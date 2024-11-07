@@ -151,8 +151,8 @@ class SaleRetailServiceDetailController extends Controller {
 
             $worksheet->getStyle("F{$counter}:G{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
-            $worksheet->setCellValue("F{$counter}", 'TOTAL');
-            $worksheet->setCellValue("G{$counter}", CHtml::encode($totalSale));
+            $worksheet->setCellValue("E{$counter}", 'TOTAL');
+            $worksheet->setCellValue("F{$counter}", CHtml::encode($totalSale));
             $counter++;$counter++;
 
         }

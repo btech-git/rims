@@ -121,6 +121,7 @@ class AdjustmentController extends Controller {
                         $transactionSubject = $stockAdjustmentHeader->transaction_type;
 
                         $journalReferences = array();
+                        $journalReferencesDestination = array();
 
                         foreach ($stockAdjustmentHeader->stockAdjustmentDetails as $key => $detail) {
                             if (!empty($detail->product_id)) {
@@ -180,6 +181,60 @@ class AdjustmentController extends Controller {
                                 $journalReferences[$jurnalUmumPersediaan]['debet_kredit'] = ($detail->quantity_current < $detail->quantity_adjustment) ? 'K' : 'D';
                                 $journalReferences[$jurnalUmumPersediaan]['is_coa_category'] = 0;
                                 $journalReferences[$jurnalUmumPersediaan]['values'][] = $total;
+                                
+                                if ($stockAdjustmentHeader->transaction_type === 'Selisih Cabang') {
+                                    $warehouseDestination = Warehouse::model()->findByAttributes(array('branch_id' => $stockAdjustmentHeader->branch_id_destination, 'status' => 'Active'));
+                                    $inventoryDestination = Inventory::model()->findByAttributes(array(
+                                        'product_id' => $detail->product_id, 
+                                        'warehouse_id' => $warehouseDestination->id,
+                                    ));
+                                    if (empty($inventoryDestination)) {
+                                        $insertInventoryDestination = new Inventory();
+                                        $insertInventoryDestination->product_id = $detail->product_id;
+                                        $insertInventoryDestination->warehouse_id = $warehouseDestination->id;
+                                        $insertInventoryDestination->minimal_stock = 0;
+                                        $insertInventoryDestination->total_stock = $detail->quantity_adjustment_destination;
+                                        $insertInventoryDestination->status = 'Active';
+                                        $insertInventoryDestination->save();
+
+                                        $inventoryId = $insertInventoryDestination->id;
+                                    } else {
+                                        $inventoryDestination->total_stock = $detail->quantity_adjustment_destination;
+                                        $inventoryDestination->update(array('total_stock'));
+
+                                        $inventoryId = $inventoryDestination->id;
+                                    }
+
+                                    $inventoryDetailDestination = new InventoryDetail();
+                                    $inventoryDetailDestination->inventory_id = $inventoryId;
+                                    $inventoryDetailDestination->product_id = $detail->product_id;
+                                    $inventoryDetailDestination->warehouse_id = $warehouseDestination->id;
+                                    $inventoryDetailDestination->transaction_type = StockAdjustmentHeader::CONSTANT;
+                                    $inventoryDetailDestination->transaction_number = $stockAdjustmentHeader->stock_adjustment_number;
+                                    $inventoryDetailDestination->transaction_date = $stockAdjustmentHeader->date_posting;
+                                    $inventoryDetailDestination->stock_in = $detail->quantityDifferenceDestination > 0 ? $detail->quantityDifferenceDestination : 0;
+                                    $inventoryDetailDestination->stock_out = $detail->quantityDifferenceDestination < 0 ? $detail->quantityDifferenceDestination : 0;
+                                    $inventoryDetailDestination->notes = "Data from Adjustment Stock";
+                                    $inventoryDetailDestination->purchase_price = $detail->product->hpp;
+                                    $inventoryDetailDestination->transaction_time = date('H:i:s');
+
+                                    $inventoryDetailDestination->save(false);
+
+                                    $branchIdDestination = $stockAdjustmentHeader->branch_id_destination;
+                                    $quantityDifference = ($detail->quantity_current_destination > $detail->quantity_adjustment_destination) ? $detail->quantityDifference * -1 : $detail->quantityDifference;
+                                    $total = $detail->product->hpp * $quantityDifference;
+
+                                    $jurnalUmumInTransit = $detail->product->productSubMasterCategory->coa_inventory_in_transit;
+                                    $journalReferencesDestination[$jurnalUmumInTransit]['debet_kredit'] = ($detail->quantity_current_destination < $detail->quantity_adjustment_destination) ? 'D' : 'K';
+                                    $journalReferencesDestination[$jurnalUmumInTransit]['is_coa_category'] = 0;
+                                    $journalReferencesDestination[$jurnalUmumInTransit]['values'][] = $total;                                    
+
+                                    $jurnalUmumPersediaan = $detail->product->productSubMasterCategory->coa_persediaan_barang_dagang;
+                                    $journalReferencesDestination[$jurnalUmumPersediaan]['debet_kredit'] = ($detail->quantity_current_destination < $detail->quantity_adjustment_destination) ? 'K' : 'D';
+                                    $journalReferencesDestination[$jurnalUmumPersediaan]['is_coa_category'] = 0;
+                                    $journalReferencesDestination[$jurnalUmumPersediaan]['values'][] = $total;
+                                    
+                                }
                             }
                         }
 
@@ -196,6 +251,23 @@ class AdjustmentController extends Controller {
                             $jurnalUmumPersediaan->is_coa_category = $journalReference['is_coa_category'];
                             $jurnalUmumPersediaan->transaction_type = $transactionType;
                             $jurnalUmumPersediaan->save();
+                        }
+                        
+                        if ($stockAdjustmentHeader->transaction_type === 'Selisih Cabang') {
+                            foreach ($journalReferencesDestination as $coaId => $journalReferenceDestination) {
+                                $jurnalUmumPersediaan = new JurnalUmum();
+                                $jurnalUmumPersediaan->kode_transaksi = $transactionCode;
+                                $jurnalUmumPersediaan->tanggal_transaksi = $transactionDate;
+                                $jurnalUmumPersediaan->coa_id = $coaId;
+                                $jurnalUmumPersediaan->branch_id = $branchIdDestination;
+                                $jurnalUmumPersediaan->total = array_sum($journalReferenceDestination['values']);
+                                $jurnalUmumPersediaan->debet_kredit = $journalReferenceDestination['debet_kredit'];
+                                $jurnalUmumPersediaan->tanggal_posting = $postingDate;
+                                $jurnalUmumPersediaan->transaction_subject = $transactionSubject;
+                                $jurnalUmumPersediaan->is_coa_category = $journalReferenceDestination['is_coa_category'];
+                                $jurnalUmumPersediaan->transaction_type = $transactionType;
+                                $jurnalUmumPersediaan->save();
+                            }
                         }
                     }
                     $stockAdjustmentHeader->save(false);

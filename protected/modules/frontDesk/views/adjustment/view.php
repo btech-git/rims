@@ -48,6 +48,12 @@ $this->menu = array(
                     'value' => $model->branch->name,
                 ),
                 array(
+                    'name' => 'branch_id_destination',
+                    'header' => 'Branch Destination',
+                    'value' => CHtml::encode(CHtml::value($model, 'branchIdDestination.name')),
+                    'visible' => $model->transaction_type == 'Selisih Cabang' ? true : false,
+                ),
+                array(
                     'name' => 'user_id',
                     'header' => 'User',
                     'value' => $model->user->username,
@@ -102,6 +108,30 @@ $this->menu = array(
                                         'style' => 'text-align: center',
                                     ),
                                 ),
+                                array(
+                                    'header' => 'Jumlah Stok Tujuan',
+                                    'value' => 'number_format($data->quantity_current_destination, 0)',
+                                    'htmlOptions' => array(
+                                        'style' => 'text-align: center',
+                                    ),
+                                    'visible' => $model->transaction_type == 'Selisih Cabang' ? true : false,
+                                ),
+                                array(
+                                    'header' => 'Jumlah Penyesuaian Tujuan',
+                                    'value' => 'number_format($data->quantity_adjustment_destination, 0)',
+                                    'htmlOptions' => array(
+                                        'style' => 'text-align: center',
+                                    ),
+                                    'visible' => $model->transaction_type == 'Selisih Cabang' ? true : false,
+                                ),
+                                array(
+                                    'header' => 'Jumlah Perbedaan Tujuan',
+                                    'value' => 'number_format($data->getQuantityDifferenceDestination(), 0)',
+                                    'htmlOptions' => array(
+                                        'style' => 'text-align: center',
+                                    ),
+                                    'visible' => $model->transaction_type == 'Selisih Cabang' ? true : false,
+                                ),
                                 'product.unit.name: Unit',
                                 'memo',
                             ),
@@ -129,12 +159,13 @@ $this->menu = array(
 
                 <tbody>
                     <?php $totalDebit = 0; $totalCredit = 0; ?>
-                    <?php $transactions = JurnalUmum::model()->findAllByAttributes(array('kode_transaksi' => $model->stock_adjustment_number, 'is_coa_category' => 0)); ?>
+                    <?php $transactions = JurnalUmum::model()->findAllByAttributes(array(
+                        'kode_transaksi' => $model->stock_adjustment_number, 
+                        'is_coa_category' => 0
+                    )); ?>
                     <?php foreach ($transactions as $i => $header): ?>
-
                         <?php $amountDebit = $header->debet_kredit == 'D' ? CHtml::value($header, 'total') : 0; ?>
                         <?php $amountCredit = $header->debet_kredit == 'K' ? CHtml::value($header, 'total') : 0; ?>
-
                         <tr>
                             <td style="text-align: center"><?php echo $i + 1; ?></td>
                             <td class="width1-4"><?php echo CHtml::encode(CHtml::value($header, 'branchAccountCode')); ?></td>
@@ -142,10 +173,8 @@ $this->menu = array(
                             <td class="width1-6" style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $amountDebit)); ?></td>
                             <td class="width1-7" style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $amountCredit)); ?></td>
                         </tr>
-
                         <?php $totalDebit += $amountDebit; ?>
                         <?php $totalCredit += $amountCredit; ?>
-
                     <?php endforeach; ?>
                 </tbody>
 

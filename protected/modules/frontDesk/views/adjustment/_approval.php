@@ -90,16 +90,16 @@
                         <?php foreach ($stockAdjustmentDetails as $key => $stockAdjustmentDetail): ?>
                         <tr>
                             <?php $product = Product::model()->findByPK($stockAdjustmentDetail->product_id); ?>
-                            <td><?php echo $stockAdjustmentDetail->product->name; ?></td>
-                            <td><?php echo $stockAdjustmentDetail->product->manufacturer_code; ?></td>
-                            <td><?php echo $stockAdjustmentDetail->product->masterSubCategoryCode; ?></td>
-                            <td><?php echo $stockAdjustmentDetail->product->brand->name; ?></td>
-                            <td><?php echo $stockAdjustmentDetail->product->subBrand->name; ?></td>
-                            <td><?php echo $stockAdjustmentDetail->product->subBrandSeries->name; ?></td>
+                            <td><?php echo CHtml::encode(CHtml::value($stockAdjustmentDetail, 'product.name')); ?></td>
+                            <td><?php echo CHtml::encode(CHtml::value($stockAdjustmentDetail, 'product.manufacturer_code')); ?></td>
+                            <td><?php echo CHtml::encode(CHtml::value($stockAdjustmentDetail, 'product.masterSubCategoryCode')); ?></td>
+                            <td><?php echo CHtml::encode(CHtml::value($stockAdjustmentDetail, 'product.brand.name')); ?></td>
+                            <td><?php echo CHtml::encode(CHtml::value($stockAdjustmentDetail, 'product.subBrand.name')); ?></td>
+                            <td><?php echo CHtml::encode(CHtml::value($stockAdjustmentDetail, 'product.subBrandSeries.name')); ?></td>
                             <td><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($stockAdjustmentDetail, 'quantity_current'))); ?></td>
                             <td><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($stockAdjustmentDetail, 'quantity_adjustment'))); ?></td>
                             <td><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($stockAdjustmentDetail, 'getQuantityDifference'))); ?></td>
-                            <td><?php echo $stockAdjustmentDetail->product->unit->name; ?></td>
+                            <td><?php echo CHtml::encode(CHtml::value($stockAdjustmentDetail, 'product.unit.name')); ?></td>
                             <td><?php echo $stockAdjustmentDetail->memo; ?></td>
                         </tr>
                     <?php endforeach; ?>

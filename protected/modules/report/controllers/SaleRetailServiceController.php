@@ -88,12 +88,12 @@ class SaleRetailServiceController extends Controller {
         $worksheet = $objPHPExcel->setActiveSheetIndex(0);
         $worksheet->setTitle('Penjualan Retail Service');
 
-        $worksheet->mergeCells('A1:E1');
-        $worksheet->mergeCells('A2:E2');
-        $worksheet->mergeCells('A3:E3');
+        $worksheet->mergeCells('A1:F1');
+        $worksheet->mergeCells('A2:F2');
+        $worksheet->mergeCells('A3:F3');
 
-        $worksheet->getStyle('A1:E5')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-        $worksheet->getStyle('A1:E5')->getFont()->setBold(true);
+        $worksheet->getStyle('A1:F5')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->getStyle('A1:F5')->getFont()->setBold(true);
 
         $worksheet->setCellValue('A2', 'Penjualan Retail Service');
         $worksheet->setCellValue('A3', Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($startDate)) . ' - ' . Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($endDate)));
@@ -105,9 +105,9 @@ class SaleRetailServiceController extends Controller {
         $worksheet->setCellValue('C5', 'Category');
         $worksheet->setCellValue('D5', 'Name');
         $worksheet->setCellValue('E5', 'Quantity');
-        $worksheet->setCellValue('E5', 'Amount');
+        $worksheet->setCellValue('F5', 'Amount');
 
-        $worksheet->getStyle('A5:E5')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle('A5:F5')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
         $counter = 7;
         $totalSale = 0.00;
@@ -122,7 +122,7 @@ class SaleRetailServiceController extends Controller {
             $worksheet->setCellValue("C{$counter}", $saleRetailServiceItem['category']);
             $worksheet->setCellValue("D{$counter}", $saleRetailServiceItem['name']);
             $worksheet->setCellValue("E{$counter}", CHtml::encode($grandTotal));
-            $worksheet->setCellValue("E{$counter}", CHtml::encode($totalQuantity));
+            $worksheet->setCellValue("F{$counter}", CHtml::encode($totalQuantity));
 
             $counter++;
             $totalSale += $grandTotal;
@@ -130,10 +130,10 @@ class SaleRetailServiceController extends Controller {
         }
 
         $worksheet->setCellValue("D{$counter}", 'TOTAL');
-        $worksheet->setCellValue("E{$counter}", CHtml::encode($totalSale));
+        $worksheet->setCellValue("F{$counter}", CHtml::encode($totalSale));
         $counter++;$counter++;
 
-        for ($col = 'A'; $col !== 'F'; $col++) {
+        for ($col = 'A'; $col !== 'G'; $col++) {
             $objPHPExcel->getActiveSheet()
             ->getColumnDimension($col)
             ->setAutoSize(true);
