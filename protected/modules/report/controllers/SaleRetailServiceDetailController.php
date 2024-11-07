@@ -113,6 +113,7 @@ class SaleRetailServiceDetailController extends Controller {
         $worksheet->getStyle('A6:G6')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
         $counter = 8;
+        $grandTotalSale = 0.00;
         foreach ($saleRetailServiceReport as $saleRetailServiceItem) {
             $worksheet->getStyle("C{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
 
@@ -148,14 +149,18 @@ class SaleRetailServiceDetailController extends Controller {
                 $totalSale += $total;
 
             }
-
-            $worksheet->getStyle("F{$counter}:G{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+            $worksheet->getStyle("E{$counter}:F{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+            $worksheet->getStyle("E{$counter}:F{$counter}")->getFont()->setBold(true);
 
             $worksheet->setCellValue("E{$counter}", 'TOTAL');
             $worksheet->setCellValue("F{$counter}", CHtml::encode($totalSale));
+            $grandTotalSale += $totalSale;
             $counter++;$counter++;
-
         }
+        
+        $worksheet->getStyle("E{$counter}:F{$counter}")->getFont()->setBold(true);
+        $worksheet->setCellValue("E{$counter}", 'GRAND TOTAL');
+        $worksheet->setCellValue("F{$counter}", CHtml::encode($grandTotalSale));
 
         for ($col = 'A'; $col !== 'H'; $col++) {
             $objPHPExcel->getActiveSheet()

@@ -115,14 +115,14 @@ class SaleRetailServiceController extends Controller {
         foreach ($saleRetailServiceReport as $saleRetailServiceItem) {
             $grandTotal = $saleRetailServiceItem['total'];
             $totalQuantity = $saleRetailServiceItem['total_quantity'];
-            $worksheet->getStyle("E{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
+            $worksheet->getStyle("F{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
 
             $worksheet->setCellValue("A{$counter}", $saleRetailServiceItem['code']);
             $worksheet->setCellValue("B{$counter}", $saleRetailServiceItem['type']);
             $worksheet->setCellValue("C{$counter}", $saleRetailServiceItem['category']);
             $worksheet->setCellValue("D{$counter}", $saleRetailServiceItem['name']);
-            $worksheet->setCellValue("E{$counter}", CHtml::encode($grandTotal));
-            $worksheet->setCellValue("F{$counter}", CHtml::encode($totalQuantity));
+            $worksheet->setCellValue("E{$counter}", CHtml::encode($totalQuantity));
+            $worksheet->setCellValue("F{$counter}", CHtml::encode($grandTotal));
 
             $counter++;
             $totalSale += $grandTotal;
