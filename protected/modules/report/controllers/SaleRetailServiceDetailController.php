@@ -150,7 +150,7 @@ class SaleRetailServiceDetailController extends Controller {
                 $worksheet->setCellValue("C{$counter}", CHtml::encode($saleRetailRow['repair_type']));
                 $worksheet->setCellValue("D{$counter}", CHtml::encode($saleRetailRow['customer']));
                 $worksheet->setCellValue("E{$counter}", CHtml::encode($saleRetailRow['vehicle']));
-                $worksheet->setCellValue("H{$counter}", CHtml::encode($total));
+                $worksheet->setCellValue("F{$counter}", CHtml::encode($total));
 
                 $counter++;
                 $totalSale += $total;
