@@ -147,7 +147,7 @@ class SaleRetailProductDetailController extends Controller {
         $worksheet->getStyle('A1:I6')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
         $worksheet->getStyle('A1:I6')->getFont()->setBold(true);
 
-        $worksheet->setCellValue('A2', 'Rincian Penjualan  Barang');
+        $worksheet->setCellValue('A2', 'Rincian Penjualan Barang');
         $worksheet->setCellValue('A3', Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($startDate)) . ' - ' . Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($endDate)));
 
         $worksheet->getStyle('A5:I5')->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);

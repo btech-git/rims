@@ -79,7 +79,7 @@ class SaleRetailServiceDetailController extends Controller {
         }
     }
 
-    protected function saveToExcel($saleRetailServiceReport, array $options = array()) {
+    protected function saveToExcel($dataProvider, array $options = array()) {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
 
@@ -89,15 +89,16 @@ class SaleRetailServiceDetailController extends Controller {
 
         $startDate = $options['startDate'];
         $endDate = $options['endDate'];
+        $branchId = $options['branchId'];
         
         $objPHPExcel = new PHPExcel();
 
         $documentProperties = $objPHPExcel->getProperties();
         $documentProperties->setCreator('Raperind Motor');
-        $documentProperties->setTitle('Penjualan Retail Service Detail');
+        $documentProperties->setTitle('Rincian Penjualan Retail Service');
 
         $worksheet = $objPHPExcel->setActiveSheetIndex(0);
-        $worksheet->setTitle('Penjualan Retail Service Detail');
+        $worksheet->setTitle('Rincian Penjualan Retail Service');
 
         $worksheet->mergeCells('A1:G1');
         $worksheet->mergeCells('A2:G2');
@@ -106,7 +107,7 @@ class SaleRetailServiceDetailController extends Controller {
         $worksheet->getStyle('A1:G5')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
         $worksheet->getStyle('A1:G6')->getFont()->setBold(true);
 
-        $worksheet->setCellValue('A2', 'Penjualan Retail Service Detail');
+        $worksheet->setCellValue('A2', 'Rincian Penjualan Retail Service');
         $worksheet->setCellValue('A3', Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($options['startDate'])) . ' - ' . Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($options['endDate'])));
 
         $worksheet->getStyle('A5:G5')->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
@@ -127,37 +128,29 @@ class SaleRetailServiceDetailController extends Controller {
 
         $counter = 8;
         $grandTotalSale = 0.00;
-        foreach ($saleRetailServiceReport as $saleRetailServiceItem) {
+        foreach ($dataProvider->data as $header) {
             $worksheet->getStyle("C{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
 
-            $worksheet->setCellValue("A{$counter}", $saleRetailServiceItem['code']);
-            $worksheet->setCellValue("B{$counter}", $saleRetailServiceItem['type']);
-            $worksheet->setCellValue("C{$counter}", $saleRetailServiceItem['category']);
-            $worksheet->setCellValue("D{$counter}", $saleRetailServiceItem['name']);
+            $worksheet->setCellValue("A{$counter}", CHtml::encode(CHtml::value($header, 'code')));
+            $worksheet->setCellValue("B{$counter}", CHtml::encode(CHtml::value($header, 'type')));
+            $worksheet->setCellValue("C{$counter}", CHtml::encode(CHtml::value($header, 'category')));
+            $worksheet->setCellValue("D{$counter}", CHtml::encode(CHtml::value($header, 'name')));
             
             $counter++;
             
             $saleRetailData = $header->getSaleRetailServiceDetailReport($startDate, $endDate, $branchId);
             $totalSale = 0.00;
-            $registrationServices = RegistrationService::model()->with('registrationTransaction')->findAll(array(
-                'condition' => 't.service_id = :service_id AND registrationTransaction.transaction_date BETWEEN :start_date AND :end_date', 
-                'params' => array(
-                    ':service_id' => $saleRetailServiceItem['id'],
-                    ':start_date' => $startDate,
-                    ':end_date' => $endDate,
-                )
-            ));
-            foreach ($registrationServices as $registrationService) {
-                $total = $registrationService->total_price; 
+            foreach ($saleRetailData as $saleRetailRow) {
+                $total = $saleRetailRow['total_price'];
                 
                 $worksheet->getStyle("I{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
 
-                $worksheet->setCellValue("A{$counter}", CHtml::encode($registrationService->registrationTransaction->transaction_number));
-                $worksheet->setCellValue("B{$counter}", CHtml::encode($registrationService->registrationTransaction->transaction_date));
-                $worksheet->setCellValue("C{$counter}", CHtml::encode($registrationService->registrationTransaction->repair_type));
-                $worksheet->setCellValue("D{$counter}", CHtml::encode($registrationService->registrationTransaction->customer->name));
-                $worksheet->setCellValue("E{$counter}", CHtml::encode($registrationService->registrationTransaction->vehicle->plate_number));
-                $worksheet->setCellValue("F{$counter}", CHtml::encode($total));
+                $worksheet->setCellValue("A{$counter}", CHtml::encode($saleRetailRow['transaction_number']));
+                $worksheet->setCellValue("B{$counter}", CHtml::encode($saleRetailRow['transaction_date']));
+                $worksheet->setCellValue("C{$counter}", CHtml::encode($saleRetailRow['repair_type']));
+                $worksheet->setCellValue("D{$counter}", CHtml::encode($saleRetailRow['customer']));
+                $worksheet->setCellValue("E{$counter}", CHtml::encode($saleRetailRow['vehicle']));
+                $worksheet->setCellValue("H{$counter}", CHtml::encode($total));
 
                 $counter++;
                 $totalSale += $total;
