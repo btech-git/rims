@@ -350,7 +350,7 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
 
                 <div class="relative">
                     <?php $this->renderPartial('_summary', array(
-                        'saleRetailServiceReport' => $saleRetailServiceReport,
+                        'saleRetailServiceSummary' => $saleRetailServiceSummary,
                         'service' => $service,
                         'startDate' => $startDate,
                         'endDate' => $endDate,
