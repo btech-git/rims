@@ -265,10 +265,10 @@ class Customer extends CActiveRecord {
         ));
     }
 
-    public function searchByReceivableReport($endDate, $branchId, $insuranceCompanyId, $plateNumber) {
+    public function searchByReceivableReport($endDate, $branchId, $insuranceCompanyId, $customerType, $plateNumber) {
         $branchConditionSql = '';
         $insuranceConditionSql = '';
-//        $typeConditionSql = '';
+        $typeConditionSql = '';
         $plateNumberConditionSql = '';
         
         $criteria = new CDbCriteria;
@@ -287,10 +287,10 @@ class Customer extends CActiveRecord {
             $criteria->params[':insurance_company_id'] = $insuranceCompanyId;
         }
 
-//        if (!empty($customerType)) {
-//            $typeConditionSql = ' AND t.customer_type = :customer_type';
-//            $criteria->params[':customer_type'] = $customerType;
-//        }
+        if (!empty($customerType)) {
+            $typeConditionSql = ' AND t.customer_type = :customer_type';
+            $criteria->params[':customer_type'] = $customerType;
+        }
 
         if (!empty($plateNumber)) {
             $plateNumberConditionSql = ' AND v.plate_number LIKE :plate_number';
@@ -302,7 +302,7 @@ class Customer extends CActiveRecord {
             FROM " . InvoiceHeader::model()->tableName() . " p 
             LEFT OUTER JOIN " . InsuranceCompany::model()->tableName() . " i ON i.id = p.insurance_company_id
             LEFT OUTER JOIN " . Vehicle::model()->tableName() . " v ON v.id = p.vehicle_id
-            WHERE p.customer_id = t.id AND p.payment_left > 100.00 AND p.invoice_date <= :end_date" . $branchConditionSql . $insuranceConditionSql . $plateNumberConditionSql . " 
+            WHERE p.customer_id = t.id AND p.payment_left > 100.00 AND p.invoice_date <= :end_date" . $branchConditionSql . $insuranceConditionSql . $plateNumberConditionSql . $typeConditionSql . " 
         ) AND t.customer_type = 'Company'");
 
         return new CActiveDataProvider($this, array(
@@ -479,6 +479,80 @@ class Customer extends CActiveRecord {
         return ($value === false) ? 0 : $value;
     }
     
+    public static function getTotalReceivableIndividual($endDate, $branchId) {
+        $branchConditionSql = '';
+        
+        $params = array(
+            ':end_date' => $endDate,
+        );
+        
+        if (!empty($branchId)) {
+            $branchConditionSql = ' AND i.branch_id = :branch_id';
+            $params[':branch_id'] = $branchId;
+        }
+        
+        $sql = "
+            SELECT COALESCE(SUM(i.total_price), 0) AS total_receivable
+            FROM " . InvoiceHeader::model()->tableName() . " i
+            INNER JOIN " . Customer::model()->tableName() . " c ON c.id = i.customer_id
+            WHERE c.customer_type = 'Individual' AND i.invoice_date <= :end_date" . $branchConditionSql . "
+        ";
+
+        $value = Yii::app()->db->createCommand($sql)->queryScalar($params);
+
+        return ($value === false) ? 0 : $value;
+    }
+    
+    public static function getTotalPaymentIndividual($endDate, $branchId) {
+        $branchConditionSql = '';
+        
+        $params = array(
+            ':end_date' => $endDate,
+        );
+        
+        if (!empty($branchId)) {
+            $branchConditionSql = ' AND i.branch_id = :branch_id';
+            $params[':branch_id'] = $branchId;
+        }
+        
+        $sql = "
+            SELECT COALESCE(SUM(i.payment_amount), 0) AS total_payment
+            FROM " . InvoiceHeader::model()->tableName() . " i
+            INNER JOIN " . Customer::model()->tableName() . " c ON c.id = i.customer_id
+            WHERE c.customer_type = 'Individual' AND i.invoice_date <= :end_date" . $branchConditionSql . "
+        ";
+
+        $value = Yii::app()->db->createCommand($sql)->queryScalar($params);
+
+        return ($value === false) ? 0 : $value;
+    }
+    
+    public static function getTotalRemainingIndividual($endDate, $branchId) {
+        $branchConditionSql = '';
+        
+        $params = array(
+            ':end_date' => $endDate,
+        );
+        
+        if (!empty($branchId)) {
+            $branchConditionSql = ' AND i.branch_id = :branch_id';
+            $params[':branch_id'] = $branchId;
+        }
+        
+        $sql = "
+            SELECT COALESCE(SUM(i.payment_left), 0) AS total_remaining
+            FROM " . InvoiceHeader::model()->tableName() . " i
+            INNER JOIN " . Customer::model()->tableName() . " c ON c.id = i.customer_id
+            WHERE c.customer_type = 'Individual' AND i.invoice_date <= :end_date" . $branchConditionSql . "
+        ";
+
+        $value = Yii::app()->db->createCommand($sql)->queryScalar($params);
+
+        $value = Yii::app()->db->createCommand($sql)->queryScalar($params);
+
+        return ($value === false) ? 0 : $value;
+    }
+    
     public function getReceivableReport($startDate, $endDate, $branchId, $insuranceCompanyId, $plateNumber) {
         $branchConditionSql = '';
         $insuranceConditionSql = '';
@@ -496,7 +570,7 @@ class Customer extends CActiveRecord {
         }
         
         if (!empty($insuranceCompanyId)) {
-            $insuranceConditionSql = ' AND r.insurance_company_id = :insurance_company_id';
+            $insuranceConditionSql = ' AND p.insurance_company_id = :insurance_company_id';
             $params[':insurance_company_id'] = $insuranceCompanyId;
         }
         
@@ -508,10 +582,35 @@ class Customer extends CActiveRecord {
         $sql = "
             SELECT invoice_number, invoice_date, due_date, v.plate_number AS vehicle, COALESCE(p.total_price, 0) AS total_price, COALESCE(p.payment_amount, 0) AS payment_amount, COALESCE(p.payment_left, 0) AS payment_left, i.name as insurance_name 
             FROM " . InvoiceHeader::model()->tableName() . " p 
-            INNER JOIN " . Vehicle::model()->tableName() . " v ON v.id = p.vehicle_id
-            INNER JOIN " . RegistrationTransaction::model()->tableName() . " r ON r.id = p.registration_transaction_id
-            LEFT OUTER JOIN " . InsuranceCompany::model()->tableName() . " i ON i.id = r.insurance_company_id
+            LEFT OUTER JOIN " . Vehicle::model()->tableName() . " v ON v.id = p.vehicle_id
+            LEFT OUTER JOIN " . InsuranceCompany::model()->tableName() . " i ON i.id = p.insurance_company_id
             WHERE p.customer_id = :customer_id AND p.payment_left > 100.00 AND p.invoice_date BETWEEN :start_date AND :end_date" . $branchConditionSql . $insuranceConditionSql . $plateNumberConditionSql . "
+        ";
+
+        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
+
+        return $resultSet;
+    }
+    
+    public function getReceivableCustomerReport($endDate, $branchId) {
+        $branchConditionSql = '';
+        
+        $params = array(
+            ':customer_id' => $this->id,
+            ':end_date' => $endDate,
+        );
+        
+        if (!empty($branchId)) {
+            $branchConditionSql = ' AND p.branch_id = :branch_id';
+            $params[':branch_id'] = $branchId;
+        }
+        
+        $sql = "
+            SELECT p.customer_id, COALESCE(SUM(p.total_price), 0) AS total_price, COALESCE(SUM(p.payment_amount), 0) AS payment_amount, COALESCE(SUM(p.payment_left), 0) AS payment_left
+            FROM " . InvoiceHeader::model()->tableName() . " p 
+            WHERE p.customer_id = :customer_id AND p.invoice_date <= :end_date" . $branchConditionSql . "
+            GROUP BY p.customer_id 
+            HAVING payment_left > 100.00
         ";
 
         $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);

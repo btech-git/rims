@@ -34,8 +34,17 @@
         <?php $grandTotalRevenue = 0.00; ?>
         <?php $grandTotalPayment = 0.00; ?>
         <?php $grandTotalReceivable = 0.00; ?>
+        <?php $totalReceivableIndividual = Customer::getTotalReceivableIndividual($endDate, $branchId); ?>
+        <?php $totalPaymentIndividual = Customer::getTotalPaymentIndividual($endDate, $branchId); ?>
+        <?php $totalRemainingIndividual = Customer::getTotalRemainingIndividual($endDate, $branchId); ?>
+        <tr>
+            <td colspan="2" style="text-align: center">Individual</td>
+            <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalReceivableIndividual)); ?></td>
+            <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalPaymentIndividual)); ?></td>
+            <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalRemainingIndividual   )); ?></td>
+        </tr>
         <?php foreach ($receivableSummary->dataProvider->data as $header): ?>
-            <?php $receivableData = $header->getReceivableReport($startDate, $endDate, $branchId, $insuranceCompanyId, $plateNumber); ?>
+            <?php $receivableData = $header->getReceivableCustomerReport($endDate, $branchId); ?>
             <?php $totalRevenue = 0.00; ?>
             <?php $totalPayment = 0.00; ?>
             <?php $totalReceivable = 0.00; ?>

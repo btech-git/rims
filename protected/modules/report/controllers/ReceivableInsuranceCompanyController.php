@@ -30,12 +30,13 @@ class ReceivableInsuranceCompanyController extends Controller {
         $plateNumber = (isset($_GET['PlateNumber'])) ? $_GET['PlateNumber'] : '';
         $insuranceCompanyId = (isset($_GET['InsuranceCompanyId'])) ? $_GET['InsuranceCompanyId'] : '';
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
+        $customerType = (isset($_GET['CustomerType'])) ? $_GET['CustomerType'] : '';
         
         $insuranceCompany = Search::bind(new InsuranceCompany('search'), isset($_GET['InsuranceCompany']) ? $_GET['InsuranceCompany'] : array());
         $insuranceCompanyDataProvider = $insuranceCompany->search();
         $insuranceCompanyDataProvider->pagination->pageVar = 'page_dialog';
 
-        $receivableSummary = new ReceivableSummary($insuranceCompany->searchByReceivableReport($endDate, $branchId, $plateNumber));
+        $receivableSummary = new ReceivableInsuranceCompanySummary($insuranceCompany->searchByReceivableReport($endDate, $branchId, $insuranceCompanyId, $customerType, $plateNumber));
         $receivableSummary->setupLoading();
         $receivableSummary->setupPaging($pageSize, $currentPage);
         $receivableSummary->setupSorting();
