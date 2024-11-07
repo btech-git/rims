@@ -402,8 +402,10 @@ class TransactionPurchaseOrderController extends Controller {
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : '';
         
         $dataProvider = $model->search();
-        $dataProvider->criteria->addCondition('t.main_branch_id = :main_branch_id');
-        $dataProvider->criteria->params[':main_branch_id'] = Yii::app()->user->branch_id;
+        if (!Yii::app()->user->checkAccess('director')) {
+            $dataProvider->criteria->addCondition('t.main_branch_id = :main_branch_id');
+            $dataProvider->criteria->params[':main_branch_id'] = Yii::app()->user->branch_id;
+        }
         $dataProvider->criteria->together = true;
         $dataProvider->criteria->with = array(
             'supplier',
