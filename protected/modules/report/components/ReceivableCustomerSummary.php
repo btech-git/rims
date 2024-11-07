@@ -34,7 +34,7 @@ class ReceivableCustomerSummary extends CComponent {
         
         if (!empty($branchId)) {
             $branchConditionSql = ' AND p.branch_id = :branch_id';
-            $criteria->params[':branch_id'] = $branchId;
+            $this->dataProvider->criteria->params[':branch_id'] = $branchId;
         }
         
         $this->dataProvider->criteria->addCondition("EXISTS (
