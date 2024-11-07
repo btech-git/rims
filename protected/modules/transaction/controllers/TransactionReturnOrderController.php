@@ -361,12 +361,15 @@ class TransactionReturnOrderController extends Controller {
     public function actionAdmin() {
         $model = new TransactionReturnOrder('search');
         $model->unsetAttributes();  // clear any default values
-        if (isset($_GET['TransactionReturnOrder']))
+        if (isset($_GET['TransactionReturnOrder'])) {
             $model->attributes = $_GET['TransactionReturnOrder'];
+        }
 
         $dataProvider = $model->search();
-        $dataProvider->criteria->addCondition('t.recipient_branch_id = :recipient_branch_id');
-        $dataProvider->criteria->params[':recipient_branch_id'] = Yii::app()->user->branch_id;
+        if (!Yii::app()->user->checkAccess('director')) {
+            $dataProvider->criteria->addCondition('t.recipient_branch_id = :recipient_branch_id');
+            $dataProvider->criteria->params[':recipient_branch_id'] = Yii::app()->user->branch_id;
+        }
 
         $this->render('admin', array(
             'model' => $model,

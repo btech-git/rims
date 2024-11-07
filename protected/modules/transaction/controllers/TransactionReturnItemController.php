@@ -230,8 +230,10 @@ class TransactionReturnItemController extends Controller {
             $model->attributes = $_GET['TransactionReturnItem'];
         }
         $dataProvider = $model->search();
-        $dataProvider->criteria->addCondition('t.recipient_branch_id = :recipient_branch_id');
-        $dataProvider->criteria->params[':recipient_branch_id'] = Yii::app()->user->branch_id;
+        if (!Yii::app()->user->checkAccess('director')) {
+            $dataProvider->criteria->addCondition('t.recipient_branch_id = :recipient_branch_id');
+            $dataProvider->criteria->params[':recipient_branch_id'] = Yii::app()->user->branch_id;
+        }
 
         $retailTransaction = new RegistrationTransaction('search');
         $retailTransaction->unsetAttributes();  // clear any default values

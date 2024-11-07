@@ -295,14 +295,19 @@ class CashTransactionController extends Controller {
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : '';
         
         $cashInTransactionDataProvider = $model->search();
-        $cashInTransactionDataProvider->criteria->addCondition('t.transaction_type = "In" AND t.branch_id = :branch_id');
-        $cashInTransactionDataProvider->criteria->params[':branch_id'] = Yii::app()->user->branch_id;
+        $cashInTransactionDataProvider->criteria->addCondition('t.transaction_type = "In"');
         $cashInTransactionDataProvider->criteria->addBetweenCondition('t.transaction_date', $startDate, $endDate);
 
         $cashOutTransactionDataProvider = $model->search();
-        $cashOutTransactionDataProvider->criteria->addCondition('t.transaction_type = "Out" AND t.branch_id = :branch_id');
-        $cashOutTransactionDataProvider->criteria->params[':branch_id'] = Yii::app()->user->branch_id;
+        $cashOutTransactionDataProvider->criteria->addCondition('t.transaction_type = "Out"');
         $cashOutTransactionDataProvider->criteria->addBetweenCondition('t.transaction_date', $startDate, $endDate);
+        
+        if (!Yii::app()->user->checkAccess('director')) {
+            $cashInTransactionDataProvider->criteria->addCondition('t.branch_id = :branch_id');
+            $cashInTransactionDataProvider->criteria->params[':branch_id'] = Yii::app()->user->branch_id;
+            $cashOutTransactionDataProvider->criteria->addCondition('t.branch_id = :branch_id');
+            $cashOutTransactionDataProvider->criteria->params[':branch_id'] = Yii::app()->user->branch_id;
+        }
         
         $this->render('admin', array(
             'model' => $model,

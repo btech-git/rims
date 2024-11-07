@@ -408,8 +408,12 @@ class InvoiceHeaderController extends Controller {
         }
         
         $dataProvider = $model->searchByAdmin();
-        $dataProvider->criteria->addCondition('t.branch_id = :branch_id');
-        $dataProvider->criteria->params[':branch_id'] = Yii::app()->user->branch_id;
+        
+        if (!Yii::app()->user->checkAccess('director')) {
+            $dataProvider->criteria->addCondition('t.branch_id = :branch_id');
+            $dataProvider->criteria->params[':branch_id'] = Yii::app()->user->branch_id;
+        }
+        
         $dataProvider->criteria->with = array(
             'salesOrder',
             'registrationTransaction',

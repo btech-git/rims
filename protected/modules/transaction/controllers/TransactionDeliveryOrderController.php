@@ -519,8 +519,10 @@ class TransactionDeliveryOrderController extends Controller {
             $model->attributes = $_GET['TransactionDeliveryOrder'];
         
         $dataProvider = $model->search();
-        $dataProvider->criteria->addCondition('t.sender_branch_id = :sender_branch_id');
-        $dataProvider->criteria->params[':sender_branch_id'] = Yii::app()->user->branch_id;
+        if (!Yii::app()->user->checkAccess('director')) {
+            $dataProvider->criteria->addCondition('t.sender_branch_id = :sender_branch_id');
+            $dataProvider->criteria->params[':sender_branch_id'] = Yii::app()->user->branch_id;
+        }
 
         $transfer = new TransactionTransferRequest('search');
         $transfer->unsetAttributes();  // clear any default values

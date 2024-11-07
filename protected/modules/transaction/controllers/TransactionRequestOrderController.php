@@ -1238,8 +1238,10 @@ class TransactionRequestOrderController extends Controller
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : '';
 
         $dataProvider = $model->search();
-        $dataProvider->criteria->addCondition('t.requester_branch_id = :requester_branch_id');
-        $dataProvider->criteria->params[':requester_branch_id'] = Yii::app()->user->branch_id;
+        if (!Yii::app()->user->checkAccess('director')) {
+            $dataProvider->criteria->addCondition('t.requester_branch_id = :requester_branch_id');
+            $dataProvider->criteria->params[':requester_branch_id'] = Yii::app()->user->branch_id;
+        }
         $dataProvider->criteria->addBetweenCondition('t.request_order_date', $startDate, $endDate);
 
         $this->render('admin', array(

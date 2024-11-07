@@ -244,8 +244,10 @@ class MovementInHeaderController extends Controller {
         }
         
         $dataProvider = $model->search();
-        $dataProvider->criteria->addCondition('t.branch_id = :branch_id');
-        $dataProvider->criteria->params[':branch_id'] = Yii::app()->user->branch_id;
+        if (!Yii::app()->user->checkAccess('director')) {
+            $dataProvider->criteria->addCondition('t.branch_id = :branch_id');
+            $dataProvider->criteria->params[':branch_id'] = Yii::app()->user->branch_id;
+        }
 
         $receiveItem = new TransactionReceiveItem('search');
         $receiveItem->unsetAttributes();

@@ -421,8 +421,10 @@ class TransactionSentRequestController extends Controller {
         }
 
         $dataProvider = $model->search();
-        $dataProvider->criteria->addCondition('t.requester_branch_id = :requester_branch_id');
-        $dataProvider->criteria->params[':requester_branch_id'] = Yii::app()->user->branch_id;
+        if (!Yii::app()->user->checkAccess('director')) {
+            $dataProvider->criteria->addCondition('t.requester_branch_id = :requester_branch_id');
+            $dataProvider->criteria->params[':requester_branch_id'] = Yii::app()->user->branch_id;
+        }
 
         $this->render('admin', array(
             'model' => $model,
