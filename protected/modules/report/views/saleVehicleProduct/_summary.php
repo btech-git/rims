@@ -50,7 +50,7 @@ Yii::app()->clientScript->registerCss('_report', '
             <tr class="items2">
                 <td colspan="2">
                     <table>
-                        <?php $saleRetailData = $header->getSaleVehicleProductReport($startDate, $endDate); ?>
+                        <?php $saleRetailData = $header->getSaleVehicleProductReport($startDate, $endDate, $branchId); ?>
                         <?php $totalSale = 0.00; ?>
                         <?php foreach ($saleRetailData as $saleRetailRow): ?>
                             <?php $total = $saleRetailRow['total_price']; ?>
