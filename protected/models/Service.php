@@ -445,22 +445,49 @@ class Service extends CActiveRecord {
         return ($value === false) ? 0 : $value;
     }
     
-    public function getSaleRetailReport($startDate, $endDate, $serviceId) {
+//    public function getSaleRetailReport($startDate, $endDate, $serviceId) {
+//        
+//        $sql = "SELECT r.transaction_number, r.transaction_date, r.repair_type, c.name as customer, v.plate_number as vehicle, t.name as type, p.total_price
+//                FROM " . RegistrationService::model()->tableName() . " p 
+//                LEFT OUTER JOIN " . RegistrationTransaction::model()->tableName() . " r ON r.id = p.registration_transaction_id
+//                LEFT OUTER JOIN " . Customer::model()->tableName() . " c ON c.id = r.customer_id
+//                LEFT OUTER JOIN " . Vehicle::model()->tableName() . " v ON v.id = r.vehicle_id
+//                LEFT OUTER JOIN " . ServiceType::model()->tableName() . " t ON t.id = p.service_type_id
+//                WHERE substr(r.transaction_date, 1, 10) BETWEEN :start_date AND :end_date AND service_id = :service_id AND p.total_price > 0
+//                ORDER BY r.transaction_date ASC";
+//        
+//        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, array(
+//            ':start_date' => $startDate,
+//            ':end_date' => $endDate,
+//            ':service_id' => $serviceId,
+//        ));
+//        
+//        return $resultSet;
+//    }
+    
+    public function getSaleRetailServiceDetailReport($startDate, $endDate, $branchId) {
+        $branchConditionSql = '';
         
-        $sql = "SELECT r.transaction_number, r.transaction_date, r.repair_type, c.name as customer, v.plate_number as vehicle, t.name as type, p.total_price
-                FROM " . RegistrationService::model()->tableName() . " p 
-                LEFT OUTER JOIN " . RegistrationTransaction::model()->tableName() . " r ON r.id = p.registration_transaction_id
-                LEFT OUTER JOIN " . Customer::model()->tableName() . " c ON c.id = r.customer_id
-                LEFT OUTER JOIN " . Vehicle::model()->tableName() . " v ON v.id = r.vehicle_id
-                LEFT OUTER JOIN " . ServiceType::model()->tableName() . " t ON t.id = p.service_type_id
-                WHERE substr(r.transaction_date, 1, 10) BETWEEN :start_date AND :end_date AND service_id = :service_id AND p.total_price > 0
-                ORDER BY r.transaction_date ASC";
-        
-        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, array(
+        $params = array(
+            ':service_id' => $this->id,
             ':start_date' => $startDate,
             ':end_date' => $endDate,
-            ':service_id' => $serviceId,
-        ));
+        );
+        
+        if (!empty($branchId)) {
+            $branchConditionSql = ' AND r.branch_id = :branch_id';
+            $params[':branch_id'] = $branchId;
+        }
+        
+        $sql = "SELECT r.transaction_number, r.transaction_date, r.repair_type, c.name as customer, v.plate_number as vehicle, p.total_price
+                FROM " . RegistrationService::model()->tableName() . " p 
+                INNER JOIN " . RegistrationTransaction::model()->tableName() . " r ON r.id = p.registration_transaction_id
+                INNER JOIN " . Customer::model()->tableName() . " c ON c.id = r.customer_id
+                INNER JOIN " . Vehicle::model()->tableName() . " v ON v.id = r.vehicle_id
+                WHERE substr(r.transaction_date, 1, 10) BETWEEN :start_date AND :end_date AND service_id = :service_id" . $branchConditionSql . "
+                ORDER BY r.transaction_date ASC";
+        
+        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
         
         return $resultSet;
     }

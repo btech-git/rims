@@ -51,7 +51,7 @@ class SaleRetailProductDetailController extends Controller {
         }
         
         if (isset($_GET['SaveExcel'])) {
-            $this->saveToExcel($saleRetailProductSummary->dataProvider, array('startDate' => $startDate, 'endDate' => $endDate));
+            $this->saveToExcel($saleRetailProductSummary->dataProvider, array('startDate' => $startDate, 'endDate' => $endDate, 'branchId' => $branchId));
         }
 
         $this->render('summary', array(
@@ -129,6 +129,7 @@ class SaleRetailProductDetailController extends Controller {
 
         $startDate = $options['startDate'];
         $endDate = $options['endDate'];
+        $branchId = $options['branchId'];
         
         $objPHPExcel = new PHPExcel();
 
@@ -186,7 +187,7 @@ class SaleRetailProductDetailController extends Controller {
 
             $counter++;
             
-            $saleRetailData = $header->getSaleRetailReport($startDate, $endDate);
+            $saleRetailData = $header->getSaleRetailProductDetailReport($startDate, $endDate, $branchId);
             $totalSale = 0.00;
             foreach ($saleRetailData as $saleRetailRow) {
                 $total = $saleRetailRow['total_price'];

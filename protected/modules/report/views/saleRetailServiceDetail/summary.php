@@ -354,6 +354,7 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                         'service' => $service,
                         'startDate' => $startDate,
                         'endDate' => $endDate,
+                        'branchId' => $branchId,
                     )); ?>
                 </div>
                 <div class="clear"></div>

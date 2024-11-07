@@ -851,24 +851,24 @@ class Product extends CActiveRecord {
         return ($value === false) ? 0 : $value;
     }
     
-    public function getSaleRetailReport($startDate, $endDate) {
-        
-        $sql = "SELECT r.transaction_number, r.transaction_date, r.repair_type, c.name as customer, v.plate_number as vehicle, p.quantity, p.sale_price, p.total_price
-                FROM " . RegistrationProduct::model()->tableName() . " p 
-                INNER JOIN " . RegistrationTransaction::model()->tableName() . " r ON r.id = p.registration_transaction_id
-                INNER JOIN " . Customer::model()->tableName() . " c ON c.id = r.customer_id
-                INNER JOIN " . Vehicle::model()->tableName() . " v ON v.id = r.vehicle_id
-                WHERE substr(r.transaction_date, 1, 10) BETWEEN :start_date AND :end_date AND product_id = :product_id
-                ORDER BY r.transaction_date ASC";
-        
-        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, array(
-            ':start_date' => $startDate,
-            ':end_date' => $endDate,
-            ':product_id' => $this->id,
-        ));
-        
-        return $resultSet;
-    }
+//    public function getSaleRetailReport($startDate, $endDate) {
+//        
+//        $sql = "SELECT r.transaction_number, r.transaction_date, r.repair_type, c.name as customer, v.plate_number as vehicle, p.quantity, p.sale_price, p.total_price
+//                FROM " . RegistrationProduct::model()->tableName() . " p 
+//                INNER JOIN " . RegistrationTransaction::model()->tableName() . " r ON r.id = p.registration_transaction_id
+//                INNER JOIN " . Customer::model()->tableName() . " c ON c.id = r.customer_id
+//                INNER JOIN " . Vehicle::model()->tableName() . " v ON v.id = r.vehicle_id
+//                WHERE substr(r.transaction_date, 1, 10) BETWEEN :start_date AND :end_date AND product_id = :product_id
+//                ORDER BY r.transaction_date ASC";
+//        
+//        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, array(
+//            ':start_date' => $startDate,
+//            ':end_date' => $endDate,
+//            ':product_id' => $this->id,
+//        ));
+//        
+//        return $resultSet;
+//    }
     
     public function getSaleRetailProductDetailReport($startDate, $endDate, $branchId) {
         $branchConditionSql = '';

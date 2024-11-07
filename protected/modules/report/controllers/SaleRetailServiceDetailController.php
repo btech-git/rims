@@ -26,28 +26,41 @@ class SaleRetailServiceDetailController extends Controller {
         $service = Search::bind(new Service('search'), isset($_GET['Service']) ? $_GET['Service'] : array());
         $serviceDataProvider = $service->search();
         $serviceDataProvider->pagination->pageVar = 'page_dialog';
+        $serviceDataProvider->criteria->compare('t.status', 'Active');
 
         $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : date('Y-m-d');
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
+        $pageSize = (isset($_GET['PageSize'])) ? $_GET['PageSize'] : '';
+        $currentPage = (isset($_GET['page'])) ? $_GET['page'] : '';
         $currentSort = (isset($_GET['sort'])) ? $_GET['sort'] : '';
         $branchId = (isset($_GET['BranchId'])) ? $_GET['BranchId'] : '';
 
-        $saleRetailServiceReport = $service->getSaleRetailServiceReport($startDate, $endDate, $branchId);
+        $saleRetailServiceSummary = new SaleRetailServiceSummary($service->search());
+        $saleRetailServiceSummary->setupLoading();
+        $saleRetailServiceSummary->setupPaging($pageSize, $currentPage);
+        $saleRetailServiceSummary->setupSorting();
+        $filters = array(
+            'startDate' => $startDate,
+            'endDate' => $endDate,
+            'branchId' => $branchId,
+        );
+        $saleRetailServiceSummary->setupFilter($filters);
 
         if (isset($_GET['ResetFilter'])) {
             $this->redirect(array('summary'));
         }
         
         if (isset($_GET['SaveExcel'])) {
-            $this->saveToExcel($saleRetailServiceReport, array('startDate' => $startDate, 'endDate' => $endDate, $branchId));
+            $this->saveToExcel($saleRetailServiceSummary->dataProvider, array('startDate' => $startDate, 'endDate' => $endDate, $branchId));
         }
 
         $this->render('summary', array(
-            'saleRetailServiceReport' => $saleRetailServiceReport,
+            'saleRetailServiceSummary' => $saleRetailServiceSummary,
             'service' => $service,
             'serviceDataProvider' => $serviceDataProvider,
             'startDate' => $startDate,
             'endDate' => $endDate,
+            'currentPage' => $currentPage,
             'currentSort' => $currentSort,
             'branchId' => $branchId,
         ));
@@ -124,6 +137,7 @@ class SaleRetailServiceDetailController extends Controller {
             
             $counter++;
             
+            $saleRetailData = $header->getSaleRetailServiceDetailReport($startDate, $endDate, $branchId);
             $totalSale = 0.00;
             $registrationServices = RegistrationService::model()->with('registrationTransaction')->findAll(array(
                 'condition' => 't.service_id = :service_id AND registrationTransaction.transaction_date BETWEEN :start_date AND :end_date', 
