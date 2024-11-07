@@ -95,10 +95,10 @@ class SaleRetailServiceDetailController extends Controller {
 
         $documentProperties = $objPHPExcel->getProperties();
         $documentProperties->setCreator('Raperind Motor');
-        $documentProperties->setTitle('Rincian Penjualan Retail Service');
+        $documentProperties->setTitle('Rincian Penjualan Service');
 
         $worksheet = $objPHPExcel->setActiveSheetIndex(0);
-        $worksheet->setTitle('Rincian Penjualan Retail Service');
+        $worksheet->setTitle('Rincian Penjualan Service');
 
         $worksheet->mergeCells('A1:G1');
         $worksheet->mergeCells('A2:G2');
@@ -107,7 +107,7 @@ class SaleRetailServiceDetailController extends Controller {
         $worksheet->getStyle('A1:G5')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
         $worksheet->getStyle('A1:G6')->getFont()->setBold(true);
 
-        $worksheet->setCellValue('A2', 'Rincian Penjualan Retail Service');
+        $worksheet->setCellValue('A2', 'Rincian Penjualan Service');
         $worksheet->setCellValue('A3', Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($options['startDate'])) . ' - ' . Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($options['endDate'])));
 
         $worksheet->getStyle('A5:G5')->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
@@ -178,7 +178,7 @@ class SaleRetailServiceDetailController extends Controller {
         ob_end_clean();
 
         header('Content-type: application/vnd.ms-excel');
-        header('Content-Disposition: attachment;filename="Penjualan Retail Service Detail.xls"');
+        header('Content-Disposition: attachment;filename="Rincian Penjualan Service.xls"');
         header('Cache-Control: max-age=0');
 
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
