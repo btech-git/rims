@@ -51,7 +51,7 @@ class SaleRetailServiceDetailController extends Controller {
         }
         
         if (isset($_GET['SaveExcel'])) {
-            $this->saveToExcel($saleRetailServiceSummary->dataProvider, array('startDate' => $startDate, 'endDate' => $endDate, $branchId));
+            $this->saveToExcel($saleRetailServiceSummary->dataProvider, array('startDate' => $startDate, 'endDate' => $endDate, 'branchId' => $branchId));
         }
 
         $this->render('summary', array(
