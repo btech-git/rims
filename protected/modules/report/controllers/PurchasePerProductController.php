@@ -129,6 +129,10 @@ class PurchasePerProductController extends Controller {
 
         $objPHPExcel = new PHPExcel();
 
+        $startDate = $options['startDate'];
+        $endDate = $options['endDate']; 
+        $branchId = $options['branchId']; 
+        
         $documentProperties = $objPHPExcel->getProperties();
         $documentProperties->setCreator('Raperind Motor');
         $documentProperties->setTitle('Laporan Pembelian per Barang');
@@ -144,7 +148,7 @@ class PurchasePerProductController extends Controller {
         $worksheet->getStyle('A1:N5')->getFont()->setBold(true);
 
         $worksheet->setCellValue('A2', 'Laporan Pembelian per Barang');
-        $worksheet->setCellValue('A3', Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($options['startDate'])) . ' - ' . Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($options['endDate'])));
+        $worksheet->setCellValue('A3', Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($startDate)) . ' - ' . Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($endDate)));
 
         $worksheet->getStyle('A5:I5')->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
@@ -164,7 +168,7 @@ class PurchasePerProductController extends Controller {
         $total = '0.00';
         foreach ($dataProvider->data as $header) {
             $worksheet->getStyle("C{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
-            $purchasePrice = $header->getPurchasePriceReport($options['startDate'], $options['endDate'], $options['branchId']);
+            $purchasePrice = $header->getPurchasePriceReport($startDate, $endDate, $branchId);
 
             $worksheet->setCellValue("A{$counter}", CHtml::encode($header->name));
             $worksheet->setCellValue("B{$counter}", CHtml::encode($header->manufacturer_code));

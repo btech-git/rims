@@ -76,7 +76,7 @@ class PurchaseOrderController extends Controller {
         }
     }
 
-    protected function saveToExcel($purchaseReport, array $options = array()) {
+    protected function saveToExcel($dataProvider, array $options = array()) {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
 
@@ -122,32 +122,23 @@ class PurchaseOrderController extends Controller {
 
         $counter = 7;
         $grandTotalPurchase = '0.00';
-        foreach ($purchaseReport as $purchaseItem) {
-            $worksheet->getStyle("C{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
-
-            $purchaseOrders = TransactionPurchaseOrder::model()->findAll(array(
-                'condition' => 'supplier_id = :supplier_id AND substr(purchase_order_date, 1, 10) BETWEEN :start_date AND :end_date', 
-                'params' => array(
-                    ':supplier_id' => $purchaseItem['id'],
-                    ':start_date' => $startDate,
-                    ':end_date' => $endDate,
-                )
-            ));
+        foreach ($dataProvider->data as $header) {
+            $purchaseOrderData = $header->getPurchasePerSupplierReport($startDate, $endDate, $branchId);
+            $totalPurchase = '0.00';
             
-            if (!empty($purchaseOrders)) {
-                $totalPurchase = '0.00';
-                foreach ($purchaseOrders as $detail) {
-                    $grandTotal = CHtml::value($detail, 'total_price'); 
+            if (!empty($purchaseOrderData)) {
+                foreach ($purchaseOrderData as $purchaseOrderItem) {
+                    $totalPrice = $purchaseOrderItem['total_price'];
 
-                    $worksheet->setCellValue("A{$counter}", CHtml::encode($purchaseItem['code']));
-                    $worksheet->setCellValue("B{$counter}", CHtml::encode($purchaseItem['company']));
-                    $worksheet->setCellValue("C{$counter}", CHtml::encode($purchaseItem['name']));
-                    $worksheet->setCellValue("D{$counter}", CHtml::encode($detail->purchase_order_no));
-                    $worksheet->setCellValue("E{$counter}", CHtml::encode($detail->purchase_order_date));
-                    $worksheet->setCellValue("F{$counter}", CHtml::encode(CHtml::value($detail, 'payment_type')));
-                    $worksheet->setCellValue("G{$counter}", CHtml::encode(CHtml::value($detail, 'payment_status')));
-                    $worksheet->setCellValue("H{$counter}", CHtml::encode($grandTotal));
-                    $totalPurchase += $grandTotal;
+                    $worksheet->setCellValue("A{$counter}", CHtml::encode(CHtml::value($header, 'code')));
+                    $worksheet->setCellValue("B{$counter}", CHtml::encode(CHtml::value($header, 'company')));
+                    $worksheet->setCellValue("C{$counter}", CHtml::encode(CHtml::value($header, 'name')));
+                    $worksheet->setCellValue("D{$counter}", CHtml::encode($purchaseOrderItem['purchase_order_no']));
+                    $worksheet->setCellValue("E{$counter}", CHtml::encode($purchaseOrderItem['purchase_order_date']));
+                    $worksheet->setCellValue("F{$counter}", CHtml::encode($purchaseOrderItem['payment_type']));
+                    $worksheet->setCellValue("G{$counter}", CHtml::encode($purchaseOrderItem['payment_status']));
+                    $worksheet->setCellValue("H{$counter}", CHtml::encode($totalPrice));
+                    $totalPurchase += $totalPrice;
 
                     $counter++;
                 }

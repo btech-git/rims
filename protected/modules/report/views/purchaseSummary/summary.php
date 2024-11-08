@@ -139,7 +139,7 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
 
                 <div class="relative">
                     <div class="reportDisplay">
-                        <?php //echo ReportHelper::summaryText($purchaseSummary->dataProvider); ?>
+                        <?php echo ReportHelper::summaryText($purchaseSummary->dataProvider); ?>
                         <?php //echo ReportHelper::sortText($transaksiPembelianSummary->dataProvider->sort, array('Jenis Persediaan', 'Tanggal SO', 'Pelanggan')); ?>
                     </div>
 
