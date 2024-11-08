@@ -162,9 +162,11 @@ class StockCardCategoryController extends Controller {
             $worksheet->setCellValue("B{$counter}", $header->code);
             $worksheet->setCellValue("C{$counter}", $header->name);
             $worksheet->getStyle("A{$counter}:C{$counter}")->getFont()->setBold(true);
-            $stockData = $header->getInventoryStockReport($endDate, $branchId); 
             $counter++;
                 
+            $totalStock = '0.00';
+            $totalValue = '0.00';
+            $stockData = $header->getInventoryStockReport($endDate, $branchId); 
             foreach ($stockData as $stockRow) {
                 $product = Product::model()->findByPk($stockRow['id']);
                 $stockBegin = $product->getBeginningStockCardReport($branchId);
@@ -181,9 +183,17 @@ class StockCardCategoryController extends Controller {
                 $worksheet->setCellValue("F{$counter}", $stockOut);
                 $worksheet->setCellValue("G{$counter}", $stokEnd);
                 $worksheet->setCellValue("H{$counter}", $inventoryValue);
+                $totalStock += $stokEnd;
+                $totalValue += $inventoryValue;
                 
                 $counter++;
-            }            
+            }
+            
+            $worksheet->getStyle("F{$counter}:H{$counter}")->getFont()->setBold(true);
+            $worksheet->setCellValue("F{$counter}", 'TOTAL');
+            $worksheet->setCellValue("G{$counter}", $totalStock);
+            $worksheet->setCellValue("H{$counter}", $totalValue);
+            $counter++;$counter++;
         }
 
         for ($col = 'A'; $col !== 'Z'; $col++) {

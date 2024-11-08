@@ -173,6 +173,7 @@ class SaleRetailProductDetailController extends Controller {
         $worksheet->getStyle('A6:I6')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
         $counter = 8;
+        $grandTotalSale = 0.00;
         foreach ($dataProvider->data as $header) {
             $worksheet->getStyle("H{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
 
@@ -212,10 +213,15 @@ class SaleRetailProductDetailController extends Controller {
 
             $worksheet->setCellValue("G{$counter}", 'TOTAL');
             $worksheet->setCellValue("H{$counter}", CHtml::encode($totalSale));
+            $grandTotalSale += $totalSale;
             $counter++;$counter++;
 
         }
         
+        $worksheet->getStyle("E{$counter}:H{$counter}")->getFont()->setBold(true);
+        $worksheet->setCellValue("G{$counter}", 'GRAND TOTAL');
+        $worksheet->setCellValue("H{$counter}", CHtml::encode($grandTotalSale));
+
         for ($col = 'A'; $col !== 'I'; $col++) {
             $objPHPExcel->getActiveSheet()
             ->getColumnDimension($col)
