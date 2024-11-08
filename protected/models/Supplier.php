@@ -479,7 +479,7 @@ class Supplier extends CActiveRecord {
         
         $sql = "
             SELECT COALESCE(SUM(total_price), 0) AS total_purchase 
-            INNER JOIN " . TransactionPurchaseOrder::model()->tableName() . "
+            FROM " . TransactionPurchaseOrder::model()->tableName() . "
             WHERE supplier_id = :supplier_id AND substr(purchase_order_date, 1, 10) BETWEEN :start_date AND :end_date AND status_document NOT LIKE '%CANCEL%'" . $branchConditionSql . "
             GROUP BY supplier_id
         ";
