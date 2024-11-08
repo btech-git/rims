@@ -25,7 +25,7 @@
     
     <tbody>
         <?php $totalPurchase = 0.00; ?>
-        <?php foreach ($purchasePerProductSummary->dataProvider->data as $header): ?>
+        <?php foreach ($purchasePerSupplierSummary->dataProvider->data as $header): ?>
             <?php $purchasePrice = $header->getPurchasePriceReport($startDate, $endDate, $branchId); ?>
             <?php if ($purchasePrice > 0): ?>
             <tr class="items1">
