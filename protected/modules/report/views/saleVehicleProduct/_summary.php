@@ -45,7 +45,10 @@ Yii::app()->clientScript->registerCss('_report', '
         <?php $grandTotalSale = 0.00; ?>
         <?php foreach ($saleVehicleProductSummary->dataProvider->data as $header): ?>
             <tr class="items1">
-                <td colspan="2" style="text-align: center"><?php echo CHtml::encode(CHtml::value($header, 'id')); ?> - <?php echo CHtml::encode(CHtml::value($header, 'name')); ?></td>
+                <td colspan="2" style="text-align: center">
+                    <?php echo CHtml::encode(CHtml::value($header, 'id')); ?> - 
+                    <?php echo CHtml::encode(CHtml::value($header, 'name')); ?>
+                </td>
             </tr>
             <tr class="items2">
                 <td colspan="2">
