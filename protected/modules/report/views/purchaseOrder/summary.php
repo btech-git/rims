@@ -109,6 +109,7 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                     </div>
 
                     <div class="clear"></div>
+                    
                     <div class="row buttons">
                         <?php echo CHtml::submitButton('Tampilkan', array('onclick' => '$("#CurrentSort").val(""); return true;')); ?>
                         <?php echo CHtml::submitButton('Hapus', array('name' => 'ResetFilter'));  ?>
@@ -124,12 +125,12 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
 
                 <div class="relative">
                     <div class="reportDisplay">
-                        <?php //echo ReportHelper::summaryText($purchaseOrderSummary->dataProvider); ?>
+                        <?php echo ReportHelper::summaryText($purchasePerSupplierSummary->dataProvider); ?>
                         <?php //echo ReportHelper::sortText($transaksiPembelianSummary->dataProvider->sort, array('Jenis Persediaan', 'Tanggal SO', 'Pelanggan')); ?>
                     </div>
 
                     <?php $this->renderPartial('_summary', array(
-                        'purchaseReport' => $purchaseReport,
+                        'purchasePerSupplierSummary' => $purchasePerSupplierSummary,
                         'startDate' => $startDate,
                         'endDate' => $endDate,
                     )); ?>

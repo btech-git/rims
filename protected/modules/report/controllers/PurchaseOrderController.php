@@ -27,27 +27,32 @@ class PurchaseOrderController extends Controller {
         $supplier = Search::bind(new Supplier('search'), isset($_GET['Supplier']) ? $_GET['Supplier'] : array());
         $supplierDataProvider = $supplier->search();
         $supplierDataProvider->pagination->pageVar = 'page_dialog';
+        $supplierDataProvider->criteria->compare('t.status', 'Active');
 
         $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : date('Y-m-d');
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
         $supplierId = (isset($_GET['SupplierId'])) ? $_GET['SupplierId'] : '';
-//        $pageSize = (isset($_GET['PageSize'])) ? $_GET['PageSize'] : '';
+        $pageSize = (isset($_GET['PageSize'])) ? $_GET['PageSize'] : '';
         $currentPage = (isset($_GET['page'])) ? $_GET['page'] : '';
         $currentSort = (isset($_GET['sort'])) ? $_GET['sort'] : '';
         $branchId = (isset($_GET['BranchId'])) ? $_GET['BranchId'] : '';
 
-        $purchaseReport = $supplier->getPurchaseReport($supplierId, $startDate, $endDate, $branchId);
+        $purchasePerSupplierSummary = new PurchasePerSupplierSummary($supplier->search());
+        $purchasePerSupplierSummary->setupLoading();
+        $purchasePerSupplierSummary->setupPaging($pageSize, $currentPage);
+        $purchasePerSupplierSummary->setupSorting();
+        $purchasePerSupplierSummary->setupFilter($startDate, $endDate, $branchId);
 
         if (isset($_GET['ResetFilter'])) {
             $this->redirect(array('summary'));
         }
         
         if (isset($_GET['SaveExcel'])) {
-            $this->saveToExcel($purchaseReport, array('startDate' => $startDate, 'endDate' => $endDate, 'branchId' => $branchId));
+            $this->saveToExcel($purchasePerSupplierSummary->dataProvider, array('startDate' => $startDate, 'endDate' => $endDate, 'branchId' => $branchId));
         }
 
         $this->render('summary', array(
-            'purchaseReport' => $purchaseReport,
+            'purchasePerSupplierSummary' => $purchasePerSupplierSummary,
             'supplier'=>$supplier,
             'supplierDataProvider'=>$supplierDataProvider,
             'supplierId' => $supplierId,
@@ -83,6 +88,7 @@ class PurchaseOrderController extends Controller {
 
         $startDate = $options['startDate'];
         $endDate = $options['endDate']; 
+        $branchId = $options['branchId']; 
         
         $documentProperties = $objPHPExcel->getProperties();
         $documentProperties->setCreator('Raperind Motor');

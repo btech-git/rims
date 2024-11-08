@@ -146,7 +146,7 @@ class PurchasePerProductController extends Controller {
         $worksheet->setCellValue('A2', 'Laporan Pembelian per Barang');
         $worksheet->setCellValue('A3', Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($options['startDate'])) . ' - ' . Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($options['endDate'])));
 
-        $worksheet->getStyle('A5:N5')->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle('A5:I5')->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
         $worksheet->setCellValue('A5', 'Product Name');
         $worksheet->setCellValue('B5', 'Code');
@@ -158,7 +158,7 @@ class PurchasePerProductController extends Controller {
         $worksheet->setCellValue('H5', 'Sub Category ');
         $worksheet->setCellValue('I5', 'Price');
 
-        $worksheet->getStyle('A5:T5')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle('A5:I5')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
         $counter = 7;
         $total = '0.00';

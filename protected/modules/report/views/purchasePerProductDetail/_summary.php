@@ -74,26 +74,37 @@ Yii::app()->clientScript->registerCss('_report', '
                     <td colspan="8">
                         <table>
                             <?php $totalPurchase = 0.00; ?>
-                        <?php $purchaseOrderData = $header->getPurchasePerProductReport($startDate, $endDate, $branchId); ?>
-                        <?php if (!empty($purchaseOrderData)): ?>
-                            <?php foreach ($purchaseOrderData as $purchaseOrderItem): ?>
-                                <?php $totalPrice = $purchaseOrderItem['total_price']; ?>
-                                <tr>
-                                    <td class="width2-1">
-                                        <?php echo CHtml::link($purchaseOrderItem['purchase_order_no'], Yii::app()->createUrl("transaction/transactionPurchaseOrder/view", array("id" => $purchaseOrderItem['id'])), array('target' => '_blank')); ?>
-                                    </td>
-                                    <td class="width2-2"><?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($purchaseOrderItem['purchase_order_date']))); ?></td>
-                                    <td class="width2-3"><?php echo CHtml::encode($purchaseOrderItem['company']); ?></td>
-                                    <td class="width2-4" style="text-align: center"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $purchaseOrderItem['quantity'])); ?></td>
-                                    <td class="width2-5" style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $purchaseOrderItem['retail_price'])); ?></td>
-                                    <td class="width2-6" style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $purchaseOrderItem['discount'])); ?></td>
-                                    <td class="width2-7" style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $purchaseOrderItem['unit_price'])); ?></td>
-                                    <td class="width2-8" style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalPrice)); ?></td>
-                                </tr>
-
-                                <?php $totalPurchase += $totalPrice; ?>
-                            <?php endforeach; ?>
-                                <?php endif; ?>
+                            <?php $purchaseOrderData = $header->getPurchasePerProductReport($startDate, $endDate, $branchId); ?>
+                            <?php if (!empty($purchaseOrderData)): ?>
+                                <?php foreach ($purchaseOrderData as $purchaseOrderItem): ?>
+                                    <?php $totalPrice = $purchaseOrderItem['total_price']; ?>
+                                    <tr>
+                                        <td class="width2-1">
+                                            <?php echo CHtml::link($purchaseOrderItem['purchase_order_no'], Yii::app()->createUrl("transaction/transactionPurchaseOrder/view", array("id" => $purchaseOrderItem['id'])), array('target' => '_blank')); ?>
+                                        </td>
+                                        <td class="width2-2">
+                                            <?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($purchaseOrderItem['purchase_order_date']))); ?>
+                                        </td>
+                                        <td class="width2-3"><?php echo CHtml::encode($purchaseOrderItem['company']); ?></td>
+                                        <td class="width2-4" style="text-align: center">
+                                            <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $purchaseOrderItem['quantity'])); ?>
+                                        </td>
+                                        <td class="width2-5" style="text-align: right">
+                                            <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $purchaseOrderItem['retail_price'])); ?>
+                                        </td>
+                                        <td class="width2-6" style="text-align: right">
+                                            <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $purchaseOrderItem['discount'])); ?>
+                                        </td>
+                                        <td class="width2-7" style="text-align: right">
+                                            <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $purchaseOrderItem['unit_price'])); ?>
+                                        </td>
+                                        <td class="width2-8" style="text-align: right">
+                                            <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalPrice)); ?>
+                                        </td>
+                                    </tr>
+                                    <?php $totalPurchase += $totalPrice; ?>
+                                <?php endforeach; ?>
+                            <?php endif; ?>
                             <tr>
                                 <td style="text-align: right; font-weight: bold" colspan="7">Total</td>
                                 <td style="text-align: right; font-weight: bold" class="width2-8">
@@ -108,8 +119,8 @@ Yii::app()->clientScript->registerCss('_report', '
     </tbody>
     <tfoot>
         <tr>
-            <td style="text-align: right; font-weight: bold" colspan="7">Total</td>
-            <td style="text-align: right; font-weight: bold" class="width1-9">
+            <td style="text-align: right; font-weight: bold" colspan="7">TOTAL PEMBELIAN</td>
+            <td style="text-align: right; font-weight: bold" class="width1-8">
                 <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $grandTotalPurchase)); ?>
             </td>
         </tr>

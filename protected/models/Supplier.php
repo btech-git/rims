@@ -437,40 +437,55 @@ class Supplier extends CActiveRecord {
         return ($value === false) ? 0 : $value;
     }
     
-    public function getPurchaseReport($supplierId, $startDate, $endDate, $branchId) {
+    public function getPurchasePerSupplierReport($startDate, $endDate, $branchId) {
         $branchConditionSql = '';
-        $supplierIdConditionSql = '';
         
         $params = array(
+            ':supplier_id' => $this->id,
             ':start_date' => $startDate,
             ':end_date' => $endDate,
         );
         
-        if (!empty($supplierId)) {
-            $supplierIdConditionSql = ' WHERE s.id = :supplier_id';
-            $params[':supplier_id'] = $supplierId;
-        }
-        
         if (!empty($branchId)) {
-            $branchConditionSql = ' AND p.main_branch_id = :branch_id';
+            $branchConditionSql = ' AND main_branch_id = :branch_id';
             $params[':branch_id'] = $branchId;
         }
         
         $sql = "
-            SELECT s.id, s.code, s.company, s.name, po.purchase_total
-            FROM " . Supplier::model()->tableName() . " s
-            INNER JOIN (
-                SELECT p.supplier_id, SUM(p.total_price) AS purchase_total
-                FROM " . TransactionPurchaseOrder::model()->tableName() . " p
-                WHERE substr(p.purchase_order_date, 1, 10) BETWEEN :start_date AND :end_date" . $branchConditionSql . "
-                GROUP BY p.supplier_id
-            ) po ON s.id = po.supplier_id
-            " . $supplierIdConditionSql . " 
-            ORDER BY s.company ASC
+            SELECT id, purchase_order_no, purchase_order_date, payment_type, payment_status, total_price
+            FROM " . TransactionPurchaseOrder::model()->tableName() . "
+            WHERE supplier_id = :supplier_id AND substr(purchase_order_date, 1, 10) BETWEEN :start_date AND :end_date AND status_document NOT LIKE '%CANCEL%'" . $branchConditionSql . "
+            ORDER BY purchase_order_date, purchase_order_no
         ";
 
         $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
-
+        
         return $resultSet;
+    }
+    
+    public function getPurchasePriceReport($startDate, $endDate, $branchId) {
+        $branchConditionSql = '';
+        
+        $params = array(
+            ':supplier_id' => $this->id,
+            ':start_date' => $startDate,
+            ':end_date' => $endDate,
+        );
+        
+        if (!empty($branchId)) {
+            $branchConditionSql = ' AND main_branch_id = :branch_id';
+            $params[':branch_id'] = $branchId;
+        }
+        
+        $sql = "
+            SELECT COALESCE(SUM(total_price), 0) AS total_purchase 
+            INNER JOIN " . TransactionPurchaseOrder::model()->tableName() . "
+            WHERE supplier_id = :supplier_id AND substr(purchase_order_date, 1, 10) BETWEEN :start_date AND :end_date AND status_document NOT LIKE '%CANCEL%'" . $branchConditionSql . "
+            GROUP BY d.supplier_id
+        ";
+
+        $value = Yii::app()->db->createCommand($sql)->queryScalar($params);
+
+        return ($value === false) ? 0 : $value;
     }
 }

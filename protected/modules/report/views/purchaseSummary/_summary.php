@@ -25,20 +25,25 @@
     
     <tbody>
         <?php $totalPurchase = 0.00; ?>
-        <?php foreach ($purchaseReport as $purchaseItem): ?>
+        <?php foreach ($purchasePerProductSummary->dataProvider->data as $header): ?>
+            <?php $purchasePrice = $header->getPurchasePriceReport($startDate, $endDate, $branchId); ?>
+            <?php if ($purchasePrice > 0): ?>
             <tr class="items1">
-                <td class="width1-1"><?php echo CHtml::encode($purchaseItem['code']); ?></td>
-                <td class="width1-2"><?php echo CHtml::encode($purchaseItem['company']); ?></td>
-                <td class="width1-3"><?php echo CHtml::encode($purchaseItem['name']); ?></td>
-                <td class="width1-4" style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $purchaseItem['purchase_total'])); ?></td>
+                <td class="width1-1"><?php echo CHtml::encode(CHtml::value($header, 'code')); ?></td>
+                <td class="width1-2"><?php echo CHtml::encode(CHtml::value($header, 'company')); ?></td>
+                <td class="width1-3"><?php echo CHtml::encode(CHtml::value($header, 'name')); ?></td>
+                <td class="width1-4" style="text-align: right">
+                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $purchasePrice)); ?>
+                </td>
             </tr>
-            <?php $totalPurchase += $purchaseItem['purchase_total']; ?>
+                <?php $totalPurchase += $purchasePrice; ?>
+            <?php endif; ?>
         <?php endforeach; ?>
     </tbody>
     
     <tfoot>
         <tr id="header1">
-            <td colspan="3" style="text-align: right">TOTAL</td>
+            <td colspan="3" style="text-align: right">TOTAL PEMBELIAN</td>
             <td class="width1-4" style="text-align: right"> <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalPurchase)); ?></td>
         </tr>  
     </tfoot>

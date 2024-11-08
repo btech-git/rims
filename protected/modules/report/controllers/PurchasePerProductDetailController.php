@@ -47,7 +47,7 @@ class PurchasePerProductDetailController extends Controller {
         }
         
         if (isset($_GET['SaveExcel'])) {
-            $this->saveToExcel($purchasePerProductSummary->dataProvider, array('startDate' => $startDate, 'endDate' => $endDate));
+            $this->saveToExcel($purchasePerProductSummary->dataProvider, array('startDate' => $startDate, 'endDate' => $endDate, 'branchId' => $branchId));
         }
 
         $this->render('summary', array(
@@ -72,6 +72,10 @@ class PurchasePerProductDetailController extends Controller {
 
         $objPHPExcel = new PHPExcel();
 
+        $startDate = $options['startDate'];
+        $endDate = $options['endDate']; 
+        $branchId = $options['branchId']; 
+        
         $documentProperties = $objPHPExcel->getProperties();
         $documentProperties->setCreator('Raperind Motor');
         $documentProperties->setTitle('Laporan Pembelian per Barang Detail');
@@ -87,7 +91,7 @@ class PurchasePerProductDetailController extends Controller {
         $worksheet->getStyle('A1:O5')->getFont()->setBold(true);
 
         $worksheet->setCellValue('A2', 'Laporan Pembelian per Barang Detail');
-        $worksheet->setCellValue('A3', Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($options['startDate'])) . ' - ' . Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($options['endDate'])));
+        $worksheet->setCellValue('A3', Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($startDate)) . ' - ' . Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($endDate)));
 
         $worksheet->getStyle('A5:O5')->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
@@ -118,8 +122,8 @@ class PurchasePerProductDetailController extends Controller {
             $purchaseOrderDetailCriteria->join = 'INNER JOIN rims_transaction_purchase_order po ON po.id = t.purchase_order_id';
             $purchaseOrderDetailCriteria->addCondition("substr(po.purchase_order_date, 1, 10) BETWEEN :start_date AND :end_date AND t.product_id = :product_id AND po.status_document NOT LIKE '%CANCEL%'");
             $purchaseOrderDetailCriteria->params = array(
-                ':start_date' => $options['startDate'],
-                ':end_date' => $options['endDate'],
+                ':start_date' => $startDate,
+                ':end_date' => $endDate,
                 ':product_id' => $header->id,
             );
             $purchaseDetails = TransactionPurchaseOrderDetail::model()->findAll($purchaseOrderDetailCriteria);
