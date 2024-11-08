@@ -144,8 +144,7 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                     </div>
 
                     <?php $this->renderPartial('_summary', array(
-//                        'purchaseSummary' => $purchaseSummary,
-                        'purchaseReport' => $purchaseReport,
+                        'purchasePerSupplierSummary' => $purchasePerSupplierSummary,
                         'startDate' => $startDate,
                         'endDate' => $endDate,
                         'branchId' => $branchId,

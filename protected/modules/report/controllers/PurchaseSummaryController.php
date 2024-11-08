@@ -54,7 +54,6 @@ class PurchaseSummaryController extends Controller {
             'purchasePerSupplierSummary' => $purchasePerSupplierSummary,
             'supplier'=>$supplier,
             'supplierDataProvider'=>$supplierDataProvider,
-            'supplierId' => $supplierId,
             'startDate' => $startDate,
             'endDate' => $endDate,
             'currentPage' => $currentPage,
