@@ -481,7 +481,7 @@ class Supplier extends CActiveRecord {
             SELECT COALESCE(SUM(total_price), 0) AS total_purchase 
             INNER JOIN " . TransactionPurchaseOrder::model()->tableName() . "
             WHERE supplier_id = :supplier_id AND substr(purchase_order_date, 1, 10) BETWEEN :start_date AND :end_date AND status_document NOT LIKE '%CANCEL%'" . $branchConditionSql . "
-            GROUP BY d.supplier_id
+            GROUP BY supplier_id
         ";
 
         $value = Yii::app()->db->createCommand($sql)->queryScalar($params);
