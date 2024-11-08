@@ -479,7 +479,7 @@ class Customer extends CActiveRecord {
         return ($value === false) ? 0 : $value;
     }
     
-    public function getTotalReceivableIndividual($endDate, $branchId) {
+    public static function getTotalReceivableIndividual($endDate, $branchId) {
         $branchConditionSql = '';
         
         $params = array(
@@ -503,7 +503,7 @@ class Customer extends CActiveRecord {
         return ($value === false) ? 0 : $value;
     }
     
-    public function getTotalPaymentIndividual($endDate, $branchId) {
+    public static function getTotalPaymentIndividual($endDate, $branchId) {
         $branchConditionSql = '';
         
         $params = array(
@@ -527,7 +527,7 @@ class Customer extends CActiveRecord {
         return ($value === false) ? 0 : $value;
     }
     
-    public function getTotalRemainingIndividual($endDate, $branchId) {
+    public static function getTotalRemainingIndividual($endDate, $branchId) {
         $branchConditionSql = '';
         
         $params = array(
