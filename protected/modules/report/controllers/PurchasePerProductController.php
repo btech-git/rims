@@ -179,8 +179,9 @@ class PurchasePerProductController extends Controller {
 
             $counter++;
         }
+        $counter++;
         $worksheet->setCellValue("H{$counter}", 'TOTAL PEMBELIAN');
-        $worksheet->setCellValue("I{$counter}", CHtml::encode($purchasePrice));
+        $worksheet->setCellValue("I{$counter}", CHtml::encode($total));
         
         for ($col = 'A'; $col !== 'Z'; $col++) {
             $objPHPExcel->getActiveSheet()
