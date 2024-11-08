@@ -86,7 +86,7 @@ class PurchaseSummaryController extends Controller {
 
         $startDate = $options['startDate'];
         $endDate = $options['endDate']; 
-        $supplierId = $options['supplierId'];
+        $branchId = $options['branchId']; 
         
         $documentProperties = $objPHPExcel->getProperties();
         $documentProperties->setCreator('Raperind Motor');
