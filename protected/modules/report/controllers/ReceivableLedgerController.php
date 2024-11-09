@@ -109,6 +109,7 @@ class ReceivableLedgerController extends Controller {
         $worksheet->getStyle('A1:G6')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
         $worksheet->getStyle('A1:G6')->getFont()->setBold(true);
 
+        $worksheet->setCellValue('A1', 'RAPERIND MOTOR');
         $worksheet->setCellValue('A2', 'Buku Besar Pembantu Piutang');
         $worksheet->setCellValue('A3', Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($startDate)) . ' - ' . Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($endDate)));
 

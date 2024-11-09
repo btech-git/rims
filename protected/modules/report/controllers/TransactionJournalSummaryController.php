@@ -306,59 +306,6 @@ class TransactionJournalSummaryController extends Controller {
         ));
     }
 
-//    public function actionSummary() {
-//        set_time_limit(0);
-//        ini_set('memory_limit', '1024M');
-//
-////        $dateNow = date('Y-m-d');
-////        list($yearNow, , ) = explode('-', $dateNow);
-////        $dateStart = $yearNow . '-01-01';
-//
-//        $transactionType = (isset($_GET['TransactionType'])) ? $_GET['TransactionType'] : '';
-//        $branchId = (isset($_GET['BranchId'])) ? $_GET['BranchId'] : '';
-//        $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : date('Y-m-d');
-//        $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
-//        $coaCategoryList = (isset($_GET['CoaCategoryList'])) ? $_GET['CoaCategoryList'] : array();
-//        $coaSubCategoryList = (isset($_GET['CoaSubCategoryList'])) ? $_GET['CoaSubCategoryList'] : array();
-//
-//        $criteria = new CDbCriteria();
-//        $criteria->order = 't.code ASC';
-//
-//        if (!empty($coaCategoryList) && !empty($coaSubCategoryList)) {
-//            $criteria->addCondition('t.coa_category_id IN (' . implode(',', $coaCategoryList) . ') OR t.id IN (' . implode(',', $coaSubCategoryList) . ')');
-//            $coaSubCategories = CoaSubCategory::model()->findAll($criteria);
-//        } elseif (!empty($coaCategoryList) && empty($coaSubCategoryList)) {
-//            $criteria->addCondition('t.coa_category_id IN (' . implode(',', $coaCategoryList) . ')');
-//            $coaSubCategories = CoaSubCategory::model()->findAll($criteria);
-//        } elseif (empty($coaCategoryList) && !empty($coaSubCategoryList)) {
-//            $criteria->addCondition('t.id IN (' . implode(',', $coaSubCategoryList) . ')');
-//            $coaSubCategories = CoaSubCategory::model()->findAll($criteria);
-//        } else {
-//            $coaSubCategories = CoaSubCategory::model()->findAll(array(
-//                'condition' => 't.coa_category_id NOT IN (11, 12, 13, 22, 1, 3)', 
-//                'order' => 't.code ASC'
-//            ));
-//        }
-//        
-//        if (isset($_GET['ResetFilter'])) {
-//            $this->redirect(array('summary'));
-//        }
-//        
-//        if (isset($_GET['SaveExcel'])) {
-//            $this->saveToExcel($coaSubCategories , $startDate, $endDate, $branchId, $transactionType);
-//        }
-//
-//        $this->render('summary', array(
-//            'coaSubCategories' => $coaSubCategories,
-//            'transactionType' => $transactionType,
-//            'startDate' => $startDate,
-//            'endDate' => $endDate,
-//            'branchId' => $branchId,
-//            'coaCategoryList' => $coaCategoryList,
-//            'coaSubCategoryList' => $coaSubCategoryList,
-//        ));
-//    }
-
     public function actionJurnalTransaction() {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
@@ -423,7 +370,7 @@ class TransactionJournalSummaryController extends Controller {
 
         $branch = Branch::model()->findByPk($branchId);
         $worksheet->setCellValue('A1', CHtml::encode(($branch === null) ? '' : $branch->name));
-        $worksheet->setCellValue('A2', 'Laporan Jurnal Umum Rekap' . $transactionTypeLiteral);
+        $worksheet->setCellValue('A2', 'Laporan Jurnal Umum Rekap ' . $transactionTypeLiteral);
         $worksheet->setCellValue('A3', 'Periode: ' . $startDateString . ' - ' . $endDateString);
 
         $worksheet->getStyle("A5:J5")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
