@@ -933,14 +933,18 @@ class PaymentInController extends Controller {
         $model = $this->loadModel($id);
         $model->status = 'CANCELLED!!!';
         $model->payment_amount = 0; 
-//        $model->invoice_id = null;
-//        $model->customer_id = null;
-//        $model->vehicle_id = null;
-//        $model->notes = '';
         $model->cancelled_datetime = date('Y-m-d H:i:s');
         $model->user_id_cancelled = Yii::app()->user->id;
         $model->update(array('status', 'invoice_id', 'payment_amount', 'customer_id', 'vehicle_id', 'notes', 'cancelled_datetime', 'user_id_cancelled'));
 
+        foreach ($model->paymentInDetails as $detail) {
+            $detail->total_invoice = '0.00';
+            $detail->amount = '0.00';
+            $detail->tax_service_percentage = '0.00';
+            $detail->tax_service_amount = '0.00';
+            $detail->memo = '';
+            $detail->update(array('total_invoice', 'amount', 'tax_service_percentage', 'tax_service_amount', 'memo'));
+        }
         JurnalUmum::model()->deleteAllByAttributes(array(
             'kode_transaksi' => $model->payment_number,
         ));
