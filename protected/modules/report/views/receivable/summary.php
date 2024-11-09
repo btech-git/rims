@@ -91,10 +91,19 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                             <div class="field">
                                 <div class="row collapse">
                                     <div class="small-4 columns">
-                                        <span class="prefix">Branch</span>
+                                        <span class="prefix">Insurance Company</span>
                                     </div>
                                     <div class="small-8 columns">
-                                        <?php echo CHtml::dropDownlist('BranchId', $branchId, CHtml::listData(Branch::model()->findAllbyAttributes(array('status' => 'Active')), 'id', 'name'), array('empty' => '-- All Branch --')); ?>
+                                        <?php echo CHtml::textField('InsuranceCompanyId', $insuranceCompanyId, array(
+                                            'readonly' => true,
+                                            'onclick' => '$("#insurance-company-dialog").dialog("open"); return false;',
+                                            'onkeypress' => 'if (event.keyCode == 13) { $("#insurance-company-dialog").dialog("open"); return false; }'
+                                        )); ?>
+
+                                        <?php echo CHtml::openTag('span', array('id' => 'insurance_name')); ?>
+                                        <?php $insuranceCompany = InsuranceCompany::model()->findByPk($insuranceCompanyId); ?>
+                                        <?php echo CHtml::encode(CHtml::value($insuranceCompany, 'name')); ?>
+                                        <?php echo CHtml::closeTag('span'); ?>    
                                     </div>
                                 </div>
                             </div>
@@ -104,20 +113,17 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                             <div class="field">
                                 <div class="row collapse">
                                     <div class="small-4 columns">
-                                        <span class="prefix">Type</span>
+                                        <span class="prefix">Branch</span>
                                     </div>
                                     <div class="small-8 columns">
-                                        <?php echo CHtml::dropDownlist('CustomerType', $customerType, array(
-                                            'Company' => 'Company',
-                                            'Individual' => 'Individual',
-                                        ), array('empty' => '-- All --')); ?>
+                                        <?php echo CHtml::dropDownlist('BranchId', $branchId, CHtml::listData(Branch::model()->findAllbyAttributes(array('status' => 'Active')), 'id', 'name'), array('empty' => '-- All Branch --')); ?>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <div class="row">
+<!--                    <div class="row">
                         <div class="medium-6 columns">
                             <div class="field">
                                 <div class="row collapse">
@@ -125,7 +131,7 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                         <span class="prefix">Customer</span>
                                     </div>
                                     <div class="small-8 columns">
-                                        <?php echo CHtml::textField('CustomerId', $customerId, array(
+                                        <?php /*echo CHtml::textField('CustomerId', $customerId, array(
                                             'readonly' => true,
                                             'onclick' => '$("#customer-dialog").dialog("open"); return false;',
                                             'onkeypress' => 'if (event.keyCode == 13) { $("#customer-dialog").dialog("open"); return false; }'
@@ -144,24 +150,18 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                             <div class="field">
                                 <div class="row collapse">
                                     <div class="small-4 columns">
-                                        <span class="prefix">Insurance Company</span>
+                                        <span class="prefix">Type</span>
                                     </div>
                                     <div class="small-8 columns">
-                                        <?php echo CHtml::textField('InsuranceCompanyId', $insuranceCompanyId, array(
-                                            'readonly' => true,
-                                            'onclick' => '$("#insurance-company-dialog").dialog("open"); return false;',
-                                            'onkeypress' => 'if (event.keyCode == 13) { $("#insurance-company-dialog").dialog("open"); return false; }'
-                                        )); ?>
-
-                                        <?php echo CHtml::openTag('span', array('id' => 'insurance_name')); ?>
-                                        <?php $insuranceCompany = InsuranceCompany::model()->findByPk($insuranceCompanyId); ?>
-                                        <?php echo CHtml::encode(CHtml::value($insuranceCompany, 'name')); ?>
-                                        <?php echo CHtml::closeTag('span'); ?>    
+                                        <?php echo CHtml::dropDownlist('CustomerType', $customerType, array(
+                                            'Company' => 'Company',
+                                            'Individual' => 'Individual',
+                                        ), array('empty' => '-- All --'));*/ ?>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </div>-->
 
                     <div class="clear"></div>
                     <div class="row buttons">

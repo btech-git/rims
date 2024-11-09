@@ -112,35 +112,36 @@ class ReceivableTransactionController extends Controller {
 
         $documentProperties = $objPHPExcel->getProperties();
         $documentProperties->setCreator('Raperind Motor');
-        $documentProperties->setTitle('Laporan Piutang Customer');
+        $documentProperties->setTitle('Kartu Piutang Customer');
 
         $worksheet = $objPHPExcel->setActiveSheetIndex(0);
-        $worksheet->setTitle('Laporan Piutang Customer');
+        $worksheet->setTitle('Kartu Piutang Customer');
 
         $worksheet->mergeCells('A1:J1');
         $worksheet->mergeCells('A2:J2');
         $worksheet->mergeCells('A3:J3');
+        $worksheet->mergeCells('A4:J4');
         
-        $worksheet->getStyle('A1:J3')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-        $worksheet->getStyle('A1:J3')->getFont()->setBold(true);
+        $worksheet->getStyle('A1:J4')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->getStyle('A1:J4')->getFont()->setBold(true);
         $worksheet->setCellValue('A2', 'Raperind Motor');
-        $worksheet->setCellValue('A3', 'Laporan Piutang Customer');
-        $worksheet->setCellValue('A3', 'Tanggal ' . Yii::app()->dateFormatter->format('d MMMM yyyy', $startDate) . ' - ' . Yii::app()->dateFormatter->format('d MMMM yyyy', $endDate));
+        $worksheet->setCellValue('A3', 'Kartu Piutang Customer');
+        $worksheet->setCellValue('A4', 'Tanggal ' . Yii::app()->dateFormatter->format('d MMMM yyyy', $startDate) . ' - ' . Yii::app()->dateFormatter->format('d MMMM yyyy', $endDate));
 
-        $worksheet->getStyle("A5:J5")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
-        $worksheet->getStyle("A6:J6")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A6:J6")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A7:J7")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
-        $worksheet->getStyle('A5:J6')->getFont()->setBold(true);
-        $worksheet->setCellValue('A5', 'Name');
-        $worksheet->setCellValue('B5', 'Type');
-        $worksheet->setCellValue('C5', 'Tanggal');
-        $worksheet->setCellValue('D5', 'Faktur #');
-        $worksheet->setCellValue('E5', 'Jatuh Tempo');
-        $worksheet->setCellValue('F5', 'Vehicle');
-        $worksheet->setCellValue('G5', 'Grand Total');
-        $worksheet->setCellValue('H5', 'Payment');
-        $worksheet->setCellValue('I5', 'Remaining');
-        $worksheet->setCellValue('J5', 'Insurance');
+        $worksheet->getStyle('A6:J7')->getFont()->setBold(true);
+        $worksheet->setCellValue('A6', 'Name');
+        $worksheet->setCellValue('B6', 'Type');
+        $worksheet->setCellValue('C6', 'Tanggal');
+        $worksheet->setCellValue('D6', 'Faktur #');
+        $worksheet->setCellValue('E6', 'Jatuh Tempo');
+        $worksheet->setCellValue('F6', 'Vehicle');
+        $worksheet->setCellValue('G6', 'Grand Total');
+        $worksheet->setCellValue('H6', 'Payment');
+        $worksheet->setCellValue('I6', 'Remaining');
+        $worksheet->setCellValue('J6', 'Insurance');
         $counter = 8;
 
         foreach ($receivableSummary->dataProvider->data as $header) {
@@ -194,7 +195,7 @@ class ReceivableTransactionController extends Controller {
         ob_end_clean();
         // We'll be outputting an excel file
         header('Content-type: application/vnd.ms-excel');
-        header('Content-Disposition: attachment;filename="Laporan Piutang Customer.xls"');
+        header('Content-Disposition: attachment;filename="Kartu Piutang Customer.xls"');
         header('Cache-Control: max-age=0');
         
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');

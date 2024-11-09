@@ -103,10 +103,10 @@ class ReceivablecustomerController extends Controller {
 
         $documentProperties = $objPHPExcel->getProperties();
         $documentProperties->setCreator('Raperind Motor');
-        $documentProperties->setTitle('Laporan Piutang Customer');
+        $documentProperties->setTitle('Piutang Customer Summary');
 
         $worksheet = $objPHPExcel->setActiveSheetIndex(0);
-        $worksheet->setTitle('Laporan Piutang Customer');
+        $worksheet->setTitle('Piutang Customer Summary');
 
         $worksheet->mergeCells('A1:H1');
         $worksheet->mergeCells('A2:H2');
@@ -115,19 +115,19 @@ class ReceivablecustomerController extends Controller {
         $worksheet->getStyle('A1:H3')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
         $worksheet->getStyle('A1:H3')->getFont()->setBold(true);
         $worksheet->setCellValue('A2', 'Raperind Motor');
-        $worksheet->setCellValue('A3', 'Laporan Piutang Customer');
-        $worksheet->setCellValue('A3', 'Per Tanggal ' . Yii::app()->dateFormatter->format('d MMMM yyyy', $endDate));
+        $worksheet->setCellValue('A3', 'Piutang Customer Summary');
+        $worksheet->setCellValue('A4', 'Per Tanggal ' . Yii::app()->dateFormatter->format('d MMMM yyyy', $endDate));
 
-        $worksheet->getStyle("A5:H5")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
-        $worksheet->getStyle("A6:H6")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A6:H6")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A7:H7")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
-        $worksheet->getStyle('A5:H6')->getFont()->setBold(true);
-        $worksheet->setCellValue('A5', 'Name');
-        $worksheet->setCellValue('B5', 'Type');
-        $worksheet->setCellValue('C5', 'Grand Total');
-        $worksheet->setCellValue('D5', 'Payment');
-        $worksheet->setCellValue('E5', 'Remaining');
-        $counter = 8;
+        $worksheet->getStyle('A6:H7')->getFont()->setBold(true);
+        $worksheet->setCellValue('A6', 'Name');
+        $worksheet->setCellValue('B6', 'Type');
+        $worksheet->setCellValue('C6', 'Grand Total');
+        $worksheet->setCellValue('D6', 'Payment');
+        $worksheet->setCellValue('E6', 'Remaining');
+        $counter = 9;
 
         $totalRevenue = 0.00;
         $totalPayment = 0.00;
@@ -170,9 +170,9 @@ class ReceivablecustomerController extends Controller {
         $worksheet->getStyle("A{$counter}:H{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
         $worksheet->mergeCells("A{$counter}:B{$counter}");
         $worksheet->setCellValue("A{$counter}", 'Total');
-        $worksheet->setCellValue("C{$counter}", $totalRevenue);
-        $worksheet->setCellValue("D{$counter}", $totalPayment);
-        $worksheet->setCellValue("E{$counter}", $totalReceivable);
+        $worksheet->setCellValue("C{$counter}", $totalRevenue + $totalReceivableIndividual);
+        $worksheet->setCellValue("D{$counter}", $totalPayment + $totalPaymentIndividual);
+        $worksheet->setCellValue("E{$counter}", $totalReceivable + $totalRemainingIndividual);
 
         $counter++;$counter++;
 
@@ -185,7 +185,7 @@ class ReceivablecustomerController extends Controller {
         ob_end_clean();
         // We'll be outputting an excel file
         header('Content-type: application/vnd.ms-excel');
-        header('Content-Disposition: attachment;filename="Laporan Piutang Customer.xls"');
+        header('Content-Disposition: attachment;filename="Piutang Customer Summary.xls"');
         header('Cache-Control: max-age=0');
         
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');

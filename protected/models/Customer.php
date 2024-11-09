@@ -618,6 +618,47 @@ class Customer extends CActiveRecord {
         return $resultSet;
     }
     
+    public function getReceivableInvoiceReport($endDate, $branchId, $insuranceCompanyId, $plateNumber) {
+        $branchConditionSql = '';
+        $insuranceConditionSql = '';
+        $plateConditionSql = '';
+        
+        $params = array(
+            ':customer_id' => $this->id,
+            ':end_date' => $endDate,
+        );
+        
+        if (!empty($branchId)) {
+            $branchConditionSql = ' AND p.branch_id = :branch_id';
+            $params[':branch_id'] = $branchId;
+        }
+        
+        if (!empty($insuranceCompanyId)) {
+            $insuranceConditionSql = ' AND p.insurance_company_id = :insurance_company_id';
+            $params[':insurance_company_id'] = $insuranceCompanyId;
+        }
+        
+        if (!empty($plateNumber)) {
+            $plateConditionSql = ' AND v.plate_number LIKE :plate_number';
+            $params[':plate_number'] = "%{$plateNumber}%";
+        }
+        
+        $sql = "
+            SELECT p.customer_id, p.invoice_date, p.due_date, p.invoice_number, v.plate_number AS vehicle, p.total_price, 
+            p.payment_amount, p.payment_left, i.name AS insurance_name
+            FROM " . InvoiceHeader::model()->tableName() . " p 
+            INNER JOIN " . Customer::model()->tableName() . " c ON c.id = p.customer_id
+            LEFT OUTER JOIN " . Vehicle::model()->tableName() . " v ON v.id = p.vehicle_id
+            LEFT OUTER JOIN " . InsuranceCompany::model()->tableName() . " i ON i.id = p.insurance_company_id 
+            WHERE p.customer_id = :customer_id AND p.invoice_date BETWEEN '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND :end_date AND c.customer_type = 'Company'" . $branchConditionSql . $insuranceConditionSql . $plateConditionSql . "
+            HAVING p.payment_left > 100.00
+        ";
+
+        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
+
+        return $resultSet;
+    }
+    
     public function getRegistrationTransactionReport($startDate, $endDate, $branchId) {
         $branchConditionSql = '';
         

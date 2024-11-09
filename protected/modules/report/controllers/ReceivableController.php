@@ -31,7 +31,6 @@ class ReceivableController extends Controller {
         $customerId = (isset($_GET['CustomerId'])) ? $_GET['CustomerId'] : '';
         $insuranceCompanyId = (isset($_GET['InsuranceCompanyId'])) ? $_GET['InsuranceCompanyId'] : '';
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
-        $customerType = (isset($_GET['CustomerType'])) ? $_GET['CustomerType'] : '';
         
         $customer = Search::bind(new Customer('search'), isset($_GET['Customer']) ? $_GET['Customer'] : array());
         $customerDataProvider = $customer->search();
@@ -40,11 +39,17 @@ class ReceivableController extends Controller {
         $insuranceCompany = Search::bind(new InsuranceCompany('search'), isset($_GET['InsuranceCompany']) ? $_GET['InsuranceCompany'] : array());
         $insuranceCompanyDataProvider = $insuranceCompany->search();
 
-        $receivableSummary = new ReceivableSummary($customer->searchByReceivableReport($endDate, $branchId, $insuranceCompanyId, $customerType, $plateNumber));
+        $receivableSummary = new ReceivableSummary($customer->search());
         $receivableSummary->setupLoading();
         $receivableSummary->setupPaging($pageSize, $currentPage);
         $receivableSummary->setupSorting();
-        $receivableSummary->setupFilter($customerId);
+        $filters = array(
+            'endDate' => $endDate,
+            'branchId' => $branchId,
+            'insuranceCompanyId' => $insuranceCompanyId,
+            'plateNumber' => $plateNumber,
+        );
+        $receivableSummary->setupFilter($filters);
 
         if (isset($_GET['ResetFilter'])) {
             $this->redirect(array('summary'));
@@ -64,7 +69,6 @@ class ReceivableController extends Controller {
             'insuranceCompanyDataProvider'=>$insuranceCompanyDataProvider,
             'insuranceCompanyId' => $insuranceCompanyId,
             'endDate' => $endDate,
-            'customerType' => $customerType,
             'receivableSummary' => $receivableSummary,
             'currentSort' => $currentSort,
             'currentPage' => $currentPage,
@@ -110,37 +114,38 @@ class ReceivableController extends Controller {
 
         $documentProperties = $objPHPExcel->getProperties();
         $documentProperties->setCreator('Raperind Motor');
-        $documentProperties->setTitle('Laporan Piutang Customer');
+        $documentProperties->setTitle('Faktur Belum Lunas Customer');
 
         $worksheet = $objPHPExcel->setActiveSheetIndex(0);
-        $worksheet->setTitle('Laporan Piutang Customer');
+        $worksheet->setTitle('Faktur Belum Lunas Customer');
 
         $worksheet->mergeCells('A1:H1');
         $worksheet->mergeCells('A2:H2');
         $worksheet->mergeCells('A3:H3');
+        $worksheet->mergeCells('A4:H4');
         
-        $worksheet->getStyle('A1:H3')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-        $worksheet->getStyle('A1:H3')->getFont()->setBold(true);
+        $worksheet->getStyle('A1:H4')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->getStyle('A1:H4')->getFont()->setBold(true);
         $worksheet->setCellValue('A2', 'Raperind Motor');
-        $worksheet->setCellValue('A3', 'Laporan Piutang Customer');
-        $worksheet->setCellValue('A3', 'Per Tanggal ' . Yii::app()->dateFormatter->format('d MMMM yyyy', $endDate));
+        $worksheet->setCellValue('A3', 'Faktur Belum Lunas Customer');
+        $worksheet->setCellValue('A4', 'Per Tanggal ' . Yii::app()->dateFormatter->format('d MMMM yyyy', $endDate));
 
-        $worksheet->getStyle("A5:H5")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
-        $worksheet->getStyle("A6:H6")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A6:H6")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A7:H7")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
-        $worksheet->getStyle('A5:H6')->getFont()->setBold(true);
-        $worksheet->setCellValue('A5', 'Name');
-        $worksheet->setCellValue('B5', 'Type');
+        $worksheet->getStyle('A6:H7')->getFont()->setBold(true);
+        $worksheet->setCellValue('A6', 'Name');
+        $worksheet->setCellValue('B6', 'Type');
 
-        $worksheet->setCellValue('A6', 'Tanggal');
-        $worksheet->setCellValue('B6', 'Faktur #');
-        $worksheet->setCellValue('C6', 'Jatuh Tempo');
-        $worksheet->setCellValue('D6', 'Vehicle');
-        $worksheet->setCellValue('E6', 'Grand Total');
-        $worksheet->setCellValue('F6', 'Payment');
-        $worksheet->setCellValue('G6', 'Remaining');
-        $worksheet->setCellValue('H6', 'Insurance');
-        $counter = 8;
+        $worksheet->setCellValue('A7', 'Tanggal');
+        $worksheet->setCellValue('B7', 'Faktur #');
+        $worksheet->setCellValue('C7', 'Jatuh Tempo');
+        $worksheet->setCellValue('D7', 'Vehicle');
+        $worksheet->setCellValue('E7', 'Grand Total');
+        $worksheet->setCellValue('F7', 'Payment');
+        $worksheet->setCellValue('G7', 'Remaining');
+        $worksheet->setCellValue('H7', 'Insurance');
+        $counter = 9;
 
         foreach ($receivableSummary->dataProvider->data as $header) {
             $worksheet->setCellValue("A{$counter}", $header->name);
@@ -148,7 +153,7 @@ class ReceivableController extends Controller {
 
             $counter++;
             
-            $receivableData = $header->getReceivableReport('2023-01-01', $endDate, $branchId, $insuranceCompanyId, $plateNumber);
+            $receivableData = $header->getReceivableInvoiceReport($endDate, $branchId, $insuranceCompanyId, $plateNumber);
             $totalRevenue = 0.00;
             $totalPayment = 0.00;
             $totalReceivable = 0.00;
@@ -195,7 +200,7 @@ class ReceivableController extends Controller {
         ob_end_clean();
         // We'll be outputting an excel file
         header('Content-type: application/vnd.ms-excel');
-        header('Content-Disposition: attachment;filename="Laporan Piutang Customer.xls"');
+        header('Content-Disposition: attachment;filename="Faktur Belum Lunas Customer.xls"');
         header('Cache-Control: max-age=0');
         
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');

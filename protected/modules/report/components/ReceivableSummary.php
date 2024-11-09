@@ -9,10 +9,7 @@ class ReceivableSummary extends CComponent {
     }
 
     public function setupLoading() {
-//        $this->dataProvider->criteria->together = TRUE;
-//        $this->dataProvider->criteria->with = array(
-//            'invoiceHeaders',
-//        );
+        
     }
 
     public function setupPaging($pageSize, $currentPage) {
@@ -29,9 +26,42 @@ class ReceivableSummary extends CComponent {
         $this->dataProvider->criteria->order = $this->dataProvider->sort->orderBy;
     }
 
-    public function setupFilter($customerId) {
-        if (!empty($customerId)) {
-            $this->dataProvider->criteria->compare('t.id', $customerId);
+    public function setupFilter($filters) {
+        $endDate = (empty($filters['endDate'])) ? date('Y-m-d') : $filters['endDate'];
+        $branchId = (empty($filters['branchId'])) ? '' : $filters['branchId'];
+        $insuranceCompanyId = (empty($filters['insuranceCompanyId'])) ? '' : $filters['insuranceCompanyId'];
+        $plateNumber = (empty($filters['plateNumber'])) ? '' : $filters['plateNumber'];
+        
+        $branchConditionSql = '';
+        $insuranceConditionSql = '';
+        $plateConditionSql = '';
+        
+        if (!empty($branchId)) {
+            $branchConditionSql = ' AND p.branch_id = :branch_id';
+            $this->dataProvider->criteria->params[':branch_id'] = $branchId;
         }
+        
+        if (!empty($insuranceCompanyId)) {
+            $insuranceConditionSql = ' AND p.insurance_company_id = :insurance_company_id';
+            $this->dataProvider->criteria->params[':insurance_company_id'] = $insuranceCompanyId;
+        }
+        
+        if (!empty($plateNumber)) {
+            $plateConditionSql = ' AND v.plate_number LIKE :plate_number';
+            $this->dataProvider->criteria->params[':plate_number'] = "%{$plateNumber}%";
+        }
+        
+        $this->dataProvider->criteria->addCondition("EXISTS (
+            SELECT p.customer_id, SUM(p.payment_left) AS remaining
+            FROM " . InvoiceHeader::model()->tableName() . " p 
+            INNER JOIN " . Customer::model()->tableName() . " c ON c.id = p.customer_id
+            LEFT OUTER JOIN " . Vehicle::model()->tableName() . " v ON v.id = p.vehicle_id
+            WHERE p.customer_id = t.id AND p.invoice_date BETWEEN '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND :end_date" . $branchConditionSql . $insuranceConditionSql . $plateConditionSql . " 
+            GROUP BY p.customer_id 
+            HAVING remaining > 100
+        )");
+        
+        $this->dataProvider->criteria->params[':end_date'] = $endDate;
+        $this->dataProvider->criteria->compare('t.customer_type', 'Company');
     }
 }
