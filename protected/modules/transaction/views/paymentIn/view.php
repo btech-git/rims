@@ -23,7 +23,7 @@ $this->menu = array(
         <?php $ccontroller = Yii::app()->controller->id; ?>
         <?php $ccaction = Yii::app()->controller->action->id; ?>
         <?php echo CHtml::link('<span class="fa fa-th-list"></span>Manage Payment In', Yii::app()->baseUrl . '/transaction/paymentIn/admin', array('class' => 'button cbutton right', 'style' => 'margin-right:10px')) ?>
-        <?php if ($model->status !== 'CANCELLED!!!' || $model->status !== 'Approved'): ?>
+        <?php if ($model->status != 'CANCELLED!!!' || $model->status != 'Approved'): ?>
             <?php if (Yii::app()->user->checkAccess("paymentInEdit")): //!($model->status == 'Approved' || $model->status == 'Rejected')): ?>
                 <?php echo CHtml::link('<span class="fa fa-edit"></span>Edit', Yii::app()->baseUrl.'/transaction/paymentIn/update?id=' . $model->id, array('class'=>'button cbutton right','style'=>'margin-right:10px')) ?>
             <?php endif; ?>
