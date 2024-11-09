@@ -24,58 +24,58 @@ $this->menu = array(
         <?php $ccaction = Yii::app()->controller->action->id; ?>
         <?php echo CHtml::link('<span class="fa fa-list"></span>Manage Movement Out', Yii::app()->baseUrl . '/transaction/movementOutHeader/admin', array('class' => 'button cbutton right', 'visible' => Yii::app()->user->checkAccess("transaction.movementOutHeader.admin"))) ?>
 
-        <?php if ($model->status == "Draft" && $model->status !== 'CANCELLED!!!'): ?>
-            <?php echo CHtml::link('<span class="fa fa-edit"></span>Edit', Yii::app()->baseUrl . '/transaction/movementOutHeader/update?id=' . $model->id, array(
-                'class' => 'button cbutton right', 
-                'style' => 'margin-right:10px', 
-                'visible' => Yii::app()->user->checkAccess("movementOutEdit")
-            )); ?>
-            <?php echo CHtml::link('<span class="fa fa-edit"></span>Approval', Yii::app()->baseUrl . '/transaction/movementOutHeader/updateApproval?headerId=' . $model->id, array(
-                'class' => 'button cbutton right', 
-                'style' => 'margin-right:10px', 
-                'visible' => Yii::app()->user->checkAccess("movementOutApproval")
-            )) ?>
-        <?php elseif ($model->status == "Approved" && $model->status !== 'CANCELLED!!!'): ?>
-            <?php echo CHtml::link('<span class="fa fa-edit"></span>Revisi', Yii::app()->baseUrl . '/transaction/movementOutHeader/update?id=' . $model->id, array(
-                'class' => 'button cbutton right', 
-                'style' => 'margin-right:10px', 
-                'visible' => Yii::app()->user->checkAccess("movementOutSupervisor")
-            )); ?>
-            <?php echo CHtml::link('<span class="fa fa-edit"></span>Update Approval', Yii::app()->baseUrl . '/transaction/movementOutHeader/updateApproval?headerId=' . $model->id, array(
-                'class' => 'button cbutton right', 
-                'style' => 'margin-right:10px',
-                'visible' => Yii::app()->user->checkAccess("movementOutSupervisor")
-            )) ?>
-        <?php endif; ?>
+        <?php if ($model->status !== 'CANCELLED!!!' && $model->status !== 'Approved'): ?>
+            <?php if ($model->status == "Draft"): ?>
+                <?php echo CHtml::link('<span class="fa fa-edit"></span>Edit', Yii::app()->baseUrl . '/transaction/movementOutHeader/update?id=' . $model->id, array(
+                    'class' => 'button cbutton right', 
+                    'style' => 'margin-right:10px', 
+                    'visible' => Yii::app()->user->checkAccess("movementOutEdit")
+                )); ?>
+                <?php echo CHtml::link('<span class="fa fa-edit"></span>Approval', Yii::app()->baseUrl . '/transaction/movementOutHeader/updateApproval?headerId=' . $model->id, array(
+                    'class' => 'button cbutton right', 
+                    'style' => 'margin-right:10px', 
+                    'visible' => Yii::app()->user->checkAccess("movementOutApproval")
+                )) ?>
+            <?php elseif ($model->status == "Approved"): ?>
+                <?php echo CHtml::link('<span class="fa fa-edit"></span>Revisi', Yii::app()->baseUrl . '/transaction/movementOutHeader/update?id=' . $model->id, array(
+                    'class' => 'button cbutton right', 
+                    'style' => 'margin-right:10px', 
+                    'visible' => Yii::app()->user->checkAccess("movementOutSupervisor")
+                )); ?>
+                <?php echo CHtml::link('<span class="fa fa-edit"></span>Update Approval', Yii::app()->baseUrl . '/transaction/movementOutHeader/updateApproval?headerId=' . $model->id, array(
+                    'class' => 'button cbutton right', 
+                    'style' => 'margin-right:10px',
+                    'visible' => Yii::app()->user->checkAccess("movementOutSupervisor")
+                )) ?>
+            <?php endif; ?>
         
-        <?php if ($model->status == 'Approved' && $model->status !== 'CANCELLED!!!'): ?>
             <?php echo CHtml::button('Update Delivered', array(
                 'id' => 'detail-button',
                 'name' => 'Detail',
                 'class' => 'button cbutton right',
                 'style' => 'margin-right:10px',
-//                'disabled' => $model->status == 'Approved' ? false : true,
                 'onclick' => ' 
                     $.ajax({
-                    type: "POST",
-                    //dataType: "JSON",
-                    url: "' . CController::createUrl('updateDelivered', array('id' => $model->id)) . '",
-                    data: $("form").serialize(),
-                    success: function(html) {
-                        alert("Status Succesfully Updated");
-                        location.reload();
-                    },})
+                        type: "POST",
+                        //dataType: "JSON",
+                        url: "' . CController::createUrl('updateDelivered', array('id' => $model->id)) . '",
+                        data: $("form").serialize(),
+                        success: function(html) {
+                            alert("Status Succesfully Updated");
+                            location.reload();
+                        },
+                    })
                 '
             )); ?>
+
+            <?php if (Yii::app()->user->checkAccess("saleInvoiceSupervisor")): ?>
+                <?php echo CHtml::link('<span class="fa fa-minus"></span>Cancel Transaction', array("/transaction/movementOutHeader/cancel", "id" => $model->id), array(
+                    'class' => 'button alert right', 
+                    'style' => 'margin-right:10px', 
+                )); ?>
+            <?php endif; ?>
         <?php endif; ?>
 
-        <?php //if (Yii::app()->user->checkAccess("saleInvoiceSupervisor")): ?>
-            <?php echo CHtml::link('<span class="fa fa-minus"></span>Cancel Transaction', array("/transaction/movementOutHeader/cancel", "id" => $model->id), array(
-                'class' => 'button alert right', 
-                'style' => 'margin-right:10px', 
-            )); ?>
-        <?php //endif; ?>
-        
         <br />
         
         <h1>View Movement Out Header #<?php echo $model->id; ?></h1>
@@ -122,7 +122,6 @@ $this->menu = array(
                     ?>
 
                     <label for=""><?php echo $movementType; ?></label>
-             <!--  <input type="text" id="right-label" value="<?php //echo $movementType; ?>" readonly="true"> -->
                 </div>
             </div>
         </div>
@@ -166,10 +165,7 @@ $this->menu = array(
                         <label for="right-label" class="right" style="font-weight:bold;">Reference #</label>
                     </div>
                     <div class="small-9 columns">
-
-
                         <label for=""><?php echo !empty($requestNumber) ? $requestNumber : ""; ?></label>
-                 <!--  <input type="text" id="right-label" value="<?php //echo $movementType;  ?>" readonly="true"> -->
                     </div>
                 </div>
             </div>

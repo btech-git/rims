@@ -25,6 +25,7 @@ $this->menu = array(
         <?php echo CHtml::link('<span class="fa fa-list"></span>Manage Invoices', Yii::app()->baseUrl . '/transaction/invoiceHeader/admin', array(
             'class' => 'button cbutton right', 
         )); ?>
+        
         <?php if ($model->status !== 'CANCELLED!!!' && $model->status !== 'Approved'): ?>
             <?php if ($model->payment_left > 0.00): ?>
                 <?php echo CHtml::link('<span class="fa fa-plus"></span>Payment', array("/transaction/paymentIn/create", "invoiceId" => $model->id), array(
