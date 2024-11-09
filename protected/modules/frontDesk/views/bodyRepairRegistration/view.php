@@ -1,6 +1,4 @@
 <?php
-/* @var $this RegistrationTransactionController */
-/* @var $model RegistrationTransaction */
 
 $this->breadcrumbs = array(
     'Body Repair Transactions' => array('admin'),
@@ -26,9 +24,6 @@ $this->breadcrumbs = array(
                                 <?php echo CHtml::link('<span class="fa fa-edit"></span>Edit Customer Data', Yii::app()->baseUrl . '/frontDesk/bodyRepairRegistration/update?id=' . $model->id, array('class' => 'button cbutton left', 'style' => 'margin-right:10px')) ?>
                             <?php endif; ?>
                             <?php echo CHtml::link('<span class="fa fa-plus"></span>Product & Service', Yii::app()->baseUrl . '/frontDesk/bodyRepairRegistration/addProductService?registrationId=' . $model->id, array('class' => 'button success left', 'style' => 'margin-right:10px')) ?>
-                            <?php /*if (!empty($model->insurance_company_id)): ?>
-                                <?php echo CHtml::link('<span class="fa fa-plus"></span>Insurance', Yii::app()->baseUrl . '/frontDesk/bodyRepairRegistration/insuranceAddition?id=' . $model->id, array('class' => 'button success left', 'style' => 'margin-right:10px', 'visible' => Yii::app()->user->checkAccess("frontDesk.bodyRepairRegistration.create"))) ?>
-                            <?php endif;*/ ?>
                         <?php endif; ?>
                     
                         <?php if (Yii::app()->user->checkAccess("bodyRepairSupervisor") && count($invoices) > 0): ?>
@@ -208,15 +203,6 @@ $this->breadcrumbs = array(
                         'model'=>$model
                     ),TRUE)
                 );
-                
-                /*if (Yii::app()->user->checkAccess("generalManager")) {
-                    $tabsArray['Journal'] = array(
-                        'id' => 'journal',
-                        'content' => $this->renderPartial('_viewJournal', array(
-                            'model' => $model
-                        ), TRUE)
-                    );
-                }*/
                 ?>
                 <?php $this->widget('zii.widgets.jui.CJuiTabs', array(
                     'tabs' => $tabsArray,
