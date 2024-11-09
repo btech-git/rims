@@ -339,7 +339,11 @@ class MovementOutHeaderController extends Controller {
 
             foreach($model->movementOutDetails as $detail) {
                 $detail->quantity = 0;
-                $detail->update(array('quantity'));
+                $detail->quantity_transaction = 0;
+                $detail->quantity_receive = 0;
+                $detail->quantity_receive_left = 0;
+                $detail->quantity_stock = 0;
+                $detail->update(array('quantity', 'quantity_transaction', 'quantity_receive', 'quantity_receive_left', 'quantity_stock'));
 
                 if (!empty($detail->delivery_order_detail_id)) {
                     $deliveryOrderDetail = $detail->deliveryOrderDetail;
