@@ -25,17 +25,19 @@ $this->menu = array(
         <?php echo CHtml::link('<span class="fa fa-list"></span>Manage Invoices', Yii::app()->baseUrl . '/transaction/invoiceHeader/admin', array(
             'class' => 'button cbutton right', 
         )); ?>
-        <?php if ($model->payment_left > 0.00 && $model->status !== 'CANCELLED!!!'): ?>
-            <?php echo CHtml::link('<span class="fa fa-plus"></span>Payment', array("/transaction/paymentIn/create", "invoiceId" => $model->id), array(
-                'class' => 'button success right', 
-                'style' => 'margin-right:10px', 
-            )); ?>
-        <?php endif; ?>
-        <?php if (Yii::app()->user->checkAccess("saleInvoiceSupervisor")): ?>
-            <?php echo CHtml::link('<span class="fa fa-minus"></span>Cancel Transaction', array("/transaction/invoiceHeader/cancel", "id" => $model->id), array(
-                'class' => 'button alert right', 
-                'style' => 'margin-right:10px', 
-            )); ?>
+        <?php if ($model->status !== 'CANCELLED!!!' && $model->status !== 'Approved'): ?>
+            <?php if ($model->payment_left > 0.00): ?>
+                <?php echo CHtml::link('<span class="fa fa-plus"></span>Payment', array("/transaction/paymentIn/create", "invoiceId" => $model->id), array(
+                    'class' => 'button success right', 
+                    'style' => 'margin-right:10px', 
+                )); ?>
+            <?php endif; ?>
+            <?php if (Yii::app()->user->checkAccess("saleInvoiceSupervisor")): ?>
+                <?php echo CHtml::link('<span class="fa fa-minus"></span>Cancel Transaction', array("/transaction/invoiceHeader/cancel", "id" => $model->id), array(
+                    'class' => 'button alert right', 
+                    'style' => 'margin-right:10px', 
+                )); ?>
+            <?php endif; ?>
         <?php endif; ?>
 
         <h1>View Invoice #<?php echo $model->invoice_number; ?></h1>
