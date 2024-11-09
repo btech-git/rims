@@ -626,7 +626,74 @@ class GeneralRepairRegistrationController extends Controller {
             $model->vehicle_status = 'CANCELLED!!!';
             $model->cancelled_datetime = date('Y-m-d H:i:s');
             $model->user_id_cancelled = Yii::app()->user->id;
-            $model->update(array('status', 'payment_status', 'service_status', 'vehicle_status', 'cancelled_datetime', 'user_id_cancelled'));
+            $model->total_service = 0; 
+            $model->subtotal_service = 0; 
+            $model->discount_service = 0; 
+            $model->total_service_price = 0; 
+            $model->total_product = 0; 
+            $model->subtotal_product = 0; 
+            $model->discount_product = 0; 
+            $model->total_product_price = 0; 
+            $model->grand_total = 0; 
+            $model->ppn = 0; 
+            $model->pph = 0; 
+            $model->subtotal = 0; 
+            $model->ppn_price = 0; 
+            $model->pph_price = 0; 
+            $model->vehicle_mileage = 0; 
+            $model->tax_percentage = 0; 
+            $model->employee_id_assign_mechanic = null; 
+            $model->employee_id_sales_person = null; 
+            $model->work_order_number = ''; 
+            $model->sales_order_number = ''; 
+            $model->note = ''; 
+            $model->customer_work_order_number = ''; 
+            $model->feedback = ''; 
+            $model->product_status = ''; 
+            $model->update(array(
+                'status', 'payment_status', 'service_status', 'vehicle_status', 'cancelled_datetime', 'user_id_cancelled', 'total_service', 
+                'subtotal_service', 'discount_service', 'total_service_price', 'total_product', 'subtotal_product', 'discount_product', 'total_product_price',
+                'grand_total', 'work_order_number', 'sales_order_number', 'ppn', 'pph', 'subtotal', 'ppn_price', 'pph_price', 'vehicle_mileage', 'note', 
+                'customer_work_order_number', 'employee_id_assign_mechanic', 'employee_id_sales_person', 'tax_percentage', 'feedback', 'product_status'
+            ));
+            
+            foreach ($model->registrationProducts as $registrationProduct) {
+                $registrationProduct->quantity = 0;
+                $registrationProduct->retail_price = 0;
+                $registrationProduct->hpp = 0;
+                $registrationProduct->recommended_selling_price = 0;
+                $registrationProduct->sale_price = 0;
+                $registrationProduct->discount = 0;
+                $registrationProduct->total_price = 0;
+                $registrationProduct->quantity_movement = 0;
+                $registrationProduct->quantity_movement_left = 0;
+                $registrationProduct->quantity_receive = 0;
+                $registrationProduct->quantity_receive_left = 0;
+                $registrationProduct->note = '';
+                
+                $registrationProduct->update(array(
+                    'quantity', 'retail_price', 'hpp', 'recommended_selling_price', 'sale_price', 'discount', 'total_price', 'quantity_movement', 
+                    'quantity_movement_left', 'quantity_receive', 'quantity_receive_left', 'note'
+                ));
+            }
+            
+            foreach ($mode->registrationServices as $registrationService) {
+                $registrationService->price = 0;
+                $registrationService->total_price = 0;
+                $registrationService->discount_price = 0;
+                $registrationService->start_mechanic_id = null;
+                $registrationService->finish_mechanic_id = null;
+                $registrationService->pause_mechanic_id = null;
+                $registrationService->resume_mechanic_id = null;
+                $registrationService->supervisor_id = null;
+                $registrationService->assign_mechanic_id = null;
+                $registrationService->note = '';
+                
+                $registrationService->update(array(
+                    'price', 'total_price', 'discount_price', 'start_mechanic_id', 'finish_mechanic_id', 'pause_mechanic_id', 'resume_mechanic_id', 
+                    'supervisor_id', 'assign_mechanic_id', 'note'
+                ));
+            }
             
             Yii::app()->user->setFlash('message', 'Transaction is successfully cancelled');
         } else {
