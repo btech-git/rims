@@ -677,7 +677,7 @@ class GeneralRepairRegistrationController extends Controller {
                 ));
             }
             
-            foreach ($mode->registrationServices as $registrationService) {
+            foreach ($model->registrationServices as $registrationService) {
                 $registrationService->price = 0;
                 $registrationService->total_price = 0;
                 $registrationService->discount_price = 0;
