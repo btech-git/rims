@@ -366,13 +366,27 @@ class InvoiceHeaderController extends Controller {
         
         if (empty($paymentInDetail) || $paymentInDetail->paymentIn->user_id_cancelled !== null) {
             $model->status = 'CANCELLED!!!';
+            $model->service_price = 0; 
+            $model->product_price = 0; 
+            $model->total_product = 0; 
+            $model->total_service = 0; 
+            $model->pph_total = 0; 
+            $model->ppn_total = 0; 
             $model->total_price = 0; 
             $model->payment_amount = 0;
             $model->payment_left = 0;
             $model->cancelled_datetime = date('Y-m-d H:i:s');
             $model->user_id_cancelled = Yii::app()->user->id;
-            $model->update(array('status', 'total_price', 'payment_amount', 'payment_left', 'cancelled_datetime', 'user_id_cancelled'));
+            $model->update(array('status', 'service_price', 'product_price', 'total_product', 'total_service', 'pph_total', 'ppn_total', 'total_price', 'payment_amount', 'payment_left', 'cancelled_datetime', 'user_id_cancelled'));
 
+            foreach($model->invoiceDetails as $detail) {
+                $detail->quantity = 0; 
+                $detail->unit_price = 0;
+                $detail->discount = 0;
+                $detail->total_price = 0;
+                $detail->update(array('quantity', 'unit_price', 'discount', 'total_price'));
+            }
+            
             JurnalUmum::model()->deleteAllByAttributes(array(
                 'kode_transaksi' => $model->invoice_number,
             ));
