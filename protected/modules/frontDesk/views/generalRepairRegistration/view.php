@@ -20,7 +20,7 @@ $this->breadcrumbs = array(
                 <div class="large-12 columns">
                     <?php echo CHtml::link('<span class="fa fa-list"></span>Manage Registration', Yii::app()->baseUrl . '/frontDesk/generalRepairRegistration/admin', array('class' => 'button cbutton left', 'style' => 'margin-right:10px', 'visible' => Yii::app()->user->checkAccess("generalRepairCreate") || Yii::app()->user->checkAccess("generalRepairEdit"))) ?>
              
-                    <?php //if ($model->status !== 'Finished' && $model->status !== 'CANCELLED!!!'): ?>
+                    <?php if ($model->status !== 'Finished' && $model->status !== 'CANCELLED!!!'): ?>
                         <?php if (!empty($invoices) && (!empty($model->sales_order_number) || !empty($model->work_order_number))): ?>
                             <?php echo CHtml::submitButton('Finish Transaction', array('name' => 'SubmitFinish', 'confirm' => 'Are you sure you want to finish this transaction?', 'class' => 'button info right', 'style' => 'margin-right:10px')); ?>
                             <?php echo CHtml::submitButton('Kendaraan Keluar Bengkel', array('name' => 'SubmitOffPremise', 'confirm' => 'Are you sure you want to set this vehice off-premise?', 'class' => 'button info right', 'style' => 'margin-right:10px')); ?>
@@ -101,7 +101,7 @@ $this->breadcrumbs = array(
                                 'onclick' => 'window.location.href = "showRealization?id=' . $model->id . '";'
                             )); ?>
                         <?php endif; ?>
-                    <?php //endif; ?>
+                    <?php endif; ?>
                     
                 </div>
             </div>
@@ -214,12 +214,12 @@ $this->breadcrumbs = array(
     </div>
     
     <div>
-        <?php if (Yii::app()->user->checkAccess("generalRepairSupervisor") && $model->status !== 'Finished' && $model->status !== 'CANCELLED!!!'): ?>
+        <?php //if (Yii::app()->user->checkAccess("generalRepairSupervisor") && $model->status !== 'Finished' && $model->status !== 'CANCELLED!!!'): ?>
             <?php echo CHtml::link('<span class="fa fa-minus"></span>Cancel Transaction', array("/frontDesk/generalRepairRegistration/cancel", "id" => $model->id), array(
                 'class' => 'button alert left', 
                 'style' => 'margin-left:10px', 
             )); ?>
-        <?php endif; ?>
+        <?php //endif; ?>
 
         <?php if (empty($model->work_order_number) && $model->status !== 'Pending' && empty($model->sales_order_number)): ?>
             <?php echo CHtml::link('<span class="fa fa-bookmark"></span>Pending', Yii::app()->baseUrl.'/frontDesk/generalRepairRegistration/pendingOrder?id=' . $model->id, array('class'=>'button secondary right', 'style' => 'margin-right:10px')) ?>
