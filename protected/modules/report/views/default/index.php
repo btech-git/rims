@@ -504,6 +504,11 @@
                                         'url' => array('/report/salesmanPerformance/summary'), 
 //                                        'visible' => Yii::app()->user->checkAccess('mechanicPerformanceReport')
                                     ),
+                                    array(
+                                        'label' => 'Laporan Transaksi Harian', 
+                                        'url' => array('/report/dailyTransaction/summary'), 
+                                        'visible' => Yii::app()->user->checkAccess('director')
+                                    ),
                                 ),
                             )); ?>
                         <?php //endif; ?>
