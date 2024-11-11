@@ -102,7 +102,8 @@ class PayableSupplierController extends Controller {
         $worksheet->getStyle('A1:H3')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
         $worksheet->getStyle('A1:H3')->getFont()->setBold(true);
         
-        $worksheet->setCellValue('A2', 'Raperind Motor');
+        $branch = Branch::model()->findByPk($branchId);
+        $worksheet->setCellValue('A2', 'Raperind Motor ' . CHtml::encode(CHtml::value($branch, 'name')));
         $worksheet->setCellValue('A3', 'Laporan Hutang Supplier');
         $worksheet->setCellValue('A3', 'Tanggal ' . Yii::app()->dateFormatter->format('d MMMM yyyy', $startDate) . ' - ' . Yii::app()->dateFormatter->format('d MMMM yyyy', $endDate));
 

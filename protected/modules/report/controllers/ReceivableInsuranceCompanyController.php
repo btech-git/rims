@@ -113,7 +113,8 @@ class ReceivableInsuranceCompanyController extends Controller {
         
         $worksheet->getStyle('A1:H3')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
         $worksheet->getStyle('A1:H3')->getFont()->setBold(true);
-        $worksheet->setCellValue('A2', 'Raperind Motor');
+        $branch = Branch::model()->findByPk($branchId);
+        $worksheet->setCellValue('A2', 'Raperind Motor ' . CHtml::encode(CHtml::value($branch, 'name')));
         $worksheet->setCellValue('A3', 'Laporan Piutang Asuransi');
         $worksheet->setCellValue('A3', 'Per Tanggal ' . Yii::app()->dateFormatter->format('d MMMM yyyy', $endDate));
 

@@ -124,7 +124,8 @@ class ReceivableTransactionController extends Controller {
         
         $worksheet->getStyle('A1:J4')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
         $worksheet->getStyle('A1:J4')->getFont()->setBold(true);
-        $worksheet->setCellValue('A2', 'Raperind Motor');
+        $branch = Branch::model()->findByPk($branchId);
+        $worksheet->setCellValue('A2', 'Raperind Motor ' . CHtml::encode(CHtml::value($branch, 'name')));
         $worksheet->setCellValue('A3', 'Kartu Piutang Customer');
         $worksheet->setCellValue('A4', 'Tanggal ' . Yii::app()->dateFormatter->format('d MMMM yyyy', $startDate) . ' - ' . Yii::app()->dateFormatter->format('d MMMM yyyy', $endDate));
 

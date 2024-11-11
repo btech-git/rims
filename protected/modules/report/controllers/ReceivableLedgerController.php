@@ -88,6 +88,7 @@ class ReceivableLedgerController extends Controller {
         
         $startDate = (empty($options['startDate'])) ? date('Y-m-d') : $options['startDate'];
         $endDate = (empty($options['endDate'])) ? date('Y-m-d') : $options['endDate'];
+        $branchId = $options['branchId']; 
         
         spl_autoload_unregister(array('YiiBase', 'autoload'));
         include_once Yii::getPathOfAlias('ext.phpexcel.Classes') . DIRECTORY_SEPARATOR . 'PHPExcel.php';
@@ -109,7 +110,8 @@ class ReceivableLedgerController extends Controller {
         $worksheet->getStyle('A1:G6')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
         $worksheet->getStyle('A1:G6')->getFont()->setBold(true);
 
-        $worksheet->setCellValue('A1', 'RAPERIND MOTOR');
+        $branch = Branch::model()->findByPk($branchId);
+        $worksheet->setCellValue('A1', 'Raperind Motor ' . CHtml::encode(CHtml::value($branch, 'name')));
         $worksheet->setCellValue('A2', 'Buku Besar Pembantu Piutang');
         $worksheet->setCellValue('A3', Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($startDate)) . ' - ' . Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($endDate)));
 

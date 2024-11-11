@@ -60,7 +60,11 @@ class PaymentInController extends Controller {
         ));
 
         if (isset($_GET['SaveExcel'])) {
-            $this->saveToExcel($paymentInSummary, $branchId, $paymentInSummary->dataProvider, array('startDate' => $startDate, 'endDate' => $endDate));
+            $this->saveToExcel($paymentInSummary->dataProvider, array(
+                'startDate' => $startDate, 
+                'endDate' => $endDate,
+                'branchId' => $branchId,
+            ));
         }
 
         $this->render('summary', array(
@@ -91,7 +95,7 @@ class PaymentInController extends Controller {
         }
     }
 
-    protected function saveToExcel($paymentInSummary, $branchId, $dataProvider, array $options = array()) {
+    protected function saveToExcel($dataProvider, array $options = array()) {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
 
@@ -101,6 +105,10 @@ class PaymentInController extends Controller {
 
         $objPHPExcel = new PHPExcel();
 
+        $startDate = $options['startDate'];
+        $endDate = $options['endDate']; 
+        $branchId = $options['branchId']; 
+        
         $documentProperties = $objPHPExcel->getProperties();
         $documentProperties->setCreator('Raperind Motor');
         $documentProperties->setTitle('Laporan Payment In');
@@ -116,9 +124,9 @@ class PaymentInController extends Controller {
         $worksheet->getStyle('A1:P5')->getFont()->setBold(true);
 
         $branch = Branch::model()->findByPk($branchId);
-        $worksheet->setCellValue('A1', CHtml::encode(CHtml::value($branch, 'name')));
+        $worksheet->setCellValue('A1', 'Raperind Motor ' . CHtml::encode(CHtml::value($branch, 'name')));
         $worksheet->setCellValue('A2', 'Laporan Payment In');
-        $worksheet->setCellValue('A3', Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($options['startDate'])) . ' - ' . Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($options['endDate'])));
+        $worksheet->setCellValue('A3', Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($startDate)) . ' - ' . Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($endDate)));
 
         $worksheet->getStyle('A5:P5')->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
