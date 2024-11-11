@@ -584,7 +584,7 @@ class Customer extends CActiveRecord {
             FROM " . InvoiceHeader::model()->tableName() . " p 
             LEFT OUTER JOIN " . Vehicle::model()->tableName() . " v ON v.id = p.vehicle_id
             LEFT OUTER JOIN " . InsuranceCompany::model()->tableName() . " i ON i.id = p.insurance_company_id
-            WHERE p.customer_id = :customer_id AND p.payment_left > 100.00 AND p.invoice_date BETWEEN :start_date AND :end_date" . $branchConditionSql . $insuranceConditionSql . $plateNumberConditionSql . "
+            WHERE p.customer_id = :customer_id AND p.invoice_date BETWEEN :start_date AND :end_date" . $branchConditionSql . $insuranceConditionSql . $plateNumberConditionSql . "
         ";
 
         $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
