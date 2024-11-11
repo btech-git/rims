@@ -41,8 +41,8 @@ class SaleRetailCustomerSummary extends CComponent {
         }
 
         $this->dataProvider->criteria->addCondition("EXISTS (
-            SELECT id FROM " . RegistrationTransaction::model()->tableName() . "
-            WHERE customer_id = t.id AND substr(transaction_date, 1, 10) BETWEEN :start_date AND :end_date" . $branchConditionSql . " 
+            SELECT id FROM " . InvoiceHeader::model()->tableName() . "
+            WHERE customer_id = t.id AND substr(invoice_date, 1, 10) BETWEEN :start_date AND :end_date" . $branchConditionSql . " 
         )");
         $this->dataProvider->criteria->params[':start_date'] = $startDate;
         $this->dataProvider->criteria->params[':end_date'] = $endDate;
