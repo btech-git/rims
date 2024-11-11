@@ -187,13 +187,13 @@ class DailyTransactionController extends Controller {
         $worksheet = $objPHPExcel->setActiveSheetIndex(0);
         $worksheet->setTitle('Laporan Transaksi Harian');
 
-        $worksheet->mergeCells('A1:J1');
-        $worksheet->mergeCells('A2:J2');
-        $worksheet->mergeCells('A3:J3');
-        $worksheet->mergeCells('A4:J4');
+        $worksheet->mergeCells('A1:G1');
+        $worksheet->mergeCells('A2:G2');
+        $worksheet->mergeCells('A3:G3');
+        $worksheet->mergeCells('A4:G4');
 
-        $worksheet->getStyle('A1:J6')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-        $worksheet->getStyle('A1:J6')->getFont()->setBold(true);
+        $worksheet->getStyle('A1:G6')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->getStyle('A1:G6')->getFont()->setBold(true);
 
         $branch = Branch::model()->findByPk($branchId);
         $worksheet->setCellValue('A1', 'Raperind Motor');
@@ -201,13 +201,13 @@ class DailyTransactionController extends Controller {
         $worksheet->setCellValue('A3', 'Laporan Transaksi Harian');
         $worksheet->setCellValue('A4', 'Tanggal: ' . Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($transactionDate)));
 
-        $worksheet->getStyle('A6:J6')->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle('A6:G6')->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
         $worksheet->setCellValue('A6', 'Cash In #');
         $worksheet->setCellValue('B6', 'Tanggal');
         $worksheet->setCellValue('C6', 'Akun');
         $worksheet->setCellValue('D6', 'Status');
         $worksheet->setCellValue('E6', 'Amount');
-        $worksheet->getStyle('A7:J7')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle('A7:G7')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
         $counter = 8;
         foreach ($cashTransactionInData as $header) {
@@ -223,16 +223,16 @@ class DailyTransactionController extends Controller {
         }
 
         $counter++;
-        $worksheet->getStyle("A{$counter}:J{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-        $worksheet->getStyle("A{$counter}:J{$counter}")->getFont()->setBold(true);
-        $worksheet->getStyle("A{$counter}:J{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A{$counter}:G{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->getStyle("A{$counter}:G{$counter}")->getFont()->setBold(true);
+        $worksheet->getStyle("A{$counter}:G{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
         $worksheet->setCellValue("A{$counter}", 'Cash Out #');
         $worksheet->setCellValue("B{$counter}", 'Tanggal');
         $worksheet->setCellValue("C{$counter}", 'Akun');
         $worksheet->setCellValue("D{$counter}", 'Status');
         $worksheet->setCellValue("E{$counter}", 'Amount');
         $counter++;
-        $worksheet->getStyle("A{$counter}:J{$counter}")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A{$counter}:G{$counter}")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
         $counter++;
 
         foreach ($cashTransactionOutData as $header) {
@@ -248,9 +248,9 @@ class DailyTransactionController extends Controller {
         }
 
         $counter++;
-        $worksheet->getStyle("A{$counter}:J{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-        $worksheet->getStyle("A{$counter}:J{$counter}")->getFont()->setBold(true);
-        $worksheet->getStyle("A{$counter}:J{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A{$counter}:G{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->getStyle("A{$counter}:G{$counter}")->getFont()->setBold(true);
+        $worksheet->getStyle("A{$counter}:G{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
         $worksheet->setCellValue("A{$counter}", 'Invoice #');
         $worksheet->setCellValue("B{$counter}", 'Tanggal');
         $worksheet->setCellValue("C{$counter}", 'Jatuh Tempo');
@@ -259,7 +259,7 @@ class DailyTransactionController extends Controller {
         $worksheet->setCellValue("F{$counter}", 'Status');
         $worksheet->setCellValue("G{$counter}", 'Amount');
         $counter++;
-        $worksheet->getStyle("A{$counter}:J{$counter}")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A{$counter}:G{$counter}")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
         $counter++;
 
         foreach ($invoiceHeaderData as $header) {
@@ -277,9 +277,9 @@ class DailyTransactionController extends Controller {
         }
 
         $counter++;
-        $worksheet->getStyle("A{$counter}:J{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-        $worksheet->getStyle("A{$counter}:J{$counter}")->getFont()->setBold(true);
-        $worksheet->getStyle("A{$counter}:J{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A{$counter}:G{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->getStyle("A{$counter}:G{$counter}")->getFont()->setBold(true);
+        $worksheet->getStyle("A{$counter}:G{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
         $worksheet->setCellValue("A{$counter}", 'Payment In #');
         $worksheet->setCellValue("B{$counter}", 'Tanggal');
         $worksheet->setCellValue("C{$counter}", 'Tipe');
@@ -288,7 +288,7 @@ class DailyTransactionController extends Controller {
         $worksheet->setCellValue("F{$counter}", 'Status');
         $worksheet->setCellValue("G{$counter}", 'Amount');
         $counter++;
-        $worksheet->getStyle("A{$counter}:J{$counter}")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A{$counter}:G{$counter}")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
         $counter++;
 
         foreach ($paymentInData as $header) {
@@ -306,9 +306,9 @@ class DailyTransactionController extends Controller {
         }
 
         $counter++;
-        $worksheet->getStyle("A{$counter}:J{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-        $worksheet->getStyle("A{$counter}:J{$counter}")->getFont()->setBold(true);
-        $worksheet->getStyle("A{$counter}:J{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A{$counter}:G{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->getStyle("A{$counter}:G{$counter}")->getFont()->setBold(true);
+        $worksheet->getStyle("A{$counter}:G{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
         $worksheet->setCellValue("A{$counter}", 'Payment Out #');
         $worksheet->setCellValue("B{$counter}", 'Tanggal');
         $worksheet->setCellValue("C{$counter}", 'Tipe');
@@ -317,7 +317,7 @@ class DailyTransactionController extends Controller {
         $worksheet->setCellValue("F{$counter}", 'Status');
         $worksheet->setCellValue("G{$counter}", 'Amount');
         $counter++;
-        $worksheet->getStyle("A{$counter}:J{$counter}")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A{$counter}:G{$counter}")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
         $counter++;
 
         foreach ($paymentOutData as $header) {
@@ -335,21 +335,21 @@ class DailyTransactionController extends Controller {
         }
 
         $counter++;
-        $worksheet->getStyle("A{$counter}:J{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-        $worksheet->getStyle("A{$counter}:J{$counter}")->getFont()->setBold(true);
-        $worksheet->getStyle("A{$counter}:J{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A{$counter}:G{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->getStyle("A{$counter}:G{$counter}")->getFont()->setBold(true);
+        $worksheet->getStyle("A{$counter}:G{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
         $worksheet->setCellValue("A{$counter}", 'Movement In #');
         $worksheet->setCellValue("B{$counter}", 'Tanggal');
         $worksheet->setCellValue("C{$counter}", 'Tipe');
         $worksheet->setCellValue("D{$counter}", 'Status');
         $counter++;
-        $worksheet->getStyle("A{$counter}:J{$counter}")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A{$counter}:G{$counter}")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
         $counter++;
 
         foreach ($movementInData as $header) {
 
             $worksheet->setCellValue("A{$counter}", CHtml::encode(CHtml::value($header, 'movement_in_number')));
-            $worksheet->setCellValue("B{$counter}", CHtml::encode(CHtml::value($header, 'date_posting')));
+            $worksheet->setCellValue("B{$counter}", CHtml::encode(Yii::app()->dateFormatter->format('Y-m-d', strtotime($header->date_posting))));
             $worksheet->setCellValue("C{$counter}", CHtml::encode($header->getMovementType($header->movement_type)));
             $worksheet->setCellValue("D{$counter}", CHtml::encode(CHtml::value($header, 'status')));
 
@@ -357,21 +357,21 @@ class DailyTransactionController extends Controller {
         }
 
         $counter++;
-        $worksheet->getStyle("A{$counter}:J{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-        $worksheet->getStyle("A{$counter}:J{$counter}")->getFont()->setBold(true);
-        $worksheet->getStyle("A{$counter}:J{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A{$counter}:G{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->getStyle("A{$counter}:G{$counter}")->getFont()->setBold(true);
+        $worksheet->getStyle("A{$counter}:G{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
         $worksheet->setCellValue("A{$counter}", 'Movement Out #');
         $worksheet->setCellValue("B{$counter}", 'Tanggal');
         $worksheet->setCellValue("C{$counter}", 'Tipe');
         $worksheet->setCellValue("D{$counter}", 'Status');
         $counter++;
-        $worksheet->getStyle("A{$counter}:J{$counter}")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A{$counter}:{$counter}")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
         $counter++;
 
         foreach ($movementOutData as $header) {
 
             $worksheet->setCellValue("A{$counter}", CHtml::encode(CHtml::value($header, 'movement_out_no')));
-            $worksheet->setCellValue("B{$counter}", CHtml::encode(CHtml::value($header, 'date_posting')));
+            $worksheet->setCellValue("B{$counter}", CHtml::encode(Yii::app()->dateFormatter->format('Y-m-d', strtotime($header->date_posting))));
             $worksheet->setCellValue("C{$counter}", CHtml::encode($header->getMovementType($header->movement_type)));
             $worksheet->setCellValue("D{$counter}", CHtml::encode(CHtml::value($header, 'status')));
 
@@ -379,9 +379,9 @@ class DailyTransactionController extends Controller {
         }
 
         $counter++;
-        $worksheet->getStyle("A{$counter}:J{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-        $worksheet->getStyle("A{$counter}:J{$counter}")->getFont()->setBold(true);
-        $worksheet->getStyle("A{$counter}:J{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A{$counter}:G{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->getStyle("A{$counter}:G{$counter}")->getFont()->setBold(true);
+        $worksheet->getStyle("A{$counter}:G{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
         $worksheet->setCellValue("A{$counter}", 'Registration Transaction #');
         $worksheet->setCellValue("B{$counter}", 'Tanggal');
         $worksheet->setCellValue("C{$counter}", 'Tipe');
@@ -390,14 +390,14 @@ class DailyTransactionController extends Controller {
         $worksheet->setCellValue("F{$counter}", 'Status');
         $worksheet->setCellValue("G{$counter}", 'Total');
         $counter++;
-        $worksheet->getStyle("A{$counter}:J{$counter}")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A{$counter}:G{$counter}")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
         $counter++;
 
         foreach ($registrationTransactionData as $header) {
             $worksheet->getStyle("G{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
 
             $worksheet->setCellValue("A{$counter}", CHtml::encode(CHtml::value($header, 'transaction_number')));
-            $worksheet->setCellValue("B{$counter}", CHtml::encode(CHtml::value($header, 'transaction_date')));
+            $worksheet->setCellValue("B{$counter}", CHtml::encode(Yii::app()->dateFormatter->format('Y-m-d', strtotime($header->transaction_date))));
             $worksheet->setCellValue("C{$counter}", CHtml::encode(CHtml::value($header, 'repair_type')));
             $worksheet->setCellValue("D{$counter}", CHtml::encode(CHtml::value($header, 'customer.name')));
             $worksheet->setCellValue("E{$counter}", CHtml::encode(CHtml::value($header, 'vehicle.plate_number')));
@@ -408,15 +408,15 @@ class DailyTransactionController extends Controller {
         }
 
         $counter++;
-        $worksheet->getStyle("A{$counter}:J{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-        $worksheet->getStyle("A{$counter}:J{$counter}")->getFont()->setBold(true);
-        $worksheet->getStyle("A{$counter}:J{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A{$counter}:G{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->getStyle("A{$counter}:G{$counter}")->getFont()->setBold(true);
+        $worksheet->getStyle("A{$counter}:G{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
         $worksheet->setCellValue("A{$counter}", 'Pengiriman #');
         $worksheet->setCellValue("B{$counter}", 'Tanggal');
         $worksheet->setCellValue("C{$counter}", 'Tipe');
         $worksheet->setCellValue("D{$counter}", 'Tujuan');
         $counter++;
-        $worksheet->getStyle("A{$counter}:J{$counter}")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A{$counter}:G{$counter}")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
         $counter++;
 
         foreach ($deliveryData as $header) {
@@ -430,9 +430,9 @@ class DailyTransactionController extends Controller {
         }
 
         $counter++;
-        $worksheet->getStyle("A{$counter}:J{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-        $worksheet->getStyle("A{$counter}:J{$counter}")->getFont()->setBold(true);
-        $worksheet->getStyle("A{$counter}:J{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A{$counter}:G{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->getStyle("A{$counter}:G{$counter}")->getFont()->setBold(true);
+        $worksheet->getStyle("A{$counter}:G{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
         $worksheet->setCellValue("A{$counter}", 'Pembelian #');
         $worksheet->setCellValue("B{$counter}", 'Tanggal');
         $worksheet->setCellValue("C{$counter}", 'Tipe');
@@ -441,7 +441,7 @@ class DailyTransactionController extends Controller {
         $worksheet->setCellValue("F{$counter}", 'Status');
         $worksheet->setCellValue("G{$counter}", 'Total');
         $counter++;
-        $worksheet->getStyle("A{$counter}:J{$counter}")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A{$counter}:G{$counter}")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
         $counter++;
 
         foreach ($purchaseOrderData as $header) {
