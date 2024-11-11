@@ -40,7 +40,7 @@ class SaleRetailServiceController extends Controller {
         }
         
         if (isset($_GET['SaveExcel'])) {
-            $this->saveToExcel($saleRetailServiceReport, array('startDate' => $startDate, 'endDate' => $endDate, $branchId));
+            $this->saveToExcel($saleRetailServiceReport, array('startDate' => $startDate, 'endDate' => $endDate, 'branchId' => $branchId));
         }
 
         $this->render('summary', array(
@@ -78,6 +78,7 @@ class SaleRetailServiceController extends Controller {
 
         $startDate = $options['startDate'];
         $endDate = $options['endDate'];
+        $branchId = $options['branchId'];
         
         $objPHPExcel = new PHPExcel();
 

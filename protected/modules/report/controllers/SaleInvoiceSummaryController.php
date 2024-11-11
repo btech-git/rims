@@ -28,7 +28,8 @@ class SaleInvoiceSummaryController extends Controller {
 
         $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : date('Y-m-d');
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
-        $customerId = isset($_GET['InvoiceHeader']['customer_id']) ? $_GET['InvoiceHeader']['customer_id'] : 0;
+        $customerId = isset($_GET['InvoiceHeader']['customer_id']) ? $_GET['InvoiceHeader']['customer_id'] : null;
+        $branchId = isset($_GET['InvoiceHeader']['branch_id']) ? $_GET['InvoiceHeader']['branch_id'] : null;
         $customerType = (isset($_GET['CustomerType'])) ? $_GET['CustomerType'] : '';
         $vehicleId = (isset($_GET['VehicleId'])) ? $_GET['VehicleId'] : '';
         $pageSize = (isset($_GET['PageSize'])) ? $_GET['PageSize'] : '';
@@ -58,7 +59,7 @@ class SaleInvoiceSummaryController extends Controller {
         }
         
         if (isset($_GET['SaveExcel'])) {
-            $this->saveToExcel($saleInvoiceSummary, $startDate, $endDate);
+            $this->saveToExcel($saleInvoiceSummary, $startDate, $endDate, $branchId);
         }
 
         $this->render('summary', array(
@@ -131,7 +132,7 @@ class SaleInvoiceSummaryController extends Controller {
         return $grandTotal;
     }
 
-    protected function saveToExcel($saleInvoiceSummary, $startDate, $endDate) {
+    protected function saveToExcel($saleInvoiceSummary, $startDate, $endDate, $branchId) {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
 

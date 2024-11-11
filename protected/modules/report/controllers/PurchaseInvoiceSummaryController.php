@@ -28,6 +28,7 @@ class PurchaseInvoiceSummaryController extends Controller {
         $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : date('Y-m-d');
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
         $supplierName = (isset($_GET['SupplierName'])) ? $_GET['SupplierName'] : '';
+        $branchId = (isset($_GET['TransactionPurchaseOrder']['main_branch_id'])) ? $_GET['TransactionPurchaseOrder']['main_branch_id'] : '';
         $pageSize = (isset($_GET['PageSize'])) ? $_GET['PageSize'] : '';
         $currentPage = (isset($_GET['page'])) ? $_GET['page'] : '';
         $currentSort = (isset($_GET['sort'])) ? $_GET['sort'] : '';
@@ -51,7 +52,7 @@ class PurchaseInvoiceSummaryController extends Controller {
         }
         
         if (isset($_GET['SaveExcel'])) {
-            $this->saveToExcel($purchaseInvoiceSummary, $startDate, $endDate);
+            $this->saveToExcel($purchaseInvoiceSummary, $startDate, $endDate, $branchId);
         }
 
         $this->render('summary', array(
@@ -107,7 +108,7 @@ class PurchaseInvoiceSummaryController extends Controller {
         return $grandTotal;
     }
 
-    protected function saveToExcel($purchaseInvoiceSummary, $startDate, $endDate) {
+    protected function saveToExcel($purchaseInvoiceSummary, $startDate, $endDate, $branchId) {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
 
