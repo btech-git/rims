@@ -349,7 +349,7 @@ class DailyTransactionController extends Controller {
         foreach ($movementInData as $header) {
 
             $worksheet->setCellValue("A{$counter}", CHtml::encode(CHtml::value($header, 'movement_in_number')));
-            $worksheet->setCellValue("B{$counter}", CHtml::encode(Yii::app()->dateFormatter->format('Y-m-d', strtotime($header->date_posting))));
+            $worksheet->setCellValue("B{$counter}", CHtml::encode(Yii::app()->dateFormatter->format('yyyy-MM-dd', strtotime($header->date_posting))));
             $worksheet->setCellValue("C{$counter}", CHtml::encode($header->getMovementType($header->movement_type)));
             $worksheet->setCellValue("D{$counter}", CHtml::encode(CHtml::value($header, 'status')));
 
@@ -371,7 +371,7 @@ class DailyTransactionController extends Controller {
         foreach ($movementOutData as $header) {
 
             $worksheet->setCellValue("A{$counter}", CHtml::encode(CHtml::value($header, 'movement_out_no')));
-            $worksheet->setCellValue("B{$counter}", CHtml::encode(Yii::app()->dateFormatter->format('Y-m-d', strtotime($header->date_posting))));
+            $worksheet->setCellValue("B{$counter}", CHtml::encode(Yii::app()->dateFormatter->format('yyyy-MM-dd', strtotime($header->date_posting))));
             $worksheet->setCellValue("C{$counter}", CHtml::encode($header->getMovementType($header->movement_type)));
             $worksheet->setCellValue("D{$counter}", CHtml::encode(CHtml::value($header, 'status')));
 
@@ -397,7 +397,7 @@ class DailyTransactionController extends Controller {
             $worksheet->getStyle("G{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
 
             $worksheet->setCellValue("A{$counter}", CHtml::encode(CHtml::value($header, 'transaction_number')));
-            $worksheet->setCellValue("B{$counter}", CHtml::encode(Yii::app()->dateFormatter->format('Y-m-d', strtotime($header->transaction_date))));
+            $worksheet->setCellValue("B{$counter}", CHtml::encode(Yii::app()->dateFormatter->format('yyyy-MM-dd', strtotime($header->transaction_date))));
             $worksheet->setCellValue("C{$counter}", CHtml::encode(CHtml::value($header, 'repair_type')));
             $worksheet->setCellValue("D{$counter}", CHtml::encode(CHtml::value($header, 'customer.name')));
             $worksheet->setCellValue("E{$counter}", CHtml::encode(CHtml::value($header, 'vehicle.plate_number')));
