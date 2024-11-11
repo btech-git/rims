@@ -444,7 +444,7 @@ class DailyTransactionController extends Controller {
         $worksheet->getStyle("A{$counter}:J{$counter}")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
         $counter++;
 
-        foreach ($registrationTransactionData as $header) {
+        foreach ($purchaseOrderData as $header) {
             $worksheet->getStyle("G{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
 
             $worksheet->setCellValue("A{$counter}", CHtml::encode(CHtml::value($header, 'purchase_order_no')));
