@@ -365,7 +365,7 @@ class DailyTransactionController extends Controller {
         $worksheet->setCellValue("C{$counter}", 'Tipe');
         $worksheet->setCellValue("D{$counter}", 'Status');
         $counter++;
-        $worksheet->getStyle("A{$counter}:{$counter}")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A{$counter}:G{$counter}")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
         $counter++;
 
         foreach ($movementOutData as $header) {
