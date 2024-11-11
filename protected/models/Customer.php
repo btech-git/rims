@@ -444,8 +444,8 @@ class Customer extends CActiveRecord {
         
         $sql = "
             SELECT COALESCE(SUM(grand_total), 0) AS total 
-            FROM " . RegistrationTransaction::model()->tableName() . "
-            WHERE customer_id = :customer_id AND substr(transaction_date, 1, 10) BETWEEN :start_date AND :end_date" . $branchConditionSql . "
+            FROM " . InvoiceHeader::model()->tableName() . "
+            WHERE customer_id = :customer_id AND substr(transaction_date, 1, 10) BETWEEN :start_date AND :end_date AND status NOT LIKE '%CANCELLED%'" . $branchConditionSql . "
             GROUP BY customer_id
         ";
 
@@ -469,9 +469,9 @@ class Customer extends CActiveRecord {
         
         $sql = "
             SELECT COALESCE(SUM(r.grand_total), 0) AS total 
-            FROM " . RegistrationTransaction::model()->tableName() . " r 
+            FROM " . InvoiceHeader::model()->tableName() . " r 
             INNER JOIN " . Customer::model()->tableName() . " c ON c.id = r.customer_id
-            WHERE c.customer_type = 'Individual' AND substr(r.transaction_date, 1, 10) BETWEEN :start_date AND :end_date" . $branchConditionSql . "
+            WHERE c.customer_type = 'Individual' AND substr(r.transaction_date, 1, 10) BETWEEN :start_date AND :end_date AND r.status NOT LIKE '%CANCELLED%'" . $branchConditionSql . "
         ";
 
         $value = Yii::app()->db->createCommand($sql)->queryScalar($params);
