@@ -102,19 +102,19 @@ class SaleRetailController extends Controller {
         $worksheet = $objPHPExcel->setActiveSheetIndex(0);
         $worksheet->setTitle('Rincian Penjualan per Pelanggan');
 
-        $worksheet->mergeCells('A1:L1');
-        $worksheet->mergeCells('A2:L2');
-        $worksheet->mergeCells('A3:L3');
+        $worksheet->mergeCells('A1:M1');
+        $worksheet->mergeCells('A2:M2');
+        $worksheet->mergeCells('A3:M3');
 
-        $worksheet->getStyle('A1:L6')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-        $worksheet->getStyle('A1:L6')->getFont()->setBold(true);
+        $worksheet->getStyle('A1:M6')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->getStyle('A1:M6')->getFont()->setBold(true);
 
         $branch = Branch::model()->findByPk($branchId);
         $worksheet->setCellValue('A1', 'Raperind Motor ' . CHtml::encode(CHtml::value($branch, 'name')));
         $worksheet->setCellValue('A2', 'Rincian Penjualan per Pelanggan');
         $worksheet->setCellValue('A3', Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($startDate)) . ' - ' . Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($endDate)));
 
-        $worksheet->getStyle('A5:L5')->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle('A5:M5')->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
         $worksheet->setCellValue('A5', 'Customer');
         $worksheet->setCellValue('B5', 'Type');
@@ -126,9 +126,11 @@ class SaleRetailController extends Controller {
         $worksheet->setCellValue('H5', 'Disc Barang');
         $worksheet->setCellValue('I5', 'Jasa');
         $worksheet->setCellValue('J5', 'Disc Jasa');
-        $worksheet->setCellValue('K5', 'Total');
+        $worksheet->setCellValue('K5', 'Ppn');
+        $worksheet->setCellValue('L5', 'Pph');
+        $worksheet->setCellValue('M5', 'Total');
 
-        $worksheet->getStyle('A6:L6')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle('A6:M6')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
         $counter = 8;
         $grandTotalSale = '0.00';
@@ -151,21 +153,23 @@ class SaleRetailController extends Controller {
                     $worksheet->setCellValue("H{$counter}", CHtml::encode($registrationTransactionRow['discount_product']));
                     $worksheet->setCellValue("I{$counter}", CHtml::encode($registrationTransactionRow['subtotal_service']));
                     $worksheet->setCellValue("J{$counter}", CHtml::encode($registrationTransactionRow['discount_service']));
-                    $worksheet->setCellValue("K{$counter}", CHtml::encode($grandTotal));
+                    $worksheet->setCellValue("K{$counter}", CHtml::encode($registrationTransactionRow['ppn_price']));
+                    $worksheet->setCellValue("L{$counter}", CHtml::encode($registrationTransactionRow['pph_price']));
+                    $worksheet->setCellValue("M{$counter}", CHtml::encode($grandTotal));
                     $counter++;
                     
                     $totalSale += $grandTotal;
                 }
-                $worksheet->setCellValue("J{$counter}", 'TOTAL');
-                $worksheet->setCellValue("K{$counter}", CHtml::encode($totalSale));
+                $worksheet->setCellValue("L{$counter}", 'TOTAL');
+                $worksheet->setCellValue("M{$counter}", CHtml::encode($totalSale));
                 $grandTotalSale += $totalSale;
                 $counter++;$counter++;
             }
         }
-        $worksheet->setCellValue("J{$counter}", 'TOTAL PENJUALAN');
-        $worksheet->setCellValue("K{$counter}", CHtml::encode($grandTotalSale));
+        $worksheet->setCellValue("L{$counter}", 'TOTAL PENJUALAN');
+        $worksheet->setCellValue("M{$counter}", CHtml::encode($grandTotalSale));
 
-        for ($col = 'A'; $col !== 'M'; $col++) {
+        for ($col = 'A'; $col !== 'Z'; $col++) {
             $objPHPExcel->getActiveSheet()
             ->getColumnDimension($col)
             ->setAutoSize(true);
