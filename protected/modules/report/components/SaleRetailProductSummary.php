@@ -40,7 +40,7 @@ class SaleRetailProductSummary extends CComponent {
         $this->dataProvider->criteria->addCondition("EXISTS (
             SELECT d.id FROM " . InvoiceDetail::model()->tableName() . " d 
             INNER JOIN " . InvoiceHeader::model()->tableName() . " h ON h.id = d.invoice_id
-            WHERE d.product_id = t.id AND substr(h.invoice_date, 1, 10) BETWEEN :start_date AND :end_date" . $branchConditionSql . " 
+            WHERE d.product_id = t.id AND substr(h.invoice_date, 1, 10) BETWEEN :start_date AND :end_date AND h.status NOT LIKE '%CANCEL%'" . $branchConditionSql . " 
         )");
         $this->dataProvider->criteria->params[':start_date'] = $startDate;
         $this->dataProvider->criteria->params[':end_date'] = $endDate;

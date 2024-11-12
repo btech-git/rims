@@ -459,13 +459,13 @@ class Service extends CActiveRecord {
             $params[':branch_id'] = $branchId;
         }
         
-        $sql = "SELECT r.transaction_number, r.transaction_date, r.repair_type, c.name as customer, v.plate_number as vehicle, p.total_price
-                FROM " . RegistrationService::model()->tableName() . " p 
-                INNER JOIN " . RegistrationTransaction::model()->tableName() . " r ON r.id = p.registration_transaction_id
+        $sql = "SELECT r.invoice_number, r.invoice_date, c.name as customer, v.plate_number as vehicle, p.total_price
+                FROM " . InvoiceDetail::model()->tableName() . " p 
+                INNER JOIN " . InvoiceHeader::model()->tableName() . " r ON r.id = p.invoice_id
                 INNER JOIN " . Customer::model()->tableName() . " c ON c.id = r.customer_id
                 INNER JOIN " . Vehicle::model()->tableName() . " v ON v.id = r.vehicle_id
-                WHERE substr(r.transaction_date, 1, 10) BETWEEN :start_date AND :end_date AND service_id = :service_id" . $branchConditionSql . "
-                ORDER BY r.transaction_date ASC";
+                WHERE substr(r.invoice_date, 1, 10) BETWEEN :start_date AND :end_date AND service_id = :service_id AND r.status NOT LIKE '%CANCEL%'" . $branchConditionSql . "
+                ORDER BY r.invoice_date ASC";
         
         $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
         
@@ -498,9 +498,9 @@ class Service extends CActiveRecord {
             INNER JOIN " . ServiceType::model()->tableName() . " t ON t.id = s.service_type_id
             INNER JOIN (
                 SELECT p.service_id, SUM(p.total_price) AS sale_total, COUNT(p.service_id) AS quantity
-                FROM " . RegistrationService::model()->tableName() . " p
-                INNER JOIN " . RegistrationTransaction::model()->tableName() . " h ON h.id = p.registration_transaction_id
-                WHERE substr(h.transaction_date, 1, 10) BETWEEN :start_date AND :end_date" . $branchConditionSql . "
+                FROM " . InvoiceDetail::model()->tableName() . " p
+                INNER JOIN " . InvoiceHeader::model()->tableName() . " h ON h.id = p.invoice_id
+                WHERE substr(h.invoice_date, 1, 10) BETWEEN :start_date AND :end_date AND h.status NOT LIKE '%CANCEL%'" . $branchConditionSql . "
                 GROUP BY p.service_id
             ) po ON s.id = po.service_id
             " . $nameConditionSql . "
