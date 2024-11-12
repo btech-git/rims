@@ -47,7 +47,7 @@ Yii::app()->clientScript->registerCss('_report', '
     <tfoot>
         <tr>
             <td style="text-align: right" colspan="3">Total</td>
-            <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalSale)); ?></td>
+            <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalSale + $totalIndividual)); ?></td>
         </tr>
     </tfoot>
 </table>
