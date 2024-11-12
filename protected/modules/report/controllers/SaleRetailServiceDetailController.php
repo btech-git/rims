@@ -121,10 +121,9 @@ class SaleRetailServiceDetailController extends Controller {
 
         $worksheet->setCellValue('A6', 'Penjualan #');
         $worksheet->setCellValue('B6', 'Tanggal');
-        $worksheet->setCellValue('C6', 'Jenis');
-        $worksheet->setCellValue('D6', 'Customer');
-        $worksheet->setCellValue('E6', 'Vehicle');
-        $worksheet->setCellValue('F6', 'Harga');
+        $worksheet->setCellValue('C6', 'Customer');
+        $worksheet->setCellValue('D6', 'Vehicle');
+        $worksheet->setCellValue('E6', 'Harga');
 
         $worksheet->getStyle('A6:G6')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
@@ -149,27 +148,26 @@ class SaleRetailServiceDetailController extends Controller {
 
                 $worksheet->setCellValue("A{$counter}", CHtml::encode($saleRetailRow['transaction_number']));
                 $worksheet->setCellValue("B{$counter}", CHtml::encode($saleRetailRow['transaction_date']));
-                $worksheet->setCellValue("C{$counter}", CHtml::encode($saleRetailRow['repair_type']));
-                $worksheet->setCellValue("D{$counter}", CHtml::encode($saleRetailRow['customer']));
-                $worksheet->setCellValue("E{$counter}", CHtml::encode($saleRetailRow['vehicle']));
-                $worksheet->setCellValue("F{$counter}", CHtml::encode($total));
+                $worksheet->setCellValue("C{$counter}", CHtml::encode($saleRetailRow['customer']));
+                $worksheet->setCellValue("D{$counter}", CHtml::encode($saleRetailRow['vehicle']));
+                $worksheet->setCellValue("E{$counter}", CHtml::encode($total));
 
                 $counter++;
                 $totalSale += $total;
 
             }
-            $worksheet->getStyle("E{$counter}:F{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
-            $worksheet->getStyle("E{$counter}:F{$counter}")->getFont()->setBold(true);
+            $worksheet->getStyle("D{$counter}:F{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+            $worksheet->getStyle("D{$counter}:F{$counter}")->getFont()->setBold(true);
 
-            $worksheet->setCellValue("E{$counter}", 'TOTAL');
-            $worksheet->setCellValue("F{$counter}", CHtml::encode($totalSale));
+            $worksheet->setCellValue("D{$counter}", 'TOTAL');
+            $worksheet->setCellValue("E{$counter}", CHtml::encode($totalSale));
             $grandTotalSale += $totalSale;
             $counter++;$counter++;
         }
         
-        $worksheet->getStyle("E{$counter}:F{$counter}")->getFont()->setBold(true);
-        $worksheet->setCellValue("E{$counter}", 'GRAND TOTAL');
-        $worksheet->setCellValue("F{$counter}", CHtml::encode($grandTotalSale));
+        $worksheet->getStyle("D{$counter}:F{$counter}")->getFont()->setBold(true);
+        $worksheet->setCellValue("D{$counter}", 'GRAND TOTAL');
+        $worksheet->setCellValue("E{$counter}", CHtml::encode($grandTotalSale));
 
         for ($col = 'A'; $col !== 'H'; $col++) {
             $objPHPExcel->getActiveSheet()
