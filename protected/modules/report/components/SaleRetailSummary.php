@@ -39,7 +39,7 @@ class SaleRetailSummary extends CComponent {
 
         $this->dataProvider->criteria->addCondition("EXISTS (
             SELECT id FROM " . RegistrationTransaction::model()->tableName() . "
-            WHERE customer_id = t.id AND substr(transaction_date, 1, 10) BETWEEN :start_date AND :end_date" . $branchConditionSql . "
+            WHERE customer_id = t.id AND substr(transaction_date, 1, 10) BETWEEN :start_date AND :end_date AND t.status NOT LIKE '%CANCELLED%'" . $branchConditionSql . "
         )");
         $this->dataProvider->criteria->params[':start_date'] = $startDate;
         $this->dataProvider->criteria->params[':end_date'] = $endDate;

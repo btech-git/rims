@@ -659,7 +659,7 @@ class Customer extends CActiveRecord {
         return $resultSet;
     }
     
-    public function getRegistrationTransactionReport($startDate, $endDate, $branchId) {
+    public function getSaleReport($startDate, $endDate, $branchId) {
         $branchConditionSql = '';
         
         $params = array(
@@ -674,11 +674,10 @@ class Customer extends CActiveRecord {
         }
         
         $sql = "
-            SELECT r.id, r.transaction_number, r.transaction_date, r.repair_type, r.subtotal_product, r.subtotal_service, r.discount_product, r.discount_service, 
-            r.grand_total, v.plate_number AS plate_number, r.ppn_price, r.pph_price
-            FROM " . RegistrationTransaction::model()->tableName() . " r
+            SELECT r.id, r.invoice_number, r.invoice_date, r.product_price, r.service_price, r.total_price, v.plate_number AS plate_number, r.ppn_total, r.pph_total
+            FROM " . InvoiceHeader::model()->tableName() . " r
             INNER JOIN " . Vehicle::model()->tableName() . " v ON v.id = r.vehicle_id
-            WHERE r.customer_id = :customer_id AND substr(r.transaction_date, 1, 10) BETWEEN :start_date AND :end_date" . $branchConditionSql . "
+            WHERE r.customer_id = :customer_id AND substr(r.invoice_date, 1, 10) BETWEEN :start_date AND :end_date AND r.status NOT LIKE '%CANCELLED%'" . $branchConditionSql . "
             ORDER BY r.transaction_date, r.transaction_number
         ";
 

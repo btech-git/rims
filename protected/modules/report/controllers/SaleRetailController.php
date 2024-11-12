@@ -136,25 +136,22 @@ class SaleRetailController extends Controller {
         $grandTotalSale = '0.00';
         
         foreach ($dataProvider->data as $header) {
-            $registrationTransactionData = $header->getRegistrationTransactionReport($startDate, $endDate, $branchId);
-            if (!empty($registrationTransactionData)) {
+            $saleReportData = $header->getSaleReport($startDate, $endDate, $branchId);
+            if (!empty($saleReportData)) {
                 $totalSale = 0.00;
-                foreach ($registrationTransactionData as $registrationTransactionRow) {
-                    $grandTotal = $registrationTransactionRow['grand_total'];
+                foreach ($saleReportData as $saleReportRow) {
+                    $grandTotal = $saleReportRow['total_price'];
                     $worksheet->getStyle("G{$counter}:I{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
 
                     $worksheet->setCellValue("A{$counter}", CHtml::encode(CHtml::value($header, 'name')));
                     $worksheet->setCellValue("B{$counter}", CHtml::encode(CHtml::value($header, 'customer_type')));
-                    $worksheet->setCellValue("C{$counter}", CHtml::encode($registrationTransactionRow['transaction_number']));
-                    $worksheet->setCellValue("D{$counter}", CHtml::encode($registrationTransactionRow['transaction_date']));
-                    $worksheet->setCellValue("E{$counter}", CHtml::encode($registrationTransactionRow['repair_type']));
-                    $worksheet->setCellValue("F{$counter}", CHtml::encode($registrationTransactionRow['plate_number']));
-                    $worksheet->setCellValue("G{$counter}", CHtml::encode($registrationTransactionRow['subtotal_product']));
-                    $worksheet->setCellValue("H{$counter}", CHtml::encode($registrationTransactionRow['discount_product']));
-                    $worksheet->setCellValue("I{$counter}", CHtml::encode($registrationTransactionRow['subtotal_service']));
-                    $worksheet->setCellValue("J{$counter}", CHtml::encode($registrationTransactionRow['discount_service']));
-                    $worksheet->setCellValue("K{$counter}", CHtml::encode($registrationTransactionRow['ppn_price']));
-                    $worksheet->setCellValue("L{$counter}", CHtml::encode($registrationTransactionRow['pph_price']));
+                    $worksheet->setCellValue("C{$counter}", CHtml::encode($saleReportRow['invoice_number']));
+                    $worksheet->setCellValue("D{$counter}", CHtml::encode($saleReportRow['invoice_date']));
+                    $worksheet->setCellValue("F{$counter}", CHtml::encode($saleReportRow['plate_number']));
+                    $worksheet->setCellValue("G{$counter}", CHtml::encode($saleReportRow['product_price']));
+                    $worksheet->setCellValue("I{$counter}", CHtml::encode($saleReportRow['service_price']));
+                    $worksheet->setCellValue("K{$counter}", CHtml::encode($saleReportRow['ppn_total']));
+                    $worksheet->setCellValue("L{$counter}", CHtml::encode($saleReportRow['pph_total']));
                     $worksheet->setCellValue("M{$counter}", CHtml::encode($grandTotal));
                     $counter++;
                     
