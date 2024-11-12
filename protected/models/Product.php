@@ -840,10 +840,10 @@ class Product extends CActiveRecord {
         
         $sql = "
             SELECT COALESCE(SUM(p.total_price), 0) AS total 
-            FROM " . RegistrationProduct::model()->tableName() . " p 
-            INNER JOIN " . RegistrationTransaction::model()->tableName() . " r ON r.id = p.registration_transaction_id
-            WHERE p.product_id = :product_id AND substr(r.transaction_date, 1, 10) BETWEEN :start_date AND :end_date" . $branchConditionSql . "
-            GROUP BY product_id
+            FROM " . InvoiceDetail::model()->tableName() . " p 
+            INNER JOIN " . InvoiceHeader::model()->tableName() . " r ON r.id = p.invoice_id
+            WHERE p.product_id = :product_id AND substr(r.invoice_date, 1, 10) BETWEEN :start_date AND :end_date" . $branchConditionSql . "
+            GROUP BY p.product_id
         ";
 
         $value = Yii::app()->db->createCommand($sql)->queryScalar($params);
@@ -884,13 +884,13 @@ class Product extends CActiveRecord {
             $params[':branch_id'] = $branchId;
         }
         
-        $sql = "SELECT r.transaction_number, r.transaction_date, r.repair_type, c.name as customer, v.plate_number as vehicle, p.quantity, p.sale_price, p.total_price
-                FROM " . RegistrationProduct::model()->tableName() . " p 
-                INNER JOIN " . RegistrationTransaction::model()->tableName() . " r ON r.id = p.registration_transaction_id
+        $sql = "SELECT r.invoice_number, r.invoice_date, c.name as customer, v.plate_number as vehicle, p.quantity, p.unit_price, p.total_price
+                FROM " . InvoiceDetail::model()->tableName() . " p 
+                INNER JOIN " . InvoiceHeader::model()->tableName() . " r ON r.id = p.invoice_id
                 INNER JOIN " . Customer::model()->tableName() . " c ON c.id = r.customer_id
                 INNER JOIN " . Vehicle::model()->tableName() . " v ON v.id = r.vehicle_id
-                WHERE substr(r.transaction_date, 1, 10) BETWEEN :start_date AND :end_date AND product_id = :product_id" . $branchConditionSql . "
-                ORDER BY r.transaction_date ASC";
+                WHERE substr(r.invoice_date, 1, 10) BETWEEN :start_date AND :end_date AND p.product_id = :product_id" . $branchConditionSql . "
+                ORDER BY r.invoice_date ASC";
         
         $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
         

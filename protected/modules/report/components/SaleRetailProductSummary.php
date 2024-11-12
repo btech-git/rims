@@ -34,13 +34,13 @@ class SaleRetailProductSummary extends CComponent {
         $branchConditionSql = '';
         
         if (!empty($branchId)) {
-            $branchConditionSql = ' AND branch_id = :branch_id';
+            $branchConditionSql = ' AND h.branch_id = :branch_id';
         }
 
         $this->dataProvider->criteria->addCondition("EXISTS (
-            SELECT d.id FROM " . RegistrationProduct::model()->tableName() . " d 
-            INNER JOIN " . RegistrationTransaction::model()->tableName() . " h ON h.id = d.registration_transaction_id
-            WHERE d.product_id = t.id AND substr(h.transaction_date, 1, 10) BETWEEN :start_date AND :end_date" . $branchConditionSql . " 
+            SELECT d.id FROM " . InvoiceDetail::model()->tableName() . " d 
+            INNER JOIN " . InvoiceHeader::model()->tableName() . " h ON h.id = d.invoice_id
+            WHERE d.product_id = t.id AND substr(h.invoice_date, 1, 10) BETWEEN :start_date AND :end_date" . $branchConditionSql . " 
         )");
         $this->dataProvider->criteria->params[':start_date'] = $startDate;
         $this->dataProvider->criteria->params[':end_date'] = $endDate;

@@ -163,9 +163,8 @@ class SaleRetailProductDetailController extends Controller {
         $worksheet->setCellValue('G5', 'Sub Master Category');
         $worksheet->setCellValue('H5', 'Sub Category');
 
-        $worksheet->setCellValue('A6', 'Penjualan #');
-        $worksheet->setCellValue('B6', 'Tanggal');
-        $worksheet->setCellValue('C6', 'Jenis');
+        $worksheet->setCellValue('B6', 'Penjualan #');
+        $worksheet->setCellValue('C6', 'Tanggal');
         $worksheet->setCellValue('D6', 'Customer');
         $worksheet->setCellValue('E6', 'Vehicle');
         $worksheet->setCellValue('F6', 'Quantity');
@@ -197,13 +196,12 @@ class SaleRetailProductDetailController extends Controller {
                 
                 $worksheet->getStyle("I{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
 
-                $worksheet->setCellValue("A{$counter}", CHtml::encode($saleRetailRow['transaction_number']));
-                $worksheet->setCellValue("B{$counter}", CHtml::encode($saleRetailRow['transaction_date']));
-                $worksheet->setCellValue("C{$counter}", CHtml::encode($saleRetailRow['repair_type']));
+                $worksheet->setCellValue("B{$counter}", CHtml::encode($saleRetailRow['invoice_number']));
+                $worksheet->setCellValue("C{$counter}", CHtml::encode($saleRetailRow['invoice_date']));
                 $worksheet->setCellValue("D{$counter}", CHtml::encode($saleRetailRow['customer']));
                 $worksheet->setCellValue("E{$counter}", CHtml::encode($saleRetailRow['vehicle']));
                 $worksheet->setCellValue("F{$counter}", CHtml::encode($saleRetailRow['quantity']));
-                $worksheet->setCellValue("G{$counter}", CHtml::encode($saleRetailRow['sale_price']));
+                $worksheet->setCellValue("G{$counter}", CHtml::encode($saleRetailRow['unit_price']));
                 $worksheet->setCellValue("H{$counter}", CHtml::encode($total));
 
                 $counter++;
