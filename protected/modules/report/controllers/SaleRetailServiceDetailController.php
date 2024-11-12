@@ -146,8 +146,8 @@ class SaleRetailServiceDetailController extends Controller {
                 
                 $worksheet->getStyle("I{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
 
-                $worksheet->setCellValue("A{$counter}", CHtml::encode($saleRetailRow['transaction_number']));
-                $worksheet->setCellValue("B{$counter}", CHtml::encode($saleRetailRow['transaction_date']));
+                $worksheet->setCellValue("A{$counter}", CHtml::encode($saleRetailRow['invoice_number']));
+                $worksheet->setCellValue("B{$counter}", CHtml::encode($saleRetailRow['invoice_date']));
                 $worksheet->setCellValue("C{$counter}", CHtml::encode($saleRetailRow['customer']));
                 $worksheet->setCellValue("D{$counter}", CHtml::encode($saleRetailRow['vehicle']));
                 $worksheet->setCellValue("E{$counter}", CHtml::encode($total));
