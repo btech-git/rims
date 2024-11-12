@@ -678,7 +678,7 @@ class Customer extends CActiveRecord {
             FROM " . InvoiceHeader::model()->tableName() . " r
             INNER JOIN " . Vehicle::model()->tableName() . " v ON v.id = r.vehicle_id
             WHERE r.customer_id = :customer_id AND substr(r.invoice_date, 1, 10) BETWEEN :start_date AND :end_date AND r.status NOT LIKE '%CANCELLED%'" . $branchConditionSql . "
-            ORDER BY r.transaction_date, r.transaction_number
+            ORDER BY r.invoice_date, r.invoice_number
         ";
 
         $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
