@@ -1,10 +1,11 @@
 <?php
 Yii::app()->clientScript->registerCss('_report', '
-    .width1-1 { width: 15% }
-    .width1-2 { width: 30% }
+    .width1-1 { width: 10% }
+    .width1-2 { width: 20% }
     .width1-3 { width: 20% }
     .width1-4 { width: 20% }
-    .width1-5 { width: 15% }
+    .width1-5 { width: 5% }
+    .width1-6 { width: 15% }
 ');
 ?>
 
@@ -19,11 +20,11 @@ Yii::app()->clientScript->registerCss('_report', '
     <thead style="position: sticky; top: 0">
         <tr id="header1">
             <th class="width1-1">Code</th>
-            <th class="width1-4">Type</th>
+            <th class="width1-2">Type</th>
             <th class="width1-3">Category</th>
-            <th class="width1-2">Name</th>
+            <th class="width1-4">Name</th>
             <th class="width1-5">Quantity</th>
-            <th class="width1-5">Amount</th>
+            <th class="width1-6">Amount</th>
         </tr>
     </thead>
     <tbody>
@@ -38,7 +39,7 @@ Yii::app()->clientScript->registerCss('_report', '
                     <td class="width1-3"><?php echo CHtml::encode($saleRetailServiceItem['category']); ?></td>
                     <td class="width1-2"><?php echo CHtml::encode($saleRetailServiceItem['name']); ?></td>
                     <td class="width1-5" style="text-align: center"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalQuantity)); ?></td>
-                    <td class="width1-5" style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $grandTotal)); ?></td>
+                    <td class="width1-6" style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $grandTotal)); ?></td>
                 </tr>
                 <?php $totalSale += $grandTotal; ?>
                 <?php $grandTotalQuantity += $totalQuantity; ?>
