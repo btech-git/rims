@@ -40,7 +40,9 @@ Yii::app()->clientScript->registerCss('_report', '
                         <th class="width2-6">Disc</th>
                         <th class="width2-7">Jasa</th>
                         <th class="width2-8">Disc</th>
-                        <th class="width2-9">Total</th>
+                        <th class="width2-9">ppn</th>
+                        <th class="width2-10">pph</th>
+                        <th class="width2-11">Total</th>
                     </tr>
                 </table>
             </td>
@@ -62,7 +64,7 @@ Yii::app()->clientScript->registerCss('_report', '
                                 <?php $grandTotal = $registrationTransactionRow['grand_total']; ?>
                                 <tr>
                                     <td class="width2-1">
-                                        <?php echo CHtml::link($registrationTransactionRow['transaction_number'], Yii::app()->createUrl("frontDesk/registrationTransaction/view", array("id" => $registrationTransactionRow['id'])), array('target' => '_blank')); ?>
+                                        <?php echo CHtml::link($registrationTransactionRow['transaction_number'], Yii::app()->createUrl("frontDesk/generalRepairRegistration/view", array("id" => $registrationTransactionRow['id'])), array('target' => '_blank')); ?>
                                     </td>
                                     <td class="width2-2">
                                         <?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($registrationTransactionRow['transaction_date']))); ?>
@@ -76,16 +78,22 @@ Yii::app()->clientScript->registerCss('_report', '
                                     <td class="width2-5" style="text-align: right">
                                         <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $registrationTransactionRow['subtotal_product'])); ?>
                                     </td>
-                                    <td class="width2-5" style="text-align: right">
+                                    <td class="width2-6" style="text-align: right">
                                         <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $registrationTransactionRow['discount_product'])); ?>
                                     </td>
-                                    <td class="width2-6" style="text-align: right">
+                                    <td class="width2-7" style="text-align: right">
                                         <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $registrationTransactionRow['subtotal_service'])); ?>
                                     </td>
-                                    <td class="width2-6" style="text-align: right">
+                                    <td class="width2-8" style="text-align: right">
                                         <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $registrationTransactionRow['discount_service'])); ?>
                                     </td>
-                                    <td class="width2-7" style="text-align: right">
+                                    <td class="width2-9" style="text-align: right">
+                                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $registrationTransactionRow['ppn_price'])); ?>
+                                    </td>
+                                    <td class="width2-10" style="text-align: right">
+                                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $registrationTransactionRow['pph_price'])); ?>
+                                    </td>
+                                    <td class="width2-11" style="text-align: right">
                                         <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $grandTotal)); ?>
                                     </td>
                                 </tr>
