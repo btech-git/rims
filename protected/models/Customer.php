@@ -610,7 +610,6 @@ class Customer extends CActiveRecord {
             FROM " . InvoiceHeader::model()->tableName() . " p 
             WHERE p.customer_id = :customer_id AND p.invoice_date <= :end_date" . $branchConditionSql . "
             GROUP BY p.customer_id 
-            HAVING payment_left > 100.00
         ";
 
         $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);

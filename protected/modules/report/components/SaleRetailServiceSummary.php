@@ -34,7 +34,7 @@ class SaleRetailServiceSummary extends CComponent {
         $branchConditionSql = '';
         
         if (!empty($branchId)) {
-            $branchConditionSql = ' AND H.branch_id = :branch_id';
+            $branchConditionSql = ' AND h.branch_id = :branch_id';
         }
 
         $this->dataProvider->criteria->addCondition("EXISTS (

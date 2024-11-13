@@ -1,6 +1,7 @@
 <?php
 Yii::app()->clientScript->registerScript('report', '
     $(".breadcrumbs").addClass("hide");
+    $("#StartDate").val("' . $startDate . '");
     $("#EndDate").val("' . $endDate . '");
     $("#PageSize").val("' . $payableSummary->dataProvider->pagination->pageSize . '");
     $("#CurrentPage").val("' . ($payableSummary->dataProvider->pagination->getCurrentPage(false) + 1) . '");
@@ -86,9 +87,23 @@ Yii::app()->clientScript->registerScript('report', '
                             <div class="field">
                                 <div class="row collapse">
                                     <div class="small-2 columns">
-                                        <span class="prefix">Per Tanggal </span>
+                                        <span class="prefix">Tanggal </span>
                                     </div>
-                                    
+                                    <div class="small-5 columns">
+                                        <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(
+                                            'name' => 'StartDate',
+                                            'options' => array(
+                                                'dateFormat' => 'yy-mm-dd',
+                                                'changeMonth'=>true,
+                                                'changeYear'=>true,
+                                            ),
+                                            'htmlOptions' => array(
+                                                'readonly' => true,
+                                                'placeholder' => 'Mulai',
+                                            ),
+                                        )); ?>
+                                    </div>
+
                                     <div class="small-5 columns">
                                         <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(
                                             'name' => 'EndDate',
@@ -137,6 +152,7 @@ Yii::app()->clientScript->registerScript('report', '
 
                     <?php $this->renderPartial('_summary', array(
                         'payableSummary' => $payableSummary,
+                        'startDate' => $startDate,
                         'endDate' => $endDate,
                         'branchId' => $branchId,
                     )); ?>

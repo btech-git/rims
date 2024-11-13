@@ -1,6 +1,6 @@
 <?php
 
-class ReceivablecustomerController extends Controller {
+class ReceivableCustomerController extends Controller {
 
     public $layout = '//layouts/column1';
     

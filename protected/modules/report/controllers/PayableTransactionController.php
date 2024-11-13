@@ -1,6 +1,6 @@
 <?php
 
-class PayableSupplierController extends Controller {
+class PayableTransactionController extends Controller {
 
     public $layout = '//layouts/column1';
     
@@ -29,28 +29,25 @@ class PayableSupplierController extends Controller {
         $currentSort = (isset($_GET['sort'])) ? $_GET['sort'] : '';
         $branchId = (isset($_GET['BranchId'])) ? $_GET['BranchId'] : '';
         $supplierId = (isset($_GET['SupplierId'])) ? $_GET['SupplierId'] : '';
+        $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : date('Y-m-d');
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
         
         $supplier = Search::bind(new Supplier('search'), isset($_GET['Supplier']) ? $_GET['Supplier'] : array());
         $supplierDataProvider = $supplier->search();
         $supplierDataProvider->pagination->pageVar = 'page_dialog';
 
-        $payableSummary = new PayableSupplierSummary($supplier->search());
+        $payableSummary = new PayableTransactionSummary($supplier->searchByPayableSupplierReport($startDate, $endDate, $branchId));
         $payableSummary->setupLoading();
         $payableSummary->setupPaging($pageSize, $currentPage);
         $payableSummary->setupSorting();
-        $filters = array(
-            'endDate' => $endDate,
-            'branchId' => $branchId,
-        );
-        $payableSummary->setupFilter($filters);
+        $payableSummary->setupFilter($supplierId);
 
         if (isset($_GET['ResetFilter'])) {
             $this->redirect(array('summary'));
         }
         
         if (isset($_GET['SaveExcel'])) {
-            $this->saveToExcel($payableSummary, $endDate, $branchId);
+            $this->saveToExcel($payableSummary, $startDate, $endDate, $branchId);
         }
 
         $this->render('summary', array(
@@ -59,6 +56,7 @@ class PayableSupplierController extends Controller {
             'supplierDataProvider'=>$supplierDataProvider,
             'supplierId' => $supplierId,
             'branchId' => $branchId,
+            'startDate' => $startDate,
             'endDate' => $endDate,
             'currentSort' => $currentSort,
             'currentPage' => $currentPage,
@@ -125,7 +123,7 @@ class PayableSupplierController extends Controller {
         $counter = 8;
         
         foreach ($payableSummary->dataProvider->data as $header) {
-            $payableData = $header->getPayableSupplierReport($startDate, $endDate, $branchId);
+            $payableData = $header->getPayableTransactionReport($startDate, $endDate, $branchId);
             $totalPurchase = 0.00;
             $totalPayment = 0.00;
             $totalPayable = 0.00;

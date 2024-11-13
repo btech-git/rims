@@ -9,10 +9,7 @@ class PayableSupplierSummary extends CComponent {
     }
 
     public function setupLoading() {
-//        $this->dataProvider->criteria->together = TRUE;
-//        $this->dataProvider->criteria->with = array(
-//            'transactionPurchaseOrders',
-//        );
+        
     }
 
     public function setupPaging($pageSize, $currentPage) {
@@ -29,9 +26,24 @@ class PayableSupplierSummary extends CComponent {
         $this->dataProvider->criteria->order = $this->dataProvider->sort->orderBy;
     }
 
-    public function setupFilter($supplierId) {
-        if (!empty($supplierId)) {
-            $this->dataProvider->criteria->compare('t.id', $supplierId);
+    public function setupFilter($filters) {
+        $endDate = (empty($filters['endDate'])) ? date('Y-m-d') : $filters['endDate'];
+        $branchId = (empty($filters['branchId'])) ? '' : $filters['branchId'];
+        
+        $branchConditionSql = '';
+        
+        if (!empty($branchId)) {
+            $branchConditionSql = ' AND p.main_branch_id = :branch_id';
+            $this->dataProvider->criteria->params[':branch_id'] = $branchId;
         }
+        
+        $this->dataProvider->criteria->addCondition("EXISTS (
+            SELECT p.supplier_id, SUM(p.payment_left) AS remaining
+            FROM " . TransactionPurchaseOrder::model()->tableName() . " p 
+            WHERE p.supplier_id = t.id AND substr(p.purchase_order_date, 1, 10) <= :end_date" . $branchConditionSql . " 
+            GROUP BY p.supplier_id
+        )");
+        
+        $this->dataProvider->criteria->params[':end_date'] = $endDate;
     }
 }

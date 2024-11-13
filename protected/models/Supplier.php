@@ -397,7 +397,7 @@ class Supplier extends CActiveRecord {
         return $resultSet;
     }
     
-    public function getPayableSupplierReport($startDate, $endDate, $branchId) {
+    public function getPayableTransactionReport($startDate, $endDate, $branchId) {
         $branchConditionSql = '';
         
         $params = array(
@@ -487,5 +487,30 @@ class Supplier extends CActiveRecord {
         $value = Yii::app()->db->createCommand($sql)->queryScalar($params);
 
         return ($value === false) ? 0 : $value;
+    }
+    
+    public function getPayableSupplierReport($endDate, $branchId) {
+        $branchConditionSql = '';
+        
+        $params = array(
+            ':supplier_id' => $this->id,
+            ':end_date' => $endDate,
+        );
+        
+        if (!empty($branchId)) {
+            $branchConditionSql = ' AND p.main_branch_id = :branch_id';
+            $params[':branch_id'] = $branchId;
+        }
+        
+        $sql = "
+            SELECT p.supplier_id, COALESCE(SUM(p.total_price), 0) AS total_price, COALESCE(SUM(p.payment_amount), 0) AS payment_amount, COALESCE(SUM(p.payment_left), 0) AS payment_left
+            FROM " . TransactionPurchaseOrder::model()->tableName() . " p 
+            WHERE p.supplier_id = :supplier_id AND substr(p.purchase_order_date, 1, 10) <= :end_date" . $branchConditionSql . "
+            GROUP BY p.supplier_id 
+        ";
+
+        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
+
+        return $resultSet;
     }
 }

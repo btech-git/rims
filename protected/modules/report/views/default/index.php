@@ -216,11 +216,6 @@
                                     'visible' => Yii::app()->user->checkAccess('insuranceReceivableReport')
                                 ),
                                 array(
-                                    'label' => 'Rincian Penerimaan Penjualan', 
-                                    'url' => array('/report/paymentIn/summary'), 
-                                    'visible' => Yii::app()->user->checkAccess('paymentInReport')
-                                ),
-                                array(
                                     'label' => 'Piutang Customer Summary', 
                                     'url' => array('/report/receivableCustomer/summary'), 
                                     'visible' => Yii::app()->user->checkAccess('customerReceivableReport')
@@ -229,6 +224,11 @@
                                     'label' => 'Kartu Piutang Customer', 
                                     'url' => array('/report/receivableTransaction/summary'), 
                                     'visible' => Yii::app()->user->checkAccess('customerReceivableReport')
+                                ),
+                                array(
+                                    'label' => 'Rincian Penerimaan Penjualan', 
+                                    'url' => array('/report/paymentIn/summary'), 
+                                    'visible' => Yii::app()->user->checkAccess('paymentInReport')
                                 ),
                             ),
                         )); ?>
@@ -343,7 +343,7 @@
                                         'visible' => Yii::app()->user->checkAccess('supplierPayableReport')
                                     ),
                                     array(
-                                        'label' => 'Kartu Hutang', 
+                                        'label' => 'Kartu Hutang Supplier', 
                                         'url' => array('/report/payableSupplier/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('supplierPayableReport')
                                     ),

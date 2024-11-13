@@ -41,8 +41,7 @@ class ReceivableCustomerSummary extends CComponent {
             SELECT p.customer_id, SUM(p.payment_left) AS remaining
             FROM " . InvoiceHeader::model()->tableName() . " p 
             WHERE p.customer_id = t.id AND p.invoice_date <= :end_date" . $branchConditionSql . " 
-            GROUP BY p.customer_id 
-            HAVING remaining > 100
+            GROUP BY p.customer_id
         )");
         
         $this->dataProvider->criteria->params[':end_date'] = $endDate;
