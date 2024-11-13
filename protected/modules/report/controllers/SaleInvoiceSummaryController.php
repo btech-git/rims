@@ -196,9 +196,9 @@ class SaleInvoiceSummaryController extends Controller {
             $totalPrice = $header->total_price; 
             $totalPayment = $header->payment_amount;
             $totalRemaining = $header->payment_left;
-            foreach ($header->paymentInDetails as $paymentInDetail) {
-                $amount = CHtml::value($paymentInDetail, 'amount');
-                $total = CHtml::value($paymentInDetail, 'totalAmount'); 
+//            foreach ($header->paymentInDetails as $paymentInDetail) {
+//                $amount = CHtml::value($paymentInDetail, 'amount');
+//                $total = CHtml::value($paymentInDetail, 'totalAmount'); 
 
                 $worksheet->setCellValue("A{$counter}", $header->invoice_date);
                 $worksheet->setCellValue("B{$counter}", $header->invoice_number);
@@ -211,16 +211,16 @@ class SaleInvoiceSummaryController extends Controller {
                 $worksheet->setCellValue("J{$counter}", $totalRemaining);
                 $worksheet->setCellValue("K{$counter}", $header->status);
                 $worksheet->setCellValue("L{$counter}", $header->user->username);
-                $worksheet->setCellValue("M{$counter}", $paymentInDetail->paymentIn->payment_number);
-                $worksheet->setCellValue("N{$counter}", $paymentInDetail->paymentIn->payment_date);
-                $worksheet->setCellValue("O{$counter}", $amount);
-                $worksheet->setCellValue("P{$counter}", $paymentInDetail->tax_service_amount);
-                $worksheet->setCellValue("Q{$counter}", $total);
-                $worksheet->setCellValue("R{$counter}", $paymentInDetail->memo);
-                $worksheet->setCellValue("S{$counter}", $paymentInDetail->paymentIn->user->username);
+//                $worksheet->setCellValue("M{$counter}", $paymentInDetail->paymentIn->payment_number);
+//                $worksheet->setCellValue("N{$counter}", $paymentInDetail->paymentIn->payment_date);
+//                $worksheet->setCellValue("O{$counter}", $amount);
+//                $worksheet->setCellValue("P{$counter}", $paymentInDetail->tax_service_amount);
+//                $worksheet->setCellValue("Q{$counter}", $total);
+//                $worksheet->setCellValue("R{$counter}", $paymentInDetail->memo);
+//                $worksheet->setCellValue("S{$counter}", $paymentInDetail->paymentIn->user->username);
 
                 $counter++;
-            }
+//            }
             $grandTotalSale += $totalPrice;
             $grandTotalPayment += $totalPayment;
             $grandTotalRemaining += $totalRemaining;
