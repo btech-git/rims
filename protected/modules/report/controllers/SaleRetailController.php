@@ -140,6 +140,9 @@ class SaleRetailController extends Controller {
             if (!empty($saleReportData)) {
                 $totalSale = 0.00;
                 foreach ($saleReportData as $saleReportRow) {
+                    $invoiceHeader = InvoiceHeader::model()->findByPk($saleReportRow['id']);
+                    $discountProduct = $invoiceHeader->getTotalDiscountProduct();
+                    $discountService = $invoiceHeader->getTotalDiscountService();
                     $grandTotal = $saleReportRow['total_price'];
                     $worksheet->getStyle("G{$counter}:I{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
 
@@ -149,7 +152,9 @@ class SaleRetailController extends Controller {
                     $worksheet->setCellValue("D{$counter}", CHtml::encode($saleReportRow['invoice_date']));
                     $worksheet->setCellValue("F{$counter}", CHtml::encode($saleReportRow['plate_number']));
                     $worksheet->setCellValue("G{$counter}", CHtml::encode($saleReportRow['product_price']));
+                    $worksheet->setCellValue("H{$counter}", CHtml::encode($discountProduct));
                     $worksheet->setCellValue("I{$counter}", CHtml::encode($saleReportRow['service_price']));
+                    $worksheet->setCellValue("J{$counter}", CHtml::encode($discountService));
                     $worksheet->setCellValue("K{$counter}", CHtml::encode($saleReportRow['ppn_total']));
                     $worksheet->setCellValue("L{$counter}", CHtml::encode($saleReportRow['pph_total']));
                     $worksheet->setCellValue("M{$counter}", CHtml::encode($grandTotal));

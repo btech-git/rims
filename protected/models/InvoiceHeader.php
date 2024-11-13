@@ -501,4 +501,28 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
 
         return $resultSet;
     }
+    
+    public function getTotalDiscountProduct() {
+        $total = 0; 
+        
+        foreach ($this->invoiceDetails as $detail) {
+            if (!empty($detail->product_id)) {
+                $total += $detail->discount;
+            }
+        }
+        
+        return $total;
+    }
+    
+    public function getTotalDiscountService() {
+        $total = 0; 
+        
+        foreach ($this->invoiceDetails as $detail) {
+            if (!empty($detail->service_id)) {
+                $total += $detail->discount;
+            }
+        }
+        
+        return $total;
+    }
 }
