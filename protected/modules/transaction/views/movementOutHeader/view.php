@@ -49,6 +49,15 @@ $this->menu = array(
                 )) ?>
             <?php endif; ?>
         
+            <?php if (Yii::app()->user->checkAccess("saleInvoiceSupervisor")): ?>
+                <?php echo CHtml::link('<span class="fa fa-minus"></span>Cancel Transaction', array("/transaction/movementOutHeader/cancel", "id" => $model->id), array(
+                    'class' => 'button alert right', 
+                    'style' => 'margin-right:10px', 
+                )); ?>
+            <?php endif; ?>
+        <?php endif; ?>
+
+        <?php if ($model->status !== 'CANCELLED!!!'): ?>
             <?php echo CHtml::button('Update Delivered', array(
                 'id' => 'detail-button',
                 'name' => 'Detail',
@@ -67,13 +76,6 @@ $this->menu = array(
                     })
                 '
             )); ?>
-
-            <?php if (Yii::app()->user->checkAccess("saleInvoiceSupervisor")): ?>
-                <?php echo CHtml::link('<span class="fa fa-minus"></span>Cancel Transaction', array("/transaction/movementOutHeader/cancel", "id" => $model->id), array(
-                    'class' => 'button alert right', 
-                    'style' => 'margin-right:10px', 
-                )); ?>
-            <?php endif; ?>
         <?php endif; ?>
 
         <br />
