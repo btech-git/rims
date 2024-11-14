@@ -164,6 +164,8 @@ $this->menu = array(
             <?php if (count($products) > 0) : ?>
                 <table>
                     <thead>
+                        <th style="text-align: center">ID</th>
+                        <th style="text-align: center">Code</th>
                         <th style="text-align: center">Product</th>
                         <th style="text-align: center">Quantity</th>
                         <th style="text-align: center">Unit Price</th>
@@ -175,6 +177,8 @@ $this->menu = array(
                         <?php foreach ($details as $i => $detail): ?>
                             <?php if ($detail->product_id != ""): ?>
                                 <tr>
+                                    <td><?php echo $detail->product->id; ?></td>
+                                    <td><?php echo $detail->product->manufacturer_code; ?></td>
                                     <td><?php echo $detail->product->name; ?></td>
                                     <td style="text-align: center"><?php echo $detail->quantity; ?></td>
                                     <td style="text-align: right"><?php echo number_format($detail->unit_price, 2); ?></td>
@@ -191,7 +195,9 @@ $this->menu = array(
                 <table>
                     <thead>
                         <tr>
+                            <th style="text-align: center">ID</th>
                             <th style="text-align: center">Service</th>
+                            <th style="text-align: center">Type</th>
                             <th style="text-align: center">Price</th>
                         </tr>
                     </thead>
@@ -200,7 +206,9 @@ $this->menu = array(
                         <?php foreach ($details as $i => $detail): ?>
                             <?php if ($detail->service_id != ""): ?>
                                 <tr>
+                                    <td><?php echo $detail->service->id; ?></td>
                                     <td><?php echo $detail->service->name; ?></td>
+                                    <td><?php echo $detail->service->serviceType->name; ?></td>
                                     <td style="text-align: right"><?php echo number_format($detail->total_price, 2); ?></td>
                                 </tr>
                             <?php endif ?>
