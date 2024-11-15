@@ -725,7 +725,7 @@ class MovementOutHeaderController extends Controller {
                         $inventoryDetail->transaction_number = $movementOut->header->movement_out_no;
                         $inventoryDetail->transaction_date = $movementOut->header->date_posting;
                         $inventoryDetail->stock_out = $movementDetail->quantity * -1;
-                        $inventoryDetail->notes = $movementOut->header->movement_type = 3 ? "Sale Retail" : "Data from Movement Out";
+                        $inventoryDetail->notes = $movementOut->header->movement_type == 3 ? "Sale Retail" : "Data from Movement Out";
                         $inventoryDetail->purchase_price = $movementDetail->product->averageCogs;
                         $inventoryDetail->transaction_time = date('H:i:s');
                         $inventoryDetail->save(false);
