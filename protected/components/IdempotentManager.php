@@ -8,7 +8,7 @@ class IdempotentManager {
         $idempotent = new Idempotent;
         $idempotent->form_token = $_POST[self::TOKEN_NAME];
         $idempotent->form_name = Yii::app()->controller->module->id  . '/' . Yii::app()->controller->id . '/' . Yii::app()->controller->action->id;
-        $idempotent->posting_date = date('Y-m-d');
+        $idempotent->posting_date = date('Y-m-d H:i:s');
         return $idempotent;
     }
     
@@ -17,6 +17,6 @@ class IdempotentManager {
     }
     
     public static function generate() {
-        return CHtml::hiddenField(self::TOKEN_NAME, rand(1, 1000000000));
+        return CHtml::hiddenField(self::TOKEN_NAME, isset($_POST[self::TOKEN_NAME]) ? $_POST[self::TOKEN_NAME] : rand(1, 1000000000));
     }
 }
