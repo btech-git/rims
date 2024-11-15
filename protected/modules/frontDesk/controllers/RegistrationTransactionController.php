@@ -463,7 +463,7 @@ class RegistrationTransactionController extends Controller {
         $invoiceDataProvider = new CActiveDataProvider('InvoiceHeader', array(
             'criteria' => $invoiceCriteria, 
             'sort' => array(
-                'defaultOrder' => 'invoice_date ASC',
+                'defaultOrder' => 'invoice_date DESC',
             ),
             'pagination' => array(
                 'pageSize' => 10,
