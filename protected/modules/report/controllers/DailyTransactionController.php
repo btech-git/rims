@@ -80,6 +80,14 @@ class DailyTransactionController extends Controller {
             ),
         ));
         
+        $vehicleData = RegistrationTransaction::model()->findAll(array(
+            'condition' => "substr(t.transaction_date, 1, 10) BETWEEN '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND :transaction_date AND t.branch_id = :branch_id AND t.vehicle_status = 'DI BENGKEL'",
+            'params' => array(
+                ':transaction_date' => $transactionDate, 
+                ':branch_id' => $branchId
+            ),
+        ));
+        
         $deliveryData = TransactionDeliveryOrder::model()->findAllByAttributes(array(
             'delivery_date' => $transactionDate,
             'sender_branch_id' => $branchId,
@@ -127,6 +135,7 @@ class DailyTransactionController extends Controller {
                 'receiveItemData' => $receiveItemData, 
                 'sentRequestData' => $sentRequestData,
                 'transferRequestData' => $transferRequestData,
+                'vehicleData' => $vehicleData,
                 'branchId' => $branchId,
                 'transactionDate' => $transactionDate,
             ));
@@ -146,6 +155,7 @@ class DailyTransactionController extends Controller {
             'receiveItemData' => $receiveItemData, 
             'sentRequestData' => $sentRequestData,
             'transferRequestData' => $transferRequestData,
+            'vehicleData' => $vehicleData,
             'branchId' => $branchId,
             'transactionDate' => $transactionDate,
             'currentSort' => $currentSort,

@@ -535,10 +535,10 @@ class JurnalUmum extends CActiveRecord {
     
     public static function graphSalePerBranch() {
         
-        $sql = "SELECT b.name AS branch_name, SUM(j.total) AS total
+        $sql = "SELECT b.code AS branch_name, SUM(j.total) AS total
                 FROM " . JurnalUmum::model()->tableName() . " j
                 INNER JOIN " . Branch::model()->tableName() . " b ON b.id = j.branch_id
-                WHERE j.transaction_type IN ('RG', 'SO')
+                WHERE j.transaction_type IN ('Invoice') AND tanggal_transaksi > '" . AppParam::BEGINNING_TRANSACTION_DATE . "'
                 GROUP BY j.branch_id";
                 
         $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true);

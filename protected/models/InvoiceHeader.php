@@ -367,7 +367,7 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
         
         $sql = "SELECT SUM(payment_left) AS remaining
                 FROM " . InvoiceHeader::model()->tableName() . "
-                WHERE payment_left > 0";
+                WHERE payment_left > 0 AND invoice_date > '" . AppParam::BEGINNING_TRANSACTION_DATE . "'";
                 
         $value = Yii::app()->db->createCommand($sql)->queryScalar(array());
 

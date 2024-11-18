@@ -15,94 +15,104 @@
  * The followings are the available model relations:
  * @property MovementInHeader $movementIn
  */
-class MovementInApproval extends CActiveRecord
-{
-	/**
-	 * Returns the static model of the specified AR class.
-	 * @param string $className active record class name.
-	 * @return MovementInApproval the static model class
-	 */
-	public static function model($className=__CLASS__)
-	{
-		return parent::model($className);
-	}
+class MovementInApproval extends CActiveRecord {
 
-	/**
-	 * @return string the associated database table name
-	 */
-	public function tableName()
-	{
-		return '{{movement_in_approval}}';
-	}
+    /**
+     * Returns the static model of the specified AR class.
+     * @param string $className active record class name.
+     * @return MovementInApproval the static model class
+     */
+    public static function model($className = __CLASS__) {
+        return parent::model($className);
+    }
 
-	/**
-	 * @return array validation rules for model attributes.
-	 */
-	public function rules()
-	{
-		// NOTE: you should only define rules for those attributes that
-		// will receive user inputs.
-		return array(
-			array('movement_in_id, revision, approval_type, date, supervisor_id', 'required'),
-			array('movement_in_id, revision, supervisor_id', 'numerical', 'integerOnly'=>true),
-			array('approval_type', 'length', 'max'=>30),
-			array('note', 'safe'),
-			// The following rule is used by search().
-			// Please remove those attributes that should not be searched.
-			array('id, movement_in_id, revision, approval_type, date, supervisor_id, note', 'safe', 'on'=>'search'),
-		);
-	}
+    /**
+     * @return string the associated database table name
+     */
+    public function tableName() {
+        return '{{movement_in_approval}}';
+    }
 
-	/**
-	 * @return array relational rules.
-	 */
-	public function relations()
-	{
-		// NOTE: you may need to adjust the relation name and the related
-		// class name for the relations automatically generated below.
-		return array(
-			'movementIn' => array(self::BELONGS_TO, 'MovementInHeader', 'movement_in_id'),
-			'supervisor' => array(self::BELONGS_TO, 'Users', 'supervisor_id'),
-		);
-	}
+    /**
+     * @return array validation rules for model attributes.
+     */
+    public function rules() {
+        // NOTE: you should only define rules for those attributes that
+        // will receive user inputs.
+        return array(
+            array('movement_in_id, revision, approval_type, date, supervisor_id', 'required'),
+            array('movement_in_id, revision, supervisor_id', 'numerical', 'integerOnly' => true),
+            array('approval_type', 'length', 'max' => 30),
+            array('note', 'safe'),
+            // The following rule is used by search().
+            // Please remove those attributes that should not be searched.
+            array('id, movement_in_id, revision, approval_type, date, supervisor_id, note', 'safe', 'on' => 'search'),
+        );
+    }
 
-	/**
-	 * @return array customized attribute labels (name=>label)
-	 */
-	public function attributeLabels()
-	{
-		return array(
-			'id' => 'ID',
-			'movement_in_id' => 'Movement In',
-			'revision' => 'Revision',
-			'approval_type' => 'Approval Type',
-			'date' => 'Date',
-			'supervisor_id' => 'Supervisor',
-			'note' => 'Note',
-		);
-	}
+    /**
+     * @return array relational rules.
+     */
+    public function relations() {
+        // NOTE: you may need to adjust the relation name and the related
+        // class name for the relations automatically generated below.
+        return array(
+            'movementIn' => array(self::BELONGS_TO, 'MovementInHeader', 'movement_in_id'),
+            'supervisor' => array(self::BELONGS_TO, 'Users', 'supervisor_id'),
+        );
+    }
 
-	/**
-	 * Retrieves a list of models based on the current search/filter conditions.
-	 * @return CActiveDataProvider the data provider that can return the models based on the search/filter conditions.
-	 */
-	public function search()
-	{
-		// Warning: Please modify the following code to remove attributes that
-		// should not be searched.
+    /**
+     * @return array customized attribute labels (name=>label)
+     */
+    public function attributeLabels() {
+        return array(
+            'id' => 'ID',
+            'movement_in_id' => 'Movement In',
+            'revision' => 'Revision',
+            'approval_type' => 'Approval Type',
+            'date' => 'Date',
+            'supervisor_id' => 'Supervisor',
+            'note' => 'Note',
+        );
+    }
 
-		$criteria=new CDbCriteria;
+    /**
+     * Retrieves a list of models based on the current search/filter conditions.
+     * @return CActiveDataProvider the data provider that can return the models based on the search/filter conditions.
+     */
+    public function search() {
+        // Warning: Please modify the following code to remove attributes that
+        // should not be searched.
 
-		$criteria->compare('id',$this->id);
-		$criteria->compare('movement_in_id',$this->movement_in_id);
-		$criteria->compare('revision',$this->revision);
-		$criteria->compare('approval_type',$this->approval_type,true);
-		$criteria->compare('date',$this->date,true);
-		$criteria->compare('supervisor_id',$this->supervisor_id);
-		$criteria->compare('note',$this->note,true);
+        $criteria = new CDbCriteria;
 
-		return new CActiveDataProvider($this, array(
-			'criteria'=>$criteria,
-		));
-	}
+        $criteria->compare('id', $this->id);
+        $criteria->compare('movement_in_id', $this->movement_in_id);
+        $criteria->compare('revision', $this->revision);
+        $criteria->compare('approval_type', $this->approval_type, true);
+        $criteria->compare('date', $this->date, true);
+        $criteria->compare('supervisor_id', $this->supervisor_id);
+        $criteria->compare('note', $this->note, true);
+
+        return new CActiveDataProvider($this, array(
+            'criteria' => $criteria,
+        ));
+    }
+
+    protected function afterSave() {
+        parent::afterSave();
+
+        $history = new TransactionLog();
+        $history->transaction_number = $this->movementIn->movement_in_number;
+        $history->transaction_date = $this->movementIn->date_posting;
+        $history->log_date = date("Y-m-d");
+        $history->log_time = date("H:i:s");
+        $history->table_name = $this->tableName();
+        $history->table_id = $this->id;
+        $history->new_data = serialize($this->attributes);
+
+        $history->save();
+    }
+
 }

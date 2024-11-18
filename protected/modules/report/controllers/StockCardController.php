@@ -142,10 +142,10 @@ class StockCardController extends Controller {
 
         $documentProperties = $objPHPExcel->getProperties();
         $documentProperties->setCreator('Raperind Motor');
-        $documentProperties->setTitle('Laporan Kartu Stok Persediaan');
+        $documentProperties->setTitle('Laporan Mutasi Barang');
 
         $worksheet = $objPHPExcel->setActiveSheetIndex(0);
-        $worksheet->setTitle('Laporan Kartu Stok Persediaan');
+        $worksheet->setTitle('Laporan Mutasi Barang');
 
         $worksheet->mergeCells('A1:I1');
         $worksheet->mergeCells('A2:I2');
@@ -154,7 +154,7 @@ class StockCardController extends Controller {
         $worksheet->getStyle('A1:I3')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
         $worksheet->getStyle('A1:I3')->getFont()->setBold(true);
         $worksheet->setCellValue('A1', 'Raperind Motor');
-        $worksheet->setCellValue('A2', 'Laporan Kartu Stok Persediaan');
+        $worksheet->setCellValue('A2', 'Laporan Mutasi Barang');
         $worksheet->setCellValue('A3', $startDateFormatted . ' - ' . $endDateFormatted);
 
         $worksheet->getStyle("A6:I6")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
@@ -243,7 +243,7 @@ class StockCardController extends Controller {
         ob_end_clean();
 
         header('Content-type: application/vnd.ms-excel');
-        header('Content-Disposition: attachment;filename="Laporan Kartu Stok Persediaan.xls"');
+        header('Content-Disposition: attachment;filename="Laporan Mutasi Barang.xls"');
         header('Cache-Control: max-age=0');
         
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');

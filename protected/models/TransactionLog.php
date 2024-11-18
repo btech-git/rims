@@ -1,31 +1,25 @@
 <?php
 
 /**
- * This is the model class for table "{{cash_transaction_detail}}".
+ * This is the model class for table "{{transaction_log}}".
  *
- * The followings are the available columns in table '{{cash_transaction_detail}}':
+ * The followings are the available columns in table '{{transaction_log}}':
  * @property integer $id
- * @property integer $cash_transaction_id
- * @property integer $coa_id
- * @property string $amount
- * @property string $notes
- *
- * The followings are the available model relations:
- * @property CashTransaction $cashTransaction
- * @property Coa $coa
+ * @property string $transaction_number
+ * @property string $transaction_date
+ * @property string $log_date
+ * @property string $log_time
+ * @property string $table_name
+ * @property integer $table_id
+ * @property string $new_data
  */
-class CashTransactionDetail extends CActiveRecord {
+class TransactionLog extends CActiveRecord {
 
     /**
      * @return string the associated database table name
      */
-    public $coa_name;
-    public $coa_normal_balance;
-    public $coa_debit;
-    public $coa_credit;
-
     public function tableName() {
-        return '{{cash_transaction_detail}}';
+        return '{{transaction_log}}';
     }
 
     /**
@@ -35,12 +29,14 @@ class CashTransactionDetail extends CActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('cash_transaction_id, coa_id, amount, notes', 'required'),
-            array('cash_transaction_id, coa_id', 'numerical', 'integerOnly' => true),
-            array('amount', 'length', 'max' => 18),
+            array('transaction_number, table_name, table_id', 'required'),
+            array('table_id', 'numerical', 'integerOnly' => true),
+            array('transaction_number', 'length', 'max' => 100),
+            array('table_name', 'length', 'max' => 200),
+            array('transaction_date, log_date, log_time, new_data', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, cash_transaction_id, coa_id, amount, notes', 'safe', 'on' => 'search'),
+            array('id, transaction_number, transaction_date, log_date, log_time, table_name, table_id, new_data', 'safe', 'on' => 'search'),
         );
     }
 
@@ -51,8 +47,6 @@ class CashTransactionDetail extends CActiveRecord {
         // NOTE: you may need to adjust the relation name and the related
         // class name for the relations automatically generated below.
         return array(
-            'cashTransaction' => array(self::BELONGS_TO, 'CashTransaction', 'cash_transaction_id'),
-            'coa' => array(self::BELONGS_TO, 'Coa', 'coa_id'),
         );
     }
 
@@ -62,10 +56,13 @@ class CashTransactionDetail extends CActiveRecord {
     public function attributeLabels() {
         return array(
             'id' => 'ID',
-            'cash_transaction_id' => 'Cash Transaction',
-            'coa_id' => 'Coa',
-            'amount' => 'Amount',
-            'notes' => 'Notes',
+            'transaction_number' => 'Transaction Number',
+            'transaction_date' => 'Transaction Date',
+            'log_date' => 'Log Date',
+            'log_time' => 'Log Time',
+            'table_name' => 'Table Name',
+            'table_id' => 'Table',
+            'new_data' => 'New Data',
         );
     }
 
@@ -87,10 +84,13 @@ class CashTransactionDetail extends CActiveRecord {
         $criteria = new CDbCriteria;
 
         $criteria->compare('id', $this->id);
-        $criteria->compare('cash_transaction_id', $this->cash_transaction_id);
-        $criteria->compare('coa_id', $this->coa_id);
-        $criteria->compare('amount', $this->amount, true);
-        $criteria->compare('notes', $this->notes, true);
+        $criteria->compare('transaction_number', $this->transaction_number, true);
+        $criteria->compare('transaction_date', $this->transaction_date, true);
+        $criteria->compare('log_date', $this->log_date, true);
+        $criteria->compare('log_time', $this->log_time, true);
+        $criteria->compare('table_name', $this->table_name, true);
+        $criteria->compare('table_id', $this->table_id);
+        $criteria->compare('new_data', $this->new_data, true);
 
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
@@ -101,25 +101,10 @@ class CashTransactionDetail extends CActiveRecord {
      * Returns the static model of the specified AR class.
      * Please note that you should have this exact method in all your CActiveRecord descendants!
      * @param string $className active record class name.
-     * @return CashTransactionDetail the static model class
+     * @return TransactionLog the static model class
      */
     public static function model($className = __CLASS__) {
         return parent::model($className);
     }
 
-    protected function afterSave() {
-        parent::afterSave();
-
-        $history = new TransactionLog();
-        $history->transaction_number = $this->cashTransaction->transaction_number;
-        $history->transaction_date = $this->cashTransaction->transaction_date;
-        $history->log_date = date("Y-m-d");
-        $history->log_time = date("H:i:s");
-        $history->table_name = $this->tableName();
-        $history->table_id = $this->id;
-        $history->new_data = serialize($this->attributes);
-
-        $history->save();
-    }
-    
 }

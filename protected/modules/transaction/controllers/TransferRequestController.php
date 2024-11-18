@@ -132,7 +132,7 @@ class TransferRequestController extends Controller {
             $jurnalUmumInterbranchRequester->save();
 
             foreach ($transferRequest->transactionTransferRequestDetails as $detail) {
-                $hppPrice = $detail->total; //$detail->unit_price * $detail->quantity;
+                $hppPrice = round($detail->total, 2); //$detail->unit_price * $detail->quantity;
 
                 //save coa persedian product sub master
                 $jurnalUmumOutstandingPartRequester = new JurnalUmum;

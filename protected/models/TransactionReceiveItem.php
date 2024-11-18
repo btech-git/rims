@@ -384,12 +384,10 @@ class TransactionReceiveItem extends MonthlyTransactionActiveRecord {
     
     public static function totalPayables() {
         
-        $sql = "SELECT SUM(invoice_grand_total) AS remaining
-                FROM " . TransactionReceiveItem::model()->tableName() . "
-                WHERE id NOT IN (
-                    SELECT receive_item_id
-                    FROM " . PayOutDetail::model()->tableName() . " 
-                ) AND invoice_number IS NOT NULL";
+        $sql = "SELECT SUM(r.invoice_grand_total) AS remaining
+                FROM " . TransactionReceiveItem::model()->tableName() . " r 
+                INNER JOIN " . TransactionPurchaseOrder::model()->tableName() . " p ON p.id = r.purchase_order_id
+                WHERE p.payment_left > 100 AND r.invoice_number IS NOT NULL AND r.receive_item_date > '" . AppParam::BEGINNING_TRANSACTION_DATE . "'";
                 
         $value = Yii::app()->db->createCommand($sql)->queryScalar(array());
 

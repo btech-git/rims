@@ -132,7 +132,7 @@ $this->menu = array(
 
                 <tr>
                     <td width="10%">User Cancelled</td>
-                    <td width="30%"><?php echo CHtml::encode(CHtml::value($model, 'userIdCancelled->username')); ?></td>
+                    <td width="30%"><?php echo CHtml::encode(CHtml::value($model, 'userIdCancelled.username')); ?></td>
                     <td width="10%">Date Cancelled</td>
                     <td width="30%"><?php echo CHtml::encode(CHtml::value($model, 'cancelled_datetime')); ?></td>
                 </tr>

@@ -1,6 +1,6 @@
 <?php
 
-class SaleRetailSummary extends CComponent {
+class UserPerformanceSummary extends CComponent {
 
     public $dataProvider;
 
@@ -29,22 +29,14 @@ class SaleRetailSummary extends CComponent {
     public function setupFilter($filters) {
         $startDate = (empty($filters['startDate'])) ? date('Y-m-d') : $filters['startDate'];
         $endDate = (empty($filters['endDate'])) ? date('Y-m-d') : $filters['endDate'];
-        $branchId = (empty($filters['branchId'])) ? '' : $filters['branchId'];
         
-        $branchConditionSql = '';
-        
-        if (!empty($branchId)) {
-            $branchConditionSql = ' AND branch_id = :branch_id';
-        }
-
         $this->dataProvider->criteria->addCondition("EXISTS (
-            SELECT id FROM " . InvoiceHeader::model()->tableName() . "
-            WHERE customer_id = t.id AND substr(transaction_date, 1, 10) BETWEEN :start_date AND :end_date AND t.status NOT LIKE '%CANCELLED%'" . $branchConditionSql . "
+            SELECT i.id 
+            FROM " . RegistrationTransaction::model()->tableName() . " r
+            INNER JOIN " . InvoiceHeader::model()->tableName() . " i ON r.id = i.registration_transaction_id
+            WHERE r.employee_id_sales_person = t.id AND substr(i.invoice_date, 1, 10) BETWEEN :start_date AND :end_date AND t.position_id = 2
         )");
         $this->dataProvider->criteria->params[':start_date'] = $startDate;
         $this->dataProvider->criteria->params[':end_date'] = $endDate;
-        if (!empty($branchId)) {
-            $this->dataProvider->criteria->params[':branch_id'] = $branchId;
-        }
     }
 }

@@ -218,6 +218,21 @@ class CashTransaction extends MonthlyTransactionActiveRecord {
         return parent::model($className);
     }
 
+    protected function afterSave() {
+        parent::afterSave();
+
+        $history = new TransactionLog();
+        $history->transaction_number = $this->transaction_number;
+        $history->transaction_date = $this->transaction_date;
+        $history->log_date = date("Y-m-d");
+        $history->log_time = date("H:i:s");
+        $history->table_name = $this->tableName();
+        $history->table_id = $this->id;
+        $history->new_data = serialize($this->attributes);
+
+        $history->save();
+    }
+    
     public function getTotalDebitAmount($branchId, $transactionDate) {
         $sql = "SELECT transaction_date, branch_id, transaction_type, COALESCE(SUM(debit_amount), 0) AS total_amount
                 FROM " . CashTransaction::model()->tableName() . "

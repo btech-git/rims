@@ -8,6 +8,15 @@
         google.charts.setOnLoadCallback(drawChart);
 
         function drawChart() {
+            var averagequantitysaledataperbranch = google.visualization.arrayToDataTable(" . CJSON::encode($dataAverageQuantitySalePerBranch) . ");
+            var average_quantity_sale_per_branch_options = {
+                title: 'Avg Qty Sales Per Branch',
+                backgroundColor: 'transparent',
+                chartArea: {width: 300, height: 170},
+            };
+            var averagequantitysaleperbranchchart = new google.visualization.PieChart(document.getElementById('average_quantity_sale_per_branch_chart_div'));
+            averagequantitysaleperbranchchart.draw(averagequantitysaledataperbranch, average_quantity_sale_per_branch_options);
+            
             var saledata = google.visualization.arrayToDataTable(" . CJSON::encode($dataSale) . ");
             var sale_options = {
                 fontSize: 11,
@@ -131,11 +140,11 @@
             </tr>
             <tr>
                 <td style="font-weight: bold; text-align: center">
-                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalReceivables)); ?>
+                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalPayables)); ?>
                 </td>
                 
                 <td style="font-weight: bold; text-align: center">
-                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalPayables)); ?>
+                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalReceivables)); ?>
                 </td>
             </tr>
         </table>
@@ -143,7 +152,16 @@
     
     <br/>
   
-    <div class="completed-center" id="sale_chart_div" style="width: 100%; height: 300px;"></div>
+    <table>
+        <tr>
+            <td style="width: 35%;">
+                <div class="completed-left" id="average_quantity_sale_per_branch_chart_div" ></div>
+            </td>
+            <td style="width: 65%">
+                <div class="completed-center" id="sale_chart_div" style="width: 100%; height: 300px;"></div>
+            </td>
+        </tr>
+    </table>
     
     <br/>
     

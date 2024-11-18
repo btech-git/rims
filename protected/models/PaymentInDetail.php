@@ -124,6 +124,21 @@ class PaymentInDetail extends CActiveRecord {
         return parent::model($className);
     }
 
+    protected function afterSave() {
+        parent::afterSave();
+
+        $history = new TransactionLog();
+        $history->transaction_number = $this->paymentIn->payment_number;
+        $history->transaction_date = $this->paymentIn->payment_date;
+        $history->log_date = date("Y-m-d");
+        $history->log_time = date("H:i:s");
+        $history->table_name = $this->tableName();
+        $history->table_id = $this->id;
+        $history->new_data = serialize($this->attributes);
+
+        $history->save();
+    }
+
 //    public function getTaxServiceAmount() {
 //        
 //        switch ($this->is_tax_service) {

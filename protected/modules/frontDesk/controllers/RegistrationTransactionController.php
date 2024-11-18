@@ -954,14 +954,19 @@ class RegistrationTransactionController extends Controller {
 
     public function actionMemo($id) {
         $model = $this->loadModel($id);
-        $services = RegistrationService::model()->findAllByAttributes(array(
-            'registration_transaction_id' => $id,
-            'is_body_repair' => 0
+        $invoiceHeader = InvoiceHeader::model()->findByAttributes(array('registration_transaction_id' => $id));
+        $services = InvoiceDetail::model()->findAll(array(
+            'condition' => 'invoice_id = :invoice_id AND service_id IS NOT null',
+            'params' => array(':invoice_id' => $invoiceHeader->id)
         ));
-        $products = RegistrationProduct::model()->findAllByAttributes(array('registration_transaction_id' => $id));
+        $products = InvoiceDetail::model()->findAll(array(
+            'condition' => 'invoice_id = :invoice_id AND product_id IS NOT null',
+            'params' => array(':invoice_id' => $invoiceHeader->id)
+        ));
 
         $this->render('memo', array(
             'model' => $model,
+            'invoiceHeader' => $invoiceHeader,
             'services' => $services,
             'products' => $products,
         ));

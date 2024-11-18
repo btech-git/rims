@@ -343,8 +343,13 @@
                                         'visible' => Yii::app()->user->checkAccess('supplierPayableReport')
                                     ),
                                     array(
-                                        'label' => 'Kartu Hutang Supplier', 
+                                        'label' => 'Hutang Supplier Summary', 
                                         'url' => array('/report/payableSupplier/summary'), 
+                                        'visible' => Yii::app()->user->checkAccess('supplierPayableReport')
+                                    ),
+                                    array(
+                                        'label' => 'Kartu Hutang Supplier', 
+                                        'url' => array('/report/payableTransaction/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('supplierPayableReport')
                                     ),
                                     array(
@@ -496,7 +501,7 @@
                             Yii::app()->user->checkAccess('workOrderVehicleReport') ||
                             Yii::app()->user->checkAccess('mechanicPerformanceReport')
                         ):*/ ?>
-                            <h2>Salesman</h2>
+                            <h2>HRD</h2>
                             <?php $this->widget('zii.widgets.CMenu', array(
                                 'items' => array(
                                     array(

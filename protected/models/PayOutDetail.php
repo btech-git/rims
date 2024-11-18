@@ -103,4 +103,19 @@ class PayOutDetail extends CActiveRecord {
         ));
     }
 
+    protected function afterSave() {
+        parent::afterSave();
+
+        $history = new TransactionLog();
+        $history->transaction_number = $this->paymentOut->payment_number;
+        $history->transaction_date = $this->paymentOut->payment_date;
+        $history->log_date = date("Y-m-d");
+        $history->log_time = date("H:i:s");
+        $history->table_name = $this->tableName();
+        $history->table_id = $this->id;
+        $history->new_data = serialize($this->attributes);
+
+        $history->save();
+    }
+
 }

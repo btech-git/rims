@@ -34,7 +34,7 @@ class SaleRetailController extends Controller {
         $currentPage = (isset($_GET['page'])) ? $_GET['page'] : '';
         $currentSort = (isset($_GET['sort'])) ? $_GET['sort'] : '';
 
-        $saleRetailSummary = new SaleRetailSummary($customer->search());
+        $saleRetailSummary = new SaleRetailSummary($customerDataProvider);
         $saleRetailSummary->setupLoading();
         $saleRetailSummary->setupPaging($pageSize, $currentPage);
         $saleRetailSummary->setupSorting();

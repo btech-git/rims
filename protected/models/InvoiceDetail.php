@@ -109,4 +109,19 @@ class InvoiceDetail extends CActiveRecord {
             'criteria' => $criteria,
         ));
     }
+    
+    public static function graphAverageQuantitySalePerBranch() {
+        
+        $sql = "SELECT b.code AS branch_name, SUM(d.quantity)/12 AS average_quantity
+                FROM " . InvoiceHeader::model()->tableName() . " h
+                INNER JOIN " . InvoiceDetail::model()->tableName() . " d ON h.id = d.invoice_id
+                INNER JOIN " . Branch::model()->tableName() . " b ON b.id = h.branch_id
+                WHERE d.product_id IS NOT null AND h.invoice_date > '" . AppParam::BEGINNING_TRANSACTION_DATE . "'
+                GROUP BY h.branch_id";
+                
+        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true);
+        
+        return $resultSet;
+    }
+    
 }

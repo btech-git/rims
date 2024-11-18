@@ -202,10 +202,10 @@ class InventoryStockValueController extends Controller {
 
         $documentProperties = $objPHPExcel->getProperties();
         $documentProperties->setCreator('Raperind Motor');
-        $documentProperties->setTitle('Stok Gudang');
+        $documentProperties->setTitle('Quantity dan Nilai Stok');
 
         $worksheet = $objPHPExcel->setActiveSheetIndex(0);
-        $worksheet->setTitle('Stok Gudang');
+        $worksheet->setTitle('Quantity dan Nilai Stok');
 
         $worksheet->mergeCells('A1:H1');
         $worksheet->mergeCells('A2:H2');
@@ -215,7 +215,7 @@ class InventoryStockValueController extends Controller {
 
         $worksheet->getStyle("A1:A2")->getFont()->setBold(true);
         $worksheet->setCellValue('A1', 'Raperind Motor');
-        $worksheet->setCellValue('A2', 'Stok Gudang');
+        $worksheet->setCellValue('A2', 'Quantity dan Nilai Stok');
 
         $column = 'I'; 
         $worksheet->setCellValue('A5', 'ID');
@@ -231,6 +231,8 @@ class InventoryStockValueController extends Controller {
             $column++;
         }
         $worksheet->setCellValue("{$column}5", 'Total');
+        $column++;
+        $worksheet->setCellValue("{$column}5", 'Value');
 
         $worksheet->getStyle("A5:{$column}5")->getFont()->setBold(true);
         $worksheet->getStyle("A5:{$column}5")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
@@ -284,7 +286,7 @@ class InventoryStockValueController extends Controller {
         ob_end_clean();
 
         header('Content-type: application/vnd.ms-excel');
-        header('Content-Disposition: attachment;filename="Laporan Stok Gudang.xls"');
+        header('Content-Disposition: attachment;filename="Quantity dan Nilai Stok.xls"');
         header('Cache-Control: max-age=0');
 
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');

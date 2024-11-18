@@ -488,4 +488,27 @@ class Employee extends CActiveRecord {
         
         return empty($user) ? '' : $user->username;
     }
+    
+    public function getSalesmanPerformanceReport($startDate, $endDate) {
+        
+        $params = array(
+            ':employee_id_sales_person' => $this->id,
+            ':start_date' => $startDate,
+            ':end_date' => $endDate,
+        );
+        
+        $sql = "
+            SELECT i.id, i.invoice_number, i.invoice_date, r.repair_type, c.name AS customer, v.plate_number AS vehicle, i.total_price AS total_price, i.status
+            FROM " . RegistrationTransaction::model()->tableName() . " r
+            INNER JOIN " . InvoiceHeader::model()->tableName() . " i ON r.id = i.registration_transaction_id
+            INNER JOIN " . Customer::model()->tableName(). " c ON c.id = i.customer_id
+            INNER JOIN " . Vehicle::model()->tableName() . " v ON v.id = i.vehicle_id
+            WHERE r.employee_id_sales_person = :employee_id_sales_person AND substr(i.invoice_date, 1, 10) BETWEEN :start_date AND :end_date AND i.status NOT LIKE '%CANCELLED%'
+            ORDER BY i.invoice_date, i.invoice_number
+        ";
+
+        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
+        
+        return $resultSet;
+    }
 }

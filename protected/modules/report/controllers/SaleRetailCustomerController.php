@@ -34,7 +34,7 @@ class SaleRetailCustomerController extends Controller {
         $currentSort = (isset($_GET['sort'])) ? $_GET['sort'] : '';
         $branchId = (isset($_GET['BranchId'])) ? $_GET['BranchId'] : '';
 
-        $saleRetailCustomerSummary = new SaleRetailCustomerSummary($customer->search());
+        $saleRetailCustomerSummary = new SaleRetailCustomerSummary($customerDataProvider);
         $saleRetailCustomerSummary->setupLoading();
         $saleRetailCustomerSummary->setupPaging($pageSize, $currentPage);
         $saleRetailCustomerSummary->setupSorting();

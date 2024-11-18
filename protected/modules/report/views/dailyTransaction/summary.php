@@ -98,22 +98,61 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                 <hr />
 
                 <div class="relative">
-                    <?php $this->renderPartial('_summary', array(
-                        'cashTransactionInData' => $cashTransactionInData,
-                        'cashTransactionOutData' => $cashTransactionOutData,
-                        'invoiceHeaderData' => $invoiceHeaderData,
-                        'paymentInData' => $paymentInData,
-                        'paymentOutData' => $paymentOutData,
-                        'movementInData' => $movementInData,
-                        'movementOutData' => $movementOutData,
-                        'registrationTransactionData' => $registrationTransactionData,
-                        'deliveryData' => $deliveryData,
-                        'purchaseOrderData' => $purchaseOrderData,
-                        'receiveItemData' => $receiveItemData, 
-                        'sentRequestData' => $sentRequestData,
-                        'transferRequestData' => $transferRequestData,
-                        'branchId' => $branchId,
-                        'transactionDate' => $transactionDate,
+                    <div style="font-weight: bold; text-align: center">
+                        <div style="font-size: larger">
+                            <?php $branch = Branch::model()->findByPk($branchId); ?>
+                            <?php echo CHtml::encode(CHtml::value($branch, 'name')); ?>
+                        </div>
+                        <div style="font-size: larger">Laporan Transaksi Harian</div>
+                        <div><?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($transactionDate))); ?></div>
+                    </div>
+
+                    <br />
+
+                    <?php $this->widget('zii.widgets.jui.CJuiTabs', array(
+                        'tabs' => array(
+                            'Penjualan' => array(
+                                'content' => $this->renderPartial('_summarySale', array(
+                                    'invoiceHeaderData' => $invoiceHeaderData,
+                                    'paymentInData' => $paymentInData,
+                                    'registrationTransactionData' => $registrationTransactionData,
+                                ), true),
+                            ),
+                            'Pembelian' => array(
+                                'content' => $this->renderPartial('_summaryPurchase', array(
+                                    'paymentOutData' => $paymentOutData,
+                                    'purchaseOrderData' => $purchaseOrderData,
+                                ), true),
+                            ),
+                            'Kas' => array(
+                                'content' => $this->renderPartial('_summaryCash', array(
+                                    'cashTransactionInData' => $cashTransactionInData,
+                                    'cashTransactionOutData' => $cashTransactionOutData,
+                                ), true),
+                            ),
+                            'Gudang' => array(
+                                'content' => $this->renderPartial('_summaryInventory', array(
+                                    'movementInData' => $movementInData,
+                                    'movementOutData' => $movementOutData,
+                                    'deliveryData' => $deliveryData,
+                                    'receiveItemData' => $receiveItemData, 
+                                    'sentRequestData' => $sentRequestData,
+                                    'transferRequestData' => $transferRequestData,
+                                ), true),
+                            ),
+                            'Kendaraan' => array(
+                                'content' => $this->renderPartial('_summaryVehicle', array(
+                                    'vehicleData' => $vehicleData,
+                                    'registrationTransactionData' => $registrationTransactionData,
+                                ), true),
+                            ),
+                        ),
+                        // additional javascript options for the tabs plugin
+                        'options' => array(
+                            'collapsible' => true,
+                        ),
+                        // set id for this widgets
+                        'id' => 'view_tab',
                     )); ?>
                 </div>
                 <div class="clear"></div>

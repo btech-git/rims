@@ -37,22 +37,22 @@ Yii::app()->clientScript->registerCss('memo', '
     <div class="memo-title">
         <table style="background-color: white;">
             <tr>
-                <td style="text-align: left; line-height: 0rem"><?php echo CHtml::encode(CHtml::value($model, 'transaction_number')); ?></td>
+                <td style="text-align: left; line-height: 0rem"><?php echo CHtml::encode(CHtml::value($invoiceHeader, 'invoice_number')); ?></td>
             </tr>
             <tr>
-                <td style="text-align: left; line-height: 0rem"><?php echo CHtml::encode(Yii::app()->dateFormatter->format("d MMM yyyy H:m:s", CHtml::value($model, 'transaction_date'))); ?></td>
+                <td style="text-align: left; line-height: 0rem"><?php echo CHtml::encode(Yii::app()->dateFormatter->format("d MMM yyyy H:m:s", CHtml::value($invoiceHeader, 'invoice_date'))); ?></td>
             </tr>
             <tr>
-                <td style="text-align: left; line-height: 0rem"><?php echo CHtml::encode(CHtml::value($model, 'customer.name')); ?></td>
+                <td style="text-align: left; line-height: 0rem"><?php echo CHtml::encode(CHtml::value($invoiceHeader, 'customer.name')); ?></td>
             </tr>
             <tr>
-                <td style="text-align: left; line-height: 0rem"><?php echo CHtml::encode(CHtml::value($model, 'vehicle.plate_number')); ?></td>
+                <td style="text-align: left; line-height: 0rem"><?php echo CHtml::encode(CHtml::value($invoiceHeader, 'vehicle.plate_number')); ?></td>
             </tr>
             <tr>
                 <td style="text-align: left; line-height: 0rem">
-                    <?php echo CHtml::encode(CHtml::value($model, 'vehicle.carMake.name')); ?> -
-                    <?php echo CHtml::encode(CHtml::value($model, 'vehicle.carModel.name')); ?> -
-                    <?php echo CHtml::encode(CHtml::value($model, 'vehicle.carSubModel.name')); ?>
+                    <?php echo CHtml::encode(CHtml::value($invoiceHeader, 'vehicle.carMake.name')); ?> -
+                    <?php echo CHtml::encode(CHtml::value($invoiceHeader, 'vehicle.carModel.name')); ?> -
+                    <?php echo CHtml::encode(CHtml::value($invoiceHeader, 'vehicle.carSubModel.name')); ?>
                 </td>
             </tr>
         </table>
@@ -98,5 +98,20 @@ Yii::app()->clientScript->registerCss('memo', '
                 </tr>
             <?php endforeach; ?>
         <?php endif; ?>
+                
+        <tr>
+            <td style="text-align: right; line-height: 0rem" colspan="4">Total :</td>
+
+            <td style="text-align: right; line-height: 0rem; width: 17%">
+                <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($invoiceHeader, 'total_price'))); ?>
+            </td>
+        </tr>
     </table> 
+    
+    <div style="text-transform: capitalize">
+        TERBILANG:
+        <?php echo CHtml::encode(NumberWord::numberName(CHtml::value($invoiceHeader, 'total_price'))); ?>
+        rupiah
+    </div>
+
 </div>

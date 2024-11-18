@@ -68,6 +68,13 @@ class AnalyticsTransactionController extends Controller {
         $totalReceivables = InvoiceHeader::totalReceivables();
         $totalPayables = TransactionReceiveItem::totalPayables();
         
+        $resultSetAverageQuantitySaleBranch = InvoiceDetail::graphAverageQuantitySalePerBranch();
+        $branchAverageRows = array();
+        foreach ($resultSetAverageQuantitySaleBranch as $item) {
+            $branchAverageRows[] = array($item['branch_name'], doubleval($item['average_quantity']));
+        }
+        $dataAverageQuantitySalePerBranch = array_merge(array(array('Branch', 'Sales')), $branchAverageRows);
+
         $resultSet = RegistrationTransaction::graphSale();
         $records = array();
         $year = intval(date('Y'));
@@ -149,6 +156,7 @@ class AnalyticsTransactionController extends Controller {
             'movement' => $movement,
             'movementIn' => $movementIn,
             'count' => $count,
+            'dataAverageQuantitySalePerBranch' => $dataAverageQuantitySalePerBranch,
         ));
     }
 

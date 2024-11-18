@@ -1,6 +1,6 @@
 <?php
 
-class SalesmanPerformanceController extends Controller {
+class UserPerformanceController extends Controller {
 
     public $layout = '//layouts/column1';
     
