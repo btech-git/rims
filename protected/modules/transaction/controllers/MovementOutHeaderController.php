@@ -692,6 +692,18 @@ class MovementOutHeaderController extends Controller {
             ));
 
             if ($delivered->save()) {
+                if ($movementOut->header->movement_type == 1) {
+                    $notes = 'Movement Delivery Order';
+                } else if ($movementOut->header->movement_type == 2) {
+                    $notes = 'Movement Return Order';
+                } else if ($movementOut->header->movement_type == 3) {
+                    $notes = 'Sale Retail';
+                } else if ($movementOut->header->movement_type == 4) {
+                    $notes = 'Movement Material Request';
+                } else {
+                    $notes = 'Data from Movement Out';
+                }
+                
                 foreach ($movementOut->details as $movementDetail) {
                     $inventory = Inventory::model()->findByAttributes(array(
                         'product_id' => $movementDetail->product_id, 
@@ -725,7 +737,7 @@ class MovementOutHeaderController extends Controller {
                         $inventoryDetail->transaction_number = $movementOut->header->movement_out_no;
                         $inventoryDetail->transaction_date = $movementOut->header->date_posting;
                         $inventoryDetail->stock_out = $movementDetail->quantity * -1;
-                        $inventoryDetail->notes = $movementOut->header->movement_type == 3 ? "Sale Retail" : "Data from Movement Out";
+                        $inventoryDetail->notes = $notes;
                         $inventoryDetail->purchase_price = $movementDetail->product->averageCogs;
                         $inventoryDetail->transaction_time = date('H:i:s');
                         $inventoryDetail->save(false);

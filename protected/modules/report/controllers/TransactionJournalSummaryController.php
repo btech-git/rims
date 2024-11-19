@@ -369,7 +369,7 @@ class TransactionJournalSummaryController extends Controller {
         $worksheet->getStyle('A1:B3')->getFont()->setBold(true);
 
         $branch = Branch::model()->findByPk($branchId);
-        $worksheet->setCellValue('A1', CHtml::encode(($branch === null) ? '' : $branch->name));
+        $worksheet->setCellValue('A1', 'Raperind Motor ' . CHtml::encode(($branch === null) ? '' : $branch->name));
         $worksheet->setCellValue('A2', 'Laporan Jurnal Umum Rekap ' . $transactionTypeLiteral);
         $worksheet->setCellValue('A3', 'Periode: ' . $startDateString . ' - ' . $endDateString);
 
