@@ -89,7 +89,7 @@ class ProductSubMasterCategoryController extends Controller {
             $coaPersediaan->attributes = $_GET['Coa'];
         }
         $coaPersediaanCriteria = new CDbCriteria;
-        $coaPersediaanCriteria->addCondition("coa_sub_category_id = 4 and coa_id = 0");
+        $coaPersediaanCriteria->addCondition("coa_sub_category_id = 4 and coa_id IS NOT null");
         $coaPersediaanCriteria->compare('code', $coaPersediaan->code . '%', true, 'AND', false);
         $coaPersediaanCriteria->compare('name', $coaPersediaan->name, true);
         $coaPersediaanDataProvider = new CActiveDataProvider('Coa', array(
@@ -101,7 +101,7 @@ class ProductSubMasterCategoryController extends Controller {
         if (isset($_GET['Coa']))
             $coaHpp->attributes = $_GET['Coa'];
         $coaHppCriteria = new CDbCriteria;
-        $coaHppCriteria->addCondition("coa_sub_category_id = 47 and coa_id = 0");
+        $coaHppCriteria->addCondition("coa_sub_category_id = 47 and coa_id IS NOT null");
         $coaHppCriteria->compare('code', $coaHpp->code . '%', true, 'AND', false);
         $coaHppCriteria->compare('name', $coaHpp->name, true);
         $coaHppDataProvider = new CActiveDataProvider('Coa', array(
@@ -113,7 +113,7 @@ class ProductSubMasterCategoryController extends Controller {
         if (isset($_GET['Coa']))
             $coaPenjualan->attributes = $_GET['Coa'];
         $coaPenjualanCriteria = new CDbCriteria;
-        $coaPenjualanCriteria->addCondition("coa_sub_category_id = 26 and coa_id = 0");
+        $coaPenjualanCriteria->addCondition("coa_sub_category_id = 26 and coa_id IS NOT null");
         $coaPenjualanCriteria->compare('code', $coaPenjualan->code . '%', true, 'AND', false);
         $coaPenjualanCriteria->compare('name', $coaPenjualan->name, true);
         $coaPenjualanDataProvider = new CActiveDataProvider('Coa', array(
@@ -125,7 +125,7 @@ class ProductSubMasterCategoryController extends Controller {
         if (isset($_GET['Coa']))
             $coaRetur->attributes = $_GET['Coa'];
         $coaReturCriteria = new CDbCriteria;
-        $coaReturCriteria->addCondition("coa_sub_category_id = 28 and coa_id = 0");
+        $coaReturCriteria->addCondition("coa_sub_category_id = 28 and coa_id IS NOT null");
         $coaReturCriteria->compare('code', $coaRetur->code . '%', true, 'AND', false);
         $coaReturCriteria->compare('name', $coaRetur->name, true);
         $coaReturDataProvider = new CActiveDataProvider('Coa', array(
@@ -137,7 +137,7 @@ class ProductSubMasterCategoryController extends Controller {
         if (isset($_GET['Coa']))
             $coaDiskon->attributes = $_GET['Coa'];
         $coaDiskonCriteria = new CDbCriteria;
-        $coaDiskonCriteria->addCondition("coa_sub_category_id = 27 and coa_id = 0");
+        $coaDiskonCriteria->addCondition("coa_sub_category_id = 27 and coa_id IS NOT null");
         $coaDiskonCriteria->compare('code', $coaDiskon->code . '%', true, 'AND', false);
         $coaDiskonCriteria->compare('name', $coaDiskon->name, true);
         $coaDiskonDataProvider = new CActiveDataProvider('Coa', array(
@@ -149,7 +149,7 @@ class ProductSubMasterCategoryController extends Controller {
         if (isset($_GET['Coa']))
             $coaReturPembelian->attributes = $_GET['Coa'];
         $coaReturPembelianCriteria = new CDbCriteria;
-        $coaReturPembelianCriteria->addCondition("coa_sub_category_id = 48 and coa_id = 0");
+        $coaReturPembelianCriteria->addCondition("coa_sub_category_id = 48 and coa_id IS NOT null");
         $coaReturPembelianCriteria->compare('code', $coaReturPembelian->code . '%', true, 'AND', false);
         $coaReturPembelianCriteria->compare('name', $coaReturPembelian->name, true);
         $coaReturPembelianDataProvider = new CActiveDataProvider('Coa', array(
@@ -161,7 +161,7 @@ class ProductSubMasterCategoryController extends Controller {
         if (isset($_GET['Coa']))
             $coaDiskonPembelian->attributes = $_GET['Coa'];
         $coaDiskonPembelianCriteria = new CDbCriteria;
-        $coaDiskonPembelianCriteria->addCondition("coa_sub_category_id = 47 and coa_id = 0");
+        $coaDiskonPembelianCriteria->addCondition("coa_sub_category_id = 47 and coa_id IS NOT null");
         $coaDiskonPembelianCriteria->compare('code', $coaDiskonPembelian->code . '%', true, 'AND', false);
         $coaDiskonPembelianCriteria->compare('name', $coaDiskonPembelian->name, true);
         $coaDiskonPembelianDataProvider = new CActiveDataProvider('Coa', array(
@@ -173,7 +173,7 @@ class ProductSubMasterCategoryController extends Controller {
         if (isset($_GET['Coa']))
             $coaInventory->attributes = $_GET['Coa'];
         $coaInventoryCriteria = new CDbCriteria;
-        $coaInventoryCriteria->addCondition("coa_sub_category_id = 9 and coa_id = 0");
+        $coaInventoryCriteria->addCondition("coa_sub_category_id = 9 and coa_id IS NOT null");
         $coaInventoryCriteria->compare('code', $coaInventory->code . '%', true, 'AND', false);
         $coaInventoryCriteria->compare('name', $coaInventory->name, true);
         $coaInventoryDataProvider = new CActiveDataProvider('Coa', array(
@@ -185,7 +185,7 @@ class ProductSubMasterCategoryController extends Controller {
         if (isset($_GET['Coa']))
             $coaConsignment->attributes = $_GET['Coa'];
         $coaConsignmentCriteria = new CDbCriteria;
-        $coaConsignmentCriteria->addCondition("coa_sub_category_id = 51 and coa_id = 0");
+        $coaConsignmentCriteria->addCondition("coa_sub_category_id = 51 and coa_id IS NOT null");
         $coaConsignmentCriteria->compare('code', $coaConsignment->code . '%', true, 'AND', false);
         $coaConsignmentCriteria->compare('name', $coaConsignment->name, true);
         $coaConsignmentDataProvider = new CActiveDataProvider('Coa', array(
@@ -237,7 +237,7 @@ class ProductSubMasterCategoryController extends Controller {
         if (isset($_GET['Coa']))
             $coaPersediaan->attributes = $_GET['Coa'];
         $coaPersediaanCriteria = new CDbCriteria;
-        $coaPersediaanCriteria->addCondition("coa_sub_category_id = 4 and coa_id = 0");
+        $coaPersediaanCriteria->addCondition("coa_sub_category_id = 4 and coa_id IS NOT null");
         $coaPersediaanCriteria->compare('code', $coaPersediaan->code . '%', true, 'AND', false);
         $coaPersediaanCriteria->compare('name', $coaPersediaan->name, true);
         $coaPersediaanDataProvider = new CActiveDataProvider('Coa', array(
@@ -249,7 +249,7 @@ class ProductSubMasterCategoryController extends Controller {
         if (isset($_GET['Coa']))
             $coaHpp->attributes = $_GET['Coa'];
         $coaHppCriteria = new CDbCriteria;
-        $coaHppCriteria->addCondition("coa_sub_category_id = 47 and coa_id = 0");
+        $coaHppCriteria->addCondition("coa_sub_category_id = 47 and coa_id IS NOT null");
         $coaHppCriteria->compare('code', $coaHpp->code . '%', true, 'AND', false);
         $coaHppCriteria->compare('name', $coaHpp->name, true);
         $coaHppDataProvider = new CActiveDataProvider('Coa', array(
@@ -261,7 +261,7 @@ class ProductSubMasterCategoryController extends Controller {
         if (isset($_GET['Coa']))
             $coaPenjualan->attributes = $_GET['Coa'];
         $coaPenjualanCriteria = new CDbCriteria;
-        $coaPenjualanCriteria->addCondition("coa_sub_category_id = 26 and coa_id = 0");
+        $coaPenjualanCriteria->addCondition("coa_sub_category_id = 26 and coa_id IS NOT null");
         $coaPenjualanCriteria->compare('code', $coaPenjualan->code . '%', true, 'AND', false);
         $coaPenjualanCriteria->compare('name', $coaPenjualan->name, true);
         $coaPenjualanDataProvider = new CActiveDataProvider('Coa', array(
@@ -273,7 +273,7 @@ class ProductSubMasterCategoryController extends Controller {
         if (isset($_GET['Coa']))
             $coaRetur->attributes = $_GET['Coa'];
         $coaReturCriteria = new CDbCriteria;
-        $coaReturCriteria->addCondition("coa_sub_category_id = 28 and coa_id = 0");
+        $coaReturCriteria->addCondition("coa_sub_category_id = 28 and coa_id IS NOT null");
         $coaReturCriteria->compare('code', $coaRetur->code . '%', true, 'AND', false);
         $coaReturCriteria->compare('name', $coaRetur->name, true);
         $coaReturDataProvider = new CActiveDataProvider('Coa', array(
@@ -285,7 +285,7 @@ class ProductSubMasterCategoryController extends Controller {
         if (isset($_GET['Coa']))
             $coaDiskon->attributes = $_GET['Coa'];
         $coaDiskonCriteria = new CDbCriteria;
-        $coaDiskonCriteria->addCondition("coa_sub_category_id = 27 and coa_id = 0");
+        $coaDiskonCriteria->addCondition("coa_sub_category_id = 27 and coa_id IS NOT null");
         $coaDiskonCriteria->compare('code', $coaDiskon->code . '%', true, 'AND', false);
         $coaDiskonCriteria->compare('name', $coaDiskon->name, true);
         $coaDiskonDataProvider = new CActiveDataProvider('Coa', array(
@@ -297,7 +297,7 @@ class ProductSubMasterCategoryController extends Controller {
         if (isset($_GET['Coa']))
             $coaReturPembelian->attributes = $_GET['Coa'];
         $coaReturPembelianCriteria = new CDbCriteria;
-        $coaReturPembelianCriteria->addCondition("coa_sub_category_id = 48 and coa_id = 0");
+        $coaReturPembelianCriteria->addCondition("coa_sub_category_id = 48 and coa_id IS NOT null");
         $coaReturPembelianCriteria->compare('code', $coaReturPembelian->code . '%', true, 'AND', false);
         $coaReturPembelianCriteria->compare('name', $coaReturPembelian->name, true);
         $coaReturPembelianDataProvider = new CActiveDataProvider('Coa', array(
@@ -309,7 +309,7 @@ class ProductSubMasterCategoryController extends Controller {
         if (isset($_GET['Coa']))
             $coaDiskonPembelian->attributes = $_GET['Coa'];
         $coaDiskonPembelianCriteria = new CDbCriteria;
-        $coaDiskonPembelianCriteria->addCondition("coa_sub_category_id = 47 and coa_id = 0");
+        $coaDiskonPembelianCriteria->addCondition("coa_sub_category_id = 47 and coa_id IS NOT null");
         $coaDiskonPembelianCriteria->compare('code', $coaDiskonPembelian->code . '%', true, 'AND', false);
         $coaDiskonPembelianCriteria->compare('name', $coaDiskonPembelian->name, true);
         $coaDiskonPembelianDataProvider = new CActiveDataProvider('Coa', array(
@@ -321,7 +321,7 @@ class ProductSubMasterCategoryController extends Controller {
         if (isset($_GET['Coa']))
             $coaInventory->attributes = $_GET['Coa'];
         $coaInventoryCriteria = new CDbCriteria;
-        $coaInventoryCriteria->addCondition("coa_sub_category_id = 9 and coa_id = 0");
+        $coaInventoryCriteria->addCondition("coa_sub_category_id = 9 and coa_id IS NOT null");
         $coaInventoryCriteria->compare('code', $coaInventory->code . '%', true, 'AND', false);
         $coaInventoryCriteria->compare('name', $coaInventory->name, true);
         $coaInventoryDataProvider = new CActiveDataProvider('Coa', array(
@@ -333,7 +333,7 @@ class ProductSubMasterCategoryController extends Controller {
         if (isset($_GET['Coa']))
             $coaConsignment->attributes = $_GET['Coa'];
         $coaConsignmentCriteria = new CDbCriteria;
-        $coaConsignmentCriteria->addCondition("coa_sub_category_id = 51 and coa_id = 0");
+        $coaConsignmentCriteria->addCondition("coa_sub_category_id = 51 and coa_id IS NOT null");
         $coaConsignmentCriteria->compare('code', $coaConsignment->code . '%', true, 'AND', false);
         $coaConsignmentCriteria->compare('name', $coaConsignment->name, true);
         $coaConsignmentDataProvider = new CActiveDataProvider('Coa', array(
