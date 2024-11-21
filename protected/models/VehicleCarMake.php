@@ -169,4 +169,33 @@ class VehicleCarMake extends CActiveRecord {
         
         return $resultSet;
     }
+    
+    public function getSaleVehicleServiceReport($startDate, $endDate, $branchId) {
+        $branchConditionSql = '';
+        
+        $params = array(
+            ':car_make_id' => $this->id,
+            ':start_date' => $startDate,
+            ':end_date' => $endDate,
+        );
+        
+        if (!empty($branchId)) {
+            $branchConditionSql = ' AND r.branch_id = :branch_id';
+            $params[':branch_id'] = $branchId;
+        }
+        
+        
+        $sql = "SELECT r.invoice_number, r.invoice_date, p.code, p.name, d.quantity, d.unit_price, d.total_price, c.name AS customer
+                FROM " . Vehicle::model()->tableName() . " v
+                INNER JOIN " . InvoiceHeader::model()->tableName() . " r ON v.id = r.vehicle_id
+                INNER JOIN " . InvoiceDetail::model()->tableName() . " d ON r.id = d.invoice_id
+                INNER JOIN " . Service::model()->tableName() . " p ON p.id = d.service_id
+                INNER JOIN " . Customer::model()->tableName() . " c ON c.id = r.customer_id
+                WHERE substr(r.invoice_date, 1, 10) BETWEEN :start_date AND :end_date AND v.car_make_id = :car_make_id AND r.status NOT LIKE '%CANCEL%'" . $branchConditionSql . "
+                ORDER BY r.invoice_date ASC";
+        
+        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
+        
+        return $resultSet;
+    }
 }

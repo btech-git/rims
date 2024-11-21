@@ -84,10 +84,10 @@ class SaleVehicleProductController extends Controller {
 
         $documentProperties = $objPHPExcel->getProperties();
         $documentProperties->setCreator('Raperind Motor');
-        $documentProperties->setTitle('Penjualan Product per Kendaraan');
+        $documentProperties->setTitle('Penjualan per Kendaraan');
 
         $worksheet = $objPHPExcel->setActiveSheetIndex(0);
-        $worksheet->setTitle('Penjualan Product per Kendaraan');
+        $worksheet->setTitle('Penjualan per Kendaraan');
 
         $worksheet->mergeCells('A1:I1');
         $worksheet->mergeCells('A2:I2');
@@ -98,7 +98,7 @@ class SaleVehicleProductController extends Controller {
 
         $branch = Branch::model()->findByPk($branchId);
         $worksheet->setCellValue('A1', 'Raperind Motor ' . CHtml::encode(CHtml::value($branch, 'name')));
-        $worksheet->setCellValue('A2', 'Penjualan Product per Kendaraan');
+        $worksheet->setCellValue('A2', 'Penjualan per Kendaraan');
         $worksheet->setCellValue('A3', Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($startDate)) . ' - ' . Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($endDate)));
 
         $worksheet->getStyle('A5:I5')->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
@@ -187,7 +187,7 @@ class SaleVehicleProductController extends Controller {
         ob_end_clean();
 
         header('Content-type: application/vnd.ms-excel');
-        header('Content-Disposition: attachment;filename="Penjualan Product per Kendaraan.xls"');
+        header('Content-Disposition: attachment;filename="Penjualan per Kendaraan.xls"');
         header('Cache-Control: max-age=0');
 
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
