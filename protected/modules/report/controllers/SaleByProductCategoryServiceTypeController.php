@@ -150,7 +150,8 @@ class SaleByProductCategoryServiceTypeController extends Controller {
         $worksheet->getStyle('A1:AZ6')->getFont()->setBold(true);
 
         $branch = Branch::model()->findByPk($branchId);
-        $worksheet->setCellValue('A2', 'Penjualan Service Product ' . CHtml::encode(CHtml::value($branch, 'name')));
+        $worksheet->setCellValue('A1', 'Raperind Motor ' . CHtml::encode(CHtml::value($branch, 'name')));
+        $worksheet->setCellValue('A2', 'Penjualan Service Type + Product Category');
         $worksheet->setCellValue('A3', $monthList[$month] . ' ' . $year);
 
         $worksheet->setCellValue('A5', 'Penjualan Retail');
@@ -271,7 +272,7 @@ class SaleByProductCategoryServiceTypeController extends Controller {
         $worksheet->getStyle("B{$rowCounter}:{$columnCounter}{$rowCounter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
         $rowCounter++;$rowCounter++;$rowCounter++;
         
-        $worksheet->mergeCells("A{$rowCounter}:E{$rowCounter}");
+        $worksheet->mergeCells("A{$rowCounter}:{$columnCounter}{$rowCounter}");
         $worksheet->getStyle("A{$rowCounter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
         $worksheet->getStyle("A{$rowCounter}")->getFont()->setBold(true);
         $worksheet->setCellValue("A{$rowCounter}", 'Penjualan PT');

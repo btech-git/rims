@@ -15,35 +15,7 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
         <div id="detail_div">
             <div>
                 <div class="myForm">
-                    <?php echo CHtml::beginForm(array(''), 'get'); ?>
-                    <div class="row">
-                        <div class="medium-6 columns">
-                            <div class="field">
-                                <div class="row collapse">
-                                    <div class="small-4 columns">
-                                        <span class="prefix">Jumlah per Halaman</span>
-                                    </div>
-                                    <div class="small-8 columns">
-                                        <?php echo CHtml::textField('PageSize', '', array('size' => 3)); ?>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="medium-6 columns">
-                            <div class="field">
-                                <div class="row collapse">
-                                    <div class="small-4 columns">
-                                        <span class="prefix">Halaman saat ini</span>
-                                    </div>
-                                    <div class="small-8 columns">
-                                        <?php echo CHtml::textField('page', '', array('size' => 3, 'id' => 'CurrentPage')); ?>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
+                    <?php echo CHtml::beginForm(array(''), 'get'); ?>                    
                     <div class="row">
                         <div class="medium-6 columns">
                             <div class="field">
@@ -88,6 +60,7 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                         <?php echo CHtml::submitButton('Tampilkan', array('onclick' => '$("#CurrentSort").val(""); return true;')); ?>
                         <?php echo CHtml::submitButton('Hapus', array('name' => 'ResetFilter'));  ?>
                         <?php echo CHtml::submitButton('Simpan ke Excel', array('name' => 'SaveExcel')); ?>
+                        <?php echo CHtml::submitButton('Konfirmasi Transaksi', array('name' => 'Confirmation', 'class' => 'button success right')); ?>
                     </div>
 
                     <?php echo CHtml::endForm(); ?>

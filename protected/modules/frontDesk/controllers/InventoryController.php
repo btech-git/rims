@@ -57,7 +57,7 @@ class InventoryController extends Controller {
         $branches = Branch::model()->findAllByAttributes(array('status' => 'Active'));
         $detailTabs = array();
         
-        $limit = 200;
+        $limit = 500;
         
         foreach ($branches as $branch) {
             $latestInventoryData = InventoryDetail::getLatestInventoryData($product->id, $branch->id, $limit, $endDate);

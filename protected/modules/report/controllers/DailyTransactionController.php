@@ -120,6 +120,13 @@ class DailyTransactionController extends Controller {
             $this->redirect(array('summary'));
         }
         
+        if (isset($_GET['Confirmation'])) {
+            $this->confirmDailyTransaction(array(
+                'branchId' => $branchId,
+                'transactionDate' => $transactionDate,
+            ));
+        }
+        
         if (isset($_GET['SaveExcel'])) {
             $this->saveToExcel(array(
                 'cashTransactionInData' => $cashTransactionInData,
@@ -163,6 +170,20 @@ class DailyTransactionController extends Controller {
             'currentPage' => $currentPage,
         ));
     }
+    
+    public function confirmDailyTransaction(array $options = array()) {
+        
+        $model = new DailyTransactionConfirmation();
+        
+        $model->branch_id = $options['branchId'];
+        $model->transaction_date = $options['transactionDate'];
+        $model->confirmation_date = date('Y-m-d');
+        $model->confirmation_time = date('H:i:s');
+        $model->user_id_confirm = Yii::app()->user->id;
+        $model->save(false);
+        
+        $this->redirect(array('summary'));
+    }
 
     protected function saveToExcel(array $options = array()) {
         set_time_limit(0);
@@ -185,9 +206,9 @@ class DailyTransactionController extends Controller {
         $registrationTransactionData = $options['registrationTransactionData'];
         $deliveryData = $options['deliveryData'];
         $purchaseOrderData = $options['purchaseOrderData'];
-        $receiveItemData = $options['receiveItemData'];
-        $sentRequestData = $options['sentRequestData'];
-        $transferRequestData = $options['transferRequestData'];
+//        $receiveItemData = $options['receiveItemData'];
+//        $sentRequestData = $options['sentRequestData'];
+//        $transferRequestData = $options['transferRequestData'];
         $branchId = $options['branchId'];
 
         $documentProperties = $objPHPExcel->getProperties();
