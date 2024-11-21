@@ -109,8 +109,8 @@ class SaleVehicleProductController extends Controller {
         $worksheet->setCellValue('A6', 'Penjualan #');
         $worksheet->setCellValue('B6', 'Tanggal');
         $worksheet->setCellValue('C6', 'Customer');
-        $worksheet->setCellValue('D6', 'Kode Barang');
-        $worksheet->setCellValue('E6', 'Nama Barang');
+        $worksheet->setCellValue('D6', 'Kode Barang/Jasa');
+        $worksheet->setCellValue('E6', 'Nama Barang/Jasa');
         $worksheet->setCellValue('F6', 'Quantity');
         $worksheet->setCellValue('G6', 'Harga');
         $worksheet->setCellValue('H6', 'Total');
@@ -138,7 +138,7 @@ class SaleVehicleProductController extends Controller {
                 $worksheet->setCellValue("A{$counter}", CHtml::encode($saleRetailProductRow['invoice_number']));
                 $worksheet->setCellValue("B{$counter}", CHtml::encode($saleRetailProductRow['invoice_date']));
                 $worksheet->setCellValue("C{$counter}", CHtml::encode($saleRetailProductRow['customer']));
-                $worksheet->setCellValue("D{$counter}", CHtml::encode($saleRetailProductRow['code']));
+                $worksheet->setCellValue("D{$counter}", CHtml::encode($saleRetailProductRow['manufacturer_code']));
                 $worksheet->setCellValue("E{$counter}", CHtml::encode($saleRetailProductRow['name']));
                 $worksheet->setCellValue("F{$counter}", CHtml::encode($saleRetailProductRow['quantity']));
                 $worksheet->setCellValue("G{$counter}", CHtml::encode($saleRetailProductRow['unit_price']));

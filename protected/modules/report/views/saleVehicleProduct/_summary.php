@@ -31,8 +31,8 @@ Yii::app()->clientScript->registerCss('_report', '
                     <tr>
                         <th class="width2-1">Penjualan #</th>
                         <th class="width2-2">Tanggal</th>
-                        <th class="width2-3">Kode Barang</th>
-                        <th class="width2-4">Nama Barang</th>
+                        <th class="width2-3">Kode Barang/Jasa</th>
+                        <th class="width2-4">Nama Barang/Jasa</th>
                         <th class="width2-5">Quantity</th>
                         <th class="width2-6">Harga</th>
                         <th class="width2-7">Total</th>
@@ -63,7 +63,7 @@ Yii::app()->clientScript->registerCss('_report', '
                                 <td class="width2-2">
                                     <?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($saleRetailProductRow['invoice_date']))); ?>
                                 </td>
-                                <td class="width2-3"><?php echo CHtml::encode($saleRetailProductRow['code']); ?></td>
+                                <td class="width2-3"><?php echo CHtml::encode($saleRetailProductRow['manufacturer_code']); ?></td>
                                 <td class="width2-4"><?php echo CHtml::encode($saleRetailProductRow['name']); ?></td>
                                 <td class="width2-5" style="text-align: center">
                                     <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $saleRetailProductRow['quantity'])); ?>
