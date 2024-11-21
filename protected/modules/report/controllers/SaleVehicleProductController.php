@@ -127,25 +127,42 @@ class SaleVehicleProductController extends Controller {
 
             $counter++;
             
-            $saleRetailData = $header->getSaleVehicleProductReport($startDate, $endDate, $branchId);
+            $saleRetailProductData = $header->getSaleVehicleProductReport($startDate, $endDate, $branchId);
+            $saleRetailServiceData = $header->getSaleVehicleServiceReport($startDate, $endDate, $branchId);
             $totalSale = 0.00;
-            foreach ($saleRetailData as $saleRetailRow) {
-                $total = $saleRetailRow['total_price'];
+            foreach ($saleRetailProductData as $saleRetailProductRow) {
+                $totalProduct = $saleRetailProductRow['total_price'];
                 
                 $worksheet->getStyle("I{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
 
-                $worksheet->setCellValue("A{$counter}", CHtml::encode($saleRetailRow['invoice_number']));
-                $worksheet->setCellValue("B{$counter}", CHtml::encode($saleRetailRow['invoice_date']));
-                $worksheet->setCellValue("C{$counter}", CHtml::encode($saleRetailRow['customer']));
-                $worksheet->setCellValue("D{$counter}", CHtml::encode($saleRetailRow['code']));
-                $worksheet->setCellValue("E{$counter}", CHtml::encode($saleRetailRow['name']));
-                $worksheet->setCellValue("F{$counter}", CHtml::encode($saleRetailRow['quantity']));
-                $worksheet->setCellValue("G{$counter}", CHtml::encode($saleRetailRow['unit_price']));
-                $worksheet->setCellValue("H{$counter}", CHtml::encode($total));
+                $worksheet->setCellValue("A{$counter}", CHtml::encode($saleRetailProductRow['invoice_number']));
+                $worksheet->setCellValue("B{$counter}", CHtml::encode($saleRetailProductRow['invoice_date']));
+                $worksheet->setCellValue("C{$counter}", CHtml::encode($saleRetailProductRow['customer']));
+                $worksheet->setCellValue("D{$counter}", CHtml::encode($saleRetailProductRow['code']));
+                $worksheet->setCellValue("E{$counter}", CHtml::encode($saleRetailProductRow['name']));
+                $worksheet->setCellValue("F{$counter}", CHtml::encode($saleRetailProductRow['quantity']));
+                $worksheet->setCellValue("G{$counter}", CHtml::encode($saleRetailProductRow['unit_price']));
+                $worksheet->setCellValue("H{$counter}", CHtml::encode($totalProduct));
 
                 $counter++;
-                $totalSale += $total;
+                $totalSale += $totalProduct;
+            }
+            foreach ($saleRetailServiceData as $saleRetailServiceRow) {
+                $totalService = $saleRetailServiceRow['total_price'];
+                
+                $worksheet->getStyle("I{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
 
+                $worksheet->setCellValue("A{$counter}", CHtml::encode($saleRetailServiceRow['invoice_number']));
+                $worksheet->setCellValue("B{$counter}", CHtml::encode($saleRetailServiceRow['invoice_date']));
+                $worksheet->setCellValue("C{$counter}", CHtml::encode($saleRetailServiceRow['customer']));
+                $worksheet->setCellValue("D{$counter}", CHtml::encode($saleRetailServiceRow['code']));
+                $worksheet->setCellValue("E{$counter}", CHtml::encode($saleRetailServiceRow['name']));
+                $worksheet->setCellValue("F{$counter}", CHtml::encode($saleRetailServiceRow['quantity']));
+                $worksheet->setCellValue("G{$counter}", CHtml::encode($saleRetailServiceRow['unit_price']));
+                $worksheet->setCellValue("H{$counter}", CHtml::encode($totalService));
+
+                $counter++;
+                $totalSale += $totalService;
             }
 
             $worksheet->getStyle("G{$counter}:H{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
