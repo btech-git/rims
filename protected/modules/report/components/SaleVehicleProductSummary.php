@@ -41,7 +41,7 @@ class SaleVehicleProductSummary extends CComponent {
             FROM " . Vehicle::model()->tableName() . " v
             INNER JOIN " . InvoiceHeader::model()->tableName() . " r ON v.id = r.vehicle_id
             INNER JOIN " . InvoiceDetail::model()->tableName() . " p ON r.id = p.invoice_id
-            WHERE v.car_make_id = t.id AND substr(h.invoice_date, 1, 10) BETWEEN :start_date AND :end_date AND r.status NOT LIKE '%CANCEL%'" . $branchConditionSql . "
+            WHERE v.car_make_id = t.id AND substr(r.invoice_date, 1, 10) BETWEEN :start_date AND :end_date AND r.status NOT LIKE '%CANCEL%'" . $branchConditionSql . "
         )");
         $this->dataProvider->criteria->params[':start_date'] = $startDate;
         $this->dataProvider->criteria->params[':end_date'] = $endDate;
