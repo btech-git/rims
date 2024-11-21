@@ -249,7 +249,7 @@ class ProductSubMasterCategoryController extends Controller {
         if (isset($_GET['Coa']))
             $coaHpp->attributes = $_GET['Coa'];
         $coaHppCriteria = new CDbCriteria;
-        $coaHppCriteria->addCondition("coa_sub_category_id = 44 and coa_id = 0");
+        $coaHppCriteria->addCondition("coa_sub_category_id = 47 and coa_id = 0");
         $coaHppCriteria->compare('code', $coaHpp->code . '%', true, 'AND', false);
         $coaHppCriteria->compare('name', $coaHpp->name, true);
         $coaHppDataProvider = new CActiveDataProvider('Coa', array(
