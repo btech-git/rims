@@ -58,12 +58,12 @@ Yii::app()->clientScript->registerCss('_report', '
                         <?php foreach ($saleRetailData as $saleRetailRow): ?>
                             <?php $total = $saleRetailRow['total_price']; ?>
                             <tr>
-                                <td class="width2-1"><?php echo CHtml::encode($saleRetailRow['transaction_number']); ?></td>
-                                <td class="width2-2"><?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($saleRetailRow['transaction_date']))); ?></td>
+                                <td class="width2-1"><?php echo CHtml::encode($saleRetailRow['invoice_number']); ?></td>
+                                <td class="width2-2"><?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($saleRetailRow['invoice_date']))); ?></td>
                                 <td class="width2-3"><?php echo CHtml::encode($saleRetailRow['code']); ?></td>
                                 <td class="width2-4"><?php echo CHtml::encode($saleRetailRow['name']); ?></td>
                                 <td class="width2-5" style="text-align: center"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $saleRetailRow['quantity'])); ?></td>
-                                <td class="width2-6" style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $saleRetailRow['sale_price'])); ?></td>
+                                <td class="width2-6" style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $saleRetailRow['unit_price'])); ?></td>
                                 <td class="width2-7" style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $total)); ?></td>
                             </tr>
                             <?php $totalSale += $total; ?>
