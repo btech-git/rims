@@ -165,7 +165,11 @@ class CashDailySummaryController extends Controller {
         $registrationTransactionCompanyCashDailySummary = RegistrationTransaction::getCompanyCashDailySummary($transactionDate);
         $saleOrderCashDailySummary = TransactionSalesOrder::getCashDailySummary($transactionDate);
         
-        $branches = Branch::model()->findAll(array('order' => 't.name ASC'));
+        $branches = Branch::model()->findAll(array(
+            'condition' => "t.id IN (SELECT branch_id FROM " . UserBranch::model()->tableName() . " WHERE users_id = :user_id)", 
+            'params' => array(':user_id' => $userId),
+            'order' => 't.name ASC',
+        ));
         
         $cashDailySummary = array();
         foreach ($registrationTransactionIndividualCashDailySummary as $registrationTransactionIndividualCashDailyItem) {
