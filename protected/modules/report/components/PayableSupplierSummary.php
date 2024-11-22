@@ -40,7 +40,7 @@ class PayableSupplierSummary extends CComponent {
         $this->dataProvider->criteria->addCondition("EXISTS (
             SELECT p.supplier_id, SUM(p.payment_left) AS remaining
             FROM " . TransactionPurchaseOrder::model()->tableName() . " p 
-            WHERE p.supplier_id = t.id AND substr(p.purchase_order_date, 1, 10) <= :end_date" . $branchConditionSql . " 
+            WHERE p.supplier_id = t.id AND substr(p.purchase_order_date, 1, 10) BETWEEN '" . AppParam::BEGINNING_TRANSACTION_DATE ."' AND :end_date" . $branchConditionSql . " 
             GROUP BY p.supplier_id
         )");
         

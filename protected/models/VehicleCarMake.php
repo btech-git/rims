@@ -141,7 +141,7 @@ class VehicleCarMake extends CActiveRecord {
         }
     }
     
-    public function getSaleVehicleProductReport($startDate, $endDate, $branchId) {
+    public function getSaleVehicleReport($startDate, $endDate, $branchId) {
         $branchConditionSql = '';
         
         $params = array(
@@ -156,14 +156,14 @@ class VehicleCarMake extends CActiveRecord {
         }
         
         
-        $sql = "SELECT r.invoice_number, r.invoice_date, p.manufacturer_code, p.name, d.quantity, d.unit_price, d.total_price, c.name AS customer
-                FROM " . Vehicle::model()->tableName() . " v
-                INNER JOIN " . InvoiceHeader::model()->tableName() . " r ON v.id = r.vehicle_id
-                INNER JOIN " . InvoiceDetail::model()->tableName() . " d ON r.id = d.invoice_id
-                INNER JOIN " . Product::model()->tableName() . " p ON p.id = d.product_id
-                INNER JOIN " . Customer::model()->tableName() . " c ON c.id = r.customer_id
-                WHERE substr(r.invoice_date, 1, 10) BETWEEN :start_date AND :end_date AND v.car_make_id = :car_make_id AND r.status NOT LIKE '%CANCEL%'" . $branchConditionSql . "
-                ORDER BY r.invoice_date ASC";
+        $sql = "
+            SELECT r.id, r.invoice_number, r.invoice_date, r.product_price, r.service_price, r.total_price, v.plate_number AS plate_number, r.ppn_total, r.pph_total
+            FROM " . Vehicle::model()->tableName() . " v
+            INNER JOIN " . InvoiceHeader::model()->tableName() . " r ON v.id = r.vehicle_id
+            INNER JOIN " . Customer::model()->tableName() . " c ON c.id = r.customer_id
+            WHERE substr(r.invoice_date, 1, 10) BETWEEN :start_date AND :end_date AND v.car_make_id = :car_make_id AND r.status NOT LIKE '%CANCEL%'" . $branchConditionSql . "
+            ORDER BY r.invoice_date ASC, r.invoice_number ASC
+        ";
         
         $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
         

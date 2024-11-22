@@ -53,9 +53,8 @@ Yii::app()->clientScript->registerCss('_report', '
             <tr class="items2">
                 <td colspan="2">
                     <table>
-                        <?php $saleRetailProductData = $header->getSaleVehicleProductReport($startDate, $endDate, $branchId); ?>
-                        <?php $saleRetailServiceData = $header->getSaleVehicleServiceReport($startDate, $endDate, $branchId); ?>
                         <?php $totalSale = 0.00; ?>
+                        <?php $saleRetailProductData = $header->getSaleVehicleReport($startDate, $endDate, $branchId); ?>
                         <?php foreach ($saleRetailProductData as $saleRetailProductRow): ?>
                             <?php $totalProduct = $saleRetailProductRow['total_price']; ?>
                             <tr>
@@ -76,27 +75,6 @@ Yii::app()->clientScript->registerCss('_report', '
                                 </td>
                             </tr>
                             <?php $totalSale += $totalProduct; ?>
-                        <?php endforeach; ?>
-                        <?php foreach ($saleRetailServiceData as $saleRetailServiceRow): ?>
-                            <?php $totalService = $saleRetailServiceRow['total_price']; ?>
-                            <tr>
-                                <td class="width2-1"><?php echo CHtml::encode($saleRetailServiceRow['invoice_number']); ?></td>
-                                <td class="width2-2">
-                                    <?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($saleRetailServiceRow['invoice_date']))); ?>
-                                </td>
-                                <td class="width2-3"><?php echo CHtml::encode($saleRetailServiceRow['code']); ?></td>
-                                <td class="width2-4"><?php echo CHtml::encode($saleRetailServiceRow['name']); ?></td>
-                                <td class="width2-5" style="text-align: center">
-                                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $saleRetailServiceRow['quantity'])); ?>
-                                </td>
-                                <td class="width2-6" style="text-align: right">
-                                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $saleRetailServiceRow['unit_price'])); ?>
-                                </td>
-                                <td class="width2-7" style="text-align: right">
-                                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalService)); ?>
-                                </td>
-                            </tr>
-                            <?php $totalSale += $totalService; ?>
                         <?php endforeach; ?>
                         <tr>
                             <td style="text-align: right; font-weight: bold" colspan="6">Total</td>

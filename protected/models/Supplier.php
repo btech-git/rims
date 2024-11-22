@@ -505,7 +505,7 @@ class Supplier extends CActiveRecord {
         $sql = "
             SELECT p.supplier_id, COALESCE(SUM(p.total_price), 0) AS total_price, COALESCE(SUM(p.payment_amount), 0) AS payment_amount, COALESCE(SUM(p.payment_left), 0) AS payment_left
             FROM " . TransactionPurchaseOrder::model()->tableName() . " p 
-            WHERE p.supplier_id = :supplier_id AND substr(p.purchase_order_date, 1, 10) <= :end_date" . $branchConditionSql . "
+            WHERE p.supplier_id = :supplier_id AND substr(p.purchase_order_date, 1, 10) BETWEEN '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND :end_date" . $branchConditionSql . "
             GROUP BY p.supplier_id 
         ";
 
