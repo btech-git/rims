@@ -163,13 +163,13 @@ class SaleRetailController extends Controller {
                     $totalSale += $grandTotal;
                 }
                 $worksheet->setCellValue("L{$counter}", 'TOTAL');
-                $worksheet->setCellValue("M{$counter}", CHtml::encode($totalSale));
+                $worksheet->setCellValue("N{$counter}", CHtml::encode($totalSale));
                 $grandTotalSale += $totalSale;
                 $counter++;$counter++;
             }
         }
         $worksheet->setCellValue("L{$counter}", 'TOTAL PENJUALAN');
-        $worksheet->setCellValue("M{$counter}", CHtml::encode($grandTotalSale));
+        $worksheet->setCellValue("N{$counter}", CHtml::encode($grandTotalSale));
 
         for ($col = 'A'; $col !== 'Z'; $col++) {
             $objPHPExcel->getActiveSheet()
