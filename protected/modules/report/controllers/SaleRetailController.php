@@ -160,7 +160,7 @@ class SaleRetailController extends Controller {
                     $worksheet->setCellValue("M{$counter}", CHtml::encode($grandTotal));
                     $counter++;
                     
-                    $totalSale += $grandTotal;
+                    $totalSale += $grandTotal + $discountProduct + $discountService;
                 }
                 $worksheet->setCellValue("L{$counter}", 'TOTAL');
                 $worksheet->setCellValue("N{$counter}", CHtml::encode($totalSale));
