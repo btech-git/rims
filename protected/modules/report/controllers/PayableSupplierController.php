@@ -125,7 +125,7 @@ class PayableSupplierController extends Controller {
         $counter = 8;
         
         foreach ($payableSummary->dataProvider->data as $header) {
-            $payableData = $header->getPayableSupplierReport($startDate, $endDate, $branchId);
+            $payableData = $header->getPayableSupplierReport($endDate, $branchId);
             $totalPurchase = 0.00;
             $totalPayment = 0.00;
             $totalPayable = 0.00;
