@@ -168,7 +168,7 @@ class SaleVehicleProductController extends Controller {
             $worksheet->getStyle("G{$counter}:H{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
             $worksheet->setCellValue("G{$counter}", 'TOTAL');
-            $worksheet->setCellValue("H{$counter}", CHtml::encode($totalSale));
+            $worksheet->setCellValue("I{$counter}", CHtml::encode($totalSale));
             $grandTotalSale += $totalSale;
             $counter++;$counter++;
 
@@ -176,7 +176,7 @@ class SaleVehicleProductController extends Controller {
         
         $worksheet->getStyle("E{$counter}:H{$counter}")->getFont()->setBold(true);
         $worksheet->setCellValue("G{$counter}", 'GRAND TOTAL');
-        $worksheet->setCellValue("H{$counter}", CHtml::encode($grandTotalSale));
+        $worksheet->setCellValue("I{$counter}", CHtml::encode($grandTotalSale));
 
         for ($col = 'A'; $col !== 'I'; $col++) {
             $objPHPExcel->getActiveSheet()
