@@ -497,12 +497,12 @@ class CashTransactionController extends Controller {
             $totalDetail = $cashTransaction->totalDetails;
 
             if ($type == "In") {
-                $amountCredit = CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $cashTransaction->details[$index]->amount));
-                $totalCreditFormatted = CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalDetail));
+                $amountCredit = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $cashTransaction->details[$index]->amount));
+                $totalCreditFormatted = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $totalDetail));
                 $totalCredit = $totalDetail;
             } else {
-                $amountDebit = CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $cashTransaction->details[$index]->amount));
-                $totalDebitFormatted = CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalDetail));
+                $amountDebit = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $cashTransaction->details[$index]->amount));
+                $totalDebitFormatted = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $totalDetail));
                 $totalDebit = $totalDetail;
             }
             
