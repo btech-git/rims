@@ -379,11 +379,11 @@ class TransactionPurchaseOrderDetail extends CActiveRecord {
             $total = $this->quantity * $this->retail_price;
         }   
 
-        return ($tax == 1) ? $total * (1 + ($taxPercentage / 100)) : $total;
+        return ($tax == 1) ? round($total * (1 + ($taxPercentage / 100)), 0) : $total;
     }
 
     public function getTaxAmount($tax, $taxPercentage) {
-        return ($tax == 2) ? 0 : $this->getTotalPriceBeforeTax($tax, $taxPercentage) * $taxPercentage / 100;
+        return ($tax == 2) ? 0 : round($this->getTotalPriceBeforeTax($tax, $taxPercentage) * $taxPercentage / 100, 0);
     }
 
     public function getTotalBeforeDiscount() {
@@ -414,8 +414,6 @@ class TransactionPurchaseOrderDetail extends CActiveRecord {
             $discountTypeLiteral = 'Rp';
         } elseif ($this->discount1_type == 3) {
             $discountTypeLiteral = 'Pcs';
-        } else {
-            $discountTypeLiteral = '';
         }
 
         return $discountTypeLiteral;
@@ -424,14 +422,13 @@ class TransactionPurchaseOrderDetail extends CActiveRecord {
     public function getDiscountType2Literal() {
         $discountTypeLiteral = '';
 
-        if ($this->discount2_type == 1)
+        if ($this->discount2_type == 1) {
             $discountTypeLiteral = '%';
-        elseif ($this->discount2_type == 2)
+        } elseif ($this->discount2_type == 2) {
             $discountTypeLiteral = 'Rp';
-        elseif ($this->discount2_type == 3)
+        } elseif ($this->discount2_type == 3) {
             $discountTypeLiteral = 'Pcs';
-        else
-            $discountTypeLiteral;
+        }
 
         return $discountTypeLiteral;
     }
@@ -439,14 +436,13 @@ class TransactionPurchaseOrderDetail extends CActiveRecord {
     public function getDiscountType3Literal() {
         $discountTypeLiteral = '';
 
-        if ($this->discount3_type == 1)
+        if ($this->discount3_type == 1) {
             $discountTypeLiteral = '%';
-        elseif ($this->discount3_type == 2)
+        } elseif ($this->discount3_type == 2) {
             $discountTypeLiteral = 'Rp';
-        elseif ($this->discount3_type == 3)
+        } elseif ($this->discount3_type == 3) {
             $discountTypeLiteral = 'Pcs';
-        else
-            $discountTypeLiteral;
+        }
 
         return $discountTypeLiteral;
     }
@@ -454,14 +450,13 @@ class TransactionPurchaseOrderDetail extends CActiveRecord {
     public function getDiscountType4Literal() {
         $discountTypeLiteral = '';
 
-        if ($this->discount4_type == 1)
+        if ($this->discount4_type == 1) {
             $discountTypeLiteral = '%';
-        elseif ($this->discount4_type == 2)
+        } elseif ($this->discount4_type == 2) {
             $discountTypeLiteral = 'Rp';
-        elseif ($this->discount4_type == 3)
+        } elseif ($this->discount4_type == 3) {
             $discountTypeLiteral = 'Pcs';
-        else
-            $discountTypeLiteral;
+        }
 
         return $discountTypeLiteral;
     }
@@ -469,14 +464,13 @@ class TransactionPurchaseOrderDetail extends CActiveRecord {
     public function getDiscountType5Literal() {
         $discountTypeLiteral = '';
 
-        if ($this->discount5_type == 1)
+        if ($this->discount5_type == 1) {
             $discountTypeLiteral = '%';
-        elseif ($this->discount5_type == 2)
+        } elseif ($this->discount5_type == 2) {
             $discountTypeLiteral = 'Rp';
-        elseif ($this->discount5_type == 3)
+        } elseif ($this->discount5_type == 3) {
             $discountTypeLiteral = 'Pcs';
-        else
-            $discountTypeLiteral;
+        }
 
         return $discountTypeLiteral;
     }
@@ -490,5 +484,4 @@ class TransactionPurchaseOrderDetail extends CActiveRecord {
 
         return $total;
     }
-
 }
