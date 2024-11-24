@@ -107,8 +107,10 @@ class JournalAdjustmentController extends Controller {
         $journalAdjustmentHeader = Search::bind(new JournalAdjustmentHeader('search'), isset($_GET['JournalAdjustmentHeader']) ? $_GET['JournalAdjustmentHeader'] : array());
         $journalAdjustmentHeaderDataProvider = $journalAdjustmentHeader->searchByAdmin();
         $journalAdjustmentHeaderDataProvider->criteria->addBetweenCondition('t.date', $startDate, $endDate);
-//        $journalAdjustmentHeaderDataProvider->criteria->addCondition('t.branch_id = :branch_id');
-//        $journalAdjustmentHeaderDataProvider->criteria->params[':branch_id'] = Yii::app()->user->branch_id;
+        if (!Yii::app()->user->checkAccess('director')) {
+            $journalAdjustmentHeaderDataProvider->criteria->addCondition('t.branch_id = :branch_id');
+            $journalAdjustmentHeaderDataProvider->criteria->params[':branch_id'] = Yii::app()->user->branch_id;
+        }
         
         $this->render('admin', array(
             'journalAdjustmentHeader' => $journalAdjustmentHeader,

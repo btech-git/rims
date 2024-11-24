@@ -444,8 +444,10 @@ class RegistrationTransactionController extends Controller {
         $invoiceCriteria->compare('t.status', $invoice->status);
         $invoiceCriteria->compare('t.branch_id', $invoice->branch_id);
         $invoiceCriteria->compare('t.insurance_company_id', $invoice->insurance_company_id);
-//        $invoiceCriteria->addCondition('t.branch_id = :branch_id');
-//        $invoiceCriteria->params[':branch_id'] = Yii::app()->user->branch_id;
+        if (!Yii::app()->user->checkAccess('director')) {
+            $invoiceCriteria->addCondition('t.branch_id = :branch_id');
+            $invoiceCriteria->params[':branch_id'] = Yii::app()->user->branch_id;
+        }
         $invoiceCriteria->addCondition("t.status NOT LIKE '%CANCELLED%' AND t.registration_transaction_id IS NOT NULL AND invoice_date > '" . AppParam::BEGINNING_TRANSACTION_DATE . "'");
         $invoiceCriteria->together = true;
         $invoiceCriteria->with = array(
