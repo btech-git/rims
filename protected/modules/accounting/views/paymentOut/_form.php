@@ -166,10 +166,10 @@
                     </div>
                     <div class="small-8 columns">
                         <?php
-                            $userBranch = UserBranch::model()->findByAttributes(array('users_id' => Yii::app()->user->getId()));
-                            $companyBranch = CompanyBranch::model()->findByAttributes(array('branch_id' => $userBranch->branch_id));
-                        ?>
-                        <?php echo CHtml::activeDropDownList($paymentOut->header, 'company_bank_id', CHtml::listData(CompanyBank::model()->findAllByAttributes(array('company_id' => $companyBranch->company_id), array('order' => 'account_name')), 'id', 'accountNameAndNumber'), array(
+//                            $userBranch = UserBranch::model()->findByAttributes(array('users_id' => Yii::app()->user->getId()));
+//                            $companyBranch = CompanyBranch::model()->findByAttributes(array('branch_id' => $userBranch->branch_id));
+                        $branch = Branch::model()->findByPk(Yii::app()->user->branch_id); ?>
+                        <?php echo CHtml::activeDropDownList($paymentOut->header, 'company_bank_id', CHtml::listData(CompanyBank::model()->findAllByAttributes(array('company_id' => $branch->company_id), array('order' => 'account_name')), 'id', 'accountNameAndNumber'), array(
                             'empty' => '-- Select Company Bank --'
                         )); ?>
                         <?php echo CHtml::error($paymentOut->header, 'company_bank_id'); ?>
