@@ -46,7 +46,7 @@
                             <span class="prefix">Phone</span>
                         </div>
                         <div class="small-8 columns">
-                            <input type="text" readonly="true" value="<?php echo $model->phone; ?>">
+                            <input type="text" readonly="true" value="<?php echo $model->customer->phone; ?>">
                             <?php /*$phones = CustomerPhone::model()->findAllByAttributes(array('customer_id' => $model->customer_id, 'status' => 'Active')); ?>
                             <?php if (count($phones) > 0): ?>
                                 <?php foreach ($phones as $key => $phone): ?>
@@ -64,7 +64,7 @@
                             <span class="prefix">Mobile</span>
                         </div>
                         <div class="small-8 columns">
-                            <input type="text" readonly="true" value="<?php echo $model->mobile_phone; ?>">
+                            <input type="text" readonly="true" value="<?php echo $model->customer->mobile_phone; ?>">
                             <?php /*$mobiles = CustomerMobile::model()->findAllByAttributes(array('customer_id' => $model->customer_id, 'status' => 'Active')); ?>
                             <?php if (count($mobiles) > 0): ?>
                                 <?php foreach ($mobiles as $key => $mobile): ?>
