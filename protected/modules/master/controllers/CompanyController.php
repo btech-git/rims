@@ -365,7 +365,7 @@ class CompanyController extends Controller {
             $coa->attributes = $_GET['COA'];
 
         $coaCriteria = new CDbCriteria;
-        //$coaCriteria->addCondition("coa_sub_category_id is 2");
+        $coaCriteria->addCondition("coa_sub_category_id IN (1, 2, 3)");
         $coaCriteria->compare('code', $coa->code . '%', true, 'AND', false);
         $coaCriteria->compare('name', $coa->name, true);
 
