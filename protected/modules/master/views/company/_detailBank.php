@@ -34,7 +34,10 @@
                         )); ?>
                     </td>
                     <td>
-                        <?php echo CHtml::activeDropDownList($bankDetail, "[$i]coa_id", CHtml::listData(Coa::model()->findAll(array('condition' => 't.coa_sub_category_id = 2', 'order' => 't.name')), 'id', 'name'), array(
+                        <?php echo CHtml::activeDropDownList($bankDetail, "[$i]coa_id", CHtml::listData(Coa::model()->findAll(array(
+                            'condition' => 't.coa_sub_category_id IN (1, 2, 3)', 
+                            'order' => 't.name'
+                        )), 'id', 'name'), array(
                             'empty' => '-Pilih COA-'
                         )); ?>
                         <?php /*echo CHtml::activeHiddenField($bankDetail,"[$i]coa_id"); ?>
