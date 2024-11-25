@@ -16,10 +16,6 @@ $this->menu=array(
 ?>
 <div id="maincontent">
 	<?php $this->renderPartial('_form', array(
-		'model'=>$model,
-		'coa'=>$coa,
-		'coaDataProvider'=>$coaDataProvider,
-		'coaDiskon'=>$coaDiskon,
-		'coaDiskonDataProvider'=>$coaDiskonDataProvider,
-		)); ?>
+            'model'=>$model,
+        )); ?>
 </div>

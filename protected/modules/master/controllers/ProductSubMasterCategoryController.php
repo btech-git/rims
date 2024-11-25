@@ -80,145 +80,287 @@ class ProductSubMasterCategoryController extends Controller {
         $model->date_posting = date('Y-m-d H:i:s');
         $model->date_approval = null;
 
-        // Uncomment the following line if AJAX validation is needed
-        // $this->performAjaxValidation($model);
-
-        $coaPersediaan = new Coa('search');
-        $coaPersediaan->unsetAttributes();  // clear any default values
-        if (isset($_GET['Coa'])) {
-            $coaPersediaan->attributes = $_GET['Coa'];
-        }
-        $coaPersediaanCriteria = new CDbCriteria;
-        $coaPersediaanCriteria->addCondition("coa_sub_category_id = 4 and coa_id IS NOT null");
-        $coaPersediaanCriteria->compare('code', $coaPersediaan->code . '%', true, 'AND', false);
-        $coaPersediaanCriteria->compare('name', $coaPersediaan->name, true);
-        $coaPersediaanDataProvider = new CActiveDataProvider('Coa', array(
-            'criteria' => $coaPersediaanCriteria,
-        ));
-
-        $coaHpp = new Coa('search');
-        $coaHpp->unsetAttributes();  // clear any default values
-        if (isset($_GET['Coa']))
-            $coaHpp->attributes = $_GET['Coa'];
-        $coaHppCriteria = new CDbCriteria;
-        $coaHppCriteria->addCondition("coa_sub_category_id = 47 and coa_id IS NOT null");
-        $coaHppCriteria->compare('code', $coaHpp->code . '%', true, 'AND', false);
-        $coaHppCriteria->compare('name', $coaHpp->name, true);
-        $coaHppDataProvider = new CActiveDataProvider('Coa', array(
-            'criteria' => $coaHppCriteria,
-        ));
-
-        $coaPenjualan = new Coa('search');
-        $coaPenjualan->unsetAttributes();  // clear any default values
-        if (isset($_GET['Coa']))
-            $coaPenjualan->attributes = $_GET['Coa'];
-        $coaPenjualanCriteria = new CDbCriteria;
-        $coaPenjualanCriteria->addCondition("coa_sub_category_id = 26 and coa_id IS NOT null");
-        $coaPenjualanCriteria->compare('code', $coaPenjualan->code . '%', true, 'AND', false);
-        $coaPenjualanCriteria->compare('name', $coaPenjualan->name, true);
-        $coaPenjualanDataProvider = new CActiveDataProvider('Coa', array(
-            'criteria' => $coaPenjualanCriteria,
-        ));
-
-        $coaRetur = new Coa('search');
-        $coaRetur->unsetAttributes();  // clear any default values
-        if (isset($_GET['Coa']))
-            $coaRetur->attributes = $_GET['Coa'];
-        $coaReturCriteria = new CDbCriteria;
-        $coaReturCriteria->addCondition("coa_sub_category_id = 28 and coa_id IS NOT null");
-        $coaReturCriteria->compare('code', $coaRetur->code . '%', true, 'AND', false);
-        $coaReturCriteria->compare('name', $coaRetur->name, true);
-        $coaReturDataProvider = new CActiveDataProvider('Coa', array(
-            'criteria' => $coaReturCriteria,
-        ));
-
-        $coaDiskon = new Coa('search');
-        $coaDiskon->unsetAttributes();  // clear any default values
-        if (isset($_GET['Coa']))
-            $coaDiskon->attributes = $_GET['Coa'];
-        $coaDiskonCriteria = new CDbCriteria;
-        $coaDiskonCriteria->addCondition("coa_sub_category_id = 27 and coa_id IS NOT null");
-        $coaDiskonCriteria->compare('code', $coaDiskon->code . '%', true, 'AND', false);
-        $coaDiskonCriteria->compare('name', $coaDiskon->name, true);
-        $coaDiskonDataProvider = new CActiveDataProvider('Coa', array(
-            'criteria' => $coaDiskonCriteria,
-        ));
-
-        $coaReturPembelian = new Coa('search');
-        $coaReturPembelian->unsetAttributes();  // clear any default values
-        if (isset($_GET['Coa']))
-            $coaReturPembelian->attributes = $_GET['Coa'];
-        $coaReturPembelianCriteria = new CDbCriteria;
-        $coaReturPembelianCriteria->addCondition("coa_sub_category_id = 48 and coa_id IS NOT null");
-        $coaReturPembelianCriteria->compare('code', $coaReturPembelian->code . '%', true, 'AND', false);
-        $coaReturPembelianCriteria->compare('name', $coaReturPembelian->name, true);
-        $coaReturPembelianDataProvider = new CActiveDataProvider('Coa', array(
-            'criteria' => $coaReturPembelianCriteria,
-        ));
-
-        $coaDiskonPembelian = new Coa('search');
-        $coaDiskonPembelian->unsetAttributes();  // clear any default values
-        if (isset($_GET['Coa']))
-            $coaDiskonPembelian->attributes = $_GET['Coa'];
-        $coaDiskonPembelianCriteria = new CDbCriteria;
-        $coaDiskonPembelianCriteria->addCondition("coa_sub_category_id = 47 and coa_id IS NOT null");
-        $coaDiskonPembelianCriteria->compare('code', $coaDiskonPembelian->code . '%', true, 'AND', false);
-        $coaDiskonPembelianCriteria->compare('name', $coaDiskonPembelian->name, true);
-        $coaDiskonPembelianDataProvider = new CActiveDataProvider('Coa', array(
-            'criteria' => $coaDiskonPembelianCriteria,
-        ));
-
-        $coaInventory = new Coa('search');
-        $coaInventory->unsetAttributes();  // clear any default values
-        if (isset($_GET['Coa']))
-            $coaInventory->attributes = $_GET['Coa'];
-        $coaInventoryCriteria = new CDbCriteria;
-        $coaInventoryCriteria->addCondition("coa_sub_category_id = 9 and coa_id IS NOT null");
-        $coaInventoryCriteria->compare('code', $coaInventory->code . '%', true, 'AND', false);
-        $coaInventoryCriteria->compare('name', $coaInventory->name, true);
-        $coaInventoryDataProvider = new CActiveDataProvider('Coa', array(
-            'criteria' => $coaInventoryCriteria,
-        ));
-
-        $coaConsignment = new Coa('search');
-        $coaConsignment->unsetAttributes();  // clear any default values
-        if (isset($_GET['Coa']))
-            $coaConsignment->attributes = $_GET['Coa'];
-        $coaConsignmentCriteria = new CDbCriteria;
-        $coaConsignmentCriteria->addCondition("coa_sub_category_id = 51 and coa_id IS NOT null");
-        $coaConsignmentCriteria->compare('code', $coaConsignment->code . '%', true, 'AND', false);
-        $coaConsignmentCriteria->compare('name', $coaConsignment->name, true);
-        $coaConsignmentDataProvider = new CActiveDataProvider('Coa', array(
-            'criteria' => $coaConsignmentCriteria,
-        ));
-
-
         if (isset($_POST['ProductSubMasterCategory'])) {
             $model->attributes = $_POST['ProductSubMasterCategory'];
-            if ($model->save())
+            
+            $existingCoaPersediaan = Coa::model()->findByAttributes(array('coa_id' => $model->productMasterCategory->coa_persediaan_barang_dagang), array('order' => 'id DESC'));
+            $ordinalPersediaan = empty($existingCoaPersediaan) ? 0 : substr($existingCoaPersediaan->code, -3);
+            $prefixPersediaan = empty($existingCoaPersediaan) ? '131.00.' : substr($existingCoaPersediaan->code, 0, 7);
+            $newOrdinalPersediaan = $ordinalPersediaan + 1;
+            $coaPersediaan = new Coa;
+            $coaPersediaan->name = $model->name;
+            $coaPersediaan->code = $prefixPersediaan . sprintf('%03d', $newOrdinalPersediaan);
+            $coaPersediaan->coa_category_id = 16;
+            $coaPersediaan->coa_sub_category_id = 4;
+            $coaPersediaan->coa_id = $model->productMasterCategory->coa_persediaan_barang_dagang;
+            $coaPersediaan->normal_balance = 'DEBIT';
+            $coaPersediaan->cash_transaction = 'NO';
+            $coaPersediaan->opening_balance = 0.00;
+            $coaPersediaan->closing_balance = 0.00;
+            $coaPersediaan->debit = 0.00;
+            $coaPersediaan->credit = 0.00;
+            $coaPersediaan->status = 'Approved';
+            $coaPersediaan->date = date('Y-m-d');
+            $coaPersediaan->date_approval = date('Y-m-d');
+            $coaPersediaan->time_created = date('H:i:s');
+            $coaPersediaan->time_approval = date('H:i:s');
+            $coaPersediaan->is_approved = 1;
+            $coaPersediaan->user_id = Yii::app()->user->id;
+            $coaPersediaan->user_id_approval = Yii::app()->user->id;
+            $coaPersediaan->save();
+
+            $existingCoaHpp = Coa::model()->findByAttributes(array('coa_id' => $model->productMasterCategory->coa_hpp), array('order' => 'id DESC'));
+            $ordinalHpp = empty($existingCoaHpp) ? 0 : substr($existingCoaHpp->code, -3);
+            $prefixHpp = empty($existingCoaHpp) ? '501.00.' : substr($existingCoaHpp->code, 0, 7);
+            $newOrdinalHpp = $ordinalHpp + 1;
+            $coaHpp = new Coa;
+            $coaHpp->name = 'HPP ' . $model->name;
+            $coaHpp->code = $prefixHpp . sprintf('%03d', $newOrdinalHpp);
+            $coaHpp->coa_category_id = 7;
+            $coaHpp->coa_sub_category_id = 47;
+            $coaHpp->coa_id = $model->productMasterCategory->coa_hpp;
+            $coaHpp->normal_balance = 'DEBIT';
+            $coaHpp->cash_transaction = 'NO';
+            $coaHpp->opening_balance = 0.00;
+            $coaHpp->closing_balance = 0.00;
+            $coaHpp->debit = 0.00;
+            $coaHpp->credit = 0.00;
+            $coaHpp->status = 'Approved';
+            $coaHpp->date = date('Y-m-d');
+            $coaHpp->date_approval = date('Y-m-d');
+            $coaHpp->time_created = date('H:i:s');
+            $coaHpp->time_approval = date('H:i:s');
+            $coaHpp->is_approved = 1;
+            $coaHpp->user_id = Yii::app()->user->id;
+            $coaHpp->user_id_approval = Yii::app()->user->id;
+            $coaHpp->save();
+
+            $existingCoaPenjualan = Coa::model()->findByAttributes(array('coa_id' => $model->productMasterCategory->coa_penjualan_barang_dagang), array('order' => 'id DESC'));
+            $ordinalPenjualan = empty($existingCoaPenjualan) ? 0 : substr($existingCoaPenjualan->code, -3);
+            $prefixPenjualan = empty($existingCoaPenjualan) ? '421.00.' : substr($existingCoaPenjualan->code, 0, 7);
+            $newOrdinalPenjualan = $ordinalPenjualan + 1;
+            $coaPenjualan = new Coa;
+            $coaPenjualan->name = 'Penjualan ' . $model->name;
+            $coaPenjualan->code = $prefixHpp . sprintf('%03d', $newOrdinalPenjualan);
+            $coaPenjualan->coa_category_id = 6;
+            $coaPenjualan->coa_sub_category_id = 29;
+            $coaPenjualan->coa_id = $model->productMasterCategory->coa_penjualan_barang_dagang;
+            $coaPenjualan->normal_balance = 'DEBIT';
+            $coaPenjualan->cash_transaction = 'NO';
+            $coaPenjualan->opening_balance = 0.00;
+            $coaPenjualan->closing_balance = 0.00;
+            $coaPenjualan->debit = 0.00;
+            $coaPenjualan->credit = 0.00;
+            $coaPenjualan->status = 'Approved';
+            $coaPenjualan->date = date('Y-m-d');
+            $coaPenjualan->date_approval = date('Y-m-d');
+            $coaPenjualan->time_created = date('H:i:s');
+            $coaPenjualan->time_approval = date('H:i:s');
+            $coaPenjualan->is_approved = 1;
+            $coaPenjualan->user_id = Yii::app()->user->id;
+            $coaPenjualan->user_id_approval = Yii::app()->user->id;
+            $coaPenjualan->save();
+            
+            $existingCoaRetur = Coa::model()->findByAttributes(array('coa_id' => $model->productMasterCategory->coa_retur_penjualan), array('order' => 'id DESC'));
+            $ordinalRetur = empty($existingCoaRetur) ? 0 : substr($existingCoaRetur->code, -3);
+            $prefixRetur = empty($existingCoaRetur) ? '423.00.' : substr($existingCoaRetur->code, 0, 7);
+            $newOrdinalRetur = $ordinalRetur + 1;
+            $coaRetur = new Coa;
+            $coaRetur->name = 'Retur Penjualan ' . $model->name;
+            $coaRetur->code = $prefixRetur . sprintf('%03d', $newOrdinalRetur);
+            $coaRetur->coa_category_id = 6;
+            $coaRetur->coa_sub_category_id = 31;
+            $coaRetur->coa_id = $model->productMasterCategory->coa_retur_penjualan;
+            $coaRetur->normal_balance = 'DEBIT';
+            $coaRetur->cash_transaction = 'NO';
+            $coaRetur->opening_balance = 0.00;
+            $coaRetur->closing_balance = 0.00;
+            $coaRetur->debit = 0.00;
+            $coaRetur->credit = 0.00;
+            $coaRetur->status = 'Approved';
+            $coaRetur->date = date('Y-m-d');
+            $coaRetur->date_approval = date('Y-m-d');
+            $coaRetur->time_created = date('H:i:s');
+            $coaRetur->time_approval = date('H:i:s');
+            $coaRetur->is_approved = 1;
+            $coaRetur->user_id = Yii::app()->user->id;
+            $coaRetur->user_id_approval = Yii::app()->user->id;
+            $coaRetur->save();
+            
+            $existingCoaDiskonJual = Coa::model()->findByAttributes(array('coa_id' => $model->productMasterCategory->coa_diskon_penjualan), array('order' => 'id DESC'));
+            $ordinalDiskonJual = empty($existingCoaDiskonJual) ? 0 : substr($existingCoaDiskonJual->code, -3);
+            $prefixDiskonJual = empty($existingCoaDiskonJual) ? '422.00.' : substr($existingCoaDiskonJual->code, 0, 7);
+            $newOrdinalDiskonJual = $ordinalDiskonJual + 1;
+            $coaDiskonJual = new Coa;
+            $coaDiskonJual->name = 'Diskon Penjualan ' . $model->name;
+            $coaDiskonJual->code = $prefixDiskonJual . sprintf('%03d', $newOrdinalDiskonJual);
+            $coaDiskonJual->coa_category_id = 6;
+            $coaDiskonJual->coa_sub_category_id = 30;
+            $coaDiskonJual->coa_id = $model->productMasterCategory->coa_diskon_penjualan;
+            $coaDiskonJual->normal_balance = 'DEBIT';
+            $coaDiskonJual->cash_transaction = 'NO';
+            $coaDiskonJual->opening_balance = 0.00;
+            $coaDiskonJual->closing_balance = 0.00;
+            $coaDiskonJual->debit = 0.00;
+            $coaDiskonJual->credit = 0.00;
+            $coaDiskonJual->status = 'Approved';
+            $coaDiskonJual->date = date('Y-m-d');
+            $coaDiskonJual->date_approval = date('Y-m-d');
+            $coaDiskonJual->time_created = date('H:i:s');
+            $coaDiskonJual->time_approval = date('H:i:s');
+            $coaDiskonJual->is_approved = 1;
+            $coaDiskonJual->user_id = Yii::app()->user->id;
+            $coaDiskonJual->user_id_approval = Yii::app()->user->id;
+            $coaDiskonJual->save();
+            
+            $existingCoaReturBeli = Coa::model()->findByAttributes(array('coa_id' => $model->productMasterCategory->coa_retur_pembelian), array('order' => 'id DESC'));
+            $ordinalReturBeli = empty($existingCoaReturBeli) ? 0 : substr($existingCoaReturBeli->code, -3);
+            $prefixReturBeli = empty($existingCoaReturBeli) ? '524.00.' : substr($existingCoaReturBeli->code, 0, 7);
+            $newOrdinalReturBeli = $ordinalReturBeli + 1;
+            $coaReturBeli = new Coa;
+            $coaReturBeli->name = 'Retur Pembelian ' . $model->name;
+            $coaReturBeli->code = $prefixReturBeli . sprintf('%03d', $newOrdinalReturBeli);
+            $coaReturBeli->coa_category_id = 11;
+            $coaReturBeli->coa_sub_category_id = 51;
+            $coaReturBeli->coa_id = $model->productMasterCategory->coa_retur_pembelian;
+            $coaReturBeli->normal_balance = 'KREDIT';
+            $coaReturBeli->cash_transaction = 'NO';
+            $coaReturBeli->opening_balance = 0.00;
+            $coaReturBeli->closing_balance = 0.00;
+            $coaReturBeli->debit = 0.00;
+            $coaReturBeli->credit = 0.00;
+            $coaReturBeli->status = 'Approved';
+            $coaReturBeli->date = date('Y-m-d');
+            $coaReturBeli->date_approval = date('Y-m-d');
+            $coaReturBeli->time_created = date('H:i:s');
+            $coaReturBeli->time_approval = date('H:i:s');
+            $coaReturBeli->is_approved = 1;
+            $coaReturBeli->user_id = Yii::app()->user->id;
+            $coaReturBeli->user_id_approval = Yii::app()->user->id;
+            $coaReturBeli->save();
+            
+            $existingCoaDiskonBeli = Coa::model()->findByAttributes(array('coa_id' => $model->productMasterCategory->coa_diskon_pembelian), array('order' => 'id DESC'));
+            $ordinalDiskonBeli = empty($existingCoaDiskonBeli) ? 0 : substr($existingCoaDiskonBeli->code, -3);
+            $prefixDiskonBeli = empty($existingCoaDiskonBeli) ? '523.00.' : substr($existingCoaDiskonBeli->code, 0, 7);
+            $newOrdinalDiskonBeli = $ordinalDiskonBeli + 1;
+            $coaDiskonBeli = new Coa;
+            $coaDiskonBeli->name = 'Diskon Pembelian ' . $model->name;
+            $coaDiskonBeli->code = $prefixDiskonBeli . sprintf('%03d', $newOrdinalDiskonBeli);
+            $coaDiskonBeli->coa_category_id = 11;
+            $coaDiskonBeli->coa_sub_category_id = 50;
+            $coaDiskonBeli->coa_id = $model->productMasterCategory->coa_diskon_pembelian;
+            $coaDiskonBeli->normal_balance = 'KREDIT';
+            $coaDiskonBeli->cash_transaction = 'NO';
+            $coaDiskonBeli->opening_balance = 0.00;
+            $coaDiskonBeli->closing_balance = 0.00;
+            $coaDiskonBeli->debit = 0.00;
+            $coaDiskonBeli->credit = 0.00;
+            $coaDiskonBeli->status = 'Approved';
+            $coaDiskonBeli->date = date('Y-m-d');
+            $coaDiskonBeli->date_approval = date('Y-m-d');
+            $coaDiskonBeli->time_created = date('H:i:s');
+            $coaDiskonBeli->time_approval = date('H:i:s');
+            $coaDiskonBeli->is_approved = 1;
+            $coaDiskonBeli->user_id = Yii::app()->user->id;
+            $coaDiskonBeli->user_id_approval = Yii::app()->user->id;
+            $coaDiskonBeli->save();
+            
+            $existingCoaTransit = Coa::model()->findByAttributes(array('coa_id' => $model->productMasterCategory->coa_inventory_in_transit), array('order' => 'id DESC'));
+            $ordinalTransit = empty($existingCoaTransit) ? 0 : substr($existingCoaTransit->code, -3);
+            $prefixTransit = empty($existingCoaTransit) ? '132.00.' : substr($existingCoaTransit->code, 0, 7);
+            $newOrdinalTransit = $ordinalTransit + 1;
+            $coaTransit = new Coa;
+            $coaTransit->name = 'Inventory in Transit ' . $model->name;
+            $coaTransit->code = $prefixTransit . sprintf('%03d', $newOrdinalTransit);
+            $coaTransit->coa_category_id = 16;
+            $coaTransit->coa_sub_category_id = 5;
+            $coaTransit->coa_id = $model->productMasterCategory->coa_inventory_in_transit;
+            $coaTransit->normal_balance = 'DEBIT';
+            $coaTransit->cash_transaction = 'NO';
+            $coaTransit->opening_balance = 0.00;
+            $coaTransit->closing_balance = 0.00;
+            $coaTransit->debit = 0.00;
+            $coaTransit->credit = 0.00;
+            $coaTransit->status = 'Approved';
+            $coaTransit->date = date('Y-m-d');
+            $coaTransit->date_approval = date('Y-m-d');
+            $coaTransit->time_created = date('H:i:s');
+            $coaTransit->time_approval = date('H:i:s');
+            $coaTransit->is_approved = 1;
+            $coaTransit->user_id = Yii::app()->user->id;
+            $coaTransit->user_id_approval = Yii::app()->user->id;
+            $coaTransit->save();
+            
+            $existingCoaConsignment = Coa::model()->findByAttributes(array('coa_id' => $model->productMasterCategory->coa_consignment_inventory), array('order' => 'id DESC'));
+            $ordinalConsignment = empty($existingCoaConsignment) ? 0 : substr($existingCoaConsignment->code, -3);
+            $prefixConsignment = empty($existingCoaConsignment) ? '133.00.' : substr($existingCoaConsignment->code, 0, 7);
+            $newOrdinalConsignment = $ordinalConsignment + 1;
+            $coaConsignment = new Coa;
+            $coaConsignment->name = 'Consignment - ' . $model->name;
+            $coaConsignment->code = $prefixConsignment . sprintf('%03d', $newOrdinalConsignment);
+            $coaConsignment->coa_category_id = 16;
+            $coaConsignment->coa_sub_category_id = 6;
+            $coaConsignment->coa_id = $model->productMasterCategory->coa_consignment_inventory;
+            $coaConsignment->normal_balance = 'DEBIT';
+            $coaConsignment->cash_transaction = 'NO';
+            $coaConsignment->opening_balance = 0.00;
+            $coaConsignment->closing_balance = 0.00;
+            $coaConsignment->debit = 0.00;
+            $coaConsignment->credit = 0.00;
+            $coaConsignment->status = 'Approved';
+            $coaConsignment->date = date('Y-m-d');
+            $coaConsignment->date_approval = date('Y-m-d');
+            $coaConsignment->time_created = date('H:i:s');
+            $coaConsignment->time_approval = date('H:i:s');
+            $coaConsignment->is_approved = 1;
+            $coaConsignment->user_id = Yii::app()->user->id;
+            $coaConsignment->user_id_approval = Yii::app()->user->id;
+            $coaConsignment->save();
+
+            $existingCoaOutstanding = Coa::model()->findByAttributes(array('coa_id' => $model->productMasterCategory->coa_outstanding_part_id), array('order' => 'id DESC'));
+            $ordinalOutstanding = empty($existingCoaOutstanding) ? 0 : substr($existingCoaOutstanding->code, -3);
+            $prefixOutstanding = empty($existingCoaOutstanding) ? '134.00.' : substr($existingCoaOutstanding->code, 0, 7);
+            $newOrdinalOutstanding = $ordinalOutstanding + 1;
+            $coaOutstanding = new Coa;
+            $coaOutstanding->name = 'Outstanding Parts - ' . $model->name;
+            $coaOutstanding->code = $prefixOutstanding . sprintf('%03d', $newOrdinalOutstanding);
+            $coaOutstanding->coa_category_id = 16;
+            $coaOutstanding->coa_sub_category_id = 68;
+            $coaOutstanding->coa_id = $model->productMasterCategory->coa_outstanding_part_id;
+            $coaOutstanding->normal_balance = 'DEBIT';
+            $coaOutstanding->cash_transaction = 'NO';
+            $coaOutstanding->opening_balance = 0.00;
+            $coaOutstanding->closing_balance = 0.00;
+            $coaOutstanding->debit = 0.00;
+            $coaOutstanding->credit = 0.00;
+            $coaOutstanding->status = 'Approved';
+            $coaOutstanding->date = date('Y-m-d');
+            $coaOutstanding->date_approval = date('Y-m-d');
+            $coaOutstanding->time_created = date('H:i:s');
+            $coaOutstanding->time_approval = date('H:i:s');
+            $coaOutstanding->is_approved = 1;
+            $coaOutstanding->user_id = Yii::app()->user->id;
+            $coaOutstanding->user_id_approval = Yii::app()->user->id;
+            $coaOutstanding->save();
+            
+            $model->coa_persediaan_barang_dagang = $coaPersediaan->id;
+            $model->coa_hpp = $coaHpp->id;
+            $model->coa_penjualan_barang_dagang = $coaPenjualan->id;
+            $model->coa_retur_penjualan = $coaRetur->id;
+            $model->coa_diskon_penjualan = $coaDiskonJual->id;
+            $model->coa_retur_pembelian = $coaReturBeli->id;
+            $model->coa_diskon_pembelian = $coaDiskonBeli->id;
+            $model->coa_inventory_in_transit = $coaTransit->id;
+            $model->coa_consignment_inventory = $coaConsignment->id;
+            $model->coa_outstanding_part_id = $coaOutstanding->id;
+            
+            if ($model->save()) {
                 $this->redirect(array('view', 'id' => $model->id));
+            }
         }
 
         $this->render('create', array(
             'model' => $model,
-            'coaPersediaan' => $coaPersediaan,
-            'coaPersediaanDataProvider' => $coaPersediaanDataProvider,
-            'coaHpp' => $coaHpp,
-            'coaHppDataProvider' => $coaHppDataProvider,
-            'coaPenjualan' => $coaPenjualan,
-            'coaPenjualanDataProvider' => $coaPenjualanDataProvider,
-            'coaRetur' => $coaRetur,
-            'coaReturDataProvider' => $coaReturDataProvider,
-            'coaDiskon' => $coaDiskon,
-            'coaDiskonDataProvider' => $coaDiskonDataProvider,
-            'coaReturPembelian' => $coaReturPembelian,
-            'coaReturPembelianDataProvider' => $coaReturPembelianDataProvider,
-            'coaDiskonPembelian' => $coaDiskonPembelian,
-            'coaDiskonPembelianDataProvider' => $coaDiskonPembelianDataProvider,
-            'coaInventory' => $coaInventory,
-            'coaInventoryDataProvider' => $coaInventoryDataProvider,
-            'coaConsignment' => $coaConsignment,
-            'coaConsignmentDataProvider' => $coaConsignmentDataProvider,
         ));
     }
 
@@ -230,142 +372,15 @@ class ProductSubMasterCategoryController extends Controller {
     public function actionUpdate($id) {
         $model = $this->loadModel($id);
 
-        // Uncomment the following line if AJAX validation is needed
-        // $this->performAjaxValidation($model);
-        $coaPersediaan = new Coa('search');
-        $coaPersediaan->unsetAttributes();  // clear any default values
-        if (isset($_GET['Coa']))
-            $coaPersediaan->attributes = $_GET['Coa'];
-        $coaPersediaanCriteria = new CDbCriteria;
-        $coaPersediaanCriteria->addCondition("coa_sub_category_id = 4 and coa_id IS NOT null");
-        $coaPersediaanCriteria->compare('code', $coaPersediaan->code . '%', true, 'AND', false);
-        $coaPersediaanCriteria->compare('name', $coaPersediaan->name, true);
-        $coaPersediaanDataProvider = new CActiveDataProvider('Coa', array(
-            'criteria' => $coaPersediaanCriteria,
-        ));
-
-        $coaHpp = new Coa('search');
-        $coaHpp->unsetAttributes();  // clear any default values
-        if (isset($_GET['Coa']))
-            $coaHpp->attributes = $_GET['Coa'];
-        $coaHppCriteria = new CDbCriteria;
-        $coaHppCriteria->addCondition("coa_sub_category_id = 47 and coa_id IS NOT null");
-        $coaHppCriteria->compare('code', $coaHpp->code . '%', true, 'AND', false);
-        $coaHppCriteria->compare('name', $coaHpp->name, true);
-        $coaHppDataProvider = new CActiveDataProvider('Coa', array(
-            'criteria' => $coaHppCriteria,
-        ));
-
-        $coaPenjualan = new Coa('search');
-        $coaPenjualan->unsetAttributes();  // clear any default values
-        if (isset($_GET['Coa']))
-            $coaPenjualan->attributes = $_GET['Coa'];
-        $coaPenjualanCriteria = new CDbCriteria;
-        $coaPenjualanCriteria->addCondition("coa_sub_category_id = 26 and coa_id IS NOT null");
-        $coaPenjualanCriteria->compare('code', $coaPenjualan->code . '%', true, 'AND', false);
-        $coaPenjualanCriteria->compare('name', $coaPenjualan->name, true);
-        $coaPenjualanDataProvider = new CActiveDataProvider('Coa', array(
-            'criteria' => $coaPenjualanCriteria,
-        ));
-
-        $coaRetur = new Coa('search');
-        $coaRetur->unsetAttributes();  // clear any default values
-        if (isset($_GET['Coa']))
-            $coaRetur->attributes = $_GET['Coa'];
-        $coaReturCriteria = new CDbCriteria;
-        $coaReturCriteria->addCondition("coa_sub_category_id = 28 and coa_id IS NOT null");
-        $coaReturCriteria->compare('code', $coaRetur->code . '%', true, 'AND', false);
-        $coaReturCriteria->compare('name', $coaRetur->name, true);
-        $coaReturDataProvider = new CActiveDataProvider('Coa', array(
-            'criteria' => $coaReturCriteria,
-        ));
-
-        $coaDiskon = new Coa('search');
-        $coaDiskon->unsetAttributes();  // clear any default values
-        if (isset($_GET['Coa']))
-            $coaDiskon->attributes = $_GET['Coa'];
-        $coaDiskonCriteria = new CDbCriteria;
-        $coaDiskonCriteria->addCondition("coa_sub_category_id = 27 and coa_id IS NOT null");
-        $coaDiskonCriteria->compare('code', $coaDiskon->code . '%', true, 'AND', false);
-        $coaDiskonCriteria->compare('name', $coaDiskon->name, true);
-        $coaDiskonDataProvider = new CActiveDataProvider('Coa', array(
-            'criteria' => $coaDiskonCriteria,
-        ));
-
-        $coaReturPembelian = new Coa('search');
-        $coaReturPembelian->unsetAttributes();  // clear any default values
-        if (isset($_GET['Coa']))
-            $coaReturPembelian->attributes = $_GET['Coa'];
-        $coaReturPembelianCriteria = new CDbCriteria;
-        $coaReturPembelianCriteria->addCondition("coa_sub_category_id = 48 and coa_id IS NOT null");
-        $coaReturPembelianCriteria->compare('code', $coaReturPembelian->code . '%', true, 'AND', false);
-        $coaReturPembelianCriteria->compare('name', $coaReturPembelian->name, true);
-        $coaReturPembelianDataProvider = new CActiveDataProvider('Coa', array(
-            'criteria' => $coaReturPembelianCriteria,
-        ));
-
-        $coaDiskonPembelian = new Coa('search');
-        $coaDiskonPembelian->unsetAttributes();  // clear any default values
-        if (isset($_GET['Coa']))
-            $coaDiskonPembelian->attributes = $_GET['Coa'];
-        $coaDiskonPembelianCriteria = new CDbCriteria;
-        $coaDiskonPembelianCriteria->addCondition("coa_sub_category_id = 47 and coa_id IS NOT null");
-        $coaDiskonPembelianCriteria->compare('code', $coaDiskonPembelian->code . '%', true, 'AND', false);
-        $coaDiskonPembelianCriteria->compare('name', $coaDiskonPembelian->name, true);
-        $coaDiskonPembelianDataProvider = new CActiveDataProvider('Coa', array(
-            'criteria' => $coaDiskonPembelianCriteria,
-        ));
-
-        $coaInventory = new Coa('search');
-        $coaInventory->unsetAttributes();  // clear any default values
-        if (isset($_GET['Coa']))
-            $coaInventory->attributes = $_GET['Coa'];
-        $coaInventoryCriteria = new CDbCriteria;
-        $coaInventoryCriteria->addCondition("coa_sub_category_id = 9 and coa_id IS NOT null");
-        $coaInventoryCriteria->compare('code', $coaInventory->code . '%', true, 'AND', false);
-        $coaInventoryCriteria->compare('name', $coaInventory->name, true);
-        $coaInventoryDataProvider = new CActiveDataProvider('Coa', array(
-            'criteria' => $coaInventoryCriteria,
-        ));
-
-        $coaConsignment = new Coa('search');
-        $coaConsignment->unsetAttributes();  // clear any default values
-        if (isset($_GET['Coa']))
-            $coaConsignment->attributes = $_GET['Coa'];
-        $coaConsignmentCriteria = new CDbCriteria;
-        $coaConsignmentCriteria->addCondition("coa_sub_category_id = 51 and coa_id IS NOT null");
-        $coaConsignmentCriteria->compare('code', $coaConsignment->code . '%', true, 'AND', false);
-        $coaConsignmentCriteria->compare('name', $coaConsignment->name, true);
-        $coaConsignmentDataProvider = new CActiveDataProvider('Coa', array(
-            'criteria' => $coaConsignmentCriteria,
-        ));
-
         if (isset($_POST['ProductSubMasterCategory'])) {
             $model->attributes = $_POST['ProductSubMasterCategory'];
-            if ($model->save())
+            if ($model->save()) {
                 $this->redirect(array('view', 'id' => $model->id));
+            }
         }
 
         $this->render('update', array(
             'model' => $model,
-            'coaPersediaan' => $coaPersediaan,
-            'coaPersediaanDataProvider' => $coaPersediaanDataProvider,
-            'coaHpp' => $coaHpp,
-            'coaHppDataProvider' => $coaHppDataProvider,
-            'coaPenjualan' => $coaPenjualan,
-            'coaPenjualanDataProvider' => $coaPenjualanDataProvider,
-            'coaRetur' => $coaRetur,
-            'coaReturDataProvider' => $coaReturDataProvider,
-            'coaDiskon' => $coaDiskon,
-            'coaDiskonDataProvider' => $coaDiskonDataProvider,
-            'coaReturPembelian' => $coaReturPembelian,
-            'coaReturPembelianDataProvider' => $coaReturPembelianDataProvider,
-            'coaDiskonPembelian' => $coaDiskonPembelian,
-            'coaDiskonPembelianDataProvider' => $coaDiskonPembelianDataProvider,
-            'coaInventory' => $coaInventory,
-            'coaInventoryDataProvider' => $coaInventoryDataProvider,
-            'coaConsignment' => $coaConsignment,
-            'coaConsignmentDataProvider' => $coaConsignmentDataProvider,
         ));
     }
 

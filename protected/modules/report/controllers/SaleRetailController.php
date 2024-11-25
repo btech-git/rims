@@ -162,12 +162,18 @@ class SaleRetailController extends Controller {
                     
                     $totalSale += $grandTotal + $discountProduct + $discountService;
                 }
+                $worksheet->getStyle("J{$counter}:N{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+                $worksheet->getStyle("J{$counter}:N{$counter}")->getFont()->setBold(true);
+
                 $worksheet->setCellValue("L{$counter}", 'TOTAL');
                 $worksheet->setCellValue("N{$counter}", CHtml::encode($totalSale));
                 $grandTotalSale += $totalSale;
                 $counter++;$counter++;
             }
         }
+        $worksheet->getStyle("A{$counter}:N{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A{$counter}:N{$counter}")->getFont()->setBold(true);
+
         $worksheet->setCellValue("L{$counter}", 'TOTAL PENJUALAN');
         $worksheet->setCellValue("N{$counter}", CHtml::encode($grandTotalSale));
 

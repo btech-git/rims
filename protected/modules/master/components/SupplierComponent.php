@@ -104,8 +104,11 @@ class SupplierComponent extends CComponent {
             $coaHutang->status = 'Approved';
             $coaHutang->date = date('Y-m-d');
             $coaHutang->date_approval = date('Y-m-d');
+            $coaHutang->time_created = date('H:i:s');
+            $coaHutang->time_approval = date('H:i:s');
             $coaHutang->is_approved = 1;
             $coaHutang->user_id = Yii::app()->user->id;
+            $coaHutang->user_id_approval = Yii::app()->user->id;
             $coaHutang->save(false);
             
             $coaGroupOutstandingOrder = Coa::model()->findByAttributes(array('coa_sub_category_id' => 16));
@@ -124,8 +127,11 @@ class SupplierComponent extends CComponent {
             $coaOutstandingOrder->status = 'Approved';
             $coaOutstandingOrder->date = date('Y-m-d');
             $coaOutstandingOrder->date_approval = date('Y-m-d');
+            $coaOutstandingOrder->time_created = date('H:i:s');
+            $coaOutstandingOrder->time_approval = date('H:i:s');
             $coaOutstandingOrder->is_approved = 1;
             $coaOutstandingOrder->user_id = Yii::app()->user->id;
+            $coaOutstandingOrder->user_id_approval = Yii::app()->user->id;
             $coaOutstandingOrder->save(false);
 
             $this->header->date_approval = date('Y-m-d');
@@ -166,14 +172,6 @@ class SupplierComponent extends CComponent {
             $bank_criteria->addInCondition('id', $delete_bank);
             SupplierBank::model()->deleteAll($bank_criteria);
         }
-
-        //delete Product
-//        $delete_product = array_diff($productId, $new_product);
-//        if ($delete_product != NULL) {
-//            $product_criteria = new CDbCriteria;
-//            $product_criteria->addInCondition('id', $delete_product);
-//            SupplierProduct::model()->deleteAll($product_criteria);
-//        }
 
         return $valid;
     }

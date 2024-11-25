@@ -157,7 +157,7 @@ class VehicleCarMake extends CActiveRecord {
         
         
         $sql = "
-            SELECT r.id, r.invoice_number, r.invoice_date, r.product_price, r.service_price, r.total_price, v.plate_number AS plate_number, r.ppn_total, r.pph_total
+            SELECT r.id, r.invoice_number, r.invoice_date, r.product_price, r.service_price, r.total_price, c.name AS customer, r.ppn_total, r.pph_total
             FROM " . Vehicle::model()->tableName() . " v
             INNER JOIN " . InvoiceHeader::model()->tableName() . " r ON v.id = r.vehicle_id
             INNER JOIN " . Customer::model()->tableName() . " c ON c.id = r.customer_id

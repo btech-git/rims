@@ -149,11 +149,14 @@ class Customers extends CComponent {
                 $coa->closing_balance = 0.00;
                 $coa->debit = 0.00;
                 $coa->credit = 0.00;
-                $coa->status = null;
+                $coa->status = 'Approved';
                 $coa->date = date('Y-m-d');
                 $coa->date_approval = date('Y-m-d');
+                $coa->time_created = date('H:i:s');
+                $coa->time_approval = date('H:i:s');
                 $coa->is_approved = 1;
                 $coa->user_id = Yii::app()->user->id;
+                $coa->user_id_approval = Yii::app()->user->id;
                 $coa->save();
 
                 $this->header->coa_id = $coa->id;

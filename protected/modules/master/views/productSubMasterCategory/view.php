@@ -52,6 +52,10 @@ $this->breadcrumbs = array(
                     array('name' => 'coa_diskon_pembelian_code', 'value' => $model->coaDiskonPembelian != "" ? $model->coaDiskonPembelian->code : ''),
                     array('name' => 'coa_inventory_in_transit_name', 'value' => $model->coaInventoryInTransit != "" ? $model->coaInventoryInTransit->name : ''),
                     array('name' => 'coa_inventory_in_transit_code', 'value' => $model->coaInventoryInTransit != "" ? $model->coaInventoryInTransit->code : ''),
+                    array('name' => 'coa_consignment_inventory_name', 'value' => $model->coaConsignmentInventory != "" ? $model->coaConsignmentInventory->name : ''),
+                    array('name' => 'coa_consignment_inventory_code', 'value' => $model->coaConsignmentInventory != "" ? $model->coaConsignmentInventory->code : ''),
+                    array('name' => 'coa_outstanding_part_name', 'value' => $model->coaOutstandingPart != "" ? $model->coaOutstandingPart->name : ''),
+                    array('name' => 'coa_outstanding_part_code', 'value' => $model->coaOutstandingPart != "" ? $model->coaOutstandingPart->code : ''),
                     'date_posting',
                     array(
                         'label' => 'Created by',
