@@ -85,7 +85,7 @@ $('.search-form form').submit(function(){
                         ),
                         array(
                             'name' => 'credit_amount',
-                            'value' => 'number_format($data->credit_amount, 0)',
+                            'value' => 'number_format($data->credit_amount, 2)',
                             'htmlOptions' => array(
                                 'style' => 'text-align: right',
                             ),
@@ -96,7 +96,7 @@ $('.search-form form').submit(function(){
                         ),
                         array(
                             'header' => 'Debit Amount',
-                            'value' => 'empty($data->cashTransactionDetails) ? "" : number_format($data->totalDetails, 0)',
+                            'value' => 'empty($data->cashTransactionDetails) ? "0.00" : number_format($data->totalDetails, 2)',
                             'htmlOptions' => array(
                                 'style' => 'text-align: right',
                             ),
@@ -161,7 +161,7 @@ $('.search-form form').submit(function(){
                         ),
                         array(
                             'name' => 'debit_amount',
-                            'value' => 'number_format($data->debit_amount, 0)',
+                            'value' => 'number_format($data->debit_amount, 2)',
                             'htmlOptions' => array(
                                 'style' => 'text-align: right',
                             ),
@@ -172,7 +172,7 @@ $('.search-form form').submit(function(){
                         ),
                         array(
                             'header' => 'Credit Amount',
-                            'value' => 'empty($data->cashTransactionDetails) ? "" : number_format($data->totalDetails, 0)',
+                            'value' => 'empty($data->cashTransactionDetails) ? "0.00" : number_format($data->totalDetails, 2)',
                             'htmlOptions' => array(
                                 'style' => 'text-align: right',
                             ),

@@ -35,7 +35,7 @@
                     </td>
                     <td>
                         <?php echo CHtml::activeDropDownList($bankDetail, "[$i]coa_id", CHtml::listData(Coa::model()->findAll(array(
-                            'condition' => 't.coa_sub_category_id IN (1, 2, 3)', 
+                            'condition' => 't.coa_sub_category_id IN (1, 2, 3) AND t.status = "Approved"', 
                             'order' => 't.name'
                         )), 'id', 'name'), array(
                             'empty' => '-Pilih COA-'

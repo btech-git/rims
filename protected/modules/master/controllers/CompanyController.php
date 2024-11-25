@@ -65,15 +65,6 @@ class CompanyController extends Controller {
     public function actionCreate() {
         $model = new Company;
 
-        // Uncomment the following line if AJAX validation is needed
-        // $this->performAjaxValidation($model);
-        // if(isset($_POST['Company']))
-        // {
-        // 	$model->attributes=$_POST['Company'];
-        // 	if($model->save())
-        // 		$this->redirect(array('view','id'=>$model->id));
-        // }
-
         $bank = new Bank('search');
         $bank->unsetAttributes();  // clear any default values
         if (isset($_GET['Bank']))
@@ -93,7 +84,7 @@ class CompanyController extends Controller {
             $coa->attributes = $_GET['Coa'];
 
         $coaCriteria = new CDbCriteria;
-        //$coaCriteria->addCondition("coa_sub_category_id = 2");
+        $coaCriteria->addCondition("coa_sub_category_id IN (1, 2, 3) AND t.status = 'Approved'");
         $coaCriteria->compare('t.code', $coa->code . '%', true, 'AND', false);
         $coaCriteria->compare('t.name', $coa->name, true);
 
@@ -163,7 +154,7 @@ class CompanyController extends Controller {
             $coa->attributes = $_GET['COA'];
 
         $coaCriteria = new CDbCriteria;
-        //$coaCriteria->addCondition("coa_sub_category_id = 2");
+        $coaCriteria->addCondition("coa_sub_category_id IN (1, 2, 3) AND t.status = 'Approved'");
         $coaCriteria->compare('t.code', $coa->code . '%', true, 'AND', false);
         $coaCriteria->compare('t.name', $coa->name, true);
         $coaCriteria->compare('t.coa_sub_category_id', 2);
