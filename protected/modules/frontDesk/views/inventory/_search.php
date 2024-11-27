@@ -172,10 +172,10 @@
                 </td>
                 <td>
                     <?php echo CHtml::dropDownList('StockOperator', $stockOperator, array(
+                    '>=' => '>= 0',
                     '>' => '> 0',
                     '<' => '< 0',
                     '=' => '= 0',
-                    '>=' => '>= 0',
                     '<=' => '<= 0',
                     '<>' => '<> 0',
                 )); ?>
