@@ -843,6 +843,74 @@ class Coa extends CActiveRecord {
         return $resultSet;
     }
     
+    public function getBeginningBalanceReceivableDetail() {
+        $sql = "
+            SELECT COALESCE(SUM(j.amount), 0) AS beginning_balance 
+            FROM (
+                SELECT coa_id, tanggal_transaksi, total AS amount
+                FROM " . JurnalUmum::model()->tableName() . "
+                WHERE debet_kredit = 'D' AND is_coa_category = 0 AND tanggal_transaksi > '" . AppParam::BEGINNING_TRANSACTION_DATE . "'
+                UNION ALL
+                SELECT coa_id, tanggal_transaksi, total * -1 AS amount
+                FROM " . JurnalUmum::model()->tableName() . "
+                WHERE debet_kredit = 'K' AND is_coa_category = 0 AND tanggal_transaksi > '" . AppParam::BEGINNING_TRANSACTION_DATE . "'
+            ) j
+            WHERE j.coa_id = :account_id
+        ";
+
+        $value = Yii::app()->db->createCommand($sql)->queryScalar(array(
+            ':account_id' => $this->id,
+        ));
+
+        return ($value === false) ? 0 : $value;
+    }
+
+    public function getReceivableDetailReport($endDate, $branchId) {
+        $branchConditionSql = '';
+        
+        $params = array(
+            ':coa_id' => $this->id,
+            ':end_date' => $endDate,
+        );
+        
+        if (!empty($branchId)) {
+            $branchConditionSql = ' AND branch_id = :branch_id';
+            $params[':branch_id'] = $branchId;
+        }
+        
+        $sql = "SELECT coa_id, total AS amount, kode_transaksi, tanggal_transaksi, debet_kredit AS transaction_type, transaction_subject AS remark
+                FROM " . JurnalUmum::model()->tableName() . " 
+                WHERE coa_id = :coa_id AND tanggal_transaksi BETWEEN '" . AppParam::BEGINNING_TRANSACTION_DATE . " ' AND :end_date AND is_coa_category = 0" . $branchConditionSql . " 
+                ORDER BY tanggal_transaksi ASC, kode_transaksi ASC";
+        
+        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
+        
+        return $resultSet;
+    }
+    
+    public function getPayableDetailReport($endDate, $branchId) {
+        $branchConditionSql = '';
+        
+        $params = array(
+            ':coa_id' => $this->id,
+            ':end_date' => $endDate,
+        );
+        
+        if (!empty($branchId)) {
+            $branchConditionSql = ' AND branch_id = :branch_id';
+            $params[':branch_id'] = $branchId;
+        }
+        
+        $sql = "SELECT coa_id, total AS amount, kode_transaksi, tanggal_transaksi, debet_kredit AS transaction_type, transaction_subject AS remark
+                FROM " . JurnalUmum::model()->tableName() . " 
+                WHERE coa_id = :coa_id AND tanggal_transaksi BETWEEN '" . AppParam::BEGINNING_TRANSACTION_DATE . " ' AND :end_date AND is_coa_category = 0" . $branchConditionSql . " 
+                ORDER BY tanggal_transaksi ASC, kode_transaksi ASC";
+        
+        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
+        
+        return $resultSet;
+    }
+    
     public function getPayableAmount() {
         $params = array(
             ':coa_id' => $this->id,

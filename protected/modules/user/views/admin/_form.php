@@ -14,8 +14,8 @@ Yii::app()->clientScript->registerScript('userRoles', "
     }
 
     $(document).ready(function(){
-        checkRoles(0, 1, 338);
-        checkRoles(1, 2, 338);
+        checkRoles(0, 1, 340);
+        checkRoles(1, 2, 340);
         checkRoles(2, 3, 7);
         checkRoles(8, 9, 22);
         checkRoles(23, 24, 31);
@@ -27,12 +27,12 @@ Yii::app()->clientScript->registerScript('userRoles', "
         checkRoles(116, 117, 128);
         checkRoles(129, 130, 134);
         checkRoles(135, 136, 150);
-        checkRoles(151, 152, 189);
-        checkRoles(190, 191, 223);
-        checkRoles(224, 225, 239);
-        checkRoles(240, 241, 276);
-        checkRoles(277, 278, 313);
-        checkRoles(314, 315, 338);
+        checkRoles(151, 152, 191);
+        checkRoles(192, 193, 225);
+        checkRoles(226, 227, 241);
+        checkRoles(242, 243, 278);
+        checkRoles(279, 280, 315);
+        checkRoles(316, 317, 340);
     });
 
     $('#" . CHtml::activeId($model, 'roles') . "_0').click(function(){
@@ -88,27 +88,27 @@ Yii::app()->clientScript->registerScript('userRoles', "
     });
 		
     $('#" . CHtml::activeId($model, 'roles') . "_151').click(function(){
-        checkRoles(151, 152, 189);
+        checkRoles(151, 152, 191);
     });
 		
     $('#" . CHtml::activeId($model, 'roles') . "_190').click(function(){
-        checkRoles(190, 191, 223);
+        checkRoles(192, 193, 225);
     });
 		
     $('#" . CHtml::activeId($model, 'roles') . "_224').click(function(){
-        checkRoles(224, 225, 239);
+        checkRoles(226, 227, 241);
     });
 		
     $('#" . CHtml::activeId($model, 'roles') . "_240').click(function(){
-        checkRoles(240, 241, 276);
+        checkRoles(242, 243, 278);
     });
 		
     $('#" . CHtml::activeId($model, 'roles') . "_277').click(function(){
-        checkRoles(277, 278, 313);
+        checkRoles(279, 280, 315);
     });
 		
     $('#" . CHtml::activeId($model, 'roles') . "_314').click(function(){
-        checkRoles(314, 315, 338);
+        checkRoles(316, 317, 340);
     });
 ");
 ?>

@@ -309,5 +309,22 @@
                 <?php echo CHtml::checkBox("User[roles][mechanicPerformanceReport]", CHtml::resolveValue($model, "roles[mechanicPerformanceReport]"), array('id' => 'User_roles_' . $counter++, 'value' => 'mechanicPerformanceReport')); ?>
             </td>
         </tr>
+        <tr>
+            <td style="text-align: center; font-weight: bold; background-color: greenyellow" colspan="2">HRD</td>
+        </tr>
+        <tr>
+            <td>Laporan Salesman</td>
+            <td style="text-align: center">
+                <?php //echo $counter; ?>
+                <?php echo CHtml::checkBox("User[roles][salesmanPerformanceReport]", CHtml::resolveValue($model, "roles[salesmanPerformanceReport]"), array('id' => 'User_roles_' . $counter++, 'value' => 'salesmanPerformanceReport')); ?>
+            </td>
+        </tr>
+        <tr>
+            <td>Laporan Transaksi Harian</td>
+            <td style="text-align: center">
+                <?php //echo $counter; ?>
+                <?php echo CHtml::checkBox("User[roles][dailyTransactionReport]", CHtml::resolveValue($model, "roles[dailyTransactionReport]"), array('id' => 'User_roles_' . $counter++, 'value' => 'dailyTransactionReport')); ?>
+            </td>
+        </tr>
     </tbody>
 </table>

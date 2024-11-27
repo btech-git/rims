@@ -66,6 +66,7 @@ $this->menu = array(
                         ),
                         'year',
                         'chasis.name: Chassis',
+                        'status_location',
                         'notes',
                     ),
                 )); ?>

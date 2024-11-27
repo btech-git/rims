@@ -143,7 +143,7 @@ class PaymentInComponent extends CComponent {
         $this->header->insurance_company_id = $this->details[0]->invoiceHeader->insurance_company_id;
         $valid = $this->header->save(false);
 
-        foreach ($this->details as $detail) {
+        foreach ($this->details as $i => $detail) {
             if ($detail->amount <= 0.00) {
                 continue;
             }
@@ -157,7 +157,8 @@ class PaymentInComponent extends CComponent {
 
             if (!empty($detail->invoice_header_id)) {
                 $invoiceHeader = InvoiceHeader::model()->findByPk($detail->invoice_header_id);
-                $invoiceHeader->payment_amount = $invoiceHeader->getTotalPayment() + $this->header->downpayment_amount;
+                $paymentAmount = $invoiceHeader->getTotalPayment() + $this->header->downpayment_amount + $this->header->discount_product_amount + $this->header->bank_administration_fee + $this->header->merimen_fee;
+                $invoiceHeader->payment_amount = $i == 0 ? $paymentAmount : $invoiceHeader->getTotalPayment();
                 $invoiceHeader->payment_left = $invoiceHeader->getTotalRemaining();
                 $invoiceHeader->status = $invoiceHeader->payment_left > 0 ? 'PARTIALLY PAID' : 'PAID';
                 $valid = $invoiceHeader->update(array('payment_amount', 'payment_left', 'status')) && $valid;

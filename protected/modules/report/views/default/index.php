@@ -221,6 +221,11 @@
                                     'visible' => Yii::app()->user->checkAccess('customerReceivableReport')
                                 ),
                                 array(
+                                    'label' => 'Piutang Customer Detail', 
+                                    'url' => array('/report/receivableDetail/summary'), 
+                                    'visible' => Yii::app()->user->checkAccess('customerReceivableReport')
+                                ),
+                                array(
                                     'label' => 'Kartu Piutang Customer', 
                                     'url' => array('/report/receivableTransaction/summary'), 
                                     'visible' => Yii::app()->user->checkAccess('customerReceivableReport')
@@ -345,6 +350,11 @@
                                     array(
                                         'label' => 'Hutang Supplier Summary', 
                                         'url' => array('/report/payableSupplier/summary'), 
+                                        'visible' => Yii::app()->user->checkAccess('supplierPayableReport')
+                                    ),
+                                    array(
+                                        'label' => 'Hutang Supplier Detail', 
+                                        'url' => array('/report/payableDetail/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('supplierPayableReport')
                                     ),
                                     array(

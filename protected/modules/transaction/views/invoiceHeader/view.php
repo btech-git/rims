@@ -294,6 +294,11 @@ $this->menu = array(
                 </tr>	
 
                 <tr>
+                    <td class="title">Total Payment</td>
+                    <td><strong>Rp. <?php echo number_format($model->payment_amount, 2) ?></strong></td>
+                </tr>	
+
+                <tr>
                     <td class="title">Remaining Receivable</td>
                     <td><strong>Rp. <?php echo number_format($model->payment_left, 2) ?></strong></td>
                 </tr>

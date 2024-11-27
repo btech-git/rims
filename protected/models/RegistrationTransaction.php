@@ -43,7 +43,7 @@
  * @property string $subtotal
  * @property string $ppn_price
  * @property string $pph_price
- * @property string $vehicle_mileage
+ * @property integer $vehicle_mileage
  * @property string $note
  * @property string $is_passed
  * @property string $product_status

@@ -202,6 +202,21 @@
                 <div class="field">
                     <div class="row collapse">
                         <div class="small-4 columns">
+                            <?php echo $form->labelEx($model, 'status_location', array('class' => 'prefix')); ?>
+                        </div>
+                        <div class="small-8 columns">
+                            <?php echo $form->dropDownList($model, 'status_location', array(
+                                'Dalam Bengkel' => 'Dalam Bengkel',
+                                'Keluar Bengkel' => 'Keluar Bengkel',
+                            ), array('empty' => '-- Pilih Status --')); ?>
+                            <?php echo $form->error($model, 'status_location'); ?>
+                        </div>
+                    </div>			
+                </div>
+
+                <div class="field">
+                    <div class="row collapse">
+                        <div class="small-4 columns">
                             <?php echo $form->labelEx($model, 'notes', array('class' => 'prefix')); ?>
                         </div>
                         <div class="small-8 columns">

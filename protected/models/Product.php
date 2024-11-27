@@ -340,6 +340,9 @@ class Product extends CActiveRecord {
                     '*'
                 )
             ),
+            'pagination' => array(
+                'pageSize' => 100,
+            ),
         ));
     }
     

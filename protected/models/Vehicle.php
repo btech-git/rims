@@ -26,6 +26,7 @@
  * @property string $drivetrain
  * @property string $notes
  * @property integer $insurance_company_id
+ * @property string $status_location
  *
  * The followings are the available model relations:
  * @property RegistrationTransaction[] $registrationTransactions
@@ -75,10 +76,11 @@ class Vehicle extends CActiveRecord {
             ),
             array('machine_number, frame_number, chasis_code, transmission', 'length', 'max' => 30),
             array('plate_number, fuel_type, plate_number_ordinal', 'length', 'max' => 20),
+            array('status_location', 'length', 'max' => 100),
             array('notes', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, plate_number, machine_number, frame_number, car_make_id, car_model_id, car_sub_model_id, car_sub_model_detail_id, color_id, year, customer_id, customer_pic_id, chasis_code, transmission, fuel_type, power, drivetrain, notes, car_make,color,car_color,car_model,car_sub_model,color, customer_name, customer_type, customer_name_checked, plate_number_checked, plate_number_prefix_id, plate_number_ordinal, plate_number_suffix, insurance_company_id', 'safe', 'on' => 'search'),
+            array('id, plate_number, machine_number, frame_number, status_location, car_make_id, car_model_id, car_sub_model_id, car_sub_model_detail_id, color_id, year, customer_id, customer_pic_id, chasis_code, transmission, fuel_type, power, drivetrain, notes, car_make,color,car_color,car_model,car_sub_model,color, customer_name, customer_type, customer_name_checked, plate_number_checked, plate_number_prefix_id, plate_number_ordinal, plate_number_suffix, insurance_company_id', 'safe', 'on' => 'search'),
         );
     }
 
@@ -127,6 +129,7 @@ class Vehicle extends CActiveRecord {
             'drivetrain' => 'Drivetrain',
             'notes' => 'Notes',
             'insurance_company_id' => 'Insurance Company',
+            'status_location' => 'Status',
         );
     }
 
@@ -169,6 +172,7 @@ class Vehicle extends CActiveRecord {
         $criteria->compare('drivetrain', $this->drivetrain, true);
         $criteria->compare('notes', $this->notes, true);
         $criteria->compare('insurance_company_id', $this->insurance_company_id);
+        $criteria->compare('status_location', $this->status_location);
 
         $criteria->together = 'true';
         //$criteria->with = array('carMake','carModel','carSubModel','color');
