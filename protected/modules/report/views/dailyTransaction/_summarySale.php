@@ -7,7 +7,9 @@
                 <th class="width1-2">Tanggal</th>
                 <th class="width1-3">Jatuh Tempo</th>
                 <th class="width1-4">Customer</th>
+                <th class="width1-5">Plat #</th>
                 <th class="width1-5">Kendaraan</th>
+                <th class="width1-5">Warna</th>
                 <th class="width1-6">KM</th>
                 <th class="width1-7">Status</th>
                 <th class="width1-8">Amount</th>
@@ -27,6 +29,12 @@
                     </td>
                     <td class="width1-4"><?php echo CHtml::encode(CHtml::value($header, 'customer.name')); ?></td>
                     <td class="width1-5"><?php echo CHtml::encode(CHtml::value($header, 'vehicle.plate_number')); ?></td>
+                    <td class="width1-2">
+                        <?php echo CHtml::encode(CHtml::value($header, 'vehicle.carMake.name')); ?> - 
+                        <?php echo CHtml::encode(CHtml::value($header, 'vehicle.carModel.name')); ?> -
+                        <?php echo CHtml::encode(CHtml::value($header, 'vehicle.carSubModel.name')); ?>
+                    </td>
+                    <td class="width1-1"><?php echo CHtml::encode(CHtml::value($header, 'vehicle.color.name')); ?></td>
                     <td class="width1-6" style="text-align: right">
                         <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($header, 'registrationTransaction.vehicle_mileage'))); ?>
                     </td>

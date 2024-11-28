@@ -112,7 +112,7 @@ class CashTransactionController extends Controller {
         //$model=new CashTransaction;
         // Uncomment the following line if AJAX validation is needed
         // $this->performAjaxValidation($model);
-        $cashTransaction = $this->instantiate(null);
+        $cashTransaction = $this->instantiate(null, 'create');
         
         $cashTransaction->header->branch_id = Yii::app()->user->branch_id;
         $cashTransaction->header->payment_type_id = 1;
@@ -190,7 +190,7 @@ class CashTransactionController extends Controller {
         //$model=$this->loadModel($id);
         // Uncomment the following line if AJAX validation is needed
         // $this->performAjaxValidation($model);
-        $cashTransaction = $this->instantiate($id);
+        $cashTransaction = $this->instantiate($id, 'update');
         $this->performAjaxValidation($cashTransaction->header);
 
         $coaKas = new Coa('search');
@@ -389,13 +389,13 @@ class CashTransactionController extends Controller {
         }
     }
 
-    public function instantiate($id) {
+    public function instantiate($id, $actionType) {
         
         if (empty($id)) {
-            $cashTransaction = new Cashs(new CashTransaction(), array());
+            $cashTransaction = new Cashs($actionType, new CashTransaction(), array());
         } else {
             $cashTransactionModel = $this->loadModel($id);
-            $cashTransaction = new Cashs($cashTransactionModel, $cashTransactionModel->cashTransactionDetails);
+            $cashTransaction = new Cashs($actionType, $cashTransactionModel, $cashTransactionModel->cashTransactionDetails);
         }
         
         return $cashTransaction;
@@ -426,7 +426,7 @@ class CashTransactionController extends Controller {
     //Add Detail
     public function actionAjaxHtmlAddDetail($id, $coaId) {
         if (Yii::app()->request->isAjaxRequest) {
-            $cashTransaction = $this->instantiate($id);
+            $cashTransaction = $this->instantiate($id, '');
             $this->loadState($cashTransaction);
 
             $cashTransaction->addDetail($coaId);
@@ -443,7 +443,7 @@ class CashTransactionController extends Controller {
     public function actionAjaxHtmlRemoveDetail($id, $index) {
         if (Yii::app()->request->isAjaxRequest) {
 
-            $cashTransaction = $this->instantiate($id);
+            $cashTransaction = $this->instantiate($id, '');
             $this->loadState($cashTransaction);
 
             $cashTransaction->removeDetailAt($index);
@@ -485,7 +485,7 @@ class CashTransactionController extends Controller {
 
     public function actionAjaxJsonTotal($id, $index, $type) {
         if (Yii::app()->request->isAjaxRequest) {
-            $cashTransaction = $this->instantiate($id);
+            $cashTransaction = $this->instantiate($id, '');
             $this->loadState($cashTransaction);
             
             $amountCredit = 0.00;

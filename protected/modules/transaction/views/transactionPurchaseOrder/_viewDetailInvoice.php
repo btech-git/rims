@@ -68,23 +68,23 @@
                                         <td style="text-align: center"><?php echo CHtml::encode(CHtml::value($receiveDetail, 'qty_request')); ?></td>
                                         <td style="text-align: center"><?php echo CHtml::encode(CHtml::value($receiveDetail, 'qty_received')); ?></td>
                                         <td><?php echo CHtml::encode(CHtml::value($product, 'unit.name')); ?></td>
-                                        <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($receiveDetail, 'purchaseOrderDetail.unit_price'))); ?></td>
-                                        <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($receiveDetail, 'totalPrice'))); ?></td>
+                                        <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($receiveDetail, 'purchaseOrderDetail.unit_price'))); ?></td>
+                                        <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($receiveDetail, 'totalPrice'))); ?></td>
                                     </tr>
                                 <?php endforeach ?>
                             </tbody>
                             <tfoot>
                                 <tr>
                                     <td colspan="11" style="text-align: right">SUB TOTAL</td>
-                                    <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($receiveHeader, 'subTotal'))); ?></td>
+                                    <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($receiveHeader, 'subTotal'))); ?></td>
                                 </tr>
                                 <tr>
                                     <td colspan="11" style="text-align: right">PPn <?php echo CHtml::encode(CHtml::value($receiveHeader, 'purchaseOrder.tax_percentage'));?>%</td>
-                                    <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($receiveHeader, 'taxNominal'))); ?></td>
+                                    <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($receiveHeader, 'taxNominal'))); ?></td>
                                 </tr>
                                 <tr>
                                     <td colspan="11" style="text-align: right">GRAND TOTAL</td>
-                                    <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($receiveHeader, 'grandTotal'))); ?></td>
+                                    <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($receiveHeader, 'grandTotal'))); ?></td>
                                 </tr>
                             </tfoot>
                         </table>

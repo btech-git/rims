@@ -101,7 +101,7 @@ $('.search-form form').submit(function(){
         ),
         array(
             'name' => 'payment_amount', 
-            'value' => 'number_format($data->payment_amount, 0)',
+            'value' => 'number_format($data->payment_amount, 2)',
             'htmlOptions' => array(
                 'style' => 'text-align: right'         
             ),

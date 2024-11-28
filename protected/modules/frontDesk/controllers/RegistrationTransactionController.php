@@ -974,6 +974,22 @@ class RegistrationTransactionController extends Controller {
         ));
     }
 
+    public function actionAjaxJsonPrintCounter($id) {
+        if (Yii::app()->request->isAjaxRequest) {
+            $invoiceHeader = InvoiceHeader::model()->findByPk($id);
+            $invoiceHeader->number_of_print += 1;
+            if ($invoiceHeader->save()) {
+                $status = 'OK';
+            } else {
+                $status = 'Not OK';
+            }
+
+            echo CJSON::encode(array(
+                'status' => $status,
+            ));
+        }
+    }
+
     public function actionAjaxJsonTotalService($id, $index) {
         if (Yii::app()->request->isAjaxRequest) {
             $registrationTransaction = $this->instantiate($id);

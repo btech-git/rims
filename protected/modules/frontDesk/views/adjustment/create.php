@@ -372,7 +372,7 @@
                 array(
                     'name' => 'product_brand_name',
                     'header' => 'Brand',
-                    'value' => '$data->brand->name'
+                    'value' => 'empty($data->brand) ? "" : $data->brand->name'
                 ),
                 array(
                     'name' => 'product_sub_brand_name',

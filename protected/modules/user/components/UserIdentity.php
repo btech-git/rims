@@ -23,11 +23,7 @@ class UserIdentity extends CUserIdentity {
      * @return boolean whether authentication succeeds.
      */
     public function authenticate() {
-        if (strpos($this->username, "@")) {
-            $user = User::model()->notsafe()->findByAttributes(array('email' => $this->username));
-        } else {
-            $user = User::model()->notsafe()->findByAttributes(array('username' => $this->username));
-        }
+        $user = User::model()->notsafe()->findByAttributes(array('username' => $this->username));
         
         if ($user === null) {
             if (strpos($this->username, "@")) {
@@ -46,10 +42,10 @@ class UserIdentity extends CUserIdentity {
             $branchIds = array_map(function ($userBranch) {
                 return $userBranch->branch_id;
             }, $userBranches);
+            $this->setState('username', $this->username);
             $this->setState('branch_ids', $branchIds);
             $this->setState('branch_id', $this->_branchId);
             $this->_id = $user->id;
-            $this->username = $user->username;
             $this->errorCode = self::ERROR_NONE;
         }
         

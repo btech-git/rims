@@ -5,6 +5,13 @@ Yii::app()->clientScript->registerScript('memo', '
     $("#mainmenu").addClass("hide");
     $(".breadcrumbs").addClass("hide");
     $("#footer").addClass("hide");
+    addEventListener("afterprint", function() {
+        $.ajax({
+            type: "POST",
+            dataType: "JSON",
+            url: "' . CController::createUrl('ajaxJsonPrintCounter', array('id' => $invoiceHeader->id)).'",
+        });
+    });
 ');
 Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/transaction/memo.css');
 Yii::app()->clientScript->registerCss('memo', '

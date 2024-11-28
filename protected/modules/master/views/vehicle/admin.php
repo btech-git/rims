@@ -123,6 +123,7 @@ $('.search-form form').submit(function(){
                     'filter'=>CHtml::textField('Vehicle[color_id]', ''),					
                 ),				
                 'year',
+                'status_location',
                 array(
                     'class'=>'CButtonColumn',
                     'template'=>'{edit} {inspection}',

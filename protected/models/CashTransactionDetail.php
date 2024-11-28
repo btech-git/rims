@@ -107,19 +107,19 @@ class CashTransactionDetail extends CActiveRecord {
         return parent::model($className);
     }
 
-    protected function afterSave() {
-        parent::afterSave();
-
-        $history = new TransactionLog();
-        $history->transaction_number = $this->cashTransaction->transaction_number;
-        $history->transaction_date = $this->cashTransaction->transaction_date;
-        $history->log_date = date("Y-m-d");
-        $history->log_time = date("H:i:s");
-        $history->table_name = $this->tableName();
-        $history->table_id = $this->id;
-        $history->new_data = serialize($this->attributes);
-
-        $history->save();
-    }
+//    protected function afterSave() {
+//        parent::afterSave();
+//
+//        $history = new TransactionLog();
+//        $history->transaction_number = $this->cashTransaction->transaction_number;
+//        $history->transaction_date = $this->cashTransaction->transaction_date;
+//        $history->log_date = date("Y-m-d");
+//        $history->log_time = date("H:i:s");
+//        $history->table_name = $this->tableName();
+//        $history->table_id = $this->id;
+//        $history->new_data = serialize($this->attributes);
+//
+//        $history->save();
+//    }
     
 }
