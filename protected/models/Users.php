@@ -167,5 +167,172 @@ class Users extends CActiveRecord {
     public static function model($className = __CLASS__) {
         return parent::model($className);
     }
+    
+    public function getUserCreatedRegistrationCount($startDate, $endDate) {
+        $sql = "SELECT COUNT(user_id)
+                FROM " . RegistrationTransaction::model()->tableName() . "
+                WHERE user_id = :user_id AND substr(transaction_date, 1, 10) BETWEEN :start_date AND :end_date";
 
+        $value = CActiveRecord::$db->createCommand($sql)->queryScalar(array(
+            ':user_id' => $this->id,
+            ':start_date' => $startDate,
+            ':end_date' => $endDate,
+        ));
+
+        return ($value === false) ? 0 : $value;
+    }
+    
+    public function getUserCreatedWorkOrderCount($startDate, $endDate) {
+        $sql = "SELECT COUNT(user_id)
+                FROM " . RegistrationTransaction::model()->tableName() . "
+                WHERE user_id = :user_id AND substr(transaction_date, 1, 10) BETWEEN :start_date AND :end_date AND work_order_number is not null";
+
+        $value = CActiveRecord::$db->createCommand($sql)->queryScalar(array(
+            ':user_id' => $this->id,
+            ':start_date' => $startDate,
+            ':end_date' => $endDate,
+        ));
+
+        return ($value === false) ? 0 : $value;
+    }
+    
+    public function getUserCreatedMovementOutCount($startDate, $endDate) {
+        $sql = "SELECT COUNT(user_id)
+                FROM " . MovementOutHeader::model()->tableName() . "
+                WHERE user_id = :user_id AND substr(date_posting, 1, 10) BETWEEN :start_date AND :end_date";
+
+        $value = CActiveRecord::$db->createCommand($sql)->queryScalar(array(
+            ':user_id' => $this->id,
+            ':start_date' => $startDate,
+            ':end_date' => $endDate,
+        ));
+
+        return ($value === false) ? 0 : $value;
+    }
+    
+    public function getUserCreatedInvoiceCount($startDate, $endDate) {
+        $sql = "SELECT COUNT(user_id)
+                FROM " . InvoiceHeader::model()->tableName() . "
+                WHERE user_id = :user_id AND substr(invoice_date, 1, 10) BETWEEN :start_date AND :end_date";
+
+        $value = CActiveRecord::$db->createCommand($sql)->queryScalar(array(
+            ':user_id' => $this->id,
+            ':start_date' => $startDate,
+            ':end_date' => $endDate,
+        ));
+
+        return ($value === false) ? 0 : $value;
+    }
+    
+    public function getUserCreatedPaymentInCount($startDate, $endDate) {
+        $sql = "SELECT COUNT(user_id)
+                FROM " . PaymentIn::model()->tableName() . "
+                WHERE user_id = :user_id AND substr(payment_date, 1, 10) BETWEEN :start_date AND :end_date";
+
+        $value = CActiveRecord::$db->createCommand($sql)->queryScalar(array(
+            ':user_id' => $this->id,
+            ':start_date' => $startDate,
+            ':end_date' => $endDate,
+        ));
+
+        return ($value === false) ? 0 : $value;
+    }
+    
+    public function getUserCreatedPurchaseCount($startDate, $endDate) {
+        $sql = "SELECT COUNT(requester_id)
+                FROM " . TransactionPurchaseOrder::model()->tableName() . "
+                WHERE requester_id = :user_id AND substr(purchase_order_date, 1, 10) BETWEEN :start_date AND :end_date";
+
+        $value = CActiveRecord::$db->createCommand($sql)->queryScalar(array(
+            ':user_id' => $this->id,
+            ':start_date' => $startDate,
+            ':end_date' => $endDate,
+        ));
+
+        return ($value === false) ? 0 : $value;
+    }
+    
+    public function getUserCreatedReceiveCount($startDate, $endDate) {
+        $sql = "SELECT COUNT(user_id_receive)
+                FROM " . TransactionReceiveItem::model()->tableName() . "
+                WHERE user_id_receive = :user_id AND substr(receive_item_date, 1, 10) BETWEEN :start_date AND :end_date";
+
+        $value = CActiveRecord::$db->createCommand($sql)->queryScalar(array(
+            ':user_id' => $this->id,
+            ':start_date' => $startDate,
+            ':end_date' => $endDate,
+        ));
+
+        return ($value === false) ? 0 : $value;
+    }
+    
+    public function getUserCreatedMovementInCount($startDate, $endDate) {
+        $sql = "SELECT COUNT(user_id)
+                FROM " . MovementInHeader::model()->tableName() . "
+                WHERE user_id = :user_id AND substr(date_posting, 1, 10) BETWEEN :start_date AND :end_date";
+
+        $value = CActiveRecord::$db->createCommand($sql)->queryScalar(array(
+            ':user_id' => $this->id,
+            ':start_date' => $startDate,
+            ':end_date' => $endDate,
+        ));
+
+        return ($value === false) ? 0 : $value;
+    }
+    
+    public function getUserCreatedDeliveryCount($startDate, $endDate) {
+        $sql = "SELECT COUNT(sender_id)
+                FROM " . TransactionDeliveryOrder::model()->tableName() . "
+                WHERE sender_id = :user_id AND substr(delivery_date, 1, 10) BETWEEN :start_date AND :end_date";
+
+        $value = CActiveRecord::$db->createCommand($sql)->queryScalar(array(
+            ':user_id' => $this->id,
+            ':start_date' => $startDate,
+            ':end_date' => $endDate,
+        ));
+
+        return ($value === false) ? 0 : $value;
+    }
+    
+    public function getUserCreatedTransferRequestCount($startDate, $endDate) {
+        $sql = "SELECT COUNT(requester_id)
+                FROM " . TransactionTransferRequest::model()->tableName() . "
+                WHERE requester_id = :user_id AND substr(transfer_request_date, 1, 10) BETWEEN :start_date AND :end_date";
+
+        $value = CActiveRecord::$db->createCommand($sql)->queryScalar(array(
+            ':user_id' => $this->id,
+            ':start_date' => $startDate,
+            ':end_date' => $endDate,
+        ));
+
+        return ($value === false) ? 0 : $value;
+    }
+    
+    public function getUserCreatedSentRequestCount($startDate, $endDate) {
+        $sql = "SELECT COUNT(requester_id)
+                FROM " . TransactionSentRequest::model()->tableName() . "
+                WHERE requester_id = :user_id AND substr(sent_request_date, 1, 10) BETWEEN :start_date AND :end_date";
+
+        $value = CActiveRecord::$db->createCommand($sql)->queryScalar(array(
+            ':user_id' => $this->id,
+            ':start_date' => $startDate,
+            ':end_date' => $endDate,
+        ));
+
+        return ($value === false) ? 0 : $value;
+    }
+    
+    public function getUserCreatedCashTransactionCount($startDate, $endDate) {
+        $sql = "SELECT COUNT(user_id)
+                FROM " . CashTransaction::model()->tableName() . "
+                WHERE user_id = :user_id AND substr(transaction_date, 1, 10) BETWEEN :start_date AND :end_date";
+
+        $value = CActiveRecord::$db->createCommand($sql)->queryScalar(array(
+            ':user_id' => $this->id,
+            ':start_date' => $startDate,
+            ':end_date' => $endDate,
+        ));
+
+        return ($value === false) ? 0 : $value;
+    }
 }

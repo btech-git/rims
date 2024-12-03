@@ -120,9 +120,4 @@ class AssetDepreciationDetail extends CActiveRecord {
             default: return '';
         }
     }
-
-//    public function getPeriodMonthYear() {
-//        
-//        return $this->getDepreciationPeriodMonth($this->depreciation_period_month) . ' ' . $this->depreciation_period_year;
-//    }
 }

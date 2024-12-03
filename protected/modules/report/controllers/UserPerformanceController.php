@@ -24,40 +24,40 @@ class UserPerformanceController extends Controller {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
 
-        $employee = Search::bind(new Employee('search'), isset($_GET['Employee']) ? $_GET['Employee'] : array());
-        $employeeDataProvider = $employee->search();
-        $employeeDataProvider->pagination->pageVar = 'page_dialog';
+        $user = Search::bind(new Users('search'), isset($_GET['Users']) ? $_GET['Users'] : array());
+        $userDataProvider = $user->search();
+        $userDataProvider->pagination->pageVar = 'page_dialog';
 
         $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : date('Y-m-d');
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
         $pageSize = (isset($_GET['PageSize'])) ? $_GET['PageSize'] : '';
         $currentPage = (isset($_GET['page'])) ? $_GET['page'] : '';
         $currentSort = (isset($_GET['sort'])) ? $_GET['sort'] : '';
-        $employeeId = (isset($_GET['EmployeeId'])) ? $_GET['EmployeeId'] : '';
+        $userId = (isset($_GET['UsersId'])) ? $_GET['UsersId'] : '';
 
-        $salesmanPerformanceSummary = new SalesmanPerformanceSummary($employeeDataProvider);
-        $salesmanPerformanceSummary->setupLoading();
-        $salesmanPerformanceSummary->setupPaging($pageSize, $currentPage);
-        $salesmanPerformanceSummary->setupSorting();
-        $filters = array(
-            'startDate' => $startDate,
-            'endDate' => $endDate,
-        );
-        $salesmanPerformanceSummary->setupFilter($filters);
+        $userPerformanceSummary = new UserPerformanceSummary($userDataProvider);
+        $userPerformanceSummary->setupLoading();
+        $userPerformanceSummary->setupPaging($pageSize, $currentPage);
+        $userPerformanceSummary->setupSorting();
+//        $filters = array(
+//            'startDate' => $startDate,
+//            'endDate' => $endDate,
+//        );
+        $userPerformanceSummary->setupFilter();
         
         if (isset($_GET['ResetFilter'])) {
             $this->redirect(array('summary'));
         }
         
         if (isset($_GET['SaveExcel'])) {
-            $this->saveToExcel($salesmanPerformanceSummary->dataProvider, array('startDate' => $startDate, 'endDate' => $endDate));
+            $this->saveToExcel($userPerformanceSummary->dataProvider, array('startDate' => $startDate, 'endDate' => $endDate));
         }
 
         $this->render('summary', array(
-            'employee' => $employee,
-            'employeeDataProvider' => $employeeDataProvider,
-            'salesmanPerformanceSummary' => $salesmanPerformanceSummary,
-            'employeeId' => $employeeId,
+            'user' => $user,
+            'userDataProvider' => $userDataProvider,
+            'userPerformanceSummary' => $userPerformanceSummary,
+            'userId' => $userId,
             'startDate' => $startDate,
             'endDate' => $endDate,
             'currentPage' => $currentPage,
@@ -128,9 +128,9 @@ class UserPerformanceController extends Controller {
 
             $totalSale = 0.00;
             $registrationTransactions = RegistrationTransaction::model()->findAll(array(
-                'condition' => 'employee_id_sales_person = :employee_id_sales_person AND transaction_date BETWEEN :start_date AND :end_date', 
+                'condition' => 'user_id_sales_person = :user_id_sales_person AND transaction_date BETWEEN :start_date AND :end_date', 
                 'params' => array(
-                    ':employee_id_sales_person' => $header->id,
+                    ':user_id_sales_person' => $header->id,
                     ':start_date' => $startDate,
                     ':end_date' => $endDate,
                 )

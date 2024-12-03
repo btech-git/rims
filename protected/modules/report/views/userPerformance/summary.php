@@ -2,8 +2,8 @@
 Yii::app()->clientScript->registerScript('report', '
     $("#StartDate").val("' . $startDate . '");
     $("#EndDate").val("' . $endDate . '");
-    $("#PageSize").val("' . $salesmanPerformanceSummary->dataProvider->pagination->pageSize . '");
-    $("#CurrentPage").val("' . ($salesmanPerformanceSummary->dataProvider->pagination->getCurrentPage(false) + 1) . '");
+    $("#PageSize").val("' . $userPerformanceSummary->dataProvider->pagination->pageSize . '");
+    $("#CurrentPage").val("' . ($userPerformanceSummary->dataProvider->pagination->getCurrentPage(false) + 1) . '");
     $("#CurrentSort").val("' . $currentSort . '");
 ');
 Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/transaction/report.css');
@@ -19,7 +19,7 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
             <div>
                 <div class="myForm">
                     <?php echo CHtml::beginForm(array(''), 'get'); ?>
-                    <div class="row">
+<!--                    <div class="row">
                         <div class="medium-6 columns">
                             <div class="field">
                                 <div class="row collapse">
@@ -27,7 +27,7 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                         <span class="prefix">Jumlah per Halaman</span>
                                     </div>
                                     <div class="small-8 columns">
-                                        <?php echo CHtml::textField('PageSize', '', array('size' => 3)); ?>
+                                        <?php //echo CHtml::textField('PageSize', '', array('size' => 3)); ?>
                                     </div>
                                 </div>
                             </div>
@@ -40,24 +40,24 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                         <span class="prefix">Halaman saat ini</span>
                                     </div>
                                     <div class="small-8 columns">
-                                        <?php echo CHtml::textField('page', '', array('size' => 3, 'id' => 'CurrentPage')); ?>
+                                        <?php //echo CHtml::textField('page', '', array('size' => 3, 'id' => 'CurrentPage')); ?>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </div>-->
                     
                     <div class="row">
                         <div class="medium-6 columns">
                             <div class="field">
                                 <div class="row collapse">
                                     <div class="small-4 columns">
-                                        <span class="prefix">Salesman</span>
+                                        <span class="prefix">User</span>
                                     </div>
                                     <div class="small-8 columns">
-                                        <?php echo CHtml::dropDownlist('EmployeeId', $employeeId, CHtml::listData(Employee::model()->findAllByAttributes(array(
-                                            "position_id" => 2,
-                                        )), "id", "name"), array("empty" => "--All Salesman--")); ?>
+                                        <?php echo CHtml::dropDownlist('UsersId', $userId, CHtml::listData(Users::model()->findAllByAttributes(array(
+                                            "status" => 1,
+                                        )), "id", "name"), array("empty" => "--All User--")); ?>
                                     </div>
                                 </div>
                             </div>
@@ -107,7 +107,7 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                     <div class="row buttons">
                         <?php echo CHtml::submitButton('Tampilkan', array('onclick' => '$("#CurrentSort").val(""); return true;')); ?>
                         <?php echo CHtml::submitButton('Hapus', array('name' => 'ResetFilter'));  ?>
-                        <?php echo CHtml::submitButton('Simpan ke Excel', array('name' => 'SaveExcel')); ?>
+                        <?php //echo CHtml::submitButton('Simpan ke Excel', array('name' => 'SaveExcel')); ?>
                     </div>
 
                     <?php echo CHtml::endForm(); ?>
@@ -119,8 +119,8 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
 
                 <div class="relative">
                     <?php $this->renderPartial('_summary', array(
-                        'employee' => $employee,
-                        'salesmanPerformanceSummary' => $salesmanPerformanceSummary,
+                        'user' => $user,
+                        'userPerformanceSummary' => $userPerformanceSummary,
                         'startDate' => $startDate,
                         'endDate' => $endDate,
                     )); ?>
@@ -135,9 +135,9 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
 
 <div class="right">
     <?php $this->widget('system.web.widgets.pagers.CLinkPager', array(
-        'itemCount' => $salesmanPerformanceSummary->dataProvider->pagination->itemCount,
-        'pageSize' => $salesmanPerformanceSummary->dataProvider->pagination->pageSize,
-        'currentPage' => $salesmanPerformanceSummary->dataProvider->pagination->getCurrentPage(false),
+        'itemCount' => $userPerformanceSummary->dataProvider->pagination->itemCount,
+        'pageSize' => $userPerformanceSummary->dataProvider->pagination->pageSize,
+        'currentPage' => $userPerformanceSummary->dataProvider->pagination->getCurrentPage(false),
     )); ?>
 </div>
 <div class="clear"></div>

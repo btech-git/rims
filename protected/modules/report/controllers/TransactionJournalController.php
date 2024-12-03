@@ -28,7 +28,7 @@ class TransactionJournalController extends Controller {
         $branchId = (isset($_GET['BranchId'])) ? $_GET['BranchId'] : '';
         $coaId = (isset($_GET['CoaId'])) ? $_GET['CoaId'] : '';
         $currentPage = (isset($_GET['page'])) ? $_GET['page'] : 1;
-        $pageSize = 5000;
+        $pageSize = 500;
         
         $transactionJournalReport = JurnalUmum::getTransactionJournalReport($startDate, $endDate, $transactionType, $branchId, $coaId, $currentPage, $pageSize);
         $transactionJournalCount = JurnalUmum::getTransactionJournalCount($startDate, $endDate, $transactionType, $branchId, $coaId);

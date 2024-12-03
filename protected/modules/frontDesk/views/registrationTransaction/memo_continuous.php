@@ -39,35 +39,23 @@ Yii::app()->clientScript->registerCss('memo', '
 ');
 ?>
 
-<div class="container">
-    <div id="memoheader">
-        <div style="float: left; width: 50%; text-align: center">
-            <img src="<?php echo Yii::app()->request->baseUrl; ?>/images/rap-logo.png" alt="" width="35%"/>
-        </div>
-        <div style="float: right; width: 45%">
-            <h2>INVOICE</h2>
-        </div>
-    </div>
-    <div class="right">
+<div id="memoheader">
+    <div class="memo-logo">&nbsp;</div>
+    <div class="memo-title">
         <table style="background-color: white;">
             <tr>
-                <td style="width: 35%">Invoice No</td>
                 <td style="text-align: left; line-height: 0rem"><?php echo CHtml::encode(CHtml::value($invoiceHeader, 'invoice_number')); ?></td>
             </tr>
             <tr>
-                <td>Date</td>
-                <td style="text-align: left; line-height: 0rem"><?php echo CHtml::encode(Yii::app()->dateFormatter->format("d MMM yyyy", CHtml::value($invoiceHeader, 'invoice_date'))); ?></td>
+                <td style="text-align: left; line-height: 0rem"><?php echo CHtml::encode(Yii::app()->dateFormatter->format("d MMM yyyy H:m:s", CHtml::value($invoiceHeader, 'invoice_date'))); ?></td>
             </tr>
             <tr>
-                <td>Name</td>
                 <td style="text-align: left; line-height: 0rem"><?php echo CHtml::encode(CHtml::value($invoiceHeader, 'customer.name')); ?></td>
             </tr>
             <tr>
-                <td>Plat No</td>
                 <td style="text-align: left; line-height: 0rem"><?php echo CHtml::encode(CHtml::value($invoiceHeader, 'vehicle.plate_number')); ?></td>
             </tr>
             <tr>
-                <td>Car Model</td>
                 <td style="text-align: left; line-height: 0rem">
                     <?php echo CHtml::encode(CHtml::value($invoiceHeader, 'vehicle.carMake.name')); ?> -
                     <?php echo CHtml::encode(CHtml::value($invoiceHeader, 'vehicle.carModel.name')); ?> -
@@ -82,14 +70,23 @@ Yii::app()->clientScript->registerCss('memo', '
 
 <div id="memonote">
     <table style="width: 98%">
-        <tr>
-            <td>CODE</td>
-            <td>PRODUCT</td>
-            <td>QTY</td>
-            <td>UNIT PRICE</td>
-            <td>TOTAL</td>
-        </tr>
-        
+        <?php if (count($services) > 0): ?>
+            <?php foreach ($services as $i => $detailService): ?>
+                <tr class="titems">
+                    <td style="text-align: left; line-height: 0rem; width: 15%"><?php echo CHtml::encode(CHtml::value($detailService, 'service.code')); ?></td>
+                    <td style="text-align: left; line-height: 0rem"><?php echo CHtml::encode(CHtml::value($detailService, 'service.name')); ?></td>
+                    <td style="text-align: center; line-height: 0rem; width: 10%">1</td>
+                    <td style="text-align: right; line-height: 0rem; width: 15%">
+                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($detailService, 'price'))); ?>
+                    </td>
+
+                    <td style="text-align: right; line-height: 0rem; width: 17%">
+                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($detailService, 'total_price'))); ?>
+                    </td>
+                </tr>
+            <?php endforeach; ?>
+        <?php endif; ?>
+
         <?php if (count($products) > 0): ?>
             <?php foreach ($products as $i => $detailProduct): ?>
                 <tr class="titems">
@@ -108,43 +105,9 @@ Yii::app()->clientScript->registerCss('memo', '
                 </tr>
             <?php endforeach; ?>
         <?php endif; ?>
-    </table> 
-    
-    <table style="width: 98%">
+                
         <tr>
-            <td>SERVICE</td>
-            <td>PRICE</td>
-        </tr>
-             
-        <?php if (count($services) > 0): ?>
-            <?php foreach ($services as $i => $detailService): ?>
-                <tr class="titems">
-                    <td style="text-align: left; line-height: 0rem"><?php echo CHtml::encode(CHtml::value($detailService, 'service.name')); ?></td>
-                    <td style="text-align: right; line-height: 0rem; width: 15%">
-                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($detailService, 'price'))); ?>
-                    </td>
-                </tr>
-            <?php endforeach; ?>
-        <?php endif; ?>
-    </table> 
-
-    <table style="width: 98%">
-        <tr>
-            <td style="text-align: right; line-height: 0rem" colspan="4">Total Product & Service</td>
-
-            <td style="text-align: right; line-height: 0rem; width: 17%">
-                <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($invoiceHeader, 'subTotal'))); ?>
-            </td>
-        </tr>
-        <tr>
-            <td style="text-align: right; line-height: 0rem" colspan="4">PPn</td>
-
-            <td style="text-align: right; line-height: 0rem; width: 17%">
-                <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($invoiceHeader, 'ppn_total'))); ?>
-            </td>
-        </tr>
-        <tr>
-            <td style="text-align: right; line-height: 0rem" colspan="4">Total Price</td>
+            <td style="text-align: right; line-height: 0rem" colspan="4">Total :</td>
 
             <td style="text-align: right; line-height: 0rem; width: 17%">
                 <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($invoiceHeader, 'total_price'))); ?>

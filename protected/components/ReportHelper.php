@@ -1,66 +1,62 @@
 <?php
 
-class ReportHelper extends CComponent
-{
-	public static function finalizeDataProvider($dataProvider, $page = array(), $sort = null, $date = array())
-	{
-		$pageSize = (empty($page['size'])) ? 10 : $page['size'];
-		$pageSize = ($pageSize <= 0) ? 1 : $pageSize;
-		$dataProvider->pagination->pageSize = $pageSize;
+class ReportHelper extends CComponent {
 
-		$currentPage = (empty($page['current'])) ? 0 : $page['current'] - 1;
-		$dataProvider->pagination->currentPage = $currentPage;
+    public static function finalizeDataProvider($dataProvider, $page = array(), $sort = null, $date = array()) {
+        $pageSize = (empty($page['size'])) ? 10 : $page['size'];
+        $pageSize = ($pageSize <= 0) ? 1 : $pageSize;
+        $dataProvider->pagination->pageSize = $pageSize;
 
-		if ($sort !== null)
-			$dataProvider->criteria->order = $sort->orderBy;
+        $currentPage = (empty($page['current'])) ? 0 : $page['current'] - 1;
+        $dataProvider->pagination->currentPage = $currentPage;
 
-		if (!empty($date['attribute']))
-		{
-			$startDate = (empty($date['start'])) ? date('Y-m-d') : $date['start'];
-			$endDate = (empty($date['end'])) ? date('Y-m-d') : $date['end'];
-			$dataProvider->criteria->addBetweenCondition($date['attribute'], $startDate, $endDate);
-		}
+        if ($sort !== null)
+            $dataProvider->criteria->order = $sort->orderBy;
 
-		return $dataProvider;
-	}
+        if (!empty($date['attribute'])) {
+            $startDate = (empty($date['start'])) ? date('Y-m-d') : $date['start'];
+            $endDate = (empty($date['end'])) ? date('Y-m-d') : $date['end'];
+            $dataProvider->criteria->addBetweenCondition($date['attribute'], $startDate, $endDate);
+        }
 
-	public static function summaryInfo($currentPage, $pageSize, $totalItemCount)
-	{
-                $pageOffset = $currentPage - 1;
-		$start = $pageOffset * $pageSize + 1;
-		$end = ($pageOffset + 1) * $pageSize;
-                if ($start > $totalItemCount) {
-                    $start =  $totalItemCount;
-                }
-                if ($end > $totalItemCount) {
-                    $end =  $totalItemCount;
-                }
+        return $dataProvider;
+    }
 
-		$info = ($totalItemCount > 0) ? "Displaying {$start}-{$end} of {$totalItemCount} result(s)." : '';
+    public static function summaryInfo($currentPage, $pageSize, $totalItemCount) {
+        $pageOffset = $currentPage - 1;
+        $start = $pageOffset * $pageSize + 1;
+        $end = ($pageOffset + 1) * $pageSize;
+        if ($start > $totalItemCount) {
+            $start = $totalItemCount;
+        }
+        if ($end > $totalItemCount) {
+            $end = $totalItemCount;
+        }
 
-		return $info;
-	}
+        $info = ($totalItemCount > 0) ? "Displaying {$start}-{$end} of {$totalItemCount} result(s)." : '';
 
-	public static function summaryText($dataProvider)
-	{
-		$start = $dataProvider->pagination->getCurrentPage(false) * $dataProvider->pagination->pageSize + 1;
-		$end = $dataProvider->pagination->getCurrentPage(false) * $dataProvider->pagination->pageSize + $dataProvider->getItemCount(false);
-		$total = $dataProvider->getTotalItemCount(false);
+        return $info;
+    }
 
-		$text = ($total > 0) ? "Displaying {$start}-{$end} of {$total} result(s)." : '';
+    public static function summaryText($dataProvider) {
+        $itemCount = $dataProvider->getItemCount(false);
+        $start = $dataProvider->pagination->getCurrentPage(false) * $dataProvider->pagination->pageSize + 1;
+        $end = $dataProvider->pagination->getCurrentPage(false) * $dataProvider->pagination->pageSize + $itemCount;
+        $total = $dataProvider->getTotalItemCount(false);
 
-		return $text;
-	}
+        $text = ($total > 0) ? "Displaying {$start}-{$end} of {$total} result(s)." : '';
 
-	public static function sortText($sort, $labels = array())
-	{
-		$text = 'Sort by: ';
-		foreach ($sort->attributes as $i => $attribute)
-		{
-			$label = isset($labels[$i]) ? $labels[$i] : null;
-			$text .= $sort->link($attribute, $label) . ' ';
-		}
+        return $text;
+    }
 
-		return $text;
-	}
+    public static function sortText($sort, $labels = array()) {
+        $text = 'Sort by: ';
+        foreach ($sort->attributes as $i => $attribute) {
+            $label = isset($labels[$i]) ? $labels[$i] : null;
+            $text .= $sort->link($attribute, $label) . ' ';
+        }
+
+        return $text;
+    }
+
 }

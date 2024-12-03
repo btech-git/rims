@@ -127,7 +127,6 @@ $this->menu = array(
                 <?php endif; ?>
             </div>
         </div>
-
     </div>
 </div>
 

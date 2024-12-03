@@ -202,6 +202,21 @@ class VehicleController extends Controller {
         ));
     }
 
+    public function actionUpdateLocation($id) {
+        $model = $this->loadModel($id);
+
+        if (isset($_POST['Vehicle'])) {
+            $model->attributes = $_POST['Vehicle'];
+            if ($model->save()) {
+                $this->redirect(array('view', 'id' => $model->id));
+            }
+        }
+
+        $this->render('updateLocation', array(
+            'model' => $model,
+        ));
+    }
+
     /**
      * Updates a particular model.
      * If update is successful, the browser will be redirected to the 'view' page.

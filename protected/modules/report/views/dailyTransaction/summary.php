@@ -86,9 +86,12 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                         'tabs' => array(
                             'Penjualan' => array(
                                 'content' => $this->renderPartial('_summarySale', array(
-                                    'invoiceHeaderData' => $invoiceHeaderData,
-                                    'paymentInData' => $paymentInData,
-                                    'registrationTransactionData' => $registrationTransactionData,
+                                    'registrationTransactionRetailData' => $registrationTransactionRetailData,
+                                    'registrationTransactionCompanyData' => $registrationTransactionCompanyData,
+                                    'invoiceHeaderRetailData' => $invoiceHeaderRetailData,
+                                    'invoiceHeaderCompanyData' => $invoiceHeaderCompanyData,
+                                    'paymentInRetailData' => $paymentInRetailData,
+                                    'paymentInCompanyData' => $paymentInCompanyData,
                                 ), true),
                             ),
                             'Pembelian' => array(

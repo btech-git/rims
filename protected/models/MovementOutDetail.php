@@ -149,21 +149,6 @@ class MovementOutDetail extends CActiveRecord {
         return parent::model($className);
     }
 
-    protected function afterSave() {
-        parent::afterSave();
-
-        $history = new TransactionLog();
-        $history->transaction_number = $this->movementOutHeader->movement_out_no;
-        $history->transaction_date = $this->movementOutHeader->date_posting;
-        $history->log_date = date("Y-m-d");
-        $history->log_time = date("H:i:s");
-        $history->table_name = $this->tableName();
-        $history->table_id = $this->id;
-        $history->new_data = serialize($this->attributes);
-
-        $history->save();
-    }
-    
     public function getQuantityReceive() {
         $total = 0;
         

@@ -40,20 +40,6 @@
                         )), 'id', 'name'), array(
                             'empty' => '-Pilih COA-'
                         )); ?>
-                        <?php /*echo CHtml::activeHiddenField($bankDetail,"[$i]coa_id"); ?>
-                        <?php echo CHtml::activeTextField($bankDetail,"[$i]coa_name", array(
-                            'size'=>25,
-                            //'size'=>15,
-                            //'maxlength'=>10,
-                            'rel'=>$i,
-                            'onclick' => '
-                                currentDetail=$(this).attr("rel");
-                                $("#coa-dialog").dialog("open"); 
-                                return false;
-                            ',
-                            'value' => $bankDetail->coa_id == "" ? '': $bankDetail->coa->name,
-                            'placeholder' => 'COA Name',
-                        ));*/ ?>
                     </td>
                     <td>
                         <?php echo CHtml::button('X', array(

@@ -132,7 +132,7 @@ class Cashs extends CComponent {
             CashTransactionDetail::model()->deleteAll($criteria);
         }
 
-//        $this->saveTransactionLog();
+        $this->saveTransactionLog();
         
         return $valid;
     }

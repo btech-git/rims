@@ -243,6 +243,11 @@
                 'value' => 'Yii::app()->dateFormatter->format("d MMM yyyy", $data->invoice_date)'
             ),
             array(
+                'name' => 'vehicle_id',
+                'header' => 'Plat #',
+                'value' => 'empty($data->vehicle_id) ? "" : $data->vehicle->plate_number',
+            ),
+            array(
                 'name' => 'customer_id',
                 'header' => 'Customer',
                 'value' => 'empty($data->customer_id) ? "" : $data->customer->name',

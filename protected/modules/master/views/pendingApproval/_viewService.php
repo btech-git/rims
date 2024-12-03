@@ -9,20 +9,18 @@
     ),
     //'summaryText'=>'',
     'columns'=>array(
-        //'id',
         array(
             'class' => 'CCheckBoxColumn',
             'selectableRows' => '2',
-            'header' => 'Selected',
             'value' => '$data->id',
+            'cssClassExpression' => '"service-item-checkbox"',
         ),
-        array('name' => 'service_type_code', 'value' => '$data->serviceType->code'),
         array(
             'name' => 'service_type_name',
             'filter' => CHtml::activeDropDownList($service, 'service_type_id', CHtml::listData(ServiceType::model()->findAll(array('order' => 'name')), 'id', 'name'), array('empty' => '-- All --')),
             'value' => '$data->serviceType->name'
         ),
-        array('name' => 'service_category_code', 'value' => '$data->serviceCategory->code'),
+//        array('name' => 'service_category_code', 'value' => '$data->serviceCategory->code'),
         array(
             'name' => 'service_category_name',
             'filter' => CHtml::activeDropDownList($service, 'service_category_id', CHtml::listData(ServiceCategory::model()->findAll(array('order' => 'name')), 'id', 'name'), array('empty' => '-- All --')),
@@ -75,3 +73,27 @@
         ),
     ),
 )); ?>
+
+<div>
+    <?php echo CHtml::button('Approve All', array(
+        'id' => 'service-approve-button',
+        'onclick' => '
+            var ids = [];
+            $(".service-item-checkbox > input:checked").each(function() {
+                ids.push($(this).val());
+            })
+            $.ajax({
+                type: "POST",
+                dataType: "JSON",
+                url: "' . CController::createUrl('ajaxApproveAllService', array('ids' => '__ids__')) . '".replace("__ids__", ids.join(",")),
+                success: function(data) {
+                    location.reload();
+                },
+            });
+        ',
+    )); ?>
+    
+    <?php echo CHtml::button('Reject All', array(
+        'id' => 'service-reject-button',
+    )); ?>
+</div>

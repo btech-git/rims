@@ -271,21 +271,6 @@ class PaymentIn extends MonthlyTransactionActiveRecord {
         return parent::model($className);
     }
 
-    protected function afterSave() {
-        parent::afterSave();
-
-        $history = new TransactionLog();
-        $history->transaction_number = $this->payment_number;
-        $history->transaction_date = $this->payment_date;
-        $history->log_date = date("Y-m-d");
-        $history->log_time = date("H:i:s");
-        $history->table_name = $this->tableName();
-        $history->table_id = $this->id;
-        $history->new_data = serialize($this->attributes);
-
-        $history->save();
-    }
-
     public function generateCodeNumber($currentMonth, $currentYear, $requesterBranchId) {
         $arr = array(1 => 'I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI', 'XII');
         $cnYearCondition = "substring_index(substring_index(substring_index(payment_number, '/', 2), '/', -1), '.', 1)";

@@ -290,4 +290,24 @@ class PendingApprovalController extends Controller {
             $this->redirect(array('index'));
         }
     }
+    
+    public function actionAjaxApproveAllService($ids) {
+
+        if (Yii::app()->request->isAjaxRequest) {
+            $services = Service::model()->findAllByAttributes(array('id' => explode(',', $ids)));
+            $valid = true;
+            foreach ($services as $service) {
+                $service->is_approved = 1;
+                $service->date_approval = date('Y-m-d');
+                $valid = $valid && $service->save(false);
+            }
+
+            $object = array(
+                'status' => $valid ? 'OK' : 'Not OK',
+            );
+
+            echo CJSON::encode($object);
+        }
+    }
+
 }

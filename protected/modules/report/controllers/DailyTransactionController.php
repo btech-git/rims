@@ -41,16 +41,6 @@ class DailyTransactionController extends Controller {
             'branch_id' => $branchId,
         ));
         
-        $invoiceHeaderData = InvoiceHeader::model()->findAllByAttributes(array(
-            'invoice_date' => $transactionDate,
-            'branch_id' => $branchId,
-        ));
-        
-        $paymentInData = PaymentIn::model()->findAllByAttributes(array(
-            'payment_date' => $transactionDate,
-            'branch_id' => $branchId,
-        ));
-        
         $paymentOutData = PaymentOut::model()->findAllByAttributes(array(
             'payment_date' => $transactionDate,
             'branch_id' => $branchId,
@@ -74,6 +64,54 @@ class DailyTransactionController extends Controller {
         
         $registrationTransactionData = RegistrationTransaction::model()->findAll(array(
             'condition' => 'substr(t.transaction_date, 1, 10) = :transaction_date AND t.branch_id = :branch_id',
+            'params' => array(
+                ':transaction_date' => $transactionDate, 
+                ':branch_id' => $branchId
+            ),
+        ));
+        
+        $registrationTransactionRetailData = RegistrationTransaction::model()->with('customer')->findAll(array(
+            'condition' => 'substr(t.transaction_date, 1, 10) = :transaction_date AND t.branch_id = :branch_id AND customer.customer_type = "Individual"',
+            'params' => array(
+                ':transaction_date' => $transactionDate, 
+                ':branch_id' => $branchId
+            ),
+        ));
+        
+        $registrationTransactionCompanyData = RegistrationTransaction::model()->with('customer')->findAll(array(
+            'condition' => 'substr(t.transaction_date, 1, 10) = :transaction_date AND t.branch_id = :branch_id AND customer.customer_type = "Company"',
+            'params' => array(
+                ':transaction_date' => $transactionDate, 
+                ':branch_id' => $branchId
+            ),
+        ));
+        
+        $invoiceHeaderRetailData = InvoiceHeader::model()->with('customer')->findAll(array(
+            'condition' => 'invoice_date = :transaction_date AND t.branch_id = :branch_id AND customer.customer_type = "Individual"',
+            'params' => array(
+                ':transaction_date' => $transactionDate, 
+                ':branch_id' => $branchId
+            ),
+        ));
+        
+        $invoiceHeaderCompanyData = InvoiceHeader::model()->with('customer')->findAll(array(
+            'condition' => 'invoice_date = :transaction_date AND t.branch_id = :branch_id AND customer.customer_type = "Company"',
+            'params' => array(
+                ':transaction_date' => $transactionDate, 
+                ':branch_id' => $branchId
+            ),
+        ));
+        
+        $paymentInRetailData = PaymentIn::model()->with('customer')->findAll(array(
+            'condition' => 'payment_date = :transaction_date AND t.branch_id = :branch_id AND customer.customer_type = "Individual"',
+            'params' => array(
+                ':transaction_date' => $transactionDate, 
+                ':branch_id' => $branchId
+            ),
+        ));
+        
+        $paymentInCompanyData = PaymentIn::model()->with('customer')->findAll(array(
+            'condition' => 'payment_date = :transaction_date AND t.branch_id = :branch_id AND customer.customer_type = "Company"',
             'params' => array(
                 ':transaction_date' => $transactionDate, 
                 ':branch_id' => $branchId
@@ -131,12 +169,16 @@ class DailyTransactionController extends Controller {
             $this->saveToExcel(array(
                 'cashTransactionInData' => $cashTransactionInData,
                 'cashTransactionOutData' => $cashTransactionOutData,
-                'invoiceHeaderData' => $invoiceHeaderData,
-                'paymentInData' => $paymentInData,
+                'invoiceHeaderRetailData' => $invoiceHeaderRetailData,
+                'invoiceHeaderCompanyData' => $invoiceHeaderCompanyData,
+                'paymentInRetailData' => $paymentInRetailData,
+                'paymentInCompanyData' => $paymentInCompanyData,
                 'paymentOutData' => $paymentOutData,
                 'movementInData' => $movementInData,
                 'movementOutData' => $movementOutData,
                 'registrationTransactionData' => $registrationTransactionData,
+                'registrationTransactionRetailData' => $registrationTransactionRetailData,
+                'registrationTransactionCompanyData' => $registrationTransactionCompanyData,
                 'deliveryData' => $deliveryData,
                 'purchaseOrderData' => $purchaseOrderData,
                 'receiveItemData' => $receiveItemData, 
@@ -151,12 +193,16 @@ class DailyTransactionController extends Controller {
         $this->render('summary', array(
             'cashTransactionInData' => $cashTransactionInData,
             'cashTransactionOutData' => $cashTransactionOutData,
-            'invoiceHeaderData' => $invoiceHeaderData,
-            'paymentInData' => $paymentInData,
+            'invoiceHeaderRetailData' => $invoiceHeaderRetailData,
+            'invoiceHeaderCompanyData' => $invoiceHeaderCompanyData,
+            'paymentInRetailData' => $paymentInRetailData,
+            'paymentInCompanyData' => $paymentInCompanyData,
             'paymentOutData' => $paymentOutData,
             'movementInData' => $movementInData,
             'movementOutData' => $movementOutData,
             'registrationTransactionData' => $registrationTransactionData,
+            'registrationTransactionRetailData' => $registrationTransactionRetailData,
+            'registrationTransactionCompanyData' => $registrationTransactionCompanyData,
             'deliveryData' => $deliveryData,
             'purchaseOrderData' => $purchaseOrderData,
             'receiveItemData' => $receiveItemData, 

@@ -156,21 +156,6 @@ class MovementInHeader extends MonthlyTransactionActiveRecord {
         ));
     }
 
-    protected function afterSave() {
-        parent::afterSave();
-
-        $history = new TransactionLog();
-        $history->transaction_number = $this->movement_in_number;
-        $history->transaction_date = $this->date_posting;
-        $history->log_date = date("Y-m-d");
-        $history->log_time = date("H:i:s");
-        $history->table_name = $this->tableName();
-        $history->table_id = $this->id;
-        $history->new_data = serialize($this->attributes);
-
-        $history->save();
-    }
-
     public function getMovementType($type) {
         switch($type) {
             case 1: return 'Receive Item';
