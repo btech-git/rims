@@ -176,8 +176,9 @@ class DeliveryOrders extends CComponent {
 
                 $quantity = 0;
 
-                foreach ($receiveItemDetails as $receiveItemDetail)
+                foreach ($receiveItemDetails as $receiveItemDetail) {
                     $quantity += $receiveItemDetail->quantity_delivery;
+                }
 
                 $salesOrderDetail = TransactionSalesOrderDetail::model()->findByAttributes(array('id' => $detail->sales_order_detail_id, 'sales_order_id' => $this->header->sales_order_id));
                 $salesOrderDetail->sales_order_quantity_left = $detail->quantity_request - ($detail->quantity_delivery + $quantity);
@@ -185,23 +186,8 @@ class DeliveryOrders extends CComponent {
                 $left_quantity = $salesOrderDetail->sales_order_quantity_left;
                 $salesOrderDetail->save(false);
 
-//                $salesOrder = TransactionSalesOrder::model()->findByPk($this->header->sales_order_id);
                 $branch = Branch::model()->findByPk($this->header->sender_branch_id);
                 $jumlah = $detail->quantity_delivery * $detail->salesOrderDetail->unit_price;
-                
-//                $coaMasterGroupInventory = Coa::model()->findByAttributes(array('code' => '105.00.000'));
-//                $jurnalUmumMasterGroupInventory = new JurnalUmum;
-//                $jurnalUmumMasterGroupInventory->kode_transaksi = $this->header->delivery_order_no;
-//                $jurnalUmumMasterGroupInventory->tanggal_transaksi = $this->header->delivery_date;
-//                $jurnalUmumMasterGroupInventory->coa_id = $coaMasterGroupInventory->id;
-//                $jurnalUmumMasterGroupInventory->branch_id = $this->header->sender_branch_id;
-//                $jurnalUmumMasterGroupInventory->total = $jumlah;
-//                $jurnalUmumMasterGroupInventory->debet_kredit = 'D';
-//                $jurnalUmumMasterGroupInventory->tanggal_posting = date('Y-m-d');
-//                $jurnalUmumMasterGroupInventory->transaction_subject = 'Delivery Order';
-//                $jurnalUmumMasterGroupInventory->is_coa_category = 1;
-//                $jurnalUmumMasterGroupInventory->transaction_type = 'DO';
-//                $jurnalUmumMasterGroupInventory->save();
                 
                 //save coa product master
                 $coaMasterInventory = Coa::model()->findByPk($detail->salesOrderDetail->product->productMasterCategory->coa_inventory_in_transit);
@@ -237,22 +223,6 @@ class DeliveryOrders extends CComponent {
                 $jurnalUmumInventory->transaction_type = 'DO';
                 $jurnalUmumInventory->save();
 
-                //____________________________________________________________________________________
-                
-//                $coaMasterGroupPersediaan = Coa::model()->findByAttributes(array('code'=> '104.00.000'));
-//                $jurnalUmumMasterGroupPersediaan = new JurnalUmum;
-//                $jurnalUmumMasterGroupPersediaan->kode_transaksi = $this->header->delivery_order_no;
-//                $jurnalUmumMasterGroupPersediaan->tanggal_transaksi = $this->header->delivery_date;
-//                $jurnalUmumMasterGroupPersediaan->coa_id = $coaMasterGroupPersediaan->id;
-//                $jurnalUmumMasterGroupPersediaan->branch_id = $this->header->sender_branch_id;
-//                $jurnalUmumMasterGroupPersediaan->total = $jumlah;
-//                $jurnalUmumMasterGroupPersediaan->debet_kredit = 'K';
-//                $jurnalUmumMasterGroupPersediaan->tanggal_posting = date('Y-m-d');
-//                $jurnalUmumMasterGroupPersediaan->transaction_subject = 'Delivery Order';
-//                $jurnalUmumMasterGroupPersediaan->is_coa_category = 1;
-//                $jurnalUmumMasterGroupPersediaan->transaction_type = 'DO';
-//                $jurnalUmumMasterGroupPersediaan->save();
-                
                 //save coa persediaan master
                 $jurnalUmumMasterOutstandingPart = new JurnalUmum;
                 $jurnalUmumMasterOutstandingPart->kode_transaksi = $this->header->delivery_order_no;
@@ -547,6 +517,34 @@ class DeliveryOrders extends CComponent {
             TransactionDeliveryOrderDetail::model()->deleteAll($criteria);
         }
 
+        $this->saveTransactionLog();
+        
         return $valid;
+    }
+    
+    public function saveTransactionLog() {
+        $transactionLog = new TransactionLog();
+        $transactionLog->transaction_number = $this->header->delivery_order_no;
+        $transactionLog->transaction_date = $this->header->delivery_date;
+        $transactionLog->log_date = date('Y-m-d');
+        $transactionLog->log_time = date('H:i:s');
+        $transactionLog->table_name = $this->header->tableName();
+        $transactionLog->table_id = $this->header->id;
+        $transactionLog->user_id = Yii::app()->user->id;
+        $transactionLog->username = Yii::app()->user->username;
+        $transactionLog->controller_class = Yii::app()->controller->module->id  . '/' . Yii::app()->controller->id;
+        $transactionLog->action_name = Yii::app()->controller->action->id;
+        $transactionLog->action_type = $this->actionType;
+        
+        $newData = $this->header->attributes;
+        
+        $newData['transactionDeliveryOrderDetails'] = array();
+        foreach($this->details as $detail) {
+            $newData['transactionDeliveryOrderDetails'][] = $detail->attributes;
+        }
+        
+        $transactionLog->new_data = json_encode($newData);
+
+        $transactionLog->save();
     }
 }
