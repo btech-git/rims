@@ -39,6 +39,8 @@
  * @property integer $movement_type
  * @property string $cancelled_datetime
  * @property integer $user_id_cancelled
+ * @property string $updated_datetime
+ * @property integer $user_id_updated
  *
  * The followings are the available model relations:
  * @property MovementInHeader[] $movementInHeaders
@@ -56,6 +58,7 @@
  * @property TransactionReturnOrder[] $transactionReturnOrders
  * @property PayOutDetail[] $payOutDetails
  * @property UserIdCancelled $userIdCancelled
+ * @property UserIdUpdated $userIdUpdated
  */
 class TransactionReceiveItem extends MonthlyTransactionActiveRecord {
 
@@ -97,15 +100,15 @@ class TransactionReceiveItem extends MonthlyTransactionActiveRecord {
         // will receive user inputs.
         return array(
             array('receive_item_no, receive_item_date, user_id_receive, recipient_branch_id, movement_type', 'required'),
-            array('recipient_id, recipient_branch_id, destination_branch, supplier_id, movement_type, purchase_order_id, transfer_request_id, consignment_in_id, delivery_order_id, movement_out_id, user_id_receive, user_id_invoice, user_id_cancelled', 'numerical', 'integerOnly' => true),
+            array('recipient_id, recipient_branch_id, destination_branch, supplier_id, movement_type, purchase_order_id, transfer_request_id, consignment_in_id, delivery_order_id, movement_out_id, user_id_receive, user_id_invoice, user_id_cancelled, user_id_updated', 'numerical', 'integerOnly' => true),
             array('receive_item_no, request_type', 'length', 'max' => 30),
             array('invoice_number, invoice_tax_number, supplier_delivery_number', 'length', 'max' => 50),
             array('invoice_sub_total, invoice_tax_nominal, invoice_grand_total, invoice_grand_total_rounded, invoice_rounding_nominal', 'length', 'max' => 18),
             array('receive_item_no', 'unique'),
-            array('receive_item_date, arrival_date, request_date, estimate_arrival_date, invoice_date, invoice_due_date, purchase_order_no, transfer_request_no, delivery_order_no, consignment_in_no, movement_out_no, note, invoice_date_created, invoice_time_created', 'safe'),
+            array('receive_item_date, arrival_date, request_date, estimate_arrival_date, invoice_date, invoice_due_date, purchase_order_no, transfer_request_no, delivery_order_no, consignment_in_no, movement_out_no, note, invoice_date_created, invoice_time_created, updated_datetime, cancelled_datetime', 'safe'),
             // The following rule is used by search().
             // Please remove those attributes that should not be searched.
-            array('id, receive_item_no, receive_item_date, arrival_date, created_datetime, movement_type, recipient_id, recipient_branch_id, request_type, request_date, estimate_arrival_date, destination_branch, supplier_id, purchase_order_id, transfer_request_id, consignment_in_id,branch_name, delivery_order_id, supplier_name,invoice_number, invoice_date, movement_out_id, transfer_request_no, delivery_order_no, consignment_in_no, movement_out_no, invoice_tax_number, invoice_sub_total, invoice_tax_nominal, invoice_grand_total, note, supplier_delivery_number, invoice_grand_total_rounded, invoice_rounding_nominal, user_id_receive, user_id_invoice, invoice_date_created, invoice_time_created, cancelled_datetime, user_id_cancelled', 'safe', 'on' => 'search'),
+            array('id, receive_item_no, receive_item_date, arrival_date, created_datetime, movement_type, recipient_id, recipient_branch_id, request_type, request_date, estimate_arrival_date, destination_branch, supplier_id, purchase_order_id, transfer_request_id, consignment_in_id,branch_name, delivery_order_id, supplier_name,invoice_number, invoice_date, movement_out_id, transfer_request_no, delivery_order_no, consignment_in_no, movement_out_no, invoice_tax_number, invoice_sub_total, invoice_tax_nominal, invoice_grand_total, note, supplier_delivery_number, invoice_grand_total_rounded, invoice_rounding_nominal, user_id_receive, user_id_invoice, invoice_date_created, invoice_time_created, cancelled_datetime, user_id_cancelled, updated_datetime, user_id_updated', 'safe', 'on' => 'search'),
         );
     }
 
@@ -128,7 +131,8 @@ class TransactionReceiveItem extends MonthlyTransactionActiveRecord {
             'movementOut' => array(self::BELONGS_TO, 'MovementOutHeader', 'movement_out_id'),
             'userIdReceive' => array(self::BELONGS_TO, 'Users', 'user_id_receive'),
             'userIdInvoice' => array(self::BELONGS_TO, 'Users', 'user_id_invoice'),
-            'userIdCancelled' => array(self::BELONGS_TO, 'User', 'user_id_cancelled'),
+            'userIdCancelled' => array(self::BELONGS_TO, 'Users', 'user_id_cancelled'),
+            'userIdUpdated' => array(self::BELONGS_TO, 'Users', 'user_id_updated'),
             'transactionReceiveItemDetails' => array(self::HAS_MANY, 'TransactionReceiveItemDetail', 'receive_item_id'),
             'transactionReturnOrders' => array(self::HAS_MANY, 'TransactionReturnOrder', 'receive_item_id'),
             'payOutDetails' => array(self::HAS_MANY, 'PayOutDetail', 'receive_item_id'),

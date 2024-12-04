@@ -35,6 +35,8 @@
  * @property string $cancelled_datetime
  * @property integer $user_id_cancelled
  * @property integer $registration_transaction_id
+ * @property string $updated_datetime
+ * @property integer $user_id_updated
  *
  * The followings are the available model relations:
  * @property PaymentOut[] $paymentOuts
@@ -49,6 +51,7 @@
  * @property CoaBank $coaBankIdEstimate
  * @property RegistrationTransaction $registrationTransaction
  * @property UserIdCancelled $userIdCancelled
+ * @property UserIdUpdated $userIdUpdated
  */
 class TransactionPurchaseOrder extends MonthlyTransactionActiveRecord {
 
@@ -91,16 +94,16 @@ class TransactionPurchaseOrder extends MonthlyTransactionActiveRecord {
         // will receive user inputs.
         return array(
             array('purchase_order_no, purchase_order_date, status_document, payment_type, purchase_type, tax_percentage, supplier_id, requester_id, main_branch_id', 'required'),
-            array('supplier_id, requester_id, main_branch_id, approved_id, total_quantity, ppn, company_bank_id, purchase_type, coa_bank_id_estimate, tax_percentage, user_id_cancelled', 'numerical', 'integerOnly' => true),
+            array('supplier_id, requester_id, main_branch_id, approved_id, total_quantity, ppn, company_bank_id, purchase_type, coa_bank_id_estimate, tax_percentage, user_id_cancelled, user_id_updated', 'numerical', 'integerOnly' => true),
             array('purchase_order_no, status_document', 'length', 'max' => 30),
             array('payment_type', 'length', 'max' => 20),
             array('price_before_discount, discount, subtotal, ppn_price, total_price, payment_amount, payment_left', 'length', 'max' => 18),
-            array('estimate_date_arrival, payment_date_estimate, note, registration_transaction_id', 'safe'),
+            array('estimate_date_arrival, payment_date_estimate, note, registration_transaction_id, updated_datetime, cancelled_datetime', 'safe'),
             array('payment_status', 'length', 'max' => 50),
             array('purchase_order_no', 'unique'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, purchase_order_no, purchase_order_date, status_document, registration_transaction_id, supplier_id, payment_type, estimate_date_arrival, requester_id, main_branch_id, approved_id, total_quantity, price_before_discount, discount, subtotal, ppn, ppn_price, total_price,supplier_name,coa_supplier,coa_name, payment_date_estimate, main_branch_name, approved_name, requester_name, purchase_type, coa_bank_id_estimate, created_datetime, tax_percentage, note, cancelled_datetime, user_id_cancelled', 'safe', 'on' => 'search'),
+            array('id, purchase_order_no, purchase_order_date, status_document, registration_transaction_id, supplier_id, payment_type, estimate_date_arrival, requester_id, main_branch_id, approved_id, total_quantity, price_before_discount, discount, subtotal, ppn, ppn_price, total_price,supplier_name,coa_supplier,coa_name, payment_date_estimate, main_branch_name, approved_name, requester_name, purchase_type, coa_bank_id_estimate, created_datetime, tax_percentage, note, cancelled_datetime, user_id_cancelled, updated_datetime, user_id_updated', 'safe', 'on' => 'search'),
         );
     }
 
@@ -119,9 +122,10 @@ class TransactionPurchaseOrder extends MonthlyTransactionActiveRecord {
             'transactionPurchaseOrderDestinationBranches' => array(self::HAS_MANY, 'TransactionPurchaseOrderDestinationBranch', 'purchase_order_id'),
             'transactionReceiveItems' => array(self::HAS_MANY, 'TransactionReceiveItem', 'purchase_order_id'),
             'transactionReturnOrders' => array(self::HAS_MANY, 'TransactionReturnOrder', 'purchase_order_id'),
-            'user' => array(self::BELONGS_TO, 'User', 'requester_id'),
-            'userIdCancelled' => array(self::BELONGS_TO, 'User', 'user_id_cancelled'),
-            'approval' => array(self::BELONGS_TO, 'User', 'approved_id'),
+            'user' => array(self::BELONGS_TO, 'Users', 'requester_id'),
+            'userIdCancelled' => array(self::BELONGS_TO, 'Users', 'user_id_cancelled'),
+            'userIdUpdated' => array(self::BELONGS_TO, 'Users', 'user_id_updated'),
+            'approval' => array(self::BELONGS_TO, 'Users', 'approved_id'),
             'mainBranch' => array(self::BELONGS_TO, 'Branch', 'main_branch_id'),
             'registrationTransaction' => array(self::BELONGS_TO, 'RegistrationTransaction', 'registration_transaction_id'),
             'coaBankIdEstimate' => array(self::BELONGS_TO, 'Coa', 'coa_bank_id_estimate'),

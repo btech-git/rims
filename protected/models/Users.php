@@ -335,4 +335,340 @@ class Users extends CActiveRecord {
 
         return ($value === false) ? 0 : $value;
     }
+    
+    public function getUserUpdatedRegistrationCount($startDate, $endDate) {
+        $sql = "SELECT COUNT(user_id_edited)
+                FROM " . RegistrationTransaction::model()->tableName() . "
+                WHERE user_id_edited = :user_id AND substr(transaction_date, 1, 10) BETWEEN :start_date AND :end_date";
+
+        $value = CActiveRecord::$db->createCommand($sql)->queryScalar(array(
+            ':user_id' => $this->id,
+            ':start_date' => $startDate,
+            ':end_date' => $endDate,
+        ));
+
+        return ($value === false) ? 0 : $value;
+    }
+    
+    public function getUserUpdatedWorkOrderCount($startDate, $endDate) {
+        $sql = "SELECT COUNT(user_id_edited)
+                FROM " . RegistrationTransaction::model()->tableName() . "
+                WHERE user_id_edited = :user_id AND substr(transaction_date, 1, 10) BETWEEN :start_date AND :end_date AND work_order_number is not null";
+
+        $value = CActiveRecord::$db->createCommand($sql)->queryScalar(array(
+            ':user_id' => $this->id,
+            ':start_date' => $startDate,
+            ':end_date' => $endDate,
+        ));
+
+        return ($value === false) ? 0 : $value;
+    }
+    
+    public function getUserUpdatedMovementOutCount($startDate, $endDate) {
+        $sql = "SELECT COUNT(user_id_updated)
+                FROM " . MovementOutHeader::model()->tableName() . "
+                WHERE user_id_updated = :user_id AND substr(date_posting, 1, 10) BETWEEN :start_date AND :end_date";
+
+        $value = CActiveRecord::$db->createCommand($sql)->queryScalar(array(
+            ':user_id' => $this->id,
+            ':start_date' => $startDate,
+            ':end_date' => $endDate,
+        ));
+
+        return ($value === false) ? 0 : $value;
+    }
+    
+    public function getUserUpdatedInvoiceCount($startDate, $endDate) {
+        $sql = "SELECT COUNT(user_id_edited)
+                FROM " . InvoiceHeader::model()->tableName() . "
+                WHERE user_id_edited = :user_id AND substr(invoice_date, 1, 10) BETWEEN :start_date AND :end_date";
+
+        $value = CActiveRecord::$db->createCommand($sql)->queryScalar(array(
+            ':user_id' => $this->id,
+            ':start_date' => $startDate,
+            ':end_date' => $endDate,
+        ));
+
+        return ($value === false) ? 0 : $value;
+    }
+    
+    public function getUserUpdatedPaymentInCount($startDate, $endDate) {
+        $sql = "SELECT COUNT(user_id_edited)
+                FROM " . PaymentIn::model()->tableName() . "
+                WHERE user_id_edited = :user_id AND substr(payment_date, 1, 10) BETWEEN :start_date AND :end_date";
+
+        $value = CActiveRecord::$db->createCommand($sql)->queryScalar(array(
+            ':user_id' => $this->id,
+            ':start_date' => $startDate,
+            ':end_date' => $endDate,
+        ));
+
+        return ($value === false) ? 0 : $value;
+    }
+    
+    public function getUserUpdatedPurchaseCount($startDate, $endDate) {
+        $sql = "SELECT COUNT(user_id_updated)
+                FROM " . TransactionPurchaseOrder::model()->tableName() . "
+                WHERE user_id_updated = :user_id AND substr(purchase_order_date, 1, 10) BETWEEN :start_date AND :end_date";
+
+        $value = CActiveRecord::$db->createCommand($sql)->queryScalar(array(
+            ':user_id' => $this->id,
+            ':start_date' => $startDate,
+            ':end_date' => $endDate,
+        ));
+
+        return ($value === false) ? 0 : $value;
+    }
+    
+    public function getUserUpdatedReceiveCount($startDate, $endDate) {
+        $sql = "SELECT COUNT(user_id_updated)
+                FROM " . TransactionReceiveItem::model()->tableName() . "
+                WHERE user_id_updated = :user_id AND substr(receive_item_date, 1, 10) BETWEEN :start_date AND :end_date";
+
+        $value = CActiveRecord::$db->createCommand($sql)->queryScalar(array(
+            ':user_id' => $this->id,
+            ':start_date' => $startDate,
+            ':end_date' => $endDate,
+        ));
+
+        return ($value === false) ? 0 : $value;
+    }
+    
+    public function getUserUpdatedMovementInCount($startDate, $endDate) {
+        $sql = "SELECT COUNT(user_id_updated)
+                FROM " . MovementInHeader::model()->tableName() . "
+                WHERE user_id_updated = :user_id AND substr(date_posting, 1, 10) BETWEEN :start_date AND :end_date";
+
+        $value = CActiveRecord::$db->createCommand($sql)->queryScalar(array(
+            ':user_id' => $this->id,
+            ':start_date' => $startDate,
+            ':end_date' => $endDate,
+        ));
+
+        return ($value === false) ? 0 : $value;
+    }
+    
+    public function getUserUpdatedDeliveryCount($startDate, $endDate) {
+        $sql = "SELECT COUNT(user_id_updated)
+                FROM " . TransactionDeliveryOrder::model()->tableName() . "
+                WHERE user_id_updated = :user_id AND substr(delivery_date, 1, 10) BETWEEN :start_date AND :end_date";
+
+        $value = CActiveRecord::$db->createCommand($sql)->queryScalar(array(
+            ':user_id' => $this->id,
+            ':start_date' => $startDate,
+            ':end_date' => $endDate,
+        ));
+
+        return ($value === false) ? 0 : $value;
+    }
+    
+    public function getUserUpdatedTransferRequestCount($startDate, $endDate) {
+        $sql = "SELECT COUNT(user_id_updated)
+                FROM " . TransactionTransferRequest::model()->tableName() . "
+                WHERE user_id_updated = :user_id AND substr(transfer_request_date, 1, 10) BETWEEN :start_date AND :end_date";
+
+        $value = CActiveRecord::$db->createCommand($sql)->queryScalar(array(
+            ':user_id' => $this->id,
+            ':start_date' => $startDate,
+            ':end_date' => $endDate,
+        ));
+
+        return ($value === false) ? 0 : $value;
+    }
+    
+    public function getUserUpdatedSentRequestCount($startDate, $endDate) {
+        $sql = "SELECT COUNT(user_id_updated)
+                FROM " . TransactionSentRequest::model()->tableName() . "
+                WHERE user_id_updated = :user_id AND substr(sent_request_date, 1, 10) BETWEEN :start_date AND :end_date";
+
+        $value = CActiveRecord::$db->createCommand($sql)->queryScalar(array(
+            ':user_id' => $this->id,
+            ':start_date' => $startDate,
+            ':end_date' => $endDate,
+        ));
+
+        return ($value === false) ? 0 : $value;
+    }
+    
+    public function getUserUpdatedCashTransactionCount($startDate, $endDate) {
+        $sql = "SELECT COUNT(user_id_updated)
+                FROM " . CashTransaction::model()->tableName() . "
+                WHERE user_id = :user_id_updated AND substr(transaction_date, 1, 10) BETWEEN :start_date AND :end_date";
+
+        $value = CActiveRecord::$db->createCommand($sql)->queryScalar(array(
+            ':user_id' => $this->id,
+            ':start_date' => $startDate,
+            ':end_date' => $endDate,
+        ));
+
+        return ($value === false) ? 0 : $value;
+    }
+    
+    public function getUserCancelledRegistrationCount($startDate, $endDate) {
+        $sql = "SELECT COUNT(user_id_cancelled)
+                FROM " . RegistrationTransaction::model()->tableName() . "
+                WHERE user_id_cancelled = :user_id AND substr(transaction_date, 1, 10) BETWEEN :start_date AND :end_date";
+
+        $value = CActiveRecord::$db->createCommand($sql)->queryScalar(array(
+            ':user_id' => $this->id,
+            ':start_date' => $startDate,
+            ':end_date' => $endDate,
+        ));
+
+        return ($value === false) ? 0 : $value;
+    }
+    
+    public function getUserCancelledWorkOrderCount($startDate, $endDate) {
+        $sql = "SELECT COUNT(user_id_cancelled)
+                FROM " . RegistrationTransaction::model()->tableName() . "
+                WHERE user_id_cancelled = :user_id AND substr(transaction_date, 1, 10) BETWEEN :start_date AND :end_date AND work_order_number is not null";
+
+        $value = CActiveRecord::$db->createCommand($sql)->queryScalar(array(
+            ':user_id' => $this->id,
+            ':start_date' => $startDate,
+            ':end_date' => $endDate,
+        ));
+
+        return ($value === false) ? 0 : $value;
+    }
+    
+    public function getUserCancelledMovementOutCount($startDate, $endDate) {
+        $sql = "SELECT COUNT(user_id_cancelled)
+                FROM " . MovementOutHeader::model()->tableName() . "
+                WHERE user_id_cancelled = :user_id AND substr(date_posting, 1, 10) BETWEEN :start_date AND :end_date";
+
+        $value = CActiveRecord::$db->createCommand($sql)->queryScalar(array(
+            ':user_id' => $this->id,
+            ':start_date' => $startDate,
+            ':end_date' => $endDate,
+        ));
+
+        return ($value === false) ? 0 : $value;
+    }
+    
+    public function getUserCancelledInvoiceCount($startDate, $endDate) {
+        $sql = "SELECT COUNT(user_id_cancelled)
+                FROM " . InvoiceHeader::model()->tableName() . "
+                WHERE user_id_cancelled = :user_id AND substr(invoice_date, 1, 10) BETWEEN :start_date AND :end_date";
+
+        $value = CActiveRecord::$db->createCommand($sql)->queryScalar(array(
+            ':user_id' => $this->id,
+            ':start_date' => $startDate,
+            ':end_date' => $endDate,
+        ));
+
+        return ($value === false) ? 0 : $value;
+    }
+    
+    public function getUserCancelledPaymentInCount($startDate, $endDate) {
+        $sql = "SELECT COUNT(user_id_cancelled)
+                FROM " . PaymentIn::model()->tableName() . "
+                WHERE user_id_cancelled = :user_id AND substr(payment_date, 1, 10) BETWEEN :start_date AND :end_date";
+
+        $value = CActiveRecord::$db->createCommand($sql)->queryScalar(array(
+            ':user_id' => $this->id,
+            ':start_date' => $startDate,
+            ':end_date' => $endDate,
+        ));
+
+        return ($value === false) ? 0 : $value;
+    }
+    
+    public function getUserCancelledPurchaseCount($startDate, $endDate) {
+        $sql = "SELECT COUNT(user_id_cancelled)
+                FROM " . TransactionPurchaseOrder::model()->tableName() . "
+                WHERE user_id_cancelled = :user_id AND substr(purchase_order_date, 1, 10) BETWEEN :start_date AND :end_date";
+
+        $value = CActiveRecord::$db->createCommand($sql)->queryScalar(array(
+            ':user_id' => $this->id,
+            ':start_date' => $startDate,
+            ':end_date' => $endDate,
+        ));
+
+        return ($value === false) ? 0 : $value;
+    }
+    
+    public function getUserCancelledReceiveCount($startDate, $endDate) {
+        $sql = "SELECT COUNT(user_id_cancelled)
+                FROM " . TransactionReceiveItem::model()->tableName() . "
+                WHERE user_id_cancelled = :user_id AND substr(receive_item_date, 1, 10) BETWEEN :start_date AND :end_date";
+
+        $value = CActiveRecord::$db->createCommand($sql)->queryScalar(array(
+            ':user_id' => $this->id,
+            ':start_date' => $startDate,
+            ':end_date' => $endDate,
+        ));
+
+        return ($value === false) ? 0 : $value;
+    }
+    
+    public function getUserCancelledMovementInCount($startDate, $endDate) {
+        $sql = "SELECT COUNT(user_id_cancelled)
+                FROM " . MovementInHeader::model()->tableName() . "
+                WHERE user_id_cancelled = :user_id AND substr(date_posting, 1, 10) BETWEEN :start_date AND :end_date";
+
+        $value = CActiveRecord::$db->createCommand($sql)->queryScalar(array(
+            ':user_id' => $this->id,
+            ':start_date' => $startDate,
+            ':end_date' => $endDate,
+        ));
+
+        return ($value === false) ? 0 : $value;
+    }
+    
+    public function getUserCancelledDeliveryCount($startDate, $endDate) {
+        $sql = "SELECT COUNT(user_id_cancelled)
+                FROM " . TransactionDeliveryOrder::model()->tableName() . "
+                WHERE user_id_cancelled = :user_id AND substr(delivery_date, 1, 10) BETWEEN :start_date AND :end_date";
+
+        $value = CActiveRecord::$db->createCommand($sql)->queryScalar(array(
+            ':user_id' => $this->id,
+            ':start_date' => $startDate,
+            ':end_date' => $endDate,
+        ));
+
+        return ($value === false) ? 0 : $value;
+    }
+    
+    public function getUserCancelledTransferRequestCount($startDate, $endDate) {
+        $sql = "SELECT COUNT(user_id_cancelled)
+                FROM " . TransactionTransferRequest::model()->tableName() . "
+                WHERE user_id_cancelled = :user_id AND substr(transfer_request_date, 1, 10) BETWEEN :start_date AND :end_date";
+
+        $value = CActiveRecord::$db->createCommand($sql)->queryScalar(array(
+            ':user_id' => $this->id,
+            ':start_date' => $startDate,
+            ':end_date' => $endDate,
+        ));
+
+        return ($value === false) ? 0 : $value;
+    }
+    
+    public function getUserCancelledSentRequestCount($startDate, $endDate) {
+        $sql = "SELECT COUNT(user_id_cancelled)
+                FROM " . TransactionSentRequest::model()->tableName() . "
+                WHERE user_id_cancelled = :user_id AND substr(sent_request_date, 1, 10) BETWEEN :start_date AND :end_date";
+
+        $value = CActiveRecord::$db->createCommand($sql)->queryScalar(array(
+            ':user_id' => $this->id,
+            ':start_date' => $startDate,
+            ':end_date' => $endDate,
+        ));
+
+        return ($value === false) ? 0 : $value;
+    }
+    
+    public function getUserCancelledCashTransactionCount($startDate, $endDate) {
+        $sql = "SELECT COUNT(user_id_cancelled)
+                FROM " . CashTransaction::model()->tableName() . "
+                WHERE user_id = :user_id_cancelled AND substr(transaction_date, 1, 10) BETWEEN :start_date AND :end_date";
+
+        $value = CActiveRecord::$db->createCommand($sql)->queryScalar(array(
+            ':user_id' => $this->id,
+            ':start_date' => $startDate,
+            ':end_date' => $endDate,
+        ));
+
+        return ($value === false) ? 0 : $value;
+    }
 }

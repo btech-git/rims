@@ -19,12 +19,15 @@
  * @property string $created_datetime
  * @property string $cancelled_datetime
  * @property integer $user_id_cancelled
+ * @property string $updated_datetime
+ * @property integer $user_id_updated
  *
  * The followings are the available model relations:
  * @property Coa $coa
  * @property Branch $branch
  * @property Users $user
  * @property UserIdCancelled $userIdCancelled
+ * @property UserIdUpdated $userIdUpdated
  * @property CashTransactionApproval[] $cashTransactionApprovals
  * @property CashTransactionDetail[] $cashTransactionDetails
  * @property CashTransactionImages[] $cashTransactionImages
@@ -58,16 +61,16 @@ class CashTransaction extends MonthlyTransactionActiveRecord {
         // will receive user inputs.
         return array(
             array('transaction_number, transaction_date, transaction_time, transaction_type, coa_id, branch_id, user_id', 'required'),
-            array('coa_id, branch_id, user_id, user_id_cancelled', 'numerical', 'integerOnly' => true),
+            array('coa_id, branch_id, user_id, user_id_cancelled, user_id_updated', 'numerical', 'integerOnly' => true),
             array('transaction_number', 'length', 'max' => 50),
             array('transaction_type', 'length', 'max' => 20),
             array('debit_amount, credit_amount', 'length', 'max' => 18),
             array('status', 'length', 'max' => 30),
             array('transaction_number', 'unique'),
-            array('note', 'safe'),
+            array('note, updated_datetime, cancelled_datetime', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, transaction_number, transaction_date, created_datetime, transaction_time, transaction_type, note, coa_id, debit_amount, credit_amount, branch_id, user_id, status, cancelled_datetime, user_id_cancelled', 'safe', 'on' => 'search'),
+            array('id, transaction_number, transaction_date, created_datetime, transaction_time, transaction_type, note, coa_id, debit_amount, credit_amount, branch_id, user_id, status, cancelled_datetime, user_id_cancelled, updated_datetime, user_id_updated', 'safe', 'on' => 'search'),
         );
     }
 
@@ -80,8 +83,9 @@ class CashTransaction extends MonthlyTransactionActiveRecord {
         return array(
             'coa' => array(self::BELONGS_TO, 'Coa', 'coa_id'),
             'branch' => array(self::BELONGS_TO, 'Branch', 'branch_id'),
-            'user' => array(self::BELONGS_TO, 'User', 'user_id'),
-            'userIdCancelled' => array(self::BELONGS_TO, 'User', 'user_id_cancelled'),
+            'user' => array(self::BELONGS_TO, 'Users', 'user_id'),
+            'userIdCancelled' => array(self::BELONGS_TO, 'Users', 'user_id_cancelled'),
+            'userIdUpdated' => array(self::BELONGS_TO, 'Users', 'user_id_updated'),
             'paymentType' => array(self::BELONGS_TO, 'PaymentType', 'payment_type_id'),
             'cashTransactionApprovals' => array(self::HAS_MANY, 'CashTransactionApproval', 'cash_transaction_id'),
             'cashTransactionDetails' => array(self::HAS_MANY, 'CashTransactionDetail', 'cash_transaction_id'),
@@ -109,18 +113,6 @@ class CashTransaction extends MonthlyTransactionActiveRecord {
         );
     }
 
-    /**
-     * Retrieves a list of models based on the current search/filter conditions.
-     *
-     * Typical usecase:
-     * - Initialize the model fields with values from filter form.
-     * - Execute this method to get CActiveDataProvider instance which will filter
-     * models according to data in model fields.
-     * - Pass data provider to CGridView, CListView or any similar widget.
-     *
-     * @return CActiveDataProvider the data provider that can return the models
-     * based on the search/filter conditions.
-     */
     public function search() {
         // @todo Please modify the following code to remove attributes that should not be searched.
 

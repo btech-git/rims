@@ -20,6 +20,8 @@
  * @property string $created_datetime
  * @property string $cancelled_datetime
  * @property integer $user_id_cancelled
+ * @property string $updated_datetime
+ * @property integer $user_id_updated
  *
  * The followings are the available model relations:
  * @property MovementOutApproval[] $movementOutApprovals
@@ -32,10 +34,17 @@
  * @property RegistrationService $registrationService
  * @property MaterialRequestHeader $materialRequestHeader
  * @property UserIdCancelled $userIdCancelled
+ * @property UserIdUpdated $userIdUpdated
  */
 class MovementOutHeader extends MonthlyTransactionActiveRecord {
 
     const CONSTANT = 'MO';
+
+    public $branch_name;
+    public $delivery_order_number;
+    public $return_order_number;
+    public $registration_transaction_number;
+    public $material_request_number;
 
     /**
      * Returns the static model of the specified AR class.
@@ -49,12 +58,6 @@ class MovementOutHeader extends MonthlyTransactionActiveRecord {
     /**
      * @return string the associated database table name
      */
-    public $branch_name;
-    public $delivery_order_number;
-    public $return_order_number;
-    public $registration_transaction_number;
-    public $material_request_number;
-
     public function tableName() {
         return '{{movement_out_header}}';
     }
@@ -67,13 +70,14 @@ class MovementOutHeader extends MonthlyTransactionActiveRecord {
         // will receive user inputs.
         return array(
             array('movement_out_no, date_posting, branch_id, movement_type, user_id, status', 'required'),
-            array('delivery_order_id, return_order_id, registration_transaction_id, registration_service_id, branch_id, movement_type, user_id, supervisor_id, material_request_header_id, user_id_cancelled', 'numerical', 'integerOnly' => true),
+            array('delivery_order_id, return_order_id, registration_transaction_id, registration_service_id, branch_id, movement_type, user_id, supervisor_id, material_request_header_id, user_id_cancelled, user_id_updated', 'numerical', 'integerOnly' => true),
             array('movement_out_no', 'length', 'max' => 30),
             array('status', 'length', 'max' => 20),
             array('movement_out_no', 'unique'),
+            array('updated_datetime, cancelled_datetime', 'safe'),
             // The following rule is used by search().
             // Please remove those attributes that should not be searched.
-            array('id, movement_out_no, date_posting, created_datetime, delivery_order_id, branch_id, movement_type, user_id, supervisor_id, status, return_order_id,delivery_order_number, return_order_number, registration_transaction_number, registration_transaction_id, branch_name, registration_service_id, material_request_header_id, cancelled_datetime, user_id_cancelled', 'safe', 'on' => 'search'),
+            array('id, movement_out_no, date_posting, created_datetime, delivery_order_id, branch_id, movement_type, user_id, supervisor_id, status, return_order_id,delivery_order_number, return_order_number, registration_transaction_number, registration_transaction_id, branch_name, registration_service_id, material_request_header_id, cancelled_datetime, user_id_cancelled, updated_datetime, user_id_updated', 'safe', 'on' => 'search'),
         );
     }
 
@@ -89,7 +93,8 @@ class MovementOutHeader extends MonthlyTransactionActiveRecord {
             'deliveryOrder' => array(self::BELONGS_TO, 'TransactionDeliveryOrder', 'delivery_order_id'),
             'branch' => array(self::BELONGS_TO, 'Branch', 'branch_id'),
             'user' => array(self::BELONGS_TO, 'Users', 'user_id'),
-            'userIdCancelled' => array(self::BELONGS_TO, 'User', 'user_id_cancelled'),
+            'userIdCancelled' => array(self::BELONGS_TO, 'Users', 'user_id_cancelled'),
+            'userIdUpdated' => array(self::BELONGS_TO, 'Users', 'user_id_updated'),
             'returnOrder' => array(self::BELONGS_TO, 'TransactionReturnOrder', 'return_order_id'),
             'registrationTransaction' => array(self::BELONGS_TO, 'RegistrationTransaction', 'registration_transaction_id'),
             'registrationService' => array(self::BELONGS_TO, 'RegistrationTransaction', 'registration_service_id'),

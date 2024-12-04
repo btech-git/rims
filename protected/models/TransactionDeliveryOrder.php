@@ -23,6 +23,8 @@
  * @property string $cancelled_datetime
  * @property integer $user_id_cancelled
  * @property integer $is_cancelled
+ * @property string $updated_datetime
+ * @property integer $user_id_updated
  *
  * The followings are the available model relations:
  * @property MovementOutHeader[] $movementOutHeaders
@@ -38,10 +40,19 @@
  * @property TransactionReceiveItem[] $transactionReceiveItems
  * @property TransactionReturnItem[] $transactionReturnItems
  * @property TransactionReturnOrder[] $transactionReturnOrders
+ * @property UserIdCancelled $userIdCancelled
+ * @property UserIdUpdated $userIdUpdated
  */
 class TransactionDeliveryOrder extends MonthlyTransactionActiveRecord {
 
     const CONSTANT = 'DO';
+
+    public $branch_name;
+    public $customer_name;
+    public $sales_order_no;
+    public $consignment_out_no;
+    public $sent_request_no;
+    public $transfer_request_no;
 
     /**
      * Returns the static model of the specified AR class.
@@ -51,13 +62,6 @@ class TransactionDeliveryOrder extends MonthlyTransactionActiveRecord {
     public static function model($className = __CLASS__) {
         return parent::model($className);
     }
-
-    public $branch_name;
-    public $customer_name;
-    public $sales_order_no;
-    public $consignment_out_no;
-    public $sent_request_no;
-    public $transfer_request_no;
 
     /**
      * @return string the associated database table name
@@ -74,13 +78,13 @@ class TransactionDeliveryOrder extends MonthlyTransactionActiveRecord {
         // will receive user inputs.
         return array(
             array('delivery_order_no, delivery_date, posting_date, sender_id, sender_branch_id', 'required'),
-            array('sender_id, sender_branch_id, sales_order_id, sent_request_id, consignment_out_id, destination_branch, customer_id, transfer_request_id, user_id_cancelled, is_cancelled', 'numerical', 'integerOnly' => true),
+            array('sender_id, sender_branch_id, sales_order_id, sent_request_id, consignment_out_id, destination_branch, customer_id, transfer_request_id, user_id_cancelled, is_cancelled, user_id_updated', 'numerical', 'integerOnly' => true),
             array('delivery_order_no, request_type', 'length', 'max' => 30),
             array('delivery_order_no', 'unique'),
-            array('delivery_date, posting_date, request_date, estimate_arrival_date, sent_request_no, consignment_out_no, transfer_request_no', 'safe'),
+            array('delivery_date, posting_date, request_date, estimate_arrival_date, sent_request_no, consignment_out_no, transfer_request_no, updated_datetime, cancelled_datetime', 'safe'),
             // The following rule is used by search().
             // Please remove those attributes that should not be searched.
-            array('id, delivery_order_no, delivery_date, posting_date, created_datetime, sender_id, sender_branch_id, request_type, sales_order_id, sent_request_id, consignment_out_id, request_date, estimate_arrival_date, destination_branch, customer_id, branch_name,customer_name,sales_order_no, transfer_request_detail_id, sent_request_no, consignment_out_no, transfer_request_no, cancelled_datetime, user_id_cancelled, is_cancelled', 'safe', 'on' => 'search'),
+            array('id, delivery_order_no, delivery_date, posting_date, created_datetime, sender_id, sender_branch_id, request_type, sales_order_id, sent_request_id, consignment_out_id, request_date, estimate_arrival_date, destination_branch, customer_id, branch_name,customer_name,sales_order_no, transfer_request_detail_id, sent_request_no, consignment_out_no, transfer_request_no, cancelled_datetime, user_id_cancelled, is_cancelled, updated_datetime, user_id_updated', 'safe', 'on' => 'search'),
         );
     }
 
@@ -97,8 +101,9 @@ class TransactionDeliveryOrder extends MonthlyTransactionActiveRecord {
             'salesOrder' => array(self::BELONGS_TO, 'TransactionSalesOrder', 'sales_order_id'),
             'destinationBranch' => array(self::BELONGS_TO, 'Branch', 'destination_branch'),
             'consignmentOut' => array(self::BELONGS_TO, 'ConsignmentOutHeader', 'consignment_out_id'),
-            'user' => array(self::BELONGS_TO, 'User', 'sender_id'),
-            'userIdCancelled' => array(self::BELONGS_TO, 'User', 'user_id_cancelled'),
+            'user' => array(self::BELONGS_TO, 'Users', 'sender_id'),
+            'userIdCancelled' => array(self::BELONGS_TO, 'Users', 'user_id_cancelled'),
+            'userIdUpdated' => array(self::BELONGS_TO, 'Users', 'user_id_updated'),
             'transferRequest' => array(self::BELONGS_TO, 'TransactionTransferRequest', 'transfer_request_id'),
             'senderBranch' => array(self::BELONGS_TO, 'Branch', 'sender_branch_id'),
             'sender' => array(self::BELONGS_TO, 'Users', 'sender_id'),

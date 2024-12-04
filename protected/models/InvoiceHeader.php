@@ -60,11 +60,6 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
 
     const CONSTANT = 'INV';
 
-    /**
-     * Returns the static model of the specified AR class.
-     * @param string $className active record class name.
-     * @return InvoiceHeader the static model class
-     */
     public $customer_name;
     public $invoice_date_to;
     public $due_date_to;

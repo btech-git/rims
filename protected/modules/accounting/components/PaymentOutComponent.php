@@ -228,24 +228,6 @@ class PaymentOutComponent extends CComponent {
 
             $originalPath = dirname(Yii::app()->request->scriptFile) . '/images/uploads/paymentOut/' . $contentImage->filename;
             $file->saveAs($originalPath);
-
-//            $dir = dirname(Yii::app()->request->scriptFile) . '/images/uploads/paymentOut/' . $this->header->id;
-//
-//            if (!file_exists($dir)) {
-//                mkdir($dir, 0777, true);
-//            }
-//            $path = $dir . '/' . $contentImage->filename;
-//            $file->saveAs($path);
-//            $picture = Yii::app()->image->load($path);
-//            $picture->save();
-
-//            $thumb = Yii::app()->image->load($path);
-//            $thumb_path = $dir . '/' . $contentImage->thumbname;
-//            $thumb->save($thumb_path);
-//
-//            $square = Yii::app()->image->load($path);
-//            $square_path = $dir . '/' . $contentImage->squarename;
-//            $square->save($square_path);
         }
 
         return $valid;

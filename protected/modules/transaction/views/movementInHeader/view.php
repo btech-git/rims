@@ -109,7 +109,7 @@ $this->menu = array(
                     'name' => 'branch_id', 
                     'value' => $model->branch_id == "" ? '-' : $model->branch->name,
                 ),
-                'user.username',
+//                'user.username',
                 'status',
             ),
         )); ?>

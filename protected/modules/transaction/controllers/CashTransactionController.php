@@ -187,16 +187,18 @@ class CashTransactionController extends Controller {
      * @param integer $id the ID of the model to be updated
      */
     public function actionUpdate($id) {
-        //$model=$this->loadModel($id);
-        // Uncomment the following line if AJAX validation is needed
-        // $this->performAjaxValidation($model);
+        
         $cashTransaction = $this->instantiate($id, 'update');
+        $cashTransaction->header->edited_datetime = date('Y-m-d H:i:s');
+        $cashTransaction->header->user_id_edited = Yii::app()->user->id;
+        
         $this->performAjaxValidation($cashTransaction->header);
 
         $coaKas = new Coa('search');
         $coaKas->unsetAttributes();  // clear any default values
-        if (isset($_GET['Coa']))
+        if (isset($_GET['Coa'])) {
             $coaKas->attributes = $_GET['Coa'];
+        }
         
         $coaKasCriteria = new CDbCriteria;
         $coaKasCriteria->addCondition("SUBSTRING(code, -3 , 3) <> 000 AND t.coa_sub_category_id IN (1, 2, 3, 72) AND t.status = 'Approved'");
@@ -209,8 +211,9 @@ class CashTransactionController extends Controller {
 
         $coaDetail = new Coa('search');
         $coaDetail->unsetAttributes();  // clear any default values
-        if (isset($_GET['Coa']))
+        if (isset($_GET['Coa'])) {
             $coaDetail->attributes = $_GET['Coa'];
+        }
         
         $coaDetailCriteria = new CDbCriteria;
         $coaDetailCriteria->addCondition("SUBSTRING(t.code, -3 , 3) <> 000 AND t.coa_sub_category_id NOT IN (1, 2, 3, 72) AND t.status = 'Approved'");
@@ -230,8 +233,9 @@ class CashTransactionController extends Controller {
         $maxImage = 10;
         $allowedImages = $maxImage - $countPostImage;
 
-        if (isset($_POST['Cancel']))
+        if (isset($_POST['Cancel'])) {
             $this->redirect(array('admin'));
+        }
 
         if (isset($_POST['CashTransaction']) && IdempotentManager::check()) {
             $this->loadState($cashTransaction);
