@@ -260,7 +260,7 @@ class PaymentInController extends Controller {
      * If creation is successful, the browser will be redirected to the 'view' page.
      */
     public function actionCreate($invoiceId) {
-        $paymentIn = $this->instantiate(null);
+        $paymentIn = $this->instantiate(null, 'create');
         $invoice = InvoiceHeader::model()->findByPk($invoiceId);
         $customer = Customer::model()->findByPk($invoice->customer_id);
         
@@ -404,13 +404,13 @@ class PaymentInController extends Controller {
         }
     }
     
-    public function instantiate($id) {
+    public function instantiate($id, $actionType) {
         
         if (empty($id)) {
-            $paymentIn = new PaymentInComponent(new PaymentIn(), array());
+            $paymentIn = new PaymentInComponent($actionType, new PaymentIn(), array());
         } else {
             $paymentInModel = $this->loadModel($id);
-            $paymentIn = new PaymentInComponent($paymentInModel, $paymentInModel->paymentInDetails);
+            $paymentIn = new PaymentInComponent($actionType, $paymentInModel, $paymentInModel->paymentInDetails);
         }
         
         return $paymentIn;
@@ -445,7 +445,7 @@ class PaymentInController extends Controller {
      * @param integer $id the ID of the model to be updated
      */
     public function actionUpdate($id) {
-        $paymentIn = $this->instantiate($id);
+        $paymentIn = $this->instantiate($id, 'update');
         $customer = Customer::model()->findByPk($paymentIn->header->customer_id);
 
         $invoiceHeader = Search::bind(new InvoiceHeader('search'), isset($_GET['InvoiceHeader']) ? $_GET['InvoiceHeader'] : array());

@@ -128,9 +128,9 @@ class MovementOutHeaderController extends Controller {
      */
     public function actionCreate($transactionId, $movementType) {
         
-        $movementOut = $this->instantiate(null);
-        $movementOut->header->created_datetime = date('Y-m-d H:i:s');
-        $movementOut->header->date_posting = date('Y-m-d H:i:s');
+        $movementOut = $this->instantiate(null, 'create');
+//        $movementOut->header->created_datetime = date('Y-m-d H:i:s');
+//        $movementOut->header->date_posting = date('Y-m-d H:i:s');
         $movementOut->header->registration_service_id = null;
         $movementOut->header->movement_type = $movementType;
         $movementOut->header->status = 'Draft';
@@ -200,7 +200,7 @@ class MovementOutHeaderController extends Controller {
      * @param integer $id the ID of the model to be updated
      */
     public function actionUpdate($id) {
-        $movementOut = $this->instantiate($id);
+        $movementOut = $this->instantiate($id, 'update');
         $movementOut->header->status = 'Draft';
 
         // Uncomment the following line if AJAX validation is needed
@@ -431,13 +431,13 @@ class MovementOutHeaderController extends Controller {
         }
     }
 
-    public function instantiate($id) {
+    public function instantiate($id, $actionType) {
 
         if (empty($id)) {
-            $movementOut = new MovementOuts(new MovementOutHeader(), array());
+            $movementOut = new MovementOuts($actionType, new MovementOutHeader(), array());
         } else {
             $movementOutModel = $this->loadModel($id);
-            $movementOut = new MovementOuts($movementOutModel, $movementOutModel->movementOutDetails);
+            $movementOut = new MovementOuts($actionType, $movementOutModel, $movementOutModel->movementOutDetails);
         }
         return $movementOut;
     }

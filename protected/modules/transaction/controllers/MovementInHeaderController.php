@@ -125,7 +125,7 @@ class MovementInHeaderController extends Controller {
 
     public function actionCreate($transactionId, $movementType) {
 
-        $movementIn = $this->instantiate(null);
+        $movementIn = $this->instantiate(null, 'create');
         $movementIn->header->created_datetime = date('Y-m-d H:i:s');
         $movementIn->header->date_posting = date('Y-m-d H:i:s');
         $this->performAjaxValidation($movementIn->header);
@@ -175,7 +175,7 @@ class MovementInHeaderController extends Controller {
      * @param integer $id the ID of the model to be updated
      */
     public function actionUpdate($id) {
-        $movementIn = $this->instantiate($id);
+        $movementIn = $this->instantiate($id, 'update');
         $movementIn->header->status = 'Draft';
 
         // Uncomment the following line if AJAX validation is needed
@@ -344,13 +344,13 @@ class MovementInHeaderController extends Controller {
         }
     }
 
-    public function instantiate($id) {
+    public function instantiate($id, $actionType) {
         ;
         if (empty($id)) {
-            $movementIn = new MovementIns(new MovementInHeader(), array());
+            $movementIn = new MovementIns($actionType, new MovementInHeader(), array());
         } else {
             $movementInModel = $this->loadModel($id);
-            $movementIn = new MovementIns($movementInModel, $movementInModel->movementInDetails);
+            $movementIn = new MovementIns($actionType, $movementInModel, $movementInModel->movementInDetails);
         }
         return $movementIn;
     }

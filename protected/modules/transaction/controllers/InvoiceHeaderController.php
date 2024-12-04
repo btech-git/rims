@@ -266,7 +266,7 @@ class InvoiceHeaderController extends Controller {
             $this->redirect(array('view', 'id' => $invoiceHeader->id));
         }
         
-        $invoice = $this->instantiate(null);
+        $invoice = $this->instantiate(null, 'create');
 //        $this->performAjaxValidation($invoice->header);
 
         $registrationTransaction = RegistrationTransaction::model()->findByPk($registrationId);
@@ -322,7 +322,7 @@ class InvoiceHeaderController extends Controller {
      * @param integer $id the ID of the model to be updated
      */
     public function actionUpdate($id) {
-        $invoice = $this->instantiate($id);
+        $invoice = $this->instantiate($id, 'update');
         $this->performAjaxValidation($invoice->header);
         
         $invoice->header->edited_datetime = date('Y-m-d H:i:s');
@@ -491,12 +491,12 @@ class InvoiceHeaderController extends Controller {
         }
     }
 
-    public function instantiate($id) {
+    public function instantiate($id, $actionType) {
         if (empty($id)) {
-            $invoice = new Invoices(new InvoiceHeader(), array());
+            $invoice = new Invoices($actionType, new InvoiceHeader(), array());
         } else {
             $invoiceModel = $this->loadModel($id);
-            $invoice = new Invoices($invoiceModel, $invoiceModel->invoiceDetails);
+            $invoice = new Invoices($actionType, $invoiceModel, $invoiceModel->invoiceDetails);
             //print_r("test");
         }
         return $invoice;
