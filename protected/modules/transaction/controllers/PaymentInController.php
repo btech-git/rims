@@ -327,7 +327,7 @@ class PaymentInController extends Controller {
     }
 
     public function actionCreateMultiple($customerId, $insuranceId) {
-        $paymentIn = $this->instantiate(null);
+        $paymentIn = $this->instantiate(null, 'create_multiple');
         
         $paymentIn->header->payment_date = date('Y-m-d');
         $paymentIn->header->payment_time = date('H:i:s');
