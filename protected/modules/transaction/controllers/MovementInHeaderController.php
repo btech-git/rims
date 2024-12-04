@@ -561,7 +561,7 @@ class MovementInHeaderController extends Controller {
 
     public function actionUpdateReceived($id) {
         IdempotentManager::generate();
-        $movementIn = $this->instantiate($id);
+        $movementIn = $this->instantiate($id, 'receive');
         
         $movementInShipping = new MovementInShipping();
         $movementInShipping->movement_in_id = $id;
