@@ -183,40 +183,40 @@ Yii::app()->clientScript->registerCss('_report', '
                     <td class="width1-1"><?php echo CHtml::encode(CHtml::value($header, 'employee.name')); ?></td>
                     <td class="width1-2"><?php echo CHtml::encode(CHtml::value($header, 'username')); ?></td>
                     <td class="width1-3" style="text-align: center">
-                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $header->getUserCreatedRegistrationCount($startDate, $endDate))); ?>
+                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $header->getUserCancelledRegistrationCount($startDate, $endDate))); ?>
                     </td>
                     <td class="width1-4" style="text-align: center">
-                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $header->getUserCreatedWorkOrderCount($startDate, $endDate))); ?>
+                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $header->getUserCancelledWorkOrderCount($startDate, $endDate))); ?>
                     </td>
                     <td class="width1-5" style="text-align: center">
-                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $header->getUserCreatedMovementOutCount($startDate, $endDate))); ?>
+                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $header->getUserCancelledMovementOutCount($startDate, $endDate))); ?>
                     </td>
                     <td class="width1-5" style="text-align: center">
-                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $header->getUserCreatedInvoiceCount($startDate, $endDate))); ?>
+                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $header->getUserCancelledInvoiceCount($startDate, $endDate))); ?>
                     </td>
                     <td class="width1-5" style="text-align: center">
-                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $header->getUserCreatedPaymentInCount($startDate, $endDate))); ?>
+                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $header->getUserCancelledPaymentInCount($startDate, $endDate))); ?>
                     </td>
                     <td class="width1-5" style="text-align: center">
-                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $header->getUserCreatedPurchaseCount($startDate, $endDate))); ?>
+                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $header->getUserCancelledPurchaseCount($startDate, $endDate))); ?>
                     </td>
                     <td class="width1-5" style="text-align: center">
-                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $header->getUserCreatedReceiveCount($startDate, $endDate))); ?>
+                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $header->getUserCancelledReceiveCount($startDate, $endDate))); ?>
                     </td>
                     <td class="width1-5" style="text-align: center">
-                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $header->getUserCreatedMovementInCount($startDate, $endDate))); ?>
+                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $header->getUserCancelledMovementInCount($startDate, $endDate))); ?>
                     </td>
                     <td class="width1-5" style="text-align: center">
-                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $header->getUserCreatedDeliveryCount($startDate, $endDate))); ?>
+                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $header->getUserCancelledDeliveryCount($startDate, $endDate))); ?>
                     </td>
                     <td class="width1-5" style="text-align: center">
-                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $header->getUserCreatedTransferRequestCount($startDate, $endDate))); ?>
+                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $header->getUserCancelledTransferRequestCount($startDate, $endDate))); ?>
                     </td>
                     <td class="width1-5" style="text-align: center">
-                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $header->getUserCreatedSentRequestCount($startDate, $endDate))); ?>
+                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $header->getUserCancelledSentRequestCount($startDate, $endDate))); ?>
                     </td>
                     <td class="width1-5" style="text-align: center">
-                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $header->getUserCreatedCashTransactionCount($startDate, $endDate))); ?>
+                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $header->getUserCancelledCashTransactionCount($startDate, $endDate))); ?>
                     </td>
                 </tr>
             <?php endforeach; ?>
