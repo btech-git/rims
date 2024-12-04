@@ -522,6 +522,11 @@
                                     array(
                                         'label' => 'Laporan Transaksi Harian', 
                                         'url' => array('/report/dailyTransaction/summary'), 
+                                        'visible' => Yii::app()->user->checkAccess('dailyTransactionReport')
+                                    ),
+                                    array(
+                                        'label' => 'Laporan User Performance', 
+                                        'url' => array('/report/userPerformance/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('director')
                                     ),
                                 ),
