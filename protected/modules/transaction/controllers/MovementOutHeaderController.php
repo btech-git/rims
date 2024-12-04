@@ -680,7 +680,7 @@ class MovementOutHeaderController extends Controller {
 
     public function actionUpdateDelivered($id) {
         IdempotentManager::generate();
-        $movementOut = $this->instantiate($id);
+        $movementOut = $this->instantiate($id, 'delivery');
         
         $delivered = new MovementOutShipping();
         $delivered->movement_out_id = $id;
