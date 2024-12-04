@@ -212,6 +212,8 @@ class TransactionSentRequestController extends Controller {
      */
     public function actionUpdate($id) {
         $sentRequest = $this->instantiate($id);
+        $sentRequest->header->user_id_updated = Yii::app()->user->id;
+        $sentRequest->header->updated_datetime = date('Y-m-d H:i:s');
         $this->performAjaxValidation($sentRequest->header);
 
         $product = new Product('search');

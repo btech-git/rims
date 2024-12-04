@@ -2,14 +2,12 @@
 
 class DeliveryOrders extends CComponent {
 
+    public $actionType;
     public $header;
     public $details;
 
-    // /public $detailApprovals;
-    // public $picPhoneDetails;
-    // public $picMobileDetails;
-
-    public function __construct($header, array $details) {
+    public function __construct($actionType, $header, array $details) {
+        $this->actionType = $actionType;
         $this->header = $header;
         $this->details = $details;
 

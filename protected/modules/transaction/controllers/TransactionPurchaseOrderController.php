@@ -126,7 +126,6 @@ class TransactionPurchaseOrderController extends Controller {
     public function actionCreate() {
         $purchaseOrder = $this->instantiate(null);
         $purchaseOrder->header->main_branch_id = Yii::app()->user->branch_id;
-;
         $purchaseOrder->header->coa_bank_id_estimate = 7;
         $purchaseOrder->header->purchase_order_date = date('Y-m-d H:i:s');
         $this->performAjaxValidation($purchaseOrder->header);
@@ -234,12 +233,12 @@ class TransactionPurchaseOrderController extends Controller {
      * @param integer $id the ID of the model to be updated
      */
     public function actionUpdate($id) {
-        //$model=$this->loadModel($id);
-        // Uncomment the following line if AJAX validation is needed
-        // $this->performAjaxValidation($model);
+        
         $purchaseOrder = $this->instantiate($id);
         $this->performAjaxValidation($purchaseOrder->header);
         $purchaseOrder->header->status_document = 'Draft';
+        $purchaseOrder->header->user_id_updated = Yii::app()->user->id;
+        $purchaseOrder->header->updated_datetime = date('Y-m-d H:i:s');
 
         $supplier = new Supplier('search');
         $supplier->unsetAttributes();  // clear any default values
@@ -370,11 +369,7 @@ class TransactionPurchaseOrderController extends Controller {
         $branch = Branch::model()->find('id=:id', array(':id' => $po->main_branch_id));
         $po_detail = TransactionPurchaseOrderDetail::model()->findAllByAttributes(array('purchase_order_id' => $id));
         $approval = TransactionPurchaseOrderApproval::model()->findByAttributes(array('purchase_order_id' => $id), array('order' => 't.id DESC'));
-//        $mPDF1 = Yii::app()->ePdf->mpdf();
         $mPDF1 = Yii::app()->ePdf->mpdf('', 'A4-L', 0, '', 15, 15, 16, 16, 9, 9, 'L');
-//        if (!function_exists("mb_check_encoding")) {
-//            die('mbstring extension is not enabled');
-//        }
         $stylesheet = file_get_contents(Yii::getPathOfAlias('webroot') . '/css/pdf.css');
         $mPDF1->WriteHTML($stylesheet, 1);
         $mPDF1->SetTitle('PO Raperind');

@@ -316,7 +316,7 @@ class TransactionDeliveryOrderController extends Controller {
      */
     public function actionCreate($transactionId, $movementType) {
         
-        $deliveryOrder = $this->instantiate(null);
+        $deliveryOrder = $this->instantiate(null, 'create');
         $deliveryOrder->header->posting_date = date('Y-m-d');
         $deliveryOrder->header->created_datetime = date('Y-m-d H:i:s');
         $deliveryOrder->header->estimate_arrival_date = null;
@@ -401,14 +401,17 @@ class TransactionDeliveryOrderController extends Controller {
      * @param integer $id the ID of the model to be updated
      */
     public function actionUpdate($id) {
-        $deliveryOrder = $this->instantiate($id);
+        $deliveryOrder = $this->instantiate($id, 'update');
+        $deliveryOrder->header->user_id_updated = Yii::app()->user->id;
+        $deliveryOrder->header->updated_datetime = date('Y-m-d H:i:s');
         $this->performAjaxValidation($deliveryOrder->header);
 
         $transfer = new TransactionTransferRequest('search');
         $transfer->unsetAttributes();  // clear any default values
         
-        if (isset($_GET['TransactionTransferRequest']))
+        if (isset($_GET['TransactionTransferRequest'])) {
             $transfer->attributes = $_GET['TransactionTransferRequest'];
+        }
 
         $transferCriteria = new CDbCriteria;
         $transferCriteria->compare('transfer_request_no', $transfer->transfer_request_no . '%', true, 'AND', false);
@@ -420,8 +423,9 @@ class TransactionDeliveryOrderController extends Controller {
         $sent = new TransactionSentRequest('search');
         $sent->unsetAttributes();  // clear any default values
         
-        if (isset($_GET['TransactionSentRequest']))
+        if (isset($_GET['TransactionSentRequest'])) {
             $sent->attributes = $_GET['TransactionSentRequest'];
+        }
 
         $sentCriteria = new CDbCriteria;
         $sentCriteria->compare('sent_request_no', $sent->sent_request_no . '%', true, 'AND', false);
@@ -433,8 +437,9 @@ class TransactionDeliveryOrderController extends Controller {
         $sales = new TransactionSalesOrder('search');
         $sales->unsetAttributes();  // clear any default values
         
-        if (isset($_GET['TransactionSalesOrder']))
+        if (isset($_GET['TransactionSalesOrder'])) {
             $sales->attributes = $_GET['TransactionSalesOrder'];
+        }
 
         $salesCriteria = new CDbCriteria;
         $salesCriteria->compare('sale_order_no', $sales->sale_order_no . '%', true, 'AND', false);
@@ -446,8 +451,9 @@ class TransactionDeliveryOrderController extends Controller {
         $consignment = new ConsignmentOutHeader('search');
         $consignment->unsetAttributes();  // clear any default values
         
-        if (isset($_GET['ConsignmentOutHeader']))
+        if (isset($_GET['ConsignmentOutHeader'])) {
             $consignment->attributes = $_GET['ConsignmentOutHeader'];
+        }
 
         $consignmentCriteria = new CDbCriteria;
         $consignmentCriteria->compare('consignment_out_no', $consignment->consignment_out_no . '%', true, 'AND', false);
@@ -456,8 +462,9 @@ class TransactionDeliveryOrderController extends Controller {
             'criteria' => $consignmentCriteria,
         ));
 
-        if (isset($_POST['Cancel']))
+        if (isset($_POST['Cancel'])) {
             $this->redirect(array('admin'));
+        }
 
         if (isset($_POST['TransactionDeliveryOrder']) && IdempotentManager::check()) {
             $this->loadState($deliveryOrder);
@@ -737,12 +744,12 @@ class TransactionDeliveryOrderController extends Controller {
         }
     }
 
-    public function instantiate($id) {
+    public function instantiate($id, $actionType) {
         if (empty($id)) {
-            $deliveryOrder = new DeliveryOrders(new TransactionDeliveryOrder(), array());
+            $deliveryOrder = new DeliveryOrders($actionType, new TransactionDeliveryOrder(), array());
         } else {
             $deliveryOrderModel = $this->loadModel($id);
-            $deliveryOrder = new DeliveryOrders($deliveryOrderModel, $deliveryOrderModel->transactionDeliveryOrderDetails);
+            $deliveryOrder = new DeliveryOrders($actionType, $deliveryOrderModel, $deliveryOrderModel->transactionDeliveryOrderDetails);
         }
         
         return $deliveryOrder;

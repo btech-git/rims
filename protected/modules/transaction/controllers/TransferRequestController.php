@@ -55,12 +55,14 @@ class TransferRequestController extends Controller {
             $this->loadState($transferRequest);
             $transferRequest->generateCodeNumber(Yii::app()->dateFormatter->format('M', strtotime($transferRequest->header->transfer_request_date)), Yii::app()->dateFormatter->format('yyyy', strtotime($transferRequest->header->transfer_request_date)), $transferRequest->header->requester_branch_id);
             
-            if ($transferRequest->save(Yii::app()->db)) 
+            if ($transferRequest->save(Yii::app()->db)) {
                 $this->redirect(array('view', 'id' => $transferRequest->header->id));
+            }
         }
 
-        if (isset($_POST['Cancel'])) 
+        if (isset($_POST['Cancel'])) {
             $this->redirect(array('admin'));
+        }
 
         $this->render('create', array(
             'transferRequest' => $transferRequest,
@@ -71,6 +73,8 @@ class TransferRequestController extends Controller {
 
     public function actionUpdate($id) {
         $transferRequest = $this->instantiate($id);
+        $transferRequest->header->user_id_updated = Yii::app()->user->id;
+        $transferRequest->header->updated_datetime = date('Y-m-d H:i:s');
 
         $product = Search::bind(new Product('search'), isset($_GET['Product']) ? $_GET['Product'] : array());
         $productDataProvider = $product->search();
@@ -90,12 +94,14 @@ class TransferRequestController extends Controller {
 
             $transferRequest->header->setCodeNumberByRevision('transfer_request_no');
         
-            if ($transferRequest->save(Yii::app()->db))
+            if ($transferRequest->save(Yii::app()->db)) {
                 $this->redirect(array('view', 'id' => $transferRequest->header->id));
+            }
         }
 
-        if (isset($_POST['Cancel'])) 
+        if (isset($_POST['Cancel'])) {
             $this->redirect(array('admin'));
+        }
 
         $this->render('update', array(
             'transferRequest' => $transferRequest,

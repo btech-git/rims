@@ -217,7 +217,7 @@ class MovementOuts extends CComponent {
         $valid = true;
         
         foreach ($this->details as $detail) {
-            if ($detail->quantity_stock > 0 && $detail->quantity_stock < $detail->quantity) {
+            if ($detail->quantity_stock <= 0 || $detail->quantity_stock < $detail->quantity) {
                 $valid = false;
                 $this->header->addError('error', 'Quantity movement melebihi stok yang ada!');
             }
@@ -228,8 +228,6 @@ class MovementOuts extends CComponent {
 
     public function flush() {
         
-        $this->header->created_datetime = Yii::app()->dateFormatter->format('yyyy-M-dd', strtotime($this->header->created_datetime)) . ' ' . date('H:i:s');
-        $this->header->date_posting = Yii::app()->dateFormatter->format('yyyy-M-dd', strtotime($this->header->date_posting)) . ' ' . date('H:i:s');
         $valid = $this->header->save();
 
         $movementOutDetails = MovementOutDetail::model()->findAllByAttributes(array('movement_out_header_id' => $this->header->id));

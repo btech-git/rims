@@ -129,8 +129,8 @@ class MovementOutHeaderController extends Controller {
     public function actionCreate($transactionId, $movementType) {
         
         $movementOut = $this->instantiate(null, 'create');
-//        $movementOut->header->created_datetime = date('Y-m-d H:i:s');
-//        $movementOut->header->date_posting = date('Y-m-d H:i:s');
+        $movementOut->header->created_datetime = Yii::app()->dateFormatter->format('yyyy-M-dd', strtotime($movementOut->header->created_datetime)) . ' ' . date('H:i:s');
+        $movementOut->header->date_posting = Yii::app()->dateFormatter->format('yyyy-M-dd', strtotime($movementOut->header->date_posting)) . ' ' . date('H:i:s');
         $movementOut->header->registration_service_id = null;
         $movementOut->header->movement_type = $movementType;
         $movementOut->header->status = 'Draft';
@@ -202,6 +202,8 @@ class MovementOutHeaderController extends Controller {
     public function actionUpdate($id) {
         $movementOut = $this->instantiate($id, 'update');
         $movementOut->header->status = 'Draft';
+        $movementOut->header->updated_datetime = Yii::app()->dateFormatter->format('yyyy-M-dd', strtotime($movementOut->header->created_datetime)) . ' ' . date('H:i:s');
+        $movementOut->header->user_id_updated = Yii::app()->user->id;
 
         // Uncomment the following line if AJAX validation is needed
         $this->performAjaxValidation($movementOut->header);

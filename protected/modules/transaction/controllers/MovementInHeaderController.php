@@ -177,6 +177,8 @@ class MovementInHeaderController extends Controller {
     public function actionUpdate($id) {
         $movementIn = $this->instantiate($id, 'update');
         $movementIn->header->status = 'Draft';
+        $movementIn->header->updated_datetime = Yii::app()->dateFormatter->format('yyyy-M-dd', strtotime($movementIn->header->created_datetime)) . ' ' . date('H:i:s');
+        $movementIn->header->user_id_updated = Yii::app()->user->id;
 
         // Uncomment the following line if AJAX validation is needed
         $this->performAjaxValidation($movementIn->header);

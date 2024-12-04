@@ -248,12 +248,15 @@ class TransactionReceiveItemController extends Controller {
      */
     public function actionUpdate($id) {
         $receiveItem = $this->instantiate($id);
+        $receiveItem->header->user_id_updated = Yii::app()->user->id;
+        $receiveItem->header->updated_datetime = date('Y-m-d H:i:s');
         $this->performAjaxValidation($receiveItem->header);
 
         $branches = Branch::model()->findAll();
         
-        if (isset($_POST['Cancel']))
+        if (isset($_POST['Cancel'])) {
             $this->redirect(array('admin'));
+        }
 
         if (isset($_POST['TransactionReceiveItem']) && IdempotentManager::check()) {
             
