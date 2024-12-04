@@ -493,7 +493,7 @@ class Users extends CActiveRecord {
     public function getUserUpdatedCashTransactionCount($startDate, $endDate) {
         $sql = "SELECT COUNT(user_id_updated)
                 FROM " . CashTransaction::model()->tableName() . "
-                WHERE user_id = :user_id_updated AND substr(transaction_date, 1, 10) BETWEEN :start_date AND :end_date";
+                WHERE user_id_updated = :user_id AND substr(transaction_date, 1, 10) BETWEEN :start_date AND :end_date";
 
         $value = CActiveRecord::$db->createCommand($sql)->queryScalar(array(
             ':user_id' => $this->id,
