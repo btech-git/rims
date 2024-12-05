@@ -7,6 +7,7 @@
 <div id="link">
     <?php echo CHtml::link('<span class="fa fa-th-list"></span>Manage', Yii::app()->baseUrl.'/accounting/workOrderExpense/admin' , array('class'=>'button cbutton right','style'=>'margin-right:10px', 'visible'=>Yii::app()->user->checkAccess("transaction.paymentOut.admin"))) ?>
     
+    <?php echo CHtml::link('<span class="fa fa-edit"></span>Edit', Yii::app()->baseUrl.'/accounting/workOrderExpense/update?id=' . $workOrderExpense->id , array('class'=>'button cbutton right','style'=>'margin-right:10px')) ?>
     <?php if ($workOrderExpense->status == "Draft" && Yii::app()->user->checkAccess("workOrderExpenseApproval")): ?>
         <?php echo CHtml::link('<span class="fa fa-edit"></span>Approval', Yii::app()->baseUrl.'/accounting/workOrderExpense/updateApproval?headerId=' . $workOrderExpense->id , array('class'=>'button cbutton right','style'=>'margin-right:10px')) ?>
     <?php elseif ($workOrderExpense->status != "Draft" && Yii::app()->user->checkAccess("workOrderExpenseSupervisor")): ?>

@@ -94,6 +94,7 @@ class WorkOrderExpenseController extends Controller {
 
     public function actionUpdate($id) {
         $workOrderExpense = $this->instantiate($id);
+        $workOrderExpense->header->status = 'Draft';
         $supplier = Supplier::model()->findByPk($workOrderExpense->header->supplier_id);
 
         $registrationTransaction = Search::bind(new RegistrationTransaction('search'), isset($_GET['RegistrationTransaction']) ? $_GET['RegistrationTransaction'] : '');
@@ -201,8 +202,9 @@ class WorkOrderExpenseController extends Controller {
 
                 Yii::app()->user->setFlash('message', 'Delete Successful');
             }
-        } else
+        } else {
             throw new CHttpException(400, 'Invalid request. Please do not repeat this request again.');
+        }
     }
 
     public function actionAdmin() {
