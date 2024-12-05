@@ -32,6 +32,8 @@
  * @property string $is_usable
  * @property string $status
  * @property integer $unit_id
+ * @property integer $unit_id_conversion
+ * @property string $unit_conversion_multiplier
  * @property integer $user_id
  * @property string $date_posting
  * @property integer $user_id_edit
@@ -80,6 +82,7 @@
  * @property TransactionSentRequestDetail[] $transactionSentRequestDetails
  * @property TransactionTransferRequestDetail[] $transactionTransferRequestDetails
  * @property Unit $unit
+ * @property UnitIdConversion $unitIdConversion
  * @property User $user
  * @property UserIdApproval $userIdApproval
  * @property UserIdEdit $userIdEdit
@@ -115,17 +118,17 @@ class Product extends CActiveRecord {
         // will receive user inputs.
         return array(
             array('code, manufacturer_code, name, production_year, brand_id, extension, product_master_category_id, product_sub_master_category_id, product_sub_category_id, retail_price, minimum_stock, margin_type, ppn, unit_id, user_id, minimum_selling_price', 'required'),
-            array('production_year, brand_id, sub_brand_id, sub_brand_series_id, product_master_category_id, product_sub_master_category_id, product_sub_category_id, vehicle_car_make_id, vehicle_car_model_id, stock, minimum_stock, margin_type, margin_amount, ppn, unit_id, is_approved, user_id_approval, user_id_edit, user_id', 'numerical', 'integerOnly' => true),
+            array('production_year, brand_id, sub_brand_id, sub_brand_series_id, product_master_category_id, product_sub_master_category_id, product_sub_category_id, vehicle_car_make_id, vehicle_car_model_id, stock, minimum_stock, margin_type, margin_amount, ppn, unit_id, unit_id_conversion, is_approved, user_id_approval, user_id_edit, user_id', 'numerical', 'integerOnly' => true),
             array('code', 'length', 'max' => 20),
             array('manufacturer_code, barcode, extension', 'length', 'max' => 50),
             array('manufacturer_code', 'unique', 'on' => 'insert'),
             array('name', 'length', 'max' => 30),
-            array('purchase_price, recommended_selling_price, hpp, retail_price, status, minimum_selling_price', 'length', 'max' => 10),
+            array('purchase_price, recommended_selling_price, hpp, retail_price, status, minimum_selling_price, unit_conversion_multiplier', 'length', 'max' => 10),
             array('is_usable', 'length', 'max' => 5),
             array('date_posting, date_approval, date_edit', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, code, manufacturer_code, barcode, name, user_id_edit, date_edit, description, production_year, brand_id, sub_brand_id, sub_brand_series_id, extension, product_master_category_id, product_sub_master_category_id, product_sub_category_id, vehicle_car_make_id, vehicle_car_model_id, purchase_price, recommended_selling_price, hpp, retail_price, stock, minimum_selling_price, minimum_stock, margin_type, margin_amount, is_usable, status, product_master_category_code, product_master_category_name, product_sub_master_category_code, product_sub_master_category_name, product_sub_category_code, product_sub_category_name,product_brand_name,product_supplier,findkeyword, ppn, product_sub_brand_name, product_sub_brand_series_name, unit_id, date_posting, user_id, is_approved, user_id_approval, date_approval, user_id', 'safe', 'on' => 'search'),
+            array('id, code, manufacturer_code, barcode, name, user_id_edit, date_edit, description, production_year, brand_id, sub_brand_id, sub_brand_series_id, extension, product_master_category_id, product_sub_master_category_id, product_sub_category_id, vehicle_car_make_id, vehicle_car_model_id, purchase_price, recommended_selling_price, hpp, retail_price, stock, minimum_selling_price, minimum_stock, margin_type, margin_amount, is_usable, status, product_master_category_code, product_master_category_name, product_sub_master_category_code, product_sub_master_category_name, product_sub_category_code, product_sub_category_name,product_brand_name,product_supplier,findkeyword, ppn, product_sub_brand_name, product_sub_brand_series_name, unit_id, date_posting, user_id, is_approved, user_id_approval, date_approval, user_id, unit_conversion_multiplier, unit_id_conversion', 'safe', 'on' => 'search'),
         );
     }
 
@@ -168,6 +171,7 @@ class Product extends CActiveRecord {
             'transactionReturnItemDetails' => array(self::HAS_MANY, 'TransactionReturnItemDetail', 'product_id'),
             'warehouseSections' => array(self::HAS_MANY, 'WarehouseSection', 'product_id'),
             'unit' => array(self::BELONGS_TO, 'Unit', 'unit_id'),
+            'unitIdConversion' => array(self::BELONGS_TO, 'Unit', 'unit_id_conversion'),
             'user' => array(self::BELONGS_TO, 'Users', 'user_id'),
             'userIdApproval' => array(self::BELONGS_TO, 'Users', 'user_id_approval'),
             'userIdEdit' => array(self::BELONGS_TO, 'Users', 'user_id_edit'),
@@ -210,6 +214,8 @@ class Product extends CActiveRecord {
             'findkeyword' => 'Find By Keyword',
             'ppn' => 'Ppn',
             'unit_id' => 'Satuan',
+            'unit_id_conversion' => 'Satuan Konversi',
+            'unit_conversion_multiplier' => 'Konversi Perkalian',
             'user_id' => 'User Input',
             'date_posting' => 'Tanggal Input',
             'is_approved' => 'Approval',

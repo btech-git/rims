@@ -235,8 +235,11 @@ class PendingApprovalController extends Controller {
         $service = Service::model()->findByPk($serviceId);
         $service->status = 'Active';
         $service->is_approved = 1;
+        $service->user_id_approval = Yii::app()->user->id;
+        $service->date_approval = date('Y-m-d');
+        $service->time_approval = date('H:i:s');
 
-        if ($service->update(array('is_approved', 'status'))) {
+        if ($service->save(false)) {
             $this->redirect(array('index'));
         }
     }
@@ -244,9 +247,12 @@ class PendingApprovalController extends Controller {
     public function actionServiceReject($serviceId) {
         $service = Service::model()->findByPk($serviceId);
         $service->status = 'Reject';
-        $service->is_approved = 2;
+        $service->is_rejected = 1;
+        $service->user_id_reject = Yii::app()->user->id;
+        $service->date_reject = date('Y-m-d');
+        $service->time_reject = date('H:i:s');
 
-        if ($service->update(array('is_approved', 'status'))) {
+        if ($service->save(false)) {
             $this->redirect(array('index'));
         }
     }
@@ -298,7 +304,30 @@ class PendingApprovalController extends Controller {
             $valid = true;
             foreach ($services as $service) {
                 $service->is_approved = 1;
+                $service->user_id_approval = Yii::app()->user->id;
                 $service->date_approval = date('Y-m-d');
+                $service->time_approval = date('H:i:s');
+                $valid = $valid && $service->save(false);
+            }
+
+            $object = array(
+                'status' => $valid ? 'OK' : 'Not OK',
+            );
+
+            echo CJSON::encode($object);
+        }
+    }
+    
+    public function actionAjaxRejectAllService($ids) {
+
+        if (Yii::app()->request->isAjaxRequest) {
+            $services = Service::model()->findAllByAttributes(array('id' => explode(',', $ids)));
+            $valid = true;
+            foreach ($services as $service) {
+                $service->is_rejected = 1;
+                $service->user_id_reject = Yii::app()->user->id;
+                $service->date_reject = date('Y-m-d');
+                $service->time_reject = date('H:i:s');
                 $valid = $valid && $service->save(false);
             }
 

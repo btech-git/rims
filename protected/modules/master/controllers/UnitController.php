@@ -59,15 +59,12 @@ class UnitController extends Controller {
     public function actionCreate() {
         $model = new Unit;
 
-        // Uncomment the following line if AJAX validation is needed
-        // $this->performAjaxValidation($model);
-
         if (isset($_POST['Unit'])) {
             $model->attributes = $_POST['Unit'];
             $model->status = 'Active';
-            if ($model->save())
-                $this->redirect(array('admin'));
-            //$this->redirect(array('view','id'=>$model->id));
+            if ($model->save()) {
+                $this->redirect(array('view', 'id'=>$model->id));
+            }
         }
 
         $this->render('create', array(
@@ -82,16 +79,13 @@ class UnitController extends Controller {
      */
     public function actionUpdate($id) {
         $model = $this->loadModel($id);
-
-        // Uncomment the following line if AJAX validation is needed
-        // $this->performAjaxValidation($model);
-
+        
         if (isset($_POST['Unit'])) {
             $model->attributes = $_POST['Unit'];
 
-            if ($model->save())
-                $this->redirect(array('admin'));
-            //$this->redirect(array('view','id'=>$model->id));
+            if ($model->save()) {
+                $this->redirect(array('view','id'=>$model->id));
+            }
         }
 
         $this->render('update', array(
@@ -171,7 +165,7 @@ class UnitController extends Controller {
 
             $this->renderPartial('_create-dialog', array(
                 'model' => $model,
-                    ), false, true);
+            ), false, true);
         }
     }
 
@@ -201,7 +195,7 @@ class UnitController extends Controller {
 
             $this->renderPartial('_update-dialog', array(
                 'model' => $model,
-                    ), false, true);
+            ), false, true);
         }
     }
 

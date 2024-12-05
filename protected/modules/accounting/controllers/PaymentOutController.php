@@ -76,17 +76,7 @@ class PaymentOutController extends Controller {
             $this->loadState($paymentOut);
             $paymentOut->header->generateCodeNumber(Yii::app()->dateFormatter->format('M', strtotime($paymentOut->header->payment_date)), Yii::app()->dateFormatter->format('yyyy', strtotime($paymentOut->header->payment_date)), $paymentOut->header->branch_id);
 
-            $valid = true; 
-
-            $paymentType = PaymentType::model()->findByPk($paymentOut->header->payment_type_id);
-            if (empty($paymentType->coa_id) && $paymentOut->header->company_bank_id == null) {
-                $valid = false; 
-                $paymentOut->header->addError('error', 'Company Bank harus diisi untuk payment type ini.');
-            } else {
-                $paymentOut->header->payment_type = $paymentType->name;
-            }
-
-            if ($valid && $paymentOut->save(Yii::app()->db)) {                
+            if ($paymentOut->save(Yii::app()->db)) {                
                 $this->redirect(array('view', 'id' => $paymentOut->header->id));
             }
         }
@@ -134,18 +124,9 @@ class PaymentOutController extends Controller {
 
         if (isset($_POST['Submit']) && IdempotentManager::check()) {
             $this->loadState($paymentOut);
-            $paymentOut->header->payment_type = $paymentOut->header->payment_type_id;
             $paymentOut->header->generateCodeNumber(Yii::app()->dateFormatter->format('M', strtotime($paymentOut->header->payment_date)), Yii::app()->dateFormatter->format('yyyy', strtotime($paymentOut->header->payment_date)), $paymentOut->header->branch_id);
 
-            $valid = true; 
-
-            $paymentType = PaymentType::model()->findByPk($paymentOut->header->payment_type_id);
-            if (empty($paymentType->coa_id) && $paymentOut->header->company_bank_id == null) {
-                $valid = false; 
-                $paymentOut->header->addError('error', 'Company Bank harus diisi untuk payment type ini.');
-            }
-
-            if ($valid && $paymentOut->save(Yii::app()->db)) {                
+            if ($paymentOut->save(Yii::app()->db)) {                
                 $this->redirect(array('view', 'id' => $paymentOut->header->id));
             }
         }
@@ -234,38 +215,6 @@ class PaymentOutController extends Controller {
                 $jurnalUmumKas->transaction_type = 'Pout';
                 $jurnalUmumKas->save();
             }
-
-//            $jurnalHutang = new JurnalUmum;
-//            $jurnalHutang->kode_transaksi = $paymentOut->payment_number;
-//            $jurnalHutang->tanggal_transaksi = $paymentOut->payment_date;
-//            $jurnalHutang->coa_id = $paymentOut->supplier->coa_id;
-//            $jurnalHutang->branch_id = $paymentOut->branch_id;
-//            $jurnalHutang->total = $paymentOut->payment_amount;
-//            $jurnalHutang->debet_kredit = 'D';
-//            $jurnalHutang->tanggal_posting = date('Y-m-d');
-//            $jurnalHutang->transaction_subject = $paymentOut->notes;
-//            $jurnalHutang->is_coa_category = 0;
-//            $jurnalHutang->transaction_type = 'Pout';
-//            $jurnalHutang->save();
-//
-//            if (!empty($paymentOut->paymentType->coa_id)) {
-//                $coaId = $paymentOut->paymentType->coa_id;
-//            } else {
-//                $coaId = $paymentOut->companyBank->coa_id;
-//            }
-//
-//            $jurnalUmumKas = new JurnalUmum;
-//            $jurnalUmumKas->kode_transaksi = $paymentOut->payment_number;
-//            $jurnalUmumKas->tanggal_transaksi = $paymentOut->payment_date;
-//            $jurnalUmumKas->coa_id = $coaId;
-//            $jurnalUmumKas->branch_id = $paymentOut->branch_id;
-//            $jurnalUmumKas->total = $paymentOut->payment_amount;
-//            $jurnalUmumKas->debet_kredit = 'K';
-//            $jurnalUmumKas->tanggal_posting = date('Y-m-d');
-//            $jurnalUmumKas->transaction_subject = $paymentOut->notes;
-//            $jurnalUmumKas->is_coa_category = 0;
-//            $jurnalUmumKas->transaction_type = 'Pout';
-//            $jurnalUmumKas->save();
         }
         
         $this->render('view', array(
@@ -313,10 +262,6 @@ class PaymentOutController extends Controller {
             $dataProvider->criteria->addCondition('t.branch_id = :branch_id');
             $dataProvider->criteria->params[':branch_id'] = Yii::app()->user->branch_id;
         }
-//        $dataProvider->criteria->with = array(
-//            'supplier',
-//            'paymentOutApprovals',
-//        );
 
         if (!empty($supplierName)) {
             $dataProvider->criteria->addCondition("supplier.name LIKE :supplier_name");
@@ -327,13 +272,9 @@ class PaymentOutController extends Controller {
 
         $receiveItem = Search::bind(new TransactionReceiveItem('search'), isset($_GET['TransactionReceiveItem']) ? $_GET['TransactionReceiveItem'] : array());
         $receiveItemDataProvider = $receiveItem->searchForPaymentOut();
-//        $receiveItemDataProvider->criteria->addCondition('t.recipient_branch_id = :recipient_branch_id');
-//        $receiveItemDataProvider->criteria->params[':recipient_branch_id'] = Yii::app()->user->branch_id;
 
         $workOrderExpense = Search::bind(new WorkOrderExpenseHeader('search'), isset($_GET['WorkOrderExpenseHeader']) ? $_GET['WorkOrderExpenseHeader'] : array());
         $workOrderExpenseDataProvider = $workOrderExpense->searchForPaymentOut();
-//        $workOrderExpenseDataProvider->criteria->addCondition('t.branch_id = :branch_id');
-//        $workOrderExpenseDataProvider->criteria->params[':branch_id'] = Yii::app()->user->branch_id;
 
         $this->render('admin', array(
             'paymentOut' => $paymentOut,
@@ -354,7 +295,7 @@ class PaymentOutController extends Controller {
         $historis = PaymentOutApproval::model()->findAllByAttributes(array('payment_out_id' => $headerId));
         $model = new PaymentOutApproval;
         $model->date = date('Y-m-d H:i:s');
-//        $purchaseOrderHeader = TransactionPurchaseOrder::model()->findByPk($paymentOut->purchase_order_id);
+        
         JurnalUmum::model()->deleteAllByAttributes(array(
             'kode_transaksi' => $paymentOut->payment_number,
             'branch_id' => $paymentOut->branch_id,
@@ -401,23 +342,6 @@ class PaymentOutController extends Controller {
                         $jurnalUmumKas->transaction_type = 'Pout';
                         $jurnalUmumKas->save();
                     }
-
-//                    if (!empty($purchaseOrderHeader)) {
-//                        if ($purchaseOrderHeader->payment_amount == 0) {
-//                            $purchaseOrderHeader->payment_amount = $paymentOut->payment_amount;
-//                        } else {
-//                            $purchaseOrderHeader->payment_amount += $paymentOut->payment_amount;
-//                        }
-//
-//                        $purchaseOrderHeader->payment_left -= $paymentOut->payment_amount;
-//                        if ($purchaseOrderHeader->payment_left > 0.00) {
-//                            $purchaseOrderHeader->payment_status = 'PARTIALLY PAID';
-//                        } else {
-//                            $purchaseOrderHeader->payment_status = 'PAID';
-//                        }
-//
-//                        $purchaseOrderHeader->update(array('payment_amount', 'payment_left', 'payment_status'));
-//                    }
                 }
 
                 $this->redirect(array('view', 'id' => $headerId));
@@ -525,9 +449,9 @@ class PaymentOutController extends Controller {
     }
 
     public function instantiate($id) {
-        if (empty($id))
+        if (empty($id)) {
             $paymentOut = new PaymentOutComponent(new PaymentOut(), array(), new PaymentOutImages());
-        else {
+        } else {
             $paymentOutHeader = $this->loadModel($id);
             $paymentOut = new PaymentOutComponent($paymentOutHeader, $paymentOutHeader->payOutDetails, $paymentOutHeader->paymentOutImages);
         }
@@ -552,18 +476,20 @@ class PaymentOutController extends Controller {
         
         if (isset($_POST['PayOutDetail'])) {
             foreach ($_POST['PayOutDetail'] as $i => $item) {
-                if (isset($paymentOut->details[$i]))
+                if (isset($paymentOut->details[$i])) {
                     $paymentOut->details[$i]->attributes = $item;
-                else {
+                } else {
                     $detail = new PayOutDetail();
                     $detail->attributes = $item;
                     $paymentOut->details[] = $detail;
                 }
             }
-            if (count($_POST['PayOutDetail']) < count($paymentOut->details))
+            if (count($_POST['PayOutDetail']) < count($paymentOut->details)) {
                 array_splice($paymentOut->details, $i + 1);
-        } else
+            }
+        } else {
             $paymentOut->details = array();
+        }
         
         $paymentOut->header->images = CUploadedFile::getInstances($paymentOut->header, 'images');
     }

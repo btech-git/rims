@@ -20,7 +20,6 @@
             'filter' => CHtml::activeDropDownList($service, 'service_type_id', CHtml::listData(ServiceType::model()->findAll(array('order' => 'name')), 'id', 'name'), array('empty' => '-- All --')),
             'value' => '$data->serviceType->name'
         ),
-//        array('name' => 'service_category_code', 'value' => '$data->serviceCategory->code'),
         array(
             'name' => 'service_category_name',
             'filter' => CHtml::activeDropDownList($service, 'service_category_id', CHtml::listData(ServiceCategory::model()->findAll(array('order' => 'name')), 'id', 'name'), array('empty' => '-- All --')),
@@ -32,7 +31,6 @@
             'value' => 'CHTml::link($data->name, array("/master/service/view", "id"=>$data->id))', 
             'type' => 'raw'
         ),
-//        'description',
         array(
             'header' => 'Status',
             'name' => 'status',
@@ -95,5 +93,19 @@
     
     <?php echo CHtml::button('Reject All', array(
         'id' => 'service-reject-button',
+        'onclick' => '
+            var ids = [];
+            $(".service-item-checkbox > input:checked").each(function() {
+                ids.push($(this).val());
+            })
+            $.ajax({
+                type: "POST",
+                dataType: "JSON",
+                url: "' . CController::createUrl('ajaxRejectAllService', array('ids' => '__ids__')) . '".replace("__ids__", ids.join(",")),
+                success: function(data) {
+                    location.reload();
+                },
+            });
+        ',
     )); ?>
 </div>

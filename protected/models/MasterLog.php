@@ -1,25 +1,28 @@
 <?php
 
 /**
- * This is the model class for table "{{unit}}".
+ * This is the model class for table "{{master_log}}".
  *
- * The followings are the available columns in table '{{unit}}':
+ * The followings are the available columns in table '{{master_log}}':
  * @property integer $id
  * @property string $name
- * @property string $status
- *
- * The followings are the available model relations:
- * @property ProductUnit[] $productUnits
- * @property UnitConversion[] $unitConversions
- * @property UnitConversion[] $unitConversions1
+ * @property string $log_date
+ * @property string $log_time
+ * @property string $table_name
+ * @property integer $table_id
+ * @property string $new_data
+ * @property integer $user_id
+ * @property string $username
+ * @property string $controller_class
+ * @property string $action_name
  */
-class Unit extends CActiveRecord {
+class MasterLog extends CActiveRecord {
 
     /**
      * @return string the associated database table name
      */
     public function tableName() {
-        return '{{unit}}';
+        return '{{master_log}}';
     }
 
     /**
@@ -29,12 +32,15 @@ class Unit extends CActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('name, status', 'required'),
-            array('name', 'length', 'max' => 30),
-            array('status', 'length', 'max' => 10),
+            array('name, table_name, table_id', 'required'),
+            array('table_id, user_id', 'numerical', 'integerOnly' => true),
+            array('name, table_name', 'length', 'max' => 200),
+            array('username', 'length', 'max' => 60),
+            array('controller_class, action_name', 'length', 'max' => 100),
+            array('log_date, log_time, new_data', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, name, status', 'safe', 'on' => 'search'),
+            array('id, name, log_date, log_time, table_name, table_id, new_data, user_id, username, controller_class, action_name', 'safe', 'on' => 'search'),
         );
     }
 
@@ -45,9 +51,6 @@ class Unit extends CActiveRecord {
         // NOTE: you may need to adjust the relation name and the related
         // class name for the relations automatically generated below.
         return array(
-            'productUnits' => array(self::HAS_MANY, 'ProductUnit', 'unit_id'),
-            'unitConversions' => array(self::HAS_MANY, 'UnitConversion', 'unit_from_id'),
-            'unitConversions1' => array(self::HAS_MANY, 'UnitConversion', 'unit_to_id'),
         );
     }
 
@@ -58,7 +61,15 @@ class Unit extends CActiveRecord {
         return array(
             'id' => 'ID',
             'name' => 'Name',
-            'status' => 'Status',
+            'log_date' => 'Log Date',
+            'log_time' => 'Log Time',
+            'table_name' => 'Table Name',
+            'table_id' => 'Table',
+            'new_data' => 'New Data',
+            'user_id' => 'User',
+            'username' => 'Username',
+            'controller_class' => 'Controller Class',
+            'action_name' => 'Action Name',
         );
     }
 
@@ -81,7 +92,15 @@ class Unit extends CActiveRecord {
 
         $criteria->compare('id', $this->id);
         $criteria->compare('name', $this->name, true);
-        $criteria->compare('LOWER(status)', strtolower($this->status), FALSE);
+        $criteria->compare('log_date', $this->log_date, true);
+        $criteria->compare('log_time', $this->log_time, true);
+        $criteria->compare('table_name', $this->table_name, true);
+        $criteria->compare('table_id', $this->table_id);
+        $criteria->compare('new_data', $this->new_data, true);
+        $criteria->compare('user_id', $this->user_id);
+        $criteria->compare('username', $this->username, true);
+        $criteria->compare('controller_class', $this->controller_class, true);
+        $criteria->compare('action_name', $this->action_name, true);
 
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
@@ -92,21 +111,10 @@ class Unit extends CActiveRecord {
      * Returns the static model of the specified AR class.
      * Please note that you should have this exact method in all your CActiveRecord descendants!
      * @param string $className active record class name.
-     * @return Unit the static model class
+     * @return MasterLog the static model class
      */
     public static function model($className = __CLASS__) {
         return parent::model($className);
     }
 
-    public function getUnitConversionName() {
-        $unitConversion = UnitConversion::model()->findByAttributes(array('unit_from_id' => $this->id));
-        
-        return $unitConversion->unitTo->name;
-    }
-
-    public function getUnitConversionMultiplier() {
-        $unitConversion = UnitConversion::model()->findByAttributes(array('unit_from_id' => $this->id));
-        
-        return $unitConversion->multiplier;
-    }
 }

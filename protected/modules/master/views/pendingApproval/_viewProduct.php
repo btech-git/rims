@@ -9,6 +9,12 @@
     ),
     //'summaryText'=>'',
     'columns'=>array(
+        array(
+            'class' => 'CCheckBoxColumn',
+            'selectableRows' => '2',
+            'value' => '$data->id',
+            'cssClassExpression' => '"product-item-checkbox"',
+        ),
         'id',
         'manufacturer_code',
         array(
@@ -71,3 +77,27 @@
         ),
     ),
 )); ?>
+
+<div>
+    <?php echo CHtml::button('Approve All', array(
+        'id' => 'service-approve-button',
+        'onclick' => '
+            var ids = [];
+            $(".service-item-checkbox > input:checked").each(function() {
+                ids.push($(this).val());
+            })
+            $.ajax({
+                type: "POST",
+                dataType: "JSON",
+                url: "' . CController::createUrl('ajaxApproveAllService', array('ids' => '__ids__')) . '".replace("__ids__", ids.join(",")),
+                success: function(data) {
+                    location.reload();
+                },
+            });
+        ',
+    )); ?>
+    
+    <?php echo CHtml::button('Reject All', array(
+        'id' => 'service-reject-button',
+    )); ?>
+</div>

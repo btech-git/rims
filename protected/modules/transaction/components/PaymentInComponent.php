@@ -79,6 +79,7 @@ class PaymentInComponent extends CComponent {
     public function validate() {
         $valid = $this->header->validate();
 
+        $valid = $this->validatePaymentType() && $valid;
         $valid = $this->validateDetailsCount() && $valid;
         $valid = $this->validateDetailsUnique() && $valid;
         $valid = $this->validatePaymentAmount() && $valid;
@@ -90,6 +91,16 @@ class PaymentInComponent extends CComponent {
             }
         } else {
             $valid = false;
+        }
+
+        return $valid;
+    }
+
+    public function validatePaymentType() {
+        $valid = true;
+        if (empty($this->header->paymentType->coa_id) && empty($this->header->company_bank_id)) {
+            $valid = false;
+            $this->header->addError('error', 'Company Bank harus diisi dulu.');
         }
 
         return $valid;

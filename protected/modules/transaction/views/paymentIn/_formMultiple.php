@@ -95,24 +95,6 @@
         </div>
         
         <div class="small-12 medium-6 columns">
-            <div class="field" >
-                <div class="row collapse">
-                    <div class="small-4 columns">
-                        <?php echo CHtml::label('Company Bank', false); ?>
-                    </div>
-                    <div class="small-8 columns">
-                        <?php
-                            //$userBranch = UserBranch::model()->findByAttributes(array('users_id' => Yii::app()->user->getId()));
-                            //$companyBranch = CompanyBranch::model()->findByAttributes(array('branch_id' => 7));
-                        ?>
-                        <?php echo CHtml::activeDropDownList($paymentIn->header, 'company_bank_id', CHtml::listData(CompanyBank::model()->findAllByAttributes(array('company_id' => 7), array('order' => 'account_name')), 'id', 'accountNameAndNumber'), array(
-                            'empty' => '-- Select Company Bank --'
-                        )); ?>
-                        <?php echo CHtml::error($paymentIn->header, 'company_bank_id'); ?>
-                    </div>
-                </div>
-            </div>
-            
             <div class="field">
                 <div class="row collapse">
                     <div class="small-4 columns">
@@ -135,6 +117,24 @@
                     </div>
                 </div>
             </div>		
+            
+            <div class="field" >
+                <div class="row collapse">
+                    <div class="small-4 columns">
+                        <?php echo CHtml::label('Company Bank', false); ?>
+                    </div>
+                    <div class="small-8 columns">
+                        <?php
+                            //$userBranch = UserBranch::model()->findByAttributes(array('users_id' => Yii::app()->user->getId()));
+                            //$companyBranch = CompanyBranch::model()->findByAttributes(array('branch_id' => 7));
+                        ?>
+                        <?php echo CHtml::activeDropDownList($paymentIn->header, 'company_bank_id', CHtml::listData(CompanyBank::model()->findAllByAttributes(array('company_id' => 7), array('order' => 'account_name')), 'id', 'accountNameAndNumber'), array(
+                            'empty' => '-- Select Company Bank --'
+                        )); ?>
+                        <?php echo CHtml::error($paymentIn->header, 'company_bank_id'); ?>
+                    </div>
+                </div>
+            </div>
             
             <div class="field">
                 <div class="row collapse">

@@ -59,9 +59,6 @@
                             Yii::app()->user->checkAccess('masterLevelCreate') || 
                             Yii::app()->user->checkAccess('masterLevelEdit') || 
                             Yii::app()->user->checkAccess('masterLevelApproval') || 
-                            Yii::app()->user->checkAccess('masterUnitCreate') || 
-                            Yii::app()->user->checkAccess('masterUnitEdit') || 
-                            Yii::app()->user->checkAccess('masterUnitApproval') || 
                             Yii::app()->user->checkAccess('masterConversionCreate') || 
                             Yii::app()->user->checkAccess('masterConversionEdit') || 
                             Yii::app()->user->checkAccess('masterConversionApproval') || 
@@ -223,7 +220,10 @@
                             Yii::app()->user->checkAccess('masterSubBrandApproval') || 
                             Yii::app()->user->checkAccess('masterSubBrandSeriesCreate') || 
                             Yii::app()->user->checkAccess('masterSubBrandSeriesEdit') || 
-                            Yii::app()->user->checkAccess('masterSubBrandSeriesApproval')
+                            Yii::app()->user->checkAccess('masterSubBrandSeriesApproval') ||
+                            Yii::app()->user->checkAccess('masterUnitCreate') || 
+                            Yii::app()->user->checkAccess('masterUnitEdit') || 
+                            Yii::app()->user->checkAccess('masterUnitApproval')
                         ): ?>
                             <h2>Product</h2>
                             <?php $this->widget('zii.widgets.CMenu', array(
@@ -263,6 +263,11 @@
                                         'label' => 'Sub-Brand Series', 
                                         'url' => array('/master/subBrandSeries/admin'), 
                                         'visible' => Yii::app()->user->checkAccess('masterSubBrandSeriesCreate') || Yii::app()->user->checkAccess('masterSubBrandSeriesEdit') || Yii::app()->user->checkAccess('masterSubBrandSeriesApproval')
+                                    ),
+                                    array(
+                                        'label' => 'Satuan', 
+                                        'url' => array('/master/unit/admin'), 
+                                        'visible' => Yii::app()->user->checkAccess('masterUnitCreate') || Yii::app()->user->checkAccess('masterUnitEdit') || Yii::app()->user->checkAccess('masterUnitApproval')
                                     ),
                                 ),
                             )); ?>

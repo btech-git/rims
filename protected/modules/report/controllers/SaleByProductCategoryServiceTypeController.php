@@ -57,6 +57,7 @@ class SaleByProductCategoryServiceTypeController extends Controller {
             $saleReportSummaryData[$key]['total_price'] = $saleReportItem['total_price'];
             $saleReportSummaryData[$key]['total_product'] = $saleReportItem['total_product'];
             $saleReportSummaryData[$key]['total_service'] = $saleReportItem['total_service'];
+            $saleReportSummaryData[$key]['total_discount'] = $saleReportItem['total_discount'];
         }
         
         $productMasterCategoryList = ProductMasterCategory::model()->findAllByAttributes(array('status' => 'Active'));

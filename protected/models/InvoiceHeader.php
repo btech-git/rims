@@ -29,6 +29,7 @@
  * @property integer $total_quick_service
  * @property string $pph_total
  * @property string $ppn_total
+ * @property string $total_discount
  * @property string $total_price
  * @property string $in_words
  * @property string $note
@@ -84,16 +85,16 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('invoice_number, invoice_date, due_date, reference_type, branch_id, user_id, status, total_price, tax_percentage, number_of_print', 'required'),
+            array('invoice_number, invoice_date, due_date, reference_type, branch_id, user_id, status, total_discount, total_price, tax_percentage, number_of_print', 'required'),
             array('reference_type, sales_order_id, registration_transaction_id, customer_id, vehicle_id, ppn, pph, branch_id, user_id, supervisor_id, total_product, total_service, total_quick_service, coa_bank_id_estimate, tax_percentage, user_id_cancelled, insurance_company_id, number_of_print, user_id_edited', 'numerical', 'integerOnly' => true),
             array('invoice_number', 'length', 'max' => 50),
             array('status', 'length', 'max' => 30),
-            array('service_price, product_price, quick_service_price, pph_total, ppn_total, total_price, payment_amount, payment_left', 'length', 'max' => 18),
+            array('service_price, product_price, quick_service_price, pph_total, ppn_total, total_discount, total_price, payment_amount, payment_left', 'length', 'max' => 18),
             array('in_words, note, payment_date_estimate', 'safe'),
             array('invoice_number', 'unique'),
             // The following rule is used by search().
             // Please remove those attributes that should not be searched.
-            array('id, invoice_number, invoice_date, due_date, number_of_print, reference_type, sales_order_id, registration_transaction_id, customer_id, vehicle_id, ppn, pph, branch_id, user_id, supervisor_id, status, service_price, product_price, quick_service_price, total_product, insurance_company_id, total_service, total_quick_service, pph_total, ppn_total, total_price, in_words, note, customer_name, invoice_date_to, due_date_to, payment_amount, payment_left,customer_type, payment_date_estimate, coa_bank_id_estimate, plate_number, tax_percentage, created_datetime, cancelled_datetime, user_id_cancelled, edited_datetime, user_id_edited', 'safe', 'on' => 'search'),
+            array('id, invoice_number, invoice_date, due_date, number_of_print, reference_type, sales_order_id, registration_transaction_id, customer_id, vehicle_id, ppn, pph, branch_id, user_id, supervisor_id, status, service_price, product_price, quick_service_price, total_product, insurance_company_id, total_service, total_quick_service, pph_total, ppn_total, total_discount, total_price, in_words, note, customer_name, invoice_date_to, due_date_to, payment_amount, payment_left,customer_type, payment_date_estimate, coa_bank_id_estimate, plate_number, tax_percentage, created_datetime, cancelled_datetime, user_id_cancelled, edited_datetime, user_id_edited', 'safe', 'on' => 'search'),
         );
     }
 
@@ -195,6 +196,7 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
         $criteria->compare('t.total_quick_service', $this->total_quick_service);
         $criteria->compare('t.pph_total', $this->pph_total, true);
         $criteria->compare('t.ppn_total', $this->ppn_total, true);
+        $criteria->compare('t.total_discount', $this->total_discount, true);
         $criteria->compare('t.total_price', $this->total_price, true);
         $criteria->compare('t.in_words', $this->in_words, true);
         $criteria->compare('t.note', $this->note, true);
@@ -485,7 +487,7 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
             $params[':branch_id'] = $branchId;
         }
         
-        $sql = "SELECT c.customer_type, DATE(h.invoice_date) AS transaction_date, SUM(h.ppn_total) AS ppn_total, SUM(h.pph_total) AS pph_total, SUM(h.total_price) AS total_price, SUM(h.total_product) AS total_product, SUM(h.total_service) AS total_service
+        $sql = "SELECT c.customer_type, DATE(h.invoice_date) AS transaction_date, SUM(h.ppn_total) AS ppn_total, SUM(h.pph_total) AS pph_total, SUM(h.total_price) AS total_price, SUM(h.total_product) AS total_product, SUM(h.total_service) AS total_service, SUM(h.total_discount) AS total_discount
                 FROM " . InvoiceHeader::model()->tableName() . " h 
                 INNER JOIN " . Customer::model()->tableName() . " c ON c.id = h.customer_id
                 WHERE DATE(h.invoice_date) BETWEEN :start_date AND :end_date AND h.status NOT LIKE '%CANCEL%'" . $branchConditionSql . "

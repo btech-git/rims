@@ -41,7 +41,13 @@
  * @property string $price_luxury
  * @property integer $is_approved
  * @property string $date_approval
+ * @property string $time_approval
+ * @property integer $user_id_approval
  * @property integer $user_id
+ * @property integer $is_rejected
+ * @property string $date_reject
+ * @property string $time_reject
+ * @property integer $user_id_reject
  * @property string $created_datetime
  *
  * The followings are the available model relations:
@@ -58,6 +64,8 @@
  * @property ServiceStandardPricelist[] $serviceStandardPricelists
  * @property RegistrationService[] $registrationServices
  * @property User $user
+ * @property UserIdApproval $userIdApproval
+ * @property UserIdReject $userIdReject
  */
 class Service extends CActiveRecord {
 
@@ -92,16 +100,16 @@ class Service extends CActiveRecord {
         // will receive user inputs.
         return array(
             array('code, name, service_category_id, service_type_id, status, difficulty_level, user_id', 'required'),
-            array('service_category_id, service_type_id, difficulty_level, is_approved, user_id', 'numerical', 'integerOnly' => true),
+            array('service_category_id, service_type_id, difficulty_level, is_approved, user_id, user_id_approval, user_id_reject, is_rejected', 'numerical', 'integerOnly' => true),
             array('code', 'unique'),
             array('code', 'length', 'max' => 20),
             array('name', 'length', 'max' => 100),
             array('description', 'length', 'max' => 60),
-            array('date_approval', 'safe'),
+            array('date_approval, time_approval, date_reject, time_reject', 'safe'),
             array('status, difficulty, difficulty_value, regular, luxury, luxury_value, luxury_calc, standard_rate_per_hour, flat_rate_hour, price, common_price, bongkar, sparepart, ketok_las, dempul, epoxy, cat, pasang, poles, cuci, finishing, price_easy, price_medium, price_hard, price_luxury', 'length', 'max' => 10),
             // The following rule is used by search().
             // Please remove those attributes that should not be searched.
-            array('id, code, name, price, description, created_datetime, service_category_id, service_type_id, status, difficulty_level, service_category_name,service_type_name,service_category_code, service_type_code, difficulty, difficulty_value, regular, luxury, luxury_value, luxury_calc, standard_rate_per_hour, flat_rate_hour, price, common_price, is_deleted, findkeyword, bongkar, sparepart, ketok_las, dempul, epoxy, cat, pasang, poles, cuci, finishing, price_easy, price_medium, price_hard, price_luxury, is_approved, date_approval, user_id', 'safe', 'on' => 'search'),
+            array('id, code, name, price, description, created_datetime, service_category_id, service_type_id, status, difficulty_level, service_category_name,service_type_name,service_category_code, service_type_code, difficulty, difficulty_value, regular, luxury, luxury_value, luxury_calc, standard_rate_per_hour, flat_rate_hour, price, common_price, is_deleted, findkeyword, bongkar, sparepart, ketok_las, dempul, epoxy, cat, pasang, poles, cuci, finishing, price_easy, price_medium, price_hard, price_luxury, is_approved, date_approval, user_id, user_id_approval, user_id_reject, is_rejected, time_approval, date_reject, time_reject', 'safe', 'on' => 'search'),
         );
     }
 
@@ -134,6 +142,8 @@ class Service extends CActiveRecord {
             'servicePricelists' => array(self::HAS_MANY, 'ServicePricelist', 'service_id'),
             'serviceStandardPricelists' => array(self::HAS_MANY, 'ServiceStandardPricelist', 'service_id'),
             'user' => array(self::BELONGS_TO, 'Users', 'user_id'),
+            'userIdApproval' => array(self::BELONGS_TO, 'Users', 'user_id_approval'),
+            'userIdReject' => array(self::BELONGS_TO, 'Users', 'user_id_reject'),
         );
     }
 

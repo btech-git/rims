@@ -119,22 +119,10 @@ class ServiceController extends Controller {
      * If creation is successful, the browser will be redirected to the 'view' page.
      */
     public function actionCreate() {
-        //$model=new Service;
-        // Uncomment the following line if AJAX validation is needed
-        // $this->performAjaxValidation($model);
-        // if(isset($_POST['Service']))
-        // {
-        // 	$model->attributes=$_POST['Service'];
-        // 	if($model->save())
-        // 		$this->redirect(array('view','id'=>$model->id));
-        // }
-        // $this->render('create',array(
-        // 	'model'=>$model,
-        // ));
-
         $service = $this->instantiate(null);
         $service->header->difficulty_level = 1;
         $service->header->user_id = Yii::app()->user->id;
+        $service->header->created_datetime = date('Y-m-d H:i:s');
 
         $complement = new Service('search');
         $complement->unsetAttributes();  // clear any default values
@@ -156,7 +144,6 @@ class ServiceController extends Controller {
             $equipment->attributes = $_GET['Equipments'];
 
         $equipmentCriteria = new CDbCriteria;
-        //$positionCriteria->compare('code',$position->code.'%',true,'AND', false);
         $equipmentCriteria->compare('t.name', $equipment->name, true);
         $equipmentCriteria->together = true;
         $equipmentCriteria->with = array('equipmentType', 'equipmentSubType');

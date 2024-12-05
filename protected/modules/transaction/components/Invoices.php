@@ -140,6 +140,7 @@ class Invoices extends CComponent {
         $registrationTransaction = $this->header->registrationTransaction;
         $this->header->total_price = $registrationTransaction->subtotal_product + $registrationTransaction->subtotal_service + $registrationTransaction->ppn_price;
         $this->header->payment_date_estimate = $this->header->due_date;
+        $this->header->total_discount = $this->getTotalDiscount();
         $valid = $this->header->save();
 
         //save request detail
@@ -305,5 +306,15 @@ class Invoices extends CComponent {
         $transactionLog->new_data = json_encode($newData);
 
         $transactionLog->save();
+    }
+    
+    public function getTotalDiscount() {
+        $total = 0;
+        
+        foreach($this->details as $detail) {
+            $total += $detail->discount;
+        }
+        
+        return $total;
     }
 }
