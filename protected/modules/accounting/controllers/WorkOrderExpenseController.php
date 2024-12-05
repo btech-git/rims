@@ -221,8 +221,10 @@ class WorkOrderExpenseController extends Controller {
             'registrationTransaction',
         );
         $dataProvider->criteria->addBetweenCondition('t.transaction_date', $startDate, $endDate);
-        $dataProvider->criteria->addCondition('t.branch_id = :branch_id');
-        $dataProvider->criteria->params[':branch_id'] = Yii::app()->user->branch_id;
+        if (!Yii::app()->user->checkAccess('director')) {
+            $dataProvider->criteria->addCondition('t.branch_id = :branch_id');
+            $dataProvider->criteria->params[':branch_id'] = Yii::app()->user->branch_id;
+        }
 
         $this->render('admin', array(
             'paymentOut' => $workOrderExpense,
