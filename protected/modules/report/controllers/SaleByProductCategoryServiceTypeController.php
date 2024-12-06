@@ -12,7 +12,7 @@ class SaleByProductCategoryServiceTypeController extends Controller {
 
     public function filterAccess($filterChain) {
         if ($filterChain->action->id === 'summary') {
-            if (!(Yii::app()->user->checkAccess('saleCustomerSummaryReport') )) {
+            if (!(Yii::app()->user->checkAccess('saleServiceProductCategoryReport') )) {
                 $this->redirect(array('/site/login'));
             }
         }

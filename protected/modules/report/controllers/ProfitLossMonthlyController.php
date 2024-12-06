@@ -5,13 +5,13 @@ class ProfitLossMonthlyController extends Controller {
     public $layout = '//layouts/column1';
     public function filters() {
         return array(
-//            'access',
+            'access',
         );
     }
 
     public function filterAccess($filterChain) {
         if ($filterChain->action->id === 'summary') {
-            if (!(Yii::app()->user->checkAccess('standardProfitLossReport'))) {
+            if (!(Yii::app()->user->checkAccess('multiProfitLossReport'))) {
                 $this->redirect(array('/site/login'));
             }
         }

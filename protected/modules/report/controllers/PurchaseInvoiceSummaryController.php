@@ -12,7 +12,7 @@ class PurchaseInvoiceSummaryController extends Controller {
 
     public function filterAccess($filterChain) {
         if ($filterChain->action->id === 'summary') {
-            if (!(Yii::app()->user->checkAccess('purchaseInvoiceReport')))
+            if (!(Yii::app()->user->checkAccess('purchaseSummaryReport')))
                 $this->redirect(array('/site/login'));
         }
 
