@@ -54,7 +54,7 @@ class MaterialRequestHeader extends MonthlyTransactionActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('transaction_number, transaction_date, transaction_time, branch_id, user_id, registration_transaction_id', 'required'),
+            array('transaction_number, transaction_date, transaction_time, branch_id, user_id', 'required'),
             array('branch_id, user_id, registration_transaction_id', 'numerical', 'integerOnly' => true),
             array('total_quantity, total_quantity_movement_out, total_quantity_remaining', 'length', 'max' => 10),
             array('transaction_number, status_document, status_progress', 'length', 'max' => 50),

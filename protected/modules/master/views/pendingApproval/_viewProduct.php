@@ -80,16 +80,16 @@
 
 <div>
     <?php echo CHtml::button('Approve All', array(
-        'id' => 'service-approve-button',
+        'id' => 'product-approve-button',
         'onclick' => '
             var ids = [];
-            $(".service-item-checkbox > input:checked").each(function() {
+            $(".product-item-checkbox > input:checked").each(function() {
                 ids.push($(this).val());
             })
             $.ajax({
                 type: "POST",
                 dataType: "JSON",
-                url: "' . CController::createUrl('ajaxApproveAllService', array('ids' => '__ids__')) . '".replace("__ids__", ids.join(",")),
+                url: "' . CController::createUrl('ajaxApproveAllProduct', array('ids' => '__ids__')) . '".replace("__ids__", ids.join(",")),
                 success: function(data) {
                     location.reload();
                 },
@@ -98,6 +98,20 @@
     )); ?>
     
     <?php echo CHtml::button('Reject All', array(
-        'id' => 'service-reject-button',
+        'id' => 'product-reject-button',
+        'onclick' => '
+            var ids = [];
+            $(".product-item-checkbox > input:checked").each(function() {
+                ids.push($(this).val());
+            })
+            $.ajax({
+                type: "POST",
+                dataType: "JSON",
+                url: "' . CController::createUrl('ajaxRejectAllProduct', array('ids' => '__ids__')) . '".replace("__ids__", ids.join(",")),
+                success: function(data) {
+                    location.reload();
+                },
+            });
+        ',
     )); ?>
 </div>

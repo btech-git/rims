@@ -87,13 +87,13 @@ Yii::app()->clientScript->registerScript('search', "
                     ),
                     array(
                         'class' => 'CButtonColumn',
-                        'template' => '{edit} {print}',
+                        'template' => '{print}',
                         'buttons' => array(
-                            'edit' => array(
-                                'label' => 'edit',
-                                'url' => 'Yii::app()->createUrl("transaction/transactionDeliveryOrder/update", array("id"=>$data->id))',
-                                'visible' => 'Yii::app()->user->checkAccess("deliveryEdit")', //count(MovementOutHeader::model()->findAllByAttributes(array("delivery_order_id"=>$data->id))) == 0 && ',
-                            ),
+//                            'edit' => array(
+//                                'label' => 'edit',
+//                                'url' => 'Yii::app()->createUrl("transaction/transactionDeliveryOrder/update", array("id"=>$data->id))',
+//                                'visible' => 'Yii::app()->user->checkAccess("deliveryEdit")', //count(MovementOutHeader::model()->findAllByAttributes(array("delivery_order_id"=>$data->id))) == 0 && ',
+//                            ),
                             'print' => array(
                                 'label' => 'print',
                                 'url' => 'Yii::app()->createUrl("transaction/transactionDeliveryOrder/pdf", array("id"=>$data->id))',

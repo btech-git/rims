@@ -109,17 +109,17 @@ Yii::app()->clientScript->registerScript('search', "
                         'filter' => false,
                         'value' => 'Yii::app()->dateFormatter->format("d MMM yyyy HH:mm:ss", $data->created_datetime)'
                     ),
-                    array(
-                        'class' => 'CButtonColumn',
-                        'template' => '{edit}',
-                        'buttons' => array(
-                            'edit' => array(
-                                'label' => 'edit',
-                                'url' => 'Yii::app()->createUrl("transaction/transactionRequestOrder/update", array("id"=>$data->id))',
-                                'visible' => 'Yii::app()->user->checkAccess("requestOrderEdit")', //$data->status_document != "Approved" && $data->status_document != "Rejected"',
-                            ),
-                        ),
-                    ),
+//                    array(
+//                        'class' => 'CButtonColumn',
+//                        'template' => '{edit}',
+//                        'buttons' => array(
+//                            'edit' => array(
+//                                'label' => 'edit',
+//                                'url' => 'Yii::app()->createUrl("transaction/transactionRequestOrder/update", array("id"=>$data->id))',
+//                                'visible' => 'Yii::app()->user->checkAccess("requestOrderEdit")', //$data->status_document != "Approved" && $data->status_document != "Rejected"',
+//                            ),
+//                        ),
+//                    ),
                 ),
             )); ?>
         </div>

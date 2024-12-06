@@ -3,7 +3,7 @@
     'Create',
 ); ?>
 
-<h1>Permintaan Bahan</h1>
+<h1>Permintaan Bahan Untuk Work Order</h1>
 
 <div id="maincontent">
     <?php echo $this->renderPartial('_form', array(

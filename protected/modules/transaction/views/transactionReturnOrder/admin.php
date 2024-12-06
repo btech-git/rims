@@ -45,11 +45,6 @@ Yii::app()->clientScript->registerScript('search', "
         <h1>Manage Transaction Return Beli</h1>
         <div class="search-bar">
             <div class="clearfix button-bar">
-                <!--<div class="left clearfix bulk-action">
-                        <span class="checkbox"><span class="fa fa-reply fa-rotate-270"></span></span>
-                        <input type="submit" value="Archive" class="button secondary cbutton" name="archive">         
-                        <input type="submit" value="Delete" class="button secondary cbutton" name="delete">      
-                </div>-->
                 <a href="#" class="search-button right button cbutton secondary">Advanced Search</a>
                 <div class="clearfix"></div>
                 <div class="search-form" style="display:none">
@@ -79,13 +74,10 @@ Yii::app()->clientScript->registerScript('search', "
                         'type' => 'raw'
                     ),
                     'return_order_date',
-                    // 'receive_item_id',
                     array(
                         'name' => 'receive_item_no',
                         'value' => '$data->receiveItem->receive_item_no'
                     ),
-                    // 'recipient_id',
-                    // 'recipient_branch_id',
                     array(
                         'name' => 'recipient_id',
                         'value' => '$data->user->username'
@@ -102,17 +94,17 @@ Yii::app()->clientScript->registerScript('search', "
                         'filter' => false,
                         'value' => 'Yii::app()->dateFormatter->format("d MMM yyyy HH:mm:ss", $data->created_datetime)'
                     ),
-                    array(
-                        'class' => 'CButtonColumn',
-                        'template' => '{edit}',
-                        'buttons' => array(
-                            'edit' => array(
-                                'label' => 'edit',
-                                'url' => 'Yii::app()->createUrl("transaction/transactionReturnOrder/update", array("id"=>$data->id))',
-                                'visible' => 'Yii::app()->user->checkAccess("purchaseReturnEdit")', //count(MovementOutHeader::model()->findAllByAttributes(array("return_order_id"=>$data->id))) == 0 &&  && $data->status != "Rejected"',
-                            ),
-                        ),
-                    ),
+//                    array(
+//                        'class' => 'CButtonColumn',
+//                        'template' => '{edit}',
+//                        'buttons' => array(
+//                            'edit' => array(
+//                                'label' => 'edit',
+//                                'url' => 'Yii::app()->createUrl("transaction/transactionReturnOrder/update", array("id"=>$data->id))',
+//                                'visible' => 'Yii::app()->user->checkAccess("purchaseReturnEdit")', //count(MovementOutHeader::model()->findAllByAttributes(array("return_order_id"=>$data->id))) == 0 &&  && $data->status != "Rejected"',
+//                            ),
+//                        ),
+//                    ),
                 ),
             )); ?>
         </div>

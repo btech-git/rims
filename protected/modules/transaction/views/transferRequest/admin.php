@@ -12,18 +12,6 @@ $this->menu=array(
     array('label'=>'Create TransactionTransferRequest', 'url'=>array('create')),
 );
 
-// Yii::app()->clientScript->registerScript('search', "
-// $('.search-button').click(function(){
-// 	$('.search-form').toggle();
-// 	return false;
-// });
-// $('.search-form form').submit(function(){
-// 	$('#transaction-transfer-request-grid').yiiGridView('update', {
-// 		data: $(this).serialize()
-// 	});
-// 	return false;
-// });
-// ");
 Yii::app()->clientScript->registerScript('search', "
     $('.search-button').click(function(){
         $('.search-form').slideToggle(600);
@@ -84,7 +72,6 @@ Yii::app()->clientScript->registerScript('search', "
                     'transfer_request_date',
                     'transfer_request_time',
                     'status_document',
-//                    'estimate_arrival_date',
                     array(
                         'name'=>'requester_branch_id',
                         'header' => 'Requester',
@@ -107,17 +94,17 @@ Yii::app()->clientScript->registerScript('search', "
                         'filter' => false,
                         'value' => 'Yii::app()->dateFormatter->format("d MMM yyyy HH:mm:ss", $data->created_datetime)'
                     ),
-                    array(
-                        'class'=>'CButtonColumn',
-                        'template'=>'{edit}',
-                        'buttons'=>array (
-                            'edit' => array (
-                                'label'=>'edit',
-                                'url'=>'Yii::app()->createUrl("transaction/transferRequest/update", array("id"=>$data->id))',
-                                'visible'=> 'Yii::app()->user->checkAccess("transferRequestEdit")', //$data->status_document == "Draft" && ',
-                            ),
-                        ),
-                    ),
+//                    array(
+//                        'class'=>'CButtonColumn',
+//                        'template'=>'{edit}',
+//                        'buttons'=>array (
+//                            'edit' => array (
+//                                'label'=>'edit',
+//                                'url'=>'Yii::app()->createUrl("transaction/transferRequest/update", array("id"=>$data->id))',
+//                                'visible'=> 'Yii::app()->user->checkAccess("transferRequestEdit")', //$data->status_document == "Draft" && ',
+//                            ),
+//                        ),
+//                    ),
                 ),
             )); ?>
         </div>

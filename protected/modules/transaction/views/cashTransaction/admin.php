@@ -102,10 +102,6 @@ $('.search-form form').submit(function(){
                             ),
                         ),
                         'status',
-//                        array(
-//                            'name' => 'branch_id', 
-//                            'value' => '$data->branch != "" ? $data->branch->name : "" '
-//                        ),
                         array(
                             'header' => 'Approved By',
                             'value' => '$data->status == "Approved" ? $data->cashTransactionApprovals[0]->supervisor->username : "" ',
@@ -118,13 +114,13 @@ $('.search-form form').submit(function(){
                         ),
                         array(
                             'class' => 'CButtonColumn',
-                            'template' => '{view}{update}',
+                            'template' => '{view}',
                             'buttons' => array(
-                                'update' => array(
-                                    'label' => 'update',
-                                    'url' => 'Yii::app()->createUrl("transaction/cashTransaction/update", array("id"=>$data->id))',
-                                    'visible' => 'Yii::app()->user->checkAccess("cashTransactionEdit")', //$data->status_document != "Approved" && $data->status_document != "Rejected" && ',
-                                ),
+//                                'update' => array(
+//                                    'label' => 'update',
+//                                    'url' => 'Yii::app()->createUrl("transaction/cashTransaction/update", array("id"=>$data->id))',
+//                                    'visible' => 'Yii::app()->user->checkAccess("cashTransactionEdit")', //$data->status_document != "Approved" && $data->status_document != "Rejected" && ',
+//                                ),
                                 'view' => array(
                                     'label' => 'view',
                                     'url' => 'Yii::app()->createUrl("transaction/cashTransaction/view", array("id"=>$data->id))',
@@ -153,7 +149,6 @@ $('.search-form form').submit(function(){
                             'type' => 'raw'
                         ),
                         'transaction_date',
-//                        'transaction_type',
                         array(
                             'header' => 'COA Debit',
                             'name' => 'coa_name', 
@@ -179,24 +174,30 @@ $('.search-form form').submit(function(){
                         ),
                         'status',
                         array(
-                            'name' => 'branch_id', 
-                            'value' => '$data->branch != "" ? $data->branch->name : "" '
-                        ),
-                        array(
                             'header' => 'Approved By',
                             'value' => '$data->status == "Approved" ? $data->cashTransactionApprovals[0]->supervisor->username : "" ',
                         ),
-//                        array(
-//                            'class' => 'CButtonColumn',
-//                            'template' => '{edit}',
-//                            'buttons' => array(
-//                                'edit' => array(
-//                                    'label' => 'edit',
+                        array(
+                            'header' => 'Input',
+                            'name' => 'created_datetime',
+                            'filter' => false,
+                            'value' => 'Yii::app()->dateFormatter->format("d MMM yyyy HH:mm:ss", $data->created_datetime)'
+                        ),
+                        array(
+                            'class' => 'CButtonColumn',
+                            'template' => '{view}',
+                            'buttons' => array(
+//                                'update' => array(
+//                                    'label' => 'update',
 //                                    'url' => 'Yii::app()->createUrl("transaction/cashTransaction/update", array("id"=>$data->id))',
-//                                    'visible' => '$data->status == "Draft" && Yii::app()->user->checkAccess("cashTransactionEdit")',
+//                                    'visible' => 'Yii::app()->user->checkAccess("cashTransactionEdit")', //$data->status_document != "Approved" && $data->status_document != "Rejected" && ',
 //                                ),
-//                            ),
-//                        ),
+                                'view' => array(
+                                    'label' => 'view',
+                                    'url' => 'Yii::app()->createUrl("transaction/cashTransaction/view", array("id"=>$data->id))',
+                                ),
+                            ),
+                        ),
                     ),
                 )); ?>
             </div>

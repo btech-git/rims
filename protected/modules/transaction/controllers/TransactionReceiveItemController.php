@@ -303,6 +303,30 @@ class TransactionReceiveItemController extends Controller {
         ));
     }
 
+    public function actionApprovalInvoice($id) {
+        $receiveItem = $this->loadModel($id);
+        $this->performAjaxValidation($receiveItem);
+
+        if (isset($_POST['Cancel'])) {
+            $this->redirect(array('admin'));
+        }
+
+        if (isset($_POST['Approve'])) {
+            $receiveItem->is_approved_invoice = 1;
+            $receiveItem->date_approval_invoice = date('Y-m-d');
+            $receiveItem->time_approval_invoice = date('H:i:s');
+            $receiveItem->user_id_approval_invoice = Yii::app()->user->id;
+            
+            if ($receiveItem->save(Yii::app()->db)) {
+                $this->redirect(array('view', 'id' => $receiveItem->id));
+            }
+        }
+
+        $this->render('approvalInvoice', array(
+            'receiveItem' => $receiveItem,
+        ));
+    }
+
     /**
      * Deletes a particular model.
      * If deletion is successful, the browser will be redirected to the 'admin' page.

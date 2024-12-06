@@ -99,17 +99,17 @@ Yii::app()->clientScript->registerScript('search', "
                         'filter' => false,
                         'value' => 'Yii::app()->dateFormatter->format("d MMM yyyy HH:mm:ss", $data->created_datetime)'
                     ),
-                    array(
-                        'class' => 'CButtonColumn',
-                        'template' => '{edit}',
-                        'buttons' => array(
-                            'edit' => array(
-                                'label' => 'edit',
-                                'url' => 'Yii::app()->createUrl("transaction/transactionReturnItem/update", array("id"=>$data->id))',
-                                'visible' => 'Yii::app()->user->checkAccess("saleReturnEdit")', //count(MovementInHeader::model()->findAllByAttributes(array("return_item_id"=>$data->id))) == 0 &&  && $data->status != "Rejected"'
-                            ),
-                        ),
-                    ),
+//                    array(
+//                        'class' => 'CButtonColumn',
+//                        'template' => '{edit}',
+//                        'buttons' => array(
+//                            'edit' => array(
+//                                'label' => 'edit',
+//                                'url' => 'Yii::app()->createUrl("transaction/transactionReturnItem/update", array("id"=>$data->id))',
+//                                'visible' => 'Yii::app()->user->checkAccess("saleReturnEdit")', //count(MovementInHeader::model()->findAllByAttributes(array("return_item_id"=>$data->id))) == 0 &&  && $data->status != "Rejected"'
+//                            ),
+//                        ),
+//                    ),
                 ),
             )); ?>
         </div>

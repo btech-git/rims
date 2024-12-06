@@ -189,8 +189,8 @@ class CashTransactionController extends Controller {
     public function actionUpdate($id) {
         
         $cashTransaction = $this->instantiate($id, 'update');
-        $cashTransaction->header->edited_datetime = date('Y-m-d H:i:s');
-        $cashTransaction->header->user_id_edited = Yii::app()->user->id;
+        $cashTransaction->header->updated_datetime = date('Y-m-d H:i:s');
+        $cashTransaction->header->user_id_updated = Yii::app()->user->id;
         
         $this->performAjaxValidation($cashTransaction->header);
 

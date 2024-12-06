@@ -148,13 +148,13 @@ $('.search-form form').submit(function(){
                         ),
                         array(
                             'class' => 'CButtonColumn',
-                            'template' => '{update} {view}',
+                            'template' => '{view}',
                             'buttons' => array(
-                                'update' => array(
-                                    'label' => 'update',
-                                    'url' => 'Yii::app()->createUrl("transaction/paymentIn/update", array("id"=>$data->id))',
-                                    'visible' => 'Yii::app()->user->checkAccess("paymentInEdit")', //$data->status_document != "Approved" && $data->status_document != "Rejected" && ',
-                                ),
+//                                'update' => array(
+//                                    'label' => 'update',
+//                                    'url' => 'Yii::app()->createUrl("transaction/paymentIn/update", array("id"=>$data->id))',
+//                                    'visible' => 'Yii::app()->user->checkAccess("paymentInEdit")', //$data->status_document != "Approved" && $data->status_document != "Rejected" && ',
+//                                ),
                                 'view' => array(
                                     'label' => 'view',
                                     'url' => 'Yii::app()->createUrl("transaction/paymentIn/view", array("id"=>$data->id))',

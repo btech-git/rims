@@ -9,6 +9,12 @@
     ),
     //'summaryText'=>'',
     'columns'=>array(
+        array(
+            'class' => 'CCheckBoxColumn',
+            'selectableRows' => '2',
+            'value' => '$data->id',
+            'cssClassExpression' => '"customer-item-checkbox"',
+        ),
         array('name'=>'name', 'value'=>'CHTml::link($data->name, array("/master/customer/view", "id"=>$data->id))', 'type'=>'raw'),
         array('header'=>'Province Name','name'=>'province_name', 'value'=>'$data->province->name'),
         array('header'=>'City Name','name'=>'city_name', 'value'=>'$data->city->name'),
@@ -70,3 +76,41 @@
         ),
     ),
 )); ?>
+
+<div>
+    <?php echo CHtml::button('Approve All', array(
+        'id' => 'customer-approve-button',
+        'onclick' => '
+            var ids = [];
+            $(".customer-item-checkbox > input:checked").each(function() {
+                ids.push($(this).val());
+            })
+            $.ajax({
+                type: "POST",
+                dataType: "JSON",
+                url: "' . CController::createUrl('ajaxApproveAllCustomer', array('ids' => '__ids__')) . '".replace("__ids__", ids.join(",")),
+                success: function(data) {
+                    location.reload();
+                },
+            });
+        ',
+    )); ?>
+    
+    <?php echo CHtml::button('Reject All', array(
+        'id' => 'customer-reject-button',
+        'onclick' => '
+            var ids = [];
+            $(".customer-item-checkbox > input:checked").each(function() {
+                ids.push($(this).val());
+            })
+            $.ajax({
+                type: "POST",
+                dataType: "JSON",
+                url: "' . CController::createUrl('ajaxRejectAllCustomer', array('ids' => '__ids__')) . '".replace("__ids__", ids.join(",")),
+                success: function(data) {
+                    location.reload();
+                },
+            });
+        ',
+    )); ?>
+</div>

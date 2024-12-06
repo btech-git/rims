@@ -136,13 +136,13 @@ $('.search-form form').submit(function(){
                     */
                     array(
                         'class' => 'CButtonColumn',
-                        'template' => '{edit} {print}',
+                        'template' => '{print}',
                         'buttons' => array(
-                            'edit' => array(
-                                'label' => 'edit',
-                                'url' => 'Yii::app()->createUrl("transaction/transactionSalesOrder/update", array("id"=>$data->id))',
-                                'visible' => 'Yii::app()->user->checkAccess("saleOrderEdit")', //$data->status_document != "Approved" && $data->status_document != "Rejected" && ',
-                            ),
+//                            'edit' => array(
+//                                'label' => 'edit',
+//                                'url' => 'Yii::app()->createUrl("transaction/transactionSalesOrder/update", array("id"=>$data->id))',
+//                                'visible' => 'Yii::app()->user->checkAccess("saleOrderEdit")', //$data->status_document != "Approved" && $data->status_document != "Rejected" && ',
+//                            ),
                             'print' => array(
                                 'label' => 'print',
                                 'url' => 'Yii::app()->createUrl("transaction/transactionSalesOrder/pdf", array("id"=>$data->id))',

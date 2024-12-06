@@ -24,7 +24,13 @@
  * @property integer $coa_id
  * @property integer $is_approved
  * @property string $date_approval
+ * @property integer $user_id_approval
  * @property integer $user_id
+ * @property string $time_approval
+ * @property integer $is_rejected
+ * @property string $date_reject
+ * @property string $time_reject
+ * @property integer $user_id_reject
  *
  * The followings are the available model relations:
  * @property ConsignmentOutHeader[] $consignmentOutHeaders
@@ -43,6 +49,8 @@
  * @property TransactionReturnItem[] $transactionReturnItems
  * @property TransactionSalesOrder[] $transactionSalesOrders
  * @property User $user
+ * @property UserIdApproval $userIdApproval
+ * @property UserIdReject $userIdReject
  */
 class Customer extends CActiveRecord {
 
@@ -68,7 +76,7 @@ class Customer extends CActiveRecord {
         // will receive user inputs.
         return array(
             array('name, address, province_id, city_id, customer_type, user_id', 'required'),
-            array('province_id, city_id, default_payment_type, tenor, coa_id, is_approved, user_id', 'numerical', 'integerOnly' => true),
+            array('province_id, city_id, default_payment_type, tenor, coa_id, is_approved, is_rejected, user_id, user_id_approval, user_id_reject', 'numerical', 'integerOnly' => true),
             array('name, email, phone, mobile_phone', 'length', 'max' => 100),
             array('email', 'email'),
             array('email, mobile_phone', 'unique'),
@@ -76,9 +84,10 @@ class Customer extends CActiveRecord {
             array('email', 'filter', 'filter' => 'strtolower'),
             array('zipcode, customer_type, status, flat_rate', 'length', 'max' => 10),
             array('fax', 'length', 'max' => 20),
+            array('date_approval, date_edit, time_approval, date_reject, time_reject', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, name, address, province_id, city_id, zipcode, fax, email, note, customer_type, tenor, status, birthdate, flat_rate, default_payment_type, city_name, province_name, plate_number, coa_id, coa_name, coa_code, phone, mobile_phone, is_approved, date_approval, user_id', 'safe', 'on' => 'search'),
+            array('id, name, address, province_id, city_id, zipcode, fax, email, note, customer_type, tenor, status, birthdate, flat_rate, default_payment_type, city_name, province_name, plate_number, coa_id, coa_name, coa_code, phone, mobile_phone, is_approved, date_approval, user_id, user_id_approval, user_id_reject, is_rejected, time_approval, date_reject, time_reject', 'safe', 'on' => 'search'),
         );
     }
 
@@ -106,6 +115,8 @@ class Customer extends CActiveRecord {
             'transactionReturnItems' => array(self::HAS_MANY, 'TransactionReturnItem', 'customer_id'),
             'transactionSalesOrders' => array(self::HAS_MANY, 'TransactionSalesOrder', 'customer_id'),
             'user' => array(self::BELONGS_TO, 'Users', 'user_id'),
+            'userIdApproval' => array(self::BELONGS_TO, 'Users', 'user_id_approval'),
+            'userIdReject' => array(self::BELONGS_TO, 'Users', 'user_id_reject'),
         );
     }
 

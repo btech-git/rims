@@ -26,7 +26,25 @@ $this->breadcrumbs=array(
         <?php echo $form->errorSummary($receiveItem); ?>
 
         <div class="row">
-            <div class="small-12 medium-6 columns">			 
+            <div class="small-12 medium-6 columns">
+                <div class="field">
+                    <div class="row collapse">
+                        <div class="small-4 columns">
+                            <?php if (empty($receiveItem->purchase_order_id)): ?>
+                                <?php echo $form->labelEx($receiveItem, 'consignment_in_id', array('class' => 'prefix')); ?>
+                            <?php else: ?>
+                                <?php echo $form->labelEx($receiveItem, 'purchase_order_id', array('class' => 'prefix')); ?>
+                            <?php endif; ?>
+                        </div>
+                        <div class="small-8 columns">
+                            <?php if (empty($receiveItem->purchase_order_id)): ?>
+                                <?php echo CHtml::encode(CHtml::value($receiveItem, 'consignmentIn.consignment_in_number')); ?>
+                            <?php else: ?>
+                                <?php echo CHtml::encode(CHtml::value($receiveItem, 'purchaseOrder.purchase_order_no')); ?>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+                </div>			 
                 <div class="field">
                     <div class="row collapse">
                         <div class="small-4 columns">
@@ -49,6 +67,19 @@ $this->breadcrumbs=array(
                     </div>
                 </div>
 
+                <div id="supplier">
+                    <div class="field">
+                        <div class="row collapse">
+                            <div class="small-4 columns">
+                                <?php echo $form->labelEx($receiveItem, 'supplier_id', array('class' => 'prefix')); ?>
+                            </div>
+                            <div class="small-8 columns">
+                                <?php echo CHtml::encode(CHtml::value($receiveItem, 'purchaseOrder.supplier.name')); ?>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="field">
                     <div class="row collapse">
                         <div class="small-4 columns">
@@ -62,47 +93,63 @@ $this->breadcrumbs=array(
             </div>
             
             <div class="small-12 medium-6 columns">
-                <div id="purchase" >
-                    <div class="field">
-                        <div class="row collapse">
-                            <div class="small-4 columns">
-                                <?php echo $form->labelEx($receiveItem, 'recipient_branch_id', array('class' => 'prefix')); ?>
-                            </div>
-                            <div class="small-8 columns">
-                                <?php echo CHtml::encode(CHtml::value($receiveItem, 'recipientBranch.name')); ?>
-                            </div>
+                <div class="field">
+                    <div class="row collapse">
+                        <div class="small-4 columns">
+                            <?php echo $form->labelEx($receiveItem, 'supplier_delivery_number', array('class' => 'prefix')); ?>
+                        </div>
+                        <div class="small-8 columns">
+                            <?php echo CHtml::encode(CHtml::value($receiveItem, 'supplier_delivery_number')); ?>
                         </div>
                     </div>
-                    
-                    <div class="field">
-                        <div class="row collapse">
-                            <div class="small-4 columns">
-                                <?php if (empty($receiveItem->purchase_order_id)): ?>
-                                    <?php echo $form->labelEx($receiveItem, 'consignment_in_id', array('class' => 'prefix')); ?>
-                                <?php else: ?>
-                                    <?php echo $form->labelEx($receiveItem, 'purchase_order_id', array('class' => 'prefix')); ?>
-                                <?php endif; ?>
-                            </div>
-                            <div class="small-8 columns">
-                                <?php if (empty($receiveItem->purchase_order_id)): ?>
-                                    <?php echo CHtml::encode(CHtml::value($receiveItem, 'consignmentIn.consignment_in_number')); ?>
-                                <?php else: ?>
-                                    <?php echo CHtml::encode(CHtml::value($receiveItem, 'purchaseOrder.purchase_order_no')); ?>
-                                <?php endif; ?>
-                            </div>
-                        </div>
-                    </div>			
                 </div>
-                
-                <div id="supplier">
-                    <div class="field">
-                        <div class="row collapse">
-                            <div class="small-4 columns">
-                                <?php echo $form->labelEx($receiveItem, 'supplier_id', array('class' => 'prefix')); ?>
-                            </div>
-                            <div class="small-8 columns">
-                                <?php echo CHtml::encode(CHtml::value($receiveItem, 'purchaseOrder.supplier.name')); ?>
-                            </div>
+                <div class="field">
+                    <div class="row collapse">
+                        <div class="small-4 columns">
+                            <?php echo $form->labelEx($receiveItem, 'invoice_number', array('class' => 'prefix')); ?>
+                        </div>
+                        <div class="small-8 columns">
+                            <?php echo CHtml::encode(CHtml::value($receiveItem, 'invoice_number')); ?>
+                        </div>
+                    </div>
+                </div>
+                <div class="field">
+                    <div class="row collapse">
+                        <div class="small-4 columns">
+                            <?php echo $form->labelEx($receiveItem, 'invoice_date', array('class' => 'prefix')); ?>
+                        </div>
+                        <div class="small-8 columns">
+                            <?php echo CHtml::encode(CHtml::value($receiveItem, 'invoice_date')); ?>
+                        </div>
+                    </div>
+                </div>
+                <div class="field">
+                    <div class="row collapse">
+                        <div class="small-4 columns">
+                            <?php echo $form->labelEx($receiveItem, 'invoice_due_date', array('class' => 'prefix')); ?>
+                        </div>
+                        <div class="small-8 columns">
+                            <?php echo CHtml::encode(CHtml::value($receiveItem, 'invoice_due_date')); ?>
+                        </div>
+                    </div>
+                </div>
+                <div class="field">
+                    <div class="row collapse">
+                        <div class="small-4 columns">
+                            <?php echo $form->labelEx($receiveItem, 'invoice_tax_number', array('class' => 'prefix')); ?>
+                        </div>
+                        <div class="small-8 columns">
+                            <?php echo CHtml::encode(CHtml::value($receiveItem, 'invoice_tax_number')); ?>
+                        </div>
+                    </div>
+                </div>
+                <div class="field">
+                    <div class="row collapse">
+                        <div class="small-4 columns">
+                            <?php echo $form->labelEx($receiveItem, 'note', array('class' => 'prefix')); ?>
+                        </div>
+                        <div class="small-8 columns">
+                            <?php echo CHtml::encode(CHtml::value($receiveItem, 'note')); ?>
                         </div>
                     </div>
                 </div>
@@ -110,70 +157,6 @@ $this->breadcrumbs=array(
         </div>
         
         <br /><hr />
-        
-        <div>
-            <table>
-                <thead>
-                    <tr>
-                        <td>SJ #</td>
-                        <td>Invoice #</td>
-                        <td>Invoice Date</td>
-                        <td>Faktur Pajak #</td>
-                        <td>Jatuh Tempo</td>
-                        <td>Memo</td>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>
-                            <?php echo CHtml::activeTextField($receiveItem, 'supplier_delivery_number', array('maxlength' => 50, 'size' => 30)); ?>
-                            <?php echo CHtml::error($receiveItem, 'supplier_delivery_number'); ?>
-                        </td>
-                        <td>
-                            <?php echo CHtml::activeTextField($receiveItem, 'invoice_number', array('maxlength' => 50, 'size' => 30)); ?>
-                            <?php echo CHtml::error($receiveItem, 'invoice_number'); ?>
-                        </td>
-                        <td>
-                            <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(
-                                'model' => $receiveItem,
-                                'attribute' => "invoice_date",
-                                // additional javascript options for the date picker plugin
-                                'options' => array(
-                                    'dateFormat' => 'yy-mm-dd',
-                                    'changeMonth' => true,
-                                    'changeYear' => true,
-                                    'yearRange' => '2015:2050'
-                                ),
-                            )); ?>
-                            <?php echo CHtml::error($receiveItem, 'invoice_date'); ?>
-                        </td>
-                        <td>
-                            <?php echo CHtml::activeTextField($receiveItem, 'invoice_tax_number', array('maxlength' => 50, 'size' => 30)); ?>
-                            <?php echo CHtml::error($receiveItem, 'invoice_tax_number'); ?>
-                        </td>
-                        
-                        <td>
-                            <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(
-                                'model' => $receiveItem,
-                                'attribute' => "invoice_due_date",
-                                // additional javascript options for the date picker plugin
-                                'options' => array(
-                                    'dateFormat' => 'yy-mm-dd',
-                                    'changeMonth' => true,
-                                    'changeYear' => true,
-                                    'yearRange' => '2015:2050'
-                                ),
-                            )); ?>
-                            <?php echo CHtml::error($receiveItem, 'invoice_due_date'); ?>
-                        </td>
-                        <td>
-                            <?php echo CHtml::activeTextField($receiveItem, 'note', array('maxlength' => 50, 'size' => 30)); ?>
-                            <?php echo CHtml::error($receiveItem, 'note'); ?>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
         
         <div class="detail">
             <?php if (count($receiveItem->transactionReceiveItemDetails) != 0): ?>
@@ -233,18 +216,7 @@ $this->breadcrumbs=array(
                         <tr>
                             <td colspan="10" style="text-align: right">PEMBULATAN</td>
                             <td style="text-align: right">
-                                <?php echo CHtml::activeTextField($receiveItem, 'invoice_rounding_nominal', array(
-                                    'maxlength' => 50, 
-                                    'size' => 30,
-                                    'onchange' => CHtml::ajax(array(
-                                        'type' => 'POST',
-                                        'dataType' => 'JSON',
-                                        'url' => CController::createUrl('ajaxJsonGrandTotal', array('id' => $receiveItem->id)),
-                                        'success' => 'function(data) {
-                                            $("#grand_total").html(data.grandTotal);
-                                        }',
-                                    ))
-                                )); ?>
+                                <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($receiveItem, 'invoice_rounding_nominal'))); ?>
                             </td>
                         </tr>
                         <tr>
@@ -264,11 +236,12 @@ $this->breadcrumbs=array(
             <div class="small-12 medium-6 columns">			 
                 <div class="field buttons text-center">
                     <?php echo CHtml::submitButton('Cancel', array('name' => 'Cancel', 'confirm' => 'Are you sure you want to cancel?')); ?>
-                    <?php echo CHtml::submitButton($receiveItem->isNewRecord ? 'Create' : 'Save', array('class' => 'button cbutton', 'id' => 'save', 'confirm' => 'Are you sure you want to save?')); ?>
+                    <?php echo CHtml::submitButton('Approve', array('class' => 'button cbutton', 'name' => 'Approve', 'confirm' => 'Are you sure you want to approve?')); ?>
                 </div>
             </div>
         </div>
     <?php $this->endWidget(); ?>
 
     </div><!-- form -->
+</div>
 </div>

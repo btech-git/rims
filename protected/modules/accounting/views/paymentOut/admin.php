@@ -128,13 +128,13 @@ $('.search-form form').submit(function(){
         ),
         array(
             'class' => 'CButtonColumn',
-            'template' => '{view}{update}',
+            'template' => '{view}',
             'buttons' => array(
-                'update' => array(
-                    'label' => 'update',
-                    'url' => 'Yii::app()->createUrl("accounting/paymentOut/update", array("id"=>$data->id))',
-                    'visible' => 'Yii::app()->user->checkAccess("paymentOutEdit")', //$data->status_document != "Approved" && $data->status_document != "Rejected" && ',
-                ),
+//                'update' => array(
+//                    'label' => 'update',
+//                    'url' => 'Yii::app()->createUrl("accounting/paymentOut/update", array("id"=>$data->id))',
+//                    'visible' => 'Yii::app()->user->checkAccess("paymentOutEdit")', //$data->status_document != "Approved" && $data->status_document != "Rejected" && ',
+//                ),
                 'view' => array(
                     'label' => 'view',
                     'url' => 'Yii::app()->createUrl("accounting/paymentOut/view", array("id"=>$data->id))',

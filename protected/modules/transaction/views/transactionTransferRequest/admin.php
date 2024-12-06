@@ -12,18 +12,6 @@ $this->menu = array(
     array('label' => 'Create TransactionTransferRequest', 'url' => array('create')),
 );
 
-// Yii::app()->clientScript->registerScript('search', "
-// $('.search-button').click(function(){
-// 	$('.search-form').toggle();
-// 	return false;
-// });
-// $('.search-form form').submit(function(){
-// 	$('#transaction-transfer-request-grid').yiiGridView('update', {
-// 		data: $(this).serialize()
-// 	});
-// 	return false;
-// });
-// ");
 Yii::app()->clientScript->registerScript('search', "
 	$('.search-button').click(function(){
 		$('.search-form').slideToggle(600);
@@ -51,11 +39,6 @@ Yii::app()->clientScript->registerScript('search', "
         <h1>Manage Transaction Transfer Request</h1>
         <div class="search-bar">
             <div class="clearfix button-bar">
-                <!--<div class="left clearfix bulk-action">
-                        <span class="checkbox"><span class="fa fa-reply fa-rotate-270"></span></span>
-                        <input type="submit" value="Archive" class="button secondary cbutton" name="archive">         
-                        <input type="submit" value="Delete" class="button secondary cbutton" name="delete">      
-                </div>-->
                 <a href="#" class="search-button right button cbutton secondary">Advanced Search</a>
                 <div class="clearfix"></div>
                 <div class="search-form" style="display:none">
@@ -94,27 +77,6 @@ Yii::app()->clientScript->registerScript('search', "
                         'name' => 'branch_name',
                         'value' => '$data->requesterBranch->name'
                     ),
-                    /*
-                      'requester_branch_id',
-                      'approved_by',
-                      'destination_id',
-                      'destination_branch_id',
-                      'total_quantity',
-                      'total_price',
-                     */
-//                    array(
-//                        'class' => 'CButtonColumn',
-//                        'template' => '{edit}',
-//                        'buttons' => array
-//                            (
-//                            'edit' => array
-//                                (
-//                                'label' => 'edit',
-//                                'url' => 'Yii::app()->createUrl("transaction/transferRequest/update", array("id"=>$data->id))',
-//                                'visible' => '$data->status_document != "Approved" && $data->status_document != "Rejected" && Yii::app()->user->checkAccess("transferRequestEdit")',
-//                            ),
-//                        ),
-//                    ),
                 ),
             ));
             ?>

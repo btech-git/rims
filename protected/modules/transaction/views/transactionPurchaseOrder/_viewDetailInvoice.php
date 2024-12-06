@@ -31,10 +31,29 @@
                     <td><?php echo $receiveHeader->supplier_delivery_number; ?></td>
                 </tr>
                 <tr>
-                    <td colspan="2">
-                        <?php echo CHtml::link('<span class="fa fa-plus"></span>Add / Edit Supporting Docs', Yii::app()->baseUrl . '/transaction/transactionReceiveItem/addInvoice?id=' . $receiveHeader->id, array('visible' => Yii::app()->user->checkAccess("transaction.transactionReceiveItem.update"))) ?>
-                    </td>
+                    <td width="15%">Status</td>
+                    <td><?php echo CHtml::encode(CHtml::value($receiveHeader, 'approvalStatus')); ?></td>
                 </tr>
+                <?php if ($receiveHeader->is_approved_invoice == 1): ?>
+                    <tr>
+                        <td width="15%">Approved by</td>
+                        <td><?php echo CHtml::encode(CHtml::value($receiveHeader, 'userIdApprovalInvoice.username')); ?></td>
+                    </tr>
+                    <tr>
+                        <td width="15%">Approval Date</td>
+                        <td><?php echo Yii::app()->dateFormatter->format("d MMMM yyyy", $receiveHeader->date_approval_invoice); ?></td>
+                    </tr>
+                    <tr>
+                        <td width="15%">Approval Time</td>
+                        <td><?php echo Yii::app()->dateFormatter->format("H:i:s", $receiveHeader->time_approval_invoice); ?></td>
+                    </tr>
+                <?php else: ?>
+                    <tr>
+                        <td colspan="2" style="text-align: center">
+                            <?php echo CHtml::link('<span class="fa fa-dollar"></span>Approve Invoice', Yii::app()->baseUrl . '/transaction/transactionReceiveItem/approvalInvoice?id=' . $receiveHeader->id) ?>
+                        </td>
+                    </tr>
+                <?php endif; ?>
                 <tr>
                     <td colspan="2">
                         <table>

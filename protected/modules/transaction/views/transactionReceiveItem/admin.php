@@ -91,17 +91,17 @@ Yii::app()->clientScript->registerScript('search', "
                         'filter' => false,
                         'value' => 'Yii::app()->dateFormatter->format("d MMM yyyy HH:mm:ss", $data->created_datetime)'
                     ),
-                    array(
-                        'class'=>'CButtonColumn',
-                        'template'=>'{edit}',
-                        'buttons'=>array(
-                            'edit' => array(
-                                'label'=>'edit',
-                                'url'=>'Yii::app()->createUrl("transaction/transactionReceiveItem/update", array("id"=>$data->id))',
-                                'visible'=>'Yii::app()->user->checkAccess("receiveItemEdit")', //count(MovementInHeader::model()->findAllByAttributes(array("receive_item_id"=>$data->id))) == 0 &&  && ($data->request_type != "Retail Sales")'
-                            ),
-                        ),
-                    ),
+//                    array(
+//                        'class'=>'CButtonColumn',
+//                        'template'=>'{edit}',
+//                        'buttons'=>array(
+//                            'edit' => array(
+//                                'label'=>'edit',
+//                                'url'=>'Yii::app()->createUrl("transaction/transactionReceiveItem/update", array("id"=>$data->id))',
+//                                'visible'=>'Yii::app()->user->checkAccess("receiveItemEdit")', //count(MovementInHeader::model()->findAllByAttributes(array("receive_item_id"=>$data->id))) == 0 &&  && ($data->request_type != "Retail Sales")'
+//                            ),
+//                        ),
+//                    ),
                 ),
             )); ?>
         </div>

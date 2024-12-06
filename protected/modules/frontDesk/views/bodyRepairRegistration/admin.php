@@ -160,18 +160,18 @@ $('.search-form form').submit(function(){
             ),
             array(
                 'class' => 'CButtonColumn',
-                'template' => '{views} {edit}',
+                'template' => '{views}',
                 'buttons' => array(
                     'views' => array(
                         'label' => 'view',
                         'url' => 'Yii::app()->createUrl("frontDesk/bodyRepairRegistration/view", array("id"=>$data->id))',
                         'visible' => 'Yii::app()->user->checkAccess("bodyRepairCreate") || Yii::app()->user->checkAccess("bodyRepairEdit")',
                     ),
-                    'edit' => array(
-                        'label' => 'edit',
-                        'url' => 'Yii::app()->createUrl("frontDesk/bodyRepairRegistration/update", array("id"=>$data->id))',
-                        'visible' => 'Yii::app()->user->checkAccess("bodyRepairEdit")', //'$data->status != "Finished" && empty($data->invoiceHeaders) && ',
-                    ),
+//                    'edit' => array(
+//                        'label' => 'edit',
+//                        'url' => 'Yii::app()->createUrl("frontDesk/bodyRepairRegistration/update", array("id"=>$data->id))',
+//                        'visible' => 'Yii::app()->user->checkAccess("bodyRepairEdit")', //'$data->status != "Finished" && empty($data->invoiceHeaders) && ',
+//                    ),
                 ),
             ),
         ),

@@ -126,13 +126,13 @@ Yii::app()->clientScript->registerScript('search', "
                     ),
                     array(
                         'class'=>'CButtonColumn',
-                        'template'=>'{edit} {print}',
+                        'template'=>'{print}',
                         'buttons'=>array (
-                            'edit' => array (
-                                'label'=>'edit',
-                                'url'=>'Yii::app()->createUrl("transaction/transactionPurchaseOrder/update", array("id"=>$data->id))',
-                                'visible'=> 'Yii::app()->user->checkAccess("purchaseOrderEdit")', //$data->status_document != "Approved" && $data->status_document != "Rejected" && ',
-                            ),
+//                            'edit' => array (
+//                                'label'=>'edit',
+//                                'url'=>'Yii::app()->createUrl("transaction/transactionPurchaseOrder/update", array("id"=>$data->id))',
+//                                'visible'=> 'Yii::app()->user->checkAccess("purchaseOrderEdit")', //$data->status_document != "Approved" && $data->status_document != "Rejected" && ',
+//                            ),
                             'print' => array (
                                 'label'=>'print',
                                 'url'=>'Yii::app()->createUrl("transaction/transactionPurchaseOrder/pdf", array("id"=>$data->id))',

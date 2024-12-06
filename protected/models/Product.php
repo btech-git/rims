@@ -41,6 +41,11 @@
  * @property integer $is_approved
  * @property integer $user_id_approval
  * @property string $date_approval
+ * @property string $time_approval
+ * @property integer $is_rejected
+ * @property string $date_reject
+ * @property string $time_reject
+ * @property integer $user_id_reject
  *
  * The followings are the available model relations:
  * @property ConsignmentInDetail[] $consignmentInDetails
@@ -86,6 +91,7 @@
  * @property User $user
  * @property UserIdApproval $userIdApproval
  * @property UserIdEdit $userIdEdit
+ * @property UserIdReject $userIdReject
  */
 class Product extends CActiveRecord {
 
@@ -118,17 +124,17 @@ class Product extends CActiveRecord {
         // will receive user inputs.
         return array(
             array('code, manufacturer_code, name, production_year, brand_id, extension, product_master_category_id, product_sub_master_category_id, product_sub_category_id, retail_price, minimum_stock, margin_type, ppn, unit_id, user_id, minimum_selling_price', 'required'),
-            array('production_year, brand_id, sub_brand_id, sub_brand_series_id, product_master_category_id, product_sub_master_category_id, product_sub_category_id, vehicle_car_make_id, vehicle_car_model_id, stock, minimum_stock, margin_type, margin_amount, ppn, unit_id, unit_id_conversion, is_approved, user_id_approval, user_id_edit, user_id', 'numerical', 'integerOnly' => true),
+            array('production_year, brand_id, sub_brand_id, sub_brand_series_id, product_master_category_id, product_sub_master_category_id, product_sub_category_id, vehicle_car_make_id, vehicle_car_model_id, stock, minimum_stock, margin_type, margin_amount, ppn, unit_id, unit_id_conversion, is_approved, is_rejected, user_id_approval, user_id_edit, user_id, user_id_reject', 'numerical', 'integerOnly' => true),
             array('code', 'length', 'max' => 20),
             array('manufacturer_code, barcode, extension', 'length', 'max' => 50),
             array('manufacturer_code', 'unique', 'on' => 'insert'),
             array('name', 'length', 'max' => 30),
             array('purchase_price, recommended_selling_price, hpp, retail_price, status, minimum_selling_price, unit_conversion_multiplier', 'length', 'max' => 10),
             array('is_usable', 'length', 'max' => 5),
-            array('date_posting, date_approval, date_edit', 'safe'),
+            array('date_posting, date_approval, date_edit, time_approval, date_reject, time_reject', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, code, manufacturer_code, barcode, name, user_id_edit, date_edit, description, production_year, brand_id, sub_brand_id, sub_brand_series_id, extension, product_master_category_id, product_sub_master_category_id, product_sub_category_id, vehicle_car_make_id, vehicle_car_model_id, purchase_price, recommended_selling_price, hpp, retail_price, stock, minimum_selling_price, minimum_stock, margin_type, margin_amount, is_usable, status, product_master_category_code, product_master_category_name, product_sub_master_category_code, product_sub_master_category_name, product_sub_category_code, product_sub_category_name,product_brand_name,product_supplier,findkeyword, ppn, product_sub_brand_name, product_sub_brand_series_name, unit_id, date_posting, user_id, is_approved, user_id_approval, date_approval, user_id, unit_conversion_multiplier, unit_id_conversion', 'safe', 'on' => 'search'),
+            array('id, code, manufacturer_code, barcode, name, user_id_edit, date_edit, description, production_year, brand_id, sub_brand_id, sub_brand_series_id, extension, product_master_category_id, product_sub_master_category_id, product_sub_category_id, vehicle_car_make_id, vehicle_car_model_id, purchase_price, recommended_selling_price, hpp, retail_price, stock, minimum_selling_price, minimum_stock, margin_type, margin_amount, is_usable, status, product_master_category_code, product_master_category_name, product_sub_master_category_code, product_sub_master_category_name, product_sub_category_code, product_sub_category_name,product_brand_name,product_supplier,findkeyword, ppn, product_sub_brand_name, product_sub_brand_series_name, unit_id, date_posting, user_id, is_approved, user_id_approval, date_approval, user_id, unit_conversion_multiplier, unit_id_conversion, user_id_reject, is_rejected, time_approval, date_reject, time_reject', 'safe', 'on' => 'search'),
         );
     }
 
@@ -175,6 +181,7 @@ class Product extends CActiveRecord {
             'user' => array(self::BELONGS_TO, 'Users', 'user_id'),
             'userIdApproval' => array(self::BELONGS_TO, 'Users', 'user_id_approval'),
             'userIdEdit' => array(self::BELONGS_TO, 'Users', 'user_id_edit'),
+            'userIdReject' => array(self::BELONGS_TO, 'Users', 'user_id_reject'),
             'registrationProducts' => array(self::HAS_MANY, 'RegistrationProduct', 'product_id'),
         );
     }
@@ -226,18 +233,6 @@ class Product extends CActiveRecord {
         );
     }
 
-    /**
-     * Retrieves a list of models based on the current search/filter conditions.
-     *
-     * Typical usecase:
-     * - Initialize the model fields with values from filter form.
-     * - Execute this method to get CActiveDataProvider instance which will filter
-     * models according to data in model fields.
-     * - Pass data provider to CGridView, CListView or any similar widget.
-     *
-     * @return CActiveDataProvider the data provider that can return the models
-     * based on the search/filter conditions.
-     */
     public function search() {
         // @todo Please modify the following code to remove attributes that should not be searched.
 
@@ -305,18 +300,13 @@ class Product extends CActiveRecord {
             $criteria->compare('productMasterCategory.name', $key, true, 'AND');
             $criteria->compare('productSubMasterCategory.code', $key, true, 'AND');
             $criteria->compare('productSubMasterCategory.name', $key, true, 'AND');
-            // $criteria->compare('productSubCategory.code',$key,true,'OR');
-            // $criteria->compare('productSubCategory.name',$key,true,'OR');
 
             $criteria->compare('brand.name', $key, true, 'AND');
         }
-        // $criteria->compare('productSubCategory.code',$this->findkeyword,true,'OR');
-        // $criteria->compare('productSubCategory.name',$this->findkeyword,true,'OR');
 
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
             'sort' => array(
-                /* "defaultOrder"=>"t.product_master_category_id DESC, product_sub_master_category_id ASC, product_sub_category_id ASC, production_year DESC", */
                 "defaultOrder" => "t.status ASC, t.name ASC",
                 'attributes' => array(
                     'product_master_category_code' => array(
@@ -339,10 +329,6 @@ class Product extends CActiveRecord {
                         'asc' => 'productSubMasterCategory.code',
                         'desc' => 'productSubMasterCategory.code DESC'
                     ),
-                    // 'product_sub_category_name' => array(
-                    // 	'asc' => 'productSubCategory.name',
-                    // 	'desc' => 'productSubCategory.name DESC'
-                    // ),
                     '*'
                 )
             ),

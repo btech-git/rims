@@ -375,7 +375,7 @@ class TransactionSalesOrder extends MonthlyTransactionActiveRecord {
         $totalRemaining = 0;
 
         foreach ($this->transactionSalesOrderDetails as $detail) {
-            $totalRemaining += $detail->remainingQuantityDelivery;
+            $totalRemaining += $detail->quantityDeliveryLeft;
         }
 
         return ($totalRemaining == 0) ? 'Completed' : 'Pending';

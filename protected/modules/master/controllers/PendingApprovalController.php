@@ -181,8 +181,12 @@ class PendingApprovalController extends Controller {
         $customer = Customer::model()->findByPk($customerId);
         $customer->status = 'Active';
         $customer->is_approved = 1;
+        $service->is_rejected = 0;
+        $service->user_id_approval = Yii::app()->user->id;
+        $service->date_approval = date('Y-m-d');
+        $service->time_approval = date('H:i:s');
 
-        if ($customer->update(array('is_approved', 'status'))) {
+        if ($customer->save(false)) {
             $this->redirect(array('index'));
         }
     }
@@ -190,9 +194,13 @@ class PendingApprovalController extends Controller {
     public function actionCustomerReject($customerId) {
         $customer = Coa::model()->findByPk($customerId);
         $customer->status = 'Reject';
-        $customer->is_approved = 2;
+        $customer->is_approved = 0;
+        $customer->is_rejected = 1;
+        $customer->user_id_reject = Yii::app()->user->id;
+        $customer->date_reject = date('Y-m-d');
+        $customer->time_reject = date('H:i:s');
 
-        if ($customer->update(array('is_approved', 'status'))) {
+        if ($customer->save(false)) {
             $this->redirect(array('index'));
         }
     }
@@ -201,8 +209,12 @@ class PendingApprovalController extends Controller {
         $product = Product::model()->findByPk($productId);
         $product->status = 'Active';
         $product->is_approved = 1;
+        $service->is_rejected = 0;
+        $service->user_id_approval = Yii::app()->user->id;
+        $service->date_approval = date('Y-m-d');
+        $service->time_approval = date('H:i:s');
 
-        if ($product->update(array('is_approved', 'status'))) {
+        if ($product->save(false)) {
             $warehouses = Warehouse::model()->findAllByAttributes(array('status' => 'Active', 'is_approved' => 1)); 
             foreach ($warehouses as $warehouse) {
                 $inventory = new Inventory();
@@ -224,9 +236,13 @@ class PendingApprovalController extends Controller {
     public function actionProductReject($productId) {
         $product = Product::model()->findByPk($productId);
         $product->status = 'Reject';
-        $product->is_approved = 2;
+        $product->is_approved = 0;
+        $service->is_rejected = 1;
+        $service->user_id_reject = Yii::app()->user->id;
+        $service->date_reject = date('Y-m-d');
+        $service->time_reject = date('H:i:s');
 
-        if ($product->update(array('is_approved', 'status'))) {
+        if ($product->save(false)) {
             $this->redirect(array('index'));
         }
     }
@@ -235,6 +251,7 @@ class PendingApprovalController extends Controller {
         $service = Service::model()->findByPk($serviceId);
         $service->status = 'Active';
         $service->is_approved = 1;
+        $service->is_rejected = 0;
         $service->user_id_approval = Yii::app()->user->id;
         $service->date_approval = date('Y-m-d');
         $service->time_approval = date('H:i:s');
@@ -247,6 +264,7 @@ class PendingApprovalController extends Controller {
     public function actionServiceReject($serviceId) {
         $service = Service::model()->findByPk($serviceId);
         $service->status = 'Reject';
+        $service->is_approved = 0;
         $service->is_rejected = 1;
         $service->user_id_reject = Yii::app()->user->id;
         $service->date_reject = date('Y-m-d');
@@ -338,5 +356,104 @@ class PendingApprovalController extends Controller {
             echo CJSON::encode($object);
         }
     }
+    
+    public function actionAjaxApproveAllProduct($ids) {
 
+        if (Yii::app()->request->isAjaxRequest) {
+            $products = Product::model()->findAllByAttributes(array('id' => explode(',', $ids)));
+            $valid = true;
+            foreach ($products as $product) {
+                $product->is_approved = 1;
+                $product->user_id_approval = Yii::app()->user->id;
+                $product->date_approval = date('Y-m-d');
+                $product->time_approval = date('H:i:s');
+                $valid = $valid && $product->save(false);
+                
+                if ($valid) {
+                    $warehouses = Warehouse::model()->findAllByAttributes(array('status' => 'Active', 'is_approved' => 1)); 
+                    foreach ($warehouses as $warehouse) {
+                        $inventory = new Inventory();
+                        $inventory->product_id = $product->id;
+                        $inventory->warehouse_id = $warehouse->id;
+                        $inventory->total_stock = 0;
+                        $inventory->minimal_stock = 0;
+                        $inventory->status = 'Active';
+                        $inventory->category = NULL;
+                        $inventory->inventory_result = NULL;
+
+                        $inventory->save();
+                    }
+                }
+            }
+
+            $object = array(
+                'status' => $valid ? 'OK' : 'Not OK',
+            );
+
+            echo CJSON::encode($object);
+        }
+    }
+    
+    public function actionAjaxRejectAllProduct($ids) {
+
+        if (Yii::app()->request->isAjaxRequest) {
+            $products = Product::model()->findAllByAttributes(array('id' => explode(',', $ids)));
+            $valid = true;
+            foreach ($products as $product) {
+                $product->is_rejected = 1;
+                $product->user_id_reject = Yii::app()->user->id;
+                $product->date_reject = date('Y-m-d');
+                $product->time_reject = date('H:i:s');
+                $valid = $valid && $product->save(false);
+            }
+
+            $object = array(
+                'status' => $valid ? 'OK' : 'Not OK',
+            );
+
+            echo CJSON::encode($object);
+        }
+    }
+    
+    public function actionAjaxApproveAllCustomer($ids) {
+
+        if (Yii::app()->request->isAjaxRequest) {
+            $customers = Customer::model()->findAllByAttributes(array('id' => explode(',', $ids)));
+            $valid = true;
+            foreach ($customers as $customer) {
+                $customer->is_approved = 1;
+                $customer->user_id_approval = Yii::app()->user->id;
+                $customer->date_approval = date('Y-m-d');
+                $customer->time_approval = date('H:i:s');
+                $valid = $valid && $customer->save(false);
+            }
+
+            $object = array(
+                'status' => $valid ? 'OK' : 'Not OK',
+            );
+
+            echo CJSON::encode($object);
+        }
+    }
+    
+    public function actionAjaxRejectAllCustomer($ids) {
+
+        if (Yii::app()->request->isAjaxRequest) {
+            $customers = Customer::model()->findAllByAttributes(array('id' => explode(',', $ids)));
+            $valid = true;
+            foreach ($customers as $customer) {
+                $customer->is_rejected = 1;
+                $customer->user_id_reject = Yii::app()->user->id;
+                $customer->date_reject = date('Y-m-d');
+                $customer->time_reject = date('H:i:s');
+                $valid = $valid && $customer->save(false);
+            }
+
+            $object = array(
+                'status' => $valid ? 'OK' : 'Not OK',
+            );
+
+            echo CJSON::encode($object);
+        }
+    }
 }

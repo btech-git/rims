@@ -105,6 +105,43 @@ class MaterialRequestController extends Controller {
         ));
     }
 
+    public function actionCreateIndependent() {
+        $materialRequest = $this->instantiate(null);
+        $materialRequest->header->user_id = Yii::app()->user->id;
+        $materialRequest->header->transaction_date = date('Y-m-d');
+        $materialRequest->header->transaction_time = date('H:i:s');
+        $materialRequest->header->created_datetime = date('Y-m-d H:i:s');
+        $materialRequest->header->status_document = 'Draft';
+        $materialRequest->header->status_progress = 'NO MOVEMENT';
+        $materialRequest->header->branch_id = Yii::app()->user->branch_id;
+
+        $branches = Branch::model()->findAll();
+        
+        $product = Search::bind(new Product('search'), isset($_GET['Product']) ? $_GET['Product'] : array());
+        $productDataProvider = $product->search();
+        $productDataProvider->criteria->compare('t.product_master_category_id', 7);
+        $productDataProvider->criteria->compare('t.status', 'Active');
+
+        if (isset($_POST['Submit']) && IdempotentManager::check()) {
+            $this->loadState($materialRequest);
+            $materialRequest->generateCodeNumber(Yii::app()->dateFormatter->format('M', strtotime($materialRequest->header->transaction_date)), Yii::app()->dateFormatter->format('yyyy', strtotime($materialRequest->header->transaction_date)), $materialRequest->header->branch_id);
+
+            if ($materialRequest->save(Yii::app()->db)) {
+                $this->redirect(array('view', 'id' => $materialRequest->header->id));
+            }
+        }
+
+        if (isset($_POST['Cancel']))
+            $this->redirect(array('admin'));
+
+        $this->render('createIndependent', array(
+            'materialRequest' => $materialRequest,
+            'product' => $product,
+            'productDataProvider' => $productDataProvider,
+            'branches' => $branches,
+        ));
+    }
+
     public function actionUpdate($id) {
         $materialRequest = $this->instantiate($id);
         $registrationTransaction = RegistrationTransaction::model()->findByPk($materialRequest->header->registration_transaction_id);

@@ -139,18 +139,18 @@ Yii::app()->clientScript->registerScript('search', "
             ),
             array(
                 'class' => 'CButtonColumn',
-                'template' => '{views} {edit} {finish}',
+                'template' => '{views} {finish}',
                 'buttons' => array(
                     'views' => array(
                         'label' => 'view',
                         'url' => 'Yii::app()->createUrl("frontDesk/generalRepairRegistration/view", array("id"=>$data->id))',
                         'visible' => 'Yii::app()->user->checkAccess("generalRepairCreate") || Yii::app()->user->checkAccess("generalRepairEdit")'
                     ),
-                    'edit' => array(
-                        'label' => 'edit',
-                        'url' => 'Yii::app()->createUrl("frontDesk/generalRepairRegistration/update", array("id"=>$data->id))',
-                        'visible' => 'Yii::app()->user->checkAccess("generalRepairEdit")', //' && $data->status != "Finished" && empty($data->invoiceHeaders)',
-                    ),
+//                    'edit' => array(
+//                        'label' => 'edit',
+//                        'url' => 'Yii::app()->createUrl("frontDesk/generalRepairRegistration/update", array("id"=>$data->id))',
+//                        'visible' => 'Yii::app()->user->checkAccess("generalRepairEdit")', //' && $data->status != "Finished" && empty($data->invoiceHeaders)',
+//                    ),
                     'finish' => array(
                         'label' => 'finish',
                         'url' => 'Yii::app()->createUrl("frontDesk/generalRepairRegistration/finishTransaction", array("id"=>$data->id))',
