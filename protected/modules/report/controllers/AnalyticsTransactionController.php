@@ -31,6 +31,7 @@ class AnalyticsTransactionController extends Controller {
             $requestCriteria = new CDbCriteria;
             $requestCriteria->addCondition(" main_branch_id = " . $branchId . " AND DATE(request_order_date) >= (NOW() - INTERVAL 7 DAY)");
             $requestOrder = TransactionRequestOrder::model()->findAll($requestCriteria);
+            
             $purchaseCriteria = new CDbCriteria;
             $purchaseCriteria->addCondition(" main_branch_id = " . $branchId . " AND DATE(purchase_order_date) >= (NOW() - INTERVAL 7 DAY)");
             $purchase = TransactionPurchaseOrder::model()->findAll($purchaseCriteria);
@@ -62,7 +63,6 @@ class AnalyticsTransactionController extends Controller {
             $movementInCriteria = new CDbCriteria;
             $movementInCriteria->addCondition(" branch_id = " . $branchId . " AND DATE(date_posting) >= (NOW() - INTERVAL 7 DAY)");
             $movementIn = MovementInHeader::model()->findAll($movementInCriteria);
-
         }
             
         $totalReceivables = InvoiceHeader::totalReceivables();

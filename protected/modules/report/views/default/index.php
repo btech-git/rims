@@ -529,6 +529,16 @@
                                         'url' => array('/report/userPerformance/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('director')
                                     ),
+                                    array(
+                                        'label' => 'Laporan User Transaction Input', 
+                                        'url' => array('/report/userPerformanceDetail/summary'), 
+                                        'visible' => Yii::app()->user->checkAccess('director')
+                                    ),
+                                    array(
+                                        'label' => 'Laporan Sales Retail Summary', 
+                                        'url' => array('/report/saleTransactionSummary/summary'), 
+                                        'visible' => Yii::app()->user->checkAccess('director')
+                                    ),
                                 ),
                             )); ?>
                         <?php //endif; ?>

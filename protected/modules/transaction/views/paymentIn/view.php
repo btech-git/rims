@@ -229,37 +229,6 @@ $this->menu = array(
                 </div>
             </fieldset>
             
-<!--                    <fieldset>
-                        <legend>Payment History</legend>
-                        <div class="large-12 columns">
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <th>Number</th>
-                                        <th>Date</th>
-                                        <th>Type</th>
-                                        <th>Amount</th>
-                                        <th>Status</th>
-                                        <th>Note</th>
-                                    </tr>
-                                </thead>
-                                
-                                <tbody>
-                                    <?php /*foreach($invoice->paymentIns as $paymentIn): ?>
-                                        <tr>
-                                            <td><?php echo CHtml::encode(CHtml::value($paymentIn, 'payment_number')); ?></td>
-                                            <td><?php echo CHtml::encode(CHtml::value($paymentIn, 'payment_date')); ?></td>
-                                            <td><?php echo CHtml::encode(CHtml::value($paymentIn, 'paymentType.name')); ?></td>
-                                            <td><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($paymentIn, 'payment_amount'))); ?></td>
-                                            <td><?php echo CHtml::encode(CHtml::value($paymentIn, 'status')); ?></td>
-                                            <td><?php echo CHtml::encode(CHtml::value($paymentIn, 'note')); ?></td>
-                                        </tr>
-                                    <?php endforeach;*/ ?>
-                                </tbody>
-                            </table>
-                        </div>
-                    </fieldset>-->
-
             <?php if (!empty($model->customer_id)): ?>
                 <fieldset>
                     <legend>Customer</legend>
@@ -508,11 +477,6 @@ $this->menu = array(
                                 <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($model, 'discount_product_amount'))); ?></td>
                                 <td></td>
                             </tr>
-<!--                            <tr>
-                                <td style="text-align: right" colspan="3">Disc Pendapatan Jasa/Service</td>
-                                <td style="text-align: right"><?php //echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($model, 'discount_service_amount'))); ?></td>
-                                <td></td>
-                            </tr>-->
                             <tr>
                                 <td style="text-align: right" colspan="5">Beban Administrasi Bank</td>
                                 <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($model, 'bank_administration_fee'))); ?></td>
@@ -578,12 +542,6 @@ $this->menu = array(
                                 <?php echo CHtml::image($src, $model->payment_number . "Image"); ?>
                             </div>
                         </div>
-
-<!--                        <div class="small-8 columns">
-                            <div style="padding:.375rem .5rem; border:1px solid #ccc; background:#fff; font-size:.8125rem; line-height:1.4; margin-bottom:.5rem;">
-                                <?php //echo (Yii::app()->baseUrl . '/images/uploads/paymentIn/' . $postImage->filename); ?>
-                            </div>
-                        </div>-->
                     </div>
                 <?php endforeach; ?>
             </fieldset>
