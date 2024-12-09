@@ -2,10 +2,12 @@
 
 class TransferRequest extends CComponent {
 
+    public $actionType;
     public $header;
     public $details;
 
-    public function __construct($header, array $details) {
+    public function __construct($actionType, $header, array $details) {
+        $this->actionType = $actionType;
         $this->header = $header;
         $this->details = $details;
     }
@@ -173,9 +175,37 @@ class TransferRequest extends CComponent {
             $valid = $valid && $detail->save(false);
         }
 
+        $this->saveTransactionLog();
+        
         return $valid;
     }
 
+    public function saveTransactionLog() {
+        $transactionLog = new TransactionLog();
+        $transactionLog->transaction_number = $this->header->transfer_request_no;
+        $transactionLog->transaction_date = $this->header->transfer_request_date;
+        $transactionLog->log_date = date('Y-m-d');
+        $transactionLog->log_time = date('H:i:s');
+        $transactionLog->table_name = $this->header->tableName();
+        $transactionLog->table_id = $this->header->id;
+        $transactionLog->user_id = Yii::app()->user->id;
+        $transactionLog->username = Yii::app()->user->username;
+        $transactionLog->controller_class = Yii::app()->controller->module->id  . '/' . Yii::app()->controller->id;
+        $transactionLog->action_name = Yii::app()->controller->action->id;
+        $transactionLog->action_type = $this->actionType;
+        
+        $newData = $this->header->attributes;
+        
+        $newData['transactionTransferRequestDetails'] = array();
+        foreach($this->details as $detail) {
+            $newData['transactionTransferRequestDetails'][] = $detail->attributes;
+        }
+        
+        $transactionLog->new_data = json_encode($newData);
+
+        $transactionLog->save();
+    }
+    
     public function getGrandTotal() {
         $total = 0.00;
 

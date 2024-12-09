@@ -180,7 +180,7 @@ class TransactionSentRequestController extends Controller {
             'criteria' => $productCriteria,
         ));
 
-        $sentRequest = $this->instantiate(null);
+        $sentRequest = $this->instantiate(null, 'create');
         $sentRequest->header->sent_request_date = date('Y-m-d');
         $sentRequest->header->requester_branch_id = Yii::app()->user->branch_id;
         $this->performAjaxValidation($sentRequest->header);
@@ -211,7 +211,7 @@ class TransactionSentRequestController extends Controller {
      * @param integer $id the ID of the model to be updated
      */
     public function actionUpdate($id) {
-        $sentRequest = $this->instantiate($id);
+        $sentRequest = $this->instantiate($id, 'update');
         $sentRequest->header->user_id_updated = Yii::app()->user->id;
         $sentRequest->header->updated_datetime = date('Y-m-d H:i:s');
         $this->performAjaxValidation($sentRequest->header);
@@ -388,7 +388,7 @@ class TransactionSentRequestController extends Controller {
      */
     public function actionDelete($id) {
         if (Yii::app()->request->isPostRequest) {
-            $model = $this->instantiate($id);
+            $model = $this->instantiate($id, '');
 
             if ($model->header->purchaseReturnHeaders != NULL || $model->header->receiveHeaders != NULL) {
                 Yii::app()->user->setFlash('message', 'Cannot DELETE this transaction');
@@ -480,7 +480,7 @@ class TransactionSentRequestController extends Controller {
 
     public function actionAjaxGetTotal($id) {
         if (Yii::app()->request->isAjaxRequest) {
-            $sentRequest = $this->instantiate($id);
+            $sentRequest = $this->instantiate($id, '');
             $this->loadState($sentRequest);
 
             $total = 0;
@@ -498,7 +498,7 @@ class TransactionSentRequestController extends Controller {
 
     public function actionAjaxJsonTotal($id, $index) {
         if (Yii::app()->request->isAjaxRequest) {
-            $sentRequest = $this->instantiate($id);
+            $sentRequest = $this->instantiate($id, '');
             $this->loadState($sentRequest);
 
             $totalQuantity = CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $sentRequest->totalQuantity));
@@ -535,7 +535,7 @@ class TransactionSentRequestController extends Controller {
                 'criteria' => $productCriteria,
             ));
 
-            $sentRequest = $this->instantiate($id);
+            $sentRequest = $this->instantiate($id, '');
             $this->loadState($sentRequest);
 
             $sentRequest->addDetail($productId);
@@ -572,7 +572,7 @@ class TransactionSentRequestController extends Controller {
                 'criteria' => $productCriteria,
             ));
 
-            $sentRequest = $this->instantiate($id);
+            $sentRequest = $this->instantiate($id, '');
             $this->loadState($sentRequest);
 
             $sentRequest->removeDetailAt($index);

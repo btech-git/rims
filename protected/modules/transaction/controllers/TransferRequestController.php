@@ -38,7 +38,7 @@ class TransferRequestController extends Controller {
     }
 
     public function actionCreate() {
-        $transferRequest = $this->instantiate(null);
+        $transferRequest = $this->instantiate(null, 'create');
         $transferRequest->header->requester_id = Yii::app()->user->id;
         $transferRequest->header->transfer_request_date = date('Y-m-d');
         $transferRequest->header->created_datetime = date('Y-m-d H:i:s');
@@ -72,7 +72,7 @@ class TransferRequestController extends Controller {
     }
 
     public function actionUpdate($id) {
-        $transferRequest = $this->instantiate($id);
+        $transferRequest = $this->instantiate($id, 'update');
         $transferRequest->header->user_id_updated = Yii::app()->user->id;
         $transferRequest->header->updated_datetime = date('Y-m-d H:i:s');
 
@@ -392,7 +392,7 @@ class TransferRequestController extends Controller {
 
     public function actionDelete($id) {
         if (Yii::app()->request->isPostRequest) {
-            $model = $this->instantiate($id);
+            $model = $this->instantiate($id, '');
 
             if ($model->header->purchaseReturnHeaders != NULL || $model->header->receiveHeaders != NULL) {
                 Yii::app()->user->setFlash('message', 'Cannot DELETE this transaction');
@@ -409,7 +409,7 @@ class TransferRequestController extends Controller {
 
     public function actionAjaxJsonTotal($id, $index) {
         if (Yii::app()->request->isAjaxRequest) {
-            $transferRequest = $this->instantiate($id);
+            $transferRequest = $this->instantiate($id, '');
             $this->loadState($transferRequest);
 
             $unitPrice = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($transferRequest->details[$index], 'unit_price')));
@@ -428,7 +428,7 @@ class TransferRequestController extends Controller {
 
     public function actionAjaxHtmlAddDetail($id) {
         if (Yii::app()->request->isAjaxRequest) {
-            $transferRequest = $this->instantiate($id);
+            $transferRequest = $this->instantiate($id, '');
             $this->loadState($transferRequest);
 
             if (isset($_POST['ProductId']))
@@ -442,7 +442,7 @@ class TransferRequestController extends Controller {
 
     public function actionAjaxHtmlRemoveProduct($id, $index) {
         if (Yii::app()->request->isAjaxRequest) {
-            $transferRequest = $this->instantiate($id);
+            $transferRequest = $this->instantiate($id, '');
             $this->loadState($transferRequest);
 
             $transferRequest->removeDetailAt($index);

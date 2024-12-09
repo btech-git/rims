@@ -384,7 +384,7 @@ class MovementInHeaderController extends Controller {
     //Add Detail
     public function actionAjaxHtmlAddDetail($id, $detailId, $type) {
         if (Yii::app()->request->isAjaxRequest) {
-            $movementIn = $this->instantiate($id);
+            $movementIn = $this->instantiate($id, '');
             $this->loadState($movementIn);
 
             $movementIn->addDetail($detailId, $type);
@@ -397,7 +397,7 @@ class MovementInHeaderController extends Controller {
 
     public function actionAjaxHtmlRemoveDetail($id, $index) {
         if (Yii::app()->request->isAjaxRequest) {
-            $movementIn = $this->instantiate($id);
+            $movementIn = $this->instantiate($id, '');
             $this->loadState($movementIn);
 
             $movementIn->removeDetailAt($index);
@@ -409,7 +409,7 @@ class MovementInHeaderController extends Controller {
 
     public function actionAjaxHtmlUpdateAllWarehouse($id) {
         if (Yii::app()->request->isAjaxRequest) {
-            $movementIn = $this->instantiate($id);
+            $movementIn = $this->instantiate($id, '');
             $this->loadState($movementIn);
 
             $warehouses = Warehouse::model()->findAllByAttributes(array('branch_id' => $movementIn->header->branch_id));
@@ -561,7 +561,7 @@ class MovementInHeaderController extends Controller {
 
     public function actionUpdateReceived($id) {
         IdempotentManager::generate();
-        $movementIn = $this->instantiate($id, 'receive');
+        $movementIn = $this->instantiate($id, '');
         
         $movementInShipping = new MovementInShipping();
         $movementInShipping->movement_in_id = $id;

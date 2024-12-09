@@ -376,7 +376,7 @@ class PaymentInController extends Controller {
    
     public function actionAjaxHtmlAddInvoices($id) {
         if (Yii::app()->request->isAjaxRequest) {
-            $paymentIn = $this->instantiate($id, 'create');
+            $paymentIn = $this->instantiate($id, '');
             $this->loadState($paymentIn);
 
             if (isset($_POST['InvoiceIds'])) {
@@ -393,7 +393,7 @@ class PaymentInController extends Controller {
  
     public function actionAjaxHtmlRemoveDetail($id, $index) {
         if (Yii::app()->request->isAjaxRequest) {
-            $paymentIn = $this->instantiate($id, 'create');
+            $paymentIn = $this->instantiate($id, '');
             $this->loadState($paymentIn);
 
             $paymentIn->removeDetailAt($index);
@@ -988,7 +988,7 @@ class PaymentInController extends Controller {
 
     public function actionAjaxJsonAmount($id, $index) {
         if (Yii::app()->request->isAjaxRequest) {
-            $paymentIn = $this->instantiate($id, 'create');
+            $paymentIn = $this->instantiate($id, '');
             $this->loadState($paymentIn);
 
             $taxServiceAmount = CHtml::value($paymentIn->details[$index], 'taxServiceAmount');
@@ -1006,7 +1006,7 @@ class PaymentInController extends Controller {
 
     public function actionAjaxJsonGrandTotal($id) {
         if (Yii::app()->request->isAjaxRequest) {
-            $paymentIn = $this->instantiate($id, 'create');
+            $paymentIn = $this->instantiate($id, '');
             $this->loadState($paymentIn);
 
             $object = array(

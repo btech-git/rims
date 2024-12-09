@@ -2,12 +2,14 @@
 
 class PurchaseOrders extends CComponent {
 
+    public $actionType;
     public $header;
     public $details;
     public $detailRequests;
     public $detailBranches;
 
-    public function __construct($header, array $details, array $detailBranches) {
+    public function __construct($actionType, $header, array $details, array $detailBranches) {
+        $this->actionType = $actionType;
         $this->header = $header;
         $this->details = $details;
         $this->detailRequests = array();
@@ -325,9 +327,37 @@ class PurchaseOrders extends CComponent {
             }
         }
 
+        $this->saveTransactionLog();
+        
         return $valid;
     }
 
+    public function saveTransactionLog() {
+        $transactionLog = new TransactionLog();
+        $transactionLog->transaction_number = $this->header->purchase_order_no;
+        $transactionLog->transaction_date = $this->header->purchase_order_date;
+        $transactionLog->log_date = date('Y-m-d');
+        $transactionLog->log_time = date('H:i:s');
+        $transactionLog->table_name = $this->header->tableName();
+        $transactionLog->table_id = $this->header->id;
+        $transactionLog->user_id = Yii::app()->user->id;
+        $transactionLog->username = Yii::app()->user->username;
+        $transactionLog->controller_class = Yii::app()->controller->module->id  . '/' . Yii::app()->controller->id;
+        $transactionLog->action_name = Yii::app()->controller->action->id;
+        $transactionLog->action_type = $this->actionType;
+        
+        $newData = $this->header->attributes;
+        
+        $newData['transactionPurchaseOrderDetails'] = array();
+        foreach($this->details as $detail) {
+            $newData['transactionPurchaseOrderDetails'][] = $detail->attributes;
+        }
+        
+        $transactionLog->new_data = json_encode($newData);
+
+        $transactionLog->save();
+    }
+    
     public function getTotalQuantity() {
         $total = 0.00;
 

@@ -41,7 +41,7 @@ class GeneralRepairRegistrationController extends Controller {
     }
 
     public function actionCreate($vehicleId) {
-        $generalRepairRegistration = $this->instantiate(null);
+        $generalRepairRegistration = $this->instantiate(null, 'create');
         
         $vehicle = Vehicle::model()->findByPk($vehicleId);
         $customer = Customer::model()->findByPk($vehicle->customer_id);
@@ -76,7 +76,7 @@ class GeneralRepairRegistrationController extends Controller {
     }
 
     public function actionAddProductService($registrationId) {
-        $generalRepairRegistration = $this->instantiate($registrationId);
+        $generalRepairRegistration = $this->instantiate($registrationId, '');
         $customer = Customer::model()->findByPk($generalRepairRegistration->header->customer_id);
         $vehicle = Vehicle::model()->findByPk($generalRepairRegistration->header->vehicle_id);
         $branches = Branch::model()->findAll();
@@ -171,7 +171,7 @@ class GeneralRepairRegistrationController extends Controller {
     }
 
     public function actionUpdate($id) {
-        $generalRepairRegistration = $this->instantiate($id);
+        $generalRepairRegistration = $this->instantiate($id, 'update');
         $vehicle = Vehicle::model()->findByPk($generalRepairRegistration->header->vehicle_id);
         $customer = Customer::model()->findByPk($vehicle->customer_id);
         $generalRepairRegistration->header->edited_datetime = date('Y-m-d H:i:s');
@@ -447,18 +447,8 @@ class GeneralRepairRegistrationController extends Controller {
         }
     }
     
-//    public function actionGenerateInvoice($id) {
-//        $registration = $this->instantiate($id);
-//        
-//        if (IdempotentManager::check()) {
-//            if ($registration->saveInvoice(Yii::app()->db, $id)) {
-//                $this->redirect(array('view', 'id' => $id));
-//            }
-//        }
-//    }
-
     public function actionGenerateSalesOrder($id) {
-        $model = $this->instantiate($id);
+        $model = $this->instantiate($id, 'createSalesOrder');
 
         if (empty($model->header->sales_order_number)) {
             $model->generateCodeNumberSaleOrder(Yii::app()->dateFormatter->format('M', strtotime($model->header->transaction_date)), Yii::app()->dateFormatter->format('yyyy', strtotime($model->header->transaction_date)), $model->header->branch_id);
@@ -484,7 +474,7 @@ class GeneralRepairRegistrationController extends Controller {
     }
 
     public function actionGenerateWorkOrder($id) {
-        $generalRepairRegistration = $this->instantiate($id);
+        $generalRepairRegistration = $this->instantiate($id, 'createWorkOrder');
         $customer = Customer::model()->findByPk($generalRepairRegistration->header->customer_id);
         $vehicle = Vehicle::model()->findByPk($generalRepairRegistration->header->vehicle_id);
 
@@ -764,7 +754,7 @@ class GeneralRepairRegistrationController extends Controller {
     //Add QuickService
     public function actionAjaxHtmlAddQuickServiceDetail($id, $quickServiceId) {
         if (Yii::app()->request->isAjaxRequest) {
-            $generalRepairRegistration = $this->instantiate($id);
+            $generalRepairRegistration = $this->instantiate($id, '');
             $this->loadStateDetails($generalRepairRegistration);
 
             $generalRepairRegistration->addQuickServiceDetail($quickServiceId);
@@ -779,7 +769,7 @@ class GeneralRepairRegistrationController extends Controller {
 
     public function actionAjaxHtmlAddQsServiceDetail($id, $quickServiceId) {
         if (Yii::app()->request->isAjaxRequest) {
-            $generalRepairRegistration = $this->instantiateProductService($id);
+            $generalRepairRegistration = $this->instantiateProductService($id, '');
             $this->loadState($generalRepairRegistration);
 
             $generalRepairRegistration->addQsServiceDetail($quickServiceId);
@@ -796,7 +786,7 @@ class GeneralRepairRegistrationController extends Controller {
     public function actionAjaxHtmlRemoveQuickServiceDetail($id, $index) {
         if (Yii::app()->request->isAjaxRequest) {
 
-            $generalRepairRegistration = $this->instantiate($id);
+            $generalRepairRegistration = $this->instantiate($id, '');
             $this->loadState($generalRepairRegistration);
 
             Yii::app()->clientscript->scriptMap['jquery.yiigridview.js'] = false;
@@ -813,7 +803,7 @@ class GeneralRepairRegistrationController extends Controller {
     public function actionAjaxHtmlRemoveQuickServiceDetailAll($id) {
         if (Yii::app()->request->isAjaxRequest) {
 
-            $generalRepairRegistration = $this->instantiateProductService($id);
+            $generalRepairRegistration = $this->instantiateProductService($id, '');
             $this->loadState($generalRepairRegistration);
 
             Yii::app()->clientscript->scriptMap['jquery-ui.min.js'] = false;
@@ -829,7 +819,7 @@ class GeneralRepairRegistrationController extends Controller {
 //Add Service
     public function actionAjaxHtmlAddServiceDetail($id, $serviceId, $customerId, $custType, $vehicleId, $repair) {
         if (Yii::app()->request->isAjaxRequest) {
-            $generalRepairRegistration = $this->instantiate($id);
+            $generalRepairRegistration = $this->instantiate($id, '');
             $this->loadStateDetails($generalRepairRegistration);
 
             $generalRepairRegistration->addServiceDetail($serviceId, $customerId, $custType, $vehicleId, $repair);
@@ -847,7 +837,7 @@ class GeneralRepairRegistrationController extends Controller {
     public function actionAjaxHtmlRemoveServiceDetail($id, $index) {
         if (Yii::app()->request->isAjaxRequest) {
 
-            $generalRepairRegistration = $this->instantiate($id);
+            $generalRepairRegistration = $this->instantiate($id, '');
             $this->loadStateDetails($generalRepairRegistration);
 
             Yii::app()->clientscript->scriptMap['jquery-ui.min.js'] = false;
@@ -864,7 +854,7 @@ class GeneralRepairRegistrationController extends Controller {
     public function actionAjaxHtmlRemoveServiceDetailAll($id) {
         if (Yii::app()->request->isAjaxRequest) {
 
-            $generalRepairRegistration = $this->instantiate($id);
+            $generalRepairRegistration = $this->instantiate($id, '');
             $this->loadState($generalRepairRegistration);
 
             Yii::app()->clientscript->scriptMap['jquery-ui.min.js'] = false;
@@ -880,7 +870,7 @@ class GeneralRepairRegistrationController extends Controller {
 //Add Product
     public function actionAjaxHtmlAddProductDetail($id, $productId) {
         if (Yii::app()->request->isAjaxRequest) {
-            $generalRepairRegistration = $this->instantiate($id);
+            $generalRepairRegistration = $this->instantiate($id, '');
             $this->loadStateDetails($generalRepairRegistration);
             $branches = Branch::model()->findAll();
 
@@ -900,7 +890,7 @@ class GeneralRepairRegistrationController extends Controller {
     public function actionAjaxHtmlRemoveProductDetail($id, $index) {
         if (Yii::app()->request->isAjaxRequest) {
 
-            $generalRepairRegistration = $this->instantiate($id);
+            $generalRepairRegistration = $this->instantiate($id, '');
             $this->loadStateDetails($generalRepairRegistration);
             $branches = Branch::model()->findAll();
 
@@ -917,7 +907,7 @@ class GeneralRepairRegistrationController extends Controller {
 
     public function actionAjaxJsonTotalService($id, $index) {
         if (Yii::app()->request->isAjaxRequest) {
-            $generalRepairRegistration = $this->instantiate($id);
+            $generalRepairRegistration = $this->instantiate($id, '');
             $this->loadStateDetails($generalRepairRegistration);
 
             $totalAmount = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($generalRepairRegistration->serviceDetails[$index], 'totalAmount')));
@@ -946,7 +936,7 @@ class GeneralRepairRegistrationController extends Controller {
 
     public function actionAjaxJsonTotalProduct($id, $index) {
         if (Yii::app()->request->isAjaxRequest) {
-            $generalRepairRegistration = $this->instantiate($id);
+            $generalRepairRegistration = $this->instantiate($id, '');
             $this->loadStateDetails($generalRepairRegistration);
 
             $totalAmountProduct = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($generalRepairRegistration->productDetails[$index], 'totalAmountProduct')));
@@ -975,7 +965,7 @@ class GeneralRepairRegistrationController extends Controller {
 
     public function actionAjaxJsonGrandTotal($id) {
         if (Yii::app()->request->isAjaxRequest) {
-            $generalRepairRegistration = $this->instantiate($id);
+            $generalRepairRegistration = $this->instantiate($id, '');
             $this->loadStateDetails($generalRepairRegistration);
 
             $totalQuickServiceQuantity = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $generalRepairRegistration->totalQuickServiceQuantity));

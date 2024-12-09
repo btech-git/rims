@@ -549,7 +549,7 @@ class InvoiceHeaderController extends Controller {
             $productDataProvider = new CActiveDataProvider('Product', array(
                 'criteria' => $productCriteria,));
 
-            $consignmentIn = $this->instantiate($id);
+            $consignmentIn = $this->instantiate($id, '');
             $this->loadState($consignmentIn);
 
             $consignmentIn->addDetail($productId);
@@ -583,7 +583,7 @@ class InvoiceHeaderController extends Controller {
             $productDataProvider = new CActiveDataProvider('Product', array(
                 'criteria' => $productCriteria,));
 
-            $consignmentIn = $this->instantiate($id);
+            $consignmentIn = $this->instantiate($id, '');
             $this->loadState($consignmentIn);
 
             $consignmentIn->removeDetailAt($index);

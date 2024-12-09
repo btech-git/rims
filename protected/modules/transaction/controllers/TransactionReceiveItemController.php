@@ -153,7 +153,7 @@ class TransactionReceiveItemController extends Controller {
      */
     public function actionCreate($transactionId, $movementType) {
         
-        $receiveItem = $this->instantiate(null);
+        $receiveItem = $this->instantiate(null, 'create');
         $receiveItem->header->receive_item_date = date('Y-m-d');
         $receiveItem->header->arrival_date = date('Y-m-d');
         $receiveItem->header->created_datetime = date('Y-m-d H:i:s');
@@ -247,7 +247,7 @@ class TransactionReceiveItemController extends Controller {
      * @param integer $id the ID of the model to be updated
      */
     public function actionUpdate($id) {
-        $receiveItem = $this->instantiate($id);
+        $receiveItem = $this->instantiate($id, 'update');
         $receiveItem->header->user_id_updated = Yii::app()->user->id;
         $receiveItem->header->updated_datetime = date('Y-m-d H:i:s');
         $this->performAjaxValidation($receiveItem->header);
@@ -615,7 +615,7 @@ class TransactionReceiveItemController extends Controller {
 
     public function actionAjaxGetTotal($id) {
         if (Yii::app()->request->isAjaxRequest) {
-            $receiveItem = $this->instantiate($id);
+            $receiveItem = $this->instantiate($id, '');
             $this->loadState($receiveItem);
             //$requestType =$receiveItem->header->request_type;
             $total = 0;
@@ -634,7 +634,7 @@ class TransactionReceiveItemController extends Controller {
     public function actionAjaxHtmlAddDetail($id, $requestType, $requestId) {
         if (Yii::app()->request->isAjaxRequest) {
 
-            $receiveItem = $this->instantiate($id);
+            $receiveItem = $this->instantiate($id, '');
             $this->loadState($receiveItem);
 
             $receiveItem->addDetail($requestType, $requestId);
@@ -647,7 +647,7 @@ class TransactionReceiveItemController extends Controller {
     public function actionAjaxHtmlRemoveDetailRequest($id) {
         if (Yii::app()->request->isAjaxRequest) {
             
-            $receiveItem = $this->instantiate($id);
+            $receiveItem = $this->instantiate($id, '');
             $this->loadState($receiveItem);
 
             $receiveItem->removeDetailAt();
@@ -660,7 +660,7 @@ class TransactionReceiveItemController extends Controller {
 
     public function actionAjaxHtmlRemoveDetail($id, $index) {
         if (Yii::app()->request->isAjaxRequest) {
-            $receiveItem = $this->instantiate($id);
+            $receiveItem = $this->instantiate($id, '');
             $this->loadState($receiveItem);
 
             $receiveItem->removeDetail($index);
@@ -673,7 +673,7 @@ class TransactionReceiveItemController extends Controller {
 
     public function actionAjaxJsonGrandTotal($id) {
         if (Yii::app()->request->isAjaxRequest) {
-            $receiveItem = $this->instantiate($id);
+            $receiveItem = $this->instantiate($id, '');
             $this->loadState($receiveItem);
 
             $grandTotal = CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $receiveItem->grandTotalAfterRounding));

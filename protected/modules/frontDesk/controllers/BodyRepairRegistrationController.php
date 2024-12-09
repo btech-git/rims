@@ -42,7 +42,7 @@ class BodyRepairRegistrationController extends Controller {
     }
 
     public function actionCreate($vehicleId) {
-        $bodyRepairRegistration = $this->instantiate(null);
+        $bodyRepairRegistration = $this->instantiate(null, 'create');
         $vehicle = Vehicle::model()->findByPk($vehicleId);
         $customer = Customer::model()->findByPk($vehicle->customer_id);
 
@@ -102,7 +102,7 @@ class BodyRepairRegistrationController extends Controller {
     }
 
     public function actionAddProductService($registrationId) {
-        $bodyRepairRegistration = $this->instantiate($registrationId);
+        $bodyRepairRegistration = $this->instantiate($registrationId, '');
         $customer = Customer::model()->findByPk($bodyRepairRegistration->header->customer_id);
         $vehicle = Vehicle::model()->findByPk($bodyRepairRegistration->header->vehicle_id);
         $branches = Branch::model()->findAll();
@@ -210,7 +210,7 @@ class BodyRepairRegistrationController extends Controller {
     }
 
     public function actionUpdate($id) {
-        $bodyRepairRegistration = $this->instantiate($id);
+        $bodyRepairRegistration = $this->instantiate($id, 'update');
         $vehicle = Vehicle::model()->findByPk($bodyRepairRegistration->header->vehicle_id);
         $customer = Customer::model()->findByPk($vehicle->customer_id);
         $bodyRepairRegistration->header->edited_datetime = date('Y-m-d H:i:s');
@@ -301,18 +301,8 @@ class BodyRepairRegistrationController extends Controller {
         ));
     }
 
-//    public function actionGenerateInvoice($id) {
-//        $registration = $this->instantiate($id);
-//
-//        if (IdempotentManager::check()) {
-//            if ($registration->saveInvoice(Yii::app()->db, $id)) {
-//                $this->redirect(array('view', 'id' => $id));
-//            }
-//        }
-//    }
-
     public function actionGenerateSalesOrder($id) {
-        $model = $this->instantiate($id);
+        $model = $this->instantiate($id, 'createSaleOrder');
 
         $model->generateCodeNumberSaleOrder(Yii::app()->dateFormatter->format('M', strtotime($model->header->transaction_date)), Yii::app()->dateFormatter->format('yyyy', strtotime($model->header->transaction_date)), $model->header->branch_id);
         $model->header->sales_order_date = date('Y-m-d');
@@ -334,7 +324,7 @@ class BodyRepairRegistrationController extends Controller {
     }
 
     public function actionGenerateWorkOrder($id) {
-        $bodyRepairRegistration = $this->instantiate($id);
+        $bodyRepairRegistration = $this->instantiate($id, 'createWorkOrder');
         $customer = Customer::model()->findByPk($bodyRepairRegistration->header->customer_id);
         $vehicle = Vehicle::model()->findByPk($bodyRepairRegistration->header->vehicle_id);
 
@@ -686,7 +676,7 @@ class BodyRepairRegistrationController extends Controller {
 
     public function actionAjaxHtmlAddDamageDetail($id, $serviceId) {
         if (Yii::app()->request->isAjaxRequest) {
-            $bodyRepairRegistration = $this->instantiate($id);
+            $bodyRepairRegistration = $this->instantiate($id, '');
             $this->loadStateDetails($bodyRepairRegistration);
 
             $bodyRepairRegistration->addDamageDetail($serviceId);
@@ -703,7 +693,7 @@ class BodyRepairRegistrationController extends Controller {
 
     public function actionAjaxHtmlRemoveDamageDetail($id, $index) {
         if (Yii::app()->request->isAjaxRequest) {
-            $bodyRepairRegistration = $this->instantiate($id);
+            $bodyRepairRegistration = $this->instantiate($id, '');
             $this->loadStateDetails($bodyRepairRegistration);
 
             Yii::app()->clientscript->scriptMap['jquery-ui.min.js'] = false;
@@ -718,7 +708,7 @@ class BodyRepairRegistrationController extends Controller {
 
     public function actionAjaxHtmlRemoveDamageDetailAll($id) {
         if (Yii::app()->request->isAjaxRequest) {
-            $bodyRepairRegistration = $this->instantiate($id);
+            $bodyRepairRegistration = $this->instantiate($id, '');
             $this->loadStateDetails($bodyRepairRegistration);
             Yii::app()->clientscript->scriptMap['jquery-ui.min.js'] = false;
             Yii::app()->clientscript->scriptMap['jquery.js'] = false;
@@ -729,7 +719,7 @@ class BodyRepairRegistrationController extends Controller {
 
     public function actionAjaxHtmlAddServiceInsuranceDetail($id, $serviceId, $insuranceId, $damageType, $repair) {
         if (Yii::app()->request->isAjaxRequest) {
-            $bodyRepairRegistration = $this->instantiate($id);
+            $bodyRepairRegistration = $this->instantiate($id, '');
             $this->loadStateDetails($bodyRepairRegistration);
 
             $bodyRepairRegistration->addServiceInsuranceDetail($serviceId, $insuranceId, $damageType, $repair);
@@ -747,7 +737,7 @@ class BodyRepairRegistrationController extends Controller {
 //Add Service
     public function actionAjaxHtmlAddServiceDetail($id, $serviceId, $customerId, $custType, $vehicleId, $repair) {
         if (Yii::app()->request->isAjaxRequest) {
-            $bodyRepairRegistration = $this->instantiate($id);
+            $bodyRepairRegistration = $this->instantiate($id, '');
             $this->loadStateDetails($bodyRepairRegistration);
 
             $bodyRepairRegistration->addServiceDetail($serviceId, $customerId, $custType, $vehicleId, $repair);
@@ -766,7 +756,7 @@ class BodyRepairRegistrationController extends Controller {
     public function actionAjaxHtmlRemoveServiceDetail($id, $index) {
         if (Yii::app()->request->isAjaxRequest) {
 
-            $bodyRepairRegistration = $this->instantiate($id);
+            $bodyRepairRegistration = $this->instantiate($id, '');
             $this->loadStateDetails($bodyRepairRegistration);
 
             Yii::app()->clientscript->scriptMap['jquery-ui.min.js'] = false;
@@ -783,7 +773,7 @@ class BodyRepairRegistrationController extends Controller {
     public function actionAjaxHtmlRemoveServiceDetailAll($id) {
         if (Yii::app()->request->isAjaxRequest) {
 
-            $bodyRepairRegistration = $this->instantiate($id);
+            $bodyRepairRegistration = $this->instantiate($id, '');
             $this->loadStateDetails($bodyRepairRegistration);
 
             Yii::app()->clientscript->scriptMap['jquery-ui.min.js'] = false;
@@ -799,7 +789,7 @@ class BodyRepairRegistrationController extends Controller {
 //Add Product
     public function actionAjaxHtmlAddProductDetail($id, $productId) {
         if (Yii::app()->request->isAjaxRequest) {
-            $bodyRepairRegistration = $this->instantiate($id);
+            $bodyRepairRegistration = $this->instantiate($id, '');
             $this->loadStateDetails($bodyRepairRegistration);
             $branches = Branch::model()->findAll();
 
@@ -820,7 +810,7 @@ class BodyRepairRegistrationController extends Controller {
     public function actionAjaxHtmlRemoveProductDetail($id, $index) {
         if (Yii::app()->request->isAjaxRequest) {
 
-            $bodyRepairRegistration = $this->instantiate($id);
+            $bodyRepairRegistration = $this->instantiate($id, '');
             $this->loadStateDetails($bodyRepairRegistration);
 
             Yii::app()->clientscript->scriptMap['jquery-ui.min.js'] = false;
@@ -838,7 +828,7 @@ class BodyRepairRegistrationController extends Controller {
 
     public function actionAjaxJsonTotalService($id, $index) {
         if (Yii::app()->request->isAjaxRequest) {
-            $bodyRepairRegistration = $this->instantiate($id);
+            $bodyRepairRegistration = $this->instantiate($id, '');
             $this->loadStateDetails($bodyRepairRegistration);
 
             $totalAmount = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($bodyRepairRegistration->serviceDetails[$index], 'totalAmount')));
@@ -867,7 +857,7 @@ class BodyRepairRegistrationController extends Controller {
 
     public function actionAjaxJsonTotalProduct($id, $index) {
         if (Yii::app()->request->isAjaxRequest) {
-            $bodyRepairRegistration = $this->instantiate($id);
+            $bodyRepairRegistration = $this->instantiate($id, '');
             $this->loadStateDetails($bodyRepairRegistration);
 
             $totalAmountProduct = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($bodyRepairRegistration->productDetails[$index], 'totalAmountProduct')));
@@ -896,7 +886,7 @@ class BodyRepairRegistrationController extends Controller {
 
     public function actionAjaxJsonGrandTotal($id) {
         if (Yii::app()->request->isAjaxRequest) {
-            $bodyRepairRegistration = $this->instantiate($id);
+            $bodyRepairRegistration = $this->instantiate($id, '');
             $this->loadStateDetails($bodyRepairRegistration);
 
             $totalQuantityService = CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $bodyRepairRegistration->totalQuantityService));

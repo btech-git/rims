@@ -2,18 +2,14 @@
 
 class SentRequests extends CComponent {
 
+    public $actionType;
     public $header;
     public $details;
 
-    // /public $detailApprovals;
-    // public $picPhoneDetails;
-    // public $picMobileDetails;
-
-    public function __construct($header, array $details) {
+    public function __construct($actionType, $header, array $details) {
+        $this->actionType = $actionType;
         $this->header = $header;
         $this->details = $details;
-
-        //$this->detailApprovals = $detailApprovals;
     }
 
     public function generateCodeNumber($currentMonth, $currentYear, $requesterBranchId) {
@@ -137,8 +133,7 @@ class SentRequests extends CComponent {
             $valid = $detail->save(false) && $valid;
             $new_detail[] = $detail->id;
         }
-
-
+        
         //delete pricelist
         $delete_array = array_diff($detail_id, $new_detail);
         if ($delete_array != NULL) {
@@ -147,7 +142,35 @@ class SentRequests extends CComponent {
             TransactionSentRequestDetail::model()->deleteAll($criteria);
         }
 
+        $this->saveTransactionLog();
+        
         return $valid;
+    }
+    
+    public function saveTransactionLog() {
+        $transactionLog = new TransactionLog();
+        $transactionLog->transaction_number = $this->header->sent_request_no;
+        $transactionLog->transaction_date = $this->header->sent_request_date;
+        $transactionLog->log_date = date('Y-m-d');
+        $transactionLog->log_time = date('H:i:s');
+        $transactionLog->table_name = $this->header->tableName();
+        $transactionLog->table_id = $this->header->id;
+        $transactionLog->user_id = Yii::app()->user->id;
+        $transactionLog->username = Yii::app()->user->username;
+        $transactionLog->controller_class = Yii::app()->controller->module->id  . '/' . Yii::app()->controller->id;
+        $transactionLog->action_name = Yii::app()->controller->action->id;
+        $transactionLog->action_type = $this->actionType;
+        
+        $newData = $this->header->attributes;
+        
+        $newData['transactionSentRequestDetails'] = array();
+        foreach($this->details as $detail) {
+            $newData['transactionSentRequestDetails'][] = $detail->attributes;
+        }
+        
+        $transactionLog->new_data = json_encode($newData);
+
+        $transactionLog->save();
     }
     
     public function getGrandTotal() {

@@ -657,7 +657,7 @@ class TransactionDeliveryOrderController extends Controller {
     public function actionAjaxHtmlAddDetail($id, $requestType, $requestId) {
         if (Yii::app()->request->isAjaxRequest) {
 
-            $deliveryOrder = $this->instantiate($id);
+            $deliveryOrder = $this->instantiate($id, '');
             $this->loadState($deliveryOrder);
 
             $deliveryOrder->addDetail($requestType, $requestId);
@@ -669,7 +669,7 @@ class TransactionDeliveryOrderController extends Controller {
 
     public function actionAjaxHtmlRemoveDetailRequest($id) {
         if (Yii::app()->request->isAjaxRequest) {
-            $deliveryOrder = $this->instantiate($id);
+            $deliveryOrder = $this->instantiate($id, '');
             $this->loadState($deliveryOrder);
 
             $deliveryOrder->removeDetailAt();
@@ -681,7 +681,7 @@ class TransactionDeliveryOrderController extends Controller {
 
     public function actionAjaxHtmlRemoveDetail($id, $index) {
         if (Yii::app()->request->isAjaxRequest) {
-            $deliveryOrder = $this->instantiate($id);
+            $deliveryOrder = $this->instantiate($id, '');
             $this->loadState($deliveryOrder);
 
             $deliveryOrder->removeDetail($index);

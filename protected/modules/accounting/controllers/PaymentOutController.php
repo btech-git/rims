@@ -43,7 +43,7 @@ class PaymentOutController extends Controller {
     }
 
     public function actionCreate($supplierId, $movementType) {
-        $paymentOut = $this->instantiate(null);
+        $paymentOut = $this->instantiate(null, 'createMultiple');
         $supplier = Supplier::model()->findByPk($supplierId);
 
         $paymentOut->header->user_id = Yii::app()->user->id;
@@ -93,7 +93,7 @@ class PaymentOutController extends Controller {
     }
 
     public function actionCreateSingle($transactionId, $movementType) {
-        $paymentOut = $this->instantiate(null);
+        $paymentOut = $this->instantiate(null, 'createSingle');
         
         if ($movementType == 1) {
             $workOrderExpense = null;
@@ -141,7 +141,7 @@ class PaymentOutController extends Controller {
     }
 
     public function actionUpdate($id) {
-        $paymentOut = $this->instantiate($id);
+        $paymentOut = $this->instantiate($id, 'update');
         $supplier = Supplier::model()->findByPk($paymentOut->header->supplier_id);
         $movementType = $paymentOut->header->movement_type;
 
@@ -226,7 +226,7 @@ class PaymentOutController extends Controller {
 
     public function actionDelete($id) {
         if (Yii::app()->request->isPostRequest) {
-            $paymentOut = $this->instantiate($id);
+            $paymentOut = $this->instantiate($id, '');
             if ($paymentOut !== null) {
                 foreach ($this->details as $detail) {
                     $receiveItemHeader = SaleInvoiceHeader::model()->findByPk($detail->sale_invoice_header_id);
@@ -385,7 +385,7 @@ class PaymentOutController extends Controller {
 
     public function actionAjaxHtmlAddInvoices($id, $movementType) {
         if (Yii::app()->request->isAjaxRequest) {
-            $paymentOut = $this->instantiate($id);
+            $paymentOut = $this->instantiate($id, '');
             $this->loadState($paymentOut);
 
             if (isset($_POST['selectedIds'])) {
@@ -406,7 +406,7 @@ class PaymentOutController extends Controller {
 
     public function actionAjaxHtmlRemoveDetail($id, $index, $movementType) {
         if (Yii::app()->request->isAjaxRequest) {
-            $paymentOut = $this->instantiate($id);
+            $paymentOut = $this->instantiate($id, '');
             $this->loadState($paymentOut);
 
             $paymentOut->removeDetailAt($index);
@@ -420,7 +420,7 @@ class PaymentOutController extends Controller {
     
     public function actionAjaxJsonTotal($id) {
         if (Yii::app()->request->isAjaxRequest) {
-            $paymentOut = $this->instantiate($id);
+            $paymentOut = $this->instantiate($id, '');
             $this->loadState($paymentOut);
             
             $totalPayment = $paymentOut->totalPayment;

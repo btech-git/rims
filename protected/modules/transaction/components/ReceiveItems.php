@@ -2,10 +2,12 @@
 
 class ReceiveItems extends CComponent {
 
+    public $actionType;
     public $header;
     public $details;
 
-    public function __construct($header, array $details) {
+    public function __construct($actionType, $header, array $details) {
+        $this->actionType = $actionType;
         $this->header = $header;
         $this->details = $details;
 
@@ -233,11 +235,7 @@ class ReceiveItems extends CComponent {
                     $journalReferences[$coaIdTransit]['is_coa_category'] = 0;
                     $journalReferences[$coaIdTransit]['remark'] = $this->header->request_type;
                     $journalReferences[$coaIdTransit]['values'][] = $value;
-//                    $coaIdOutstandingMaster = $detail->product->productMasterCategory->coa_outstanding_part_id;
-//                    $journalReferences[$coaIdOutstandingMaster]['debet_kredit'] = 'K';
-//                    $journalReferences[$coaIdOutstandingMaster]['is_coa_category'] = 1;
-//                    $journalReferences[$coaIdOutstandingMaster]['remark'] = 'Internal Delivery Order';
-//                    $journalReferences[$coaIdOutstandingMaster]['values'][] = $value;
+                    
                     $coaIdOutstandingSub = $detail->product->productSubMasterCategory->coa_outstanding_part_id;
                     $journalReferences[$coaIdOutstandingSub]['debet_kredit'] = 'K';
                     $journalReferences[$coaIdOutstandingSub]['is_coa_category'] = 0;
@@ -326,7 +324,35 @@ class ReceiveItems extends CComponent {
             TransactionReceiveItemDetail::model()->deleteAll($criteria);
         }
 
+        $this->saveTransactionLog();
+        
         return $valid;
+    }
+    
+    public function saveTransactionLog() {
+        $transactionLog = new TransactionLog();
+        $transactionLog->transaction_number = $this->header->receive_item_no;
+        $transactionLog->transaction_date = $this->header->receive_item_date;
+        $transactionLog->log_date = date('Y-m-d');
+        $transactionLog->log_time = date('H:i:s');
+        $transactionLog->table_name = $this->header->tableName();
+        $transactionLog->table_id = $this->header->id;
+        $transactionLog->user_id = Yii::app()->user->id;
+        $transactionLog->username = Yii::app()->user->username;
+        $transactionLog->controller_class = Yii::app()->controller->module->id  . '/' . Yii::app()->controller->id;
+        $transactionLog->action_name = Yii::app()->controller->action->id;
+        $transactionLog->action_type = $this->actionType;
+        
+        $newData = $this->header->attributes;
+        
+        $newData['transactionReceiveItemDetails'] = array();
+        foreach($this->details as $detail) {
+            $newData['transactionReceiveItemDetails'][] = $detail->attributes;
+        }
+        
+        $transactionLog->new_data = json_encode($newData);
+
+        $transactionLog->save();
     }
     
     public function getSubTotal() {

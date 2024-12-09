@@ -124,7 +124,7 @@ class TransactionPurchaseOrderController extends Controller {
      * If creation is successful, the browser will be redirected to the 'view' page.
      */
     public function actionCreate() {
-        $purchaseOrder = $this->instantiate(null);
+        $purchaseOrder = $this->instantiate(null, 'create');
         $purchaseOrder->header->main_branch_id = Yii::app()->user->branch_id;
         $purchaseOrder->header->coa_bank_id_estimate = 7;
         $purchaseOrder->header->purchase_order_date = date('Y-m-d H:i:s');
@@ -234,7 +234,7 @@ class TransactionPurchaseOrderController extends Controller {
      */
     public function actionUpdate($id) {
         
-        $purchaseOrder = $this->instantiate($id);
+        $purchaseOrder = $this->instantiate($id, 'update');
         $this->performAjaxValidation($purchaseOrder->header);
         $purchaseOrder->header->status_document = 'Draft';
         $purchaseOrder->header->user_id_updated = Yii::app()->user->id;
@@ -718,7 +718,7 @@ class TransactionPurchaseOrderController extends Controller {
 
     public function actionAjaxGetTotal($id) {
         if (Yii::app()->request->isAjaxRequest) {
-            $purchaseOrder = $this->instantiate($id);
+            $purchaseOrder = $this->instantiate($id, '');
             $this->loadState($purchaseOrder);
             $total = 0;
             $totalItems = 0;
@@ -1046,12 +1046,12 @@ class TransactionPurchaseOrderController extends Controller {
         }
     }
 
-    public function instantiate($id) {
+    public function instantiate($id, $actionType) {
         if (empty($id)) {
-            $purchaseOrder = new PurchaseOrders(new TransactionPurchaseOrder(), array(), array());
+            $purchaseOrder = new PurchaseOrders($actionType, new TransactionPurchaseOrder(), array(), array());
         } else {
             $purchaseOrderModel = $this->loadModel($id);
-            $purchaseOrder = new PurchaseOrders($purchaseOrderModel, $purchaseOrderModel->transactionPurchaseOrderDetails, $purchaseOrderModel->transactionPurchaseOrderDestinationBranches);
+            $purchaseOrder = new PurchaseOrders($actionType, $purchaseOrderModel, $purchaseOrderModel->transactionPurchaseOrderDetails, $purchaseOrderModel->transactionPurchaseOrderDestinationBranches);
         }
         return $purchaseOrder;
     }
@@ -1099,7 +1099,7 @@ class TransactionPurchaseOrderController extends Controller {
     //Add Detail
     public function actionAjaxHtmlAddDetail($id, $productId) {
         if (Yii::app()->request->isAjaxRequest) {
-            $purchaseOrder = $this->instantiate($id);
+            $purchaseOrder = $this->instantiate($id, '');
             $this->loadState($purchaseOrder);
 
             $product = new Product('search');
@@ -1139,7 +1139,7 @@ class TransactionPurchaseOrderController extends Controller {
     public function actionAjaxHtmlRemoveDetail($id, $index) {
         if (Yii::app()->request->isAjaxRequest) {
 
-            $purchaseOrder = $this->instantiate($id);
+            $purchaseOrder = $this->instantiate($id, '');
             $this->loadState($purchaseOrder);
 
             $purchaseOrder->removeDetailAt($index);
@@ -1154,7 +1154,7 @@ class TransactionPurchaseOrderController extends Controller {
     public function actionAjaxHtmlRemoveDetailSupplier($id) {
         if (Yii::app()->request->isAjaxRequest) {
 
-            $purchaseOrder = $this->instantiate($id);
+            $purchaseOrder = $this->instantiate($id, '');
             $this->loadState($purchaseOrder);
 
             $purchaseOrder->removeDetailSupplier();
@@ -1255,7 +1255,7 @@ class TransactionPurchaseOrderController extends Controller {
 
     public function actionAjaxJsonDateChanged($id) {
         if (Yii::app()->request->isAjaxRequest) {
-            $purchaseOrder = $this->instantiate($id);
+            $purchaseOrder = $this->instantiate($id, '');
             $this->loadState($purchaseOrder);
 
             $date = $_POST['TransactionPurchaseOrder']['purchase_order_date'];
@@ -1273,7 +1273,7 @@ class TransactionPurchaseOrderController extends Controller {
 
     public function actionAjaxHtmlAddDestinationBranches($id) {
         if (Yii::app()->request->isAjaxRequest) {
-            $purchaseOrder = $this->instantiate($id);
+            $purchaseOrder = $this->instantiate($id, '');
             $this->loadState($purchaseOrder);
 
             if (isset($_POST['selectedIds'])) {
@@ -1366,7 +1366,7 @@ class TransactionPurchaseOrderController extends Controller {
 
     public function actionAjaxHtmlUpdateAllTax($id) {
         if (Yii::app()->request->isAjaxRequest) {
-            $purchaseOrder = $this->instantiate($id);
+            $purchaseOrder = $this->instantiate($id, '');
             $this->loadState($purchaseOrder);
 
             $purchaseOrder->updateTaxes();
@@ -1379,7 +1379,7 @@ class TransactionPurchaseOrderController extends Controller {
 
     public function actionAjaxJsonTotal($id, $index) {
         if (Yii::app()->request->isAjaxRequest) {
-            $purchaseOrder = $this->instantiate($id);
+            $purchaseOrder = $this->instantiate($id, '');
             $this->loadState($purchaseOrder);
             $tax = $purchaseOrder->header->ppn;
             $taxPercentage = $purchaseOrder->header->tax_percentage;
