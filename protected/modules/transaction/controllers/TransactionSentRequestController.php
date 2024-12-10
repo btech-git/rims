@@ -626,13 +626,13 @@ class TransactionSentRequestController extends Controller {
         }
     }
 
-    public function instantiate($id) {
+    public function instantiate($id, $actionType) {
         if (empty($id)) {
-            $sentRequest = new SentRequests(new TransactionSentRequest(), array());
+            $sentRequest = new SentRequests($actionType, new TransactionSentRequest(), array());
             //print_r("test");
         } else {
             $sentRequestModel = $this->loadModel($id);
-            $sentRequest = new SentRequests($sentRequestModel, $sentRequestModel->transactionSentRequestDetails);
+            $sentRequest = new SentRequests($actionType, $sentRequestModel, $sentRequestModel->transactionSentRequestDetails);
             //print_r("test");
         }
         return $sentRequest;

@@ -684,12 +684,12 @@ class TransactionReceiveItemController extends Controller {
         }
     }
 
-    public function instantiate($id) {
+    public function instantiate($id, $actionType) {
         if (empty($id)) {
-            $receiveItem = new ReceiveItems(new TransactionReceiveItem(), array());
+            $receiveItem = new ReceiveItems($actionType, new TransactionReceiveItem(), array());
         } else {
             $receiveItemModel = $this->loadModel($id);
-            $receiveItem = new ReceiveItems($receiveItemModel, $receiveItemModel->transactionReceiveItemDetails);
+            $receiveItem = new ReceiveItems($actionType, $receiveItemModel, $receiveItemModel->transactionReceiveItemDetails);
         }
         return $receiveItem;
     }

@@ -493,12 +493,12 @@ class TransferRequestController extends Controller {
         }
     }
     
-    public function instantiate($id) {
-        if (empty($id))
-            $transferRequest = new TransferRequest(new TransactionTransferRequest(), array());
-        else {
+    public function instantiate($id, $actionType) {
+        if (empty($id)) {
+            $transferRequest = new TransferRequest($actionType, new TransactionTransferRequest(), array());
+        } else {
             $transferRequestHeader = $this->loadModel($id);
-            $transferRequest = new TransferRequest($transferRequestHeader, $transferRequestHeader->transactionTransferRequestDetails);
+            $transferRequest = new TransferRequest($actionType, $transferRequestHeader, $transferRequestHeader->transactionTransferRequestDetails);
         }
 
         return $transferRequest;

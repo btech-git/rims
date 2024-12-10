@@ -448,12 +448,12 @@ class PaymentOutController extends Controller {
         
     }
 
-    public function instantiate($id) {
+    public function instantiate($id, $actionType) {
         if (empty($id)) {
-            $paymentOut = new PaymentOutComponent(new PaymentOut(), array(), new PaymentOutImages());
+            $paymentOut = new PaymentOutComponent($actionType, new PaymentOut(), array(), new PaymentOutImages());
         } else {
             $paymentOutHeader = $this->loadModel($id);
-            $paymentOut = new PaymentOutComponent($paymentOutHeader, $paymentOutHeader->payOutDetails, $paymentOutHeader->paymentOutImages);
+            $paymentOut = new PaymentOutComponent($actionType, $paymentOutHeader, $paymentOutHeader->payOutDetails, $paymentOutHeader->paymentOutImages);
         }
 
         return $paymentOut;
