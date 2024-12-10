@@ -350,17 +350,17 @@
                                     array(
                                         'label' => 'Hutang Supplier Summary', 
                                         'url' => array('/report/payableSupplier/summary'), 
-                                        'visible' => Yii::app()->user->checkAccess('supplierPayableReport')
+                                        'visible' => Yii::app()->user->checkAccess('payableReport')
                                     ),
                                     array(
                                         'label' => 'Hutang Supplier Detail', 
                                         'url' => array('/report/payableDetail/summary'), 
-                                        'visible' => Yii::app()->user->checkAccess('supplierPayableReport')
+                                        'visible' => Yii::app()->user->checkAccess('payableReport')
                                     ),
                                     array(
                                         'label' => 'Kartu Hutang Supplier', 
                                         'url' => array('/report/payableTransaction/summary'), 
-                                        'visible' => Yii::app()->user->checkAccess('supplierPayableReport')
+                                        'visible' => Yii::app()->user->checkAccess('payableReport')
                                     ),
                                     array(
                                         'label' => 'Rincian Pembayaran Hutang', 
