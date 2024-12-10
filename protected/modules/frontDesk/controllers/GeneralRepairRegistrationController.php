@@ -76,7 +76,7 @@ class GeneralRepairRegistrationController extends Controller {
     }
 
     public function actionAddProductService($registrationId) {
-        $generalRepairRegistration = $this->instantiate($registrationId, '');
+        $generalRepairRegistration = $this->instantiate($registrationId, 'create');
         $customer = Customer::model()->findByPk($generalRepairRegistration->header->customer_id);
         $vehicle = Vehicle::model()->findByPk($generalRepairRegistration->header->vehicle_id);
         $branches = Branch::model()->findAll();

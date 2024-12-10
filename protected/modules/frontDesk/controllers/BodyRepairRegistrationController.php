@@ -102,7 +102,7 @@ class BodyRepairRegistrationController extends Controller {
     }
 
     public function actionAddProductService($registrationId) {
-        $bodyRepairRegistration = $this->instantiate($registrationId, '');
+        $bodyRepairRegistration = $this->instantiate($registrationId, 'create');
         $customer = Customer::model()->findByPk($bodyRepairRegistration->header->customer_id);
         $vehicle = Vehicle::model()->findByPk($bodyRepairRegistration->header->vehicle_id);
         $branches = Branch::model()->findAll();
