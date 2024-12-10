@@ -992,12 +992,12 @@ class BodyRepairRegistrationController extends Controller {
         }
     }
 
-    public function instantiate($id) {
+    public function instantiate($id, $actionType) {
         if (empty($id)) {
-            $bodyRepairRegistration = new BodyRepairRegistration(new RegistrationTransaction(), array(), array(), array());
+            $bodyRepairRegistration = new BodyRepairRegistration($actionType, new RegistrationTransaction(), array(), array(), array());
         } else {
             $bodyRepairRegistrationModel = $this->loadModel($id);
-            $bodyRepairRegistration = new BodyRepairRegistration($bodyRepairRegistrationModel, $bodyRepairRegistrationModel->registrationQuickServices, $bodyRepairRegistrationModel->registrationServices, $bodyRepairRegistrationModel->registrationProducts
+            $bodyRepairRegistration = new BodyRepairRegistration($actionType, $bodyRepairRegistrationModel, $bodyRepairRegistrationModel->registrationQuickServices, $bodyRepairRegistrationModel->registrationServices, $bodyRepairRegistrationModel->registrationProducts
             );
         }
         return $bodyRepairRegistration;

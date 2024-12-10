@@ -37,7 +37,7 @@ Yii::app()->clientScript->registerScript('search', "
 <div id="maincontent">
     <div class="clearfix page-action">
         <?php echo CHtml::link('<span class="fa fa-plus"></span>New Permintaan Bahan WO', Yii::app()->baseUrl.'/frontDesk/materialRequest/create', array('class'=>'button success center', 'visible'=>Yii::app()->user->checkAccess("materialRequestCreate"))) ?> &nbsp;&nbsp;&nbsp;
-        <?php echo CHtml::link('<span class="fa fa-plus"></span>New Permintaan Bahan Gudang', Yii::app()->baseUrl.'/frontDesk/materialRequest/createIndependent', array('class'=>'button success right', 'visible'=>Yii::app()->user->checkAccess("materialRequestCreate"))) ?>
+        <?php echo CHtml::link('<span class="fa fa-plus"></span>New Permintaan Bahan Bulk', Yii::app()->baseUrl.'/frontDesk/materialRequest/createIndependent', array('class'=>'button success right', 'visible'=>Yii::app()->user->checkAccess("materialRequestCreate"))) ?>
         <h1>Manage  Permintaan Bahan</h1>
         <div class="search-bar">
             <div class="clearfix button-bar">

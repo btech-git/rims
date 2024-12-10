@@ -1048,12 +1048,12 @@ class GeneralRepairRegistrationController extends Controller {
         }
     }
 
-    public function instantiate($id) {
+    public function instantiate($id, $actionType) {
         if (empty($id)) {
-            $generalRepairRegistration = new GeneralRepairRegistration(new RegistrationTransaction(), array(), array(), array());
+            $generalRepairRegistration = new GeneralRepairRegistration($actionType, new RegistrationTransaction(), array(), array(), array());
         } else {
             $generalRepairRegistrationModel = $this->loadModel($id);
-            $generalRepairRegistration = new GeneralRepairRegistration($generalRepairRegistrationModel, $generalRepairRegistrationModel->registrationQuickServices, $generalRepairRegistrationModel->registrationServices, $generalRepairRegistrationModel->registrationProducts);
+            $generalRepairRegistration = new GeneralRepairRegistration($actionType, $generalRepairRegistrationModel, $generalRepairRegistrationModel->registrationQuickServices, $generalRepairRegistrationModel->registrationServices, $generalRepairRegistrationModel->registrationProducts);
         }
         return $generalRepairRegistration;
     }
