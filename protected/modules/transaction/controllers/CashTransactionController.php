@@ -570,6 +570,8 @@ class CashTransactionController extends Controller {
                     }
                 }
                 
+                $this->saveTransactionLog('approval', $cashTransaction);
+        
                 $this->redirect(array('view', 'id' => $headerId));
             }
         }
@@ -579,6 +581,32 @@ class CashTransactionController extends Controller {
             'cashTransaction' => $cashTransaction,
             'historis' => $historis,
         ));
+    }
+
+    public function saveTransactionLog($actionType, $cashTransaction) {
+        $transactionLog = new TransactionLog();
+        $transactionLog->transaction_number = $cashTransaction->transaction_number;
+        $transactionLog->transaction_date = $cashTransaction->transaction_date;
+        $transactionLog->log_date = date('Y-m-d');
+        $transactionLog->log_time = date('H:i:s');
+        $transactionLog->table_name = $cashTransaction->tableName();
+        $transactionLog->table_id = $cashTransaction->id;
+        $transactionLog->user_id = Yii::app()->user->id;
+        $transactionLog->username = Yii::app()->user->username;
+        $transactionLog->controller_class = Yii::app()->controller->module->id  . '/' . Yii::app()->controller->id;
+        $transactionLog->action_name = Yii::app()->controller->action->id;
+        $transactionLog->action_type = $actionType;
+        
+        $newData = $cashTransaction->attributes;
+        
+        $newData['cashTransactionApprovals'] = array();
+        foreach($cashTransaction->cashTransactionApprovals as $detail) {
+            $newData['cashTransactionApprovals'][] = $detail->attributes;
+        }
+        
+        $transactionLog->new_data = json_encode($newData);
+
+        $transactionLog->save();
     }
 
     public function actionAjaxGetCount($coaId, $amount, $type) {

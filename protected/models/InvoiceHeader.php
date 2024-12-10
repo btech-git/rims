@@ -522,4 +522,19 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
         
         return $total;
     }
+    
+    public static function getYearlySaleSummary($year) {
+        $sql = "SELECT EXTRACT(YEAR_MONTH FROM invoice_date) AS year_month_value, branch_id, MIN(b.name) AS branch_name, SUM(total_price) AS total_price
+                FROM " . InvoiceHeader::model()->tableName() . " i 
+                INNER JOIN " . Branch::model()->tableName() . " b ON b.id = i.branch_id
+                WHERE YEAR(invoice_date) = :year AND i.status NOT LIKE '%CANCELLED%'
+                GROUP BY EXTRACT(YEAR_MONTH FROM invoice_date), branch_id
+                ORDER BY year_month_value ASC, branch_id ASC";
+                
+        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, array(
+            ':year' => $year,
+        ));
+
+        return $resultSet;
+    }
 }

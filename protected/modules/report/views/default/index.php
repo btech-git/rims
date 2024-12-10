@@ -536,7 +536,12 @@
                                     ),
                                     array(
                                         'label' => 'Laporan Sales Retail Summary', 
-                                        'url' => array('/report/saleTransactionSummary/summary'), 
+                                        'url' => array('/report/saleFlowSummary/summary'), 
+                                        'visible' => Yii::app()->user->checkAccess('director')
+                                    ),
+                                    array(
+                                        'label' => 'Laporan Sales Yearly Summary', 
+                                        'url' => array('/report/yearlySaleSummary/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('director')
                                     ),
                                 ),

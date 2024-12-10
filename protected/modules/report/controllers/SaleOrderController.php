@@ -73,24 +73,6 @@ class SaleOrderController extends Controller {
         $worksheet = $objPHPExcel->setActiveSheetIndex(0);
         $worksheet->setTitle('Sale Order');
 
-        $worksheet->getColumnDimension('A')->setAutoSize(true);
-        $worksheet->getColumnDimension('B')->setAutoSize(true);
-        $worksheet->getColumnDimension('C')->setAutoSize(true);
-        $worksheet->getColumnDimension('D')->setAutoSize(true);
-        $worksheet->getColumnDimension('E')->setAutoSize(true);
-        $worksheet->getColumnDimension('F')->setAutoSize(true);
-        $worksheet->getColumnDimension('G')->setAutoSize(true);
-        $worksheet->getColumnDimension('H')->setAutoSize(true);
-        $worksheet->getColumnDimension('I')->setAutoSize(true);
-        $worksheet->getColumnDimension('J')->setAutoSize(true);
-        $worksheet->getColumnDimension('K')->setAutoSize(true);
-        $worksheet->getColumnDimension('L')->setAutoSize(true);
-        $worksheet->getColumnDimension('M')->setAutoSize(true);
-        $worksheet->getColumnDimension('N')->setAutoSize(true);
-        $worksheet->getColumnDimension('O')->setAutoSize(true);
-        $worksheet->getColumnDimension('P')->setAutoSize(true);
-        $worksheet->getColumnDimension('Q')->setAutoSize(true);
-
         $worksheet->mergeCells('A1:Q1');
         $worksheet->mergeCells('A2:Q2');
         $worksheet->mergeCells('A3:Q3');
@@ -150,6 +132,12 @@ class SaleOrderController extends Controller {
 
                 $counter++;
             }
+        }
+
+        for ($col = 'A'; $col !== 'Z'; $col++) {
+            $objPHPExcel->getActiveSheet()
+            ->getColumnDimension($col)
+            ->setAutoSize(true);
         }
 
         ob_end_clean();
