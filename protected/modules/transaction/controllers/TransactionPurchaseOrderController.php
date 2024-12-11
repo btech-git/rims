@@ -959,6 +959,8 @@ class TransactionPurchaseOrderController extends Controller {
                         $jurnalUmumOutstanding->transaction_type = 'PO';
                         $jurnalUmumOutstanding->save();
 
+                        $this->saveTransactionLog('approval', $purchaseOrder);
+        
                         $this->redirect(array('view', 'id' => $headerId));
                     }
 //                }
@@ -973,6 +975,32 @@ class TransactionPurchaseOrderController extends Controller {
             'purchaseOrder' => $purchaseOrder,
             'historis' => $historis,
         ));
+    }
+
+    public function saveTransactionLog($actionType, $purchaseOrder) {
+        $transactionLog = new TransactionLog();
+        $transactionLog->transaction_number = $purchaseOrder->purchase_order_no;
+        $transactionLog->transaction_date = $purchaseOrder->purchase_order_date;
+        $transactionLog->log_date = date('Y-m-d');
+        $transactionLog->log_time = date('H:i:s');
+        $transactionLog->table_name = $purchaseOrder->tableName();
+        $transactionLog->table_id = $purchaseOrder->id;
+        $transactionLog->user_id = Yii::app()->user->id;
+        $transactionLog->username = Yii::app()->user->username;
+        $transactionLog->controller_class = Yii::app()->controller->module->id  . '/' . Yii::app()->controller->id;
+        $transactionLog->action_name = Yii::app()->controller->action->id;
+        $transactionLog->action_type = $actionType;
+        
+        $newData = $purchaseOrder->attributes;
+        
+        $newData['transactionPurchaseOrderApprovals'] = array();
+        foreach($purchaseOrder->transactionPurchaseOrderApprovals as $detail) {
+            $newData['transactionPurchaseOrderApprovals'][] = $detail->attributes;
+        }
+        
+        $transactionLog->new_data = json_encode($newData);
+
+        $transactionLog->save();
     }
 
     public function actionCancel($id) {

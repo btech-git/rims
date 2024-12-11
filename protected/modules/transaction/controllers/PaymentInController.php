@@ -866,22 +866,6 @@ class PaymentInController extends Controller {
                             $jurnalDiscountProduct->save();
                         }
                         
-//                        if ($paymentIn->discount_service_amount > 0) {
-//                            $jurnalDiscountService = new JurnalUmum;
-//                            $jurnalDiscountService->kode_transaksi = $paymentIn->payment_number;
-//                            $jurnalDiscountService->tanggal_transaksi = $paymentIn->payment_date;
-//                            $jurnalDiscountService->coa_id = 2935;
-//                            $jurnalDiscountService->branch_id = $paymentIn->branch_id;
-//                            $jurnalDiscountService->total = $paymentIn->discount_service_amount;
-//                            $jurnalDiscountService->debet_kredit = 'D';
-//                            $jurnalDiscountService->tanggal_posting = date('Y-m-d');
-//                            $jurnalDiscountService->transaction_subject = $paymentIn->notes;
-//                            $jurnalDiscountService->remark = $remark;
-//                            $jurnalDiscountService->is_coa_category = 0;
-//                            $jurnalDiscountService->transaction_type = 'Pin';
-//                            $jurnalDiscountService->save();
-//                        }
-                        
                         if ($paymentIn->bank_administration_fee > 0) {
                             $jurnalBankAdministration = new JurnalUmum;
                             $jurnalBankAdministration->kode_transaksi = $paymentIn->payment_number;
@@ -915,6 +899,9 @@ class PaymentInController extends Controller {
                         }
                     }// end if approved
                 }
+                
+                $this->saveTransactionLog('approval', $paymentIn);
+        
                 $this->redirect(array('view', 'id' => $headerId));
             }
 //        } catch (Exception $e) {
@@ -927,6 +914,32 @@ class PaymentInController extends Controller {
             'paymentIn' => $paymentIn,
             'historis' => $historis,
         ));
+    }
+
+    public function saveTransactionLog($actionType, $paymentIn) {
+        $transactionLog = new TransactionLog();
+        $transactionLog->transaction_number = $paymentIn->payment_number;
+        $transactionLog->transaction_date = $paymentIn->payment_date;
+        $transactionLog->log_date = date('Y-m-d');
+        $transactionLog->log_time = date('H:i:s');
+        $transactionLog->table_name = $paymentIn->tableName();
+        $transactionLog->table_id = $paymentIn->id;
+        $transactionLog->user_id = Yii::app()->user->id;
+        $transactionLog->username = Yii::app()->user->username;
+        $transactionLog->controller_class = Yii::app()->controller->module->id  . '/' . Yii::app()->controller->id;
+        $transactionLog->action_name = Yii::app()->controller->action->id;
+        $transactionLog->action_type = $actionType;
+        
+        $newData = $paymentIn->attributes;
+        
+        $newData['paymentInApprovals'] = array();
+        foreach($paymentIn->paymentInApprovals as $detail) {
+            $newData['paymentInApprovals'][] = $detail->attributes;
+        }
+        
+        $transactionLog->new_data = json_encode($newData);
+
+        $transactionLog->save();
     }
 
     public function actionCancel($id) {

@@ -344,6 +344,8 @@ class PaymentOutController extends Controller {
                     }
                 }
 
+                $this->saveTransactionLog('approval', $paymentOut);
+        
                 $this->redirect(array('view', 'id' => $headerId));
             }
         }
@@ -353,6 +355,32 @@ class PaymentOutController extends Controller {
             'paymentOut' => $paymentOut,
             'historis' => $historis,
         ));
+    }
+
+    public function saveTransactionLog($actionType, $paymentOut) {
+        $transactionLog = new TransactionLog();
+        $transactionLog->transaction_number = $paymentOut->payment_number;
+        $transactionLog->transaction_date = $paymentOut->payment_date;
+        $transactionLog->log_date = date('Y-m-d');
+        $transactionLog->log_time = date('H:i:s');
+        $transactionLog->table_name = $paymentOut->tableName();
+        $transactionLog->table_id = $paymentOut->id;
+        $transactionLog->user_id = Yii::app()->user->id;
+        $transactionLog->username = Yii::app()->user->username;
+        $transactionLog->controller_class = Yii::app()->controller->module->id  . '/' . Yii::app()->controller->id;
+        $transactionLog->action_name = Yii::app()->controller->action->id;
+        $transactionLog->action_type = $actionType;
+        
+        $newData = $paymentOut->attributes;
+        
+        $newData['paymentOutApprovals'] = array();
+        foreach($paymentOut->paymentOutApprovals as $detail) {
+            $newData['paymentOutApprovals'][] = $detail->attributes;
+        }
+        
+        $transactionLog->new_data = json_encode($newData);
+
+        $transactionLog->save();
     }
 
     public function actionCancel($id) {

@@ -535,6 +535,8 @@ class MovementInHeaderController extends Controller {
                     }
                 }
 
+                $this->saveTransactionLog('approval', $movement);
+        
                 $this->redirect(array('view', 'id' => $headerId));
             }
         }
@@ -544,6 +546,32 @@ class MovementInHeaderController extends Controller {
             'movement' => $movement,
             'historis' => $historis,
         ));
+    }
+
+    public function saveTransactionLog($actionType, $movement) {
+        $transactionLog = new TransactionLog();
+        $transactionLog->transaction_number = $movement->movement_in_number;
+        $transactionLog->transaction_date = $movement->date_posting;
+        $transactionLog->log_date = date('Y-m-d');
+        $transactionLog->log_time = date('H:i:s');
+        $transactionLog->table_name = $movement->tableName();
+        $transactionLog->table_id = $movement->id;
+        $transactionLog->user_id = Yii::app()->user->id;
+        $transactionLog->username = Yii::app()->user->username;
+        $transactionLog->controller_class = Yii::app()->controller->module->id  . '/' . Yii::app()->controller->id;
+        $transactionLog->action_name = Yii::app()->controller->action->id;
+        $transactionLog->action_type = $actionType;
+        
+        $newData = $movement->attributes;
+        
+        $newData['movementInApprovals'] = array();
+        foreach($movement->movementInApprovals as $detail) {
+            $newData['movementInApprovals'][] = $detail->attributes;
+        }
+        
+        $transactionLog->new_data = json_encode($newData);
+
+        $transactionLog->save();
     }
 
     public function actionAjaxReturn($id) {

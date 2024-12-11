@@ -631,6 +631,8 @@ class MovementOutHeaderController extends Controller {
                     }
                 }
 
+                $this->saveTransactionLog('approval', $movement);
+        
                 $this->redirect(array('view', 'id' => $headerId));
             }
         }
@@ -640,6 +642,32 @@ class MovementOutHeaderController extends Controller {
             'movement' => $movement,
             'historis' => $historis,
         ));
+    }
+
+    public function saveTransactionLog($actionType, $movement) {
+        $transactionLog = new TransactionLog();
+        $transactionLog->transaction_number = $movement->movement_out_no;
+        $transactionLog->transaction_date = $movement->date_posting;
+        $transactionLog->log_date = date('Y-m-d');
+        $transactionLog->log_time = date('H:i:s');
+        $transactionLog->table_name = $movement->tableName();
+        $transactionLog->table_id = $movement->id;
+        $transactionLog->user_id = Yii::app()->user->id;
+        $transactionLog->username = Yii::app()->user->username;
+        $transactionLog->controller_class = Yii::app()->controller->module->id  . '/' . Yii::app()->controller->id;
+        $transactionLog->action_name = Yii::app()->controller->action->id;
+        $transactionLog->action_type = $actionType;
+        
+        $newData = $movement->attributes;
+        
+        $newData['movementOutApprovals'] = array();
+        foreach($movement->movementOutApprovals as $detail) {
+            $newData['movementOutApprovals'][] = $detail->attributes;
+        }
+        
+        $transactionLog->new_data = json_encode($newData);
+
+        $transactionLog->save();
     }
 
     public function actionAjaxReturn($id) {

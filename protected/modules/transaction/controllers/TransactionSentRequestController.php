@@ -10,7 +10,7 @@ class TransactionSentRequestController extends Controller {
 
     public function filters() {
         return array(
-//            'access',
+            'access',
         );
     }
 
@@ -323,6 +323,8 @@ class TransactionSentRequestController extends Controller {
                     $jurnalUmumOutstandingPartRequester->save();
                 }
 
+                $this->saveTransactionLog('approval', $sentRequest);
+        
                 $this->redirect(array('view', 'id' => $headerId));
             }
         }
@@ -332,6 +334,32 @@ class TransactionSentRequestController extends Controller {
             'sentRequest' => $sentRequest,
             'historis' => $historis,
         ));
+    }
+
+    public function saveTransactionLog($actionType, $sentRequest) {
+        $transactionLog = new TransactionLog();
+        $transactionLog->transaction_number = $sentRequest->sent_request_no;
+        $transactionLog->transaction_date = $sentRequest->sent_request_date;
+        $transactionLog->log_date = date('Y-m-d');
+        $transactionLog->log_time = date('H:i:s');
+        $transactionLog->table_name = $sentRequest->tableName();
+        $transactionLog->table_id = $sentRequest->id;
+        $transactionLog->user_id = Yii::app()->user->id;
+        $transactionLog->username = Yii::app()->user->username;
+        $transactionLog->controller_class = Yii::app()->controller->module->id  . '/' . Yii::app()->controller->id;
+        $transactionLog->action_name = Yii::app()->controller->action->id;
+        $transactionLog->action_type = $actionType;
+        
+        $newData = $sentRequest->attributes;
+        
+        $newData['transactionSentRequestApprovals'] = array();
+        foreach($sentRequest->transactionSentRequestApprovals as $detail) {
+            $newData['transactionSentRequestApprovals'][] = $detail->attributes;
+        }
+        
+        $transactionLog->new_data = json_encode($newData);
+
+        $transactionLog->save();
     }
 
     public function actionUpdateApprovalDestination($id) {

@@ -6,7 +6,7 @@ class TransferRequestController extends Controller {
     
     public function filters() {
         return array(
-//            'access',
+            'access',
         );
     }
 
@@ -263,7 +263,6 @@ class TransferRequestController extends Controller {
                         $jurnalUmumOutstandingPartRequester->is_coa_category = 0;
                         $jurnalUmumOutstandingPartRequester->transaction_type = 'TR';
                         $jurnalUmumOutstandingPartRequester->save();
-
                     }
                     
                     foreach ($transferRequest->transactionTransferRequestDetails as $detail) {
@@ -278,6 +277,8 @@ class TransferRequestController extends Controller {
 
                 $transferRequest->save(false);
 
+                $this->saveTransactionLog('approval', $transferRequest);
+        
                 $this->redirect(array('view', 'id' => $headerId));
             }
         }
@@ -287,6 +288,32 @@ class TransferRequestController extends Controller {
             'transferRequest' => $transferRequest,
             'historis' => $historis,
         ));
+    }
+
+    public function saveTransactionLog($actionType, $transferRequest) {
+        $transactionLog = new TransactionLog();
+        $transactionLog->transaction_number = $transferRequest->transfer_request_no;
+        $transactionLog->transaction_date = $transferRequest->transfer_request_date;
+        $transactionLog->log_date = date('Y-m-d');
+        $transactionLog->log_time = date('H:i:s');
+        $transactionLog->table_name = $transferRequest->tableName();
+        $transactionLog->table_id = $transferRequest->id;
+        $transactionLog->user_id = Yii::app()->user->id;
+        $transactionLog->username = Yii::app()->user->username;
+        $transactionLog->controller_class = Yii::app()->controller->module->id  . '/' . Yii::app()->controller->id;
+        $transactionLog->action_name = Yii::app()->controller->action->id;
+        $transactionLog->action_type = $actionType;
+        
+        $newData = $transferRequest->attributes;
+        
+        $newData['transactionTransferRequestApprovals'] = array();
+        foreach($transferRequest->transactionTransferRequestApprovals as $detail) {
+            $newData['transactionTransferRequestApprovals'][] = $detail->attributes;
+        }
+        
+        $transactionLog->new_data = json_encode($newData);
+
+        $transactionLog->save();
     }
 
     public function actionUpdateApprovalDestination($id)

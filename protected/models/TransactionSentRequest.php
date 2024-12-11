@@ -99,6 +99,7 @@ class TransactionSentRequest extends MonthlyTransactionActiveRecord {
             'userIdUpdated' => array(self::BELONGS_TO, 'Users', 'user_id_updated'),
             'approval' => array(self::BELONGS_TO, 'User', 'approved_by'),
             'destinationApprovedBy' => array(self::BELONGS_TO, 'Users', 'destination_approved_by'),
+            'transactionSentRequestApprovals' => array(self::HAS_MANY, 'TransactionSentRequestApproval', 'sent_request_id'),
         );
     }
 

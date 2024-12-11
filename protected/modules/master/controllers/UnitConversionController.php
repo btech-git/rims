@@ -64,8 +64,9 @@ class UnitConversionController extends Controller {
 
         if (isset($_POST['UnitConversion'])) {
             $model->attributes = $_POST['UnitConversion'];
-            if ($model->save())
+            if ($model->save()) {
                 $this->redirect(array('view', 'id' => $model->id));
+            }
         }
 
         $this->render('create', array(

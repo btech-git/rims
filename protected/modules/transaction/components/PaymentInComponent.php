@@ -230,7 +230,7 @@ class PaymentInComponent extends CComponent {
         $bankFeeAmount = 0.00;
         
         if ($this->header->paymentType->bank_fee_type == 1) {
-            $bankFeeAmount = $this->getTotalDetail() * $this->header->paymentType->bank_fee_amount / 100;
+            $bankFeeAmount = $this->getTotalInvoice() * $this->header->paymentType->bank_fee_amount / 100;
         } elseif ($this->header->paymentType->bank_fee_type == 2) {
             $bankFeeAmount = $this->header->paymentType->bank_fee_amount;
         } else {
