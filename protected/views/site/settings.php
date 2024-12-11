@@ -269,6 +269,11 @@
                                         'url' => array('/master/unit/admin'), 
                                         'visible' => Yii::app()->user->checkAccess('masterUnitCreate') || Yii::app()->user->checkAccess('masterUnitEdit') || Yii::app()->user->checkAccess('masterUnitApproval')
                                     ),
+                                    array(
+                                        'label' => 'Konversi Satuan', 
+                                        'url' => array('/master/unitConversion/admin'), 
+                                        'visible' => Yii::app()->user->checkAccess('masterUnitCreate') || Yii::app()->user->checkAccess('masterUnitEdit') || Yii::app()->user->checkAccess('masterUnitApproval')
+                                    ),
                                 ),
                             )); ?>
                         <?php endif; ?>

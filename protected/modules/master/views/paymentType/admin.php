@@ -57,6 +57,8 @@ $('.search-form form').submit(function(){
     'columns' => array(
         'id',
         'name',
+        'bank_fee_amount: Biaya Potongan Bank',
+        'bankFeeTypeConstant: Jenis Potongan Bank',
         'coa.name: COA',
         'memo',
         array(

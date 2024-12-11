@@ -996,6 +996,7 @@ class PaymentInController extends Controller {
             $object = array(
                 'paymentAmount' => CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($paymentIn->details[$index], 'amount'))),
                 'taxServiceAmountFormatted' => CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $taxServiceAmount)),
+                'bankFeeAmount' => CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($paymentIn, 'bankFeeAmount'))),
                 'totalPayment' => CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($paymentIn, 'totalPayment'))),
                 'totalInvoice' => CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($paymentIn, 'totalInvoice'))),
             );
@@ -1010,6 +1011,7 @@ class PaymentInController extends Controller {
             $this->loadState($paymentIn);
 
             $object = array(
+                'bankFeeAmount' => CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($paymentIn, 'bankFeeAmount'))),
                 'totalPayment' => CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($paymentIn, 'totalPayment'))),
                 'totalInvoice' => CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($paymentIn, 'totalInvoice'))),
             );

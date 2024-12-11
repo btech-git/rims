@@ -226,6 +226,20 @@ class PaymentInComponent extends CComponent {
         $transactionLog->save();
     }
     
+    public function getBankFeeAmount() {
+        $bankFeeAmount = 0.00;
+        
+        if ($this->header->paymentType->bank_fee_type == 1) {
+            $bankFeeAmount = $this->getTotalDetail() * $this->header->paymentType->bank_fee_amount / 100;
+        } elseif ($this->header->paymentType->bank_fee_type == 2) {
+            $bankFeeAmount = $this->header->paymentType->bank_fee_amount;
+        } else {
+            $bankFeeAmount = '0.00';
+        }
+        
+        return $bankFeeAmount;
+    }
+    
     public function getTotalInvoice() {
         $total = 0.00;
         
@@ -258,7 +272,6 @@ class PaymentInComponent extends CComponent {
     
     public function getTotalPayment() {
         
-        return $this->totalDetail + $this->totalServiceTax + $this->header->downpayment_amount + $this->header->discount_product_amount + $this->header->discount_service_amount + $this->header->bank_administration_fee + $this->header->merimen_fee;
+        return $this->totalDetail + $this->totalServiceTax + $this->header->downpayment_amount + $this->header->discount_product_amount + $this->header->discount_service_amount + $this->header->bank_administration_fee + $this->header->merimen_fee + $this->getBankFeeAmount();
     }
-    
 }

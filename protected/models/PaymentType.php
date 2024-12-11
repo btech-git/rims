@@ -8,6 +8,8 @@
  * @property string $name
  * @property string $memo
  * @property integer $coa_id
+ * @property string $bank_fee_amount
+ * @property integer $bank_fee_type
  *
  * The followings are the available model relations:
  * @property PaymentIn[] $paymentIns
@@ -40,12 +42,13 @@ class PaymentType extends CActiveRecord {
         // will receive user inputs.
         return array(
             array('name', 'required'),
+            array('bank_fee_amount', 'length', 'max' => 10),
             array('name', 'length', 'max' => 60),
             array('memo', 'length', 'max' => 100),
-            array('coa_id', 'numerical', 'integerOnly' => true),
+            array('coa_id, bank_fee_type', 'numerical', 'integerOnly' => true),
             // The following rule is used by search().
             // Please remove those attributes that should not be searched.
-            array('id, name, memo, coa_id', 'safe', 'on' => 'search'),
+            array('id, name, memo, coa_id, bank_fee_amount, bank_fee_type', 'safe', 'on' => 'search'),
         );
     }
 
@@ -113,4 +116,15 @@ class PaymentType extends CActiveRecord {
         return ($value === false) ? 0 : $value;
     }
 
+    public function getBankFeeTypeConstant() {
+        $constant = ''; 
+        
+        if ($this->bank_fee_type == 1) {
+            $constant = '%';
+        } elseif ($this->bank_fee_type == 2) {
+            $constant = 'Rp';
+        }
+        
+        return $constant;
+    }
 }

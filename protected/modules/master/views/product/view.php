@@ -40,6 +40,10 @@ $this->menu=array(
                 'name',
                 'description',
                 'production_year',
+                array(
+                    'name'=>'unit_id', 
+                    'header' => 'Satuan',
+                    'value'=>$model->unit->name),
                 array('name'=>'product_master_category_id', 'value'=>$model->productMasterCategory->name),
                 array('name'=>'product_sub_master_category_id', 'value'=>$model->productSubMasterCategory->name),
                 array('name'=>'product_sub_category_id', 'value'=>$model->productSubCategory->name),

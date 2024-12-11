@@ -188,10 +188,10 @@
                     </div>
                 </div>
 
-                <div class="field">
+<!--                <div class="field">
                     <div class="row collapse">
                         <div class="small-4 columns">
-                            <?php echo $form->labelEx($product->header, 'unit_id_conversion', array('class' => 'prefix')); ?>
+                            <?php /*echo $form->labelEx($product->header, 'unit_id_conversion', array('class' => 'prefix')); ?>
                         </div>
                         <div class="small-8 columns">
                             <?php echo $form->dropDownList($product->header, 'unit_id_conversion', CHtml::listData(Unit::model()->findAll(array('order' => 'name ASC')), 'id', 'name'), array(
@@ -209,10 +209,10 @@
                         </div>
                         <div class="small-8 columns">
                             <?php echo $form->textField($product->header, 'unit_conversion_multiplier', array('size' => 20, 'maxlength' => 30)); ?>
-                            <?php echo $form->error($product->header, 'unit_conversion_multiplier'); ?>
+                            <?php echo $form->error($product->header, 'unit_conversion_multiplier');*/ ?>
                         </div>
                     </div>
-                </div>
+                </div>-->
 
                 <div class="field">
                     <div class="row collapse">

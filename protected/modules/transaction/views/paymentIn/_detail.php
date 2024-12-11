@@ -39,6 +39,7 @@
                             data: $("form").serialize(),
                             success: function(data) {
                                 $("#tax_service_amount_' . $i . '").html(data.taxServiceAmountFormatted);
+                                $("#bank_fee_amount").html(data.bankFeeAmount);
                                 $("#total_invoice").html(data.totalInvoice);
                                 $("#total_payment").html(data.totalPayment);
                             },
@@ -56,6 +57,7 @@
                             data: $("form").serialize(),
                             success: function(data) {
                                 $("#payment_amount_' . $i . '").html(data.paymentAmount);
+                                $("#bank_fee_amount").html(data.bankFeeAmount);
                                 $("#total_invoice").html(data.totalInvoice);
                                 $("#total_payment").html(data.totalPayment);
                             },
@@ -72,6 +74,7 @@
                             data: $("form").serialize(),
                             success: function(data) {
                                 $("#payment_amount_' . $i . '").html(data.paymentAmount);
+                                $("#bank_fee_amount").html(data.bankFeeAmount);
                                 $("#total_invoice").html(data.totalInvoice);
                                 $("#total_payment").html(data.totalPayment);
                             },
@@ -103,6 +106,7 @@
                         url: "' . CController::createUrl('ajaxJsonGrandTotal', array('id' => $paymentIn->header->id)) . '",
                         data: $("form").serialize(),
                         success: function(data) {
+                            $("#bank_fee_amount").html(data.bankFeeAmount);
                             $("#total_invoice").html(data.totalInvoice);
                             $("#total_payment").html(data.totalPayment);
                         },
@@ -121,6 +125,7 @@
                         url: "' . CController::createUrl('ajaxJsonGrandTotal', array('id' => $paymentIn->header->id)) . '",
                         data: $("form").serialize(),
                         success: function(data) {
+                            $("#bank_fee_amount").html(data.bankFeeAmount);
                             $("#total_invoice").html(data.totalInvoice);
                             $("#total_payment").html(data.totalPayment);
                         },
@@ -139,10 +144,11 @@
                         url: "' . CController::createUrl('ajaxJsonGrandTotal', array('id' => $paymentIn->header->id)) . '",
                         data: $("form").serialize(),
                         success: function(data) {
+                            $("#bank_fee_amount").html(data.bankFeeAmount);
                             $("#total_invoice").html(data.totalInvoice);
                             $("#total_payment").html(data.totalPayment);
                         },
-                    });',                        
+                    });',
                 )); ?>
             </td>
             <td colspan="2"></td>
@@ -157,11 +163,21 @@
                         url: "' . CController::createUrl('ajaxJsonGrandTotal', array('id' => $paymentIn->header->id)) . '",
                         data: $("form").serialize(),
                         success: function(data) {
+                            $("#bank_fee_amount").html(data.bankFeeAmount);
                             $("#total_invoice").html(data.totalInvoice);
                             $("#total_payment").html(data.totalPayment);
                         },
                     });',                        
                 )); ?>
+            </td>
+            <td colspan="2"></td>
+        </tr>
+        <tr>
+            <td colspan="5" style="text-align: right">Biaya Bank</td>
+            <td style="text-align: right">
+                <span id="bank_fee_amount">
+                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($paymentIn->header, 'bank_fee_amount'))); ?>
+                </span>
             </td>
             <td colspan="2"></td>
         </tr>

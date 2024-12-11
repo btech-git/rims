@@ -111,7 +111,17 @@
                                     $(".bank").show();
                                     $(".giro").show();
                                 }
-                            '
+                            ' . '$.ajax({
+                                type: "POST",
+                                dataType: "JSON",
+                                url: "' . CController::createUrl('ajaxJsonGrandTotal', array('id' => $paymentIn->header->id)) . '",
+                                data: $("form").serialize(),
+                                success: function(data) {
+                                    $("#bank_fee_amount").html(data.bankFeeAmount);
+                                    $("#total_invoice").html(data.totalInvoice);
+                                    $("#total_payment").html(data.totalPayment);
+                                },
+                            });',
                         )); ?>
                         <?php echo CHtml::error($paymentIn->header, 'payment_type_id'); ?>
                     </div>

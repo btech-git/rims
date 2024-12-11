@@ -22,6 +22,23 @@
 	</div>
 
 	<div class="row">
+            <?php echo $form->labelEx($model, 'Biaya Potongan Bank'); ?>
+            <?php echo $form->textField($model,'bank_fee_amount',array('size'=>60,'maxlength'=>60)); ?>
+            <?php echo $form->error($model,'bank_fee_amount'); ?>
+	</div>
+
+	<div class="row">
+            <?php echo $form->labelEx($model,'Jenis Potongan Bank'); ?>
+            <?php echo $form->dropDownList($model, 'bank_fee_type', array(
+                1 => '%',
+                2 => 'Rp',
+             ),array(
+                'prompt' => '[--Pilih Jenis Biaya--]',
+            )); ?>
+            <?php echo $form->error($model,'bank_fee_type'); ?>
+	</div>
+
+	<div class="row">
             <?php echo $form->labelEx($model,'coa_id'); ?>
             <?php echo $form->dropDownList($model, 'coa_id', CHtml::listData(Coa::model()->findAllByAttributes(array('coa_sub_category_id' => 2)), 'id', 'name'),array(
                 'prompt' => '[--Select COA--]',

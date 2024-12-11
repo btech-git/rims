@@ -32,6 +32,7 @@
  * @property string $bank_administration_fee
  * @property string $merimen_fee
  * @property integer $insurance_company_id
+ * @property string $bank_fee_amount
  *
  * The followings are the available model relations:
  * @property InvoiceHeader $invoice
@@ -85,13 +86,13 @@ class PaymentIn extends MonthlyTransactionActiveRecord {
             array('notes, payment_time, payment_date, payment_amount, downpayment_amount, user_id, branch_id, status, is_tax_service, tax_service_amount, payment_type_id', 'required'),
             array('invoice_id, customer_id, vehicle_id, user_id, branch_id, company_bank_id, cash_payment_type, bank_id, payment_type_id, is_tax_service, user_id_cancelled, insurance_company_id, user_id_edited', 'numerical', 'integerOnly' => true),
             array('payment_number', 'length', 'max' => 50),
-            array('payment_amount, tax_service_amount, downpayment_amount, discount_product_amount, discount_service_amount, bank_administration_fee, merimen_fee', 'length', 'max' => 18),
+            array('payment_amount, tax_service_amount, downpayment_amount, discount_product_amount, discount_service_amount, bank_administration_fee, merimen_fee, bank_fee_amount', 'length', 'max' => 18),
             array('payment_type, status', 'length', 'max' => 30),
             array('nomor_giro', 'length', 'max' => 20),
             array('payment_number', 'unique'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, invoice_id, payment_number, payment_date, created_datetime, payment_amount, notes, downpayment_amount, customer_id, vehicle_id, payment_type, user_id, branch_id, insurance_company_id, invoice_status, status, nomor_giro, company_bank_id, cash_payment_type, bank_id, invoice_number, customer_name, payment_type_id, is_tax_service, tax_service_amount, cancelled_datetime, user_id_cancelled, edited_datetime, user_id_edited, discount_product_amount, discount_service_amount, bank_administration_fee, merimen_fee', 'safe', 'on' => 'search'),
+            array('id, invoice_id, payment_number, payment_date, created_datetime, payment_amount, notes, downpayment_amount, customer_id, vehicle_id, payment_type, user_id, branch_id, insurance_company_id, invoice_status, status, nomor_giro, company_bank_id, cash_payment_type, bank_id, invoice_number, customer_name, payment_type_id, is_tax_service, tax_service_amount, cancelled_datetime, user_id_cancelled, edited_datetime, user_id_edited, discount_product_amount, discount_service_amount, bank_administration_fee, merimen_fee, bank_fee_amount', 'safe', 'on' => 'search'),
         );
     }
 
@@ -386,16 +387,6 @@ class PaymentIn extends MonthlyTransactionActiveRecord {
         return $total;
     }
     
-//    public function getTaxServiceAmount($serviceTax) {
-//        
-//        switch ($serviceTax) {
-//            case self::ADD_SERVICE_TAX: return $this->invoice->registrationTransaction->total_service_price * 2 / 100;
-//            case self::NON_SERVICE_TAX: return 0;
-//            case self::INCLUDE_SERVICE_TAX: return $this->invoice->registrationTransaction->total_service_price * 2 / 100;
-//            default: return '';
-//        }
-//    }
-
     public function searchByPendingJournal() {
         // @todo Please modify the following code to remove attributes that should not be searched.
 

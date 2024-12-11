@@ -31,6 +31,16 @@ $this->menu = array(
             'attributes' => array(
                 'id',
                 'name',
+                array(
+                    'label' => 'Biaya Potongan Bank',
+                    'name' => 'bank_fee_amount',
+                    'value' => $model->bank_fee_amount,
+                ),
+                array(
+                    'label' => 'Jenis Potongan Bank',
+                    'name' => 'bank_fee_type',
+                    'value' => $model->bankFeeTypeConstant,
+                ),
                 'coa.name',
                 'memo',
             ),
