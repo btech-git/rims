@@ -192,8 +192,10 @@ class MovementOutServiceController extends Controller {
             ),
         );
         
-        $dataProvider->criteria->addCondition('t.branch_id = :branch_id');
-        $dataProvider->criteria->params[':branch_id'] = Yii::app()->user->branch_id;
+        if (!Yii::app()->user->checkAccess('director')) {
+            $dataProvider->criteria->addCondition('t.branch_id = :branch_id');
+            $dataProvider->criteria->params[':branch_id'] = Yii::app()->user->branch_id;
+        }
         
         if (!empty($plateNumber)) {
             $dataProvider->criteria->addCondition('vehicle.plate_number LIKE :plate_number');

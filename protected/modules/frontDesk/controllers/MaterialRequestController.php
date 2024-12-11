@@ -205,8 +205,10 @@ class MaterialRequestController extends Controller {
             ),
         );
         
-        $dataProvider->criteria->addCondition('t.branch_id = :branch_id');
-        $dataProvider->criteria->params[':branch_id'] = Yii::app()->user->branch_id;
+        if (!Yii::app()->user->checkAccess('director')) {
+            $dataProvider->criteria->addCondition('t.branch_id = :branch_id');
+            $dataProvider->criteria->params[':branch_id'] = Yii::app()->user->branch_id;
+        }
         
         $plateNumber = isset($_GET['PlateNumber']) ? $_GET['PlateNumber'] : '';
         
