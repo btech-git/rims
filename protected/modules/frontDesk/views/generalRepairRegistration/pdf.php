@@ -16,7 +16,7 @@ function tanggal($date) {
             <img src="<?php echo Yii::app()->request->baseUrl; ?>/images/rap-logo.png" alt="" width="35%"/>
         </div>
         <div style="float: right; width: 45%">
-            <p style="font-size: 10px">
+            <p>
                 Jl. Raya Jati Asih/Jati Kramat - 84993984/77 Fax. 84993989 <br />
                 Jl. Raya Kalimalang No. 8, Kp. Dua - 8843656 Fax. 88966753<br />
                 Jl. Raya Kalimalang Q/2D - 8643594/95 Fax. 8645008<br />

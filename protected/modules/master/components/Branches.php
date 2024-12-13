@@ -162,9 +162,6 @@ class Branches extends CComponent {
 //        $isNewRecord = $this->header->isNewRecord;
         $valid = $this->header->save();
 
-        //Update code after saving header
-//        $branch = Branch::model()->findByPk($this->header->id);
-
         $warehouseBranches = BranchWarehouse::model()->findAllByAttributes(array('branch_id' => $this->header->id));
         $wareId = array();
         foreach ($warehouseBranches as $warehouseBranch) {
@@ -264,6 +261,26 @@ class Branches extends CComponent {
             BranchFax::model()->deleteAll($faxcriteria);
         }
 
+        $this->saveTransactionLog();
+        
         return $valid;
+    }
+    
+    public function saveTransactionLog() {
+        $transactionLog = new TransactionLog();
+        $transactionLog->name = $this->header->name;
+        $transactionLog->log_date = date('Y-m-d');
+        $transactionLog->log_time = date('H:i:s');
+        $transactionLog->table_name = $this->header->tableName();
+        $transactionLog->table_id = $this->header->id;
+        $transactionLog->user_id = Yii::app()->user->id;
+        $transactionLog->username = Yii::app()->user->username;
+        $transactionLog->controller_class = Yii::app()->controller->module->id  . '/' . Yii::app()->controller->id;
+        $transactionLog->action_name = Yii::app()->controller->action->id;
+        
+        $newData = $this->header->attributes;
+        $transactionLog->new_data = json_encode($newData);
+
+        $transactionLog->save();
     }
 }

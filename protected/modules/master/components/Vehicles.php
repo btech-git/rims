@@ -90,8 +90,6 @@ class Vehicles extends CComponent {
             $new_inspection[] = $inspectionDetail->id;
         }
 
-        //var_dump(CJSON::encode($this->phoneDetails));
-        //delete vehicle
         $delete_inspection = array_diff($inspectionId, $new_inspection);
         if ($delete_inspection != NULL) {
             $inspection_criteria = new CDbCriteria;
@@ -101,5 +99,4 @@ class Vehicles extends CComponent {
 
         return $valid;
     }
-
 }

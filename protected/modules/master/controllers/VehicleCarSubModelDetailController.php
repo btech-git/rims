@@ -64,8 +64,11 @@ class VehicleCarSubModelDetailController extends Controller {
 
         if (isset($_POST['VehicleCarSubModelDetail'])) {
             $model->attributes = $_POST['VehicleCarSubModelDetail'];
-            if ($model->save())
+            if ($model->save()) {
+                $this->saveTransactionLog($model);
+        
                 $this->redirect(array('view', 'id' => $model->id));
+            }
         }
 
         $this->render('create', array(
@@ -88,8 +91,9 @@ class VehicleCarSubModelDetailController extends Controller {
 
         $vehicleCarSubModel = new VehicleCarSubModel('search');
         $vehicleCarSubModel->unsetAttributes();  // clear any default values
-        if (isset($_GET['VehicleCarSubModel']))
+        if (isset($_GET['VehicleCarSubModel'])) {
             $vehicleCarSubModel->attributes = $_GET['VehicleCarSubModel'];
+        }
 
         $vehicleCarSubModelCriteria = new CDbCriteria;
         $vehicleCarSubModelCriteria->compare('name', $vehicleCarSubModel->name, true);
@@ -100,8 +104,11 @@ class VehicleCarSubModelDetailController extends Controller {
 
         if (isset($_POST['VehicleCarSubModelDetail'])) {
             $model->attributes = $_POST['VehicleCarSubModelDetail'];
-            if ($model->save())
+            if ($model->save()) {
+                $this->saveTransactionLog($model);
+        
                 $this->redirect(array('view', 'id' => $model->id));
+            }
         }
 
         $this->render('update', array(
@@ -109,6 +116,24 @@ class VehicleCarSubModelDetailController extends Controller {
             'vehicleCarSubModel' => $vehicleCarSubModel,
             'vehicleCarSubModelDataProvider' => $vehicleCarSubModelDataProvider,
         ));
+    }
+
+    public function saveTransactionLog($model) {
+        $transactionLog = new TransactionLog();
+        $transactionLog->name = $model->name;
+        $transactionLog->log_date = date('Y-m-d');
+        $transactionLog->log_time = date('H:i:s');
+        $transactionLog->table_name = $model->tableName();
+        $transactionLog->table_id = $model->id;
+        $transactionLog->user_id = Yii::app()->user->id;
+        $transactionLog->username = Yii::app()->user->username;
+        $transactionLog->controller_class = Yii::app()->controller->module->id  . '/' . Yii::app()->controller->id;
+        $transactionLog->action_name = Yii::app()->controller->action->id;
+        
+        $newData = $model->attributes;
+        $transactionLog->new_data = json_encode($newData);
+
+        $transactionLog->save();
     }
 
     /**

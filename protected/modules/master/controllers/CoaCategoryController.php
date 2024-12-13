@@ -64,8 +64,12 @@ class CoaCategoryController extends Controller {
 
         if (isset($_POST['CoaCategory'])) {
             $model->attributes = $_POST['CoaCategory'];
-            if ($model->save())
+            if ($model->save()) {
+                
+                $this->saveTransactionLog($model);
+        
                 $this->redirect(array('view', 'id' => $model->id));
+            }
         }
 
         $this->render('create', array(
@@ -86,13 +90,35 @@ class CoaCategoryController extends Controller {
 
         if (isset($_POST['CoaCategory'])) {
             $model->attributes = $_POST['CoaCategory'];
-            if ($model->save())
+            
+            if ($model->save()) {
+                $this->saveTransactionLog($model);
+        
                 $this->redirect(array('view', 'id' => $model->id));
+            }
         }
 
         $this->render('update', array(
             'model' => $model,
         ));
+    }
+
+    public function saveTransactionLog($model) {
+        $transactionLog = new TransactionLog();
+        $transactionLog->name = $model->name;
+        $transactionLog->log_date = date('Y-m-d');
+        $transactionLog->log_time = date('H:i:s');
+        $transactionLog->table_name = $model->tableName();
+        $transactionLog->table_id = $model->id;
+        $transactionLog->user_id = Yii::app()->user->id;
+        $transactionLog->username = Yii::app()->user->username;
+        $transactionLog->controller_class = Yii::app()->controller->module->id  . '/' . Yii::app()->controller->id;
+        $transactionLog->action_name = Yii::app()->controller->action->id;
+        
+        $newData = $model->attributes;
+        $transactionLog->new_data = json_encode($newData);
+
+        $transactionLog->save();
     }
 
     /**
@@ -104,8 +130,9 @@ class CoaCategoryController extends Controller {
         $this->loadModel($id)->delete();
 
         // if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
-        if (!isset($_GET['ajax']))
+        if (!isset($_GET['ajax'])) {
             $this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
+        }
     }
 
     /**
@@ -124,8 +151,9 @@ class CoaCategoryController extends Controller {
     public function actionAdmin() {
         $model = new CoaCategory('search');
         $model->unsetAttributes();  // clear any default values
-        if (isset($_GET['CoaCategory']))
+        if (isset($_GET['CoaCategory'])) {
             $model->attributes = $_GET['CoaCategory'];
+        }
 
         $this->render('admin', array(
             'model' => $model,

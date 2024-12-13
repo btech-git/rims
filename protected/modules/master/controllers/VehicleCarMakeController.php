@@ -53,8 +53,11 @@ class VehicleCarMakeController extends Controller {
 
         if (isset($_POST['VehicleCarMake'])) {
             $model->attributes = $_POST['VehicleCarMake'];
-            if ($model->save())
+            if ($model->save()) {
+                $this->saveTransactionLog($model);
+        
                 $this->redirect(array('admin'));
+            }
         }
 
         $this->render('create', array(
@@ -75,13 +78,34 @@ class VehicleCarMakeController extends Controller {
 
         if (isset($_POST['VehicleCarMake'])) {
             $model->attributes = $_POST['VehicleCarMake'];
-            if ($model->save())
+            if ($model->save()) {
+                $this->saveTransactionLog($model);
+        
                 $this->redirect(array('admin'));
+            }
         }
 
         $this->render('update', array(
             'model' => $model,
         ));
+    }
+
+    public function saveTransactionLog($model) {
+        $transactionLog = new TransactionLog();
+        $transactionLog->name = $model->name;
+        $transactionLog->log_date = date('Y-m-d');
+        $transactionLog->log_time = date('H:i:s');
+        $transactionLog->table_name = $model->tableName();
+        $transactionLog->table_id = $model->id;
+        $transactionLog->user_id = Yii::app()->user->id;
+        $transactionLog->username = Yii::app()->user->username;
+        $transactionLog->controller_class = Yii::app()->controller->module->id  . '/' . Yii::app()->controller->id;
+        $transactionLog->action_name = Yii::app()->controller->action->id;
+        
+        $newData = $model->attributes;
+        $transactionLog->new_data = json_encode($newData);
+
+        $transactionLog->save();
     }
 
     /**

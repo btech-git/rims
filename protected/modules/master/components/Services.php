@@ -186,7 +186,7 @@ class Services extends CComponent {
     }
 
     public function flush() {
-        $isNewRecord = $this->header->isNewRecord;
+//        $isNewRecord = $this->header->isNewRecord;
         $valid = $this->header->save();
 
         $service_equipments = ServiceEquipment::model()->findAllByAttributes(array('service_id' => $this->header->id));
@@ -265,34 +265,32 @@ class Services extends CComponent {
             ServiceComplement::model()->deleteAll($criteria);
         }
 
-//        $service_materials = ServiceMaterial::model()->findAllByAttributes(array('service_id' => $this->header->id));
-//        $product_id = array();
-//        foreach ($service_materials as $service_material) {
-//            $product_id[] = $service_material->id;
-//        }
-//        $new_detail_material = array();
-//
-//        //equipment
-//        foreach ($this->materialDetails as $materialDetail) {
-//            $materialDetail->service_id = $this->header->id;
-//            $valid = $materialDetail->save(false) && $valid;
-//            $new_detail_material[] = $materialDetail->id;
-//        }
-//
-//        //delete equipment
-//        $delete_array = array_diff($product_id, $new_detail_material);
-//        if ($delete_array != NULL) {
-//            $criteria = new CDbCriteria;
-//            $criteria->addInCondition('id', $delete_array);
-//            ServiceMaterial::model()->deleteAll($criteria);
-//        }
-
         foreach ($this->productDetails as $productDetail) {
             $productDetail->service_id = $this->header->id;
                 
             $valid = $valid && $productDetail->save(false);
         }
 
+        $this->saveTransactionLog();
+        
         return $valid;
+    }
+    
+    public function saveTransactionLog() {
+        $transactionLog = new TransactionLog();
+        $transactionLog->name = $this->header->name;
+        $transactionLog->log_date = date('Y-m-d');
+        $transactionLog->log_time = date('H:i:s');
+        $transactionLog->table_name = $this->header->tableName();
+        $transactionLog->table_id = $this->header->id;
+        $transactionLog->user_id = Yii::app()->user->id;
+        $transactionLog->username = Yii::app()->user->username;
+        $transactionLog->controller_class = Yii::app()->controller->module->id  . '/' . Yii::app()->controller->id;
+        $transactionLog->action_name = Yii::app()->controller->action->id;
+        
+        $newData = $this->header->attributes;
+        $transactionLog->new_data = json_encode($newData);
+
+        $transactionLog->save();
     }
 }

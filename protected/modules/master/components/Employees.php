@@ -186,11 +186,6 @@ class Employees extends CComponent {
 //        $isNewRecord = $this->header->isNewRecord;
         $valid = $this->header->save();
 
-        //Update code after saving header
-//        $employee = Employee::model()->findByPk($this->header->id);
-//        $this->header->code = 'E-' . $this->header->id;
-//        $this->header->update(array('code'));
-
         $employee_phones = EmployeePhone::model()->findAllByAttributes(array('employee_id' => $this->header->id));
         $phoneId = array();
         foreach ($employee_phones as $employee_phone) {
@@ -226,13 +221,6 @@ class Employees extends CComponent {
             $deductionId[] = $employee_deduction->id;
         }
         $new_deduction = array();
-
-        /*$employee_divisions = EmployeeBranchDivisionPositionLevel::model()->findAllByAttributes(array('employee_id' => $this->header->id));
-        $divisionId = array();
-        foreach ($employee_divisions as $employee_division) {
-            $divisionId[] = $employee_division->id;
-        }
-        $new_division = array();*/
 
         //phone
         foreach ($this->phoneDetails as $phoneDetail) {
@@ -271,20 +259,8 @@ class Employees extends CComponent {
             $deductionDetail->employee_id = $this->header->id;
             $valid = $deductionDetail->save(false) && $valid;
             $new_deduction[] = $deductionDetail->id;
-            //print_r($new_deduction);
-            //echo 'test deduction added';
-            //exit;
         }
 
-        //Division
-//        foreach ($this->divisionDetails as $divisionDetail) {
-//            $divisionDetail->employee_id = $this->header->id;
-//            $divisionDetail->branch_id = $_POST['Employee']['branch_id'];
-//            $valid = $divisionDetail->save(false) && $valid;
-//            $new_division[] = $divisionDetail->id;
-//        }
-        //var_dump(CJSON::encode($this->phoneDetails));
-        //delete phone
         $delete_array = array_diff($phoneId, $new_detail);
         if ($delete_array != NULL) {
             $criteria = new CDbCriteria;
@@ -324,15 +300,26 @@ class Employees extends CComponent {
             EmployeeDeductions::model()->deleteAll($deduction_criteria);
         }
 
-        //delete Divisions
-        /*$delete_division = array_diff($divisionId, $new_division);
-        if ($delete_division != NULL) {
-            $division_criteria = new CDbCriteria;
-            $division_criteria->addInCondition('id', $delete_division);
-            EmployeeBranchDivisionPositionLevel::model()->deleteAll($division_criteria);
-        }*/
-
+        $this->saveTransactionLog();
+        
         return $valid;
     }
+    
+    public function saveTransactionLog() {
+        $transactionLog = new TransactionLog();
+        $transactionLog->name = $this->header->name;
+        $transactionLog->log_date = date('Y-m-d');
+        $transactionLog->log_time = date('H:i:s');
+        $transactionLog->table_name = $this->header->tableName();
+        $transactionLog->table_id = $this->header->id;
+        $transactionLog->user_id = Yii::app()->user->id;
+        $transactionLog->username = Yii::app()->user->username;
+        $transactionLog->controller_class = Yii::app()->controller->module->id  . '/' . Yii::app()->controller->id;
+        $transactionLog->action_name = Yii::app()->controller->action->id;
+        
+        $newData = $this->header->attributes;
+        $transactionLog->new_data = json_encode($newData);
 
+        $transactionLog->save();
+    }
 }
