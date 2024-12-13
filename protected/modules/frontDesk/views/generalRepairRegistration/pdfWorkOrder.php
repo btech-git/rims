@@ -31,7 +31,7 @@ function tanggal($date) {
         <h4>WORK ORDER</h4>
     </div>
 
-    <div style="text-align: right;">
+    <div style="text-align: right; font-size: 10px;">
         No WO: <?php echo CHtml::encode(CHtml::value($generalRepairRegistration, 'work_order_number')); ?>
         &nbsp;&nbsp;
         No Nota: <?php echo CHtml::encode(CHtml::value($generalRepairRegistration, 'sales_order_number')); ?>
@@ -39,7 +39,7 @@ function tanggal($date) {
 
     <div class="supplier">
         <div class="left">
-            <table style="font-size: 10px">
+            <table>
                 <tr>
                     <td>TANGGAL MASUK</td>
                     <td>:</td>
@@ -68,7 +68,7 @@ function tanggal($date) {
             </table>
         </div>
         <div class="right">
-            <table style="font-size: 10px">
+            <table>
                 <tr>
                     <td>TANGGAL SELESAI</td>
                     <td>:</td>
@@ -206,7 +206,7 @@ function tanggal($date) {
                     </tr>
                 <?php $no++;
                 } ?>
-                <?php for ($j = 22, $i = $i % $j + 1; $j > $i; $j--): ?>
+                <?php for ($j = 15, $i = $i % $j + 1; $j > $i; $j--): ?>
                     <tr class="titems">
                         <td style="border-right: 1px solid">&nbsp;</td>
                         <td style="border-right: 1px solid">&nbsp;</td>
