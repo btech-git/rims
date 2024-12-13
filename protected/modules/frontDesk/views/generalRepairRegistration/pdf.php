@@ -113,9 +113,8 @@ function tanggal($date) {
                 </tr>
             </table>
         </div>
-        
-        <br />
     <?php endif; ?>
+    
     <?php if (count($generalRepairRegistration->registrationQuickServices) > 0 || count($generalRepairRegistration->registrationServices) > 0): ?>
         <div class="purchase-order">
             <table>
@@ -141,6 +140,7 @@ function tanggal($date) {
                         </tr>
                     <?php endforeach; ?>
                 <?php endif; ?>
+                        
                 <?php if (count($generalRepairRegistration->registrationServices) > 0): ?>
                     <?php foreach ($generalRepairRegistration->registrationServices as $service): ?>
                         <tr class="isi">
