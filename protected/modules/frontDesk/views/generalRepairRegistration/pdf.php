@@ -99,7 +99,7 @@ function tanggal($date) {
                 foreach ($generalRepairRegistration->registrationProducts as $product) {
                 ?>
                     <tr class="isi">
-                        <td class="noo"><?php echo $no ?></td>
+                        <td class="noo"><?php echo $no; ?></td>
                         <td>&nbsp; <?php echo CHtml::encode(CHtml::value($product, 'product.name')); ?></td>
                         <td>&nbsp; <?php echo CHtml::encode(CHtml::value($product, 'quantity')); ?></td>
                         <td style="text-align: right">&nbsp;  Rp. <?php echo number_format($product->sale_price, 2, ',', '.'); ?></td>
@@ -111,7 +111,9 @@ function tanggal($date) {
                 } ?>
                 <tr>
                     <td colspan="5" style="font-weight: bold; text-align: right">TOTAL SUKU CADANG</td>
-                    <td colspan="2" style="font-weight: bold; text-align: right">&nbsp;  Rp. <?php echo number_format($generalRepairRegistration->subtotal_product, 2, ',', '.'); ?></td>
+                    <td colspan="2" style="font-weight: bold; text-align: right">
+                        &nbsp;  Rp. <?php echo number_format($generalRepairRegistration->subtotal_product, 2, ',', '.'); ?>
+                    </td>
                 </tr>
             </table>
         </div>
@@ -120,10 +122,10 @@ function tanggal($date) {
     <?php if (count($generalRepairRegistration->registrationQuickServices) > 0 || count($generalRepairRegistration->registrationServices) > 0): ?>
         <div class="purchase-order">
             <table>
-                <tr style="background-color: skyblue; font-size: 10px;">
+                <tr style="background-color: skyblue">
                     <th colspan="5">JASA PERBAIKAN - SERVICE</th>
                 </tr>
-                <tr style="font-size: 8px;">
+                <tr>
                     <th class="no">NO</th>
                     <th class="item">DESKRIPSI</th>
                     <th class="price">JUMLAH</th>
@@ -131,33 +133,31 @@ function tanggal($date) {
                     <th class="price">TOTAL</th>
                 </tr>
                 <?php $no = 1;?>
-                <?php if (count($generalRepairRegistration->registrationQuickServices) > 0): ?>
-                    <?php foreach ($generalRepairRegistration->registrationQuickServices as $quickService): ?>
-                        <tr class="isi" style="font-size: 8px;">
-                            <td class="noo"><?php echo $no ?></td>
-                            <td>&nbsp; <?php echo CHtml::encode(CHtml::value($quickService, 'quickService.name')); ?></td>
-                            <td style="text-align: right">&nbsp;  Rp. <?php echo number_format($quickService->price, 2, ',', '.') ?></td>
-                            <td style="text-align: center">&nbsp; <?php echo $generalRepairRegistration->ppnLiteral; ?></td>
-                            <td style="text-align: right">&nbsp;  Rp. <?php echo number_format($quickService->total_price, 2, ',', '.') ?></td>
-                        </tr>
-                    <?php endforeach; ?>
-                <?php endif; ?>
-                        
-                <?php if (count($generalRepairRegistration->registrationServices) > 0): ?>
-                    <?php foreach ($generalRepairRegistration->registrationServices as $service): ?>
-                        <tr class="isi" style="font-size: 8px;">
-                            <td class="noo"><?php echo $no ?></td>
-                            <td>&nbsp; <?php echo CHtml::encode(CHtml::value($service, 'service.name')); ?></td>
-                            <td style="text-align: right">&nbsp; Rp. <?php echo number_format($service->price, 2, ',', '.') ?></td>
-                            <td style="text-align: center">&nbsp; <?php echo $generalRepairRegistration->ppnLiteral; ?></td>
-                            <td style="text-align: right">&nbsp; Rp. <?php echo number_format($service->total_price, 2, ',', '.') ?></td>
-                        </tr>
-                        <?php $no++; ?>
-                    <?php endforeach; ?>
-                <?php endif; ?>
-                <tr style="font-size: 8px;">
-                    <td colspan="4" style="font-weight: bold; text-align: right">TOTAL JASA PERBAIKAN</td>
-                    <td style="font-weight: bold; text-align: right">&nbsp;  Rp. <?php echo number_format($generalRepairRegistration->subtotal_service, 2, ',', '.'); ?></td>
+                <?php foreach ($generalRepairRegistration->registrationQuickServices as $quickService): ?>
+                    <tr class="isi">
+                        <td class="noo"><?php echo $no; ?></td>
+                        <td>&nbsp; <?php echo CHtml::encode(CHtml::value($quickService, 'quickService.name')); ?></td>
+                        <td style="text-align: right">&nbsp;  Rp. <?php echo number_format($quickService->price, 2, ',', '.') ?></td>
+                        <td style="text-align: center">&nbsp; <?php echo $generalRepairRegistration->ppnLiteral; ?></td>
+                        <td style="text-align: right">&nbsp;  Rp. <?php echo number_format($quickService->total_price, 2, ',', '.') ?></td>
+                    </tr>
+                    <?php $no++; ?>
+                <?php endforeach; ?>
+                <?php foreach ($generalRepairRegistration->registrationServices as $service): ?>
+                    <tr class="isi">
+                        <td class="noo"><?php echo $no; ?></td>
+                        <td>&nbsp; <?php echo CHtml::encode(CHtml::value($service, 'service.name')); ?></td>
+                        <td style="text-align: right">&nbsp; Rp. <?php echo number_format($service->price, 2, ',', '.') ?></td>
+                        <td style="text-align: center">&nbsp; <?php echo $generalRepairRegistration->ppnLiteral; ?></td>
+                        <td style="text-align: right">&nbsp; Rp. <?php echo number_format($service->total_price, 2, ',', '.') ?></td>
+                    </tr>
+                    <?php $no++; ?>
+                <?php endforeach; ?>
+                <tr>
+                    <td colspan="5" style="font-weight: bold; text-align: right">TOTAL JASA PERBAIKAN</td>
+                    <td colspan="2" style="font-weight: bold; text-align: right">
+                        &nbsp;  Rp. <?php echo number_format($generalRepairRegistration->subtotal_service, 2, ',', '.'); ?>
+                    </td>
                 </tr>
             </table>
         </div>
