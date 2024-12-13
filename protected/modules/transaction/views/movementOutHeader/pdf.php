@@ -69,41 +69,39 @@ function tanggal($date) {
     <hr />
     
     <div class="purchase-order">
-        <div class="detail">
-            <table>
-                <thead>
-                    <tr>
-                        <th style="width: 5%; text-align: center">NO</th>
-                        <th>Code</th>
-                        <th>Product</th>
-                        <th>Brand</th>
-                        <th>Qty Request</th>
-                        <th>Qty Movement</th>
-                    </tr>
-                </thead>
-                <tbody style="height: 100px;">
-                    <?php $no = 1;?>
-                    <?php if (count($model->movementOutDetails) > 0): ?>
-                        <?php foreach ($model->movementOutDetails as $detail): ?>
-                            <?php $product = $detail->product; ?>
-                            <tr class="isi">
-                                <td><?php echo $no; ?></td>
-                                <td>&nbsp; <?php echo CHtml::encode(CHtml::value($product, 'manufacturer_code')); ?></td>
-                                <td>&nbsp; <?php echo CHtml::encode(CHtml::value($product, 'name')); ?></td>
-                                <td>
-                                    <?php echo CHtml::encode(CHtml::value($product, 'brand.name')); ?> -
-                                    <?php echo CHtml::encode(CHtml::value($product, 'subBrand.name')); ?> -
-                                    <?php echo CHtml::encode(CHtml::value($product, 'subBrandSeries.name')); ?>
-                                </td>
-                                <td>&nbsp; <?php echo CHtml::encode(CHtml::value($detail, 'quantity_transaction')); ?></td>
-                                <td>&nbsp; <?php echo CHtml::encode(CHtml::value($detail, 'quantity')); ?></td>
-                            </tr>
-                            <?php $no++; ?>
-                        <?php endforeach; ?>
-                    <?php endif; ?>
-                </tbody>
-            </table>
-        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th style="width: 5%; text-align: center">NO</th>
+                    <th>Code</th>
+                    <th>Product</th>
+                    <th>Brand</th>
+                    <th>Qty Request</th>
+                    <th>Qty Movement</th>
+                </tr>
+            </thead>
+            <tbody style="height: 100px;">
+                <?php $no = 1;?>
+                <?php if (count($model->movementOutDetails) > 0): ?>
+                    <?php foreach ($model->movementOutDetails as $detail): ?>
+                        <?php $product = $detail->product; ?>
+                        <tr class="isi">
+                            <td><?php echo $no; ?></td>
+                            <td>&nbsp; <?php echo CHtml::encode(CHtml::value($product, 'manufacturer_code')); ?></td>
+                            <td>&nbsp; <?php echo CHtml::encode(CHtml::value($product, 'name')); ?></td>
+                            <td>
+                                <?php echo CHtml::encode(CHtml::value($product, 'brand.name')); ?> -
+                                <?php echo CHtml::encode(CHtml::value($product, 'subBrand.name')); ?> -
+                                <?php echo CHtml::encode(CHtml::value($product, 'subBrandSeries.name')); ?>
+                            </td>
+                            <td>&nbsp; <?php echo CHtml::encode(CHtml::value($detail, 'quantity_transaction')); ?></td>
+                            <td>&nbsp; <?php echo CHtml::encode(CHtml::value($detail, 'quantity')); ?></td>
+                        </tr>
+                        <?php $no++; ?>
+                    <?php endforeach; ?>
+                <?php endif; ?>
+            </tbody>
+        </table>
     </div>
     
     <div>
