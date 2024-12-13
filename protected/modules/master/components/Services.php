@@ -277,7 +277,7 @@ class Services extends CComponent {
     }
     
     public function saveTransactionLog() {
-        $transactionLog = new TransactionLog();
+        $transactionLog = new MasterLog();
         $transactionLog->name = $this->header->name;
         $transactionLog->log_date = date('Y-m-d');
         $transactionLog->log_time = date('H:i:s');

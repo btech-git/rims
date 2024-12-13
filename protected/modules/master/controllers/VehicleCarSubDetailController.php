@@ -104,7 +104,7 @@ class VehicleCarSubDetailController extends Controller {
     }
 
     public function saveTransactionLog($model) {
-        $transactionLog = new TransactionLog();
+        $transactionLog = new MasterLog();
         $transactionLog->name = $model->name;
         $transactionLog->log_date = date('Y-m-d');
         $transactionLog->log_time = date('H:i:s');

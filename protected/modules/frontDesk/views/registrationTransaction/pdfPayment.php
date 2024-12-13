@@ -28,7 +28,8 @@ function tanggal($date) {
     </div>
     
     <div style="text-align: center">
-        <h4>INVOICE</h4>
+        <h4>TANDA TERIMA PEMBAYARAN</h4>
+        <img src="<?php echo Yii::app()->request->baseUrl; ?>/images/lunas.png" alt="" width="35%"/>
     </div>
 
     <div class="body-memo">
