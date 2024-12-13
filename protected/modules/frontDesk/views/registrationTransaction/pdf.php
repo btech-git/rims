@@ -75,7 +75,7 @@ function tanggal($date) {
                 <th class="no">NO</th>
                 <th class="item">CODE</th>
                 <th class="item">PRODUCT</th>
-                <th class="no">QTY</th>
+                <th class="qty">QTY</th>
                 <th class="price">UNIT PRICE</th>
                 <th class="price">TOTAL</th>
             </tr>
