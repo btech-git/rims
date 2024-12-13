@@ -30,7 +30,7 @@ function tanggal($date) {
         <h4>FORM ESTIMASI</h4>
     </div>
 
-    <div class="body">
+    <div class="body-memo">
         <table>
             <tr>
                 <td>TGL PEMERIKSAAN</td>
