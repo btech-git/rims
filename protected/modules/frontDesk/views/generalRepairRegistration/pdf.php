@@ -83,16 +83,16 @@ function tanggal($date) {
         <div class="purchase-order">
             <table>
                 <tr style="background-color: skyblue">
-                    <th colspan="7" style="font-size: 18px;">SUKU CADANG - SPAREPARTS</th>
+                    <th colspan="7" style="font-size: 12px;">SUKU CADANG - SPAREPARTS</th>
                 </tr>
                 <tr>
-                    <th class="no" style="font-size: 18px;">NO</th>
-                    <th class="item" style="font-size: 18px;">DESKRIPSI</th>
-                    <th class="no">Qty</th>
-                    <th class="price">HARGA SATUAN</th>
-                    <th class="price">JUMLAH</th>
-                    <th class="no">PPN</th>
-                    <th class="price">TOTAL</th>
+                    <th class="no" style="font-size: 12px;">NO</th>
+                    <th class="item" style="font-size: 12px;">DESKRIPSI</th>
+                    <th class="no" style="font-size: 12px;">Qty</th>
+                    <th class="price" style="font-size: 12px;">HARGA SATUAN</th>
+                    <th class="price" style="font-size: 12px;">JUMLAH</th>
+                    <th class="no" style="font-size: 12px;">PPN</th>
+                    <th class="price" style="font-size: 12px;">TOTAL</th>
                 </tr>
                 <?php
                 $no = 1;
