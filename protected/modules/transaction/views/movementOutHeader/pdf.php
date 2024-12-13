@@ -110,3 +110,7 @@ function tanggal($date) {
         <p class="authorized"></p>
     </div>
 </div>
+
+<div style="width: 100%; text-align: center">
+    <img src="<?php echo Yii::app()->request->baseUrl; ?>/images/copy-icon.png" alt="" width="35%"/>
+</div>
