@@ -77,13 +77,15 @@ function tanggal($date) {
         </table>
     </div>
     
+    <hr />
+    
     <?php if (count($generalRepairRegistration->registrationProducts) > 0): ?>
         <div class="purchase-order">
             <table>
-                <tr style="background-color: skyblue">
+                <tr style="background-color: skyblue; font-size: 12px;">
                     <th colspan="7">SUKU CADANG - SPAREPARTS</th>
                 </tr>
-                <tr>
+                <tr style="font-size: 10px;">
                     <th class="no">NO</th>
                     <th class="item">DESKRIPSI</th>
                     <th class="no">Qty</th>
@@ -96,7 +98,7 @@ function tanggal($date) {
                 $no = 1;
                 foreach ($generalRepairRegistration->registrationProducts as $product) {
                 ?>
-                    <tr class="isi">
+                    <tr class="isi" style="font-size: 10px;">
                         <td class="noo"><?php echo $no ?></td>
                         <td>&nbsp; <?php echo CHtml::encode(CHtml::value($product, 'product.name')); ?></td>
                         <td>&nbsp; <?php echo CHtml::encode(CHtml::value($product, 'quantity')); ?></td>
