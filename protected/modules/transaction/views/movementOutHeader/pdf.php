@@ -44,23 +44,23 @@ function tanggal($date) {
                 <td><?php echo CHtml::encode(Yii::app()->dateFormatter->format("d MMM yyyy", CHtml::value($model, 'date_posting'))); ?></td>
             </tr>
             <tr>
-                <td>Type</td>
+                <td>Reference #</td>
                 <td>:</td>
                 <td>
                     <?php
                     if ($model->movement_type == 1) {
-                        $movementType = "Delivery Order";
+                        $referenceNumber = $model->deliveryOrder->delivery_order_no;
                     } elseif ($model->movement_type == 2) {
-                        $movementType = "Return Order";
+                        $referenceNumber = $model->returnOrder->return_order_no;
                     } elseif ($model->movement_type == 3) {
-                        $movementType = "GR/BR";
+                        $referenceNumber = $model->registrationTransaction->transaction_number;
                     } elseif ($model->movement_type == 4) {
-                        $movementType = "Permintaan Bahan";
+                        $referenceNumber = $model->materialRequestHeader->transaction_number;
                     } else {
-                        $movementType = "";
+                        $referenceNumber = "";
                     }
                     ?>
-                    <?php echo CHtml::encode($movementType); ?>
+                    <?php echo CHtml::encode($referenceNumber); ?>
                 </td>
             </tr>
         </table>
@@ -109,8 +109,8 @@ function tanggal($date) {
     </div>
     
     <div class="detail-notes">
-        <h4>Jakarta, <?php echo tanggal(date('Y-m-d')); ?></h4>
-        Yang Mengirim,
+        <span style="text-align: right"><h4>Jakarta, <?php echo tanggal(date('Y-m-d')); ?></h4></span>
+        <p style="text-align: right">Yang Mengirim,</p>
         <p class="authorized"></p>
     </div>
 </div>
