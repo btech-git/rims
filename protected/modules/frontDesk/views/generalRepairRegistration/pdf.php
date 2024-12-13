@@ -82,10 +82,10 @@ function tanggal($date) {
     <?php if (count($generalRepairRegistration->registrationProducts) > 0): ?>
         <div class="purchase-order">
             <table>
-                <tr style="background-color: skyblue; font-size: 12px;">
+                <tr style="background-color: skyblue; font-size: 14px;">
                     <th colspan="7">SUKU CADANG - SPAREPARTS</th>
                 </tr>
-                <tr style="font-size: 12px;">
+                <tr style="font-size: 14px;">
                     <th class="no">NO</th>
                     <th class="item">DESKRIPSI</th>
                     <th class="no">Qty</th>
@@ -98,7 +98,7 @@ function tanggal($date) {
                 $no = 1;
                 foreach ($generalRepairRegistration->registrationProducts as $product) {
                 ?>
-                    <tr class="isi" style="font-size: 10px;">
+                    <tr class="isi" style="font-size: 12px;">
                         <td class="noo"><?php echo $no; ?></td>
                         <td>&nbsp; <?php echo CHtml::encode(CHtml::value($product, 'product.name')); ?></td>
                         <td>&nbsp; <?php echo CHtml::encode(CHtml::value($product, 'quantity')); ?></td>
@@ -109,7 +109,7 @@ function tanggal($date) {
                     </tr>
                     <?php $no++;
                 } ?>
-                <tr style="font-size: 10px;">
+                <tr style="font-size: 12px;">
                     <td colspan="5" style="font-weight: bold; text-align: right">TOTAL SUKU CADANG</td>
                     <td colspan="2" style="font-weight: bold; text-align: right">
                         &nbsp;  Rp. <?php echo number_format($generalRepairRegistration->subtotal_product, 2, ',', '.'); ?>
