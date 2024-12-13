@@ -103,12 +103,6 @@ function tanggal($date) {
                         </tr>
                     <?php endif; ?>
                 <?php endforeach; ?>
-                <tr>
-                    <td colspan="5" style="font-weight: bold; text-align: right;">TOTAL SUKU CADANG</td>
-                    <td style="font-weight: bold; text-align: right;">
-                        &nbsp;  Rp. <?php echo number_format($invoiceHeader->subtotal_product, 2, ',', '.'); ?>
-                    </td>
-                </tr>
             </table>
         </div>
     <?php endif; ?>
@@ -145,12 +139,6 @@ function tanggal($date) {
                     <?php $no++; ?>
                     <?php endif; ?>
                 <?php endforeach; ?>
-                <tr>
-                    <td colspan="2" style="font-weight: bold; text-align: right">TOTAL JASA PERBAIKAN</td>
-                    <td style="font-weight: bold; text-align: right">
-                        &nbsp;  Rp. <?php echo number_format($invoiceHeader->subtotal_service, 2, ',', '.'); ?>
-                    </td>
-                </tr>
             </table>
         </div>
     <?php endif; ?>
@@ -159,19 +147,19 @@ function tanggal($date) {
             <tr>
                 <td style="width: 45%; text-align: center">Yang membuat,</td>
                 <td>TOTAL PRODUCT & SERVICE</td>
-                <td style="text-align:right">Rp. <?php echo number_format($invoiceHeader->subtotal, 2, ',', '.') ?> &nbsp; </td>
+                <td style="text-align:right">Rp. <?php echo number_format($invoiceHeader->subTotal, 2, ',', '.') ?> &nbsp; </td>
             </tr>
             
             <tr>
                 <td style="border-bottom: none">&nbsp;</td>
                 <td>PPN - <?php echo CHtml::encode(CHtml::value($invoiceHeader, 'tax_percentage')); ?>%</td>
-                <td style="text-align:right">Rp. <?php echo number_format($invoiceHeader->ppn_price, 2, ',', '.') ?> &nbsp; </td>
+                <td style="text-align:right">Rp. <?php echo number_format($invoiceHeader->ppn_total, 2, ',', '.') ?> &nbsp; </td>
             </tr>
                 
             <tr>
                 <td style="text-align: center"><?php echo CHtml::encode(CHtml::value($invoiceHeader, 'user.username')); ?></td>
                 <td style="font-weight: bold">GRAND TOTAL</td>
-                <td style="font-weight: bold; text-align:right">Rp. <?php echo number_format($invoiceHeader->grand_total, 2, ',', '.') ?> &nbsp; </td>
+                <td style="font-weight: bold; text-align:right">Rp. <?php echo number_format($invoiceHeader->total_price, 2, ',', '.') ?> &nbsp; </td>
             </tr>
             <tr>
                 <td colspan="3" style="text-align: center">* Note: Jasa Perbaikan & Suku Cadang diluar Estimasi, akan diinformasikan lebih lanjut</td>
