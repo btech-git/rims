@@ -78,7 +78,6 @@ function tanggal($date) {
                         <th>Product</th>
                         <th>Brand</th>
                         <th>Qty Request</th>
-                        <th>Qty Stock</th>
                         <th>Qty Movement</th>
                     </tr>
                 </thead>
@@ -97,7 +96,6 @@ function tanggal($date) {
                                     <?php echo CHtml::encode(CHtml::value($product, 'subBrandSeries.name')); ?>
                                 </td>
                                 <td>&nbsp; <?php echo CHtml::encode(CHtml::value($detail, 'quantity_transaction')); ?></td>
-                                <td>&nbsp; <?php echo CHtml::encode(CHtml::value($detail, 'quantity_stock')); ?></td>
                                 <td>&nbsp; <?php echo CHtml::encode(CHtml::value($detail, 'quantity')); ?></td>
                             </tr>
                             <?php $no++; ?>
@@ -109,7 +107,7 @@ function tanggal($date) {
     </div>
     
     <div class="detail-notes">
-        <span style="text-align: right"><h4>Jakarta, <?php echo tanggal(date('Y-m-d')); ?></h4></span>
+        <h4><span style="text-align: right">Jakarta, <?php echo tanggal(date('Y-m-d')); ?></span></h4>
         <p style="text-align: right">Yang Mengirim,</p>
         <p class="authorized"></p>
     </div>
