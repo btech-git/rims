@@ -34,7 +34,7 @@
   font-size: 12px;
 }
 .rapad{
-  font-size: 10px
+  font-size: 10px;
 }
 .rap{
   padding-top:15px
@@ -48,11 +48,18 @@
 .supplier .left{
   width: 50%;
   float: left;
-  font-size: 10px;
 }
 .supplier .right{
   width: 48.2%;
-  float: right;
+  float: right
+}
+.supplier table{
+  border-collapse: collapse;
+  width: 100%;
+}
+.supplier table tr td{
+  border:1px solid black;
+  padding: 5px;
   font-size: 10px;
 }
 .purchase-order{
