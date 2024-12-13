@@ -113,7 +113,7 @@ function tanggal($date) {
         <?php endif; ?>
     </div>
     
-    <div style="text-align:right">
+    <div style="text-align:right; font-size: 10px;">
         <h4>Jakarta, <?php echo tanggal(date('Y-m-d')); ?></h4>
         Yang Menyerahkan,
         <p class="authorized"></p>
