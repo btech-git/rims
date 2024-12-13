@@ -43,7 +43,8 @@
 .supplier{
   width: 100%;
   overflow: hidden;
-  padding-top: 20px
+  padding-top: 20px;
+  font-size: 10px;
 }
 .supplier .left{
   width: 50%;
