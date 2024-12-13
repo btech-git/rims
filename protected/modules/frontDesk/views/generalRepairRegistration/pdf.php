@@ -83,35 +83,35 @@ function tanggal($date) {
         <div class="purchase-order">
             <table>
                 <tr style="background-color: skyblue">
-                    <th colspan="7" style="font-size: 12px;">SUKU CADANG - SPAREPARTS</th>
+                    <th colspan="7" style="font-size: 14px;">SUKU CADANG - SPAREPARTS</th>
                 </tr>
                 <tr>
-                    <th class="no" style="font-size: 12px;">NO</th>
-                    <th class="item" style="font-size: 12px;">DESKRIPSI</th>
-                    <th class="no" style="font-size: 12px;">Qty</th>
-                    <th class="price" style="font-size: 12px;">HARGA SATUAN</th>
-                    <th class="price" style="font-size: 12px;">JUMLAH</th>
-                    <th class="no" style="font-size: 12px;">PPN</th>
-                    <th class="price" style="font-size: 12px;">TOTAL</th>
+                    <th class="no" style="font-size: 14x;">NO</th>
+                    <th class="item" style="font-size: 14px;">DESKRIPSI</th>
+                    <th class="no" style="font-size: 14px;">Qty</th>
+                    <th class="price" style="font-size: 14px;">HARGA SATUAN</th>
+                    <th class="price" style="font-size: 14px;">JUMLAH</th>
+                    <th class="no" style="font-size: 14px;">PPN</th>
+                    <th class="price" style="font-size: 14px;">TOTAL</th>
                 </tr>
                 <?php
                 $no = 1;
                 foreach ($generalRepairRegistration->registrationProducts as $product) {
                 ?>
                     <tr class="isi">
-                        <td class="noo" style="font-size: 10px;"><?php echo $no; ?></td>
-                        <td style="font-size: 10px;">&nbsp; <?php echo CHtml::encode(CHtml::value($product, 'product.name')); ?></td>
-                        <td style="font-size: 10px;">&nbsp; <?php echo CHtml::encode(CHtml::value($product, 'quantity')); ?></td>
-                        <td style="text-align: right; font-size: 10px;">&nbsp;  Rp. <?php echo number_format($product->sale_price, 2, ',', '.'); ?></td>
-                        <td style="text-align: right; font-size: 10px;">&nbsp;  Rp. <?php echo number_format($product->total_price, 2, ',', '.'); ?></td>
-                        <td style="text-align: center; font-size: 10px;">&nbsp; <?php echo $generalRepairRegistration->ppnLiteral; ?></td>
-                        <td style="text-align: right; font-size: 10px;">&nbsp;  Rp. <?php echo number_format($product->totalPriceAfterTax, 2, ',', '.'); ?></td>
+                        <td class="noo" style="font-size: 12px;"><?php echo $no; ?></td>
+                        <td style="font-size: 12px;">&nbsp; <?php echo CHtml::encode(CHtml::value($product, 'product.name')); ?></td>
+                        <td style="font-size: 12px;">&nbsp; <?php echo CHtml::encode(CHtml::value($product, 'quantity')); ?></td>
+                        <td style="text-align: right; font-size: 12px;">&nbsp;  Rp. <?php echo number_format($product->sale_price, 2, ',', '.'); ?></td>
+                        <td style="text-align: right; font-size: 12px;">&nbsp;  Rp. <?php echo number_format($product->total_price, 2, ',', '.'); ?></td>
+                        <td style="text-align: center; font-size: 12px;">&nbsp; <?php echo $generalRepairRegistration->ppnLiteral; ?></td>
+                        <td style="text-align: right; font-size: 12px;">&nbsp;  Rp. <?php echo number_format($product->totalPriceAfterTax, 2, ',', '.'); ?></td>
                     </tr>
                     <?php $no++;
                 } ?>
                 <tr>
-                    <td colspan="5" style="font-weight: bold; text-align: right; font-size: 10px;">TOTAL SUKU CADANG</td>
-                    <td colspan="2" style="font-weight: bold; text-align: right; font-size: 10px;">
+                    <td colspan="5" style="font-weight: bold; text-align: right; font-size: 12px;">TOTAL SUKU CADANG</td>
+                    <td colspan="2" style="font-weight: bold; text-align: right; font-size: 12px;">
                         &nbsp;  Rp. <?php echo number_format($generalRepairRegistration->subtotal_product, 2, ',', '.'); ?>
                     </td>
                 </tr>
