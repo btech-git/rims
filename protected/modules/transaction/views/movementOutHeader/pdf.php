@@ -106,8 +106,8 @@ function tanggal($date) {
         </div>
     </div>
     
-    <div class="detail-notes">
-        <h4><span style="text-align: right">Jakarta, <?php echo tanggal(date('Y-m-d')); ?></span></h4>
+    <div>
+        <p style="text-align: right">Jakarta, <?php echo tanggal(date('Y-m-d')); ?></p>
         <p style="text-align: right">Yang Mengirim,</p>
         <p class="authorized"></p>
     </div>
