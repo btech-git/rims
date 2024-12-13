@@ -30,7 +30,7 @@ function tanggal($date) {
         <h4>FORM ESTIMASI</h4>
     </div>
 
-    <div class="center">
+    <div class="body">
         <table>
             <tr>
                 <td>TGL PEMERIKSAAN</td>
@@ -99,10 +99,10 @@ function tanggal($date) {
                         <td class="noo"><?php echo $no ?></td>
                         <td>&nbsp; <?php echo CHtml::encode(CHtml::value($product, 'product.name')); ?></td>
                         <td>&nbsp; <?php echo CHtml::encode(CHtml::value($product, 'quantity')); ?></td>
-                        <td>&nbsp;  Rp. <?php echo number_format($product->sale_price, 2, ',', '.'); ?></td>
-                        <td>&nbsp;  Rp. <?php echo number_format($product->total_price, 2, ',', '.'); ?></td>
-                        <td>&nbsp; <?php echo $generalRepairRegistration->ppnLiteral; ?></td>
-                        <td>&nbsp;  Rp. <?php echo number_format($product->totalPriceAfterTax, 2, ',', '.'); ?></td>
+                        <td style="text-align: right">&nbsp;  Rp. <?php echo number_format($product->sale_price, 2, ',', '.'); ?></td>
+                        <td style="text-align: right">&nbsp;  Rp. <?php echo number_format($product->total_price, 2, ',', '.'); ?></td>
+                        <td style="text-align: center">&nbsp; <?php echo $generalRepairRegistration->ppnLiteral; ?></td>
+                        <td style="text-align: right">&nbsp;  Rp. <?php echo number_format($product->totalPriceAfterTax, 2, ',', '.'); ?></td>
                     </tr>
                     <?php $no++;
                 } ?>
@@ -131,9 +131,9 @@ function tanggal($date) {
                         <tr class="isi">
                             <td class="noo"><?php echo $no ?></td>
                             <td>&nbsp; <?php echo CHtml::encode(CHtml::value($quickService, 'quickService.name')); ?></td>
-                            <td>&nbsp;  Rp. <?php echo number_format($quickService->price, 2, ',', '.') ?></td>
-                            <td>&nbsp; <?php echo $generalRepairRegistration->ppnLiteral; ?></td>
-                            <td>&nbsp;  Rp. <?php echo number_format($quickService->total_price, 2, ',', '.') ?></td>
+                            <td style="text-align: right">&nbsp;  Rp. <?php echo number_format($quickService->price, 2, ',', '.') ?></td>
+                            <td style="text-align: center">&nbsp; <?php echo $generalRepairRegistration->ppnLiteral; ?></td>
+                            <td style="text-align: right">&nbsp;  Rp. <?php echo number_format($quickService->total_price, 2, ',', '.') ?></td>
                         </tr>
                     <?php endforeach; ?>
                 <?php endif; ?>
@@ -142,9 +142,9 @@ function tanggal($date) {
                         <tr class="isi">
                             <td class="noo"><?php echo $no ?></td>
                             <td>&nbsp; <?php echo CHtml::encode(CHtml::value($service, 'service.name')); ?></td>
-                            <td>&nbsp; Rp. <?php echo number_format($service->price, 2, ',', '.') ?></td>
-                            <td>&nbsp; <?php echo $generalRepairRegistration->ppnLiteral; ?></td>
-                            <td>&nbsp; Rp. <?php echo number_format($service->total_price, 2, ',', '.') ?></td>
+                            <td style="text-align: right">&nbsp; Rp. <?php echo number_format($service->price, 2, ',', '.') ?></td>
+                            <td style="text-align: center">&nbsp; <?php echo $generalRepairRegistration->ppnLiteral; ?></td>
+                            <td style="text-align: right">&nbsp; Rp. <?php echo number_format($service->total_price, 2, ',', '.') ?></td>
                         </tr>
                         <?php $no++; ?>
                     <?php endforeach; ?>
