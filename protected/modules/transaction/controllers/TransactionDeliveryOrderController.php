@@ -781,15 +781,15 @@ class TransactionDeliveryOrderController extends Controller {
 
     public function actionPdf($id) {
         $do = $this->loadModel($id);
-        $supplier = '0'; //Supplier::model()->find('id=:id', array(':id'=>$po->supplier_id));
-        $branch = '0'; //Branch::model()->find('id=:id', array(':id'=>$po->main_branch_id));
-        $deliveryDetails = TransactionDeliveryOrderDetail::model()->findAllByAttributes(array('delivery_order_id' => $id));
-        $mPDF1 = Yii::app()->ePdf->mpdf();
-        $mPDF1 = Yii::app()->ePdf->mpdf('', 'A4-L');
+        $mPDF1 = Yii::app()->ePdf->mpdf('', 'A4');
+
         $stylesheet = file_get_contents(Yii::getPathOfAlias('webroot') . '/css/pdf.css');
+        $mPDF1->SetTitle('Estimasi');
         $mPDF1->WriteHTML($stylesheet, 1);
-        $mPDF1->WriteHTML($this->renderPartial('pdf', array('model' => $do, 'deliveryDetails' => $deliveryDetails), true));
-        $mPDF1->Output();
+        $mPDF1->WriteHTML($this->renderPartial('pdf', array(
+            'do' => $do,
+        ), true));
+        $mPDF1->Output('Surat Jalan ' . $do->delivery_order_no . '.pdf', 'I');
     }
 
     public function loadModel($id) {

@@ -1,183 +1,64 @@
 <?php
 date_default_timezone_set('Asia/Jakarta');
-function tanggal($date){
-    $bulan = array('Januari','Februari','Maret','April','Mei','Juni','July','Agustus','September','Oktober','November','Desember');
-    $tahun = substr($date,0,4);
-    $bulan2 = substr($date,5,2);
-    $tanggal = substr($date,8,2);
 
-    return $tanggal.' '.$bulan[(int)$bulan2 - 1]. ' '.$tahun;
+function tanggal($date) {
+    $bulan = array('Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'July', 'Agustus', 'September', 'Oktober', 'November', 'Desember');
+    $tahun = substr($date, 0, 4);
+    $bulan2 = substr($date, 5, 2);
+    $tanggal = substr($date, 8, 2);
+
+    return $tanggal . ' ' . $bulan[(int) $bulan2 - 1] . ' ' . $tahun;
 }
-
-if ($model->customer->customerPhones == NULL) {
-    $phonenumber = '';
-}else{
-    foreach ($model->customer->customerPhones as $key => $value) {
-        $phonenumber = $value->phone_no . ', ';
-    }
-}
-
 ?>
 <div class="container">
     <div class="header">
-        <div class="left">
-            <img src="images/logo.png" alt="">
-            <table>
-                <tr>
-                    <td>
-                        <p class="rapad" style="padding-top: 20px;">
-                            JL. Kalimalang, No. 8, Kampung Dua,<br />
-                            Bekasi City, West Java. <br />
-                            Tlp. (021) 8843656
-                        </p>
-                    </td>
-                </tr>
-            </table>
+        <div style="float: left; width: 50%; text-align: center">
+            <img src="<?php echo Yii::app()->request->baseUrl; ?>/images/rap-logo.png" alt="" width="35%"/>
         </div>
-        <div class="right">
-            <h3>Surat Jalan</h3>
-            <table style="font-size: 10px">
-                <tr>
-                    <td>Date</td>
-                    <td>:</td>
-                    <td><?php echo tanggal($model->delivery_date); ?></td>
-                </tr>
-                <tr>
-                    <td>No DO#</td>
-                    <td>:</td>
-                    <td><?php echo $model->delivery_order_no; ?></td>
-                </tr>
-                <tr>
-                    <td>Cabang asal</td>
-                    <td>:</td>
-                    <td><?php echo CHtml::encode(CHtml::value($model, 'senderBranch.name')); ?></td>
-                </tr>
-                <tr>
-                    <td>Cabang tujuan</td>
-                    <td>:</td>
-                    <td><?php echo CHtml::encode(CHtml::value($model, 'destinationBranch.name')); ?></td>
-                </tr>
-                <tr>
-                    <td>Pembuat</td>
-                    <td>:</td>
-                    <td><?php echo CHtml::encode(CHtml::value($model, 'user.username')); ?></td>
-                </tr>
-            </table>
+        <div style="float: right; width: 45%">
+            <p>
+                Jl. Raya Jati Asih/Jati Kramat - 84993984/77 Fax. 84993989 <br />
+                Jl. Raya Kalimalang No. 8, Kp. Dua - 8843656 Fax. 88966753<br />
+                Jl. Raya Kalimalang Q/2D - 8643594/95 Fax. 8645008<br />
+                Jl. Raya Radin Inten II No. 9 - 8629545/46 Fax. 8627313<br />
+                Jl. Celebration Boulevard Blok AA 9/35 - 8261594<br />
+                Email info@raperind.com
+            </p>
         </div>
     </div>
-    <div class="supplier" style="font-size: 10px">
-        <div class="left">
-            <table style="font-size: 10px">
-                <tr>
-                    <td colspan="3">Kepada Yth,</td>
-                </tr>
-                <tr>
-                    <td>Customer</td>
-                    <td>:</td>
-                    <td><?php echo CHtml::encode(CHtml::value($model, 'customer.name')); ?></td>
-                </tr>
-                <tr>
-                    <td>Phone</td>
-                    <td>:</td>
-                    <td><?php echo $phonenumber; ?></td>
-                </tr>
-                <tr>
-                    <td>Address</td>
-                    <td>:</td>
-                    <td><?php echo !empty($model->customer->address)?$model->customer->address.", ": ""; ?><?php echo $model->customer->city->name; ?>  <?php echo $model->customer->province->name; ?> <?php echo $model->customer->zipcode; ?></td>
-                </tr>
-            </table>
-        </div>
-
-        <div class="right">
-            <?php /*
-            <?php if ($model->request_type =='Sales Order'): ?>
-                <div class="row">
-                    <div class="small-12 columns">
-                        <div class="field">
-                            <div class="row collapse">
-                                <div class="small-4 columns">
-                                    <label for="label">SO no</label>
-                                </div>
-                                <div class="small-8 columns">
-                                    <label for="label"><?php echo $model->salesOrder != "" ? $model->salesOrder->sale_order_no : ''; ?></label>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-            <?php elseif($model->request_type =='Sent Request'): ?>
-                <div class="row">
-                    <div class="small-12 columns">
-                        <div class="field">
-                            <div class="row collapse">
-                                <div class="small-4 columns">
-                                    <label for="label">Sent Request no</label>
-                                </div>
-                                <div class="small-8 columns">
-                                    <label for="label"><?php echo $model->sentRequest != NULL ? $model->sentRequest->sent_request_no : ''; ?></label>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="field">
-                            <div class="row collapse">
-                                <div class="small-4 columns">
-                                    <label for="label">Destination Branch</label>
-                                </div>
-                                <div class="small-8 columns">
-                                    <label for="label"><?php echo $model->destination_branch == NULL?'-':$model->destinationBranch->name; ?></label>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            <?php elseif($model->request_type =='Consignment Out') : ?>
-                <div class="row">
-                    <div class="small-12 columns">
-                        <div class="field">
-                            <div class="row collapse">
-                                <div class="small-4 columns">
-                                    <label for="label">Consignment Out</label>
-                                </div>
-                                <div class="small-8 columns">
-                                    <label for="label"><?php echo $model->consignmentOut != NULL ? $model->consignmentOut->consignment_out_no : ''; ?></label>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            <?php elseif($model->request_type =='Transfer Request') : ?>
-                <div class="row">
-                    <div class="small-12 columns">
-                        <div class="field">
-                            <div class="row collapse">
-                                <div class="small-4 columns">
-                                    <label for="label">Transfer Request</label>
-                                </div>
-                                <div class="small-8 columns">
-                                    <label for="label"><?php echo $model->transferRequest != NULL ? $model->transferRequest->transfer_request_no : ''; ?></label>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="field">
-                            <div class="row collapse">
-                                <div class="small-4 columns">
-                                    <label for="label">Destination Branch</label>
-                                </div>
-                                <div class="small-8 columns">
-                                    <label for="label"><?php echo $model->destination_branch == NULL?'-':$model->destinationBranch->name; ?></label>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            <?php endif ?>*/?>
-        </div>
+    
+    <div style="text-align: center">
+        <h4>SURAT JALAN</h4>
     </div>
+
+    <div class="body-memo">
+        <table style="font-size: 10px">
+            <tr>
+                <td colspan="3">Kepada Yth,</td>
+            </tr>
+            <tr>
+                <td>Customer</td>
+                <td>:</td>
+                <td><?php echo CHtml::encode(CHtml::value($do, 'customer.name')); ?></td>
+            </tr>
+            <tr>
+                <td>Phone</td>
+                <td>:</td>
+                <td><?php echo $phonenumber; ?></td>
+            </tr>
+            <tr>
+                <td>Address</td>
+                <td>:</td>
+                <td><?php echo !empty($do->customer->address)?$do->customer->address.", ": ""; ?><?php echo $do->customer->city->name; ?>  <?php echo $do->customer->province->name; ?> <?php echo $do->customer->zipcode; ?></td>
+            </tr>
+        </table>
+    </div>
+    
+    <hr />
+    
     <div class="purchase-order">
         <div class="detail">
-            <?php if (count($deliveryDetails)>0): ?>
+            <?php if (count($do->transactionDeliveryOrderDetails) > 0): ?>
                 <table>
                     <thead>
                         <tr>
@@ -187,7 +68,7 @@ if ($model->customer->customerPhones == NULL) {
                         </tr>
                     </thead>
                     <tbody style="height: 100px;">
-                        <?php foreach ($deliveryDetails as $key => $deliveryDetail): ?>
+                        <?php foreach ($do->transactionDeliveryOrderDetails as $key => $deliveryDetail): ?>
                             <tr>
                                 <td><?php echo $deliveryDetail->product->name == ''?'-':$deliveryDetail->product->name; ?></td>
                                 <td><?php echo $deliveryDetail->quantity_request == ''?'-':$deliveryDetail->quantity_request; ?></td>
