@@ -44,15 +44,16 @@
   width: 100%;
   overflow: hidden;
   padding-top: 20px;
-  font-size: 10px;
 }
 .supplier .left{
   width: 50%;
-  float: left
+  float: left;
+  font-size: 10px;
 }
 .supplier .right{
   width: 48.2%;
-  float: right
+  float: right;
+  font-size: 10px;
 }
 .purchase-order{
   width: 100%;
