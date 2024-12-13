@@ -710,7 +710,7 @@ class GeneralRepairRegistrationController extends Controller {
             'vehicle' => $vehicle,
             'branch' => $branch,
         ), true));
-        $mPDF1->Output('Estimasi' . $generalRepairRegistration->transaction_number . '.pdf');
+        $mPDF1->Output('Estimasi ' . $generalRepairRegistration->transaction_number . '.pdf', 'I');
     }
 
     public function actionPdfSaleOrder($id) {
