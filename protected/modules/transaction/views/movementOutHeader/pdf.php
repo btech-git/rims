@@ -106,7 +106,7 @@ function tanggal($date) {
     
     <div>
         <p style="text-align: right">Jakarta, <?php echo tanggal(date('Y-m-d')); ?></p>
-        <p style="text-align: right">Yang Mengirim,</p>
+        <p style="text-align: right">Yang Mengeluarkan,</p>
         <p class="authorized"></p>
     </div>
 </div>
