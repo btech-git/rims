@@ -77,8 +77,8 @@ function tanggal($date) {
         </table>
     </div>
     
-    <div class="purchase-order">
-        <?php if (count($generalRepairRegistration->registrationProducts) > 0): ?>
+    <?php if (count($generalRepairRegistration->registrationProducts) > 0): ?>
+        <div class="purchase-order">
             <table>
                 <tr style="background-color: skyblue">
                     <th colspan="7">SUKU CADANG - SPAREPARTS</th>
@@ -112,9 +112,12 @@ function tanggal($date) {
                     <td colspan="2" style="font-weight: bold; text-align: right">&nbsp;  Rp. <?php echo number_format($generalRepairRegistration->subtotal_product, 2, ',', '.'); ?></td>
                 </tr>
             </table>
-            <br />
-        <?php endif; ?>
-        <?php if (count($generalRepairRegistration->registrationQuickServices) > 0 || count($generalRepairRegistration->registrationServices) > 0): ?>
+        </div>
+        
+        <br />
+    <?php endif; ?>
+    <?php if (count($generalRepairRegistration->registrationQuickServices) > 0 || count($generalRepairRegistration->registrationServices) > 0): ?>
+        <div class="purchase-order">
             <table>
                 <tr style="background-color: skyblue">
                     <th colspan="5">JASA PERBAIKAN - SERVICE</th>
@@ -155,8 +158,10 @@ function tanggal($date) {
                     <td style="font-weight: bold; text-align: right">&nbsp;  Rp. <?php echo number_format($generalRepairRegistration->subtotal_service, 2, ',', '.'); ?></td>
                 </tr>
             </table>
-            <br />
-        <?php endif; ?>
+        </div>
+        <br />
+    <?php endif; ?>
+    <div class="purchase-order">
         <table>
             <tr>
                 <td style="width: 45%; text-align: center">Yang membuat,</td>
@@ -167,7 +172,7 @@ function tanggal($date) {
             <tr>
                 <?php //if ($generalRepairRegistration->ppn_price > 0.00): ?>
                     <td style="border-bottom: none">&nbsp;</td>
-                    <td>PPN - 10%</td>
+                    <td>PPN - <?php echo CHtml::encode(CHtml::value($generalRepairRegistration, 'tax_percentage')); ?>%</td>
                     <td style="text-align:right">Rp. <?php echo number_format($generalRepairRegistration->ppn_price, 2, ',', '.') ?> &nbsp; </td>
                 <?php /*else: ?>
                     <td style="border-right: 1px solid; border-bottom: none">&nbsp;</td>
@@ -178,7 +183,7 @@ function tanggal($date) {
             <tr>
                 <?php //if ($generalRepairRegistration->pph_price > 0.00): ?>
                     <td style="border-top: none">&nbsp;</td>
-                    <td>PPH 23 - 2%</td>
+                    <td>PPH 23</td>
                     <td style="text-align:right">Rp. <?php echo number_format($generalRepairRegistration->pph_price, 2, ',', '.') ?> &nbsp; </td>
                 <?php /*else: ?>
                     <td style="border-right: 1px solid">&nbsp;</td>
