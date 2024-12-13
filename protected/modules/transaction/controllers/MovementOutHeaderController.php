@@ -407,8 +407,6 @@ class MovementOutHeaderController extends Controller {
         $mPDF1->WriteHTML($this->renderPartial('pdf', array(
             'model' => $model,
         ), true));
-        $mPDF1->SetWatermarkText(new \Mpdf\WatermarkText('DRAFT'));
-        $mPDF1->showWatermarkText = true;
         $mPDF1->Output('Movement Out' . $model->movement_out_no . '.pdf', 'I');
     }
 
