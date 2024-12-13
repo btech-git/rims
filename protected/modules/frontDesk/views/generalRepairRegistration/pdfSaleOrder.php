@@ -31,7 +31,7 @@ function tanggal($date) {
         <h4>FORM PERMINTAAN SERVICE - CONTRACT SERVICE</h4>
     </div>
 
-    <div class="supplier">
+    <div class="body-memo">
         <div class="left">
             <table>
                 <tr>
