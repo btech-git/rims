@@ -37,8 +37,8 @@ function tanggal($date) {
                 <td colspan="3">Kepada Yth,</td>
             </tr>
             <tr>
-                <td>Customer</td>
-                <td>:</td>
+                <td style="width: 15%">Customer</td>
+                <td style="width: 5%">:</td>
                 <td><?php echo CHtml::encode(CHtml::value($do, 'customer.name')); ?></td>
             </tr>
             <tr>

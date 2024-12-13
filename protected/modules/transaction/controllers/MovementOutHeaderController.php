@@ -397,6 +397,19 @@ class MovementOutHeaderController extends Controller {
         $this->redirect(array('admin'));
     }
 
+    public function actionPdf($id) {
+        $model = $this->loadModel($id);
+        $mPDF1 = Yii::app()->ePdf->mpdf('', 'A4');
+
+        $stylesheet = file_get_contents(Yii::getPathOfAlias('webroot') . '/css/pdf.css');
+        $mPDF1->SetTitle('Movement Out');
+        $mPDF1->WriteHTML($stylesheet, 1);
+        $mPDF1->WriteHTML($this->renderPartial('pdf', array(
+            'model' => $model,
+        ), true));
+        $mPDF1->Output('Movement Out' . $model->movement_out_no . '.pdf', 'I');
+    }
+
     public function actionMemo($id) {
         $model = $this->loadModel($id);
         $details = MovementOutDetail::model()->findAllByAttributes(array('movement_out_header_id' => $id));

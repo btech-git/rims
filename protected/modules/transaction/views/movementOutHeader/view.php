@@ -261,6 +261,10 @@ $this->menu = array(
     </div>
 <?php endif; ?>
 
+<div>
+    <?php echo CHtml::link('<span class="fa fa-print"></span>Print Movement Out', Yii::app()->baseUrl.'/transaction/movementOut/pdf?id=' . $model->id, array('class'=>'button warning right', 'style' => 'margin-right:10px')); ?>
+</div>
+
 <?php $this->beginWidget('zii.widgets.jui.CJuiDialog', array(
     'id' => 'cancel-message-dialog',
     // additional javascript options for the dialog plugin
