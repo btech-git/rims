@@ -16,7 +16,7 @@ function tanggal($date) {
             <img src="<?php echo Yii::app()->request->baseUrl; ?>/images/rap-logo.png" alt="" width="35%"/>
         </div>
         <div style="float: right; width: 45%">
-            <p style="font-size: 10px">
+            <p>
                 Jl. Raya Jati Asih/Jati Kramat - 84993984/77 Fax. 84993989 <br />
                 Jl. Raya Kalimalang No. 8, Kp. Dua - 8843656 Fax. 88966753<br />
                 Jl. Raya Kalimalang Q/2D - 8643594/95 Fax. 8645008<br />
@@ -26,100 +26,101 @@ function tanggal($date) {
             </p>
         </div>
     </div>
+    
     <div style="text-align: center">
         <h4>FORM ESTIMASI</h4>
     </div>
 
-    <div class="supplier">
-        <div class="left">
-            <table>
-                <tr>
-                    <td>TGL PEMERIKSAAN</td>
-                    <td>:</td>
-                    <td><?php echo tanggal($bodyRepairRegistration->transaction_date); ?></td>
-                </tr>
-                <tr>
-                    <td>JENIS KENDARAAN</td>
-                    <td>:</td>
-                    <td><?php echo $bodyRepairRegistration->vehicle->carMake->name; ?></td>
-                </tr>
-                <tr>
-                    <td>NO. POLISI</td>
-                    <td>:</td>
-                    <td><?php echo $bodyRepairRegistration->vehicle->plate_number; ?></td>
-                </tr>
-                <tr>
-                    <td>NO. RANGKA</td>
-                    <td>:</td>
-                    <td><?php echo $bodyRepairRegistration->vehicle->frame_number; ?></td>
-                </tr>
-            </table>
-        </div>
-        <div class="right">
-            <table>
-                <tr>
-                    <td>KM</td>
-                    <td>:</td>
-                    <td><?php echo $bodyRepairRegistration->vehicle_mileage; ?></td>
-                </tr>
-                <tr>
-                    <td>NAMA</td>
-                    <td>:</td>
-                    <td><?php echo $customer->name; ?></td>
-                </tr>
-                <tr>
-                    <td>PHONE</td>
-                    <td>:</td>
-                    <td><?php echo $customer->mobile_phone; ?></td>
-                </tr>
-                <tr>
-                    <td>ALAMAT</td>
-                    <td>:</td>
-                    <td><?php echo $customer->address; ?></td>
-                </tr>
-            </table>
-        </div>
+    <div class="body-memo">
+        <table>
+            <tr>
+                <td>TGL PEMERIKSAAN</td>
+                <td>:</td>
+                <td><?php echo tanggal($generalRepairRegistration->transaction_date); ?></td>
+                <td>KM</td>
+                <td>:</td>
+                <td><?php echo $generalRepairRegistration->vehicle_mileage; ?></td>
+            </tr>
+            <tr>
+                <td>JENIS KENDARAAN</td>
+                <td>:</td>
+                <td>
+                    <?php echo $generalRepairRegistration->vehicle->carMake->name; ?> -
+                    <?php echo $generalRepairRegistration->vehicle->carModel->name; ?> -
+                    <?php echo $generalRepairRegistration->vehicle->carSubModel->name; ?> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                </td>
+                <td>NAMA</td>
+                <td>:</td>
+                <td><?php echo $customer->name; ?></td>
+            </tr>
+            <tr>
+                <td>NO. POLISI</td>
+                <td>:</td>
+                <td><?php echo $generalRepairRegistration->vehicle->plate_number; ?></td>
+                <td>PHONE</td>
+                <td>:</td>
+                <td><?php echo $customer->mobile_phone; ?></td>
+            </tr>
+            <tr>
+                <td>NO. RANGKA</td>
+                <td>:</td>
+                <td><?php echo $generalRepairRegistration->vehicle->frame_number; ?></td>
+                <td>ALAMAT</td>
+                <td>:</td>
+                <td><?php echo nl2br($customer->address); ?></td>
+            </tr>
+            <tr>
+                <td>PROBLEM</td>
+                <td>:</td>
+                <td colspan="4"><?php echo CHtml::encode(CHtml::value($generalRepairRegistration, 'problem')); ?></td>
+            </tr>
+        </table>
     </div>
-    <div class="center">PROBLEM: <?php echo CHtml::encode(CHtml::value($generalRepairRegistration, 'problem')); ?></div>
-
-    <div class="purchase-order">
-        <?php if (count($bodyRepairRegistration->registrationProducts) > 0): ?>
+    
+    <hr />
+    
+    <?php if (count($generalRepairRegistration->registrationProducts) > 0): ?>
+        <div class="purchase-order">
             <table>
                 <tr style="background-color: skyblue">
-                    <th colspan="7">SUKU CADANG - SPAREPARTS</th>
+                    <th colspan="7" style="font-size: 14px;">SUKU CADANG - SPAREPARTS</th>
                 </tr>
                 <tr>
-                    <th class="no">NO</th>
-                    <th class="item">DESKRIPSI</th>
-                    <th class="no">Qty</th>
-                    <th class="price">HARGA SATUAN</th>
-                    <th class="price">JUMLAH</th>
-                    <th class="no">PPN</th>
-                    <th class="price">Total</th>
+                    <th class="no" style="font-size: 14x;">NO</th>
+                    <th class="item" style="font-size: 14px;">DESKRIPSI</th>
+                    <th class="no" style="font-size: 14px;">Qty</th>
+                    <th class="price" style="font-size: 14px;">HARGA SATUAN</th>
+                    <th class="price" style="font-size: 14px;">JUMLAH</th>
+                    <th class="no" style="font-size: 14px;">PPN</th>
+                    <th class="price" style="font-size: 14px;">TOTAL</th>
                 </tr>
                 <?php
                 $no = 1;
-                foreach ($bodyRepairRegistration->registrationProducts as $product) {
+                foreach ($generalRepairRegistration->registrationProducts as $product) {
                 ?>
                     <tr class="isi">
-                        <td class="noo"><?php echo $no ?></td>
-                        <td>&nbsp; <?php echo CHtml::encode(CHtml::value($product, 'product.name')); ?></td>
-                        <td>&nbsp; <?php echo CHtml::encode(CHtml::value($product, 'quantity')); ?></td>
-                        <td>&nbsp;  Rp. <?php echo number_format($product->sale_price, 2, ',', '.'); ?></td>
-                        <td>&nbsp;  Rp. <?php echo number_format($product->total_price, 2, ',', '.'); ?></td>
-                        <td>&nbsp; <?php echo $bodyRepairRegistration->ppnLiteral; ?></td>
-                        <td>&nbsp;  Rp. <?php echo number_format($product->totalPriceAfterTax, 2, ',', '.'); ?></td>
+                        <td class="noo" style="font-size: 12px;"><?php echo $no; ?></td>
+                        <td style="font-size: 12px;">&nbsp; <?php echo CHtml::encode(CHtml::value($product, 'product.name')); ?></td>
+                        <td style="font-size: 12px;">&nbsp; <?php echo CHtml::encode(CHtml::value($product, 'quantity')); ?></td>
+                        <td style="text-align: right; font-size: 12px;">&nbsp;  Rp. <?php echo number_format($product->sale_price, 2, ',', '.'); ?></td>
+                        <td style="text-align: right; font-size: 12px;">&nbsp;  Rp. <?php echo number_format($product->total_price, 2, ',', '.'); ?></td>
+                        <td style="text-align: center; font-size: 12px;">&nbsp; <?php echo $generalRepairRegistration->ppnLiteral; ?></td>
+                        <td style="text-align: right; font-size: 12px;">&nbsp;  Rp. <?php echo number_format($product->totalPriceAfterTax, 2, ',', '.'); ?></td>
                     </tr>
                     <?php $no++;
                 } ?>
                 <tr>
-                    <td colspan="5" style="font-weight: bold; text-align: right">TOTAL SUKU CADANG</td>
-                    <td colspan="2" style="font-weight: bold; text-align: right">&nbsp;  Rp. <?php echo number_format($bodyRepairRegistration->subtotal_product, 2, ',', '.'); ?></td>
+                    <td colspan="5" style="font-weight: bold; text-align: right; font-size: 12px;">TOTAL SUKU CADANG</td>
+                    <td colspan="2" style="font-weight: bold; text-align: right; font-size: 12px;">
+                        &nbsp;  Rp. <?php echo number_format($generalRepairRegistration->subtotal_product, 2, ',', '.'); ?>
+                    </td>
                 </tr>
             </table>
-            <br />
-        <?php endif; ?>
-        <?php if (count($bodyRepairRegistration->registrationQuickServices) > 0 || count($bodyRepairRegistration->registrationServices) > 0): ?>
+        </div>
+    <?php endif; ?>
+    
+    <?php if (count($generalRepairRegistration->registrationQuickServices) > 0 || count($generalRepairRegistration->registrationServices) > 0): ?>
+        <div class="purchase-order">
             <table>
                 <tr style="background-color: skyblue">
                     <th colspan="5">JASA PERBAIKAN - SERVICE</th>
@@ -132,55 +133,69 @@ function tanggal($date) {
                     <th class="price">TOTAL</th>
                 </tr>
                 <?php $no = 1;?>
-                <?php if (count($bodyRepairRegistration->registrationQuickServices) > 0): ?>
-                    <?php foreach ($bodyRepairRegistration->registrationQuickServices as $quickService): ?>
-                        <tr class="isi">
-                            <td class="noo"><?php echo $no ?></td>
-                            <td>&nbsp; <?php echo CHtml::encode(CHtml::value($quickService, 'quickService.name')); ?></td>
-                            <td>&nbsp;  Rp. <?php echo number_format($quickService->price, 2, ',', '.') ?></td>
-                            <td>&nbsp; <?php echo $bodyRepairRegistration->ppnLiteral; ?></td>
-                            <td>&nbsp;  Rp. <?php echo number_format($quickService->total_price, 2, ',', '.') ?></td>
-                        </tr>
-                    <?php endforeach; ?>
-                <?php endif; ?>
-                <?php if (count($bodyRepairRegistration->registrationServices) > 0): ?>
-                    <?php foreach ($bodyRepairRegistration->registrationServices as $service): ?>
-                        <tr class="isi">
-                            <td class="noo"><?php echo $no ?></td>
-                            <td>&nbsp; <?php echo CHtml::encode(CHtml::value($service, 'service.name')); ?></td>
-                            <td>&nbsp; Rp. <?php echo number_format($service->price, 2, ',', '.') ?></td>
-                            <td>&nbsp; <?php echo $bodyRepairRegistration->ppnLiteral; ?></td>
-                            <td>&nbsp; Rp. <?php echo number_format($service->total_price, 2, ',', '.') ?></td>
-                        </tr>
-                        <?php $no++; ?>
-                    <?php endforeach; ?>
-                <?php endif; ?>
+                <?php foreach ($generalRepairRegistration->registrationQuickServices as $quickService): ?>
+                    <tr class="isi">
+                        <td class="noo"><?php echo $no; ?></td>
+                        <td>&nbsp; <?php echo CHtml::encode(CHtml::value($quickService, 'quickService.name')); ?></td>
+                        <td style="text-align: right">&nbsp;  Rp. <?php echo number_format($quickService->price, 2, ',', '.') ?></td>
+                        <td style="text-align: center">&nbsp; <?php echo $generalRepairRegistration->ppnLiteral; ?></td>
+                        <td style="text-align: right">&nbsp;  Rp. <?php echo number_format($quickService->total_price, 2, ',', '.') ?></td>
+                    </tr>
+                    <?php $no++; ?>
+                <?php endforeach; ?>
+                <?php foreach ($generalRepairRegistration->registrationServices as $service): ?>
+                    <tr class="isi">
+                        <td class="noo"><?php echo $no; ?></td>
+                        <td>&nbsp; <?php echo CHtml::encode(CHtml::value($service, 'service.name')); ?></td>
+                        <td style="text-align: right">&nbsp; Rp. <?php echo number_format($service->price, 2, ',', '.') ?></td>
+                        <td style="text-align: center">&nbsp; <?php echo $generalRepairRegistration->ppnLiteral; ?></td>
+                        <td style="text-align: right">&nbsp; Rp. <?php echo number_format($service->total_price, 2, ',', '.') ?></td>
+                    </tr>
+                    <?php $no++; ?>
+                <?php endforeach; ?>
                 <tr>
-                    <td colspan="4" style="font-weight: bold; text-align: right">TOTAL JASA PERBAIKAN</td>
-                    <td style="font-weight: bold; text-align: right">&nbsp;  Rp. <?php echo number_format($bodyRepairRegistration->subtotal_service, 2, ',', '.'); ?></td>
+                    <td colspan="3" style="font-weight: bold; text-align: right">TOTAL JASA PERBAIKAN</td>
+                    <td colspan="2" style="font-weight: bold; text-align: right">
+                        &nbsp;  Rp. <?php echo number_format($generalRepairRegistration->subtotal_service, 2, ',', '.'); ?>
+                    </td>
                 </tr>
             </table>
-            <br />
-        <?php endif; ?>
+        </div>
+    <?php endif; ?>
+    <div class="purchase-order">
         <table>
             <tr>
                 <td style="width: 45%; text-align: center">Yang membuat,</td>
                 <td>SUBTOTAL</td>
-                <td style="text-align:right">Rp. <?php echo number_format($bodyRepairRegistration->subtotal, 2, ',', '.') ?> &nbsp; </td>
+                <td style="text-align:right">Rp. <?php echo number_format($generalRepairRegistration->subtotal, 2, ',', '.') ?> &nbsp; </td>
             </tr>
+            
             <tr>
-                <td rowspan="2"></td>
-                <td>PPN - 10%</td>
-                <td style="text-align:right">Rp. <?php echo number_format($bodyRepairRegistration->ppn_price, 2, ',', '.') ?> &nbsp; </td>
+                <?php //if ($generalRepairRegistration->ppn_price > 0.00): ?>
+                    <td style="border-bottom: none">&nbsp;</td>
+                    <td>PPN - <?php echo CHtml::encode(CHtml::value($generalRepairRegistration, 'tax_percentage')); ?>%</td>
+                    <td style="text-align:right">Rp. <?php echo number_format($generalRepairRegistration->ppn_price, 2, ',', '.') ?> &nbsp; </td>
+                <?php /*else: ?>
+                    <td style="border-right: 1px solid; border-bottom: none">&nbsp;</td>
+                    <td colspan="2">&nbsp;</td>
+                <?php endif;*/ ?>
             </tr>
+                
             <tr>
-                <td>PPH 23 - 2%</td>
-                <td style="text-align:right">Rp. <?php echo number_format($bodyRepairRegistration->pph_price, 2, ',', '.') ?> &nbsp; </td>
+                <?php //if ($generalRepairRegistration->pph_price > 0.00): ?>
+                    <td style="border-top: none">&nbsp;</td>
+                    <td>PPH 23</td>
+                    <td style="text-align:right">Rp. <?php echo number_format($generalRepairRegistration->pph_price, 2, ',', '.') ?> &nbsp; </td>
+                <?php /*else: ?>
+                    <td style="border-right: 1px solid">&nbsp;</td>
+                    <td colspan="2">&nbsp;</td>
+                <?php endif;*/ ?>
             </tr>
+                
             <tr>
-                <td style="text-align: center"><?php echo CHtml::encode(CHtml::value($bodyRepairRegistration, 'user.username')); ?></td>
+                <td style="text-align: center"><?php echo CHtml::encode(CHtml::value($generalRepairRegistration, 'user.username')); ?></td>
                 <td style="font-weight: bold">GRAND TOTAL</td>
-                <td style="font-weight: bold; text-align:right">Rp. <?php echo number_format($bodyRepairRegistration->grand_total, 2, ',', '.') ?> &nbsp; </td>
+                <td style="font-weight: bold; text-align:right">Rp. <?php echo number_format($generalRepairRegistration->grand_total, 2, ',', '.') ?> &nbsp; </td>
             </tr>
             <tr>
                 <td colspan="3" style="text-align: center">* Note: Jasa Perbaikan & Suku Cadang diluar Estimasi, akan diinformasikan lebih lanjut</td>

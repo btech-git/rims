@@ -372,18 +372,18 @@ class BodyRepairRegistrationController extends Controller {
         $customer = Customer::model()->findByPk($bodyRepairRegistration->customer_id);
         $vehicle = Vehicle::model()->findByPk($bodyRepairRegistration->vehicle_id);
         $branch = Branch::model()->findByPk($bodyRepairRegistration->branch_id);
-//        $mPDF1 = Yii::app()->ePdf->mpdf();
         $mPDF1 = Yii::app()->ePdf->mpdf('', 'A4');
 
         $stylesheet = file_get_contents(Yii::getPathOfAlias('webroot') . '/css/pdf.css');
+        $mPDF1->SetTitle('Estimasi');
         $mPDF1->WriteHTML($stylesheet, 1);
         $mPDF1->WriteHTML($this->renderPartial('pdf', array(
-                    'bodyRepairRegistration' => $bodyRepairRegistration,
-                    'customer' => $customer,
-                    'vehicle' => $vehicle,
-                    'branch' => $branch,
-                        ), true));
-        $mPDF1->Output();
+            'bodyRepairRegistration' => $bodyRepairRegistration,
+            'customer' => $customer,
+            'vehicle' => $vehicle,
+            'branch' => $branch,
+        ), true));
+        $mPDF1->Output('Estimasi ' . $bodyRepairRegistration->transaction_number . '.pdf', 'I');
     }
 
     public function actionPdfSaleOrder($id) {
@@ -391,18 +391,19 @@ class BodyRepairRegistrationController extends Controller {
         $customer = Customer::model()->findByPk($bodyRepairRegistration->customer_id);
         $vehicle = Vehicle::model()->findByPk($bodyRepairRegistration->vehicle_id);
         $branch = Branch::model()->findByPk($bodyRepairRegistration->branch_id);
-        $mPDF1 = Yii::app()->ePdf->mpdf();
+//        $mPDF1 = Yii::app()->ePdf->mpdf();
         $mPDF1 = Yii::app()->ePdf->mpdf('', 'A4');
 
         $stylesheet = file_get_contents(Yii::getPathOfAlias('webroot') . '/css/pdf.css');
+        $mPDF1->SetTitle('Sales Order');
         $mPDF1->WriteHTML($stylesheet, 1);
         $mPDF1->WriteHTML($this->renderPartial('pdfSaleOrder', array(
-                    'bodyRepairRegistration' => $bodyRepairRegistration,
-                    'customer' => $customer,
-                    'vehicle' => $vehicle,
-                    'branch' => $branch,
-                        ), true));
-        $mPDF1->Output();
+            'bodyRepairRegistration' => $bodyRepairRegistration,
+            'customer' => $customer,
+            'vehicle' => $vehicle,
+            'branch' => $branch,
+        ), true));
+        $mPDF1->Output('SO ' . $bodyRepairRegistration->sales_order_number . '.pdf', 'I');
     }
 
     public function actionPdfWorkOrder($id) {
@@ -414,14 +415,15 @@ class BodyRepairRegistrationController extends Controller {
         $mPDF1 = Yii::app()->ePdf->mpdf('', 'A4');
 
         $stylesheet = file_get_contents(Yii::getPathOfAlias('webroot') . '/css/pdf.css');
+        $mPDF1->SetTitle('Work Order');
         $mPDF1->WriteHTML($stylesheet, 1);
         $mPDF1->WriteHTML($this->renderPartial('pdfWorkOrder', array(
-                    'bodyRepairRegistration' => $bodyRepairRegistration,
-                    'customer' => $customer,
-                    'vehicle' => $vehicle,
-                    'branch' => $branch,
-                        ), true));
-        $mPDF1->Output();
+            'bodyRepairRegistration' => $bodyRepairRegistration,
+            'customer' => $customer,
+            'vehicle' => $vehicle,
+            'branch' => $branch,
+        ), true));
+        $mPDF1->Output('WO ' . $bodyRepairRegistration->work_order_number . '.pdf', 'I');
     }
 
     public function actionUpdateSpk($id) {

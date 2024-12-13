@@ -37,22 +37,22 @@ function tanggal($date) {
                 <tr>
                     <td>TANGGAL MASUK</td>
                     <td>:</td>
-                    <td><?php echo tanggal($bodyRepairRegistration->transaction_date); ?></td>
+                    <td><?php echo tanggal($generalRepairRegistration->transaction_date); ?></td>
                 </tr>
                 <tr>
                     <td>JENIS KENDARAAN</td>
                     <td>:</td>
-                    <td><?php echo $bodyRepairRegistration->vehicle->carMake->name; ?></td>
+                    <td><?php echo $generalRepairRegistration->vehicle->carMake->name; ?></td>
                 </tr>
                 <tr>
                     <td>NO. POLISI</td>
                     <td>:</td>
-                    <td><?php echo $bodyRepairRegistration->vehicle->plate_number; ?></td>
+                    <td><?php echo $generalRepairRegistration->vehicle->plate_number; ?></td>
                 </tr>
                 <tr>
                     <td>NO. RANGKA</td>
                     <td>:</td>
-                    <td><?php echo $bodyRepairRegistration->vehicle->frame_number; ?></td>
+                    <td><?php echo $generalRepairRegistration->vehicle->frame_number; ?></td>
                 </tr>
             </table>
         </div>
@@ -85,23 +85,23 @@ function tanggal($date) {
     </div>
 
     <div class="purchase-order">
-        <?php if (count($bodyRepairRegistration->registrationQuickServices) > 0 || count($bodyRepairRegistration->registrationServices) > 0): ?>
+        <?php if (count($generalRepairRegistration->registrationQuickServices) > 0 || count($generalRepairRegistration->registrationServices) > 0): ?>
             <table>
                 <tr style="background-color: skyblue">
                     <th style="width: 5%; text-align: center">NO</th>
                     <th>JENIS PEKERJAAN</th>
                 </tr>
                 <?php $no = 1;?>
-                <?php if (count($bodyRepairRegistration->registrationQuickServices) > 0): ?>
-                    <?php foreach ($bodyRepairRegistration->registrationQuickServices as $quickService): ?>
+                <?php if (count($generalRepairRegistration->registrationQuickServices) > 0): ?>
+                    <?php foreach ($generalRepairRegistration->registrationQuickServices as $quickService): ?>
                         <tr class="isi">
                             <td><?php echo $no ?></td>
                             <td>&nbsp; <?php echo CHtml::encode(CHtml::value($quickService, 'quickService.name')); ?></td>
                         </tr>
                     <?php endforeach; ?>
                 <?php endif; ?>
-                <?php if (count($bodyRepairRegistration->registrationServices) > 0): ?>
-                    <?php foreach ($bodyRepairRegistration->registrationServices as $service): ?>
+                <?php if (count($generalRepairRegistration->registrationServices) > 0): ?>
+                    <?php foreach ($generalRepairRegistration->registrationServices as $service): ?>
                         <tr class="isi">
                             <td><?php echo $no ?></td>
                             <td>&nbsp; <?php echo CHtml::encode(CHtml::value($service, 'service.name')); ?></td>
@@ -113,7 +113,7 @@ function tanggal($date) {
         <?php endif; ?>
     </div>
     
-    <div style="text-align:right">
+    <div style="text-align:right; font-size: 10px;">
         <h4>Jakarta, <?php echo tanggal(date('Y-m-d')); ?></h4>
         Yang Menyerahkan,
         <p class="authorized"></p>
