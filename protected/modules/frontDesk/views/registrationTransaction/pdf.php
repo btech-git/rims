@@ -65,83 +65,80 @@ function tanggal($date) {
     </div>
     
     <hr />
-    
-    <?php if (count($invoiceHeader->invoiceDetails) > 0): ?>
-        <div class="purchase-order">
-            <table>
-                <tr style="background-color: skyblue">
-                    <th colspan="7">SUKU CADANG - SPAREPARTS</th>
-                </tr>
-                <tr>
-                    <th class="no">NO</th>
-                    <th class="item">CODE</th>
-                    <th class="item">PRODUCT</th>
-                    <th class="no">QTY</th>
-                    <th class="price">UNIT PRICE</th>
-                    <th class="price">TOTAL</th>
-                </tr>
-                <?php $no = 1; ?>
-                <?php foreach ($invoiceHeader->invoiceDetails as $detail): ?>
-                    <?php if (!empty($detail->product_id)): ?>
-                        <tr class="isi">
-                            <td class="noo"><?php echo $no; ?></td>
-                            <td>&nbsp; <?php echo CHtml::encode(CHtml::value($detail, 'product.manufacturer_code')); ?></td>
-                            <td>&nbsp; <?php echo CHtml::encode(CHtml::value($detail, 'product.name')); ?></td>
-                            <td>&nbsp; <?php echo CHtml::encode(CHtml::value($detail, 'quantity')); ?></td>
-                            <td style="text-align: right;">&nbsp;  Rp. <?php echo number_format($detail->unit_price, 2, ',', '.'); ?></td>
-                            <td style="text-align: right;">&nbsp;  Rp. <?php echo number_format($detail->total_price, 2, ',', '.'); ?></td>
-                        </tr>
-                        <?php $no++; ?>
-                    <?php else: ?>
-                        <tr class="isi">
-                            <td>&nbsp;</td>
-                            <td>&nbsp;</td>
-                            <td>&nbsp;</td>
-                            <td>&nbsp;</td>
-                            <td>&nbsp;</td>
-                            <td>&nbsp;</td>
-                        </tr>
-                    <?php endif; ?>
-                <?php endforeach; ?>
-            </table>
-        </div>
-    <?php endif; ?>
-    
-    <?php if (count($invoiceHeader->registrationQuickServices) > 0 || count($invoiceHeader->registrationServices) > 0): ?>
-        <div class="purchase-order">
-            <table>
-                <tr style="background-color: skyblue">
-                    <th colspan="5">JASA PERBAIKAN - SERVICE</th>
-                </tr>
-                <tr>
-                    <th class="no">NO</th>
-                    <th class="item">SERVICE</th>
-                    <th class="price">PRICE</th>
-                </tr>
-                <?php $no = 1;?>
-                <?php foreach ($invoiceHeader->invoiceDetails as $detail): ?>
-                    <?php if (!empty($detail->quick_service_id)): ?>
+
+    <div class="purchase-order">
+        <table>
+            <tr style="background-color: skyblue">
+                <th colspan="7">SUKU CADANG - SPAREPARTS</th>
+            </tr>
+            <tr>
+                <th class="no">NO</th>
+                <th class="item">CODE</th>
+                <th class="item">PRODUCT</th>
+                <th class="no">QTY</th>
+                <th class="price">UNIT PRICE</th>
+                <th class="price">TOTAL</th>
+            </tr>
+            <?php $no = 1; ?>
+            <?php foreach ($invoiceHeader->invoiceDetails as $detail): ?>
+                <?php if (!empty($detail->product_id)): ?>
                     <tr class="isi">
                         <td class="noo"><?php echo $no; ?></td>
-                        <td>&nbsp; <?php echo CHtml::encode(CHtml::value($detail, 'quickService.name')); ?></td>
-                        <td style="text-align: right">&nbsp;  Rp. <?php echo number_format($detail->total_price, 2, ',', '.') ?></td>
+                        <td>&nbsp; <?php echo CHtml::encode(CHtml::value($detail, 'product.manufacturer_code')); ?></td>
+                        <td>&nbsp; <?php echo CHtml::encode(CHtml::value($detail, 'product.name')); ?></td>
+                        <td>&nbsp; <?php echo CHtml::encode(CHtml::value($detail, 'quantity')); ?></td>
+                        <td style="text-align: right;">&nbsp;  Rp. <?php echo number_format($detail->unit_price, 2, ',', '.'); ?></td>
+                        <td style="text-align: right;">&nbsp;  Rp. <?php echo number_format($detail->total_price, 2, ',', '.'); ?></td>
                     </tr>
                     <?php $no++; ?>
-                    <?php endif; ?>
-                <?php endforeach; ?>
-                <?php foreach ($invoiceHeader->invoiceDetails as $detail): ?>
-                    <?php if (!empty($detail->service_id)): ?>
+                <?php else: ?>
                     <tr class="isi">
-                        <td class="noo"><?php echo $no; ?></td>
-                        <td>&nbsp; <?php echo CHtml::encode(CHtml::value($detail, 'service.name')); ?></td>
-                        <td style="text-align: right">&nbsp; Rp. <?php echo number_format($detail->total_price, 2, ',', '.') ?></td>
+                        <td>&nbsp;</td>
+                        <td>&nbsp;</td>
+                        <td>&nbsp;</td>
+                        <td>&nbsp;</td>
+                        <td>&nbsp;</td>
+                        <td>&nbsp;</td>
                     </tr>
-                    <?php $no++; ?>
-                    <?php endif; ?>
-                <?php endforeach; ?>
-            </table>
-        </div>
-    <?php endif; ?>
+                <?php endif; ?>
+            <?php endforeach; ?>
+        </table>
+    </div>
+
+    <div class="purchase-order">
+        <table>
+            <tr style="background-color: skyblue">
+                <th colspan="5">JASA PERBAIKAN - SERVICE</th>
+            </tr>
+            <tr>
+                <th class="no">NO</th>
+                <th class="item">SERVICE</th>
+                <th class="price">PRICE</th>
+            </tr>
+            <?php $no = 1;?>
+            <?php foreach ($invoiceHeader->invoiceDetails as $detail): ?>
+                <?php if (!empty($detail->quick_service_id)): ?>
+                <tr class="isi">
+                    <td class="noo"><?php echo $no; ?></td>
+                    <td>&nbsp; <?php echo CHtml::encode(CHtml::value($detail, 'quickService.name')); ?></td>
+                    <td style="text-align: right">&nbsp;  Rp. <?php echo number_format($detail->total_price, 2, ',', '.') ?></td>
+                </tr>
+                <?php $no++; ?>
+                <?php endif; ?>
+            <?php endforeach; ?>
+            <?php foreach ($invoiceHeader->invoiceDetails as $detail): ?>
+                <?php if (!empty($detail->service_id)): ?>
+                <tr class="isi">
+                    <td class="noo"><?php echo $no; ?></td>
+                    <td>&nbsp; <?php echo CHtml::encode(CHtml::value($detail, 'service.name')); ?></td>
+                    <td style="text-align: right">&nbsp; Rp. <?php echo number_format($detail->total_price, 2, ',', '.') ?></td>
+                </tr>
+                <?php $no++; ?>
+                <?php endif; ?>
+            <?php endforeach; ?>
+        </table>
+    </div>
+    
     <div class="purchase-order">
         <table>
             <tr>
