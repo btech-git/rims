@@ -26,6 +26,7 @@ function tanggal($date) {
             </p>
         </div>
     </div>
+    
     <div style="text-align: center">
         <h4>FORM ESTIMASI</h4>
     </div>

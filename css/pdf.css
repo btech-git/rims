@@ -24,6 +24,10 @@
 .body-memo{
   width: 100%;
   overflow: hidden;
+}
+.body-memo table{
+  border-collapse: collapse;
+  width: 100%;
   font-size: 10px;
 }
 .raperind{
