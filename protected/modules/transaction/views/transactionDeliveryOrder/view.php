@@ -33,7 +33,6 @@ $this->menu = array(
                 'visible' => Yii::app()->user->checkAccess("deliveryEdit")
             )); ?>
         <?php //else: ?>
-            <?php echo CHtml::link('<span class="fa fa-edit"></span>Print', Yii::app()->baseUrl . '/transaction/transactionDeliveryOrder/pdf?id=' . $model->id, array('class' => 'button cbutton right', 'style' => 'margin-right:10px', 'visible' => Yii::app()->user->checkAccess("transaction.transactionDeliveryOrder.pdf"))) ?>
         <?php //endif; ?>
 
         <?php //if (Yii::app()->user->checkAccess("saleInvoiceSupervisor")): ?>
@@ -455,6 +454,10 @@ $this->menu = array(
     <?php echo CHtml::beginForm(); ?>
     <?php echo CHtml::submitButton('Processing Journal', array('name' => 'Process', 'confirm' => 'Are you sure you want to process into journal transactions?')); ?>
     <?php echo CHtml::endForm(); ?>
+</div>
+
+<div>
+    <?php echo CHtml::link('<span class="fa fa-edit"></span>Print Surat Jalan', Yii::app()->baseUrl . '/transaction/transactionDeliveryOrder/pdf?id=' . $model->id, array('class' => 'button warning right', 'style' => 'margin-right:10px', 'target' => 'blank')) ?>
 </div>
 
 <?php $this->beginWidget('zii.widgets.jui.CJuiDialog', array(

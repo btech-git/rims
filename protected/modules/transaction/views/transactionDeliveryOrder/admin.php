@@ -85,22 +85,22 @@ Yii::app()->clientScript->registerScript('search', "
                         'filter' => false,
                         'value' => 'Yii::app()->dateFormatter->format("d MMM yyyy HH:mm:ss", $data->created_datetime)'
                     ),
-                    array(
-                        'class' => 'CButtonColumn',
-                        'template' => '{print}',
-                        'buttons' => array(
+//                    array(
+//                        'class' => 'CButtonColumn',
+//                        'template' => '{print}',
+//                        'buttons' => array(
 //                            'edit' => array(
 //                                'label' => 'edit',
 //                                'url' => 'Yii::app()->createUrl("transaction/transactionDeliveryOrder/update", array("id"=>$data->id))',
 //                                'visible' => 'Yii::app()->user->checkAccess("deliveryEdit")', //count(MovementOutHeader::model()->findAllByAttributes(array("delivery_order_id"=>$data->id))) == 0 && ',
 //                            ),
-                            'print' => array(
-                                'label' => 'print',
-                                'url' => 'Yii::app()->createUrl("transaction/transactionDeliveryOrder/pdf", array("id"=>$data->id))',
-                                'visible' => 'count(MovementOutHeader::model()->findAllByAttributes(array("delivery_order_id"=>$data->id))) != 0 && Yii::app()->user->checkAccess("deliveryEdit")',
-                            ),
-                        ),
-                    ),
+//                            'print' => array(
+//                                'label' => 'print',
+//                                'url' => 'Yii::app()->createUrl("transaction/transactionDeliveryOrder/pdf", array("id"=>$data->id))',
+//                                'visible' => 'count(MovementOutHeader::model()->findAllByAttributes(array("delivery_order_id"=>$data->id))) != 0 && Yii::app()->user->checkAccess("deliveryEdit")',
+//                            ),
+//                        ),
+//                    ),
                 ),
             )); ?>
         </div>

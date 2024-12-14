@@ -262,7 +262,7 @@ $this->menu = array(
 <?php endif; ?>
 
 <div>
-    <?php echo CHtml::link('<span class="fa fa-print"></span>Print Movement Out', Yii::app()->baseUrl.'/transaction/movementOutHeader/pdf?id=' . $model->id, array('class'=>'button warning right', 'style' => 'margin-right:10px')); ?>
+    <?php echo CHtml::link('<span class="fa fa-print"></span>Print Movement Out', Yii::app()->baseUrl.'/transaction/movementOutHeader/pdf?id=' . $model->id, array('class'=>'button warning right', 'style' => 'margin-right:10px', 'target' => 'blank')); ?>
 </div>
 
 <?php $this->beginWidget('zii.widgets.jui.CJuiDialog', array(

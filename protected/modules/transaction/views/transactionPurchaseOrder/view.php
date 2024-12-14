@@ -22,11 +22,6 @@ $this->menu=array(
         <?php $ccaction = Yii::app()->controller->action->id; ?>
         <?php echo CHtml::link('<span class="fa fa-list"></span>Manage Purchase Order', Yii::app()->baseUrl.'/transaction/transactionPurchaseOrder/admin', array('class'=>'button cbutton right','style'=>'margin-left:10px')) ?>
         
-        <?php if ($model->status_document != 'CANCELLED!!!'): //$model->status_document == 'Approved'): ?>
-            <?php //echo CHtml::link('<span class="fa fa-plus"></span>Payment', Yii::app()->baseUrl.'/transaction/paymentOut/create', array('class'=>'button success right', 'visible'=>Yii::app()->user->checkAccess("transaction.paymentOut.create"))) ?>
-            <?php echo CHtml::link('<span class="fa fa-print"></span>Print', Yii::app()->baseUrl.'/transaction/transactionPurchaseOrder/pdf?id=' . $model->id, array('class'=>'button cbutton right','style'=>'margin-right:10px', 'target' => 'blank')) ?>
-        <?php endif; ?>
-        
         <?php if ($model->status_document == "Draft" && $model->status_document != 'CANCELLED!!!'): ?>
             <?php echo CHtml::link('<span class="fa fa-edit"></span>Edit', Yii::app()->baseUrl.'/transaction/transactionPurchaseOrder/update?id=' . $model->id, array(
                 'class'=>'button cbutton right',
@@ -197,6 +192,12 @@ $this->menu=array(
         <?php echo CHtml::beginForm(); ?>
         <?php echo CHtml::submitButton('Processing Journal', array('name' => 'Process', 'confirm' => 'Are you sure you want to process into journal transactions?')); ?>
         <?php echo CHtml::endForm(); ?>
+    </div>
+<?php endif; ?>
+
+<?php if ($model->status_document != 'CANCELLED!!!'): //$model->status_document == 'Approved'): ?>
+    <div class="field buttons text-right">
+        <?php echo CHtml::link('<span class="fa fa-print"></span>Print PO', Yii::app()->baseUrl.'/transaction/transactionPurchaseOrder/pdf?id=' . $model->id, array('class'=>'button warning right','style'=>'margin-right:10px', 'target' => 'blank')) ?>
     </div>
 <?php endif; ?>
 
