@@ -77,7 +77,7 @@ Yii::app()->clientScript->registerScript('search', "
 //                    ),
                     array(
                         'header' => 'Plate #',
-                        'value' => '$data->registrationTransaction->vehicle->plate_number',
+                        'value' => 'empty($data->registration_transaction_id) ? "" : $data->registrationTransaction->vehicle->plate_number',
                     ),
                     array(
                         'header' => 'Status Document',
@@ -93,11 +93,11 @@ Yii::app()->clientScript->registerScript('search', "
                         'filter' => false,
                         'value' => 'Yii::app()->dateFormatter->format("d MMM yyyy HH:mm:ss", $data->created_datetime)'
                     ),
-//                    array(
-//                        'name'=>'user_id',
-//                        'filter' => CHtml::activeDropDownList($model, 'user_id', CHtml::listData(Users::model()->findAll(), 'id', 'name'), array('empty' => '-- All --')),
-//                        'value'=>'$data->user->username',
-//                    ),
+                    array(
+                        'name'=>'user_id',
+                        'filter' => CHtml::activeDropDownList($model, 'user_id', CHtml::listData(Users::model()->findAll(), 'id', 'name'), array('empty' => '-- All --')),
+                        'value'=>'$data->user->username',
+                    ),
 //                    array(
 //                        'class'=>'CButtonColumn',
 //                        'template'=>'{edit}',
