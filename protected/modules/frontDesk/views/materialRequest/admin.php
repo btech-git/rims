@@ -93,22 +93,22 @@ Yii::app()->clientScript->registerScript('search', "
                         'filter' => false,
                         'value' => 'Yii::app()->dateFormatter->format("d MMM yyyy HH:mm:ss", $data->created_datetime)'
                     ),
-                    array(
-                        'name'=>'user_id',
-                        'filter' => CHtml::activeDropDownList($model, 'user_id', CHtml::listData(Users::model()->findAll(), 'id', 'name'), array('empty' => '-- All --')),
-                        'value'=>'$data->user->username',
-                    ),
-                    array(
-                        'class'=>'CButtonColumn',
-                        'template'=>'{edit}',
-                        'buttons'=>array (
-                            'edit' => array (
-                                'label'=>'edit',
-                                'url'=>'Yii::app()->createUrl("frontDesk/materialRequest/update", array("id"=>$data->id))',
-                                'visible'=> 'Yii::app()->user->checkAccess("materialRequestEdit")', //$data->status_document != "Approved" && $data->status_document != "Rejected" && ',
-                            ),
-                        ),
-                    ),
+//                    array(
+//                        'name'=>'user_id',
+//                        'filter' => CHtml::activeDropDownList($model, 'user_id', CHtml::listData(Users::model()->findAll(), 'id', 'name'), array('empty' => '-- All --')),
+//                        'value'=>'$data->user->username',
+//                    ),
+//                    array(
+//                        'class'=>'CButtonColumn',
+//                        'template'=>'{edit}',
+//                        'buttons'=>array (
+//                            'edit' => array (
+//                                'label'=>'edit',
+//                                'url'=>'Yii::app()->createUrl("frontDesk/materialRequest/update", array("id"=>$data->id))',
+//                                'visible'=> 'Yii::app()->user->checkAccess("materialRequestEdit")', //$data->status_document != "Approved" && $data->status_document != "Rejected" && ',
+//                            ),
+//                        ),
+//                    ),
                 ),
             )); ?>
         </div>
