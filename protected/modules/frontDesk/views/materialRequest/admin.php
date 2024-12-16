@@ -70,15 +70,15 @@ Yii::app()->clientScript->registerScript('search', "
                         'type'=>'raw',
                     ),
                     'transaction_date',
-                    array(
-                        'name'=>'branch_id',
-                        'filter' => CHtml::activeDropDownList($model, 'branch_id', CHtml::listData(Branch::model()->findAll(array('order' => 'name')), 'id', 'name'), array('empty' => '-- All --')),
-                        'value'=>'$data->branch->code',
-                    ),
 //                    array(
-//                        'header' => 'Plate #',
-//                        'value' => '$data->registrationTransaction->vehicle->plate_number',
+//                        'name'=>'branch_id',
+//                        'filter' => CHtml::activeDropDownList($model, 'branch_id', CHtml::listData(Branch::model()->findAll(array('order' => 'name')), 'id', 'name'), array('empty' => '-- All --')),
+//                        'value'=>'$data->branch->code',
 //                    ),
+                    array(
+                        'header' => 'Plate #',
+                        'value' => '$data->registrationTransaction->vehicle->plate_number',
+                    ),
                     array(
                         'header' => 'Status Document',
                         'value' => '$data->status_document',
