@@ -54,12 +54,12 @@ $this->menu = array(
                 'dateTime',
                 array(
                     'name' => 'registration_transaction_id', 
-                    'value' => CHTml::link($materialRequest->registrationTransaction->transaction_number, array($materialRequest->registrationTransaction->repair_type == "GR" ? "/frontDesk/generalRepairRegistration/view" : "/frontDesk/bodyRepairRegistration/view", "id" => $materialRequest->registration_transaction_id), array('target' => 'blank')),
+                    'value' => empty($materialRequest->registration_transaction_id) ? "" : CHTml::link($materialRequest->registrationTransaction->transaction_number, array($materialRequest->registrationTransaction->repair_type == "GR" ? "/frontDesk/generalRepairRegistration/view" : "/frontDesk/bodyRepairRegistration/view", "id" => $materialRequest->registration_transaction_id), array('target' => 'blank')),
                     'type'=>'raw',
                 ),
                 array(
                     'label' => 'WO #', 
-                    'value' => $materialRequest->registrationTransaction->work_order_number
+                    'value' => empty($materialRequest->registration_transaction_id) ? "" : $materialRequest->registrationTransaction->work_order_number
                 ),
                 array(
                     'name' => 'branch_id', 
@@ -67,23 +67,23 @@ $this->menu = array(
                 ),
                 array(
                     'label' => 'Tanggal WO ', 
-                    'value' => $materialRequest->registrationTransaction->transaction_date
+                    'value' => empty($materialRequest->registration_transaction_id) ? "" : $materialRequest->registrationTransaction->transaction_date
                 ),
                 array(
                     'label' => 'Customer', 
-                    'value' => $materialRequest->registrationTransaction->customer->name
+                    'value' => empty($materialRequest->registration_transaction_id) ? "" : $materialRequest->registrationTransaction->customer->name
                 ),
                 array(
                     'label' => 'Plate #', 
-                    'value' => $materialRequest->registrationTransaction->vehicle->plate_number
+                    'value' => empty($materialRequest->registration_transaction_id) ? "" : $materialRequest->registrationTransaction->vehicle->plate_number
                 ),
                 array(
                     'label' => 'Vehicle', 
-                    'value' => $materialRequest->registrationTransaction->vehicle->carMakeModelSubCombination
+                    'value' => empty($materialRequest->registration_transaction_id) ? "" : $materialRequest->registrationTransaction->vehicle->carMakeModelSubCombination
                 ),
                 array(
                     'label' => 'Color', 
-                    'value' => $materialRequest->registrationTransaction->vehicle->color->name
+                    'value' => empty($materialRequest->registration_transaction_id) ? "" : $materialRequest->registrationTransaction->vehicle->color->name
                 ),
                 'status_document',
                 'status_progress',
