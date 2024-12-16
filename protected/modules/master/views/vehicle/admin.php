@@ -125,22 +125,19 @@ $('.search-form form').submit(function(){
                 'year',
                 array(
                     'name'=>'status_location', 
-                    'value'=>'CHTml::link($data->status_location, array("updateLocation", "id"=>$data->id))', 
-                    'type'=>'raw'
+                    'value'=>'$data->status_location', 
                 ),
                 array(
                     'class'=>'CButtonColumn',
-                    'template'=>'{edit} {inspection}',
+                    'template'=>'{edit} {status}',
                     'buttons'=>array (
                         'edit' => array (
-                            'visible'=>'(Yii::app()->user->checkAccess("master.vehicle.update"))',
                             'label'=>'edit',
                             'url'=>'Yii::app()->createUrl("master/vehicle/update", array("id"=>$data->id))',
                         ),
-                        'inspection' => array (
-                            'visible'=>'(Yii::app()->user->checkAccess("master.vehicle.inspection"))',
-                            'label'=>'inspection',
-                            'url'=>'Yii::app()->createUrl("master/vehicle/inspection", array("id"=>$data->id))',
+                        'status' => array (
+                            'label'=>'status',
+                            'url'=>'Yii::app()->createUrl("master/vehicle/updateLocation", array("id"=>$data->id))',
                         ),
                     ),
                 ),

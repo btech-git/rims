@@ -380,7 +380,7 @@ class TransactionReceiveItem extends MonthlyTransactionActiveRecord {
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
             'Pagination' => array(
-                'PageSize' => 50
+                'PageSize' => 30
             ),
             'sort' => array(
                 'defaultOrder' => 't.invoice_date DESC',

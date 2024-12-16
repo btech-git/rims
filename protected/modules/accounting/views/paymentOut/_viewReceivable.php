@@ -62,9 +62,9 @@
         ),
         array(
             'name' => 'user_id_invoice',
-            'filter' => CHtml::activeDropDownList($receiveItem, 'user_id_invoice', CHtml::listData(Users::model()->findAll(array('order' => 'username')), 'id', 'username'), array('empty' => '-- all --')),
+//            'filter' => CHtml::activeDropDownList($receiveItem, 'user_id_invoice', CHtml::listData(Users::model()->findAll(array('order' => 'username')), 'id', 'username'), array('empty' => '-- all --')),
             'header' => 'Created By',
-            'value' => 'empty($data->user_id_invoice) ? "N/A" : $data->userIdInvoice->username',
+            'value' => 'empty($data->purchase_order_id) ? "N/A" : $data->purchaseOrder->user->username',
         ),
         array(
             'header' => 'Tanggal Input',
