@@ -100,18 +100,9 @@ class MaterialRequest extends CComponent {
     public function validate() {
         $valid = $this->header->validate();
         
-        if (!$valid) {
-            $this->header->addError('error', 'Header Error');
-        } else {
-            $valid = $valid && $this->validateDetailsCount();
-            if (!$valid)
-                $this->header->addError('error', 'Validate Details Error');
-            else {
-                $valid = $valid && $this->validateDetailsUnique();
-                if (!$valid)
-                    $this->header->addError('error', 'Validate Unique Error');
-            }
-        }
+        $valid = $valid && $this->validateDetailsCount();
+        $valid = $valid && $this->validateDetailsUnique();
+        $valid = $valid && $this->validateDetailsUnit();
         
         if (count($this->details) > 0) {
             foreach ($this->details as $detail) {
@@ -155,6 +146,27 @@ class MaterialRequest extends CComponent {
         return $valid;
     }
 
+    public function validateDetailsUnit() {
+        $valid = true;
+        
+        foreach ($this->details as $detail) {
+            if ($detail->product->unit_id !== $detail->unit_id) {
+                $unitConversion = UnitConversion::model()->findByAttributes(array('unit_from_id' => $detail->product->unit_id, 'unit_to_id' => $detail->unit_id));
+                if ($unitConversion !== null) {
+                    continue;
+                }
+                $unitConversion = UnitConversion::model()->findByAttributes(array('unit_from_id' => $detail->unit_id, 'unit_to_id' => $detail->product->unit_id));
+                if ($unitConversion !== null) {
+                    continue;
+                }
+                $valid = false;
+                $detail->addError('unit_id', 'Unit harus ada.');
+            }
+        }
+        
+        return $valid;
+    }
+    
     public function flush() {
         $this->header->total_quantity = $this->getTotalQuantity();
         $this->header->total_quantity_movement_out = $this->getTotalQuantityMovementOut();

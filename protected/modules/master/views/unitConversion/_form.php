@@ -28,28 +28,23 @@
             <div class="small-12 medium-6 columns">         
                 <div class="field">
                     <div class="row collapse">
-                        <div class="small-4 columns">
-                            <label class="prefix"><?php echo $form->labelEx($model, 'unit_from_id'); ?></label>
+                        <div class="small-1 columns" style="text-align: right; font-size: larger; font-weight: bold">
+                            1 &nbsp;
                         </div>
-                        <div class="small-8 columns">
+                        <div class="small-3 columns">
                             <?php echo CHtml::activeDropDownList($model, 'unit_from_id', CHtml::listData(Unit::model()->findAll(), 'id', 'name'), array(
                                 'empty' => '-- Select Satuan Awal --'
                             )); ?>
                             <?php echo $form->error($model, 'unit_from_id'); ?>
                         </div>
-                    </div>
-                </div>		 
-            </div>		
-        </div>
-
-        <div class="row">
-            <div class="small-12 medium-6 columns">         
-                <div class="field">
-                    <div class="row collapse">
-                        <div class="small-4 columns">
-                            <label class="prefix"><?php echo $form->labelEx($model, 'unit_to_id'); ?></label>
+                        <div class="small-1 columns" style="text-align: center; font-size: larger; font-weight: bold">
+                            =
                         </div>
-                        <div class="small-8 columns">
+                        <div class="small-4 columns">
+                            <?php echo $form->textField($model, 'multiplier'); ?>
+                            <?php echo $form->error($model, 'multiplier'); ?>
+                        </div>
+                        <div class="small-3 columns">
                             <?php echo CHtml::activeDropDownList($model, 'unit_to_id', CHtml::listData(Unit::model()->findAll(), 'id', 'name'), array(
                                 'empty' => '-- Select Satuan Konversi --'
                             )); ?>
@@ -60,22 +55,6 @@
             </div>		
         </div>
 
-        <div class="row">
-            <div class="small-12 medium-6 columns">         
-                <div class="field">
-                    <div class="row collapse">
-                        <div class="small-4 columns">
-                            <label class="prefix"><?php echo $form->labelEx($model, 'multiplier'); ?></label>
-                        </div>
-                        <div class="small-8 columns">
-                            <?php echo $form->textField($model, 'multiplier'); ?>
-                            <?php echo $form->error($model, 'multiplier'); ?>
-                        </div>
-                    </div>
-                </div>		 
-            </div>		
-        </div>
-        
         <hr />
         
         <div class="field buttons text-center">
