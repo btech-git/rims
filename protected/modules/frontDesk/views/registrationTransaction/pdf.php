@@ -15,7 +15,7 @@ function tanggal($date) {
     <div <?php if ($i > 0): ?>style=" page-break-before: always"<?php endif; ?>>
         <div class="container">
             <div class="header">
-                <div style="float: left; width: 30%; text-align: center">
+                <div style="float: left; width: 30%; text-align: left">
                     <img src="<?php echo Yii::app()->request->baseUrl; ?>/images/rap-logo.png" alt="" style="width: 64px; height: 64px"/>
                 </div>
                 <div style="float: right; width: 30%">
