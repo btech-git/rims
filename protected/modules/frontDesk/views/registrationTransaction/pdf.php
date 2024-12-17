@@ -15,18 +15,22 @@ function tanggal($date) {
     <div <?php if ($i > 0): ?>style=" page-break-before: always"<?php endif; ?>>
         <div class="container">
             <div class="header">
-                <div style="float: left; width: 50%; text-align: center">
+                <div style="float: left; width: 30%; text-align: center">
                     <img src="<?php echo Yii::app()->request->baseUrl; ?>/images/rap-logo.png" alt="" style="width: 50px; height: 50px"/>
                 </div>
-                <div style="float: right; width: 45%">
-                    <p>
+                <div style="float: right; width: 30%">
+                    <div>
                         Jl. Raya Jati Asih/Jati Kramat - 84993984/77 Fax. 84993989 <br />
                         Jl. Raya Kalimalang No. 8, Kp. Dua - 8843656 Fax. 88966753<br />
-                        Jl. Raya Kalimalang Q/2D - 8643594/95 Fax. 8645008<br />
+                        Jl. Raya Kalimalang Q/2D - 8643594/95 Fax. 8645008
+                    </div>
+                </div>
+                <div style="float: right; width: 30%">
+                    <div>
                         Jl. Raya Radin Inten II No. 9 - 8629545/46 Fax. 8627313<br />
                         Jl. Celebration Boulevard Blok AA 9/35 - 8261594<br />
                         Email info@raperind.com
-                    </p>
+                    </div>
                 </div>
             </div>
 
@@ -102,11 +106,11 @@ function tanggal($date) {
                                 <td>&nbsp; <?php echo CHtml::encode(CHtml::value($detail, 'product.manufacturer_code')); ?></td>
                                 <td>&nbsp; <?php echo CHtml::encode(CHtml::value($detail, 'product.name')); ?></td>
                                 <td>&nbsp; <?php echo CHtml::encode(CHtml::value($detail, 'product.brand.name')); ?></td>
+                                <td>&nbsp; <?php echo CHtml::encode(CHtml::value($detail, 'quantity')); ?></td>
+                                <td>&nbsp; <?php echo CHtml::encode(CHtml::value($detail, 'product.unit.name')); ?></td>
                                 <td style="text-align: right;">&nbsp;  Rp. <?php echo number_format($detail->unit_price, 2, ',', '.'); ?></td>
                                 <td style="text-align: right;">&nbsp;  Rp. <?php echo number_format($detail->discount, 2, ',', '.'); ?></td>
                                 <td style="text-align: right;">&nbsp;  Rp. <?php echo number_format($detail->unit_price, 2, ',', '.'); ?></td>
-                                <td>&nbsp; <?php echo CHtml::encode(CHtml::value($detail, 'quantity')); ?></td>
-                                <td>&nbsp; <?php echo CHtml::encode(CHtml::value($detail, 'product.unit.name')); ?></td>
                                 <td style="text-align: right;">&nbsp;  Rp. <?php echo number_format($detail->total_price, 2, ',', '.'); ?></td>
                             </tr>
                             <?php $no++; ?>
