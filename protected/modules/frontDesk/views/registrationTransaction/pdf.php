@@ -16,7 +16,7 @@ function tanggal($date) {
         <div class="container">
             <div class="header">
                 <div style="float: left; width: 30%; text-align: center">
-                    <img src="<?php echo Yii::app()->request->baseUrl; ?>/images/rap-logo.png" alt="" style="width: 50px; height: 50px"/>
+                    <img src="<?php echo Yii::app()->request->baseUrl; ?>/images/rap-logo.png" alt="" style="width: 64px; height: 64px"/>
                 </div>
                 <div style="float: right; width: 30%">
                     <div>
