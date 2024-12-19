@@ -10,71 +10,53 @@ function tanggal($date) {
     return $tanggal . ' ' . $bulan[(int) $bulan2 - 1] . ' ' . $tahun;
 }
 ?>
-<div class="header">
-    <div class="left"><img src="images/rims po head.png" alt="logo" height="70"></div>
-    <div class="right">
-        <table style="font-size: 8px">
-            <tr>
-                <td>Jl. Raya Jati Asih/Jati Kramat . 84993984/77 Fax. 84993989</td>
-            </tr>
-            <tr>
-                <td>Jl. Raya Kalimalang no. 8, Kp. Dua . 8843656 Fax. 88966753</td>
-            </tr>
-            <tr>
-                <td>Jl. Raya Kalimalang Q/2D . 8643594/95 Fax. 8645008</td>
-            </tr>
-            <tr>
-                <td>Jl. Raya Radin Inten II no. 9 . 8629545/46 Fax. 8627313</td>
-            </tr>
-            <tr>
-                <td>Jl. Celebration Boulevard blok AA 9/35 . 8261594</td>
-            </tr>
-            <tr>
-                <td>EMAIL info@raperind.com</td>
-            </tr>
-        </table>
-    </div>
-</div>
-
-<div style="margin-top: 0px">
-    <div class="supplier">
-        <div class="left">
-            <table style="margin-top: 0px; font-size: 11px">
-                <tr>
-                    <td>To</td>
-                    <td>:</td>
-                    <td><?php echo CHtml::encode(CHtml::value($supplier, 'name')); ?></td>
-                </tr>
-                <tr>
-                    <td>Address</td>
-                    <td>:</td>
-                    <td><?php echo CHtml::encode(CHtml::value($supplier, 'address')); ?></td>
-                </tr>
-                <tr>
-                    <td>TOP</td>
-                    <td>:</td>
-                    <td><?php echo CHtml::encode(CHtml::value($supplier, 'tenor')); ?> Hari</td>
-                </tr>
-                <tr>
-                    <td>From</td>
-                    <td>:</td>
-                    <td><?php echo CHtml::encode(CHtml::value($po, 'mainBranch.name')); ?></td>
-                </tr>
-            </table>
+<div class="container">
+    <div class="header">
+        <div style="float: left; width: 30%; text-align: left">
+            <img src="<?php echo Yii::app()->request->baseUrl; ?>/images/rap-logo.png" alt="" style="width: 64px; height: 64px"/>
         </div>
-        <div class="right">
-            <h3 style="margin-top: 0px; font-size: 12px">Purchase Order</h3>
-            <table style="margin-top: 0px; font-size: 11px">
-                <tr>
-                    <td>Date</td>
-                    <td>:</td>
-                    <td><?php echo tanggal($po->purchase_order_date); ?></td>
-                </tr>
-                <tr>
-                    <td>PO#</td>
-                    <td>:</td>
-                    <td><?php echo CHtml::encode(CHtml::value($po, 'purchase_order_no')); ?></td>
-                </tr>
+        <div style="float: right; width: 30%">
+            <div>
+                Jl. Raya Jati Asih/Jati Kramat - 84993984/77 Fax. 84993989 <br />
+                Jl. Raya Kalimalang No. 8, Kp. Dua - 8843656 Fax. 88966753<br />
+                Jl. Raya Kalimalang Q/2D - 8643594/95 Fax. 8645008
+            </div>
+        </div>
+        <div style="float: right; width: 30%">
+            <div>
+                Jl. Raya Radin Inten II No. 9 - 8629545/46 Fax. 8627313<br />
+                Jl. Celebration Boulevard Blok AA 9/35 - 8261594<br />
+                Email info@raperind.com
+            </div>
+        </div>
+    </div>
+
+    <div style="text-align: center">
+        <h4>PURCHASE ORDER</h4>
+    </div>
+
+    <div class="body-memo">
+        <table>
+            <tr>
+                <td>To</td>
+                <td>:</td>
+                <td><?php echo CHtml::encode(CHtml::value($supplier, 'name')); ?></td>
+                <td>PO#</td>
+                <td>:</td>
+                <td><?php echo CHtml::encode(CHtml::value($po, 'purchase_order_no')); ?></td>
+            </tr>
+            <tr>
+                <td>Address</td>
+                <td>:</td>
+                <td><?php echo CHtml::encode(CHtml::value($supplier, 'address')); ?></td>
+                <td>Date</td>
+                <td>:</td>
+                <td><?php echo tanggal($po->purchase_order_date); ?></td>
+            </tr>
+            <tr>
+                <td>TOP</td>
+                <td>:</td>
+                <td><?php echo CHtml::encode(CHtml::value($supplier, 'tenor')); ?> Hari</td>
                 <?php if ($po->purchase_type === TransactionPurchaseOrder::TIRE): ?>
                     <tr>
                         <td>Type</td>
@@ -82,8 +64,13 @@ function tanggal($date) {
                         <td><?php echo CHtml::encode($po->getPurchaseStatus($po->purchase_type)); ?></td>
                     </tr>
                 <?php endif; ?>
-            </table>
-        </div>
+            </tr>
+            <tr>
+                <td>From</td>
+                <td>:</td>
+                <td><?php echo CHtml::encode(CHtml::value($po, 'mainBranch.name')); ?></td>
+            </tr>
+        </table>
     </div>
 
     <div class="purchase-order">
@@ -97,20 +84,20 @@ function tanggal($date) {
                 <?php else: ?>
                     <th style="width:10%">Code</th>
                     <th style="width:10%">Item Name</th>
-                    <th style="width:10%">Brand Name</th>
+                    <th style="width:10%">Brand</th>
                 <?php endif; ?>
+                <th style="width:10%">Qty</th>
+                <th style="width:5%">Unit</th>
                 <th style="width:10%">Price</th>
                 <th style="width:10%">Disc</th>
                 <th style="width:10%">After Disc</th>
-                <th style="width:10%">Qty</th>
-                <th style="width:5%">Unit</th>
                 <th style="width:15%">Total</th>
                 <!--<th style="width:10%">Notes</th>-->
             </tr>
             <?php
             $no = 1;
             foreach ($po_detail as $x) {
-                ?>
+            ?>
                 <tr>
                     <td class="noo"><?php echo $no; ?></td>
                     <?php if ($po->purchase_type === TransactionPurchaseOrder::TIRE): ?>
@@ -122,33 +109,16 @@ function tanggal($date) {
                         <td style="margin-top: 0px">&nbsp;  <?php echo CHtml::encode(CHtml::value($x, 'product.name')); ?></td>
                         <td style="margin-top: 0px">&nbsp;  <?php echo CHtml::encode(CHtml::value($x, 'product.brand.name')); ?></td>
                     <?php endif; ?>
+                    <td style="text-align:center"><?php echo $x->quantity ?></td>
+                    <td style="text-align:center"><?php echo $x->unit->name ?></td>
                     <td style="text-align:right">Rp. <?php echo number_format($x->retail_price, 2, ',', '.') ?></td>
                     <td style="text-align:right">Rp. <?php echo number_format($x->discount, 2, ',', '.') ?></td>
                     <td style="text-align:right">Rp. <?php echo number_format($x->unit_price, 2, ',', '.') ?></td>
-                    <td style="text-align:center"><?php echo $x->quantity ?></td>
-                    <td style="text-align:center"><?php echo $x->unit->name ?></td>
                     <td style="text-align:right">Rp. <?php echo number_format($x->total_price, 2, ',', '.') ?> &nbsp; </td>
-                    <!--<td style="text-align:center"><?php // echo $x->memo ?></td>-->
                 </tr>
                 <?php $no++;
             } ?>
-                
-            <?php for ($j = 3, $i = $i % $j + 1; $j > $i; $j--): ?>
-                <tr>
-                    <td>&nbsp;</td>
-                    <td>&nbsp;</td>
-                    <td>&nbsp;</td>
-                    <td>&nbsp;</td>
-                    <td>&nbsp;</td>
-                    <td>&nbsp;</td>
-                    <td>&nbsp;</td>
-                    <td>&nbsp;</td>
-                    <td>&nbsp;</td>
-                    <td>&nbsp;</td>
-                    <!--<td>&nbsp;</td>-->
-                </tr>
-            <?php endfor; ?>
-                
+
             <tr class="r">
                 <td colspan="9" style="text-align:right; font-size: 11px" class="result">Sub Total</td>
                 <td style="text-align:right">Rp. <?php echo number_format($po->subtotal, 2, ',', '.') ?> &nbsp; </td>
@@ -162,13 +132,13 @@ function tanggal($date) {
                 <td style="text-align:right">Rp. <?php echo number_format($po->total_price, 2, ',', '.') ?> &nbsp; </td>
             </tr>
         </table>
-        
+
         <div class="row" style="font-size: 11px">
             Catatan: 
             <?php echo CHtml::encode(CHtml::value($po, 'note')); ?>
         </div>
     </div>
-    
+
     <div class="purchase-order">
         <table style="width: 100%">
             <tr>

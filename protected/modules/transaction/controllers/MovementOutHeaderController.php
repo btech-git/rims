@@ -399,7 +399,7 @@ class MovementOutHeaderController extends Controller {
 
     public function actionPdf($id) {
         $model = $this->loadModel($id);
-        $mPDF1 = Yii::app()->ePdf->mpdf('', 'A4');
+        $mPDF1 = Yii::app()->ePdf->mpdf('', 'A4-L');
 
         $stylesheet = file_get_contents(Yii::getPathOfAlias('webroot') . '/css/pdf.css');
         $mPDF1->SetTitle('Movement Out');

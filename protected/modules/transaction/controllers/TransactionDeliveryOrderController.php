@@ -781,10 +781,10 @@ class TransactionDeliveryOrderController extends Controller {
 
     public function actionPdf($id) {
         $do = $this->loadModel($id);
-        $mPDF1 = Yii::app()->ePdf->mpdf('', 'A4');
+        $mPDF1 = Yii::app()->ePdf->mpdf('', 'A4-L');
 
         $stylesheet = file_get_contents(Yii::getPathOfAlias('webroot') . '/css/pdf.css');
-        $mPDF1->SetTitle('Estimasi');
+        $mPDF1->SetTitle('Surat Jalan');
         $mPDF1->WriteHTML($stylesheet, 1);
         $mPDF1->WriteHTML($this->renderPartial('pdf', array(
             'do' => $do,

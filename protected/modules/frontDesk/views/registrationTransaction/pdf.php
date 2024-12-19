@@ -35,7 +35,7 @@ function tanggal($date) {
             </div>
 
             <div style="text-align: center">
-                <h4>INVOICE<?php if ($i > 0): ?> COPY<?php endif; ?></h4>
+                <h4>INVOICE<?php if ($i > 0): ?><span style="color: red"> COPY</span><?php endif; ?></h4>
             </div>
 
             <div class="body-memo">
@@ -129,10 +129,10 @@ function tanggal($date) {
                             </tr>
                         <?php endif; ?>
                     <?php endforeach; ?>
-                            <tr>
-                                <td colspan="9" style="text-align: right;">Total Parts</td>
-                                <td style="text-align: right;">&nbsp;  Rp. <?php echo number_format($invoiceHeader->product_price, 2, ',', '.'); ?></td>
-                            </tr>
+                    <tr>
+                        <td colspan="9" style="text-align: right;">Total Parts</td>
+                        <td style="text-align: right;">&nbsp;  Rp. <?php echo number_format($invoiceHeader->product_price, 2, ',', '.'); ?></td>
+                    </tr>
                 </table>
             </div>
 
@@ -171,10 +171,10 @@ function tanggal($date) {
                         <?php $no++; ?>
                         <?php endif; ?>
                     <?php endforeach; ?>
-                            <tr>
-                                <td colspan="4" style="text-align: right;">Total Jasa</td>
-                                <td style="text-align: right;">&nbsp;  Rp. <?php echo number_format($invoiceHeader->service_price, 2, ',', '.'); ?></td>
-                            </tr>
+                    <tr>
+                        <td colspan="4" style="text-align: right;">Total Jasa</td>
+                        <td style="text-align: right;">&nbsp;  Rp. <?php echo number_format($invoiceHeader->service_price, 2, ',', '.'); ?></td>
+                    </tr>
                 </table>
             </div>
 

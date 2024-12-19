@@ -12,18 +12,22 @@ function tanggal($date) {
 ?>
 <div class="container">
     <div class="header">
-        <div style="float: left; width: 50%; text-align: center">
-            <img src="<?php echo Yii::app()->request->baseUrl; ?>/images/rap-logo.png" alt="" width="35%"/>
+        <div style="float: left; width: 30%; text-align: left">
+            <img src="<?php echo Yii::app()->request->baseUrl; ?>/images/rap-logo.png" alt="" style="width: 64px; height: 64px"/>
         </div>
-        <div style="float: right; width: 45%">
-            <p style="font-size: 10px">
+        <div style="float: right; width: 30%">
+            <div>
                 Jl. Raya Jati Asih/Jati Kramat - 84993984/77 Fax. 84993989 <br />
                 Jl. Raya Kalimalang No. 8, Kp. Dua - 8843656 Fax. 88966753<br />
-                Jl. Raya Kalimalang Q/2D - 8643594/95 Fax. 8645008<br />
+                Jl. Raya Kalimalang Q/2D - 8643594/95 Fax. 8645008
+            </div>
+        </div>
+        <div style="float: right; width: 30%">
+            <div>
                 Jl. Raya Radin Inten II No. 9 - 8629545/46 Fax. 8627313<br />
                 Jl. Celebration Boulevard Blok AA 9/35 - 8261594<br />
                 Email info@raperind.com
-            </p>
+            </div>
         </div>
     </div>
     
@@ -31,86 +35,84 @@ function tanggal($date) {
         <h4>FORM PERMINTAAN SERVICE - CONTRACT SERVICE</h4>
     </div>
 
-    <div class="supplier">
-        <div class="left">
-            <table>
-                <tr>
-                    <td>TANGGAL MASUK</td>
-                    <td>:</td>
-                    <td><?php echo tanggal($generalRepairRegistration->transaction_date); ?></td>
-                </tr>
-                <tr>
-                    <td>JENIS KENDARAAN</td>
-                    <td>:</td>
-                    <td><?php echo $generalRepairRegistration->vehicle->carMake->name; ?></td>
-                </tr>
-                <tr>
-                    <td>NO. POLISI</td>
-                    <td>:</td>
-                    <td><?php echo $generalRepairRegistration->vehicle->plate_number; ?></td>
-                </tr>
-                <tr>
-                    <td>NO. RANGKA</td>
-                    <td>:</td>
-                    <td><?php echo $generalRepairRegistration->vehicle->frame_number; ?></td>
-                </tr>
-            </table>
-        </div>
-        <div class="right">
-            <table>
-                <tr>
-                    <td colspan="3">Yang Menyerahkan, </td>
-                </tr>
-                <tr>
-                    <td>NAMA</td>
-                    <td>:</td>
-                    <td><?php echo $customer->name; ?></td>
-                </tr>
-                <tr>
-                    <td>PHONE</td>
-                    <td>:</td>
-                    <td><?php echo $customer->mobile_phone; ?></td>
-                </tr>
-                <tr>
-                    <td>DIVISI</td>
-                    <td>:</td>
-                    <td><?php //echo $customer->customer_type; ?></td>
-                </tr>
-            </table>
-        </div>
+    <div class="body-memo">
+        <table>
+            <tr>
+                <td>WO #</td>
+                <td>:</td>
+                <td><?php echo $bodyRepairRegistration->work_order_number; ?></td>
+                <td>TANGGAL</td>
+                <td>:</td>
+                <td><?php echo tanggal($bodyRepairRegistration->transaction_date); ?></td>
+            </tr>
+            <tr>
+                <td>JENIS KENDARAAN</td>
+                <td>:</td>
+                <td>
+                    <?php echo $bodyRepairRegistration->vehicle->carMake->name; ?> -
+                    <?php echo $bodyRepairRegistration->vehicle->carModel->name; ?> -
+                    <?php echo $bodyRepairRegistration->vehicle->carSubModel->name; ?> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                </td>
+                <td>NAMA</td>
+                <td>:</td>
+                <td><?php echo $customer->name; ?></td>
+            </tr>
+            <tr>
+                <td>NO. POLISI</td>
+                <td>:</td>
+                <td><?php echo $bodyRepairRegistration->vehicle->plate_number; ?></td>
+                <td>PHONE</td>
+                <td>:</td>
+                <td><?php echo $customer->mobile_phone; ?></td>
+            </tr>
+            <tr>
+                <td>NO. RANGKA</td>
+                <td>:</td>
+                <td><?php echo $bodyRepairRegistration->vehicle->frame_number; ?></td>
+                <td>ALAMAT</td>
+                <td>:</td>
+                <td><?php echo nl2br($customer->address); ?></td>
+            </tr>
+            <tr>
+                <td>PROBLEM</td>
+                <td>:</td>
+                <td><?php echo CHtml::encode(CHtml::value($bodyRepairRegistration, 'problem')); ?></td>
+                <td>KM</td>
+                <td>:</td>
+                <td><?php echo $bodyRepairRegistration->vehicle_mileage; ?></td>
+            </tr>
+        </table>
     </div>
-
+    
     <div style="text-align: center">
         <h4>List Permohonan Service</h4>
     </div>
 
     <div class="purchase-order">
-        <?php if (count($generalRepairRegistration->registrationQuickServices) > 0 || count($generalRepairRegistration->registrationServices) > 0): ?>
-            <table>
-                <tr style="background-color: skyblue">
-                    <th style="width: 5%; text-align: center">NO</th>
-                    <th>JENIS PEKERJAAN</th>
-                </tr>
-                <?php $no = 1;?>
-                <?php if (count($generalRepairRegistration->registrationQuickServices) > 0): ?>
-                    <?php foreach ($generalRepairRegistration->registrationQuickServices as $quickService): ?>
-                        <tr class="isi">
-                            <td><?php echo $no ?></td>
-                            <td>&nbsp; <?php echo CHtml::encode(CHtml::value($quickService, 'quickService.name')); ?></td>
-                        </tr>
-                    <?php endforeach; ?>
-                <?php endif; ?>
-                <?php if (count($generalRepairRegistration->registrationServices) > 0): ?>
-                    <?php foreach ($generalRepairRegistration->registrationServices as $service): ?>
-                        <tr class="isi">
-                            <td><?php echo $no ?></td>
-                            <td>&nbsp; <?php echo CHtml::encode(CHtml::value($service, 'service.name')); ?></td>
-                        </tr>
-                        <?php $no++; ?>
-                    <?php endforeach; ?>
-                <?php endif; ?>
-            </table>
-        <?php endif; ?>
+        <table>
+            <tr style="background-color: skyblue">
+                <th style="width: 1%; text-align: center">NO</th>
+                <th>JENIS PEKERJAAN</th>
+            </tr>
+            <?php $no = 1;?>
+            <?php if (count($bodyRepairRegistration->registrationQuickServices) > 0): ?>
+                <?php foreach ($bodyRepairRegistration->registrationQuickServices as $quickService): ?>
+                    <tr class="isi">
+                        <td class="noo"><?php echo $no; ?></td>
+                        <td>&nbsp; <?php echo CHtml::encode(CHtml::value($quickService, 'quickService.name')); ?></td>
+                    </tr>
+                <?php endforeach; ?>
+            <?php endif; ?>
+            <?php if (count($bodyRepairRegistration->registrationServices) > 0): ?>
+                <?php foreach ($bodyRepairRegistration->registrationServices as $service): ?>
+                    <tr class="isi">
+                        <td class="noo"><?php echo $no ?></td>
+                        <td>&nbsp; <?php echo CHtml::encode(CHtml::value($service, 'service.name')); ?></td>
+                    </tr>
+                    <?php $no++; ?>
+                <?php endforeach; ?>
+            <?php endif; ?>
+        </table>
     </div>
     
     <div style="text-align:right; font-size: 10px;">

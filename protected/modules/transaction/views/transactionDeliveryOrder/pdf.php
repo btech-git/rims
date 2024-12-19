@@ -12,18 +12,22 @@ function tanggal($date) {
 ?>
 <div class="container">
     <div class="header">
-        <div style="float: left; width: 50%; text-align: center">
-            <img src="<?php echo Yii::app()->request->baseUrl; ?>/images/rap-logo.png" alt="" width="35%"/>
+        <div style="float: left; width: 30%; text-align: left">
+            <img src="<?php echo Yii::app()->request->baseUrl; ?>/images/rap-logo.png" alt="" style="width: 64px; height: 64px"/>
         </div>
-        <div style="float: right; width: 45%">
-            <p>
+        <div style="float: right; width: 30%">
+            <div>
                 Jl. Raya Jati Asih/Jati Kramat - 84993984/77 Fax. 84993989 <br />
                 Jl. Raya Kalimalang No. 8, Kp. Dua - 8843656 Fax. 88966753<br />
-                Jl. Raya Kalimalang Q/2D - 8643594/95 Fax. 8645008<br />
+                Jl. Raya Kalimalang Q/2D - 8643594/95 Fax. 8645008
+            </div>
+        </div>
+        <div style="float: right; width: 30%">
+            <div>
                 Jl. Raya Radin Inten II No. 9 - 8629545/46 Fax. 8627313<br />
                 Jl. Celebration Boulevard Blok AA 9/35 - 8261594<br />
                 Email info@raperind.com
-            </p>
+            </div>
         </div>
     </div>
     
@@ -34,22 +38,40 @@ function tanggal($date) {
     <div class="body-memo">
         <table style="font-size: 10px">
             <tr>
-                <td colspan="3">Kepada Yth,</td>
-            </tr>
-            <tr>
-                <td style="width: 15%">Customer</td>
+                <td>SJ #</td>
                 <td style="width: 5%">:</td>
-                <td><?php echo CHtml::encode(CHtml::value($do, 'customer.name')); ?></td>
+                <td><?php echo CHtml::encode(CHtml::value($do, 'delivery_order_no')); ?></td>
+                <?php if (!empty($do->sent_request_id)): ?>
+                    <td>Sent Request #</td>
+                    <td style="width: 5%">:</td>
+                    <td><?php echo CHtml::encode(CHtml::value($do, 'sentRequest.sent_request_no')); ?></td>
+                <?php elseif (!empty($do->transfer_request_id)): ?>
+                    <td>Transfer Request #</td>
+                    <td style="width: 5%">:</td>
+                    <td><?php echo CHtml::encode(CHtml::value($do, 'transferRequest.transfer_request_no')); ?></td>
+                <?php endif; ?>
             </tr>
             <tr>
-                <td>Phone</td>
-                <td>:</td>
-                <td><?php echo $phonenumber; ?></td>
+                <td>Tanggal Kirim</td>
+                <td style="width: 5%">:</td>
+                <td><?php echo tanggal(CHtml::encode(CHtml::value($do, 'delivery_date'))); ?></td>
+                <?php if (!empty($do->sent_request_id)): ?>
+                    <td>Tanggal Request</td>
+                    <td style="width: 5%">:</td>
+                    <td><?php echo tanggal(CHtml::encode(CHtml::value($do, 'sentRequest.sent_request_date'))); ?></td>
+                <?php elseif (!empty($do->transfer_request_id)): ?>
+                    <td>Tanggal Request</td>
+                    <td style="width: 5%">:</td>
+                    <td><?php echo tanggal(CHtml::encode(CHtml::value($do, 'transferRequest.transfer_request_date'))); ?></td>
+                <?php endif; ?>
             </tr>
             <tr>
-                <td>Address</td>
-                <td>:</td>
-                <td><?php echo !empty($do->customer->address)?$do->customer->address.", ": ""; ?><?php echo $do->customer->city->name; ?>  <?php echo $do->customer->province->name; ?> <?php echo $do->customer->zipcode; ?></td>
+                <td>Tujuan</td>
+                <td style="width: 5%">:</td>
+                <td><?php echo CHtml::encode(CHtml::value($do, 'destinationBranch.code')); ?></td>
+                <td>ETA</td>
+                <td style="width: 5%">:</td>
+                <td><?php echo tanggal(CHtml::encode(CHtml::value($do, 'estimate_arrival_date'))); ?></td>
             </tr>
         </table>
     </div>
@@ -62,19 +84,29 @@ function tanggal($date) {
                 <table>
                     <thead>
                         <tr>
-                            <th width="30%">Product Name</th>
-                            <th width="10%">Quantity</th>
-                            <th width="60%">Notes</th>
+                            <th style="width: 1%">No</th>
+                            <th width="10%">Code</th>
+                            <th>Item Name</th>
+                            <th width="15%">Brand Name</th>
+                            <th width="8%">Qty</th>
+                            <th width="6%">Unit</th>
+                            <th width="30%">Notes</th>
                         </tr>
                     </thead>
+                    <?php $no = 1; ?>
                     <tbody style="height: 100px;">
                         <?php foreach ($do->transactionDeliveryOrderDetails as $key => $deliveryDetail): ?>
                             <tr>
-                                <td><?php echo $deliveryDetail->product->name == ''?'-':$deliveryDetail->product->name; ?></td>
-                                <td><?php echo $deliveryDetail->quantity_request == ''?'-':$deliveryDetail->quantity_request; ?></td>
+                                <td class="noo"><?php echo $no; ?></td>
+                                <td>&nbsp; <?php echo CHtml::encode(CHtml::value($deliveryDetail, 'product.manufacturer_code')); ?></td>
+                                <td>&nbsp; <?php echo CHtml::encode(CHtml::value($deliveryDetail, 'product.name')); ?></td>
+                                <td>&nbsp; <?php echo CHtml::encode(CHtml::value($deliveryDetail, 'product.brand.name')); ?></td>
+                                <td>&nbsp; <?php echo CHtml::encode(CHtml::value($deliveryDetail, 'quantity_request')); ?></td>
+                                <td>&nbsp; <?php echo CHtml::encode(CHtml::value($deliveryDetail, 'product.unit.name')); ?></td>
                                 <td><?php echo $deliveryDetail->note== ''?'-':$deliveryDetail->note; ?></td>
                             </tr>
-                        <?php endforeach ?>
+                            <?php $no++; ?>
+                        <?php endforeach; ?>
                     </tbody>
                 </table>    
             <?php else: ?>
@@ -82,8 +114,8 @@ function tanggal($date) {
             <?php endif; ?>
             <table>
                 <tr>
-                    <td width="30%" style="font-size: 10px">Notes :</td>
-                    <td width="70%" style="font-size: 10px">
+                    <td width="50%" style="font-size: 10px">Notes :</td>
+                    <td width="50%" style="font-size: 10px">
                         <ol>
                             <li>surat jalan ini merupakan bukti resmi penerimaan barang</li>
                             <li>surat jalan ini bukan bukti penjualan</li>

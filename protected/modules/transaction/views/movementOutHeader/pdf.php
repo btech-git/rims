@@ -12,18 +12,22 @@ function tanggal($date) {
 ?>
 <div class="container">
     <div class="header">
-        <div style="float: left; width: 50%; text-align: center">
-            <img src="<?php echo Yii::app()->request->baseUrl; ?>/images/rap-logo.png" alt="" width="35%"/>
+        <div style="float: left; width: 30%; text-align: left">
+            <img src="<?php echo Yii::app()->request->baseUrl; ?>/images/rap-logo.png" alt="" style="width: 64px; height: 64px"/>
         </div>
-        <div style="float: right; width: 45%">
-            <p>
+        <div style="float: right; width: 30%">
+            <div>
                 Jl. Raya Jati Asih/Jati Kramat - 84993984/77 Fax. 84993989 <br />
                 Jl. Raya Kalimalang No. 8, Kp. Dua - 8843656 Fax. 88966753<br />
-                Jl. Raya Kalimalang Q/2D - 8643594/95 Fax. 8645008<br />
+                Jl. Raya Kalimalang Q/2D - 8643594/95 Fax. 8645008
+            </div>
+        </div>
+        <div style="float: right; width: 30%">
+            <div>
                 Jl. Raya Radin Inten II No. 9 - 8629545/46 Fax. 8627313<br />
                 Jl. Celebration Boulevard Blok AA 9/35 - 8261594<br />
                 Email info@raperind.com
-            </p>
+            </div>
         </div>
     </div>
     
@@ -72,12 +76,13 @@ function tanggal($date) {
         <table>
             <thead>
                 <tr>
-                    <th style="width: 5%; text-align: center">NO</th>
-                    <th>Code</th>
+                    <th style="width: 1%; text-align: center">NO</th>
+                    <th width="15%">Code</th>
                     <th>Product</th>
-                    <th>Brand</th>
-                    <th>Qty Request</th>
-                    <th>Qty Movement</th>
+                    <th width="20%">Brand</th>
+                    <th width="8%">Qty Request</th>
+                    <th width="8%">Qty Movement</th>
+                    <th width="5%">Satuan</th>
                 </tr>
             </thead>
             <tbody style="height: 100px;">
@@ -86,16 +91,13 @@ function tanggal($date) {
                     <?php foreach ($model->movementOutDetails as $detail): ?>
                         <?php $product = $detail->product; ?>
                         <tr class="isi">
-                            <td><?php echo $no; ?></td>
+                            <td class="noo"><?php echo $no; ?></td>
                             <td>&nbsp; <?php echo CHtml::encode(CHtml::value($product, 'manufacturer_code')); ?></td>
                             <td>&nbsp; <?php echo CHtml::encode(CHtml::value($product, 'name')); ?></td>
-                            <td>
-                                <?php echo CHtml::encode(CHtml::value($product, 'brand.name')); ?> -
-                                <?php echo CHtml::encode(CHtml::value($product, 'subBrand.name')); ?> -
-                                <?php echo CHtml::encode(CHtml::value($product, 'subBrandSeries.name')); ?>
-                            </td>
-                            <td>&nbsp; <?php echo CHtml::encode(CHtml::value($detail, 'quantity_transaction')); ?></td>
-                            <td>&nbsp; <?php echo CHtml::encode(CHtml::value($detail, 'quantity')); ?></td>
+                            <td><?php echo CHtml::encode(CHtml::value($product, 'brand.name')); ?></td>
+                            <td style="text-align: center">&nbsp; <?php echo CHtml::encode(CHtml::value($detail, 'quantity_transaction')); ?></td>
+                            <td style="text-align: center">&nbsp; <?php echo CHtml::encode(CHtml::value($detail, 'quantity')); ?></td>
+                                <td>&nbsp; <?php echo CHtml::encode(CHtml::value($product, 'unit.name')); ?></td>
                         </tr>
                         <?php $no++; ?>
                     <?php endforeach; ?>
