@@ -15,17 +15,17 @@ function tanggal($date) {
     <div <?php if ($i > 0): ?>style=" page-break-before: always"<?php endif; ?>>
         <div class="container">
             <div class="header">
-                <div style="float: left; width: 30%; text-align: left">
-                    <img src="<?php echo Yii::app()->request->baseUrl; ?>/images/rap-logo.png" alt="" style="width: 64px; height: 64px"/>
+                <div style="float: left; width: 20%; text-align: center">
+                    <img src="<?php echo Yii::app()->baseUrl . '/images/rap-logo.png' ?>" style="width: 75px; height: 64px" />
                 </div>
-                <div style="float: right; width: 30%">
+                <div style="float: right; width: 40%">
                     <div>
                         Jl. Raya Jati Asih/Jati Kramat - 84993984/77 Fax. 84993989 <br />
                         Jl. Raya Kalimalang No. 8, Kp. Dua - 8843656 Fax. 88966753<br />
                         Jl. Raya Kalimalang Q/2D - 8643594/95 Fax. 8645008
                     </div>
                 </div>
-                <div style="float: right; width: 30%">
+                <div style="float: right; width: 40%">
                     <div>
                         Jl. Raya Radin Inten II No. 9 - 8629545/46 Fax. 8627313<br />
                         Jl. Celebration Boulevard Blok AA 9/35 - 8261594<br />
