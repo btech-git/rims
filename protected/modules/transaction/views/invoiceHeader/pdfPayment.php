@@ -122,19 +122,6 @@ function tanggal($date) {
                                 <td style="text-align: right;">&nbsp;  Rp. <?php echo number_format($detail->total_price, 2, ',', '.'); ?></td>
                             </tr>
                             <?php $no++; ?>
-                        <?php else: ?>
-                            <tr class="isi">
-                                <td>&nbsp;</td>
-                                <td>&nbsp;</td>
-                                <td>&nbsp;</td>
-                                <td>&nbsp;</td>
-                                <td>&nbsp;</td>
-                                <td>&nbsp;</td>
-                                <td>&nbsp;</td>
-                                <td>&nbsp;</td>
-                                <td>&nbsp;</td>
-                                <td>&nbsp;</td>
-                            </tr>
                         <?php endif; ?>
                     <?php endforeach; ?>
                     <tr>
@@ -220,11 +207,6 @@ function tanggal($date) {
 
             <div style="font-size: 10px; text-align: left">1. Raperind Motor tidak bertanggung jawab atas kendaraan yang tidak diambil dalam waktu 30 hari setelah kendaraan selesai</div>
             <div style="font-size: 10px; text-align: left">2. Raperind Motor bertanggung jawab atas keamanan kendaraan yang ditinggal di workshop dengan penggantian sebesar 10x Jasa, kecuali atas kejadian Force Majeure (Pencurian Kendaraan, Kebakaran, dll)</div>
-
-            <div style="text-align: center">
-                <img src="<?php echo Yii::app()->request->baseUrl; ?>/images/lunas.png" alt="" width="35%"/>
-            </div>
-
         </div>
     </div>
 <?php endfor; ?>

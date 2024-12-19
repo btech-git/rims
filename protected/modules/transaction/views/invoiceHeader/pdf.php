@@ -15,8 +15,8 @@ function tanggal($date) {
     <div <?php if ($i > 0): ?>style=" page-break-before: always"<?php endif; ?>>
         <div class="container">
             <div class="header">
-                <div style="float: left; width: 30%; text-align: left">
-                    <img src="<?php echo Yii::app()->request->baseUrl; ?>/images/rap-logo.png" alt="" style="width: 64px; height: 64px"/>
+                <div style="float: left; width: 30%; text-align: center">
+                    <img src="<?php echo Yii::app()->baseUrl . '/images/rap-logo.png' ?>" style="width: 75px; height: 64px" />
                 </div>
                 <div style="float: right; width: 30%">
                     <div>
@@ -35,19 +35,11 @@ function tanggal($date) {
             </div>
 
             <div style="text-align: center">
-                <h4>TANDA TERIMA PEMBAYARAN<?php if ($i > 0): ?><span style="color: red"> - COPY</span><?php endif; ?></h4>
+                <h4>INVOICE<?php if ($i > 0): ?><span style="color: red"> - COPY</span><?php endif; ?></h4>
             </div>
 
             <div class="body-memo">
                 <table>
-                    <tr>
-                        <td>PAYMENT #</td>
-                        <td>:</td>
-                        <td><?php echo $paymentInDetail->paymentIn->payment_number; ?></td>
-                        <td>TGL PAYMENT</td>
-                        <td>:</td>
-                        <td><?php echo tanggal($paymentInDetail->paymentIn->payment_date) . ' ' . $paymentInDetail->paymentIn->payment_time; ?></td>
-                    </tr>
                     <tr>
                         <td>INVOICE #</td>
                         <td>:</td>
@@ -77,9 +69,9 @@ function tanggal($date) {
                         </td>
                     </tr>
                     <tr>
-                        <td>JENIS PEMBAYARAN</td>
-                        <td>:</td>
-                        <td><?php echo $paymentInDetail->paymentIn->paymentType->name; ?></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
                         <td>KM</td>
                         <td>:</td>
                         <td>
@@ -108,34 +100,19 @@ function tanggal($date) {
                     </tr>
                     <?php $no = 1; ?>
                     <?php foreach ($invoiceHeader->invoiceDetails as $detail): ?>
-                        <?php if (!empty($detail->product_id)): ?>
-                            <tr class="isi">
-                                <td class="noo"><?php echo $no; ?></td>
-                                <td>&nbsp; <?php echo CHtml::encode(CHtml::value($detail, 'product.manufacturer_code')); ?></td>
-                                <td>&nbsp; <?php echo CHtml::encode(CHtml::value($detail, 'product.name')); ?></td>
-                                <td>&nbsp; <?php echo CHtml::encode(CHtml::value($detail, 'product.brand.name')); ?></td>
-                                <td>&nbsp; <?php echo CHtml::encode(CHtml::value($detail, 'quantity')); ?></td>
-                                <td>&nbsp; <?php echo CHtml::encode(CHtml::value($detail, 'product.unit.name')); ?></td>
-                                <td style="text-align: right;">&nbsp;  Rp. <?php echo number_format($detail->unit_price, 2, ',', '.'); ?></td>
-                                <td style="text-align: right;">&nbsp;  Rp. <?php echo number_format($detail->discount, 2, ',', '.'); ?></td>
-                                <td style="text-align: right;">&nbsp;  Rp. <?php echo number_format($detail->unit_price, 2, ',', '.'); ?></td>
-                                <td style="text-align: right;">&nbsp;  Rp. <?php echo number_format($detail->total_price, 2, ',', '.'); ?></td>
-                            </tr>
-                            <?php $no++; ?>
-                        <?php else: ?>
-                            <tr class="isi">
-                                <td>&nbsp;</td>
-                                <td>&nbsp;</td>
-                                <td>&nbsp;</td>
-                                <td>&nbsp;</td>
-                                <td>&nbsp;</td>
-                                <td>&nbsp;</td>
-                                <td>&nbsp;</td>
-                                <td>&nbsp;</td>
-                                <td>&nbsp;</td>
-                                <td>&nbsp;</td>
-                            </tr>
-                        <?php endif; ?>
+                        <tr class="isi">
+                            <td class="noo"><?php echo $no; ?></td>
+                            <td>&nbsp; <?php echo CHtml::encode(CHtml::value($detail, 'product.manufacturer_code')); ?></td>
+                            <td>&nbsp; <?php echo CHtml::encode(CHtml::value($detail, 'product.name')); ?></td>
+                            <td>&nbsp; <?php echo CHtml::encode(CHtml::value($detail, 'product.brand.name')); ?></td>
+                            <td>&nbsp; <?php echo CHtml::encode(CHtml::value($detail, 'quantity')); ?></td>
+                            <td>&nbsp; <?php echo CHtml::encode(CHtml::value($detail, 'product.unit.name')); ?></td>
+                            <td style="text-align: right;">&nbsp;  Rp. <?php echo number_format($detail->unit_price, 2, ',', '.'); ?></td>
+                            <td style="text-align: right;">&nbsp;  Rp. <?php echo number_format($detail->discount, 2, ',', '.'); ?></td>
+                            <td style="text-align: right;">&nbsp;  Rp. <?php echo number_format($detail->unit_price, 2, ',', '.'); ?></td>
+                            <td style="text-align: right;">&nbsp;  Rp. <?php echo number_format($detail->total_price, 2, ',', '.'); ?></td>
+                        </tr>
+                        <?php $no++; ?>
                     <?php endforeach; ?>
                     <tr>
                         <td colspan="9" style="text-align: right;">Total Parts</td>
@@ -220,11 +197,6 @@ function tanggal($date) {
 
             <div style="font-size: 10px; text-align: left">1. Raperind Motor tidak bertanggung jawab atas kendaraan yang tidak diambil dalam waktu 30 hari setelah kendaraan selesai</div>
             <div style="font-size: 10px; text-align: left">2. Raperind Motor bertanggung jawab atas keamanan kendaraan yang ditinggal di workshop dengan penggantian sebesar 10x Jasa, kecuali atas kejadian Force Majeure (Pencurian Kendaraan, Kebakaran, dll)</div>
-
-            <div style="text-align: center">
-                <img src="<?php echo Yii::app()->request->baseUrl; ?>/images/lunas.png" alt="" width="35%"/>
-            </div>
-
         </div>
     </div>
 <?php endfor; ?>

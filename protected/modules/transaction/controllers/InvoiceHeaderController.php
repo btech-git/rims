@@ -255,6 +255,66 @@ class InvoiceHeaderController extends Controller {
         $mPDF1->Output('Invoice.pdf', 'D');
     }
 
+    public function actionPdf($id) {
+        $invoiceHeader = InvoiceHeader::model()->findByAttributes(array('id' => $id));
+        $customer = Customer::model()->findByPk($invoiceHeader->customer_id);
+        $vehicle = Vehicle::model()->findByPk($invoiceHeader->vehicle_id);
+        $branch = Branch::model()->findByPk($invoiceHeader->branch_id);
+        $mPDF1 = Yii::app()->ePdf->mpdf('', 'A4-L');
+
+        $stylesheet = file_get_contents(Yii::getPathOfAlias('webroot') . '/css/pdf.css');
+        $mPDF1->SetTitle('Invoice');
+        $mPDF1->WriteHTML($stylesheet, 1);
+        $mPDF1->WriteHTML($this->renderPartial('pdf', array(
+            'invoiceHeader' => $invoiceHeader,
+            'customer' => $customer,
+            'vehicle' => $vehicle,
+            'branch' => $branch,
+        ), true));
+        $mPDF1->Output('Invoice ' . $invoiceHeader->invoice_number . '.pdf', 'I');
+    }
+
+    public function actionPdfPayment($id) {
+        $invoiceHeader = InvoiceHeader::model()->findByPk($id);
+        $paymentInDetail = PaymentInDetail::model()->findByAttributes(array('invoice_header_id' => $id));
+        $customer = Customer::model()->findByPk($invoiceHeader->customer_id);
+        $vehicle = Vehicle::model()->findByPk($invoiceHeader->vehicle_id);
+        $branch = Branch::model()->findByPk($invoiceHeader->branch_id);
+        $mPDF1 = Yii::app()->ePdf->mpdf('', 'A4-L');
+
+        $stylesheet = file_get_contents(Yii::getPathOfAlias('webroot') . '/css/pdf.css');
+        $mPDF1->SetTitle('Tanda Terima');
+        $mPDF1->WriteHTML($stylesheet, 1);
+        $mPDF1->SetWatermarkText('LUNAS');
+        $mPDF1->showWatermarkText = true;
+        $mPDF1->watermark_font = 'DejaVuSansCondensed'; 
+        $mPDF1->WriteHTML($this->renderPartial('pdfPayment', array(
+            'invoiceHeader' => $invoiceHeader,
+            'paymentInDetail' => $paymentInDetail,
+            'customer' => $customer,
+            'vehicle' => $vehicle,
+            'branch' => $branch,
+        ), true));
+        $mPDF1->Output('Tanda Terima ' . $invoiceHeader->invoice_number . '.pdf', 'I');
+    }
+
+    public function actionAjaxJsonPrintCounter($id) {
+        if (Yii::app()->request->isAjaxRequest) {
+            $invoiceHeader = InvoiceHeader::model()->findByPk($id);
+            $invoiceHeader->number_of_print += 1;
+            $invoiceHeader->user_id_printed = Yii::app()->user->getId();
+            if ($invoiceHeader->save()) {
+                $status = 'OK';
+            } else {
+                $status = 'Not OK';
+            }
+
+            echo CJSON::encode(array(
+                'status' => $status,
+            ));
+        }
+    }
+
     /**
      * Creates a new model.
      * If creation is successful, the browser will be redirected to the 'view' page.
@@ -267,7 +327,6 @@ class InvoiceHeaderController extends Controller {
         }
         
         $invoice = $this->instantiate(null, 'create');
-//        $this->performAjaxValidation($invoice->header);
 
         $registrationTransaction = RegistrationTransaction::model()->findByPk($registrationId);
         $invoice->header->reference_type = 2;

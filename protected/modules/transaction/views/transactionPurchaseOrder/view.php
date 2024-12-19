@@ -46,12 +46,12 @@ $this->menu=array(
             )); ?>
         <?php endif; ?>
         
-        <?php //if (Yii::app()->user->checkAccess("saleInvoiceSupervisor")): ?>
-            <?php echo CHtml::link('<span class="fa fa-minus"></span>Cancel Transaction', array("/transaction/transactionPurchaseOrder/cancel", "id" => $model->id), array(
-                'class' => 'button alert right', 
-                'style' => 'margin-right:10px', 
-            )); ?>
-        <?php //endif; ?>
+        <?php if ($model->status_document == 'Approved'): ?>
+            <div class="field buttons text-right">
+                <?php echo CHtml::link('<span class="fa fa-print"></span>Print PO', Yii::app()->baseUrl.'/transaction/transactionPurchaseOrder/pdf?id=' . $model->id, array('class'=>'button warning right','style'=>'margin-right:10px', 'target' => 'blank')) ?>
+            </div>
+        <?php endif; ?>
+
         
         <br />
         
@@ -195,10 +195,11 @@ $this->menu=array(
     </div>
 <?php endif; ?>
 
-<?php if ($model->status_document != 'CANCELLED!!!'): //$model->status_document == 'Approved'): ?>
-    <div class="field buttons text-right">
-        <?php echo CHtml::link('<span class="fa fa-print"></span>Print PO', Yii::app()->baseUrl.'/transaction/transactionPurchaseOrder/pdf?id=' . $model->id, array('class'=>'button warning right','style'=>'margin-right:10px', 'target' => 'blank')) ?>
-    </div>
+<?php if (Yii::app()->user->checkAccess("saleInvoiceSupervisor")): ?>
+    <?php echo CHtml::link('<span class="fa fa-minus"></span>Cancel Transaction', array("/transaction/transactionPurchaseOrder/cancel", "id" => $model->id), array(
+        'class' => 'button alert right', 
+        'style' => 'margin-right:10px', 
+    )); ?>
 <?php endif; ?>
 
 <?php $this->beginWidget('zii.widgets.jui.CJuiDialog', array(

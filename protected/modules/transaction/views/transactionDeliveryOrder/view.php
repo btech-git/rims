@@ -22,26 +22,19 @@ $this->menu = array(
         <?php $ccaction = Yii::app()->controller->action->id; ?>
         <?php echo CHtml::link('<span class="fa fa-list"></span>Manage Delivery Order', Yii::app()->baseUrl . '/transaction/transactionDeliveryOrder/admin', array('class' => 'button cbutton right', 'visible' => Yii::app()->user->checkAccess("transaction.transactionDeliveryOrder.admin"))) ?>
 
-        <?php
-//        $movements = MovementOutHeader::model()->findAllByAttributes(array('delivery_order_id' => $model->id));
-//        if (count($movements) == 0):
-        ?>
         <?php if ($model->is_cancelled == 0): ?>
             <?php echo CHtml::link('<span class="fa fa-edit"></span>Edit', Yii::app()->baseUrl . '/transaction/transactionDeliveryOrder/update?id=' . $model->id, array(
                 'class' => 'button cbutton right', 
                 'style' => 'margin-right:10px', 
                 'visible' => Yii::app()->user->checkAccess("deliveryEdit")
             )); ?>
-        <?php //else: ?>
-        <?php //endif; ?>
-
-        <?php //if (Yii::app()->user->checkAccess("saleInvoiceSupervisor")): ?>
-            <?php echo CHtml::link('<span class="fa fa-minus"></span>Cancel Transaction', array("/transaction/transactionDeliveryOrder/cancel", "id" => $model->id), array(
-                'class' => 'button alert right', 
+            <?php echo CHtml::link('<span class="fa fa-edit"></span>Print Surat Jalan', Yii::app()->baseUrl . '/transaction/transactionDeliveryOrder/pdf?id=' . $model->id, array(
+                'class' => 'button warning right', 
                 'style' => 'margin-right:10px', 
-            )); ?>
+                'target' => 'blank'
+            )) ?>
         <?php endif; ?>
-        
+
         <h1>View Transaction Delivery Order #<?php echo $model->id; ?></h1>
 
         <?php $this->widget('zii.widgets.CDetailView', array(
@@ -457,7 +450,12 @@ $this->menu = array(
 </div>
 
 <div>
-    <?php echo CHtml::link('<span class="fa fa-edit"></span>Print Surat Jalan', Yii::app()->baseUrl . '/transaction/transactionDeliveryOrder/pdf?id=' . $model->id, array('class' => 'button warning right', 'style' => 'margin-right:10px', 'target' => 'blank')) ?>
+    <?php if (Yii::app()->user->checkAccess("saleInvoiceSupervisor")): ?>
+        <?php echo CHtml::link('<span class="fa fa-minus"></span>Cancel Transaction', array("/transaction/transactionDeliveryOrder/cancel", "id" => $model->id), array(
+            'class' => 'button alert right', 
+            'style' => 'margin-right:10px', 
+        )); ?>
+    <?php endif; ?>
 </div>
 
 <?php $this->beginWidget('zii.widgets.jui.CJuiDialog', array(

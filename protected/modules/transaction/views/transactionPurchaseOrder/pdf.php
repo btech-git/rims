@@ -57,19 +57,17 @@ function tanggal($date) {
                 <td>TOP</td>
                 <td>:</td>
                 <td><?php echo CHtml::encode(CHtml::value($supplier, 'tenor')); ?> Hari</td>
-                <?php if ($po->purchase_type === TransactionPurchaseOrder::TIRE): ?>
-                    <tr>
-                        <td>Type</td>
-                        <td>:</td>
-                        <td><?php echo CHtml::encode($po->getPurchaseStatus($po->purchase_type)); ?></td>
-                    </tr>
-                <?php endif; ?>
-            </tr>
-            <tr>
                 <td>From</td>
                 <td>:</td>
-                <td><?php echo CHtml::encode(CHtml::value($po, 'mainBranch.name')); ?></td>
+                <td><?php echo CHtml::encode(CHtml::value($po, 'user.username')); ?></td>
             </tr>
+            <?php if ($po->purchase_type === TransactionPurchaseOrder::TIRE): ?>
+                <tr>
+                    <td>Type</td>
+                    <td>:</td>
+                    <td><?php echo CHtml::encode($po->getPurchaseStatus($po->purchase_type)); ?></td>
+                </tr>
+            <?php endif; ?>
         </table>
     </div>
 

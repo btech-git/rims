@@ -369,6 +369,7 @@ class TransactionPurchaseOrderController extends Controller {
         $branch = Branch::model()->find('id=:id', array(':id' => $po->main_branch_id));
         $po_detail = TransactionPurchaseOrderDetail::model()->findAllByAttributes(array('purchase_order_id' => $id));
         $approval = TransactionPurchaseOrderApproval::model()->findByAttributes(array('purchase_order_id' => $id), array('order' => 't.id DESC'));
+        
         $mPDF1 = Yii::app()->ePdf->mpdf('', 'A4-L', 0, '', 15, 15, 16, 16, 9, 9, 'L');
         $stylesheet = file_get_contents(Yii::getPathOfAlias('webroot') . '/css/pdf.css');
         $mPDF1->WriteHTML($stylesheet, 1);
@@ -380,7 +381,7 @@ class TransactionPurchaseOrderController extends Controller {
             'po_detail' => $po_detail,
             'approval' => $approval,
         ), true));
-        $mPDF1->Output();
+        $mPDF1->Output('PO ' . $po->purchase_order_no . '.pdf', 'I');
     }
 
     /**

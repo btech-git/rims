@@ -90,12 +90,12 @@ function tanggal($date) {
         </table>
     </div>
     
-    <div>
+<!--    <div>
         <table style="border: 1px solid; width: 100%; font-size: 0.5em">
             <tr>
                 <td>Tahun</td>
                 <td style="width: 10px">:</td>
-                <td style="border-right: 1px solid"><?php echo $bodyRepairRegistration->vehicle->year; ?></td>
+                <td style="border-right: 1px solid"><?php /*echo $bodyRepairRegistration->vehicle->year; ?></td>
                 <td><?php echo CHtml::image(Yii::app()->baseUrl . '/images/icons/checkbox.png', 'checkbox', array('style' => 'width: 10px')); ?> Oli Mesin</td>
                 <td style="width: 80px; border-bottom: 1px solid black;">&nbsp;</td>
                 <td><?php echo CHtml::image(Yii::app()->baseUrl . '/images/icons/checkbox.png', 'checkbox', array('style' => 'width: 10px')); ?> Balancing</td>
@@ -133,7 +133,7 @@ function tanggal($date) {
                 <td style="border-bottom: 1px solid black;">&nbsp;</td>
                 <td><?php echo CHtml::image(Yii::app()->baseUrl . '/images/icons/checkbox.png', 'checkbox', array('style' => 'width: 10px')); ?> Carbon Clean</td>
                 <td style="border-bottom: 1px solid black;">&nbsp;</td>
-                <td><?php echo CHtml::image(Yii::app()->baseUrl . '/images/icons/checkbox.png', 'checkbox', array('style' => 'width: 10px')); ?> Cuci</td>
+                <td><?php echo CHtml::image(Yii::app()->baseUrl . '/images/icons/checkbox.png', 'checkbox', array('style' => 'width: 10px'));*/ ?> Cuci</td>
                 <td style="border-bottom: 1px solid black;">&nbsp;</td>
             </tr>
         </table>
@@ -163,18 +163,21 @@ function tanggal($date) {
                 <td>&nbsp;</td>
             </tr>
         </table>
-    </div>
+    </div>-->
     
     <?php if (count($bodyRepairRegistration->registrationProducts) > 0): ?>
         <div class="purchase-order">
             <table>
+                <tr style="background-color: skyblue">
+                    <th colspan="6">SUKU CADANG - SPAREPARTS</th>
+                </tr>
                 <tr>
                     <th style="width: 1%">No</th>
-                    <th>Code</th>
+                    <th style="width: 15%">Code</th>
                     <th>Item Name</th>
-                    <th>Brand Name</th>
-                    <th>Qty</th>
-                    <th>Unit</th>
+                    <th style="width: 15%">Brand Name</th>
+                    <th style="width: 5%">Qty</th>
+                    <th style="width: 5%">Unit</th>
                 </tr>
                 <?php
                 $no = 1;
@@ -196,6 +199,9 @@ function tanggal($date) {
     <?php if (count($bodyRepairRegistration->registrationQuickServices) > 0 || count($bodyRepairRegistration->registrationServices) > 0): ?>
         <div class="purchase-order">
             <table>
+                <tr style="background-color: skyblue">
+                    <th colspan="2">JASA PERBAIKAN - SERVICE</th>
+                </tr>
                 <tr>
                     <th style="width: 1%">No</th>
                     <th>Service</th>
@@ -224,15 +230,13 @@ function tanggal($date) {
     <div style="width: 100%">
         <table style="border: 1px solid; font-size: 10px; width: 100%; float: center">
             <tr>
-                <td colspan="3" style="border-bottom: 1px solid; text-align: center">Tanda Tangan</td>
+                <td colspan="2" style="border-bottom: 1px solid; text-align: center">Tanda Tangan</td>
             </tr>
             <tr>
                 <td style="height: 70px; border-right: 1px solid; width: 30%">&nbsp;</td>
-                <td style="border-right: 1px solid; width: 30%">&nbsp;</td>
                 <td style="width: 30%">&nbsp;</td>
             </tr>
             <tr>
-                <td style="text-align: center; border-right: 1px solid;">(Pemilik Kendaraan)</td>
                 <td style="text-align: center; border-right: 1px solid;">(Front Office)</td>
                 <td style="text-align: center">(Mekanik)</td>
             </tr>

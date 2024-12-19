@@ -32,18 +32,26 @@ function tanggal($date) {
     </div>
     
     <div style="text-align: center">
-        <h4>FORM PERMINTAAN SERVICE - CONTRACT SERVICE</h4>
+        <h4>FORM PERSETUJUAN PARTS</h4>
     </div>
 
     <div class="body-memo">
         <table>
             <tr>
-                <td>WO #</td>
+                <td>RG #</td>
                 <td>:</td>
-                <td><?php echo $generalRepairRegistration->work_order_number; ?></td>
+                <td><?php echo $generalRepairRegistration->transaction_number; ?></td>
                 <td>TANGGAL</td>
                 <td>:</td>
                 <td><?php echo tanggal($generalRepairRegistration->transaction_date); ?></td>
+            </tr>
+            <tr>
+                <td>WO #</td>
+                <td>:</td>
+                <td><?php echo $generalRepairRegistration->work_order_number; ?></td>
+                <td>NAMA</td>
+                <td>:</td>
+                <td><?php echo $customer->name; ?></td>
             </tr>
             <tr>
                 <td>JENIS KENDARAAN</td>
@@ -53,65 +61,59 @@ function tanggal($date) {
                     <?php echo $generalRepairRegistration->vehicle->carModel->name; ?> -
                     <?php echo $generalRepairRegistration->vehicle->carSubModel->name; ?> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                 </td>
-                <td>NAMA</td>
-                <td>:</td>
-                <td><?php echo $customer->name; ?></td>
-            </tr>
-            <tr>
-                <td>NO. POLISI</td>
-                <td>:</td>
-                <td><?php echo $generalRepairRegistration->vehicle->plate_number; ?></td>
                 <td>PHONE</td>
                 <td>:</td>
                 <td><?php echo $customer->mobile_phone; ?></td>
             </tr>
             <tr>
-                <td>NO. RANGKA</td>
+                <td>NO. POLISI</td>
                 <td>:</td>
-                <td><?php echo $generalRepairRegistration->vehicle->frame_number; ?></td>
+                <td><?php echo $generalRepairRegistration->vehicle->plate_number; ?></td>
                 <td>ALAMAT</td>
                 <td>:</td>
                 <td><?php echo nl2br($customer->address); ?></td>
             </tr>
             <tr>
-                <td>PROBLEM</td>
+                <td>NO. RANGKA</td>
                 <td>:</td>
-                <td><?php echo CHtml::encode(CHtml::value($generalRepairRegistration, 'problem')); ?></td>
+                <td><?php echo $generalRepairRegistration->vehicle->frame_number; ?></td>
                 <td>KM</td>
                 <td>:</td>
                 <td><?php echo $generalRepairRegistration->vehicle_mileage; ?></td>
+            </tr>
+            <tr>
+                <td>PROBLEM</td>
+                <td>:</td>
+                <td colspan="4"><?php echo CHtml::encode(CHtml::value($generalRepairRegistration, 'problem')); ?></td>
             </tr>
         </table>
     </div>
     
     <div style="text-align: center">
-        <h4>List Permohonan Service</h4>
+        <h4>List Parts</h4>
     </div>
 
     <div class="purchase-order">
         <table>
             <tr style="background-color: skyblue">
                 <th style="width: 1%; text-align: center">NO</th>
-                <th>JENIS PEKERJAAN</th>
+                <th style="width: 15%">Code</th>
+                <th>Item Name</th>
+                <th style="width: 15%">Brand Name</th>
+                <th style="width: 5%">Qty</th>
+                <th style="width: 5%">Unit</th>
             </tr>
             <?php $no = 1;?>
-            <?php if (count($generalRepairRegistration->registrationQuickServices) > 0): ?>
-                <?php foreach ($generalRepairRegistration->registrationQuickServices as $quickService): ?>
-                    <tr class="isi">
-                        <td class="noo"><?php echo $no; ?></td>
-                        <td>&nbsp; <?php echo CHtml::encode(CHtml::value($quickService, 'quickService.name')); ?></td>
-                    </tr>
-                <?php endforeach; ?>
-            <?php endif; ?>
-            <?php if (count($generalRepairRegistration->registrationServices) > 0): ?>
-                <?php foreach ($generalRepairRegistration->registrationServices as $service): ?>
-                    <tr class="isi">
-                        <td class="noo"><?php echo $no ?></td>
-                        <td>&nbsp; <?php echo CHtml::encode(CHtml::value($service, 'service.name')); ?></td>
-                    </tr>
-                    <?php $no++; ?>
-                <?php endforeach; ?>
-            <?php endif; ?>
+            <?php foreach ($generalRepairRegistration->registrationProducts as $registrationProduct): ?>
+                <tr class="isi">
+                    <td class="noo"><?php echo $no; ?></td>
+                    <td>&nbsp; <?php echo CHtml::encode(CHtml::value($registrationProduct, 'product.manufacturer_code')); ?></td>
+                    <td>&nbsp; <?php echo CHtml::encode(CHtml::value($registrationProduct, 'product.name')); ?></td>
+                    <td>&nbsp; <?php echo CHtml::encode(CHtml::value($registrationProduct, 'product.brand.name')); ?></td>
+                    <td>&nbsp; <?php echo CHtml::encode(CHtml::value($registrationProduct, 'quantity')); ?></td>
+                    <td>&nbsp; <?php echo CHtml::encode(CHtml::value($registrationProduct, 'product.unit.name')); ?></td>
+                </tr>
+            <?php endforeach; ?>
         </table>
     </div>
     

@@ -525,6 +525,9 @@ class RegistrationTransactionController extends Controller {
         $stylesheet = file_get_contents(Yii::getPathOfAlias('webroot') . '/css/pdf.css');
         $mPDF1->SetTitle('Invoice');
         $mPDF1->WriteHTML($stylesheet, 1);
+        $mPDF1->SetWatermarkText('LUNAS');
+        $mPDF1->showWatermarkText = true;
+        $mPDF1->watermark_font = 'DejaVuSansCondensed'; 
         $mPDF1->WriteHTML($this->renderPartial('pdfPayment', array(
             'invoiceHeader' => $invoiceHeader,
             'customer' => $customer,
@@ -997,6 +1000,7 @@ class RegistrationTransactionController extends Controller {
         if (Yii::app()->request->isAjaxRequest) {
             $invoiceHeader = InvoiceHeader::model()->findByPk($id);
             $invoiceHeader->number_of_print += 1;
+            $invoiceHeader->user_id_printed =Yii::app()->user->getId();
             if ($invoiceHeader->save()) {
                 $status = 'OK';
             } else {
