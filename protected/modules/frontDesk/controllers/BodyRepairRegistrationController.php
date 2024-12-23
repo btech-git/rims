@@ -406,7 +406,7 @@ class BodyRepairRegistrationController extends Controller {
     }
 
     public function actionPdfWorkOrder($id) {
-        $bodyRepairRegistration = RegistrationTransaction::model()->find('id=:id', array(':id' => $id));
+        $bodyRepairRegistration = RegistrationTransaction::model()->findByPk($id);
         $customer = Customer::model()->findByPk($bodyRepairRegistration->customer_id);
         $vehicle = Vehicle::model()->findByPk($bodyRepairRegistration->vehicle_id);
         $branch = Branch::model()->findByPk($bodyRepairRegistration->branch_id);

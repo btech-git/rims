@@ -46,7 +46,7 @@ function tanggal($date) {
                         <td><?php echo $paymentInDetail->paymentIn->payment_number; ?></td>
                         <td>TGL PAYMENT</td>
                         <td>:</td>
-                        <td><?php echo tanggal($paymentInDetail->paymentIn->payment_date) . ' ' . $paymentInDetail->paymentIn->payment_time; ?></td>
+                        <td><?php echo tanggal($paymentInDetail->paymentIn->payment_date) . ' ' . Yii::app()->dateFormatter->formatDateTime($paymentInDetail->paymentIn->payment_time, '', 'short'); ?></td>
                     </tr>
                     <tr>
                         <td>INVOICE #</td>
@@ -54,7 +54,7 @@ function tanggal($date) {
                         <td><?php echo $invoiceHeader->invoice_number; ?></td>
                         <td>TGL INVOICE</td>
                         <td>:</td>
-                        <td><?php echo tanggal($invoiceHeader->invoice_date); ?></td>
+                        <td><?php echo tanggal($invoiceHeader->invoice_date) . ' ' . Yii::app()->dateFormatter->formatDateTime($invoiceHeader->created_datetime, '', 'short'); ?></td>
                     </tr>
                     <tr>
                         <td>NAMA</td>
@@ -65,9 +65,9 @@ function tanggal($date) {
                         <td><?php echo $invoiceHeader->vehicle->plate_number; ?></td>
                     </tr>
                     <tr>
-                        <td>PHONE</td>
+                        <td>PAYMENT TYPE</td>
                         <td>:</td>
-                        <td><?php echo $customer->mobile_phone; ?></td>
+                        <td><?php echo $paymentInDetail->paymentIn->paymentType->name; ?></td>
                         <td>KENDARAAN</td>
                         <td>:</td>
                         <td>
@@ -77,14 +77,12 @@ function tanggal($date) {
                         </td>
                     </tr>
                     <tr>
-                        <td>JENIS PEMBAYARAN</td>
+                        <td>CREATED BY</td>
                         <td>:</td>
-                        <td><?php echo $paymentInDetail->paymentIn->paymentType->name; ?></td>
+                        <td><?php echo $invoiceHeader->user->username; ?></td>
                         <td>KM</td>
                         <td>:</td>
-                        <td>
-                            <?php echo $invoiceHeader->registrationTransaction->vehicle_mileage; ?>
-                        </td>
+                        <td><?php echo $invoiceHeader->registrationTransaction->vehicle_mileage; ?></td>
                     </tr>
                 </table>
             </div>

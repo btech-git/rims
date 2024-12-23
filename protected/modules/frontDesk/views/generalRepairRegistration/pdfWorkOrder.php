@@ -35,29 +35,23 @@ function tanggal($date) {
         <h4>WORK ORDER</h4>
     </div>
 
-    <div style="text-align: right; font-size: 10px;">
-        No WO: <?php echo CHtml::encode(CHtml::value($generalRepairRegistration, 'work_order_number')); ?>
-        &nbsp;&nbsp;
-        No Nota: <?php echo CHtml::encode(CHtml::value($generalRepairRegistration, 'sales_order_number')); ?>
-    </div>
-
     <div class="body-memo">
         <table>
             <tr>
-                <td>TANGGAL MASUK</td>
+                <td>WO #</td>
                 <td>:</td>
-                <td><?php echo tanggal($generalRepairRegistration->transaction_date); ?></td>
-                <td>TANGGAL SELESAI</td>
+                <td><?php echo CHtml::encode(CHtml::value($generalRepairRegistration, 'work_order_number')); ?></td>
+                <td>RG #</td>
                 <td>:</td>
-                <td><?php //echo $customer->name; ?></td>
+                <td><?php echo CHtml::encode(CHtml::value($generalRepairRegistration, 'transaction_number')); ?></td>
             </tr>
             <tr>
-                <td>JAM MASUK</td>
+                <td>TANGGAL MASUK</td>
                 <td>:</td>
-                <td><?php echo Yii::app()->dateFormatter->formatDateTime($generalRepairRegistration->transaction_date, '', 'short'); ?></td>
-                <td>JAM SELESAI</td>
+                <td><?php echo tanggal($generalRepairRegistration->transaction_date) . ' ' . Yii::app()->dateFormatter->formatDateTime($generalRepairRegistration->transaction_date, '', 'short'); ?></td>
+                <td>TANGGAL SELESAI</td>
                 <td>:</td>
-                <td><?php //echo $customer->name; ?></td>
+                <td></td>
             </tr>
             <tr>
                 <td>NAMA CUSTOMER</td>
@@ -175,7 +169,7 @@ function tanggal($date) {
                     <th style="width: 1%">No</th>
                     <th style="width: 15%">Code</th>
                     <th>Item Name</th>
-                    <th style="width: 15%">Brand Name</th>
+                    <th style="width: 20%">Brand Name</th>
                     <th style="width: 5%">Qty</th>
                     <th style="width: 5%">Unit</th>
                 </tr>
@@ -196,6 +190,7 @@ function tanggal($date) {
             </table>
         </div>
     <?php endif; ?>
+                
     <?php if (count($generalRepairRegistration->registrationQuickServices) > 0 || count($generalRepairRegistration->registrationServices) > 0): ?>
         <div class="purchase-order">
             <table>

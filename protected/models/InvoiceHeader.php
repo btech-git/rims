@@ -259,6 +259,7 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
         $criteria->compare('ppn_total', $this->ppn_total, true);
         $criteria->compare('total_price', $this->total_price, true);
         $criteria->compare('in_words', $this->in_words, true);
+        $criteria->compare('t.insurance_company_id', $this->insurance_company_id);
         $criteria->compare('note', $this->note, true);
 
 //        $criteria->addCondition("t.branch_id IN (SELECT branch_id FROM " . UserBranch::model()->tableName() . " WHERE users_id = :userId)");
@@ -270,9 +271,10 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
         }
 
         $criteria->together = 'true';
-        $criteria->with = array('customer');
+        $criteria->with = array('customer', 'vehicle');
         $criteria->addSearchCondition('customer.name', $this->customer_name, true);
         $criteria->addSearchCondition('customer.customer_type', $this->customer_type, true);
+        $criteria->addSearchCondition('vehicle.plate_number', $this->plate_number   , true);
 
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
@@ -496,6 +498,82 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
                 WHERE DATE(h.invoice_date) BETWEEN :start_date AND :end_date AND h.status NOT LIKE '%CANCEL%'" . $branchConditionSql . "
                 GROUP BY c.customer_type, DATE(h.invoice_date)
                 ORDER BY c.customer_type DESC, transaction_date ASC";
+        
+        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
+
+        return $resultSet;
+    }
+    
+    public static function getSaleReportByProductCategoryAll($startDate, $endDate, $branchId) {
+        $branchConditionSql = '';
+        
+        $params = array(
+            ':start_date' => $startDate,
+            ':end_date' => $endDate,
+        );
+        
+        if (!empty($branchId)) {
+            $branchConditionSql = ' AND h.branch_id = :branch_id';
+            $params[':branch_id'] = $branchId;
+        }
+        
+        $sql = "SELECT DATE(h.invoice_date) AS transaction_date, p.product_master_category_id, SUM(d.total_price) AS total_price
+                FROM " . InvoiceHeader::model()->tableName() . " h 
+                INNER JOIN " . InvoiceDetail::model()->tableName() . " d ON h.id = d.invoice_id
+                INNER JOIN " . Product::model()->tableName() . " p ON p.id = d.product_id
+                WHERE DATE(h.invoice_date) BETWEEN :start_date AND :end_date AND h.status NOT LIKE '%CANCEL%'" . $branchConditionSql . "
+                GROUP BY DATE(h.invoice_date), p.product_master_category_id
+                ORDER BY transaction_date ASC, p.product_master_category_id ASC";
+        
+        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
+
+        return $resultSet;
+    }
+    
+    public static function getSaleReportByServiceTypeAll($startDate, $endDate, $branchId) {
+        $branchConditionSql = '';
+        
+        $params = array(
+            ':start_date' => $startDate,
+            ':end_date' => $endDate,
+        );
+        
+        if (!empty($branchId)) {
+            $branchConditionSql = ' AND h.branch_id = :branch_id';
+            $params[':branch_id'] = $branchId;
+        }
+        
+        $sql = "SELECT DATE(h.invoice_date) AS transaction_date, s.service_category_id, SUM(d.total_price) AS total_price
+                FROM " . InvoiceHeader::model()->tableName() . " h 
+                INNER JOIN " . InvoiceDetail::model()->tableName() . " d ON h.id = d.invoice_id
+                INNER JOIN " . Service::model()->tableName() . " s ON s.id = d.service_id
+                WHERE DATE(h.invoice_date) BETWEEN :start_date AND :end_date AND h.status NOT LIKE '%CANCEL%'" . $branchConditionSql . "
+                GROUP BY DATE(h.invoice_date), s.service_category_id
+                ORDER BY transaction_date ASC, s.service_category_id ASC";
+        
+        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
+
+        return $resultSet;
+    }
+    
+    public static function getSaleReportSummaryAll($startDate, $endDate, $branchId) {
+        $branchConditionSql = '';
+        
+        $params = array(
+            ':start_date' => $startDate,
+            ':end_date' => $endDate,
+        );
+        
+        if (!empty($branchId)) {
+            $branchConditionSql = ' AND h.branch_id = :branch_id';
+            $params[':branch_id'] = $branchId;
+        }
+        
+        $sql = "SELECT DATE(h.invoice_date) AS transaction_date, SUM(h.ppn_total) AS ppn_total, SUM(h.pph_total) AS pph_total, SUM(h.total_price) AS total_price, SUM(h.total_product) AS total_product, SUM(h.total_service) AS total_service, SUM(h.total_discount) AS total_discount
+                FROM " . InvoiceHeader::model()->tableName() . " h 
+                WHERE DATE(h.invoice_date) BETWEEN :start_date AND :end_date AND h.status NOT LIKE '%CANCEL%'" . $branchConditionSql . "
+                GROUP BY DATE(h.invoice_date)
+                ORDER BY transaction_date ASC";
         
         $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
 

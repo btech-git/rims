@@ -64,9 +64,9 @@ function tanggal($date) {
                         <td>Tanggal Request</td>
                         <td style="width: 5%">:</td>
                         <?php if (!empty($do->sent_request_id)): ?>
-                            <td><?php echo tanggal(CHtml::encode(CHtml::value($do, 'sentRequest.sent_request_date'))); ?></td>
+                            <td><?php echo tanggal(CHtml::encode(CHtml::value($do, 'sentRequest.sent_request_date'))) . ' ' . CHtml::encode(CHtml::value($do, 'sentRequest.sent_request_time')); ?></td>
                         <?php elseif (!empty($do->transfer_request_id)): ?>
-                            <td><?php echo tanggal(CHtml::encode(CHtml::value($do, 'transferRequest.transfer_request_date'))); ?></td>
+                            <td><?php echo tanggal(CHtml::encode(CHtml::value($do, 'transferRequest.transfer_request_date'))) . ' ' . CHtml::encode(CHtml::value($do, 'transferRequest.transfer_request_time')); ?></td>
                         <?php endif; ?>
                     </tr>
                     <tr>
@@ -130,7 +130,7 @@ function tanggal($date) {
                     <?php endif; ?>
                     <table>
                         <tr>
-                            <td width="50%" style="font-size: 10px">Notes :</td>
+                            <td width="50%" style="font-size: 10px; background-color:lightgrey">Notes :</td>
                         </tr>
                         <tr>
                             <td width="50%" style="font-size: 10px">

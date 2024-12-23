@@ -35,7 +35,6 @@ $('form').submit(function(){
 <?php echo CHtml::beginForm(); ?>
 <div id="maincontent">
     <div class="clearfix page-action">
-
         <h1>Cashier</h1>
         <div class="search-bar">
             <div class="clearfix button-bar">

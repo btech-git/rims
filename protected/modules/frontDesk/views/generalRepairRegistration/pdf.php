@@ -46,7 +46,7 @@ function tanggal($date) {
                         <td><?php echo $generalRepairRegistration->transaction_number; ?></td>
                         <td>TANGGAL</td>
                         <td>:</td>
-                        <td><?php echo tanggal($generalRepairRegistration->transaction_date); ?></td>
+                        <td><?php echo tanggal($generalRepairRegistration->transaction_date) . ' ' . Yii::app()->dateFormatter->formatDateTime($generalRepairRegistration->transaction_date, '', 'short'); ?></td>
                     </tr>
                     <tr>
                         <td>JENIS KENDARAAN</td>
@@ -86,8 +86,6 @@ function tanggal($date) {
                     </tr>
                 </table>
             </div>
-
-            <hr />
 
             <?php if (count($generalRepairRegistration->registrationProducts) > 0): ?>
                 <div class="purchase-order">
@@ -181,40 +179,35 @@ function tanggal($date) {
             <div>
                 <table style="width: 100%">
                     <tr>
-                        <td style="width: 45%; text-align: center">Yang membuat,</td>
+                        <td style="width: 35%; text-align: center">Yang membuat,</td>
                         <td style="text-align:right; font-size: 11px">TOTAL PRODUCT & SERVICE</td>
-                        <td style="text-align:right; font-size: 11px">Rp. <?php echo number_format($generalRepairRegistration->subtotal, 2, ',', '.') ?> &nbsp; </td>
+                        <td style="width: 15%; text-align:right; font-size: 11px">Rp. <?php echo number_format($generalRepairRegistration->subtotal, 2, ',', '.') ?> &nbsp; </td>
                     </tr>
 
                     <tr>
-                        <?php //if ($generalRepairRegistration->ppn_price > 0.00): ?>
+                        <?php if ($generalRepairRegistration->ppn_price > 0.00): ?>
                             <td style="border-bottom: none">&nbsp;</td>
                             <td style="text-align:right; font-size: 11px">PPN - <?php echo CHtml::encode(CHtml::value($generalRepairRegistration, 'tax_percentage')); ?>%</td>
                             <td style="text-align:right; font-size: 11px">Rp. <?php echo number_format($generalRepairRegistration->ppn_price, 2, ',', '.') ?> &nbsp; </td>
-                        <?php /*else: ?>
-                            <td style="border-right: 1px solid; border-bottom: none">&nbsp;</td>
-                            <td colspan="2">&nbsp;</td>
-                        <?php endif;*/ ?>
+                        <?php endif; ?>
                     </tr>
 
                     <tr>
-                        <?php //if ($generalRepairRegistration->pph_price > 0.00): ?>
+                        <?php if ($generalRepairRegistration->pph_price > 0.00): ?>
                             <td style="border-top: none">&nbsp;</td>
                             <td style="text-align:right; font-size: 11px">PPH 23</td>
                             <td style="text-align:right; font-size: 11px">Rp. <?php echo number_format($generalRepairRegistration->pph_price, 2, ',', '.') ?> &nbsp; </td>
-                        <?php /*else: ?>
-                            <td style="border-right: 1px solid">&nbsp;</td>
-                            <td colspan="2">&nbsp;</td>
-                        <?php endif;*/ ?>
+                        <?php endif; ?>
                     </tr>
 
                     <tr>
-                        <td style="text-align: center"><?php echo CHtml::encode(CHtml::value($generalRepairRegistration, 'user.username')); ?></td>
+                        <td style="border-top: none">&nbsp;</td>
                         <td style="font-weight: bold; text-align:right; font-size: 11px">GRAND TOTAL</td>
                         <td style="font-weight: bold; text-align:right; font-size: 11px">Rp. <?php echo number_format($generalRepairRegistration->grand_total, 2, ',', '.') ?> &nbsp; </td>
                     </tr>
                     <tr>
-                        <td colspan="3" style="text-align: center">* Note: Jasa Perbaikan & Suku Cadang diluar Estimasi, akan diinformasikan lebih lanjut</td>
+                        <td style="text-align: center"><?php echo CHtml::encode(CHtml::value($generalRepairRegistration, 'user.username')); ?></td>
+                        <td colspan="2">* Note: Jasa Perbaikan & Suku Cadang diluar Estimasi, akan diinformasikan lebih lanjut</td>
                     </tr>
                 </table>
             </div>

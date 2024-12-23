@@ -118,22 +118,26 @@ function tanggal($date) {
             } ?>
 
             <tr class="r">
-                <td colspan="9" style="text-align:right; font-size: 11px" class="result">Sub Total</td>
+                <td colspan="9" style="text-align:right; font-size: 11px">Sub Total</td>
                 <td style="text-align:right">Rp. <?php echo number_format($po->subtotal, 2, ',', '.') ?> &nbsp; </td>
             </tr>
+            
+            <?php if ($po->ppn_price > 0): ?>
+                <tr class="r">
+                    <td colspan="9" style="text-align:right; font-size: 11px"
+                        >PPN</td>
+                    <td style="text-align:right">Rp. <?php echo number_format($po->ppn_price, 2, ',', '.') ?> &nbsp; </td>
+                </tr>
+            <?php endif; ?>
+            
             <tr class="r">
-                <td colspan="9" style="text-align:right; font-size: 11px" class="result">PPN</td>
-                <td style="text-align:right">Rp. <?php echo number_format($po->ppn_price, 2, ',', '.') ?> &nbsp; </td>
-            </tr>
-            <tr class="r">
-                <td colspan="9" style="text-align:right; font-size: 11px" class="result">Total</td>
+                <td colspan="9" style="text-align:right; font-size: 11px">Total</td>
                 <td style="text-align:right">Rp. <?php echo number_format($po->total_price, 2, ',', '.') ?> &nbsp; </td>
             </tr>
         </table>
 
-        <div class="row" style="font-size: 11px">
-            Catatan: 
-            <?php echo CHtml::encode(CHtml::value($po, 'note')); ?>
+        <div class="row result" style="font-size: 11px; background-color:lightgrey">
+            Catatan: <?php echo CHtml::encode(CHtml::value($po, 'note')); ?>
         </div>
     </div>
 

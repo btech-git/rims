@@ -69,10 +69,12 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                         'year' => $year,
                         'numberOfDays' => $numberOfDays,
                         'saleReportData' => $saleReportData,
+                        'saleReportAllData' => $saleReportAllData,
                         'productMasterCategoryList' => $productMasterCategoryList,
                         'serviceCategoryList' => $serviceCategoryList,
                         'monthList' => $monthList,
                         'saleReportSummaryData' => $saleReportSummaryData,
+                        'saleReportSummaryAllData' => $saleReportSummaryAllData,
                     )); ?>
                 </div>
                 <div class="clear"></div>

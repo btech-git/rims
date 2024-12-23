@@ -51,38 +51,13 @@ $('#invoiceSearch').submit(function(){
                                 <div class="field">
                                     <div class="row collapse">
                                         <div class="small-4 columns">
-                                            <?php echo $form->label($model, 'customer_name', array('class' => 'prefix')); ?>
+                                            <?php echo $form->label($model, 'invoice_number', array('class' => 'prefix')); ?>
                                         </div>
                                         <div class="small-8 columns">
-                                            <?php echo $form->textField($model, 'customer_name'); ?>
+                                            <?php echo $form->textField($model, 'invoice_number'); ?>
                                         </div>
                                     </div>
                                 </div>	
-                                
-                                <div class="field">
-                                    <div class="row collapse">
-                                        <div class="small-4 columns">
-                                            <?php echo $form->label($model, 'customer_type', array('class' => 'prefix')); ?>
-                                        </div>
-                                        <div class="small-8 columns">
-                                            <?php echo $form->dropDownList($model, 'customer_type', array('Individual' => 'Individual', 'Company' => 'Company',), array('prompt' => 'Select',)); ?>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="field">
-                                    <div class="row collapse">
-                                        <div class="small-4 columns">
-                                            <?php echo $form->label($model, 'reference_type', array('class' => 'prefix')); ?>
-                                        </div>
-                                        <div class="small-8 columns">						
-                                            <?php echo $form->dropDownList($model, 'reference_type', array(
-                                                '1' => 'Sales Order', 
-                                                '2' => 'Retail Sales',
-                                            ), array('prompt' => 'Select',)); ?>
-                                        </div>
-                                    </div>
-                                </div>
 
                                 <div class="field">
                                     <div class="row collapse">
@@ -138,86 +113,46 @@ $('#invoiceSearch').submit(function(){
                                 <div class="field">
                                     <div class="row collapse">
                                         <div class="small-4 columns">
-                                            <label class="prefix"><?php echo $form->labelEx($model, 'due_date'); ?></label>
+                                            <?php echo $form->label($model, 'customer_name', array('class' => 'prefix')); ?>
                                         </div>
                                         <div class="small-8 columns">
-                                            <div class="row">
-                                                <div class="medium-5 columns">
-                                                    <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(
-                                                        'model' => $model,
-                                                        'attribute' => "due_date",
-                                                        // additional javascript options for the date picker plugin
-                                                        'options' => array(
-                                                            'dateFormat' => 'yy-mm-dd',
-                                                        //             'changeMonth'=>true,
-                                                        // 'changeYear'=>true,
-                                                        // 'yearRange'=>'1900:2020'
-                                                        ),
-                                                        'htmlOptions' => array(),
-                                                    )); ?>
-                                                    <?php echo $form->error($model, 'due_date'); ?>
-                                                </div>
-                                                
-                                                <div class="medium-7 columns">
-                                                    <div class="field">
-                                                        <div class="row collapse">
-                                                            <div class="small-4 columns">
-                                                                <label class="prefix">To</label>
-                                                            </div>
-                                                            <div class="small-8 columns">
-                                                                <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(
-                                                                    'model' => $model,
-                                                                    'attribute' => "due_date_to",
-                                                                    // additional javascript options for the date picker plugin
-                                                                    'options' => array(
-                                                                        'dateFormat' => 'yy-mm-dd',
-                                                                    //             'changeMonth'=>true,
-                                                                    // 'changeYear'=>true,
-                                                                    // 'yearRange'=>'1900:2020'
-                                                                    ),
-                                                                    'htmlOptions' => array(),
-                                                                )); ?>
-                                                                <?php echo $form->error($model, 'due_date_to'); ?>
-                                                            </div>
-                                                        </div>
-                                                    </div>															
-                                                </div>
-                                            </div>
+                                            <?php echo $form->textField($model, 'customer_name'); ?>
                                         </div>
                                     </div>
                                 </div>	
+                                
+                                <div class="field">
+                                    <div class="row collapse">
+                                        <div class="small-4 columns">
+                                            <?php echo $form->label($model, 'customer_type', array('class' => 'prefix')); ?>
+                                        </div>
+                                        <div class="small-8 columns">
+                                            <?php echo $form->dropDownList($model, 'customer_type', array('Individual' => 'Individual', 'Company' => 'Company',), array('prompt' => 'Select',)); ?>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>	
                             <div class="medium-6 columns">
-
                                 <div class="field">
                                     <div class="row collapse">
                                         <div class="small-4 columns">
-                                            <?php echo $form->label($model, 'invoice_number', array('class' => 'prefix')); ?>
+                                            <?php echo CHtml::label('Plat #', '', array('class' => 'prefix')); ?>
                                         </div>
-                                        <div class="small-8 columns">
-                                            <?php echo $form->textField($model, 'invoice_number'); ?>
+                                        <div class="small-8 columns">						
+                                            <?php echo CHtml::activeTextField($model, 'plate_number'); ?>
                                         </div>
                                     </div>
-                                </div>	
+                                </div>
 
                                 <div class="field">
                                     <div class="row collapse">
                                         <div class="small-4 columns">
-                                            <?php echo CHtml::label('SO #', '', array('class' => 'prefix')); ?>
+                                            <?php echo CHtml::label('Insurance', '', array('class' => 'prefix')); ?>
                                         </div>
                                         <div class="small-8 columns">
-                                            <?php echo CHtml::textField('SaleOrderNumber', $saleOrderNumber); ?>
-                                        </div>
-                                    </div>
-                                </div>	
-
-                                <div class="field">
-                                    <div class="row collapse">
-                                        <div class="small-4 columns">
-                                            <?php echo CHtml::label('WO #', '', array('class' => 'prefix')); ?>
-                                        </div>
-                                        <div class="small-8 columns">
-                                            <?php echo CHtml::textField('WorkOrderNumber', $workOrderNumber); ?>
+                                            <?php echo CHtml::activeDropDownList($model, 'insurance_company_id', CHtml::listData(InsuranceCompany::model()->findAll(array('order' => 'name')), 'id', 'name'), array(
+                                                'empty' => '-- all --',
+                                            )); ?>
                                         </div>
                                     </div>
                                 </div>	
@@ -267,21 +202,20 @@ $('#invoiceSearch').submit(function(){
                     'id' => 'invoice-header-grid',
                     'dataProvider' => $dataProvider,
                     'filter' => null,
-                    // 'summaryText'=>'',
+                    'template' => '<div style="overflow-x:scroll ; overflow-y: hidden; margin-bottom: 1.25rem;">{items}</div><div class="clearfix">{summary}{pager}</div>',
                     'rowCssClassExpression' => '(($data->status == "PAID")?"hijau":"merah")',
-                    'template' => '{items}<!--<div class="clearfix">{summary}{pager}</div>-->',
                     'pager' => array(
                         'cssFile' => false,
                         'header' => '',
                     ),
                     'columns' => array(
-                        array(
-                            'class' => 'CCheckBoxColumn', //CHECKBOX COLUMN ADDED.
-                            'selectableRows' => 2, //MULTIPLE ROWS CAN BE SELECTED.
-                            'checked' => function($data) use($prChecked) {
-                                return in_array($data->id, $prChecked);
-                            },
-                        ),
+//                        array(
+//                            'class' => 'CCheckBoxColumn', //CHECKBOX COLUMN ADDED.
+//                            'selectableRows' => 2, //MULTIPLE ROWS CAN BE SELECTED.
+//                            'checked' => function($data) use($prChecked) {
+//                                return in_array($data->id, $prChecked);
+//                            },
+//                        ),
                         array(
                             'name' => 'invoice_number', 
                             'value' => 'CHtml::link($data->invoice_number, array("view", "id"=>$data->id))', 
@@ -314,16 +248,16 @@ $('#invoiceSearch').submit(function(){
                     ),
                 )); ?>
 
-                <div class="button-group">
-                    <?php if (Yii::app()->user->checkAccess("saleInvoiceEdit")): ?>
+<!--                <div class="button-group">
+                    <?php /*if (Yii::app()->user->checkAccess("saleInvoiceEdit")): ?>
                         <?php echo CHtml::button("View Invoice", array("id" => "btnProses", 'class' => 'button cbutton')); ?>
                     <?php endif; ?>
                     <?php if (Yii::app()->user->checkAccess("saleInvoiceEdit")): ?>
                         <?php echo CHtml::button("Export PDF", array("id" => "btnProsesPdf", 'class' => 'button cbutton')); ?>
                     <?php endif; ?>
 
-                    <?php echo CHtml::button("Clear Selected", array("id" => "btnClear", 'class' => 'button cbutton')); ?>
-                </div>
+                    <?php echo CHtml::button("Clear Selected", array("id" => "btnClear", 'class' => 'button cbutton'));*/ ?>
+                </div>-->
             </div>
         </div>
     </div> <!-- end row -->

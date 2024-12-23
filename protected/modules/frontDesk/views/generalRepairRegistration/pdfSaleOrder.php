@@ -43,7 +43,7 @@ function tanggal($date) {
                 <td><?php echo $generalRepairRegistration->transaction_number; ?></td>
                 <td>TANGGAL</td>
                 <td>:</td>
-                <td><?php echo tanggal($generalRepairRegistration->transaction_date); ?></td>
+                <td><?php echo tanggal($generalRepairRegistration->transaction_date) . ' ' . Yii::app()->dateFormatter->formatDateTime($generalRepairRegistration->transaction_date, '', 'short'); ?></td>
             </tr>
             <tr>
                 <td>WO #</td>
@@ -99,7 +99,7 @@ function tanggal($date) {
                 <th style="width: 1%; text-align: center">NO</th>
                 <th style="width: 15%">Code</th>
                 <th>Item Name</th>
-                <th style="width: 15%">Brand Name</th>
+                <th style="width: 20%">Brand Name</th>
                 <th style="width: 5%">Qty</th>
                 <th style="width: 5%">Unit</th>
             </tr>
