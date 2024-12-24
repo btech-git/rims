@@ -266,6 +266,21 @@ class BodyRepairRegistrationController extends Controller {
         ));
     }
 
+    public function actionUpdateLocation($id, $vehicleId) {
+        $vehicle = Vehicle::model()->findByPk($vehicleId);
+
+        if (isset($_POST['Vehicle'])) {
+            $vehicle->attributes = $_POST['Vehicle'];
+            if ($vehicle->save()) {
+                $this->redirect(array('view', 'id' => $id));
+            }
+        }
+
+        $this->render('updateLocation', array(
+            'vehicle' => $vehicle,
+        ));
+    }
+
     public function actionPendingOrder($id) {
         $model = $this->loadModel($id);
         $model->status = 'Pending';

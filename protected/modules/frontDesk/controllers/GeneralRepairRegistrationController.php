@@ -238,127 +238,6 @@ class GeneralRepairRegistrationController extends Controller {
             }
         }
 
-//        if (isset($_POST['Process'])) {
-//            JurnalUmum::model()->deleteAllByAttributes(array(
-//                'kode_transaksi' => $model->transaction_number,
-//            ));
-//            
-//            $transactionType = 'RG GR';
-//            $postingDate = date('Y-m-d');
-//            $transactionCode = $model->transaction_number;
-//            $transactionDate = $model->transaction_date;
-//            $branchId = $model->branch_id;
-//            $transactionSubject = $model->customer->name;
-//
-//            $journalReferences = array();
-//
-//            $jurnalUmumReceivable = new JurnalUmum;
-//            $jurnalUmumReceivable->kode_transaksi = $model->transaction_number;
-//            $jurnalUmumReceivable->tanggal_transaksi = $model->transaction_date;
-//            $jurnalUmumReceivable->coa_id = (empty($model->insurance_company_id)) ? $model->customer->coa_id : $model->insuranceCompany->coa_id;
-//            $jurnalUmumReceivable->branch_id = $model->branch_id;
-//            $jurnalUmumReceivable->total = $model->grand_total;
-//            $jurnalUmumReceivable->debet_kredit = 'D';
-//            $jurnalUmumReceivable->tanggal_posting = date('Y-m-d');
-//            $jurnalUmumReceivable->transaction_subject = $transactionSubject;
-//            $jurnalUmumReceivable->is_coa_category = 0;
-//            $jurnalUmumReceivable->transaction_type = 'RG GR';
-//            $jurnalUmumReceivable->save();
-//
-//            if ($model->ppn_price > 0.00) {
-//                $coaPpn = Coa::model()->findByAttributes(array('code' => '224.00.001'));
-//                $jurnalUmumPpn = new JurnalUmum;
-//                $jurnalUmumPpn->kode_transaksi = $model->transaction_number;
-//                $jurnalUmumPpn->tanggal_transaksi = $model->transaction_date;
-//                $jurnalUmumPpn->coa_id = $coaPpn->id;
-//                $jurnalUmumPpn->branch_id = $model->branch_id;
-//                $jurnalUmumPpn->total = $model->ppn_price;
-//                $jurnalUmumPpn->debet_kredit = 'K';
-//                $jurnalUmumPpn->tanggal_posting = date('Y-m-d');
-//                $jurnalUmumPpn->transaction_subject = $transactionSubject;
-//                $jurnalUmumPpn->is_coa_category = 0;
-//                $jurnalUmumPpn->transaction_type = 'RG GR';
-//                $jurnalUmumPpn->save();
-//            }
-//
-//            if ($model->pph_price > 0.00) {
-//                $coaPph = Coa::model()->findByAttributes(array('code' => '224.00.004'));
-//                $jurnalUmumPpn = new JurnalUmum;
-//                $jurnalUmumPpn->kode_transaksi = $model->transaction_number;
-//                $jurnalUmumPpn->tanggal_transaksi = $model->transaction_date;
-//                $jurnalUmumPpn->coa_id = $coaPph->id;
-//                $jurnalUmumPpn->branch_id = $model->branch_id;
-//                $jurnalUmumPpn->total = $model->pph_price;
-//                $jurnalUmumPpn->debet_kredit = 'D';
-//                $jurnalUmumPpn->tanggal_posting = date('Y-m-d');
-//                $jurnalUmumPpn->transaction_subject = $transactionSubject;
-//                $jurnalUmumPpn->is_coa_category = 0;
-//                $jurnalUmumPpn->transaction_type = 'RG GR';
-//                $jurnalUmumPpn->save();
-//            }
-//
-//            if (count($model->registrationProducts) > 0) {
-//                foreach ($model->registrationProducts as $key => $rProduct) {
-//                    $jurnalUmumHpp = $rProduct->product->productSubMasterCategory->coa_hpp;
-//                    $journalReferences[$jurnalUmumHpp]['debet_kredit'] = 'D';
-//                    $journalReferences[$jurnalUmumHpp]['is_coa_category'] = 0;
-//                    $journalReferences[$jurnalUmumHpp]['values'][] = $rProduct->quantity * $rProduct->hpp;
-//
-//                    $jurnalUmumPenjualan = $rProduct->product->productSubMasterCategory->coa_penjualan_barang_dagang;
-//                    $journalReferences[$jurnalUmumPenjualan]['debet_kredit'] = 'K';
-//                    $journalReferences[$jurnalUmumPenjualan]['is_coa_category'] = 0;
-//                    $journalReferences[$jurnalUmumPenjualan]['values'][] = $rProduct->sale_price * $rProduct->quantity;
-//
-//                    $jurnalUmumOutstandingPart = $rProduct->product->productSubMasterCategory->coa_outstanding_part_id;
-//                    $journalReferences[$jurnalUmumOutstandingPart]['debet_kredit'] = 'K';
-//                    $journalReferences[$jurnalUmumOutstandingPart]['is_coa_category'] = 0;
-//                    $journalReferences[$jurnalUmumOutstandingPart]['values'][] = $rProduct->quantity * $rProduct->hpp;
-//
-//                    if ($rProduct->discount > 0) {
-//                        $jurnalUmumDiskon = $rProduct->product->productSubMasterCategory->coa_diskon_penjualan;
-//                        $journalReferences[$jurnalUmumDiskon]['debet_kredit'] = 'D';
-//                        $journalReferences[$jurnalUmumDiskon]['is_coa_category'] = 0;
-//                        $journalReferences[$jurnalUmumDiskon]['values'][] = $rProduct->getDiscountAmount();
-//                    }
-//                }
-//            }
-//
-//            if (count($model->registrationServices) > 0) {
-//                foreach ($model->registrationServices as $key => $rService) {
-//                    $price = $rService->is_quick_service == 1 ? $rService->price : $rService->price;
-//
-//                    $jurnalUmumPendapatanJasa = $rService->service->serviceCategory->coa_id;
-//                    $journalReferences[$jurnalUmumPendapatanJasa]['debet_kredit'] = 'K';
-//                    $journalReferences[$jurnalUmumPendapatanJasa]['is_coa_category'] = 0;
-//                    $journalReferences[$jurnalUmumPendapatanJasa]['values'][] = $price;
-//
-//                    if ($rService->discount_price > 0.00) {
-//                        $jurnalUmumDiscountPendapatanJasa = $rService->service->serviceCategory->coa_diskon_service;
-//                        $journalReferences[$jurnalUmumDiscountPendapatanJasa]['debet_kredit'] = 'D';
-//                        $journalReferences[$jurnalUmumDiscountPendapatanJasa]['is_coa_category'] = 0;
-//                        $journalReferences[$jurnalUmumDiscountPendapatanJasa]['values'][] = $rService->discountAmount;
-//                    }
-//                }
-//            }
-//
-//            foreach ($journalReferences as $coaId => $journalReference) {
-//                $jurnalUmumPersediaan = new JurnalUmum();
-//                $jurnalUmumPersediaan->kode_transaksi = $transactionCode;
-//                $jurnalUmumPersediaan->tanggal_transaksi = $transactionDate;
-//                $jurnalUmumPersediaan->coa_id = $coaId;
-//                $jurnalUmumPersediaan->branch_id = $branchId;
-//                $jurnalUmumPersediaan->total = array_sum($journalReference['values']);
-//                $jurnalUmumPersediaan->debet_kredit = $journalReference['debet_kredit'];
-//                $jurnalUmumPersediaan->tanggal_posting = $postingDate;
-//                $jurnalUmumPersediaan->transaction_subject = $transactionSubject;
-//                $jurnalUmumPersediaan->is_coa_category = $journalReference['is_coa_category'];
-//                $jurnalUmumPersediaan->transaction_type = $transactionType;
-//                $jurnalUmumPersediaan->save();
-//            }
-//            
-//            $this->redirect(array('view', 'id' => $id));
-//        }
-            
         $this->render('view', array(
             'model' => $model,
             'quickServices' => $quickServices,
@@ -366,6 +245,21 @@ class GeneralRepairRegistrationController extends Controller {
             'products' => $products,
             'registrationMemos' => $registrationMemos,
             'memo' => $memo,
+        ));
+    }
+
+    public function actionUpdateLocation($id, $vehicleId) {
+        $vehicle = Vehicle::model()->findByPk($vehicleId);
+
+        if (isset($_POST['Vehicle'])) {
+            $vehicle->attributes = $_POST['Vehicle'];
+            if ($vehicle->save()) {
+                $this->redirect(array('view', 'id' => $id));
+            }
+        }
+
+        $this->render('updateLocation', array(
+            'vehicle' => $vehicle,
         ));
     }
 

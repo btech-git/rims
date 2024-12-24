@@ -752,19 +752,34 @@ class MovementOutHeaderController extends Controller {
                         'product_id' => $movementDetail->product_id, 
                         'warehouse_id' => $movementDetail->warehouse_id
                     ));
+                    
+                    $quantity = $movementDetail->quantity;
+                    if ($movementDetail->unit_id !== $movementDetail->product->unit_id) {
+                        $conversionFactor = 1;
+                        $unitConversion = UnitConversion::model()->findByAttributes(array('unit_from_id' => $movementDetail->unit_id, 'unit_to_id' => $movementDetail->product->unit_id));
+                        if ($unitConversion !== null) {
+                            $conversionFactor = $unitConversion->multiplier;
+                        } else {
+                            $unitConversionFlipped = UnitConversion::model()->findByAttributes(array('unit_from_id' => $movementDetail->product->unit_id, 'unit_to_id' => $movementDetail->unit_id));
+                            if ($unitConversionFlipped !== null) {
+                                $conversionFactor = 1 / $unitConversionFlipped->multiplier;
+                            }
+                        }
+                        $quantity = $conversionFactor * $quantity;
+                    }
 
                     if (empty($inventory)) {
                         $insertInventory = new Inventory();
                         $insertInventory->product_id = $movementDetail->product_id;
                         $insertInventory->warehouse_id = $movementDetail->warehouse_id;
                         $insertInventory->minimal_stock = 0;
-                        $insertInventory->total_stock = $movementDetail->quantity * -1;
+                        $insertInventory->total_stock = $quantity * -1;
                         $insertInventory->status = 'Active';
                         $insertInventory->save();
 
                         $inventoryId = $insertInventory->id;
                     } else {
-                        $inventory->total_stock -= $movementDetail->quantity;
+                        $inventory->total_stock -= $quantity;
                         $inventory->update(array('total_stock'));
 
                         $inventoryId = $inventory->id;
@@ -779,7 +794,7 @@ class MovementOutHeaderController extends Controller {
                         $inventoryDetail->transaction_type = 'MVO';
                         $inventoryDetail->transaction_number = $movementOut->header->movement_out_no;
                         $inventoryDetail->transaction_date = $movementOut->header->date_posting;
-                        $inventoryDetail->stock_out = $movementDetail->quantity * -1;
+                        $inventoryDetail->stock_out = $quantity * -1;
                         $inventoryDetail->notes = $notes;
                         $inventoryDetail->purchase_price = $movementDetail->product->averageCogs;
                         $inventoryDetail->transaction_time = date('H:i:s');

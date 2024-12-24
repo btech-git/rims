@@ -158,6 +158,7 @@ class MovementOuts extends CComponent {
                         $detail->unit_id = $materialRequestDetail->unit_id;
                         $detail->warehouse_id = $warehouseBranchProductCategory === null ? null : $warehouseBranchProductCategory->warehouse_id;
                         $detail->quantity_transaction = $materialRequestDetail->quantity_remaining;
+                        $detail->quantity = $materialRequestDetail->quantity_remaining;
                         $detail->quantity_stock = $stock;
                         $this->details[] = $detail;
                     }
@@ -197,9 +198,9 @@ class MovementOuts extends CComponent {
     public function validate() {
         $valid = $this->header->validate();
 
-        if ($this->header->isNewRecord) {
-            $valid = $this->validateDetailsQuantityStock() && $valid;
-        }
+//        if ($this->header->isNewRecord) {
+//            $valid = $this->validateDetailsQuantityStock() && $valid;
+//        }
 
         if (count($this->details) > 0) {
             foreach ($this->details as $detail) {

@@ -8,8 +8,8 @@
         <th style="text-align: center">Sub Brand</th>
         <th style="text-align: center">Sub Brand Series</th>
         <th style="text-align: center; width: 10%">Quantity</th>
-        <th style="text-align: center; width: 10%">Satuan Inventory</th>
         <th style="text-align: center; width: 10%">Satuan Permintaan</th>
+        <th style="text-align: center; width: 10%">Satuan Inventory</th>
         <th style="text-align: center; width: 10%">COA</th>
         <th style="text-align: center; width: 5%"></th>
     </tr>
@@ -54,12 +54,12 @@
                 )); ?>
                 <?php echo CHtml::error($detail, 'quantity'); ?>
             </td>
-            <td>
-                <?php echo CHtml::encode(CHtml::value($productInfo, 'unit.name')); ?>
-            </td>
             <td style="text-align: center">
                 <?php echo CHtml::activeDropDownList($detail, "[$i]unit_id", CHtml::listData(Unit::model()->findAll(), 'id', 'name'), array('prompt'=>'[--Select Unit --]')); ?>
                 <?php echo CHtml::error($detail, 'unit_id'); ?>
+            </td>
+            <td>
+                <?php echo CHtml::encode(CHtml::value($productInfo, 'unit.name')); ?>
             </td>
             <td>
                 <?php echo CHtml::encode(CHtml::value($productInfo, 'productSubMasterCategory.coaPersediaanBarangDagang.name')); ?>

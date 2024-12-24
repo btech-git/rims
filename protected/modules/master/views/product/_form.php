@@ -6,25 +6,29 @@
 <div class="clearfix page-action">
     <a class="button cbutton right" href="<?php echo Yii::app()->baseUrl . '/master/product/admin'; ?>"><span class="fa fa-th-list"></span>Manage Product</a>
     <h1>
-        <?php if ($product->header->isNewRecord) {
+        <?php
+        if ($product->header->isNewRecord) {
             echo "New Product";
         } else {
             echo "Update Product";
-        } ?>
+        }
+        ?>
     </h1>
-    
+
     <hr />
-    
+
     <div class="form">
 
-        <?php $form = $this->beginWidget('CActiveForm', array(
+        <?php
+        $form = $this->beginWidget('CActiveForm', array(
             'id' => 'product-form',
             // Please note: When you enable ajax validation, make sure the corresponding
             // controller action is handling ajax validation correctly.
             // There is a call to performAjaxValidation() commented in generated controller code.
             // See class documentation of CActiveForm for details on this.
             'enableAjaxValidation' => false,
-        )); ?>
+        ));
+        ?>
 
         <p class="note">Fields with <span class="required">*</span> are required.</p>
 
@@ -69,7 +73,7 @@
                         <div class="small-4 columns">
                             <?php echo $form->labelEx($product->header, 'product_sub_master_category_id', array('class' => 'prefix')); ?>
                         </div>
-                        
+
                         <div class="small-8 columns">
                             <?php echo $form->dropDownList($product->header, 'product_sub_master_category_id', $product->header->product_master_category_id != '' ? CHtml::listData(ProductSubMasterCategory::model()->findAllByAttributes(array('product_master_category_id' => $product->header->product_master_category_id)), 'id', 'nameAndCode') : array(), array(
                                 'prompt' => '[--Select Product Sub Master Category--]',
@@ -97,7 +101,7 @@
                         <div class="small-4 columns">
                             <?php echo $form->labelEx($product->header, 'product_sub_category_id', array('class' => 'prefix')); ?>
                         </div>
-                        
+
                         <div class="small-8 columns">
                             <?php echo $form->dropDownList($product->header, 'product_sub_category_id', $product->header->product_sub_master_category_id != '' ? CHtml::listData(ProductSubCategory::model()->findAllByAttributes(array('product_sub_master_category_id' => $product->header->product_sub_master_category_id)), 'id', 'nameAndCode') : array(), array(
                                 'prompt' => '[--Select Product Sub Category--]',
@@ -182,37 +186,12 @@
                         <div class="small-8 columns">
                             <?php echo $form->dropDownList($product->header, 'unit_id', CHtml::listData(Unit::model()->findAll(array('order' => 'name ASC')), 'id', 'name'), array(
                                 'prompt' => '[--Select Unit--]'
-                            )); ?>
+                            ));
+                            ?>
                             <?php echo $form->error($product->header, 'unit_id'); ?>
                         </div>
                     </div>
                 </div>
-
-<!--                <div class="field">
-                    <div class="row collapse">
-                        <div class="small-4 columns">
-                            <?php /*echo $form->labelEx($product->header, 'unit_id_conversion', array('class' => 'prefix')); ?>
-                        </div>
-                        <div class="small-8 columns">
-                            <?php echo $form->dropDownList($product->header, 'unit_id_conversion', CHtml::listData(Unit::model()->findAll(array('order' => 'name ASC')), 'id', 'name'), array(
-                                'prompt' => '[--Select Unit--]'
-                            )); ?>
-                            <?php echo $form->error($product->header, 'unit_id_conversion'); ?>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="field">
-                    <div class="row collapse">
-                        <div class="small-4 columns">
-                            <?php echo $form->labelEx($product->header, 'unit_conversion_multiplier', array('class' => 'prefix')); ?>
-                        </div>
-                        <div class="small-8 columns">
-                            <?php echo $form->textField($product->header, 'unit_conversion_multiplier', array('size' => 20, 'maxlength' => 30)); ?>
-                            <?php echo $form->error($product->header, 'unit_conversion_multiplier');*/ ?>
-                        </div>
-                    </div>
-                </div>-->
 
                 <div class="field">
                     <div class="row collapse">
@@ -231,7 +210,7 @@
                         <div class="small-4 columns">
                             <?php echo $form->labelEx($product->header, 'production_year', array('class' => 'prefix')); ?>
                         </div>
-                        
+
                         <div class="small-8 columns">
                             <?php $range = range(date('Y', strtotime('+1 years')), 1988); ?>
                             <?php echo $form->dropDownList($product->header, 'production_year', array_combine($range, $range)); ?>
@@ -280,7 +259,7 @@
                         <div class="small-4 columns">
                             <label class="prefix"><?php echo $form->labelEx($product->header, 'sub_brand_id'); ?></label>
                         </div>
-                        
+
                         <div class="small-8 columns">
                             <?php echo $form->dropDownList($product->header, 'sub_brand_id', $product->header->brand_id != '' ? CHtml::listData(SubBrand::model()->findAllByAttributes(array('brand_id' => $product->header->brand_id)), 'id', 'name') : array(), array(
                                 'prompt' => '[--Select Sub Brand--]',
@@ -297,13 +276,13 @@
                         </div>
                     </div>
                 </div>
-                
+
                 <div class="field">
                     <div class="row collapse">
                         <div class="small-4 columns">
                             <label class="prefix"><?php echo $form->labelEx($product->header, 'sub_brand_series_id'); ?></label>
                         </div>
-                        
+
                         <div class="small-8 columns">
                             <?php echo $form->dropDownList($product->header, 'sub_brand_series_id', $product->header->sub_brand_id != '' ? CHtml::listData(SubBrandSeries::model()->findAllByAttributes(array('sub_brand_id' => $product->header->sub_brand_id)), 'id', 'name') : array(), array(
                                 'prompt' => '[--Select Sub Brand Series--]',
@@ -356,7 +335,7 @@
                         <div class="small-4 columns">
                             <?php echo $form->labelEx($product->header, 'PPn', array('class' => 'prefix')); ?>
                         </div>
-                        
+
                         <div class="small-8 columns">
                             <span id="tax_value">
                                 <?php echo CHtml::encode(Yii::app()->numberFormatter->format("#,##0.00", CHtml::value($product->header, 'purchasePriceTax'))); ?>
@@ -372,7 +351,7 @@
                         </div>
                         <div class="small-8 columns">
                             <span id="retail_after_tax">
-                                <?php echo CHtml::encode(Yii::app()->numberFormatter->format("#,##0.00", CHtml::value($product->header, 'retailPriceAfterTax'))); ?>
+                            <?php echo CHtml::encode(Yii::app()->numberFormatter->format("#,##0.00", CHtml::value($product->header, 'retailPriceAfterTax'))); ?>
                             </span>
                         </div>
                     </div>
@@ -444,37 +423,39 @@
                     </div>
                 </div>
 
-                <div class="field">
-                    <div class="row collapse">
-                        <div class="small-4 columns">
-                            <?php echo $form->labelEx($product->header, 'HPP', array('class' => 'prefix')); ?>
-                        </div>
-                        <div class="small-8 columns">
-                            <?php if ($product->header->isNewRecord): ?>
-                                <?php echo $form->textField($product->header, 'hpp'); ?>
-                            <?php else: ?>
-                                <?php echo CHtml::encode(Yii::app()->numberFormatter->format("#,##0.00", CHtml::value($product->header, 'hpp'))); ?>
-                            <?php endif; ?>
-                            <?php echo $form->error($product->header, 'hpp'); ?>
+                <?php if (Yii::app()->user->checkAccess('director')): ?>
+                    <div class="field">
+                        <div class="row collapse">
+                            <div class="small-4 columns">
+                                <?php echo $form->labelEx($product->header, 'HPP', array('class' => 'prefix')); ?>
+                            </div>
+                            <div class="small-8 columns">
+                                <?php if ($product->header->isNewRecord): ?>
+                                    <?php echo $form->textField($product->header, 'hpp'); ?>
+                                <?php else: ?>
+                                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format("#,##0.00", CHtml::value($product->header, 'hpp'))); ?>
+                                <?php endif; ?>
+                                <?php echo $form->error($product->header, 'hpp'); ?>
+                            </div>
                         </div>
                     </div>
-                </div>
+                <?php endif; ?>
 
-<!--                <div class="field">
-                    <div class="row collapse">
-                        <div class="small-4 columns">
-                            <?php /*echo $form->labelEx($product->header, 'stock', array('class' => 'prefix')); ?>
-                        </div>
-                        <div class="small-8 columns">
-                            <?php if ($product->header->isNewRecord): ?>
-                                <?php echo $form->textField($product->header, 'stock', array('size' => 10, 'maxlength' => 10)); ?>
-                            <?php else: ?>
-                                <?php echo CHtml::encode(Yii::app()->numberFormatter->format("#,##0.00", CHtml::value($product->header, 'stock'))); ?>
-                            <?php endif; ?>
-                            <?php echo $form->error($product->header, 'stock');*/ ?>
-                        </div>
-                    </div>
-                </div>-->
+                <!--                <div class="field">
+                                    <div class="row collapse">
+                                        <div class="small-4 columns">
+<?php /* echo $form->labelEx($product->header, 'stock', array('class' => 'prefix')); ?>
+  </div>
+  <div class="small-8 columns">
+  <?php if ($product->header->isNewRecord): ?>
+  <?php echo $form->textField($product->header, 'stock', array('size' => 10, 'maxlength' => 10)); ?>
+  <?php else: ?>
+  <?php echo CHtml::encode(Yii::app()->numberFormatter->format("#,##0.00", CHtml::value($product->header, 'stock'))); ?>
+  <?php endif; ?>
+  <?php echo $form->error($product->header, 'stock'); */ ?>
+                                        </div>
+                                    </div>
+                                </div>-->
 
                 <div class="field">
                     <div class="row collapse">
@@ -549,7 +530,7 @@
                 <div id="vehicle">
                     <?php $this->renderPartial('_detailVehicle', array('product' => $product,)); ?>
                 </div>
-                
+
                 <div class="clearfix"></div>
 
                 <!-- Product Complement -->
@@ -770,13 +751,9 @@
                 <div id="product-substitute">
                     <?php $this->renderPartial('_detailSubstitute', array('product' => $product)); ?>
                 </div>
-                <!-- End Product Substitute -->
             </div>
             <!-- end RIGHT -->
-
         </div>
-
         <?php $this->endWidget(); ?>
-
     </div><!-- form -->
 </div>

@@ -515,7 +515,7 @@
                     array(
                         'name' => 'product_brand_name',
                         'header' => 'Brand',
-                        'value' => '$data->brand->name'
+                        'value' => 'empty($data->brand) ? "" : $data->brand->name'
                     ),
                     array(
                         'name' => 'product_sub_brand_name',
@@ -530,11 +530,11 @@
                     array(
                         'name' => 'unit_id',
                         'header' => 'Unit',
-                        'value' => '$data->unit->name'
+                        'value' => 'empty($data->unit) ? "" : $data->unit->name'
                     ),
                     array(
                         'header' => 'COA',
-                        'value' => '$data->productSubMasterCategory->coaPersediaanBarangDagang->name'
+                        'value' => 'empty($data->productSubMasterCategory) ? "" : $data->productSubMasterCategory->coaPersediaanBarangDagang->name'
                     ),
                 ),
             ));	?>

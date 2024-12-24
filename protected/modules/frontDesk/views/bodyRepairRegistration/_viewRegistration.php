@@ -75,7 +75,7 @@
                             <span class="prefix">Vehicle Status</span>
                         </div>
                         <div class="small-8 columns">
-                            <input type="text" readonly="true" value="<?php echo $model->vehicle_status; ?>"> 
+                            <input type="text" readonly="true" value="<?php echo $model->vehicle->status_location; ?>"> 
                         </div>
                     </div>
                 </div>

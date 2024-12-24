@@ -11,7 +11,8 @@
                 <td>Sub Brand</td>
                 <td>Sub Brand Series</td>
                 <td>Quantity</td>
-                <td>Unit</td>
+                <td>Satuan Permintaan</td>
+                <td>Satuan Inventory</td>
                 <td>COA</td>
             </tr>
         </thead>
@@ -28,6 +29,7 @@
                     <td><?php echo $product->subBrandSeries->name; ?></td>
                     <td style="text-align: center"><?php echo $materialRequestDetail->quantity; ?></td>
                     <td><?php echo $materialRequestDetail->unit->name; ?></td>
+                    <td><?php echo $materialRequestDetail->product->unit->name; ?></td>
                     <td><?php echo $product->productSubMasterCategory->coaPersediaanBarangDagang->name; ?></td>
                 </tr>
             <?php endforeach; ?>
@@ -36,7 +38,7 @@
             <tr>
                 <td colspan="7" style="text-align: right; font-weight: bold">Total</td>
                 <td style="text-align: center; font-weight: bold"><?php echo $model->totalQuantity; ?></td>
-                <td colspan="2">&nbsp;</td>
+                <td colspan="3">&nbsp;</td>
             </tr>
         </tfoot>
     </table>

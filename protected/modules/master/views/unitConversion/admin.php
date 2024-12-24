@@ -98,16 +98,12 @@ $('.search-form form').submit(function(){
                     'header' => '',
                 ),
                 'columns' => array(
-                    //'id',
-                    //'unit_from_id',
                     array('name' => 'unit_from_id', 'value' => '$data->unitFrom->name'),
-                    //'unit_to_id',
-                    array('name' => 'unit_to_id', 'value' => '$data->unitTo->name'),
-                    // 'multiplier',
                     array(
                         'name' => 'multiplier',
                         'value' => '(float) $data->multiplier',
                     ),
+                    array('name' => 'unit_to_id', 'value' => '$data->unitTo->name'),
                     array(
                         'class' => 'CButtonColumn',
                         'template' => '{edit}',
