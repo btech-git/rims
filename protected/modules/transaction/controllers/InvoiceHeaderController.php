@@ -256,7 +256,7 @@ class InvoiceHeaderController extends Controller {
     }
 
     public function actionPdf($id) {
-        $invoiceHeader = InvoiceHeader::model()->findByAttributes(array('id' => $id));
+        $invoiceHeader = InvoiceHeader::model()->findByPk($id);
         $customer = Customer::model()->findByPk($invoiceHeader->customer_id);
         $vehicle = Vehicle::model()->findByPk($invoiceHeader->vehicle_id);
         $branch = Branch::model()->findByPk($invoiceHeader->branch_id);
@@ -273,6 +273,20 @@ class InvoiceHeaderController extends Controller {
         ), true));
         $mPDF1->Output('Invoice ' . $invoiceHeader->invoice_number . '.pdf', 'I');
     }
+
+//    public function actionPdf2($id) {
+//        $invoiceHeader = InvoiceHeader::model()->findByAttributes(array('id' => $id));
+//        $customer = Customer::model()->findByPk($invoiceHeader->customer_id);
+//        $vehicle = Vehicle::model()->findByPk($invoiceHeader->vehicle_id);
+//        $branch = Branch::model()->findByPk($invoiceHeader->branch_id);
+//
+//        $this->renderPartial('pdf2', array(
+//            'invoiceHeader' => $invoiceHeader,
+//            'customer' => $customer,
+//            'vehicle' => $vehicle,
+//            'branch' => $branch,
+//        ));
+//    }
 
     public function actionPdfPayment($id) {
         $invoiceHeader = InvoiceHeader::model()->findByPk($id);
