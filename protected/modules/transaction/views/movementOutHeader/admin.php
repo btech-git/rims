@@ -75,11 +75,11 @@ $('.search-form form').submit(function(){
                         ),
                         array(
                             'name' => 'delivery_order_number',
-                            'value' => '(!empty($data->deliveryOrder->delivery_order_no)?$data->deliveryOrder->delivery_order_no:"")'
+                            'value' => '(!empty($data->deliveryOrder->delivery_order_no)?$data->deliveryOrder->delivery_order_no : "")'
                         ),
                         array(
                             'name' => 'return_order_number',
-                            'value' => '(!empty($data->returnOrder->return_order_no)?$data->returnOrder->return_order_no:"")'
+                            'value' => '(!empty($data->returnOrder->return_order_no)?$data->returnOrder->return_order_no : "")'
                         ),
                         array(
                             'name' => 'user_id',
