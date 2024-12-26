@@ -23,11 +23,11 @@
             ),
             array(
                 'header' => 'WO #',
-                'value' => '$data->registrationTransaction->work_order_number',
+                'value' => '!empty($data->registration_transaction_id) ? $data->registrationTransaction->work_order_number : ""',
             ),
             array(
                 'header'=>'Customer', 
-                'value'=>'$data->registrationTransaction->customer->name', 
+                'value'=>'!empty($data->registration_transaction_id) ? $data->registrationTransaction->customer->name : ""', 
             ),
             array(
                 'header'=>'Movements',
