@@ -46,7 +46,7 @@ $this->menu = array(
         <?php endif; ?>
         
         <?php if (Yii::app()->user->checkAccess("transferRequestSupervisor")): ?>
-            <?php echo CHtml::link('<span class="fa fa-minus"></span>Cancel Transaction', array("/transaction/transferRequest/cancel", "id" => $model->id), array(
+            <?php echo CHtml::link('<span class="fa fa-minus"></span>Cancel Transaction', array("/transaction/transferRequest/cancel", "id" => $transferRequest->id), array(
                 'class' => 'button alert right', 
                 'style' => 'margin-right:10px', 
             )); ?>

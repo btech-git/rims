@@ -311,7 +311,7 @@ class TransferRequestController extends Controller {
         }
         
         JurnalUmum::model()->deleteAllByAttributes(array(
-            'kode_transaksi' => $model->payment_number,
+            'kode_transaksi' => $model->transfer_request_no,
         ));
 
         $this->redirect(array('admin'));
