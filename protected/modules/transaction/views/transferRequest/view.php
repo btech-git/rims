@@ -45,6 +45,13 @@ $this->menu = array(
             <?php echo CHtml::link('<span class="fa fa-edit"></span>Update Approval', Yii::app()->baseUrl . '/transaction/transferRequest/updateApproval?headerId=' . $transferRequest->id, array('class' => 'button cbutton right', 'style' => 'margin-right:10px')) ?>
         <?php endif; ?>
         
+        <?php if (Yii::app()->user->checkAccess("transferRequestSupervisor")): ?>
+            <?php echo CHtml::link('<span class="fa fa-minus"></span>Cancel Transaction', array("/transaction/transferRequest/cancel", "id" => $model->id), array(
+                'class' => 'button alert right', 
+                'style' => 'margin-right:10px', 
+            )); ?>
+        <?php endif; ?>
+        
         <h1>View Transaction Transfer Request #<?php echo $transferRequest->id; ?></h1>
 
         <?php $this->widget('zii.widgets.CDetailView', array(

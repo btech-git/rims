@@ -948,7 +948,7 @@ class PaymentInController extends Controller {
         $model->payment_amount = 0; 
         $model->cancelled_datetime = date('Y-m-d H:i:s');
         $model->user_id_cancelled = Yii::app()->user->id;
-        $model->update(array('status', 'invoice_id', 'payment_amount', 'customer_id', 'vehicle_id', 'notes', 'cancelled_datetime', 'user_id_cancelled'));
+        $model->update(array('status', 'payment_amount', 'cancelled_datetime', 'user_id_cancelled'));
 
         foreach ($model->paymentInDetails as $detail) {
             $detail->total_invoice = '0.00';

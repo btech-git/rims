@@ -290,6 +290,33 @@ class TransferRequestController extends Controller {
         ));
     }
 
+    public function actionCancel($id) {
+        $model = $this->loadModel($id);
+        $model->status_document = 'CANCELLED!!!';
+        $model->total_quantity = 0; 
+        $model->total_price = 0; 
+        $model->cancelled_datetime = date('Y-m-d H:i:s');
+        $model->user_id_cancelled = Yii::app()->user->id;
+        $model->update(array('status_document', 'total_quantity', 'total_price', 'cancelled_datetime', 'user_id_cancelled'));
+
+        foreach ($model->transactionTransferRequestDetails as $detail) {
+            $detail->quantity = 0;
+            $detail->unit_price = '0.00';
+            $detail->amount = '0.00';
+            $detail->receive_quantity = '0.00';
+            $detail->transfer_request_quantity_left = '0.00';
+            $detail->quantity_delivery = '0.00';
+            $detail->quantity_delivery_left = '0.00';
+            $detail->update(array('quantity', 'unit_price', 'amount', 'receive_quantity', 'transfer_request_quantity_left', 'quantity_delivery', 'quantity_delivery_left'));
+        }
+        
+        JurnalUmum::model()->deleteAllByAttributes(array(
+            'kode_transaksi' => $model->payment_number,
+        ));
+
+        $this->redirect(array('admin'));
+    }
+
     public function saveTransactionLog($actionType, $transferRequest) {
         $transactionLog = new TransactionLog();
         $transactionLog->transaction_number = $transferRequest->transfer_request_no;
