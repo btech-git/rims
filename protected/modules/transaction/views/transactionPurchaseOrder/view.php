@@ -46,11 +46,11 @@ $this->menu=array(
             )); ?>
         <?php endif; ?>
         
-        <?php if ($model->status_document == 'Approved'): ?>
+        <?php //if ($model->status_document == 'Approved'): ?>
             <div class="field buttons text-right">
                 <?php echo CHtml::link('<span class="fa fa-print"></span>Print PO', Yii::app()->baseUrl.'/transaction/transactionPurchaseOrder/pdf?id=' . $model->id, array('class'=>'button warning right','style'=>'margin-right:10px', 'target' => 'blank')) ?>
             </div>
-        <?php endif; ?>
+        <?php //endif; ?>
 
         
         <br />
