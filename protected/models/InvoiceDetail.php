@@ -111,7 +111,7 @@ class InvoiceDetail extends CActiveRecord {
     }
     
     public function getPriceAfterDiscount() {
-        return $this->unit_price - $this->discount;
+        return $this->quantity * $this->unit_price - $this->discount;
     }
     
     public static function graphAverageQuantitySalePerBranch() {
