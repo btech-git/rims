@@ -10,13 +10,23 @@ function tanggal($date) {
     return $tanggal . ' ' . $bulan[(int) $bulan2 - 1] . ' ' . $tahun;
 }
 ?>
+<style>
+    .page {
+        background-repeat: no-repeat;
+        background-position: center;
+        background-size: contain;
+    }
+    .container {
+        background-color: rgba(255, 255, 255, 0.8);
+    }
+</style>
 <?php $numberOfPages = 3; ?>
 <?php for ($i = 0; $i < $numberOfPages; $i++): ?>
-    <div <?php if ($i > 0): ?>style=" page-break-before: always"<?php endif; ?>>
+    <div class="page" <?php if ($i > 0): ?>style="page-break-before: always; background-image: url('<?php echo Yii::app()->baseUrl; ?>/images/copy-text.jpg')"<?php else: ?>style="background-image: url('<?php echo Yii::app()->baseUrl; ?>/images/rap-logo.png')"<?php endif; ?>>
         <div class="container">
             <div class="header">
                 <div style="float: left; width: 20%; text-align: center">
-                    <img src="<?php echo Yii::app()->baseUrl . '/images/rap-logo.png' ?>" style="width: 75px; height: 64px" />
+                    <img src="<?php echo Yii::app()->baseUrl; ?>/images/rap-logo.png" style="width: 75px; height: 64px" />
                 </div>
                 <div style="float: right; width: 40%">
                     <div>
@@ -110,7 +120,7 @@ function tanggal($date) {
                                 <td>&nbsp; <?php echo CHtml::encode(CHtml::value($detail, 'product.unit.name')); ?></td>
                                 <td style="text-align: right;">&nbsp;  Rp. <?php echo number_format($detail->unit_price, 2, ',', '.'); ?></td>
                                 <td style="text-align: right;">&nbsp;  Rp. <?php echo number_format($detail->discount, 2, ',', '.'); ?></td>
-                                <td style="text-align: right;">&nbsp;  Rp. <?php echo number_format($detail->unit_price, 2, ',', '.'); ?></td>
+                                <td style="text-align: right;">&nbsp;  Rp. <?php echo number_format($detail->priceAfterDiscount, 2, ',', '.'); ?></td>
                                 <td style="text-align: right;">&nbsp;  Rp. <?php echo number_format($detail->total_price, 2, ',', '.'); ?></td>
                             </tr>
                             <?php $no++; ?>

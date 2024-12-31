@@ -110,6 +110,10 @@ class InvoiceDetail extends CActiveRecord {
         ));
     }
     
+    public function getPriceAfterDiscount() {
+        return $this->unit_price - $this->discount;
+    }
+    
     public static function graphAverageQuantitySalePerBranch() {
         
         $sql = "SELECT b.code AS branch_name, SUM(d.quantity)/12 AS average_quantity

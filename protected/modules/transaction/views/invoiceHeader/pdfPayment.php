@@ -116,7 +116,7 @@ function tanggal($date) {
                                 <td>&nbsp; <?php echo CHtml::encode(CHtml::value($detail, 'product.unit.name')); ?></td>
                                 <td style="text-align: right;">&nbsp;  Rp. <?php echo number_format($detail->unit_price, 2, ',', '.'); ?></td>
                                 <td style="text-align: right;">&nbsp;  Rp. <?php echo number_format($detail->discount, 2, ',', '.'); ?></td>
-                                <td style="text-align: right;">&nbsp;  Rp. <?php echo number_format($detail->unit_price, 2, ',', '.'); ?></td>
+                                <td style="text-align: right;">&nbsp;  Rp. <?php echo number_format($detail->priceAfterDiscount, 2, ',', '.'); ?></td>
                                 <td style="text-align: right;">&nbsp;  Rp. <?php echo number_format($detail->total_price, 2, ',', '.'); ?></td>
                             </tr>
                             <?php $no++; ?>
