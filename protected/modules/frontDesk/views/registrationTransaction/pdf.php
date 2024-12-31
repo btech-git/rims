@@ -45,7 +45,7 @@ function tanggal($date) {
             </div>
 
             <div style="text-align: center">
-                <h4>INVOICE<?php if ($i > 0): ?><span style="color: red"> - COPY</span><?php endif; ?></h4>
+                <h4>INVOICE</h4>
             </div>
 
             <div class="body-memo">
