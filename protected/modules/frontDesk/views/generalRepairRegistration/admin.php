@@ -86,13 +86,13 @@ Yii::app()->clientScript->registerScript('search', "
                 'header' => 'Car Model',
                 'value' => '$data->vehicle->carModel->name'
             ),
-            array(
-                'header' => 'Repair Type',
-                'name' => 'repair_type',
-                'value' => '$data->repair_type',
-                'type' => 'raw',
-                'filter' => false,
-            ),
+//            array(
+//                'header' => 'Repair Type',
+//                'name' => 'repair_type',
+//                'value' => '$data->repair_type',
+//                'type' => 'raw',
+//                'filter' => false,
+//            ),
             array(
                 'header' => 'Customer Name',
                 'value' => '$data->customer->name',
@@ -113,13 +113,20 @@ Yii::app()->clientScript->registerScript('search', "
                 )),
             ),
             'service_status',
-            'payment_status',
-            'vehicle_status',
             array(
-                'name' => 'branch_id',
-                'filter' => CHtml::activeDropDownList($model, 'branch_id', CHtml::listData(Branch::model()->findAll(array('order' => 'name')), 'id', 'name'), array('empty' => '-- All --')),
-                'value' => '$data->branch->name'
+                'header' => 'Invoice #',
+                'value' => '$data->getInvoice($data)'
+            ),            
+            'payment_status',
+            array(
+                'header' => 'Vehicle Status',
+                'value' => '$data->vehicle->status_location'
             ),
+//            array(
+//                'name' => 'branch_id',
+//                'filter' => CHtml::activeDropDownList($model, 'branch_id', CHtml::listData(Branch::model()->findAll(array('order' => 'name')), 'id', 'name'), array('empty' => '-- All --')),
+//                'value' => '$data->branch->name'
+//            ),
             'problem',
             array(
                 'header' => 'Mekanik',

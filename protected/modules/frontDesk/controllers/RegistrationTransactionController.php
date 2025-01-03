@@ -517,6 +517,7 @@ class RegistrationTransactionController extends Controller {
 
     public function actionPdfPayment($id) {
         $invoiceHeader = InvoiceHeader::model()->findByAttributes(array('id' => $id));
+        $paymentInDetail = PaymentInDetail::model()->findByAttributes(array('invoice_header_id' => $id));
         $customer = Customer::model()->findByPk($invoiceHeader->customer_id);
         $vehicle = Vehicle::model()->findByPk($invoiceHeader->vehicle_id);
         $branch = Branch::model()->findByPk($invoiceHeader->branch_id);
@@ -530,6 +531,7 @@ class RegistrationTransactionController extends Controller {
         $mPDF1->watermark_font = 'DejaVuSansCondensed'; 
         $mPDF1->WriteHTML($this->renderPartial('pdfPayment', array(
             'invoiceHeader' => $invoiceHeader,
+            'paymentInDetail' => $paymentInDetail,
             'customer' => $customer,
             'vehicle' => $vehicle,
             'branch' => $branch,

@@ -55,7 +55,7 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                     <div class="small-8 columns">
                                         <?php echo CHtml::dropDownlist('UsersId', $userId, CHtml::listData(Users::model()->findAllByAttributes(array(
                                             "status" => 1,
-                                        )), "id", "username"), array("empty" => "--All User--")); ?>
+                                        )), "id", "username"), array("empty" => "--Pilih User--")); ?>
                                     </div>
                                 </div>
                             </div>

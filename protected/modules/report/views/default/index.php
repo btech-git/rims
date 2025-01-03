@@ -535,8 +535,13 @@
                                         'visible' => Yii::app()->user->checkAccess('director')
                                     ),
                                     array(
-                                        'label' => 'Laporan Sales Retail Summary', 
+                                        'label' => 'Laporan Penjualan Retail Summary', 
                                         'url' => array('/report/saleFlowSummary/summary'), 
+                                        'visible' => Yii::app()->user->checkAccess('director')
+                                    ),
+                                    array(
+                                        'label' => 'Laporan Pembelian Summary', 
+                                        'url' => array('/report/purchaseFlowSummary/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('director')
                                     ),
                                     array(

@@ -1,6 +1,6 @@
 <?php
 
-class SaleFlowSummary extends CComponent {
+class WarehouseFlowSummary extends CComponent {
 
     public $dataProvider;
 

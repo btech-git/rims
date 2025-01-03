@@ -1,6 +1,6 @@
 <?php
 
-class SaleFlowSummary extends CComponent {
+class PurchaseFlowSummary extends CComponent {
 
     public $dataProvider;
 
@@ -10,9 +10,8 @@ class SaleFlowSummary extends CComponent {
 
     public function setupLoading() {
         $this->dataProvider->criteria->with = array(
-            'customer',
-            'vehicle',
-            'branch',
+            'supplier',
+            'mainBranch',
         );
     }
 
@@ -26,14 +25,14 @@ class SaleFlowSummary extends CComponent {
     }
 
     public function setupSorting() {
-        $this->dataProvider->sort->attributes = array('t.transaction_date');
+        $this->dataProvider->sort->attributes = array('t.purchase_order_date');
         $this->dataProvider->criteria->order = $this->dataProvider->sort->orderBy;
     }
 
     public function setupFilter($filters) {
         $startDate = (empty($filters['startDate'])) ? date('Y-m-d') : $filters['startDate'];
         $endDate = (empty($filters['endDate'])) ? date('Y-m-d') : $filters['endDate'];
-        $this->dataProvider->criteria->addCondition('t.status NOT LIKE "%CANCELLED%" AND substr(t.transaction_date, 1, 10) BETWEEN :start_date AND :end_date');
+        $this->dataProvider->criteria->addCondition('t.status_document NOT LIKE "%CANCELLED%" AND substr(t.purchase_order_date, 1, 10) BETWEEN :start_date AND :end_date');
         $this->dataProvider->criteria->params[':start_date'] = $startDate;
         $this->dataProvider->criteria->params[':end_date'] = $endDate;
     }

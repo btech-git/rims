@@ -96,5 +96,4 @@ class PaymentOutDetail extends CActiveRecord {
             'criteria' => $criteria,
         ));
     }
-
 }

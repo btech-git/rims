@@ -84,13 +84,13 @@ $('.search-form form').submit(function(){
                 'name'=>'car_model_code',
                 'value'=>'$data->vehicle->carModel->name'
             ),
-            array(
-                'header' => 'Repair Type',
-                'name' => 'repair_type',
-                'value' => '$data->repair_type',
-                'type' => 'raw',
-                'filter' => false,
-            ),
+//            array(
+//                'header' => 'Repair Type',
+//                'name' => 'repair_type',
+//                'value' => '$data->repair_type',
+//                'type' => 'raw',
+//                'filter' => false,
+//            ),
             array(
                 'header' => 'Customer Name',
                 'name' => 'customer_name',
@@ -102,6 +102,21 @@ $('.search-form form').submit(function(){
                 'value' => 'empty($data->insurance_company_id) ? "" : $data->insuranceCompany->name',
             ),
             'work_order_number',
+            array(
+                'header' => 'WO Status',
+                'name' => 'status',
+                'value' => '$data->status',
+                'type' => 'raw',
+                'filter' => CHtml::dropDownList('RegistrationTransaction[status]', $model->status, array(
+                    '' => 'All',
+                    'Registration' => 'Registration',
+                    'Pending' => 'Pending',
+                    'Available' => 'Available',
+                    'On Progress' => 'On Progress',
+                    'Finished' => 'Finished'
+                )),
+            ),
+            'service_status',
             array(
                 'header' => 'Invoice #',
                 'filter' => false,
@@ -119,28 +134,16 @@ $('.search-form form').submit(function(){
                     return $invoiceNumber;
                 }
             ),
-            array(
-                'header' => 'WO Status',
-                'name' => 'status',
-                'value' => '$data->status',
-                'type' => 'raw',
-                'filter' => CHtml::dropDownList('RegistrationTransaction[status]', $model->status, array(
-                    '' => 'All',
-                    'Registration' => 'Registration',
-                    'Pending' => 'Pending',
-                    'Available' => 'Available',
-                    'On Progress' => 'On Progress',
-                    'Finished' => 'Finished'
-                )),
-            ),
-            'service_status',
             'payment_status',
-            'vehicle_status',
             array(
-                'name'=>'branch_id',
-                'filter' => CHtml::activeDropDownList($model, 'branch_id', CHtml::listData(Branch::model()->findAll(array('order' => 'name')), 'id', 'name'), array('empty' => '-- All --')),
-                'value'=>'$data->branch->name'
+                'header' => 'Vehicle Status',
+                'value' => '$data->vehicle->status_location'
             ),
+//            array(
+//                'name'=>'branch_id',
+//                'filter' => CHtml::activeDropDownList($model, 'branch_id', CHtml::listData(Branch::model()->findAll(array('order' => 'name')), 'id', 'name'), array('empty' => '-- All --')),
+//                'value'=>'$data->branch->name'
+//            ),
             'problem',
             array(
                 'header' => 'Mekanik',

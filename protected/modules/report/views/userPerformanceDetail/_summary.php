@@ -2,9 +2,9 @@
 Yii::app()->clientScript->registerCss('_report', '
     .width1-1 { width: 10% }
     .width1-2 { width: 10% }
-    .width1-3 { width: 10% }
+    .width1-3 { width: 5% }
     .width1-4 { width: 35% }
-    .width1-5 { width: 15% }
+    .width1-5 { width: 20% }
     .width1-6 { width: 5% }
     .width1-7 { width: 10% }
 ');
@@ -28,6 +28,7 @@ Yii::app()->clientScript->registerCss('_report', '
                 <th class="width1-2">Tanggal</th>
                 <th class="width1-3">Type</th>
                 <th class="width1-4">Customer</th>
+                <th class="width1-2">Plat #</th>
                 <th class="width1-5">Kendaraan</th>
                 <th class="width1-6">Status</th>
                 <th class="width1-7">Total</th>
@@ -36,11 +37,18 @@ Yii::app()->clientScript->registerCss('_report', '
         <tbody>
             <?php foreach ($createRegistrationTransactions as $header): ?>
                 <tr class="items1">
-                    <td class="width1-1"><?php echo CHtml::encode(CHtml::value($header, 'transaction_number')); ?></td>
+                    <td class="width1-1">
+                        <?php echo CHtml::link(CHtml::encode($header->transaction_number), array("/frontDesk/generalRepairRegistration/view", "id"=>$header->id), array("target" => "_blank")); ?>
+                    </td>
                     <td class="width1-2"><?php echo CHtml::encode(CHtml::value($header, 'transaction_date')); ?></td>
                     <td class="width1-3"><?php echo CHtml::encode(CHtml::value($header, 'repair_type')); ?></td>
                     <td class="width1-4"><?php echo CHtml::encode(CHtml::value($header, 'customer.name')); ?></td>
-                    <td class="width1-5"><?php echo CHtml::encode(CHtml::value($header, 'vehicle.plate_number')); ?></td>
+                    <td class="width1-2"><?php echo CHtml::encode(CHtml::value($header, 'vehicle.plate_number')); ?></td>
+                    <td class="width1-5">
+                        <?php echo CHtml::encode(CHtml::value($header, 'vehicle.carMake.name')); ?> -
+                        <?php echo CHtml::encode(CHtml::value($header, 'vehicle.carModel.name')); ?> -
+                        <?php echo CHtml::encode(CHtml::value($header, 'vehicle.carSubModel.name')); ?>
+                    </td>
                     <td class="width1-6"><?php echo CHtml::encode(CHtml::value($header, 'status')); ?></td>
                     <td class="width1-7" style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($header, 'grand_total'))); ?></td>
                 </tr>
@@ -68,7 +76,9 @@ Yii::app()->clientScript->registerCss('_report', '
         <tbody>
             <?php foreach ($createWorkOrders as $header): ?>
                 <tr class="items1">
-                    <td class="width1-1"><?php echo CHtml::encode(CHtml::value($header, 'work_order_number')); ?></td>
+                    <td class="width1-1">
+                        <?php echo CHtml::link(CHtml::encode($header->work_order_number), array("/frontDesk/generalRepairRegistration/view", "id"=>$header->id), array("target" => "_blank")); ?>
+                    </td>
                     <td class="width1-2"><?php echo CHtml::encode(CHtml::value($header, 'transaction_date')); ?></td>
                     <td class="width1-3"><?php echo CHtml::encode(CHtml::value($header, 'repair_type')); ?></td>
                     <td class="width1-4"><?php echo CHtml::encode(CHtml::value($header, 'customer.name')); ?></td>
@@ -98,7 +108,9 @@ Yii::app()->clientScript->registerCss('_report', '
         <tbody>
             <?php foreach ($createMovementOuts as $header): ?>
                 <tr class="items1">
-                    <td class="width1-1"><?php echo CHtml::encode(CHtml::value($header, 'movement_out_no')); ?></td>
+                    <td class="width1-1">
+                        <?php echo CHtml::link(CHtml::encode($header->movement_out_no), array("/transaction/movementOutHeader/view", "id"=>$header->id), array("target" => "_blank")); ?>
+                    </td>
                     <td class="width1-2"><?php echo CHtml::encode(CHtml::value($header, 'date_posting')); ?></td>
                     <td class="width1-4"><?php echo CHtml::encode($header->getMovementType($header->movement_type)); ?></td>
                     <td class="width1-5">
@@ -140,7 +152,9 @@ Yii::app()->clientScript->registerCss('_report', '
         <tbody>
             <?php foreach ($createInvoices as $header): ?>
                 <tr class="items1">
-                    <td class="width1-1"><?php echo CHtml::encode(CHtml::value($header, 'invoice_number')); ?></td>
+                    <td class="width1-1">
+                        <?php echo CHtml::link(CHtml::encode($header->invoice_number), array("/transaction/invoiceHeader/view", "id"=>$header->id), array("target" => "_blank")); ?>
+                    </td>
                     <td class="width1-2"><?php echo CHtml::encode(CHtml::value($header, 'invoice_date')); ?></td>
                     <td class="width1-3">
                         <?php if (!empty($header->sales_order_id)): ?>
@@ -180,7 +194,9 @@ Yii::app()->clientScript->registerCss('_report', '
         <tbody>
             <?php foreach ($createPaymentIns as $header): ?>
                 <tr class="items1">
-                    <td class="width1-1"><?php echo CHtml::encode(CHtml::value($header, 'payment_number')); ?></td>
+                    <td class="width1-1">
+                        <?php echo CHtml::link(CHtml::encode($header->payment_number), array("/transaction/paymentIn/view", "id"=>$header->id), array("target" => "_blank")); ?>
+                    </td>
                     <td class="width1-2"><?php echo CHtml::encode(CHtml::value($header, 'payment_date')); ?></td>
                     <td class="width1-3"><?php echo CHtml::encode(CHtml::value($header, 'paymentType.name')); ?></td>
                     <td class="width1-4"><?php echo CHtml::encode(CHtml::value($header, 'customer.name')); ?></td>
@@ -211,7 +227,9 @@ Yii::app()->clientScript->registerCss('_report', '
         <tbody>
             <?php foreach ($createPurchases as $header): ?>
                 <tr class="items1">
-                    <td class="width1-1"><?php echo CHtml::encode(CHtml::value($header, 'purchase_order_no')); ?></td>
+                    <td class="width1-1">
+                        <?php echo CHtml::link(CHtml::encode($header->purchase_order_no), array("/transaction/transactionPurchaseOrder/view", "id"=>$header->id), array("target" => "_blank")); ?>
+                    </td>
                     <td class="width1-2"><?php echo CHtml::encode(CHtml::value($header, 'purchase_order_date')); ?></td>
                     <td class="width1-3"><?php echo CHtml::encode(CHtml::value($header, 'supplier.name')); ?></td>
                     <td class="width1-5"><?php echo CHtml::encode(CHtml::value($header, 'note')); ?></td>
@@ -242,7 +260,9 @@ Yii::app()->clientScript->registerCss('_report', '
         <tbody>
             <?php foreach ($createReceives as $header): ?>
                 <tr class="items1">
-                    <td class="width1-1"><?php echo CHtml::encode(CHtml::value($header, 'receive_item_no')); ?></td>
+                    <td class="width1-1">
+                        <?php echo CHtml::link(CHtml::encode($header->receive_item_no), array("/transaction/transactionReceiveItem/view", "id"=>$header->id), array("target" => "_blank")); ?>
+                    </td>
                     <td class="width1-2"><?php echo CHtml::encode(CHtml::value($header, 'receive_item_date')); ?></td>
                     <td class="width1-3"><?php echo CHtml::encode(CHtml::value($header, 'request_type')); ?></td>
                     <td class="width1-4"><?php echo CHtml::encode(CHtml::value($header, 'supplier.name')); ?></td>
@@ -284,7 +304,9 @@ Yii::app()->clientScript->registerCss('_report', '
         <tbody>
             <?php foreach ($createMovementIns as $header): ?>
                 <tr class="items1">
-                    <td class="width1-1"><?php echo CHtml::encode(CHtml::value($header, 'movement_in_number')); ?></td>
+                    <td class="width1-1">
+                        <?php echo CHtml::link(CHtml::encode($header->movement_in_number), array("/transaction/movementInHeader/view", "id"=>$header->id), array("target" => "_blank")); ?>
+                    </td>
                     <td class="width1-2"><?php echo CHtml::encode(CHtml::value($header, 'date_posting')); ?></td>
                     <td class="width1-3"><?php echo CHtml::encode($header->getMovementType($header->movement_type)); ?></td>
                     <td class="width1-5">
@@ -321,7 +343,9 @@ Yii::app()->clientScript->registerCss('_report', '
         <tbody>
             <?php foreach ($createDeliveries as $header): ?>
                 <tr class="items1">
-                    <td class="width1-1"><?php echo CHtml::encode(CHtml::value($header, 'delivery_order_no')); ?></td>
+                    <td class="width1-1">
+                        <?php echo CHtml::link(CHtml::encode($header->delivery_order_no), array("/transaction/transactionDeliveryOrder/view", "id"=>$header->id), array("target" => "_blank")); ?>
+                    </td>
                     <td class="width1-2"><?php echo CHtml::encode(CHtml::value($header, 'delivery_date')); ?></td>
                     <td class="width1-3"><?php echo CHtml::encode(CHtml::value($header, 'request_type')); ?></td>
                     <td class="width1-3"><?php echo CHtml::encode(CHtml::value($header, 'destinationBranch.name')); ?></td>
@@ -362,7 +386,9 @@ Yii::app()->clientScript->registerCss('_report', '
         <tbody>
             <?php foreach ($createTransferRequests as $header): ?>
                 <tr class="items1">
-                    <td class="width1-1"><?php echo CHtml::encode(CHtml::value($header, 'transfer_request_no')); ?></td>
+                    <td class="width1-1">
+                        <?php echo CHtml::link(CHtml::encode($header->transfer_request_no), array("/transaction/transferRequest/view", "id"=>$header->id), array("target" => "_blank")); ?>
+                    </td>
                     <td class="width1-2"><?php echo CHtml::encode(CHtml::value($header, 'transfer_request_date')); ?></td>
                     <td class="width1-3"><?php echo CHtml::encode(CHtml::value($header, 'status_document')); ?></td>
                     <td class="width1-3"><?php echo CHtml::encode(CHtml::value($header, 'destinationBranch.name')); ?></td>
@@ -390,7 +416,9 @@ Yii::app()->clientScript->registerCss('_report', '
         <tbody>
             <?php foreach ($createSentRequests as $header): ?>
                 <tr class="items1">
-                    <td class="width1-1"><?php echo CHtml::encode(CHtml::value($header, 'sent_request_no')); ?></td>
+                    <td class="width1-1">
+                        <?php echo CHtml::link(CHtml::encode($header->sent_request_no), array("/transaction/transactionSentRequest/view", "id"=>$header->id), array("target" => "_blank")); ?>
+                    </td>
                     <td class="width1-2"><?php echo CHtml::encode(CHtml::value($header, 'sent_request_date')); ?></td>
                     <td class="width1-3"><?php echo CHtml::encode(CHtml::value($header, 'status_document')); ?></td>
                     <td class="width1-3"><?php echo CHtml::encode(CHtml::value($header, 'destinationBranch.name')); ?></td>
@@ -419,7 +447,9 @@ Yii::app()->clientScript->registerCss('_report', '
         <tbody>
             <?php foreach ($createCashTransactions as $header): ?>
                 <tr class="items1">
-                    <td class="width1-1"><?php echo CHtml::encode(CHtml::value($header, 'transaction_number')); ?></td>
+                    <td class="width1-1">
+                        <?php echo CHtml::link(CHtml::encode($header->transaction_number), array("/transaction/cashTransaction/view", "id"=>$header->id), array("target" => "_blank")); ?>
+                    </td>
                     <td class="width1-2"><?php echo CHtml::encode(CHtml::value($header, 'transaction_date')); ?></td>
                     <td class="width1-3"><?php echo CHtml::encode(CHtml::value($header, 'transaction_type')); ?></td>
                     <td class="width1-4"><?php echo CHtml::encode(CHtml::value($header, 'note')); ?></td>

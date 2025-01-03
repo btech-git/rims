@@ -578,11 +578,11 @@ class RegistrationTransaction extends MonthlyTransactionActiveRecord {
         return parent::model($className);
     }
 
-    function getInvoice($data, $row) {
+    function getInvoice($data) {
         $invoiceNumber = '';
         $invoices = InvoiceHeader::model()->findAllByAttributes(array('registration_transaction_id' => $data->id));
         foreach ($invoices as $key => $invoice) {
-            if ($invoice->status != 'CANCELLED' && $invoice->status != 'PAID') {
+            if ($invoice->status != 'CANCELLED') {
                 $invoiceNumber = $invoice->invoice_number;
             }
         }

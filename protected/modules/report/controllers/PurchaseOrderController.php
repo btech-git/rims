@@ -64,9 +64,10 @@ class PurchaseOrderController extends Controller {
         ));
     }
 
-    public function actionAjaxJsonSupplier($id) {
+    public function actionAjaxJsonSupplier() {
         if (Yii::app()->request->isAjaxRequest) {
-            $supplier = Supplier::model()->findByPk($id);
+            $supplierId = (isset($_POST['Supplier']['id'])) ? $_POST['Supplier']['id'] : '';
+            $supplier = Supplier::model()->findByPk($supplierId);
 
             $object = array(
                 'supplier_name' => CHtml::value($supplier, 'company'),

@@ -53,7 +53,7 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                         <span class="prefix">Supplier </span>
                                     </div>
                                     <div class="small-8 columns">
-                                        <?php echo CHtml::textField('SupplierId', $supplierId, array(
+                                        <?php echo CHtml::activeTextField($supplier, 'id', array(
                                             'readonly' => true,
                                             'onclick' => '$("#supplier-dialog").dialog("open"); return false;',
                                             'onkeypress' => 'if (event.keyCode == 13) { $("#supplier-dialog").dialog("open"); return false; }'
@@ -196,7 +196,7 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
             'header' => '',
         ),
         'selectionChanged' => 'js:function(id) {
-            $("#SupplierId").val($.fn.yiiGridView.getSelection(id));
+            $("#' . CHtml::activeId($supplier, 'id') . '").val($.fn.yiiGridView.getSelection(id));
             $("#supplier-dialog").dialog("close");
             if ($.fn.yiiGridView.getSelection(id) == "")
             {
@@ -208,7 +208,7 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                 $.ajax({
                     type: "POST",
                     dataType: "JSON",
-                    url: "' . CController::createUrl('ajaxJsonSupplier', array('id' => $supplier->id)) . '",
+                    url: "' . CController::createUrl('ajaxJsonSupplier') . '",
                     data: $("form").serialize(),
                     success: function(data) {
                         $("#supplier_name").html(data.supplier_name);
