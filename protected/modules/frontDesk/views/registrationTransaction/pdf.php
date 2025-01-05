@@ -183,9 +183,15 @@ function tanggal($date) {
                         <td style="text-align:right; width: 20%; font-size: 11px">Rp. <?php echo number_format($invoiceHeader->subTotal, 2, ',', '.') ?> &nbsp; </td>
                     </tr>
 
+                    <tr>
+                        <td style="font-size: 11px">Note : <?php echo CHtml::encode(CHtml::value($invoiceHeader, 'note')); ?></td>
+                        <td style="text-align:right; width: 20%; font-size: 11px">TOTAL DISKON</td>
+                        <td style="text-align:right; width: 20%; font-size: 11px">Rp. <?php echo number_format($invoiceHeader->totalDiscountProductService, 2, ',', '.') ?> &nbsp; </td>
+                    </tr>
+
                     <?php if ($invoiceHeader->ppn_total > 0): ?>
                         <tr>
-                            <td style="font-size: 11px">Note : <?php echo CHtml::encode(CHtml::value($invoiceHeader, 'note')); ?></td>
+                            <td></td>
                             <td style="text-align:right; font-size: 11px">PPN - <?php echo CHtml::encode(CHtml::value($invoiceHeader, 'tax_percentage')); ?>%</td>
                             <td style="text-align:right; font-size: 11px">Rp. <?php echo number_format($invoiceHeader->ppn_total, 2, ',', '.') ?> &nbsp; </td>
                         </tr>

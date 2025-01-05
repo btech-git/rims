@@ -81,6 +81,11 @@ function tanggal($date) {
                 <td>:</td>
                 <td><?php echo $bodyRepairRegistration->vehicle_mileage; ?></td>
             </tr>
+            <tr>
+                <td>PROBLEM</td>
+                <td>:</td>
+                <td colspan="4"><?php echo $bodyRepairRegistration->problem; ?></td>
+            </tr>
         </table>
     </div>
     

@@ -604,6 +604,10 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
         return $total;
     }
     
+    public function getTotalDiscountProductService() {
+        return $this->totalDiscountProduct + $this->totalDiscountService;
+    }
+    
     public static function getYearlySaleSummary($year) {
         $sql = "SELECT EXTRACT(YEAR_MONTH FROM invoice_date) AS year_month_value, branch_id, MIN(b.name) AS branch_name, SUM(total_price) AS total_price
                 FROM " . InvoiceHeader::model()->tableName() . " i 
