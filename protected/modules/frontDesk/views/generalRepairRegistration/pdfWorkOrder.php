@@ -76,7 +76,7 @@ function tanggal($date) {
             <tr>
                 <td>TELP / HP</td>
                 <td>:</td>
-                <td><?php echo $generalRepairRegistration->customer->phone; ?></td>
+                <td><?php echo $generalRepairRegistration->customer->mobile_phone; ?></td>
                 <td>KILOMETER</td>
                 <td>:</td>
                 <td><?php echo $generalRepairRegistration->vehicle_mileage; ?></td>
