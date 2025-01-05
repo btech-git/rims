@@ -124,19 +124,6 @@ function tanggal($date) {
                                 <td style="text-align: right;">&nbsp;  Rp. <?php echo number_format($detail->total_price, 2, ',', '.'); ?></td>
                             </tr>
                             <?php $no++; ?>
-                        <?php else: ?>
-                            <tr class="isi">
-                                <td>&nbsp;</td>
-                                <td>&nbsp;</td>
-                                <td>&nbsp;</td>
-                                <td>&nbsp;</td>
-                                <td>&nbsp;</td>
-                                <td>&nbsp;</td>
-                                <td>&nbsp;</td>
-                                <td>&nbsp;</td>
-                                <td>&nbsp;</td>
-                                <td>&nbsp;</td>
-                            </tr>
                         <?php endif; ?>
                     <?php endforeach; ?>
                     <tr>

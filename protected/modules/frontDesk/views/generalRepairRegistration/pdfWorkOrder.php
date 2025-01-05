@@ -82,7 +82,7 @@ function tanggal($date) {
                 <td><?php echo $generalRepairRegistration->vehicle_mileage; ?></td>
             </tr>
             <tr>
-                <td>Problem</td>
+                <td>PROBLEM</td>
                 <td>:</td>
                 <td colspan="4"><?php echo $generalRepairRegistration->problem; ?></td>
             </tr>
