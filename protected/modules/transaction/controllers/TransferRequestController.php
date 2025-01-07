@@ -129,7 +129,7 @@ class TransferRequestController extends Controller {
             $jurnalUmumInterbranchRequester->tanggal_transaksi = $transferRequest->transfer_request_date;
             $jurnalUmumInterbranchRequester->coa_id = $coaInterbranchRequester->coa_id;
             $jurnalUmumInterbranchRequester->branch_id = $transferRequest->requester_branch_id;
-            $jurnalUmumInterbranchRequester->total = round($transferRequest->total_price, 0);
+            $jurnalUmumInterbranchRequester->total = round($transferRequest->total_price, 2);
             $jurnalUmumInterbranchRequester->debet_kredit = 'D';
             $jurnalUmumInterbranchRequester->tanggal_posting = date('Y-m-d');
             $jurnalUmumInterbranchRequester->transaction_subject = 'Transfer Request Main';
@@ -167,7 +167,7 @@ class TransferRequestController extends Controller {
                 $jurnalUmumInterbranchDestination->tanggal_transaksi = $transferRequest->transfer_request_date;
                 $jurnalUmumInterbranchDestination->coa_id = $coaInterbranchDestination->coa_id;
                 $jurnalUmumInterbranchDestination->branch_id = $transferRequest->destination_branch_id;
-                $jurnalUmumInterbranchDestination->total = round($transferRequest->total_price, 0);
+                $jurnalUmumInterbranchDestination->total = round($transferRequest->total_price, 2);
                 $jurnalUmumInterbranchDestination->debet_kredit = 'K';
                 $jurnalUmumInterbranchDestination->tanggal_posting = date('Y-m-d');
                 $jurnalUmumInterbranchDestination->transaction_subject = 'Transfer Request Destination';
@@ -176,7 +176,7 @@ class TransferRequestController extends Controller {
                 $jurnalUmumInterbranchDestination->save();
 
                 foreach ($transferRequest->transactionTransferRequestDetails as $detail) {
-                    $hppPrice = $detail->total; //$detail->unit_price * $detail->quantity;
+                    $hppPrice = round($detail->total, 2); //$detail->unit_price * $detail->quantity;
 
                     //save coa persedian product sub master
                     $jurnalUmumOutstandingPartDestination = new JurnalUmum;
