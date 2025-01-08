@@ -12,7 +12,7 @@
 
 <div style="font-weight: bold; text-align: center">
     <div style="font-size: larger">Raperind Motor</div>
-    <div style="font-size: larger">Laporan Penjualan Retail Summary</div>
+    <div style="font-size: larger">Perpindahan Barang Penjualan</div>
     <div><?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($startDate))) . ' &nbsp;&ndash;&nbsp; ' . CHtml::encode(Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($endDate))); ?></div>
 </div>
 
@@ -44,9 +44,7 @@
                 </td>
                 <td class="width1-4"><?php echo CHtml::encode(CHtml::value($header, 'customer.name')); ?></td>
                 <td class="width1-5"><?php echo CHtml::encode($header->vehicle->plate_number); ?></td>
-                <td class="width1-6">
-                    <?php echo CHtml::encode(CHtml::value($header, 'work_order_number')); ?>
-                </td>
+                <td class="width1-6"><?php echo CHtml::encode(CHtml::value($header, 'work_order_number')); ?></td>
                 <td class="width1-7"><?php echo CHtml::encode(implode(', ', $movementOutHeaderCodeNumbers)); ?></td>
             </tr>
         <?php endforeach; ?>

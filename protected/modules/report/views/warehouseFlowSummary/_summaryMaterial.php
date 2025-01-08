@@ -11,8 +11,7 @@
 '); ?>
 
 <div style="font-weight: bold; text-align: center">
-    <div style="font-size: larger">Raperind Motor</div>
-    <div style="font-size: larger">Laporan Penjualan Retail Summary</div>
+    <div style="font-size: larger">Perpindahan Barang Material Request</div>
     <div><?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($startDate))) . ' &nbsp;&ndash;&nbsp; ' . CHtml::encode(Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($endDate))); ?></div>
 </div>
 
@@ -22,40 +21,32 @@
     <thead style="position: sticky; top: 0">
         <tr id="header1">
             <th class="width1-1">No</th>
-            <th class="width1-2">RG #</th>
+            <th class="width1-2">Request #</th>
             <th class="width1-3">Tanggal</th>
-            <th class="width1-4">Customer</th>
-            <th class="width1-5">Vehicle</th>
-            <th class="width1-6">Work Order</th>
-            <th class="width1-7">Movement Out</th>
-            <th class="width1-8">Invoice</th>
-            <th class="width1-9">Payment In</th>
+            <th class="width1-4">RG #</th>
+            <th class="width1-5">Work Order</th>
+            <th class="width1-6">Movement Out</th>
         </tr>
     </thead>
     <tbody>
-        <?php foreach ($saleFlowSummary->dataProvider->data as $i => $header): ?>
+        <?php foreach ($materialRequestFlowSummary->dataProvider->data as $i => $header): ?>
             <?php $movementOutHeaders = $header->movementOutHeaders; ?>
             <?php $movementOutHeaderCodeNumbers = array_map(function($movementOutHeader) { return $movementOutHeader->movement_out_no; }, $movementOutHeaders); ?>
-            <?php $invoiceHeaders = $header->invoiceHeaders; ?>
-            <?php $invoiceHeaderCodeNumbers = array_map(function($invoiceHeader) { return $invoiceHeader->invoice_number; }, $invoiceHeaders); ?>
-            <?php $paymentInDetails = array_reduce(array_map(function($invoiceHeader) { return $invoiceHeader->paymentInDetails; }, $invoiceHeaders), function($a, $b) { return in_array($b, $a) ? $a : array_merge($a, $b); }, array()); ?>
-            <?php $paymentInHeaderCodeNumbers = array_map(function($paymentInDetail) { return $paymentInDetail->paymentIn->payment_number; }, $paymentInDetails); ?>
             <tr class="items1">
                 <td class="width1-1"><?php echo CHtml::encode($i + 1); ?></td>
                 <td class="width1-2">
-                    <?php echo CHtml::link(CHtml::encode($header->transaction_number), array("/frontDesk/generalRepairRegistration/view", "id"=>$header->id), array("target" => "_blank")); ?>
+                    <?php echo CHtml::link(CHtml::encode($header->transaction_number), array("/frontDesk/materialRequest/view", "id"=>$header->id), array("target" => "_blank")); ?>
                 </td>
                 <td class="width1-3">
                     <?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($header->transaction_date))); ?>
                 </td>
-                <td class="width1-4"><?php echo CHtml::encode(CHtml::value($header, 'customer.name')); ?></td>
-                <td class="width1-5"><?php echo CHtml::encode($header->vehicle->plate_number); ?></td>
-                <td class="width1-6">
-                    <?php echo CHtml::encode(CHtml::value($header, 'work_order_number')); ?>
+                <td class="width1-4">
+                    <?php if (!empty($header->registration_transaction_id)): ?>
+                        <?php echo CHtml::link(CHtml::encode($header->registrationTransaction->transaction_number), array("/frontDesk/generalRepairRegistration/view", "id"=>$header->registration_transaction_id), array("target" => "_blank")); ?>
+                    <?php endif; ?>
                 </td>
-                <td class="width1-7"><?php echo CHtml::encode(implode(', ', $movementOutHeaderCodeNumbers)); ?></td>
-                <td class="width1-8"><?php echo CHtml::encode(implode(', ', $invoiceHeaderCodeNumbers)); ?></td>
-                <td class="width1-9"><?php echo CHtml::encode(implode(', ', $paymentInHeaderCodeNumbers)); ?></td>
+                <td class="width1-5"><?php echo CHtml::encode(CHtml::value($header, 'registrationTransaction.work_order_number')); ?></td>
+                <td class="width1-6"><?php echo CHtml::encode(implode(', ', $movementOutHeaderCodeNumbers)); ?></td>
             </tr>
         <?php endforeach; ?>
     </tbody>

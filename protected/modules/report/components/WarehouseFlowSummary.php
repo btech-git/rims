@@ -9,11 +9,11 @@ class WarehouseFlowSummary extends CComponent {
     }
 
     public function setupLoading() {
-        $this->dataProvider->criteria->with = array(
-            'customer',
-            'vehicle',
-            'branch',
-        );
+//        $this->dataProvider->criteria->with = array(
+//            'customer',
+//            'vehicle',
+//            'branch',
+//        );
     }
 
     public function setupPaging($pageSize, $currentPage) {
@@ -33,7 +33,31 @@ class WarehouseFlowSummary extends CComponent {
     public function setupFilter($filters) {
         $startDate = (empty($filters['startDate'])) ? date('Y-m-d') : $filters['startDate'];
         $endDate = (empty($filters['endDate'])) ? date('Y-m-d') : $filters['endDate'];
-        $this->dataProvider->criteria->addCondition('t.status NOT LIKE "%CANCELLED%" AND substr(t.transaction_date, 1, 10) BETWEEN :start_date AND :end_date');
+        $this->dataProvider->criteria->addCondition('substr(t.transaction_date, 1, 10) BETWEEN :start_date AND :end_date');
+        $this->dataProvider->criteria->params[':start_date'] = $startDate;
+        $this->dataProvider->criteria->params[':end_date'] = $endDate;
+    }
+
+    public function setupFilterTransfer($filters) {
+        $startDate = (empty($filters['startDate'])) ? date('Y-m-d') : $filters['startDate'];
+        $endDate = (empty($filters['endDate'])) ? date('Y-m-d') : $filters['endDate'];
+        $this->dataProvider->criteria->addCondition('substr(t.transfer_request_date, 1, 10) BETWEEN :start_date AND :end_date');
+        $this->dataProvider->criteria->params[':start_date'] = $startDate;
+        $this->dataProvider->criteria->params[':end_date'] = $endDate;
+    }
+
+    public function setupFilterSent($filters) {
+        $startDate = (empty($filters['startDate'])) ? date('Y-m-d') : $filters['startDate'];
+        $endDate = (empty($filters['endDate'])) ? date('Y-m-d') : $filters['endDate'];
+        $this->dataProvider->criteria->addCondition('substr(t.sent_request_date, 1, 10) BETWEEN :start_date AND :end_date');
+        $this->dataProvider->criteria->params[':start_date'] = $startDate;
+        $this->dataProvider->criteria->params[':end_date'] = $endDate;
+    }
+
+    public function setupFilterPurchase($filters) {
+        $startDate = (empty($filters['startDate'])) ? date('Y-m-d') : $filters['startDate'];
+        $endDate = (empty($filters['endDate'])) ? date('Y-m-d') : $filters['endDate'];
+        $this->dataProvider->criteria->addCondition('substr(t.purchase_order_date, 1, 10) BETWEEN :start_date AND :end_date');
         $this->dataProvider->criteria->params[':start_date'] = $startDate;
         $this->dataProvider->criteria->params[':end_date'] = $endDate;
     }

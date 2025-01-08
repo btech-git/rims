@@ -26,9 +26,9 @@ class WarehouseFlowSummaryController extends Controller {
 
         $registrationTransaction = Search::bind(new RegistrationTransaction('search'), isset($_GET['RegistrationTransaction']) ? $_GET['RegistrationTransaction'] : array());
         $materialRequest = Search::bind(new MaterialRequestHeader('search'), isset($_GET['MaterialRequestHeader']) ? $_GET['MaterialRequestHeader'] : array());
-//        $transferRequest = Search::bind(new TransactionTransferRequest('search'), isset($_GET['TransactionTransferRequest']) ? $_GET['TransactionTransferRequest'] : array());
-//        $sentRequest = Search::bind(new TransactionSentRequest('search'), isset($_GET['TransactionSentRequest']) ? $_GET['TransactionSentRequest'] : array());
-//        $purchaseOrder = Search::bind(new TransactionPurchaseOrder('search'), isset($_GET['TransactionPurchaseOrder']) ? $_GET['TransactionPurchaseOrder'] : array());
+        $transferRequest = Search::bind(new TransactionTransferRequest('search'), isset($_GET['TransactionTransferRequest']) ? $_GET['TransactionTransferRequest'] : array());
+        $sentRequest = Search::bind(new TransactionSentRequest('search'), isset($_GET['TransactionSentRequest']) ? $_GET['TransactionSentRequest'] : array());
+        $purchaseOrder = Search::bind(new TransactionPurchaseOrder('search'), isset($_GET['TransactionPurchaseOrder']) ? $_GET['TransactionPurchaseOrder'] : array());
 
         $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : date('Y-m-d');
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
@@ -41,17 +41,35 @@ class WarehouseFlowSummaryController extends Controller {
             'endDate' => $endDate,
         );
         
-        $saleFlowSummary = new SaleFlowSummary($registrationTransaction->search());
+        $saleFlowSummary = new WarehouseFlowSummary($registrationTransaction->search());
         $saleFlowSummary->setupLoading();
         $saleFlowSummary->setupPaging($pageSize, $currentPage);
         $saleFlowSummary->setupSorting();
         $saleFlowSummary->setupFilter($filters);
 
-        $materialRequestFlowSummary = new SaleFlowSummary($materialRequest->search());
+        $materialRequestFlowSummary = new WarehouseFlowSummary($materialRequest->search());
         $materialRequestFlowSummary->setupLoading();
         $materialRequestFlowSummary->setupPaging($pageSize, $currentPage);
         $materialRequestFlowSummary->setupSorting();
         $materialRequestFlowSummary->setupFilter($filters);
+
+        $transferRequestFlowSummary = new WarehouseFlowSummary($transferRequest->search());
+        $transferRequestFlowSummary->setupLoading();
+        $transferRequestFlowSummary->setupPaging($pageSize, $currentPage);
+        $transferRequestFlowSummary->setupSorting();
+        $transferRequestFlowSummary->setupFilterTransfer($filters);
+
+        $sentRequestFlowSummary = new WarehouseFlowSummary($sentRequest->search());
+        $sentRequestFlowSummary->setupLoading();
+        $sentRequestFlowSummary->setupPaging($pageSize, $currentPage);
+        $sentRequestFlowSummary->setupSorting();
+        $sentRequestFlowSummary->setupFilterSent($filters);
+
+        $purchaseOrderFlowSummary = new WarehouseFlowSummary($purchaseOrder->search());
+        $purchaseOrderFlowSummary->setupLoading();
+        $purchaseOrderFlowSummary->setupPaging($pageSize, $currentPage);
+        $purchaseOrderFlowSummary->setupSorting();
+        $purchaseOrderFlowSummary->setupFilterPurchase($filters);
 
         if (isset($_GET['ResetFilter'])) {
             $this->redirect(array('summary'));
@@ -66,65 +84,16 @@ class WarehouseFlowSummaryController extends Controller {
             'saleFlowSummary' => $saleFlowSummary,
             'materialRequest' => $materialRequest,
             'materialRequestFlowSummary' => $materialRequestFlowSummary,
+            'transferRequest' => $transferRequest,
+            'transferRequestFlowSummary' => $transferRequestFlowSummary,
+            'sentRequest' => $sentRequest,
+            'sentRequestFlowSummary' => $sentRequestFlowSummary,
+            'purchaseOrder' => $purchaseOrder,
+            'purchaseOrderFlowSummary' => $purchaseOrderFlowSummary,
             'startDate' => $startDate,
             'endDate' => $endDate,
             'currentSort' => $currentSort,
         ));
-    }
-
-    public function actionAjaxJsonCustomer($id) {
-        if (Yii::app()->request->isAjaxRequest) {
-            $customerId = (isset($_POST['InvoiceHeader']['customer_id'])) ? $_POST['InvoiceHeader']['customer_id'] : '';
-            $customer = Customer::model()->findByPk($customerId);
-
-            $object = array(
-                'customer_id' => CHtml::value($customer, 'id'),
-                'customer_name' => CHtml::value($customer, 'name'),
-                'customer_type' => CHtml::value($customer, 'customer_type'),
-                'customer_mobile_phone' => CHtml::value($customer, 'mobile_phone'),
-            );
-            echo CJSON::encode($object);
-        }
-    }
-
-    public function actionAjaxHtmlUpdateVehicleList() {
-        if (Yii::app()->request->isAjaxRequest) {
-            $customerId = isset($_GET['InvoiceHeader']['customer_id']) ? $_GET['InvoiceHeader']['customer_id'] : 0;
-            $vehicleId = isset($_GET['VehicleId']) ? $_GET['VehicleId'] : '';
-            $vehicles = Vehicle::model()->findAllByAttributes(array('customer_id' => $customerId), array('order' => 'id DESC', 'limit' => 100));
-
-            $this->renderPartial('_vehicleList', array(
-                'vehicles' => $vehicles,
-                'vehicleId' => $vehicleId,
-            ));
-        }
-    }
-
-    public function reportGrandTotal($dataProvider) {
-        $grandTotal = 0.00;
-
-        foreach ($dataProvider->data as $data)
-            $grandTotal += $data->total_price;
-
-        return $grandTotal;
-    }
-
-    public function reportTotalPayment($dataProvider) {
-        $grandTotal = 0.00;
-
-        foreach ($dataProvider->data as $data)
-            $grandTotal += $data->payment_amount;
-
-        return $grandTotal;
-    }
-
-    public function reportTotalRemaining($dataProvider) {
-        $grandTotal = 0.00;
-
-        foreach ($dataProvider->data as $data)
-            $grandTotal += $data->payment_left;
-
-        return $grandTotal;
     }
 
     protected function saveToExcel($saleInvoiceSummary, $startDate, $endDate, $branchId) {
@@ -229,5 +198,4 @@ class WarehouseFlowSummaryController extends Controller {
 
         Yii::app()->end();
     }
-
 }

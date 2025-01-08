@@ -118,6 +118,8 @@ Yii::app()->clientScript->registerScript('report', '
                 )); ?>
             </div>
 
+            <hr />
+
             <div class="relative">
                 <div class="reportDisplay">
                     <?php echo ReportHelper::summaryText($materialRequestFlowSummary->dataProvider); ?>
@@ -126,6 +128,51 @@ Yii::app()->clientScript->registerScript('report', '
 
                 <?php $this->renderPartial('_summaryMaterial', array(
                     'materialRequestFlowSummary' => $materialRequestFlowSummary, 
+                    'startDate' => $startDate, 
+                    'endDate' => $endDate,
+                )); ?>
+            </div>
+
+            <hr />
+
+            <div class="relative">
+                <div class="reportDisplay">
+                    <?php echo ReportHelper::summaryText($transferRequestFlowSummary->dataProvider); ?>
+                    <?php //echo ReportHelper::sortText($transaksiPembelianSummary->dataProvider->sort, array('Jenis Persediaan', 'Tanggal SO', 'Pelanggan')); ?>
+                </div>
+
+                <?php $this->renderPartial('_summaryTransfer', array(
+                    'transferRequestFlowSummary' => $transferRequestFlowSummary, 
+                    'startDate' => $startDate, 
+                    'endDate' => $endDate,
+                )); ?>
+            </div>
+
+            <hr />
+
+            <div class="relative">
+                <div class="reportDisplay">
+                    <?php echo ReportHelper::summaryText($sentRequestFlowSummary->dataProvider); ?>
+                    <?php //echo ReportHelper::sortText($transaksiPembelianSummary->dataProvider->sort, array('Jenis Persediaan', 'Tanggal SO', 'Pelanggan')); ?>
+                </div>
+
+                <?php $this->renderPartial('_summarySent', array(
+                    'sentRequestFlowSummary' => $sentRequestFlowSummary, 
+                    'startDate' => $startDate, 
+                    'endDate' => $endDate,
+                )); ?>
+            </div>
+
+            <hr />
+
+            <div class="relative">
+                <div class="reportDisplay">
+                    <?php echo ReportHelper::summaryText($purchaseOrderFlowSummary->dataProvider); ?>
+                    <?php //echo ReportHelper::sortText($transaksiPembelianSummary->dataProvider->sort, array('Jenis Persediaan', 'Tanggal SO', 'Pelanggan')); ?>
+                </div>
+
+                <?php $this->renderPartial('_summaryPurchase', array(
+                    'purchaseOrderFlowSummary' => $purchaseOrderFlowSummary, 
                     'startDate' => $startDate, 
                     'endDate' => $endDate,
                 )); ?>
