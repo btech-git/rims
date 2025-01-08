@@ -66,11 +66,11 @@ Yii::app()->clientScript->registerCss('_report', '
             </td>
             <td class="width2-6" style="text-align: right">
                 <?php $debitAmount = $header->debet_kredit == 'D' ? $header->total : 0 ?>
-                <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $debitAmount)); ?>
+                <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $debitAmount)); ?>
             </td>
             <td class="width2-7" style="text-align: right">
                 <?php $creditAmount = $header->debet_kredit == 'K' ? $header->total : 0 ?>
-                <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $creditAmount)); ?>
+                <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $creditAmount)); ?>
             </td>
         </tr>
         <?php $totalDebet += $debitAmount; ?>
@@ -78,7 +78,7 @@ Yii::app()->clientScript->registerCss('_report', '
     <?php endforeach; ?>
     <tr>
         <td colspan='5' style="text-align: right">Total</td>
-        <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalDebet)); ?></td>
-        <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalCredit)); ?></td>
+        <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $totalDebet)); ?></td>
+        <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $totalCredit)); ?></td>
     </tr>
 </table>

@@ -41,7 +41,7 @@
                 </td>
                 
                 <td style="text-align: right; font-weight: bold">
-                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $accountCategoryBalance)); ?>
+                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $accountCategoryBalance)); ?>
                 </td>
             </tr>
             <?php if ((int)$accountCategory->id === 28 || (int)$accountCategory->id === 30 || (int)$accountCategory->id === 31): ?>
@@ -60,7 +60,7 @@
             </td>
             
             <td style="text-align: right; font-weight: bold; border-top: 1px solid">
-                <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $accountCategoryTypeBalance)); ?>
+                <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $accountCategoryTypeBalance)); ?>
             </td>
         </tr>
         <?php if ($accountCategoryType->id == 7 || $accountCategoryType->id == 8 || $accountCategoryType->id == 10): ?>
@@ -72,7 +72,7 @@
     <tr>
         <td style="text-align: right; font-weight: bold; border-top: 1px solid">Profit / Loss</td>
         <td style="text-align: right; font-weight: bold; border-top: 1px solid">
-            <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $profitLossAmount)); ?>
+            <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $profitLossAmount)); ?>
         </td>
     </tr>
 </table>

@@ -41,7 +41,7 @@
                         <td style="text-align: right; font-weight: bold; font-size: 20px;">Total Kewajiban & Ekuitas</td>
                         <?php foreach ($yearMonthList as $yearMonth => $yearMonthFormatted): ?>
                             <td style="text-align: right; font-weight: bold; font-size: 20px;">
-                                <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $elementsTotalSums['2'][$yearMonth] + $elementsTotalSums['3'][$yearMonth])); ?>
+                                <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $elementsTotalSums['2'][$yearMonth] + $elementsTotalSums['3'][$yearMonth])); ?>
                             </td>
                         <?php endforeach; ?>
                     </tr>
@@ -77,7 +77,7 @@
                                         <?php foreach ($yearMonthList as $yearMonth => $yearMonthFormatted): ?>
                                             <?php $balance = isset($accountInfo['totals'][$yearMonth]) ? $accountInfo['totals'][$yearMonth] : ''; ?>
                                             <td style="text-align: right">
-                                                <?php echo CHtml::link(CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $balance)), Yii::app()->createUrl("report/profitLossMonthly/jurnalTransaction", array(
+                                                <?php echo CHtml::link(CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $balance)), Yii::app()->createUrl("report/profitLossMonthly/jurnalTransaction", array(
                                                     "CoaId" => $coaId, 
                                                     "YearMonth" => $yearMonth, 
                                                     "BranchId" => $branchId
@@ -92,7 +92,7 @@
                                 <td style="text-align: right; font-weight: bold; font-size: 14px;">Total <?php echo $subCategoryInfo['name']; ?></td>
                                 <?php foreach ($yearMonthList as $yearMonth => $yearMonthFormatted): ?>
                                     <td style="text-align: right; font-weight: bold; font-size: 14px;">
-                                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $subCategoryTotalSums[$yearMonth])); ?>
+                                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $subCategoryTotalSums[$yearMonth])); ?>
                                     </td>
                                 <?php endforeach; ?>
                             </tr>
@@ -104,7 +104,7 @@
                             <td style="text-align: right; font-weight: bold; font-size: 16px;">Total <?php echo $categoryInfo['name']; ?></td>
                             <?php foreach ($yearMonthList as $yearMonth => $yearMonthFormatted): ?>
                                 <td style="text-align: right; font-weight: bold; font-size: 16px;">
-                                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $categoryTotalSums[$yearMonth])); ?>
+                                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $categoryTotalSums[$yearMonth])); ?>
                                 </td>
                             <?php endforeach; ?>
                         </tr>
@@ -116,7 +116,7 @@
                         <td style="text-align: right; font-weight: bold; font-size: 18px;">Total <?php echo $elementNames[$elementNumber]; ?></td>
                         <?php foreach ($yearMonthList as $yearMonth => $yearMonthFormatted): ?>
                             <td style="text-align: right; font-weight: bold; font-size: 18px;">
-                                <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $elementsTotalSums[$elementNumber][$yearMonth])); ?>
+                                <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $elementsTotalSums[$elementNumber][$yearMonth])); ?>
                             </td>
                         <?php endforeach; ?>
                     </tr>

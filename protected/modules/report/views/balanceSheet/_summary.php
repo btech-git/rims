@@ -18,7 +18,7 @@
                 <td></td>
             </tr>
 
-            <?php $accountCategoryPrimarys = CoaCategory::model()->findAllByAttributes(array('coa_category_id' => $accountCategoryAsset->id), array('order' => 'code')); ?>
+            <?php $accountCategoryPrimarys = CoaCategory::model()->findAllByAttributes(array('coa_category_id' => $accountCategoryAsset->id), array('order' => 'code ASC')); ?>
             <?php foreach ($accountCategoryPrimarys as $accountCategoryPrimary): ?>
                 <?php $accountCategoryPrimaryBalance = 0.00; ?>
                 <tr>
@@ -28,7 +28,7 @@
                     <td></td>
                 </tr>
 
-                <?php $accountCategorySubs = CoaCategory::model()->findAllByAttributes(array('coa_category_id' => $accountCategoryPrimary->id), array('order' => 'code')); ?>
+                <?php $accountCategorySubs = CoaCategory::model()->findAllByAttributes(array('coa_category_id' => $accountCategoryPrimary->id), array('order' => 'code ASC')); ?>
                 <?php foreach ($accountCategorySubs as $accountCategorySub): ?>
                     <?php $accountCategorySubBalance = 0.00; ?>
                     <tr>
@@ -38,7 +38,7 @@
                         <td></td>
                     </tr>
 
-                    <?php $coaSubCategoryCodes = CoaSubCategory::model()->findAllByAttributes(array('coa_category_id' => $accountCategorySub->id), array('order' => 'code')); ?>
+                    <?php $coaSubCategoryCodes = CoaSubCategory::model()->findAllByAttributes(array('coa_category_id' => $accountCategorySub->id), array('order' => 'code ASC')); ?>
                     <?php foreach ($coaSubCategoryCodes as $accountCategory): ?>
                         <?php $accountCategoryBalance = 0.00; ?>
                         <tr>
@@ -54,7 +54,7 @@
                         )); ?> 
                         <?php foreach ($coas as $coa): ?>
                             <?php $accountGroupBalance = $coa->getBalanceSheetBalance($startDate, $endDate, $branchId); ?>
-                            <?php $coaSubs = Coa::model()->findAllByAttributes(array('is_approved' => 1, 'coa_id' => $coa->id)); ?> 
+                            <?php $coaSubs = Coa::model()->findAllByAttributes(array('is_approved' => 1, 'coa_id' => $coa->id), array('order' => 'code ASC')); ?> 
                             <?php //if ((int) $accountGroupBalance !== 0): ?>
                                 <?php if (!empty($coaSubs)): ?>
                                     <?php $accountGroupBalance = 0; ?> 
@@ -72,7 +72,7 @@
                                 <?php echo CHtml::encode(CHtml::value($accountCategory, 'name')); ?>
                             </td>
                             <td style="text-align: right; font-weight: bold;">
-                                <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $accountCategoryBalance)); ?>
+                                <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $accountCategoryBalance)); ?>
                             </td>
                         </tr>
                         <?php $accountCategorySubBalance += $accountCategoryBalance; ?>
@@ -90,7 +90,7 @@
                         </td>
 
                         <td style="text-align: right; font-weight: bold; border-top: 2px solid">
-                            <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $accountCategorySubBalance)); ?>
+                            <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $accountCategorySubBalance)); ?>
                         </td>
                     </tr>
                     <?php $accountCategoryPrimaryBalance += $accountCategorySubBalance; ?>
@@ -108,7 +108,7 @@
                     </td>
 
                     <td style="text-align: right; font-weight: bold; border-top: 3px solid">
-                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $accountCategoryPrimaryBalance)); ?>
+                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $accountCategoryPrimaryBalance)); ?>
                     </td>
                 </tr>
                 <?php $accountCategoryAssetBalance += $accountCategoryPrimaryBalance; ?>
@@ -126,7 +126,7 @@
                 </td>
 
                 <td style="text-align: right; font-weight: bold; border-top: 4px solid; font-size:  1em">
-                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $accountCategoryAssetBalance)); ?>
+                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $accountCategoryAssetBalance)); ?>
                 </td>
             </tr>
         <?php endforeach; ?>
@@ -144,7 +144,7 @@
                 <td></td>
             </tr>
 
-            <?php $accountCategoryPrimarys = CoaCategory::model()->findAllByAttributes(array('coa_category_id' => $accountCategoryLiabilitiesEquity->id), array('order' => 'code')); ?>
+            <?php $accountCategoryPrimarys = CoaCategory::model()->findAllByAttributes(array('coa_category_id' => $accountCategoryLiabilitiesEquity->id), array('order' => 'code ASC')); ?>
             <?php foreach ($accountCategoryPrimarys as $accountCategoryPrimary): ?>
                 <?php $accountCategoryPrimaryBalance = 0.00; ?>
                 <tr>
@@ -155,7 +155,7 @@
                 </tr>
 
                 <?php if ($accountCategoryPrimary->id == 5): ?>
-                    <?php $coaSubCategoryCodes = CoaSubCategory::model()->findAllByAttributes(array('coa_category_id' => $accountCategoryPrimary->id), array('order' => 'code')); ?>
+                    <?php $coaSubCategoryCodes = CoaSubCategory::model()->findAllByAttributes(array('coa_category_id' => $accountCategoryPrimary->id), array('order' => 'code ASC')); ?>
                     <?php foreach ($coaSubCategoryCodes as $accountCategory): ?>
                         <?php $accountCategoryBalance = 0.00; ?>
                         <?php $coas = Coa::model()->findAllByAttributes(array('coa_sub_category_id' => $accountCategory->id, 'status' => 'Approved')); ?> 
@@ -170,13 +170,13 @@
                             </td>
 
                             <td style="text-align: right; font-weight: bold;">
-                                <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $accountCategoryBalance)); ?>
+                                <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $accountCategoryBalance)); ?>
                             </td>
                         </tr>
                         <?php $accountCategoryPrimaryBalance += $accountCategoryBalance; ?>
                     <?php endforeach; ?>
                 <?php else : ?>
-                    <?php $accountCategorySubs = CoaCategory::model()->findAllByAttributes(array('coa_category_id' => $accountCategoryPrimary->id), array('order' => 'code')); ?>
+                    <?php $accountCategorySubs = CoaCategory::model()->findAllByAttributes(array('coa_category_id' => $accountCategoryPrimary->id), array('order' => 'code ASC')); ?>
                     <?php foreach ($accountCategorySubs as $accountCategorySub): ?>
                         <?php $accountCategorySubBalance = 0.00; ?>
                         <tr>
@@ -187,13 +187,13 @@
                         </tr>
 
                         <?php if ($accountCategorySub->id == 3): ?>
-                            <?php $coaCategorySecondaries = CoaCategory::model()->findAllByAttributes(array('coa_category_id' => $accountCategorySub->id), array('order' => 'code')); ?>
+                            <?php $coaCategorySecondaries = CoaCategory::model()->findAllByAttributes(array('coa_category_id' => $accountCategorySub->id), array('order' => 'code ASC')); ?>
                             <?php foreach ($coaCategorySecondaries as $coaCategorySecondary): ?>
                                 <?php $accountCategorySecondaryBalance = 0.00; ?>
-                                <?php $coaSubCategoryCodes = CoaSubCategory::model()->findAllByAttributes(array('coa_category_id' => $coaCategorySecondary->id), array('order' => 'code')); ?>
+                                <?php $coaSubCategoryCodes = CoaSubCategory::model()->findAllByAttributes(array('coa_category_id' => $coaCategorySecondary->id), array('order' => 'code ASC')); ?>
                                 <?php foreach ($coaSubCategoryCodes as $accountCategory): ?>
                                     <?php $accountCategoryBalance = 0.00; ?>
-                                    <?php $coas = Coa::model()->findAllByAttributes(array('coa_sub_category_id' => $accountCategory->id, 'status' => 'Approved')); ?> 
+                                    <?php $coas = Coa::model()->findAllByAttributes(array('coa_sub_category_id' => $accountCategory->id, 'status' => 'Approved'), array('order' => 'code ASC')); ?> 
                                     <?php foreach ($coas as $account): ?>
                                         <?php $accountBalance = $account->getBalanceTotal($startDate, $endDate, $branchId); ?>
                                         <?php $accountCategoryBalance += $accountBalance; ?>
@@ -205,7 +205,7 @@
                                         </td>                                                
 
                                         <td style="text-align: right; font-weight: bold;">
-                                            <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $accountCategoryBalance)); ?>
+                                            <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $accountCategoryBalance)); ?>
                                         </td>
                                     </tr>
                                     <?php $accountCategorySecondaryBalance += $accountCategoryBalance; ?>
@@ -222,7 +222,7 @@
                                     </td>
 
                                     <td style="text-align: right; font-weight: bold; border-top: 2px solid">
-                                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $accountCategorySecondaryBalance)); ?>
+                                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $accountCategorySecondaryBalance)); ?>
                                     </td>
                                 </tr>
                                 <?php $accountCategorySubBalance += $accountCategorySecondaryBalance; ?>
@@ -231,10 +231,10 @@
 
                         <?php else: ?>
 
-                            <?php $coaSubCategoryCodes = CoaSubCategory::model()->findAllByAttributes(array('coa_category_id' => $accountCategorySub->id), array('order' => 'code')); ?>
+                            <?php $coaSubCategoryCodes = CoaSubCategory::model()->findAllByAttributes(array('coa_category_id' => $accountCategorySub->id), array('order' => 'code ASC')); ?>
                             <?php foreach ($coaSubCategoryCodes as $accountCategory): ?>
                                 <?php $accountCategoryBalance = 0.00; ?>
-                                <?php $coas = Coa::model()->findAllByAttributes(array('coa_sub_category_id' => $accountCategory->id, 'status' => 'Approved')); ?> 
+                                <?php $coas = Coa::model()->findAllByAttributes(array('coa_sub_category_id' => $accountCategory->id, 'status' => 'Approved'), array('order' => 'code ASC')); ?> 
                                 <?php foreach ($coas as $account): ?>
                                     <?php $accountBalance = $account->getBalanceTotal($startDate, $endDate, $branchId); ?>
                                     <?php $accountCategoryBalance += $accountBalance; ?>
@@ -247,7 +247,7 @@
                                     </td>
 
                                     <td style="text-align: right; font-weight: bold">
-                                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $accountCategoryBalance)); ?>
+                                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $accountCategoryBalance)); ?>
                                     </td>
                                 </tr>
                                 <?php $accountCategorySubBalance += $accountCategoryBalance; ?>
@@ -265,7 +265,7 @@
                             </td>
 
                             <td style="text-align: right; font-weight: bold; border-top: 1px solid;">
-                                <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $accountCategorySubBalance)); ?>
+                                <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $accountCategorySubBalance)); ?>
                             </td>
                         </tr>
                         <?php $accountCategoryPrimaryBalance += $accountCategorySubBalance; ?>
@@ -283,7 +283,7 @@
                     </td>
 
                     <td style="text-align: right; font-weight: bold; border-top: 1px solid">
-                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $accountCategoryPrimaryBalance)); ?>
+                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $accountCategoryPrimaryBalance)); ?>
                     </td>
                 </tr>
                 <?php $accountCategoryLiabilityEquityBalance += $accountCategoryPrimaryBalance; ?>
@@ -300,7 +300,7 @@
                 </td>
 
                 <td style="text-align: right; font-weight: bold; border-top: 1px solid; font-size:  1em">
-                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $accountCategoryLiabilityEquityBalance)); ?>
+                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $accountCategoryLiabilityEquityBalance)); ?>
                 </td>
             </tr>
         <?php endforeach; ?>
