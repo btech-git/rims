@@ -580,7 +580,7 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
         return $resultSet;
     }
     
-    public function getTotalDiscountProduct() {
+    public function getTotalDiscountProductService() {
         $total = 0; 
         
         foreach ($this->invoiceDetails as $detail) {
@@ -589,12 +589,6 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
             }
         }
         
-        return $total;
-    }
-    
-    public function getTotalDiscountService() {
-        $total = 0; 
-        
         foreach ($this->invoiceDetails as $detail) {
             if (!empty($detail->service_id)) {
                 $total += $detail->discount;
@@ -602,10 +596,6 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
         }
         
         return $total;
-    }
-    
-    public function getTotalDiscountProductService() {
-        return $this->totalDiscountProduct + $this->totalDiscountService;
     }
     
     public static function getYearlySaleSummary($year) {
