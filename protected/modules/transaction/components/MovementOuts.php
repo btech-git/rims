@@ -198,9 +198,9 @@ class MovementOuts extends CComponent {
     public function validate() {
         $valid = $this->header->validate();
 
-//        if ($this->header->isNewRecord) {
-//            $valid = $this->validateDetailsQuantityStock() && $valid;
-//        }
+        if ($this->header->isNewRecord) {
+            $valid = $this->validateDetailsQuantityStock() && $valid;
+        }
 
         if (count($this->details) > 0) {
             foreach ($this->details as $detail) {
