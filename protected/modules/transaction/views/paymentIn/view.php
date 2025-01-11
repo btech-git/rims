@@ -467,11 +467,11 @@ $this->menu = array(
                             <?php endforeach; ?>
                         </tbody>
                         <tfoot>
-                            <tr>
+<!--                            <tr>
                                 <td style="text-align: right" colspan="5">Downpayment</td>
-                                <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($model, 'downpayment_amount'))); ?></td>
+                                <td style="text-align: right"><?php //echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($model, 'downpayment_amount'))); ?></td>
                                 <td></td>
-                            </tr>
+                            </tr>-->
                             <tr>
                                 <td style="text-align: right" colspan="5">Diskon</td>
                                 <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($model, 'discount_product_amount'))); ?></td>
@@ -532,10 +532,9 @@ $this->menu = array(
             <fieldset>
                 <legend>Attached Images</legend>
 
-                <?php foreach ($postImages as $postImage):
-                    $dir = dirname(Yii::app()->request->scriptFile) . '/images/uploads/paymentIn/' . $postImage->filename;
-                    $src = Yii::app()->baseUrl . '/images/uploads/paymentIn/' . $postImage->filename;
-                ?>
+                <?php if (!empty($postImages)): ?>
+                    <?php $postImage = $postImages[count($postImages) - 1]; ?>
+                    <?php $src = Yii::app()->baseUrl . '/images/uploads/paymentIn/' . $postImage->filename; ?>
                     <div class="row">
                         <div class="small-3 columns">
                             <div style="margin-bottom:.5rem">
@@ -543,7 +542,7 @@ $this->menu = array(
                             </div>
                         </div>
                     </div>
-                <?php endforeach; ?>
+                <?php endif; ?>
             </fieldset>
             
             <br />

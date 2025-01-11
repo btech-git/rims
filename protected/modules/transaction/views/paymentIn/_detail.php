@@ -96,10 +96,10 @@
         <?php endforeach; ?>
     </tbody>
     <tfoot>
-        <tr>
+<!--        <tr>
             <td colspan="5" style="text-align: right">Downpayment</td>
             <td>
-                <?php echo CHtml::activeTextField($paymentIn->header, 'downpayment_amount', array(
+                <?php /*echo CHtml::activeTextField($paymentIn->header, 'downpayment_amount', array(
                     'onchange' => '$.ajax({
                         type: "POST",
                         dataType: "JSON",
@@ -111,10 +111,10 @@
                             $("#total_payment").html(data.totalPayment);
                         },
                     });',                        
-                )); ?>
+                ));*/ ?>
             </td>
             <td colspan="2"></td>
-        </tr>
+        </tr>-->
         <tr>
             <td colspan="5" style="text-align: right">Diskon</td>
             <td>
