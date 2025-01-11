@@ -373,9 +373,16 @@ class PaymentOutController extends Controller {
         
         $newData = $paymentOut->attributes;
         
-        $newData['paymentOutApprovals'] = array();
-        foreach($paymentOut->paymentOutApprovals as $detail) {
-            $newData['paymentOutApprovals'][] = $detail->attributes;
+        if ($actionType === 'approval') {
+            $newData['paymentOutApprovals'] = array();
+            foreach($paymentOut->paymentOutApprovals as $detail) {
+                $newData['paymentOutApprovals'][] = $detail->attributes;
+            }
+        } else {
+            $newData['payOutDetails'] = array();
+            foreach($paymentOut->payOutDetails as $detail) {
+                $newData['payOutDetails'][] = $detail->attributes;
+            }
         }
         
         $transactionLog->new_data = json_encode($newData);
@@ -403,6 +410,8 @@ class PaymentOutController extends Controller {
             $purchaseOrderHeader->payment_left = $purchaseOrderHeader->totalRemaining;
             $purchaseOrderHeader->update(array('payment_amount', 'payment_left'));
         }
+        
+        $this->saveTransactionLog('cancel', $model);
         
         JurnalUmum::model()->deleteAllByAttributes(array(
             'kode_transaksi' => $model->payment_number,
