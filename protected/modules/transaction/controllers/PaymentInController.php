@@ -934,7 +934,7 @@ class PaymentInController extends Controller {
         
         if ($actionType === 'approval') {
             $newData['paymentInApprovals'] = array();
-            foreach($movement->paymentInApprovals as $detail) {
+            foreach($paymentIn->paymentInApprovals as $detail) {
                 $newData['paymentInApprovals'][] = $detail->attributes;
             }
         } else {
