@@ -579,6 +579,8 @@ class GeneralRepairRegistrationController extends Controller {
                 ));
             }
             
+            $this->saveTransactionLog('cancel', $model);
+        
             Yii::app()->user->setFlash('message', 'Transaction is successfully cancelled');
         } else {
             Yii::app()->user->setFlash('message', 'Transaction cannot be cancelled. Check related transactions!');
@@ -586,6 +588,37 @@ class GeneralRepairRegistrationController extends Controller {
         }
 
         $this->redirect(array('admin'));
+    }
+
+    public function saveTransactionLog($actionType, $generalRepair) {
+        $transactionLog = new TransactionLog();
+        $transactionLog->transaction_number = $generalRepair->transaction_number;
+        $transactionLog->transaction_date = $generalRepair->transaction_date;
+        $transactionLog->log_date = date('Y-m-d');
+        $transactionLog->log_time = date('H:i:s');
+        $transactionLog->table_name = $generalRepair->tableName();
+        $transactionLog->table_id = $generalRepair->id;
+        $transactionLog->user_id = Yii::app()->user->id;
+        $transactionLog->username = Yii::app()->user->username;
+        $transactionLog->controller_class = Yii::app()->controller->module->id  . '/' . Yii::app()->controller->id;
+        $transactionLog->action_name = Yii::app()->controller->action->id;
+        $transactionLog->action_type = $actionType;
+        
+        $newData = $generalRepair->attributes;
+        
+        $newData['registrationProducts'] = array();
+        foreach($generalRepair->registrationProducts as $detail) {
+            $newData['registrationProducts'][] = $detail->attributes;
+        }
+        
+        $newData['registrationServices'] = array();
+        foreach($generalRepair->registrationServices as $detail) {
+            $newData['registrationServices'][] = $detail->attributes;
+        }
+        
+        $transactionLog->new_data = json_encode($newData);
+
+        $transactionLog->save();
     }
 
     public function actionPdf($id) {

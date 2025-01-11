@@ -603,7 +603,7 @@ class BodyRepairRegistrationController extends Controller {
         
         $movementOutHeader = MovementOutHeader::model()->findByAttributes(array('registration_transaction_id' => $id, 'user_id_cancelled' => null));
         $invoiceHeader = InvoiceHeader::model()->findByAttributes(array('registration_transaction_id' => $id, 'user_id_cancelled' => null));
-        if (empty($movementOutHeader && $invoiceHeader)) { 
+        if (empty($movementOutHeader) && empty($invoiceHeader)) { 
             $model = $this->loadModel($id);
             $model->status = 'CANCELLED!!!';
             $model->payment_status = 'CANCELLED!!!';
@@ -680,6 +680,8 @@ class BodyRepairRegistrationController extends Controller {
                 ));
             }
             
+            $this->saveTransactionLog('cancel', $model);
+        
             Yii::app()->user->setFlash('message', 'Transaction is successfully cancelled');
         } else {
             Yii::app()->user->setFlash('message', 'Transaction cannot be cancelled. Check related transactions!');
@@ -687,6 +689,37 @@ class BodyRepairRegistrationController extends Controller {
         }
 
         $this->redirect(array('admin'));
+    }
+
+    public function saveTransactionLog($actionType, $bodyRepair) {
+        $transactionLog = new TransactionLog();
+        $transactionLog->transaction_number = $bodyRepair->transaction_number;
+        $transactionLog->transaction_date = $bodyRepair->transaction_date;
+        $transactionLog->log_date = date('Y-m-d');
+        $transactionLog->log_time = date('H:i:s');
+        $transactionLog->table_name = $bodyRepair->tableName();
+        $transactionLog->table_id = $bodyRepair->id;
+        $transactionLog->user_id = Yii::app()->user->id;
+        $transactionLog->username = Yii::app()->user->username;
+        $transactionLog->controller_class = Yii::app()->controller->module->id  . '/' . Yii::app()->controller->id;
+        $transactionLog->action_name = Yii::app()->controller->action->id;
+        $transactionLog->action_type = $actionType;
+        
+        $newData = $bodyRepair->attributes;
+        
+        $newData['registrationProducts'] = array();
+        foreach($bodyRepair->registrationProducts as $detail) {
+            $newData['registrationProducts'][] = $detail->attributes;
+        }
+        
+        $newData['registrationServices'] = array();
+        foreach($bodyRepair->registrationServices as $detail) {
+            $newData['registrationServices'][] = $detail->attributes;
+        }
+        
+        $transactionLog->new_data = json_encode($newData);
+
+        $transactionLog->save();
     }
 
     public function actionAjaxHtmlAddDamageDetail($id, $serviceId) {
