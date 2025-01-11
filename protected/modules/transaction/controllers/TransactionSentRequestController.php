@@ -336,6 +336,35 @@ class TransactionSentRequestController extends Controller {
         ));
     }
 
+    public function actionCancel($id) {
+        $model = $this->loadModel($id);
+        $model->status_document = 'CANCELLED!!!';
+        $model->total_quantity = 0; 
+        $model->total_price = 0; 
+        $model->cancelled_datetime = date('Y-m-d H:i:s');
+        $model->user_id_cancelled = Yii::app()->user->id;
+        $model->update(array('status_document', 'total_quantity', 'total_price', 'cancelled_datetime', 'user_id_cancelled'));
+
+        foreach ($model->transactionSentRequestDetails as $detail) {
+            $detail->quantity = 0;
+            $detail->unit_price = '0.00';
+            $detail->amount = '0.00';
+            $detail->delivery_quantity = '0.00';
+            $detail->transfer_request_quantity_left = '0.00';
+            $detail->quantity_delivery = '0.00';
+            $detail->quantity_delivery_left = '0.00';
+            $detail->update(array('quantity', 'unit_price', 'amount', 'receive_quantity', 'transfer_request_quantity_left', 'quantity_delivery', 'quantity_delivery_left'));
+        }
+        
+        $this->saveTransactionLog('cancel', $model);
+        
+        JurnalUmum::model()->deleteAllByAttributes(array(
+            'kode_transaksi' => $model->transfer_request_no,
+        ));
+
+        $this->redirect(array('admin'));
+    }
+
     public function saveTransactionLog($actionType, $sentRequest) {
         $transactionLog = new TransactionLog();
         $transactionLog->transaction_number = $sentRequest->sent_request_no;
@@ -352,9 +381,16 @@ class TransactionSentRequestController extends Controller {
         
         $newData = $sentRequest->attributes;
         
-        $newData['transactionSentRequestApprovals'] = array();
-        foreach($sentRequest->transactionSentRequestApprovals as $detail) {
-            $newData['transactionSentRequestApprovals'][] = $detail->attributes;
+        if ($actionType === 'approval') {
+            $newData['transactionSentRequestApprovals'] = array();
+            foreach($sentRequest->transactionSentRequestApprovals as $detail) {
+                $newData['transactionSentRequestApprovals'][] = $detail->attributes;
+            }
+        } else {
+            $newData['transactionSentRequestDetails'] = array();
+            foreach($sentRequest->transactionSentRequestDetails as $detail) {
+                $newData['transactionSentRequestDetails'][] = $detail->attributes;
+            }
         }
         
         $transactionLog->new_data = json_encode($newData);

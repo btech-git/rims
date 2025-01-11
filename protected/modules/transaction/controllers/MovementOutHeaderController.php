@@ -388,6 +388,8 @@ class MovementOutHeaderController extends Controller {
                 $inventory->update(array('total_stock'));
             }
             
+            $this->saveTransactionLog('cancel', $model);
+        
             Yii::app()->user->setFlash('message', 'Transaction is successfully cancelled');
         } else {
             Yii::app()->user->setFlash('message', 'Transaction cannot be cancelled. Check receive transaction!');
@@ -673,9 +675,16 @@ class MovementOutHeaderController extends Controller {
         
         $newData = $movement->attributes;
         
-        $newData['movementOutApprovals'] = array();
-        foreach($movement->movementOutApprovals as $detail) {
-            $newData['movementOutApprovals'][] = $detail->attributes;
+        if ($actionType === 'approval') {
+            $newData['movementOutApprovals'] = array();
+            foreach($movement->movementOutApprovals as $detail) {
+                $newData['movementOutApprovals'][] = $detail->attributes;
+            }
+        } else {
+            $newData['movementOutDetails'] = array();
+            foreach($movement->movementOutDetails as $detail) {
+                $newData['movementOutDetails'][] = $detail->attributes;
+            }
         }
         
         $transactionLog->new_data = json_encode($newData);

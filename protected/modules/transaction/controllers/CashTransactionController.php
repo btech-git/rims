@@ -334,6 +334,8 @@ class CashTransactionController extends Controller {
         $model->user_id_cancelled = Yii::app()->user->id;
         $model->update(array('status', 'debit_amount', 'credit_amount', 'payment_type_id', 'note', 'cancelled_datetime', 'user_id_cancelled'));
 
+        $this->saveTransactionLog('cancel', $model);
+
         JurnalUmum::model()->deleteAllByAttributes(array(
             'kode_transaksi' => $model->transaction_number,
         ));
@@ -599,9 +601,16 @@ class CashTransactionController extends Controller {
         
         $newData = $cashTransaction->attributes;
         
-        $newData['cashTransactionApprovals'] = array();
-        foreach($cashTransaction->cashTransactionApprovals as $detail) {
-            $newData['cashTransactionApprovals'][] = $detail->attributes;
+        if ($actionType === 'approval') {
+            $newData['cashTransactionApprovals'] = array();
+            foreach($cashTransaction->cashTransactionApprovals as $detail) {
+                $newData['cashTransactionApprovals'][] = $detail->attributes;
+            }
+        } else {
+            $newData['cashTransactionDetails'] = array();
+            foreach($cashTransaction->cashTransactionDetails as $detail) {
+                $newData['cashTransactionDetails'][] = $detail->attributes;
+            }
         }
         
         $transactionLog->new_data = json_encode($newData);

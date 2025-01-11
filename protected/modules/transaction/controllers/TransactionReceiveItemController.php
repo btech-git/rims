@@ -490,6 +490,8 @@ class TransactionReceiveItemController extends Controller {
                 'kode_transaksi' => $model->receive_item_no,
             ));
             
+            $this->saveTransactionLog('cancel', $model);
+        
             Yii::app()->user->setFlash('message', 'Transaction is successfully cancelled');
         } else {
             Yii::app()->user->setFlash('message', 'Transaction cannot be cancelled. Check related transactions!');
@@ -497,6 +499,32 @@ class TransactionReceiveItemController extends Controller {
         }
 
         $this->redirect(array('admin'));
+    }
+
+    public function saveTransactionLog($actionType, $receiveItem) {
+        $transactionLog = new TransactionLog();
+        $transactionLog->transaction_number = $receiveItem->receive_item_no;
+        $transactionLog->transaction_date = $receiveItem->receive_item_date;
+        $transactionLog->log_date = date('Y-m-d');
+        $transactionLog->log_time = date('H:i:s');
+        $transactionLog->table_name = $receiveItem->tableName();
+        $transactionLog->table_id = $receiveItem->id;
+        $transactionLog->user_id = Yii::app()->user->id;
+        $transactionLog->username = Yii::app()->user->username;
+        $transactionLog->controller_class = Yii::app()->controller->module->id  . '/' . Yii::app()->controller->id;
+        $transactionLog->action_name = Yii::app()->controller->action->id;
+        $transactionLog->action_type = $actionType;
+        
+        $newData = $receiveItem->attributes;
+        
+        $newData['transactionReceiveItemDetails'] = array();
+        foreach($receiveItem->transactionReceiveItemDetails as $detail) {
+            $newData['transactionReceiveItemDetails'][] = $detail->attributes;
+        }
+        
+        $transactionLog->new_data = json_encode($newData);
+
+        $transactionLog->save();
     }
 
     /**

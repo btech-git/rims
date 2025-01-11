@@ -994,9 +994,16 @@ class TransactionPurchaseOrderController extends Controller {
         
         $newData = $purchaseOrder->attributes;
         
-        $newData['transactionPurchaseOrderApprovals'] = array();
-        foreach($purchaseOrder->transactionPurchaseOrderApprovals as $detail) {
-            $newData['transactionPurchaseOrderApprovals'][] = $detail->attributes;
+        if ($actionType === 'approval') {
+            $newData['transactionPurchaseOrderApprovals'] = array();
+            foreach($purchaseOrder->transactionPurchaseOrderApprovals as $detail) {
+                $newData['transactionPurchaseOrderApprovals'][] = $detail->attributes;
+            }
+        } else {
+            $newData['transactionPurchaseOrderDetails'] = array();
+            foreach($purchaseOrder->transactionPurchaseOrderDetails as $detail) {
+                $newData['transactionPurchaseOrderDetails'][] = $detail->attributes;
+            }            
         }
         
         $transactionLog->new_data = json_encode($newData);
@@ -1026,6 +1033,8 @@ class TransactionPurchaseOrderController extends Controller {
                 'kode_transaksi' => $model->purchase_order_no,
             ));
             
+            $this->saveTransactionLog('cancel', $model);
+        
             Yii::app()->user->setFlash('message', 'Transaction is successfully cancelled');
         } else {
             Yii::app()->user->setFlash('message', 'Transaction cannot be cancelled. Check related transactions!');

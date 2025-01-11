@@ -590,10 +590,10 @@ class TransactionDeliveryOrderController extends Controller {
     public function actionCancel($id) {
         $model = $this->loadModel($id);
         
-        $movementOutHeader = MovementOutHeader::model()->findByAttributes(array('delivery_order_id' => $id, 'user_id_cancelled' => null));
+        $deliveryOutHeader = MovementOutHeader::model()->findByAttributes(array('delivery_order_id' => $id, 'user_id_cancelled' => null));
         $receiveItem = TransactionReceiveItem::model()->findByAttributes(array('delivery_order_id' => $id, 'user_id_cancelled' => null));
         
-        if (!empty($receiveItem && $movementOutHeader)) {
+        if (!empty($receiveItem && $deliveryOutHeader)) {
             $model->is_cancelled = 1;
             $model->request_type = 'Cancelled!!!'; 
             $model->cancelled_datetime = date('Y-m-d H:i:s');
@@ -637,6 +637,8 @@ class TransactionDeliveryOrderController extends Controller {
                 'kode_transaksi' => $model->delivery_order_no,
             ));
             
+            $this->saveTransactionLog('cancel', $model);
+        
             Yii::app()->user->setFlash('message', 'Transaction is successfully cancelled');
         } else {
             Yii::app()->user->setFlash('message', 'Transaction cannot be cancelled. Check related transactions!');
@@ -644,6 +646,32 @@ class TransactionDeliveryOrderController extends Controller {
         }
 
         $this->redirect(array('admin'));
+    }
+
+    public function saveTransactionLog($actionType, $delivery) {
+        $transactionLog = new TransactionLog();
+        $transactionLog->transaction_number = $delivery->delivery_order_no;
+        $transactionLog->transaction_date = $delivery->delivery_date;
+        $transactionLog->log_date = date('Y-m-d');
+        $transactionLog->log_time = date('H:i:s');
+        $transactionLog->table_name = $delivery->tableName();
+        $transactionLog->table_id = $delivery->id;
+        $transactionLog->user_id = Yii::app()->user->id;
+        $transactionLog->username = Yii::app()->user->username;
+        $transactionLog->controller_class = Yii::app()->controller->module->id  . '/' . Yii::app()->controller->id;
+        $transactionLog->action_name = Yii::app()->controller->action->id;
+        $transactionLog->action_type = $actionType;
+        
+        $newData = $delivery->attributes;
+        
+        $newData['transactionDeliveryOrderDetails'] = array();
+        foreach($delivery->transactionDeliveryOrderDetails as $detail) {
+            $newData['transactionDeliveryOrderDetails'][] = $detail->attributes;
+        }
+        
+        $transactionLog->new_data = json_encode($newData);
+
+        $transactionLog->save();
     }
 
     /**

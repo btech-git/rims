@@ -310,6 +310,8 @@ class TransferRequestController extends Controller {
             $detail->update(array('quantity', 'unit_price', 'amount', 'receive_quantity', 'transfer_request_quantity_left', 'quantity_delivery', 'quantity_delivery_left'));
         }
         
+        $this->saveTransactionLog('cancel', $model);
+        
         JurnalUmum::model()->deleteAllByAttributes(array(
             'kode_transaksi' => $model->transfer_request_no,
         ));
@@ -333,9 +335,16 @@ class TransferRequestController extends Controller {
         
         $newData = $transferRequest->attributes;
         
-        $newData['transactionTransferRequestApprovals'] = array();
-        foreach($transferRequest->transactionTransferRequestApprovals as $detail) {
-            $newData['transactionTransferRequestApprovals'][] = $detail->attributes;
+        if ($actionType === 'approval') {
+            $newData['transactionTransferRequestApprovals'] = array();
+            foreach($transferRequest->transactionTransferRequestApprovals as $detail) {
+                $newData['transactionTransferRequestApprovals'][] = $detail->attributes;
+            }
+        } else {
+            $newData['transactionTransferRequestDetails'] = array();
+            foreach($transferRequest->transactionTransferRequestDetails as $detail) {
+                $newData['transactionTransferRequestDetails'][] = $detail->attributes;
+            }
         }
         
         $transactionLog->new_data = json_encode($newData);

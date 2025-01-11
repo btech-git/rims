@@ -932,9 +932,16 @@ class PaymentInController extends Controller {
         
         $newData = $paymentIn->attributes;
         
-        $newData['paymentInApprovals'] = array();
-        foreach($paymentIn->paymentInApprovals as $detail) {
-            $newData['paymentInApprovals'][] = $detail->attributes;
+        if ($actionType === 'approval') {
+            $newData['paymentInApprovals'] = array();
+            foreach($movement->paymentInApprovals as $detail) {
+                $newData['paymentInApprovals'][] = $detail->attributes;
+            }
+        } else {
+            $newData['paymentInDetails'] = array();
+            foreach($paymentIn->paymentInDetails as $detail) {
+                $newData['paymentInDetails'][] = $detail->attributes;
+            }
         }
         
         $transactionLog->new_data = json_encode($newData);
@@ -968,6 +975,8 @@ class PaymentInController extends Controller {
             'kode_transaksi' => $model->payment_number,
         ));
 
+        $this->saveTransactionLog('cancel', $model);
+        
         $this->redirect(array('admin'));
     }
 

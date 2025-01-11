@@ -316,6 +316,8 @@ class MovementInHeaderController extends Controller {
             $inventory->update(array('total_stock'));
         }
         
+        $this->saveTransactionLog('cancel', $model);
+        
         $this->redirect(array('admin'));
     }
 
@@ -564,9 +566,16 @@ class MovementInHeaderController extends Controller {
         
         $newData = $movement->attributes;
         
-        $newData['movementInApprovals'] = array();
-        foreach($movement->movementInApprovals as $detail) {
-            $newData['movementInApprovals'][] = $detail->attributes;
+        if ($actionType === 'approval') {
+            $newData['movementInApprovals'] = array();
+            foreach($movement->movementInApprovals as $detail) {
+                $newData['movementInApprovals'][] = $detail->attributes;
+            }
+        } else {
+            $newData['movementInDetails'] = array();
+            foreach($movement->movementInDetails as $detail) {
+                $newData['movementInDetails'][] = $detail->attributes;
+            }
         }
         
         $transactionLog->new_data = json_encode($newData);

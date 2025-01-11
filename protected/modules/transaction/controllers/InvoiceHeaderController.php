@@ -465,6 +465,8 @@ class InvoiceHeaderController extends Controller {
                 $detail->update(array('quantity', 'unit_price', 'discount', 'total_price'));
             }
             
+            $this->saveTransactionLog('cancel', $model);
+        
             JurnalUmum::model()->deleteAllByAttributes(array(
                 'kode_transaksi' => $model->invoice_number,
             ));
@@ -476,6 +478,32 @@ class InvoiceHeaderController extends Controller {
         }
 
         $this->redirect(array('admin'));
+    }
+
+    public function saveTransactionLog($actionType, $invoiceHeader) {
+        $transactionLog = new TransactionLog();
+        $transactionLog->transaction_number = $invoiceHeader->invoice_number;
+        $transactionLog->transaction_date = $invoiceHeader->invoice_date;
+        $transactionLog->log_date = date('Y-m-d');
+        $transactionLog->log_time = date('H:i:s');
+        $transactionLog->table_name = $invoiceHeader->tableName();
+        $transactionLog->table_id = $invoiceHeader->id;
+        $transactionLog->user_id = Yii::app()->user->id;
+        $transactionLog->username = Yii::app()->user->username;
+        $transactionLog->controller_class = Yii::app()->controller->module->id  . '/' . Yii::app()->controller->id;
+        $transactionLog->action_name = Yii::app()->controller->action->id;
+        $transactionLog->action_type = $actionType;
+        
+        $newData = $invoiceHeader->attributes;
+        
+        $newData['invoiceDetails'] = array();
+        foreach($invoiceHeader->invoiceDetails as $detail) {
+            $newData['invoiceDetails'][] = $detail->attributes;
+        }
+        
+        $transactionLog->new_data = json_encode($newData);
+
+        $transactionLog->save();
     }
 
     /**
