@@ -24,7 +24,12 @@ $this->menu=array(
         <a class="button cbutton right" style="margin-right:10px;" href="<?php echo Yii::app()->baseUrl.'/master/employeeDayoff/admin';?>"><span class="fa fa-th-list"></span>Manage EmployeeDayoff</a>
         <a class="button cbutton right" style="margin-right:10px;" href="<?php echo Yii::app()->createUrl('/master/'.$ccontroller.'/update',array('id'=>$model->id));?>"><span class="fa fa-edit"></span>Edit</a>
         <?php echo CHtml::link('<span class="fa fa-edit"></span>Update Approval', Yii::app()->baseUrl.'/master/employeeDayoff/updateApproval?headerId=' . $model->id , array('class'=>'button cbutton right','style'=>'margin-right:10px', 'visible'=>Yii::app()->user->checkAccess("master.employeeDayoff.updateApproval"))) ?>
-        <!--<h1>View Employee Day off Request #<?php //echo $model->id; ?></h1>-->
+
+        <?php echo CHtml::link('<span class="fa fa-edit"></span>Print Pengajuan Cuti', array("pdf", "id" => $model->id), array(
+            'class' => 'button warning right', 
+            'style' => 'margin-right:10px', 
+            'target' => 'blank'
+        )) ?>
 
         <?php $this->widget('zii.widgets.CDetailView', array(
             'data'=>$model,
