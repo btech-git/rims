@@ -25,8 +25,8 @@ class StockCardSummary extends CComponent {
     }
 
     public function setupSorting() {
-        $this->dataProvider->sort->attributes = array('t.name');
-        $this->dataProvider->criteria->order = $this->dataProvider->sort->orderBy;
+//        $this->dataProvider->sort->attributes = array('t.name');
+        $this->dataProvider->criteria->order = 't.name'; //$this->dataProvider->sort->orderBy;
     }
 
     public function setupFilter($filters) {
@@ -36,7 +36,7 @@ class StockCardSummary extends CComponent {
         
         $branchConditionSql = '';
         if (!empty($branchId)) {
-            $branchConditionSql = ' AND w.branch_id = :branch_id';
+            $branchConditionSql = ' AND w.branch_id = :branch_id AND w.status = "Active"';
         }
         $this->dataProvider->criteria->addCondition("EXISTS (
             SELECT i.id

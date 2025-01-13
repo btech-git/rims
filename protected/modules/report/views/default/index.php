@@ -466,11 +466,11 @@
                                         'url' => array('/report/stockCard/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('stockCardReport')
                                     ),
-                                    array(
-                                        'label' => 'Mutasi per Gudang', 
-                                        'url' => array('/report/stockCardByWarehouse/summary'), 
-                                        'visible' => Yii::app()->user->checkAccess('stockCardWarehouseReport')
-                                    ),
+//                                    array(
+//                                        'label' => 'Mutasi per Gudang', 
+//                                        'url' => array('/report/stockCardByWarehouse/summary'), 
+//                                        'visible' => Yii::app()->user->checkAccess('stockCardWarehouseReport')
+//                                    ),
                                 ),
                             )); ?>
                         <?php endif; ?>
