@@ -653,14 +653,14 @@ class Product extends CActiveRecord {
         );
         
         if (!empty($branchId)) {
-            $branchConditionSql = ' AND w.branch_id = :branch_id';
+            $branchConditionSql = ' AND w.branch_id = :branch_id AND w.status = "Active"';
             $params[':branch_id'] = $branchId;
         }
         
         $sql = "SELECT i.transaction_number, i.transaction_date, i.transaction_type, i.notes, i.stock_in, i.stock_out, w.name, i.purchase_price
                 FROM " . InventoryDetail::model()->tableName() . " i
                 INNER JOIN " . Warehouse::model()->tableName() . " w ON w.id = i.warehouse_id
-                WHERE i.transaction_date BETWEEN :start_date AND :end_date AND w.status = 'Active' AND i.product_id = :product_id" . $branchConditionSql . "
+                WHERE i.transaction_date BETWEEN :start_date AND :end_date AND i.product_id = :product_id" . $branchConditionSql . "
                 ORDER BY i.transaction_date ASC";
         
         $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
