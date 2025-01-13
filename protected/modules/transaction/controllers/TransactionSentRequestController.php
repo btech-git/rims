@@ -517,6 +517,19 @@ class TransactionSentRequestController extends Controller {
         ));
     }
 
+    public function actionPdf($id) {
+        $sentRequest = $this->loadModel($id);
+        $mPDF1 = Yii::app()->ePdf->mpdf('', 'A4-L');
+
+        $stylesheet = file_get_contents(Yii::getPathOfAlias('webroot') . '/css/pdf.css');
+        $mPDF1->SetTitle('Permintaan Barang');
+        $mPDF1->WriteHTML($stylesheet, 1);
+        $mPDF1->WriteHTML($this->renderPartial('pdf', array(
+            'sentRequest' => $sentRequest,
+        ), true));
+        $mPDF1->Output('Permintaan Barang ' . $sentRequest->sent_request_no . '.pdf', 'I');
+    }
+
     /**
      * Returns the data model based on the primary key given in the GET variable.
      * If the data model is not found, an HTTP exception will be raised.

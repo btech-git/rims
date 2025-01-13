@@ -470,6 +470,19 @@ class TransferRequestController extends Controller {
             throw new CHttpException(400, 'Invalid request. Please do not repeat this request again.');
     }
 
+    public function actionPdf($id) {
+        $transferRequest = $this->loadModel($id);
+        $mPDF1 = Yii::app()->ePdf->mpdf('', 'A4-L');
+
+        $stylesheet = file_get_contents(Yii::getPathOfAlias('webroot') . '/css/pdf.css');
+        $mPDF1->SetTitle('Permintaan Barang');
+        $mPDF1->WriteHTML($stylesheet, 1);
+        $mPDF1->WriteHTML($this->renderPartial('pdf', array(
+            'transferRequest' => $transferRequest,
+        ), true));
+        $mPDF1->Output('Permintaan Barang ' . $transferRequest->transfer_request_no . '.pdf', 'I');
+    }
+
     public function actionAjaxJsonTotal($id, $index) {
         if (Yii::app()->request->isAjaxRequest) {
             $transferRequest = $this->instantiate($id, '');
