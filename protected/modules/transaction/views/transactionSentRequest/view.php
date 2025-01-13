@@ -43,6 +43,14 @@ $this->menu = array(
         <?php elseif ($model->status_document != "Draft" && Yii::app()->user->checkAccess("sentRequestSupervisor")): ?>
             <?php echo CHtml::link('<span class="fa fa-edit"></span>Update Approval', Yii::app()->baseUrl . '/transaction/transactionSentRequest/updateApproval?headerId=' . $model->id, array('class' => 'button cbutton right', 'style' => 'margin-right:10px')) ?>
         <?php endif; ?>
+       
+        <?php if ($model->status_document === 'Approved'): ?>
+            <?php echo CHtml::link('<span class="fa fa-edit"></span>Print Permintaan Barang', array("pdf", "id" => $model->id), array(
+                'class' => 'button warning right', 
+                'style' => 'margin-right:10px', 
+                'target' => 'blank'
+            )) ?>
+        <?php endif; ?>
         
         <h1>View Transaction Sent Request #<?php echo $model->id; ?></h1>
 

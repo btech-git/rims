@@ -52,6 +52,14 @@ $this->menu = array(
             )); ?>
         <?php endif; ?>
         
+        <?php if ($transferRequest->status_document === 'Approved'): ?>
+            <?php echo CHtml::link('<span class="fa fa-edit"></span>Print Permintaan Barang', array("pdf", "id" => $transferRequest->id), array(
+                'class' => 'button warning right', 
+                'style' => 'margin-right:10px', 
+                'target' => 'blank'
+            )) ?>
+        <?php endif; ?>
+        
         <h1>View Transaction Transfer Request #<?php echo $transferRequest->id; ?></h1>
 
         <?php $this->widget('zii.widgets.CDetailView', array(

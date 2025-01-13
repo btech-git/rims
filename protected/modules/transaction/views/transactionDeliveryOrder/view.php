@@ -28,7 +28,7 @@ $this->menu = array(
                 'style' => 'margin-right:10px', 
                 'visible' => Yii::app()->user->checkAccess("deliveryEdit")
             )); ?>
-            <?php echo CHtml::link('<span class="fa fa-edit"></span>Print Surat Jalan', Yii::app()->baseUrl . '/transaction/transactionDeliveryOrder/pdf?id=' . $model->id, array(
+            <?php echo CHtml::link('<span class="fa fa-print"></span>Print Surat Jalan', array("pdf", "id" => $model->id), array(
                 'class' => 'button warning right', 
                 'style' => 'margin-right:10px', 
                 'target' => 'blank'
