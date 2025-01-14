@@ -118,22 +118,6 @@ Yii::app()->clientScript->registerScript('report', '
                             </div>
                         </div>
                     </div>
-                    
-                    <div class="medium-6 columns">
-                        <div class="field">
-                            <div class="row collapse">
-                                <div class="small-4 columns">
-                                    <label class="prefix">Type</label>
-                                </div>
-                                <div class="small-8 columns">
-                                    <?php echo CHtml::dropDownlist('CustomerType', $customerType, array(
-                                        'INDIVIDUAL' => 'INDIVIDUAL', 
-                                        'COMPANY' => 'COMPANY'
-                                    ), array('empty' => '-- All Type --')); ?>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                 </div>-->
 
 <!--                <div class="row">
@@ -206,6 +190,27 @@ Yii::app()->clientScript->registerScript('report', '
                                             'placeholder' => 'Sampai',
                                         ),
                                     )); ?>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="medium-6 columns">
+                        <div class="field">
+                            <div class="row collapse">
+                                <div class="small-4 columns">
+                                    <label class="prefix">Status</label>
+                                </div>
+                                <div class="small-8 columns">
+                                    <?php echo CHtml::dropDownlist('TransactionStatus', $transactionStatus, array(
+                                        'Draft' => 'Draft', 
+                                        'Registration' => 'Registration',
+                                        'Waitlist' => 'Waitlist',
+                                        'Processing SO' => 'Processing SO',
+                                        'Update Registration' => 'Update Registration',
+                                        'Finished' => 'Finished', 
+                                        'CANCELLED!!!' => 'Canceled', 
+                                    ), array('empty' => '-- All Status --')); ?>
                                 </div>
                             </div>
                         </div>

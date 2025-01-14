@@ -85,6 +85,24 @@ Yii::app()->clientScript->registerScript('report', '
                             </div>
                         </div>
                     </div>
+                    
+                    <div class="medium-6 columns">
+                        <div class="field">
+                            <div class="row collapse">
+                                <div class="small-4 columns">
+                                    <label class="prefix">Status</label>
+                                </div>
+                                <div class="small-8 columns">
+                                    <?php echo CHtml::dropDownlist('TransactionStatus', $transactionStatus, array(
+                                        'Draft' => 'Draft', 
+                                        'Approved' => 'Approved',
+                                        'Rejected' => 'Rejected',
+                                        'CANCELLED!!!' => 'Canceled', 
+                                    ), array('empty' => '-- All Status --')); ?>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="clear"></div>

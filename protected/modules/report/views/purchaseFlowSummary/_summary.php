@@ -7,6 +7,8 @@
     .width1-6 { width: 10% }
     .width1-7 { width: 10% }
     .width1-8 { width: 10% }
+    .width1-9 { width: 10% }
+    .width1-10 { width: 10% }
 '); ?>
 
 <div style="font-weight: bold; text-align: center">
@@ -24,10 +26,12 @@
             <th class="width1-2">PO #</th>
             <th class="width1-3">Tanggal</th>
             <th class="width1-4">Supplier</th>
-            <th class="width1-5">Penerimaan</th>
-            <th class="width1-6">Movement In</th>
-            <th class="width1-7">Invoice</th>
-            <th class="width1-8">Payment Out</th>
+            <th class="width1-5">Status</th>
+            <th class="width1-6">Amount</th>
+            <th class="width1-7">Penerimaan</th>
+            <th class="width1-8">Movement In</th>
+            <th class="width1-9">Invoice</th>
+            <th class="width1-10">Payment Out</th>
         </tr>
     </thead>
     <tbody>
@@ -48,6 +52,10 @@
                     <?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($header->purchase_order_date))); ?>
                 </td>
                 <td class="width1-4"><?php echo CHtml::encode(CHtml::value($header, 'supplier.name')); ?></td>
+                <td class="width1-6"><?php echo CHtml::encode(CHtml::value($header, 'status_document')); ?></td>
+                <td class="width1-7" style="text-align: right">
+                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($header, 'total_price'))); ?>
+                </td>
                 <td class="width1-5"><?php echo CHtml::encode(implode(', ', $receiveItemCodeNumbers)); ?></td>
                 <td class="width1-6"><?php echo CHtml::encode(implode(', ', $movementInHeaderCodeNumbers)); ?></td>
                 <td class="width1-7"><?php echo CHtml::encode(implode(', ', $receiveItemInvoiceNumbers)); ?></td>

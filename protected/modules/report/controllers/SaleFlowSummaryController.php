@@ -30,7 +30,7 @@ class SaleFlowSummaryController extends Controller {
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
 //        $customerId = isset($_GET['InvoiceHeader']['customer_id']) ? $_GET['InvoiceHeader']['customer_id'] : null;
 //        $branchId = isset($_GET['InvoiceHeader']['branch_id']) ? $_GET['InvoiceHeader']['branch_id'] : null;
-//        $vehicleId = (isset($_GET['VehicleId'])) ? $_GET['VehicleId'] : '';
+        $transactionStatus = (isset($_GET['TransactionStatus'])) ? $_GET['TransactionStatus'] : '';
         $pageSize = (isset($_GET['PageSize'])) ? $_GET['PageSize'] : '';
         $currentPage = (isset($_GET['page'])) ? $_GET['page'] : '';
         $currentSort = (isset($_GET['sort'])) ? $_GET['sort'] : '';
@@ -44,7 +44,7 @@ class SaleFlowSummaryController extends Controller {
         $filters = array(
             'startDate' => $startDate,
             'endDate' => $endDate,
-//            'vehicleId' => $vehicleId,
+            'transactionStatus' => $transactionStatus,
 //            'customerId' => $customerId,
 //            'customerType' => $customerType,
         );
@@ -67,7 +67,7 @@ class SaleFlowSummaryController extends Controller {
             'startDate' => $startDate,
             'endDate' => $endDate,
             'currentSort' => $currentSort,
-//            'vehicleId' => $vehicleId,
+            'transactionStatus' => $transactionStatus,
 //            'customerId' => $customerId,
 //            'customerType' => $customerType,
 //            'customer'=>$customer,

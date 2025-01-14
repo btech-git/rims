@@ -32,8 +32,19 @@ class PurchaseFlowSummary extends CComponent {
     public function setupFilter($filters) {
         $startDate = (empty($filters['startDate'])) ? date('Y-m-d') : $filters['startDate'];
         $endDate = (empty($filters['endDate'])) ? date('Y-m-d') : $filters['endDate'];
-        $this->dataProvider->criteria->addCondition('t.status_document NOT LIKE "%CANCELLED%" AND substr(t.purchase_order_date, 1, 10) BETWEEN :start_date AND :end_date');
+        $transactionStatus = (empty($filters['transactionStatus'])) ? '' : $filters['transactionStatus'];        
+        
+        $statusConditionSql = '';
+        
+        if (!empty($transactionStatus)) {
+            $statusConditionSql = ' AND t.status_document = :status';
+        }
+
+        $this->dataProvider->criteria->addCondition("substr(t.purchase_order_date, 1, 10) BETWEEN :start_date AND :end_date" . $statusConditionSql);
         $this->dataProvider->criteria->params[':start_date'] = $startDate;
         $this->dataProvider->criteria->params[':end_date'] = $endDate;
+        if (!empty($transactionStatus)) {
+            $this->dataProvider->criteria->params[':status'] = $transactionStatus;
+        }
     }
 }

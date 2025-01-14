@@ -31,6 +31,7 @@ class PurchaseFlowSummaryController extends Controller {
         $pageSize = (isset($_GET['PageSize'])) ? $_GET['PageSize'] : '';
         $currentPage = (isset($_GET['page'])) ? $_GET['page'] : '';
         $currentSort = (isset($_GET['sort'])) ? $_GET['sort'] : '';
+        $transactionStatus = (isset($_GET['TransactionStatus'])) ? $_GET['TransactionStatus'] : '';
         
         $purchaseFlowSummary = new PurchaseFlowSummary($purchaseOrder->search());
         $purchaseFlowSummary->setupLoading();
@@ -39,6 +40,7 @@ class PurchaseFlowSummaryController extends Controller {
         $filters = array(
             'startDate' => $startDate,
             'endDate' => $endDate,
+            'transactionStatus' => $transactionStatus,
         );
         $purchaseFlowSummary->setupFilter($filters);
 
@@ -51,6 +53,7 @@ class PurchaseFlowSummaryController extends Controller {
             'purchaseFlowSummary' => $purchaseFlowSummary,
             'startDate' => $startDate,
             'endDate' => $endDate,
+            'transactionStatus' => $transactionStatus,
             'currentSort' => $currentSort,
         ));
     }
