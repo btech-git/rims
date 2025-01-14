@@ -29,7 +29,7 @@
     <tbody>
         <?php foreach ($transactionLogDataProvider->data as $transactionLogRow): ?>
             <tr class="items1">
-                <td class="width1-1"><?php echo CHtml::encode(CHtml::value($transactionLogRow, 'transaction_number')); ?></td>
+                <td class="width1-1"><?php echo CHtml::link(CHtml::value($transactionLogRow, 'transaction_number'), Yii::app()->createUrl("/report/transactionLog/summaryPayload", array('id' => $transactionLogRow->id)), array('target' => '_blank')); ?></td>
                 <td class="width1-2">
                     <?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime(CHtml::value($transactionLogRow, 'transaction_date')))); ?>
                 </td>

@@ -44,6 +44,14 @@ class TransactionLogController extends Controller {
         ));
     }
 
+    public function actionSummaryPayload($id) {
+        $transactionLog = TransactionLog::model()->findByPk($id);
+        
+        $this->renderPartial('_summaryPayload', array(
+            'transactionLog' => $transactionLog,
+        ));
+    }
+    
     protected function saveToExcel($transactionJournalData, $startDate, $endDate, $branchId, $transactionType, $transactionTypeLiteral) {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
