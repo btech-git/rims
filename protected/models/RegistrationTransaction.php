@@ -152,6 +152,7 @@ class RegistrationTransaction extends MonthlyTransactionActiveRecord {
         return array(
             'invoiceHeaders' => array(self::HAS_MANY, 'InvoiceHeader', 'registration_transaction_id'),
             'movementOutHeaders' => array(self::HAS_MANY, 'MovementOutHeader', 'registration_transaction_id'),
+            'registrationApprovals' => array(self::HAS_MANY, 'RegistrationApproval', 'registration_transaction_id'),
             'registrationDamages' => array(self::HAS_MANY, 'RegistrationDamage', 'registration_transaction_id'),
             'registrationInsuranceDatas' => array(self::HAS_MANY, 'RegistrationInsuranceData', 'registration_transaction_id'),
             'registrationPayments' => array(self::HAS_MANY, 'RegistrationPayment', 'registration_transaction_id'),
