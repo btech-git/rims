@@ -36,10 +36,12 @@ class StockCardByWarehouseSummary extends CComponent {
         $this->dataProvider->criteria->addCondition("EXISTS (
             SELECT i.id
             FROM " . InventoryDetail::model()->tableName() . " i
-            WHERE i.warehouse_id = t.id AND i.transaction_date BETWEEN :start_date AND :end_date
+            INNER JOIN " . Warehouse::model()->tableName() . " w ON w.id = i.warehouse_id
+            WHERE i.product_id = t.id AND i.warehouse_id = :warehouse_id AND i.transaction_date BETWEEN :start_date AND :end_date AND w.status = 'Active'
         )");
         $this->dataProvider->criteria->params[':start_date'] = $startDate;
         $this->dataProvider->criteria->params[':end_date'] = $endDate;
+        $this->dataProvider->criteria->params[':warehouse_id'] = $filters['warehouseId'];
     }
 
 }

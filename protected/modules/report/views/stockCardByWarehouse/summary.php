@@ -7,6 +7,12 @@ Yii::app()->clientScript->registerScript('report', '
     $("#CurrentPage").val("' . ($stockCardSummary->dataProvider->pagination->getCurrentPage(false) + 1) . '");
     $("#CurrentSort").val("' . $currentSort . '");
 ');
+Yii::app()->clientScript->registerScript('search', "
+    $('.search-button').click(function(){
+	$('.search-form').toggle();
+	return false;
+    });
+");
 Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/transaction/report.css');
 ?>
 
@@ -21,304 +27,23 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                 <div class="myForm">
                     <?php echo CHtml::beginForm(array(''), 'get'); ?>
                     
-                    <div class="row">
-                        <div class="medium-6 columns">
-                            <div class="field">
-                                <div class="row collapse">
-                                    <div class="small-4 columns">
-                                        <span class="prefix">Gudang</span>
-                                    </div>
-                                    
-                                    <div class="small-8 columns">
-                                        <?php echo CHtml::hiddenField('page', $currentPage, array('size' => 3, 'id' => 'CurrentPage')); ?>
-                                        <?php echo CHtml::activeDropDownList($warehouse, 'id', CHtml::listData(Warehouse::model()->findAll(array('order' => 'name ASC')), 'id', 'name'), array(
-                                            'empty' => '-- All --',
-                                            'order' => 'name',
-                                        )); ?>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="medium-6 columns">
-                            <div class="field">
-                                <div class="row collapse">
-                                    <div class="small-4 columns">
-                                        <span class="prefix">Produk</span>
-                                    </div>
-                                    <div class="small-8 columns">
-                                        <?php echo CHtml::textField('ProductId', $productId, array(
-                                            'readonly' => true,
-                                            'onclick' => '$("#product-dialog").dialog("open"); return false;',
-                                            'onkeypress' => 'if (event.keyCode == 13) { $("#product-dialog").dialog("open"); return false; }',
-                                        )); ?>
-
-                                        <?php $this->beginWidget('zii.widgets.jui.CJuiDialog', array(
-                                            'id' => 'product-dialog',
-                                            'options' => array(
-                                                'title' => 'Product',
-                                                'autoOpen' => false,
-                                                'width' => 'auto',
-                                                'modal' => true,
-                                            ),
-                                        )); ?>
-
-                                        <div class="row">
-                                            <div class="small-12 columns" style="padding-left: 0px; padding-right: 0px;">
-                                                <table>
-                                                    <thead>
-                                                        <tr>
-                                                            <td>ID</td>
-                                                            <td>Code</td>
-                                                            <td>Name</td>
-                                                            <td>Brand</td>
-                                                            <td>Sub Brand</td>
-                                                            <td>Sub Brand Series</td>
-                                                            <td>Master Kategori</td>
-                                                            <td>Sub Master Kategori</td>
-                                                            <td>Sub Kategori</td>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        <tr>
-                                                            <td>
-                                                                <?php echo CHtml::activeTextField($product, 'id', array(
-                                                                    'onchange' => '
-                                                                    $.fn.yiiGridView.update("product-grid", {data: {Product: {
-                                                                        product_supplier: [$("#TransactionPurchaseOrder_supplier_id").val()],
-                                                                        brand_id: $("#Product_brand_id").val(),
-                                                                        sub_brand_id: $("#Product_sub_brand_id").val(),
-                                                                        sub_brand_series_id: $("#Product_sub_brand_series_id").val(),
-                                                                        product_master_category_id: $("#Product_product_master_category_id").val(),
-                                                                        product_sub_master_category_id: $("#Product_product_sub_master_category_id").val(),
-                                                                        product_sub_category_id: $("#Product_product_sub_category_id").val(),
-                                                                        id: $(this).val(),
-                                                                        name: $("#Product_name").val(),
-                                                                        manufacturer_code: $("#Product_manufacturer_code").val(),
-                                                                    } } });',
-                                                                )); ?>
-                                                            </td>
-                                                            <td>
-                                                                <?php echo CHtml::activeTextField($product, 'manufacturer_code', array(
-                                                                    'onchange' => '
-                                                                    $.fn.yiiGridView.update("product-grid", {data: {Product: {
-                                                                        product_supplier: [$("#TransactionPurchaseOrder_supplier_id").val()],
-                                                                        brand_id: $("#Product_brand_id").val(),
-                                                                        sub_brand_id: $("#Product_sub_brand_id").val(),
-                                                                        sub_brand_series_id: $("#Product_sub_brand_series_id").val(),
-                                                                        product_master_category_id: $("#Product_product_master_category_id").val(),
-                                                                        product_sub_master_category_id: $("#Product_product_sub_master_category_id").val(),
-                                                                        product_sub_category_id: $("#Product_product_sub_category_id").val(),
-                                                                        manufacturer_code: $(this).val(),
-                                                                        id: $("#Product_id").val(),
-                                                                        name: $("#Product_name").val(),
-                                                                    } } });',
-                                                                )); ?>
-                                                            </td>
-                                                            <td>
-                                                                <?php echo CHtml::activeTextField($product, 'name', array(
-                                                                    'onchange' => '$.fn.yiiGridView.update("product-grid", {data: {Product: {
-                                                                        product_supplier: [$("#TransactionPurchaseOrder_supplier_id").val()],
-                                                                        brand_id: $("#Product_brand_id").val(),
-                                                                        sub_brand_id: $("#Product_sub_brand_id").val(),
-                                                                        sub_brand_series_id: $("#Product_sub_brand_series_id").val(),
-                                                                        product_master_category_id: $("#Product_product_master_category_id").val(),
-                                                                        product_sub_master_category_id: $("#Product_product_sub_master_category_id").val(),
-                                                                        product_sub_category_id: $("#Product_product_sub_category_id").val(),
-                                                                        manufacturer_code: $("#Product_manufacturer_code").val(),
-                                                                        name: $(this).val(),
-                                                                        id: $("#Product_id").val(),
-                                                                    } } });',
-                                                                )); ?>
-                                                            </td>
-                                                            <td>
-                                                                <?php echo CHtml::activeDropDownList($product, 'brand_id', CHtml::listData(Brand::model()->findAll(array('order' => 'name ASC')), 'id', 'name'), array(
-                                                                    'empty' => '-- All --',
-                                                                    'order' => 'name',
-                                                                    'onchange' => '$.fn.yiiGridView.update("product-grid", {data: {Product: {
-                                                                        brand_id: $(this).val(),
-                                                                        sub_brand_id: $("#Product_sub_brand_id").val(),
-                                                                        sub_brand_series_id: $("#Product_sub_brand_series_id").val(),
-                                                                        product_master_category_id: $("#Product_product_master_category_id").val(),
-                                                                        product_sub_master_category_id: $("#Product_product_sub_master_category_id").val(),
-                                                                        product_sub_category_id: $("#Product_product_sub_category_id").val(),
-                                                                        manufacturer_code: $("#Product_manufacturer_code").val(),
-                                                                        name: $("#Product_name").val(),
-                                                                        id: $("#Product_id").val(),
-                                                                    } } });',
-                                                                )); ?>
-                                                            </td>
-                                                            <td>
-                                                                <div id="product_sub_brand">
-                                                                    <?php echo CHtml::activeDropDownList($product, 'sub_brand_id', CHtml::listData(SubBrand::model()->findAll(array('order' => 'name ASC')), 'id', 'name'), array(
-                                                                        'empty' => '-- All --',
-                                                                        'order' => 'name',
-                                                                        'onchange' => CHtml::ajax(array(
-                                                                            'type' => 'GET',
-                                                                            'url' => CController::createUrl('ajaxHtmlUpdateProductSubBrandSeriesSelect'),
-                                                                            'update' => '#product_sub_brand_series',
-                                                                        )),
-                                                                    )); ?>
-                                                                </div>
-                                                            </td>
-                                                            <td>
-                                                                <div id="product_sub_brand_series">
-                                                                    <?php echo CHtml::activeDropDownList($product, 'sub_brand_series_id', CHtml::listData(SubBrandSeries::model()->findAll(array('order' => 'name ASC')), 'id', 'name'), array(
-                                                                        'empty' => '-- All --',
-                                                                        'order' => 'name',
-                                                                    )); ?>
-                                                                </div>
-                                                            </td>
-                                                            <td>
-                                                                <?php echo CHtml::activeDropDownList($product, 'product_master_category_id', CHtml::listData(ProductMasterCategory::model()->findAll(array('order' => 'name ASC')), 'id', 'name'), array(
-                                                                    'empty' => '-- All --',
-                                                                    'order' => 'name',
-                                                                    'onchange' => '$.fn.yiiGridView.update("product-grid", {data: {Product: {
-                                                                        brand_id: $("#Product_brand_id").val(),
-                                                                        sub_brand_id: $("#Product_sub_brand_id").val(),
-                                                                        sub_brand_series_id: $("#Product_sub_brand_series_id").val(),
-                                                                        product_master_category_id: $(this).val(),
-                                                                        product_sub_master_category_id: $("#Product_product_sub_master_category_id").val(),
-                                                                        product_sub_category_id: $("#Product_product_sub_category_id").val(),
-                                                                        manufacturer_code: $("#Product_manufacturer_code").val(),
-                                                                        name: $("#Product_name").val(),
-                                                                        id: $("#Product_id").val(),
-                                                                    } } });',
-                                                                )); ?>
-                                                            </td>
-                                                            <td>
-                                                                <div id="product_sub_master_category">
-                                                                    <?php echo CHtml::activeDropDownList($product, 'product_sub_master_category_id', CHtml::listData(ProductSubMasterCategory::model()->findAll(array('order' => 'name ASC')), 'id', 'name'), array(
-                                                                        'empty' => '-- All --',
-                                                                        'order' => 'name',
-                                                                        'onchange' => CHtml::ajax(array(
-                                                                            'type' => 'GET',
-                                                                            'url' => CController::createUrl('ajaxHtmlUpdateProductSubCategorySelect'),
-                                                                            'update' => '#product_sub_category',
-                                                                        )),
-                                                                    )); ?>
-                                                                </div>
-                                                            </td>
-                                                            <td>
-                                                                <div id="product_sub_category">
-                                                                    <?php echo CHtml::activeDropDownList($product, 'product_sub_category_id', CHtml::listData(ProductSubCategory::model()->findAll(array('order' => 'name ASC')), 'id', 'name'), array(
-                                                                        'empty' => '-- All --',
-                                                                        'order' => 'name',
-                                                                    )); ?>
-                                                                </div>
-                                                            </td>
-                                                        </tr>
-                                                    </tbody>
-                                                </table>
-                                                <?php $this->widget('zii.widgets.grid.CGridView', array(
-                                                    'id'=>'product-grid',
-                                                    'dataProvider'=>$productDataProvider,
-                                                    'filter'=>null,
-                                                    'template' => '{items}<div class="clearfix">{summary}{pager}</div>',
-                                                    'pager'=>array(
-                                                        'cssFile'=>false,
-                                                        'header'=>'',
-                                                    ),
-                                                    'selectionChanged'=>'js:function(id){
-                                                        $("#ProductId").val($.fn.yiiGridView.getSelection(id));
-                                                        $("#product-dialog").dialog("close");
-                                                        if ($.fn.yiiGridView.getSelection(id) == "") {
-                                                            $("#product_name").html("");
-                                                        } else {
-                                                            $.ajax({
-                                                                type: "POST",
-                                                                dataType: "JSON",
-                                                                url: "' . CController::createUrl('ajaxJsonProduct') . '",
-                                                                data: $("form").serialize(),
-                                                                success: function(data) {
-                                                                    $("#product_name").html(data.product_name);
-                                                                },
-                                                            });
-                                                        }
-                                                    }',
-                                                    'columns'=>array(
-                                                        'id',
-                                                        'manufacturer_code',
-                                                        'name',
-                                                        array(
-                                                            'name'=>'product_brand_name', 
-                                                            'value'=>'empty($data->brand_id) ? "" : $data->brand->name'
-                                                        ),
-                                                        array(
-                                                            'header' => 'Sub Brand', 
-                                                            'name' => 'product_sub_brand_name', 
-                                                            'value' => 'empty($data->sub_brand_id) ? "" : $data->subBrand->name'
-                                                        ),
-                                                        array(
-                                                            'header' => 'Sub Brand Series', 
-                                                            'name' => 'product_sub_brand_series_name', 
-                                                            'value' => 'empty($data->sub_brand_series_id) ? "" : $data->subBrandSeries->name'
-                                                        ),
-                                                        'masterSubCategoryCode: Kategori',
-                                                    ),
-                                                )); ?>
-                                            </div>
-                                        </div>
-                                        <?php $this->endWidget('zii.widgets.jui.CJuiDialog'); ?>
-
-                                        <?php echo CHtml::openTag('span', array('id' => 'product_name')); ?>
-                                        <?php echo CHtml::encode(CHtml::value($product, 'name')); ?>
-                                        <?php echo CHtml::closeTag('span'); ?> 
-
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="row">
-                        <div class="medium-12 columns">
-                            <div class="field">
-                                <div class="row collapse">
-                                    <div class="small-2 columns">
-                                        <span class="prefix">Periode:</span>
-                                    </div>
-                                    
-                                    <div class="small-5 columns">
-                                        <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(
-                                            'name' => 'StartDate',
-                                            'options' => array(
-                                                'dateFormat' => 'yy-mm-dd',
-                                                'changeMonth'=>true,
-                                                'changeYear'=>true,
-                                            ),
-                                            'htmlOptions' => array(
-                                                'readonly' => true,
-                                                'placeholder' => 'Mulai',
-                                            ),
-                                        )); ?>
-                                    </div>
-
-                                    <div class="small-5 columns">
-                                        <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(
-                                            'name' => 'EndDate',
-                                            'options' => array(
-                                                'dateFormat' => 'yy-mm-dd',
-                                                'changeMonth'=>true,
-                                                'changeYear'=>true,
-                                            ),
-                                            'htmlOptions' => array(
-                                                'readonly' => true,
-                                                'placeholder' => 'Sampai',
-                                            ),
-                                        )); ?>
-                                    </div>
-                                </div>
-                            </div>
+                    <div class="search-bar">
+                        <div class="clearfix button-bar">
+                            <a href="#" class="search-button right button cbutton secondary" id="menushow">Advanced Search</a>
                         </div>
                     </div>
 
-                    <div class="clear"></div>
-                    <div class="row buttons">
-                        <?php echo CHtml::submitButton('Tampilkan', array('onclick' => '$("#CurrentSort").val(""); return true;')); ?>
-                        <?php echo CHtml::submitButton('Hapus', array('name' => 'ResetFilter'));  ?>
-                        <?php echo CHtml::submitButton('Simpan ke Excel', array('name' => 'SaveExcel')); ?>
-                    </div>
+                    <div class="clearfix"></div>
+
+                    <div class="search-form" style="display:none">
+                        <?php $this->renderPartial('_search',array(
+                            'startDate' => $startDate,
+                            'endDate' => $endDate,
+                            'product'=>$product,
+                            'warehouseId' => $warehouseId,
+                            'currentPage' => $currentPage,
+                        )); ?>
+                    </div><!-- search-form -->
 
                     <?php echo CHtml::endForm(); ?>
                     <div class="clear"></div>
@@ -329,7 +54,7 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                 <div class="relative">
                     <?php $this->renderPartial('_summary', array(
                         'stockCardSummary' => $stockCardSummary,
-                        'warehouse' => $warehouse,
+                        'warehouseId' => $warehouseId,
                         'startDate' => $startDate,
                         'endDate' => $endDate,
                     )); ?>

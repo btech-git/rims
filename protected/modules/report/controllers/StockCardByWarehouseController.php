@@ -23,50 +23,38 @@ class StockCardByWarehouseController extends Controller {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
 
-        $warehouse = Search::bind(new Warehouse('search'), isset($_GET['Warehouse']) ? $_GET['Warehouse'] : '');
+        $product = Search::bind(new Product('search'), isset($_GET['Product']) ? $_GET['Product'] : '');
 
         $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : date('Y-m-d');
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
         $pageSize = (isset($_GET['PageSize'])) ? $_GET['PageSize'] : '';
         $currentPage = (isset($_GET['page'])) ? $_GET['page'] : '';
         $currentSort = (isset($_GET['sort'])) ? $_GET['sort'] : '';
-        $productId = (isset($_GET['ProductId'])) ? $_GET['ProductId'] : '';
+        $warehouseId = (isset($_GET['WarehouseId'])) ? $_GET['WarehouseId'] : '';
 
-        $stockCardSummary = new StockCardByWarehouseSummary($warehouse->search());
+        $stockCardSummary = new StockCardByWarehouseSummary($product->searchByStockCard());
         $stockCardSummary->setupLoading();
         $stockCardSummary->setupPaging($pageSize, $currentPage);
         $stockCardSummary->setupSorting();
         $filters = array(
             'startDate' => $startDate,
             'endDate' => $endDate,
-            'productId' => $productId,
+            'warehouseId' => $warehouseId,
         );
         $stockCardSummary->setupFilter($filters);
         
-        $product = new Product('search');
-        $product->unsetAttributes();  // clear any default values
-
-        if (isset($_GET['Product'])) {
-            $product->attributes = $_GET['Product'];
-        }
-
-        $productDataProvider = $product->search();
-        $productDataProvider->criteria->compare('t.status', 'Active');
-
         if (isset($_GET['ResetFilter'])) {
             $this->redirect(array('summary'));
         }
         
         if (isset($_GET['SaveExcel'])) {
-            $this->saveToExcel($stockCardSummary, $startDate, $endDate);
+            $this->saveToExcel($stockCardSummary, $startDate, $endDate, $warehouseId);
         }
 
         $this->render('summary', array(
-            'warehouse' => $warehouse,
             'stockCardSummary' => $stockCardSummary,
-            'productId' => $productId,
+            'warehouseId' => $warehouseId,
             'product' => $product,
-            'productDataProvider' => $productDataProvider,
             'startDate' => $startDate,
             'endDate' => $endDate,
             'currentSort' => $currentSort,
@@ -154,7 +142,7 @@ class StockCardByWarehouseController extends Controller {
         }
     }
     
-    protected function saveToExcel($stockCardSummary, $startDate, $endDate) {
+    protected function saveToExcel($stockCardSummary, $startDate, $endDate, $warehouseId) {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
 
