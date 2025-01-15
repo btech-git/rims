@@ -599,6 +599,31 @@ class BodyRepairRegistrationController extends Controller {
         $this->redirect(Yii::app()->request->urlReferrer);
     }
 
+    public function actionUpdateApproval($id) {
+        $registrationTransaction = $this->loadModel($id);
+        $historis = RegistrationApproval::model()->findAllByAttributes(array('registration_transaction_id' => $id));
+        $model = new RegistrationApproval;
+        $model->date = date('Y-m-d H:i:s');
+        
+        if (isset($_POST['RegistrationApproval'])) {
+            $model->attributes = $_POST['RegistrationApproval'];
+            if ($model->save()) {
+                $registrationTransaction->status = $model->approval_type;
+                $registrationTransaction->save(false);
+
+                $this->saveTransactionLog('approval', $registrationTransaction);
+        
+                $this->redirect(array('view', 'id' => $id));
+            }
+        }
+
+        $this->render('updateApproval', array(
+            'model' => $model,
+            'registrationTransaction' => $registrationTransaction,
+            'historis' => $historis,
+        ));
+    }
+
     public function actionCancel($id) {
         
         $movementOutHeader = MovementOutHeader::model()->findByAttributes(array('registration_transaction_id' => $id, 'user_id_cancelled' => null));
@@ -707,14 +732,21 @@ class BodyRepairRegistrationController extends Controller {
         
         $newData = $bodyRepair->attributes;
         
-        $newData['registrationProducts'] = array();
-        foreach($bodyRepair->registrationProducts as $detail) {
-            $newData['registrationProducts'][] = $detail->attributes;
-        }
-        
-        $newData['registrationServices'] = array();
-        foreach($bodyRepair->registrationServices as $detail) {
-            $newData['registrationServices'][] = $detail->attributes;
+        if ($actionType === 'approval') {
+            $newData['registrationApprovals'] = array();
+            foreach($bodyRepair->registrationApprovals as $detail) {
+                $newData['registrationApprovals'][] = $detail->attributes;
+            }
+        } else {
+            $newData['registrationProducts'] = array();
+            foreach($bodyRepair->registrationProducts as $detail) {
+                $newData['registrationProducts'][] = $detail->attributes;
+            }
+
+            $newData['registrationServices'] = array();
+            foreach($bodyRepair->registrationServices as $detail) {
+                $newData['registrationServices'][] = $detail->attributes;
+            }
         }
         
         $transactionLog->new_data = json_encode($newData);

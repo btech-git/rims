@@ -16,16 +16,16 @@ $this->breadcrumbs = array(
             <?php $invoices = InvoiceHeader::model()->findAllByAttributes(array('registration_transaction_id' => $model->id, 'user_id_cancelled' => null)); ?>
             <div class="row">
                 <div class="large-12 columns">
-                    <?php echo CHtml::link('<span class="fa fa-list"></span>Manage', Yii::app()->baseUrl . '/frontDesk/bodyRepairRegistration/admin', array('class' => 'button cbutton left', 'style' => 'margin-right:10px')) ?>
-
+                    <?php echo CHtml::link('<span class="fa fa-list"></span>Manage Registration', array("admin"), array('class' => 'button cbutton left', 'style' => 'margin-right:10px', 'visible' => Yii::app()->user->checkAccess("generalRepairCreate") || Yii::app()->user->checkAccess("generalRepairEdit"))) ?>
+             
                     <?php if (!empty($model->work_order_number) && $model->total_service > 0): ?>
-                        <?php echo CHtml::link('<span class="fa fa-print"></span>Print Work Order', Yii::app()->baseUrl.'/frontDesk/bodyRepairRegistration/pdfWorkOrder?id=' . $model->id, array('class'=>'button warning right', 'style' => 'margin-right:10px')); ?>
+                        <?php echo CHtml::link('<span class="fa fa-print"></span> Print Work Order', array("pdfWorkOrder", "id" => $model->id), array('class'=>'button warning right', 'style' => 'margin-right:10px', 'target' =>'_blank')) ?>
                     <?php endif; ?>
                     <?php if (!empty($model->sales_order_number) && $model->status !== 'Finished'): ?>
-                        <?php echo CHtml::link('<span class="fa fa-print"></span>Print Sales Order', Yii::app()->baseUrl.'/frontDesk/bodyRepairRegistration/pdfSaleOrder?id=' . $model->id, array('class'=>'button warning right', 'style' => 'margin-right:10px')); ?>
+                        <?php echo CHtml::link('<span class="fa fa-print"></span> Print Sales Order', array("pdfSaleOrder", "id" => $model->id), array('class'=>'button warning right', 'style' => 'margin-right:10px', 'target' =>'_blank')) ?>
                     <?php endif; ?>
                     <?php if ($model->status !== 'Finished'): ?>
-                        <?php echo CHtml::link('<span class="fa fa-print"></span>Print Estimasi', Yii::app()->baseUrl.'/frontDesk/bodyRepairRegistration/pdf?id=' . $model->id, array('class'=>'button warning right', 'style' => 'margin-right:10px')); ?>
+                        <?php echo CHtml::link('<span class="fa fa-print"></span> Print Estimasi', array("pdf", "id" => $model->id), array('class'=>'button warning right', 'style' => 'margin-right:10px', 'target' =>'_blank')) ?>
                     <?php endif; ?>
                     
                     <?php if ($model->status !== 'Finished' && $model->status !== 'CANCELLED!!!'): ?>
@@ -69,29 +69,36 @@ $this->breadcrumbs = array(
                         ?>
                     
                         <?php if (count($model->registrationServices) > 0 && empty($model->work_order_number)): ?>
-                            <?php echo CHtml::link('<span class="fa fa-plus"></span>Generate Work Order', Yii::app()->baseUrl . '/frontDesk/bodyRepairRegistration/generateWorkOrder?id=' . $model->id, array(
+                            <?php echo CHtml::link('<span class="fa fa-check"></span> Generate Work Order', array("generateWorkOrder", "id" => $model->id), array(
                                 'class' => 'button success left', 
-                                'style' => 'margin-right:10px'
+                                'style' => 'margin-right:10px', 
                             )); ?>
                         <?php endif; ?>
-
-                        <?php if (empty($invoices)): ?>
+                    
+                        <?php if (empty($invoices) && !($model->status == 'Approved' || $model->status == 'Finished' || $model->status == 'CANCELLED!!!')): ?>
                             <?php if (!empty($model->registrationServices) && (!empty($model->registrationProducts) && $model->getTotalQuantityMovementLeft() == 0)): ?>
-                                <?php echo CHtml::link('<span class="fa fa-plus"></span>Generate Invoice', Yii::app()->baseUrl . '/transaction/invoiceHeader/create?registrationId=' . $model->id, array(
+                                <?php echo CHtml::link('<span class="fa fa-check"></span>Approval', array("updateApproval", "id" => $model->id), array(
                                     'class' => 'button success left', 
-                                    'style' => 'margin-right:10px'
+                                    'style' => 'margin-right:10px', 
                                 )); ?>
                             <?php elseif (!empty($model->registrationServices) && empty($model->registrationProducts)): ?>
-                                <?php echo CHtml::link('<span class="fa fa-plus"></span>Generate Invoice', Yii::app()->baseUrl . '/transaction/invoiceHeader/create?registrationId=' . $model->id, array(
+                                <?php echo CHtml::link('<span class="fa fa-check"></span>Approval', array("updateApproval", "id" => $model->id), array(
                                     'class' => 'button success left', 
-                                    'style' => 'margin-right:10px'
+                                    'style' => 'margin-right:10px', 
                                 )); ?>
                             <?php elseif (empty($model->registrationServices) && !empty($model->registrationProducts) && $model->getTotalQuantityMovementLeft() == 0): ?>
-                                <?php echo CHtml::link('<span class="fa fa-plus"></span>Generate Invoice', Yii::app()->baseUrl . '/transaction/invoiceHeader/create?registrationId=' . $model->id, array(
+                                <?php echo CHtml::link('<span class="fa fa-check"></span>Approval', array("updateApproval", "id" => $model->id), array(
                                     'class' => 'button success left', 
-                                    'style' => 'margin-right:10px'
+                                    'style' => 'margin-right:10px', 
                                 )); ?>
                             <?php endif; ?>
+                        <?php endif; ?>
+
+                        <?php if ($model->status == "Approved" && $model->status !== 'CANCELLED!!!'): ?>
+                            <?php echo CHtml::link('<span class="fa fa-plus"></span>Generate Invoice', array("/transaction/invoiceHeader/create", "registrationId" => $model->id), array(
+                                'class' => 'button success left', 
+                                'style' => 'margin-right:10px', 
+                            )); ?>
                         <?php endif; ?>
 
                         <?php if (Yii::app()->user->checkAccess("bodyRepairCreate") || Yii::app()->user->checkAccess("bodyRepairEdit")): ?>
