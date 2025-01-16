@@ -132,7 +132,7 @@
                         <?php echo $form->error($model, 'approval_type'); ?>
                     </td>
                     <td>
-                        <?php $revisions = PaymentOutApproval::model()->findAllByAttributes(array('payment_out_id' => $registrationTransaction->id)); ?>
+                        <?php $revisions = RegistrationApproval::model()->findAllByAttributes(array('registration_transaction_id' => $registrationTransaction->id)); ?>
                         <?php echo $form->textField($model, 'revision', array('value' => count($revisions) != 0 ? count($revisions) : 0, 'readonly' => true)); ?>		
                         <?php echo $form->error($model, 'revision'); ?>
                     </td>
