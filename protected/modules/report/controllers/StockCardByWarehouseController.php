@@ -30,7 +30,7 @@ class StockCardByWarehouseController extends Controller {
         $pageSize = (isset($_GET['PageSize'])) ? $_GET['PageSize'] : '';
         $currentPage = (isset($_GET['page'])) ? $_GET['page'] : '';
         $currentSort = (isset($_GET['sort'])) ? $_GET['sort'] : '';
-        $warehouseId = (isset($_GET['WarehouseId'])) ? $_GET['WarehouseId'] : '';
+        $warehouseId = (isset($_GET['WarehouseId'])) ? $_GET['WarehouseId'] : 5;
 
         $stockCardSummary = new StockCardByWarehouseSummary($product->searchByStockCard());
         $stockCardSummary->setupLoading();
