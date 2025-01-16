@@ -160,7 +160,7 @@
                 </td>
                 <td>
                     <?php echo CHtml::dropDownList('WarehouseId', $warehouseId, CHtml::listData(Warehouse::model()->findAllByAttributes(array('status' => 'Active'), array('order' => 'name ASC')), 'id', 'name'), array(
-                        'empty' => '-- All --',
+                        'empty' => '-- Pilih Gudang --',
                     )); ?>
                 </td>
                 <td>
