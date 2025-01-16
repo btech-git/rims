@@ -77,29 +77,41 @@ $this->breadcrumbs = array(
                     
                         <?php if (empty($invoices) && !($model->status == 'Approved' || $model->status == 'Finished' || $model->status == 'CANCELLED!!!')): ?>
                             <?php if (!empty($model->registrationServices) && (!empty($model->registrationProducts) && $model->getTotalQuantityMovementLeft() == 0)): ?>
-                                <?php echo CHtml::link('<span class="fa fa-check"></span>Approval', array("updateApproval", "id" => $model->id), array(
+                                <?php echo CHtml::link('<span class="fa fa-plus"></span>Generate Invoice', array("/transaction/invoiceHeader/create", "registrationId" => $model->id), array(
                                     'class' => 'button success left', 
                                     'style' => 'margin-right:10px', 
                                 )); ?>
+                                <?php /*echo CHtml::link('<span class="fa fa-check"></span>Approval', array("updateApproval", "id" => $model->id), array(
+                                    'class' => 'button success left', 
+                                    'style' => 'margin-right:10px', 
+                                ));*/ ?>
                             <?php elseif (!empty($model->registrationServices) && empty($model->registrationProducts)): ?>
-                                <?php echo CHtml::link('<span class="fa fa-check"></span>Approval', array("updateApproval", "id" => $model->id), array(
+                                <?php echo CHtml::link('<span class="fa fa-plus"></span>Generate Invoice', array("/transaction/invoiceHeader/create", "registrationId" => $model->id), array(
                                     'class' => 'button success left', 
                                     'style' => 'margin-right:10px', 
                                 )); ?>
+                                <?php /*echo CHtml::link('<span class="fa fa-check"></span>Approval', array("updateApproval", "id" => $model->id), array(
+                                    'class' => 'button success left', 
+                                    'style' => 'margin-right:10px', 
+                                ));*/ ?>
                             <?php elseif (empty($model->registrationServices) && !empty($model->registrationProducts) && $model->getTotalQuantityMovementLeft() == 0): ?>
-                                <?php echo CHtml::link('<span class="fa fa-check"></span>Approval', array("updateApproval", "id" => $model->id), array(
+                                <?php echo CHtml::link('<span class="fa fa-plus"></span>Generate Invoice', array("/transaction/invoiceHeader/create", "registrationId" => $model->id), array(
                                     'class' => 'button success left', 
                                     'style' => 'margin-right:10px', 
                                 )); ?>
+                                <?php /*echo CHtml::link('<span class="fa fa-check"></span>Approval', array("updateApproval", "id" => $model->id), array(
+                                    'class' => 'button success left', 
+                                    'style' => 'margin-right:10px', 
+                                ));*/ ?>
                             <?php endif; ?>
                         <?php endif; ?>
 
-                        <?php if ($model->status == "Approved" && $model->status !== 'CANCELLED!!!'): ?>
+                        <?php /*if ($model->status == "Approved" && $model->status !== 'CANCELLED!!!'): ?>
                             <?php echo CHtml::link('<span class="fa fa-plus"></span>Generate Invoice', array("/transaction/invoiceHeader/create", "registrationId" => $model->id), array(
                                 'class' => 'button success left', 
                                 'style' => 'margin-right:10px', 
                             )); ?>
-                        <?php endif; ?>
+                        <?php endif;*/ ?>
 
                         <?php if (Yii::app()->user->checkAccess("generalRepairCreate") || Yii::app()->user->checkAccess("generalRepairEdit")): ?>
                             <?php echo CHtml::button('Show Realization', array(

@@ -13,7 +13,7 @@
     <div class="row">
         <div class="field">
             <div class="row collapse">
-                <h2>Payment Out</h2>
+                <h2>Registration Transaction</h2>
             </div>
         </div>
         <div class="field">
@@ -40,7 +40,7 @@
         <div class="field">
             <div class="row collapse">
                 <div class="small-4 columns">
-                    <label class="prefix">Payment Amount</label>
+                    <label class="prefix">Grand Total</label>
                 </div>
                 <div class="small-8 columns">
                     <?php echo $form->textField($registrationTransaction, 'grand_total', array('value' => $registrationTransaction->grand_total, 'readonly' => true)); ?>
