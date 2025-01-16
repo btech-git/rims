@@ -497,7 +497,8 @@ class RegistrationTransactionController extends Controller {
     }
 
     public function actionPdf($id) {
-        $invoiceHeader = InvoiceHeader::model()->findByAttributes(array('id' => $id));
+        $invoiceHeader = InvoiceHeader::model()->findByPk($id);
+        $invoiceDetailsData = $this->getInvoiceDetailsData($invoiceHeader);
         $customer = Customer::model()->findByPk($invoiceHeader->customer_id);
         $vehicle = Vehicle::model()->findByPk($invoiceHeader->vehicle_id);
         $branch = Branch::model()->findByPk($invoiceHeader->branch_id);
@@ -508,15 +509,47 @@ class RegistrationTransactionController extends Controller {
         $mPDF1->WriteHTML($stylesheet, 1);
         $mPDF1->WriteHTML($this->renderPartial('pdf', array(
             'invoiceHeader' => $invoiceHeader,
+            'invoiceDetailsData' => $invoiceDetailsData,
             'customer' => $customer,
             'vehicle' => $vehicle,
             'branch' => $branch,
         ), true));
         $mPDF1->Output('Invoice ' . $invoiceHeader->invoice_number . '.pdf', 'I');
     }
+    
+    public function getInvoiceDetailsData($invoiceHeader) {
+        $pageSize = 9;
+        
+        $invoiceDetails = array();
+        foreach ($invoiceHeader->invoiceDetails as $invoiceDetail) {
+            if (!empty($invoiceDetail->product_id)) {
+                $invoiceDetails[] = $invoiceDetail;
+            }
+        }
+        foreach ($invoiceHeader->invoiceDetails as $invoiceDetail) {
+            if (!empty($invoiceDetail->service_id)) {
+                $invoiceDetails[] = $invoiceDetail;
+            }
+        }
+        
+        $invoiceDetailsData = array();
+        foreach ($invoiceDetails as $i => $invoiceDetail) {
+            $currentPage = intval($i / $pageSize);
+            if (!empty($invoiceDetail->product_id)) {
+                $invoiceDetailsData['items'][$currentPage]['p'][] = $invoiceDetail;
+                $invoiceDetailsData['lastpage']['p'] = $currentPage;
+            } else if (!empty($invoiceDetail->service_id)) {
+                $invoiceDetailsData['items'][$currentPage]['s'][] = $invoiceDetail;
+                $invoiceDetailsData['lastpage']['s'] = $currentPage;
+            }
+        }
+        
+        return $invoiceDetailsData;
+    }
 
     public function actionPdfPayment($id) {
-        $invoiceHeader = InvoiceHeader::model()->findByAttributes(array('id' => $id));
+        $invoiceHeader = InvoiceHeader::model()->findByPk($id);
+        $invoiceDetailsData = $this->getInvoiceDetailsData($invoiceHeader);
         $paymentInDetail = PaymentInDetail::model()->findByAttributes(array('invoice_header_id' => $id));
         $customer = Customer::model()->findByPk($invoiceHeader->customer_id);
         $vehicle = Vehicle::model()->findByPk($invoiceHeader->vehicle_id);
@@ -524,13 +557,14 @@ class RegistrationTransactionController extends Controller {
         $mPDF1 = Yii::app()->ePdf->mpdf('', 'A4-L');
 
         $stylesheet = file_get_contents(Yii::getPathOfAlias('webroot') . '/css/pdf.css');
-        $mPDF1->SetTitle('Invoice');
+        $mPDF1->SetTitle('Tanda Terima');
         $mPDF1->WriteHTML($stylesheet, 1);
         $mPDF1->SetWatermarkText('LUNAS');
         $mPDF1->showWatermarkText = true;
         $mPDF1->watermark_font = 'DejaVuSansCondensed'; 
         $mPDF1->WriteHTML($this->renderPartial('pdfPayment', array(
             'invoiceHeader' => $invoiceHeader,
+            'invoiceDetailsData' => $invoiceDetailsData,
             'paymentInDetail' => $paymentInDetail,
             'customer' => $customer,
             'vehicle' => $vehicle,
