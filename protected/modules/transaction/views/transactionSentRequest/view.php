@@ -44,7 +44,7 @@ $this->menu = array(
             <?php echo CHtml::link('<span class="fa fa-edit"></span>Update Approval', Yii::app()->baseUrl . '/transaction/transactionSentRequest/updateApproval?headerId=' . $model->id, array('class' => 'button cbutton right', 'style' => 'margin-right:10px')) ?>
         <?php endif; ?>
        
-        <?php if ($model->status_document === 'Approved'): ?>
+        <?php if ($model->status_document !== 'Draft' || $model->status_document !== 'Rejected' || $model->status_document !== 'Revised'): ?>
             <?php echo CHtml::link('<span class="fa fa-edit"></span>Print Permintaan Barang', array("pdf", "id" => $model->id), array(
                 'class' => 'button warning right', 
                 'style' => 'margin-right:10px', 

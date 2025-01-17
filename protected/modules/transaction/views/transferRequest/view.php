@@ -52,7 +52,7 @@ $this->menu = array(
             )); ?>
         <?php endif; ?>
         
-        <?php if ($transferRequest->status_document === 'Approved'): ?>
+        <?php if ($transferRequest->status_document !== 'Draft' || $transferRequest->status_document !== 'Rejected' || $transferRequest->status_document !== 'Revised'): ?>
             <?php echo CHtml::link('<span class="fa fa-edit"></span>Print Permintaan Barang', array("pdf", "id" => $transferRequest->id), array(
                 'class' => 'button warning right', 
                 'style' => 'margin-right:10px', 

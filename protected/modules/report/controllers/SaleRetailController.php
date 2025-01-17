@@ -103,19 +103,19 @@ class SaleRetailController extends Controller {
         $worksheet = $objPHPExcel->setActiveSheetIndex(0);
         $worksheet->setTitle('Rincian Penjualan per Pelanggan');
 
-        $worksheet->mergeCells('A1:M1');
-        $worksheet->mergeCells('A2:M2');
-        $worksheet->mergeCells('A3:M3');
+        $worksheet->mergeCells('A1:L1');
+        $worksheet->mergeCells('A2:L2');
+        $worksheet->mergeCells('A3:L3');
 
-        $worksheet->getStyle('A1:M6')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-        $worksheet->getStyle('A1:M6')->getFont()->setBold(true);
+        $worksheet->getStyle('A1:L6')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->getStyle('A1:L6')->getFont()->setBold(true);
 
         $branch = Branch::model()->findByPk($branchId);
         $worksheet->setCellValue('A1', 'Raperind Motor ' . CHtml::encode(CHtml::value($branch, 'name')));
         $worksheet->setCellValue('A2', 'Rincian Penjualan per Pelanggan');
         $worksheet->setCellValue('A3', Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($startDate)) . ' - ' . Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($endDate)));
 
-        $worksheet->getStyle('A5:M5')->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle('A5:L5')->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
         $worksheet->setCellValue('A5', 'Customer');
         $worksheet->setCellValue('B5', 'Type');
@@ -124,14 +124,12 @@ class SaleRetailController extends Controller {
         $worksheet->setCellValue('E5', 'Jenis');
         $worksheet->setCellValue('F5', 'Vehicle');
         $worksheet->setCellValue('G5', 'Barang');
-        $worksheet->setCellValue('H5', 'Disc Barang');
-        $worksheet->setCellValue('I5', 'Jasa');
-        $worksheet->setCellValue('J5', 'Disc Jasa');
-        $worksheet->setCellValue('K5', 'Ppn');
-        $worksheet->setCellValue('L5', 'Pph');
-        $worksheet->setCellValue('M5', 'Total');
+        $worksheet->setCellValue('H5', 'Jasa');
+        $worksheet->setCellValue('I5', 'Ppn');
+        $worksheet->setCellValue('J5', 'Pph');
+        $worksheet->setCellValue('K5', 'Total');
 
-        $worksheet->getStyle('A6:M6')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle('A6:L6')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
         $counter = 8;
         $grandTotalSale = '0.00';
@@ -141,11 +139,8 @@ class SaleRetailController extends Controller {
             if (!empty($saleReportData)) {
                 $totalSale = 0.00;
                 foreach ($saleReportData as $saleReportRow) {
-                    $invoiceHeader = InvoiceHeader::model()->findByPk($saleReportRow['id']);
-                    $discountProduct = $invoiceHeader->getTotalDiscountProduct();
-                    $discountService = $invoiceHeader->getTotalDiscountService();
                     $grandTotal = $saleReportRow['total_price'];
-                    $worksheet->getStyle("G{$counter}:I{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
+                    $worksheet->getStyle("G{$counter}:L{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
 
                     $worksheet->setCellValue("A{$counter}", CHtml::encode(CHtml::value($header, 'name')));
                     $worksheet->setCellValue("B{$counter}", CHtml::encode(CHtml::value($header, 'customer_type')));
@@ -153,30 +148,28 @@ class SaleRetailController extends Controller {
                     $worksheet->setCellValue("D{$counter}", CHtml::encode($saleReportRow['invoice_date']));
                     $worksheet->setCellValue("F{$counter}", CHtml::encode($saleReportRow['plate_number']));
                     $worksheet->setCellValue("G{$counter}", CHtml::encode($saleReportRow['product_price']));
-                    $worksheet->setCellValue("H{$counter}", CHtml::encode($discountProduct));
-                    $worksheet->setCellValue("I{$counter}", CHtml::encode($saleReportRow['service_price']));
-                    $worksheet->setCellValue("J{$counter}", CHtml::encode($discountService));
-                    $worksheet->setCellValue("K{$counter}", CHtml::encode($saleReportRow['ppn_total']));
-                    $worksheet->setCellValue("L{$counter}", CHtml::encode($saleReportRow['pph_total']));
-                    $worksheet->setCellValue("M{$counter}", CHtml::encode($grandTotal));
+                    $worksheet->setCellValue("H{$counter}", CHtml::encode($saleReportRow['service_price']));
+                    $worksheet->setCellValue("I{$counter}", CHtml::encode($saleReportRow['ppn_total']));
+                    $worksheet->setCellValue("J{$counter}", CHtml::encode($saleReportRow['pph_total']));
+                    $worksheet->setCellValue("K{$counter}", CHtml::encode($grandTotal));
                     $counter++;
                     
-                    $totalSale += $grandTotal + $discountProduct + $discountService;
+                    $totalSale += $grandTotal;
                 }
-                $worksheet->getStyle("J{$counter}:N{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
-                $worksheet->getStyle("J{$counter}:N{$counter}")->getFont()->setBold(true);
-
-                $worksheet->setCellValue("L{$counter}", 'TOTAL');
-                $worksheet->setCellValue("N{$counter}", CHtml::encode($totalSale));
-                $grandTotalSale += $totalSale;
-                $counter++;$counter++;
+//                $worksheet->getStyle("I{$counter}:K{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+//                $worksheet->getStyle("I{$counter}:K{$counter}")->getFont()->setBold(true);
+//
+//                $worksheet->setCellValue("L{$counter}", 'TOTAL');
+//                $worksheet->setCellValue("M{$counter}", CHtml::encode($totalSale));
+//                $grandTotalSale += $totalSale;
+//                $counter++;$counter++;
             }
         }
         $worksheet->getStyle("A{$counter}:N{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
         $worksheet->getStyle("A{$counter}:N{$counter}")->getFont()->setBold(true);
 
         $worksheet->setCellValue("L{$counter}", 'TOTAL PENJUALAN');
-        $worksheet->setCellValue("N{$counter}", CHtml::encode($grandTotalSale));
+        $worksheet->setCellValue("M{$counter}", CHtml::encode($grandTotalSale));
 
         for ($col = 'A'; $col !== 'Z'; $col++) {
             $objPHPExcel->getActiveSheet()
