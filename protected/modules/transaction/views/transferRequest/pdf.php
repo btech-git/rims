@@ -63,6 +63,9 @@ function tanggal($date) {
                         <td>User Request</td>
                         <td style="width: 5%">:</td>
                         <td><?php echo tanggal(CHtml::encode(CHtml::value($transferRequest, 'user.username'))); ?></td>
+                        <td>Approved oleh Cabang</td>
+                        <td style="width: 5%">:</td>
+                        <td><?php echo tanggal(CHtml::encode(CHtml::value($transferRequest, 'destinationApprovedBy.username'))); ?></td>
                     </tr>
                 </table>
             </div>

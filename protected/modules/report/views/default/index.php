@@ -422,17 +422,17 @@
                                     array(
                                         'label' => 'Nilai Stok Persediaan', 
                                         'url' => array('/report/inventoryValue/summary'), 
-                                        'visible' => Yii::app()->user->checkAccess('stockCardReport')
+                                        'visible' => Yii::app()->user->checkAccess('stockValueReport')
                                     ),
                                     array(
                                         'label' => 'Stok Quantity + Nilai Persediaan', 
                                         'url' => array('/report/inventoryStockValue/summary'), 
-                                        'visible' => Yii::app()->user->checkAccess('stockCardReport')
+                                        'visible' => Yii::app()->user->checkAccess('stockQuantityValueReport')
                                     ),
                                     array(
                                         'label' => 'Posisi Stok Gudang', 
                                         'url' => array('/report/stockCardCategory/summary'), 
-                                        'visible' => Yii::app()->user->checkAccess('stockCardReport')
+                                        'visible' => Yii::app()->user->checkAccess('stockPositionReport')
                                     ),
                                 ),
                             )); ?>
@@ -459,12 +459,12 @@
                                     array(
                                         'label' => 'Kartu Stok Gudang', 
                                         'url' => array('/frontDesk/inventory/check'), 
-                                        'visible' => (Yii::app()->user->checkAccess('stockInventoryReport'))
+                                        'visible' => (Yii::app()->user->checkAccess('warehouseStockReport'))
                                     ),
                                     array(
                                         'label' => 'Mutasi per Barang', 
                                         'url' => array('/report/stockCard/summary'), 
-                                        'visible' => Yii::app()->user->checkAccess('stockCardReport')
+                                        'visible' => Yii::app()->user->checkAccess('stockCardItemReport')
                                     ),
                                     array(
                                         'label' => 'Mutasi per Gudang', 
@@ -517,7 +517,7 @@
                                     array(
                                         'label' => 'Laporan Salesman', 
                                         'url' => array('/report/salesmanPerformance/summary'), 
-//                                        'visible' => Yii::app()->user->checkAccess('mechanicPerformanceReport')
+                                        'visible' => Yii::app()->user->checkAccess('director')
                                     ),
                                     array(
                                         'label' => 'Laporan Transaksi Harian', 
