@@ -3,6 +3,7 @@
     <table class="report">
         <thead>
             <tr id="header1">
+                <th>No.</th>
                 <th class="width1-1">Transaksi #</th>
                 <th class="width1-2">Tanggal</th>
                 <th class="width1-3">Tujuan</th>
@@ -10,8 +11,9 @@
             </tr>
         </thead>
         <tbody>
-            <?php foreach ($sentRequestData as $header): ?>
+            <?php foreach ($sentRequestData as $i => $header): ?>
                 <tr class="items1">
+                    <td style="text-align: center"><?php echo $i + 1; ?></td>
                     <td class="width1-1">
                         <?php echo CHtml::link(CHtml::encode($header->sent_request_no), array("/transaction/transactionSentRequest/view", "id"=>$header->id), array("target" => "_blank")); ?>
                     </td>
@@ -21,6 +23,7 @@
                     <td class="width1-3"><?php echo CHtml::encode(CHtml::value($header, 'destinationBranch.name')); ?></td>
                     <td class="width1-4"><?php echo CHtml::encode(CHtml::value($header, 'status_document')); ?></td>
                 </tr>
+                <?php $i++; ?>
             <?php endforeach; ?>
         </tbody>
     </table>
@@ -33,6 +36,7 @@
     <table class="report">
         <thead>
             <tr id="header1">
+                <th>No.</th>
                 <th class="width1-1">Transaksi #</th>
                 <th class="width1-2">Tanggal</th>
                 <th class="width1-3">Tujuan</th>
@@ -40,8 +44,9 @@
             </tr>
         </thead>
         <tbody>
-            <?php foreach ($transferRequestData as $header): ?>
+            <?php foreach ($transferRequestData as $i => $header): ?>
                 <tr class="items1">
+                    <td style="text-align: center"><?php echo $i + 1; ?></td>
                     <td class="width1-1">
                         <?php echo CHtml::link(CHtml::encode($header->transfer_request_no), array("/transaction/transactionTransferRequest/view", "id"=>$header->id), array("target" => "_blank")); ?>
                     </td>
@@ -51,6 +56,7 @@
                     <td class="width1-3"><?php echo CHtml::encode(CHtml::value($header, 'destinationBranch.name')); ?></td>
                     <td class="width1-4"><?php echo CHtml::encode(CHtml::value($header, 'status_document')); ?></td>
                 </tr>
+                <?php $i++; ?>
             <?php endforeach; ?>
         </tbody>
     </table>
@@ -63,6 +69,7 @@
     <table class="report">
         <thead>
             <tr id="header1">
+                <th>No.</th>
                 <th class="width1-1">Transaksi #</th>
                 <th class="width1-2">Tanggal</th>
                 <th class="width1-3">Tipe</th>
@@ -71,8 +78,9 @@
             </tr>
         </thead>
         <tbody>
-            <?php foreach ($deliveryData as $header): ?>
+            <?php foreach ($deliveryData as $i => $header): ?>
                 <tr class="items1">
+                    <td style="text-align: center"><?php echo $i + 1; ?></td>
                     <td class="width1-1">
                         <?php echo CHtml::link(CHtml::encode($header->delivery_order_no), array("/transaction/transactionDeliveryOrder/view", "id"=>$header->id), array("target" => "_blank")); ?>
                     </td>
@@ -95,6 +103,7 @@
                         <?php endif; ?>
                     </td>
                 </tr>
+                <?php $i++; ?>
             <?php endforeach; ?>
         </tbody>
     </table>
@@ -107,6 +116,7 @@
     <table class="report">
         <thead>
             <tr id="header1">
+                <th>No.</th>
                 <th class="width1-1">Transaksi #</th>
                 <th class="width1-2">Tanggal</th>
                 <th class="width1-3">Tipe</th>
@@ -115,8 +125,9 @@
             </tr>
         </thead>
         <tbody>
-            <?php foreach ($movementOutData as $header): ?>
+            <?php foreach ($movementOutData as $i => $header): ?>
                 <tr class="items1">
+                    <td style="text-align: center"><?php echo $i + 1; ?></td>
                     <td class="width1-1">
                         <?php echo CHtml::link(CHtml::encode($header->movement_out_no), array("/transaction/movementOut/view", "id"=>$header->id), array("target" => "_blank")); ?>
                     </td>
@@ -139,6 +150,7 @@
                         <?php endif; ?>
                     </td>
                 </tr>
+                <?php $i++; ?>
             <?php endforeach; ?>
         </tbody>
     </table>
@@ -151,6 +163,7 @@
     <table class="report">
         <thead>
             <tr id="header1">
+                <th>No.</th>
                 <th class="width1-1">Transaksi #</th>
                 <th class="width1-2">Tanggal</th>
                 <th class="width1-3">Tipe</th>
@@ -160,8 +173,9 @@
             </tr>
         </thead>
         <tbody>
-            <?php foreach ($receiveItemData as $header): ?>
+            <?php foreach ($receiveItemData as $i => $header): ?>
                 <tr class="items1">
+                    <td style="text-align: center"><?php echo $i + 1; ?></td>
                     <td class="width1-1">
                         <?php echo CHtml::link(CHtml::encode($header->receive_item_no), array("/transaction/transactionReceiveItem/view", "id"=>$header->id), array("target" => "_blank")); ?>
                     </td>
@@ -187,6 +201,7 @@
                         <?php endif; ?>
                     </td>
                 </tr>
+                <?php $i++; ?>
             <?php endforeach; ?>
         </tbody>
     </table>
@@ -199,6 +214,7 @@
     <table class="report">
         <thead>
             <tr id="header1">
+                <th>No.</th>
                 <th class="width1-1">Transaksi #</th>
                 <th class="width1-2">Tanggal</th>
                 <th class="width1-3">Tipe</th>
@@ -207,8 +223,9 @@
             </tr>
         </thead>
         <tbody>
-            <?php foreach ($movementInData as $header): ?>
+            <?php foreach ($movementInData as $i => $header): ?>
                 <tr class="items1">
+                    <td style="text-align: center"><?php echo $i + 1; ?></td>
                     <td class="width1-1">
                         <?php echo CHtml::link(CHtml::encode($header->movement_in_number), array("/transaction/movementIn/view", "id"=>$header->id), array("target" => "_blank")); ?>
                     </td>
@@ -227,6 +244,7 @@
                         <?php endif; ?>
                     </td>
                 </tr>
+                <?php $i++; ?>
             <?php endforeach; ?>
         </tbody>
     </table>

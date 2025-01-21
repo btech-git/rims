@@ -35,10 +35,12 @@ class WarehouseFlowSummaryController extends Controller {
         $pageSize = (isset($_GET['PageSize'])) ? $_GET['PageSize'] : '';
         $currentPage = (isset($_GET['page'])) ? $_GET['page'] : '';
         $currentSort = (isset($_GET['sort'])) ? $_GET['sort'] : '';
+        $transactionStatus = (isset($_GET['TransactionStatus'])) ? $_GET['TransactionStatus'] : '';
         
         $filters = array(
             'startDate' => $startDate,
             'endDate' => $endDate,
+            'transactionStatus' => $transactionStatus,
         );
         
         $saleFlowSummary = new WarehouseFlowSummary($registrationTransaction->search());
@@ -51,7 +53,7 @@ class WarehouseFlowSummaryController extends Controller {
         $materialRequestFlowSummary->setupLoading();
         $materialRequestFlowSummary->setupPaging($pageSize, $currentPage);
         $materialRequestFlowSummary->setupSorting();
-        $materialRequestFlowSummary->setupFilter($filters);
+        $materialRequestFlowSummary->setupFilterMaterial($filters);
 
         $transferRequestFlowSummary = new WarehouseFlowSummary($transferRequest->search());
         $transferRequestFlowSummary->setupLoading();
@@ -93,6 +95,7 @@ class WarehouseFlowSummaryController extends Controller {
             'startDate' => $startDate,
             'endDate' => $endDate,
             'currentSort' => $currentSort,
+            'transactionStatus' => $transactionStatus,
         ));
     }
 

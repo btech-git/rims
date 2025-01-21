@@ -3,6 +3,7 @@
     <table class="report">
         <thead>
             <tr id="header1">
+                <th>No.</th>
                 <th class="width1-1">Transaksi #</th>
                 <th class="width1-2">Tanggal</th>
                 <th class="width1-3">Akun</th>
@@ -11,8 +12,9 @@
             </tr>
         </thead>
         <tbody>
-            <?php foreach ($cashTransactionInData as $header): ?>
+            <?php foreach ($cashTransactionInData as $i => $header): ?>
                 <tr class="items1">
+                    <td style="text-align: center"><?php echo $i + 1; ?></td>
                     <td class="width1-1">
                         <?php echo CHtml::link(CHtml::encode($header->transaction_number), array("/transaction/cashTransaction/view", "id"=>$header->id), array("target" => "_blank")); ?>
                     </td>
@@ -25,6 +27,7 @@
                         <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($header, 'credit_amount'))); ?>
                     </td>
                 </tr>
+                <?php $i++; ?>
             <?php endforeach; ?>
         </tbody>
     </table>
@@ -37,6 +40,7 @@
     <table class="report">
         <thead>
             <tr id="header1">
+                <th>No.</th>
                 <th class="width1-1">Transaksi #</th>
                 <th class="width1-2">Tanggal</th>
                 <th class="width1-3">Akun</th>
@@ -45,8 +49,9 @@
             </tr>
         </thead>
         <tbody>
-            <?php foreach ($cashTransactionOutData as $header): ?>
+            <?php foreach ($cashTransactionOutData as $i => $header): ?>
                 <tr class="items1">
+                    <td style="text-align: center"><?php echo $i + 1; ?></td>
                     <td class="width1-1">
                         <?php echo CHtml::link(CHtml::encode($header->transaction_number), array("/transaction/cashTransaction/view", "id"=>$header->id), array("target" => "_blank")); ?>
                     </td>
@@ -59,6 +64,7 @@
                         <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($header, 'debit_amount'))); ?>
                     </td>
                 </tr>
+                <?php $i++; ?>
             <?php endforeach; ?>
         </tbody>
     </table>

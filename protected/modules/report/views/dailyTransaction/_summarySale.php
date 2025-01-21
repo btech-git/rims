@@ -3,18 +3,24 @@
     <table class="report">
         <thead>
             <tr id="header1">
+                <th>No.</th>
                 <th class="width1-1">Registration #</th>
                 <th class="width1-2">Tanggal</th>
                 <th class="width1-3">Tipe</th>
                 <th class="width1-4">Customer</th>
                 <th class="width1-5">Kendaraan</th>
                 <th class="width1-6">Status</th>
+                <th class="width1-7">WO #</th>
+                <th class="width1-7">Estimasi #</th>
+                <th class="width1-7">Total Parts</th>
+                <th class="width1-7">Total Jasa</th>
                 <th class="width1-7">Total</th>
             </tr>
         </thead>
         <tbody>
-            <?php foreach ($registrationTransactionRetailData as $header): ?>
+            <?php foreach ($registrationTransactionRetailData as $i => $header): ?>
                 <tr class="items1">
+                    <td style="text-align: center"><?php echo $i + 1; ?></td>
                     <td class="width1-1">
                         <?php echo CHtml::link(CHtml::encode($header->transaction_number), array("/frontDesk/generalRepairRegistration/view", "id"=>$header->id), array("target" => "_blank")); ?>
                     </td>
@@ -25,10 +31,19 @@
                     <td class="width1-4"><?php echo CHtml::encode(CHtml::value($header, 'customer.name')); ?></td>
                     <td class="width1-5"><?php echo CHtml::encode(CHtml::value($header, 'vehicle.plate_number')); ?></td>
                     <td class="width1-6"><?php echo CHtml::encode(CHtml::value($header, 'status')); ?></td>
+                    <td class="width1-6"><?php echo CHtml::encode(CHtml::value($header, 'work_order_number')); ?></td>
+                    <td class="width1-6"><?php echo CHtml::encode(CHtml::value($header, 'sales_order_number')); ?></td>
+                    <td class="width1-7" style="text-align: right">
+                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($header, 'subtotal_product'))); ?>
+                    </td>
+                    <td class="width1-7" style="text-align: right">
+                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($header, 'subtotal_service'))); ?>
+                    </td>
                     <td class="width1-7" style="text-align: right">
                         <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($header, 'grand_total'))); ?>
                     </td>
                 </tr>
+                <?php $i++; ?>
             <?php endforeach; ?>
         </tbody>
     </table>
@@ -38,6 +53,7 @@
     <table class="report">
         <thead>
             <tr id="header1">
+                <th>No.</th>
                 <th class="width1-1">Invoice #</th>
                 <th class="width1-2">Tanggal</th>
                 <th class="width1-3">Jatuh Tempo</th>
@@ -51,8 +67,9 @@
             </tr>
         </thead>
         <tbody>
-            <?php foreach ($invoiceHeaderRetailData as $header): ?>
+            <?php foreach ($invoiceHeaderRetailData as $i => $header): ?>
                 <tr class="items1">
+                    <td style="text-align: center"><?php echo $i + 1; ?></td>
                     <td class="width1-1">
                         <?php echo CHtml::link(CHtml::encode($header->invoice_number), array("/transaction/invoiceHeader/view", "id"=>$header->id), array("target" => "_blank")); ?>
                     </td>
@@ -78,6 +95,7 @@
                         <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($header, 'total_price'))); ?>
                     </td>
                 </tr>
+                <?php $i++; ?>
             <?php endforeach; ?>
         </tbody>
     </table>
@@ -87,6 +105,7 @@
     <table class="report">
         <thead>
             <tr id="header1">
+                <th>No.</th>
                 <th class="width1-1">Payment #</th>
                 <th class="width1-2">Tanggal</th>
                 <th class="width1-3">Tipe</th>
@@ -97,8 +116,9 @@
             </tr>
         </thead>
         <tbody>
-            <?php foreach ($paymentInRetailData as $header): ?>
+            <?php foreach ($paymentInRetailData as $i => $header): ?>
                 <tr class="items1">
+                    <td style="text-align: center"><?php echo $i + 1; ?></td>
                     <td class="width1-1">
                         <?php echo CHtml::link(CHtml::encode($header->payment_number), array("/transaction/paymentIn/view", "id"=>$header->id), array("target" => "_blank")); ?>
                     </td>
@@ -113,6 +133,7 @@
                         <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($header, 'payment_amount'))); ?>
                     </td>
                 </tr>
+                <?php $i++; ?>
             <?php endforeach; ?>
         </tbody>
     </table>
@@ -125,18 +146,24 @@
     <table class="report">
         <thead>
             <tr id="header1">
+                <th>No.</th>
                 <th class="width1-1">Registration #</th>
                 <th class="width1-2">Tanggal</th>
                 <th class="width1-3">Tipe</th>
                 <th class="width1-4">Customer</th>
                 <th class="width1-5">Kendaraan</th>
                 <th class="width1-6">Status</th>
+                <th class="width1-7">WO #</th>
+                <th class="width1-7">Estimasi #</th>
+                <th class="width1-7">Total Parts</th>
+                <th class="width1-7">Total Jasa</th>
                 <th class="width1-7">Total</th>
             </tr>
         </thead>
         <tbody>
-            <?php foreach ($registrationTransactionCompanyData as $header): ?>
+            <?php foreach ($registrationTransactionCompanyData as $i => $header): ?>
                 <tr class="items1">
+                    <td style="text-align: center"><?php echo $i + 1; ?></td>
                     <td class="width1-1">
                         <?php echo CHtml::link(CHtml::encode($header->transaction_number), array("/frontDesk/generalRepairRegistration/view", "id"=>$header->id), array("target" => "_blank")); ?>
                     </td>
@@ -147,10 +174,19 @@
                     <td class="width1-4"><?php echo CHtml::encode(CHtml::value($header, 'customer.name')); ?></td>
                     <td class="width1-5"><?php echo CHtml::encode(CHtml::value($header, 'vehicle.plate_number')); ?></td>
                     <td class="width1-6"><?php echo CHtml::encode(CHtml::value($header, 'status')); ?></td>
+                    <td class="width1-6"><?php echo CHtml::encode(CHtml::value($header, 'work_order_number')); ?></td>
+                    <td class="width1-6"><?php echo CHtml::encode(CHtml::value($header, 'sales_order_number')); ?></td>
+                    <td class="width1-7" style="text-align: right">
+                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($header, 'subtotal_product'))); ?>
+                    </td>
+                    <td class="width1-7" style="text-align: right">
+                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($header, 'subtotal_service'))); ?>
+                    </td>
                     <td class="width1-7" style="text-align: right">
                         <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($header, 'grand_total'))); ?>
                     </td>
                 </tr>
+                <?php $i++; ?>
             <?php endforeach; ?>
         </tbody>
     </table>
@@ -160,6 +196,7 @@
     <table class="report">
         <thead>
             <tr id="header1">
+                <th>No.</th>
                 <th class="width1-1">Invoice #</th>
                 <th class="width1-2">Tanggal</th>
                 <th class="width1-3">Jatuh Tempo</th>
@@ -173,8 +210,9 @@
             </tr>
         </thead>
         <tbody>
-            <?php foreach ($invoiceHeaderCompanyData as $header): ?>
+            <?php foreach ($invoiceHeaderCompanyData as $i => $header): ?>
                 <tr class="items1">
+                    <td style="text-align: center"><?php echo $i + 1; ?></td>
                     <td class="width1-1">
                         <?php echo CHtml::link(CHtml::encode($header->invoice_number), array("/transaction/invoiceHeader/view", "id"=>$header->id), array("target" => "_blank")); ?>
                     </td>
@@ -200,6 +238,7 @@
                         <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($header, 'total_price'))); ?>
                     </td>
                 </tr>
+                <?php $i++; ?>
             <?php endforeach; ?>
         </tbody>
     </table>
@@ -209,6 +248,7 @@
     <table class="report">
         <thead>
             <tr id="header1">
+                <th>No.</th>
                 <th class="width1-1">Payment #</th>
                 <th class="width1-2">Tanggal</th>
                 <th class="width1-3">Tipe</th>
@@ -219,8 +259,9 @@
             </tr>
         </thead>
         <tbody>
-            <?php foreach ($paymentInCompanyData as $header): ?>
+            <?php foreach ($paymentInCompanyData as $i => $header): ?>
                 <tr class="items1">
+                    <td style="text-align: center"><?php echo $i + 1; ?></td>
                     <td class="width1-1">
                         <?php echo CHtml::link(CHtml::encode($header->payment_number), array("/transaction/paymentIn/view", "id"=>$header->id), array("target" => "_blank")); ?>
                     </td>
@@ -235,6 +276,7 @@
                         <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($header, 'payment_amount'))); ?>
                     </td>
                 </tr>
+                <?php $i++; ?>
             <?php endforeach; ?>
         </tbody>
     </table>

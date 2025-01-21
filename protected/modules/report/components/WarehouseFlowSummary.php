@@ -33,32 +33,95 @@ class WarehouseFlowSummary extends CComponent {
     public function setupFilter($filters) {
         $startDate = (empty($filters['startDate'])) ? date('Y-m-d') : $filters['startDate'];
         $endDate = (empty($filters['endDate'])) ? date('Y-m-d') : $filters['endDate'];
-        $this->dataProvider->criteria->addCondition('substr(t.transaction_date, 1, 10) BETWEEN :start_date AND :end_date');
+        $transactionStatus = (empty($filters['transactionStatus'])) ? '' : $filters['transactionStatus'];        
+        
+        $statusConditionSql = '';
+        
+        if (!empty($transactionStatus)) {
+            $statusConditionSql = ' AND t.status = :status';
+        }
+
+        $this->dataProvider->criteria->addCondition("substr(t.transaction_date, 1, 10) BETWEEN :start_date AND :end_date" . $statusConditionSql);
         $this->dataProvider->criteria->params[':start_date'] = $startDate;
         $this->dataProvider->criteria->params[':end_date'] = $endDate;
+        if (!empty($transactionStatus)) {
+            $this->dataProvider->criteria->params[':status'] = $transactionStatus;
+        }
+    }
+
+    public function setupFilterMaterial($filters) {
+        $startDate = (empty($filters['startDate'])) ? date('Y-m-d') : $filters['startDate'];
+        $endDate = (empty($filters['endDate'])) ? date('Y-m-d') : $filters['endDate'];
+        $transactionStatus = (empty($filters['transactionStatus'])) ? '' : $filters['transactionStatus'];        
+        
+        $statusConditionSql = '';
+        
+        if (!empty($transactionStatus)) {
+            $statusConditionSql = ' AND t.status_document = :status';
+        }
+
+        $this->dataProvider->criteria->addCondition("substr(t.transaction_date, 1, 10) BETWEEN :start_date AND :end_date" . $statusConditionSql);
+        $this->dataProvider->criteria->params[':start_date'] = $startDate;
+        $this->dataProvider->criteria->params[':end_date'] = $endDate;
+        if (!empty($transactionStatus)) {
+            $this->dataProvider->criteria->params[':status'] = $transactionStatus;
+        }
     }
 
     public function setupFilterTransfer($filters) {
         $startDate = (empty($filters['startDate'])) ? date('Y-m-d') : $filters['startDate'];
         $endDate = (empty($filters['endDate'])) ? date('Y-m-d') : $filters['endDate'];
-        $this->dataProvider->criteria->addCondition('substr(t.transfer_request_date, 1, 10) BETWEEN :start_date AND :end_date');
+        $transactionStatus = (empty($filters['transactionStatus'])) ? '' : $filters['transactionStatus'];        
+        
+        $statusConditionSql = '';
+        
+        if (!empty($transactionStatus)) {
+            $statusConditionSql = ' AND t.status_document LIKE :status';
+        }
+
+        $this->dataProvider->criteria->addCondition("substr(t.transfer_request_date, 1, 10) BETWEEN :start_date AND :end_date" . $statusConditionSql);
         $this->dataProvider->criteria->params[':start_date'] = $startDate;
         $this->dataProvider->criteria->params[':end_date'] = $endDate;
+        if (!empty($transactionStatus)) {
+            $this->dataProvider->criteria->params[':status'] = "%{$transactionStatus}%";
+        }
     }
 
     public function setupFilterSent($filters) {
         $startDate = (empty($filters['startDate'])) ? date('Y-m-d') : $filters['startDate'];
         $endDate = (empty($filters['endDate'])) ? date('Y-m-d') : $filters['endDate'];
-        $this->dataProvider->criteria->addCondition('substr(t.sent_request_date, 1, 10) BETWEEN :start_date AND :end_date');
+        $transactionStatus = (empty($filters['transactionStatus'])) ? '' : $filters['transactionStatus'];        
+        
+        $statusConditionSql = '';
+        
+        if (!empty($transactionStatus)) {
+            $statusConditionSql = ' AND t.status_document LIKE :status';
+        }
+
+        $this->dataProvider->criteria->addCondition("substr(t.sent_request_date, 1, 10) BETWEEN :start_date AND :end_date" . $statusConditionSql);
         $this->dataProvider->criteria->params[':start_date'] = $startDate;
         $this->dataProvider->criteria->params[':end_date'] = $endDate;
+        if (!empty($transactionStatus)) {
+            $this->dataProvider->criteria->params[':status'] = "%{$transactionStatus}%";
+        }
     }
 
     public function setupFilterPurchase($filters) {
         $startDate = (empty($filters['startDate'])) ? date('Y-m-d') : $filters['startDate'];
         $endDate = (empty($filters['endDate'])) ? date('Y-m-d') : $filters['endDate'];
-        $this->dataProvider->criteria->addCondition('substr(t.purchase_order_date, 1, 10) BETWEEN :start_date AND :end_date');
+        $transactionStatus = (empty($filters['transactionStatus'])) ? '' : $filters['transactionStatus'];        
+        
+        $statusConditionSql = '';
+        
+        if (!empty($transactionStatus)) {
+            $statusConditionSql = ' AND t.status_document = :status';
+        }
+
+        $this->dataProvider->criteria->addCondition("substr(t.purchase_order_date, 1, 10) BETWEEN :start_date AND :end_date" . $statusConditionSql);
         $this->dataProvider->criteria->params[':start_date'] = $startDate;
         $this->dataProvider->criteria->params[':end_date'] = $endDate;
+        if (!empty($transactionStatus)) {
+            $this->dataProvider->criteria->params[':status'] = $transactionStatus;
+        }
     }
 }

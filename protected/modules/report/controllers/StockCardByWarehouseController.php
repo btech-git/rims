@@ -148,6 +148,7 @@ class StockCardByWarehouseController extends Controller {
 
         $startDateFormatted = Yii::app()->dateFormatter->format('d MMMM yyyy', $startDate);
         $endDateFormatted = Yii::app()->dateFormatter->format('d MMMM yyyy', $endDate);
+        $warehouse = Warehouse::model()->findByPk($warehouseId);
 
         spl_autoload_unregister(array('YiiBase', 'autoload'));
         include_once Yii::getPathOfAlias('ext.phpexcel.Classes') . DIRECTORY_SEPARATOR . 'PHPExcel.php';
@@ -168,7 +169,7 @@ class StockCardByWarehouseController extends Controller {
         $worksheet->getStyle('A1:I3')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
         $worksheet->getStyle('A1:I3')->getFont()->setBold(true);
         $worksheet->setCellValue('A1', 'Raperind Motor');
-        $worksheet->setCellValue('A2', 'Laporan Mutasi per Gudang');
+        $worksheet->setCellValue('A2', 'Laporan Mutasi per Gudang' . CHtml::encode(CHtml::value($warehouse, 'name')));
         $worksheet->setCellValue('A3', $startDateFormatted . ' - ' . $endDateFormatted);
 
         $worksheet->getStyle("A5:I5")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
@@ -187,15 +188,17 @@ class StockCardByWarehouseController extends Controller {
         $counter = 7;
 
         foreach ($stockCardSummary->dataProvider->data as $header) {
-            $worksheet->setCellValue("A{$counter}", $header->code);
-            $worksheet->setCellValue("B{$counter}", $header->name);
-            $worksheet->setCellValue("C{$counter}", $header->description);
-            $stock = $header->getBeginningStockReport($startDate);
+            $worksheet->setCellValue("A{$counter}", $header->id);
+            $worksheet->setCellValue("B{$counter}", $header->code);
+            $worksheet->setCellValue("C{$counter}", $header->name);
+            $worksheet->mergeCells("D{$counter}:F{$counter}");
+            $worksheet->setCellValue("D{$counter}", CHtml::encode(CHtml::value($header, 'brand.name')) . ' ' . CHtml::encode(CHtml::value($header, 'subBrand.name')) . ' ' . CHtml::encode(CHtml::value($header, 'subBrandSeries.name')));
+            $stock = $header->getBeginningStockReport($startDate, $warehouse->branch_id);
             $worksheet->setCellValue("G{$counter}", CHtml::encode($stock));
             
             $counter++;
             
-            $stockData = $header->getInventoryStockReport($startDate, $endDate);
+            $stockData = $header->getInventoryStockReport($startDate, $endDate, $warehouse->branch_id);
             $totalStockIn = 0;
             $totalStockOut = 0;
             
@@ -208,7 +211,6 @@ class StockCardByWarehouseController extends Controller {
                 $worksheet->setCellValue("A{$counter}", CHtml::encode($stockRow['transaction_date']));
                 $worksheet->setCellValue("B{$counter}", CHtml::encode($stockRow['transaction_type']));
                 $worksheet->setCellValue("C{$counter}", CHtml::encode($stockRow['transaction_number']));
-                $worksheet->setCellValue("D{$counter}", CHtml::encode($stockRow['product_name']));
                 $worksheet->setCellValue("E{$counter}", $stockIn);
                 $worksheet->setCellValue("F{$counter}", $stockOut);
                 $worksheet->setCellValue("G{$counter}", $stock);

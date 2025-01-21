@@ -122,6 +122,11 @@
                         'visible' => (Yii::app()->user->checkAccess('bodyRepairCreate') || Yii::app()->user->checkAccess('bodyRepairEdit'))
                     ),
                     array(
+                        'label' => 'Permintaan Harga', 
+                        'url' => array('/frontDesk/productPricingRequest/admin')
+//                        'visible' => (Yii::app()->user->checkAccess('inspectionCreate') || Yii::app()->user->checkAccess('inspectionEdit'))
+                    ),
+                    array(
                         'label' => 'Inspeksi Kendaraan', 
                         'url' => array('/frontDesk/vehicleInspection/admin'), 
                         'visible' => (Yii::app()->user->checkAccess('inspectionCreate') || Yii::app()->user->checkAccess('inspectionEdit'))

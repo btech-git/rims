@@ -38,7 +38,7 @@ Yii::app()->clientScript->registerCss('_report', '
         <tbody>
             <?php foreach ($stockCardSummary->dataProvider->data as $header): ?>
             <?php $stock = $header->getBeginningStockReport($startDate, $warehouse->branch_id); ?>
-            <?php $beginningValue = $header->getBeginningValueReport($startDate, $warehouse->branch_id); ?>
+            <?php //$beginningValue = $header->getBeginningValueReport($startDate, $warehouse->branch_id); ?>
                 <tr class="items1">
                     <td><?php echo CHtml::encode(CHtml::value($header, 'id')); ?></td>
                     <td><?php echo CHtml::encode(CHtml::value($header, 'code')); ?></td>
@@ -62,8 +62,8 @@ Yii::app()->clientScript->registerCss('_report', '
                     <?php $stockIn = $stockRow['stock_in']; ?>
                     <?php $stockOut = $stockRow['stock_out']; ?>
                     <?php $stock += $stockIn + $stockOut; ?>
-                    <?php $inventoryInValue = $stockRow['purchase_price'] * $stockIn; ?>
-                    <?php $inventoryOutValue = $stockRow['purchase_price'] * $stockOut; ?>
+                    <?php //$inventoryInValue = $stockRow['purchase_price'] * $stockIn; ?>
+                    <?php //$inventoryOutValue = $stockRow['purchase_price'] * $stockOut; ?>
                     <?php $inventoryValue = $stockRow['purchase_price'] * $stock; ?>
                     <tr class="items2">
                         <td><?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($stockRow['transaction_date']))); ?></td>

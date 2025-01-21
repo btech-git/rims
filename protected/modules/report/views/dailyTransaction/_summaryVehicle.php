@@ -3,6 +3,7 @@
     <table class="report">
         <thead>
             <tr id="header1">
+                <th>No.</th>
                 <th class="width1-1">Plat #</th>
                 <th class="width1-2">Kendaraan</th>
                 <th class="width1-3">Warna</th>
@@ -15,8 +16,9 @@
             </tr>
         </thead>
         <tbody>
-            <?php foreach ($registrationTransactionData as $header): ?>
+            <?php foreach ($registrationTransactionData as $i => $header): ?>
                 <tr class="items1">
+                    <td style="text-align: center"><?php echo $i + 1; ?></td>
                     <td class="width1-1"><?php echo CHtml::encode(CHtml::value($header, 'vehicle.plate_number')); ?></td>
                     <td class="width1-2">
                         <?php echo CHtml::encode(CHtml::value($header, 'vehicle.carMake.name')); ?> - 
@@ -31,8 +33,9 @@
                     <td class="width1-4"><?php echo CHtml::encode(CHtml::value($header, 'customer.customer_type')); ?></td>
                     <td class="width1-5"><?php echo CHtml::encode(CHtml::value($header, 'customer.mobile_phone')); ?></td>
                     <td class="width1-6"><?php echo CHtml::encode(CHtml::value($header, 'customer.email')); ?></td>
-                    <td class="width1-7"><?php echo CHtml::encode(CHtml::value($header, 'vehicle_status')); ?></td>
+                    <td class="width1-7"><?php echo CHtml::encode(CHtml::value($header, 'vehicle.status_location')); ?></td>
                 </tr>
+                <?php $i++; ?>
             <?php endforeach; ?>
         </tbody>
     </table>
@@ -45,6 +48,7 @@
     <table class="report">
         <thead>
             <tr id="header1">
+                <th>No.</th>
                 <th class="width1-1">Plat #</th>
                 <th class="width1-2">Kendaraan</th>
                 <th class="width1-3">Customer</th>
@@ -55,8 +59,9 @@
             </tr>
         </thead>
         <tbody>
-            <?php foreach ($vehicleData as $header): ?>
+            <?php foreach ($vehicleData as $i => $header): ?>
                 <tr class="items1">
+                    <td style="text-align: center"><?php echo $i + 1; ?></td>
                     <td class="width1-1"><?php echo CHtml::encode(CHtml::value($header, 'vehicle.plate_number')); ?></td>
                     <td class="width1-2">
                         <?php echo CHtml::encode(CHtml::value($header, 'vehicle.carMake.name')); ?> - 
@@ -67,8 +72,9 @@
                     <td class="width1-4"><?php echo CHtml::encode(CHtml::value($header, 'customer.customer_type')); ?></td>
                     <td class="width1-5"><?php echo CHtml::encode(CHtml::value($header, 'customer.mobile_phone')); ?></td>
                     <td class="width1-6"><?php echo CHtml::encode(CHtml::value($header, 'customer.email')); ?></td>
-                    <td class="width1-7"><?php echo CHtml::encode(CHtml::value($header, 'vehicle_status')); ?></td>
+                    <td class="width1-7"><?php echo CHtml::encode(CHtml::value($header, 'vehicle.status_location')); ?></td>
                 </tr>
+                <?php $i++; ?>
             <?php endforeach; ?>
         </tbody>
     </table>
