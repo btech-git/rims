@@ -36,7 +36,7 @@
             <div class="field">
                 <div class="row collapse">
                     <div class="small-4 columns">
-                        <label class="prefix"><?php echo $form->labelEx($model, 'request_date'); ?>
+                        <label class="prefix"><?php echo $form->labelEx($model, 'request_date'); ?></label>
                     </div>
                     
                     <div class="small-8 columns">
@@ -48,7 +48,7 @@
             <div class="field">
                 <div class="row collapse">
                     <div class="small-4 columns">
-                        <label class="prefix"><?php echo $form->labelEx($model, 'quantity'); ?>
+                        <label class="prefix"><?php echo $form->labelEx($model, 'quantity'); ?></label>
                     </div>
                     
                     <div class="small-8 columns">
@@ -60,7 +60,7 @@
             <div class="field">
                 <div class="row collapse">
                     <div class="small-4 columns">
-                        <label class="prefix"><?php echo $form->labelEx($model, 'user_id_request'); ?>
+                        <label class="prefix"><?php echo $form->labelEx($model, 'user_id_request'); ?></label>
                     </div>
                     
                     <div class="small-8 columns">
@@ -72,7 +72,7 @@
             <div class="field">
                 <div class="row collapse">
                     <div class="small-4 columns">
-                        <label class="prefix"><?php echo $form->labelEx($model, 'request_note'); ?>
+                        <label class="prefix"><?php echo $form->labelEx($model, 'request_note'); ?></label>
                     </div>
                     
                     <div class="small-8 columns">
@@ -84,7 +84,7 @@
             <div class="field">
                 <div class="row collapse">
                     <div class="small-4 columns">
-                        <label class="prefix"><?php echo $form->labelEx($model, 'branch_id_request'); ?>
+                        <label class="prefix"><?php echo $form->labelEx($model, 'branch_id_request'); ?></label>
                     </div>
                     
                     <div class="small-8 columns">
@@ -96,7 +96,7 @@
             <div class="field">
                 <div class="row collapse">
                     <div class="small-4 columns">
-                        <label class="prefix"><?php echo $form->labelEx($model, 'recommended_price'); ?>
+                        <label class="prefix"><?php echo $form->labelEx($model, 'recommended_price'); ?></label>
                     </div>
                     
                     <div class="small-8 columns">
@@ -108,7 +108,7 @@
             <div class="field">
                 <div class="row collapse">
                     <div class="small-4 columns">
-                        <label class="prefix"><?php echo $form->labelEx($model, 'reply_note'); ?>
+                        <label class="prefix"><?php echo $form->labelEx($model, 'reply_note'); ?></label>
                     </div>
                     
                     <div class="small-8 columns">
@@ -121,6 +121,10 @@
 
     <hr />
 
+    <div style="text-align: center">
+        <h2>Uploaded Image</h2>
+        <?php echo CHtml::image('//raperind.com/rimsfront/images/product_pricing_request/' . $model->id . '.' . $model->extension, "image", array("width" => "30%")); ?>  
+    </div>
     <div class="field buttons text-center">
         <?php echo CHtml::submitButton($model->isNewRecord ? 'Create' : 'Save', array('class' => 'button cbutton', 'id' => 'SubmitButton')); ?>
     </div>

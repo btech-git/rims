@@ -33,9 +33,11 @@ Yii::app()->clientScript->registerCss('_report', '
                         <th class="width2-2">Tanggal</th>
                         <th class="width2-3">Customer</th>
                         <th class="width2-4">Barang</th>
+                        <th class="width2-5">Disc Barang</th>
                         <th class="width2-5">Jasa</th>
-                        <th class="width2-6">ppn</th>
-                        <th class="width2-7">pph</th>
+                        <th class="width2-5">Disc Jasa</th>
+                        <th class="width2-6">PPn</th>
+                        <th class="width2-7">PPh</th>
                         <th class="width2-8">Total</th>
                     </tr>
                 </table>
@@ -57,6 +59,9 @@ Yii::app()->clientScript->registerCss('_report', '
                         <?php $totalSale = 0.00; ?>
                         <?php $saleRetailVehicleData = $header->getSaleVehicleReport($startDate, $endDate, $branchId); ?>
                         <?php foreach ($saleRetailVehicleData as $saleRetailVehicleRow): ?>
+                        <?php $invoiceHeader = InvoiceHeader::model()->findByPk($saleRetailVehicleRow['id']); ?>
+                        <?php $discountProduct = $invoiceHeader->getTotalDiscountProduct(); ?>
+                        <?php $discountService = $invoiceHeader->getTotalDiscountService(); ?>
                             <?php $grandTotal = $saleRetailVehicleRow['total_price']; ?>
                             <tr>
                                 <td class="width2-1"><?php echo CHtml::encode($saleRetailVehicleRow['invoice_number']); ?></td>
@@ -70,7 +75,13 @@ Yii::app()->clientScript->registerCss('_report', '
                                     <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $saleRetailVehicleRow['product_price'])); ?>
                                 </td>
                                 <td class="width2-5" style="text-align: right">
+                                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $discountProduct)); ?>
+                                </td>
+                                <td class="width2-5" style="text-align: right">
                                     <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $saleRetailVehicleRow['service_price'])); ?>
+                                </td>
+                                <td class="width2-5" style="text-align: right">
+                                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $discountService)); ?>
                                 </td>
                                 <td class="width2-6" style="text-align: right">
                                     <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $saleRetailVehicleRow['ppn_total'])); ?>
@@ -85,8 +96,10 @@ Yii::app()->clientScript->registerCss('_report', '
                             <?php $totalSale += $grandTotal; ?>
                         <?php endforeach; ?>
                         <tr>
-                            <td style="text-align: right; font-weight: bold" colspan="7">Total</td>
-                            <td style="text-align: right; font-weight: bold"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalSale)); ?></td>
+                            <td style="text-align: right; font-weight: bold" colspan="9">Total</td>
+                            <td style="text-align: right; font-weight: bold">
+                                <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalSale)); ?>
+                            </td>
                         </tr>
                     </table>
                 </td>

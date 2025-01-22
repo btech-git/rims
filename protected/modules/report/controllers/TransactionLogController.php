@@ -46,9 +46,16 @@ class TransactionLogController extends Controller {
 
     public function actionSummaryPayload($id) {
         $transactionLog = TransactionLog::model()->findByPk($id);
+        $newData = json_decode($transactionLog->new_data, true);
+        
+        $tableName = trim($transactionLog->table_name, '{}');
+        $modelName = str_replace('_', '', ucwords($tableName, '_'));
+        
+        $className = $modelName . 'LogData';
+        $payload = $className::make($newData);
         
         $this->renderPartial('_summaryPayload', array(
-            'transactionLog' => $transactionLog,
+            'payload' => $payload,
         ));
     }
     

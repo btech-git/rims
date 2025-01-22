@@ -1,1 +1,1 @@
-<pre style="font-size: larger"><?php echo json_encode(json_decode($transactionLog->new_data), JSON_PRETTY_PRINT); ?></pre>
+<pre style="font-size: larger"><?php echo str_replace('\\', '', json_encode($payload, JSON_PRETTY_PRINT)); ?></pre>

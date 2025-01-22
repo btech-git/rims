@@ -47,6 +47,7 @@ class VehicleCarModelController extends Controller {
     public function actionCreate() {
         $model = new VehicleCarModel;
         $model->user_id = Yii::app()->user->id;
+        $model->created_datetime = date('Y-m-d H:i:s');
 
         // Uncomment the following line if AJAX validation is needed
         // $this->performAjaxValidation($model);
