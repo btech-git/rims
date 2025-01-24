@@ -63,61 +63,6 @@
             <div class="field">
                 <div class="row collapse">
                     <div class="small-4 columns">
-                        <?php echo CHtml::label('Payment Type', false); ?>
-                    </div>
-                    <div class="small-8 columns">
-                        <?php echo CHtml::activeDropDownList($paymentOut->header, 'payment_type_id', CHtml::listData(PaymentType::model()->findAll(), 'id', 'name'), array(
-                            'empty' => '-- Select Payment Type --',
-                            'onchange' => '
-                                if ($(this).val() == 1) {
-                                    $(".giro").hide();
-                                    $(".bank").hide();
-                                } else {
-                                    $(".bank").show();
-                                    $(".giro").show();
-                                }
-                            '
-                        )); ?>
-                        <?php echo CHtml::error($paymentOut->header, 'payment_type_id'); ?>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="giro">
-                <div class="field">
-                    <div class="row collapse">
-                        <div class="small-4 columns">
-                            <?php echo CHtml::label('Giro #', ''); ?>
-                        </div>
-                        <div class="small-8 columns">
-                            <?php echo CHtml::activeTextField($paymentOut->header, 'nomor_giro'); ?>
-                            <?php echo CHtml::error($paymentOut->header, 'nomor_giro'); ?>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="bank">
-                <div class="field">
-                    <div class="row collapse">
-                        <div class="small-4 columns">
-                            <?php echo CHtml::label('Bank', false); ?>
-                        </div>
-                        <div class="small-8 columns">
-                            <?php echo CHtml::activeDropDownList($paymentOut->header, 'bank_id', CHtml::listData(Bank::model()->findAll(), 'id', 'name'), array(
-                                'empty' => '-- Select Bank --'
-                            )); ?>
-                            <?php echo CHtml::error($paymentOut->header, 'bank_id'); ?>
-                        </div>
-                    </div>
-                </div>
-            </div>            
-        </div>
-        
-        <div class="small-12 medium-6 columns">
-            <div class="field">
-                <div class="row collapse">
-                    <div class="small-4 columns">
                         <?php echo CHtml::label('Supplier Company', ''); ?>
                     </div>
                     <div class="small-8 columns">
@@ -159,21 +104,103 @@
                 </div>
             </div>	
             
-            <div class="field" >
+        </div>
+        
+        <div class="small-12 medium-6 columns">
+            <div class="field">
                 <div class="row collapse">
                     <div class="small-4 columns">
-                        <?php echo CHtml::label('Company Bank', false); ?>
+                        <?php echo CHtml::label('Payment Type', false); ?>
                     </div>
                     <div class="small-8 columns">
-                        <?php
-                            $branchId = $paymentOut->header->isNewRecord ? User::model()->findByPk(Yii::app()->user->getId())->branch_id : $paymentOut->header->branch_id;
-                            $branch = Branch::model()->findByPk($branchId);
-                            $company = Company::model()->findByPk($branch->company_id);
-                        ?>
-                        <?php echo CHtml::activeDropDownList($paymentOut->header, 'company_bank_id', CHtml::listData(CompanyBank::model()->findAllByAttributes(array('company_id' => $company->id), array('order' => 'account_name')), 'id', 'accountNameAndNumber'), array(
-                            'empty' => '-- Select Company Bank --'
+                        <?php echo CHtml::activeDropDownList($paymentOut->header, 'payment_type_id', CHtml::listData(PaymentType::model()->findAll(), 'id', 'name'), array(
+                            'empty' => '-- Select Payment Type --',
+                            'onchange' => '
+                                if ($(this).val() == 5) {
+                                    $(".bank").show();
+                                    $(".giro").hide();
+                                    $(".deposit").hide();
+                                } else if ($(this).val() == 6) {
+                                    $(".bank").show();
+                                    $(".giro").show();
+                                    $(".deposit").hide();
+                                } else if ($(this).val() == 12) {
+                                    $(".bank").hide();
+                                    $(".deposit").show();
+                                    $(".giro").hide();
+                                } else {
+                                    $(".bank").hide();
+                                    $(".giro").hide();
+                                    $(".deposit").hide();
+                                }
+                            '
                         )); ?>
-                        <?php echo CHtml::error($paymentOut->header, 'company_bank_id'); ?>
+                        <?php echo CHtml::error($paymentOut->header, 'payment_type_id'); ?>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="giro">
+                <div class="field">
+                    <div class="row collapse">
+                        <div class="small-4 columns">
+                            <?php echo CHtml::label('Giro #', ''); ?>
+                        </div>
+                        <div class="small-8 columns">
+                            <?php echo CHtml::activeTextField($paymentOut->header, 'nomor_giro'); ?>
+                            <?php echo CHtml::error($paymentOut->header, 'nomor_giro'); ?>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="bank">
+                <div class="field">
+                    <div class="row collapse">
+                        <div class="small-4 columns">
+                            <?php echo CHtml::label('Bank', false); ?>
+                        </div>
+                        <div class="small-8 columns">
+                            <?php echo CHtml::activeDropDownList($paymentOut->header, 'bank_id', CHtml::listData(Bank::model()->findAll(), 'id', 'name'), array(
+                                'empty' => '-- Select Bank --'
+                            )); ?>
+                            <?php echo CHtml::error($paymentOut->header, 'bank_id'); ?>
+                        </div>
+                    </div>
+                </div>
+            
+                <div class="field">
+                    <div class="row collapse">
+                        <div class="small-4 columns">
+                            <?php echo CHtml::label('Company Bank', false); ?>
+                        </div>
+                        <div class="small-8 columns">
+                            <?php
+                                $branchId = $paymentOut->header->isNewRecord ? User::model()->findByPk(Yii::app()->user->getId())->branch_id : $paymentOut->header->branch_id;
+                                $branch = Branch::model()->findByPk($branchId);
+                                $company = Company::model()->findByPk($branch->company_id);
+                            ?>
+                            <?php echo CHtml::activeDropDownList($paymentOut->header, 'company_bank_id', CHtml::listData(CompanyBank::model()->findAllByAttributes(array('company_id' => $company->id), array('order' => 'account_name')), 'id', 'accountNameAndNumber'), array(
+                                'empty' => '-- Select Company Bank --'
+                            )); ?>
+                            <?php echo CHtml::error($paymentOut->header, 'company_bank_id'); ?>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="deposit">
+                <div class="field">
+                    <div class="row collapse">
+                        <div class="small-4 columns">
+                            <?php echo CHtml::label('COA Deposit', false); ?>
+                        </div>
+                        <div class="small-8 columns">
+                            <?php echo CHtml::activeDropDownList($paymentOut->header, 'coa_id_deposit', CHtml::listData(Coa::model()->findAllByAttributes(array('coa_sub_category_id' => 72)), 'id', 'name'), array(
+                                'empty' => '-- Select COA Deposit --'
+                            )); ?>
+                            <?php echo CHtml::error($paymentOut->header, 'coa_id_deposit'); ?>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -189,7 +216,6 @@
                     </div>
                 </div>
             </div>
-
         </div>
     </div>
 

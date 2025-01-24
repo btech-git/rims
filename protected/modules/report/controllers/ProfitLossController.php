@@ -11,7 +11,7 @@ class ProfitLossController extends Controller {
 
     public function filterAccess($filterChain) {
         if ($filterChain->action->id === 'summary') {
-            if (!(Yii::app()->user->checkAccess('summaryProfitLossReport')))
+            if (!(Yii::app()->user->checkAccess('director')))
                 $this->redirect(array('/site/login'));
         }
 

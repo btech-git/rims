@@ -21,6 +21,7 @@
  * @property string $created_datetime
  * @property string $cancelled_datetime
  * @property integer $user_id_cancelled
+ * @property integer $coa_id_deposit
  *
  * The followings are the available model relations:
  * @property TransactionPurchaseOrder $purchaseOrder
@@ -33,6 +34,7 @@
  * @property PaymentOutImages[] $paymentOutImages
  * @property PaymentOutApproval[] $paymentOutApprovals
  * @property PaymentType $paymentType
+ * @property CoaIdDeposit $coaIdDeposit
  */
 class PaymentOut extends MonthlyTransactionActiveRecord {
 
@@ -60,7 +62,7 @@ class PaymentOut extends MonthlyTransactionActiveRecord {
         // will receive user inputs.
         return array(
             array('payment_number, payment_date, supplier_id, payment_amount, notes, user_id, branch_id, status, payment_type_id', 'required'),
-            array('purchase_order_id, supplier_id, user_id, branch_id, company_bank_id, cash_payment_type, bank_id, payment_type_id, user_id_cancelled', 'numerical', 'integerOnly' => true),
+            array('purchase_order_id, supplier_id, user_id, branch_id, company_bank_id, cash_payment_type, bank_id, payment_type_id, user_id_cancelled, coa_id_deposit', 'numerical', 'integerOnly' => true),
             array('payment_number', 'length', 'max' => 50),
             array('payment_amount', 'length', 'max' => 18),
             array('nomor_giro', 'length', 'max' => 20),
@@ -68,7 +70,7 @@ class PaymentOut extends MonthlyTransactionActiveRecord {
             array('payment_number', 'unique'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, purchase_order_id, purchase_order_number, payment_number, payment_date, created_datetime, supplier_id, payment_amount, notes, payment_type, user_id, branch_id,supplier_name, status, company_bank_id, nomor_giro, cash_payment_type, bank_id, payment_type_id, images, cancelled_datetime, user_id_cancelled', 'safe', 'on' => 'search'),
+            array('id, purchase_order_id, purchase_order_number, payment_number, payment_date, created_datetime, supplier_id, payment_amount, coa_id_deposit, notes, payment_type, user_id, branch_id,supplier_name, status, company_bank_id, nomor_giro, cash_payment_type, bank_id, payment_type_id, images, cancelled_datetime, user_id_cancelled', 'safe', 'on' => 'search'),
         );
     }
 
@@ -90,6 +92,7 @@ class PaymentOut extends MonthlyTransactionActiveRecord {
             'paymentOutApprovals' => array(self::HAS_MANY, 'PaymentOutApproval', 'payment_out_id'),
             'paymentOutImages' => array(self::HAS_MANY, 'PaymentOutImages', 'payment_out_id'),
             'paymentType' => array(self::BELONGS_TO, 'PaymentType', 'payment_type_id'),
+            'coaIdDeposit' => array(self::BELONGS_TO, 'Coa', 'coa_id_deposit'),
         );
     }
 
@@ -150,6 +153,7 @@ class PaymentOut extends MonthlyTransactionActiveRecord {
         $criteria->compare('t.cash_payment_type', $this->cash_payment_type);
         $criteria->compare('t.bank_id', $this->bank_id);
         $criteria->compare('t.payment_type_id', $this->payment_type_id);
+        $criteria->compare('t.coa_id_deposit', $this->coa_id_deposit);
 
         $criteria->together = true;
         $criteria->with = array('supplier', 'purchaseOrder');

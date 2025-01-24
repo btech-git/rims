@@ -27,12 +27,12 @@
                 <div class="row" style="margin-top:20px" id="noliststyle">
                     <div class="small-4 columns">
                         <?php if (
-                            Yii::app()->user->checkAccess('summaryProfitLossReport') ||
-                            Yii::app()->user->checkAccess('standardProfitLossReport') || 
-                            Yii::app()->user->checkAccess('multiProfitLossReport') || 
-                            Yii::app()->user->checkAccess('summaryBalanceSheetReport') || 
-                            Yii::app()->user->checkAccess('standardBalanceSheetReport') || 
-                            Yii::app()->user->checkAccess('multiBalanceSheetReport')
+//                            Yii::app()->user->checkAccess('summaryProfitLossReport') ||
+//                            Yii::app()->user->checkAccess('standardProfitLossReport') || 
+//                            Yii::app()->user->checkAccess('multiProfitLossReport') || 
+//                            Yii::app()->user->checkAccess('summaryBalanceSheetReport') || 
+//                            Yii::app()->user->checkAccess('standardBalanceSheetReport') || 
+                            Yii::app()->user->checkAccess('director')
                         ): ?>
                             <h2>Keuangan</h2>
                             <?php $this->widget('zii.widgets.CMenu', array(
@@ -40,32 +40,32 @@
                                     array(
                                         'label' => 'Laba Rugi (induk)', 
                                         'url' => array('/report/profitLoss/summary'), 
-                                        'visible' => Yii::app()->user->checkAccess('summaryProfitLossReport')
+                                        'visible' => Yii::app()->user->checkAccess('director')
                                     ),
                                     array(
                                         'label' => 'Laba Rugi (Standar)', 
                                         'url' => array('/report/profitLossDetail/summary'), 
-                                        'visible' => Yii::app()->user->checkAccess('standardProfitLossReport')
+                                        'visible' => Yii::app()->user->checkAccess('director')
                                     ),
                                     array(
                                         'label' => 'Laba Rugi (Multi Periode)', 
                                         'url' => array('/report/profitLossMonthly/summary'), 
-                                        'visible' => Yii::app()->user->checkAccess('multiProfitLossReport')
+                                        'visible' => Yii::app()->user->checkAccess('director')
                                     ),
                                     array(
                                         'label' => 'Neraca (induk)', 
                                         'url' => array('/report/balanceSheet/summary'), 
-                                        'visible' => Yii::app()->user->checkAccess('summaryBalanceSheetReport')
+                                        'visible' => Yii::app()->user->checkAccess('director')
                                     ),
                                     array(
                                         'label' => 'Neraca (Standar)', 
                                         'url' => array('/report/balanceSheetDetail/summary'), 
-                                        'visible' => Yii::app()->user->checkAccess('standardBalanceSheetReport')
+                                        'visible' => Yii::app()->user->checkAccess('director')
                                     ),
                                     array(
                                         'label' => 'Neraca (Multi Periode)', 
                                         'url' => array('/report/balanceSheetMonthly/summary'), 
-                                        'visible' => Yii::app()->user->checkAccess('multiBalanceSheetReport')
+                                        'visible' => Yii::app()->user->checkAccess('director')
                                     ),
                                 ),
                             )); ?>

@@ -198,6 +198,8 @@ class PaymentOutController extends Controller {
 
                 if (!empty($paymentOut->paymentType->coa_id)) {
                     $coaId = $paymentOut->paymentType->coa_id;
+                } elseif ($paymentOut->payment_type_id == 12) {
+                    $coaId = $paymentOut->coa_id_deposit;
                 } else {
                     $coaId = $paymentOut->companyBank->coa_id;
                 }
@@ -325,6 +327,8 @@ class PaymentOutController extends Controller {
 
                         if (!empty($paymentOut->paymentType->coa_id)) {
                             $coaId = $paymentOut->paymentType->coa_id;
+                        } elseif ($paymentOut->payment_type_id == 12) {
+                            $coaId = $paymentOut->coa_id_deposit;
                         } else {
                             $coaId = $paymentOut->companyBank->coa_id;
                         }

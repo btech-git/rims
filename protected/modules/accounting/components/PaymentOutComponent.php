@@ -121,15 +121,19 @@ class PaymentOutComponent extends CComponent {
                 $fields = array('memo', 'total_invoice');
                 $valid = $detail->validate($fields) && $valid;
             }
-        } else
+        } else {
             $valid = false;
+        }
 
         return $valid;
     }
 
     public function validatePaymentType() {
         $valid = true;
-        if (empty($this->header->paymentType->coa_id) && empty($this->header->company_bank_id)) {
+        if ($this->header->payment_type_id == 12 && empty($this->header->coa_id_deposit)) {
+            $valid = false;
+            $this->header->addError('error', 'COA Deposit harus diisi dulu.');
+        } elseif ($this->header->payment_type_id != 12 && empty($this->header->paymentType->coa_id) && empty($this->header->company_bank_id)) {
             $valid = false;
             $this->header->addError('error', 'Company Bank harus diisi dulu.');
         }

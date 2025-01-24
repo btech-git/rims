@@ -70,6 +70,10 @@
             'value' => empty($paymentOut->bank_id) ? "N/A" : $paymentOut->bank->name,
         ),
         array(
+            'label' => 'COA Deposit',
+            'value' => empty($paymentOut->coa_id_deposit) ? "N/A" : $paymentOut->coaIdDeposit->name,
+        ),
+        array(
             'label' => 'Admin',
             'value' => $paymentOut->user->username,
         ),
