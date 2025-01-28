@@ -4,59 +4,60 @@
 /* @var $form CActiveForm */
 ?>
 <script>
-	
+
 </script>
 <div class="form">
 
-<?php $form=$this->beginWidget('CActiveForm', array(
-	'id'=>'transaction-request-order-form',
-	'enableAjaxValidation'=>false,
-)); ?>
+    <?php
+    $form = $this->beginWidget('CActiveForm', array(
+        'id' => 'transaction-request-order-form',
+        'enableAjaxValidation' => false,
+    ));
+    ?>
 
-	<!-- <p class="note">Fields with <span class="required">*</span> are required.</p> -->
-	<div class="row">
-		<div class="field">
-			<div class="row collapse">
-				<h2>Payment In</h2>
-			</div>
-		</div>
-		<div class="field">
+    <div class="row">
+        <div class="field">
+            <div class="row collapse">
+                <h2>Payment In</h2>
+            </div>
+        </div>
+        <div class="field">
             <div class="row collapse">
                 <div class="small-4 columns">
                     <label class="prefix">Payment In No</label>
                 </div>
                 <div class="small-8 columns">
-                    <?php echo $form->textField($paymentIn, 'payment_number', array('value'=>$paymentIn->payment_number,'readonly'=>true)); ?>
-                </div>
-            </div>
-        </div>
-		 <div class="field">
-            <div class="row collapse">
-                <div class="small-4 columns">
-                  <label class="prefix">Date Posting</label>
-                </div>
-                <div class="small-8 columns">
-                    <?php echo $form->textField($paymentIn, 'payment_date', array('value'=>$paymentIn->payment_date,'readonly'=>true)); ?>
+                    <?php echo $form->textField($paymentIn, 'payment_number', array('value' => $paymentIn->payment_number, 'readonly' => true)); ?>
                 </div>
             </div>
         </div>
         <div class="field">
             <div class="row collapse">
                 <div class="small-4 columns">
-                  <label class="prefix">Payment Amount</label>
-              </div>
+                    <label class="prefix">Date Posting</label>
+                </div>
                 <div class="small-8 columns">
-                    <?php echo $form->textField($paymentIn, 'payment_amount', array('value'=>$paymentIn->payment_amount,'readonly'=>true)); ?>
+                    <?php echo $form->textField($paymentIn, 'payment_date', array('value' => $paymentIn->payment_date, 'readonly' => true)); ?>
                 </div>
             </div>
         </div>
         <div class="field">
             <div class="row collapse">
                 <div class="small-4 columns">
-                  <label class="prefix">Status</label>
-              </div>
+                    <label class="prefix">Payment Amount</label>
+                </div>
                 <div class="small-8 columns">
-                    <?php echo $form->textField($paymentIn, 'status', array('value'=>$paymentIn->status,'readonly'=>true)); ?>
+                    <?php echo $form->textField($paymentIn, 'payment_amount', array('value' => $paymentIn->payment_amount, 'readonly' => true)); ?>
+                </div>
+            </div>
+        </div>
+        <div class="field">
+            <div class="row collapse">
+                <div class="small-4 columns">
+                    <label class="prefix">Status</label>
+                </div>
+                <div class="small-8 columns">
+                    <?php echo $form->textField($paymentIn, 'status', array('value' => $paymentIn->status, 'readonly' => true)); ?>
                 </div>
             </div>
         </div>
@@ -72,7 +73,7 @@
         <div class="field">
             <div class="row collapse">
                 <div class="small-12 columns">
-                    <?php if ($historis!=null): ?>
+                    <?php if ($historis != null): ?>
                         <table>
                             <thead>
                                 <tr>
@@ -92,17 +93,20 @@
                                         <td><?php echo $history->note; ?></td>
                                         <td><?php echo $history->supervisor->username; ?></td>
                                     </tr>
-                                <?php endforeach; ?>
+                        <?php endforeach; ?>
                             </tbody>
-                         </table>
-                    <?php else: 
+                        </table>
+                    <?php
+                    else:
                         echo "No Revision History";
-                    ?>		
+                        ?>		
                     <?php endif; ?>			 
                 </div>
             </div>
         </div>
+        
         <hr />
+        
         <div class="field">
             <div class="row collapse">
                 <div class="small-12 columns">
@@ -122,35 +126,37 @@
                 </tr>
                 <tr>
                     <td>
-                        <?php echo $form->hiddenField($model, 'payment_in_id',array('value'=>$paymentIn->id)); ?>		
-                        <?php echo $form->dropDownList($model, 'approval_type', array('Revised' => 'Need Revision','Rejected'=>'Rejected','Approved'=>'Approved'),array('prompt'=>'[--Select Approval Status--]')); ?>
-                        <?php echo $form->error($model,'approval_type'); ?>
+                        <?php echo $form->hiddenField($model, 'payment_in_id', array('value' => $paymentIn->id)); ?>		
+                        <?php echo $form->dropDownList($model, 'approval_type', array('Revised' => 'Need Revision', 'Rejected' => 'Rejected', 'Approved' => 'Approved'), array('prompt' => '[--Select Approval Status--]')); ?>
+                        <?php echo $form->error($model, 'approval_type'); ?>
                     </td>
                     <td>
-                        <?php $revisions = PaymentInApproval::model()->findAllByAttributes(array('payment_in_id'=>$paymentIn->id)); ?>
-                        <?php echo $form->textField($model, 'revision',array('value'=>count($revisions)!=0? count($revisions): 0,'readonly'=>true)); ?>		
-                        <?php echo $form->error($model,'revision'); ?>
+                        <?php $revisions = PaymentInApproval::model()->findAllByAttributes(array('payment_in_id' => $paymentIn->id)); ?>
+                        <?php echo $form->textField($model, 'revision', array('value' => count($revisions) != 0 ? count($revisions) : 0, 'readonly' => true)); ?>		
+                        <?php echo $form->error($model, 'revision'); ?>
                     </td>
                     <td>
-                        <?php echo $form->textField($model, 'date',array('readonly'=>true)); ?>
-                        <?php echo $form->error($model,'date'); ?>
+                        <?php echo $form->textField($model, 'date', array('readonly' => true)); ?>
+                        <?php echo $form->error($model, 'date'); ?>
                     </td>
                     <td>
-                        <?php echo $form->textArea($model, 'note', array('rows'=>5, 'cols'=>30)); ?>
-                        <?php echo $form->error($model,'note'); ?>
+                        <?php echo $form->textArea($model, 'note', array('rows' => 5, 'cols' => 30)); ?>
+                        <?php echo $form->error($model, 'note'); ?>
                     </td>
                     <td>
-                        <?php echo $form->hiddenField($model, 'supervisor_id',array('readonly'=>true,'value'=> Yii::app()->user->getId()));?>
-                        <?php echo $form->textField($model, 'supervisor_name',array('readonly'=>true,'value'=> Yii::app()->user->getName()));?>
-                        <?php echo $form->error($model,'supervisor_id'); ?>
+                        <?php echo $form->hiddenField($model, 'supervisor_id', array('readonly' => true, 'value' => Yii::app()->user->getId())); ?>
+                        <?php echo $form->textField($model, 'supervisor_name', array('readonly' => true, 'value' => Yii::app()->user->getName())); ?>
+                        <?php echo $form->error($model, 'supervisor_id'); ?>
                     </td>
                 </tr>
             </table>
         </div>
+        
         <hr />
+        
         <div class="field buttons text-center">
-            <?php echo CHtml::submitButton('Save', array('class'=>'button cbutton')); ?>
+            <?php echo CHtml::submitButton('Save', array('class' => 'button cbutton')); ?>
         </div>
-	</div>
-    <?php $this->endWidget(); ?>
+    </div>
+<?php $this->endWidget(); ?>
 </div><!-- form -->

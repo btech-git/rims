@@ -19,6 +19,10 @@
  * @property integer $branch_id_request
  * @property integer $branch_id_reply
  * @property string $product_name
+ * @property string $vehicle_name
+ * @property integer $production_year
+ * @property string $brand_name
+ * @property string $category_name
  *
  * The followings are the available model relations:
  * @property Users $userIdRequest
@@ -28,11 +32,12 @@
  */
 class ProductPricingRequest extends CActiveRecord {
 
+    public $file;
     /**
      * @return string the associated database table name
      */
     public function tableName() {
-        return '{{product_pricing_request}}';
+        return 'rims_product_pricing_request';
     }
 
     /**
@@ -42,16 +47,16 @@ class ProductPricingRequest extends CActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('request_date, user_id_request, branch_id_request', 'required'),
-            array('user_id_request, user_id_reply, branch_id_request, branch_id_reply', 'numerical', 'integerOnly' => true),
+            array('request_date, user_id_request, branch_id_request, product_name', 'required'),
+            array('user_id_request, user_id_reply, branch_id_request, branch_id_reply, production_year', 'numerical', 'integerOnly' => true),
             array('recommended_price', 'length', 'max' => 18),
             array('quantity', 'length', 'max' => 10),
             array('extension', 'length', 'max' => 5),
-            array('product_name', 'length', 'max' => 100),
+            array('product_name, vehicle_name, brand_name, category_name', 'length', 'max' => 100),
             array('reply_date, request_time, reply_time, request_note, reply_note', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, recommended_price, request_date, quantity, user_id_request, user_id_reply, extension, reply_date, request_time, reply_time, request_note, reply_note, branch_id_request, branch_id_reply, product_name', 'safe', 'on' => 'search'),
+            array('id, recommended_price, request_date, quantity, user_id_request, user_id_reply, extension, reply_date, request_time, reply_time, request_note, reply_note, branch_id_request, branch_id_reply, product_name, vehicle_name, production_year, brand_name, category_name', 'safe', 'on' => 'search'),
         );
     }
 
@@ -89,6 +94,10 @@ class ProductPricingRequest extends CActiveRecord {
             'branch_id_request' => 'Branch Id Request',
             'branch_id_reply' => 'Branch Id Reply',
             'product_name' => 'Product Name',
+            'vehicle_name' => 'Vehicle Name',
+            'production_year' => 'Production Year',
+            'brand_name' => 'Brand Name',
+            'category_name' => 'Category Name',
         );
     }
 
@@ -124,6 +133,10 @@ class ProductPricingRequest extends CActiveRecord {
         $criteria->compare('branch_id_request', $this->branch_id_request);
         $criteria->compare('branch_id_reply', $this->branch_id_reply);
         $criteria->compare('product_name', $this->product_name, true);
+        $criteria->compare('vehicle_name', $this->vehicle_name, true);
+        $criteria->compare('production_year', $this->production_year);
+        $criteria->compare('brand_name', $this->brand_name, true);
+        $criteria->compare('category_name', $this->category_name, true);
 
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,

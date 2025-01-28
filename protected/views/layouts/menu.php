@@ -344,6 +344,11 @@
                         'visible' => (Yii::app()->user->checkAccess('materialRequestCreate') || Yii::app()->user->checkAccess('materialRequestEdit'))
                     ),
                     array(
+                        'label' => 'Permintaan Barang non stok', 
+                        'url' => array('/frontDesk/itemRequest/admin'), 
+//                        'visible' => (Yii::app()->user->checkAccess('itemRequestCreate') || Yii::app()->user->checkAccess('itemRequestEdit'))
+                    ),
+                    array(
                         'label' => 'Stok Gudang', 
                         'url' => array('/frontDesk/inventory/check'), 
                         'visible' => (Yii::app()->user->checkAccess('warehouseStockReport'))

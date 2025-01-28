@@ -1,3 +1,11 @@
+<script type="text/javascript">
+    window.onload = function() {
+        $(".bank").hide();
+        $(".giro").hide();
+        $(".deposit").hide();
+    }
+</script>
+
 <div class="form">
     <?php echo CHtml::beginForm(array(), 'POST', array('enctype' => 'multipart/form-data')); ?>
     <?php echo CHtml::errorSummary($paymentOut->header); ?>

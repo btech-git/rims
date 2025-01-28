@@ -123,6 +123,27 @@ $this->breadcrumbs = array(
                         <?php endif; ?>
                     <?php endif; ?>
                     
+                    <?php if (Yii::app()->user->checkAccess("generalRepairSupervisor")): ?>
+                        <?php echo CHtml::link('<span class="fa fa-minus"></span>Cancel Transaction', array("/frontDesk/generalRepairRegistration/cancel", "id" => $model->id), array(
+                            'class' => 'button alert left', 
+                            'style' => 'margin-left:10px', 
+                        )); ?>
+                    <?php endif; ?>
+
+                    <?php //if ($model->status == 'Finished' && $model->status !== 'CANCELLED!!!'): ?>
+                        <?php echo CHtml::link('Status Kendaraan', array("/frontDesk/generalRepairRegistration/updateLocation", "id" => $model->id, "vehicleId" => $model->vehicle_id), array(
+                            'class' => 'button warning left', 
+                            'style' => 'margin-left:10px', 
+                        )); ?>
+                    <?php //endif; ?>
+
+                    <?php if (!empty($invoices) && (!empty($model->sales_order_number) || !empty($model->work_order_number))): ?>
+                        <?php echo CHtml::submitButton('Finish Transaction', array('name' => 'SubmitFinish', 'confirm' => 'Are you sure you want to finish this transaction?', 'class' => 'button info right', 'style' => 'margin-right:10px')); ?>
+                    <?php endif; ?>
+
+                    <?php if ($model->service_status !== 'Done' && $model->total_service > 0): ?>
+                        <?php echo CHtml::submitButton('Finish Service', array('name' => 'SubmitService', 'confirm' => 'Are you sure you want to finish this services?', 'class' => 'button info right', 'style' => 'margin-right:10px')); ?>
+                    <?php endif; ?>
                 </div>
             </div>
 
@@ -231,31 +252,6 @@ $this->breadcrumbs = array(
                 'options' => array('collapsible' => true),
             )); ?>
         </fieldset>
-    </div>
-    
-    <div>
-        <?php if (Yii::app()->user->checkAccess("generalRepairSupervisor")): ?>
-            <?php echo CHtml::link('<span class="fa fa-minus"></span>Cancel Transaction', array("/frontDesk/generalRepairRegistration/cancel", "id" => $model->id), array(
-                'class' => 'button alert left', 
-                'style' => 'margin-left:10px', 
-            )); ?>
-        <?php endif; ?>
-        
-        <?php //if ($model->status == 'Finished' && $model->status !== 'CANCELLED!!!'): ?>
-            <?php echo CHtml::link('Status Kendaraan', array("/frontDesk/generalRepairRegistration/updateLocation", "id" => $model->id, "vehicleId" => $model->vehicle_id), array(
-                'class' => 'button warning left', 
-                'style' => 'margin-left:10px', 
-            )); ?>
-        <?php //endif; ?>
-
-        <?php if (!empty($invoices) && (!empty($model->sales_order_number) || !empty($model->work_order_number))): ?>
-            <?php echo CHtml::submitButton('Finish Transaction', array('name' => 'SubmitFinish', 'confirm' => 'Are you sure you want to finish this transaction?', 'class' => 'button info right', 'style' => 'margin-right:10px')); ?>
-        <?php endif; ?>
-
-        <?php if ($model->service_status !== 'Done' && $model->total_service > 0): ?>
-            <?php echo CHtml::submitButton('Finish Service', array('name' => 'SubmitService', 'confirm' => 'Are you sure you want to finish this services?', 'class' => 'button info right', 'style' => 'margin-right:10px')); ?>
-        <?php endif; ?>
-
     </div>
 </div>
 
