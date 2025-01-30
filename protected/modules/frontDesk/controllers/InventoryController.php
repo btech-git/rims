@@ -154,6 +154,9 @@ class InventoryController extends Controller {
         } else if ($codeNumberConstant === 'MO') {
             $model = MovementOutHeader::model()->findByAttributes(array('movement_out_no' => $codeNumber));
             $this->redirect(array('/transaction/movementOutHeader/view', 'id' => $model->id));
+        } else if ($codeNumberConstant === 'SA') {
+            $model = StockAdjustmentHeader::model()->findByAttributes(array('stock_adjustment_number' => $codeNumber));
+            $this->redirect(array('/frontDesk/adjustment/view', 'id' => $model->id));
         }
     }
 
