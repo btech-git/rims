@@ -211,9 +211,9 @@ class PurchaseOrders extends CComponent {
 
             $new_detail[] = $detail->id;
             
-            $product = Product::model()->findByPk($detail->product_id);
-            $product->hpp = $product->getAverageCogs();
-            $product->update(array('hpp'));
+//            $product = Product::model()->findByPk($detail->product_id);
+//            $product->hpp = $product->getAverageCogs();
+//            $product->update(array('hpp'));
         }
 
         foreach ($this->detailBranches as $detailBranch) {
