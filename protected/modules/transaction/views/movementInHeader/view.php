@@ -111,6 +111,7 @@ $this->menu = array(
                 ),
 //                'user.username',
                 'status',
+                'created_datetime',
             ),
         )); ?>
     </div>
