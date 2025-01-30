@@ -911,7 +911,7 @@ class TransactionPurchaseOrderController extends Controller {
 
                                 if ($productPrice->save()) {
                                     $product = Product::model()->findByPk($poDetail->product_id);
-                                    $product->hpp = $poDetail->unit_price;
+                                    $product->hpp = $product->getAverageCogs();
                                     $product->save();
                                 }
                             }

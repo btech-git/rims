@@ -33,6 +33,14 @@ class YearlySaleSummaryController extends Controller {
             $yearlySaleSummaryData[$monthValue][$yearlySaleSummaryItem['branch_id']] = $yearlySaleSummaryItem['total_price'];
         }
         
+        $yearlyVehicleSaleSummary = InvoiceHeader::getYearlyVehicleSaleSummary($year);
+        
+        $yearlyVehicleSaleSummaryData = array();
+        foreach ($yearlyVehicleSaleSummary as $yearlyVehicleSaleSummaryItem) {
+            $monthValue = intval(substr($yearlyVehicleSaleSummaryItem['year_month_value'], 4, 2));
+            $yearlyVehicleSaleSummaryData[$monthValue][$yearlyVehicleSaleSummaryItem['branch_id']] = $yearlyVehicleSaleSummaryItem['total_vehicle'];
+        }
+        
         $yearList = array();
         for ($y = $yearNow - 4; $y <= $yearNow; $y++) {
             $yearList[$y] = $y;
@@ -52,6 +60,7 @@ class YearlySaleSummaryController extends Controller {
         
         $this->render('summary', array(
             'yearlySaleSummaryData' => $yearlySaleSummaryData,
+            'yearlyVehicleSaleSummaryData' => $yearlyVehicleSaleSummaryData,
             'yearList' => $yearList,
             'year' => $year,
         ));

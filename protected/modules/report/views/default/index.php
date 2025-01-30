@@ -554,6 +554,11 @@
                                         'url' => array('/report/yearlySaleSummary/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('director')
                                     ),
+                                    array(
+                                        'label' => 'Laporan Penjualan Project', 
+                                        'url' => array('/report/saleByProject/summary'), 
+                                        'visible' => Yii::app()->user->checkAccess('director')
+                                    ),
                                 ),
                             )); ?>
                         <?php //endif; ?>

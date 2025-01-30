@@ -40,6 +40,7 @@
             <div class="relative">
                 <?php $this->renderPartial('_summary', array(
                     'yearlySaleSummaryData' => $yearlySaleSummaryData,
+                    'yearlyVehicleSaleSummaryData' => $yearlyVehicleSaleSummaryData,
                     'year' => $year,
                 )); ?>
             </div>

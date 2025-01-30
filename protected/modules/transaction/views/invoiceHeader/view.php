@@ -43,10 +43,10 @@ $this->menu = array(
         )); ?>
         
         <?php //if ($model->status == "Draft" && Yii::app()->user->checkAccess("invoiceApproval")): ?>
-            <?php echo CHtml::link('<span class="fa fa-edit"></span>Approval', Yii::app()->baseUrl . '/transaction/invoiceHeader/updateApproval?id=' . $model->id, array(
+            <?php /*echo CHtml::link('<span class="fa fa-edit"></span>Approval', Yii::app()->baseUrl . '/transaction/invoiceHeader/updateApproval?id=' . $model->id, array(
                 'class' => 'button cbutton right', 
                 'style' => 'margin-right:10px'
-            )); ?>
+            ));*/ ?>
         <?php //elseif ($model->status != "Draft" && Yii::app()->user->checkAccess("invoiceSupervisor")): ?>
             <?php //echo CHtml::link('<span class="fa fa-edit"></span>Update Approval', Yii::app()->baseUrl . '/transaction/paymentIn/updateApproval?headerId=' . $model->id, array('class' => 'button cbutton right', 'style' => 'margin-right:10px')) ?>
         <?php //endif; ?>

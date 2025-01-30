@@ -695,4 +695,34 @@ class Customer extends CActiveRecord {
         
         return $resultSet;
     }
+    
+    public function getSaleByProjectReport($startDate, $endDate, $branchId) {
+        $branchConditionSql = '';
+        
+        $params = array(
+            ':customer_id' => $this->id,
+            ':start_date' => $startDate,
+            ':end_date' => $endDate,
+        );
+        
+        if (!empty($branchId)) {
+            $branchConditionSql = ' AND r.branch_id = :branch_id';
+            $params[':branch_id'] = $branchId;
+        }
+        
+        $sql = "
+            SELECT r.id, r.invoice_number, r.invoice_date, p.name AS product, s.name AS service, d.quantity, d.unit_price, d.total_price, v.plate_number AS plate_number, p.hpp
+            FROM " . InvoiceHeader::model()->tableName() . " r
+            INNER JOIN " . InvoiceDetail::model()->tableName() . " d ON r.id = d.invoice_id
+            INNER JOIN " . Vehicle::model()->tableName() . " v ON v.id = r.vehicle_id
+            LEFT OUTER JOIN " . Product::model()->tableName() . " p ON p.id = d.product_id
+            LEFT OUTER JOIN " . Service::model()->tableName() . " s ON s.id = d.service_id
+            WHERE r.customer_id = :customer_id AND substr(r.invoice_date, 1, 10) BETWEEN :start_date AND :end_date AND r.status NOT LIKE '%CANCELLED%'" . $branchConditionSql . "
+            ORDER BY r.invoice_date, r.invoice_number
+        ";
+
+        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
+        
+        return $resultSet;
+    }
 }
