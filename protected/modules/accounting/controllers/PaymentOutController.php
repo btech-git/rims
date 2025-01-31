@@ -43,7 +43,7 @@ class PaymentOutController extends Controller {
     }
 
     public function actionCreate($supplierId, $movementType) {
-        $paymentOut = $this->instantiate(null, 'createMultiple');
+        $paymentOut = $this->instantiate(null, 'create');
         $supplier = Supplier::model()->findByPk($supplierId);
 
         $paymentOut->header->user_id = Yii::app()->user->id;
@@ -93,7 +93,7 @@ class PaymentOutController extends Controller {
     }
 
     public function actionCreateSingle($transactionId, $movementType) {
-        $paymentOut = $this->instantiate(null, 'createSingle');
+        $paymentOut = $this->instantiate(null, 'create');
         
         if ($movementType == 1) {
             $workOrderExpense = null;
