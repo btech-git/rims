@@ -14,16 +14,18 @@ class AdminController extends Controller {
 
     public function filterAccess($filterChain) {
         if ($filterChain->action->id === 'create') {
-            if (!(Yii::app()->user->checkAccess('masterUserCreate')))
+            if (!(Yii::app()->user->checkAccess('masterUserCreate'))) {
                 $this->redirect(array('/site/login'));
+            }
         }
 
         if (
             $filterChain->action->id === 'update' || 
             $filterChain->action->id === 'delete'
         ) {
-            if (!Yii::app()->user->checkAccess('masterUserEdit'))
+            if (!Yii::app()->user->checkAccess('masterUserEdit')) {
                 $this->redirect(array('/site/login'));
+            }
         }
 
         if ($filterChain->action->id === 'switchUser') {
@@ -32,13 +34,10 @@ class AdminController extends Controller {
             }
         }
 
-        if (
-            $filterChain->action->id === 'view' || 
-            $filterChain->action->id === 'profile' || 
-            $filterChain->action->id === 'admin'
-        ) {
-            if (!(Yii::app()->user->checkAccess('masterUserCreate')) || !(Yii::app()->user->checkAccess('masterUserEdit')))
+        if ($filterChain->action->id === 'admin') {
+            if (!(Yii::app()->user->checkAccess('masterUserCreate')) || !(Yii::app()->user->checkAccess('masterUserEdit'))) {
                 $this->redirect(array('/site/login'));
+            }
         }
 
         $filterChain->run();
