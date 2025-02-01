@@ -19,7 +19,6 @@ class AdminController extends Controller {
         }
 
         if (
-            $filterChain->action->id === 'edit' || 
             $filterChain->action->id === 'update' || 
             $filterChain->action->id === 'delete'
         ) {
