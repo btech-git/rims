@@ -121,7 +121,7 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                         )); ?>
                                         <?php $this->endWidget(); ?>
                                         <?php echo CHtml::openTag('span', array('id' => 'customer_name')); ?>
-                                        <?php echo CHtml::encode(CHtml::value($customer, 'name')); ?>
+                                        <?php echo CHtml::encode(CHtml::value($customerData, 'name')); ?>
                                         <?php echo CHtml::closeTag('span'); ?> 
 
                                     </div>
@@ -211,6 +211,7 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                         'startDate' => $startDate,
                         'endDate' => $endDate,
                         'branchId' => $branchId,
+                        'customerData' => $customerData,
                     )); ?>
                 </div>
                 <div class="clear"></div>
