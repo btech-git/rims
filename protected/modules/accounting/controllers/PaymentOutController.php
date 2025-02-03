@@ -142,6 +142,9 @@ class PaymentOutController extends Controller {
 
     public function actionUpdate($id) {
         $paymentOut = $this->instantiate($id, 'update');
+        $paymentOut->header->edited_datetime = date('Y-m-d H:i:s');
+        $paymentOut->header->user_id_edited = Yii::app()->user->id;
+        
         $supplier = Supplier::model()->findByPk($paymentOut->header->supplier_id);
         $movementType = $paymentOut->header->movement_type;
 

@@ -107,4 +107,19 @@ class TransactionLog extends CActiveRecord {
         return parent::model($className);
     }
 
+    public static function getTransactionLogUserCounterData($startDate, $endDate) {
+        
+        $sql = "SELECT user_id, controller_class, action_type, MIN(username) AS username, COUNT(*) AS counter
+                FROM " . TransactionLog::model()->tableName() . "
+                WHERE transaction_date BETWEEN :start_date AND :end_date AND action_type IN ('create', 'update', 'approval', 'cancel')
+                GROUP BY user_id, controller_class, action_type
+                ORDER BY user_id ASC, controller_class ASC, action_type ASC";
+                
+        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, array(
+            ':start_date' => $startDate,
+            ':end_date' => $endDate,
+        ));
+        
+        return $resultSet;
+    }
 }

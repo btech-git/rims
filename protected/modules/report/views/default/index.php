@@ -526,7 +526,7 @@
                                     ),
                                     array(
                                         'label' => 'Laporan User Performance', 
-                                        'url' => array('/report/userPerformance/summary'), 
+                                        'url' => array('/report/transactionLogUserCounter/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('director')
                                     ),
                                     array(
@@ -557,6 +557,11 @@
                                     array(
                                         'label' => 'Laporan Penjualan Project', 
                                         'url' => array('/report/saleByProject/summary'), 
+                                        'visible' => Yii::app()->user->checkAccess('director')
+                                    ),
+                                    array(
+                                        'label' => 'Laporan Konfirmasi Transaksi Harian', 
+                                        'url' => array('/report/dailyTransactionConfirmation/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('director')
                                     ),
                                 ),

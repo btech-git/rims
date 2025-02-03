@@ -114,7 +114,6 @@ class CashDailySummary extends CActiveRecord {
         
         return $this->id . '.' . $this->extension;
     }
-    
 
     public function getApprovalList($monthStart, $yearStart, $monthEnd, $yearEnd, $branchId) {
         if (empty($branchId)) {

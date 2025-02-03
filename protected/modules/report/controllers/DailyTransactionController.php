@@ -119,8 +119,8 @@ class DailyTransactionController extends Controller {
             ),
         ));
         
-        $vehicleData = RegistrationTransaction::model()->findAll(array(
-            'condition' => "substr(t.transaction_date, 1, 10) BETWEEN '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND :transaction_date AND t.branch_id = :branch_id AND t.vehicle_status = 'DI BENGKEL'",
+        $vehicleData = RegistrationTransaction::model()->with('vehicle')->findAll(array(
+            'condition' => "substr(t.transaction_date, 1, 10) BETWEEN '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND :transaction_date AND t.branch_id = :branch_id AND vehicle.status_location = 'Masuk Bengkel'",
             'params' => array(
                 ':transaction_date' => $transactionDate, 
                 ':branch_id' => $branchId
