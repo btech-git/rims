@@ -25,9 +25,9 @@
 <?php echo CHtml::activeCheckBox($model, 'rememberMe'); ?>
 <?php echo CHtml::activeLabelEx($model, 'rememberMe'); ?>
 
-<p class="pull-right">
+<!--<p class="pull-right">
     <?php //echo CHtml::link(UserModule::t("Register"), Yii::app()->getModule('user')->registrationUrl); ?> | <?php //echo CHtml::link(UserModule::t("Lost Password?"), Yii::app()->getModule('user')->recoveryUrl); ?>
-</p>
+</p>-->
 
 <?php echo CHtml::submitButton(UserModule::t("Login"), array('class' => 'tiny button cbutton', 'style' => 'width:100%;')); ?>
 

@@ -8,12 +8,14 @@ Yii::app()->clientScript->registerCss('_report', '
     .width2-1 { width: 10% }
     .width2-2 { width: 10% }
     .width2-3 { width: 10% }
-    .width2-4 { width: 25% }
+    .width2-4 { width: 5% }
     .width2-5 { width: 5% }
     .width2-6 { width: 10% }
-    .width2-7 { width: 10% }
+    .width2-7 { width: 5% }
     .width2-8 { width: 10% }
     .width2-9 { width: 10% }
+    .width2-10 { width: 10% }
+    .width2-11 { width: 10% }
 ');
 ?>
 
@@ -39,12 +41,14 @@ Yii::app()->clientScript->registerCss('_report', '
                         <th class="width2-1">Penjualan #</th>
                         <th class="width2-2">Tanggal</th>
                         <th class="width2-3">Vehicle</th>
-                        <th class="width2-4">Nama Parts/Jasa</th>
-                        <th class="width2-5">Quantity</th>
-                        <th class="width2-6">Harga</th>
-                        <th class="width2-7">HPP</th>
-                        <th class="width2-8">Profit</th>
-                        <th class="width2-9">Total</th>
+                        <th class="width2-4">Type</th>
+                        <th class="width2-5">ID</th>
+                        <th class="width2-6">Item</th>
+                        <th class="width2-7">Quantity</th>
+                        <th class="width2-8">Harga</th>
+                        <th class="width2-9">HPP</th>
+                        <th class="width2-10">COGS</th>
+                        <th class="width2-11">Total</th>
                     </tr>
                 </table>
             </td>
@@ -81,31 +85,45 @@ Yii::app()->clientScript->registerCss('_report', '
                                     </td>
                                     <td class="width2-4">
                                         <?php if (empty($saleReportRow['product'])): ?>
+                                            <?php echo 'Jasa'; ?>
+                                        <?php else: ?>
+                                            <?php echo 'Parts'; ?>
+                                        <?php endif; ?>
+                                    </td>
+                                    <td class="width2-5">
+                                        <?php if (empty($saleReportRow['product'])): ?>
+                                            <?php echo CHtml::encode($saleReportRow['service_id']); ?>
+                                        <?php else: ?>
+                                            <?php echo CHtml::encode($saleReportRow['product_id']); ?>
+                                        <?php endif; ?>
+                                    </td>
+                                    <td class="width2-6">
+                                        <?php if (empty($saleReportRow['product'])): ?>
                                             <?php echo CHtml::encode($saleReportRow['service']); ?>
                                         <?php else: ?>
                                             <?php echo CHtml::encode($saleReportRow['product']); ?>
                                         <?php endif; ?>
                                     </td>
-                                    <td class="width2-5" style="text-align: center">
+                                    <td class="width2-7" style="text-align: center">
                                         <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $saleReportRow['quantity'])); ?>
                                     </td>
-                                    <td class="width2-6" style="text-align: right">
+                                    <td class="width2-8" style="text-align: right">
                                         <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $unitPrice)); ?>
                                     </td>
-                                    <td class="width2-7" style="text-align: right">
+                                    <td class="width2-9" style="text-align: right">
                                         <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $cogs)); ?>
                                     </td>
-                                    <td class="width2-8" style="text-align: right">
+                                    <td class="width2-10" style="text-align: right">
                                         <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $profit)); ?>
                                     </td>
-                                    <td class="width2-9" style="text-align: right">
+                                    <td class="width2-11" style="text-align: right">
                                         <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $grandTotal)); ?>
                                     </td>
                                 </tr>
                                 <?php $totalSale += $grandTotal; ?>
                             <?php endforeach; ?>
                             <tr>
-                                <td style="text-align: right" colspan="8">Total</td>
+                                <td style="text-align: right" colspan="10">Total</td>
                                 <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalSale)); ?></td>
                             </tr>
                         <?php endif; ?>

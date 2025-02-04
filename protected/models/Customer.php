@@ -711,7 +711,7 @@ class Customer extends CActiveRecord {
         }
         
         $sql = "
-            SELECT r.id, r.invoice_number, r.invoice_date, p.name AS product, s.name AS service, d.quantity, d.unit_price, d.total_price, v.plate_number AS plate_number, p.hpp
+            SELECT r.id, r.invoice_number, r.invoice_date, d.product_id, p.name AS product, d.service_id, s.name AS service, d.quantity, d.unit_price, d.total_price, v.plate_number AS plate_number, p.hpp
             FROM " . InvoiceHeader::model()->tableName() . " r
             INNER JOIN " . InvoiceDetail::model()->tableName() . " d ON r.id = d.invoice_id
             INNER JOIN " . Vehicle::model()->tableName() . " v ON v.id = r.vehicle_id
