@@ -168,7 +168,7 @@
                             <?php echo CHtml::label('Bank', false); ?>
                         </div>
                         <div class="small-8 columns">
-                            <?php echo CHtml::activeDropDownList($paymentOut->header, 'bank_id', CHtml::listData(Bank::model()->findAll(array('sort' => 'name ASC')), 'id', 'name'), array(
+                            <?php echo CHtml::activeDropDownList($paymentOut->header, 'bank_id', CHtml::listData(Bank::model()->findAll(array('order' => 'name ASC')), 'id', 'name'), array(
                                 'empty' => '-- Select Bank --'
                             )); ?>
                             <?php echo CHtml::error($paymentOut->header, 'bank_id'); ?>
