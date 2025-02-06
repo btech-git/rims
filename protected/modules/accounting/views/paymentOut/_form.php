@@ -1,11 +1,3 @@
-<script type="text/javascript">
-    window.onload = function() {
-        $(".bank").hide();
-        $(".giro").hide();
-        $(".deposit").hide();
-    }
-</script>
-
 <div class="form">
     <?php echo CHtml::beginForm(array(), 'POST', array('enctype' => 'multipart/form-data')); ?>
     <?php echo CHtml::errorSummary($paymentOut->header); ?>
@@ -147,7 +139,7 @@
                 </div>
             </div>
             
-            <div class="giro">
+            <div class="giro" <?php if ((int) $paymentOut->header->payment_type_id !== 6): ?>style="display: none"<?php endif; ?>>
                 <div class="field">
                     <div class="row collapse">
                         <div class="small-4 columns">
@@ -161,7 +153,7 @@
                 </div>
             </div>
             
-            <div class="bank">
+            <div class="bank" <?php if ((int) $paymentOut->header->payment_type_id !== 5 && (int) $paymentOut->header->payment_type_id !== 6): ?>style="display: none"<?php endif; ?>>
                 <div class="field">
                     <div class="row collapse">
                         <div class="small-4 columns">
@@ -195,7 +187,7 @@
                 </div>
             </div>
             
-            <div class="deposit">
+            <div class="deposit" <?php if ((int) $paymentOut->header->payment_type_id !== 12): ?>style="display: none"<?php endif; ?>>
                 <div class="field">
                     <div class="row collapse">
                         <div class="small-4 columns">

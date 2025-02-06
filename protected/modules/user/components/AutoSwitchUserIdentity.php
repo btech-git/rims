@@ -23,11 +23,13 @@ class AutoSwitchUserIdentity extends CUserIdentity {
         if ($user === null) {
             $this->errorCode = self::ERROR_USERNAME_INVALID;
         } else {
+            $branch = Branch::model()->find();
             $userBranches = UserBranch::model()->findAllByAttributes(array('users_id' => $user->id));
             $branchIds = array_map(function ($userBranch) {
                 return $userBranch->branch_id;
             }, $userBranches);
             $this->setState('branch_ids', $branchIds);
+            $this->setState('branch_id', $branch->id);
             $this->_id = $user->id;
             $this->username = $user->username;
             $this->errorCode = self::ERROR_NONE;

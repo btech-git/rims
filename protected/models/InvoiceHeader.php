@@ -335,6 +335,16 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
         return $this->service_price + $this->product_price + $this->quick_service_price;
     }
 
+    public function getSubTotalBeforeDiscount() {
+        $total = '0.00'; 
+        
+        foreach ($this->invoiceDetails as $detail) {
+            $total += $detail->quantity * $detail->unit_price;
+        }
+        
+        return $total;
+    }
+
     public function getTotalPayment() {
         $total = 0.00;
         
