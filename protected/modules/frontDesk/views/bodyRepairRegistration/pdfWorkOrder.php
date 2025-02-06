@@ -51,7 +51,7 @@ function tanggal($date) {
                 <td><?php echo tanggal($bodyRepairRegistration->transaction_date) . ' ' . Yii::app()->dateFormatter->formatDateTime($bodyRepairRegistration->transaction_date, '', 'short'); ?></td>
                 <td>TANGGAL SELESAI</td>
                 <td>:</td>
-                <td></td>
+                <td><?php echo tanggal($bodyRepairRegistration->transaction_date) . ' ' . Yii::app()->dateFormatter->formatDateTime($bodyRepairRegistration->transaction_date, '', 'short'); ?></td>
             </tr>
             <tr>
                 <td>NAMA CUSTOMER</td>
