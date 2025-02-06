@@ -2,6 +2,7 @@
     <table>
         <thead>
             <tr>
+                <td>ID</td>
                 <td>Product</td>
                 <td>Code</td>
                 <td>Kategori</td>
@@ -17,6 +18,7 @@
         <tbody>
             <?php foreach ($transferDetails as $key => $transferDetail): ?>
                 <tr>
+                    <td><?php echo $transferDetail->product ? $transferDetail->product_id : '-'; ?></td>
                     <td><?php echo $transferDetail->product ? $transferDetail->product->name : '-'; ?></td>
                     <td><?php echo $transferDetail->product ? $transferDetail->product->manufacturer_code : '-'; ?></td>
                     <td><?php echo $transferDetail->product ? $transferDetail->product->masterSubCategoryCode : '-'; ?></td>
@@ -32,7 +34,7 @@
         </tbody>
         <tfoot>
             <tr>
-                <td colspan="6" style="text-align: right; font-weight: bold">Total Quantity</td>
+                <td colspan="7" style="text-align: right; font-weight: bold">Total Quantity</td>
                 <td style="text-align: center; font-weight: bold"><?php echo $model->total_quantity; ?></td>
                 <td>&nbsp;</td>
             </tr>

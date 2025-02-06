@@ -65,7 +65,7 @@ $this->menu = array(
         <?php $this->widget('zii.widgets.CDetailView', array(
             'data' => $transferRequest,
             'attributes' => array(
-                'id',
+//                'id',
                 'transfer_request_no',
                 array('name' => 'transfer_request_date', 'value' => $transferRequest->transactionDateTime),
                 'status_document',
