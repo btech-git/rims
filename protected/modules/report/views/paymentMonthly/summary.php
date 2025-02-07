@@ -16,11 +16,11 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                         <div class="medium-6 columns">
                             <div class="field">
                                 <div class="row collapse">
-                                    <div class="small-2 columns">
+                                    <div class="small-4 columns">
                                         <span class="prefix">Periode</span>
                                     </div>
 
-                                    <div class="small-2 columns">
+                                    <div class="small-4 columns">
                                         <?php echo CHtml::dropDownList('Month', $month, array(
                                             '01' => 'Jan',
                                             '02' => 'Feb',
@@ -37,8 +37,21 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                         )); ?>
                                     </div>
 
-                                    <div class="small-2 columns">
+                                    <div class="small-4 columns">
                                         <?php echo CHtml::dropDownList('Year', $year, $yearList); ?>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="medium-6 columns">
+                            <div class="field">
+                                <div class="row collapse">
+                                    <div class="small-4 columns">
+                                        <span class="prefix">Branch</span>
+                                    </div>
+                                    <div class="small-8 columns">
+                                          <?php echo CHtml::dropDownlist('BranchId', $branchId, CHtml::listData(Branch::model()->findAllbyAttributes(array('status'=>'Active')), 'id','name'), array('empty'=>'-- All Branch --')); ?>
                                     </div>
                                 </div>
                             </div>
@@ -60,8 +73,20 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                 <hr />
 
                 <div class="relative">
-                    <?php $this->renderPartial('_summary', array(
+                    <?php $this->renderPartial('_summaryIn', array(
                         'paymentInList' => $paymentInList,
+                        'paymentTypes' => $paymentTypes,
+                        'month' => $month,
+                        'year' => $year,
+                        'numberOfDays' => $numberOfDays,
+                    )); ?>
+                </div>
+                
+                <hr />
+
+                <div class="relative">
+                    <?php $this->renderPartial('_summaryOut', array(
+                        'paymentOutList' => $paymentOutList,
                         'paymentTypes' => $paymentTypes,
                         'month' => $month,
                         'year' => $year,

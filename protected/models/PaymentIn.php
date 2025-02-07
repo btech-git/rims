@@ -444,7 +444,8 @@ class PaymentIn extends MonthlyTransactionActiveRecord {
                 FROM " . PaymentIn::model()->tableName() . " pi
                 INNER JOIN " . PaymentType::model()->tableName() . " pt ON pt.id = pi.payment_type_id
                 WHERE YEAR(payment_date) = :year AND MONTH(payment_date) = :month AND pi.status IN ('CLEAR', 'Approved')" . $branchConditionSql . "
-                GROUP BY pi.payment_date, pi.payment_type_id";
+                GROUP BY pi.payment_date, pi.payment_type_id
+                ORDER BY pi.payment_date";
 
         $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
 

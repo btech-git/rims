@@ -16,11 +16,11 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                         <div class="medium-6 columns">
                             <div class="field">
                                 <div class="row collapse">
-                                    <div class="small-2 columns">
+                                    <div class="small-4 columns">
                                         <span class="prefix">Periode</span>
                                     </div>
 
-                                    <div class="small-2 columns">
+                                    <div class="small-4 columns">
                                         <?php echo CHtml::dropDownList('Month', $month, array(
                                             '01' => 'Jan',
                                             '02' => 'Feb',
@@ -37,7 +37,7 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                         )); ?>
                                     </div>
 
-                                    <div class="small-2 columns">
+                                    <div class="small-4 columns">
                                         <?php echo CHtml::dropDownList('Year', $year, $yearList); ?>
                                     </div>
                                 </div>

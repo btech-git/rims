@@ -564,6 +564,11 @@
                                         'url' => array('/report/dailyTransactionConfirmation/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('director')
                                     ),
+                                    array(
+                                        'label' => 'Laporan Kas Bulanan', 
+                                        'url' => array('/report/paymentMonthly/summary'), 
+                                        'visible' => Yii::app()->user->checkAccess('director')
+                                    ),
                                 ),
                             )); ?>
                         <?php //endif; ?>

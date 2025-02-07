@@ -32,7 +32,8 @@ class PaymentMonthlyController extends Controller {
         
         $paymentTypes = PaymentType::model()->findAll();
         
-        $paymentByTypeList = PaymentIn::getPaymentByTypeList($month, $year, $branchId);
+        $paymentInByTypeList = PaymentIn::getPaymentByTypeList($month, $year, $branchId);
+        $paymentOutByTypeList = PaymentOut::getPaymentByTypeList($month, $year, $branchId);
         
         $paymentTypeIdList = array();
         foreach ($paymentTypes as $paymentType) {
@@ -40,16 +41,30 @@ class PaymentMonthlyController extends Controller {
         }
         
         $paymentInList = array();
-        $lastPaymentDate = '';
-        foreach ($paymentByTypeList as $paymentByTypeRow) {
-            if ($lastPaymentDate !== $paymentByTypeRow['payment_date']) {
-                $paymentInList[$paymentByTypeRow['payment_date']][0] = $paymentByTypeRow['payment_type'];
+        $lastPaymentInDate = '';
+        foreach ($paymentInByTypeList as $paymentInByTypeRow) {
+            if ($lastPaymentInDate !== $paymentInByTypeRow['payment_date']) {
+                $paymentInList[$paymentInByTypeRow['payment_date']][0] = $paymentInByTypeRow['payment_date'];
                 foreach ($paymentTypeIdList as $paymentTypeId) {
-                    $paymentInList[$paymentByTypeRow['payment_date']][$paymentTypeId] = '0.00';
+                    $paymentInList[$paymentInByTypeRow['payment_date']][$paymentTypeId] = '0.00';
                 }
             }
-            $paymentInList[$paymentByTypeRow['payment_date']][$paymentByTypeRow['payment_type_id']] = $paymentByTypeRow['total_amount'];
-            $lastPaymentDate = $paymentByTypeRow['payment_date'];
+            $paymentInList[$paymentInByTypeRow['payment_date']][$paymentInByTypeRow['payment_type_id']] = $paymentInByTypeRow['total_amount'];
+            $lastPaymentInDate = $paymentInByTypeRow['payment_date'];
+        }
+
+        
+        $paymentOutList = array();
+        $lastPaymentOutDate = '';
+        foreach ($paymentOutByTypeList as $paymentOutByTypeRow) {
+            if ($lastPaymentOutDate !== $paymentOutByTypeRow['payment_date']) {
+                $paymentOutList[$paymentOutByTypeRow['payment_date']][0] = $paymentOutByTypeRow['payment_date'];
+                foreach ($paymentTypeIdList as $paymentTypeId) {
+                    $paymentOutList[$paymentOutByTypeRow['payment_date']][$paymentTypeId] = '0.00';
+                }
+            }
+            $paymentOutList[$paymentOutByTypeRow['payment_date']][$paymentOutByTypeRow['payment_type_id']] = $paymentOutByTypeRow['total_amount'];
+            $lastPaymentOutDate = $paymentOutByTypeRow['payment_date'];
         }
 
         $yearList = array();
@@ -69,6 +84,7 @@ class PaymentMonthlyController extends Controller {
 
         $this->render('summary', array(
             'paymentInList' => $paymentInList,
+            'paymentOutList' => $paymentOutList,
             'yearList' => $yearList,
             'paymentTypes' => $paymentTypes,
             'month' => $month,

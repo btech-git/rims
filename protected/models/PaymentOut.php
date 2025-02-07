@@ -331,4 +331,27 @@ class PaymentOut extends MonthlyTransactionActiveRecord {
         
         return $paymentOutApproval->approval_type;
     }
+
+    public static function getPaymentByTypeList($month, $year, $branchId) {
+        $branchConditionSql = '';
+        $params = array(
+            ':year' => $year,
+            ':month' => $month,
+        );
+        if (!empty($branchId)) {
+            $branchConditionSql = " AND pi.branch_id = :branch_id";
+            $params[':branch_id'] = $branchId;
+        }
+        
+        $sql = "SELECT pi.payment_date, pi.payment_type_id, MIN(pt.name) AS payment_type, COALESCE(SUM(pi.payment_amount), 0) AS total_amount
+                FROM " . PaymentOut::model()->tableName() . " pi
+                INNER JOIN " . PaymentType::model()->tableName() . " pt ON pt.id = pi.payment_type_id
+                WHERE YEAR(payment_date) = :year AND MONTH(payment_date) = :month AND pi.status IN ('CLEAR', 'Approved')" . $branchConditionSql . "
+                GROUP BY pi.payment_date, pi.payment_type_id
+                ORDER BY pi.payment_date";
+
+        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
+
+        return $resultSet;
+    }
 }
