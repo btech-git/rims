@@ -40,7 +40,7 @@
 
 	<div class="row">
             <?php echo $form->labelEx($model,'coa_id'); ?>
-            <?php echo $form->dropDownList($model, 'coa_id', CHtml::listData(Coa::model()->findAll(array('condition' => 'coa_sub_category_id IN (1, 2)')), 'id', 'name'),array(
+            <?php echo $form->dropDownList($model, 'coa_id', CHtml::listData(Coa::model()->findAll(array('condition' => 'coa_sub_category_id IN (1, 2) AND t.status = "Approved"')), 'id', 'name'),array(
                 'prompt' => '[--Select COA--]',
             )); ?>
             <?php echo $form->error($model,'coa_id'); ?>
