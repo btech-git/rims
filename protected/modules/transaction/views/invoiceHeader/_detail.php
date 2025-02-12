@@ -9,7 +9,6 @@
         </thead>
         <tbody>
             <?php foreach ($invoice->details as $i => $detail): ?>
-                <?php echo $form->errorSummary($detail); ?>
                 <tr>
                     <?php if ($detail->product_id != ""): ?>
                         <td>
