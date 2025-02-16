@@ -37,11 +37,67 @@
 
             <hr />
 
+            <div style="font-weight: bold; text-align: center">
+                <div style="font-size: larger">Laporan Penjualan Tahunan</div>
+                <div><?php echo CHtml::encode($year); ?></div>
+            </div>
+
+            <br />
+
+            <?php $monthList = array(
+                1 => 'Jan',
+                2 => 'Feb',
+                3 => 'Mar',
+                4 => 'Apr',
+                5 => 'May',
+                6 => 'Jun',
+                7 => 'Jul',
+                8 => 'Aug',
+                9 => 'Sep',
+                10 => 'Oct',
+                11 => 'Nov',
+                12 => 'Dec',
+            ); ?>
+
             <div class="relative">
-                <?php $this->renderPartial('_summary', array(
+                <?php $this->renderPartial('_summaryTotal', array(
                     'yearlySaleSummaryData' => $yearlySaleSummaryData,
+                    'year' => $year,
+                    'branches' => $branches,
+                    'monthList' => $monthList,
+                )); ?>
+            </div>
+
+            <hr />
+
+            <div class="relative">
+                <?php $this->renderPartial('_summaryCompany', array(
+                    'yearlyCompanySaleSummaryData' => $yearlyCompanySaleSummaryData,
+                    'year' => $year,
+                    'branches' => $branches,
+                    'monthList' => $monthList,
+                )); ?>
+            </div>
+
+            <hr />
+
+            <div class="relative">
+                <?php $this->renderPartial('_summaryIndividual', array(
+                    'yearlyIndividualSaleSummaryData' => $yearlyIndividualSaleSummaryData,
+                    'year' => $year,
+                    'branches' => $branches,
+                    'monthList' => $monthList,
+                )); ?>
+            </div>
+
+            <hr />
+
+            <div class="relative">
+                <?php $this->renderPartial('_summaryVehicle', array(
                     'yearlyVehicleSaleSummaryData' => $yearlyVehicleSaleSummaryData,
                     'year' => $year,
+                    'branches' => $branches,
+                    'monthList' => $monthList,
                 )); ?>
             </div>
             <div class="clear"></div>

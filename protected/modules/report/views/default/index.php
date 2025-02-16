@@ -569,6 +569,11 @@
                                         'url' => array('/report/paymentMonthly/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('director')
                                     ),
+                                    array(
+                                        'label' => 'Laporan Penyesuaian Stok Gudang', 
+                                        'url' => array('/report/stockAdjustment/summary'), 
+                                        'visible' => Yii::app()->user->checkAccess('director')
+                                    ),
                                 ),
                             )); ?>
                         <?php //endif; ?>

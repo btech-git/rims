@@ -33,6 +33,22 @@ class YearlySaleSummaryController extends Controller {
             $yearlySaleSummaryData[$monthValue][$yearlySaleSummaryItem['branch_id']] = $yearlySaleSummaryItem['total_price'];
         }
         
+        $yearlyCompanySaleSummary = InvoiceHeader::getYearlyCompanySaleSummary($year);
+        
+        $yearlyCompanySaleSummaryData = array();
+        foreach ($yearlyCompanySaleSummary as $yearlyCompanySaleSummaryItem) {
+            $monthValue = intval(substr($yearlyCompanySaleSummaryItem['year_month_value'], 4, 2));
+            $yearlyCompanySaleSummaryData[$monthValue][$yearlyCompanySaleSummaryItem['branch_id']] = $yearlyCompanySaleSummaryItem['total_price'];
+        }
+        
+        $yearlyIndividualSaleSummary = InvoiceHeader::getYearlyIndividualSaleSummary($year);
+        
+        $yearlyIndividualSaleSummaryData = array();
+        foreach ($yearlyIndividualSaleSummary as $yearlyIndividualSaleSummaryItem) {
+            $monthValue = intval(substr($yearlyIndividualSaleSummaryItem['year_month_value'], 4, 2));
+            $yearlyIndividualSaleSummaryData[$monthValue][$yearlyIndividualSaleSummaryItem['branch_id']] = $yearlyIndividualSaleSummaryItem['total_price'];
+        }
+        
         $yearlyVehicleSaleSummary = InvoiceHeader::getYearlyVehicleSaleSummary($year);
         
         $yearlyVehicleSaleSummaryData = array();
@@ -45,6 +61,7 @@ class YearlySaleSummaryController extends Controller {
         for ($y = $yearNow - 4; $y <= $yearNow; $y++) {
             $yearList[$y] = $y;
         }
+        $branches = Branch::model()->findAll();
         
         if (isset($_GET['ResetFilter'])) {
             $this->redirect(array('summary'));
@@ -60,9 +77,12 @@ class YearlySaleSummaryController extends Controller {
         
         $this->render('summary', array(
             'yearlySaleSummaryData' => $yearlySaleSummaryData,
+            'yearlyCompanySaleSummaryData' => $yearlyCompanySaleSummaryData,
+            'yearlyIndividualSaleSummaryData' => $yearlyIndividualSaleSummaryData,
             'yearlyVehicleSaleSummaryData' => $yearlyVehicleSaleSummaryData,
             'yearList' => $yearList,
             'year' => $year,
+            'branches' => $branches,
         ));
     }
     
