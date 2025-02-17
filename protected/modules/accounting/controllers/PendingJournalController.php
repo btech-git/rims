@@ -176,7 +176,7 @@ class PendingJournalController extends Controller {
                     ));
                     $valid = true;
 
-                    $transactionType = $model->registrationTransaction->repair_type == 'GR' ? 'Invoice GR' : 'Invoice BR';
+                    $transactionType = 'Invoice';
                     $postingDate = date('Y-m-d');
                     $transactionCode = $model->invoice_number;
                     $transactionDate = $model->invoice_date;
