@@ -23,7 +23,7 @@
         array(
             'name' => 'coa_id',
             'header' => 'COA Piutang',
-            'value' => 'empty($data_coa_id) ? "" : $data->coa->name',
+            'value' => 'empty($data->coa_id) ? "" : $data->coa->name',
         ),
         'email',
         array(
