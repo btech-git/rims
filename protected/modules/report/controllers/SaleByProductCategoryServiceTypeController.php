@@ -236,7 +236,7 @@ class SaleByProductCategoryServiceTypeController extends Controller {
             foreach ($productMasterCategoryList as $productMasterCategoryItem) {
                 $key = 'Individual|' . $year . '-' . $month . '-' . $day . '|p|' . $productMasterCategoryItem->id;
                 $dpp = isset($saleReportData[$key]) ? $saleReportData[$key] : '';
-                $worksheet->setCellValue("{$columnCounter}{$rowCounter}", Yii::app()->numberFormatter->format('#,##0.00', $dpp));
+                $worksheet->setCellValue("{$columnCounter}{$rowCounter}", $dpp);
                 $dppProductSum += $dpp;
                 $dppSum += $dpp;
                 if (!isset($dppSums['p' . $productMasterCategoryItem->id])) {
@@ -248,7 +248,7 @@ class SaleByProductCategoryServiceTypeController extends Controller {
             foreach ($serviceCategoryList as $serviceCategoryItem) {
                 $key = 'Individual|' . $year . '-' . $month . '-' . $day . '|s|' . $serviceCategoryItem->id;
                 $dpp = isset($saleReportData[$key]) ? $saleReportData[$key] : ''; 
-                $worksheet->setCellValue("{$columnCounter}{$rowCounter}", Yii::app()->numberFormatter->format('#,##0.00', $dpp));
+                $worksheet->setCellValue("{$columnCounter}{$rowCounter}", $dpp);
                 $dppServiceSum += $dpp;
                 $dppSum += $dpp;
                 if (!isset($dppSums['s' . $serviceCategoryItem->id])) {
@@ -257,11 +257,11 @@ class SaleByProductCategoryServiceTypeController extends Controller {
                 $dppSums['s' . $serviceCategoryItem->id] += $dpp;
                 $columnCounter++;
             }
-            $worksheet->setCellValue("{$columnCounter}{$rowCounter}", Yii::app()->numberFormatter->format('#,##0.00', $dppProductSum));
+            $worksheet->setCellValue("{$columnCounter}{$rowCounter}", $dppProductSum);
             $columnCounter++;
-            $worksheet->setCellValue("{$columnCounter}{$rowCounter}", Yii::app()->numberFormatter->format('#,##0.00', $dppServiceSum));
+            $worksheet->setCellValue("{$columnCounter}{$rowCounter}", $dppServiceSum);
             $columnCounter++;
-            $worksheet->setCellValue("{$columnCounter}{$rowCounter}", Yii::app()->numberFormatter->format('#,##0.00', $dppSum));
+            $worksheet->setCellValue("{$columnCounter}{$rowCounter}", $dppSum);
             $columnCounter++;
             $key = 'Individual|' . $year . '-' . $month . '-' . $day;
             $discountTotal = isset($saleReportSummaryData[$key]['total_discount']) ? $saleReportSummaryData[$key]['total_discount'] : '';
@@ -270,17 +270,17 @@ class SaleByProductCategoryServiceTypeController extends Controller {
             $totalPrice = isset($saleReportSummaryData[$key]['total_price']) ? $saleReportSummaryData[$key]['total_price'] : '';
             $totalProduct = isset($saleReportSummaryData[$key]['total_product']) ? $saleReportSummaryData[$key]['total_product'] : '';
             $totalService = isset($saleReportSummaryData[$key]['total_service']) ? $saleReportSummaryData[$key]['total_service'] : '';
-            $worksheet->setCellValue("{$columnCounter}{$rowCounter}", Yii::app()->numberFormatter->format('#,##0.00', $discountTotal));
+            $worksheet->setCellValue("{$columnCounter}{$rowCounter}", $discountTotal);
             $columnCounter++;
-            $worksheet->setCellValue("{$columnCounter}{$rowCounter}", Yii::app()->numberFormatter->format('#,##0.00', $ppnTotal));
+            $worksheet->setCellValue("{$columnCounter}{$rowCounter}", $ppnTotal);
             $columnCounter++;
-            $worksheet->setCellValue("{$columnCounter}{$rowCounter}", Yii::app()->numberFormatter->format('#,##0.00', $pphTotal));
+            $worksheet->setCellValue("{$columnCounter}{$rowCounter}", $pphTotal);
             $columnCounter++;
-            $worksheet->setCellValue("{$columnCounter}{$rowCounter}", Yii::app()->numberFormatter->format('#,##0.00', $totalPrice));
+            $worksheet->setCellValue("{$columnCounter}{$rowCounter}", $totalPrice);
             $columnCounter++;
-            $worksheet->setCellValue("{$columnCounter}{$rowCounter}", Yii::app()->numberFormatter->format('#,##0.00', $totalProduct));
+            $worksheet->setCellValue("{$columnCounter}{$rowCounter}", $totalProduct);
             $columnCounter++;
-            $worksheet->setCellValue("{$columnCounter}{$rowCounter}", Yii::app()->numberFormatter->format('#,##0.00', $totalService));
+            $worksheet->setCellValue("{$columnCounter}{$rowCounter}", $totalService);
             $columnCounter++;
             $discountTotalSum += $discountTotal;
             $ppnTotalSum += $ppnTotal;
@@ -297,34 +297,34 @@ class SaleByProductCategoryServiceTypeController extends Controller {
         $dppServiceSumTotal = '0.00';
         $dppSumTotal = '0.00';
         foreach ($productMasterCategoryList as $productMasterCategoryItem) {
-            $worksheet->setCellValue("{$columnCounter}{$rowCounter}", Yii::app()->numberFormatter->format('#,##0.00', $dppSums['p' . $productMasterCategoryItem->id]));
+            $worksheet->setCellValue("{$columnCounter}{$rowCounter}", $dppSums['p' . $productMasterCategoryItem->id]);
             $dppProductSumTotal += $dppSums['p' . $productMasterCategoryItem->id];
             $dppSumTotal += $dppSums['p' . $productMasterCategoryItem->id];
             $columnCounter++;
         }
         foreach ($serviceCategoryList as $serviceCategoryItem) {
-            $worksheet->setCellValue("{$columnCounter}{$rowCounter}", Yii::app()->numberFormatter->format('#,##0.00', $dppSums['s' . $serviceCategoryItem->id]));
+            $worksheet->setCellValue("{$columnCounter}{$rowCounter}", $dppSums['s' . $serviceCategoryItem->id]);
             $dppServiceSumTotal += $dppSums['s' . $serviceCategoryItem->id]; 
             $dppSumTotal += $dppSums['s' . $serviceCategoryItem->id];
             $columnCounter++;           
         }
-        $worksheet->setCellValue("{$columnCounter}{$rowCounter}", Yii::app()->numberFormatter->format('#,##0.00', $dppProductSumTotal));
+        $worksheet->setCellValue("{$columnCounter}{$rowCounter}", $dppProductSumTotal);
         $columnCounter++;  
-        $worksheet->setCellValue("{$columnCounter}{$rowCounter}", Yii::app()->numberFormatter->format('#,##0.00', $dppServiceSumTotal));
+        $worksheet->setCellValue("{$columnCounter}{$rowCounter}", $dppServiceSumTotal);
         $columnCounter++;  
-        $worksheet->setCellValue("{$columnCounter}{$rowCounter}", Yii::app()->numberFormatter->format('#,##0.00', $dppSumTotal));
+        $worksheet->setCellValue("{$columnCounter}{$rowCounter}", $dppSumTotal);
         $columnCounter++;   
-        $worksheet->setCellValue("{$columnCounter}{$rowCounter}", Yii::app()->numberFormatter->format('#,##0.00', $discountTotalSum));
+        $worksheet->setCellValue("{$columnCounter}{$rowCounter}", $discountTotalSum);
         $columnCounter++;   
-        $worksheet->setCellValue("{$columnCounter}{$rowCounter}", Yii::app()->numberFormatter->format('#,##0.00', $ppnTotalSum));
+        $worksheet->setCellValue("{$columnCounter}{$rowCounter}", $ppnTotalSum);
         $columnCounter++;   
-        $worksheet->setCellValue("{$columnCounter}{$rowCounter}", Yii::app()->numberFormatter->format('#,##0.00', $pphTotalSum));
+        $worksheet->setCellValue("{$columnCounter}{$rowCounter}", $pphTotalSum);
         $columnCounter++;   
-        $worksheet->setCellValue("{$columnCounter}{$rowCounter}", Yii::app()->numberFormatter->format('#,##0.00', $totalPriceSum));
+        $worksheet->setCellValue("{$columnCounter}{$rowCounter}", $totalPriceSum);
         $columnCounter++;   
-        $worksheet->setCellValue("{$columnCounter}{$rowCounter}", Yii::app()->numberFormatter->format('#,##0.00', $totalProductSum));
+        $worksheet->setCellValue("{$columnCounter}{$rowCounter}", $totalProductSum);
         $columnCounter++;   
-        $worksheet->setCellValue("{$columnCounter}{$rowCounter}", Yii::app()->numberFormatter->format('#,##0.00', $totalServiceSum));
+        $worksheet->setCellValue("{$columnCounter}{$rowCounter}", $totalServiceSum);
         $columnCounter++;   
         $worksheet->getStyle("A{$rowCounter}:{$columnCounter}{$rowCounter}")->getFont()->setBold(true);
         $worksheet->getStyle("B{$rowCounter}:{$columnCounter}{$rowCounter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
@@ -388,7 +388,7 @@ class SaleByProductCategoryServiceTypeController extends Controller {
             foreach ($productMasterCategoryList as $productMasterCategoryItem) {
                 $key = 'Company|' . $year . '-' . $month . '-' . $day . '|p|' . $productMasterCategoryItem->id;
                 $dpp = isset($saleReportData[$key]) ? $saleReportData[$key] : '';
-                $worksheet->setCellValue("{$columnCounter}{$rowCounter}", Yii::app()->numberFormatter->format('#,##0.00', $dpp));
+                $worksheet->setCellValue("{$columnCounter}{$rowCounter}", $dpp);
                 $dppProductSum += $dpp;
                 $dppSum += $dpp;
                 if (!isset($dppSums['p' . $productMasterCategoryItem->id])) {
@@ -400,7 +400,7 @@ class SaleByProductCategoryServiceTypeController extends Controller {
             foreach ($serviceCategoryList as $serviceCategoryItem) {
                 $key = 'Company|' . $year . '-' . $month . '-' . $day . '|s|' . $serviceCategoryItem->id;
                 $dpp = isset($saleReportData[$key]) ? $saleReportData[$key] : ''; 
-                $worksheet->setCellValue("{$columnCounter}{$rowCounter}", Yii::app()->numberFormatter->format('#,##0.00', $dpp));
+                $worksheet->setCellValue("{$columnCounter}{$rowCounter}", $dpp);
                 $dppServiceSum += $dpp;
                 $dppSum += $dpp;
                 if (!isset($dppSums['s' . $serviceCategoryItem->id])) {
@@ -409,11 +409,11 @@ class SaleByProductCategoryServiceTypeController extends Controller {
                 $dppSums['s' . $serviceCategoryItem->id] += $dpp;
                 $columnCounter++;
             }
-            $worksheet->setCellValue("{$columnCounter}{$rowCounter}", Yii::app()->numberFormatter->format('#,##0.00', $dppProductSum));
+            $worksheet->setCellValue("{$columnCounter}{$rowCounter}", $dppProductSum);
             $columnCounter++;
-            $worksheet->setCellValue("{$columnCounter}{$rowCounter}", Yii::app()->numberFormatter->format('#,##0.00', $dppServiceSum));
+            $worksheet->setCellValue("{$columnCounter}{$rowCounter}", $dppServiceSum);
             $columnCounter++;
-            $worksheet->setCellValue("{$columnCounter}{$rowCounter}", Yii::app()->numberFormatter->format('#,##0.00', $dppSum));
+            $worksheet->setCellValue("{$columnCounter}{$rowCounter}", $dppSum);
             $columnCounter++;
             $key = 'Company|' . $year . '-' . $month . '-' . $day;
             $discountTotal = isset($saleReportSummaryData[$key]['total_discount']) ? $saleReportSummaryData[$key]['total_discount'] : '';
@@ -422,17 +422,17 @@ class SaleByProductCategoryServiceTypeController extends Controller {
             $totalPrice = isset($saleReportSummaryData[$key]['total_price']) ? $saleReportSummaryData[$key]['total_price'] : '';
             $totalProduct = isset($saleReportSummaryData[$key]['total_product']) ? $saleReportSummaryData[$key]['total_product'] : '';
             $totalService = isset($saleReportSummaryData[$key]['total_service']) ? $saleReportSummaryData[$key]['total_service'] : '';
-            $worksheet->setCellValue("{$columnCounter}{$rowCounter}", Yii::app()->numberFormatter->format('#,##0.00', $discountTotal));
+            $worksheet->setCellValue("{$columnCounter}{$rowCounter}", $discountTotal);
             $columnCounter++;
-            $worksheet->setCellValue("{$columnCounter}{$rowCounter}", Yii::app()->numberFormatter->format('#,##0.00', $ppnTotal));
+            $worksheet->setCellValue("{$columnCounter}{$rowCounter}", $ppnTotal);
             $columnCounter++;
-            $worksheet->setCellValue("{$columnCounter}{$rowCounter}", Yii::app()->numberFormatter->format('#,##0.00', $pphTotal));
+            $worksheet->setCellValue("{$columnCounter}{$rowCounter}", $pphTotal);
             $columnCounter++;
-            $worksheet->setCellValue("{$columnCounter}{$rowCounter}", Yii::app()->numberFormatter->format('#,##0.00', $totalPrice));
+            $worksheet->setCellValue("{$columnCounter}{$rowCounter}", $totalPrice);
             $columnCounter++;
-            $worksheet->setCellValue("{$columnCounter}{$rowCounter}", Yii::app()->numberFormatter->format('#,##0.00', $totalProduct));
+            $worksheet->setCellValue("{$columnCounter}{$rowCounter}", $totalProduct);
             $columnCounter++;
-            $worksheet->setCellValue("{$columnCounter}{$rowCounter}", Yii::app()->numberFormatter->format('#,##0.00', $totalService));
+            $worksheet->setCellValue("{$columnCounter}{$rowCounter}", $totalService);
             $columnCounter++;
             $discountTotalSum += $discountTotal;
             $ppnTotalSum += $ppnTotal;
@@ -449,34 +449,34 @@ class SaleByProductCategoryServiceTypeController extends Controller {
         $dppSumTotal = '0.00';
         $columnCounter = 'B';
         foreach ($productMasterCategoryList as $productMasterCategoryItem) {
-            $worksheet->setCellValue("{$columnCounter}{$rowCounter}", Yii::app()->numberFormatter->format('#,##0.00', $dppSums['p' . $productMasterCategoryItem->id]));
+            $worksheet->setCellValue("{$columnCounter}{$rowCounter}", $dppSums['p' . $productMasterCategoryItem->id]);
             $dppProductSumTotal += $dppSums['p' . $productMasterCategoryItem->id];
             $dppSumTotal += $dppSums['p' . $productMasterCategoryItem->id];
             $columnCounter++;
         }
         foreach ($serviceCategoryList as $serviceCategoryItem) {
-            $worksheet->setCellValue("{$columnCounter}{$rowCounter}", Yii::app()->numberFormatter->format('#,##0.00', $dppSums['s' . $serviceCategoryItem->id]));
+            $worksheet->setCellValue("{$columnCounter}{$rowCounter}", $dppSums['s' . $serviceCategoryItem->id]);
             $dppServiceSumTotal += $dppSums['s' . $serviceCategoryItem->id]; 
             $dppSumTotal += $dppSums['s' . $serviceCategoryItem->id];
             $columnCounter++;           
         }
-        $worksheet->setCellValue("{$columnCounter}{$rowCounter}", Yii::app()->numberFormatter->format('#,##0.00', $dppProductSumTotal));
+        $worksheet->setCellValue("{$columnCounter}{$rowCounter}", $dppProductSumTotal);
         $columnCounter++;  
-        $worksheet->setCellValue("{$columnCounter}{$rowCounter}", Yii::app()->numberFormatter->format('#,##0.00', $dppServiceSumTotal));
+        $worksheet->setCellValue("{$columnCounter}{$rowCounter}", $dppServiceSumTotal);
         $columnCounter++;  
-        $worksheet->setCellValue("{$columnCounter}{$rowCounter}", Yii::app()->numberFormatter->format('#,##0.00', $dppSumTotal));
+        $worksheet->setCellValue("{$columnCounter}{$rowCounter}", $dppSumTotal);
         $columnCounter++;   
-        $worksheet->setCellValue("{$columnCounter}{$rowCounter}", Yii::app()->numberFormatter->format('#,##0.00', $discountTotalSum));
+        $worksheet->setCellValue("{$columnCounter}{$rowCounter}", $discountTotalSum);
         $columnCounter++;   
-        $worksheet->setCellValue("{$columnCounter}{$rowCounter}", Yii::app()->numberFormatter->format('#,##0.00', $ppnTotalSum));
+        $worksheet->setCellValue("{$columnCounter}{$rowCounter}", $ppnTotalSum);
         $columnCounter++;   
-        $worksheet->setCellValue("{$columnCounter}{$rowCounter}", Yii::app()->numberFormatter->format('#,##0.00', $pphTotalSum));
+        $worksheet->setCellValue("{$columnCounter}{$rowCounter}", $pphTotalSum);
         $columnCounter++;   
-        $worksheet->setCellValue("{$columnCounter}{$rowCounter}", Yii::app()->numberFormatter->format('#,##0.00', $totalPriceSum));
+        $worksheet->setCellValue("{$columnCounter}{$rowCounter}", $totalPriceSum);
         $columnCounter++;   
-        $worksheet->setCellValue("{$columnCounter}{$rowCounter}", Yii::app()->numberFormatter->format('#,##0.00', $totalProductSum));
+        $worksheet->setCellValue("{$columnCounter}{$rowCounter}", $totalProductSum);
         $columnCounter++;   
-        $worksheet->setCellValue("{$columnCounter}{$rowCounter}", Yii::app()->numberFormatter->format('#,##0.00', $totalServiceSum));
+        $worksheet->setCellValue("{$columnCounter}{$rowCounter}", $totalServiceSum);
         $worksheet->getStyle("A{$rowCounter}:{$columnCounter}{$rowCounter}")->getFont()->setBold(true);
         $worksheet->getStyle("B{$rowCounter}:{$columnCounter}{$rowCounter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
         $rowCounter++;$rowCounter++;$rowCounter++;
@@ -539,7 +539,7 @@ class SaleByProductCategoryServiceTypeController extends Controller {
             foreach ($productMasterCategoryList as $productMasterCategoryItem) {
                 $key = $year . '-' . $month . '-' . $day . '|p|' . $productMasterCategoryItem->id;
                 $dpp = isset($saleReportAllData[$key]) ? $saleReportAllData[$key] : '';
-                $worksheet->setCellValue("{$columnCounter}{$rowCounter}", Yii::app()->numberFormatter->format('#,##0.00', $dpp));
+                $worksheet->setCellValue("{$columnCounter}{$rowCounter}", $dpp);
                 $dppProductSum += $dpp;
                 $dppSum += $dpp;
                 if (!isset($dppSums['p' . $productMasterCategoryItem->id])) {
@@ -551,7 +551,7 @@ class SaleByProductCategoryServiceTypeController extends Controller {
             foreach ($serviceCategoryList as $serviceCategoryItem) {
                 $key = $year . '-' . $month . '-' . $day . '|s|' . $serviceCategoryItem->id;
                 $dpp = isset($saleReportAllData[$key]) ? $saleReportAllData[$key] : ''; 
-                $worksheet->setCellValue("{$columnCounter}{$rowCounter}", Yii::app()->numberFormatter->format('#,##0.00', $dpp));
+                $worksheet->setCellValue("{$columnCounter}{$rowCounter}", $dpp);
                 $dppServiceSum += $dpp;
                 $dppSum += $dpp;
                 if (!isset($dppSums['s' . $serviceCategoryItem->id])) {
@@ -560,11 +560,11 @@ class SaleByProductCategoryServiceTypeController extends Controller {
                 $dppSums['s' . $serviceCategoryItem->id] += $dpp;
                 $columnCounter++;
             }
-            $worksheet->setCellValue("{$columnCounter}{$rowCounter}", Yii::app()->numberFormatter->format('#,##0.00', $dppProductSum));
+            $worksheet->setCellValue("{$columnCounter}{$rowCounter}", $dppProductSum);
             $columnCounter++;
-            $worksheet->setCellValue("{$columnCounter}{$rowCounter}", Yii::app()->numberFormatter->format('#,##0.00', $dppServiceSum));
+            $worksheet->setCellValue("{$columnCounter}{$rowCounter}", $dppServiceSum);
             $columnCounter++;
-            $worksheet->setCellValue("{$columnCounter}{$rowCounter}", Yii::app()->numberFormatter->format('#,##0.00', $dppSum));
+            $worksheet->setCellValue("{$columnCounter}{$rowCounter}", $dppSum);
             $columnCounter++;
             $key = $year . '-' . $month . '-' . $day;
             $discountTotal = isset($saleReportSummaryAllData[$key]['total_discount']) ? $saleReportSummaryAllData[$key]['total_discount'] : '';
@@ -573,17 +573,17 @@ class SaleByProductCategoryServiceTypeController extends Controller {
             $totalPrice = isset($saleReportSummaryAllData[$key]['total_price']) ? $saleReportSummaryAllData[$key]['total_price'] : '';
             $totalProduct = isset($saleReportSummaryAllData[$key]['total_product']) ? $saleReportSummaryAllData[$key]['total_product'] : '';
             $totalService = isset($saleReportSummaryAllData[$key]['total_service']) ? $saleReportSummaryAllData[$key]['total_service'] : '';
-            $worksheet->setCellValue("{$columnCounter}{$rowCounter}", Yii::app()->numberFormatter->format('#,##0.00', $discountTotal));
+            $worksheet->setCellValue("{$columnCounter}{$rowCounter}", $discountTotal);
             $columnCounter++;
-            $worksheet->setCellValue("{$columnCounter}{$rowCounter}", Yii::app()->numberFormatter->format('#,##0.00', $ppnTotal));
+            $worksheet->setCellValue("{$columnCounter}{$rowCounter}", $ppnTotal);
             $columnCounter++;
-            $worksheet->setCellValue("{$columnCounter}{$rowCounter}", Yii::app()->numberFormatter->format('#,##0.00', $pphTotal));
+            $worksheet->setCellValue("{$columnCounter}{$rowCounter}", $pphTotal);
             $columnCounter++;
-            $worksheet->setCellValue("{$columnCounter}{$rowCounter}", Yii::app()->numberFormatter->format('#,##0.00', $totalPrice));
+            $worksheet->setCellValue("{$columnCounter}{$rowCounter}", $totalPrice);
             $columnCounter++;
-            $worksheet->setCellValue("{$columnCounter}{$rowCounter}", Yii::app()->numberFormatter->format('#,##0.00', $totalProduct));
+            $worksheet->setCellValue("{$columnCounter}{$rowCounter}", $totalProduct);
             $columnCounter++;
-            $worksheet->setCellValue("{$columnCounter}{$rowCounter}", Yii::app()->numberFormatter->format('#,##0.00', $totalService));
+            $worksheet->setCellValue("{$columnCounter}{$rowCounter}", $totalService);
             $columnCounter++;
             $discountTotalSum += $discountTotal;
             $ppnTotalSum += $ppnTotal;
@@ -600,34 +600,34 @@ class SaleByProductCategoryServiceTypeController extends Controller {
         $dppSumTotal = '0.00';
         $columnCounter = 'B';
         foreach ($productMasterCategoryList as $productMasterCategoryItem) {
-            $worksheet->setCellValue("{$columnCounter}{$rowCounter}", Yii::app()->numberFormatter->format('#,##0.00', $dppSums['p' . $productMasterCategoryItem->id]));
+            $worksheet->setCellValue("{$columnCounter}{$rowCounter}", $dppSums['p' . $productMasterCategoryItem->id]);
             $dppProductSumTotal += $dppSums['p' . $productMasterCategoryItem->id];
             $dppSumTotal += $dppSums['p' . $productMasterCategoryItem->id];
             $columnCounter++;
         }
         foreach ($serviceCategoryList as $serviceCategoryItem) {
-            $worksheet->setCellValue("{$columnCounter}{$rowCounter}", Yii::app()->numberFormatter->format('#,##0.00', $dppSums['s' . $serviceCategoryItem->id]));
+            $worksheet->setCellValue("{$columnCounter}{$rowCounter}", $dppSums['s' . $serviceCategoryItem->id]);
             $dppServiceSumTotal += $dppSums['s' . $serviceCategoryItem->id]; 
             $dppSumTotal += $dppSums['s' . $serviceCategoryItem->id];
             $columnCounter++;           
         }
-        $worksheet->setCellValue("{$columnCounter}{$rowCounter}", Yii::app()->numberFormatter->format('#,##0.00', $dppProductSumTotal));
+        $worksheet->setCellValue("{$columnCounter}{$rowCounter}", $dppProductSumTotal);
         $columnCounter++;  
-        $worksheet->setCellValue("{$columnCounter}{$rowCounter}", Yii::app()->numberFormatter->format('#,##0.00', $dppServiceSumTotal));
+        $worksheet->setCellValue("{$columnCounter}{$rowCounter}", $dppServiceSumTotal);
         $columnCounter++;  
-        $worksheet->setCellValue("{$columnCounter}{$rowCounter}", Yii::app()->numberFormatter->format('#,##0.00', $dppSumTotal));
+        $worksheet->setCellValue("{$columnCounter}{$rowCounter}", $dppSumTotal);
         $columnCounter++;   
-        $worksheet->setCellValue("{$columnCounter}{$rowCounter}", Yii::app()->numberFormatter->format('#,##0.00', $discountTotalSum));
+        $worksheet->setCellValue("{$columnCounter}{$rowCounter}", $discountTotalSum);
         $columnCounter++;   
-        $worksheet->setCellValue("{$columnCounter}{$rowCounter}", Yii::app()->numberFormatter->format('#,##0.00', $ppnTotalSum));
+        $worksheet->setCellValue("{$columnCounter}{$rowCounter}", $ppnTotalSum);
         $columnCounter++;   
-        $worksheet->setCellValue("{$columnCounter}{$rowCounter}", Yii::app()->numberFormatter->format('#,##0.00', $pphTotalSum));
+        $worksheet->setCellValue("{$columnCounter}{$rowCounter}", $pphTotalSum);
         $columnCounter++;   
-        $worksheet->setCellValue("{$columnCounter}{$rowCounter}", Yii::app()->numberFormatter->format('#,##0.00', $totalPriceSum));
+        $worksheet->setCellValue("{$columnCounter}{$rowCounter}", $totalPriceSum);
         $columnCounter++;   
-        $worksheet->setCellValue("{$columnCounter}{$rowCounter}", Yii::app()->numberFormatter->format('#,##0.00', $totalProductSum));
+        $worksheet->setCellValue("{$columnCounter}{$rowCounter}", $totalProductSum);
         $columnCounter++;   
-        $worksheet->setCellValue("{$columnCounter}{$rowCounter}", Yii::app()->numberFormatter->format('#,##0.00', $totalServiceSum));
+        $worksheet->setCellValue("{$columnCounter}{$rowCounter}", $totalServiceSum);
         $worksheet->getStyle("A{$rowCounter}:{$columnCounter}{$rowCounter}")->getFont()->setBold(true);
         $worksheet->getStyle("B{$rowCounter}:{$columnCounter}{$rowCounter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
             
