@@ -218,7 +218,7 @@ class MovementOuts extends CComponent {
         $valid = true;
         
         foreach ($this->details as $detail) {
-            if ($detail->quantity_stock <= 0 || $detail->quantity_stock < $detail->quantity) {
+            if ($detail->quantity_stock < 0 || $detail->quantity_stock < $detail->quantity) {
                 $valid = false;
                 $this->header->addError('error', 'Quantity movement melebihi stok yang ada!');
             }
