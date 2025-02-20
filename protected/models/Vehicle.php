@@ -27,6 +27,10 @@
  * @property string $notes
  * @property integer $insurance_company_id
  * @property string $status_location
+ * @property string $entry_datetime
+ * @property string $exit_datetime
+ * @property string $start_service_datetime
+ * @property string $finish_service_datetime
  *
  * The followings are the available model relations:
  * @property RegistrationTransaction[] $registrationTransactions
@@ -71,16 +75,14 @@ class Vehicle extends CActiveRecord {
             array('car_make_id, car_model_id, car_sub_model_id, car_sub_model_detail_id, color_id, customer_id, customer_pic_id, power, plate_number_prefix_id, insurance_company_id', 'numerical', 'integerOnly' => true),
             array('year, drivetrain, plate_number_suffix', 'length', 'max' => 10),
             array('plate_number', 'unique', 'message' => 'Plate number already exists.'),
-            array('plate_number_prefix_id', 'uniqueValidator', 'attributeName' => array(
-                'plate_number_prefix_id', 'plate_number_ordinal', 'plate_number_suffix'), 'on' => 'insert'
-            ),
+            array('plate_number_prefix_id', 'uniqueValidator', 'attributeName' => array('plate_number_prefix_id', 'plate_number_ordinal', 'plate_number_suffix'), 'on' => 'insert'),
             array('machine_number, frame_number, chasis_code, transmission', 'length', 'max' => 30),
             array('plate_number, fuel_type, plate_number_ordinal', 'length', 'max' => 20),
             array('status_location', 'length', 'max' => 100),
-            array('notes', 'safe'),
+            array('notes, entry_datetime, start_service_datetime, finish_service_datetime, exit_datetime', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, plate_number, machine_number, frame_number, status_location, car_make_id, car_model_id, car_sub_model_id, car_sub_model_detail_id, color_id, year, customer_id, customer_pic_id, chasis_code, transmission, fuel_type, power, drivetrain, notes, car_make,color,car_color,car_model,car_sub_model,color, customer_name, customer_type, customer_name_checked, plate_number_checked, plate_number_prefix_id, plate_number_ordinal, plate_number_suffix, insurance_company_id', 'safe', 'on' => 'search'),
+            array('id, plate_number, machine_number, frame_number, status_location, car_make_id, car_model_id, car_sub_model_id, car_sub_model_detail_id, color_id, year, customer_id, customer_pic_id, chasis_code, transmission, fuel_type, power, drivetrain, notes, car_make,color,car_color,car_model,car_sub_model,color, customer_name, customer_type, customer_name_checked, plate_number_checked, plate_number_prefix_id, plate_number_ordinal, plate_number_suffix, insurance_company_id, entry_datetime, start_service_datetime, finish_service_datetime, exit_datetime', 'safe', 'on' => 'search'),
         );
     }
 

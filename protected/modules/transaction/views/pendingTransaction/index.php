@@ -106,6 +106,13 @@ Yii::app()->clientScript->registerScript('report', '
             <div>
                 <?php $this->widget('zii.widgets.jui.CJuiTabs', array(
                     'tabs' => array(
+                        'Invoice' => array(
+                            'content' => $this->renderPartial(
+                                '_viewSaleInvoice',
+                                array('invoiceDataProvider' => $invoiceDataProvider, 'invoiceHeader' => $invoiceHeader),
+                                true
+                            )
+                        ),
                         'Request Order' => array(
                             'content' => $this->renderPartial(
                                 '_viewRequest',
@@ -120,13 +127,13 @@ Yii::app()->clientScript->registerScript('report', '
                                 true
                             )
                         ),
-                        'Sales Order' => array(
-                            'content' => $this->renderPartial(
-                                '_viewSales',
-                                array('salesDataProvider' => $salesDataProvider, 'sales' => $sales),
-                                true
-                            )
-                        ),
+//                        'Sales Order' => array(
+//                            'content' => $this->renderPartial(
+//                                '_viewSales',
+//                                array('salesDataProvider' => $salesDataProvider, 'sales' => $sales),
+//                                true
+//                            )
+//                        ),
                         'Transfer Request' => array(
                             'content' => $this->renderPartial(
                                 '_viewTransfer',
@@ -141,20 +148,20 @@ Yii::app()->clientScript->registerScript('report', '
                                 true
                             )
                         ),
-                        'Consignment Out' => array(
-                            'content' => $this->renderPartial(
-                                '_viewConsignmentOut',
-                                array('consignmentDataProvider' => $consignmentDataProvider, 'consignment' => $consignment),
-                                true
-                            )
-                        ),
-                        'Consignment In' => array(
-                            'content' => $this->renderPartial(
-                                '_viewConsignmentIn',
-                                array('consignmentInDataProvider' => $consignmentInDataProvider, 'consignmentIn' => $consignmentIn),
-                                true
-                            )
-                        ),
+//                        'Consignment Out' => array(
+//                            'content' => $this->renderPartial(
+//                                '_viewConsignmentOut',
+//                                array('consignmentDataProvider' => $consignmentDataProvider, 'consignment' => $consignment),
+//                                true
+//                            )
+//                        ),
+//                        'Consignment In' => array(
+//                            'content' => $this->renderPartial(
+//                                '_viewConsignmentIn',
+//                                array('consignmentInDataProvider' => $consignmentInDataProvider, 'consignmentIn' => $consignmentIn),
+//                                true
+//                            )
+//                        ),
                         'Movement In' => array(
                             'content' => $this->renderPartial(
                                 '_viewMovementIn',

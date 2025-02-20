@@ -64,6 +64,10 @@
  * @property integer $user_id_edited
  * @property integer $sale_estimation_header_id
  * @property string $feedback
+ * @property string $vehicle_entry_datetime
+ * @property string $vehicle_exit_datetime
+ * @property string $vehicle_start_service_datetime
+ * @property string $vehicle_finish_service_datetime
  *
  * The followings are the available model relations:
  * @property InvoiceHeader[] $invoiceHeaders
@@ -136,10 +140,10 @@ class RegistrationTransaction extends MonthlyTransactionActiveRecord {
             array('status', 'length', 'max' => 50),
             array('product_status, service_status', 'length', 'max' => 100),
             array('transaction_number', 'unique'),
-            array('transaction_date, problem, work_order_date, work_order_time, sales_order_date, note, customer_type, transaction_date_out, transaction_time_out, feedback', 'safe'),
+            array('transaction_date, problem, work_order_date, work_order_time, sales_order_date, note, customer_type, transaction_date_out, transaction_time_out, feedback, vehicle_entry_datetime, vehicle_exit_datetime, vehicle_start_service_datetime, vehicle_finish_service_datetime', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, transaction_number, transaction_date, repair_type, work_order_number, problem, work_order_date, work_order_time, customer_id, pic_id, vehicle_id, feedback, branch_id, user_id, total_quickservice, total_quickservice_price, total_service, subtotal_service, discount_service, total_service_price, total_product, subtotal_product, discount_product, total_product_price, is_quick_service, is_insurance, insurance_company_id, status, grand_total, work_order_number, work_order_date, status, payment_status, payment_type, down_payment_amount,customer_name, pic_name, plate_number, branch_name, sales_order_number, sales_order_date, car_make_code, car_model_code, search_service, car_color, transaction_date_from, transaction_date_to, subtotal, ppn, pph, ppn_price, pph_price, vehicle_mileage, note, customer_type, is_passed, total_time, product_status, service_status, priority_level, customer_work_order_number, vehicle_status, transaction_date_out, transaction_time_out, employee_id_assign_mechanic, employee_id_sales_person, tax_percentage, created_datetime, cancelled_datetime, user_id_cancelled, edited_datetime, user_id_edited, sale_estimation_header_id', 'safe', 'on' => 'search'),
+            array('id, transaction_number, transaction_date, repair_type, work_order_number, problem, work_order_date, work_order_time, customer_id, pic_id, vehicle_id, feedback, branch_id, user_id, total_quickservice, total_quickservice_price, total_service, subtotal_service, discount_service, total_service_price, total_product, subtotal_product, discount_product, total_product_price, is_quick_service, is_insurance, insurance_company_id, status, grand_total, work_order_number, work_order_date, status, payment_status, payment_type, down_payment_amount,customer_name, pic_name, plate_number, branch_name, sales_order_number, sales_order_date, car_make_code, car_model_code, search_service, car_color, transaction_date_from, transaction_date_to, subtotal, ppn, pph, ppn_price, pph_price, vehicle_mileage, note, customer_type, is_passed, total_time, product_status, service_status, priority_level, customer_work_order_number, vehicle_status, transaction_date_out, transaction_time_out, employee_id_assign_mechanic, employee_id_sales_person, tax_percentage, created_datetime, cancelled_datetime, user_id_cancelled, edited_datetime, user_id_edited, sale_estimation_header_id, vehicle_entry_datetime, vehicle_exit_datetime, vehicle_start_service_datetime, vehicle_finish_service_datetime', 'safe', 'on' => 'search'),
         );
     }
 

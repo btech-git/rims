@@ -31,10 +31,10 @@ $this->breadcrumbs=array(
                     <td><?php echo $product->id; ?></td>
                     <td><?php echo $product->manufacturer_code; ?></td>
                     <td><?php echo $product->masterSubCategoryCode; ?></td>
-                    <td><?php echo $product->brand->name; ?></td>
-                    <td><?php echo $product->subBrand->name; ?></td>
-                    <td><?php echo $product->subBrandSeries->name; ?></td>
-                    <td><?php echo $product->unit->name; ?></td>
+                    <td><?php echo CHtml::encode(CHtml::value($product, 'brand.name')); ?></td>
+                    <td><?php echo CHtml::encode(CHtml::value($product, 'subBrand.name')); ?></td>
+                    <td><?php echo CHtml::encode(CHtml::value($product, 'subBrandSeries.name')); ?></td>
+                    <td><?php echo CHtml::encode(CHtml::value($product, 'unit.name')); ?></td>
                 </tr>
             </table>
         </div>

@@ -93,7 +93,8 @@ $this->menu=array(
                     <div class="small-8 columns">
                         <?php echo $form->dropDownList($vehicle, 'status_location', array(
                             'Masuk Bengkel' => 'Masuk Bengkel',
-                            'Proses Service' => 'Proses Service',
+                            'Mulai Service' => 'Mulai Service',
+                            'Selesai Service' => 'Selesai Service',
                             'Keluar Bengkel' => 'Keluar Bengkel',
                         ), array('empty' => '-- Pilih Status --')); ?>
                         <?php echo $form->error($vehicle, 'status_location'); ?>

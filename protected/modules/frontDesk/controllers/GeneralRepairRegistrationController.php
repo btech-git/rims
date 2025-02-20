@@ -52,6 +52,10 @@ class GeneralRepairRegistrationController extends Controller {
         $generalRepairRegistration->header->vehicle_id = $vehicleId;
         $generalRepairRegistration->header->customer_id = $vehicle->customer_id;
         $generalRepairRegistration->header->branch_id = Yii::app()->user->branch_id;
+        $generalRepairRegistration->header->vehicle_entry_datetime = null;
+        $generalRepairRegistration->header->vehicle_exit_datetime = null;
+        $generalRepairRegistration->header->vehicle_start_service_datetime = null;
+        $generalRepairRegistration->header->vehicle_finish_service_datetime = null;
 //        $generalRepairRegistration->generateCodeNumber(Yii::app()->dateFormatter->format('M', strtotime($generalRepairRegistration->header->transaction_date)), Yii::app()->dateFormatter->format('yyyy', strtotime($generalRepairRegistration->header->transaction_date)), $generalRepairRegistration->header->branch_id);
 
         if (isset($_POST['Cancel'])) {
@@ -250,10 +254,35 @@ class GeneralRepairRegistrationController extends Controller {
 
     public function actionUpdateLocation($id, $vehicleId) {
         $vehicle = Vehicle::model()->findByPk($vehicleId);
+        $registrationTransaction = RegistrationTransaction::model()->findByPk($id);
 
         if (isset($_POST['Vehicle'])) {
             $vehicle->attributes = $_POST['Vehicle'];
-            if ($vehicle->save()) {
+            
+            if ($vehicle->status_location == 'Masuk Bengkel') {
+                $vehicle->entry_datetime = date('Y-m-d H:i:s');
+                $registrationTransaction->vehicle_entry_datetime = date('Y-m-d H:i:s');
+            } elseif ($vehicle->status_location == 'Mulai Service') {
+                $vehicle->start_service_datetime = date('Y-m-d H:i:s');
+                $registrationTransaction->vehicle_start_service_datetime = date('Y-m-d H:i:s');
+            } elseif ($vehicle->status_location == 'Selesai Service') {
+                $vehicle->finish_service_datetime = date('Y-m-d H:i:s');
+                $registrationTransaction->vehicle_finish_service_datetime = date('Y-m-d H:i:s');
+            } elseif ($vehicle->status_location == 'Keluar Bengkel') {
+                $vehicle->exit_datetime = date('Y-m-d H:i:s');
+                $registrationTransaction->vehicle_exit_datetime = date('Y-m-d H:i:s');
+            } else {
+                $vehicle->entry_datetime = null;
+                $vehicle->start_service_datetime = null;
+                $vehicle->finish_service_datetime = null;
+                $vehicle->exit_datetime = null;
+                $registrationTransaction->vehicle_entry_datetime = null;
+                $registrationTransaction->vehicle_start_service_datetime = null;
+                $registrationTransaction->vehicle_finish_service_datetime = null;
+                $registrationTransaction->vehicle_exit_datetime = null;
+            }
+            
+            if ($vehicle->save() && $registrationTransaction->save()) {
                 $this->redirect(array('view', 'id' => $id));
             }
         }

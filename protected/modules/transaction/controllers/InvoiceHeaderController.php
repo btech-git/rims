@@ -513,7 +513,7 @@ class InvoiceHeaderController extends Controller {
         $invoice->header->vehicle_id = $registrationTransaction->vehicle_id;
         $invoice->header->branch_id = $registrationTransaction->branch_id;
         $invoice->header->user_id = Yii::app()->user->getId();
-        $invoice->header->status = "Draft";
+        $invoice->header->status = "Approved";
         $invoice->header->total_product = $registrationTransaction->total_product;
         $invoice->header->total_service = $registrationTransaction->total_service;
         $invoice->header->total_quick_service = $registrationTransaction->total_quickservice;

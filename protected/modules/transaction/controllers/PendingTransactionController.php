@@ -42,8 +42,14 @@ class PendingTransactionController extends Controller {
             $model->attributes = $_GET['TransactionDeliveryOrder'];
         }
 
-        $branchId = User::model()->findByPk(Yii::app()->user->getId())->branch_id;
-        $branch = Branch::model()->findByPk($branchId);
+//        $branchId = User::model()->findByPk(Yii::app()->user->getId())->branch_id;
+//        $branch = Branch::model()->findByPk($branchId);
+
+        $invoiceHeader = Search::bind(new InvoiceHeader('search'), isset($_GET['InvoiceHeader']) ? $_GET['InvoiceHeader'] : '');
+        $invoiceDataProvider = $invoiceHeader->search();
+        $invoiceDataProvider->criteria->with = array('branch');
+        $invoiceDataProvider->criteria->order = 't.invoice_date DESC';
+        $invoiceDataProvider->criteria->addBetweenCondition('t.invoice_date', $tanggal_mulai, $tanggal_sampai);
 
         $request = Search::bind(new TransactionRequestOrder('search'), isset($_GET['TransactionRequestOrder']) ? $_GET['TransactionRequestOrder'] : '');
         $requestDataProvider = $request->search();
@@ -106,6 +112,9 @@ class PendingTransactionController extends Controller {
         $stockAdjustmentDataProvider->criteria->addBetweenCondition('t.date_posting', $tanggal_mulai, $tanggal_sampai);
 
         if (!empty($mainBranch)) {
+            $invoiceDataProvider->criteria->addCondition('branch_id = :branch_id');
+            $invoiceDataProvider->criteria->params[':branch_id'] = $mainBranch;
+
             $requestDataProvider->criteria->addCondition('main_branch_id = :main_branch_id');
             $requestDataProvider->criteria->params[':main_branch_id'] = $mainBranch;
 
@@ -149,25 +158,28 @@ class PendingTransactionController extends Controller {
         }
 
         if (!empty($status_document)) {
-            $requestDataProvider->criteria->addCondition('status_document = :status_document');
+            $invoiceDataProvider->criteria->addCondition('t.status = :status');
+            $invoiceDataProvider->criteria->params[':status'] = $status_document;
+
+            $requestDataProvider->criteria->addCondition('t.status_document = :status_document');
             $requestDataProvider->criteria->params[':status_document'] = $status_document;
 
-            $purchaseDataProvider->criteria->addCondition('status_document = :status_document');
+            $purchaseDataProvider->criteria->addCondition('t.status_document = :status_document');
             $purchaseDataProvider->criteria->params[':status_document'] = $status_document;
 
-            $transferDataProvider->criteria->addCondition('status_document = :status_document');
+            $transferDataProvider->criteria->addCondition('t.status_document = :status_document');
             $transferDataProvider->criteria->params[':status_document'] = $status_document;
 
-            $sentDataProvider->criteria->addCondition('status_document = :status_document');
+            $sentDataProvider->criteria->addCondition('t.status_document = :status_document');
             $sentDataProvider->criteria->params[':status_document'] = $status_document;
 
-            $salesDataProvider->criteria->addCondition('status_document = :status_document');
+            $salesDataProvider->criteria->addCondition('t.status_document = :status_document');
             $salesDataProvider->criteria->params[':status_document'] = $status_document;
 
             $consignmentDataProvider->criteria->addCondition('t.status = :status_document');
             $consignmentDataProvider->criteria->params[':status_document'] = $status_document;
 
-            $consignmentInDataProvider->criteria->addCondition('status_document = :status_document');
+            $consignmentInDataProvider->criteria->addCondition('t.status_document = :status_document');
             $consignmentInDataProvider->criteria->params[':status_document'] = $status_document;
 
             $movementDataProvider->criteria->addCondition('t.status = :status');
@@ -185,6 +197,8 @@ class PendingTransactionController extends Controller {
             'tanggal_sampai' => $tanggal_sampai,
             'status_document' => $status_document,
             'model' => $model,
+            'invoiceHeader' => $invoiceHeader,
+            'invoiceDataProvider' => $invoiceDataProvider,
             'sent' => $sent,
             'sentDataProvider' => $sentDataProvider,
             'sales' => $sales,
@@ -203,12 +217,11 @@ class PendingTransactionController extends Controller {
             'movementDataProvider' => $movementDataProvider,
             'movementIn' => $movementIn,
             'movementInDataProvider' => $movementInDataProvider,
-            'branch' => $branch,
+//            'branch' => $branch,
             'mainBranch' => $mainBranch,
             'requesterBranch' => $requesterBranch,
             'stockAdjustmentDataProvider' => $stockAdjustmentDataProvider,
             'stockAdjustmentHeader' => $stockAdjustmentHeader,
         ));
     }
-
 }
