@@ -183,7 +183,8 @@ class SaleByProjectController extends Controller {
         $worksheet->getStyle("A{$counter}:M{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
         $worksheet->getStyle("A{$counter}:M{$counter}")->getFont()->setBold(true);
 
-        $worksheet->setCellValue("L{$counter}", 'TOTAL');
+        $worksheet->setCellValue("K{$counter}", 'TOTAL');
+        $worksheet->setCellValue("L{$counter}", CHtml::encode($grandTotalCogs));
         $worksheet->setCellValue("M{$counter}", CHtml::encode($grandTotalSale));
 
         for ($col = 'A'; $col !== 'Z'; $col++) {

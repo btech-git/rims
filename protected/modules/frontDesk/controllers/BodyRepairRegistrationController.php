@@ -157,7 +157,7 @@ class BodyRepairRegistrationController extends Controller {
         $serviceCriteria->compare('t.name', $service->name, true);
         $serviceCriteria->compare('t.code', $service->code, true);
         $serviceCriteria->compare('t.service_category_id', $service->service_category_id);
-        $serviceCriteria->compare('t.service_type_id', 2);
+//        $serviceCriteria->compare('t.service_type_id', 2);
         $explodeKeyword = explode(" ", $service->findkeyword);
 
         foreach ($explodeKeyword as $key) {
@@ -193,8 +193,9 @@ class BodyRepairRegistrationController extends Controller {
         if (isset($_POST['Submit']) && IdempotentManager::check()) {
             $this->loadStateDetails($bodyRepairRegistration);
 
-            if ($bodyRepairRegistration->saveDetails(Yii::app()->db))
+            if ($bodyRepairRegistration->saveDetails(Yii::app()->db)) {
                 $this->redirect(array('view', 'id' => $bodyRepairRegistration->header->id));
+            }
         }
         //}
 
