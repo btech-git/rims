@@ -70,7 +70,7 @@ $this->menu = array(
             <tr>
                 <td>Invoice Number</td>
                 <td><?php echo $model->invoice_number; ?></td>
-                <td width="10%">Status</td>
+                <td width="10%">Invoice Status</td>
                 <td width="30%">
                     <input type="text" id = "status" style="background-color:red;color:white" value="<?php echo $model->status; ?>">
                 </td>
