@@ -202,7 +202,7 @@ class MovementOutHeaderController extends Controller {
     public function actionUpdate($id) {
         $movementOut = $this->instantiate($id, 'update');
         $movementOut->header->status = 'Draft';
-        $movementOut->header->updated_datetime = Yii::app()->dateFormatter->format('yyyy-M-dd', strtotime($movementOut->header->created_datetime)) . ' ' . date('H:i:s');
+        $movementOut->header->updated_datetime = date('Y-m-d H:i:s');
         $movementOut->header->user_id_updated = Yii::app()->user->id;
 
         // Uncomment the following line if AJAX validation is needed
