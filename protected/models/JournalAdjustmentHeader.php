@@ -122,6 +122,7 @@ class JournalAdjustmentHeader extends MonthlyTransactionActiveRecord {
         $criteria->compare('time', $this->time, true);
         $criteria->compare('note', $this->note, true);
         $criteria->compare('user_id', $this->user_id);
+        $criteria->compare('branch_id', $this->branch_id);
         $criteria->compare('status', $this->status, true);
 
 //        $criteria->addCondition("t.branch_id IN (SELECT branch_id FROM " . UserBranch::model()->tableName() . " WHERE users_id = :userId)");

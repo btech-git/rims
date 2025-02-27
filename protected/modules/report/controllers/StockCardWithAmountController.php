@@ -1,6 +1,6 @@
 <?php
 
-class StockCardController extends Controller {
+class StockCardWithAmountController extends Controller {
 
     public $layout = '//layouts/column1';
     public function filters() {
@@ -143,10 +143,10 @@ class StockCardController extends Controller {
 
         $documentProperties = $objPHPExcel->getProperties();
         $documentProperties->setCreator('Raperind Motor');
-        $documentProperties->setTitle('Kartu Stok');
+        $documentProperties->setTitle('Laporan Mutasi Barang');
 
         $worksheet = $objPHPExcel->setActiveSheetIndex(0);
-        $worksheet->setTitle('Kartu Stok');
+        $worksheet->setTitle('Laporan Mutasi Barang');
 
         $worksheet->mergeCells('A1:I1');
         $worksheet->mergeCells('A2:I2');
@@ -155,7 +155,7 @@ class StockCardController extends Controller {
         $worksheet->getStyle('A1:I3')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
         $worksheet->getStyle('A1:I3')->getFont()->setBold(true);
         $worksheet->setCellValue('A1', 'Raperind Motor');
-        $worksheet->setCellValue('A2', 'Kartu Stok');
+        $worksheet->setCellValue('A2', 'Laporan Mutasi Barang');
         $worksheet->setCellValue('A3', $startDateFormatted . ' - ' . $endDateFormatted);
 
         $worksheet->getStyle("A6:I6")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
@@ -168,8 +168,9 @@ class StockCardController extends Controller {
         $worksheet->setCellValue('D6', 'Keterangan');
         $worksheet->setCellValue('E6', 'Gudang');
         $worksheet->setCellValue('F6', 'Masuk');
-        $worksheet->setCellValue('G6', 'Keluar');
-        $worksheet->setCellValue('H6', 'Stok');
+        $worksheet->setCellValue('H6', 'Keluar');
+        $worksheet->setCellValue('J6', 'Stok');
+        $worksheet->setCellValue('K6', 'Nilai');
 
         $counter = 8;
 
@@ -182,7 +183,7 @@ class StockCardController extends Controller {
             $worksheet->setCellValue("F{$counter}", CHtml::value($header, 'subBrandSeries.name'));
             $worksheet->getStyle("G{$counter}:H{$counter}")->getFont()->setBold(true);
             $saldo = $header->getBeginningStockReport($startDate, $branchId); 
-//            $beginningValue = $header->getBeginningValueReport($startDate, $branchId);
+            $beginningValue = $header->getBeginningValueReport($startDate, $branchId);
             $worksheet->setCellValue("G{$counter}", $saldo);
 //            $worksheet->setCellValue("H{$counter}", $beginningValue);
             
@@ -196,6 +197,9 @@ class StockCardController extends Controller {
                 $stockIn = $stockRow['stock_in'];
                 $stockOut = $stockRow['stock_out'];
                 $saldo += $stockIn + $stockOut;
+                $inventoryInValue = $stockRow['purchase_price'] * $stockIn;
+                $inventoryOutValue = $stockRow['purchase_price'] * $stockOut;
+                $inventoryValue = $stockRow['purchase_price'] * $saldo;
                 
                 $worksheet->setCellValue("A{$counter}", $stockRow['transaction_date']);
                 $worksheet->setCellValue("B{$counter}", $stockRow['transaction_type']);
@@ -203,8 +207,11 @@ class StockCardController extends Controller {
                 $worksheet->setCellValue("D{$counter}", $stockRow['notes']);
                 $worksheet->setCellValue("E{$counter}", $stockRow['name']);
                 $worksheet->setCellValue("F{$counter}", $stockIn);
-                $worksheet->setCellValue("G{$counter}", $stockOut);
-                $worksheet->setCellValue("H{$counter}", $saldo);
+                $worksheet->setCellValue("G{$counter}", $inventoryInValue);
+                $worksheet->setCellValue("H{$counter}", $stockOut);
+                $worksheet->setCellValue("I{$counter}", $inventoryOutValue);
+                $worksheet->setCellValue("J{$counter}", $saldo);
+                $worksheet->setCellValue("K{$counter}", $inventoryValue);
                 
                 $totalStockIn += $stockIn;
                 $totalStockOut += $stockOut;
@@ -220,6 +227,14 @@ class StockCardController extends Controller {
             
         }
 
+//        $worksheet->getStyle("A{$counter}:H{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+//        $worksheet->getStyle("E{$counter}:F{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
+//        $worksheet->setCellValue("F{$counter}", 'Total Penjualan');
+//        $worksheet->setCellValue("G{$counter}", 'Rp');
+//        $worksheet->setCellValue("H{$counter}", $this->reportGrandTotal($saleInvoiceSummary->dataProvider));
+//
+//        $counter++;
+
         for ($col = 'A'; $col !== 'Z'; $col++) {
             $objPHPExcel->getActiveSheet()
             ->getColumnDimension($col)
@@ -229,7 +244,7 @@ class StockCardController extends Controller {
         ob_end_clean();
 
         header('Content-type: application/vnd.ms-excel');
-        header('Content-Disposition: attachment;filename="Kartu Stok.xls"');
+        header('Content-Disposition: attachment;filename="Laporan Mutasi Barang.xls"');
         header('Cache-Control: max-age=0');
         
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');

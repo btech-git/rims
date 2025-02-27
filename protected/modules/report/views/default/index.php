@@ -457,13 +457,18 @@
                             <?php $this->widget('zii.widgets.CMenu', array(
                                 'items' => array(
                                     array(
-                                        'label' => 'Kartu Stok Gudang', 
+                                        'label' => 'Stok Gudang', 
                                         'url' => array('/frontDesk/inventory/check'), 
                                         'visible' => (Yii::app()->user->checkAccess('warehouseStockReport'))
                                     ),
                                     array(
-                                        'label' => 'Mutasi per Barang', 
+                                        'label' => 'Kartu Stok', 
                                         'url' => array('/report/stockCard/summary'), 
+                                        'visible' => Yii::app()->user->checkAccess('stockCardItemReport')
+                                    ),
+                                    array(
+                                        'label' => 'Mutasi per Barang', 
+                                        'url' => array('/report/stockCardWithAmount/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('stockCardItemReport')
                                     ),
                                     array(
