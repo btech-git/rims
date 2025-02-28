@@ -661,7 +661,7 @@ class Product extends CActiveRecord {
                 FROM " . InventoryDetail::model()->tableName() . " i
                 INNER JOIN " . Warehouse::model()->tableName() . " w ON w.id = i.warehouse_id
                 WHERE i.transaction_date BETWEEN :start_date AND :end_date AND i.product_id = :product_id AND w.status = 'Active'" . $branchConditionSql . "
-                ORDER BY i.transaction_date ASC";
+                ORDER BY i.transaction_date ASC, i.id ASC";
         
         $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
         

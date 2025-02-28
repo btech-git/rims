@@ -335,6 +335,18 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
         return $this->service_price + $this->product_price + $this->quick_service_price;
     }
 
+    public function getProductPriceAfterTax() {
+        return $this->product_price * ( 1 + $this->tax_percentage / 100);
+    }
+    
+    public function getServicePriceAfterTax() {
+        return $this->service_price * ( 1 + $this->tax_percentage / 100);
+    }
+    
+    public function getSubTotalAfterTax() {
+        return $this->productPriceAfterTax + $this->servicePriceAfterTax;
+    }
+    
     public function getSubTotalBeforeDiscount() {
         $total = '0.00'; 
         

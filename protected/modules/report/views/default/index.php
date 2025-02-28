@@ -27,51 +27,108 @@
                 <div class="row" style="margin-top:20px" id="noliststyle">
                     <div class="small-4 columns">
                         <?php if (
-//                            Yii::app()->user->checkAccess('summaryProfitLossReport') ||
-//                            Yii::app()->user->checkAccess('standardProfitLossReport') || 
-//                            Yii::app()->user->checkAccess('multiProfitLossReport') || 
-//                            Yii::app()->user->checkAccess('summaryBalanceSheetReport') || 
-//                            Yii::app()->user->checkAccess('standardBalanceSheetReport') || 
-                            Yii::app()->user->checkAccess('director')
+                            Yii::app()->user->checkAccess('stockInventoryReport') || 
+                            Yii::app()->user->checkAccess('stockCardReport') || 
+                            Yii::app()->user->checkAccess('stockCardWarehouseReport')
                         ): ?>
-                            <h2>Keuangan</h2>
+                            <h2>Gudang</h2>
                             <?php $this->widget('zii.widgets.CMenu', array(
                                 'items' => array(
                                     array(
-                                        'label' => 'Laba Rugi (induk)', 
-                                        'url' => array('/report/profitLoss/summary'), 
-                                        'visible' => Yii::app()->user->checkAccess('director')
+                                        'label' => 'Stok Gudang', 
+                                        'url' => array('/frontDesk/inventory/check'), 
+                                        'visible' => (Yii::app()->user->checkAccess('warehouseStockReport'))
                                     ),
                                     array(
-                                        'label' => 'Laba Rugi (Standar)', 
-                                        'url' => array('/report/profitLossDetail/summary'), 
-                                        'visible' => Yii::app()->user->checkAccess('director')
+                                        'label' => 'Kartu Stok', 
+                                        'url' => array('/report/stockCard/summary'), 
+                                        'visible' => Yii::app()->user->checkAccess('stockCardItemReport')
                                     ),
                                     array(
-                                        'label' => 'Laba Rugi (Multi Periode)', 
-                                        'url' => array('/report/profitLossMonthly/summary'), 
-                                        'visible' => Yii::app()->user->checkAccess('director')
+                                        'label' => 'Mutasi per Barang', 
+                                        'url' => array('/report/stockCardWithAmount/summary'), 
+                                        'visible' => Yii::app()->user->checkAccess('stockCardItemReport')
                                     ),
                                     array(
-                                        'label' => 'Neraca (induk)', 
-                                        'url' => array('/report/balanceSheet/summary'), 
-                                        'visible' => Yii::app()->user->checkAccess('director')
+                                        'label' => 'Mutasi per Gudang', 
+                                        'url' => array('/report/stockCardByWarehouse/summary'), 
+                                        'visible' => Yii::app()->user->checkAccess('stockCardWarehouseReport')
+                                    ),
+                                ),
+                            )); ?>
+                        <?php endif; ?>
+                    </div>
+                    
+                    <div class="small-4 columns">
+                        <?php if (
+                            Yii::app()->user->checkAccess('stockCardReport')
+                        ): ?>
+                            <h2>Persediaan</h2>
+                            <?php $this->widget('zii.widgets.CMenu', array(
+                                'items' => array(
+                                    array(
+                                        'label' => 'Nilai Stok Persediaan', 
+                                        'url' => array('/report/inventoryValue/summary'), 
+                                        'visible' => Yii::app()->user->checkAccess('stockValueReport')
                                     ),
                                     array(
-                                        'label' => 'Neraca (Standar)', 
-                                        'url' => array('/report/balanceSheetDetail/summary'), 
-                                        'visible' => Yii::app()->user->checkAccess('director')
+                                        'label' => 'Stok Quantity + Nilai Persediaan', 
+                                        'url' => array('/report/inventoryStockValue/summary'), 
+                                        'visible' => Yii::app()->user->checkAccess('stockQuantityValueReport')
                                     ),
                                     array(
-                                        'label' => 'Neraca (Multi Periode)', 
-                                        'url' => array('/report/balanceSheetMonthly/summary'), 
+                                        'label' => 'Posisi Stok Gudang', 
+                                        'url' => array('/report/stockCardCategory/summary'), 
+                                        'visible' => Yii::app()->user->checkAccess('stockPositionReport')
+                                    ),
+                                ),
+                            )); ?>
+                        <?php endif; ?>
+                    </div>
+                    
+                    <div class="small-4 columns">
+                        <?php if (
+                            Yii::app()->user->checkAccess('workOrderServiceReport') ||
+                            Yii::app()->user->checkAccess('workOrderVehicleReport') ||
+                            Yii::app()->user->checkAccess('mechanicPerformanceReport')
+                        ): ?>
+                            <h2>Pekerjaan Pesanan</h2>
+                            <?php $this->widget('zii.widgets.CMenu', array(
+                                'items' => array(
+                                    array(
+                                        'label' => 'Penyelesaian Pesanan per Pekerjaan', 
+                                        'url' => array('/report/registrationServiceCategory/summary'), 
+                                        'visible' => Yii::app()->user->checkAccess('workOrderServiceReport')
+                                    ),
+                                    array(
+                                        'label' => 'Penyelesaian Pesanan per Kendaraan', 
+                                        'url' => array('/report/registrationVehicleCarMake/summary'), 
+                                        'visible' => Yii::app()->user->checkAccess('workOrderVehicleReport')
+                                    ),
+                                    array(
+                                        'label' => 'Laporan Mekanik', 
+                                        'url' => array('/report/mechanicPerformance/summary'), 
+                                        'visible' => Yii::app()->user->checkAccess('mechanicPerformanceReport')
+                                    ),
+                                    array(
+                                        'label' => 'Laporan Salesman', 
+                                        'url' => array('/report/salesmanPerformance/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('director')
                                     ),
                                 ),
                             )); ?>
                         <?php endif; ?>
                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
+    <div class="row">
+        <div class="small-12 columns" >
+            <div id="maincontent">
+                <hr />
+                <div class="row" style="margin-top:20px" id="noliststyle">
                     <div class="small-4 columns">
                         <?php if (
                             Yii::app()->user->checkAccess('transactionJournalReport') || 
@@ -146,50 +203,6 @@
                         <?php endif; ?>
                     </div>
 
-                    <div class="small-4 columns">
-                        <?php if (
-                            Yii::app()->user->checkAccess('cashDailyApprovalReport') || 
-                            Yii::app()->user->checkAccess('cashDailySummaryReport') || 
-                            Yii::app()->user->checkAccess('financialForecastReport') || 
-                            Yii::app()->user->checkAccess('cashTransactionReport')
-                        ): ?>
-                            <h2>Kas</h2>
-                            <?php $this->widget('zii.widgets.CMenu', array(
-                                'items' => array(
-                                    array(
-                                        'label' => 'Approval Kas Harian', 
-                                        'url' => array('/accounting/cashDailySummary/summary'), 
-                                        'visible' => Yii::app()->user->checkAccess('cashDailyApprovalReport')
-                                    ),
-                                    array(
-                                        'label' => 'Summary Kas Harian', 
-                                        'url' => array('/accounting/cashDailySummary/index'), 
-                                        'visible' => Yii::app()->user->checkAccess('cashDailySummaryReport')
-                                    ),
-                                    array(
-                                        'label' => 'Financial Forecast', 
-                                        'url' => array('/report/financialForecast/summary'), 
-                                        'visible' => Yii::app()->user->checkAccess('financialForecastReport')
-                                    ),
-                                    array(
-                                        'label' => 'Laporan Cash Transaction', 
-                                        'url' => array('/report/cashTransaction/summary'), 
-                                        'visible' => Yii::app()->user->checkAccess('cashTransactionReport')
-                                    ),
-                                ),
-                            )); ?>
-                        <?php endif; ?>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="small-12 columns" >
-            <div id="maincontent">
-                <hr />
-                <div class="row" style="margin-top:20px" id="noliststyle">
                     <div class="small-4 columns">
                         <?php if (
                             Yii::app()->user->checkAccess('receivableJournalReport') || 
@@ -301,23 +314,7 @@
                             )); ?>
                         <?php endif; ?>
                     </div>
-
-                    <div class="small-4 columns">
-                        <?php if (
-                            Yii::app()->user->checkAccess('fixedAssetReport')
-                        ): ?>
-                            <h2>Aset Tetap</h2>
-                            <?php $this->widget('zii.widgets.CMenu', array(
-                                'items' => array(
-                                    array(
-                                        'label' => 'Daftar Aset Tetap', 
-                                        'url' => array('/report/fixedAsset/summary'), 
-                                        'visible' => Yii::app()->user->checkAccess('fixedAssetReport')
-                                    ),
-                                ),
-                            )); ?>
-                        <?php endif; ?>
-                    </div>
+                    
                 </div>
             </div>
         </div>
@@ -328,6 +325,41 @@
             <div id="maincontent">
                 <hr />
                 <div class="row" style="margin-top:20px" id="noliststyle">
+                    <div class="small-4 columns">
+                        <?php if (
+                            Yii::app()->user->checkAccess('cashDailyApprovalReport') || 
+                            Yii::app()->user->checkAccess('cashDailySummaryReport') || 
+                            Yii::app()->user->checkAccess('financialForecastReport') || 
+                            Yii::app()->user->checkAccess('cashTransactionReport')
+                        ): ?>
+                            <h2>Kas</h2>
+                            <?php $this->widget('zii.widgets.CMenu', array(
+                                'items' => array(
+                                    array(
+                                        'label' => 'Approval Kas Harian', 
+                                        'url' => array('/accounting/cashDailySummary/summary'), 
+                                        'visible' => Yii::app()->user->checkAccess('cashDailyApprovalReport')
+                                    ),
+                                    array(
+                                        'label' => 'Summary Kas Harian', 
+                                        'url' => array('/accounting/cashDailySummary/index'), 
+                                        'visible' => Yii::app()->user->checkAccess('cashDailySummaryReport')
+                                    ),
+                                    array(
+                                        'label' => 'Financial Forecast', 
+                                        'url' => array('/report/financialForecast/summary'), 
+                                        'visible' => Yii::app()->user->checkAccess('financialForecastReport')
+                                    ),
+                                    array(
+                                        'label' => 'Laporan Cash Transaction', 
+                                        'url' => array('/report/cashTransaction/summary'), 
+                                        'visible' => Yii::app()->user->checkAccess('cashTransactionReport')
+                                    ),
+                                ),
+                            )); ?>
+                        <?php endif; ?>
+                    </div>
+                    
                     <div class="small-4 columns">
                         <?php if (
                             Yii::app()->user->checkAccess('payableJournalReport') || 
@@ -411,33 +443,6 @@
                             )); ?>
                         <?php endif; ?>
                     </div>
-
-                    <div class="small-4 columns">
-                        <?php if (
-                            Yii::app()->user->checkAccess('stockCardReport')
-                        ): ?>
-                            <h2>Persediaan</h2>
-                            <?php $this->widget('zii.widgets.CMenu', array(
-                                'items' => array(
-                                    array(
-                                        'label' => 'Nilai Stok Persediaan', 
-                                        'url' => array('/report/inventoryValue/summary'), 
-                                        'visible' => Yii::app()->user->checkAccess('stockValueReport')
-                                    ),
-                                    array(
-                                        'label' => 'Stok Quantity + Nilai Persediaan', 
-                                        'url' => array('/report/inventoryStockValue/summary'), 
-                                        'visible' => Yii::app()->user->checkAccess('stockQuantityValueReport')
-                                    ),
-                                    array(
-                                        'label' => 'Posisi Stok Gudang', 
-                                        'url' => array('/report/stockCardCategory/summary'), 
-                                        'visible' => Yii::app()->user->checkAccess('stockPositionReport')
-                                    ),
-                                ),
-                            )); ?>
-                        <?php endif; ?>
-                    </div>
                 </div>
             </div>
         </div>
@@ -447,34 +452,48 @@
             <div id="maincontent">
                 <hr />
                 <div class="row" style="margin-top:20px" id="noliststyle">
+
                     <div class="small-4 columns">
                         <?php if (
-                            Yii::app()->user->checkAccess('stockInventoryReport') || 
-                            Yii::app()->user->checkAccess('stockCardReport') || 
-                            Yii::app()->user->checkAccess('stockCardWarehouseReport')
+                            Yii::app()->user->checkAccess('fixedAssetReport')
                         ): ?>
-                            <h2>Gudang</h2>
+                            <h2>Finance</h2>
                             <?php $this->widget('zii.widgets.CMenu', array(
                                 'items' => array(
                                     array(
-                                        'label' => 'Stok Gudang', 
-                                        'url' => array('/frontDesk/inventory/check'), 
-                                        'visible' => (Yii::app()->user->checkAccess('warehouseStockReport'))
+                                        'label' => 'Daftar Aset Tetap', 
+                                        'url' => array('/report/fixedAsset/summary'), 
+                                        'visible' => Yii::app()->user->checkAccess('fixedAssetReport')
                                     ),
                                     array(
-                                        'label' => 'Kartu Stok', 
-                                        'url' => array('/report/stockCard/summary'), 
-                                        'visible' => Yii::app()->user->checkAccess('stockCardItemReport')
+                                        'label' => 'Laporan Sales Yearly Summary', 
+                                        'url' => array('/report/yearlySaleSummary/summary'), 
+                                        'visible' => Yii::app()->user->checkAccess('director')
                                     ),
                                     array(
-                                        'label' => 'Mutasi per Barang', 
-                                        'url' => array('/report/stockCardWithAmount/summary'), 
-                                        'visible' => Yii::app()->user->checkAccess('stockCardItemReport')
+                                        'label' => 'Laporan Penjualan Project', 
+                                        'url' => array('/report/saleByProject/summary'), 
+                                        'visible' => Yii::app()->user->checkAccess('director')
                                     ),
                                     array(
-                                        'label' => 'Mutasi per Gudang', 
-                                        'url' => array('/report/stockCardByWarehouse/summary'), 
-                                        'visible' => Yii::app()->user->checkAccess('stockCardWarehouseReport')
+                                        'label' => 'Laporan Penjualan PPn (Rincian)', 
+                                        'url' => array('/report/saleInvoiceTaxOnlySummary/summary'), 
+                                        'visible' => Yii::app()->user->checkAccess('director')
+                                    ),
+                                    array(
+                                        'label' => 'Laporan Pembelian PPn (Rincian)', 
+                                        'url' => array('/report/purchaseInvoiceTaxOnlySummary/summary'), 
+                                        'visible' => Yii::app()->user->checkAccess('director')
+                                    ),
+                                    array(
+                                        'label' => 'Laporan Konfirmasi Transaksi Harian', 
+                                        'url' => array('/report/dailyTransactionConfirmation/summary'), 
+                                        'visible' => Yii::app()->user->checkAccess('director')
+                                    ),
+                                    array(
+                                        'label' => 'Laporan Kas Bulanan', 
+                                        'url' => array('/report/paymentMonthly/summary'), 
+                                        'visible' => Yii::app()->user->checkAccess('director')
                                     ),
                                 ),
                             )); ?>
@@ -483,47 +502,60 @@
 
                     <div class="small-4 columns">
                         <?php if (
-                            Yii::app()->user->checkAccess('workOrderServiceReport') ||
-                            Yii::app()->user->checkAccess('workOrderVehicleReport') ||
-                            Yii::app()->user->checkAccess('mechanicPerformanceReport')
+//                            Yii::app()->user->checkAccess('summaryProfitLossReport') ||
+//                            Yii::app()->user->checkAccess('standardProfitLossReport') || 
+//                            Yii::app()->user->checkAccess('multiProfitLossReport') || 
+//                            Yii::app()->user->checkAccess('summaryBalanceSheetReport') || 
+//                            Yii::app()->user->checkAccess('standardBalanceSheetReport') || 
+                            Yii::app()->user->checkAccess('director')
                         ): ?>
-                            <h2>Pekerjaan Pesanan</h2>
+                            <h2>Keuangan</h2>
                             <?php $this->widget('zii.widgets.CMenu', array(
                                 'items' => array(
                                     array(
-                                        'label' => 'Penyelesaian Pesanan per Pekerjaan', 
-                                        'url' => array('/report/registrationServiceCategory/summary'), 
-                                        'visible' => Yii::app()->user->checkAccess('workOrderServiceReport')
+                                        'label' => 'Laba Rugi (induk)', 
+                                        'url' => array('/report/profitLoss/summary'), 
+                                        'visible' => Yii::app()->user->checkAccess('director')
                                     ),
                                     array(
-                                        'label' => 'Penyelesaian Pesanan per Kendaraan', 
-                                        'url' => array('/report/registrationVehicleCarMake/summary'), 
-                                        'visible' => Yii::app()->user->checkAccess('workOrderVehicleReport')
+                                        'label' => 'Laba Rugi (Standar)', 
+                                        'url' => array('/report/profitLossDetail/summary'), 
+                                        'visible' => Yii::app()->user->checkAccess('director')
                                     ),
                                     array(
-                                        'label' => 'Laporan Mekanik', 
-                                        'url' => array('/report/mechanicPerformance/summary'), 
-                                        'visible' => Yii::app()->user->checkAccess('mechanicPerformanceReport')
+                                        'label' => 'Laba Rugi (Multi Periode)', 
+                                        'url' => array('/report/profitLossMonthly/summary'), 
+                                        'visible' => Yii::app()->user->checkAccess('director')
+                                    ),
+                                    array(
+                                        'label' => 'Neraca (induk)', 
+                                        'url' => array('/report/balanceSheet/summary'), 
+                                        'visible' => Yii::app()->user->checkAccess('director')
+                                    ),
+                                    array(
+                                        'label' => 'Neraca (Standar)', 
+                                        'url' => array('/report/balanceSheetDetail/summary'), 
+                                        'visible' => Yii::app()->user->checkAccess('director')
+                                    ),
+                                    array(
+                                        'label' => 'Neraca (Multi Periode)', 
+                                        'url' => array('/report/balanceSheetMonthly/summary'), 
+                                        'visible' => Yii::app()->user->checkAccess('director')
                                     ),
                                 ),
                             )); ?>
                         <?php endif; ?>
                     </div>
-
+                    
                     <div class="small-4 columns">
                         <?php /*if (
                             Yii::app()->user->checkAccess('workOrderServiceReport') ||
                             Yii::app()->user->checkAccess('workOrderVehicleReport') ||
                             Yii::app()->user->checkAccess('mechanicPerformanceReport')
                         ):*/ ?>
-                            <h2>HRD</h2>
+                            <h2>Management</h2>
                             <?php $this->widget('zii.widgets.CMenu', array(
                                 'items' => array(
-                                    array(
-                                        'label' => 'Laporan Salesman', 
-                                        'url' => array('/report/salesmanPerformance/summary'), 
-                                        'visible' => Yii::app()->user->checkAccess('director')
-                                    ),
                                     array(
                                         'label' => 'Laporan Transaksi Harian', 
                                         'url' => array('/report/dailyTransaction/summary'), 
@@ -552,26 +584,6 @@
                                     array(
                                         'label' => 'Laporan Perpindahan Barang Summary', 
                                         'url' => array('/report/warehouseFlowSummary/summary'), 
-                                        'visible' => Yii::app()->user->checkAccess('director')
-                                    ),
-                                    array(
-                                        'label' => 'Laporan Sales Yearly Summary', 
-                                        'url' => array('/report/yearlySaleSummary/summary'), 
-                                        'visible' => Yii::app()->user->checkAccess('director')
-                                    ),
-                                    array(
-                                        'label' => 'Laporan Penjualan Project', 
-                                        'url' => array('/report/saleByProject/summary'), 
-                                        'visible' => Yii::app()->user->checkAccess('director')
-                                    ),
-                                    array(
-                                        'label' => 'Laporan Konfirmasi Transaksi Harian', 
-                                        'url' => array('/report/dailyTransactionConfirmation/summary'), 
-                                        'visible' => Yii::app()->user->checkAccess('director')
-                                    ),
-                                    array(
-                                        'label' => 'Laporan Kas Bulanan', 
-                                        'url' => array('/report/paymentMonthly/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('director')
                                     ),
                                     array(

@@ -1,0 +1,1 @@
+<?php echo CHtml::dropDownlist('VehicleId', $vehicleId, CHtml::listData($vehicles, 'id', 'plate_number'), array('empty' => '-- All Vehicle --')); ?>
