@@ -49,6 +49,9 @@ class StockAnalysisController extends Controller {
             $this->saveToExcel($dataProvider, array(
                 'startDate' => $startDate, 
                 'endDate' => $endDate,
+                'productId' => $productId,
+                'productCode' => $productCode,
+                'productName' => $productName,
                 'brandId' => $brandId,
                 'branchId' => $branchId,
                 'subBrandId' => $subBrandId,
@@ -130,6 +133,9 @@ class StockAnalysisController extends Controller {
         
         $startDate = (empty($options['startDate'])) ? date('Y-m-d') : $options['startDate'];
         $endDate = (empty($options['endDate'])) ? date('Y-m-d') : $options['endDate'];
+        $productId = (empty($options['productId'])) ? '' : $options['productId'];
+        $productCode = (empty($options['productCode'])) ? '' : $options['productCode'];
+        $productName = (empty($options['productName'])) ? '' : $options['productName'];
         $branchId = (empty($options['branchId'])) ? $options['branchId'] : '';
         $brandId = (empty($options['brandId'])) ? $options['brandId'] : '';
         $subBrandId = (empty($options['subBrandId'])) ? $options['subBrandId'] : '';
@@ -176,7 +182,7 @@ class StockAnalysisController extends Controller {
 
         $counter = 7; 
         
-        $fastMovingItems = $inventoryDetail->getFastMovingItems($startDate, $endDate, $brandId, $subBrandId, $subBrandSeriesId, $productMasterCategoryId, $productSubMasterCategoryId, $productSubCategoryId, $branchId);
+        $fastMovingItems = $inventoryDetail->getFastMovingItems($startDate, $endDate, $brandId, $subBrandId, $subBrandSeriesId, $productMasterCategoryId, $productSubMasterCategoryId, $productSubCategoryId, $branchId, $productId, $productCode, $productName);
         foreach ($fastMovingItems as $i => $header) {
             $worksheet->setCellValue("A{$counter}", CHtml::encode($i + 1));
             $worksheet->setCellValue("B{$counter}", CHtml::encode($header['code']));
