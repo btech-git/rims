@@ -242,88 +242,90 @@ class MovementOuts extends CComponent {
 
         //save request detail
         foreach ($this->details as $detail) {
-            if ($detail->id == "") {
-                $moveDetail = MovementOutDetail::model()->findByAttributes(array('movement_out_header_id' => $this->header->id, 'product_id' => $detail->product_id, 'warehouse_id' => $detail->warehouse_id));
-                if (!empty($moveDetail)) {
-                    $moveDetail->quantity += $detail->quantity;
-                    $moveDetail->save() && $valid;
+            if ($detail->quantity_transaction > 0) {
+                if ($detail->id == "") {
+                    $moveDetail = MovementOutDetail::model()->findByAttributes(array('movement_out_header_id' => $this->header->id, 'product_id' => $detail->product_id, 'warehouse_id' => $detail->warehouse_id));
+                    if (!empty($moveDetail)) {
+                        $moveDetail->quantity += $detail->quantity;
+                        $moveDetail->save() && $valid;
+                    } else {
+                        $detail->movement_out_header_id = $this->header->id;
+                        $valid = $detail->save() && $valid;
+                    }
                 } else {
                     $detail->movement_out_header_id = $this->header->id;
                     $valid = $detail->save() && $valid;
                 }
-            } else {
-                $detail->movement_out_header_id = $this->header->id;
-                $valid = $detail->save() && $valid;
-            }
 
-            $movementType = $this->header->movement_type;
-            if ($movementType == 1) {
-                $criteria = new CDbCriteria;
-                $criteria->condition = "delivery_order_detail_id =" . $detail->delivery_order_detail_id . " AND product_id = " . $detail->product_id;
-                $mvmntDetails = MovementOutDetail::model()->findAll($criteria);
+                $movementType = $this->header->movement_type;
+                if ($movementType == 1) {
+                    $criteria = new CDbCriteria;
+                    $criteria->condition = "delivery_order_detail_id =" . $detail->delivery_order_detail_id . " AND product_id = " . $detail->product_id;
+                    $mvmntDetails = MovementOutDetail::model()->findAll($criteria);
 
-                $quantity = 0;
-                
-                foreach ($mvmntDetails as $mvmntDetail) {
-                    $quantity += $mvmntDetail->quantity;
+                    $quantity = 0;
+
+                    foreach ($mvmntDetails as $mvmntDetail) {
+                        $quantity += $mvmntDetail->quantity;
+                    }
+
+                    $deliveryDetail = TransactionDeliveryOrderDetail::model()->findByAttributes(array('id' => $detail->delivery_order_detail_id, 'delivery_order_id' => $this->header->delivery_order_id));
+                    $deliveryDetail->quantity_movement_left = $deliveryDetail->quantity_delivery - $quantity;
+                    $deliveryDetail->quantity_movement = $quantity;
+                    $deliveryDetail->quantity_receive = 0;
+                    $deliveryDetail->quantity_receive_left = $quantity;
+                    $deliveryDetail->save(false);
+                } elseif ($movementType == 2) {
+                    $criteria = new CDbCriteria;
+                    $criteria->together = 'true';
+                    $criteria->with = array('movementOutHeader');
+                    $criteria->condition = "movementOutHeader.return_order_id =" . $this->header->return_order_id . " AND movement_out_header_id != " . $this->header->id;
+                    $mvmntDetails = MovementOutDetail::model()->findAll($criteria);
+                    $quantity = 0;
+
+                    foreach ($mvmntDetails as $mvmntDetail) {
+                        $quantity += $mvmntDetail->quantity;
+                    }
+
+                    $deliveryDetail = TransactionReturnOrderDetail::model()->findByAttributes(array('id' => $detail->return_order_detail_id, 'return_order_id' => $this->header->return_order_id));
+                    $deliveryDetail->quantity_movement_left = $detail->quantity_transaction - ($detail->quantity + $quantity);
+                    $deliveryDetail->quantity_movement = $quantity + $detail->quantity;
+                    $deliveryDetail->save(false);
+                } elseif ($movementType == 3) {
+                    $criteria = new CDbCriteria;
+                    $criteria->together = 'true';
+                    $criteria->with = array('movementOutHeader');
+                    $criteria->condition = "movementOutHeader.registration_transaction_id =" . $this->header->registration_transaction_id . " AND movement_out_header_id != " . $this->header->id;
+                    $mvmntDetails = MovementOutDetail::model()->findAll($criteria);
+                    $quantity = 0;
+
+                    foreach ($mvmntDetails as $mvmntDetail) {
+                        $quantity += $mvmntDetail->quantity;
+                    }
+
+                    $registrationProduct = RegistrationProduct::model()->findByAttributes(array('id' => $detail->registration_product_id, 'registration_transaction_id' => $this->header->registration_transaction_id));
+                    $registrationProduct->quantity_movement = $registrationProduct->getTotalMovementOutQuantity();
+                    $registrationProduct->quantity_movement_left = $registrationProduct->quantity - $registrationProduct->quantity_movement;
+                    $registrationProduct->save(false);
+                } elseif ($movementType == 4) {
+
+                    $materialRequestDetail = MaterialRequestDetail::model()->findByPk($detail->material_request_detail_id);
+                    $materialRequestDetail->quantity_movement_out = $materialRequestDetail->getTotalQuantityMovementOut();
+                    $materialRequestDetail->quantity_remaining = $materialRequestDetail->quantity - $materialRequestDetail->quantity_movement_out;
+                    $materialRequestDetail->update(array('quantity_movement_out', 'quantity_remaining'));
+
+                    $materialRequestHeader = MaterialRequestHeader::model()->findByPk($materialRequestDetail->material_request_header_id);
+                    $materialRequestHeader->total_quantity_movement_out = $materialRequestHeader->getTotalQuantityMovementOut();
+                    $materialRequestHeader->total_quantity_remaining = $materialRequestHeader->total_quantity - $materialRequestHeader->total_quantity_movement_out;
+                    $materialRequestHeader->status_progress = ($materialRequestHeader->total_quantity_remaining > 0) ? 'PARTIAL MOVEMENT' : 'COMPLETED';
+                    $materialRequestHeader->update(array('total_quantity_movement_out', 'total_quantity_remaining', 'status_progress'));
                 }
 
-                $deliveryDetail = TransactionDeliveryOrderDetail::model()->findByAttributes(array('id' => $detail->delivery_order_detail_id, 'delivery_order_id' => $this->header->delivery_order_id));
-                $deliveryDetail->quantity_movement_left = $deliveryDetail->quantity_delivery - $quantity;
-                $deliveryDetail->quantity_movement = $quantity;
-                $deliveryDetail->quantity_receive = 0;
-                $deliveryDetail->quantity_receive_left = $quantity;
-                $deliveryDetail->save(false);
-            } elseif ($movementType == 2) {
-                $criteria = new CDbCriteria;
-                $criteria->together = 'true';
-                $criteria->with = array('movementOutHeader');
-                $criteria->condition = "movementOutHeader.return_order_id =" . $this->header->return_order_id . " AND movement_out_header_id != " . $this->header->id;
-                $mvmntDetails = MovementOutDetail::model()->findAll($criteria);
-                $quantity = 0;
-                
-                foreach ($mvmntDetails as $mvmntDetail) {
-                    $quantity += $mvmntDetail->quantity;
-                }
-                
-                $deliveryDetail = TransactionReturnOrderDetail::model()->findByAttributes(array('id' => $detail->return_order_detail_id, 'return_order_id' => $this->header->return_order_id));
-                $deliveryDetail->quantity_movement_left = $detail->quantity_transaction - ($detail->quantity + $quantity);
-                $deliveryDetail->quantity_movement = $quantity + $detail->quantity;
-                $deliveryDetail->save(false);
-            } elseif ($movementType == 3) {
-                $criteria = new CDbCriteria;
-                $criteria->together = 'true';
-                $criteria->with = array('movementOutHeader');
-                $criteria->condition = "movementOutHeader.registration_transaction_id =" . $this->header->registration_transaction_id . " AND movement_out_header_id != " . $this->header->id;
-                $mvmntDetails = MovementOutDetail::model()->findAll($criteria);
-                $quantity = 0;
-                
-                foreach ($mvmntDetails as $mvmntDetail) {
-                    $quantity += $mvmntDetail->quantity;
-                }
-                
-                $registrationProduct = RegistrationProduct::model()->findByAttributes(array('id' => $detail->registration_product_id, 'registration_transaction_id' => $this->header->registration_transaction_id));
-                $registrationProduct->quantity_movement = $registrationProduct->getTotalMovementOutQuantity();
-                $registrationProduct->quantity_movement_left = $registrationProduct->quantity - $registrationProduct->quantity_movement;
-                $registrationProduct->save(false);
-            } elseif ($movementType == 4) {
-                
-                $materialRequestDetail = MaterialRequestDetail::model()->findByPk($detail->material_request_detail_id);
-                $materialRequestDetail->quantity_movement_out = $materialRequestDetail->getTotalQuantityMovementOut();
-                $materialRequestDetail->quantity_remaining = $materialRequestDetail->quantity - $materialRequestDetail->quantity_movement_out;
-                $materialRequestDetail->update(array('quantity_movement_out', 'quantity_remaining'));
-                
-                $materialRequestHeader = MaterialRequestHeader::model()->findByPk($materialRequestDetail->material_request_header_id);
-                $materialRequestHeader->total_quantity_movement_out = $materialRequestHeader->getTotalQuantityMovementOut();
-                $materialRequestHeader->total_quantity_remaining = $materialRequestHeader->total_quantity - $materialRequestHeader->total_quantity_movement_out;
-                $materialRequestHeader->status_progress = ($materialRequestHeader->total_quantity_remaining > 0) ? 'PARTIAL MOVEMENT' : 'COMPLETED';
-                $materialRequestHeader->update(array('total_quantity_movement_out', 'total_quantity_remaining', 'status_progress'));
-            }
-
-            $new_detail[] = $detail->id;
+                $new_detail[] = $detail->id;
             
-            if ($detail->id == "") {
-                echo $detail->quantity;
+//            if ($detail->id == "") {
+//                echo $detail->quantity;
+//            }
             }
         }
 
