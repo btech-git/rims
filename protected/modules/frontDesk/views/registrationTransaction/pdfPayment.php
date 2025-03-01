@@ -29,7 +29,7 @@ function tanggal($date) {
     <?php $serviceDetailRowNumber = 0; ?>
     <?php for ($j = 0; $j < $numberOfPages; $j++): ?>
         <?php $detailItems = $invoiceDetailsData['items'][$j]; ?>
-        <div class="page" style="<?php if ($i > 0 || $j > 0): ?>page-break-before: always;<?php endif; ?><?php if ($i > 0): ?>background-image: url('<?php echo Yii::app()->baseUrl; ?>/images/lunas-icon.jpg')<?php else: ?>background-image: url('<?php echo Yii::app()->baseUrl; ?>/images/rap-logo.png')<?php endif; ?>">
+        <div class="page" style="<?php if ($i > 0 || $j > 0): ?>page-break-before: always;<?php endif; ?> background-image: url('<?php echo Yii::app()->baseUrl; ?>/images/lunas-icon.png')">
             <div class="container">
                 <div class="header">
                     <div style="float: left; width: 30%; text-align: center">
