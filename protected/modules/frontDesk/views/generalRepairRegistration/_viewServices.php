@@ -10,6 +10,7 @@
             <th>Status</th>
             <th>Mechanic</th>
             <th>Duration</th>
+            <th>Note</th>
         </tr>
     </thead>
     
@@ -26,6 +27,7 @@
                     <td><?php echo $service->status; ?></td>
                     <td><?php echo empty($service->start_mechanic_id) ? '' : $service->startMechanic->name; ?></td>
                     <td><?php echo $service->hour; ?></td>
+                    <td><?php echo $service->note; ?></td>
                 </tr>
             <?php endforeach ?>
         <?php endif ?>

@@ -8,6 +8,7 @@
         <th style="text-align: center">Sub Brand Series</th>
         <th style="text-align: center; width: 10%">Quantity</th>
         <th style="text-align: center; width: 10%">Satuan</th>
+        <th style="text-align: center; width: 10%">Memo</th>
         <th style="text-align: center; width: 5%"></th>
     </tr>
     <?php foreach ($transferRequest->details as $i => $detail): ?>
@@ -16,21 +17,11 @@
                 <?php echo CHtml::activeHiddenField($detail, "[$i]product_id"); ?>
                 <?php echo CHtml::encode(CHtml::value($detail, 'product.name')); ?>
             </td>
-            <td>
-                <?php echo CHtml::encode(CHtml::value($detail, 'product.manufacturer_code')); ?>
-            </td>
-            <td>
-                <?php echo CHtml::encode(CHtml::value($detail, 'product.masterSubCategoryCode')); ?>
-            </td>
-            <td>
-                <?php echo CHtml::encode(CHtml::value($detail, 'product.brand.name')); ?>
-            </td>
-            <td>
-                <?php echo CHtml::encode(CHtml::value($detail, 'product.subBrand.name')); ?>
-            </td>
-            <td>
-                <?php echo CHtml::encode(CHtml::value($detail, 'product.subBrandSeries.name')); ?>
-            </td>
+            <td><?php echo CHtml::encode(CHtml::value($detail, 'product.manufacturer_code')); ?></td>
+            <td><?php echo CHtml::encode(CHtml::value($detail, 'product.masterSubCategoryCode')); ?></td>
+            <td><?php echo CHtml::encode(CHtml::value($detail, 'product.brand.name')); ?></td>
+            <td><?php echo CHtml::encode(CHtml::value($detail, 'product.subBrand.name')); ?></td>
+            <td><?php echo CHtml::encode(CHtml::value($detail, 'product.subBrandSeries.name')); ?></td>
             <td style="text-align: center">
                 <?php echo CHtml::activeTextField($detail, "[$i]quantity", array(
                     'size' => 7, 
@@ -58,6 +49,7 @@
                 <?php echo CHtml::encode(CHtml::value($unit, 'name')); ?>
                 <?php echo CHtml::error($detail, 'unit_id'); ?>
             </td>
+            <td><?php echo CHtml::activeTextField($detail, "[$i]memo"); ?></td>
             <td>
                 <?php echo CHtml::button('Delete', array(
                     'onclick' => CHtml::ajax(array(
@@ -76,6 +68,6 @@
                 <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $transferRequest->totalQuantity)); ?>
             </span>
         </td>
-        <td style="text-align: right; font-weight: bold" colspan="2">&nbsp;</td>
+        <td colspan="3">&nbsp;</td>
     </tr>
 </table>

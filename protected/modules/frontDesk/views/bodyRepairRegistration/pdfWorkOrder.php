@@ -205,6 +205,7 @@ function tanggal($date) {
                 <tr>
                     <th style="width: 1%">No</th>
                     <th>Service</th>
+                    <th>Note</th>
                 </tr>
                 <?php $no = 1;?>
                 <?php foreach ($bodyRepairRegistration->registrationQuickServices as $quickService): ?>
@@ -218,6 +219,7 @@ function tanggal($date) {
                     <tr class="isi">
                         <td class="noo"><?php echo $no; ?></td>
                         <td>&nbsp; <?php echo CHtml::encode(CHtml::value($service, 'service.name')); ?></td>
+                        <td>&nbsp; <?php echo CHtml::encode(CHtml::value($service, 'note')); ?></td>
                     </tr>
                     <?php $no++; ?>
                 <?php endforeach; ?>
