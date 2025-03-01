@@ -93,7 +93,7 @@
                                     <?php echo CHtml::encode(CHtml::value($productInfo, 'subBrandSeries.name')); ?>
                                 </td>
                                 <td>
-                                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.0', CHtml::value($detail, 'quantity'))); ?>
+                                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($detail, 'quantity'))); ?>
                                 </td>
                                 <td>
                                     <?php echo CHtml::encode(CHtml::value($productInfo, 'unit.name')); ?>
