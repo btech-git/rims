@@ -161,8 +161,8 @@ class CashDailySummaryController extends Controller {
             $lastBranchId = $paymentInRetailRow['branch_id'];
         }
 
-        $registrationTransactionIndividualCashDailySummary = RegistrationTransaction::getIndividualCashDailySummary($transactionDate);
-        $registrationTransactionCompanyCashDailySummary = RegistrationTransaction::getCompanyCashDailySummary($transactionDate);
+        $registrationTransactionIndividualCashDailySummary = InvoiceHeader::getIndividualCashDailySummary($transactionDate);
+        $registrationTransactionCompanyCashDailySummary = InvoiceHeader::getCompanyCashDailySummary($transactionDate);
         $saleOrderCashDailySummary = TransactionSalesOrder::getCashDailySummary($transactionDate);
         
         $branches = Branch::model()->findAll(array(
