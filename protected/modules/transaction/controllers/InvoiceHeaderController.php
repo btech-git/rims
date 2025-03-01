@@ -461,9 +461,9 @@ class InvoiceHeaderController extends Controller {
         $stylesheet = file_get_contents(Yii::getPathOfAlias('webroot') . '/css/pdf.css');
         $mPDF1->SetTitle('Tanda Terima');
         $mPDF1->WriteHTML($stylesheet, 1);
-        $mPDF1->SetWatermarkText('LUNAS');
-        $mPDF1->showWatermarkText = true;
-        $mPDF1->watermark_font = 'DejaVuSansCondensed'; 
+//        $mPDF1->SetWatermarkText('LUNAS');
+//        $mPDF1->showWatermarkText = true;
+//        $mPDF1->watermark_font = 'DejaVuSansCondensed'; 
         $mPDF1->WriteHTML($this->renderPartial('pdfPayment', array(
             'invoiceHeader' => $invoiceHeader,
             'invoiceDetailsData' => $invoiceDetailsData,

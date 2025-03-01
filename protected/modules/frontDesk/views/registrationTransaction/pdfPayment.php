@@ -10,6 +10,17 @@ function tanggal($date) {
     return $tanggal . ' ' . $bulan[(int) $bulan2 - 1] . ' ' . $tahun;
 }
 ?>
+<style>
+    .page {
+        background-repeat: no-repeat;
+        background-position: center;
+        background-size: contain;
+    }
+    .container {
+        background-color: rgba(255, 255, 255, 0.8);
+    }
+</style>
+
 <?php $numberOfCopies = 3; ?>
 <?php $numberOfPages = count($invoiceDetailsData['items']); ?>
 
@@ -18,10 +29,10 @@ function tanggal($date) {
     <?php $serviceDetailRowNumber = 0; ?>
     <?php for ($j = 0; $j < $numberOfPages; $j++): ?>
         <?php $detailItems = $invoiceDetailsData['items'][$j]; ?>
-        <div class="page" style="<?php if ($i > 0 || $j > 0): ?>page-break-before: always;<?php endif; ?>">
+        <div class="page" style="<?php if ($i > 0 || $j > 0): ?>page-break-before: always;<?php endif; ?><?php if ($i > 0): ?>background-image: url('<?php echo Yii::app()->baseUrl; ?>/images/lunas-icon.jpg')<?php else: ?>background-image: url('<?php echo Yii::app()->baseUrl; ?>/images/rap-logo.png')<?php endif; ?>">
             <div class="container">
                 <div class="header">
-                    <div style="float: left; width: 30%; text-align: left">
+                    <div style="float: left; width: 30%; text-align: center">
                         <img src="<?php echo Yii::app()->request->baseUrl; ?>/images/rap-logo.png" alt="" style="width: 64px; height: 64px"/>
                     </div>
                     <div style="float: right; width: 30%">
