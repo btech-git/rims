@@ -97,7 +97,7 @@ $this->menu = array(
                                 </div>
                                 
                                 <div class="small-8 columns">
-                                    <input type="text" readonly="true" value="<?php echo CHtml::encode(CHtml::value($model, 'companyBank.bank.name')); ?>"> 
+                                    <input type="text" readonly="true" value="<?php echo CHtml::encode(CHtml::value($model, 'companyBank.account_name')); ?>"> 
                                 </div>
                             </div>
                         </div>

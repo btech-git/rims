@@ -106,15 +106,15 @@ function tanggal($date) {
                             </tr>
                             <tr>
                                 <th style="width: 1%">No</th>
-                                <th>Code</th>
-                                <th>Item Name</th>
-                                <th>Brand Name</th>
-                                <th>Qty</th>
-                                <th>Unit</th>
-                                <th style="width: 10%">Price</th>
-                                <th style="width: 10%">Disc</th>
-                                <th style="width: 10%">After Disc</th>
-                                <th style="width: 10%">Sub Total</th>
+                                <th style="font-size: 10px">Code</th>
+                                <th style="font-size: 10px">Item Name</th>
+                                <th style="font-size: 10px">Brand Name</th>
+                                <th style="font-size: 10px">Qty</th>
+                                <th style="font-size: 10px">Unit</th>
+                                <th style="width: 10%; font-size: 10px">Price</th>
+                                <th style="width: 10%; font-size: 10px">Disc</th>
+                                <th style="width: 10%; font-size: 10px">After Disc</th>
+                                <th style="width: 10%; font-size: 10px">Sub Total</th>
                             </tr>
                             <?php foreach ($detailItems['p'] as $detail): ?>
                                 <tr class="isi">
@@ -148,10 +148,10 @@ function tanggal($date) {
                             </tr>
                             <tr>
                                 <th style="width: 1%">No</th>
-                                <th>Service</th>
-                                <th style="width: 10%">Price</th>
-                                <th style="width: 10%">Disc</th>
-                                <th style="width: 10%">Sub Total</th>
+                                <th style="font-size: 10px">Service</th>
+                                <th style="width: 15%; font-size: 10px">Price</th>
+                                <th style="width: 15%; font-size: 10px">Disc</th>
+                                <th style="width: 15%; font-size: 10px">Sub Total</th>
                             </tr>
                             <?php foreach ($detailItems['s'] as $detail): ?>
                                 <tr class="isi">

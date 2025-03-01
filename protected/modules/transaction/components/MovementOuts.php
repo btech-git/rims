@@ -244,7 +244,11 @@ class MovementOuts extends CComponent {
         foreach ($this->details as $detail) {
             if ($detail->quantity_transaction > 0) {
                 if ($detail->id == "") {
-                    $moveDetail = MovementOutDetail::model()->findByAttributes(array('movement_out_header_id' => $this->header->id, 'product_id' => $detail->product_id, 'warehouse_id' => $detail->warehouse_id));
+                    $moveDetail = MovementOutDetail::model()->findByAttributes(array(
+                        'movement_out_header_id' => $this->header->id, 
+                        'product_id' => $detail->product_id, 
+                        'warehouse_id' => $detail->warehouse_id
+                    ));
                     if (!empty($moveDetail)) {
                         $moveDetail->quantity += $detail->quantity;
                         $moveDetail->save() && $valid;
