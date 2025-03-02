@@ -17,7 +17,7 @@
         <tbody>
             <?php foreach ($transferDetails as $key => $transferDetail): ?>
                 <tr>
-                    <td><?php echo $transferDetail->product ? CHtml::link($transferDetail->product_id, array("/master/product/view", "id"=>$transferDetail->product_id), array('target' => 'blank')) : '-'; ?></td>
+                    <td><?php echo $transferDetail->product ? CHtml::link($transferDetail->product_id, array("/frontDesk/inventory/detail", "id"=>$transferDetail->product_id, 'endDate' => date('Y-m-d)')), array('target' => 'blank')) : '-'; ?></td>
                     <td><?php echo $transferDetail->product ? $transferDetail->product->name : '-'; ?></td>
                     <td><?php echo $transferDetail->product ? $transferDetail->product->manufacturer_code : '-'; ?></td>
                     <td><?php echo $transferDetail->product ? $transferDetail->product->masterSubCategoryCode : '-'; ?></td>

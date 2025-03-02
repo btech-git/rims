@@ -200,7 +200,7 @@ function tanggal($date) {
         <div class="purchase-order">
             <table>
                 <tr style="background-color: skyblue">
-                    <th colspan="2">JASA PERBAIKAN - SERVICE</th>
+                    <th colspan="3">JASA PERBAIKAN - SERVICE</th>
                 </tr>
                 <tr>
                     <th style="width: 1%">No</th>
