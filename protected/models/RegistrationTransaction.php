@@ -587,7 +587,7 @@ class RegistrationTransaction extends MonthlyTransactionActiveRecord {
         $invoiceNumber = '';
         $invoices = InvoiceHeader::model()->findAllByAttributes(array('registration_transaction_id' => $data->id));
         foreach ($invoices as $key => $invoice) {
-            if ($invoice->status != 'CANCELLED') {
+            if ($invoice->status !== 'CANCELLED!!!') {
                 $invoiceNumber = $invoice->invoice_number;
             } else {
                 $invoiceNumber = 'CANCELLED!!!';
