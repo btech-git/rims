@@ -72,6 +72,7 @@ class Vehicles extends CComponent {
     }
 
     public function flush() {
+        $this->header->plate_number = $this->header->getPlateNumberCombination();
         $valid = $this->header->save();
         //echo $valid;
 
