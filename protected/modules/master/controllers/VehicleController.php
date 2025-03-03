@@ -137,6 +137,7 @@ class VehicleController extends Controller {
             //Search for Vehicle Sub Model Detail
             $subModelDetail = VehicleCarSubModelDetail::model()->findByAttributes(array('car_sub_model_id' => $_POST['Vehicle']['car_sub_model_id'], 'transmission' => $_POST['Vehicle']['transmission'], 'fuel_type' => $_POST['Vehicle']['fuel_type'], 'power' => $_POST['Vehicle']['power']))->id;
             $model->car_sub_model_detail_id = $subModelDetail;
+            $model->plate_number = $model->getPlateNumberCombination();
 
             if ($model->save()) {
                 $this->saveTransactionLog($model);
@@ -179,6 +180,8 @@ class VehicleController extends Controller {
 
         if (isset($_POST['Vehicle'])) {
             $model->attributes = $_POST['Vehicle'];
+            $model->plate_number = $model->getPlateNumberCombination();
+            
             if ($model->save()) {
                 $vehicleLog = new VehicleLog();
                 $vehicleLog->vehicle_id = $model->id;
