@@ -8,7 +8,6 @@ $this->breadcrumbs = array(
 );
 ?>
 
-<h1>View MovementInHeader #<?php echo $model->id; ?></h1>
 <div id="maincontent">
     <div class="clearfix page-action">
         <h1>View Movement In Header #<?php echo $model->id; ?></h1>
