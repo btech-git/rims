@@ -11,6 +11,7 @@
     .width1-10 { width: 30px }
     .width1-11 { width: 30px }
 '); ?>
+
 <style> 
  .table_wrapper{
     display: block;
@@ -18,13 +19,7 @@
     white-space: nowrap;
 }
 </style>
-<style> 
- .table_wrapper{
-    display: block;
-    overflow-x: auto;
-    white-space: nowrap;
-}
-</style>
+
 <div style="font-weight: bold; text-align: center">
     <div style="font-size: larger">
         <?php $branch = Branch::model()->findByPk($branchId); ?>
@@ -61,17 +56,17 @@
                 <?php $movementOutHeaderCodeNumbers = array_map(function($movementOutHeader) { return $movementOutHeader->movement_out_no; }, $movementOutHeaders); ?>
                 <?php $invoiceHeaders = $header->invoiceHeaders; ?>
                 <?php $invoiceHeaderCodeNumbers = array_map(function($invoiceHeader) { return $invoiceHeader->invoice_number; }, $invoiceHeaders); ?>
-                <?php $invoiceHeaderTransactionDates = array_map(function($invoiceHeader) { return $invoiceHeader->invoice_date; }, $invoiceHeaders); ?>
+                <?php $invoiceHeaderTransactionDates = array_map(function($invoiceHeader) { return $invoiceHeader->invoice_date . ' ' . CHtml::encode(Yii::app()->dateFormatter->format('hh:mm:ss', strtotime($invoiceHeader->created_datetime))); }, $invoiceHeaders); ?>
                 <?php $paymentInDetails = array_reduce(array_map(function($invoiceHeader) { return $invoiceHeader->paymentInDetails; }, $invoiceHeaders), function($a, $b) { return in_array($b, $a) ? $a : array_merge($a, $b); }, array()); ?>
                 <?php $paymentInHeaderCodeNumbers = array_map(function($paymentInDetail) { return $paymentInDetail->paymentIn->payment_number; }, $paymentInDetails); ?>
-                <?php $paymentInHeaderDates = array_map(function($paymentInDetail) { return $paymentInDetail->paymentIn->payment_date; }, $paymentInDetails); ?>
+                <?php $paymentInHeaderDates = array_map(function($paymentInDetail) { return $paymentInDetail->paymentIn->payment_date . ' ' . $paymentInDetail->paymentIn->payment_time; }, $paymentInDetails); ?>
                 <tr class="items1">
                     <td class="width1-1"><?php echo CHtml::encode($i + 1); ?></td>
                     <td class="width1-2">
                         <?php echo CHtml::link(CHtml::encode($header->transaction_number), array("/frontDesk/generalRepairRegistration/view", "id"=>$header->id), array("target" => "_blank")); ?>
                     </td>
                     <td class="width1-3">
-                        <?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($header->transaction_date))); ?>
+                        <?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy hh:mm:ss', strtotime($header->transaction_date))); ?>
                     </td>
                     <td class="width1-4"><?php echo CHtml::encode(CHtml::value($header, 'customer.name')); ?></td>
                     <td class="width1-5"><?php echo CHtml::encode(CHtml::value($header, 'vehicle.plate_number')); ?></td>
