@@ -26,6 +26,7 @@
             <th class="width1-3">Tanggal</th>
             <th class="width1-4">Customer</th>
             <th class="width1-5">Vehicle</th>
+            <th class="width1-6">Sales Order</th>
             <th class="width1-6">Work Order</th>
             <th class="width1-7">Movement Out</th>
         </tr>
@@ -44,9 +45,21 @@
                 </td>
                 <td class="width1-4"><?php echo CHtml::encode(CHtml::value($header, 'customer.name')); ?></td>
                 <td class="width1-5"><?php echo CHtml::encode($header->vehicle->plate_number); ?></td>
+                <td class="width1-6"><?php echo CHtml::encode(CHtml::value($header, 'sales_order_number')); ?></td>
                 <td class="width1-6"><?php echo CHtml::encode(CHtml::value($header, 'work_order_number')); ?></td>
                 <td class="width1-7"><?php echo CHtml::encode(implode(', ', $movementOutHeaderCodeNumbers)); ?></td>
             </tr>
         <?php endforeach; ?>
     </tbody>
 </table>
+
+<div>
+    <div class="right">
+        <?php $this->widget('system.web.widgets.pagers.CLinkPager', array(
+            'itemCount' => $saleFlowSummary->dataProvider->pagination->itemCount,
+            'pageSize' => $saleFlowSummary->dataProvider->pagination->pageSize,
+            'currentPage' => $saleFlowSummary->dataProvider->pagination->getCurrentPage(false),
+        )); ?>
+    </div>
+    <div class="clear"></div>
+</div>

@@ -123,7 +123,7 @@
                     ),
                     array(
                         'label' => 'Permintaan Harga', 
-                        'url' => array('/frontDesk/productPricingRequest/admin')
+                        'url' => array('/frontDesk/productPricingRequest/create')
 //                        'visible' => (Yii::app()->user->checkAccess('inspectionCreate') || Yii::app()->user->checkAccess('inspectionEdit'))
                     ),
                     array(
@@ -220,6 +220,11 @@
                         'label' => 'Sub Pekerjaan Luar', 
                         'url' => array('/accounting/workOrderExpense/admin'), 
                         'visible' => (Yii::app()->user->checkAccess('workOrderExpenseCreate') || Yii::app()->user->checkAccess('workOrderExpenseEdit'))
+                    ),
+                    array(
+                        'label' => 'Permintaan Harga Cabang', 
+                        'url' => array('/frontDesk/productPricingRequest/admin'), 
+//                        'visible' => (Yii::app()->user->checkAccess('workOrderExpenseCreate') || Yii::app()->user->checkAccess('workOrderExpenseEdit'))
                     ),
                     array('label' => 'PELUNASAN', 'url' => array('#'), 'itemOptions' => array('class' => 'title', 'style' => 'text-decoration: underline')),
                     array(
@@ -402,6 +407,12 @@
                         'label' => 'Head POV', 
                         'url' => array('/frontDesk/bodyRepairManagement/index'), 
                         'visible' => (Yii::app()->user->checkAccess('brHeadCreate') || Yii::app()->user->checkAccess('brHeadEdit'))
+                    ),
+                    array('label' => 'KENDARAAN', 'url' => array('#'), 'itemOptions' => array('class' => 'title', 'style' => 'text-decoration: underline')),
+                    array(
+                        'label' => 'Kendaraan Dalam Bengkel', 
+                        'url' => array('/frontDesk/vehicleInboundList/index'), 
+                        'visible' => (Yii::app()->user->checkAccess('director') || Yii::app()->user->checkAccess('director'))
                     ),
                 ),
             )); ?>

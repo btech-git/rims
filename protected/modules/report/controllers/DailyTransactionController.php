@@ -30,130 +30,11 @@ class DailyTransactionController extends Controller {
         $currentPage = (isset($_GET['page'])) ? $_GET['page'] : '';
         $currentSort = (isset($_GET['sort'])) ? $_GET['sort'] : '';
 
-        $cashTransactionInData = CashTransaction::model()->findAllByAttributes(array(
-            'transaction_date' => $transactionDate,
-            'transaction_type' => 'In',
-            'branch_id' => $branchId,
-        ));
-        
-        $cashTransactionOutData = CashTransaction::model()->findAllByAttributes(array(
-            'transaction_date' => $transactionDate,
-            'transaction_type' => 'Out',
-            'branch_id' => $branchId,
-        ));
-        
-        $paymentOutData = PaymentOut::model()->findAllByAttributes(array(
-            'payment_date' => $transactionDate,
-            'branch_id' => $branchId,
-        ));
-        
-        $movementInData = MovementInHeader::model()->findAll(array(
-            'condition' => 'substr(t.date_posting, 1, 10) = :transaction_date AND t.branch_id = :branch_id',
-            'params' => array(
-                ':transaction_date' => $transactionDate, 
-                ':branch_id' => $branchId
-            ),
-        ));
-        
-        $movementOutData = MovementOutHeader::model()->findAll(array(
-            'condition' => 'substr(t.date_posting, 1, 10) = :transaction_date AND t.branch_id = :branch_id',
-            'params' => array(
-                ':transaction_date' => $transactionDate, 
-                ':branch_id' => $branchId
-            ),
-        ));
-        
-        $registrationTransactionData = RegistrationTransaction::model()->findAll(array(
-            'condition' => 'substr(t.transaction_date, 1, 10) = :transaction_date AND t.branch_id = :branch_id',
-            'params' => array(
-                ':transaction_date' => $transactionDate, 
-                ':branch_id' => $branchId
-            ),
-        ));
-        
-        $registrationTransactionRetailData = RegistrationTransaction::model()->with('customer')->findAll(array(
-            'condition' => 'substr(t.transaction_date, 1, 10) = :transaction_date AND t.branch_id = :branch_id AND customer.customer_type = "Individual"',
-            'params' => array(
-                ':transaction_date' => $transactionDate, 
-                ':branch_id' => $branchId
-            ),
-        ));
-        
-        $registrationTransactionCompanyData = RegistrationTransaction::model()->with('customer')->findAll(array(
-            'condition' => 'substr(t.transaction_date, 1, 10) = :transaction_date AND t.branch_id = :branch_id AND customer.customer_type = "Company"',
-            'params' => array(
-                ':transaction_date' => $transactionDate, 
-                ':branch_id' => $branchId
-            ),
-        ));
-        
-        $invoiceHeaderRetailData = InvoiceHeader::model()->with('customer')->findAll(array(
-            'condition' => 'invoice_date = :transaction_date AND t.branch_id = :branch_id AND customer.customer_type = "Individual"',
-            'params' => array(
-                ':transaction_date' => $transactionDate, 
-                ':branch_id' => $branchId
-            ),
-        ));
-        
-        $invoiceHeaderCompanyData = InvoiceHeader::model()->with('customer')->findAll(array(
-            'condition' => 'invoice_date = :transaction_date AND t.branch_id = :branch_id AND customer.customer_type = "Company"',
-            'params' => array(
-                ':transaction_date' => $transactionDate, 
-                ':branch_id' => $branchId
-            ),
-        ));
-        
-        $paymentInRetailData = PaymentIn::model()->with('customer')->findAll(array(
-            'condition' => 'payment_date = :transaction_date AND t.branch_id = :branch_id AND customer.customer_type = "Individual"',
-            'params' => array(
-                ':transaction_date' => $transactionDate, 
-                ':branch_id' => $branchId
-            ),
-        ));
-        
-        $paymentInCompanyData = PaymentIn::model()->with('customer')->findAll(array(
-            'condition' => 'payment_date = :transaction_date AND t.branch_id = :branch_id AND customer.customer_type = "Company"',
-            'params' => array(
-                ':transaction_date' => $transactionDate, 
-                ':branch_id' => $branchId
-            ),
-        ));
-        
-        $vehicleData = RegistrationTransaction::model()->with('vehicle')->findAll(array(
-            'condition' => "substr(t.transaction_date, 1, 10) BETWEEN '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND :transaction_date AND t.branch_id = :branch_id AND vehicle.status_location = 'Masuk Bengkel'",
-            'params' => array(
-                ':transaction_date' => $transactionDate, 
-                ':branch_id' => $branchId
-            ),
-        ));
-        
-        $deliveryData = TransactionDeliveryOrder::model()->findAllByAttributes(array(
-            'delivery_date' => $transactionDate,
-            'sender_branch_id' => $branchId,
-        ));
-        
-        $purchaseOrderData = TransactionPurchaseOrder::model()->findAll(array(
-            'condition' => 'substr(t.purchase_order_date, 1, 10) = :transaction_date AND t.main_branch_id = :branch_id',
-            'params' => array(
-                ':transaction_date' => $transactionDate, 
-                ':branch_id' => $branchId
-            ),
-        ));
-        
-        $receiveItemData = TransactionReceiveItem::model()->findAllByAttributes(array(
-            'receive_item_date' => $transactionDate,
-            'recipient_branch_id' => $branchId,
-        ));
-        
-        $sentRequestData = TransactionSentRequest::model()->findAllByAttributes(array(
-            'sent_request_date' => $transactionDate,
-            'requester_branch_id' => $branchId,
-        ));
-        
-        $transferRequestData = TransactionTransferRequest::model()->findAllByAttributes(array(
-            'transfer_request_date' => $transactionDate,
-            'requester_branch_id' => $branchId,
-        ));
+        list($movementInData, $movementOutData, $receiveItemData, $sentRequestData, $transferRequestData, $deliveryData) = $this->getWarehouseTabData($transactionDate, $branchId);
+        list($registrationTransactionRetailData, $registrationTransactionCompanyData, $invoiceHeaderRetailData, $invoiceHeaderCompanyData, $paymentInRetailData, $paymentInCompanyData) = $this->getSaleTabData($transactionDate, $branchId);
+        list($paymentOutData, $purchaseOrderData) = $this->getPurchaseTabData($transactionDate, $branchId);
+        list($cashTransactionInData, $cashTransactionOutData) = $this->getCashTransactionTabData($transactionDate, $branchId);
+        list($vehicleData, $registrationTransactionData) = $this->getVehicleTabData($transactionDate, $branchId);
         
         if (isset($_GET['ResetFilter'])) {
             $this->redirect(array('summary'));
@@ -216,6 +97,230 @@ class DailyTransactionController extends Controller {
             'pageSize' => $pageSize,
             'currentPage' => $currentPage,
         ));
+    }
+    
+    public function getVehicleTabData($transactionDate, $branchId) {
+    
+        $condition = "substr(t.transaction_date, 1, 10) BETWEEN '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND :transaction_date AND vehicle.status_location = 'Masuk Bengkel'";
+        $params = array(
+            ':transaction_date' => $transactionDate,
+        );
+        if (!empty($branchId)) {
+            $condition .= ' AND t.branch_id = :branch_id';
+            $params['branch_id'] = $branchId;
+        }
+        $vehicleData = RegistrationTransaction::model()->with('vehicle')->findAll(array(
+            'condition' => $condition,
+            'params' => $params,
+        ));
+        
+        $condition = 'substr(t.transaction_date, 1, 10) = :transaction_date';
+        $params = array(
+            ':transaction_date' => $transactionDate,
+        );
+        if (!empty($branchId)) {
+            $condition .= ' AND t.branch_id = :branch_id';
+            $params['branch_id'] = $branchId;
+        }
+        $registrationTransactionData = RegistrationTransaction::model()->findAll(array(
+            'condition' => $condition,
+            'params' => $params,
+        ));
+        
+        return array($vehicleData, $registrationTransactionData);
+    }
+    
+    public function getCashTransactionTabData($transactionDate, $branchId) {
+    
+        $fieldValues = array(
+            'transaction_date' => $transactionDate,
+            'transaction_type' => 'In',
+        );
+        if (!empty($branchId)) {
+            $fieldValues['branch_id'] = $branchId;
+        }
+        $cashTransactionInData = CashTransaction::model()->findAllByAttributes($fieldValues);
+        
+        $fieldValues = array(
+            'transaction_date' => $transactionDate,
+            'transaction_type' => 'Out',
+        );
+        if (!empty($branchId)) {
+            $fieldValues['branch_id'] = $branchId;
+        }
+        $cashTransactionOutData = CashTransaction::model()->findAllByAttributes($fieldValues);
+        
+        return array($cashTransactionInData, $cashTransactionOutData);
+    }
+    public function getPurchaseTabData($transactionDate, $branchId) {
+    
+        $fieldValues = array(
+            'payment_date' => $transactionDate,
+        );
+        if (!empty($branchId)) {
+            $fieldValues['branch_id'] = $branchId;
+        }
+        $paymentOutData = PaymentOut::model()->findAllByAttributes($fieldValues);
+        
+        $condition = 'substr(t.purchase_order_date, 1, 10) = :transaction_date';
+        $params = array(
+            ':transaction_date' => $transactionDate,
+        );
+        if (!empty($branchId)) {
+            $condition .= ' AND t.main_branch_id = :branch_id';
+            $params['branch_id'] = $branchId;
+        }
+        $purchaseOrderData = TransactionPurchaseOrder::model()->findAll(array(
+            'condition' => $condition,
+            'params' => $params,
+        ));
+        
+        return array($paymentOutData, $purchaseOrderData);
+    }
+    public function getSaleTabData($transactionDate, $branchId) {
+    
+        $condition = 'substr(t.transaction_date, 1, 10) = :transaction_date AND customer.customer_type = "Individual"';
+        $params = array(
+            ':transaction_date' => $transactionDate,
+        );
+        if (!empty($branchId)) {
+            $condition .= ' AND t.branch_id = :branch_id';
+            $params['branch_id'] = $branchId;
+        }
+        $registrationTransactionRetailData = RegistrationTransaction::model()->with('customer')->findAll(array(
+            'condition' => $condition,
+            'params' => $params,
+        ));
+        
+        $condition = 'substr(t.transaction_date, 1, 10) = :transaction_date AND customer.customer_type = "Company"';
+        $params = array(
+            ':transaction_date' => $transactionDate,
+        );
+        if (!empty($branchId)) {
+            $condition .= ' AND t.branch_id = :branch_id';
+            $params['branch_id'] = $branchId;
+        }
+        $registrationTransactionCompanyData = RegistrationTransaction::model()->with('customer')->findAll(array(
+            'condition' => $condition,
+            'params' => $params,
+        ));
+        
+        $condition = 'substr(t.invoice_date, 1, 10) = :transaction_date AND customer.customer_type = "Individual"';
+        $params = array(
+            ':transaction_date' => $transactionDate,
+        );
+        if (!empty($branchId)) {
+            $condition .= ' AND t.branch_id = :branch_id';
+            $params['branch_id'] = $branchId;
+        }
+        $invoiceHeaderRetailData = InvoiceHeader::model()->with('customer')->findAll(array(
+            'condition' => $condition,
+            'params' => $params,
+        ));
+        
+        $condition = 'substr(t.invoice_date, 1, 10) = :transaction_date AND customer.customer_type = "Company"';
+        $params = array(
+            ':transaction_date' => $transactionDate,
+        );
+        if (!empty($branchId)) {
+            $condition .= ' AND t.branch_id = :branch_id';
+            $params['branch_id'] = $branchId;
+        }
+        $invoiceHeaderCompanyData = InvoiceHeader::model()->with('customer')->findAll(array(
+            'condition' => $condition,
+            'params' => $params,
+        ));
+        
+        $condition = 'substr(t.payment_date, 1, 10) = :transaction_date AND customer.customer_type = "Individual"';
+        $params = array(
+            ':transaction_date' => $transactionDate,
+        );
+        if (!empty($branchId)) {
+            $condition .= ' AND t.branch_id = :branch_id';
+            $params['branch_id'] = $branchId;
+        }
+        $paymentInRetailData = PaymentIn::model()->with('customer')->findAll(array(
+            'condition' => $condition,
+            'params' => $params,
+        ));
+        
+        $condition = 'substr(t.payment_date, 1, 10) = :transaction_date AND customer.customer_type = "Company"';
+        $params = array(
+            ':transaction_date' => $transactionDate,
+        );
+        if (!empty($branchId)) {
+            $condition .= ' AND t.branch_id = :branch_id';
+            $params['branch_id'] = $branchId;
+        }
+        $paymentInCompanyData = PaymentIn::model()->with('customer')->findAll(array(
+            'condition' => $condition,
+            'params' => $params,
+        ));
+        
+        return array($registrationTransactionRetailData, $registrationTransactionCompanyData, $invoiceHeaderRetailData, $invoiceHeaderCompanyData, $paymentInRetailData, $paymentInCompanyData);
+    }
+    
+    public function getWarehouseTabData($transactionDate, $branchId) {
+        
+        $condition = 'substr(t.date_posting, 1, 10) = :transaction_date';
+        $params = array(
+            ':transaction_date' => $transactionDate,
+        );
+        if (!empty($branchId)) {
+            $condition .= ' AND t.branch_id = :branch_id';
+            $params['branch_id'] = $branchId;
+        }
+        $movementInData = MovementInHeader::model()->findAll(array(
+            'condition' => $condition,
+            'params' => $params,
+        ));
+        
+        $condition = 'substr(t.date_posting, 1, 10) = :transaction_date';
+        $params = array(
+            ':transaction_date' => $transactionDate,
+        );
+        if (!empty($branchId)) {
+            $condition .= ' AND t.branch_id = :branch_id';
+            $params['branch_id'] = $branchId;
+        }
+        $movementOutData = MovementOutHeader::model()->findAll(array(
+            'condition' => $condition,
+            'params' => $params,
+        ));
+        
+        $fieldValues = array(
+            'receive_item_date' => $transactionDate,
+        );
+        if (!empty($branchId)) {
+            $fieldValues['recipient_branch_id'] = $branchId;
+        }
+        $receiveItemData = TransactionReceiveItem::model()->findAllByAttributes($fieldValues);
+        
+        $fieldValues = array(
+            'sent_request_date' => $transactionDate,
+        );
+        if (!empty($branchId)) {
+            $fieldValues['requester_branch_id'] = $branchId;
+        }
+        $sentRequestData = TransactionSentRequest::model()->findAllByAttributes($fieldValues);
+        
+        $fieldValues = array(
+            'transfer_request_date' => $transactionDate,
+        );
+        if (!empty($branchId)) {
+            $fieldValues['requester_branch_id'] = $branchId;
+        }
+        $transferRequestData = TransactionTransferRequest::model()->findAllByAttributes($fieldValues);
+        
+        $fieldValues = array(
+            'delivery_date' => $transactionDate,
+        );
+        if (!empty($branchId)) {
+            $fieldValues['sender_branch_id'] = $branchId;
+        }
+        $deliveryData = TransactionDeliveryOrder::model()->findAllByAttributes($fieldValues);
+        
+        return array($movementInData, $movementOutData, $receiveItemData, $sentRequestData, $transferRequestData, $deliveryData);
     }
     
     public function confirmDailyTransaction(array $options = array()) {

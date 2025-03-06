@@ -77,9 +77,23 @@ class WarehouseFlowSummaryController extends Controller {
             $this->redirect(array('summary'));
         }
         
-//        if (isset($_GET['SaveExcel'])) {
-//            $this->saveToExcel($saleInvoiceSummary, $startDate, $endDate, $branchId);
-//        }
+        if (isset($_GET['SaveExcel'])) {
+            $this->saveToExcel(
+                $registrationTransaction,
+                $saleFlowSummary,
+                $materialRequest,
+                $materialRequestFlowSummary,
+                $transferRequest,
+                $transferRequestFlowSummary,
+                $sentRequest,
+                $sentRequestFlowSummary,
+                $purchaseOrder,
+                $purchaseOrderFlowSummary, 
+                $startDate, 
+                $endDate,
+                $transactionStatus
+            );
+        }
 
         $this->render('summary', array(
             'registrationTransaction' => $registrationTransaction,
@@ -99,7 +113,7 @@ class WarehouseFlowSummaryController extends Controller {
         ));
     }
 
-    protected function saveToExcel($saleInvoiceSummary, $startDate, $endDate, $branchId) {
+    protected function saveToExcel($registrationTransaction, $saleFlowSummary, $materialRequest, $materialRequestFlowSummary, $transferRequest, $transferRequestFlowSummary, $sentRequest, $sentRequestFlowSummary, $purchaseOrder, $purchaseOrderFlowSummary, $startDate, $endDate, $transactionStatus) {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
 
@@ -114,75 +128,206 @@ class WarehouseFlowSummaryController extends Controller {
 
         $documentProperties = $objPHPExcel->getProperties();
         $documentProperties->setCreator('Raperind Motor');
-        $documentProperties->setTitle('Laporan Faktur Penjualan');
+        $documentProperties->setTitle('Laporan Perpindahan Barang');
 
         $worksheet = $objPHPExcel->setActiveSheetIndex(0);
-        $worksheet->setTitle('Laporan Faktur Penjualan');
+        $worksheet->setTitle('Laporan Perpindahan Barang');
 
-        $worksheet->mergeCells('A1:L1');
-        $worksheet->mergeCells('A2:L2');
-        $worksheet->mergeCells('A3:L3');
-        $worksheet->mergeCells('A4:L4');
+        $worksheet->mergeCells('A1:H1');
+        $worksheet->mergeCells('A2:H2');
+        $worksheet->mergeCells('A3:H3');
+        $worksheet->mergeCells('A4:H4');
+        $worksheet->mergeCells('A5:H5');
         
-        $worksheet->getStyle('A1:L3')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-        $worksheet->getStyle('A1:L3')->getFont()->setBold(true);
-        $branch = Branch::model()->findByPk($branchId);
-        $worksheet->setCellValue('A1', 'Raperind Motor ' . CHtml::encode(CHtml::value($branch, 'name')));
-        $worksheet->setCellValue('A2', 'Laporan Faktur Penjualan');
+        $worksheet->getStyle('A1:H3')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->getStyle('A1:H3')->getFont()->setBold(true);
+        $worksheet->setCellValue('A1', 'Raperind Motor ');
+        $worksheet->setCellValue('A2', 'Laporan Perpindahan Barang');
         $worksheet->setCellValue('A3', $startDateFormatted . ' - ' . $endDateFormatted);
 
-        $worksheet->getStyle("A6:L6")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
-        $worksheet->getStyle("A6:L6")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
-
-        $worksheet->getStyle('A6:L6')->getFont()->setBold(true);
-        $worksheet->setCellValue('A6', 'Tanggal');
-        $worksheet->setCellValue('B6', 'Faktur #');
-        $worksheet->setCellValue('C6', 'Jatuh Tempo');
+        $worksheet->getStyle("A5:H5")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle('A5:H6')->getFont()->setBold(true);
+        $worksheet->getStyle('A5:H6')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->setCellValue('A5', 'Penjualan');
+        $worksheet->getStyle("A6:H6")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->setCellValue('A6', 'No');
+        $worksheet->setCellValue('B6', 'RG #');
+        $worksheet->setCellValue('C6', 'Tanggal');
         $worksheet->setCellValue('D6', 'Customer');
-        $worksheet->setCellValue('E6', 'Type');
-        $worksheet->setCellValue('F6', 'Vehicle');
-        $worksheet->setCellValue('H6', 'Grand Total');
-        $worksheet->setCellValue('I6', 'Payment');
-        $worksheet->setCellValue('J6', 'Remaining');
-        $worksheet->setCellValue('K6', 'Status');
-        $worksheet->setCellValue('L6', 'User');
+        $worksheet->setCellValue('E6', 'Vehicle');
+        $worksheet->setCellValue('F6', 'Sales Order');
+        $worksheet->setCellValue('G6', 'Work Order');
+        $worksheet->setCellValue('H6', 'Movement Out');
 
         $counter = 7;
 
-        $grandTotalSale = 0;
-        $grandTotalPayment = 0;
-        $grandTotalRemaining = 0;
-        foreach ($saleInvoiceSummary->dataProvider->data as $header) {
-            $totalPrice = $header->total_price; 
-            $totalPayment = $header->payment_amount;
-            $totalRemaining = $header->payment_left;
-            $worksheet->setCellValue("A{$counter}", $header->invoice_date);
-            $worksheet->setCellValue("B{$counter}", $header->invoice_number);
-            $worksheet->setCellValue("C{$counter}", CHtml::encode(CHtml::value($header, 'due_date')));
+        foreach ($saleFlowSummary->dataProvider->data as $i => $header) {
+            $movementOutHeaders = $header->movementOutHeaders;
+            $movementOutHeaderCodeNumbers = array_map(function($movementOutHeader) { return $movementOutHeader->movement_out_no; }, $movementOutHeaders);
+            $worksheet->setCellValue("A{$counter}", CHtml::encode($i + 1));
+            $worksheet->setCellValue("B{$counter}", CHtml::encode($header->transaction_number));
+            $worksheet->setCellValue("C{$counter}", CHtml::encode(CHtml::value($header, 'transaction_date')));
             $worksheet->setCellValue("D{$counter}", CHtml::encode(CHtml::value($header, 'customer.name')));
-            $worksheet->setCellValue("E{$counter}", CHtml::value($header, 'customer.customer_type'));
-            $worksheet->setCellValue("F{$counter}", CHtml::value($header, 'vehicle.plate_number'));
-            $worksheet->setCellValue("H{$counter}", $totalPrice);
-            $worksheet->setCellValue("I{$counter}", $totalPayment);
-            $worksheet->setCellValue("J{$counter}", $totalRemaining);
-            $worksheet->setCellValue("K{$counter}", $header->status);
-            $worksheet->setCellValue("L{$counter}", $header->user->username);
-            $grandTotalSale += $totalPrice;
-            $grandTotalPayment += $totalPayment;
-            $grandTotalRemaining += $totalRemaining;
+            $worksheet->setCellValue("E{$counter}", CHtml::value($header, 'vehicle.plate_number'));
+            $worksheet->setCellValue("F{$counter}", CHtml::encode(CHtml::value($header, 'sales_order_number')));
+            $worksheet->setCellValue("G{$counter}", CHtml::encode(CHtml::value($header, 'work_order_number')));
+            $worksheet->setCellValue("H{$counter}", CHtml::encode(implode(', ', $movementOutHeaderCodeNumbers)));
             $counter++;
         }
 
-        $worksheet->getStyle("A{$counter}:U{$counter}")->getFont()->setBold(true);
-        $worksheet->getStyle("A{$counter}:U{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
-        $worksheet->getStyle("H{$counter}:J{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
-        $worksheet->setCellValue("F{$counter}", 'Total');
-        $worksheet->setCellValue("G{$counter}", 'Rp');
-        $worksheet->setCellValue("H{$counter}", $grandTotalSale);
-        $worksheet->setCellValue("I{$counter}", $grandTotalPayment);
-        $worksheet->setCellValue("J{$counter}", $grandTotalRemaining);
+        $counter++;$counter++;
+
+        $worksheet->mergeCells("A{$counter}:H{$counter}");
+        $worksheet->getStyle("A{$counter}:H{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A{$counter}:H{$counter}")->getFont()->setBold(true);
+        $worksheet->getStyle("A{$counter}:H{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->setCellValue("A{$counter}", 'Material Request');
+        $counter++;
+
+        $worksheet->getStyle("A{$counter}:H{$counter}")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A{$counter}:H{$counter}")->getFont()->setBold(true);
+        $worksheet->getStyle("A{$counter}:H{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->setCellValue("A{$counter}", 'No');
+        $worksheet->setCellValue("B{$counter}", 'Request #');
+        $worksheet->setCellValue("C{$counter}", 'Tanggal');
+        $worksheet->setCellValue("D{$counter}", 'RG #');
+        $worksheet->setCellValue("E{$counter}", 'Customer');
+        $worksheet->setCellValue("F{$counter}", 'Sales Order');
+        $worksheet->setCellValue("G{$counter}", 'Work Order');
+        $worksheet->setCellValue("H{$counter}", 'Movement Out');
 
         $counter++;
+
+        foreach ($materialRequestFlowSummary->dataProvider->data as $i => $header) {
+            $movementOutHeaders = $header->movementOutHeaders;
+            $movementOutHeaderCodeNumbers = array_map(function($movementOutHeader) { return $movementOutHeader->movement_out_no; }, $movementOutHeaders);
+            $worksheet->setCellValue("A{$counter}", CHtml::encode($i + 1));
+            $worksheet->setCellValue("B{$counter}", CHtml::encode($header->transaction_number));
+            $worksheet->setCellValue("C{$counter}", CHtml::encode(CHtml::value($header, 'transaction_date')));
+            $worksheet->setCellValue("D{$counter}", CHtml::encode(CHtml::value($header, 'registrationTransaction.transaction_number')));
+            $worksheet->setCellValue("E{$counter}", CHtml::value($header, 'registrationTransaction.customer.name'));
+            $worksheet->setCellValue("F{$counter}", CHtml::encode(CHtml::value($header, 'registrationTransaction.sales_order_number')));
+            $worksheet->setCellValue("G{$counter}", CHtml::encode(CHtml::value($header, 'registrationTransaction.work_order_number')));
+            $worksheet->setCellValue("H{$counter}", CHtml::encode(implode(', ', $movementOutHeaderCodeNumbers)));
+            $counter++;
+        }
+
+        $counter++;$counter++;
+
+        $worksheet->mergeCells("A{$counter}:H{$counter}");
+        $worksheet->getStyle("A{$counter}:H{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A{$counter}:H{$counter}")->getFont()->setBold(true);
+        $worksheet->getStyle("A{$counter}:H{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->setCellValue("A{$counter}", 'Transfer Request');
+        $counter++;
+
+        $worksheet->getStyle("A{$counter}:H{$counter}")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A{$counter}:H{$counter}")->getFont()->setBold(true);
+        $worksheet->getStyle("A{$counter}:H{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->setCellValue("A{$counter}", 'No');
+        $worksheet->setCellValue("B{$counter}", 'Transfer Request #');
+        $worksheet->setCellValue("C{$counter}", 'Tanggal');
+        $worksheet->setCellValue("D{$counter}", 'Pengiriman #');
+        $worksheet->setCellValue("E{$counter}", 'Movement Out #');
+        $worksheet->setCellValue("F{$counter}", 'Penerimaan #');
+        $worksheet->setCellValue("G{$counter}", 'Movement In #');
+
+        $counter++;
+
+        foreach ($transferRequestFlowSummary->dataProvider->data as $i => $header) {
+            $deliveryOrders = $header->transactionDeliveryOrders;
+            $deliveryOrderCodeNumbers = array_map(function($deliveryOrder) { return $deliveryOrder->delivery_order_no; }, $deliveryOrders);
+            $movementOutHeaders = array_reduce(array_map(function($deliveryOrder) { return $deliveryOrder->movementOutHeaders; }, $deliveryOrders), function($a, $b) { return in_array($b, $a) ? $a : array_merge($a, $b); }, array());
+            $movementOutHeaderCodeNumbers = array_map(function($movementOutHeader) { return $movementOutHeader->movement_out_no; }, $movementOutHeaders);
+            $receiveItems = array_reduce(array_map(function($deliveryOrder) { return $deliveryOrder->transactionReceiveItems; }, $deliveryOrders), function($a, $b) { return in_array($b, $a) ? $a : array_merge($a, $b); }, array());
+            $receiveItemCodeNumbers = array_map(function($receiveItem) { return $receiveItem->receive_item_no; }, $receiveItems);
+            $movementInHeaders = array_reduce(array_map(function($receiveItem) { return $receiveItem->movementInHeaders; }, $receiveItems), function($a, $b) { return in_array($b, $a) ? $a : array_merge($a, $b); }, array());
+            $movementInHeaderCodeNumbers = array_map(function($movementInHeader) { return $movementInHeader->movement_in_number; }, $movementInHeaders);
+            $worksheet->setCellValue("A{$counter}", CHtml::encode($i + 1));
+            $worksheet->setCellValue("B{$counter}", CHtml::encode($header->transfer_request_no));
+            $worksheet->setCellValue("C{$counter}", CHtml::encode(CHtml::value($header, 'transfer_request_date')));
+            $worksheet->setCellValue("D{$counter}", CHtml::encode(implode(', ', $deliveryOrderCodeNumbers)));
+            $worksheet->setCellValue("E{$counter}", CHtml::encode(implode(', ', $movementOutHeaderCodeNumbers)));
+            $worksheet->setCellValue("F{$counter}", CHtml::encode(implode(', ', $receiveItemCodeNumbers)));
+            $worksheet->setCellValue("G{$counter}", CHtml::encode(implode(', ', $movementInHeaderCodeNumbers)));
+            $counter++;
+        }
+
+        $counter++;$counter++;
+
+        $worksheet->mergeCells("A{$counter}:H{$counter}");
+        $worksheet->getStyle("A{$counter}:H{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A{$counter}:H{$counter}")->getFont()->setBold(true);
+        $worksheet->getStyle("A{$counter}:H{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->setCellValue("A{$counter}", 'Sent Request');
+        $counter++;
+
+        $worksheet->getStyle("A{$counter}:H{$counter}")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A{$counter}:H{$counter}")->getFont()->setBold(true);
+        $worksheet->getStyle("A{$counter}:H{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->setCellValue("A{$counter}", 'No');
+        $worksheet->setCellValue("B{$counter}", 'Sent Request #');
+        $worksheet->setCellValue("C{$counter}", 'Tanggal');
+        $worksheet->setCellValue("D{$counter}", 'Pengiriman #');
+        $worksheet->setCellValue("E{$counter}", 'Movement Out #');
+        $worksheet->setCellValue("F{$counter}", 'Penerimaan #');
+        $worksheet->setCellValue("G{$counter}", 'Movement In #');
+
+        $counter++;
+
+        foreach ($sentRequestFlowSummary->dataProvider->data as $i => $header) {
+            $deliveryOrders = $header->transactionDeliveryOrders;
+            $deliveryOrderCodeNumbers = array_map(function($deliveryOrder) { return $deliveryOrder->delivery_order_no; }, $deliveryOrders);
+            $movementOutHeaders = array_reduce(array_map(function($deliveryOrder) { return $deliveryOrder->movementOutHeaders; }, $deliveryOrders), function($a, $b) { return in_array($b, $a) ? $a : array_merge($a, $b); }, array());
+            $movementOutHeaderCodeNumbers = array_map(function($movementOutHeader) { return $movementOutHeader->movement_out_no; }, $movementOutHeaders);
+            $receiveItems = array_reduce(array_map(function($deliveryOrder) { return $deliveryOrder->transactionReceiveItems; }, $deliveryOrders), function($a, $b) { return in_array($b, $a) ? $a : array_merge($a, $b); }, array());
+            $receiveItemCodeNumbers = array_map(function($receiveItem) { return $receiveItem->receive_item_no; }, $receiveItems);
+            $movementInHeaders = array_reduce(array_map(function($receiveItem) { return $receiveItem->movementInHeaders; }, $receiveItems), function($a, $b) { return in_array($b, $a) ? $a : array_merge($a, $b); }, array());
+            $movementInHeaderCodeNumbers = array_map(function($movementInHeader) { return $movementInHeader->movement_in_number; }, $movementInHeaders);
+            $worksheet->setCellValue("A{$counter}", CHtml::encode($i + 1));
+            $worksheet->setCellValue("B{$counter}", CHtml::encode($header->sent_request_no));
+            $worksheet->setCellValue("C{$counter}", CHtml::encode(CHtml::value($header, 'sent_request_date')));
+            $worksheet->setCellValue("D{$counter}", CHtml::encode(implode(', ', $deliveryOrderCodeNumbers)));
+            $worksheet->setCellValue("E{$counter}", CHtml::encode(implode(', ', $movementOutHeaderCodeNumbers)));
+            $worksheet->setCellValue("F{$counter}", CHtml::encode(implode(', ', $receiveItemCodeNumbers)));
+            $worksheet->setCellValue("G{$counter}", CHtml::encode(implode(', ', $movementInHeaderCodeNumbers)));
+            $counter++;
+        }
+
+        $counter++;$counter++;
+
+        $worksheet->mergeCells("A{$counter}:H{$counter}");
+        $worksheet->getStyle("A{$counter}:H{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A{$counter}:H{$counter}")->getFont()->setBold(true);
+        $worksheet->getStyle("A{$counter}:H{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->setCellValue("A{$counter}", 'Pembelian');
+        $counter++;
+
+        $worksheet->getStyle("A{$counter}:H{$counter}")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A{$counter}:H{$counter}")->getFont()->setBold(true);
+        $worksheet->getStyle("A{$counter}:H{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->setCellValue("A{$counter}", 'No');
+        $worksheet->setCellValue("B{$counter}", 'Purchase #');
+        $worksheet->setCellValue("C{$counter}", 'Tanggal');
+        $worksheet->setCellValue("D{$counter}", 'Penerimaan #');
+        $worksheet->setCellValue("E{$counter}", 'Movement In #');
+
+        $counter++;
+
+        foreach ($purchaseOrderFlowSummary->dataProvider->data as $i => $header) {
+            $receiveItems = $header->transactionReceiveItems;
+            $receiveItemCodeNumbers = array_map(function($receiveItem) { return $receiveItem->receive_item_no; }, $receiveItems);
+            $movementInHeaders = array_reduce(array_map(function($receiveItem) { return $receiveItem->movementInHeaders; }, $receiveItems), function($a, $b) { return in_array($b, $a) ? $a : array_merge($a, $b); }, array());
+            $movementInHeaderCodeNumbers = array_map(function($movementInHeader) { return $movementInHeader->movement_in_number; }, $movementInHeaders);
+            $worksheet->setCellValue("A{$counter}", CHtml::encode($i + 1));
+            $worksheet->setCellValue("B{$counter}", CHtml::encode($header->purchase_order_no));
+            $worksheet->setCellValue("C{$counter}", CHtml::encode(CHtml::value($header, 'purchase_order_date')));
+            $worksheet->setCellValue("D{$counter}", CHtml::encode(implode(', ', $receiveItemCodeNumbers)));
+            $worksheet->setCellValue("E{$counter}", CHtml::encode(implode(', ', $movementInHeaderCodeNumbers)));
+            $counter++;
+        }
+
+        $counter++;$counter++;
 
         for ($col = 'A'; $col !== 'Z'; $col++) {
             $objPHPExcel->getActiveSheet()
@@ -193,7 +338,7 @@ class WarehouseFlowSummaryController extends Controller {
         ob_end_clean();
 
         header('Content-type: application/vnd.ms-excel');
-        header('Content-Disposition: attachment;filename="Laporan Faktur Penjualan.xls"');
+        header('Content-Disposition: attachment;filename="Laporan Perpindahan Barang.xls"');
         header('Cache-Control: max-age=0');
         
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');

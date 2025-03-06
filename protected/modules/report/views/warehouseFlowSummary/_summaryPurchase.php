@@ -47,3 +47,14 @@
         <?php endforeach; ?>
     </tbody>
 </table>
+
+<div>
+    <div class="right">
+        <?php $this->widget('system.web.widgets.pagers.CLinkPager', array(
+            'itemCount' => $purchaseOrderFlowSummary->dataProvider->pagination->itemCount,
+            'pageSize' => $purchaseOrderFlowSummary->dataProvider->pagination->pageSize,
+            'currentPage' => $purchaseOrderFlowSummary->dataProvider->pagination->getCurrentPage(false),
+        )); ?>
+    </div>
+    <div class="clear"></div>
+</div>

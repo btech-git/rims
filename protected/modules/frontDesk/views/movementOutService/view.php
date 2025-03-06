@@ -22,7 +22,7 @@ $this->menu=array(
 	'data'=>$model,
 	'attributes'=>array(
 		'id',
-		'registration_transaction_id',
+		'registrationTransaction.transaction_number',
 		'service_id',
 		'employee_id',
 		'claim',

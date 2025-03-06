@@ -40,167 +40,19 @@ class SiteController extends Controller {
         if (Yii::app()->user->isGuest) {
             $this->redirect(array('/user/login'));
 //        } else {
-
-//            $assetPurchases = AssetPurchase::model()->findAll();
-//            
-//            $transactionDate = '2022-01-12';
-//            list($year, $month, ) = explode('-', $transactionDate);
-//            $startDate = $year . '-' . $month . '-01';
-//            $endDate = date_create(date('Y-m-t'));
-//            for ($currentDate = date_create($startDate); $currentDate < $endDate; $currentDate->add(new DateInterval('P1M'))) {
-//                var_dump($currentDate);
+//            $pricingRequest = new ProductPricingRequest('search');
+//            $pricingRequest->unsetAttributes();  // clear any default values
+//
+//            if (isset($_GET['ProductPricingRequest'])) {
+//                $pricingRequest->attributes = $_GET['ProductPricingRequest'];
 //            }
-            
-//            foreach ($assetPurchases as $detail) {
-//                
-//                $purchaseDate = strtotime($detail->transaction_date);
-//                $currentDate = strtotime(date('Y-m-t'));
 //
-//                for ($i = $purchaseDate; $i <= $currentDate; $i += 2630000) {
-//                    echo $detail->id . ' - ' . date('Y-m-t', $i ) . '<br />';
-//                }
-//            }
-            
-//            $count = 0;
-//            $branchId = User::model()->findByPk(Yii::app()->user->getId())->branch_id;
-//            $date = date_create(date('d-m-Y'));
-//            date_sub($date, date_interval_create_from_date_string("7 days"));
-
-//            if (!empty($branchId)) {
-//                $requestCriteria = new CDbCriteria;
-//                $requestCriteria->addCondition(" DATE(request_order_date) >= (NOW() - INTERVAL 7 DAY)");
-//                $requestCriteria->addInCondition('main_branch_id', Yii::app()->user->branch_ids);
-//                $requestOrder = TransactionRequestOrder::model()->findAll($requestCriteria);
-//                
-//                $purchaseCriteria = new CDbCriteria;
-//                $purchaseCriteria->addInCondition('main_branch_id', Yii::app()->user->branch_ids);
-//                $purchaseCriteria->addCondition(" DATE(purchase_order_date) >= (NOW() - INTERVAL 7 DAY)");
-//                $purchase = TransactionPurchaseOrder::model()->findAll($purchaseCriteria);
-//
-//                $salesCriteria = new CDbCriteria;
-//                $salesCriteria->addInCondition('requester_branch_id', Yii::app()->user->branch_ids);
-//                $salesCriteria->addCondition(" DATE(sale_order_date) >= (NOW() - INTERVAL 7 DAY)");
-//                $sales = TransactionSalesOrder::model()->findAll($salesCriteria);
-//
-//                $transferCriteria = new CDbCriteria;
-//                $transferCriteria->addInCondition('destination_branch_id', Yii::app()->user->branch_ids);
-//                $transferCriteria->addCondition(" DATE(transfer_request_date) >= (NOW() - INTERVAL 7 DAY)");
-//                $transfer = TransactionTransferRequest::model()->findAll($transferCriteria);
-//
-//                $sentCriteria = new CDbCriteria;
-//                $sentCriteria->addInCondition('destination_branch_id', Yii::app()->user->branch_ids);
-//                $sentCriteria->addCondition(" DATE(sent_request_date) >= (NOW() - INTERVAL 7 DAY)");
-//                $sent = TransactionSentRequest::model()->findAll($sentCriteria);
-//
-//                $consignmentCriteria = new CDbCriteria;
-//                $consignmentCriteria->addInCondition('branch_id', Yii::app()->user->branch_ids);
-//                $consignmentCriteria->addCondition(" DATE(date_posting) >= (NOW() - INTERVAL 7 DAY)");
-//                $consignment = ConsignmentOutHeader::model()->findAll($consignmentCriteria);
-//
-//                $consignmentInCriteria = new CDbCriteria;
-//                $consignmentInCriteria->addInCondition('receive_branch', Yii::app()->user->branch_ids);
-//                $consignmentInCriteria->addCondition(" DATE(date_posting) >= (NOW() - INTERVAL 7 DAY)");
-//                $consignmentIn = ConsignmentInHeader::model()->findAll($consignmentInCriteria);
-//
-//                $movementCriteria = new CDbCriteria;
-//                $movementCriteria->addInCondition('branch_id', Yii::app()->user->branch_ids);
-//                $movementCriteria->addCondition(" DATE(date_posting) >= (NOW() - INTERVAL 7 DAY)");
-//                $movement = MovementOutHeader::model()->findAll($movementCriteria);
-//
-//                $movementInCriteria = new CDbCriteria;
-//                $movementInCriteria->addInCondition('branch_id', Yii::app()->user->branch_ids);
-//                $movementInCriteria->addCondition(" DATE(date_posting) >= (NOW() - INTERVAL 7 DAY)");
-//                $movementIn = MovementInHeader::model()->findAll($movementInCriteria);
-
-//            }
+//            $pricingRequestDataProvider = $pricingRequest->search();
         }
         
-//        $totalReceivables = InvoiceHeader::totalReceivables();
-//        $totalPayables = TransactionReceiveItem::totalPayables();
-//        
-//        $resultSet = RegistrationTransaction::graphSale();
-//        $records = array();
-//        $year = intval(date('Y'));
-//        $month = intval(date('m'));
-//        for ($i = 0; $i < 12; $i++) {
-//            $records[$year][$month] = 0;
-//            $month--;
-//            if ($month <= 0) {
-//                $month += 12;
-//                $year--;
-//            }
-//        }
-//        foreach ($resultSet as $item) {
-//            $month = intval($item['month']);
-//            $year = intval($item['year']);
-//            if (isset($records[$year][$month])) {
-//                $records[$year][$month] = doubleval($item['grand_total']);
-//            }
-//        }
-//        $rows = array();
-//        foreach ($records as $y => $record) {
-//            foreach ($record as $m => $value) {
-//                $month = date("M", mktime(0, 0, 0, $m));
-//                $year = substr($y, 2);
-//                $rows[] = array($month . " " . $year, $value);
-//            }
-//        }
-//        $dataSale = array_merge(array(array('Monthly', 'Sales')), array_reverse($rows));
-//
-//        $resultSetBranch = JurnalUmum::graphSalePerBranch();
-//        $branchRows = array();
-//        foreach ($resultSetBranch as $item) {
-//            $branchRows[] = array($item['branch_name'], doubleval($item['total']));
-//        }
-//        $dataSalePerBranch = array_merge(array(array('Branch', 'Sales')), $branchRows);
-//
-//        $resultSetIncomeExpense = JurnalUmum::graphIncomeExpense();
-//        $incomeExpenseRecords = array();
-//        $incomeExpenseYear = intval(date('Y'));
-//        $incomeExpenseMonth = intval(date('m'));
-//        for ($i = 0; $i < 12; $i++) {
-//            $incomeExpenseRecords[$incomeExpenseYear][$incomeExpenseMonth] = 0;
-//            $incomeExpenseMonth--;
-//            if ($incomeExpenseMonth <= 0) {
-//                $incomeExpenseMonth += 12;
-//                $incomeExpenseYear--;
-//            }
-//        }
-//        foreach ($resultSetIncomeExpense as $item) {
-//            $incomeExpenseMonth = intval($item['month']);
-//            $incomeExpenseYear = intval($item['year']);
-//            if (isset($incomeExpenseRecords[$incomeExpenseYear][$incomeExpenseMonth])) {
-//                $incomeExpenseRecords[$incomeExpenseYear][$incomeExpenseMonth] = array(doubleval($item['debit']), doubleval($item['kredit']));
-//            }
-//        }
-//        $incomeExpenseRows = array();
-//        foreach ($incomeExpenseRecords as $y => $record) {
-//            foreach ($record as $m => $value) {
-//                $incomeExpenseMonth = date("M", mktime(0, 0, 0, $m));
-//                $incomeExpenseYear = substr($y, 2);
-//                $incomeExpenseRows[] = array_merge(array($incomeExpenseMonth . " " . $incomeExpenseYear), $value);
-//            }
-//        }
-//        $dataIncomeExpense = array_merge(array(array('Monthly', 'Income', 'Expense')), array_reverse($incomeExpenseRows));
-
-        // renders the view file 'protected/views/site/index.php'
-        // using the default layout 'protected/views/layouts/main.php'
         $this->render('index', array(
-//            'dataSale' => $dataSale,
-//            'dataSalePerBranch' => $dataSalePerBranch,
-//            'dataIncomeExpense' => $dataIncomeExpense,
-//            'totalReceivables' => $totalReceivables,
-//            'totalPayables' => $totalPayables,
-//            'requestOrder' => $requestOrder,
-//            'purchase' => $purchase,
-//            'sales' => $sales,
-//            'transfer' => $transfer,
-//            'sent' => $sent,
-//            'consignment' => $consignment,
-//            'consignmentIn' => $consignmentIn,
-//            'movement' => $movement,
-//            'movementIn' => $movementIn,
-//            'count' => $count,
+//            'pricingRequest' => $pricingRequest,
+//            'pricingRequestDataProvider' => $pricingRequestDataProvider,
         ));
     }
     

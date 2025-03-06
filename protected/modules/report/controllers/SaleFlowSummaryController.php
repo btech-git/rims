@@ -28,15 +28,14 @@ class SaleFlowSummaryController extends Controller {
 
         $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : date('Y-m-d');
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
-//        $customerId = isset($_GET['InvoiceHeader']['customer_id']) ? $_GET['InvoiceHeader']['customer_id'] : null;
-//        $branchId = isset($_GET['InvoiceHeader']['branch_id']) ? $_GET['InvoiceHeader']['branch_id'] : null;
+        $customerName = isset($_GET['CustomerName']) ? $_GET['CustomerName'] : null;
+        $plateNumber = isset($_GET['PlateNumber']) ? $_GET['PlateNumber'] : null;
+        $branchId = isset($_GET['BranchId']) ? $_GET['BranchId'] : null;
         $transactionStatus = (isset($_GET['TransactionStatus'])) ? $_GET['TransactionStatus'] : '';
         $pageSize = (isset($_GET['PageSize'])) ? $_GET['PageSize'] : '';
         $currentPage = (isset($_GET['page'])) ? $_GET['page'] : '';
         $currentSort = (isset($_GET['sort'])) ? $_GET['sort'] : '';
         
-//        $vehicles = Vehicle::model()->findAllByAttributes(array('customer_id' => $customerId), array('order' => 'id DESC', 'limit' => 100));
-
         $saleFlowSummary = new SaleFlowSummary($registrationTransaction->search());
         $saleFlowSummary->setupLoading();
         $saleFlowSummary->setupPaging($pageSize, $currentPage);
@@ -45,21 +44,19 @@ class SaleFlowSummaryController extends Controller {
             'startDate' => $startDate,
             'endDate' => $endDate,
             'transactionStatus' => $transactionStatus,
-//            'customerId' => $customerId,
-//            'customerType' => $customerType,
+            'branchId' => $branchId,
+            'customerName' => $customerName,
+            'plateNumber' => $plateNumber,
         );
         $saleFlowSummary->setupFilter($filters);
-
-//        $customer = Search::bind(new Customer('search'), isset($_GET['Customer']) ? $_GET['Customer'] : array());
-//        $customerDataProvider = $customer->search();
 
         if (isset($_GET['ResetFilter'])) {
             $this->redirect(array('summary'));
         }
         
-//        if (isset($_GET['SaveExcel'])) {
-//            $this->saveToExcel($saleInvoiceSummary, $startDate, $endDate, $branchId);
-//        }
+        if (isset($_GET['SaveExcel'])) {
+            $this->saveToExcel($saleFlowSummary, $startDate, $endDate, $branchId);
+        }
 
         $this->render('summary', array(
             'registrationTransaction' => $registrationTransaction,
@@ -68,11 +65,9 @@ class SaleFlowSummaryController extends Controller {
             'endDate' => $endDate,
             'currentSort' => $currentSort,
             'transactionStatus' => $transactionStatus,
-//            'customerId' => $customerId,
-//            'customerType' => $customerType,
-//            'customer'=>$customer,
-//            'customerDataProvider'=>$customerDataProvider,
-//            'vehicles' => $vehicles,
+            'branchId' => $branchId,
+            'customerName' => $customerName,
+            'plateNumber' => $plateNumber,
         ));
     }
 
@@ -131,7 +126,7 @@ class SaleFlowSummaryController extends Controller {
         return $grandTotal;
     }
 
-    protected function saveToExcel($saleInvoiceSummary, $startDate, $endDate, $branchId) {
+    protected function saveToExcel($saleFlowSummary, $startDate, $endDate, $branchId) {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
 
@@ -146,75 +141,67 @@ class SaleFlowSummaryController extends Controller {
 
         $documentProperties = $objPHPExcel->getProperties();
         $documentProperties->setCreator('Raperind Motor');
-        $documentProperties->setTitle('Laporan Faktur Penjualan');
+        $documentProperties->setTitle('Penjualan Retail Summary');
 
         $worksheet = $objPHPExcel->setActiveSheetIndex(0);
-        $worksheet->setTitle('Laporan Faktur Penjualan');
+        $worksheet->setTitle('Penjualan Retail Summary');
 
-        $worksheet->mergeCells('A1:L1');
-        $worksheet->mergeCells('A2:L2');
-        $worksheet->mergeCells('A3:L3');
-        $worksheet->mergeCells('A4:L4');
+        $worksheet->mergeCells('A1:M1');
+        $worksheet->mergeCells('A2:M2');
+        $worksheet->mergeCells('A3:M3');
+        $worksheet->mergeCells('A4:M4');
         
-        $worksheet->getStyle('A1:L3')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-        $worksheet->getStyle('A1:L3')->getFont()->setBold(true);
+        $worksheet->getStyle('A1:M3')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->getStyle('A1:M3')->getFont()->setBold(true);
         $branch = Branch::model()->findByPk($branchId);
         $worksheet->setCellValue('A1', 'Raperind Motor ' . CHtml::encode(CHtml::value($branch, 'name')));
-        $worksheet->setCellValue('A2', 'Laporan Faktur Penjualan');
+        $worksheet->setCellValue('A2', 'Laporan Penjualan Retail Summary');
         $worksheet->setCellValue('A3', $startDateFormatted . ' - ' . $endDateFormatted);
 
-        $worksheet->getStyle("A6:L6")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
-        $worksheet->getStyle("A6:L6")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A6:M6")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A6:M6")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
-        $worksheet->getStyle('A6:L6')->getFont()->setBold(true);
-        $worksheet->setCellValue('A6', 'Tanggal');
-        $worksheet->setCellValue('B6', 'Faktur #');
-        $worksheet->setCellValue('C6', 'Jatuh Tempo');
+        $worksheet->getStyle('A6:M6')->getFont()->setBold(true);
+        $worksheet->setCellValue('A6', 'No');
+        $worksheet->setCellValue('B6', 'RG #');
+        $worksheet->setCellValue('C6', 'Tanggal');
         $worksheet->setCellValue('D6', 'Customer');
-        $worksheet->setCellValue('E6', 'Type');
-        $worksheet->setCellValue('F6', 'Vehicle');
-        $worksheet->setCellValue('H6', 'Grand Total');
-        $worksheet->setCellValue('I6', 'Payment');
-        $worksheet->setCellValue('J6', 'Remaining');
-        $worksheet->setCellValue('K6', 'Status');
-        $worksheet->setCellValue('L6', 'User');
+        $worksheet->setCellValue('E6', 'Vehicle');
+        $worksheet->setCellValue('F6', 'Status');
+        $worksheet->setCellValue('G6', 'Amount');
+        $worksheet->setCellValue('H6', 'Work Order');
+        $worksheet->setCellValue('U6', 'Movement Out');
+        $worksheet->setCellValue('J6', 'Invoice');
+        $worksheet->setCellValue('K6', 'Tanggal Invoice');
+        $worksheet->setCellValue('L6', 'Payment In');
+        $worksheet->setCellValue('M6', 'Tanggal Payment');
 
         $counter = 7;
 
-        $grandTotalSale = 0;
-        $grandTotalPayment = 0;
-        $grandTotalRemaining = 0;
-        foreach ($saleInvoiceSummary->dataProvider->data as $header) {
-            $totalPrice = $header->total_price; 
-            $totalPayment = $header->payment_amount;
-            $totalRemaining = $header->payment_left;
-            $worksheet->setCellValue("A{$counter}", $header->invoice_date);
-            $worksheet->setCellValue("B{$counter}", $header->invoice_number);
-            $worksheet->setCellValue("C{$counter}", CHtml::encode(CHtml::value($header, 'due_date')));
+        foreach ($saleFlowSummary->dataProvider->data as $i => $header) {
+            $movementOutHeaders = $header->movementOutHeaders;
+            $movementOutHeaderCodeNumbers = array_map(function($movementOutHeader) { return $movementOutHeader->movement_out_no; }, $movementOutHeaders);
+            $invoiceHeaders = $header->invoiceHeaders;
+            $invoiceHeaderCodeNumbers = array_map(function($invoiceHeader) { return $invoiceHeader->invoice_number; }, $invoiceHeaders);
+            $invoiceHeaderTransactionDates = array_map(function($invoiceHeader) { return $invoiceHeader->invoice_date; }, $invoiceHeaders);
+            $paymentInDetails = array_reduce(array_map(function($invoiceHeader) { return $invoiceHeader->paymentInDetails; }, $invoiceHeaders), function($a, $b) { return in_array($b, $a) ? $a : array_merge($a, $b); }, array());
+            $paymentInHeaderCodeNumbers = array_map(function($paymentInDetail) { return $paymentInDetail->paymentIn->payment_number; }, $paymentInDetails);
+            $paymentInHeaderDates = array_map(function($paymentInDetail) { return $paymentInDetail->paymentIn->payment_date; }, $paymentInDetails);
+            $worksheet->setCellValue("A{$counter}", CHtml::encode($i + 1));
+            $worksheet->setCellValue("B{$counter}", $header->transaction_number);
+            $worksheet->setCellValue("C{$counter}", CHtml::encode(CHtml::value($header, 'transaction_date')));
             $worksheet->setCellValue("D{$counter}", CHtml::encode(CHtml::value($header, 'customer.name')));
-            $worksheet->setCellValue("E{$counter}", CHtml::value($header, 'customer.customer_type'));
-            $worksheet->setCellValue("F{$counter}", CHtml::value($header, 'vehicle.plate_number'));
-            $worksheet->setCellValue("H{$counter}", $totalPrice);
-            $worksheet->setCellValue("I{$counter}", $totalPayment);
-            $worksheet->setCellValue("J{$counter}", $totalRemaining);
-            $worksheet->setCellValue("K{$counter}", $header->status);
-            $worksheet->setCellValue("L{$counter}", $header->user->username);
-            $grandTotalSale += $totalPrice;
-            $grandTotalPayment += $totalPayment;
-            $grandTotalRemaining += $totalRemaining;
+            $worksheet->setCellValue("E{$counter}", CHtml::value($header, 'vehicle.plate_number'));
+            $worksheet->setCellValue("F{$counter}", CHtml::value($header, 'status'));
+            $worksheet->setCellValue("G{$counter}", CHtml::value($header, 'grand_total'));
+            $worksheet->setCellValue("H{$counter}", CHtml::value($header, 'work_order_number'));
+            $worksheet->setCellValue("I{$counter}", CHtml::encode(implode(', ', $movementOutHeaderCodeNumbers)));
+            $worksheet->setCellValue("J{$counter}", CHtml::encode(implode(', ', $invoiceHeaderCodeNumbers)));
+            $worksheet->setCellValue("K{$counter}", CHtml::encode(implode(', ', $invoiceHeaderTransactionDates)));
+            $worksheet->setCellValue("L{$counter}", CHtml::encode(implode(', ', $paymentInHeaderCodeNumbers)));
+            $worksheet->setCellValue("M{$counter}", CHtml::encode(implode(', ', $paymentInHeaderDates)));
             $counter++;
         }
-
-        $worksheet->getStyle("A{$counter}:U{$counter}")->getFont()->setBold(true);
-        $worksheet->getStyle("A{$counter}:U{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
-        $worksheet->getStyle("H{$counter}:J{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
-        $worksheet->setCellValue("F{$counter}", 'Total');
-        $worksheet->setCellValue("G{$counter}", 'Rp');
-        $worksheet->setCellValue("H{$counter}", $grandTotalSale);
-        $worksheet->setCellValue("I{$counter}", $grandTotalPayment);
-        $worksheet->setCellValue("J{$counter}", $grandTotalRemaining);
-
-        $counter++;
 
         for ($col = 'A'; $col !== 'Z'; $col++) {
             $objPHPExcel->getActiveSheet()
@@ -225,7 +212,7 @@ class SaleFlowSummaryController extends Controller {
         ob_end_clean();
 
         header('Content-type: application/vnd.ms-excel');
-        header('Content-Disposition: attachment;filename="Laporan Faktur Penjualan.xls"');
+        header('Content-Disposition: attachment;filename="Penjualan Retail Summary.xls"');
         header('Cache-Control: max-age=0');
         
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');

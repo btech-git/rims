@@ -55,3 +55,14 @@
         <?php endforeach; ?>
     </tbody>
 </table>
+
+<div>
+    <div class="right">
+        <?php $this->widget('system.web.widgets.pagers.CLinkPager', array(
+            'itemCount' => $transferRequestFlowSummary->dataProvider->pagination->itemCount,
+            'pageSize' => $transferRequestFlowSummary->dataProvider->pagination->pageSize,
+            'currentPage' => $transferRequestFlowSummary->dataProvider->pagination->getCurrentPage(false),
+        )); ?>
+    </div>
+    <div class="clear"></div>
+</div>

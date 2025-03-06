@@ -19,25 +19,38 @@
  * @property integer $branch_id_request
  * @property integer $branch_id_reply
  * @property string $product_name
- * @property string $vehicle_name
+ * @property integer $vehicle_car_make_id
  * @property integer $production_year
- * @property string $brand_name
- * @property string $category_name
+ * @property integer $brand_id
+ * @property integer $product_master_category_id
+ * @property integer $sub_brand_id
+ * @property integer $sub_brand_series_id
+ * @property integer $product_sub_master_category_id
+ * @property integer $product_sub_category_id
+ * @property integer $vehicle_car_model_id
  *
  * The followings are the available model relations:
- * @property Users $userIdRequest
- * @property Users $userIdReply
- * @property Branch $branchIdRequest
+ * @property VehicleCarMake $vehicleCarMake
+ * @property Brand $brand
+ * @property ProductMasterCategory $productMasterCategory
+ * @property SubBrand $subBrand
+ * @property SubBrandSeries $subBrandSeries
+ * @property ProductSubCategory $productSubCategory
+ * @property ProductSubMasterCategory $productSubMasterCategory
+ * @property VehicleCarModel $vehicleCarModel
  * @property Branch $branchIdReply
+ * @property Branch $branchIdRequest
+ * @property Users $userIdReply
+ * @property Users $userIdRequest
  */
 class ProductPricingRequest extends CActiveRecord {
 
-    public $file;
+    public $file; 
     /**
      * @return string the associated database table name
      */
     public function tableName() {
-        return 'rims_product_pricing_request';
+        return '{{product_pricing_request}}';
     }
 
     /**
@@ -47,16 +60,16 @@ class ProductPricingRequest extends CActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('request_date, user_id_request, branch_id_request, product_name', 'required'),
-            array('user_id_request, user_id_reply, branch_id_request, branch_id_reply, production_year', 'numerical', 'integerOnly' => true),
+            array('request_date, user_id_request, request_time, request_note, branch_id_request, product_name', 'required'),
+            array('user_id_request, user_id_reply, branch_id_request, branch_id_reply, vehicle_car_make_id, production_year, brand_id, product_master_category_id, sub_brand_id, sub_brand_series_id, product_sub_master_category_id, product_sub_category_id, vehicle_car_model_id', 'numerical', 'integerOnly' => true),
             array('recommended_price', 'length', 'max' => 18),
             array('quantity', 'length', 'max' => 10),
             array('extension', 'length', 'max' => 5),
-            array('product_name, vehicle_name, brand_name, category_name', 'length', 'max' => 100),
-            array('reply_date, request_time, reply_time, request_note, reply_note', 'safe'),
+            array('product_name', 'length', 'max' => 100),
+            array('reply_date, reply_time, reply_note, file', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, recommended_price, request_date, quantity, user_id_request, user_id_reply, extension, reply_date, request_time, reply_time, request_note, reply_note, branch_id_request, branch_id_reply, product_name, vehicle_name, production_year, brand_name, category_name', 'safe', 'on' => 'search'),
+            array('id, recommended_price, request_date, quantity, file, user_id_request, user_id_reply, extension, reply_date, request_time, reply_time, request_note, reply_note, branch_id_request, branch_id_reply, product_name, vehicle_car_make_id, production_year, brand_id, product_master_category_id, sub_brand_id, sub_brand_series_id, product_sub_master_category_id, product_sub_category_id, vehicle_car_model_id', 'safe', 'on' => 'search'),
         );
     }
 
@@ -67,10 +80,18 @@ class ProductPricingRequest extends CActiveRecord {
         // NOTE: you may need to adjust the relation name and the related
         // class name for the relations automatically generated below.
         return array(
-            'userIdRequest' => array(self::BELONGS_TO, 'Users', 'user_id_request'),
-            'userIdReply' => array(self::BELONGS_TO, 'Users', 'user_id_reply'),
-            'branchIdRequest' => array(self::BELONGS_TO, 'Branch', 'branch_id_request'),
+            'vehicleCarMake' => array(self::BELONGS_TO, 'VehicleCarMake', 'vehicle_car_make_id'),
+            'brand' => array(self::BELONGS_TO, 'Brand', 'brand_id'),
+            'productMasterCategory' => array(self::BELONGS_TO, 'ProductMasterCategory', 'product_master_category_id'),
+            'subBrand' => array(self::BELONGS_TO, 'SubBrand', 'sub_brand_id'),
+            'subBrandSeries' => array(self::BELONGS_TO, 'SubBrandSeries', 'sub_brand_series_id'),
+            'productSubCategory' => array(self::BELONGS_TO, 'ProductSubCategory', 'product_sub_category_id'),
+            'productSubMasterCategory' => array(self::BELONGS_TO, 'ProductSubMasterCategory', 'product_sub_master_category_id'),
+            'vehicleCarModel' => array(self::BELONGS_TO, 'VehicleCarModel', 'vehicle_car_model_id'),
             'branchIdReply' => array(self::BELONGS_TO, 'Branch', 'branch_id_reply'),
+            'branchIdRequest' => array(self::BELONGS_TO, 'Branch', 'branch_id_request'),
+            'userIdReply' => array(self::BELONGS_TO, 'Users', 'user_id_reply'),
+            'userIdRequest' => array(self::BELONGS_TO, 'Users', 'user_id_request'),
         );
     }
 
@@ -94,10 +115,15 @@ class ProductPricingRequest extends CActiveRecord {
             'branch_id_request' => 'Branch Id Request',
             'branch_id_reply' => 'Branch Id Reply',
             'product_name' => 'Product Name',
-            'vehicle_name' => 'Vehicle Name',
+            'vehicle_car_make_id' => 'Vehicle Car Make',
             'production_year' => 'Production Year',
-            'brand_name' => 'Brand Name',
-            'category_name' => 'Category Name',
+            'brand_id' => 'Brand',
+            'product_master_category_id' => 'Product Master Category',
+            'sub_brand_id' => 'Sub Brand',
+            'sub_brand_series_id' => 'Sub Brand Series',
+            'product_sub_master_category_id' => 'Product Sub Master Category',
+            'product_sub_category_id' => 'Product Sub Category',
+            'vehicle_car_model_id' => 'Vehicle Car Model',
         );
     }
 
@@ -133,10 +159,15 @@ class ProductPricingRequest extends CActiveRecord {
         $criteria->compare('branch_id_request', $this->branch_id_request);
         $criteria->compare('branch_id_reply', $this->branch_id_reply);
         $criteria->compare('product_name', $this->product_name, true);
-        $criteria->compare('vehicle_name', $this->vehicle_name, true);
+        $criteria->compare('vehicle_car_make_id', $this->vehicle_car_make_id);
         $criteria->compare('production_year', $this->production_year);
-        $criteria->compare('brand_name', $this->brand_name, true);
-        $criteria->compare('category_name', $this->category_name, true);
+        $criteria->compare('brand_id', $this->brand_id);
+        $criteria->compare('product_master_category_id', $this->product_master_category_id);
+        $criteria->compare('sub_brand_id', $this->sub_brand_id);
+        $criteria->compare('sub_brand_series_id', $this->sub_brand_series_id);
+        $criteria->compare('product_sub_master_category_id', $this->product_sub_master_category_id);
+        $criteria->compare('product_sub_category_id', $this->product_sub_category_id);
+        $criteria->compare('vehicle_car_model_id', $this->vehicle_car_model_id);
 
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,

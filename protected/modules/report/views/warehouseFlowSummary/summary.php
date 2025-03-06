@@ -109,7 +109,7 @@ Yii::app()->clientScript->registerScript('report', '
                 <div class="row buttons">
                     <?php echo CHtml::submitButton('Tampilkan', array('onclick' => '$("#CurrentSort").val(""); return true;')); ?>
                     <?php echo CHtml::submitButton('Hapus', array('name' => 'ResetFilter'));  ?>
-                    <?php //echo CHtml::submitButton('Simpan ke Excel', array('name' => 'SaveExcel'));  ?>
+                    <?php echo CHtml::submitButton('Simpan ke Excel', array('name' => 'SaveExcel'));  ?>
                 </div>
 
                 <div class="row">
@@ -195,13 +195,6 @@ Yii::app()->clientScript->registerScript('report', '
                 )); ?>
             </div>
 
-            <div class="right">
-                <?php $this->widget('system.web.widgets.pagers.CLinkPager', array(
-                    'itemCount' => $saleFlowSummary->dataProvider->pagination->itemCount,
-                    'pageSize' => $saleFlowSummary->dataProvider->pagination->pageSize,
-                    'currentPage' => $saleFlowSummary->dataProvider->pagination->getCurrentPage(false),
-                )); ?>
-            </div>
             <div class="clear"></div>
         </div>
     </div>

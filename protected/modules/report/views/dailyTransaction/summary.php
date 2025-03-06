@@ -24,7 +24,7 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                         <span class="prefix">Branch </span>
                                     </div>
                                     <div class="small-8 columns">
-                                        <?php echo CHtml::dropDownlist('BranchId', $branchId, CHtml::listData(Branch::model()->findAllbyAttributes(array('status' => 'Active')), 'id', 'name'), array('empty' => '-- Pilih Branch --')); ?>
+                                        <?php echo CHtml::dropDownlist('BranchId', $branchId, CHtml::listData(Branch::model()->findAllbyAttributes(array('status' => 'Active')), 'id', 'name'), array('empty' => '-- All Branch --')); ?>
                                     </div>
                                 </div>
                             </div>
@@ -60,7 +60,9 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                         <?php echo CHtml::submitButton('Tampilkan', array('onclick' => '$("#CurrentSort").val(""); return true;')); ?>
                         <?php echo CHtml::submitButton('Hapus', array('name' => 'ResetFilter'));  ?>
                         <?php echo CHtml::submitButton('Simpan ke Excel', array('name' => 'SaveExcel')); ?>
-                        <?php echo CHtml::submitButton('Konfirmasi Transaksi', array('name' => 'Confirmation', 'class' => 'button success right')); ?>
+                        <?php if (!empty($branchId)): ?>
+                            <?php echo CHtml::submitButton('Konfirmasi Transaksi', array('name' => 'Confirmation', 'class' => 'button success right')); ?>
+                        <?php endif; ?>
                     </div>
 
                     <?php echo CHtml::endForm(); ?>

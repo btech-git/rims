@@ -30,7 +30,6 @@ $this->menu=array(
 	// ),
 //)); ?>
 <?php $registrationData = RegistrationTransaction::model()->findByPk($model->registration_transaction_id); ?>
-	 <div class="row">
 <div class="row">
     <div class="large-6 columns">
       <div class="row collapse prefix-radius">
@@ -102,7 +101,7 @@ $this->menu=array(
       </div>
     </div>
    </div>
-   <?php $registrationData = RegistrationTransaction::model()->findByPk($model->registration_transaction_id); ?>
+   <?php //$registrationData = RegistrationTransaction::model()->findByPk($model->registration_transaction_id); ?>
    <div class="row">
     <div class="large-6 columns">
       <div class="row collapse prefix-radius">
@@ -239,7 +238,6 @@ $this->menu=array(
 	        </div>
 	      </div>
 	    </div>
-	    
 	</fieldset>
 	<fieldset>
 		<legend>Details</legend>

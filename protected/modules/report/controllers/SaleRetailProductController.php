@@ -34,6 +34,7 @@ class SaleRetailProductController extends Controller {
         $currentPage = (isset($_GET['page'])) ? $_GET['page'] : '';
         $currentSort = (isset($_GET['sort'])) ? $_GET['sort'] : '';
         $branchId = (isset($_GET['BranchId'])) ? $_GET['BranchId'] : '';
+        $customerType = (isset($_GET['CustomerType'])) ? $_GET['CustomerType'] : '';
 
         $saleRetailProductSummary = new SaleRetailProductSummary($product->search());
         $saleRetailProductSummary->setupLoading();
@@ -43,6 +44,7 @@ class SaleRetailProductController extends Controller {
             'startDate' => $startDate,
             'endDate' => $endDate,
             'branchId' => $branchId,
+            'customerType' => $customerType,
         );
         $saleRetailProductSummary->setupFilter($filters);
 
@@ -63,6 +65,7 @@ class SaleRetailProductController extends Controller {
             'currentPage' => $currentPage,
             'currentSort' => $currentSort,
             'branchId' => $branchId,
+            'customerType' => $customerType,
         ));
     }
 

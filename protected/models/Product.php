@@ -825,8 +825,9 @@ class Product extends CActiveRecord {
         return ($value === false) ? 0 : $value;
     }
     
-    public function getTotalSales($startDate, $endDate, $branchId) {
+    public function getTotalSales($startDate, $endDate, $branchId, $customerType) {
         $branchConditionSql = '';
+        $customerTypeConditionSql = '';
         
         $params = array(
             ':product_id' => $this->id,
@@ -839,11 +840,51 @@ class Product extends CActiveRecord {
             $params[':branch_id'] = $branchId;
         }
         
+        if (!empty($customerType)) {
+            $customerTypeConditionSql = ' AND c.customer_type = :customer_type';
+            $params[':customer_type'] = $customerType;
+        }
+        
         $sql = "
             SELECT COALESCE(SUM(p.total_price), 0) AS total 
             FROM " . InvoiceDetail::model()->tableName() . " p 
             INNER JOIN " . InvoiceHeader::model()->tableName() . " r ON r.id = p.invoice_id
-            WHERE p.product_id = :product_id AND substr(r.invoice_date, 1, 10) BETWEEN :start_date AND :end_date AND r.status NOT LIKE '%CANCEL%'" . $branchConditionSql . "
+            INNER JOIN " . Customer::model()->tableName() . " c ON c.id = r.customer_id
+            WHERE p.product_id = :product_id AND substr(r.invoice_date, 1, 10) BETWEEN :start_date AND :end_date AND r.status NOT LIKE '%CANCEL%'" . $branchConditionSql . $customerTypeConditionSql . "
+            GROUP BY p.product_id
+        ";
+
+        $value = Yii::app()->db->createCommand($sql)->queryScalar($params);
+
+        return ($value === false) ? 0 : $value;
+    }
+     
+    public function getTotalQuantitySales($startDate, $endDate, $branchId, $customerType) {
+        $branchConditionSql = '';
+        $customerTypeConditionSql = '';
+        
+        $params = array(
+            ':product_id' => $this->id,
+            ':start_date' => $startDate,
+            ':end_date' => $endDate,
+        );
+        
+        if (!empty($branchId)) {
+            $branchConditionSql = ' AND r.branch_id = :branch_id';
+            $params[':branch_id'] = $branchId;
+        }
+        
+        if (!empty($customerType)) {
+            $customerTypeConditionSql = ' AND c.customer_type = :customer_type';
+            $params[':customer_type'] = $customerType;
+        }
+        
+        $sql = "
+            SELECT COALESCE(SUM(p.quantity), 0) AS total 
+            FROM " . InvoiceDetail::model()->tableName() . " p 
+            INNER JOIN " . InvoiceHeader::model()->tableName() . " r ON r.id = p.invoice_id
+            INNER JOIN " . Customer::model()->tableName() . " c ON c.id = r.customer_id
+            WHERE p.product_id = :product_id AND substr(r.invoice_date, 1, 10) BETWEEN :start_date AND :end_date AND r.status NOT LIKE '%CANCEL%'" . $branchConditionSql . $customerTypeConditionSql . "
             GROUP BY p.product_id
         ";
 
@@ -871,8 +912,9 @@ class Product extends CActiveRecord {
 //        return $resultSet;
 //    }
     
-    public function getSaleRetailProductDetailReport($startDate, $endDate, $branchId) {
+    public function getSaleRetailProductDetailReport($startDate, $endDate, $branchId, $customerType) {
         $branchConditionSql = '';
+        $customerTypeConditionSql = '';
         
         $params = array(
             ':product_id' => $this->id,
@@ -885,12 +927,17 @@ class Product extends CActiveRecord {
             $params[':branch_id'] = $branchId;
         }
         
+        if (!empty($customerType)) {
+            $customerTypeConditionSql = ' AND c.customer_type = :customer_type';
+            $params[':customer_type'] = $customerType;
+        }
+        
         $sql = "SELECT r.invoice_number, r.invoice_date, c.name as customer, v.plate_number as vehicle, p.quantity, p.unit_price, p.total_price
                 FROM " . InvoiceDetail::model()->tableName() . " p 
                 INNER JOIN " . InvoiceHeader::model()->tableName() . " r ON r.id = p.invoice_id
                 INNER JOIN " . Customer::model()->tableName() . " c ON c.id = r.customer_id
                 INNER JOIN " . Vehicle::model()->tableName() . " v ON v.id = r.vehicle_id
-                WHERE substr(r.invoice_date, 1, 10) BETWEEN :start_date AND :end_date AND p.product_id = :product_id AND r.status NOT LIKE '%CANCEL%'" . $branchConditionSql . "
+                WHERE substr(r.invoice_date, 1, 10) BETWEEN :start_date AND :end_date AND p.product_id = :product_id AND r.status NOT LIKE '%CANCEL%'" . $branchConditionSql . $customerTypeConditionSql . "
                 ORDER BY r.invoice_date ASC";
         
         $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);

@@ -31,8 +31,7 @@ class MovementInSummary extends CComponent {
     }
 
     public function setupFilter($startDate, $endDate, $branch) {
-//        $startDate = (empty($startDate)) ? date('Y-m-d') : $startDate;
-//        $endDate = (empty($endDate)) ? date('Y-m-d') : $endDate;
+
         $this->dataProvider->criteria->addBetweenCondition('t.date_posting', $startDate, $endDate);
         $this->dataProvider->criteria->compare('t.branch_id', $branch);
     }

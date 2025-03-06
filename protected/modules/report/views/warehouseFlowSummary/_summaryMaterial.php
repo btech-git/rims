@@ -24,6 +24,8 @@
             <th class="width1-2">Request #</th>
             <th class="width1-3">Tanggal</th>
             <th class="width1-4">RG #</th>
+            <th class="width1-4">Customer</th>
+            <th class="width1-6">Sales Order</th>
             <th class="width1-5">Work Order</th>
             <th class="width1-6">Movement Out</th>
         </tr>
@@ -45,9 +47,22 @@
                         <?php echo CHtml::link(CHtml::encode($header->registrationTransaction->transaction_number), array("/frontDesk/generalRepairRegistration/view", "id"=>$header->registration_transaction_id), array("target" => "_blank")); ?>
                     <?php endif; ?>
                 </td>
+                <td class="width1-4"><?php echo CHtml::encode(CHtml::value($header, 'registrationTransaction.customer.name')); ?></td>
+                <td class="width1-6"><?php echo CHtml::encode(CHtml::value($header, 'registrationTransaction.sales_order_number')); ?></td>
                 <td class="width1-5"><?php echo CHtml::encode(CHtml::value($header, 'registrationTransaction.work_order_number')); ?></td>
                 <td class="width1-6"><?php echo CHtml::encode(implode(', ', $movementOutHeaderCodeNumbers)); ?></td>
             </tr>
         <?php endforeach; ?>
     </tbody>
 </table>
+
+<div>
+    <div class="right">
+        <?php $this->widget('system.web.widgets.pagers.CLinkPager', array(
+            'itemCount' => $materialRequestFlowSummary->dataProvider->pagination->itemCount,
+            'pageSize' => $materialRequestFlowSummary->dataProvider->pagination->pageSize,
+            'currentPage' => $materialRequestFlowSummary->dataProvider->pagination->getCurrentPage(false),
+        )); ?>
+    </div>
+    <div class="clear"></div>
+</div>

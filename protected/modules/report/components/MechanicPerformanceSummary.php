@@ -33,11 +33,6 @@ class MechanicPerformanceSummary extends CComponent {
         $startDate = (empty($filters['startDate'])) ? date('Y-m-d') : $filters['startDate'];
         $endDate = (empty($filters['endDate'])) ? date('Y-m-d') : $filters['endDate'];
 
-        $params = array(
-            ':start_date' => $startDate,
-            ':end_date' => $endDate,
-        );
-        
         $this->dataProvider->criteria->addCondition('EXISTS (
             SELECT id FROM rims_registration_transaction
             WHERE employee_id_assign_mechanic = t.id AND transaction_date BETWEEN :start_date AND :end_date
