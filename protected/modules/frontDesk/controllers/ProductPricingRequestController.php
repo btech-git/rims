@@ -82,16 +82,12 @@ class ProductPricingRequestController extends Controller {
         if (isset($_POST['ProductPricingRequest']) && IdempotentManager::check()) {
             $model->attributes = $_POST['ProductPricingRequest'];
             
-//            if (!empty($model->file)) {
-                $fileName = CUploadedFile::getInstanceByName('file');
-                $model->file = $fileName;
-                $model->extension = $fileName->extensionName;
-//            }
+            $fileName = CUploadedFile::getInstanceByName('file');
+            $model->file = $fileName;
+            $model->extension = $fileName->extensionName;
 
             if ($model->save(Yii::app()->db)) {
-//                if (!empty($model->file)) {
-                    $this->saveImageFile($model);
-//                }
+                $this->saveImageFile($model);
                 $this->redirect(array('view', 'id' => $model->id));
             }
         }
