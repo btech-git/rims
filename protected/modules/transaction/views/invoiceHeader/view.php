@@ -96,7 +96,7 @@ $this->menu = array(
                 <td>Due Date</td>
                 <td><?php echo $model->due_date; ?></td>
                 <td width="10%">Registration #</td>
-                <td width="30%"><?php echo empty($registration) ? '' :  CHtml::link($registration->transaction_number, array($registration->repair_type == 'GR' ? "/frontDesk/generalRepairRegistration/view" : "/frontDesk/bodyRepairRegistration/view", "id"=>$registration->id), array('target' => 'blank')); ?></td>
+                <td width="30%"><?php echo empty($registration) ? '' :  CHtml::link($registration->transaction_number, array($registration->repair_type == 'GR' ? "/frontDesk/generalRepairRegistration/show" : "/frontDesk/bodyRepairRegistration/show", "id"=>$registration->id), array('target' => 'blank')); ?></td>
             </tr>
             
             <tr>
@@ -343,7 +343,7 @@ $this->menu = array(
                     <tbody>
                         <?php foreach ($payments as $key => $payment): ?>
                             <tr>
-                                <td><?php echo CHtml::link($payment->paymentIn->payment_number, array("/transaction/paymentIn/view", "id"=>$payment->payment_in_id), array('target' => 'blank')); ?></td>
+                                <td><?php echo CHtml::link($payment->paymentIn->payment_number, array("/transaction/paymentIn/show", "id"=>$payment->payment_in_id), array('target' => 'blank')); ?></td>
                                 <td><?php echo $payment->paymentIn->payment_date; ?></td>
                                 <td><?php echo $payment->paymentIn->paymentType->name; ?></td>
                                 <td><?php echo number_format($payment->amount, 2); ?></td>
@@ -386,8 +386,12 @@ $this->menu = array(
                             <td style="text-align: center"><?php echo $i + 1; ?></td>
                             <td class="width1-4"><?php echo CHtml::encode(CHtml::value($header, 'branchAccountCode')); ?></td>
                             <td class="width1-5"><?php echo CHtml::encode(CHtml::value($header, 'branchAccountName')); ?></td>
-                            <td class="width1-6" style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $amountDebit)); ?></td>
-                            <td class="width1-7" style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $amountCredit)); ?></td>
+                            <td class="width1-6" style="text-align: right">
+                                <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $amountDebit)); ?>
+                            </td>
+                            <td class="width1-7" style="text-align: right">
+                                <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $amountCredit)); ?>
+                            </td>
                         </tr>
 
                         <?php $totalDebit += $amountDebit; ?>

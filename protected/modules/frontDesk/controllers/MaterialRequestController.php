@@ -187,6 +187,16 @@ class MaterialRequestController extends Controller {
         ));
     }
 
+    public function actionShow($id) {
+        $materialRequest = $this->loadModel($id);
+        $materialRequestDetails = MaterialRequestDetail::model()->findAllByAttributes(array('material_request_header_id' => $id));
+
+        $this->render('show', array(
+            'materialRequest' => $materialRequest,
+            'materialRequestDetails' => $materialRequestDetails,
+        ));
+    }
+
     public function actionAdmin() {
         $model = new MaterialRequestHeader('search');
         $model->unsetAttributes();  // clear any default values

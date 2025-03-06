@@ -65,7 +65,7 @@
         'columns'=>array(
             array(
                 'name'=>'transaction_number', 
-                'value'=>'CHtml::link($data->transaction_number, array("/frontDesk/registrationTransaction/view", "id"=>$data->id))', 
+                'value'=>'CHtml::link($data->transaction_number, array("/frontDesk/registrationTransaction/show", "id"=>$data->id))', 
                 'type'=>'raw'
             ),
             array(
@@ -91,7 +91,7 @@
                 'header'=>'Movements',
                 'value'=> function($data){
                     foreach ($data->movementOutHeaders as $key => $movementDetail) {
-                        echo CHtml::link($movementDetail->movement_out_no, array("/transaction/movementOutHeader/view", "id"=>$movementDetail->id)). "<br />";
+                        echo CHtml::link($movementDetail->movement_out_no, array("/transaction/movementOutHeader/show", "id"=>$movementDetail->id)). "<br />";
                     }
                 }
             ),

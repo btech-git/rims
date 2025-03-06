@@ -28,7 +28,7 @@
                 <?php $currentStock += $latestInventoryItem['stock_in'] + $latestInventoryItem['stock_out']; ?>
                 <tr>
                     <td><?php echo CHtml::encode($latestInventoryItem['transaction_type']); ?></td>
-                    <td><?php echo CHtml::encode($latestInventoryItem['transaction_number']); ?><?php //echo CHtml::link($latestInventoryItem['transaction_number'], Yii::app()->createUrl("frontDesk/inventory/redirectTransaction", array("codeNumber" => $latestInventoryItem['transaction_number'])), array('target' => '_blank')); ?></td>
+                    <td><?php echo CHtml::link($latestInventoryItem['transaction_number'], Yii::app()->createUrl("frontDesk/inventory/redirectTransaction", array("codeNumber" => $latestInventoryItem['transaction_number'])), array('target' => '_blank')); ?></td>
                     <td><?php echo CHtml::encode($latestInventoryItem['transaction_date']); ?></td>
                     <td><?php echo CHtml::encode($lastCurrentStock); ?></td>
                     <td><?php echo CHtml::encode($latestInventoryItem['stock_in']); ?></td>

@@ -220,28 +220,28 @@ class PayableLedgerController extends Controller {
 
         if ($codeNumberConstant === 'PO') {
             $model = TransactionPurchaseOrder::model()->findByAttributes(array('purchase_order_no' => $codeNumber));
-            $this->redirect(array('/transaction/transactionPurchaseOrder/view', 'id' => $model->id));
+            $this->redirect(array('/transaction/transactionPurchaseOrder/show', 'id' => $model->id));
         } else if ($codeNumberConstant === 'DO') {
             $model = TransactionDeliveryOrder::model()->findByAttributes(array('delivery_order_no' => $codeNumber));
-            $this->redirect(array('/transaction/transactionDeliveryOrder/view', 'id' => $model->id));
+            $this->redirect(array('/transaction/transactionDeliveryOrder/show', 'id' => $model->id));
         } else if ($codeNumberConstant === 'RCI') {
             $model = TransactionReceiveItem::model()->findByAttributes(array('receive_item_no' => $codeNumber));
-            $this->redirect(array('/transaction/transactionReceiveItem/view', 'id' => $model->id));
+            $this->redirect(array('/transaction/transactionReceiveItem/show', 'id' => $model->id));
         } else if ($codeNumberConstant === 'CASH') {
             $model = CashTransaction::model()->findByAttributes(array('transaction_number' => $codeNumber));
-            $this->redirect(array('/transaction/cashTransaction/view', 'id' => $model->id));
+            $this->redirect(array('/transaction/cashTransaction/show', 'id' => $model->id));
         } else if ($codeNumberConstant === 'MO') {
             $model = MovementOutHeader::model()->findByAttributes(array('movement_out_no' => $codeNumber));
-            $this->redirect(array('/transaction/movementOutHeader/view', 'id' => $model->id));
+            $this->redirect(array('/transaction/movementOutHeader/show', 'id' => $model->id));
         } else if ($codeNumberConstant === 'Pout') {
             $model = PaymentOut::model()->findByAttributes(array('payment_number' => $codeNumber));
-            $this->redirect(array('/accounting/paymentOut/view', 'id' => $model->id));
+            $this->redirect(array('/accounting/paymentOut/show', 'id' => $model->id));
         } else if ($codeNumberConstant === 'RTO') {
             $model = TransactionReturnOrder::model()->findByAttributes(array('return_order_no' => $codeNumber));
-            $this->redirect(array('/transaction/transactionReturnOrder/view', 'id' => $model->id));
+            $this->redirect(array('/transaction/transactionReturnOrder/show', 'id' => $model->id));
         } else if ($codeNumberConstant === 'WOE') {
             $model = WorkOrderExpenseHeader::model()->findByAttributes(array('transaction_number' => $codeNumber));
-            $this->redirect(array('/accounting/workOrderExpense/view', 'id' => $model->id));
+            $this->redirect(array('/accounting/workOrderExpense/show', 'id' => $model->id));
         } 
     }
 }

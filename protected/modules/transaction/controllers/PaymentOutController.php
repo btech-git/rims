@@ -71,6 +71,23 @@ class PaymentOutController extends Controller {
         ));
     }
 
+    public function actionShow($id) {
+        $model = $this->loadModel($id);
+        $revisionHistories = PaymentOutApproval::model()->findAllByAttributes(array('payment_out_id' => $model->id));
+        $postImages = PaymentOutImages::model()->findAllByAttributes(array(
+            'payment_out_id' => $model->id,
+            'is_inactive' => $model::STATUS_ACTIVE
+        ));
+        $supplier = empty($model->supplier_id) ? '' : $model->supplier;
+        
+        $this->render('view', array(
+            'model' => $model,
+            'supplier' => $supplier,
+            'postImages' => $postImages,
+            'revisionHistories' => $revisionHistories,
+        ));
+    }
+
     /**
      * Returns the data model based on the primary key given in the GET variable.
      * If the data model is not found, an HTTP exception will be raised.

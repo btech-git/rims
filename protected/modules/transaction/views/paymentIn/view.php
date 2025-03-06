@@ -456,7 +456,7 @@ $this->menu = array(
                         <tbody>
                             <?php foreach ($model->paymentInDetails as $detail): ?>
                             <tr>
-                                <td><?php echo CHTml::link($detail->invoiceHeader->invoice_number, array("/transaction/invoiceHeader/view", "id" => $detail->invoice_header_id), array('target' => 'blank')); ?></td>
+                                <td><?php echo CHTml::link($detail->invoiceHeader->invoice_number, array("/transaction/invoiceHeader/show", "id" => $detail->invoice_header_id), array('target' => 'blank')); ?></td>
                                 <td><?php echo CHtml::encode(CHtml::value($detail, 'invoiceHeader.customer.name')); ?></td>
                                 <td><?php echo CHtml::encode(CHtml::value($detail, 'invoiceHeader.insuranceCompany.name')); ?></td>
                                 <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($detail, 'total_invoice'))); ?></td>
@@ -467,11 +467,6 @@ $this->menu = array(
                             <?php endforeach; ?>
                         </tbody>
                         <tfoot>
-<!--                            <tr>
-                                <td style="text-align: right" colspan="5">Downpayment</td>
-                                <td style="text-align: right"><?php //echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($model, 'downpayment_amount'))); ?></td>
-                                <td></td>
-                            </tr>-->
                             <tr>
                                 <td style="text-align: right" colspan="5">Diskon</td>
                                 <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($model, 'discount_product_amount'))); ?></td>

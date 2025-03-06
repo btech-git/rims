@@ -224,6 +224,18 @@ class PaymentInController extends Controller {
         ));
     }
 
+    public function actionShow($id) {
+        $model = $this->loadModel($id);
+        $revisionHistories = PaymentInApproval::model()->findAllByAttributes(array('payment_in_id' => $model->id));
+        $postImages = PaymentInImages::model()->findAllByAttributes(array('payment_in_id' => $model->id, 'is_inactive' => $model::STATUS_ACTIVE));
+        
+        $this->render('show', array(
+            'model' => $model,
+            'postImages' => $postImages,
+            'revisionHistories' => $revisionHistories,
+        ));
+    }
+
     public function actionInvoiceList() {
         $invoice = Search::bind(new InvoiceHeader('search'), isset($_GET['InvoiceHeader']) ? $_GET['InvoiceHeader'] : '');
         $invoice->unsetAttributes();

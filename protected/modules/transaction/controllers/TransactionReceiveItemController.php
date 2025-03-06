@@ -147,6 +147,16 @@ class TransactionReceiveItemController extends Controller {
         ));
     }
 
+    public function actionShow($id) {
+        $model = $this->loadModel($id);
+        $recieveDetails = TransactionReceiveItemDetail::model()->findAllByAttributes(array('receive_item_id' => $id));
+        
+        $this->render('show', array(
+            'model' => $model,
+            'recieveDetails' => $recieveDetails,
+        ));
+    }
+
     /**
      * Creates a new model.
      * If creation is successful, the browser will be redirected to the 'view' page.

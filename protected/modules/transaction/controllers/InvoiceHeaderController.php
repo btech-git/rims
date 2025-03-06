@@ -193,6 +193,18 @@ class InvoiceHeaderController extends Controller {
         ));
     }
 
+    public function actionShow($id) {
+        $model = $this->loadModel($id);
+        $details = InvoiceDetail::model()->findAllByAttributes(array('invoice_id' => $id));
+        $payments = PaymentInDetail::model()->findAllByAttributes(array('invoice_header_id' => $id));
+        
+        $this->render('show', array(
+            'model' => $model,
+            'details' => $details,
+            'payments' => $payments,
+        ));
+    }
+
     public function actionViewInvoices() {
         // $id = array(4,5);
         (!empty(Yii::app()->session['pr'])) ? $pr = Yii::app()->session['pr'] : $pr = array();

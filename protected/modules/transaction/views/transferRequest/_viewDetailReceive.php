@@ -6,7 +6,7 @@ if (count($deliveryOrders) != 0) {
         <table>
             <tr>
                 <td width="20%">Delivery Order No</td>
-                <td><?php echo CHTml::link($deliveryOrder->delivery_order_no, array("/transaction/transactionDeliveryOrder/view", "id" => $deliveryOrder->id), array('target' => 'blank')); ?></td>
+                <td><?php echo CHTml::link($deliveryOrder->delivery_order_no, array("/transaction/transactionDeliveryOrder/show", "id" => $deliveryOrder->id), array('target' => 'blank')); ?></td>
             </tr>
             <tr>
                 <td  width="20%">Date Delivery</td>
@@ -42,7 +42,7 @@ if (count($deliveryOrders) != 0) {
                                     <?php $receiveDetails = TransactionReceiveItemDetail::model()->findAllByAttributes(array('receive_item_id' => $receive->id)); ?>
                                     <?php foreach ($receiveDetails as $receiveDetail) : ?>
                                         <tr>
-                                            <td><?php echo CHTml::link($receive->receive_item_no, array("/transaction/transactionReceiveItem/view", "id" => $receive->id), array('target' => 'blank')); ?></td>
+                                            <td><?php echo CHTml::link($receive->receive_item_no, array("/transaction/transactionReceiveItem/show", "id" => $receive->id), array('target' => 'blank')); ?></td>
                                             <td><?php echo $receive->receive_item_date; ?></td>
                                             <td><?php echo $receiveDetail->product->name; ?></td>
                                             <td><?php echo $receiveDetail->qty_request; ?></td>

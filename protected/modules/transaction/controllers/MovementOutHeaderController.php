@@ -122,6 +122,20 @@ class MovementOutHeaderController extends Controller {
         ));
     }
 
+    public function actionShow($id) {
+        $model = $this->loadModel($id);
+        $details = MovementOutDetail::model()->findAllByAttributes(array('movement_out_header_id' => $id));
+        $historis = MovementOutApproval::model()->findAllByAttributes(array('movement_out_id' => $id));
+        $shippings = MovementOutShipping::model()->findAllByAttributes(array('movement_out_id' => $id));
+        
+        $this->render('show', array(
+            'model' => $model,
+            'details' => $details,
+            'historis' => $historis,
+            'shippings' => $shippings,
+        ));
+    }
+
     /**
      * Creates a new model.
      * If creation is successful, the browser will be redirected to the 'view' page.

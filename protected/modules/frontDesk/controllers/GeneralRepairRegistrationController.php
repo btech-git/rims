@@ -252,6 +252,23 @@ class GeneralRepairRegistrationController extends Controller {
         ));
     }
 
+    public function actionShow($id) {
+        $model = $this->loadModel($id);
+        
+        $products = RegistrationProduct::model()->findAllByAttributes(array('registration_transaction_id' => $id));
+        $quickServices = RegistrationQuickService::model()->findAllByAttributes(array('registration_transaction_id' => $id));
+        $services = RegistrationService::model()->findAllByAttributes(array(
+            'registration_transaction_id' => $id,
+            'is_body_repair' => 0
+        ));
+        $this->render('show', array(
+            'model' => $model,
+            'quickServices' => $quickServices,
+            'services' => $services,
+            'products' => $products,
+        ));
+    }
+
     public function actionUpdateLocation($id, $vehicleId) {
         $vehicle = Vehicle::model()->findByPk($vehicleId);
         $registrationTransaction = RegistrationTransaction::model()->findByPk($id);

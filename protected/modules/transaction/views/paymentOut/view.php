@@ -345,7 +345,10 @@ $this->menu = array(
                             <div class="small-8 columns">
                                 <?php $getPhone = ""; ?>
                                 <?php if ($model->supplier_id != ""): ?>
-                                    <?php $phones = SupplierPhone::model()->findAllByAttributes(array('supplier_id' => $model->supplier_id, 'status' => 'Active')); ?>
+                                    <?php $phones = SupplierPhone::model()->findAllByAttributes(array(
+                                        'supplier_id' => $model->supplier_id, 
+                                        'status' => 'Active'
+                                    )); ?>
 
                                     <?php if (count($phones) > 0): ?>
 
@@ -371,7 +374,10 @@ $this->menu = array(
                             <div class="small-8 columns">
                                 <?php $getMobile = "" ?>
                                 <?php if ($model->supplier_id != ""): ?>
-                                    <?php $mobiles = SupplierMobile::model()->findAllByAttributes(array('supplier_id' => $model->supplier_id, 'status' => 'Active')); ?>
+                                    <?php $mobiles = SupplierMobile::model()->findAllByAttributes(array(
+                                        'supplier_id' => $model->supplier_id, 
+                                        'status' => 'Active'
+                                    )); ?>
                                     <?php if (count($mobiles) > 0): ?>
                                         <?php foreach ($mobiles as $key => $mobile): ?>
                                             <?php $getMobile .= $mobile->mobile_no . '&#13;&#10;'; ?>
@@ -409,8 +415,12 @@ $this->menu = array(
                                     <td><?php echo CHtml::encode(CHtml::value($product, 'name')); ?></td>
                                     <td><?php echo CHtml::encode(CHtml::value($purchaseOrderDetail, 'quantity')); ?></td>
                                     <td><?php echo CHtml::encode(CHtml::value($product, 'unit.name')); ?></td>
-                                    <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($purchaseOrderDetail, 'unit_price'))); ?></td>
-                                    <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($purchaseOrderDetail, 'total_price'))); ?></td>
+                                    <td style="text-align: right">
+                                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($purchaseOrderDetail, 'unit_price'))); ?>
+                                    </td>
+                                    <td style="text-align: right">
+                                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($purchaseOrderDetail, 'total_price'))); ?>
+                                    </td>
                                 </tr>
                             <?php endforeach; ?>
                         </tbody>

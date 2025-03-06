@@ -112,6 +112,14 @@ class ItemRequestController extends Controller {
         ));
     }
 
+    public function actionShow($id) {
+        $itemRequest = $this->loadModel($id);
+
+        $this->render('view', array(
+            'itemRequest' => $itemRequest,
+        ));
+    }
+
     public function actionAdmin() {
         $model = new ItemRequestHeader('search');
         $model->unsetAttributes();  // clear any default values

@@ -203,6 +203,16 @@ class TransferRequestController extends Controller {
         ));
     }
 
+    public function actionShow($id) {
+        $transferRequest = $this->loadModel($id);
+        $transferDetails = TransactionTransferRequestDetail::model()->findAllByAttributes(array('transfer_request_id' => $id));
+
+        $this->render('show', array(
+            'transferRequest' => $transferRequest,
+            'transferDetails' => $transferDetails,
+        ));
+    }
+
     public function actionUpdateApproval($headerId)
     {
         $transferRequest = TransactionTransferRequest::model()->findByPk($headerId);

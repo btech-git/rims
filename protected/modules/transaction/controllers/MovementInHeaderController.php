@@ -123,6 +123,20 @@ class MovementInHeaderController extends Controller {
         ));
     }
 
+    public function actionShow($id) {
+        $model = $this->loadModel($id);
+        $details = MovementInDetail::model()->findAllByAttributes(array('movement_in_header_id' => $id));
+        $historis = MovementInApproval::model()->findAllByAttributes(array('movement_in_id' => $id));
+        $shippings = MovementInShipping::model()->findAllByAttributes(array('movement_in_id' => $id));
+        
+        $this->render('show', array(
+            'model' => $model,
+            'details' => $details,
+            'historis' => $historis,
+            'shippings' => $shippings,
+        ));
+    }
+
     public function actionCreate($transactionId, $movementType) {
 
         $movementIn = $this->instantiate(null, 'create');

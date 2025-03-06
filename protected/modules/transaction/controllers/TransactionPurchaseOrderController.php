@@ -119,6 +119,16 @@ class TransactionPurchaseOrderController extends Controller {
         ));
     }
 
+    public function actionShow($id) {
+        $purchaseOrder = $this->loadModel($id);
+        $purchaseOrderDetails = TransactionPurchaseOrderDetail::model()->findAllByAttributes(array('purchase_order_id' => $id));
+
+        $this->render('show', array(
+            'model' => $purchaseOrder,
+            'purchaseOrderDetails' => $purchaseOrderDetails,
+        ));
+    }
+
     /**
      * Creates a new model.
      * If creation is successful, the browser will be redirected to the 'view' page.

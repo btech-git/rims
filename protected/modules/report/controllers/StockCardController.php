@@ -122,10 +122,10 @@ class StockCardController extends Controller {
 
         if ($codeNumberConstant === 'PO') {
             $model = TransactionPurchaseOrder::model()->findByAttributes(array('purchase_order_no' => $codeNumber));
-            $this->redirect(array('/transaction/transactionPurchaseOrder/view', 'id' => $model->id));
+            $this->redirect(array('/transaction/transactionPurchaseOrder/show', 'id' => $model->id));
         } else if ($codeNumberConstant === 'Pout') {
             $model = PaymentOut::model()->findByAttributes(array('payment_number' => $codeNumber));
-            $this->redirect(array('/transaction/paymentOut/view', 'id' => $model->id));
+            $this->redirect(array('/transaction/paymentOut/show', 'id' => $model->id));
         }
     }
     protected function saveToExcel($stockCardSummary, $startDate, $endDate, $branchId) {

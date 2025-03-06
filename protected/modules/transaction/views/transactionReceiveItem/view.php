@@ -99,7 +99,7 @@ $this->menu = array(
                         </div>
                         
                         <div class="small-8 columns">
-                            <label for="label"><?php echo $model->purchase_order_id == NULL ? '-' : CHTml::link($model->purchaseOrder->purchase_order_no, array("/transaction/transactionPurchaseOrder/view", "id"=>$model->purchase_order_id)); ?></label>
+                            <label for="label"><?php echo $model->purchase_order_id == NULL ? '-' : CHTml::link($model->purchaseOrder->purchase_order_no, array("/transaction/transactionPurchaseOrder/show", "id"=>$model->purchase_order_id)); ?></label>
                         </div>
                     </div>
                 </div>
@@ -140,7 +140,7 @@ $this->menu = array(
                         </div>
                         
                         <div class="small-8 columns">
-                            <label for="label"><?php echo $model->delivery_order_id == NULL ? '-' : CHTml::link($model->deliveryOrder->delivery_order_no, array("/transaction/transactionDeliveryOrder/view", "id"=>$model->delivery_order_id)); ?></label>
+                            <label for="label"><?php echo $model->delivery_order_id == NULL ? '-' : CHTml::link($model->deliveryOrder->delivery_order_no, array("/transaction/transactionDeliveryOrder/show", "id"=>$model->delivery_order_id)); ?></label>
                         </div>
                     </div>
                 </div>
@@ -424,7 +424,7 @@ $this->menu = array(
                     <?php $movementInDetails = MovementInDetail::model()->findAllByAttributes(array('movement_in_header_id' => $movementIn->id)); ?>
                     <?php foreach ($movementInDetails as $movementInDetail): ?>
                         <tr>
-                            <td><?php echo CHtml::link($movementIn->movement_in_number, array("/transaction/movementInHeader/view", "id"=>$movementIn->id)); ?></td>
+                            <td><?php echo CHtml::link($movementIn->movement_in_number, array("/transaction/movementInHeader/show", "id"=>$movementIn->id)); ?></td>
                             <td><?php echo CHtml::encode(CHtml::value($movementIn, 'date_posting')); ?></td>
                             <td><?php echo CHtml::encode(CHtml::value($movementIn, 'branch.name')); ?></td>
                             <td><?php echo CHtml::encode(CHtml::value($movementInDetail, 'product.name')); ?></td>

@@ -101,6 +101,16 @@ class MaintenanceRequestController extends Controller {
         ));
     }
 
+    public function actionShow($id) {
+        $maintenanceRequest = $this->loadModel($id);
+        $maintenanceRequestDetails = MaintenanceRequestDetail::model()->findAllByAttributes(array('maintenance_request_header_id' => $id));
+
+        $this->render('show', array(
+            'maintenanceRequest' => $maintenanceRequest,
+            'maintenanceRequestDetails' => $maintenanceRequestDetails,
+        ));
+    }
+
     public function actionAdmin() {
         $model = new MaintenanceRequestHeader('search');
         $model->unsetAttributes();  // clear any default values

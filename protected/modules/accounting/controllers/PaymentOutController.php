@@ -229,6 +229,22 @@ class PaymentOutController extends Controller {
         ));
     }
 
+    public function actionShow($id) {
+        $paymentOut = $this->loadModel($id);
+        $paymentOutDetails = PayOutDetail::model()->findAllByAttributes(array('payment_out_id' => $id));
+        
+        $postImages = PaymentOutImages::model()->findAllByAttributes(array(
+            'payment_out_id' => $paymentOut->id,
+            'is_inactive' => $paymentOut::STATUS_ACTIVE
+        ));
+        
+        $this->render('show', array(
+            'paymentOut' => $paymentOut,
+            'paymentOutDetails' => $paymentOutDetails,
+            'postImages' => $postImages,
+        ));
+    }
+
     public function actionDelete($id) {
         if (Yii::app()->request->isPostRequest) {
             $paymentOut = $this->instantiate($id, '');
@@ -487,7 +503,7 @@ class PaymentOutController extends Controller {
 
         if ($codeNumberConstant === 'PO') {
             $model = TransactionPurchaseOrder::model()->findByAttributes(array('purchase_order_no' => $codeNumber));
-            $this->redirect(array('/transaction/transactionPurchaseOrder/view', 'id' => $model->id));
+            $this->redirect(array('/transaction/transactionPurchaseOrder/show', 'id' => $model->id));
         }
         
     }

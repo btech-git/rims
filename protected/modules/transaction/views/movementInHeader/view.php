@@ -47,25 +47,6 @@ $this->menu = array(
                 'visible' => Yii::app()->user->checkAccess("movementInSupervisor")
             )) ?>
         <?php endif; ?>
-        <?php /* echo CHtml::button('Update Delivered', array(
-          'id' => 'detail-button',
-          'name' => 'Detail',
-          'class'=>'button cbutton right',
-          'style'=>'margin-right:10px',
-          'disabled'=>$model->status == 'Approved' ? false : true,
-          'onclick' => '
-          $.ajax({
-          type: "POST",
-          //dataType: "JSON",
-          url: "' . CController::createUrl('updateDelivered', array('id'=> $model->id)) . '",
-          data: $("form").serialize(),
-          success: function(html) {
-
-          alert("Status Succesfully Updated");
-          location.reload();
-          },})
-          '
-          )); */ ?>
         <?php if ($model->status != 'Finished' && $model->status != 'CANCELLED!!!'): ?>
             <?php echo CHtml::button('Update Received', array(
                 'id' => 'detail-button',
@@ -149,13 +130,13 @@ $this->menu = array(
         if (!empty($receive)) {
             if ($receive->request_type == "Internal Delivery Order") {
                 $type = "Internal Delivery Order";
-                $requestNumber = CHTml::link($receive->deliveryOrder->delivery_order_no, array("/transaction/transactionDeliveryOrder/view", "id" => $receive->delivery_order_id), array('target' => 'blank'));
+                $requestNumber = CHTml::link($receive->deliveryOrder->delivery_order_no, array("/transaction/transactionDeliveryOrder/show", "id" => $receive->delivery_order_id), array('target' => 'blank'));
             } elseif ($receive->request_type == "Purchase Order") {
                 $type = "Purchase Order";
-                $requestNumber = CHTml::link($receive->purchaseOrder->purchase_order_no, array("/transaction/transactionPurchaseOrder/view", "id" => $receive->purchase_order_id), array('target' => 'blank'));
+                $requestNumber = CHTml::link($receive->purchaseOrder->purchase_order_no, array("/transaction/transactionPurchaseOrder/show", "id" => $receive->purchase_order_id), array('target' => 'blank'));
             } elseif ($receive->request_type == "Consignment In") {
                 $type = "Consignment In";
-                $requestNumber = CHTml::link($receive->consignmentIn->consignment_in_number, array("/transaction/consignmentIn/view", "id" => $receive->consignment_in_id), array('target' => 'blank'));
+                $requestNumber = CHTml::link($receive->consignmentIn->consignment_in_number, array("/transaction/consignmentIn/show", "id" => $receive->consignment_in_id), array('target' => 'blank'));
             }
         }
         ?>
@@ -168,7 +149,7 @@ $this->menu = array(
                     </div>
                     
                     <div class="small-9 columns">
-                        <label for=""><?php echo empty($receive) ? "N/A" : CHTml::link($receive->receive_item_no, array("/transaction/transactionReceiveItem/view", "id" => $receive->id), array('target' => 'blank')); ?></label>
+                        <label for=""><?php echo empty($receive) ? "N/A" : CHTml::link($receive->receive_item_no, array("/transaction/transactionReceiveItem/show", "id" => $receive->id), array('target' => 'blank')); ?></label>
                     </div>
                 </div>
             </div>
@@ -210,7 +191,7 @@ $this->menu = array(
                     </div>
                     
                     <div class="small-9 columns">
-                        <label for=""><?php echo $model->return_item_id != "" ? CHTml::link($model->returnItem->return_item_no, array("/transaction/transactionReturnItem/view", "id" => $model->return_item_id), array('target' => 'blank')) : ""; ?></label>
+                        <label for=""><?php echo $model->return_item_id != "" ? CHTml::link($model->returnItem->return_item_no, array("/transaction/transactionReturnItem/show", "id" => $model->return_item_id), array('target' => 'blank')) : ""; ?></label>
                  <!--  <input type="text" id="right-label" value="<?php //echo $movementType;  ?>" readonly="true"> -->
                     </div>
                 </div>

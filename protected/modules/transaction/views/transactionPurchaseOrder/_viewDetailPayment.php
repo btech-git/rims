@@ -5,7 +5,7 @@
             <table>
                 <tr>
                     <td width="15%">Payment #</td>
-                    <td><?php echo CHTml::link($paymentOutDetail->paymentOut->payment_number, array("/accounting/paymentOut/view", "id"=>$paymentOutDetail->payment_out_id), array('target' => 'blank')); ?></td>
+                    <td><?php echo CHTml::link($paymentOutDetail->paymentOut->payment_number, array("/accounting/paymentOut/show", "id"=>$paymentOutDetail->payment_out_id), array('target' => 'blank')); ?></td>
                     <td width="15%">Payment Type</td>
                     <td><?php echo $paymentOutDetail->paymentOut->paymentType->name; ?></td>
                 </tr>

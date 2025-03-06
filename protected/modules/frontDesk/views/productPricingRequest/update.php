@@ -199,7 +199,7 @@
 
         <div style="text-align: center">
             <h2>Uploaded Image</h2>
-            <?php echo CHtml::image('//raperind.com/rimsfront/images/product_pricing_request/' . $model->id . '.' . $model->extension, "image", array("width" => "30%")); ?>  
+            <?php echo CHtml::image(Yii::app()->baseUrl . '/images/product_pricing_request/' . $model->id . '.' . $model->extension, "image", array("width" => "30%")); ?>  
         </div>
 
         <hr />

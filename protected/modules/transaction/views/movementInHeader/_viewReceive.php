@@ -12,7 +12,7 @@
         'columns'=>array(
             array(
                 'name'=>'receive_item_no', 
-                'value'=>'CHTml::link($data->receive_item_no, array("/transaction/transactionReceiveItem/view", "id"=>$data->id))', 
+                'value'=>'CHTml::link($data->receive_item_no, array("/transaction/transactionReceiveItem/show", "id"=>$data->id))', 
                 'type'=>'raw'
             ),
             'receive_item_date',
@@ -35,7 +35,7 @@
                 'header'=>'Movements',
                 'value'=> function($data){
                     foreach ($data->movementInHeaders as $key => $movementDetail) {
-                        echo CHtml::link($movementDetail->movement_in_number, array("/transaction/movementInHeader/view", "id"=>$movementDetail->id)). "<br>";
+                        echo CHtml::link($movementDetail->movement_in_number, array("/transaction/movementInHeader/show", "id"=>$movementDetail->id)). "<br>";
                     }
                 }
             ),

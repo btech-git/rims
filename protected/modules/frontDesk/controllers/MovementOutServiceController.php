@@ -114,6 +114,12 @@ class MovementOutServiceController extends Controller {
         ));
     }
 
+    public function actionShow($id) {
+        $this->render('show', array(
+            'model' => $this->loadModel($id),
+        ));
+    }
+
     /**
      * Updates a particular model.
      * If update is successful, the browser will be redirected to the 'view' page.

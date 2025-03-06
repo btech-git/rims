@@ -104,6 +104,20 @@ class CashTransactionController extends Controller {
         ));
     }
 
+    public function actionShow($id) {
+        $cashTransaction = $this->loadModel($id);
+        $details = CashTransactionDetail::model()->findAllByAttributes(array('cash_transaction_id' => $id));
+        $revisionHistories = CashTransactionApproval::model()->findAllByAttributes(array('cash_transaction_id' => $id));
+        $postImages = CashTransactionImages::model()->findAllByAttributes(array('cash_transaction_id' => $id, 'is_inactive' => 0));
+        
+        $this->render('show', array(
+            'model' => $cashTransaction,
+            'details' => $details,
+            'postImages' => $postImages,
+            'revisionHistories' => $revisionHistories,
+        ));
+    }
+
     /**
      * Creates a new model.
      * If creation is successful, the browser will be redirected to the 'view' page.

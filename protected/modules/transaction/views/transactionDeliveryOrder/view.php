@@ -120,7 +120,7 @@ $this->menu = array(
                             </div>
 
                             <div class="small-8 columns">
-                                <label for="label"><?php echo $model->salesOrder != "" ? CHTml::link($model->salesOrder->sale_order_no, array("/transaction/transactionSalesOrder/view", "id" => $model->sales_order_id), array('target' => 'blank')) : ''; ?></label>
+                                <label for="label"><?php echo $model->salesOrder != "" ? CHTml::link($model->salesOrder->sale_order_no, array("/transaction/transactionSalesOrder/show", "id" => $model->sales_order_id), array('target' => 'blank')) : ''; ?></label>
                             </div>
                         </div>
                     </div>
@@ -148,7 +148,7 @@ $this->menu = array(
                             </div>
 
                             <div class="small-8 columns">
-                                <label for="label"><?php echo $model->sentRequest != NULL ? CHTml::link($model->sentRequest->sent_request_no, array("/transaction/transactionSentRequest/view", "id" => $model->sent_request_id), array('target' => 'blank')) : ''; ?></label>
+                                <label for="label"><?php echo $model->sentRequest != NULL ? CHTml::link($model->sentRequest->sent_request_no, array("/transaction/transactionSentRequest/show", "id" => $model->sent_request_id), array('target' => 'blank')) : ''; ?></label>
                             </div>
                         </div>
                     </div>
@@ -176,7 +176,7 @@ $this->menu = array(
                             </div>
 
                             <div class="small-8 columns">
-                                <label for="label"><?php echo $model->consignmentOut != NULL ? CHTml::link($model->consignmentOut->consignment_out_no, array("/transaction/consignmentOut/view", "id" => $model->consignment_out_id), array('target' => 'blank')) : ''; ?></label>
+                                <label for="label"><?php echo $model->consignmentOut != NULL ? CHTml::link($model->consignmentOut->consignment_out_no, array("/transaction/consignmentOut/show", "id" => $model->consignment_out_id), array('target' => 'blank')) : ''; ?></label>
                             </div>
                         </div>
                     </div>
@@ -204,7 +204,7 @@ $this->menu = array(
                             </div>
 
                             <div class="small-8 columns">
-                                <label for="label"><?php echo $model->transferRequest != NULL ? CHTml::link($model->transferRequest->transfer_request_no, array("/transaction/transferRequest/view", "id" => $model->transfer_request_id), array('target' => 'blank')) : ''; ?></label>
+                                <label for="label"><?php echo $model->transferRequest != NULL ? CHTml::link($model->transferRequest->transfer_request_no, array("/transaction/transferRequest/show", "id" => $model->transfer_request_id), array('target' => 'blank')) : ''; ?></label>
                             </div>
                         </div>
                     </div>
@@ -260,7 +260,6 @@ $this->menu = array(
                             <td><?php echo $deliveryDetail->quantity_movement == '' ? '-' : $deliveryDetail->quantity_movement; ?></td>
                             <td><?php echo $deliveryDetail->quantity_movement_left == '' ? '-' : $deliveryDetail->quantity_movement_left; ?></td>
                             <td><?php echo $deliveryDetail->note == '' ? '-' : $deliveryDetail->note; ?></td>
-                            <!--<td><?php //echo $deliveryDetail->barcode_product == '' ? '-' : $deliveryDetail->barcode_product; ?></td>-->
                         </tr>
                     <?php endforeach ?>
                 </tbody>
@@ -297,8 +296,12 @@ $this->menu = array(
                                 <td style="text-align: center"><?php echo $i + 1; ?></td>
                                 <td class="width1-4"><?php echo CHtml::encode(CHtml::value($header, 'branchAccountCode')); ?></td>
                                 <td class="width1-5"><?php echo CHtml::encode(CHtml::value($header, 'branchAccountName')); ?></td>
-                                <td class="width1-6" style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $amountDebit)); ?></td>
-                                <td class="width1-7" style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $amountCredit)); ?></td>
+                                <td class="width1-6" style="text-align: right">
+                                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $amountDebit)); ?>
+                                </td>
+                                <td class="width1-7" style="text-align: right">
+                                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $amountCredit)); ?>
+                                </td>
                             </tr>
 
                             <?php $totalDebit += $amountDebit; ?>
@@ -310,8 +313,12 @@ $this->menu = array(
                     <tfoot>
                         <tr>
                             <td colspan="3" style="text-align: right; font-weight: bold">TOTAL</td>
-                            <td class="width1-6" style="text-align: right; font-weight: bold; border-top: 1px solid"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $totalDebit)); ?></td>
-                            <td class="width1-7" style="text-align: right; font-weight: bold; border-top: 1px solid"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $totalCredit)); ?></td>
+                            <td class="width1-6" style="text-align: right; font-weight: bold; border-top: 1px solid">
+                                <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $totalDebit)); ?>
+                            </td>
+                            <td class="width1-7" style="text-align: right; font-weight: bold; border-top: 1px solid">
+                                <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $totalCredit)); ?>
+                            </td>
                         </tr>        
                     </tfoot>
                 </table>

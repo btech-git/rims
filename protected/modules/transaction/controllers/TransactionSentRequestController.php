@@ -155,6 +155,16 @@ class TransactionSentRequestController extends Controller {
         ));
     }
 
+    public function actionShow($id) {
+        $model = $this->loadModel($id);
+        $sentDetails = TransactionSentRequestDetail::model()->findAllByAttributes(array('sent_request_id' => $id));
+
+        $this->render('show', array(
+            'model' => $model,
+            'sentDetails' => $sentDetails,
+        ));
+    }
+
     /**
      * Creates a new model.
      * If creation is successful, the browser will be redirected to the 'view' page.

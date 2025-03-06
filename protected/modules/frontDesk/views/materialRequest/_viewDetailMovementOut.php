@@ -6,7 +6,7 @@ if (count($movementOuts) != 0) {
         <table>
             <tr>
                 <td width="20%">Movement Out No</td>
-                <td><?php echo CHTml::link($movementOut->movement_out_no, array("/transaction/movementOutHeader/view", "id" => $movementOut->id), array('target' => 'blank')); ?></td>
+                <td><?php echo CHTml::link($movementOut->movement_out_no, array("/transaction/movementOutHeader/show", "id" => $movementOut->id), array('target' => 'blank')); ?></td>
             </tr>
             <tr>
                 <td  width="20%">Date</td>

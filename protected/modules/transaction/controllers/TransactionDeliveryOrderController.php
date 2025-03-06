@@ -310,6 +310,16 @@ class TransactionDeliveryOrderController extends Controller {
         ));
     }
 
+    public function actionShow($id) {
+        $model = $this->loadModel($id);
+        $deliveryDetails = TransactionDeliveryOrderDetail::model()->findAllByAttributes(array('delivery_order_id' => $id));
+        
+        $this->render('show', array(
+            'model' => $model,
+            'deliveryDetails' => $deliveryDetails,
+        ));
+    }
+
     /**
      * Creates a new model.
      * If creation is successful, the browser will be redirected to the 'view' page.
