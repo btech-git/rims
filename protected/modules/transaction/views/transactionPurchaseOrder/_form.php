@@ -351,7 +351,7 @@
                                 <?php echo $form->labelEx($purchaseOrder->header, 'registration_transaction_id'); ?>
                             </label>
                         </div>
-                        <?php if ($purchaseOrder->header->isNewRecord): ?>
+                        <?php //if ($purchaseOrder->header->isNewRecord): ?>
                             <div class="small-8 columns">
                                 <?php echo CHtml::activeTextField($purchaseOrder->header, 'work_order_number', array(
                                     'size' => 15,
@@ -361,14 +361,13 @@
                                     'onkeypress' => 'if (event.keyCode == 13) { $("#registration-transaction-dialog").dialog("open"); return false; }',
                                     'value' => $purchaseOrder->header->registration_transaction_id == "" ? '' : RegistrationTransaction::model()->findByPk($purchaseOrder->header->registration_transaction_id)->work_order_number
                                 )); ?>
-
                                 <?php echo $form->error($purchaseOrder->header, 'registration_transaction_id'); ?>
                             </div>
-                        <?php else: ?>
+                        <?php /*else: ?>
                             <div class="small-8 columns">
                                 <?php echo CHtml::encode(CHtml::value($purchaseOrder->header, 'registrationTransaction.work_order_number')); ?>
                             </div>
-                        <?php endif; ?>
+                        <?php endif;*/ ?>
                     </div>
                 </div>
                 
