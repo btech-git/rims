@@ -651,10 +651,11 @@
                 'filter' => false,
             ),
             array(
+                'name' => 'customer_name',
                 'header' => 'Customer Name',
                 'value' => '$data->customer->name',
             ),
-            'work_order_number',
+            'sales_order_number',
         )
     )); ?>
     <?php $this->endWidget(); ?>

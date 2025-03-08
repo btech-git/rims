@@ -161,6 +161,15 @@ class TransactionPurchaseOrderController extends Controller {
             $registrationTransaction->attributes = $_GET['RegistrationTransaction'];
         }
         $registrationTransactionCriteria = new CDbCriteria;
+        $registrationTransactionCriteria->compare('t.transaction_number', $registrationTransaction->transaction_number, true);
+        $registrationTransactionCriteria->together = 'true';
+        $registrationTransactionCriteria->with = array(
+            'vehicle', 
+            'customer', 
+        );
+        $registrationTransactionCriteria->compare('vehicle.plate_number', $registrationTransaction->plate_number, true);
+        $registrationTransactionCriteria->compare('customer.name', $registrationTransaction->customer_name, true);
+
         $registrationTransactionCriteria->addCondition("NOT EXISTS (
             SELECT i.registration_transaction_id
             FROM " . TransactionPurchaseOrder::model()->tableName() . " i

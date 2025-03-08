@@ -1,6 +1,13 @@
 <?php
 Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/transaction/report.css');
 ?>
+<style> 
+ .table_wrapper{
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+}
+</style>
 
 <div class="clear"></div>
 
@@ -77,7 +84,7 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                         <?php $branch = Branch::model()->findByPk($branchId); ?>
                         Raperind Motor <?php echo CHtml::encode(CHtml::value($branch, 'name')); ?>
                     </div>
-                    <div style="font-size: larger">Laporan Payment Bulanan by Type</div>
+                    <div style="font-size: larger">Laporan Bank Bulanan</div>
                     <div><?php echo CHtml::encode(strftime("%B",mktime(0,0,0,$month))); ?> <?php echo CHtml::encode($year); ?></div>
                 </div>
 
@@ -86,9 +93,10 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                 <div class="relative">
                     <?php $this->renderPartial('_summaryIn', array(
                         'paymentInList' => $paymentInList,
-                        'paymentTypes' => $paymentTypes,
+                        'coaList' => $coaList,
                         'month' => $month,
                         'year' => $year,
+                        'numberOfDays' => $numberOfDays,
                     )); ?>
                 </div>
                 
@@ -97,9 +105,10 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                 <div class="relative">
                     <?php $this->renderPartial('_summaryOut', array(
                         'paymentOutList' => $paymentOutList,
-                        'paymentTypes' => $paymentTypes,
+                        'coaList' => $coaList,
                         'month' => $month,
                         'year' => $year,
+                        'numberOfDays' => $numberOfDays,
                     )); ?>
                 </div>
                 <div class="clear"></div>

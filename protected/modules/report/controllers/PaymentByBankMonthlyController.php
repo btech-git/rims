@@ -1,6 +1,6 @@
 <?php
 
-class PaymentMonthlyController extends Controller {
+class PaymentByBankMonthlyController extends Controller {
 
     public $layout = '//layouts/column1';
     public function filters() {
@@ -30,41 +30,41 @@ class PaymentMonthlyController extends Controller {
         $year = isset($_GET['Year']) ? $_GET['Year'] : $yearNow;
         $branchId = isset($_GET['BranchId']) ? $_GET['BranchId'] : '';
         
-        $paymentTypes = PaymentType::model()->findAll();
+        $coaList = Coa::model()->findAll(array('condition' => 't.coa_sub_category_id IN (1, 2, 3) AND t.status = "Approved"'));
         
-        $paymentInByTypeList = PaymentIn::getPaymentByTypeList($month, $year, $branchId);
-        $paymentOutByTypeList = PaymentOut::getPaymentByTypeList($month, $year, $branchId);
+        $paymentInByBankList = JurnalUmum::getPaymentInByBankList($month, $year, $branchId);
+        $paymentOutByBankList = JurnalUmum::getPaymentOutByBankList($month, $year, $branchId);
         
-        $paymentTypeIdList = array();
-        foreach ($paymentTypes as $paymentType) {
-            $paymentTypeIdList[] = $paymentType->id;
+        $coaIdList = array();
+        foreach ($coaList as $coa) {
+            $coaIdList[] = $coa->id;
         }
         
         $paymentInList = array();
         $lastPaymentInDate = '';
-        foreach ($paymentInByTypeList as $paymentInByTypeRow) {
-            if ($lastPaymentInDate !== $paymentInByTypeRow['payment_date']) {
-                $paymentInList[$paymentInByTypeRow['payment_date']][0] = $paymentInByTypeRow['payment_date'];
-                foreach ($paymentTypeIdList as $paymentTypeId) {
-                    $paymentInList[$paymentInByTypeRow['payment_date']][$paymentTypeId] = '0.00';
+        foreach ($paymentInByBankList as $paymentInByBankRow) {
+            if ($lastPaymentInDate !== $paymentInByBankRow['tanggal_transaksi']) {
+                $paymentInList[$paymentInByBankRow['tanggal_transaksi']][0] = $paymentInByBankRow['tanggal_transaksi'];
+                foreach ($coaIdList as $coaId) {
+                    $paymentInList[$paymentInByBankRow['tanggal_transaksi']][$coaId] = '0.00';
                 }
             }
-            $paymentInList[$paymentInByTypeRow['payment_date']][$paymentInByTypeRow['payment_type_id']] = $paymentInByTypeRow['total_amount'];
-            $lastPaymentInDate = $paymentInByTypeRow['payment_date'];
+            $paymentInList[$paymentInByBankRow['tanggal_transaksi']][$paymentInByBankRow['coa_id']] = $paymentInByBankRow['total_amount'];
+            $lastPaymentInDate = $paymentInByBankRow['tanggal_transaksi'];
         }
 
         
         $paymentOutList = array();
         $lastPaymentOutDate = '';
-        foreach ($paymentOutByTypeList as $paymentOutByTypeRow) {
-            if ($lastPaymentOutDate !== $paymentOutByTypeRow['payment_date']) {
-                $paymentOutList[$paymentOutByTypeRow['payment_date']][0] = $paymentOutByTypeRow['payment_date'];
-                foreach ($paymentTypeIdList as $paymentTypeId) {
-                    $paymentOutList[$paymentOutByTypeRow['payment_date']][$paymentTypeId] = '0.00';
+        foreach ($paymentOutByBankList as $paymentOutByBankRow) {
+            if ($lastPaymentOutDate !== $paymentOutByBankRow['tanggal_transaksi']) {
+                $paymentOutList[$paymentOutByBankRow['tanggal_transaksi']][0] = $paymentOutByBankRow['tanggal_transaksi'];
+                foreach ($coaIdList as $coaId) {
+                    $paymentOutList[$paymentOutByBankRow['tanggal_transaksi']][$coaId] = '0.00';
                 }
             }
-            $paymentOutList[$paymentOutByTypeRow['payment_date']][$paymentOutByTypeRow['payment_type_id']] = $paymentOutByTypeRow['total_amount'];
-            $lastPaymentOutDate = $paymentOutByTypeRow['payment_date'];
+            $paymentOutList[$paymentOutByBankRow['tanggal_transaksi']][$paymentOutByBankRow['coa_id']] = $paymentOutByBankRow['total_amount'];
+            $lastPaymentOutDate = $paymentOutByBankRow['tanggal_transaksi'];
         }
 
         $yearList = array();
@@ -82,7 +82,7 @@ class PaymentMonthlyController extends Controller {
             $this->saveToExcel(array(
                 'paymentInList' => $paymentInList,
                 'paymentOutList' => $paymentOutList,
-                'paymentTypes' => $paymentTypes,
+                'coaList' => $coaList,
                 'month' => $month,
                 'year' => $year,
                 'branchId' => $branchId,
@@ -93,7 +93,7 @@ class PaymentMonthlyController extends Controller {
             'paymentInList' => $paymentInList,
             'paymentOutList' => $paymentOutList,
             'yearList' => $yearList,
-            'paymentTypes' => $paymentTypes,
+            'coaList' => $coaList,
             'month' => $month,
             'year' => $year,
             'numberOfDays' => $numberOfDays,
@@ -113,58 +113,58 @@ class PaymentMonthlyController extends Controller {
 
         $paymentInList = $options['paymentInList'];
         $paymentOutList = $options['paymentOutList'];
-        $paymentTypes = $options['paymentTypes'];
+        $coaList = $options['coaList'];
         $month = $options['month'];
         $year = $options['year'];
         $branchId = $options['branchId'];
         
         $documentProperties = $objPHPExcel->getProperties();
         $documentProperties->setCreator('Raperind Motor');
-        $documentProperties->setTitle('Laporan Payment Bulanan by Type');
+        $documentProperties->setTitle('Laporan Bank Bulanan');
 
         $worksheet = $objPHPExcel->setActiveSheetIndex(0);
-        $worksheet->setTitle('Laporan Payment Bulanan by Type');
+        $worksheet->setTitle('Laporan Bank Bulanan');
 
-        $worksheet->mergeCells('A1:N1');
-        $worksheet->mergeCells('A2:N2');
-        $worksheet->mergeCells('A3:N3');
-        $worksheet->mergeCells('A5:N5');
+        $worksheet->mergeCells('A1:Z1');
+        $worksheet->mergeCells('A2:Z2');
+        $worksheet->mergeCells('A3:Z3');
+        $worksheet->mergeCells('A5:Z5');
 
-        $worksheet->getStyle('A1:N6')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-        $worksheet->getStyle('A1:N6')->getFont()->setBold(true);
+        $worksheet->getStyle('A1:Z6')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->getStyle('A1:Z6')->getFont()->setBold(true);
 
         $branch = Branch::model()->findByPk($branchId);
         $worksheet->setCellValue('A1', 'RAPERIND MOTOR ' . CHtml::encode(CHtml::value($branch, 'name')));
-        $worksheet->setCellValue('A2', 'Laporan Payment Bulanan by Type');
+        $worksheet->setCellValue('A2', 'Laporan Bank Bulanan');
         $worksheet->setCellValue('A3', CHtml::encode(strftime("%B",mktime(0,0,0,$month))) . ' ' . CHtml::encode($year));
-        $worksheet->setCellValue('A5', 'Transaksi Kas Masuk');
+        $worksheet->setCellValue('A5', 'Transaksi Bank Masuk');
 
-        $worksheet->getStyle('A6:N6')->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle('A6:Z6')->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
         $paymentDailyTotals = array();
         $columnCounter = 'B';
-        foreach ($paymentTypes as $paymentType) {
-            $worksheet->setCellValue("{$columnCounter}6", CHtml::encode(CHtml::value($paymentType, 'name')));
-            $paymentDailyTotals[$paymentType->id] = '0.00'; 
+        foreach ($coaList as $coa) {
+            $worksheet->setCellValue("{$columnCounter}6", CHtml::encode(CHtml::value($coa, 'name')));
+            $paymentDailyTotals[$coa->id] = '0.00'; 
             $columnCounter++;
         }
         $dailyTotal = '0.00';
         $worksheet->setCellValue("{$columnCounter}6", 'Total');
-        $worksheet->getStyle('A6:N6')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle('A6:Z6')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
         $counter = 8;
         foreach ($paymentInList as $paymentInDate => $paymentInItem) {
             $columnCounter = 'B';
             $totalPerDate = '0.00';
-            foreach ($paymentInItem as $paymentTypeId => $paymentInRetail) {
-                if ($paymentTypeId > 0) {
+            foreach ($paymentInItem as $coaId => $paymentInRetail) {
+                if ($coaId > 0) {
                     $worksheet->getStyle("{$columnCounter}{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
                     $worksheet->setCellValue("{$columnCounter}{$counter}", CHtml::encode($paymentInRetail));
-                    $paymentDailyTotals[$paymentTypeId] += $paymentInRetail;
+                    $paymentDailyTotals[$coaId] += $paymentInRetail;
                     $columnCounter++;
                 } else {
                     $worksheet->setCellValue("A{$counter}", CHtml::encode($paymentInRetail));
                 }
-                if ($paymentTypeId > 0) {
+                if ($coaId > 0) {
                     $totalPerDate += $paymentInRetail;
                 }
             }
@@ -174,52 +174,52 @@ class PaymentMonthlyController extends Controller {
             $counter++;
         }
         
-        $worksheet->getStyle("A{$counter}:N{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
-        $worksheet->getStyle("A{$counter}:N{$counter}")->getFont()->setBold(true);
+        $worksheet->getStyle("A{$counter}:Z{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A{$counter}:Z{$counter}")->getFont()->setBold(true);
         $columnCounter = 'B';
-        $worksheet->setCellValue("A{$counter}", 'Total Monthly Cash');
-        foreach ($paymentTypes as $paymentType) {
+        $worksheet->setCellValue("A{$counter}", 'Total Monthly');
+        foreach ($coaList as $coa) {
             $worksheet->getStyle("{$columnCounter}{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
-            $worksheet->setCellValue("{$columnCounter}{$counter}", CHtml::encode($paymentDailyTotals[$paymentType->id]));
+            $worksheet->setCellValue("{$columnCounter}{$counter}", CHtml::encode($paymentDailyTotals[$coa->id]));
             $columnCounter++;
         }
         $worksheet->setCellValue("{$columnCounter}{$counter}", CHtml::encode($dailyTotal));
-        $worksheet->getStyle("A{$counter}:N{$counter}")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A{$counter}:Z{$counter}")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
         $counter++;$counter++;
 
-        $worksheet->mergeCells("A{$counter}:N{$counter}");
-        $worksheet->getStyle("A{$counter}:N{$counter}")->getFont()->setBold(true);
-        $worksheet->getStyle("A{$counter}:N{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-        $worksheet->setCellValue("A{$counter}", 'Transaksi Kas Keluar');
+        $worksheet->mergeCells("A{$counter}:Z{$counter}");
+        $worksheet->getStyle("A{$counter}:Z{$counter}")->getFont()->setBold(true);
+        $worksheet->getStyle("A{$counter}:Z{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->setCellValue("A{$counter}", 'Transaksi Bank Keluar');
         $counter++;
 
-        $worksheet->getStyle("A{$counter}:N{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
-        $worksheet->getStyle("A{$counter}:N{$counter}")->getFont()->setBold(true);
+        $worksheet->getStyle("A{$counter}:Z{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A{$counter}:Z{$counter}")->getFont()->setBold(true);
         $paymentDailyTotals = array();
         $columnCounter = 'B';
-        foreach ($paymentTypes as $paymentType) {
-            $worksheet->setCellValue("{$columnCounter}{$counter}", CHtml::encode(CHtml::value($paymentType, 'name')));
-            $paymentDailyTotals[$paymentType->id] = '0.00'; 
+        foreach ($coaList as $coa) {
+            $worksheet->setCellValue("{$columnCounter}{$counter}", CHtml::encode(CHtml::value($coa, 'name')));
+            $paymentDailyTotals[$coa->id] = '0.00'; 
             $columnCounter++;
         }
         $dailyTotal = '0.00';
         $worksheet->setCellValue("{$columnCounter}{$counter}", 'Total');
-        $worksheet->getStyle("A{$counter}:N{$counter}")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A{$counter}:Z{$counter}")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
         $counter++;$counter++;
 
         foreach ($paymentOutList as $paymentOutDate => $paymentOutItem) {
             $columnCounter = 'B';
             $totalPerDate = '0.00';
-            foreach ($paymentOutItem as $paymentTypeId => $paymentOutRetail) {
-                if ($paymentTypeId > 0) {
+            foreach ($paymentOutItem as $coaId => $paymentOutRetail) {
+                if ($coaId > 0) {
                     $worksheet->getStyle("{$columnCounter}{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
                     $worksheet->setCellValue("{$columnCounter}{$counter}", CHtml::encode($paymentOutRetail));
-                    $paymentDailyTotals[$paymentTypeId] += $paymentOutRetail;
+                    $paymentDailyTotals[$coaId] += $paymentOutRetail;
                     $columnCounter++;
                 } else {
                     $worksheet->setCellValue("A{$counter}", CHtml::encode($paymentOutRetail));
                 }
-                if ($paymentTypeId > 0) {
+                if ($coaId > 0) {
                     $totalPerDate += $paymentOutRetail;
                 }
             }
@@ -229,17 +229,17 @@ class PaymentMonthlyController extends Controller {
             $counter++;
         }
         
-        $worksheet->getStyle("A{$counter}:N{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
-        $worksheet->getStyle("A{$counter}:N{$counter}")->getFont()->setBold(true);
+        $worksheet->getStyle("A{$counter}:Z{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A{$counter}:Z{$counter}")->getFont()->setBold(true);
         $columnCounter = 'B';
-        $worksheet->setCellValue("A{$counter}", 'Total Monthly Cash');
-        foreach ($paymentTypes as $paymentType) {
+        $worksheet->setCellValue("A{$counter}", 'Total Monthly');
+        foreach ($coaList as $coa) {
             $worksheet->getStyle("{$columnCounter}{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
-            $worksheet->setCellValue("{$columnCounter}{$counter}", CHtml::encode($paymentDailyTotals[$paymentType->id]));
+            $worksheet->setCellValue("{$columnCounter}{$counter}", CHtml::encode($paymentDailyTotals[$coa->id]));
             $columnCounter++;
         }
         $worksheet->setCellValue("{$columnCounter}{$counter}", CHtml::encode($dailyTotal));
-        $worksheet->getStyle("A{$counter}:N{$counter}")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A{$counter}:Z{$counter}")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
         $counter++;$counter++;
 
         for ($col = 'A'; $col !== 'Z'; $col++) {
@@ -251,7 +251,7 @@ class PaymentMonthlyController extends Controller {
         ob_end_clean();
 
         header('Content-type: application/vnd.ms-excel');
-        header('Content-Disposition: attachment;filename="Laporan Payment Bulanan.xls"');
+        header('Content-Disposition: attachment;filename="Laporan Bank Bulanan.xls"');
         header('Cache-Control: max-age=0');
 
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');

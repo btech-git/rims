@@ -43,6 +43,7 @@
                 <th class="width1-6">Status</th>
                 <th class="width1-7">Amount</th>
                 <th class="width1-8">Work Order</th>
+                <th class="width1-8">Sales Order</th>
                 <th class="width1-9">Movement Out</th>
                 <th class="width1-10">Invoice</th>
                 <th class="width1-11">Tanggal Invoice</th>
@@ -75,6 +76,7 @@
                         <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($header, 'grand_total'))); ?>
                     </td>
                     <td class="width1-8"><?php echo CHtml::encode(CHtml::value($header, 'work_order_number')); ?></td>
+                    <td class="width1-8"><?php echo CHtml::encode(CHtml::value($header, 'sales_order_number')); ?></td>
                     <td class="width1-9"><?php echo CHtml::encode(implode(', ', $movementOutHeaderCodeNumbers)); ?></td>
                     <td class="width1-10"><?php echo CHtml::encode(implode(', ', $invoiceHeaderCodeNumbers)); ?></td>
                     <td class="width1-3"><?php echo CHtml::encode(implode(', ', $invoiceHeaderTransactionDates)); ?></td>

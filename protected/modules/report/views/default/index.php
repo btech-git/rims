@@ -495,6 +495,11 @@
                                         'url' => array('/report/paymentMonthly/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('director')
                                     ),
+                                    array(
+                                        'label' => 'Laporan Bank Bulanan', 
+                                        'url' => array('/report/paymentByBankMonthly/summary'), 
+                                        'visible' => Yii::app()->user->checkAccess('director')
+                                    ),
                                 ),
                             )); ?>
                         <?php endif; ?>
