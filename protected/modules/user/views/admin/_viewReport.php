@@ -208,6 +208,13 @@
             </td>
         </tr>
         <tr>
+            <td>Rincian Penjualan Ppn</td>
+            <td style="text-align: center">
+                <?php //echo $counter; ?>
+                <?php echo CHtml::checkBox("User[roles][saleTaxReport]", CHtml::resolveValue($model, "roles[saleTaxReport]"), array('id' => 'User_roles_' . $counter++, 'value' => 'saleTaxReport')); ?>
+            </td>
+        </tr>
+        <tr>
             <td>Penjualan Jasa + Kategori Produk</td>
             <td style="text-align: center">
                 <?php //echo $counter; ?>
@@ -291,6 +298,13 @@
             <td style="text-align: center">
                 <?php //echo $counter; ?>
                 <?php echo CHtml::checkBox("User[roles][purchaseProductReport]", CHtml::resolveValue($model, "roles[purchaseProductReport]"), array('id' => 'User_roles_' . $counter++, 'value' => 'purchaseProductReport')); ?>
+            </td>
+        </tr>
+        <tr>
+            <td>Rincian Pembelian Ppn</td>
+            <td style="text-align: center">
+                <?php //echo $counter; ?>
+                <?php echo CHtml::checkBox("User[roles][purchaseTaxReport]", CHtml::resolveValue($model, "roles[purchaseTaxReport]"), array('id' => 'User_roles_' . $counter++, 'value' => 'purchaseTaxReport')); ?>
             </td>
         </tr>
         <tr>

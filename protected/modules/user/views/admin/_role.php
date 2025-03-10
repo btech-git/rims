@@ -95,35 +95,35 @@
             'Setting Company' => array(
                 'content' => $this->renderPartial(
                     '_viewCompany',
-                    array('model' => $model, 'counter' => $counter+198),
+                    array('model' => $model, 'counter' => $counter+200),
                     true
                 )
             ),
             'Setting Accounting' => array(
                 'content' => $this->renderPartial(
                     '_viewAccounting',
-                    array('model' => $model, 'counter' => $counter+232),
+                    array('model' => $model, 'counter' => $counter+234),
                     true
                 )
             ),
             'Setting Product' => array(
                 'content' => $this->renderPartial(
                     '_viewProduct',
-                    array('model' => $model, 'counter' => $counter+248),
+                    array('model' => $model, 'counter' => $counter+250),
                     true
                 )
             ),
             'Setting Service' => array(
                 'content' => $this->renderPartial(
                     '_viewService',
-                    array('model' => $model, 'counter' => $counter+285),
+                    array('model' => $model, 'counter' => $counter+287),
                     true
                 )
             ),
             'Setting Vehicle' => array(
                 'content' => $this->renderPartial(
                     '_viewVehicle',
-                    array('model' => $model, 'counter' => $counter+322),
+                    array('model' => $model, 'counter' => $counter+324),
                     true
                 )
             ),

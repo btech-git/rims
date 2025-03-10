@@ -306,6 +306,11 @@
                                         'visible' => (Yii::app()->user->checkAccess('saleSummaryReport'))
                                     ),
                                     array(
+                                        'label' => 'Laporan Penjualan PPn (Rincian)', 
+                                        'url' => array('/report/saleInvoiceTaxOnlySummary/summary'), 
+                                        'visible' => Yii::app()->user->checkAccess('saleTaxReport')
+                                    ),
+                                    array(
                                         'label' => 'Penjualan Jasa + Kategori Produk', 
                                         'url' => array('/report/saleByProductCategoryServiceType/summary'), 
                                         'visible' => (Yii::app()->user->checkAccess('saleCustomerSummaryReport'))
@@ -439,6 +444,11 @@
                                         'url' => array('/report/purchasePerProductDetail/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('purchaseProductReport')
                                     ),
+                                    array(
+                                        'label' => 'Laporan Pembelian PPn (Rincian)', 
+                                        'url' => array('/report/purchaseInvoiceTaxOnlySummary/summary'), 
+                                        'visible' => Yii::app()->user->checkAccess('purchaseTaxReport')
+                                    ),
                                 ),
                             )); ?>
                         <?php endif; ?>
@@ -466,7 +476,7 @@
                                         'visible' => Yii::app()->user->checkAccess('fixedAssetReport')
                                     ),
                                     array(
-                                        'label' => 'Laporan Sales Yearly Summary', 
+                                        'label' => 'Laporan Penjualan Tahunan', 
                                         'url' => array('/report/yearlySaleSummary/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('director')
                                     ),
@@ -476,28 +486,23 @@
                                         'visible' => Yii::app()->user->checkAccess('director')
                                     ),
                                     array(
-                                        'label' => 'Laporan Penjualan PPn (Rincian)', 
-                                        'url' => array('/report/saleInvoiceTaxOnlySummary/summary'), 
-                                        'visible' => Yii::app()->user->checkAccess('director')
-                                    ),
-                                    array(
-                                        'label' => 'Laporan Pembelian PPn (Rincian)', 
-                                        'url' => array('/report/purchaseInvoiceTaxOnlySummary/summary'), 
-                                        'visible' => Yii::app()->user->checkAccess('director')
-                                    ),
-                                    array(
                                         'label' => 'Laporan Konfirmasi Transaksi Harian', 
                                         'url' => array('/report/dailyTransactionConfirmation/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('director')
                                     ),
                                     array(
-                                        'label' => 'Laporan Kas Bulanan', 
+                                        'label' => 'Laporan Payment Type Bulanan', 
                                         'url' => array('/report/paymentMonthly/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('director')
                                     ),
                                     array(
                                         'label' => 'Laporan Bank Bulanan', 
                                         'url' => array('/report/paymentByBankMonthly/summary'), 
+                                        'visible' => Yii::app()->user->checkAccess('director')
+                                    ),
+                                    array(
+                                        'label' => 'Laporan Penjualan Ppn Summary', 
+                                        'url' => array('/report/yearlySaleTaxSummary/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('director')
                                     ),
                                 ),
