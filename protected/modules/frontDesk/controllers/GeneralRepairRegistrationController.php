@@ -573,7 +573,7 @@ class GeneralRepairRegistrationController extends Controller {
         
         $movementOutHeader = MovementOutHeader::model()->findByAttributes(array('registration_transaction_id' => $id, 'user_id_cancelled' => null));
         $invoiceHeader = InvoiceHeader::model()->findByAttributes(array('registration_transaction_id' => $id, 'user_id_cancelled' => null));
-        if (empty($movementOutHeader && $invoiceHeader)) { 
+        if (empty($movementOutHeader) && empty($invoiceHeader)) { 
             $model = $this->loadModel($id);
             $model->status = 'CANCELLED!!!';
             $model->payment_status = 'CANCELLED!!!';
