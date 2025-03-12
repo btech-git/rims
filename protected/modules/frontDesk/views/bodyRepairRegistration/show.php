@@ -40,13 +40,6 @@ $this->breadcrumbs = array(
                                     'model' => $model,
                                 ), true)
                             ),
-                            'Messages' => array(
-                                'id' => 'info5',
-                                'content' => $this->renderPartial('_viewMemo', array(
-                                    'registrationMemos' => $registrationMemos,
-                                    'memo' => $memo,
-                                ), true)
-                            ),
                         ),
                         // additional javascript options for the tabs plugin
                         'options' => array(
