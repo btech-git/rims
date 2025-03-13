@@ -75,6 +75,7 @@ $('.search-form form').submit(function(){
                         'type' => 'raw',
                         'value' => 'CHtml::link(UHtml::markSearch($data,"username"),array("admin/view","id"=>$data->id))',
                     ),
+                    'email',
                     'create_at',
                     'employee.name',
                     array(
