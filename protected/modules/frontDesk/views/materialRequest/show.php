@@ -18,7 +18,7 @@ $this->breadcrumbs = array(
                 'dateTime',
                 array(
                     'name' => 'registration_transaction_id', 
-                    'value' => empty($materialRequest->registration_transaction_id) ? "" : CHTml::link($materialRequest->registrationTransaction->transaction_number, array($materialRequest->registrationTransaction->repair_type == "GR" ? "/frontDesk/generalRepairRegistration/view" : "/frontDesk/bodyRepairRegistration/view", "id" => $materialRequest->registration_transaction_id), array('target' => 'blank')),
+                    'value' => empty($materialRequest->registration_transaction_id) ? "" : CHtml::link($materialRequest->registrationTransaction->transaction_number, array($materialRequest->registrationTransaction->repair_type == "GR" ? "/frontDesk/generalRepairRegistration/view" : "/frontDesk/bodyRepairRegistration/view", "id" => $materialRequest->registration_transaction_id), array('target' => 'blank')),
                     'type'=>'raw',
                 ),
                 array(
