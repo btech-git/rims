@@ -79,7 +79,7 @@ $('.search-form form').submit(function(){
                         ),
                         array(
                             'header' => 'WO #',
-                            'value' => '!empty($data->material_request_header_id) ? $data->materialRequestHeader->registrationTransaction->work_order_number : ""'
+                            'value' => 'CHtml::encode(CHtml::value($data, "materialRequestHeader.registrationTransaction.work_order_number"))'
                         ),
 //                        array(
 //                            'header' => 'Customer Name',
