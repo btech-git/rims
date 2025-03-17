@@ -99,7 +99,7 @@ $('.search-form form').submit(function(){
                         ),
                         array(
                             'name' => 'user_id',
-                            'value' => '$data->user->username',
+                            'value' => 'empty($data->user_id) ? "" : $data->user->username',
                         ),
                     ),
                 )); ?>
