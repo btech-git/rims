@@ -12,7 +12,7 @@ Yii::app()->clientScript->registerScript('report', '
             <div class="myForm tabForm customer">
                 <?php echo CHtml::beginForm(array(''), 'get'); ?>
                 <div class="row">
-                    <div class="medium-6 columns">                        
+                    <div class="medium-6 columns">
                         <div class="field">
                             <div class="row collapse">
                                 <div class="small-2 columns">
@@ -47,6 +47,19 @@ Yii::app()->clientScript->registerScript('report', '
                                             'placeholder' => 'Sampai',
                                         ),
                                     )); ?>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="medium-6 columns">
+                        <div class="field">
+                            <div class="row collapse">
+                                <div class="small-4 columns">
+                                    <span class="prefix">Transaksi #</span>
+                                </div>
+                                
+                                <div class="small-8 columns">
+                                    <?php echo CHtml::activeTextField($transactionLog, 'transaction_number'); ?>
                                 </div>
                             </div>
                         </div>

@@ -60,12 +60,18 @@ class PaymentOutController extends Controller {
         $workOrderExpense = Search::bind(new WorkOrderExpenseHeader('search'), isset($_GET['WorkOrderExpenseHeader']) ? $_GET['WorkOrderExpenseHeader'] : array());
         $workOrderExpenseDataProvider = $workOrderExpense->searchForPaymentOut();
 
+        $itemRequestHeader = Search::bind(new ItemRequestHeader('search'), isset($_GET['ItemRequestHeader']) ? $_GET['ItemRequestHeader'] : array());
+        $itemRequestDataProvider = $itemRequestHeader->searchForPaymentOut();
+
         if (!empty($supplierId)) {
             $receiveItemDataProvider->criteria->addCondition("t.supplier_id = :supplier_id");
             $receiveItemDataProvider->criteria->params[':supplier_id'] = $supplierId;
             
             $workOrderExpenseDataProvider->criteria->addCondition("t.supplier_id = :supplier_id");
             $workOrderExpenseDataProvider->criteria->params[':supplier_id'] = $supplierId;
+            
+            $itemRequestDataProvider->criteria->addCondition("t.supplier_id = :supplier_id");
+            $itemRequestDataProvider->criteria->params[':supplier_id'] = $supplierId;
         }
         
         if (isset($_POST['Cancel'])) {
@@ -88,6 +94,8 @@ class PaymentOutController extends Controller {
             'receiveItemDataProvider' => $receiveItemDataProvider,
             'workOrderExpense' => $workOrderExpense,
             'workOrderExpenseDataProvider' => $workOrderExpenseDataProvider,
+            'itemRequestHeader' => $itemRequestHeader,
+            'itemRequestDataProvider' => $itemRequestDataProvider,
             'movementType' => $movementType,
         ));
     }
@@ -97,14 +105,22 @@ class PaymentOutController extends Controller {
         
         if ($movementType == 1) {
             $workOrderExpense = null;
+            $itemRequestHeader = null;
             $receiveItem = TransactionReceiveItem::model()->findByPk($transactionId);
             $supplier = Supplier::model()->findByPk($receiveItem->supplier_id);
             $paymentOut->header->supplier_id = $receiveItem->supplier_id;
         } elseif ($movementType == 2) {
             $receiveItem = null;
+            $itemRequestHeader = null;
             $workOrderExpense = WorkOrderExpenseHeader::model()->findByPk($transactionId);
             $supplier = Supplier::model()->findByPk($workOrderExpense->supplier_id);
             $paymentOut->header->supplier_id = $workOrderExpense->supplier_id;
+        } elseif ($movementType == 3) {
+            $workOrderExpense = null;
+            $receiveItem = null;
+            $itemRequestHeader = ItemRequestHeader::model()->findByPk($transactionId);
+            $supplier = Supplier::model()->findByPk($itemRequestHeader->supplier_id);
+            $paymentOut->header->supplier_id = $itemRequestHeader->supplier_id;
         } else {
             $paymentOut->header->supplier_id = null;
         }
@@ -136,6 +152,7 @@ class PaymentOutController extends Controller {
             'supplier' => $supplier,
             'receiveItem' => $receiveItem,
             'workOrderExpense' => $workOrderExpense,
+            'itemRequestHeader' => $itemRequestHeader,
             'movementType' => $movementType,
         ));
     }
@@ -184,6 +201,27 @@ class PaymentOutController extends Controller {
                 'branch_id' => $paymentOut->branch_id,
             ));
 
+            if (!empty($paymentOut->paymentType->coa_id)) {
+                $coaId = $paymentOut->paymentType->coa_id;
+            } elseif ($paymentOut->payment_type_id == 12) {
+                $coaId = $paymentOut->coa_id_deposit;
+            } else {
+                $coaId = $paymentOut->companyBank->coa_id;
+            }
+
+            $jurnalUmumKas = new JurnalUmum;
+            $jurnalUmumKas->kode_transaksi = $paymentOut->payment_number;
+            $jurnalUmumKas->tanggal_transaksi = $paymentOut->payment_date;
+            $jurnalUmumKas->coa_id = $coaId;
+            $jurnalUmumKas->branch_id = $paymentOut->branch_id;
+            $jurnalUmumKas->total = $paymentOut->payment_amount;
+            $jurnalUmumKas->debet_kredit = 'K';
+            $jurnalUmumKas->tanggal_posting = date('Y-m-d');
+            $jurnalUmumKas->transaction_subject = $paymentOut->supplier->company;
+            $jurnalUmumKas->is_coa_category = 0;
+            $jurnalUmumKas->transaction_type = 'Pout';
+            $jurnalUmumKas->save();
+
             foreach ($paymentOut->payOutDetails as $detail) {
                 $invoiceNumber = empty($detail->receive_item_id) ? '' : $detail->receiveItem->invoice_number;
                 $jurnalHutang = new JurnalUmum;
@@ -198,27 +236,6 @@ class PaymentOutController extends Controller {
                 $jurnalHutang->is_coa_category = 0;
                 $jurnalHutang->transaction_type = 'Pout';
                 $jurnalHutang->save();
-
-                if (!empty($paymentOut->paymentType->coa_id)) {
-                    $coaId = $paymentOut->paymentType->coa_id;
-                } elseif ($paymentOut->payment_type_id == 12) {
-                    $coaId = $paymentOut->coa_id_deposit;
-                } else {
-                    $coaId = $paymentOut->companyBank->coa_id;
-                }
-
-                $jurnalUmumKas = new JurnalUmum;
-                $jurnalUmumKas->kode_transaksi = $paymentOut->payment_number;
-                $jurnalUmumKas->tanggal_transaksi = $paymentOut->payment_date;
-                $jurnalUmumKas->coa_id = $coaId;
-                $jurnalUmumKas->branch_id = $paymentOut->branch_id;
-                $jurnalUmumKas->total = $detail->amount;
-                $jurnalUmumKas->debet_kredit = 'K';
-                $jurnalUmumKas->tanggal_posting = date('Y-m-d');
-                $jurnalUmumKas->transaction_subject = $paymentOut->supplier->company . ', ' . $detail->memo . ', ' . $invoiceNumber;
-                $jurnalUmumKas->is_coa_category = 0;
-                $jurnalUmumKas->transaction_type = 'Pout';
-                $jurnalUmumKas->save();
             }
         }
         
@@ -297,6 +314,9 @@ class PaymentOutController extends Controller {
         $workOrderExpense = Search::bind(new WorkOrderExpenseHeader('search'), isset($_GET['WorkOrderExpenseHeader']) ? $_GET['WorkOrderExpenseHeader'] : array());
         $workOrderExpenseDataProvider = $workOrderExpense->searchForPaymentOut();
 
+        $itemRequest = Search::bind(new ItemRequestHeader('search'), isset($_GET['ItemRequestHeader']) ? $_GET['ItemRequestHeader'] : array());
+        $itemRequestDataProvider = $itemRequest->searchForPaymentOut();
+
         $this->render('admin', array(
             'paymentOut' => $paymentOut,
             'dataProvider' => $dataProvider,
@@ -308,6 +328,8 @@ class PaymentOutController extends Controller {
             'paymentApproval' => $paymentApproval,
             'workOrderExpense' => $workOrderExpense,
             'workOrderExpenseDataProvider' => $workOrderExpenseDataProvider,
+            'itemRequest' => $itemRequest,
+            'itemRequestDataProvider' => $itemRequestDataProvider,
         ));
     }
 
@@ -329,6 +351,27 @@ class PaymentOutController extends Controller {
                 $paymentOut->save(false);
 
                 if ($model->approval_type == 'Approved') {
+                    if (!empty($paymentOut->paymentType->coa_id)) {
+                        $coaId = $paymentOut->paymentType->coa_id;
+                    } elseif ($paymentOut->payment_type_id == 12) {
+                        $coaId = $paymentOut->coa_id_deposit;
+                    } else {
+                        $coaId = $paymentOut->companyBank->coa_id;
+                    }
+
+                    $jurnalUmumKas = new JurnalUmum;
+                    $jurnalUmumKas->kode_transaksi = $paymentOut->payment_number;
+                    $jurnalUmumKas->tanggal_transaksi = $paymentOut->payment_date;
+                    $jurnalUmumKas->coa_id = $coaId;
+                    $jurnalUmumKas->branch_id = $paymentOut->branch_id;
+                    $jurnalUmumKas->total = $paymentOut->payment_amount;
+                    $jurnalUmumKas->debet_kredit = 'K';
+                    $jurnalUmumKas->tanggal_posting = date('Y-m-d');
+                    $jurnalUmumKas->transaction_subject = $paymentOut->supplier->company;
+                    $jurnalUmumKas->is_coa_category = 0;
+                    $jurnalUmumKas->transaction_type = 'Pout';
+                    $jurnalUmumKas->save();
+                    
                     foreach ($paymentOut->payOutDetails as $detail) {
                         $invoiceNumber = empty($detail->receive_item_id) ? '' : $detail->receiveItem->invoice_number;
                         $jurnalHutang = new JurnalUmum;
@@ -343,27 +386,6 @@ class PaymentOutController extends Controller {
                         $jurnalHutang->is_coa_category = 0;
                         $jurnalHutang->transaction_type = 'Pout';
                         $jurnalHutang->save();
-
-                        if (!empty($paymentOut->paymentType->coa_id)) {
-                            $coaId = $paymentOut->paymentType->coa_id;
-                        } elseif ($paymentOut->payment_type_id == 12) {
-                            $coaId = $paymentOut->coa_id_deposit;
-                        } else {
-                            $coaId = $paymentOut->companyBank->coa_id;
-                        }
-
-                        $jurnalUmumKas = new JurnalUmum;
-                        $jurnalUmumKas->kode_transaksi = $paymentOut->payment_number;
-                        $jurnalUmumKas->tanggal_transaksi = $paymentOut->payment_date;
-                        $jurnalUmumKas->coa_id = $coaId;
-                        $jurnalUmumKas->branch_id = $paymentOut->branch_id;
-                        $jurnalUmumKas->total = $detail->amount;
-                        $jurnalUmumKas->debet_kredit = 'K';
-                        $jurnalUmumKas->tanggal_posting = date('Y-m-d');
-                        $jurnalUmumKas->transaction_subject = $paymentOut->supplier->company . ', ' . $detail->memo . ', ' . $invoiceNumber;
-                        $jurnalUmumKas->is_coa_category = 0;
-                        $jurnalUmumKas->transaction_type = 'Pout';
-                        $jurnalUmumKas->save();
                     }
                 }
 

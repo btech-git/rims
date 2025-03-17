@@ -10,6 +10,7 @@
     'supplier' => $supplier,
     'receiveItem' => $receiveItem,
     'workOrderExpense' => $workOrderExpense,
+    'itemRequestHeader' => $itemRequestHeader,
     'movementType' => $movementType,
 )); 
 

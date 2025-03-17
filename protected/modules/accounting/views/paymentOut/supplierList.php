@@ -28,7 +28,11 @@
             'name' => 'code',
             'value' => '$data->code',
         ),
-        'tenor',
+        array(
+            'header' => 'TOP (hari)',
+            'name' => 'tenor',
+            'value' => '$data->tenor',
+        ),
         array(
             'header' => 'PO',
             'type' => 'raw',
@@ -41,6 +45,14 @@
             'header' => 'Sub Pekerjaan',
             'type' => 'raw',
             'value' => 'CHtml::link("Create", array("create", "supplierId" => $data->id, "movementType" => 2))',
+            'htmlOptions' => array(
+                'style' => 'text-align: center;'
+            ),
+        ),
+        array(
+            'header' => 'Pembelian non stok',
+            'type' => 'raw',
+            'value' => 'CHtml::link("Create", array("create", "supplierId" => $data->id, "movementType" => 3))',
             'htmlOptions' => array(
                 'style' => 'text-align: center;'
             ),

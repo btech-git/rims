@@ -5,11 +5,15 @@
                 <th style="text-align: center; width: 17%">Sub Pekerjaan #</th>
                 <th style="text-align: center; width: 12%">Tanggal</th>
                 <th style="text-align: center; width: 17%">RG #</th>
-            <?php else: ?>
+            <?php elseif ($movementType == 1): ?>
                 <th style="text-align: center; width: 12%">Invoice #</th>
                 <th style="text-align: center; width: 12%">Tanggal</th>
                 <th style="text-align: center; width: 12%">SJ #</th>
                 <th style="text-align: center; width: 12%">Jatuh Tempo</th>
+            <?php elseif ($movementType == 3): ?>
+                <th style="text-align: center; width: 12%">Pembelian #</th>
+                <th style="text-align: center; width: 12%">Tanggal</th>
+                <th style="text-align: center; width: 12%">Note</th>
             <?php endif; ?>
             <th style="text-align: center; width: 12%">Invoice</th>
             <th style="text-align: center; width: 12%">Payment</th>
@@ -20,57 +24,47 @@
     <tbody>
         <?php foreach ($paymentOut->details as $i => $detail): ?>
             <tr style="background-color: azure">
+                <td style="display: none">
+                    <?php echo CHtml::activeHiddenField($detail, "[$i]receive_item_id"); ?>
+                    <?php echo CHtml::activeHiddenField($detail, "[$i]work_order_expense_header_id"); ?>
+                    <?php echo CHtml::activeHiddenField($detail, "[$i]item_request_header_id"); ?>
+                </td>
                 <?php if ($movementType == 2): ?>
+                    <?php $workOrderExpenseHeader = WorkOrderExpenseHeader::model()->findByPk($detail->work_order_expense_header_id); ?>
                     <td>
-                        <?php $workOrderExpenseHeader = WorkOrderExpenseHeader::model()->findByPk($detail->work_order_expense_header_id); ?>
-                        <?php echo CHtml::activeHiddenField($detail, "[$i]receive_item_id"); ?>
-                        <?php echo CHtml::activeHiddenField($detail, "[$i]work_order_expense_header_id"); ?>
                         <?php echo CHtml::encode(CHtml::value($workOrderExpenseHeader, 'transaction_number')); ?>
                         <?php echo CHtml::error($detail, 'work_order_expense_header_id'); ?>
                     </td>
-
                     <td>
                         <?php echo CHtml::encode(Yii::app()->dateFormatter->format("d MMM yyyy", CHtml::value($workOrderExpenseHeader, 'transaction_date'))); ?>
                     </td>
-
+                    <td><?php echo CHtml::encode(CHtml::value($workOrderExpenseHeader, 'registrationTransaction.transaction_number')); ?></td>
+                <?php elseif ($movementType == 1): ?>
+                    <?php $receiveItem = TransactionReceiveItem::model()->findByPk($detail->receive_item_id); ?>
                     <td>
-                        <?php echo CHtml::encode(CHtml::value($workOrderExpenseHeader, 'registrationTransaction.transaction_number')); ?>
-                    </td>
-
-                    <td style="text-align: right">
-                        <?php echo CHtml::activeHiddenField($detail, "[$i]total_invoice"); ?>
-                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($workOrderExpenseHeader, 'grand_total'))); ?>
-                        <?php echo CHtml::error($detail, 'total_invoice'); ?>
-                    </td>
-
-                <?php else: ?>
-                    <td>
-                        <?php $receiveItem = TransactionReceiveItem::model()->findByPk($detail->receive_item_id); ?>
-                        <?php echo CHtml::activeHiddenField($detail, "[$i]receive_item_id"); ?>
-                        <?php echo CHtml::activeHiddenField($detail, "[$i]work_order_expense_header_id"); ?>
                         <?php echo CHtml::encode($receiveItem->invoice_number); ?>
                         <?php echo CHtml::error($detail, 'receive_item_id'); ?>
                     </td>
-
+                    <td><?php echo CHtml::encode(Yii::app()->dateFormatter->format("d MMM yyyy", CHtml::value($receiveItem, 'invoice_date'))); ?></td>
+                    <td><?php echo CHtml::encode(CHtml::value($receiveItem, 'supplier_delivery_number')); ?></td>
+                    <td><?php echo CHtml::encode(Yii::app()->dateFormatter->format("d MMM yyyy", CHtml::value($receiveItem, 'invoice_due_date'))); ?></td>
+                <?php elseif ($movementType == 3): ?>
+                    <?php $itemRequestHeader = ItemRequestHeader::model()->findByPk($detail->item_request_header_id); ?>
                     <td>
-                        <?php echo CHtml::encode(Yii::app()->dateFormatter->format("d MMM yyyy", CHtml::value($receiveItem, 'invoice_date'))); ?>
+                        <?php echo CHtml::encode(CHtml::value($itemRequestHeader, 'transaction_number')); ?>
+                        <?php echo CHtml::error($detail, 'item_request_header_id'); ?>
                     </td>
-
                     <td>
-                        <?php echo CHtml::encode(CHtml::value($receiveItem, 'supplier_delivery_number')); ?>
+                        <?php echo CHtml::encode(Yii::app()->dateFormatter->format("d MMM yyyy", CHtml::value($itemRequestHeader, 'transaction_date'))); ?>
                     </td>
-
-                    <td>
-                        <?php echo CHtml::encode(Yii::app()->dateFormatter->format("d MMM yyyy", CHtml::value($receiveItem, 'invoice_due_date'))); ?>
-                    </td>
-
-                    <td style="text-align: right">
-                        <?php echo CHtml::activeHiddenField($detail, "[$i]total_invoice"); ?>
-                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($detail, 'total_invoice'))); ?>
-                        <?php echo CHtml::error($detail, 'total_invoice'); ?>
-                    </td>
-
+                    <td><?php echo CHtml::encode(CHtml::value($itemRequestHeader, 'note')); ?></td>
                 <?php endif; ?>
+                    
+                <td style="text-align: right">
+                    <?php echo CHtml::activeHiddenField($detail, "[$i]total_invoice"); ?>
+                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($detail, 'total_invoice'))); ?>
+                    <?php echo CHtml::error($detail, 'total_invoice'); ?>
+                </td>
                 <td style="text-align: right">
                     <?php echo CHtml::activeTextField($detail, "[$i]amount", array(
                         'onchange' => '
@@ -111,7 +105,7 @@
     </tbody>
     <tfoot>
 	<tr style="background-color: aquamarine">
-            <td colspan=<?php echo $movementType == 2 ? 3 : 4; ?> style="text-align: right; font-weight: bold">Total</td>
+            <td colspan=<?php echo $movementType == 1 ? 4 : 3; ?> style="text-align: right; font-weight: bold">Total</td>
             <td style="text-align: right; font-weight: bold">
                 <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($paymentOut, 'totalInvoice'))); ?>
             </td>

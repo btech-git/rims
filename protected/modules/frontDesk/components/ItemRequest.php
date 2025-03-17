@@ -113,6 +113,8 @@ class ItemRequest extends CComponent {
     public function flush() {
         $this->header->total_quantity = $this->getTotalQuantity();
         $this->header->total_price = $this->getTotalPrice();
+        $this->header->total_payment = $this->header->getTotalPayment();
+        $this->header->remaining_payment = $this->header->getRemainingPayment();
         $valid = $this->header->save(false);
 
         foreach ($this->details as $detail) {

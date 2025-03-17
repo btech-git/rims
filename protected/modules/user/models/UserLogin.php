@@ -35,7 +35,7 @@ class UserLogin extends CFormModel {
     public function attributeLabels() {
         return array(
             'rememberMe' => UserModule::t("Remember Me"),
-            'username' => UserModule::t("Username or Email"),
+            'username' => UserModule::t("Username"),
             'password' => UserModule::t("Password"),
             'branchId' => UserModule::t("Branch"),
         );
@@ -44,12 +44,16 @@ class UserLogin extends CFormModel {
     public function assigned($attribute, $params) {
         if (!$this->hasErrors()) {
             $user = User::model()->findByAttributes(array('username' => $this->username));
-            if (!in_array('director', $user->roles)) {
-                $userBranches = UserBranch::model()->findAllByAttributes(array('users_id' => $user->id));
-                $userBranchIds = array_map(function($userBranch) { return $userBranch->branch_id; }, $userBranches);
-                if (empty($this->branchId) || !in_array($this->branchId, $userBranchIds)) {
-                    $this->addError("branchId", UserModule::t("Branch is not assigned to user."));
+            if ($user !== null) {
+                if (!in_array('director', $user->roles)) {
+                    $userBranches = UserBranch::model()->findAllByAttributes(array('users_id' => $user->id));
+                    $userBranchIds = array_map(function($userBranch) { return $userBranch->branch_id; }, $userBranches);
+                    if (empty($this->branchId) || !in_array($this->branchId, $userBranchIds)) {
+                        $this->addError("branchId", UserModule::t("Branch is not assigned to user."));
+                    }
                 }
+            } else {
+                $this->addError("username", UserModule::t("Username is incorrect."));
             }
         }
     }
@@ -67,9 +71,6 @@ class UserLogin extends CFormModel {
                 case UserIdentity::ERROR_NONE:
                     $duration = $this->rememberMe ? Yii::app()->controller->module->rememberMeTime : 36000;
                     Yii::app()->user->login($identity, $duration);
-                    break;
-                case UserIdentity::ERROR_EMAIL_INVALID:
-                    $this->addError("username", UserModule::t("Email is incorrect."));
                     break;
                 case UserIdentity::ERROR_USERNAME_INVALID:
                     $this->addError("username", UserModule::t("Username is incorrect."));

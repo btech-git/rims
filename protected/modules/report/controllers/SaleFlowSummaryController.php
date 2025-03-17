@@ -28,7 +28,7 @@ class SaleFlowSummaryController extends Controller {
 
         $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : date('Y-m-d');
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
-        $customerName = isset($_GET['CustomerName']) ? $_GET['CustomerName'] : null;
+        $customerId = (isset($_GET['CustomerId'])) ? $_GET['CustomerId'] : '';
         $plateNumber = isset($_GET['PlateNumber']) ? $_GET['PlateNumber'] : null;
         $branchId = isset($_GET['BranchId']) ? $_GET['BranchId'] : null;
         $transactionStatus = (isset($_GET['TransactionStatus'])) ? $_GET['TransactionStatus'] : '';
@@ -36,6 +36,10 @@ class SaleFlowSummaryController extends Controller {
         $currentPage = (isset($_GET['page'])) ? $_GET['page'] : '';
         $currentSort = (isset($_GET['sort'])) ? $_GET['sort'] : '';
         
+        $customer = Search::bind(new Customer('search'), isset($_GET['Customer']) ? $_GET['Customer'] : array());
+        $customerDataProvider = $customer->search();
+        $customerDataProvider->pagination->pageVar = 'page_dialog';
+
         $saleFlowSummary = new SaleFlowSummary($registrationTransaction->search());
         $saleFlowSummary->setupLoading();
         $saleFlowSummary->setupPaging($pageSize, $currentPage);
@@ -45,7 +49,7 @@ class SaleFlowSummaryController extends Controller {
             'endDate' => $endDate,
             'transactionStatus' => $transactionStatus,
             'branchId' => $branchId,
-            'customerName' => $customerName,
+            'customerId' => $customerId,
             'plateNumber' => $plateNumber,
         );
         $saleFlowSummary->setupFilter($filters);
@@ -66,7 +70,9 @@ class SaleFlowSummaryController extends Controller {
             'currentSort' => $currentSort,
             'transactionStatus' => $transactionStatus,
             'branchId' => $branchId,
-            'customerName' => $customerName,
+            'customerId' => $customerId,
+            'customer'=>$customer,
+            'customerDataProvider'=>$customerDataProvider,
             'plateNumber' => $plateNumber,
         ));
     }

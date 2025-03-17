@@ -66,6 +66,7 @@ class InvoiceDetail extends CActiveRecord {
             'service' => array(self::BELONGS_TO, 'Service', 'service_id'),
             'product' => array(self::BELONGS_TO, 'Product', 'product_id'),
             'quickService' => array(self::BELONGS_TO, 'QuickService', 'quick_service_id'),
+            'invoiceHeader' => array(self::BELONGS_TO, 'InvoiceHeader', 'invoice_id'),
         );
     }
 
@@ -114,6 +115,16 @@ class InvoiceDetail extends CActiveRecord {
         return $this->quantity * $this->unit_price - $this->discount;
     }
     
+    public function getTotalWithTax() {
+
+        return round($this->total_price * ($this->invoiceHeader->tax_percentage / 100), 0);
+    }
+
+    public function getTotalWithCoretax() {
+
+        return round($this->total_price * 11 / 12, 2);
+    }
+
     public static function graphAverageQuantitySalePerBranch() {
         
         $sql = "SELECT b.code AS branch_name, SUM(d.quantity)/12 AS average_quantity

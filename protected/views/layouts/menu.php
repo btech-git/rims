@@ -201,6 +201,11 @@
                         'visible' => (Yii::app()->user->checkAccess('purchaseOrderCreate') || Yii::app()->user->checkAccess('purchaseOrderEdit'))
                     ),
                     array(
+                        'label' => 'Pembelian Barang non stok', 
+                        'url' => array('/frontDesk/itemRequest/admin'), 
+                        'visible' => (Yii::app()->user->checkAccess('purchaseOrderCreate') || Yii::app()->user->checkAccess('purchaseOrderEdit'))
+                    ),
+                    array(
                         'label' => 'Perbandingan', 
                         'url' => array('/transaction/compare/step1'), 
                         'visible' => (Yii::app()->user->checkAccess('purchaseHead'))
@@ -216,6 +221,11 @@
                         'url' => array('/transaction/invoiceHeader/admin'), 
                         'visible' => (Yii::app()->user->checkAccess('saleInvoiceCreate') || Yii::app()->user->checkAccess('saleInvoiceEdit'))
                     ),
+//                    array(
+//                        'label' => 'Faktur Pajak Coretax', 
+//                        'url' => array('/accounting/saleInvoiceCoretax/admin'), 
+//                        'visible' => (Yii::app()->user->checkAccess('saleInvoiceCreate') || Yii::app()->user->checkAccess('saleInvoiceEdit'))
+//                    ),
                     array(
                         'label' => 'Sub Pekerjaan Luar', 
                         'url' => array('/accounting/workOrderExpense/admin'), 
@@ -347,11 +357,6 @@
                         'label' => 'Permintaan Bahan', 
                         'url' => array('/frontDesk/materialRequest/admin'), 
                         'visible' => (Yii::app()->user->checkAccess('materialRequestCreate') || Yii::app()->user->checkAccess('materialRequestEdit'))
-                    ),
-                    array(
-                        'label' => 'Permintaan Barang non stok', 
-                        'url' => array('/frontDesk/itemRequest/admin'), 
-//                        'visible' => (Yii::app()->user->checkAccess('itemRequestCreate') || Yii::app()->user->checkAccess('itemRequestEdit'))
                     ),
                     array(
                         'label' => 'Stok Gudang', 

@@ -96,7 +96,7 @@
 <br />
 
 <table style="background-color: greenyellow">
-    <?php if (empty($paymentOut->payOutDetails[0]->receive_item_id)): ?>
+    <?php if ($paymentOut->movement_type == 2): ?>
         <thead>
             <tr style="background-color: skyblue">
                 <th style="text-align: center; width: 15%">Sub Pekerjaan #</th>
@@ -115,11 +115,9 @@
                         <?php $workOrderExpenseHeader = WorkOrderExpenseHeader::model()->findByPk($detail->work_order_expense_header_id); ?>
                         <?php echo CHtml::encode($workOrderExpenseHeader->transaction_number); ?>
                     </td>
-
                     <td>
                         <?php echo CHtml::encode(Yii::app()->dateFormatter->format("d MMM yyyy", CHtml::value($workOrderExpenseHeader, 'transaction_date'))); ?>
                     </td>
-
                     <td>
                         <?php echo CHtml::link($workOrderExpenseHeader->registrationTransaction->transaction_number, array('javascript:;'), array(
                             'onclick' => 'window.open("' . CController::createUrl('/accounting/cashDailySummary/redirectTransaction', array(
@@ -127,22 +125,13 @@
                             )) . '", "_blank", "top=100, left=225, width=900, height=650"); return false;'
                         )); ?>
                     </td>
-
-                    <td style="text-align: right" colspan="3">
-                        <?php echo CHtml::encode(CHtml::value($detail, 'memo')); ?>
-                    </td>
-
-                    <td style="text-align: right">
-                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($detail, 'total_invoice'))); ?>
-                    </td>
-
-                    <td style="text-align: right">
-                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($detail, 'amount'))); ?>
-                    </td>
+                    <td style="text-align: right" colspan="3"><?php echo CHtml::encode(CHtml::value($detail, 'memo')); ?></td>
+                    <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($detail, 'total_invoice'))); ?></td>
+                    <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($detail, 'amount'))); ?></td>
                 </tr>
             <?php endforeach; ?>
         </tbody>
-    <?php else: ?>
+    <?php elseif ($paymentOut->movement_type == 1): ?>
         <thead>
             <tr style="background-color: skyblue">
                 <th style="text-align: center; width: 15%">Invoice #</th>
@@ -163,11 +152,9 @@
                         <?php $receiveItem = TransactionReceiveItem::model()->findByPk($detail->receive_item_id); ?>
                         <?php echo CHtml::encode($receiveItem->invoice_number); ?>
                     </td>
-
                     <td>
                         <?php echo CHtml::encode(Yii::app()->dateFormatter->format("d MMM yyyy", CHtml::value($receiveItem, 'invoice_date'))); ?>
                     </td>
-
                     <td>
                         <?php echo CHtml::link($receiveItem->purchaseOrder->purchase_order_no, array('javascript:;'), array(
                             'onclick' => 'window.open("' . CController::createUrl('/accounting/cashDailySummary/redirectTransaction', array(
@@ -175,23 +162,49 @@
                             )) . '", "_blank", "top=100, left=225, width=900, height=650"); return false;'
                         )); ?>
                     </td>
-
                     <td>
                         <?php echo CHtml::encode(Yii::app()->dateFormatter->format("d MMM yyyy", CHtml::value($receiveItem, 'purchaseOrder.purchase_order_date'))); ?>
                     </td>
-
                     <td>
                         <?php echo CHtml::encode(Yii::app()->dateFormatter->format("d MMM yyyy", CHtml::value($receiveItem, 'invoice_due_date'))); ?>
                     </td>
-
-                    <td style="text-align: right">
-                        <?php echo CHtml::encode(CHtml::value($detail, 'memo')); ?>
-                    </td>
-
+                    <td style="text-align: right"><?php echo CHtml::encode(CHtml::value($detail, 'memo')); ?></td>
                     <td style="text-align: right">
                         <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($detail, 'total_invoice'))); ?>
                     </td>
+                    <td style="text-align: right">
+                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($detail, 'amount'))); ?>
+                    </td>
+                </tr>
+            <?php endforeach; ?>
+        </tbody>
+    <?php elseif ($paymentOut->movement_type == 3): ?>
+        <thead>
+            <tr style="background-color: skyblue">
+                <th style="text-align: center; width: 15%">Pembelian #</th>
+                <th style="text-align: center; width: 15%">Tanggal</th>
+                <th style="text-align: center; width: 15%">Note</th>
+                <th style="text-align: center">Memo</th>
+                <th style="text-align: center; width: 15%">Total Invoice</th>
+                <th style="text-align: center; width: 15%">Payment</th>
+            </tr>
+        </thead>
 
+        <tbody>
+            <?php foreach ($paymentOutDetails as $detail): ?>
+                <tr style="background-color: azure">
+                    <td>
+                        <?php $itemRequestHeader = ItemRequestHeader::model()->findByPk($detail->item_request_header_id); ?>
+                        <?php echo CHtml::encode($itemRequestHeader->transaction_number); ?>
+                    </td>
+                    <td>
+                        <?php echo CHtml::encode(Yii::app()->dateFormatter->format("d MMM yyyy", CHtml::value($itemRequestHeader, 'transaction_date'))); ?>
+                    </td>
+                    <td style="text-align: right"><?php echo CHtml::encode(CHtml::value($itemRequestHeader, 'note')); ?></td>
+                    <td style="text-align: right"><?php echo CHtml::encode(CHtml::value($detail, 'memo')); ?></td>
+                    <td style="text-align: right">
+                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($detail, 'total_invoice'))); ?>
+                    </td>
                     <td style="text-align: right">
                         <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($detail, 'amount'))); ?>
                     </td>
@@ -202,7 +215,7 @@
     
     <tfoot>
         <tr>
-            <td style="text-align: right; font-weight: bold" colspan="6">Total</td>
+            <td style="text-align: right; font-weight: bold" colspan=<?php echo $paymentOut->movement_type == 3 ? 4 : 6; ?>>Total</td>
             <td style="text-align: right; font-weight: bold">
                 <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($paymentOut, 'totalInvoice'))); ?>
             </td>

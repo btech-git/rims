@@ -12,6 +12,8 @@
     'receiveItemDataProvider' => $receiveItemDataProvider,
     'workOrderExpense' => $workOrderExpense,
     'workOrderExpenseDataProvider' => $workOrderExpenseDataProvider,
+    'itemRequestHeader' => $itemRequestHeader,
+    'itemRequestDataProvider' => $itemRequestDataProvider,
     'movementType' => $movementType,
 )); ?>
 

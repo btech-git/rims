@@ -10,7 +10,6 @@ class UserIdentity extends CUserIdentity {
     private $_id;
     private $_branchId;
 
-    const ERROR_EMAIL_INVALID = 3;
     const ERROR_STATUS_NOTACTIV = 4;
     const ERROR_STATUS_BAN = 5;
 
@@ -26,11 +25,7 @@ class UserIdentity extends CUserIdentity {
         $user = User::model()->notsafe()->findByAttributes(array('username' => $this->username));
         
         if ($user === null) {
-            if (strpos($this->username, "@")) {
-                $this->errorCode = self::ERROR_EMAIL_INVALID;
-            } else {
-                $this->errorCode = self::ERROR_USERNAME_INVALID;
-            }
+            $this->errorCode = self::ERROR_USERNAME_INVALID;
         } else if (Yii::app()->getModule('user')->encrypting($this->password) !== $user->password) {
             $this->errorCode = self::ERROR_PASSWORD_INVALID;
         } else if ($user->status == 0 && Yii::app()->getModule('user')->loginNotActiv == false) {

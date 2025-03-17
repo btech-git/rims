@@ -61,60 +61,16 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                 </div>
 
                 <hr />
-                
-                <div style="font-weight: bold; text-align: center">
-                    <?php $branch = Branch::model()->findByPk($branchId); ?>
-                    <div style="font-size: larger">Raperind Motor <?php echo CHtml::encode(CHtml::value($branch, 'name')); ?></div>
-                    <div style="font-size: larger">Laporan Penjualan</div>
-                    <div><?php echo $monthList[$month] . ' ' . $year; ?></div>
-                </div>
-
-                <br />
 
                 <div class="relative">
-                    <?php $this->renderPartial('_summaryCompany', array(
+                    <?php $this->renderPartial('_summary', array(
                         'branchId' => $branchId,
                         'month' => $month,
                         'year' => $year,
                         'numberOfDays' => $numberOfDays,
                         'saleReportData' => $saleReportData,
                         'saleReportAllData' => $saleReportAllData,
-                        'productMasterCategoryList' => $productMasterCategoryList,
-                        'serviceCategoryList' => $serviceCategoryList,
-                        'monthList' => $monthList,
-                        'saleReportSummaryData' => $saleReportSummaryData,
-                        'saleReportSummaryAllData' => $saleReportSummaryAllData,
-                    )); ?>
-                </div>
-                <div class="clear"></div>
-                
-                <div class="relative">
-                    <?php $this->renderPartial('_summaryIndividual', array(
-                        'branchId' => $branchId,
-                        'month' => $month,
-                        'year' => $year,
-                        'numberOfDays' => $numberOfDays,
-                        'saleReportData' => $saleReportData,
-                        'saleReportAllData' => $saleReportAllData,
-                        'productMasterCategoryList' => $productMasterCategoryList,
-                        'serviceCategoryList' => $serviceCategoryList,
-                        'monthList' => $monthList,
-                        'saleReportSummaryData' => $saleReportSummaryData,
-                        'saleReportSummaryAllData' => $saleReportSummaryAllData,
-                    )); ?>
-                </div>
-                <div class="clear"></div>
-                
-                <div class="relative">
-                    <?php $this->renderPartial('_summaryAll', array(
-                        'branchId' => $branchId,
-                        'month' => $month,
-                        'year' => $year,
-                        'numberOfDays' => $numberOfDays,
-                        'saleReportData' => $saleReportData,
-                        'saleReportAllData' => $saleReportAllData,
-                        'productMasterCategoryList' => $productMasterCategoryList,
-                        'serviceCategoryList' => $serviceCategoryList,
+                        'productSubMasterCategoryList' => $productSubMasterCategoryList,
                         'monthList' => $monthList,
                         'saleReportSummaryData' => $saleReportSummaryData,
                         'saleReportSummaryAllData' => $saleReportSummaryAllData,

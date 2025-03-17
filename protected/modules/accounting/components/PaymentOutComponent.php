@@ -34,7 +34,8 @@ class PaymentOutComponent extends CComponent {
                     $detail = new PayOutDetail;
                     $detail->receive_item_id = $transactionId;
                     $detail->work_order_expense_header_id = null;
-                    $detail->total_invoice = $receiveItem->invoice_grand_total;
+                    $detail->item_request_header_id = null;
+                    $detail->total_invoice = $receiveItem->purchaseOrder->payment_left;
                     $this->details[] = $detail;
                 }
             } else {
@@ -54,8 +55,31 @@ class PaymentOutComponent extends CComponent {
                 if (!$exist) {
                     $detail = new PayOutDetail;
                     $detail->receive_item_id = null;
+                    $detail->item_request_header_id = null;
                     $detail->work_order_expense_header_id = $transactionId;
-                    $detail->total_invoice = $workOrderExpense->grand_total;
+                    $detail->total_invoice = $workOrderExpense->payment_remaining;
+                    $this->details[] = $detail;
+                }
+            } else {
+                $this->header->addError('error', 'Invoice tidak ada di dalam detail');
+            }
+        } elseif ($movementType == 3) {
+            $itemRequestHeader = ItemRequestHeader::model()->findByPk($transactionId);
+            
+            if ($itemRequestHeader != null) {
+                foreach ($this->details as $detail) {
+                    if ($detail->item_request_header_id == $itemRequestHeader->id) {
+                        $exist = TRUE;
+                        break;
+                    }
+                }
+
+                if (!$exist) {
+                    $detail = new PayOutDetail;
+                    $detail->receive_item_id = null;
+                    $detail->work_order_expense_header_id = null;
+                    $detail->item_request_header_id = $transactionId;
+                    $detail->total_invoice = $itemRequestHeader->remaining_payment;
                     $this->details[] = $detail;
                 }
             } else {
@@ -202,31 +226,37 @@ class PaymentOutComponent extends CComponent {
         $new_invoice = array();
 
         foreach ($this->details as $detail) {
-            if ($detail->amount <= 0.00)
+            if ($detail->amount <= 0.00) {
                 continue;
+            }
 
             if ($detail->isNewRecord) {
                 $detail->payment_out_id = $this->header->id;
             }
                 
-            $detail->total_invoice = empty($detail->receive_item_id) ? $detail->workOrderExpenseHeader->grand_total : $detail->receiveItem->grandTotal;
+//            $detail->total_invoice = empty($detail->receive_item_id) ? $detail->workOrderExpenseHeader->grand_total : $detail->receiveItem->grandTotal;
 
             $valid = $detail->save(false) && $valid;
             $new_invoice[] = $detail->id;
 
-            if (empty($detail->work_order_expense_header_id)) {
+            if (!empty($detail->receive_item_id)) {
                 $receiveItem = TransactionReceiveItem::model()->findByPk($detail->receive_item_id);
                 $purchaseOrder = TransactionPurchaseOrder::model()->findByPk($receiveItem->purchase_order_id);
                 $purchaseOrder->payment_amount = $purchaseOrder->getTotalPayment();
                 $purchaseOrder->payment_left = $purchaseOrder->getTotalRemaining();
                 $purchaseOrder->payment_status = $purchaseOrder->payment_left > 0 ? 'Partial Payment' : 'PAID';
-                $valid = $purchaseOrder->update(array('payment_amount', 'payment_left', 'payment_status')) && $valid;
-            } else {
+                $valid = $valid && $purchaseOrder->update(array('payment_amount', 'payment_left', 'payment_status'));
+            } elseif (!empty($detail->work_order_expense_header_id)) {
                 $workOrderExpenseHeader = WorkOrderExpenseHeader::model()->findByPk($detail->work_order_expense_header_id);
                 $workOrderExpenseHeader->total_payment = $workOrderExpenseHeader->getTotalPayment();
                 $workOrderExpenseHeader->payment_remaining = $workOrderExpenseHeader->getRemainingPayment();
-                $valid = $workOrderExpenseHeader->update(array('total_payment', 'payment_remaining')) && $valid;
-            }
+                $valid = $valid && $workOrderExpenseHeader->update(array('total_payment', 'payment_remaining'));
+            } elseif (!empty($detail->item_request_header_id)) {
+                $itemRequestHeader = ItemRequestHeader::model()->findByPk($detail->item_request_header_id);
+                $itemRequestHeader->total_payment = $itemRequestHeader->getTotalPayment();
+                $itemRequestHeader->remaining_payment = $itemRequestHeader->getRemainingPayment();
+                $valid = $valid && $itemRequestHeader->update(array('total_payment', 'remaining_payment'));
+            } 
         }
 
         //delete 

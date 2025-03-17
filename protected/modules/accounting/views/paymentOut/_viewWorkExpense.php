@@ -25,6 +25,11 @@
                 'value'=>'$data->transaction_date',
             ),
             array(
+                'name' => 'supplier_id',
+                'header' => 'Supplier',
+                'value' => '$data->supplier->name',
+            ),
+            array(
                 'header'=>'WO #', 
                 'value'=>'empty($data->registration_transaction_id) ? "" : $data->registrationTransaction->work_order_number', 
             ),

@@ -165,6 +165,12 @@ $('.search-form form').submit(function(){
                         'workOrderExpenseDataProvider' => $workOrderExpenseDataProvider,
                     ), true)
                 ),
+                'Pembelian non stok' => array(
+                    'content' => $this->renderPartial('_viewItemRequest', array(
+                        'itemRequest' => $itemRequest,
+                        'itemRequestDataProvider' => $itemRequestDataProvider,
+                    ), true)
+                ),
             ),
             // additional javascript options for the tabs plugin
             'options' => array(

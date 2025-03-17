@@ -601,6 +601,11 @@
                                         'url' => array('/report/stockAdjustment/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('director')
                                     ),
+                                    array(
+                                        'label' => 'Log Transaksi', 
+                                        'url' => array('/report/transactionLog/summary'), 
+                                        'visible' => Yii::app()->user->checkAccess('director')
+                                    ),
                                 ),
                             )); ?>
                         <?php //endif; ?>

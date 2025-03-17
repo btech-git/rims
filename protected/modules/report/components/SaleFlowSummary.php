@@ -35,7 +35,7 @@ class SaleFlowSummary extends CComponent {
         $endDate = (empty($filters['endDate'])) ? date('Y-m-d') : $filters['endDate'];
         $transactionStatus = (empty($filters['transactionStatus'])) ? '' : $filters['transactionStatus'];
         $branchId = (empty($filters['branchId'])) ? '' : $filters['branchId'];
-        $customerName = (empty($filters['customerName'])) ? '' : $filters['customerName'];
+        $customerId = (empty($filters['customerId'])) ? '' : $filters['customerId'];
         $plateNumber = (empty($filters['plateNumber'])) ? '' : $filters['plateNumber'];
         
         $statusConditionSql = '';
@@ -51,8 +51,8 @@ class SaleFlowSummary extends CComponent {
             $branchConditionSql = ' AND t.branch_id = :branch_id';
         }
 
-        if (!empty($customerName)) {
-            $customerConditionSql = ' AND customer.name LIKE :customer_name';
+        if (!empty($customerId)) {
+            $customerConditionSql = ' AND t.customer_id = :customer_id';
         }
 
         if (!empty($plateNumber)) {
@@ -72,8 +72,8 @@ class SaleFlowSummary extends CComponent {
         if (!empty($branchId)) {
             $this->dataProvider->criteria->params[':branch_id'] = $branchId;
         }
-        if (!empty($customerName)) {
-            $this->dataProvider->criteria->params[':customer_name'] = "%{$customerName}%";
+        if (!empty($customerId)) {
+            $this->dataProvider->criteria->params[':customer_id'] = $customerId;
         }
         if (!empty($plateNumber)) {
             $this->dataProvider->criteria->params[':plate_number'] = "%{$plateNumber}%";

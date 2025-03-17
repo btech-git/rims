@@ -49,6 +49,21 @@ class ItemRequestController extends Controller {
         $itemRequest->header->status_document = 'Draft';
         $itemRequest->header->branch_id = Yii::app()->user->branch_id;
 
+        $supplier = new Supplier('search');
+        $supplier->unsetAttributes();  // clear any default values
+        if (isset($_GET['Supplier'])) {
+            $supplier->attributes = $_GET['Supplier'];
+        }
+        $supplierCriteria = new CDbCriteria;
+        $supplierCriteria->compare('t.name', $supplier->name, true);
+        $supplierCriteria->compare('t.company', $supplier->company, true);
+        $supplierDataProvider = new CActiveDataProvider('Supplier', array(
+            'criteria' => $supplierCriteria,
+            'sort' => array(
+                "defaultOrder" => "t.status ASC, t.name ASC",
+            ),
+        ));
+
         if (isset($_POST['Submit']) && IdempotentManager::check()) {
             $this->loadState($itemRequest);
             $itemRequest->generateCodeNumber(Yii::app()->dateFormatter->format('M', strtotime($itemRequest->header->transaction_date)), Yii::app()->dateFormatter->format('yyyy', strtotime($itemRequest->header->transaction_date)), $itemRequest->header->branch_id);
@@ -64,6 +79,8 @@ class ItemRequestController extends Controller {
 
         $this->render('create', array(
             'itemRequest' => $itemRequest,
+            'supplier' => $supplier,
+            'supplierDataProvider' => $supplierDataProvider,
         ));
     }
 
@@ -181,6 +198,35 @@ class ItemRequestController extends Controller {
             'itemRequest' => $itemRequest,
             'historis' => $historis,
         ));
+    }
+
+    public function actionAjaxJsonSupplier($id) {
+        if (Yii::app()->request->isAjaxRequest) {
+
+            $itemRequest = $this->instantiate($id);
+            $this->loadState($itemRequest);
+            $supplier = Supplier::model()->findByPk($itemRequest->header->supplier_id);
+
+            $object = array(
+                'supplier_name' => $supplier->name,
+            );
+
+            echo CJSON::encode($object);
+        }
+    }
+
+    public function actionAjaxHtmlRemoveDetailSupplier($id) {
+        if (Yii::app()->request->isAjaxRequest) {
+
+            $itemRequest = $this->instantiate($id);
+            $this->loadState($itemRequest);
+
+            $itemRequest->details[] = array();
+
+            $this->renderPartial('_detail', array(
+                'itemRequest' => $itemRequest,
+            ));
+        }
     }
 
     public function actionAjaxHtmlAddProduct($id) {

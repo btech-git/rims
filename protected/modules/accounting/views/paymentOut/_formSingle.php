@@ -236,6 +236,7 @@
             'paymentOut' => $paymentOut,
             'receiveItem' => $receiveItem,
             'workOrderExpense' => $workOrderExpense,
+            'itemRequestHeader' => $itemRequestHeader,
             'movementType' => $movementType,
         )); ?>
     </div>

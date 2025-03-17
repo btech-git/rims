@@ -83,11 +83,15 @@ class ProductPricingRequestController extends Controller {
             $model->attributes = $_POST['ProductPricingRequest'];
             
             $fileName = CUploadedFile::getInstanceByName('file');
-            $model->file = $fileName;
-            $model->extension = $fileName->extensionName;
+            if ($fileName !== null) {
+                $model->file = $fileName;
+                $model->extension = $fileName->extensionName;
+            }
 
             if ($model->save(Yii::app()->db)) {
-                $this->saveImageFile($model);
+                if ($fileName !== null) {
+                    $this->saveImageFile($model);
+                }
                 $this->redirect(array('view', 'id' => $model->id));
             }
         }

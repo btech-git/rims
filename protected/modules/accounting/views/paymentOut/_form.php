@@ -224,8 +224,10 @@
         <?php if ($paymentOut->header->isNewRecord): ?>
             <?php if ($movementType == 1): ?>
                 <?php echo CHtml::button('Tambah Invoice PO', array('name' => 'Search', 'onclick' => '$("#purchase-invoice-dialog").dialog("open"); return false;', 'onkeypress' => 'if (event.keyCode == 13) { $("#purchase-invoice-dialog").dialog("open"); return false; }')); ?>
-            <?php else: ?>
+            <?php elseif ($movementType == 2): ?>
                 <?php echo CHtml::button('Tambah Invoice Sub Pekerjaan', array('name' => 'Search', 'onclick' => '$("#work-order-expense-dialog").dialog("open"); return false;', 'onkeypress' => 'if (event.keyCode == 13) { $("#work-order-expense-dialog").dialog("open"); return false; }')); ?>
+            <?php elseif ($movementType == 3): ?>
+                <?php echo CHtml::button('Tambah Pembelian non stok', array('name' => 'Search', 'onclick' => '$("#item-request-dialog").dialog("open"); return false;', 'onkeypress' => 'if (event.keyCode == 13) { $("#item-request-dialog").dialog("open"); return false; }')); ?>
             <?php endif; ?>
         <?php endif; ?>
         <?php echo CHtml::hiddenField('PurchaseInvoiceId'); ?>
@@ -236,6 +238,9 @@
     <div id="detail_div">
         <?php $this->renderPartial('_detail', array(
             'paymentOut' => $paymentOut,
+            'receiveItem' => $receiveItem,
+            'workOrderExpense' => $workOrderExpense,
+            'itemRequestHeader' => $itemRequestHeader,
             'movementType' => $movementType,
         )); ?>
     </div>
@@ -338,14 +343,16 @@
                 'htmlOptions' => array('style' => 'text-align: right'),
             ),
             array(
-                'name' => 'user_id_invoice',
+                'header' => 'Payment',
                 'filter' => false,
-                'header' => 'Admin',
-                'value' => 'empty($data->user_id_invoice) ? "N/A" : $data->userIdInvoice->username',
+                'value' => 'number_format(CHtml::value($data, "purchaseOrder.payment_amount"), 2)',
+                'htmlOptions' => array('style' => 'text-align: right'),
             ),
             array(
-                'header' => 'Tanggal Input',
-                'value' => '$data->dateTimeCreated',
+                'header' => 'Remaining',
+                'filter' => false,
+                'value' => 'number_format(CHtml::value($data, "purchaseOrder.payment_left"), 2)',
+                'htmlOptions' => array('style' => 'text-align: right'),
             ),
         ),
     )); ?>
@@ -413,6 +420,24 @@
                 'header' => 'Plate #',
                 'value' => 'CHtml::value($data, "registrationTransaction.vehicle.plate_number")',
             ),
+            array(
+                'header' => 'Total',
+                'filter' => false,
+                'value' => 'number_format(CHtml::value($data, "grand_total"), 2)',
+                'htmlOptions' => array('style' => 'text-align: right'),
+            ),
+            array(
+                'header' => 'Payment',
+                'filter' => false,
+                'value' => 'number_format(CHtml::value($data, "total_payment"), 2)',
+                'htmlOptions' => array('style' => 'text-align: right'),
+            ),
+            array(
+                'header' => 'Remaining',
+                'filter' => false,
+                'value' => 'number_format(CHtml::value($data, "payment_remaining"), 2)',
+                'htmlOptions' => array('style' => 'text-align: right'),
+            ),
         ),
     )); ?>
 
@@ -422,6 +447,78 @@
         'success' => 'js:function(html) {
             $("#detail_div").html(html);
             $("#work-order-expense-dialog").dialog("close");
+        }'
+    )); ?>
+
+    <?php echo CHtml::endForm(); ?>
+    <?php $this->endWidget('zii.widgets.jui.CJuiDialog'); ?>
+
+    <?php $this->beginWidget('zii.widgets.jui.CJuiDialog', array(
+        'id' => 'item-request-dialog',
+        // additional javascript options for the dialog plugin
+        'options' => array(
+            'title' => 'Pembelian non stok',
+            'autoOpen' => false,
+            'width' => 'auto',
+            'modal' => true,
+        ),
+    )); ?>
+
+    <?php echo CHtml::beginForm('', 'post'); ?>
+    <?php $this->widget('zii.widgets.grid.CGridView', array(
+        'id' => 'item-request-grid',
+        'dataProvider' => $itemRequestDataProvider,
+        'filter' => $itemRequestHeader,
+        'template' => '{items}<div class="clearfix">{summary}{pager}</div>',
+        'pager' => array(
+            'cssFile' => false,
+            'header' => '',
+        ),
+        'columns' => array(
+            array(
+                'id' => 'selectedIds',
+                'class' => 'CCheckBoxColumn',
+                'selectableRows' => '50',
+            ),
+            array(
+                'name'=>'transaction_number', 
+                'header' => 'Pembelian #',
+                'value'=>'CHtml::link($data->transaction_number, array("/frontDesk/itemRequest/view", "id"=>$data->id))', 
+                'type'=>'raw'
+            ),
+            array(
+                'name'=>'transaction_date', 
+                'header' => 'Tanggal',
+                'value'=>'$data->transaction_date',
+            ),
+            'note',
+            array(
+                'header' => 'Total',
+                'filter' => false,
+                'value' => 'number_format(CHtml::value($data, "total_price"), 2)',
+                'htmlOptions' => array('style' => 'text-align: right'),
+            ),
+            array(
+                'header' => 'Payment',
+                'filter' => false,
+                'value' => 'number_format(CHtml::value($data, "total_payment"), 2)',
+                'htmlOptions' => array('style' => 'text-align: right'),
+            ),
+            array(
+                'header' => 'Remaining',
+                'filter' => false,
+                'value' => 'number_format(CHtml::value($data, "remaining_payment"), 2)',
+                'htmlOptions' => array('style' => 'text-align: right'),
+            ),
+        ),
+    )); ?>
+
+    <?php echo CHtml::ajaxSubmitButton('Add', CController::createUrl('ajaxHtmlAddInvoices', array('id' => $paymentOut->header->id, 'movementType' => 3)), array(
+        'type' => 'POST',
+        'data' => 'js:$("form").serialize()',
+        'success' => 'js:function(html) {
+            $("#detail_div").html(html);
+            $("#item-request-dialog").dialog("close");
         }'
     )); ?>
 
