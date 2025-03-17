@@ -77,10 +77,10 @@ $('.search-form form').submit(function(){
                             'header' => 'Permintaan Bahan #',
                             'value' => '!empty($data->material_request_header_id) ? $data->materialRequestHeader->transaction_number : ""'
                         ),
-//                        array(
-//                            'header' => 'WO #',
-//                            'value' => '!empty($data->material_request_header_id) ? $data->materialRequestHeader->registrationTransaction->work_order_number : ""'
-//                        ),
+                        array(
+                            'header' => 'WO #',
+                            'value' => '!empty($data->material_request_header_id) ? $data->materialRequestHeader->registrationTransaction->work_order_number : ""'
+                        ),
 //                        array(
 //                            'header' => 'Customer Name',
 //                            'value' => '!empty($data->material_request_header_id) ? $data->materialRequestHeader->registrationTransaction->customer->name : ""',
