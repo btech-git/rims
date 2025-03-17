@@ -79,24 +79,24 @@ $('.search-form form').submit(function(){
                         ),
                         array(
                             'header' => 'WO #',
-                            'value' => 'CHtml::encode(CHtml::value($data, "materialRequestHeader.registrationTransaction.work_order_number"))'
+                            'value' => 'CHtml::encode(CHtml::value($data, "materialRequestHeader.registrationTransaction.work_order_number"))',
                         ),
-//                        array(
-//                            'header' => 'Customer Name',
-//                            'value' => '!empty($data->material_request_header_id) ? $data->materialRequestHeader->registrationTransaction->customer->name : ""',
-//                        ),
-//                        array(
-//                            'header' => 'Vehicle', 
-//                            'value' => '!empty($data->material_request_header_id) ? $data->materialRequestHeader->registrationTransaction->vehicle->plate_number : ""'
-//                        ),
-//                        array(
-//                            'header' => 'Car Make',
-//                            'value' => '!empty($data->material_request_header_id) ? $data->materialRequestHeader->registrationTransaction->vehicle->carMake->name : ""'
-//                        ),
-//                        array(
-//                            'header'=>'Car Model',
-//                            'value'=>'!empty($data->material_request_header_id) ? $data->materialRequestHeader->registrationTransaction->vehicle->carModel->name : ""'
-//                        ),
+                        array(
+                            'header' => 'Customer Name',
+                            'value' => 'CHtml::encode(CHtml::value($data, "materialRequestHeader.registrationTransaction.customer.name"))',
+                        ),
+                        array(
+                            'header' => 'Vehicle', 
+                            'value' => 'CHtml::encode(CHtml::value($data, "materialRequestHeader.registrationTransaction.vehicle.plate_number"))',
+                        ),
+                        array(
+                            'header' => 'Car Make',
+                            'value' => 'CHtml::encode(CHtml::value($data, "materialRequestHeader.registrationTransaction.vehicle.carMake.name"))',
+                        ),
+                        array(
+                            'header'=>'Car Model',
+                            'value' => 'CHtml::encode(CHtml::value($data, "materialRequestHeader.registrationTransaction.vehicle.carModel.name"))',
+                        ),
                         array(
                             'name' => 'user_id',
                             'value' => 'empty($data->user_id) ? "" : $data->user->username',
