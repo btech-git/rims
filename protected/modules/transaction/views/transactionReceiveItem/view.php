@@ -246,6 +246,7 @@ $this->menu = array(
         <table>
             <thead>
                 <tr>
+                    <td>ID</td>
                     <td>Product</td>
                     <td>Code</td>
                     <td>Kategori</td>
@@ -268,6 +269,7 @@ $this->menu = array(
             <tbody>
                 <?php foreach ($recieveDetails as $key => $recieveDetail): ?>
                     <tr>
+                        <td><?php echo $recieveDetail->product_id == NULL ? '-' : $recieveDetail->product->id; ?></td>
                         <td><?php echo $recieveDetail->product_id == NULL ? '-' : $recieveDetail->product->name; ?></td>
                         <td><?php echo CHtml::encode(CHtml::value($recieveDetail, 'product.manufacturer_code')); ?></td>
                         <td><?php echo CHtml::encode(CHtml::value($recieveDetail, 'product.masterSubCategoryCode')); ?></td>
