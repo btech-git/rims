@@ -15,6 +15,8 @@
  * @property string $lastvisit_at
  * @property integer $employee_id
  * @property integer $branch_id
+ * @property integer $is_main_access
+ * @property integer $is_front_access
  *
  * The followings are the available model relations:
  * @property Profiles $profiles
@@ -58,13 +60,13 @@ class Users extends CActiveRecord {
         // will receive user inputs.
         return array(
             array('create_at', 'required'),
-            array('superuser, status, employee_id, branch_id', 'numerical', 'integerOnly' => true),
+            array('superuser, status, employee_id, branch_id, is_main_access, is_front_access', 'numerical', 'integerOnly' => true),
             array('username', 'length', 'max' => 20),
             array('password, email, activkey', 'length', 'max' => 128),
             array('lastvisit_at', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, username, password, email, activkey, superuser, status, create_at, lastvisit_at, employee_id, branch_id,employee_name, branch_name', 'safe', 'on' => 'search'),
+            array('id, username, password, email, activkey, superuser, status, create_at, lastvisit_at, employee_id, branch_id,employee_name, branch_name, is_main_access, is_front_access', 'safe', 'on' => 'search'),
         );
     }
 
@@ -116,6 +118,8 @@ class Users extends CActiveRecord {
             'lastvisit_at' => 'Lastvisit At',
             'employee_id' => 'Employee',
             'branch_id' => 'Branch',
+            'is_main_access' => 'Is Main Access',
+            'is_front_access' => 'Is Front Access',
         );
     }
 
@@ -147,6 +151,8 @@ class Users extends CActiveRecord {
         $criteria->compare('lastvisit_at', $this->lastvisit_at, true);
         $criteria->compare('employee_id', $this->employee_id);
         $criteria->compare('branch_id', $this->branch_id);
+        $criteria->compare('is_main_access', $this->is_main_access);
+        $criteria->compare('is_front_access', $this->is_front_access);
 
         $criteria->together = true;
         $criteria->with = array('branch', 'employee');
