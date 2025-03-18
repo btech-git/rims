@@ -14,8 +14,8 @@ Yii::app()->clientScript->registerScript('userRoles', "
     }
 
     $(document).ready(function(){
-        checkRoles(0, 1, 350);
-        checkRoles(1, 2, 350);
+        checkRoles(0, 1, 363);
+        checkRoles(1, 2, 363);
         checkRoles(2, 3, 7);
         checkRoles(8, 9, 22);
         checkRoles(23, 24, 31);
@@ -33,14 +33,15 @@ Yii::app()->clientScript->registerScript('userRoles', "
         checkRoles(252, 253, 288);
         checkRoles(290, 291, 325);
         checkRoles(326, 327, 350);
+        checkRoles(351, 352, 363);
     });
 
     $('#" . CHtml::activeId($model, 'roles') . "_0').click(function(){
-        checkRoles(0, 1, 348);
+        checkRoles(0, 1, 363);
     });
 
     $('#" . CHtml::activeId($model, 'roles') . "_1').click(function(){
-        checkRoles(1, 2, 348);
+        checkRoles(1, 2, 363);
     })
 
     $('#" . CHtml::activeId($model, 'roles') . "_2').click(function(){
@@ -109,6 +110,40 @@ Yii::app()->clientScript->registerScript('userRoles', "
 		
     $('#" . CHtml::activeId($model, 'roles') . "_326').click(function(){
         checkRoles(326, 327, 350);
+    });
+		
+    $('#" . CHtml::activeId($model, 'roles') . "_351').click(function(){
+        checkRoles(351, 352, 363);
+    });
+    
+    $('#" . CHtml::activeId($model, 'is_main_access') . "').click(function(){
+        if ($(this).prop('checked')) {
+            for (i = 2; i <= 350; i++) {
+                $('#" . CHtml::activeId($model, 'roles') . "_' + i).removeAttr('disabled');
+                $('#main-role-panel').show();
+            }
+        } else {
+            for (i = 2; i <= 350; i++) {
+                $('#" . CHtml::activeId($model, 'roles') . "_' + i).removeAttr('checked');
+                $('#" . CHtml::activeId($model, 'roles') . "_' + i).attr('disabled', true);
+                $('#main-role-panel').hide();
+            }
+        }
+    });
+    
+    $('#" . CHtml::activeId($model, 'is_front_access') . "').click(function(){
+        if ($(this).prop('checked')) {
+            for (i = 351; i <= 363; i++) {
+                $('#" . CHtml::activeId($model, 'roles') . "_' + i).removeAttr('disabled');
+                $('#front-role-panel').show();
+            }
+        } else {
+            for (i = 351; i <= 363; i++) {
+                $('#" . CHtml::activeId($model, 'roles') . "_' + i).removeAttr('checked');
+                $('#" . CHtml::activeId($model, 'roles') . "_' + i).attr('disabled', true);
+                $('#front-role-panel').hide();
+            }
+        }
     });
 ");
 ?>
@@ -243,6 +278,28 @@ Yii::app()->clientScript->registerScript('userRoles', "
                         <?php echo CHtml::checkBoxList('BranchId[]', $branchIds, CHtml::listData($branches, 'id', 'code'), array('labelOptions'=>array('style'=>'display:inline'), 'separator'=>' ',)); ?>
                     </div>
                     <div style="color: red; font-weight: bold"><?php echo $emptyBranchErrorMessage; ?></div>
+                </div>
+            </div>
+            
+            <div class="field">
+                <div class="row collapse">
+                    <div class="small-4 columns">
+                        <?php echo $form->labelEx($model, 'Main Access', array('class' => 'prefix')); ?>
+                    </div>
+                    <div class="small-8 columns">
+                        <?php echo CHtml::activeCheckBox($model, 'is_main_access'); ?>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="field">
+                <div class="row collapse">
+                    <div class="small-4 columns">
+                        <?php echo $form->labelEx($model, 'Front Access', array('class' => 'prefix')); ?>
+                    </div>
+                    <div class="small-8 columns">
+                        <?php echo CHtml::activeCheckBox($model, 'is_front_access'); ?>
+                    </div>
                 </div>
             </div>
             

@@ -312,12 +312,12 @@ class MovementInHeaderController extends Controller {
             }
         }
 
-        JurnalUmum::model()->deleteAllByAttributes(array(
-            'kode_transaksi' => $model->movement_in_number,
+        JurnalUmum::model()->updateAll(array('total' => '0.00'), 'kode_transaksi = :kode_transaksi', array(
+            ':kode_transaksi' => $model->movement_in_number,
         ));
 
-        InventoryDetail::model()->deleteAllByAttributes(array(
-            'transaction_number' => $model->movement_in_number,
+        InventoryDetail::model()->updateAll(array('stock_in' => '0.00', 'stock_out' => '0.00'), 'transaction_number = :transaction_number', array(
+            ':transaction_number' => $model->movement_in_number,
         ));
 
         foreach ($model->movementInDetails as $movementDetail) {
@@ -514,20 +514,20 @@ class MovementInHeaderController extends Controller {
                         $jumlah = $movementDetail->quantity * $unitPrice;
 
                         $value = $jumlah;
-                        $coaMasterTransitId = $movementDetail->product->productMasterCategory->coa_inventory_in_transit;
-                        $journalReferences[$coaMasterTransitId]['debet_kredit'] = 'K';
-                        $journalReferences[$coaMasterTransitId]['is_coa_category'] = 1;
-                        $journalReferences[$coaMasterTransitId]['values'][] = $value;
+//                        $coaMasterTransitId = $movementDetail->product->productMasterCategory->coa_inventory_in_transit;
+//                        $journalReferences[$coaMasterTransitId]['debet_kredit'] = 'K';
+//                        $journalReferences[$coaMasterTransitId]['is_coa_category'] = 1;
+//                        $journalReferences[$coaMasterTransitId]['values'][] = $value;
 
                         $coaSubTransitId = $movementDetail->product->productSubMasterCategory->coa_inventory_in_transit;
                         $journalReferences[$coaSubTransitId]['debet_kredit'] = 'K';
                         $journalReferences[$coaSubTransitId]['is_coa_category'] = 0;
                         $journalReferences[$coaSubTransitId]['values'][] = $value;
 
-                        $coaMasterInventoryId = $movementDetail->product->productMasterCategory->coa_persediaan_barang_dagang;
-                        $journalReferences[$coaMasterInventoryId]['debet_kredit'] = 'D';
-                        $journalReferences[$coaMasterInventoryId]['is_coa_category'] = 1;
-                        $journalReferences[$coaMasterInventoryId]['values'][] = $value;
+//                        $coaMasterInventoryId = $movementDetail->product->productMasterCategory->coa_persediaan_barang_dagang;
+//                        $journalReferences[$coaMasterInventoryId]['debet_kredit'] = 'D';
+//                        $journalReferences[$coaMasterInventoryId]['is_coa_category'] = 1;
+//                        $journalReferences[$coaMasterInventoryId]['values'][] = $value;
 
                         $coaSubInventoryId = $movementDetail->product->productSubMasterCategory->coa_persediaan_barang_dagang;
                         $journalReferences[$coaSubInventoryId]['debet_kredit'] = 'D';

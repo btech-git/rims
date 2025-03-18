@@ -73,8 +73,7 @@
                 )); ?>
             </td>
             <td>
-                <?php echo CHtml::activeHiddenField($detail, "[$i]unit_id"); ?>
-                <?php $unit = Unit::model()->findByPk($detail->unit_id); ?>
+                <?php echo CHtml::activeDropDownList($detail, "[$i]unit_id", CHtml::listData(Unit::model()->findAll(), 'id', 'name'), array('prompt'=>'[--Select Unit --]')); ?>
                 <?php echo CHtml::encode(CHtml::value($unit, 'name')); ?>
             </td>
             <td>
