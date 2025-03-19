@@ -74,7 +74,7 @@
             </td>
             <td>
                 <?php echo CHtml::activeDropDownList($detail, "[$i]unit_id", CHtml::listData(Unit::model()->findAll(), 'id', 'name'), array('prompt'=>'[--Select Unit --]')); ?>
-                <?php echo CHtml::encode(CHtml::value($unit, 'name')); ?>
+                <?php echo CHtml::encode(CHtml::value($detail, 'unit_id')); ?>
             </td>
             <td>
                 <?php echo CHtml::activeHiddenField($detail, "[$i]hpp"); ?>
