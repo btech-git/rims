@@ -602,6 +602,11 @@
                                         'visible' => Yii::app()->user->checkAccess('director')
                                     ),
                                     array(
+                                        'label' => 'Laporan Penjualan Body Repair', 
+                                        'url' => array('/report/bodyRepairCosting/summary'), 
+                                        'visible' => Yii::app()->user->checkAccess('director')
+                                    ),
+                                    array(
                                         'label' => 'Log Transaksi', 
                                         'url' => array('/report/transactionLog/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('director')
