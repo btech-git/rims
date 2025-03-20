@@ -106,7 +106,7 @@ Yii::app()->clientScript->registerCss('_report', '
                                             <?php echo CHtml::encode(CHtml::value($movementOutHeader, 'movement_out_no')); ?>
                                         </td>
                                         <td class="width2-2">
-                                            <?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime(CHtml::value($workOrderExpense, 'date_posting')))); ?>
+                                            <?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime(CHtml::value($movementOutHeader, 'date_posting')))); ?>
                                         </td>
                                         <td class="width2-3">
                                             <?php echo CHtml::encode(CHtml::value($detail, 'product.name')); ?>
