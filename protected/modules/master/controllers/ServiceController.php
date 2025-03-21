@@ -493,6 +493,16 @@ class ServiceController extends Controller {
         }
     }
 
+    public function actionAjaxHtmlUpdateServiceCategorySelect() {
+        if (Yii::app()->request->isAjaxRequest) {
+            $serviceTypeId = isset($_GET['Service']['service_type_id']) ? $_GET['Service']['service_type_id'] : 0;
+
+            $this->renderPartial('_serviceCategorySelect', array(
+                'serviceTypeId' => $serviceTypeId,
+            ));
+        }
+    }
+
     public function actionAjaxGetCode() {
         // $service = Service::model()->findByAttributes(array('service_type_id'=>$_POST['Service']['service_type_id'],'service_category_id'=>$_POST['Service']['service_category_id']),array('order'=>'id desc'));
         $serviceType = ServiceType::model()->findByPK($_POST['Service']['service_type_id']);

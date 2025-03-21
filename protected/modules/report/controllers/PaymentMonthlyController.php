@@ -30,7 +30,7 @@ class PaymentMonthlyController extends Controller {
         $year = isset($_GET['Year']) ? $_GET['Year'] : $yearNow;
         $branchId = isset($_GET['BranchId']) ? $_GET['BranchId'] : '';
         
-        $paymentTypes = PaymentType::model()->findAll();
+        $paymentTypes = PaymentType::model()->findAll(array('condition' => 'id NOT IN (2, 12)'));
         
         $paymentInByTypeList = PaymentIn::getPaymentByTypeList($month, $year, $branchId);
         $paymentOutByTypeList = PaymentOut::getPaymentByTypeList($month, $year, $branchId);

@@ -245,30 +245,30 @@
         'name',
         array(
             'name'=>'brand_id', 
-            'value'=>'$data->brand->name',
+            'value'=>'CHtml::encode(CHtml::value($data, "brand.name"))',
         ),
         array(
             'name'=>'sub_brand_id', 
-            'value'=>'$data->subBrand->name',
+            'value'=>'CHtml::encode(CHtml::value($data, "subBrand.name"))',
         ),
         array(
             'name'=>'sub_brand_series_id', 
-            'value'=>'$data->subBrandSeries->name',
+            'value'=>'CHtml::encode(CHtml::value($data, "subBrandSeries.name"))',
         ),
         array(
             'name'=>'product_master_category_name', 
             'header' => 'Master Category',
-            'value'=>'$data->productMasterCategory->name'
+            'value'=>'CHtml::encode(CHtml::value($data, "productMasterCategory.name"))'
         ),
         array(
             'name'=>'product_sub_master_category_name', 
             'header' => 'Sub Master Category',
-            'value'=>'$data->productSubMasterCategory->name'
+            'value'=>'CHtml::encode(CHtml::value($data, "productSubMasterCategory.name"))'
         ),
         array(
             'name'=>'product_sub_category_name', 
             'header' => 'Sub Category',
-            'value'=>'$data->productSubCategory->name'
+            'value'=>'CHtml::encode(CHtml::value($data, "productSubCategory.name"))'
         ),
     ),
 )); ?>

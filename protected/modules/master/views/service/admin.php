@@ -14,25 +14,24 @@ $this->menu = array(
 );
 
 Yii::app()->clientScript->registerScript('search', "
-	$('.search-button').click(function(){
-		$('.search-form').slideToggle(600);
-		$('.bulk-action').toggle();
-		$(this).toggleClass('active');
-		if($(this).hasClass('active')){
-			$(this).text('');
-		}else {
-			$(this).text('Advanced Search');
-		}
-		return false;
-	});
-	$('.search-form form').submit(function(){
-		$('#service-grid').yiiGridView('update', {
-			data: $(this).serialize()
-		});
-		return false;
-	});
-	");
-?>
+    $('.search-button').click(function(){
+            $('.search-form').slideToggle(600);
+            $('.bulk-action').toggle();
+            $(this).toggleClass('active');
+            if($(this).hasClass('active')){
+                    $(this).text('');
+            }else {
+                    $(this).text('Advanced Search');
+            }
+            return false;
+    });
+    $('.search-form form').submit(function(){
+            $('#service-grid').yiiGridView('update', {
+                    data: $(this).serialize()
+            });
+            return false;
+    });
+"); ?>
 
 
 <div id="maincontent">
@@ -67,7 +66,7 @@ Yii::app()->clientScript->registerScript('search', "
             $this->widget('zii.widgets.grid.CGridView', array(
                 'id' => 'service-grid',
                 'dataProvider' => $model->search(),
-                'filter' => $model,
+                'filter' => null,
                 'template' => '<div style="overflow-x:scroll ; overflow-y: hidden; margin-bottom:1.25rem">{items}</div><div class="clearfix">{summary}{pager}</div>',
                 'pager' => array(
                     'cssFile' => false,
@@ -85,13 +84,13 @@ Yii::app()->clientScript->registerScript('search', "
                     array('name' => 'service_type_code', 'value' => '$data->serviceType->code'),
                     array(
                         'name' => 'service_type_name',
-                        'filter' => CHtml::activeDropDownList($model, 'service_type_id', CHtml::listData(ServiceType::model()->findAll(array('order' => 'name')), 'id', 'name'), array('empty' => '-- All --')),
+//                        'filter' => CHtml::activeDropDownList($model, 'service_type_id', CHtml::listData(ServiceType::model()->findAll(array('order' => 'name')), 'id', 'name'), array('empty' => '-- All --')),
                         'value' => '$data->serviceType->name'
                     ),
                     array('name' => 'service_category_code', 'value' => '$data->serviceCategory->code'),
                     array(
                         'name' => 'service_category_name',
-                        'filter' => CHtml::activeDropDownList($model, 'service_category_id', CHtml::listData(ServiceCategory::model()->findAll(array('order' => 'name')), 'id', 'name'), array('empty' => '-- All --')),
+//                        'filter' => CHtml::activeDropDownList($model, 'service_category_id', CHtml::listData(ServiceCategory::model()->findAll(array('order' => 'name')), 'id', 'name'), array('empty' => '-- All --')),
                         'value' => '$data->serviceCategory->name'
                     ),
                     'code',
@@ -106,11 +105,11 @@ Yii::app()->clientScript->registerScript('search', "
                         'name' => 'status',
                         'value' => '$data->status',
                         'type' => 'raw',
-                        'filter' => CHtml::dropDownList('Service[status]', $model->status, array(
-                            '' => 'All',
-                            'Active' => 'Active',
-                            'Inactive' => 'Inactive',
-                        )),
+//                        'filter' => CHtml::dropDownList('Service[status]', $model->status, array(
+//                            '' => 'All',
+//                            'Active' => 'Active',
+//                            'Inactive' => 'Inactive',
+//                        )),
                     ),
                     array('name'=>'user_id', 'value'=>'$data->user->username'),
                     array(
