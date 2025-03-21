@@ -643,10 +643,10 @@ class TransactionDeliveryOrderController extends Controller {
                 }
             }
 
-            JurnalUmum::model()->deleteAllByAttributes(array(
-                'kode_transaksi' => $model->delivery_order_no,
+            JurnalUmum::model()->updateAll(array('total' => '0.00'), 'kode_transaksi = :kode_transaksi', array(
+                ':kode_transaksi' => $model->delivery_order_no,
             ));
-            
+
             $this->saveTransactionLog('cancel', $model);
         
             Yii::app()->user->setFlash('message', 'Transaction is successfully cancelled');

@@ -983,8 +983,8 @@ class PaymentInController extends Controller {
             $invoiceHeader->update(array('payment_amount', 'payment_left'));
         }
         
-        JurnalUmum::model()->deleteAllByAttributes(array(
-            'kode_transaksi' => $model->payment_number,
+        JurnalUmum::model()->updateAll(array('total' => '0.00'), 'kode_transaksi = :kode_transaksi', array(
+            ':kode_transaksi' => $model->payment_number,
         ));
 
         $this->saveTransactionLog('cancel', $model);

@@ -1057,10 +1057,10 @@ class TransactionPurchaseOrderController extends Controller {
             $model->user_id_cancelled = Yii::app()->user->id;
             $model->update(array('status_document', 'total_quantity', 'subtotal', 'total_price', 'payment_amount', 'payment_left', 'payment_status', 'cancelled_datetime', 'user_id_cancelled'));
 
-            JurnalUmum::model()->deleteAllByAttributes(array(
-                'kode_transaksi' => $model->purchase_order_no,
+            JurnalUmum::model()->updateAll(array('total' => '0.00'), 'kode_transaksi = :kode_transaksi', array(
+                ':kode_transaksi' => $model->purchase_order_no,
             ));
-            
+
             $this->saveTransactionLog('cancel', $model);
         
             Yii::app()->user->setFlash('message', 'Transaction is successfully cancelled');

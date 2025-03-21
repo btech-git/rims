@@ -383,13 +383,13 @@ class MovementOutHeaderController extends Controller {
                     $returnOrderDetail->update(array('quantity_movement', 'quantity_movement_left'));                
                 }
             }
-
-            JurnalUmum::model()->deleteAllByAttributes(array(
-                'kode_transaksi' => $model->movement_out_no,
+            
+            JurnalUmum::model()->updateAll(array('total' => '0.00'), 'kode_transaksi = :kode_transaksi', array(
+                ':kode_transaksi' => $model->movement_out_no,
             ));
 
-            InventoryDetail::model()->deleteAllByAttributes(array(
-                'transaction_number' => $model->movement_out_no,
+            InventoryDetail::model()->updateAll(array('stock_in' => '0.00', 'stock_out' => '0.00'), 'transaction_number = :transaction_number', array(
+                ':transaction_number' => $model->movement_out_no,
             ));
 
             foreach ($model->movementOutDetails as $movementDetail) {

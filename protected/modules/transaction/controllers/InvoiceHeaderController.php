@@ -642,10 +642,10 @@ class InvoiceHeaderController extends Controller {
             
             $this->saveTransactionLog('cancel', $model);
         
-            JurnalUmum::model()->deleteAllByAttributes(array(
-                'kode_transaksi' => $model->invoice_number,
+            JurnalUmum::model()->updateAll(array('total' => '0.00'), 'kode_transaksi = :kode_transaksi', array(
+                ':kode_transaksi' => $model->invoice_number,
             ));
-            
+
             Yii::app()->user->setFlash('message', 'Transaction is successfully cancelled');
         } else {
             Yii::app()->user->setFlash('message', 'Transaction cannot be cancelled. Check related transactions!');

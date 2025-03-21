@@ -458,8 +458,8 @@ class PaymentOutController extends Controller {
         
         $this->saveTransactionLog('cancel', $model);
         
-        JurnalUmum::model()->deleteAllByAttributes(array(
-            'kode_transaksi' => $model->payment_number,
+        JurnalUmum::model()->updateAll(array('total' => '0.00'), 'kode_transaksi = :kode_transaksi', array(
+            ':kode_transaksi' => $model->payment_number,
         ));
 
         $this->redirect(array('admin'));

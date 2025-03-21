@@ -13,6 +13,35 @@ class StockOpnameController extends Controller {
         $filterChain->run();
     }
 
+    public function actionTest() {
+        $sql = "SELECT p.product_sub_master_category_id, MONTH(h.invoice_date) AS invoice_month, GROUP_CONCAT(d.quantity) AS quantities, GROUP_CONCAT(d.total_price) AS total_prices
+                FROM rims_invoice_detail d 
+                INNER JOIN rims_invoice_header h ON h.id = d.invoice_id
+                INNER JOIN rims_product p ON p.id = d.product_id
+                WHERE YEAR(h.invoice_date) = '2020' AND d.product_id IS NOT null
+                GROUP BY p.product_sub_master_category_id, MONTH(h.invoice_date)";
+        
+        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true);
+        
+        foreach ($resultSet as $item) {
+            $sortedQuantities = explode(',', $item['quantities']);
+            sort($sortedQuantities, SORT_NUMERIC);
+            $sortedQuantitiesCount = count($sortedQuantities);
+            $quantitiesMiddleBottomIndex = ceil($sortedQuantitiesCount / 2);
+            $quantitiesMiddleTopIndex = ceil(($sortedQuantitiesCount + 1) / 2);
+            $quantitiesMedian = ($sortedQuantities[$quantitiesMiddleBottomIndex - 1] + $sortedQuantities[$quantitiesMiddleTopIndex - 1]) / 2;
+            
+            $sortedTotalPrices = explode(',', $item['total_prices']);
+            sort($sortedTotalPrices, SORT_NUMERIC);
+            $sortedTotalPricesCount = count($sortedTotalPrices);
+            $totalPricesMiddleBottomIndex = ceil($sortedTotalPricesCount / 2);
+            $totalPricesMiddleTopIndex = ceil(($sortedTotalPricesCount + 1) / 2);
+            $totalPricesMedian = ($sortedTotalPrices[$totalPricesMiddleBottomIndex - 1] + $sortedTotalPrices[$totalPricesMiddleTopIndex - 1]) / 2;
+            
+            echo $item['product_sub_master_category_id'] . ' - ' . $item['invoice_month'] . ' - ' . $quantitiesMedian . ' - ' . $totalPricesMedian . '<br/>';
+        }
+    }
+
     public function actionRun($f) {
         $headerInfo = array();
         $csvData = array();

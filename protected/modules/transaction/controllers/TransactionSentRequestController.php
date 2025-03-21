@@ -369,8 +369,8 @@ class TransactionSentRequestController extends Controller {
         
         $this->saveTransactionLog('cancel', $model);
         
-        JurnalUmum::model()->deleteAllByAttributes(array(
-            'kode_transaksi' => $model->transfer_request_no,
+        JurnalUmum::model()->updateAll(array('total' => '0.00'), 'kode_transaksi = :kode_transaksi', array(
+            ':kode_transaksi' => $model->transfer_request_no,
         ));
 
         $this->redirect(array('admin'));
