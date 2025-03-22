@@ -149,7 +149,7 @@ $this->menu = array(
                     'columns' => array(
                         array(
                             'name' => 'transaction_number',
-                            'value' => 'CHtml::link($data->transaction_number, array("/frontDesk/generalRepairRegistration/view", "id"=>$data->id))',
+                            'value' => 'CHtml::link($data->transaction_number, array("/frontDesk/generalRepairRegistration/show", "id"=>$data->id))',
                             'type' => 'raw'
                         ),
                         'transaction_date',
@@ -161,12 +161,6 @@ $this->menu = array(
                             'value' => 'empty($data->invoiceHeaders) ? "" : $data->invoiceHeaders[0]->invoice_number',
                             'type' => 'raw'
                         ),
-//                        array(
-//                            'name' => 'branch_id',
-//                            'header' => 'Branch',
-//                            'filter' => CHtml::activeDropDownList($registrationTransaction, 'branch_id', CHtml::listData(Branch::model()->findAll(array('order' => 'name')), 'id', 'name'), array('empty' => '-- all --')),
-//                            'value' => '$data->branch->name',
-//                        ),
                         array(
                             'name' => 'grand_total', 
                             'value' => 'AppHelper::formatMoney($data->grand_total)',
