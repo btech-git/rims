@@ -148,20 +148,20 @@ class MovementIns extends CComponent {
             }
 
             if ($this->header->movement_type == 1) {
-                $criteria = new CDbCriteria;
-                $criteria->together = 'true';
-                $criteria->with = array('movementInHeader');
-                $criteria->condition = "movementInHeader.receive_item_id =" . $this->header->receive_item_id . " AND movement_in_header_id != " . $this->header->id;
-                $mvmntDetails = MovementInDetail::model()->findAll($criteria);
-                $quantity = 0;
+//                $criteria = new CDbCriteria;
+//                $criteria->together = 'true';
+//                $criteria->with = array('movementInHeader');
+//                $criteria->condition = "movementInHeader.receive_item_id =" . $this->header->receive_item_id . " AND movement_in_header_id != " . $this->header->id;
+//                $mvmntDetails = MovementInDetail::model()->findAll($criteria);
+//                $quantity = 0;
+//                
+//                foreach ($mvmntDetails as $mvmntDetail) {
+//                    $quantity += $mvmntDetail->quantity;
+//                }
                 
-                foreach ($mvmntDetails as $mvmntDetail) {
-                    $quantity += $mvmntDetail->quantity;
-                }
-                
-                $receiveDetail = TransactionReceiveItemDetail::model()->findByAttributes(array('id' => $detail->receive_item_detail_id, 'receive_item_id' => $this->header->receive_item_id));
-                $receiveDetail->quantity_movement_left = $detail->quantity_transaction - ($detail->quantity + $quantity);
-                $receiveDetail->quantity_movement = $quantity + $detail->quantity;
+                $receiveDetail = TransactionReceiveItemDetail::model()->findByPk($detail->receive_item_detail_id);
+                $receiveDetail->quantity_movement = $receiveDetail->getQuantityMovement(); //$quantity + $detail->quantity;
+                $receiveDetail->quantity_movement_left = $receiveDetail->getQuantityMovementLeft(); //$detail->quantity_transaction - ($detail->quantity + $quantity);
                 $receiveDetail->save(false);
             } else {
                 $criteria = new CDbCriteria;

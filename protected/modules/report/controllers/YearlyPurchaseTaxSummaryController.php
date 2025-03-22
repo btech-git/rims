@@ -1,6 +1,6 @@
 <?php
 
-class YearlySaleTaxSummaryController extends Controller {
+class YearlyPurchaseTaxSummaryController extends Controller {
 
     public function filters() {
         return array(
@@ -25,28 +25,12 @@ class YearlySaleTaxSummaryController extends Controller {
         $yearNow = date('Y');
         $year = (isset($_GET['Year'])) ? $_GET['Year'] : $yearNow;
         
-        $yearlySaleSummary = InvoiceHeader::getYearlySaleTaxSummary($year);
+        $yearlyPurchaseSummary = TransactionReceiveItem::getYearlyPurchaseTaxSummary($year);
         
-        $yearlySaleSummaryData = array();
-        foreach ($yearlySaleSummary as $yearlySaleSummaryItem) {
-            $monthValue = intval(substr($yearlySaleSummaryItem['year_month_value'], 4, 2));
-            $yearlySaleSummaryData[$monthValue][$yearlySaleSummaryItem['branch_id']] = $yearlySaleSummaryItem['total_price'];
-        }
-        
-        $yearlyCompanySaleSummary = InvoiceHeader::getYearlyCompanySaleTaxSummary($year);
-        
-        $yearlyCompanySaleSummaryData = array();
-        foreach ($yearlyCompanySaleSummary as $yearlyCompanySaleSummaryItem) {
-            $monthValue = intval(substr($yearlyCompanySaleSummaryItem['year_month_value'], 4, 2));
-            $yearlyCompanySaleSummaryData[$monthValue][$yearlyCompanySaleSummaryItem['branch_id']] = $yearlyCompanySaleSummaryItem['total_price'];
-        }
-        
-        $yearlyIndividualSaleSummary = InvoiceHeader::getYearlyIndividualSaleTaxSummary($year);
-        
-        $yearlyIndividualSaleSummaryData = array();
-        foreach ($yearlyIndividualSaleSummary as $yearlyIndividualSaleSummaryItem) {
-            $monthValue = intval(substr($yearlyIndividualSaleSummaryItem['year_month_value'], 4, 2));
-            $yearlyIndividualSaleSummaryData[$monthValue][$yearlyIndividualSaleSummaryItem['branch_id']] = $yearlyIndividualSaleSummaryItem['total_price'];
+        $yearlyPurchaseSummaryData = array();
+        foreach ($yearlyPurchaseSummary as $yearlyPurchaseSummaryItem) {
+            $monthValue = intval(substr($yearlyPurchaseSummaryItem['year_month_value'], 4, 2));
+            $yearlyPurchaseSummaryData[$monthValue][$yearlyPurchaseSummaryItem['recipient_branch_id']] = $yearlyPurchaseSummaryItem['total_price'];
         }
         
         $yearList = array();
@@ -61,23 +45,21 @@ class YearlySaleTaxSummaryController extends Controller {
         
         if (isset($_GET['SaveExcel'])) {
             $this->saveToExcel(
-                $yearlySaleSummaryData,
+                $yearlyPurchaseSummaryData,
                 $yearList,
                 $year
             );
         }
         
         $this->render('summary', array(
-            'yearlySaleSummaryData' => $yearlySaleSummaryData,
-            'yearlyCompanySaleSummaryData' => $yearlyCompanySaleSummaryData,
-            'yearlyIndividualSaleSummaryData' => $yearlyIndividualSaleSummaryData,
+            'yearlyPurchaseSummaryData' => $yearlyPurchaseSummaryData,
             'yearList' => $yearList,
             'year' => $year,
             'branches' => $branches,
         ));
     }
     
-    protected function saveToExcel($yearlySaleSummaryData, $yearList, $year) {
+    protected function saveToExcel($yearlyPurchaseSummaryData, $yearList, $year) {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
 
@@ -141,7 +123,7 @@ class YearlySaleTaxSummaryController extends Controller {
             $amountSum = '0.00';
             $columnCounter = 'B';
             foreach ($branches as $branch) {
-                $amount = isset($yearlySaleSummaryData[$month][$branch->id]) ? $yearlySaleSummaryData[$month][$branch->id] : '0.00';
+                $amount = isset($yearlyPurchaseSummaryData[$month][$branch->id]) ? $yearlyPurchaseSummaryData[$month][$branch->id] : '0.00';
                 $worksheet->setCellValue("{$columnCounter}{$counter}", CHtml::encode($amount));
                 $amountSum += $amount;
                 if (!isset($amountTotals[$branch->id])) {

@@ -76,6 +76,7 @@ $this->menu = array(
                     'label' => 'Cabang Penerima',
                     'value' => $model->recipientBranch->name,
                 ),
+                'supplier_delivery_number',
                 'request_type',
                 'estimate_arrival_date',
                 'note', 

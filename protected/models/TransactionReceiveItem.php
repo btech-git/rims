@@ -421,4 +421,19 @@ class TransactionReceiveItem extends MonthlyTransactionActiveRecord {
     public function getApprovalStatus() {
         return $this->is_approved_invoice == 0 ? 'Not Approved' : 'Approved';
     }
+    
+    public static function getYearlyPurchaseTaxSummary($year) {
+        $sql = "SELECT EXTRACT(YEAR_MONTH FROM invoice_date) AS year_month_value, recipient_branch_id, MIN(b.name) AS branch_name, SUM(invoice_grand_total) AS total_price
+                FROM " . TransactionReceiveItem::model()->tableName() . " i 
+                INNER JOIN " . Branch::model()->tableName() . " b ON b.id = i.recipient_branch_id
+                WHERE YEAR(invoice_date) = :year AND i.user_id_cancelled IS null AND i.invoice_tax_nominal > 0
+                GROUP BY EXTRACT(YEAR_MONTH FROM invoice_date), recipient_branch_id
+                ORDER BY year_month_value ASC, recipient_branch_id ASC";
+                
+        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, array(
+            ':year' => $year,
+        ));
+
+        return $resultSet;
+    }
 }
