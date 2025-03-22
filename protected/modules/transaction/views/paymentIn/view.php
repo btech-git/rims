@@ -34,9 +34,9 @@ $this->menu = array(
                 <?php echo CHtml::link('<span class="fa fa-edit"></span>Update Approval', Yii::app()->baseUrl . '/transaction/paymentIn/updateApproval?headerId=' . $model->id, array('class' => 'button cbutton right', 'style' => 'margin-right:10px')) ?>
             <?php endif; ?>
 
-            <?php if ($model->paymentInDetails[0]->invoiceHeader->registrationTransaction->status != 'Finished'): ?>
+            <?php /*if ($model->paymentInDetails[0]->invoiceHeader->registrationTransaction->status != 'Finished'): ?>
                 <?php echo CHtml::submitButton('Finish', array('name' => 'SubmitFinish', 'confirm' => 'Are you sure you want to finish this transaction?', 'class' => 'button warning')); ?>
-            <?php endif; ?>
+            <?php endif;*/ ?>
         <?php endif; ?>
         <?php if (Yii::app()->user->checkAccess("paymentInSupervisor")): ?>
             <?php echo CHtml::link('<span class="fa fa-minus"></span>Cancel Transaction', array("/transaction/paymentIn/cancel", "id" => $model->id), array(
