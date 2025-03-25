@@ -172,7 +172,7 @@ class TransactionReceiveItemDetail extends CActiveRecord {
         $total = 0.00; 
         
         if (!empty($this->purchase_order_detail_id)) {
-            $unitPrice = $this->purchaseOrderDetail->unit_price;
+            $unitPrice = $this->purchaseOrderDetail->price_before_tax;
 //            $taxPercentage = $this->purchaseOrderDetail->purchaseOrder->tax_percentage;
             $total = $unitPrice; // * (1 + ($taxPercentage / 100));
         } elseif (!empty($this->consignment_in_detail_id)) {
