@@ -93,11 +93,11 @@ class PurchaseOrders extends CComponent {
 
     public function updateTaxes() {
         foreach ($this->details as $detail) {
-            $detail->total_before_tax = $detail->getTotalPriceBeforeTax($this->header->ppn);
-            $detail->price_before_tax = $detail->getPriceBeforeTax($this->header->ppn);
-            $detail->tax_amount = $detail->getTaxAmount($this->header->ppn);
-            $detail->unit_price = $detail->getUnitPrice($this->header->ppn);
-            $detail->total_price = $detail->getSubTotal($this->header->ppn);
+            $detail->total_before_tax = $detail->getTotalPriceBeforeTax($this->header->ppn, $this->header->tax_percentage);
+            $detail->price_before_tax = $detail->getPriceBeforeTax($this->header->ppn, $this->header->tax_percentage);
+            $detail->tax_amount = $detail->getTaxAmount($this->header->ppn, $this->header->tax_percentage);
+            $detail->unit_price = $detail->getUnitPrice($this->header->ppn, $this->header->tax_percentage);
+            $detail->total_price = $detail->getSubTotal($this->header->ppn, $this->header->tax_percentage);
         }
     }
 
