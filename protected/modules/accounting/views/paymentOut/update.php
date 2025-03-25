@@ -15,7 +15,5 @@
     'itemRequestHeader' => $itemRequestHeader,
     'itemRequestDataProvider' => $itemRequestDataProvider,
     'movementType' => $movementType,
-//    'receiveItem' => $receiveItem,
-//    'receiveItemDataProvider' => $receiveItemDataProvider,
 )); ?>
 
