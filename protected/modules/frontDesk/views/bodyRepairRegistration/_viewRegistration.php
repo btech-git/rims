@@ -112,7 +112,6 @@
                         </div>
                     </div>
                 </div>
-
             </div> <!-- end div large -->
 
             <div class="large-6 columns">
@@ -179,7 +178,7 @@
                                 <span class="prefix">Insurance Company</span>
                             </div>
                             <div class="small-8 columns">
-                                <input type="text" readonly="true" value="<?php echo $model->insuranceCompany->name; ?>"> 
+                                <input type="text" readonly="true" value="<?php echo CHtml::encode(CHtml::value($model, 'insuranceCompany.name')); ?>"> 
                             </div>
                         </div>
                     </div>
@@ -263,7 +262,6 @@
                         </div>
                     </div>
                 <?php endif; ?>
-
             </div><!-- end div large -->
         </div>
     </div>
