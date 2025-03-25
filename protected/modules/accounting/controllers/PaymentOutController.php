@@ -165,6 +165,15 @@ class PaymentOutController extends Controller {
         $supplier = Supplier::model()->findByPk($paymentOut->header->supplier_id);
         $movementType = $paymentOut->header->movement_type;
 
+        $receiveItem = Search::bind(new TransactionReceiveItem('search'), isset($_GET['TransactionReceiveItem']) ? $_GET['TransactionReceiveItem'] : array());
+        $receiveItemDataProvider = $receiveItem->searchForPaymentOut();
+
+        $workOrderExpense = Search::bind(new WorkOrderExpenseHeader('search'), isset($_GET['WorkOrderExpenseHeader']) ? $_GET['WorkOrderExpenseHeader'] : array());
+        $workOrderExpenseDataProvider = $workOrderExpense->searchForPaymentOut();
+
+        $itemRequestHeader = Search::bind(new ItemRequestHeader('search'), isset($_GET['ItemRequestHeader']) ? $_GET['ItemRequestHeader'] : array());
+        $itemRequestDataProvider = $itemRequestHeader->searchForPaymentOut();
+
         if (isset($_POST['Submit']) && IdempotentManager::check()) {
             $this->loadState($paymentOut);
             JurnalUmum::model()->deleteAllByAttributes(array(
@@ -181,6 +190,12 @@ class PaymentOutController extends Controller {
         $this->render('update', array(
             'paymentOut' => $paymentOut,
             'supplier' => $supplier,
+            'receiveItem' => $receiveItem,
+            'receiveItemDataProvider' => $receiveItemDataProvider,
+            'workOrderExpense' => $workOrderExpense,
+            'workOrderExpenseDataProvider' => $workOrderExpenseDataProvider,
+            'itemRequestHeader' => $itemRequestHeader,
+            'itemRequestDataProvider' => $itemRequestDataProvider,
             'movementType' => $movementType,
         ));
     }
