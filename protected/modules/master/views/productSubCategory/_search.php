@@ -6,10 +6,12 @@
 
 <div class="wide form" id="advSearch">
 
-	<?php $form=$this->beginWidget('CActiveForm', array(
-		'action'=>Yii::app()->createUrl($this->route),
-		'method'=>'get',
+    <?php $form=$this->beginWidget('CActiveForm', array(
+        'action'=>Yii::app()->createUrl($this->route),
+        'method'=>'get',
     )); ?>
+    
+    <?php echo CHtml::beginForm(); ?>
     <div class="row">
         <div class="small-12 medium-6 columns">
 
@@ -19,7 +21,15 @@
                         <?php echo $form->label($model,'product_master_category_id', array('class'=>'prefix'));?>
                     </div>
                     <div class="small-8 columns">
-                    <?php echo CHtml::activeDropDownList($model, 'product_master_category_id', CHtml::listData(ProductMasterCategory::model()->findAll(array('order' => 'name')), 'id', 'name'), array('empty' => '-- All --',)); ?>
+                    <?php echo CHtml::activeDropDownList($model, 'product_master_category_id', CHtml::listData(ProductMasterCategory::model()->findAll(array('order' => 'name')), 'id', 'name'), array(
+                        'empty' => '-- All --',
+                        'order' => 'name',
+                        'onchange' => CHtml::ajax(array(
+                            'type' => 'GET',
+                            'url' => CController::createUrl('ajaxHtmlUpdateProductSubMasterCategorySelect'),
+                            'update' => '#product_sub_master_category',
+                        )),
+                    )); ?>
                     </div>
                 </div>
             </div>
@@ -29,7 +39,7 @@
                     <div class="small-4 columns">
                         <?php echo $form->label($model,'product_sub_master_category_id', array('class'=>'prefix'));?>
                     </div>
-                    <div class="small-8 columns">
+                    <div class="small-8 columns" id="product_sub_master_category">
                     <?php echo CHtml::activeDropDownList($model, 'product_sub_master_category_id', CHtml::listData(ProductSubMasterCategory::model()->findAll(array('order' => 'name')), 'id', 'name'), array('empty' => '-- All --',)); ?>
                     </div>
                 </div>
@@ -90,7 +100,7 @@
             </div>
         </div>
     </div>
-
+    <?php echo CHtml::endForm(); ?>
     <?php $this->endWidget(); ?>
 
 </div><!-- search-form -->

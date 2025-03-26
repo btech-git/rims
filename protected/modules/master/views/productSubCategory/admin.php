@@ -14,26 +14,25 @@ $this->menu = array(
 );
 
 Yii::app()->clientScript->registerScript('search', "
-	$('.search-button').click(function(){
-		$('.search-form').slideToggle(600);
-		$('.bulk-action').toggle();
-		$(this).toggleClass('active');
-		if($(this).hasClass('active')){
-			$(this).text('');
-		}else {
-			$(this).text('Advanced Search');
-		}
-		return false;
-	});
+    $('.search-button').click(function(){
+        $('.search-form').slideToggle(600);
+        $('.bulk-action').toggle();
+        $(this).toggleClass('active');
+        if ($(this).hasClass('active')){
+            $(this).text('');
+        } else {
+            $(this).text('Advanced Search');
+        }
+        return false;
+    });
 
-	$('.search-form form').submit(function(){
-		$('#product-sub-category-grid').yiiGridView('update', {
-			data: $(this).serialize()
-		});
-		return false;
-	});
-	");
-?>
+    $('.search-form form').submit(function(){
+        $('#product-sub-category-grid').yiiGridView('update', {
+            data: $(this).serialize()
+        });
+        return false;
+    });
+"); ?>
 
 <!-- BEGIN maincontent -->
 <div id="maincontent">
@@ -68,7 +67,7 @@ Yii::app()->clientScript->registerScript('search', "
             $this->widget('zii.widgets.grid.CGridView', array(
                 'id' => 'product-sub-category-grid',
                 'dataProvider' => $model->search(),
-                'filter' => $model,
+                'filter' => null,
                 'template' => '<div style="overflow-x:scroll ; overflow-y: hidden; margin-bottom: 1.25rem;">{items}</div><div class="clearfix">{summary}{pager}</div>',
                 'pager' => array(
                     'cssFile' => false,

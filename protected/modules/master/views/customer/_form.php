@@ -59,38 +59,35 @@
                                 <div class="small-8 columns">
                                     <?php echo $form->hiddenField($customer->header, 'coa_id'); ?>
                                     <?php echo CHtml::encode(CHtml::value($customer->header, 'coa.codeName')); ?>
-                                    <?php //echo $form->textField($customer->header, 'coa_name', array('readonly' => true, 'onclick' => 'jQuery("#coa-dialog").dialog("open"); return false;', 'value' => $customer->header->coa_id != "" ? $customer->header->coa->name : '')); ?>
-                                    <?php //echo $form->textField($customer->header, 'coa_code', array('readonly' => true, 'value' => $customer->header->coa_id != "" ? $customer->header->coa->code : '')); ?>
                                     <?php echo $form->error($customer->header, 'coa_id'); ?>
                                 </div>
                             </div>			
                         </div>
                     </div>
 
-                    <div class="field">
+<!--                    <div class="field">
                         <div class="row collapse">
                             <div class="small-4 columns">
-                                <label class="prefix"><?php echo $form->labelEx($customer->header, 'name'); ?></label>
+                                <label class="prefix"><?php //echo $form->labelEx($customer->header, 'name'); ?></label>
                             </div>
                             <div class="small-8 columns">
-                                <?php echo CHtml::encode(CHtml::value($customer->header, 'name')); ?>
+                                <?php //echo CHtml::encode(CHtml::value($customer->header, 'name')); ?>
                             </div>
                         </div>			
-                    </div>
-                <?php else: ?>
-                    <div class="field">
-                        <div class="row collapse">
-                            <div class="small-4 columns">
-                                <label class="prefix"><?php echo $form->labelEx($customer->header, 'name'); ?></label>
-                            </div>
-                            <div class="small-8 columns">
-                                <?php echo $form->textField($customer->header, 'name', array('size' => 60, 'maxlength' => 100, 'style' => 'text-transform: capitalize')); ?>
-                                <?php echo $form->error($customer->header, 'name'); ?>
-                            </div>
-                        </div>			
-                    </div>
+                    </div>-->
                 <?php endif; ?>
 
+                <div class="field">
+                    <div class="row collapse">
+                        <div class="small-4 columns">
+                            <label class="prefix"><?php echo $form->labelEx($customer->header, 'name'); ?></label>
+                        </div>
+                        <div class="small-8 columns">
+                            <?php echo $form->textField($customer->header, 'name', array('size' => 60, 'maxlength' => 100, 'style' => 'text-transform: capitalize')); ?>
+                            <?php echo $form->error($customer->header, 'name'); ?>
+                        </div>
+                    </div>			
+                </div>
                 <div class="field">
                     <div class="row collapse">
                         <div class="small-4 columns">

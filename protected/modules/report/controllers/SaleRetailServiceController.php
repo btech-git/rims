@@ -33,8 +33,10 @@ class SaleRetailServiceController extends Controller {
         $currentPage = (isset($_GET['page'])) ? $_GET['page'] : '';
         $currentSort = (isset($_GET['sort'])) ? $_GET['sort'] : '';
         $branchId = (isset($_GET['BranchId'])) ? $_GET['BranchId'] : '';
+        $serviceTypeId = (isset($_GET['ServiceTypeId'])) ? $_GET['ServiceTypeId'] : '';
+        $serviceCategoryId = (isset($_GET['ServiceCategoryId'])) ? $_GET['ServiceCategoryId'] : '';
 
-        $saleRetailServiceReport = $service->getSaleRetailServiceReport($startDate, $endDate, $branchId);
+        $saleRetailServiceReport = $service->getSaleRetailServiceReport($startDate, $endDate, $branchId, $serviceTypeId, $serviceCategoryId);
 
         if (isset($_GET['ResetFilter'])) {
             $this->redirect(array('summary'));
@@ -53,6 +55,8 @@ class SaleRetailServiceController extends Controller {
             'currentPage' => $currentPage,
             'currentSort' => $currentSort,
             'branchId' => $branchId,
+            'serviceTypeId' => $serviceTypeId,
+            'serviceCategoryId' => $serviceCategoryId,
         ));
     }
 
@@ -66,6 +70,16 @@ class SaleRetailServiceController extends Controller {
             );
             
             echo CJSON::encode($object);
+        }
+    }
+
+    public function actionAjaxHtmlUpdateServiceCategorySelect() {
+        if (Yii::app()->request->isAjaxRequest) {
+            $serviceTypeId = isset($_GET['ServiceTypeId']) ? $_GET['ServiceTypeId'] : 0;
+
+            $this->renderPartial('_serviceCategorySelect', array(
+                'serviceTypeId' => $serviceTypeId,
+            ));
         }
     }
 

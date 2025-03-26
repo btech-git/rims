@@ -482,9 +482,11 @@ class Service extends CActiveRecord {
         return $resultSet;
     }
     
-    public function getSaleRetailServiceReport($startDate, $endDate, $branchId) {
+    public function getSaleRetailServiceReport($startDate, $endDate, $branchId, $serviceTypeId, $serviceCategoryId) {
         $branchConditionSql = '';
         $nameConditionSql = '';
+        $serviceTypeConditionSql = '';
+        $serviceCategoryConditionSql = '';
         
         $params = array(
             ':start_date' => $startDate,
@@ -494,6 +496,16 @@ class Service extends CActiveRecord {
         if (!empty($branchId)) {
             $branchConditionSql = ' AND h.branch_id = :branch_id';
             $params[':branch_id'] = $branchId;
+        }
+       
+        if (!empty($serviceTypeId)) {
+            $serviceTypeConditionSql = ' AND s.service_type_id = :service_type_id';
+            $params[':service_type_id'] = $serviceTypeId;
+        }
+       
+        if (!empty($serviceCategoryId)) {
+            $serviceCategoryConditionSql = ' AND s.service_category_id = :service_category_id';
+            $params[':service_category_id'] = $serviceCategoryId;
         }
        
         if (!empty($this->id)) {
@@ -513,7 +525,7 @@ class Service extends CActiveRecord {
                 WHERE substr(h.invoice_date, 1, 10) BETWEEN :start_date AND :end_date AND h.status NOT LIKE '%CANCEL%'" . $branchConditionSql . "
                 GROUP BY p.service_id
             ) po ON s.id = po.service_id
-            " . $nameConditionSql . "
+            " . $nameConditionSql . $serviceTypeConditionSql . $serviceCategoryConditionSql . "
             ORDER BY c.name ASC, s.name ASC
         ";
 

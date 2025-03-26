@@ -189,6 +189,16 @@ class ProductSubCategoryController extends Controller {
         }
     }
 
+    public function actionAjaxHtmlUpdateProductSubMasterCategorySelect() {
+        if (Yii::app()->request->isAjaxRequest) {
+            $productMasterCategoryId = isset($_GET['ProductSubCategory']['product_master_category_id']) ? $_GET['ProductSubCategory']['product_master_category_id'] : 0;
+
+            $this->renderPartial('_productSubMasterCategorySelect', array(
+                'productMasterCategoryId' => $productMasterCategoryId,
+            ));
+        }
+    }
+
     /**
      * Returns the data model based on the primary key given in the GET variable.
      * If the data model is not found, an HTTP exception will be raised.

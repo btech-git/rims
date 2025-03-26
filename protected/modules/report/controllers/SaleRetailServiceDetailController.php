@@ -34,6 +34,8 @@ class SaleRetailServiceDetailController extends Controller {
         $currentPage = (isset($_GET['page'])) ? $_GET['page'] : '';
         $currentSort = (isset($_GET['sort'])) ? $_GET['sort'] : '';
         $branchId = (isset($_GET['BranchId'])) ? $_GET['BranchId'] : '';
+        $serviceTypeId = (isset($_GET['ServiceTypeId'])) ? $_GET['ServiceTypeId'] : '';
+        $serviceCategoryId = (isset($_GET['ServiceCategoryId'])) ? $_GET['ServiceCategoryId'] : '';
 
         $saleRetailServiceSummary = new SaleRetailServiceSummary($service->search());
         $saleRetailServiceSummary->setupLoading();
@@ -43,6 +45,8 @@ class SaleRetailServiceDetailController extends Controller {
             'startDate' => $startDate,
             'endDate' => $endDate,
             'branchId' => $branchId,
+            'serviceTypeId' => $serviceTypeId,
+            'serviceCategoryId' => $serviceCategoryId
         );
         $saleRetailServiceSummary->setupFilter($filters);
 
@@ -51,7 +55,13 @@ class SaleRetailServiceDetailController extends Controller {
         }
         
         if (isset($_GET['SaveExcel'])) {
-            $this->saveToExcel($saleRetailServiceSummary->dataProvider, array('startDate' => $startDate, 'endDate' => $endDate, 'branchId' => $branchId));
+            $this->saveToExcel($saleRetailServiceSummary->dataProvider, array(
+                'startDate' => $startDate, 
+                'endDate' => $endDate, 
+                'branchId' => $branchId,
+                'serviceTypeId' => $serviceTypeId,
+                'serviceCategoryId' => $serviceCategoryId
+            ));
         }
 
         $this->render('summary', array(
@@ -63,6 +73,8 @@ class SaleRetailServiceDetailController extends Controller {
             'currentPage' => $currentPage,
             'currentSort' => $currentSort,
             'branchId' => $branchId,
+            'serviceTypeId' => $serviceTypeId,
+            'serviceCategoryId' => $serviceCategoryId
         ));
     }
 
