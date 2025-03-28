@@ -297,8 +297,9 @@ class TransactionReceiveItemController extends Controller {
         $receiveItem->user_id_invoice = Yii::app()->user->id;
         $this->performAjaxValidation($receiveItem);
 
-        if (isset($_POST['Cancel']))
+        if (isset($_POST['Cancel'])) {
             $this->redirect(array('admin'));
+        }
 
         if (isset($_POST['TransactionReceiveItem'])) {
             $receiveItem->attributes = $_POST['TransactionReceiveItem'];

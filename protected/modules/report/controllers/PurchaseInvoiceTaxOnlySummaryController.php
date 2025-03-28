@@ -6,7 +6,7 @@ class PurchaseInvoiceTaxOnlySummaryController extends Controller {
     
     public function filters() {
         return array(
-            'access',
+//            'access',
         );
     }
 
@@ -120,14 +120,15 @@ class PurchaseInvoiceTaxOnlySummaryController extends Controller {
         $worksheet->getStyle('A6:K6')->getFont()->setBold(true);
         $worksheet->setCellValue('A6', 'PO #');
         $worksheet->setCellValue('B6', 'Tanggal');
-        $worksheet->setCellValue('C6', 'Invoice #');
-        $worksheet->setCellValue('D6', 'Tanggal Invoice');
-        $worksheet->setCellValue('E6', 'Invoice Total');
-        $worksheet->setCellValue('F6', 'Tanggal SJ');
-        $worksheet->setCellValue('G6', 'SJ #');
-        $worksheet->setCellValue('H6', 'Faktur Pajak #');
-        $worksheet->setCellValue('I6', 'DPP (Rp)');
-        $worksheet->setCellValue('J6', 'PPn (Rp)');
+        $worksheet->setCellValue('C6', 'Supplier');
+        $worksheet->setCellValue('D6', 'Invoice #');
+        $worksheet->setCellValue('E6', 'Tanggal Invoice');
+        $worksheet->setCellValue('F6', 'Invoice Total');
+        $worksheet->setCellValue('G6', 'Tanggal SJ');
+        $worksheet->setCellValue('H6', 'SJ #');
+        $worksheet->setCellValue('I6', 'Faktur Pajak #');
+        $worksheet->setCellValue('J6', 'DPP (Rp)');
+        $worksheet->setCellValue('K6', 'PPn (Rp)');
 
         $counter = 7;
 
@@ -135,30 +136,18 @@ class PurchaseInvoiceTaxOnlySummaryController extends Controller {
             $receiveHeader = TransactionReceiveItem::model()->findByAttributes(array('purchase_order_id' => $header->id));
             $worksheet->setCellValue("A{$counter}", CHtml::encode(CHtml::value($header, 'purchase_order_no')));
             $worksheet->setCellValue("B{$counter}", CHtml::encode(CHtml::value($header, 'purchase_order_date')));
-            $worksheet->setCellValue("C{$counter}", CHtml::encode(CHtml::value($receiveHeader, 'invoice_number')));
-            $worksheet->setCellValue("D{$counter}", CHtml::encode(CHtml::value($receiveHeader, 'invoice_date')));
-            $worksheet->setCellValue("E{$counter}", CHtml::encode(CHtml::value($receiveHeader, 'invoice_grand_total')));
-            $worksheet->setCellValue("F{$counter}", CHtml::encode(CHtml::value($receiveHeader, 'receive_item_date')));
-            $worksheet->setCellValue("G{$counter}", CHtml::encode(CHtml::value($receiveHeader, 'supplier_delivery_number')));
-            $worksheet->setCellValue("H{$counter}", CHtml::encode(CHtml::value($receiveHeader, 'invoice_tax_number')));
-            $worksheet->setCellValue("I{$counter}", CHtml::encode(CHtml::value($header, 'subtotal')));
-            $worksheet->setCellValue("J{$counter}", CHtml::encode(CHtml::value($header, 'ppn_price')));
+            $worksheet->setCellValue("C{$counter}", CHtml::encode(CHtml::value($header, 'supplier.name')));
+            $worksheet->setCellValue("D{$counter}", CHtml::encode(CHtml::value($receiveHeader, 'invoice_number')));
+            $worksheet->setCellValue("E{$counter}", CHtml::encode(CHtml::value($receiveHeader, 'invoice_date')));
+            $worksheet->setCellValue("F{$counter}", CHtml::encode(CHtml::value($receiveHeader, 'invoice_grand_total')));
+            $worksheet->setCellValue("G{$counter}", CHtml::encode(CHtml::value($receiveHeader, 'receive_item_date')));
+            $worksheet->setCellValue("H{$counter}", CHtml::encode(CHtml::value($receiveHeader, 'supplier_delivery_number')));
+            $worksheet->setCellValue("I{$counter}", CHtml::encode(CHtml::value($receiveHeader, 'invoice_tax_number')));
+            $worksheet->setCellValue("J{$counter}", CHtml::encode(CHtml::value($header, 'subtotal')));
+            $worksheet->setCellValue("K{$counter}", CHtml::encode(CHtml::value($header, 'ppn_price')));
 
             $counter++;
         }
-
-//        $worksheet->getStyle("A{$counter}:K{$counter}")->getFont()->setBold(true);
-//
-//        $worksheet->getStyle("A{$counter}:H{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
-//        $worksheet->getStyle("H{$counter}:J{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
-//        $worksheet->mergeCells("A{$counter}:C{$counter}");
-//        $worksheet->setCellValue("A{$counter}", 'Total Pembelian');
-//        $worksheet->setCellValue("D{$counter}", 'Rp');
-//        $worksheet->setCellValue("E{$counter}", $this->reportGrandTotal($purchaseInvoiceSummary->dataProvider));
-//        $worksheet->setCellValue("F{$counter}", $this->reportTotalPayment($purchaseInvoiceSummary->dataProvider));
-//        $worksheet->setCellValue("G{$counter}", $this->reportTotalRemaining($purchaseInvoiceSummary->dataProvider));
-//
-//        $counter++;
 
         for ($col = 'A'; $col !== 'Z'; $col++) {
             $objPHPExcel->getActiveSheet()

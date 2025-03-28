@@ -208,7 +208,7 @@ $this->breadcrumbs=array(
                     </tbody>
                     <tfoot>
                         <tr>
-                            <td colspan="10" style="text-align: right">TOTAL</td>
+                            <td colspan="10" style="text-align: right">SUB TOTAL</td>
                             <td style="text-align: right">
                                 <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($receiveItem, 'subTotal'))); ?>
                             </td>
@@ -220,7 +220,7 @@ $this->breadcrumbs=array(
                             </td>
                         </tr>
                         <tr>
-                            <td colspan="10" style="text-align: right">SUB TOTAL</td>
+                            <td colspan="10" style="text-align: right">GRAND TOTAL</td>
                             <td style="text-align: right">
                                 <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($receiveItem, 'grandTotal'))); ?>
                             </td>
@@ -243,10 +243,10 @@ $this->breadcrumbs=array(
                             </td>
                         </tr>
                         <tr>
-                            <td colspan="10" style="text-align: right">GRAND TOTAL</td>
+                            <td colspan="10" style="text-align: right">TOTAL + PEMBULATAN</td>
                             <td style="text-align: right">
                                 <span id="grand_total">
-                                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($receiveItem, 'invoice_grand_total_rounded'))); ?>
+                                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($receiveItem, 'grandTotalAfterRounding'))); ?>
                                 </span>
                             </td>
                         </tr>
