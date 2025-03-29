@@ -48,6 +48,10 @@ class PurchaseFlowSummaryController extends Controller {
             $this->redirect(array('summary'));
         }
         
+        if (isset($_GET['SaveExcel'])) {
+            $this->saveToExcel($purchaseFlowSummary, $startDate, $endDate, $transactionStatus);
+        }
+
         $this->render('summary', array(
             'purchaseOrder' => $purchaseOrder,
             'purchaseFlowSummary' => $purchaseFlowSummary,
@@ -101,7 +105,7 @@ class PurchaseFlowSummaryController extends Controller {
         return $grandTotal;
     }
 
-    protected function saveToExcel($saleInvoiceSummary, $startDate, $endDate, $branchId) {
+    protected function saveToExcel($purchaseFlowSummary, $startDate, $endDate, $transactionStatus) {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
 
@@ -116,75 +120,83 @@ class PurchaseFlowSummaryController extends Controller {
 
         $documentProperties = $objPHPExcel->getProperties();
         $documentProperties->setCreator('Raperind Motor');
-        $documentProperties->setTitle('Laporan Faktur Penjualan');
+        $documentProperties->setTitle('Laporan Pembelian Summary');
 
         $worksheet = $objPHPExcel->setActiveSheetIndex(0);
-        $worksheet->setTitle('Laporan Faktur Penjualan');
+        $worksheet->setTitle('Laporan Pembelian Summary');
 
-        $worksheet->mergeCells('A1:L1');
-        $worksheet->mergeCells('A2:L2');
-        $worksheet->mergeCells('A3:L3');
-        $worksheet->mergeCells('A4:L4');
+        $worksheet->mergeCells('A1:R1');
+        $worksheet->mergeCells('A2:R2');
+        $worksheet->mergeCells('A3:R3');
+        $worksheet->mergeCells('A4:R4');
         
-        $worksheet->getStyle('A1:L3')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-        $worksheet->getStyle('A1:L3')->getFont()->setBold(true);
-        $branch = Branch::model()->findByPk($branchId);
-        $worksheet->setCellValue('A1', 'Raperind Motor ' . CHtml::encode(CHtml::value($branch, 'name')));
-        $worksheet->setCellValue('A2', 'Laporan Faktur Penjualan');
+        $worksheet->getStyle('A1:R3')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->getStyle('A1:R3')->getFont()->setBold(true);
+        $worksheet->setCellValue('A1', 'Raperind Motor ');
+        $worksheet->setCellValue('A2', 'Laporan Pembelian Summary');
         $worksheet->setCellValue('A3', $startDateFormatted . ' - ' . $endDateFormatted);
 
-        $worksheet->getStyle("A6:L6")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
-        $worksheet->getStyle("A6:L6")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A6:R6")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A6:R6")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
-        $worksheet->getStyle('A6:L6')->getFont()->setBold(true);
-        $worksheet->setCellValue('A6', 'Tanggal');
-        $worksheet->setCellValue('B6', 'Faktur #');
-        $worksheet->setCellValue('C6', 'Jatuh Tempo');
-        $worksheet->setCellValue('D6', 'Customer');
-        $worksheet->setCellValue('E6', 'Type');
-        $worksheet->setCellValue('F6', 'Vehicle');
-        $worksheet->setCellValue('H6', 'Grand Total');
-        $worksheet->setCellValue('I6', 'Payment');
-        $worksheet->setCellValue('J6', 'Remaining');
-        $worksheet->setCellValue('K6', 'Status');
-        $worksheet->setCellValue('L6', 'User');
+        $worksheet->getStyle('A6:R6')->getFont()->setBold(true);
+        $worksheet->setCellValue('A6', 'No');
+        $worksheet->setCellValue('B6', 'PO #');
+        $worksheet->setCellValue('C6', 'Tanggal');
+        $worksheet->setCellValue('D6', 'Jam');
+        $worksheet->setCellValue('E6', 'Supplier');
+        $worksheet->setCellValue('F6', 'Status');
+        $worksheet->setCellValue('G6', 'Amount');
+        $worksheet->setCellValue('H6', 'Penerimaan');
+        $worksheet->setCellValue('I6', 'Tanggal');
+        $worksheet->setCellValue('J6', 'Jam');
+        $worksheet->setCellValue('K6', 'Movement In');
+        $worksheet->setCellValue('L6', 'Tanggal');
+        $worksheet->setCellValue('M6', 'Jam');
+        $worksheet->setCellValue('N6', 'Invoice');
+        $worksheet->setCellValue('O6', 'Tanggal');
+        $worksheet->setCellValue('P6', 'Jam');
+        $worksheet->setCellValue('Q6', 'Payment Out');
+        $worksheet->setCellValue('R6', 'Tanggal');
+        $worksheet->setCellValue('S6', 'Jam');
 
         $counter = 7;
-
-        $grandTotalSale = 0;
-        $grandTotalPayment = 0;
-        $grandTotalRemaining = 0;
-        foreach ($saleInvoiceSummary->dataProvider->data as $header) {
-            $totalPrice = $header->total_price; 
-            $totalPayment = $header->payment_amount;
-            $totalRemaining = $header->payment_left;
-            $worksheet->setCellValue("A{$counter}", $header->invoice_date);
-            $worksheet->setCellValue("B{$counter}", $header->invoice_number);
-            $worksheet->setCellValue("C{$counter}", CHtml::encode(CHtml::value($header, 'due_date')));
-            $worksheet->setCellValue("D{$counter}", CHtml::encode(CHtml::value($header, 'supplier.name')));
-            $worksheet->setCellValue("E{$counter}", CHtml::value($header, 'supplier.supplier_type'));
-            $worksheet->setCellValue("F{$counter}", CHtml::value($header, 'vehicle.plate_number'));
-            $worksheet->setCellValue("H{$counter}", $totalPrice);
-            $worksheet->setCellValue("I{$counter}", $totalPayment);
-            $worksheet->setCellValue("J{$counter}", $totalRemaining);
-            $worksheet->setCellValue("K{$counter}", $header->status);
-            $worksheet->setCellValue("L{$counter}", $header->user->username);
-            $grandTotalSale += $totalPrice;
-            $grandTotalPayment += $totalPayment;
-            $grandTotalRemaining += $totalRemaining;
+        foreach ($purchaseFlowSummary->dataProvider->data as $i => $header) {
+            $receiveItems = $header->transactionReceiveItems;
+            $receiveItemCodeNumbers = array_map(function($receiveItem) { return $receiveItem->receive_item_no; }, $receiveItems); 
+            $receiveItemInvoiceNumbers = array_map(function($receiveItem) { return $receiveItem->invoice_number; }, $receiveItems); 
+            $invoiceDates = array_map(function($receiveItem) { return CHtml::encode($receiveItem->invoice_date); }, $receiveItems); 
+            $receiveItemDates = array_map(function($receiveItem) { return CHtml::encode($receiveItem->receive_item_date); }, $receiveItems); 
+            $receiveItemTimes = array_map(function($receiveItem) { return CHtml::encode(substr($receiveItem->created_datetime, -8)); }, $receiveItems); 
+            $movementInHeaders = array_reduce(array_map(function($receiveItem) { return $receiveItem->movementInHeaders; }, $receiveItems), function($a, $b) { return in_array($b, $a) ? $a : array_merge($a, $b); }, array()); 
+            $movementInHeaderCodeNumbers = array_map(function($movementInHeader) { return $movementInHeader->movement_in_number; }, $movementInHeaders); 
+            $movementInDates = array_map(function($movementInHeader) { return CHtml::encode(substr($movementInHeader->date_posting, 0, 10)); }, $movementInHeaders); 
+            $movementInTimes = array_map(function($movementInHeader) { return CHtml::encode(substr($movementInHeader->date_posting, -8)); }, $movementInHeaders); 
+            $paymentOutDetails = array_reduce(array_map(function($receiveItem) { return $receiveItem->payOutDetails; }, $receiveItems), function($a, $b) { return in_array($b, $a) ? $a : array_merge($a, $b); }, array()); 
+            $paymentOutCodeNumbers = array_map(function($paymentOutDetail) { return $paymentOutDetail->paymentOut->payment_number; }, $paymentOutDetails); 
+            $paymentOutDates = array_map(function($paymentOutDetail) { return CHtml::encode($paymentOutDetail->paymentOut->payment_date); }, $paymentOutDetails); 
+            $paymentOutTimes = array_map(function($paymentOutDetail) { return CHtml::encode(substr($paymentOutDetail->paymentOut->created_datetime, -8)); }, $paymentOutDetails); 
+            $worksheet->setCellValue("A{$counter}", CHtml::encode($i + 1));
+            $worksheet->setCellValue("B{$counter}", $header->purchase_order_no);
+            $worksheet->setCellValue("C{$counter}", CHtml::encode(substr($header->purchase_order_date, 0, 10)));
+            $worksheet->setCellValue("D{$counter}", CHtml::encode(substr($header->purchase_order_date, -8)));
+            $worksheet->setCellValue("E{$counter}", CHtml::value($header, 'supplier.name'));
+            $worksheet->setCellValue("F{$counter}", CHtml::value($header, 'status_document'));
+            $worksheet->setCellValue("G{$counter}", CHtml::value($header, 'total_price'));
+            $worksheet->setCellValue("H{$counter}", CHtml::encode(implode(', ', $receiveItemCodeNumbers)));
+            $worksheet->setCellValue("I{$counter}", CHtml::encode(implode(', ', $receiveItemDates)));
+            $worksheet->setCellValue("J{$counter}", CHtml::encode(implode(', ', $receiveItemTimes)));
+            $worksheet->setCellValue("K{$counter}", CHtml::encode(implode(', ', $movementInHeaderCodeNumbers)));
+            $worksheet->setCellValue("L{$counter}", CHtml::encode(implode(', ', $movementInDates)));
+            $worksheet->setCellValue("M{$counter}", CHtml::encode(implode(', ', $movementInTimes)));
+            $worksheet->setCellValue("N{$counter}", CHtml::encode(implode(', ', $receiveItemInvoiceNumbers)));
+            $worksheet->setCellValue("O{$counter}", CHtml::encode(implode(', ', $invoiceDates)));
+            $worksheet->setCellValue("P{$counter}", CHtml::encode(implode(', ', $receiveItemTimes)));
+            $worksheet->setCellValue("Q{$counter}", CHtml::encode(implode(', ', $paymentOutCodeNumbers)));
+            $worksheet->setCellValue("R{$counter}", CHtml::encode(implode(', ', $paymentOutDates)));
+            $worksheet->setCellValue("S{$counter}", CHtml::encode(implode(', ', $paymentOutTimes)));
             $counter++;
         }
-
-        $worksheet->getStyle("A{$counter}:U{$counter}")->getFont()->setBold(true);
-        $worksheet->getStyle("A{$counter}:U{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
-        $worksheet->getStyle("H{$counter}:J{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
-        $worksheet->setCellValue("F{$counter}", 'Total');
-        $worksheet->setCellValue("G{$counter}", 'Rp');
-        $worksheet->setCellValue("H{$counter}", $grandTotalSale);
-        $worksheet->setCellValue("I{$counter}", $grandTotalPayment);
-        $worksheet->setCellValue("J{$counter}", $grandTotalRemaining);
-
-        $counter++;
 
         for ($col = 'A'; $col !== 'Z'; $col++) {
             $objPHPExcel->getActiveSheet()
@@ -195,7 +207,7 @@ class PurchaseFlowSummaryController extends Controller {
         ob_end_clean();
 
         header('Content-type: application/vnd.ms-excel');
-        header('Content-Disposition: attachment;filename="Laporan Faktur Penjualan.xls"');
+        header('Content-Disposition: attachment;filename="Laporan Pembelian Summary.xls"');
         header('Cache-Control: max-age=0');
         
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');

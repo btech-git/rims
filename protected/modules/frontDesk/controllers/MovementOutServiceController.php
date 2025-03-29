@@ -76,7 +76,8 @@ class MovementOutServiceController extends Controller {
 
     public function actionCreate($registrationTransactionId) {
         $movementOut = $this->instantiate(null);
-        $movementOut->header->date_posting = date('Y-m-d');
+        
+        $movementOut->header->date_posting = Yii::app()->dateFormatter->format('yyyy-M-dd', strtotime($movementOut->header->date_posting)) . ' ' . date('H:i:s');
         $movementOut->header->date_created = date('Y-m-d H:i:s');
         $movementOut->header->branch_id = Yii::app()->user->branch_id;
         $movementOut->header->user_id = Yii::app()->user->id;

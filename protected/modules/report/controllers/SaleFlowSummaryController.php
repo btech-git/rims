@@ -193,15 +193,15 @@ class SaleFlowSummaryController extends Controller {
             $invoiceHeaders = $header->invoiceHeaders;
             $invoiceHeaderCodeNumbers = array_map(function($invoiceHeader) { return $invoiceHeader->invoice_number; }, $invoiceHeaders);
             $invoiceHeaderTransactionDates = array_map(function($invoiceHeader) { return $invoiceHeader->invoice_date; }, $invoiceHeaders);
-            $invoiceHeaderTransactionTimes = array_map(function($invoiceHeader) { return Yii::app()->dateFormatter->format("HH:MM:ss", $invoiceHeader->created_datetime); }, $invoiceHeaders);
+            $invoiceHeaderTransactionTimes = array_map(function($invoiceHeader) { return substr($invoiceHeader->created_datetime, -8); }, $invoiceHeaders);
             $paymentInDetails = array_reduce(array_map(function($invoiceHeader) { return $invoiceHeader->paymentInDetails; }, $invoiceHeaders), function($a, $b) { return in_array($b, $a) ? $a : array_merge($a, $b); }, array());
             $paymentInHeaderCodeNumbers = array_map(function($paymentInDetail) { return $paymentInDetail->paymentIn->payment_number; }, $paymentInDetails);
             $paymentInHeaderDates = array_map(function($paymentInDetail) { return $paymentInDetail->paymentIn->payment_date; }, $paymentInDetails);
-            $paymentInHeaderTimes = array_map(function($paymentInDetail) { return Yii::app()->dateFormatter->format("HH:MM:ss", $paymentInDetail->paymentIn->created_datetime); }, $paymentInDetails);
+            $paymentInHeaderTimes = array_map(function($paymentInDetail) { return substr($paymentInDetail->paymentIn->created_datetime, -8); }, $paymentInDetails);
             $worksheet->setCellValue("A{$counter}", CHtml::encode($i + 1));
             $worksheet->setCellValue("B{$counter}", $header->transaction_number);
             $worksheet->setCellValue("C{$counter}", CHtml::encode(Yii::app()->dateFormatter->format("d MMMM yyyy", CHtml::value($header, 'transaction_date'))));
-            $worksheet->setCellValue("D{$counter}", CHtml::encode(Yii::app()->dateFormatter->format("HH:MM:ss", CHtml::value($header, 'transaction_date'))));
+            $worksheet->setCellValue("D{$counter}", CHtml::encode(substr($header, 'transaction_date', -8)));
             $worksheet->setCellValue("E{$counter}", CHtml::encode(CHtml::value($header, 'customer.name')));
             $worksheet->setCellValue("F{$counter}", CHtml::value($header, 'vehicle.plate_number'));
             $worksheet->setCellValue("G{$counter}", CHtml::value($header, 'status'));
