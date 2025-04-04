@@ -201,7 +201,7 @@ class SaleFlowSummaryController extends Controller {
             $worksheet->setCellValue("A{$counter}", CHtml::encode($i + 1));
             $worksheet->setCellValue("B{$counter}", $header->transaction_number);
             $worksheet->setCellValue("C{$counter}", CHtml::encode(Yii::app()->dateFormatter->format("d MMMM yyyy", CHtml::value($header, 'transaction_date'))));
-            $worksheet->setCellValue("D{$counter}", CHtml::encode(substr($header, 'created_datetime', -8)));
+            $worksheet->setCellValue("D{$counter}", CHtml::encode(substr($header->created_datetime, -8)));
             $worksheet->setCellValue("E{$counter}", CHtml::encode(CHtml::value($header, 'customer.name')));
             $worksheet->setCellValue("F{$counter}", CHtml::value($header, 'vehicle.plate_number'));
             $worksheet->setCellValue("G{$counter}", CHtml::value($header, 'status'));
