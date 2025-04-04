@@ -26,7 +26,7 @@ class SaleFlowSummary extends CComponent {
     }
 
     public function setupSorting() {
-        $this->dataProvider->sort->attributes = array('t.transaction_date');
+        $this->dataProvider->sort->attributes = array('t.transaction_number');
         $this->dataProvider->criteria->order = $this->dataProvider->sort->orderBy;
     }
 
