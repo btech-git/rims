@@ -513,7 +513,7 @@ class RegistrationTransaction extends MonthlyTransactionActiveRecord {
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
             'sort' => array(
-                'defaultOrder' => 'transaction_date DESC',
+                'defaultOrder' => 'transaction_date ASC',
             ),
             'pagination' => array(
                 'pageSize' => 500,
