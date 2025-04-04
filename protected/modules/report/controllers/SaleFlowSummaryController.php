@@ -40,7 +40,7 @@ class SaleFlowSummaryController extends Controller {
         $customerDataProvider = $customer->search();
         $customerDataProvider->pagination->pageVar = 'page_dialog';
 
-        $saleFlowSummary = new SaleFlowSummary($registrationTransaction->search());
+        $saleFlowSummary = new SaleFlowSummary($registrationTransaction->searchReport());
         $saleFlowSummary->setupLoading();
         $saleFlowSummary->setupPaging($pageSize, $currentPage);
         $saleFlowSummary->setupSorting();
