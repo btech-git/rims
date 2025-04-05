@@ -99,7 +99,7 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                 <div style="font-weight: bold; text-align: center">
                     <?php $branch = Branch::model()->findByPk($branchId); ?>
                     <div style="font-size: larger">Raperind Motor <?php echo CHtml::encode(CHtml::value($branch, 'name')); ?></div>
-                    <div style="font-size: larger">Laporan Penjualan Jasa</div>
+                    <div style="font-size: larger">Laporan Penjualan Jasa Monthly</div>
                     <div><?php echo $monthList[$month] . ' ' . $year; ?></div>
                 </div>
 
