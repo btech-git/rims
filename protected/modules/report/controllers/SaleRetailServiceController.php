@@ -76,9 +76,11 @@ class SaleRetailServiceController extends Controller {
     public function actionAjaxHtmlUpdateServiceCategorySelect() {
         if (Yii::app()->request->isAjaxRequest) {
             $serviceTypeId = isset($_GET['ServiceTypeId']) ? $_GET['ServiceTypeId'] : 0;
+            $serviceCategoryId = isset($_GET['ServiceCategoryId']) ? $_GET['ServiceCategoryId'] : 0;
 
             $this->renderPartial('_serviceCategorySelect', array(
                 'serviceTypeId' => $serviceTypeId,
+                'serviceCategoryId' => $serviceCategoryId,
             ));
         }
     }

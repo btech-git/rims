@@ -510,6 +510,16 @@
                                         'url' => array('/report/yearlyPurchaseTaxSummary/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('director')
                                     ),
+                                    array(
+                                        'label' => 'Laporan Penjualan Parts Bulanan', 
+                                        'url' => array('/report/saleByProductMonthly/summary'), 
+                                        'visible' => Yii::app()->user->checkAccess('director')
+                                    ),
+                                    array(
+                                        'label' => 'Laporan Penjualan Jasa Bulanan', 
+                                        'url' => array('/report/saleByServiceMonthly/summary'), 
+                                        'visible' => Yii::app()->user->checkAccess('director')
+                                    ),
                                 ),
                             )); ?>
                         <?php endif; ?>

@@ -704,6 +704,106 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
         return $resultSet;
     }
     
+    public static function getSaleReportByProduct($startDate, $endDate, $branchId, $brandId, $subBrandId, $subBrandSeriesId, $masterCategoryId, $subMasterCategoryId, $subCategoryId) {
+        $branchConditionSql = '';
+        $brandConditionSql = '';
+        $subBrandConditionSql = '';
+        $subBrandSeriesConditionSql = '';
+        $masterCategoryConditionSql = '';
+        $subMasterCategoryConditionSql = '';
+        $subCategoryConditionSql = '';
+        
+        $params = array(
+            ':start_date' => $startDate,
+            ':end_date' => $endDate,
+        );
+        
+        if (!empty($branchId)) {
+            $branchConditionSql = ' AND h.branch_id = :branch_id';
+            $params[':branch_id'] = $branchId;
+        }
+        
+        if (!empty($brandId)) {
+            $brandConditionSql = ' AND p.brand_id = :brand_id';
+            $params[':brand_id'] = $brandId;
+        }
+        
+        if (!empty($subBrandId)) {
+            $subBrandConditionSql = ' AND p.sub_brand_id = :sub_brand_id';
+            $params[':sub_brand_id'] = $subBrandId;
+        }
+        
+        if (!empty($subBrandSeriesId)) {
+            $subBrandSeriesConditionSql = ' AND p.sub_brand_series_id = :sub_brand_series_id';
+            $params[':sub_brand_series_id'] = $subBrandSeriesId;
+        }
+        
+        if (!empty($masterCategoryId)) {
+            $masterCategoryConditionSql = ' AND p.product_master_category_id = :product_master_category_id';
+            $params[':product_master_category_id'] = $masterCategoryId;
+        }
+        
+        if (!empty($subMasterCategoryId)) {
+            $subMasterCategoryConditionSql = ' AND p.product_sub_master_category_id = :product_sub_master_category_id';
+            $params[':product_sub_master_category_id'] = $subMasterCategoryId;
+        }
+        
+        if (!empty($subCategoryId)) {
+            $subCategoryConditionSql = ' AND p.product_sub_category_id = :product_sub_category_id';
+            $params[':product_sub_category_id'] = $subCategoryId;
+        }
+        
+        $sql = "SELECT DATE(h.invoice_date) AS transaction_date, d.product_id, SUM(d.total_price) AS total_price, SUM(d.quantity) AS total_quantity
+                FROM " . InvoiceHeader::model()->tableName() . " h 
+                INNER JOIN " . InvoiceDetail::model()->tableName() . " d ON h.id = d.invoice_id
+                INNER JOIN " . Product::model()->tableName() . " p ON p.id = d.product_id
+                WHERE DATE(h.invoice_date) BETWEEN :start_date AND :end_date AND h.status NOT LIKE '%CANCEL%'" . $branchConditionSql . $brandConditionSql . $subBrandConditionSql . $subBrandSeriesConditionSql . $masterCategoryConditionSql . $subMasterCategoryConditionSql . $subCategoryConditionSql . "
+                GROUP BY DATE(h.invoice_date), d.product_id
+                ORDER BY transaction_date ASC, d.product_id ASC";
+        
+        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
+
+        return $resultSet;
+    }
+    
+    public static function getSaleReportByService($startDate, $endDate, $branchId, $categoryId, $typeId) {
+        $branchConditionSql = '';
+        $categoryConditionSql = '';
+        $typeConditionSql = '';
+        
+        $params = array(
+            ':start_date' => $startDate,
+            ':end_date' => $endDate,
+        );
+        
+        if (!empty($branchId)) {
+            $branchConditionSql = ' AND h.branch_id = :branch_id';
+            $params[':branch_id'] = $branchId;
+        }
+        
+        if (!empty($categoryId)) {
+            $categoryConditionSql = ' AND s.service_category_id = :service_category_id';
+            $params[':service_category_id'] = $categoryId;
+        }
+
+        if (!empty($typeId)) {
+            $typeConditionSql = ' AND s.service_type_id = :service_type_id';
+            $params[':service_type_id'] = $typeId;
+        }
+
+        $sql = "SELECT DATE(h.invoice_date) AS transaction_date, d.service_id, SUM(d.total_price) AS total_price, COUNT(d.service_id) AS total_quantity
+                FROM " . InvoiceHeader::model()->tableName() . " h 
+                INNER JOIN " . InvoiceDetail::model()->tableName() . " d ON h.id = d.invoice_id
+                INNER JOIN " . Service::model()->tableName() . " s ON s.id = d.service_id
+                WHERE DATE(h.invoice_date) BETWEEN :start_date AND :end_date AND h.status NOT LIKE '%CANCEL%'" . $categoryConditionSql . $typeConditionSql . "
+                GROUP BY DATE(h.invoice_date), d.service_id
+                ORDER BY transaction_date ASC, d.service_id ASC";
+        
+        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
+
+        return $resultSet;
+    }
+    
     public function getTotalDiscountProduct() {
         $total = 0; 
         

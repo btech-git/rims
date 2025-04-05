@@ -152,22 +152,22 @@ class SaleFlowSummaryController extends Controller {
         $worksheet = $objPHPExcel->setActiveSheetIndex(0);
         $worksheet->setTitle('Penjualan Retail Summary');
 
-        $worksheet->mergeCells('A1:P1');
-        $worksheet->mergeCells('A2:P2');
-        $worksheet->mergeCells('A3:P3');
-        $worksheet->mergeCells('A4:P4');
+        $worksheet->mergeCells('A1:T1');
+        $worksheet->mergeCells('A2:T2');
+        $worksheet->mergeCells('A3:T3');
+        $worksheet->mergeCells('A4:T4');
         
-        $worksheet->getStyle('A1:P3')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-        $worksheet->getStyle('A1:P3')->getFont()->setBold(true);
+        $worksheet->getStyle('A1:T3')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->getStyle('A1:T3')->getFont()->setBold(true);
         $branch = Branch::model()->findByPk($branchId);
         $worksheet->setCellValue('A1', 'Raperind Motor ' . CHtml::encode(CHtml::value($branch, 'name')));
         $worksheet->setCellValue('A2', 'Laporan Penjualan Retail Summary');
         $worksheet->setCellValue('A3', $startDateFormatted . ' - ' . $endDateFormatted);
 
-        $worksheet->getStyle("A6:P6")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
-        $worksheet->getStyle("A6:P6")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A6:T6")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A6:T6")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
-        $worksheet->getStyle('A6:P6')->getFont()->setBold(true);
+        $worksheet->getStyle('A6:T6')->getFont()->setBold(true);
         $worksheet->setCellValue('A6', 'No');
         $worksheet->setCellValue('B6', 'RG #');
         $worksheet->setCellValue('C6', 'Tanggal');
