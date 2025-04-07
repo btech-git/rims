@@ -11,7 +11,7 @@ class PurchaseInvoiceTaxOnlySummary extends CComponent {
     public function setupLoading() {
         $this->dataProvider->criteria->with = array(
             'supplier',
-            'mainBranch',
+            'recipientBranch',
         );
     }
 
@@ -32,8 +32,8 @@ class PurchaseInvoiceTaxOnlySummary extends CComponent {
     public function setupFilter($filters) {
         $startDate = (empty($filters['startDate'])) ? date('Y-m-d') : $filters['startDate'];
         $endDate = (empty($filters['endDate'])) ? date('Y-m-d') : $filters['endDate'];
-        $this->dataProvider->criteria->addCondition('t.status_document = "Approved" AND t.tax_percentage > 0');
-        $this->dataProvider->criteria->addBetweenCondition('substr(t.purchase_order_date, 1, 10)', $startDate, $endDate);
+        $this->dataProvider->criteria->addCondition('t.user_id_cancelled IS null AND t.invoice_tax_nominal > 0');
+        $this->dataProvider->criteria->addBetweenCondition('substr(t.receive_item_date, 1, 10)', $startDate, $endDate);
         $this->dataProvider->criteria->compare('supplier.name', $filters['supplierName'], TRUE);
     }
 }

@@ -36,14 +36,14 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                     <label class="prefix">Supplier</label>
                                 </div>
                                 <div class="small-8 columns">
-                                    <?php echo CHtml::activeTextField($purchaseOrderHeader, 'supplier_id', array(
+                                    <?php echo CHtml::activeTextField($receiveItemHeader, 'supplier_id', array(
                                         'readonly' => true,
                                         'onclick' => '$("#supplier-dialog").dialog("open"); return false;',
                                         'onkeypress' => 'if (event.keyCode == 13) { $("#supplier-dialog").dialog("open"); return false; }'
                                     )); ?>
 
                                     <?php echo CHtml::openTag('span', array('id' => 'supplier_name')); ?>
-                                    <?php echo CHtml::encode(CHtml::value($purchaseOrderHeader, 'supplier.company')); ?>
+                                    <?php echo CHtml::encode(CHtml::value($receiveItemHeader, 'supplier.company')); ?>
                                     <?php echo CHtml::closeTag('span'); ?>    
                                 </div>
                             </div>
@@ -106,27 +106,27 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                     <span class="prefix">Branch </span>
                                 </div>
                                  <div class="small-8 columns">
-                                      <?php echo CHtml::activeDropDownlist($purchaseOrderHeader, 'main_branch_id', CHtml::listData(Branch::model()->findAllbyAttributes(array('status'=>'Active')), 'id','name'), array('empty'=>'-- All Branch --')); ?>
+                                      <?php echo CHtml::activeDropDownlist($receiveItemHeader, 'recipient_branch_id', CHtml::listData(Branch::model()->findAllbyAttributes(array('status'=>'Active')), 'id','name'), array('empty'=>'-- All Branch --')); ?>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="field">
+<!--                        <div class="field">
                             <div class="row collapse">
                                 <div class="small-4 columns">
                                     <span class="prefix">Status</span>
                                 </div>
                                  <div class="small-8 columns">
-                                      <?php echo CHtml::activeDropDownlist($purchaseOrderHeader, 'status_document', array(
+                                      <?php /*echo CHtml::activeDropDownlist($receiveItemHeader, 'status_document', array(
                                           'Approved' => 'Approved',
                                           'Draft' => 'Draft',
                                           'Revised' => 'Revised',
                                           'Rejected' => 'Rejected',
                                           'CANCELLED!!!' => 'CANCELLED!!!',
-                                      ), array('empty'=>'-- All Status --')); ?>
+                                      ), array('empty'=>'-- All Status --'));*/ ?>
                                 </div>
                             </div>
-                        </div>
+                        </div>-->
 
                         <div class="clear"></div>
                 
@@ -196,7 +196,7 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
             'header' => '',
         ),
         'selectionChanged' => 'js:function(id) {
-            $("#' . CHtml::activeId($purchaseOrderHeader, 'supplier_id') . '").val($.fn.yiiGridView.getSelection(id));
+            $("#' . CHtml::activeId($receiveItemHeader, 'supplier_id') . '").val($.fn.yiiGridView.getSelection(id));
             $("#supplier-dialog").dialog("close");
             if ($.fn.yiiGridView.getSelection(id) == "")
             {
