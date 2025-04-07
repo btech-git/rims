@@ -1,16 +1,16 @@
 <div class="grid-view">
-    <table class="report" style="table-layout: fixed; width: 2000px">
+    <table class="report" style="table-layout: fixed; width: 9000px">
         <tr id="header1">
             <th style="width: 80px">Tanggal</th>
             <?php foreach ($productList as $productItem): ?>
-                <th style="width: 120px; overflow: hidden" colspan="2"><?php echo CHtml::encode(CHtml::value($productItem, 'name')); ?></th>
+                <th style="width: 200px; overflow: hidden" colspan="2"><?php echo CHtml::encode(CHtml::value($productItem, 'name')); ?></th>
             <?php endforeach; ?>
         </tr>
         <tr id="header1">
             <th></th>
             <?php foreach ($productList as $productItem): ?>
-                <th style="width: 120px">Amount</th>
-                <th style="width: 120px">Qty</th>
+                <th>Amount</th>
+                <th>Qty</th>
             <?php endforeach; ?>
         </tr>
         <?php $dppSums = array(); ?>
@@ -27,8 +27,8 @@
                     <?php $key = $year . '-' . $month . '-' . $day . '|p|' . $productItem->id; ?>
                     <?php $dpp = isset($salePriceReportData[$key]) ? $salePriceReportData[$key] : ''; ?>
                     <?php $quantity = isset($saleQuantityReportData[$key]) ? $saleQuantityReportData[$key] : ''; ?>
-                    <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $dpp)); ?></td>
-                    <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $quantity)); ?></td>
+                    <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $dpp)); ?></td>
+                    <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $quantity)); ?></td>
                     <?php $dppProductSum += $dpp; ?>
                     <?php $dppSum += $dpp; ?>
                     <?php if (!isset($dppSums['p' . $productItem->id])): ?>
@@ -52,8 +52,8 @@
             <?php $dppProductSumTotal = '0.00'; ?>
             <?php $dppSumTotal = '0.00'; ?>
             <?php foreach ($productList as $productItem): ?>
-                <td style="text-align: right; font-weight: bold"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $dppSums['p' . $productItem->id])); ?></td>
-                <td style="text-align: right; font-weight: bold"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $quantitySums['p' . $productItem->id])); ?></td>
+                <td style="text-align: right; font-weight: bold"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $dppSums['p' . $productItem->id])); ?></td>
+                <td style="text-align: right; font-weight: bold"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $quantitySums['p' . $productItem->id])); ?></td>
                 <?php $dppProductSumTotal += $dppSums['p' . $productItem->id]; ?>
                 <?php $dppSumTotal += $dppSums['p' . $productItem->id]; ?>
             <?php endforeach; ?>

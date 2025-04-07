@@ -309,6 +309,26 @@ class TransactionReceiveItem extends MonthlyTransactionActiveRecord {
         ));
     }
 
+    public function getTotalRetailPrice() {
+        $total = 0.00;
+
+        foreach ($this->transactionReceiveItemDetails as $detail) {
+            $total += $detail->purchaseRetailPrice;
+        }
+
+        return $total;
+    }
+
+    public function getTotalPurchaseDiscount() {
+        $total = 0.00;
+
+        foreach ($this->transactionReceiveItemDetails as $detail) {
+            $total += $detail->purchaseDiscount;
+        }
+
+        return $total;
+    }
+
     public function getSubTotal() {
         $total = 0.00;
 
@@ -316,11 +336,11 @@ class TransactionReceiveItem extends MonthlyTransactionActiveRecord {
             $total += $detail->totalPrice;
         }
 
-        return $total / (1 + ($this->purchaseOrder->tax_percentage /100));
+        return round($total / (1 + ($this->purchaseOrder->tax_percentage /100)), 2);
     }
 
     public function getTaxNominal() {
-        return ((int) $this->purchaseOrder->tax_percentage > 0) ? $this->subTotal * $this->purchaseOrder->tax_percentage /100 : 0.00;
+        return ((int) $this->purchaseOrder->tax_percentage > 0) ? round($this->subTotal * $this->purchaseOrder->tax_percentage /100, 2) : 0.00;
     }
 
     public function getGrandTotal() {

@@ -222,12 +222,13 @@ class TransactionPurchaseOrderDetail extends CActiveRecord {
     public function getDiscount1Amount() {
         $amount = 0.00;
 
-        if ($this->discount1_type == 1)
+        if ($this->discount1_type == 1) {
             $amount = round($this->retail_price * $this->discount1_nominal / 100, 2);
-        elseif ($this->discount1_type == 2)
+        } elseif ($this->discount1_type == 2) {
             $amount = $this->discount1_nominal;
-        else
+        } else {
             $amount = 0.00;
+        }
 
         return $amount;
     }
@@ -239,12 +240,13 @@ class TransactionPurchaseOrderDetail extends CActiveRecord {
     public function getDiscount2Amount() {
         $amount = 0.00;
 
-        if ($this->discount2_type == 1)
+        if ($this->discount2_type == 1) {
             $amount = round($this->unitPriceAfterDiscount1 * $this->discount2_nominal / 100, 2);
-        elseif ($this->discount2_type == 2)
+        } elseif ($this->discount2_type == 2) {
             $amount = $this->discount2_nominal;
-        else
+        } else {
             $amount = 0.00;
+        }
 
         return $amount;
     }
@@ -256,12 +258,13 @@ class TransactionPurchaseOrderDetail extends CActiveRecord {
     public function getDiscount3Amount() {
         $amount = 0.00;
 
-        if ($this->discount3_type == 1)
+        if ($this->discount3_type == 1) {
             $amount = round($this->unitPriceAfterDiscount2 * $this->discount3_nominal / 100, 2);
-        elseif ($this->discount3_type == 2)
+        } elseif ($this->discount3_type == 2) {
             $amount = $this->discount3_nominal;
-        else
+        } else {
             $amount = 0.00;
+        }
 
         return $amount;
     }
@@ -273,12 +276,13 @@ class TransactionPurchaseOrderDetail extends CActiveRecord {
     public function getDiscount4Amount() {
         $amount = 0.00;
 
-        if ($this->discount4_type == 1)
+        if ($this->discount4_type == 1) {
             $amount = round($this->unitPriceAfterDiscount3 * $this->discount4_nominal / 100, 2);
-        elseif ($this->discount4_type == 2)
+        } elseif ($this->discount4_type == 2) {
             $amount = $this->discount4_nominal;
-        else
+        } else {
             $amount = 0.00;
+        }
 
         return $amount;
     }
@@ -290,12 +294,13 @@ class TransactionPurchaseOrderDetail extends CActiveRecord {
     public function getDiscount5Amount() {
         $amount = 0.00;
 
-        if ($this->discount5_type == 1)
+        if ($this->discount5_type == 1) {
             $amount = round($this->unitPriceAfterDiscount4 * $this->discount5_nominal / 100, 2);
-        elseif ($this->discount5_type == 2)
+        } elseif ($this->discount5_type == 2) {
             $amount = $this->discount5_nominal;
-        else
+        } else {
             $amount = 0.00;
+        }
 
         return $amount;
     }
@@ -359,7 +364,7 @@ class TransactionPurchaseOrderDetail extends CActiveRecord {
     }
 
     public function getTotalDiscount() {
-        return $this->getDiscount1Amount() + $this->getDiscount2Amount() + $this->getDiscount3Amount() + $this->getDiscount4Amount() + $this->getDiscount5Amount();
+        return ($this->getDiscount1Amount() + $this->getDiscount2Amount() + $this->getDiscount3Amount() + $this->getDiscount4Amount() + $this->getDiscount5Amount());
     }
 
     public function getSubTotal($tax, $taxPercentage) {

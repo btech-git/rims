@@ -413,6 +413,16 @@ class TransactionPurchaseOrder extends MonthlyTransactionActiveRecord {
         return $this->total_price - $this->payment_amount;
     }
 
+    public function getTotalDiscount() {
+        $total = '0.00'; 
+        
+        foreach ($this->transactionPurchaseOrderDetails as $detail) {
+            $total += $detail->totalDiscount;
+        }
+        
+        return $total;
+    }
+    
     public function searchByPendingJournal() {
         // @todo Please modify the following code to remove attributes that should not be searched.
 

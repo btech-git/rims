@@ -25,11 +25,11 @@ class SaleByProductMonthlyController extends Controller {
         ini_set('memory_limit', '1024M');
 
         $branchId = isset($_GET['BranchId']) ? $_GET['BranchId'] : '';
-        $brandId = isset($_GET['BrandId']) ? $_GET['BrandId'] : 1;
-        $subBrandId = isset($_GET['SubBrandId']) ? $_GET['SubBrandId'] : 1;
-        $subBrandSeriesId = isset($_GET['SubBrandSeriesId']) ? $_GET['SubBrandSeriesId'] : 1;
-        $masterCategoryId = isset($_GET['MasterCategoryId']) ? $_GET['MasterCategoryId'] : 1;
-        $subMasterCategoryId = isset($_GET['SubMasterCategoryId']) ? $_GET['SubMasterCategoryId'] : 1;
+        $brandId = isset($_GET['BrandId']) ? $_GET['BrandId'] : '';
+        $subBrandId = isset($_GET['SubBrandId']) ? $_GET['SubBrandId'] : '';
+        $subBrandSeriesId = isset($_GET['SubBrandSeriesId']) ? $_GET['SubBrandSeriesId'] : '';
+        $masterCategoryId = isset($_GET['MasterCategoryId']) ? $_GET['MasterCategoryId'] : '';
+        $subMasterCategoryId = isset($_GET['SubMasterCategoryId']) ? $_GET['SubMasterCategoryId'] : '';
         $subCategoryId = isset($_GET['SubCategoryId']) ? $_GET['SubCategoryId'] : 1;
 
         $monthNow = date('m');

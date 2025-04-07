@@ -168,6 +168,20 @@ class TransactionReceiveItemDetail extends CActiveRecord {
         return $this->qty_received * $this->getUnitPrice();
     }
     
+    public function getPurchaseRetailPrice() {
+        
+        $retailPrice = !empty($this->purchase_order_detail_id) ? $this->purchaseOrderDetail->retail_price : "0.00";
+        
+        return $retailPrice * $this->qty_received;
+    }
+    
+    public function getPurchaseDiscount() {
+        
+        $discountAmount = !empty($this->purchase_order_detail_id) ? $this->purchaseOrderDetail->totalDiscount : "0.00";
+        
+        return $discountAmount * $this->qty_received;
+    }
+    
     public function getTotalPrice() {
         $total = 0.00; 
         
