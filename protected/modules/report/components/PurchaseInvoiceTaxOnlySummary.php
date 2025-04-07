@@ -25,7 +25,7 @@ class PurchaseInvoiceTaxOnlySummary extends CComponent {
     }
 
     public function setupSorting() {
-        $this->dataProvider->sort->attributes = array('t.purchase_order_date', 'supplier.name');
+        $this->dataProvider->sort->attributes = array('t.receive_item_date', 't.receive_item_no');
         $this->dataProvider->criteria->order = $this->dataProvider->sort->orderBy;
     }
 
