@@ -613,30 +613,30 @@ class MovementOutHeaderController extends Controller {
                         $value = $movementDetail->quantity * $movementDetail->product->hpp;
 
                         if ((int)$movement->movement_type == 3) {
-                            $coaId = $movementDetail->product->productMasterCategory->coa_outstanding_part_id;
-                            $journalReferences[$coaId]['debet_kredit'] = 'D';
-                            $journalReferences[$coaId]['is_coa_category'] = 1;
-                            $journalReferences[$coaId]['values'][] = $value;
+//                            $coaId = $movementDetail->product->productMasterCategory->coa_outstanding_part_id;
+//                            $journalReferences[$coaId]['debet_kredit'] = 'D';
+//                            $journalReferences[$coaId]['is_coa_category'] = 1;
+//                            $journalReferences[$coaId]['values'][] = $value;
                             $coaId = $movementDetail->product->productSubMasterCategory->coa_outstanding_part_id;
                             $journalReferences[$coaId]['debet_kredit'] = 'D';
                             $journalReferences[$coaId]['is_coa_category'] = 0;
                             $journalReferences[$coaId]['values'][] = $value;
 
                         } else {
-                            $coaId = $movementDetail->product->productMasterCategory->coa_inventory_in_transit;
-                            $journalReferences[$coaId]['debet_kredit'] = 'D';
-                            $journalReferences[$coaId]['is_coa_category'] = 1;
-                            $journalReferences[$coaId]['values'][] = $value;
+//                            $coaId = $movementDetail->product->productMasterCategory->coa_inventory_in_transit;
+//                            $journalReferences[$coaId]['debet_kredit'] = 'D';
+//                            $journalReferences[$coaId]['is_coa_category'] = 1;
+//                            $journalReferences[$coaId]['values'][] = $value;
                             $coaId = $movementDetail->product->productSubMasterCategory->coa_inventory_in_transit;
                             $journalReferences[$coaId]['debet_kredit'] = 'D';
                             $journalReferences[$coaId]['is_coa_category'] = 0;
                             $journalReferences[$coaId]['values'][] = $value;
                         }
 
-                        $coaId = $movementDetail->product->productMasterCategory->coa_persediaan_barang_dagang;
-                        $journalReferences[$coaId]['debet_kredit'] = 'K';
-                        $journalReferences[$coaId]['is_coa_category'] = 1;
-                        $journalReferences[$coaId]['values'][] = $value;
+//                        $coaId = $movementDetail->product->productMasterCategory->coa_persediaan_barang_dagang;
+//                        $journalReferences[$coaId]['debet_kredit'] = 'K';
+//                        $journalReferences[$coaId]['is_coa_category'] = 1;
+//                        $journalReferences[$coaId]['values'][] = $value;
                         $coaId = $movementDetail->product->productSubMasterCategory->coa_persediaan_barang_dagang;
                         $journalReferences[$coaId]['debet_kredit'] = 'K';
                         $journalReferences[$coaId]['is_coa_category'] = 0;
@@ -822,6 +822,69 @@ class MovementOutHeaderController extends Controller {
                         $inventoryDetail->purchase_price = $movementDetail->product->averageCogs;
                         $inventoryDetail->transaction_time = date('H:i:s');
                         $inventoryDetail->save(false);
+                    }
+                    
+                    $movementType = $movementOut->header->movement_type;
+                    if ($movementType == 1) {
+                        $criteria = new CDbCriteria;
+                        $criteria->condition = "delivery_order_detail_id =" . $movementDetail->delivery_order_detail_id . " AND product_id = " . $movementDetail->product_id;
+                        $mvmntDetails = MovementOutDetail::model()->findAll($criteria);
+
+                        $quantity = 0;
+
+                        foreach ($mvmntDetails as $mvmntDetail) {
+                            $quantity += $mvmntDetail->quantity;
+                        }
+
+                        $deliveryDetail = TransactionDeliveryOrderDetail::model()->findByAttributes(array('id' => $movementDetail->delivery_order_detail_id, 'delivery_order_id' => $movementOut->header->delivery_order_id));
+                        $deliveryDetail->quantity_movement_left = $deliveryDetail->quantity_delivery - $quantity;
+                        $deliveryDetail->quantity_movement = $quantity;
+                        $deliveryDetail->quantity_receive = 0;
+                        $deliveryDetail->quantity_receive_left = $quantity;
+                        $deliveryDetail->save(false);
+                    } elseif ($movementType == 2) {
+                        $criteria = new CDbCriteria;
+                        $criteria->together = 'true';
+                        $criteria->with = array('movementOutHeader');
+                        $criteria->condition = "movementOutHeader.return_order_id =" . $movementOut->header->return_order_id . " AND movement_out_header_id != " . $movementOut->header->id;
+                        $mvmntDetails = MovementOutDetail::model()->findAll($criteria);
+                        $quantity = 0;
+
+                        foreach ($mvmntDetails as $mvmntDetail) {
+                            $quantity += $mvmntDetail->quantity;
+                        }
+
+                        $deliveryDetail = TransactionReturnOrderDetail::model()->findByAttributes(array('id' => $movementDetail->return_order_detail_id, 'return_order_id' => $movementOut->header->return_order_id));
+                        $deliveryDetail->quantity_movement_left = $movementDetail->quantity_transaction - ($movementDetail->quantity + $quantity);
+                        $deliveryDetail->quantity_movement = $quantity + $movementDetail->quantity;
+                        $deliveryDetail->save(false);
+                    } elseif ($movementType == 3) {
+                        $criteria = new CDbCriteria;
+                        $criteria->together = 'true';
+                        $criteria->with = array('movementOutHeader');
+                        $criteria->condition = "movementOutHeader.registration_transaction_id =" . $movementOut->header->registration_transaction_id . " AND movement_out_header_id != " . $movementOut->header->id;
+                        $mvmntDetails = MovementOutDetail::model()->findAll($criteria);
+                        $quantity = 0;
+
+                        foreach ($mvmntDetails as $mvmntDetail) {
+                            $quantity += $mvmntDetail->quantity;
+                        }
+
+                        $registrationProduct = RegistrationProduct::model()->findByAttributes(array('id' => $movementDetail->registration_product_id, 'registration_transaction_id' => $movementOut->header->registration_transaction_id));
+                        $registrationProduct->quantity_movement = $registrationProduct->getTotalMovementOutQuantity();
+                        $registrationProduct->quantity_movement_left = $registrationProduct->quantity - $registrationProduct->quantity_movement;
+                        $registrationProduct->save(false);
+                    } elseif ($movementType == 4) {
+                        $materialRequestDetail = MaterialRequestDetail::model()->findByPk($movementDetail->material_request_detail_id);
+                        $materialRequestDetail->quantity_movement_out = $materialRequestDetail->getTotalQuantityMovementOut();
+                        $materialRequestDetail->quantity_remaining = $materialRequestDetail->quantity - $materialRequestDetail->quantity_movement_out;
+                        $materialRequestDetail->update(array('quantity_movement_out', 'quantity_remaining'));
+
+                        $materialRequestHeader = MaterialRequestHeader::model()->findByPk($materialRequestDetail->material_request_header_id);
+                        $materialRequestHeader->total_quantity_movement_out = $materialRequestHeader->getTotalQuantityMovementOut();
+                        $materialRequestHeader->total_quantity_remaining = $materialRequestHeader->total_quantity - $materialRequestHeader->total_quantity_movement_out;
+                        $materialRequestHeader->status_progress = ($materialRequestHeader->total_quantity_remaining > 0) ? 'PARTIAL MOVEMENT' : 'COMPLETED';
+                        $materialRequestHeader->update(array('total_quantity_movement_out', 'total_quantity_remaining', 'status_progress'));
                     }
                 }
 
