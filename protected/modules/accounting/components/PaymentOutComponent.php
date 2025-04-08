@@ -35,7 +35,7 @@ class PaymentOutComponent extends CComponent {
                     $detail->receive_item_id = $transactionId;
                     $detail->work_order_expense_header_id = null;
                     $detail->item_request_header_id = null;
-                    $detail->total_invoice = $receiveItem->invoice_grand_total;
+                    $detail->total_invoice = $receiveItem->grandTotal;
                     $this->details[] = $detail;
                 }
             } else {
