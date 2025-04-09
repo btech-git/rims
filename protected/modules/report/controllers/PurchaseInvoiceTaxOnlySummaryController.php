@@ -24,24 +24,24 @@ class PurchaseInvoiceTaxOnlySummaryController extends Controller {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
 
-        $receiveItemHeader = Search::bind(new TransactionReceiveItem('search'), isset($_GET['TransactionReceiveItem']) ? $_GET['TransactionReceiveItem'] : array());
+        $purchaseOrderHeader = Search::bind(new TransactionPurchaseOrder('search'), isset($_GET['TransactionPurchaseOrder']) ? $_GET['TransactionPurchaseOrder'] : array());
 
         $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : date('Y-m-d');
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
-        $supplierName = (isset($_GET['SupplierName'])) ? $_GET['SupplierName'] : '';
-        $branchId = (isset($_GET['TransactionPurchaseOrder']['main_branch_id'])) ? $_GET['TransactionPurchaseOrder']['main_branch_id'] : '';
+//        $supplierName = (isset($_GET['SupplierName'])) ? $_GET['SupplierName'] : '';
+//        $branchId = (isset($_GET['TransactionPurchaseOrder']['main_branch_id'])) ? $_GET['TransactionPurchaseOrder']['main_branch_id'] : '';
         $pageSize = (isset($_GET['PageSize'])) ? $_GET['PageSize'] : '';
         $currentPage = (isset($_GET['page'])) ? $_GET['page'] : '';
         $currentSort = (isset($_GET['sort'])) ? $_GET['sort'] : '';
 
-        $purchaseInvoiceSummary = new PurchaseInvoiceTaxOnlySummary($receiveItemHeader->search());
+        $purchaseInvoiceSummary = new PurchaseInvoiceTaxOnlySummary($purchaseOrderHeader->search());
         $purchaseInvoiceSummary->setupLoading();
         $purchaseInvoiceSummary->setupPaging($pageSize, $currentPage);
         $purchaseInvoiceSummary->setupSorting();
         $filters = array(
             'startDate' => $startDate,
             'endDate' => $endDate,
-            'supplierName' => $supplierName,
+//            'supplierName' => $supplierName,
         );
         $purchaseInvoiceSummary->setupFilter($filters);
 
@@ -53,16 +53,16 @@ class PurchaseInvoiceTaxOnlySummaryController extends Controller {
         }
         
         if (isset($_GET['SaveExcel'])) {
-            $this->saveToExcel($purchaseInvoiceSummary, $startDate, $endDate, $branchId);
+            $this->saveToExcel($purchaseInvoiceSummary, $startDate, $endDate);
         }
 
         $this->render('summary', array(
-            'receiveItemHeader' => $receiveItemHeader,
+            'purchaseOrderHeader' => $purchaseOrderHeader,
             'purchaseInvoiceSummary' => $purchaseInvoiceSummary,
             'startDate' => $startDate,
             'endDate' => $endDate,
             'currentSort' => $currentSort,
-            'supplierName' => $supplierName,
+//            'supplierName' => $supplierName,
             'supplier'=>$supplier,
             'supplierDataProvider'=>$supplierDataProvider,
         ));
@@ -127,9 +127,9 @@ class PurchaseInvoiceTaxOnlySummaryController extends Controller {
         $worksheet->setCellValue('G6', 'SJ #');
         $worksheet->setCellValue('H6', 'Faktur Pajak #');
         $worksheet->setCellValue('I6', 'Ppn/Non');
-        $worksheet->setCellValue('J6', 'DPP (Rp)');
+        $worksheet->setCellValue('J6', 'Price Bruto (Rp)');
         $worksheet->setCellValue('K6', 'Disc (Rp)');
-        $worksheet->setCellValue('L6', 'Sub Total (Rp)');
+        $worksheet->setCellValue('L6', 'DPP (Rp)');
         $worksheet->setCellValue('M6', 'PPn (Rp)');
         $worksheet->setCellValue('N6', 'Total (Rp)');
 

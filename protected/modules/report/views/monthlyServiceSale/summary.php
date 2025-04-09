@@ -21,6 +21,41 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                             <div class="field">
                                 <div class="row collapse">
                                     <div class="small-4 columns">
+                                        <span class="prefix">Service Type</span>
+                                    </div>
+                                    <div class="small-8 columns">	
+                                        <?php echo CHtml::dropDownList('ServiceTypeId', $serviceTypeId, CHtml::listData(ServiceType::model()->findAll(array('order' => 'name')), 'id', 'name'), array(
+                                            'empty' => '-- All --',
+                                            'onchange' => CHtml::ajax(array(
+                                                'type' => 'GET',
+                                                'url' => CController::createUrl('ajaxHtmlUpdateServiceCategorySelect'),
+                                                'update' => '#service_category',
+                                            )),
+                                        )); ?>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="medium-6 columns">
+                            <div class="field">
+                                <div class="row collapse">
+                                    <div class="small-4 columns">
+                                        <span class="prefix">Service Category</span>
+                                    </div>
+                                    <div class="small-8 columns" id="service_category">
+                                        <?php echo CHtml::dropDownList('ServiceCategoryId', $serviceCategoryId, CHtml::listData(ServiceCategory::model()->findAll(array('order' => 'name')), 'id', 'name'), array('empty' => '-- All --',)); ?>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="medium-6 columns">
+                            <div class="field">
+                                <div class="row collapse">
+                                    <div class="small-4 columns">
                                         <span class="prefix">Bulan</span>
                                     </div>
                                     <div class="small-4 columns">
@@ -46,47 +81,13 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                             </div>
                         </div>
                     </div>
-                    
-                    <div class="row">
-                        <div class="medium-6 columns">
-                            <div class="field">
-                                <div class="row collapse">
-                                    <div class="small-4 columns">
-                                        <span class="prefix">Service Type</span>
-                                    </div>
-                                    <div class="small-8 columns">	
-                                        <?php echo CHtml::dropDownList('TypeId', $typeId, CHtml::listData(ServiceType::model()->findAll(array('order' => 'name')), 'id', 'name'), array(
-                                            'empty' => '-- All --',
-                                            'onchange' => CHtml::ajax(array(
-                                                'type' => 'GET',
-                                                'url' => CController::createUrl('ajaxHtmlUpdateServiceCategorySelect'),
-                                                'update' => '#service_category',
-                                            )),
-                                        )); ?>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="medium-6 columns">
-                            <div class="field">
-                                <div class="row collapse">
-                                    <div class="small-4 columns">
-                                        <span class="prefix">Service Category</span>
-                                    </div>
-                                    <div class="small-8 columns" id="service_category">
-                                        <?php echo CHtml::dropDownList('CategoryId', $categoryId, CHtml::listData(ServiceCategory::model()->findAll(array('order' => 'name')), 'id', 'name'), array('empty' => '-- All --',)); ?>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+
                     <div class="clear"></div>
                     
                     <div class="row buttons">
                         <?php echo CHtml::submitButton('Tampilkan', array('onclick' => '$("#CurrentSort").val(""); return true;')); ?>
                         <?php echo CHtml::submitButton('Hapus', array('name' => 'ResetFilter'));  ?>
-                        <?php //echo CHtml::submitButton('Simpan ke Excel', array('name' => 'SaveExcel')); ?>
+                        <?php echo CHtml::submitButton('Simpan ke Excel', array('name' => 'SaveExcel')); ?>
                     </div>
 
                     <?php echo CHtml::endForm(); ?>
@@ -110,12 +111,9 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                         'branchId' => $branchId,
                         'month' => $month,
                         'year' => $year,
-                        'yearList' => $yearList,
                         'numberOfDays' => $numberOfDays,
-                        'serviceList' => $serviceList,
-                        'salePriceReportData' => $salePriceReportData,
-                        'saleQuantityReportData' => $saleQuantityReportData,
-                        'saleReportSummaryData' => $saleReportSummaryData,
+                        'serviceSaleData' => $serviceSaleData,
+                        'monthList' => $monthList,
                     )); ?>
                 </div>
                 <div class="clear"></div>

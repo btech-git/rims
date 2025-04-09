@@ -11,7 +11,7 @@ class PurchaseInvoiceTaxOnlySummary extends CComponent {
     public function setupLoading() {
         $this->dataProvider->criteria->with = array(
             'supplier',
-            'recipientBranch',
+            'mainBranch',
         );
     }
 
@@ -25,15 +25,15 @@ class PurchaseInvoiceTaxOnlySummary extends CComponent {
     }
 
     public function setupSorting() {
-        $this->dataProvider->sort->attributes = array('t.receive_item_date', 't.receive_item_no');
+        $this->dataProvider->sort->attributes = array('t.purchase_order_date', 't.purchase_order_no');
         $this->dataProvider->criteria->order = $this->dataProvider->sort->orderBy;
     }
 
     public function setupFilter($filters) {
         $startDate = (empty($filters['startDate'])) ? date('Y-m-d') : $filters['startDate'];
         $endDate = (empty($filters['endDate'])) ? date('Y-m-d') : $filters['endDate'];
-        $this->dataProvider->criteria->addCondition('t.user_id_cancelled IS null AND t.invoice_tax_nominal > 0');
-        $this->dataProvider->criteria->addBetweenCondition('substr(t.receive_item_date, 1, 10)', $startDate, $endDate);
-        $this->dataProvider->criteria->compare('supplier.name', $filters['supplierName'], TRUE);
+        $this->dataProvider->criteria->addCondition('t.user_id_cancelled IS null AND t.ppn_price > 0');
+        $this->dataProvider->criteria->addBetweenCondition('substr(t.purchase_order_date, 1, 10)', $startDate, $endDate);
+//        $this->dataProvider->criteria->compare('supplier.name', $filters['supplierName'], TRUE);
     }
 }

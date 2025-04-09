@@ -139,4 +139,35 @@ class InvoiceDetail extends CActiveRecord {
         return $resultSet;
     }
     
+    public static function getYearlyStatisticsData($year, $branchId, $masterCategoryId) {
+        $branchConditionSql = '';
+        $masterCategoryConditionSql = '';
+        
+        $params = array(
+            ':year' => $year,
+        );
+        
+        if (!empty($branchId)) {
+            $branchConditionSql = ' AND h.branch_id = :branch_id';
+            $params[':branch_id'] = $branchId;
+        }
+        
+        if (!empty($masterCategoryId)) {
+            $masterCategoryConditionSql = ' AND p.product_master_category_id = :product_master_category_id';
+            $params[':product_master_category_id'] = $masterCategoryId;
+        }
+        
+        $sql = "SELECT p.product_sub_master_category_id, MONTH(h.invoice_date) AS invoice_month, MIN(c.name) AS category_name, GROUP_CONCAT(d.quantity) AS quantities, GROUP_CONCAT(d.total_price) AS total_prices
+                FROM " . InvoiceDetail::model()->tableName() . " d 
+                INNER JOIN " . InvoiceHeader::model()->tableName() . " h ON h.id = d.invoice_id
+                INNER JOIN " . Product::model()->tableName() . " p ON p.id = d.product_id
+                INNER JOIN " . ProductSubMasterCategory::model()->tableName() . " c ON c.id = p.product_sub_master_category_id" . $branchConditionSql . $masterCategoryConditionSql . " 
+                WHERE YEAR(h.invoice_date) = :year AND d.product_id IS NOT null
+                GROUP BY p.product_sub_master_category_id, MONTH(h.invoice_date)
+                ORDER BY c.name ASC";
+        
+        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
+        
+        return $resultSet;
+    }
 }

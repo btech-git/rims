@@ -53,42 +53,44 @@
         </thead>
         <tbody>
             <?php foreach ($purchaseInvoiceSummary->dataProvider->data as $header): ?>
-                <?php //$purchaseOrderHeader = TransactionReceiveItem::model()->findByAttributes(array('purchase_order_id' => $header->id)); ?>
-                <tr class="items1">
-                    <td class="width1-1">
-                        <?php echo CHtml::link(CHtml::encode($header->purchaseOrder->purchase_order_no), array("/transaction/transactionPurchaseOrder/view", "id"=>$header->purchase_order_id), array("target" => "_blank")); ?>
-                    </td>
-                    <td class="width1-2">
-                        <?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy hh:mm:ss', strtotime($header->purchaseOrder->purchase_order_date))); ?>
-                    </td>
-                    <td class="width1-3"><?php echo CHtml::encode(CHtml::value($header, 'supplier.name')); ?></td>
-                    <td class="width1-4"><?php echo CHtml::encode(CHtml::value($header, 'invoice_number')); ?></td>
-                    <td class="width1-5">
-                        <?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($header->invoice_date))); ?>
-                        <?php echo substr(CHtml::encode($header->created_datetime), -8); ?>
-                    </td>
-                    <td class="width1-6">
-                        <?php echo empty($header) ? '' : CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($header->receive_item_date))); ?>
-                    </td>
-                    <td class="width1-7"><?php echo CHtml::encode(CHtml::value($header, 'supplier_delivery_number')); ?></td>
-                    <td class="width1-8"><?php echo CHtml::encode(CHtml::value($header, 'invoice_tax_number')); ?></td>
-                    <td class="width1-9"><?php echo CHtml::encode(CHtml::value($header, 'purchaseOrder.taxStatus')); ?></td>
-                    <td class="width1-10" style="text-align: right">
-                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($header, 'totalRetailPrice'))); ?>
-                    </td>
-                    <td class="width1-11" style="text-align: right">
-                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($header, 'totalPurchaseDiscount'))); ?>
-                    </td>
-                    <td class="width1-12" style="text-align: right">
-                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($header, 'subTotal'))); ?>
-                    </td>
-                    <td class="width1-13" style="text-align: right">
-                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($header, 'taxNominal'))); ?>
-                    </td>
-                    <td class="width1-14" style="text-align: right">
-                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($header, 'grandTotal'))); ?>
-                    </td>
-                </tr>
+                <?php foreach ($header->transactionReceiveItems as $receiveItem): ?>
+                    <?php //$purchaseOrderHeader = TransactionReceiveItem::model()->findByAttributes(array('purchase_order_id' => $header->id)); ?>
+                    <tr class="items1">
+                        <td class="width1-1">
+                            <?php echo CHtml::link(CHtml::encode($header->purchase_order_no), array("/transaction/transactionPurchaseOrder/view", "id"=>$header->id), array("target" => "_blank")); ?>
+                        </td>
+                        <td class="width1-2">
+                            <?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy hh:mm:ss', strtotime($header->purchase_order_date))); ?>
+                        </td>
+                        <td class="width1-3"><?php echo CHtml::encode(CHtml::value($header, 'supplier.name')); ?></td>
+                        <td class="width1-4"><?php echo CHtml::encode(CHtml::value($receiveItem, 'invoice_number')); ?></td>
+                        <td class="width1-5">
+                            <?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($receiveItem->invoice_date))); ?>
+                            <?php echo substr(CHtml::encode($header->created_datetime), -8); ?>
+                        </td>
+                        <td class="width1-6">
+                            <?php echo empty($header) ? '' : CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($receiveItem->receive_item_date))); ?>
+                        </td>
+                        <td class="width1-7"><?php echo CHtml::encode(CHtml::value($receiveItem, 'supplier_delivery_number')); ?></td>
+                        <td class="width1-8"><?php echo CHtml::encode(CHtml::value($receiveItem, 'invoice_tax_number')); ?></td>
+                        <td class="width1-9"><?php echo CHtml::encode(CHtml::value($header, 'taxStatus')); ?></td>
+                        <td class="width1-10" style="text-align: right">
+                            <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($receiveItem, 'totalRetailPrice'))); ?>
+                        </td>
+                        <td class="width1-11" style="text-align: right">
+                            <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($receiveItem, 'totalPurchaseDiscount'))); ?>
+                        </td>
+                        <td class="width1-12" style="text-align: right">
+                            <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($receiveItem, 'subTotal'))); ?>
+                        </td>
+                        <td class="width1-13" style="text-align: right">
+                            <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($receiveItem, 'taxNominal'))); ?>
+                        </td>
+                        <td class="width1-14" style="text-align: right">
+                            <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($receiveItem, 'grandTotal'))); ?>
+                        </td>
+                    </tr>
+                <?php endforeach; ?>
             <?php endforeach; ?>
         </tbody>
     </table>

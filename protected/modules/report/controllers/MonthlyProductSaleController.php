@@ -1,18 +1,18 @@
 <?php
 
-class SaleByProductMonthlyController extends Controller {
+class MonthlyProductSaleController extends Controller {
 
     public $layout = '//layouts/column1';
     
     public function filters() {
         return array(
-//            'access',
+            'access',
         );
     }
 
     public function filterAccess($filterChain) {
         if ($filterChain->action->id === 'summary') {
-            if (!(Yii::app()->user->checkAccess('saleServiceProductCategoryReport') )) {
+            if (!(Yii::app()->user->checkAccess('director') )) {
                 $this->redirect(array('/site/login'));
             }
         }
@@ -30,7 +30,7 @@ class SaleByProductMonthlyController extends Controller {
         $subBrandSeriesId = isset($_GET['SubBrandSeriesId']) ? $_GET['SubBrandSeriesId'] : '';
         $masterCategoryId = isset($_GET['MasterCategoryId']) ? $_GET['MasterCategoryId'] : '';
         $subMasterCategoryId = isset($_GET['SubMasterCategoryId']) ? $_GET['SubMasterCategoryId'] : '';
-        $subCategoryId = isset($_GET['SubCategoryId']) ? $_GET['SubCategoryId'] : 1;
+        $subCategoryId = isset($_GET['SubCategoryId']) ? $_GET['SubCategoryId'] : '';
 
         $monthNow = date('m');
         $yearNow = date('Y');
@@ -42,67 +42,15 @@ class SaleByProductMonthlyController extends Controller {
         $startDate = $year . '-' . $month . '-1';
         $endDate = $year . '-' . $month . '-' . $numberOfDays;
         
-        $saleReportByProduct = InvoiceHeader::getSaleReportByProduct($startDate, $endDate, $branchId, $brandId, $subBrandId, $subBrandSeriesId, $masterCategoryId, $subMasterCategoryId, $subCategoryId);
-        $saleReportSummary = InvoiceHeader::getSaleReportSummaryAll($startDate, $endDate, $branchId);
+        $monthlyProductSaleData = InvoiceHeader::getMonthlyProductSaleData($startDate, $endDate, $branchId, $brandId, $subBrandId, $subBrandSeriesId, $masterCategoryId, $subMasterCategoryId, $subCategoryId);
         
-        $salePriceReportData = array();
-        $saleQuantityReportData = array();
-        foreach ($saleReportByProduct as $saleReportItem) {
-            $key = $saleReportItem['transaction_date'] . '|p|' . $saleReportItem['product_id'];
-            $salePriceReportData[$key] = $saleReportItem['total_price'];
-            $saleQuantityReportData[$key] = $saleReportItem['total_quantity'];
+        $productSaleData = array();
+        foreach ($monthlyProductSaleData as $monthlyProductSaleItem) {
+            $productSaleData[$monthlyProductSaleItem['product_id']]['product_name'] = $monthlyProductSaleItem['product_name'];
+            $productSaleData[$monthlyProductSaleItem['product_id']][$monthlyProductSaleItem['invoice_date']]['total_quantity'] = $monthlyProductSaleItem['total_quantity'];
+            $productSaleData[$monthlyProductSaleItem['product_id']][$monthlyProductSaleItem['invoice_date']]['total_price'] = $monthlyProductSaleItem['total_price'];
         }
-        $saleReportSummaryData = array();
-        foreach ($saleReportSummary as $saleReportItem) {
-            $key = $saleReportItem['transaction_date'];
-            $saleReportSummaryData[$key]['total_price'] = $saleReportItem['total_price'];
-            $saleReportSummaryData[$key]['total_quantity'] = $saleReportItem['total_product'];
-        }
-        
-        $brandConditionSql = '';
-        $subBrandConditionSql = '';
-        $subBrandSeriesConditionSql = '';
-        $masterCategoryConditionSql = '';
-        $subMasterCategoryConditionSql = '';
-        $subCategoryConditionSql = '';
-        
-        $params = array();
-        
-        if (!empty($brandId)) {
-            $brandConditionSql = ' AND t.brand_id = :brand_id';
-            $params[':brand_id'] = $brandId;
-        }
-
-        if (!empty($subBrandId)) {
-            $subBrandConditionSql = ' AND t.sub_brand_id = :sub_brand_id';
-            $params[':sub_brand_id'] = $subBrandId;
-        }
-
-        if (!empty($subBrandSeriesId)) {
-            $subBrandSeriesConditionSql = ' AND t.sub_brand_series_id = :sub_brand_series_id';
-            $params[':sub_brand_series_id'] = $subBrandSeriesId;
-        }
-
-        if (!empty($masterCategoryId)) {
-            $masterCategoryConditionSql = ' AND t.product_master_category_id = :product_master_category_id';
-            $params[':product_master_category_id'] = $masterCategoryId;
-        }
-
-        if (!empty($subMasterCategoryId)) {
-            $subMasterCategoryConditionSql = ' AND t.product_sub_master_category_id = :product_sub_master_category_id';
-            $params[':product_sub_master_category_id'] = $subMasterCategoryId;
-        }
-
-        if (!empty($subCategoryId)) {
-            $subCategoryConditionSql = ' AND t.product_sub_category_id = :product_sub_category_id';
-            $params[':product_sub_category_id'] = $subCategoryId;
-        }
-
-        $criteria = new CDbCriteria;
-        $criteria->condition = "t.status = 'Active'" . $brandConditionSql . $subBrandConditionSql . $subBrandSeriesConditionSql . $masterCategoryConditionSql . $subMasterCategoryConditionSql . $subCategoryConditionSql;
-        $criteria->params = $params;
-        $productList = Product::model()->findAll($criteria);
-        
+                
         $yearList = array();
         for ($y = $yearNow - 4; $y <= $yearNow; $y++) {
             $yearList[$y] = $y;
@@ -128,82 +76,73 @@ class SaleByProductMonthlyController extends Controller {
         }
         
 //        if (isset($_GET['SaveExcel'])) {
-//            $this->saveToExcel($saleReportData, $saleReportData, array(
+//            $this->saveToExcel($saleReportData, $saleReportAllData, array(
 //            'branchId' => $branchId,
 //            'month' => $month,
 //            'year' => $year,
 //            'yearList' => $yearList,
 //            'numberOfDays' => $numberOfDays,
-//            'productList' => $productList,
+//            'productMasterCategoryList' => $productMasterCategoryList,
+//            'serviceCategoryList' => $serviceCategoryList,
 //            'saleReportSummaryData' => $saleReportSummaryData,
+//            'saleReportSummaryAllData' => $saleReportSummaryAllData,
 //            'monthList' => $monthList,
 //            ));
 //        }
 
         $this->render('summary', array(
             'branchId' => $branchId,
+            'month' => $month,
+            'year' => $year,
+            'yearList' => $yearList,
+            'numberOfDays' => $numberOfDays,
+            'productSaleData' => $productSaleData,
+            'monthList' => $monthList,
             'brandId' => $brandId,
             'subBrandId' => $subBrandId,
             'subBrandSeriesId' => $subBrandSeriesId,
             'masterCategoryId' => $masterCategoryId,
             'subMasterCategoryId' => $subMasterCategoryId,
             'subCategoryId' => $subCategoryId,
-            'month' => $month,
-            'year' => $year,
-            'yearList' => $yearList,
-            'numberOfDays' => $numberOfDays,
-            'monthList' => $monthList,
-            'salePriceReportData' => $salePriceReportData,
-            'saleQuantityReportData' => $saleQuantityReportData,
-            'productList' => $productList,
-            'saleReportSummaryData' => $saleReportSummaryData,
         ));
     }
 
     public function actionAjaxHtmlUpdateProductSubBrandSelect() {
         if (Yii::app()->request->isAjaxRequest) {
-            $brandId = isset($_GET['BrandId']) ? $_GET['BrandId'] : 0;
-            $subBrandId = isset($_GET['SubBrandId']) ? $_GET['SubBrandId'] : 0;
+            $brandId = isset($_GET['BrandId']) ? $_GET['BrandId'] : '';
 
             $this->renderPartial('_productSubBrandSelect', array(
                 'brandId' => $brandId,
-                'subBrandId' => $subBrandId,
             ));
         }
     }
 
     public function actionAjaxHtmlUpdateProductSubBrandSeriesSelect() {
         if (Yii::app()->request->isAjaxRequest) {
-            $subBrandId = isset($_GET['SubBrandId']) ? $_GET['SubBrandId'] : 0;
-            $subBrandSeriesId = isset($_GET['SubBrandSeriesId']) ? $_GET['SubBrandSeriesId'] : '';
+            $subBrandId = isset($_GET['SubBrandId']) ? $_GET['SubBrandId'] : '';
 
             $this->renderPartial('_productSubBrandSeriesSelect', array(
                 'subBrandId' => $subBrandId,
-                'subBrandSeriesId' => $subBrandSeriesId,
             ));
         }
     }
 
     public function actionAjaxHtmlUpdateProductSubMasterCategorySelect() {
         if (Yii::app()->request->isAjaxRequest) {
-            $masterCategoryId = isset($_GET['MasterCategoryId']) ? $_GET['MasterCategoryId'] : 0;
-            $subMasterCategoryId = isset($_GET['SubMasterCategoryId']) ? $_GET['SubMasterCategoryId'] : 0;
+            $masterCategoryId = isset($_GET['MasterCategoryId']) ? $_GET['MasterCategoryId'] : '';
 
             $this->renderPartial('_productSubMasterCategorySelect', array(
                 'masterCategoryId' => $masterCategoryId,
-                'subMasterCategoryId' => $subMasterCategoryId,
             ));
         }
     }
 
     public function actionAjaxHtmlUpdateProductSubCategorySelect() {
         if (Yii::app()->request->isAjaxRequest) {
-            $subMasterCategoryId = isset($_GET['SubMasterCategoryId']) ? $_GET['SubMasterCategoryId'] : 0;
-            $subCategoryId = isset($_GET['SubCategoryId']) ? $_GET['SubCategoryId'] : 0;
+            $subMasterCategoryId = isset($_GET['SubMasterCategoryId']) ? $_GET['SubMasterCategoryId'] : '';
 
             $this->renderPartial('_productSubCategorySelect', array(
                 'subMasterCategoryId' => $subMasterCategoryId,
-                'subCategoryId' => $subCategoryId,
             ));
         }
     }

@@ -512,12 +512,17 @@
                                     ),
                                     array(
                                         'label' => 'Laporan Penjualan Parts Bulanan', 
-                                        'url' => array('/report/saleByProductMonthly/summary'), 
+                                        'url' => array('/report/monthlyProductSale/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('director')
                                     ),
                                     array(
                                         'label' => 'Laporan Penjualan Jasa Bulanan', 
-                                        'url' => array('/report/saleByServiceMonthly/summary'), 
+                                        'url' => array('/report/monthlyServiceSale/summary'), 
+                                        'visible' => Yii::app()->user->checkAccess('director')
+                                    ),
+                                    array(
+                                        'label' => 'Laporan Analisis Penjualan Parts', 
+                                        'url' => array('/report/productSubMasterCategoryStatistics/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('director')
                                     ),
                                 ),

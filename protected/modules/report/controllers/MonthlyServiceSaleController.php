@@ -1,18 +1,18 @@
 <?php
 
-class SaleByServiceMonthlyController extends Controller {
+class MonthlyServiceSaleController extends Controller {
 
     public $layout = '//layouts/column1';
     
     public function filters() {
         return array(
-//            'access',
+            'access',
         );
     }
 
     public function filterAccess($filterChain) {
         if ($filterChain->action->id === 'summary') {
-            if (!(Yii::app()->user->checkAccess('saleServiceProductCategoryReport') )) {
+            if (!(Yii::app()->user->checkAccess('director') )) {
                 $this->redirect(array('/site/login'));
             }
         }
@@ -25,8 +25,8 @@ class SaleByServiceMonthlyController extends Controller {
         ini_set('memory_limit', '1024M');
 
         $branchId = isset($_GET['BranchId']) ? $_GET['BranchId'] : '';
-        $categoryId = isset($_GET['CategoryId']) ? $_GET['CategoryId'] : 1;
-        $typeId = isset($_GET['TypeId']) ? $_GET['TypeId'] : 1;
+        $serviceTypeId = (isset($_GET['ServiceTypeId'])) ? $_GET['ServiceTypeId'] : '';
+        $serviceCategoryId = (isset($_GET['ServiceCategoryId'])) ? $_GET['ServiceCategoryId'] : '';
 
         $monthNow = date('m');
         $yearNow = date('Y');
@@ -38,43 +38,15 @@ class SaleByServiceMonthlyController extends Controller {
         $startDate = $year . '-' . $month . '-1';
         $endDate = $year . '-' . $month . '-' . $numberOfDays;
         
-        $saleReportByService = InvoiceHeader::getSaleReportByService($startDate, $endDate, $branchId, $categoryId, $typeId);
-        $saleReportSummary = InvoiceHeader::getSaleReportSummaryAll($startDate, $endDate, $branchId);
+        $monthlyServiceSaleData = InvoiceHeader::getMonthlyServiceSaleData($startDate, $endDate, $branchId, $serviceTypeId, $serviceCategoryId);
         
-        $salePriceReportData = array();
-        $saleQuantityReportData = array();
-        foreach ($saleReportByService as $saleReportItem) {
-            $key = $saleReportItem['transaction_date'] . '|s|' . $saleReportItem['service_id'];
-            $salePriceReportData[$key] = $saleReportItem['total_price'];
-            $saleQuantityReportData[$key] = $saleReportItem['total_quantity'];
+        $serviceSaleData = array();
+        foreach ($monthlyServiceSaleData as $monthlyServiceSaleItem) {
+            $serviceSaleData[$monthlyServiceSaleItem['service_id']]['service_name'] = $monthlyServiceSaleItem['service_name'];
+            $serviceSaleData[$monthlyServiceSaleItem['service_id']][$monthlyServiceSaleItem['invoice_date']]['total_quantity'] = $monthlyServiceSaleItem['total_quantity'];
+            $serviceSaleData[$monthlyServiceSaleItem['service_id']][$monthlyServiceSaleItem['invoice_date']]['total_price'] = $monthlyServiceSaleItem['total_price'];
         }
-        $saleReportSummaryData = array();
-        foreach ($saleReportSummary as $saleReportItem) {
-            $key = $saleReportItem['transaction_date'];
-            $saleReportSummaryData[$key]['total_price'] = $saleReportItem['total_price'];
-            $saleReportSummaryData[$key]['total_quantity'] = $saleReportItem['total_product'];
-        }
-        
-        $categoryConditionSql = '';
-        $typeConditionSql = '';
-        
-        $params = array();
-        
-        if (!empty($categoryId)) {
-            $categoryConditionSql = ' AND t.service_category_id = :service_category_id';
-            $params[':service_category_id'] = $categoryId;
-        }
-
-        if (!empty($typeId)) {
-            $typeConditionSql = ' AND t.service_type_id = :service_type_id';
-            $params[':service_type_id'] = $typeId;
-        }
-
-        $criteria = new CDbCriteria;
-        $criteria->condition = "t.status = 'Active'" . $categoryConditionSql . $typeConditionSql;
-        $criteria->params = $params;
-        $serviceList = Service::model()->findAll($criteria);
-        
+                
         $yearList = array();
         for ($y = $yearNow - 4; $y <= $yearNow; $y++) {
             $yearList[$y] = $y;
@@ -106,38 +78,35 @@ class SaleByServiceMonthlyController extends Controller {
 //            'year' => $year,
 //            'yearList' => $yearList,
 //            'numberOfDays' => $numberOfDays,
-//            'productMasterCategoryList' => $productMasterCategoryList,
+//            'serviceMasterCategoryList' => $serviceMasterCategoryList,
 //            'serviceCategoryList' => $serviceCategoryList,
 //            'saleReportSummaryData' => $saleReportSummaryData,
-//            'saleReportSummaryAllData' => $saleReportSummaryData,
+//            'saleReportSummaryAllData' => $saleReportSummaryAllData,
 //            'monthList' => $monthList,
 //            ));
 //        }
 
         $this->render('summary', array(
             'branchId' => $branchId,
-            'categoryId' => $categoryId,
-            'typeId' => $typeId,
             'month' => $month,
             'year' => $year,
             'yearList' => $yearList,
             'numberOfDays' => $numberOfDays,
-            'serviceList' => $serviceList,
-            'salePriceReportData' => $salePriceReportData,
-            'saleQuantityReportData' => $saleQuantityReportData,
-            'saleReportSummaryData' => $saleReportSummaryData,
+            'serviceSaleData' => $serviceSaleData,
             'monthList' => $monthList,
+            'serviceTypeId' => $serviceTypeId,
+            'serviceCategoryId' => $serviceCategoryId,
         ));
     }
 
     public function actionAjaxHtmlUpdateServiceCategorySelect() {
         if (Yii::app()->request->isAjaxRequest) {
-            $categoryId = isset($_GET['CategoryId']) ? $_GET['CategoryId'] : '';
-            $typeId = isset($_GET['TypeId']) ? $_GET['TypeId'] : '';
+            $serviceTypeId = isset($_GET['ServiceTypeId']) ? $_GET['ServiceTypeId'] : 0;
+            $serviceCategoryId = isset($_GET['ServiceCategoryId']) ? $_GET['ServiceCategoryId'] : 0;
 
             $this->renderPartial('_serviceCategorySelect', array(
-                'categoryId' => $categoryId,
-                'typeId' => $typeId,
+                'serviceTypeId' => $serviceTypeId,
+                'serviceCategoryId' => $serviceCategoryId,
             ));
         }
     }
@@ -164,7 +133,7 @@ class SaleByServiceMonthlyController extends Controller {
         $month = $options['month'];
         $year = $options['year'];
         $numberOfDays = $options['numberOfDays'];
-        $productMasterCategoryList = $options['productMasterCategoryList'];
+        $serviceMasterCategoryList = $options['serviceMasterCategoryList'];
         $serviceCategoryList = $options['serviceCategoryList'];
         $saleReportSummaryData = $options['saleReportSummaryData'];
         $saleReportSummaryAllData = $options['saleReportSummaryAllData'];
@@ -186,8 +155,8 @@ class SaleByServiceMonthlyController extends Controller {
         
         $worksheet->setCellValue('A6', 'Tanggal');
         $columnCounter = 'B';
-        foreach ($productMasterCategoryList as $productMasterCategoryItem) {
-            $worksheet->setCellValue("{$columnCounter}6", CHtml::value($productMasterCategoryItem, 'name'));
+        foreach ($serviceMasterCategoryList as $serviceMasterCategoryItem) {
+            $worksheet->setCellValue("{$columnCounter}6", CHtml::value($serviceMasterCategoryItem, 'name'));
             $columnCounter++;
         }
         foreach ($serviceCategoryList as $serviceCategoryItem) {
@@ -233,16 +202,16 @@ class SaleByServiceMonthlyController extends Controller {
             $dppServiceSum = '0.00';
             $dppSum = '0.00';
             $columnCounter = 'B';
-            foreach ($productMasterCategoryList as $productMasterCategoryItem) {
-                $key = 'Individual|' . $year . '-' . $month . '-' . $day . '|p|' . $productMasterCategoryItem->id;
+            foreach ($serviceMasterCategoryList as $serviceMasterCategoryItem) {
+                $key = 'Individual|' . $year . '-' . $month . '-' . $day . '|p|' . $serviceMasterCategoryItem->id;
                 $dpp = isset($saleReportData[$key]) ? $saleReportData[$key] : '';
                 $worksheet->setCellValue("{$columnCounter}{$rowCounter}", $dpp);
                 $dppProductSum += $dpp;
                 $dppSum += $dpp;
-                if (!isset($dppSums['p' . $productMasterCategoryItem->id])) {
-                    $dppSums['p' . $productMasterCategoryItem->id] = '0.00';
+                if (!isset($dppSums['p' . $serviceMasterCategoryItem->id])) {
+                    $dppSums['p' . $serviceMasterCategoryItem->id] = '0.00';
                 }
-                $dppSums['p' . $productMasterCategoryItem->id] += $dpp;
+                $dppSums['p' . $serviceMasterCategoryItem->id] += $dpp;
                 $columnCounter++;
             }
             foreach ($serviceCategoryList as $serviceCategoryItem) {
@@ -268,7 +237,7 @@ class SaleByServiceMonthlyController extends Controller {
             $ppnTotal = isset($saleReportSummaryData[$key]['ppn_total']) ? $saleReportSummaryData[$key]['ppn_total'] : ''; 
             $pphTotal = isset($saleReportSummaryData[$key]['pph_total']) ? $saleReportSummaryData[$key]['pph_total'] : ''; 
             $totalPrice = isset($saleReportSummaryData[$key]['total_price']) ? $saleReportSummaryData[$key]['total_price'] : '';
-            $totalProduct = isset($saleReportSummaryData[$key]['total_product']) ? $saleReportSummaryData[$key]['total_product'] : '';
+            $totalProduct = isset($saleReportSummaryData[$key]['total_service']) ? $saleReportSummaryData[$key]['total_service'] : '';
             $totalService = isset($saleReportSummaryData[$key]['total_service']) ? $saleReportSummaryData[$key]['total_service'] : '';
             $worksheet->setCellValue("{$columnCounter}{$rowCounter}", $discountTotal);
             $columnCounter++;
@@ -296,10 +265,10 @@ class SaleByServiceMonthlyController extends Controller {
         $dppProductSumTotal = '0.00';
         $dppServiceSumTotal = '0.00';
         $dppSumTotal = '0.00';
-        foreach ($productMasterCategoryList as $productMasterCategoryItem) {
-            $worksheet->setCellValue("{$columnCounter}{$rowCounter}", $dppSums['p' . $productMasterCategoryItem->id]);
-            $dppProductSumTotal += $dppSums['p' . $productMasterCategoryItem->id];
-            $dppSumTotal += $dppSums['p' . $productMasterCategoryItem->id];
+        foreach ($serviceMasterCategoryList as $serviceMasterCategoryItem) {
+            $worksheet->setCellValue("{$columnCounter}{$rowCounter}", $dppSums['p' . $serviceMasterCategoryItem->id]);
+            $dppProductSumTotal += $dppSums['p' . $serviceMasterCategoryItem->id];
+            $dppSumTotal += $dppSums['p' . $serviceMasterCategoryItem->id];
             $columnCounter++;
         }
         foreach ($serviceCategoryList as $serviceCategoryItem) {
@@ -338,8 +307,8 @@ class SaleByServiceMonthlyController extends Controller {
         
         $worksheet->setCellValue("A{$rowCounter}", 'Tanggal');
         $columnCounter = 'B';
-        foreach ($productMasterCategoryList as $productMasterCategoryItem) {
-            $worksheet->setCellValue("{$columnCounter}{$rowCounter}", CHtml::value($productMasterCategoryItem, 'name'));
+        foreach ($serviceMasterCategoryList as $serviceMasterCategoryItem) {
+            $worksheet->setCellValue("{$columnCounter}{$rowCounter}", CHtml::value($serviceMasterCategoryItem, 'name'));
             $columnCounter++;
         }
         foreach ($serviceCategoryList as $serviceCategoryItem) {
@@ -385,16 +354,16 @@ class SaleByServiceMonthlyController extends Controller {
             $dppServiceSum = '0.00';
             $dppSum = '0.00';
             $columnCounter = 'B';
-            foreach ($productMasterCategoryList as $productMasterCategoryItem) {
-                $key = 'Company|' . $year . '-' . $month . '-' . $day . '|p|' . $productMasterCategoryItem->id;
+            foreach ($serviceMasterCategoryList as $serviceMasterCategoryItem) {
+                $key = 'Company|' . $year . '-' . $month . '-' . $day . '|p|' . $serviceMasterCategoryItem->id;
                 $dpp = isset($saleReportData[$key]) ? $saleReportData[$key] : '';
                 $worksheet->setCellValue("{$columnCounter}{$rowCounter}", $dpp);
                 $dppProductSum += $dpp;
                 $dppSum += $dpp;
-                if (!isset($dppSums['p' . $productMasterCategoryItem->id])) {
-                    $dppSums['p' . $productMasterCategoryItem->id] = '0.00';
+                if (!isset($dppSums['p' . $serviceMasterCategoryItem->id])) {
+                    $dppSums['p' . $serviceMasterCategoryItem->id] = '0.00';
                 }
-                $dppSums['p' . $productMasterCategoryItem->id] += $dpp;
+                $dppSums['p' . $serviceMasterCategoryItem->id] += $dpp;
                 $columnCounter++;
             }
             foreach ($serviceCategoryList as $serviceCategoryItem) {
@@ -420,7 +389,7 @@ class SaleByServiceMonthlyController extends Controller {
             $ppnTotal = isset($saleReportSummaryData[$key]['ppn_total']) ? $saleReportSummaryData[$key]['ppn_total'] : ''; 
             $pphTotal = isset($saleReportSummaryData[$key]['pph_total']) ? $saleReportSummaryData[$key]['pph_total'] : ''; 
             $totalPrice = isset($saleReportSummaryData[$key]['total_price']) ? $saleReportSummaryData[$key]['total_price'] : '';
-            $totalProduct = isset($saleReportSummaryData[$key]['total_product']) ? $saleReportSummaryData[$key]['total_product'] : '';
+            $totalProduct = isset($saleReportSummaryData[$key]['total_service']) ? $saleReportSummaryData[$key]['total_service'] : '';
             $totalService = isset($saleReportSummaryData[$key]['total_service']) ? $saleReportSummaryData[$key]['total_service'] : '';
             $worksheet->setCellValue("{$columnCounter}{$rowCounter}", $discountTotal);
             $columnCounter++;
@@ -448,10 +417,10 @@ class SaleByServiceMonthlyController extends Controller {
         $dppServiceSumTotal = '0.00';
         $dppSumTotal = '0.00';
         $columnCounter = 'B';
-        foreach ($productMasterCategoryList as $productMasterCategoryItem) {
-            $worksheet->setCellValue("{$columnCounter}{$rowCounter}", $dppSums['p' . $productMasterCategoryItem->id]);
-            $dppProductSumTotal += $dppSums['p' . $productMasterCategoryItem->id];
-            $dppSumTotal += $dppSums['p' . $productMasterCategoryItem->id];
+        foreach ($serviceMasterCategoryList as $serviceMasterCategoryItem) {
+            $worksheet->setCellValue("{$columnCounter}{$rowCounter}", $dppSums['p' . $serviceMasterCategoryItem->id]);
+            $dppProductSumTotal += $dppSums['p' . $serviceMasterCategoryItem->id];
+            $dppSumTotal += $dppSums['p' . $serviceMasterCategoryItem->id];
             $columnCounter++;
         }
         foreach ($serviceCategoryList as $serviceCategoryItem) {
@@ -489,8 +458,8 @@ class SaleByServiceMonthlyController extends Controller {
         
         $worksheet->setCellValue("A{$rowCounter}", 'Tanggal');
         $columnCounter = 'B';
-        foreach ($productMasterCategoryList as $productMasterCategoryItem) {
-            $worksheet->setCellValue("{$columnCounter}{$rowCounter}", CHtml::value($productMasterCategoryItem, 'name'));
+        foreach ($serviceMasterCategoryList as $serviceMasterCategoryItem) {
+            $worksheet->setCellValue("{$columnCounter}{$rowCounter}", CHtml::value($serviceMasterCategoryItem, 'name'));
             $columnCounter++;
         }
         foreach ($serviceCategoryList as $serviceCategoryItem) {
@@ -536,16 +505,16 @@ class SaleByServiceMonthlyController extends Controller {
             $dppServiceSum = '0.00';
             $dppSum = '0.00';
             $columnCounter = 'B';
-            foreach ($productMasterCategoryList as $productMasterCategoryItem) {
-                $key = $year . '-' . $month . '-' . $day . '|p|' . $productMasterCategoryItem->id;
+            foreach ($serviceMasterCategoryList as $serviceMasterCategoryItem) {
+                $key = $year . '-' . $month . '-' . $day . '|p|' . $serviceMasterCategoryItem->id;
                 $dpp = isset($saleReportAllData[$key]) ? $saleReportAllData[$key] : '';
                 $worksheet->setCellValue("{$columnCounter}{$rowCounter}", $dpp);
                 $dppProductSum += $dpp;
                 $dppSum += $dpp;
-                if (!isset($dppSums['p' . $productMasterCategoryItem->id])) {
-                    $dppSums['p' . $productMasterCategoryItem->id] = '0.00';
+                if (!isset($dppSums['p' . $serviceMasterCategoryItem->id])) {
+                    $dppSums['p' . $serviceMasterCategoryItem->id] = '0.00';
                 }
-                $dppSums['p' . $productMasterCategoryItem->id] += $dpp;
+                $dppSums['p' . $serviceMasterCategoryItem->id] += $dpp;
                 $columnCounter++;
             }
             foreach ($serviceCategoryList as $serviceCategoryItem) {
@@ -571,7 +540,7 @@ class SaleByServiceMonthlyController extends Controller {
             $ppnTotal = isset($saleReportSummaryAllData[$key]['ppn_total']) ? $saleReportSummaryAllData[$key]['ppn_total'] : ''; 
             $pphTotal = isset($saleReportSummaryAllData[$key]['pph_total']) ? $saleReportSummaryAllData[$key]['pph_total'] : ''; 
             $totalPrice = isset($saleReportSummaryAllData[$key]['total_price']) ? $saleReportSummaryAllData[$key]['total_price'] : '';
-            $totalProduct = isset($saleReportSummaryAllData[$key]['total_product']) ? $saleReportSummaryAllData[$key]['total_product'] : '';
+            $totalProduct = isset($saleReportSummaryAllData[$key]['total_service']) ? $saleReportSummaryAllData[$key]['total_service'] : '';
             $totalService = isset($saleReportSummaryAllData[$key]['total_service']) ? $saleReportSummaryAllData[$key]['total_service'] : '';
             $worksheet->setCellValue("{$columnCounter}{$rowCounter}", $discountTotal);
             $columnCounter++;
@@ -599,10 +568,10 @@ class SaleByServiceMonthlyController extends Controller {
         $dppServiceSumTotal = '0.00';
         $dppSumTotal = '0.00';
         $columnCounter = 'B';
-        foreach ($productMasterCategoryList as $productMasterCategoryItem) {
-            $worksheet->setCellValue("{$columnCounter}{$rowCounter}", $dppSums['p' . $productMasterCategoryItem->id]);
-            $dppProductSumTotal += $dppSums['p' . $productMasterCategoryItem->id];
-            $dppSumTotal += $dppSums['p' . $productMasterCategoryItem->id];
+        foreach ($serviceMasterCategoryList as $serviceMasterCategoryItem) {
+            $worksheet->setCellValue("{$columnCounter}{$rowCounter}", $dppSums['p' . $serviceMasterCategoryItem->id]);
+            $dppProductSumTotal += $dppSums['p' . $serviceMasterCategoryItem->id];
+            $dppSumTotal += $dppSums['p' . $serviceMasterCategoryItem->id];
             $columnCounter++;
         }
         foreach ($serviceCategoryList as $serviceCategoryItem) {
