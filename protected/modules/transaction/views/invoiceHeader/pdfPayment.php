@@ -58,14 +58,6 @@ function tanggal($date) {
                 <div class="body-memo">
                     <table>
                         <tr>
-                            <td>PAYMENT #</td>
-                            <td>:</td>
-                            <td><?php echo $paymentInDetail->paymentIn->payment_number; ?></td>
-                            <td>TGL PAYMENT</td>
-                            <td>:</td>
-                            <td><?php echo tanggal($paymentInDetail->paymentIn->payment_date) . ' ' . Yii::app()->dateFormatter->formatDateTime($paymentInDetail->paymentIn->payment_time, '', 'short'); ?></td>
-                        </tr>
-                        <tr>
                             <td>INVOICE #</td>
                             <td>:</td>
                             <td><?php echo $invoiceHeader->invoice_number; ?></td>
@@ -216,6 +208,25 @@ function tanggal($date) {
                                 <td style="font-weight: bold; text-align:right; font-size: 11px">Rp. <?php echo number_format($invoiceHeader->total_price, 2, ',', '.') ?> &nbsp; </td>
                             </tr>
                         </table>
+                        
+                        <div class="purchase-order">
+                            <table style="width: 100%; font-size: 11px">
+                                <tr>
+                                    <th>Payment #</th>
+                                    <th>Tanggal</th>
+                                    <th>Type</th>
+                                    <th>Amount</th>
+                                </tr>
+                                <?php foreach ($invoiceHeader->paymentInDetails as $paymentInDetail): ?>
+                                    <tr>
+                                        <td><?php echo CHtml::encode(CHtml::value($paymentInDetail, 'paymentIn.payment_number')); ?></td>
+                                        <td><?php echo tanggal($paymentInDetail->paymentIn->payment_date) . ' ' . Yii::app()->dateFormatter->formatDateTime($paymentInDetail->paymentIn->payment_time, '', 'short'); ?></td>
+                                        <td><?php echo CHtml::encode(CHtml::value($paymentInDetail, 'paymentIn.paymentType.name')); ?></td>
+                                        <td style="text-align:right">Rp. <?php echo number_format($paymentInDetail->amount, 2, ',', '.') ?></td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            </table>
+                        </div>
 
                         <div style="font-size: 10px; text-align: left">1. Raperind Motor tidak bertanggung jawab atas kendaraan yang tidak diambil dalam waktu 30 hari setelah kendaraan selesai</div>
                         <div style="font-size: 10px; text-align: left">2. Raperind Motor bertanggung jawab atas keamanan kendaraan yang ditinggal di workshop dengan penggantian sebesar 10x Jasa, kecuali atas kejadian Force Majeure (Pencurian Kendaraan, Kebakaran, dll)</div>

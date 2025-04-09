@@ -464,7 +464,7 @@ class InvoiceHeaderController extends Controller {
     public function actionPdfPayment($id) {
         $invoiceHeader = InvoiceHeader::model()->findByPk($id);
         $invoiceDetailsData = $this->getInvoiceDetailsData($invoiceHeader);
-        $paymentInDetail = PaymentInDetail::model()->findByAttributes(array('invoice_header_id' => $id));
+        $paymentInDetails = PaymentInDetail::model()->findAllByAttributes(array('invoice_header_id' => $id));
         $customer = Customer::model()->findByPk($invoiceHeader->customer_id);
         $vehicle = Vehicle::model()->findByPk($invoiceHeader->vehicle_id);
         $branch = Branch::model()->findByPk($invoiceHeader->branch_id);
@@ -479,7 +479,7 @@ class InvoiceHeaderController extends Controller {
         $mPDF1->WriteHTML($this->renderPartial('pdfPayment', array(
             'invoiceHeader' => $invoiceHeader,
             'invoiceDetailsData' => $invoiceDetailsData,
-            'paymentInDetail' => $paymentInDetail,
+            'paymentInDetails' => $paymentInDetails,
             'customer' => $customer,
             'vehicle' => $vehicle,
             'branch' => $branch,
