@@ -158,6 +158,7 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                     'purchaseInvoiceSummary' => $purchaseInvoiceSummary, 
                     'startDate' => $startDate, 
                     'endDate' => $endDate,
+                    'purchaseOrderHeader' => $purchaseOrderHeader,
                 )); ?>
             </div>
 

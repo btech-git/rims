@@ -53,7 +53,7 @@ class PurchaseInvoiceTaxOnlySummaryController extends Controller {
         }
         
         if (isset($_GET['SaveExcel'])) {
-            $this->saveToExcel($purchaseInvoiceSummary, $startDate, $endDate);
+            $this->saveToExcel($purchaseInvoiceSummary, $purchaseOrderHeader, $startDate, $endDate);
         }
 
         $this->render('summary', array(
@@ -82,7 +82,7 @@ class PurchaseInvoiceTaxOnlySummaryController extends Controller {
         }
     }
 
-    protected function saveToExcel($purchaseInvoiceSummary, $startDate, $endDate, $branchId) {
+    protected function saveToExcel($purchaseInvoiceSummary, $purchaseOrderHeader, $startDate, $endDate, $branchId) {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
 
@@ -109,8 +109,7 @@ class PurchaseInvoiceTaxOnlySummaryController extends Controller {
         
         $worksheet->getStyle('A1:N3')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
         $worksheet->getStyle('A1:N3')->getFont()->setBold(true);
-        $branch = Branch::model()->findByPk($branchId);
-        $worksheet->setCellValue('A1', 'Raperind Motor ' . CHtml::encode(CHtml::value($branch, 'name')));
+        $worksheet->setCellValue('A1', 'Raperind Motor ' . CHtml::encode(CHtml::value($purchaseOrderHeader, 'mainBranch.name')));
         $worksheet->setCellValue('A2', 'Laporan Faktur Pembelian PPn');
         $worksheet->setCellValue('A3', $startDateFormatted . ' - ' . $endDateFormatted);
 
