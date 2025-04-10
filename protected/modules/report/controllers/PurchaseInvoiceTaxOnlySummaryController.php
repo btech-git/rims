@@ -135,23 +135,24 @@ class PurchaseInvoiceTaxOnlySummaryController extends Controller {
         $counter = 7;
 
         foreach ($purchaseInvoiceSummary->dataProvider->data as $header) {
-//            $header = TransactionReceiveItem::model()->findByAttributes(array('purchase_order_id' => $header->id));
-            $worksheet->setCellValue("A{$counter}", CHtml::encode(CHtml::value($header, 'purchaseOrder.purchase_order_no')));
-            $worksheet->setCellValue("B{$counter}", CHtml::encode(CHtml::value($header, 'purchaseOrder.purchase_order_date')));
-            $worksheet->setCellValue("C{$counter}", CHtml::encode(CHtml::value($header, 'supplier.name')));
-            $worksheet->setCellValue("D{$counter}", CHtml::encode(CHtml::value($header, 'invoice_number')));
-            $worksheet->setCellValue("E{$counter}", CHtml::encode(CHtml::value($header, 'invoice_date')) . ' ' . substr(CHtml::encode($header->created_datetime), -8));
-            $worksheet->setCellValue("F{$counter}", CHtml::encode(CHtml::value($header, 'receive_item_date')));
-            $worksheet->setCellValue("G{$counter}", CHtml::encode(CHtml::value($header, 'supplier_delivery_number')));
-            $worksheet->setCellValue("H{$counter}", CHtml::encode(CHtml::value($header, 'invoice_tax_number')));
-            $worksheet->setCellValue("I{$counter}", CHtml::encode(CHtml::value($header, 'purchaseOrder.taxStatus')));
-            $worksheet->setCellValue("J{$counter}", CHtml::encode(CHtml::value($header, 'totalRetailPrice')));
-            $worksheet->setCellValue("K{$counter}", CHtml::encode(CHtml::value($header, 'totalPurchaseDiscount')));
-            $worksheet->setCellValue("L{$counter}", CHtml::encode(CHtml::value($header, 'subTotal')));
-            $worksheet->setCellValue("M{$counter}", CHtml::encode(CHtml::value($header, 'taxNominal')));
-            $worksheet->setCellValue("N{$counter}", CHtml::encode(CHtml::value($header, 'grandTotal')));
+            foreach ($header->transactionReceiveItems as $receiveItem) {
+                $worksheet->setCellValue("A{$counter}", CHtml::encode(CHtml::value($header, 'purchase_order_no')));
+                $worksheet->setCellValue("B{$counter}", CHtml::encode(CHtml::value($header, 'purchase_order_date')));
+                $worksheet->setCellValue("C{$counter}", CHtml::encode(CHtml::value($header, 'supplier.name')));
+                $worksheet->setCellValue("D{$counter}", CHtml::encode(CHtml::value($receiveItem, 'invoice_number')));
+                $worksheet->setCellValue("E{$counter}", CHtml::encode(CHtml::value($receiveItem, 'invoice_date')) . ' ' . substr(CHtml::encode($receiveItem->created_datetime), -8));
+                $worksheet->setCellValue("F{$counter}", CHtml::encode(CHtml::value($receiveItem, 'receive_item_date')));
+                $worksheet->setCellValue("G{$counter}", CHtml::encode(CHtml::value($receiveItem, 'supplier_delivery_number')));
+                $worksheet->setCellValue("H{$counter}", CHtml::encode(CHtml::value($receiveItem, 'invoice_tax_number')));
+                $worksheet->setCellValue("I{$counter}", CHtml::encode(CHtml::value($header, 'taxStatus')));
+                $worksheet->setCellValue("J{$counter}", CHtml::encode(CHtml::value($receiveItem, 'totalRetailPrice')));
+                $worksheet->setCellValue("K{$counter}", CHtml::encode(CHtml::value($receiveItem, 'totalPurchaseDiscount')));
+                $worksheet->setCellValue("L{$counter}", CHtml::encode(CHtml::value($receiveItem, 'subTotal')));
+                $worksheet->setCellValue("M{$counter}", CHtml::encode(CHtml::value($receiveItem, 'taxNominal')));
+                $worksheet->setCellValue("N{$counter}", CHtml::encode(CHtml::value($receiveItem, 'grandTotal')));
 
-            $counter++;
+                $counter++;
+            }
         }
 
         for ($col = 'A'; $col !== 'Z'; $col++) {
