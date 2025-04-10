@@ -233,6 +233,43 @@ class MaterialRequestController extends Controller {
         ));
     }
 
+    public function actionCancel($id) {
+        
+        $movementOutHeader = MovementOutHeader::model()->findByAttributes(array('material_request_header_id' => $id, 'user_id_cancelled' => null));
+        if (empty($movementOutHeader)) { 
+            $model = $this->loadModel($id);
+            $model->status_document = 'CANCELLED!!!';
+            $model->status_progress = 'CANCELLED!!!';
+            $model->cancelled_datetime = date('Y-m-d H:i:s');
+            $model->user_id_cancelled = Yii::app()->user->id;
+            $model->total_quantity = 0; 
+            $model->total_quantity_movement_out = 0; 
+            $model->total_quantity_remaining = 0; 
+            $model->note = '';
+            $model->update(array(
+                'status_document', 'status_progress', 'cancelled_datetime', 'user_id_cancelled', 'total_quantity', 'total_quantity_movement_out', 
+                'total_quantity_remaining', 'note'
+            ));
+            
+            foreach ($model->materialRequestDetails as $detail) {
+                $detail->quantity = 0;
+                $detail->quantity_movement_out = 0;
+                $detail->quantity_remaining = 0;
+                
+                $detail->update(array('quantity', 'quantity_movement_out', 'quantity_remaining'));
+            }
+            
+            $this->saveTransactionLog('cancel', $model);
+        
+            Yii::app()->user->setFlash('message', 'Transaction is successfully cancelled');
+        } else {
+            Yii::app()->user->setFlash('message', 'Transaction cannot be cancelled. Check related transactions!');
+            $this->redirect(array('view', 'id' => $id));
+        }
+
+        $this->redirect(array('admin'));
+    }
+
     public function actionDelete($id) {
         if (Yii::app()->request->isPostRequest) {
             $model = $this->instantiate($id);
@@ -403,6 +440,39 @@ class MaterialRequestController extends Controller {
                 'productSubMasterCategoryId' => $productSubMasterCategoryId,
             ));
         }
+    }
+
+    public function saveTransactionLog($actionType, $materialRequest) {
+        $transactionLog = new TransactionLog();
+        $transactionLog->transaction_number = $materialRequest->transaction_number;
+        $transactionLog->transaction_date = $materialRequest->transaction_date;
+        $transactionLog->log_date = date('Y-m-d');
+        $transactionLog->log_time = date('H:i:s');
+        $transactionLog->table_name = $materialRequest->tableName();
+        $transactionLog->table_id = $materialRequest->id;
+        $transactionLog->user_id = Yii::app()->user->id;
+        $transactionLog->username = Yii::app()->user->username;
+        $transactionLog->controller_class = Yii::app()->controller->module->id  . '/' . Yii::app()->controller->id;
+        $transactionLog->action_name = Yii::app()->controller->action->id;
+        $transactionLog->action_type = $actionType;
+        
+        $newData = $materialRequest->attributes;
+        
+        if ($actionType === 'approval') {
+            $newData['materialRequestApprovals'] = array();
+            foreach($materialRequest->materialRequestApprovals as $detail) {
+                $newData['materialRequestApprovals'][] = $detail->attributes;
+            }
+        } else {
+            $newData['materialRequestDetails'] = array();
+            foreach($materialRequest->materialRequestDetails as $detail) {
+                $newData['materialRequestDetails'][] = $detail->attributes;
+            }
+        }
+        
+        $transactionLog->new_data = json_encode($newData);
+
+        $transactionLog->save();
     }
 
     public function instantiate($id) {

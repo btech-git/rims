@@ -15,15 +15,21 @@
  * @property string $status_progress
  * @property string $note
  * @property integer $branch_id
- * @property integer $user_id
  * @property integer $registration_transaction_id
+ * @property integer $user_id
  * @property string $created_datetime
+ * @property integer $user_id_updated
+ * @property string $updated_datetime
+ * @property integer $user_id_cancelled
+ * @property string $cancelled_datetime
  *
  * The followings are the available model relations:
  * @property MaterialRequestDetail[] $materialRequestDetails
  * @property MaterialRequestApproval[] $materialRequestApprovals
  * @property Branch $branch
  * @property Users $user
+ * @property UserIdUpdated $userIdUpdated
+ * @property UserIdCancelled $userIdCancelled
  * @property RegistrationTransaction $registrationTransaction
  * @property MovementOutHeader[] $movementOutHeaders
  */
@@ -55,14 +61,14 @@ class MaterialRequestHeader extends MonthlyTransactionActiveRecord {
         // will receive user inputs.
         return array(
             array('transaction_number, transaction_date, transaction_time, branch_id, user_id', 'required'),
-            array('branch_id, user_id, registration_transaction_id', 'numerical', 'integerOnly' => true),
+            array('branch_id, user_id, user_id_updated, user_id_cancelled, registration_transaction_id', 'numerical', 'integerOnly' => true),
             array('total_quantity, total_quantity_movement_out, total_quantity_remaining', 'length', 'max' => 10),
             array('transaction_number, status_document, status_progress', 'length', 'max' => 50),
-            array('note', 'safe'),
+            array('note, created_datetime, updated_datetime, cancelled_datetime', 'safe'),
             array('transaction_number', 'unique'),
             // The following rule is used by search().
             // Please remove those attributes that should not be searched.
-            array('id, transaction_number, transaction_date, transaction_time, created_datetime, status_document, status_progress, note, branch_id, user_id, total_quantity, total_quantity_movement_out, total_quantity_remaining, registration_transaction_id', 'safe', 'on' => 'search'),
+            array('id, transaction_number, transaction_date, transaction_time, created_datetime, updated_datetime, cancelled_datetime, status_document, status_progress, note, branch_id, user_id, user_id_updated, user_id_cancelled, total_quantity, total_quantity_movement_out, total_quantity_remaining, registration_transaction_id', 'safe', 'on' => 'search'),
         );
     }
 
@@ -77,6 +83,8 @@ class MaterialRequestHeader extends MonthlyTransactionActiveRecord {
             'materialRequestApprovals' => array(self::HAS_MANY, 'MaterialRequestApproval', 'material_request_header_id'),
             'branch' => array(self::BELONGS_TO, 'Branch', 'branch_id'),
             'user' => array(self::BELONGS_TO, 'Users', 'user_id'),
+            'userIdUpdated' => array(self::BELONGS_TO, 'Users', 'user_id_updated'),
+            'userIdCancelled' => array(self::BELONGS_TO, 'Users', 'user_id_cancelled'),
             'movementOutHeaders' => array(self::HAS_MANY, 'MovementOutHeader', 'material_request_header_id'),
             'registrationTransaction' => array(self::BELONGS_TO, 'RegistrationTransaction', 'registration_transaction_id'),
         );

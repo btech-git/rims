@@ -123,7 +123,6 @@ class VehicleController extends Controller {
             $customer->attributes = $_GET['Customer'];
 
         $customerCriteria = new CDbCriteria;
-        //$positionCriteria->compare('code',$position->code.'%',true,'AND', false);
         $customerCriteria->compare('name', $customer->name, true);
         $customerCriteria->compare('email', $customer->email . '%', true, 'AND', false);
 
