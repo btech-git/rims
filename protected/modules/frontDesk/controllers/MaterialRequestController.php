@@ -144,6 +144,8 @@ class MaterialRequestController extends Controller {
 
     public function actionUpdate($id) {
         $materialRequest = $this->instantiate($id);
+        $materialRequest->header->user_id_updated = Yii::app()->user->id;
+        $materialRequest->header->updated_datetime = date('Y-m-d H:i:s');
         $registrationTransaction = RegistrationTransaction::model()->findByPk($materialRequest->header->registration_transaction_id);
 
         $product = Search::bind(new Product('search'), isset($_GET['Product']) ? $_GET['Product'] : array());
