@@ -175,7 +175,7 @@ class MaterialRequest extends CComponent {
 
         foreach ($this->details as $detail) {
             
-            if ($detail->quantity <= 0) {
+            if ($detail->quantity < 0) {
                 continue;
             }
 
@@ -189,7 +189,7 @@ class MaterialRequest extends CComponent {
     }
 
     public function getTotalQuantity() {
-        $total = 0.00;
+        $total = '0.00';
 
         foreach ($this->details as $detail) {
             $total += $detail->quantity;
@@ -199,7 +199,7 @@ class MaterialRequest extends CComponent {
     }
     
     public function getTotalQuantityMovementOut() {
-        $total = 0.00;
+        $total = '0.00';
 
         foreach ($this->details as $detail) {
             $total += $detail->quantity_movement_out;
