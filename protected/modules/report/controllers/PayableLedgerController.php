@@ -234,7 +234,7 @@ class PayableLedgerController extends Controller {
             $model = MovementOutHeader::model()->findByAttributes(array('movement_out_no' => $codeNumber));
             $this->redirect(array('/transaction/movementOutHeader/show', 'id' => $model->id));
         } else if ($codeNumberConstant === 'MI') {
-            $model = MovementInHeader::model()->findByAttributes(array('movement_in_no' => $codeNumber));
+            $model = MovementInHeader::model()->findByAttributes(array('movement_in_number' => $codeNumber));
             $this->redirect(array('/transaction/movementInHeader/show', 'id' => $model->id));
         } else if ($codeNumberConstant === 'Pout') {
             $model = PaymentOut::model()->findByAttributes(array('payment_number' => $codeNumber));
