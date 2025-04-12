@@ -259,7 +259,7 @@ $this->menu = array(
 <?php endif; ?>
 
 <div>
-    <?php if (Yii::app()->user->checkAccess("saleInvoiceSupervisor")): ?>
+    <?php if (Yii::app()->user->checkAccess("movementOutSupervisor")): ?>
         <?php echo CHtml::link('<span class="fa fa-minus"></span>Cancel Transaction', array("/transaction/movementOutHeader/cancel", "id" => $model->id), array(
             'class' => 'button alert right', 
             'style' => 'margin-right:10px', 
