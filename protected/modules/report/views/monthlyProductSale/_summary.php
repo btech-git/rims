@@ -2,17 +2,17 @@
     <table class="report" style="width: 4000px">
         <thead>
             <tr id="header1">
-                <th style="width: 80px"></th>
-                <?php for ($n = 1; $n <= $numberOfDays; $n++): ?>
-                    <th style="width: 120px; overflow: hidden"><?php echo $n; ?></th>
-                <?php endfor; ?>
+                <th></th>
+                <?php foreach ($productSaleData as $productSaleItem): ?>
+                    <th><?php echo CHtml::encode($productSaleItem['product_name']); ?></th>
+                <?php endforeach; ?>
             </tr>
         </thead>
         <tbody>
-            <?php foreach ($productSaleData as $productSaleItem): ?>
+            <?php for ($n = 1; $n <= $numberOfDays; $n++): ?>
                 <tr>
-                    <td><?php echo CHtml::encode($productSaleItem['product_name']); ?></td>
-                    <?php for ($n = 1; $n <= $numberOfDays; $n++): ?>
+                    <td style="width: 10px; overflow: hidden"><?php echo $n; ?></td>
+                    <?php foreach ($productSaleData as $productSaleItem): ?>
                         <?php $day = str_pad($n, 2, '0', STR_PAD_LEFT); ?>
                         <?php $date = $year . '-' . $month . '-' . $day; ?>
                         <td style="padding: 16px">
@@ -21,9 +21,9 @@
                                 <div><strong>Price:</strong> <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $productSaleItem[$date]['total_price'])); ?></div>
                             <?php endif; ?>
                         </td>
-                    <?php endfor; ?>
+                    <?php endforeach; ?>
                 </tr>
-            <?php endforeach; ?>
+            <?php endfor; ?>
         </tbody>
     </table>
 </div>

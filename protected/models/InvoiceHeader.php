@@ -1025,6 +1025,20 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
         return $resultSet;
     }
     
+    public static function getSaleInvoiceTaxYearlyReport($year) {
+        $sql = "SELECT EXTRACT(YEAR_MONTH FROM invoice_date) AS year_month_value, COUNT(*) AS quantity_invoice, SUM(i.service_price) AS service_price, SUM(i.product_price) AS product_price, SUM(i.product_price + i.service_price) AS sub_total, SUM(i.ppn_total) AS total_tax, SUM(i.pph_total) AS total_tax_income, SUM(i.total_price) AS total_price 
+                FROM " . InvoiceHeader::model()->tableName() . " i 
+                WHERE YEAR(i.invoice_date) = :year AND i.status NOT LIKE '%CANCELLED%' AND i.tax_percentage > 0 AND i.ppn_total > 0
+                GROUP BY EXTRACT(YEAR_MONTH FROM invoice_date)
+                ORDER BY year_month_value ASC";
+                
+        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, array(
+            ':year' => $year,
+        ));
+
+        return $resultSet;
+    }
+    
     public static function getYearlyCompanySaleTaxSummary($year) {
         $sql = "SELECT EXTRACT(YEAR_MONTH FROM invoice_date) AS year_month_value, branch_id, MIN(b.name) AS branch_name, SUM(total_price) AS total_price
                 FROM " . InvoiceHeader::model()->tableName() . " i 

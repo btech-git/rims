@@ -525,6 +525,16 @@
                                         'url' => array('/report/productSubMasterCategoryStatistics/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('director')
                                     ),
+                                    array(
+                                        'label' => 'Laporan Penjualan Ppn Tahunan', 
+                                        'url' => array('/report/saleInvoiceTaxYearly/summary'), 
+                                        'visible' => Yii::app()->user->checkAccess('director')
+                                    ),
+                                    array(
+                                        'label' => 'Laporan Pembelian Ppn Tahunan', 
+                                        'url' => array('/report/purchaseInvoiceTaxYearly/summary'), 
+                                        'visible' => Yii::app()->user->checkAccess('director')
+                                    ),
                                 ),
                             )); ?>
                         <?php endif; ?>
