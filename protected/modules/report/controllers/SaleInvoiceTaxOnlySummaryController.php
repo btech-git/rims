@@ -6,7 +6,7 @@ class SaleInvoiceTaxOnlySummaryController extends Controller {
     
     public function filters() {
         return array(
-            'access',
+//            'access',
         );
     }
 
@@ -143,19 +143,20 @@ class SaleInvoiceTaxOnlySummaryController extends Controller {
         $worksheet->getStyle('A6:O6')->getFont()->setBold(true);
         $worksheet->setCellValue('A6', 'Tanggal');
         $worksheet->setCellValue('B6', 'Faktur #');
-        $worksheet->setCellValue('C6', 'Amount');
-        $worksheet->setCellValue('D6', 'Parts (Rp)');
-        $worksheet->setCellValue('E6', 'Jasa (Rp)');
-        $worksheet->setCellValue('F6', 'DPP Parts');
-        $worksheet->setCellValue('G6', 'DPP Jasa');
-        $worksheet->setCellValue('H6', 'Total DPP');
-        $worksheet->setCellValue('I6', 'Ppn');
-        $worksheet->setCellValue('J6', 'Pph');
-        $worksheet->setCellValue('K6', 'Total');
-        $worksheet->setCellValue('L6', 'SPK #');
-        $worksheet->setCellValue('M6', 'Faktur Pajak #');
-        $worksheet->setCellValue('N6', 'FP Amount');
-        $worksheet->setCellValue('O6', 'Bupot #');
+        $worksheet->setCellValue('C6', 'Customer');
+        $worksheet->setCellValue('D6', 'Amount');
+        $worksheet->setCellValue('E6', 'Parts (Rp)');
+        $worksheet->setCellValue('F6', 'Jasa (Rp)');
+        $worksheet->setCellValue('G6', 'DPP Parts');
+        $worksheet->setCellValue('H6', 'DPP Jasa');
+        $worksheet->setCellValue('I6', 'Total DPP');
+        $worksheet->setCellValue('J6', 'Ppn');
+        $worksheet->setCellValue('K6', 'Pph');
+        $worksheet->setCellValue('L6', 'Total');
+        $worksheet->setCellValue('M6', 'SPK #');
+        $worksheet->setCellValue('N6', 'Faktur Pajak #');
+        $worksheet->setCellValue('O6', 'FP Amount');
+        $worksheet->setCellValue('P6', 'Bupot #');
 
         $counter = 7;
 
@@ -168,16 +169,17 @@ class SaleInvoiceTaxOnlySummaryController extends Controller {
 //            $totalRemaining = $header->payment_left;
             $worksheet->setCellValue("A{$counter}", CHtml::encode(CHtml::value($header, 'invoice_date')));
             $worksheet->setCellValue("B{$counter}", CHtml::encode(CHtml::value($header, 'invoice_number')));
-            $worksheet->setCellValue("C{$counter}", CHtml::encode(CHtml::value($header, 'subTotalAfterTax')));
-            $worksheet->setCellValue("D{$counter}", CHtml::encode(CHtml::value($header, 'productPriceAfterTax')));
-            $worksheet->setCellValue("E{$counter}", CHtml::encode(CHtml::value($header, 'servicePriceAfterTax')));
-            $worksheet->setCellValue("F{$counter}", CHtml::encode(CHtml::value($header, 'product_price')));
-            $worksheet->setCellValue("G{$counter}", CHtml::encode(CHtml::value($header, 'service_price')));
-            $worksheet->setCellValue("H{$counter}", CHtml::encode(CHtml::value($header, 'subTotal')));
-            $worksheet->setCellValue("I{$counter}", CHtml::encode(CHtml::value($header, 'ppn_total')));
-            $worksheet->setCellValue("J{$counter}", CHtml::encode(CHtml::value($header, 'pph_total')));
-            $worksheet->setCellValue("K{$counter}", CHtml::encode(CHtml::value($header, 'total_price')));
-            $worksheet->setCellValue("L{$counter}", CHtml::encode(CHtml::value($header, 'registrationTransaction.work_order_number')));
+            $worksheet->setCellValue("C{$counter}", CHtml::encode(CHtml::value($header, 'customer.name')));
+            $worksheet->setCellValue("D{$counter}", CHtml::encode(CHtml::value($header, 'subTotalAfterTax')));
+            $worksheet->setCellValue("E{$counter}", CHtml::encode(CHtml::value($header, 'productPriceAfterTax')));
+            $worksheet->setCellValue("F{$counter}", CHtml::encode(CHtml::value($header, 'servicePriceAfterTax')));
+            $worksheet->setCellValue("G{$counter}", CHtml::encode(CHtml::value($header, 'product_price')));
+            $worksheet->setCellValue("H{$counter}", CHtml::encode(CHtml::value($header, 'service_price')));
+            $worksheet->setCellValue("I{$counter}", CHtml::encode(CHtml::value($header, 'subTotal')));
+            $worksheet->setCellValue("J{$counter}", CHtml::encode(CHtml::value($header, 'ppn_total')));
+            $worksheet->setCellValue("K{$counter}", CHtml::encode(CHtml::value($header, 'pph_total')));
+            $worksheet->setCellValue("L{$counter}", CHtml::encode(CHtml::value($header, 'total_price')));
+            $worksheet->setCellValue("M{$counter}", CHtml::encode(CHtml::value($header, 'registrationTransaction.work_order_number')));
 //            $grandTotalSale += $totalPrice;
 //            $grandTotalPayment += $totalPayment;
 //            $grandTotalRemaining += $totalRemaining;
