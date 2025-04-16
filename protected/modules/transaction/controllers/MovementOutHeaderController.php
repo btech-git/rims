@@ -75,7 +75,7 @@ class MovementOutHeaderController extends Controller {
         
             foreach ($details as $movementDetail) {
                 if ((int)$model->movement_type == 3) {
-                    $value = $movementDetail->registrationProduct->total_price;
+                    $value = $movementDetail->registrationProduct->product->hpp;
                     $coaId = $movementDetail->product->productSubMasterCategory->coa_outstanding_part_id;
                     $journalReferences[$coaId]['debet_kredit'] = 'D';
                     $journalReferences[$coaId]['is_coa_category'] = 0;
