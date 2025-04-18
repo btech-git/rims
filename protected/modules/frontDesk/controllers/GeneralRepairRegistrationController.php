@@ -276,19 +276,19 @@ class GeneralRepairRegistrationController extends Controller {
         if (isset($_POST['Vehicle'])) {
             $vehicle->attributes = $_POST['Vehicle'];
             
-            if ($vehicle->status_location == 'Masuk Bengkel') {
-                $vehicle->entry_datetime = date('Y-m-d H:i:s');
-                $registrationTransaction->vehicle_entry_datetime = date('Y-m-d H:i:s');
-            } elseif ($vehicle->status_location == 'Mulai Service') {
-                $vehicle->start_service_datetime = date('Y-m-d H:i:s');
-                $registrationTransaction->vehicle_start_service_datetime = date('Y-m-d H:i:s');
-            } elseif ($vehicle->status_location == 'Selesai Service') {
-                $vehicle->finish_service_datetime = date('Y-m-d H:i:s');
-                $registrationTransaction->vehicle_finish_service_datetime = date('Y-m-d H:i:s');
-            } elseif ($vehicle->status_location == 'Keluar Bengkel') {
-                $vehicle->exit_datetime = date('Y-m-d H:i:s');
-                $registrationTransaction->vehicle_exit_datetime = date('Y-m-d H:i:s');
-            } else {
+//            if ($vehicle->status_location == 'Masuk Bengkel') {
+//                $vehicle->entry_datetime = date('Y-m-d H:i:s');
+//                $registrationTransaction->vehicle_entry_datetime = date('Y-m-d H:i:s');
+//            } elseif ($vehicle->status_location == 'Mulai Service') {
+//                $vehicle->start_service_datetime = date('Y-m-d H:i:s');
+//                $registrationTransaction->vehicle_start_service_datetime = date('Y-m-d H:i:s');
+//            } elseif ($vehicle->status_location == 'Selesai Service') {
+//                $vehicle->finish_service_datetime = date('Y-m-d H:i:s');
+//                $registrationTransaction->vehicle_finish_service_datetime = date('Y-m-d H:i:s');
+//            } elseif ($vehicle->status_location == 'Keluar Bengkel') {
+//                $vehicle->exit_datetime = date('Y-m-d H:i:s');
+//                $registrationTransaction->vehicle_exit_datetime = date('Y-m-d H:i:s');
+//            } else {
                 $vehicle->entry_datetime = null;
                 $vehicle->start_service_datetime = null;
                 $vehicle->finish_service_datetime = null;
@@ -297,7 +297,7 @@ class GeneralRepairRegistrationController extends Controller {
                 $registrationTransaction->vehicle_start_service_datetime = null;
                 $registrationTransaction->vehicle_finish_service_datetime = null;
                 $registrationTransaction->vehicle_exit_datetime = null;
-            }
+//            }
             
             if ($vehicle->save() && $registrationTransaction->save()) {
                 $this->redirect(array('view', 'id' => $id));
