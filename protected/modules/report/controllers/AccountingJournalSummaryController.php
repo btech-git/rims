@@ -138,9 +138,10 @@ class AccountingJournalSummaryController extends Controller {
         $worksheet->getStyle("A5:J5")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
         $worksheet->getStyle('A5:J5')->getFont()->setBold(true);
-        $worksheet->setCellValue('A5', 'Chart of Account');
-        $worksheet->setCellValue('B5', 'Debit');
-        $worksheet->setCellValue('C5', 'Credit');
+        $worksheet->setCellValue('A5', 'COA Code');
+        $worksheet->setCellValue('B5', 'COA Name');
+        $worksheet->setCellValue('C5', 'Debit');
+        $worksheet->setCellValue('D5', 'Credit');
 
         $counter = 6;
 
@@ -152,10 +153,11 @@ class AccountingJournalSummaryController extends Controller {
                 $journalDebitBalance = $coa->getJournalDebitBalance($startDate, $endDate, $branchId, $transactionType);
                 $journalCreditBalance = $coa->getJournalCreditBalance($startDate, $endDate, $branchId, $transactionType);
                 if ($journalDebitBalance !== 0 || $journalCreditBalance !== 0) { //&& $journalDebitBalance !== $journalCreditBalance) {
-                    $worksheet->setCellValue("A{$counter}", $coa->code . ' - ' . $coa->name);
+                    $worksheet->setCellValue("A{$counter}", $coa->code);
+                    $worksheet->setCellValue("B{$counter}", $coa->name);
                     if (empty($coa->coaIds)) {
-                        $worksheet->setCellValue("B{$counter}", $journalDebitBalance);
-                        $worksheet->setCellValue("C{$counter}", $journalCreditBalance);
+                        $worksheet->setCellValue("C{$counter}", $journalDebitBalance);
+                        $worksheet->setCellValue("D{$counter}", $journalCreditBalance);
                     }
                     $counter++;
             
@@ -167,10 +169,11 @@ class AccountingJournalSummaryController extends Controller {
                             $journalDebitBalance = $account->getJournalDebitBalance($startDate, $endDate, $branchId, $transactionType);
                             $journalCreditBalance = $account->getJournalCreditBalance($startDate, $endDate, $branchId, $transactionType);
                             if (($journalDebitBalance !== 0 || $journalCreditBalance !== 0) && $journalDebitBalance !== $journalCreditBalance) {
-                                $worksheet->setCellValue("A{$counter}", $coa->code . ' - ' . $coa->name);
+                                $worksheet->setCellValue("A{$counter}", $coa->code);
+                                $worksheet->setCellValue("B{$counter}", $coa->name);
                                 if (empty($coa->coaIds)) {
-                                    $worksheet->setCellValue("B{$counter}", $journalDebitBalance);
-                                    $worksheet->setCellValue("C{$counter}", $journalCreditBalance);
+                                    $worksheet->setCellValue("C{$counter}", $journalDebitBalance);
+                                    $worksheet->setCellValue("D{$counter}", $journalCreditBalance);
                                 }
                                 $groupDebitBalance += $journalDebitBalance;
                                 $groupCreditBalance += $journalCreditBalance;
@@ -188,9 +191,9 @@ class AccountingJournalSummaryController extends Controller {
             $counter++;
         }
         
-        $worksheet->setCellValue("A{$counter}", "Total");
-        $worksheet->setCellValue("B{$counter}", $accountCategoryDebitBalance);
-        $worksheet->setCellValue("C{$counter}", $accountCategoryCreditBalance);
+        $worksheet->setCellValue("B{$counter}", "Total");
+        $worksheet->setCellValue("C{$counter}", $accountCategoryDebitBalance);
+        $worksheet->setCellValue("D{$counter}", $accountCategoryCreditBalance);
 
         for ($col = 'A'; $col !== 'D'; $col++) {
             $objPHPExcel->getActiveSheet()
@@ -252,13 +255,13 @@ class AccountingJournalSummaryController extends Controller {
         $totalDebit = '0.00';
         $totalCredit = '0.00';
         foreach ($transactionJournalSummary->dataProvider->data as $header) {
-            $debitAmount = $header->debet_kredit == "D" ? CHtml::encode(CHtml::value($header, 'total')) : 0;
-            $creditAmount = $header->debet_kredit == "K" ? CHtml::encode(CHtml::value($header, 'total')) : 0;
+            $debitAmount = $header->debet_kredit == "D" ? CHtml::value($header, 'total') : 0;
+            $creditAmount = $header->debet_kredit == "K" ? CHtml::value($header, 'total') : 0;
             
-            $worksheet->setCellValue("A{$counter}", CHtml::encode(CHtml::value($header, 'kode_transaksi')));
-            $worksheet->setCellValue("B{$counter}", CHtml::encode(CHtml::value($header, 'tanggal_transaksi')));
-            $worksheet->setCellValue("C{$counter}", CHtml::encode(CHtml::value($header, 'transaction_subject')));
-            $worksheet->setCellValue("D{$counter}", CHtml::encode(CHtml::value($header, 'remark')));
+            $worksheet->setCellValue("A{$counter}", CHtml::value($header, 'kode_transaksi'));
+            $worksheet->setCellValue("B{$counter}", CHtml::value($header, 'tanggal_transaksi'));
+            $worksheet->setCellValue("C{$counter}", CHtml::value($header, 'transaction_subject'));
+            $worksheet->setCellValue("D{$counter}", CHtml::value($header, 'remark'));
             $worksheet->setCellValue("E{$counter}", $debitAmount);
             $worksheet->setCellValue("F{$counter}", $creditAmount);
 
