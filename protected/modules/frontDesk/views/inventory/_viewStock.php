@@ -46,8 +46,8 @@
         <tfoot>
             <tr>
                 <td colspan="4" class="text-right"><strong>Total</strong></td>
-                <td><?php echo CHtml::encode($totalStockIn); ?></td>
-                <td><?php echo CHtml::encode($totalStockOut); ?></td>
+                <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $totalStockIn)); ?></td>
+                <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $totalStockOut)); ?></td>
                 <td colspan="3"></td>
             </tr>
         </tfoot>
