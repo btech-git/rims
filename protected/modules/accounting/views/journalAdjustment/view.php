@@ -10,17 +10,30 @@ $this->breadcrumbs = array(
         <?php $ccontroller = Yii::app()->controller->id; ?>
         <?php $ccaction = Yii::app()->controller->action->id; ?>
 
-        <?php echo CHtml::link('<span class="fa fa-plus"></span>Create', Yii::app()->baseUrl . '/accounting/journalAdjustment/create', array('class' => 'button cbutton right', 'style' => 'margin-right:10px', 'visible' => Yii::app()->user->checkAccess("accounting.cashTransaction.admin"))) ?>
-        <?php echo CHtml::link('<span class="fa fa-th-list"></span>Manage', Yii::app()->baseUrl . '/accounting/journalAdjustment/admin', array('class' => 'button cbutton right', 'style' => 'margin-right:10px', 'visible' => Yii::app()->user->checkAccess("accounting.cashTransaction.admin"))) ?>
+        <?php echo CHtml::link('<span class="fa fa-th-list"></span>Manage', Yii::app()->baseUrl . '/accounting/journalAdjustment/admin', array(
+            'class' => 'button cbutton right', 
+            'style' => 'margin-right:10px', 
+//            'visible' => Yii::app()->user->checkAccess("accounting.cashTransaction.admin")
+        )); ?>
 
         <?php if (Yii::app()->user->checkAccess("adjustmentJournalEdit")): //$journalVoucher->status != "Approved" && $journalVoucher->status != 'Rejected'): ?>
-            <?php echo CHtml::link('<span class="fa fa-edit"></span>Edit', Yii::app()->baseUrl . '/accounting/journalAdjustment/update?id=' . $journalVoucher->id, array('class' => 'button cbutton right', 'style' => 'margin-right:10px', 'visible' => Yii::app()->user->checkAccess("transaction.cashTransaction.update"))) ?>
-        <?php endif ?>
+            <?php echo CHtml::link('<span class="fa fa-edit"></span>Edit', Yii::app()->baseUrl . '/accounting/journalAdjustment/update?id=' . $journalVoucher->id, array(
+                'class' => 'button warning right', 
+                'style' => 'margin-right:10px', 
+                'visible' => Yii::app()->user->checkAccess("transaction.cashTransaction.update")
+            )); ?>
+        <?php endif; ?>
 
         <?php if ($journalVoucher->status == "Draft" && Yii::app()->user->checkAccess("adjustmentJournalApproval")): ?>
-            <?php echo CHtml::link('<span class="fa fa-edit"></span>Approval', Yii::app()->baseUrl . '/accounting/journalAdjustment/updateApproval?headerId=' . $journalVoucher->id, array('class' => 'button cbutton right', 'style' => 'margin-right:10px')) ?>
+            <?php echo CHtml::link('<span class="fa fa-edit"></span>Approval', Yii::app()->baseUrl . '/accounting/journalAdjustment/updateApproval?headerId=' . $journalVoucher->id, array(
+                'class' => 'button cbutton right', 
+                'style' => 'margin-right:10px'
+            )); ?>
         <?php elseif ($journalVoucher->status != "Draft" && Yii::app()->user->checkAccess("adjustmentJournalSupervisor")): ?>
-            <?php echo CHtml::link('<span class="fa fa-edit"></span>Update Approval', Yii::app()->baseUrl . '/accounting/journalAdjustment/updateApproval?headerId=' . $journalVoucher->id, array('class' => 'button cbutton right', 'style' => 'margin-right:10px')) ?>
+            <?php echo CHtml::link('<span class="fa fa-edit"></span>Update Approval', Yii::app()->baseUrl . '/accounting/journalAdjustment/updateApproval?headerId=' . $journalVoucher->id, array(
+                'class' => 'button cbutton right', 
+                'style' => 'margin-right:10px'
+            )); ?>
         <?php endif; ?>
 
         <h1><?php echo $this->id . '/' . $this->action->id; ?></h1>

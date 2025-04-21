@@ -74,6 +74,9 @@ class JournalAdjustmentController extends Controller {
      */
     public function actionUpdate($id) {
         $journalVoucher = $this->instantiate($id);
+        $journalVoucher->header->status = 'Draft';
+        $journalVoucher->header->updated_datetime = date('Y-m-d H:i:s');
+        $journalVoucher->header->user_id_updated = Yii::app()->user->id;
 
         // Uncomment the following line if AJAX validation is needed
         // $this->performAjaxValidation($model);
@@ -84,6 +87,12 @@ class JournalAdjustmentController extends Controller {
 
         if (isset($_POST['Submit']) && IdempotentManager::check()) {
             $this->loadState($journalVoucher);
+
+            JurnalUmum::model()->deleteAllByAttributes(array(
+                'kode_transaksi' => $journalVoucher->transaction_number,
+            ));
+
+            $journalVoucher->header->setCodeNumberByRevision('transaction_number');
 
             if ($journalVoucher->save(Yii::app()->db)) {
                 $this->redirect(array('view', 'id' => $journalVoucher->header->id));
