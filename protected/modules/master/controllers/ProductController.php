@@ -63,6 +63,8 @@ class ProductController extends Controller {
         ));
         $productSalesDataProvider->criteria->order = 't.id DESC';
         
+        $movementOutData = MovementOutDetail::model()->findAllByAttributes(array('product_id' => $model->id), array('order' => 't.id DESC', 'limit' => '100'));
+        
         if (isset($_POST['Approve']) && (int) $model->is_approved !== 1) {
             $model->is_approved = 1;
             $model->user_id_approval = Yii::app()->user->getId();
@@ -84,6 +86,7 @@ class ProductController extends Controller {
             'model' => $model,
             'purchaseOrderDetailDataProvider' => $purchaseOrderDetailDataProvider,
             'productSalesDataProvider' => $productSalesDataProvider,
+            'movementOutData' => $movementOutData,
         ));
     }
 
