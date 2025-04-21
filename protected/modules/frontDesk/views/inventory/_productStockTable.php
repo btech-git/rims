@@ -43,7 +43,7 @@
                             <?php break; ?>
                         <?php endif; ?>
                     <?php endforeach; ?>
-                    <td style="text-align: center"><?php echo CHtml::encode($stockValue); ?></td>
+                    <td style="text-align: center"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $stockValue)); ?></td>
                     <?php $totalStock += $stockValue; ?>
                 <?php endforeach; ?>
                         
