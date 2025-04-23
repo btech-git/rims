@@ -2,94 +2,121 @@
     <thead>
         <tr>
             <th style="text-align: center; width: 50%">
-                <?php //echo $counter; ?>
-                <?php echo CHtml::checkBox("User[roles][humanResourceHead]", CHtml::resolveValue($model, "roles[humanResourceHead]"), array('id' => 'User_roles_' . $counter, 'value' => 'humanResourceHead')); ?>
-                <?php echo CHtml::label('SELECT ALL', 'User_roles_' . $counter++, array('style' => 'display: inline')); ?>
+                <?php if (CHtml::resolveValue($model, "roles[humanResourceHead]")): ?>
+                    <?php echo CHtml::image(Yii::app()->request->baseUrl . '/images/icons/check_green.png', '', array('width' => 20)); ?>
+                <?php endif; ?>
             </th>
             <th style="text-align: center">Create</th>
             <th style="text-align: center">Edit</th>
+            <th style="text-align: center">View</th>
             <th style="text-align: center">Approval</th>
-            <th style="text-align: center">Report</th>
         </tr>
     </thead>
     <tbody>
         <tr>
             <td>Master Employee</td>
             <td style="text-align: center">
-                <?php //echo $counter; ?>
-                <?php echo CHtml::checkBox("User[roles][masterEmployeeCreate]", CHtml::resolveValue($model, "roles[masterEmployeeCreate]"), array('id' => 'User_roles_' . $counter++, 'value' => 'masterEmployeeCreate')); ?>
+                <?php if (CHtml::resolveValue($model, "roles[masterEmployeeCreate]")): ?>
+                    <?php echo CHtml::image(Yii::app()->request->baseUrl . '/images/icons/check_green.png', '', array('width' => 20)); ?>
+                <?php endif; ?>
             </td>
             <td style="text-align: center">
-                <?php //echo $counter; ?>
-                <?php echo CHtml::checkBox("User[roles][masterEmployeeEdit]", CHtml::resolveValue($model, "roles[masterEmployeeEdit]"), array('id' => 'User_roles_' . $counter++, 'value' => 'masterEmployeeEdit')); ?>
+                <?php if (CHtml::resolveValue($model, "roles[masterEmployeeEdit]")): ?>
+                    <?php echo CHtml::image(Yii::app()->request->baseUrl . '/images/icons/check_green.png', '', array('width' => 20)); ?>
+                <?php endif; ?>
             </td>
             <td style="text-align: center">
-                <?php //echo $counter; ?>
-                <?php echo CHtml::checkBox("User[roles][masterEmployeeApproval]", CHtml::resolveValue($model, "roles[masterEmployeeApproval]"), array('id' => 'User_roles_' . $counter++, 'value' => 'masterEmployeeApproval')); ?>
+                <?php if (CHtml::resolveValue($model, "roles[masterEmployeeView]")): ?>
+                    <?php echo CHtml::image(Yii::app()->request->baseUrl . '/images/icons/check_green.png', '', array('width' => 20)); ?>
+                <?php endif; ?>
             </td>
-            <td>&nbsp;</td>
+            <td style="text-align: center">
+                <?php if (CHtml::resolveValue($model, "roles[masterEmployeeApproval]")): ?>
+                    <?php echo CHtml::image(Yii::app()->request->baseUrl . '/images/icons/check_green.png', '', array('width' => 20)); ?>
+                <?php endif; ?>
+            </td>
         </tr>
         <tr>
             <td>Master Kategori Ketidakhadiran</td>
             <td style="text-align: center">
-                <?php //echo $counter; ?>
-                <?php echo CHtml::checkBox("User[roles][masterEmployeeOnleaveCategoryCreate]", CHtml::resolveValue($model, "roles[masterEmployeeOnleaveCategoryCreate]"), array('id' => 'User_roles_' . $counter++, 'value' => 'masterEmployeeOnleaveCategoryCreate')); ?>
+                <?php if (CHtml::resolveValue($model, "roles[masterEmployeeOnleaveCategoryCreate]")): ?>
+                    <?php echo CHtml::image(Yii::app()->request->baseUrl . '/images/icons/check_green.png', '', array('width' => 20)); ?>
+                <?php endif; ?>
             </td>
             <td style="text-align: center">
-                <?php //echo $counter; ?>
-                <?php echo CHtml::checkBox("User[roles][masterEmployeeOnleaveCategoryEdit]", CHtml::resolveValue($model, "roles[masterEmployeeOnleaveCategoryEdit]"), array('id' => 'User_roles_' . $counter++, 'value' => 'masterEmployeeOnleaveCategoryEdit')); ?>
+                <?php if (CHtml::resolveValue($model, "roles[masterEmployeeOnleaveCategoryEdit]")): ?>
+                    <?php echo CHtml::image(Yii::app()->request->baseUrl . '/images/icons/check_green.png', '', array('width' => 20)); ?>
+                <?php endif; ?>
             </td>
             <td style="text-align: center">
-                <?php //echo $counter; ?>
-                <?php echo CHtml::checkBox("User[roles][masterEmployeeOnleaveCategoryApproval]", CHtml::resolveValue($model, "roles[masterEmployeeOnleaveCategoryApproval]"), array('id' => 'User_roles_' . $counter++, 'value' => 'masterEmployeeOnleaveCategoryApproval')); ?>
+                <?php if (CHtml::resolveValue($model, "roles[masterEmployeeOnleaveCategoryView]")): ?>
+                    <?php echo CHtml::image(Yii::app()->request->baseUrl . '/images/icons/check_green.png', '', array('width' => 20)); ?>
+                <?php endif; ?>
             </td>
-            <td>&nbsp;</td>
+            <td style="text-align: center">
+                <?php if (CHtml::resolveValue($model, "roles[masterEmployeeOnleaveCategoryApproval]")): ?>
+                    <?php echo CHtml::image(Yii::app()->request->baseUrl . '/images/icons/check_green.png', '', array('width' => 20)); ?>
+                <?php endif; ?>
+            </td>
         </tr>
         <tr>
             <td>Public Holiday</td>
             <td style="text-align: center">
-                <?php //echo $counter; ?>
-                <?php echo CHtml::checkBox("User[roles][masterHolidayCreate]", CHtml::resolveValue($model, "roles[masterHolidayCreate]"), array('id' => 'User_roles_' . $counter++, 'value' => 'masterHolidayCreate')); ?>
+                <?php if (CHtml::resolveValue($model, "roles[masterHolidayCreate]")): ?>
+                    <?php echo CHtml::image(Yii::app()->request->baseUrl . '/images/icons/check_green.png', '', array('width' => 20)); ?>
+                <?php endif; ?>
             </td>
             <td style="text-align: center">
-                <?php //echo $counter; ?>
-                <?php echo CHtml::checkBox("User[roles][masterHolidayEdit]", CHtml::resolveValue($model, "roles[masterHolidayEdit]"), array('id' => 'User_roles_' . $counter++, 'value' => 'masterHolidayEdit')); ?>
+                <?php if (CHtml::resolveValue($model, "roles[masterHolidayEdit]")): ?>
+                    <?php echo CHtml::image(Yii::app()->request->baseUrl . '/images/icons/check_green.png', '', array('width' => 20)); ?>
+                <?php endif; ?>
             </td>
             <td style="text-align: center">
-                <?php //echo $counter; ?>
-                <?php echo CHtml::checkBox("User[roles][masterHolidayApproval]", CHtml::resolveValue($model, "roles[masterHolidayApproval]"), array('id' => 'User_roles_' . $counter++, 'value' => 'masterHolidayApproval')); ?>
+                <?php if (CHtml::resolveValue($model, "roles[masterHolidayView]")): ?>
+                    <?php echo CHtml::image(Yii::app()->request->baseUrl . '/images/icons/check_green.png', '', array('width' => 20)); ?>
+                <?php endif; ?>
             </td>
-            <td>&nbsp;</td>
+            <td style="text-align: center">
+                <?php if (CHtml::resolveValue($model, "roles[masterHolidayApproval]")): ?>
+                    <?php echo CHtml::image(Yii::app()->request->baseUrl . '/images/icons/check_green.png', '', array('width' => 20)); ?>
+                <?php endif; ?>
+            </td>
         </tr>
         <tr>
             <td>Absensi Karyawan</td>
             <td style="text-align: center">
-                <?php //echo $counter; ?>
-                <?php echo CHtml::checkBox("User[roles][employeeTimesheetCreate]", CHtml::resolveValue($model, "roles[employeeTimesheetCreate]"), array('id' => 'User_roles_' . $counter++, 'value' => 'employeeTimesheetCreate')); ?>
+                <?php if (CHtml::resolveValue($model, "roles[employeeTimesheetCreate]")): ?>
+                    <?php echo CHtml::image(Yii::app()->request->baseUrl . '/images/icons/check_green.png', '', array('width' => 20)); ?>
+                <?php endif; ?>
             </td>
             <td style="text-align: center">
-                <?php //echo $counter; ?>
-                <?php echo CHtml::checkBox("User[roles][employeeTimesheetEdit]", CHtml::resolveValue($model, "roles[employeeTimesheetEdit]"), array('id' => 'User_roles_' . $counter++, 'value' => 'employeeTimesheetEdit')); ?>
+                <?php if (CHtml::resolveValue($model, "roles[employeeTimesheetEdit]")): ?>
+                    <?php echo CHtml::image(Yii::app()->request->baseUrl . '/images/icons/check_green.png', '', array('width' => 20)); ?>
+                <?php endif; ?>
             </td>
             <td style="text-align: center">
-                <?php //echo $counter; ?>
-                <?php //echo CHtml::checkBox("User[roles][employeeTimesheetApproval]", CHtml::resolveValue($model, "roles[employeeTimesheetApproval]"), array('id' => 'User_roles_' . $counter++, 'value' => 'employeeTimesheetApproval')); ?>
+                <?php if (CHtml::resolveValue($model, "roles[employeeTimesheetView]")): ?>
+                    <?php echo CHtml::image(Yii::app()->request->baseUrl . '/images/icons/check_green.png', '', array('width' => 20)); ?>
+                <?php endif; ?>
             </td>
             <td>&nbsp;</td>
         </tr>
         <tr>
             <td>Cuti Karyawan</td>
             <td style="text-align: center">
-                <?php //echo $counter; ?>
-                <?php echo CHtml::checkBox("User[roles][employeeLeaveApplicationCreate]", CHtml::resolveValue($model, "roles[employeeLeaveApplicationCreate]"), array('id' => 'User_roles_' . $counter++, 'value' => 'employeeLeaveApplicationCreate')); ?>
+                <?php if (CHtml::resolveValue($model, "roles[employeeLeaveApplicationCreate]")): ?>
+                    <?php echo CHtml::image(Yii::app()->request->baseUrl . '/images/icons/check_green.png', '', array('width' => 20)); ?>
+                <?php endif; ?>
             </td>
             <td style="text-align: center">
-                <?php //echo $counter; ?>
-                <?php echo CHtml::checkBox("User[roles][employeeLeaveApplicationEdit]", CHtml::resolveValue($model, "roles[employeeLeaveApplicationEdit]"), array('id' => 'User_roles_' . $counter++, 'value' => 'employeeLeaveApplicationEdit')); ?>
+                <?php if (CHtml::resolveValue($model, "roles[employeeLeaveApplicationEdit]")): ?>
+                    <?php echo CHtml::image(Yii::app()->request->baseUrl . '/images/icons/check_green.png', '', array('width' => 20)); ?>
+                <?php endif; ?>
             </td>
             <td style="text-align: center">
-                <?php //echo $counter; ?>
-                <?php //echo CHtml::checkBox("User[roles][employeeLeaveApplicationApproval]", CHtml::resolveValue($model, "roles[employeeLeaveApplicationApproval]"), array('id' => 'User_roles_' . $counter++, 'value' => 'employeeLeaveApplicationApproval')); ?>
+                <?php if (CHtml::resolveValue($model, "roles[employeeLeaveApplicationView]")): ?>
+                    <?php echo CHtml::image(Yii::app()->request->baseUrl . '/images/icons/check_green.png', '', array('width' => 20)); ?>
+                <?php endif; ?>
             </td>
             <td>&nbsp;</td>
         </tr>
@@ -97,21 +124,23 @@
             <td>Rekap Absensi</td>
             <td>&nbsp;</td>
             <td>&nbsp;</td>
-            <td>&nbsp;</td>
             <td style="text-align: center">
-                <?php //echo $counter; ?>
-                <?php echo CHtml::checkBox("User[roles][absencyReport]", CHtml::resolveValue($model, "roles[absencyReport]"), array('id' => 'User_roles_' . $counter++, 'value' => 'absencyReport')); ?>
+                <?php if (CHtml::resolveValue($model, "roles[absencyReport]")): ?>
+                    <?php echo CHtml::image(Yii::app()->request->baseUrl . '/images/icons/check_green.png', '', array('width' => 20)); ?>
+                <?php endif; ?>
             </td>
+            <td>&nbsp;</td>
         </tr>
         <tr>
             <td>Payroll</td>
             <td>&nbsp;</td>
             <td>&nbsp;</td>
-            <td>&nbsp;</td>
             <td style="text-align: center">
-                <?php //echo $counter; ?>
-                <?php echo CHtml::checkBox("User[roles][payrollReport]", CHtml::resolveValue($model, "roles[payrollReport]"), array('id' => 'User_roles_' . $counter++, 'value' => 'payrollReport')); ?>
+                <?php if (CHtml::resolveValue($model, "roles[payrollReport]")): ?>
+                    <?php echo CHtml::image(Yii::app()->request->baseUrl . '/images/icons/check_green.png', '', array('width' => 20)); ?>
+                <?php endif; ?>
             </td>
+            <td>&nbsp;</td>
         </tr>
     </tbody>
 </table>

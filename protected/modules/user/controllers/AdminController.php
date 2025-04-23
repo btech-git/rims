@@ -117,6 +117,8 @@ class AdminController extends Controller {
      */
     public function actionCreate() {
         $model = new User;
+        $model->user_id = Yii::app()->user->id;
+        $model->created_datetime = date('Y-m-d H:i:s');
         $model->create_at = date('Y-m-d H:i:s');
         $model->lastvisit_at = date('Y-m-d H:i:s');
         $employees = Employee::model()->findAll(array('condition' => 'status = "Active"', 'order' => 't.name'));
@@ -165,6 +167,8 @@ class AdminController extends Controller {
      */
     public function actionUpdate() {
         $model = $this->loadModel();
+        $model->user_id_updated = Yii::app()->user->id;
+        $model->updated_datetime = date('Y-m-d H:i:s');
         $employees = Employee::model()->findAll(array('order' => 't.name'));
         $this->performAjaxValidation(array($model));
         $emptyBranchErrorMessage = '';

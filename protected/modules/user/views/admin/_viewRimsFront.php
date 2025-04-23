@@ -1,12 +1,11 @@
-
 <table>
     <thead>
         <tr>
             <th style="text-align: center; width: 50%">
-                <?php if (CHtml::resolveValue($model, "roles[idleManagement]")): ?>
+                <?php if (CHtml::resolveValue($model, "roles[masterServiceList]")): ?>
                     <?php echo CHtml::image(Yii::app()->request->baseUrl . '/images/icons/check_green.png', '', array('width' => 20)); ?>
                 <?php endif; ?>
-                <?php //echo CHtml::label('IDLE MANAGEMENT', 'User_roles_' . $counter++, array('style' => 'display: inline')); ?>
+                <?php //echo CHtml::label('SETTING SERVICE', 'User_roles_' . $counter++, array('style' => 'display: inline')); ?>
             </th>
             <th style="text-align: center">Create</th>
             <th style="text-align: center">Edit</th>
@@ -15,71 +14,73 @@
     </thead>
     <tbody>
         <tr>
-            <td>BR Mechanic POV</td>
+            <td>Estimasi</td>
             <td style="text-align: center">
-                <?php if (CHtml::resolveValue($model, "roles[brMechanicCreate]")): ?>
-                    <?php echo CHtml::image(Yii::app()->request->baseUrl . '/images/icons/check_green.png', '', array('width' => 20)); ?>
-                <?php endif; ?></td>
-            <td style="text-align: center">
-                <?php if (CHtml::resolveValue($model, "roles[brMechanicEdit]")): ?>
+                <?php if (CHtml::resolveValue($model, "roles[saleEstimationFrontCreate]")): ?>
                     <?php echo CHtml::image(Yii::app()->request->baseUrl . '/images/icons/check_green.png', '', array('width' => 20)); ?>
                 <?php endif; ?>
             </td>
             <td style="text-align: center">
-                <?php if (CHtml::resolveValue($model, "roles[brMechanicApproval]")): ?>
-                    <?php echo CHtml::image(Yii::app()->request->baseUrl . '/images/icons/check_green.png', '', array('width' => 20)); ?>
-                <?php endif; ?>
-            </td>
-        </tr>
-        <tr>
-            <td>BR Head POV</td>
-            <td style="text-align: center">
-                <?php if (CHtml::resolveValue($model, "roles[brHeadCreate]")): ?>
-                    <?php echo CHtml::image(Yii::app()->request->baseUrl . '/images/icons/check_green.png', '', array('width' => 20)); ?>
-                <?php endif; ?></td>
-            <td style="text-align: center">
-                <?php if (CHtml::resolveValue($model, "roles[brHeadEdit]")): ?>
+                <?php if (CHtml::resolveValue($model, "roles[saleEstimationFrontEdit]")): ?>
                     <?php echo CHtml::image(Yii::app()->request->baseUrl . '/images/icons/check_green.png', '', array('width' => 20)); ?>
                 <?php endif; ?>
             </td>
             <td style="text-align: center">
-                <?php if (CHtml::resolveValue($model, "roles[brHeadApproval]")): ?>
+                <?php if (CHtml::resolveValue($model, "roles[saleEstimationFrontSupervisor]")): ?>
                     <?php echo CHtml::image(Yii::app()->request->baseUrl . '/images/icons/check_green.png', '', array('width' => 20)); ?>
                 <?php endif; ?>
             </td>
         </tr>
         <tr>
-            <td>GR Mechanic POV</td>
+            <td>Registration</td>
             <td style="text-align: center">
-                <?php if (CHtml::resolveValue($model, "roles[grMechanicCreate]")): ?>
+                <?php if (CHtml::resolveValue($model, "roles[registrationTransactionFrontCreate]")): ?>
                     <?php echo CHtml::image(Yii::app()->request->baseUrl . '/images/icons/check_green.png', '', array('width' => 20)); ?>
                 <?php endif; ?>
             </td>
             <td style="text-align: center">
-                <?php if (CHtml::resolveValue($model, "roles[grMechanicEdit]")): ?>
+                <?php if (CHtml::resolveValue($model, "roles[registrationTransactionFrontEdit]")): ?>
                     <?php echo CHtml::image(Yii::app()->request->baseUrl . '/images/icons/check_green.png', '', array('width' => 20)); ?>
                 <?php endif; ?>
             </td>
             <td style="text-align: center">
-                <?php if (CHtml::resolveValue($model, "roles[grMechanicApproval]")): ?>
+                <?php if (CHtml::resolveValue($model, "roles[registrationTransactionFrontSupervisor]")): ?>
                     <?php echo CHtml::image(Yii::app()->request->baseUrl . '/images/icons/check_green.png', '', array('width' => 20)); ?>
                 <?php endif; ?>
             </td>
         </tr>
         <tr>
-            <td>GR Head POV</td>
+            <td>Invoice</td>
             <td style="text-align: center">
-                <?php if (CHtml::resolveValue($model, "roles[grHeadCreate]")): ?>
+                <?php if (CHtml::resolveValue($model, "roles[saleInvoiceFrontCreate]")): ?>
                     <?php echo CHtml::image(Yii::app()->request->baseUrl . '/images/icons/check_green.png', '', array('width' => 20)); ?>
                 <?php endif; ?>
             </td>
             <td style="text-align: center">
-                <?php if (CHtml::resolveValue($model, "roles[grHeadEdit]")): ?>
+                <?php if (CHtml::resolveValue($model, "roles[saleInvoiceFrontEdit]")): ?>
                     <?php echo CHtml::image(Yii::app()->request->baseUrl . '/images/icons/check_green.png', '', array('width' => 20)); ?>
                 <?php endif; ?>
             </td>
             <td style="text-align: center">
-                <?php if (CHtml::resolveValue($model, "roles[grHeadApproval]")): ?>
+                <?php if (CHtml::resolveValue($model, "roles[saleInvoiceFrontSupervisor]")): ?>
+                    <?php echo CHtml::image(Yii::app()->request->baseUrl . '/images/icons/check_green.png', '', array('width' => 20)); ?>
+                <?php endif; ?>
+            </td>
+        </tr>
+        <tr>
+            <td>Kasir</td>
+            <td style="text-align: center">
+                <?php if (CHtml::resolveValue($model, "roles[cashierFrontCreate]")): ?>
+                    <?php echo CHtml::image(Yii::app()->request->baseUrl . '/images/icons/check_green.png', '', array('width' => 20)); ?>
+                <?php endif; ?>
+            </td>
+            <td style="text-align: center">
+                <?php if (CHtml::resolveValue($model, "roles[cashierFrontEdit]")): ?>
+                    <?php echo CHtml::image(Yii::app()->request->baseUrl . '/images/icons/check_green.png', '', array('width' => 20)); ?>
+                <?php endif; ?>
+            </td>
+            <td style="text-align: center">
+                <?php if (CHtml::resolveValue($model, "roles[cashierFrontSupervisor]")): ?>
                     <?php echo CHtml::image(Yii::app()->request->baseUrl . '/images/icons/check_green.png', '', array('width' => 20)); ?>
                 <?php endif; ?>
             </td>

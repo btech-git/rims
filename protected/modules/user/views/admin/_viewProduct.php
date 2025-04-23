@@ -2,12 +2,14 @@
     <thead>
         <tr>
             <th style="text-align: center; width: 50%">
-                <?php //echo $counter; ?>
-                <?php echo CHtml::checkBox("User[roles][productHead]", CHtml::resolveValue($model, "roles[productHead]"), array('id' => 'User_roles_' . $counter, 'value' => 'productHead')); ?>
-                <?php echo CHtml::label('SELECT ALL', 'User_roles_' . $counter++, array('style' => 'display: inline')); ?>
+                <?php if (CHtml::resolveValue($model, "roles[masterProductInventory]")): ?>
+                    <?php echo CHtml::image(Yii::app()->request->baseUrl . '/images/icons/check_green.png', '', array('width' => 20)); ?>
+                <?php endif; ?>
+                <?php //echo CHtml::label('SETTING PRODUCT', 'User_roles_' . $counter++, array('style' => 'display: inline')); ?>
             </th>
             <th style="text-align: center">Create</th>
             <th style="text-align: center">Edit</th>
+            <th style="text-align: center">View</th>
             <th style="text-align: center">Approval</th>
         </tr>
     </thead>
@@ -15,181 +17,277 @@
         <tr>
             <td>Product</td>
             <td style="text-align: center">
-                <?php //echo $counter; ?>
-                <?php echo CHtml::checkBox("User[roles][masterProductCreate]", CHtml::resolveValue($model, "roles[masterProductCreate]"), array('id' => 'User_roles_' . $counter++, 'value' => 'masterProductCreate')); ?>
+                <?php if (CHtml::resolveValue($model, "roles[masterProductCreate]")): ?>
+                    <?php echo CHtml::image(Yii::app()->request->baseUrl . '/images/icons/check_green.png', '', array('width' => 20)); ?>
+                <?php endif; ?>
             </td>
             <td style="text-align: center">
-                <?php //echo $counter; ?>
-                <?php echo CHtml::checkBox("User[roles][masterProductEdit]", CHtml::resolveValue($model, "roles[masterProductEdit]"), array('id' => 'User_roles_' . $counter++, 'value' => 'masterProductEdit')); ?>
+                <?php if (CHtml::resolveValue($model, "roles[masterProductEdit]")): ?>
+                    <?php echo CHtml::image(Yii::app()->request->baseUrl . '/images/icons/check_green.png', '', array('width' => 20)); ?>
+                <?php endif; ?>
             </td>
             <td style="text-align: center">
-                <?php //echo $counter; ?>
-                <?php echo CHtml::checkBox("User[roles][masterProductApproval]", CHtml::resolveValue($model, "roles[masterProductApproval]"), array('id' => 'User_roles_' . $counter++, 'value' => 'masterProductApproval')); ?>
+                <?php if (CHtml::resolveValue($model, "roles[masterProductView]")): ?>
+                    <?php echo CHtml::image(Yii::app()->request->baseUrl . '/images/icons/check_green.png', '', array('width' => 20)); ?>
+                <?php endif; ?>
+            </td>
+            <td style="text-align: center">
+                <?php if (CHtml::resolveValue($model, "roles[masterProductApproval]")): ?>
+                    <?php echo CHtml::image(Yii::app()->request->baseUrl . '/images/icons/check_green.png', '', array('width' => 20)); ?>
+                <?php endif; ?>
             </td>
         </tr>
         <tr>
             <td>Product Category</td>
             <td style="text-align: center">
-                <?php //echo $counter; ?>
-                <?php echo CHtml::checkBox("User[roles][masterProductCategoryCreate]", CHtml::resolveValue($model, "roles[masterProductCategoryCreate]"), array('id' => 'User_roles_' . $counter++, 'value' => 'masterProductCategoryCreate')); ?>
+                <?php if (CHtml::resolveValue($model, "roles[masterProductCategoryCreate]")): ?>
+                    <?php echo CHtml::image(Yii::app()->request->baseUrl . '/images/icons/check_green.png', '', array('width' => 20)); ?>
+                <?php endif; ?>
             </td>
             <td style="text-align: center">
-                <?php //echo $counter; ?>
-                <?php echo CHtml::checkBox("User[roles][masterProductCategoryEdit]", CHtml::resolveValue($model, "roles[masterProductCategoryEdit]"), array('id' => 'User_roles_' . $counter++, 'value' => 'masterProductCategoryEdit')); ?>
+                <?php if (CHtml::resolveValue($model, "roles[masterProductCategoryEdit]")): ?>
+                    <?php echo CHtml::image(Yii::app()->request->baseUrl . '/images/icons/check_green.png', '', array('width' => 20)); ?>
+                <?php endif; ?>
             </td>
             <td style="text-align: center">
-                <?php //echo $counter; ?>
-                <?php echo CHtml::checkBox("User[roles][masterProductCategoryApproval]", CHtml::resolveValue($model, "roles[masterProductCategoryApproval]"), array('id' => 'User_roles_' . $counter++, 'value' => 'masterProductCategoryApproval')); ?>
+                <?php if (CHtml::resolveValue($model, "roles[masterProductCategoryView]")): ?>
+                    <?php echo CHtml::image(Yii::app()->request->baseUrl . '/images/icons/check_green.png', '', array('width' => 20)); ?>
+                <?php endif; ?>
+            </td>
+            <td style="text-align: center">
+                <?php if (CHtml::resolveValue($model, "roles[masterProductCategoryApproval]")): ?>
+                    <?php echo CHtml::image(Yii::app()->request->baseUrl . '/images/icons/check_green.png', '', array('width' => 20)); ?>
+                <?php endif; ?>
             </td>
         </tr>
         <tr>
             <td>Product Sub Master Category</td>
             <td style="text-align: center">
-                <?php //echo $counter; ?>
-                <?php echo CHtml::checkBox("User[roles][masterProductSubMasterCategoryCreate]", CHtml::resolveValue($model, "roles[masterProductSubMasterCategoryCreate]"), array('id' => 'User_roles_' . $counter++, 'value' => 'masterProductSubMasterCategoryCreate')); ?>
+                <?php if (CHtml::resolveValue($model, "roles[masterProductSubMasterCategoryCreate]")): ?>
+                    <?php echo CHtml::image(Yii::app()->request->baseUrl . '/images/icons/check_green.png', '', array('width' => 20)); ?>
+                <?php endif; ?>
             </td>
             <td style="text-align: center">
-                <?php //echo $counter; ?>
-                <?php echo CHtml::checkBox("User[roles][masterProductSubMasterCategoryEdit]", CHtml::resolveValue($model, "roles[masterProductSubMasterCategoryEdit]"), array('id' => 'User_roles_' . $counter++, 'value' => 'masterProductSubMasterCategoryEdit')); ?>
+                <?php if (CHtml::resolveValue($model, "roles[masterProductSubMasterCategoryEdit]")): ?>
+                    <?php echo CHtml::image(Yii::app()->request->baseUrl . '/images/icons/check_green.png', '', array('width' => 20)); ?>
+                <?php endif; ?>
             </td>
             <td style="text-align: center">
-                <?php //echo $counter; ?>
-                <?php echo CHtml::checkBox("User[roles][masterProductSubMasterCategoryApproval]", CHtml::resolveValue($model, "roles[masterProductSubMasterCategoryApproval]"), array('id' => 'User_roles_' . $counter++, 'value' => 'masterProductSubMasterCategoryApproval')); ?>
+                <?php if (CHtml::resolveValue($model, "roles[masterProductSubMasterCategoryView]")): ?>
+                    <?php echo CHtml::image(Yii::app()->request->baseUrl . '/images/icons/check_green.png', '', array('width' => 20)); ?>
+                <?php endif; ?>
+            </td>
+            <td style="text-align: center">
+                <?php if (CHtml::resolveValue($model, "roles[masterProductSubMasterCategoryApproval]")): ?>
+                    <?php echo CHtml::image(Yii::app()->request->baseUrl . '/images/icons/check_green.png', '', array('width' => 20)); ?>
+                <?php endif; ?>
             </td>
         </tr>
         <tr>
             <td>Product Sub Category</td>
             <td style="text-align: center">
-                <?php //echo $counter; ?>
-                <?php echo CHtml::checkBox("User[roles][masterProductSubCategoryCreate]", CHtml::resolveValue($model, "roles[masterProductSubCategoryCreate]"), array('id' => 'User_roles_' . $counter++, 'value' => 'masterProductSubCategoryCreate')); ?>
+                <?php if (CHtml::resolveValue($model, "roles[masterProductSubCategoryCreate]")): ?>
+                    <?php echo CHtml::image(Yii::app()->request->baseUrl . '/images/icons/check_green.png', '', array('width' => 20)); ?>
+                <?php endif; ?>
             </td>
             <td style="text-align: center">
-                <?php //echo $counter; ?>
-                <?php echo CHtml::checkBox("User[roles][masterProductSubCategoryEdit]", CHtml::resolveValue($model, "roles[masterProductSubCategoryEdit]"), array('id' => 'User_roles_' . $counter++, 'value' => 'masterProductSubCategoryEdit')); ?>
+                <?php if (CHtml::resolveValue($model, "roles[masterProductSubCategoryEdit]")): ?>
+                    <?php echo CHtml::image(Yii::app()->request->baseUrl . '/images/icons/check_green.png', '', array('width' => 20)); ?>
+                <?php endif; ?>
             </td>
             <td style="text-align: center">
-                <?php //echo $counter; ?>
-                <?php echo CHtml::checkBox("User[roles][masterProductSubCategoryApproval]", CHtml::resolveValue($model, "roles[masterProductSubCategoryApproval]"), array('id' => 'User_roles_' . $counter++, 'value' => 'masterProductSubCategoryApproval')); ?>
+                <?php if (CHtml::resolveValue($model, "roles[masterProductSubCategoryView]")): ?>
+                    <?php echo CHtml::image(Yii::app()->request->baseUrl . '/images/icons/check_green.png', '', array('width' => 20)); ?>
+                <?php endif; ?>
+            </td>
+            <td style="text-align: center">
+                <?php if (CHtml::resolveValue($model, "roles[masterProductSubCategoryApproval]")): ?>
+                    <?php echo CHtml::image(Yii::app()->request->baseUrl . '/images/icons/check_green.png', '', array('width' => 20)); ?>
+                <?php endif; ?>
             </td>
         </tr>
         <tr>
             <td>Brand</td>
             <td style="text-align: center">
-                <?php //echo $counter; ?>
-                <?php echo CHtml::checkBox("User[roles][masterBrandCreate]", CHtml::resolveValue($model, "roles[masterBrandCreate]"), array('id' => 'User_roles_' . $counter++, 'value' => 'masterBrandCreate')); ?>
+                <?php if (CHtml::resolveValue($model, "roles[masterBrandCreate]")): ?>
+                    <?php echo CHtml::image(Yii::app()->request->baseUrl . '/images/icons/check_green.png', '', array('width' => 20)); ?>
+                <?php endif; ?>
             </td>
             <td style="text-align: center">
-                <?php //echo $counter; ?>
-                <?php echo CHtml::checkBox("User[roles][masterBrandEdit]", CHtml::resolveValue($model, "roles[masterBrandEdit]"), array('id' => 'User_roles_' . $counter++, 'value' => 'masterBrandEdit')); ?>
+                <?php if (CHtml::resolveValue($model, "roles[masterBrandEdit]")): ?>
+                    <?php echo CHtml::image(Yii::app()->request->baseUrl . '/images/icons/check_green.png', '', array('width' => 20)); ?>
+                <?php endif; ?>
             </td>
             <td style="text-align: center">
-                <?php //echo $counter; ?>
-                <?php echo CHtml::checkBox("User[roles][masterBrandApproval]", CHtml::resolveValue($model, "roles[masterBrandApproval]"), array('id' => 'User_roles_' . $counter++, 'value' => 'masterBrandApproval')); ?>
+                <?php if (CHtml::resolveValue($model, "roles[masterBrandView]")): ?>
+                    <?php echo CHtml::image(Yii::app()->request->baseUrl . '/images/icons/check_green.png', '', array('width' => 20)); ?>
+                <?php endif; ?>
+            </td>
+            <td style="text-align: center">
+                <?php if (CHtml::resolveValue($model, "roles[masterBrandApproval]")): ?>
+                    <?php echo CHtml::image(Yii::app()->request->baseUrl . '/images/icons/check_green.png', '', array('width' => 20)); ?>
+                <?php endif; ?>
             </td>
         </tr>
         <tr>
             <td>Sub Brand</td>
             <td style="text-align: center">
-                <?php //echo $counter; ?>
-                <?php echo CHtml::checkBox("User[roles][masterSubBrandCreate]", CHtml::resolveValue($model, "roles[masterSubBrandCreate]"), array('id' => 'User_roles_' . $counter++, 'value' => 'masterSubBrandCreate')); ?>
+                <?php if (CHtml::resolveValue($model, "roles[masterSubBrandCreate]")): ?>
+                    <?php echo CHtml::image(Yii::app()->request->baseUrl . '/images/icons/check_green.png', '', array('width' => 20)); ?>
+                <?php endif; ?>
             </td>
             <td style="text-align: center">
-                <?php //echo $counter; ?>
-                <?php echo CHtml::checkBox("User[roles][masterSubBrandEdit]", CHtml::resolveValue($model, "roles[masterSubBrandEdit]"), array('id' => 'User_roles_' . $counter++, 'value' => 'masterSubBrandEdit')); ?>
+                <?php if (CHtml::resolveValue($model, "roles[masterSubBrandEdit]")): ?>
+                    <?php echo CHtml::image(Yii::app()->request->baseUrl . '/images/icons/check_green.png', '', array('width' => 20)); ?>
+                <?php endif; ?>
             </td>
             <td style="text-align: center">
-                <?php //echo $counter; ?>
-                <?php echo CHtml::checkBox("User[roles][masterSubBrandApproval]", CHtml::resolveValue($model, "roles[masterSubBrandApproval]"), array('id' => 'User_roles_' . $counter++, 'value' => 'masterSubBrandApproval')); ?>
+                <?php if (CHtml::resolveValue($model, "roles[masterSubBrandView]")): ?>
+                    <?php echo CHtml::image(Yii::app()->request->baseUrl . '/images/icons/check_green.png', '', array('width' => 20)); ?>
+                <?php endif; ?>
+            </td>
+            <td style="text-align: center">
+                <?php if (CHtml::resolveValue($model, "roles[masterSubBrandApproval]")): ?>
+                    <?php echo CHtml::image(Yii::app()->request->baseUrl . '/images/icons/check_green.png', '', array('width' => 20)); ?>
+                <?php endif; ?>
             </td>
         </tr>
         <tr>
             <td>Sub Brand Series</td>
             <td style="text-align: center">
-                <?php //echo $counter; ?>
-                <?php echo CHtml::checkBox("User[roles][masterSubBrandSeriesCreate]", CHtml::resolveValue($model, "roles[masterSubBrandSeriesCreate]"), array('id' => 'User_roles_' . $counter++, 'value' => 'masterSubBrandSeriesCreate')); ?>
+                <?php if (CHtml::resolveValue($model, "roles[masterSubBrandSeriesCreate]")): ?>
+                    <?php echo CHtml::image(Yii::app()->request->baseUrl . '/images/icons/check_green.png', '', array('width' => 20)); ?>
+                <?php endif; ?>
             </td>
             <td style="text-align: center">
-                <?php //echo $counter; ?>
-                <?php echo CHtml::checkBox("User[roles][masterSubBrandSeriesEdit]", CHtml::resolveValue($model, "roles[masterSubBrandSeriesEdit]"), array('id' => 'User_roles_' . $counter++, 'value' => 'masterSubBrandSeriesEdit')); ?>
+                <?php if (CHtml::resolveValue($model, "roles[masterSubBrandSeriesEdit]")): ?>
+                    <?php echo CHtml::image(Yii::app()->request->baseUrl . '/images/icons/check_green.png', '', array('width' => 20)); ?>
+                <?php endif; ?>
             </td>
             <td style="text-align: center">
-                <?php //echo $counter; ?>
-                <?php echo CHtml::checkBox("User[roles][masterSubBrandSeriesApproval]", CHtml::resolveValue($model, "roles[masterSubBrandSeriesApproval]"), array('id' => 'User_roles_' . $counter++, 'value' => 'masterSubBrandSeriesApproval')); ?>
+                <?php if (CHtml::resolveValue($model, "roles[masterSubBrandSeriesView]")): ?>
+                    <?php echo CHtml::image(Yii::app()->request->baseUrl . '/images/icons/check_green.png', '', array('width' => 20)); ?>
+                <?php endif; ?>
+            </td>
+            <td style="text-align: center">
+                <?php if (CHtml::resolveValue($model, "roles[masterSubBrandSeriesApproval]")): ?>
+                    <?php echo CHtml::image(Yii::app()->request->baseUrl . '/images/icons/check_green.png', '', array('width' => 20)); ?>
+                <?php endif; ?>
             </td>
         </tr>
         <tr>
             <td>Equipment</td>
             <td style="text-align: center">
-                <?php //echo $counter; ?>
-                <?php echo CHtml::checkBox("User[roles][masterEquipmentCreate]", CHtml::resolveValue($model, "roles[masterEquipmentCreate]"), array('id' => 'User_roles_' . $counter++, 'value' => 'masterEquipmentCreate')); ?>
+                <?php if (CHtml::resolveValue($model, "roles[masterEquipmentCreate]")): ?>
+                    <?php echo CHtml::image(Yii::app()->request->baseUrl . '/images/icons/check_green.png', '', array('width' => 20)); ?>
+                <?php endif; ?>
             </td>
             <td style="text-align: center">
-                <?php //echo $counter; ?>
-                <?php echo CHtml::checkBox("User[roles][masterEquipmentEdit]", CHtml::resolveValue($model, "roles[masterEquipmentEdit]"), array('id' => 'User_roles_' . $counter++, 'value' => 'masterEquipmentEdit')); ?>
+                <?php if (CHtml::resolveValue($model, "roles[masterEquipmentEdit]")): ?>
+                    <?php echo CHtml::image(Yii::app()->request->baseUrl . '/images/icons/check_green.png', '', array('width' => 20)); ?>
+                <?php endif; ?>
             </td>
             <td style="text-align: center">
-                <?php //echo $counter; ?>
-                <?php echo CHtml::checkBox("User[roles][masterEquipmentApproval]", CHtml::resolveValue($model, "roles[masterEquipmentApproval]"), array('id' => 'User_roles_' . $counter++, 'value' => 'masterEquipmentApproval')); ?>
+                <?php if (CHtml::resolveValue($model, "roles[masterEquipmentView]")): ?>
+                    <?php echo CHtml::image(Yii::app()->request->baseUrl . '/images/icons/check_green.png', '', array('width' => 20)); ?>
+                <?php endif; ?>
+            </td>
+            <td style="text-align: center">
+                <?php if (CHtml::resolveValue($model, "roles[masterEquipmentApproval]")): ?>
+                    <?php echo CHtml::image(Yii::app()->request->baseUrl . '/images/icons/check_green.png', '', array('width' => 20)); ?>
+                <?php endif; ?>
             </td>
         </tr>
         <tr>
             <td>Equipment Type</td>
             <td style="text-align: center">
-                <?php //echo $counter; ?>
-                <?php echo CHtml::checkBox("User[roles][masterEquipmentTypeCreate]", CHtml::resolveValue($model, "roles[masterEquipmentTypeCreate]"), array('id' => 'User_roles_' . $counter++, 'value' => 'masterEquipmentTypeCreate')); ?>
+                <?php if (CHtml::resolveValue($model, "roles[masterEquipmentTypeCreate]")): ?>
+                    <?php echo CHtml::image(Yii::app()->request->baseUrl . '/images/icons/check_green.png', '', array('width' => 20)); ?>
+                <?php endif; ?>
             </td>
             <td style="text-align: center">
-                <?php //echo $counter; ?>
-                <?php echo CHtml::checkBox("User[roles][masterEquipmentTypeEdit]", CHtml::resolveValue($model, "roles[masterEquipmentTypeEdit]"), array('id' => 'User_roles_' . $counter++, 'value' => 'masterEquipmentTypeEdit')); ?>
+                <?php if (CHtml::resolveValue($model, "roles[masterEquipmentTypeEdit]")): ?>
+                    <?php echo CHtml::image(Yii::app()->request->baseUrl . '/images/icons/check_green.png', '', array('width' => 20)); ?>
+                <?php endif; ?>
             </td>
             <td style="text-align: center">
-                <?php //echo $counter; ?>
-                <?php echo CHtml::checkBox("User[roles][masterEquipmentTypeApproval]", CHtml::resolveValue($model, "roles[masterEquipmentTypeApproval]"), array('id' => 'User_roles_' . $counter++, 'value' => 'masterEquipmentTypeApproval')); ?>
+                <?php if (CHtml::resolveValue($model, "roles[masterEquipmentTypeView]")): ?>
+                    <?php echo CHtml::image(Yii::app()->request->baseUrl . '/images/icons/check_green.png', '', array('width' => 20)); ?>
+                <?php endif; ?>
+            </td>
+            <td style="text-align: center">
+                <?php if (CHtml::resolveValue($model, "roles[masterEquipmentTypeApproval]")): ?>
+                    <?php echo CHtml::image(Yii::app()->request->baseUrl . '/images/icons/check_green.png', '', array('width' => 20)); ?>
+                <?php endif; ?>
             </td>
         </tr>
         <tr>
             <td>Equipment Sub Type</td>
             <td style="text-align: center">
-                <?php //echo $counter; ?>
-                <?php echo CHtml::checkBox("User[roles][masterEquipmentSubTypeCreate]", CHtml::resolveValue($model, "roles[masterEquipmentSubTypeCreate]"), array('id' => 'User_roles_' . $counter++, 'value' => 'masterEquipmentSubTypeCreate')); ?>
+                <?php if (CHtml::resolveValue($model, "roles[masterEquipmentSubTypeCreate]")): ?>
+                    <?php echo CHtml::image(Yii::app()->request->baseUrl . '/images/icons/check_green.png', '', array('width' => 20)); ?>
+                <?php endif; ?>
             </td>
             <td style="text-align: center">
-                <?php //echo $counter; ?>
-                <?php echo CHtml::checkBox("User[roles][masterEquipmentSubTypeEdit]", CHtml::resolveValue($model, "roles[masterEquipmentSubTypeEdit]"), array('id' => 'User_roles_' . $counter++, 'value' => 'masterEquipmentSubTypeEdit')); ?>
+                <?php if (CHtml::resolveValue($model, "roles[masterEquipmentSubTypeEdit]")): ?>
+                    <?php echo CHtml::image(Yii::app()->request->baseUrl . '/images/icons/check_green.png', '', array('width' => 20)); ?>
+                <?php endif; ?>
             </td>
             <td style="text-align: center">
-                <?php //echo $counter; ?>
-                <?php echo CHtml::checkBox("User[roles][masterEquipmentSubTypeApproval]", CHtml::resolveValue($model, "roles[masterEquipmentSubTypeApproval]"), array('id' => 'User_roles_' . $counter++, 'value' => 'masterEquipmentSubTypeApproval')); ?>
+                <?php if (CHtml::resolveValue($model, "roles[masterEquipmentSubTypeView]")): ?>
+                    <?php echo CHtml::image(Yii::app()->request->baseUrl . '/images/icons/check_green.png', '', array('width' => 20)); ?>
+                <?php endif; ?>
+            </td>
+            <td style="text-align: center">
+                <?php if (CHtml::resolveValue($model, "roles[masterEquipmentSubTypeApproval]")): ?>
+                    <?php echo CHtml::image(Yii::app()->request->baseUrl . '/images/icons/check_green.png', '', array('width' => 20)); ?>
+                <?php endif; ?>
             </td>
         </tr>
         <tr>
             <td>Permintaan Maintenance</td>
             <td style="text-align: center">
-                <?php //echo $counter; ?>
-                <?php echo CHtml::checkBox("User[roles][maintenanceRequestCreate]", CHtml::resolveValue($model, "roles[maintenanceRequestCreate]"), array('id' => 'User_roles_' . $counter++, 'value' => 'maintenanceRequestCreate')); ?>
+                <?php if (CHtml::resolveValue($model, "roles[maintenanceRequestCreate]")): ?>
+                    <?php echo CHtml::image(Yii::app()->request->baseUrl . '/images/icons/check_green.png', '', array('width' => 20)); ?>
+                <?php endif; ?>
             </td>
             <td style="text-align: center">
-                <?php //echo $counter; ?>
-                <?php echo CHtml::checkBox("User[roles][maintenanceRequestEdit]", CHtml::resolveValue($model, "roles[maintenanceRequestEdit]"), array('id' => 'User_roles_' . $counter++, 'value' => 'maintenanceRequestEdit')); ?>
+                <?php if (CHtml::resolveValue($model, "roles[maintenanceRequestEdit]")): ?>
+                    <?php echo CHtml::image(Yii::app()->request->baseUrl . '/images/icons/check_green.png', '', array('width' => 20)); ?>
+                <?php endif; ?>
             </td>
             <td style="text-align: center">
-                <?php //echo $counter; ?>
-                <?php echo CHtml::checkBox("User[roles][maintenanceRequestApproval]", CHtml::resolveValue($model, "roles[maintenanceRequestApproval]"), array('id' => 'User_roles_' . $counter++, 'value' => 'maintenanceRequestApproval')); ?>
+                <?php if (CHtml::resolveValue($model, "roles[maintenanceRequestView]")): ?>
+                    <?php echo CHtml::image(Yii::app()->request->baseUrl . '/images/icons/check_green.png', '', array('width' => 20)); ?>
+                <?php endif; ?>
+            </td>
+            <td style="text-align: center">
+                <?php if (CHtml::resolveValue($model, "roles[maintenanceRequestApproval]")): ?>
+                    <?php echo CHtml::image(Yii::app()->request->baseUrl . '/images/icons/check_green.png', '', array('width' => 20)); ?>
+                <?php endif; ?>
             </td>
         </tr>
         <tr>
             <td>Warehouse</td>
             <td style="text-align: center">
-                <?php //echo $counter; ?>
-                <?php echo CHtml::checkBox("User[roles][masterWarehouseCreate]", CHtml::resolveValue($model, "roles[masterWarehouseCreate]"), array('id' => 'User_roles_' . $counter++, 'value' => 'masterWarehouseCreate')); ?>
+                <?php if (CHtml::resolveValue($model, "roles[masterWarehouseCreate]")): ?>
+                    <?php echo CHtml::image(Yii::app()->request->baseUrl . '/images/icons/check_green.png', '', array('width' => 20)); ?>
+                <?php endif; ?>
             </td>
             <td style="text-align: center">
-                <?php //echo $counter; ?>
-                <?php echo CHtml::checkBox("User[roles][masterWarehouseEdit]", CHtml::resolveValue($model, "roles[masterWarehouseEdit]"), array('id' => 'User_roles_' . $counter++, 'value' => 'masterWarehouseEdit')); ?>
+                <?php if (CHtml::resolveValue($model, "roles[masterWarehouseEdit]")): ?>
+                    <?php echo CHtml::image(Yii::app()->request->baseUrl . '/images/icons/check_green.png', '', array('width' => 20)); ?>
+                <?php endif; ?>
             </td>
             <td style="text-align: center">
-                <?php //echo $counter; ?>
-                <?php echo CHtml::checkBox("User[roles][masterWarehouseApproval]", CHtml::resolveValue($model, "roles[masterWarehouseApproval]"), array('id' => 'User_roles_' . $counter++, 'value' => 'masterWarehouseApproval')); ?>
+                <?php if (CHtml::resolveValue($model, "roles[masterWarehouseView]")): ?>
+                    <?php echo CHtml::image(Yii::app()->request->baseUrl . '/images/icons/check_green.png', '', array('width' => 20)); ?>
+                <?php endif; ?>
+            </td>
+            <td style="text-align: center">
+                <?php if (CHtml::resolveValue($model, "roles[masterWarehouseApproval]")): ?>
+                    <?php echo CHtml::image(Yii::app()->request->baseUrl . '/images/icons/check_green.png', '', array('width' => 20)); ?>
+                <?php endif; ?>
             </td>
         </tr>
     </tbody>
