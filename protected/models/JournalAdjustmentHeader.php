@@ -10,13 +10,19 @@
  * @property string $time
  * @property string $note
  * @property integer $user_id
+ * @property integer $user_id_updated
+ * @property integer $user_id_cancelled
  * @property integer $branch_id
  * @property string $status
  * @property string $created_datetime
+ * @property string $updated_datetime
+ * @property string $cancelled_datetime
  *
  * The followings are the available model relations:
  * @property JournalAdjustmentDetail[] $journalAdjustmentDetails
  * @property Users $user
+ * @property UserIdUpdated $userIdUpdated
+ * @property UserIdCancelled $userIdCancelled
  * @property Branch $branch
  */
 class JournalAdjustmentHeader extends MonthlyTransactionActiveRecord {
@@ -38,13 +44,13 @@ class JournalAdjustmentHeader extends MonthlyTransactionActiveRecord {
         // will receive user inputs.
         return array(
             array('transaction_number, date, time, user_id, branch_id, status', 'required'),
-            array('user_id, branch_id', 'numerical', 'integerOnly' => true),
+            array('user_id, user_id_updated, user_id_cancelled, branch_id', 'numerical', 'integerOnly' => true),
             array('transaction_number', 'length', 'max' => 60),
             array('status', 'length', 'max' => 20),
-            array('note', 'safe'),
+            array('note, created_datetime, updated_datetime, cancelled_datetime', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, transaction_number, date, time, note, user_id, branch_id, status, created_datetime', 'safe', 'on' => 'search'),
+            array('id, transaction_number, date, time, note, user_id, user_id_updated, user_id_cancelled, branch_id, status, created_datetime, updated_datetime, cancelled_datetime', 'safe', 'on' => 'search'),
         );
     }
 
@@ -57,6 +63,8 @@ class JournalAdjustmentHeader extends MonthlyTransactionActiveRecord {
         return array(
             'journalAdjustmentDetails' => array(self::HAS_MANY, 'JournalAdjustmentDetail', 'journal_adjustment_header_id'),
             'user' => array(self::BELONGS_TO, 'Users', 'user_id'),
+            'userIdUpdated' => array(self::BELONGS_TO, 'Users', 'user_id'),
+            'userIdCancelled' => array(self::BELONGS_TO, 'Users', 'user_id'),
             'branch' => array(self::BELONGS_TO, 'Branch', 'branch_id'),
         );
     }

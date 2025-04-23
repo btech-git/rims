@@ -17,6 +17,10 @@
  * @property integer $branch_id
  * @property integer $is_main_access
  * @property integer $is_front_access
+ * @property integer $user_id
+ * @property integer $user_id_updated
+ * @property string $created_datetime
+ * @property string $updated_datetime
  *
  * The followings are the available model relations:
  * @property Profiles $profiles
@@ -39,6 +43,8 @@
  * @property TransactionReturnOrderApproval[] $transactionReturnOrderApprovals
  * @property TransactionTransferRequest[] $transactionTransferRequests
  * @property TransactionTransferRequest[] $transactionTransferRequests1
+ * @property User $user
+ * @property UserIdUpdated $userIdUpdated
  */
 class Users extends CActiveRecord {
 
@@ -59,14 +65,14 @@ class Users extends CActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('create_at', 'required'),
-            array('superuser, status, employee_id, branch_id, is_main_access, is_front_access', 'numerical', 'integerOnly' => true),
+            array('create_at, user_id, created_datetime', 'required'),
+            array('superuser, status, employee_id, branch_id, is_main_access, is_front_access, user_id, user_id_updated', 'numerical', 'integerOnly' => true),
             array('username', 'length', 'max' => 20),
             array('password, email, activkey', 'length', 'max' => 128),
-            array('lastvisit_at', 'safe'),
+            array('lastvisit_at, updated_datetime', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, username, password, email, activkey, superuser, status, create_at, lastvisit_at, employee_id, branch_id,employee_name, branch_name, is_main_access, is_front_access', 'safe', 'on' => 'search'),
+            array('id, username, password, email, activkey, superuser, status, create_at, lastvisit_at, employee_id, branch_id, employee_name, branch_name, is_main_access, is_front_access, user_id, created_datetime, user_id_updated, updated_datetime', 'safe', 'on' => 'search'),
         );
     }
 
@@ -99,6 +105,8 @@ class Users extends CActiveRecord {
             'transactionTransferRequests1' => array(self::HAS_MANY, 'TransactionTransferRequest', 'requester_id'),
             'branch' => array(self::BELONGS_TO, 'Branch', 'branch_id'),
             'employee' => array(self::BELONGS_TO, 'Employee', 'employee_id'),
+            'user' => array(self::BELONGS_TO, 'User', 'user_id'),
+            'userIdUpdated' => array(self::BELONGS_TO, 'User', 'user_id_updated'),
         );
     }
 
@@ -164,12 +172,6 @@ class Users extends CActiveRecord {
         ));
     }
 
-    /**
-     * Returns the static model of the specified AR class.
-     * Please note that you should have this exact method in all your CActiveRecord descendants!
-     * @param string $className active record class name.
-     * @return Users the static model class
-     */
     public static function model($className = __CLASS__) {
         return parent::model($className);
     }
