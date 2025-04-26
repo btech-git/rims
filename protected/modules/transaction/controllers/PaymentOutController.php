@@ -32,7 +32,7 @@ class PaymentOutController extends Controller {
         }
 
         if ($filterChain->action->id === 'updateApproval') {
-            if (!(Yii::app()->user->checkAccess('paymentOutApproval')) || !(Yii::app()->user->checkAccess('paymentOutSupervisor'))) {
+            if (!(Yii::app()->user->checkAccess('paymentOutApproval') || Yii::app()->user->checkAccess('paymentOutSupervisor'))) {
                 $this->redirect(array('/site/login'));
             }
         }
@@ -42,7 +42,7 @@ class PaymentOutController extends Controller {
             $filterChain->action->id === 'index' ||
             $filterChain->action->id === 'view'
         ) {
-            if (!(Yii::app()->user->checkAccess('paymentOutCreate')) || !(Yii::app()->user->checkAccess('paymentOutEdit'))) {
+            if (!(Yii::app()->user->checkAccess('paymentOutCreate') || Yii::app()->user->checkAccess('paymentOutEdit') || Yii::app()->user->checkAccess('paymentOutView'))) {
                 $this->redirect(array('/site/login'));
             }
         }

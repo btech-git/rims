@@ -11,9 +11,13 @@ class ProductPricingRequestController extends Controller {
     }
 
     public function filterAccess($filterChain) {
-        if ($filterChain->action->id === 'create') {
-            if (!(Yii::app()->user->checkAccess('masterBranchCreate')))
+        if (
+            $filterChain->action->id === 'create' || 
+            $filterChain->action->id === 'addInterbranch'
+        ) {
+            if (!(Yii::app()->user->checkAccess('productPricingRequestCreate'))) {
                 $this->redirect(array('/site/login'));
+            }
         }
 
         if (
@@ -22,18 +26,19 @@ class ProductPricingRequestController extends Controller {
             $filterChain->action->id === 'delete' || 
             $filterChain->action->id === 'updateDivision'
         ) {
-            if (!(Yii::app()->user->checkAccess('masterBranchEdit')))
+            if (!(Yii::app()->user->checkAccess('productPricingRequestUpdate'))) {
                 $this->redirect(array('/site/login'));
+            }
         }
 
         if (
             $filterChain->action->id === 'view' || 
-            $filterChain->action->id === 'addInterbranch' || 
             $filterChain->action->id === 'admin' || 
             $filterChain->action->id === 'index'
         ) {
-            if (!(Yii::app()->user->checkAccess('masterBranchCreate')) || !(Yii::app()->user->checkAccess('masterBranchEdit')))
+            if (!(Yii::app()->user->checkAccess('productPricingRequestCreate') || Yii::app()->user->checkAccess('productPricingRequestUpdate') || Yii::app()->user->checkAccess('productPricingRequestView'))) {
                 $this->redirect(array('/site/login'));
+            }
         }
 
         $filterChain->run();

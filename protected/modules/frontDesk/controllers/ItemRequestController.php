@@ -6,35 +6,43 @@ class ItemRequestController extends Controller {
 
     public function filters() {
         return array(
-//            'access',
+            'access',
         );
     }
 
     public function filterAccess($filterChain) {
         if ($filterChain->action->id === 'create') {
-            if (!(Yii::app()->user->checkAccess('itemRequestCreate')))
+            if (!(Yii::app()->user->checkAccess('itemRequestCreate'))) {
                 $this->redirect(array('/site/login'));
+            }
         }
 
         if (
             $filterChain->action->id === 'delete' ||
             $filterChain->action->id === 'update'
         ) {
-            if (!(Yii::app()->user->checkAccess('itemRequestEdit')))
+            if (!(Yii::app()->user->checkAccess('itemRequestEdit'))) {
                 $this->redirect(array('/site/login'));
+            }
         }
 
         if ($filterChain->action->id === 'updateApproval') {
-            if (!(Yii::app()->user->checkAccess('itemRequestApproval')) || !(Yii::app()->user->checkAccess('itemRequestSupervisor')))
+            if (!(Yii::app()->user->checkAccess('itemRequestApproval') || Yii::app()->user->checkAccess('itemRequestSupervisor'))) {
                 $this->redirect(array('/site/login'));
+            }
         }
 
         if (
             $filterChain->action->id === 'admin' || 
             $filterChain->action->id === 'view'
         ) {
-            if (!(Yii::app()->user->checkAccess('itemRequestCreate')) || !(Yii::app()->user->checkAccess('itemRequestEdit')))
+            if (!(
+                Yii::app()->user->checkAccess('itemRequestCreate') || 
+                Yii::app()->user->checkAccess('itemRequestEdit') || 
+                Yii::app()->user->checkAccess('itemRequestView')
+            )) {
                 $this->redirect(array('/site/login'));
+            }
         }
 
         $filterChain->run();

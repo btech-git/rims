@@ -36,7 +36,7 @@ $('.search-form form').submit(function(){
 <div id="link">
     <?php echo CHtml::link('<span class="fa fa-plus"></span> Sub Pekerjaan Luar', Yii::app()->baseUrl . '/accounting/workOrderExpense/create', array(
         'class' => 'button success right',
-//        'visible' => Yii::app()->user->checkAccess("transaction.paymentOut.create")
+        'visible' => Yii::app()->user->checkAccess("workOrderExpenseCreate")
     )); ?>
 </div>
 
@@ -118,10 +118,6 @@ $('.search-form form').submit(function(){
             'header' => 'Plate #',
             'value' => 'CHtml::value($data, "registrationTransaction.vehicle.plate_number")',
         ),
-//        array(
-//            'header' => 'Branch',
-//            'value' => 'CHtml::value($data, "branch.code")',
-//        ),
         array(
             'name' => 'note',
             'value' => 'substr(CHtml::value($data, "note"), 0, 30)',
@@ -142,11 +138,6 @@ $('.search-form form').submit(function(){
             'class' => 'CButtonColumn',
             'template' => '{view}',
             'buttons' => array(
-//                'edit' => array(
-//                    'label' => 'update',
-//                    'url' => 'Yii::app()->createUrl("accounting/workOrderExpense/update", array("id"=>$data->id))',
-//                    'visible' => 'Yii::app()->user->checkAccess("workOrderExpenseEdit")', //$data->status_document != "Approved" && $data->status_document != "Rejected" && ',
-//                ),
                 'view' => array(
                     'label' => 'view',
                     'url' => 'Yii::app()->createUrl("accounting/workOrderExpense/view", array("id"=>$data->id))',

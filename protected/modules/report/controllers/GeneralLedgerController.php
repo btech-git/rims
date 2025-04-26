@@ -185,8 +185,9 @@ class GeneralLedgerController extends Controller {
 
         $worksheet->getStyle('A5:G5')->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
-        $worksheet->setCellValue('A5', 'Akun');
-        $worksheet->mergeCells('A5:D5');
+        $worksheet->setCellValue('A5', 'COA Code');
+        $worksheet->setCellValue('B5', 'COA Name');
+        $worksheet->mergeCells('B5:D5');
         $worksheet->setCellValue('E5', 'Total Debit');
         $worksheet->setCellValue('F5', 'Total Kredit');
         $worksheet->setCellValue('G5', 'Saldo Akhir');
@@ -208,8 +209,9 @@ class GeneralLedgerController extends Controller {
             $worksheet->getStyle("A{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_LEFT);
             $worksheet->getStyle("E{$counter}:G{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
 
-            $worksheet->setCellValue("A{$counter}", CHtml::encode(CHtml::value($header, 'code')) . '-' . CHtml::encode(CHtml::value($header, 'name')));
-            $worksheet->mergeCells("A{$counter}:D{$counter}");
+            $worksheet->setCellValue("A{$counter}", CHtml::encode(CHtml::value($header, 'code')));
+            $worksheet->setCellValue("B{$counter}", CHtml::encode(CHtml::value($header, 'name')));
+            $worksheet->mergeCells("B{$counter}:D{$counter}");
             $counter++;$counter++;
 
             $worksheet->getStyle("A{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
@@ -345,5 +347,4 @@ class GeneralLedgerController extends Controller {
             $this->redirect(array('/transaction/invoiceHeader/show', 'id' => $model->id));
         }
     }
-
 }

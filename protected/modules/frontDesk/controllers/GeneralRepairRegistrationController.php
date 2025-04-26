@@ -24,15 +24,26 @@ class GeneralRepairRegistrationController extends Controller {
         }
 
         if (
-            $filterChain->action->id === 'admin' ||
             $filterChain->action->id === 'addProductService' ||
             $filterChain->action->id === 'generateSalesOrder' ||
             $filterChain->action->id === 'generateWorkOrder' ||
             $filterChain->action->id === 'generateInvoice' ||
-            $filterChain->action->id === 'view' ||
             $filterChain->action->id === 'showRealization'
         ) {
-            if (!(Yii::app()->user->checkAccess('generalRepairCreate')) || !(Yii::app()->user->checkAccess('generalRepairEdit'))) {
+            if (!(Yii::app()->user->checkAccess('generalRepairCreate') || Yii::app()->user->checkAccess('generalRepairEdit'))) {
+                $this->redirect(array('/site/login'));
+            }
+        }
+
+        if (
+            $filterChain->action->id === 'admin' ||
+            $filterChain->action->id === 'view'
+        ) {
+            if (!(
+                Yii::app()->user->checkAccess('generalRepairCreate') || 
+                Yii::app()->user->checkAccess('generalRepairEdit') || 
+                Yii::app()->user->checkAccess('generalRepairView')
+            )) {
                 $this->redirect(array('/site/login'));
             }
         }

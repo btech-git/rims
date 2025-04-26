@@ -37,7 +37,7 @@ class InvoiceHeaderController extends Controller {
             $filterChain->action->id === 'view' ||
             $filterChain->action->id === 'viewInvoices'
         ) {
-            if (!(Yii::app()->user->checkAccess('saleInvoiceCreate')) || !(Yii::app()->user->checkAccess('saleInvoiceEdit'))) {
+            if (!(Yii::app()->user->checkAccess('saleInvoiceCreate') || Yii::app()->user->checkAccess('saleInvoiceEdit') || Yii::app()->user->checkAccess('saleInvoiceView'))) {
                 $this->redirect(array('/site/login'));
             }
         }

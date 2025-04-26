@@ -160,40 +160,67 @@ class SaleInvoiceTaxOnlySummaryController extends Controller {
 
         $counter = 7;
 
-//        $grandTotalSale = 0;
-//        $grandTotalPayment = 0;
-//        $grandTotalRemaining = 0;
+        $grandTotalSubAfterTax = 0;
+        $grandTotalProductPriceAfterTax = 0;
+        $grandTotalServicePriceAfterTax = 0;
+        $grandTotalProductPrice = 0;
+        $grandTotalServicePrice = 0;
+        $grandTotalSubTotal = 0;
+        $grandTotalPpnTotal = 0;
+        $grandTotalPphTotal = 0;
+        $grandTotalPrice = 0;
         foreach ($saleInvoiceSummary->dataProvider->data as $header) {
-//            $totalPrice = $header->total_price; 
-//            $totalPayment = $header->payment_amount;
-//            $totalRemaining = $header->payment_left;
+            $subTotalAfterTax = CHtml::value($header, 'subTotalAfterTax'); 
+            $productPriceAfterTax = CHtml::value($header, 'productPriceAfterTax');
+            $servicePriceAfterTax = CHtml::value($header, 'servicePriceAfterTax');
+            $productPrice = CHtml::value($header, 'product_price'); 
+            $servicePrice = CHtml::value($header, 'service_price');
+            $subTotal = CHtml::value($header, 'subTotal');
+            $ppnTotal = CHtml::value($header, 'ppn_total'); 
+            $pphTotal = CHtml::value($header, 'pph_total');
+            $totalPrice = CHtml::value($header, 'total_price');
+            
             $worksheet->setCellValue("A{$counter}", CHtml::encode(CHtml::value($header, 'invoice_date')));
             $worksheet->setCellValue("B{$counter}", CHtml::encode(CHtml::value($header, 'invoice_number')));
             $worksheet->setCellValue("C{$counter}", CHtml::encode(CHtml::value($header, 'customer.name')));
-            $worksheet->setCellValue("D{$counter}", CHtml::encode(CHtml::value($header, 'subTotalAfterTax')));
-            $worksheet->setCellValue("E{$counter}", CHtml::encode(CHtml::value($header, 'productPriceAfterTax')));
-            $worksheet->setCellValue("F{$counter}", CHtml::encode(CHtml::value($header, 'servicePriceAfterTax')));
-            $worksheet->setCellValue("G{$counter}", CHtml::encode(CHtml::value($header, 'product_price')));
-            $worksheet->setCellValue("H{$counter}", CHtml::encode(CHtml::value($header, 'service_price')));
-            $worksheet->setCellValue("I{$counter}", CHtml::encode(CHtml::value($header, 'subTotal')));
-            $worksheet->setCellValue("J{$counter}", CHtml::encode(CHtml::value($header, 'ppn_total')));
-            $worksheet->setCellValue("K{$counter}", CHtml::encode(CHtml::value($header, 'pph_total')));
-            $worksheet->setCellValue("L{$counter}", CHtml::encode(CHtml::value($header, 'total_price')));
+            $worksheet->setCellValue("D{$counter}", CHtml::encode($subTotalAfterTax));
+            $worksheet->setCellValue("E{$counter}", CHtml::encode($productPriceAfterTax));
+            $worksheet->setCellValue("F{$counter}", CHtml::encode($servicePriceAfterTax));
+            $worksheet->setCellValue("G{$counter}", CHtml::encode($productPrice));
+            $worksheet->setCellValue("H{$counter}", CHtml::encode($servicePrice));
+            $worksheet->setCellValue("I{$counter}", CHtml::encode($subTotal));
+            $worksheet->setCellValue("J{$counter}", CHtml::encode($ppnTotal));
+            $worksheet->setCellValue("K{$counter}", CHtml::encode($pphTotal));
+            $worksheet->setCellValue("L{$counter}", CHtml::encode($totalPrice));
             $worksheet->setCellValue("M{$counter}", CHtml::encode(CHtml::value($header, 'registrationTransaction.work_order_number')));
-//            $grandTotalSale += $totalPrice;
-//            $grandTotalPayment += $totalPayment;
-//            $grandTotalRemaining += $totalRemaining;
+            
+            $grandTotalSubAfterTax += $subTotalAfterTax;
+            $grandTotalProductPriceAfterTax += $productPriceAfterTax;
+            $grandTotalServicePriceAfterTax += $servicePriceAfterTax;
+            $grandTotalProductPrice += $productPrice;
+            $grandTotalServicePrice += $servicePrice;
+            $grandTotalSubTotal += $subTotal;
+            $grandTotalPpnTotal += $ppnTotal;
+            $grandTotalPphTotal += $pphTotal;
+            $grandTotalPrice += $totalPrice;
+            
             $counter++;
         }
 
-        $worksheet->getStyle("A{$counter}:O{$counter}")->getFont()->setBold(true);
-        $worksheet->getStyle("A{$counter}:O{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
-        $worksheet->getStyle("C{$counter}:K{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
-//        $worksheet->setCellValue("F{$counter}", 'Total');
-//        $worksheet->setCellValue("G{$counter}", 'Rp');
-//        $worksheet->setCellValue("H{$counter}", $grandTotalSale);
-//        $worksheet->setCellValue("I{$counter}", $grandTotalPayment);
-//        $worksheet->setCellValue("J{$counter}", $grandTotalRemaining);
+        $worksheet->getStyle("A{$counter}:M{$counter}")->getFont()->setBold(true);
+        $worksheet->getStyle("A{$counter}:M{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("D{$counter}:M{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
+        $worksheet->setCellValue("B{$counter}", 'Total');
+        $worksheet->setCellValue("C{$counter}", 'Rp');
+        $worksheet->setCellValue("D{$counter}", $grandTotalSubAfterTax);
+        $worksheet->setCellValue("E{$counter}", $grandTotalProductPriceAfterTax);
+        $worksheet->setCellValue("F{$counter}", $grandTotalServicePriceAfterTax);
+        $worksheet->setCellValue("G{$counter}", $grandTotalProductPrice);
+        $worksheet->setCellValue("H{$counter}", $grandTotalServicePrice);
+        $worksheet->setCellValue("I{$counter}", $grandTotalSubTotal);
+        $worksheet->setCellValue("J{$counter}", $grandTotalPpnTotal);
+        $worksheet->setCellValue("K{$counter}", $grandTotalPphTotal);
+        $worksheet->setCellValue("L{$counter}", $grandTotalPrice);
 
         $counter++;
 

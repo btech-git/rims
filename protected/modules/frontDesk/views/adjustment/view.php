@@ -20,7 +20,7 @@ $this->menu = array(
     <div class="clearfix page-action">
         <?php $ccontroller = Yii::app()->controller->id;
         $ccaction = Yii::app()->controller->action->id; ?>
-        <?php echo CHtml::link('<span class="fa fa-list"></span>Manage Stock Adjustment', Yii::app()->baseUrl . '/frontDesk/adjustment/admin', array('class' => 'button cbutton right', 'visible' => Yii::app()->user->checkAccess("transaction.stockAdjustment.admin"))) ?>
+        <?php echo CHtml::link('<span class="fa fa-list"></span>Manage Stock Adjustment', Yii::app()->baseUrl . '/frontDesk/adjustment/admin', array('class' => 'button cbutton right')) ?>
 
         <?php if ($model->status == "Draft" && Yii::app()->user->checkAccess("stockAdjustmentApproval") && $model->status != 'CANCELLED!!!'): ?>
             <?php echo CHtml::link('<span class="fa fa-edit"></span>Approval', Yii::app()->baseUrl.'/frontDesk/adjustment/updateApproval?headerId=' . $model->id , array('class'=>'button cbutton right','style'=>'margin-right:10px')) ?>
@@ -136,8 +136,6 @@ $this->menu = array(
                                 'memo',
                             ),
                         )); ?>
-
-                        <?php //$this->renderPartial('_detailView', array('model'=>$model,'warehouse'=>$warehouse));  ?>
                     </div>
                 </div>
             </div>

@@ -6,24 +6,27 @@ class JournalAdjustmentController extends Controller {
     
     public function filters() {
         return array(
-//            'access',
+            'access',
         );
     }
 
     public function filterAccess($filterChain) {
         if ($filterChain->action->id === 'create') {
-            if (!(Yii::app()->user->checkAccess('adjustmentJournalCreate')))
+            if (!(Yii::app()->user->checkAccess('adjustmentJournalCreate'))) {
                 $this->redirect(array('/site/login'));
+            }
         }
 
         if ($filterChain->action->id === 'update') {
-            if (!(Yii::app()->user->checkAccess('adjustmentJournalEdit')))
+            if (!(Yii::app()->user->checkAccess('adjustmentJournalEdit'))) {
                 $this->redirect(array('/site/login'));
+            }
         }
 
         if ($filterChain->action->id === 'updateApproval') {
-            if (!(Yii::app()->user->checkAccess('adjustmentJournalApproval')) || !(Yii::app()->user->checkAccess('adjustmentJournalSupervisor')))
+            if (!(Yii::app()->user->checkAccess('adjustmentJournalApproval') || Yii::app()->user->checkAccess('adjustmentJournalSupervisor'))) {
                 $this->redirect(array('/site/login'));
+            }
         }
 
         if (
@@ -31,8 +34,13 @@ class JournalAdjustmentController extends Controller {
             $filterChain->action->id === 'admin' ||
             $filterChain->action->id === 'view'
         ) {
-            if (!(Yii::app()->user->checkAccess('adjustmentJournalCreate')) || !(Yii::app()->user->checkAccess('adjustmentJournalEdit')))
+            if (!(
+                Yii::app()->user->checkAccess('adjustmentJournalCreate') || 
+                Yii::app()->user->checkAccess('adjustmentJournalEdit') || 
+                Yii::app()->user->checkAccess('adjustmentJournalView')
+            )) {
                 $this->redirect(array('/site/login'));
+            }
         }
 
         $filterChain->run();
@@ -89,7 +97,7 @@ class JournalAdjustmentController extends Controller {
             $this->loadState($journalVoucher);
 
             JurnalUmum::model()->deleteAllByAttributes(array(
-                'kode_transaksi' => $journalVoucher->transaction_number,
+                'kode_transaksi' => $journalVoucher->header->transaction_number,
             ));
 
             $journalVoucher->header->setCodeNumberByRevision('transaction_number');

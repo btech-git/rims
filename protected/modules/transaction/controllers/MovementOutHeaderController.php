@@ -11,14 +11,15 @@ class MovementOutHeaderController extends Controller {
 
     public function filters() {
         return array(
-//            'access',
+            'access',
         );
     }
 
     public function filterAccess($filterChain) {
         if ($filterChain->action->id === 'create') {
-            if (!(Yii::app()->user->checkAccess('movementOutCreate')))
+            if (!(Yii::app()->user->checkAccess('movementOutCreate'))) {
                 $this->redirect(array('/site/login'));
+            }
         }
 
         if (
@@ -27,13 +28,15 @@ class MovementOutHeaderController extends Controller {
             $filterChain->action->id === 'updateStatus' || 
             $filterChain->action->id === 'update'
         ) {
-            if (!(Yii::app()->user->checkAccess('movementOutEdit')))
+            if (!(Yii::app()->user->checkAccess('movementOutEdit'))) {
                 $this->redirect(array('/site/login'));
+            }
         }
 
         if ($filterChain->action->id === 'updateApproval') {
-            if (!(Yii::app()->user->checkAccess('movementOutApproval')) || !(Yii::app()->user->checkAccess('movementOutSupervisor')))
+            if (!(Yii::app()->user->checkAccess('movementOutApproval') || Yii::app()->user->checkAccess('movementOutSupervisor'))) {
                 $this->redirect(array('/site/login'));
+            }
         }
 
         if (
@@ -41,8 +44,9 @@ class MovementOutHeaderController extends Controller {
             $filterChain->action->id === 'index' || 
             $filterChain->action->id === 'view'
         ) {
-            if (!(Yii::app()->user->checkAccess('movementOutCreate')) || !(Yii::app()->user->checkAccess('movementOutEdit')))
+            if (!(Yii::app()->user->checkAccess('movementOutCreate') || Yii::app()->user->checkAccess('movementOutEdit') || Yii::app()->user->checkAccess('movementOutView'))) {
                 $this->redirect(array('/site/login'));
+            }
         }
 
         $filterChain->run();

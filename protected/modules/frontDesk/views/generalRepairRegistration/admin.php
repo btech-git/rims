@@ -29,7 +29,10 @@ Yii::app()->clientScript->registerScript('search', "
 
 <div id="maincontent">
     <div class="clearfix page-action">
-        <?php echo CHtml::link('<span class="fa fa-plus"></span>New Registration', Yii::app()->baseUrl . '/frontDesk/customerRegistration/vehicleList', array('class' => 'button success right', 'visible' => Yii::app()->user->checkAccess("frontDesk.generalRepairRegistration.admin"))); ?>
+        <?php echo CHtml::link('<span class="fa fa-plus"></span>New Registration', Yii::app()->baseUrl . '/frontDesk/customerRegistration/vehicleList', array(
+            'class' => 'button success right', 
+            'visible' => Yii::app()->user->checkAccess("generalRepairCreate")
+        )); ?>
         <h1>Manage General Repair Registrations</h1>
         
         <div class="search-bar">
@@ -86,13 +89,6 @@ Yii::app()->clientScript->registerScript('search', "
                 'header' => 'Car Model',
                 'value' => '$data->vehicle->carModel->name'
             ),
-//            array(
-//                'header' => 'Repair Type',
-//                'name' => 'repair_type',
-//                'value' => '$data->repair_type',
-//                'type' => 'raw',
-//                'filter' => false,
-//            ),
             array(
                 'header' => 'Customer Name',
                 'value' => '$data->customer->name',
@@ -122,11 +118,6 @@ Yii::app()->clientScript->registerScript('search', "
                 'header' => 'Vehicle Status',
                 'value' => '$data->vehicle->status_location'
             ),
-//            array(
-//                'name' => 'branch_id',
-//                'filter' => CHtml::activeDropDownList($model, 'branch_id', CHtml::listData(Branch::model()->findAll(array('order' => 'name')), 'id', 'name'), array('empty' => '-- All --')),
-//                'value' => '$data->branch->name'
-//            ),
             'problem',
             array(
                 'header' => 'Mekanik',

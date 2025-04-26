@@ -24,16 +24,27 @@ class BodyRepairRegistrationController extends Controller {
         }
 
         if (
-                $filterChain->action->id === 'admin' ||
-                $filterChain->action->id === 'addProductService' ||
-                $filterChain->action->id === 'generateInvoice' ||
-                $filterChain->action->id === 'generateSalesOrder' ||
-                $filterChain->action->id === 'generateWorkOrder' ||
-                $filterChain->action->id === 'insuranceAddition' ||
-                $filterChain->action->id === 'view' ||
-                $filterChain->action->id === 'showRealization'
+            $filterChain->action->id === 'addProductService' ||
+            $filterChain->action->id === 'generateInvoice' ||
+            $filterChain->action->id === 'generateSalesOrder' ||
+            $filterChain->action->id === 'generateWorkOrder' ||
+            $filterChain->action->id === 'insuranceAddition' ||
+            $filterChain->action->id === 'showRealization'
         ) {
-            if (!(Yii::app()->user->checkAccess('bodyRepairCreate')) || !(Yii::app()->user->checkAccess('bodyRepairEdit'))) {
+            if (!(Yii::app()->user->checkAccess('bodyRepairCreate') || Yii::app()->user->checkAccess('bodyRepairEdit'))) {
+                $this->redirect(array('/site/login'));
+            }
+        }
+
+        if (
+            $filterChain->action->id === 'admin' ||
+            $filterChain->action->id === 'view'
+        ) {
+            if (!(
+                Yii::app()->user->checkAccess('bodyRepairCreate') || 
+                Yii::app()->user->checkAccess('bodyRepairEdit') || 
+                Yii::app()->user->checkAccess('bodyRepairView')
+            )) {
                 $this->redirect(array('/site/login'));
             }
         }
@@ -223,7 +234,7 @@ class BodyRepairRegistrationController extends Controller {
 
         if (isset($_POST['RegistrationTransaction'])) {
             $this->loadState($bodyRepairRegistration);
-            
+
             if ($bodyRepairRegistration->save(Yii::app()->db)) {
                 $this->redirect(array('view', 'id' => $bodyRepairRegistration->header->id));
             }
@@ -237,7 +248,7 @@ class BodyRepairRegistrationController extends Controller {
     }
 
     public function actionView($id) {
-        
+
         $model = $this->loadModel($id);
         $memo = isset($_GET['Memo']) ? $_GET['Memo'] : '';
         $services = RegistrationService::model()->findAllByAttributes(array(
@@ -272,7 +283,7 @@ class BodyRepairRegistrationController extends Controller {
     }
 
     public function actionShow($id) {
-        
+
         $model = $this->loadModel($id);
         $services = RegistrationService::model()->findAllByAttributes(array(
             'registration_transaction_id' => $id,
@@ -299,7 +310,7 @@ class BodyRepairRegistrationController extends Controller {
 
         if (isset($_POST['Vehicle'])) {
             $vehicle->attributes = $_POST['Vehicle'];
-            
+
 //            if ($vehicle->status_location == 'Masuk Bengkel') {
 //                $vehicle->entry_datetime = date('Y-m-d H:i:s');
 //                $registrationTransaction->vehicle_entry_datetime = date('Y-m-d H:i:s');
@@ -313,16 +324,16 @@ class BodyRepairRegistrationController extends Controller {
 //                $vehicle->exit_datetime = date('Y-m-d H:i:s');
 //                $registrationTransaction->vehicle_exit_datetime = date('Y-m-d H:i:s');
 //            } else {
-                $vehicle->entry_datetime = null;
-                $vehicle->start_service_datetime = null;
-                $vehicle->finish_service_datetime = null;
-                $vehicle->exit_datetime = null;
-                $registrationTransaction->vehicle_entry_datetime = null;
-                $registrationTransaction->vehicle_start_service_datetime = null;
-                $registrationTransaction->vehicle_finish_service_datetime = null;
-                $registrationTransaction->vehicle_exit_datetime = null;
+            $vehicle->entry_datetime = null;
+            $vehicle->start_service_datetime = null;
+            $vehicle->finish_service_datetime = null;
+            $vehicle->exit_datetime = null;
+            $registrationTransaction->vehicle_entry_datetime = null;
+            $registrationTransaction->vehicle_start_service_datetime = null;
+            $registrationTransaction->vehicle_finish_service_datetime = null;
+            $registrationTransaction->vehicle_exit_datetime = null;
 //            }
-            
+
             if ($vehicle->save()) {
                 $this->redirect(array('view', 'id' => $id));
             }
@@ -338,9 +349,8 @@ class BodyRepairRegistrationController extends Controller {
         $model->status = 'Pending';
         $model->update(array('status'));
         $this->redirect(array('view', 'id' => $id));
-        
     }
-       
+
     public function actionAdmin() {
         $model = new RegistrationTransaction('search');
         $model->unsetAttributes();  // clear any default values
@@ -417,7 +427,7 @@ class BodyRepairRegistrationController extends Controller {
 
             $this->redirect(array('view', 'id' => $id));
         }
-        
+
         $this->render('generateWorkOrder', array(
             'bodyRepairRegistration' => $bodyRepairRegistration,
             'vehicle' => $vehicle,
@@ -445,11 +455,11 @@ class BodyRepairRegistrationController extends Controller {
         $mPDF1->SetTitle('Estimasi');
         $mPDF1->WriteHTML($stylesheet, 1);
         $mPDF1->WriteHTML($this->renderPartial('pdf', array(
-            'bodyRepairRegistration' => $bodyRepairRegistration,
-            'customer' => $customer,
-            'vehicle' => $vehicle,
-            'branch' => $branch,
-        ), true));
+                    'bodyRepairRegistration' => $bodyRepairRegistration,
+                    'customer' => $customer,
+                    'vehicle' => $vehicle,
+                    'branch' => $branch,
+                        ), true));
         $mPDF1->Output('Estimasi ' . $bodyRepairRegistration->transaction_number . '.pdf', 'I');
     }
 
@@ -464,11 +474,11 @@ class BodyRepairRegistrationController extends Controller {
         $mPDF1->SetTitle('Sales Order');
         $mPDF1->WriteHTML($stylesheet, 1);
         $mPDF1->WriteHTML($this->renderPartial('pdfSaleOrder', array(
-            'bodyRepairRegistration' => $bodyRepairRegistration,
-            'customer' => $customer,
-            'vehicle' => $vehicle,
-            'branch' => $branch,
-        ), true));
+                    'bodyRepairRegistration' => $bodyRepairRegistration,
+                    'customer' => $customer,
+                    'vehicle' => $vehicle,
+                    'branch' => $branch,
+                        ), true));
         $mPDF1->Output('SO ' . $bodyRepairRegistration->sales_order_number . '.pdf', 'I');
     }
 
@@ -483,11 +493,11 @@ class BodyRepairRegistrationController extends Controller {
         $mPDF1->SetTitle('Work Order');
         $mPDF1->WriteHTML($stylesheet, 1);
         $mPDF1->WriteHTML($this->renderPartial('pdfWorkOrder', array(
-            'bodyRepairRegistration' => $bodyRepairRegistration,
-            'customer' => $customer,
-            'vehicle' => $vehicle,
-            'branch' => $branch,
-        ), true));
+                    'bodyRepairRegistration' => $bodyRepairRegistration,
+                    'customer' => $customer,
+                    'vehicle' => $vehicle,
+                    'branch' => $branch,
+                        ), true));
         $mPDF1->Output('WO ' . $bodyRepairRegistration->work_order_number . '.pdf', 'I');
     }
 
@@ -656,7 +666,7 @@ class BodyRepairRegistrationController extends Controller {
         $historis = RegistrationApproval::model()->findAllByAttributes(array('registration_transaction_id' => $id));
         $model = new RegistrationApproval;
         $model->date = date('Y-m-d H:i:s');
-        
+
         if (isset($_POST['RegistrationApproval'])) {
             $model->attributes = $_POST['RegistrationApproval'];
             if ($model->save()) {
@@ -664,7 +674,7 @@ class BodyRepairRegistrationController extends Controller {
                 $registrationTransaction->save(false);
 
                 $this->saveTransactionLog('approval', $registrationTransaction);
-        
+
                 $this->redirect(array('view', 'id' => $id));
             }
         }
@@ -677,10 +687,10 @@ class BodyRepairRegistrationController extends Controller {
     }
 
     public function actionCancel($id) {
-        
+
         $movementOutHeader = MovementOutHeader::model()->findByAttributes(array('registration_transaction_id' => $id, 'user_id_cancelled' => null));
         $invoiceHeader = InvoiceHeader::model()->findByAttributes(array('registration_transaction_id' => $id, 'user_id_cancelled' => null));
-        if (empty($movementOutHeader) && empty($invoiceHeader)) { 
+        if (empty($movementOutHeader) && empty($invoiceHeader)) {
             $model = $this->loadModel($id);
             $model->status = 'CANCELLED!!!';
             $model->payment_status = 'CANCELLED!!!';
@@ -688,37 +698,37 @@ class BodyRepairRegistrationController extends Controller {
             $model->vehicle_status = 'CANCELLED!!!';
             $model->cancelled_datetime = date('Y-m-d H:i:s');
             $model->user_id_cancelled = Yii::app()->user->id;
-            $model->total_service = 0; 
-            $model->subtotal_service = 0; 
-            $model->discount_service = 0; 
-            $model->total_service_price = 0; 
-            $model->total_product = 0; 
-            $model->subtotal_product = 0; 
-            $model->discount_product = 0; 
-            $model->total_product_price = 0; 
-            $model->grand_total = 0; 
-            $model->ppn = 0; 
-            $model->pph = 0; 
-            $model->subtotal = 0; 
-            $model->ppn_price = 0; 
-            $model->pph_price = 0; 
-            $model->vehicle_mileage = 0; 
-            $model->tax_percentage = 0; 
-            $model->employee_id_assign_mechanic = null; 
-            $model->employee_id_sales_person = null; 
-            $model->work_order_number = ''; 
-            $model->sales_order_number = ''; 
-            $model->note = ''; 
-            $model->customer_work_order_number = ''; 
-            $model->feedback = ''; 
-            $model->product_status = ''; 
+            $model->total_service = 0;
+            $model->subtotal_service = 0;
+            $model->discount_service = 0;
+            $model->total_service_price = 0;
+            $model->total_product = 0;
+            $model->subtotal_product = 0;
+            $model->discount_product = 0;
+            $model->total_product_price = 0;
+            $model->grand_total = 0;
+            $model->ppn = 0;
+            $model->pph = 0;
+            $model->subtotal = 0;
+            $model->ppn_price = 0;
+            $model->pph_price = 0;
+            $model->vehicle_mileage = 0;
+            $model->tax_percentage = 0;
+            $model->employee_id_assign_mechanic = null;
+            $model->employee_id_sales_person = null;
+            $model->work_order_number = '';
+            $model->sales_order_number = '';
+            $model->note = '';
+            $model->customer_work_order_number = '';
+            $model->feedback = '';
+            $model->product_status = '';
             $model->update(array(
-                'status', 'payment_status', 'service_status', 'vehicle_status', 'cancelled_datetime', 'user_id_cancelled', 'total_service', 
+                'status', 'payment_status', 'service_status', 'vehicle_status', 'cancelled_datetime', 'user_id_cancelled', 'total_service',
                 'subtotal_service', 'discount_service', 'total_service_price', 'total_product', 'subtotal_product', 'discount_product', 'total_product_price',
-                'grand_total', 'work_order_number', 'sales_order_number', 'ppn', 'pph', 'subtotal', 'ppn_price', 'pph_price', 'vehicle_mileage', 'note', 
+                'grand_total', 'work_order_number', 'sales_order_number', 'ppn', 'pph', 'subtotal', 'ppn_price', 'pph_price', 'vehicle_mileage', 'note',
                 'customer_work_order_number', 'employee_id_assign_mechanic', 'employee_id_sales_person', 'tax_percentage', 'feedback', 'product_status'
             ));
-            
+
             foreach ($model->registrationProducts as $registrationProduct) {
                 $registrationProduct->quantity = 0;
                 $registrationProduct->retail_price = 0;
@@ -732,13 +742,13 @@ class BodyRepairRegistrationController extends Controller {
                 $registrationProduct->quantity_receive = 0;
                 $registrationProduct->quantity_receive_left = 0;
                 $registrationProduct->note = '';
-                
+
                 $registrationProduct->update(array(
-                    'quantity', 'retail_price', 'hpp', 'recommended_selling_price', 'sale_price', 'discount', 'total_price', 'quantity_movement', 
+                    'quantity', 'retail_price', 'hpp', 'recommended_selling_price', 'sale_price', 'discount', 'total_price', 'quantity_movement',
                     'quantity_movement_left', 'quantity_receive', 'quantity_receive_left', 'note'
                 ));
             }
-            
+
             foreach ($model->registrationServices as $registrationService) {
                 $registrationService->price = 0;
                 $registrationService->total_price = 0;
@@ -750,15 +760,15 @@ class BodyRepairRegistrationController extends Controller {
                 $registrationService->supervisor_id = null;
                 $registrationService->assign_mechanic_id = null;
                 $registrationService->note = '';
-                
+
                 $registrationService->update(array(
-                    'price', 'total_price', 'discount_price', 'start_mechanic_id', 'finish_mechanic_id', 'pause_mechanic_id', 'resume_mechanic_id', 
+                    'price', 'total_price', 'discount_price', 'start_mechanic_id', 'finish_mechanic_id', 'pause_mechanic_id', 'resume_mechanic_id',
                     'supervisor_id', 'assign_mechanic_id', 'note'
                 ));
             }
-            
+
             $this->saveTransactionLog('cancel', $model);
-        
+
             Yii::app()->user->setFlash('message', 'Transaction is successfully cancelled');
         } else {
             Yii::app()->user->setFlash('message', 'Transaction cannot be cancelled. Check related transactions!');
@@ -778,29 +788,29 @@ class BodyRepairRegistrationController extends Controller {
         $transactionLog->table_id = $bodyRepair->id;
         $transactionLog->user_id = Yii::app()->user->id;
         $transactionLog->username = Yii::app()->user->username;
-        $transactionLog->controller_class = Yii::app()->controller->module->id  . '/' . Yii::app()->controller->id;
+        $transactionLog->controller_class = Yii::app()->controller->module->id . '/' . Yii::app()->controller->id;
         $transactionLog->action_name = Yii::app()->controller->action->id;
         $transactionLog->action_type = $actionType;
-        
+
         $newData = $bodyRepair->attributes;
-        
+
         if ($actionType === 'approval') {
             $newData['registrationApprovals'] = array();
-            foreach($bodyRepair->registrationApprovals as $detail) {
+            foreach ($bodyRepair->registrationApprovals as $detail) {
                 $newData['registrationApprovals'][] = $detail->attributes;
             }
         } else {
             $newData['registrationProducts'] = array();
-            foreach($bodyRepair->registrationProducts as $detail) {
+            foreach ($bodyRepair->registrationProducts as $detail) {
                 $newData['registrationProducts'][] = $detail->attributes;
             }
 
             $newData['registrationServices'] = array();
-            foreach($bodyRepair->registrationServices as $detail) {
+            foreach ($bodyRepair->registrationServices as $detail) {
                 $newData['registrationServices'][] = $detail->attributes;
             }
         }
-        
+
         $transactionLog->new_data = json_encode($newData);
 
         $transactionLog->save();
@@ -819,7 +829,7 @@ class BodyRepairRegistrationController extends Controller {
 
             $this->renderPartial('_detailDamage', array(
                 'bodyRepairRegistration' => $bodyRepairRegistration,
-            ), false, true);
+                    ), false, true);
         }
     }
 
@@ -834,7 +844,7 @@ class BodyRepairRegistrationController extends Controller {
 
             $this->renderPartial('_detailDamage', array(
                 'registrationTransaction' => $bodyRepairRegistration
-            ), false, true);
+                    ), false, true);
         }
     }
 
@@ -880,7 +890,7 @@ class BodyRepairRegistrationController extends Controller {
 
             $this->renderPartial('_detailService', array(
                 'bodyRepairRegistration' => $bodyRepairRegistration,
-            ), false, true);
+                    ), false, true);
         }
     }
 
@@ -898,7 +908,7 @@ class BodyRepairRegistrationController extends Controller {
 
             $this->renderPartial('_detailService', array(
                 'bodyRepairRegistration' => $bodyRepairRegistration,
-            ), false, true);
+                    ), false, true);
         }
     }
 
@@ -914,7 +924,7 @@ class BodyRepairRegistrationController extends Controller {
 
             $this->renderPartial('_detailService', array(
                 'bodyRepairRegistration' => $bodyRepairRegistration,
-            ), false, true);
+                    ), false, true);
         }
     }
 
@@ -934,7 +944,7 @@ class BodyRepairRegistrationController extends Controller {
             $this->renderPartial('_detailProduct', array(
                 'bodyRepairRegistration' => $bodyRepairRegistration,
                 'branches' => $branches,
-            ), false, true);
+                    ), false, true);
         }
     }
 
@@ -954,7 +964,7 @@ class BodyRepairRegistrationController extends Controller {
             $this->renderPartial('_detailProduct', array(
                 'bodyRepairRegistration' => $bodyRepairRegistration,
                 'branches' => $branches,
-            ), false, true);
+                    ), false, true);
         }
     }
 

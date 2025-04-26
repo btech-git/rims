@@ -6,35 +6,43 @@ class MaterialRequestController extends Controller {
 
     public function filters() {
         return array(
-//            'access',
+            'access',
         );
     }
 
     public function filterAccess($filterChain) {
         if ($filterChain->action->id === 'create') {
-            if (!(Yii::app()->user->checkAccess('materialRequestCreate')))
+            if (!(Yii::app()->user->checkAccess('materialRequestCreate'))) {
                 $this->redirect(array('/site/login'));
+            }
         }
 
         if (
             $filterChain->action->id === 'delete' ||
             $filterChain->action->id === 'update'
         ) {
-            if (!(Yii::app()->user->checkAccess('materialRequestEdit')))
+            if (!(Yii::app()->user->checkAccess('materialRequestEdit'))) {
                 $this->redirect(array('/site/login'));
+            }
         }
 
         if ($filterChain->action->id === 'updateApproval') {
-            if (!(Yii::app()->user->checkAccess('materialRequestApproval')) || !(Yii::app()->user->checkAccess('materialRequestSupervisor')))
+            if (!(Yii::app()->user->checkAccess('materialRequestApproval') || Yii::app()->user->checkAccess('materialRequestSupervisor'))) {
                 $this->redirect(array('/site/login'));
+            }
         }
 
         if (
             $filterChain->action->id === 'admin' || 
             $filterChain->action->id === 'view'
         ) {
-            if (!(Yii::app()->user->checkAccess('materialRequestCreate')) || !(Yii::app()->user->checkAccess('materialRequestEdit')))
+            if (!(
+                Yii::app()->user->checkAccess('materialRequestCreate') || 
+                Yii::app()->user->checkAccess('materialRequestEdit') || 
+                Yii::app()->user->checkAccess('materialRequestView')
+            )) {
                 $this->redirect(array('/site/login'));
+            }
         }
 
         $filterChain->run();

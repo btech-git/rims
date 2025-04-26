@@ -1,6 +1,6 @@
 <?php
 
-class StockAdjustmentSummary extends CComponent {
+class JournalAdjustmentSummary extends CComponent {
 
     public $dataProvider;
 
@@ -22,7 +22,7 @@ class StockAdjustmentSummary extends CComponent {
     }
 
     public function setupSorting() {
-        $this->dataProvider->sort->attributes = array('t.date_posting');
+        $this->dataProvider->sort->attributes = array('t.date');
         $this->dataProvider->criteria->order = $this->dataProvider->sort->orderBy;
     }
 
@@ -31,7 +31,7 @@ class StockAdjustmentSummary extends CComponent {
         $endDate = (empty($filters['endDate'])) ? date('Y-m-d') : $filters['endDate'];
         $branchId = $filters['branchId'];
         
-        $this->dataProvider->criteria->addBetweenCondition('t.date_posting', $startDate, $endDate);
+        $this->dataProvider->criteria->addBetweenCondition('t.date', $startDate, $endDate);
         if (!empty($branchId)) {
             $this->dataProvider->criteria->compare('t.branch_id', $branchId);
         }

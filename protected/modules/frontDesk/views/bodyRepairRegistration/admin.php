@@ -28,7 +28,7 @@ $('.search-form form').submit(function(){
 
 <div id="maincontent">
     <div class="clearfix page-action">
-        <?php echo CHtml::link('<span class="fa fa-plus"></span>New Registration', Yii::app()->baseUrl . '/frontDesk/customerRegistration/vehicleList', array('class' => 'button success right', 'visible' => Yii::app()->user->checkAccess("frontDesk.bodyRepairRegistration.admin"))); ?>
+        <?php echo CHtml::link('<span class="fa fa-plus"></span>New Registration', Yii::app()->baseUrl . '/frontDesk/customerRegistration/vehicleList', array('class' => 'button success right', 'visible' => Yii::app()->user->checkAccess("bodyRepairCreate"))); ?>
         <h1>Manage Body Repair Registrations</h1>
 
         <div class="search-bar">
@@ -84,13 +84,6 @@ $('.search-form form').submit(function(){
                 'name'=>'car_model_code',
                 'value'=>'$data->vehicle->carModel->name'
             ),
-//            array(
-//                'header' => 'Repair Type',
-//                'name' => 'repair_type',
-//                'value' => '$data->repair_type',
-//                'type' => 'raw',
-//                'filter' => false,
-//            ),
             array(
                 'header' => 'Customer Name',
                 'name' => 'customer_name',
@@ -139,11 +132,6 @@ $('.search-form form').submit(function(){
                 'header' => 'Vehicle Status',
                 'value' => '$data->vehicle->status_location'
             ),
-//            array(
-//                'name'=>'branch_id',
-//                'filter' => CHtml::activeDropDownList($model, 'branch_id', CHtml::listData(Branch::model()->findAll(array('order' => 'name')), 'id', 'name'), array('empty' => '-- All --')),
-//                'value'=>'$data->branch->name'
-//            ),
             'problem',
             array(
                 'header' => 'Mekanik',
@@ -168,13 +156,8 @@ $('.search-form form').submit(function(){
                     'views' => array(
                         'label' => 'view',
                         'url' => 'Yii::app()->createUrl("frontDesk/bodyRepairRegistration/view", array("id"=>$data->id))',
-                        'visible' => 'Yii::app()->user->checkAccess("bodyRepairCreate") || Yii::app()->user->checkAccess("bodyRepairEdit")',
+                        'visible' => 'Yii::app()->user->checkAccess("bodyRepairCreate") || Yii::app()->user->checkAccess("bodyRepairEdit") || Yii::app()->user->checkAccess("bodyRepairView")',
                     ),
-//                    'edit' => array(
-//                        'label' => 'edit',
-//                        'url' => 'Yii::app()->createUrl("frontDesk/bodyRepairRegistration/update", array("id"=>$data->id))',
-//                        'visible' => 'Yii::app()->user->checkAccess("bodyRepairEdit")', //'$data->status != "Finished" && empty($data->invoiceHeaders) && ',
-//                    ),
                 ),
             ),
         ),

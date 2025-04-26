@@ -10,12 +10,15 @@ class TransactionSalesOrderController extends Controller {
 
     public function filters() {
         return array(
-//            'access',
+            'access',
         );
     }
 
     public function filterAccess($filterChain) {
-        if ($filterChain->action->id === 'create') {
+        if (
+            $filterChain->action->id === 'create' ||
+            $filterChain->action->id === 'generateInvoice'
+        ) {
             if (!(Yii::app()->user->checkAccess('saleOrderCreate'))) {
                 $this->redirect(array('/site/login'));
             }
@@ -38,13 +41,13 @@ class TransactionSalesOrderController extends Controller {
 
         if (
                 $filterChain->action->id === 'admin' ||
-                $filterChain->action->id === 'generateInvoice' ||
                 $filterChain->action->id === 'index' ||
                 $filterChain->action->id === 'view' ||
                 $filterChain->action->id === 'showProduct'
                 
         ) {
-            if (!(Yii::app()->user->checkAccess('saleOrderCreate')) || !(Yii::app()->user->checkAccess('saleOrderEdit'))) {
+            if (
+                !(Yii::app()->user->checkAccess('saleOrderCreate') || Yii::app()->user->checkAccess('saleOrderEdit') || Yii::app()->user->checkAccess('saleOrderView'))) {
                 $this->redirect(array('/site/login'));
             }
         }

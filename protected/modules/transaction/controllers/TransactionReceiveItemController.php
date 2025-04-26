@@ -10,22 +10,24 @@ class TransactionReceiveItemController extends Controller {
 
     public function filters() {
         return array(
-//            'access',
+            'access',
         );
     }
 
     public function filterAccess($filterChain) {
         if ($filterChain->action->id === 'create') {
-            if (!(Yii::app()->user->checkAccess('receiveItemCreate')))
+            if (!(Yii::app()->user->checkAccess('receiveItemCreate'))) {
                 $this->redirect(array('/site/login'));
+            }
         }
 
         if (
             $filterChain->action->id === 'delete' || 
             $filterChain->action->id === 'update'
         ) {
-            if (!(Yii::app()->user->checkAccess('receiveItemEdit')))
+            if (!(Yii::app()->user->checkAccess('receiveItemEdit'))) {
                 $this->redirect(array('/site/login'));
+            }
         }
 
         if (
@@ -33,8 +35,9 @@ class TransactionReceiveItemController extends Controller {
             $filterChain->action->id === 'index' || 
             $filterChain->action->id === 'view'
         ) {
-            if (!(Yii::app()->user->checkAccess('receiveItemCreate')) || !(Yii::app()->user->checkAccess('receiveItemEdit')))
+            if (!(Yii::app()->user->checkAccess('receiveItemCreate') || Yii::app()->user->checkAccess('receiveItemEdit') || Yii::app()->user->checkAccess('receiveItemView'))) {
                 $this->redirect(array('/site/login'));
+            }
         }
 
         $filterChain->run();

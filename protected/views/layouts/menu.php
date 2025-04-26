@@ -93,10 +93,13 @@
     <?php if (
         Yii::app()->user->checkAccess('generalRepairCreate') || 
         Yii::app()->user->checkAccess('generalRepairEdit') || 
+        Yii::app()->user->checkAccess('generalRepairView') || 
         Yii::app()->user->checkAccess('bodyRepairCreate') || 
         Yii::app()->user->checkAccess('bodyRepairEdit') || 
+        Yii::app()->user->checkAccess('bodyRepairView') || 
         Yii::app()->user->checkAccess('inspectionCreate') || 
         Yii::app()->user->checkAccess('inspectionEdit') || 
+        Yii::app()->user->checkAccess('inspectionView') || 
         Yii::app()->user->checkAccess('workOrderApproval') || 
         Yii::app()->user->checkAccess('cashierApproval') || 
         Yii::app()->user->checkAccess('customerQueueApproval') || 
@@ -114,12 +117,12 @@
                     array(
                         'label' => 'General Repair', 
                         'url' => array('/frontDesk/generalRepairRegistration/admin'), 
-                        'visible' => (Yii::app()->user->checkAccess('generalRepairCreate') || Yii::app()->user->checkAccess('generalRepairEdit'))
+                        'visible' => (Yii::app()->user->checkAccess('generalRepairCreate') || Yii::app()->user->checkAccess('generalRepairEdit') || Yii::app()->user->checkAccess('generalRepairView'))
                     ),
                     array(
                         'label' => 'Body Repair', 
                         'url' => array('/frontDesk/bodyRepairRegistration/admin'), 
-                        'visible' => (Yii::app()->user->checkAccess('bodyRepairCreate') || Yii::app()->user->checkAccess('bodyRepairEdit'))
+                        'visible' => (Yii::app()->user->checkAccess('bodyRepairCreate') || Yii::app()->user->checkAccess('bodyRepairEdit') || Yii::app()->user->checkAccess('bodyRepairView'))
                     ),
                     array(
                         'label' => 'Permintaan Harga', 
@@ -129,7 +132,7 @@
                     array(
                         'label' => 'Inspeksi Kendaraan', 
                         'url' => array('/frontDesk/vehicleInspection/admin'), 
-                        'visible' => (Yii::app()->user->checkAccess('inspectionCreate') || Yii::app()->user->checkAccess('inspectionEdit'))
+                        'visible' => (Yii::app()->user->checkAccess('inspectionCreate') || Yii::app()->user->checkAccess('inspectionEdit') || Yii::app()->user->checkAccess('inspectionView'))
                     ),
                     array(
                         'label' => 'Work Orders', 
@@ -169,22 +172,30 @@
     <?php if (
         Yii::app()->user->checkAccess('requestOrderCreate') || 
         Yii::app()->user->checkAccess('requestOrderEdit') || 
+        Yii::app()->user->checkAccess('requestOrderView') || 
         Yii::app()->user->checkAccess('purchaseOrderCreate') || 
         Yii::app()->user->checkAccess('purchaseOrderEdit') || 
+        Yii::app()->user->checkAccess('purchaseOrderView') || 
         Yii::app()->user->checkAccess('saleOrderCreate') || 
         Yii::app()->user->checkAccess('saleOrderEdit') || 
+        Yii::app()->user->checkAccess('saleOrderView') || 
         Yii::app()->user->checkAccess('saleInvoiceCreate') || 
         Yii::app()->user->checkAccess('saleInvoiceEdit') || 
+        Yii::app()->user->checkAccess('saleInvoiceView') || 
         Yii::app()->user->checkAccess('workOrderExpenseCreate') || 
         Yii::app()->user->checkAccess('workOrderExpenseEdit') || 
+        Yii::app()->user->checkAccess('workOrderExpenseView') || 
         Yii::app()->user->checkAccess('paymentInCreate') || 
         Yii::app()->user->checkAccess('paymentInEdit') || 
+        Yii::app()->user->checkAccess('paymentInView') || 
         Yii::app()->user->checkAccess('paymentOutCreate') || 
         Yii::app()->user->checkAccess('paymentOutEdit') || 
+        Yii::app()->user->checkAccess('paymentOutView') || 
         Yii::app()->user->checkAccess('cashTransactionCreate') || 
         Yii::app()->user->checkAccess('cashTransactionEdit') || 
+        Yii::app()->user->checkAccess('cashTransactionView') || 
         Yii::app()->user->checkAccess('adjustmentJournalCreate') || 
-        Yii::app()->user->checkAccess('adjustmentJournalEdit')
+        Yii::app()->user->checkAccess('adjustmentJournalView')
     ) : ?>
         <li class="mdropdown"> <a href="#">TRANSAKSI</a>							
             <?php $this->widget('zii.widgets.CMenu', array(
@@ -193,17 +204,17 @@
                     array(
                         'label' => 'Order Permintaan', 
                         'url' => array('/transaction/transactionRequestOrder/admin'), 
-                        'visible' => (Yii::app()->user->checkAccess('requestOrderCreate') || Yii::app()->user->checkAccess('requestOrderEdit'))
+                        'visible' => (Yii::app()->user->checkAccess('requestOrderCreate') || Yii::app()->user->checkAccess('requestOrderEdit') || Yii::app()->user->checkAccess('requestOrderView'))
                     ),
                     array(
                         'label' => 'Order Pembelian', 
                         'url' => array('/transaction/transactionPurchaseOrder/admin'), 
-                        'visible' => (Yii::app()->user->checkAccess('purchaseOrderCreate') || Yii::app()->user->checkAccess('purchaseOrderEdit'))
+                        'visible' => (Yii::app()->user->checkAccess('purchaseOrderCreate') || Yii::app()->user->checkAccess('purchaseOrderEdit') || Yii::app()->user->checkAccess('purchaseOrderView'))
                     ),
                     array(
                         'label' => 'Pembelian Barang non stok', 
                         'url' => array('/frontDesk/itemRequest/admin'), 
-                        'visible' => (Yii::app()->user->checkAccess('purchaseOrderCreate') || Yii::app()->user->checkAccess('purchaseOrderEdit'))
+                        'visible' => (Yii::app()->user->checkAccess('itemRequestCreate') || Yii::app()->user->checkAccess('itemRequestEdit') || Yii::app()->user->checkAccess('itemRequestView'))
                     ),
                     array(
                         'label' => 'Perbandingan', 
@@ -214,12 +225,12 @@
                     array(
                         'label' => 'Order Penjualan', 
                         'url' => array('/transaction/transactionSalesOrder/admin'), 
-                        'visible' => (Yii::app()->user->checkAccess('saleOrderCreate') || Yii::app()->user->checkAccess('saleOrderEdit'))
+                        'visible' => (Yii::app()->user->checkAccess('saleOrderCreate') || Yii::app()->user->checkAccess('saleOrderEdit') || Yii::app()->user->checkAccess('saleOrderView'))
                     ),
                     array(
                         'label' => 'Faktur Penjualan', 
                         'url' => array('/transaction/invoiceHeader/admin'), 
-                        'visible' => (Yii::app()->user->checkAccess('saleInvoiceCreate') || Yii::app()->user->checkAccess('saleInvoiceEdit'))
+                        'visible' => (Yii::app()->user->checkAccess('saleInvoiceCreate') || Yii::app()->user->checkAccess('saleInvoiceEdit') || Yii::app()->user->checkAccess('saleInvoiceView'))
                     ),
 //                    array(
 //                        'label' => 'Faktur Pajak Coretax', 
@@ -229,7 +240,7 @@
                     array(
                         'label' => 'Sub Pekerjaan Luar', 
                         'url' => array('/accounting/workOrderExpense/admin'), 
-                        'visible' => (Yii::app()->user->checkAccess('workOrderExpenseCreate') || Yii::app()->user->checkAccess('workOrderExpenseEdit'))
+                        'visible' => (Yii::app()->user->checkAccess('workOrderExpenseCreate') || Yii::app()->user->checkAccess('workOrderExpenseEdit') || Yii::app()->user->checkAccess('workOrderExpenseView'))
                     ),
                     array(
                         'label' => 'Permintaan Harga Cabang', 
@@ -240,7 +251,7 @@
                     array(
                         'label' => 'Payment In', 
                         'url' => array('/transaction/paymentIn/admin'), 
-                        'visible' => (Yii::app()->user->checkAccess('paymentInCreate') || Yii::app()->user->checkAccess('paymentInEdit'))
+                        'visible' => (Yii::app()->user->checkAccess('paymentInCreate') || Yii::app()->user->checkAccess('paymentInEdit') || Yii::app()->user->checkAccess('paymentInView'))
                     ),
                     array(
                         'label' => 'Payment Out', 
@@ -251,12 +262,12 @@
                     array(
                         'label' => 'Transaksi Kas', 
                         'url' => array('/transaction/cashTransaction/admin'), 
-                        'visible' => (Yii::app()->user->checkAccess('cashTransactionCreate') || Yii::app()->user->checkAccess('cashTransactionEdit'))
+                        'visible' => (Yii::app()->user->checkAccess('cashTransactionCreate') || Yii::app()->user->checkAccess('cashTransactionEdit') || Yii::app()->user->checkAccess('cashTransactionView'))
                     ),
                     array(
                         'label' => 'Transaksi Jurnal Umum', 
                         'url' => array('/accounting/journalAdjustment/admin'), 
-                        'visible' => (Yii::app()->user->checkAccess('adjustmentJournalCreate') || Yii::app()->user->checkAccess('adjustmentJournalEdit'))
+                        'visible' => (Yii::app()->user->checkAccess('adjustmentJournalCreate') || Yii::app()->user->checkAccess('adjustmentJournalEdit') || Yii::app()->user->checkAccess('adjustmentJournalView'))
                     ),
                 ),
             )); ?>
@@ -266,30 +277,43 @@
     <?php if (
         Yii::app()->user->checkAccess('transferRequestCreate') || 
         Yii::app()->user->checkAccess('transferRequestEdit') || 
+        Yii::app()->user->checkAccess('transferRequestView') || 
         Yii::app()->user->checkAccess('sentRequestCreate') || 
         Yii::app()->user->checkAccess('sentRequestEdit') || 
+        Yii::app()->user->checkAccess('sentRequestView') || 
         Yii::app()->user->checkAccess('purchaseReturnCreate') || 
         Yii::app()->user->checkAccess('purchaseReturnEdit') || 
+        Yii::app()->user->checkAccess('purchaseReturnView') || 
         Yii::app()->user->checkAccess('saleReturnCreate') || 
         Yii::app()->user->checkAccess('saleReturnEdit') || 
+        Yii::app()->user->checkAccess('saleReturnView') || 
         Yii::app()->user->checkAccess('deliveryCreate') || 
         Yii::app()->user->checkAccess('deliveryEdit') || 
+        Yii::app()->user->checkAccess('deliveryView') || 
         Yii::app()->user->checkAccess('receiveItemCreate') || 
         Yii::app()->user->checkAccess('receiveItemEdit') || 
+        Yii::app()->user->checkAccess('receiveItemView') || 
         Yii::app()->user->checkAccess('consignmentInCreate') || 
         Yii::app()->user->checkAccess('consignmentInEdit') || 
+        Yii::app()->user->checkAccess('consignmentInView') || 
         Yii::app()->user->checkAccess('consignmentOutCreate') || 
         Yii::app()->user->checkAccess('consignmentOutEdit') || 
+        Yii::app()->user->checkAccess('consignmentOutView') || 
         Yii::app()->user->checkAccess('movementInCreate') || 
         Yii::app()->user->checkAccess('movementInEdit') || 
+        Yii::app()->user->checkAccess('movementInView') || 
         Yii::app()->user->checkAccess('movementOutCreate') || 
         Yii::app()->user->checkAccess('movementOutEdit') || 
+        Yii::app()->user->checkAccess('movementOutView') || 
         Yii::app()->user->checkAccess('movementServiceCreate') || 
         Yii::app()->user->checkAccess('movementServiceEdit') || 
+        Yii::app()->user->checkAccess('movementServiceView') || 
         Yii::app()->user->checkAccess('materialRequestCreate') || 
         Yii::app()->user->checkAccess('materialRequestEdit') || 
+        Yii::app()->user->checkAccess('materialRequestView') || 
         Yii::app()->user->checkAccess('stockAdjustmentCreate') || 
         Yii::app()->user->checkAccess('stockAdjustmentEdit') || 
+        Yii::app()->user->checkAccess('stockAdjustmentView') || 
         Yii::app()->user->checkAccess('warehouseStockReport') || 
         Yii::app()->user->checkAccess('stockAnalysisReport')
     ): ?>
@@ -300,63 +324,63 @@
                     array(
                         'label' => 'Permintaan Transfer', 
                         'url' => array('/transaction/transferRequest/admin'), 
-                        'visible' => (Yii::app()->user->checkAccess('transferRequestCreate') || Yii::app()->user->checkAccess('transferRequestEdit'))
+                        'visible' => (Yii::app()->user->checkAccess('transferRequestCreate') || Yii::app()->user->checkAccess('transferRequestEdit') || Yii::app()->user->checkAccess('transferRequestView'))
                     ),
                     array(
                         'label' => 'Permintaan Kirim', 
                         'url' => array('/transaction/transactionSentRequest/admin'), 
-                        'visible' => (Yii::app()->user->checkAccess('sentRequestCreate') || Yii::app()->user->checkAccess('sentRequestEdit'))
+                        'visible' => (Yii::app()->user->checkAccess('sentRequestCreate') || Yii::app()->user->checkAccess('sentRequestEdit') || Yii::app()->user->checkAccess('sentRequestView'))
                     ),
                     array(
                         'label' => 'Retur Beli', 
                         'url' => array('/transaction/transactionReturnOrder/admin'), 
-                        'visible' => (Yii::app()->user->checkAccess('purchaseReturnCreate') || Yii::app()->user->checkAccess('purchaseReturnEdit'))
+                        'visible' => (Yii::app()->user->checkAccess('purchaseReturnCreate') || Yii::app()->user->checkAccess('purchaseReturnEdit') || Yii::app()->user->checkAccess('purchaseReturnView'))
                     ),
                     array(
                         'label' => 'Retur Jual', 
                         'url' => array('/transaction/transactionReturnItem/admin'), 
-                        'visible' => (Yii::app()->user->checkAccess('saleReturnCreate') || Yii::app()->user->checkAccess('saleReturnEdit'))
+                        'visible' => (Yii::app()->user->checkAccess('saleReturnCreate') || Yii::app()->user->checkAccess('saleReturnEdit') || Yii::app()->user->checkAccess('saleReturnView'))
                     ),
                     array(
                         'label' => 'Pengiriman Barang', 
                         'url' => array('/transaction/transactionDeliveryOrder/admin'), 
-                        'visible' => (Yii::app()->user->checkAccess('deliveryCreate') || Yii::app()->user->checkAccess('deliveryEdit'))
+                        'visible' => (Yii::app()->user->checkAccess('deliveryCreate') || Yii::app()->user->checkAccess('deliveryEdit') || Yii::app()->user->checkAccess('deliveryView'))
                     ),
                     array(
                         'label' => 'Penerimaan Barang', 
                         'url' => array('/transaction/transactionReceiveItem/admin'), 
-                        'visible' => (Yii::app()->user->checkAccess('receiveItemCreate') || Yii::app()->user->checkAccess('receiveItemEdit'))
+                        'visible' => (Yii::app()->user->checkAccess('receiveItemCreate') || Yii::app()->user->checkAccess('receiveItemEdit') || Yii::app()->user->checkAccess('receiveItemView'))
                     ),
                     array(
                         'label' => 'Penerimaan Konsinyasi', 
                         'url' => array('/transaction/consignmentInHeader/admin'), 
-                        'visible' => (Yii::app()->user->checkAccess('consignmentInCreate') || Yii::app()->user->checkAccess('consignmentInEdit'))
+                        'visible' => (Yii::app()->user->checkAccess('consignmentInCreate') || Yii::app()->user->checkAccess('consignmentInEdit') || Yii::app()->user->checkAccess('consignmentInView'))
                     ),
                     array(
                         'label' => 'Pengeluaran Konsinyasi', 
                         'url' => array('/transaction/consignmentOutHeader/admin'), 
-                        'visible' => (Yii::app()->user->checkAccess('consignmentOutCreate') || Yii::app()->user->checkAccess('consignmentOutEdit'))
+                        'visible' => (Yii::app()->user->checkAccess('consignmentOutCreate') || Yii::app()->user->checkAccess('consignmentOutEdit') || Yii::app()->user->checkAccess('consignmentOutView'))
                     ),
                     array('label' => 'GUDANG', 'url' => array('#'), 'itemOptions' => array('class' => 'title', 'style' => 'text-decoration: underline')),
                     array(
                         'label' => 'Barang Masuk Gudang', 
                         'url' => array('/transaction/movementInHeader/admin'), 
-                        'visible' => (Yii::app()->user->checkAccess('movementInCreate') || Yii::app()->user->checkAccess('movementInEdit'))
+                        'visible' => (Yii::app()->user->checkAccess('movementInCreate') || Yii::app()->user->checkAccess('movementInEdit') || Yii::app()->user->checkAccess('movementInView'))
                     ),
                     array(
                         'label' => 'Barang Keluar Gudang', 
                         'url' => array('/transaction/movementOutHeader/admin'), 
-                        'visible' => (Yii::app()->user->checkAccess('movementOutCreate') || Yii::app()->user->checkAccess('movementOutEdit'))
+                        'visible' => (Yii::app()->user->checkAccess('movementOutCreate') || Yii::app()->user->checkAccess('movementOutEdit') || Yii::app()->user->checkAccess('movementOutView'))
                     ),
                     array(
                         'label' => 'Pengeluaran Bahan Pemakaian', 
                         'url' => array('/frontDesk/movementOutService/admin'), 
-                        'visible' => (Yii::app()->user->checkAccess('movementServiceCreate') || Yii::app()->user->checkAccess('movementServiceEdit'))
+                        'visible' => (Yii::app()->user->checkAccess('movementServiceCreate') || Yii::app()->user->checkAccess('movementServiceEdit') || Yii::app()->user->checkAccess('movementServiceView'))
                     ),
                     array(
                         'label' => 'Permintaan Bahan', 
                         'url' => array('/frontDesk/materialRequest/admin'), 
-                        'visible' => (Yii::app()->user->checkAccess('materialRequestCreate') || Yii::app()->user->checkAccess('materialRequestEdit'))
+                        'visible' => (Yii::app()->user->checkAccess('materialRequestCreate') || Yii::app()->user->checkAccess('materialRequestEdit') || Yii::app()->user->checkAccess('materialRequestView'))
                     ),
                     array(
                         'label' => 'Stok Gudang', 
@@ -371,7 +395,7 @@
                     array(
                         'label' => 'Penyesuaian Stok', 
                         'url' => array('/frontDesk/adjustment/admin'), 
-                        'visible' => (Yii::app()->user->checkAccess('stockAdjustmentCreate') || Yii::app()->user->checkAccess('stockAdjustmentEdit'))
+                        'visible' => (Yii::app()->user->checkAccess('stockAdjustmentCreate') || Yii::app()->user->checkAccess('stockAdjustmentView'))
                     ),
                 ),
             )); ?>
@@ -478,14 +502,19 @@
     <?php if (
         Yii::app()->user->checkAccess('masterEmployeeCreate') || 
         Yii::app()->user->checkAccess('masterEmployeeEdit') || 
+        Yii::app()->user->checkAccess('masterEmployeeView') || 
         Yii::app()->user->checkAccess('masterEmployeeOnleaveCategoryCreate') || 
         Yii::app()->user->checkAccess('masterEmployeeOnleaveCategoryEdit') || 
+        Yii::app()->user->checkAccess('masterEmployeeOnleaveCategoryView') || 
         Yii::app()->user->checkAccess('masterHolidayCreate') || 
         Yii::app()->user->checkAccess('masterHolidayEdit') || 
+        Yii::app()->user->checkAccess('masterHolidayView') || 
         Yii::app()->user->checkAccess('employeeTimesheetCreate') || 
         Yii::app()->user->checkAccess('employeeTimesheetEdit') || 
+        Yii::app()->user->checkAccess('employeeTimesheetView') || 
         Yii::app()->user->checkAccess('employeeLeaveApplicationCreate') || 
         Yii::app()->user->checkAccess('employeeLeaveApplicationEdit') || 
+        Yii::app()->user->checkAccess('employeeLeaveApplicationView') || 
         Yii::app()->user->checkAccess('absencyReport') || 
         Yii::app()->user->checkAccess('payrollReport')
     ): ?>
@@ -495,22 +524,22 @@
                     array(
                         'label' => 'Data Karyawan', 
                         'url' => array('/master/employee/admin'), 
-                        'visible' => Yii::app()->user->checkAccess('masterEmployeeCreate') || Yii::app()->user->checkAccess('masterEmployeeEdit')
+                        'visible' => Yii::app()->user->checkAccess('masterEmployeeCreate') || Yii::app()->user->checkAccess('masterEmployeeEdit') || Yii::app()->user->checkAccess('masterEmployeeView')
                     ),
                     array(
                         'label' => 'Kategori Ketidakhadiran', 
                         'url' => array('/master/employeeOnleaveCategory/admin'), 
-                        'visible' => Yii::app()->user->checkAccess('masterEmployeeOnleaveCategoryCreate') || Yii::app()->user->checkAccess('masterEmployeeOnleaveCategoryEdit')
+                        'visible' => Yii::app()->user->checkAccess('masterEmployeeOnleaveCategoryCreate') || Yii::app()->user->checkAccess('masterEmployeeOnleaveCategoryEdit') || Yii::app()->user->checkAccess('masterEmployeeOnleaveCategoryView')
                     ),
                     array(
                         'label' => 'Public Holiday', 
                         'url' => array('/master/publicDayOff/admin'), 
-                        'visible' => Yii::app()->user->checkAccess('masterHolidayCreate') || Yii::app()->user->checkAccess('masterHolidayEdit')
+                        'visible' => Yii::app()->user->checkAccess('masterHolidayCreate') || Yii::app()->user->checkAccess('masterHolidayEdit') || Yii::app()->user->checkAccess('masterHolidayView')
                     ),
                     array(
                         'label' => 'Absensi Karyawan', 
                         'url' => array('/master/employeeTimesheet/admin'), 
-                        'visible' => Yii::app()->user->checkAccess('employeeTimesheetCreate') || Yii::app()->user->checkAccess('employeeTimesheetEdit')
+                        'visible' => Yii::app()->user->checkAccess('employeeTimesheetCreate') || Yii::app()->user->checkAccess('employeeTimesheetEdit') || Yii::app()->user->checkAccess('employeeTimesheetView')
                     ),
                     array(
                         'label' => 'Rekap Absensi', 
@@ -520,7 +549,7 @@
                     array(
                         'label' => 'Cuti Karyawan', 
                         'url' => array('/master/employeeDayoff/admin'), 
-                        'visible' => Yii::app()->user->checkAccess('employeeLeaveApplicationCreate') || Yii::app()->user->checkAccess('employeeLeaveApplicationEdit')
+                        'visible' => Yii::app()->user->checkAccess('employeeLeaveApplicationCreate') || Yii::app()->user->checkAccess('employeeLeaveApplicationEdit') || Yii::app()->user->checkAccess('employeeLeaveApplicationView')
                     ),
                     array(
                         'label' => 'Payroll', 
@@ -533,96 +562,45 @@
     <?php endif; ?>
     
     <?php if (
-            Yii::app()->user->checkAccess('summaryBalanceSheetReport') || 
-            Yii::app()->user->checkAccess('standardBalanceSheetReport') ||  
-            Yii::app()->user->checkAccess('multiBalanceSheetReport') || 
-            Yii::app()->user->checkAccess('summaryProfitLossReport') || 
-            Yii::app()->user->checkAccess('standardProfitLossReport') || 
-            Yii::app()->user->checkAccess('multiProfitLossReport') || 
-            Yii::app()->user->checkAccess('transactionJournalReport') || 
-            Yii::app()->user->checkAccess('journalSummaryReport') || 
-            Yii::app()->user->checkAccess('generalLedgerReport') || 
-            Yii::app()->user->checkAccess('cashDailyApprovalReport') || 
-            Yii::app()->user->checkAccess('cashDailySummaryReport') || 
-            Yii::app()->user->checkAccess('financialForecastReport') || 
-            Yii::app()->user->checkAccess('cashTransactionReport') || 
-            Yii::app()->user->checkAccess('receivableJournalReport') || 
-            Yii::app()->user->checkAccess('customerReceivableReport') || 
-            Yii::app()->user->checkAccess('insuranceReceivableReport') || 
-            Yii::app()->user->checkAccess('paymentInReport') || 
-            Yii::app()->user->checkAccess('saleCustomerSummaryReport') || 
-            Yii::app()->user->checkAccess('saleCustomerReport') ||
-            Yii::app()->user->checkAccess('saleProductSummaryReport') ||
-            Yii::app()->user->checkAccess('saleProductReport') ||
-            Yii::app()->user->checkAccess('saleServiceSummaryReport') ||
-            Yii::app()->user->checkAccess('saleServiceReport') ||
-            Yii::app()->user->checkAccess('fixedAssetReport') ||
-            Yii::app()->user->checkAccess('payableJournalReport') || 
-            Yii::app()->user->checkAccess('supplierPayableReport') || 
-            Yii::app()->user->checkAccess('paymentOutReport') || 
-            Yii::app()->user->checkAccess('purchaseSupplierSummaryReport') || 
-            Yii::app()->user->checkAccess('purchaseSupplierReport') || 
-            Yii::app()->user->checkAccess('purchaseProductSummaryReport') || 
-            Yii::app()->user->checkAccess('purchaseProductReport') || 
-            Yii::app()->user->checkAccess('stockCardReport') || 
-            Yii::app()->user->checkAccess('stockInventoryReport') || 
-            Yii::app()->user->checkAccess('stockCardItemReport') || 
-            Yii::app()->user->checkAccess('stockCardWarehouseReport') || 
-            Yii::app()->user->checkAccess('workOrderServiceReport') || 
-            Yii::app()->user->checkAccess('workOrderVehicleReport') || 
-            Yii::app()->user->checkAccess('mechanicPerformanceReport')
-        ): ?>
-        <li><?php echo CHtml::link('LAPORAN ', array('/report/default')); ?>
-            <?php /*$this->widget('zii.widgets.CMenu', array(
-                'items' => array(
-                    array(
-                        'label' => 'Keuangan', 
-                        'url' => '#', 
-                        'itemOptions' => array('class' => 'dropdown user'),
-                        'linkOptions' => array(
-                            'class' => 'dropdown-toggle',
-                            'data-toggle' => 'dropdown',
-                        ),
-                        'items' => array(
-                            array('label' => 'Profit/Loss (induk)', 'url' => array('/report/profitLoss/summary'), 'visible' => Yii::app()->user->checkAccess('summaryProfitLossReport')),
-                            array('label' => 'Profit/Loss (Standar)', 'url' => array('/report/profitLossDetail/summary'), 'visible' => Yii::app()->user->checkAccess('standardProfitLossReport')),
-                        ),
-                    ),
-                    array('label' => 'Inventory Stok Penjualan', 'url' => array('/report/stockSales/summary'), 'visible' => Yii::app()->user->checkAccess('stockInventoryReport')),
-//                  array('label' => 'Financial Forecast', 'url' => array('/report/financialForecast/summary'), 'visible' => Yii::app()->user->checkAccess('financialForecastReport')),
-                    array('label' => 'Laporan Consignment In', 'url' => array('/report/consignmentIn/summary'), 'visible' => Yii::app()->user->checkAccess('consignmentInReport')),
-                    array('label' => 'Laporan Consignment Out', 'url' => array('/report/consignmentOut/summary'), 'visible' => Yii::app()->user->checkAccess('consignmentOutReport')),
-                    array('label' => 'Laporan Permintaan Bahan', 'url' => array('/report/materialRequest/summary'), 'visible' => Yii::app()->user->checkAccess('materialRequestReport')),
-                    array('label' => 'Laporan Movement In', 'url' => array('/report/movementIn/summary'), 'visible' => Yii::app()->user->checkAccess('movementInReport')),
-                    array('label' => 'Laporan Movement Out', 'url' => array('/report/movementOut/summary'), 'visible' => Yii::app()->user->checkAccess('movementOutReport')),
-                    array('label' => 'Laporan Invoice Penjualan', 'url' => array('/report/saleInvoiceSummary/summary'), 'visible' => Yii::app()->user->checkAccess('saleInvoiceReport')),
-                    array('label' => 'Laporan Order Penjualan', 'url' => array('/report/saleOrder/summary'), 'visible' => Yii::app()->user->checkAccess('saleOrderReport')),
-                    array('label' => 'Laporan Pengiriman', 'url' => array('/report/delivery/summary'), 'visible' => Yii::app()->user->checkAccess('deliveryReport')),
-                    array('label' => 'Laporan Penerimaan Barang', 'url' => array('/report/receiveItem/summary'), 'visible' => Yii::app()->user->checkAccess('receiveItemReport')),
-                    array('label' => 'Laporan Sent Request', 'url' => array('/report/sentRequest/summary'), 'visible' => Yii::app()->user->checkAccess('sentRequestReport')),
-                    array('label' => 'Laporan Transfer Request', 'url' => array('/report/transferRequest/summary'), 'visible' => Yii::app()->user->checkAccess('transferRequestReport')),
-                    array('label' => '-----------------------'),
-                    array('label' => 'Laporan Pembelian', 'url' => array('/transaction/transactionPurchaseOrder/laporanPembelian'), 'visible' => Yii::app()->user->checkAccess('purchaseOrderReport')),
-                    array('label' => 'Laporan Penjualan', 'url' => array('/transaction/transactionSalesOrder/laporanPenjualan'), 'visible' => (Yii::app()->user->checkAccess('saleOrderReport') || Yii::app()->user->checkAccess('saleInvoiceReport'))),
-                    array('label' => 'Laporan Body Repair', 'url' => array('/report/bodyrepair/index'), 'visible' => Yii::app()->user->checkAccess('bodyRepairReport')),
-                    array('label' => 'Laporan Penjualan Registration', 'url' => array('/frontDesk/RegistrationTransaction/laporanPenjualan'), 'visible' => (Yii::app()->user->checkAccess('saleOrderReport') || Yii::app()->user->checkAccess('saleInvoiceReport'))),
-                    array('label' => 'Laporan Hutang Pembelian', 'url' => array('/transaction/transactionPurchaseOrder/laporanOutstanding'), 'visible' => (Yii::app()->user->checkAccess('accountingReport') || Yii::app()->user->checkAccess('financeReport'))),
-                    array('label' => 'Laporan Piutang Penjualan', 'url' => array('/transaction/transactionSalesOrder/laporanOutstanding'), 'visible' => (Yii::app()->user->checkAccess('accountingReport') || Yii::app()->user->checkAccess('financeReport'))),
-                    array('label' => 'Laporan Penjualan Harian Ban/Oli', 'url' => array('/report/laporanpenjualan/harian'), 'visible' => (Yii::app()->user->checkAccess('saleOrderReport') || Yii::app()->user->checkAccess('saleInvoiceReport'))),
-                    array('label' => 'Laporan Penjualan Bulanan Ban/Oli', 'url' => array('/report/laporanpenjualan/bulanan'), 'visible' => (Yii::app()->user->checkAccess('saleOrderReport') || Yii::app()->user->checkAccess('saleInvoiceReport'))),
-                    array('label' => 'Laporan Penjualan Tahunan Ban/Oli', 'url' => array('/report/laporanpenjualan/tahunan'), 'visible' => (Yii::app()->user->checkAccess('saleOrderReport') || Yii::app()->user->checkAccess('saleInvoiceReport'))),
-//                    array('label' => 'Laporan Stok', 'url' => array('/report/laporanPenjualan/index'), 'visible' => Yii::app()->user->checkAccess('inventoryHead')),
-//                    array('label' => 'Laporan Bulanan Tahunan', 'url' => array('/frontDesk/registrationTransaction/monthlyYearly'), 'visible' => (Yii::app()->user->checkAccess('generalManager'))),
-//                    array('label' => 'Laporan Pendapatan', 'url' => array('/report/revenueRecap/index'), 'visible' => Yii::app()->user->checkAccess('generalManager')),
-                ),
-                'encodeLabel' => false,
-                'htmlOptions' => array(
-                    'class' => 'nav pull-right',
-                ),
-                'submenuHtmlOptions' => array(
-                    'class' => 'dropdown-menu',
-                )
-            ));*/ ?>
-        </li>
+        Yii::app()->user->checkAccess('summaryBalanceSheetReport') || 
+        Yii::app()->user->checkAccess('standardBalanceSheetReport') ||  
+        Yii::app()->user->checkAccess('multiBalanceSheetReport') || 
+        Yii::app()->user->checkAccess('summaryProfitLossReport') || 
+        Yii::app()->user->checkAccess('standardProfitLossReport') || 
+        Yii::app()->user->checkAccess('multiProfitLossReport') || 
+        Yii::app()->user->checkAccess('transactionJournalReport') || 
+        Yii::app()->user->checkAccess('journalSummaryReport') || 
+        Yii::app()->user->checkAccess('generalLedgerReport') || 
+        Yii::app()->user->checkAccess('cashDailyApprovalReport') || 
+        Yii::app()->user->checkAccess('cashDailySummaryReport') || 
+        Yii::app()->user->checkAccess('financialForecastReport') || 
+        Yii::app()->user->checkAccess('cashTransactionReport') || 
+        Yii::app()->user->checkAccess('receivableJournalReport') || 
+        Yii::app()->user->checkAccess('customerReceivableReport') || 
+        Yii::app()->user->checkAccess('insuranceReceivableReport') || 
+        Yii::app()->user->checkAccess('paymentInReport') || 
+        Yii::app()->user->checkAccess('saleCustomerSummaryReport') || 
+        Yii::app()->user->checkAccess('saleCustomerReport') ||
+        Yii::app()->user->checkAccess('saleProductSummaryReport') ||
+        Yii::app()->user->checkAccess('saleProductReport') ||
+        Yii::app()->user->checkAccess('saleServiceSummaryReport') ||
+        Yii::app()->user->checkAccess('saleServiceReport') ||
+        Yii::app()->user->checkAccess('fixedAssetReport') ||
+        Yii::app()->user->checkAccess('payableJournalReport') || 
+        Yii::app()->user->checkAccess('supplierPayableReport') || 
+        Yii::app()->user->checkAccess('paymentOutReport') || 
+        Yii::app()->user->checkAccess('purchaseSupplierSummaryReport') || 
+        Yii::app()->user->checkAccess('purchaseSupplierReport') || 
+        Yii::app()->user->checkAccess('purchaseProductSummaryReport') || 
+        Yii::app()->user->checkAccess('purchaseProductReport') || 
+        Yii::app()->user->checkAccess('stockCardReport') || 
+        Yii::app()->user->checkAccess('stockInventoryReport') || 
+        Yii::app()->user->checkAccess('stockCardItemReport') || 
+        Yii::app()->user->checkAccess('stockCardWarehouseReport') || 
+        Yii::app()->user->checkAccess('workOrderServiceReport') || 
+        Yii::app()->user->checkAccess('workOrderVehicleReport') || 
+        Yii::app()->user->checkAccess('mechanicPerformanceReport')
+    ): ?>
+        <li><?php echo CHtml::link('LAPORAN ', array('/report/default')); ?></li>
     <?php endif; ?>
 </ul>

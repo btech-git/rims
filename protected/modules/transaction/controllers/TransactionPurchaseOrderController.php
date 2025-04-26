@@ -10,7 +10,7 @@ class TransactionPurchaseOrderController extends Controller {
 
     public function filters() {
         return array(
-//            'access',
+            'access',
         );
     }
 
@@ -30,10 +30,8 @@ class TransactionPurchaseOrderController extends Controller {
             }
         }
 
-        if (
-            $filterChain->action->id === 'updateApproval'
-        ) {
-            if (!(Yii::app()->user->checkAccess('purchaseOrderApproval')) || !(Yii::app()->user->checkAccess('purchaseOrderSupervisor'))) {
+        if ($filterChain->action->id === 'updateApproval') {
+            if (!(Yii::app()->user->checkAccess('purchaseOrderApproval') || Yii::app()->user->checkAccess('purchaseOrderSupervisor'))) {
                 $this->redirect(array('/site/login'));
             }
         }
@@ -44,10 +42,7 @@ class TransactionPurchaseOrderController extends Controller {
             $filterChain->action->id === 'index' || 
             $filterChain->action->id === 'view'
         ) {
-            if (
-                !(Yii::app()->user->checkAccess('purchaseOrderCreate')) || 
-                !(Yii::app()->user->checkAccess('purchaseOrderEdit'))
-            ) {
+            if (!(Yii::app()->user->checkAccess('purchaseOrderCreate') || Yii::app()->user->checkAccess('purchaseOrderEdit') || Yii::app()->user->checkAccess('purchaseOrderView'))) {
                 $this->redirect(array('/site/login'));
             }
         }

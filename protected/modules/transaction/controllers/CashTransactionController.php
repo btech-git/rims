@@ -11,7 +11,7 @@ class CashTransactionController extends Controller {
 
     public function filters() {
         return array(
-//            'access',
+            'access',
         );
     }
 
@@ -29,8 +29,7 @@ class CashTransactionController extends Controller {
         }
 
         if ($filterChain->action->id === 'updateApproval') {
-            if (!(Yii::app()->user->checkAccess('cashTransactionApproval')) || 
-                !(Yii::app()->user->checkAccess('cashTransactionSupervisor'))) {
+            if (!(Yii::app()->user->checkAccess('cashTransactionApproval') || Yii::app()->user->checkAccess('cashTransactionSupervisor'))) {
                 $this->redirect(array('/site/login'));
             }
         }
@@ -40,10 +39,7 @@ class CashTransactionController extends Controller {
             $filterChain->action->id === 'index' ||
             $filterChain->action->id === 'view'
         ) {
-            if (
-                !(Yii::app()->user->checkAccess('cashTransactionCreate')) || 
-                !(Yii::app()->user->checkAccess('cashTransactionEdit'))
-            ) {
+            if (!(Yii::app()->user->checkAccess('cashTransactionCreate') || Yii::app()->user->checkAccess('cashTransactionEdit') || Yii::app()->user->checkAccess('cashTransactionView'))) {
                 $this->redirect(array('/site/login'));
             }
         }

@@ -11,13 +11,25 @@ class AdjustmentController extends Controller {
     }
 
     public function filterAccess($filterChain) {
+        if ($filterChain->action->id === 'create') {
+            if (!(Yii::app()->user->checkAccess('stockAdjustmentCreate'))) {
+                $this->redirect(array('/site/login'));
+            }
+        }
+        
+        if ($filterChain->action->id === 'updateApproval') {
+            if (!(Yii::app()->user->checkAccess('stockAdjustmentApproval') || Yii::app()->user->checkAccess('stockAdjustmentSupervisor'))) {
+                $this->redirect(array('/site/login'));
+            }
+        }
+        
         if (
             $filterChain->action->id === 'admin' || 
-            $filterChain->action->id === 'create' || 
             $filterChain->action->id === 'view'
         ) {
-            if (!(Yii::app()->user->checkAccess('stockAdjustmentCreate')) || !(Yii::app()->user->checkAccess('stockAdjustmentEdit')))
+            if (!(Yii::app()->user->checkAccess('stockAdjustmentCreate') || Yii::app()->user->checkAccess('stockAdjustmentView'))) {
                 $this->redirect(array('/site/login'));
+            }
         }
 
         $filterChain->run();

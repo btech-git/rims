@@ -10,7 +10,7 @@ class MovementOutServiceController extends Controller {
 
     public function filters() {
         return array(
-//            'access',
+            'access',
         );
     }
 
@@ -19,24 +19,31 @@ class MovementOutServiceController extends Controller {
                 $filterChain->action->id === 'registrationTransactionList' ||
                 $filterChain->action->id === 'create'
         ) {
-            if (!(Yii::app()->user->checkAccess('movementServiceCreate')))
+            if (!(Yii::app()->user->checkAccess('movementServiceCreate'))) {
                 $this->redirect(array('/site/login'));
+            }
         }
 
         if (
                 $filterChain->action->id === 'delete' ||
                 $filterChain->action->id === 'update'
         ) {
-            if (!(Yii::app()->user->checkAccess('movementServiceEdit')))
+            if (!(Yii::app()->user->checkAccess('movementServiceEdit'))) {
                 $this->redirect(array('/site/login'));
+            }
         }
 
         if (
                 $filterChain->action->id === 'admin' ||
                 $filterChain->action->id === 'view'
         ) {
-            if (!(Yii::app()->user->checkAccess('movementServiceCreate')) || !(Yii::app()->user->checkAccess('movementServiceEdit')))
+            if (!(
+                Yii::app()->user->checkAccess('movementServiceCreate') || 
+                Yii::app()->user->checkAccess('movementServiceEdit') || 
+                Yii::app()->user->checkAccess('movementServiceView')
+            )) {
                 $this->redirect(array('/site/login'));
+            }
         }
 
         $filterChain->run();

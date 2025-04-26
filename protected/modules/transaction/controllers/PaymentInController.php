@@ -11,26 +11,29 @@ class PaymentInController extends Controller {
 
     public function filters() {
         return array(
-//            'access',
+            'access',
         );
     }
 
     public function filterAccess($filterChain) {
         if ($filterChain->action->id === 'create') {
-            if (!(Yii::app()->user->checkAccess('paymentInCreate')))
+            if (!(Yii::app()->user->checkAccess('paymentInCreate'))) {
                 $this->redirect(array('/site/login'));
+            }
         }
         if ($filterChain->action->id === 'delete' || $filterChain->action->id === 'update') {
-            if (!(Yii::app()->user->checkAccess('paymentInEdit')))
+            if (!(Yii::app()->user->checkAccess('paymentInEdit'))) {
                 $this->redirect(array('/site/login'));
+            }
         }
         if ($filterChain->action->id === 'admin' || $filterChain->action->id === 'memo' || $filterChain->action->id === 'view') {
-            if (!(Yii::app()->user->checkAccess('paymentInCreate') || Yii::app()->user->checkAccess('paymentInEdit')))
+            if (!(Yii::app()->user->checkAccess('paymentInCreate') || Yii::app()->user->checkAccess('paymentInEdit') || Yii::app()->user->checkAccess('paymentInView'))) {
                 $this->redirect(array('/site/login'));
+            }
         }
         
         if ($filterChain->action->id === 'updateApproval') {
-            if (!(Yii::app()->user->checkAccess('paymentInApproval')) || !(Yii::app()->user->checkAccess('paymentInSupervisor'))) {
+            if (!(Yii::app()->user->checkAccess('paymentInApproval') || Yii::app()->user->checkAccess('paymentInSupervisor'))) {
                 $this->redirect(array('/site/login'));
             }
         }

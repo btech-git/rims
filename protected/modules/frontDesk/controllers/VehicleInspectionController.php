@@ -16,11 +16,8 @@ class VehicleInspectionController extends Controller {
 
     public function filterAccess($filterChain) {
         if (
-            $filterChain->action->id === 'admin' || 
             $filterChain->action->id === 'create' || 
-            $filterChain->action->id === 'index' || 
-            $filterChain->action->id === 'inspection' || 
-            $filterChain->action->id === 'view'
+            $filterChain->action->id === 'inspection'
         ) {
             if (!(Yii::app()->user->checkAccess('inspectionCreate'))) {
                 $this->redirect(array('/site/login'));
@@ -28,14 +25,19 @@ class VehicleInspectionController extends Controller {
         }
         
         if (
-            $filterChain->action->id === 'admin' || 
-            $filterChain->action->id === 'delete' || 
-            $filterChain->action->id === 'index' || 
-            $filterChain->action->id === 'inspection' || 
             $filterChain->action->id === 'update' || 
-            $filterChain->action->id === 'view'
+            $filterChain->action->id === 'delete'
         ) {
             if (!(Yii::app()->user->checkAccess('inspectionEdit'))) {
+                $this->redirect(array('/site/login'));
+            }
+        }
+
+        if (
+            $filterChain->action->id === 'admin' || 
+            $filterChain->action->id === 'view'
+        ) {
+            if (!(Yii::app()->user->checkAccess('inspectionCreate') || Yii::app()->user->checkAccess('inspectionEdit') || Yii::app()->user->checkAccess('inspectionView'))) {
                 $this->redirect(array('/site/login'));
             }
         }

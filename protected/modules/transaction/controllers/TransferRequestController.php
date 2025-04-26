@@ -6,32 +6,41 @@ class TransferRequestController extends Controller {
     
     public function filters() {
         return array(
-//            'access',
+            'access',
         );
     }
 
     public function filterAccess($filterChain) {
         if ($filterChain->action->id === 'create') {
-            if (!(Yii::app()->user->checkAccess('transferRequestCreate')))
+            if (!(Yii::app()->user->checkAccess('transferRequestCreate'))) {
                 $this->redirect(array('/site/login'));
+            }
         }
         
         if ($filterChain->action->id === 'update') {
-            if (!Yii::app()->user->checkAccess('transferRequestEdit'))
+            if (!Yii::app()->user->checkAccess('transferRequestEdit')) {
                 $this->redirect(array('/site/login'));
+            }
         }
         
         if ($filterChain->action->id === 'updateApproval') {
-            if (!(Yii::app()->user->checkAccess('transferRequestApproval')) || !(Yii::app()->user->checkAccess('transferRequestSupervisor')))
+            if (!(Yii::app()->user->checkAccess('transferRequestApproval') || Yii::app()->user->checkAccess('transferRequestSupervisor'))) {
                 $this->redirect(array('/site/login'));
+            }
         }
         
-        if ($filterChain->action->id === 'view'
-            || $filterChain->action->id === 'admin'
-            || $filterChain->action->id === 'memo'
+        if (
+            $filterChain->action->id === 'view' || 
+            $filterChain->action->id === 'admin' || 
+            $filterChain->action->id === 'memo'
         ) {
-            if (!(Yii::app()->user->checkAccess('transferRequestCreate')) || !(Yii::app()->user->checkAccess('transferRequestEdit')))
+            if (!(
+                Yii::app()->user->checkAccess('transferRequestCreate') || 
+                Yii::app()->user->checkAccess('transferRequestEdit') || 
+                Yii::app()->user->checkAccess('transferRequestView')
+            )) {
                 $this->redirect(array('/site/login'));
+            }
         }
         
         $filterChain->run();
