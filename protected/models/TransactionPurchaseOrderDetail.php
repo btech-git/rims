@@ -384,7 +384,7 @@ class TransactionPurchaseOrderDetail extends CActiveRecord {
             $total = $this->quantity * $this->retail_price;
         }   
 
-        return ($tax == 1) ? round($total * (1 + ($taxPercentage / 100)), 0) : $total;
+        return ($tax == 1) ? round($total * (1 + ($taxPercentage / 100)), 2) : $total;
     }
 
     public function getTaxAmount($tax, $taxPercentage) {

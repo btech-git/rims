@@ -400,7 +400,7 @@ class PurchaseOrders extends CComponent {
 
     public function getTaxAmount() {
 
-        return round($this->subTotal * $this->header->tax_percentage / 100, 0);
+        return round($this->subTotal * $this->header->tax_percentage / 100, 2);
     }
 
     public function getGrandTotal() {
