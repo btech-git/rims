@@ -54,9 +54,9 @@
                         <?php echo "0"; ?>
                     <?php endif ?>
                 </td>
-                <td style="text-align: right"><?php echo $this->format_money($purchaseOrderDetail->retail_price, 2); ?></td>
-                <td style="text-align: right"><?php echo $this->format_money($purchaseOrderDetail->unit_price, 2); ?></td>
-                <td style="text-align: right"><?php echo $this->format_money($purchaseOrderDetail->total_price, 2); ?></td>
+                <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $purchaseOrderDetail->retail_price, 2)); ?></td>
+                <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $purchaseOrderDetail->unit_price, 2)); ?></td>
+                <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $purchaseOrderDetail->total_price, 2)); ?></td>
             </tr>
             <tr>
                 <td colspan="9">
