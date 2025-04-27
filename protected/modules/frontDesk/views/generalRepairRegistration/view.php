@@ -82,7 +82,7 @@ $this->breadcrumbs = array(
                                 'id' => 'detail-button',
                                 'name' => 'Detail',
                                 'class' => 'button cbutton left',
-                                'style' => 'margin-right:10px',,
+                                'style' => 'margin-right:10px',
                                 'visible' => Yii::app()->user->checkAccess("generalRepairCreate") || Yii::app()->user->checkAccess("generalRepairEdit"),
                                 'onclick' => '$.ajax({
                                     type: "POST",
