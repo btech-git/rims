@@ -157,6 +157,8 @@ class StockCardCategoryController extends Controller {
 
         $counter = 8;
 
+        $grandTotalStock = '0.00';
+        $grandTotalValue = '0.00';
         foreach ($stockCardSummary->dataProvider->data as $header) {
             $worksheet->setCellValue("A{$counter}", $header->id);
             $worksheet->setCellValue("B{$counter}", $header->code);
@@ -188,6 +190,8 @@ class StockCardCategoryController extends Controller {
                 
                 $counter++;
             }
+            $grandTotalStock += $totalStock;
+            $grandTotalValue += $totalValue;
             
             $worksheet->getStyle("F{$counter}:H{$counter}")->getFont()->setBold(true);
             $worksheet->setCellValue("F{$counter}", 'TOTAL');
@@ -195,6 +199,12 @@ class StockCardCategoryController extends Controller {
             $worksheet->setCellValue("H{$counter}", $totalValue);
             $counter++;$counter++;
         }
+            
+        $worksheet->getStyle("F{$counter}:H{$counter}")->getFont()->setBold(true);
+        $worksheet->setCellValue("F{$counter}", 'GRAND TOTAL');
+        $worksheet->setCellValue("G{$counter}", $grandTotalStock);
+        $worksheet->setCellValue("H{$counter}", $grandTotalValue);
+        $counter++;$counter++;
 
         for ($col = 'A'; $col !== 'Z'; $col++) {
             $objPHPExcel->getActiveSheet()

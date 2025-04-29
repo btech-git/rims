@@ -1,6 +1,6 @@
 <?php
 
-class SaleInvoiceTaxYearlyController extends Controller {
+class SaleInvoiceCustomerTaxMonthlyController extends Controller {
 
     public function filters() {
         return array(
@@ -22,29 +22,14 @@ class SaleInvoiceTaxYearlyController extends Controller {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
         
+        $monthNow = date('m');
         $yearNow = date('Y');
+        
+        $month = isset($_GET['Month']) ? $_GET['Month'] : $monthNow;
         $year = (isset($_GET['Year'])) ? $_GET['Year'] : $yearNow;
         $branchId = (isset($_GET['BranchId'])) ? $_GET['BranchId'] : '';
         
-        $yearlySaleSummary = InvoiceHeader::getSaleInvoiceTaxYearlyReport($year, $branchId);
-        
-        $yearlySaleTotalPriceData = array();
-        $yearlySaleQuantityInvoiceData = array();
-        $yearlySaleServicePriceData = array();
-        $yearlySalePartsPriceData = array();
-        $yearlySaleSubTotalData = array();
-        $yearlySaleTotalTaxData = array();
-        $yearlySaleTotalTaxIncomeData = array();
-        foreach ($yearlySaleSummary as $yearlySaleSummaryItem) {
-            $monthValue = intval(substr($yearlySaleSummaryItem['year_month_value'], 4, 2));
-            $yearlySaleTotalPriceData[$monthValue] = $yearlySaleSummaryItem['total_price'];
-            $yearlySaleQuantityInvoiceData[$monthValue] = $yearlySaleSummaryItem['quantity_invoice'];
-            $yearlySaleServicePriceData[$monthValue] = $yearlySaleSummaryItem['service_price'];
-            $yearlySalePartsPriceData[$monthValue] = $yearlySaleSummaryItem['product_price'];
-            $yearlySaleSubTotalData[$monthValue] = $yearlySaleSummaryItem['sub_total'];
-            $yearlySaleTotalTaxData[$monthValue] = $yearlySaleSummaryItem['total_tax'];
-            $yearlySaleTotalTaxIncomeData[$monthValue] = $yearlySaleSummaryItem['total_tax_income'];
-        }
+        $monthlySaleSummary = InvoiceHeader::getSaleInvoiceCustomerTaxMonthlyReport($year, $month, $branchId);
         
         $yearList = array();
         for ($y = $yearNow - 4; $y <= $yearNow; $y++) {
@@ -57,27 +42,22 @@ class SaleInvoiceTaxYearlyController extends Controller {
         
 //        if (isset($_GET['SaveExcel'])) {
 //            $this->saveToExcel(
-//                $yearlySaleSummaryData,
+//                $monthlySaleSummaryData,
 //                $yearList,
 //                $year
 //            );
 //        }
         
         $this->render('summary', array(
-            'yearlySaleTotalPriceData' => $yearlySaleTotalPriceData,
-            'yearlySaleQuantityInvoiceData' => $yearlySaleQuantityInvoiceData,
-            'yearlySaleServicePriceData' => $yearlySaleServicePriceData,
-            'yearlySalePartsPriceData' => $yearlySalePartsPriceData,
-            'yearlySaleSubTotalData' => $yearlySaleSubTotalData,
-            'yearlySaleTotalTaxData' => $yearlySaleTotalTaxData,
-            'yearlySaleTotalTaxIncomeData' => $yearlySaleTotalTaxIncomeData,
+            'monthlySaleSummary' => $monthlySaleSummary,
             'yearList' => $yearList,
             'year' => $year,
+            'month' => $month,
             'branchId' => $branchId,
         ));
     }
     
-    protected function saveToExcel($yearlySaleSummaryData, $yearList, $year) {
+    protected function saveToExcel($monthlySaleSummaryData, $yearList, $year) {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
 
@@ -141,7 +121,7 @@ class SaleInvoiceTaxYearlyController extends Controller {
             $amountSum = '0.00';
             $columnCounter = 'B';
             foreach ($branches as $branch) {
-                $amount = isset($yearlySaleSummaryData[$month][$branch->id]) ? $yearlySaleSummaryData[$month][$branch->id] : '0.00';
+                $amount = isset($monthlySaleSummaryData[$month][$branch->id]) ? $monthlySaleSummaryData[$month][$branch->id] : '0.00';
                 $worksheet->setCellValue("{$columnCounter}{$counter}", CHtml::encode($amount));
                 $amountSum += $amount;
                 if (!isset($amountTotals[$branch->id])) {

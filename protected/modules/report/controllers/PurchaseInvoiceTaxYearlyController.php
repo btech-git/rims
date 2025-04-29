@@ -24,8 +24,9 @@ class PurchaseInvoiceTaxYearlyController extends Controller {
         
         $yearNow = date('Y');
         $year = (isset($_GET['Year'])) ? $_GET['Year'] : $yearNow;
+        $branchId = (isset($_GET['BranchId'])) ? $_GET['BranchId'] : '';
         
-        $yearlyPurchaseSummary = TransactionReceiveItem::getPurchaseInvoiceTaxYearlyReport($year);
+        $yearlyPurchaseSummary = TransactionReceiveItem::getPurchaseInvoiceTaxYearlyReport($year, $branchId);
         
         $yearlyPurchaseQuantityInvoiceData = array();
         $yearlyPurchaseSubTotalData = array();
@@ -63,6 +64,7 @@ class PurchaseInvoiceTaxYearlyController extends Controller {
             'yearlyPurchaseTotalTaxData' => $yearlyPurchaseTotalTaxData,
             'yearList' => $yearList,
             'year' => $year,
+            'branchId' => $branchId,
         ));
     }
     
