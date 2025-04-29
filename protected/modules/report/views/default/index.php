@@ -462,13 +462,33 @@
                             <?php $this->widget('zii.widgets.CMenu', array(
                                 'items' => array(
                                     array(
-                                        'label' => 'Laporan Penjualan PPn (Rincian)', 
+                                        'label' => 'Laporan Penjualan PPn (Rincian & Detail)', 
                                         'url' => array('/report/saleInvoiceTaxOnlySummary/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('saleTaxReport')
                                     ),
                                     array(
-                                        'label' => 'Laporan Pembelian PPn (Rincian)', 
+                                        'label' => 'Laporan Pembelian PPn (Rincian & Detail)', 
                                         'url' => array('/report/purchaseInvoiceTaxOnlySummary/summary'), 
+                                        'visible' => Yii::app()->user->checkAccess('purchaseTaxReport')
+                                    ),
+                                    array(
+                                        'label' => 'Laporan Penjualan Ppn Recap Bulan', 
+                                        'url' => array('/report/saleInvoiceCustomerTaxMonthly/summary'), 
+                                        'visible' => Yii::app()->user->checkAccess('saleTaxReport')
+                                    ),
+                                    array(
+                                        'label' => 'Laporan Pembelian Ppn Recap Bulan', 
+                                        'url' => array('/report/purchaseInvoiceSupplierTaxMonthly/summary'), 
+                                        'visible' => Yii::app()->user->checkAccess('purchaseTaxReport')
+                                    ),
+                                    array(
+                                        'label' => 'Laporan Penjualan Ppn Recap Tahun', 
+                                        'url' => array('/report/saleInvoiceTaxYearly/summary'), 
+                                        'visible' => Yii::app()->user->checkAccess('saleTaxReport')
+                                    ),
+                                    array(
+                                        'label' => 'Laporan Pembelian Ppn Recap Tahun', 
+                                        'url' => array('/report/purchaseInvoiceTaxYearly/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('purchaseTaxReport')
                                     ),
                                     array(
@@ -479,16 +499,6 @@
                                     array(
                                         'label' => 'Laporan Pembelian Ppn Summary', 
                                         'url' => array('/report/yearlyPurchaseTaxSummary/summary'), 
-                                        'visible' => Yii::app()->user->checkAccess('purchaseTaxReport')
-                                    ),
-                                    array(
-                                        'label' => 'Laporan Penjualan Ppn Tahunan', 
-                                        'url' => array('/report/saleInvoiceTaxYearly/summary'), 
-                                        'visible' => Yii::app()->user->checkAccess('saleTaxReport')
-                                    ),
-                                    array(
-                                        'label' => 'Laporan Pembelian Ppn Tahunan', 
-                                        'url' => array('/report/purchaseInvoiceTaxYearly/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('purchaseTaxReport')
                                     ),
                                 ),

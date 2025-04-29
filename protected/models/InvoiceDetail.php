@@ -139,9 +139,11 @@ class InvoiceDetail extends CActiveRecord {
         return $resultSet;
     }
     
-    public static function getYearlyStatisticsData($year, $branchId, $masterCategoryId) {
+    public static function getYearlyStatisticsData($year, $branchId, $masterCategoryId, $subMasterCategoryId, $subCategoryId, $brandId, $subBrandId, $subBrandSeriesId) {
         $branchConditionSql = '';
-        $masterCategoryConditionSql = '';
+        $brandConditionSql = ''; 
+        $categoryConditionSql = '';
+        $brandCategoryConditionSql = '';
         
         $params = array(
             ':year' => $year,
@@ -152,19 +154,41 @@ class InvoiceDetail extends CActiveRecord {
             $params[':branch_id'] = $branchId;
         }
         
-        if (!empty($masterCategoryId)) {
-            $masterCategoryConditionSql = ' AND p.product_master_category_id = :product_master_category_id';
+        if (!empty($subBrandSeriesId)) {
+            $brandConditionSql = ' AND p.sub_brand_series_id = :sub_brand_series_id';
+            $params[':sub_brand_series_id'] = $subBrandSeriesId;
+        } else if (!empty($subBrandId)) {
+            $brandConditionSql = ' AND p.sub_brand_id = :sub_brand_id';
+            $params[':sub_brand_id'] = $subBrandId;
+        } else if (!empty($brandId)) {
+            $brandConditionSql = ' AND p.brand_id = :brand_id';
+            $params[':brand_id'] = $brandId;
+        }
+        
+        if (!empty($subCategoryId)) {
+            $categoryConditionSql = ' AND p.product_sub_category_id = :product_sub_category_id';
+            $params[':product_sub_category_id'] = $subCategoryId;
+        } else if (!empty($subMasterCategoryId)) {
+            $categoryConditionSql = ' AND p.product_sub_master_category_id = :product_sub_master_category_id';
+            $params[':product_sub_master_category_id'] = $subMasterCategoryId;
+        } else if (!empty($masterCategoryId)) {
+            $categoryConditionSql = ' AND p.product_master_category_id = :product_master_category_id';
             $params[':product_master_category_id'] = $masterCategoryId;
         }
         
-        $sql = "SELECT p.product_sub_master_category_id, MONTH(h.invoice_date) AS invoice_month, MIN(c.name) AS category_name, GROUP_CONCAT(d.quantity) AS quantities, GROUP_CONCAT(d.total_price) AS total_prices
+        if (empty($brandConditionSql) && empty($categoryConditionSql)) {
+            $brandCategoryConditionSql = ' AND FALSE';
+        } else {
+            $brandCategoryConditionSql = $brandConditionSql . $categoryConditionSql;
+        }
+        
+        $sql = "SELECT d.product_id, MONTH(h.invoice_date) AS invoice_month, MAX(p.name) AS product_name, GROUP_CONCAT(d.quantity) AS quantities, GROUP_CONCAT(d.total_price) AS total_prices
                 FROM " . InvoiceDetail::model()->tableName() . " d 
                 INNER JOIN " . InvoiceHeader::model()->tableName() . " h ON h.id = d.invoice_id
                 INNER JOIN " . Product::model()->tableName() . " p ON p.id = d.product_id
-                INNER JOIN " . ProductSubMasterCategory::model()->tableName() . " c ON c.id = p.product_sub_master_category_id" . $branchConditionSql . $masterCategoryConditionSql . " 
-                WHERE YEAR(h.invoice_date) = :year AND d.product_id IS NOT null
-                GROUP BY p.product_sub_master_category_id, MONTH(h.invoice_date)
-                ORDER BY c.name ASC";
+                WHERE YEAR(h.invoice_date) = :year AND d.product_id IS NOT null" . $branchConditionSql . $brandCategoryConditionSql . " 
+                GROUP BY d.product_id, MONTH(h.invoice_date), p.name
+                ORDER BY p.name ASC";
         
         $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
         

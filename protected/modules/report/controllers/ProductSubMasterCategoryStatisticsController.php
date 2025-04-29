@@ -25,9 +25,14 @@ class ProductSubMasterCategoryStatisticsController extends Controller {
         $yearNow = date('Y');
         $year = (isset($_GET['Year'])) ? $_GET['Year'] : $yearNow;
         $branchId = isset($_GET['BranchId']) ? $_GET['BranchId'] : '';
+        $brandId = isset($_GET['BrandId']) ? $_GET['BrandId'] : '';
+        $subBrandId = isset($_GET['SubBrandId']) ? $_GET['SubBrandId'] : '';
+        $subBrandSeriesId = isset($_GET['SubBrandSeriesId']) ? $_GET['SubBrandSeriesId'] : '';
         $masterCategoryId = isset($_GET['MasterCategoryId']) ? $_GET['MasterCategoryId'] : '';
+        $subMasterCategoryId = isset($_GET['SubMasterCategoryId']) ? $_GET['SubMasterCategoryId'] : '';
+        $subCategoryId = isset($_GET['SubCategoryId']) ? $_GET['SubCategoryId'] : '';
         
-        $yearlyStatisticsData = InvoiceDetail::getYearlyStatisticsData($year, $branchId, $masterCategoryId);
+        $yearlyStatisticsData = InvoiceDetail::getYearlyStatisticsData($year, $branchId, $masterCategoryId, $subMasterCategoryId, $subCategoryId, $brandId, $subBrandId, $subBrandSeriesId);
         
         $yearlyStatistics = array();
         foreach ($yearlyStatisticsData as $yearlyStatisticsDataItem) {
@@ -49,11 +54,11 @@ class ProductSubMasterCategoryStatisticsController extends Controller {
             $sortedTotalPricesSum = array_sum($sortedTotalPrices);
             $totalPricesMean = $sortedTotalPricesSum / $sortedTotalPricesCount;
             
-            $yearlyStatistics[$yearlyStatisticsDataItem['product_sub_master_category_id']]['name'] = $yearlyStatisticsDataItem['category_name'];
-            $yearlyStatistics[$yearlyStatisticsDataItem['product_sub_master_category_id']][$yearlyStatisticsDataItem['invoice_month']]['quantityMean'] = $quantitiesMean;
-            $yearlyStatistics[$yearlyStatisticsDataItem['product_sub_master_category_id']][$yearlyStatisticsDataItem['invoice_month']]['quantityMedian'] = $quantitiesMedian;
-            $yearlyStatistics[$yearlyStatisticsDataItem['product_sub_master_category_id']][$yearlyStatisticsDataItem['invoice_month']]['totalPriceMean'] = $totalPricesMean;
-            $yearlyStatistics[$yearlyStatisticsDataItem['product_sub_master_category_id']][$yearlyStatisticsDataItem['invoice_month']]['totalPriceMedian'] = $totalPricesMedian;
+            $yearlyStatistics[$yearlyStatisticsDataItem['product_id']]['name'] = $yearlyStatisticsDataItem['product_name'];
+            $yearlyStatistics[$yearlyStatisticsDataItem['product_id']][$yearlyStatisticsDataItem['invoice_month']]['quantityMean'] = $quantitiesMean;
+            $yearlyStatistics[$yearlyStatisticsDataItem['product_id']][$yearlyStatisticsDataItem['invoice_month']]['quantityMedian'] = $quantitiesMedian;
+            $yearlyStatistics[$yearlyStatisticsDataItem['product_id']][$yearlyStatisticsDataItem['invoice_month']]['totalPriceMean'] = $totalPricesMean;
+            $yearlyStatistics[$yearlyStatisticsDataItem['product_id']][$yearlyStatisticsDataItem['invoice_month']]['totalPriceMedian'] = $totalPricesMedian;
         }
         
         $yearList = array();
@@ -77,10 +82,55 @@ class ProductSubMasterCategoryStatisticsController extends Controller {
             'yearList' => $yearList,
             'year' => $year,
             'branchId' => $branchId,
+            'brandId' => $brandId,
+            'subBrandId' => $subBrandId,
+            'subBrandSeriesId' => $subBrandSeriesId,
             'masterCategoryId' => $masterCategoryId,
+            'subMasterCategoryId' => $subMasterCategoryId,
+            'subCategoryId' => $subCategoryId,
         ));
     }
     
+    public function actionAjaxHtmlUpdateProductSubBrandSelect() {
+        if (Yii::app()->request->isAjaxRequest) {
+            $brandId = isset($_GET['BrandId']) ? $_GET['BrandId'] : '';
+
+            $this->renderPartial('_productSubBrandSelect', array(
+                'brandId' => $brandId,
+            ));
+        }
+    }
+
+    public function actionAjaxHtmlUpdateProductSubBrandSeriesSelect() {
+        if (Yii::app()->request->isAjaxRequest) {
+            $subBrandId = isset($_GET['SubBrandId']) ? $_GET['SubBrandId'] : '';
+
+            $this->renderPartial('_productSubBrandSeriesSelect', array(
+                'subBrandId' => $subBrandId,
+            ));
+        }
+    }
+
+    public function actionAjaxHtmlUpdateProductSubMasterCategorySelect() {
+        if (Yii::app()->request->isAjaxRequest) {
+            $masterCategoryId = isset($_GET['MasterCategoryId']) ? $_GET['MasterCategoryId'] : '';
+
+            $this->renderPartial('_productSubMasterCategorySelect', array(
+                'masterCategoryId' => $masterCategoryId,
+            ));
+        }
+    }
+
+    public function actionAjaxHtmlUpdateProductSubCategorySelect() {
+        if (Yii::app()->request->isAjaxRequest) {
+            $subMasterCategoryId = isset($_GET['SubMasterCategoryId']) ? $_GET['SubMasterCategoryId'] : '';
+
+            $this->renderPartial('_productSubCategorySelect', array(
+                'subMasterCategoryId' => $subMasterCategoryId,
+            ));
+        }
+    }
+
     protected function saveToExcel($yearlyPurchaseSummaryData, $yearList, $year) {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');

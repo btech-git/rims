@@ -35,38 +35,24 @@
             <?php $sumTotalTaxIncome = '0.00'; ?>
             <?php $sumGrandTotal = '0.00'; ?>
             <?php for ($month = 1; $month <= 12; $month++): ?>
+                <?php $quantityInvoice = isset($yearlySaleQuantityInvoiceData[$month]) ? $yearlySaleQuantityInvoiceData[$month] : '0.00'; ?>
+                <?php $totalParts = isset($yearlySalePartsPriceData[$month]) ? $yearlySalePartsPriceData[$month] : '0.00'; ?>
+                <?php $totalService = isset($yearlySaleServicePriceData[$month]) ? $yearlySaleServicePriceData[$month] : '0.00'; ?>
+                <?php $subTotal = isset($yearlySaleSubTotalData[$month]) ? $yearlySaleSubTotalData[$month] : '0.00'; ?>
+                <?php $totalTax = isset($yearlySaleTotalTaxData[$month]) ? $yearlySaleTotalTaxData[$month] : '0.00'; ?>
+                <?php $totalTaxIncome = isset($yearlySaleTotalTaxIncomeData[$month]) ? $yearlySaleTotalTaxIncomeData[$month] : '0.00'; ?>
+                <?php $totalPrice = isset($yearlySaleTotalPriceData[$month]) ? $yearlySaleTotalPriceData[$month] : '0.00'; ?>
                 <tr class="items1">
                     <td style="text-align: left"><?php echo CHtml::encode($monthList[$month]); ?></td>
-                    <td style="text-align: right">
-                        <?php $quantityInvoice = isset($yearlySaleQuantityInvoiceData[$month]) ? $yearlySaleQuantityInvoiceData[$month] : '0.00'; ?>
-                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $quantityInvoice)); ?>
-                    </td>
-                    <td></td>
-                    <td></td>
-                    <td style="text-align: right">
-                        <?php $totalParts = isset($yearlySalePartsPriceData[$month]) ? $yearlySalePartsPriceData[$month] : '0.00'; ?>
-                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalParts)); ?>
-                    </td>
-                    <td style="text-align: right">
-                        <?php $totalService = isset($yearlySaleServicePriceData[$month]) ? $yearlySaleServicePriceData[$month] : '0.00'; ?>
-                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalService)); ?>
-                    </td>
-                    <td style="text-align: right">
-                        <?php $subTotal = isset($yearlySaleSubTotalData[$month]) ? $yearlySaleSubTotalData[$month] : '0.00'; ?>
-                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $subTotal)); ?>
-                    </td>
-                    <td style="text-align: right">
-                        <?php $totalTax = isset($yearlySaleTotalTaxData[$month]) ? $yearlySaleTotalTaxData[$month] : '0.00'; ?>
-                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalTax)); ?>
-                    </td>
-                    <td style="text-align: right">
-                        <?php $totalTaxIncome = isset($yearlySaleTotalTaxIncomeData[$month]) ? $yearlySaleTotalTaxIncomeData[$month] : '0.00'; ?>
-                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalTaxIncome)); ?>
-                    </td>
-                    <td style="text-align: right">
-                        <?php $totalPrice = isset($yearlySaleTotalPriceData[$month]) ? $yearlySaleTotalPriceData[$month] : '0.00'; ?>
-                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalPrice)); ?>
-                    </td>
+                    <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $quantityInvoice)); ?></td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalParts)); ?></td>
+                    <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalService)); ?></td>
+                    <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $subTotal)); ?></td>
+                    <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalTax)); ?></td>
+                    <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalTaxIncome)); ?></td>
+                    <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalPrice)); ?></td>
                 </tr>
                 <?php $sumSubTotal += $subTotal; ?>
                 <?php $sumTotalTax += $totalTax; ?>

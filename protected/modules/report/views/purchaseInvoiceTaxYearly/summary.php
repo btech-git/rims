@@ -20,6 +20,18 @@
                             </div>
                         </div>
                     </div>
+                    <div class="medium-6 columns">
+                        <div class="field">
+                            <div class="row collapse">
+                                <div class="small-4 columns">
+                                    <span class="prefix">Branch </span>
+                                </div>
+                                 <div class="small-8 columns">
+                                      <?php echo CHtml::dropDownlist('BranchId', $branchId, CHtml::listData(Branch::model()->findAllbyAttributes(array('status'=>'Active')), 'id','name'), array('empty'=>'-- All Branch --')); ?>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="clear"></div>
@@ -27,7 +39,7 @@
                 <div class="row buttons">
                     <?php echo CHtml::submitButton('Tampilkan', array('onclick' => '$("#CurrentSort").val(""); return true;')); ?>
                     <?php echo CHtml::submitButton('Hapus', array('name' => 'ResetFilter'));  ?>
-                    <?php //echo CHtml::submitButton('Simpan ke Excel', array('name' => 'SaveExcel'));  ?>
+                    <?php echo CHtml::submitButton('Simpan ke Excel', array('name' => 'SaveExcel'));  ?>
                 </div>
 
                 <?php echo CHtml::endForm(); ?>
@@ -38,8 +50,9 @@
             <hr />
 
             <div style="font-weight: bold; text-align: center">
-                <div style="font-size: larger">Laporan Penjualan Ppn Tahunan</div>
-                <div><?php echo CHtml::encode($year); ?></div>
+                <?php $branch = Branch::model()->findByPk($branchId); ?>
+                <div style="font-size: larger">Laporan Pembelian Ppn  Recap Tahun</div>
+                <div><?php echo CHtml::encode($year); ?> - <?php echo empty($branchId) ? 'All' : CHtml::encode(CHtml::value($branch, 'name')); ?></div>
             </div>
 
             <br />

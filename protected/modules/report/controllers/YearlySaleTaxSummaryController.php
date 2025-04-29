@@ -94,12 +94,12 @@ class YearlySaleTaxSummaryController extends Controller {
         $worksheet = $objPHPExcel->setActiveSheetIndex(0);
         $worksheet->setTitle('Laporan Penjualan Tahunan');
 
-        $worksheet->mergeCells('A1:Q1');
-        $worksheet->mergeCells('A2:Q2');
-        $worksheet->mergeCells('A3:Q3');
+        $worksheet->mergeCells('A1:J1');
+        $worksheet->mergeCells('A2:J2');
+        $worksheet->mergeCells('A3:J3');
 
-        $worksheet->getStyle('A1:Q5')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-        $worksheet->getStyle('A1:Q5')->getFont()->setBold(true);
+        $worksheet->getStyle('A1:J5')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->getStyle('A1:J5')->getFont()->setBold(true);
 
         $worksheet->setCellValue('A1', 'Raperind Motor ');
         $worksheet->setCellValue('A2', 'Laporan Penjualan Tahunan');
@@ -120,7 +120,7 @@ class YearlySaleTaxSummaryController extends Controller {
         );
         $branches = Branch::model()->findAll();
         
-        $worksheet->getStyle('A5:Q5')->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle('A5:J5')->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
         $worksheet->setCellValue('A5', 'Bulan');
         $columnCounter = 'B';
@@ -130,7 +130,7 @@ class YearlySaleTaxSummaryController extends Controller {
         }
         $worksheet->setCellValue("{$columnCounter}5", 'Total');
 
-        $worksheet->getStyle('A5:Q5')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle('A5:J5')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
         $counter = 7;
         $amountTotals = array();

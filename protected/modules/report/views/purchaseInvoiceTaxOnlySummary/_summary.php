@@ -25,7 +25,7 @@
 
 <div style="font-weight: bold; text-align: center">
     <div style="font-size: larger">Raperind Motor <?php echo CHtml::encode(CHtml::value($purchaseOrderHeader, 'mainBranch.name')); ?></div>
-    <div style="font-size: larger">Laporan Faktur Pembelian PPn</div>
+    <div style="font-size: larger">Laporan Faktur Pembelian PPn (Rincian & Detail)</div>
     <div><?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($startDate))) . ' &nbsp;&ndash;&nbsp; ' . CHtml::encode(Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($endDate))); ?></div>
 </div>
 

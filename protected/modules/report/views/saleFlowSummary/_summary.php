@@ -40,6 +40,7 @@
                 <th class="width1-3">Tanggal</th>
                 <th class="width1-4">Customer</th>
                 <th class="width1-5">Vehicle</th>
+                <th class="width1-5">Plate #</th>
                 <th class="width1-6">Status</th>
                 <th class="width1-7">Amount</th>
                 <th class="width1-8">Work Order</th>
@@ -70,6 +71,11 @@
                         <?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy hh:mm:ss', strtotime($header->transaction_date))); ?>
                     </td>
                     <td class="width1-4"><?php echo CHtml::encode(CHtml::value($header, 'customer.name')); ?></td>
+                    <td class="width1-5">
+                        <?php echo CHtml::encode(CHtml::value($header, 'vehicle.carMake.name')); ?> -
+                        <?php echo CHtml::encode(CHtml::value($header, 'vehicle.carModel.name')); ?> - 
+                        <?php echo CHtml::encode(CHtml::value($header, 'vehicle.carSubModel.name')); ?>
+                    </td>
                     <td class="width1-5"><?php echo CHtml::encode(CHtml::value($header, 'vehicle.plate_number')); ?></td>
                     <td class="width1-6"><?php echo CHtml::encode(CHtml::value($header, 'status')); ?></td>
                     <td class="width1-7" style="text-align: right">

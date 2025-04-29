@@ -1,6 +1,3 @@
-<?php
-
-?>
 <div class="tab reportTab">
     <div class="tabBody">
         <div id="detail_div">
@@ -10,11 +7,28 @@
                     <div class="medium-6 columns">
                         <div class="field">
                             <div class="row collapse">
-                                <div class="small-6 columns">
-                                    <span class="prefix">Tahun </span>
+                                <div class="small-4 columns">
+                                    <span class="prefix">Periode</span>
                                 </div>
 
-                                <div class="small-6 columns">
+                                <div class="small-4 columns">
+                                    <?php echo CHtml::dropDownList('Month', $month, array(
+                                        '01' => 'Jan',
+                                        '02' => 'Feb',
+                                        '03' => 'Mar',
+                                        '04' => 'Apr',
+                                        '05' => 'May',
+                                        '06' => 'Jun',
+                                        '07' => 'Jul',
+                                        '08' => 'Aug',
+                                        '09' => 'Sep',
+                                        '10' => 'Oct',
+                                        '11' => 'Nov',
+                                        '12' => 'Dec',
+                                    )); ?>
+                                </div>
+
+                                <div class="small-4 columns">
                                     <?php echo CHtml::dropDownList('Year', $year, $yearList); ?>
                                 </div>
                             </div>
@@ -52,38 +66,15 @@
 
             <div style="font-weight: bold; text-align: center">
                 <?php $branch = Branch::model()->findByPk($branchId); ?>
-                <div style="font-size: larger">Laporan Penjualan Ppn  Recap Tahun</div>
-                <div><?php echo CHtml::encode($year); ?> - <?php echo empty($branchId) ? 'All' : CHtml::encode(CHtml::value($branch, 'name')); ?></div>
+                <div style="font-size: larger">Laporan Pembelian Ppn  Recap Bulan</div>
+                <div><?php echo CHtml::encode(strftime("%B",mktime(0,0,0,$month))); ?> <?php echo CHtml::encode($year); ?> - <?php echo empty($branchId) ? 'All' : CHtml::encode(CHtml::value($branch, 'name')); ?></div>
             </div>
 
             <br />
 
-            <?php $monthList = array(
-                1 => 'Jan',
-                2 => 'Feb',
-                3 => 'Mar',
-                4 => 'Apr',
-                5 => 'May',
-                6 => 'Jun',
-                7 => 'Jul',
-                8 => 'Aug',
-                9 => 'Sep',
-                10 => 'Oct',
-                11 => 'Nov',
-                12 => 'Dec',
-            ); ?>
-
             <div class="relative">
                 <?php $this->renderPartial('_summary', array(
-                    'yearlySaleTotalPriceData' => $yearlySaleTotalPriceData,
-                    'yearlySaleQuantityInvoiceData' => $yearlySaleQuantityInvoiceData,
-                    'yearlySaleServicePriceData' => $yearlySaleServicePriceData,
-                    'yearlySalePartsPriceData' => $yearlySalePartsPriceData,
-                    'yearlySaleSubTotalData' => $yearlySaleSubTotalData,
-                    'yearlySaleTotalTaxData' => $yearlySaleTotalTaxData,
-                    'yearlySaleTotalTaxIncomeData' => $yearlySaleTotalTaxIncomeData,
-                    'year' => $year,
-                    'monthList' => $monthList,
+                    'monthlyPurchaseSummary' => $monthlyPurchaseSummary,
                 )); ?>
             </div>
 

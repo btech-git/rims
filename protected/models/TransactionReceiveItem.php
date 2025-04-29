@@ -457,16 +457,50 @@ class TransactionReceiveItem extends MonthlyTransactionActiveRecord {
         return $resultSet;
     }
     
-    public static function getPurchaseInvoiceTaxYearlyReport($year) {
+    public static function getPurchaseInvoiceTaxYearlyReport($year, $branchId) {
+        $branchConditionSql = '';
+        
+        $params = array(
+            ':year' => $year,
+        );
+        
+        if (!empty($branchId)) {
+            $branchConditionSql = ' AND i.recipient_branch_id = :branch_id';
+            $params[':branch_id'] = $branchId;
+        }
+        
         $sql = "SELECT EXTRACT(YEAR_MONTH FROM invoice_date) AS year_month_value, COUNT(*) AS quantity_invoice, SUM(i.invoice_sub_total) AS sub_total, SUM(i.invoice_tax_nominal) AS total_tax, SUM(i.invoice_grand_total) AS total_price 
                 FROM " . TransactionReceiveItem::model()->tableName() . " i 
-                WHERE YEAR(i.invoice_date) = :year AND i.user_id_cancelled IS NULL AND i.invoice_tax_nominal > 0
+                WHERE YEAR(i.invoice_date) = :year AND i.user_id_cancelled IS NULL AND i.invoice_tax_nominal > 0" . $branchConditionSql . "
                 GROUP BY EXTRACT(YEAR_MONTH FROM invoice_date)
                 ORDER BY year_month_value ASC";
                 
-        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, array(
+        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
+
+        return $resultSet;
+    }
+    
+    public static function getPurchaseInvoiceSupplierTaxMonthlyReport($year, $month, $branchId) {
+        $branchConditionSql = '';
+        
+        $params = array(
+            ':month' => $month,
             ':year' => $year,
-        ));
+        );
+        
+        if (!empty($branchId)) {
+            $branchConditionSql = ' AND i.recipient_branch_id = :branch_id';
+            $params[':branch_id'] = $branchId;
+        }
+        
+        $sql = "SELECT EXTRACT(YEAR_MONTH FROM invoice_date) AS year_month_value, i.supplier_id, MAX(c.name) AS supplier_name, COUNT(*) AS quantity_invoice, SUM(i.invoice_sub_total) AS sub_total, SUM(i.invoice_tax_nominal) AS total_tax, SUM(i.invoice_grand_total) AS total_price 
+                FROM " . TransactionReceiveItem::model()->tableName() . " i 
+                INNER JOIN " . Supplier::model()->tableName() . " c ON c.id = i.supplier_id
+                WHERE YEAR(i.invoice_date) = :year AND MONTH(i.invoice_date) = :month AND i.user_id_cancelled IS NULL AND i.invoice_tax_nominal > 0" . $branchConditionSql . "
+                GROUP BY EXTRACT(YEAR_MONTH FROM invoice_date), i.supplier_id
+                ORDER BY year_month_value ASC, c.name ASC";
+                
+        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
 
         return $resultSet;
     }

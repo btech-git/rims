@@ -71,20 +71,20 @@ class YearlyPurchaseTaxSummaryController extends Controller {
 
         $documentProperties = $objPHPExcel->getProperties();
         $documentProperties->setCreator('Raperind Motor');
-        $documentProperties->setTitle('Laporan Penjualan Tahunan');
+        $documentProperties->setTitle('Laporan Pembelian Tahunan');
 
         $worksheet = $objPHPExcel->setActiveSheetIndex(0);
-        $worksheet->setTitle('Laporan Penjualan Tahunan');
+        $worksheet->setTitle('Laporan Pembelian Tahunan');
 
-        $worksheet->mergeCells('A1:Q1');
-        $worksheet->mergeCells('A2:Q2');
-        $worksheet->mergeCells('A3:Q3');
+        $worksheet->mergeCells('A1:J1');
+        $worksheet->mergeCells('A2:J2');
+        $worksheet->mergeCells('A3:J3');
 
-        $worksheet->getStyle('A1:Q5')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-        $worksheet->getStyle('A1:Q5')->getFont()->setBold(true);
+        $worksheet->getStyle('A1:J5')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->getStyle('A1:J5')->getFont()->setBold(true);
 
         $worksheet->setCellValue('A1', 'Raperind Motor ');
-        $worksheet->setCellValue('A2', 'Laporan Penjualan Tahunan');
+        $worksheet->setCellValue('A2', 'Laporan Pembelian Tahunan');
         $worksheet->setCellValue('A3', $year);
         $monthList = array(
             1 => 'Jan',
@@ -102,7 +102,7 @@ class YearlyPurchaseTaxSummaryController extends Controller {
         );
         $branches = Branch::model()->findAll();
         
-        $worksheet->getStyle('A5:Q5')->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle('A5:J5')->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
         $worksheet->setCellValue('A5', 'Bulan');
         $columnCounter = 'B';
@@ -112,7 +112,7 @@ class YearlyPurchaseTaxSummaryController extends Controller {
         }
         $worksheet->setCellValue("{$columnCounter}5", 'Total');
 
-        $worksheet->getStyle('A5:Q5')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle('A5:J5')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
         $counter = 7;
         $amountTotals = array();
@@ -155,7 +155,7 @@ class YearlyPurchaseTaxSummaryController extends Controller {
         ob_end_clean();
 
         header('Content-type: application/vnd.ms-excel');
-        header('Content-Disposition: attachment;filename="Laporan Penjualan Tahunan.xls"');
+        header('Content-Disposition: attachment;filename="Laporan Pembelian Tahunan.xls"');
         header('Cache-Control: max-age=0');
 
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
