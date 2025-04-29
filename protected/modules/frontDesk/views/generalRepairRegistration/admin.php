@@ -142,7 +142,7 @@ Yii::app()->clientScript->registerScript('search', "
                     'views' => array(
                         'label' => 'view',
                         'url' => 'Yii::app()->createUrl("frontDesk/generalRepairRegistration/view", array("id"=>$data->id))',
-                        'visible' => 'Yii::app()->user->checkAccess("generalRepairCreate") || Yii::app()->user->checkAccess("generalRepairEdit")'
+                        'visible' => 'Yii::app()->user->checkAccess("generalRepairCreate") || Yii::app()->user->checkAccess("generalRepairEdit") || Yii::app()->user->checkAccess("generalRepairView")'
                     ),
 //                    'edit' => array(
 //                        'label' => 'edit',
