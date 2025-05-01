@@ -59,13 +59,13 @@ class User extends CActiveRecord {
             array('lastvisit_at', 'default', 'value' => '0000-00-00 00:00:00', 'setOnEmpty' => true, 'on' => 'insert'),
             array('username, email, superuser, status', 'required'),
             array('roles', 'safe'),
-            array('superuser, status, employee_id, branch_id', 'numerical', 'integerOnly' => true),
-            array('id, username, password, email, activkey, create_at, lastvisit_at, superuser, status,employee_id, branch_id, roles', 'safe', 'on' => 'search'),
+            array('superuser, status, employee_id, branch_id, is_main_access, is_front_access', 'numerical', 'integerOnly' => true),
+            array('id, username, password, email, activkey, create_at, lastvisit_at, superuser, status,employee_id, branch_id, roles, is_main_access, is_front_access', 'safe', 'on' => 'search'),
         ) : ((Yii::app()->user->id == $this->id) ? array(
             array('username, email', 'required'),
             array('username', 'length', 'max' => 20, 'min' => 3, 'message' => UserModule::t("Incorrect username (length between 3 and 20 characters).")),
             array('email', 'email'),
-            array('roles', 'safe'),
+            array('roles, is_main_access, is_front_access', 'safe'),
             array('username', 'unique', 'message' => UserModule::t("This user's name already exists.")),
             array('email', 'unique', 'message' => UserModule::t("This user's email address already exists.")),
         ) : array()));
@@ -132,7 +132,7 @@ class User extends CActiveRecord {
     public function defaultScope() {
         return CMap::mergeArray(Yii::app()->getModule('user')->defaultScope, array(
             'alias' => 'user',
-            'select' => 'user.id, user.username, user.email, user.create_at, user.lastvisit_at, user.superuser, user.status, user.employee_id, user.branch_id',
+//            'select' => 'user.id, user.username, user.email, user.create_at, user.lastvisit_at, user.superuser, user.status, user.employee_id, user.branch_id',
         ));
     }
 

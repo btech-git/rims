@@ -118,12 +118,12 @@ Yii::app()->clientScript->registerScript('userRoles', "
 	
     $('#" . CHtml::activeId($model, 'is_main_access') . "').click(function(){
         if ($(this).prop('checked')) {
-            for (i = 2; i <= 350; i++) {
+            for (i = 2; i <= 427; i++) {
                 $('#" . CHtml::activeId($model, 'roles') . "_' + i).removeAttr('disabled');
                 $('#main-role-panel').show();
             }
         } else {
-            for (i = 2; i <= 350; i++) {
+            for (i = 2; i <= 427; i++) {
                 $('#" . CHtml::activeId($model, 'roles') . "_' + i).removeAttr('checked');
                 $('#" . CHtml::activeId($model, 'roles') . "_' + i).attr('disabled', true);
                 $('#main-role-panel').hide();
@@ -133,12 +133,12 @@ Yii::app()->clientScript->registerScript('userRoles', "
     
     $('#" . CHtml::activeId($model, 'is_front_access') . "').click(function(){
         if ($(this).prop('checked')) {
-            for (i = 351; i <= 363; i++) {
+            for (i = 428; i <= 440; i++) {
                 $('#" . CHtml::activeId($model, 'roles') . "_' + i).removeAttr('disabled');
                 $('#front-role-panel').show();
             }
         } else {
-            for (i = 351; i <= 363; i++) {
+            for (i = 428; i <= 440; i++) {
                 $('#" . CHtml::activeId($model, 'roles') . "_' + i).removeAttr('checked');
                 $('#" . CHtml::activeId($model, 'roles') . "_' + i).attr('disabled', true);
                 $('#front-role-panel').hide();
@@ -287,7 +287,7 @@ Yii::app()->clientScript->registerScript('userRoles', "
                         <?php echo $form->labelEx($model, 'Main Access', array('class' => 'prefix')); ?>
                     </div>
                     <div class="small-8 columns">
-                        <?php echo CHtml::activeCheckBox($model, 'is_main_access'); ?>
+                        <?php echo $form->checkBox($model, 'is_main_access'); ?>
                     </div>
                 </div>
             </div>
@@ -298,7 +298,7 @@ Yii::app()->clientScript->registerScript('userRoles', "
                         <?php echo $form->labelEx($model, 'Front Access', array('class' => 'prefix')); ?>
                     </div>
                     <div class="small-8 columns">
-                        <?php echo CHtml::activeCheckBox($model, 'is_front_access'); ?>
+                        <?php echo $form->checkBox($model, 'is_front_access'); ?>
                     </div>
                 </div>
             </div>

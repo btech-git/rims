@@ -129,6 +129,7 @@ class AdminController extends Controller {
             $model->attributes = $_POST['User'];
             $model->employee_id = $_POST['User']['employee_id'];
             $model->activkey = Yii::app()->controller->module->encrypting(microtime() . $model->password);
+            
             if ($model->validate()) {
                 $model->password = Yii::app()->controller->module->encrypting($model->password);
                 $branches = isset($_POST['BranchId']) ? $_POST['BranchId'] : array();
@@ -357,7 +358,7 @@ class AdminController extends Controller {
     public function loadModel() {
         if ($this->_model === null) {
             if (isset($_GET['id'])) {
-                $this->_model = User::model()->notsafe()->findbyPk($_GET['id']);
+                $this->_model = User::model()->findByPk($_GET['id']);
             }
             if ($this->_model === null) {
                 throw new CHttpException(404, 'The requested page does not exist.');

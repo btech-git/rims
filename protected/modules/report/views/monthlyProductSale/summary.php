@@ -149,7 +149,7 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                 <div style="font-weight: bold; text-align: center">
                     <?php $branch = Branch::model()->findByPk($branchId); ?>
                     <div style="font-size: larger">Raperind Motor <?php echo CHtml::encode(CHtml::value($branch, 'name')); ?></div>
-                    <div style="font-size: larger">Laporan Penjualan</div>
+                    <div style="font-size: larger">Laporan Penjualan Parts Bulanan</div>
                     <div><?php echo $monthList[$month] . ' ' . $year; ?></div>
                 </div>
 
@@ -157,12 +157,10 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
 
                 <div class="relative">
                     <?php $this->renderPartial('_summary', array(
-                        'branchId' => $branchId,
                         'month' => $month,
                         'year' => $year,
                         'numberOfDays' => $numberOfDays,
                         'productSaleData' => $productSaleData,
-                        'monthList' => $monthList,
                     )); ?>
                 </div>
                 <div class="clear"></div>

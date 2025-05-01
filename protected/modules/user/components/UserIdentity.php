@@ -22,9 +22,9 @@ class UserIdentity extends CUserIdentity {
      * @return boolean whether authentication succeeds.
      */
     public function authenticate() {
-        $user = User::model()->notsafe()->findByAttributes(array('username' => $this->username));
+        $user = User::model()->findByAttributes(array('username' => $this->username));
         
-        if ($user === null) {
+        if ($user === null || !$user->is_main_access) {
             $this->errorCode = self::ERROR_USERNAME_INVALID;
         } else if (Yii::app()->getModule('user')->encrypting($this->password) !== $user->password) {
             $this->errorCode = self::ERROR_PASSWORD_INVALID;
