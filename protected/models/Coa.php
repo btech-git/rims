@@ -65,7 +65,7 @@ class Coa extends CActiveRecord {
         return array(
             array('name, coa_category_id, coa_sub_category_id, user_id', 'required'),
             array('coa_category_id, coa_sub_category_id, coa_id, is_approved, user_id, user_id_approval', 'numerical', 'integerOnly' => true),
-            array('name', 'length', 'max' => 50),
+            array('name', 'length', 'max' => 100),
             array('normal_balance', 'length', 'max' => 10),
             array('code', 'length', 'max' => 15),
             array('status', 'length', 'max' => 20),

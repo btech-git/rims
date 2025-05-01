@@ -22,10 +22,6 @@ class AccountingJournalSummaryController extends Controller {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
 
-//        $dateNow = date('Y-m-d');
-//        list($yearNow, , ) = explode('-', $dateNow);
-//        $dateStart = $yearNow . '-01-01';
-
         $transactionType = (isset($_GET['TransactionType'])) ? $_GET['TransactionType'] : '';
         $branchId = (isset($_GET['BranchId'])) ? $_GET['BranchId'] : '';
         $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : date('Y-m-d');
@@ -188,7 +184,7 @@ class AccountingJournalSummaryController extends Controller {
                 $accountCategoryCreditBalance += $journalCreditBalance;
             }
 
-            $counter++;
+//            $counter++;
         }
         
         $worksheet->setCellValue("B{$counter}", "Total");
