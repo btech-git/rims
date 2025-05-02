@@ -283,7 +283,7 @@
 
 </div><!-- form -->
 
-<?php if ($paymentOut->header->isNewRecord): ?>
+<?php //if ($paymentOut->header->isNewRecord): ?>
     <?php $this->beginWidget('zii.widgets.jui.CJuiDialog', array(
         'id' => 'purchase-invoice-dialog',
         // additional javascript options for the dialog plugin
@@ -525,4 +525,4 @@
     <?php echo CHtml::endForm(); ?>
 
     <?php $this->endWidget('zii.widgets.jui.CJuiDialog'); ?>
-<?php endif; ?>
+<?php //endif; ?>
