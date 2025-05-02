@@ -174,6 +174,17 @@ class PaymentOutController extends Controller {
         $itemRequestHeader = Search::bind(new ItemRequestHeader('search'), isset($_GET['ItemRequestHeader']) ? $_GET['ItemRequestHeader'] : array());
         $itemRequestDataProvider = $itemRequestHeader->searchForPaymentOut();
 
+        if (!empty($paymentOut->header->supplier_id)) {
+            $receiveItemDataProvider->criteria->addCondition("t.supplier_id = :supplier_id");
+            $receiveItemDataProvider->criteria->params[':supplier_id'] = $paymentOut->header->supplier_id;
+            
+            $workOrderExpenseDataProvider->criteria->addCondition("t.supplier_id = :supplier_id");
+            $workOrderExpenseDataProvider->criteria->params[':supplier_id'] = $paymentOut->header->supplier_id;
+            
+            $itemRequestDataProvider->criteria->addCondition("t.supplier_id = :supplier_id");
+            $itemRequestDataProvider->criteria->params[':supplier_id'] = $paymentOut->header->supplier_id;
+        }
+        
         if (isset($_POST['Submit']) && IdempotentManager::check()) {
             $this->loadState($paymentOut);
             JurnalUmum::model()->deleteAllByAttributes(array(
