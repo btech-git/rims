@@ -44,7 +44,7 @@
                 <td style="text-align: center">
                     <?php echo CHtml::activeTextField($detail, "[$i]credit", array(
                         'size' => 10, 
-                        'maxlength' => 10,
+                        'maxlength' => 18,
                         'onchange' => CHtml::ajax(array(
                             'type' => 'POST',
                             'dataType' => 'JSON',
