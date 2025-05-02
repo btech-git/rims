@@ -48,7 +48,7 @@ class JournalAdjustment extends CComponent {
         $valid = $this->header->validate();
 
         $valid = $valid && $this->validateDetailsCount();
-        $valid = $valid && $this->validateDebitCreditBalance();
+//        $valid = $valid && $this->validateDebitCreditBalance();
 
         if (count($this->details) > 0) {
             foreach ($this->details as $detail) {
