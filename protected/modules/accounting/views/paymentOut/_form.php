@@ -221,7 +221,7 @@
     <hr />
 
     <div class="row">
-        <?php if ($paymentOut->header->isNewRecord): ?>
+        <?php //if ($paymentOut->header->isNewRecord): ?>
             <?php if ($movementType == 1): ?>
                 <?php echo CHtml::button('Tambah Invoice PO', array('name' => 'Search', 'onclick' => '$("#purchase-invoice-dialog").dialog("open"); return false;', 'onkeypress' => 'if (event.keyCode == 13) { $("#purchase-invoice-dialog").dialog("open"); return false; }')); ?>
             <?php elseif ($movementType == 2): ?>
@@ -229,7 +229,7 @@
             <?php elseif ($movementType == 3): ?>
                 <?php echo CHtml::button('Tambah Pembelian non stok', array('name' => 'Search', 'onclick' => '$("#item-request-dialog").dialog("open"); return false;', 'onkeypress' => 'if (event.keyCode == 13) { $("#item-request-dialog").dialog("open"); return false; }')); ?>
             <?php endif; ?>
-        <?php endif; ?>
+        <?php //endif; ?>
         <?php echo CHtml::hiddenField('PurchaseInvoiceId'); ?>
     </div>
 
