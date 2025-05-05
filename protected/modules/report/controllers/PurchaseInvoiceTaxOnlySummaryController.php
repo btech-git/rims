@@ -135,7 +135,15 @@ class PurchaseInvoiceTaxOnlySummaryController extends Controller {
         $counter = 7;
 
         foreach ($purchaseInvoiceSummary->dataProvider->data as $header) {
-            foreach ($header->transactionReceiveItems as $receiveItem) {
+            $receiveItems = TransactionReceiveItem::model()->findAll(array(
+                'condition' => 'purchase_order_id = :purchase_order_id AND invoice_date BETWEEN :start_date AND :end_date AND r.user_id_cancelled IS NULL',
+                'params' => array(
+                    ':purchase_order_id' => $header->id,
+                    ':start_date' => $startDate,
+                    ':end_date' => $endDate,
+                )
+            ));
+            foreach ($receiveItems as $receiveItem) {
                 $worksheet->setCellValue("A{$counter}", CHtml::encode(CHtml::value($header, 'purchase_order_no')));
                 $worksheet->setCellValue("B{$counter}", CHtml::encode(CHtml::value($header, 'purchase_order_date')));
                 $worksheet->setCellValue("C{$counter}", CHtml::encode(CHtml::value($header, 'supplier.name')));
