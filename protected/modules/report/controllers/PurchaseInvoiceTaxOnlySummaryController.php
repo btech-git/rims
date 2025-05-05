@@ -136,7 +136,7 @@ class PurchaseInvoiceTaxOnlySummaryController extends Controller {
 
         foreach ($purchaseInvoiceSummary->dataProvider->data as $header) {
             $receiveItems = TransactionReceiveItem::model()->findAll(array(
-                'condition' => 'purchase_order_id = :purchase_order_id AND invoice_date BETWEEN :start_date AND :end_date AND r.user_id_cancelled IS NULL',
+                'condition' => 'purchase_order_id = :purchase_order_id AND invoice_date BETWEEN :start_date AND :end_date AND user_id_cancelled IS NULL',
                 'params' => array(
                     ':purchase_order_id' => $header->id,
                     ':start_date' => $startDate,
