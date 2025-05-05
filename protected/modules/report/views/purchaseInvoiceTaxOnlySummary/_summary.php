@@ -53,8 +53,15 @@
         </thead>
         <tbody>
             <?php foreach ($purchaseInvoiceSummary->dataProvider->data as $header): ?>
-                <?php foreach ($header->transactionReceiveItems as $receiveItem): ?>
-                    <?php //$purchaseOrderHeader = TransactionReceiveItem::model()->findByAttributes(array('purchase_order_id' => $header->id)); ?>
+                <?php $receiveItems = TransactionReceiveItem::model()->findAll(array(
+                    'condition' => 'purchase_order_id = :purchase_order_id AND invoice_date BETWEEN :start_date AND :end_date AND r.user_id_cancelled IS NULL',
+                    'params' => array(
+                        ':purchase_order_id' => $header->id,
+                        ':start_date' => $startDate,
+                        ':end_date' => $endDate,
+                    )
+                )); ?>
+                <?php foreach ($receiveItems as $receiveItem): ?>
                     <tr class="items1">
                         <td class="width1-1">
                             <?php echo CHtml::link(CHtml::encode($header->purchase_order_no), array("/transaction/transactionPurchaseOrder/view", "id"=>$header->id), array("target" => "_blank")); ?>

@@ -44,8 +44,8 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                     <?php if (empty($coa)): ?>
                                         <?php echo '0' ;?>
                                     <?php else: ?>
-                                        <?php $saldo = $coa->getBeginningBalanceFinancialForecast($transactionDate); ?>
-                                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $saldo)); ?>
+                                        <?php //$saldo = $coa->getBeginningBalanceFinancialForecast($transactionDate); ?>
+                                        <?php //echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $saldo)); ?>
                                     <?php endif; ?>
                                 </td>
                             </tr>
@@ -62,7 +62,7 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                             <?php foreach ($forecastData as $forecastRow): ?>
                                 <?php $debitAmount = $forecastRow['debit']; ?>
                                 <?php $creditAmount = $forecastRow['credit']; ?>
-                                <?php $saldo += $debitAmount - $creditAmount; ?>
+                                <?php //$saldo += $debitAmount - $creditAmount; ?>
                                 <tr>
                                     <td>
                                         <?php $transactionNumber = $forecastRow['transaction_number']; ?>
@@ -75,7 +75,7 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                     <td style="text-align: center"><?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($forecastRow['payment_date_estimate']))); ?></td>
                                     <td style="text-align: right"><?php echo Yii::app()->numberFormatter->format('#,##0', $debitAmount); ?></td>
                                     <td style="text-align: right"><?php echo Yii::app()->numberFormatter->format('#,##0', $creditAmount); ?></td>
-                                    <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $saldo)); ?></td>
+                                    <td style="text-align: right"><?php //echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $saldo)); ?></td>
                                 </tr>
                             <?php endforeach; ?>
                     </table>
