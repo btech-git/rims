@@ -656,14 +656,13 @@ class Customer extends CActiveRecord {
         }
         
         $sql = "
-            SELECT p.customer_id, p.invoice_date, p.due_date, p.invoice_number, v.plate_number AS vehicle, p.total_price, 
+            SELECT p.id, p.customer_id, p.invoice_date, p.due_date, p.invoice_number, v.plate_number AS vehicle, p.total_price, 
             p.payment_amount, p.payment_left, i.name AS insurance_name
             FROM " . InvoiceHeader::model()->tableName() . " p 
             INNER JOIN " . Customer::model()->tableName() . " c ON c.id = p.customer_id
             LEFT OUTER JOIN " . Vehicle::model()->tableName() . " v ON v.id = p.vehicle_id
             LEFT OUTER JOIN " . InsuranceCompany::model()->tableName() . " i ON i.id = p.insurance_company_id 
             WHERE p.customer_id = :customer_id AND p.invoice_date BETWEEN '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND :end_date AND c.customer_type = 'Company'" . $branchConditionSql . $insuranceConditionSql . $plateConditionSql . "
-            HAVING p.payment_left > 100.00
         ";
 
         $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);

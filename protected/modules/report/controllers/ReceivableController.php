@@ -164,15 +164,28 @@ class ReceivableController extends Controller {
                 $paymentLeft = $receivableRow['payment_left'];
                 
                 $worksheet->setCellValue("A{$counter}", $receivableRow['invoice_date']);
-                $worksheet->setCellValue("B{$counter}", CHtml::encode($receivableRow['invoice_number']));
-                $worksheet->setCellValue("C{$counter}", CHtml::encode($receivableRow['due_date']));
-                $worksheet->setCellValue("D{$counter}", CHtml::encode($receivableRow['vehicle']));
-                $worksheet->setCellValue("E{$counter}", CHtml::encode($revenue));
-                $worksheet->setCellValue("F{$counter}", CHtml::encode($paymentAmount));
-                $worksheet->setCellValue("G{$counter}", CHtml::encode($paymentLeft));
-                $worksheet->setCellValue("H{$counter}", CHtml::encode($receivableRow['insurance_name']));
+                $worksheet->setCellValue("B{$counter}", $receivableRow['invoice_number']);
+                $worksheet->setCellValue("C{$counter}", $receivableRow['due_date']);
+                $worksheet->setCellValue("D{$counter}", $receivableRow['vehicle']);
+                $worksheet->setCellValue("E{$counter}", $revenue);
+                $worksheet->setCellValue("F{$counter}", $paymentAmount);
+                $worksheet->setCellValue("G{$counter}", $paymentLeft);
+                $worksheet->setCellValue("H{$counter}", $receivableRow['insurance_name']);
                 
                 $counter++;
+                
+                $paymentInDetails = PaymentInDetail::model()->findAllByAttributes(array('invoice_header_id' => $receivableRow['id']));
+                foreach ($paymentInDetails as $paymentInDetail) {
+                    
+                    $worksheet->setCellValue("B{$counter}", $paymentInDetail->paymentIn->payment_number);
+                    $worksheet->setCellValue("C{$counter}", $paymentInDetail->paymentIn->payment_date);
+                    $worksheet->setCellValue("D{$counter}", $paymentInDetail->memo);
+                    $worksheet->setCellValue("E{$counter}", $paymentInDetail->amount);
+                    $worksheet->setCellValue("F{$counter}", $paymentInDetail->tax_service_amount);
+                    $worksheet->setCellValue("G{$counter}", $paymentInDetail->totalAmount);
+                    $counter++;
+
+                }
             
                 $totalRevenue += $revenue;
                 $totalPayment += $paymentAmount;
