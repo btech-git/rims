@@ -331,6 +331,61 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
         ));
     }
     
+    public function searchByReport() {
+        // Warning: Please modify the following code to remove attributes that
+        // should not be searched.
+
+        $criteria = new CDbCriteria;
+
+        $criteria->compare('id', $this->id);
+        $criteria->compare('t.invoice_number', $this->invoice_number, true);
+        $criteria->compare('t.reference_type', $this->reference_type);
+        $criteria->compare('t.sales_order_id', $this->sales_order_id);
+        $criteria->compare('t.registration_transaction_id', $this->registration_transaction_id);
+        $criteria->compare('t.customer_id', $this->customer_id);
+        $criteria->compare('t.vehicle_id', $this->vehicle_id);
+        $criteria->compare('t.coa_bank_id_estimate', $this->coa_bank_id_estimate);
+        $criteria->compare('t.payment_date_estimate', $this->payment_date_estimate);
+        $criteria->compare('t.ppn', $this->ppn);
+        $criteria->compare('t.pph', $this->pph);
+        $criteria->compare('t.branch_id', $this->branch_id);
+        $criteria->compare('t.user_id', $this->user_id);
+        $criteria->compare('t.supervisor_id', $this->supervisor_id);
+        $criteria->compare('t.status', $this->status);
+        $criteria->compare('t.service_price', $this->service_price, true);
+        $criteria->compare('t.product_price', $this->product_price, true);
+        $criteria->compare('t.quick_service_price', $this->quick_service_price, true);
+        $criteria->compare('t.total_product', $this->total_product);
+        $criteria->compare('t.total_service', $this->total_service);
+        $criteria->compare('t.total_quick_service', $this->total_quick_service);
+        $criteria->compare('t.pph_total', $this->pph_total, true);
+        $criteria->compare('t.ppn_total', $this->ppn_total, true);
+        $criteria->compare('t.total_discount', $this->total_discount, true);
+        $criteria->compare('t.total_price', $this->total_price, true);
+        $criteria->compare('t.in_words', $this->in_words, true);
+        $criteria->compare('t.note', $this->note, true);
+        $criteria->compare('t.tax_percentage', $this->tax_percentage);
+        $criteria->compare('t.insurance_company_id', $this->insurance_company_id);
+        $criteria->compare('t.number_of_print', $this->number_of_print);
+
+        if ($this->invoice_date != NULL OR $this->invoice_date_to != NULL) {
+            $criteria->addBetweenCondition('invoice_date', $this->invoice_date, $this->invoice_date_to);
+            $criteria->addBetweenCondition('due_date', $this->invoice_date, $this->invoice_date_to);
+        }
+
+        $criteria->together = 'true';
+        $criteria->with = array('customer');
+        $criteria->addSearchCondition('customer.name', $this->customer_name, true);
+        $criteria->addSearchCondition('customer.customer_type', $this->customer_type, true);
+
+        return new CActiveDataProvider($this, array(
+            'criteria' => $criteria,
+            'pagination' => array(
+                'pageSize' => 1000,
+            ),
+        ));
+    }
+
     public function getSubTotal() {
         return $this->service_price + $this->product_price + $this->quick_service_price;
     }
@@ -1064,7 +1119,7 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
         $sql = "SELECT EXTRACT(YEAR_MONTH FROM invoice_date) AS year_month_value, i.customer_id, MAX(c.name) AS customer_name, COUNT(*) AS quantity_invoice, SUM(i.service_price) AS service_price, SUM(i.product_price) AS product_price, SUM(i.product_price + i.service_price) AS sub_total, SUM(i.ppn_total) AS total_tax, SUM(i.pph_total) AS total_tax_income, SUM(i.total_price) AS total_price 
                 FROM " . InvoiceHeader::model()->tableName() . " i 
                 INNER JOIN " . Customer::model()->tableName() . " c ON c.id = i.customer_id
-                WHERE YEAR(i.invoice_date) = :year AND MONTH(i.invoice_date) = :month AND i.status NOT LIKE '%CANCELLED%' AND i.tax_percentage > 0 AND i.ppn_total > 0 AND c.customer_type = 'Company'" . $branchConditionSql . "
+                WHERE YEAR(i.invoice_date) = :year AND MONTH(i.invoice_date) = :month AND i.status NOT LIKE '%CANCELLED%' AND i.tax_percentage > 0 AND i.ppn_total > 0" . $branchConditionSql . "
                 GROUP BY EXTRACT(YEAR_MONTH FROM invoice_date), i.customer_id
                 ORDER BY year_month_value ASC, c.name ASC";
                 

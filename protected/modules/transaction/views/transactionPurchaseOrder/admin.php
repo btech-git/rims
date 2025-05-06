@@ -100,6 +100,12 @@ Yii::app()->clientScript->registerScript('search', "
                         'name'=>'supplier_name',
                         'value'=>'empty($data->supplier_id) ? "" : $data->supplier->name',
                     ),
+                    array(
+                        'name' => 'total_price',
+                        'filter' => false,
+                        'value' => 'number_format($data->total_price, 2)',
+                        'htmlOptions' => array('style' => 'text-align: right'),
+                    ),
                     'status_document',
                     array(
                         'name' => 'requester_id',

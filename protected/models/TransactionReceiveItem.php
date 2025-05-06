@@ -309,6 +309,51 @@ class TransactionReceiveItem extends MonthlyTransactionActiveRecord {
         ));
     }
 
+    public function searchByReport() {
+        // Warning: Please modify the following code to remove attributes that
+        // should not be searched.
+
+        $criteria = new CDbCriteria;
+
+        $criteria->compare('t.id', $this->id);
+        $criteria->compare('t.receive_item_no', $this->receive_item_no, true);
+        $criteria->compare('t.receive_item_date', $this->receive_item_date, true);
+        $criteria->compare('t.arrival_date', $this->arrival_date, true);
+        $criteria->compare('t.recipient_id', $this->recipient_id);
+        $criteria->compare('t.recipient_branch_id', $this->recipient_branch_id);
+        $criteria->compare('t.request_type', $this->request_type, true);
+        $criteria->compare('t.request_date', $this->request_date, true);
+        $criteria->compare('t.estimate_arrival_date', $this->estimate_arrival_date, true);
+        $criteria->compare('t.destination_branch', $this->destination_branch);
+        $criteria->compare('t.supplier_id', $this->supplier_id);
+        $criteria->compare('t.purchase_order_id', $this->purchase_order_id);
+        $criteria->compare('t.transfer_request_id', $this->transfer_request_id);
+        $criteria->compare('t.consignment_in_id', $this->consignment_in_id);
+        $criteria->compare('t.delivery_order_id', $this->delivery_order_id);
+        $criteria->compare('t.invoice_number', $this->invoice_number, true);
+        $criteria->compare('t.invoice_date', $this->invoice_date, true);
+        $criteria->compare('t.invoice_due_date', $this->invoice_due_date, true);
+        $criteria->compare('t.invoice_tax_number', $this->invoice_tax_number, true);
+        $criteria->compare('t.supplier_delivery_number', $this->supplier_delivery_number, true);
+        $criteria->compare('t.movement_out_id', $this->movement_out_id);
+        $criteria->compare('t.note', $this->note);
+        $criteria->compare('t.user_id_receive', $this->user_id_receive);
+        $criteria->compare('t.user_id_invoice', $this->user_id_invoice);
+        $criteria->compare('t.invoice_grand_total_rounded', $this->invoice_grand_total_rounded);
+        $criteria->compare('t.invoice_rounding_nominal', $this->invoice_rounding_nominal);
+        $criteria->compare('t.movement_type', $this->movement_type);
+
+        return new CActiveDataProvider($this, array(
+            'criteria' => $criteria,
+            'sort' => array(
+                'defaultOrder' => 'invoice_date ASC',
+            ),
+            'pagination' => array(
+                'pageSize' => 1000,
+            ),
+        ));
+    }
+
     public function getTotalRetailPrice() {
         $total = 0.00;
 
@@ -469,9 +514,9 @@ class TransactionReceiveItem extends MonthlyTransactionActiveRecord {
             $params[':branch_id'] = $branchId;
         }
         
-        $sql = "SELECT EXTRACT(YEAR_MONTH FROM invoice_date) AS year_month_value, COUNT(*) AS quantity_invoice, SUM(i.invoice_sub_total) AS sub_total, SUM(i.invoice_tax_nominal) AS total_tax, SUM(i.invoice_grand_total) AS total_price 
+        $sql = "SELECT EXTRACT(YEAR_MONTH FROM invoice_date) AS year_month_value, COUNT(DISTINCT(i.purchase_order_id)) AS quantity_order, COUNT(*) AS quantity_invoice, SUM(i.invoice_sub_total) AS sub_total, SUM(i.invoice_tax_nominal) AS total_tax, SUM(i.invoice_grand_total) AS total_price 
                 FROM " . TransactionReceiveItem::model()->tableName() . " i 
-                WHERE YEAR(i.invoice_date) = :year AND i.user_id_cancelled IS NULL AND i.invoice_tax_nominal > 0" . $branchConditionSql . "
+                WHERE YEAR(i.invoice_date) = :year AND i.user_id_cancelled IS NULL AND i.invoice_tax_nominal > 0 AND i.invoice_number <> ''" . $branchConditionSql . "
                 GROUP BY EXTRACT(YEAR_MONTH FROM invoice_date)
                 ORDER BY year_month_value ASC";
                 
@@ -493,7 +538,7 @@ class TransactionReceiveItem extends MonthlyTransactionActiveRecord {
             $params[':branch_id'] = $branchId;
         }
         
-        $sql = "SELECT EXTRACT(YEAR_MONTH FROM invoice_date) AS year_month_value, i.supplier_id, MAX(c.name) AS supplier_name, COUNT(*) AS quantity_invoice, SUM(i.invoice_sub_total) AS sub_total, SUM(i.invoice_tax_nominal) AS total_tax, SUM(i.invoice_grand_total) AS total_price 
+        $sql = "SELECT EXTRACT(YEAR_MONTH FROM invoice_date) AS year_month_value, i.supplier_id, MAX(c.name) AS supplier_name, COUNT(DISTINCT(i.purchase_order_id)) AS quantity_order, COUNT(*) AS quantity_invoice, SUM(i.invoice_sub_total) AS sub_total, SUM(i.invoice_tax_nominal) AS total_tax, SUM(i.invoice_grand_total) AS total_price 
                 FROM " . TransactionReceiveItem::model()->tableName() . " i 
                 INNER JOIN " . Supplier::model()->tableName() . " c ON c.id = i.supplier_id
                 WHERE YEAR(i.invoice_date) = :year AND MONTH(i.invoice_date) = :month AND i.user_id_cancelled IS NULL AND i.invoice_tax_nominal > 0" . $branchConditionSql . "

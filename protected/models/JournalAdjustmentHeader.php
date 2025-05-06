@@ -133,9 +133,6 @@ class JournalAdjustmentHeader extends MonthlyTransactionActiveRecord {
         $criteria->compare('branch_id', $this->branch_id);
         $criteria->compare('status', $this->status, true);
 
-//        $criteria->addCondition("t.branch_id IN (SELECT branch_id FROM " . UserBranch::model()->tableName() . " WHERE users_id = :userId)");
-//        $criteria->params = array(':userId' => Yii::app()->user->id);
-
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
             'sort' => array(

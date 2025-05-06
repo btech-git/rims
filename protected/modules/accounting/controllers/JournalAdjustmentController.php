@@ -124,6 +124,7 @@ class JournalAdjustmentController extends Controller {
         $journalAdjustmentHeader = Search::bind(new JournalAdjustmentHeader('search'), isset($_GET['JournalAdjustmentHeader']) ? $_GET['JournalAdjustmentHeader'] : array());
         $journalAdjustmentHeaderDataProvider = $journalAdjustmentHeader->searchByAdmin();
         $journalAdjustmentHeaderDataProvider->criteria->addBetweenCondition('t.date', $startDate, $endDate);
+        
         if (!Yii::app()->user->checkAccess('director')) {
             $journalAdjustmentHeaderDataProvider->criteria->addCondition('t.branch_id = :branch_id');
             $journalAdjustmentHeaderDataProvider->criteria->params[':branch_id'] = Yii::app()->user->branch_id;
@@ -172,6 +173,23 @@ class JournalAdjustmentController extends Controller {
         }
         
         $this->render('view', array(
+            'journalVoucher' => $journalVoucher,
+            'detailsDataProvider' => $detailsDataProvider,
+        ));
+    }
+
+    public function actionShow($id) {
+        $journalVoucher = $this->loadModel($id);
+
+        $criteria = new CDbCriteria;
+        $criteria->compare('journal_adjustment_header_id', $journalVoucher->id);
+        $detailsDataProvider = new CActiveDataProvider('JournalAdjustmentDetail', array(
+            'criteria' => $criteria,
+        ));
+
+        $detailsDataProvider->criteria->with = array('coa');
+
+        $this->render('show', array(
             'journalVoucher' => $journalVoucher,
             'detailsDataProvider' => $detailsDataProvider,
         ));

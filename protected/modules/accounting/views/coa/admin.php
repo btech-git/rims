@@ -115,18 +115,17 @@ Yii::app()->clientScript->registerScript('search', "
                         ),
                         array(
                             'class' => 'CButtonColumn',
-                            'template' => '{edit} {update opening balance}',
+                            'template' => '{edit} {opening balance}',
                             'buttons' => array(
                                 'edit' => array(
                                     'label' => 'edit',
                                     // 'visible'=>'($data->is_deleted == 0)? TRUE:FALSE',
-                                    'visible' => '(Yii::app()->user->checkAccess("accounting.coa.update"))',
+                                    'visible' => '(Yii::app()->user->checkAccess("masterCoaEdit"))',
                                     'url' => 'Yii::app()->createUrl("accounting/coa/update",array("id"=>$data->id))',
                                 ),
-                                'update opening balance' => array(
-                                    'label' => 'update opening balance',
-                                    //'visible'=>'$data->opening_balance == ""',
-                                    //'visible'=>'(Yii::app()->user->checkAccess("accounting.coa.updateBalance"))',
+                                'opening balance' => array(
+                                    'label' => 'opening balance',
+                                    'visible'=>'(Yii::app()->user->checkAccess("masterCoaEdit"))',
                                     'url' => 'Yii::app()->createUrl("accounting/coa/ajaxHtmlUpdate",array("id"=>$data->id))', 'options' => array(
                                         'ajax' => array(
                                             'type' => 'POST',

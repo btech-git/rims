@@ -83,6 +83,20 @@ class SaleInvoiceTaxYearlyController extends Controller {
         ));
     }
     
+    public function actionDetail($month, $year, $branchId) {
+        
+        $invoiceHeader = Search::bind(new InvoiceHeader('search'), isset($_GET['InvoiceHeader']) ? $_GET['InvoiceHeader'] : array());
+
+        $saleInvoiceSummary = $invoiceHeader->searchByReport();
+        $saleInvoiceSummary->criteria->compare('t.branch_id', $branchId);
+        $saleInvoiceSummary->criteria->addCondition('t.status NOT LIKE "%CANCELLED%" AND t.tax_percentage > 0 AND YEAR(t.invoice_date) = :year AND MONTH(t.invoice_date) = :month');
+        $saleInvoiceSummary->criteria->params = array(':month' => $month, ':year' => $year);
+        
+        $this->render('detail', array(
+            'saleInvoiceSummary' => $saleInvoiceSummary,
+        ));
+    }
+    
     protected function saveToExcel($yearlySaleTotalPriceData, $yearlySaleQuantityInvoiceData, $yearlySaleServicePriceData, $yearlySalePartsPriceData, $yearlySaleSubTotalData, $yearlySaleTotalTaxData, $yearlySaleTotalTaxIncomeData, $branchId, $year) {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');

@@ -57,6 +57,22 @@ class PurchaseInvoiceSupplierTaxMonthlyController extends Controller {
         ));
     }
     
+    public function actionDetail($month, $year, $branchId, $supplierId) {
+        
+        $receiveItem = Search::bind(new TransactionReceiveItem('search'), isset($_GET['TransactionReceiveItem']) ? $_GET['TransactionReceiveItem'] : array());
+
+        $purchaseInvoiceSummary = $receiveItem->searchByReport();
+        $purchaseInvoiceSummary->criteria->compare('t.recipient_branch_id', $branchId);
+        $purchaseInvoiceSummary->criteria->addCondition('t.supplier_id = :supplier_id AND YEAR(t.invoice_date) = :year AND MONTH(t.invoice_date) = :month AND t.user_id_cancelled IS NULL AND t.invoice_tax_nominal > 0');
+        $purchaseInvoiceSummary->criteria->params = array(':month' => $month, ':year' => $year, ':supplier_id' => $supplierId);
+        
+        $this->render('detail', array(
+            'purchaseInvoiceSummary' => $purchaseInvoiceSummary,
+            'year' => $year,
+            'month' => $month,
+        ));
+    }
+    
     protected function saveToExcel($monthlyPurchaseSummary, $month, $year) {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');

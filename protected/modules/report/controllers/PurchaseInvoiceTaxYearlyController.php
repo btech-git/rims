@@ -28,6 +28,7 @@ class PurchaseInvoiceTaxYearlyController extends Controller {
         
         $yearlyPurchaseSummary = TransactionReceiveItem::getPurchaseInvoiceTaxYearlyReport($year, $branchId);
         
+        $yearlyPurchaseQuantityOrderData = array();
         $yearlyPurchaseQuantityInvoiceData = array();
         $yearlyPurchaseSubTotalData = array();
         $yearlyPurchaseTotalTaxData = array();
@@ -35,6 +36,7 @@ class PurchaseInvoiceTaxYearlyController extends Controller {
         foreach ($yearlyPurchaseSummary as $yearlyPurchaseSummaryItem) {
             $monthValue = intval(substr($yearlyPurchaseSummaryItem['year_month_value'], 4, 2));
             $yearlyPurchaseTotalPriceData[$monthValue] = $yearlyPurchaseSummaryItem['total_price'];
+            $yearlyPurchaseQuantityOrderData[$monthValue] = $yearlyPurchaseSummaryItem['quantity_order'];
             $yearlyPurchaseQuantityInvoiceData[$monthValue] = $yearlyPurchaseSummaryItem['quantity_invoice'];
             $yearlyPurchaseSubTotalData[$monthValue] = $yearlyPurchaseSummaryItem['sub_total'];
             $yearlyPurchaseTotalTaxData[$monthValue] = $yearlyPurchaseSummaryItem['total_tax'];
@@ -62,12 +64,29 @@ class PurchaseInvoiceTaxYearlyController extends Controller {
         
         $this->render('summary', array(
             'yearlyPurchaseTotalPriceData' => $yearlyPurchaseTotalPriceData,
+            'yearlyPurchaseQuantityOrderData' => $yearlyPurchaseQuantityOrderData,
             'yearlyPurchaseQuantityInvoiceData' => $yearlyPurchaseQuantityInvoiceData,
             'yearlyPurchaseSubTotalData' => $yearlyPurchaseSubTotalData,
             'yearlyPurchaseTotalTaxData' => $yearlyPurchaseTotalTaxData,
             'yearList' => $yearList,
             'year' => $year,
             'branchId' => $branchId,
+        ));
+    }
+    
+    public function actionDetail($month, $year, $branchId) {
+        
+        $receiveItem = Search::bind(new TransactionReceiveItem('search'), isset($_GET['TransactionReceiveItem']) ? $_GET['TransactionReceiveItem'] : array());
+
+        $purchaseInvoiceSummary = $receiveItem->searchByReport();
+        $purchaseInvoiceSummary->criteria->compare('t.recipient_branch_id', $branchId);
+        $purchaseInvoiceSummary->criteria->addCondition('YEAR(t.invoice_date) = :year AND MONTH(t.invoice_date) = :month AND t.user_id_cancelled IS NULL AND t.invoice_tax_nominal > 0');
+        $purchaseInvoiceSummary->criteria->params = array(':month' => $month, ':year' => $year);
+        
+        $this->render('detail', array(
+            'purchaseInvoiceSummary' => $purchaseInvoiceSummary,
+            'year' => $year,
+            'month' => $month,
         ));
     }
     

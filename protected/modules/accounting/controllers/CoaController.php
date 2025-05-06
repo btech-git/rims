@@ -235,7 +235,6 @@ class CoaController extends Controller {
         if (Yii::app()->request->isAjaxRequest) {
 
             if (isset($_POST['Coa'])) {
-                // var_dump($_POST['Level']); die("S");
                 $isiID = $_POST['Coa']['id'];
                 if (!empty($isiID)) {
                     $model = $this->loadModel($isiID);
@@ -280,7 +279,7 @@ class CoaController extends Controller {
 
             $this->renderPartial('_update-dialog', array(
                 'model' => $model,
-                    ), false, true);
+            ), false, true);
         }
     }
 

@@ -48,7 +48,7 @@ Yii::app()->clientScript->registerScript('search', "
                         <div class="clearfix"></div>
                         <div class="search-form" style="display:none">
                             <?php $this->renderPartial('_search', array(
-                                'model' => $journalAdjustmentHeader,
+                                'journalAdjustmentHeader' => $journalAdjustmentHeader,
                                 'startDate' => $startDate,
                                 'endDate' => $endDate,
                             )); ?>
@@ -80,9 +80,17 @@ Yii::app()->clientScript->registerScript('search', "
                             'value' => 'Yii::app()->dateFormatter->format("d MMM yyyy", CHtml::encode(CHtml::value($data, "date")))'
                         ),
                         'note',
+                        array(
+                            'name' => 'status',
+                            'header' => 'Status',
+                            'filter' => CHtml::activeDropDownList($journalAdjustmentHeader,'status', array(
+                                'Draft' => 'Draft',
+                                'Approved' => 'Approved',
+                                'Rejected' => 'Rejected',
+                            ), array('empty' => '-- All --')),
+                            'value' => '$data->status',
+                        ),
                         'user.username',
-//                        'branch.name',
-                        'status',
                         array(
                             'header' => 'Input',
                             'name' => 'created_datetime',
@@ -93,11 +101,6 @@ Yii::app()->clientScript->registerScript('search', "
                             'class' => 'CButtonColumn',
                             'template' => '{view}',
                             'buttons' => array(
-//                                'update' => array(
-//                                    'label' => 'update',
-//                                    'url' => 'Yii::app()->createUrl("accounting/journalAdjustment/update", array("id"=>$data->id))',
-//                                    'visible' => 'Yii::app()->user->checkAccess("adjustmentJournalEdit")', //$data->status_document != "Approved" && $data->status_document != "Rejected" && ',
-//                                ),
                                 'view' => array(
                                     'label' => 'view',
                                     'url' => 'Yii::app()->createUrl("accounting/journalAdjustment/view", array("id"=>$data->id))',

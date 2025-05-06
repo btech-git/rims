@@ -64,17 +64,12 @@
 
             <hr />
 
-            <div style="font-weight: bold; text-align: center">
-                <?php $branch = Branch::model()->findByPk($branchId); ?>
-                <div style="font-size: larger">Laporan Penjualan Ppn  Recap Bulan</div>
-                <div><?php echo CHtml::encode(strftime("%B",mktime(0,0,0,$month))); ?> <?php echo CHtml::encode($year); ?> - <?php echo empty($branchId) ? 'All' : CHtml::encode(CHtml::value($branch, 'name')); ?></div>
-            </div>
-
-            <br />
-
             <div class="relative">
                 <?php $this->renderPartial('_summary', array(
                     'monthlySaleSummary' => $monthlySaleSummary,
+                    'year' => $year,
+                    'month' => $month,
+                    'branchId' => $branchId,
                 )); ?>
             </div>
 

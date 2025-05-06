@@ -50,14 +50,6 @@
 
             <hr />
 
-            <div style="font-weight: bold; text-align: center">
-                <?php $branch = Branch::model()->findByPk($branchId); ?>
-                <div style="font-size: larger">Laporan Penjualan Ppn  Recap Tahun</div>
-                <div><?php echo CHtml::encode($year); ?> - <?php echo empty($branchId) ? 'All' : CHtml::encode(CHtml::value($branch, 'name')); ?></div>
-            </div>
-
-            <br />
-
             <?php $monthList = array(
                 1 => 'Jan',
                 2 => 'Feb',
@@ -84,6 +76,7 @@
                     'yearlySaleTotalTaxIncomeData' => $yearlySaleTotalTaxIncomeData,
                     'year' => $year,
                     'monthList' => $monthList,
+                    'branchId' => $branchId,
                 )); ?>
             </div>
 

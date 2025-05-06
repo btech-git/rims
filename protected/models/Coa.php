@@ -647,7 +647,7 @@ class Coa extends CActiveRecord {
                     $this->coa_category_id == 5
                 ) {
                     $balanceTotal += $creditAmount - $debitAmount;
-                } else if ($this->coa_category_id == 1 || $this->coa_category_id == 2) {
+                } elseif ($this->coa_category_id == 1 || $this->coa_category_id == 2) {
                     $balanceTotal += $debitAmount - $creditAmount;
                 } else {
                     $balanceTotal = 0.00;
@@ -694,20 +694,21 @@ class Coa extends CActiveRecord {
     
     public function getFinancialForecastDetails($transactionDate) {
         
-        $sql = "SELECT transaction_number, payment_date_estimate, coa_bank_id_estimate, branch_id, debit, credit, remaining
+        $sql = "SELECT transaction_number, transaction_date, coa_id, branch_id, journal_debit, journal_credit
                 FROM (
-                    SELECT invoice_number AS transaction_number, payment_date_estimate, coa_bank_id_estimate, branch_id, total_price AS debit, 0 AS credit, payment_left AS remaining
-                    FROM " . InvoiceHeader::model()->tableName() . "
+                    SELECT kode_transaksi AS transaction_number, tanggal_transaksi AS transaction_date, coa_id, branch_id, total AS journal_debit, 0 AS journal_credit
+                    FROM " . JurnalUmum::model()->tableName() . "
+                    WHERE debet_kredit = 'D' AND tanggal_transaksi = :transaction_date AND coa_id = :coa_id AND is_coa_category = 0 
                     UNION
-                    SELECT purchase_order_no AS transaction_number, payment_date_estimate, coa_bank_id_estimate, main_branch_id AS branch_id, 0 AS debit, total_price AS credit, payment_left AS remaining
-                    FROM " . TransactionPurchaseOrder::model()->tableName() . "
+                    SELECT kode_transaksi AS transaction_number, tanggal_transaksi AS transaction_date, coa_id, branch_id, 0 AS journal_debit, total AS journal_credit
+                    FROM " . JurnalUmum::model()->tableName() . "
+                    WHERE debet_kredit = 'K' AND tanggal_transaksi = :transaction_date AND coa_id = :coa_id AND is_coa_category = 0 
                 ) transaction
-                WHERE remaining > 0 AND payment_date_estimate =:payment_date_estimate AND coa_bank_id_estimate = :coa_bank_id_estimate
-                ORDER BY payment_date_estimate ASC";
+                ORDER BY transaction_date ASC";
         
         $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, array(
-            ':payment_date_estimate' => $transactionDate,
-            ':coa_bank_id_estimate' => $this->id,
+            ':transaction_date' => $transactionDate,
+            ':coa_id' => $this->id,
         ));
         
         return $resultSet;

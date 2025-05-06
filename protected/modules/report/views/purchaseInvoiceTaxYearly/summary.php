@@ -49,14 +49,6 @@
 
             <hr />
 
-            <div style="font-weight: bold; text-align: center">
-                <?php $branch = Branch::model()->findByPk($branchId); ?>
-                <div style="font-size: larger">Laporan Pembelian Ppn  Recap Tahun</div>
-                <div><?php echo CHtml::encode($year); ?> - <?php echo empty($branchId) ? 'All' : CHtml::encode(CHtml::value($branch, 'name')); ?></div>
-            </div>
-
-            <br />
-
             <?php $monthList = array(
                 1 => 'Jan',
                 2 => 'Feb',
@@ -75,9 +67,11 @@
             <div class="relative">
                 <?php $this->renderPartial('_summary', array(
                     'yearlyPurchaseTotalPriceData' => $yearlyPurchaseTotalPriceData,
+                    'yearlyPurchaseQuantityOrderData' => $yearlyPurchaseQuantityOrderData,
                     'yearlyPurchaseQuantityInvoiceData' => $yearlyPurchaseQuantityInvoiceData,
                     'yearlyPurchaseSubTotalData' => $yearlyPurchaseSubTotalData,
                     'yearlyPurchaseTotalTaxData' => $yearlyPurchaseTotalTaxData,
+                    'branchId' => $branchId,
                     'year' => $year,
                     'monthList' => $monthList,
                 )); ?>
