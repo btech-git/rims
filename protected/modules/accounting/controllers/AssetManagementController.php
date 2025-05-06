@@ -261,6 +261,36 @@ class AssetManagementController extends Controller {
         if (isset($_POST['AssetPurchase']) && IdempotentManager::check()) {
             $model->attributes = $_POST['AssetPurchase'];
             if ($model->save()) {
+                JurnalUmum::model()->deleteAllByAttributes(array(
+                    'kode_transaksi' => $model->transaction_number,
+                ));
+
+                $jurnalInventory = new JurnalUmum;
+                $jurnalInventory->kode_transaksi = $model->transaction_number;
+                $jurnalInventory->tanggal_transaksi = $model->transaction_date;
+                $jurnalInventory->coa_id = $model->assetCategory->coa_inventory_id;
+                $jurnalInventory->branch_id = $model->branch_id;
+                $jurnalInventory->total = $model->purchase_value;
+                $jurnalInventory->debet_kredit = 'D';
+                $jurnalInventory->tanggal_posting = date('Y-m-d');
+                $jurnalInventory->transaction_subject = $model->note;
+                $jurnalInventory->is_coa_category = 0;
+                $jurnalInventory->transaction_type = 'PFA';
+                $jurnalInventory->save();
+
+                $jurnalBanking = new JurnalUmum;
+                $jurnalBanking->kode_transaksi = $model->transaction_number;
+                $jurnalBanking->tanggal_transaksi = $model->transaction_date;
+                $jurnalBanking->coa_id = empty($model->companyBank->coa_id) ? 7 : $model->companyBank->coa_id;
+                $jurnalBanking->branch_id = $model->branch_id;
+                $jurnalBanking->total = $model->purchase_value;
+                $jurnalBanking->debet_kredit = 'K';
+                $jurnalBanking->tanggal_posting = date('Y-m-d');
+                $jurnalBanking->transaction_subject = $model->note;
+                $jurnalBanking->is_coa_category = 0;
+                $jurnalBanking->transaction_type = 'PFA';
+                $jurnalBanking->save();
+
                 $this->redirect(array('view', 'id' => $model->id));
             }
         }
