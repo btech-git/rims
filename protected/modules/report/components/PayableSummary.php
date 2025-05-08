@@ -29,9 +29,23 @@ class PayableSummary extends CComponent {
         $this->dataProvider->criteria->order = $this->dataProvider->sort->orderBy;
     }
 
-    public function setupFilter($supplierId) {
-        if (!empty($supplierId)) {
-            $this->dataProvider->criteria->compare('t.id', $supplierId);
+    public function setupFilter($filters) {
+        $endDate = (empty($filters['endDate'])) ? date('Y-m-d') : $filters['endDate'];
+        $branchId = (empty($filters['branchId'])) ? '' : $filters['branchId'];
+        
+        $branchConditionSql = '';
+        
+        if (!empty($branchId)) {
+            $branchConditionSql = ' AND i.main_branch_id = :branch_id';
+            $this->dataProvider->criteria->params[':branch_id'] = $branchId;
         }
+        
+        $this->dataProvider->criteria->addCondition("EXISTS (
+            SELECT p.supplier_id, COALESCE(p.payment_left, 0) AS payment_left 
+            FROM " . TransactionPurchaseOrder::model()->tableName() . " p 
+            WHERE p.supplier_id = t.id AND payment_left > 100.00 AND purchase_order_date <= :end_date AND p.status_document = 'Approved'" . $branchConditionSql . " 
+        )");
+        
+        $this->dataProvider->criteria->params[':end_date'] = $endDate;
     }
 }

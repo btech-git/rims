@@ -35,11 +35,15 @@ class PayableController extends Controller {
         $supplierDataProvider = $supplier->search();
         $supplierDataProvider->pagination->pageVar = 'page_dialog';
 
-        $payableSummary = new PayableSummary($supplier->searchByPayableReport($endDate, $branchId));
+        $payableSummary = new PayableSummary($supplier->searchByPayableReport());
         $payableSummary->setupLoading();
         $payableSummary->setupPaging($pageSize, $currentPage);
         $payableSummary->setupSorting();
-        $payableSummary->setupFilter($supplierId);
+        $filters = array(
+            'endDate' => $endDate,
+            'branchId' => $branchId,
+        );
+        $payableSummary->setupFilter($filters);
 
         if (isset($_GET['ResetFilter'])) {
             $this->redirect(array('summary'));

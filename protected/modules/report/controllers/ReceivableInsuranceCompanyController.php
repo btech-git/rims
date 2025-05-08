@@ -40,7 +40,12 @@ class ReceivableInsuranceCompanyController extends Controller {
         $receivableSummary->setupLoading();
         $receivableSummary->setupPaging($pageSize, $currentPage);
         $receivableSummary->setupSorting();
-        $receivableSummary->setupFilter($insuranceCompanyId);
+        $filters = array(
+            'endDate' => $endDate,
+            'branchId' => $branchId,
+            'plateNumber' => $plateNumber,
+        );
+        $receivableSummary->setupFilter($filters);
 
         if (isset($_GET['ResetFilter'])) {
             $this->redirect(array('summary'));
