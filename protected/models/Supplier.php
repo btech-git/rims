@@ -402,7 +402,7 @@ class Supplier extends CActiveRecord {
             SELECT purchase_order_no, purchase_order_date, COALESCE(p.total_price, 0) AS total_price, COALESCE(p.payment_amount, 0) AS payment_amount, 
             COALESCE(p.payment_left, 0) AS payment_left 
             FROM " . TransactionPurchaseOrder::model()->tableName() . " p 
-            WHERE p.supplier_id = :supplier_id AND payment_left > 100.00 AND purchase_order_date <= :end_date AND p.status_document = 'Approved'" . $branchConditionSql;
+            WHERE p.supplier_id = :supplier_id AND payment_left > 100.00 AND DATE(purchase_order_date) BETWEEN '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND :end_date AND p.status_document = 'Approved'" . $branchConditionSql;
 
         $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
 

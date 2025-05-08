@@ -89,11 +89,10 @@ class PayableDetailController extends Controller {
         }
     }
 
-    protected function saveToExcel($payableDetailSummary, array $options = array()) {
+    protected function saveToExcel($dataProvider, array $options = array()) {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
         
-        $startDate = (empty($options['startDate'])) ? date('Y-m-d') : $options['startDate'];
         $endDate = (empty($options['endDate'])) ? date('Y-m-d') : $options['endDate'];
         $branchId = $options['branchId']; 
         
@@ -105,10 +104,10 @@ class PayableDetailController extends Controller {
 
         $documentProperties = $objPHPExcel->getProperties();
         $documentProperties->setCreator('PT. Raperind Motor');
-        $documentProperties->setTitle('Buku Besar Pembantu Hutang');
+        $documentProperties->setTitle('Hutang Supplier Detail');
 
         $worksheet = $objPHPExcel->setActiveSheetIndex(0);
-        $worksheet->setTitle('Buku Besar Pembantu Hutang');
+        $worksheet->setTitle('Hutang Supplier Detail');
 
         $worksheet->mergeCells('A1:G1');
         $worksheet->mergeCells('A2:G2');
@@ -118,80 +117,51 @@ class PayableDetailController extends Controller {
         $worksheet->getStyle('A1:G6')->getFont()->setBold(true);
 
         $branch = Branch::model()->findByPk($branchId);
-        $worksheet->setCellValue('A1', 'Raperind Motor ' . CHtml::encode(CHtml::value($branch, 'name')));
-        $worksheet->setCellValue('A2', 'Buku Besar Pembantu Hutang');
-        $worksheet->setCellValue('A3', Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($startDate)) . ' - ' . Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($endDate)));
+        $worksheet->setCellValue('A1', 'Raperind Motor ' . CHtml::value($branch, 'name'));
+        $worksheet->setCellValue('A2', 'Hutang Supplier Detail');
+        $worksheet->setCellValue('A3', 'Per Tanggal: ' . Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($endDate)));
 
         $worksheet->getStyle('A5:G5')->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
         $worksheet->setCellValue('A5', 'Tanggal');
-        $worksheet->setCellValue('B5', 'Jenis Transaksi');
-        $worksheet->setCellValue('C5', 'Transaksi #');
-        $worksheet->setCellValue('D5', 'Keterangan');
-        $worksheet->setCellValue('E5', 'Debit');
-        $worksheet->setCellValue('F5', 'Kredit');
-        $worksheet->setCellValue('G5', 'Saldo');
+        $worksheet->setCellValue('B5', 'Transaksi #');
+        $worksheet->setCellValue('C5', 'Keterangan');
+        $worksheet->setCellValue('D5', 'Debit');
+        $worksheet->setCellValue('E5', 'Kredit');
+        $worksheet->setCellValue('F5', 'Saldo');
 
         $worksheet->getStyle('A6:G6')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
         $counter = 7;
 
-        foreach ($payableDetailSummary->data as $header) {
-            $payableAmount = $header->getPayableAmount();
-            if ($payableAmount !== 0) {
-                $worksheet->mergeCells("A{$counter}:B{$counter}");
-                $worksheet->mergeCells("C{$counter}:E{$counter}");
-                $worksheet->setCellValue("A{$counter}", CHtml::encode(CHtml::value($header, 'code')));
-                $worksheet->setCellValue("C{$counter}", CHtml::encode(CHtml::value($header, 'name')));
-                $saldo = $header->getBeginningBalancePayable($startDate);
-                $worksheet->setCellValue("F{$counter}", CHtml::encode($saldo));
-                
-                $counter++;
-                
-                $payableData = $header->getPayableLedgerReport($startDate, $endDate, $options['branchId']);
-                $positiveAmount = 0; 
-                $negativeAmount = 0;
-                
-                foreach ($payableData as $payableRow) {
-                    $purchaseAmount = $payableRow['purchase_amount'];
-                    $paymentAmount = $payableRow['payment_amount'];
-                    $amount = $payableRow['amount'];
-                    if ($payableRow['transaction_type'] == 'K') {
-                        $saldo += $amount;
-                    } else {
-                        $saldo -= $amount;
-                    }
-                    
-                    $worksheet->setCellValue("A{$counter}", CHtml::encode($payableRow['tanggal_transaksi']));
-                    $worksheet->setCellValue("B{$counter}", CHtml::encode($payableRow['transaction_type']));
-                    $worksheet->setCellValue("C{$counter}", CHtml::encode($payableRow['kode_transaksi']));
-                    $worksheet->setCellValue("D{$counter}", CHtml::encode($payableRow['remark']));
-                    $worksheet->setCellValue("E{$counter}", $payableRow['transaction_type'] == 'D' ? CHtml::encode($amount) : 0);
-                    $worksheet->setCellValue("F{$counter}", $payableRow['transaction_type'] == 'K' ? CHtml::encode($amount) : 0);
-                    $worksheet->setCellValue("G{$counter}", CHtml::encode($saldo));
-                    
-                    $positiveAmount += $purchaseAmount;
-                    $negativeAmount += $paymentAmount; 
-                    
-                    $counter++;
+        foreach ($dataProvider->data as $header) {
+            $worksheet->mergeCells("A{$counter}:B{$counter}");
+            $worksheet->mergeCells("C{$counter}:E{$counter}");
+            $worksheet->setCellValue("A{$counter}", CHtml::value($header, 'code'));
+            $worksheet->setCellValue("C{$counter}", CHtml::value($header, 'name'));
+            $saldo = 0; //$header->getBeginningBalancePayable($startDate);
+            $worksheet->setCellValue("F{$counter}", $saldo);
+
+            $counter++;
+
+            $payableData = $header->getPayableDetailReport($endDate, $options['branchId']);
+            foreach ($payableData as $payableRow) {
+                $amount = $payableRow['amount'];
+                if ($payableRow['transaction_type'] == 'K') {
+                    $saldo += $amount;
+                } else {
+                    $saldo -= $amount;
                 }
-                
-                $worksheet->mergeCells("A{$counter}:F{$counter}");
-                $worksheet->setCellValue("A{$counter}", "Total Penambahan");
-                $worksheet->setCellValue("G{$counter}", CHtml::encode($negativeAmount));
+
+                $worksheet->setCellValue("A{$counter}", $payableRow['tanggal_transaksi']);
+                $worksheet->setCellValue("B{$counter}", $payableRow['kode_transaksi']);
+                $worksheet->setCellValue("C{$counter}", $payableRow['remark']);
+                $worksheet->setCellValue("D{$counter}", $payableRow['transaction_type'] == 'D' ? $amount : 0);
+                $worksheet->setCellValue("E{$counter}", $payableRow['transaction_type'] == 'K' ? $amount : 0);
+                $worksheet->setCellValue("F{$counter}", $saldo);
+
                 $counter++;
-                
-                $worksheet->mergeCells("A{$counter}:F{$counter}");
-                $worksheet->setCellValue("A{$counter}", "Total Penurunan");
-                $worksheet->setCellValue("G{$counter}", CHtml::encode($positiveAmount));
-                $counter++;
-                
-                $worksheet->mergeCells("A{$counter}:F{$counter}");
-                $worksheet->setCellValue("A{$counter}", "Perubahan Bersih");
-                $worksheet->setCellValue("G{$counter}", CHtml::encode($saldo));
-                $counter++; $counter++;
-                
-            }
+            } 
         }
             
         for ($col = 'A'; $col !== 'L'; $col++) {
@@ -203,7 +173,7 @@ class PayableDetailController extends Controller {
         ob_end_clean();
         // We'll be outputting an excel file
         header('Content-type: application/vnd.ms-excel');
-        header('Content-Disposition: attachment;filename="Buku Besar Pembantu Hutang.xls"');
+        header('Content-Disposition: attachment;filename="hutang_supplier_detail.xls"');
         header('Cache-Control: max-age=0');
         
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');

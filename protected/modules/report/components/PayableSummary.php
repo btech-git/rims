@@ -44,7 +44,7 @@ class PayableSummary extends CComponent {
         $this->dataProvider->criteria->addCondition("EXISTS (
             SELECT p.supplier_id, COALESCE(p.payment_left, 0) AS payment_left 
             FROM " . TransactionPurchaseOrder::model()->tableName() . " p 
-            WHERE p.supplier_id = t.id AND payment_left > 100.00 AND purchase_order_date <= :end_date AND p.status_document = 'Approved'" . $branchConditionSql . " 
+            WHERE p.supplier_id = t.id AND payment_left > 100.00 AND purchase_order_date BETWEEN '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND :end_date AND p.status_document = 'Approved'" . $branchConditionSql . " 
         )");
         
         $this->dataProvider->criteria->params[':end_date'] = $endDate;
