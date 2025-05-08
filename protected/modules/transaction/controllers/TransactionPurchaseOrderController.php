@@ -260,6 +260,9 @@ class TransactionPurchaseOrderController extends Controller {
         $purchaseOrder->header->status_document = 'Draft';
         $purchaseOrder->header->user_id_updated = Yii::app()->user->id;
         $purchaseOrder->header->updated_datetime = date('Y-m-d H:i:s');
+        $purchaseOrderDate = isset($_POST['PurchaseOrderDate']) ? $_POST['PurchaseOrderDate'] : date('Y-m-d');
+        $purchaseOrderHour = isset($_POST['PurchaseOrderHour']) ? $_POST['PurchaseOrderHour'] : date('H');
+        $purchaseOrderMinute = isset($_POST['PurchaseOrderMinute']) ? $_POST['PurchaseOrderMinute'] : date('i');
 
         $supplier = new Supplier('search');
         $supplier->unsetAttributes();  // clear any default values
@@ -357,6 +360,9 @@ class TransactionPurchaseOrderController extends Controller {
 
         $this->render('update', array(
             'purchaseOrder' => $purchaseOrder,
+            'purchaseOrderDate' => $purchaseOrderDate,
+            'purchaseOrderHour' => $purchaseOrderHour,
+            'purchaseOrderMinute' => $purchaseOrderMinute,
             'supplier' => $supplier,
             'supplierDataProvider' => $supplierDataProvider,
             'product' => $product,

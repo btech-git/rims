@@ -16,11 +16,13 @@ $this->menu=array(
 );
 ?>
 <div id="maincontent">
-    <?php echo $this->renderPartial('_form', array('purchaseOrder'=>$purchaseOrder,
+    <?php echo $this->renderPartial('_form', array(
+        'purchaseOrder'=>$purchaseOrder,
+        'purchaseOrderDate' => $purchaseOrderDate,
+        'purchaseOrderHour' => $purchaseOrderHour,
+        'purchaseOrderMinute' => $purchaseOrderMinute,
         'supplier'=>$supplier,
         'supplierDataProvider'=>$supplierDataProvider,
-        // 'request'=>$request,
-        // 'requestDataProvider'=>$requestDataProvider,
         'product'=>$product,
         'productDataProvider'=>$productDataProvider,
         'price' => $price,
