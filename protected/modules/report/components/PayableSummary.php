@@ -32,6 +32,7 @@ class PayableSummary extends CComponent {
     public function setupFilter($filters) {
         $endDate = (empty($filters['endDate'])) ? date('Y-m-d') : $filters['endDate'];
         $branchId = (empty($filters['branchId'])) ? '' : $filters['branchId'];
+        $supplierId = (empty($filters['supplierId'])) ? '' : $filters['supplierId'];
         
         $branchConditionSql = '';
         
@@ -47,5 +48,6 @@ class PayableSummary extends CComponent {
         )");
         
         $this->dataProvider->criteria->params[':end_date'] = $endDate;
+        $this->dataProvider->criteria->compare('t.id', $supplierId);
     }
 }

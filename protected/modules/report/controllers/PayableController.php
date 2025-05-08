@@ -42,6 +42,7 @@ class PayableController extends Controller {
         $filters = array(
             'endDate' => $endDate,
             'branchId' => $branchId,
+            'supplierId' => $supplierId,
         );
         $payableSummary->setupFilter($filters);
 
