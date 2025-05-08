@@ -189,7 +189,7 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                         'receivableSummary' => $receivableSummary,
                         'endDate' => $endDate,
                         'branchId' => $branchId,
-                        'insuranceCompanyId' => $insuranceCompanyId,
+                        'customerId' => $customerId,
                         'plateNumber' => $plateNumber,
                     )); ?>
                 </div>
