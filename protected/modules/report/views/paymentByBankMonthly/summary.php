@@ -63,6 +63,20 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                 </div>
                             </div>
                         </div>
+                    </div>              
+                    <div class="row">                        
+                        <div class="medium-12 columns">
+                            <div class="field">
+                                <div class="row collapse">
+                                    <div class="small-2 columns">
+                                        <span class="prefix">COA List</span>
+                                    </div>
+                                    <div class="small-10 columns">
+                                          <?php echo CHtml::checkBoxList('CoaIds', $coaIds, CHtml::listData($coaList, 'id','name'), array('template' => '<div style="display: inline-block">{input}{label}</div>', 'separator' => '')); ?>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
                     <div class="clear"></div>
@@ -97,6 +111,7 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                         'month' => $month,
                         'year' => $year,
                         'numberOfDays' => $numberOfDays,
+                        'selectedCoas' => $selectedCoas,
                     )); ?>
                 </div>
                 
@@ -109,6 +124,7 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                         'month' => $month,
                         'year' => $year,
                         'numberOfDays' => $numberOfDays,
+                        'selectedCoas' => $selectedCoas,
                     )); ?>
                 </div>
                 <div class="clear"></div>

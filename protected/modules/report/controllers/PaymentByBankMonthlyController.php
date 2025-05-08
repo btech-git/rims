@@ -29,11 +29,18 @@ class PaymentByBankMonthlyController extends Controller {
         $month = isset($_GET['Month']) ? $_GET['Month'] : $monthNow;
         $year = isset($_GET['Year']) ? $_GET['Year'] : $yearNow;
         $branchId = isset($_GET['BranchId']) ? $_GET['BranchId'] : '';
+        $coaIds = isset($_GET['CoaIds']) ? $_GET['CoaIds'] : array();
         
-        $coaList = Coa::model()->findAll(array('condition' => 't.coa_sub_category_id IN (1, 2, 3) AND t.status = "Approved"'));
+        $coaList = Coa::model()->findAll(array('condition' => 't.coa_sub_category_id IN (1, 2, 3) AND t.status = "Approved"', 'order' => 't.name ASC'));
         
-        $paymentInByBankList = JurnalUmum::getPaymentInByBankList($month, $year, $branchId);
-        $paymentOutByBankList = JurnalUmum::getPaymentOutByBankList($month, $year, $branchId);
+        $coaInSql = '= NULL';
+        if (!empty($coaIds)) {
+            $coaInSql = "IN (" . implode(',', $coaIds) . ")";
+        }
+        $selectedCoas = Coa::model()->findAll(array('condition' => 't.id ' . $coaInSql, 'order' => 't.name ASC'));
+        
+        $paymentInByBankList = JurnalUmum::getPaymentInByBankList($month, $year, $branchId, $coaIds);
+        $paymentOutByBankList = JurnalUmum::getPaymentOutByBankList($month, $year, $branchId, $coaIds);
         
         $coaIdList = array();
         foreach ($coaList as $coa) {
@@ -52,7 +59,6 @@ class PaymentByBankMonthlyController extends Controller {
             $paymentInList[$paymentInByBankRow['tanggal_transaksi']][$paymentInByBankRow['coa_id']] = $paymentInByBankRow['total_amount'];
             $lastPaymentInDate = $paymentInByBankRow['tanggal_transaksi'];
         }
-
         
         $paymentOutList = array();
         $lastPaymentOutDate = '';
@@ -98,6 +104,8 @@ class PaymentByBankMonthlyController extends Controller {
             'year' => $year,
             'numberOfDays' => $numberOfDays,
             'branchId' => $branchId,
+            'coaIds' => $coaIds,
+            'selectedCoas' => $selectedCoas,
         ));
     }
     

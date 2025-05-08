@@ -132,7 +132,10 @@ class TransactionPurchaseOrderController extends Controller {
         $purchaseOrder = $this->instantiate(null, 'create');
         $purchaseOrder->header->main_branch_id = Yii::app()->user->branch_id;
         $purchaseOrder->header->coa_bank_id_estimate = 7;
-        $purchaseOrder->header->purchase_order_date = date('Y-m-d H:i:s');
+//        $purchaseOrder->header->purchase_order_date = date('Y-m-d H:i:s');
+        $purchaseOrderDate = isset($_POST['PurchaseOrderDate']) ? $_POST['PurchaseOrderDate'] : date('Y-m-d');
+        $purchaseOrderHour = isset($_POST['PurchaseOrderHour']) ? $_POST['PurchaseOrderHour'] : date('H');
+        $purchaseOrderMinute = isset($_POST['PurchaseOrderMinute']) ? $_POST['PurchaseOrderMinute'] : date('i');
         $this->performAjaxValidation($purchaseOrder->header);
 
         $supplier = new Supplier('search');
@@ -221,6 +224,7 @@ class TransactionPurchaseOrderController extends Controller {
             $purchaseOrder->generateCodeNumber(Yii::app()->dateFormatter->format('M', strtotime($purchaseOrder->header->purchase_order_date)), Yii::app()->dateFormatter->format('yyyy', strtotime($purchaseOrder->header->purchase_order_date)), $purchaseOrder->header->main_branch_id);
             $purchaseOrder->header->payment_date_estimate = date('Y-m-d');
             $purchaseOrder->header->created_datetime = date('Y-m-d H:i:s');
+            $purchaseOrder->header->purchase_order_date = "{$purchaseOrderDate} {$purchaseOrderHour}:{$purchaseOrderMinute}:00";
             
             if ($purchaseOrder->save(Yii::app()->db)) {
                 $this->redirect(array('view', 'id' => $purchaseOrder->header->id));
@@ -229,6 +233,9 @@ class TransactionPurchaseOrderController extends Controller {
 
         $this->render('create', array(
             'purchaseOrder' => $purchaseOrder,
+            'purchaseOrderDate' => $purchaseOrderDate,
+            'purchaseOrderHour' => $purchaseOrderHour,
+            'purchaseOrderMinute' => $purchaseOrderMinute,
             'supplier' => $supplier,
             'supplierDataProvider' => $supplierDataProvider,
             'product' => $product,

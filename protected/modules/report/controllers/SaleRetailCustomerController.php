@@ -32,7 +32,7 @@ class SaleRetailCustomerController extends Controller {
         $pageSize = (isset($_GET['PageSize'])) ? $_GET['PageSize'] : '';
         $currentPage = (isset($_GET['page'])) ? $_GET['page'] : '';
         $currentSort = (isset($_GET['sort'])) ? $_GET['sort'] : '';
-        $branchId = (isset($_GET['BranchId'])) ? $_GET['BranchId'] : '';
+        $taxValue = (isset($_GET['TaxValue'])) ? $_GET['TaxValue'] : '';
 
         $saleRetailCustomerSummary = new SaleRetailCustomerSummary($customerDataProvider);
         $saleRetailCustomerSummary->setupLoading();
@@ -41,7 +41,7 @@ class SaleRetailCustomerController extends Controller {
         $filters = array(
             'startDate' => $startDate,
             'endDate' => $endDate,
-            'branchId' => $branchId,
+            'taxValue' => $taxValue,
         );
         $saleRetailCustomerSummary->setupFilter($filters);
 
@@ -61,7 +61,7 @@ class SaleRetailCustomerController extends Controller {
             'endDate' => $endDate,
             'currentPage' => $currentPage,
             'currentSort' => $currentSort,
-            'branchId' => $branchId,
+            'taxValue' => $taxValue,
         ));
     }
 

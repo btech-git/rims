@@ -310,6 +310,11 @@
                                         'url' => array('/report/saleByProductCategoryServiceType/summary'), 
                                         'visible' => (Yii::app()->user->checkAccess('saleCustomerSummaryReport'))
                                     ),
+                                    array(
+                                        'label' => 'Penjualan Jasa + Kategori Produk Summary', 
+                                        'url' => array('/report/companySaleByProductCategoryServiceType/summary'), 
+                                        'visible' => (Yii::app()->user->checkAccess('saleCustomerSummaryReport'))
+                                    ),
                                 ),
                             )); ?>
                         <?php endif; ?>

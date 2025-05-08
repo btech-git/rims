@@ -15,6 +15,9 @@ $this->menu = array(
 <div id="maincontent">
     <?php echo $this->renderPartial('_form', array(
         'purchaseOrder' => $purchaseOrder,
+        'purchaseOrderDate' => $purchaseOrderDate,
+        'purchaseOrderHour' => $purchaseOrderHour,
+        'purchaseOrderMinute' => $purchaseOrderMinute,
         'supplier' => $supplier,
         'supplierDataProvider' => $supplierDataProvider,
         // 'request'=>$request,

@@ -216,14 +216,13 @@ Yii::app()->clientScript->registerScript('report', '
                         <div class="field">
                             <div class="row collapse">
                                 <div class="small-4 columns">
-                                    <span class="prefix">Status</span>
+                                    <span class="prefix">PPn/non</span>
                                 </div>
                                  <div class="small-8 columns">
-                                      <?php echo CHtml::activeDropDownlist($invoiceHeader, 'status', array(
-                                          'INVOICING' => 'INVOICING',
-                                          'PARTIALLY PAID' => 'PARTIALLY PAID',
-                                          'PAID' => 'PAID',
-                                      ), array('empty'=>'-- All Status --')); ?>
+                                      <?php echo CHtml::activeDropDownlist($invoiceHeader, 'ppn', array(
+                                          '0' => 'Non PPn',
+                                          '1' => 'PPn',
+                                      ), array('empty'=>'-- All --')); ?>
                                 </div>
                             </div>
                         </div>

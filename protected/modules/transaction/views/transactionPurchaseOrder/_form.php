@@ -40,6 +40,12 @@
                     </div>
                 </div>-->
 
+                <?php $hourList = array_map(function($num) { return str_pad($num, 2, '0', STR_PAD_LEFT); }, range(0, 23)); ?>
+                <?php $hourChoices = array_combine($hourList, $hourList); ?>
+
+                <?php $minuteList = array_map(function($num) { return str_pad($num, 2, '0', STR_PAD_LEFT); }, range(0, 59)); ?>
+                <?php $minuteChoices = array_combine($minuteList, $minuteList); ?>
+
                 <div class="field">
                     <div class="row collapse">
                         <div class="small-4 columns">
@@ -49,8 +55,8 @@
                         </div>
                         <div class="small-8 columns">
                             <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(
-                                'model' => $purchaseOrder->header,
-                                'attribute' => "purchase_order_date",
+                                'name' => 'PurchaseOrderDate',
+                                'value' => $purchaseOrderDate,
                                 // additional javascript options for the date picker plugin
                                 'options' => array(
                                     'dateFormat' => 'yy-mm-dd',
@@ -61,6 +67,8 @@
                                     'readonly' => true,
                                 ),
                             )); ?>
+                            <?php echo CHtml::dropDownList('PurchaseOrderHour', $purchaseOrderHour, $hourChoices); ?>
+                            <?php echo CHtml::dropDownList('PurchaseOrderMinute', $purchaseOrderMinute, $minuteChoices); ?>
                             <?php echo $form->error($purchaseOrder->header, 'purchase_order_date'); ?>
                         </div>
                     </div>

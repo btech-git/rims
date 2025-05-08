@@ -91,18 +91,18 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                             <div class="field">
                                 <div class="row collapse">
                                     <div class="small-4 columns">
-                                        <span class="prefix">Insurance Company</span>
+                                        <span class="prefix">Customer</span>
                                     </div>
                                     <div class="small-8 columns">
-                                        <?php echo CHtml::textField('InsuranceCompanyId', $insuranceCompanyId, array(
+                                        <?php echo CHtml::textField('CustomerId', $customerId, array(
                                             'readonly' => true,
-                                            'onclick' => '$("#insurance-company-dialog").dialog("open"); return false;',
-                                            'onkeypress' => 'if (event.keyCode == 13) { $("#insurance-company-dialog").dialog("open"); return false; }'
+                                            'onclick' => '$("#customer-dialog").dialog("open"); return false;',
+                                            'onkeypress' => 'if (event.keyCode == 13) { $("#customer-dialog").dialog("open"); return false; }'
                                         )); ?>
 
-                                        <?php echo CHtml::openTag('span', array('id' => 'insurance_name')); ?>
-                                        <?php $insuranceCompany = InsuranceCompany::model()->findByPk($insuranceCompanyId); ?>
-                                        <?php echo CHtml::encode(CHtml::value($insuranceCompany, 'name')); ?>
+                                        <?php echo CHtml::openTag('span', array('id' => 'customer_name')); ?>
+                                        <?php $customer = Customer::model()->findByPk($customerId); ?>
+                                        <?php echo CHtml::encode(CHtml::value($customer, 'name')); ?>
                                         <?php echo CHtml::closeTag('span'); ?>    
                                     </div>
                                 </div>
@@ -245,19 +245,6 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
         }',
         'columns' => array(
             'name',
-            array(
-                'header'=>'Customer Type', 
-                'name'=>'customer_type',
-                'value'=>'$data->customer_type',
-                'type'=>'raw',
-                'filter'=>CHtml::dropDownList('Customer[customer_type]', $customer->customer_type, 
-                    array(
-                        ''=>'All',
-                        'Company' => 'Company',
-                        'Individual' => 'Individual',
-                    )
-                ),
-            ),
             'mobile_phone',
             'email',
         ),
@@ -266,7 +253,7 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
 </div>
 
 <div>
-    <?php $this->beginWidget('zii.widgets.jui.CJuiDialog', array(
+    <?php /*$this->beginWidget('zii.widgets.jui.CJuiDialog', array(
         'id' => 'insurance-company-dialog',
         // additional javascript options for the dialog plugin
         'options' => array(
@@ -307,5 +294,5 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
             'coa.name',
         ),
     )); ?>
-    <?php $this->endWidget('zii.widgets.jui.CJuiDialog'); ?>
+    <?php $this->endWidget('zii.widgets.jui.CJuiDialog');*/ ?>
 </div>

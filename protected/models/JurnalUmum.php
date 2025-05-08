@@ -533,8 +533,9 @@ class JurnalUmum extends CActiveRecord {
         return $count;
     }
 
-    public static function getPaymentInByBankList($month, $year, $branchId) {
+    public static function getPaymentInByBankList($month, $year, $branchId, $coaIds) {
         $branchConditionSql = '';
+        $coaInSql = '= NULL';
         $params = array(
             ':year' => $year,
             ':month' => $month,
@@ -543,11 +544,14 @@ class JurnalUmum extends CActiveRecord {
             $branchConditionSql = " AND pi.branch_id = :branch_id";
             $params[':branch_id'] = $branchId;
         }
+        if (!empty($coaIds)) {
+            $coaInSql = "IN (" . implode(',', $coaIds) . ")";
+        }
         
         $sql = "SELECT pi.tanggal_transaksi, pi.coa_id, MIN(pt.name) AS coa_name, COALESCE(SUM(pi.total), 0) AS total_amount
                 FROM " . JurnalUmum::model()->tableName() . " pi
                 INNER JOIN " . Coa::model()->tableName() . " pt ON pt.id = pi.coa_id
-                WHERE YEAR(tanggal_transaksi) = :year AND MONTH(tanggal_transaksi) = :month AND pi.transaction_type = 'Pin' AND pi.is_coa_category = 0 AND pt.coa_sub_category_id IN (1, 2, 3) AND pt.status = 'Approved' AND pi.debet_kredit = 'D'" . $branchConditionSql . "
+                WHERE pi.coa_id " . $coaInSql . " AND YEAR(tanggal_transaksi) = :year AND MONTH(tanggal_transaksi) = :month AND pi.transaction_type = 'Pin' AND pi.is_coa_category = 0 AND pt.coa_sub_category_id IN (1, 2, 3) AND pt.status = 'Approved' AND pi.debet_kredit = 'D'" . $branchConditionSql . "
                 GROUP BY pi.tanggal_transaksi, pi.coa_id
                 ORDER BY pi.tanggal_transaksi";
 
@@ -556,7 +560,7 @@ class JurnalUmum extends CActiveRecord {
         return $resultSet;
     }
     
-    public static function getPaymentOutByBankList($month, $year, $branchId) {
+    public static function getPaymentOutByBankList($month, $year, $branchId, $coaIds) {
         $branchConditionSql = '';
         $params = array(
             ':year' => $year,

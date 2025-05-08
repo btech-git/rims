@@ -141,7 +141,7 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                     </div>
                     
                     <div class="row">
-                        <div class="medium-12 columns">
+                        <div class="medium-6 columns">
                             <div class="field">
                                 <div class="row collapse">
                                     <div class="small-2 columns">
@@ -175,6 +175,22 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                                 'placeholder' => 'Sampai',
                                             ),
                                         )); ?>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="medium-6 columns">
+                            <div class="field">
+                                <div class="row collapse">
+                                    <div class="small-4 columns">
+                                        <span class="prefix">PPn/non</span>
+                                    </div>
+                                     <div class="small-8 columns">
+                                          <?php echo CHtml::dropDownlist('TaxValue', $taxValue, array(
+                                              '0' => 'Non PPn',
+                                              '1' => 'PPn',
+                                          ), array('empty'=>'-- All --')); ?>
                                     </div>
                                 </div>
                             </div>

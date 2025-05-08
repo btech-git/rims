@@ -35,9 +35,10 @@ class ReceivableController extends Controller {
         $customer = Search::bind(new Customer('search'), isset($_GET['Customer']) ? $_GET['Customer'] : array());
         $customerDataProvider = $customer->search();
         $customerDataProvider->pagination->pageVar = 'page_dialog';
+        $customerDataProvider->criteria->compare('t.customer_type', 'Company');
 
-        $insuranceCompany = Search::bind(new InsuranceCompany('search'), isset($_GET['InsuranceCompany']) ? $_GET['InsuranceCompany'] : array());
-        $insuranceCompanyDataProvider = $insuranceCompany->search();
+//        $insuranceCompany = Search::bind(new InsuranceCompany('search'), isset($_GET['InsuranceCompany']) ? $_GET['InsuranceCompany'] : array());
+//        $insuranceCompanyDataProvider = $insuranceCompany->search();
 
         $receivableSummary = new ReceivableSummary($customer->search());
         $receivableSummary->setupLoading();
@@ -46,7 +47,7 @@ class ReceivableController extends Controller {
         $filters = array(
             'endDate' => $endDate,
             'branchId' => $branchId,
-            'insuranceCompanyId' => $insuranceCompanyId,
+            'customerId' => $customerId,
             'plateNumber' => $plateNumber,
         );
         $receivableSummary->setupFilter($filters);
@@ -65,8 +66,8 @@ class ReceivableController extends Controller {
             'customerId' => $customerId,
             'plateNumber' => $plateNumber,
             'branchId' => $branchId,
-            'insuranceCompany'=>$insuranceCompany,
-            'insuranceCompanyDataProvider'=>$insuranceCompanyDataProvider,
+//            'insuranceCompany'=>$insuranceCompany,
+//            'insuranceCompanyDataProvider'=>$insuranceCompanyDataProvider,
             'insuranceCompanyId' => $insuranceCompanyId,
             'endDate' => $endDate,
             'receivableSummary' => $receivableSummary,

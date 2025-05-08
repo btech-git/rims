@@ -657,6 +657,64 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
         return $resultSet;
     }
     
+    public static function getCompanySaleReportByProductCategory($year, $month) {
+        
+        $sql = "SELECT h.branch_id, p.product_master_category_id, MAX(b.company_id) AS company_id, SUM(d.total_price) AS total_price
+                FROM " . InvoiceHeader::model()->tableName() . " h 
+                INNER JOIN " . InvoiceDetail::model()->tableName() . " d ON h.id = d.invoice_id
+                INNER JOIN " . Product::model()->tableName() . " p ON p.id = d.product_id
+                INNER JOIN " . Branch::model()->tableName() . " b ON b.id = h.branch_id
+                INNER JOIN " . Company::model()->tableName() . " c ON c.id = b.company_id
+                WHERE YEAR(h.invoice_date) = :year AND MONTH(h.invoice_date) = :month AND h.status NOT LIKE '%CANCEL%'
+                GROUP BY h.branch_id, p.product_master_category_id
+                ORDER BY company_id ASC, h.branch_id ASC, p.product_master_category_id ASC";
+        
+        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, array(
+            ':year' => $year,
+            ':month' => $month,
+        ));
+
+        return $resultSet;
+    }
+    
+    public static function getCompanySaleReportByServiceType($year, $month) {
+        
+        $sql = "SELECT h.branch_id, s.service_category_id, MAX(b.company_id) AS company_id, SUM(d.total_price) AS total_price
+                FROM " . InvoiceHeader::model()->tableName() . " h 
+                INNER JOIN " . InvoiceDetail::model()->tableName() . " d ON h.id = d.invoice_id
+                INNER JOIN " . Service::model()->tableName() . " s ON s.id = d.service_id
+                INNER JOIN " . Branch::model()->tableName() . " b ON b.id = h.branch_id
+                INNER JOIN " . Company::model()->tableName() . " c ON c.id = b.company_id
+                WHERE YEAR(h.invoice_date) = :year AND MONTH(h.invoice_date) = :month AND h.status NOT LIKE '%CANCEL%'
+                GROUP BY h.branch_id, s.service_category_id
+                ORDER BY company_id ASC, h.branch_id ASC, s.service_category_id ASC";
+        
+        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, array(
+            ':year' => $year,
+            ':month' => $month,
+        ));
+
+        return $resultSet;
+    }
+    
+    public static function getCompanySaleReportSummary($year, $month) {
+        
+        $sql = "SELECT h.branch_id, MAX(b.company_id) AS company_id, SUM(h.ppn_total) AS ppn_total, SUM(h.pph_total) AS pph_total, SUM(h.total_price) AS total_price, SUM(h.total_product) AS total_product, SUM(h.total_service) AS total_service, SUM(h.total_discount) AS total_discount
+                FROM " . InvoiceHeader::model()->tableName() . " h 
+                INNER JOIN " . Branch::model()->tableName() . " b ON b.id = h.branch_id
+                INNER JOIN " . Company::model()->tableName() . " c ON c.id = b.company_id
+                WHERE YEAR(h.invoice_date) = :year AND MONTH(h.invoice_date) = :month AND h.status NOT LIKE '%CANCEL%'
+                GROUP BY h.branch_id
+                ORDER BY company_id ASC, h.branch_id ASC";
+        
+        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, array(
+            ':year' => $year,
+            ':month' => $month,
+        ));
+
+        return $resultSet;
+    }
+    
     public static function getMonthlyProductSaleData($startDate, $endDate, $branchId, $brandId, $subBrandId, $subBrandSeriesId, $masterCategoryId, $subMasterCategoryId, $subCategoryId) {
         $branchConditionSql = '';
         $brandConditionSql = ''; 

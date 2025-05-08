@@ -630,9 +630,8 @@ class Customer extends CActiveRecord {
         return $resultSet;
     }
     
-    public function getReceivableInvoiceReport($endDate, $branchId, $insuranceCompanyId, $plateNumber) {
+    public function getReceivableInvoiceReport($endDate, $branchId, $plateNumber) {
         $branchConditionSql = '';
-        $insuranceConditionSql = '';
         $plateConditionSql = '';
         
         $params = array(
@@ -641,13 +640,8 @@ class Customer extends CActiveRecord {
         );
         
         if (!empty($branchId)) {
-            $branchConditionSql = ' AND p.branch_id = :branch_id';
+            $branchConditionSql = ' AND i.branch_id = :branch_id';
             $params[':branch_id'] = $branchId;
-        }
-        
-        if (!empty($insuranceCompanyId)) {
-            $insuranceConditionSql = ' AND p.insurance_company_id = :insurance_company_id';
-            $params[':insurance_company_id'] = $insuranceCompanyId;
         }
         
         if (!empty($plateNumber)) {
@@ -656,14 +650,19 @@ class Customer extends CActiveRecord {
         }
         
         $sql = "
-            SELECT p.id, p.customer_id, p.invoice_date, p.due_date, p.invoice_number, v.plate_number AS vehicle, p.total_price, 
-            p.payment_amount, p.payment_left, i.name AS insurance_name
-            FROM " . InvoiceHeader::model()->tableName() . " p 
-            INNER JOIN " . Customer::model()->tableName() . " c ON c.id = p.customer_id
-            LEFT OUTER JOIN " . Vehicle::model()->tableName() . " v ON v.id = p.vehicle_id
-            LEFT OUTER JOIN " . InsuranceCompany::model()->tableName() . " i ON i.id = p.insurance_company_id 
-            WHERE p.customer_id = :customer_id AND p.invoice_date BETWEEN '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND :end_date AND c.customer_type = 'Company'" . $branchConditionSql . $insuranceConditionSql . $plateConditionSql . "
-        ";
+            SELECT i.id, i.customer_id, i.invoice_date, i.due_date, i.invoice_number, v.plate_number AS vehicle, i.total_price, p.amount, 
+            i.total_price - p.amount AS remaining
+            FROM " . InvoiceHeader::model()->tableName() . " i
+            INNER JOIN " . Vehicle::model()->tableName() . " v ON v.id = i.vehicle_id
+            LEFT OUTER JOIN (
+                SELECT d.invoice_header_id, SUM(d.amount) AS amount 
+                FROM " . PaymentInDetail::model()->tableName() . " d 
+                INNER JOIN " . PaymentIn::model()->tableName() . " h ON h.id = d.payment_in_id
+                WHERE h.payment_date BETWEEN '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND :end_date
+                GROUP BY d.invoice_header_id
+            ) p ON i.id = p.invoice_header_id 
+            WHERE i.customer_id = :customer_id AND i.insurance_company_id IS NULL AND (i.total_price - p.amount) > 100 AND 
+            i.invoice_date BETWEEN '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND :end_date" . $branchConditionSql . $plateConditionSql;
 
         $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
 
