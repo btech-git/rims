@@ -29,7 +29,6 @@ class ReceivableController extends Controller {
         $plateNumber = (isset($_GET['PlateNumber'])) ? $_GET['PlateNumber'] : '';
         $branchId = (isset($_GET['BranchId'])) ? $_GET['BranchId'] : '';
         $customerId = (isset($_GET['CustomerId'])) ? $_GET['CustomerId'] : '';
-        $insuranceCompanyId = (isset($_GET['InsuranceCompanyId'])) ? $_GET['InsuranceCompanyId'] : '';
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
         
         $customer = Search::bind(new Customer('search'), isset($_GET['Customer']) ? $_GET['Customer'] : array());
@@ -56,7 +55,7 @@ class ReceivableController extends Controller {
         }
         
         if (isset($_GET['SaveExcel'])) {
-            $this->saveToExcel($receivableSummary, $endDate, $branchId, $insuranceCompanyId, $plateNumber);
+            $this->saveToExcel($receivableSummary, $endDate, $branchId, $plateNumber);
         }
 
         $this->render('summary', array(
@@ -65,9 +64,6 @@ class ReceivableController extends Controller {
             'customerId' => $customerId,
             'plateNumber' => $plateNumber,
             'branchId' => $branchId,
-//            'insuranceCompany'=>$insuranceCompany,
-//            'insuranceCompanyDataProvider'=>$insuranceCompanyDataProvider,
-            'insuranceCompanyId' => $insuranceCompanyId,
             'endDate' => $endDate,
             'receivableSummary' => $receivableSummary,
             'currentSort' => $currentSort,
@@ -90,19 +86,19 @@ class ReceivableController extends Controller {
         }
     }
 
-    public function actionAjaxJsonInsuranceCompany() {
-        if (Yii::app()->request->isAjaxRequest) {
-            $insuranceCompanyId = (isset($_POST['InsuranceCompanyId'])) ? $_POST['InsuranceCompanyId'] : '';
-            $insuranceCompany = InsuranceCompany::model()->findByPk($insuranceCompanyId);
+//    public function actionAjaxJsonInsuranceCompany() {
+//        if (Yii::app()->request->isAjaxRequest) {
+//            $insuranceCompanyId = (isset($_POST['InsuranceCompanyId'])) ? $_POST['InsuranceCompanyId'] : '';
+//            $insuranceCompany = InsuranceCompany::model()->findByPk($insuranceCompanyId);
+//
+//            $object = array(
+//                'insurance_name' => CHtml::value($insuranceCompany, 'name'),
+//            );
+//            echo CJSON::encode($object);
+//        }
+//    }
 
-            $object = array(
-                'insurance_name' => CHtml::value($insuranceCompany, 'name'),
-            );
-            echo CJSON::encode($object);
-        }
-    }
-
-    protected function saveToExcel($receivableSummary, $endDate, $branchId, $insuranceCompanyId, $plateNumber) {
+    protected function saveToExcel($receivableSummary, $endDate, $branchId, $plateNumber) {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
 
@@ -145,7 +141,6 @@ class ReceivableController extends Controller {
         $worksheet->setCellValue('E7', 'Grand Total');
         $worksheet->setCellValue('F7', 'Payment');
         $worksheet->setCellValue('G7', 'Remaining');
-        $worksheet->setCellValue('H7', 'Insurance');
         $counter = 9;
 
         foreach ($receivableSummary->dataProvider->data as $header) {
@@ -154,14 +149,14 @@ class ReceivableController extends Controller {
 
             $counter++;
             
-            $receivableData = $header->getReceivableInvoiceReport($endDate, $branchId, $insuranceCompanyId, $plateNumber);
+            $receivableData = $header->getReceivableInvoiceReport($endDate, $branchId, $plateNumber);
             $totalRevenue = 0.00;
             $totalPayment = 0.00;
             $totalReceivable = 0.00;
             foreach ($receivableData as $receivableRow) {
                 $revenue = $receivableRow['total_price'];
-                $paymentAmount = $receivableRow['payment_amount'];
-                $paymentLeft = $receivableRow['payment_left'];
+                $paymentAmount = $receivableRow['amount'];
+                $paymentLeft = $receivableRow['remaining'];
                 
                 $worksheet->setCellValue("A{$counter}", $receivableRow['invoice_date']);
                 $worksheet->setCellValue("B{$counter}", $receivableRow['invoice_number']);
@@ -170,23 +165,9 @@ class ReceivableController extends Controller {
                 $worksheet->setCellValue("E{$counter}", $revenue);
                 $worksheet->setCellValue("F{$counter}", $paymentAmount);
                 $worksheet->setCellValue("G{$counter}", $paymentLeft);
-                $worksheet->setCellValue("H{$counter}", $receivableRow['insurance_name']);
                 
                 $counter++;
                 
-                $paymentInDetails = PaymentInDetail::model()->findAllByAttributes(array('invoice_header_id' => $receivableRow['id']));
-                foreach ($paymentInDetails as $paymentInDetail) {
-                    
-                    $worksheet->setCellValue("B{$counter}", $paymentInDetail->paymentIn->payment_number);
-                    $worksheet->setCellValue("C{$counter}", $paymentInDetail->paymentIn->payment_date);
-                    $worksheet->setCellValue("D{$counter}", $paymentInDetail->memo);
-                    $worksheet->setCellValue("E{$counter}", $paymentInDetail->amount);
-                    $worksheet->setCellValue("F{$counter}", $paymentInDetail->tax_service_amount);
-                    $worksheet->setCellValue("G{$counter}", $paymentInDetail->totalAmount);
-                    $counter++;
-
-                }
-            
                 $totalRevenue += $revenue;
                 $totalPayment += $paymentAmount;
                 $totalReceivable += $paymentLeft;
