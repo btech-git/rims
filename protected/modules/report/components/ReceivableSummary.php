@@ -30,6 +30,7 @@ class ReceivableSummary extends CComponent {
         $endDate = (empty($filters['endDate'])) ? date('Y-m-d') : $filters['endDate'];
         $branchId = (empty($filters['branchId'])) ? '' : $filters['branchId'];
         $plateNumber = (empty($filters['plateNumber'])) ? '' : $filters['plateNumber'];
+        $customerId = (empty($filters['customerId'])) ? '' : $filters['customerId'];
         
         $branchConditionSql = '';
         $plateConditionSql = '';
@@ -45,9 +46,9 @@ class ReceivableSummary extends CComponent {
         }
         
         $this->dataProvider->criteria->addCondition("EXISTS (
-            SELECT i.customer_id, SUM(i.total_price - p.amount) AS remaining
+            SELECT i.customer_id, SUM(i.total_price - COALESCE(p.amount, 0)) AS remaining
             FROM " . InvoiceHeader::model()->tableName() . " i
-            LEFT OUTER JOIN " . Vehicle::model()->tableName() . " v ON v.id = i.vehicle_id
+            INNER JOIN " . Vehicle::model()->tableName() . " v ON v.id = i.vehicle_id
             LEFT OUTER JOIN (
                 SELECT d.invoice_header_id, SUM(d.amount) AS amount 
                 FROM " . PaymentInDetail::model()->tableName() . " d 
@@ -55,12 +56,13 @@ class ReceivableSummary extends CComponent {
                 WHERE h.payment_date BETWEEN '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND :end_date
                 GROUP BY d.invoice_header_id
             ) p ON i.id = p.invoice_header_id 
-            WHERE i.customer_id = t.id AND i.insurance_company_id IS NULL AND (i.total_price - p.amount) > 0 AND i.invoice_date BETWEEN '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND :end_date" . $branchConditionSql . $plateConditionSql . " 
+            WHERE i.customer_id = t.id AND i.insurance_company_id IS NULL AND i.invoice_date BETWEEN '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND :end_date" . $branchConditionSql . $plateConditionSql . " 
             GROUP BY i.customer_id 
             HAVING remaining > 100
         )");
         
         $this->dataProvider->criteria->params[':end_date'] = $endDate;
         $this->dataProvider->criteria->compare('t.customer_type', 'Company');
+        $this->dataProvider->criteria->compare('t.id', $customerId);
     }
 }

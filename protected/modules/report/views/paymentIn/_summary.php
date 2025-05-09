@@ -48,7 +48,7 @@ Yii::app()->clientScript->registerCss('_report', '
                         <th class="width2-2">Tanggal</th>
                         <th class="width2-3">Kendaraan</th>
                         <th class="width2-4">Jumlah</th>
-                        <th class="width2-5">Pph 21</th>
+                        <th class="width2-5">Pph 23</th>
                         <th class="width2-6">Total</th>
                         <th class="width2-7">Memo</th>
                     </tr>

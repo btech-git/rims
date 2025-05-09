@@ -141,7 +141,7 @@ class PaymentInController extends Controller {
         $worksheet->setCellValue('I5', 'Tanggal');
         $worksheet->setCellValue('J5', 'Kendaraan');
         $worksheet->setCellValue('K5', 'Jumlah');
-        $worksheet->setCellValue('L5', 'Pph 21');
+        $worksheet->setCellValue('L5', 'Pph 23');
         $worksheet->setCellValue('M5', 'Total');
         $worksheet->setCellValue('N5', 'Memo');
 

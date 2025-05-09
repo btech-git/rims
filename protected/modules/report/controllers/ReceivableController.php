@@ -47,6 +47,7 @@ class ReceivableController extends Controller {
             'endDate' => $endDate,
             'branchId' => $branchId,
             'plateNumber' => $plateNumber,
+            'customerId' => $customerId,
         );
         $receivableSummary->setupFilter($filters);
 
