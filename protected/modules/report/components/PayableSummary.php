@@ -37,7 +37,7 @@ class PayableSummary extends CComponent {
         $branchConditionSql = '';
         
         if (!empty($branchId)) {
-            $branchConditionSql = ' AND i.main_branch_id = :branch_id';
+            $branchConditionSql = ' AND p.main_branch_id = :branch_id';
             $this->dataProvider->criteria->params[':branch_id'] = $branchId;
         }
         
