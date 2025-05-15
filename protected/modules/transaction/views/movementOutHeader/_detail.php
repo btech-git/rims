@@ -12,9 +12,9 @@
                 <th class="required">Warehouse</th>
                 <th class="required">Qty Req</th>
                 <th class="required">Qty Stock</th>
+                <th class="required">Satuan Stock</th>
                 <th class="required">Qty Out</th>
                 <th class="required">Satuan Request</th>
-                <th class="required">Satuan Inventory</th>
                 <th>Action</th>
             </tr>
         </thead>
@@ -51,6 +51,9 @@
                         <?php echo CHtml::encode(CHtml::value($detail, 'quantity_stock')); ?>
                         <?php echo CHtml::error($detail, 'quantity_stock'); ?>
                     </td>
+                    <td style="text-align: center">
+                        <?php echo CHtml::encode(CHtml::value($detail, 'product.unit.name')); ?>
+                    </td>
                     <td>
                         <?php if ($movementOut->header->isNewRecord): ?>
                         <?php echo CHtml::activeTextField($detail, "[$i]quantity", array(
@@ -78,9 +81,6 @@
                         <?php echo CHtml::activeHiddenField($detail, "[$i]unit_id"); ?>
                         <?php echo CHtml::encode(CHtml::value($detail, 'unit.name')); ?>
                         <?php echo CHtml::error($detail, 'unit_id'); ?>
-                    </td>
-                    <td style="text-align: center">
-                        <?php echo CHtml::encode(CHtml::value($detail, 'product.unit.name')); ?>
                     </td>
                     <td>
                         <?php echo CHtml::button('X', array(

@@ -53,12 +53,14 @@
                                 <?php echo $form->labelEx($purchaseOrder->header, 'purchase_order_date'); ?>
                             </label>
                         </div>
-                        <div class="small-8 columns">
+                        <div class="small-4 columns">
                             <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(
                                 'name' => 'PurchaseOrderDate',
                                 'value' => $purchaseOrderDate,
                                 // additional javascript options for the date picker plugin
                                 'options' => array(
+                                    'minDate' => '-1W',
+                                    'maxDate' => '+6M',
                                     'dateFormat' => 'yy-mm-dd',
                                     'changeMonth' => true,
                                     'changeYear' => true,
@@ -67,7 +69,11 @@
                                     'readonly' => true,
                                 ),
                             )); ?>
+                        </div>
+                        <div class="small-2 columns">
                             <?php echo CHtml::dropDownList('PurchaseOrderHour', $purchaseOrderHour, $hourChoices); ?>
+                        </div>
+                        <div class="small-2 columns">
                             <?php echo CHtml::dropDownList('PurchaseOrderMinute', $purchaseOrderMinute, $minuteChoices); ?>
                             <?php echo $form->error($purchaseOrder->header, 'purchase_order_date'); ?>
                         </div>

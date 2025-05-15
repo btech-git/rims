@@ -198,7 +198,7 @@ class MovementOuts extends CComponent {
     public function validate() {
         $valid = $this->header->validate();
 
-        if ($this->header->isNewRecord) {
+        if ($this->header->isNewRecord && $this->header->movement_type !== 4) {
             $valid = $this->validateDetailsQuantityStock() && $valid;
         }
 
@@ -218,9 +218,33 @@ class MovementOuts extends CComponent {
         $valid = true;
         
         foreach ($this->details as $detail) {
-            if ($detail->quantity_stock < 0 || $detail->quantity_stock < $detail->quantity) {
+            if ($detail->quantity_stock <= 0) {
                 $valid = false;
-                $this->header->addError('error', 'Quantity movement melebihi stok yang ada!');
+                $this->header->addError('error', 'Quantity stok tidak mencukupi!');
+            } else if ($detail->unit_id !== $detail->product->unit_id) {
+                $unitConversion = UnitConversion::model()->findByAttributes(array('unit_from_id' => $detail->product->unit_id, 'unit_to_id' => $detail->unit_id));
+                if ($unitConversion === null) {
+                    $unitConversionFlipped = UnitConversion::model()->findByAttributes(array('unit_from_id' => $detail->unit_id, 'unit_to_id' => $detail->product->unit_id));
+                    if ($unitConversionFlipped === null) {
+                        $valid = false;
+                        $this->header->addError('error', 'Satuan konversi belum ada di database!');
+                    } else {
+                        if ($detail->quantity_stock < $unitConversionFlipped->multiplier * $detail->quantity) {
+                            $valid = false;
+                            $this->header->addError('error', 'Quantity movement melebihi stok yang ada!');
+                        }
+                    }
+                } else {
+                    if ($unitConversion->multiplier * $detail->quantity_stock < $detail->quantity) {
+                        $valid = false;
+                        $this->header->addError('error', 'Quantity movement melebihi stok yang ada!');
+                    }
+                }
+            } else {
+                if ($detail->quantity_stock < $detail->quantity) {
+                    $valid = false;
+                    $this->header->addError('error', 'Quantity movement melebihi stok yang ada!');
+                }
             }
         }
 

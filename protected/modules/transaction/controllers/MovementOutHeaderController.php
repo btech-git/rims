@@ -153,7 +153,7 @@ class MovementOutHeaderController extends Controller {
         $movementOut->header->movement_type = $movementType;
         $movementOut->header->status = 'Draft';
         $movementOut->header->branch_id = Yii::app()->user->branch_id;
-        $this->performAjaxValidation($movementOut->header);
+//        $this->performAjaxValidation($movementOut->header);
 
         if ($movementType == 1) {
             $deliveryOrder = TransactionDeliveryOrder::model()->findByPk($transactionId);

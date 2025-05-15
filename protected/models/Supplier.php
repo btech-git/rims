@@ -426,7 +426,7 @@ class Supplier extends CActiveRecord {
         $sql = "
             SELECT purchase_order_no, purchase_order_date, COALESCE(total_price, 0) AS total_price, COALESCE(payment_amount, 0) AS payment_amount, COALESCE(payment_left, 0) AS payment_left 
             FROM " . TransactionPurchaseOrder::model()->tableName() . "
-            WHERE supplier_id = :supplier_id AND substring(purchase_order_date, 1, 10) BETWEEN :start_date AND :end_date " . $branchConditionSql;
+            WHERE supplier_id = :supplier_id AND substring(purchase_order_date, 1, 10) BETWEEN :start_date AND :end_date AND status_document = 'Approved'" . $branchConditionSql;
 
         $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
 
