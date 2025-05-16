@@ -46,11 +46,11 @@ class ReceivableSummary extends CComponent {
         }
         
         $this->dataProvider->criteria->addCondition("EXISTS (
-            SELECT i.customer_id, SUM(i.total_price - COALESCE(p.amount, 0)) AS remaining
+            SELECT i.customer_id, SUM(i.total_price - COALESCE(p.amount, 0) + COALESCE(p.tax_service_amount, 0)) AS remaining
             FROM " . InvoiceHeader::model()->tableName() . " i
             INNER JOIN " . Vehicle::model()->tableName() . " v ON v.id = i.vehicle_id
             LEFT OUTER JOIN (
-                SELECT d.invoice_header_id, SUM(d.amount) AS amount 
+                SELECT d.invoice_header_id, SUM(d.amount) AS amount, SUM(d.tax_service_amount) AS tax_service_amount 
                 FROM " . PaymentInDetail::model()->tableName() . " d 
                 INNER JOIN " . PaymentIn::model()->tableName() . " h ON h.id = d.payment_in_id
                 WHERE h.payment_date BETWEEN '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND :end_date

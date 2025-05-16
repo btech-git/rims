@@ -610,17 +610,17 @@ class Customer extends CActiveRecord {
         
         $sql = "
             SELECT i.id, i.customer_id, i.invoice_date, i.due_date, i.invoice_number, v.plate_number AS vehicle, i.total_price, COALESCE(p.amount, 0) AS amount, 
-            i.total_price - COALESCE(p.amount, 0) AS remaining
+            i.total_price - COALESCE(p.amount, 0) + COALESCE(p.tax_service_amount, 0) AS remaining
             FROM " . InvoiceHeader::model()->tableName() . " i
             INNER JOIN " . Vehicle::model()->tableName() . " v ON v.id = i.vehicle_id
             LEFT OUTER JOIN (
-                SELECT d.invoice_header_id, SUM(d.amount) AS amount 
+                SELECT d.invoice_header_id, SUM(d.amount) AS amount, SUM(d.tax_service_amount) AS tax_service_amount 
                 FROM " . PaymentInDetail::model()->tableName() . " d 
                 INNER JOIN " . PaymentIn::model()->tableName() . " h ON h.id = d.payment_in_id
                 WHERE h.payment_date BETWEEN '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND :end_date
                 GROUP BY d.invoice_header_id
             ) p ON i.id = p.invoice_header_id 
-            WHERE i.customer_id = :customer_id AND i.insurance_company_id IS NULL AND (i.total_price - COALESCE(p.amount, 0)) > 100 AND 
+            WHERE i.customer_id = :customer_id AND i.insurance_company_id IS NULL AND (i.total_price - COALESCE(p.amount, 0) + COALESCE(p.tax_service_amount, 0)) > 100 AND 
             i.invoice_date BETWEEN '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND :end_date" . $branchConditionSql . $plateConditionSql;
 
         $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
