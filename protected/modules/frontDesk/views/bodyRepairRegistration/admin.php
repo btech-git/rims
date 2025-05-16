@@ -60,8 +60,7 @@ $('.search-form form').submit(function(){
             'cssFile' => false,
             'header' => '',
         ),
-        'rowCssClassExpression' => '(($data->status == "Finished")?"hijau":"merah")',
-        // 'rowCssClassExpression' => '(($data->status == "Finished")?"hijau":(($data->status == "Pending")?"merah":""))',
+        'rowCssClassExpression' => '(($data->status == "Finished" || $data->status == "PAID")?"hijau":"merah")',
         'columns' => array(
             array(
                 'header' => '#',
