@@ -135,8 +135,8 @@ class WorkOrderController extends Controller {
             $model->attributes = $_GET['RegistrationTransaction'];
         }
 
+        $dataProvider = $model->searchByProcessingWorkOrder();
         if (!Yii::app()->user->checkAccess('director')) {
-            $dataProvider = $model->searchByProcessingWorkOrder();
             $dataProvider->criteria->addCondition('t.branch_id = :branch_id');
             $dataProvider->criteria->params[':branch_id'] = Yii::app()->user->branch_id;
         }
