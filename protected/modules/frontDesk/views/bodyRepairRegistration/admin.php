@@ -112,21 +112,25 @@ $('.search-form form').submit(function(){
             'service_status',
             array(
                 'header' => 'Invoice #',
-                'filter' => false,
-                'value' => function($data) {
-                    $invoiceCriteria = new CDbCriteria;
-                    $invoiceCriteria->addCondition("status !='CANCELLED'");
-                    $invoiceCriteria->addCondition("registration_transaction_id = " . $data->id);
-                    $invoice = InvoiceHeader::model()->find($invoiceCriteria);
-                    $invoiceNumber = "";
-                    
-                    if (!empty($invoice)) {
-                        $invoiceNumber = $invoice->invoice_number;
-                    }
-                    
-                    return $invoiceNumber;
-                }
-            ),
+                'value' => '$data->getInvoice($data)'
+            ),            
+//            array(
+//                'header' => 'Invoice #',
+//                'filter' => false,
+//                'value' => function($data) {
+//                    $invoiceCriteria = new CDbCriteria;
+//                    $invoiceCriteria->addCondition("status !='CANCELLED'");
+//                    $invoiceCriteria->addCondition("registration_transaction_id = " . $data->id);
+//                    $invoice = InvoiceHeader::model()->find($invoiceCriteria);
+//                    $invoiceNumber = "";
+//                    
+//                    if (!empty($invoice)) {
+//                        $invoiceNumber = $invoice->invoice_number;
+//                    }
+//                    
+//                    return $invoiceNumber;
+//                }
+//            ),
             'payment_status',
             array(
                 'header' => 'Vehicle Status',

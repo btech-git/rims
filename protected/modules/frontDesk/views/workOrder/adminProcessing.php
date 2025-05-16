@@ -306,6 +306,10 @@ $('form').submit(function(){
                     ),
                     'work_order_date',
                     array(
+                        'header' => 'Invoice #',
+                        'value' => '$data->getInvoice($data)'
+                    ),            
+                    array(
                         'header'=>'Services',
                         'name'=>'search_service',
                         'type'=>'html',
@@ -327,12 +331,12 @@ $('form').submit(function(){
                         'name'=>'user_id',
                         'value'=>'!empty($data->user->username)?$data->user->username:""',
                     ),
-                    array(
-                        'header'=>'Cabang',
-                        'name'=>'branch_id',
-                        'value'=>'$data->branch != "" ? $data->branch->name : ""',
-                        'filter'=>CHtml::dropDownList('RegistrationTransaction[branch_id]', 'branch_name', CHtml::listData(Branch::model()->findAll(),'id','name'), array('class'=>'form-control','empty'=>'--Select Branch--')),
-                    ),
+//                    array(
+//                        'header'=>'Cabang',
+//                        'name'=>'branch_id',
+//                        'value'=>'$data->branch != "" ? $data->branch->name : ""',
+//                        'filter'=>CHtml::dropDownList('RegistrationTransaction[branch_id]', 'branch_name', CHtml::listData(Branch::model()->findAll(),'id','name'), array('class'=>'form-control','empty'=>'--Select Branch--')),
+//                    ),
                     array(
                         'header'=>'WO Status',
                         'name'=>'status', 
