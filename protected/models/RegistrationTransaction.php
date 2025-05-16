@@ -552,16 +552,15 @@ class RegistrationTransaction extends MonthlyTransactionActiveRecord {
         $criteria->compare('t.service_status', $this->service_status);
         $criteria->compare('note', $this->note, true);
 
-        if (!empty($this->transaction_date_from) && !empty($this->transaction_date_to)) {
-            $criteria->addBetweenCondition('t.transaction_date', $this->transaction_date_from, $this->transaction_date_to);
-        }
+//        if (!empty($this->transaction_date_from) && !empty($this->transaction_date_to)) {
+//            $criteria->addBetweenCondition('t.transaction_date', $this->transaction_date_from, $this->transaction_date_to);
+//        }
         
-        $criteria->addCondition("t.work_order_number IS NOT NULL");
         $criteria->addCondition("NOT EXISTS (
             SELECT i.registration_transaction_id
             FROM " . InvoiceHeader::model()->tableName() . " i
             WHERE t.id = i.registration_transaction_id
-        ) AND t.work_order_number IS NOT NULL AND t.total_product_price > 0 AND t.status NOT LIKE '%CANCELLED%' AND t.transaction_date > '2022-12-31'");
+        ) AND t.work_order_number IS NOT NULL AND t.total_product_price > 0 AND t.status NOT LIKE '%CANCELLED%' AND t.transaction_date > '2023-12-31'");
 
         $criteria->compare('carMake.id', $this->car_make_code, true);
         $criteria->compare('carModel.id', $this->car_model_code, true);
