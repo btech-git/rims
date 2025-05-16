@@ -63,6 +63,7 @@ class CompanySaleByProductCategoryServiceTypeController extends Controller {
         $serviceCategoryList = ServiceCategory::model()->findAllByAttributes(array('status' => 'Active'));
         
         $branchList = Branch::model()->findAllByAttributes(array('status' => 'Active'));
+        $companyList = Company::model()->findAllByAttributes(array('id' => array(2, 7, 8)));
         
         $yearList = array();
         for ($y = $yearNow - 4; $y <= $yearNow; $y++) {
@@ -109,6 +110,7 @@ class CompanySaleByProductCategoryServiceTypeController extends Controller {
             'saleReportData' => $saleReportData,
             'productMasterCategoryList' => $productMasterCategoryList,
             'serviceCategoryList' => $serviceCategoryList,
+            'companyList' => $companyList,
         ));
     }
 

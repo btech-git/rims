@@ -101,8 +101,8 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                         )); ?>
 
                                         <?php echo CHtml::openTag('span', array('id' => 'customer_name')); ?>
-                                        <?php $customer = Customer::model()->findByPk($customerId); ?>
-                                        <?php echo CHtml::encode(CHtml::value($customer, 'name')); ?>
+                                        <?php $customerData = Customer::model()->findByPk($customerId); ?>
+                                        <?php echo CHtml::encode(CHtml::value($customerData, 'name')); ?>
                                         <?php echo CHtml::closeTag('span'); ?>    
                                     </div>
                                 </div>
@@ -122,46 +122,6 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                             </div>
                         </div>
                     </div>
-
-<!--                    <div class="row">
-                        <div class="medium-6 columns">
-                            <div class="field">
-                                <div class="row collapse">
-                                    <div class="small-4 columns">
-                                        <span class="prefix">Customer</span>
-                                    </div>
-                                    <div class="small-8 columns">
-                                        <?php /*echo CHtml::textField('CustomerId', $customerId, array(
-                                            'readonly' => true,
-                                            'onclick' => '$("#customer-dialog").dialog("open"); return false;',
-                                            'onkeypress' => 'if (event.keyCode == 13) { $("#customer-dialog").dialog("open"); return false; }'
-                                        )); ?>
-
-                                        <?php echo CHtml::openTag('span', array('id' => 'customer_name')); ?>
-                                        <?php $customerModel = Customer::model()->findByPk($customerId); ?>
-                                        <?php echo CHtml::encode(CHtml::value($customerModel, 'name')); ?>
-                                        <?php echo CHtml::closeTag('span'); ?>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="medium-6 columns">
-                            <div class="field">
-                                <div class="row collapse">
-                                    <div class="small-4 columns">
-                                        <span class="prefix">Type</span>
-                                    </div>
-                                    <div class="small-8 columns">
-                                        <?php echo CHtml::dropDownlist('CustomerType', $customerType, array(
-                                            'Company' => 'Company',
-                                            'Individual' => 'Individual',
-                                        ), array('empty' => '-- All --'));*/ ?>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>-->
 
                     <div class="clear"></div>
                     <div class="row buttons">

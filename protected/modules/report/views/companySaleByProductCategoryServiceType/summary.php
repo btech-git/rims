@@ -64,6 +64,7 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                         'saleReportData' => $saleReportData,
                         'productMasterCategoryList' => $productMasterCategoryList,
                         'serviceCategoryList' => $serviceCategoryList,
+                        'companyList' => $companyList,
                     )); ?>
                 </div>
                 <div class="clear"></div>

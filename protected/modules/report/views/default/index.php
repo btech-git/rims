@@ -238,11 +238,11 @@
                                     'url' => array('/report/receivableDetail/summary'), 
                                     'visible' => Yii::app()->user->checkAccess('customerReceivableReport')
                                 ),
-                                array(
-                                    'label' => 'Kartu Piutang Customer', 
-                                    'url' => array('/report/receivableTransaction/summary'), 
-                                    'visible' => Yii::app()->user->checkAccess('customerReceivableReport')
-                                ),
+//                                array(
+//                                    'label' => 'Kartu Piutang Customer', 
+//                                    'url' => array('/report/receivableTransaction/summary'), 
+//                                    'visible' => Yii::app()->user->checkAccess('customerReceivableReport')
+//                                ),
                                 array(
                                     'label' => 'Rincian Penerimaan Penjualan', 
                                     'url' => array('/report/paymentIn/summary'), 
@@ -380,7 +380,7 @@
                                         'visible' => Yii::app()->user->checkAccess('payableJournalReport')
                                     ),
                                     array(
-                                        'label' => 'Faktur Belum Lunas', 
+                                        'label' => 'Faktur Belum Lunas Supplier', 
                                         'url' => array('/report/payable/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('supplierPayableReport')
                                     ),
@@ -394,11 +394,11 @@
                                         'url' => array('/report/payableDetail/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('payableReport')
                                     ),
-                                    array(
-                                        'label' => 'Kartu Hutang Supplier', 
-                                        'url' => array('/report/payableTransaction/summary'), 
-                                        'visible' => Yii::app()->user->checkAccess('payableReport')
-                                    ),
+//                                    array(
+//                                        'label' => 'Kartu Hutang Supplier', 
+//                                        'url' => array('/report/payableTransaction/summary'), 
+//                                        'visible' => Yii::app()->user->checkAccess('payableReport')
+//                                    ),
                                     array(
                                         'label' => 'Rincian Pembayaran Hutang', 
                                         'url' => array('/report/paymentOut/summary'), 

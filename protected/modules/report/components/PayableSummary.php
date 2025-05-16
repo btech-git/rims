@@ -37,14 +37,24 @@ class PayableSummary extends CComponent {
         $branchConditionSql = '';
         
         if (!empty($branchId)) {
-            $branchConditionSql = ' AND p.main_branch_id = :branch_id';
+            $branchConditionSql = ' AND o.main_branch_id = :branch_id';
             $this->dataProvider->criteria->params[':branch_id'] = $branchId;
         }
         
         $this->dataProvider->criteria->addCondition("EXISTS (
-            SELECT p.supplier_id, COALESCE(p.payment_left, 0) AS payment_left 
-            FROM " . TransactionPurchaseOrder::model()->tableName() . " p 
-            WHERE p.supplier_id = t.id AND payment_left > 100.00 AND purchase_order_date BETWEEN '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND :end_date AND p.status_document = 'Approved'" . $branchConditionSql . " 
+            SELECT o.supplier_id, SUM(o.total_price - COALESCE(p.amount, 0)) AS remaining
+            FROM " . TransactionPurchaseOrder::model()->tableName() . " o
+            INNER JOIN " . TransactionReceiveItem::model()->tableName() . " r ON o.id = r.purchase_order_id
+            LEFT OUTER JOIN (
+                SELECT d.receive_item_id, SUM(d.amount) AS amount 
+                FROM " . PayOutDetail::model()->tableName() . " d 
+                INNER JOIN " . PaymentOut::model()->tableName() . " h ON h.id = d.payment_out_id
+                WHERE h.payment_date BETWEEN '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND :end_date
+                GROUP BY d.receive_item_id
+            ) p ON r.id = p.receive_item_id 
+            WHERE o.supplier_id = t.id AND r.invoice_date BETWEEN '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND :end_date" . $branchConditionSql . " 
+            GROUP BY o.supplier_id 
+            HAVING remaining > 100
         )");
         
         $this->dataProvider->criteria->params[':end_date'] = $endDate;

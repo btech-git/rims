@@ -556,6 +556,7 @@ class RegistrationTransaction extends MonthlyTransactionActiveRecord {
             $criteria->addBetweenCondition('t.transaction_date', $this->transaction_date_from, $this->transaction_date_to);
         }
         
+        $criteria->addCondition("t.work_order_number IS NOT NULL");
         $criteria->addCondition("NOT EXISTS (
             SELECT i.registration_transaction_id
             FROM " . InvoiceHeader::model()->tableName() . " i

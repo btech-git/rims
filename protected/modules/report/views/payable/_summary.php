@@ -14,7 +14,7 @@
 
 <div style="font-weight: bold; text-align: center">
     <div style="font-size: larger"><?php echo Yii::app()->name; ?></div>
-    <div style="font-size: larger">Laporan Hutang Supplier</div>
+    <div style="font-size: larger">Laporan Faktur Belum Lunas Supplier</div>
     <div><?php echo 'Per tanggal: ' . CHtml::encode(Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime(date('Y-m-d')))); ?></div>
 </div>
 
@@ -58,8 +58,8 @@
                         <?php $totalPayable = 0.00; ?>
                         <?php foreach ($payableData as $payableRow): ?>
                             <?php $purchase = $payableRow['total_price']; ?>
-                            <?php $paymentAmount = $payableRow['payment_amount']; ?>
-                            <?php $paymentLeft = $payableRow['payment_left']; ?>
+                            <?php $paymentAmount = $payableRow['amount']; ?>
+                            <?php $paymentLeft = $payableRow['remaining']; ?>
                             <tr>
                                 <td class="width2-1"><?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($payableRow['purchase_order_date']))); ?></td>
                                 <td class="width2-2"><?php echo CHtml::link($payableRow['purchase_order_no'], Yii::app()->createUrl("report/generalLedger/redirectTransaction", array("codeNumber" => $payableRow['purchase_order_no'])), array('target' => '_blank'));?></td>

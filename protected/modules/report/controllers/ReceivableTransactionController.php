@@ -41,11 +41,11 @@ class ReceivableTransactionController extends Controller {
         $insuranceCompany = Search::bind(new InsuranceCompany('search'), isset($_GET['InsuranceCompany']) ? $_GET['InsuranceCompany'] : array());
         $insuranceCompanyDataProvider = $insuranceCompany->search();
 
-        $receivableSummary = new ReceivableTransactionSummary($customer->searchByReceivableTransactionReport($startDate, $endDate, $branchId, $insuranceCompanyId, $customerType, $plateNumber));
+        $receivableSummary = new ReceivableTransactionSummary($customer->search());
         $receivableSummary->setupLoading();
         $receivableSummary->setupPaging($pageSize, $currentPage);
         $receivableSummary->setupSorting();
-        $receivableSummary->setupFilter($customerId);
+        $receivableSummary->setupFilter($startDate, $endDate, $branchId, $insuranceCompanyId, $customerType, $plateNumber, $customerId);
 
         if (isset($_GET['ResetFilter'])) {
             $this->redirect(array('summary'));
