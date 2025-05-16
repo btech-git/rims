@@ -139,7 +139,7 @@ class SupplierController extends Controller {
 
         $coaCriteria = new CDbCriteria;
         $coaCriteria->addCondition("coa_sub_category_id = 15");
-        $coaCriteria->compare('code', $coa->code . '%', true, 'AND', false);
+        $coaCriteria->compare('code', $coa->code, true);
         $coaCriteria->compare('name', $coa->name, true);
 
 
@@ -154,7 +154,7 @@ class SupplierController extends Controller {
 
         $coaOutstandingCriteria = new CDbCriteria;
         $coaOutstandingCriteria->addCondition("coa_sub_category_id = 16");
-        $coaOutstandingCriteria->compare('code', $coaOutstanding->code . '%', true, 'AND', false);
+        $coaOutstandingCriteria->compare('code', $coaOutstanding->code, true);
         $coaOutstandingCriteria->compare('name', $coaOutstanding->name, true);
 
         $coaOutstandingDataProvider = new CActiveDataProvider('Coa', array(
