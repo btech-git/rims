@@ -782,6 +782,9 @@ class PaymentInController extends Controller {
                             if ($invoiceHeader->payment_left > 0.00) {
                                 $invoiceHeader->status = 'PARTIALLY PAID';
                             } else {
+                                $registrationTransaction = RegistrationTransaction::model()->findByPk($invoiceHeader->registration_transaction_id);
+                                $registrationTransaction->status = 'Finished';
+                                $registrationTransaction->update(array('status'));
                                 $invoiceHeader->status = 'PAID';
                             }
 
