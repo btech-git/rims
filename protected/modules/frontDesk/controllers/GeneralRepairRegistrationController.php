@@ -372,7 +372,7 @@ class GeneralRepairRegistrationController extends Controller {
             $dataProvider->criteria->params[':name'] = "%{$customerName}%";
         }
         
-        $dataProvider->criteria->addCondition("repair_type = 'GR'");
+//        $dataProvider->criteria->addCondition("repair_type = 'GR'");
         $dataProvider->criteria->addBetweenCondition('SUBSTRING(t.transaction_date, 1, 10)', $startDate, $endDate);
 
         $this->render('admin', array(
