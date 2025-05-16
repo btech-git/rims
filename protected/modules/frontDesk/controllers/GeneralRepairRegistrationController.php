@@ -373,7 +373,7 @@ class GeneralRepairRegistrationController extends Controller {
         }
         
 //        $dataProvider->criteria->addCondition("repair_type = 'GR'");
-        $dataProvider->criteria->addBetweenCondition('SUBSTRING(t.transaction_date, 1, 10)', $startDate, $endDate);
+//        $dataProvider->criteria->addBetweenCondition('SUBSTRING(t.transaction_date, 1, 10)', $startDate, $endDate);
 
         $this->render('admin', array(
             'model' => $model,
