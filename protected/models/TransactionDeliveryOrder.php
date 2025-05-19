@@ -272,7 +272,7 @@ class TransactionDeliveryOrder extends MonthlyTransactionActiveRecord {
         $sql = "SELECT p.id, p.delivery_order_no, p.delivery_date, b.name as branch_name, p.request_type
                 FROM " . TransactionDeliveryOrder::model()->tableName() . " p
                 INNER JOIN " . Branch::model()->tableName() . " b ON b.id = p.sender_branch_id
-                WHERE p.delivery_date > '2022-12-31' AND p.delivery_order_no NOT IN (
+                WHERE p.delivery_date > '2023-12-31' AND p.delivery_order_no NOT IN (
                     SELECT kode_transaksi 
                     FROM " . JurnalUmum::model()->tableName() . "
                 ) AND p.is_cancelled = 0

@@ -135,7 +135,6 @@ class PendingJournalController extends Controller {
                 'currentPage' => $currentPage,
             ),
         ));
-        $receiveItemDataProvider->criteria->addBetweenCondition('t.receive_item_date', $startDate, $endDate);
 
         $this->render('indexReceive', array(
             'receiveItemDataProvider' => $receiveItemDataProvider,
@@ -698,7 +697,6 @@ class PendingJournalController extends Controller {
                 'currentPage' => $currentPage,
             ),
         ));
-        $deliveryOrderDataProvider->criteria->addBetweenCondition('SUBSTRING(t.delivery_date, 1, 10)', $startDate, $endDate);
         
         $this->render('indexDelivery', array(
             'deliveryOrderDataProvider' => $deliveryOrderDataProvider,
@@ -914,7 +912,6 @@ class PendingJournalController extends Controller {
                 'currentPage' => $currentPage,
             ),
         ));
-        $saleOrderDataProvider->criteria->addBetweenCondition('t.sale_order_date', $startDate, $endDate);
         
         $this->render('indexSale', array(
             'saleOrderDataProvider' => $saleOrderDataProvider,

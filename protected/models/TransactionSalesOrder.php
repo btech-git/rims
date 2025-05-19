@@ -387,7 +387,7 @@ class TransactionSalesOrder extends MonthlyTransactionActiveRecord {
                 LEFT OUTER JOIN " . JurnalUmum::model()->tableName() . " j ON p.sale_order_no = j.kode_transaksi
                 INNER JOIN " . Customer::model()->tableName() . " s ON s.id = p.customer_id
                 INNER JOIN " . Branch::model()->tableName() . " b ON b.id = p.requester_branch_id
-                WHERE j.id IS NULL AND p.status_document IN ('Approved')
+                WHERE DATE(p.sale_order_date) > '2023-12-31' AND j.id IS NULL AND p.status_document IN ('Approved')
                 ORDER BY p.sale_order_date DESC";
 
         return $sql;

@@ -474,7 +474,7 @@ class TransactionReceiveItem extends MonthlyTransactionActiveRecord {
                 FROM " . TransactionReceiveItem::model()->tableName() . " p
                 INNER JOIN " . Supplier::model()->tableName() . " s ON s.id = p.supplier_id
                 INNER JOIN " . Branch::model()->tableName() . " b ON b.id = p.recipient_branch_id
-                WHERE p.receive_item_date > '2022-12-31' AND p.receive_item_no NOT IN (
+                WHERE p.receive_item_date > '2023-12-31' AND p.receive_item_no NOT IN (
                     SELECT kode_transaksi 
                     FROM " . JurnalUmum::model()->tableName() . "
                 ) AND p.user_id_cancelled is null
