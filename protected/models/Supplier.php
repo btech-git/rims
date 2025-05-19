@@ -411,7 +411,7 @@ class Supplier extends CActiveRecord {
                 WHERE h.payment_date BETWEEN '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND :end_date
                 GROUP BY d.receive_item_id
             ) p ON r.id = p.receive_item_id 
-            WHERE o.supplier_id = :supplier_id AND (r.invoice_grand_total - COALESCE(p.amount, 0)) > 100.00 AND 
+            WHERE o.supplier_id = :supplier_id AND (o.total_price - COALESCE(p.amount, 0)) > 100.00 AND 
             DATE(purchase_order_date) BETWEEN '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND :end_date" . $branchConditionSql . "
             ORDER BY r.invoice_date ASC";
 
