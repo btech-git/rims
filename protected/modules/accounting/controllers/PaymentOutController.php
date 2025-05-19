@@ -365,12 +365,12 @@ class PaymentOutController extends Controller {
         $model = new PaymentOutApproval;
         $model->date = date('Y-m-d H:i:s');
         
-        JurnalUmum::model()->deleteAllByAttributes(array(
-            'kode_transaksi' => $paymentOut->payment_number,
-            'branch_id' => $paymentOut->branch_id,
-        ));
-
         if (isset($_POST['PaymentOutApproval'])) {
+            JurnalUmum::model()->deleteAllByAttributes(array(
+                'kode_transaksi' => $paymentOut->payment_number,
+                'branch_id' => $paymentOut->branch_id,
+            ));
+
             $model->attributes = $_POST['PaymentOutApproval'];
             if ($model->save()) {
                 $paymentOut->status = $model->approval_type;

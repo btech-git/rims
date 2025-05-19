@@ -224,7 +224,7 @@ class InsuranceCompany extends CActiveRecord {
         
         $sql = "
             SELECT i.invoice_number, i.invoice_date, due_date, v.plate_number AS vehicle, COALESCE(i.total_price, 0) AS total_price, p.amount, 
-            i.total_price - p.amount AS remaining, c.name as customer_name 
+            i.total_price - COALESCE(p.amount, 0) - COALESCE(p.tax_service_amount, 0) AS remaining, c.name as customer_name 
             FROM " . InvoiceHeader::model()->tableName() . " i
             INNER JOIN " . Customer::model()->tableName() . " c ON c.id = i.customer_id
             INNER JOIN " . Vehicle::model()->tableName() . " v ON v.id = i.vehicle_id

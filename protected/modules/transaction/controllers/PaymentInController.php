@@ -99,28 +99,28 @@ class PaymentInController extends Controller {
             $jurnalPiutang->is_coa_category = 0;
             $jurnalPiutang->transaction_type = 'Pin';
             $jurnalPiutang->save();
-
+            
             if (!empty($model->paymentType->coa_id)) {
                 $coaId = $model->paymentType->coa_id;
             } else {
                 $coaId = $model->companyBank->coa_id;
             }
 
-            foreach ($model->paymentInDetails as $detail) {
-                $jurnalUmumKas = new JurnalUmum;
-                $jurnalUmumKas->kode_transaksi = $model->payment_number;
-                $jurnalUmumKas->tanggal_transaksi = $model->payment_date;
-                $jurnalUmumKas->coa_id = $coaId;
-                $jurnalUmumKas->branch_id = $model->branch_id;
-                $jurnalUmumKas->total = $detail->amount;
-                $jurnalUmumKas->debet_kredit = 'D';
-                $jurnalUmumKas->tanggal_posting = date('Y-m-d');
-                $jurnalUmumKas->transaction_subject = $model->notes;
-                $jurnalUmumKas->remark = $remark;
-                $jurnalUmumKas->is_coa_category = 0;
-                $jurnalUmumKas->transaction_type = 'Pin';
-                $jurnalUmumKas->save();
+            $jurnalUmumKas = new JurnalUmum;
+            $jurnalUmumKas->kode_transaksi = $model->payment_number;
+            $jurnalUmumKas->tanggal_transaksi = $model->payment_date;
+            $jurnalUmumKas->coa_id = $coaId;
+            $jurnalUmumKas->branch_id = $model->branch_id;
+            $jurnalUmumKas->total = $model->totalDetailAmount;
+            $jurnalUmumKas->debet_kredit = 'D';
+            $jurnalUmumKas->tanggal_posting = date('Y-m-d');
+            $jurnalUmumKas->transaction_subject = $model->notes;
+            $jurnalUmumKas->remark = $remark;
+            $jurnalUmumKas->is_coa_category = 0;
+            $jurnalUmumKas->transaction_type = 'Pin';
+            $jurnalUmumKas->save();
 
+            foreach ($model->paymentInDetails as $detail) {
                 if ($detail->tax_service_amount > 0) {
                     $jurnalPph = new JurnalUmum;
                     $jurnalPph->kode_transaksi = $model->payment_number;
@@ -820,21 +820,21 @@ class PaymentInController extends Controller {
                             $coaId = $paymentIn->companyBank->coa_id;
                         }
 
+                        $jurnalUmumKas = new JurnalUmum;
+                        $jurnalUmumKas->kode_transaksi = $paymentIn->payment_number;
+                        $jurnalUmumKas->tanggal_transaksi = $paymentIn->payment_date;
+                        $jurnalUmumKas->coa_id = $coaId;
+                        $jurnalUmumKas->branch_id = $paymentIn->branch_id;
+                        $jurnalUmumKas->total = $paymentIn->totalDetailAmount;
+                        $jurnalUmumKas->debet_kredit = 'D';
+                        $jurnalUmumKas->tanggal_posting = date('Y-m-d');
+                        $jurnalUmumKas->transaction_subject = $paymentIn->notes;
+                        $jurnalUmumKas->remark = $remark;
+                        $jurnalUmumKas->is_coa_category = 0;
+                        $jurnalUmumKas->transaction_type = 'Pin';
+                        $jurnalUmumKas->save();
+                        
                         foreach ($paymentIn->paymentInDetails as $detail) {
-                            $jurnalUmumKas = new JurnalUmum;
-                            $jurnalUmumKas->kode_transaksi = $paymentIn->payment_number;
-                            $jurnalUmumKas->tanggal_transaksi = $paymentIn->payment_date;
-                            $jurnalUmumKas->coa_id = $coaId;
-                            $jurnalUmumKas->branch_id = $paymentIn->branch_id;
-                            $jurnalUmumKas->total = $detail->amount;
-                            $jurnalUmumKas->debet_kredit = 'D';
-                            $jurnalUmumKas->tanggal_posting = date('Y-m-d');
-                            $jurnalUmumKas->transaction_subject = $paymentIn->notes;
-                            $jurnalUmumKas->remark = $remark;
-                            $jurnalUmumKas->is_coa_category = 0;
-                            $jurnalUmumKas->transaction_type = 'Pin';
-                            $jurnalUmumKas->save();
-
                             if ($detail->tax_service_amount > 0) {
                                 $jurnalPph = new JurnalUmum;
                                 $jurnalPph->kode_transaksi = $paymentIn->payment_number;

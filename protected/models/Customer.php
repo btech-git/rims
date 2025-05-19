@@ -610,7 +610,7 @@ class Customer extends CActiveRecord {
         
         $sql = "
             SELECT i.id, i.customer_id, i.invoice_date, i.due_date, i.invoice_number, v.plate_number AS vehicle, i.total_price, COALESCE(p.amount, 0) AS amount, 
-            i.total_price - COALESCE(p.amount, 0) + COALESCE(p.tax_service_amount, 0) AS remaining
+            i.total_price - COALESCE(p.amount, 0) - COALESCE(p.tax_service_amount, 0) AS remaining
             FROM " . InvoiceHeader::model()->tableName() . " i
             INNER JOIN " . Vehicle::model()->tableName() . " v ON v.id = i.vehicle_id
             LEFT OUTER JOIN (

@@ -362,6 +362,16 @@ class PaymentIn extends MonthlyTransactionActiveRecord {
         return $total;
     }
     
+    public function getTotalDetailAmount() {
+        $total = '0.00';
+        
+        foreach ($this->paymentInDetails as $detail) {
+            $total += $detail->amount;
+        }
+        
+        return $total;
+    }
+    
     public function getTotalPayment() {
         
         return $this->payment_amount + $this->tax_service_amount + $this->downpayment_amount + $this->discount_product_amount + $this->discount_service_amount + $this->bank_administration_fee + $this->merimen_fee;
