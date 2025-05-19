@@ -77,6 +77,63 @@ class SaleFlowSummaryController extends Controller {
         ));
     }
 
+    public function actionTransaction() {
+        set_time_limit(0);
+        ini_set('memory_limit', '1024M');
+
+        $registrationTransaction = Search::bind(new RegistrationTransaction('search'), isset($_GET['RegistrationTransaction']) ? $_GET['RegistrationTransaction'] : array());
+
+        $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : date('Y-m-d');
+        $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
+        $customerId = (isset($_GET['CustomerId'])) ? $_GET['CustomerId'] : '';
+        $plateNumber = isset($_GET['PlateNumber']) ? $_GET['PlateNumber'] : null;
+        $branchId = isset($_GET['BranchId']) ? $_GET['BranchId'] : null;
+        $transactionStatus = (isset($_GET['TransactionStatus'])) ? $_GET['TransactionStatus'] : '';
+        $pageSize = (isset($_GET['PageSize'])) ? $_GET['PageSize'] : '';
+        $currentPage = (isset($_GET['page'])) ? $_GET['page'] : '';
+        $currentSort = (isset($_GET['sort'])) ? $_GET['sort'] : '';
+        
+        $customer = Search::bind(new Customer('search'), isset($_GET['Customer']) ? $_GET['Customer'] : array());
+        $customerDataProvider = $customer->search();
+        $customerDataProvider->pagination->pageVar = 'page_dialog';
+
+        $saleFlowSummary = new SaleFlowSummary($registrationTransaction->searchReport());
+        $saleFlowSummary->setupLoading();
+        $saleFlowSummary->setupPaging($pageSize, $currentPage);
+        $saleFlowSummary->setupSorting();
+        $filters = array(
+            'startDate' => $startDate,
+            'endDate' => $endDate,
+            'transactionStatus' => $transactionStatus,
+            'branchId' => $branchId,
+            'customerId' => $customerId,
+            'plateNumber' => $plateNumber,
+        );
+        $saleFlowSummary->setupFilter($filters);
+
+        if (isset($_GET['ResetFilter'])) {
+            $this->redirect(array('summary'));
+        }
+        
+        if (isset($_GET['SaveExcel'])) {
+            $this->saveToExcel($saleFlowSummary, $startDate, $endDate, $branchId);
+        }
+
+        $this->render('transaction', array(
+            'registrationTransaction' => $registrationTransaction,
+            'saleFlowSummary' => $saleFlowSummary,
+            'startDate' => $startDate,
+            'endDate' => $endDate,
+            'currentSort' => $currentSort,
+            'transactionStatus' => $transactionStatus,
+            'branchId' => $branchId,
+            'customerId' => $customerId,
+            'customer'=>$customer,
+            'customerDataProvider'=>$customerDataProvider,
+            'plateNumber' => $plateNumber,
+        ));
+    }
+
     public function actionAjaxJsonCustomer($id) {
         if (Yii::app()->request->isAjaxRequest) {
             $customerId = (isset($_POST['InvoiceHeader']['customer_id'])) ? $_POST['InvoiceHeader']['customer_id'] : '';

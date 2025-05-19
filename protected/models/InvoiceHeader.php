@@ -1123,6 +1123,31 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
         return $resultSet;
     }
     
+    public static function getSaleInvoiceNonTaxMonthlyReport($year, $month, $branchId) {
+        $branchConditionSql = '';
+        
+        $params = array(
+            ':month' => $month,
+            ':year' => $year,
+        );
+        
+        if (!empty($branchId)) {
+            $branchConditionSql = ' AND i.branch_id = :branch_id';
+            $params[':branch_id'] = $branchId;
+        }
+        
+        $sql = "SELECT EXTRACT(YEAR_MONTH FROM invoice_date) AS year_month_value, i.customer_id, MAX(c.name) AS customer_name, COUNT(*) AS quantity_invoice, SUM(i.service_price) AS service_price, SUM(i.product_price) AS product_price, SUM(i.product_price + i.service_price) AS sub_total, SUM(i.ppn_total) AS total_tax, SUM(i.pph_total) AS total_tax_income, SUM(i.total_price) AS total_price 
+                FROM " . InvoiceHeader::model()->tableName() . " i 
+                INNER JOIN " . Customer::model()->tableName() . " c ON c.id = i.customer_id
+                WHERE YEAR(i.invoice_date) = :year AND MONTH(i.invoice_date) = :month AND i.status NOT LIKE '%CANCELLED%' AND i.tax_percentage = 0 AND i.ppn_total = 0" . $branchConditionSql . "
+                GROUP BY EXTRACT(YEAR_MONTH FROM invoice_date), i.customer_id
+                ORDER BY year_month_value ASC, c.name ASC";
+                
+        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
+
+        return $resultSet;
+    }
+    
     public static function getYearlySaleTaxSummary($year) {
         $sql = "SELECT EXTRACT(YEAR_MONTH FROM invoice_date) AS year_month_value, branch_id, MIN(b.name) AS branch_name, SUM(total_price) AS total_price
                 FROM " . InvoiceHeader::model()->tableName() . " i 

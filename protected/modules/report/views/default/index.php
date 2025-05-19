@@ -315,6 +315,11 @@
                                         'url' => array('/report/companySaleByProductCategoryServiceType/summary'), 
                                         'visible' => (Yii::app()->user->checkAccess('saleCustomerSummaryReport'))
                                     ),
+                                    array(
+                                        'label' => 'Penjualan Retail', 
+                                        'url' => array('/report/saleFlowSummary/transaction'), 
+                                        'visible' => (Yii::app()->user->checkAccess('saleSummaryReport'))
+                                    ),
                                 ),
                             )); ?>
                         <?php endif; ?>
@@ -504,6 +509,16 @@
                                     array(
                                         'label' => 'Laporan Pembelian Ppn Summary', 
                                         'url' => array('/report/yearlyPurchaseTaxSummary/summary'), 
+                                        'visible' => Yii::app()->user->checkAccess('purchaseTaxReport')
+                                    ),
+                                    array(
+                                        'label' => 'Laporan Penjualan NON Ppn Recap Bulan', 
+                                        'url' => array('/report/saleInvoiceNonTaxMonthly/summary'), 
+                                        'visible' => Yii::app()->user->checkAccess('saleTaxReport')
+                                    ),
+                                    array(
+                                        'label' => 'Laporan Pembelian NON Ppn Recap Bulan', 
+                                        'url' => array('/report/purchaseInvoiceNonTaxMonthly/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('purchaseTaxReport')
                                     ),
                                 ),

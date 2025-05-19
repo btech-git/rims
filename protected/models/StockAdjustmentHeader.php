@@ -169,7 +169,7 @@ class StockAdjustmentHeader extends MonthlyTransactionActiveRecord {
         $criteria->compare('t.note', $this->note, true);
         $criteria->compare('t.transaction_type', $this->transaction_type, true);
 
-        $criteria->addCondition("substring(t.stock_adjustment_number, 1, (length(t.stock_adjustment_number) - 2)) NOT IN (
+        $criteria->addCondition("t.status = 'Approved' AND substring(t.stock_adjustment_number, 1, (length(t.stock_adjustment_number) - 2)) NOT IN (
             SELECT substring(kode_transaksi, 1, (length(kode_transaksi) - 2))  
             FROM " . JurnalUmum::model()->tableName() . "
         )");

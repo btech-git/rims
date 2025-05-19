@@ -541,12 +541,12 @@ class CashTransactionController extends Controller {
         $model = new CashTransactionApproval;
         $model->date = date('Y-m-d H:i:s');
         
-        JurnalUmum::model()->deleteAllByAttributes(array(
-            'kode_transaksi' => $cashTransaction->transaction_number,
-            'branch_id' => $cashTransaction->branch_id,
-        ));
-
         if (isset($_POST['CashTransactionApproval'])) {
+            JurnalUmum::model()->deleteAllByAttributes(array(
+                'kode_transaksi' => $cashTransaction->transaction_number,
+                'branch_id' => $cashTransaction->branch_id,
+            ));
+
             $model->attributes = $_POST['CashTransactionApproval'];
             if ($model->save()) {
                 $cashTransaction->status = $model->approval_type;

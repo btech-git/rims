@@ -33,7 +33,7 @@ class PendingJournalController extends Controller {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
         
-        $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : '2022-01-01';
+        $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : '2024-01-01';
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
         
         $model = new TransactionPurchaseOrder('search');

@@ -13,7 +13,6 @@
     .width1-12 { width: 30px }
     .width1-13 { width: 30px }
     .width1-14 { width: 30px }
-    .width1-15 { width: 30px }
 '); ?>
 
 <style> 
@@ -46,14 +45,13 @@
                 <th class="width1-5">Vehicle</th>
                 <th class="width1-6">Plate #</th>
                 <th class="width1-7">Status</th>
-                <th class="width1-8">Amount</th>
-                <th class="width1-9">Work Order</th>
-                <th class="width1-10">Sales Order</th>
-                <th class="width1-11">Movement Out</th>
-                <th class="width1-12">Invoice</th>
-                <th class="width1-13">Tanggal Invoice</th>
-                <th class="width1-14">Payment In</th>
-                <th class="width1-15">Tanggal Payment</th>
+                <th class="width1-8">Work Order</th>
+                <th class="width1-9">Sales Order</th>
+                <th class="width1-10">Movement Out</th>
+                <th class="width1-11">Invoice</th>
+                <th class="width1-12">Tanggal Invoice</th>
+                <th class="width1-13">Payment In</th>
+                <th class="width1-14">Tanggal Payment</th>
             </tr>
         </thead>
         <tbody>
@@ -82,16 +80,13 @@
                     </td>
                     <td class="width1-6"><?php echo CHtml::encode(CHtml::value($header, 'vehicle.plate_number')); ?></td>
                     <td class="width1-7"><?php echo CHtml::encode(CHtml::value($header, 'status')); ?></td>
-                    <td class="width1-8" style="text-align: right">
-                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($header, 'grand_total'))); ?>
-                    </td>
-                    <td class="width1-9"><?php echo CHtml::encode(CHtml::value($header, 'work_order_number')); ?></td>
-                    <td class="width1-10"><?php echo CHtml::encode(CHtml::value($header, 'sales_order_number')); ?></td>
-                    <td class="width1-11"><?php echo CHtml::encode(implode(', ', $movementOutHeaderCodeNumbers)); ?></td>
-                    <td class="width1-12"><?php echo CHtml::encode(implode(', ', $invoiceHeaderCodeNumbers)); ?></td>
-                    <td class="width1-13"><?php echo CHtml::encode(implode(', ', $invoiceHeaderTransactionDates)); ?></td>
-                    <td class="width1-14"><?php echo CHtml::encode(implode(', ', $paymentInHeaderCodeNumbers)); ?></td>
-                    <td class="width1-15"><?php echo CHtml::encode(implode(', ', $paymentInHeaderDates)); ?></td>
+                    <td class="width1-8"><?php echo CHtml::encode(CHtml::value($header, 'work_order_number')); ?></td>
+                    <td class="width1-9"><?php echo CHtml::encode(CHtml::value($header, 'sales_order_number')); ?></td>
+                    <td class="width1-10"><?php echo CHtml::encode(implode(', ', $movementOutHeaderCodeNumbers)); ?></td>
+                    <td class="width1-11"><?php echo CHtml::encode(implode(', ', $invoiceHeaderCodeNumbers)); ?></td>
+                    <td class="width1-12"><?php echo CHtml::encode(implode(', ', $invoiceHeaderTransactionDates)); ?></td>
+                    <td class="width1-13"><?php echo CHtml::encode(implode(', ', $paymentInHeaderCodeNumbers)); ?></td>
+                    <td class="width1-14"><?php echo CHtml::encode(implode(', ', $paymentInHeaderDates)); ?></td>
                 </tr>
             <?php endforeach; ?>
         </tbody>

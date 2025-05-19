@@ -110,15 +110,15 @@ class AdjustmentController extends Controller {
             $model = new StockAdjustmentApproval;
             $model->date = date('Y-m-d H:i:s');
 
-            JurnalUmum::model()->deleteAllByAttributes(array(
-                'kode_transaksi' => $stockAdjustmentHeader->stock_adjustment_number,
-            ));
-
-            InventoryDetail::model()->deleteAllByAttributes(array(
-                'transaction_number' => $stockAdjustmentHeader->stock_adjustment_number,
-            ));
-
             if (isset($_POST['StockAdjustmentApproval'])) {
+                JurnalUmum::model()->deleteAllByAttributes(array(
+                    'kode_transaksi' => $stockAdjustmentHeader->stock_adjustment_number,
+                ));
+
+                InventoryDetail::model()->deleteAllByAttributes(array(
+                    'transaction_number' => $stockAdjustmentHeader->stock_adjustment_number,
+                ));
+
                 $model->attributes = $_POST['StockAdjustmentApproval'];
                 if ($model->save()) {
                     $stockAdjustmentHeader->status = $model->approval_type;
