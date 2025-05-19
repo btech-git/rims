@@ -121,6 +121,9 @@ class PendingJournalController extends Controller {
         
         $pageSize = (isset($_GET['PageSize'])) ? $_GET['PageSize'] : 100;
         $currentPage = (isset($_GET['CurrentPage'])) ? $_GET['CurrentPage'] - 1 : 0;
+        $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : '2024-01-01';
+        $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
+        
         
         $receiveItemSql = TransactionReceiveItem::pendingJournal();
         $receiveItemDataProvider = new CSqlDataProvider($receiveItemSql, array(
@@ -132,6 +135,7 @@ class PendingJournalController extends Controller {
                 'currentPage' => $currentPage,
             ),
         ));
+        $receiveItemDataProvider->criteria->addBetweenCondition('t.receive_item_date', $startDate, $endDate);
 
         $this->render('indexReceive', array(
             'receiveItemDataProvider' => $receiveItemDataProvider,
@@ -142,7 +146,7 @@ class PendingJournalController extends Controller {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
         
-        $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : '2023-01-01';
+        $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : '2024-01-01';
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
         
         $model = new InvoiceHeader('search');
@@ -306,7 +310,7 @@ class PendingJournalController extends Controller {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
         
-        $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : '2022-01-01';
+        $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : '2024-01-01';
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
         
         $model = new PaymentIn('search');
@@ -400,7 +404,7 @@ class PendingJournalController extends Controller {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
         
-        $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : '2022-01-01';
+        $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : '2024-01-01';
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
         
         $model = new PaymentOut('search');
@@ -477,7 +481,7 @@ class PendingJournalController extends Controller {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
         
-        $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : '2022-01-01';
+        $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : '2024-01-01';
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
         
         $model = new MovementInHeader('search');
@@ -573,7 +577,7 @@ class PendingJournalController extends Controller {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
         
-        $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : '2022-01-01';
+        $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : '2024-01-01';
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
         
         $model = new MovementOutHeader('search');
@@ -681,6 +685,8 @@ class PendingJournalController extends Controller {
         
         $pageSize = (isset($_GET['PageSize'])) ? $_GET['PageSize'] : 100;
         $currentPage = (isset($_GET['CurrentPage'])) ? $_GET['CurrentPage'] - 1 : 0;
+        $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : '2024-01-01';
+        $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
         
         $deliveryOrderSql = TransactionDeliveryOrder::pendingJournal();
         $deliveryOrderDataProvider = new CSqlDataProvider($deliveryOrderSql, array(
@@ -692,6 +698,7 @@ class PendingJournalController extends Controller {
                 'currentPage' => $currentPage,
             ),
         ));
+        $deliveryOrderDataProvider->criteria->addBetweenCondition('SUBSTRING(t.delivery_date, 1, 10)', $startDate, $endDate);
         
         $this->render('indexDelivery', array(
             'deliveryOrderDataProvider' => $deliveryOrderDataProvider,
@@ -702,7 +709,7 @@ class PendingJournalController extends Controller {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
         
-        $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : '2022-01-01';
+        $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : '2024-01-01';
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
         
         $model = new CashTransaction('search');
@@ -807,7 +814,7 @@ class PendingJournalController extends Controller {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
         
-        $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : '2023-01-01';
+        $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : '2024-01-01';
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
         
         $model = new StockAdjustmentHeader('search');
@@ -894,6 +901,8 @@ class PendingJournalController extends Controller {
         
         $pageSize = (isset($_GET['PageSize'])) ? $_GET['PageSize'] : 100;
         $currentPage = (isset($_GET['CurrentPage'])) ? $_GET['CurrentPage'] - 1 : 0;
+        $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : '2024-01-01';
+        $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
         
         $saleOrderSql = TransactionSalesOrder::pendingJournal();
         $saleOrderDataProvider = new CSqlDataProvider($saleOrderSql, array(
@@ -905,6 +914,7 @@ class PendingJournalController extends Controller {
                 'currentPage' => $currentPage,
             ),
         ));
+        $saleOrderDataProvider->criteria->addBetweenCondition('t.sale_order_date', $startDate, $endDate);
         
         $this->render('indexSale', array(
             'saleOrderDataProvider' => $saleOrderDataProvider,
