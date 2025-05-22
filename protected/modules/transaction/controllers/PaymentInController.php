@@ -1026,16 +1026,21 @@ class PaymentInController extends Controller {
         }
     }
 
-    public function actionAjaxJsonAmount($id, $index) {
+    public function actionAjaxJsonGrandTotal($id, $index) {
         if (Yii::app()->request->isAjaxRequest) {
             $paymentIn = $this->instantiate($id, '');
             $this->loadState($paymentIn);
-
-            $taxServiceAmount = CHtml::value($paymentIn->details[$index], 'taxServiceAmount');
 
             $object = array(
                 'paymentAmount' => CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($paymentIn->details[$index], 'amount'))),
-                'taxServiceAmountFormatted' => CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $taxServiceAmount)),
+                'taxServiceAmount' => CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($paymentIn->details[$index], 'tax_service_amount'))),
+                'discountAmount' => CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($paymentIn->details[$index], 'discount_amount'))),
+                'bankAdminFeeAmount' => CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($paymentIn->details[$index], 'bank_administration_fee'))),
+                'merimenFeeAmount' => CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($paymentIn->details[$index], 'merimen_fee'))),
+                'totalAmount' => CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($paymentIn, 'totalDetail'))),
+                'totalDiscountAmount' => CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($paymentIn, 'totalDiscount'))),
+                'totalBankAdminFeeAmount' => CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($paymentIn, 'totalBankAdminFee'))),
+                'totalMerimenFeeAmount' => CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($paymentIn, 'totalMerimenFee'))),
                 'bankFeeAmount' => CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($paymentIn, 'bankFeeAmount'))),
                 'totalPayment' => CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($paymentIn, 'totalPayment'))),
                 'totalInvoice' => CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($paymentIn, 'totalInvoice'))),
@@ -1044,20 +1049,4 @@ class PaymentInController extends Controller {
             echo CJSON::encode($object);
         }
     }
-
-    public function actionAjaxJsonGrandTotal($id) {
-        if (Yii::app()->request->isAjaxRequest) {
-            $paymentIn = $this->instantiate($id, '');
-            $this->loadState($paymentIn);
-
-            $object = array(
-                'bankFeeAmount' => CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($paymentIn, 'bankFeeAmount'))),
-                'totalPayment' => CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($paymentIn, 'totalPayment'))),
-                'totalInvoice' => CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($paymentIn, 'totalInvoice'))),
-            );
-
-            echo CJSON::encode($object);
-        }
-    }
-
 }

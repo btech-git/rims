@@ -153,6 +153,9 @@ class PaymentInComponent extends CComponent {
         $this->header->payment_type = $this->header->paymentType->name;
         $this->header->payment_amount = $this->totalDetail;
         $this->header->tax_service_amount = $this->totalServiceTax;
+        $this->header->discount_product_amount = $this->totalDiscount;
+        $this->header->bank_administration_fee = $this->totalBankAdminFee;
+        $this->header->merimen_fee = $this->totalMerimenFee;
         $this->header->insurance_company_id = $this->details[0]->invoiceHeader->insurance_company_id;
         $valid = $this->header->save(false);
 
@@ -270,8 +273,38 @@ class PaymentInComponent extends CComponent {
         return $total;
     }
     
+    public function getTotalDiscount() {
+        $total = 0.00;
+        
+        foreach ($this->details as $detail) {
+            $total += $detail->discount_amount;
+        }
+        
+        return $total;
+    }
+    
+    public function getTotalBankAdminFee() {
+        $total = 0.00;
+        
+        foreach ($this->details as $detail) {
+            $total += $detail->bank_administration_fee;
+        }
+        
+        return $total;
+    }
+    
+    public function getTotalMerimenFee() {
+        $total = 0.00;
+        
+        foreach ($this->details as $detail) {
+            $total += $detail->merimen_fee;
+        }
+        
+        return $total;
+    }
+    
     public function getTotalPayment() {
         
-        return $this->totalDetail + $this->totalServiceTax + $this->header->downpayment_amount + $this->header->discount_product_amount + $this->header->discount_service_amount + $this->header->bank_administration_fee + $this->header->merimen_fee + $this->getBankFeeAmount();
+        return $this->totalDetail + $this->totalServiceTax + $this->totalDiscount + $this->totalBankAdminFee + $this->totalMerimenFee + $this->getBankFeeAmount();
     }
 }

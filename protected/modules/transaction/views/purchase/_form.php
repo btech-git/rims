@@ -42,6 +42,8 @@
                     // additional javascript options for the date picker plugin
 
                     'options' => array(
+                        'minDate' => '-1W',
+                        'maxDate' => '+6M',
                         'dateFormat' => 'yy-mm-dd',
                     ),
                 )); ?>

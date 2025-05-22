@@ -70,6 +70,8 @@
                                 'model' => $consignmentIn->header,
                                 'attribute' => "date_posting",
                                 'options' => array(
+                                    'minDate' => '-1W',
+                                    'maxDate' => '+6M',
                                     'dateFormat' => 'yy-mm-dd',
                                     'changeMonth' => true,
                                     'changeYear' => true,

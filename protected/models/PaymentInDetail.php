@@ -13,6 +13,9 @@
  * @property integer $is_tax_service
  * @property string $tax_service_amount
  * @property string $tax_service_percentage
+ * @property string $discount_amount
+ * @property string $bank_administration_fee
+ * @property string $merimen_fee
  *
  * The followings are the available model relations:
  * @property PaymentIn $paymentIn
@@ -44,12 +47,12 @@ class PaymentInDetail extends CActiveRecord {
         return array(
             array('payment_in_id, invoice_header_id', 'required'),
             array('payment_in_id, invoice_header_id, is_tax_service', 'numerical', 'integerOnly' => true),
-            array('total_invoice, amount, tax_service_amount', 'length', 'max' => 18),
+            array('total_invoice, amount, tax_service_amount, discount_amount, bank_administration_fee, merimen_fee', 'length', 'max' => 18),
             array('memo', 'length', 'max' => 100),
             array('tax_service_percentage', 'length', 'max' => 10),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, total_invoice, amount, memo, payment_in_id, invoice_header_id, is_tax_service, tax_service_amount, tax_service_percentage', 'safe', 'on' => 'search'),
+            array('id, total_invoice, amount, memo, payment_in_id, invoice_header_id, is_tax_service, tax_service_amount, tax_service_percentage, discount_amount, bank_administration_fee, merimen_fee', 'safe', 'on' => 'search'),
         );
     }
 

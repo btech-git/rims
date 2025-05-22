@@ -137,16 +137,109 @@ class WorkOrderController extends Controller {
             $model->attributes = $_GET['RegistrationTransaction'];
         }
 
+        $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : date('Y-m-d');
+        $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
+        
         $dataProvider = $model->searchByProcessingWorkOrder();
         if (!Yii::app()->user->checkAccess('director')) {
             $dataProvider->criteria->addCondition('t.branch_id = :branch_id');
             $dataProvider->criteria->params[':branch_id'] = Yii::app()->user->branch_id;
         }
 
+        if (isset($_GET['SaveExcel'])) {
+            $this->saveToExcel($dataProvider);
+        }
+
         $this->render('adminProcessing', array(
             'model' => $model,
             'dataProvider' => $dataProvider,
+            'startDate' => $startDate,
+            'endDate' => $endDate,
         ));
+    }
+    
+    protected function saveToExcel($dataProvider) {
+        set_time_limit(0);
+        ini_set('memory_limit', '1024M');
+
+        spl_autoload_unregister(array('YiiBase', 'autoload'));
+        include_once Yii::getPathOfAlias('ext.phpexcel.Classes') . DIRECTORY_SEPARATOR . 'PHPExcel.php';
+        spl_autoload_register(array('YiiBase', 'autoload'));
+
+        $objPHPExcel = new PHPExcel();
+
+        $documentProperties = $objPHPExcel->getProperties();
+        $documentProperties->setCreator('Raperind Motor');
+        $documentProperties->setTitle('WO Outstanding');
+
+        $worksheet = $objPHPExcel->setActiveSheetIndex(0);
+        $worksheet->setTitle('WO Outstanding');
+
+        $worksheet->mergeCells('A1:N1');
+        $worksheet->mergeCells('A2:N2');
+        $worksheet->mergeCells('A3:N3');
+
+        $worksheet->getStyle('A1:N5')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->getStyle('A1:N5')->getFont()->setBold(true);
+
+        $worksheet->setCellValue('A1', 'Raperind Motor');
+        $worksheet->setCellValue('A2', 'WO Outstanding (pending invoices)');
+
+        $worksheet->getStyle('A4:N4')->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+
+        $worksheet->setCellValue('A4', 'Vehicle ID');
+        $worksheet->setCellValue('B4', 'Plate #');
+        $worksheet->setCellValue('C4', 'Date');
+        $worksheet->setCellValue('D4', 'Vehicle Model');
+        $worksheet->setCellValue('E4', 'Color');
+        $worksheet->setCellValue('F4', 'WO #');
+        $worksheet->setCellValue('G4', 'Tanggal WO');
+        $worksheet->setCellValue('H4', 'Invoice #');
+        $worksheet->setCellValue('I4', 'Services');
+        $worksheet->setCellValue('J4', 'Repair Type');
+        $worksheet->setCellValue('K4', 'Problem');
+        $worksheet->setCellValue('L4', 'User');
+        $worksheet->setCellValue('M4', 'WO Status');
+
+        $worksheet->getStyle('A4:N4')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+
+        $counter = 6;
+        foreach ($dataProvider->data as $header) {
+            $worksheet->getStyle("C{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
+
+            $worksheet->setCellValue("A{$counter}", CHtml::value($header, 'vehicle_id'));
+            $worksheet->setCellValue("B{$counter}", CHtml::value($header, 'vehicle.plate_number'));
+            $worksheet->setCellValue("C{$counter}", CHtml::value($header, 'transaction_date'));
+            $worksheet->setCellValue("D{$counter}", CHtml::value($header, 'vehicle.carMake.name') . ' ' . CHtml::value($header, 'vehicle.carModel.name'));
+            $worksheet->setCellValue("E{$counter}", $header->vehicle->getColor($header->vehicle,"color_id"));
+            $worksheet->setCellValue("F{$counter}", CHtml::value($header, 'work_order_number'));
+            $worksheet->setCellValue("G{$counter}", CHtml::value($header, 'work_order_date'));
+            $worksheet->setCellValue("H{$counter}", $header->getInvoice($header));
+            $worksheet->setCellValue("I{$counter}", $header->getServices());
+            $worksheet->setCellValue("J{$counter}", CHtml::value($header, 'repair_type'));
+            $worksheet->setCellValue("K{$counter}", CHtml::value($header, 'problem'));
+            $worksheet->setCellValue("L{$counter}", CHtml::value($header, 'user.username'));
+            $worksheet->setCellValue("M{$counter}", CHtml::value($header, 'status'));
+
+            $counter++;
+        }
+
+        for ($col = 'A'; $col !== 'P'; $col++) {
+            $objPHPExcel->getActiveSheet()
+            ->getColumnDimension($col)
+            ->setAutoSize(true);
+        }
+        
+        ob_end_clean();
+        // We'll be outputting an excel file
+        header('Content-type: application/vnd.ms-excel');
+        header('Content-Disposition: attachment;filename="wo_outstanding.xls"');
+        header('Cache-Control: max-age=0');
+        
+        $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
+        $objWriter->save('php://output');
+
+        Yii::app()->end();
     }
 
     public function actionAjaxHtmlUpdateCarModelSelect() {
