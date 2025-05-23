@@ -155,15 +155,15 @@ class PayableController extends Controller {
             
             $worksheet->getStyle("A{$counter}:E{$counter}")->getFont()->setBold(true);
 
-            $worksheet->getStyle("A{$counter}:E{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
-            $worksheet->getStyle("A{$counter}:E{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
-            $worksheet->mergeCells("A{$counter}:B{$counter}");
-            $worksheet->setCellValue("A{$counter}", 'Total');
-            $worksheet->setCellValue("C{$counter}", $totalPurchase);
-            $worksheet->setCellValue("D{$counter}", $totalPayment);
-            $worksheet->setCellValue("E{$counter}", $totalPayable);
-
-            $counter++;$counter++;
+//            $worksheet->getStyle("A{$counter}:E{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+//            $worksheet->getStyle("A{$counter}:E{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
+//            $worksheet->mergeCells("A{$counter}:B{$counter}");
+//            $worksheet->setCellValue("A{$counter}", 'Total');
+//            $worksheet->setCellValue("C{$counter}", $totalPurchase);
+//            $worksheet->setCellValue("D{$counter}", $totalPayment);
+//            $worksheet->setCellValue("E{$counter}", $totalPayable);
+//
+//            $counter++;$counter++;
         }
 
         for ($col = 'A'; $col !== 'F'; $col++) {
