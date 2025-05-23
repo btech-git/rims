@@ -29,7 +29,7 @@ $this->breadcrumbs = array(
             </tr>
             <tr>
                 <td width="15%">Receive Item No</td>
-                <td><?php echo CHTml::link($receiveHeader->receive_item_no, array("/transaction/transactionReceiveItem/show", "id"=>$receiveHeader->id), array('target' => 'blank')); ?></td>
+                <td><?php echo CHtml::link($receiveHeader->receive_item_no, array("/transaction/transactionReceiveItem/show", "id"=>$receiveHeader->id), array('target' => 'blank')); ?></td>
             </tr>
             <tr>
                 <td width="15%">Tanggal</td>
