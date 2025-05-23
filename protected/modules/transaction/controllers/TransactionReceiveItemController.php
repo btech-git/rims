@@ -163,7 +163,7 @@ class TransactionReceiveItemController extends Controller {
     public function actionShowInvoice($id) {
         $receiveHeader = $this->loadModel($id);
         
-        $this->render('show', array(
+        $this->render('showInvoice', array(
             'receiveHeader' => $receiveHeader,
         ));
     }
