@@ -3,8 +3,8 @@
 /* @var $model TransactionReceiveItem */
 
 $this->breadcrumbs = array(
-    'Transaction Transfer Requests' => array('admin'),
-    $model->id,
+    'Invoice' => array('admin'),
+    $receiveHeader->id,
 );
 ?>
 
@@ -131,7 +131,7 @@ $this->breadcrumbs = array(
 </div>
 
 <div>
-    <?php $paymentOutDetails = PayOutDetail::model()->findAllByAttributes(array('receive_item_id' => $model->id)); ?>
+    <?php $paymentOutDetails = PayOutDetail::model()->findAllByAttributes(array('receive_item_id' => $receiveHeader->id)); ?>
     
     <table>
         <caption>Payment</caption>
