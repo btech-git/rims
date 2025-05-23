@@ -134,8 +134,8 @@ class PayableController extends Controller {
             $totalPayable = 0.00;
             foreach ($payableData as $payableRow) {
                 $purchase = $payableRow['total_price'];
-                $paymentAmount = $payableRow['payment_amount'];
-                $paymentLeft = $payableRow['payment_left'];
+                $paymentAmount = $payableRow['amount'];
+                $paymentLeft = $payableRow['remaining'];
 
                 $worksheet->setCellValue("A{$counter}", $header->code);
                 $worksheet->setCellValue("B{$counter}", $header->company);
