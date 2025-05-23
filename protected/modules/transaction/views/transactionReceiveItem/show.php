@@ -344,29 +344,27 @@ $this->breadcrumbs = array(
 <div>
     <?php $paymentOutDetails = PayOutDetail::model()->findAllByAttributes(array('receive_item_id' => $model->id)); ?>
     
-    <?php if (!empty($paymentOutDetails)): ?>
-        <table>
-            <caption>Payment</caption>
-            <thead>
+    <table>
+        <caption>Payment</caption>
+        <thead>
+            <tr>
+                <td>Payment #</td>
+                <td>Date</td>
+                <th style="text-align: center">Memo</th>
+                <th style="text-align: center; width: 15%">Total Invoice</th>
+                <th style="text-align: center; width: 15%">Payment</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php foreach ($paymentOutDetails as $paymentOutDetail): ?>
                 <tr>
-                    <td>Payment #</td>
-                    <td>Date</td>
-                    <th style="text-align: center">Memo</th>
-                    <th style="text-align: center; width: 15%">Total Invoice</th>
-                    <th style="text-align: center; width: 15%">Payment</th>
+                    <td><?php echo CHtml::encode(CHtml::value($paymentOutDetail, 'paymentOut.payment_number')); ?></td>
+                    <td><?php echo CHtml::encode(CHtml::value($paymentOutDetail, 'paymentOut.payment_date')); ?></td>
+                    <td><?php echo CHtml::encode(CHtml::value($paymentOutDetail, 'memo')); ?></td>
+                    <td><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($paymentOutDetail, 'total_invoice'))); ?></td>
+                    <td><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($paymentOutDetail, 'amount'))); ?></td>
                 </tr>
-            </thead>
-            <tbody>
-                <?php foreach ($paymentOutDetails as $paymentOutDetail): ?>
-                    <tr>
-                        <td><?php echo CHtml::encode(CHtml::value($paymentOutDetail, 'paymentOut.payment_number')); ?></td>
-                        <td><?php echo CHtml::encode(CHtml::value($paymentOutDetail, 'paymentOut.payment_date')); ?></td>
-                        <td><?php echo CHtml::encode(CHtml::value($paymentOutDetail, 'memo')); ?></td>
-                        <td><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($paymentOutDetail, 'total_invoice'))); ?></td>
-                        <td><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($paymentOutDetail, 'amount'))); ?></td>
-                    </tr>
-                <?php endforeach; ?>
-            </tbody>
-        </table>
-    <?php endif; ?>
+            <?php endforeach; ?>
+        </tbody>
+    </table>
 </div>
