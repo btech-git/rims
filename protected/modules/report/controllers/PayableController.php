@@ -81,6 +81,15 @@ class PayableController extends Controller {
         }
     }
 
+    public function actionRedirectTransaction($codeNumber) {
+//        list($leftPart,, ) = explode('/', $codeNumber);
+//        list(, $codeNumberConstant) = explode('.', $leftPart);
+
+        $model = TransactionReceiveItem::model()->findByAttributes(array('invoice_number' => $codeNumber));
+        $this->redirect(array('/transaction/transactionReceiveItem/showInvoice', 'id' => $model->id));
+
+    }
+    
     protected function saveToExcel($payableSummary, $endDate, $branchId) {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');

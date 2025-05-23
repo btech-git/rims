@@ -108,15 +108,19 @@ $this->breadcrumbs = array(
                         <tfoot>
                             <tr>
                                 <td colspan="11" style="text-align: right">SUB TOTAL</td>
-                                <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($receiveHeader, 'subTotal'))); ?></td>
+                                <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($receiveHeader, 'invoice_sub_total'))); ?></td>
                             </tr>
                             <tr>
                                 <td colspan="11" style="text-align: right">PPn <?php echo CHtml::encode(CHtml::value($receiveHeader, 'purchaseOrder.tax_percentage'));?>%</td>
-                                <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($receiveHeader, 'taxNominal'))); ?></td>
+                                <td style="text-align: right">
+                                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($receiveHeader, 'invoice_tax_nominal'))); ?>
+                                </td>
                             </tr>
                             <tr>
                                 <td colspan="11" style="text-align: right">GRAND TOTAL</td>
-                                <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($receiveHeader, 'grandTotal'))); ?></td>
+                                <td style="text-align: right">
+                                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($receiveHeader, 'invoice_grand_total'))); ?>
+                                </td>
                             </tr>
                         </tfoot>
                     </table>
