@@ -160,6 +160,14 @@ class TransactionReceiveItemController extends Controller {
         ));
     }
 
+    public function actionShowInvoice($id) {
+        $receiveHeader = $this->loadModel($id);
+        
+        $this->render('show', array(
+            'receiveHeader' => $receiveHeader,
+        ));
+    }
+
     /**
      * Creates a new model.
      * If creation is successful, the browser will be redirected to the 'view' page.
