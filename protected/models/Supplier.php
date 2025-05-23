@@ -400,7 +400,7 @@ class Supplier extends CActiveRecord {
         }
         
         $sql = "
-            SELECT purchase_order_no, purchase_order_date, o.total_price, COALESCE(p.amount, 0) AS amount, 
+            SELECT purchase_order_no, purchase_order_date, r.invoice_grand_total AS total_price, COALESCE(p.amount, 0) AS amount, 
             o.total_price - COALESCE(p.amount, 0) AS remaining
             FROM " . TransactionPurchaseOrder::model()->tableName() . " o
             INNER JOIN " . TransactionReceiveItem::model()->tableName() . " r ON o.id = r.purchase_order_id
