@@ -127,11 +127,6 @@ class PayableController extends Controller {
         $counter = 8;
         
         foreach ($payableSummary->dataProvider->data as $header) {
-            $worksheet->setCellValue("A{$counter}", $header->code);
-            $worksheet->setCellValue("B{$counter}", $header->company);
-            $worksheet->setCellValue("C{$counter}", $header->name);
-            
-            $counter++;
             
             $payableData = $header->getPayableReport($endDate, $branchId);
             $totalPurchase = 0.00;
@@ -141,12 +136,15 @@ class PayableController extends Controller {
                 $purchase = $payableRow['total_price'];
                 $paymentAmount = $payableRow['payment_amount'];
                 $paymentLeft = $payableRow['payment_left'];
-                
-                $worksheet->setCellValue("A{$counter}", $payableRow['purchase_order_date']);
-                $worksheet->setCellValue("B{$counter}", $payableRow['purchase_order_no']);
-                $worksheet->setCellValue("C{$counter}", $purchase);
-                $worksheet->setCellValue("D{$counter}", $paymentAmount);
-                $worksheet->setCellValue("E{$counter}", $paymentLeft);
+
+                $worksheet->setCellValue("A{$counter}", $header->code);
+                $worksheet->setCellValue("B{$counter}", $header->company);
+                $worksheet->setCellValue("C{$counter}", $header->name);
+                $worksheet->setCellValue("D{$counter}", $payableRow['purchase_order_date']);
+                $worksheet->setCellValue("E{$counter}", $payableRow['purchase_order_no']);
+                $worksheet->setCellValue("F{$counter}", $purchase);
+                $worksheet->setCellValue("G{$counter}", $paymentAmount);
+                $worksheet->setCellValue("H{$counter}", $paymentLeft);
 
                 $counter++;
                 
