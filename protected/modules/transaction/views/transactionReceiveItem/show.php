@@ -342,7 +342,7 @@ $this->breadcrumbs = array(
 </div>
 
 <div>
-    <?php $paymentOutDetails = PaymentOutDetail::model()->findAllByAttributes(array('receive_item_id' => $model->id)); ?>
+    <?php $paymentOutDetails = PayOutDetail::model()->findAllByAttributes(array('receive_item_id' => $model->id)); ?>
     
     <?php if (!empty($paymentOutDetails)): ?>
         <table>
