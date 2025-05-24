@@ -220,7 +220,7 @@ $this->breadcrumbs=array(
                         <tr>
                             <td colspan="10" style="text-align: right">PPn <?php echo CHtml::encode(CHtml::value($receiveItem, 'purchaseOrder.tax_percentage')); ?>%</td>
                             <td style="text-align: right">
-                                <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($receiveItem, 'invoice_tax_nominal'))); ?>
+                                <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($receiveItem, 'taxNominal'))); ?>
                             </td>
                         </tr>
                         <tr>
