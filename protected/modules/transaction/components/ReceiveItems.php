@@ -366,7 +366,7 @@ class ReceiveItems extends CComponent {
     }
     
     public function getTaxNominal() {
-        return ((int)$this->header->purchaseOrder->tax_percentage > 0) ? $this->subTotal * $this->header->purchaseOrder->tax_percentage / 100 : 0.00;
+        return $this->subTotal * $this->header->purchaseOrder->tax_percentage / 100;
     }
     
     public function getGrandTotal() {
