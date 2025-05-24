@@ -202,7 +202,7 @@ $this->breadcrumbs=array(
                                 <td style="text-align: center"><?php echo CHtml::encode(CHtml::value($detail, 'qty_received')); ?></td>
                                 <td><?php echo CHtml::encode(CHtml::value($product, 'unit.name')); ?></td>
                                 <td style="text-align: right">
-                                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($detail, 'purchaseOrderDetail.unit_price'))); ?>
+                                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($detail, 'purchaseOrderDetail.price_before_tax'))); ?>
                                 </td>
                                 <td style="text-align: right">
                                     <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($detail, 'totalPrice'))); ?>
