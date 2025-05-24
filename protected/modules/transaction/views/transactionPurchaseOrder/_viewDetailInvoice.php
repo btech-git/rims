@@ -88,7 +88,7 @@
                                         <td style="text-align: center"><?php echo CHtml::encode(CHtml::value($receiveDetail, 'qty_received')); ?></td>
                                         <td><?php echo CHtml::encode(CHtml::value($product, 'unit.name')); ?></td>
                                         <td style="text-align: right">
-                                            <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($receiveDetail, 'purchaseOrderDetail.unit_price_before_tax'))); ?>
+                                            <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($receiveDetail, 'purchaseOrderDetail.price_before_tax'))); ?>
                                         </td>
                                         <td style="text-align: right">
                                             <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($receiveDetail, 'total_price'))); ?>
