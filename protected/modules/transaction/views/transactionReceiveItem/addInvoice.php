@@ -246,7 +246,7 @@ $this->breadcrumbs=array(
                             <td colspan="10" style="text-align: right">TOTAL + PEMBULATAN</td>
                             <td style="text-align: right">
                                 <span id="grand_total">
-                                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($receiveItem, 'grandTotalAfterRounding'))); ?>
+                                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($receiveItem, 'invoice_grand_total_rounded'))); ?>
                                 </span>
                             </td>
                         </tr>
