@@ -214,7 +214,7 @@ $this->breadcrumbs=array(
                         <tr>
                             <td colspan="10" style="text-align: right">SUB TOTAL</td>
                             <td style="text-align: right">
-                                <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($receiveItem, 'invoice_sub_total'))); ?>
+                                <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($receiveItem, 'subTotal'))); ?>
                             </td>
                         </tr>
                         <tr>
