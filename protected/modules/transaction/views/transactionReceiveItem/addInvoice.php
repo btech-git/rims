@@ -201,8 +201,12 @@ $this->breadcrumbs=array(
                                 <td style="text-align: center"><?php echo CHtml::encode(CHtml::value($detail, 'qty_request')); ?></td>
                                 <td style="text-align: center"><?php echo CHtml::encode(CHtml::value($detail, 'qty_received')); ?></td>
                                 <td><?php echo CHtml::encode(CHtml::value($product, 'unit.name')); ?></td>
-                                <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($detail, 'purchaseOrderDetail.unit_price'))); ?></td>
-                                <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($detail, 'totalPrice'))); ?></td>
+                                <td style="text-align: right">
+                                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($detail, 'purchaseOrderDetail.unit_price'))); ?>
+                                </td>
+                                <td style="text-align: right">
+                                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($detail, 'totalPrice'))); ?>
+                                </td>
                             </tr>
                         <?php endforeach; ?>
                     </tbody>
@@ -246,7 +250,7 @@ $this->breadcrumbs=array(
                             <td colspan="10" style="text-align: right">TOTAL + PEMBULATAN</td>
                             <td style="text-align: right">
                                 <span id="grand_total">
-                                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($receiveItem, 'invoice_grand_total_rounded'))); ?>
+                                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($receiveItem, 'grandTotalAfterRounding'))); ?>
                                 </span>
                             </td>
                         </tr>

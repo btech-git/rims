@@ -370,10 +370,10 @@ class ReceiveItems extends CComponent {
     }
     
     public function getGrandTotal() {
-        return $this->header->invoice_sub_total + $this->header->invoice_tax_nominal;
+        return $this->subTotal + $this->taxNominal;
     }
     
     public function getGrandTotalAfterRounding() {
-        return $this->header->invoice_grand_total + $this->header->invoice_rounding_nominal;
+        return $this->header->grandTotal + $this->header->invoice_rounding_nominal;
     }
 }
