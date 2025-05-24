@@ -47,7 +47,7 @@
             array(
                 'header' => 'Total',
                 'filter' => false,
-                'value' => 'number_format(CHtml::value($data, "grandTotal"), 2)',
+                'value' => 'number_format(CHtml::value($data, "invoice_grand_total"), 2)',
                 'htmlOptions' => array('style' => 'text-align: right'),
             ),
             array(
