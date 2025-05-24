@@ -374,6 +374,6 @@ class ReceiveItems extends CComponent {
     }
     
     public function getGrandTotalAfterRounding() {
-        return $this->header->getGrandTotal() + $this->header->invoice_rounding_nominal;
+        return $this->header->invoice_grand_total + $this->header->invoice_rounding_nominal;
     }
 }
