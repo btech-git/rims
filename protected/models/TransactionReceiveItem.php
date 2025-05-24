@@ -381,11 +381,11 @@ class TransactionReceiveItem extends MonthlyTransactionActiveRecord {
             $total += $detail->totalPrice;
         }
 
-        return round($total / (1 + ($this->purchaseOrder->tax_percentage /100)), 2);
+        return $total; //round($total / (1 + ($this->purchaseOrder->tax_percentage /100)), 2);
     }
 
     public function getTaxNominal() {
-        return ((int) $this->purchaseOrder->tax_percentage > 0) ? round($this->subTotal * $this->purchaseOrder->tax_percentage /100, 2) : 0.00;
+        return round($this->subTotal * $this->purchaseOrder->tax_percentage /100, 2);
     }
 
     public function getGrandTotal() {

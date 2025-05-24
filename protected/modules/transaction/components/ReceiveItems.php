@@ -358,9 +358,9 @@ class ReceiveItems extends CComponent {
     public function getSubTotal() {
         $total = 0.00;
         
-//        foreach ($this->details as $detail) {
-//            $total += $detail->totalPrice;
-//        }
+        foreach ($this->details as $detail) {
+            $total += $detail->totalPrice;
+        }
         
         return $total;
     }
