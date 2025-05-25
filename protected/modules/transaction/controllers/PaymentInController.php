@@ -971,6 +971,13 @@ class PaymentInController extends Controller {
         $model = $this->loadModel($id);
         $model->status = 'CANCELLED!!!';
         $model->payment_amount = 0; 
+        $model->tax_service_amount = 0; 
+        $model->downpayment_amount = 0; 
+        $model->discount_product_amount = 0; 
+        $model->discount_service_amount = 0; 
+        $model->bank_administration_fee = 0; 
+        $model->merimen_fee = 0; 
+        $model->bank_fee_amount = 0; 
         $model->cancelled_datetime = date('Y-m-d H:i:s');
         $model->user_id_cancelled = Yii::app()->user->id;
         $model->update(array('status', 'payment_amount', 'cancelled_datetime', 'user_id_cancelled'));
