@@ -557,6 +557,12 @@
 //                                        'linkOptions' => array('class' => 'titleNav'), 
                                         'visible' => Yii::app()->user->checkAccess('masterWarehouseCreate') || Yii::app()->user->checkAccess('masterWarehouseEdit') || Yii::app()->user->checkAccess('masterWarehouseView') || Yii::app()->user->checkAccess('masterWarehouseApproval')
                                     ),
+                                    array(
+                                        'label' => 'Kategori Aset', 
+                                        'url' => array('/master/assetCategory/admin'), 
+//                                        'linkOptions' => array('class' => 'titleNav'), 
+//                                        'visible' => Yii::app()->user->checkAccess('masterWarehouseCreate') || Yii::app()->user->checkAccess('masterWarehouseEdit') || Yii::app()->user->checkAccess('masterWarehouseView') || Yii::app()->user->checkAccess('masterWarehouseApproval')
+                                    ),
                                 ),
                             )); ?>
                         <?php endif; ?>
