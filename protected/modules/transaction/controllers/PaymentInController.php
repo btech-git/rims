@@ -778,7 +778,7 @@ class PaymentInController extends Controller {
                     if ($model->approval_type == 'Approved') {
                         foreach ($paymentIn->paymentInDetails as $detail) {
                             $invoiceHeader = InvoiceHeader::model()->findByPk($detail->invoice_header_id);
-                            $paymentAmount = $invoiceHeader->getTotalPayment() + $detail->discount_product_amount + $detail->bank_administration_fee + $detail->merimen_fee;
+                            $paymentAmount = $invoiceHeader->getTotalPayment() + $detail->discount_amount + $detail->bank_administration_fee + $detail->merimen_fee;
                             $invoiceHeader->payment_amount = $paymentAmount;
                             $invoiceHeader->payment_left = $invoiceHeader->getTotalRemaining();
 
