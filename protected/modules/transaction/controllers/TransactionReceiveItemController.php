@@ -306,6 +306,9 @@ class TransactionReceiveItemController extends Controller {
         $receiveItem->invoice_date_created = date('Y-m-d');
         $receiveItem->invoice_time_created = date('H:i:s');
         $receiveItem->user_id_invoice = Yii::app()->user->id;
+        $receiveItem->invoice_sub_total = $receiveItem->subTotal;
+        $receiveItem->invoice_tax_nominal = $receiveItem->taxNominal;
+        $receiveItem->invoice_grand_total = $receiveItem->grandTotal;
         $this->performAjaxValidation($receiveItem);
 
         if (isset($_POST['Cancel'])) {
@@ -338,6 +341,9 @@ class TransactionReceiveItemController extends Controller {
             $receiveItem->date_approval_invoice = date('Y-m-d');
             $receiveItem->time_approval_invoice = date('H:i:s');
             $receiveItem->user_id_approval_invoice = Yii::app()->user->id;
+            $receiveItem->invoice_sub_total = $receiveItem->subTotal;
+            $receiveItem->invoice_tax_nominal = $receiveItem->taxNominal;
+            $receiveItem->invoice_grand_total = $receiveItem->grandTotal;
             
             if ($receiveItem->save(Yii::app()->db)) {
                 $this->redirect(array('view', 'id' => $receiveItem->id));
