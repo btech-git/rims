@@ -171,19 +171,18 @@ class PaymentInComponent extends CComponent {
             $detail->tax_service_percentage = $detail->is_tax_service === 2 ? 0 : 0.02;
             $valid = $detail->save(false) && $valid;
 
-            if (!empty($detail->invoice_header_id)) {
-                $invoiceHeader = InvoiceHeader::model()->findByPk($detail->invoice_header_id);
-                $paymentAmount = $invoiceHeader->getTotalPayment() + $this->header->downpayment_amount + $this->header->discount_product_amount + $this->header->bank_administration_fee + $this->header->merimen_fee;
-                $invoiceHeader->payment_amount = $i == 0 ? $paymentAmount : $invoiceHeader->getTotalPayment();
-                $invoiceHeader->payment_left = $invoiceHeader->getTotalRemaining();
-                $invoiceHeader->status = $invoiceHeader->payment_left > 0 ? 'PARTIALLY PAID' : 'PAID';
-                $valid = $invoiceHeader->update(array('payment_amount', 'payment_left', 'status')) && $valid;
-                
-                $registrationTransaction = RegistrationTransaction::model()->findByPk($invoiceHeader->registration_transaction_id);
-                $registrationTransaction->payment_status = $invoiceHeader->payment_left > 0 ? 'PARTIALLY PAID' : 'PAID';
-                $valid = $valid && $registrationTransaction->update(array('payment_status'));
-
-            }
+//            if (!empty($detail->invoice_header_id)) {
+//                $invoiceHeader = InvoiceHeader::model()->findByPk($detail->invoice_header_id);
+//                $paymentAmount = $invoiceHeader->getTotalPayment() + $detail->downpayment_amount + $detail->discount_product_amount + $detail->bank_administration_fee + $detail->merimen_fee;
+//                $invoiceHeader->payment_amount = $i == 0 ? $paymentAmount : $invoiceHeader->getTotalPayment();
+//                $invoiceHeader->payment_left = $invoiceHeader->getTotalRemaining();
+//                $invoiceHeader->status = $invoiceHeader->payment_left > 0 ? 'PARTIALLY PAID' : 'PAID';
+//                $valid = $invoiceHeader->update(array('payment_amount', 'payment_left', 'status')) && $valid;
+//                
+//                $registrationTransaction = RegistrationTransaction::model()->findByPk($invoiceHeader->registration_transaction_id);
+//                $registrationTransaction->payment_status = $invoiceHeader->payment_left > 0 ? 'PARTIALLY PAID' : 'PAID';
+//                $valid = $valid && $registrationTransaction->update(array('payment_status'));
+//            }
         }
 
         $this->header->images = CUploadedFile::getInstances($this->header, 'images');

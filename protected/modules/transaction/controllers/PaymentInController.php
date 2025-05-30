@@ -778,6 +778,9 @@ class PaymentInController extends Controller {
                     if ($model->approval_type == 'Approved') {
                         foreach ($paymentIn->paymentInDetails as $detail) {
                             $invoiceHeader = InvoiceHeader::model()->findByPk($detail->invoice_header_id);
+                            $paymentAmount = $invoiceHeader->getTotalPayment() + $detail->downpayment_amount + $detail->discount_product_amount + $detail->bank_administration_fee + $detail->merimen_fee;
+                            $invoiceHeader->payment_amount = $paymentAmount;
+                            $invoiceHeader->payment_left = $invoiceHeader->getTotalRemaining();
 
                             if ($invoiceHeader->payment_left > 0.00) {
                                 $invoiceHeader->status = 'PARTIALLY PAID';
@@ -788,7 +791,7 @@ class PaymentInController extends Controller {
                                 $invoiceHeader->status = 'PAID';
                             }
 
-                            $invoiceHeader->update(array('status'));
+                            $invoiceHeader->update(array('payment_amount', 'payment_left', 'status'));
                         }
 
                         if (!empty($paymentIn->insurance_company_id)) {

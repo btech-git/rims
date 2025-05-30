@@ -10,6 +10,8 @@ $this->breadcrumbs = array(
 
 <div id="maincontent">
     <div class="clearfix page-action">
+        <h1>View Supplier Invoice #<?php echo $receiveHeader->invoice_number; ?></h1>
+        
         <table>
             <tr>
                 <td width="15%">Invoice #</td>
