@@ -211,11 +211,11 @@
                         'url' => array('/transaction/transactionPurchaseOrder/admin'), 
                         'visible' => (Yii::app()->user->checkAccess('purchaseOrderCreate') || Yii::app()->user->checkAccess('purchaseOrderEdit') || Yii::app()->user->checkAccess('purchaseOrderView'))
                     ),
-                    array(
-                        'label' => 'Pembelian Barang non stok', 
-                        'url' => array('/frontDesk/itemRequest/admin'), 
-                        'visible' => (Yii::app()->user->checkAccess('itemRequestCreate') || Yii::app()->user->checkAccess('itemRequestEdit') || Yii::app()->user->checkAccess('itemRequestView'))
-                    ),
+//                    array(
+//                        'label' => 'Pembelian Barang non stok', 
+//                        'url' => array('/frontDesk/itemRequest/admin'), 
+//                        'visible' => (Yii::app()->user->checkAccess('itemRequestCreate') || Yii::app()->user->checkAccess('itemRequestEdit') || Yii::app()->user->checkAccess('itemRequestView'))
+//                    ),
                     array(
                         'label' => 'Perbandingan', 
                         'url' => array('/transaction/compare/step1'), 

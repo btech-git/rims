@@ -9,6 +9,7 @@
             <th>Disc</th>
             <th>Biaya Bank</th>
             <th>Biaya Merimen</th>
+            <th>DP</th>
             <th class="required">Payment Amount</th>
             <th></th>
         </tr>
@@ -120,6 +121,24 @@
                     )); ?>
                     <span id="merimen_fee_amount_<?php echo $i; ?>"></span>
                 </td>
+                <td style="text-align: right">
+                    <?php echo CHtml::activeTextField($detail, "[$i]downpayment_amount", array(
+                        'onchange' => '$.ajax({
+                            type: "POST",
+                            dataType: "JSON",
+                            url: "' . CController::createUrl('ajaxJsonGrandTotal', array('id' => $paymentIn->header->id, 'index'=>$i)) . '",
+                            data: $("form").serialize(),
+                            success: function(data) {
+                                $("#downpayment_amount_' . $i . '").html(data.downpaymentAmount);
+                                $("#total_downpayment_amount").html(data.totalDownpaymentAmount);
+                                $("#bank_fee_amount").html(data.bankFeeAmount);
+                                $("#total_invoice").html(data.totalInvoice);
+                                $("#total_payment").html(data.totalPayment);
+                            },
+                        });',                        
+                    )); ?>
+                    <span id="downpayment_amount_<?php echo $i; ?>"></span>
+                </td>
                 <td>
                     <?php echo CHtml::activeTextField($detail, "[$i]amount", array(
                         'onchange' => '$.ajax({
@@ -150,27 +169,17 @@
         <?php endforeach; ?>
     </tbody>
     <tfoot>
-<!--        <tr>
-            <td colspan="5" style="text-align: right">Downpayment</td>
-            <td>
-                <?php /*echo CHtml::activeTextField($paymentIn->header, 'downpayment_amount', array(
-                    'onchange' => '$.ajax({
-                        type: "POST",
-                        dataType: "JSON",
-                        url: "' . CController::createUrl('ajaxJsonGrandTotal', array('id' => $paymentIn->header->id)) . '",
-                        data: $("form").serialize(),
-                        success: function(data) {
-                            $("#bank_fee_amount").html(data.bankFeeAmount);
-                            $("#total_invoice").html(data.totalInvoice);
-                            $("#total_payment").html(data.totalPayment);
-                        },
-                    });',                        
-                ));*/ ?>
-            </td>
-            <td colspan="2"></td>
-        </tr>-->
         <tr>
-            <td colspan="9" style="text-align: right">Total Amount + PPh</td>
+            <td colspan="10" style="text-align: right">Downpayment</td>
+            <td style="text-align: right">
+                <span id="total_downpayment_amount">
+                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($paymentIn->header, 'totalDownpayment'))); ?>
+                </span>
+            </td>
+            <td></td>
+        </tr>
+        <tr>
+            <td colspan="10" style="text-align: right">Total Amount + PPh</td>
             <td style="text-align: right">
                 <span id="total_amount">
                     <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($paymentIn->header, 'totalDetail'))); ?>
@@ -179,7 +188,7 @@
             <td></td>
         </tr>
         <tr>
-            <td colspan="9" style="text-align: right">Total Diskon</td>
+            <td colspan="10" style="text-align: right">Total Diskon</td>
             <td style="text-align: right">
                 <span id="total_discount">
                     <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($paymentIn->header, 'discount_product_amount'))); ?>
@@ -188,7 +197,7 @@
             <td></td>
         </tr>
         <tr>
-            <td colspan="9" style="text-align: right">Total Beban Administrasi Bank</td>
+            <td colspan="10" style="text-align: right">Total Beban Administrasi Bank</td>
             <td style="text-align: right">
                 <span id="total_bank_admin_fee">
                     <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($paymentIn->header, 'bank_administration_fee'))); ?>
@@ -197,7 +206,7 @@
             <td></td>
         </tr>
         <tr>
-            <td colspan="9" style="text-align: right">Total Beban Merimen</td>
+            <td colspan="10" style="text-align: right">Total Beban Merimen</td>
             <td style="text-align: right">
                 <span id="total_merimen_fee">
                     <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($paymentIn->header, 'merimen_fee'))); ?>
@@ -206,7 +215,7 @@
             <td></td>
         </tr>
         <tr>
-            <td colspan="9" style="text-align: right">Biaya Bank</td>
+            <td colspan="10" style="text-align: right">Biaya Bank</td>
             <td style="text-align: right">
                 <span id="bank_fee_amount">
                     <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($paymentIn->header, 'bank_fee_amount'))); ?>
@@ -215,7 +224,7 @@
             <td></td>
         </tr>
         <tr>
-            <td colspan="9" style="text-align: right">Total Payment</td>
+            <td colspan="10" style="text-align: right">Total Payment</td>
             <td style="text-align: right">
                 <span id="total_payment">
                     <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($paymentIn->header, 'totalPayment'))); ?>
@@ -224,7 +233,7 @@
             <td></td>
         </tr>
         <tr>
-            <td colspan="9" style="text-align: right">Total Invoice</td>
+            <td colspan="10" style="text-align: right">Total Invoice</td>
             <td style="text-align: right">
                 <span id="total_invoice">
                     <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($paymentIn->header, 'totalInvoice'))); ?>

@@ -131,7 +131,7 @@ class SaleByProductCategoryServiceTypeController extends Controller {
             'month' => $month,
             'year' => $year,
             'yearList' => $yearList,
-            'numberOfDays' => $numberOfDays,
+//            'numberOfDays' => $numberOfDays,
             'saleReportData' => $saleReportData,
             'saleReportAllData' => $saleReportAllData,
             'productMasterCategoryList' => $productMasterCategoryList,

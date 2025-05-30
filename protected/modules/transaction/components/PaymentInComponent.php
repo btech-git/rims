@@ -156,6 +156,7 @@ class PaymentInComponent extends CComponent {
         $this->header->discount_product_amount = $this->totalDiscount;
         $this->header->bank_administration_fee = $this->totalBankAdminFee;
         $this->header->merimen_fee = $this->totalMerimenFee;
+        $this->header->downpayment_amount = $this->totalDownpaymentAmount;
         $this->header->insurance_company_id = $this->details[0]->invoiceHeader->insurance_company_id;
         $valid = $this->header->save(false);
 
@@ -297,6 +298,16 @@ class PaymentInComponent extends CComponent {
         
         foreach ($this->details as $detail) {
             $total += $detail->merimen_fee;
+        }
+        
+        return $total;
+    }
+    
+    public function getTotalDownpaymentAmount() {
+        $total = 0.00;
+        
+        foreach ($this->details as $detail) {
+            $total += $detail->downpayment_amount;
         }
         
         return $total;

@@ -418,12 +418,15 @@ class JurnalUmum extends CActiveRecord {
             $params[':branch_id'] = $branchId;
         }
         
-        $sql = "SELECT SUBSTRING_INDEX(j.tanggal_transaksi, '-', 2) AS transaction_month_year, j.coa_id, j.debet_kredit, cc.id AS category_id, cc.`code` AS category_code, cc.`name` AS category_name, s.id AS sub_category_id, s.`code` AS sub_category_code, s.`name` AS sub_category_name, c.`code` AS coa_code, c.`name` AS coa_name, c.normal_balance, SUM(j.total) AS total
+        $sql = "SELECT SUBSTRING_INDEX(j.tanggal_transaksi, '-', 2) AS transaction_month_year, j.coa_id, j.debet_kredit, cc.id AS category_id, 
+                    cc.`code` AS category_code, cc.`name` AS category_name, s.id AS sub_category_id, s.`code` AS sub_category_code, s.`name` AS sub_category_name, 
+                    c.`code` AS coa_code, c.`name` AS coa_name, c.normal_balance, SUM(j.total) AS total
                 FROM " . JurnalUmum::model()->tableName() . " j
                 INNER JOIN " . Coa::model()->tableName() . " c ON c.id = j.coa_id
                 INNER JOIN " . CoaSubCategory::model()->tableName() . " s ON s.id = c.coa_sub_category_id
                 INNER JOIN " . CoaCategory::model()->tableName() . " cc ON cc.id = s.coa_category_id
-                WHERE SUBSTRING_INDEX(j.tanggal_transaksi, '-', 2) BETWEEN :start_year_month AND :end_year_month AND c.coa_category_id IN (1, 2, 3, 4, 5, 23) AND c.is_approved = 1 " . $branchConditionSql . "
+                WHERE SUBSTRING_INDEX(j.tanggal_transaksi, '-', 2) BETWEEN :start_year_month AND :end_year_month AND 
+                    c.coa_category_id IN (14) AND c.is_approved = 1 " . $branchConditionSql . "
                 GROUP BY SUBSTRING_INDEX(j.tanggal_transaksi, '-', 2), j.coa_id, j.debet_kredit
                 ORDER BY cc.`code`, s.`code` ASC, c.`code` ASC, transaction_month_year ASC";
 

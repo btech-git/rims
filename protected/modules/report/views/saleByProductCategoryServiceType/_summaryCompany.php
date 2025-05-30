@@ -27,7 +27,7 @@
         <?php $totalPriceSum = '0.00'; ?>
         <?php $totalProductSum = '0.00'; ?>
         <?php $totalServiceSum = '0.00'; ?>
-        <?php for ($n = 1; $n <= $numberOfDays; $n++): ?>
+        <?php for ($n = 1; $n <= 31; $n++): ?>
             <?php $day = str_pad($n, 2, '0', STR_PAD_LEFT); ?>
             <tr>
                 <td style="text-align: center"><?php echo $n; ?></td>
