@@ -118,6 +118,10 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                 <hr />
 
                 <div class="relative">
+                    <div class="reportDisplay">
+                        <?php echo ReportHelper::summaryText($cashTransactionSummary->dataProvider); ?>
+                    </div>
+
                     <?php $this->renderPartial('_summary', array(
                         'cashTransaction' => $cashTransaction,
                         'cashTransactionSummary' => $cashTransactionSummary,
@@ -126,13 +130,6 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                         'endDate' => $endDate,
                     )); ?>
                 </div>
-                <div class="clear"></div>
-            </div>
-            
-            <br/>
-
-            <div class="hide">
-                <div class="right"></div>
                 <div class="clear"></div>
             </div>
         </div>

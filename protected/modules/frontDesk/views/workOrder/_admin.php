@@ -16,7 +16,8 @@
 
 <div style="font-weight: bold; text-align: center">
     <div style="font-size: larger">Raperind Motor</div>
-    <div style="font-size: larger">WO Outstanding (pending invoices)</div>
+    <div style="font-size: larger">Work Order</div>
+    <div><?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($startDate))) . ' &nbsp;&ndash;&nbsp; ' . CHtml::encode(Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($endDate))); ?></div>
 </div>
 
 <br />
@@ -40,7 +41,7 @@
         </tr>
     </thead>
     <tbody>
-        <?php foreach ($dataProvider->data as $header): ?>
+        <?php foreach ($workOrderSummary->dataProvider->data as $header): ?>
             <tr class="items1">
                 <th class="width1-1"><?php echo CHtml::encode(CHtml::value($header, 'vehicle_id')); ?></th>
                 <th class="width1-2"><?php echo CHtml::encode(CHtml::value($header, 'vehicle.plate_number')); ?></th>

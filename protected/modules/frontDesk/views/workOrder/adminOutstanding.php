@@ -1,8 +1,8 @@
 <?php
 Yii::app()->clientScript->registerScript('report', '
     $(".breadcrumbs").addClass("hide");
-    $("#StartDate").val("' . $startDate . '");
-    $("#EndDate").val("' . $endDate . '");
+    $("#PageSize").val("' . $workOrderSummary->dataProvider->pagination->pageSize . '");
+    $("#CurrentPage").val("' . ($workOrderSummary->dataProvider->pagination->getCurrentPage(false) + 1) . '");
 ');
 Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/transaction/report.css');
 ?>
@@ -20,6 +20,7 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                     <span class="prefix">Plate #</span>
                                 </div>
                                 <div class="small-8 columns">
+                                    <?php echo CHtml::hiddenField('page', '', array('size' => 3, 'id' => 'CurrentPage')); ?>
                                     <?php echo CHtml::activeTextField($model, 'plate_number'); ?>
                                 </div>
                             </div>
@@ -140,7 +141,7 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                 <div class="row buttons">
                     <?php echo CHtml::submitButton('Tampilkan', array('onclick' => '$("#CurrentSort").val(""); return true;')); ?>
                     <?php echo CHtml::submitButton('Hapus', array('name' => 'ResetFilter'));  ?>
-                    <?php echo CHtml::submitButton('Simpan ke Excel', array('name' => 'SaveExcel')); ?>
+                    <?php echo CHtml::submitButton('Simpan ke Excel', array('name' => 'SaveExcelOutstanding')); ?>
                 </div>
 
                 <?php echo CHtml::endForm(); ?>
@@ -150,18 +151,15 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
 
             <hr />
 
-            <div class="right"><?php echo ReportHelper::summaryText($dataProvider); ?></div>
-            <br />
-            <div class="right"><?php //echo ReportHelper::sortText($receivableSummary->dataProvider->sort, array('Tanggal', 'Customer')); ?></div>
+            <div class="right"><?php echo ReportHelper::summaryText($workOrderSummary->dataProvider); ?></div>
             <div class="clear"></div>
+            
             <br />
 
             <div class="relative">
-                <?php $this->renderPartial('_adminProcessing', array(
+                <?php $this->renderPartial('_adminOutstanding', array(
                     'model' => $model,
-                    'dataProvider' => $dataProvider,
-                    'startDate' => $startDate,
-                    'endDate' => $endDate,
+                    'workOrderSummary' => $workOrderSummary,
                 )); ?>
             </div>
             
@@ -173,9 +171,9 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
 <div>
     <div class="right">
         <?php $this->widget('system.web.widgets.pagers.CLinkPager', array(
-            'itemCount' => $dataProvider->pagination->itemCount,
-            'pageSize' => $dataProvider->pagination->pageSize,
-            'currentPage' => $dataProvider->pagination->getCurrentPage(false),
+            'itemCount' => $workOrderSummary->dataProvider->pagination->itemCount,
+            'pageSize' => $workOrderSummary->dataProvider->pagination->pageSize,
+            'currentPage' => $workOrderSummary->dataProvider->pagination->getCurrentPage(false),
         )); ?>
     </div>
     <div class="clear"></div>

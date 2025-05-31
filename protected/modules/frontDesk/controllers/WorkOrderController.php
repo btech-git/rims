@@ -110,55 +110,157 @@ class WorkOrderController extends Controller {
      * Manages all models.
      */
     public function actionAdmin() {
-        $model = new RegistrationTransaction('search');
-        $model->unsetAttributes();  // clear any default values
+        set_time_limit(0);
+        ini_set('memory_limit', '1024M');
 
-        if (isset($_GET['RegistrationTransaction'])) {
-            $model->attributes = $_GET['RegistrationTransaction'];
+        $model = Search::bind(new RegistrationTransaction('search'), isset($_GET['RegistrationTransaction']) ? $_GET['RegistrationTransaction'] : array());
+
+        $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : date('Y-m-d');
+        $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
+        $pageSize = (isset($_GET['PageSize'])) ? $_GET['PageSize'] : 50;
+        $currentPage = (isset($_GET['page'])) ? $_GET['page'] : '';
+        $currentSort = (isset($_GET['sort'])) ? $_GET['sort'] : '';
+
+        $workOrderSummary = new WorkOrderSummary($model->search());
+        $workOrderSummary->setupLoading();
+        $workOrderSummary->setupPaging($pageSize, $currentPage);
+        $workOrderSummary->setupSorting();
+        $workOrderSummary->setupFilter($startDate, $endDate);
+
+        if (isset($_GET['ResetFilter'])) {
+            $this->redirect(array('summary'));
         }
-
-        $modelDataProvider = $model->searchByWorkOrder();
-        if (!Yii::app()->user->checkAccess('director')) {
-            $modelDataProvider->criteria->addCondition('t.branch_id = :branch_id');
-            $modelDataProvider->criteria->params[':branch_id'] = Yii::app()->user->branch_id;
+        
+        if (isset($_GET['SaveExcel'])) {
+            $this->saveToExcel($workOrderSummary->dataProvider, array('startDate' => $startDate, 'endDate' => $endDate));
         }
 
         $this->render('admin', array(
             'model' => $model,
-            'modelDataProvider' => $modelDataProvider,
+            'workOrderSummary' => $workOrderSummary,
+            'startDate' => $startDate,
+            'endDate' => $endDate,
+            'currentSort' => $currentSort,
         ));
     }
 
-    public function actionAdminProcessing() {
-        $model = new RegistrationTransaction('search');
-        $model->unsetAttributes();  // clear any default values
+    protected function saveToExcel($dataProvider, array $options = array()) {
+        set_time_limit(0);
+        ini_set('memory_limit', '1024M');
 
-        if (isset($_GET['RegistrationTransaction'])) {
-            $model->attributes = $_GET['RegistrationTransaction'];
+        spl_autoload_unregister(array('YiiBase', 'autoload'));
+        include_once Yii::getPathOfAlias('ext.phpexcel.Classes') . DIRECTORY_SEPARATOR . 'PHPExcel.php';
+        spl_autoload_register(array('YiiBase', 'autoload'));
+
+        $objPHPExcel = new PHPExcel();
+
+        $documentProperties = $objPHPExcel->getProperties();
+        $documentProperties->setCreator('Raperind Motor');
+        $documentProperties->setTitle('Work Order');
+
+        $worksheet = $objPHPExcel->setActiveSheetIndex(0);
+        $worksheet->setTitle('Work Order');
+
+        $worksheet->mergeCells('A1:N1');
+        $worksheet->mergeCells('A2:N2');
+        $worksheet->mergeCells('A3:N3');
+
+        $worksheet->getStyle('A1:N5')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->getStyle('A1:N5')->getFont()->setBold(true);
+
+        $worksheet->setCellValue('A1', 'Raperind Motor');
+        $worksheet->setCellValue('A2', 'Work Order');
+        $worksheet->setCellValue('A3', Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($options['startDate'])) . ' - ' . Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($options['endDate'])));
+
+        $worksheet->getStyle('A5:N5')->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+
+        $worksheet->setCellValue('A5', 'Vehicle ID');
+        $worksheet->setCellValue('B5', 'Plate #');
+        $worksheet->setCellValue('C5', 'Date');
+        $worksheet->setCellValue('D5', 'Vehicle Model');
+        $worksheet->setCellValue('E5', 'Color');
+        $worksheet->setCellValue('F5', 'WO #');
+        $worksheet->setCellValue('G5', 'Tanggal WO');
+        $worksheet->setCellValue('H5', 'Invoice #');
+        $worksheet->setCellValue('I5', 'Services');
+        $worksheet->setCellValue('J5', 'Repair Type');
+        $worksheet->setCellValue('K5', 'Problem');
+        $worksheet->setCellValue('L5', 'User');
+        $worksheet->setCellValue('M5', 'WO Status');
+
+        $worksheet->getStyle('A5:N5')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+
+        $counter = 7;
+        foreach ($dataProvider->data as $header) {
+            $worksheet->getStyle("C{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
+
+            $worksheet->setCellValue("A{$counter}", CHtml::value($header, 'vehicle_id'));
+            $worksheet->setCellValue("B{$counter}", CHtml::value($header, 'vehicle.plate_number'));
+            $worksheet->setCellValue("C{$counter}", CHtml::value($header, 'transaction_date'));
+            $worksheet->setCellValue("D{$counter}", CHtml::value($header, 'vehicle.carMake.name') . ' ' . CHtml::value($header, 'vehicle.carModel.name'));
+            $worksheet->setCellValue("E{$counter}", $header->vehicle->getColor($header->vehicle,"color_id"));
+            $worksheet->setCellValue("F{$counter}", CHtml::value($header, 'work_order_number'));
+            $worksheet->setCellValue("G{$counter}", CHtml::value($header, 'work_order_date'));
+            $worksheet->setCellValue("H{$counter}", $header->getInvoice($header));
+            $worksheet->setCellValue("I{$counter}", $header->getServices());
+            $worksheet->setCellValue("J{$counter}", CHtml::value($header, 'repair_type'));
+            $worksheet->setCellValue("K{$counter}", CHtml::value($header, 'problem'));
+            $worksheet->setCellValue("L{$counter}", CHtml::value($header, 'user.username'));
+            $worksheet->setCellValue("M{$counter}", CHtml::value($header, 'status'));
+
+            $counter++;
         }
+
+        for ($col = 'A'; $col !== 'P'; $col++) {
+            $objPHPExcel->getActiveSheet()
+            ->getColumnDimension($col)
+            ->setAutoSize(true);
+        }
+        
+        ob_end_clean();
+        // We'll be outputting an excel file
+        header('Content-type: application/vnd.ms-excel');
+        header('Content-Disposition: attachment;filename="work_order.xls"');
+        header('Cache-Control: max-age=0');
+        
+        $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
+        $objWriter->save('php://output');
+
+        Yii::app()->end();
+    }
+
+    public function actionAdminOutstanding() {
+        set_time_limit(0);
+        ini_set('memory_limit', '1024M');
+
+        $model = Search::bind(new RegistrationTransaction('search'), isset($_GET['RegistrationTransaction']) ? $_GET['RegistrationTransaction'] : array());
 
         $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : date('Y-m-d');
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
+        $pageSize = (isset($_GET['PageSize'])) ? $_GET['PageSize'] : 50;
+        $currentPage = (isset($_GET['page'])) ? $_GET['page'] : '';
+
+        $workOrderSummary = new WorkOrderSummary($model->search());
+        $workOrderSummary->setupLoading();
+        $workOrderSummary->setupPaging($pageSize, $currentPage);
+        $workOrderSummary->setupSorting();
+        $workOrderSummary->setupFilterOutstanding();
+
+        if (isset($_GET['ResetFilter'])) {
+            $this->redirect(array('summary'));
+        }
         
-        $dataProvider = $model->searchByProcessingWorkOrder();
-        if (!Yii::app()->user->checkAccess('director')) {
-            $dataProvider->criteria->addCondition('t.branch_id = :branch_id');
-            $dataProvider->criteria->params[':branch_id'] = Yii::app()->user->branch_id;
+        if (isset($_GET['SaveExcelOutstanding'])) {
+            $this->saveToExcelOutstanding($workOrderSummary->dataProvider);
         }
 
-        if (isset($_GET['SaveExcel'])) {
-            $this->saveToExcel($dataProvider);
-        }
-
-        $this->render('adminProcessing', array(
+        $this->render('adminOutstanding', array(
             'model' => $model,
-            'dataProvider' => $dataProvider,
-            'startDate' => $startDate,
-            'endDate' => $endDate,
+            'workOrderSummary' => $workOrderSummary,
         ));
     }
     
-    protected function saveToExcel($dataProvider) {
+    protected function saveToExcelOutstanding($dataProvider) {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
 
