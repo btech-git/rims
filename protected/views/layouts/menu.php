@@ -141,7 +141,7 @@
                     ),
                     array(
                         'label' => 'WO Outstanding', 
-                        'url' => array('/frontDesk/workOrder/adminProcessing'),
+                        'url' => array('/frontDesk/workOrder/adminOutstanding'),
                         'visible' => Yii::app()->user->checkAccess('workOrderApproval')
                     ),
                     array(
