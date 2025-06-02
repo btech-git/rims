@@ -23,7 +23,7 @@
         <?php if (count($products) > 0): ?>
             <?php foreach ($products as $i => $product): ?>
                 <tr>
-                    <td><?php echo $product->product->id; ?></td>
+                    <td><?php echo $product->product_id; ?></td>
                     <td><?php echo $product->product->manufacturer_code; ?></td>
                     <td><?php echo $product->product->name; ?></td>
                     <td><?php echo $product->quantity; ?></td>

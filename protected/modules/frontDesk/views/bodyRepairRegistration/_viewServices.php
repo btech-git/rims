@@ -2,6 +2,7 @@
     <table>
         <thead>
             <tr>
+                <th>ID</th>
                 <th>Service name</th>
                 <th>Claim</th>
                 <th>Price</th>
@@ -15,6 +16,7 @@
         <tbody>
             <?php foreach ($services as $i => $service): ?>
                 <tr>
+                    <td><?php echo $service->service_id; ?></td>
                     <td><?php echo $service->service->name; ?></td>
                     <td><?php echo $service->claim; ?></td>
                     <td><?php echo number_format($service->price, 2); ?></td>

@@ -71,24 +71,31 @@
             <div class="field">
                 <div class="row collapse">
                     <div class="small-4 columns">
-                        <?php echo $form->label($model,'status', array('class'=>'prefix')); ?>
+                        <?php echo $form->label($model,'supplier_id', array('class'=>'prefix')); ?>
                     </div>
                     <div class="small-8 columns">
-                        <?php echo $form->textField($model,'status'); ?>
+                        <?php echo CHtml::activeTextField($model, 'supplier_id', array(
+                            'readonly' => true,
+                            'onclick' => '$("#supplier-dialog").dialog("open"); return false;',
+                            'onkeypress' => 'if (event.keyCode == 13) { $("#supplier-dialog").dialog("open"); return false; }'
+                        )); ?>
+
+                        <?php echo CHtml::openTag('span', array('id' => 'supplier_name')); ?>
+                        <?php echo CHtml::encode(CHtml::value($model, 'supplier.name')); ?>
+                        <?php echo CHtml::closeTag('span'); ?>
                     </div>
                 </div>
-            </div>	
-
+            </div>
         </div>
         <div class="small-12 medium-6 columns">
             <!-- BEGIN FIELDS -->
             <div class="field">
                 <div class="row collapse">
                     <div class="small-4 columns">
-                        <?php echo $form->label($model,'supplier_id', array('class'=>'prefix')); ?>
+                        <?php echo CHtml::label('Plat #', '', array('class'=>'prefix')); ?>
                     </div>
                     <div class="small-8 columns">
-                        <?php echo CHtml::activeDropDownList($model, 'supplier_id', CHtml::listData(Supplier::model()->findAll(), 'id', 'name'), array('empty' => '-- All --')); ?>
+                        <?php echo CHtml::textField('PlateNumber', $plateNumber); ?>
                     </div>
                 </div>
             </div>	
@@ -108,10 +115,19 @@
             <div class="field">
                 <div class="row collapse">
                     <div class="small-4 columns">
-                        <?php echo $form->label($model,'note', array('class'=>'prefix')); ?>
+                        <?php echo CHtml::label('Customer', '', array('class'=>'prefix')); ?>
                     </div>
                     <div class="small-8 columns">
-                        <?php echo $form->textField($model,'note'); ?>
+                        <?php echo CHtml::textField('CustomerId', $customerId, array(
+                            'readonly' => true,
+                            'onclick' => '$("#customer-dialog").dialog("open"); return false;',
+                            'onkeypress' => 'if (event.keyCode == 13) { $("#customer-dialog").dialog("open"); return false; }'
+                        )); ?>
+
+                        <?php echo CHtml::openTag('span', array('id' => 'customer_name')); ?>
+                        <?php $customerData = Customer::model()->findByPk($customerId); ?>
+                        <?php echo CHtml::encode(CHtml::value($customerData, 'name')); ?>
+                        <?php echo CHtml::closeTag('span'); ?>
                     </div>
                 </div>
             </div>	
@@ -122,5 +138,98 @@
         </div>
     </div>
 <?php $this->endWidget(); ?>
+</div>
 
-</div><!-- search-form -->
+<div>
+    <?php $this->beginWidget('zii.widgets.jui.CJuiDialog', array(
+        'id' => 'supplier-dialog',
+        // additional javascript options for the dialog plugin
+        'options' => array(
+            'title' => 'Supplier',
+            'autoOpen' => false,
+            'width' => 'auto',
+            'modal' => true,
+        ),
+    )); ?>
+    <?php $this->widget('zii.widgets.grid.CGridView', array(
+        'id' => 'supplier-grid',
+        'dataProvider' => $supplierDataProvider,
+        'filter' => $supplier,
+        'template' => '{items}<div class="clearfix">{summary}{pager}</div>',
+        'pager' => array(
+            'cssFile' => false,
+            'header' => '',
+        ),
+        'selectionChanged' => 'js:function(id) {
+            $("#' . CHtml::activeId($model, 'supplier_id') . '").val($.fn.yiiGridView.getSelection(id));
+            $("#supplier-dialog").dialog("close");
+            if ($.fn.yiiGridView.getSelection(id) == "") {
+                $("#supplier_name").html("");
+            } else {
+                $.ajax({
+                    type: "POST",
+                    dataType: "JSON",
+                    url: "' . CController::createUrl('ajaxJsonSupplier') . '",
+                    data: $("form").serialize(),
+                    success: function(data) {
+                        $("#supplier_name").html(data.supplier_name);
+                    },
+                });
+            }
+        }',
+        'columns' => array(
+            'name',
+            'company',
+            'address',
+            'description',
+            'status'
+        ),
+    )); ?>
+    <?php $this->endWidget('zii.widgets.jui.CJuiDialog'); ?>
+</div>
+
+<div>
+    <?php $this->beginWidget('zii.widgets.jui.CJuiDialog', array(
+        'id' => 'customer-dialog',
+        // additional javascript options for the dialog plugin
+        'options' => array(
+            'title' => 'Customer',
+            'autoOpen' => false,
+            'width' => 'auto',
+            'modal' => true,
+        ),
+    )); ?>
+    <?php $this->widget('zii.widgets.grid.CGridView', array(
+        'id' => 'customer-grid',
+        'dataProvider' => $customerDataProvider,
+        'filter' => $customer,
+        'template' => '{items}<div class="clearfix">{summary}{pager}</div>',
+        'pager' => array(
+            'cssFile' => false,
+            'header' => '',
+        ),
+        'selectionChanged' => 'js:function(id) {
+            $("#CustomerId").val($.fn.yiiGridView.getSelection(id));
+            $("#customer-dialog").dialog("close");
+            if ($.fn.yiiGridView.getSelection(id) == "") {
+                $("#customer_name").html("");
+            } else {
+                $.ajax({
+                    type: "POST",
+                    dataType: "JSON",
+                    url: "' . CController::createUrl('ajaxJsonCustomer') . '",
+                    data: $("form").serialize(),
+                    success: function(data) {
+                        $("#customer_name").html(data.customer_name);
+                    },
+                });
+            }
+        }',
+        'columns' => array(
+            'name',
+            'mobile_phone',
+            'email',
+        ),
+    )); ?>
+    <?php $this->endWidget('zii.widgets.jui.CJuiDialog'); ?>
+</div>

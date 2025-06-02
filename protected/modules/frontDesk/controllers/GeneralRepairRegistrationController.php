@@ -341,10 +341,12 @@ class GeneralRepairRegistrationController extends Controller {
 
         $model = Search::bind(new RegistrationTransaction('search'), isset($_GET['RegistrationTransaction']) ? $_GET['RegistrationTransaction'] : '');
         $dataProvider = $model->searchAdmin();
+        
         if (!Yii::app()->user->checkAccess('director')) {
             $dataProvider->criteria->addCondition('t.branch_id = :branch_id');
             $dataProvider->criteria->params[':branch_id'] = Yii::app()->user->branch_id;
         }
+        
         $dataProvider->criteria->together = true;
         $dataProvider->criteria->with = array(
             'customer',

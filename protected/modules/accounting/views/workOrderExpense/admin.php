@@ -73,6 +73,12 @@ $('.search-form form').submit(function(){
                     'model' => $paymentOut,
                     'startDate' => $startDate,
                     'endDate' => $endDate,
+                    'customerId' => $customerId,
+                    'plateNumber' => $plateNumber,
+                    'customer' => $customer,
+                    'customerDataProvider' => $customerDataProvider,
+                    'supplier' => $supplier,
+                    'supplierDataProvider' => $supplierDataProvider,
                 )); ?>
             </div><!-- search-form -->
         </div>
@@ -102,6 +108,11 @@ $('.search-form form').submit(function(){
             'value' => 'Yii::app()->dateFormatter->format("d MMM yyyy", $data->transaction_date)'
         ),
         array(
+            'header' => 'Supplier',
+            'name' => 'supplier_id',
+            'value' => 'CHtml::value($data, "supplier.name")',
+        ),
+        array(
             'header' => 'WO #',
             'value'=>'CHtml::link($data->registrationTransaction->work_order_number, array("/frontDesk/registrationTransaction/view", "id"=>$data->registration_transaction_id), array("target" => "blank"))', 
             'type'=>'raw',
@@ -119,8 +130,27 @@ $('.search-form form').submit(function(){
             'value' => 'CHtml::value($data, "registrationTransaction.vehicle.plate_number")',
         ),
         array(
+            'header' => 'Kendaraan',
+            'value' => 'CHtml::value($data, "registrationTransaction.vehicle.carMakeModelSubCombination")',
+        ),
+        array(
             'name' => 'note',
             'value' => 'substr(CHtml::value($data, "note"), 0, 30)',
+        ),
+        array(
+            'name' => 'grand_total',
+            'value' => 'number_format(CHtml::value($data, "grand_total"), 2)',
+            'htmlOptions' => array('style' => 'text-align: right'),
+        ),
+        array(
+            'name' => 'total_payment',
+            'value' => 'number_format(CHtml::value($data, "total_payment"), 2)',
+            'htmlOptions' => array('style' => 'text-align: right'),
+        ),
+        array(
+            'name' => 'payment_remaining',
+            'value' => 'number_format(CHtml::value($data, "payment_remaining"), 2)',
+            'htmlOptions' => array('style' => 'text-align: right'),
         ),
         array(
             'header' => 'Created By',
@@ -134,17 +164,17 @@ $('.search-form form').submit(function(){
             'filter' => false,
             'value' => 'Yii::app()->dateFormatter->format("d MMM yyyy HH:mm:ss", $data->created_datetime)'
         ),
-        array(
-            'class' => 'CButtonColumn',
-            'template' => '{view}',
-            'buttons' => array(
-                'view' => array(
-                    'label' => 'view',
-                    'url' => 'Yii::app()->createUrl("accounting/workOrderExpense/view", array("id"=>$data->id))',
-                ),
-            ),
-            'afterDelete' => 'function(){ location.reload(); }'
-        ),
+//        array(
+//            'class' => 'CButtonColumn',
+//            'template' => '{view}',
+//            'buttons' => array(
+//                'view' => array(
+//                    'label' => 'view',
+//                    'url' => 'Yii::app()->createUrl("accounting/workOrderExpense/view", array("id"=>$data->id))',
+//                ),
+//            ),
+//            'afterDelete' => 'function(){ location.reload(); }'
+//        ),
     ),
 )); ?>
 <?php echo CHtml::endForm(); ?>

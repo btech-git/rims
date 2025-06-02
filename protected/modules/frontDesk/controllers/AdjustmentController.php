@@ -92,13 +92,22 @@ class AdjustmentController extends Controller {
             $model->attributes = $_GET['StockAdjustmentHeader'];
         }
 
+        $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : '';
+        $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : '';
+        
         $dataProvider = $model->search();
-//        $dataProvider->criteria->addCondition('t.branch_id = :branch_id');
-//        $dataProvider->criteria->params[':branch_id'] = Yii::app()->user->branch_id;
+        $dataProvider->criteria->addBetweenCondition('DATE(t.date_posting)', $startDate, $endDate);
+        
+        if (!Yii::app()->user->checkAccess('director')) {
+            $dataProvider->criteria->addCondition('t.branch_id = :branch_id');
+            $dataProvider->criteria->params[':branch_id'] = Yii::app()->user->branch_id;
+        }
         
         $this->render('admin', array(
             'model' => $model,
             'dataProvider' => $dataProvider,
+            'startDate' => $startDate,
+            'endDate' => $endDate,
         ));
     }
 

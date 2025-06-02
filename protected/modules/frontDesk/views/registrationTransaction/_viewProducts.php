@@ -2,6 +2,7 @@
     <table>
         <thead>
             <tr>
+                <th>ID</th>
                 <th>Product name</th>
                 <th>Quantity</th>
                 <th>Retail Price</th>
@@ -16,12 +17,12 @@
                 <th>Quantity Movement left</th>
                 <th>Quantity Receive</th>
                 <th>Quantity Receive left</th>
-
             </tr>
         </thead>
         <tbody>
             <?php foreach ($products as $i => $product): ?>
                 <tr>
+                    <td><?php echo $product->product_id; ?></td>
                     <td><?php echo $product->product->name; ?></td>
                     <td><?php echo $product->quantity; ?></td>
                     <td><?php echo number_format($product->retail_price, 2); ?></td>
@@ -44,7 +45,6 @@
                             'onclick' => '$("#detail-' . $product->id . '").toggle();'
                         ), '<span class="fa fa-caret-down">&nbsp;</span>'); ?>
                     </td>
-
                 </tr>
                 <tr>
                     <td id="detail-<?php echo $product->id ?>" class="hide" colspan=12>

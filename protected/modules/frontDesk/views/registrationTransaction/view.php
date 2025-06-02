@@ -69,14 +69,14 @@ $this->breadcrumbs = array(
             <legend>Details</legend>
             <?php
             $tabsArray = array();
-            $tabsArray['Quick Service'] = array(
-                'id' => 'quickService',
-                'content' => $this->renderPartial('_viewQuickService', array(
-                    'quickServices' => $quickServices,
-                    'ccontroller' => $ccontroller,
-                    'model' => $model
-                ), TRUE)
-            );
+//            $tabsArray['Quick Service'] = array(
+//                'id' => 'quickService',
+//                'content' => $this->renderPartial('_viewQuickService', array(
+//                    'quickServices' => $quickServices,
+//                    'ccontroller' => $ccontroller,
+//                    'model' => $model
+//                ), TRUE)
+//            );
             $tabsArray['Service'] = array(
                 'id' => 'service',
                 'content' => $this->renderPartial('_viewServices', array(

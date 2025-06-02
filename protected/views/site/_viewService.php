@@ -104,6 +104,11 @@
                 'name' => 'service_type_id',
                 'value' => 'CHtml::value($data, "serviceType.name")',
             ),
+            array(
+                'header' => 'Sell Price',
+                'value' => 'number_format(CHtml::value($data, "lastSalePrice"), 2)',
+                'htmlOptions' => array('style' => 'text-align:right'),
+            ),
         ),
     )); ?>
 </div>

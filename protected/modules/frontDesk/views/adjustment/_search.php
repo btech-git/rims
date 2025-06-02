@@ -31,8 +31,32 @@
                         <?php echo $form->label($model, 'date_posting', array('class' => 'prefix')); ?>
                     </div>
                     
-                    <div class="small-8 columns">
-                        <?php echo $form->textField($model, 'date_posting'); ?>
+                    <div class="small-4 columns">
+                        <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(
+                            'name' => 'StartDate',
+                            'attribute' => $startDate,
+                            'options' => array(
+                                'dateFormat' => 'yy-mm-dd',
+                            ),
+                            'htmlOptions' => array(
+                                'readonly' => true,
+                                'placeholder' => 'Date From'
+                            ),
+                        )); ?>
+                    </div>
+                    
+                    <div class="small-4 columns">
+                        <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(
+                            'name' => 'EndDate',
+                            'attribute' => $endDate,
+                            'options' => array(
+                                'dateFormat' => 'yy-mm-dd',
+                            ),
+                            'htmlOptions' => array(
+                                'readonly' => true,
+                                'placeholder' => 'Date To'
+                            ),
+                        )); ?>
                     </div>
                 </div>
             </div>
@@ -53,15 +77,13 @@
             <div class="field">
                 <div class="row collapse">
                     <div class="small-4 columns">
-                        <?php echo $form->label($model, 'status', array('class' => 'prefix')); ?>
+                        <?php echo $form->label($model, 'transaction_type', array('class' => 'prefix')); ?>
                     </div>
                     
                     <div class="small-8 columns">
-                        <?php echo $form->dropDownList($model, 'status', array(
-                            'Draft' => 'Draft',
-                            'Revised' => 'Need Revision',
-                            'Rejected'=>'Rejected',
-                            'Approved' => 'Approved',
+                        <?php echo $form->dropDownList($model, 'transaction_type', array(
+                            'Selisih Cabang' => 'Selisih Cabang',
+                            'Hilang' => 'Hilang / Lebih',
                         ), array('empty' => '-- all --')); ?>
                     </div>
                 </div>

@@ -533,4 +533,20 @@ class Service extends CActiveRecord {
 
         return $resultSet;
     }
+    
+    public function getLastSalePrice() {
+        $sql = "
+            SELECT total_price
+            FROM " . RegistrationService::model()->tableName() . "
+            WHERE service_id = :service_id
+            ORDER BY id DESC
+        ";
+
+        $value = Yii::app()->db->createCommand($sql)->queryScalar(array(
+            ':service_id' => $this->id,
+        ));
+
+        return ($value === false) ? 0 : $value;
+        
+    }
 }

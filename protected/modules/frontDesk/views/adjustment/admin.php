@@ -39,6 +39,8 @@ $('.search-form form').submit(function(){
             <div class="search-form" style="display:none">
                 <?php $this->renderPartial('_search', array(
                     'model' => $model,
+                    'startDate' => $startDate,
+                    'endDate' => $endDate,
                 )); ?>
             </div><!-- search-form -->
         </div>
@@ -60,6 +62,11 @@ $('.search-form form').submit(function(){
                     'type' => 'raw'
                 ),
                 'date_posting',
+                array(
+                    'name' => 'transaction_type',
+                    'filter' => CHtml::activeDropDownList($model, 'transaction_type', array(), array('empty' => '-- All --')),
+                    'value' => '$data->transaction_type'
+                ),
                 array(
                     'name' => 'username_name',
                     'value' => '(!empty($data->user->username)?$data->user->username:"")',

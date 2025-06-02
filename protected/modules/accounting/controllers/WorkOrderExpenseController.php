@@ -56,7 +56,7 @@ class WorkOrderExpenseController extends Controller {
         $customerName = isset($_GET['CustomerName']) ? $_GET['CustomerName'] : '';
         $vehicleNumber = isset($_GET['VehicleNumber']) ? $_GET['VehicleNumber'] : '';
 
-        $registrationTransactionDataProvider = $registrationTransaction->search();
+        $registrationTransactionDataProvider = $registrationTransaction->searchByWorkOrderExpense();
         $registrationTransactionDataProvider->criteria->with = array(
             'customer',
             'vehicle',
@@ -219,6 +219,8 @@ class WorkOrderExpenseController extends Controller {
         
         $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : '';
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : '';
+        $customerId = (isset($_GET['CustomerId'])) ? $_GET['CustomerId'] : '';
+        $plateNumber = (isset($_GET['PlateNumber'])) ? $_GET['PlateNumber'] : '';
 
         if (isset($_GET['pageSize'])) {
             Yii::app()->user->setState('pageSize', (int) $_GET['pageSize']);
@@ -227,19 +229,47 @@ class WorkOrderExpenseController extends Controller {
 
         $dataProvider = $workOrderExpense->search();
         $dataProvider->criteria->with = array(
-            'registrationTransaction',
+            'registrationTransaction' => array(
+                'with' => array(
+                    'vehicle',
+                ),
+            ),
+            'supplier',
         );
         $dataProvider->criteria->addBetweenCondition('t.transaction_date', $startDate, $endDate);
+        
+        if (!empty($customerId)) {
+            $dataProvider->criteria->compare('registrationTransaction.customer_id', $customerId);
+        }
+        
+        if (!empty($plateNumber)) {
+            $dataProvider->criteria->compare('vehicle.plate_number', $plateNumber, true);
+        }
+        
         if (!Yii::app()->user->checkAccess('director')) {
             $dataProvider->criteria->addCondition('t.branch_id = :branch_id');
             $dataProvider->criteria->params[':branch_id'] = Yii::app()->user->branch_id;
         }
 
+        $customer = Search::bind(new Customer('search'), isset($_GET['Customer']) ? $_GET['Customer'] : array());
+        $customerDataProvider = $customer->search();
+        $customerDataProvider->pagination->pageVar = 'page_dialog';
+        
+        $supplier = Search::bind(new Supplier('search'), isset($_GET['Supplier']) ? $_GET['Supplier'] : array());
+        $supplierDataProvider = $supplier->search();
+        $supplierDataProvider->pagination->pageVar = 'page_dialog';
+        
         $this->render('admin', array(
             'paymentOut' => $workOrderExpense,
             'dataProvider' => $dataProvider,
             'startDate' => $startDate,
             'endDate' => $endDate,
+            'customerId' => $customerId,
+            'plateNumber' => $plateNumber,
+            'customer' => $customer,
+            'customerDataProvider' => $customerDataProvider,
+            'supplier' => $supplier,
+            'supplierDataProvider' => $supplierDataProvider,
         ));
     }
 
