@@ -19,18 +19,20 @@ $this->menu = array(
 <div id="maincontent">
     <div class="clearfix page-action">
         <?php $ccontroller = Yii::app()->controller->id;
-        $ccaction = Yii::app()->controller->action->id; ?>
+        $ccaction = Yii::app()->controller->action->id;
+        ?>
         <?php echo CHtml::link('<span class="fa fa-list"></span>Manage Stock Adjustment', Yii::app()->baseUrl . '/frontDesk/adjustment/admin', array('class' => 'button cbutton right')) ?>
 
         <?php if ($model->status == "Draft" && Yii::app()->user->checkAccess("stockAdjustmentApproval") && $model->status != 'CANCELLED!!!'): ?>
-            <?php echo CHtml::link('<span class="fa fa-edit"></span>Approval', Yii::app()->baseUrl.'/frontDesk/adjustment/updateApproval?headerId=' . $model->id , array('class'=>'button cbutton right','style'=>'margin-right:10px')) ?>
+            <?php echo CHtml::link('<span class="fa fa-edit"></span>Approval', Yii::app()->baseUrl . '/frontDesk/adjustment/updateApproval?headerId=' . $model->id, array('class' => 'button cbutton right', 'style' => 'margin-right:10px')) ?>
         <?php elseif ($model->status != "Draft" && Yii::app()->user->checkAccess("stockAdjustmentSupervisor") && $model->status != 'CANCELLED!!!'): ?>
-            <?php echo CHtml::link('<span class="fa fa-edit"></span>Update Approval', Yii::app()->baseUrl.'/frontDesk/adjustment/updateApproval?headerId=' . $model->id , array('class'=>'button cbutton right','style'=>'margin-right:10px')) ?>
-        <?php endif; ?>
-        
+            <?php echo CHtml::link('<span class="fa fa-edit"></span>Update Approval', Yii::app()->baseUrl . '/frontDesk/adjustment/updateApproval?headerId=' . $model->id, array('class' => 'button cbutton right', 'style' => 'margin-right:10px')) ?>
+<?php endif; ?>
+
         <h1>View Stock Adjustment #<?php echo $model->id; ?></h1>
 
-        <?php $this->widget('zii.widgets.CDetailView', array(
+        <?php
+        $this->widget('zii.widgets.CDetailView', array(
             'data' => $model,
             'attributes' => array(
                 'id',
@@ -66,17 +68,19 @@ $this->menu = array(
                 'status',
                 'note',
             ),
-        )); ?>
+        ));
+        ?>
 
         <hr />
-        
+
         <h2>Detail Product</h2>
-        
+
         <div class="row">
             <div class="small-12 columns">
                 <div style="max-width: 120em; width: 100%;">
                     <div style="overflow-y: hidden; margin-bottom: 1.25rem;">
-                        <?php $this->widget('zii.widgets.grid.CGridView', array(
+                        <?php
+                        $this->widget('zii.widgets.grid.CGridView', array(
                             'id' => 'adjustment-detail-grid',
                             'dataProvider' => new CArrayDataProvider($model->stockAdjustmentDetails),
                             'columns' => array(
@@ -135,8 +139,53 @@ $this->menu = array(
                                 'product.unit.name: Unit',
                                 'memo',
                             ),
-                        )); ?>
+                        ));
+                        ?>
                     </div>
+                </div>
+            </div>
+        </div>
+
+        <hr />
+
+        <div class="field">
+            <div class="row collapse">
+                <div class="small-12 columns">
+                    <h2>Revision History</h2>
+                </div>
+            </div>
+        </div>
+
+        <div class="field">
+            <div class="row collapse">
+                <div class="small-12 columns">
+                    <?php if ($historis != null): ?>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <td>Approval type</td>
+                                    <td>Revision</td>
+                                    <td>date</td>
+                                    <td>note</td>
+                                    <td>supervisor</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php foreach ($historis as $key => $history): ?>
+                                    <tr>
+                                        <td><?php echo $history->approval_type; ?></td>
+                                        <td><?php echo $history->revision; ?></td>
+                                        <td><?php echo $history->date; ?></td>
+                                        <td><?php echo $history->note; ?></td>
+                                        <td><?php echo $history->supervisor_id !== null ? $history->supervisor->username : " "; ?></td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            </tbody>
+                        </table>
+                    <?php else:
+                        echo "No Revision History";
+                    ?>		
+                    <?php endif; ?>			 
                 </div>
             </div>
         </div>
@@ -156,11 +205,14 @@ $this->menu = array(
                 </thead>
 
                 <tbody>
-                    <?php $totalDebit = 0; $totalCredit = 0; ?>
-                    <?php $transactions = JurnalUmum::model()->findAllByAttributes(array(
-                        'kode_transaksi' => $model->stock_adjustment_number, 
-                        'is_coa_category' => 0
-                    )); ?>
+                    <?php $totalDebit = 0;
+                    $totalCredit = 0; ?>
+<?php
+$transactions = JurnalUmum::model()->findAllByAttributes(array(
+    'kode_transaksi' => $model->stock_adjustment_number,
+    'is_coa_category' => 0
+        ));
+?>
                     <?php foreach ($transactions as $i => $header): ?>
                         <?php $amountDebit = $header->debet_kredit == 'D' ? CHtml::value($header, 'total') : 0; ?>
                         <?php $amountCredit = $header->debet_kredit == 'K' ? CHtml::value($header, 'total') : 0; ?>
@@ -171,19 +223,19 @@ $this->menu = array(
                             <td class="width1-6" style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $amountDebit)); ?></td>
                             <td class="width1-7" style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $amountCredit)); ?></td>
                         </tr>
-                        <?php $totalDebit += $amountDebit; ?>
-                        <?php $totalCredit += $amountCredit; ?>
-                    <?php endforeach; ?>
+                                <?php $totalDebit += $amountDebit; ?>
+    <?php $totalCredit += $amountCredit; ?>
+                            <?php endforeach; ?>
                 </tbody>
 
                 <tfoot>
                     <tr>
                         <td colspan="3" style="text-align: right; font-weight: bold">TOTAL</td>
                         <td class="width1-6" style="text-align: right; font-weight: bold; border-top: 1px solid">
-                            <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $totalDebit)); ?>
+<?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $totalDebit)); ?>
                         </td>
                         <td class="width1-7" style="text-align: right; font-weight: bold; border-top: 1px solid">
-                            <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $totalCredit)); ?>
+<?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $totalCredit)); ?>
                         </td>
                     </tr>
                 </tfoot>

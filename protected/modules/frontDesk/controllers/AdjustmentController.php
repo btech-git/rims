@@ -75,12 +75,14 @@ class AdjustmentController extends Controller {
         $listApproval = StockAdjustmentApproval::model()->findAllByAttributes(array('stock_adjustment_header_id' => $id));
         $product = new Product('search');
         $warehouse = Warehouse::model()->findAll();
+        $historis = StockAdjustmentApproval::model()->findAllByAttributes(array('stock_adjustment_header_id' => $headerId));
 
         $this->render('view', array(
             'model' => $this->loadModel($id),
             'product' => $product,
             'warehouse' => $warehouse,
             'listApproval' => $listApproval,
+            'historis' => $historis,
         ));
     }
 
