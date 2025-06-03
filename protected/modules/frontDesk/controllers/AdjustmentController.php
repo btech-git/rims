@@ -76,8 +76,20 @@ class AdjustmentController extends Controller {
         $product = new Product('search');
         $warehouse = Warehouse::model()->findAll();
 
-
         $this->render('view', array(
+            'model' => $this->loadModel($id),
+            'product' => $product,
+            'warehouse' => $warehouse,
+            'listApproval' => $listApproval,
+        ));
+    }
+
+    public function actionShow($id) {
+        $listApproval = StockAdjustmentApproval::model()->findAllByAttributes(array('stock_adjustment_header_id' => $id));
+        $product = new Product('search');
+        $warehouse = Warehouse::model()->findAll();
+
+        $this->render('show', array(
             'model' => $this->loadModel($id),
             'product' => $product,
             'warehouse' => $warehouse,
