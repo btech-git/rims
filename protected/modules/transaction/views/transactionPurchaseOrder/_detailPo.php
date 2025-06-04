@@ -81,7 +81,7 @@
                 <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($detail, 'product.hpp'))); ?>
             </td>
             <td>
-                <?php echo CHtml::activeTextField($detail, "[$i]unit_price", array(
+                <?php echo CHtml::activeTextField($detail, "[$i]retail_price", array(
                     'onchange' => '
                         $.ajax({
                             type: "POST",
