@@ -404,12 +404,12 @@ class PurchaseOrders extends CComponent {
     }
 
     public function getGrandTotal() {
-        $total = 0.00;
+//        $total = 0.00;
 
-        foreach ($this->details as $detail) {
-            $total += $detail->getSubTotal($this->header->ppn, $this->header->tax_percentage);
-        }
+//        foreach ($this->details as $detail) {
+//            $total += $detail->getSubTotal($this->header->ppn, $this->header->tax_percentage);
+//        }
 
-        return $total;
+        return $this->subTotal + $this->taxAmount;
     }
 }
