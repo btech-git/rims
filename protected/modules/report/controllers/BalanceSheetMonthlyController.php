@@ -83,7 +83,7 @@ class BalanceSheetMonthlyController extends Controller {
         }
         
         if (isset($_GET['SaveExcel'])) {
-            $this->saveToExcel($balanceSheetInfo, $startYearMonth, $endYearMonth, $branchId);
+            $this->saveToExcel($balanceSheetInfo, $beginningBalanceInfo, $startYearMonth, $endYearMonth, $branchId);
         }
 
         $this->render('summary', array(
@@ -125,7 +125,7 @@ class BalanceSheetMonthlyController extends Controller {
         ));
     }
 
-    protected function saveToExcel($balanceSheetInfo, $startYearMonth, $endYearMonth, $branchId) {
+    protected function saveToExcel($balanceSheetInfo, $beginningBalanceInfo, $startYearMonth, $endYearMonth, $branchId) {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
         
@@ -174,12 +174,17 @@ class BalanceSheetMonthlyController extends Controller {
             $worksheet->setCellValue('A3', $branch->name);
         }
 
-        $column = 'B'; 
+        $column = 'C'; 
         if (count($yearMonthList) <= 12 && count($yearMonthList) >= 1) {
             $worksheet->setCellValue('A5', 'Account');
+            $worksheet->setCellValue('B5', 'Saldo Awal');
             foreach ($yearMonthList as $yearMonth => $yearMonthFormatted) {
-                $worksheet->setCellValue($column . '4', $yearMonthFormatted);
-                $column++;                
+                $worksheet->setCellValue($column . '4', $yearMonthFormatted . '- Debit');
+                $column++;
+                $worksheet->setCellValue($column . '4', $yearMonthFormatted . '- Credit');
+                $column++;
+                $worksheet->setCellValue($column . '4', $yearMonthFormatted . '- Saldo');
+                $column++;
             }
             
             $counter = 7;
@@ -193,12 +198,12 @@ class BalanceSheetMonthlyController extends Controller {
             }
             foreach ($balanceSheetInfo as $elementNumber => $balanceSheetElementInfo) {
                 if ($elementNumber === '3*') {
-                    $column = 'B'; 
+                    $column = 'C'; 
                     $worksheet->getStyle("A{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
                     $worksheet->setCellValue("A{$counter}", "Total Kewajiban & Ekuitas");
                     foreach ($yearMonthList as $yearMonth => $yearMonthFormatted) {
                         $worksheet->setCellValue("{$column}{$counter}", CHtml::encode($elementsTotalSums['2'][$yearMonth] + $elementsTotalSums['3'][$yearMonth]));
-                        $column++;
+                        $column++;$column++;$column++;
                     }
                     $counter++;
                 } else {
@@ -219,20 +224,30 @@ class BalanceSheetMonthlyController extends Controller {
                                 $subCategoryTotalSums[$yearMonth] = '0.00';
                             }
 
-                            foreach ($subCategoryInfo['accounts'] as $accountInfo) {
-                                $column = 'B'; 
+                            foreach ($subCategoryInfo['accounts'] as $coaId => $accountInfo) {
+                                $column = 'C'; 
+                                $beginningBalance = isset($beginningBalanceInfo[$coaId]) ? $beginningBalanceInfo[$coaId] : '0.00'; 
+                                $currentBalance = $beginningBalance;
                                 $worksheet->setCellValue("A{$counter}", $accountInfo['code'] . " - " . $accountInfo['name']);
+                                $worksheet->setCellValue("B{$counter}", $beginningBalance);
                                 foreach ($yearMonthList as $yearMonth => $yearMonthFormatted) {
-                                    $balance = isset($accountInfo['totals'][$yearMonth]) ? $accountInfo['totals'][$yearMonth] : 0;
-                                    $worksheet->setCellValue("{$column}{$counter}", CHtml::encode($balance));
+                                    $debit = isset($accountInfo['debits'][$yearMonth]) ? $accountInfo['debits'][$yearMonth] : ''; 
+                                    $worksheet->setCellValue("{$column}{$counter}", CHtml::encode($debit));
                                     $column++;
-                                    $subCategoryTotalSums[$yearMonth] += $balance;
+                                    $credit = isset($accountInfo['credits'][$yearMonth]) ? $accountInfo['credits'][$yearMonth] : '';
+                                    $worksheet->setCellValue("{$column}{$counter}", CHtml::encode($credit));
+                                    $column++;
+                                    $balance = isset($accountInfo['totals'][$yearMonth]) ? $accountInfo['totals'][$yearMonth] : '';
+                                    $currentBalance += $balance;
+                                    $worksheet->setCellValue("{$column}{$counter}", CHtml::encode($currentBalance));
+                                    $column++;
+                                    $subCategoryTotalSums[$yearMonth] += $currentBalance;
                                 }
                                 $counter++;
 
                             }
 
-                            $column = 'B'; 
+                            $column = 'C'; 
                             $worksheet->getStyle("A{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
                             $worksheet->setCellValue("A{$counter}", "Total " . $subCategoryInfo['name']);
                             foreach ($yearMonthList as $yearMonth => $yearMonthFormatted) {
@@ -245,7 +260,7 @@ class BalanceSheetMonthlyController extends Controller {
                             }
                         }
 
-                        $column = 'B'; 
+                        $column = 'C'; 
                         $worksheet->getStyle("A{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
                         $worksheet->setCellValue("A{$counter}", "Total " . $categoryInfo['name']);
                         foreach ($yearMonthList as $yearMonth => $yearMonthFormatted) {
@@ -259,7 +274,7 @@ class BalanceSheetMonthlyController extends Controller {
                         }
                     }
 
-                    $column = 'B'; 
+                    $column = 'C'; 
                     $worksheet->getStyle("A{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
                     $worksheet->setCellValue("A{$counter}", "Total " . $elementNames[$elementNumber]);
                     foreach ($yearMonthList as $yearMonth => $yearMonthFormatted) {
@@ -271,7 +286,7 @@ class BalanceSheetMonthlyController extends Controller {
             }
         }
         
-        for ($col = 'A'; $col !== 'H'; $col++) {
+        for ($col = 'A'; $col !== 'Z'; $col++) {
             $objPHPExcel->getActiveSheet()
             ->getColumnDimension($col)
             ->setAutoSize(true);

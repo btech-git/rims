@@ -54,7 +54,9 @@
                 <?php else: ?>
                     <?php foreach ($balanceSheetElementInfo as $categoryInfo): ?>
                         <tr>
-                            <td colspan="<?php echo count($yearMonthList) * 3 + 2; ?>" style="font-weight: bold"><?php echo $categoryInfo['code']; ?> - <?php echo $categoryInfo['name']; ?></td>
+                            <td colspan="<?php echo count($yearMonthList) * 3 + 2; ?>" style="font-weight: bold">
+                                <?php echo $categoryInfo['code']; ?> - <?php echo $categoryInfo['name']; ?>
+                            </td>
                         </tr>
                         <?php $categoryTotalSums = array(); ?>
                         <?php foreach ($yearMonthList as $yearMonth => $yearMonthFormatted): ?>
@@ -62,7 +64,9 @@
                         <?php endforeach; ?>
                         <?php foreach ($categoryInfo['sub_categories'] as $subCategoryInfo): ?>
                             <tr>
-                                <td colspan="<?php echo count($yearMonthList) * 3 + 2; ?>" style="padding-left: 25px; font-weight: bold;"><?php echo $subCategoryInfo['code']; ?> - <?php echo $subCategoryInfo['name']; ?></td>
+                                <td colspan="<?php echo count($yearMonthList) * 3 + 2; ?>" style="padding-left: 25px; font-weight: bold;">
+                                    <?php echo $subCategoryInfo['code']; ?> - <?php echo $subCategoryInfo['name']; ?>
+                                </td>
                             </tr>
                             <?php $subCategoryTotalSums = array(); ?>
                             <?php foreach ($yearMonthList as $yearMonth => $yearMonthFormatted): ?>
@@ -82,7 +86,9 @@
                                         <?php $beginningBalance = isset($beginningBalanceInfo[$coaId]) ? $beginningBalanceInfo[$coaId] : '0.00'; ?>
                                         <?php $currentBalance = $beginningBalance; ?>
                                         <td style="padding-left: 50px;"><?php echo $accountInfo['code']; ?> - <?php echo $accountInfo['name']; ?></td>
-                                        <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $beginningBalance)); ?></td>
+                                        <td style="text-align: right">
+                                            <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $beginningBalance)); ?>
+                                        </td>
                                         <?php foreach ($yearMonthList as $yearMonth => $yearMonthFormatted): ?>
                                             <?php $debit = isset($accountInfo['debits'][$yearMonth]) ? $accountInfo['debits'][$yearMonth] : ''; ?>
                                             <td style="text-align: right">
