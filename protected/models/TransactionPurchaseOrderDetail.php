@@ -343,7 +343,7 @@ class TransactionPurchaseOrderDetail extends CActiveRecord {
         } elseif ($this->discount_step == 5) {
             $unitPrice = ($this->discount5_type == 3) ? round($this->unitPriceAfterDiscount5 * $this->quantity / ($this->quantity + $this->discount5_nominal), 2) : $this->unitPriceAfterDiscount5;
         } else {
-            $unitPrice = $this->unit_price;
+            $unitPrice = $this->retail_price;
         }
 
         return ($tax == 3) ? round($this->getUnitPrice($tax, $taxPercentage) / (1 + ($taxPercentage / 100)), 2) : $unitPrice;

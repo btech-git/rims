@@ -14,6 +14,7 @@
  * @property string $tanggal_posting
  * @property string $transaction_subject
  * @property string $transaction_type
+ * @property string $remark
  * @property integer $is_coa_category
  *
  * The followings are the available model relations:
@@ -45,13 +46,14 @@ class JurnalUmum extends CActiveRecord {
             array('kode_transaksi, tanggal_transaksi, coa_id, total, debet_kredit, tanggal_posting, branch_id', 'required'),
             array('coa_id, branch_id, is_coa_category', 'numerical', 'integerOnly' => true),
             array('kode_transaksi', 'length', 'max' => 30),
+            array('remark', 'length', 'max' => 100),
             array('transaction_subject', 'length', 'max' => 200),
             array('transaction_type', 'length', 'max' => 20),
             array('total', 'length', 'max' => 18),
             array('debet_kredit', 'length', 'max' => 5),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, kode_transaksi, tanggal_transaksi, coa_id, total, debet_kredit, tanggal_posting, branch_id, tanggal_mulai, tanggal_sampai, transaction_subject, is_coa_category, transaction_type', 'safe', 'on' => 'search'),
+            array('id, kode_transaksi, tanggal_transaksi, coa_id, total, debet_kredit, tanggal_posting, branch_id, tanggal_mulai, tanggal_sampai, transaction_subject, is_coa_category, transaction_type, remark', 'safe', 'on' => 'search'),
         );
     }
 
@@ -80,7 +82,8 @@ class JurnalUmum extends CActiveRecord {
             'total' => 'Total',
             'debet_kredit' => 'Debet Kredit',
             'tanggal_posting' => 'Tanggal Posting',
-            'transaction_type' => 'Type'
+            'transaction_type' => 'Type',
+            'remark' => 'Remark',
         );
     }
 
@@ -122,6 +125,7 @@ class JurnalUmum extends CActiveRecord {
         $criteria->compare('transaction_subject', $this->transaction_subject, true);
         $criteria->compare('transaction_type', $this->transaction_type);
         $criteria->compare('is_coa_category', $this->is_coa_category);
+        $criteria->compare('remark', $this->remark, true);
 
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
@@ -405,6 +409,35 @@ class JurnalUmum extends CActiveRecord {
         return $resultSet;
     }
     
+    public static function getBeginningBalanceDataByTransactionYear($startYearMonth, $branchId) {
+        $branchConditionSql = '';
+        
+        $params = array(
+            ':start_year_month' => $startYearMonth,
+        );
+        
+        if (!empty($branchId)) {
+            $branchConditionSql = ' AND j.branch_id = :branch_id';
+            $params[':branch_id'] = $branchId;
+        }
+        
+        $sql = "SELECT j.coa_id, COALESCE(SUM(
+                    CASE c.normal_balance
+                        WHEN 'DEBIT' THEN CASE j.debet_kredit WHEN 'D' THEN +j.total WHEN 'K' THEN -j.total ELSE 0 END
+                        WHEN 'KREDIT' THEN CASE j.debet_kredit WHEN 'K' THEN +j.total WHEN 'D' THEN -j.total ELSE 0 END
+                        ELSE 0
+                    END
+                ), 0) AS total
+                FROM " . JurnalUmum::model()->tableName() . " j
+                INNER JOIN " . Coa::model()->tableName() . " c ON c.id = j.coa_id
+                WHERE SUBSTRING_INDEX(j.tanggal_transaksi, '-', 2) < :start_year_month AND c.coa_category_id IN (14) AND c.is_approved = 1" . $branchConditionSql . "
+                GROUP BY j.coa_id";
+
+        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
+
+        return $resultSet;
+    }
+    
     public static function getBalanceSheetDataByTransactionYear($startYearMonth, $endYearMonth, $branchId) {
         $branchConditionSql = '';
         
@@ -426,7 +459,7 @@ class JurnalUmum extends CActiveRecord {
                 INNER JOIN " . CoaSubCategory::model()->tableName() . " s ON s.id = c.coa_sub_category_id
                 INNER JOIN " . CoaCategory::model()->tableName() . " cc ON cc.id = s.coa_category_id
                 WHERE SUBSTRING_INDEX(j.tanggal_transaksi, '-', 2) BETWEEN :start_year_month AND :end_year_month AND 
-                    c.coa_category_id IN (14) AND c.is_approved = 1 " . $branchConditionSql . "
+                    c.coa_category_id IN (14) AND c.is_approved = 1" . $branchConditionSql . "
                 GROUP BY SUBSTRING_INDEX(j.tanggal_transaksi, '-', 2), j.coa_id, j.debet_kredit
                 ORDER BY cc.`code`, s.`code` ASC, c.`code` ASC, transaction_month_year ASC";
 

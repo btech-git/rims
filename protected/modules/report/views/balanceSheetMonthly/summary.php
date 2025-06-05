@@ -85,6 +85,7 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                         'startYearMonth' => $startYearMonth,
                         'endYearMonth' => $endYearMonth,
                         'balanceSheetInfo' => $balanceSheetInfo,
+                        'beginningBalanceInfo' => $beginningBalanceInfo,
                     )); ?>
                 </div>
                 <div class="clear"></div>

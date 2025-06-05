@@ -34,7 +34,9 @@ class BalanceSheetMonthlyController extends Controller {
         $balanceSheetInfo['2'] = array();
         $balanceSheetInfo['3'] = array();
         $balanceSheetInfo['3*'] = array();
+        $beginningBalanceInfo = array();
         $balanceSheetData = JurnalUmum::getBalanceSheetDataByTransactionYear($startYearMonth, $endYearMonth, $branchId);
+        $beginningBalanceData = JurnalUmum::getBeginningBalanceDataByTransactionYear($startYearMonth, $branchId);
         foreach ($balanceSheetData as $balanceSheetItem) {
             $elementNumber = substr($balanceSheetItem['coa_code'], 0, 1);
             $balanceSheetInfo[$elementNumber][$balanceSheetItem['category_id']]['code'] = $balanceSheetItem['category_code'];
@@ -72,6 +74,9 @@ class BalanceSheetMonthlyController extends Controller {
             $balanceSheetInfo[$elementNumber][$balanceSheetItem['category_id']]['sub_categories'][$balanceSheetItem['sub_category_id']]['accounts'][$balanceSheetItem['coa_id']]['credits'][$balanceSheetItem['transaction_month_year']] += $credit;
             $balanceSheetInfo[$elementNumber][$balanceSheetItem['category_id']]['sub_categories'][$balanceSheetItem['sub_category_id']]['accounts'][$balanceSheetItem['coa_id']]['totals'][$balanceSheetItem['transaction_month_year']] += $amount;
         }
+        foreach ($beginningBalanceData as $beginningBalanceItem) {
+            $beginningBalanceInfo[$beginningBalanceItem['coa_id']] = $beginningBalanceItem['total'];
+        }
 
         if (isset($_GET['ResetFilter'])) {
             $this->redirect(array('summary'));
@@ -87,6 +92,7 @@ class BalanceSheetMonthlyController extends Controller {
             'startYearMonth' => $startYearMonth,
             'endYearMonth' => $endYearMonth,
             'balanceSheetInfo' => $balanceSheetInfo,
+            'beginningBalanceInfo' => $beginningBalanceInfo,
         ));
     }
 

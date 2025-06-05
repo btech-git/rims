@@ -392,7 +392,7 @@ class PurchaseOrders extends CComponent {
         $total = 0.00;
 
         foreach ($this->details as $detail) {
-            $total += $detail->getTotalPriceBeforeTax($this->header->ppn, $this->header->tax_percentage);
+            $total += $detail->total_before_tax; //$detail->getTotalPriceBeforeTax($this->header->ppn, $this->header->tax_percentage);
         }
 
         return $total;

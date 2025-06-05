@@ -74,8 +74,6 @@ class StockOpnameController extends Controller {
                 $inventoryDetail->transaction_time = '00:00:01';
                 $valid = $valid && $inventoryDetail->save(false);
 
-    //            $headerStockData = self::getHeaderStockData($stockDifferenceData, $warehouseId);
-
                 $inventoryDetail->inventory->total_stock = $headerStockData[$productId] + $stockDifference;
                 $valid = $valid && $inventoryDetail->inventory->save();
             }
@@ -97,17 +95,6 @@ class StockOpnameController extends Controller {
         echo CHtml::submitButton('Execute', array('name' => 'Submit'));
         echo CHtml::endForm();
     }
-
-//    public static function getHeaderStockData($stockDifferenceData, $warehouseId) {
-//        $productIds = array_keys($stockDifferenceData);
-//        $productCurrentStockData = self::getProductCurrentStockData($warehouseId, $productIds);
-//        $headerStockData = array();
-//        foreach ($productCurrentStockData as $productCurrentStockItem) {
-//            $headerStockData[$productCurrentStockItem['product_id']] = $productCurrentStockItem['stock'];
-//        }
-//
-//        return $headerStockData;
-//    }
 
     public static function getHeaderData($stockDifferenceData, $warehouseId) {
         $productIds = array_keys($stockDifferenceData);

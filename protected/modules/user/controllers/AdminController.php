@@ -128,30 +128,48 @@ class AdminController extends Controller {
         if (isset($_POST['User'])) {
             $model->attributes = $_POST['User'];
             $model->employee_id = $_POST['User']['employee_id'];
+            $branches = isset($_POST['BranchId']) ? $_POST['BranchId'] : array();
             $model->activkey = Yii::app()->controller->module->encrypting(microtime() . $model->password);
             
-            if ($model->validate()) {
-                $model->password = Yii::app()->controller->module->encrypting($model->password);
-                $branches = isset($_POST['BranchId']) ? $_POST['BranchId'] : array();
-                if (empty($branches)) {
-                    $emptyBranchErrorMessage = '1 or more branch must be selected!!';
-                } else if ($model->save()) {
-                    $authorizer = Yii::app()->getModule("rights")->getAuthorizer();
-                    $authorizer->authManager->assign('Authenticated', $model->id);
-                    
-                    if ((int) $model->superuser === 1) {
-                        $authorizer->authManager->assign('Admin', $model->id);
+            $dbTransaction = Yii::app()->db->beginTransaction();
+            try {
+                $valid = $model->validate();
+                if ($valid) {
+                    $model->password = Yii::app()->controller->module->encrypting($model->password);
+                    $valid = $valid && !empty($branches);
+                    if ($valid) {
+                        $valid = $valid && $model->save();
+                        
+//                        $authorizer = Yii::app()->getModule("rights")->getAuthorizer();
+//                        $authorizer->authManager->assign('Authenticated', $model->id);
+//
+//                        if ((int) $model->superuser === 1) {
+//                            $authorizer->authManager->assign('Admin', $model->id);
+//                        }
+
+                        foreach ($branches as $i=>$branch) {
+                            $userBranch = new UserBranch;
+                            $userBranch->users_id = $model->id;
+                            $userBranch->branch_id = $branch;
+                            $valid = $valid && $userBranch->save();
+                        }
+
+                        $this->saveUserLog($model);
+
+                        if ($valid) {
+                            $dbTransaction->commit();
+                        } else {
+                            $dbTransaction->rollback();
+                        }
+                        
+                        $this->redirect(array('view', 'id' => $model->id));
+                    } else {
+                        $emptyBranchErrorMessage = '1 or more branch must be selected!!';
                     }
-                    
-                    foreach($branches as $i=>$branch) {
-                        $userBranch = new UserBranch;
-                        $userBranch->users_id = $model->id;
-                        $userBranch->branch_id = $branch;
-                        $userBranch->save();
-                    }
-                    
-                    $this->redirect(array('view', 'id' => $model->id));
                 }
+            } catch (Exception $e) {
+                $dbTransaction->rollback();
+                $valid = false;
             }
         }
 
@@ -176,23 +194,40 @@ class AdminController extends Controller {
         
         if (isset($_POST['User'])) {
             $model->attributes = $_POST['User'];
+            $branches = isset($_POST['BranchId']) ? $_POST['BranchId'] : array();
 
-            if ($model->validate()) {
-                $branches = isset($_POST['BranchId']) ? $_POST['BranchId'] : array();
-                if (empty($branches)) {
-                    $emptyBranchErrorMessage = '1 or more branch must be selected!!';
-                } else if ($model->save()) {
-                
-                    UserBranch::model()->deleteAllByAttributes(array('users_id' => $model->id,));
-                    foreach($branches as $i=>$branch) {
-                        $userBranch = new UserBranch;
-                        $userBranch->users_id = $model->id;
-                        $userBranch->branch_id = $branch;
-                        $userBranch->save();
+            $dbTransaction = Yii::app()->db->beginTransaction();
+            try {
+                $valid = $model->validate();
+                if ($valid) {
+                    $valid = $valid && !empty($branches);
+                    if ($valid) {
+                        $valid = $valid && $model->save();
+                        
+                        UserBranch::model()->deleteAllByAttributes(array('users_id' => $model->id,));
+                        foreach ($branches as $i=>$branch) {
+                            $userBranch = new UserBranch;
+                            $userBranch->users_id = $model->id;
+                            $userBranch->branch_id = $branch;
+                            $valid = $valid && $userBranch->save();
+                        }
+
+                        $this->saveUserLog($model);
+
+                        if ($valid) {
+                            $dbTransaction->commit();
+                        } else {
+                            $dbTransaction->rollback();
+                        }
+                        
+                        $this->redirect(array('view', 'id' => $model->id));
+                    } else {
+                        $emptyBranchErrorMessage = '1 or more branch must be selected!!';
                     }
-
-                    $this->redirect(array('view', 'id' => $model->id));
                 }
+            } catch (Exception $e) {
+                $dbTransaction->rollback();
+                $valid = false;
             }
         }
 
@@ -313,6 +348,30 @@ class AdminController extends Controller {
             'userList' => $userList,
             'userIsError' => $userIsError,
         ));
+    }
+    
+    
+    public function saveUserLog($user) {
+        $userLog = new UserLog();
+        $userLog->log_date = date('Y-m-d');
+        $userLog->log_time = date('H:i:s');
+        $userLog->table_name = $user->tableName();
+        $userLog->table_id = $user->id;
+        $userLog->user_id = Yii::app()->user->id;
+        $userLog->username = Yii::app()->user->username;
+        $userLog->controller_class = Yii::app()->controller->module->id  . '/' . Yii::app()->controller->id;
+        $userLog->action_name = Yii::app()->controller->action->id;
+        
+        $newData = $user->attributes;
+        
+        $newData['roles'] = array();
+        foreach($user->roles as $role) {
+            $newData['roles'][] = $role;
+        }
+        
+        $userLog->new_data = json_encode($newData);
+        
+        $userLog->save(false);
     }
     
     public function actionEmployeeCompletion() {
