@@ -346,6 +346,11 @@ class TransactionReceiveItemController extends Controller {
             $receiveItem->invoice_grand_total = $receiveItem->grandTotal;
             
             if ($receiveItem->save(Yii::app()->db)) {
+                foreach ($receiveItem->transactionReceiveItemDetails as $detail) {
+                    $detail->total_price = $detail->totalPrice;
+                    $detail->update(array('total_price'));
+                }
+                
                 $this->redirect(array('view', 'id' => $receiveItem->id));
             }
         }

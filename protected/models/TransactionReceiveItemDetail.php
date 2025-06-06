@@ -20,6 +20,8 @@
  * @property integer $delivery_order_detail_id
  * @property string $quantity_delivered
  * @property string $quantity_delivered_left
+ * @property string $quantity_return
+ * @property string $total_price
  *
  * The followings are the available model relations:
  * @property Product $product
@@ -61,11 +63,12 @@ class TransactionReceiveItemDetail extends CActiveRecord {
         return array(
             array('receive_item_id, purchase_order_detail_id, transfer_request_detail_id, consignment_in_detail_id, product_id, delivery_order_detail_id', 'numerical', 'integerOnly' => true),
             array('barcode_product', 'length', 'max' => 30),
-            array('qty_request, qty_received, qty_request_left, quantity_delivered, quantity_delivered_left', 'length', 'max' => 10),
+            array('qty_request, qty_received, qty_request_left, quantity_delivered, quantity_delivered_left, quantity_return', 'length', 'max' => 10),
+            array('total_price', 'length', 'max' => 18),
             array('note', 'safe'),
             // The following rule is used by search().
             // Please remove those attributes that should not be searched.
-            array('id, receive_item_id, purchase_order_detail_id, transfer_request_detail_id, consignment_in_detail_id, product_id, qty_request, qty_received, note, qty_request_left, barcode_product, receive_item_no, product_name, delivery_order_detail_id, quantity_delivered, quantity_delivered_left', 'safe', 'on' => 'search'),
+            array('id, receive_item_id, purchase_order_detail_id, transfer_request_detail_id, consignment_in_detail_id, product_id, total_price, quantity_return, qty_request, qty_received, note, qty_request_left, barcode_product, receive_item_no, product_name, delivery_order_detail_id, quantity_delivered, quantity_delivered_left', 'safe', 'on' => 'search'),
         );
     }
 
