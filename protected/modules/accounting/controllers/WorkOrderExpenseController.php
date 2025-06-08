@@ -40,7 +40,7 @@ class WorkOrderExpenseController extends Controller {
     }
 
     public function actionCreate() {
-        $workOrderExpense = $this->instantiate(null);
+        $workOrderExpense = $this->instantiate(null, 'create');
 
         $workOrderExpense->header->user_id = Yii::app()->user->id;
         $workOrderExpense->header->transaction_date = date('Y-m-d');
@@ -100,7 +100,7 @@ class WorkOrderExpenseController extends Controller {
     }
 
     public function actionUpdate($id) {
-        $workOrderExpense = $this->instantiate($id);
+        $workOrderExpense = $this->instantiate($id, 'update');
         $workOrderExpense->header->status = 'Draft';
         $supplier = Supplier::model()->findByPk($workOrderExpense->header->supplier_id);
 
@@ -193,6 +193,33 @@ class WorkOrderExpenseController extends Controller {
             'workOrderExpense' => $workOrderExpense,
             'workOrderExpenseDetails' => $workOrderExpenseDetails,
         ));
+    }
+
+    public function actionCancel($id) {
+        $model = $this->loadModel($id);
+        $model->status = 'CANCELLED!!!';
+        $model->grand_total = '0.00'; 
+        $model->total_payment = '0.00';
+        $model->payment_remaining = '0.00';
+        $model->note = '';
+        $model->cancelled_datetime = date('Y-m-d H:i:s');
+        $model->user_id_cancelled = Yii::app()->user->id;
+        $model->update(array('status', 'grand_total', 'total_payment', 'payment_remaining', 'note', 'cancelled_datetime', 'user_id_cancelled'));
+
+        foreach ($model->workOrderExpenseDetails as $detail) {
+            $detail->memo = 'CANCELLED';
+            $detail->description = '';
+            $detail->amount = '0.00';
+            $detail->update(array('memo', 'amount', 'description'));
+        }
+        
+        $this->saveTransactionLog('cancel', $model);
+        
+        JurnalUmum::model()->updateAll(array('total' => '0.00'), 'kode_transaksi = :kode_transaksi', array(
+            ':kode_transaksi' => $model->transaction_number,
+        ));
+
+        $this->redirect(array('admin'));
     }
 
     public function actionDelete($id) {
@@ -319,6 +346,8 @@ class WorkOrderExpenseController extends Controller {
                     $jurnalUmumKas->save();
                 }
 
+                $this->saveTransactionLog('approval', $workOrderExpense);
+        
                 $this->redirect(array('view', 'id' => $headerId));
             }
         }
@@ -328,6 +357,39 @@ class WorkOrderExpenseController extends Controller {
             'workOrderExpense' => $workOrderExpense,
             'historis' => $historis,
         ));
+    }
+
+    public function saveTransactionLog($actionType, $workOrderExpense) {
+        $transactionLog = new TransactionLog();
+        $transactionLog->transaction_number = $workOrderExpense->transaction_number;
+        $transactionLog->transaction_date = $workOrderExpense->transaction_date;
+        $transactionLog->log_date = date('Y-m-d');
+        $transactionLog->log_time = date('H:i:s');
+        $transactionLog->table_name = $workOrderExpense->tableName();
+        $transactionLog->table_id = $workOrderExpense->id;
+        $transactionLog->user_id = Yii::app()->user->id;
+        $transactionLog->username = Yii::app()->user->username;
+        $transactionLog->controller_class = Yii::app()->controller->module->id  . '/' . Yii::app()->controller->id;
+        $transactionLog->action_name = Yii::app()->controller->action->id;
+        $transactionLog->action_type = $actionType;
+        
+        $newData = $workOrderExpense->attributes;
+        
+        if ($actionType === 'approval') {
+            $newData['workOrderExpenseApprovals'] = array();
+            foreach($workOrderExpense->workOrderExpenseApprovals as $detail) {
+                $newData['workOrderExpenseApprovals'][] = $detail->attributes;
+            }
+        } else {
+            $newData['workOrderExpenseDetails'] = array();
+            foreach($workOrderExpense->workOrderExpenseDetails as $detail) {
+                $newData['workOrderExpenseDetails'][] = $detail->attributes;
+            }
+        }
+        
+        $transactionLog->new_data = json_encode($newData);
+
+        $transactionLog->save();
     }
 
     public function actionAjaxJsonWorkOrder($id) {
@@ -423,24 +485,12 @@ class WorkOrderExpenseController extends Controller {
         }
     }
 
-//    public function actionRedirectTransaction($codeNumber) {
-//
-//        list($leftPart,, ) = explode('/', $codeNumber);
-//        list(, $codeNumberConstant) = explode('.', $leftPart);
-//
-//        if ($codeNumberConstant === 'PO') {
-//            $model = TransactionPurchaseOrder::model()->findByAttributes(array('purchase_order_no' => $codeNumber));
-//            $this->redirect(array('/transaction/transactionPurchaseOrder/view', 'id' => $model->id));
-//        }
-//        
-//    }
-
-    public function instantiate($id) {
+    public function instantiate($id, $actionType) {
         if (empty($id)) {
-            $workOrderExpense = new WorkOrderExpense(new WorkOrderExpenseHeader(), array());
+            $workOrderExpense = new WorkOrderExpense($actionType, new WorkOrderExpenseHeader(), array());
         } else {
             $workOrderExpenseHeader = $this->loadModel($id);
-            $workOrderExpense = new WorkOrderExpense($workOrderExpenseHeader, $workOrderExpenseHeader->workOrderExpenseDetails);
+            $workOrderExpense = new WorkOrderExpense($actionType, $workOrderExpenseHeader, $workOrderExpenseHeader->workOrderExpenseDetails);
         }
 
         return $workOrderExpense;

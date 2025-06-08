@@ -13,7 +13,13 @@
     <?php elseif ($workOrderExpense->status != "Draft"): //&& Yii::app()->user->checkAccess("workOrderExpenseSupervisor")): ?>
         <?php echo CHtml::link('<span class="fa fa-edit"></span>Update Approval', Yii::app()->baseUrl.'/accounting/workOrderExpense/updateApproval?headerId=' . $workOrderExpense->id , array('class'=>'button cbutton right','style'=>'margin-right:10px', 'visible'=>Yii::app()->user->checkAccess("workOrderExpenseEdit"))) ?>
     <?php endif; ?>
-
+    
+    <?php if (!($workOrderExpense->status == 'CANCELLED!!!')): ?>
+        <?php echo CHtml::link('<span class="fa fa-minus"></span>Cancel Transaction', array("cancel", "id" => $workOrderExpense->id), array(
+            'class' => 'button alert right', 
+            'style' => 'margin-right:10px', 
+        )); ?>
+    <?php endif; ?>
 </div>
 
 <h1>View Sub Pekerjaan Luar <?php //echo $this->id . '/' . $this->action->id; ?></h1>
@@ -192,3 +198,32 @@
         <?php echo CHtml::endForm(); ?>
     </div>
 <?php //endif; ?>
+
+<?php $this->beginWidget('zii.widgets.jui.CJuiDialog', array(
+    'id' => 'cancel-message-dialog',
+    // additional javascript options for the dialog plugin
+    'options' => array(
+        'title' => 'Cancel Message',
+        'autoOpen' => false,
+        'width' => 'auto',
+        'modal' => false,
+    ),
+));?>
+<div>
+    <?php $hasFlash = Yii::app()->user->hasFlash('message'); ?>
+    <?php if ($hasFlash): ?>
+        <div class="flash-error">
+            <?php echo Yii::app()->user->getFlash('message'); ?>
+        </div>
+    <?php endif; ?>
+</div>
+<?php $this->endWidget('zii.widgets.jui.CJuiDialog'); ?>
+
+<script>
+    $(document).ready(function() {
+        var hasFlash = <?php echo $hasFlash ? 'true' : 'false' ?>;
+        if (hasFlash) {
+            $("#cancel-message-dialog").dialog({modal: 'false'});
+        }
+    });
+</script>

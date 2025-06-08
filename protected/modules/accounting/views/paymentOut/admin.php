@@ -42,7 +42,7 @@ $('.search-form form').submit(function(){
 
 <br />
 
-<?php //echo CHtml::beginForm(array(''), 'get'); ?>
+<?php echo CHtml::beginForm(array(''), 'get'); ?>
 <center>
     <?php
     $pageSize = Yii::app()->user->getState('pageSize', Yii::app()->params['defaultPageSize']);

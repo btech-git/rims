@@ -18,6 +18,8 @@
  * @property string $total_payment
  * @property string $payment_remaining
  * @property integer $supplier_id
+ * @property integer $user_id_cancelled
+ * @property string $cancelled_datetime
  *
  * The followings are the available model relations:
  * @property WorkOrderExpenseDetail[] $workOrderExpenseDetails
@@ -25,6 +27,7 @@
  * @property RegistrationTransaction $registrationTransaction
  * @property Branch $branch
  * @property Users $user
+ * @property UserIdCancelled $userIdCancelled
  * @property Supplier $supplier
  */
 class WorkOrderExpenseHeader extends MonthlyTransactionActiveRecord {
@@ -45,13 +48,13 @@ class WorkOrderExpenseHeader extends MonthlyTransactionActiveRecord {
         // will receive user inputs.
         return array(
             array('transaction_number, transaction_date, transaction_time, registration_transaction_id, branch_id, user_id, status', 'required'),
-            array('registration_transaction_id, branch_id, user_id, supplier_id', 'numerical', 'integerOnly' => true),
+            array('registration_transaction_id, branch_id, user_id, user_id_cancelled, supplier_id', 'numerical', 'integerOnly' => true),
             array('transaction_number, status', 'length', 'max' => 50),
             array('grand_total, total_payment, payment_remaining', 'length', 'max' => 18),
-            array('note', 'safe'),
+            array('note, created_datetime, cancelled_datetime', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, transaction_number, transaction_date, transaction_time, note, registration_transaction_id, branch_id, user_id, status, created_datetime, grand_total, total_payment, payment_remaining, supplier_id', 'safe', 'on' => 'search'),
+            array('id, transaction_number, transaction_date, transaction_time, note, registration_transaction_id, branch_id, user_id, status, created_datetime, cancelled_datetime, grand_total, total_payment, payment_remaining, supplier_id', 'safe', 'on' => 'search'),
         );
     }
 
@@ -63,10 +66,12 @@ class WorkOrderExpenseHeader extends MonthlyTransactionActiveRecord {
         // class name for the relations automatically generated below.
         return array(
             'workOrderExpenseDetails' => array(self::HAS_MANY, 'WorkOrderExpenseDetail', 'work_order_expense_header_id'),
+            'workOrderExpenseApprovals' => array(self::HAS_MANY, 'WorkOrderExpenseApproval', 'work_order_expense_header_id'),
             'payOutDetails' => array(self::HAS_MANY, 'PayOutDetail', 'work_order_expense_header_id'),
             'registrationTransaction' => array(self::BELONGS_TO, 'RegistrationTransaction', 'registration_transaction_id'),
             'branch' => array(self::BELONGS_TO, 'Branch', 'branch_id'),
             'user' => array(self::BELONGS_TO, 'Users', 'user_id'),
+            'userIdCancelled' => array(self::BELONGS_TO, 'Users', 'user_id_cancelled'),
             'supplier' => array(self::BELONGS_TO, 'Supplier', 'supplier_id'),
         );
     }

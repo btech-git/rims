@@ -2,10 +2,12 @@
 
 class WorkOrderExpense extends CComponent {
 
+    public $actionType;
     public $header;
     public $details;
 
-    public function __construct($header, array $details) {
+    public function __construct($actionType, $header, array $details) {
+        $this->actionType = $actionType;
         $this->header = $header;
         $this->details = $details;
     }
@@ -145,7 +147,35 @@ class WorkOrderExpense extends CComponent {
             $valid = $detail->save(false) && $valid;
         }
 
+        $this->saveTransactionLog();
+        
         return $valid;
+    }
+    
+    public function saveTransactionLog() {
+        $transactionLog = new TransactionLog();
+        $transactionLog->transaction_number = $this->header->transaction_number;
+        $transactionLog->transaction_date = $this->header->transaction_date;
+        $transactionLog->log_date = date('Y-m-d');
+        $transactionLog->log_time = date('H:i:s');
+        $transactionLog->table_name = $this->header->tableName();
+        $transactionLog->table_id = $this->header->id;
+        $transactionLog->user_id = Yii::app()->user->id;
+        $transactionLog->username = Yii::app()->user->username;
+        $transactionLog->controller_class = Yii::app()->controller->module->id  . '/' . Yii::app()->controller->id;
+        $transactionLog->action_name = Yii::app()->controller->action->id;
+        $transactionLog->action_type = $this->actionType;
+        
+        $newData = $this->header->attributes;
+        
+        $newData['workOrderExpenseDetails'] = array();
+        foreach($this->details as $detail) {
+            $newData['workOrderExpenseDetails'][] = $detail->attributes;
+        }
+        
+        $transactionLog->new_data = json_encode($newData);
+
+        $transactionLog->save();
     }
     
     public function getTotalDetail() {
