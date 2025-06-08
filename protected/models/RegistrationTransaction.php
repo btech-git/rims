@@ -984,7 +984,7 @@ class RegistrationTransaction extends MonthlyTransactionActiveRecord {
 
         $criteria->condition = "NOT EXISTS (
             SELECT registration_transaction_id
-            FROM " . InvoiceHeader::model()->tableName() . "
+            FROM " . WorkOrderExpenseHeader::model()->tableName() . "
             WHERE t.id = registration_transaction_id
         ) AND t.work_order_number <> ''";
 
