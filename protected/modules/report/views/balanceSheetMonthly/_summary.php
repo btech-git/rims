@@ -101,7 +101,7 @@
                                             <?php $balance = isset($accountInfo['totals'][$yearMonth]) ? $accountInfo['totals'][$yearMonth] : ''; ?>
                                             <?php $currentBalance += $balance; ?>
                                             <td style="text-align: right">
-                                                <?php echo CHtml::link(CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $currentBalance)), Yii::app()->createUrl("report/profitLossMonthly/jurnalTransaction", array(
+                                                <?php echo CHtml::link(CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $currentBalance)), Yii::app()->createUrl("report/balanceSheetMonthly/jurnalTransaction", array(
                                                     "CoaId" => $coaId, 
                                                     "YearMonth" => $yearMonth, 
                                                     "BranchId" => $branchId

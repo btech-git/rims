@@ -16,7 +16,8 @@ Yii::app()->clientScript->registerCss('_report', '
 <?php echo CHtml::beginForm(array(''), 'get'); ?>
 
 <div style="font-weight: bold; text-align: center">
-    <div style="font-size: larger">Transaction Detail</div>
+    <?php $branch = Branch::model()->findByPk($branchId); ?>
+    <div style="font-size: larger">Transaction Detail - <?php echo empty($branchId) ? 'All Branch' : $branch->code; ?></div>
     <?php $coa = Coa::model()->findByPk($coaId); ?>
     <div><?php echo CHtml::encode($coa->code); ?> - <?php echo CHtml::encode($coa->name); ?></div>
     <div><?php echo CHtml::encode(Yii::app()->dateFormatter->format('MMMM yyyy', strtotime($yearMonth))); ?></div>
@@ -25,11 +26,10 @@ Yii::app()->clientScript->registerCss('_report', '
 <div class="clear"></div>
 
 <div class="row buttons">
-    <?php /*echo CHtml::hiddenField('CoaId', $coaId); ?>
-    <?php echo CHtml::hiddenField('StartDate', $startDate); ?>
-    <?php echo CHtml::hiddenField('EndDate', $endDate); ?>
-    <?php echo CHtml::hiddenField('BranchId', $branchId);*/ ?>
-    <?php //echo CHtml::submitButton('Simpan ke Excel', array('name' => 'SaveToExcel')); ?>
+    <?php echo CHtml::hiddenField('CoaId', $coaId); ?>
+    <?php echo CHtml::hiddenField('YearMonth', $yearMonth); ?>
+    <?php echo CHtml::hiddenField('BranchId', $branchId); ?>
+    <?php echo CHtml::submitButton('Simpan ke Excel', array('name' => 'SaveToExcel')); ?>
 </div>
 
 <?php echo CHtml::endForm(); ?>
@@ -47,7 +47,7 @@ Yii::app()->clientScript->registerCss('_report', '
     </tr>
     <?php $totalDebet = '0.00'; ?>
     <?php $totalCredit = '0.00'; ?>
-    <?php foreach ($profitLossSummary->dataProvider->data as $i => $header): ?>
+    <?php foreach ($balanceSheetSummary->dataProvider->data as $i => $header): ?>
         <tr>
             <td class="width2-1" style="text-align: center">
                 <?php echo $i+1; ?>
@@ -65,11 +65,11 @@ Yii::app()->clientScript->registerCss('_report', '
                 <?php echo CHtml::encode(CHtml::value($header, 'transaction_type')); ?>
             </td>
             <td class="width2-6" style="text-align: right">
-                <?php $debitAmount = $header->debet_kredit == 'D' ? $header->total : 0 ?>
+                <?php $debitAmount = $header->debet_kredit == 'D' ? $header->total : 0; ?>
                 <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $debitAmount)); ?>
             </td>
             <td class="width2-7" style="text-align: right">
-                <?php $creditAmount = $header->debet_kredit == 'K' ? $header->total : 0 ?>
+                <?php $creditAmount = $header->debet_kredit == 'K' ? $header->total : 0; ?>
                 <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $creditAmount)); ?>
             </td>
         </tr>

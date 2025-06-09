@@ -96,35 +96,6 @@ class BalanceSheetMonthlyController extends Controller {
         ));
     }
 
-    public function actionJurnalTransaction() {
-        set_time_limit(0);
-        ini_set('memory_limit', '1024M');
-
-        $jurnalUmum = new JurnalUmum('search');
-
-        $coaId = (isset($_GET['CoaId'])) ? $_GET['CoaId'] : '';
-        $yearMonth = (isset($_GET['YearMonth'])) ? $_GET['YearMonth'] : date('Y-m');
-        $branchId = (isset($_GET['BranchId'])) ? $_GET['BranchId'] : '';
-
-        $balanceSheetSummary = new BalanceSheetSummary($jurnalUmum->search());
-        $balanceSheetSummary->setupLoading();
-        $balanceSheetSummary->setupPaging(1000, 1);
-        $balanceSheetSummary->setupSorting();
-        $balanceSheetSummary->setupFilter($yearMonth, $coaId, $branchId);
-
-//        if (isset($_GET['SaveToExcel'])) {
-//            $this->saveToExcelTransactionJournal($balanceSheetSummary, $coaId, $startDate, $endDate, $branchId);
-//        }
-
-        $this->render('jurnalTransaction', array(
-            'jurnalUmum' => $jurnalUmum,
-            'balanceSheetSummary' => $balanceSheetSummary,
-            'yearMonth' => $yearMonth,
-            'coaId' => $coaId,
-            'branchId' => $branchId,
-        ));
-    }
-
     protected function saveToExcel($balanceSheetInfo, $beginningBalanceInfo, $startYearMonth, $endYearMonth, $branchId) {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
@@ -296,6 +267,126 @@ class BalanceSheetMonthlyController extends Controller {
         // We'll be outputting an excel file
         header('Content-type: application/vnd.ms-excel');
         header('Content-Disposition: attachment;filename="Balance Sheet Multi Periode.xls"');
+        header('Cache-Control: max-age=0');
+        
+        $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
+        $objWriter->save('php://output');
+
+        Yii::app()->end();
+    }
+    
+    public function actionJurnalTransaction() {
+        set_time_limit(0);
+        ini_set('memory_limit', '1024M');
+
+        $jurnalUmum = new JurnalUmum('search');
+
+        $coaId = (isset($_GET['CoaId'])) ? $_GET['CoaId'] : '';
+        $yearMonth = (isset($_GET['YearMonth'])) ? $_GET['YearMonth'] : date('Y-m');
+        $branchId = (isset($_GET['BranchId'])) ? $_GET['BranchId'] : '';
+
+        $balanceSheetSummary = new BalanceSheetSummary($jurnalUmum->search());
+        $balanceSheetSummary->setupLoading();
+        $balanceSheetSummary->setupPaging(1000, 1);
+        $balanceSheetSummary->setupSorting();
+        $balanceSheetSummary->setupFilter($yearMonth, $coaId, $branchId);
+
+        if (isset($_GET['SaveToExcel'])) {
+            $this->saveToExcelTransactionJournal($balanceSheetSummary, $coaId, $yearMonth, $branchId);
+        }
+
+        $this->render('jurnalTransaction', array(
+            'jurnalUmum' => $jurnalUmum,
+            'balanceSheetSummary' => $balanceSheetSummary,
+            'yearMonth' => $yearMonth,
+            'coaId' => $coaId,
+            'branchId' => $branchId,
+        ));
+    }
+
+    protected function saveToExcelTransactionJournal($balanceSheetSummary, $coaId, $yearMonth, $branchId) {
+        set_time_limit(0);
+        ini_set('memory_limit', '1024M');
+        
+        $branch = Branch::model()->findbyPk($branchId);
+        $coa = Coa::model()->findByPk($coaId);
+
+        spl_autoload_unregister(array('YiiBase', 'autoload'));
+        include_once Yii::getPathOfAlias('ext.phpexcel.Classes') . DIRECTORY_SEPARATOR . 'PHPExcel.php';
+        spl_autoload_register(array('YiiBase', 'autoload'));
+        
+        $objPHPExcel = new PHPExcel();
+
+        $documentProperties = $objPHPExcel->getProperties();
+        $documentProperties->setCreator('Raperind Motor');
+        $documentProperties->setTitle('Balance Sheet Transaction');
+
+        $worksheet = $objPHPExcel->setActiveSheetIndex(0);
+        $worksheet->setTitle('Balance Sheet Transaction');
+
+        $worksheet->mergeCells('A1:G1');
+        $worksheet->mergeCells('A2:G2');
+        $worksheet->mergeCells('A3:G3');
+        $worksheet->getStyle('A1:G3')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->getStyle('A1:G3')->getFont()->setBold(true);
+
+        $worksheet->setCellValue('A1', 'Transaction Detail - ' . empty($branchId) ? 'All Branch' : $branch->code);
+        $worksheet->setCellValue('A2', CHtml::encode($coa->code) . ' - ' . CHtml::encode($coa->name));
+        $worksheet->setCellValue('A3', CHtml::encode(Yii::app()->dateFormatter->format('MMMM yyyy', strtotime($yearMonth))));
+        
+        $worksheet->getStyle('A5:G5')->getBorders()->gettOP()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+
+        $worksheet->setCellValue('A5', 'No');
+        $worksheet->setCellValue('B5', 'Tanggal');
+        $worksheet->setCellValue('C5', 'Kode Transaksi');
+        $worksheet->setCellValue('D5', 'Keterangan');
+        $worksheet->setCellValue('E5', 'Memo');
+        $worksheet->setCellValue('F5', 'Debit');
+        $worksheet->setCellValue('G5', 'Kredit');
+
+        $worksheet->getStyle('A5:G5')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+
+        $counter = 7; 
+        
+        $totalDebit = '0.00'; 
+        $totalCredit = '0.00'; 
+        foreach ($balanceSheetSummary->dataProvider->data as $i => $header) {
+            $debitAmount = $header->debet_kredit == 'D' ? $header->total : 0;
+            $creditAmount = $header->debet_kredit == 'K' ? $header->total : 0;
+
+            $worksheet->setCellValue("A{$counter}", $i + 1);
+            $worksheet->setCellValue("B{$counter}", $header->tanggal_transaksi);
+            $worksheet->setCellValue("C{$counter}", $header->kode_transaksi);
+            $worksheet->setCellValue("D{$counter}", $header->transaction_subject);
+            $worksheet->setCellValue("E{$counter}", $header->transaction_type);
+            $worksheet->setCellValue("F{$counter}", $debitAmount);
+            $worksheet->setCellValue("G{$counter}", $creditAmount);
+
+            $totalDebit += $debitAmount;
+            $totalCredit += $creditAmount;
+
+            $counter++;
+
+        }
+        
+        $worksheet->mergeCells("A{$counter}:E{$counter}");
+        $worksheet->getStyle("A{$counter}:G{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+        $worksheet->getStyle("A{$counter}:G{$counter}")->getFont()->setBold(true);
+        $worksheet->setCellValue("A{$counter}", 'TOTAL');
+        $worksheet->setCellValue("F{$counter}", $totalDebit);
+        $worksheet->setCellValue("G{$counter}", $totalCredit);
+        $counter++;$counter++;
+
+        for ($col = 'A'; $col !== 'Z'; $col++) {
+            $objPHPExcel->getActiveSheet()
+            ->getColumnDimension($col)
+            ->setAutoSize(true);
+        }
+
+        ob_end_clean();
+        // We'll be outputting an excel file
+        header('Content-type: application/vnd.ms-excel');
+        header('Content-Disposition: attachment;filename="balance_sheet_transaction.xls"');
         header('Cache-Control: max-age=0');
         
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
