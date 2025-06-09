@@ -224,7 +224,7 @@ class WorkOrderExpenseController extends Controller {
 
     public function actionDelete($id) {
         if (Yii::app()->request->isPostRequest) {
-            $workOrderExpense = $this->instantiate($id);
+            $workOrderExpense = $this->instantiate($id, 'delete');
             if ($workOrderExpense !== null) {
                 foreach ($this->details as $detail) {
                     $receiveItemHeader = SaleInvoiceHeader::model()->findByPk($detail->sale_invoice_header_id);
@@ -396,7 +396,7 @@ class WorkOrderExpenseController extends Controller {
         if (Yii::app()->request->isAjaxRequest) {
             $registrationTransactionId = (isset($_POST['WorkOrderExpenseHeader']['registration_transaction_id'])) ? $_POST['WorkOrderExpenseHeader']['registration_transaction_id'] : '';
             
-            $workOrderExpense = $this->instantiate($id);
+            $workOrderExpense = $this->instantiate($id, 'create');
             $this->loadState($workOrderExpense);
 
             $registrationTransaction = RegistrationTransaction::model()->findByPk($registrationTransactionId);
@@ -416,7 +416,7 @@ class WorkOrderExpenseController extends Controller {
 
     public function actionAjaxHtmlAddService($id) {
         if (Yii::app()->request->isAjaxRequest) {
-            $workOrderExpense = $this->instantiate($id);
+            $workOrderExpense = $this->instantiate($id, 'create');
             $this->loadState($workOrderExpense);
 
             $this->renderPartial('_detailService', array(
@@ -429,7 +429,7 @@ class WorkOrderExpenseController extends Controller {
         if (Yii::app()->request->isAjaxRequest) {
             $supplierId = (isset($_POST['WorkOrderExpenseHeader']['supplier_id'])) ? $_POST['WorkOrderExpenseHeader']['supplier_id'] : '';
             
-            $workOrderExpense = $this->instantiate($id);
+            $workOrderExpense = $this->instantiate($id, 'create');
             $this->loadState($workOrderExpense);
 
             $supplier = Supplier::model()->findByPk($supplierId);
@@ -448,7 +448,7 @@ class WorkOrderExpenseController extends Controller {
 
     public function actionAjaxHtmlAddDetail($id) {
         if (Yii::app()->request->isAjaxRequest) {
-            $workOrderExpense = $this->instantiate($id);
+            $workOrderExpense = $this->instantiate($id, 'create');
             $this->loadState($workOrderExpense);
 
             $workOrderExpense->addDetail();
@@ -461,7 +461,7 @@ class WorkOrderExpenseController extends Controller {
 
     public function actionAjaxHtmlRemoveDetail($id, $index) {
         if (Yii::app()->request->isAjaxRequest) {
-            $workOrderExpense = $this->instantiate($id);
+            $workOrderExpense = $this->instantiate($id, 'create');
             $this->loadState($workOrderExpense);
 
             $workOrderExpense->removeDetailAt($index);
@@ -474,7 +474,7 @@ class WorkOrderExpenseController extends Controller {
     
     public function actionAjaxJsonTotal($id, $index) {
         if (Yii::app()->request->isAjaxRequest) {
-            $workOrderExpense = $this->instantiate($id);
+            $workOrderExpense = $this->instantiate($id, 'create');
             $this->loadState($workOrderExpense);
 
             $object = array(
