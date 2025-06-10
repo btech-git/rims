@@ -429,7 +429,7 @@ class GeneralRepairRegistrationController extends Controller {
         $vehicle = Vehicle::model()->findByPk($generalRepairRegistration->header->vehicle_id);
 
         $generalRepairRegistration->generateCodeNumberWorkOrder(Yii::app()->dateFormatter->format('M', strtotime($generalRepairRegistration->header->transaction_date)), Yii::app()->dateFormatter->format('yyyy', strtotime($generalRepairRegistration->header->transaction_date)), $generalRepairRegistration->header->branch_id);
-        $generalRepairRegistration->header->work_order_date = isset($_POST['RegistrationTransaction']['work_order_date']) ? $_POST['RegistrationTransaction']['work_order_date'] : date('Y-m-d');
+        $generalRepairRegistration->header->work_order_date = date('Y-m-d');
         $generalRepairRegistration->header->work_order_time = date('H:i:s');
         $generalRepairRegistration->header->status = 'Waitlist';
 
