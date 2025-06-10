@@ -604,13 +604,13 @@ class RegistrationTransaction extends MonthlyTransactionActiveRecord {
 
         if ($this->repair_type == 'GR') {
             foreach ($this->registrationServices as $registrationService) {
-
                 $services[] = $registrationService->service->name . '<br>';
             }
         } else {
             foreach ($this->registrationServices as $registrationService) {
-                if ($registrationService->is_body_repair == 1)
+                if ($registrationService->is_body_repair == 1) {
                     $services[] = $registrationService->service->name . '<br>';
+                }
             }
         }
 
@@ -982,11 +982,7 @@ class RegistrationTransaction extends MonthlyTransactionActiveRecord {
     public function searchByWorkOrderExpense() {
         $criteria = new CDbCriteria;
 
-        $criteria->condition = "NOT EXISTS (
-            SELECT registration_transaction_id
-            FROM " . WorkOrderExpenseHeader::model()->tableName() . "
-            WHERE t.id = registration_transaction_id AND status NOT LIKE '%CANCEL%'
-        ) AND t.work_order_number <> '' AND t.user_id_cancelled IS NULL";
+        $criteria->condition = "t.work_order_number <> '' AND t.user_id_cancelled IS NULL AND t.status NOT IN ('Finished', 'Invoicing')";
 
         $criteria->compare('id', $this->id);
         $criteria->compare('transaction_number', $this->transaction_number, true);
