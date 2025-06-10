@@ -129,6 +129,6 @@ class PaymentInDetail extends CActiveRecord {
     }
 
     public function getTotalAmount() {
-        return $this->amount + $this->tax_service_amount;
+        return $this->amount + $this->tax_service_amount + $this->discount_amount + $this->bank_administration_fee + $this->merimen_fee + $this->downpayment_amount;
     }
 }
