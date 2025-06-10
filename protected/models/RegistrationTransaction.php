@@ -985,7 +985,7 @@ class RegistrationTransaction extends MonthlyTransactionActiveRecord {
         $criteria->condition = "NOT EXISTS (
             SELECT registration_transaction_id
             FROM " . WorkOrderExpenseHeader::model()->tableName() . "
-            WHERE t.id = registration_transaction_id AND status IS NOT LIKE '%CANCEL%'
+            WHERE t.id = registration_transaction_id AND status NOT LIKE '%CANCEL%'
         ) AND t.work_order_number <> '' AND t.user_id_cancelled IS NULL";
 
         $criteria->compare('id', $this->id);
