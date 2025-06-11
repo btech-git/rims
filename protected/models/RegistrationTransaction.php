@@ -982,7 +982,7 @@ class RegistrationTransaction extends MonthlyTransactionActiveRecord {
     public function searchByWorkOrderExpense() {
         $criteria = new CDbCriteria;
 
-        $criteria->condition = "t.work_order_number <> '' AND t.user_id_cancelled IS NULL AND t.status NOT IN ('Finished', 'Invoicing')";
+        $criteria->condition = "t.work_order_number IS NOT NULL AND t.work_order_number <> '' AND t.user_id_cancelled IS NULL AND t.status NOT IN ('Finished', 'Invoicing')";
 
         $criteria->compare('id', $this->id);
         $criteria->compare('transaction_number', $this->transaction_number, true);

@@ -73,11 +73,12 @@ class WorkOrderExpenseController extends Controller {
             $registrationTransactionDataProvider->criteria->params[':vehicle_number'] = "%{$vehicleNumber}%";
         }
 
-        $registrationTransactionDataProvider->criteria->order = 't.transaction_date DESC';
-        $registrationTransactionDataProvider->criteria->addCondition('t.transaction_date > "2021-12-31"');
+//        $registrationTransactionDataProvider->criteria->order = 't.transaction_date DESC';
+        $registrationTransactionDataProvider->criteria->addCondition('t.transaction_date > "2023-12-31"');
 
-        if (isset($_POST['Cancel']))
+        if (isset($_POST['Cancel'])) {
             $this->redirect(array('admin'));
+        }
 
         if (isset($_POST['Submit']) && IdempotentManager::check()) {
             $this->loadState($workOrderExpense);
