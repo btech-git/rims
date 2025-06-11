@@ -11,8 +11,9 @@ class ReceivableLedgerController extends Controller {
 
     public function filterAccess($filterChain) {
         if ($filterChain->action->id === 'summary') {
-            if (!(Yii::app()->user->checkAccess('receivableJournalReport')))
+            if (!(Yii::app()->user->checkAccess('receivableJournalReport'))) {
                 $this->redirect(array('/site/login'));
+            }
         }
 
         $filterChain->run();

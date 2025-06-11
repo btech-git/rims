@@ -162,11 +162,43 @@
                                 '2' => 'Non PPN',
                             ), array(
                                 'empty' => '-- Pilih PPN --',
-                                'onchange' => CHtml::ajax(array(
-                                    'type' => 'POST',
-                                    'url' => CController::createUrl('ajaxHtmlUpdateAllTax', array('id' => $purchaseOrder->header->id)),
-                                    'update' => '#detail',
-                                )),
+                                'onchange' => '
+                                    $.ajax({
+                                        type: "POST",
+                                        dataType: "JSON",
+                                        url: "' . CController::createUrl('ajaxJsonTotal', array('id' => $purchaseOrder->header->id)) . '",
+                                        data: $("form").serialize(),
+                                        success: function(data) {
+                                            for (var i = 0; i < data["detailFormattedValues"].length; i++) {
+                                                const detailFormattedValue = data["detailFormattedValues"][i];
+                                                $("#discount_1_nominal_" + i).html(detailFormattedValue["discount1Amount"]);
+                                                $("#discount_2_nominal_" + i).html(detailFormattedValue["discount2Amount"]);
+                                                $("#discount_3_nominal_" + i).html(detailFormattedValue["discount3Amount"]);
+                                                $("#discount_4_nominal_" + i).html(detailFormattedValue["discount4Amount"]);
+                                                $("#discount_5_nominal_" + i).html(detailFormattedValue["discount5Amount"]);
+                                                $("#price_after_discount_1_" + i).html(detailFormattedValue["unitPriceAfterDiscount1"]);
+                                                $("#price_after_discount_2_" + i).html(detailFormattedValue["unitPriceAfterDiscount2"]);
+                                                $("#price_after_discount_3_" + i).html(detailFormattedValue["unitPriceAfterDiscount3"]);
+                                                $("#price_after_discount_4_" + i).html(detailFormattedValue["unitPriceAfterDiscount4"]);
+                                                $("#price_after_discount_5_" + i).html(detailFormattedValue["unitPriceAfterDiscount5"]);
+                                                $("#unit_price_after_discount_" + i).html(detailFormattedValue["unit_price"]);
+                                                $("#sub_total_detail_" + i).html(detailFormattedValue["total_price"]);
+                                                $("#tax_detail_" + i).html(detailFormattedValue["tax_amount"]);
+                                                $("#price_before_tax_" + i).html(detailFormattedValue["price_before_tax"]);
+                                                $("#total_before_tax_" + i).html(detailFormattedValue["total_before_tax"]);
+                                                $("#total_quantity_detail_" + i).html(detailFormattedValue["total_quantity"]);
+                                                $("#total_discount_detail_" + i).html(detailFormattedValue["discount"]);
+                                            }
+
+                                            $("#sub_total_before_discount").html(data.subTotalBeforeDiscountFormatted);
+                                            $("#sub_total_discount").html(data.subTotalDiscountFormatted);
+                                            $("#sub_total").html(data.subTotalFormatted);
+                                            $("#total_quantity").html(data.totalQuantityFormatted);
+                                            $("#tax_value").html(data.taxValueFormatted);
+                                            $("#grand_total").html(data.grandTotalFormatted);
+                                        },
+                                    });
+                                ',
                             )); ?>
                             <?php echo $form->error($purchaseOrder->header, 'ppn'); ?>
                         </div>
@@ -183,6 +215,44 @@
                                 0 => 0,
                                 10 => 10,
                                 11 =>11,
+                            ), array(
+                                'onchange' => '
+                                    $.ajax({
+                                        type: "POST",
+                                        dataType: "JSON",
+                                        url: "' . CController::createUrl('ajaxJsonTotal', array('id' => $purchaseOrder->header->id)) . '",
+                                        data: $("form").serialize(),
+                                        success: function(data) {
+                                            for (var i = 0; i < data["detailFormattedValues"].length; i++) {
+                                                const detailFormattedValue = data["detailFormattedValues"][i];
+                                                $("#discount_1_nominal_" + i).html(detailFormattedValue["discount1Amount"]);
+                                                $("#discount_2_nominal_" + i).html(detailFormattedValue["discount2Amount"]);
+                                                $("#discount_3_nominal_" + i).html(detailFormattedValue["discount3Amount"]);
+                                                $("#discount_4_nominal_" + i).html(detailFormattedValue["discount4Amount"]);
+                                                $("#discount_5_nominal_" + i).html(detailFormattedValue["discount5Amount"]);
+                                                $("#price_after_discount_1_" + i).html(detailFormattedValue["unitPriceAfterDiscount1"]);
+                                                $("#price_after_discount_2_" + i).html(detailFormattedValue["unitPriceAfterDiscount2"]);
+                                                $("#price_after_discount_3_" + i).html(detailFormattedValue["unitPriceAfterDiscount3"]);
+                                                $("#price_after_discount_4_" + i).html(detailFormattedValue["unitPriceAfterDiscount4"]);
+                                                $("#price_after_discount_5_" + i).html(detailFormattedValue["unitPriceAfterDiscount5"]);
+                                                $("#unit_price_after_discount_" + i).html(detailFormattedValue["unit_price"]);
+                                                $("#sub_total_detail_" + i).html(detailFormattedValue["total_price"]);
+                                                $("#tax_detail_" + i).html(detailFormattedValue["tax_amount"]);
+                                                $("#price_before_tax_" + i).html(detailFormattedValue["price_before_tax"]);
+                                                $("#total_before_tax_" + i).html(detailFormattedValue["total_before_tax"]);
+                                                $("#total_quantity_detail_" + i).html(detailFormattedValue["total_quantity"]);
+                                                $("#total_discount_detail_" + i).html(detailFormattedValue["discount"]);
+                                            }
+
+                                            $("#sub_total_before_discount").html(data.subTotalBeforeDiscountFormatted);
+                                            $("#sub_total_discount").html(data.subTotalDiscountFormatted);
+                                            $("#sub_total").html(data.subTotalFormatted);
+                                            $("#total_quantity").html(data.totalQuantityFormatted);
+                                            $("#tax_value").html(data.taxValueFormatted);
+                                            $("#grand_total").html(data.grandTotalFormatted);
+                                        },
+                                    });
+                                ',
                             )); ?>
                             <?php echo $form->error($purchaseOrder->header, 'tax_percentage'); ?>
                         </div>
@@ -473,42 +543,36 @@
                                         <span id="total_quantity">
                                             <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $purchaseOrder->header->total_quantity)); ?>
                                         </span>
-                                        <?php echo CHtml::activeHiddenField($purchaseOrder->header, 'total_quantity'); ?>
                                         <?php echo $form->error($purchaseOrder->header, 'total_quantity'); ?>
                                     </td>
                                     <td style="text-align: right">
                                         <span id="sub_total_before_discount">
                                             <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $purchaseOrder->header->price_before_discount)); ?>
                                         </span>
-                                        <?php echo CHtml::activeHiddenField($purchaseOrder->header, 'price_before_discount'); ?>
                                         <?php echo $form->error($purchaseOrder->header, 'price_before_discount'); ?>
                                     </td>
                                     <td style="text-align: right">
                                         <span id="sub_total_discount">
                                             <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $purchaseOrder->header->discount)); ?>
                                         </span>
-                                        <?php echo CHtml::activeHiddenField($purchaseOrder->header, 'discount'); ?>
                                         <?php echo $form->error($purchaseOrder->header, 'discount'); ?>
                                     </td>
                                     <td style="text-align: right">
                                         <span id="sub_total">
                                             <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $purchaseOrder->header->subtotal)); ?>
                                         </span>
-                                        <?php echo CHtml::activeHiddenField($purchaseOrder->header, 'subtotal'); ?>
                                         <?php echo $form->error($purchaseOrder->header, 'subtotal'); ?>
                                     </td>
                                     <td style="text-align: right">
                                         <span id="tax_value">
                                             <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $purchaseOrder->header->ppn_price)); ?>
                                         </span>
-                                        <?php echo CHtml::activeHiddenField($purchaseOrder->header, 'ppn_price'); ?>
                                         <?php echo $form->error($purchaseOrder->header, 'ppn_price'); ?>
                                     </td>
                                     <td style="text-align: right">
                                         <span id="grand_total">
                                             <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $purchaseOrder->header->total_price)); ?>
                                         </span>
-                                        <?php echo CHtml::activeHiddenField($purchaseOrder->header, 'total_price'); ?>
                                         <?php echo $form->error($purchaseOrder->header, 'total_price'); ?>
                                     </td>
                                 </tr>

@@ -11,8 +11,9 @@ class CashTransactionController extends Controller {
 
     public function filterAccess($filterChain) {
         if ($filterChain->action->id === 'summary') {
-            if (!(Yii::app()->user->checkAccess('cashTransactionReport') ))
+            if (!(Yii::app()->user->checkAccess('cashTransactionReport'))) {
                 $this->redirect(array('/site/login'));
+            }
         }
 
         $filterChain->run();

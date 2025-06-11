@@ -12,8 +12,9 @@ class ReceivableInsuranceCompanyController extends Controller {
 
     public function filterAccess($filterChain) {
         if ($filterChain->action->id === 'summary') {
-            if (!(Yii::app()->user->checkAccess('insuranceReceivableReport')))
+            if (!(Yii::app()->user->checkAccess('insuranceReceivableReport'))) {
                 $this->redirect(array('/site/login'));
+            }
         }
 
         $filterChain->run();

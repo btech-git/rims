@@ -16,8 +16,9 @@ class InventoryStockValueController extends Controller {
             $filterChain->action->id === 'detail' || 
             $filterChain->action->id === 'redirectTransaction'
         ) {
-            if (!(Yii::app()->user->checkAccess('stockQuantityValueReport')))
+            if (!(Yii::app()->user->checkAccess('stockQuantityValueReport'))) {
                 $this->redirect(array('/site/login'));
+            }
         }
 
         $filterChain->run();

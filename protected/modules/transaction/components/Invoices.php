@@ -138,6 +138,12 @@ class Invoices extends CComponent {
 
     public function flush() {
         $registrationTransaction = $this->header->registrationTransaction;
+        
+        if ($this->header->isNewRecord) {
+            $invoiceHeader = InvoiceHeader::model()->findByAttributes(array('customer_id' => $this->header->customer_id));
+            $this->header->is_new_customer = $invoiceHeader === null ? 1 : 0;
+        }
+        
         $this->header->total_price = $registrationTransaction->subtotal_product + $registrationTransaction->subtotal_service + $registrationTransaction->ppn_price;
         $this->header->payment_date_estimate = $this->header->due_date;
         $this->header->total_discount = $this->getTotalDiscount();

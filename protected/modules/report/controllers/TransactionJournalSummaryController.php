@@ -10,9 +10,58 @@ class TransactionJournalSummaryController extends Controller {
     }
 
     public function filterAccess($filterChain) {
-        if ($filterChain->action->id === 'summary') {
-            if (!(Yii::app()->user->checkAccess('journalSummaryReport')))
+        if ($filterChain->action->id === 'summaryCash') {
+            if (!(Yii::app()->user->checkAccess('summaryCashReport'))) {
                 $this->redirect(array('/site/login'));
+            }
+        }
+
+        if ($filterChain->action->id === 'summaryMovementIn') {
+            if (!(Yii::app()->user->checkAccess('summaryMovementInReport'))) {
+                $this->redirect(array('/site/login'));
+            }
+        }
+
+        if ($filterChain->action->id === 'summaryMovementOut') {
+            if (!(Yii::app()->user->checkAccess('summaryMovementOutReport'))) {
+                $this->redirect(array('/site/login'));
+            }
+        }
+
+        if ($filterChain->action->id === 'summaryMovementOutMaterial') {
+            if (!(Yii::app()->user->checkAccess('summaryMovementOutMaterialReport'))) {
+                $this->redirect(array('/site/login'));
+            }
+        }
+
+        if ($filterChain->action->id === 'summaryPaymentIn') {
+            if (!(Yii::app()->user->checkAccess('summaryPaymentInReport'))) {
+                $this->redirect(array('/site/login'));
+            }
+        }
+
+        if ($filterChain->action->id === 'summaryPaymentOut') {
+            if (!(Yii::app()->user->checkAccess('summaryPaymentOutReport'))) {
+                $this->redirect(array('/site/login'));
+            }
+        }
+
+        if ($filterChain->action->id === 'summaryPurchase') {
+            if (!(Yii::app()->user->checkAccess('summaryPurchaseReport'))) {
+                $this->redirect(array('/site/login'));
+            }
+        }
+
+        if ($filterChain->action->id === 'summarySale') {
+            if (!(Yii::app()->user->checkAccess('summarySaleReport'))) {
+                $this->redirect(array('/site/login'));
+            }
+        }
+
+        if ($filterChain->action->id === 'summaryWorkOrderExpense') {
+            if (!(Yii::app()->user->checkAccess('summaryWorkOrderExpenseReport'))) {
+                $this->redirect(array('/site/login'));
+            }
         }
 
         $filterChain->run();

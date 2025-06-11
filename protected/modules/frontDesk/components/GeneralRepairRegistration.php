@@ -41,7 +41,7 @@ class GeneralRepairRegistration extends CComponent {
         $cnYearCondition = "substring_index(substring_index(substring_index(work_order_number, '/', 2), '/', -1), '.', 1)";
         $cnMonthCondition = "substring_index(substring_index(substring_index(work_order_number, '/', 2), '/', -1), '.', -1)";
         $registrationTransaction = RegistrationTransaction::model()->find(array(
-            'order' => ' id DESC',
+            'order' => ' work_order_number DESC',
             'condition' => "$cnYearCondition = :cn_year AND $cnMonthCondition = :cn_month AND branch_id = :branch_id",
             'params' => array(':cn_year' => $currentYear, ':cn_month' => $arr[$currentMonth], ':branch_id' => $branchId),
         ));
@@ -61,7 +61,7 @@ class GeneralRepairRegistration extends CComponent {
         $cnYearCondition = "substring_index(substring_index(substring_index(sales_order_number, '/', 2), '/', -1), '.', 1)";
         $cnMonthCondition = "substring_index(substring_index(substring_index(sales_order_number, '/', 2), '/', -1), '.', -1)";
         $registrationTransaction = RegistrationTransaction::model()->find(array(
-            'order' => ' id DESC',
+            'order' => ' sales_order_number DESC',
             'condition' => "$cnYearCondition = :cn_year AND $cnMonthCondition = :cn_month AND branch_id = :branch_id",
             'params' => array(':cn_year' => $currentYear, ':cn_month' => $arr[$currentMonth], ':branch_id' => $branchId),
         ));

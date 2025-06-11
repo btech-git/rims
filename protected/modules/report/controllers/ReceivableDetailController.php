@@ -11,8 +11,9 @@ class ReceivableDetailController extends Controller {
 
     public function filterAccess($filterChain) {
         if ($filterChain->action->id === 'summary') {
-            if (!(Yii::app()->user->checkAccess('customerReceivableReport')))
+            if (!(Yii::app()->user->checkAccess('receivableReport'))) {
                 $this->redirect(array('/site/login'));
+            }
         }
 
         $filterChain->run();

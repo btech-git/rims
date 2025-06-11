@@ -12,8 +12,9 @@ class MechanicPerformanceController extends Controller {
 
     public function filterAccess($filterChain) {
         if ($filterChain->action->id === 'summary') {
-            if (!(Yii::app()->user->checkAccess('mechanicPerformanceReport')))
+            if (!(Yii::app()->user->checkAccess('mechanicPerformanceReport'))) {
                 $this->redirect(array('/site/login'));
+            }
         }
 
         $filterChain->run();

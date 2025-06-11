@@ -10,8 +10,9 @@ class SaleVehicleProductController extends Controller {
 
     public function filterAccess($filterChain) {
         if ($filterChain->action->id === 'summary') {
-            if (!(Yii::app()->user->checkAccess('saleVehicleReport')))
+            if (!(Yii::app()->user->checkAccess('saleVehicleReport'))) {
                 $this->redirect(array('/site/login'));
+            }
         }
 
         $filterChain->run();

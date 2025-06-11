@@ -91,16 +91,6 @@ class PurchaseOrders extends CComponent {
         }
     }
 
-    public function updateTaxes() {
-        foreach ($this->details as $detail) {
-            $detail->total_before_tax = $detail->getTotalPriceBeforeTax($this->header->ppn, $this->header->tax_percentage);
-            $detail->price_before_tax = $detail->getPriceBeforeTax($this->header->ppn, $this->header->tax_percentage);
-            $detail->tax_amount = $detail->getTaxAmount($this->header->ppn, $this->header->tax_percentage);
-            $detail->unit_price = $detail->getUnitPrice($this->header->ppn, $this->header->tax_percentage);
-            $detail->total_price = $detail->getSubTotal($this->header->ppn, $this->header->tax_percentage);
-        }
-    }
-
     public function save($dbConnection) {
         $dbTransaction = $dbConnection->beginTransaction();
         try {
@@ -144,6 +134,7 @@ class PurchaseOrders extends CComponent {
     }
 
     public function flush() {
+        $this->setSummaryValues();
         $isNewRecord = $this->header->isNewRecord;
         
         $this->header->ppn_price = $this->taxAmount;
@@ -411,5 +402,27 @@ class PurchaseOrders extends CComponent {
 //        }
 
         return $this->subTotal + $this->taxAmount;
+    }
+    
+    public function setSummaryValues() {
+        $this->header->total_quantity = $this->totalQuantity;
+        $this->header->price_before_discount = $this->subTotalBeforeDiscount;
+        $this->header->discount = $this->subTotalDiscount;
+        $this->header->subtotal = $this->subTotal;
+        $this->header->ppn_price = $this->taxAmount;
+        $this->header->total_price = $this->grandTotal;
+        
+        $tax = $this->header->ppn;
+        $taxPercentage = $this->header->tax_percentage;
+        
+        foreach ($this->details as $detail) {
+            $detail->unit_price = $detail->getUnitPrice($tax, $taxPercentage);
+            $detail->total_price = $detail->getSubTotal($tax, $taxPercentage);
+            $detail->tax_amount = $detail->getTaxAmount($tax, $taxPercentage);
+            $detail->price_before_tax = $detail->getPriceBeforeTax($tax, $taxPercentage);
+            $detail->total_before_tax = $detail->getTotalPriceBeforeTax($tax, $taxPercentage);
+            $detail->total_quantity = $detail->quantityAfterBonus;
+            $detail->discount = $detail->totalDiscount;
+        }
     }
 }

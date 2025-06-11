@@ -14,7 +14,7 @@ class CashDailySummaryController extends Controller {
         if (
             $filterChain->action->id === 'summary' || 
             $filterChain->action->id === 'approval' || 
-            $filterChain->action->id === 'create' || 
+            $filterChain->action->id === 'index' || 
             $filterChain->action->id === 'admin' || 
             $filterChain->action->id === 'view'
         ) {

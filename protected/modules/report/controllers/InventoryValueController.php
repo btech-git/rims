@@ -10,8 +10,9 @@ class InventoryValueController extends Controller {
 
     public function filterAccess($filterChain) {
         if ($filterChain->action->id === 'summary') {
-            if (!(Yii::app()->user->checkAccess('stockValueReport')))
+            if (!(Yii::app()->user->checkAccess('stockValueReport'))) {
                 $this->redirect(array('/site/login'));
+            }
         }
 
         $filterChain->run();
