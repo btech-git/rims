@@ -405,7 +405,12 @@ class BodyRepairRegistrationController extends Controller {
         $customer = Customer::model()->findByPk($bodyRepairRegistration->header->customer_id);
         $vehicle = Vehicle::model()->findByPk($bodyRepairRegistration->header->vehicle_id);
 
-        $bodyRepairRegistration->generateCodeNumberWorkOrder(Yii::app()->dateFormatter->format('M', strtotime($bodyRepairRegistration->header->transaction_date)), Yii::app()->dateFormatter->format('yyyy', strtotime($bodyRepairRegistration->header->transaction_date)), $bodyRepairRegistration->header->branch_id);
+        if (empty($bodyRepairRegistration->header->work_order_number)) {
+            $bodyRepairRegistration->generateCodeNumberWorkOrder(Yii::app()->dateFormatter->format('M', strtotime($bodyRepairRegistration->header->transaction_date)), Yii::app()->dateFormatter->format('yyyy', strtotime($bodyRepairRegistration->header->transaction_date)), $bodyRepairRegistration->header->branch_id);
+        } else {
+            $bodyRepairRegistration->setCodeNumberWorkOrderByRevision('work_order_number');
+        }
+        
         $bodyRepairRegistration->header->work_order_date = isset($_POST['RegistrationTransaction']['work_order_date']) ? $_POST['RegistrationTransaction']['work_order_date'] : date('Y-m-d');
         $bodyRepairRegistration->header->work_order_time = date('H:i:s');
         $bodyRepairRegistration->header->status = 'Waitlist';

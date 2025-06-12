@@ -428,7 +428,12 @@ class GeneralRepairRegistrationController extends Controller {
         $customer = Customer::model()->findByPk($generalRepairRegistration->header->customer_id);
         $vehicle = Vehicle::model()->findByPk($generalRepairRegistration->header->vehicle_id);
 
-        $generalRepairRegistration->generateCodeNumberWorkOrder(Yii::app()->dateFormatter->format('M', strtotime($generalRepairRegistration->header->transaction_date)), Yii::app()->dateFormatter->format('yyyy', strtotime($generalRepairRegistration->header->transaction_date)), $generalRepairRegistration->header->branch_id);
+        if (empty($generalRepairRegistration->header->work_order_number)) {
+            $generalRepairRegistration->generateCodeNumberWorkOrder(Yii::app()->dateFormatter->format('M', strtotime($generalRepairRegistration->header->transaction_date)), Yii::app()->dateFormatter->format('yyyy', strtotime($generalRepairRegistration->header->transaction_date)), $generalRepairRegistration->header->branch_id);
+        } else {
+            $generalRepairRegistration->setCodeNumberWorkOrderByRevision('work_order_number');
+        }
+        
         $generalRepairRegistration->header->work_order_date = date('Y-m-d');
         $generalRepairRegistration->header->work_order_time = date('H:i:s');
         $generalRepairRegistration->header->status = 'Waitlist';

@@ -458,7 +458,10 @@ class GeneralRepairRegistration extends CComponent {
         $this->header->subtotal = $this->subTotalTransaction;
         $this->header->ppn_price = $this->taxItemAmount;
 //        $this->header->pph_price = $this->taxServiceAmount;
-        $valid = $this->header->save();
+        $valid = $this->header->update(array(
+            'transaction_number', 'total_quickservice', 'total_quickservice_price', 'total_service', 'subtotal_service', 'discount_service', 'total_service_price',
+            'total_product', 'subtotal_product', 'discount_product', 'total_product_price', 'grand_total', 'subtotal', 'ppn_price'
+        ));
         
 //        $bongkar = $sparepart = $ketok_las = $dempul = $epoxy = $cat = $pasang = $poles = $cuci = $finishing = 0;
 
