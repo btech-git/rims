@@ -1,0 +1,1 @@
+<pre style="font-size: larger"><?php echo str_replace('\\', '', json_encode($payload, JSON_PRETTY_PRINT)); ?></pre>

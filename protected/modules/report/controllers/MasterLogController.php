@@ -1,6 +1,6 @@
 <?php
 
-class TransactionLogController extends Controller {
+class MasterLogController extends Controller {
 
     public $layout = '//layouts/column1';
     public function filters() {
@@ -26,12 +26,12 @@ class TransactionLogController extends Controller {
         $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : date('Y-m-d');
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
         
-        $transactionLog = Search::bind(new TransactionLog('search'), isset($_GET['TransactionLog']) ? $_GET['TransactionLog'] : array());
-        $transactionLogDataProvider = $transactionLog->search();
-        $transactionLogDataProvider->criteria->addCondition("transaction_date BETWEEN :start_date AND :end_date");
-        $transactionLogDataProvider->criteria->params[':start_date'] = $startDate;
-        $transactionLogDataProvider->criteria->params[':end_date'] = $endDate;
-        $transactionLogDataProvider->pagination->pageSize = 50;
+        $masterLog = Search::bind(new MasterLog('search'), isset($_GET['MasterLog']) ? $_GET['MasterLog'] : array());
+        $masterLogDataProvider = $masterLog->search();
+        $masterLogDataProvider->criteria->addCondition("log_date BETWEEN :start_date AND :end_date");
+        $masterLogDataProvider->criteria->params[':start_date'] = $startDate;
+        $masterLogDataProvider->criteria->params[':end_date'] = $endDate;
+        $masterLogDataProvider->pagination->pageSize = 50;
         
         if (isset($_GET['ResetFilter'])) {
             $this->redirect(array('summary'));
@@ -40,16 +40,16 @@ class TransactionLogController extends Controller {
         $this->render('summary', array(
             'startDate' => $startDate,
             'endDate' => $endDate,
-            'transactionLog' => $transactionLog,
-            'transactionLogDataProvider' => $transactionLogDataProvider,
+            'masterLog' => $masterLog,
+            'masterLogDataProvider' => $masterLogDataProvider,
         ));
     }
 
     public function actionSummaryPayload($id) {
-        $transactionLog = TransactionLog::model()->findByPk($id);
-        $newData = json_decode($transactionLog->new_data, true);
+        $masterLog = TransactionLog::model()->findByPk($id);
+        $newData = json_decode($masterLog->new_data, true);
         
-        $tableName = trim($transactionLog->table_name, '{}');
+        $tableName = trim($masterLog->table_name, '{}');
         $modelName = str_replace('_', '', ucwords($tableName, '_'));
         
         $className = $modelName . 'LogData';

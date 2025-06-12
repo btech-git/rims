@@ -139,7 +139,7 @@ class RegistrationTransaction extends MonthlyTransactionActiveRecord {
             array('total_product, subtotal, ppn_price, pph_price', 'length', 'max' => 10),
             array('status', 'length', 'max' => 50),
             array('product_status, service_status', 'length', 'max' => 100),
-            array('transaction_number, work_order_number, sales_order_number', 'unique'),
+            array('transaction_number, work_order_number, sales_order_number', 'unique', 'on'=>'create'),
             array('transaction_date, problem, work_order_date, work_order_time, sales_order_date, note, customer_type, transaction_date_out, transaction_time_out, feedback, vehicle_entry_datetime, vehicle_exit_datetime, vehicle_start_service_datetime, vehicle_finish_service_datetime', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.

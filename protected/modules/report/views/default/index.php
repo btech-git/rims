@@ -694,6 +694,11 @@
                                         'url' => array('/report/transactionLog/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('director')
                                     ),
+                                    array(
+                                        'label' => 'Log Master', 
+                                        'url' => array('/report/masterLog/summary'), 
+                                        'visible' => Yii::app()->user->checkAccess('director')
+                                    ),
                                 ),
                             )); ?>
                         <?php endif; ?>
