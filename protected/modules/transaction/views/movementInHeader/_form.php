@@ -40,12 +40,11 @@
                                 'model' => $movementIn->header,
                                 'attribute' => "date_posting",
                                 'options' => array(
-                                    'minDate' => '-1W',
+                                    'minDate' => '-1M',
                                     'maxDate' => '+6M',
                                     'dateFormat' => 'yy-mm-dd',
                                     'changeMonth' => true,
                                     'changeYear' => true,
-                                    'yearRange' => '1900:2050'
                                 ),
                                 'htmlOptions' => array(
                                     'readonly' => true,

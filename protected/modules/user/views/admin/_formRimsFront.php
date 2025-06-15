@@ -2,7 +2,7 @@
     <thead>
         <tr>
             <th style="text-align: center; width: 50%">
-                <?php echo $counter; ?>
+                <?php //echo $counter; ?>
                 <?php echo CHtml::checkBox("User[roles][managerFront]", CHtml::resolveValue($model, "roles[managerFront]"), array('id' => 'User_roles_' . $counter, 'value' => 'managerFront')); ?>
                 <?php echo CHtml::label('SELECT ALL', 'User_roles_' . $counter++, array('style' => 'display: inline')); ?>
             </th>
@@ -68,7 +68,7 @@
                 <?php echo CHtml::checkBox("User[roles][saleInvoiceFrontEdit]", CHtml::resolveValue($model, "roles[saleInvoiceFrontEdit]"), array('id' => 'User_roles_' . $counter++, 'value' => 'saleInvoiceFrontEdit')); ?>
             </td>
             <td style="text-align: center">
-                <?php echo $counter; ?>
+                <?php //echo $counter; ?>
                 <?php echo CHtml::checkBox("User[roles][saleInvoiceFrontSupervisor]", CHtml::resolveValue($model, "roles[saleInvoiceFrontSupervisor]"), array('id' => 'User_roles_' . $counter++, 'value' => 'saleInvoiceFrontSupervisor')); ?>
             </td>
         </tr>

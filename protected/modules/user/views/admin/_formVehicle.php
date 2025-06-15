@@ -2,7 +2,7 @@
     <thead>
         <tr>
             <th style="text-align: center; width: 50%">
-                <?php echo $counter; ?>
+                <?php //echo $counter; ?>
                 <?php echo CHtml::checkBox("User[roles][masterVehicleInventory]", CHtml::resolveValue($model, "roles[masterVehicleInventory]"), array('id' => 'User_roles_' . $counter, 'value' => 'masterVehicleInventory')); ?>
                 <?php echo CHtml::label('SELECT ALL', 'User_roles_' . $counter++, array('style' => 'display: inline')); ?>
             </th>
@@ -145,7 +145,7 @@
                 <?php echo CHtml::checkBox("User[roles][masterColorView]", CHtml::resolveValue($model, "roles[masterColorView]"), array('id' => 'User_roles_' . $counter++, 'value' => 'masterColorView')); ?>
             </td>
             <td style="text-align: center">
-                <?php echo $counter; ?>
+                <?php //echo $counter; ?>
                 <?php echo CHtml::checkBox("User[roles][masterColorApproval]", CHtml::resolveValue($model, "roles[masterColorApproval]"), array('id' => 'User_roles_' . $counter++, 'value' => 'masterColorApproval')); ?>
             </td>
         </tr>

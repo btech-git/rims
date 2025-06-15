@@ -113,7 +113,7 @@
             <td>&nbsp;</td>
             <td>&nbsp;</td>
             <td style="text-align: center">
-                <?php echo $counter; ?>
+                <?php //echo $counter; ?>
                 <?php echo CHtml::checkBox("User[roles][payrollReport]", CHtml::resolveValue($model, "roles[payrollReport]"), array('id' => 'User_roles_' . $counter++, 'value' => 'payrollReport')); ?>
             </td>
             <td>&nbsp;</td>
