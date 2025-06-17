@@ -12,6 +12,11 @@
  * @property string $table_name
  * @property integer $table_id
  * @property string $new_data
+ * @property integer $user_id
+ * @property string $username
+ * @property string $controller_class
+ * @property string $action_name
+ * @property string $action_type
  */
 class TransactionLog extends CActiveRecord {
 
@@ -30,13 +35,14 @@ class TransactionLog extends CActiveRecord {
         // will receive user inputs.
         return array(
             array('transaction_number, table_name, table_id', 'required'),
-            array('table_id', 'numerical', 'integerOnly' => true),
-            array('transaction_number', 'length', 'max' => 100),
+            array('table_id, user_id', 'numerical', 'integerOnly' => true),
+            array('transaction_number, controller_class, action_name', 'length', 'max' => 100),
             array('table_name', 'length', 'max' => 200),
+            array('username, action_type', 'length', 'max' => 60),
             array('transaction_date, log_date, log_time, new_data', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, transaction_number, transaction_date, log_date, log_time, table_name, table_id, new_data', 'safe', 'on' => 'search'),
+            array('id, transaction_number, transaction_date, log_date, log_time, table_name, table_id, new_data, user_id, username, controller_class, action_name, action_type', 'safe', 'on' => 'search'),
         );
     }
 
@@ -63,6 +69,11 @@ class TransactionLog extends CActiveRecord {
             'table_name' => 'Table Name',
             'table_id' => 'Table',
             'new_data' => 'New Data',
+            'user_id' => 'User',
+            'username' => 'Username',
+            'controller_class' => 'Controller Class',
+            'action_name' => 'Action Name',
+            'action_type' => 'Action Type',
         );
     }
 
@@ -91,6 +102,11 @@ class TransactionLog extends CActiveRecord {
         $criteria->compare('table_name', $this->table_name, true);
         $criteria->compare('table_id', $this->table_id);
         $criteria->compare('new_data', $this->new_data, true);
+        $criteria->compare('user_id', $this->user_id);
+        $criteria->compare('username', $this->username, true);
+        $criteria->compare('controller_class', $this->controller_class, true);
+        $criteria->compare('action_name', $this->action_name, true);
+        $criteria->compare('action_type', $this->action_type, true);
 
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,

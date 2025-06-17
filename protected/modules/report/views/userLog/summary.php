@@ -55,11 +55,11 @@ Yii::app()->clientScript->registerScript('report', '
                         <div class="field">
                             <div class="row collapse">
                                 <div class="small-4 columns">
-                                    <span class="prefix">Transaksi #</span>
+                                    <span class="prefix">User</span>
                                 </div>
                                 
                                 <div class="small-8 columns">
-                                    <?php echo CHtml::activeTextField($transactionLog, 'transaction_number'); ?>
+                                    <?php echo CHtml::activeDropDownList($userLog, 'user_id', CHtml::listData(Users::model()->findAllbyAttributes(array('status' => 1)), 'id','username'), array('empty'=>'-- All --')); ?>
                                 </div>
                             </div>
                         </div>
@@ -71,15 +71,13 @@ Yii::app()->clientScript->registerScript('report', '
                         <div class="field">
                             <div class="row collapse">
                                 <div class="small-4 columns">
-                                    <span class="prefix">Action Type</span>
+                                    <span class="prefix">Action</span>
                                 </div>
                                 
                                 <div class="small-8 columns">
-                                    <?php echo CHtml::activeDropDownList($transactionLog, 'action_type', array(
+                                    <?php echo CHtml::activeDropDownList($userLog, 'action_name', array(
                                         'create' => 'Create',
                                         'update' => 'Update',
-                                        'approval' => 'Approval',
-                                        'cancel' => 'Cancel',
                                     ), array('empty' => '-- All --')); ?>
                                 </div>
                             </div>
@@ -89,11 +87,11 @@ Yii::app()->clientScript->registerScript('report', '
                         <div class="field">
                             <div class="row collapse">
                                 <div class="small-4 columns">
-                                    <span class="prefix">Transaksi</span>
+                                    <span class="prefix">User Target</span>
                                 </div>
                                 
                                 <div class="small-8 columns">
-                                    <?php echo CHtml::activeDropDownList($transactionLog, 'controller_class', TransactionModuleScanner::getTransactionList(), array('empty' => '-- All --')); ?>
+                                    <?php echo CHtml::activeDropDownList($userLog, 'user_id_target', CHtml::listData(Users::model()->findAllbyAttributes(array('status' => 1)), 'id','username'), array('empty'=>'-- All --')); ?>
                                 </div>
                             </div>
                         </div>
@@ -117,12 +115,12 @@ Yii::app()->clientScript->registerScript('report', '
 
             <div class="relative">
                 <div class="reportDisplay" style="text-align: right">
-                    <?php echo ReportHelper::summaryText($transactionLogDataProvider); ?>
+                    <?php echo ReportHelper::summaryText($userLogDataProvider); ?>
                 </div>
 
                 <?php $this->renderPartial('_summary', array(
-                    'transactionLog' => $transactionLog,
-                    'transactionLogDataProvider' => $transactionLogDataProvider,
+                    'userLog' => $userLog,
+                    'userLogDataProvider' => $userLogDataProvider,
                     'startDate' => $startDate,
                     'endDate' => $endDate,
                 )); ?>

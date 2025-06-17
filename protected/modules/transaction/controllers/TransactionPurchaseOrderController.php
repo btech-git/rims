@@ -958,7 +958,7 @@ class TransactionPurchaseOrderController extends Controller {
                                 }
                             }
                         }
-                        $purchaseOrder->save(false);
+                        $purchaseOrder->update(array('status_document', 'approved_id'));
                         
                         $jurnalUmumHutang = new JurnalUmum;
                         $jurnalUmumHutang->kode_transaksi = $purchaseOrder->purchase_order_no;

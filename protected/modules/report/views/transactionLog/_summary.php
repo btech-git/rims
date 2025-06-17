@@ -22,12 +22,13 @@
             <th class="width1-3">Log Date</th>
             <th class="width1-3">Log Time</th>
             <th class="width1-2">Username</th>
-            <th class="width1-2">Controller</th>
+            <th class="width1-2">Transaction Type</th>
             <th class="width1-2">Action Type</th>
         </tr>
     </thead>
     <tbody>
         <?php foreach ($transactionLogDataProvider->data as $transactionLogRow): ?>
+            <?php list(, $controllerClass) = explode('/', CHtml::value($transactionLogRow, 'controller_class')); ?>
             <tr class="items1">
                 <td class="width1-1"><?php echo CHtml::link(CHtml::value($transactionLogRow, 'transaction_number'), Yii::app()->createUrl("/report/transactionLog/summaryPayload", array('id' => $transactionLogRow->id)), array('target' => '_blank')); ?></td>
                 <td class="width1-2">
@@ -38,7 +39,7 @@
                 </td>
                 <td class="width1-1"><?php echo CHtml::encode(CHtml::value($transactionLogRow, 'log_time')); ?></td>
                 <td class="width1-1"><?php echo CHtml::encode(CHtml::value($transactionLogRow, 'username')); ?></td>
-                <td class="width1-1"><?php echo CHtml::encode(CHtml::value($transactionLogRow, 'controller_class')); ?></td>
+                <td class="width1-1"><?php echo CHtml::encode(ucfirst($controllerClass)); ?></td>
                 <td class="width1-1"><?php echo CHtml::encode(CHtml::value($transactionLogRow, 'action_type')); ?></td>
             </tr>
         <?php endforeach; ?>

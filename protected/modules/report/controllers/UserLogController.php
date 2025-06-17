@@ -1,6 +1,6 @@
 <?php
 
-class TransactionLogController extends Controller {
+class UserLogController extends Controller {
 
     public $layout = '//layouts/column1';
     public function filters() {
@@ -26,13 +26,13 @@ class TransactionLogController extends Controller {
         $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : date('Y-m-d');
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
         
-        $transactionLog = Search::bind(new TransactionLog('search'), isset($_GET['TransactionLog']) ? $_GET['TransactionLog'] : array());
-        $transactionLogDataProvider = $transactionLog->search();
-        $transactionLogDataProvider->criteria->addCondition("transaction_date BETWEEN :start_date AND :end_date");
-        $transactionLogDataProvider->criteria->params[':start_date'] = $startDate;
-        $transactionLogDataProvider->criteria->params[':end_date'] = $endDate;
-        $transactionLogDataProvider->pagination->pageSize = 50;
-        $transactionLogDataProvider->criteria->order = 't.transaction_date ASC, t.log_date ASC, t.log_time ASC';
+        $userLog = Search::bind(new UserLog('search'), isset($_GET['UserLog']) ? $_GET['UserLog'] : array());
+        $userLogDataProvider = $userLog->search();
+        $userLogDataProvider->criteria->addCondition("log_date BETWEEN :start_date AND :end_date");
+        $userLogDataProvider->criteria->params[':start_date'] = $startDate;
+        $userLogDataProvider->criteria->params[':end_date'] = $endDate;
+        $userLogDataProvider->pagination->pageSize = 50;
+        $userLogDataProvider->criteria->order = 't.log_date ASC, t.log_time ASC';
         
         if (isset($_GET['ResetFilter'])) {
             $this->redirect(array('summary'));
@@ -41,20 +41,20 @@ class TransactionLogController extends Controller {
         $this->render('summary', array(
             'startDate' => $startDate,
             'endDate' => $endDate,
-            'transactionLog' => $transactionLog,
-            'transactionLogDataProvider' => $transactionLogDataProvider,
+            'userLog' => $userLog,
+            'userLogDataProvider' => $userLogDataProvider,
         ));
     }
 
     public function actionSummaryPayload($id) {
-        $transactionLog = TransactionLog::model()->findByPk($id);
-        $newData = json_decode($transactionLog->new_data, true);
+        $userLog = UserLog::model()->findByPk($id);
+        $newData = json_decode($userLog->new_data, true);
         
-        $tableName = trim($transactionLog->table_name, '{}');
+        $tableName = trim($userLog->table_name, '{}');
         $modelName = str_replace('_', '', ucwords($tableName, '_'));
         
         $className = $modelName . 'LogData';
-        $fileName = Yii::app()->basePath . '/components/logData/transaction/' . $className . '.php';
+        $fileName = Yii::app()->basePath . '/components/logData/user/' . $className . '.php';
         if (file_exists($fileName)) {
             $payload = $className::make($newData);
         } else {

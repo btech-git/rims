@@ -46,14 +46,19 @@ class MasterLogController extends Controller {
     }
 
     public function actionSummaryPayload($id) {
-        $masterLog = TransactionLog::model()->findByPk($id);
+        $masterLog = MasterLog::model()->findByPk($id);
         $newData = json_decode($masterLog->new_data, true);
         
         $tableName = trim($masterLog->table_name, '{}');
         $modelName = str_replace('_', '', ucwords($tableName, '_'));
         
         $className = $modelName . 'LogData';
-        $payload = $className::make($newData);
+        $fileName = Yii::app()->basePath . '/components/logData/master/' . $className . '.php';
+        if (file_exists($fileName)) {
+            $payload = $className::make($newData);
+        } else {
+            $payload = $newData;
+        }
         
         $this->renderPartial('_summaryPayload', array(
             'payload' => $payload,

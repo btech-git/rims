@@ -116,18 +116,7 @@ $this->breadcrumbs=array(
                                                     }',
                                                 )),
                                             )); ?>
-                                            <?php /*echo CHtml::activeCheckBox($generalRepairRegistration->header,'ppn', array(
-                                                'onchange' => CHtml::ajax(array(
-                                                    'type' => 'POST',
-                                                    'dataType' => 'JSON',
-                                                    'url' => CController::createUrl('ajaxJsonGrandTotal', array('id' => $generalRepairRegistration->header->id)),
-                                                    'success' => 'function(data) {
-                                                        $("#grand_total_transaction").html(data.grandTotal);
-                                                        $("#tax_item_amount").html(data.taxItemAmount);
-                                                    }',
-                                                )),
-                                            ));*/ ?>
-                                            <?php echo CHtml::activeDropDownList($generalRepairRegistration->header, 'tax_percentage', array(
+                                            <?php echo $form->dropDownList($generalRepairRegistration->header, 'tax_percentage', array(
                                                 0 => 0,
                                                 10 => 10,
                                                 11 => 11,
@@ -145,21 +134,6 @@ $this->breadcrumbs=array(
                                                 )),
                                             )); ?>
                                         </td>
-<!--                                        <td>
-                                            <?php /*echo CHtml::activeCheckBox($generalRepairRegistration->header,'pph', array(
-                                                'onchange' => CHtml::ajax(array(
-                                                    'type' => 'POST',
-                                                    'dataType' => 'JSON',
-                                                    'url' => CController::createUrl('ajaxJsonGrandTotal', array('id' => $generalRepairRegistration->header->id)),
-                                                    'success' => 'function(data) {
-                                                        $("#grand_total_transaction").html(data.grandTotal);
-                                                        $("#tax_service_amount").html(data.taxServiceAmount);
-                                                        $("#total_quick_service_quantity").html(data.totalQuickServiceQuantity);
-                                                        $("#sub_total_quick_service").html(data.subTotalQuickService);
-                                                    }',
-                                                )),
-                                            ));*/ ?>
-                                        </td>-->
                                         <?php if ($generalRepairRegistration->header->work_order_number != ""): ?>
                                             <td><?php echo CHtml::encode(CHtml::value($generalRepairRegistration->header, 'work_order_number')); ?></td>
                                         <?php endif; ?>

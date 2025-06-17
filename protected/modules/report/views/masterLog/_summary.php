@@ -9,7 +9,7 @@
 '); ?>
 
 <div style="font-weight: bold; text-align: center">
-    <div style="font-size: larger">Transaction Log</div>
+    <div style="font-size: larger">Master Log</div>
     <div><?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($startDate))) . ' &nbsp;&ndash;&nbsp; ' . CHtml::encode(Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($endDate))); ?></div>
 </div>
 

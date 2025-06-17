@@ -288,19 +288,22 @@ $this->menu = array(
                     <td class="title"><?php echo $model->reference_type == 1 ? 'Subtotal' : 'Product Price' ?></td>
                     <td>Rp. <?php echo number_format($model->product_price, 2) ?></td>
                 </tr>
+                
                 <?php if ($model->reference_type == 2): ?>
                     <tr>
                         <td class="title">Quick Service Price</td>
                         <td>Rp. <?php echo number_format($model->quick_service_price, 2); ?></td>
                     </tr>
                 <?php endif; ?>
+                    
                 <tr>
                     <td class="title">Sub Total</td>
                     <td>Rp. <?php echo number_format($model->subTotal, 2) ?></td>
                 </tr>
+                
                 <tr>
                     <td class="title">PPN <?php echo CHtml::encode(CHtml::value($model, 'tax_percentage')); ?>%</td>
-                    <td>Rp. <?php echo $model->ppn == 1 ? number_format($model->ppn_total, 2) : 0.00; ?></td>
+                    <td>Rp. <?php echo number_format($model->ppn_total, 2); ?></td>
                 </tr>
 
                 <?php if ($model->reference_type == 2): ?>
@@ -308,7 +311,7 @@ $this->menu = array(
                         <td class="title">PPH (2%) </td>
                         <td>Rp. <?php echo number_format($model->pph_total, 2) ?></td>
                     </tr>
-                <?php endif ?>
+                <?php endif; ?>
 
                 <tr>
                     <td class="title">Total Price</td>

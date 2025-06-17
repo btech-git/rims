@@ -1275,4 +1275,66 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
 
         return $resultSet;
     }
+    
+    public function searchByFollowUp() {
+        // @todo Please modify the following code to remove attributes that should not be searched.
+
+        $criteria = new CDbCriteria;
+
+        $criteria->compare('id', $this->id);
+        $criteria->compare('t.invoice_number', $this->invoice_number, true);
+        $criteria->compare('t.reference_type', $this->reference_type);
+        $criteria->compare('t.sales_order_id', $this->sales_order_id);
+        $criteria->compare('t.registration_transaction_id', $this->registration_transaction_id);
+        $criteria->compare('t.customer_id', $this->customer_id);
+        $criteria->compare('t.vehicle_id', $this->vehicle_id);
+        $criteria->compare('t.coa_bank_id_estimate', $this->coa_bank_id_estimate);
+        $criteria->compare('t.payment_date_estimate', $this->payment_date_estimate);
+        $criteria->compare('t.ppn', $this->ppn);
+        $criteria->compare('t.pph', $this->pph);
+        $criteria->compare('t.branch_id', $this->branch_id);
+        $criteria->compare('t.user_id', $this->user_id);
+        $criteria->compare('t.supervisor_id', $this->supervisor_id);
+        $criteria->compare('t.status', $this->status);
+        $criteria->compare('t.service_price', $this->service_price, true);
+        $criteria->compare('t.product_price', $this->product_price, true);
+        $criteria->compare('t.quick_service_price', $this->quick_service_price, true);
+        $criteria->compare('t.total_product', $this->total_product);
+        $criteria->compare('t.total_service', $this->total_service);
+        $criteria->compare('t.total_quick_service', $this->total_quick_service);
+        $criteria->compare('t.pph_total', $this->pph_total, true);
+        $criteria->compare('t.ppn_total', $this->ppn_total, true);
+        $criteria->compare('t.total_discount', $this->total_discount, true);
+        $criteria->compare('t.total_price', $this->total_price, true);
+        $criteria->compare('t.in_words', $this->in_words, true);
+        $criteria->compare('t.note', $this->note, true);
+        $criteria->compare('t.tax_percentage', $this->tax_percentage);
+        $criteria->compare('t.insurance_company_id', $this->insurance_company_id);
+        $criteria->compare('t.number_of_print', $this->number_of_print);
+        $criteria->compare('t.is_new_customer', $this->is_new_customer);
+
+        return new CActiveDataProvider($this, array(
+            'criteria' => $criteria,
+            'sort' => array(
+                'defaultOrder' => 'invoice_date DESC',
+            ),
+            'pagination' => array(
+                'pageSize' => 500,
+            ),
+        ));
+    }
+    
+    public function getWarrantyFollowUpDate() {
+        return date('Y-m-d', strtotime('+3 days', strtotime($this->invoice_date))); 
+    }
+    
+    public function getServiceFollowUpDate() {
+        return date('Y-m-d', strtotime('+3 months', strtotime($this->invoice_date))); 
+    }
+    
+    public function getLastInvoiceDaysNumber() {
+        $dateDiff = date_diff(date_create($this->invoice_date), date_create(date('Y-m-d')));
+        
+        return $dateDiff->format("%a days");
+    }
 }

@@ -5,6 +5,8 @@
  *
  * The followings are the available columns in table '{{user_log}}':
  * @property integer $id
+ * @property integer $user_id_target
+ * @property string $username_target
  * @property string $log_date
  * @property string $log_time
  * @property string $table_name
@@ -31,14 +33,14 @@ class UserLog extends CActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('log_date, log_time, table_name, table_id, new_data, user_id, username, controller_class, action_name', 'required'),
-            array('table_id, user_id', 'numerical', 'integerOnly' => true),
+            array('log_date, log_time, table_name, table_id, new_data, user_id, username, user_id_target, username_target, controller_class, action_name', 'required'),
+            array('table_id, user_id, user_id_target', 'numerical', 'integerOnly' => true),
             array('table_name', 'length', 'max' => 200),
-            array('username', 'length', 'max' => 60),
+            array('username, username_target', 'length', 'max' => 60),
             array('controller_class, action_name', 'length', 'max' => 100),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, log_date, log_time, table_name, table_id, new_data, user_id, username, controller_class, action_name', 'safe', 'on' => 'search'),
+            array('id, log_date, log_time, table_name, table_id, new_data, user_id, username, user_id_target, username_target, controller_class, action_name', 'safe', 'on' => 'search'),
         );
     }
 
@@ -58,6 +60,8 @@ class UserLog extends CActiveRecord {
     public function attributeLabels() {
         return array(
             'id' => 'ID',
+            'user_id_target' => 'User Target',
+            'username_target' => 'Username Target',
             'log_date' => 'Log Date',
             'log_time' => 'Log Time',
             'table_name' => 'Table Name',
@@ -88,6 +92,8 @@ class UserLog extends CActiveRecord {
         $criteria = new CDbCriteria;
 
         $criteria->compare('id', $this->id);
+        $criteria->compare('user_id_target', $this->user_id_target);
+        $criteria->compare('username_target', $this->username_target, true);
         $criteria->compare('log_date', $this->log_date, true);
         $criteria->compare('log_time', $this->log_time, true);
         $criteria->compare('table_name', $this->table_name, true);

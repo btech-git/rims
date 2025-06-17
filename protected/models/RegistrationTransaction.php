@@ -117,6 +117,7 @@ class RegistrationTransaction extends MonthlyTransactionActiveRecord {
     public $car_model_code;
     public $car_color;
     public $invoice_number;
+    public $search_product;
     public $search_service;
     public $transaction_date_from;
     public $transaction_date_to;
@@ -143,7 +144,7 @@ class RegistrationTransaction extends MonthlyTransactionActiveRecord {
             array('transaction_date, problem, work_order_date, work_order_time, sales_order_date, note, customer_type, transaction_date_out, transaction_time_out, feedback, vehicle_entry_datetime, vehicle_exit_datetime, vehicle_start_service_datetime, vehicle_finish_service_datetime', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, transaction_number, transaction_date, repair_type, work_order_number, problem, work_order_date, work_order_time, customer_id, pic_id, vehicle_id, feedback, branch_id, user_id, total_quickservice, total_quickservice_price, total_service, subtotal_service, discount_service, total_service_price, total_product, subtotal_product, discount_product, total_product_price, is_quick_service, is_insurance, insurance_company_id, status, grand_total, work_order_number, work_order_date, status, payment_status, payment_type, down_payment_amount,customer_name, pic_name, plate_number, branch_name, sales_order_number, sales_order_date, car_make_code, car_model_code, search_service, car_color, transaction_date_from, transaction_date_to, subtotal, ppn, pph, ppn_price, pph_price, vehicle_mileage, note, customer_type, is_passed, total_time, product_status, service_status, priority_level, customer_work_order_number, vehicle_status, transaction_date_out, transaction_time_out, employee_id_assign_mechanic, employee_id_sales_person, tax_percentage, created_datetime, cancelled_datetime, user_id_cancelled, edited_datetime, user_id_edited, sale_estimation_header_id, vehicle_entry_datetime, vehicle_exit_datetime, vehicle_start_service_datetime, vehicle_finish_service_datetime', 'safe', 'on' => 'search'),
+            array('id, transaction_number, transaction_date, repair_type, work_order_number, problem, work_order_date, work_order_time, customer_id, pic_id, vehicle_id, feedback, branch_id, user_id, total_quickservice, total_quickservice_price, total_service, subtotal_service, discount_service, total_service_price, total_product, subtotal_product, discount_product, total_product_price, is_quick_service, is_insurance, insurance_company_id, status, grand_total, work_order_number, work_order_date, status, payment_status, payment_type, down_payment_amount,customer_name, pic_name, plate_number, branch_name, sales_order_number, sales_order_date, car_make_code, car_model_code, search_service, search_product, car_color, transaction_date_from, transaction_date_to, subtotal, ppn, pph, ppn_price, pph_price, vehicle_mileage, note, customer_type, is_passed, total_time, product_status, service_status, priority_level, customer_work_order_number, vehicle_status, transaction_date_out, transaction_time_out, employee_id_assign_mechanic, employee_id_sales_person, tax_percentage, created_datetime, cancelled_datetime, user_id_cancelled, edited_datetime, user_id_edited, sale_estimation_header_id, vehicle_entry_datetime, vehicle_exit_datetime, vehicle_start_service_datetime, vehicle_finish_service_datetime', 'safe', 'on' => 'search'),
         );
     }
 
@@ -599,17 +600,27 @@ class RegistrationTransaction extends MonthlyTransactionActiveRecord {
         return $invoiceNumber;
     }
 
+    public function getProducts() {
+        $products = array();
+
+        foreach ($this->registrationProducts as $registrationProduct) {
+            $products[] = $registrationProduct->product->name . ', ';
+        }
+
+        return $this->search_product = implode('', $products);
+    }
+
     public function getServices() {
         $services = array();
 
         if ($this->repair_type == 'GR') {
             foreach ($this->registrationServices as $registrationService) {
-                $services[] = $registrationService->service->name . '<br>';
+                $services[] = $registrationService->service->name . '<br />';
             }
         } else {
             foreach ($this->registrationServices as $registrationService) {
                 if ($registrationService->is_body_repair == 1) {
-                    $services[] = $registrationService->service->name . '<br>';
+                    $services[] = $registrationService->service->name . '<br />';
                 }
             }
         }
@@ -1201,85 +1212,6 @@ class RegistrationTransaction extends MonthlyTransactionActiveRecord {
 //
 //        return $sql;
 //    }
-    
-    public function searchByFollowUp() {
-        // @todo Please modify the following code to remove attributes that should not be searched.
-
-        $criteria = new CDbCriteria;
-
-        $criteria->compare('id', $this->id);
-        $criteria->compare('transaction_number', $this->transaction_number, true);
-        $criteria->compare('t.transaction_date', $this->transaction_date);
-        $criteria->compare('repair_type', $this->repair_type, true);
-        $criteria->compare('problem', $this->problem, true);
-        $criteria->compare('t.customer_id', $this->customer_id);
-        $criteria->compare('pic_id', $this->pic_id);
-        $criteria->compare('vehicle_id', $this->vehicle_id);
-        $criteria->compare('user_id', $this->user_id);
-        $criteria->compare('total_quickservice', $this->total_quickservice);
-        $criteria->compare('total_quickservice_price', $this->total_quickservice_price, true);
-        $criteria->compare('total_service', $this->total_service);
-        $criteria->compare('subtotal_service', $this->subtotal_service, true);
-        $criteria->compare('discount_service', $this->discount_service, true);
-        $criteria->compare('total_service_price', $this->total_service_price, true);
-        $criteria->compare('total_product', $this->total_product, true);
-        $criteria->compare('subtotal_product', $this->subtotal_product, true);
-        $criteria->compare('discount_product', $this->discount_product, true);
-        $criteria->compare('total_product_price', $this->total_product_price, true);
-        $criteria->compare('is_quick_service', $this->is_quick_service);
-        $criteria->compare('is_insurance', $this->is_insurance);
-        $criteria->compare('insurance_company_id', $this->insurance_company_id);
-        $criteria->compare('grand_total', $this->grand_total, true);
-        $criteria->compare('t.work_order_number', $this->work_order_number, true);
-        $criteria->compare('t.work_order_date', $this->work_order_date, true);
-        $criteria->compare('payment_status', $this->payment_status, true);
-        $criteria->compare('payment_type', $this->payment_type, true);
-        $criteria->compare('down_payment_amount', $this->down_payment_amount, true);
-        $criteria->compare('laststatusupdate_by', $this->laststatusupdate_by);
-        $criteria->compare('sales_order_number', $this->sales_order_number, true);
-        $criteria->compare('sales_order_date', $this->sales_order_date, true);
-        $criteria->compare('ppn', $this->ppn);
-        $criteria->compare('pph', $this->pph);
-        $criteria->compare('subtotal', $this->subtotal, true);
-        $criteria->compare('ppn_price', $this->ppn_price, true);
-        $criteria->compare('pph_price', $this->pph_price, true);
-        $criteria->compare('vehicle_mileage', $this->vehicle_mileage, true);
-        $criteria->compare('note', $this->note, true);
-        $criteria->compare('is_passed', $this->is_passed);
-        $criteria->compare('total_time', $this->total_time);
-        $criteria->compare('priority_level', $this->priority_level);
-        $criteria->compare('customer_work_order_number', $this->customer_work_order_number);
-        $criteria->compare('t.branch_id', $this->branch_id);
-
-        $criteria->together = 'true';
-        $criteria->with = array(
-            'vehicle' => array(
-                'with' => array(
-                    'carMake', 'carModel', 'color'
-                ),
-            ), 
-            'customer', 
-            'pic',
-        );
-
-        $criteria->compare('vehicle.plate_number', $this->plate_number, true);
-        $criteria->compare('customer.name', $this->customer_name, true);
-        $criteria->addSearchCondition('customer.customer_type', $this->customer_type, true);
-        $criteria->addSearchCondition('pic.name', $this->pic_name, true);
-        $criteria->compare('carMake.name', $this->car_make_code, true);
-        $criteria->compare('carModel.name', $this->car_model_code, true);
-        $criteria->compare('vehicle.color_id', $this->car_color, true);
-
-        return new CActiveDataProvider($this, array(
-            'criteria' => $criteria,
-            'sort' => array(
-                'defaultOrder' => 'transaction_date DESC',
-            ),
-            'pagination' => array(
-                'pageSize' => 500,
-            ),
-        ));
-    }
     
     public static function getTotalQuantityVehicleCarMakeData($yearMonth, $branchId) {
         $branchConditionSql = '';

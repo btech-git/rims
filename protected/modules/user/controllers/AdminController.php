@@ -353,6 +353,8 @@ class AdminController extends Controller {
     
     public function saveUserLog($user) {
         $userLog = new UserLog();
+        $userLog->user_id_target = $user->id;
+        $userLog->username_target = $user->username;
         $userLog->log_date = date('Y-m-d');
         $userLog->log_time = date('H:i:s');
         $userLog->table_name = $user->tableName();
