@@ -16,7 +16,7 @@
                 <th>Qty Request Left</th>
                 <th>Unit</th>
                 <th>Note</th>
-                <th>Barcode</th>
+                <!--<th>Barcode</th>-->
             </tr>
         </thead>
         <tbody>
@@ -30,10 +30,10 @@
                         <td><?php echo $deliveryDetail->quantity_request_left; ?></td>
                         <td><?php echo $deliveryDetail->product->unit->name; ?></td>
                         <td><?php echo $deliveryDetail->note; ?></td>
-                        <td><?php echo $deliveryDetail->barcode_product; ?></td>
+                        <!--<td><?php // echo $deliveryDetail->barcode_product; ?></td>-->
                     </tr>
                     <tr>
-                        <td colspan="7">
+                        <td colspan="6">
                             Code: <?php echo CHtml::encode(CHtml::value($deliveryDetail, "product.manufacturer_code")); ?> ||
                             Kategori: <?php echo CHtml::encode(CHtml::value($deliveryDetail, "product.masterSubCategoryCode")); ?> ||
                             Brand: <?php echo CHtml::encode(CHtml::value($deliveryDetail, "product.brand.name")); ?> ||
@@ -47,7 +47,7 @@
     </table>
 <?php endif; ?>
 
-<?php if(count($deliveryOrder->details) != 0) {	?>
+<?php if (count($deliveryOrder->details) != 0) {	?>
     <table>
         <thead>
             <tr>
@@ -57,7 +57,8 @@
                 <th>Qty Delivery</th>
                 <th>Unit</th>
                 <th>Note</th>
-                <th>Barcode</th>
+                <!--<th>Barcode</th>-->
+                <th></th>
             </tr>
         </thead>
         <tbody>
@@ -96,7 +97,7 @@
                     </td>
                     <td><?php echo $detail->product->unit->name; ?></td>
                     <td><?php echo CHtml::activeTextField($detail,"[$i]note");  ?></td>
-                    <td><?php echo CHtml::activeTextField($detail,"[$i]barcode_product"); ?></td>
+                    <!--<td><?php //echo CHtml::activeTextField($detail,"[$i]barcode_product"); ?></td>-->
                     <td>
                         <?php echo CHtml::button('X', array(
                             'onclick' => CHtml::ajax(array(
@@ -108,7 +109,7 @@
                     </td>
                 </tr>
                 <tr>
-                    <td colspan="8">
+                    <td colspan="7">
                         Code: <?php echo CHtml::encode(CHtml::value($detail, "product.manufacturer_code")); ?> ||
                         Kategori: <?php echo CHtml::encode(CHtml::value($detail, "product.masterSubCategoryCode")); ?> ||
                         Brand: <?php echo CHtml::encode(CHtml::value($detail, "product.brand.name")); ?> ||
