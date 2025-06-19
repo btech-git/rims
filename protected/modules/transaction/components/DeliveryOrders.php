@@ -160,7 +160,7 @@ class DeliveryOrders extends CComponent {
 
         //save request detail
         foreach ($this->details as $detail) {
-            if ($detail->quantity_delivery > '0.00') {
+            if ($detail->quantity_delivery > 0) {
                 $detail->delivery_order_id = $this->header->id;
                 $detail->quantity_movement = 0;
                 $detail->quantity_movement_left = $detail->quantity_delivery;
