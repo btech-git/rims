@@ -5,28 +5,9 @@ Yii::app()->clientScript->registerScript('report', '
     $("#EndDate").val("' . $endDate . '");
     $("#PageSize").val("' . $dataProvider->pagination->pageSize . '");
     $("#CurrentPage").val("' . ($dataProvider->pagination->getCurrentPage(false) + 1) . '");
-    $("#CurrentSort").val("' . $currentSort . '");
 ');
 Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/transaction/report.css');
 ?>
-
-<?php echo CHtml::beginForm(array(''), 'get'); ?>
-<div id="maincontent">
-    <div class="clearfix page-action">
-        <h1>Follow Up Customer</h1>
-    </div>
-    <div class="clearfix"></div>
-</div>
-
-<div class="clear"></div>
-
-<div class="row buttons">
-    <?php echo CHtml::submitButton('Simpan ke Excel', array('name' => 'SaveExcel')); ?>
-</div>
-
-<?php echo CHtml::endForm(); ?>
-
-<br />
 
 <div class="tab reportTab">
     <div class="tabHead"><h1>Follow Up Customer</h1></div>
@@ -40,7 +21,7 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                         <div class="field">
                             <div class="row collapse">
                                 <div class="small-4 columns">
-                                    <span class="prefix">Branch </span>
+                                    <span class="prefix">Branch</span>
                                 </div>
                                 <div class="small-8 columns">
                                     <?php echo CHtml::activeDropDownlist($model, 'branch_id', CHtml::listData(Branch::model()->findAllbyAttributes(array('status' => 'Active')), 'id', 'name'), array('empty' => '-- All Branch --')); ?>
@@ -52,10 +33,80 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                     <div class="medium-6 columns">
                         <div class="field">
                             <div class="row collapse">
-                                <div class="small-2 columns">
+                                <div class="small-4 columns">
+                                    <span class="prefix">Merk</span>
+                                </div>
+                                <div class="small-8 columns">
+                                    <?php echo CHtml::dropDownList('CarMake', $carMake, CHtml::listData(VehicleCarMake::model()->findAll(), 'id', 'name'), array(
+                                        'empty' => '-- All --',
+                                        'onchange' => CHtml::ajax(array(
+                                            'type' => 'GET',
+                                            'url' => CController::createUrl('ajaxHtmlUpdateCarModelSelect'),
+                                            'update' => '#car_model',
+                                        )),
+                                    )); ?>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="medium-6 columns">
+                        <div class="field">
+                            <div class="row collapse">
+                                <div class="small-4 columns">
+                                    <span class="prefix">Model</span>
+                                </div>
+                                <div class="small-8 columns" id="car_model">
+                                    <?php echo CHtml::dropDownList('CarModel', $carModel, CHtml::listData(VehicleCarModel::model()->findAll(), 'id', 'name'), array(
+                                        'empty' => '-- All --',
+                                        'onchange' => CHtml::ajax(array(
+                                            'type' => 'GET',
+                                            'url' => CController::createUrl('ajaxHtmlUpdateCarSubModelSelect'),
+                                            'update' => '#car_sub_model',
+                                        )),
+                                    )); ?>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="medium-6 columns">
+                        <div class="field">
+                            <div class="row collapse">
+                                <div class="small-4 columns">
+                                    <span class="prefix">Sub Model</span>
+                                </div>
+                                <div class="small-8 columns" id="car_sub_model">
+                                    <?php echo CHtml::dropDownList('CarSubModel', $carSubModel, CHtml::listData(VehicleCarSubModel::model()->findAll(), 'id', 'name'), array(
+                                        'empty' => '-- All --',
+                                    )); ?>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="medium-6 columns">
+                        <div class="field">
+                            <div class="row collapse">
+                                <div class="small-4 columns">
+                                    <span class="prefix">Customer</span>
+                                </div>
+                                <div class="small-8 columns">
+                                    <?php echo CHtml::textField('CustomerName', $customerName); ?>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="medium-6 columns">
+                        <div class="field">
+                            <div class="row collapse">
+                                <div class="small-4 columns">
                                     <span class="prefix">Tanggal </span>
                                 </div>
-                                <div class="small-5 columns">
+                                <div class="small-4 columns">
                                     <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(
                                         'name' => 'StartDate',
                                         'options' => array(
@@ -70,7 +121,7 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                     )); ?>
                                 </div>
 
-                                <div class="small-5 columns">
+                                <div class="small-4 columns">
                                     <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(
                                         'name' => 'EndDate',
                                         'options' => array(
@@ -86,7 +137,6 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                 </div>
                             </div>
                         </div>
-
                     </div>
                 </div>
 

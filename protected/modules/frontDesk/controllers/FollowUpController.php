@@ -50,6 +50,7 @@ class FollowUpController extends Controller {
         $plateNumber = (isset($_GET['PlateNumber'])) ? $_GET['PlateNumber'] : '';
         $carMake = (isset($_GET['CarMake'])) ? $_GET['CarMake'] : '';
         $carModel = (isset($_GET['CarModel'])) ? $_GET['CarModel'] : '';
+        $carSubModel = (isset($_GET['CarSubModel'])) ? $_GET['CarSubModel'] : '';
         $customerName = (isset($_GET['CustomerName'])) ? $_GET['CustomerName'] : '';
 
         $model = Search::bind(new InvoiceHeader('search'), isset($_GET['InvoiceHeader']) ? $_GET['InvoiceHeader'] : '');
@@ -75,9 +76,13 @@ class FollowUpController extends Controller {
             $dataProvider->criteria->params[':name'] = "%{$customerName}%";
         }
         
-        $followUpDate = date('Y-m-d', strtotime('-6 months', strtotime(date('Y-m-d')))); 
-        $dataProvider->criteria->addCondition("t.status IN ('PAID', 'CLEAR') AND t.invoice_date >= :follow_up_date");
-        $dataProvider->criteria->params[':follow_up_date'] = $followUpDate;
+//        $followUpDate = date('Y-m-d', strtotime('-6 months', strtotime(date('Y-m-d')))); 
+        $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : date('Y-m-d');
+        $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
+        $dataProvider->criteria->addCondition("t.status IN ('PAID', 'CLEAR') AND t.invoice_date BETWEEN :start_date AND :end_date");
+//        $dataProvider->criteria->params[':follow_up_date'] = $followUpDate;
+        $dataProvider->criteria->params[':start_date'] = $startDate;
+        $dataProvider->criteria->params[':end_date'] = $endDate;
 
         if (isset($_GET['SaveExcel'])) {
             $this->saveToExcelCustomerFollowUp($dataProvider);
@@ -89,8 +94,35 @@ class FollowUpController extends Controller {
             'plateNumber' => $plateNumber,
             'carMake' => $carMake,
             'carModel' => $carModel,
+            'carSubModel' => $carSubModel,
             'customerName' => $customerName,
+            'endDate' => $endDate,
+            'startDate' => $startDate,
         ));
+    }
+    
+    public function actionAjaxHtmlUpdateCarModelSelect() {
+        if (Yii::app()->request->isAjaxRequest) {
+            $carMake = (isset($_GET['CarMake'])) ? $_GET['CarMake'] : '';
+            $carModel = (isset($_GET['CarModel'])) ? $_GET['CarModel'] : '';
+
+            $this->renderPartial('_carModelSelect', array(
+                'carMake' => $carMake,
+                'carModel' => $carModel,
+            ));
+        }
+    }
+    
+    public function actionAjaxHtmlUpdateCarSubModelSelect() {
+        if (Yii::app()->request->isAjaxRequest) {
+            $carModel = (isset($_GET['CarModel'])) ? $_GET['CarModel'] : '';
+            $carSubModel = (isset($_GET['CarSubModel'])) ? $_GET['CarSubModel'] : '';
+
+            $this->renderPartial('_carSubModelSelect', array(
+                'carModel' => $carModel,
+                'carSubModel' => $carSubModel,
+            ));
+        }
     }
     
     protected function saveToExcelCustomerFollowUp($dataProvider) {

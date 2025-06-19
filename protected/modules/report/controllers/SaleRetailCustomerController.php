@@ -34,6 +34,7 @@ class SaleRetailCustomerController extends Controller {
         $currentPage = (isset($_GET['page'])) ? $_GET['page'] : '';
         $currentSort = (isset($_GET['sort'])) ? $_GET['sort'] : '';
         $taxValue = (isset($_GET['TaxValue'])) ? $_GET['TaxValue'] : '';
+        $branchId = (isset($_GET['BranchId'])) ? $_GET['BranchId'] : '';
 
         $saleRetailCustomerSummary = new SaleRetailCustomerSummary($customerDataProvider);
         $saleRetailCustomerSummary->setupLoading();
@@ -63,6 +64,7 @@ class SaleRetailCustomerController extends Controller {
             'currentPage' => $currentPage,
             'currentSort' => $currentSort,
             'taxValue' => $taxValue,
+            'branchId' => $branchId,
         ));
     }
 

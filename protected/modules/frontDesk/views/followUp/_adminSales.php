@@ -52,7 +52,9 @@ Yii::app()->clientScript->registerCss('_report', '
                     <?php echo CHtml::encode(CHtml::value($header, 'vehicle.carModel.name')); ?> -
                     <?php echo CHtml::encode(CHtml::value($header, 'vehicle.carSubModel.name')); ?>
                 </td>
-                <td class="width1-4"><?php echo CHtml::link($data->registrationTransaction->transaction_number, array($data->registrationTransaction->repair_type == "GR" ? "/frontDesk/generalRepairRegistration/view" : "/frontDesk/bodyRepairRegistration/view", "id"=>$data->registration_transaction_id), array("target" => "blank")); ?></td>
+                <td class="width1-4">
+                    <?php echo CHtml::link($header->registrationTransaction->transaction_number, array($header->registrationTransaction->repair_type == "GR" ? "/frontDesk/generalRepairRegistration/view" : "/frontDesk/bodyRepairRegistration/view", "id"=>$header->registration_transaction_id), array("target" => "blank")); ?>
+                </td>
                 <td class="width1-5"><?php echo CHtml::encode(CHtml::value($header, 'invoice_number')); ?></td>
                 <td class="width1-6"><?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($header->invoice_date))); ?></td>
                 <td class="width1-7"><?php echo CHtml::encode(CHtml::value($header, 'warrantyFollowUpDate')); ?></td>
@@ -60,7 +62,7 @@ Yii::app()->clientScript->registerCss('_report', '
                 <td class="width1-9"><?php echo CHtml::encode(CHtml::value($header, 'lastInvoiceDaysNumber')); ?></td>
                 <td class="width1-10">
                     <?php if (empty($header->registrationTransaction->feedback)): ?>
-                        <?php echo Yii::app()->createUrl("frontDesk/followUp/updateFeedback", array("id"=>$data->registration_transaction_id)); ?>
+                        <?php echo CHtml::link('Feedback', Yii::app()->createUrl("frontDesk/followUp/updateFeedback", array("id"=>$header->registration_transaction_id))); ?>
                     <?php else: ?>
                         <?php echo CHtml::encode(CHtml::value($header, 'lastInvoiceDaysNumber')); ?>
                     <?php endif; ?>

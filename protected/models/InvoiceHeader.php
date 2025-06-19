@@ -1178,7 +1178,9 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
             $params[':branch_id'] = $branchId;
         }
         
-        $sql = "SELECT EXTRACT(YEAR_MONTH FROM invoice_date) AS year_month_value, COUNT(*) AS quantity_invoice, SUM(i.service_price) AS service_price, SUM(i.product_price) AS product_price, SUM(i.product_price + i.service_price) AS sub_total, SUM(i.ppn_total) AS total_tax, SUM(i.pph_total) AS total_tax_income, SUM(i.total_price) AS total_price 
+        $sql = "SELECT EXTRACT(YEAR_MONTH FROM invoice_date) AS year_month_value, COUNT(*) AS quantity_invoice, SUM(i.service_price) AS service_price, 
+                SUM(i.product_price) AS product_price, SUM(i.product_price + i.service_price) AS sub_total, SUM(i.ppn_total) AS total_tax, 
+                SUM(i.pph_total) AS total_tax_income, SUM(i.total_price) AS total_price 
                 FROM " . InvoiceHeader::model()->tableName() . " i 
                 WHERE YEAR(i.invoice_date) = :year AND i.status NOT LIKE '%CANCELLED%' AND i.tax_percentage > 0 AND i.ppn_total > 0" . $branchConditionSql . "
                 GROUP BY EXTRACT(YEAR_MONTH FROM invoice_date)
@@ -1313,6 +1315,9 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
         $criteria->compare('t.number_of_print', $this->number_of_print);
         $criteria->compare('t.is_new_customer', $this->is_new_customer);
 
+        $criteria->together = 'true';
+        $criteria->with = array('customer', 'vehicle');
+        
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
             'sort' => array(
@@ -1336,5 +1341,85 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
         $dateDiff = date_diff(date_create($this->invoice_date), date_create(date('Y-m-d')));
         
         return $dateDiff->format("%a days");
+    }
+    
+    public static function getSaleInvoiceCarSubModelMonthlyData($yearMonth, $branchId, $carMake, $carModel) {
+        $branchConditionSql = '';
+        $carMakeConditionSql = '';
+        $carModelConditionSql = '';
+        
+        $params = array(
+            ':year_month' => $yearMonth,
+        );
+        
+        if (!empty($branchId)) {
+            $branchConditionSql = ' AND t.branch_id = :branch_id';
+            $params[':branch_id'] = $branchId;
+        }
+        
+        if (!empty($carMake)) {
+            $carMakeConditionSql = ' AND v.car_make_id = :car_make_id';
+            $params[':car_make_id'] = $carMake;
+        }
+        
+        if (!empty($carModel)) {
+            $carModelConditionSql = ' AND v.car_model_id = :car_model_id';
+            $params[':car_model_id'] = $carModel;
+        }
+        
+        $sql = "SELECT s.id AS car_sub_model_id, SUBSTRING_INDEX(SUBSTRING_INDEX(t.invoice_date, ' ', 1), '-', 3) AS transaction_date, 
+                MAX(s.name) AS car_sub_model_name, MAX(c.name) AS car_model_name, MAX(m.name) AS car_make_name, COUNT(*) AS total_quantity_vehicle
+                FROM " . InvoiceHeader::model()->tableName() . " t
+                INNER JOIN " . Vehicle::model()->tableName() . " v ON v.id = t.vehicle_id
+                INNER JOIN " . VehicleCarSubModel::model()->tableName() . " s ON s.id = v.car_sub_model_id
+                INNER JOIN " . VehicleCarModel::model()->tableName() . " c ON c.id = s.car_model_id
+                INNER JOIN " . VehicleCarMake::model()->tableName() . " m ON m.id = c.car_make_id
+                WHERE SUBSTRING_INDEX(SUBSTRING_INDEX(t.invoice_date, ' ', 1), '-', 2) = :year_month AND t.status NOT LIKE '%CANCELLED%'" . $branchConditionSql . $carMakeConditionSql . $carModelConditionSql . "
+                GROUP BY s.id, SUBSTRING_INDEX(SUBSTRING_INDEX(t.invoice_date, ' ', 1), '-', 3)
+                ORDER BY m.name ASC, c.name ASC, s.name ASC, transaction_date ASC";
+
+        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
+
+        return $resultSet;
+    }
+    
+    public static function getSaleInvoiceCarSubModelYearlyData($year, $branchId, $carMake, $carModel) {
+        $branchConditionSql = '';
+        $carMakeConditionSql = '';
+        $carModelConditionSql = '';
+        
+        $params = array(
+            ':year' => $year,
+        );
+        
+        if (!empty($branchId)) {
+            $branchConditionSql = ' AND i.branch_id = :branch_id';
+            $params[':branch_id'] = $branchId;
+        }
+        
+        if (!empty($carMake)) {
+            $carMakeConditionSql = ' AND v.car_make_id = :car_make_id';
+            $params[':car_make_id'] = $carMake;
+        }
+        
+        if (!empty($carModel)) {
+            $carModelConditionSql = ' AND v.car_model_id = :car_model_id';
+            $params[':car_model_id'] = $carModel;
+        }
+        
+        $sql = "SELECT EXTRACT(YEAR_MONTH FROM i.invoice_date) AS year_month_value, v.car_sub_model_id AS car_sub_model_id, COUNT(*) AS total_quantity_vehicle, 
+                MAX(s.name) AS car_sub_model_name, MAX(c.name) AS car_model_name, MAX(m.name) AS car_make_name
+                FROM " . InvoiceHeader::model()->tableName() . " i
+                INNER JOIN " . Vehicle::model()->tableName() . " v ON v.id = i.vehicle_id
+                INNER JOIN " . VehicleCarSubModel::model()->tableName() . " s ON s.id = v.car_sub_model_id
+                INNER JOIN " . VehicleCarModel::model()->tableName() . " c ON c.id = s.car_model_id
+                INNER JOIN " . VehicleCarMake::model()->tableName() . " m ON m.id = c.car_make_id
+                WHERE YEAR(i.invoice_date) = :year AND i.status NOT LIKE '%CANCELLED%'" . $branchConditionSql . $carMakeConditionSql . $carModelConditionSql . "
+                GROUP BY EXTRACT(YEAR_MONTH FROM invoice_date), v.car_sub_model_id
+                ORDER BY year_month_value ASC, car_make_name ASC, car_model_name ASC, car_sub_model_name ASC";
+                
+        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
+
+        return $resultSet;
     }
 }

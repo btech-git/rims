@@ -699,6 +699,16 @@
                                         'url' => array('/report/masterLog/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('director')
                                     ),
+                                    array(
+                                        'label' => 'Penjualan per Kendaraan Bulanan', 
+                                        'url' => array('/report/saleInvoiceCarSubModelMonthly/summary'), 
+                                        'visible' => Yii::app()->user->checkAccess('director')
+                                    ),
+                                    array(
+                                        'label' => 'Penjualan per Kendaraan Tahunan', 
+                                        'url' => array('/report/saleInvoiceCarSubModelYearly/summary'), 
+                                        'visible' => Yii::app()->user->checkAccess('director')
+                                    ),
                                 ),
                             )); ?>
                         <?php endif; ?>

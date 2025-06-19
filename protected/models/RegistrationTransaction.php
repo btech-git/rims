@@ -1225,7 +1225,8 @@ class RegistrationTransaction extends MonthlyTransactionActiveRecord {
             $params[':branch_id'] = $branchId;
         }
         
-        $sql = "SELECT c.id AS car_model_id, SUBSTRING_INDEX(SUBSTRING_INDEX(t.transaction_date, ' ', 1), '-', 3) AS transaction_date, c.name AS car_model_name, m.id AS car_make_id, m.name AS car_make_name, COUNT(*) AS total_quantity_vehicle
+        $sql = "SELECT c.id AS car_model_id, SUBSTRING_INDEX(SUBSTRING_INDEX(t.transaction_date, ' ', 1), '-', 3) AS transaction_date, 
+                c.name AS car_model_name, m.id AS car_make_id, m.name AS car_make_name, COUNT(*) AS total_quantity_vehicle
                 FROM " . RegistrationTransaction::model()->tableName() . " t
                 INNER JOIN " . Vehicle::model()->tableName() . " v ON v.id = t.vehicle_id
                 INNER JOIN " . VehicleCarModel::model()->tableName() . " c ON c.id = v.car_model_id
