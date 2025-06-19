@@ -506,20 +506,19 @@ class DeliveryOrders extends CComponent {
                 $detail->quantity_request_left = $left_quantity;
                 $valid = $detail->save() && $valid;
                 $new_detail[] = $detail->id;
+
+                //delete pricelist
+                $delete_array = array_diff($detail_id, $new_detail);
+                if ($delete_array != NULL) {
+                    $criteria = new CDbCriteria;
+                    $criteria->addInCondition('id', $delete_array);
+                    TransactionDeliveryOrderDetail::model()->deleteAll($criteria);
+                }
             }
-
-            //delete pricelist
-            $delete_array = array_diff($detail_id, $new_detail);
-            if ($delete_array != NULL) {
-                $criteria = new CDbCriteria;
-                $criteria->addInCondition('id', $delete_array);
-                TransactionDeliveryOrderDetail::model()->deleteAll($criteria);
-            }
-
-            $this->saveTransactionLog();
-
-            return $valid;
         }
+        $this->saveTransactionLog();
+
+        return $valid;
     }
     
     public function saveTransactionLog() {
