@@ -48,9 +48,9 @@ class SaleInvoiceCarSubModelYearlyController extends Controller {
             $this->redirect(array('summary'));
         }
         
-        if (isset($_GET['SaveExcel'])) {
-            $this->saveToExcel($invoiceVehicleInfo, $year);
-        }
+//        if (isset($_GET['SaveExcel'])) {
+//            $this->saveToExcel($invoiceVehicleInfo, $year);
+//        }
 
         $this->render('summary', array(
             'yearList' => $yearList,

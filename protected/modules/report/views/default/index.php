@@ -709,6 +709,21 @@
                                         'url' => array('/report/saleInvoiceCarSubModelYearly/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('director')
                                     ),
+                                    array(
+                                        'label' => 'Customer Follow Up + Warranty', 
+                                        'url' => array('/frontDesk/followUp/adminSales'), 
+                                        'visible' => Yii::app()->user->checkAccess('director')
+                                    ),
+                                    array(
+                                        'label' => 'Penjualan per Front Office Harian', 
+                                        'url' => array('/report/saleInvoiceMarketingDaily/summary'), 
+                                        'visible' => Yii::app()->user->checkAccess('director')
+                                    ),
+                                    array(
+                                        'label' => 'Penjualan per Mekanik Harian', 
+                                        'url' => array('/report/registrationTransactionMechanicDaily/summary'), 
+                                        'visible' => Yii::app()->user->checkAccess('director')
+                                    ),
                                 ),
                             )); ?>
                         <?php endif; ?>

@@ -69,6 +69,8 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
     public $due_date_to;
     public $customer_type;
     public $plate_number;
+    public $search_product;
+    public $search_service;
 
     public static function model($className = __CLASS__) {
         return parent::model($className);
@@ -97,7 +99,7 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
             array('invoice_number', 'unique'),
             // The following rule is used by search().
             // Please remove those attributes that should not be searched.
-            array('id, invoice_number, invoice_date, due_date, number_of_print, reference_type, sales_order_id, registration_transaction_id, customer_id, vehicle_id, ppn, pph, branch_id, user_id, supervisor_id, status, service_price, product_price, quick_service_price, total_product, insurance_company_id, total_service, total_quick_service, pph_total, ppn_total, total_discount, total_price, in_words, note, customer_name, invoice_date_to, due_date_to, payment_amount, payment_left,customer_type, payment_date_estimate, coa_bank_id_estimate, plate_number, tax_percentage, created_datetime, cancelled_datetime, user_id_cancelled, edited_datetime, user_id_edited, user_id_printed, is_new_customer', 'safe', 'on' => 'search'),
+            array('id, invoice_number, invoice_date, due_date, number_of_print, reference_type, sales_order_id, registration_transaction_id, search_service, search_product, customer_id, vehicle_id, ppn, pph, branch_id, user_id, supervisor_id, status, service_price, product_price, quick_service_price, total_product, insurance_company_id, total_service, total_quick_service, pph_total, ppn_total, total_discount, total_price, in_words, note, customer_name, invoice_date_to, due_date_to, payment_amount, payment_left,customer_type, payment_date_estimate, coa_bank_id_estimate, plate_number, tax_percentage, created_datetime, cancelled_datetime, user_id_cancelled, edited_datetime, user_id_edited, user_id_printed, is_new_customer', 'safe', 'on' => 'search'),
         );
     }
 
@@ -1421,5 +1423,25 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
         $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
 
         return $resultSet;
+    }
+    
+    public function getProductLists() {
+        $products = array();
+
+        foreach ($this->invoiceDetails as $detail) {
+            $products[] = empty($detail->product_id) ? '' : $detail->product->name . ', ';
+        }
+
+        return $this->search_product = implode('', $products);
+    }
+
+    public function getServiceLists() {
+        $services = array();
+
+        foreach ($this->invoiceDetails as $detail) {
+            $services[] = empty($detail->service_id) ? '' : $detail->service->name . ', ';
+        }
+
+        return $this->search_service = implode('', $services);
     }
 }

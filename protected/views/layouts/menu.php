@@ -154,11 +154,11 @@
                         'url' => array('/frontDesk/registrationTransaction/customerWaitlist'), 
                         'visible' => Yii::app()->user->checkAccess('customerQueueApproval')
                     ),
-                    array(
-                        'label' => 'Follow Up Customer', 
-                        'url' => array('/frontDesk/followUp/adminSales'), 
-                        'visible' => Yii::app()->user->checkAccess('customerFollowUp')
-                    ),
+//                    array(
+//                        'label' => 'Follow Up Customer', 
+//                        'url' => array('/frontDesk/followUp/adminSales'), 
+//                        'visible' => Yii::app()->user->checkAccess('customerFollowUp')
+//                    ),
                     array(
                         'label' => 'Follow Up Service', 
                         'url' => array('/frontDesk/followUp/adminService'), 

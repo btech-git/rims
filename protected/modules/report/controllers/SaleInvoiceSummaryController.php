@@ -234,5 +234,4 @@ class SaleInvoiceSummaryController extends Controller {
 
         Yii::app()->end();
     }
-
 }

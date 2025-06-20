@@ -613,17 +613,17 @@ class RegistrationTransaction extends MonthlyTransactionActiveRecord {
     public function getServices() {
         $services = array();
 
-        if ($this->repair_type == 'GR') {
+//        if ($this->repair_type == 'GR') {
             foreach ($this->registrationServices as $registrationService) {
                 $services[] = $registrationService->service->name . '<br />';
             }
-        } else {
-            foreach ($this->registrationServices as $registrationService) {
-                if ($registrationService->is_body_repair == 1) {
-                    $services[] = $registrationService->service->name . '<br />';
-                }
-            }
-        }
+//        } else {
+//            foreach ($this->registrationServices as $registrationService) {
+//                if ($registrationService->is_body_repair == 1) {
+//                    $services[] = $registrationService->service->name . '<br />';
+//                }
+//            }
+//        }
 
         return $this->search_service = implode('', $services);
     }

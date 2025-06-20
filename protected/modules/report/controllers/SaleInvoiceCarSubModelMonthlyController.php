@@ -44,9 +44,9 @@ class SaleInvoiceCarSubModelMonthlyController extends Controller {
             $this->redirect(array('summary'));
         }
         
-        if (isset($_GET['SaveExcel'])) {
-            $this->saveToExcel($invoiceVehicleInfo, $yearMonth);
-        }
+//        if (isset($_GET['SaveExcel'])) {
+//            $this->saveToExcel($invoiceVehicleInfo, $yearMonth);
+//        }
 
         $this->render('summary', array(
             'yearMonthNow' => $yearMonthNow,
