@@ -408,11 +408,12 @@ class Supplier extends CActiveRecord {
                 SELECT d.receive_item_id, SUM(d.amount) AS amount 
                 FROM " . PayOutDetail::model()->tableName() . " d 
                 INNER JOIN " . PaymentOut::model()->tableName() . " h ON h.id = d.payment_out_id
-                WHERE h.payment_date BETWEEN '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND :end_date
+                WHERE h.payment_date BETWEEN '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND :end_date AND h.status NOT LIKE '%CANCEL%'
                 GROUP BY d.receive_item_id
             ) p ON r.id = p.receive_item_id 
             WHERE r.supplier_id = :supplier_id AND (r.invoice_grand_total - COALESCE(p.amount, 0)) > 100.00 AND 
-            DATE(r.invoice_date) BETWEEN '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND :end_date" . $branchConditionSql . "
+            DATE(r.invoice_date) BETWEEN '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND :end_date AND o.status_document NOT LIKE '%CANCEL%' AND
+            r.user_id_cancelled IS NULL" . $branchConditionSql . "
             ORDER BY r.invoice_date ASC";
 
         $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
