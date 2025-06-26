@@ -88,7 +88,7 @@ $this->menu = array(
                 <td><?php echo $model->invoice_date; ?></td>
                 <td width="10%">SO #</td>
                 <td width="30%">
-                    <?php echo empty($registration) ? '' : CHtml::encode(CHtml::value($registration, 'sales_order_number')); ?>
+                    <?php echo CHtml::encode(CHtml::value($registration, 'sales_order_number')); ?>
                 </td>
             </tr>
             
@@ -96,24 +96,24 @@ $this->menu = array(
                 <td>Due Date</td>
                 <td><?php echo $model->due_date; ?></td>
                 <td width="10%">Registration #</td>
-                <td width="30%"><?php echo empty($registration) ? '' :  CHtml::link($registration->transaction_number, array($registration->repair_type == 'GR' ? "/frontDesk/generalRepairRegistration/show" : "/frontDesk/bodyRepairRegistration/show", "id"=>$registration->id), array('target' => 'blank')); ?></td>
+                <td width="30%"><?php echo CHtml::link($registration->transaction_number, array($registration->repair_type == 'GR' ? "/frontDesk/generalRepairRegistration/show" : "/frontDesk/bodyRepairRegistration/show", "id"=>$registration->id), array('target' => 'blank')); ?></td>
             </tr>
             
             <tr>
                 <td width="10%">Payment Est Date</td>
                 <td width="30%"><?php echo $model->payment_date_estimate; ?></td>
                 <td width="10%">Plate #</td>
-                <td width="30%"><?php echo empty($registration) ? '' : CHtml::encode(CHtml::value($registration, 'vehicle.plate_number')); ?>
+                <td width="30%"><?php echo CHtml::encode(CHtml::value($model, 'vehicle.plate_number')); ?>
                 </td>
             </tr>
             
             <tr>
                 <td width="10%">Insurance Company</td>
                 <td width="30%">
-                    <?php echo CHtml::encode(CHtml::value($registration, 'insuranceCompany.name')); ?>
+                    <?php echo CHtml::encode(CHtml::value($model, 'insuranceCompany.name')); ?>
                 </td>
                 <td width="10%">Car Make</td>
-                <td width="30%"><?php echo empty($registration) ? '' :  CHtml::encode(CHtml::value($registration, 'vehicle.carMake.name')); ?></td>
+                <td width="30%"><?php echo CHtml::encode(CHtml::value($model, 'vehicle.carMake.name')); ?></td>
             </tr>
             
             <tr>
@@ -121,7 +121,7 @@ $this->menu = array(
                 <td width="30%"><?php echo CHtml::encode(CHtml::value($model, 'registrationTransaction.repair_type')); ?></td>
                 <td width="10%">Car Model</td>
                 <td width="30%">
-                    <?php echo empty($registration) ? '' : CHtml::encode(CHtml::value($registration, 'vehicle.carModel.name')); ?>
+                    <?php echo CHtml::encode(CHtml::value($model, 'vehicle.carModel.name')); ?>
                 </td>
             </tr>
             
@@ -134,7 +134,7 @@ $this->menu = array(
                     <?php endif ?>
                 </td>
                 <td width="10%">Car Detail</td>
-                <td width="30%"><?php echo empty($registration) ? '' :  CHtml::encode(CHtml::value($registration, 'vehicle.carSubModel.name')); ?></td>
+                <td width="30%"><?php echo CHtml::encode(CHtml::value($model, 'vehicle.carSubModel.name')); ?></td>
             </tr>
                 
             <?php if (Yii::app()->user->checkAccess("director")): ?>

@@ -49,13 +49,13 @@
                 'style' => 'text-align: center;'
             ),
         ),
-        array(
-            'header' => 'Pembelian non stok',
-            'type' => 'raw',
-            'value' => 'CHtml::link("Create", array("create", "supplierId" => $data->id, "movementType" => 3))',
-            'htmlOptions' => array(
-                'style' => 'text-align: center;'
-            ),
-        ),
+//        array(
+//            'header' => 'Pembelian non stok',
+//            'type' => 'raw',
+//            'value' => 'CHtml::link("Create", array("create", "supplierId" => $data->id, "movementType" => 3))',
+//            'htmlOptions' => array(
+//                'style' => 'text-align: center;'
+//            ),
+//        ),
     ),
 )); ?>
