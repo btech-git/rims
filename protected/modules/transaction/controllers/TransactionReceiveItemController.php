@@ -724,11 +724,16 @@ class TransactionReceiveItemController extends Controller {
             $receiveItem = $this->instantiate($id, '');
             $this->loadState($receiveItem);
 
+            $branches = Branch::model()->findAll();
+        
             $receiveItem->removeDetail($index);
             Yii::app()->clientscript->scriptMap['jquery-ui.min.js'] = false;
             Yii::app()->clientscript->scriptMap['jquery.js'] = false;
             
-            $this->renderPartial('_detail', array('receiveItem' => $receiveItem), false, true);
+            $this->renderPartial('_detail', array(
+                'receiveItem' => $receiveItem,
+                'branches' => $branches,
+            ), false, true);
         }
     }
 
