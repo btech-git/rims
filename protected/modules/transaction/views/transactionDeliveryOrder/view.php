@@ -246,6 +246,7 @@ $this->menu = array(
                     </tr>
                 </thead>
                 <tbody>
+                    <?php $totalQuantity = 0; ?>
                     <?php foreach ($deliveryDetails as $key => $deliveryDetail): ?>
                         <tr>
                             <td><?php echo $deliveryDetail->product->name == '' ? '-' : $deliveryDetail->product->name; ?></td>
@@ -261,8 +262,16 @@ $this->menu = array(
                             <td><?php echo $deliveryDetail->quantity_movement_left == '' ? '-' : $deliveryDetail->quantity_movement_left; ?></td>
                             <td><?php echo $deliveryDetail->note == '' ? '-' : $deliveryDetail->note; ?></td>
                         </tr>
+                        <?php $totalQuantity += $deliveryDetail->quantity_delivery; ?>
                     <?php endforeach ?>
                 </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="7">Total</td>
+                        <td><?php echo CHtml::encode($totalQuantity); ?></td>
+                        <td colspan="4">&nbsp;</td>
+                    </tr>
+                </tfoot>
             </table>	
         <?php else: ?>
             <?php echo 'No Details Available'; ?>
