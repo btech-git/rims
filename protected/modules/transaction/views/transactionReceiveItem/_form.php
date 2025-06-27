@@ -284,6 +284,7 @@
         </div>
         
         <div class="detail">
+            <?php echo $form->errorSummary($receiveItem->details); ?>
             <?php $this->renderPartial('_detail', array(
                 'receiveItem' => $receiveItem,
                 'branches' => $branches,
