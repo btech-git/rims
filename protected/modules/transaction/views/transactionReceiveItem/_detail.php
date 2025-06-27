@@ -22,7 +22,7 @@ if ($receiveItem->header->request_type == 'Purchase Order') {
                 <td>Qty Request Left</td>
                 <td>Unit</td>
                 <td>Note</td>
-                <td>Barcode</td>
+                <!--<td>Barcode</td>-->
                 <td>&nbsp;</td>
             </tr>
         </thead>
@@ -43,7 +43,7 @@ if ($receiveItem->header->request_type == 'Purchase Order') {
                         <td><?php echo $receiveItemDetail->qty_request_left; ?></td>
                         <td><?php echo CHtml::encode(CHtml::value($receiveItemDetail, 'product.unit.name')); ?></td>
                         <td><?php echo $receiveItemDetail->note; ?></td>
-                        <td><?php echo $receiveItemDetail->barcode_product; ?></td>
+                        <!--<td><?php // echo $receiveItemDetail->barcode_product; ?></td>-->
                     </tr>
                 <?php endforeach; ?>
             <?php endforeach; ?>
@@ -68,7 +68,7 @@ if ($receiveItem->header->request_type == 'Purchase Order') {
                 <td>Qty Received</td>
                 <td>Unit</td>
                 <td>Note</td>
-                <td>Barcode</td>
+                <!--<td>Barcode</td>-->
                 <td>&nbsp;</td>
             </tr>
         </thead>
@@ -132,7 +132,7 @@ if ($receiveItem->header->request_type == 'Purchase Order') {
                     </td>
                     <td><?php echo CHtml::encode(CHtml::value($receiveItemDetail, 'brand.name')); ?></td>
                     <td><?php echo CHtml::activeTextField($detail, "[$i]note"); ?></td>
-                    <td><?php echo CHtml::activeTextField($detail, "[$i]barcode_product"); ?></td>
+                    <!--<td><?php //echo CHtml::activeTextField($detail, "[$i]barcode_product"); ?></td>-->
                     <td>
                         <?php echo CHtml::button('X', array(
                             'onclick' => CHtml::ajax(array(
