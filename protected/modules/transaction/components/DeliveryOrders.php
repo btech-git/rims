@@ -71,12 +71,14 @@ class DeliveryOrders extends CComponent {
         } elseif ($requestType == 4) {
             $transfers = TransactionTransferRequestDetail::model()->findAllByAttributes(array('transfer_request_id' => $requestId));
             foreach ($transfers as $key => $transfer) {
-                $detail = new TransactionDeliveryOrderDetail();
-                $detail->product_id = $transfer->product_id;
-                $detail->quantity_request = $transfer->quantity;
-                $detail->quantity_request_left = $transfer->quantity_delivery_left;
-                $detail->transfer_request_detail_id = $transfer->id;
-                $this->details[] = $detail;
+                if ($transfer->quantity_delivery_left > 0) {
+                    $detail = new TransactionDeliveryOrderDetail();
+                    $detail->product_id = $transfer->product_id;
+                    $detail->quantity_request = $transfer->quantity;
+                    $detail->quantity_request_left = $transfer->quantity_delivery_left;
+                    $detail->transfer_request_detail_id = $transfer->id;
+                    $this->details[] = $detail;
+                }
             }
         }
     }
