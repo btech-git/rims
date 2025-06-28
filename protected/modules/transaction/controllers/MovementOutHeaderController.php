@@ -617,35 +617,22 @@ class MovementOutHeaderController extends Controller {
                         $value = $movementDetail->quantity * $movementDetail->product->hpp;
 
                         if ((int)$movement->movement_type == 3) {
-//                            $coaId = $movementDetail->product->productMasterCategory->coa_outstanding_part_id;
-//                            $journalReferences[$coaId]['debet_kredit'] = 'D';
-//                            $journalReferences[$coaId]['is_coa_category'] = 1;
-//                            $journalReferences[$coaId]['values'][] = $value;
                             $coaId = $movementDetail->product->productSubMasterCategory->coa_outstanding_part_id;
                             $journalReferences[$coaId]['debet_kredit'] = 'D';
                             $journalReferences[$coaId]['is_coa_category'] = 0;
                             $journalReferences[$coaId]['values'][] = $value;
 
                         } else {
-//                            $coaId = $movementDetail->product->productMasterCategory->coa_inventory_in_transit;
-//                            $journalReferences[$coaId]['debet_kredit'] = 'D';
-//                            $journalReferences[$coaId]['is_coa_category'] = 1;
-//                            $journalReferences[$coaId]['values'][] = $value;
                             $coaId = $movementDetail->product->productSubMasterCategory->coa_inventory_in_transit;
                             $journalReferences[$coaId]['debet_kredit'] = 'D';
                             $journalReferences[$coaId]['is_coa_category'] = 0;
                             $journalReferences[$coaId]['values'][] = $value;
                         }
 
-//                        $coaId = $movementDetail->product->productMasterCategory->coa_persediaan_barang_dagang;
-//                        $journalReferences[$coaId]['debet_kredit'] = 'K';
-//                        $journalReferences[$coaId]['is_coa_category'] = 1;
-//                        $journalReferences[$coaId]['values'][] = $value;
                         $coaId = $movementDetail->product->productSubMasterCategory->coa_persediaan_barang_dagang;
                         $journalReferences[$coaId]['debet_kredit'] = 'K';
                         $journalReferences[$coaId]['is_coa_category'] = 0;
                         $journalReferences[$coaId]['values'][] = $value;
-
                     }
 
                     foreach ($journalReferences as $coaId => $journalReference) {

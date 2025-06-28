@@ -40,33 +40,39 @@ class DeliveryOrders extends CComponent {
         if ($requestType == 1) {
             $sales = TransactionSalesOrderDetail::model()->findAllByAttributes(array('sales_order_id' => $requestId));
             foreach ($sales as $key => $sale) {
-                $detail = new TransactionDeliveryOrderDetail();
-                $detail->product_id = $sale->product_id;
-                $detail->quantity_request = $sale->quantity;
-                $detail->quantity_request_left = $sale->remainingQuantityDelivery;
-                $detail->sales_order_detail_id = $sale->id;
-                $this->details[] = $detail;
+                if ($sale->remainingQuantityDelivery > 0) {
+                    $detail = new TransactionDeliveryOrderDetail();
+                    $detail->product_id = $sale->product_id;
+                    $detail->quantity_request = $sale->quantity;
+                    $detail->quantity_request_left = $sale->remainingQuantityDelivery;
+                    $detail->sales_order_detail_id = $sale->id;
+                    $this->details[] = $detail;
+                }
             } //endforeach
         }//end if
         elseif ($requestType == 2) {
             $sents = TransactionSentRequestDetail::model()->findAllByAttributes(array('sent_request_id' => $requestId));
             foreach ($sents as $key => $sent) {
-                $detail = new TransactionDeliveryOrderDetail();
-                $detail->product_id = $sent->product_id;
-                $detail->quantity_request = $sent->quantity;
-                $detail->quantity_request_left = $sent->remainingQuantityDelivery;
-                $detail->sent_request_detail_id = $sent->id;
-                $this->details[] = $detail;
+                if ($sent->remainingQuantityDelivery > 0) {
+                    $detail = new TransactionDeliveryOrderDetail();
+                    $detail->product_id = $sent->product_id;
+                    $detail->quantity_request = $sent->quantity;
+                    $detail->quantity_request_left = $sent->remainingQuantityDelivery;
+                    $detail->sent_request_detail_id = $sent->id;
+                    $this->details[] = $detail;
+                }
             }
         } elseif ($requestType == 3) {
             $consignments = ConsignmentOutDetail::model()->findAllByAttributes(array('consignment_out_id' => $requestId));
             foreach ($consignments as $key => $consignment) {
-                $detail = new TransactionDeliveryOrderDetail();
-                $detail->product_id = $consignment->product_id;
-                $detail->quantity_request = $consignment->quantity;
-                $detail->quantity_request_left = $consignment->remainingQuantityDelivery;
-                $detail->consignment_out_detail_id = $consignment->id;
-                $this->details[] = $detail;
+                if ($consignment->remainingQuantityDelivery > 0) {
+                    $detail = new TransactionDeliveryOrderDetail();
+                    $detail->product_id = $consignment->product_id;
+                    $detail->quantity_request = $consignment->quantity;
+                    $detail->quantity_request_left = $consignment->remainingQuantityDelivery;
+                    $detail->consignment_out_detail_id = $consignment->id;
+                    $this->details[] = $detail;
+                }
             }
         } elseif ($requestType == 4) {
             $transfers = TransactionTransferRequestDetail::model()->findAllByAttributes(array('transfer_request_id' => $requestId));

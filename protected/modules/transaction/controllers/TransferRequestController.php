@@ -401,18 +401,18 @@ class TransferRequestController extends Controller {
             $hppPrice = $detail->unit_price * $detail->quantity;
 
             //save coa persediaan product master
-            $jurnalUmumMasterOutstandingPartDestination = new JurnalUmum;
-            $jurnalUmumMasterOutstandingPartDestination->kode_transaksi = $transferRequest->transfer_request_no;
-            $jurnalUmumMasterOutstandingPartDestination->tanggal_transaksi = $transferRequest->transfer_request_date;
-            $jurnalUmumMasterOutstandingPartDestination->coa_id = $detail->product->productMasterCategory->coa_outstanding_part_id;
-            $jurnalUmumMasterOutstandingPartDestination->branch_id = $transferRequest->destination_branch_id;
-            $jurnalUmumMasterOutstandingPartDestination->total = $hppPrice;
-            $jurnalUmumMasterOutstandingPartDestination->debet_kredit = 'D';
-            $jurnalUmumMasterOutstandingPartDestination->tanggal_posting = date('Y-m-d');
-            $jurnalUmumMasterOutstandingPartDestination->transaction_subject = 'Transfer Request Destination';
-            $jurnalUmumMasterOutstandingPartDestination->is_coa_category = 1;
-            $jurnalUmumMasterOutstandingPartDestination->transaction_type = 'TR';
-            $jurnalUmumMasterOutstandingPartDestination->save();
+//            $jurnalUmumMasterOutstandingPartDestination = new JurnalUmum;
+//            $jurnalUmumMasterOutstandingPartDestination->kode_transaksi = $transferRequest->transfer_request_no;
+//            $jurnalUmumMasterOutstandingPartDestination->tanggal_transaksi = $transferRequest->transfer_request_date;
+//            $jurnalUmumMasterOutstandingPartDestination->coa_id = $detail->product->productMasterCategory->coa_outstanding_part_id;
+//            $jurnalUmumMasterOutstandingPartDestination->branch_id = $transferRequest->destination_branch_id;
+//            $jurnalUmumMasterOutstandingPartDestination->total = $hppPrice;
+//            $jurnalUmumMasterOutstandingPartDestination->debet_kredit = 'D';
+//            $jurnalUmumMasterOutstandingPartDestination->tanggal_posting = date('Y-m-d');
+//            $jurnalUmumMasterOutstandingPartDestination->transaction_subject = 'Transfer Request Destination';
+//            $jurnalUmumMasterOutstandingPartDestination->is_coa_category = 1;
+//            $jurnalUmumMasterOutstandingPartDestination->transaction_type = 'TR';
+//            $jurnalUmumMasterOutstandingPartDestination->save();
 
             //save coa persedian product sub master
             $jurnalUmumOutstandingPartDestination = new JurnalUmum;

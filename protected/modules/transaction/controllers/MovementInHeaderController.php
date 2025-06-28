@@ -80,20 +80,20 @@ class MovementInHeaderController extends Controller {
                 $jumlah = $movementDetail->quantity * $unitPrice;
 
                 $value = $jumlah;
-                $coaMasterTransitId = $movementDetail->product->productMasterCategory->coa_inventory_in_transit;
-                $journalReferences[$coaMasterTransitId]['debet_kredit'] = 'K';
-                $journalReferences[$coaMasterTransitId]['is_coa_category'] = 1;
-                $journalReferences[$coaMasterTransitId]['values'][] = $value;
+//                $coaMasterTransitId = $movementDetail->product->productMasterCategory->coa_inventory_in_transit;
+//                $journalReferences[$coaMasterTransitId]['debet_kredit'] = 'K';
+//                $journalReferences[$coaMasterTransitId]['is_coa_category'] = 1;
+//                $journalReferences[$coaMasterTransitId]['values'][] = $value;
 
                 $coaSubTransitId = $movementDetail->product->productSubMasterCategory->coa_inventory_in_transit;
                 $journalReferences[$coaSubTransitId]['debet_kredit'] = 'K';
                 $journalReferences[$coaSubTransitId]['is_coa_category'] = 0;
                 $journalReferences[$coaSubTransitId]['values'][] = $value;
 
-                $coaMasterInventoryId = $movementDetail->product->productMasterCategory->coa_persediaan_barang_dagang;
-                $journalReferences[$coaMasterInventoryId]['debet_kredit'] = 'D';
-                $journalReferences[$coaMasterInventoryId]['is_coa_category'] = 1;
-                $journalReferences[$coaMasterInventoryId]['values'][] = $value;
+//                $coaMasterInventoryId = $movementDetail->product->productMasterCategory->coa_persediaan_barang_dagang;
+//                $journalReferences[$coaMasterInventoryId]['debet_kredit'] = 'D';
+//                $journalReferences[$coaMasterInventoryId]['is_coa_category'] = 1;
+//                $journalReferences[$coaMasterInventoryId]['values'][] = $value;
 
                 $coaSubInventoryId = $movementDetail->product->productSubMasterCategory->coa_persediaan_barang_dagang;
                 $journalReferences[$coaSubInventoryId]['debet_kredit'] = 'D';

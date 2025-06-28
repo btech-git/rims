@@ -15,6 +15,7 @@
                 <th>Quantity Transaction</th>
                 <th>Quantity Stock</th>
                 <th>Quantity</th>
+                <th>Satuan</th>
                 <!--<th>Status</th>-->
             </tr>
         </thead>
@@ -33,6 +34,7 @@
                     <td><?php echo $detail->quantity_transaction; ?></td>
                     <td><?php echo $detail->quantity_stock; ?></td>
                     <td><?php echo $detail->quantity; ?></td>
+                    <td><?php echo CHtml::encode(CHtml::value($product, 'unit.name')); ?></td>
                     <?php //$stockInventory = Inventory::model()->findByAttributes(array('product_id' => $detail->product_id, 'warehouse_id' => $detail->warehouse_id)); ?>
                     <!--<td><?php //echo empty($stockInventory) ? 'N/A' : $stockInventory->total_stock > $detail->quantity ? 'V' : 'X'; ?></td>-->
                 </tr>
