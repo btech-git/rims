@@ -33,7 +33,7 @@
                     <td><?php echo $detail->warehouse == "" ? "" : $detail->warehouse->code ?></td>
                     <td><?php echo $detail->quantity_transaction; ?></td>
                     <td><?php echo $detail->quantity; ?></td>
-                    <td><?php echo CHtml::encode(CHtml::value($detail, 'unit.name')); ?></td>
+                    <td><?php echo CHtml::encode(CHtml::value($product, 'unit.name')); ?></td>
                 </tr>
             <?php endforeach; ?>
         </tbody>
