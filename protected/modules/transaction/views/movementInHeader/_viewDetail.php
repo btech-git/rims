@@ -10,10 +10,11 @@
                 <th>Category</th>
                 <th>Brand</th>
                 <th>Sub Brand</th>
-                <th>Sub Brand Series</th>
+                <th>Series</th>
+                <th>Warehouse</th>
                 <th>Qty Transaction</th>
                 <th>Qty Movement</th>
-                <th>Warehouse</th>
+                <th>Satuan</th>
 
             </tr>
         </thead>
@@ -29,9 +30,10 @@
                     <td><?php echo CHtml::encode(CHtml::value($product, 'brand.name')); ?></td>
                     <td><?php echo CHtml::encode(CHtml::value($product, 'subBrand.name')); ?></td>
                     <td><?php echo CHtml::encode(CHtml::value($product, 'subBrandSeries.name')); ?></td>
+                    <td><?php echo $detail->warehouse == "" ? "" : $detail->warehouse->code ?></td>
                     <td><?php echo $detail->quantity_transaction; ?></td>
                     <td><?php echo $detail->quantity; ?></td>
-                    <td><?php echo $detail->warehouse == "" ? "" : $detail->warehouse->name ?></td>
+                    <td><?php echo CHtml::encode(CHtml::value($detail, 'unit.name')); ?></td>
                 </tr>
             <?php endforeach; ?>
         </tbody>
