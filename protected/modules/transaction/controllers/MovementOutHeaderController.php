@@ -614,7 +614,28 @@ class MovementOutHeaderController extends Controller {
                     $journalReferences = array();
 
                     foreach ($details as $movementDetail) {
-                        $value = $movementDetail->quantity * $movementDetail->product->hpp;
+                        $quantity = $movementDetail->quantity;
+                        if ($movementDetail->unit_id !== $movementDetail->product->unit_id) {
+                            $conversionFactor = 1;
+                            $unitConversion = UnitConversion::model()->findByAttributes(array(
+                                'unit_from_id' => $movementDetail->unit_id, 
+                                'unit_to_id' => $movementDetail->product->unit_id
+                            ));
+                            if ($unitConversion !== null) {
+                                $conversionFactor = $unitConversion->multiplier;
+                            } else {
+                                $unitConversionFlipped = UnitConversion::model()->findByAttributes(array(
+                                    'unit_from_id' => $movementDetail->product->unit_id, 
+                                    'unit_to_id' => $movementDetail->unit_id
+                                ));
+                                if ($unitConversionFlipped !== null) {
+                                    $conversionFactor = 1 / $unitConversionFlipped->multiplier;
+                                }
+                            }
+                            $quantity = $conversionFactor * $quantity;
+                        }
+
+                        $value = $quantity * $movementDetail->product->hpp;
 
                         if ((int)$movement->movement_type == 3) {
                             $coaId = $movementDetail->product->productSubMasterCategory->coa_outstanding_part_id;
@@ -770,11 +791,17 @@ class MovementOutHeaderController extends Controller {
                     $quantity = $movementDetail->quantity;
                     if ($movementDetail->unit_id !== $movementDetail->product->unit_id) {
                         $conversionFactor = 1;
-                        $unitConversion = UnitConversion::model()->findByAttributes(array('unit_from_id' => $movementDetail->unit_id, 'unit_to_id' => $movementDetail->product->unit_id));
+                        $unitConversion = UnitConversion::model()->findByAttributes(array(
+                            'unit_from_id' => $movementDetail->unit_id, 
+                            'unit_to_id' => $movementDetail->product->unit_id
+                        ));
                         if ($unitConversion !== null) {
                             $conversionFactor = $unitConversion->multiplier;
                         } else {
-                            $unitConversionFlipped = UnitConversion::model()->findByAttributes(array('unit_from_id' => $movementDetail->product->unit_id, 'unit_to_id' => $movementDetail->unit_id));
+                            $unitConversionFlipped = UnitConversion::model()->findByAttributes(array(
+                                'unit_from_id' => $movementDetail->product->unit_id, 
+                                'unit_to_id' => $movementDetail->unit_id
+                            ));
                             if ($unitConversionFlipped !== null) {
                                 $conversionFactor = 1 / $unitConversionFlipped->multiplier;
                             }
