@@ -124,8 +124,7 @@ class RegistrationTransactionMechanicDailyController extends Controller {
             $worksheet->setCellValue("C{$counter}", CHtml::value($header, 'branch.code'));
             $worksheet->setCellValue("D{$counter}", CHtml::value($header, 'customer.name'));
             $worksheet->setCellValue("E{$counter}", CHtml::value($header, 'customer.customer_type'));
-            $invoiceHeader = InvoiceHeader::model()->findByAttributes(array('registration_transaction_id' => $header->id));
-            $worksheet->setCellValue("F{$counter}", $invoiceHeader->is_new_customer == 0 ? 'Repeat' : 'New');
+            $worksheet->setCellValue("F{$counter}", $header->is_new_customer == 0 ? 'Repeat' : 'New');
             $worksheet->setCellValue("G{$counter}", CHtml::value($header, 'vehicle.plate_number'));
             $worksheet->setCellValue("H{$counter}", CHtml::value($header, 'vehicle.carMake.name') . ' - ' . CHtml::value($header, 'vehicle.carModel.name') . ' - ' . CHtml::value($header, 'vehicle.carSubModel.name'));
             $worksheet->setCellValue("I{$counter}", CHtml::value($header, 'vehicle.color.name'));
