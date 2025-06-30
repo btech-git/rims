@@ -306,7 +306,7 @@ class GeneralLedgerController extends Controller {
             $this->redirect(array('/transaction/consignmentOutHeader/show', 'id' => $model->id));
         } else if ($codeNumberConstant === 'MO') {
             $model = MovementOutHeader::model()->findByAttributes(array('movement_out_no' => $codeNumber));
-            $this->redirect(array('/transaction/movementOutHeader/view', 'id' => $model->id));
+            $this->redirect(array('/transaction/movementOutHeader/show', 'id' => $model->id));
         } else if ($codeNumberConstant === 'MI') {
             $model = MovementInHeader::model()->findByAttributes(array('movement_in_number' => $codeNumber));
             $this->redirect(array('/transaction/movementInHeader/show', 'id' => $model->id));

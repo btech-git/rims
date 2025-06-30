@@ -360,6 +360,11 @@ class GeneralRepairRegistration extends CComponent {
     public function flush() {
         $isNewRecord = $this->header->isNewRecord;
         
+        if ($this->header->isNewRecord) {
+            $registrationTransaction = RegistrationTransaction::model()->findByAttributes(array('customer_id' => $this->header->customer_id));
+            $this->header->is_new_customer = $registrationTransaction === null ? 1 : 0;
+        }
+        
         if ($isNewRecord) {
             $this->header->status = 'Registration';
             $this->header->vehicle_status = 'DI BENGKEL';
