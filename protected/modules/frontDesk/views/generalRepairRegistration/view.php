@@ -151,13 +151,13 @@ $this->breadcrumbs = array(
                         )); ?>
                     <?php endif; ?>
 
-                    <?php //if ($model->status == 'Finished' && $model->status !== 'CANCELLED!!!'): ?>
-                        <?php /*echo CHtml::link('Status Kendaraan', array("/frontDesk/generalRepairRegistration/updateLocation", "id" => $model->id, "vehicleId" => $model->vehicle_id), array(
+                    <?php if ($model->status == 'Finished' && $model->status !== 'CANCELLED!!!'): ?>
+                        <?php echo CHtml::link('Status Kendaraan', array("/frontDesk/generalRepairRegistration/updateLocation", "id" => $model->id, "vehicleId" => $model->vehicle_id), array(
                             'class' => 'button warning left', 
                             'style' => 'margin-left:10px',
                             'visible' => Yii::app()->user->checkAccess("generalRepairCreate") || Yii::app()->user->checkAccess("generalRepairEdit")
-                        )); */?>
-                    <?php //endif; ?>
+                        )); ?>
+                    <?php endif; ?>
 
                     <?php if (!empty($invoices) && (!empty($model->sales_order_number) || !empty($model->work_order_number))): ?>
                         <?php echo CHtml::submitButton('Finish Transaction', array(
