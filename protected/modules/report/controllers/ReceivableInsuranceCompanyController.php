@@ -44,6 +44,7 @@ class ReceivableInsuranceCompanyController extends Controller {
             'endDate' => $endDate,
             'branchId' => $branchId,
             'plateNumber' => $plateNumber,
+            'insuranceCompanyId' => $insuranceCompanyId,
         );
         $receivableSummary->setupFilter($filters);
 
