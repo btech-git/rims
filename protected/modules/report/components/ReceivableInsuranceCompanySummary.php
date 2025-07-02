@@ -37,7 +37,6 @@ class ReceivableInsuranceCompanySummary extends CComponent {
         
         $branchConditionSql = '';
         $plateConditionSql = '';
-        $insuranceConditionSql = '';
         
         if (!empty($branchId)) {
             $branchConditionSql = ' AND i.branch_id = :branch_id';
@@ -47,11 +46,6 @@ class ReceivableInsuranceCompanySummary extends CComponent {
         if (!empty($plateNumber)) {
             $plateConditionSql = ' AND v.plate_number LIKE :plate_number';
             $this->dataProvider->criteria->params[':plate_number'] = "%{$plateNumber}%";
-        }
-        
-        if (!empty($insuranceCompanyId)) {
-            $insuranceConditionSql = ' AND i.insurance_company_id = :insurance_company_id';
-            $this->dataProvider->criteria->params[':insurance_company_id'] = $insuranceCompanyId;
         }
         
         $this->dataProvider->criteria->addCondition("EXISTS (
@@ -69,11 +63,12 @@ class ReceivableInsuranceCompanySummary extends CComponent {
                 GROUP BY d.invoice_header_id
             ) p ON i.id = p.invoice_header_id 
             WHERE i.insurance_company_id = t.id AND i.insurance_company_id IS NOT NULL AND i.invoice_date BETWEEN '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND :end_date" . 
-            $branchConditionSql . $plateConditionSql . $insuranceConditionSql . " 
+            $branchConditionSql . $plateConditionSql . " 
             GROUP BY i.insurance_company_id 
             HAVING remaining > 100
         )");
         
         $this->dataProvider->criteria->params[':end_date'] = $endDate;
+        $this->dataProvider->criteria->compare('t.id', $insuranceCompanyId);
     }
 }
