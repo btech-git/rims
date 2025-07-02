@@ -1,0 +1,160 @@
+<?php
+
+class MonthlySingleMechanicTransactionController extends Controller {
+
+    public function filters() {
+        return array(
+            'access',
+        );
+    }
+
+    public function filterAccess($filterChain) {
+        if ($filterChain->action->id === 'summary') {
+            if (!(Yii::app()->user->checkAccess('director'))) {
+                $this->redirect(array('/site/login'));
+            }
+        }
+
+        $filterChain->run();
+    }
+
+    public function actionSummary() {
+        set_time_limit(0);
+        ini_set('memory_limit', '1024M');
+        
+        $monthNow = date('m');
+        $yearNow = date('Y');
+        
+        $month = isset($_GET['Month']) ? $_GET['Month'] : $monthNow;
+        $year = (isset($_GET['Year'])) ? $_GET['Year'] : $yearNow;
+        $employeeId = (isset($_GET['EmployeeId'])) ? $_GET['EmployeeId'] : '';
+        
+        $monthlySingleMechanicTransactionReport = InvoiceHeader::getMonthlySingleMechanicTransactionReport($year, $month, $employeeId);
+        
+        $monthlySingleMechanicTransactionServiceReport = InvoiceDetail::getMonthlySingleMechanicTransactionServiceReport($year, $month, $employeeId);
+        
+        $monthlySingleMechanicTransactionReportData = array();
+        foreach ($monthlySingleMechanicTransactionReport as $monthlySingleMechanicTransactionReportItem) {
+            $monthlySingleMechanicTransactionReportData[$monthlySingleMechanicTransactionReportItem['day']] = $monthlySingleMechanicTransactionReportItem;
+        }
+        
+        $monthlySingleMechanicTransactionServiceReportData = array();
+        foreach ($monthlySingleMechanicTransactionServiceReport as $monthlySingleMechanicTransactionServiceReportItem) {
+            $monthlySingleMechanicTransactionServiceReportData[$monthlySingleMechanicTransactionServiceReportItem['day']] = $monthlySingleMechanicTransactionServiceReportItem;
+        }
+        
+        $yearList = array();
+        for ($y = $yearNow - 4; $y <= $yearNow; $y++) {
+            $yearList[$y] = $y;
+        }
+        
+        if (isset($_GET['ResetFilter'])) {
+            $this->redirect(array('summary'));
+        }
+        
+        if (isset($_GET['SaveExcel'])) {
+            $this->saveToExcel($monthlySingleMechanicTransactionReportData, $monthlySingleMechanicTransactionServiceReportData, $month, $year, $employeeId);
+        }
+        
+        $this->render('summary', array(
+            'monthlySingleMechanicTransactionReportData' => $monthlySingleMechanicTransactionReportData,
+            'monthlySingleMechanicTransactionServiceReportData' => $monthlySingleMechanicTransactionServiceReportData,
+            'yearList' => $yearList,
+            'year' => $year,
+            'month' => $month,
+            'employeeId' => $employeeId,
+        ));
+    }
+    
+    protected function saveToExcel($monthlySingleMechanicTransactionReportData, $monthlySingleMechanicTransactionServiceReportData, $month, $year, $employeeId) {
+        set_time_limit(0);
+        ini_set('memory_limit', '1024M');
+
+        spl_autoload_unregister(array('YiiBase', 'autoload'));
+        include_once Yii::getPathOfAlias('ext.phpexcel.Classes') . DIRECTORY_SEPARATOR . 'PHPExcel.php';
+        spl_autoload_register(array('YiiBase', 'autoload'));
+
+        $objPHPExcel = new PHPExcel();
+
+        $documentProperties = $objPHPExcel->getProperties();
+        $documentProperties->setCreator('Raperind Motor');
+        $documentProperties->setTitle('Penjualan Mechanic Bulanan');
+
+        $worksheet = $objPHPExcel->setActiveSheetIndex(0);
+        $worksheet->setTitle('Penjualan Mechanic Bulanan');
+
+        $worksheet->mergeCells('A1:K1');
+        $worksheet->mergeCells('A2:K2');
+        $worksheet->mergeCells('A3:K3');
+
+        $worksheet->getStyle('A1:K5')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->getStyle('A1:K5')->getFont()->setBold(true);
+
+        $employee = Employee::model()->findByPk($employeeId);
+        $worksheet->setCellValue('A1', 'Raperind Motor ');
+        $worksheet->setCellValue('A2', 'Laporan Penjualan Bulanan ' . CHtml::value($employee, 'name'));
+        $worksheet->setCellValue('A3', strftime("%B",mktime(0,0,0,$month)) . ' ' . $year);
+        
+        $worksheet->getStyle('A5:K5')->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->setCellValue('A5', 'Tanggal');
+        $worksheet->setCellValue('B5', 'Total Car');
+        $worksheet->setCellValue('C5', 'Total WO');
+        $worksheet->setCellValue('D5', 'Vehicle System Check');
+        $worksheet->setCellValue('E5', 'Retail Customer');
+        $worksheet->setCellValue('F5', 'Contract Service Unit');
+        $worksheet->setCellValue('G5', 'Total Service');
+        $worksheet->setCellValue('H5', 'Total Standard Service Time');
+        $worksheet->setCellValue('I5', 'Total Service Time');
+        $worksheet->setCellValue('J5', 'Total Service (Rp)');
+        $worksheet->setCellValue('K5', 'Average Service (Rp)');
+        $worksheet->getStyle('A6:K6')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+
+        $counter = 7;
+        for ($i = 1; $i <= 31; $i++) {
+            if (isset($monthlySingleMechanicTransactionReportData[$i]) && isset($monthlySingleMechanicTransactionServiceReportData[$i])) {
+                $dataItem = $monthlySingleMechanicTransactionReportData[$i];
+                $detailItem = $monthlySingleMechanicTransactionServiceReportData[$i];
+                $averageService = $detailItem['service_quantity'] > 0 ? $dataItem['total_service'] / $detailItem['service_quantity'] : '0.00';
+                
+                $worksheet->getStyle("E{$counter}:K{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
+
+                $worksheet->setCellValue("A{$counter}", $dataItem['day']);
+                $worksheet->setCellValue("B{$counter}", $dataItem['vehicle_quantity']);
+                $worksheet->setCellValue("C{$counter}", $dataItem['work_order_quantity']);
+                $worksheet->setCellValue("E{$counter}", $dataItem['customer_retail_quantity']);
+                $worksheet->setCellValue("G{$counter}", $detailItem['service_quantity']);
+                $worksheet->setCellValue("J{$counter}", $dataItem['total_service']);
+                $worksheet->setCellValue("K{$counter}", $averageService);
+                
+                $counter++;
+            } else {
+                $worksheet->setCellValue("A{$counter}", $i);
+                $worksheet->setCellValue("B{$counter}", '0.00');
+                $worksheet->setCellValue("C{$counter}", '0.00');
+                $worksheet->setCellValue("E{$counter}", '0.00');
+                $worksheet->setCellValue("G{$counter}", '0.00');
+                $worksheet->setCellValue("J{$counter}", '0.00');
+                $worksheet->setCellValue("K{$counter}", '0.00');
+                
+                $counter++;
+            }
+        }
+
+        for ($col = 'A'; $col !== 'Z'; $col++) {
+            $objPHPExcel->getActiveSheet()
+            ->getColumnDimension($col)
+            ->setAutoSize(true);
+        }
+
+        ob_end_clean();
+
+        header('Content-type: application/vnd.ms-excel');
+        header('Content-Disposition: attachment;filename="penjualan_mechanic_bulanan.xls"');
+        header('Cache-Control: max-age=0');
+
+        $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
+        $objWriter->save('php://output');
+
+        Yii::app()->end();
+    }
+}

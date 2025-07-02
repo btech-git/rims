@@ -720,8 +720,58 @@
                                         'visible' => Yii::app()->user->checkAccess('director')
                                     ),
                                     array(
+                                        'label' => 'Penjualan All Front Office Harian', 
+                                        'url' => array('/report/dailyMultipleEmployeeSaleTransaction/summary'), 
+                                        'visible' => Yii::app()->user->checkAccess('director')
+                                    ),
+                                    array(
+                                        'label' => 'Penjualan per Front Office Bulanan', 
+                                        'url' => array('/report/monthlySingleEmployeeSaleTransaction/summary'), 
+                                        'visible' => Yii::app()->user->checkAccess('director')
+                                    ),
+                                    array(
+                                        'label' => 'Penjualan All Front Office Bulanan', 
+                                        'url' => array('/report/monthlyMultipleEmployeeSaleTransaction/summary'), 
+                                        'visible' => Yii::app()->user->checkAccess('director')
+                                    ),
+                                    array(
+                                        'label' => 'Penjualan per Front Office Tahunan', 
+                                        'url' => array('/report/yearlySingleEmployeeSaleTransaction/summary'), 
+                                        'visible' => Yii::app()->user->checkAccess('director')
+                                    ),
+                                    array(
+                                        'label' => 'Penjualan All Front Office Tahunan', 
+                                        'url' => array('/report/yearlyMultipleEmployeeSaleTransaction/summary'), 
+                                        'visible' => Yii::app()->user->checkAccess('director')
+                                    ),
+                                    array(
                                         'label' => 'Penjualan per Mekanik Harian', 
                                         'url' => array('/report/registrationTransactionMechanicDaily/summary'), 
+                                        'visible' => Yii::app()->user->checkAccess('director')
+                                    ),
+                                    array(
+                                        'label' => 'Penjualan all Mekanik Harian', 
+                                        'url' => array('/report/dailyMultipleMechanicTransaction/summary'), 
+                                        'visible' => Yii::app()->user->checkAccess('director')
+                                    ),
+                                    array(
+                                        'label' => 'Penjualan per Mekanik Bulanan', 
+                                        'url' => array('/report/monthlySingleMechanicTransaction/summary'), 
+                                        'visible' => Yii::app()->user->checkAccess('director')
+                                    ),
+                                    array(
+                                        'label' => 'Penjualan all Mekanik Bulanan', 
+                                        'url' => array('/report/monthlyMultipleMechanicTransaction/summary'), 
+                                        'visible' => Yii::app()->user->checkAccess('director')
+                                    ),
+                                    array(
+                                        'label' => 'Penjualan per Mekanik Tahunan', 
+                                        'url' => array('/report/yearlySingleMechanicTransaction/summary'), 
+                                        'visible' => Yii::app()->user->checkAccess('director')
+                                    ),
+                                    array(
+                                        'label' => 'Penjualan all Mekanik Tahunan', 
+                                        'url' => array('/report/yearlyMultipleMechanicTransaction/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('director')
                                     ),
                                 ),
