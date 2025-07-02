@@ -1452,14 +1452,15 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
         
         $sql = "SELECT r.employee_id_sales_person, MAX(e.name) AS employee_name, COUNT(h.customer_id) AS customer_quantity, 
                     COUNT(CASE WHEN h.is_new_customer = 0 THEN 1 END) AS customer_repeat_quantity, COUNT(CASE WHEN h.is_new_customer = 1 THEN 1 END) AS customer_new_quantity, 
-                    COUNT(CASE WHEN c.customer_type = 'Individual' THEN 1 END) AS customer_retail_quantity, SUM(h.service_price) AS total_service, SUM(h.product_price) AS total_product, SUM(h.total_price) AS grand_total
-                FROM rims_invoice_header h 
-                INNER JOIN rims_registration_transaction r ON r.id = h.registration_transaction_id
-                INNER JOIN rims_employee e ON e.id = r.employee_id_sales_person
-                INNER JOIN rims_customer c ON c.id = h.customer_id
+                    COUNT(CASE WHEN c.customer_type = 'Individual' THEN 1 END) AS customer_retail_quantity, SUM(h.service_price) AS total_service, 
+                    SUM(h.product_price) AS total_product, SUM(h.total_price) AS grand_total
+                FROM " . InvoiceHeader::model()->tableName() . " h 
+                INNER JOIN " . RegistrationTransaction::model()->tableName() . " r ON r.id = h.registration_transaction_id
+                INNER JOIN " . Employee::model()->tableName() . " e ON e.id = r.employee_id_assign_mechanic
+                INNER JOIN " . Customer::model()->tableName() . " c ON c.id = h.customer_id
                 WHERE h.invoice_date = :invoice_date AND r.employee_id_sales_person IS NOT NULL AND h.status NOT LIKE '%CANCEL%' AND r.status NOT LIKE '%CANCEL%'
                 GROUP BY r.employee_id_sales_person
-                ORDER BY e.name ASC";
+                ORDER BY MAX(e.name) ASC";
                 
         $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
         
@@ -1474,14 +1475,16 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
         
         $sql = "SELECT r.employee_id_sales_person, MAX(e.name) AS employee_name, COUNT(h.customer_id) AS customer_quantity, 
                     COUNT(CASE WHEN h.is_new_customer = 0 THEN 1 END) AS customer_repeat_quantity, COUNT(CASE WHEN h.is_new_customer = 1 THEN 1 END) AS customer_new_quantity, 
-                    COUNT(CASE WHEN c.customer_type = 'Individual' THEN 1 END) AS customer_retail_quantity, SUM(h.service_price) AS total_service, SUM(h.product_price) AS total_product, SUM(h.total_price) AS grand_total
-                FROM rims_invoice_header h 
-                INNER JOIN rims_registration_transaction r ON r.id = h.registration_transaction_id
-                INNER JOIN rims_employee e ON e.id = r.employee_id_sales_person
-                INNER JOIN rims_customer c ON c.id = h.customer_id
-                WHERE YEAR(h.invoice_date) = :year AND MONTH(h.invoice_date) = :month AND r.employee_id_sales_person IS NOT NULL AND h.status NOT LIKE '%CANCEL%' AND r.status NOT LIKE '%CANCEL%'
+                    COUNT(CASE WHEN c.customer_type = 'Individual' THEN 1 END) AS customer_retail_quantity, SUM(h.service_price) AS total_service, 
+                    SUM(h.product_price) AS total_product, SUM(h.total_price) AS grand_total
+                FROM " . InvoiceHeader::model()->tableName() . " h 
+                INNER JOIN " . RegistrationTransaction::model()->tableName() . " r ON r.id = h.registration_transaction_id
+                INNER JOIN " . Employee::model()->tableName() . " e ON e.id = r.employee_id_assign_mechanic
+                INNER JOIN " . Customer::model()->tableName() . " c ON c.id = h.customer_id
+                WHERE YEAR(h.invoice_date) = :year AND MONTH(h.invoice_date) = :month AND r.employee_id_sales_person IS NOT NULL AND 
+                    h.status NOT LIKE '%CANCEL%' AND r.status NOT LIKE '%CANCEL%'
                 GROUP BY r.employee_id_sales_person
-                ORDER BY e.name ASC";
+                ORDER BY MAX(e.name) ASC";
                 
         $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
         
@@ -1495,14 +1498,15 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
         
         $sql = "SELECT r.employee_id_sales_person, MAX(e.name) AS employee_name, COUNT(h.customer_id) AS customer_quantity, 
                     COUNT(CASE WHEN h.is_new_customer = 0 THEN 1 END) AS customer_repeat_quantity, COUNT(CASE WHEN h.is_new_customer = 1 THEN 1 END) AS customer_new_quantity, 
-                    COUNT(CASE WHEN c.customer_type = 'Individual' THEN 1 END) AS customer_retail_quantity, SUM(h.service_price) AS total_service, SUM(h.product_price) AS total_product, SUM(h.total_price) AS grand_total
-                FROM rims_invoice_header h 
-                INNER JOIN rims_registration_transaction r ON r.id = h.registration_transaction_id
-                INNER JOIN rims_employee e ON e.id = r.employee_id_sales_person
-                INNER JOIN rims_customer c ON c.id = h.customer_id
+                    COUNT(CASE WHEN c.customer_type = 'Individual' THEN 1 END) AS customer_retail_quantity, SUM(h.service_price) AS total_service, 
+                    SUM(h.product_price) AS total_product, SUM(h.total_price) AS grand_total
+                FROM " . InvoiceHeader::model()->tableName() . " h 
+                INNER JOIN " . RegistrationTransaction::model()->tableName() . " r ON r.id = h.registration_transaction_id
+                INNER JOIN " . Employee::model()->tableName() . " e ON e.id = r.employee_id_assign_mechanic
+                INNER JOIN " . Customer::model()->tableName() . " c ON c.id = h.customer_id
                 WHERE YEAR(h.invoice_date) = :year AND r.employee_id_sales_person IS NOT NULL AND h.status NOT LIKE '%CANCEL%' AND r.status NOT LIKE '%CANCEL%'
                 GROUP BY r.employee_id_sales_person
-                ORDER BY e.name ASC";
+                ORDER BY MAX(e.name) ASC";
                 
         $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
         
@@ -1518,12 +1522,14 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
         
         $sql = "SELECT DAY(h.invoice_date) AS day, COUNT(h.customer_id) AS customer_quantity, 
                     COUNT(CASE WHEN h.is_new_customer = 0 THEN 1 END) AS customer_repeat_quantity, COUNT(CASE WHEN h.is_new_customer = 1 THEN 1 END) AS customer_new_quantity, 
-                    COUNT(CASE WHEN c.customer_type = 'Individual' THEN 1 END) AS customer_retail_quantity, SUM(h.service_price) AS total_service, SUM(h.product_price) AS total_product, SUM(h.total_price) AS grand_total
-                FROM rims_invoice_header h 
-                INNER JOIN rims_registration_transaction r ON r.id = h.registration_transaction_id
-                INNER JOIN rims_employee e ON e.id = r.employee_id_sales_person
-                INNER JOIN rims_customer c ON c.id = h.customer_id
-                WHERE YEAR(h.invoice_date) = :year AND MONTH(h.invoice_date) = :month AND r.employee_id_sales_person = :employee_id_sales_person AND h.status NOT LIKE '%CANCEL%' AND r.status NOT LIKE '%CANCEL%'
+                    COUNT(CASE WHEN c.customer_type = 'Individual' THEN 1 END) AS customer_retail_quantity, SUM(h.service_price) AS total_service, 
+                    SUM(h.product_price) AS total_product, SUM(h.total_price) AS grand_total
+                FROM " . InvoiceHeader::model()->tableName() . " h 
+                INNER JOIN " . RegistrationTransaction::model()->tableName() . " r ON r.id = h.registration_transaction_id
+                INNER JOIN " . Employee::model()->tableName() . " e ON e.id = r.employee_id_assign_mechanic
+                INNER JOIN " . Customer::model()->tableName() . " c ON c.id = h.customer_id
+                WHERE YEAR(h.invoice_date) = :year AND MONTH(h.invoice_date) = :month AND r.employee_id_sales_person = :employee_id_sales_person AND 
+                    h.status NOT LIKE '%CANCEL%' AND r.status NOT LIKE '%CANCEL%'
                 GROUP BY DAY(h.invoice_date)";
                 
         $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
@@ -1539,11 +1545,12 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
         
         $sql = "SELECT MONTH(h.invoice_date) AS month, COUNT(h.customer_id) AS customer_quantity, 
                     COUNT(CASE WHEN h.is_new_customer = 0 THEN 1 END) AS customer_repeat_quantity, COUNT(CASE WHEN h.is_new_customer = 1 THEN 1 END) AS customer_new_quantity, 
-                    COUNT(CASE WHEN c.customer_type = 'Individual' THEN 1 END) AS customer_retail_quantity, SUM(h.service_price) AS total_service, SUM(h.product_price) AS total_product, SUM(h.total_price) AS grand_total
-                FROM rims_invoice_header h 
-                INNER JOIN rims_registration_transaction r ON r.id = h.registration_transaction_id
-                INNER JOIN rims_employee e ON e.id = r.employee_id_sales_person
-                INNER JOIN rims_customer c ON c.id = h.customer_id
+                    COUNT(CASE WHEN c.customer_type = 'Individual' THEN 1 END) AS customer_retail_quantity, SUM(h.service_price) AS total_service, 
+                    SUM(h.product_price) AS total_product, SUM(h.total_price) AS grand_total
+                FROM " . InvoiceHeader::model()->tableName() . " h 
+                INNER JOIN " . RegistrationTransaction::model()->tableName() . " r ON r.id = h.registration_transaction_id
+                INNER JOIN " . Employee::model()->tableName() . " e ON e.id = r.employee_id_assign_mechanic
+                INNER JOIN " . Customer::model()->tableName() . " c ON c.id = h.customer_id
                 WHERE YEAR(h.invoice_date) = :year AND r.employee_id_sales_person = :employee_id_sales_person AND h.status NOT LIKE '%CANCEL%' AND r.status NOT LIKE '%CANCEL%'
                 GROUP BY MONTH(h.invoice_date)";
                 
@@ -1551,4 +1558,107 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
         
         return $resultSet;
     }
+    
+    public static function getDailyMultipleMechanicTransactionReport($date) {
+        $params = array(
+            ':invoice_date' => $date,
+        );
+        
+        $sql = "SELECT r.employee_id_assign_mechanic, MAX(e.name) AS employee_name, COUNT(h.vehicle_id) AS vehicle_quantity, COUNT(r.work_order_number) AS work_order_quantity, 
+                    COUNT(CASE WHEN c.customer_type = 'Individual' THEN 1 END) AS customer_retail_quantity, SUM(h.service_price) AS total_service
+                FROM " . InvoiceHeader::model()->tableName() . " h 
+                INNER JOIN " . RegistrationTransaction::model()->tableName() . " r ON r.id = h.registration_transaction_id
+                INNER JOIN " . Employee::model()->tableName() . " e ON e.id = r.employee_id_assign_mechanic
+                INNER JOIN " . Customer::model()->tableName() . " c ON c.id = h.customer_id
+                WHERE h.invoice_date = :invoice_date AND r.employee_id_assign_mechanic IS NOT NULL AND h.status NOT LIKE '%CANCEL%' AND r.status NOT LIKE '%CANCEL%'
+                GROUP BY r.employee_id_assign_mechanic
+                ORDER BY e.name ASC";
+                
+        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
+        
+        return $resultSet;
+    }
+    
+    public static function getMonthlyMultipleMechanicTransactionReport($year, $month) {
+        $params = array(
+            ':year' => $year,
+            ':month' => $month,
+        );
+        
+        $sql = "SELECT r.employee_id_assign_mechanic, MAX(e.name) AS employee_name, COUNT(h.vehicle_id) AS vehicle_quantity, COUNT(r.work_order_number) AS work_order_quantity, 
+                    COUNT(CASE WHEN c.customer_type = 'Individual' THEN 1 END) AS customer_retail_quantity, SUM(h.service_price) AS total_service
+                FROM " . InvoiceHeader::model()->tableName() . " h 
+                INNER JOIN " . RegistrationTransaction::model()->tableName() . " r ON r.id = h.registration_transaction_id
+                INNER JOIN " . Employee::model()->tableName() . " e ON e.id = r.employee_id_assign_mechanic
+                INNER JOIN " . Customer::model()->tableName() . " c ON c.id = h.customer_id
+                WHERE YEAR(h.invoice_date) = :year AND MONTH(h.invoice_date) = :month AND r.employee_id_assign_mechanic IS NOT NULL AND h.status NOT LIKE '%CANCEL%' AND r.status NOT LIKE '%CANCEL%'
+                GROUP BY r.employee_id_assign_mechanic
+                ORDER BY MAX(e.name) ASC";
+                
+        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
+        
+        return $resultSet;
+    }
+    
+    public static function getYearlyMultipleMechanicTransactionReport($year) {
+        $params = array(
+            ':year' => $year,
+        );
+        
+        $sql = "SELECT r.employee_id_assign_mechanic, MAX(e.name) AS employee_name, COUNT(h.vehicle_id) AS vehicle_quantity, COUNT(r.work_order_number) AS work_order_quantity, 
+                    COUNT(CASE WHEN c.customer_type = 'Individual' THEN 1 END) AS customer_retail_quantity, SUM(h.service_price) AS total_service
+                FROM " . InvoiceHeader::model()->tableName() . " h 
+                INNER JOIN " . RegistrationTransaction::model()->tableName() . " r ON r.id = h.registration_transaction_id
+                INNER JOIN " . Employee::model()->tableName() . " e ON e.id = r.employee_id_assign_mechanic
+                INNER JOIN " . Customer::model()->tableName() . " c ON c.id = h.customer_id
+                WHERE YEAR(h.invoice_date) = :year AND r.employee_id_assign_mechanic IS NOT NULL AND h.status NOT LIKE '%CANCEL%' AND r.status NOT LIKE '%CANCEL%'
+                GROUP BY r.employee_id_assign_mechanic
+                ORDER BY MAX(e.name) ASC";
+                
+        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
+        
+        return $resultSet;
+    }
+    
+    public static function getMonthlySingleMechanicTransactionReport($year, $month, $employeeId) {
+        $params = array(
+            ':year' => $year,
+            ':month' => $month,
+            ':employee_id_assign_mechanic' => $employeeId,
+        );
+        
+        $sql = "SELECT DAY(h.invoice_date) AS day, COUNT(h.vehicle_id) AS vehicle_quantity, COUNT(r.work_order_number) AS work_order_quantity, 
+                    COUNT(CASE WHEN c.customer_type = 'Individual' THEN 1 END) AS customer_retail_quantity, SUM(h.service_price) AS total_service
+                FROM " . InvoiceHeader::model()->tableName() . " h 
+                INNER JOIN " . RegistrationTransaction::model()->tableName() . " r ON r.id = h.registration_transaction_id
+                INNER JOIN " . Employee::model()->tableName() . " e ON e.id = r.employee_id_assign_mechanic
+                INNER JOIN " . Customer::model()->tableName() . " c ON c.id = h.customer_id
+                WHERE YEAR(h.invoice_date) = :year AND MONTH(h.invoice_date) = :month AND r.employee_id_assign_mechanic = :employee_id_assign_mechanic AND 
+                    h.status NOT LIKE '%CANCEL%' AND r.status NOT LIKE '%CANCEL%'
+                GROUP BY DAY(h.invoice_date)";
+                
+        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
+        
+        return $resultSet;
+    }
+    
+    public static function getYearlySingleMechanicTransactionReport($year, $employeeId) {
+        $params = array(
+            ':year' => $year,
+            ':employee_id_assign_mechanic' => $employeeId,
+        );
+        
+        $sql = "SELECT MONTH(h.invoice_date) AS month, COUNT(h.vehicle_id) AS vehicle_quantity, COUNT(r.work_order_number) AS work_order_quantity, 
+                    COUNT(CASE WHEN c.customer_type = 'Individual' THEN 1 END) AS customer_retail_quantity, SUM(h.service_price) AS total_service
+                FROM " . InvoiceHeader::model()->tableName() . " h 
+                INNER JOIN " . RegistrationTransaction::model()->tableName() . " r ON r.id = h.registration_transaction_id
+                INNER JOIN " . Employee::model()->tableName() . " e ON e.id = r.employee_id_assign_mechanic
+                INNER JOIN " . Customer::model()->tableName() . " c ON c.id = h.customer_id
+                WHERE YEAR(h.invoice_date) = :year AND r.employee_id_assign_mechanic = :employee_id_assign_mechanic AND h.status NOT LIKE '%CANCEL%' AND r.status NOT LIKE '%CANCEL%'
+                GROUP BY MONTH(h.invoice_date)";
+                
+        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
+        
+        return $resultSet;
+    }    
 }

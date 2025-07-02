@@ -205,10 +205,10 @@ class InvoiceDetail extends CActiveRecord {
         $sql = "SELECT r.employee_id_sales_person, SUM(CASE WHEN p.product_master_category_id = 4 THEN d.quantity ELSE 0 END) AS tire_quantity, 
                     SUM(CASE WHEN p.product_master_category_id = 6 THEN d.quantity ELSE 0 END) AS oil_quantity, 
                     SUM(CASE WHEN p.product_master_category_id = 9 THEN d.quantity ELSE 0 END) AS accessories_quantity
-                FROM rims_invoice_detail d 
-                INNER JOIN rims_invoice_header h ON h.id = d.invoice_id
-                INNER JOIN rims_registration_transaction r ON r.id = h.registration_transaction_id
-                INNER JOIN rims_product p ON p.id = d.product_id
+                FROM " . InvoiceDetail::model()->tableName() . " d 
+                INNER JOIN " . InvoiceHeader::model()->tableName() . " h ON h.id = d.invoice_id
+                INNER JOIN " . RegistrationTransaction::model()->tableName() . " r ON r.id = h.registration_transaction_id
+                INNER JOIN " . Product::model()->tableName() . " p ON p.id = d.product_id
                 WHERE r.employee_id_sales_person IN (" . $employeeIdList . ") AND h.invoice_date = :invoice_date AND h.status NOT LIKE '%CANCEL%' AND r.status NOT LIKE '%CANCEL%'
                 GROUP BY r.employee_id_sales_person";
                 
@@ -231,10 +231,10 @@ class InvoiceDetail extends CActiveRecord {
                     SUM(CASE WHEN p.product_master_category_id = 4 THEN d.total_price ELSE 0 END) AS tire_price, 
                     SUM(CASE WHEN p.product_master_category_id = 6 THEN d.total_price ELSE 0 END) AS oil_price, 
                     SUM(CASE WHEN p.product_master_category_id = 9 THEN d.total_price ELSE 0 END) AS accessories_price
-                FROM rims_invoice_detail d 
-                INNER JOIN rims_invoice_header h ON h.id = d.invoice_id
-                INNER JOIN rims_registration_transaction r ON r.id = h.registration_transaction_id
-                INNER JOIN rims_product p ON p.id = d.product_id
+                FROM " . InvoiceDetail::model()->tableName() . " d 
+                INNER JOIN " . InvoiceHeader::model()->tableName() . " h ON h.id = d.invoice_id
+                INNER JOIN " . RegistrationTransaction::model()->tableName() . " r ON r.id = h.registration_transaction_id
+                INNER JOIN " . Product::model()->tableName() . " p ON p.id = d.product_id
                 WHERE r.employee_id_sales_person IN (" . $employeeIdList . ") AND YEAR(h.invoice_date) = :year AND MONTH(h.invoice_date) = :month AND h.status NOT LIKE '%CANCEL%' AND r.status NOT LIKE '%CANCEL%'
                 GROUP BY r.employee_id_sales_person";
                 
@@ -256,10 +256,10 @@ class InvoiceDetail extends CActiveRecord {
                     SUM(CASE WHEN p.product_master_category_id = 4 THEN d.total_price ELSE 0 END) AS tire_price, 
                     SUM(CASE WHEN p.product_master_category_id = 6 THEN d.total_price ELSE 0 END) AS oil_price, 
                     SUM(CASE WHEN p.product_master_category_id = 9 THEN d.total_price ELSE 0 END) AS accessories_price
-                FROM rims_invoice_detail d 
-                INNER JOIN rims_invoice_header h ON h.id = d.invoice_id
-                INNER JOIN rims_registration_transaction r ON r.id = h.registration_transaction_id
-                INNER JOIN rims_product p ON p.id = d.product_id
+                FROM " . InvoiceDetail::model()->tableName() . " d 
+                INNER JOIN " . InvoiceHeader::model()->tableName() . " h ON h.id = d.invoice_id
+                INNER JOIN " . RegistrationTransaction::model()->tableName() . " r ON r.id = h.registration_transaction_id
+                INNER JOIN " . Product::model()->tableName() . " p ON p.id = d.product_id
                 WHERE r.employee_id_sales_person IN (" . $employeeIdList . ") AND YEAR(h.invoice_date) = :year AND h.status NOT LIKE '%CANCEL%' AND r.status NOT LIKE '%CANCEL%'
                 GROUP BY r.employee_id_sales_person";
                 
@@ -281,10 +281,10 @@ class InvoiceDetail extends CActiveRecord {
                     SUM(CASE WHEN p.product_master_category_id = 4 THEN d.total_price ELSE 0 END) AS tire_price, 
                     SUM(CASE WHEN p.product_master_category_id = 6 THEN d.total_price ELSE 0 END) AS oil_price, 
                     SUM(CASE WHEN p.product_master_category_id = 9 THEN d.total_price ELSE 0 END) AS accessories_price
-                FROM rims_invoice_detail d 
-                INNER JOIN rims_invoice_header h ON h.id = d.invoice_id
-                INNER JOIN rims_registration_transaction r ON r.id = h.registration_transaction_id
-                INNER JOIN rims_product p ON p.id = d.product_id
+                FROM " . InvoiceDetail::model()->tableName() . " d 
+                INNER JOIN " . InvoiceHeader::model()->tableName() . " h ON h.id = d.invoice_id
+                INNER JOIN " . RegistrationTransaction::model()->tableName() . " r ON r.id = h.registration_transaction_id
+                INNER JOIN " . Product::model()->tableName() . " p ON p.id = d.product_id
                 WHERE r.employee_id_sales_person = :employee_id_sales_person AND YEAR(h.invoice_date) = :year AND MONTH(h.invoice_date) = :month AND h.status NOT LIKE '%CANCEL%' AND r.status NOT LIKE '%CANCEL%'
                 GROUP BY DAY(h.invoice_date)";
                 
@@ -305,10 +305,10 @@ class InvoiceDetail extends CActiveRecord {
                     SUM(CASE WHEN p.product_master_category_id = 4 THEN d.total_price ELSE 0 END) AS tire_price, 
                     SUM(CASE WHEN p.product_master_category_id = 6 THEN d.total_price ELSE 0 END) AS oil_price, 
                     SUM(CASE WHEN p.product_master_category_id = 9 THEN d.total_price ELSE 0 END) AS accessories_price
-                FROM rims_invoice_detail d 
-                INNER JOIN rims_invoice_header h ON h.id = d.invoice_id
-                INNER JOIN rims_registration_transaction r ON r.id = h.registration_transaction_id
-                INNER JOIN rims_product p ON p.id = d.product_id
+                FROM " . InvoiceDetail::model()->tableName() . " d 
+                INNER JOIN " . InvoiceHeader::model()->tableName() . " h ON h.id = d.invoice_id
+                INNER JOIN " . RegistrationTransaction::model()->tableName() . " r ON r.id = h.registration_transaction_id
+                INNER JOIN " . Product::model()->tableName() . " p ON p.id = d.product_id
                 WHERE r.employee_id_sales_person = :employee_id_sales_person AND YEAR(h.invoice_date) = :year AND h.status NOT LIKE '%CANCEL%' AND r.status NOT LIKE '%CANCEL%'
                 GROUP BY MONTH(h.invoice_date)";
                 
@@ -316,4 +316,101 @@ class InvoiceDetail extends CActiveRecord {
         
         return $resultSet;
     }
+    
+    public static function getDailyMultipleMechanicTransactionServiceReport($date, $employeeIds) {
+        $employeeIdList = empty($employeeIds) ? 'NULL' :  implode(',', $employeeIds);
+        
+        $params = array(
+            ':invoice_date' => $date,
+        );
+        
+        $sql = "SELECT r.employee_id_assign_mechanic, COUNT(d.service_id) AS service_quantity
+                FROM " . InvoiceDetail::model()->tableName() . " d 
+                INNER JOIN " . InvoiceHeader::model()->tableName() . " h ON h.id = d.invoice_id
+                INNER JOIN " . RegistrationTransaction::model()->tableName() . " r ON r.id = h.registration_transaction_id
+                WHERE r.employee_id_assign_mechanic IN (" . $employeeIdList . ") AND h.invoice_date = :invoice_date AND h.status NOT LIKE '%CANCEL%' AND r.status NOT LIKE '%CANCEL%'
+                GROUP BY r.employee_id_assign_mechanic";
+                
+        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
+        
+        return $resultSet;
+    }
+    
+    public static function getMonthlyMultipleMechanicTransactionServiceReport($year, $month, $employeeIds) {
+        $employeeIdList = empty($employeeIds) ? 'NULL' :  implode(',', $employeeIds);
+        
+        $params = array(
+            ':year' => $year,
+            ':month' => $month,
+        );
+        
+        $sql = "SELECT r.employee_id_assign_mechanic, COUNT(d.service_id) AS service_quantity
+                FROM " . InvoiceDetail::model()->tableName() . " d 
+                INNER JOIN " . InvoiceHeader::model()->tableName() . " h ON h.id = d.invoice_id
+                INNER JOIN " . RegistrationTransaction::model()->tableName() . " r ON r.id = h.registration_transaction_id
+                WHERE r.employee_id_assign_mechanic IN (" . $employeeIdList . ") AND YEAR(h.invoice_date) = :year AND MONTH(h.invoice_date) = :month AND 
+                    h.status NOT LIKE '%CANCEL%' AND r.status NOT LIKE '%CANCEL%'
+                GROUP BY r.employee_id_assign_mechanic";
+                
+        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
+        
+        return $resultSet;
+    }
+    
+    public static function getYearlyMultipleMechanicTransactionServiceReport($year, $employeeIds) {
+        $employeeIdList = empty($employeeIds) ? 'NULL' :  implode(',', $employeeIds);
+        
+        $params = array(
+            ':year' => $year,
+        );
+        
+        $sql = "SELECT r.employee_id_assign_mechanic, COUNT(d.service_id) AS service_quantity
+                FROM " . InvoiceDetail::model()->tableName() . " d 
+                INNER JOIN " . InvoiceHeader::model()->tableName() . " h ON h.id = d.invoice_id
+                INNER JOIN " . RegistrationTransaction::model()->tableName() . " r ON r.id = h.registration_transaction_id
+                WHERE r.employee_id_assign_mechanic IN (" . $employeeIdList . ") AND YEAR(h.invoice_date) = :year AND h.status NOT LIKE '%CANCEL%' AND r.status NOT LIKE '%CANCEL%'
+                GROUP BY r.employee_id_assign_mechanic";
+                
+        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
+        
+        return $resultSet;
+    }
+    
+    public static function getMonthlySingleMechanicTransactionServiceReport($year, $month, $employeeId) {
+        $params = array(
+            ':year' => $year,
+            ':month' => $month,
+            ':employee_id_assign_mechanic' => $employeeId,
+        );
+        
+        $sql = "SELECT DAY(h.invoice_date) AS day, COUNT(d.service_id) AS service_quantity
+                FROM " . InvoiceDetail::model()->tableName() . " d 
+                INNER JOIN " . InvoiceHeader::model()->tableName() . " h ON h.id = d.invoice_id
+                INNER JOIN " . RegistrationTransaction::model()->tableName() . " r ON r.id = h.registration_transaction_id
+                WHERE r.employee_id_assign_mechanic = :employee_id_assign_mechanic AND YEAR(h.invoice_date) = :year AND MONTH(h.invoice_date) = :month AND 
+                    h.status NOT LIKE '%CANCEL%' AND r.status NOT LIKE '%CANCEL%'
+                GROUP BY DAY(h.invoice_date)";
+                
+        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
+        
+        return $resultSet;
+    }
+    
+    public static function getYearlySingleMechanicTransactionServiceReport($year, $employeeId) {
+        $params = array(
+            ':year' => $year,
+            ':employee_id_assign_mechanic' => $employeeId,
+        );
+        
+        $sql = "SELECT MONTH(h.invoice_date) AS month, COUNT(d.service_id) AS service_quantity
+                FROM " . InvoiceDetail::model()->tableName() . " d 
+                INNER JOIN " . InvoiceHeader::model()->tableName() . " h ON h.id = d.invoice_id
+                INNER JOIN " . RegistrationTransaction::model()->tableName() . " r ON r.id = h.registration_transaction_id
+                WHERE r.employee_id_assign_mechanic = :employee_id_assign_mechanic AND YEAR(h.invoice_date) = :year AND h.status NOT LIKE '%CANCEL%' AND r.status NOT LIKE '%CANCEL%'
+                GROUP BY MONTH(h.invoice_date)";
+                
+        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
+        
+        return $resultSet;
+    }    
 }
