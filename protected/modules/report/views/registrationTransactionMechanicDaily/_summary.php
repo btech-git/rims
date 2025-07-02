@@ -46,9 +46,7 @@
                 <td class="width1-1"><?php echo CHtml::encode(CHtml::value($header, 'employeeIdAssignMechanic.name')); ?></td>
                 <td class="width1-2"><?php echo CHtml::encode(CHtml::value($header, 'employeeIdAssignMechanic.level.name')); ?></td>
                 <td class="width1-3"><?php echo CHtml::encode(CHtml::value($header, 'customer.name')); ?></td>
-                <td class="width1-4">
-                    <?php echo $header->is_new_customer == 0 ? 'Repeat' : 'New'; ?>
-                </td>
+                <td class="width1-4"><?php echo $header->is_new_customer == 0 ? 'Repeat' : 'New'; ?></td>
                 <td class="width1-5"><?php echo CHtml::encode(CHtml::value($header, 'vehicle.plate_number')); ?></td>
                 <td class="width1-6">
                     <?php echo CHtml::encode(CHtml::value($header, 'vehicle.carMake.name')); ?> - 

@@ -460,7 +460,7 @@ $this->menu = array(
                         <tbody>
                             <?php foreach ($model->paymentInDetails as $detail): ?>
                             <tr>
-                                <td><?php echo CHTml::link($detail->invoiceHeader->invoice_number, array("/transaction/invoiceHeader/show", "id" => $detail->invoice_header_id), array('target' => 'blank')); ?></td>
+                                <td><?php echo CHtml::link($detail->invoiceHeader->invoice_number, array("/transaction/invoiceHeader/show", "id" => $detail->invoice_header_id), array('target' => 'blank')); ?></td>
                                 <td><?php echo CHtml::encode(CHtml::value($detail, 'invoiceHeader.customer.name')); ?></td>
                                 <td><?php echo CHtml::encode(CHtml::value($detail, 'invoiceHeader.insuranceCompany.name')); ?></td>
                                 <td><?php echo CHtml::encode(CHtml::value($detail, 'memo')); ?></td>
