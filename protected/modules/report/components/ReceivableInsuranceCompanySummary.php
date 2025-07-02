@@ -33,6 +33,7 @@ class ReceivableInsuranceCompanySummary extends CComponent {
         $endDate = (empty($filters['endDate'])) ? date('Y-m-d') : $filters['endDate'];
         $branchId = (empty($filters['branchId'])) ? '' : $filters['branchId'];
         $plateNumber = (empty($filters['plateNumber'])) ? '' : $filters['plateNumber'];
+        $insuranceCompanyId = (empty($filters['insuranceCompanyId'])) ? '' : $filters['insuranceCompanyId'];
         
         $branchConditionSql = '';
         $plateConditionSql = '';
@@ -48,11 +49,14 @@ class ReceivableInsuranceCompanySummary extends CComponent {
         }
         
         $this->dataProvider->criteria->addCondition("EXISTS (
-            SELECT i.insurance_company_id, SUM(i.total_price - COALESCE(p.amount, 0) - COALESCE(p.tax_service_amount, 0)) AS remaining
+            SELECT i.insurance_company_id, i.total_price - COALESCE(p.amount, 0) - 
+                COALESCE(p.tax_service_amount, 0) - COALESCE(p.discount_amount, 0) - COALESCE(p.bank_administration_fee, 0) - COALESCE(p.merimen_fee, 0) - 
+                COALESCE(p.downpayment_amount, 0) AS remaining
             FROM " . InvoiceHeader::model()->tableName() . " i
             LEFT OUTER JOIN " . Vehicle::model()->tableName() . " v ON v.id = i.vehicle_id
             LEFT OUTER JOIN (
-                SELECT d.invoice_header_id, SUM(d.amount) AS amount, SUM(d.tax_service_amount) AS tax_service_amount 
+                SELECT d.invoice_header_id, SUM(d.amount) AS amount, SUM(d.tax_service_amount) AS tax_service_amount, SUM(d.discount_amount) AS discount_amount,
+                    SUM(d.bank_administration_fee) AS bank_administration_fee, SUM(d.merimen_fee) AS merimen_fee, SUM(d.downpayment_amount) AS downpayment_amount
                 FROM " . PaymentInDetail::model()->tableName() . " d 
                 INNER JOIN " . PaymentIn::model()->tableName() . " h ON h.id = d.payment_in_id
                 WHERE h.payment_date BETWEEN '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND :end_date
@@ -65,5 +69,6 @@ class ReceivableInsuranceCompanySummary extends CComponent {
         )");
         
         $this->dataProvider->criteria->params[':end_date'] = $endDate;
+        $this->dataProvider->criteria->compare('t.id', $insuranceCompanyId);
     }
 }
