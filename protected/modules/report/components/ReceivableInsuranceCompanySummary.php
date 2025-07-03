@@ -49,9 +49,8 @@ class ReceivableInsuranceCompanySummary extends CComponent {
         }
         
         $this->dataProvider->criteria->addCondition("EXISTS (
-            SELECT i.insurance_company_id, i.total_price - COALESCE(p.amount, 0) - 
-                COALESCE(p.tax_service_amount, 0) - COALESCE(p.discount_amount, 0) - COALESCE(p.bank_administration_fee, 0) - COALESCE(p.merimen_fee, 0) - 
-                COALESCE(p.downpayment_amount, 0) AS remaining
+            SELECT i.insurance_company_id, i.total_price - COALESCE(p.amount, 0) - COALESCE(p.tax_service_amount, 0) - COALESCE(p.discount_amount, 0) - 
+                COALESCE(p.bank_administration_fee, 0) - COALESCE(p.merimen_fee, 0) - COALESCE(p.downpayment_amount, 0) AS remaining
             FROM " . InvoiceHeader::model()->tableName() . " i
             LEFT OUTER JOIN " . Vehicle::model()->tableName() . " v ON v.id = i.vehicle_id
             LEFT OUTER JOIN (
@@ -64,7 +63,6 @@ class ReceivableInsuranceCompanySummary extends CComponent {
             ) p ON i.id = p.invoice_header_id 
             WHERE i.insurance_company_id = t.id AND i.insurance_company_id IS NOT NULL AND i.invoice_date BETWEEN '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND :end_date" . 
             $branchConditionSql . $plateConditionSql . " 
-            GROUP BY i.insurance_company_id 
             HAVING remaining > 100
         )");
         
