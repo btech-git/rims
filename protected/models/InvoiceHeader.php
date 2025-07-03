@@ -1418,7 +1418,7 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
                 INNER JOIN " . VehicleCarMake::model()->tableName() . " m ON m.id = c.car_make_id
                 WHERE YEAR(i.invoice_date) = :year AND i.status NOT LIKE '%CANCELLED%'" . $branchConditionSql . $carMakeConditionSql . $carModelConditionSql . "
                 GROUP BY EXTRACT(YEAR_MONTH FROM invoice_date), v.car_sub_model_id
-                ORDER BY year_month_value ASC, car_make_name ASC, car_model_name ASC, car_sub_model_name ASC";
+                ORDER BY car_make_name ASC, car_model_name ASC, car_sub_model_name ASC, year_month_value ASC";
                 
         $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
 
@@ -1456,7 +1456,7 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
                     SUM(h.product_price) AS total_product, SUM(h.total_price) AS grand_total
                 FROM " . InvoiceHeader::model()->tableName() . " h 
                 INNER JOIN " . RegistrationTransaction::model()->tableName() . " r ON r.id = h.registration_transaction_id
-                INNER JOIN " . Employee::model()->tableName() . " e ON e.id = r.employee_id_assign_mechanic
+                INNER JOIN " . Employee::model()->tableName() . " e ON e.id = r.employee_id_sales_person
                 INNER JOIN " . Customer::model()->tableName() . " c ON c.id = h.customer_id
                 WHERE h.invoice_date = :invoice_date AND r.employee_id_sales_person IS NOT NULL AND h.status NOT LIKE '%CANCEL%' AND r.status NOT LIKE '%CANCEL%'
                 GROUP BY r.employee_id_sales_person
@@ -1479,7 +1479,7 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
                     SUM(h.product_price) AS total_product, SUM(h.total_price) AS grand_total
                 FROM " . InvoiceHeader::model()->tableName() . " h 
                 INNER JOIN " . RegistrationTransaction::model()->tableName() . " r ON r.id = h.registration_transaction_id
-                INNER JOIN " . Employee::model()->tableName() . " e ON e.id = r.employee_id_assign_mechanic
+                INNER JOIN " . Employee::model()->tableName() . " e ON e.id = r.employee_id_sales_person
                 INNER JOIN " . Customer::model()->tableName() . " c ON c.id = h.customer_id
                 WHERE YEAR(h.invoice_date) = :year AND MONTH(h.invoice_date) = :month AND r.employee_id_sales_person IS NOT NULL AND 
                     h.status NOT LIKE '%CANCEL%' AND r.status NOT LIKE '%CANCEL%'
@@ -1502,7 +1502,7 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
                     SUM(h.product_price) AS total_product, SUM(h.total_price) AS grand_total
                 FROM " . InvoiceHeader::model()->tableName() . " h 
                 INNER JOIN " . RegistrationTransaction::model()->tableName() . " r ON r.id = h.registration_transaction_id
-                INNER JOIN " . Employee::model()->tableName() . " e ON e.id = r.employee_id_assign_mechanic
+                INNER JOIN " . Employee::model()->tableName() . " e ON e.id = r.employee_id_sales_person
                 INNER JOIN " . Customer::model()->tableName() . " c ON c.id = h.customer_id
                 WHERE YEAR(h.invoice_date) = :year AND r.employee_id_sales_person IS NOT NULL AND h.status NOT LIKE '%CANCEL%' AND r.status NOT LIKE '%CANCEL%'
                 GROUP BY r.employee_id_sales_person
@@ -1526,7 +1526,7 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
                     SUM(h.product_price) AS total_product, SUM(h.total_price) AS grand_total
                 FROM " . InvoiceHeader::model()->tableName() . " h 
                 INNER JOIN " . RegistrationTransaction::model()->tableName() . " r ON r.id = h.registration_transaction_id
-                INNER JOIN " . Employee::model()->tableName() . " e ON e.id = r.employee_id_assign_mechanic
+                INNER JOIN " . Employee::model()->tableName() . " e ON e.id = r.employee_id_sales_person
                 INNER JOIN " . Customer::model()->tableName() . " c ON c.id = h.customer_id
                 WHERE YEAR(h.invoice_date) = :year AND MONTH(h.invoice_date) = :month AND r.employee_id_sales_person = :employee_id_sales_person AND 
                     h.status NOT LIKE '%CANCEL%' AND r.status NOT LIKE '%CANCEL%'
@@ -1549,7 +1549,7 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
                     SUM(h.product_price) AS total_product, SUM(h.total_price) AS grand_total
                 FROM " . InvoiceHeader::model()->tableName() . " h 
                 INNER JOIN " . RegistrationTransaction::model()->tableName() . " r ON r.id = h.registration_transaction_id
-                INNER JOIN " . Employee::model()->tableName() . " e ON e.id = r.employee_id_assign_mechanic
+                INNER JOIN " . Employee::model()->tableName() . " e ON e.id = r.employee_id_sales_person
                 INNER JOIN " . Customer::model()->tableName() . " c ON c.id = h.customer_id
                 WHERE YEAR(h.invoice_date) = :year AND r.employee_id_sales_person = :employee_id_sales_person AND h.status NOT LIKE '%CANCEL%' AND r.status NOT LIKE '%CANCEL%'
                 GROUP BY MONTH(h.invoice_date)";
