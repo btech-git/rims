@@ -740,21 +740,6 @@
                             <?php $this->widget('zii.widgets.CMenu', array(
                                 'items' => array(
                                     array(
-                                        'label' => 'Penjualan per Kendaraan Bulanan', 
-                                        'url' => array('/report/saleInvoiceCarSubModelMonthly/summary'), 
-                                        'visible' => Yii::app()->user->checkAccess('director')
-                                    ),
-                                    array(
-                                        'label' => 'Penjualan per Kendaraan Tahunan', 
-                                        'url' => array('/report/saleInvoiceCarSubModelYearly/summary'), 
-                                        'visible' => Yii::app()->user->checkAccess('director')
-                                    ),
-                                    array(
-                                        'label' => 'Customer Follow Up + Warranty', 
-                                        'url' => array('/frontDesk/followUp/adminSales'), 
-                                        'visible' => Yii::app()->user->checkAccess('director')
-                                    ),
-                                    array(
                                         'label' => 'Penjualan per Front Office Harian', 
                                         'url' => array('/report/saleInvoiceMarketingDaily/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('director')

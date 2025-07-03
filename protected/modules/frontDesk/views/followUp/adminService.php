@@ -46,14 +46,14 @@ Yii::app()->clientScript->registerScript('search', "
             'cssFile' => false,
             'header' => '',
         ),
-        'rowCssClassExpression' => '(($data->status == "Finished")?"hijau":"merah")',
+        'rowCssClassExpression' => '(($data->status == "PAID")?"hijau":"merah")',
         'columns' => array(
             array(
-                'header' => 'Registration #',
-                'value' => 'CHtml::link($data->transaction_number, array($data->repair_type == "GR" ? "/frontDesk/generalRepairRegistration/view" : "/frontDesk/bodyRepairRegistration/view", "id"=>$data->id), array("target" => "blank"))', 
+                'header' => 'Invoice #',
+                'value' => 'CHtml::link($data->invoice_number, array("/transaction/invoiceHeader/view", "id"=>$data->id), array("target" => "blank"))', 
                 'type' => 'raw'
             ),
-            'work_order_date',
+            'invoice_date',
             array('name' => 'plate_number', 'value' => '$data->vehicle->plate_number'),
             array(
                 'header' => 'Car Make',
@@ -63,18 +63,18 @@ Yii::app()->clientScript->registerScript('search', "
                 'header' => 'Car Model',
                 'value' => '$data->vehicle->carModel->name'
             ),
-            array(
-                'header' => 'Repair Type',
-                'name' => 'repair_type',
-                'value' => '$data->repair_type',
-                'type' => 'raw',
-                'filter' => false,
-            ),
+//            array(
+//                'header' => 'Repair Type',
+//                'name' => 'repair_type',
+//                'value' => '$data->repair_type',
+//                'type' => 'raw',
+//                'filter' => false,
+//            ),
             array(
                 'header' => 'Customer Name',
                 'value' => '$data->customer->name',
             ),
-            'problem',
+//            'problem',
         ),
     )); ?>
 </div>

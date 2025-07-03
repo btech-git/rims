@@ -226,9 +226,9 @@ class FollowUpController extends Controller {
         $carModel = (isset($_GET['CarModel'])) ? $_GET['CarModel'] : '';
         $customerName = (isset($_GET['CustomerName'])) ? $_GET['CustomerName'] : '';
 
-        $model = Search::bind(new RegistrationTransaction('search'), isset($_GET['RegistrationTransaction']) ? $_GET['RegistrationTransaction'] : '');
+        $model = Search::bind(new InvoiceHeader('search'), isset($_GET['InvoiceHeader']) ? $_GET['InvoiceHeader'] : '');
         $dataProvider = $model->searchByFollowUp();
-        $dataProvider->criteria->addCondition("t.status = 'Finished' AND t.work_order_date IS NOT NULL AND t.branch_id = :branch_id");
+        $dataProvider->criteria->addCondition("t.status IN ('PAID', 'CLEAR') AND t.branch_id = :branch_id");
         $dataProvider->criteria->params[':branch_id'] = Yii::app()->user->branch_id;
         
         if (!empty($plateNumber)) {
@@ -252,7 +252,7 @@ class FollowUpController extends Controller {
         }
         
         $followUpDate = date('Y-m-d', strtotime('-6 months', strtotime(date('Y-m-d')))); 
-        $dataProvider->criteria->addCondition('t.sales_order_date = :follow_up_date');
+        $dataProvider->criteria->addCondition('t.invoice_date >= :follow_up_date');
         $dataProvider->criteria->params[':follow_up_date'] = $followUpDate;
 
         $this->render('adminService', array(

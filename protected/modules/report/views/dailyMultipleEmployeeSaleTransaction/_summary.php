@@ -38,20 +38,22 @@ Yii::app()->clientScript->registerCss('_report', '
         <th class="width1-12">Total Aksesoris</th>
     </tr>
     <?php foreach ($dailyMultipleEmployeeSaleReport as $dataItem): ?>
-        <?php $detailItem = $dailyMultipleEmployeeSaleProductReportData[$dataItem['employee_id_sales_person']]; ?>
-        <tr class="items1">
-            <td><?php echo CHtml::encode($dataItem['employee_name']); ?></td>
-            <td style="text-align: center"><?php echo CHtml::encode($dataItem['customer_quantity']); ?></td>
-            <td style="text-align: center"><?php echo CHtml::encode($dataItem['customer_new_quantity']); ?></td>
-            <td style="text-align: center"><?php echo CHtml::encode($dataItem['customer_repeat_quantity']); ?></td>
-            <td style="text-align: center"><?php echo CHtml::encode($dataItem['customer_retail_quantity']); ?></td>
-            <td></td>
-            <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $dataItem['grand_total'])); ?></td>
-            <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $dataItem['total_service'])); ?></td>
-            <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $dataItem['total_product'])); ?></td>
-            <td style="text-align: center"><?php echo CHtml::encode($detailItem['tire_quantity']); ?></td>
-            <td style="text-align: center"><?php echo CHtml::encode($detailItem['oil_quantity']); ?></td>
-            <td style="text-align: center"><?php echo CHtml::encode($detailItem['accessories_quantity']); ?></td>
-        </tr>
+        <?php if (isset($dailyMultipleEmployeeSaleProductReportData[$dataItem['employee_id_sales_person']]) ? $dailyMultipleEmployeeSaleProductReportData[$dataItem['employee_id_sales_person']] : ''): ?>
+            <?php $detailItem = $dailyMultipleEmployeeSaleProductReportData[$dataItem['employee_id_sales_person']]; ?>
+            <tr class="items1">
+                <td><?php echo CHtml::encode($dataItem['employee_name']); ?></td>
+                <td style="text-align: center"><?php echo CHtml::encode($dataItem['customer_quantity']); ?></td>
+                <td style="text-align: center"><?php echo CHtml::encode($dataItem['customer_new_quantity']); ?></td>
+                <td style="text-align: center"><?php echo CHtml::encode($dataItem['customer_repeat_quantity']); ?></td>
+                <td style="text-align: center"><?php echo CHtml::encode($dataItem['customer_retail_quantity']); ?></td>
+                <td></td>
+                <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $dataItem['grand_total'])); ?></td>
+                <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $dataItem['total_service'])); ?></td>
+                <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $dataItem['total_product'])); ?></td>
+                <td style="text-align: center"><?php echo CHtml::encode($detailItem['tire_quantity']); ?></td>
+                <td style="text-align: center"><?php echo CHtml::encode($detailItem['oil_quantity']); ?></td>
+                <td style="text-align: center"><?php echo CHtml::encode($detailItem['accessories_quantity']); ?></td>
+            </tr>
+        <?php endif; ?>
     <?php endforeach; ?>
 </table>
