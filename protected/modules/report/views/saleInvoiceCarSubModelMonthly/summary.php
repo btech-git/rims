@@ -1,7 +1,4 @@
 <?php
-Yii::app()->clientScript->registerScript('report', '
-	$("#YearMonth").val("' . $yearMonth . '");
-');
 Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/transaction/report.css');
 ?>
 
@@ -23,7 +20,7 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                     <div class="small-4 columns">
                                         <span class="prefix">Periode:</span>
                                     </div>
-                                    <?php list($yearNow, $monthNow) = explode('-', $yearMonthNow); ?>
+                                    <?php /*list($yearNow, $monthNow) = explode('-', $yearMonthNow); ?>
                                     <?php $currentYear = intval($yearNow); ?>
                                     <?php $currentMonth = intval($monthNow); ?>
                                     <?php $yearMonthRange = array(); ?>
@@ -35,10 +32,31 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                             <?php $currentMonth = 12; ?>
                                             <?php $currentYear--; ?>
                                         <?php endif; ?>
-                                    <?php endfor; ?>
+                                    <?php endfor;*/ ?>
 
-                                    <div class="small-8 columns">
-                                        <?php echo CHtml::dropDownList('YearMonth', $yearMonth, $yearMonthRange); ?>
+<!--                                    <div class="small-8 columns">
+                                        <?php //echo CHtml::dropDownList('YearMonth', $yearMonth, $yearMonthRange); ?>
+                                    </div>-->
+                                    
+                                    <div class="small-4 columns">
+                                        <?php echo CHtml::dropDownList('Month', $month, array(
+                                            '01' => 'Jan',
+                                            '02' => 'Feb',
+                                            '03' => 'Mar',
+                                            '04' => 'Apr',
+                                            '05' => 'May',
+                                            '06' => 'Jun',
+                                            '07' => 'Jul',
+                                            '08' => 'Aug',
+                                            '09' => 'Sep',
+                                            '10' => 'Oct',
+                                            '11' => 'Nov',
+                                            '12' => 'Dec',
+                                        )); ?>
+                                    </div>
+
+                                    <div class="small-4 columns">
+                                        <?php echo CHtml::dropDownList('Year', $year, $yearList); ?>
                                     </div>
                                 </div>
                             </div>
@@ -116,8 +134,8 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
 
                 <div class="relative">
                     <?php $this->renderPartial('_summary', array(
-                        'yearMonthNow' => $yearMonthNow,
-                        'yearMonth' => $yearMonth,
+                        'year' => $year,
+                        'month' => $month,
                         'invoiceVehicleInfo' => $invoiceVehicleInfo,
                     )); ?>
                 </div>

@@ -1345,13 +1345,14 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
         return $dateDiff->format("%a days");
     }
     
-    public static function getSaleInvoiceCarSubModelMonthlyData($yearMonth, $branchId, $carMake, $carModel) {
+    public static function getSaleInvoiceCarSubModelMonthlyData($year, $month, $branchId, $carMake, $carModel) {
         $branchConditionSql = '';
         $carMakeConditionSql = '';
         $carModelConditionSql = '';
         
         $params = array(
-            ':year_month' => $yearMonth,
+            ':year' => $year,
+            ':month' => $month,
         );
         
         if (!empty($branchId)) {
@@ -1376,7 +1377,7 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
                 INNER JOIN " . VehicleCarSubModel::model()->tableName() . " s ON s.id = v.car_sub_model_id
                 INNER JOIN " . VehicleCarModel::model()->tableName() . " c ON c.id = s.car_model_id
                 INNER JOIN " . VehicleCarMake::model()->tableName() . " m ON m.id = c.car_make_id
-                WHERE SUBSTRING_INDEX(SUBSTRING_INDEX(t.invoice_date, ' ', 1), '-', 2) = :year_month AND t.status NOT LIKE '%CANCELLED%'" . $branchConditionSql . $carMakeConditionSql . $carModelConditionSql . "
+                WHERE YEAR(t.invoice_date) = :year AND MONTH(t.invoice_date) = :month AND t.status NOT LIKE '%CANCELLED%'" . $branchConditionSql . $carMakeConditionSql . $carModelConditionSql . "
                 GROUP BY s.id, SUBSTRING_INDEX(SUBSTRING_INDEX(t.invoice_date, ' ', 1), '-', 3)
                 ORDER BY m.name ASC, c.name ASC, s.name ASC, transaction_date ASC";
 

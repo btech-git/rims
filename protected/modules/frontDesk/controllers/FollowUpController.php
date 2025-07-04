@@ -188,8 +188,8 @@ class FollowUpController extends Controller {
             $worksheet->setCellValue("I{$counter}", CHtml::value($header, 'registrationTransaction.vehicle_mileage'));
             $worksheet->setCellValue("J{$counter}", CHtml::value($header, 'invoice_number'));
             $worksheet->setCellValue("K{$counter}", CHtml::value($header, 'invoice_date'));
-            $worksheet->setCellValue("L{$counter}", CHtml::value($header, 'registrationTransaction.products'));
-            $worksheet->setCellValue("M{$counter}", CHtml::value($header, 'registrationTransaction.services'));
+            $worksheet->setCellValue("L{$counter}", CHtml::value($header, 'registrationTransaction.services'));
+            $worksheet->setCellValue("M{$counter}", CHtml::value($header, 'registrationTransaction.products'));
             $worksheet->setCellValue("N{$counter}", CHtml::value($header, 'registrationTransaction.employeeIdSalesPerson.name'));
             $worksheet->setCellValue("O{$counter}", CHtml::value($header, 'registrationTransaction.employeeIdAssignMechanic.name'));
             $worksheet->setCellValue("P{$counter}", CHtml::value($header, 'warrantyFollowUpDate'));

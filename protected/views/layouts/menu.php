@@ -130,7 +130,7 @@
 //                        'visible' => (Yii::app()->user->checkAccess('inspectionCreate') || Yii::app()->user->checkAccess('inspectionEdit'))
                     ),
                     array(
-                        'label' => 'Inspeksi Kendaraan', 
+                        'label' => 'Vehicle System Check', 
                         'url' => array('/frontDesk/vehicleInspection/admin'), 
                         'visible' => (Yii::app()->user->checkAccess('inspectionCreate') || Yii::app()->user->checkAccess('inspectionEdit') || Yii::app()->user->checkAccess('inspectionView'))
                     ),

@@ -11,7 +11,7 @@
 <table style="width: 110%">
     <thead>
         <tr>
-            <th style="width: 20%" colspan="3"></th>
+            <th style="width: 20%" colspan="4"></th>
             <?php for ($month = 1; $month <= 12; $month++): ?>
                 <th style="width: 256px"><?php echo CHtml::encode($monthList[$month]); ?></th>
             <?php endfor; ?>
@@ -20,8 +20,10 @@
     </thead>
     <tbody>
         <?php $groupTotalSums = array(); ?>
+        <?php $autoNumber = 1; ?>
         <?php foreach ($invoiceVehicleInfo as $invoiceVehicleCarSubModelInfo): ?>
             <tr>
+                <td style="text-align: center"><?php echo $autoNumber; ?></td>
                 <td style="text-align: right"><?php echo $invoiceVehicleCarSubModelInfo['car_make_name']; ?></td>
                 <td style="text-align: right"><?php echo $invoiceVehicleCarSubModelInfo['car_model_name']; ?></td>
                 <td style="text-align: right"><?php echo $invoiceVehicleCarSubModelInfo['car_sub_model_name']; ?></td>
@@ -39,6 +41,7 @@
                 <?php endfor; ?>
                 <td style="text-align: right"><?php echo CHtml::encode($totalSum); ?></td>
             </tr>
+            <?php $autoNumber++; ?>
         <?php endforeach; ?>
     </tbody>
     <tfoot>

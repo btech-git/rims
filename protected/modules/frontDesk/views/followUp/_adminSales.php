@@ -1,15 +1,15 @@
 <?php
 Yii::app()->clientScript->registerCss('_report', '
     .width1-1 { width: 15% }
-    .width1-2 { width: 15% }
-    .width1-3 { width: 10% }
-    .width1-4 { width: 25% }
+    .width1-2 { width: 5% }
+    .width1-3 { width: 15% }
+    .width1-4 { width: 10% }
     .width1-5 { width: 10% }
-    .width1-6 { width: 10% }
-    .width1-7 { width: 10% }
+    .width1-6 { width: 5% }
+    .width1-7 { width: 5% }
     .width1-8 { width: 10% }
-    .width1-9 { width: 10% }
-    .width1-10 { width: 10% }
+    .width1-9 { width: 5% }
+    .width1-10 { width: 5% }
 ');
 ?>
 
@@ -57,8 +57,8 @@ Yii::app()->clientScript->registerCss('_report', '
                 </td>
                 <td class="width1-5"><?php echo CHtml::encode(CHtml::value($header, 'invoice_number')); ?></td>
                 <td class="width1-6"><?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($header->invoice_date))); ?></td>
-                <td class="width1-7"><?php echo CHtml::encode(CHtml::value($header, 'warrantyFollowUpDate')); ?></td>
-                <td class="width1-8"><?php echo CHtml::encode(CHtml::value($header, 'serviceFollowUpDate')); ?></td>
+                <td class="width1-7"><?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($header->warrantyFollowUpDate))); ?></td>
+                <td class="width1-8"><?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($header->serviceFollowUpDate))); ?></td>
                 <td class="width1-9"><?php echo CHtml::encode(CHtml::value($header, 'lastInvoiceDaysNumber')); ?></td>
                 <td class="width1-10">
                     <?php if (empty($header->registrationTransaction->feedback)): ?>

@@ -23,15 +23,21 @@ class SaleInvoiceCarSubModelMonthlyController extends Controller {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
         
-        $yearMonthNow = date('Y-m');
-
-        $yearMonth = (isset($_GET['YearMonth'])) ? $_GET['YearMonth'] : $yearMonthNow;
+//        $yearMonthNow = date('Y-m');
+//
+//        $yearMonth = (isset($_GET['YearMonth'])) ? $_GET['YearMonth'] : $yearMonthNow;
+        $monthNow = date('m');
+        $yearNow = date('Y');
+        
+        $month = isset($_GET['Month']) ? $_GET['Month'] : $monthNow;
+        $year = (isset($_GET['Year'])) ? $_GET['Year'] : $yearNow;
+        
         $branchId = isset($_GET['BranchId']) ? $_GET['BranchId'] : '';
         $carMake = (isset($_GET['CarMake'])) ? $_GET['CarMake'] : '';
         $carModel = (isset($_GET['CarModel'])) ? $_GET['CarModel'] : '';
         
         $invoiceVehicleInfo = array();
-        $invoiceVehicleData = InvoiceHeader::getSaleInvoiceCarSubModelMonthlyData($yearMonth, $branchId, $carMake, $carModel);
+        $invoiceVehicleData = InvoiceHeader::getSaleInvoiceCarSubModelMonthlyData($year, $month, $branchId, $carMake, $carModel);
         foreach ($invoiceVehicleData as $invoiceVehicleItem) {
             $invoiceVehicleInfo[$invoiceVehicleItem['car_sub_model_id']]['car_sub_model_id'] = $invoiceVehicleItem['car_sub_model_id'];
             $invoiceVehicleInfo[$invoiceVehicleItem['car_sub_model_id']]['car_model_name'] = $invoiceVehicleItem['car_model_name'];
@@ -40,17 +46,25 @@ class SaleInvoiceCarSubModelMonthlyController extends Controller {
             $invoiceVehicleInfo[$invoiceVehicleItem['car_sub_model_id']]['totals'][$invoiceVehicleItem['transaction_date']] = $invoiceVehicleItem['total_quantity_vehicle'];
         }
 
+        $yearList = array();
+        for ($y = $yearNow - 4; $y <= $yearNow; $y++) {
+            $yearList[$y] = $y;
+        }
+        
         if (isset($_GET['ResetFilter'])) {
             $this->redirect(array('summary'));
         }
         
-//        if (isset($_GET['SaveExcel'])) {
-//            $this->saveToExcel($invoiceVehicleInfo, $yearMonth);
-//        }
+        if (isset($_GET['SaveExcel'])) {
+            $this->saveToExcel($invoiceVehicleInfo, $year, $month);
+        }
 
         $this->render('summary', array(
-            'yearMonthNow' => $yearMonthNow,
-            'yearMonth' => $yearMonth,
+//            'yearMonthNow' => $yearMonthNow,
+//            'yearMonth' => $yearMonth,
+            'yearList' => $yearList,
+            'year' => $year,
+            'month' => $month,
             'branchId' => $branchId,
             'invoiceVehicleInfo' => $invoiceVehicleInfo,
             'carMake' => $carMake,
@@ -70,7 +84,7 @@ class SaleInvoiceCarSubModelMonthlyController extends Controller {
         }
     }
     
-    protected function saveToExcel($registrationVehicleInfo, $yearMonth) {
+    protected function saveToExcel($invoiceVehicleInfo, $yearMonth) {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
 
@@ -82,28 +96,28 @@ class SaleInvoiceCarSubModelMonthlyController extends Controller {
 
         $documentProperties = $objPHPExcel->getProperties();
         $documentProperties->setCreator('Raperind Motor');
-        $documentProperties->setTitle('Laporan Penyelesaian Pesanan per Kendaraan');
+        $documentProperties->setTitle('Laporan Penjualan Bulanan Kendaraan');
 
         $worksheet = $objPHPExcel->setActiveSheetIndex(0);
-        $worksheet->setTitle('Penyelesaian per Kendaraan');
+        $worksheet->setTitle('Penjualan Bulanan Kendaraan');
 
         $worksheet->mergeCells('A2:AI2');
         $worksheet->mergeCells('A3:AI3');
         $worksheet->mergeCells('A4:AI4');
         
-        $worksheet->getStyle('A1:G4')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-        $worksheet->getStyle('A1:G4')->getFont()->setBold(true);
+        $worksheet->getStyle('A1:AI4')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->getStyle('A1:AI4')->getFont()->setBold(true);
         $worksheet->setCellValue('A2', 'Raperind Motor');
-        $worksheet->setCellValue('A3', 'Laporan Penyelesaian Pesanan per Kendaraan');
+        $worksheet->setCellValue('A3', 'Laporan Penjualan Bulanan Kendaraan');
         $worksheet->setCellValue('A4', Yii::app()->dateFormatter->format('MMMM yyyy', $yearMonth));
 
-        $worksheet->getStyle("A6:G6")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
-        $worksheet->getStyle("A6:G6")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A6:AI6")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A6:AI6")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
-        $worksheet->getStyle('A5:G6')->getFont()->setBold(true);
+        $worksheet->getStyle('A5:AI6')->getFont()->setBold(true);
 
         $dateNumList = range(1, 31);
-        $columnCounter = 'B';
+        $columnCounter = 'D';
         foreach ($dateNumList as $dateNum) {
             $worksheet->setCellValue("{$columnCounter}6", $dateNum);
             $columnCounter++;
@@ -111,58 +125,44 @@ class SaleInvoiceCarSubModelMonthlyController extends Controller {
         $worksheet->setCellValue("{$columnCounter}6", 'Total');
         $counter = 8;
 
-        $footerTotalSums = array();
-        foreach ($registrationVehicleInfo as $registrationVehicleCarMakeInfo) {
-            $groupTotalSums = array();
-            $worksheet->setCellValue("A{$counter}", $registrationVehicleCarMakeInfo['name']);
-            $counter++;
-            foreach ($registrationVehicleCarMakeInfo['car_models'] as $registrationVehicleCarModelInfo) {
-                $worksheet->setCellValue("A{$counter}", $registrationVehicleCarModelInfo['name']);
-                $totalSum = 0;
-                $columnCounter = 'B';
-                foreach ($dateNumList as $dateNum) {
-                    $transactionDate = $yearMonth . '-' . str_pad($dateNum, 2, '0', STR_PAD_LEFT);
-                    $total = isset($registrationVehicleCarModelInfo['totals'][$transactionDate]) ? $registrationVehicleCarModelInfo['totals'][$transactionDate] : '';
-                    $worksheet->setCellValue("{$columnCounter}{$counter}", $total);
-                    $totalSum += $total; 
-                    if (!isset($groupTotalSums[$dateNum])) {
-                        $groupTotalSums[$dateNum] = 0;
-                    }
-                    $groupTotalSums[$dateNum] += $total;
-                    $columnCounter++;
-                }
-                $worksheet->setCellValue("{$columnCounter}{$counter}", $totalSum);
-                $counter++;
-            }
-            
-            $worksheet->setCellValue("A{$counter}", 'Total');
-            $groupSubTotal = 0;
-            $footerCounter = 'B';
+        $groupTotalSums = array();
+        foreach ($invoiceVehicleInfo as $invoiceVehicleCarSubModelInfo) {
+            $worksheet->setCellValue("A{$counter}", $invoiceVehicleCarSubModelInfo['car_make_name']);
+            $worksheet->setCellValue("B{$counter}", $invoiceVehicleCarSubModelInfo['car_model_name']);
+            $worksheet->setCellValue("C{$counter}", $invoiceVehicleCarSubModelInfo['car_sub_model_name']);
+            $totalSum = 0;
+            $columnCounter = 'D';
             foreach ($dateNumList as $dateNum) {
-                if (!isset($footerTotalSums[$dateNum])) {
-                    $footerTotalSums[$dateNum] = 0;
+                $transactionDate = $yearMonth . '-' . str_pad($dateNum, 2, '0', STR_PAD_LEFT);
+                $total = isset($invoiceVehicleCarSubModelInfo['totals'][$transactionDate]) ? $invoiceVehicleCarSubModelInfo['totals'][$transactionDate] : '';
+                $worksheet->setCellValue("{$columnCounter}{$counter}", $total);
+                $totalSum += $total; 
+                if (!isset($groupTotalSums[$dateNum])) {
+                    $groupTotalSums[$dateNum] = 0;
                 }
-                $footerTotalSums[$dateNum] += $groupTotalSums[$dateNum];
-                $worksheet->setCellValue("{$footerCounter}{$counter}", CHtml::encode($groupTotalSums[$dateNum]));
-                $groupSubTotal += $groupTotalSums[$dateNum];
-                $footerCounter++;
+                $groupTotalSums[$dateNum] += $total;
+                $columnCounter++;
             }
-            $worksheet->setCellValue("{$footerCounter}{$counter}", CHtml::encode($groupSubTotal));
+            $worksheet->setCellValue("{$columnCounter}{$counter}", $totalSum);
+            $columnCounter++;
             $counter++;
-
         }
-        
-        $worksheet->setCellValue("A{$counter}", 'Grand Total');
+            
+        $worksheet->setCellValue("A{$counter}", 'Total');
         $grandTotal = 0;
-        $footerCounter = 'B';
+        $footerCounter = 'D';
         foreach ($dateNumList as $dateNum) {
-            $worksheet->setCellValue("{$footerCounter}{$counter}", CHtml::encode($footerTotalSums[$dateNum]));
-            $grandTotal += $footerTotalSums[$dateNum];
+            if (!isset($groupTotalSums[$dateNum])) {
+                $groupTotalSums[$dateNum] = 0;
+            }
+            $worksheet->setCellValue("{$footerCounter}{$counter}", CHtml::encode($groupTotalSums[$dateNum]));
+            $grandTotal += $groupTotalSums[$dateNum];
             $footerCounter++;
         }
         $worksheet->setCellValue("{$footerCounter}{$counter}", CHtml::encode($grandTotal));
+        $counter++;
 
-        for ($col = 'A'; $col !== 'CC'; $col++) {
+        for ($col = 'A'; $col !== 'AG'; $col++) {
             $objPHPExcel->getActiveSheet()
             ->getColumnDimension($col)
             ->setAutoSize(true);
@@ -171,7 +171,7 @@ class SaleInvoiceCarSubModelMonthlyController extends Controller {
         ob_end_clean();
         // We'll be outputting an excel file
         header('Content-type: application/vnd.ms-excel');
-        header('Content-Disposition: attachment;filename="Penyelesaian per Kendaraan.xls"');
+        header('Content-Disposition: attachment;filename="penjualan_bulanan_kendaraan.xls"');
         header('Cache-Control: max-age=0');
         
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
