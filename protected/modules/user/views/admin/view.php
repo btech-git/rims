@@ -38,10 +38,10 @@ $attributes = array(
             'name' => 'branch_id',
             'value' => $model->branch_id != "" ? Branch::model()->findByPk($model->branch_id)->name : '',
         ), 
-        array(
-            'name' => 'superuser',
-            'value' => User::itemAlias("AdminStatus", $model->superuser),
-        ), 
+//        array(
+//            'name' => 'superuser',
+//            'value' => User::itemAlias("AdminStatus", $model->superuser),
+//        ), 
         array(
             'name' => 'status',
             'value' => User::itemAlias("UserStatus", $model->status),

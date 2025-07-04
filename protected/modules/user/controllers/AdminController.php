@@ -200,7 +200,9 @@ class AdminController extends Controller {
             try {
                 $valid = $model->validate();
                 if ($valid) {
-                    $valid = $valid && !empty($branches);
+                    if ($model->isNewRecord) {
+                        $valid = $valid && !empty($branches);
+                    }
                     if ($valid) {
                         $valid = $valid && $model->save();
                         
