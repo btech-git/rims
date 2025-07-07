@@ -37,9 +37,6 @@ class ReceivableController extends Controller {
         $customerDataProvider->pagination->pageVar = 'page_dialog';
         $customerDataProvider->criteria->compare('t.customer_type', 'Company');
 
-//        $insuranceCompany = Search::bind(new InsuranceCompany('search'), isset($_GET['InsuranceCompany']) ? $_GET['InsuranceCompany'] : array());
-//        $insuranceCompanyDataProvider = $insuranceCompany->search();
-
         $receivableSummary = new ReceivableSummary($customer->search());
         $receivableSummary->setupLoading();
         $receivableSummary->setupPaging($pageSize, $currentPage);

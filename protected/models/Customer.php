@@ -624,8 +624,9 @@ class Customer extends CActiveRecord {
                 WHERE h.payment_date BETWEEN '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND :end_date
                 GROUP BY d.invoice_header_id
             ) p ON i.id = p.invoice_header_id 
-            WHERE i.customer_id = :customer_id AND i.insurance_company_id IS NULL AND (i.total_price - COALESCE(p.amount, 0) - COALESCE(p.tax_service_amount, 0)) > 100 AND 
-            i.invoice_date BETWEEN '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND :end_date" . $branchConditionSql . $plateConditionSql;
+            WHERE i.customer_id = :customer_id AND i.insurance_company_id IS NULL AND (i.total_price - COALESCE(p.amount, 0) - COALESCE(p.tax_service_amount, 0) - 
+                COALESCE(p.discount_amount, 0) - COALESCE(p.bank_administration_fee, 0) - COALESCE(p.merimen_fee, 0) - COALESCE(p.downpayment_amount, 0)) > 100 AND 
+                i.invoice_date BETWEEN '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND :end_date " . $branchConditionSql . $plateConditionSql;
 
         $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
 

@@ -46,9 +46,8 @@ class ReceivableSummary extends CComponent {
         }
         
         $this->dataProvider->criteria->addCondition("EXISTS (
-            SELECT i.customer_id, i.total_price - COALESCE(p.amount, 0) - 
-                COALESCE(p.tax_service_amount, 0) - COALESCE(p.discount_amount, 0) - COALESCE(p.bank_administration_fee, 0) - COALESCE(p.merimen_fee, 0) - 
-                COALESCE(p.downpayment_amount, 0) AS remaining
+            SELECT i.customer_id, i.total_price - COALESCE(p.amount, 0) - COALESCE(p.tax_service_amount, 0) - COALESCE(p.discount_amount, 0) - 
+                COALESCE(p.bank_administration_fee, 0) - COALESCE(p.merimen_fee, 0) - COALESCE(p.downpayment_amount, 0) AS remaining
             FROM " . InvoiceHeader::model()->tableName() . " i
             INNER JOIN " . Vehicle::model()->tableName() . " v ON v.id = i.vehicle_id
             LEFT OUTER JOIN (
@@ -59,10 +58,10 @@ class ReceivableSummary extends CComponent {
                 WHERE h.payment_date BETWEEN '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND :end_date
                 GROUP BY d.invoice_header_id
             ) p ON i.id = p.invoice_header_id 
-            WHERE i.customer_id = t.id AND i.insurance_company_id IS NULL AND i.invoice_date BETWEEN '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND :end_date" . 
-            $branchConditionSql . $plateConditionSql . " 
-            GROUP BY i.customer_id 
-            HAVING remaining > 100
+            WHERE i.customer_id = t.id AND i.insurance_company_id IS NULL AND i.invoice_date BETWEEN '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND :end_date AND
+                i.total_price - COALESCE(p.amount, 0) - COALESCE(p.tax_service_amount, 0) - COALESCE(p.discount_amount, 0) - 
+                COALESCE(p.bank_administration_fee, 0) - COALESCE(p.merimen_fee, 0) - COALESCE(p.downpayment_amount, 0) > 100 " . 
+                $branchConditionSql . $plateConditionSql . " 
         )");
         
         $this->dataProvider->criteria->params[':end_date'] = $endDate;

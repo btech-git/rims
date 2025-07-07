@@ -61,9 +61,8 @@ class ReceivableInsuranceCompanySummary extends CComponent {
                 WHERE h.payment_date BETWEEN '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND :end_date
                 GROUP BY d.invoice_header_id
             ) p ON i.id = p.invoice_header_id 
-            WHERE i.insurance_company_id = t.id AND i.insurance_company_id IS NOT NULL AND i.invoice_date BETWEEN '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND :end_date" . 
+            WHERE i.insurance_company_id = t.id AND i.insurance_company_id IS NOT NULL AND i.invoice_date BETWEEN '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND :end_date AND remaining > 100 " . 
             $branchConditionSql . $plateConditionSql . " 
-            HAVING remaining > 100
         )");
         
         $this->dataProvider->criteria->params[':end_date'] = $endDate;
