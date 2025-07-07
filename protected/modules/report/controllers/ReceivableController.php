@@ -132,14 +132,13 @@ class ReceivableController extends Controller {
         $worksheet->getStyle('A6:H7')->getFont()->setBold(true);
         $worksheet->setCellValue('A6', 'Name');
         $worksheet->setCellValue('B6', 'Type');
-
-        $worksheet->setCellValue('A7', 'Tanggal');
-        $worksheet->setCellValue('B7', 'Faktur #');
-        $worksheet->setCellValue('C7', 'Jatuh Tempo');
-        $worksheet->setCellValue('D7', 'Vehicle');
-        $worksheet->setCellValue('E7', 'Grand Total');
-        $worksheet->setCellValue('F7', 'Payment');
-        $worksheet->setCellValue('G7', 'Remaining');
+        $worksheet->setCellValue('C6', 'Tanggal');
+        $worksheet->setCellValue('D6', 'Faktur #');
+        $worksheet->setCellValue('E6', 'Jatuh Tempo');
+        $worksheet->setCellValue('F6', 'Vehicle');
+        $worksheet->setCellValue('G6', 'Grand Total');
+        $worksheet->setCellValue('H6', 'Payment');
+        $worksheet->setCellValue('I6', 'Remaining');
         $counter = 9;
 
         foreach ($receivableSummary->dataProvider->data as $header) {
@@ -168,18 +167,6 @@ class ReceivableController extends Controller {
                 $totalPayment += $paymentAmount;
                 $totalReceivable += $paymentLeft;
             }
-            
-//            $worksheet->getStyle("A{$counter}:H{$counter}")->getFont()->setBold(true);
-//
-//            $worksheet->getStyle("A{$counter}:H{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
-//            $worksheet->getStyle("A{$counter}:H{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
-//            $worksheet->mergeCells("A{$counter}:D{$counter}");
-//            $worksheet->setCellValue("A{$counter}", 'Total');
-//            $worksheet->setCellValue("E{$counter}", $totalRevenue);
-//            $worksheet->setCellValue("F{$counter}", $totalPayment);
-//            $worksheet->setCellValue("G{$counter}", $totalReceivable);
-//
-//            $counter++;$counter++;
         }
 
         for ($col = 'A'; $col !== 'J'; $col++) {
