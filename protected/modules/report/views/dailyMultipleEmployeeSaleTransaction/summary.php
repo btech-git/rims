@@ -1,4 +1,8 @@
 <?php
+Yii::app()->clientScript->registerScript('report', '
+	$("#StartDate").val("' . $startDate . '");
+	$("#EndDate").val("' . $endDate . '");
+');
 Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/transaction/report.css');
 ?>
 
@@ -19,10 +23,10 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                     <div class="small-4 columns">
                                         <span class="prefix">Tanggal </span>
                                     </div>
-                                    <div class="small-8 columns">
+                                
+                                    <div class="small-4 columns">
                                         <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(
-                                            'name' => 'Date',
-                                            'value' => $date,
+                                            'name' => 'StartDate',
                                             'options' => array(
                                                 'dateFormat' => 'yy-mm-dd',
                                                 'changeMonth'=>true,
@@ -31,6 +35,21 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                             'htmlOptions' => array(
                                                 'readonly' => true,
                                                 'placeholder' => 'Mulai',
+                                            ),
+                                        )); ?>
+                                    </div>
+
+                                    <div class="small-4 columns">
+                                        <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(
+                                            'name' => 'EndDate',
+                                            'options' => array(
+                                                'dateFormat' => 'yy-mm-dd',
+                                                'changeMonth'=>true,
+                                                'changeYear'=>true,
+                                            ),
+                                            'htmlOptions' => array(
+                                                'readonly' => true,
+                                                'placeholder' => 'Sampai',
                                             ),
                                         )); ?>
                                     </div>
@@ -55,14 +74,13 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
 
                 <div class="relative">
                     <div class="reportDisplay">
-                        <?php //echo ReportHelper::summaryText($dailyMultipleEmployeeSaleReport->dataProvider); ?>
-                        <?php //echo ReportHelper::sortText($transaksiPembelianSummary->dataProvider->sort, array('Jenis Persediaan', 'Tanggal SO', 'Pelanggan')); ?>
                     </div>
 
                     <?php $this->renderPartial('_summary', array(
                         'dailyMultipleEmployeeSaleReport' => $dailyMultipleEmployeeSaleReport,
                         'dailyMultipleEmployeeSaleProductReportData' => $dailyMultipleEmployeeSaleProductReportData,
-                        'date' => $date,
+                        'startDate' => $startDate,
+                        'endDate' => $endDate,
                     )); ?>
                 </div>
                 <div class="clear"></div>

@@ -2,7 +2,8 @@
 Yii::app()->clientScript->registerScript('report', '
 	$(".breadcrumbs").addClass("hide");
 
-	$("#InvoiceDate").val("' . $invoiceDate . '");
+	$("#StartDate").val("' . $startDate . '");
+	$("#EndDate").val("' . $endDate . '");
 	$("#PageSize").val("' . $saleInvoiceSummary->dataProvider->pagination->pageSize . '");
 	$("#CurrentPage").val("' . ($saleInvoiceSummary->dataProvider->pagination->getCurrentPage(false) + 1) . '");
 	$("#CurrentSort").val("' . $currentSort . '");
@@ -52,9 +53,9 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                     <span class="prefix">Tanggal</span>
                                 </div>
                                 
-                                <div class="small-8 columns">
+                                <div class="small-4 columns">
                                     <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(
-                                        'name' => 'InvoiceDate',
+                                        'name' => 'StartDate',
                                         'options' => array(
                                             'dateFormat' => 'yy-mm-dd',
                                             'changeMonth'=>true,
@@ -63,6 +64,21 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                         'htmlOptions' => array(
                                             'readonly' => true,
                                             'placeholder' => 'Mulai',
+                                        ),
+                                    )); ?>
+                                </div>
+                                
+                                <div class="small-4 columns">
+                                    <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(
+                                        'name' => 'EndDate',
+                                        'options' => array(
+                                            'dateFormat' => 'yy-mm-dd',
+                                            'changeMonth'=>true,
+                                            'changeYear'=>true,
+                                        ),
+                                        'htmlOptions' => array(
+                                            'readonly' => true,
+                                            'placeholder' => 'Sampai',
                                         ),
                                     )); ?>
                                 </div>
@@ -105,12 +121,12 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
             <div class="relative">
                 <div class="reportDisplay">
                     <?php echo ReportHelper::summaryText($saleInvoiceSummary->dataProvider); ?>
-                    <?php //echo ReportHelper::sortText($transaksiPembelianSummary->dataProvider->sort, array('Jenis Persediaan', 'Tanggal SO', 'Pelanggan')); ?>
                 </div>
 
                 <?php $this->renderPartial('_summary', array(
                     'saleInvoiceSummary' => $saleInvoiceSummary, 
-                    'invoiceDate' => $invoiceDate,
+                    'startDate' => $startDate,
+                    'endDate' => $endDate,
                 )); ?>
             </div>
 

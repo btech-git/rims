@@ -111,6 +111,7 @@ class YearlyMultipleMechanicTransactionController extends Controller {
             $worksheet->setCellValue("B{$counter}", $dataItem['vehicle_quantity']);
             $worksheet->setCellValue("C{$counter}", $dataItem['work_order_quantity']);
             $worksheet->setCellValue("E{$counter}", $dataItem['customer_retail_quantity']);
+            $worksheet->setCellValue("F{$counter}", $dataItem['customer_company_quantity']);
             $worksheet->setCellValue("G{$counter}", $detailItem['service_quantity']);
             $worksheet->setCellValue("J{$counter}", $dataItem['total_service']);
             $worksheet->setCellValue("K{$counter}", $averageService);

@@ -2,7 +2,8 @@
 Yii::app()->clientScript->registerScript('report', '
 	$(".breadcrumbs").addClass("hide");
 
-	$("#TransactionDate").val("' . $transactionDate . '");
+	$("#StartDate").val("' . $startDate . '");
+	$("#EndDate").val("' . $endDate . '");
 	$("#PageSize").val("' . $registrationTransactionSummary->dataProvider->pagination->pageSize . '");
 	$("#CurrentPage").val("' . ($registrationTransactionSummary->dataProvider->pagination->getCurrentPage(false) + 1) . '");
 	$("#CurrentSort").val("' . $currentSort . '");
@@ -52,9 +53,9 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                     <span class="prefix">Tanggal</span>
                                 </div>
                                 
-                                <div class="small-8 columns">
+                                <div class="small-4 columns">
                                     <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(
-                                        'name' => 'TransactionDate',
+                                        'name' => 'StartDate',
                                         'options' => array(
                                             'dateFormat' => 'yy-mm-dd',
                                             'changeMonth'=>true,
@@ -62,7 +63,22 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                         ),
                                         'htmlOptions' => array(
                                             'readonly' => true,
-                                            'placeholder' => 'Tanggal',
+                                            'placeholder' => 'Mulai',
+                                        ),
+                                    )); ?>
+                                </div>
+                                
+                                <div class="small-4 columns">
+                                    <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(
+                                        'name' => 'EndDate',
+                                        'options' => array(
+                                            'dateFormat' => 'yy-mm-dd',
+                                            'changeMonth'=>true,
+                                            'changeYear'=>true,
+                                        ),
+                                        'htmlOptions' => array(
+                                            'readonly' => true,
+                                            'placeholder' => 'Sampai',
                                         ),
                                     )); ?>
                                 </div>
@@ -109,8 +125,9 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                 </div>
 
                 <?php $this->renderPartial('_summary', array(
-                    'registrationTransactionSummary' => $registrationTransactionSummary, 
-                    'transactionDate' => $transactionDate,
+                    'registrationTransactionSummary' => $registrationTransactionSummary,  
+                    'startDate' => $startDate,
+                    'endDate' => $endDate,
                 )); ?>
             </div>
 

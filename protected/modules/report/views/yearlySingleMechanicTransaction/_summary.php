@@ -1,11 +1,11 @@
 <?php
 Yii::app()->clientScript->registerCss('_report', '
-    .width1-1 { width: 5% }
-    .width1-2 { width: 5% }
-    .width1-3 { width: 5% }
-    .width1-4 { width: 5% }
-    .width1-5 { width: 5% }
-    .width1-6 { width: 5% }
+    .width1-1 { width: 3% }
+    .width1-2 { width: 3% }
+    .width1-3 { width: 3% }
+    .width1-4 { width: 3% }
+    .width1-5 { width: 3% }
+    .width1-6 { width: 3% }
     .width1-7 { width: 5% }
     .width1-8 { width: 5% }
     .width1-9 { width: 5% }
@@ -51,7 +51,7 @@ Yii::app()->clientScript->registerCss('_report', '
                 <td style="text-align: center"><?php echo CHtml::encode($dataItem['work_order_quantity']); ?></td>
                 <td></td>
                 <td style="text-align: center"><?php echo CHtml::encode($dataItem['customer_retail_quantity']); ?></td>
-                <td></td>
+                <td style="text-align: center"><?php echo CHtml::encode($dataItem['customer_company_quantity']); ?></td>
                 <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $detailItem['service_quantity'])); ?></td>
                 <td></td>
                 <td></td>
@@ -61,16 +61,7 @@ Yii::app()->clientScript->registerCss('_report', '
         <?php else: ?>
             <tr class="items1">
                 <td><?php echo $i; ?></td>
-                <td>0.00</td>
-                <td>0.00</td>
-                <td>0.00</td>
-                <td>0.00</td>
-                <td>0.00</td>
-                <td>0.00</td>
-                <td>0.00</td>
-                <td>0.00</td>
-                <td>0.00</td>
-                <td>0.00</td>
+                <td colspan="10">&nbsp;</td>
             </tr>
         <?php endif; ?>
     <?php endfor; ?>

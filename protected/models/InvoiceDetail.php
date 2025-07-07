@@ -195,11 +195,12 @@ class InvoiceDetail extends CActiveRecord {
         return $resultSet;
     }
     
-    public static function getDailyMultipleEmployeeSaleProductReport($date, $employeeIds) {
+    public static function getDailyMultipleEmployeeSaleProductReport($startDate, $endDate, $employeeIds) {
         $employeeIdList = empty($employeeIds) ? 'NULL' :  implode(',', $employeeIds);
         
         $params = array(
-            ':invoice_date' => $date,
+            ':start_date' => $startDate,
+            ':end_date' => $endDate,
         );
         
         $sql = "SELECT r.employee_id_sales_person, SUM(CASE WHEN p.product_master_category_id = 4 THEN d.quantity ELSE 0 END) AS tire_quantity, 
@@ -209,7 +210,8 @@ class InvoiceDetail extends CActiveRecord {
                 INNER JOIN " . InvoiceHeader::model()->tableName() . " h ON h.id = d.invoice_id
                 INNER JOIN " . RegistrationTransaction::model()->tableName() . " r ON r.id = h.registration_transaction_id
                 INNER JOIN " . Product::model()->tableName() . " p ON p.id = d.product_id
-                WHERE r.employee_id_sales_person IN (" . $employeeIdList . ") AND h.invoice_date = :invoice_date AND h.status NOT LIKE '%CANCEL%' AND r.status NOT LIKE '%CANCEL%'
+                WHERE r.employee_id_sales_person IN (" . $employeeIdList . ") AND h.invoice_date BETWEEN :start_date AND :end_date AND 
+                    h.status NOT LIKE '%CANCEL%' AND r.status NOT LIKE '%CANCEL%'
                 GROUP BY r.employee_id_sales_person";
                 
         $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
@@ -317,18 +319,19 @@ class InvoiceDetail extends CActiveRecord {
         return $resultSet;
     }
     
-    public static function getDailyMultipleMechanicTransactionServiceReport($date, $employeeIds) {
+    public static function getDailyMultipleMechanicTransactionServiceReport($startDate, $endDate, $employeeIds) {
         $employeeIdList = empty($employeeIds) ? 'NULL' :  implode(',', $employeeIds);
         
         $params = array(
-            ':invoice_date' => $date,
+            ':start_date' => $startDate,
+            ':end_date' => $endDate,
         );
         
         $sql = "SELECT r.employee_id_assign_mechanic, COUNT(d.service_id) AS service_quantity
                 FROM " . InvoiceDetail::model()->tableName() . " d 
                 INNER JOIN " . InvoiceHeader::model()->tableName() . " h ON h.id = d.invoice_id
                 INNER JOIN " . RegistrationTransaction::model()->tableName() . " r ON r.id = h.registration_transaction_id
-                WHERE r.employee_id_assign_mechanic IN (" . $employeeIdList . ") AND h.invoice_date = :invoice_date AND h.status NOT LIKE '%CANCEL%' AND r.status NOT LIKE '%CANCEL%'
+                WHERE r.employee_id_assign_mechanic IN (" . $employeeIdList . ") AND h.invoice_date BETWEEN :start_date AND :end_date AND h.status NOT LIKE '%CANCEL%' AND r.status NOT LIKE '%CANCEL%'
                 GROUP BY r.employee_id_assign_mechanic";
                 
         $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);

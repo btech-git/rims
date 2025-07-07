@@ -118,6 +118,7 @@ class YearlyMultipleEmployeeSaleTransactionController extends Controller {
             $worksheet->setCellValue("C{$counter}", $dataItem['customer_new_quantity']);
             $worksheet->setCellValue("D{$counter}", $dataItem['customer_repeat_quantity']);
             $worksheet->setCellValue("E{$counter}", $dataItem['customer_retail_quantity']);
+            $worksheet->setCellValue("F{$counter}", $dataItem['customer_company_quantity']);
             $worksheet->setCellValue("G{$counter}", $dataItem['grand_total']);
             $worksheet->setCellValue("H{$counter}", $dataItem['total_service']);
             $worksheet->setCellValue("I{$counter}", $dataItem['total_product']);

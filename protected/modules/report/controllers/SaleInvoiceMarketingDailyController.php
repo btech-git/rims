@@ -25,7 +25,8 @@ class SaleInvoiceMarketingDailyController extends Controller {
         
         $invoiceHeader = Search::bind(new InvoiceHeader('search'), isset($_GET['InvoiceHeader']) ? $_GET['InvoiceHeader'] : array());
 
-        $invoiceDate = (isset($_GET['InvoiceDate'])) ? $_GET['InvoiceDate'] : date('Y-m-d');
+        $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : date('Y-m-d');
+        $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
         $branchId = isset($_GET['BranchId']) ? $_GET['BranchId'] : '';
         $pageSize = (isset($_GET['PageSize'])) ? $_GET['PageSize'] : '';
         $currentPage = (isset($_GET['page'])) ? $_GET['page'] : '';
@@ -36,7 +37,8 @@ class SaleInvoiceMarketingDailyController extends Controller {
         $saleInvoiceSummary->setupPaging($pageSize, $currentPage);
         $saleInvoiceSummary->setupSorting();
         $filters = array(
-            'invoiceDate' => $invoiceDate,
+            'startDate' => $startDate,
+            'endDate' => $endDate,
         );
         $saleInvoiceSummary->setupFilter($filters);
 
@@ -45,23 +47,25 @@ class SaleInvoiceMarketingDailyController extends Controller {
         }
         
         if (isset($_GET['SaveExcel'])) {
-            $this->saveToExcel($saleInvoiceSummary, $invoiceDate, $branchId);
+            $this->saveToExcel($saleInvoiceSummary, $startDate, $endDate, $branchId);
         }
 
         $this->render('summary', array(
             'invoiceHeader' => $invoiceHeader,
             'saleInvoiceSummary' => $saleInvoiceSummary,
             'branchId' => $branchId,
-            'invoiceDate' => $invoiceDate,
+            'startDate' => $startDate,
+            'endDate' => $endDate,
             'currentSort' => $currentSort,
         ));
     }
     
-    protected function saveToExcel($saleInvoiceSummary, $invoiceDate, $branchId) {
+    protected function saveToExcel($saleInvoiceSummary, $startDate, $endDate, $branchId) {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
 
-        $invoiceDateFormatted = Yii::app()->dateFormatter->format('d MMMM yyyy', $invoiceDate);
+        $startDateFormatted = Yii::app()->dateFormatter->format('d MMMM yyyy', $startDate);
+        $endDateFormatted = Yii::app()->dateFormatter->format('d MMMM yyyy', $endDate);
 
         spl_autoload_unregister(array('YiiBase', 'autoload'));
         include_once Yii::getPathOfAlias('ext.phpexcel.Classes') . DIRECTORY_SEPARATOR . 'PHPExcel.php';
@@ -86,7 +90,7 @@ class SaleInvoiceMarketingDailyController extends Controller {
         $branch = Branch::model()->findByPk($branchId);
         $worksheet->setCellValue('A1', 'Raperind Motor ' . CHtml::encode(CHtml::value($branch, 'name')));
         $worksheet->setCellValue('A2', 'Laporan Kinerja Front Office');
-        $worksheet->setCellValue('A3', $invoiceDateFormatted);
+        $worksheet->setCellValue('A3', $startDateFormatted . ' - ' . $endDateFormatted);
 
         $worksheet->getStyle("A5:AA5")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
         $worksheet->getStyle("A5:AA5")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
@@ -144,23 +148,10 @@ class SaleInvoiceMarketingDailyController extends Controller {
             $worksheet->setCellValue("S{$counter}", CHtml::value($header, 'service_price'));
             $worksheet->setCellValue("T{$counter}", CHtml::value($header, 'productLists'));
             $worksheet->setCellValue("U{$counter}", CHtml::value($header, 'product_price'));
-//            $worksheet->setCellValue("F{$counter}", CHtml::value($header, 'service_price'));
-//            $worksheet->setCellValue("F{$counter}", CHtml::value($header, 'service_price'));
-//            $worksheet->setCellValue("F{$counter}", CHtml::value($header, 'service_price'));
-//            $worksheet->setCellValue("F{$counter}", CHtml::value($header, 'service_price'));
-//            $worksheet->setCellValue("F{$counter}", CHtml::value($header, 'service_price'));
-//            $worksheet->setCellValue("F{$counter}", CHtml::value($header, 'service_price'));
             $counter++;
         }
 
-//        $worksheet->getStyle("A{$counter}:U{$counter}")->getFont()->setBold(true);
         $worksheet->getStyle("A{$counter}:AA{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
-//        $worksheet->getStyle("H{$counter}:J{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
-//        $worksheet->setCellValue("F{$counter}", 'Total');
-//        $worksheet->setCellValue("G{$counter}", 'Rp');
-//        $worksheet->setCellValue("H{$counter}", $grandTotalSale);
-//        $worksheet->setCellValue("I{$counter}", $grandTotalPayment);
-//        $worksheet->setCellValue("J{$counter}", $grandTotalRemaining);
 
         $counter++;
 

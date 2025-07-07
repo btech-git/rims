@@ -22,13 +22,13 @@ class DailyMultipleMechanicTransactionController extends Controller {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
         
-        $date = isset($_GET['Date']) ? $_GET['Date'] : date('Y-m-d');
-        
-        $dailyMultipleMechanicTransactionReport = InvoiceHeader::getDailyMultipleMechanicTransactionReport($date);
+        $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : date('Y-m-d');
+        $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
+        $dailyMultipleMechanicTransactionReport = InvoiceHeader::getDailyMultipleMechanicTransactionReport($startDate, $endDate);
         
         $employeeIds = array_map(function($dailyMultipleMechanicTransactionItem) { return $dailyMultipleMechanicTransactionItem['employee_id_assign_mechanic']; }, $dailyMultipleMechanicTransactionReport);
         
-        $dailyMultipleMechanicTransactionServiceReport = InvoiceDetail::getDailyMultipleMechanicTransactionServiceReport($date, $employeeIds);
+        $dailyMultipleMechanicTransactionServiceReport = InvoiceDetail::getDailyMultipleMechanicTransactionServiceReport($startDate, $endDate, $employeeIds);
         
         $dailyMultipleMechanicTransactionServiceReportData = array();
         foreach ($dailyMultipleMechanicTransactionServiceReport as $dailyMultipleMechanicTransactionServiceReportItem) {
@@ -40,17 +40,18 @@ class DailyMultipleMechanicTransactionController extends Controller {
         }
         
         if (isset($_GET['SaveExcel'])) {
-            $this->saveToExcel($dailyMultipleMechanicTransactionReport, $dailyMultipleMechanicTransactionServiceReportData, $date);
+            $this->saveToExcel($dailyMultipleMechanicTransactionReport, $dailyMultipleMechanicTransactionServiceReportData, $startDate, $endDate);
         }
         
         $this->render('summary', array(
             'dailyMultipleMechanicTransactionReport' => $dailyMultipleMechanicTransactionReport,
             'dailyMultipleMechanicTransactionServiceReportData' => $dailyMultipleMechanicTransactionServiceReportData,
-            'date' => $date,
+            'startDate' => $startDate,
+            'endDate' => $endDate,
         ));
     }
     
-    protected function saveToExcel($dailyMultipleMechanicTransactionReport, $dailyMultipleMechanicTransactionServiceReportData, $date) {
+    protected function saveToExcel($dailyMultipleMechanicTransactionReport, $dailyMultipleMechanicTransactionServiceReportData, $startDate, $endDate) {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
 
@@ -76,7 +77,7 @@ class DailyMultipleMechanicTransactionController extends Controller {
 
         $worksheet->setCellValue('A1', 'Raperind Motor');
         $worksheet->setCellValue('A2', 'Laporan All Mechanic Harian');
-        $worksheet->setCellValue('A3', $date);
+        $worksheet->setCellValue('A3', Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($startDate)) . ' - ' . Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($endDate)));
         
         $worksheet->getStyle('A5:J5')->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
         $worksheet->setCellValue('A5', 'Mechanic');
@@ -101,6 +102,7 @@ class DailyMultipleMechanicTransactionController extends Controller {
             $worksheet->setCellValue("B{$counter}", $dataItem['vehicle_quantity']);
             $worksheet->setCellValue("C{$counter}", $dataItem['work_order_quantity']);
             $worksheet->setCellValue("E{$counter}", $dataItem['customer_retail_quantity']);
+            $worksheet->setCellValue("F{$counter}", $dataItem['customer_company_quantity']);
             $worksheet->setCellValue("G{$counter}", $detailItem['service_quantity']);
             $worksheet->setCellValue("J{$counter}", $dataItem['total_service']);
             

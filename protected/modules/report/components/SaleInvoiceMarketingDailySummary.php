@@ -36,12 +36,9 @@ class SaleInvoiceMarketingDailySummary extends CComponent {
     }
 
     public function setupFilter($filters) {
-        $invoiceDate = (empty($filters['invoiceDate'])) ? date('Y-m-d') : $filters['invoiceDate'];
+        $startDate = (empty($filters['startDate'])) ? date('Y-m-d') : $filters['startDate'];
+        $endDate = (empty($filters['endDate'])) ? date('Y-m-d') : $filters['endDate'];
         $this->dataProvider->criteria->addCondition('t.status NOT LIKE "%CANCELLED%" AND registrationTransaction.employee_id_sales_person IS NOT NULL');
-        $this->dataProvider->criteria->compare('t.invoice_date', $invoiceDate);
-//        $this->dataProvider->criteria->compare('t.customer_id', FALSE);
-//        $this->dataProvider->criteria->compare('vehicle.id', $filters['vehicleId']);
-//        $this->dataProvider->criteria->compare('customer.customer_type', $filters['customerType'], false);
-//        $this->dataProvider->criteria->compare('customer.id', $filters['customerId']);
+        $this->dataProvider->criteria->addBetweenCondition('t.invoice_date', $startDate, $endDate);
     }
 }

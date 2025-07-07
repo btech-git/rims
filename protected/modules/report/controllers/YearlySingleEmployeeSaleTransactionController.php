@@ -126,6 +126,7 @@ class YearlySingleEmployeeSaleTransactionController extends Controller {
                 $worksheet->setCellValue("C{$counter}", $dataItem['customer_new_quantity']);
                 $worksheet->setCellValue("D{$counter}", $dataItem['customer_repeat_quantity']);
                 $worksheet->setCellValue("E{$counter}", $dataItem['customer_retail_quantity']);
+                $worksheet->setCellValue("F{$counter}", $dataItem['customer_company_quantity']);
                 $worksheet->setCellValue("G{$counter}", $dataItem['grand_total']);
                 $worksheet->setCellValue("H{$counter}", $dataItem['total_service']);
                 $worksheet->setCellValue("I{$counter}", $dataItem['total_product']);
@@ -139,19 +140,6 @@ class YearlySingleEmployeeSaleTransactionController extends Controller {
                 $counter++;
             } else {
                 $worksheet->setCellValue("A{$counter}", $i);
-                $worksheet->setCellValue("B{$counter}", '0.00');
-                $worksheet->setCellValue("C{$counter}", '0.00');
-                $worksheet->setCellValue("D{$counter}", '0.00');
-                $worksheet->setCellValue("E{$counter}", '0.00');
-                $worksheet->setCellValue("G{$counter}", '0.00');
-                $worksheet->setCellValue("H{$counter}", '0.00');
-                $worksheet->setCellValue("I{$counter}", '0.00');
-                $worksheet->setCellValue("J{$counter}", '0.00');
-                $worksheet->setCellValue("K{$counter}", '0.00');
-                $worksheet->setCellValue("L{$counter}", '0.00');
-                $worksheet->setCellValue("M{$counter}", '0.00');
-                $worksheet->setCellValue("N{$counter}", '0.00');
-                $worksheet->setCellValue("O{$counter}", '0.00');
                 
                 $counter++;                
             }

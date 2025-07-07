@@ -115,9 +115,9 @@ class PurchaseInvoiceTaxYearlyController extends Controller {
         $worksheet->getStyle('A1:G5')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
         $worksheet->getStyle('A1:G5')->getFont()->setBold(true);
 
-        $worksheet->setCellValue('A1', 'Raperind Motor ');
+        $worksheet->setCellValue('A1', empty($branchId) ? 'Raperind Motor' : 'Raperind Motor ' . CHtml::value($branch, 'name'));
         $worksheet->setCellValue('A2', 'Laporan Pembelian Ppn  Recap Tahun');
-        $worksheet->setCellValue('A3', $year . ' ' . empty($branchId) ? 'All' : CHtml::encode(CHtml::value($branch, 'name')));
+        $worksheet->setCellValue('A3', $year);
         $monthList = array(
             1 => 'Jan',
             2 => 'Feb',
@@ -181,7 +181,7 @@ class PurchaseInvoiceTaxYearlyController extends Controller {
         ob_end_clean();
 
         header('Content-type: application/vnd.ms-excel');
-        header('Content-Disposition: attachment;filename="Laporan Pembelian Ppn  Recap Tahun.xls"');
+        header("Content-Disposition: attachment;filename=laporan_pembelian_ppn_recap_" . $year . ".xls");
         header('Cache-Control: max-age=0');
 
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');

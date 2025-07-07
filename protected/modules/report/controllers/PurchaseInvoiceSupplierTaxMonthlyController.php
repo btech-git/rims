@@ -148,7 +148,7 @@ class PurchaseInvoiceSupplierTaxMonthlyController extends Controller {
         ob_end_clean();
 
         header('Content-type: application/vnd.ms-excel');
-        header('Content-Disposition: attachment;filename="Laporan Pembelian Ppn  Recap Bulan.xls"');
+        header("Content-Disposition: attachment;filename=laporan_pembelian_ppn_recap_" . strftime("%B",mktime(0,0,0,$month)) . '_' . $year .  ".xls");
         header('Cache-Control: max-age=0');
 
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');

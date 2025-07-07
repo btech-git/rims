@@ -728,15 +728,12 @@
     <div class="row">
         <div class="small-12 columns" >
             <div id="maincontent">
-                <div class="row" style="margin-top:20px" id="noliststyle">                    
+                <div class="row" style="margin-top:20px" id="noliststyle">
                     <div class="small-4 columns">
                         <?php if (
                             Yii::app()->user->checkAccess('director')
-//                            Yii::app()->user->checkAccess('workOrderServiceReport') ||
-//                            Yii::app()->user->checkAccess('workOrderVehicleReport') ||
-//                            Yii::app()->user->checkAccess('mechanicPerformanceReport')
                         ): ?>
-                            <h2>Penjualan Front + Mecahanic</h2>
+                            <h2>Penjualan Front</h2>
                             <?php $this->widget('zii.widgets.CMenu', array(
                                 'items' => array(
                                     array(
@@ -769,6 +766,18 @@
                                         'url' => array('/report/yearlyMultipleEmployeeSaleTransaction/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('director')
                                     ),
+                                ),
+                            )); ?>
+                        <?php endif; ?>
+                    </div>
+                    
+                    <div class="small-4 columns">
+                        <?php if (
+                            Yii::app()->user->checkAccess('director')
+                        ): ?>
+                            <h2>Penjualan Mechanic</h2>
+                            <?php $this->widget('zii.widgets.CMenu', array(
+                                'items' => array(
                                     array(
                                         'label' => 'Penjualan per Mekanik Harian', 
                                         'url' => array('/report/registrationTransactionMechanicDaily/summary'), 

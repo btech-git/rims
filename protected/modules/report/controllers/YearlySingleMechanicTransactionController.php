@@ -119,6 +119,7 @@ class YearlySingleMechanicTransactionController extends Controller {
                 $worksheet->setCellValue("B{$counter}", $dataItem['vehicle_quantity']);
                 $worksheet->setCellValue("C{$counter}", $dataItem['work_order_quantity']);
                 $worksheet->setCellValue("E{$counter}", $dataItem['customer_retail_quantity']);
+                $worksheet->setCellValue("F{$counter}", $dataItem['customer_company_quantity']);
                 $worksheet->setCellValue("G{$counter}", $detailItem['service_quantity']);
                 $worksheet->setCellValue("J{$counter}", $dataItem['total_service']);
                 $worksheet->setCellValue("K{$counter}", $averageService);
@@ -126,12 +127,6 @@ class YearlySingleMechanicTransactionController extends Controller {
                 $counter++;
             } else {
                 $worksheet->setCellValue("A{$counter}", $i);
-                $worksheet->setCellValue("B{$counter}", '0.00');
-                $worksheet->setCellValue("C{$counter}", '0.00');
-                $worksheet->setCellValue("E{$counter}", '0.00');
-                $worksheet->setCellValue("G{$counter}", '0.00');
-                $worksheet->setCellValue("J{$counter}", '0.00');
-                $worksheet->setCellValue("K{$counter}", '0.00');
                 
                 $counter++;                
             }

@@ -14,7 +14,7 @@
 <div style="font-weight: bold; text-align: center">
     <div style="font-size: larger">Raperind Motor</div>
     <div style="font-size: larger">Laporan Kinerja Front Office</div>
-    <div><?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($invoiceDate))); ?></div>
+    <div><?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($startDate))); ?> - <?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($endDate))); ?></div>
 </div>
 
 <br />
