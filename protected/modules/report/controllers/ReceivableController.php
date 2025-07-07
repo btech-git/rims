@@ -85,18 +85,6 @@ class ReceivableController extends Controller {
         }
     }
 
-//    public function actionAjaxJsonInsuranceCompany() {
-//        if (Yii::app()->request->isAjaxRequest) {
-//            $insuranceCompanyId = (isset($_POST['InsuranceCompanyId'])) ? $_POST['InsuranceCompanyId'] : '';
-//            $insuranceCompany = InsuranceCompany::model()->findByPk($insuranceCompanyId);
-//
-//            $object = array(
-//                'insurance_name' => CHtml::value($insuranceCompany, 'name'),
-//            );
-//            echo CJSON::encode($object);
-//        }
-//    }
-
     protected function saveToExcel($receivableSummary, $endDate, $branchId, $plateNumber) {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
@@ -114,34 +102,40 @@ class ReceivableController extends Controller {
         $worksheet = $objPHPExcel->setActiveSheetIndex(0);
         $worksheet->setTitle('Faktur Belum Lunas Customer');
 
-        $worksheet->mergeCells('A1:H1');
-        $worksheet->mergeCells('A2:H2');
-        $worksheet->mergeCells('A3:H3');
-        $worksheet->mergeCells('A4:H4');
+        $worksheet->mergeCells('A1:G1');
+        $worksheet->mergeCells('A2:G2');
+        $worksheet->mergeCells('A3:G3');
+        $worksheet->mergeCells('A4:G4');
         
-        $worksheet->getStyle('A1:H4')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-        $worksheet->getStyle('A1:H4')->getFont()->setBold(true);
+        $worksheet->getStyle('A1:G4')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->getStyle('A1:G4')->getFont()->setBold(true);
         $branch = Branch::model()->findByPk($branchId);
         $worksheet->setCellValue('A2', 'Raperind Motor ' . CHtml::encode(CHtml::value($branch, 'name')));
         $worksheet->setCellValue('A3', 'Faktur Belum Lunas Customer');
         $worksheet->setCellValue('A4', 'Per Tanggal ' . Yii::app()->dateFormatter->format('d MMMM yyyy', $endDate));
 
-        $worksheet->getStyle("A6:H6")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
-        $worksheet->getStyle("A7:H7")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A6:G6")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A7:G7")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
-        $worksheet->getStyle('A6:H7')->getFont()->setBold(true);
-        $worksheet->setCellValue('A6', 'Name');
-        $worksheet->setCellValue('B6', 'Type');
-        $worksheet->setCellValue('C6', 'Tanggal');
-        $worksheet->setCellValue('D6', 'Faktur #');
-        $worksheet->setCellValue('E6', 'Jatuh Tempo');
-        $worksheet->setCellValue('F6', 'Vehicle');
-        $worksheet->setCellValue('G6', 'Grand Total');
-        $worksheet->setCellValue('H6', 'Payment');
-        $worksheet->setCellValue('I6', 'Remaining');
+        $worksheet->getStyle('A6:G7')->getFont()->setBold(true);
+        $worksheet->setCellValue('A5', 'Name');
+        $worksheet->setCellValue('B5', 'Type');
+        
+        $worksheet->setCellValue('A6', 'Tanggal');
+        $worksheet->setCellValue('B6', 'Faktur #');
+        $worksheet->setCellValue('C6', 'Jatuh Tempo');
+        $worksheet->setCellValue('D6', 'Vehicle');
+        $worksheet->setCellValue('E6', 'Grand Total');
+        $worksheet->setCellValue('F6', 'Payment');
+        $worksheet->setCellValue('G6', 'Remaining');
         $counter = 9;
 
         foreach ($receivableSummary->dataProvider->data as $header) {
+            $worksheet->setCellValue("A{$counter}", $header->name);
+            $worksheet->setCellValue("B{$counter}", $header->customer_type);
+
+            $counter++;
+            
             $receivableData = $header->getReceivableInvoiceReport($endDate, $branchId, $plateNumber);
             $totalRevenue = 0.00;
             $totalPayment = 0.00;
@@ -151,15 +145,13 @@ class ReceivableController extends Controller {
                 $paymentAmount = $receivableRow['amount'];
                 $paymentLeft = $receivableRow['remaining'];
                 
-                $worksheet->setCellValue("A{$counter}", $header->name);
-                $worksheet->setCellValue("B{$counter}", $header->customer_type);
-                $worksheet->setCellValue("C{$counter}", $receivableRow['invoice_date']);
-                $worksheet->setCellValue("D{$counter}", $receivableRow['invoice_number']);
-                $worksheet->setCellValue("E{$counter}", $receivableRow['due_date']);
-                $worksheet->setCellValue("F{$counter}", $receivableRow['vehicle']);
-                $worksheet->setCellValue("G{$counter}", $revenue);
-                $worksheet->setCellValue("H{$counter}", $paymentAmount);
-                $worksheet->setCellValue("I{$counter}", $paymentLeft);
+                $worksheet->setCellValue("A{$counter}", $receivableRow['invoice_date']);
+                $worksheet->setCellValue("B{$counter}", $receivableRow['invoice_number']);
+                $worksheet->setCellValue("C{$counter}", $receivableRow['due_date']);
+                $worksheet->setCellValue("D{$counter}", $receivableRow['vehicle']);
+                $worksheet->setCellValue("E{$counter}", $revenue);
+                $worksheet->setCellValue("F{$counter}", $paymentAmount);
+                $worksheet->setCellValue("G{$counter}", $paymentLeft);
                 
                 $counter++;
                 
@@ -167,6 +159,18 @@ class ReceivableController extends Controller {
                 $totalPayment += $paymentAmount;
                 $totalReceivable += $paymentLeft;
             }
+            
+            $worksheet->getStyle("A{$counter}:G{$counter}")->getFont()->setBold(true);
+
+            $worksheet->getStyle("A{$counter}:G{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+            $worksheet->getStyle("A{$counter}:G{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
+            $worksheet->mergeCells("A{$counter}:D{$counter}");
+            $worksheet->setCellValue("A{$counter}", 'Total');
+            $worksheet->setCellValue("E{$counter}", $totalRevenue);
+            $worksheet->setCellValue("F{$counter}", $totalPayment);
+            $worksheet->setCellValue("G{$counter}", $totalReceivable);
+
+            $counter++;$counter++;
         }
 
         for ($col = 'A'; $col !== 'J'; $col++) {
