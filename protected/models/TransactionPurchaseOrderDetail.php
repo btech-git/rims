@@ -349,8 +349,8 @@ class TransactionPurchaseOrderDetail extends CActiveRecord {
         return ($tax == 3) ? round($unitPrice / (1 + ($taxPercentage / 100)), 2) : $unitPrice;
     }
     
-    public function getTotalPriceBeforeTax($tax, $taxPercentage) {
-        return $this->quantity * $this->price_before_tax; //$this->getPriceBeforeTax($tax, $taxPercentage);
+    public function getTotalPriceBeforeTax() {
+        return $this->quantity * $this->price_before_tax;
     }
     
     public function getQuantityAfterBonus() {

@@ -299,13 +299,6 @@ class PurchaseOrders extends CComponent {
     }
     
     public function setSummaryValues() {
-        $this->header->total_quantity = $this->totalQuantity;
-        $this->header->price_before_discount = $this->subTotalBeforeDiscount;
-        $this->header->discount = $this->subTotalDiscount;
-        $this->header->subtotal = $this->subTotal;
-        $this->header->ppn_price = $this->taxAmount;
-        $this->header->total_price = $this->grandTotal;
-        
         $tax = $this->header->ppn;
         $taxPercentage = $this->header->tax_percentage;
         
@@ -314,9 +307,16 @@ class PurchaseOrders extends CComponent {
             $detail->total_price = $detail->getSubTotal($tax, $taxPercentage);
             $detail->tax_amount = $detail->getTaxAmount($tax, $taxPercentage);
             $detail->price_before_tax = $detail->getPriceBeforeTax($tax, $taxPercentage);
-            $detail->total_before_tax = $detail->getTotalPriceBeforeTax($tax, $taxPercentage);
+            $detail->total_before_tax = $detail->getTotalPriceBeforeTax();
             $detail->total_quantity = $detail->quantityAfterBonus;
             $detail->discount = $detail->totalDiscount;
         }
+        
+        $this->header->total_quantity = $this->totalQuantity;
+        $this->header->price_before_discount = $this->subTotalBeforeDiscount;
+        $this->header->discount = $this->subTotalDiscount;
+        $this->header->subtotal = $this->subTotal;
+        $this->header->ppn_price = $this->taxAmount;
+        $this->header->total_price = $this->grandTotal;
     }
 }
