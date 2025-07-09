@@ -173,7 +173,7 @@ $('.search-form form').submit(function(){
                     'buttons' => array(
                         'inspection' => array(
                             'label' => 'inspection',
-                            'url' => 'Yii::app()->createUrl("frontDesk/vehicleInspection/create", array("vehicleId" => $data->vehicle_id, "wonumber" => $data->work_order_number))',
+                            'url' => 'Yii::app()->createUrl("frontDesk/vehicleInspection/create", array("registrationTransactionId" => $data->id))',
                             'visible' => 'Yii::app()->user->checkAccess("inspectionCreate") && !empty($data->work_order_number)'
                         ),
                     ),

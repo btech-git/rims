@@ -60,15 +60,20 @@ class VehicleInspectionController extends Controller {
      * Creates a new model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      */
-    public function actionCreate() {
+    public function actionCreate($registrationTransactionId) {
         $vehicleInspection = $this->instantiate(null);
+        $registrationTransaction = RegistrationTransaction::model()->findByPk($registrationTransactionId);
         $vehicleInspection->header->inspection_date = date('Y-m-d');
+        $vehicleInspection->header->registration_transaction_id = $registrationTransactionId;
+        $vehicleInspection->header->vehicle_id = $registrationTransaction->vehicle_id;
+        $vehicleInspection->header->work_order_number = $registrationTransaction->work_order_number;
 
         $vehicleInspectionDetail = new VehicleInspectionDetail('search');
         $vehicleInspectionDetail->unsetAttributes();  // clear any default values
         
-        if (isset($_GET['VehicleInspectionDetail']))
+        if (isset($_GET['VehicleInspectionDetail'])) {
             $vehicleInspection->attributes = $_GET['VehicleInspectionDetail'];
+        }
 
         $vehicleInspectionDetailCriteria = new CDbCriteria;
         $vehicleInspectionDetailDataProvider = new CActiveDataProvider('VehicleInspectionDetail', array(
