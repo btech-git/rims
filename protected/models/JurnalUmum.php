@@ -652,4 +652,27 @@ class JurnalUmum extends CActiveRecord {
         
         return $resultSet;
     }
+    
+    public static function getMonthlyRunningBalanceReport($endYear, $coaSubCategoryId) {
+        
+        $sql = "SELECT j.coa_id, YEAR(j.tanggal_transaksi) AS year, MONTH(j.tanggal_transaksi) AS month, MAX(c.name) AS coa_name, COALESCE(SUM(
+                    CASE c.normal_balance
+                        WHEN 'DEBIT' THEN CASE j.debet_kredit WHEN 'D' THEN +j.total WHEN 'K' THEN -j.total ELSE 0 END
+                        WHEN 'KREDIT' THEN CASE j.debet_kredit WHEN 'K' THEN +j.total WHEN 'D' THEN -j.total ELSE 0 END
+                        ELSE 0
+                    END
+                ), 0) AS total
+                FROM rims_jurnal_umum j 
+                INNER JOIN rims_coa c ON c.id = j.coa_id
+                WHERE YEAR(j.tanggal_transaksi) BETWEEN 2024 AND :end_year AND c.coa_sub_category_id = :coa_sub_category_id
+                GROUP BY j.coa_id, YEAR(j.tanggal_transaksi), MONTH(j.tanggal_transaksi)
+                ORDER BY j.coa_id ASC, year ASC, month ASC";
+                
+        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, array(
+            ':end_year' => $endYear,
+            ':coa_sub_category_id' => $coaSubCategoryId,
+        ));
+        
+        return $resultSet;
+    } 
 }

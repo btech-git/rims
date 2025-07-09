@@ -156,23 +156,28 @@ class CustomerController extends Controller {
 
         $customer = Customer::model()->findByPk($id);
 
-        if (isset($_POST['Cancel']))
+        if (isset($_POST['Cancel'])) {
             $this->redirect(array('view', 'id' => $id));
+        }
 
         if (isset($_POST['Submit'])) {
             $model->attributes = $_POST['Vehicle'];
             $model->plate_number = $model->getPlateNumberCombination();
 
-            if ($model->save())
+            if ($model->save()) {
+                $this->saveMasterLog($model);
                 $this->redirect(array('view', 'id' => $id));
+            }
         }
 
         if (isset($_POST['Add'])) {
             $model->attributes = $_POST['Vehicle'];
             $model->plate_number = $model->getPlateNumberCombination();
 
-            if ($model->save())
+            if ($model->save()) {
+                $this->saveMasterLog($model);
                 $this->redirect(array('addVehicle', 'id' => $id));
+            }
         }
 
         $this->render('addVehicle', array(
@@ -190,8 +195,9 @@ class CustomerController extends Controller {
 
         $coa = new Coa('search');
         $coa->unsetAttributes();  // clear any default values
-        if (isset($_GET['Coa']))
+        if (isset($_GET['Coa'])) {
             $coa->attributes = $_GET['Coa'];
+        }
 
         $coaCriteria = new CDbCriteria;
         $coaCriteria->addCondition("coa_sub_category_id = 8");
@@ -249,9 +255,6 @@ class CustomerController extends Controller {
                 $customerLog->save();
                 
                 $this->redirect(array('view', 'id' => $customer->header->id));
-            } else {
-                foreach ($customer->phoneDetails as $key => $value) {
-                }
             }
         }
         $this->render('update', array(
@@ -263,21 +266,25 @@ class CustomerController extends Controller {
         ));
     }
 
-    public function actionUpdatePic($custId, $picId) {
-        // $customer = $this->instantiate($custId);
-        // $this->performAjaxValidation($customer->header);
-        // if(isset($_POST['CustomerPic']))
-        // {
-        // 	$this->loadState($customer);
-        // 	if ($customer->save(Yii::app()->db)){
-        // 		$this->redirect(array('view', 'id' => $customer->header->id));
-        // 	} else {
-        // 		foreach ($customer->phoneDetails as $key => $value) {
-        // 			//print_r(CJSON::encode($value->jenis_persediaan_id));
-        // 		}
-        // 	}
-        // }
+    public function saveMasterLog($model) {
+        $masterLog = new MasterLog();
+        $masterLog->name = $model->plate_number;
+        $masterLog->log_date = date('Y-m-d');
+        $masterLog->log_time = date('H:i:s');
+        $masterLog->table_name = $model->tableName();
+        $masterLog->table_id = $model->id;
+        $masterLog->user_id = Yii::app()->user->id;
+        $masterLog->username = Yii::app()->user->username;
+        $masterLog->controller_class = Yii::app()->controller->module->id  . '/' . Yii::app()->controller->id;
+        $masterLog->action_name = Yii::app()->controller->action->id;
+        
+        $newData = $model->attributes;
+        $masterLog->new_data = json_encode($newData);
 
+        $masterLog->save();
+    }
+
+    public function actionUpdatePic($custId, $picId) {
         $customer = $this->instantiate($custId);
 
         // $this->performAjaxValidation($customer->header);
@@ -303,8 +310,9 @@ class CustomerController extends Controller {
             $model->attributes = $_POST['Vehicle'];
             $model->plate_number = $model->getPlateNumberCombination();
             
-            if ($model->save())
+            if ($model->save()) {
                 $this->redirect(array('view', 'id' => $custId));
+            }
         }
 
         $this->render('update', array(
@@ -314,16 +322,15 @@ class CustomerController extends Controller {
     }
 
     public function actionUpdatePrice($custId, $priceId) {
-
-
         $customer = $this->instantiate($custId);
 
         // $this->performAjaxValidation($customer->header);
         $model = CustomerServiceRate::model()->findByPk($priceId);
         if (isset($_POST['CustomerServiceRate'])) {
             $model->attributes = $_POST['CustomerServiceRate'];
-            if ($model->save())
+            if ($model->save()) {
                 $this->redirect(array('view', 'id' => $custId));
+            }
         }
 
         $this->render('update', array(
@@ -503,8 +510,6 @@ class CustomerController extends Controller {
 
     // Get City
     public function actionAjaxGetCity() {
-
-
         $data = City::model()->findAllByAttributes(array('province_id' => $_POST['Customer']['province_id']), array('order' => 'name ASC'));
 
         if (count($data) > 0) {
@@ -521,8 +526,6 @@ class CustomerController extends Controller {
     }
 
     public function actionAjaxGetCityPic() {
-
-
         $data = City::model()->findAllByAttributes(array('province_id' => $_POST['CustomerPic']['province_id']), array('order' => 'name ASC'));
 
         if (count($data) > 0) {
@@ -539,8 +542,6 @@ class CustomerController extends Controller {
     }
 
     public function actionAjaxGetCityPicIndex($index) {
-
-
         $data = City::model()->findAllByAttributes(array('province_id' => $_POST['CustomerPic'][$index]['province_id']), array('order' => 'name ASC'));
 
         if (count($data) > 0) {
@@ -579,8 +580,6 @@ class CustomerController extends Controller {
 
     // Get Car Model for pricelist
     public function actionAjaxGetModelPrice($carmake) {
-
-
         $data = VehicleCarModel::model()->findAllByAttributes(array('car_make_id' => $carmake));
 
         if (count($data) > 0) {
@@ -598,8 +597,6 @@ class CustomerController extends Controller {
 
     //Get Car Sub Model for pricelist
     public function actionAjaxGetSubModelPrice($carmake, $carmodel) {
-
-
         $data = VehicleCarSubModel::model()->findAllByAttributes(array('car_make_id' => $carmake, 'car_model_id' => $carmodel));
 
         if (count($data) > 0) {

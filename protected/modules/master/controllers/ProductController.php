@@ -111,17 +111,14 @@ class ProductController extends Controller {
             
             if ($product->save(Yii::app()->db)) {
                 $this->redirect(array('view', 'id' => $product->header->id));
-            } /* else {
-              foreach ($customer->phoneDetails as $key => $phoneDetail) {
-              //print_r(CJSON::encode($detail->jenis_persediaan_id));
-              }
-              } */
+            }
         }
 
         $supplier = new Supplier('search');
         $supplier->unsetAttributes();  // clear any default values
-        if (isset($_GET['Supplier']))
+        if (isset($_GET['Supplier'])) {
             $supplier->attributes = $_GET['Supplier'];
+        }
 
         $supplierCriteria = new CDbCriteria;
         //$positionCriteria->compare('code',$position->code.'%',true,'AND', false);
@@ -133,8 +130,9 @@ class ProductController extends Controller {
 
         $unit = new Unit('search');
         $unit->unsetAttributes();  // clear any default values
-        if (isset($_GET['Unit']))
+        if (isset($_GET['Unit'])) {
             $unit->attributes = $_GET['Unit'];
+        }
 
         $unitCriteria = new CDbCriteria;
         $unitCriteria->compare('name', $unit->name, true);
@@ -145,8 +143,9 @@ class ProductController extends Controller {
 
         $productComplementSubstitute = new Product('search');
         $productComplementSubstitute->unsetAttributes();  // clear any default values
-        if (isset($_GET['Product']))
+        if (isset($_GET['Product'])) {
             $productComplementSubstitute->attributes = $_GET['Product'];
+        }
 
         $productComplementSubstituteCriteria = new CDbCriteria;
         $productComplementSubstituteCriteria->together = true;

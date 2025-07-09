@@ -86,8 +86,9 @@ class EmployeeController extends Controller {
     public function actionCreate() {
         $bank = new Bank('search');
         $bank->unsetAttributes();  // clear any default values
-        if (isset($_GET['Bank']))
+        if (isset($_GET['Bank'])) {
             $bank->attributes = $_GET['Bank'];
+        }
 
         $bankCriteria = new CDbCriteria;
         $bankCriteria->compare('code', $bank->code . '%', true, 'AND', false);
@@ -99,8 +100,9 @@ class EmployeeController extends Controller {
 
         $incentive = new Incentive('search');
         $incentive->unsetAttributes();  // clear any default values
-        if (isset($_GET['Incentive']))
+        if (isset($_GET['Incentive'])) {
             $incentive->attributes = $_GET['Incentive'];
+        }
 
         $incentiveCriteria = new CDbCriteria;
         $incentiveCriteria->compare('id', $incentive->id . '%', true, 'AND', false);
@@ -112,8 +114,9 @@ class EmployeeController extends Controller {
 
         $deduction = new Deduction('search');
         $deduction->unsetAttributes();  // clear any default values
-        if (isset($_GET['Deduction']))
+        if (isset($_GET['Deduction'])) {
             $deduction->attributes = $_GET['Deduction'];
+        }
 
         $deductionCriteria = new CDbCriteria;
         $deductionCriteria->compare('id', $deduction->id . '%', true, 'AND', false);
@@ -125,8 +128,9 @@ class EmployeeController extends Controller {
 
         $branch = new Branch('search');
         $branch->unsetAttributes();  // clear any default values
-        if (isset($_GET['Division']))
+        if (isset($_GET['Division'])) {
             $branch->attributes = $_GET['Division'];
+        }
 
         $branchCriteria = new CDbCriteria;
         $branchCriteria->compare('name', $branch->name, true);

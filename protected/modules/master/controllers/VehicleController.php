@@ -119,8 +119,9 @@ class VehicleController extends Controller {
         // $this->performAjaxValidation($model);
         $customer = new Customer('search');
         $customer->unsetAttributes();  // clear any default values
-        if (isset($_GET['Customer']))
+        if (isset($_GET['Customer'])) {
             $customer->attributes = $_GET['Customer'];
+        }
 
         $customerCriteria = new CDbCriteria;
         $customerCriteria->compare('name', $customer->name, true);
@@ -139,7 +140,7 @@ class VehicleController extends Controller {
             $model->plate_number = $model->getPlateNumberCombination();
 
             if ($model->save()) {
-                $this->saveTransactionLog($model);
+                $this->saveMasterLog($model);
         
                 $this->redirect(array('view', 'id' => $model->id));
             }
@@ -165,8 +166,9 @@ class VehicleController extends Controller {
 
         $customer = new Customer('search');
         $customer->unsetAttributes();  // clear any default values
-        if (isset($_GET['Customer']))
+        if (isset($_GET['Customer'])) {
             $customer->attributes = $_GET['Customer'];
+        }
 
         $customerCriteria = new CDbCriteria;
         //$positionCriteria->compare('code',$position->code.'%',true,'AND', false);
@@ -194,7 +196,7 @@ class VehicleController extends Controller {
                 $vehicleLog->user_updated_id =  Yii::app()->user->id;
                 $vehicleLog->save();
                 
-                $this->saveTransactionLog($model);
+                $this->saveMasterLog($model);
         
                 $this->redirect(array('view', 'id' => $model->id));
             }
@@ -207,22 +209,22 @@ class VehicleController extends Controller {
         ));
     }
 
-    public function saveTransactionLog($model) {
-        $transactionLog = new MasterLog();
-        $transactionLog->name = $model->plate_number;
-        $transactionLog->log_date = date('Y-m-d');
-        $transactionLog->log_time = date('H:i:s');
-        $transactionLog->table_name = $model->tableName();
-        $transactionLog->table_id = $model->id;
-        $transactionLog->user_id = Yii::app()->user->id;
-        $transactionLog->username = Yii::app()->user->username;
-        $transactionLog->controller_class = Yii::app()->controller->module->id  . '/' . Yii::app()->controller->id;
-        $transactionLog->action_name = Yii::app()->controller->action->id;
+    public function saveMasterLog($model) {
+        $masterLog = new MasterLog();
+        $masterLog->name = $model->plate_number;
+        $masterLog->log_date = date('Y-m-d');
+        $masterLog->log_time = date('H:i:s');
+        $masterLog->table_name = $model->tableName();
+        $masterLog->table_id = $model->id;
+        $masterLog->user_id = Yii::app()->user->id;
+        $masterLog->username = Yii::app()->user->username;
+        $masterLog->controller_class = Yii::app()->controller->module->id  . '/' . Yii::app()->controller->id;
+        $masterLog->action_name = Yii::app()->controller->action->id;
         
         $newData = $model->attributes;
-        $transactionLog->new_data = json_encode($newData);
+        $masterLog->new_data = json_encode($newData);
 
-        $transactionLog->save();
+        $masterLog->save();
     }
 
     public function actionUpdateLocation($id) {

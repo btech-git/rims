@@ -158,13 +158,15 @@ class Customers extends CComponent {
                 $coa->user_id = Yii::app()->user->id;
                 $coa->user_id_approval = Yii::app()->user->id;
                 $coa->save();
+                $this->saveMasterCoaLog($coa);
 
                 $this->header->coa_id = $coa->id;
             }
         }
 
         $valid = $this->header->save();
-
+        $this->saveMasterLog();
+        
         $customer_phones = CustomerPhone::model()->findAllByAttributes(array('customer_id' => $this->header->id));
         $phoneId = array();
         foreach ($customer_phones as $customer_phone) {
@@ -242,26 +244,42 @@ class Customers extends CComponent {
             $new_service[] = $serviceDetail->id;
         }
 
-        $this->saveTransactionLog();
-        
         return $valid;
     }
     
-    public function saveTransactionLog() {
-        $transactionLog = new MasterLog();
-        $transactionLog->name = $this->header->name;
-        $transactionLog->log_date = date('Y-m-d');
-        $transactionLog->log_time = date('H:i:s');
-        $transactionLog->table_name = $this->header->tableName();
-        $transactionLog->table_id = $this->header->id;
-        $transactionLog->user_id = Yii::app()->user->id;
-        $transactionLog->username = Yii::app()->user->username;
-        $transactionLog->controller_class = Yii::app()->controller->module->id  . '/' . Yii::app()->controller->id;
-        $transactionLog->action_name = Yii::app()->controller->action->id;
+    public function saveMasterLog() {
+        $masterLog = new MasterLog();
+        $masterLog->name = $this->header->name;
+        $masterLog->log_date = date('Y-m-d');
+        $masterLog->log_time = date('H:i:s');
+        $masterLog->table_name = $this->header->tableName();
+        $masterLog->table_id = $this->header->id;
+        $masterLog->user_id = Yii::app()->user->id;
+        $masterLog->username = Yii::app()->user->username;
+        $masterLog->controller_class = Yii::app()->controller->module->id  . '/' . Yii::app()->controller->id;
+        $masterLog->action_name = Yii::app()->controller->action->id;
         
         $newData = $this->header->attributes;
-        $transactionLog->new_data = json_encode($newData);
+        $masterLog->new_data = json_encode($newData);
 
-        $transactionLog->save();
+        $masterLog->save();
+    }
+    
+    public function saveMasterCoaLog($model) {
+        $masterLog = new MasterLog();
+        $masterLog->name = $model->name;
+        $masterLog->log_date = date('Y-m-d');
+        $masterLog->log_time = date('H:i:s');
+        $masterLog->table_name = $model->tableName();
+        $masterLog->table_id = $model->id;
+        $masterLog->user_id = Yii::app()->user->id;
+        $masterLog->username = Yii::app()->user->username;
+        $masterLog->controller_class = Yii::app()->controller->module->id  . '/' . Yii::app()->controller->id;
+        $masterLog->action_name = Yii::app()->controller->action->id;
+        
+        $newData = $model->attributes;
+        $masterLog->new_data = json_encode($newData);
+
+        $masterLog->save();
     }
 }
