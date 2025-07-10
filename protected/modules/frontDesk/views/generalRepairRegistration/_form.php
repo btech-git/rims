@@ -83,7 +83,7 @@
                                                     'model' => $generalRepairRegistration->header,
                                                     'attribute' => "transaction_date",
                                                     'options' => array(
-                                                        'minDate' => '-1W',
+                                                        'minDate' => '-1M',
                                                         'maxDate' => '+6M',
                                                         'dateFormat' => 'yy-mm-dd',
                                                         'changeMonth' => true,

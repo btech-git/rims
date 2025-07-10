@@ -11,7 +11,10 @@
 <table style="width: 110%">
     <thead>
         <tr>
-            <th style="width: 20%" colspan="4"></th>
+            <th style="width: 3%">No.</th>
+            <th style="width: 10%">Car Make</th>
+            <th style="width: 10%">Car Model</th>
+            <th style="width: 10%">Car Type</th>
             <?php for ($month = 1; $month <= 12; $month++): ?>
                 <th style="width: 256px"><?php echo CHtml::encode($monthList[$month]); ?></th>
             <?php endfor; ?>
@@ -46,7 +49,7 @@
     </tbody>
     <tfoot>
         <tr>
-            <td style="text-align: right" colspan="3">Total</td>
+            <td style="text-align: right" colspan="4">Total</td>
             <?php $grandTotal = 0; ?>
             <?php for ($month = 1; $month <= 12; $month++): ?>
                 <?php if (!isset($groupTotalSums[$month])): ?>

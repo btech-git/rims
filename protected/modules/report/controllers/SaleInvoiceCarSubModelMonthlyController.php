@@ -116,8 +116,12 @@ class SaleInvoiceCarSubModelMonthlyController extends Controller {
 
         $worksheet->getStyle('A5:AI6')->getFont()->setBold(true);
 
+        $worksheet->setCellValue("A6", 'No');
+        $worksheet->setCellValue("B6", 'Car Make');
+        $worksheet->setCellValue("C6", 'Car Model');
+        $worksheet->setCellValue("D6", 'Car Type');
         $dateNumList = range(1, 31);
-        $columnCounter = 'D';
+        $columnCounter = 'E';
         foreach ($dateNumList as $dateNum) {
             $worksheet->setCellValue("{$columnCounter}6", $dateNum);
             $columnCounter++;
@@ -126,12 +130,14 @@ class SaleInvoiceCarSubModelMonthlyController extends Controller {
         $counter = 8;
 
         $groupTotalSums = array();
+        $autoNumber = 1;
         foreach ($invoiceVehicleInfo as $invoiceVehicleCarSubModelInfo) {
-            $worksheet->setCellValue("A{$counter}", $invoiceVehicleCarSubModelInfo['car_make_name']);
-            $worksheet->setCellValue("B{$counter}", $invoiceVehicleCarSubModelInfo['car_model_name']);
-            $worksheet->setCellValue("C{$counter}", $invoiceVehicleCarSubModelInfo['car_sub_model_name']);
+            $worksheet->setCellValue("A{$counter}", $autoNumber);
+            $worksheet->setCellValue("B{$counter}", $invoiceVehicleCarSubModelInfo['car_make_name']);
+            $worksheet->setCellValue("C{$counter}", $invoiceVehicleCarSubModelInfo['car_model_name']);
+            $worksheet->setCellValue("D{$counter}", $invoiceVehicleCarSubModelInfo['car_sub_model_name']);
             $totalSum = 0;
-            $columnCounter = 'D';
+            $columnCounter = 'E';
             foreach ($dateNumList as $dateNum) {
                 $transactionDate = $yearMonth . '-' . str_pad($dateNum, 2, '0', STR_PAD_LEFT);
                 $total = isset($invoiceVehicleCarSubModelInfo['totals'][$transactionDate]) ? $invoiceVehicleCarSubModelInfo['totals'][$transactionDate] : '';
@@ -146,11 +152,12 @@ class SaleInvoiceCarSubModelMonthlyController extends Controller {
             $worksheet->setCellValue("{$columnCounter}{$counter}", $totalSum);
             $columnCounter++;
             $counter++;
+            $autoNumber++;
         }
             
-        $worksheet->setCellValue("A{$counter}", 'Total');
+        $worksheet->setCellValue("D{$counter}", 'Total');
         $grandTotal = 0;
-        $footerCounter = 'D';
+        $footerCounter = 'E';
         foreach ($dateNumList as $dateNum) {
             if (!isset($groupTotalSums[$dateNum])) {
                 $groupTotalSums[$dateNum] = 0;

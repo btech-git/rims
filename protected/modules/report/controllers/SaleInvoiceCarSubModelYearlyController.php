@@ -91,20 +91,20 @@ class SaleInvoiceCarSubModelYearlyController extends Controller {
         $worksheet = $objPHPExcel->setActiveSheetIndex(0);
         $worksheet->setTitle('Penjualan Tahunan Kendaraan');
 
-        $worksheet->mergeCells('A2:P2');
-        $worksheet->mergeCells('A3:P3');
-        $worksheet->mergeCells('A4:P4');
+        $worksheet->mergeCells('A2:Q2');
+        $worksheet->mergeCells('A3:Q3');
+        $worksheet->mergeCells('A4:Q4');
         
-        $worksheet->getStyle('A1:P4')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-        $worksheet->getStyle('A1:P4')->getFont()->setBold(true);
+        $worksheet->getStyle('A1:Q4')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->getStyle('A1:Q4')->getFont()->setBold(true);
         $worksheet->setCellValue('A2', 'Raperind Motor');
         $worksheet->setCellValue('A3', 'Laporan Penjualan Tahunan Kendaraan');
         $worksheet->setCellValue('A4', $year);
 
-        $worksheet->getStyle("A6:P6")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
-        $worksheet->getStyle("A6:P6")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A6:Q6")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A6:Q6")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
-        $worksheet->getStyle('A5:P6')->getFont()->setBold(true);
+        $worksheet->getStyle('A5:Q6')->getFont()->setBold(true);
 
         $monthList = array(
             1 => 'Jan',
@@ -121,7 +121,11 @@ class SaleInvoiceCarSubModelYearlyController extends Controller {
             12 => 'Dec',
         );
         
-        $columnCounter = 'D';
+        $worksheet->setCellValue("A6", 'No');
+        $worksheet->setCellValue("B6", 'Car Make');
+        $worksheet->setCellValue("C6", 'Car Model');
+        $worksheet->setCellValue("D6", 'Car Type');
+        $columnCounter = 'E';
         for ($month = 1; $month <= 12; $month++) {
             $worksheet->setCellValue("{$columnCounter}6", CHtml::encode($monthList[$month]));
             $columnCounter++;
@@ -130,12 +134,14 @@ class SaleInvoiceCarSubModelYearlyController extends Controller {
         $counter = 8;
 
         $groupTotalSums = array();
+        $autoNumber = 1;
         foreach ($invoiceVehicleInfo as $invoiceVehicleCarSubModelInfo) {
-            $worksheet->setCellValue("A{$counter}", $invoiceVehicleCarSubModelInfo['car_make_name']);
-            $worksheet->setCellValue("B{$counter}", $invoiceVehicleCarSubModelInfo['car_model_name']);
-            $worksheet->setCellValue("C{$counter}", $invoiceVehicleCarSubModelInfo['car_sub_model_name']);
+            $worksheet->setCellValue("A{$counter}", $autoNumber);
+            $worksheet->setCellValue("B{$counter}", $invoiceVehicleCarSubModelInfo['car_make_name']);
+            $worksheet->setCellValue("C{$counter}", $invoiceVehicleCarSubModelInfo['car_model_name']);
+            $worksheet->setCellValue("D{$counter}", $invoiceVehicleCarSubModelInfo['car_sub_model_name']);
             $totalSum = 0;
-            $columnCounter = 'D';
+            $columnCounter = 'E';
             for ($month = 1; $month <= 12; $month++) {
                 $total = isset($invoiceVehicleCarSubModelInfo['totals'][$month]) ? $invoiceVehicleCarSubModelInfo['totals'][$month] : '';
                 $worksheet->setCellValue("{$columnCounter}{$counter}", $total);
@@ -149,11 +155,12 @@ class SaleInvoiceCarSubModelYearlyController extends Controller {
             
             $worksheet->setCellValue("{$columnCounter}{$counter}", CHtml::encode($totalSum));
             $counter++;
+            $autoNumber++;
         }
         
-        $worksheet->setCellValue("A{$counter}", 'Total');
+        $worksheet->setCellValue("D{$counter}", 'Total');
         $grandTotal = 0;
-        $footerCounter = 'D';
+        $footerCounter = 'E';
         for ($month = 1; $month <= 12; $month++) {
             if (!isset($groupTotalSums[$month])) {
                 $groupTotalSums[$month] = 0;
