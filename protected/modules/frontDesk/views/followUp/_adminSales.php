@@ -10,6 +10,7 @@ Yii::app()->clientScript->registerCss('_report', '
     .width1-8 { width: 10% }
     .width1-9 { width: 5% }
     .width1-10 { width: 5% }
+    .width1-11 { width: 3% }
 ');
 ?>
 
@@ -27,15 +28,16 @@ Yii::app()->clientScript->registerCss('_report', '
 <table class="report">
     <thead style="position: sticky; top: 0">
         <tr id="header1">
+            <th class="width1-11"></th>
             <th class="width1-1">Customer</th>
             <th class="width1-2">Plat #</th>
             <th class="width1-3">Kendaraan</th>
             <th class="width1-4">Last RG #</th>
             <th class="width1-5">Invoice #</th>
             <th class="width1-6">Invoice Last Date</th>
-            <th class="width1-7">Warranty Date (3days)</th>
-            <th class="width1-8">Follow up Date (3 Months)</th>
-            <th class="width1-9">Days since Last Service (hari)</th>
+            <th class="width1-7">Warrant (3 Days)</th>
+            <th class="width1-8">Follow Up (3 Months)</th>
+            <th class="width1-9">Last Service (Days)</th>
             <th class="width1-10">Feedback</th>
         </tr>
         <tr id="header2">
@@ -43,8 +45,9 @@ Yii::app()->clientScript->registerCss('_report', '
         </tr>
     </thead>
     <tbody>
-        <?php foreach ($dataProvider->data as $header): ?>
+        <?php foreach ($dataProvider->data as $i => $header): ?>
             <tr class="items1">
+                <td><?php echo CHtml::encode($i+1); ?></td>
                 <td class="width1-1"><?php echo CHtml::encode(CHtml::value($header, 'customer.name')); ?></td>
                 <td class="width1-2"><?php echo CHtml::encode(CHtml::value($header, 'vehicle.plate_number')); ?></td>
                 <td class="width1-3">

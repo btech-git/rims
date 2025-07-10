@@ -15,6 +15,7 @@ Yii::app()->clientScript->registerCss('_report', '
     .width1-13 { width: 5% }
     .width1-14 { width: 5% }
     .width1-15 { width: 5% }
+    .width1-16 { width: 3% }
 ');
 ?>
 
@@ -28,6 +29,7 @@ Yii::app()->clientScript->registerCss('_report', '
 <table class="report">
     <thead>
         <tr id="header1">
+            <th class="width1-16">No</th>
             <th class="width1-1">Front Name</th>
             <th class="width1-2">Customer Total</th>
             <th class="width1-3">Baru</th>
@@ -60,12 +62,13 @@ Yii::app()->clientScript->registerCss('_report', '
         <?php $averageTireSum = '0.00'; ?>
         <?php $averageOilSum = '0.00'; ?>
         <?php $averageAccessoriesSum = '0.00'; ?>
-        <?php foreach ($monthlyMultipleEmployeeSaleReport as $dataItem): ?>
+        <?php foreach ($monthlyMultipleEmployeeSaleReport as $i => $dataItem): ?>
             <?php $detailItem = $monthlyMultipleEmployeeSaleProductReportData[$dataItem['employee_id_sales_person']]; ?>
             <?php $averageTire = $detailItem['tire_quantity'] > 0 ? $detailItem['tire_price'] / $detailItem['tire_quantity'] : '0.00'; ?>
             <?php $averageOil = $detailItem['oil_quantity'] > 0 ? $detailItem['oil_price'] / $detailItem['oil_quantity'] : '0.00'; ?>
             <?php $averageAccessories = $detailItem['accessories_quantity'] > 0 ? $detailItem['accessories_price'] / $detailItem['accessories_quantity'] : '0.00'; ?>
             <tr class="items1">
+                <td><?php echo CHtml::encode($i + 1); ?></td>
                 <td><?php echo CHtml::encode($dataItem['employee_name']); ?></td>
                 <td style="text-align: center"><?php echo CHtml::encode($dataItem['customer_quantity']); ?></td>
                 <td style="text-align: center"><?php echo CHtml::encode($dataItem['customer_new_quantity']); ?></td>
@@ -100,7 +103,7 @@ Yii::app()->clientScript->registerCss('_report', '
     </tbody>
     <tfoot>
         <tr>
-            <td>TOTAL</td>
+            <td colspan="2">TOTAL</td>
             <td style="text-align: center"><?php echo CHtml::encode($customerQuantitySum); ?></td>
             <td style="text-align: center"><?php echo CHtml::encode($customerNewQuantitySum); ?></td>
             <td style="text-align: center"><?php echo CHtml::encode($customerRepeatQuantitySum); ?></td>

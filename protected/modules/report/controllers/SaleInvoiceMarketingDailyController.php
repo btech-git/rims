@@ -148,6 +148,12 @@ class SaleInvoiceMarketingDailyController extends Controller {
             $worksheet->setCellValue("S{$counter}", CHtml::value($header, 'service_price'));
             $worksheet->setCellValue("T{$counter}", CHtml::value($header, 'productLists'));
             $worksheet->setCellValue("U{$counter}", CHtml::value($header, 'product_price'));
+            $worksheet->setCellValue("V{$counter}", CHtml::value($header, 'productTireLists'));
+            $worksheet->setCellValue("W{$counter}", CHtml::value($header, 'productTireAmount'));
+            $worksheet->setCellValue("X{$counter}", CHtml::value($header, 'productOilLists'));
+            $worksheet->setCellValue("Y{$counter}", CHtml::value($header, 'productOilAmount'));
+            $worksheet->setCellValue("Z{$counter}", CHtml::value($header, 'productAccessoriesLists'));
+            $worksheet->setCellValue("AA{$counter}", CHtml::value($header, 'productAccessoriesAmount'));
             $counter++;
         }
 
@@ -155,7 +161,7 @@ class SaleInvoiceMarketingDailyController extends Controller {
 
         $counter++;
 
-        for ($col = 'A'; $col !== 'Z'; $col++) {
+        for ($col = 'A'; $col !== 'AZ'; $col++) {
             $objPHPExcel->getActiveSheet()
             ->getColumnDimension($col)
             ->setAutoSize(true);

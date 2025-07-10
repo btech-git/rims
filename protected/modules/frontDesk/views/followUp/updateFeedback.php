@@ -278,6 +278,14 @@
                     Feedback: 
                     <?php echo CHtml::activeTextArea($registrationTransaction, 'feedback', array('rows' => 5)); ?>
                 </div>
+                
+                <br /><br />
+
+                <div>
+                    Note: 
+                    <?php echo CHtml::activeTextArea($registrationTransaction, 'note', array('rows' => 5)); ?>
+                </div>
+                
                 <br /><br />
 
                 <div class="row buttons">

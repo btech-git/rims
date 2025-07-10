@@ -1426,6 +1426,78 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
         return $resultSet;
     }
     
+    public function getProductTireLists() {
+        $products = array();
+
+        foreach ($this->invoiceDetails as $detail) {
+            if (!empty($detail->product_id) && $detail->product->product_master_category_id == 4) {
+                $products[] =  $detail->product->name . ', ';
+            }
+        }
+
+        return $this->search_product = implode('', $products);
+    }
+
+    public function getProductTireAmount() {
+        $amount = '0.00';
+
+        foreach ($this->invoiceDetails as $detail) {
+            if (!empty($detail->product_id) && $detail->product->product_master_category_id == 4) {
+                $amount +=  $detail->total_price;
+            }
+        }
+
+        return $amount;
+    }
+
+    public function getProductOilLists() {
+        $products = array();
+
+        foreach ($this->invoiceDetails as $detail) {
+            if (!empty($detail->product_id) && $detail->product->product_master_category_id == 6) {
+                $products[] =  $detail->product->name . ', ';
+            }
+        }
+
+        return $this->search_product = implode('', $products);
+    }
+
+    public function getProductOilAmount() {
+        $amount = '0.00';
+
+        foreach ($this->invoiceDetails as $detail) {
+            if (!empty($detail->product_id) && $detail->product->product_master_category_id == 6) {
+                $amount +=  $detail->total_price;
+            }
+        }
+
+        return $amount;
+    }
+
+    public function getProductAccessoriesLists() {
+        $products = array();
+
+        foreach ($this->invoiceDetails as $detail) {
+            if (!empty($detail->product_id) && $detail->product->product_master_category_id == 9) {
+                $products[] =  $detail->product->name . ', ';
+            }
+        }
+
+        return $this->search_product = implode('', $products);
+    }
+
+    public function getProductAccessoriesAmount() {
+        $amount = '0.00';
+
+        foreach ($this->invoiceDetails as $detail) {
+            if (!empty($detail->product_id) && $detail->product->product_master_category_id == 9) {
+                $amount +=  $detail->total_price;
+            }
+        }
+
+        return $amount;
+    }
+
     public function getProductLists() {
         $products = array();
 

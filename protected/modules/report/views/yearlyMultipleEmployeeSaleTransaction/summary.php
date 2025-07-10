@@ -19,7 +19,7 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                     <div class="small-4 columns">
                                         <span class="prefix">Periode</span>
                                     </div>
-                                    <div class="small-4 columns">
+                                    <div class="small-8 columns">
                                         <?php echo CHtml::dropDownList('Year', $year, $yearList); ?>
                                     </div>
                                 </div>

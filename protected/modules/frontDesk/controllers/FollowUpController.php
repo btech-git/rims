@@ -278,7 +278,9 @@ class FollowUpController extends Controller {
         
         if (isset($_POST['Submit'])) {
             $registrationTransaction->feedback = $_POST['RegistrationTransaction']['feedback'];
-            $registrationTransaction->update(array('feedback'));
+            $registrationTransaction->feedback = $_POST['RegistrationTransaction']['note'];
+            $registrationTransaction->update(array('feedback', 'note'));
+            
             $this->redirect(array('adminSales'));
         }
 

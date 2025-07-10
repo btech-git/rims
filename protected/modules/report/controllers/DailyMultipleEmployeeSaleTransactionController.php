@@ -95,6 +95,17 @@ class DailyMultipleEmployeeSaleTransactionController extends Controller {
         $worksheet->getStyle('A6:L6')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
         $counter = 7;
+        $customerQuantitySum = 0;
+        $customerNewQuantitySum = 0;
+        $customerRepeatQuantitySum = 0;
+        $customerRetailQuantitySum = 0;
+        $customerCompanyQuantitySum = 0;
+        $grandTotalSum = '0.00';
+        $totalServiceSum = '0.00';
+        $totalProductSum = '0.00';
+        $tireQuantitySum = 0;
+        $oilQuantitySum = 0;
+        $accessoriesQuantitySum = 0;
         foreach ($dailyMultipleEmployeeSaleReport as $dataItem) {
             $detailItem = $dailyMultipleEmployeeSaleProductReportData[$dataItem['employee_id_sales_person']];
             
@@ -113,8 +124,33 @@ class DailyMultipleEmployeeSaleTransactionController extends Controller {
             $worksheet->setCellValue("K{$counter}", $detailItem['oil_quantity']);
             $worksheet->setCellValue("L{$counter}", $detailItem['accessories_quantity']);
             
+            $customerQuantitySum += $dataItem['customer_quantity'];
+            $customerNewQuantitySum += $dataItem['customer_new_quantity'];
+            $customerRepeatQuantitySum += $dataItem['customer_repeat_quantity'];
+            $customerRetailQuantitySum += $dataItem['customer_retail_quantity'];
+            $customerCompanyQuantitySum += $dataItem['customer_company_quantity'];
+            $grandTotalSum += $dataItem['grand_total'];
+            $totalServiceSum += $dataItem['total_service'];
+            $totalProductSum += $dataItem['total_product'];
+            $tireQuantitySum += $detailItem['tire_quantity'];
+            $oilQuantitySum += $detailItem['oil_quantity'];
+            $accessoriesQuantitySum += $detailItem['accessories_quantity'];
+
             $counter++;
         }
+        
+        $worksheet->setCellValue("A{$counter}", 'TOTAL');
+        $worksheet->setCellValue("B{$counter}", $customerQuantitySum);
+        $worksheet->setCellValue("C{$counter}", $customerNewQuantitySum);
+        $worksheet->setCellValue("D{$counter}", $customerRepeatQuantitySum);
+        $worksheet->setCellValue("E{$counter}", $customerRetailQuantitySum);
+        $worksheet->setCellValue("F{$counter}", $customerCompanyQuantitySum);
+        $worksheet->setCellValue("G{$counter}", $grandTotalSum);
+        $worksheet->setCellValue("H{$counter}", $totalServiceSum);
+        $worksheet->setCellValue("I{$counter}", $totalProductSum);
+        $worksheet->setCellValue("J{$counter}", $tireQuantitySum);
+        $worksheet->setCellValue("K{$counter}", $oilQuantitySum);
+        $worksheet->setCellValue("L{$counter}", $accessoriesQuantitySum);
 
         for ($col = 'A'; $col !== 'Z'; $col++) {
             $objPHPExcel->getActiveSheet()

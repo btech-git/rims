@@ -101,6 +101,13 @@ class YearlyMultipleMechanicTransactionController extends Controller {
         $worksheet->getStyle('A6:K6')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
         $counter = 7;
+        $vehicleQuantitySum = 0;
+        $workOrderQuantitySum = 0;
+        $customerRetailQuantitySum = 0;
+        $customerCompanyQuantitySum = 0;
+        $quantityServiceSum = 0;
+        $totalServiceSum = '0.00';
+        $averageServiceSum = '0.00';
         foreach ($yearlyMultipleMechanicTransactionReport as $dataItem) {
             $detailItem = $yearlyMultipleMechanicTransactionServiceReportData[$dataItem['employee_id_assign_mechanic']];
             $averageService = $detailItem['service_quantity'] > 0 ? $dataItem['total_service'] / $detailItem['service_quantity'] : '0.00';
@@ -116,8 +123,25 @@ class YearlyMultipleMechanicTransactionController extends Controller {
             $worksheet->setCellValue("J{$counter}", $dataItem['total_service']);
             $worksheet->setCellValue("K{$counter}", $averageService);
             
+            $vehicleQuantitySum += $dataItem['vehicle_quantity'];
+            $workOrderQuantitySum += $dataItem['work_order_quantity'];
+            $customerRetailQuantitySum += $dataItem['customer_retail_quantity'];
+            $customerCompanyQuantitySum += $dataItem['customer_company_quantity'];
+            $quantityServiceSum += $detailItem['service_quantity'];
+            $totalServiceSum += $dataItem['total_service'];
+            $averageServiceSum += $averageService;
+
             $counter++;
         }
+
+        $worksheet->setCellValue("A{$counter}", 'TOTAL');
+        $worksheet->setCellValue("B{$counter}", $vehicleQuantitySum);
+        $worksheet->setCellValue("C{$counter}", $workOrderQuantitySum);
+        $worksheet->setCellValue("E{$counter}", $customerRetailQuantitySum);
+        $worksheet->setCellValue("F{$counter}", $customerCompanyQuantitySum);
+        $worksheet->setCellValue("G{$counter}", $quantityServiceSum);
+        $worksheet->setCellValue("J{$counter}", $totalServiceSum);
+        $worksheet->setCellValue("K{$counter}", $averageServiceSum);
 
         for ($col = 'A'; $col !== 'Z'; $col++) {
             $objPHPExcel->getActiveSheet()
