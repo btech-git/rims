@@ -45,6 +45,8 @@
  * @property integer $insurance_company_id
  * @property integer $number_of_print
  * @property integer $is_new_customer
+ * @property string $warranty_date
+ * @property string $follow_up_date
  *
  * The followings are the available model relations:
  * @property InvoiceDetail[] $invoiceDetails
@@ -95,11 +97,11 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
             array('invoice_number', 'length', 'max' => 50),
             array('status', 'length', 'max' => 30),
             array('service_price, product_price, quick_service_price, pph_total, ppn_total, total_discount, total_price, payment_amount, payment_left', 'length', 'max' => 18),
-            array('in_words, note, payment_date_estimate', 'safe'),
+            array('in_words, note, payment_date_estimate, warranty_date, follow_up_date', 'safe'),
             array('invoice_number', 'unique'),
             // The following rule is used by search().
             // Please remove those attributes that should not be searched.
-            array('id, invoice_number, invoice_date, due_date, number_of_print, reference_type, sales_order_id, registration_transaction_id, search_service, search_product, customer_id, vehicle_id, ppn, pph, branch_id, user_id, supervisor_id, status, service_price, product_price, quick_service_price, total_product, insurance_company_id, total_service, total_quick_service, pph_total, ppn_total, total_discount, total_price, in_words, note, customer_name, invoice_date_to, due_date_to, payment_amount, payment_left,customer_type, payment_date_estimate, coa_bank_id_estimate, plate_number, tax_percentage, created_datetime, cancelled_datetime, user_id_cancelled, edited_datetime, user_id_edited, user_id_printed, is_new_customer', 'safe', 'on' => 'search'),
+            array('id, invoice_number, invoice_date, due_date, number_of_print, reference_type, sales_order_id, registration_transaction_id, search_service, search_product, customer_id, vehicle_id, ppn, pph, branch_id, user_id, supervisor_id, status, service_price, product_price, quick_service_price, total_product, warranty_date, follow_up_date, insurance_company_id, total_service, total_quick_service, pph_total, ppn_total, total_discount, total_price, in_words, note, customer_name, invoice_date_to, due_date_to, payment_amount, payment_left,customer_type, payment_date_estimate, coa_bank_id_estimate, plate_number, tax_percentage, created_datetime, cancelled_datetime, user_id_cancelled, edited_datetime, user_id_edited, user_id_printed, is_new_customer', 'safe', 'on' => 'search'),
         );
     }
 

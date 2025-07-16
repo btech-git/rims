@@ -69,6 +69,10 @@ class BodyRepairRegistrationController extends Controller {
         $bodyRepairRegistration->header->vehicle_start_service_datetime = null;
         $bodyRepairRegistration->header->vehicle_finish_service_datetime = null;
 
+        if (isset($_POST['Cancel'])) {
+            $this->redirect(array('admin'));
+        }
+
         if (isset($_POST['Submit']) && IdempotentManager::check()) {
             $this->loadState($bodyRepairRegistration);
             $bodyRepairRegistration->generateCodeNumber(Yii::app()->dateFormatter->format('M', strtotime($bodyRepairRegistration->header->transaction_date)), Yii::app()->dateFormatter->format('yyyy', strtotime($bodyRepairRegistration->header->transaction_date)), $bodyRepairRegistration->header->branch_id);

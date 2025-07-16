@@ -47,6 +47,12 @@ class FollowUpController extends Controller {
 
     public function actionAdminSales() {
 
+        $invoiceStartDate = (isset($_GET['InvoiceStartDate'])) ? $_GET['InvoiceStartDate'] : date('Y-m-d');
+        $invoiceEndDate = (isset($_GET['InvoiceEndDate'])) ? $_GET['InvoiceEndDate'] : date('Y-m-d');
+        $warrantyStartDate = (isset($_GET['WarrantyStartDate'])) ? $_GET['WarrantyStartDate'] : '';
+        $warrantyEndDate = (isset($_GET['WarrantyEndDate'])) ? $_GET['WarrantyEndDate'] : '';
+        $followUpStartDate = (isset($_GET['FollowUpStartDate'])) ? $_GET['FollowUpStartDate'] : '';
+        $followUpEndDate = (isset($_GET['FollowUpEndDate'])) ? $_GET['FollowUpEndDate'] : '';
         $plateNumber = (isset($_GET['PlateNumber'])) ? $_GET['PlateNumber'] : '';
         $carMake = (isset($_GET['CarMake'])) ? $_GET['CarMake'] : '';
         $carModel = (isset($_GET['CarModel'])) ? $_GET['CarModel'] : '';
@@ -56,6 +62,14 @@ class FollowUpController extends Controller {
         $model = Search::bind(new InvoiceHeader('search'), isset($_GET['InvoiceHeader']) ? $_GET['InvoiceHeader'] : '');
         $dataProvider = $model->searchByFollowUp();
 
+        if (!empty($warrantyStartDate) && !empty($warrantyEndDate)) {
+            $dataProvider->criteria->addBetweenCondition('t.warranty_date', $warrantyStartDate, $warrantyEndDate);
+        }
+        
+        if (!empty($followUpStartDate) && !empty($followUpEndDate)) {
+            $dataProvider->criteria->addBetweenCondition('t.follow_up_date', $followUpStartDate, $followUpEndDate);
+        }
+        
         if (!empty($plateNumber)) {
             $dataProvider->criteria->addCondition('vehicle.plate_number LIKE :plate_number');
             $dataProvider->criteria->params[':plate_number'] = "%{$plateNumber}%";
@@ -76,14 +90,13 @@ class FollowUpController extends Controller {
             $dataProvider->criteria->params[':name'] = "%{$customerName}%";
         }
         
-//        $followUpDate = date('Y-m-d', strtotime('-6 months', strtotime(date('Y-m-d')))); 
-        $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : date('Y-m-d');
-        $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
-        $dataProvider->criteria->addCondition("t.status IN ('PAID', 'CLEAR') AND t.invoice_date BETWEEN :start_date AND :end_date");
-//        $dataProvider->criteria->params[':follow_up_date'] = $followUpDate;
-        $dataProvider->criteria->params[':start_date'] = $startDate;
-        $dataProvider->criteria->params[':end_date'] = $endDate;
+        $dataProvider->criteria->addBetweenCondition('t.invoice_date', $invoiceStartDate, $invoiceEndDate);
+        $dataProvider->criteria->addCondition("t.status IN ('PAID', 'CLEAR')");
 
+        if (isset($_GET['ResetFilter'])) {
+            $this->redirect(array('adminSales'));
+        }
+        
         if (isset($_GET['SaveExcel'])) {
             $this->saveToExcelCustomerFollowUp($dataProvider);
         }
@@ -96,8 +109,12 @@ class FollowUpController extends Controller {
             'carModel' => $carModel,
             'carSubModel' => $carSubModel,
             'customerName' => $customerName,
-            'endDate' => $endDate,
-            'startDate' => $startDate,
+            'invoiceStartDate' => $invoiceStartDate,
+            'invoiceEndDate' => $invoiceEndDate,
+            'warrantyStartDate' => $warrantyStartDate,
+            'warrantyEndDate' => $warrantyEndDate,
+            'followUpStartDate' => $followUpStartDate,
+            'followUpEndDate' => $followUpEndDate,
         ));
     }
     
@@ -142,61 +159,62 @@ class FollowUpController extends Controller {
         $worksheet = $objPHPExcel->setActiveSheetIndex(0);
         $worksheet->setTitle('Customer Follow Up');
 
-        $worksheet->mergeCells('A1:T1');
-        $worksheet->mergeCells('A2:T2');
-        $worksheet->getStyle('A1:T3')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-        $worksheet->getStyle('A1:T3')->getFont()->setBold(true);
+        $worksheet->mergeCells('A1:U1');
+        $worksheet->mergeCells('A2:U2');
+        $worksheet->getStyle('A1:U3')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->getStyle('A1:U3')->getFont()->setBold(true);
 
         $worksheet->setCellValue('A1', 'Customer Follow Up');
         
-        $worksheet->getStyle('A3:T3')->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle('A3:U3')->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
-        $worksheet->setCellValue('A3', 'Customer');
-        $worksheet->setCellValue('B3', 'HP');
-        $worksheet->setCellValue('C3', 'Plat #');
-        $worksheet->setCellValue('D3', 'Car Make');
-        $worksheet->setCellValue('E3', 'Car Model');
-        $worksheet->setCellValue('F3', 'Car Sub Model');
-        $worksheet->setCellValue('G3', 'Color');
-        $worksheet->setCellValue('H3', 'Vehicle System Check # (Last)');
-        $worksheet->setCellValue('I3', 'Last KM');
-        $worksheet->setCellValue('J3', 'Invoice #');
-        $worksheet->setCellValue('K3', 'Invoice Last Date');
-        $worksheet->setCellValue('L3', 'Last Service List');
-        $worksheet->setCellValue('M3', 'Last Parts List');
-        $worksheet->setCellValue('N3', 'Frontliner(s)');
-        $worksheet->setCellValue('O3', 'Mechanic(s)');
-        $worksheet->setCellValue('P3', 'Warranty Date (3days)');
-        $worksheet->setCellValue('Q3', 'Follow up Date (3 Months)');
-        $worksheet->setCellValue('R3', 'Days since Last Service (hari)');
-        $worksheet->setCellValue('S3', 'Notes');
-        $worksheet->setCellValue('T3', 'Follow up Status');
+        $worksheet->setCellValue('A3', 'No');
+        $worksheet->setCellValue('B3', 'Customer');
+        $worksheet->setCellValue('C3', 'HP');
+        $worksheet->setCellValue('D3', 'Plat #');
+        $worksheet->setCellValue('E3', 'Car Make');
+        $worksheet->setCellValue('F3', 'Car Model');
+        $worksheet->setCellValue('G3', 'Car Sub Model');
+        $worksheet->setCellValue('H3', 'Color');
+        $worksheet->setCellValue('I3', 'Vehicle System Check # (Last)');
+        $worksheet->setCellValue('J3', 'Last KM');
+        $worksheet->setCellValue('K3', 'Invoice #');
+        $worksheet->setCellValue('L3', 'Invoice Last Date');
+        $worksheet->setCellValue('M3', 'Last Service List');
+        $worksheet->setCellValue('N3', 'Last Parts List');
+        $worksheet->setCellValue('O3', 'Frontliner(s)');
+        $worksheet->setCellValue('P3', 'Mechanic(s)');
+        $worksheet->setCellValue('Q3', 'Warranty Date (3days)');
+        $worksheet->setCellValue('R3', 'Follow up Date (3 Months)');
+        $worksheet->setCellValue('S3', 'Days since Last Service (hari)');
+        $worksheet->setCellValue('T3', 'Notes');
+        $worksheet->setCellValue('U3', 'Follow up Status');
 
-        $worksheet->getStyle('A3:T3')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle('A3:U3')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
         $counter = 5;
-        foreach ($dataProvider->data as $header) {
+        foreach ($dataProvider->data as $i => $header) {
 
-            $worksheet->setCellValue("A{$counter}", CHtml::value($header, 'customer.name'));
-            $worksheet->setCellValue("B{$counter}", CHtml::value($header, 'customer.mobile_phone'));
-            $worksheet->setCellValue("C{$counter}", CHtml::value($header, 'vehicle.plate_number'));
-            $worksheet->setCellValue("D{$counter}", CHtml::value($header, 'vehicle.carMake.name'));
-            $worksheet->setCellValue("E{$counter}", CHtml::value($header, 'vehicle.carModel.name'));
-            $worksheet->setCellValue("F{$counter}", CHtml::value($header, 'vehicle.carSubModel.name'));
-            $worksheet->setCellValue("G{$counter}", CHtml::value($header, 'vehicle.color.name'));
-            $worksheet->setCellValue("H{$counter}", CHtml::value($header, 'registrationTransaction.transaction_number'));
-            $worksheet->setCellValue("I{$counter}", CHtml::value($header, 'registrationTransaction.vehicle_mileage'));
-            $worksheet->setCellValue("J{$counter}", CHtml::value($header, 'invoice_number'));
-            $worksheet->setCellValue("K{$counter}", CHtml::value($header, 'invoice_date'));
-            $worksheet->setCellValue("L{$counter}", CHtml::value($header, 'registrationTransaction.services'));
-            $worksheet->setCellValue("M{$counter}", CHtml::value($header, 'registrationTransaction.products'));
-            $worksheet->setCellValue("N{$counter}", CHtml::value($header, 'registrationTransaction.employeeIdSalesPerson.name'));
-            $worksheet->setCellValue("O{$counter}", CHtml::value($header, 'registrationTransaction.employeeIdAssignMechanic.name'));
-            $worksheet->setCellValue("P{$counter}", CHtml::value($header, 'warrantyFollowUpDate'));
-            $worksheet->setCellValue("Q{$counter}", CHtml::value($header, 'serviceFollowUpDate'));
-            $worksheet->setCellValue("R{$counter}", CHtml::value($header, 'lastInvoiceDaysNumber'));
-            $worksheet->setCellValue("S{$counter}", CHtml::value($header, 'note'));
-            $worksheet->setCellValue("T{$counter}", CHtml::value($header, 'registrationTransaction.feedback'));
+            $worksheet->setCellValue("A{$counter}", $i + 1);
+            $worksheet->setCellValue("B{$counter}", CHtml::value($header, 'customer.name'));
+            $worksheet->setCellValue("C{$counter}", CHtml::value($header, 'customer.mobile_phone'));
+            $worksheet->setCellValue("D{$counter}", CHtml::value($header, 'vehicle.plate_number'));
+            $worksheet->setCellValue("E{$counter}", CHtml::value($header, 'vehicle.carMake.name'));
+            $worksheet->setCellValue("F{$counter}", CHtml::value($header, 'vehicle.carModel.name'));
+            $worksheet->setCellValue("G{$counter}", CHtml::value($header, 'vehicle.carSubModel.name'));
+            $worksheet->setCellValue("H{$counter}", CHtml::value($header, 'vehicle.color.name'));
+            $worksheet->setCellValue("J{$counter}", CHtml::value($header, 'registrationTransaction.vehicle_mileage'));
+            $worksheet->setCellValue("K{$counter}", CHtml::value($header, 'invoice_number'));
+            $worksheet->setCellValue("L{$counter}", CHtml::value($header, 'invoice_date'));
+            $worksheet->setCellValue("M{$counter}", CHtml::value($header, 'registrationTransaction.services'));
+            $worksheet->setCellValue("N{$counter}", CHtml::value($header, 'registrationTransaction.products'));
+            $worksheet->setCellValue("O{$counter}", CHtml::value($header, 'registrationTransaction.employeeIdSalesPerson.name'));
+            $worksheet->setCellValue("P{$counter}", CHtml::value($header, 'registrationTransaction.employeeIdAssignMechanic.name'));
+            $worksheet->setCellValue("Q{$counter}", CHtml::value($header, 'warrantyFollowUpDate'));
+            $worksheet->setCellValue("R{$counter}", CHtml::value($header, 'serviceFollowUpDate'));
+            $worksheet->setCellValue("S{$counter}", CHtml::value($header, 'lastInvoiceDaysNumber'));
+            $worksheet->setCellValue("T{$counter}", CHtml::value($header, 'note'));
+            $worksheet->setCellValue("U{$counter}", CHtml::value($header, 'registrationTransaction.feedback'));
 
             $counter++;
         }

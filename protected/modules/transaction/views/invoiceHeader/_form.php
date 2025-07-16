@@ -45,33 +45,21 @@
                 <div class="field">
                     <div class="row collapse">
                         <div class="small-4 columns">
-                            <?php echo $form->labelEx($invoice->header, 'due_date', array('class' => 'prefix')); ?>
-                        </div>
-                        <div class="small-8 columns">
-                            <?php $this->widget('zii.widgets.jui.CJuiDatePicker',array(
-                                'model' => $invoice->header,
-                                'attribute' => "due_date",
-                                'options'=>array(
-                                    'dateFormat' => 'yy-mm-dd',
-                                    'changeMonth'=>true,
-                                    'changeYear'=>true,
-                                ),
-                                'htmlOptions'=>array(
-                                    'readonly' => true,
-                                ),
-                            )); ?>
-                            <?php echo $form->error($invoice->header, 'due_date'); ?>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="field">
-                    <div class="row collapse">
-                        <div class="small-4 columns">
                             <?php echo $form->labelEx($invoice->header, 'branch_id', array('class' => 'prefix')); ?>
                         </div>
                         <div class="small-8 columns">
                             <?php echo CHtml::encode(CHtml::value($invoice->header, 'branch.name')); ?>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="field">
+                    <div class="row collapse">
+                        <div class="small-4 columns">
+                            <?php echo $form->labelEx($invoice->header, 'vehicle_id', array('class' => 'prefix')); ?>
+                        </div>
+                        <div class="small-8 columns">
+                            <?php echo CHtml::encode(CHtml::value($invoice->header, 'vehicle.plate_number')); ?>
                         </div>
                     </div>
                 </div>
@@ -102,10 +90,24 @@
                 <div class="field">
                     <div class="row collapse">
                         <div class="small-4 columns">
-                            <?php echo $form->labelEx($invoice->header, 'vehicle_id', array('class' => 'prefix')); ?>
+                            
+                            <?php echo $form->labelEx($invoice->header, 'Jatuh Tempo (hari)', array('class' => 'prefix')); ?>
                         </div>
                         <div class="small-8 columns">
-                            <?php echo CHtml::encode(CHtml::value($invoice->header, 'vehicle.plate_number')); ?>
+                            <?php echo CHtml::encode(CHtml::value($invoice->header, 'customer.tenor')); ?>
+                            <?php /*$this->widget('zii.widgets.jui.CJuiDatePicker',array(
+                                'model' => $invoice->header,
+                                'attribute' => "due_date",
+                                'options'=>array(
+                                    'dateFormat' => 'yy-mm-dd',
+                                    'changeMonth'=>true,
+                                    'changeYear'=>true,
+                                ),
+                                'htmlOptions'=>array(
+                                    'readonly' => true,
+                                ),
+                            ));*/ ?>
+                            <?php //echo $form->error($invoice->header, 'due_date'); ?>
                         </div>
                     </div>
                 </div>

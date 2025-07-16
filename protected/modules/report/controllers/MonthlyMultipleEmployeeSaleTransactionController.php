@@ -29,9 +29,7 @@ class MonthlyMultipleEmployeeSaleTransactionController extends Controller {
         $year = (isset($_GET['Year'])) ? $_GET['Year'] : $yearNow;
         
         $monthlyMultipleEmployeeSaleReport = InvoiceHeader::getMonthlyMultipleEmployeeSaleReport($year, $month);
-        
         $employeeIds = array_map(function($monthlyMultipleEmployeeSaleReportItem) { return $monthlyMultipleEmployeeSaleReportItem['employee_id_sales_person']; }, $monthlyMultipleEmployeeSaleReport);
-        
         $monthlyMultipleEmployeeSaleProductReport = InvoiceDetail::getMonthlyMultipleEmployeeSaleProductReport($year, $month, $employeeIds);
         
         $monthlyMultipleEmployeeSaleProductReportData = array();
@@ -78,34 +76,42 @@ class MonthlyMultipleEmployeeSaleTransactionController extends Controller {
         $worksheet = $objPHPExcel->setActiveSheetIndex(0);
         $worksheet->setTitle('Penjualan All Front Bulanan');
 
-        $worksheet->mergeCells('A1:O1');
-        $worksheet->mergeCells('A2:O2');
-        $worksheet->mergeCells('A3:O3');
+        $worksheet->mergeCells('A1:W1');
+        $worksheet->mergeCells('A2:W2');
+        $worksheet->mergeCells('A3:W3');
 
-        $worksheet->getStyle('A1:O5')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-        $worksheet->getStyle('A1:O5')->getFont()->setBold(true);
+        $worksheet->getStyle('A1:W5')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->getStyle('A1:W5')->getFont()->setBold(true);
 
         $worksheet->setCellValue('A1', 'Raperind Motor ');
         $worksheet->setCellValue('A2', 'Laporan Penjualan All Front Bulanan');
         $worksheet->setCellValue('A3', strftime("%B",mktime(0,0,0,$month)) . ' ' . $year);
-        
-        $worksheet->getStyle('A5:O5')->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
-        $worksheet->setCellValue('A5', 'Front Name');
-        $worksheet->setCellValue('B5', 'Customer Total');
-        $worksheet->setCellValue('C5', 'Baru');
-        $worksheet->setCellValue('D5', 'Repeat');
-        $worksheet->setCellValue('E5', 'Retail');
-        $worksheet->setCellValue('F5', 'Contract Service Unit');
-        $worksheet->setCellValue('G5', 'Total Invoice (Rp)');
-        $worksheet->setCellValue('H5', 'Jasa (Rp)');
-        $worksheet->setCellValue('I5', 'Parts (Rp)');
-        $worksheet->setCellValue('J5', 'Total Ban');
-        $worksheet->setCellValue('K5', 'Total Oli');
-        $worksheet->setCellValue('L5', 'Total Aksesoris');
-        $worksheet->setCellValue('M5', 'Average Ban');
-        $worksheet->setCellValue('N5', 'Average Oli');
-        $worksheet->setCellValue('O5', 'Average Aksesoris');
-        $worksheet->getStyle('A6:O6')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+       
+        $worksheet->getStyle('A5:W5')->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->setCellValue('A5', 'No');
+        $worksheet->setCellValue('B5', 'Front Name');
+        $worksheet->setCellValue('C5', 'Customer Total');
+        $worksheet->setCellValue('D5', 'per Hari');
+        $worksheet->setCellValue('E5', 'Baru');
+        $worksheet->setCellValue('F5', 'Repeat');
+        $worksheet->setCellValue('G5', 'Retail');
+        $worksheet->setCellValue('H5', 'Contract Service Unit');
+        $worksheet->setCellValue('I5', 'Total Invoice (Rp)');
+        $worksheet->setCellValue('J5', 'per Hari');
+        $worksheet->setCellValue('K5', 'per Unit');
+        $worksheet->setCellValue('L5', 'Jasa (Rp)');
+        $worksheet->setCellValue('M5', 'Jasa / Unit');
+        $worksheet->setCellValue('N5', 'Jasa / Hari');
+        $worksheet->setCellValue('O5', 'Parts (Rp)');
+        $worksheet->setCellValue('P5', 'Parts / Unit');
+        $worksheet->setCellValue('Q5', 'Parts / Hari');
+        $worksheet->setCellValue('R5', 'Total Ban');
+        $worksheet->setCellValue('S5', 'Total Oli');
+        $worksheet->setCellValue('T5', 'Total Aksesoris');
+        $worksheet->setCellValue('U5', 'Average Ban');
+        $worksheet->setCellValue('V5', 'Average Oli');
+        $worksheet->setCellValue('W5', 'Average Aksesoris');
+        $worksheet->getStyle('A6:W6')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
         $counter = 7;
         $customerQuantitySum = 0;
@@ -122,29 +128,53 @@ class MonthlyMultipleEmployeeSaleTransactionController extends Controller {
         $averageTireSum = '0.00';
         $averageOilSum = '0.00';
         $averageAccessoriesSum = '0.00';
-        foreach ($monthlyMultipleEmployeeSaleReport as $dataItem) {
+        $customerAverageDailySum = '0.00';
+        $totalInvoiceAverageDailySum = '0.00';
+        $totalInvoicePerCustomerSum = '0.00';
+        $totalServiceAverageDailySum = '0.00';
+        $totalServicePerCustomerSum = '0.00';
+        $totalPartsAverageDailySum = '0.00';
+        $totalPartsPerCustomerSum = '0.00';
+        $numberOfDays = cal_days_in_month(CAL_GREGORIAN, $month, $year);
+        
+        foreach ($monthlyMultipleEmployeeSaleReport as $i => $dataItem) {
             $detailItem = $monthlyMultipleEmployeeSaleProductReportData[$dataItem['employee_id_sales_person']];
             $averageTire = $detailItem['tire_quantity'] > 0 ? $detailItem['tire_price'] / $detailItem['tire_quantity'] : '0.00';
             $averageOil = $detailItem['oil_quantity'] > 0 ? $detailItem['oil_price'] / $detailItem['oil_quantity'] : '0.00';
             $averageAccessories = $detailItem['accessories_quantity'] > 0 ? $detailItem['accessories_price'] / $detailItem['accessories_quantity'] : '0.00';
+            $customerAverageDaily = round($dataItem['customer_quantity'] / $numberOfDays, 2);
+            $totalInvoiceAverageDaily = round($dataItem['grand_total'] / $numberOfDays, 2);
+            $totalInvoicePerCustomer = round($dataItem['grand_total'] / $dataItem['customer_quantity'], 2);
+            $totalServiceAverageDaily = round($dataItem['total_service'] / $numberOfDays, 2);
+            $totalServicePerCustomer = round($dataItem['total_service'] / $dataItem['customer_quantity'], 2);
+            $totalPartsAverageDaily = round($dataItem['total_product'] / $numberOfDays, 2);
+            $totalPartsPerCustomer = round($dataItem['total_product'] / $dataItem['customer_quantity'], 2);
             
-            $worksheet->getStyle("E{$counter}:J{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
+            $worksheet->getStyle("E{$counter}:W{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
 
-            $worksheet->setCellValue("A{$counter}", $dataItem['employee_name']);
-            $worksheet->setCellValue("B{$counter}", $dataItem['customer_quantity']);
-            $worksheet->setCellValue("C{$counter}", $dataItem['customer_new_quantity']);
-            $worksheet->setCellValue("D{$counter}", $dataItem['customer_repeat_quantity']);
-            $worksheet->setCellValue("E{$counter}", $dataItem['customer_retail_quantity']);
-            $worksheet->setCellValue("F{$counter}", $dataItem['customer_company_quantity']);
-            $worksheet->setCellValue("G{$counter}", $dataItem['grand_total']);
-            $worksheet->setCellValue("H{$counter}", $dataItem['total_service']);
-            $worksheet->setCellValue("I{$counter}", $dataItem['total_product']);
-            $worksheet->setCellValue("J{$counter}", $detailItem['tire_quantity']);
-            $worksheet->setCellValue("K{$counter}", $detailItem['oil_quantity']);
-            $worksheet->setCellValue("L{$counter}", $detailItem['accessories_quantity']);
-            $worksheet->setCellValue("M{$counter}", $averageTire);
-            $worksheet->setCellValue("N{$counter}", $averageOil);
-            $worksheet->setCellValue("O{$counter}", $averageAccessories);
+            $worksheet->setCellValue("A{$counter}", $i + 1);
+            $worksheet->setCellValue("B{$counter}", $dataItem['employee_name']);
+            $worksheet->setCellValue("C{$counter}", $dataItem['customer_quantity']);
+            $worksheet->setCellValue("D{$counter}", $customerAverageDaily);
+            $worksheet->setCellValue("E{$counter}", $dataItem['customer_new_quantity']);
+            $worksheet->setCellValue("F{$counter}", $dataItem['customer_repeat_quantity']);
+            $worksheet->setCellValue("G{$counter}", $dataItem['customer_retail_quantity']);
+            $worksheet->setCellValue("H{$counter}", $dataItem['customer_company_quantity']);
+            $worksheet->setCellValue("I{$counter}", $dataItem['grand_total']);
+            $worksheet->setCellValue("J{$counter}", $totalInvoiceAverageDaily);
+            $worksheet->setCellValue("K{$counter}", $totalInvoicePerCustomer);
+            $worksheet->setCellValue("L{$counter}", $dataItem['total_service']);
+            $worksheet->setCellValue("M{$counter}", $totalServiceAverageDaily);
+            $worksheet->setCellValue("N{$counter}", $totalServicePerCustomer);
+            $worksheet->setCellValue("O{$counter}", $dataItem['total_product']);
+            $worksheet->setCellValue("P{$counter}", $totalPartsAverageDaily);
+            $worksheet->setCellValue("Q{$counter}", $totalPartsPerCustomer);
+            $worksheet->setCellValue("R{$counter}", $detailItem['tire_quantity']);
+            $worksheet->setCellValue("S{$counter}", $detailItem['oil_quantity']);
+            $worksheet->setCellValue("T{$counter}", $detailItem['accessories_quantity']);
+            $worksheet->setCellValue("U{$counter}", $averageTire);
+            $worksheet->setCellValue("V{$counter}", $averageOil);
+            $worksheet->setCellValue("W{$counter}", $averageAccessories);
             
             $customerQuantitySum += $dataItem['customer_quantity'];
             $customerNewQuantitySum += $dataItem['customer_new_quantity'];
@@ -160,25 +190,42 @@ class MonthlyMultipleEmployeeSaleTransactionController extends Controller {
             $averageTireSum += $averageTire;
             $averageOilSum += $averageOil;
             $averageAccessoriesSum += $averageAccessories;
+            $customerAverageDailySum += $customerAverageDaily;
+            $totalInvoiceAverageDailySum += $totalInvoiceAverageDaily;
+            $totalInvoicePerCustomerSum += $totalInvoicePerCustomer;
+            $totalServiceAverageDailySum += $totalServiceAverageDaily;
+            $totalServicePerCustomerSum += $totalServicePerCustomer;
+            $totalPartsAverageDailySum += $totalPartsAverageDaily;
+            $totalPartsPerCustomerSum += $totalPartsPerCustomer;
 
             $counter++;
         }
 
-        $worksheet->setCellValue("A{$counter}", 'TOTAL');
-        $worksheet->setCellValue("B{$counter}", $customerQuantitySum);
-        $worksheet->setCellValue("C{$counter}", $customerNewQuantitySum);
-        $worksheet->setCellValue("D{$counter}", $customerRepeatQuantitySum);
-        $worksheet->setCellValue("E{$counter}", $customerRetailQuantitySum);
-        $worksheet->setCellValue("F{$counter}", $customerCompanyQuantitySum);
-        $worksheet->setCellValue("G{$counter}", $grandTotalSum);
-        $worksheet->setCellValue("H{$counter}", $totalServiceSum);
-        $worksheet->setCellValue("I{$counter}", $totalProductSum);
-        $worksheet->setCellValue("J{$counter}", $tireQuantitySum);
-        $worksheet->setCellValue("K{$counter}", $oilQuantitySum);
-        $worksheet->setCellValue("L{$counter}", $accessoriesQuantitySum);
-        $worksheet->setCellValue("M{$counter}", $averageTireSum);
-        $worksheet->setCellValue("N{$counter}", $averageOilSum);
-        $worksheet->setCellValue("O{$counter}", $averageAccessoriesSum);
+        $worksheet->getStyle("A{$counter}:W{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A{$counter}:W{$counter}")->getFont()->setBold(true);
+        
+        $worksheet->setCellValue("B{$counter}", 'TOTAL');
+        $worksheet->setCellValue("C{$counter}", $customerQuantitySum);
+        $worksheet->setCellValue("D{$counter}", $customerAverageDailySum);
+        $worksheet->setCellValue("E{$counter}", $customerNewQuantitySum);
+        $worksheet->setCellValue("F{$counter}", $customerRepeatQuantitySum);
+        $worksheet->setCellValue("G{$counter}", $customerRetailQuantitySum);
+        $worksheet->setCellValue("H{$counter}", $customerCompanyQuantitySum);
+        $worksheet->setCellValue("I{$counter}", $grandTotalSum);
+        $worksheet->setCellValue("J{$counter}", $totalInvoiceAverageDailySum);
+        $worksheet->setCellValue("K{$counter}", $totalInvoicePerCustomerSum);
+        $worksheet->setCellValue("L{$counter}", $totalServiceSum);
+        $worksheet->setCellValue("M{$counter}", $totalServiceAverageDailySum);
+        $worksheet->setCellValue("N{$counter}", $totalServicePerCustomerSum);
+        $worksheet->setCellValue("O{$counter}", $totalProductSum);
+        $worksheet->setCellValue("P{$counter}", $totalPartsAverageDailySum);
+        $worksheet->setCellValue("Q{$counter}", $totalPartsPerCustomerSum);
+        $worksheet->setCellValue("R{$counter}", $tireQuantitySum);
+        $worksheet->setCellValue("S{$counter}", $oilQuantitySum);
+        $worksheet->setCellValue("T{$counter}", $accessoriesQuantitySum);
+        $worksheet->setCellValue("U{$counter}", $averageTireSum);
+        $worksheet->setCellValue("V{$counter}", $averageOilSum);
+        $worksheet->setCellValue("W{$counter}", $averageAccessoriesSum);
 
         for ($col = 'A'; $col !== 'Z'; $col++) {
             $objPHPExcel->getActiveSheet()

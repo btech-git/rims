@@ -359,19 +359,32 @@ class GeneralRepairRegistration extends CComponent {
 
     public function flush() {
         $isNewRecord = $this->header->isNewRecord;
-        
-        if ($this->header->isNewRecord) {
-            $registrationTransaction = RegistrationTransaction::model()->findByAttributes(array('customer_id' => $this->header->customer_id));
-            $this->header->is_new_customer = $registrationTransaction === null ? 1 : 0;
-        }
+        $vehicle = Vehicle::model()->findByPk($this->header->vehicle_id);
         
         if ($isNewRecord) {
+            $registrationTransaction = RegistrationTransaction::model()->findByAttributes(array('customer_id' => $this->header->customer_id));
+            $this->header->is_new_customer = $registrationTransaction === null ? 1 : 0;
             $this->header->status = 'Registration';
-            $this->header->vehicle_status = 'DI BENGKEL';
+            $this->header->vehicle_status = 'Masuk Lokasi';
             $this->header->repair_type = 'GR';
             $this->header->service_status = 'Pending';
             $this->header->product_status = 'Draft';
             $this->header->priority_level = 2;
+            
+            $vehicle->status_location = 'Masuk Lokasi';
+            $vehicle->entry_datetime = date('Y-m-d H:i:s');
+            $vehicle->entry_user_id = Yii::app()->user->id;
+            $vehicle->update(array('status_location', 'entry_datetime', 'entry_user_id')); 
+
+            $vehiclePositionTimer = new VehiclePositionTimer();
+            $vehiclePositionTimer->vehicle_id = $this->header->vehicle_id;
+            $vehiclePositionTimer->entry_date = date('Y-m-d');
+            $vehiclePositionTimer->entry_time = date('H:i:s');
+            $vehiclePositionTimer->process_date = null;
+            $vehiclePositionTimer->process_time = null;
+            $vehiclePositionTimer->exit_date = null;
+            $vehiclePositionTimer->exit_time = null;
+            $vehiclePositionTimer->save();
         } else {
             $this->header->status = 'Update Registration';
             $this->header->customer_id = $this->header->vehicle->customer_id;
@@ -379,12 +392,11 @@ class GeneralRepairRegistration extends CComponent {
 
         $valid = $this->header->save();
 
-        if ($isNewRecord) {
+        if ($isNewRecord && $valid) {
             $registrationRealization = new RegistrationRealizationProcess();
             $registrationRealization->registration_transaction_id = $this->header->id;
             $registrationRealization->name = 'Vehicle Inspection';
             $registrationRealization->detail = 'No';
-            
             $registrationRealization->save();
         }
         
@@ -396,10 +408,11 @@ class GeneralRepairRegistration extends CComponent {
         
         try {
             $valid = $this->validateDetails() && IdempotentManager::build()->save() && $this->flushDetails();
-            if ($valid)
+            if ($valid) {
                 $dbTransaction->commit();
-            else
+            } else {
                 $dbTransaction->rollback();
+            }
         } catch (Exception $e) {
             $dbTransaction->rollback();
             $valid = false;

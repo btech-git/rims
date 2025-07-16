@@ -20,7 +20,7 @@ Yii::app()->clientScript->registerCss('_report', '
         <?php echo CHtml::encode(CHtml::value($branch, 'name')); ?>
     </div>
     <div style="font-size: larger">Follow Up Customer</div>
-    <div><?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($startDate))) . ' &nbsp;&ndash;&nbsp; ' . CHtml::encode(Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($endDate))); ?></div>
+    <div><?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($invoiceStartDate))) . ' &nbsp;&ndash;&nbsp; ' . CHtml::encode(Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($invoiceEndDate))); ?></div>
 </div>
 
 <br />
@@ -40,9 +40,6 @@ Yii::app()->clientScript->registerCss('_report', '
             <th class="width1-9">Last Service (Days)</th>
             <th class="width1-10">Feedback</th>
         </tr>
-        <tr id="header2">
-            <td colspan="10">&nbsp;</td>
-        </tr>
     </thead>
     <tbody>
         <?php foreach ($dataProvider->data as $i => $header): ?>
@@ -60,8 +57,8 @@ Yii::app()->clientScript->registerCss('_report', '
                 </td>
                 <td class="width1-5"><?php echo CHtml::encode(CHtml::value($header, 'invoice_number')); ?></td>
                 <td class="width1-6"><?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($header->invoice_date))); ?></td>
-                <td class="width1-7"><?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($header->warrantyFollowUpDate))); ?></td>
-                <td class="width1-8"><?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($header->serviceFollowUpDate))); ?></td>
+                <td class="width1-7"><?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($header->warranty_date))); ?></td>
+                <td class="width1-8"><?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($header->follow_up_date))); ?></td>
                 <td class="width1-9"><?php echo CHtml::encode(CHtml::value($header, 'lastInvoiceDaysNumber')); ?></td>
                 <td class="width1-10">
                     <?php if (empty($header->registrationTransaction->feedback)): ?>

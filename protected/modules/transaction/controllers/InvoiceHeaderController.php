@@ -520,7 +520,6 @@ class InvoiceHeaderController extends Controller {
         $registrationTransaction = RegistrationTransaction::model()->findByPk($registrationId);
         $invoice->header->reference_type = 2;
         $invoice->header->registration_transaction_id = $registrationId;
-        $invoice->header->due_date = date('Y-m-d',strtotime('+' . $registrationTransaction->customer->tenor . ' days',strtotime(date('Y-m-d'))));
         $invoice->header->customer_id = $registrationTransaction->customer_id;
         $invoice->header->vehicle_id = $registrationTransaction->vehicle_id;
         $invoice->header->branch_id = $registrationTransaction->branch_id;
@@ -552,6 +551,9 @@ class InvoiceHeaderController extends Controller {
         if (isset($_POST['InvoiceHeader']) && IdempotentManager::check()) {
 
             $this->loadState($invoice);
+            $invoice->header->due_date = date('Y-m-d',strtotime('+' . $registrationTransaction->customer->tenor . ' days',strtotime($invoice->header->invoice_date)));
+            $invoice->header->warranty_date = date('Y-m-d', strtotime('+3 days', strtotime($invoice->header->invoice_date))); 
+            $invoice->header->follow_up_date = date('Y-m-d', strtotime('+3 months', strtotime($invoice->header->invoice_date))); 
             $invoice->generateCodeNumber(Yii::app()->dateFormatter->format('M', strtotime($invoice->header->invoice_date)), Yii::app()->dateFormatter->format('yyyy', strtotime($invoice->header->invoice_date)), $registrationTransaction->branch_id);
         
             if ($invoice->save(Yii::app()->db)) {
