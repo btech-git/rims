@@ -39,7 +39,7 @@
                             'attribute' => "return_order_date",
                             // additional javascript options for the date picker plugin
                             'options' => array(
-                                'minDate' => '-1M',
+                                'minDate' => '-2M',
                                 'maxDate' => '+6M',
                                 'dateFormat' => 'yy-mm-dd',
                                 'changeMonth' => true,
