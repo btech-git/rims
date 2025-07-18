@@ -416,4 +416,37 @@ class InvoiceDetail extends CActiveRecord {
         
         return $resultSet;
     }    
+    
+    public function searchByTransactionDetailInfo($employeeId, $startDate, $endDate, $productMasterCategoryId, $page) {
+        // Warning: Please modify the following code to remove attributes that
+        // should not be searched.
+
+        $criteria = new CDbCriteria;
+
+        $criteria->together = 'true';
+        $criteria->with = array(
+            'invoiceHeader' => array(
+                'with' => array(
+                    'registrationTransaction',
+                ),
+            ),
+            'product',
+        );
+
+        $criteria->compare('registrationTransaction.employee_id_sales_person', $employeeId);
+        $criteria->compare('product.product_master_category_id', $productMasterCategoryId);
+        $criteria->addBetweenCondition('invoiceHeader.invoice_date', $startDate, $endDate);
+        $criteria->addCondition("invoiceHeader.status NOT LIKE '%CANCEL%' AND registrationTransaction.status NOT LIKE '%CANCEL%'");
+        
+        return new CActiveDataProvider($this, array(
+            'criteria' => $criteria,
+            'sort' => array(
+                'defaultOrder' => 'invoiceHeader.invoice_date DESC',
+            ),
+            'pagination' => array(
+                'pageSize' => 100,
+                'currentPage' => $page - 1,
+            ),
+        ));
+    }
 }

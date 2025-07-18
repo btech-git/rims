@@ -32,6 +32,7 @@ Yii::app()->clientScript->registerCss('_report', '
             <th class="width1-1">Customer</th>
             <th class="width1-2">Plat #</th>
             <th class="width1-3">Kendaraan</th>
+            <th class="width1-11">KM</th>
             <th class="width1-4">Last RG #</th>
             <th class="width1-5">Invoice #</th>
             <th class="width1-6">Invoice Last Date</th>
@@ -52,6 +53,7 @@ Yii::app()->clientScript->registerCss('_report', '
                     <?php echo CHtml::encode(CHtml::value($header, 'vehicle.carModel.name')); ?> -
                     <?php echo CHtml::encode(CHtml::value($header, 'vehicle.carSubModel.name')); ?>
                 </td>
+                <td class="width1-5"><?php echo CHtml::encode(CHtml::value($header, 'registrationTransaction.vehicle_mileage')); ?></td>
                 <td class="width1-4">
                     <?php echo CHtml::link($header->registrationTransaction->transaction_number, array($header->registrationTransaction->repair_type == "GR" ? "/frontDesk/generalRepairRegistration/view" : "/frontDesk/bodyRepairRegistration/view", "id"=>$header->registration_transaction_id), array("target" => "blank")); ?>
                 </td>

@@ -63,24 +63,29 @@ Yii::app()->clientScript->registerCss('_report', '
         <?php $averageAccessoriesSum = '0.00'; ?>
         <?php for ($i = 1; $i <= 12; $i++): ?>
             <?php if (isset($yearlySingleEmployeeSaleReportData[$i]) && isset($yearlySingleEmployeeSaleProductReportData[$i])): ?>
+                <?php $daysInMonth = cal_days_in_month(CAL_GREGORIAN, $i, $year); ?>
+                <?php $yearMonth = $year . '-' . str_pad($i, 2, '0', STR_PAD_LEFT); ?>
+                <?php $startDate = $yearMonth . '-01'; ?>
+                <?php $endDate = $yearMonth . '-' . $daysInMonth; ?>
+
                 <?php $dataItem = $yearlySingleEmployeeSaleReportData[$i]; ?>
                 <?php $detailItem = $yearlySingleEmployeeSaleProductReportData[$i]; ?>
                 <?php $averageTire = $detailItem['tire_quantity'] > 0 ? $detailItem['tire_price'] / $detailItem['tire_quantity'] : '0.00'; ?>
                 <?php $averageOil = $detailItem['oil_quantity'] > 0 ? $detailItem['oil_price'] / $detailItem['oil_quantity'] : '0.00'; ?>
                 <?php $averageAccessories = $detailItem['accessories_quantity'] > 0 ? $detailItem['accessories_price'] / $detailItem['accessories_quantity'] : '0.00'; ?>
                 <tr class="items1">
-                    <td><?php echo CHtml::encode($dataItem['month']); ?></td>
-                    <td style="text-align: center"><?php echo CHtml::encode($dataItem['customer_quantity']); ?></td>
+                    <td><?php echo CHtml::encode(strftime("%B", mktime(0, 0, 0, $i))); ?></td>
+                    <td style="text-align: center"><?php echo CHtml::link(CHtml::encode($dataItem['customer_quantity']), array('/report/employeeSaleTransactionInfo/headerInfo', 'showDetails' => 0, 'employeeId' => $employeeId, 'startDate' => $startDate, 'endDate' => $endDate), array('target' => '_blank')); ?></td>
                     <td style="text-align: center"><?php echo CHtml::encode($dataItem['customer_new_quantity']); ?></td>
                     <td style="text-align: center"><?php echo CHtml::encode($dataItem['customer_repeat_quantity']); ?></td>
                     <td style="text-align: center"><?php echo CHtml::encode($dataItem['customer_retail_quantity']); ?></td>
                     <td style="text-align: center"><?php echo CHtml::encode($dataItem['customer_company_quantity']); ?></td>
-                    <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $dataItem['grand_total'])); ?></td>
+                    <td style="text-align: right"><?php echo CHtml::link(CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $dataItem['grand_total'])), array('/report/employeeSaleTransactionInfo/headerInfo', 'showDetails' => 1, 'employeeId' => $employeeId, 'startDate' => $startDate, 'endDate' => $endDate), array('target' => '_blank')); ?></td>
                     <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $dataItem['total_service'])); ?></td>
                     <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $dataItem['total_product'])); ?></td>
-                    <td style="text-align: center"><?php echo CHtml::encode($detailItem['tire_quantity']); ?></td>
-                    <td style="text-align: center"><?php echo CHtml::encode($detailItem['oil_quantity']); ?></td>
-                    <td style="text-align: center"><?php echo CHtml::encode($detailItem['accessories_quantity']); ?></td>
+                    <td style="text-align: center"><?php echo CHtml::link(CHtml::encode($detailItem['tire_quantity']), array('/report/employeeSaleTransactionInfo/detailInfo', 'employeeId' => $employeeId, 'startDate' => $startDate, 'endDate' => $endDate, 'productMasterCategoryId' => 4), array('target' => '_blank')); ?></td>
+                    <td style="text-align: center"><?php echo CHtml::link(CHtml::encode($detailItem['oil_quantity']), array('/report/employeeSaleTransactionInfo/detailInfo', 'employeeId' => $employeeId, 'startDate' => $startDate, 'endDate' => $endDate, 'productMasterCategoryId' => 6), array('target' => '_blank')); ?></td>
+                    <td style="text-align: center"><?php echo CHtml::link(CHtml::encode($detailItem['accessories_quantity']), array('/report/employeeSaleTransactionInfo/detailInfo', 'employeeId' => $employeeId, 'startDate' => $startDate, 'endDate' => $endDate, 'productMasterCategoryId' => 9), array('target' => '_blank')); ?></td>
                     <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $averageTire)); ?></td>
                     <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $averageOil)); ?></td>
                     <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $averageAccessories)); ?></td>
@@ -101,7 +106,7 @@ Yii::app()->clientScript->registerCss('_report', '
                 <?php $averageAccessoriesSum += $averageAccessories; ?>
             <?php else: ?>
                 <tr class="items1">
-                    <td><?php echo $i; ?></td>
+                    <td><?php echo CHtml::encode(strftime("%B", mktime(0, 0, 0, $i))); ?></td>
                     <td colspan="14">&nbsp;</td>
                 </tr>
             <?php endif; ?>

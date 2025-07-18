@@ -1320,7 +1320,7 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
         $criteria->compare('t.is_new_customer', $this->is_new_customer);
 
         $criteria->together = 'true';
-        $criteria->with = array('customer', 'vehicle');
+        $criteria->with = array('customer', 'vehicle', 'registrationTransaction');
         
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
@@ -1749,5 +1749,31 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
         $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
         
         return $resultSet;
-    }    
+    }  
+    
+    public function searchByTransactionHeaderInfo($employeeId, $startDate, $endDate, $page) {
+        // Warning: Please modify the following code to remove attributes that
+        // should not be searched.
+
+        $criteria = new CDbCriteria;
+
+        $criteria->together = 'true';
+        $criteria->with = array('registrationTransaction');
+
+        $criteria->compare('registrationTransaction.employee_id_sales_person', $employeeId);
+        $criteria->addBetweenCondition('t.invoice_date', $startDate, $endDate);
+        $criteria->addCondition("t.status NOT LIKE '%CANCEL%' AND registrationTransaction.status NOT LIKE '%CANCEL%'");
+        
+        return new CActiveDataProvider($this, array(
+            'criteria' => $criteria,
+            'sort' => array(
+                'defaultOrder' => 't.invoice_date DESC',
+            ),
+            'pagination' => array(
+                'pageSize' => 100,
+                'currentPage' => $page - 1,
+            ),
+        ));
+    }
+
 }

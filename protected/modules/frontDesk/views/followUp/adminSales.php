@@ -38,6 +38,24 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                         <div class="field">
                             <div class="row collapse">
                                 <div class="small-4 columns">
+                                    <span class="prefix">KM</span>
+                                </div>
+                                <div class="small-8 columns">
+                                    <?php echo CHtml::dropDownlist('StartMileage', $startMileage, array(
+                                        0 => '0 - 9.999',
+                                        10000 => '10.000 - 49.999',
+                                        50000 => '50.000 - 99.999',
+                                        100000 => '100.000 - 149.999',
+                                    ), array('empty' => '-- All --')); ?>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="medium-4 columns">
+                        <div class="field">
+                            <div class="row collapse">
+                                <div class="small-4 columns">
                                     <span class="prefix">Branch</span>
                                 </div>
                                 <div class="small-8 columns">

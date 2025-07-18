@@ -26,6 +26,11 @@ Yii::app()->clientScript->registerCss('_report', '
 
 <br />
 
+<?php $daysInMonth = cal_days_in_month(CAL_GREGORIAN, $month, $year); ?>
+<?php $yearMonth = $year . '-' . str_pad($month, 2, '0', STR_PAD_LEFT); ?>
+<?php $startDate = $yearMonth . '-01'; ?>
+<?php $endDate = $yearMonth . '-' . $daysInMonth; ?>
+
 <table class="report">
     <thead>
         <tr id="header1">
@@ -70,17 +75,17 @@ Yii::app()->clientScript->registerCss('_report', '
             <tr class="items1">
                 <td><?php echo CHtml::encode($i + 1); ?></td>
                 <td><?php echo CHtml::encode($dataItem['employee_name']); ?></td>
-                <td style="text-align: center"><?php echo CHtml::encode($dataItem['customer_quantity']); ?></td>
+                <td style="text-align: center"><?php echo CHtml::link(CHtml::encode($dataItem['customer_quantity']), array('/report/employeeSaleTransactionInfo/headerInfo', 'showDetails' => 0, 'employeeId' => $dataItem['employee_id_sales_person'], 'startDate' => $startDate, 'endDate' => $endDate), array('target' => '_blank')); ?></td>
                 <td style="text-align: center"><?php echo CHtml::encode($dataItem['customer_new_quantity']); ?></td>
                 <td style="text-align: center"><?php echo CHtml::encode($dataItem['customer_repeat_quantity']); ?></td>
                 <td style="text-align: center"><?php echo CHtml::encode($dataItem['customer_retail_quantity']); ?></td>
                 <td style="text-align: center"><?php echo CHtml::encode($dataItem['customer_company_quantity']); ?></td>
-                <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $dataItem['grand_total'])); ?></td>
+                <td style="text-align: right"><?php echo CHtml::link(CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $dataItem['grand_total'])), array('/report/employeeSaleTransactionInfo/headerInfo', 'showDetails' => 1, 'employeeId' => $dataItem['employee_id_sales_person'], 'startDate' => $startDate, 'endDate' => $endDate), array('target' => '_blank')); ?></td>
                 <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $dataItem['total_service'])); ?></td>
                 <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $dataItem['total_product'])); ?></td>
-                <td style="text-align: center"><?php echo CHtml::encode($detailItem['tire_quantity']); ?></td>
-                <td style="text-align: center"><?php echo CHtml::encode($detailItem['oil_quantity']); ?></td>
-                <td style="text-align: center"><?php echo CHtml::encode($detailItem['accessories_quantity']); ?></td>
+                <td style="text-align: center"><?php echo CHtml::link(CHtml::encode($detailItem['tire_quantity']), array('/report/employeeSaleTransactionInfo/detailInfo', 'employeeId' => $dataItem['employee_id_sales_person'], 'startDate' => $startDate, 'endDate' => $endDate, 'productMasterCategoryId' => 4), array('target' => '_blank')); ?></td>
+                <td style="text-align: center"><?php echo CHtml::link(CHtml::encode($detailItem['oil_quantity']), array('/report/employeeSaleTransactionInfo/detailInfo', 'employeeId' => $dataItem['employee_id_sales_person'], 'startDate' => $startDate, 'endDate' => $endDate, 'productMasterCategoryId' => 6), array('target' => '_blank')); ?></td>
+                <td style="text-align: center"><?php echo CHtml::link(CHtml::encode($detailItem['accessories_quantity']), array('/report/employeeSaleTransactionInfo/detailInfo', 'employeeId' => $dataItem['employee_id_sales_person'], 'startDate' => $startDate, 'endDate' => $endDate, 'productMasterCategoryId' => 9), array('target' => '_blank')); ?></td>
                 <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $averageTire)); ?></td>
                 <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $averageOil)); ?></td>
                 <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $averageAccessories)); ?></td>

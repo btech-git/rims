@@ -58,10 +58,21 @@ class FollowUpController extends Controller {
         $carModel = (isset($_GET['CarModel'])) ? $_GET['CarModel'] : '';
         $carSubModel = (isset($_GET['CarSubModel'])) ? $_GET['CarSubModel'] : '';
         $customerName = (isset($_GET['CustomerName'])) ? $_GET['CustomerName'] : '';
+        $startMileage = (isset($_GET['StartMileage'])) ? $_GET['StartMileage'] : '';
 
         $model = Search::bind(new InvoiceHeader('search'), isset($_GET['InvoiceHeader']) ? $_GET['InvoiceHeader'] : '');
         $dataProvider = $model->searchByFollowUp();
 
+        if ($startMileage !== '') {
+            $endMileages = array(
+                0 => 9999,
+                10000 => 49999,
+                50000 => 99999,
+                100000 => 149999,
+            );
+            $dataProvider->criteria->addBetweenCondition('registrationTransaction.vehicle_mileage', $startMileage, $endMileages[$startMileage]);
+        }
+        
         if (!empty($warrantyStartDate) && !empty($warrantyEndDate)) {
             $dataProvider->criteria->addBetweenCondition('t.warranty_date', $warrantyStartDate, $warrantyEndDate);
         }
@@ -115,6 +126,7 @@ class FollowUpController extends Controller {
             'warrantyEndDate' => $warrantyEndDate,
             'followUpStartDate' => $followUpStartDate,
             'followUpEndDate' => $followUpEndDate,
+            'startMileage' => $startMileage,
         ));
     }
     
