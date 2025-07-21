@@ -251,195 +251,213 @@ class FollowUpController extends Controller {
     
     public function actionAdminService() {
 
-        $plateNumber = (isset($_GET['PlateNumber'])) ? $_GET['PlateNumber'] : '';
-        $carMake = (isset($_GET['CarMake'])) ? $_GET['CarMake'] : '';
-        $carModel = (isset($_GET['CarModel'])) ? $_GET['CarModel'] : '';
-        $customerName = (isset($_GET['CustomerName'])) ? $_GET['CustomerName'] : '';
+//        $plateNumber = (isset($_GET['PlateNumber'])) ? $_GET['PlateNumber'] : '';
+//        $carMake = (isset($_GET['CarMake'])) ? $_GET['CarMake'] : '';
+//        $carModel = (isset($_GET['CarModel'])) ? $_GET['CarModel'] : '';
+//        $customerName = (isset($_GET['CustomerName'])) ? $_GET['CustomerName'] : '';
 
         $model = Search::bind(new InvoiceHeader('search'), isset($_GET['InvoiceHeader']) ? $_GET['InvoiceHeader'] : '');
-        $dataProvider = $model->searchByFollowUp();
-        $dataProvider->criteria->addCondition("t.status IN ('PAID', 'CLEAR') AND t.branch_id = :branch_id");
-        $dataProvider->criteria->params[':branch_id'] = Yii::app()->user->branch_id;
+        $dataProvider = $model->searchByPendingFollowUp();
+//        $dataProvider->criteria->addCondition("t.status IN ('PAID', 'CLEAR') AND t.branch_id = :branch_id");
+//        $dataProvider->criteria->params[':branch_id'] = Yii::app()->user->branch_id;
         
-        if (!empty($plateNumber)) {
-            $dataProvider->criteria->addCondition('vehicle.plate_number LIKE :plate_number');
-            $dataProvider->criteria->params[':plate_number'] = "%{$plateNumber}%";
-        }
+//        if (!empty($plateNumber)) {
+//            $dataProvider->criteria->addCondition('vehicle.plate_number LIKE :plate_number');
+//            $dataProvider->criteria->params[':plate_number'] = "%{$plateNumber}%";
+//        }
+//        
+//        if (!empty($carMake)) {
+//            $dataProvider->criteria->addCondition('vehicle.car_make_id = :car_make_id');
+//            $dataProvider->criteria->params[':car_make_id'] = $carMake;
+//        }
+//        
+//        if (!empty($carModel)) {
+//            $dataProvider->criteria->addCondition('vehicle.car_model_id = :car_model_id');
+//            $dataProvider->criteria->params[':car_model_id'] = $carModel;
+//        }
+//        
+//        if (!empty($customerName)) {
+//            $dataProvider->criteria->addCondition('customer.name LIKE :name');
+//            $dataProvider->criteria->params[':name'] = "%{$customerName}%";
+//        }
         
-        if (!empty($carMake)) {
-            $dataProvider->criteria->addCondition('vehicle.car_make_id = :car_make_id');
-            $dataProvider->criteria->params[':car_make_id'] = $carMake;
-        }
-        
-        if (!empty($carModel)) {
-            $dataProvider->criteria->addCondition('vehicle.car_model_id = :car_model_id');
-            $dataProvider->criteria->params[':car_model_id'] = $carModel;
-        }
-        
-        if (!empty($customerName)) {
-            $dataProvider->criteria->addCondition('customer.name LIKE :name');
-            $dataProvider->criteria->params[':name'] = "%{$customerName}%";
-        }
-        
-        $followUpDate = date('Y-m-d', strtotime('-6 months', strtotime(date('Y-m-d')))); 
-        $dataProvider->criteria->addCondition('t.invoice_date >= :follow_up_date');
-        $dataProvider->criteria->params[':follow_up_date'] = $followUpDate;
-
         $this->render('adminService', array(
             'model' => $model,
             'dataProvider' => $dataProvider,
-            'plateNumber' => $plateNumber,
-            'carMake' => $carMake,
-            'carModel' => $carModel,
-            'customerName' => $customerName,
-        ));
-    }
-    public function actionUpdateFeedback($id) {
-        $registrationTransaction = RegistrationTransaction::model()->findByPk($id);
-        
-        $vehicle = Vehicle::model()->findByPk($registrationTransaction->vehicle_id);
-        $customer = Customer::model()->findByPk($vehicle->customer_id);
-
-        $products = RegistrationProduct::model()->findAllByAttributes(array('registration_transaction_id' => $id));
-        $services = RegistrationService::model()->findAllByAttributes(array(
-            'registration_transaction_id' => $id,
-//            'is_body_repair' => 0
-        ));
-        
-        if (isset($_POST['Submit'])) {
-            $registrationTransaction->feedback = $_POST['RegistrationTransaction']['feedback'];
-            $registrationTransaction->feedback = $_POST['RegistrationTransaction']['note'];
-            $registrationTransaction->update(array('feedback', 'note'));
-            
-            $this->redirect(array('adminSales'));
-        }
-
-        $this->render('updateFeedback', array(
-            'registrationTransaction' => $registrationTransaction,
-            'vehicle' => $vehicle,
-            'customer' => $customer,
-            'products' => $products,
-            'services' => $services,
+//            'plateNumber' => $plateNumber,
+//            'carMake' => $carMake,
+//            'carModel' => $carModel,
+//            'customerName' => $customerName,
         ));
     }
     
-    public function actionJurnalTransaction() {
-        set_time_limit(0);
-        ini_set('memory_limit', '1024M');
-
-        $jurnalUmum = new JurnalUmum('search');
-
-        $coaId = (isset($_GET['CoaId'])) ? $_GET['CoaId'] : '';
-        $yearMonth = (isset($_GET['YearMonth'])) ? $_GET['YearMonth'] : date('Y-m');
-        $branchId = (isset($_GET['BranchId'])) ? $_GET['BranchId'] : '';
-
-        $balanceSheetSummary = new BalanceSheetSummary($jurnalUmum->search());
-        $balanceSheetSummary->setupLoading();
-        $balanceSheetSummary->setupPaging(1000, 1);
-        $balanceSheetSummary->setupSorting();
-        $balanceSheetSummary->setupFilter($yearMonth, $coaId, $branchId);
-
-        if (isset($_GET['SaveToExcel'])) {
-            $this->saveToExcelTransactionJournal($balanceSheetSummary, $coaId, $yearMonth, $branchId);
+    public function actionUpdateFollowUpFeedback($id) {
+        $invoiceHeader = InvoiceHeader::model()->findByPk($id);
+        
+        if (isset($_POST['Submit'])) {
+            $invoiceHeader->follow_up_feedback = $_POST['InvoiceHeader']['follow_up_feedback'];
+            $invoiceHeader->note = $_POST['InvoiceHeader']['note'];
+            $invoiceHeader->follow_up_input_date_time = date('Y-m-d H:i:s');
+            $invoiceHeader->follow_up_input_user_id = Yii::app()->user->id;
+            $invoiceHeader->update(array('follow_up_feedback', 'note', 'follow_up_input_date_time', 'follow_up_input_user_id'));
+            
+            $this->redirect(array('adminService'));
         }
 
-        $this->render('jurnalTransaction', array(
-            'jurnalUmum' => $jurnalUmum,
-            'balanceSheetSummary' => $balanceSheetSummary,
-            'yearMonth' => $yearMonth,
-            'coaId' => $coaId,
-            'branchId' => $branchId,
+        $this->render('updateFollowUpFeedback', array(
+            'invoiceHeader' => $invoiceHeader,
+//            'vehicle' => $vehicle,
+//            'customer' => $customer,
+//            'products' => $products,
+//            'services' => $services,
         ));
     }
+    
+    public function actionAdminWarranty() {
 
-    protected function saveToExcelTransactionJournal($balanceSheetSummary, $coaId, $yearMonth, $branchId) {
-        set_time_limit(0);
-        ini_set('memory_limit', '1024M');
+        $model = Search::bind(new InvoiceHeader('search'), isset($_GET['InvoiceHeader']) ? $_GET['InvoiceHeader'] : '');
+        $dataProvider = $model->searchByPendingWarranty();
         
-        $branch = Branch::model()->findbyPk($branchId);
-        $coa = Coa::model()->findByPk($coaId);
-
-        spl_autoload_unregister(array('YiiBase', 'autoload'));
-        include_once Yii::getPathOfAlias('ext.phpexcel.Classes') . DIRECTORY_SEPARATOR . 'PHPExcel.php';
-        spl_autoload_register(array('YiiBase', 'autoload'));
-        
-        $objPHPExcel = new PHPExcel();
-
-        $documentProperties = $objPHPExcel->getProperties();
-        $documentProperties->setCreator('Raperind Motor');
-        $documentProperties->setTitle('Balance Sheet Transaction');
-
-        $worksheet = $objPHPExcel->setActiveSheetIndex(0);
-        $worksheet->setTitle('Balance Sheet Transaction');
-
-        $worksheet->mergeCells('A1:G1');
-        $worksheet->mergeCells('A2:G2');
-        $worksheet->mergeCells('A3:G3');
-        $worksheet->getStyle('A1:G3')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-        $worksheet->getStyle('A1:G3')->getFont()->setBold(true);
-
-        $worksheet->setCellValue('A1', 'Transaction Detail - ' . empty($branchId) ? 'All Branch' : $branch->code);
-        $worksheet->setCellValue('A2', $coa->code . ' - ' . $coa->name);
-        $worksheet->setCellValue('A3', Yii::app()->dateFormatter->format('MMMM yyyy', strtotime($yearMonth)));
-        
-        $worksheet->getStyle('A5:G5')->getBorders()->gettOP()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
-
-        $worksheet->setCellValue('A5', 'No');
-        $worksheet->setCellValue('B5', 'Tanggal');
-        $worksheet->setCellValue('C5', 'Kode Transaksi');
-        $worksheet->setCellValue('D5', 'Keterangan');
-        $worksheet->setCellValue('E5', 'Memo');
-        $worksheet->setCellValue('F5', 'Debit');
-        $worksheet->setCellValue('G5', 'Kredit');
-
-        $worksheet->getStyle('A5:G5')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
-
-        $counter = 7; 
-        
-        $totalDebit = '0.00'; 
-        $totalCredit = '0.00'; 
-        foreach ($balanceSheetSummary->dataProvider->data as $i => $header) {
-            $debitAmount = $header->debet_kredit == 'D' ? $header->total : 0;
-            $creditAmount = $header->debet_kredit == 'K' ? $header->total : 0;
-
-            $worksheet->setCellValue("A{$counter}", $i + 1);
-            $worksheet->setCellValue("B{$counter}", $header->tanggal_transaksi);
-            $worksheet->setCellValue("C{$counter}", $header->kode_transaksi);
-            $worksheet->setCellValue("D{$counter}", $header->transaction_subject);
-            $worksheet->setCellValue("E{$counter}", $header->transaction_type);
-            $worksheet->setCellValue("F{$counter}", $debitAmount);
-            $worksheet->setCellValue("G{$counter}", $creditAmount);
-
-            $totalDebit += $debitAmount;
-            $totalCredit += $creditAmount;
-
-            $counter++;
-
-        }
-        
-        $worksheet->mergeCells("A{$counter}:E{$counter}");
-        $worksheet->getStyle("A{$counter}:G{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
-        $worksheet->getStyle("A{$counter}:G{$counter}")->getFont()->setBold(true);
-        $worksheet->setCellValue("A{$counter}", 'TOTAL');
-        $worksheet->setCellValue("F{$counter}", $totalDebit);
-        $worksheet->setCellValue("G{$counter}", $totalCredit);
-        $counter++;$counter++;
-
-        for ($col = 'A'; $col !== 'Z'; $col++) {
-            $objPHPExcel->getActiveSheet()
-            ->getColumnDimension($col)
-            ->setAutoSize(true);
-        }
-
-        ob_end_clean();
-        // We'll be outputting an excel file
-        header('Content-type: application/vnd.ms-excel');
-        header('Content-Disposition: attachment;filename="balance_sheet_transaction.xls"');
-        header('Cache-Control: max-age=0');
-        
-        $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
-        $objWriter->save('php://output');
-
-        Yii::app()->end();
+        $this->render('adminWarranty', array(
+            'model' => $model,
+            'dataProvider' => $dataProvider,
+        ));
     }
+    
+    public function actionUpdateWarrantyFeedback($id) {
+        $invoiceHeader = InvoiceHeader::model()->findByPk($id);
+        
+        if (isset($_POST['Submit'])) {
+            $invoiceHeader->warranty_feedback = $_POST['InvoiceHeader']['warranty_feedback'];
+            $invoiceHeader->warranty_input_date_time = date('Y-m-d H:i:s');
+            $invoiceHeader->warranty_input_user_id = Yii::app()->user->id;
+            $invoiceHeader->update(array('warranty_feedback', 'warranty_input_date_time', 'warranty_input_user_id'));
+            
+            $this->redirect(array('adminWarranty'));
+        }
+
+        $this->render('updateWarrantyFeedback', array(
+            'invoiceHeader' => $invoiceHeader,
+        ));
+    }
+    
+//    public function actionJurnalTransaction() {
+//        set_time_limit(0);
+//        ini_set('memory_limit', '1024M');
+//
+//        $jurnalUmum = new JurnalUmum('search');
+//
+//        $coaId = (isset($_GET['CoaId'])) ? $_GET['CoaId'] : '';
+//        $yearMonth = (isset($_GET['YearMonth'])) ? $_GET['YearMonth'] : date('Y-m');
+//        $branchId = (isset($_GET['BranchId'])) ? $_GET['BranchId'] : '';
+//
+//        $balanceSheetSummary = new BalanceSheetSummary($jurnalUmum->search());
+//        $balanceSheetSummary->setupLoading();
+//        $balanceSheetSummary->setupPaging(1000, 1);
+//        $balanceSheetSummary->setupSorting();
+//        $balanceSheetSummary->setupFilter($yearMonth, $coaId, $branchId);
+//
+//        if (isset($_GET['SaveToExcel'])) {
+//            $this->saveToExcelTransactionJournal($balanceSheetSummary, $coaId, $yearMonth, $branchId);
+//        }
+//
+//        $this->render('jurnalTransaction', array(
+//            'jurnalUmum' => $jurnalUmum,
+//            'balanceSheetSummary' => $balanceSheetSummary,
+//            'yearMonth' => $yearMonth,
+//            'coaId' => $coaId,
+//            'branchId' => $branchId,
+//        ));
+//    }
+//
+//    protected function saveToExcelTransactionJournal($balanceSheetSummary, $coaId, $yearMonth, $branchId) {
+//        set_time_limit(0);
+//        ini_set('memory_limit', '1024M');
+//        
+//        $branch = Branch::model()->findbyPk($branchId);
+//        $coa = Coa::model()->findByPk($coaId);
+//
+//        spl_autoload_unregister(array('YiiBase', 'autoload'));
+//        include_once Yii::getPathOfAlias('ext.phpexcel.Classes') . DIRECTORY_SEPARATOR . 'PHPExcel.php';
+//        spl_autoload_register(array('YiiBase', 'autoload'));
+//        
+//        $objPHPExcel = new PHPExcel();
+//
+//        $documentProperties = $objPHPExcel->getProperties();
+//        $documentProperties->setCreator('Raperind Motor');
+//        $documentProperties->setTitle('Balance Sheet Transaction');
+//
+//        $worksheet = $objPHPExcel->setActiveSheetIndex(0);
+//        $worksheet->setTitle('Balance Sheet Transaction');
+//
+//        $worksheet->mergeCells('A1:G1');
+//        $worksheet->mergeCells('A2:G2');
+//        $worksheet->mergeCells('A3:G3');
+//        $worksheet->getStyle('A1:G3')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+//        $worksheet->getStyle('A1:G3')->getFont()->setBold(true);
+//
+//        $worksheet->setCellValue('A1', 'Transaction Detail - ' . empty($branchId) ? 'All Branch' : $branch->code);
+//        $worksheet->setCellValue('A2', $coa->code . ' - ' . $coa->name);
+//        $worksheet->setCellValue('A3', Yii::app()->dateFormatter->format('MMMM yyyy', strtotime($yearMonth)));
+//        
+//        $worksheet->getStyle('A5:G5')->getBorders()->gettOP()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+//
+//        $worksheet->setCellValue('A5', 'No');
+//        $worksheet->setCellValue('B5', 'Tanggal');
+//        $worksheet->setCellValue('C5', 'Kode Transaksi');
+//        $worksheet->setCellValue('D5', 'Keterangan');
+//        $worksheet->setCellValue('E5', 'Memo');
+//        $worksheet->setCellValue('F5', 'Debit');
+//        $worksheet->setCellValue('G5', 'Kredit');
+//
+//        $worksheet->getStyle('A5:G5')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+//
+//        $counter = 7; 
+//        
+//        $totalDebit = '0.00'; 
+//        $totalCredit = '0.00'; 
+//        foreach ($balanceSheetSummary->dataProvider->data as $i => $header) {
+//            $debitAmount = $header->debet_kredit == 'D' ? $header->total : 0;
+//            $creditAmount = $header->debet_kredit == 'K' ? $header->total : 0;
+//
+//            $worksheet->setCellValue("A{$counter}", $i + 1);
+//            $worksheet->setCellValue("B{$counter}", $header->tanggal_transaksi);
+//            $worksheet->setCellValue("C{$counter}", $header->kode_transaksi);
+//            $worksheet->setCellValue("D{$counter}", $header->transaction_subject);
+//            $worksheet->setCellValue("E{$counter}", $header->transaction_type);
+//            $worksheet->setCellValue("F{$counter}", $debitAmount);
+//            $worksheet->setCellValue("G{$counter}", $creditAmount);
+//
+//            $totalDebit += $debitAmount;
+//            $totalCredit += $creditAmount;
+//
+//            $counter++;
+//
+//        }
+//        
+//        $worksheet->mergeCells("A{$counter}:E{$counter}");
+//        $worksheet->getStyle("A{$counter}:G{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+//        $worksheet->getStyle("A{$counter}:G{$counter}")->getFont()->setBold(true);
+//        $worksheet->setCellValue("A{$counter}", 'TOTAL');
+//        $worksheet->setCellValue("F{$counter}", $totalDebit);
+//        $worksheet->setCellValue("G{$counter}", $totalCredit);
+//        $counter++;$counter++;
+//
+//        for ($col = 'A'; $col !== 'Z'; $col++) {
+//            $objPHPExcel->getActiveSheet()
+//            ->getColumnDimension($col)
+//            ->setAutoSize(true);
+//        }
+//
+//        ob_end_clean();
+//        // We'll be outputting an excel file
+//        header('Content-type: application/vnd.ms-excel');
+//        header('Content-Disposition: attachment;filename="balance_sheet_transaction.xls"');
+//        header('Cache-Control: max-age=0');
+//        
+//        $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
+//        $objWriter->save('php://output');
+//
+//        Yii::app()->end();
+//    }
 }

@@ -46,7 +46,13 @@
  * @property integer $number_of_print
  * @property integer $is_new_customer
  * @property string $warranty_date
+ * @property string $warranty_feedback
+ * @property string $warranty_input_date_time
+ * @property integer $warranty_input_user_id
  * @property string $follow_up_date
+ * @property string $follow_up_feedback
+ * @property string $follow_up_input_date_time
+ * @property integer $follow_up_input_user_id
  *
  * The followings are the available model relations:
  * @property InvoiceDetail[] $invoiceDetails
@@ -61,6 +67,8 @@
  * @property UserIdCancelled $userIdCancelled
  * @property UserIdEdited $userIdEdited
  * @property UserIdEdited $userIdPrinted
+ * @property WarrantyInputUser $warrantyInputUser
+ * @property FollowUpInputUser $followUpInputUser
  */
 class InvoiceHeader extends MonthlyTransactionActiveRecord {
 
@@ -93,15 +101,15 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
         // will receive user inputs.
         return array(
             array('invoice_number, invoice_date, due_date, reference_type, branch_id, user_id, status, total_discount, total_price, tax_percentage, number_of_print', 'required'),
-            array('reference_type, sales_order_id, registration_transaction_id, customer_id, vehicle_id, ppn, pph, branch_id, user_id, supervisor_id, total_product, total_service, total_quick_service, coa_bank_id_estimate, tax_percentage, user_id_cancelled, insurance_company_id, number_of_print, user_id_edited, user_id_printed, is_new_customer', 'numerical', 'integerOnly' => true),
+            array('reference_type, sales_order_id, registration_transaction_id, customer_id, vehicle_id, ppn, pph, branch_id, user_id, supervisor_id, total_product, total_service, total_quick_service, coa_bank_id_estimate, tax_percentage, user_id_cancelled, insurance_company_id, number_of_print, user_id_edited, user_id_printed, is_new_customer, warranty_input_user_id, follow_up_input_user_id', 'numerical', 'integerOnly' => true),
             array('invoice_number', 'length', 'max' => 50),
             array('status', 'length', 'max' => 30),
             array('service_price, product_price, quick_service_price, pph_total, ppn_total, total_discount, total_price, payment_amount, payment_left', 'length', 'max' => 18),
-            array('in_words, note, payment_date_estimate, warranty_date, follow_up_date', 'safe'),
+            array('in_words, note, payment_date_estimate, warranty_date, follow_up_date, warranty_feedback, follow_up_feedback, warranty_input_date_time, follow_up_input_date_time', 'safe'),
             array('invoice_number', 'unique'),
             // The following rule is used by search().
             // Please remove those attributes that should not be searched.
-            array('id, invoice_number, invoice_date, due_date, number_of_print, reference_type, sales_order_id, registration_transaction_id, search_service, search_product, customer_id, vehicle_id, ppn, pph, branch_id, user_id, supervisor_id, status, service_price, product_price, quick_service_price, total_product, warranty_date, follow_up_date, insurance_company_id, total_service, total_quick_service, pph_total, ppn_total, total_discount, total_price, in_words, note, customer_name, invoice_date_to, due_date_to, payment_amount, payment_left,customer_type, payment_date_estimate, coa_bank_id_estimate, plate_number, tax_percentage, created_datetime, cancelled_datetime, user_id_cancelled, edited_datetime, user_id_edited, user_id_printed, is_new_customer', 'safe', 'on' => 'search'),
+            array('id, invoice_number, invoice_date, due_date, number_of_print, reference_type, sales_order_id, registration_transaction_id, search_service, search_product, customer_id, vehicle_id, ppn, pph, branch_id, user_id, supervisor_id, status, service_price, product_price, quick_service_price, total_product, warranty_date, follow_up_date, insurance_company_id, total_service, total_quick_service, pph_total, ppn_total, total_discount, total_price, in_words, note, customer_name, invoice_date_to, due_date_to, payment_amount, payment_left,customer_type, payment_date_estimate, coa_bank_id_estimate, plate_number, tax_percentage, created_datetime, cancelled_datetime, user_id_cancelled, edited_datetime, user_id_edited, user_id_printed, is_new_customer, warranty_input_user_id, follow_up_input_user_id, warranty_feedback, follow_up_feedback, warranty_input_date_time, follow_up_input_date_time', 'safe', 'on' => 'search'),
         );
     }
 
@@ -126,6 +134,8 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
             'paymentIns' => array(self::HAS_MANY, 'PaymentIn', 'invoice_id'),
             'insuranceCompany' => array(self::BELONGS_TO, 'InsuranceCompany', 'insurance_company_id'),
             'paymentInDetails' => array(self::HAS_MANY, 'PaymentInDetail', 'invoice_header_id'),
+            'warrantyInputUser' => array(self::BELONGS_TO, 'User', 'warranty_input_user_id'),
+            'followUpInputUser' => array(self::BELONGS_TO, 'User', 'follow_up_input_user_id'),
         );
     }
 
@@ -1328,7 +1338,7 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
                 'defaultOrder' => 'invoice_date DESC',
             ),
             'pagination' => array(
-                'pageSize' => 500,
+                'pageSize' => 100,
             ),
         ));
     }
@@ -1345,6 +1355,116 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
         $dateDiff = date_diff(date_create($this->invoice_date), date_create(date('Y-m-d')));
         
         return $dateDiff->format("%a days");
+    }
+    
+    public function searchByPendingFollowUp() {
+        // @todo Please modify the following code to remove attributes that should not be searched.
+
+        $criteria = new CDbCriteria;
+
+        $criteria->compare('id', $this->id);
+        $criteria->compare('t.invoice_number', $this->invoice_number, true);
+        $criteria->compare('t.reference_type', $this->reference_type);
+        $criteria->compare('t.sales_order_id', $this->sales_order_id);
+        $criteria->compare('t.registration_transaction_id', $this->registration_transaction_id);
+        $criteria->compare('t.customer_id', $this->customer_id);
+        $criteria->compare('t.vehicle_id', $this->vehicle_id);
+        $criteria->compare('t.coa_bank_id_estimate', $this->coa_bank_id_estimate);
+        $criteria->compare('t.payment_date_estimate', $this->payment_date_estimate);
+        $criteria->compare('t.ppn', $this->ppn);
+        $criteria->compare('t.pph', $this->pph);
+        $criteria->compare('t.branch_id', $this->branch_id);
+        $criteria->compare('t.user_id', $this->user_id);
+        $criteria->compare('t.supervisor_id', $this->supervisor_id);
+        $criteria->compare('t.status', $this->status);
+        $criteria->compare('t.service_price', $this->service_price, true);
+        $criteria->compare('t.product_price', $this->product_price, true);
+        $criteria->compare('t.quick_service_price', $this->quick_service_price, true);
+        $criteria->compare('t.total_product', $this->total_product);
+        $criteria->compare('t.total_service', $this->total_service);
+        $criteria->compare('t.total_quick_service', $this->total_quick_service);
+        $criteria->compare('t.pph_total', $this->pph_total, true);
+        $criteria->compare('t.ppn_total', $this->ppn_total, true);
+        $criteria->compare('t.total_discount', $this->total_discount, true);
+        $criteria->compare('t.total_price', $this->total_price, true);
+        $criteria->compare('t.in_words', $this->in_words, true);
+        $criteria->compare('t.note', $this->note, true);
+        $criteria->compare('t.tax_percentage', $this->tax_percentage);
+        $criteria->compare('t.insurance_company_id', $this->insurance_company_id);
+        $criteria->compare('t.number_of_print', $this->number_of_print);
+        $criteria->compare('t.is_new_customer', $this->is_new_customer);
+
+        $criteria->together = 'true';
+        $criteria->with = array('customer', 'vehicle', 'registrationTransaction');
+        
+        $followUpDate = date('Y-m-d', strtotime('-6 months', strtotime(date('Y-m-d')))); 
+        $criteria->addCondition('t.invoice_date >= :follow_up_date AND t.follow_up_feedback IS NULL AND t.follow_up_input_user_id IS NULL AND t.status IN ("PAID", "CLEAR")');
+        $criteria->params[':follow_up_date'] = $followUpDate;
+
+        return new CActiveDataProvider($this, array(
+            'criteria' => $criteria,
+            'sort' => array(
+                'defaultOrder' => 'follow_up_date ASC',
+            ),
+            'pagination' => array(
+                'pageSize' => 100,
+            ),
+        ));
+    }
+    
+    public function searchByPendingWarranty() {
+        // @todo Please modify the following code to remove attributes that should not be searched.
+
+        $criteria = new CDbCriteria;
+
+        $criteria->compare('id', $this->id);
+        $criteria->compare('t.invoice_number', $this->invoice_number, true);
+        $criteria->compare('t.reference_type', $this->reference_type);
+        $criteria->compare('t.sales_order_id', $this->sales_order_id);
+        $criteria->compare('t.registration_transaction_id', $this->registration_transaction_id);
+        $criteria->compare('t.customer_id', $this->customer_id);
+        $criteria->compare('t.vehicle_id', $this->vehicle_id);
+        $criteria->compare('t.coa_bank_id_estimate', $this->coa_bank_id_estimate);
+        $criteria->compare('t.payment_date_estimate', $this->payment_date_estimate);
+        $criteria->compare('t.ppn', $this->ppn);
+        $criteria->compare('t.pph', $this->pph);
+        $criteria->compare('t.branch_id', $this->branch_id);
+        $criteria->compare('t.user_id', $this->user_id);
+        $criteria->compare('t.supervisor_id', $this->supervisor_id);
+        $criteria->compare('t.status', $this->status);
+        $criteria->compare('t.service_price', $this->service_price, true);
+        $criteria->compare('t.product_price', $this->product_price, true);
+        $criteria->compare('t.quick_service_price', $this->quick_service_price, true);
+        $criteria->compare('t.total_product', $this->total_product);
+        $criteria->compare('t.total_service', $this->total_service);
+        $criteria->compare('t.total_quick_service', $this->total_quick_service);
+        $criteria->compare('t.pph_total', $this->pph_total, true);
+        $criteria->compare('t.ppn_total', $this->ppn_total, true);
+        $criteria->compare('t.total_discount', $this->total_discount, true);
+        $criteria->compare('t.total_price', $this->total_price, true);
+        $criteria->compare('t.in_words', $this->in_words, true);
+        $criteria->compare('t.note', $this->note, true);
+        $criteria->compare('t.tax_percentage', $this->tax_percentage);
+        $criteria->compare('t.insurance_company_id', $this->insurance_company_id);
+        $criteria->compare('t.number_of_print', $this->number_of_print);
+        $criteria->compare('t.is_new_customer', $this->is_new_customer);
+
+        $criteria->together = 'true';
+        $criteria->with = array('customer', 'vehicle', 'registrationTransaction');
+        
+        $followUpDate = date('Y-m-d', strtotime('-3 months', strtotime(date('Y-m-d')))); 
+        $criteria->addCondition('t.invoice_date >= :follow_up_date AND t.warranty_feedback IS NULL AND t.warranty_input_user_id IS NULL AND t.status IN ("PAID", "CLEAR")');
+        $criteria->params[':follow_up_date'] = $followUpDate;
+
+        return new CActiveDataProvider($this, array(
+            'criteria' => $criteria,
+            'sort' => array(
+                'defaultOrder' => 'warranty_date ASC',
+            ),
+            'pagination' => array(
+                'pageSize' => 100,
+            ),
+        ));
     }
     
     public static function getSaleInvoiceCarSubModelMonthlyData($year, $month, $branchId, $carMake, $carModel) {

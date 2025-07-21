@@ -125,6 +125,11 @@
                         'visible' => (Yii::app()->user->checkAccess('bodyRepairCreate') || Yii::app()->user->checkAccess('bodyRepairEdit') || Yii::app()->user->checkAccess('bodyRepairView'))
                     ),
                     array(
+                        'label' => 'Status Kendaraan', 
+                        'url' => array('/frontDesk/vehicleStatus/index'), 
+                        'visible' => (Yii::app()->user->checkAccess('generalRepairCreate') || Yii::app()->user->checkAccess('bodyRepairCreate'))
+                    ),
+                    array(
                         'label' => 'Permintaan Harga', 
                         'url' => array('/frontDesk/productPricingRequest/create')
 //                        'visible' => (Yii::app()->user->checkAccess('inspectionCreate') || Yii::app()->user->checkAccess('inspectionEdit'))
@@ -154,11 +159,11 @@
                         'url' => array('/frontDesk/registrationTransaction/customerWaitlist'), 
                         'visible' => Yii::app()->user->checkAccess('customerQueueApproval')
                     ),
-//                    array(
-//                        'label' => 'Follow Up Customer', 
-//                        'url' => array('/frontDesk/followUp/adminSales'), 
-//                        'visible' => Yii::app()->user->checkAccess('customerFollowUp')
-//                    ),
+                    array(
+                        'label' => 'Follow Up Warranty', 
+                        'url' => array('/frontDesk/followUp/adminWarranty'), 
+                        'visible' => Yii::app()->user->checkAccess('customerFollowUp')
+                    ),
                     array(
                         'label' => 'Follow Up Service', 
                         'url' => array('/frontDesk/followUp/adminService'), 

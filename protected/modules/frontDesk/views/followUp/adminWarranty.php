@@ -19,7 +19,7 @@ Yii::app()->clientScript->registerScript('search', "
     });
 
     $('.search-form form').submit(function(){
-        $('#registration-transaction-grid').yiiGridView('update', {
+        $('#invoice-grid').yiiGridView('update', {
             data: $(this).serialize()
         });
         return false;
@@ -29,7 +29,7 @@ Yii::app()->clientScript->registerScript('search', "
 
 <div id="maincontent">
     <div class="clearfix page-action">
-        <h1>Customer List to Follow Up Service</h1>
+        <h1>Customer List to Follow Up Warranty</h1>
     </div>
     <div class="clearfix"></div>
 </div>
@@ -38,7 +38,7 @@ Yii::app()->clientScript->registerScript('search', "
 
 <div class="grid-view">
     <?php $this->widget('zii.widgets.grid.CGridView', array(
-        'id' => 'registration-transaction-grid',
+        'id' => 'invoice-grid',
         'dataProvider' => $dataProvider,
         'filter' => null,
         'template' => '<div style="overflow-x:scroll ; overflow-y: hidden; margin-bottom: 1.25rem;">{items}</div><div class="clearfix">{summary}{pager}</div>',
@@ -46,7 +46,6 @@ Yii::app()->clientScript->registerScript('search', "
             'cssFile' => false,
             'header' => '',
         ),
-//        'rowCssClassExpression' => '($data->follow_up_feedback == NULL ? "merah" : "hijau")',
         'columns' => array(
             array(
                 'header' => 'Invoice #',
@@ -54,7 +53,7 @@ Yii::app()->clientScript->registerScript('search', "
                 'type' => 'raw'
             ),
             'invoice_date',
-            'follow_up_date',
+            'warranty_date',
             array(
                 'header' => 'Customer Name',
                 'value' => '$data->customer->name',
@@ -67,7 +66,7 @@ Yii::app()->clientScript->registerScript('search', "
             'status',
             array(
                 'header' => '',
-                'value' => 'CHtml::link("Feedback", array("updateFollowUpFeedback", "id"=>$data->id), array("target" => "blank"))', 
+                'value' => 'CHtml::link("Feedback", array("updateWarrantyFeedback", "id"=>$data->id), array("target" => "blank"))', 
                 'type' => 'raw'
             ),
         ),
