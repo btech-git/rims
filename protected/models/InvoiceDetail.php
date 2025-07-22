@@ -203,8 +203,8 @@ class InvoiceDetail extends CActiveRecord {
             ':end_date' => $endDate,
         );
         
-        $sql = "SELECT r.employee_id_sales_person, SUM(CASE WHEN p.product_master_category_id = 4 THEN d.quantity ELSE 0 END) AS tire_quantity, 
-                    SUM(CASE WHEN p.product_master_category_id = 6 THEN d.quantity ELSE 0 END) AS oil_quantity, 
+        $sql = "SELECT r.employee_id_sales_person, SUM(CASE WHEN p.product_sub_category_id IN (442, 444) THEN d.quantity ELSE 0 END) AS tire_quantity, 
+                    SUM(CASE WHEN p.product_sub_category_id = 540 THEN d.quantity ELSE 0 END) AS oil_quantity, 
                     SUM(CASE WHEN p.product_master_category_id = 9 THEN d.quantity ELSE 0 END) AS accessories_quantity
                 FROM " . InvoiceDetail::model()->tableName() . " d 
                 INNER JOIN " . InvoiceHeader::model()->tableName() . " h ON h.id = d.invoice_id
@@ -227,11 +227,11 @@ class InvoiceDetail extends CActiveRecord {
             ':month' => $month,
         );
         
-        $sql = "SELECT r.employee_id_sales_person, SUM(CASE WHEN p.product_master_category_id = 4 THEN d.quantity ELSE 0 END) AS tire_quantity, 
-                    SUM(CASE WHEN p.product_master_category_id = 6 THEN d.quantity ELSE 0 END) AS oil_quantity, 
+        $sql = "SELECT r.employee_id_sales_person, SUM(CASE WHEN p.product_sub_category_id IN (442, 444) THEN d.quantity ELSE 0 END) AS tire_quantity, 
+                    SUM(CASE WHEN p.product_sub_category_id = 540 THEN d.quantity ELSE 0 END) AS oil_quantity, 
                     SUM(CASE WHEN p.product_master_category_id = 9 THEN d.quantity ELSE 0 END) AS accessories_quantity, 
-                    SUM(CASE WHEN p.product_master_category_id = 4 THEN d.total_price ELSE 0 END) AS tire_price, 
-                    SUM(CASE WHEN p.product_master_category_id = 6 THEN d.total_price ELSE 0 END) AS oil_price, 
+                    SUM(CASE WHEN p.product_sub_category_id IN (442, 444) THEN d.total_price ELSE 0 END) AS tire_price, 
+                    SUM(CASE WHEN p.product_sub_category_id = 540 THEN d.total_price ELSE 0 END) AS oil_price, 
                     SUM(CASE WHEN p.product_master_category_id = 9 THEN d.total_price ELSE 0 END) AS accessories_price
                 FROM " . InvoiceDetail::model()->tableName() . " d 
                 INNER JOIN " . InvoiceHeader::model()->tableName() . " h ON h.id = d.invoice_id
@@ -252,11 +252,11 @@ class InvoiceDetail extends CActiveRecord {
             ':year' => $year,
         );
         
-        $sql = "SELECT r.employee_id_sales_person, SUM(CASE WHEN p.product_master_category_id = 4 THEN d.quantity ELSE 0 END) AS tire_quantity, 
-                    SUM(CASE WHEN p.product_master_category_id = 6 THEN d.quantity ELSE 0 END) AS oil_quantity, 
+        $sql = "SELECT r.employee_id_sales_person, SUM(CASE WHEN p.product_sub_category_id IN (442, 444) THEN d.quantity ELSE 0 END) AS tire_quantity, 
+                    SUM(CASE WHEN p.product_sub_category_id = 540 THEN d.quantity ELSE 0 END) AS oil_quantity, 
                     SUM(CASE WHEN p.product_master_category_id = 9 THEN d.quantity ELSE 0 END) AS accessories_quantity, 
-                    SUM(CASE WHEN p.product_master_category_id = 4 THEN d.total_price ELSE 0 END) AS tire_price, 
-                    SUM(CASE WHEN p.product_master_category_id = 6 THEN d.total_price ELSE 0 END) AS oil_price, 
+                    SUM(CASE WHEN p.product_sub_category_id IN (442, 444) THEN d.total_price ELSE 0 END) AS tire_price, 
+                    SUM(CASE WHEN p.product_sub_category_id = 540 THEN d.total_price ELSE 0 END) AS oil_price, 
                     SUM(CASE WHEN p.product_master_category_id = 9 THEN d.total_price ELSE 0 END) AS accessories_price
                 FROM " . InvoiceDetail::model()->tableName() . " d 
                 INNER JOIN " . InvoiceHeader::model()->tableName() . " h ON h.id = d.invoice_id
@@ -277,11 +277,11 @@ class InvoiceDetail extends CActiveRecord {
             ':employee_id_sales_person' => $employeeId,
         );
         
-        $sql = "SELECT DAY(h.invoice_date) AS day, SUM(CASE WHEN p.product_master_category_id = 4 THEN d.quantity ELSE 0 END) AS tire_quantity, 
-                    SUM(CASE WHEN p.product_master_category_id = 6 THEN d.quantity ELSE 0 END) AS oil_quantity, 
+        $sql = "SELECT DAY(h.invoice_date) AS day, SUM(CASE WHEN p.product_sub_category_id IN (442, 444) THEN d.quantity ELSE 0 END) AS tire_quantity, 
+                    SUM(CASE WHEN p.product_sub_category_id = 540 THEN d.quantity ELSE 0 END) AS oil_quantity, 
                     SUM(CASE WHEN p.product_master_category_id = 9 THEN d.quantity ELSE 0 END) AS accessories_quantity, 
-                    SUM(CASE WHEN p.product_master_category_id = 4 THEN d.total_price ELSE 0 END) AS tire_price, 
-                    SUM(CASE WHEN p.product_master_category_id = 6 THEN d.total_price ELSE 0 END) AS oil_price, 
+                    SUM(CASE WHEN p.product_sub_category_id IN (442, 444) THEN d.total_price ELSE 0 END) AS tire_price, 
+                    SUM(CASE WHEN p.product_sub_category_id = 540 THEN d.total_price ELSE 0 END) AS oil_price, 
                     SUM(CASE WHEN p.product_master_category_id = 9 THEN d.total_price ELSE 0 END) AS accessories_price
                 FROM " . InvoiceDetail::model()->tableName() . " d 
                 INNER JOIN " . InvoiceHeader::model()->tableName() . " h ON h.id = d.invoice_id
@@ -301,11 +301,11 @@ class InvoiceDetail extends CActiveRecord {
             ':employee_id_sales_person' => $employeeId,
         );
         
-        $sql = "SELECT MONTH(h.invoice_date) AS month, SUM(CASE WHEN p.product_master_category_id = 4 THEN d.quantity ELSE 0 END) AS tire_quantity, 
-                    SUM(CASE WHEN p.product_master_category_id = 6 THEN d.quantity ELSE 0 END) AS oil_quantity, 
+        $sql = "SELECT MONTH(h.invoice_date) AS month, SUM(CASE WHEN p.product_sub_category_id IN (442, 444) THEN d.quantity ELSE 0 END) AS tire_quantity, 
+                    SUM(CASE WHEN p.product_sub_category_id = 540 THEN d.quantity ELSE 0 END) AS oil_quantity, 
                     SUM(CASE WHEN p.product_master_category_id = 9 THEN d.quantity ELSE 0 END) AS accessories_quantity, 
-                    SUM(CASE WHEN p.product_master_category_id = 4 THEN d.total_price ELSE 0 END) AS tire_price, 
-                    SUM(CASE WHEN p.product_master_category_id = 6 THEN d.total_price ELSE 0 END) AS oil_price, 
+                    SUM(CASE WHEN p.product_sub_category_id IN (442, 444) THEN d.total_price ELSE 0 END) AS tire_price, 
+                    SUM(CASE WHEN p.product_sub_category_id = 540 THEN d.total_price ELSE 0 END) AS oil_price, 
                     SUM(CASE WHEN p.product_master_category_id = 9 THEN d.total_price ELSE 0 END) AS accessories_price
                 FROM " . InvoiceDetail::model()->tableName() . " d 
                 INNER JOIN " . InvoiceHeader::model()->tableName() . " h ON h.id = d.invoice_id
