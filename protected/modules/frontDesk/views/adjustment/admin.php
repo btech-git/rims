@@ -68,6 +68,10 @@ $('.search-form form').submit(function(){
                     'value' => '$data->transaction_type'
                 ),
                 array(
+                    'header' => 'Parts',
+                    'value' => '$data->getProducts()',
+                ),
+                array(
                     'name' => 'username_name',
                     'value' => '(!empty($data->user->username)?$data->user->username:"")',
                 ),
@@ -75,11 +79,11 @@ $('.search-form form').submit(function(){
                     'name' => 'supervisor_name',
                     'value' => '(!empty($data->supervisor->username)?$data->supervisor->username:"")',
                 ),
-                array(
-                    'name' => 'branch_id',
-                    'filter' => CHtml::activeDropDownList($model, 'branch_id', CHtml::listData(Branch::model()->findAll(array('order' => 'name')), 'id', 'name'), array('empty' => '-- All --')),
-                    'value' => '$data->branch->name'
-                ),
+//                array(
+//                    'name' => 'branch_id',
+//                    'filter' => CHtml::activeDropDownList($model, 'branch_id', CHtml::listData(Branch::model()->findAll(array('order' => 'name')), 'id', 'name'), array('empty' => '-- All --')),
+//                    'value' => '$data->branch->name'
+//                ),
                 'status',
                 array(
                     'header' => 'Input',
