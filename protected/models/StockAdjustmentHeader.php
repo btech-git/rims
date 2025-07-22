@@ -34,6 +34,7 @@ class StockAdjustmentHeader extends MonthlyTransactionActiveRecord {
     public $supervisor_name;
     public $username_name;
     public $branch_name;
+    public $search_product;
 
     // public $supervisor_name;
 
@@ -52,10 +53,10 @@ class StockAdjustmentHeader extends MonthlyTransactionActiveRecord {
             array('branch_id, warehouse_id, user_id, supervisor_id, branch_id_destination', 'numerical', 'integerOnly' => true),
             array('stock_adjustment_number, status, transaction_type', 'length', 'max' => 30),
             array('stock_adjustment_number', 'unique'),
-            array('note', 'safe'),
+            array('note, search_product', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, stock_adjustment_number, date_posting, created_datetime, branch_id, branch_id_destination, warehouse_id, user_id, supervisor_id, username_name, supervisor_name,branch_name,status, note, transaction_type', 'safe', 'on' => 'search'),
+            array('id, stock_adjustment_number, date_posting, created_datetime, branch_id, branch_id_destination, warehouse_id, user_id, supervisor_id, username_name, supervisor_name,branch_name,status, note, transaction_type, search_product', 'safe', 'on' => 'search'),
         );
     }
 
@@ -229,4 +230,13 @@ class StockAdjustmentHeader extends MonthlyTransactionActiveRecord {
         $this->setCodeNumberByNext('stock_adjustment_number', $branchCode, StockAdjustmentHeader::CONSTANT, $currentMonth, $currentYear);
     }
 
+    public function getProducts() {
+        $products = array();
+
+        foreach ($this->stockAdjustmentDetails as $detail) {
+            $products[] = $detail->product->name . ', ';
+        }
+
+        return $this->search_product = implode('', $products);
+    }
 }
