@@ -89,7 +89,7 @@ class ProfitLossMonthlyController extends Controller {
         $yearMonth = (isset($_GET['YearMonth'])) ? $_GET['YearMonth'] : date('Y-m');
         $branchId = (isset($_GET['BranchId'])) ? $_GET['BranchId'] : '';
 
-        $profitLossSummary = new ProfitLossSummary($jurnalUmum->search());
+        $profitLossSummary = new ProfitLossMonthlySummary($jurnalUmum->search());
         $profitLossSummary->setupLoading();
         $profitLossSummary->setupPaging(1000, 1);
         $profitLossSummary->setupSorting();

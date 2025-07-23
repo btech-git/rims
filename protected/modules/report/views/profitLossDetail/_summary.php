@@ -48,7 +48,12 @@
                         </td>
                         <td style="text-align: right">
                             <?php $coaBalance = (empty($coa->coaIds)) ? $coa->getProfitLossBalance($startDate, $endDate, $branchId) : 0; ?>
-                            <?php echo ($coaBalance == 0) ? '' : CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $coaBalance)); ?>
+                            <?php echo ($coaBalance == 0) ? '' : CHtml::link(Yii::app()->numberFormatter->format('#,##0.00', $coaBalance), Yii::app()->createUrl("report/profitLossDetail/jurnalTransaction", array(
+                                "CoaId" => $coa->id, 
+                                "StartDate" => $startDate, 
+                                "EndDate" => $endDate, 
+                                "BranchId" => $branchId
+                            )), array('target' => '_blank')); ?>
                         </td>
                     </tr>
 
@@ -68,7 +73,12 @@
                                         )), array('target' => '_blank')); ?>
                                     </td>
                                     <td style="text-align: right; font-size: 10px">
-                                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $accountBalance)); ?>
+                                        <?php echo CHtml::link(Yii::app()->numberFormatter->format('#,##0.00', $accountBalance), Yii::app()->createUrl("report/profitLossDetail/jurnalTransaction", array(
+                                            "CoaId" => $account->id, 
+                                            "StartDate" => $startDate, 
+                                            "EndDate" => $endDate, 
+                                            "BranchId" => $branchId
+                                        )), array('target' => '_blank')); ?>
                                     </td>
                                 </tr>
                                 <?php $accountGroupBalance += $accountBalance; ?>

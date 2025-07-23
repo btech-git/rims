@@ -44,6 +44,37 @@ class ProfitLossController extends Controller {
         ));
     }
 
+    public function actionJurnalTransaction() {
+        set_time_limit(0);
+        ini_set('memory_limit', '1024M');
+
+        $jurnalUmum = new JurnalUmum('search');
+
+        $accountCategoryId = (isset($_GET['AccountCategoryId'])) ? $_GET['AccountCategoryId'] : '';
+        $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : date('Y-m-d');
+        $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
+        $branchId = (isset($_GET['BranchId'])) ? $_GET['BranchId'] : '';
+
+        $profitLossSummary = new ProfitLossSummary($jurnalUmum->search());
+        $profitLossSummary->setupLoading();
+        $profitLossSummary->setupPaging(1000, 1);
+        $profitLossSummary->setupSorting();
+        $profitLossSummary->setupFilter($startDate, $endDate, $accountCategoryId, $branchId);
+
+//        if (isset($_GET['SaveToExcel'])) {
+//            $this->saveToExcelTransactionJournal($profitLossSummary, $coaId, $startDate, $endDate, $branchId);
+//        }
+
+        $this->render('jurnalTransaction', array(
+            'jurnalUmum' => $jurnalUmum,
+            'profitLossSummary' => $profitLossSummary,
+            'startDate' => $startDate,
+            'endDate' => $endDate,
+            'accountCategoryId' => $accountCategoryId,
+            'branchId' => $branchId,
+        ));
+    }
+
     protected function saveToExcel($accountCategoryTypes, $startDate, $endDate, $branchId) {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');

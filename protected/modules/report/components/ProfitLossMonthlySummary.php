@@ -1,6 +1,6 @@
 <?php
 
-class ProfitLossSummary extends CComponent {
+class ProfitLossMonthlySummary extends CComponent {
 
     public $dataProvider;
 
@@ -9,10 +9,6 @@ class ProfitLossSummary extends CComponent {
     }
 
     public function setupLoading() {
-        $this->dataProvider->criteria->together = TRUE;
-        $this->dataProvider->criteria->with = array(
-            'coa',
-        );
         
     }
 
@@ -30,11 +26,10 @@ class ProfitLossSummary extends CComponent {
         $this->dataProvider->criteria->order = $this->dataProvider->sort->orderBy;
     }
 
-    public function setupFilter($startDate, $endDate, $accountCategoryId, $branchId) {
-        $this->dataProvider->criteria->addCondition("t.tanggal_transaksi BETWEEN :start_date AND :end_date AND t.is_coa_category = 0");
-        $this->dataProvider->criteria->params[':start_date'] = $startDate;
-        $this->dataProvider->criteria->params[':end_date'] = $endDate;
-        $this->dataProvider->criteria->compare('coa.coa_sub_category_id', $accountCategoryId);
+    public function setupFilter($yearMonth, $accountId, $branchId) {
+        $this->dataProvider->criteria->addCondition("SUBSTRING_INDEX(t.tanggal_transaksi, '-', 2) = :year_month AND t.is_coa_category = 0");
+        $this->dataProvider->criteria->params[':year_month'] = $yearMonth;
+        $this->dataProvider->criteria->compare('t.coa_id', $accountId);
         $this->dataProvider->criteria->compare('t.branch_id', $branchId);
     }
 }

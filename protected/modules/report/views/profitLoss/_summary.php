@@ -41,7 +41,12 @@
                 </td>
                 
                 <td style="text-align: right; font-weight: bold">
-                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $accountCategoryBalance)); ?>
+                    <?php echo CHtml::link(CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $accountCategoryBalance)), Yii::app()->createUrl("report/profitLoss/jurnalTransaction", array(
+                        "AccountCategoryId" => $accountCategory->id, 
+                        "StartDate" => $startDate, 
+                        "EndDate" => $endDate, 
+                        "BranchId" => $branchId,
+                    )), array('target' => '_blank')); ?>
                 </td>
             </tr>
             <?php if ((int)$accountCategory->id === 28 || (int)$accountCategory->id === 30 || (int)$accountCategory->id === 31): ?>

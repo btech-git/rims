@@ -17,23 +17,23 @@ Yii::app()->clientScript->registerCss('_report', '
 
 <div style="font-weight: bold; text-align: center">
     <div style="font-size: larger">Transaction Detail</div>
-    <?php $coa = Coa::model()->findByPk($coaId); ?>
-    <div><?php echo CHtml::encode($coa->code); ?> - <?php echo CHtml::encode($coa->name); ?></div>
-    <div><?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($startDate))); ?> - <?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($endDate))); ?></div>
+    <?php $coaCategory = CoaSubCategory::model()->findByPk($accountCategoryId); ?>
+    <div><?php echo CHtml::encode($coaCategory->code); ?> - <?php echo CHtml::encode($coaCategory->name); ?></div>
+    <div><?php echo CHtml::encode(Yii::app()->dateFormatter->format('MMMM yyyy', strtotime($startDate))); ?> - <?php echo CHtml::encode(Yii::app()->dateFormatter->format('MMMM yyyy', strtotime($endDate))); ?></div>
 </div>
 
 <div class="clear"></div>
 
 <div class="row buttons">
     <div class="reportDisplay">
-        <?php echo ReportHelper::summaryText($balanceSheetSummary->dataProvider); ?>
+        <?php echo ReportHelper::summaryText($profitLossSummary->dataProvider); ?>
         <?php //echo ReportHelper::sortText($transaksiPembelianSummary->dataProvider->sort, array('Jenis Persediaan', 'Tanggal SO', 'Pelanggan')); ?>
     </div>
     <?php /*echo CHtml::hiddenField('CoaId', $coaId); ?>
     <?php echo CHtml::hiddenField('StartDate', $startDate); ?>
     <?php echo CHtml::hiddenField('EndDate', $endDate); ?>
-    <?php echo CHtml::hiddenField('BranchId', $branchId); ?>
-    <?php echo CHtml::submitButton('Simpan ke Excel', array('name' => 'SaveToExcel'));*/ ?>
+    <?php echo CHtml::hiddenField('BranchId', $branchId);*/ ?>
+    <?php //echo CHtml::submitButton('Simpan ke Excel', array('name' => 'SaveToExcel')); ?>
 </div>
 
 <?php echo CHtml::endForm(); ?>
@@ -51,7 +51,7 @@ Yii::app()->clientScript->registerCss('_report', '
     </tr>
     <?php $totalDebet = '0.00'; ?>
     <?php $totalCredit = '0.00'; ?>
-    <?php foreach ($balanceSheetSummary->dataProvider->data as $i => $header): ?>
+    <?php foreach ($profitLossSummary->dataProvider->data as $i => $header): ?>
         <tr>
             <td class="width2-1" style="text-align: center">
                 <?php echo $i+1; ?>
@@ -80,19 +80,19 @@ Yii::app()->clientScript->registerCss('_report', '
         <?php $totalDebet += $debitAmount; ?>
         <?php $totalCredit += $creditAmount; ?>
     <?php endforeach; ?>
-    <tr>
-        <td colspan='5' style="text-align: right">Total</td>
-        <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $totalDebet)); ?></td>
-        <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $totalCredit)); ?></td>
-    </tr>
+        <tr>
+            <td colspan='5' style="text-align: right">Total</td>
+            <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $totalDebet)); ?></td>
+            <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $totalCredit)); ?></td>
+        </tr>
 </table>
 
 <div>
     <div class="right">
         <?php $this->widget('system.web.widgets.pagers.CLinkPager', array(
-            'itemCount' => $balanceSheetSummary->dataProvider->pagination->itemCount,
-            'pageSize' => $balanceSheetSummary->dataProvider->pagination->pageSize,
-            'currentPage' => $balanceSheetSummary->dataProvider->pagination->getCurrentPage(false),
+            'itemCount' => $profitLossSummary->dataProvider->pagination->itemCount,
+            'pageSize' => $profitLossSummary->dataProvider->pagination->pageSize,
+            'currentPage' => $profitLossSummary->dataProvider->pagination->getCurrentPage(false),
         )); ?>
     </div>
     <div class="clear"></div>
