@@ -32,7 +32,7 @@ class PaymentInSummary extends CComponent {
         
         $this->dataProvider->criteria->addBetweenCondition('t.payment_date', $startDate, $endDate);
         $this->dataProvider->criteria->compare('t.branch_id', $branch);
-        $this->dataProvider->criteria->addCondition("t.user_id_cancelled is null");
+        $this->dataProvider->criteria->addCondition("t.user_id_cancelled is null AND t.status = 'Approved'");
         
         if (!empty($customerType)) {
             $this->dataProvider->criteria->compare('customer.customer_type', $customerType);
@@ -45,7 +45,7 @@ class PaymentInSummary extends CComponent {
                 INNER JOIN " . InvoiceHeader::model()->tableName() . " i ON i.id = p.invoice_header_id
                 INNER JOIN " . Vehicle::model()->tableName() . " v ON v.id = i.vehicle_id
                 WHERE v.plate_number LIKE :plate_number
-            ) AND t.status = 'Approved'");
+            )");
             
             $this->dataProvider->criteria->params[':plate_number'] = "%{$plateNumber}%";
         }
