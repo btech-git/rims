@@ -44,7 +44,8 @@ class PaymentInSummary extends CComponent {
                 FROM " . PaymentInDetail::model()->tableName() . " p 
                 INNER JOIN " . InvoiceHeader::model()->tableName() . " i ON i.id = p.invoice_header_id
                 INNER JOIN " . Vehicle::model()->tableName() . " v ON v.id = i.vehicle_id
-                WHERE v.plate_number LIKE :plate_number)");
+                WHERE v.plate_number LIKE :plate_number
+            ) AND t.status = 'Approved'");
             
             $this->dataProvider->criteria->params[':plate_number'] = "%{$plateNumber}%";
         }
