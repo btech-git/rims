@@ -36,20 +36,21 @@ class EmployeeSaleTransactionInfoController extends Controller {
         ));
     }
 
-    public function actionDetailInfo($employeeId, $startDate, $endDate, $productMasterCategoryId) {
+    public function actionDetailInfo($employeeId, $startDate, $endDate, $productSubCategoryIdsString) {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
 
         $page = (isset($_GET['page'])) ? $_GET['page'] : 1;
         
-        $dataProvider = InvoiceDetail::model()->searchByTransactionDetailInfo($employeeId, $startDate, $endDate, $productMasterCategoryId, $page);
+        $productSubCategoryIds = explode(',', $productSubCategoryIdsString);
+        
+        $dataProvider = InvoiceDetail::model()->searchByTransactionDetailInfo($employeeId, $startDate, $endDate, $productSubCategoryIds, $page);
         
         $this->render('detailInfo', array(
             'dataProvider' => $dataProvider,
             'startDate' => $startDate,
             'endDate' => $endDate,
             'employeeId' => $employeeId,
-            'productMasterCategoryId' => $productMasterCategoryId,
         ));
     }
 

@@ -205,7 +205,7 @@ class InvoiceDetail extends CActiveRecord {
         
         $sql = "SELECT r.employee_id_sales_person, SUM(CASE WHEN p.product_sub_category_id IN (442, 444) THEN d.quantity ELSE 0 END) AS tire_quantity, 
                     SUM(CASE WHEN p.product_sub_category_id = 540 THEN d.quantity ELSE 0 END) AS oil_quantity, 
-                    SUM(CASE WHEN p.product_master_category_id = 9 THEN d.quantity ELSE 0 END) AS accessories_quantity
+                    SUM(CASE WHEN p.product_sub_category_id BETWEEN 636 AND 649 THEN d.quantity ELSE 0 END) AS accessories_quantity
                 FROM " . InvoiceDetail::model()->tableName() . " d 
                 INNER JOIN " . InvoiceHeader::model()->tableName() . " h ON h.id = d.invoice_id
                 INNER JOIN " . RegistrationTransaction::model()->tableName() . " r ON r.id = h.registration_transaction_id
@@ -417,7 +417,7 @@ class InvoiceDetail extends CActiveRecord {
         return $resultSet;
     }    
     
-    public function searchByTransactionDetailInfo($employeeId, $startDate, $endDate, $productSubCategoryId, $page) {
+    public function searchByTransactionDetailInfo($employeeId, $startDate, $endDate, $productSubCategoryIds, $page) {
         // Warning: Please modify the following code to remove attributes that
         // should not be searched.
 
@@ -434,7 +434,7 @@ class InvoiceDetail extends CActiveRecord {
         );
 
         $criteria->compare('registrationTransaction.employee_id_sales_person', $employeeId);
-        $criteria->compare('product.product_sub_category_id', $productSubCategoryId);
+        $criteria->addInCondition('product.product_sub_category_id', $productSubCategoryIds);
         $criteria->addBetweenCondition('invoiceHeader.invoice_date', $startDate, $endDate);
         $criteria->addCondition("invoiceHeader.status NOT LIKE '%CANCEL%' AND registrationTransaction.status NOT LIKE '%CANCEL%'");
         

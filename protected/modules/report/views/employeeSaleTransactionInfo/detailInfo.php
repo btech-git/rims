@@ -33,7 +33,6 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                     'dataProvider' => $dataProvider,
                     'startDate' => $startDate,
                     'endDate' => $endDate,
-                    'productMasterCategoryId' => $productMasterCategoryId,
                 )); ?>
             </div>
             <div class="clear"></div>

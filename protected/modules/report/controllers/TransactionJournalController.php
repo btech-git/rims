@@ -82,6 +82,15 @@ class TransactionJournalController extends Controller {
         ));
     }
 
+    public function actionBalanceErrorSummary() {
+        
+        $balanceErrorReport = JurnalUmum::getBalanceErrorReport();
+        
+        $this->render('balanceErrorSummary', array(
+            'balanceErrorReport' => $balanceErrorReport,
+        ));
+    }
+    
     public function actionAjaxJsonCoa() {
         if (Yii::app()->request->isAjaxRequest) {
             $coaId = (isset($_POST['JurnalUmum']['coa_id'])) ? $_POST['JurnalUmum']['coa_id'] : '';

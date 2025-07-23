@@ -156,6 +156,11 @@
                                         'visible' => Yii::app()->user->checkAccess('transactionJournalReport')
                                     ),
                                     array(
+                                        'label' => 'Jurnal Umum (unbalanced)', 
+                                        'url' => array('/report/transactionJournal/balanceErrorSummary'), 
+                                        'visible' => Yii::app()->user->checkAccess('director')
+                                    ),
+                                    array(
                                         'label' => 'Ringkasan Buku Besar', 
                                         'url' => array('/report/accountingJournalSummary/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('journalSummaryReport'),

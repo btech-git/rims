@@ -50,7 +50,9 @@ Yii::app()->clientScript->registerCss('_report', '
                 <td class="width1-1"><?php echo CHtml::encode(CHtml::value($header, 'invoice_number')); ?></td>
                 <td class="width1-2"><?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($header->invoice_date))); ?></td>
                 <td class="width1-3"><?php echo CHtml::encode(CHtml::value($header, 'customer.name')); ?></td>
-                <td class="width1-4" style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($header, 'total_price'))); ?></td>
+                <td class="width1-4" style="text-align: right">
+                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($header, 'total_price'))); ?>
+                </td>
             </tr>
             <?php if ($showDetails): ?>
                 <tr class="items2">
@@ -58,10 +60,18 @@ Yii::app()->clientScript->registerCss('_report', '
                         <table>
                             <?php foreach ($header->invoiceDetails as $detail): ?>
                                 <tr>
-                                    <td class="width2-1"><?php echo $detail->product_id === null ? CHtml::encode(CHtml::value($detail, 'service.name')) : CHtml::encode(CHtml::value($detail, 'product.name')); ?></td>
-                                    <td class="width2-2" style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($detail, 'quantity'))); ?></td>
-                                    <td class="width2-2" style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($detail, 'unit_price'))); ?></td>
-                                    <td class="width2-2" style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($detail, 'total_price'))); ?></td>
+                                    <td class="width2-1">
+                                        <?php echo $detail->product_id === null ? CHtml::encode(CHtml::value($detail, 'service.name')) : CHtml::encode(CHtml::value($detail, 'product.name')); ?>
+                                    </td>
+                                    <td class="width2-2" style="text-align: right">
+                                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($detail, 'quantity'))); ?>
+                                    </td>
+                                    <td class="width2-2" style="text-align: right">
+                                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($detail, 'unit_price'))); ?>
+                                    </td>
+                                    <td class="width2-2" style="text-align: right">
+                                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($detail, 'total_price'))); ?>
+                                    </td>
                                 </tr>
                             <?php endforeach; ?>
                         </table>

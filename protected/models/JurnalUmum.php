@@ -534,7 +534,21 @@ class JurnalUmum extends CActiveRecord {
         return $resultSet;
     }
     
-    public static function getTransactionJournalCount($startDate, $endDate, $transactionType, $branchId, $coaId) {
+    public static function getBalanceErrorReport() {
+        
+        $sql = "SELECT kode_transaksi, MAX(tanggal_transaksi) as transaction_date, SUM(CASE WHEN debet_kredit = 'D' THEN total ELSE 0 END) AS debit, SUM(CASE WHEN debet_kredit = 'K' THEN total ELSE 0 END) AS credit
+                FROM " . JurnalUmum::model()->tableName() . "
+                WHERE tanggal_transaksi BETWEEN '2024-01-01' AND :end_date
+                GROUP BY kode_transaksi
+                HAVING debit <> credit
+                ORDER BY transaction_date ASC";
+        
+        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, array(':end_date' => date('Y-m-d')));
+
+        return $resultSet;
+    }
+
+        public static function getTransactionJournalCount($startDate, $endDate, $transactionType, $branchId, $coaId) {
         
         $transactionTypeConditionSql = '';
         $branchConditionSql = '';
