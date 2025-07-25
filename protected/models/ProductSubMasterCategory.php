@@ -22,7 +22,10 @@
  * @property string $date_posting
  * @property integer $is_approved
  * @property integer $user_id_approval
- * @property string $date_approval
+ * @property string $date_time_approval
+ * @property integer $is_rejected
+ * @property integer $user_id_reject
+ * @property string $date_time_reject
  * @property integer $margin_type
  * @property integer $margin_amount
  *
@@ -40,13 +43,13 @@
  * @property Coa $coaInventoryInTransit
  * @property Coa $coaOutstandingPart
  * @property User $user
+ * @property UserIdApproval $userIdApproval
+ * @property UserIdReject $userIdReject
  */
 class ProductSubMasterCategory extends CActiveRecord {
 
     public $product_master_category_code;
     public $product_master_category_name;
-    // public $coa_name;
-    // public $coa_code;
     public $coa_persediaan_barang_dagang_name;
     public $coa_persediaan_barang_dagang_code;
     public $coa_hpp_name;
@@ -81,13 +84,14 @@ class ProductSubMasterCategory extends CActiveRecord {
         // will receive user inputs.
         return array(
             array('product_master_category_id, code, name, status, user_id, margin_type, margin_amount', 'required'),
-            array('product_master_category_id, coa_persediaan_barang_dagang, coa_hpp, coa_penjualan_barang_dagang, coa_retur_penjualan, coa_diskon_penjualan, coa_retur_pembelian, coa_diskon_pembelian, coa_inventory_in_transit, coa_consignment_inventory, coa_outstanding_part_id, user_id, is_approved, user_id_approval, margin_type, margin_amount', 'numerical', 'integerOnly' => true),
+            array('product_master_category_id, coa_persediaan_barang_dagang, coa_hpp, coa_penjualan_barang_dagang, coa_retur_penjualan, coa_diskon_penjualan, coa_retur_pembelian, coa_diskon_pembelian, coa_inventory_in_transit, coa_consignment_inventory, coa_outstanding_part_id, user_id, is_approved, user_id_approval, margin_type, margin_amount, is_rejected, user_id_reject', 'numerical', 'integerOnly' => true),
             array('code', 'length', 'max' => 20),
             array('name', 'length', 'max' => 30),
             array('status', 'length', 'max' => 10),
+            array('date_time_approval, date_time_reject', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, product_master_category_id, code, name, status, product_master_category_code, product_master_category_name,coa_persediaan_barang_dagang, coa_hpp, coa_penjualan_barang_dagang, coa_retur_penjualan, coa_diskon_penjualan, coa_retur_pembelian, coa_diskon_pembelian,coa_persediaan_barang_dagang_name, coa_hpp_name, coa_penjualan_barang_dagang_name, coa_retur_penjualan_name, coa_diskon_penjualan_name, coa_retur_pembelian_name, coa_diskon_pembelian_name,coa_persediaan_barang_dagang_code, coa_hpp_code, coa_penjualan_barang_dagang_code, coa_retur_penjualan_code, coa_diskon_penjualan_code, coa_retur_pembelian_code, coa_diskon_pembelian_code, coa_inventory_in_transit, coa_inventory_in_transit_name, coa_inventory_in_transit_code, coa_consignment_inventory,coa_consignment_inventory_name, coa_consignment_inventory_code, coa_outstanding_part_id, date_posting, user_id, is_approved, user_id_approval, date_approval, user_id, margin_type, margin_amount', 'safe', 'on' => 'search'),
+            array('id, product_master_category_id, code, name, status, product_master_category_code, product_master_category_name,coa_persediaan_barang_dagang, coa_hpp, coa_penjualan_barang_dagang, coa_retur_penjualan, coa_diskon_penjualan, coa_retur_pembelian, coa_diskon_pembelian,coa_persediaan_barang_dagang_name, coa_hpp_name, coa_penjualan_barang_dagang_name, coa_retur_penjualan_name, coa_diskon_penjualan_name, coa_retur_pembelian_name, coa_diskon_pembelian_name,coa_persediaan_barang_dagang_code, coa_hpp_code, coa_penjualan_barang_dagang_code, coa_retur_penjualan_code, coa_diskon_penjualan_code, coa_retur_pembelian_code, coa_diskon_pembelian_code, coa_inventory_in_transit, coa_inventory_in_transit_name, coa_inventory_in_transit_code, coa_consignment_inventory,coa_consignment_inventory_name, coa_consignment_inventory_code, coa_outstanding_part_id, date_posting, user_id, is_approved, user_id_approval, date_time_approval, user_id_reject, date_time_reject, is_rejected, margin_type, margin_amount', 'safe', 'on' => 'search'),
         );
     }
 
@@ -113,6 +117,7 @@ class ProductSubMasterCategory extends CActiveRecord {
             'coaOutstandingPart' => array(self::BELONGS_TO, 'Coa', 'coa_outstanding_part_id'),
             'user' => array(self::BELONGS_TO, 'Users', 'user_id'),
             'userIdApproval' => array(self::BELONGS_TO, 'Users', 'user_id_approval'),
+            'userIdReject' => array(self::BELONGS_TO, 'Users', 'user_id_reject'),
         );
     }
 
@@ -182,6 +187,7 @@ class ProductSubMasterCategory extends CActiveRecord {
         $criteria->compare('t.date_posting', $this->date_posting);
         $criteria->compare('t.is_approved', $this->is_approved);
         $criteria->compare('t.user_id_approval', $this->user_id_approval);
+        $criteria->compare('t.user_id_reject', $this->user_id_reject);
 
         $criteria->together = true;
         $criteria->with = array('productMasterCategory', 'coaPersediaanBarangDagang', 'coaHpp', 'coaPenjualanBarangDagang', 'coaReturPenjualan', 'coaDiskonPenjualan', 'coaReturPembelian', 'coaDiskonPembelian', 'coaInventoryInTransit', 'coaConsignmentInventory');

@@ -33,6 +33,7 @@ class SaleInvoiceCarSubModelYearlyController extends Controller {
         $yearlySaleSummary = InvoiceHeader::getSaleInvoiceCarSubModelYearlyData($year, $branchId, $carMake, $carModel);
         foreach ($yearlySaleSummary as $yearlySaleSummaryItem) {
             $monthValue = intval(substr($yearlySaleSummaryItem['year_month_value'], 4, 2));
+            $invoiceVehicleInfo[$yearlySaleSummaryItem['car_sub_model_id']]['car_sub_model_id'] = $yearlySaleSummaryItem['car_sub_model_id'];
             $invoiceVehicleInfo[$yearlySaleSummaryItem['car_sub_model_id']]['car_model_name'] = $yearlySaleSummaryItem['car_model_name'];
             $invoiceVehicleInfo[$yearlySaleSummaryItem['car_sub_model_id']]['car_make_name'] = $yearlySaleSummaryItem['car_make_name'];
             $invoiceVehicleInfo[$yearlySaleSummaryItem['car_sub_model_id']]['car_sub_model_name'] = $yearlySaleSummaryItem['car_sub_model_name'];
@@ -62,6 +63,23 @@ class SaleInvoiceCarSubModelYearlyController extends Controller {
         ));
     }
     
+    public function actionTransactionInfo($carSubModelId, $startDate, $endDate) {
+        set_time_limit(0);
+        ini_set('memory_limit', '1024M');
+
+        $page = (isset($_GET['page'])) ? $_GET['page'] : 1;
+        
+        $dataProvider = InvoiceHeader::model()->searchByTransactionInfo($carSubModelId, $startDate, $endDate, $page);
+        $carSubModel = VehicleCarSubModel::model()->findByPk($carSubModelId);
+        
+        $this->render('transactionInfo', array(
+            'dataProvider' => $dataProvider,
+            'startDate' => $startDate,
+            'endDate' => $endDate,
+            'carSubModel' => $carSubModel,
+        ));
+    }
+
     public function actionAjaxHtmlUpdateCarModelSelect() {
         if (Yii::app()->request->isAjaxRequest) {
             $carMake = (isset($_GET['CarMake'])) ? $_GET['CarMake'] : '';

@@ -200,7 +200,7 @@ class Coa extends CActiveRecord {
                 'defaultOrder' => 't.code ASC, t.name ASC',
             ),
             'pagination' => array(
-                'pageSize' => 500,
+                'pageSize' => 50,
             ),
         ));
     }
@@ -1038,6 +1038,31 @@ class Coa extends CActiveRecord {
 
         $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
         
+        return $resultSet;
+    }
+    
+    public function getReceivableInvoiceReport($endDate, $branchId) {
+        $branchConditionSql = '';
+        
+        $params = array(
+            ':coa_id' => $this->id,
+            ':end_date' => $endDate,
+        );
+        
+        if (!empty($branchId)) {
+            $branchConditionSql = ' AND i.branch_id = :branch_id';
+            $params[':branch_id'] = $branchId;
+        }
+        
+        $sql = "
+            SELECT j.id, j.coa_id, j.tanggal_transaksi, j.kode_transaksi, j.remark, CASE WHEN j.debet_kredit = 'D' THEN total ELSE 0 END AS debit, 
+                CASE WHEN j.debet_kredit = 'K' THEN total ELSE 0 END AS credit
+            FROM " . JurnalUmum::model()->tableName() . " j
+            WHERE j.coa_id = :coa_id AND j.tanggal_transaksi BETWEEN '2025-01-01' AND :end_date " . $branchConditionSql . "
+            ORDER BY j.tanggal_transaksi ASC, j.id ASC";
+
+        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
+
         return $resultSet;
     }
 }

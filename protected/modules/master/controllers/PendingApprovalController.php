@@ -52,9 +52,29 @@ class PendingApprovalController extends Controller {
         $productDataProvider = $product->search();
         $productDataProvider->criteria->addCondition('t.is_approved = 0');
 
+        $productMasterCategory = Search::bind(new ProductMasterCategory('search'), isset($_GET['ProductMasterCategory']) ? $_GET['ProductMasterCategory'] : '');
+        $productMasterCategoryDataProvider = $productMasterCategory->search();
+        $productMasterCategoryDataProvider->criteria->addCondition('t.is_approved = 0 AND t.is_rejected = 0');
+
+        $productSubMasterCategory = Search::bind(new ProductSubMasterCategory('search'), isset($_GET['ProductSubMasterCategory']) ? $_GET['ProductSubMasterCategory'] : '');
+        $productSubMasterCategoryDataProvider = $productSubMasterCategory->search();
+        $productSubMasterCategoryDataProvider->criteria->addCondition('t.is_approved = 0 AND t.is_rejected = 0');
+
+        $productSubCategory = Search::bind(new ProductSubCategory('search'), isset($_GET['ProductSubCategory']) ? $_GET['ProductSubCategory'] : '');
+        $productSubCategoryDataProvider = $productSubCategory->search();
+        $productSubCategoryDataProvider->criteria->addCondition('t.is_approved = 0 AND t.is_rejected = 0');
+
         $service = Search::bind(new Service('search'), isset($_GET['Service']) ? $_GET['Service'] : '');
         $serviceDataProvider = $service->search();
         $serviceDataProvider->criteria->addCondition('t.is_approved = 0');
+
+        $serviceCategory = Search::bind(new ServiceCategory('search'), isset($_GET['ServiceCategory']) ? $_GET['ServiceCategory'] : '');
+        $serviceCategoryDataProvider = $serviceCategory->search();
+        $serviceCategoryDataProvider->criteria->addCondition('t.is_approved = 0 AND t.is_rejected = 0');
+
+        $serviceType = Search::bind(new ServiceType('search'), isset($_GET['ServiceType']) ? $_GET['ServiceType'] : '');
+        $serviceTypeDataProvider = $serviceType->search();
+        $serviceTypeDataProvider->criteria->addCondition('t.is_approved = 0 AND t.is_rejected = 0');
 
         $warehouse = Search::bind(new Warehouse('search'), isset($_GET['Warehouse']) ? $_GET['Warehouse'] : '');
         $warehouseDataProvider = $warehouse->search();
@@ -83,8 +103,18 @@ class PendingApprovalController extends Controller {
             'supplierDataProvider' => $supplierDataProvider,
             'product' => $product,
             'productDataProvider' => $productDataProvider,
+            'productMasterCategory' => $productMasterCategory,
+            'productMasterCategoryDataProvider' => $productMasterCategoryDataProvider,
+            'productSubMasterCategory' => $productSubMasterCategory,
+            'productSubMasterCategoryDataProvider' => $productSubMasterCategoryDataProvider,
+            'productSubCategory' => $productSubCategory,
+            'productSubCategoryDataProvider' => $productSubCategoryDataProvider,
             'service' => $service,
             'serviceDataProvider' => $serviceDataProvider,
+            'serviceCategory' => $serviceCategory,
+            'serviceCategoryDataProvider' => $serviceCategoryDataProvider,
+            'serviceType' => $serviceType,
+            'serviceTypeDataProvider' => $serviceTypeDataProvider,
             'warehouse' => $warehouse,
             'warehouseDataProvider' => $warehouseDataProvider,
             'carMake' => $carMake,
@@ -209,10 +239,10 @@ class PendingApprovalController extends Controller {
         $product = Product::model()->findByPk($productId);
         $product->status = 'Active';
         $product->is_approved = 1;
-        $service->is_rejected = 0;
-        $service->user_id_approval = Yii::app()->user->id;
-        $service->date_approval = date('Y-m-d');
-        $service->time_approval = date('H:i:s');
+        $product->is_rejected = 0;
+        $product->user_id_approval = Yii::app()->user->id;
+        $product->date_approval = date('Y-m-d');
+        $product->time_approval = date('H:i:s');
 
         if ($product->save(false)) {
             $warehouses = Warehouse::model()->findAllByAttributes(array('status' => 'Active', 'is_approved' => 1)); 
@@ -237,12 +267,99 @@ class PendingApprovalController extends Controller {
         $product = Product::model()->findByPk($productId);
         $product->status = 'Reject';
         $product->is_approved = 0;
-        $service->is_rejected = 1;
-        $service->user_id_reject = Yii::app()->user->id;
-        $service->date_reject = date('Y-m-d');
-        $service->time_reject = date('H:i:s');
+        $product->is_rejected = 1;
+        $product->user_id_reject = Yii::app()->user->id;
+        $product->date_reject = date('Y-m-d');
+        $product->time_reject = date('H:i:s');
 
         if ($product->save(false)) {
+            $this->redirect(array('index'));
+        }
+    }
+    
+    public function actionProductMasterCategoryApproval($productMasterCategoryId) {
+        $productMasterCategory = ProductMasterCategory::model()->findByPk($productMasterCategoryId);
+        $productMasterCategory->is_approved = 1;
+        $productMasterCategory->user_id_approval = Yii::app()->user->id;
+        $productMasterCategory->date_time_approval = date('Y-m-d H:i:s');
+        $productMasterCategory->is_rejected = 0;
+        $productMasterCategory->user_id_reject = null;
+        $productMasterCategory->date_time_reject = null;
+
+        if ($productMasterCategory->save(false)) {
+            $this->redirect(array('index'));
+        }
+    }
+    
+    public function actionProductMasterCategoryReject($productMasterCategoryId) {
+        $productMasterCategory = ProductMasterCategory::model()->findByPk($productMasterCategoryId);
+        $productMasterCategory->status = 'Reject';
+        $productMasterCategory->is_approved = 0;
+        $productMasterCategory->user_id_approval = null;
+        $productMasterCategory->date_time_approval = null;
+        $productMasterCategory->is_rejected = 1;
+        $productMasterCategory->user_id_reject = Yii::app()->user->id;
+        $productMasterCategory->date_time_reject = date('Y-m-d H:i:s');
+
+        if ($productMasterCategory->save(false)) {
+            $this->redirect(array('index'));
+        }
+    }
+    
+    public function actionProductSubMasterCategoryApproval($productSubMasterCategoryId) {
+        $productSubMasterCategory = ProductSubMasterCategory::model()->findByPk($productSubMasterCategoryId);
+        $productSubMasterCategory->is_approved = 1;
+        $productSubMasterCategory->user_id_approval = Yii::app()->user->id;
+        $productSubMasterCategory->date_time_approval = date('Y-m-d H:i:s');
+        $productSubMasterCategory->is_rejected = 0;
+        $productSubMasterCategory->user_id_reject = null;
+        $productSubMasterCategory->date_time_reject = null;
+
+        if ($productSubMasterCategory->save(false)) {
+            $this->redirect(array('index'));
+        }
+    }
+    
+    public function actionProductSubMasterCategoryReject($productSubMasterCategoryId) {
+        $productSubMasterCategory = ProductSubMasterCategory::model()->findByPk($productSubMasterCategoryId);
+        $productSubMasterCategory->status = 'Reject';
+        $productSubMasterCategory->is_approved = 0;
+        $productSubMasterCategory->user_id_approval = null;
+        $productSubMasterCategory->date_time_approval = null;
+        $productSubMasterCategory->is_rejected = 1;
+        $productSubMasterCategory->user_id_reject = Yii::app()->user->id;
+        $productSubMasterCategory->date_time_reject = date('Y-m-d H:i:s');
+
+        if ($productSubMasterCategory->save(false)) {
+            $this->redirect(array('index'));
+        }
+    }
+    
+    public function actionProductSubCategoryApproval($productSubCategoryId) {
+        $productSubCategory = ProductSubCategory::model()->findByPk($productSubCategoryId);
+        $productSubCategory->is_approved = 1;
+        $productSubCategory->user_id_approval = Yii::app()->user->id;
+        $productSubCategory->date_time_approval = date('Y-m-d H:i:s');
+        $productSubCategory->is_rejected = 0;
+        $productSubCategory->user_id_reject = null;
+        $productSubCategory->date_time_reject = null;
+
+        if ($productSubCategory->save(false)) {
+            $this->redirect(array('index'));
+        }
+    }
+    
+    public function actionProductSubCategoryReject($productSubCategoryId) {
+        $productSubCategory = ProductSubCategory::model()->findByPk($productSubCategoryId);
+        $productSubCategory->status = 'Reject';
+        $productSubCategory->is_approved = 0;
+        $productSubCategory->user_id_approval = null;
+        $productSubCategory->date_time_approval = null;
+        $productSubCategory->is_rejected = 1;
+        $productSubCategory->user_id_reject = Yii::app()->user->id;
+        $productSubCategory->date_time_reject = date('Y-m-d H:i:s');
+
+        if ($productSubCategory->save(false)) {
             $this->redirect(array('index'));
         }
     }
@@ -271,6 +388,66 @@ class PendingApprovalController extends Controller {
         $service->time_reject = date('H:i:s');
 
         if ($service->save(false)) {
+            $this->redirect(array('index'));
+        }
+    }
+    
+    public function actionServiceTypeApproval($serviceTypeId) {
+        $serviceType = ServiceType::model()->findByPk($serviceTypeId);
+        $serviceType->status = 'Active';
+        $serviceType->is_approved = 1;
+        $serviceType->user_id_approval = Yii::app()->user->id;
+        $serviceType->date_time_approval = date('Y-m-d H:i:s');
+        $serviceType->is_rejected = 0;
+        $serviceType->user_id_reject = null;
+        $serviceType->date_time_reject = null;
+
+        if ($serviceType->save(false)) {
+            $this->redirect(array('index'));
+        }
+    }
+    
+    public function actionServiceTypeReject($serviceTypeId) {
+        $serviceType = ServiceType::model()->findByPk($serviceTypeId);
+        $serviceType->status = 'Reject';
+        $serviceType->is_approved = 0;
+        $serviceType->user_id_approval = null;
+        $serviceType->date_time_approval = null;
+        $serviceType->is_rejected = 1;
+        $serviceType->user_id_reject = Yii::app()->user->id;
+        $serviceType->date_time_reject = date('Y-m-d H:i:s');
+
+        if ($serviceType->save(false)) {
+            $this->redirect(array('index'));
+        }
+    }
+    
+    public function actionServiceCategoryApproval($serviceCategoryId) {
+        $serviceCategory = ServiceCategory::model()->findByPk($serviceCategoryId);
+        $serviceCategory->status = 'Active';
+        $serviceCategory->is_approved = 1;
+        $serviceCategory->user_id_approval = Yii::app()->user->id;
+        $serviceCategory->date_time_approval = date('Y-m-d H:i:s');
+        $serviceCategory->is_rejected = 0;
+        $serviceCategory->user_id_reject = null;
+        $serviceCategory->date_time_reject = null;
+
+        if ($serviceCategory->save(false)) {
+            $this->redirect(array('index'));
+        }
+    }
+    
+    public function actionServiceCategoryReject($serviceCategoryId) {
+        $serviceCategory = ServiceCategory::model()->findByPk($serviceCategoryId);
+        $serviceCategory->status = 'Reject';
+        $serviceCategory->is_approved = 0;
+        $serviceCategory->user_id_approval = null;
+        $serviceCategory->date_time_approval = null;
+        $serviceCategory->is_rejected = 1;
+        $serviceCategory->user_id_reject = Yii::app()->user->id;
+        $serviceCategory->date_time_reject = date('Y-m-d H:i:s');
+
+        if ($serviceCategory->save(false)) {
             $this->redirect(array('index'));
         }
     }
@@ -320,11 +497,13 @@ class PendingApprovalController extends Controller {
         if (Yii::app()->request->isAjaxRequest) {
             $services = Service::model()->findAllByAttributes(array('id' => explode(',', $ids)));
             $valid = true;
+            
             foreach ($services as $service) {
                 $service->is_approved = 1;
                 $service->user_id_approval = Yii::app()->user->id;
                 $service->date_approval = date('Y-m-d');
                 $service->time_approval = date('H:i:s');
+                
                 $valid = $valid && $service->save(false);
             }
 
@@ -341,12 +520,114 @@ class PendingApprovalController extends Controller {
         if (Yii::app()->request->isAjaxRequest) {
             $services = Service::model()->findAllByAttributes(array('id' => explode(',', $ids)));
             $valid = true;
+            
             foreach ($services as $service) {
                 $service->is_rejected = 1;
                 $service->user_id_reject = Yii::app()->user->id;
                 $service->date_reject = date('Y-m-d');
                 $service->time_reject = date('H:i:s');
+                
                 $valid = $valid && $service->save(false);
+            }
+
+            $object = array(
+                'status' => $valid ? 'OK' : 'Not OK',
+            );
+
+            echo CJSON::encode($object);
+        }
+    }
+    
+    public function actionAjaxApproveAllServiceCategory($ids) {
+
+        if (Yii::app()->request->isAjaxRequest) {
+            $serviceCategories = ServiceCategory::model()->findAllByAttributes(array('id' => explode(',', $ids)));
+            $valid = true;
+            
+            foreach ($serviceCategories as $serviceCategory) {
+                $serviceCategory->is_approved = 1;
+                $serviceCategory->user_id_approval = Yii::app()->user->id;
+                $serviceCategory->date_time_approval = date('Y-m-d H:i:s');
+                $serviceCategory->is_rejected = 0;
+                $serviceCategory->user_id_reject = null;
+                $serviceCategory->date_time_reject = null;
+                
+                $valid = $valid && $serviceCategory->save(false);
+            }
+
+            $object = array(
+                'status' => $valid ? 'OK' : 'Not OK',
+            );
+
+            echo CJSON::encode($object);
+        }
+    }
+    
+    public function actionAjaxRejectAllServiceCategory($ids) {
+
+        if (Yii::app()->request->isAjaxRequest) {
+            $serviceCategories = ServiceCategory::model()->findAllByAttributes(array('id' => explode(',', $ids)));
+            $valid = true;
+            
+            foreach ($serviceCategories as $serviceCategory) {
+                $serviceCategory->is_approved = 0;
+                $serviceCategory->user_id_approval = null;
+                $serviceCategory->date_time_approval = null;
+                $serviceCategory->is_rejected = 1;
+                $serviceCategory->user_id_reject = Yii::app()->user->id;
+                $serviceCategory->date_time_reject = date('Y-m-d H:i:s');
+                
+                $valid = $valid && $serviceCategory->save(false);
+            }
+
+            $object = array(
+                'status' => $valid ? 'OK' : 'Not OK',
+            );
+
+            echo CJSON::encode($object);
+        }
+    }
+    
+    public function actionAjaxApproveAllServiceType($ids) {
+
+        if (Yii::app()->request->isAjaxRequest) {
+            $serviceTypes = ServiceType::model()->findAllByAttributes(array('id' => explode(',', $ids)));
+            $valid = true;
+            
+            foreach ($serviceTypes as $serviceType) {
+                $serviceType->is_approved = 1;
+                $serviceType->user_id_approval = Yii::app()->user->id;
+                $serviceType->date_time_approval = date('Y-m-d H:i:s');
+                $serviceType->is_rejected = 0;
+                $serviceType->user_id_reject = null;
+                $serviceType->date_time_reject = null;
+                
+                $valid = $valid && $serviceType->save(false);
+            }
+
+            $object = array(
+                'status' => $valid ? 'OK' : 'Not OK',
+            );
+
+            echo CJSON::encode($object);
+        }
+    }
+    
+    public function actionAjaxRejectAllServiceType($ids) {
+
+        if (Yii::app()->request->isAjaxRequest) {
+            $serviceTypes = ServiceType::model()->findAllByAttributes(array('id' => explode(',', $ids)));
+            $valid = true;
+            
+            foreach ($serviceTypes as $serviceType) {
+                $serviceType->is_approved = 0;
+                $serviceType->user_id_approval = null;
+                $serviceType->date_time_approval = null;
+                $serviceType->is_rejected = 1;
+                $serviceType->user_id_reject = Yii::app()->user->id;
+                $serviceType->date_time_reject = date('Y-m-d H:i:s');
+                
+                $valid = $valid && $serviceType->save(false);
             }
 
             $object = array(
@@ -362,11 +643,13 @@ class PendingApprovalController extends Controller {
         if (Yii::app()->request->isAjaxRequest) {
             $products = Product::model()->findAllByAttributes(array('id' => explode(',', $ids)));
             $valid = true;
+            
             foreach ($products as $product) {
                 $product->is_approved = 1;
                 $product->user_id_approval = Yii::app()->user->id;
                 $product->date_approval = date('Y-m-d');
                 $product->time_approval = date('H:i:s');
+                
                 $valid = $valid && $product->save(false);
                 
                 if ($valid) {
@@ -405,6 +688,156 @@ class PendingApprovalController extends Controller {
                 $product->date_reject = date('Y-m-d');
                 $product->time_reject = date('H:i:s');
                 $valid = $valid && $product->save(false);
+            }
+
+            $object = array(
+                'status' => $valid ? 'OK' : 'Not OK',
+            );
+
+            echo CJSON::encode($object);
+        }
+    }
+    
+    public function actionAjaxApproveAllProductMasterCategory($ids) {
+
+        if (Yii::app()->request->isAjaxRequest) {
+            $productMasterCategories = ProductMasterCategory::model()->findAllByAttributes(array('id' => explode(',', $ids)));
+            $valid = true;
+            
+            foreach ($productMasterCategories as $productMasterCategory) {
+                $productMasterCategory->is_approved = 1;
+                $productMasterCategory->user_id_approval = Yii::app()->user->id;
+                $productMasterCategory->date_time_approval = date('Y-m-d H:i:s');
+                $productMasterCategory->is_rejected = 0;
+                $productMasterCategory->user_id_reject = null;
+                $productMasterCategory->date_time_reject = null;
+                
+                $valid = $valid && $productMasterCategory->save(false);
+            }
+
+            $object = array(
+                'status' => $valid ? 'OK' : 'Not OK',
+            );
+
+            echo CJSON::encode($object);
+        }
+    }
+    
+    public function actionAjaxRejectAllProductMasterCategory($ids) {
+
+        if (Yii::app()->request->isAjaxRequest) {
+            $productMasterCategories = ProductMasterCategory::model()->findAllByAttributes(array('id' => explode(',', $ids)));
+            $valid = true;
+            
+            foreach ($productMasterCategories as $productMasterCategory) {
+                $productMasterCategory->is_approved = 0;
+                $productMasterCategory->user_id_approval = null;
+                $productMasterCategory->date_time_approval = null;
+                $productMasterCategory->is_rejected = 1;
+                $productMasterCategory->user_id_reject = Yii::app()->user->id;
+                $productMasterCategory->date_time_reject = date('Y-m-d H:i:s');
+                
+                $valid = $valid && $productMasterCategory->save(false);
+            }
+
+            $object = array(
+                'status' => $valid ? 'OK' : 'Not OK',
+            );
+
+            echo CJSON::encode($object);
+        }
+    }
+   
+    public function actionAjaxApproveAllProductSubMasterCategory($ids) {
+
+        if (Yii::app()->request->isAjaxRequest) {
+            $productSubMasterCategories = ProductSubMasterCategory::model()->findAllByAttributes(array('id' => explode(',', $ids)));
+            $valid = true;
+            
+            foreach ($productSubMasterCategories as $productSubMasterCategory) {
+                $productSubMasterCategory->is_approved = 1;
+                $productSubMasterCategory->user_id_approval = Yii::app()->user->id;
+                $productSubMasterCategory->date_time_approval = date('Y-m-d H:i:s');
+                $productSubMasterCategory->is_rejected = 0;
+                $productSubMasterCategory->user_id_reject = null;
+                $productSubMasterCategory->date_time_reject = null;
+                
+                $valid = $valid && $productSubMasterCategory->save(false);
+            }
+
+            $object = array(
+                'status' => $valid ? 'OK' : 'Not OK',
+            );
+
+            echo CJSON::encode($object);
+        }
+    }
+    
+    public function actionAjaxRejectAllProductSubMasterCategory($ids) {
+
+        if (Yii::app()->request->isAjaxRequest) {
+            $productSubMasterCategories = ProductSubMasterCategory::model()->findAllByAttributes(array('id' => explode(',', $ids)));
+            $valid = true;
+            
+            foreach ($productSubMasterCategories as $productSubMasterCategory) {
+                $productSubMasterCategory->is_approved = 0;
+                $productSubMasterCategory->user_id_approval = null;
+                $productSubMasterCategory->date_time_approval = null;
+                $productSubMasterCategory->is_rejected = 1;
+                $productSubMasterCategory->user_id_reject = Yii::app()->user->id;
+                $productSubMasterCategory->date_time_reject = date('Y-m-d H:i:s');
+                
+                $valid = $valid && $productSubMasterCategory->save(false);
+            }
+
+            $object = array(
+                'status' => $valid ? 'OK' : 'Not OK',
+            );
+
+            echo CJSON::encode($object);
+        }
+    }
+    
+    public function actionAjaxApproveAllProductSubCategory($ids) {
+
+        if (Yii::app()->request->isAjaxRequest) {
+            $productSubCategories = ProductSubCategory::model()->findAllByAttributes(array('id' => explode(',', $ids)));
+            $valid = true;
+            
+            foreach ($productSubCategories as $productSubCategory) {
+                $productSubCategory->is_approved = 1;
+                $productSubCategory->user_id_approval = Yii::app()->user->id;
+                $productSubCategory->date_time_approval = date('Y-m-d H:i:s');
+                $productSubCategory->is_rejected = 0;
+                $productSubCategory->user_id_reject = null;
+                $productSubCategory->date_time_reject = null;
+                
+                $valid = $valid && $productSubCategory->save(false);
+            }
+
+            $object = array(
+                'status' => $valid ? 'OK' : 'Not OK',
+            );
+
+            echo CJSON::encode($object);
+        }
+    }
+    
+    public function actionAjaxRejectAllProductSubCategory($ids) {
+
+        if (Yii::app()->request->isAjaxRequest) {
+            $productSubCategories = ProductSubCategory::model()->findAllByAttributes(array('id' => explode(',', $ids)));
+            $valid = true;
+            
+            foreach ($productSubCategories as $productSubCategory) {
+                $productSubCategory->is_approved = 0;
+                $productSubCategory->user_id_approval = null;
+                $productSubCategory->date_time_approval = null;
+                $productSubCategory->is_rejected = 1;
+                $productSubCategory->user_id_reject = Yii::app()->user->id;
+                $productSubCategory->date_time_reject = date('Y-m-d H:i:s');
+                
+                $valid = $valid && $productSubCategory->save(false);
             }
 
             $object = array(

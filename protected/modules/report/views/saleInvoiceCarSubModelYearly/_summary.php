@@ -8,6 +8,9 @@
 
 <br />
 
+<?php $startDate = $year . '-01-01'; ?>
+<?php $endDate = $year . '-12-31'; ?>
+
 <table style="width: 110%">
     <thead>
         <tr>
@@ -42,7 +45,14 @@
                     <?php endif; ?>
                     <?php $groupTotalSums[$month] += $total; ?>
                 <?php endfor; ?>
-                <td style="text-align: right"><?php echo CHtml::encode($totalSum); ?></td>
+                <td style="text-align: right">
+                    <?php echo CHtml::link($totalSum, array(
+                        '/report/saleInvoiceCarSubModelMonthly/transactionInfo', 
+                        'carSubModelId' => $invoiceVehicleCarSubModelInfo['car_sub_model_id'], 
+                        'startDate' => $startDate, 
+                        'endDate' => $endDate,
+                    ), array('target' => '_blank')); ?>
+                </td>
             </tr>
             <?php $autoNumber++; ?>
         <?php endforeach; ?>

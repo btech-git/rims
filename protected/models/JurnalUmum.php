@@ -536,9 +536,10 @@ class JurnalUmum extends CActiveRecord {
     
     public static function getBalanceErrorReport() {
         
-        $sql = "SELECT kode_transaksi, MAX(tanggal_transaksi) as transaction_date, SUM(CASE WHEN debet_kredit = 'D' THEN total ELSE 0 END) AS debit, SUM(CASE WHEN debet_kredit = 'K' THEN total ELSE 0 END) AS credit
+        $sql = "SELECT kode_transaksi, MAX(tanggal_transaksi) as transaction_date, SUM(CASE WHEN debet_kredit = 'D' THEN total ELSE 0 END) AS debit, 
+                    SUM(CASE WHEN debet_kredit = 'K' THEN total ELSE 0 END) AS credit
                 FROM " . JurnalUmum::model()->tableName() . "
-                WHERE tanggal_transaksi BETWEEN '2024-01-01' AND :end_date
+                WHERE tanggal_transaksi BETWEEN '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND :end_date
                 GROUP BY kode_transaksi
                 HAVING debit <> credit
                 ORDER BY transaction_date ASC";

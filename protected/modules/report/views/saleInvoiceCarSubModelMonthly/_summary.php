@@ -8,6 +8,11 @@
 
 <br />
 
+<?php $daysInMonth = cal_days_in_month(CAL_GREGORIAN, $month, $year); ?>
+<?php $yearMonth = $year . '-' . str_pad($month, 2, '0', STR_PAD_LEFT); ?>
+<?php $startDate = $yearMonth . '-01'; ?>
+<?php $endDate = $yearMonth . '-' . $daysInMonth; ?>
+
 <table style="width: 110%">
     <thead>
         <tr>
@@ -43,7 +48,14 @@
                     <?php endif; ?>
                     <?php $groupTotalSums[$dateNum] += $total; ?>
                 <?php endforeach; ?>
-                <td style="text-align: right"><?php echo CHtml::encode($totalSum); ?></td>
+                <td style="text-align: right">
+                    <?php echo CHtml::link($totalSum, array(
+                        '/report/saleInvoiceCarSubModelMonthly/transactionInfo', 
+                        'carSubModelId' => $invoiceVehicleCarSubModelInfo['car_sub_model_id'], 
+                        'startDate' => $startDate, 
+                        'endDate' => $endDate,
+                    ), array('target' => '_blank')); ?>
+                </td>
             </tr>
             <?php $autoNumber++; ?>
         <?php endforeach; ?>

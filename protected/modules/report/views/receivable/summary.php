@@ -72,18 +72,18 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                             </div>
                         </div>
                         
-                        <div class="medium-6 columns">
+<!--                        <div class="medium-6 columns">
                             <div class="field">
                                 <div class="row collapse">
                                     <div class="small-4 columns">
                                         <span class="prefix">Vehicle Plate #</span>
                                     </div>
                                     <div class="small-8 columns">
-                                        <?php echo CHtml::textField('PlateNumber', $plateNumber); ?>
+                                        <?php //echo CHtml::textField('PlateNumber', $plateNumber); ?>
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        </div>-->
                     </div>
 
                     <div class="row">
@@ -94,14 +94,14 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                         <span class="prefix">Customer</span>
                                     </div>
                                     <div class="small-8 columns">
-                                        <?php echo CHtml::textField('CustomerId', $customerId, array(
+                                        <?php echo CHtml::textField('CoaId', $coaId, array(
                                             'readonly' => true,
-                                            'onclick' => '$("#customer-dialog").dialog("open"); return false;',
-                                            'onkeypress' => 'if (event.keyCode == 13) { $("#customer-dialog").dialog("open"); return false; }'
+                                            'onclick' => '$("#coa-dialog").dialog("open"); return false;',
+                                            'onkeypress' => 'if (event.keyCode == 13) { $("#coa-dialog").dialog("open"); return false; }'
                                         )); ?>
 
                                         <?php echo CHtml::openTag('span', array('id' => 'customer_name')); ?>
-                                        <?php $customerData = Customer::model()->findByPk($customerId); ?>
+                                        <?php $customerData = Coa::model()->findByPk($coaId); ?>
                                         <?php echo CHtml::encode(CHtml::value($customerData, 'name')); ?>
                                         <?php echo CHtml::closeTag('span'); ?>    
                                     </div>
@@ -149,17 +149,9 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                         'receivableSummary' => $receivableSummary,
                         'endDate' => $endDate,
                         'branchId' => $branchId,
-                        'customerId' => $customerId,
-                        'plateNumber' => $plateNumber,
+                        'coaId' => $coaId,
                     )); ?>
                 </div>
-                <div class="clear"></div>
-            </div>
-            
-            <br/>
-
-            <div class="hide">
-                <div class="right"></div>
                 <div class="clear"></div>
             </div>
         </div>
@@ -168,7 +160,7 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
 
 <div>
     <?php $this->beginWidget('zii.widgets.jui.CJuiDialog', array(
-        'id' => 'customer-dialog',
+        'id' => 'coa-dialog',
         // additional javascript options for the dialog plugin
         'options' => array(
             'title' => 'Customer',
@@ -178,17 +170,17 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
         ),
     )); ?>
     <?php $this->widget('zii.widgets.grid.CGridView', array(
-        'id' => 'customer-grid',
-        'dataProvider' => $customerDataProvider,
-        'filter' => $customer,
+        'id' => 'coa-grid',
+        'dataProvider' => $coaDataProvider,
+        'filter' => $coa,
         'template' => '{items}<div class="clearfix">{summary}{pager}</div>',
         'pager' => array(
             'cssFile' => false,
             'header' => '',
         ),
         'selectionChanged' => 'js:function(id) {
-            $("#CustomerId").val($.fn.yiiGridView.getSelection(id));
-            $("#customer-dialog").dialog("close");
+            $("#CoaId").val($.fn.yiiGridView.getSelection(id));
+            $("#coa-dialog").dialog("close");
             if ($.fn.yiiGridView.getSelection(id) == "") {
                 $("#customer_name").html("");
             } else {
@@ -204,55 +196,11 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
             }
         }',
         'columns' => array(
+            'code',
             'name',
-            'mobile_phone',
-            'email',
+            'coaCategory.name',
+            'coasubCategory.name',
         ),
     )); ?>
     <?php $this->endWidget('zii.widgets.jui.CJuiDialog'); ?>
-</div>
-
-<div>
-    <?php /*$this->beginWidget('zii.widgets.jui.CJuiDialog', array(
-        'id' => 'insurance-company-dialog',
-        // additional javascript options for the dialog plugin
-        'options' => array(
-            'title' => 'Insurance Company',
-            'autoOpen' => false,
-            'width' => 'auto',
-            'modal' => true,
-        ),
-    )); ?>
-    <?php $this->widget('zii.widgets.grid.CGridView', array(
-        'id' => 'insurance-company-grid',
-        'dataProvider' => $insuranceCompanyDataProvider,
-        'filter' => $insuranceCompany,
-        'template' => '{items}<div class="clearfix">{summary}{pager}</div>',
-        'pager' => array(
-            'cssFile' => false,
-            'header' => '',
-        ),
-        'selectionChanged' => 'js:function(id) {
-            $("#InsuranceCompanyId").val($.fn.yiiGridView.getSelection(id));
-            $("#insurance-company-dialog").dialog("close");
-            if ($.fn.yiiGridView.getSelection(id) == "") {
-                $("#insurance_name").html("");
-            } else {
-                $.ajax({
-                    type: "POST",
-                    dataType: "JSON",
-                    url: "' . CController::createUrl('ajaxJsonInsuranceCompany') . '",
-                    data: $("form").serialize(),
-                    success: function(data) {
-                        $("#insurance_name").html(data.insurance_name);
-                    },
-                });
-            }
-        }',
-        'columns' => array(
-            'name',
-            'coa.name',
-        ),
-    )); ?>
-    <?php $this->endWidget('zii.widgets.jui.CJuiDialog');*/ ?>
 </div>

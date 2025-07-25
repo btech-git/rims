@@ -1896,4 +1896,34 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
         ));
     }
 
+    public function searchByTransactionInfo($carSubModelId, $startDate, $endDate, $page) {
+        // Warning: Please modify the following code to remove attributes that
+        // should not be searched.
+
+        $criteria = new CDbCriteria;
+
+        $criteria->together = 'true';
+        $criteria->with = array(
+            'registrationTransaction' => array(
+                'with' => array(
+                    'vehicle'
+                ),
+            ),
+        );
+
+        $criteria->compare('vehicle.car_sub_model_id', $carSubModelId);
+        $criteria->addBetweenCondition('t.invoice_date', $startDate, $endDate);
+        $criteria->addCondition("t.status NOT LIKE '%CANCEL%'");
+        
+        return new CActiveDataProvider($this, array(
+            'criteria' => $criteria,
+            'sort' => array(
+                'defaultOrder' => 't.invoice_date ASC',
+            ),
+            'pagination' => array(
+                'pageSize' => 100,
+                'currentPage' => $page - 1,
+            ),
+        ));
+    }
 }

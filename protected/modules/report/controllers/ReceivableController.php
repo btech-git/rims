@@ -27,25 +27,23 @@ class ReceivableController extends Controller {
         $pageSize = (isset($_GET['PageSize'])) ? $_GET['PageSize'] : '';
         $currentPage = (isset($_GET['page'])) ? $_GET['page'] : '';
         $currentSort = (isset($_GET['sort'])) ? $_GET['sort'] : '';
-        $plateNumber = (isset($_GET['PlateNumber'])) ? $_GET['PlateNumber'] : '';
         $branchId = (isset($_GET['BranchId'])) ? $_GET['BranchId'] : '';
-        $customerId = (isset($_GET['CustomerId'])) ? $_GET['CustomerId'] : '';
+        $coaId = (isset($_GET['CoaId'])) ? $_GET['CoaId'] : '';
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
         
-        $customer = Search::bind(new Customer('search'), isset($_GET['Customer']) ? $_GET['Customer'] : array());
-        $customerDataProvider = $customer->search();
-        $customerDataProvider->pagination->pageVar = 'page_dialog';
-        $customerDataProvider->criteria->compare('t.customer_type', 'Company');
+        $coa = Search::bind(new Coa('search'), isset($_GET['Coa']) ? $_GET['Coa'] : array());
+        $coaDataProvider = $coa->search();
+        $coaDataProvider->pagination->pageVar = 'page_dialog';
+        $coaDataProvider->criteria->addCondition("t.coa_category_id = 15 AND t.coa_sub_category_id = 8");
 
-        $receivableSummary = new ReceivableSummary($customer->search());
+        $receivableSummary = new ReceivableSummary($coa->searchByTransactionJournal());
         $receivableSummary->setupLoading();
         $receivableSummary->setupPaging($pageSize, $currentPage);
         $receivableSummary->setupSorting();
         $filters = array(
             'endDate' => $endDate,
             'branchId' => $branchId,
-            'plateNumber' => $plateNumber,
-            'customerId' => $customerId,
+            'coaId' => $coaId,
         );
         $receivableSummary->setupFilter($filters);
 
@@ -54,14 +52,13 @@ class ReceivableController extends Controller {
         }
         
         if (isset($_GET['SaveExcel'])) {
-            $this->saveToExcel($receivableSummary, $endDate, $branchId, $plateNumber);
+            $this->saveToExcel($receivableSummary, $endDate, $branchId);
         }
 
         $this->render('summary', array(
-            'customer'=>$customer,
-            'customerDataProvider'=>$customerDataProvider,
-            'customerId' => $customerId,
-            'plateNumber' => $plateNumber,
+            'coa' => $coa,
+            'coaDataProvider'=> $coaDataProvider,
+            'coaId' => $coaId,
             'branchId' => $branchId,
             'endDate' => $endDate,
             'receivableSummary' => $receivableSummary,
@@ -72,14 +69,12 @@ class ReceivableController extends Controller {
 
     public function actionAjaxJsonCustomer() {
         if (Yii::app()->request->isAjaxRequest) {
-            $customerId = (isset($_POST['CustomerId'])) ? $_POST['CustomerId'] : '';
-            $customer = Customer::model()->findByPk($customerId);
+            $coaId = (isset($_POST['CoaId'])) ? $_POST['CoaId'] : '';
+            $coa = Coa::model()->findByPk($coaId);
 
             $object = array(
-                'customer_id' => CHtml::value($customer, 'id'),
-                'customer_name' => CHtml::value($customer, 'name'),
-                'customer_type' => CHtml::value($customer, 'customer_type'),
-                'customer_mobile_phone' => CHtml::value($customer, 'mobile_phone'),
+                'customer_id' => CHtml::value($coa, 'id'),
+                'customer_name' => CHtml::value($coa, 'name'),
             );
             echo CJSON::encode($object);
         }

@@ -23,9 +23,6 @@ class SaleInvoiceCarSubModelMonthlyController extends Controller {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
         
-//        $yearMonthNow = date('Y-m');
-//
-//        $yearMonth = (isset($_GET['YearMonth'])) ? $_GET['YearMonth'] : $yearMonthNow;
         $monthNow = date('m');
         $yearNow = date('Y');
         
@@ -60,8 +57,6 @@ class SaleInvoiceCarSubModelMonthlyController extends Controller {
         }
 
         $this->render('summary', array(
-//            'yearMonthNow' => $yearMonthNow,
-//            'yearMonth' => $yearMonth,
             'yearList' => $yearList,
             'year' => $year,
             'month' => $month,
@@ -72,6 +67,23 @@ class SaleInvoiceCarSubModelMonthlyController extends Controller {
         ));
     }
     
+    public function actionTransactionInfo($carSubModelId, $startDate, $endDate) {
+        set_time_limit(0);
+        ini_set('memory_limit', '1024M');
+
+        $page = (isset($_GET['page'])) ? $_GET['page'] : 1;
+        
+        $dataProvider = InvoiceHeader::model()->searchByTransactionInfo($carSubModelId, $startDate, $endDate, $page);
+        $carSubModel = VehicleCarSubModel::model()->findByPk($carSubModelId);
+        
+        $this->render('transactionInfo', array(
+            'dataProvider' => $dataProvider,
+            'startDate' => $startDate,
+            'endDate' => $endDate,
+            'carSubModel' => $carSubModel,
+        ));
+    }
+
     public function actionAjaxHtmlUpdateCarModelSelect() {
         if (Yii::app()->request->isAjaxRequest) {
             $carMake = (isset($_GET['CarMake'])) ? $_GET['CarMake'] : '';

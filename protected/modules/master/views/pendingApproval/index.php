@@ -38,16 +38,22 @@ Yii::app()->clientScript->registerScript('report', '
                                 'coaDataProvider' => $coaDataProvider,
                             ), true)
                         ),
-                        'Product' => array(
-                            'content' => $this->renderPartial('_viewProduct', array(
-                                'product' => $product,
-                                'productDataProvider' => $productDataProvider,
-                            ), true)
-                        ),
                         'Service' => array(
                             'content' => $this->renderPartial('_viewService', array(
                                 'service' => $service,
                                 'serviceDataProvider' => $serviceDataProvider,
+                            ), true)
+                        ),
+                        'Service Category' => array(
+                            'content' => $this->renderPartial('_viewServiceCategory', array(
+                                'serviceCategory' => $serviceCategory,
+                                'serviceCategoryDataProvider' => $serviceCategoryDataProvider,
+                            ), true)
+                        ),
+                        'Service Type' => array(
+                            'content' => $this->renderPartial('_viewServiceType', array(
+                                'serviceType' => $serviceType,
+                                'serviceTypeDataProvider' => $serviceTypeDataProvider,
                             ), true)
                         ),
                         'Customer' => array(
@@ -92,7 +98,46 @@ Yii::app()->clientScript->registerScript('report', '
                         'collapsible' => true,
                     ),
                     // set id for this widgets
-                    'id' => 'view_tab',
+                    'id' => 'view_master',
+                )); ?>
+            </div>
+            
+            <br />
+
+            <div>
+                <?php $this->widget('zii.widgets.jui.CJuiTabs', array(
+                    'tabs' => array(
+                        'Product' => array(
+                            'content' => $this->renderPartial('_viewProduct', array(
+                                'product' => $product,
+                                'productDataProvider' => $productDataProvider,
+                            ), true)
+                        ),
+                        'Product Master Category' => array(
+                            'content' => $this->renderPartial('_viewProductMasterCategory', array(
+                                'productMasterCategory' => $productMasterCategory,
+                                'productMasterCategoryDataProvider' => $productMasterCategoryDataProvider,
+                            ), true)
+                        ),
+                        'Product Sub Master Category' => array(
+                            'content' => $this->renderPartial('_viewProductSubMasterCategory', array(
+                                'productSubMasterCategory' => $productSubMasterCategory,
+                                'productSubMasterCategoryDataProvider' => $productSubMasterCategoryDataProvider,
+                            ), true)
+                        ),
+                        'Product Sub Category' => array(
+                            'content' => $this->renderPartial('_viewProductSubCategory', array(
+                                'productSubCategory' => $productSubCategory,
+                                'productSubCategoryDataProvider' => $productSubCategoryDataProvider,
+                            ), true)
+                        ),
+                    ),
+                    // additional javascript options for the tabs plugin
+                    'options' => array(
+                        'collapsible' => true,
+                    ),
+                    // set id for this widgets
+                    'id' => 'view_master_category',
                 )); ?>
             </div>
         </fieldset>
