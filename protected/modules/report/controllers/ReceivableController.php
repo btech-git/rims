@@ -80,7 +80,7 @@ class ReceivableController extends Controller {
         }
     }
 
-    protected function saveToExcel($receivableSummary, $endDate, $branchId, $plateNumber) {
+    protected function saveToExcel($receivableSummary, $endDate, $branchId) {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
 
@@ -104,8 +104,7 @@ class ReceivableController extends Controller {
         
         $worksheet->getStyle('A1:G4')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
         $worksheet->getStyle('A1:G4')->getFont()->setBold(true);
-        $branch = Branch::model()->findByPk($branchId);
-        $worksheet->setCellValue('A2', 'Raperind Motor ' . CHtml::encode(CHtml::value($branch, 'name')));
+        $worksheet->setCellValue('A2', 'Raperind Motor ');
         $worksheet->setCellValue('A3', 'Faktur Belum Lunas Customer');
         $worksheet->setCellValue('A4', 'Per Tanggal ' . Yii::app()->dateFormatter->format('d MMMM yyyy', $endDate));
 
@@ -113,46 +112,48 @@ class ReceivableController extends Controller {
         $worksheet->getStyle("A7:G7")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
         $worksheet->getStyle('A6:G7')->getFont()->setBold(true);
+        $worksheet->setCellValue('B5', 'Code');
         $worksheet->setCellValue('A5', 'Name');
-        $worksheet->setCellValue('B5', 'Type');
+        $worksheet->setCellValue('B5', 'Saldo Awal');
         
-        $worksheet->setCellValue('A6', 'Tanggal');
-        $worksheet->setCellValue('B6', 'Faktur #');
-        $worksheet->setCellValue('C6', 'Jatuh Tempo');
-        $worksheet->setCellValue('D6', 'Vehicle');
-        $worksheet->setCellValue('E6', 'Grand Total');
-        $worksheet->setCellValue('F6', 'Payment');
-        $worksheet->setCellValue('G6', 'Remaining');
+        $worksheet->setCellValue('A6', 'Faktur #');
+        $worksheet->setCellValue('B6', 'Tanggal');
+        $worksheet->setCellValue('C6', 'Memo');
+        $worksheet->setCellValue('D6', 'Debit');
+        $worksheet->setCellValue('E6', 'Credit');
+        $worksheet->setCellValue('F6', 'Balance');
         $counter = 9;
 
         foreach ($receivableSummary->dataProvider->data as $header) {
-            $worksheet->setCellValue("A{$counter}", $header->name);
-            $worksheet->setCellValue("B{$counter}", $header->customer_type);
+            $beginningBalance = CHtml::value($header, 'beginningBalanceReceivableDetail');
+            $worksheet->setCellValue("A{$counter}", $header->code);
+            $worksheet->setCellValue("B{$counter}", $header->name);
+            $worksheet->setCellValue("C{$counter}", $beginningBalance);
 
             $counter++;
             
-            $receivableData = $header->getReceivableInvoiceReport($endDate, $branchId, $plateNumber);
+            $receivableData = $header->getReceivableInvoiceReport($endDate, $branchId);
             $totalRevenue = 0.00;
             $totalPayment = 0.00;
             $totalReceivable = 0.00;
+            $currentBalance = $beginningBalance;
             foreach ($receivableData as $receivableRow) {
-                $revenue = $receivableRow['total_price'];
-                $paymentAmount = $receivableRow['amount'];
-                $paymentLeft = $receivableRow['remaining'];
+                $debitAmount = $receivableRow['debit'];
+                $creditAmount = $receivableRow['credit'];
+                $currentBalance += $debitAmount - $creditAmount;
                 
-                $worksheet->setCellValue("A{$counter}", $receivableRow['invoice_date']);
-                $worksheet->setCellValue("B{$counter}", $receivableRow['invoice_number']);
-                $worksheet->setCellValue("C{$counter}", $receivableRow['due_date']);
-                $worksheet->setCellValue("D{$counter}", $receivableRow['vehicle']);
-                $worksheet->setCellValue("E{$counter}", $revenue);
-                $worksheet->setCellValue("F{$counter}", $paymentAmount);
-                $worksheet->setCellValue("G{$counter}", $paymentLeft);
+                $worksheet->setCellValue("A{$counter}", $receivableRow['kode_transaksi']);
+                $worksheet->setCellValue("B{$counter}", $receivableRow['tanggal_transaksi']);
+                $worksheet->setCellValue("C{$counter}", $receivableRow['remark']);
+                $worksheet->setCellValue("D{$counter}", $debitAmount);
+                $worksheet->setCellValue("E{$counter}", $creditAmount);
+                $worksheet->setCellValue("F{$counter}", $currentBalance);
                 
                 $counter++;
                 
-                $totalRevenue += $revenue;
-                $totalPayment += $paymentAmount;
-                $totalReceivable += $paymentLeft;
+                $totalRevenue += $debitAmount;
+                $totalPayment += $creditAmount;
+                $totalReceivable += $currentBalance;
             }
             
             $worksheet->getStyle("A{$counter}:G{$counter}")->getFont()->setBold(true);
