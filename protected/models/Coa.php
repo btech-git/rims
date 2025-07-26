@@ -1050,7 +1050,7 @@ class Coa extends CActiveRecord {
         );
         
         if (!empty($branchId)) {
-            $branchConditionSql = ' AND i.branch_id = :branch_id';
+            $branchConditionSql = ' AND j.branch_id = :branch_id';
             $params[':branch_id'] = $branchId;
         }
         
