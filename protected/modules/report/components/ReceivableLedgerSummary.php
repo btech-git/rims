@@ -30,15 +30,22 @@ class ReceivableLedgerSummary extends CComponent {
         $this->dataProvider->criteria->order = 't.code ASC'; //$this->dataProvider->sort->orderBy;
     }
 
-    public function setupFilter($startDate, $endDate, $branchId) {
+    public function setupFilter($startDate, $endDate, $branchId, $coaId) {
         $this->dataProvider->criteria->addCondition("t.code NOT LIKE '%.000'");
         $this->dataProvider->criteria->compare('t.coa_sub_category_id', 8);
         $this->dataProvider->criteria->compare('t.is_approved', 1);
         
         $branchConditionSql = '';
+        $coaConditionSql = '';
         
         if (!empty($branchId)) {
             $branchConditionSql = ' AND i.branch_id = :branch_id';
+            $this->dataProvider->criteria->params[':branch_id'] = $branchId;
+        }
+
+        if (!empty($coaId)) {
+            $coaConditionSql = ' AND t.id = :coa_id';
+            $this->dataProvider->criteria->params[':coa_id'] = $coaId;
         }
 
         $this->dataProvider->criteria->addCondition("EXISTS (
@@ -55,8 +62,5 @@ class ReceivableLedgerSummary extends CComponent {
 
         $this->dataProvider->criteria->params[':start_date'] = $startDate;
         $this->dataProvider->criteria->params[':end_date'] = $endDate;
-        if (!empty($branchId)) {
-            $this->dataProvider->criteria->params[':branch_id'] = $branchId;
-        }
     }
 }

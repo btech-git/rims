@@ -77,9 +77,10 @@ class InsuranceCompanyController extends Controller {
         // }
         $coa = new Coa('search');
         $coa->unsetAttributes();  // clear any default values
-        if (isset($_GET['Coa']))
+        if (isset($_GET['Coa'])) {
             $coa->attributes = $_GET['Coa'];
-
+        }
+        
         $coaCriteria = new CDbCriteria;
         //$coaCriteria->addCondition("coa_sub_category_id = 2");
         $coaCriteria->compare('code', $coa->code . '%', true, 'AND', false);
@@ -92,9 +93,10 @@ class InsuranceCompanyController extends Controller {
 
         $service = new Service('search');
         $service->unsetAttributes();  // clear any default values
-        if (isset($_GET['Service']))
+        if (isset($_GET['Service'])) {
             $service->attributes = $_GET['Service'];
-
+        }
+        
         $serviceCriteria = new CDbCriteria;
         //$positionCriteria->compare('code',$position->code.'%',true,'AND', false);
         $serviceCriteria->compare('t.name', $service->name, true);

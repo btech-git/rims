@@ -42,7 +42,7 @@ class ReceivableLedgerController extends Controller {
         $receivableLedgerSummary->setupLoading();
         $receivableLedgerSummary->setupPaging($pageSize, $currentPage);
         $receivableLedgerSummary->setupSorting();
-        $receivableLedgerSummary->setupFilter($startDate, $endDate, $branchId);
+        $receivableLedgerSummary->setupFilter($startDate, $endDate, $branchId, $coaId);
 
         if (isset($_GET['ResetFilter'])) {
             $this->redirect(array('summary'));
