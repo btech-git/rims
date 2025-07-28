@@ -34,18 +34,13 @@ class ReceivableLedgerSummary extends CComponent {
         $this->dataProvider->criteria->addCondition("t.code NOT LIKE '%.000'");
         $this->dataProvider->criteria->compare('t.coa_sub_category_id', 8);
         $this->dataProvider->criteria->compare('t.is_approved', 1);
+        $this->dataProvider->criteria->compare('t.id', $coaId);
         
         $branchConditionSql = '';
-        $coaConditionSql = '';
         
         if (!empty($branchId)) {
             $branchConditionSql = ' AND i.branch_id = :branch_id';
             $this->dataProvider->criteria->params[':branch_id'] = $branchId;
-        }
-
-        if (!empty($coaId)) {
-            $coaConditionSql = ' AND t.id = :coa_id';
-            $this->dataProvider->criteria->params[':coa_id'] = $coaId;
         }
 
         $this->dataProvider->criteria->addCondition("EXISTS (

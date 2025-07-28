@@ -71,7 +71,7 @@ class ReceivableLedgerController extends Controller {
 
     public function actionAjaxJsonCoa() {
         if (Yii::app()->request->isAjaxRequest) {
-            $coaId = (isset($_POST['Coa']['id'])) ? $_POST['Coa']['id'] : '';
+            $coaId = (isset($_POST['CoaId'])) ? $_POST['CoaId'] : '';
             $coa = Coa::model()->findByPk($coaId);
 
             $object = array(
