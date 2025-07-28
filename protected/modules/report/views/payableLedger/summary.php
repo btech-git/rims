@@ -33,7 +33,7 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                             'onkeypress' => 'if (event.keyCode == 13) { $("#coa-dialog").dialog("open"); return false; }'
                                         )); ?>
                                         <?php echo CHtml::openTag('span', array('id' => 'coa_name')); ?>
-                                        <?php $coa = Coa::model()->findByPk($account->id); ?>
+                                        <?php $coa = Coa::model()->findByPk($coaId); ?>
                                         <?php echo CHtml::encode(CHtml::value($coa, 'combinationName')); ?>
                                         <?php echo CHtml::closeTag('span'); ?> 
                                     </div>
@@ -227,7 +227,7 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                    'header'=>'',
                 ),
                 'selectionChanged'=>'js:function(id){
-                    $("#' . CHtml::activeId($account, 'id') . '").val($.fn.yiiGridView.getSelection(id));
+                    $("#CoaId").val($.fn.yiiGridView.getSelection(id));
                     $("#coa-dialog").dialog("close");
                     if ($.fn.yiiGridView.getSelection(id) == "") {
                         $("#coa_id").html("");

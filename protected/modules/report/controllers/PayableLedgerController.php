@@ -42,7 +42,7 @@ class PayableLedgerController extends Controller {
         $payableLedgerSummary->setupLoading();
         $payableLedgerSummary->setupPaging($pageSize, $currentPage);
         $payableLedgerSummary->setupSorting();
-        $payableLedgerSummary->setupFilter($coaId);
+        $payableLedgerSummary->setupFilter($startDate, $endDate, $branchId, $coaId);
         
         if (isset($_GET['ResetFilter'])) {
             $this->redirect(array('summary'));
@@ -69,26 +69,17 @@ class PayableLedgerController extends Controller {
         ));
     }
 
-    public function actionAjaxJsonSupplier() {
+    public function actionAjaxJsonCoa() {
         if (Yii::app()->request->isAjaxRequest) {
-            $supplier = Supplier::model()->findByPk($_POST['Supplier']['id']);
-            
+            $coaId = (isset($_POST['CoaId'])) ? $_POST['CoaId'] : '';
+            $coa = Coa::model()->findByPk($coaId);
+
             $object = array(
-                'supplier_company' => $supplier->company,
-                'supplier_name' => $supplier->name,
-                'supplier_address' => $supplier->address,
+                'coa_name' => CHtml::value($coa, 'combinationName'),
+                'coa_code' => CHtml::value($coa, 'code'),
             );
+            
             echo CJSON::encode($object);
-        }
-    }
-
-    public function actionAjaxHtmlUpdateSubCategorySelect() {
-        if (Yii::app()->request->isAjaxRequest) {
-            $categoryId = isset($_GET['Coa']['coa_category_id']) ? $_GET['Coa']['coa_category_id'] : 0;
-
-            $this->renderPartial('_subCategorySelect', array(
-                'categoryId' => $categoryId,
-            ), false, true);
         }
     }
 
