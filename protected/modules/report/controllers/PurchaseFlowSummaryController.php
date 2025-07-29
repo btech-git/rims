@@ -146,19 +146,18 @@ class PurchaseFlowSummaryController extends Controller {
         $worksheet->setCellValue('D6', 'Jam');
         $worksheet->setCellValue('E6', 'Supplier');
         $worksheet->setCellValue('F6', 'Status');
-        $worksheet->setCellValue('G6', 'Amount');
-        $worksheet->setCellValue('H6', 'Penerimaan');
-        $worksheet->setCellValue('I6', 'Tanggal');
-        $worksheet->setCellValue('J6', 'Jam');
-        $worksheet->setCellValue('K6', 'Movement In');
-        $worksheet->setCellValue('L6', 'Tanggal');
-        $worksheet->setCellValue('M6', 'Jam');
-        $worksheet->setCellValue('N6', 'Invoice');
-        $worksheet->setCellValue('O6', 'Tanggal');
-        $worksheet->setCellValue('P6', 'Jam');
-        $worksheet->setCellValue('Q6', 'Payment Out');
-        $worksheet->setCellValue('R6', 'Tanggal');
-        $worksheet->setCellValue('S6', 'Jam');
+        $worksheet->setCellValue('G6', 'Penerimaan');
+        $worksheet->setCellValue('H6', 'Tanggal');
+        $worksheet->setCellValue('I6', 'Jam');
+        $worksheet->setCellValue('J6', 'Movement In');
+        $worksheet->setCellValue('K6', 'Tanggal');
+        $worksheet->setCellValue('L6', 'Jam');
+        $worksheet->setCellValue('M6', 'Invoice');
+        $worksheet->setCellValue('N6', 'Tanggal');
+        $worksheet->setCellValue('O6', 'Jam');
+        $worksheet->setCellValue('P6', 'Payment Out');
+        $worksheet->setCellValue('Q6', 'Tanggal');
+        $worksheet->setCellValue('R6', 'Jam');
 
         $counter = 7;
         foreach ($purchaseFlowSummary->dataProvider->data as $i => $header) {
@@ -182,19 +181,18 @@ class PurchaseFlowSummaryController extends Controller {
             $worksheet->setCellValue("D{$counter}", CHtml::encode(substr($header->purchase_order_date, -8)));
             $worksheet->setCellValue("E{$counter}", CHtml::value($header, 'supplier.name'));
             $worksheet->setCellValue("F{$counter}", CHtml::value($header, 'status_document'));
-            $worksheet->setCellValue("G{$counter}", CHtml::value($header, 'total_price'));
-            $worksheet->setCellValue("H{$counter}", CHtml::encode(implode(', ', $receiveItemCodeNumbers)));
-            $worksheet->setCellValue("I{$counter}", CHtml::encode(implode(', ', $receiveItemDates)));
-            $worksheet->setCellValue("J{$counter}", CHtml::encode(implode(', ', $receiveItemTimes)));
-            $worksheet->setCellValue("K{$counter}", CHtml::encode(implode(', ', $movementInHeaderCodeNumbers)));
-            $worksheet->setCellValue("L{$counter}", CHtml::encode(implode(', ', $movementInDates)));
-            $worksheet->setCellValue("M{$counter}", CHtml::encode(implode(', ', $movementInTimes)));
-            $worksheet->setCellValue("N{$counter}", CHtml::encode(implode(', ', $receiveItemInvoiceNumbers)));
-            $worksheet->setCellValue("O{$counter}", CHtml::encode(implode(', ', $invoiceDates)));
-            $worksheet->setCellValue("P{$counter}", CHtml::encode(implode(', ', $receiveItemTimes)));
-            $worksheet->setCellValue("Q{$counter}", CHtml::encode(implode(', ', $paymentOutCodeNumbers)));
-            $worksheet->setCellValue("R{$counter}", CHtml::encode(implode(', ', $paymentOutDates)));
-            $worksheet->setCellValue("S{$counter}", CHtml::encode(implode(', ', $paymentOutTimes)));
+            $worksheet->setCellValue("G{$counter}", CHtml::encode(implode(', ', $receiveItemCodeNumbers)));
+            $worksheet->setCellValue("H{$counter}", CHtml::encode(implode(', ', $receiveItemDates)));
+            $worksheet->setCellValue("I{$counter}", CHtml::encode(implode(', ', $receiveItemTimes)));
+            $worksheet->setCellValue("J{$counter}", CHtml::encode(implode(', ', $movementInHeaderCodeNumbers)));
+            $worksheet->setCellValue("K{$counter}", CHtml::encode(implode(', ', $movementInDates)));
+            $worksheet->setCellValue("L{$counter}", CHtml::encode(implode(', ', $movementInTimes)));
+            $worksheet->setCellValue("M{$counter}", CHtml::encode(implode(', ', $receiveItemInvoiceNumbers)));
+            $worksheet->setCellValue("N{$counter}", CHtml::encode(implode(', ', $invoiceDates)));
+            $worksheet->setCellValue("O{$counter}", CHtml::encode(implode(', ', $receiveItemTimes)));
+            $worksheet->setCellValue("P{$counter}", CHtml::encode(implode(', ', $paymentOutCodeNumbers)));
+            $worksheet->setCellValue("Q{$counter}", CHtml::encode(implode(', ', $paymentOutDates)));
+            $worksheet->setCellValue("R{$counter}", CHtml::encode(implode(', ', $paymentOutTimes)));
             $counter++;
         }
 

@@ -28,19 +28,18 @@
             <th class="width1-3">Jam</th>
             <th class="width1-4">Supplier</th>
             <th class="width1-5">Status</th>
-            <th class="width1-6">Amount</th>
-            <th class="width1-7">Penerimaan</th>
-            <th class="width1-3">Tanggal</th>
-            <th class="width1-3">Jam</th>
-            <th class="width1-8">Movement In</th>
-            <th class="width1-3">Tanggal</th>
-            <th class="width1-3">Jam</th>
-            <th class="width1-9">Invoice</th>
-            <th class="width1-3">Tanggal</th>
-            <th class="width1-3">Jam</th>
-            <th class="width1-10">Payment Out</th>
-            <th class="width1-3">Tanggal</th>
-            <th class="width1-3">Jam</th>
+            <th class="width1-6">Penerimaan</th>
+            <th class="width1-7">Tanggal</th>
+            <th class="width1-8">Jam</th>
+            <th class="width1-9">Movement In</th>
+            <th class="width1-10">Tanggal</th>
+            <th class="width1-11">Jam</th>
+            <th class="width1-12">Invoice</th>
+            <th class="width1-13">Tanggal</th>
+            <th class="width1-14">Jam</th>
+            <th class="width1-15">Payment Out</th>
+            <th class="width1-16">Tanggal</th>
+            <th class="width1-17">Jam</th>
         </tr>
     </thead>
     <tbody>
@@ -60,31 +59,28 @@
             <?php $paymentOutDates = array_map(function($paymentOutDetail) { return CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($paymentOutDetail->paymentOut->payment_date))); }, $paymentOutDetails); ?>
             <?php $paymentOutTimes = array_map(function($paymentOutDetail) { return CHtml::encode(substr($paymentOutDetail->paymentOut->created_datetime, -8)); }, $paymentOutDetails); ?>
             <tr class="items1">
-                <td class="width1-1"><?php echo CHtml::encode($i + 1); ?></td>
-                <td class="width1-2">
+                <td><?php echo CHtml::encode($i + 1); ?></td>
+                <td>
                     <?php echo CHtml::link(CHtml::encode($header->purchase_order_no), array("/transaction/transactionPurchaseOrder/view", "id"=>$header->id), array("target" => "_blank")); ?>
                 </td>
-                <td class="width1-3">
+                <td>
                     <?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($header->purchase_order_date))); ?>
                 </td>
-                <td class="width1-3"><?php echo CHtml::encode(substr($header->purchase_order_date, -8)); ?></td>
-                <td class="width1-4"><?php echo CHtml::encode(CHtml::value($header, 'supplier.name')); ?></td>
-                <td class="width1-6"><?php echo CHtml::encode(CHtml::value($header, 'status_document')); ?></td>
-                <td class="width1-7" style="text-align: right">
-                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($header, 'total_price'))); ?>
-                </td>
-                <td class="width1-5"><?php echo CHtml::encode(implode(', ', $receiveItemCodeNumbers)); ?></td>
-                <td class="width1-5"><?php echo CHtml::encode(implode(', ', $receiveItemDates)); ?></td>
-                <td class="width1-5"><?php echo CHtml::encode(implode(', ', $receiveItemTimes)); ?></td>
-                <td class="width1-6"><?php echo CHtml::encode(implode(', ', $movementInHeaderCodeNumbers)); ?></td>
-                <td class="width1-5"><?php echo CHtml::encode(implode(', ', $movementInDates)); ?></td>
-                <td class="width1-5"><?php echo CHtml::encode(implode(', ', $movementInTimes)); ?></td>
-                <td class="width1-7"><?php echo CHtml::encode(implode(', ', $receiveItemInvoiceNumbers)); ?></td>
-                <td class="width1-5"><?php echo CHtml::encode(implode(', ', $invoiceDates)); ?></td>
-                <td class="width1-5"><?php echo CHtml::encode(implode(', ', $receiveItemTimes)); ?></td>
-                <td class="width1-8"><?php echo CHtml::encode(implode(', ', $paymentOutCodeNumbers)); ?></td>
-                <td class="width1-5"><?php echo CHtml::encode(implode(', ', $paymentOutDates)); ?></td>
-                <td class="width1-5"><?php echo CHtml::encode(implode(', ', $paymentOutTimes)); ?></td>
+                <td><?php echo CHtml::encode(substr($header->purchase_order_date, -8)); ?></td>
+                <td><?php echo CHtml::encode(CHtml::value($header, 'supplier.name')); ?></td>
+                <td><?php echo CHtml::encode(CHtml::value($header, 'status_document')); ?></td>
+                <td><?php echo CHtml::encode(implode(', ', $receiveItemCodeNumbers)); ?></td>
+                <td><?php echo CHtml::encode(implode(', ', $receiveItemDates)); ?></td>
+                <td><?php echo CHtml::encode(implode(', ', $receiveItemTimes)); ?></td>
+                <td><?php echo CHtml::encode(implode(', ', $movementInHeaderCodeNumbers)); ?></td>
+                <td><?php echo CHtml::encode(implode(', ', $movementInDates)); ?></td>
+                <td><?php echo CHtml::encode(implode(', ', $movementInTimes)); ?></td>
+                <td><?php echo CHtml::encode(implode(', ', $receiveItemInvoiceNumbers)); ?></td>
+                <td><?php echo CHtml::encode(implode(', ', $invoiceDates)); ?></td>
+                <td><?php echo CHtml::encode(implode(', ', $receiveItemTimes)); ?></td>
+                <td><?php echo CHtml::encode(implode(', ', $paymentOutCodeNumbers)); ?></td>
+                <td><?php echo CHtml::encode(implode(', ', $paymentOutDates)); ?></td>
+                <td><?php echo CHtml::encode(implode(', ', $paymentOutTimes)); ?></td>
             </tr>
         <?php endforeach; ?>
     </tbody>

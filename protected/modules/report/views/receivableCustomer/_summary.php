@@ -1,24 +1,20 @@
 <?php Yii::app()->clientScript->registerCss('_report', '
-    .width1-1 { width: 30% }
-    .width1-2 { width: 30% }
-    
-    .width2-1 { width: 12% }
-    .width2-2 { width: 12% }
-    .width2-3 { width: 15% }
-    .width2-4 { width: 10% }
-    .width2-5 { width: 12% }
-    .width2-6 { width: 12% }
-    .width2-7 { width: 12% }
-    .width2-8 { width: 15% }
+    .width1-1 { width: 40% }
+    .width1-2 { width: 15% }
+    .width1-3 { width: 15% }
+    .width1-4 { width: 15% }
+    .width1-5 { width: 15% }
 '); ?>
 
 <div style="font-weight: bold; text-align: center">
     <div style="font-size: larger"><?php echo Yii::app()->name; ?></div>
-    <div style="font-size: larger">Laporan Piutang Customer Summary</div>
+    <div style="font-size: larger">Laporan Piutang Customer</div>
     <div><?php echo 'Per tanggal: ' . CHtml::encode(Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($endDate))); ?></div>
 </div>
 
 <br />
+
+<?php $startDate = '2024-01-01'; ?>
 
 <table class="report">
     <thead style="position: sticky; top: 0">
@@ -57,11 +53,16 @@
                 <?php $totalReceivable += $paymentLeft; ?>
             <?php endforeach; ?>
             <tr class="items1">
-                <th class="width1-1"><?php echo CHtml::encode(CHtml::value($header, 'name')); ?></th>
-                <th class="width1-2"><?php echo CHtml::encode(CHtml::value($header, 'customer_type')); ?></th>
-                <td class="width1-3" style="text-align: right"> <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalRevenue)); ?></td>
-                <td class="width1-4" style="text-align: right"> <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalPayment)); ?></td>
-                <td class="width1-5" style="text-align: right"> <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalReceivable)); ?></td>
+                <th><?php echo CHtml::encode(CHtml::value($header, 'name')); ?></th>
+                <th><?php echo CHtml::encode(CHtml::value($header, 'customer_type')); ?></th>
+                <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalRevenue)); ?></td>
+                <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalPayment)); ?></td>
+                <td style="text-align: right"><?php echo CHtml::link(Yii::app()->numberFormatter->format('#,##0', $totalReceivable), array(
+                    '/report/receivableCustomer/transactionInfo', 
+                    'customerId' => $header->id, 
+                    'startDate' => $startDate, 
+                    'endDate' => $endDate,
+                ), array('target' => '_blank')); ?></td>
             </tr>
             <?php $grandTotalRevenue += $totalRevenue; ?>
             <?php $grandTotalPayment += $totalPayment; ?>
@@ -71,9 +72,9 @@
     <tfoot>
         <tr>
             <td colspan="2">TOTAL</td>
-            <td class="width1-3" style="text-align: right"> <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $grandTotalRevenue)); ?></td>
-            <td class="width1-4" style="text-align: right"> <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $grandTotalPayment)); ?></td>
-            <td class="width1-5" style="text-align: right"> <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $grandTotalReceivable)); ?></td>
+            <td class="width1-3" style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $grandTotalRevenue)); ?></td>
+            <td class="width1-4" style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $grandTotalPayment)); ?></td>
+            <td class="width1-5" style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $grandTotalReceivable)); ?></td>
         </tr>
     </tfoot>
 </table>

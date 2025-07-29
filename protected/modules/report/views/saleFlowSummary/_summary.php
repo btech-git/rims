@@ -46,7 +46,6 @@
                 <th class="width1-5">Vehicle</th>
                 <th class="width1-6">Plate #</th>
                 <th class="width1-7">Status</th>
-                <th class="width1-8">Amount</th>
                 <th class="width1-9">Work Order</th>
                 <th class="width1-10">Sales Order</th>
                 <th class="width1-11">Movement Out</th>
@@ -82,9 +81,6 @@
                     </td>
                     <td class="width1-6"><?php echo CHtml::encode(CHtml::value($header, 'vehicle.plate_number')); ?></td>
                     <td class="width1-7"><?php echo CHtml::encode(CHtml::value($header, 'status')); ?></td>
-                    <td class="width1-8" style="text-align: right">
-                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($header, 'grand_total'))); ?>
-                    </td>
                     <td class="width1-9"><?php echo CHtml::encode(CHtml::value($header, 'work_order_number')); ?></td>
                     <td class="width1-10"><?php echo CHtml::encode(CHtml::value($header, 'sales_order_number')); ?></td>
                     <td class="width1-11"><?php echo CHtml::encode(implode(', ', $movementOutHeaderCodeNumbers)); ?></td>

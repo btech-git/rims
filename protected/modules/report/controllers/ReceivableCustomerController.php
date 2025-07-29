@@ -65,6 +65,26 @@ class ReceivableCustomerController extends Controller {
         ));
     }
 
+    public function actionTransactionInfo($customerId, $startDate, $endDate) {
+        set_time_limit(0);
+        ini_set('memory_limit', '1024M');
+
+        $dataProvider = InvoiceHeader::model()->searchByReport();
+        $dataProvider->criteria->addBetweenCondition('t.invoice_date', $startDate, $endDate);
+        $dataProvider->criteria->compare('t.customer_id', $customerId);
+        $dataProvider->criteria->addCondition("t.user_id_cancelled IS NULL AND t.payment_left > 0");
+        
+        $customer = Customer::model()->findByPk($customerId);
+        
+        $this->render('transactionInfo', array(
+            'dataProvider' => $dataProvider,
+            'startDate' => $startDate,
+            'endDate' => $endDate,
+            'customer' => $customer,
+            'customerId' => $customerId,
+        ));
+    }
+
     public function actionAjaxJsonCustomer() {
         if (Yii::app()->request->isAjaxRequest) {
             $customerId = (isset($_POST['CustomerId'])) ? $_POST['CustomerId'] : '';
@@ -75,18 +95,6 @@ class ReceivableCustomerController extends Controller {
                 'customer_name' => CHtml::value($customer, 'name'),
                 'customer_type' => CHtml::value($customer, 'customer_type'),
                 'customer_mobile_phone' => CHtml::value($customer, 'mobile_phone'),
-            );
-            echo CJSON::encode($object);
-        }
-    }
-
-    public function actionAjaxJsonInsuranceCompany() {
-        if (Yii::app()->request->isAjaxRequest) {
-            $insuranceCompanyId = (isset($_POST['InsuranceCompanyId'])) ? $_POST['InsuranceCompanyId'] : '';
-            $insuranceCompany = InsuranceCompany::model()->findByPk($insuranceCompanyId);
-
-            $object = array(
-                'insurance_name' => CHtml::value($insuranceCompany, 'name'),
             );
             echo CJSON::encode($object);
         }

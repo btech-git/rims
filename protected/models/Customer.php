@@ -578,10 +578,11 @@ class Customer extends CActiveRecord {
         }
         
         $sql = "
-            SELECT p.customer_id, COALESCE(SUM(p.total_price), 0) AS total_price, COALESCE(SUM(p.payment_amount), 0) AS payment_amount, COALESCE(SUM(p.payment_left), 0) AS payment_left
+            SELECT p.customer_id, COALESCE(SUM(p.total_price), 0) AS total_price, COALESCE(SUM(p.payment_amount), 0) AS payment_amount, 
+                COALESCE(SUM(p.payment_left), 0) AS payment_left
             FROM " . InvoiceHeader::model()->tableName() . " p 
-            WHERE p.customer_id = :customer_id AND p.invoice_date <= :end_date" . $branchConditionSql . "
-            GROUP BY p.customer_id 
+            WHERE p.customer_id = :customer_id AND p.invoice_date BETWEEN '2024-01-01' AND :end_date AND p.user_id_cancelled IS NULL" . $branchConditionSql . "
+            GROUP BY p.customer_id
         ";
 
         $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
