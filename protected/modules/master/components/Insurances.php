@@ -68,33 +68,40 @@ class Insurances extends CComponent {
     }
 
     public function flush() {
-//        $isNewRecord = $this->header->isNewRecord;
+
+        if ($this->header->isNewRecord) {
+            $existingCoa = Coa::model()->findByAttributes(array('coa_sub_category_id' => 8, 'coa_id' => null), array('order' => 'id DESC'));
+            $ordinal = substr($existingCoa->code, -3);
+            $newOrdinal = $ordinal + 1;
+
+            $coa = new Coa;
+            $coa->name = 'Piutang ' . $this->header->name;
+            $coa->code = '121.00.' . sprintf('%03d', $newOrdinal);
+            $coa->coa_category_id = 1;
+            $coa->coa_sub_category_id = 8;
+            $coa->coa_id = null;
+            $coa->normal_balance = 'DEBIT';
+            $coa->cash_transaction = 'NO';
+            $coa->opening_balance = 0.00;
+            $coa->closing_balance = 0.00;
+            $coa->debit = 0.00;
+            $coa->credit = 0.00;
+            $coa->status = 'Approved';
+            $coa->date = date('Y-m-d');
+            $coa->date_approval = date('Y-m-d');
+            $coa->time_created = date('H:i:s');
+            $coa->time_approval = date('H:i:s');
+            $coa->is_approved = 1;
+            $coa->user_id = Yii::app()->user->id;
+            $coa->user_id_approval = Yii::app()->user->id;
+            $coa->save();
+            $this->saveMasterCoaLog($coa);
+
+            $this->header->coa_id = $coa->id;
+        }
+        
         $valid = $this->header->save();
-
-        $existingCoa = Coa::model()->findByAttributes(array('coa_sub_category_id' => 8, 'coa_id' => null), array('order' => 'id DESC'));
-        $ordinal = substr($existingCoa->code, -3);
-        $newOrdinal = $ordinal + 1;
-
-        $coa = new Coa;
-        $coa->name = 'Piutang ' . $this->header->name;
-        $coa->code = '121.00.' . sprintf('%03d', $newOrdinal);
-        $coa->coa_category_id = 1;
-        $coa->coa_sub_category_id = 8;
-        $coa->coa_id = null;
-        $coa->normal_balance = 'DEBIT';
-        $coa->cash_transaction = 'NO';
-        $coa->opening_balance = 0.00;
-        $coa->closing_balance = 0.00;
-        $coa->debit = 0.00;
-        $coa->credit = 0.00;
-        $coa->status = null;
-        $coa->date = date('Y-m-d');
-        $coa->date_approval = date('Y-m-d');
-        $coa->is_approved = 1;
-        $coa->user_id = Yii::app()->user->id;
-        $coa->save();
-
-        $this->header->coa_id = $coa->id;
+        $this->saveMasterLog();
 
         $service_pricelists = InsuranceCompanyPricelist::model()->findAllByAttributes(array('insurance_company_id' => $this->header->id));
         $price_id = array();
@@ -119,5 +126,41 @@ class Insurances extends CComponent {
             InsuranceCompanyPricelist::model()->deleteAll($criteria);
         }
         return $valid;
+    }
+    
+    public function saveMasterLog() {
+        $masterLog = new MasterLog();
+        $masterLog->name = $this->header->name;
+        $masterLog->log_date = date('Y-m-d');
+        $masterLog->log_time = date('H:i:s');
+        $masterLog->table_name = $this->header->tableName();
+        $masterLog->table_id = $this->header->id;
+        $masterLog->user_id = Yii::app()->user->id;
+        $masterLog->username = Yii::app()->user->username;
+        $masterLog->controller_class = Yii::app()->controller->module->id  . '/' . Yii::app()->controller->id;
+        $masterLog->action_name = Yii::app()->controller->action->id;
+        
+        $newData = $this->header->attributes;
+        $masterLog->new_data = json_encode($newData);
+
+        $masterLog->save();
+    }
+    
+    public function saveMasterCoaLog($model) {
+        $masterLog = new MasterLog();
+        $masterLog->name = $model->name;
+        $masterLog->log_date = date('Y-m-d');
+        $masterLog->log_time = date('H:i:s');
+        $masterLog->table_name = $model->tableName();
+        $masterLog->table_id = $model->id;
+        $masterLog->user_id = Yii::app()->user->id;
+        $masterLog->username = Yii::app()->user->username;
+        $masterLog->controller_class = Yii::app()->controller->module->id  . '/' . Yii::app()->controller->id;
+        $masterLog->action_name = Yii::app()->controller->action->id;
+        
+        $newData = $model->attributes;
+        $masterLog->new_data = json_encode($newData);
+
+        $masterLog->save();
     }
 }

@@ -14,12 +14,10 @@ $this->menu=array(
 );
 ?>
 <div id="maincontent">
-	<?php echo $this->renderPartial('_form', array(
-		'insurance'=>$insurance,
-		'service'=>$service,
-		'serviceDataProvider'=>$serviceDataProvider,
-		'serviceArray'=>$serviceArray,
-		'coa'=>$coa,
-		'coaDataProvider'=>$coaDataProvider,
-		)); ?>
+    <?php echo $this->renderPartial('_form', array(
+        'insurance'=>$insurance,
+        'service'=>$service,
+        'serviceDataProvider'=>$serviceDataProvider,
+        'serviceArray'=>$serviceArray,
+    )); ?>
 </div>

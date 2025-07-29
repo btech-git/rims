@@ -66,31 +66,6 @@ class InsuranceCompanyController extends Controller {
      */
     public function actionCreate() {
 
-
-        // Uncomment the following line if AJAX validation is needed
-        // $this->performAjaxValidation($model);
-        // if(isset($_POST['InsuranceCompany']))
-        // {
-        // 	$model->attributes=$_POST['InsuranceCompany'];
-        // 	if($model->save())
-        // 		$this->redirect(array('view','id'=>$model->id));
-        // }
-        $coa = new Coa('search');
-        $coa->unsetAttributes();  // clear any default values
-        if (isset($_GET['Coa'])) {
-            $coa->attributes = $_GET['Coa'];
-        }
-        
-        $coaCriteria = new CDbCriteria;
-        //$coaCriteria->addCondition("coa_sub_category_id = 2");
-        $coaCriteria->compare('code', $coa->code . '%', true, 'AND', false);
-        $coaCriteria->compare('name', $coa->name, true);
-
-
-        $coaDataProvider = new CActiveDataProvider('Coa', array(
-            'criteria' => $coaCriteria,
-        ));
-
         $service = new Service('search');
         $service->unsetAttributes();  // clear any default values
         if (isset($_GET['Service'])) {
@@ -126,8 +101,6 @@ class InsuranceCompanyController extends Controller {
             'service' => $service,
             'serviceDataProvider' => $serviceDataProvider,
             'serviceArray' => $serviceArray,
-            'coa' => $coa,
-            'coaDataProvider' => $coaDataProvider,
         ));
     }
 

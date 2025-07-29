@@ -32,14 +32,26 @@ $this->menu = array(
             'attributes' => array(
                 'name',
                 'address',
-                'province_id',
-                'city_id',
+                array(
+                    'label' => 'Province', 
+                    'value' => $model->province_id != "" ? $model->province->name : ''
+                ),
+                array(
+                    'label' => 'City', 
+                    'value' => $model->city_id != "" ? $model->city->name : ''
+                ),
                 'email',
                 'phone',
                 'fax',
                 'npwp',
-                array('name' => 'coa_name', 'value' => $model->coa != "" ? $model->coa->name : ''),
-                array('name' => 'coa_code', 'value' => $model->coa != "" ? $model->coa->code : ''),
+                array(
+                    'name' => 'coa_name', 
+                    'value' => $model->coa != "" ? $model->coa->name : ''
+                ),
+                array(
+                    'name' => 'coa_code', 
+                    'value' => $model->coa != "" ? $model->coa->code : ''
+                ),
             ),
         )); ?>
     </div>
@@ -70,7 +82,7 @@ $this->menu = array(
                     <td><?php echo $service->name; ?></td>
                     <td><?php echo $pricelist->damage_type; ?></td>
                     <td><?php echo $pricelist->vehicle_type; ?></td>
-                    <td><?php echo $pricelist->price; ?></td>
+                    <td><?php echo number_format($pricelist->price, 2); ?></td>
                 </tr>
             <?php endforeach; ?>
         </table>

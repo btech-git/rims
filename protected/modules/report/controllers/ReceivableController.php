@@ -34,7 +34,7 @@ class ReceivableController extends Controller {
         $coa = Search::bind(new Coa('search'), isset($_GET['Coa']) ? $_GET['Coa'] : array());
         $coaDataProvider = $coa->search();
         $coaDataProvider->pagination->pageVar = 'page_dialog';
-        $coaDataProvider->criteria->addCondition("t.coa_category_id = 15 AND t.coa_sub_category_id = 8 AND (t.name NOT LIKE '%Asuransi% OR t.name NOT LIKE '%Insurance%')");
+        $coaDataProvider->criteria->addCondition("t.coa_category_id = 15 AND t.coa_sub_category_id = 8 AND (t.name NOT LIKE '%Asuransi%' OR t.name NOT LIKE '%Insurance%')");
 
         $receivableSummary = new ReceivableSummary($coa->searchByTransactionJournal());
         $receivableSummary->setupLoading();
