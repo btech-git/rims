@@ -483,7 +483,6 @@
         <div class="small-12 columns" >
             <div id="maincontent">
                 <div class="row" style="margin-top:20px" id="noliststyle">
-
                     <div class="small-4 columns">
                         <?php if (
                             Yii::app()->user->checkAccess('saleTaxReport') ||
@@ -546,7 +545,111 @@
                             )); ?>
                         <?php endif; ?>
                     </div>
+                    
+                    <div class="small-4 columns">
+                        <?php if (
+                            Yii::app()->user->checkAccess('dailySaleFrontReport') ||
+                            Yii::app()->user->checkAccess('dailySaleAllFrontReport') ||
+                            Yii::app()->user->checkAccess('monthlySaleFrontReport') ||
+                            Yii::app()->user->checkAccess('monthlySaleAllFrontReport') ||
+                            Yii::app()->user->checkAccess('yearlySaleFrontReport') ||
+                            Yii::app()->user->checkAccess('yearlySaleAllFrontReport')
+                        ): ?>
+                            <h2>Penjualan Front</h2>
+                            <?php $this->widget('zii.widgets.CMenu', array(
+                                'items' => array(
+                                    array(
+                                        'label' => 'Penjualan per Front Office Harian', 
+                                        'url' => array('/report/saleInvoiceMarketingDaily/summary'), 
+                                        'visible' => Yii::app()->user->checkAccess('dailySaleFrontReport')
+                                    ),
+                                    array(
+                                        'label' => 'Penjualan All Front Office Harian', 
+                                        'url' => array('/report/dailyMultipleEmployeeSaleTransaction/summary'), 
+                                        'visible' => Yii::app()->user->checkAccess('dailySaleAllFrontReport')
+                                    ),
+                                    array(
+                                        'label' => 'Penjualan per Front Office Bulanan', 
+                                        'url' => array('/report/monthlySingleEmployeeSaleTransaction/summary'), 
+                                        'visible' => Yii::app()->user->checkAccess('monthlySaleFrontReport')
+                                    ),
+                                    array(
+                                        'label' => 'Penjualan All Front Office Bulanan', 
+                                        'url' => array('/report/monthlyMultipleEmployeeSaleTransaction/summary'), 
+                                        'visible' => Yii::app()->user->checkAccess('monthlySaleAllFrontReport')
+                                    ),
+                                    array(
+                                        'label' => 'Penjualan per Front Office Tahunan', 
+                                        'url' => array('/report/yearlySingleEmployeeSaleTransaction/summary'), 
+                                        'visible' => Yii::app()->user->checkAccess('yearlySaleFrontReport')
+                                    ),
+                                    array(
+                                        'label' => 'Penjualan All Front Office Tahunan', 
+                                        'url' => array('/report/yearlyMultipleEmployeeSaleTransaction/summary'), 
+                                        'visible' => Yii::app()->user->checkAccess('yearlySaleAllFrontReport')
+                                    ),
+                                ),
+                            )); ?>
+                        <?php endif; ?>
+                    </div>
 
+                    <div class="small-4 columns">
+                        <?php if (
+                            Yii::app()->user->checkAccess('dailySaleMechanicReport') ||
+                            Yii::app()->user->checkAccess('dailySaleAllMechanicReport') ||
+                            Yii::app()->user->checkAccess('monthlySaleMechanicReport') ||
+                            Yii::app()->user->checkAccess('monthlySaleAllMechanicReport') ||
+                            Yii::app()->user->checkAccess('yearlySaleMechanicReport') ||
+                            Yii::app()->user->checkAccess('yearlySaleAllMechanicReport')
+                        ): ?>
+                            <h2>Penjualan Mechanic</h2>
+                            <?php $this->widget('zii.widgets.CMenu', array(
+                                'items' => array(
+                                    array(
+                                        'label' => 'Penjualan per Mekanik Harian', 
+                                        'url' => array('/report/registrationTransactionMechanicDaily/summary'), 
+                                        'visible' => Yii::app()->user->checkAccess('dailySaleMechanicReport')
+                                    ),
+                                    array(
+                                        'label' => 'Penjualan all Mekanik Harian', 
+                                        'url' => array('/report/dailyMultipleMechanicTransaction/summary'), 
+                                        'visible' => Yii::app()->user->checkAccess('dailySaleAllMechanicReport')
+                                    ),
+                                    array(
+                                        'label' => 'Penjualan per Mekanik Bulanan', 
+                                        'url' => array('/report/monthlySingleMechanicTransaction/summary'), 
+                                        'visible' => Yii::app()->user->checkAccess('monthlySaleMechanicReport')
+                                    ),
+                                    array(
+                                        'label' => 'Penjualan all Mekanik Bulanan', 
+                                        'url' => array('/report/monthlyMultipleMechanicTransaction/summary'), 
+                                        'visible' => Yii::app()->user->checkAccess('monthlySaleAllMechanicReport')
+                                    ),
+                                    array(
+                                        'label' => 'Penjualan per Mekanik Tahunan', 
+                                        'url' => array('/report/yearlySingleMechanicTransaction/summary'), 
+                                        'visible' => Yii::app()->user->checkAccess('yearlySaleMechanicReport')
+                                    ),
+                                    array(
+                                        'label' => 'Penjualan all Mekanik Tahunan', 
+                                        'url' => array('/report/yearlyMultipleMechanicTransaction/summary'), 
+                                        'visible' => Yii::app()->user->checkAccess('yearlySaleAllMechanicReport')
+                                    ),
+                                ),
+                            )); ?>
+                        <?php endif; ?>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <hr />
+
+    <div class="row">
+        <div class="small-12 columns" >
+            <div id="maincontent">
+                <div class="row" style="margin-top:20px" id="noliststyle">
                     <div class="small-4 columns">
                         <?php if (
 //                            Yii::app()->user->checkAccess('summaryProfitLossReport') ||
@@ -702,100 +805,6 @@
                                     array(
                                         'label' => 'Log Master', 
                                         'url' => array('/report/masterLog/summary'), 
-                                        'visible' => Yii::app()->user->checkAccess('director')
-                                    ),
-                                ),
-                            )); ?>
-                        <?php endif; ?>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    
-    <hr />
-
-    <div class="row">
-        <div class="small-12 columns" >
-            <div id="maincontent">
-                <div class="row" style="margin-top:20px" id="noliststyle">
-                    <div class="small-4 columns">
-                        <?php if (
-                            Yii::app()->user->checkAccess('director')
-                        ): ?>
-                            <h2>Penjualan Front</h2>
-                            <?php $this->widget('zii.widgets.CMenu', array(
-                                'items' => array(
-                                    array(
-                                        'label' => 'Penjualan per Front Office Harian', 
-                                        'url' => array('/report/saleInvoiceMarketingDaily/summary'), 
-                                        'visible' => Yii::app()->user->checkAccess('director')
-                                    ),
-                                    array(
-                                        'label' => 'Penjualan All Front Office Harian', 
-                                        'url' => array('/report/dailyMultipleEmployeeSaleTransaction/summary'), 
-                                        'visible' => Yii::app()->user->checkAccess('director')
-                                    ),
-                                    array(
-                                        'label' => 'Penjualan per Front Office Bulanan', 
-                                        'url' => array('/report/monthlySingleEmployeeSaleTransaction/summary'), 
-                                        'visible' => Yii::app()->user->checkAccess('director')
-                                    ),
-                                    array(
-                                        'label' => 'Penjualan All Front Office Bulanan', 
-                                        'url' => array('/report/monthlyMultipleEmployeeSaleTransaction/summary'), 
-                                        'visible' => Yii::app()->user->checkAccess('director')
-                                    ),
-                                    array(
-                                        'label' => 'Penjualan per Front Office Tahunan', 
-                                        'url' => array('/report/yearlySingleEmployeeSaleTransaction/summary'), 
-                                        'visible' => Yii::app()->user->checkAccess('director')
-                                    ),
-                                    array(
-                                        'label' => 'Penjualan All Front Office Tahunan', 
-                                        'url' => array('/report/yearlyMultipleEmployeeSaleTransaction/summary'), 
-                                        'visible' => Yii::app()->user->checkAccess('director')
-                                    ),
-                                ),
-                            )); ?>
-                        <?php endif; ?>
-                    </div>
-                    
-                    <div class="small-4 columns">
-                        <?php if (
-                            Yii::app()->user->checkAccess('director')
-                        ): ?>
-                            <h2>Penjualan Mechanic</h2>
-                            <?php $this->widget('zii.widgets.CMenu', array(
-                                'items' => array(
-                                    array(
-                                        'label' => 'Penjualan per Mekanik Harian', 
-                                        'url' => array('/report/registrationTransactionMechanicDaily/summary'), 
-                                        'visible' => Yii::app()->user->checkAccess('director')
-                                    ),
-                                    array(
-                                        'label' => 'Penjualan all Mekanik Harian', 
-                                        'url' => array('/report/dailyMultipleMechanicTransaction/summary'), 
-                                        'visible' => Yii::app()->user->checkAccess('director')
-                                    ),
-                                    array(
-                                        'label' => 'Penjualan per Mekanik Bulanan', 
-                                        'url' => array('/report/monthlySingleMechanicTransaction/summary'), 
-                                        'visible' => Yii::app()->user->checkAccess('director')
-                                    ),
-                                    array(
-                                        'label' => 'Penjualan all Mekanik Bulanan', 
-                                        'url' => array('/report/monthlyMultipleMechanicTransaction/summary'), 
-                                        'visible' => Yii::app()->user->checkAccess('director')
-                                    ),
-                                    array(
-                                        'label' => 'Penjualan per Mekanik Tahunan', 
-                                        'url' => array('/report/yearlySingleMechanicTransaction/summary'), 
-                                        'visible' => Yii::app()->user->checkAccess('director')
-                                    ),
-                                    array(
-                                        'label' => 'Penjualan all Mekanik Tahunan', 
-                                        'url' => array('/report/yearlyMultipleMechanicTransaction/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('director')
                                     ),
                                 ),

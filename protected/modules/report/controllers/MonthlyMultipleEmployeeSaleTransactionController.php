@@ -164,11 +164,11 @@ class MonthlyMultipleEmployeeSaleTransactionController extends Controller {
             $worksheet->setCellValue("J{$counter}", $totalInvoiceAverageDaily);
             $worksheet->setCellValue("K{$counter}", $totalInvoicePerCustomer);
             $worksheet->setCellValue("L{$counter}", $dataItem['total_service']);
-            $worksheet->setCellValue("M{$counter}", $totalServiceAverageDaily);
-            $worksheet->setCellValue("N{$counter}", $totalServicePerCustomer);
+            $worksheet->setCellValue("M{$counter}", $totalServicePerCustomer);
+            $worksheet->setCellValue("N{$counter}", $totalServiceAverageDaily);
             $worksheet->setCellValue("O{$counter}", $dataItem['total_product']);
-            $worksheet->setCellValue("P{$counter}", $totalPartsAverageDaily);
-            $worksheet->setCellValue("Q{$counter}", $totalPartsPerCustomer);
+            $worksheet->setCellValue("P{$counter}", $totalPartsPerCustomer);
+            $worksheet->setCellValue("Q{$counter}", $totalPartsAverageDaily);
             $worksheet->setCellValue("R{$counter}", $detailItem['tire_quantity']);
             $worksheet->setCellValue("S{$counter}", $detailItem['oil_quantity']);
             $worksheet->setCellValue("T{$counter}", $detailItem['accessories_quantity']);

@@ -40,8 +40,11 @@ Yii::app()->clientScript->registerCss('_report', '
             <th class="width1-5">Customer Retail</th>
             <th class="width1-6">Contract Service Unit</th>
             <th class="width1-7">Total Invoice (Rp)</th>
+            <th class="width1-7">Invoice per Unit</th>
             <th class="width1-8">Total Service (Rp)</th>
+            <th class="width1-7">Service per Unit</th>
             <th class="width1-9">Total Parts (Rp)</th>
+            <th class="width1-7">Parts per Unit</th>
             <th class="width1-10">Total Ban</th>
             <th class="width1-11">Total Oli</th>
             <th class="width1-12">Total Aksesoris</th>
@@ -67,6 +70,9 @@ Yii::app()->clientScript->registerCss('_report', '
         <?php $averageAccessoriesSum = '0.00'; ?>
         <?php foreach ($yearlyMultipleEmployeeSaleReport as $i => $dataItem): ?>
             <?php $detailItem = $yearlyMultipleEmployeeSaleProductReportData[$dataItem['employee_id_sales_person']]; ?>
+            <?php $totalInvoicePerCustomer = round($dataItem['grand_total'] / $dataItem['customer_quantity'], 2); ?>
+            <?php $totalServicePerCustomer = round($dataItem['total_service'] / $dataItem['customer_quantity'], 2); ?> 
+            <?php $totalPartsPerCustomer = round($dataItem['total_product'] / $dataItem['customer_quantity'], 2); ?>
             <?php $averageTire = $detailItem['tire_quantity'] > 0 ? $detailItem['tire_price'] / $detailItem['tire_quantity'] : '0.00'; ?>
             <?php $averageOil = $detailItem['oil_quantity'] > 0 ? $detailItem['oil_price'] / $detailItem['oil_quantity'] : '0.00'; ?>
             <?php $averageAccessories = $detailItem['accessories_quantity'] > 0 ? $detailItem['accessories_price'] / $detailItem['accessories_quantity'] : '0.00'; ?>
@@ -95,8 +101,11 @@ Yii::app()->clientScript->registerCss('_report', '
                         'endDate' => $endDate
                     ), array('target' => '_blank')); ?>
                 </td>
+                <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $totalInvoicePerCustomer)); ?></td>
                 <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $dataItem['total_service'])); ?></td>
+                <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $totalServicePerCustomer)); ?></td>
                 <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $dataItem['total_product'])); ?></td>
+                <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $totalPartsPerCustomer)); ?></td>
                 <td style="text-align: center">
                     <?php echo CHtml::link(CHtml::encode($detailItem['tire_quantity']), array(
                         '/report/employeeSaleTransactionInfo/detailInfo', 
@@ -147,14 +156,17 @@ Yii::app()->clientScript->registerCss('_report', '
     <tfoot>
         <tr>
             <td colspan="2">TOTAL</td>
-            <td style="text-align: center"><?php echo CHtml::encode($customerQuantitySum); ?></td>
-            <td style="text-align: center"><?php echo CHtml::encode($customerNewQuantitySum); ?></td>
-            <td style="text-align: center"><?php echo CHtml::encode($customerRepeatQuantitySum); ?></td>
-            <td style="text-align: center"><?php echo CHtml::encode($customerRetailQuantitySum); ?></td>
-            <td style="text-align: center"><?php echo CHtml::encode($customerCompanyQuantitySum); ?></td>
+            <td style="text-align: center"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $customerQuantitySum)); ?></td>
+            <td style="text-align: center"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $customerNewQuantitySum)); ?></td>
+            <td style="text-align: center"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $customerRepeatQuantitySum)); ?></td>
+            <td style="text-align: center"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $customerRetailQuantitySum)); ?></td>
+            <td style="text-align: center"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $customerCompanyQuantitySum)); ?></td>
             <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $grandTotalSum)); ?></td>
+            <td></td>
             <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $totalServiceSum)); ?></td>
+            <td></td>
             <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $totalProductSum)); ?></td>
+            <td></td>
             <td style="text-align: center"><?php echo CHtml::encode($tireQuantitySum); ?></td>
             <td style="text-align: center"><?php echo CHtml::encode($oilQuantitySum); ?></td>
             <td style="text-align: center"><?php echo CHtml::encode($accessoriesQuantitySum); ?></td>

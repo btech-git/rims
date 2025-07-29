@@ -2,7 +2,7 @@
     <thead>
         <tr>
             <th style="text-align: center; width: 50%">
-                <?php //echo $counter; ?>
+                <?php echo $counter; ?>
                 <?php echo CHtml::checkBox("User[roles][reportHead]", CHtml::resolveValue($model, "roles[reportHead]"), array('id' => 'User_roles_' . $counter, 'value' => 'reportHead')); ?>
                 <?php echo CHtml::label('SELECT ALL', 'User_roles_' . $counter++, array('style' => 'display: inline')); ?>
             </th>
@@ -405,73 +405,94 @@
             </td>
         </tr>
         <tr>
-            <td style="text-align: center; font-weight: bold; background-color: greenyellow" colspan="2">Keuangan</td>
+            <td style="text-align: center; font-weight: bold; background-color: greenyellow" colspan="2">Front Performance</td>
         </tr>
         <tr>
-            <td>Laba/Rugi (induk)</td>
+            <td>Penjualan per Front Office Harian</td>
             <td style="text-align: center">
                 <?php //echo $counter; ?>
-                <?php echo CHtml::checkBox("User[roles][summaryProfitLossReport]", CHtml::resolveValue($model, "roles[summaryProfitLossReport]"), array('id' => 'User_roles_' . $counter++, 'value' => 'summaryProfitLossReport')); ?>
+                <?php echo CHtml::checkBox("User[roles][dailySaleFrontReport]", CHtml::resolveValue($model, "roles[dailySaleFrontReport]"), array('id' => 'User_roles_' . $counter++, 'value' => 'dailySaleFrontReport')); ?>
             </td>
         </tr>
         <tr>
-            <td>Laba/Rugi (Standar)</td>
+            <td>Penjualan All Front Office Harian</td>
             <td style="text-align: center">
                 <?php //echo $counter; ?>
-                <?php echo CHtml::checkBox("User[roles][standardProfitLossReport]", CHtml::resolveValue($model, "roles[standardProfitLossReport]"), array('id' => 'User_roles_' . $counter++, 'value' => 'standardProfitLossReport')); ?>
+                <?php echo CHtml::checkBox("User[roles][dailySaleAllFrontReport]", CHtml::resolveValue($model, "roles[dailySaleAllFrontReport]"), array('id' => 'User_roles_' . $counter++, 'value' => 'dailySaleAllFrontReport')); ?>
             </td>
         </tr>
         <tr>
-            <td>Laba/Rugi (Multi Periode)</td>
+            <td>Penjualan per Front Office Bulanan</td>
             <td style="text-align: center">
                 <?php //echo $counter; ?>
-                <?php echo CHtml::checkBox("User[roles][multiProfitLossReport]", CHtml::resolveValue($model, "roles[multiProfitLossReport]"), array('id' => 'User_roles_' . $counter++, 'value' => 'multiProfitLossReport')); ?>
+                <?php echo CHtml::checkBox("User[roles][monthlySaleFrontReport]", CHtml::resolveValue($model, "roles[monthlySaleFrontReport]"), array('id' => 'User_roles_' . $counter++, 'value' => 'monthlySaleFrontReport')); ?>
             </td>
         </tr>
         <tr>
-            <td>Neraca (Induk)</td>
+            <td>Penjualan All Front Office Bulanan</td>
             <td style="text-align: center">
                 <?php //echo $counter; ?>
-                <?php echo CHtml::checkBox("User[roles][summaryBalanceSheetReport]", CHtml::resolveValue($model, "roles[summaryBalanceSheetReport]"), array('id' => 'User_roles_' . $counter++, 'value' => 'summaryBalanceSheetReport')); ?>
+                <?php echo CHtml::checkBox("User[roles][monthlySaleAllFrontReport]", CHtml::resolveValue($model, "roles[monthlySaleAllFrontReport]"), array('id' => 'User_roles_' . $counter++, 'value' => 'monthlySaleAllFrontReport')); ?>
             </td>
         </tr>
         <tr>
-            <td>Neraca (Standard)</td>
+            <td>Penjualan per Front Office Tahunan</td>
             <td style="text-align: center">
                 <?php //echo $counter; ?>
-                <?php echo CHtml::checkBox("User[roles][standardBalanceSheetReport]", CHtml::resolveValue($model, "roles[standardBalanceSheetReport]"), array('id' => 'User_roles_' . $counter++, 'value' => 'standardBalanceSheetReport')); ?>
+                <?php echo CHtml::checkBox("User[roles][yearlySaleFrontReport]", CHtml::resolveValue($model, "roles[yearlySaleFrontReport]"), array('id' => 'User_roles_' . $counter++, 'value' => 'yearlySaleFrontReport')); ?>
             </td>
         </tr>
         <tr>
-            <td>Neraca (Multi Periode)</td>
+            <td>Penjualan All Front Office Tahunan</td>
             <td style="text-align: center">
                 <?php //echo $counter; ?>
-                <?php echo CHtml::checkBox("User[roles][multiBalanceSheetReport]", CHtml::resolveValue($model, "roles[multiBalanceSheetReport]"), array('id' => 'User_roles_' . $counter++, 'value' => 'multiBalanceSheetReport')); ?>
+                <?php echo CHtml::checkBox("User[roles][yearlySaleAllFrontReport]", CHtml::resolveValue($model, "roles[yearlySaleAllFrontReport]"), array('id' => 'User_roles_' . $counter++, 'value' => 'yearlySaleAllFrontReport')); ?>
             </td>
         </tr>
         <tr>
-            <td>Bank Bulanan</td>
+            <td style="text-align: center; font-weight: bold; background-color: greenyellow" colspan="2">Mechanic Performance</td>
+        </tr>
+        <tr>
+            <td>Penjualan per Mechanic Harian</td>
             <td style="text-align: center">
                 <?php //echo $counter; ?>
-                <?php echo CHtml::checkBox("User[roles][multiBalanceSheetReport]", CHtml::resolveValue($model, "roles[multiBalanceSheetReport]"), array('id' => 'User_roles_' . $counter++, 'value' => 'multiBalanceSheetReport')); ?>
+                <?php echo CHtml::checkBox("User[roles][dailySaleMechanicReport]", CHtml::resolveValue($model, "roles[dailySaleMechanicReport]"), array('id' => 'User_roles_' . $counter++, 'value' => 'dailySaleMechanicReport')); ?>
             </td>
         </tr>
         <tr>
-            <td>Transaksi Harian</td>
+            <td>Penjualan All Mechanic Harian</td>
             <td style="text-align: center">
                 <?php //echo $counter; ?>
-                <?php echo CHtml::checkBox("User[roles][multiBalanceSheetReport]", CHtml::resolveValue($model, "roles[multiBalanceSheetReport]"), array('id' => 'User_roles_' . $counter++, 'value' => 'multiBalanceSheetReport')); ?>
+                <?php echo CHtml::checkBox("User[roles][dailySaleAllMechanicReport]", CHtml::resolveValue($model, "roles[dailySaleAllMechanicReport]"), array('id' => 'User_roles_' . $counter++, 'value' => 'dailySaleAllMechanicReport')); ?>
             </td>
-        </tr>
-<!--        <tr>
-            <td style="text-align: center; font-weight: bold; background-color: greenyellow" colspan="2">Management</td>
         </tr>
         <tr>
-            <td>Daftar Aset Tetap</td>
+            <td>Penjualan per Mechanic Bulanan</td>
             <td style="text-align: center">
                 <?php //echo $counter; ?>
-                <?php //echo CHtml::checkBox("User[roles][fixedAssetReport]", CHtml::resolveValue($model, "roles[fixedAssetReport]"), array('id' => 'User_roles_' . $counter++, 'value' => 'fixedAssetReport')); ?>
+                <?php echo CHtml::checkBox("User[roles][monthlySaleMechanicReport]", CHtml::resolveValue($model, "roles[monthlySaleMechanicReport]"), array('id' => 'User_roles_' . $counter++, 'value' => 'monthlySaleMechanicReport')); ?>
             </td>
-        </tr>-->
+        </tr>
+        <tr>
+            <td>Penjualan All Mechanic Bulanan</td>
+            <td style="text-align: center">
+                <?php //echo $counter; ?>
+                <?php echo CHtml::checkBox("User[roles][monthlySaleAllMechanicReport]", CHtml::resolveValue($model, "roles[monthlySaleAllMechanicReport]"), array('id' => 'User_roles_' . $counter++, 'value' => 'monthlySaleAllMechanicReport')); ?>
+            </td>
+        </tr>
+        <tr>
+            <td>Penjualan per Mechanic Tahunan</td>
+            <td style="text-align: center">
+                <?php //echo $counter; ?>
+                <?php echo CHtml::checkBox("User[roles][yearlySaleMechanicReport]", CHtml::resolveValue($model, "roles[yearlySaleMechanicReport]"), array('id' => 'User_roles_' . $counter++, 'value' => 'yearlySaleMechanicReport')); ?>
+            </td>
+        </tr>
+        <tr>
+            <td>Penjualan All Mechanic Tahunan</td>
+            <td style="text-align: center">
+                <?php echo $counter; ?>
+                <?php echo CHtml::checkBox("User[roles][yearlySaleAllMechanicReport]", CHtml::resolveValue($model, "roles[yearlySaleAllMechanicReport]"), array('id' => 'User_roles_' . $counter++, 'value' => 'yearlySaleAllMechanicReport')); ?>
+            </td>
+        </tr>
     </tbody>
 </table>
