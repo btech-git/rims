@@ -28,7 +28,7 @@ class ReceivableLedgerController extends Controller {
         $coaId = (isset($_GET['CoaId'])) ? $_GET['CoaId'] : '';
         $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : date('Y-m-d');
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
-        $pageSize = (isset($_GET['PageSize'])) ? $_GET['PageSize'] : '';
+        $pageSize = (isset($_GET['PageSize'])) ? $_GET['PageSize'] : 50000;
         $currentPage = (isset($_GET['page'])) ? $_GET['page'] : '';
         $currentSort = (isset($_GET['sort'])) ? $_GET['sort'] : '';
 

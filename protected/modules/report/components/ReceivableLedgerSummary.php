@@ -31,7 +31,6 @@ class ReceivableLedgerSummary extends CComponent {
     }
 
     public function setupFilter($startDate, $endDate, $branchId, $coaId) {
-        $this->dataProvider->criteria->addCondition("t.code NOT LIKE '%.000'");
         $this->dataProvider->criteria->compare('t.coa_sub_category_id', 8);
         $this->dataProvider->criteria->compare('t.is_approved', 1);
         $this->dataProvider->criteria->compare('t.id', $coaId);
@@ -39,21 +38,15 @@ class ReceivableLedgerSummary extends CComponent {
         $branchConditionSql = '';
         
         if (!empty($branchId)) {
-            $branchConditionSql = ' AND i.branch_id = :branch_id';
+            $branchConditionSql = ' AND branch_id = :branch_id';
             $this->dataProvider->criteria->params[':branch_id'] = $branchId;
         }
 
         $this->dataProvider->criteria->addCondition("EXISTS (
-            SELECT i.id 
-            FROM " . InvoiceHeader::model()->tableName() . " i 
-            INNER JOIN " . Customer::model()->tableName() . " c ON c.id = i.customer_id
-            WHERE c.coa_id = t.id AND invoice_date BETWEEN :start_date AND :end_date" . $branchConditionSql . "
-            UNION
-            SELECT i.id 
-            FROM " . PaymentIn::model()->tableName() . " i 
-            INNER JOIN " . Customer::model()->tableName() . " c ON c.id = i.customer_id
-            WHERE c.coa_id = t.id AND payment_date BETWEEN :start_date AND :end_date" . $branchConditionSql . "
-        )");
+            SELECT coa_id 
+            FROM " . JurnalUmum::model()->tableName() . " 
+            WHERE coa_id = t.id AND tanggal_transaksi BETWEEN :start_date AND :end_date" . $branchConditionSql . "
+        ) AND t.code NOT LIKE '%.000'");
 
         $this->dataProvider->criteria->params[':start_date'] = $startDate;
         $this->dataProvider->criteria->params[':end_date'] = $endDate;
