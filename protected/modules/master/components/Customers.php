@@ -140,7 +140,7 @@ class Customers extends CComponent {
                 $coa = new Coa;
                 $coa->name = 'Piutang ' . $this->header->name;
                 $coa->code = '121.00.' . sprintf('%03d', $newOrdinal);
-                $coa->coa_category_id = 1;
+                $coa->coa_category_id = 15;
                 $coa->coa_sub_category_id = 8;
                 $coa->coa_id = null;
                 $coa->normal_balance = 'DEBIT';

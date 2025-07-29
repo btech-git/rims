@@ -41,8 +41,8 @@ Yii::app()->clientScript->registerCss('_report', '
         
         <tbody>
             <?php foreach ($receivableLedgerSummary->dataProvider->data as $header): ?>
-                <?php $receivableAmount = $header->getReceivableAmount(); ?>
-                <?php if ($receivableAmount !== 0): ?>
+                <?php //$receivableAmount = $header->getReceivableAmount(); ?>
+                <?php //if ($receivableAmount !== 0): ?>
                     <tr>
                         <td colspan="5">
                             <?php echo CHtml::encode(CHtml::value($header, 'code')); ?> - 
@@ -99,7 +99,7 @@ Yii::app()->clientScript->registerCss('_report', '
                     <tr>
                         <td colspan="6">&nbsp;</td>
                     </tr>
-                <?php endif; ?>
+                <?php //endif; ?>
             <?php endforeach; ?>
         </tbody>
     </table>
