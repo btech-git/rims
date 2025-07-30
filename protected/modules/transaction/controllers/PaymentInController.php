@@ -106,19 +106,21 @@ class PaymentInController extends Controller {
                 $coaId = $model->companyBank->coa_id;
             }
 
-            $jurnalUmumKas = new JurnalUmum;
-            $jurnalUmumKas->kode_transaksi = $model->payment_number;
-            $jurnalUmumKas->tanggal_transaksi = $model->payment_date;
-            $jurnalUmumKas->coa_id = $coaId;
-            $jurnalUmumKas->branch_id = $model->branch_id;
-            $jurnalUmumKas->total = $model->totalDetailAmount;
-            $jurnalUmumKas->debet_kredit = 'D';
-            $jurnalUmumKas->tanggal_posting = date('Y-m-d');
-            $jurnalUmumKas->transaction_subject = $model->notes;
-            $jurnalUmumKas->remark = $remark;
-            $jurnalUmumKas->is_coa_category = 0;
-            $jurnalUmumKas->transaction_type = 'Pin';
-            $jurnalUmumKas->save();
+            if ($model->totalDetailAmount) {
+                $jurnalUmumKas = new JurnalUmum;
+                $jurnalUmumKas->kode_transaksi = $model->payment_number;
+                $jurnalUmumKas->tanggal_transaksi = $model->payment_date;
+                $jurnalUmumKas->coa_id = $coaId;
+                $jurnalUmumKas->branch_id = $model->branch_id;
+                $jurnalUmumKas->total = $model->totalDetailAmount;
+                $jurnalUmumKas->debet_kredit = 'D';
+                $jurnalUmumKas->tanggal_posting = date('Y-m-d');
+                $jurnalUmumKas->transaction_subject = $model->notes;
+                $jurnalUmumKas->remark = $remark;
+                $jurnalUmumKas->is_coa_category = 0;
+                $jurnalUmumKas->transaction_type = 'Pin';
+                $jurnalUmumKas->save();
+            }
 
             foreach ($model->paymentInDetails as $detail) {
                 if ($detail->tax_service_amount > 0) {
@@ -823,19 +825,21 @@ class PaymentInController extends Controller {
                             $coaId = $paymentIn->companyBank->coa_id;
                         }
 
-                        $jurnalUmumKas = new JurnalUmum;
-                        $jurnalUmumKas->kode_transaksi = $paymentIn->payment_number;
-                        $jurnalUmumKas->tanggal_transaksi = $paymentIn->payment_date;
-                        $jurnalUmumKas->coa_id = $coaId;
-                        $jurnalUmumKas->branch_id = $paymentIn->branch_id;
-                        $jurnalUmumKas->total = $paymentIn->totalDetailAmount;
-                        $jurnalUmumKas->debet_kredit = 'D';
-                        $jurnalUmumKas->tanggal_posting = date('Y-m-d');
-                        $jurnalUmumKas->transaction_subject = $paymentIn->notes;
-                        $jurnalUmumKas->remark = $remark;
-                        $jurnalUmumKas->is_coa_category = 0;
-                        $jurnalUmumKas->transaction_type = 'Pin';
-                        $jurnalUmumKas->save();
+                        if ($paymentIn->totalDetailAmount > 0) {
+                            $jurnalUmumKas = new JurnalUmum;
+                            $jurnalUmumKas->kode_transaksi = $paymentIn->payment_number;
+                            $jurnalUmumKas->tanggal_transaksi = $paymentIn->payment_date;
+                            $jurnalUmumKas->coa_id = $coaId;
+                            $jurnalUmumKas->branch_id = $paymentIn->branch_id;
+                            $jurnalUmumKas->total = $paymentIn->totalDetailAmount;
+                            $jurnalUmumKas->debet_kredit = 'D';
+                            $jurnalUmumKas->tanggal_posting = date('Y-m-d');
+                            $jurnalUmumKas->transaction_subject = $paymentIn->notes;
+                            $jurnalUmumKas->remark = $remark;
+                            $jurnalUmumKas->is_coa_category = 0;
+                            $jurnalUmumKas->transaction_type = 'Pin';
+                            $jurnalUmumKas->save();
+                        }
                         
                         foreach ($paymentIn->paymentInDetails as $detail) {
                             if ($detail->tax_service_amount > 0) {
