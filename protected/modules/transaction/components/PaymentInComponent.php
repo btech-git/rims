@@ -161,9 +161,9 @@ class PaymentInComponent extends CComponent {
         $valid = $this->header->save(false);
 
         foreach ($this->details as $i => $detail) {
-            if ($detail->amount <= 0.00) {
-                continue;
-            }
+//            if ($detail->amount <= 0.00) {
+//                continue;
+//            }
 
             if ($detail->isNewRecord) {
                 $detail->payment_in_id = $this->header->id;
