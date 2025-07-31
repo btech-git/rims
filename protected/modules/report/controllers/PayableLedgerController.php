@@ -131,8 +131,8 @@ class PayableLedgerController extends Controller {
         $counter = 7;
 
         foreach ($payableLedgerSummary->data as $header) {
-            $payableAmount = $header->getPayableAmount();
-            if ($payableAmount !== 0) {
+//            $payableAmount = $header->getPayableAmount();
+//            if ($payableAmount !== 0) {
                 $worksheet->mergeCells("A{$counter}:B{$counter}");
                 $worksheet->mergeCells("C{$counter}:E{$counter}");
                 $worksheet->setCellValue("A{$counter}", CHtml::encode(CHtml::value($header, 'code')));
@@ -184,8 +184,7 @@ class PayableLedgerController extends Controller {
                 $worksheet->setCellValue("A{$counter}", "Perubahan Bersih");
                 $worksheet->setCellValue("G{$counter}", CHtml::encode($saldo));
                 $counter++; $counter++;
-                
-            }
+//            }
         }
             
         for ($col = 'A'; $col !== 'L'; $col++) {
