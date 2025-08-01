@@ -39,7 +39,17 @@ class SiteController extends Controller {
     public function actionIndex() {
         if (Yii::app()->user->isGuest) {
             $this->redirect(array('/user/login'));
-//        } else {
+        } else {
+            $vehicle = Search::bind(new Vehicle('search'), isset($_GET['Vehicle']) ? $_GET['Vehicle'] : '');
+            $vehicleDataProvider = $vehicle->searchByDashboard();
+            $vehicleDataProvider->criteria->with = array(
+                'customer',
+            );
+
+            if (isset($_GET['Vehicle'])) {
+                $vehicle->attributes = $_GET['Vehicle'];
+            }
+
 //            $pricingRequest = new ProductPricingRequest('search');
 //            $pricingRequest->unsetAttributes();  // clear any default values
 //
@@ -51,6 +61,8 @@ class SiteController extends Controller {
         }
         
         $this->render('index', array(
+            'vehicle' => $vehicle,
+            'vehicleDataProvider' => $vehicleDataProvider,
 //            'pricingRequest' => $pricingRequest,
 //            'pricingRequestDataProvider' => $pricingRequestDataProvider,
         ));

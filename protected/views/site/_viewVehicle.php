@@ -113,23 +113,33 @@
                 'type'=>'raw'
             ),
             array(
-                'header' => 'Phone',
+                'header' => 'Type',
                 'filter' => false,
-                'value'=>'CHtml::encode(CHtml::value($data, "customer.mobilePhone"))'
+                'value'=>'CHtml::encode(CHtml::value($data, "customer.customer_type"))'
             ),
             array(
-                'name'=>'car_make_id',
-                'header' => 'Car Make',
-                'value'=>'empty($data->car_make_id) ? "" : $data->carMake->name'
-            ),
-            array(
-                'name'=>'car_model_id',
-                'value'=>'empty($data->car_model_id) ? "" : $data->carModel->name'
+                'header' => 'Kendaraan',
+                'value' => '$data->carMakeModelSubCombination',
             ),
             array(
                 'name'=>'color_id',
                 'header'=>'Color',
                 'value'=>'empty($data->color_id) ? "" : $data->color->name'
+            ),
+            array(
+                'header' => 'Status Location',
+                'value'=>'CHtml::encode(CHtml::value($data, "status_location"))'
+            ),
+            array(
+                'class' => 'CButtonColumn',
+                'template' => '{update}',
+                'buttons' => array(
+                    'update' => array(
+                        'label' => 'location',
+                        'url' => 'Yii::app()->createUrl("master/vehicle/updateLocation", array("id"=>$data->id))',
+//                        'visible' => 'Yii::app()->user->checkAccess("movementInEdit")', 
+                    ),
+                ),
             ),
         ),
     )); ?>

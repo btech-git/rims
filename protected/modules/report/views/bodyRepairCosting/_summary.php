@@ -43,6 +43,9 @@ Yii::app()->clientScript->registerCss('_report', '
             <th class="width1-7">WO #</th>
             <th class="width1-8">WO Status</th>
             <th class="width1-9">Total</th>
+            <th class="width1-10">HPP</th>
+            <th class="width1-11">Sub Luar</th>
+            <th class="width1-12">Bahan</th>
         </tr>
     </thead>
     <tbody>
@@ -60,12 +63,23 @@ Yii::app()->clientScript->registerCss('_report', '
                 <td class="width1-6"><?php echo CHtml::encode(CHtml::value($header, 'insuranceCompany.name')); ?></td>
                 <td class="width1-7"><?php echo CHtml::encode(CHtml::value($header, 'work_order_number')); ?></td>
                 <td class="width1-8"><?php echo CHtml::encode(CHtml::value($header, 'status')); ?></td>
-                <td class="width1-10" style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($header, 'grand_total'))); ?></td>
-            </tr>
+                <td class="width1-10" style="text-align: right">
+                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($header, 'grand_total'))); ?>
+                </td>
+                <td class="width1-10" style="text-align: right">
+                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($header, 'totalHpp'))); ?>
+                </td>
+                <td class="width1-10" style="text-align: right">
+                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($header, 'totalWorkOrderExpense'))); ?>
+                </td>
+                <td class="width1-10" style="text-align: right">
+                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($header, 'totalMaterialRequest'))); ?>
+                </td>
+<!--            </tr>
             <tr class="items2">
                 <td colspan="10">
                     <table>
-                        <?php $workOrderExpenses = WorkOrderExpenseHeader::model()->findAllByAttributes(array('registration_transaction_id' => $header->id)); ?>
+                        <?php /*$workOrderExpenses = WorkOrderExpenseHeader::model()->findAllByAttributes(array('registration_transaction_id' => $header->id)); ?>
                         <?php foreach ($workOrderExpenses as $workOrderExpense): ?>
                             <?php foreach ($workOrderExpense->workOrderExpenseDetails as $detail): ?>
                                 <tr>
@@ -126,10 +140,10 @@ Yii::app()->clientScript->registerCss('_report', '
                                     </tr>
                                 <?php endforeach; ?>
                             <?php endforeach; ?>
-                        <?php endforeach; ?>
+                        <?php endforeach; */ ?>
                     </table>
                 </td>
-            </tr>
+            </tr>-->
         <?php endforeach; ?>
     </tbody>
 </table>

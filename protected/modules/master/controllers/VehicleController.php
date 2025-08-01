@@ -95,7 +95,7 @@ class VehicleController extends Controller {
                 'defaultOrder' => 't.transaction_date DESC',
             ),
             'pagination' => array(
-                'pageSize' => 10,
+                'pageSize' => 30,
             )
         ));
         
@@ -229,16 +229,84 @@ class VehicleController extends Controller {
 
     public function actionUpdateLocation($id) {
         $model = $this->loadModel($id);
+        $oldVehiclePositionTimer = VehiclePositionTimer::model()->find(array(
+            'order' => ' id DESC',
+            'condition' => "t.vehicle_id = :vehicle_id",
+            'params' => array(':vehicle_id' => $id)
+        ));
+        
+        if ($oldVehiclePositionTimer === null) {
+            $statusLocation = 'Masuk Lokasi';
+        } else {
+            if ($oldVehiclePositionTimer->entry_date !== null && $oldVehiclePositionTimer->entry_time !== null &&
+                    $oldVehiclePositionTimer->process_date == null && $oldVehiclePositionTimer->process_time == null &&
+                    $oldVehiclePositionTimer->exit_date == null && $oldVehiclePositionTimer->exit_time == null) {
+                $statusLocation = 'On-Progress';
+            } else if ($oldVehiclePositionTimer->entry_date !== null && $oldVehiclePositionTimer->entry_time !== null &&
+                    $oldVehiclePositionTimer->process_date !== null && $oldVehiclePositionTimer->process_time !== null &&
+                    $oldVehiclePositionTimer->exit_date == null && $oldVehiclePositionTimer->exit_time == null) {
+                $statusLocation = 'Keluar Lokasi';
+            } else if ($oldVehiclePositionTimer->entry_date !== null && $oldVehiclePositionTimer->entry_time !== null &&
+                    $oldVehiclePositionTimer->process_date !== null && $oldVehiclePositionTimer->process_time !== null &&
+                    $oldVehiclePositionTimer->exit_date !== null && $oldVehiclePositionTimer->exit_time !== null) {
+                $statusLocation = 'Masuk Lokasi';
+            }
+        }
+        
+        $statusErrorMessage = '';
 
         if (isset($_POST['Vehicle'])) {
             $model->attributes = $_POST['Vehicle'];
-            if ($model->save()) {
-                $this->redirect(array('view', 'id' => $model->id));
+            
+            if ($model->status_location !== $statusLocation) {
+                $statusErrorMessage = 'Lokasi yang anda pilih salah.';
+            } else {
+                if ($model->status_location == 'Masuk Lokasi') {
+                    $model->entry_user_id = Yii::app()->user->id;
+                    $model->entry_datetime = date('Y-m-d H:i:s');
+                } elseif ($model->status_location == 'On-Progress') {
+                    $model->start_service_user_id = Yii::app()->user->id;
+                    $model->start_service_datetime = date('Y-m-d H:i:s');
+                } elseif ($model->status_location == 'Keluar Lokasi') {
+                    $model->exit_user_id = Yii::app()->user->id;
+                    $model->exit_datetime = date('Y-m-d H:i:s');
+                } else {
+                    $model->entry_user_id = null;
+                    $model->start_service_user_id = null;
+                    $model->finish_service_user_id = null;
+                    $model->exit_user_id = null;
+                    $model->entry_datetime = null;
+                    $model->start_service_datetime = null;
+                    $model->finish_service_datetime = null;
+                    $model->exit_datetime = null;
+                }
+                
+                if ($model->status_location == 'Masuk Lokasi') {
+                    $vehiclePositionTimer = new VehiclePositionTimer();
+                    $vehiclePositionTimer->entry_date = date('Y-m-d');
+                    $vehiclePositionTimer->entry_time = date('H:i:s');
+                } elseif ($model->status_location == 'On-Progress') {
+                    $vehiclePositionTimer = $oldVehiclePositionTimer;
+                    $vehiclePositionTimer->process_date = date('Y-m-d');
+                    $vehiclePositionTimer->process_time = date('H:i:s');
+                } elseif ($model->status_location == 'Keluar Lokasi') {
+                    $vehiclePositionTimer = $oldVehiclePositionTimer;
+                    $vehiclePositionTimer->exit_date = date('Y-m-d');
+                    $vehiclePositionTimer->exit_time = date('H:i:s');
+                }
+                $vehiclePositionTimer->vehicle_id = $id;
+
+                if ($model->save()) {
+                    if ($vehiclePositionTimer->save()) {
+                        $this->redirect(array('view', 'id' => $model->id));
+                    }
+                }
             }
         }
 
         $this->render('updateLocation', array(
             'model' => $model,
+            'statusErrorMessage' => $statusErrorMessage,
         ));
     }
 

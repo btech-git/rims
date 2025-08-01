@@ -181,6 +181,8 @@ class RegistrationTransaction extends MonthlyTransactionActiveRecord {
             'vehicle' => array(self::BELONGS_TO, 'Vehicle', 'vehicle_id'),
             'saleEstimationHeader' => array(self::BELONGS_TO, 'SaleEstimationHeader', 'sale_estimation_header_id'),
             'registrationServiceManagements' => array(self::HAS_MANY, 'RegistrationServiceManagement', 'registration_transaction_id'),
+            'workOrderExpenseHeaders' => array(self::HAS_MANY, 'WorkOrderExpenseHeader', 'registration_transaction_id'),
+            'materialRequestHeaders' => array(self::HAS_MANY, 'MaterialRequestHeader', 'registration_transaction_id'),
         );
     }
 
@@ -1242,6 +1244,36 @@ class RegistrationTransaction extends MonthlyTransactionActiveRecord {
         $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
 
         return $resultSet;
+    }
+    
+    public function getTotalHpp() {
+        $total = '0.00'; 
+        
+        foreach ($this->registrationProducts as $detail) {
+            $total += $detail->product->hpp * $detail->quantity;
+        }
+        
+        return $total;
+    }
+    
+    public function getTotalWorkOrderExpense() {
+        $total = '0.00'; 
+        
+        foreach ($this->workOrderExpenseHeaders as $detail) {
+            $total += $detail->grand_total;
+        }
+        
+        return $total;
+    }
+    
+    public function getTotalMaterialRequest() {
+        $total = '0.00';
+        
+        foreach ($this->materialRequestHeaders as $detail) {
+            $total += $detail->totalPrice;
+        }
+        
+        return $total;
     }
     
 //    public static function getIndividualCashDailySummary($transactionDate) {

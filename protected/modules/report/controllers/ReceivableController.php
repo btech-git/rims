@@ -111,55 +111,53 @@ class ReceivableController extends Controller {
         $worksheet->getStyle("A6:G6")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
         $worksheet->getStyle("A7:G7")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
-        $worksheet->getStyle('A6:G7')->getFont()->setBold(true);
-        $worksheet->setCellValue('B5', 'Code');
+        $worksheet->getStyle('A5:H6')->getFont()->setBold(true);
         $worksheet->setCellValue('A5', 'Name');
-        $worksheet->setCellValue('B5', 'Saldo Awal');
-        
-        $worksheet->setCellValue('A6', 'Faktur #');
-        $worksheet->setCellValue('B6', 'Tanggal');
-        $worksheet->setCellValue('C6', 'Memo');
-        $worksheet->setCellValue('D6', 'Debit');
-        $worksheet->setCellValue('E6', 'Credit');
-        $worksheet->setCellValue('F6', 'Balance');
-        $counter = 9;
+        $worksheet->setCellValue('B5', 'COA');
+
+        $worksheet->setCellValue('A6', 'Tanggal');
+        $worksheet->setCellValue('B6', 'Faktur #');
+        $worksheet->setCellValue('C6', 'Jatuh Tempo');
+        $worksheet->setCellValue('D6', 'Customer');
+        $worksheet->setCellValue('E6', 'Grand Total');
+        $worksheet->setCellValue('F6', 'Payment');
+        $worksheet->setCellValue('G6', 'Remaining');
+        $counter = 8;
 
         foreach ($receivableSummary->dataProvider->data as $header) {
-            $beginningBalance = CHtml::value($header, 'beginningBalanceReceivableDetail');
             $worksheet->setCellValue("A{$counter}", $header->code);
             $worksheet->setCellValue("B{$counter}", $header->name);
-            $worksheet->setCellValue("C{$counter}", $beginningBalance);
 
             $counter++;
             
-            $receivableData = $header->getReceivableInvoiceReport($endDate, $branchId);
+            $receivableData = $header->getReceivableReport($endDate, $branchId);
             $totalRevenue = 0.00;
             $totalPayment = 0.00;
             $totalReceivable = 0.00;
-            $currentBalance = $beginningBalance;
             foreach ($receivableData as $receivableRow) {
-                $debitAmount = $receivableRow['debit'];
-                $creditAmount = $receivableRow['credit'];
-                $currentBalance += $debitAmount - $creditAmount;
+                $revenue = $receivableRow['total_price'];
+                $paymentAmount = $receivableRow['amount'];
+                $paymentLeft = $receivableRow['remaining'];
                 
-                $worksheet->setCellValue("A{$counter}", $receivableRow['kode_transaksi']);
-                $worksheet->setCellValue("B{$counter}", $receivableRow['tanggal_transaksi']);
-                $worksheet->setCellValue("C{$counter}", $receivableRow['remark']);
-                $worksheet->setCellValue("D{$counter}", $debitAmount);
-                $worksheet->setCellValue("E{$counter}", $creditAmount);
-                $worksheet->setCellValue("F{$counter}", $currentBalance);
+                $worksheet->setCellValue("A{$counter}", $receivableRow['invoice_date']);
+                $worksheet->setCellValue("B{$counter}", CHtml::encode($receivableRow['invoice_number']));
+                $worksheet->setCellValue("C{$counter}", CHtml::encode($receivableRow['due_date']));
+                $worksheet->setCellValue("D{$counter}", CHtml::encode($receivableRow['customer_name']));
+                $worksheet->setCellValue("E{$counter}", CHtml::encode($revenue));
+                $worksheet->setCellValue("F{$counter}", CHtml::encode($paymentAmount));
+                $worksheet->setCellValue("G{$counter}", CHtml::encode($paymentLeft));
                 
                 $counter++;
-                
-                $totalRevenue += $debitAmount;
-                $totalPayment += $creditAmount;
-                $totalReceivable += $currentBalance;
+            
+                $totalRevenue += $revenue;
+                $totalPayment += $paymentAmount;
+                $totalReceivable += $paymentLeft;
             }
             
-            $worksheet->getStyle("A{$counter}:G{$counter}")->getFont()->setBold(true);
+            $worksheet->getStyle("A{$counter}:H{$counter}")->getFont()->setBold(true);
 
-            $worksheet->getStyle("A{$counter}:G{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
-            $worksheet->getStyle("A{$counter}:G{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
+            $worksheet->getStyle("A{$counter}:H{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+            $worksheet->getStyle("A{$counter}:H{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
             $worksheet->mergeCells("A{$counter}:D{$counter}");
             $worksheet->setCellValue("A{$counter}", 'Total');
             $worksheet->setCellValue("E{$counter}", $totalRevenue);

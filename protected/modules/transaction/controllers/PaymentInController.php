@@ -106,7 +106,7 @@ class PaymentInController extends Controller {
                 $coaId = $model->companyBank->coa_id;
             }
 
-            if ($model->totalDetailAmount) {
+            if ($model->totalDetailAmount > 0) {
                 $jurnalUmumKas = new JurnalUmum;
                 $jurnalUmumKas->kode_transaksi = $model->payment_number;
                 $jurnalUmumKas->tanggal_transaksi = $model->payment_date;

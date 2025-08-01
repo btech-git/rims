@@ -66,11 +66,11 @@ class ReceivableSummary extends CComponent {
             SELECT i.coa_id, SUM(CASE WHEN debet_kredit = 'D' THEN total ELSE 0 END) AS debit, SUM(CASE WHEN debet_kredit = 'K' THEN total ELSE 0 END) AS credit
             FROM " . JurnalUmum::model()->tableName() . " i
             INNER JOIN " . Coa::model()->tableName() . " c ON c.id = i.coa_id
-            WHERE i.coa_id = t.id AND i.tanggal_transaksi BETWEEN '2025-01-01' AND :end_date AND t.coa_category_id = 15 AND t.coa_sub_category_id = 8 AND 
-                (c.name NOT LIKE '%Asuransi%' OR c.name NOT LIKE '%Insurance%')" . $branchConditionSql . $coaConditionSql . " 
+            WHERE i.coa_id = t.id AND i.tanggal_transaksi BETWEEN '2025-01-01' AND :end_date AND t.coa_category_id = 15 AND t.coa_sub_category_id = 8" . 
+                $branchConditionSql . $coaConditionSql . " 
             GROUP BY i.coa_id
             HAVING debit - credit > 100
-        )");
+        ) AND t.name NOT LIKE '%Asuransi%' AND t.name NOT LIKE '%Insurance%'");
         
         $this->dataProvider->criteria->params[':end_date'] = $endDate;
     }

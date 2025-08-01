@@ -444,7 +444,7 @@
                             <?php $this->widget('zii.widgets.CMenu', array(
                                 'items' => array(
                                     array(
-                                        'label' => 'Pembelian Summary', 
+                                        'label' => 'Pembelian Parts', 
                                         'url' => array('/report/purchaseInvoiceSummary/summary'), 
                                         'visible' => (Yii::app()->user->checkAccess('purchaseSummaryReport'))
                                     ),
@@ -459,12 +459,12 @@
                                         'visible' => Yii::app()->user->checkAccess('purchaseSupplierReport')
                                     ),
                                     array(
-                                        'label' => 'Pembelian per Barang', 
+                                        'label' => 'Pembelian per Parts', 
                                         'url' => array('/report/purchasePerProduct/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('purchaseProductSummaryReport')
                                     ),
                                     array(
-                                        'label' => 'Rincian Pembelian per Barang', 
+                                        'label' => 'Rincian Pembelian per Parts', 
                                         'url' => array('/report/purchasePerProductDetail/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('purchaseProductReport')
                                     ),
@@ -718,11 +718,6 @@
                             <?php $this->widget('zii.widgets.CMenu', array(
                                 'items' => array(
                                     array(
-                                        'label' => 'Daftar Aset Tetap', 
-                                        'url' => array('/report/fixedAsset/summary'), 
-                                        'visible' => Yii::app()->user->checkAccess('director')
-                                    ),
-                                    array(
                                         'label' => 'Penjualan Tahunan', 
                                         'url' => array('/report/yearlySaleSummary/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('director')
@@ -730,16 +725,6 @@
                                     array(
                                         'label' => 'Penjualan Project', 
                                         'url' => array('/report/saleByProject/summary'), 
-                                        'visible' => Yii::app()->user->checkAccess('director')
-                                    ),
-                                    array(
-                                        'label' => 'Konfirmasi Transaksi Harian', 
-                                        'url' => array('/report/dailyTransactionConfirmation/summary'), 
-                                        'visible' => Yii::app()->user->checkAccess('director')
-                                    ),
-                                    array(
-                                        'label' => 'Payment Type Bulanan', 
-                                        'url' => array('/report/paymentMonthly/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('director')
                                     ),
                                     array(
@@ -758,13 +743,8 @@
                                         'visible' => Yii::app()->user->checkAccess('director')
                                     ),
                                     array(
-                                        'label' => 'User Performance', 
-                                        'url' => array('/report/transactionLogUserCounter/summary'), 
-                                        'visible' => Yii::app()->user->checkAccess('director')
-                                    ),
-                                    array(
-                                        'label' => 'User Transaction Input', 
-                                        'url' => array('/report/userPerformanceDetail/summary'), 
+                                        'label' => 'Penjualan Body Repair', 
+                                        'url' => array('/report/bodyRepairCosting/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('director')
                                     ),
                                     array(
@@ -773,13 +753,33 @@
                                         'visible' => Yii::app()->user->checkAccess('director')
                                     ),
                                     array(
-                                        'label' => 'Pembelian Summary', 
+                                        'label' => 'Pembelian Harian Summary', 
                                         'url' => array('/report/purchaseFlowSummary/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('director')
                                     ),
                                     array(
                                         'label' => 'Perpindahan Barang Summary', 
                                         'url' => array('/report/warehouseFlowSummary/summary'), 
+                                        'visible' => Yii::app()->user->checkAccess('director')
+                                    ),
+                                    array(
+                                        'label' => 'Pembelian WO', 
+                                        'url' => array('/report/purchaseWorkOrder/summary'), 
+                                        'visible' => Yii::app()->user->checkAccess('director')
+                                    ),
+                                    array(
+                                        'label' => 'Daftar Aset Tetap', 
+                                        'url' => array('/report/fixedAsset/summary'), 
+                                        'visible' => Yii::app()->user->checkAccess('director')
+                                    ),
+                                    array(
+                                        'label' => 'Konfirmasi Transaksi Harian', 
+                                        'url' => array('/report/dailyTransactionConfirmation/summary'), 
+                                        'visible' => Yii::app()->user->checkAccess('director')
+                                    ),
+                                    array(
+                                        'label' => 'Payment Type Bulanan', 
+                                        'url' => array('/report/paymentMonthly/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('director')
                                     ),
                                     array(
@@ -793,8 +793,13 @@
                                         'visible' => Yii::app()->user->checkAccess('director')
                                     ),
                                     array(
-                                        'label' => 'Penjualan Body Repair', 
-                                        'url' => array('/report/bodyRepairCosting/summary'), 
+                                        'label' => 'User Performance', 
+                                        'url' => array('/report/transactionLogUserCounter/summary'), 
+                                        'visible' => Yii::app()->user->checkAccess('director')
+                                    ),
+                                    array(
+                                        'label' => 'User Transaction Input', 
+                                        'url' => array('/report/userPerformanceDetail/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('director')
                                     ),
                                     array(

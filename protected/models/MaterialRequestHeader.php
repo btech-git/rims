@@ -190,6 +190,16 @@ class MaterialRequestHeader extends MonthlyTransactionActiveRecord {
         return $total;
     }
     
+    public function getTotalPrice() {
+        $total = 0.00;
+
+        foreach ($this->materialRequestDetails as $detail) {
+            $total += $detail->quantity_movement_out * $detail->product->hpp;
+        }
+        
+        return $total;
+    }
+
     public function getDateTime() {
         return $this->transaction_date . ' ' . $this->transaction_time;
     }
