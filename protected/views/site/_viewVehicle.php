@@ -132,9 +132,9 @@
             ),
             array(
                 'class' => 'CButtonColumn',
-                'template' => '{update}',
+                'template' => '{location}',
                 'buttons' => array(
-                    'update' => array(
+                    'location' => array(
                         'label' => 'location',
                         'url' => 'Yii::app()->createUrl("master/vehicle/updateLocation", array("id"=>$data->id))',
 //                        'visible' => 'Yii::app()->user->checkAccess("movementInEdit")', 

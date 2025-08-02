@@ -55,10 +55,10 @@
     <div style="font-size:30px">Raperind Information Management System (RIMS) Dashboard</div>
     <br /><br/>
     
-    <?php $this->renderPartial('_viewVehicle', array(
+    <?php /*$this->renderPartial('_viewVehicle', array(
         'vehicleDataProvider' => $vehicleDataProvider, 
         'vehicle' => $vehicle, 
-    )); ?>
+    ));*/ ?>
 <!--    <fieldset>
         <legend>Permintaan Harga</legend>
         <div class="grid-view">
