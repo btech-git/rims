@@ -166,6 +166,7 @@ $this->breadcrumbs = array(
                 <div class="clear"></div>
                 <div class="row buttons">
                     <?php echo CHtml::submitButton('Hapus', array('name' => 'ResetFilter'));  ?>
+                    <?php echo CHtml::submitButton('Simpan ke Excel', array('name' => 'SaveExcel')); ?>
                 </div>
 
                 <?php echo CHtml::endForm(); ?>

@@ -28,7 +28,14 @@
                             <?php foreach ($selectedCoas as $coa): ?>
                                 <?php $paymentOutRetail = $paymentOutItem[$coa->id]; ?>
                                 <td style="text-align: right">
-                                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $paymentOutRetail)); ?>
+                                    <?php echo CHtml::link(CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $paymentOutRetail)), array(
+                                        '/report/paymentByBankMonthly/transactionInfo', 
+                                        'coaId' => $coa->id, 
+                                        'debitCredit' => 'K',
+                                        'transactionType' => 'Pout',
+                                        'date' => $date, 
+                                    ), array('target' => '_blank')); ?>
+                                    <?php //echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $paymentOutRetail)); ?>
                                     <?php $paymentDailyTotals[$coa->id] += $paymentOutRetail; ?>
                                 </td>
                                 <?php $totalPerDate += $paymentOutRetail; ?>

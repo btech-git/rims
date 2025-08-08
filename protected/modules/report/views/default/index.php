@@ -362,7 +362,9 @@
                             Yii::app()->user->checkAccess('cashDailyApprovalReport') || 
                             Yii::app()->user->checkAccess('cashDailySummaryReport') || 
                             Yii::app()->user->checkAccess('financialForecastReport') || 
-                            Yii::app()->user->checkAccess('cashTransactionReport')
+                            Yii::app()->user->checkAccess('cashTransactionReport') || 
+                            Yii::app()->user->checkAccess('monthlyBankingReport') || 
+                            Yii::app()->user->checkAccess('dailyTransactionReport')
                         ): ?>
                             <h2>Kas</h2>
                             <?php $this->widget('zii.widgets.CMenu', array(
@@ -383,9 +385,19 @@
                                         'visible' => Yii::app()->user->checkAccess('financialForecastReport')
                                     ),
                                     array(
-                                        'label' => 'Cash Transaction', 
+                                        'label' => 'Transaksi Kas', 
                                         'url' => array('/report/cashTransaction/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('cashTransactionReport')
+                                    ),
+                                    array(
+                                        'label' => 'Bank Bulanan', 
+                                        'url' => array('/report/paymentByBankMonthly/summary'), 
+                                        'visible' => Yii::app()->user->checkAccess('monthlyBankingReport')
+                                    ),
+                                    array(
+                                        'label' => 'Transaksi Harian', 
+                                        'url' => array('/report/dailyTransaction/summary'), 
+                                        'visible' => Yii::app()->user->checkAccess('dailyTransactionReport')
                                     ),
                                 ),
                             )); ?>
@@ -690,16 +702,6 @@
                                     array(
                                         'label' => 'Neraca (Multi Periode)', 
                                         'url' => array('/report/balanceSheetMonthly/summary'), 
-                                        'visible' => Yii::app()->user->checkAccess('director')
-                                    ),
-                                    array(
-                                        'label' => 'Bank Bulanan', 
-                                        'url' => array('/report/paymentByBankMonthly/summary'), 
-                                        'visible' => Yii::app()->user->checkAccess('director')
-                                    ),
-                                    array(
-                                        'label' => 'Transaksi Harian', 
-                                        'url' => array('/report/dailyTransaction/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('director')
                                     ),
                                 ),

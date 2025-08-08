@@ -11,7 +11,7 @@ class PaymentByBankMonthlyController extends Controller {
 
     public function filterAccess($filterChain) {
         if ($filterChain->action->id === 'summary') {
-            if (!(Yii::app()->user->checkAccess('director') )) {
+            if (!(Yii::app()->user->checkAccess('monthlyBankingReport') )) {
                 $this->redirect(array('/site/login'));
             }
         }
@@ -109,6 +109,23 @@ class PaymentByBankMonthlyController extends Controller {
         ));
     }
     
+    public function actionTransactionInfo($coaId, $debitCredit, $transactionType, $date) {
+        set_time_limit(0);
+        ini_set('memory_limit', '1024M');
+
+        $page = (isset($_GET['page'])) ? $_GET['page'] : 1;
+        
+        $dataProvider = JurnalUmum::model()->searchByTransactionInfo($coaId, $debitCredit, $transactionType, $date, $page);
+        $coa = Coa::model()->findByPk($coaId);
+        
+        $this->render('transactionInfo', array(
+            'dataProvider' => $dataProvider,
+            'debitCredit' => $debitCredit,
+            'date' => $date,
+            'coa' => $coa,
+        ));
+    }
+
     protected function saveToExcel(array $options = array()) {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');

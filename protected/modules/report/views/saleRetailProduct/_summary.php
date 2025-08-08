@@ -1,15 +1,16 @@
 <?php
 Yii::app()->clientScript->registerCss('_report', '
-    .width1-1 { width: 5% }
+    .width1-1 { width: 3% }
     .width1-2 { width: 10% }
-    .width1-3 { width: 15% }
+    .width1-3 { width: 10% }
     .width1-4 { width: 10% }
     .width1-5 { width: 10% }
     .width1-6 { width: 10% }
-    .width1-7 { width: 10% }
-    .width1-8 { width: 10% }
-    .width1-9 { width: 5% }
-    .width1-10 { width: 10% }
+    .width1-7 { width: 15% }
+    .width1-8 { width: 15% }
+    .width1-9 { width: 4% }
+    .width1-10 { width: 3% }
+    .width1-11 { width: 10% }
 ');
 ?>
 
@@ -34,7 +35,8 @@ Yii::app()->clientScript->registerCss('_report', '
             <th class="width1-7">Sub Master Category</th>
             <th class="width1-8">Sub Category</th>
             <th class="width1-9">Quantity</th>
-            <th class="width1-10">Total</th>
+            <th class="width1-10">Satuan</th>
+            <th class="width1-11">Total</th>
         </tr>
     </thead>
     <tbody>
@@ -44,16 +46,17 @@ Yii::app()->clientScript->registerCss('_report', '
             <?php $totalQuantitySales = $header->getTotalQuantitySales($startDate, $endDate, $branchId, $customerType); ?>
             <?php $totalAmountSales = $header->getTotalSales($startDate, $endDate, $branchId, $customerType); ?>
             <tr class="items1">
-                <td class="width1-1"><?php echo CHtml::encode(CHtml::value($header, 'id')); ?></td>
-                <td class="width1-2"><?php echo CHtml::encode(CHtml::value($header, 'manufacturer_code')); ?></td>
-                <td class="width1-3"><?php echo CHtml::encode(CHtml::value($header, 'name')); ?></td>
-                <td class="width1-4"><?php echo CHtml::encode(CHtml::value($header, 'brand.name')); ?></td>
-                <td class="width1-5"><?php echo CHtml::encode(CHtml::value($header, 'subBrand.name')); ?></td>
-                <td class="width1-6"><?php echo CHtml::encode(CHtml::value($header, 'productMasterCategory.name')); ?></td>
-                <td class="width1-7"><?php echo CHtml::encode(CHtml::value($header, 'productSubMasterCategory.name')); ?></td>
-                <td class="width1-8"><?php echo CHtml::encode(CHtml::value($header, 'productSubCategory.name')); ?></td>
-                <td class="width1-9" style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalQuantitySales)); ?></td>
-                <td class="width1-10" style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalAmountSales)); ?></td>
+                <td><?php echo CHtml::encode(CHtml::value($header, 'id')); ?></td>
+                <td><?php echo CHtml::encode(CHtml::value($header, 'manufacturer_code')); ?></td>
+                <td><?php echo CHtml::encode(CHtml::value($header, 'name')); ?></td>
+                <td><?php echo CHtml::encode(CHtml::value($header, 'brand.name')); ?></td>
+                <td><?php echo CHtml::encode(CHtml::value($header, 'subBrand.name')); ?></td>
+                <td><?php echo CHtml::encode(CHtml::value($header, 'productMasterCategory.name')); ?></td>
+                <td><?php echo CHtml::encode(CHtml::value($header, 'productSubMasterCategory.name')); ?></td>
+                <td><?php echo CHtml::encode(CHtml::value($header, 'productSubCategory.name')); ?></td>
+                <td style="text-align: center"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalQuantitySales)); ?></td>
+                <td><?php echo CHtml::encode(CHtml::value($header, 'unit.name')); ?></td>
+                <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalAmountSales)); ?></td>
             </tr>
             <?php $totalQuantity += $totalQuantitySales; ?>
             <?php $totalSale += $totalAmountSales; ?>
@@ -63,6 +66,7 @@ Yii::app()->clientScript->registerCss('_report', '
         <tr>
             <td colspan="8" style="text-align: right; font-weight: bold">Total Sales</td>
             <td style="text-align: right; font-weight: bold"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalQuantity)); ?></td>
+            <td></td>
             <td style="text-align: right; font-weight: bold"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalSale)); ?></td>
         </tr>
     </tfoot>

@@ -93,6 +93,11 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
 
                 <hr />
 
+                <?php $daysInMonth = cal_days_in_month(CAL_GREGORIAN, $month, $year); ?>
+                <?php $yearMonth = $year . '-' . str_pad($month, 2, '0', STR_PAD_LEFT); ?>
+                <?php $startDate = $yearMonth . '-01'; ?>
+                <?php $endDate = $yearMonth . '-' . $daysInMonth; ?>
+
                 <div style="font-weight: bold; text-align: center">
                     <div style="font-size: larger">
                         <?php $branch = Branch::model()->findByPk($branchId); ?>
@@ -112,6 +117,8 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                         'year' => $year,
                         'numberOfDays' => $numberOfDays,
                         'selectedCoas' => $selectedCoas,
+                        'startDate' => $startDate,
+                        'endDate' => $endDate,
                     )); ?>
                 </div>
                 
@@ -125,6 +132,8 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                         'year' => $year,
                         'numberOfDays' => $numberOfDays,
                         'selectedCoas' => $selectedCoas,
+                        'startDate' => $startDate,
+                        'endDate' => $endDate,
                     )); ?>
                 </div>
                 <div class="clear"></div>

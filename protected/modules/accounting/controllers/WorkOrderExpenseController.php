@@ -196,6 +196,19 @@ class WorkOrderExpenseController extends Controller {
         ));
     }
 
+    public function actionPdf($id) {
+        $workOrderExpense = $this->loadModel($id);
+        
+        $mPDF1 = Yii::app()->ePdf->mpdf('', 'A4-L', 0, '', 15, 15, 16, 16, 9, 9, 'L');
+        $stylesheet = file_get_contents(Yii::getPathOfAlias('webroot') . '/css/pdf.css');
+        $mPDF1->WriteHTML($stylesheet, 1);
+        $mPDF1->SetTitle('Sub Pekerjaan Luar Raperind');
+        $mPDF1->WriteHTML($this->renderPartial('pdf', array(
+            'workOrderExpense' => $workOrderExpense,
+        ), true));
+        $mPDF1->Output('Sub Pekerjaan Luar ' . $workOrderExpense->transaction_number . '.pdf', 'I');
+    }
+
     public function actionCancel($id) {
         $model = $this->loadModel($id);
         $model->status = 'CANCELLED!!!';

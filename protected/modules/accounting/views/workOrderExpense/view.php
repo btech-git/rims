@@ -14,6 +14,10 @@
         <?php echo CHtml::link('<span class="fa fa-edit"></span>Update Approval', Yii::app()->baseUrl.'/accounting/workOrderExpense/updateApproval?headerId=' . $workOrderExpense->id , array('class'=>'button cbutton right','style'=>'margin-right:10px', 'visible'=>Yii::app()->user->checkAccess("workOrderExpenseEdit"))) ?>
     <?php endif; ?>
     
+    <div class="field buttons text-right">
+        <?php echo CHtml::link('<span class="fa fa-print"></span>Print', Yii::app()->baseUrl.'/accounting/workOrderExpense/pdf?id=' . $workOrderExpense->id, array('class'=>'button warning right','style'=>'margin-right:10px', 'target' => 'blank')) ?>
+    </div>
+    
     <?php if (!($workOrderExpense->status == 'CANCELLED!!!')): ?>
         <?php echo CHtml::link('<span class="fa fa-minus"></span>Cancel Transaction', array("cancel", "id" => $workOrderExpense->id), array(
             'class' => 'button alert right', 
