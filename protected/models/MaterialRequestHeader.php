@@ -194,7 +194,8 @@ class MaterialRequestHeader extends MonthlyTransactionActiveRecord {
         $total = 0.00;
 
         foreach ($this->materialRequestDetails as $detail) {
-            $total += $detail->quantity_movement_out * $detail->product->hpp;
+
+            $total += $detail->totalProductPrice;
         }
         
         return $total;

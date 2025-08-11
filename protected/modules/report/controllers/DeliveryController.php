@@ -12,8 +12,9 @@ class DeliveryController extends Controller {
 
     public function filterAccess($filterChain) {
         if ($filterChain->action->id === 'summary') {
-            if (!(Yii::app()->user->checkAccess('deliveryReport') ))
+            if (!(Yii::app()->user->checkAccess('deliveryReport'))) {
                 $this->redirect(array('/site/login'));
+            }
         }
 
         $filterChain->run();
@@ -43,7 +44,7 @@ class DeliveryController extends Controller {
         }
         
         if (isset($_GET['SaveExcel'])) {
-            $this->saveToExcel($deliveryOrderSummary, $branchId, $deliveryOrderSummary->dataProvider, array('startDate' => $startDate, 'endDate' => $endDate));
+            $this->saveToExcel($branchId, $deliveryOrderSummary->dataProvider, array('startDate' => $startDate, 'endDate' => $endDate));
         }
 
         $this->render('summary', array(
@@ -56,7 +57,7 @@ class DeliveryController extends Controller {
         ));
     }
 
-    protected function saveToExcel($deliveryOrderSummary, $branchId, $dataProvider, array $options = array()) {
+    protected function saveToExcel($branchId, $dataProvider, array $options = array()) {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
 
@@ -68,62 +69,76 @@ class DeliveryController extends Controller {
 
         $documentProperties = $objPHPExcel->getProperties();
         $documentProperties->setCreator('Raperind Motor');
-        $documentProperties->setTitle('Laporan Delivery Order');
+        $documentProperties->setTitle('Laporan Pengiriman Barang');
 
         $worksheet = $objPHPExcel->setActiveSheetIndex(0);
-        $worksheet->setTitle('Delivery Order');
+        $worksheet->setTitle('Laporan Pengiriman Barang');
 
-        $worksheet->mergeCells('A1:N1');
-        $worksheet->mergeCells('A2:N2');
-        $worksheet->mergeCells('A3:N3');
-
-        $worksheet->getStyle('A1:N5')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-        $worksheet->getStyle('A1:N5')->getFont()->setBold(true);
+        $worksheet->mergeCells('A1:M1');
+        $worksheet->mergeCells('A2:M2');
+        $worksheet->mergeCells('A3:M3');
+        $worksheet->getStyle('A1:M5')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->getStyle('A1:M5')->getFont()->setBold(true);
 
         $branch = Branch::model()->findByPk($branchId);
-        $worksheet->setCellValue('A1', CHtml::encode(CHtml::value($branch, 'name')));
-        $worksheet->setCellValue('A2', 'Laporan Delivery Order');
+        $worksheet->setCellValue('A1', 'Raperind Motor ' . CHtml::value($branch, 'name'));
+        $worksheet->setCellValue('A2', 'Laporan Pengiriman Barang');
         $worksheet->setCellValue('A3', Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($options['startDate'])) . ' - ' . Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($options['endDate'])));
 
-        $worksheet->getStyle('A5:N5')->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle('A5:M5')->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
         $worksheet->setCellValue('A5', 'Delivery #');
         $worksheet->setCellValue('B5', 'Tanggal');
         $worksheet->setCellValue('C5', 'Type');
         $worksheet->setCellValue('D5', 'Customer');
-        $worksheet->setCellValue('E5', 'SO #');
-        $worksheet->setCellValue('F5', 'Request #');
-        $worksheet->setCellValue('G5', 'Consignment #');
-        $worksheet->setCellValue('H5', 'Transfer #');
-        $worksheet->setCellValue('I5', 'Branch');
-        $worksheet->setCellValue('J5', 'Pengirim');
-        $worksheet->setCellValue('K5', 'Product');
-        $worksheet->setCellValue('L5', 'Quantity Request');
-        $worksheet->setCellValue('M5', 'Quantity Kirim');
-        $worksheet->setCellValue('N5', 'Memo');
+        $worksheet->setCellValue('E5', 'Reference #');
+        $worksheet->setCellValue('F5', 'ETA');
+        $worksheet->setCellValue('G5', 'Tujuan');
+        $worksheet->setCellValue('H5', 'Pengirim');
+        $worksheet->setCellValue('I5', 'Product');
+        $worksheet->setCellValue('J5', 'Quantity Request');
+        $worksheet->setCellValue('K5', 'Quantity Kirim');
+        $worksheet->setCellValue('L5', 'Quantity Movement');
+        $worksheet->setCellValue('M5', 'Memo');
 
-        $worksheet->getStyle('A5:N5')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle('A5:M5')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
         $counter = 7;
         foreach ($dataProvider->data as $header) {
-            $worksheet->getStyle("C{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
+            foreach ($header->transactionDeliveryOrderDetails as $detail) {
+                $referenceNumber = ''; 
+                if (!empty($header->sales_order_id)) { 
+                    $referenceNumber = CHtml::value($header, 'saleOrder.sale_order_no');
+                } elseif (!empty($header->sent_request_id)) {
+                    $referenceNumber = CHtml::value($header, 'sentRequest.sent_request_no');                
+                } elseif (!empty($header->consignment_out_id)) {
+                    $referenceNumber = CHtml::value($header, 'consignmentOut.consignment_out_no');                
+                } elseif (!empty($header->transfer_request_id)) {
+                    $referenceNumber = CHtml::value($header, 'transferRequest.transfer_request_no');                
+                } else {
+                    $referenceNumber = 'N/A';                
+                }
+                $productName = CHtml::value($detail, 'product.manufacturer_code') . ' - ' . CHtml::value($detail, 'product.name') . ' - ' . CHtml::value($detail, 'product.brand.name') . ' - ' .
+                        CHtml::value($detail, 'product.subBrand.name') . ' - ' . CHtml::value($detail, 'product.subBrandSeries.name') . ' - ' . CHtml::value($detail, 'product.productMasterCategory.name') . ' - ' .
+                        CHtml::value($detail, 'product.productSubMasterCategory.name') . ' - ' . CHtml::value($detail, 'product.productSubCategory.name');
+                $worksheet->getStyle("C{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
 
-            $worksheet->setCellValue("A{$counter}", CHtml::encode($header->delivery_order_no));
-            $worksheet->setCellValue("B{$counter}", CHtml::encode($header->delivery_date));
-            $worksheet->setCellValue("C{$counter}", CHtml::encode(CHtml::value($header, 'request_type')));
-            $worksheet->setCellValue("D{$counter}", CHtml::encode(CHtml::value($header, 'customer.name')));
-            $worksheet->setCellValue("E{$counter}", CHtml::encode(CHtml::value($header, 'saleOrder.sale_order_no')));
-            $worksheet->setCellValue("F{$counter}", CHtml::encode(CHtml::value($header, 'sentRequest.sent_request_no')));
-            $worksheet->setCellValue("G{$counter}", CHtml::encode(CHtml::value($header, 'consigmentOut.consignment_out_no')));
-            $worksheet->setCellValue("H{$counter}", CHtml::encode(CHtml::value($header, 'transferRequest. transfer_request_no')));
-            $worksheet->setCellValue("I{$counter}", CHtml::encode(CHtml::value($header, 'branch.name')));
-            $worksheet->setCellValue("J{$counter}", CHtml::encode(CHtml::value($header, 'user.username')));
-            $worksheet->setCellValue("K{$counter}", CHtml::encode(CHtml::value($header, 'product.name')));
-            $worksheet->setCellValue("L{$counter}", CHtml::encode(CHtml::value($header, 'quantity_request')));
-            $worksheet->setCellValue("M{$counter}", CHtml::encode(CHtml::value($header, 'quantity_delivery')));
-            $worksheet->setCellValue("N{$counter}", CHtml::encode(CHtml::value($header, 'note')));
+                $worksheet->setCellValue("A{$counter}", CHtml::value($header, 'delivery_order_no'));
+                $worksheet->setCellValue("B{$counter}", CHtml::value($header, 'delivery_date'));
+                $worksheet->setCellValue("C{$counter}", CHtml::value($header, 'request_type'));
+                $worksheet->setCellValue("D{$counter}", CHtml::value($header, 'customer.name'));
+                $worksheet->setCellValue("E{$counter}", $referenceNumber);
+                $worksheet->setCellValue("F{$counter}", CHtml::value($header, 'estimate_arrival_date'));
+                $worksheet->setCellValue("G{$counter}", CHtml::value($header, 'destinationBranch.code'));
+                $worksheet->setCellValue("H{$counter}", CHtml::value($header, 'sender.username'));
+                $worksheet->setCellValue("I{$counter}", $productName);
+                $worksheet->setCellValue("J{$counter}", CHtml::value($detail, 'quantity_request'));
+                $worksheet->setCellValue("K{$counter}", CHtml::value($detail, 'quantity_delivery'));
+                $worksheet->setCellValue("L{$counter}", CHtml::value($detail, 'quantity_movement'));
+                $worksheet->setCellValue("M{$counter}", CHtml::value($detail, 'note'));
 
-            $counter++;
+                $counter++;
+            }
         }
 
         for ($col = 'A'; $col !== 'P'; $col++) {
@@ -135,7 +150,7 @@ class DeliveryController extends Controller {
         ob_end_clean();
         // We'll be outputting an excel file
         header('Content-type: application/vnd.ms-excel');
-        header('Content-Disposition: attachment;filename="Laporan Delivery Order.xls"');
+        header('Content-Disposition: attachment;filename="laporan_pengiriman_barang.xls"');
         header('Cache-Control: max-age=0');
         
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');

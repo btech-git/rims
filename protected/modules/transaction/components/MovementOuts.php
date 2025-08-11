@@ -222,9 +222,15 @@ class MovementOuts extends CComponent {
                 $valid = false;
                 $this->header->addError('error', 'Quantity stok tidak mencukupi!');
             } else if ($detail->unit_id !== $detail->product->unit_id) {
-                $unitConversion = UnitConversion::model()->findByAttributes(array('unit_from_id' => $detail->product->unit_id, 'unit_to_id' => $detail->unit_id));
+                $unitConversion = UnitConversion::model()->findByAttributes(array(
+                    'unit_from_id' => $detail->product->unit_id, 
+                    'unit_to_id' => $detail->unit_id
+                ));
                 if ($unitConversion === null) {
-                    $unitConversionFlipped = UnitConversion::model()->findByAttributes(array('unit_from_id' => $detail->unit_id, 'unit_to_id' => $detail->product->unit_id));
+                    $unitConversionFlipped = UnitConversion::model()->findByAttributes(array(
+                        'unit_from_id' => $detail->unit_id, 
+                        'unit_to_id' => $detail->product->unit_id
+                    ));
                     if ($unitConversionFlipped === null) {
                         $valid = false;
                         $this->header->addError('error', 'Satuan konversi belum ada di database!');

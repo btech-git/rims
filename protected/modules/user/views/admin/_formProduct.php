@@ -2,7 +2,7 @@
     <thead>
         <tr>
             <th style="text-align: center; width: 50%">
-                <?php //echo $counter; ?>
+                <?php //zecho $counter; ?>
                 <?php echo CHtml::checkBox("User[roles][productHead]", CHtml::resolveValue($model, "roles[productHead]"), array('id' => 'User_roles_' . $counter, 'value' => 'productHead')); ?>
                 <?php echo CHtml::label('SELECT ALL', 'User_roles_' . $counter++, array('style' => 'display: inline')); ?>
             </th>

@@ -28,22 +28,29 @@ class ReceivableController extends Controller {
         $currentPage = (isset($_GET['page'])) ? $_GET['page'] : '';
         $currentSort = (isset($_GET['sort'])) ? $_GET['sort'] : '';
         $branchId = (isset($_GET['BranchId'])) ? $_GET['BranchId'] : '';
-        $coaId = (isset($_GET['CoaId'])) ? $_GET['CoaId'] : '';
+//        $coaId = (isset($_GET['CoaId'])) ? $_GET['CoaId'] : '';
+        $plateNumber = (isset($_GET['PlateNumber'])) ? $_GET['PlateNumber'] : '';
+        $customerId = (isset($_GET['InsuranceCompanyId'])) ? $_GET['InsuranceCompanyId'] : '';
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
         
-        $coa = Search::bind(new Coa('search'), isset($_GET['Coa']) ? $_GET['Coa'] : array());
-        $coaDataProvider = $coa->search();
-        $coaDataProvider->pagination->pageVar = 'page_dialog';
-        $coaDataProvider->criteria->addCondition("t.coa_category_id = 15 AND t.coa_sub_category_id = 8 AND (t.name NOT LIKE '%Asuransi%' OR t.name NOT LIKE '%Insurance%')");
+//        $coa = Search::bind(new Coa('search'), isset($_GET['Coa']) ? $_GET['Coa'] : array());
+//        $coaDataProvider = $coa->search();
+//        $coaDataProvider->pagination->pageVar = 'page_dialog';
+//        $coaDataProvider->criteria->addCondition("t.coa_category_id = 15 AND t.coa_sub_category_id = 8 AND (t.name NOT LIKE '%Asuransi%' OR t.name NOT LIKE '%Insurance%')");
 
-        $receivableSummary = new ReceivableSummary($coa->searchByTransactionJournal());
+        $customer = Search::bind(new Customer('search'), isset($_GET['Customer']) ? $_GET['Customer'] : array());
+        $customerDataProvider = $customer->search();
+        $customerDataProvider->pagination->pageVar = 'page_dialog';
+
+        $receivableSummary = new ReceivableSummary($customer->search());
         $receivableSummary->setupLoading();
         $receivableSummary->setupPaging($pageSize, $currentPage);
         $receivableSummary->setupSorting();
         $filters = array(
             'endDate' => $endDate,
             'branchId' => $branchId,
-            'coaId' => $coaId,
+            'plateNumber' => $plateNumber,
+            'customerId' => $customerId,
         );
         $receivableSummary->setupFilter($filters);
 
@@ -56,9 +63,13 @@ class ReceivableController extends Controller {
         }
 
         $this->render('summary', array(
-            'coa' => $coa,
-            'coaDataProvider'=> $coaDataProvider,
-            'coaId' => $coaId,
+//            'coa' => $coa,
+//            'coaDataProvider'=> $coaDataProvider,
+//            'coaId' => $coaId,
+            'plateNumber' => $plateNumber,
+            'customer' => $customer,
+            'customerDataProvider' => $customerDataProvider,
+            'customerId' => $customerId,
             'branchId' => $branchId,
             'endDate' => $endDate,
             'receivableSummary' => $receivableSummary,
@@ -69,12 +80,12 @@ class ReceivableController extends Controller {
 
     public function actionAjaxJsonCustomer() {
         if (Yii::app()->request->isAjaxRequest) {
-            $coaId = (isset($_POST['CoaId'])) ? $_POST['CoaId'] : '';
-            $coa = Coa::model()->findByPk($coaId);
+            $customerId = (isset($_POST['CustomerId'])) ? $_POST['CustomerId'] : '';
+            $customer = Customer::model()->findByPk($customerId);
 
             $object = array(
-                'customer_id' => CHtml::value($coa, 'id'),
-                'customer_name' => CHtml::value($coa, 'name'),
+                'customer_id' => CHtml::value($customer, 'id'),
+                'customer_name' => CHtml::value($customer, 'name'),
             );
             echo CJSON::encode($object);
         }

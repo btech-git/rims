@@ -14,6 +14,8 @@
                 <td>Satuan Permintaan</td>
                 <td>Satuan Inventory</td>
                 <td>COA</td>
+                <td>HPP</td>
+                <td>Total</td>
             </tr>
         </thead>
         <tbody>
@@ -31,6 +33,8 @@
                     <td><?php echo $materialRequestDetail->unit->name; ?></td>
                     <td><?php echo $materialRequestDetail->product->unit->name; ?></td>
                     <td><?php echo $product->productSubMasterCategory->coaPersediaanBarangDagang->name; ?></td>
+                    <td style="text-align: center"><?php echo $materialRequestDetail->product->hpp; ?></td>
+                    <td style="text-align: center"><?php echo $materialRequestDetail->totalProductPrice; ?></td>
                 </tr>
             <?php endforeach; ?>
         </tbody>
@@ -38,7 +42,7 @@
             <tr>
                 <td colspan="7" style="text-align: right; font-weight: bold">Total</td>
                 <td style="text-align: center; font-weight: bold"><?php echo $model->totalQuantity; ?></td>
-                <td colspan="3">&nbsp;</td>
+                <td colspan="3"><?php echo $model->totalPrice; ?></td>
             </tr>
         </tfoot>
     </table>

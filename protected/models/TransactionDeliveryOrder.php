@@ -101,7 +101,7 @@ class TransactionDeliveryOrder extends MonthlyTransactionActiveRecord {
             'salesOrder' => array(self::BELONGS_TO, 'TransactionSalesOrder', 'sales_order_id'),
             'destinationBranch' => array(self::BELONGS_TO, 'Branch', 'destination_branch'),
             'consignmentOut' => array(self::BELONGS_TO, 'ConsignmentOutHeader', 'consignment_out_id'),
-            'user' => array(self::BELONGS_TO, 'Users', 'sender_id'),
+//            'user' => array(self::BELONGS_TO, 'Users', 'sender_id'),
             'userIdCancelled' => array(self::BELONGS_TO, 'Users', 'user_id_cancelled'),
             'userIdUpdated' => array(self::BELONGS_TO, 'Users', 'user_id_updated'),
             'transferRequest' => array(self::BELONGS_TO, 'TransactionTransferRequest', 'transfer_request_id'),

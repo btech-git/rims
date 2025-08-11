@@ -241,7 +241,7 @@ class InsuranceCompany extends CActiveRecord {
             ) p ON i.id = p.invoice_header_id 
             WHERE i.insurance_company_id = :insurance_company_id AND i.insurance_company_id IS NOT NULL AND (i.total_price - COALESCE(p.amount, 0) - 
                 COALESCE(p.tax_service_amount, 0) - COALESCE(p.discount_amount, 0) - COALESCE(p.bank_administration_fee, 0) - COALESCE(p.merimen_fee, 0) - 
-                COALESCE(p.downpayment_amount, 0)) > 100.00 AND i.invoice_date BETWEEN '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND :end_date " . 
+                COALESCE(p.downpayment_amount, 0)) > 100.00 AND i.invoice_date BETWEEN '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND :end_date" . 
                 $branchConditionSql . $plateNumberConditionSql;
 
         $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);

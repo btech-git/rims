@@ -516,14 +516,12 @@ class Customer extends CActiveRecord {
         return ($value === false) ? 0 : $value;
     }
     
-    public function getReceivableReport($startDate, $endDate, $branchId, $insuranceCompanyId, $plateNumber) {
+    public function getReceivableReport($endDate, $branchId, $plateNumber) {
         $branchConditionSql = '';
-        $insuranceConditionSql = '';
         $plateNumberConditionSql = '';
         
         $params = array(
             ':customer_id' => $this->id,
-            ':start_date' => $startDate,
             ':end_date' => $endDate,
         );
         
@@ -532,32 +530,31 @@ class Customer extends CActiveRecord {
             $params[':branch_id'] = $branchId;
         }
         
-        if (!empty($insuranceCompanyId)) {
-            $insuranceConditionSql = ' AND i.insurance_company_id = :insurance_company_id';
-            $params[':insurance_company_id'] = $insuranceCompanyId;
-        }
-        
         if (!empty($plateNumber)) {
             $plateNumberConditionSql = ' AND v.plate_number LIKE :plate_number';
             $params[':plate_number'] = "%{$plateNumber}%";
         }
         
         $sql = "
-            SELECT invoice_number, invoice_date, due_date, v.plate_number AS vehicle, COALESCE(i.total_price, 0) AS total_price, p.amount, 
-            i.total_price - p.amount AS remaining, ic.name as insurance_name 
+            SELECT i.invoice_number, i.invoice_date, due_date, v.plate_number AS vehicle, COALESCE(i.total_price, 0) AS total_price, 
+                COALESCE(p.amount, 0) + COALESCE(p.tax_service_amount, 0) + COALESCE(p.discount_amount, 0) + COALESCE(p.bank_administration_fee, 0) + 
+                COALESCE(p.merimen_fee, 0) + COALESCE(p.downpayment_amount, 0) AS amount, i.total_price - COALESCE(p.amount, 0) - 
+                COALESCE(p.tax_service_amount, 0) - COALESCE(p.discount_amount, 0) - COALESCE(p.bank_administration_fee, 0) - COALESCE(p.merimen_fee, 0) - 
+                COALESCE(p.downpayment_amount, 0) AS remaining
             FROM " . InvoiceHeader::model()->tableName() . " i
             INNER JOIN " . Vehicle::model()->tableName() . " v ON v.id = i.vehicle_id
-            LEFT OUTER JOIN " . InsuranceCompany::model()->tableName() . " ic ON ic.id = i.insurance_company_id
             LEFT OUTER JOIN (
-                SELECT d.invoice_header_id, SUM(d.amount) AS amount 
+                SELECT d.invoice_header_id, SUM(d.amount) AS amount, SUM(d.tax_service_amount) AS tax_service_amount, SUM(d.discount_amount) AS discount_amount,
+                    SUM(d.bank_administration_fee) AS bank_administration_fee, SUM(d.merimen_fee) AS merimen_fee, SUM(d.downpayment_amount) AS downpayment_amount
                 FROM " . PaymentInDetail::model()->tableName() . " d 
                 INNER JOIN " . PaymentIn::model()->tableName() . " h ON h.id = d.payment_in_id
                 WHERE h.payment_date BETWEEN '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND :end_date
                 GROUP BY d.invoice_header_id
             ) p ON i.id = p.invoice_header_id 
-            WHERE i.customer_id = :customer_id AND i.insurance_company_id IS NULL AND (i.total_price - p.amount) > 100.00 AND 
-            i.invoice_date BETWEEN :start_date AND :end_date" . $branchConditionSql . $insuranceConditionSql . $plateNumberConditionSql . "
-        ";
+            WHERE i.customer_id = :customer_id AND i.insurance_company_id IS NULL AND (i.total_price - COALESCE(p.amount, 0) - 
+                COALESCE(p.tax_service_amount, 0) - COALESCE(p.discount_amount, 0) - COALESCE(p.bank_administration_fee, 0) - COALESCE(p.merimen_fee, 0) - 
+                COALESCE(p.downpayment_amount, 0)) > 100.00 AND i.invoice_date BETWEEN '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND :end_date" . 
+                $branchConditionSql . $plateNumberConditionSql;
 
         $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
 

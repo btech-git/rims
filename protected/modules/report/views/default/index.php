@@ -29,7 +29,10 @@
                         <?php if (
                             Yii::app()->user->checkAccess('warehouseStockReport') || 
                             Yii::app()->user->checkAccess('stockCardItemReport') || 
-                            Yii::app()->user->checkAccess('stockCardWarehouseReport')
+                            Yii::app()->user->checkAccess('stockCardWarehouseReport') || 
+                            Yii::app()->user->checkAccess('deliveryReport') || 
+                            Yii::app()->user->checkAccess('receiveItemReport') || 
+                            Yii::app()->user->checkAccess('workOrderExpenseReport')
                         ): ?>
                             <h2>Gudang</h2>
                             <?php $this->widget('zii.widgets.CMenu', array(
@@ -53,6 +56,21 @@
                                         'label' => 'Mutasi per Gudang', 
                                         'url' => array('/report/stockCardByWarehouse/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('stockCardWarehouseReport')
+                                    ),
+                                    array(
+                                        'label' => 'Pengiriman Barang', 
+                                        'url' => array('/report/delivery/summary'), 
+                                        'visible' => Yii::app()->user->checkAccess('deliveryReport')
+                                    ),
+                                    array(
+                                        'label' => 'Penerimaan Barang', 
+                                        'url' => array('/report/receiveItem/summary'), 
+                                        'visible' => Yii::app()->user->checkAccess('receiveItemReport')
+                                    ),
+                                    array(
+                                        'label' => 'Sub Pekerjaan Luar', 
+                                        'url' => array('/report/workOrderExpense/summary'), 
+                                        'visible' => Yii::app()->user->checkAccess('workOrderExpenseReport')
                                     ),
                                 ),
                             )); ?>

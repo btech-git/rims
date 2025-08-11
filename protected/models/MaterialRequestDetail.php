@@ -144,4 +144,30 @@ class MaterialRequestDetail extends CActiveRecord {
     public function getQuantityMovementLeft() {
         return $this->quantity - $this->quantity_movement_out;
     }
+    
+    public function getTotalProductPrice() {
+
+        $quantity = $this->quantity_movement_out;
+        if ($this->unit_id !== $this->product->unit_id) {
+            $conversionFactor = 1;
+            $unitConversion = UnitConversion::model()->findByAttributes(array(
+                'unit_from_id' => $this->unit_id, 
+                'unit_to_id' => $this->product->unit_id
+            ));
+            if ($unitConversion !== null) {
+                $conversionFactor = $unitConversion->multiplier;
+            } else {
+                $unitConversionFlipped = UnitConversion::model()->findByAttributes(array(
+                    'unit_from_id' => $this->product->unit_id, 
+                    'unit_to_id' => $this->unit_id
+                ));
+                if ($unitConversionFlipped !== null) {
+                    $conversionFactor = 1 / $unitConversionFlipped->multiplier;
+                }
+            }
+            $quantity = $conversionFactor * $quantity;
+        }
+
+        return $quantity * $this->product->hpp;
+    }
 }
