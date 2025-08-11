@@ -705,7 +705,8 @@
             });
         }',
         'columns' => array(
-            'transaction_number',
+            'work_order_number',
+            'sales_order_number',
             array(
                 'name' => 'transaction_date',
                 'value' => "Yii::app()->dateFormatter->formatDateTime(\$data->transaction_date, 'medium', 'short')",
@@ -732,7 +733,6 @@
                 'header' => 'Customer Name',
                 'value' => '$data->customer->name',
             ),
-            'sales_order_number',
         )
     )); ?>
     <?php $this->endWidget(); ?>
