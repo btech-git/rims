@@ -69,7 +69,7 @@ Yii::app()->clientScript->registerScript('search', "
                     'posting_date',
                     array(
                         'name' => 'sender_id',
-                        'value' => '!empty($data->user_id) ? $data->user->username : ""'
+                        'value' => '!empty($data->sender_id) ? $data->sender->username : ""'
                     ),
                     array(
                         'name' => 'request_type',
