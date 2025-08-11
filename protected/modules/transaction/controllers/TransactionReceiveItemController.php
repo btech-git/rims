@@ -467,6 +467,19 @@ class TransactionReceiveItemController extends Controller {
         ));
     }
 
+    public function actionPdf($id) {
+        $receiveItem = $this->loadModel($id);
+        $mPDF1 = Yii::app()->ePdf->mpdf('', 'A4-L');
+
+        $stylesheet = file_get_contents(Yii::getPathOfAlias('webroot') . '/css/pdf.css');
+        $mPDF1->SetTitle('Penerimaan Gudang');
+        $mPDF1->WriteHTML($stylesheet, 1);
+        $mPDF1->WriteHTML($this->renderPartial('pdf', array(
+            'receiveItem' => $receiveItem,
+        ), true));
+        $mPDF1->Output('Penerimaan Gudang ' . $receiveItem->receive_item_no . '.pdf', 'I');
+    }
+
     public function actionCancel($id) {
         $model = $this->loadModel($id);
         

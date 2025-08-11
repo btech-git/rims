@@ -47,6 +47,13 @@ $this->menu = array(
             )); ?>
         <?php //endif; ?>
         
+        <?php if (empty($model->user_id_cancelled)): ?>
+            <?php echo CHtml::link('<span class="fa fa-print"></span>Print Penerimaan', array("pdf", "id" => $model->id), array(
+                'class' => 'button warning right', 
+                'style' => 'margin-right:10px', 
+                'target' => 'blank'
+            )) ?>
+        <?php endif; ?>
         <br />
         
         <h1>View Transaction Receive Item #<?php echo $model->id; ?></h1>
