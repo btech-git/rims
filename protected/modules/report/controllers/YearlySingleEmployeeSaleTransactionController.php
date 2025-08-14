@@ -80,19 +80,19 @@ class YearlySingleEmployeeSaleTransactionController extends Controller {
         $worksheet = $objPHPExcel->setActiveSheetIndex(0);
         $worksheet->setTitle('Penjualan Front Tahunan');
 
-        $worksheet->mergeCells('A1:O1');
-        $worksheet->mergeCells('A2:O2');
-        $worksheet->mergeCells('A3:O3');
+        $worksheet->mergeCells('A1:R1');
+        $worksheet->mergeCells('A2:R2');
+        $worksheet->mergeCells('A3:R3');
 
-        $worksheet->getStyle('A1:O5')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-        $worksheet->getStyle('A1:O5')->getFont()->setBold(true);
+        $worksheet->getStyle('A1:R5')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->getStyle('A1:R5')->getFont()->setBold(true);
 
         $employee = Employee::model()->findByPk($employeeId);
         $worksheet->setCellValue('A1', 'Raperind Motor ');
         $worksheet->setCellValue('A2', 'Laporan Penjualan Tahunan ' . CHtml::value($employee, 'name'));
         $worksheet->setCellValue('A3', $year);
         
-        $worksheet->getStyle('A5:O5')->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle('A5:R5')->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
         $worksheet->setCellValue('A5', 'Bulan');
         $worksheet->setCellValue('B5', 'Customer Total');
         $worksheet->setCellValue('C5', 'Baru');
@@ -100,15 +100,18 @@ class YearlySingleEmployeeSaleTransactionController extends Controller {
         $worksheet->setCellValue('E5', 'Retail');
         $worksheet->setCellValue('F5', 'Contract Service Unit');
         $worksheet->setCellValue('G5', 'Total Invoice (Rp)');
-        $worksheet->setCellValue('H5', 'Jasa (Rp)');
-        $worksheet->setCellValue('I5', 'Parts (Rp)');
-        $worksheet->setCellValue('J5', 'Total Ban');
-        $worksheet->setCellValue('K5', 'Total Oli');
-        $worksheet->setCellValue('L5', 'Total Aksesoris');
-        $worksheet->setCellValue('M5', 'Average Ban');
-        $worksheet->setCellValue('N5', 'Average Oli');
-        $worksheet->setCellValue('O5', 'Average Aksesoris');
-        $worksheet->getStyle('A6:O6')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->setCellValue('H5', 'Invoice per Unit');
+        $worksheet->setCellValue('I5', 'Jasa (Rp)');
+        $worksheet->setCellValue('J5', 'Jasa / Unit');
+        $worksheet->setCellValue('K5', 'Parts (Rp)');
+        $worksheet->setCellValue('L5', 'Parts / Unit');
+        $worksheet->setCellValue('M5', 'Total Ban');
+        $worksheet->setCellValue('N5', 'Total Oli');
+        $worksheet->setCellValue('O5', 'Total Aksesoris');
+        $worksheet->setCellValue('P5', 'Average Ban');
+        $worksheet->setCellValue('Q5', 'Average Oli');
+        $worksheet->setCellValue('R5', 'Average Aksesoris');
+        $worksheet->getStyle('A6:R6')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
         $counter = 7;
         $customerQuantitySum = 0;
@@ -132,6 +135,9 @@ class YearlySingleEmployeeSaleTransactionController extends Controller {
                 $averageTire = $detailItem['tire_quantity'] > 0 ? $detailItem['tire_price'] / $detailItem['tire_quantity'] : '0.00';
                 $averageOil = $detailItem['oil_quantity'] > 0 ? $detailItem['oil_price'] / $detailItem['oil_quantity'] : '0.00';
                 $averageAccessories = $detailItem['accessories_quantity'] > 0 ? $detailItem['accessories_price'] / $detailItem['accessories_quantity'] : '0.00';
+                $totalInvoicePerCustomer = round($dataItem['grand_total'] / $dataItem['customer_quantity'], 2);
+                $totalServicePerCustomer = round($dataItem['total_service'] / $dataItem['customer_quantity'], 2);
+                $totalPartsPerCustomer = round($dataItem['total_product'] / $dataItem['customer_quantity'], 2);
                 
                 $worksheet->getStyle("E{$counter}:J{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
 
@@ -142,14 +148,17 @@ class YearlySingleEmployeeSaleTransactionController extends Controller {
                 $worksheet->setCellValue("E{$counter}", $dataItem['customer_retail_quantity']);
                 $worksheet->setCellValue("F{$counter}", $dataItem['customer_company_quantity']);
                 $worksheet->setCellValue("G{$counter}", $dataItem['grand_total']);
-                $worksheet->setCellValue("H{$counter}", $dataItem['total_service']);
-                $worksheet->setCellValue("I{$counter}", $dataItem['total_product']);
-                $worksheet->setCellValue("J{$counter}", $detailItem['tire_quantity']);
-                $worksheet->setCellValue("K{$counter}", $detailItem['oil_quantity']);
-                $worksheet->setCellValue("L{$counter}", $detailItem['accessories_quantity']);
-                $worksheet->setCellValue("M{$counter}", $averageTire);
-                $worksheet->setCellValue("N{$counter}", $averageOil);
-                $worksheet->setCellValue("O{$counter}", $averageAccessories);
+                $worksheet->setCellValue("H{$counter}", $totalInvoicePerCustomer);
+                $worksheet->setCellValue("I{$counter}", $dataItem['total_service']);
+                $worksheet->setCellValue("J{$counter}", $totalServicePerCustomer);
+                $worksheet->setCellValue("K{$counter}", $dataItem['total_product']);
+                $worksheet->setCellValue("L{$counter}", $totalPartsPerCustomer);
+                $worksheet->setCellValue("M{$counter}", $detailItem['tire_quantity']);
+                $worksheet->setCellValue("N{$counter}", $detailItem['oil_quantity']);
+                $worksheet->setCellValue("O{$counter}", $detailItem['accessories_quantity']);
+                $worksheet->setCellValue("P{$counter}", $averageTire);
+                $worksheet->setCellValue("Q{$counter}", $averageOil);
+                $worksheet->setCellValue("R{$counter}", $averageAccessories);
                 
                 $customerQuantitySum += $dataItem['customer_quantity'];
                 $customerNewQuantitySum += $dataItem['customer_new_quantity'];
@@ -181,14 +190,14 @@ class YearlySingleEmployeeSaleTransactionController extends Controller {
         $worksheet->setCellValue("E{$counter}", $customerRetailQuantitySum);
         $worksheet->setCellValue("F{$counter}", $customerCompanyQuantitySum);
         $worksheet->setCellValue("G{$counter}", $grandTotalSum);
-        $worksheet->setCellValue("H{$counter}", $totalServiceSum);
-        $worksheet->setCellValue("I{$counter}", $totalProductSum);
-        $worksheet->setCellValue("J{$counter}", $tireQuantitySum);
-        $worksheet->setCellValue("K{$counter}", $oilQuantitySum);
-        $worksheet->setCellValue("L{$counter}", $accessoriesQuantitySum);
-        $worksheet->setCellValue("M{$counter}", $averageTireSum);
-        $worksheet->setCellValue("N{$counter}", $averageOilSum);
-        $worksheet->setCellValue("O{$counter}", $averageAccessoriesSum);
+        $worksheet->setCellValue("I{$counter}", $totalServiceSum);
+        $worksheet->setCellValue("K{$counter}", $totalProductSum);
+        $worksheet->setCellValue("M{$counter}", $tireQuantitySum);
+        $worksheet->setCellValue("N{$counter}", $oilQuantitySum);
+        $worksheet->setCellValue("O{$counter}", $accessoriesQuantitySum);
+        $worksheet->setCellValue("P{$counter}", $averageTireSum);
+        $worksheet->setCellValue("Q{$counter}", $averageOilSum);
+        $worksheet->setCellValue("R{$counter}", $averageAccessoriesSum);
 
         for ($col = 'A'; $col !== 'Z'; $col++) {
             $objPHPExcel->getActiveSheet()

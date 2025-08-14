@@ -30,7 +30,7 @@ Yii::app()->clientScript->registerCss('_report', '
             <td colspan="3">
                 <table>
                     <tr>
-                        <th class="width2-1">Pembelian #</th>
+                        <th class="width2-1">Transaction #</th>
                         <th class="width2-2">Tanggal</th>
                         <th class="width2-3">Tipe</th>
                         <th class="width2-4">Status</th>
@@ -54,7 +54,10 @@ Yii::app()->clientScript->registerCss('_report', '
                 <td colspan="3">
                     <table>
                         <?php $totalPurchase = 0.00; ?>
+                        <?php $totalWorkOrderExpense = 0.00; ?>
                         <?php $purchaseOrderData = $header->getPurchasePerSupplierReport($startDate, $endDate, $branchId); ?>
+                        <?php $workOrderExpenseData = $header->getWorkOrderExpensePerSupplierReport($startDate, $endDate, $branchId); ?>
+                        
                         <?php if (!empty($purchaseOrderData)): ?>
                             <?php foreach ($purchaseOrderData as $purchaseOrderItem): ?>
                                 <?php $totalPrice = $purchaseOrderItem['total_price']; ?>
@@ -67,6 +70,33 @@ Yii::app()->clientScript->registerCss('_report', '
                                     </td>
                                     <td class="width2-3"><?php echo CHtml::encode($purchaseOrderItem['payment_type']); ?></td>
                                     <td class="width2-4"><?php echo CHtml::encode($purchaseOrderItem['payment_status']); ?></td>
+                                    <td class="width2-5" style="text-align: right">
+                                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalPrice)); ?>
+                                    </td>
+                                </tr>
+                                <?php $totalPurchase += $totalPrice; ?>
+                            <?php endforeach; ?>
+                            <tr>
+                                <td style="text-align: right; font-weight: bold" colspan="4">Total</td>
+                                <td style="text-align: right; font-weight: bold">
+                                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalPurchase)); ?>
+                                </td>
+                            </tr>
+                            <?php $grandTotalPurchase += $totalPurchase; ?>
+                        <?php endif; ?>
+                            
+                        <?php if (!empty($workOrderExpenseData)): ?>
+                            <?php foreach ($workOrderExpenseData as $workOrderExpenseItem): ?>
+                                <?php $totalPrice = $workOrderExpenseItem['grand_total']; ?>
+                                <tr>
+                                    <td class="width2-1">
+                                        <?php echo CHtml::link($workOrderExpenseItem['transaction_number'], Yii::app()->createUrl("accounting/workOrderExpense/view", array("id" => $workOrderExpenseItem['id'])), array('target' => '_blank')); ?>
+                                    </td>
+                                    <td class="width2-2">
+                                        <?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($workOrderExpenseItem['transaction_date']))); ?>
+                                    </td>
+                                    <td class="width2-3"><?php echo CHtml::encode($workOrderExpenseItem['registration_number']); ?></td>
+                                    <td class="width2-4"><?php echo CHtml::encode($workOrderExpenseItem['status']); ?></td>
                                     <td class="width2-5" style="text-align: right">
                                         <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalPrice)); ?>
                                     </td>

@@ -127,7 +127,9 @@ class PurchaseOrderController extends Controller {
         $grandTotalPurchase = '0.00';
         foreach ($dataProvider->data as $header) {
             $purchaseOrderData = $header->getPurchasePerSupplierReport($startDate, $endDate, $branchId);
+            $workOrderExpenseData = $header->getWorkOrderExpensePerSupplierReport($startDate, $endDate, $branchId);
             $totalPurchase = '0.00';
+            $totalWorkOrderExpense = '0.00';
             
             if (!empty($purchaseOrderData)) {
                 foreach ($purchaseOrderData as $purchaseOrderItem) {
@@ -145,17 +147,25 @@ class PurchaseOrderController extends Controller {
 
                     $counter++;
                 }
-                
-                $worksheet->getStyle("G{$counter}:H{$counter}")->getFont()->setBold(true);
-                $worksheet->getStyle("G{$counter}:H{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
-
-                $worksheet->setCellValue("G{$counter}", 'TOTAL');
-                $worksheet->setCellValue("H{$counter}", CHtml::encode($totalPurchase));
-                $grandTotalPurchase += $totalPurchase;
-                $counter++;$counter++;
             }
-            $worksheet->setCellValue("G{$counter}", 'TOTAL PEMBELIAN');
-            $worksheet->setCellValue("H{$counter}", CHtml::encode($grandTotalPurchase));
+            
+            if (!empty($workOrderExpenseData)) {
+                foreach ($workOrderExpenseData as $workOrderExpenseItem) {
+                    $totalPrice = $workOrderExpenseItem['grand_total'];
+
+                    $worksheet->setCellValue("A{$counter}", CHtml::encode(CHtml::value($header, 'code')));
+                    $worksheet->setCellValue("B{$counter}", CHtml::encode(CHtml::value($header, 'company')));
+                    $worksheet->setCellValue("C{$counter}", CHtml::encode(CHtml::value($header, 'name')));
+                    $worksheet->setCellValue("D{$counter}", CHtml::encode($workOrderExpenseItem['transaction_number']));
+                    $worksheet->setCellValue("E{$counter}", CHtml::encode($workOrderExpenseItem['transaction_date']));
+                    $worksheet->setCellValue("F{$counter}", CHtml::encode($workOrderExpenseItem['registration_number']));
+                    $worksheet->setCellValue("G{$counter}", CHtml::encode($workOrderExpenseItem['status']));
+                    $worksheet->setCellValue("H{$counter}", CHtml::encode($totalPrice));
+                    $totalPurchase += $totalPrice;
+
+                    $counter++;
+                }
+            }
         }
         
         for ($col = 'A'; $col !== 'Z'; $col++) {
@@ -167,7 +177,7 @@ class PurchaseOrderController extends Controller {
         ob_end_clean();
 
         header('Content-type: application/vnd.ms-excel');
-        header('Content-Disposition: attachment;filename="Rincian Pembelian per Pemasok.xls"');
+        header('Content-Disposition: attachment;filename="rincian_pembelian_per_pemasok.xls"');
         header('Cache-Control: max-age=0');
 
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');

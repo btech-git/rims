@@ -95,40 +95,45 @@ class PurchaseSummaryController extends Controller {
         $worksheet = $objPHPExcel->setActiveSheetIndex(0);
         $worksheet->setTitle('Laporan Pembelian per Pemasok');
 
-        $worksheet->mergeCells('A1:D1');
-        $worksheet->mergeCells('A2:D2');
-        $worksheet->mergeCells('A3:D3');
-        $worksheet->mergeCells('A4:D4');
+        $worksheet->mergeCells('A1:E1');
+        $worksheet->mergeCells('A2:E2');
+        $worksheet->mergeCells('A3:E3');
+        $worksheet->mergeCells('A4:E4');
         
-        $worksheet->getStyle('A1:D3')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-        $worksheet->getStyle('A1:D3')->getFont()->setBold(true);
+        $worksheet->getStyle('A1:E3')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->getStyle('A1:E3')->getFont()->setBold(true);
         $branch = Branch::model()->findByPk($branchId);
         $worksheet->setCellValue('A1', 'Raperind Motor ' . CHtml::encode(CHtml::value($branch, 'name')));
         $worksheet->setCellValue('A2', 'Laporan Pembelian per Pemasok');
         $worksheet->setCellValue('A3', Yii::app()->dateFormatter->format('d MMMM yyyy', $startDate) . ' - ' . Yii::app()->dateFormatter->format('d MMMM yyyy', $endDate));
 
-        $worksheet->getStyle("A6:D5")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
-        $worksheet->getStyle("A6:D5")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A6:E6")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A5:E5")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
-        $worksheet->getStyle('A5:D5')->getFont()->setBold(true);
+        $worksheet->getStyle('A5:E5')->getFont()->setBold(true);
         $worksheet->setCellValue('A5', 'Code');
         $worksheet->setCellValue('B5', 'Company');
         $worksheet->setCellValue('C5', 'Name');
         $worksheet->setCellValue('D5', 'Total Purchase');
+        $worksheet->setCellValue('E5', 'Total Sub Pekerjaan Luar');
 
         $counter = 7;
 
-        $totalPurchase = 0.00;
+        $totalPurchase = '0.00';
+        $totalWorkOrderExpense = '0.00';
         foreach ($dataProvider->data as $header) {
             $purchasePrice = $header->getPurchasePriceReport($startDate, $endDate, $branchId);
-            if ($purchasePrice > 0) {
+            $workOrderExpensePrice = $header->getWorkOrderExpensePriceReport($startDate, $endDate, $branchId);
+//            if ($purchasePrice > 0) {
                 $worksheet->setCellValue("A{$counter}", CHtml::encode(CHtml::value($header, 'code')));
                 $worksheet->setCellValue("B{$counter}", CHtml::encode(CHtml::value($header, 'company')));
                 $worksheet->setCellValue("C{$counter}", CHtml::encode(CHtml::value($header, 'name')));
                 $worksheet->setCellValue("D{$counter}", CHtml::encode($purchasePrice));
+                $worksheet->setCellValue("E{$counter}", CHtml::encode($workOrderExpensePrice));
                 $totalPurchase += $purchasePrice;
+                $totalWorkOrderExpense += $workOrderExpensePrice;
                 $counter++;
-            }
+//            }
         }
 
         $worksheet->getStyle("A{$counter}:E{$counter}")->getFont()->setBold(true);
@@ -138,6 +143,7 @@ class PurchaseSummaryController extends Controller {
         $worksheet->setCellValue("A{$counter}", 'TOTAL PEMBELIAN');
         $worksheet->setCellValue("C{$counter}", 'Rp');
         $worksheet->setCellValue("D{$counter}", $totalPurchase);
+        $worksheet->setCellValue("E{$counter}", $totalWorkOrderExpense);
 
         $counter++;
 
@@ -150,7 +156,7 @@ class PurchaseSummaryController extends Controller {
         ob_end_clean();
 
         header('Content-type: application/vnd.ms-excel');
-        header('Content-Disposition: attachment;filename="Laporan Pembelian per Pemasok.xls"');
+        header('Content-Disposition: attachment;filename="laporan_pembelian_per_pemasok.xls"');
         header('Cache-Control: max-age=0');
 
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');

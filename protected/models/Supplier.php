@@ -513,6 +513,58 @@ class Supplier extends CActiveRecord {
         return ($value === false) ? 0 : $value;
     }
     
+    public function getWorkOrderExpensePerSupplierReport($startDate, $endDate, $branchId) {
+        $branchConditionSql = '';
+        
+        $params = array(
+            ':supplier_id' => $this->id,
+            ':start_date' => $startDate,
+            ':end_date' => $endDate,
+        );
+        
+        if (!empty($branchId)) {
+            $branchConditionSql = ' AND w.branch_id = :branch_id';
+            $params[':branch_id'] = $branchId;
+        }
+        
+        $sql = "
+            SELECT w.id, w.transaction_number, w.transaction_date, r.transaction_number AS registration_number, w.status, w.grand_total
+            FROM " . WorkOrderExpenseHeader::model()->tableName() . " w
+            INNER JOIN " . RegistrationTransaction::model()->tableName() . " r ON r.id = w.registration_transaction_id
+            WHERE w.supplier_id = :supplier_id AND substr(w.transaction_date, 1, 10) BETWEEN :start_date AND :end_date AND w.status NOT LIKE '%CANCEL%'" . $branchConditionSql . "
+            ORDER BY w.transaction_date, w.transaction_number
+        ";
+
+        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
+        
+        return $resultSet;
+    }
+    
+    public function getWorkOrderExpensePriceReport($startDate, $endDate, $branchId) {
+        $branchConditionSql = '';
+        
+        $params = array(
+            ':supplier_id' => $this->id,
+            ':start_date' => $startDate,
+            ':end_date' => $endDate,
+        );
+        
+        if (!empty($branchId)) {
+            $branchConditionSql = ' AND branch_id = :branch_id';
+            $params[':branch_id'] = $branchId;
+        }
+        
+        $sql = "
+            SELECT COALESCE(SUM(grand_total), 0) AS total_purchase 
+            FROM " . WorkOrderExpenseHeader::model()->tableName() . "
+            WHERE supplier_id = :supplier_id AND substr(transaction_date, 1, 10) BETWEEN :start_date AND :end_date AND status NOT LIKE '%CANCEL%'" . $branchConditionSql . "
+        ";
+
+        $value = Yii::app()->db->createCommand($sql)->queryScalar($params);
+
+        return ($value === false) ? 0 : $value;
+    }
+    
     public function getPayableSupplierReport($endDate, $branchId) {
         $branchConditionSql = '';
         
