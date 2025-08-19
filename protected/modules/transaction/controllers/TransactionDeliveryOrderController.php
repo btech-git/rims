@@ -603,10 +603,10 @@ class TransactionDeliveryOrderController extends Controller {
     public function actionCancel($id) {
         $model = $this->loadModel($id);
         
-        $deliveryOutHeader = MovementOutHeader::model()->findByAttributes(array('delivery_order_id' => $id, 'user_id_cancelled' => null));
+        $movementOutHeader = MovementOutHeader::model()->findByAttributes(array('delivery_order_id' => $id, 'user_id_cancelled' => null));
         $receiveItem = TransactionReceiveItem::model()->findByAttributes(array('delivery_order_id' => $id, 'user_id_cancelled' => null));
         
-        if (!empty($receiveItem && $deliveryOutHeader)) {
+        if (empty($receiveItem && $movementOutHeader)) {
             $model->is_cancelled = 1;
             $model->request_type = 'Cancelled!!!'; 
             $model->cancelled_datetime = date('Y-m-d H:i:s');
