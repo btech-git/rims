@@ -478,6 +478,19 @@ class Product extends CActiveRecord {
         return ($value === false) ? 0 : $value;
     }
 
+    public function getTotalStock($warehouseId) {
+        $sql = "SELECT COALESCE(SUM(stock_in + stock_out), 0) as stock 
+                FROM " . InventoryDetail::model()->tableName() . "
+                WHERE product_id = :product_id AND warehouse_id = :warehouse_id";
+
+        $value = CActiveRecord::$db->createCommand($sql)->queryScalar(array(
+            ':product_id' => $this->id,
+            ':warehouse_id' => $warehouseId,
+        ));
+
+        return ($value === false) ? 0 : $value;
+    }
+
     public function searchByStockCheck($pageNumber, $endDate, $stockOperator) {
 
         $operatorConditionSql = '';
