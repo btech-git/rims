@@ -94,7 +94,7 @@ class Employee extends CActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('name, local_address, home_address, sex, email, id_card, branch_id, basic_salary, skills, onleave_allocation, clock_in_time, clock_out_time', 'required'),
+            array('name, local_address, home_address, sex, email, id_card, branch_id, basic_salary, skills, onleave_allocation, clock_in_time, clock_out_time, off_day', 'required'),
             array('province_id, city_id, home_province, home_city, branch_id, registration_service_id, is_deleted, deleted_by, division_id, position_id, level_id, employee_head_id, onleave_allocation, children_quantity', 'numerical', 'integerOnly' => true),
             array('name, mother_name, bank_name, birth_place, emergency_contact_name', 'length', 'max' => 100),
             array('sex, status, basic_salary', 'length', 'max' => 10),
@@ -467,21 +467,6 @@ class Employee extends CActiveRecord {
 
         return ($value === false) ? 0 : $value;
     }
-    
-//    public function getTotalMissing($yearMonth) {
-//        
-//        $sql = "SELECT COALESCE(COUNT(*), 0) AS total_days 
-//                FROM " . EmployeeTimesheet::model()->tableName() . "
-//                WHERE CONCAT(SUBSTRING_INDEX(date, '-', 1), '-', SUBSTRING_INDEX(SUBSTRING_INDEX(date, '-', 2), '-', -1)) = :yearMonth AND employee_id = :employee_id AND employee_onleave_category_id = 13
-//                GROUP BY employee_id";
-//
-//        $value = CActiveRecord::$db->createCommand($sql)->queryScalar(array(
-//            ':yearMonth' => $yearMonth,
-//            ':employee_id' => $this->id,
-//        ));
-//
-//        return ($value === false) ? 0 : $value;
-//    }
     
     public function getUsername() {
         $user = Users::model()->findByAttributes(array('employee_id' => $this->id));
