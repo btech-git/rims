@@ -564,7 +564,7 @@
                     array(
                         'label' => 'Jadwal Karyawan', 
                         'url' => array('/master/employeeSchedule/index'), 
-                        'visible' => Yii::app()->user->checkAccess('payrollReport')
+                        'visible' => Yii::app()->user->checkAccess('employeeScheduleView')
                     ),
                 ),
             )); ?>
