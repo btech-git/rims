@@ -75,6 +75,13 @@ $this->menu = array(
             )); ?>
         <?php endif; ?>
 
+        <?php if (Yii::app()->user->checkAccess("movementOutSupervisor")): ?>
+            <?php echo CHtml::link('<span class="fa fa-minus"></span>Cancel Transaction', array("/transaction/movementOutHeader/cancel", "id" => $model->id), array(
+                'class' => 'button alert right', 
+                'style' => 'margin-right:10px', 
+            )); ?>
+        <?php endif; ?>
+
         <br />
         
         <h1>View Movement Out Header #<?php echo $model->id; ?></h1>
@@ -257,15 +264,6 @@ $this->menu = array(
         <?php echo CHtml::endForm(); ?>
     </div>
 <?php endif; ?>
-
-<div>
-    <?php if (Yii::app()->user->checkAccess("movementOutSupervisor")): ?>
-        <?php echo CHtml::link('<span class="fa fa-minus"></span>Cancel Transaction', array("/transaction/movementOutHeader/cancel", "id" => $model->id), array(
-            'class' => 'button alert right', 
-            'style' => 'margin-right:10px', 
-        )); ?>
-    <?php endif; ?>
-</div>
 
 <?php $this->beginWidget('zii.widgets.jui.CJuiDialog', array(
     'id' => 'cancel-message-dialog',

@@ -20,7 +20,14 @@ $this->menu = array(
         
         <?php $ccontroller = Yii::app()->controller->id; ?>
         <?php $ccaction = Yii::app()->controller->action->id; ?>
-        <?php echo CHtml::link('<span class="fa fa-list"></span>Manage Delivery Order', Yii::app()->baseUrl . '/transaction/transactionDeliveryOrder/admin', array('class' => 'button cbutton right', 'visible' => Yii::app()->user->checkAccess("transaction.transactionDeliveryOrder.admin"))) ?>
+        <?php echo CHtml::link('<span class="fa fa-list"></span>Manage Delivery Order', Yii::app()->baseUrl . '/transaction/transactionDeliveryOrder/admin', array('class' => 'button cbutton right')) ?>
+
+        <?php if (Yii::app()->user->checkAccess("deliverySupervisor")): ?>
+            <?php echo CHtml::link('<span class="fa fa-minus"></span>Cancel Transaction', array("/transaction/transactionDeliveryOrder/cancel", "id" => $model->id), array(
+                'class' => 'button alert right', 
+                'style' => 'margin-right:10px', 
+            )); ?>
+        <?php endif; ?>
 
         <?php if ($model->is_cancelled == 0): ?>
             <?php echo CHtml::link('<span class="fa fa-edit"></span>Edit', Yii::app()->baseUrl . '/transaction/transactionDeliveryOrder/update?id=' . $model->id, array(
@@ -463,15 +470,6 @@ $this->menu = array(
     <?php echo CHtml::beginForm(); ?>
     <?php echo CHtml::submitButton('Processing Journal', array('name' => 'Process', 'confirm' => 'Are you sure you want to process into journal transactions?')); ?>
     <?php echo CHtml::endForm(); ?>
-</div>
-
-<div>
-    <?php if (Yii::app()->user->checkAccess("saleInvoiceSupervisor")): ?>
-        <?php echo CHtml::link('<span class="fa fa-minus"></span>Cancel Transaction', array("/transaction/transactionDeliveryOrder/cancel", "id" => $model->id), array(
-            'class' => 'button alert right', 
-            'style' => 'margin-right:10px', 
-        )); ?>
-    <?php endif; ?>
 </div>
 
 <?php $this->beginWidget('zii.widgets.jui.CJuiDialog', array(
