@@ -78,7 +78,7 @@ class EmployeeTimesheetController extends Controller {
             if ($_FILES['TimesheetImportFile']['error'] === UPLOAD_ERR_OK && is_uploaded_file($_FILES['TimesheetImportFile']['tmp_name'])) {
                 if (($handle = fopen($_FILES['TimesheetImportFile']['tmp_name'], 'r')) !== false) {
                     $records = array();
-                    while (($lineFields = fgetcsv($handle, null, ';')) !== false) {
+                    while (($lineFields = fgetcsv($handle, null, ',')) !== false) {
                         if ($lineFields[0] !== 'NIP') {
                             $employee = Employee::model()->findByAttributes(array('code' => $lineFields[0]));
 
