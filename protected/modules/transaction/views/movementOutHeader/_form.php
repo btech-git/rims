@@ -38,7 +38,7 @@
                                 'model' => $movementOut->header,
                                 'attribute' => "date_posting",
                                 'options' => array(
-                                    'minDate' => '-2M',
+                                    'minDate' => '-7W',
                                     'maxDate' => '+6M',
                                     'dateFormat' => 'yy-mm-dd',
                                     'changeMonth' => true,
