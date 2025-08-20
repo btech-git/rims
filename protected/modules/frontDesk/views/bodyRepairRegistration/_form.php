@@ -99,7 +99,7 @@
                                                     'model' => $bodyRepairRegistration->header,
                                                     'attribute' => "transaction_date",
                                                     'options' => array(
-                                                        'minDate' => '-1M',
+                                                        'minDate' => '-7W',
                                                         'maxDate' => '+6M',
                                                         'dateFormat' => 'yy-mm-dd',
                                                         'changeMonth' => true,
