@@ -196,6 +196,16 @@ class WorkOrderExpenseController extends Controller {
         ));
     }
 
+    public function actionShow($id) {
+        $workOrderExpense = $this->loadModel($id);
+        $workOrderExpenseDetails = WorkOrderExpenseDetail::model()->findAllByAttributes(array('work_order_expense_header_id' => $id));
+        
+        $this->render('show', array(
+            'workOrderExpense' => $workOrderExpense,
+            'workOrderExpenseDetails' => $workOrderExpenseDetails,
+        ));
+    }
+
     public function actionPdf($id) {
         $workOrderExpense = $this->loadModel($id);
         
