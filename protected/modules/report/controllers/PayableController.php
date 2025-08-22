@@ -82,11 +82,16 @@ class PayableController extends Controller {
     }
 
     public function actionRedirectTransaction($codeNumber) {
-//        list($leftPart,, ) = explode('/', $codeNumber);
-//        list(, $codeNumberConstant) = explode('.', $leftPart);
+        list($leftPart,, ) = explode('/', $codeNumber);
+        list(, $codeNumberConstant) = explode('.', $leftPart);
 
-        $model = TransactionReceiveItem::model()->findByAttributes(array('invoice_number' => $codeNumber));
-        $this->redirect(array('/transaction/transactionReceiveItem/showInvoice', 'id' => $model->id));
+        if ($codeNumberConstant === 'RCI') {
+            $model = TransactionReceiveItem::model()->findByAttributes(array('receive_item_no' => $codeNumber));
+            $this->redirect(array('/transaction/transactionReceiveItem/showInvoice', 'id' => $model->id));
+        } else if ($codeNumberConstant === 'WOE') {
+            $model = WorkOrderExpenseHeader::model()->findByAttributes(array('transaction_number' => $codeNumber));
+            $this->redirect(array('/accounting/workOrderExpense/show', 'id' => $model->id));
+        }
 
     }
     
@@ -107,40 +112,37 @@ class PayableController extends Controller {
         $worksheet = $objPHPExcel->setActiveSheetIndex(0);
         $worksheet->setTitle('Laporan Hutang Supplier');
 
-        $worksheet->mergeCells('A1:E1');
-        $worksheet->mergeCells('A2:E2');
-        $worksheet->mergeCells('A3:E3');
+        $worksheet->mergeCells('A1:H1');
+        $worksheet->mergeCells('A2:H2');
+        $worksheet->mergeCells('A3:H3');
 
-        $worksheet->getStyle('A1:E3')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-        $worksheet->getStyle('A1:E3')->getFont()->setBold(true);
+        $worksheet->getStyle('A1:H5')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->getStyle('A1:H5')->getFont()->setBold(true);
         
         $branch = Branch::model()->findByPk($branchId);
-        $worksheet->setCellValue('A2', 'Raperind Motor ' . CHtml::encode(CHtml::value($branch, 'name')));
-        $worksheet->setCellValue('A3', 'Laporan Hutang Supplier');
+        $worksheet->setCellValue('A1', 'Raperind Motor ' . CHtml::encode(CHtml::value($branch, 'name')));
+        $worksheet->setCellValue('A2', 'Laporan Hutang Supplier');
         $worksheet->setCellValue('A3', 'Per Tanggal ' . Yii::app()->dateFormatter->format('d MMMM yyyy', $endDate));
 
-        $worksheet->getStyle("A5:E5")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
-        $worksheet->getStyle("A6:E6")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A5:H5")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A6:H6")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
-        $worksheet->getStyle('A5:E6')->getFont()->setBold(true);
+        $worksheet->getStyle('A5:H5')->getFont()->setBold(true);
         $worksheet->setCellValue('A5', 'Code');
         $worksheet->setCellValue('B5', 'Company');
         $worksheet->setCellValue('C5', 'Name');
+        $worksheet->setCellValue('D5', 'Tanggal');
+        $worksheet->setCellValue('E5', 'PO #');
+        $worksheet->setCellValue('F5', 'Grand Total');
+        $worksheet->setCellValue('G5', 'Payment');
+        $worksheet->setCellValue('H5', 'Remaining');
 
-        $worksheet->setCellValue('A6', 'Tanggal');
-        $worksheet->setCellValue('B6', 'PO #');
-        $worksheet->setCellValue('C6', 'Grand Total');
-        $worksheet->setCellValue('D6', 'Payment');
-        $worksheet->setCellValue('E6', 'Remaining');
-
-        $counter = 8;
+        $counter = 7;
         
         foreach ($payableSummary->dataProvider->data as $header) {
-            
             $payableData = $header->getPayableReport($endDate, $branchId);
-            $totalPurchase = 0.00;
-            $totalPayment = 0.00;
-            $totalPayable = 0.00;
+            $payableWorkOrderExpenseData = $header->getPayableWorkOrderExpenseReport($endDate, $branchId);
+            
             foreach ($payableData as $payableRow) {
                 $purchase = $payableRow['total_price'];
                 $paymentAmount = $payableRow['amount'];
@@ -156,23 +158,24 @@ class PayableController extends Controller {
                 $worksheet->setCellValue("H{$counter}", $paymentLeft);
 
                 $counter++;
-                
-                $totalPurchase += $purchase;
-                $totalPayment += $paymentAmount;
-                $totalPayable += $paymentLeft;
             }
             
-            $worksheet->getStyle("A{$counter}:E{$counter}")->getFont()->setBold(true);
+            foreach ($payableWorkOrderExpenseData as $payableRow) {
+                $purchase = $payableRow['total_price'];
+                $paymentAmount = $payableRow['amount'];
+                $paymentLeft = $payableRow['remaining'];
 
-//            $worksheet->getStyle("A{$counter}:E{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
-//            $worksheet->getStyle("A{$counter}:E{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
-//            $worksheet->mergeCells("A{$counter}:B{$counter}");
-//            $worksheet->setCellValue("A{$counter}", 'Total');
-//            $worksheet->setCellValue("C{$counter}", $totalPurchase);
-//            $worksheet->setCellValue("D{$counter}", $totalPayment);
-//            $worksheet->setCellValue("E{$counter}", $totalPayable);
-//
-//            $counter++;$counter++;
+                $worksheet->setCellValue("A{$counter}", $header->code);
+                $worksheet->setCellValue("B{$counter}", $header->company);
+                $worksheet->setCellValue("C{$counter}", $header->name);
+                $worksheet->setCellValue("D{$counter}", $payableRow['transaction_date']);
+                $worksheet->setCellValue("E{$counter}", $payableRow['transaction_number']);
+                $worksheet->setCellValue("F{$counter}", $purchase);
+                $worksheet->setCellValue("G{$counter}", $paymentAmount);
+                $worksheet->setCellValue("H{$counter}", $paymentLeft);
+
+                $counter++;
+            }
         }
 
         for ($col = 'A'; $col !== 'F'; $col++) {

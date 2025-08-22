@@ -1,20 +1,15 @@
 <?php
 Yii::app()->clientScript->registerCss('_report', '
-    .width1-1 { width: 15% }
-    .width1-2 { width: 10% }
-    .width1-3 { width: 10% }
-    .width1-4 { width: 10% }
-    .width1-5 { width: 15% }
+    .width1-1 { width: 10% }
+    .width1-2 { width: 7% }
+    .width1-3 { width: 18% }
+    .width1-4 { width: 15% }
+    .width1-5 { width: 5% }
     .width1-6 { width: 10% }
     .width1-7 { width: 10% }
     .width1-8 { width: 10% }
-    .width1-9 { width: 10% }
+    .width1-9 { width: 5% }
     .width1-10 { width: 10% }
-
-    .width2-1 { width: 40% }
-    .width2-2 { width: 5% }
-    .width2-3 { width: 15% }
-    .width2-4 { width: 15% }
 ');
 ?>
 
@@ -50,16 +45,18 @@ Yii::app()->clientScript->registerCss('_report', '
         <?php foreach ($paymentOutSummary->dataProvider->data as $header): ?>
             <?php $paymentAmount = CHtml::value($header, 'payment_amount'); ?>
             <tr class="items1">
-                <td class="width1-1"><?php echo CHtml::link(CHtml::encode($header->payment_number), array("/accounting/paymentOut/view", "id"=>$header->id), array("target" => "_blank")); ?></td>
+                <td class="width1-1">
+                    <?php echo CHtml::link(CHtml::encode($header->payment_number), array("/accounting/paymentOut/view", "id"=>$header->id), array("target" => "_blank")); ?>
+                </td>
                 <td class="width1-2"><?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($header->payment_date))); ?></td>
-                <td class="width1-4"><?php echo CHtml::encode(CHtml::value($header, 'notes')); ?></td>
-                <td class="width1-5"><?php echo CHtml::encode(CHtml::value($header, 'supplier.name')); ?></td>
-                <td class="width1-7"><?php echo CHtml::encode($header->status); ?></td>
-                <td class="width1-8"><?php echo CHtml::encode(CHtml::value($header, 'paymentType.name')); ?></td>
-                <td class="width1-9"><?php echo CHtml::encode(CHtml::value($header, 'bank.name')); ?></td>
-                <td class="width1-9"><?php echo CHtml::encode(CHtml::value($header, 'companyBank.bank.name')); ?></td>
-                <td class="width1-10"><?php echo CHtml::encode(CHtml::value($header, 'user.username')); ?></td>
-                <td class="width1-3" style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $paymentAmount)); ?></td>
+                <td class="width1-3"><?php echo CHtml::encode(CHtml::value($header, 'notes')); ?></td>
+                <td class="width1-4"><?php echo CHtml::encode(CHtml::value($header, 'supplier.name')); ?></td>
+                <td class="width1-5"><?php echo CHtml::encode($header->status); ?></td>
+                <td class="width1-6"><?php echo CHtml::encode(CHtml::value($header, 'paymentType.name')); ?></td>
+                <td class="width1-7"><?php echo CHtml::encode(CHtml::value($header, 'bank.name')); ?></td>
+                <td class="width1-8"><?php echo CHtml::encode(CHtml::value($header, 'companyBank.bank.name')); ?></td>
+                <td class="width1-9"><?php echo CHtml::encode(CHtml::value($header, 'user.username')); ?></td>
+                <td class="width1-10" style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $paymentAmount)); ?></td>
             </tr>
             <?php $totalPayment += $paymentAmount; ?>
         <?php endforeach; ?>
@@ -68,7 +65,9 @@ Yii::app()->clientScript->registerCss('_report', '
     <tfoot>
         <tr>
             <td colspan="9" style="text-align: right; font-weight: bold">Total Payment Out</td>
-            <td class="width1-3" style="text-align: right; font-weight: bold"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalPayment)); ?></td>
+            <td class="width1-3" style="text-align: right; font-weight: bold">
+                <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalPayment)); ?>
+            </td>
         </tr>
     </tfoot>
 </table>

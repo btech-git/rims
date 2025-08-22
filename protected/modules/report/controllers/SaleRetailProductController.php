@@ -54,7 +54,12 @@ class SaleRetailProductController extends Controller {
         }
         
         if (isset($_GET['SaveExcel'])) {
-            $this->saveToExcel($saleRetailProductSummary->dataProvider, array('startDate' => $startDate, 'endDate' => $endDate, 'branchId' => $branchId,));
+            $this->saveToExcel($saleRetailProductSummary->dataProvider, array(
+                'startDate' => $startDate, 
+                'endDate' => $endDate, 
+                'branchId' => $branchId,
+                'customerType' => $customerType,
+            ));
         }
 
         $this->render('summary', array(
@@ -134,6 +139,7 @@ class SaleRetailProductController extends Controller {
         $startDate = $options['startDate'];
         $endDate = $options['endDate'];
         $branchId = $options['branchId'];
+        $customerType = $options['customerType'];
         
         $objPHPExcel = new PHPExcel();
 
@@ -173,7 +179,7 @@ class SaleRetailProductController extends Controller {
         $counter = 7;
         $totalSale = 0.00;
         foreach ($dataProvider->data as $header) {
-            $grandTotal = $header->getTotalSales($startDate, $endDate, $branchId);
+            $grandTotal = $header->getTotalSales($startDate, $endDate, $branchId, $customerType);
             $worksheet->getStyle("I{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
 
             $worksheet->setCellValue("A{$counter}", CHtml::encode($header->id));
