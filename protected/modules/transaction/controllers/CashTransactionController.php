@@ -353,6 +353,19 @@ class CashTransactionController extends Controller {
         $this->redirect(array('admin'));
     }
 
+    public function actionPdf($id) {
+        $model = $this->loadModel($id);
+        $mPDF1 = Yii::app()->ePdf->mpdf('', 'A4-L');
+
+        $stylesheet = file_get_contents(Yii::getPathOfAlias('webroot') . '/css/pdf.css');
+        $mPDF1->SetTitle('Transaksi Kas');
+        $mPDF1->WriteHTML($stylesheet, 1);
+        $mPDF1->WriteHTML($this->renderPartial('pdf', array(
+            'model' => $model,
+        ), true));
+        $mPDF1->Output('Transaksi Kas ' . $model->transaction_number . '.pdf', 'I');
+    }
+
     public function actionAjaxHtmlUpdateSubCategorySelect() {
         if (Yii::app()->request->isAjaxRequest) {
             $categoryId = isset($_GET['Coa']['coa_category_id']) ? $_GET['Coa']['coa_category_id'] : 0;

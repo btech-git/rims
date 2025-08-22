@@ -49,8 +49,11 @@
                     </tr>
                 <?php else: ?>
                     <tr>
-                        <td colspan="2" style="text-align: center">
+                        <td style="text-align: center">
                             <?php echo CHtml::link('<span class="fa fa-dollar"></span>Approve Invoice', Yii::app()->baseUrl . '/transaction/transactionReceiveItem/approvalInvoice?id=' . $receiveHeader->id) ?>
+                        </td>
+                        <td style="text-align: center">
+                            <?php echo CHtml::link('<span class="fa fa-print"></span>Print Invoice', Yii::app()->baseUrl . '/transaction/transactionReceiveItem/pdf?id=' . $receiveHeader->id) ?>
                         </td>
                     </tr>
                 <?php endif; ?>
