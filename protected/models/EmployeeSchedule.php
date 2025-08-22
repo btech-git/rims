@@ -19,7 +19,7 @@ class EmployeeSchedule extends CActiveRecord {
      * @return string the associated database table name
      */
     public function tableName() {
-        return '{{employee_schedule}}';
+        return 'rims_employee_schedule';
     }
 
     /**

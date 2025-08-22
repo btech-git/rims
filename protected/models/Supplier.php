@@ -421,6 +421,40 @@ class Supplier extends CActiveRecord {
         return $resultSet;
     }
     
+    public function getPayableWorkOrderExpenseReport($endDate, $branchId) {
+        $branchConditionSql = '';
+        
+        $params = array(
+            ':supplier_id' => $this->id,
+            ':end_date' => $endDate,
+        );
+        
+        if (!empty($branchId)) {
+            $branchConditionSql = ' AND w.branch_id = :branch_id';
+            $params[':branch_id'] = $branchId;
+        }
+        
+        $sql = "
+            SELECT w.transaction_number, w.transaction_date, w.grand_total AS total_price, COALESCE(p.amount, 0) AS amount, 
+            w.grand_total - COALESCE(p.amount, 0) AS remaining
+            FROM " . WorkOrderExpenseHeader::model()->tableName() . " w
+            LEFT OUTER JOIN (
+                SELECT d.work_order_expense_header_id, SUM(d.amount) AS amount 
+                FROM " . PayOutDetail::model()->tableName() . " d 
+                INNER JOIN " . PaymentOut::model()->tableName() . " h ON h.id = d.payment_out_id
+                WHERE h.payment_date BETWEEN '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND :end_date AND h.status NOT LIKE '%CANCEL%'
+                GROUP BY d.work_order_expense_header_id
+            ) p ON w.id = p.work_order_expense_header_id 
+            WHERE w.supplier_id = :supplier_id AND (w.grand_total - COALESCE(p.amount, 0)) > 100.00 AND 
+            DATE(w.transaction_date) BETWEEN '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND :end_date AND w.status = 'Approved' AND
+            w.user_id_cancelled IS NULL" . $branchConditionSql . "
+            ORDER BY w.transaction_date ASC";
+
+        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
+
+        return $resultSet;
+    }
+    
     public function getPayableTransactionReport($startDate, $endDate, $branchId) {
         $branchConditionSql = '';
         

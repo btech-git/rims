@@ -77,6 +77,7 @@
  * @property RegistrationInsuranceData[] $registrationInsuranceDatas
  * @property RegistrationPayment[] $registrationPayments
  * @property RegistrationProduct[] $registrationProducts
+ * @property RegistrationPackage[] $registrationPackages
  * @property RegistrationQuickService[] $registrationQuickServices
  * @property RegistrationMemo[] $registrationMemos
  * @property RegistrationRealizationProcess[] $registrationRealizationProcesses
@@ -164,6 +165,7 @@ class RegistrationTransaction extends MonthlyTransactionActiveRecord {
             'registrationInsuranceDatas' => array(self::HAS_MANY, 'RegistrationInsuranceData', 'registration_transaction_id'),
             'registrationPayments' => array(self::HAS_MANY, 'RegistrationPayment', 'registration_transaction_id'),
             'registrationProducts' => array(self::HAS_MANY, 'RegistrationProduct', 'registration_transaction_id'),
+            'registrationPackages' => array(self::HAS_MANY, 'RegistrationPackage', 'registration_transaction_id'),
             'registrationQuickServices' => array(self::HAS_MANY, 'RegistrationQuickService', 'registration_transaction_id'),
             'registrationMemos' => array(self::HAS_MANY, 'RegistrationMemo', 'registration_transaction_id'),
             'registrationRealizationProcesses' => array(self::HAS_MANY, 'RegistrationRealizationProcess', 'registration_transaction_id'),
