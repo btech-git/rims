@@ -161,9 +161,9 @@ class PaymentInComponent extends CComponent {
         $valid = $this->header->save(false);
 
         foreach ($this->details as $i => $detail) {
-//            if ($detail->amount <= 0.00) {
-//                continue;
-//            }
+            if ($detail->amount <= 0.00 && $detail->tax_service_amount <= 0.00 && $detail->discount_amount <= 0.00 && $detail->bank_administration_fee <= 0.00 && $detail->merimen_fee <= 0.00) {
+                continue;
+            }
 
             if ($detail->isNewRecord) {
                 $detail->payment_in_id = $this->header->id;
@@ -172,18 +172,6 @@ class PaymentInComponent extends CComponent {
             $detail->tax_service_percentage = $detail->is_tax_service === 2 ? 0 : 0.02;
             $valid = $detail->save(false) && $valid;
 
-//            if (!empty($detail->invoice_header_id)) {
-//                $invoiceHeader = InvoiceHeader::model()->findByPk($detail->invoice_header_id);
-//                $paymentAmount = $invoiceHeader->getTotalPayment() + $detail->downpayment_amount + $detail->discount_product_amount + $detail->bank_administration_fee + $detail->merimen_fee;
-//                $invoiceHeader->payment_amount = $i == 0 ? $paymentAmount : $invoiceHeader->getTotalPayment();
-//                $invoiceHeader->payment_left = $invoiceHeader->getTotalRemaining();
-//                $invoiceHeader->status = $invoiceHeader->payment_left > 0 ? 'PARTIALLY PAID' : 'PAID';
-//                $valid = $invoiceHeader->update(array('payment_amount', 'payment_left', 'status')) && $valid;
-//                
-//                $registrationTransaction = RegistrationTransaction::model()->findByPk($invoiceHeader->registration_transaction_id);
-//                $registrationTransaction->payment_status = $invoiceHeader->payment_left > 0 ? 'PARTIALLY PAID' : 'PAID';
-//                $valid = $valid && $registrationTransaction->update(array('payment_status'));
-//            }
         }
 
         $this->header->images = CUploadedFile::getInstances($this->header, 'images');
