@@ -93,6 +93,8 @@ function tanggal($date) {
                                 <th width="15%">Brand</th>
                                 <th width="8%">Qty</th>
                                 <th width="6%">Unit</th>
+                                <th width="10%">Harga</th>
+                                <th width="10%">Total</th>
                                 <th width="30%">Notes</th>
                             </tr>
                         </thead>
@@ -106,6 +108,8 @@ function tanggal($date) {
                                     <td>&nbsp; <?php echo CHtml::encode(CHtml::value($receiveDetail, 'product.brand.name')); ?></td>
                                     <td>&nbsp; <?php echo CHtml::encode(CHtml::value($receiveDetail, 'qty_received')); ?></td>
                                     <td>&nbsp; <?php echo CHtml::encode(CHtml::value($receiveDetail, 'product.unit.name')); ?></td>
+                                    <td>&nbsp; <?php echo CHtml::encode(CHtml::value($receiveDetail, 'purchaseOrderDetail.retail_price')); ?></td>
+                                    <td>&nbsp; <?php echo CHtml::encode(CHtml::value($receiveDetail, 'purchaseRetailPrice')); ?></td>
                                     <td><?php echo $receiveDetail->note== ''?'-':$receiveDetail->note; ?></td>
                                 </tr>
                                 <?php $no++; ?>
