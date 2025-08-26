@@ -121,21 +121,21 @@ function tanggal($date) {
                         </tbody>
                         <tfoot>
                             <tr>
-                                <td style="text-align: right; font-weight: bold" colspan="6">SUB TOTAL</td>
+                                <td style="text-align: right; font-weight: bold" colspan="7">SUB TOTAL</td>
                                 <td style="text-align: right; font-weight: bold">
                                     <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($receiveItem, 'subTotal'))); ?>
                                 </td>
                                 <td></td>
                             </tr>
                             <tr>
-                                <td style="text-align: right; font-weight: bold" colspan="6">PPn</td>
+                                <td style="text-align: right; font-weight: bold" colspan="7">PPn</td>
                                 <td style="text-align: right; font-weight: bold">
                                     <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($receiveItem, 'taxNominal'))); ?>
                                 </td>
                                 <td></td>
                             </tr>
                             <tr>
-                                <td style="text-align: right; font-weight: bold" colspan="6">GRAND TOTAL</td>
+                                <td style="text-align: right; font-weight: bold" colspan="7">GRAND TOTAL</td>
                                 <td style="text-align: right; font-weight: bold">
                                     <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($receiveItem, 'grandTotal'))); ?>
                                 </td>
