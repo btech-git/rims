@@ -90,12 +90,12 @@ function tanggal($date) {
                                 <th style="width: 1%">No</th>
                                 <th width="10%">Code</th>
                                 <th>Item Name</th>
-                                <th width="15%">Brand</th>
+                                <th width="10%">Brand</th>
                                 <th width="8%">Qty</th>
                                 <th width="6%">Unit</th>
                                 <th width="10%">Harga</th>
                                 <th width="10%">Total</th>
-                                <th width="30%">Notes</th>
+                                <th width="20%">Notes</th>
                             </tr>
                         </thead>
                         <?php $no = 1; ?>
@@ -103,18 +103,42 @@ function tanggal($date) {
                             <?php foreach ($receiveItem->transactionReceiveItemDetails as $key => $receiveDetail): ?>
                                 <tr>
                                     <td class="noo"><?php echo $no; ?></td>
-                                    <td>&nbsp; <?php echo CHtml::encode(CHtml::value($receiveDetail, 'product.manufacturer_code')); ?></td>
-                                    <td>&nbsp; <?php echo CHtml::encode(CHtml::value($receiveDetail, 'product.name')); ?></td>
-                                    <td>&nbsp; <?php echo CHtml::encode(CHtml::value($receiveDetail, 'product.brand.name')); ?></td>
-                                    <td>&nbsp; <?php echo CHtml::encode(CHtml::value($receiveDetail, 'qty_received')); ?></td>
-                                    <td>&nbsp; <?php echo CHtml::encode(CHtml::value($receiveDetail, 'product.unit.name')); ?></td>
-                                    <td>&nbsp; <?php echo CHtml::encode(CHtml::value($receiveDetail, 'purchaseOrderDetail.retail_price')); ?></td>
-                                    <td>&nbsp; <?php echo CHtml::encode(CHtml::value($receiveDetail, 'purchaseRetailPrice')); ?></td>
+                                    <td><?php echo CHtml::encode(CHtml::value($receiveDetail, 'product.manufacturer_code')); ?></td>
+                                    <td><?php echo CHtml::encode(CHtml::value($receiveDetail, 'product.name')); ?></td>
+                                    <td><?php echo CHtml::encode(CHtml::value($receiveDetail, 'product.brand.name')); ?></td>
+                                    <td><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($receiveDetail, 'qty_received'))); ?></td>
+                                    <td><?php echo CHtml::encode(CHtml::value($receiveDetail, 'product.unit.name')); ?></td>
+                                    <td style="text-align: right">
+                                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($receiveDetail, 'purchaseOrderDetail.retail_price'))); ?>
+                                    </td>
+                                    <td style="text-align: right">
+                                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($receiveDetail, 'purchaseRetailPrice'))); ?>
+                                    </td>
                                     <td><?php echo $receiveDetail->note== ''?'-':$receiveDetail->note; ?></td>
                                 </tr>
                                 <?php $no++; ?>
                             <?php endforeach; ?>
                         </tbody>
+                        <tfoot>
+                            <tr>
+                                <td style="text-align: right; font-weight: bold">SUB TOTAL</td>
+                                <td style="text-align: right; font-weight: bold">
+                                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($receiveItem, 'subTotal'))); ?>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="text-align: right; font-weight: bold">PPn</td>
+                                <td style="text-align: right; font-weight: bold">
+                                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($receiveItem, 'taxNominal'))); ?>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="text-align: right; font-weight: bold">GRAND TOTAL</td>
+                                <td style="text-align: right; font-weight: bold">
+                                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($receiveItem, 'grandTotal'))); ?>
+                                </td>
+                            </tr>
+                        </tfoot>
                     </table>
                 </div>
             </div>
