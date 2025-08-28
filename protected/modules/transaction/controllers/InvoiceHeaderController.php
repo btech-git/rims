@@ -600,8 +600,11 @@ class InvoiceHeaderController extends Controller {
 
         if (isset($_POST['InvoiceHeader']) && IdempotentManager::check()) {
             $invoice->transaction_tax_number = $_POST['InvoiceHeader']['transaction_tax_number'];
+            $invoice->coretax_receipt_number = $_POST['InvoiceHeader']['coretax_receipt_number'];
+            $invoice->grand_total_coretax = $_POST['InvoiceHeader']['grand_total_coretax'];
+            $invoice->tax_amount_coretax = $_POST['InvoiceHeader']['tax_amount_coretax'];
             
-            if ($invoice->update(array('transaction_tax_number'))) {
+            if ($invoice->update(array('transaction_tax_number', 'tax_amount_coretax', 'grand_total_coretax', 'coretax_receipt_number'))) {
                 $this->redirect(array('view', 'id' => $invoice->id));
             }
         }

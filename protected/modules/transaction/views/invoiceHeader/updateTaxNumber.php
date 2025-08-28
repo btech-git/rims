@@ -65,6 +65,18 @@ $this->breadcrumbs=array(
                             </div>
                         </div>
                     </div>
+                    
+                    <div class="field">
+                        <div class="row collapse">
+                            <div class="medium-4 columns">
+                                <?php echo $form->labelEx($invoice, 'coretax_receipt_number', array('class' => 'prefix')); ?>
+                            </div>
+                            <div class="medium-8 columns">
+                                <?php echo $form->textField($invoice, 'coretax_receipt_number'); ?>
+                                <?php echo $form->error($invoice, 'coretax_receipt_number'); ?>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="small-12 medium-6 columns">
@@ -195,6 +207,23 @@ $this->breadcrumbs=array(
                             </div>
                         </div>
                     </div>
+                    
+                    <div class="field">
+                        <div class="row collapse">
+                            <div class="small-4 columns">
+                                <?php echo $form->labelEx($invoice, 'PPn Coretax', array('class' => 'prefix')); ?>
+                            </div>
+                            <div class="small-8 columns">
+                                <?php echo $form->textField($invoice, 'tax_amount_coretax'); ?>
+                                <?php echo $form->error($invoice, 'tax_amount_coretax'); ?>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="field buttons text-center">
+                        <?php echo CHtml::submitButton('Cancel', array('name' => 'Cancel', 'confirm' => 'Are you sure you want to cancel?')); ?>
+                        <?php echo CHtml::submitButton($invoice->isNewRecord ? 'Create' : 'Save', array('class' => 'button cbutton', 'confirm' => 'Are you sure you want to save?')); ?>
+                    </div>
                 </div>
 
                 <div class="small-12 medium-6 columns">
@@ -231,10 +260,18 @@ $this->breadcrumbs=array(
                         </div>
                     </div>
 
-                    <div class="field buttons text-center">
-                        <?php echo CHtml::submitButton('Cancel', array('name' => 'Cancel', 'confirm' => 'Are you sure you want to cancel?')); ?>
-                        <?php echo CHtml::submitButton($invoice->isNewRecord ? 'Create' : 'Save', array('class' => 'button cbutton', 'confirm' => 'Are you sure you want to save?')); ?>
+                    <div class="field">
+                        <div class="row collapse">
+                            <div class="small-4 columns">
+                                <?php echo $form->labelEx($invoice, 'DPP Coretax', array('class' => 'prefix')); ?>
+                            </div>
+                            <div class="small-8 columns">
+                                <?php echo $form->textField($invoice, 'grand_total_coretax'); ?>
+                                <?php echo $form->error($invoice, 'grand_total_coretax'); ?>
+                            </div>
+                        </div>
                     </div>
+                    
                     <?php echo IdempotentManager::generate(); ?>
 
                 </div>

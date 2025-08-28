@@ -47,7 +47,7 @@ $this->menu = array(
                 'class' => 'button cbutton right', 
                 'style' => 'margin-right:10px'
             ));*/ ?>
-        <?php if ($model->status != "CANCELLED!!!" && $model->transaction_tax_number == null): ?>
+        <?php if ($model->status != "CANCELLED!!!" && $model->transaction_tax_number == null && $model->ppn_total > 0): ?>
             <?php echo CHtml::link('<span class="fa fa-edit"></span>Update Faktur Pajak', array("updateTaxNumber", "id" => $model->id), array(
                 'class' => 'button success right', 
                 'style' => 'margin-right:10px'
@@ -82,8 +82,8 @@ $this->menu = array(
             <tr>
                 <td>Customer</td>
                 <td><?php echo CHtml::encode(CHtml::value($model, 'customer.name')); ?></td>
-                <td>Reference Type</td>
-                <td><?php echo $model->reference_type == 1 ? 'Sales Order' : 'Retail Sales'; ?></td>
+                <td width="10%">Registration #</td>
+                <td width="30%"><?php echo CHtml::link($registration->transaction_number, array($registration->repair_type == 'GR' ? "/frontDesk/generalRepairRegistration/show" : "/frontDesk/bodyRepairRegistration/show", "id"=>$registration->id), array('target' => 'blank')); ?></td>
             </tr>
             
             <tr>
@@ -98,16 +98,19 @@ $this->menu = array(
             <tr>
                 <td>Due Date</td>
                 <td><?php echo $model->due_date; ?></td>
-                <td width="10%">Registration #</td>
-                <td width="30%"><?php echo CHtml::link($registration->transaction_number, array($registration->repair_type == 'GR' ? "/frontDesk/generalRepairRegistration/show" : "/frontDesk/bodyRepairRegistration/show", "id"=>$registration->id), array('target' => 'blank')); ?></td>
+                <td width="10%">Vehicle</td>
+                <td width="30%">
+                    <?php echo CHtml::encode(CHtml::value($model, 'vehicle.carMake.name')); ?> -
+                    <?php echo CHtml::encode(CHtml::value($model, 'vehicle.carModel.name')); ?> - 
+                    <?php echo CHtml::encode(CHtml::value($model, 'vehicle.carSubModel.name')); ?>                    
+                </td>
             </tr>
             
             <tr>
                 <td width="10%">Payment Est Date</td>
                 <td width="30%"><?php echo $model->payment_date_estimate; ?></td>
                 <td width="10%">Plate #</td>
-                <td width="30%"><?php echo CHtml::encode(CHtml::value($model, 'vehicle.plate_number')); ?>
-                </td>
+                <td width="30%"><?php echo CHtml::encode(CHtml::value($model, 'vehicle.plate_number')); ?></td>
             </tr>
             
             <tr>
@@ -115,12 +118,8 @@ $this->menu = array(
                 <td width="30%">
                     <?php echo CHtml::encode(CHtml::value($model, 'insuranceCompany.name')); ?>
                 </td>
-                <td width="10%">Vehicle</td>
-                <td width="30%">
-                    <?php echo CHtml::encode(CHtml::value($model, 'vehicle.carMake.name')); ?> -
-                    <?php echo CHtml::encode(CHtml::value($model, 'vehicle.carModel.name')); ?> - 
-                    <?php echo CHtml::encode(CHtml::value($model, 'vehicle.carSubModel.name')); ?>                    
-                </td>
+                <td width="10%">Bupot #</td>
+                <td width="30%"><?php echo CHtml::encode(CHtml::value($model, 'coretax_receipt_number')); ?></td>
             </tr>
             
             <tr>
@@ -134,14 +133,22 @@ $this->menu = array(
             
             <tr>
                 <td>Reference Number</td>
-                <td><?php if ($model->reference_type == 1): ?>
-                        <?php echo $model->salesOrder->sale_order_no; ?>
-                    <?php else : ?>
-                        <?php echo $model->registration_transaction_id; ?>
-                    <?php endif ?>
+                <td>
+                    <?php if ($model->reference_type == 1): ?>
+                        <?php echo CHtml::encode(CHtml::value($model, 'salesOrder.sale_order_no')); ?>
+                    <?php else: ?>
+                        <?php echo CHtml::encode(CHtml::value($model, 'registrationTransaction.work_order_number')); ?>
+                    <?php endif; ?>
                 </td>
-                <td width="10%"></td>
-                <td width="30%"><?php //echo CHtml::encode(CHtml::value($model, 'vehicle.carSubModel.name')); ?></td>
+                <td width="10%">DPP Coretax</td>
+                <td width="30%"><?php echo number_format(CHtml::encode(CHtml::value($model, 'grand_total_coretax')), 2); ?></td>
+            </tr>
+                
+            <tr>
+                <td>Reference Type</td>
+                <td><?php echo $model->reference_type == 1 ? 'Sales Order' : 'Retail Sales'; ?></td>
+                <td width="10%">PPn Coretax</td>
+                <td width="30%"><?php echo number_format(CHtml::encode(CHtml::value($model, 'tax_amount_coretax')), 2); ?></td>
             </tr>
                 
             <?php if (Yii::app()->user->checkAccess("director")): ?>
