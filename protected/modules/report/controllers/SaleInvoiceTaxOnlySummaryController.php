@@ -125,38 +125,38 @@ class SaleInvoiceTaxOnlySummaryController extends Controller {
         $worksheet = $objPHPExcel->setActiveSheetIndex(0);
         $worksheet->setTitle('Laporan Faktur Penjualan PPn');
 
-        $worksheet->mergeCells('A1:P1');
-        $worksheet->mergeCells('A2:P2');
-        $worksheet->mergeCells('A3:P3');
-        $worksheet->mergeCells('A4:P4');
-        
-        $worksheet->getStyle('A1:P3')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-        $worksheet->getStyle('A1:P3')->getFont()->setBold(true);
+        $worksheet->mergeCells('A1:Q1');
+        $worksheet->mergeCells('A2:Q2');
+        $worksheet->mergeCells('A3:Q3');
+       
+        $worksheet->getStyle('A1:Q3')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->getStyle('A1:Q3')->getFont()->setBold(true);
         $branch = Branch::model()->findByPk($branchId);
         $worksheet->setCellValue('A1', 'Raperind Motor ' . CHtml::value($branch, 'name'));
         $worksheet->setCellValue('A2', 'Laporan Faktur Penjualan PPn');
         $worksheet->setCellValue('A3', $startDateFormatted . ' - ' . $endDateFormatted);
 
-        $worksheet->getStyle("A6:P6")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
-        $worksheet->getStyle("A6:P6")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A5:Q5")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A5:Q5")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
-        $worksheet->getStyle('A6:P6')->getFont()->setBold(true);
-        $worksheet->setCellValue('A6', 'Tanggal');
-        $worksheet->setCellValue('B6', 'Faktur #');
-        $worksheet->setCellValue('C6', 'Customer');
-        $worksheet->setCellValue('D6', 'Amount');
-        $worksheet->setCellValue('E6', 'Parts (Rp)');
-        $worksheet->setCellValue('F6', 'Jasa (Rp)');
-        $worksheet->setCellValue('G6', 'DPP Parts');
-        $worksheet->setCellValue('H6', 'DPP Jasa');
-        $worksheet->setCellValue('I6', 'Total DPP');
-        $worksheet->setCellValue('J6', 'Ppn');
-        $worksheet->setCellValue('K6', 'Pph');
-        $worksheet->setCellValue('L6', 'Total');
-        $worksheet->setCellValue('M6', 'SPK #');
-        $worksheet->setCellValue('N6', 'Faktur Pajak #');
-        $worksheet->setCellValue('O6', 'FP Amount');
-        $worksheet->setCellValue('P6', 'Bupot #');
+        $worksheet->getStyle('A5:Q5')->getFont()->setBold(true);
+        $worksheet->setCellValue('A5', 'Tanggal');
+        $worksheet->setCellValue('B5', 'Faktur #');
+        $worksheet->setCellValue('C5', 'Customer');
+        $worksheet->setCellValue('D5', 'Amount');
+        $worksheet->setCellValue('E5', 'Parts (Rp)');
+        $worksheet->setCellValue('F5', 'Jasa (Rp)');
+        $worksheet->setCellValue('G5', 'DPP Parts');
+        $worksheet->setCellValue('H5', 'DPP Jasa');
+        $worksheet->setCellValue('I5', 'Total DPP');
+        $worksheet->setCellValue('J5', 'Ppn');
+        $worksheet->setCellValue('K5', 'Pph');
+        $worksheet->setCellValue('L5', 'Total');
+        $worksheet->setCellValue('M5', 'SPK #');
+        $worksheet->setCellValue('N5', 'Faktur Pajak #');
+        $worksheet->setCellValue('O5', 'FP DPP');
+        $worksheet->setCellValue('P5', 'FP PPn');
+        $worksheet->setCellValue('Q5', 'Bupot #');
 
         $counter = 7;
 
@@ -194,7 +194,9 @@ class SaleInvoiceTaxOnlySummaryController extends Controller {
             $worksheet->setCellValue("L{$counter}", $totalPrice);
             $worksheet->setCellValue("M{$counter}", CHtml::value($header, 'registrationTransaction.work_order_number'));
             $worksheet->setCellValue("N{$counter}", CHtml::value($header, 'transaction_tax_number'));
-            $worksheet->setCellValue("O{$counter}", $ppnTotal);
+            $worksheet->setCellValue("O{$counter}", CHtml::value($header, 'grand_total_coretax'));
+            $worksheet->setCellValue("P{$counter}", CHtml::value($header, 'tax_amount_coretax'));
+            $worksheet->setCellValue("Q{$counter}", CHtml::value($header, 'coretax_receipt_number'));
             
             $grandTotalSubAfterTax += $subTotalAfterTax;
             $grandTotalProductPriceAfterTax += $productPriceAfterTax;

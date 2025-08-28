@@ -53,7 +53,8 @@
                 <th class="width1-11">Total</th>
                 <th class="width1-12">SPK #</th>
                 <th class="width1-13">Faktur Pajak #</th>
-                <th class="width1-14">FP Amount</th>
+                <th class="width1-14">FP DPP</th>
+                <th class="width1-14">FP PPn</th>
                 <th class="width1-15">Bupot #</th>
             </tr>
         </thead>
@@ -101,9 +102,18 @@
                     <td class="width1-12" style="text-align: right">
                         <?php echo CHtml::encode(CHtml::value($header, 'registrationTransaction.work_order_number')); ?>
                     </td>
-                    <td class="width1-13" style="text-align: right"></td>
-                    <td class="width1-14" style="text-align: right"></td>
-                    <td class="width1-15" style="text-align: right"></td>
+                    <td class="width1-12" style="text-align: right">
+                        <?php echo CHtml::encode(CHtml::value($header, 'transaction_tax_number')); ?>
+                    </td>
+                    <td class="width1-11" style="text-align: right">
+                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', ($header->grand_total_coretax))); ?>
+                    </td>
+                    <td class="width1-11" style="text-align: right">
+                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', ($header->tax_amount_coretax))); ?>
+                    </td>
+                    <td class="width1-12" style="text-align: right">
+                        <?php echo CHtml::encode(CHtml::value($header, 'coretax_receipt_number')); ?>
+                    </td>
                 </tr>
             <?php endforeach; ?>
         </tbody>
