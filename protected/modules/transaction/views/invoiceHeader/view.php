@@ -47,7 +47,7 @@ $this->menu = array(
                 'class' => 'button cbutton right', 
                 'style' => 'margin-right:10px'
             ));*/ ?>
-        <?php if ($model->status == "Approved" && $model->transaction_tax_number == null): ?>
+        <?php if ($model->status != "CANCELLED!!!" && $model->transaction_tax_number == null): ?>
             <?php echo CHtml::link('<span class="fa fa-edit"></span>Update Faktur Pajak', array("updateTaxNumber", "id" => $model->id), array(
                 'class' => 'button success right', 
                 'style' => 'margin-right:10px'
