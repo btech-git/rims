@@ -133,7 +133,7 @@ class SaleInvoiceTaxOnlySummaryController extends Controller {
         $worksheet->getStyle('A1:P3')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
         $worksheet->getStyle('A1:P3')->getFont()->setBold(true);
         $branch = Branch::model()->findByPk($branchId);
-        $worksheet->setCellValue('A1', 'Raperind Motor ' . CHtml::encode(CHtml::value($branch, 'name')));
+        $worksheet->setCellValue('A1', 'Raperind Motor ' . CHtml::value($branch, 'name'));
         $worksheet->setCellValue('A2', 'Laporan Faktur Penjualan PPn');
         $worksheet->setCellValue('A3', $startDateFormatted . ' - ' . $endDateFormatted);
 
@@ -180,19 +180,21 @@ class SaleInvoiceTaxOnlySummaryController extends Controller {
             $pphTotal = CHtml::value($header, 'pph_total');
             $totalPrice = CHtml::value($header, 'total_price');
             
-            $worksheet->setCellValue("A{$counter}", CHtml::encode(CHtml::value($header, 'invoice_date')));
-            $worksheet->setCellValue("B{$counter}", CHtml::encode(CHtml::value($header, 'invoice_number')));
-            $worksheet->setCellValue("C{$counter}", CHtml::encode(CHtml::value($header, 'customer.name')));
-            $worksheet->setCellValue("D{$counter}", CHtml::encode($subTotalAfterTax));
-            $worksheet->setCellValue("E{$counter}", CHtml::encode($productPriceAfterTax));
-            $worksheet->setCellValue("F{$counter}", CHtml::encode($servicePriceAfterTax));
-            $worksheet->setCellValue("G{$counter}", CHtml::encode($productPrice));
-            $worksheet->setCellValue("H{$counter}", CHtml::encode($servicePrice));
-            $worksheet->setCellValue("I{$counter}", CHtml::encode($subTotal));
-            $worksheet->setCellValue("J{$counter}", CHtml::encode($ppnTotal));
-            $worksheet->setCellValue("K{$counter}", CHtml::encode($pphTotal));
-            $worksheet->setCellValue("L{$counter}", CHtml::encode($totalPrice));
-            $worksheet->setCellValue("M{$counter}", CHtml::encode(CHtml::value($header, 'registrationTransaction.work_order_number')));
+            $worksheet->setCellValue("A{$counter}", CHtml::value($header, 'invoice_date'));
+            $worksheet->setCellValue("B{$counter}", CHtml::value($header, 'invoice_number'));
+            $worksheet->setCellValue("C{$counter}", CHtml::value($header, 'customer.name'));
+            $worksheet->setCellValue("D{$counter}", $subTotalAfterTax);
+            $worksheet->setCellValue("E{$counter}", $productPriceAfterTax);
+            $worksheet->setCellValue("F{$counter}", $servicePriceAfterTax);
+            $worksheet->setCellValue("G{$counter}", $productPrice);
+            $worksheet->setCellValue("H{$counter}", $servicePrice);
+            $worksheet->setCellValue("I{$counter}", $subTotal);
+            $worksheet->setCellValue("J{$counter}", $ppnTotal);
+            $worksheet->setCellValue("K{$counter}", $pphTotal);
+            $worksheet->setCellValue("L{$counter}", $totalPrice);
+            $worksheet->setCellValue("M{$counter}", CHtml::value($header, 'registrationTransaction.work_order_number'));
+            $worksheet->setCellValue("N{$counter}", CHtml::value($header, 'transaction_tax_number'));
+            $worksheet->setCellValue("O{$counter}", $ppnTotal);
             
             $grandTotalSubAfterTax += $subTotalAfterTax;
             $grandTotalProductPriceAfterTax += $productPriceAfterTax;

@@ -162,12 +162,12 @@ class StockCardController extends Controller {
         $worksheet->getStyle("A6:O6")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
         $worksheet->getStyle('A6:O6')->getFont()->setBold(true);
-        $worksheet->setCellValue('A6', 'Produk');
-        $worksheet->setCellValue('B6', 'Code');
-        $worksheet->setCellValue('C6', 'Cetegory');
-        $worksheet->setCellValue('D6', 'Brand');
-        $worksheet->setCellValue('E6', 'Sub Brand');
-        $worksheet->setCellValue('F6', 'Sub Brand Series');
+        $worksheet->setCellValue('A6', 'No');
+        $worksheet->setCellValue('B6', 'ID');
+        $worksheet->setCellValue('C6', 'Produk');
+        $worksheet->setCellValue('D6', 'Code');
+        $worksheet->setCellValue('E6', 'Category');
+        $worksheet->setCellValue('F6', 'Brand');
         $worksheet->setCellValue('G6', 'Tanggal');
         $worksheet->setCellValue('H6', 'Jenis Transaksi');
         $worksheet->setCellValue('I6', 'Transaksi #');
@@ -179,34 +179,38 @@ class StockCardController extends Controller {
         $worksheet->setCellValue('O6', 'Stok Akhir');
 
         $counter = 8;
-
+        $incrementNumber = 1;
+        
         foreach ($stockCardSummary->dataProvider->data as $header) {
-            $saldo = $header->getBeginningStockReport($startDate, $branchId); 
-            $stockData = $header->getInventoryStockReport($startDate, $endDate, $branchId); 
+            $stock = $header->getBeginningStockReport($startDate, $branchId); 
+            $stockData = $header->getInventoryStockReport($startDate, $endDate, $branchId);
+            $beginningStock = $stock;
             
             foreach ($stockData as $stockRow) {
                 $stockIn = $stockRow['stock_in'];
                 $stockOut = $stockRow['stock_out'];
+                $stock += $stockIn + $stockOut;
                 
-                $worksheet->setCellValue("A{$counter}", $header->name);
-                $worksheet->setCellValue("B{$counter}", $header->manufacturer_code);
-                $worksheet->setCellValue("C{$counter}", CHtml::encode(CHtml::value($header, 'masterSubCategoryCode')));
-                $worksheet->setCellValue("D{$counter}", CHtml::encode(CHtml::value($header, 'brand.name')));
-                $worksheet->setCellValue("E{$counter}", CHtml::value($header, 'subBrand.name'));
-                $worksheet->setCellValue("F{$counter}", CHtml::value($header, 'subBrandSeries.name'));
+                $worksheet->setCellValue("A{$counter}", $incrementNumber);
+                $worksheet->setCellValue("B{$counter}", $header->id);
+                $worksheet->setCellValue("C{$counter}", $header->name);
+                $worksheet->setCellValue("D{$counter}", $header->manufacturer_code);
+                $worksheet->setCellValue("E{$counter}", CHtml::value($header, 'masterSubCategoryCode'));
+                $worksheet->setCellValue("F{$counter}", CHtml::value($header, 'brand.name') . ' - ' . CHtml::value($header, 'subBrand.name') . ' - ' . CHtml::value($header, 'subBrandSeries.name'));
                 $worksheet->setCellValue("G{$counter}", $stockRow['transaction_date']);
                 $worksheet->setCellValue("H{$counter}", $stockRow['transaction_type']);
                 $worksheet->setCellValue("I{$counter}", $stockRow['transaction_number']);
                 $worksheet->setCellValue("J{$counter}", $stockRow['notes']);
-                $worksheet->setCellValue("K{$counter}", $stockRow['name']);
-                $worksheet->setCellValue("L{$counter}", $saldo);
+                $worksheet->setCellValue("K{$counter}", $stockRow['warehouse']);
+                $worksheet->setCellValue("L{$counter}", $beginningStock);
                 $worksheet->setCellValue("M{$counter}", $stockIn);
                 $worksheet->setCellValue("N{$counter}", $stockOut);
-                $saldo += $stockIn + $stockOut;
-                $worksheet->setCellValue("O{$counter}", $saldo);
+                $worksheet->setCellValue("O{$counter}", $stock);
                 
-                $counter++;
-            }            
+                $beginningStock = $stock;
+                $counter++; $incrementNumber++;
+            }       
+            $counter++;     
         }
 
         for ($col = 'A'; $col !== 'Z'; $col++) {
@@ -218,7 +222,7 @@ class StockCardController extends Controller {
         ob_end_clean();
 
         header('Content-type: application/vnd.ms-excel');
-        header('Content-Disposition: attachment;filename="Kartu Stok.xls"');
+        header('Content-Disposition: attachment;filename="kartu_stok.xls"');
         header('Cache-Control: max-age=0');
         
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');

@@ -35,9 +35,10 @@ Yii::app()->clientScript->registerCss('_report', '
                 <th style="text-align: center; font-weight: bold; border-bottom: 1px solid">Jenis Transaksi</th>
                 <th style="text-align: center; font-weight: bold; border-bottom: 1px solid">Transaksi #</th>
                 <th style="text-align: center; font-weight: bold; border-bottom: 1px solid">Gudang</th>
+                <th style="text-align: center; font-weight: bold; border-bottom: 1px solid" colspan="2">Awal</th>
                 <th style="text-align: center; font-weight: bold; border-bottom: 1px solid" colspan="2">Masuk</th>
                 <th style="text-align: center; font-weight: bold; border-bottom: 1px solid" colspan="2">Keluar</th>
-                <th style="text-align: center; font-weight: bold; border-bottom: 1px solid">Stok</th>
+                <th style="text-align: center; font-weight: bold; border-bottom: 1px solid">Akhir</th>
                 <th style="text-align: center; font-weight: bold; border-bottom: 1px solid">Nilai</th>
             </tr>
         </thead>
@@ -53,20 +54,19 @@ Yii::app()->clientScript->registerCss('_report', '
                         <td><?php echo CHtml::encode(CHtml::value($header, 'manufacturer_code')); ?></td>
                         <td><?php echo CHtml::encode(CHtml::value($header, 'name')); ?></td>
                         <td><?php echo CHtml::encode(CHtml::value($header, 'masterSubCategoryCode')); ?></td>
-                        <td><?php echo CHtml::encode(CHtml::value($header, 'brand.name')); ?></td>
-                        <td><?php echo CHtml::encode(CHtml::value($header, 'subBrand.name')); ?></td>
-                        <td><?php echo CHtml::encode(CHtml::value($header, 'subBrandSeries.name')); ?></td>
-                        <td style="text-align: center; font-weight: bold">
-                            <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $stock)); ?>
-                        </td>
-                        <td style="text-align: right; font-weight: bold">
-                            <?php //echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $beginningValue)); ?>
+                        <td colspan="7">
+                            <?php echo CHtml::encode(CHtml::value($header, 'brand.name')); ?> - 
+                            <?php echo CHtml::encode(CHtml::value($header, 'subBrand.name')); ?> - 
+                            <?php echo CHtml::encode(CHtml::value($header, 'subBrandSeries.name')); ?>
                         </td>
                     </tr>
 
                     <?php $stockData = $header->getInventoryStockReport($startDate, $endDate, $branchId); ?>
                     <?php $totalStockIn = 0; ?>
                     <?php $totalStockOut = 0; ?>
+                    <?php $beginningStock = $stock; ?>
+                    <?php $beginningStockValue = $beginningValue; ?>
+                    
                     <?php foreach ($stockData as $stockRow): ?>
                         <?php $transactionNumber = $stockRow['transaction_number']; ?>
                         <?php $stockIn = $stockRow['stock_in']; ?>
@@ -79,7 +79,9 @@ Yii::app()->clientScript->registerCss('_report', '
                             <td><?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($stockRow['transaction_date']))); ?></td>
                             <td><?php echo CHtml::encode($stockRow['transaction_type']); ?></td>
                             <td><?php echo CHtml::link($transactionNumber, Yii::app()->createUrl("report/payableLedger/redirectTransaction", array("codeNumber" => $transactionNumber)), array('target' => '_blank')); ?></td>
-                            <td><?php echo CHtml::encode($stockRow['name']); ?></td>
+                            <td><?php echo CHtml::encode($stockRow['warehouse']); ?></td>
+                            <td style="text-align: center"><?php echo Yii::app()->numberFormatter->format('#,##0', $beginningStock); ?></td>
+                            <td style="text-align: right"><?php echo Yii::app()->numberFormatter->format('#,##0', $beginningStockValue); ?></td>
                             <td style="text-align: center"><?php echo Yii::app()->numberFormatter->format('#,##0', $stockIn); ?></td>
                             <td style="text-align: right"><?php echo Yii::app()->numberFormatter->format('#,##0.00', $inventoryInValue); ?></td>
                             <td style="text-align: center"><?php echo Yii::app()->numberFormatter->format('#,##0', $stockOut); ?></td>
@@ -87,12 +89,14 @@ Yii::app()->clientScript->registerCss('_report', '
                             <td style="text-align: center"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $stock)); ?></td>
                             <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $inventoryValue)); ?></td>
                         </tr>
+                        <?php $beginningStock = $stock; ?>
+                        <?php $beginningStockValue = $inventoryValue; ?>
                         <?php $totalStockIn += $stockIn; ?>
                         <?php $totalStockOut += $stockOut; ?>
                     <?php endforeach; ?>
 
                     <tr>
-                        <td colspan="4" style="text-align: right; font-weight: bold">Total</td>
+                        <td colspan="6" style="text-align: right; font-weight: bold">Total</td>
                         <td style="text-align: right; font-weight: bold; border-top: 1px solid">
                             <?php echo Yii::app()->numberFormatter->format('#,##0', $totalStockIn); ?>
                         </td>
@@ -103,7 +107,7 @@ Yii::app()->clientScript->registerCss('_report', '
                         <td colspan="3">&nbsp;</td>
                     </tr>
                     <tr>
-                        <td colspan="10">&nbsp;</td>
+                        <td colspan="12">&nbsp;</td>
                     </tr>
                 <?php //endif; ?>
             <?php endforeach; ?>

@@ -45,12 +45,13 @@ Yii::app()->clientScript->registerCss('_report', '
                 <tr class="items1">
                     <td style="text-align: center; font-weight: bold"><?php echo CHtml::encode(CHtml::value($header, 'id')); ?></td>
                     <td style="text-align: center; font-weight: bold"><?php echo CHtml::encode(CHtml::value($header, 'code')); ?></td>
-                    <td colspan="6" style="text-align: center; font-weight: bold"><?php echo CHtml::encode(CHtml::value($header, 'name')); ?></td>
+                    <td colspan="6" style="font-weight: bold"><?php echo CHtml::encode(CHtml::value($header, 'name')); ?></td>
                 </tr>
 
                 <?php $totalStock = '0.00'; ?>
                 <?php $totalValue = '0.00'; ?>
                 <?php $stockData = $header->getInventoryStockReport($endDate, $branchId); ?>
+                
                 <?php foreach ($stockData as $stockRow): ?>
                     <?php $product = Product::model()->findByPk($stockRow['id']); ?>
                     <?php $stockBegin = $product->getBeginningStockCardReport($branchId); ?>
@@ -68,6 +69,7 @@ Yii::app()->clientScript->registerCss('_report', '
                         <td style="text-align: center"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $stokEnd)); ?></td>
                         <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $inventoryValue)); ?></td>
                     </tr>
+                    
                     <?php $totalStock += $stokEnd; ?>
                     <?php $totalValue += $inventoryValue; ?>
                 <?php endforeach; ?>

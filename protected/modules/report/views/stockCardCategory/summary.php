@@ -77,6 +77,10 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                 <hr />
 
                 <div class="relative">
+                    <div class="reportDisplay" style="text-align: right">
+                        <?php echo ReportHelper::summaryText($stockCardCategorySummary->dataProvider); ?>
+                    </div>
+
                     <?php $this->renderPartial('_summary', array(
                         'stockCardCategorySummary' => $stockCardCategorySummary,
                         'endDate' => $endDate,

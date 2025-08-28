@@ -26,7 +26,7 @@ class InventoryValueController extends Controller {
         $currentPage = (isset($_GET['page'])) ? $_GET['page'] : '';
         
         $productSubCategory = Search::bind(new ProductSubCategory(), isset($_GET['ProductSubCategory']) ? $_GET['ProductSubCategory'] : '');
-        $productSubCategoryDataProvider = $productSubCategory->searchByStockCheck();
+        $productSubCategoryDataProvider = $productSubCategory->searchByInventoryValueReport();
         $branches = Branch::model()->findAll();
 
         if (isset($_GET['Clear'])) {
@@ -118,37 +118,46 @@ class InventoryValueController extends Controller {
 
         $worksheet->getStyle('A5:Q5')->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
-        $worksheet->setCellValue('A5', 'Sub Category');        
-        $worksheet->setCellValue('B5', 'Sub Master Category');
-        $worksheet->setCellValue('C5', 'Master Category');
+        $worksheet->setCellValue('A5', 'No');
+        $worksheet->setCellValue('B5', 'Master Category');
+        $worksheet->setCellValue('C5', 'Master Category ID');
+        $worksheet->setCellValue('D5', 'Sub Master Category');
+        $worksheet->setCellValue('E5', 'Sub Master Category ID');
+        $worksheet->setCellValue('F5', 'Sub Category');
+        $worksheet->setCellValue('G5', 'Sub Category ID');
         $branches = Branch::model()->findAll();
-        $column = 'D';
+        $column = 'H';
         foreach ($branches as $branch) {
             $worksheet->setCellValue($column . '5', $branch->code);
             $column++;
         }
-        $worksheet->setCellValue('K5', 'Stock');
+        $worksheet->setCellValue('P5', 'All Cabang');
 
-        $worksheet->getStyle('A5:M5')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle('A5:Q5')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
         $counter = 7;
+        $incrementNumber = 1;
 
         foreach ($dataProvider->data as $header) {
-            $inventoryTotalQuantities = $header->getInventoryTotalQuantities();
+            $inventoryTotalValues = $header->getInventoryTotalValues();
             $totalStock = 0;
             
-            $worksheet->setCellValue("A{$counter}", CHtml::encode(CHtml::value($header, 'name')));
-            $worksheet->setCellValue("B{$counter}", CHtml::encode(CHtml::value($header, 'productSubMasterCategory.name')));
-            $worksheet->setCellValue("C{$counter}", CHtml::encode(CHtml::value($header, 'productSubMasterCategory.productMasterCategory.name')));
+            $worksheet->setCellValue("A{$counter}", CHtml::encode($incrementNumber));
+            $worksheet->setCellValue("B{$counter}", CHtml::encode(CHtml::value($header, 'productSubMasterCategory.productMasterCategory.name')));
+            $worksheet->setCellValue("C{$counter}", CHtml::encode(CHtml::value($header, 'productSubMasterCategory.product_master_category_id')));
+            $worksheet->setCellValue("D{$counter}", CHtml::encode(CHtml::value($header, 'productSubMasterCategory.name')));
+            $worksheet->setCellValue("E{$counter}", CHtml::encode(CHtml::value($header, 'product_sub_master_category_id')));
+            $worksheet->setCellValue("F{$counter}", CHtml::encode(CHtml::value($header, 'name')));
+            $worksheet->setCellValue("G{$counter}", CHtml::encode(CHtml::value($header, 'id')));
             
-            $column = 'D'; 
+            $column = 'H'; 
             foreach ($branches as $branch) {
                 $index = -1;
                 $stockValue = 0;
-                foreach ($inventoryTotalQuantities as $i => $inventoryTotalQuantity) {
-                    if ($inventoryTotalQuantity['branch_id'] == $branch->id) {
+                foreach ($inventoryTotalValues as $i => $inventoryTotalValue) {
+                    if ($inventoryTotalValue['branch_id'] == $branch->id) {
                         $index = $i;
-                        $stockValue = CHtml::value($inventoryTotalQuantities[$i], 'total_stock');
+                        $stockValue = CHtml::value($inventoryTotalValues[$i], 'total_value');
                         break;
                     }
                 }
@@ -163,8 +172,7 @@ class InventoryValueController extends Controller {
             }
                         
             $worksheet->setCellValue($column++ . $counter, CHtml::encode($totalStock));
-            $counter++;
-
+            $counter++; $incrementNumber++;
         }
 
         for ($col = 'A'; $col !== $column; $col++) {
@@ -176,7 +184,7 @@ class InventoryValueController extends Controller {
         ob_end_clean();
         // We'll be outputting an excel file
         header('Content-type: application/vnd.ms-excel');
-        header('Content-Disposition: attachment;filename="Laporan Nilai Persediaan.xls"');
+        header('Content-Disposition: attachment;filename="laporan_nilai_persediaan.xls"');
         header('Cache-Control: max-age=0');
         
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');

@@ -75,7 +75,7 @@ Yii::app()->clientScript->registerCss('_report', '
                             <td><?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($stockRow['transaction_date']))); ?></td>
                             <td><?php echo CHtml::link($transactionNumber, Yii::app()->createUrl("report/payableLedger/redirectTransaction", array("codeNumber" => $transactionNumber)), array('target' => '_blank')); ?></td>
                             <td><?php echo CHtml::encode($stockRow['transaction_type']); ?></td>
-                            <td><?php echo CHtml::encode($stockRow['name']); ?></td>
+                            <td><?php echo CHtml::encode($stockRow['warehouse']); ?></td>
                             <td style="text-align: center"><?php echo Yii::app()->numberFormatter->format('#,##0', $stockIn); ?></td>
                             <td style="text-align: center"><?php echo Yii::app()->numberFormatter->format('#,##0', $stockOut); ?></td>
                             <td style="text-align: center"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $stock)); ?></td>

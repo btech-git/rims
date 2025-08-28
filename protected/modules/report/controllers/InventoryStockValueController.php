@@ -218,22 +218,22 @@ class InventoryStockValueController extends Controller {
         $worksheet->setCellValue('A1', 'Raperind Motor');
         $worksheet->setCellValue('A2', 'Quantity dan Nilai Stok');
 
-        $column = 'I'; 
+        $column = 'G'; 
         $worksheet->setCellValue('A5', 'ID');
         $worksheet->setCellValue('B5', 'Code');
         $worksheet->setCellValue('C5', 'Name');
         $worksheet->setCellValue('D5', 'Brand');
-        $worksheet->setCellValue('E5', 'Sub Brand');
-        $worksheet->setCellValue('F5', 'Sub Brand Series');
-        $worksheet->setCellValue('G5', 'Category');
-        $worksheet->setCellValue('H5', 'Unit');
+        $worksheet->setCellValue('E5', 'Category');
+        $worksheet->setCellValue('F5', 'Satuan');
         foreach ($branches as $branch) {
-            $worksheet->setCellValue("{$column}5", CHtml::value($branch, 'code'));
+            $worksheet->setCellValue("{$column}5", 'Stok ' . CHtml::value($branch, 'code'));
+            $column++;
+            $worksheet->setCellValue("{$column}5", 'Value ' . CHtml::value($branch, 'code'));
             $column++;
         }
-        $worksheet->setCellValue("{$column}5", 'Total');
+        $worksheet->setCellValue("{$column}5", 'Total Stok');
         $column++;
-        $worksheet->setCellValue("{$column}5", 'Value');
+        $worksheet->setCellValue("{$column}5", 'Value Stok');
 
         $worksheet->getStyle("A5:{$column}5")->getFont()->setBold(true);
         $worksheet->getStyle("A5:{$column}5")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
@@ -247,15 +247,13 @@ class InventoryStockValueController extends Controller {
             $totalStock = 0;
             $totalAmount = 0; 
 
-            $column = 'I'; 
-            $worksheet->setCellValue("A{$counter}", CHtml::encode(CHtml::value($header, 'id')));
-            $worksheet->setCellValue("B{$counter}", CHtml::encode(CHtml::value($header, 'manufacturer_code')));
-            $worksheet->setCellValue("C{$counter}", CHtml::encode(CHtml::value($header, 'name')));
-            $worksheet->setCellValue("D{$counter}", CHtml::encode(CHtml::value($header, 'brand.name')));
-            $worksheet->setCellValue("E{$counter}", CHtml::encode(CHtml::value($header, 'subBrand.name')));
-            $worksheet->setCellValue("F{$counter}", CHtml::encode(CHtml::value($header, 'subBrandSeries.name')));
-            $worksheet->setCellValue("G{$counter}", CHtml::encode(CHtml::value($header, 'masterSubCategoryCode')));
-            $worksheet->setCellValue("H{$counter}", CHtml::encode(CHtml::value($header, 'unit.name')));
+            $column = 'G'; 
+            $worksheet->setCellValue("A{$counter}", CHtml::value($header, 'id'));
+            $worksheet->setCellValue("B{$counter}", CHtml::value($header, 'manufacturer_code'));
+            $worksheet->setCellValue("C{$counter}", CHtml::value($header, 'name'));
+            $worksheet->setCellValue("D{$counter}", CHtml::value($header, 'brand.name') . ' - ' . CHtml::value($header, 'subBrand.name') . ' - ' . CHtml::value($header, 'subBrandSeries.name'));
+            $worksheet->setCellValue("E{$counter}", CHtml::value($header, 'masterSubCategoryCode'));
+            $worksheet->setCellValue("F{$counter}", CHtml::value($header, 'unit.name'));
             foreach ($branches as $branch) {
                 $stockValue = 0;
                 $stockAmount = 0;
@@ -265,14 +263,16 @@ class InventoryStockValueController extends Controller {
                         $stockAmount = CHtml::value($inventoryTotalQuantities[$i], 'stock_amount');
                     }
                 }
-                $worksheet->setCellValue("{$column}{$counter}", CHtml::encode($stockValue) . ' - ' . CHtml::encode($stockAmount));
+                $worksheet->setCellValue("{$column}{$counter}", $stockValue);
+                $column++;
+                $worksheet->setCellValue("{$column}{$counter}", $stockAmount);
+                $column++;
                 $totalStock += $stockValue;
                 $totalAmount += $stockAmount;
-                $column++;
             }
-            $worksheet->setCellValue("{$column}{$counter}", CHtml::encode($totalStock));
+            $worksheet->setCellValue("{$column}{$counter}", $totalStock);
             $column++;
-            $worksheet->setCellValue("{$column}{$counter}", CHtml::encode($totalAmount));
+            $worksheet->setCellValue("{$column}{$counter}", $totalAmount);
 
             $counter++;
 
@@ -287,7 +287,7 @@ class InventoryStockValueController extends Controller {
         ob_end_clean();
 
         header('Content-type: application/vnd.ms-excel');
-        header('Content-Disposition: attachment;filename="Quantity dan Nilai Stok.xls"');
+        header('Content-Disposition: attachment;filename="quantity_dan_nilai_stok.xls"');
         header('Cache-Control: max-age=0');
 
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');

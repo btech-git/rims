@@ -12,13 +12,13 @@
             <?php foreach ($branches as $branch): ?>
                 <th style="text-align: center"><?php echo CHtml::encode(CHtml::value($branch, 'code')); ?></th>
             <?php endforeach; ?>
-            <th style="text-align: center">Stock</th>
+            <th style="text-align: center">All Cabang</th>
         </tr>
     </thead>
     
     <tbody>
         <?php foreach ($productSubCategoryDataProvider->data as $productSubCategory): ?>
-            <?php $inventoryTotalQuantities = $productSubCategory->getInventoryTotalQuantities(); ?>
+            <?php $inventoryTotalValues = $productSubCategory->getInventoryTotalValues(); ?>
             <?php $totalStock = 0; ?>
             <tr>
                 <td><?php echo CHtml::encode(CHtml::value($productSubCategory, 'productMasterCategory.name')); ?></td>
@@ -27,17 +27,17 @@
                 
                 <?php foreach ($branches as $branch): ?>
                     <?php $stockValue = 0; ?>
-                    <?php foreach ($inventoryTotalQuantities as $i => $inventoryTotalQuantity): ?>
-                        <?php if ($inventoryTotalQuantity['branch_id'] == $branch->id): ?>
-                            <?php $stockValue = CHtml::value($inventoryTotalQuantities[$i], 'total_stock'); ?>
+                    <?php foreach ($inventoryTotalValues as $i => $inventoryTotalValue): ?>
+                        <?php if ($inventoryTotalValue['branch_id'] == $branch->id): ?>
+                            <?php $stockValue = CHtml::value($inventoryTotalValues[$i], 'total_value'); ?>
                             <?php break; ?>
                         <?php endif; ?>
                     <?php endforeach; ?>
-                    <td style="text-align: center"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $stockValue)); ?></td>
+                    <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $stockValue)); ?></td>
                     <?php $totalStock += $stockValue; ?>
                 <?php endforeach; ?>
                         
-                <td style="text-align: center"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $totalStock)); ?></td>
+                <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $totalStock)); ?></td>
             </tr>
         <?php endforeach; ?>
     </tbody>
