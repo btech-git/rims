@@ -21,11 +21,15 @@
  * @property string $quantity_receive
  * @property string $quantity_receive_left
  * @property string $note
+ * @property integer $sale_package_header_id
+ * @property integer $sale_package_detail_id
  *
  * The followings are the available model relations:
  * @property MovementOutDetail[] $movementOutDetails
  * @property RegistrationTransaction $registrationTransaction
  * @property Product $product
+ * @property SalePackageHeader $salePackageHeader
+ * @property SalePackageDetail $salePackageDetail
  */
 class RegistrationProduct extends CActiveRecord {
 
@@ -56,14 +60,14 @@ class RegistrationProduct extends CActiveRecord {
         // will receive user inputs.
         return array(
             array('quantity, sale_price, total_price', 'required'),
-            array('registration_transaction_id, product_id, is_material', 'numerical', 'integerOnly' => true),
+            array('registration_transaction_id, product_id, is_material, sale_package_header_id, sale_package_detail_id', 'numerical', 'integerOnly' => true),
             array('retail_price, hpp, sale_price, discount, total_price, recommended_selling_price', 'length', 'max' => 18),
             array('discount_type', 'length', 'max' => 30),
             array('note', 'length', 'max' => 100),
             array('quantity, quantity_movement, quantity_movement_left, quantity_receive, quantity_receive_left', 'length', 'max' => 10),
             // The following rule is used by search().
             // Please remove those attributes that should not be searched.
-            array('id, registration_transaction_id, product_id, quantity, retail_price, hpp, sale_price, discount, total_price, discount_type, transaction_number, quantity_movement, quantity_movement_left, is_material, quantity_receive, quantity_receive_left, recommended_selling_price, note', 'safe', 'on' => 'search'),
+            array('id, registration_transaction_id, product_id, quantity, retail_price, hpp, sale_price, discount, total_price, discount_type, transaction_number, quantity_movement, quantity_movement_left, is_material, quantity_receive, quantity_receive_left, recommended_selling_price, note, sale_package_header_id, sale_package_detail_id', 'safe', 'on' => 'search'),
         );
     }
 
@@ -77,6 +81,8 @@ class RegistrationProduct extends CActiveRecord {
             'movementOutDetails' => array(self::HAS_MANY, 'MovementOutDetail', 'registration_product_id'),
             'registrationTransaction' => array(self::BELONGS_TO, 'RegistrationTransaction', 'registration_transaction_id'),
             'product' => array(self::BELONGS_TO, 'Product', 'product_id'),
+            'salePackageHeader' => array(self::BELONGS_TO, 'SalePackageHeader', 'sale_package_header_id'),
+            'salePackageDetail' => array(self::BELONGS_TO, 'SalePackageDetail', 'sale_package_detail_id'),
         );
     }
 
