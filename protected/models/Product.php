@@ -670,7 +670,7 @@ class Product extends CActiveRecord {
             $params[':branch_id'] = $branchId;
         }
         
-        $sql = "SELECT i.transaction_number, i.transaction_date, i.transaction_type, i.notes, i.stock_in, i.stock_out, w.name, i.purchase_price
+        $sql = "SELECT i.transaction_number, i.transaction_date, i.transaction_type, i.notes, i.stock_in, i.stock_out, w.name AS warehouse, i.purchase_price
                 FROM " . InventoryDetail::model()->tableName() . " i
                 INNER JOIN " . Warehouse::model()->tableName() . " w ON w.id = i.warehouse_id
                 WHERE i.transaction_date BETWEEN :start_date AND :end_date AND i.product_id = :product_id AND w.status = 'Active'" . $branchConditionSql . "
