@@ -196,6 +196,27 @@ class ProductSubCategory extends CActiveRecord {
         ));
     }
 
+    public function searchByInventoryValueReport() {
+
+        $criteria = new CDbCriteria;
+
+        $criteria->compare('t.id', $this->id);
+        $criteria->compare('t.product_master_category_id', $this->product_master_category_id);
+        $criteria->compare('t.product_sub_master_category_id', $this->product_sub_master_category_id);
+        $criteria->compare('t.code', $this->code, true);
+        $criteria->compare('t.name', $this->name, true);
+        $criteria->compare('t.description', $this->description, true);
+        $criteria->compare('t.status', $this->status, true);
+
+        return new CActiveDataProvider($this, array(
+            'criteria' => $criteria,
+            'pagination' => array(
+                'pageSize' => 500,
+//                'currentPage' => $pageNumber - 1,
+            ),
+        ));
+    }
+
     public function getInventoryTotalQuantityData($productMasterCategoryId, $productSubMasterCategoryId) {
         $productMasterCategoryConditionSql = '';
         $productSubMasterCategoryConditionSql = '';
@@ -232,6 +253,19 @@ class ProductSubCategory extends CActiveRecord {
     public function getInventoryTotalQuantities() {
         $sql = "SELECT w.branch_id, COALESCE(SUM(i.total_stock), 0) AS total_stock
                 FROM " . Inventory::model()->tableName() . " i
+                INNER JOIN " . Warehouse::model()->tableName() . " w ON w.id = i.warehouse_id
+                INNER JOIN " . Product::model()->tableName() . " p ON p.id = i.product_id
+                WHERE p.product_sub_category_id = :product_sub_category_id AND w.status = 'Active'
+                GROUP BY w.branch_id";
+
+        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, array(':product_sub_category_id' => $this->id));
+
+        return $resultSet;
+    }
+
+    public function getInventoryTotalValues() {
+        $sql = "SELECT w.branch_id, COALESCE(SUM((i.stock_in + i.stock_out) * i.purchase_price), 0) AS total_value
+                FROM " . InventoryDetail::model()->tableName() . " i
                 INNER JOIN " . Warehouse::model()->tableName() . " w ON w.id = i.warehouse_id
                 INNER JOIN " . Product::model()->tableName() . " p ON p.id = i.product_id
                 WHERE p.product_sub_category_id = :product_sub_category_id AND w.status = 'Active'
