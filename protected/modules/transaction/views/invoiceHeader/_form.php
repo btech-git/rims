@@ -111,17 +111,20 @@
                         </div>
                     </div>
                 </div>
-            </div> <!-- close for <div class="small-12 medium-6 columns"> -->
-        </div><!-- close for <div class="row"> -->
+            </div>
+        </div>
+        
         <div class="row">
-            <div class="field">
-                <div class="row collapse">
-                    <div class="small-4 columns">
-                        <?php echo $form->labelEx($invoice->header, 'note', array('class' => 'prefix')); ?>
-                    </div>
-                    <div class="small-8 columns">
-                        <?php echo $form->textArea($invoice->header, 'note', array('rows' => 6, 'cols' => 50)); ?>
-                        <?php echo $form->error($invoice->header, 'note'); ?>
+            <div class="small-12 medium-12 columns">
+                <div class="field">
+                    <div class="row collapse">
+                        <div class="medium-2 columns">
+                            <?php echo $form->labelEx($invoice->header, 'note', array('class' => 'prefix')); ?>
+                        </div>
+                        <div class="medium-10 columns">
+                            <?php echo $form->textArea($invoice->header, 'note', array('rows' => 3, 'cols' => 50)); ?>
+                            <?php echo $form->error($invoice->header, 'note'); ?>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -148,10 +151,10 @@
                 <div class="field">
                     <div class="row collapse">
                         <div class="small-4 columns">
-                            <?php echo $form->labelEx($invoice->header, 'quick_service_price', array('class' => 'prefix')); ?>
+                            <?php echo $form->labelEx($invoice->header, 'Paket', array('class' => 'prefix')); ?>
                         </div>
                         <div class="small-8 columns">
-                            <?php echo number_format(CHtml::encode(CHtml::value($invoice->header, 'quick_service_price')), 2); ?>
+                            <?php echo number_format(CHtml::encode(CHtml::value($invoice->header, 'package_price')), 2); ?>
                         </div>
                     </div>
                 </div>
@@ -176,7 +179,20 @@
                             <?php echo number_format(CHtml::encode(CHtml::value($invoice->header, 'product_price')), 2); ?>
                         </div>
                     </div>
-                </div>		
+                </div>
+            </div>
+
+            <div class="small-12 medium-6 columns">
+                <div class="field">
+                    <div class="row collapse">
+                        <div class="small-4 columns">
+                            <label for="" class="prefix">Sub Total</label>
+                        </div>
+                        <div class="small-8 columns">
+                            <?php echo number_format(CHtml::encode(CHtml::value($invoice->header, 'subTotal')), 2); ?>
+                        </div>
+                    </div>
+                </div>
 
                 <div class="field">
                     <div class="row collapse">
@@ -188,17 +204,6 @@
                         </div>
                     </div>
                 </div>
-
-<!--                <div class="field">
-                    <div class="row collapse">
-                        <div class="small-4 columns">
-                            <label for="" class="prefix">PPH (2%)</label>
-                        </div>
-                        <div class="small-8 columns">
-                            <?php //echo number_format(CHtml::encode(CHtml::value($invoice->header, 'pph_total')), 2); ?>
-                        </div>
-                    </div>
-                </div>-->
 
                 <div class="field">
                     <div class="row collapse">
@@ -217,8 +222,8 @@
                 </div>
                 <?php echo IdempotentManager::generate(); ?>
 
-            </div> <!-- close for <div class="small-12 medium-6 columns"> after detail -->
-        </div> <!-- close for <div class="row"> after detail -->
+            </div>
+        </div>
 
         <?php $this->endWidget(); ?>
     </div><!-- form -->

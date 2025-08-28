@@ -1,7 +1,7 @@
 <?php if (count($invoice->details) != 0): ?>
     <table>
         <thead>
-            <th>Product/Service</th>
+            <th>Product / Service / Paket</th>
             <th>Quantity</th>
             <th>Unit Price</th>
             <!--<th>Discount</th>-->
@@ -18,9 +18,9 @@
                     <?php elseif ($detail->service_id != ""): ?>
                             <?php echo CHtml::activeHiddenField($detail, "[$i]service_id"); ?>
                         <td><?php echo $detail->service->name; ?></td>
-                    <?php elseif ($detail->quick_service_id != ""): ?>
-                            <?php echo CHtml::activeHiddenField($detail, "[$i]quick_service_id"); ?>
-                        <td><?php echo $detail->quickService->name; ?></td>
+                    <?php elseif ($detail->sale_package_header_id != ""): ?>
+                            <?php echo CHtml::activeHiddenField($detail, "[$i]sale_package_header_id"); ?>
+                        <td><?php echo $detail->salePackageHeader->name; ?></td>
                     <?php endif; ?>
                     <td style="text-align: center">
                         <?php echo CHtml::activeHiddenField($detail, "[$i]quantity"); ?>

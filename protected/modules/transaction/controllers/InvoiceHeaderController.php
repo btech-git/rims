@@ -105,22 +105,6 @@ class InvoiceHeaderController extends Controller {
                     $valid = $jurnalUmumPpn->save() && $valid;
                 }
 
-    //            if ($model->pph_price > 0.00) {
-    //                $coaPph = Coa::model()->findByAttributes(array('code' => '224.00.004'));
-    //                $jurnalUmumPpn = new JurnalUmum;
-    //                $jurnalUmumPpn->kode_transaksi = $model->transaction_number;
-    //                $jurnalUmumPpn->tanggal_transaksi = $model->transaction_date;
-    //                $jurnalUmumPpn->coa_id = $coaPph->id;
-    //                $jurnalUmumPpn->branch_id = $model->branch_id;
-    //                $jurnalUmumPpn->total = $model->pph_price;
-    //                $jurnalUmumPpn->debet_kredit = 'D';
-    //                $jurnalUmumPpn->tanggal_posting = date('Y-m-d');
-    //                $jurnalUmumPpn->transaction_subject = $transactionSubject;
-    //                $jurnalUmumPpn->is_coa_category = 0;
-    //                $jurnalUmumPpn->transaction_type = $transactionType;
-    //                $jurnalUmumPpn->save();
-    //            }
-
                 foreach ($model->invoiceDetails as $key => $detail) {
                     if (!empty($detail->product_id)) {
                         $total = $detail->product->averageCogs * $detail->quantity;
@@ -162,6 +146,12 @@ class InvoiceHeaderController extends Controller {
                             $journalReferences[$jurnalUmumDiscountPendapatanJasa]['is_coa_category'] = 0;
                             $journalReferences[$jurnalUmumDiscountPendapatanJasa]['values'][] = $detail->discount;
                         }
+                    } elseif (!empty($detail->sale_package_header_id)) { 
+
+                        $jurnalUmumPendapatanPaket = 3008; 
+                        $journalReferences[$jurnalUmumPendapatanPaket]['debet_kredit'] = 'K';
+                        $journalReferences[$jurnalUmumPendapatanPaket]['is_coa_category'] = 0;
+                        $journalReferences[$jurnalUmumPendapatanPaket]['values'][] = $detail->total_price;
                     } else {
                         continue;
                     }
@@ -510,10 +500,10 @@ class InvoiceHeaderController extends Controller {
      */
     public function actionCreate($registrationId) {
 
-        $invoiceHeader = InvoiceHeader::model()->findByAttributes(array('registration_transaction_id' => $registrationId));
-        if ($invoiceHeader !== null) {
-            $this->redirect(array('view', 'id' => $invoiceHeader->id));
-        }
+//        $invoiceHeader = InvoiceHeader::model()->findByAttributes(array('registration_transaction_id' => $registrationId));
+//        if ($invoiceHeader !== null) {
+//            $this->redirect(array('view', 'id' => $invoiceHeader->id));
+//        }
         
         $invoice = $this->instantiate(null, 'create');
 
@@ -537,6 +527,7 @@ class InvoiceHeaderController extends Controller {
         $invoice->header->ppn_total = $registrationTransaction->ppn_price;
         $invoice->header->ppn = ($registrationTransaction->ppn_price > 0) ? 1 : 0;
         $invoice->header->tax_percentage = $registrationTransaction->tax_percentage;
+        $invoice->header->package_price = $registrationTransaction->total_price_package;
         $invoice->header->payment_date_estimate = date('Y-m-d');
         $invoice->header->coa_bank_id_estimate = null;
         $invoice->header->created_datetime = date('Y-m-d H:i:s');
@@ -596,6 +587,26 @@ class InvoiceHeaderController extends Controller {
         }
 
         $this->render('update', array(
+            'invoice' => $invoice,
+        ));
+    }
+
+    public function actionUpdateTaxNumber($id) {
+        $invoice = $this->loadModel($id);
+        
+        if (isset($_POST['Cancel'])) {
+            $this->redirect(array('admin'));
+        }
+
+        if (isset($_POST['InvoiceHeader']) && IdempotentManager::check()) {
+            $invoice->transaction_tax_number = $_POST['InvoiceHeader']['transaction_tax_number'];
+            
+            if ($invoice->update(array('transaction_tax_number'))) {
+                $this->redirect(array('view', 'id' => $invoice->id));
+            }
+        }
+
+        $this->render('updateTaxNumber', array(
             'invoice' => $invoice,
         ));
     }

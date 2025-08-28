@@ -48,7 +48,10 @@ class Invoices extends CComponent {
         }//end if
         elseif ($requestType == 2) {
 
-            $registrationProducts = RegistrationProduct::model()->findAllByAttributes(array('registration_transaction_id' => $requestId));
+            $registrationProducts = RegistrationProduct::model()->findAll(array(
+                'condition' => 'registration_transaction_id = :registration_transaction_id AND sale_package_detail_id IS NULL', 
+                'params' => array(':registration_transaction_id' => $requestId)
+            ));
             if (count($registrationProducts) != 0) {
                 foreach ($registrationProducts as $key => $registrationProduct) {
                     $detail = new InvoiceDetail();
@@ -60,6 +63,7 @@ class Invoices extends CComponent {
                     $this->details[] = $detail;
                 }
             }
+            
             $registrationServices = RegistrationService::model()->findAllByAttributes(array('registration_transaction_id' => $requestId));
             if (count($registrationServices) != 0) {
                 foreach ($registrationServices as $key => $registrationService) {
@@ -72,14 +76,15 @@ class Invoices extends CComponent {
                     $this->details[] = $detail;
                 }
             }
-            $registrationQuickServices = RegistrationQuickService::model()->findAllByAttributes(array('registration_transaction_id' => $requestId));
-            if (count($registrationQuickServices) != 0) {
-                foreach ($registrationQuickServices as $registrationQuickService) {
+            
+            $registrationPackages = RegistrationPackage::model()->findAllByAttributes(array('registration_transaction_id' => $requestId));
+            if (count($registrationPackages) != 0) {
+                foreach ($registrationPackages as $registrationPackage) {
                     $detail = new InvoiceDetail();
-                    $detail->quick_service_id = $registrationQuickService->quick_service_id;
-                    $detail->quantity = 1;
-                    $detail->unit_price = $registrationQuickService->price;
-                    $detail->total_price = $registrationQuickService->price;
+                    $detail->sale_package_header_id = $registrationPackage->sale_package_header_id;
+                    $detail->quantity = $registrationPackage->quantity;
+                    $detail->unit_price = $registrationPackage->price;
+                    $detail->total_price = $registrationPackage->total_price;
                     $this->details[] = $detail;
                 }
             }
@@ -144,8 +149,8 @@ class Invoices extends CComponent {
             $this->header->is_new_customer = $invoiceHeader === null ? 1 : 0;
         }
         
-        $this->header->total_price = $registrationTransaction->subtotal_product + $registrationTransaction->subtotal_service + $registrationTransaction->ppn_price;
-        $this->header->payment_date_estimate = $this->header->due_date;
+//        $this->header->total_price = $registrationTransaction->subtotal_product + $registrationTransaction->subtotal_service + $registrationTransaction->ppn_price;
+//        $this->header->payment_date_estimate = $this->header->due_date;
         $this->header->total_discount = $this->getTotalDiscount();
         $valid = $this->header->save();
 
@@ -177,12 +182,16 @@ class Invoices extends CComponent {
         }
 
         $journalReferences = array();
-        $registrationProducts = RegistrationProduct::model()->findAllByAttributes(array(
-            'registration_transaction_id' => $this->header->registration_transaction_id
+        $registrationProducts = RegistrationProduct::model()->findAll(array(
+            'condition' => 'registration_transaction_id = :registration_transaction_id AND sale_package_detail_id IS NULL', 
+            'params' => array(':registration_transaction_id' => $this->header->registration_transaction_id)
         ));
         $registrationServices = RegistrationService::model()->findAllByAttributes(array(
             'registration_transaction_id' => $this->header->registration_transaction_id,
             'is_quick_service' => 0
+        ));
+        $registrationPackages = RegistrationPackage::model()->findAllByAttributes(array(
+            'registration_transaction_id' => $this->header->registration_transaction_id,
         ));
         
         $jurnalUmumReceivable = new JurnalUmum;
@@ -227,7 +236,7 @@ class Invoices extends CComponent {
                 $journalReferences[$jurnalUmumPenjualan]['debet_kredit'] = 'K';
                 $journalReferences[$jurnalUmumPenjualan]['is_coa_category'] = 0;
                 $journalReferences[$jurnalUmumPenjualan]['values'][] = $rProduct->sale_price * $rProduct->quantity;
-
+ 
                 $jurnalUmumOutstandingPart = $rProduct->product->productSubMasterCategory->coa_outstanding_part_id;
                 $journalReferences[$jurnalUmumOutstandingPart]['debet_kredit'] = 'K';
                 $journalReferences[$jurnalUmumOutstandingPart]['is_coa_category'] = 0;
@@ -255,6 +264,15 @@ class Invoices extends CComponent {
                     $journalReferences[$jurnalUmumDiscountPendapatanJasa]['is_coa_category'] = 0;
                     $journalReferences[$jurnalUmumDiscountPendapatanJasa]['values'][] = $rService->discountAmount;
                 }
+            }
+        }
+
+        if ($registrationPackages > 0) {
+            foreach ($registrationPackages as $key => $rPackage) {
+                $jurnalUmumPendapatanPaket = 3008;
+                $journalReferences[$jurnalUmumPendapatanPaket]['debet_kredit'] = 'K';
+                $journalReferences[$jurnalUmumPendapatanPaket]['is_coa_category'] = 0;
+                $journalReferences[$jurnalUmumPendapatanPaket]['values'][] = $rPackage->price;
             }
         }
 
