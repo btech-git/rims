@@ -61,11 +61,8 @@ class AssetManagementController extends Controller {
     public function actionCreatePurchase() {
         $model = new AssetPurchase;
         $model->transaction_time = date('H:i:s');
-        $model->status = 'Draft';
+        $model->status = 'Approved';
         $model->user_id = Yii::app()->user->id;
-
-        // Uncomment the following line if AJAX validation is needed
-        // $this->performAjaxValidation($model);
 
         if (isset($_POST['Submit']) && IdempotentManager::check()) {
             $model->attributes = $_POST['AssetPurchase'];
@@ -125,9 +122,6 @@ class AssetManagementController extends Controller {
         $model->asset_purchase_id = $id;
         $model->transaction_time = date('H:i:s');
         $model->user_id = Yii::app()->user->id;
-
-        // Uncomment the following line if AJAX validation is needed
-        // $this->performAjaxValidation($model);
 
         if (isset($_POST['AssetSale']) && IdempotentManager::check()) {
             $model->attributes = $_POST['AssetSale'];
@@ -230,9 +224,6 @@ class AssetManagementController extends Controller {
         
         $assetDepreciation->addAsset();
         
-        // Uncomment the following line if AJAX validation is needed
-        // $this->performAjaxValidation($model);
-
         if (isset($_POST['Submit']) && IdempotentManager::check()) {
             $this->loadState($assetDepreciation);
             $assetDepreciation->header->generateCodeNumber(Yii::app()->dateFormatter->format('M', strtotime($assetDepreciation->header->transaction_date)), Yii::app()->dateFormatter->format('yyyy', strtotime($assetDepreciation->header->transaction_date)), 6);
@@ -254,9 +245,6 @@ class AssetManagementController extends Controller {
      */
     public function actionUpdate($id) {
         $model = $this->loadModel($id);
-
-        // Uncomment the following line if AJAX validation is needed
-        // $this->performAjaxValidation($model);
 
         if (isset($_POST['AssetPurchase']) && IdempotentManager::check()) {
             $model->attributes = $_POST['AssetPurchase'];
