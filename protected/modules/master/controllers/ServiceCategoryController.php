@@ -228,10 +228,11 @@ class ServiceCategoryController extends Controller {
      */
     public function actionAdmin() {
         $model = new ServiceCategory('search');
-        //$model->disableBehavior('SoftDelete');
         $model->unsetAttributes();  // clear any default values
-        if (isset($_GET['ServiceCategory']))
+        
+        if (isset($_GET['ServiceCategory'])) {
             $model->attributes = $_GET['ServiceCategory'];
+        }
 
         $this->render('admin', array(
             'model' => $model,

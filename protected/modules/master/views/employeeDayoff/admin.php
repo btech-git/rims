@@ -60,7 +60,7 @@ $('.search-form form').submit(function(){
             <div class="grid-view">
                 <?php $this->widget('zii.widgets.grid.CGridView', array(
                     'id' => 'employee-dayoff-grid',
-                    'dataProvider' => $model->search(),
+                    'dataProvider' => $modelApprovedDataprovider,
                     'filter' => $model,
                     // 'summaryText'=>'',
                     'template' => '{items}<div class="clearfix">{summary}{pager}</div>',
@@ -69,6 +69,13 @@ $('.search-form form').submit(function(){
                         'header' => '',
                     ),
                     'columns' => array(
+                        array(
+                            'name'=>'transaction_number', 
+                            'value'=>'CHtml::link($data->transaction_number, array("view", "id"=>$data->id))', 
+                            'type'=>'raw'
+                        ),
+                        'transaction_number',
+                        'date_created',
                         array('name' => 'employee_name', 'value' => '$data->employee->name'),
                         array(
                             'header'=>'Paid/Unpaid', 
@@ -89,15 +96,104 @@ $('.search-form form').submit(function(){
                             'name'=>'status',
                             'value'=>'$data->status',
                             'type'=>'raw',
-                            'filter'=>CHtml::activeDropDownList($model, 'status', array(
+                            'filter' => false,
+                        ),
+                        'user.username',
+//                        array(
+//                            'class' => 'CButtonColumn',
+//                        ),
+                    ),
+                )); ?>
+            </div>
+
+            <div class="grid-view">
+                <?php $this->widget('zii.widgets.grid.CGridView', array(
+                    'id' => 'employee-dayoff-grid',
+                    'dataProvider' => $modelDraftDataprovider,
+                    'filter' => $model,
+                    // 'summaryText'=>'',
+                    'template' => '{items}<div class="clearfix">{summary}{pager}</div>',
+                    'pager' => array(
+                        'cssFile' => false,
+                        'header' => '',
+                    ),
+                    'columns' => array(
+                        'transaction_number',
+                        'date_created',
+                        array('name' => 'employee_name', 'value' => '$data->employee->name'),
+                        array(
+                            'header'=>'Paid/Unpaid', 
+                            'name'=>'off_type',
+                            'value'=>'$data->off_type',
+                            'type'=>'raw',
+                            'filter'=>CHtml::activeDropDownList($model, 'off_type', array(
                                 ''=>'All',
-                                'Draft' => 'Draft',
-                                'Approved' => 'Approved',
+                                'Paid' => 'Paid',
+                                'Unpaid' => 'Unpaid',
                             )),
                         ),
+                        'day',
+                        'notes',
+                        'date_from',
+                        'date_to',
+                        array(
+                            'name'=>'status',
+                            'value'=>'$data->status',
+                            'type'=>'raw',
+                            'filter' => false,
+                        ),
+                        'user.username',
                         array(
                             'class' => 'CButtonColumn',
                         ),
+                    ),
+                )); ?>
+            </div>
+
+            <div class="grid-view">
+                <?php $this->widget('zii.widgets.grid.CGridView', array(
+                    'id' => 'employee-dayoff-grid',
+                    'dataProvider' => $modelRejectDataprovider,
+                    'filter' => $model,
+                    // 'summaryText'=>'',
+                    'template' => '{items}<div class="clearfix">{summary}{pager}</div>',
+                    'pager' => array(
+                        'cssFile' => false,
+                        'header' => '',
+                    ),
+                    'columns' => array(
+                        array(
+                            'name'=>'transaction_number', 
+                            'value'=>'CHtml::link($data->transaction_number, array("view", "id"=>$data->id))', 
+                            'type'=>'raw'
+                        ),
+                        'date_created',
+                        array('name' => 'employee_name', 'value' => '$data->employee->name'),
+                        array(
+                            'header'=>'Paid/Unpaid', 
+                            'name'=>'off_type',
+                            'value'=>'$data->off_type',
+                            'type'=>'raw',
+                            'filter'=>CHtml::activeDropDownList($model, 'off_type', array(
+                                ''=>'All',
+                                'Paid' => 'Paid',
+                                'Unpaid' => 'Unpaid',
+                            )),
+                        ),
+                        'day',
+                        'notes',
+                        'date_from',
+                        'date_to',
+                        array(
+                            'name'=>'status',
+                            'value'=>'$data->status',
+                            'type'=>'raw',
+                            'filter' => false,
+                        ),
+                        'user.username',
+//                        array(
+//                            'class' => 'CButtonColumn',
+//                        ),
                     ),
                 )); ?>
             </div>

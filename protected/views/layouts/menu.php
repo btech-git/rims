@@ -566,6 +566,11 @@
                         'url' => array('/master/employeeSchedule/index'), 
                         'visible' => Yii::app()->user->checkAccess('employeeScheduleView')
                     ),
+                    array(
+                        'label' => 'Absensi Karyawan Tahunan', 
+                        'url' => array('/report/employeeYearlyAttendance/summary'), 
+                        'visible' => Yii::app()->user->checkAccess('absencyReport')
+                    ),
                 ),
             )); ?>
         </li>

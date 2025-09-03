@@ -9,6 +9,7 @@
  * @property integer $number_of_days
  * @property integer $is_using_quota
  * @property integer $is_inactive
+ * @property integer $is_onsite
  *
  * The followings are the available model relations:
  * @property EmployeeDayoff[] $employeeDayoffs
@@ -39,11 +40,11 @@ class EmployeeOnleaveCategory extends CActiveRecord {
         // will receive user inputs.
         return array(
             array('name', 'required'),
-            array('number_of_days, is_using_quota, is_inactive', 'numerical', 'integerOnly' => true),
+            array('number_of_days, is_using_quota, is_inactive, is_onsite', 'numerical', 'integerOnly' => true),
             array('name', 'length', 'max' => 60),
             // The following rule is used by search().
             // Please remove those attributes that should not be searched.
-            array('id, name, number_of_days, is_using_quota, is_inactive', 'safe', 'on' => 'search'),
+            array('id, name, number_of_days, is_using_quota, is_inactive, is_onsite', 'safe', 'on' => 'search'),
         );
     }
 
@@ -67,7 +68,8 @@ class EmployeeOnleaveCategory extends CActiveRecord {
             'name' => 'Name',
             'number_of_days' => 'Number Of Days',
             'is_using_quota' => 'Is Using Quota',
-            'is_inactive' => 'Is Inactive',
+            'is_inactive' => 'Inactive',
+            'is_onsite' => 'On Site',
         );
     }
 

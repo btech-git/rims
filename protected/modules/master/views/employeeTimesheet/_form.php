@@ -50,6 +50,12 @@
         <?php echo $form->error($model, 'clock_out'); ?>
     </div>
 
+    <div class="row">
+        <?php echo $form->labelEx($model, 'remarks'); ?>
+        <?php echo $form->textField($model, 'remarks'); ?>
+        <?php echo $form->error($model, 'remarks'); ?>
+    </div>
+
     <div class="row buttons">
         <?php echo CHtml::submitButton($model->isNewRecord ? 'Create' : 'Save'); ?>
     </div>

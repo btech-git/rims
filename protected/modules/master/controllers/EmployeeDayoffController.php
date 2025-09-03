@@ -110,7 +110,7 @@ class EmployeeDayoffController extends Controller {
         $employee = new Employee('search');
         $employee->unsetAttributes();  // clear any default values
         if (isset($_GET['Employee'])) {
-            $employee->attributes = $_GET['Employe'];
+            $employee->attributes = $_GET['Employee'];
         }
 
         $employeeCriteria = new CDbCriteria;
@@ -258,9 +258,21 @@ class EmployeeDayoffController extends Controller {
         if (isset($_GET['EmployeeDayoff'])) {
             $model->attributes = $_GET['EmployeeDayoff'];
         }
+        
+        $modelDraftDataprovider = $model->search();
+        $modelDraftDataprovider->criteria->compare('t.status', 'Draft');
+
+        $modelApprovedDataprovider = $model->search();
+        $modelApprovedDataprovider->criteria->compare('t.status', 'Approved');
+
+        $modelRejectDataprovider = $model->search();
+        $modelRejectDataprovider->criteria->compare('t.status', 'Rejected');
 
         $this->render('admin', array(
             'model' => $model,
+            'modelDraftDataprovider' => $modelDraftDataprovider,
+            'modelApprovedDataprovider' => $modelApprovedDataprovider,
+            'modelRejectDataprovider' => $modelRejectDataprovider,
         ));
     }
 

@@ -10,6 +10,7 @@
  * @property string $clock_out
  * @property string $duration_late
  * @property string $duration_work
+ * @property string $duration_overtime
  * @property string $remarks
  * @property integer $employee_id
  * @property integer $employee_onleave_category_id
@@ -42,14 +43,14 @@ class EmployeeTimesheet extends CActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('date, clock_in, employee_id, duration_late, duration_work,employee_onleave_category_id', 'required'),
+            array('date, clock_in, employee_id, duration_late, duration_work, duration_overtime,employee_onleave_category_id', 'required'),
             array('employee_id, employee_onleave_category_id', 'numerical', 'integerOnly' => true),
-            array('duration_late, duration_work', 'length', 'max' => 18),
+            array('duration_late, duration_work, duration_overtime', 'length', 'max' => 18),
             array('remarks', 'length', 'max' => 50),
             array('clock_out', 'safe'),
             // The following rule is used by search().
             // Please remove those attributes that should not be searched.
-            array('id, date, clock_in, clock_out, employee_id, duration_late, duration_work, employee_onleave_category_id, remarks', 'safe', 'on' => 'search'),
+            array('id, date, clock_in, clock_out, employee_id, duration_late, duration_work, duration_overtime, employee_onleave_category_id, remarks', 'safe', 'on' => 'search'),
         );
     }
 
@@ -77,7 +78,9 @@ class EmployeeTimesheet extends CActiveRecord {
             'employee_id' => 'Employee',
             'duration_late' => 'Durasi Telat',
             'duration_work' => 'Durasi Kerja',
+            'duration_overtime' => 'Durasi Lembur',
             'employee_onleave_category_id' => 'Status',
+            'remarks' => 'Notes',
         );
     }
 
@@ -98,6 +101,7 @@ class EmployeeTimesheet extends CActiveRecord {
         $criteria->compare('employee_id', $this->employee_id);
         $criteria->compare('duration_late', $this->clock_in, true);
         $criteria->compare('duration_work', $this->clock_out, true);
+        $criteria->compare('duration_overtime', $this->clock_out, true);
 
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
@@ -123,6 +127,7 @@ class EmployeeTimesheet extends CActiveRecord {
         $criteria->compare('employee_id', $this->employee_id);
         $criteria->compare('duration_late', $this->clock_in, true);
         $criteria->compare('duration_work', $this->clock_out, true);
+        $criteria->compare('duration_overtime', $this->clock_out, true);
 
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
@@ -151,5 +156,22 @@ class EmployeeTimesheet extends CActiveRecord {
         $seconds = $durationWork > 0 ? $durationWork % 60 : 00;
 
         return str_pad($hours, 2, '0', STR_PAD_LEFT). ":" . str_pad($minutes, 2, '0', STR_PAD_LEFT). ":" . str_pad($seconds, 2, '0', STR_PAD_LEFT);
+    }
+    
+    public static function getEmployeeYearlyAttendance($employeeId, $year) {
+        
+        $sql = "SELECT t.employee_onleave_category_id, MONTH(t.date) as month, MAX(c.name) AS category_name, COUNT(*) AS days, COUNT(CASE WHEN t.duration_late > 300 THEN 0 ELSE NULL END) as late_days
+                FROM rims_employee_timesheet t 
+                INNER JOIN rims_employee_onleave_category c ON c.id = t.employee_onleave_category_id
+                WHERE t.employee_id = :employee_id AND YEAR(t.date) = :year
+                GROUP BY t.employee_onleave_category_id, MONTH(t.date)
+                ORDER BY t.employee_onleave_category_id ASC, month ASC";
+
+        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, array(
+            ':employee_id' => $employeeId,
+            ':year' => $year,
+        ));
+
+        return $resultSet;
     }
 }

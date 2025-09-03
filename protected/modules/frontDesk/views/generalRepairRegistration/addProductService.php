@@ -29,18 +29,19 @@ $this->breadcrumbs=array(
                     <div class="row">
                         <?php $this->widget('zii.widgets.jui.CJuiTabs', array(
                             'tabs' => array(
-                                'Customer Info' => array(
-                                    'id' => 'info1',
-                                    'content' => $this->renderPartial('_infoCustomer', array(
-                                        'generalRepairRegistration' => $generalRepairRegistration, 
-                                        'customer' => $customer,
-                                    ), true)
-                                ),
+//                                'Customer Info' => array(
+//                                    'id' => 'info1',
+//                                    'content' => $this->renderPartial('_infoCustomer', array(
+//                                        'generalRepairRegistration' => $generalRepairRegistration, 
+//                                        'customer' => $customer,
+//                                    ), true)
+//                                ),
                                 'Vehicle Info' => array(
                                     'id' => 'info2',
                                     'content' => $this->renderPartial('_infoVehicle', array(
                                         'generalRepairRegistration' => $generalRepairRegistration,
                                         'vehicle' => $vehicle,
+                                        'customer' => $customer,
                                     ), true)
                                 ),
                                 'Service Exception Rate' => array(
@@ -82,7 +83,7 @@ $this->breadcrumbs=array(
                                         <th>Car Mileage (KM)</th>
                                         <th>Branch</th>
                                         <th>User</th>
-                                        <th>PPn</th>
+                                        <th colspan="2">PPn</th>
                                         <!--<th>PPh</th>-->
                                         <?php if($generalRepairRegistration->header->work_order_number != ""): ?>
                                             <th>WO #</th>
@@ -116,6 +117,8 @@ $this->breadcrumbs=array(
                                                     }',
                                                 )),
                                             )); ?>
+                                        </td>
+                                        <td>
                                             <?php echo $form->dropDownList($generalRepairRegistration->header, 'tax_percentage', array(
                                                 0 => 0,
                                                 10 => 10,
@@ -157,13 +160,13 @@ $this->breadcrumbs=array(
                                 <br />
                             </div>
                             
-                            <div class="row">
+<!--                            <div class="row">
                                 <div class="medium-6 columns">
                                     <div id="detailQs">
                                         <div class="field">
                                             <div class="row collapse">
                                                 <div class="small-4 columns">
-                                                    <?php echo CHtml::activeCheckBox($generalRepairRegistration->header,'is_quick_service',array(
+                                                    <?php /*echo CHtml::activeCheckBox($generalRepairRegistration->header,'is_quick_service',array(
                                                         1 => 1,
                                                         'disabled' => $generalRepairRegistration->header->is_quick_service == 1 ? false : true, 
                                                         'onchange' => '
@@ -255,24 +258,24 @@ $this->breadcrumbs=array(
                                             </div>
                                         </div>
                                     </div> 
-                                    <!-- end of DetailQs -->
+                                     end of DetailQs 
                                 </div>
 
                                 <hr />
-                                <!-- DETAIL QUICK SERVICE -->
+                                 DETAIL QUICK SERVICE 
                                 <div class="medium-12 columns">
                                     <div class="detail">
                                         <div class="field" id="quickService">
                                             <div class="row collapse">
                                                 <div class="small-12 columns">
-                                                    <?php $this->renderPartial('_detailQuickService', array('generalRepairRegistration'=>$generalRepairRegistration)); ?>
+                                                    <?php $this->renderPartial('_detailQuickService', array('generalRepairRegistration'=>$generalRepairRegistration));*/ ?>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>								
                                 </div>
-                                <!-- END QUICK SERVICE -->
-                            </div>
+                                 END QUICK SERVICE 
+                            </div>-->
 
                             <div class="row">
                                 <div class="medium-12 columns">
@@ -331,6 +334,34 @@ $this->breadcrumbs=array(
                                         </div>
                                     </div>
 
+                                    <div class="field">
+                                        <div class="row collapse">
+                                            <div class="small-4 columns">
+                                                <label class="prefix">Paket Penjualan</label>
+                                            </div>
+                                            <div class="small-8 columns">
+                                                <?php echo CHtml::button('add Paket', array(
+                                                    'id' => 'sale-package-button',
+                                                    'name' => 'sale-package',
+                                                    'onclick' => 'jQuery("#sale-package-dialog").dialog("open"); return false;'
+                                                )); ?>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="detail-package">
+                                        <div class="field" id="package">
+                                            <div class="row collapse">
+                                                <div class="small-12 columns">
+                                                    <?php $this->renderPartial('_detailSalePackage', array(
+                                                        'generalRepairRegistration'=>$generalRepairRegistration,
+                                                        'branches' => $branches,
+                                                    )); ?>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
                                 </div>
                             </div>
                             <hr />
@@ -338,22 +369,21 @@ $this->breadcrumbs=array(
                                 <div class="field">
                                     <table>
                                         <tr>
-                                            <td><?php echo $form->labelEx($generalRepairRegistration->header,'total_quickservice'); ?></td>
-                                            <td style="text-align: right">
-                                                <?php echo $form->hiddenField($generalRepairRegistration->header,'total_quickservice',array('readonly'=>true)); ?>
-                                                <span id="total_quick_service_quantity">
-                                                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format("#,##0", CHtml::value($generalRepairRegistration->header,'total_quickservice'))); ?>                                                
+                                            <td><?php echo $form->labelEx($generalRepairRegistration->header,'Total Quantity Paket'); ?></td>
+                                            <td style="width: 10%; text-align: right">
+                                                <span id="quantity_sum">
+                                                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($generalRepairRegistration->header, 'total_quantity_package'))); ?>
                                                 </span>
-                                                <?php echo $form->error($generalRepairRegistration->header,'total_quickservice'); ?>
+                                                <?php echo $form->error($generalRepairRegistration->header,'total_quantity_package'); ?>
                                             </td>
                                             <td colspan="4">&nbsp;</td>
-                                            <td><?php echo $form->labelEx($generalRepairRegistration->header,'total_quickservice_price'); ?></td>
+                                            <td><?php echo $form->labelEx($generalRepairRegistration->header, 'Total Harga Paket'); ?></td>
                                             <td style="text-align: right">
-                                                <?php echo $form->hiddenField($generalRepairRegistration->header,'total_quickservice_price',array('size'=>18,'maxlength'=>18,'readonly'=>true, )); ?>
-                                                <span id="sub_total_quick_service">
-                                                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format("#,##0.00", CHtml::value($generalRepairRegistration->header,'total_quickservice_price'))); ?>
+                                                <?php //echo $form->hiddenField($generalRepairRegistration->header,'total_quickservice_price',array('size'=>18,'maxlength'=>18,'readonly'=>true, )); ?>
+                                                <span id="total_price_sum">
+                                                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format("#,##0.00", CHtml::value($generalRepairRegistration->header,'total_price_package'))); ?>
                                                 </span>
-                                                <?php echo $form->error($generalRepairRegistration->header,'total_quickservice_price'); ?>
+                                                <?php echo $form->error($generalRepairRegistration->header,'total_price_package'); ?>
                                             </td>
                                         </tr>
                                         <tr>
@@ -845,6 +875,68 @@ $this->breadcrumbs=array(
         )); ?>
     </div>
 </div>
+<?php echo CHtml::endForm(); ?>
+<?php $this->endWidget('zii.widgets.jui.CJuiDialog'); ?>
+
+<!-- Service Dialog and Grid -->
+<?php $this->beginWidget('zii.widgets.jui.CJuiDialog', array(
+    'id' => 'sale-package-dialog',
+    'options' => array(
+        'title' => 'Paket Penjualan',
+        'autoOpen' => false,
+        'width' => 'auto',
+        'modal' => true,
+    ),
+)); ?>
+<?php echo CHtml::beginForm(); ?>
+    <div class="row">
+        <div class="small-12 columns" style="padding-left: 0px; padding-right: 0px;">
+            <?php $this->widget('zii.widgets.grid.CGridView', array(
+                'id'=>'sale-package-grid',
+                'dataProvider'=>$salePackageDataProvider,
+                'filter'=>null,
+                'template' => '{items}<div class="clearfix">{summary}{pager}</div>',
+                'pager'=>array(
+                    'cssFile'=>false,
+                    'header'=>'',
+                ),
+                'selectionChanged'=>'js:function(id){
+                    $("#sale-package-dialog").dialog("close");
+                    $.ajax({
+                        type: "POST",
+                        url: "' . CController::createUrl('ajaxHtmlAddSalePackageDetail', array('id'=>$generalRepairRegistration->header->id,'packageId'=>'')). '" + $.fn.yiiGridView.getSelection(id),
+                        data: $("form").serialize(),
+                        success: function(html) {
+                            $("#package").html(html);
+                            $.ajax({
+                                type: "POST",
+                                dataType: "JSON",
+                                url: "' . CController::createUrl('ajaxJsonGrandTotal', array('id' => $generalRepairRegistration->header->id)). '",
+                                data: $("form").serialize(),
+                                success: function(data) {
+                                    $("#grand_total").html(data.grandTotal);
+                                },
+                            });
+                        },
+                    });
+
+                    $("#sale-package-grid").find("tr.selected").each(function(){
+                        $(this).removeClass( "selected" );
+                    });
+                }',
+                'columns'=>array(
+                    'name',
+                    'start_date',
+                    'end_date',
+                    array(
+                        'name'=>'price',
+                        'header' => 'Price',
+                        'value'=>'Yii::app()->numberFormatter->format("#,##0.00", $data->price)',
+                    ),
+                ),
+            )); ?>
+        </div>
+    </div>
 <?php echo CHtml::endForm(); ?>
 <?php $this->endWidget('zii.widgets.jui.CJuiDialog'); ?>
 

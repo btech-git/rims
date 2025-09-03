@@ -23,17 +23,31 @@ $this->menu=array(
         <?php $ccaction = Yii::app()->controller->action->id; ?>
         <a class="button cbutton right" style="margin-right:10px;" href="<?php echo Yii::app()->baseUrl.'/master/employeeDayoff/admin';?>"><span class="fa fa-th-list"></span>Manage EmployeeDayoff</a>
         <a class="button cbutton right" style="margin-right:10px;" href="<?php echo Yii::app()->createUrl('/master/'.$ccontroller.'/update',array('id'=>$model->id));?>"><span class="fa fa-edit"></span>Edit</a>
-        <?php echo CHtml::link('<span class="fa fa-edit"></span>Update Approval', Yii::app()->baseUrl.'/master/employeeDayoff/updateApproval?headerId=' . $model->id , array('class'=>'button cbutton right','style'=>'margin-right:10px', 'visible'=>Yii::app()->user->checkAccess("master.employeeDayoff.updateApproval"))) ?>
+        <?php echo CHtml::link('<span class="fa fa-check"></span>Approve / Reject', Yii::app()->baseUrl.'/master/employeeDayoff/updateApproval?headerId=' . $model->id , array(
+            'class'=>'button success right',
+            'style'=>'margin-right:10px', 
+            'target' => 'blank',
+        )); ?>
 
-        <?php echo CHtml::link('<span class="fa fa-edit"></span>Print Pengajuan Cuti', array("pdf", "id" => $model->id), array(
+        <?php echo CHtml::link('<span class="fa fa-print"></span>Print Pengajuan Cuti', array("pdf", "id" => $model->id), array(
             'class' => 'button warning right', 
             'style' => 'margin-right:10px', 
             'target' => 'blank'
-        )) ?>
+        )); ?>
 
         <?php $this->widget('zii.widgets.CDetailView', array(
             'data'=>$model,
             'attributes'=>array(
+                array(
+                    'label' => 'Pengajuan #',
+                    'name'=>'transaction_number',
+                    'value'=>$model->transaction_number,
+                ),
+                array(
+                    'label' => 'Tanggal Pengajuan',
+                    'name'=>'date_created',
+                    'value'=>$model->date_created,
+                ),
                 array(
                     'name'=>'employee_name',
                     'value'=>$model->employee->name
@@ -65,7 +79,35 @@ $this->menu=array(
                 ),
                 'notes',
                 'status',
+                array(
+                    'label' => 'User',
+                    'name'=>'user_id',
+                    'value'=>$model->user->username,
+                ),
             ),
         )); ?>
+    </div>
+    
+    <hr />
+    
+    <div>
+        <table>
+            <tr>
+                <td>Approval Type</td>
+                <td>Revision</td>
+                <td>Tanggal</td>
+                <td>Note</td>
+                <td>Supervisor</td>
+            </tr>
+            <?php foreach ($model->employeeDayoffApprovals as $detail): ?>
+            <tr>
+                <td><?php echo CHtml::encode(CHtml::value($detail, 'approval_type')); ?></td>
+                <td><?php echo CHtml::encode(CHtml::value($detail, 'revision')); ?></td>
+                <td><?php echo CHtml::encode(CHtml::value($detail, 'date')); ?></td>
+                <td><?php echo CHtml::encode(CHtml::value($detail, 'note')); ?></td>
+                <td><?php echo CHtml::encode(CHtml::value($detail, 'supervisor.username')); ?></td>
+            </tr>
+            <?php endforeach; ?>
+        </table>
     </div>
 </div>

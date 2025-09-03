@@ -7,13 +7,15 @@ class GeneralRepairRegistration extends CComponent {
     public $quickServiceDetails;
     public $serviceDetails;
     public $productDetails;
+    public $packageDetails;
 
-    public function __construct($actionType, $header, array $quickServiceDetails, array $serviceDetails, array $productDetails) {
+    public function __construct($actionType, $header, array $quickServiceDetails, array $serviceDetails, array $productDetails, array $packageDetails) {
         $this->actionType = $actionType;
         $this->header = $header;
         $this->quickServiceDetails = $quickServiceDetails;
         $this->serviceDetails = $serviceDetails;
         $this->productDetails = $productDetails;
+        $this->packageDetails = $packageDetails;
     }
 
     public function generateCodeNumber($currentMonth, $currentYear, $branchId) {
@@ -262,32 +264,30 @@ class GeneralRepairRegistration extends CComponent {
             $productDetail->retail_price = $product->retail_price;
             $productDetail->recommended_selling_price = $product->recommended_selling_price;
             $productDetail->sale_price = $product->retail_price;
+            $productDetail->sale_package_detail_id = null;
+            $productDetail->sale_package_header_id = null;
             $this->productDetails[] = $productDetail;
         }
-        
-//        $productArrays = array();
-//        $productArrays = $this->productDetails;
-//        $checkProduct = array();
-//        
-//        foreach ($productArrays as $productArray)
-//            $checkProduct[] = $productArray->product_id;
-//
-//        if (in_array($productId, $checkProduct))
-//            echo "Please select other Product, this is already added";
-//        else {
-//            $productDetail = new RegistrationProduct();
-//            $productDetail->product_id = $productId;
-//            $product = Product::model()->findByPk($productId);
-//            $productDetail->product_name = $product->name;
-//            $productDetail->retail_price = $product->retail_price;
-//            $productDetail->recommended_selling_price = $product->recommended_selling_price;
-//            $productDetail->sale_price = $product->retail_price;
-//            $this->productDetails[] = $productDetail;
-//        }
     }
 
     public function removeProductDetailAt($index) {
         array_splice($this->productDetails, $index, 1);
+    }
+
+    public function addPackageDetail($packageId) {
+        
+        $salePackageHeader = SalePackageHeader::model()->findByPk($packageId);
+
+        if ($salePackageHeader !== null) {
+            $registrationPackage = new RegistrationPackage();
+            $registrationPackage->sale_package_header_id = $packageId;
+            $registrationPackage->price = $salePackageHeader->price;
+            $this->packageDetails[] = $registrationPackage;
+        }
+    }
+
+    public function removePackageDetailAt($index) {
+        array_splice($this->packageDetails, $index, 1);
     }
 
     public function validate() {
@@ -475,7 +475,8 @@ class GeneralRepairRegistration extends CComponent {
         $this->header->grand_total = $this->grandTotalTransaction;
         $this->header->subtotal = $this->subTotalTransaction;
         $this->header->ppn_price = $this->taxItemAmount;
-//        $this->header->pph_price = $this->taxServiceAmount;
+        $this->header->total_quantity_package = $this->totalQuantityPackage;
+        $this->header->total_price_package = $this->totalPricePackage;
         $valid = $this->header->save(false);
         
 //        $bongkar = $sparepart = $ketok_las = $dempul = $epoxy = $cat = $pasang = $poles = $cuci = $finishing = 0;
@@ -618,6 +619,49 @@ class GeneralRepairRegistration extends CComponent {
             RegistrationProduct::model()->deleteAll($criteria);
         }
 
+        //save package detail
+        if (count($this->packageDetails) > 0) {
+            foreach ($this->packageDetails as $packageDetail) {
+                $packageDetail->registration_transaction_id = $this->header->id;
+                $packageDetail->total_price = $packageDetail->totalPrice;
+                $valid = $packageDetail->save(false) && $valid;
+            }
+            
+            $salePackageDetailIds = array();
+            foreach ($this->packageDetails as $packageDetail) {
+                foreach ($packageDetail->salePackageHeader->salePackageDetails as $salePackageDetail) {
+                    if ($salePackageDetail->product_id !== null && $salePackageDetail->service_id === null) {
+                        $salePackageDetailIds[] = $salePackageDetail->id;
+                    }
+                }
+            }
+            
+            RegistrationProduct::model()->deleteAll(array(
+                'condition' => 'sale_package_detail_id IN (' . implode(',', $salePackageDetailIds) . ') AND registration_transaction_id = :registration_transaction_id',
+                'params' => array(':registration_transaction_id' => $this->header->id),
+            ));
+            
+            foreach ($this->packageDetails as $packageDetail) {
+                foreach ($packageDetail->salePackageHeader->salePackageDetails as $salePackageDetail) {
+                    if ($salePackageDetail->product_id !== null && $salePackageDetail->service_id === null) {
+                        $registrationProduct = new RegistrationProduct();
+                        $registrationProduct->registration_transaction_id = $this->header->id;
+                        $registrationProduct->hpp = $salePackageDetail->product->hpp;
+                        $registrationProduct->product_id = $salePackageDetail->product_id;
+                        $registrationProduct->retail_price = $salePackageDetail->product->retail_price;
+                        $registrationProduct->recommended_selling_price = $salePackageDetail->product->recommended_selling_price;
+                        $registrationProduct->sale_price = $salePackageDetail->product->retail_price;
+                        $registrationProduct->quantity = $packageDetail->quantity * $salePackageDetail->quantity;
+                        $registrationProduct->total_price = $registrationProduct->quantity * $salePackageDetail->price;
+                        $registrationProduct->quantity_movement_left = $registrationProduct->quantity - $registrationProduct->quantity_movement;
+                        $registrationProduct->sale_package_detail_id = $salePackageDetail->id;
+                        $registrationProduct->sale_package_header_id = $salePackageDetail->sale_package_header_id;
+                        $valid = $valid && $registrationProduct->save(false);
+                    }
+                }
+            }
+        }
+
         $this->saveTransactionLog();
         
         return $valid;
@@ -753,8 +797,28 @@ class GeneralRepairRegistration extends CComponent {
         return $this->subTotalProduct; // - $this->totalDiscountProduct;
     }
 
+    public function getTotalQuantityPackage() {
+        $total = 0.00;
+
+        foreach ($this->packageDetails as $detail) {
+            $total += $detail->quantity;
+        }
+        
+        return $total;
+    }
+
+    public function getTotalPricePackage() {
+        $total = 0.00;
+
+        foreach ($this->packageDetails as $detail) {
+            $total += $detail->totalPrice;
+        }
+        
+        return $total;
+    }
+
     public function getSubTotalTransaction() {
-        return $this->subTotalQuickService + $this->grandTotalService + $this->grandTotalProduct;
+        return $this->totalPricePackage + $this->grandTotalService + $this->grandTotalProduct;
     }
 
     public function getTaxItemAmount() {
@@ -762,6 +826,6 @@ class GeneralRepairRegistration extends CComponent {
     }
 
     public function getGrandTotalTransaction() {
-        return $this->subTotalTransaction + $this->taxItemAmount; // - $this->taxServiceAmount;
+        return $this->subTotalTransaction + $this->taxItemAmount;
     }
 }

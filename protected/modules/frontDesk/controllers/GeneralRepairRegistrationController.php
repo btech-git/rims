@@ -96,20 +96,20 @@ class GeneralRepairRegistrationController extends Controller {
         $generalRepairRegistration->header->pph = 1;
         $generalRepairRegistration->header->pph_price = 0.00;
 
-        $qs = new QuickService('search');
-        $qs->unsetAttributes();  // clear any default values
-        if (isset($_GET['QuickService'])) {
-            $qs->attributes = $_GET['QuickService'];
-        }
-
-        $qsCriteria = new CDbCriteria;
-        $qsCriteria->compare('name', $qs->name, true);
-        $qsCriteria->compare('code', $qs->code, true);
-        $qsCriteria->compare('rate', $qs->rate, true);
-
-        $qsDataProvider = new CActiveDataProvider('QuickService', array(
-            'criteria' => $qsCriteria,
-        ));
+//        $qs = new QuickService('search');
+//        $qs->unsetAttributes();  // clear any default values
+//        if (isset($_GET['QuickService'])) {
+//            $qs->attributes = $_GET['QuickService'];
+//        }
+//
+//        $qsCriteria = new CDbCriteria;
+//        $qsCriteria->compare('name', $qs->name, true);
+//        $qsCriteria->compare('code', $qs->code, true);
+//        $qsCriteria->compare('rate', $qs->rate, true);
+//
+//        $qsDataProvider = new CActiveDataProvider('QuickService', array(
+//            'criteria' => $qsCriteria,
+//        ));
 
         $service = new Service('search');
         $service->unsetAttributes();  // clear any default values
@@ -154,6 +154,18 @@ class GeneralRepairRegistrationController extends Controller {
         $productDataProvider = $product->search();
         $productDataProvider->criteria->compare('t.status', 'Active');
 
+        $salePackage = new SalePackageHeader('search');
+        $salePackage->unsetAttributes();  // clear any default values
+
+        if (isset($_GET['SalePackageHeader'])) {
+            $salePackage->attributes = $_GET['SalePackageHeader'];
+        }
+        
+        $currentDate = date('Y-m-d');
+
+        $salePackageDataProvider = $salePackage->search();
+        $salePackageDataProvider->criteria->addCondition("'{$currentDate}' BETWEEN t.start_date AND t.end_date");
+
         if (isset($_POST['Cancel'])) {
             $this->redirect(array('view', 'id' => $generalRepairRegistration->header->id));
         }
@@ -172,12 +184,14 @@ class GeneralRepairRegistrationController extends Controller {
             'generalRepairRegistration' => $generalRepairRegistration,
             'vehicle' => $vehicle,
             'customer' => $customer,
-            'qs' => $qs,
-            'qsDataProvider' => $qsDataProvider,
+//            'qs' => $qs,
+//            'qsDataProvider' => $qsDataProvider,
             'service' => $service,
             'serviceDataProvider' => $serviceDataProvider,
             'product' => $product,
             'productDataProvider' => $productDataProvider,
+            'salePackage' => $salePackage,
+            'salePackageDataProvider' => $salePackageDataProvider,
             'serviceArray' => $serviceArray,
             'branches' => $branches,
         ));
@@ -209,8 +223,11 @@ class GeneralRepairRegistrationController extends Controller {
         $model = $this->loadModel($id);
         
         $memo = isset($_GET['Memo']) ? $_GET['Memo'] : '';
-        $products = RegistrationProduct::model()->findAllByAttributes(array('registration_transaction_id' => $id));
-        $quickServices = RegistrationQuickService::model()->findAllByAttributes(array('registration_transaction_id' => $id));
+        $products = RegistrationProduct::model()->findAll(array(
+            'condition' => 'registration_transaction_id = :registration_transaction_id AND sale_package_detail_id IS NULL', 
+            'params' => array(':registration_transaction_id' => $id)
+        ));
+        $packages = RegistrationPackage::model()->findAllByAttributes(array('registration_transaction_id' => $id));
         $services = RegistrationService::model()->findAllByAttributes(array(
             'registration_transaction_id' => $id,
             'is_body_repair' => 0
@@ -253,7 +270,7 @@ class GeneralRepairRegistrationController extends Controller {
 
         $this->render('view', array(
             'model' => $model,
-            'quickServices' => $quickServices,
+            'packages' => $packages,
             'services' => $services,
             'products' => $products,
             'registrationMemos' => $registrationMemos,
@@ -904,6 +921,24 @@ class GeneralRepairRegistrationController extends Controller {
         }
     }
 
+    public function actionAjaxHtmlAddSalePackageDetail($id, $packageId) {
+        if (Yii::app()->request->isAjaxRequest) {
+            $generalRepairRegistration = $this->instantiate($id, '');
+            $this->loadStateDetails($generalRepairRegistration);
+            $branches = Branch::model()->findAll();
+
+            $generalRepairRegistration->addPackageDetail($packageId);
+            Yii::app()->clientscript->scriptMap['jquery-ui.min.js'] = false;
+            Yii::app()->clientscript->scriptMap['jquery.yiigridview.js'] = false;
+            Yii::app()->clientscript->scriptMap['jquery.js'] = false;
+
+            $this->renderPartial('_detailSalePackage', array(
+                'generalRepairRegistration' => $generalRepairRegistration,
+                'branches' => $branches,
+            ), false, true);
+        }
+    }
+
     //Delete Phone Detail
     public function actionAjaxHtmlRemoveProductDetail($id, $index) {
         if (Yii::app()->request->isAjaxRequest) {
@@ -976,6 +1011,29 @@ class GeneralRepairRegistrationController extends Controller {
                 'subTotalTransaction' => $subTotalTransaction,
                 'taxItemAmount' => $taxItemAmount,
 //                'taxServiceAmount' => $taxServiceAmount,
+                'grandTotalTransaction' => $grandTotalTransaction,
+            ));
+        }
+    }
+
+    public function actionAjaxJsonTotalPackage($id, $index) {
+        if (Yii::app()->request->isAjaxRequest) {
+            $generalRepairRegistration = $this->instantiate($id, '');
+            $this->loadStateDetails($generalRepairRegistration);
+
+            $totalPrice = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($generalRepairRegistration->packageDetails[$index], 'totalPrice')));
+            $quantitySum = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $generalRepairRegistration->totalQuantityPackage));
+            $totalPriceSum = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $generalRepairRegistration->totalPricePackage));
+            $subTotalTransaction = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $generalRepairRegistration->subTotalTransaction));
+            $taxItemAmount = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $generalRepairRegistration->taxItemAmount));
+            $grandTotalTransaction = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $generalRepairRegistration->grandTotalTransaction));
+
+            echo CJSON::encode(array(
+                'totalPrice' => $totalPrice,
+                'quantitySum' => $quantitySum,
+                'totalPriceSum' => $totalPriceSum,
+                'subTotalTransaction' => $subTotalTransaction,
+                'taxItemAmount' => $taxItemAmount,
                 'grandTotalTransaction' => $grandTotalTransaction,
             ));
         }
@@ -1068,10 +1126,10 @@ class GeneralRepairRegistrationController extends Controller {
 
     public function instantiate($id, $actionType) {
         if (empty($id)) {
-            $generalRepairRegistration = new GeneralRepairRegistration($actionType, new RegistrationTransaction(), array(), array(), array());
+            $generalRepairRegistration = new GeneralRepairRegistration($actionType, new RegistrationTransaction(), array(), array(), array(), array());
         } else {
             $generalRepairRegistrationModel = $this->loadModel($id);
-            $generalRepairRegistration = new GeneralRepairRegistration($actionType, $generalRepairRegistrationModel, $generalRepairRegistrationModel->registrationQuickServices, $generalRepairRegistrationModel->registrationServices, $generalRepairRegistrationModel->registrationProducts);
+            $generalRepairRegistration = new GeneralRepairRegistration($actionType, $generalRepairRegistrationModel, $generalRepairRegistrationModel->registrationQuickServices, $generalRepairRegistrationModel->registrationServices, $generalRepairRegistrationModel->registrationProducts, $generalRepairRegistrationModel->registrationPackages);
         }
         return $generalRepairRegistration;
     }
@@ -1136,6 +1194,23 @@ class GeneralRepairRegistrationController extends Controller {
             }
         } else {
             $generalRepairRegistration->productDetails = array();
+        }
+
+        if (isset($_POST['RegistrationPackage'])) {
+            foreach ($_POST['RegistrationPackage'] as $i => $item) {
+                if (isset($generalRepairRegistration->packageDetails[$i])) {
+                    $generalRepairRegistration->packageDetails[$i]->attributes = $item;
+                } else {
+                    $detail = new RegistrationPackage();
+                    $detail->attributes = $item;
+                    $generalRepairRegistration->packageDetails[] = $detail;
+                }
+            }
+            if (count($_POST['RegistrationPackage']) < count($generalRepairRegistration->packageDetails)) {
+                array_splice($generalRepairRegistration->packageDetails, $i + 1);
+            }
+        } else {
+            $generalRepairRegistration->packageDetails = array();
         }
     }
 

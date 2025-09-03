@@ -216,6 +216,44 @@
                             </div>
                         </div>
                     </div>
+                    
+                    <div class="field">
+                        <div class="row collapse">
+                            <div class="small-4 columns">
+                                <label class="prefix"><?php echo $form->labelEx($employee->header, 'clock_in_time'); ?></label>
+                            </div>
+                            <div class="small-8 columns">
+                                <?php echo $form->dropDownList($employee->header, 'clock_in_time', array(
+                                    '06:00:00' => '06:00',
+                                    '06:30:00' => '06:30',
+                                    '07:00:00' => '07:00',
+                                    '07:30:00' => '07:30',
+                                    '08:00:00' => '08:00',
+                                    '08:30:00' => '08:30',
+                                ), array('prompt' => '[--Pilih Jam Masuk--]')); ?>
+                                <?php echo $form->error($employee->header, 'clock_in_time'); ?>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="field">
+                        <div class="row collapse">
+                            <div class="small-4 columns">
+                                <label class="prefix"><?php echo $form->labelEx($employee->header, 'clock_out_time'); ?></label>
+                            </div>
+                            <div class="small-8 columns">
+                                <?php echo $form->dropDownList($employee->header, 'clock_out_time', array(
+                                    '16:00:00' => '16:00',
+                                    '16:30:00' => '16:30',
+                                    '17:00:00' => '17:00',
+                                    '17:30:00' => '17:30',
+                                    '18:00:00' => '18:00',
+                                    '18:30:00' => '18:30',
+                                ), array('prompt' => '[--Pilih Jam Keluar --]')); ?>
+                                <?php echo $form->error($employee->header, 'clock_out_time'); ?>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </fieldset>

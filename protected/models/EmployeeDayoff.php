@@ -118,6 +118,15 @@ class EmployeeDayoff extends MonthlyTransactionActiveRecord {
 
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
+            'sort' => array(
+                'defaultOrder' => 't.date_from DESC',
+                'attributes' => array(
+                    '*',
+                ),
+            ),
+            'pagination' => array(
+                'pageSize' => 25,
+            ),
         ));
     }
 

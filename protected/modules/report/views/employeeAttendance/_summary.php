@@ -14,18 +14,21 @@
             <th style="text-align: center">ID</th>
             <th style="text-align: center">NIP</th>
             <th style="text-align: center">Nama</th>
-            <th style="text-align: center">Hadir</th>
-            <th style="text-align: center">Terlambat</th>
-            <th style="text-align: center">Libur</th>
-            <th style="text-align: center">Izin 1/2 hari</th>
-            <th style="text-align: center">Izin</th>
+            <th style="text-align: center">Kehadiran</th>
             <th style="text-align: center">Cuti</th>
+            <th style="text-align: center">Sakit</th>
+            <th style="text-align: center">Izin</th>
+            <th style="text-align: center">Libur</th>
+            <th style="text-align: center">Dinas Luar</th>
+            <th style="text-align: center">Tanpa Keterangan</th>
+            <th style="text-align: center">Total H. Kerja</th>
+            <th style="text-align: center">Terlambat</th>
+            <th style="text-align: center">Lembur</th>
+<!--            <th style="text-align: center">Izin 1/2 hari</th>
             <th style="text-align: center">SDSD</th>
             <th style="text-align: center">STSD</th>
             <th style="text-align: center">Alfa</th>
-            <th style="text-align: center">Tidak Hadir</th>
-            <th style="text-align: center">Lembur</th>
-            <th style="text-align: center">Dinas Luar</th>
+            <th style="text-align: center">Tidak Hadir</th>-->
         </tr>
     </thead>
     <tbody>
@@ -41,14 +44,18 @@
                     )), array('target' => '_blank')); ?>
                 </td>
                 <td><?php echo CHtml::encode($employee->getTotalWorkingDay($startDate, $endDate)); ?></td>
-                <td><?php echo CHtml::encode($employee->getTotalLateDay($startDate, $endDate)); ?></td>
-                <td><?php echo CHtml::encode($employee->getTotalDayOff($startDate, $endDate)); ?></td>
-                <td><?php echo CHtml::encode($employee->getTotalHalfDayLeave($startDate, $endDate)); ?></td>
-                <td><?php echo CHtml::encode($employee->getTotalFullDayLeave($startDate, $endDate)); ?></td>
                 <td><?php echo CHtml::encode($employee->getTotalPaidLeave($startDate, $endDate)); ?></td>
-                <td><?php echo CHtml::encode($employee->getTotalSdsd($startDate, $endDate)); ?></td>
-                <td><?php echo CHtml::encode($employee->getTotalStsd($startDate, $endDate)); ?></td>
+                <td><?php echo CHtml::encode($employee->getTotalSickDay($startDate, $endDate)); ?></td>
+                <td><?php echo CHtml::encode($employee->getTotalFullDayLeave($startDate, $endDate)); ?></td>
+                <td><?php //echo CHtml::encode($employee->getTotalDayOff($startDate, $endDate)); ?></td>
+                <td><?php echo CHtml::encode($employee->getTotalBusinessTripDay($startDate, $endDate)); ?></td>
                 <td><?php echo CHtml::encode($employee->getTotalMissing($startDate, $endDate)); ?></td>
+                <td>30</td>
+                <td><?php echo CHtml::encode($employee->getTotalLateDay($startDate, $endDate)); ?></td>
+                <td><?php echo CHtml::encode($employee->getTotalOvertimeDay($startDate, $endDate)); ?></td>
+<!--                <td><?php /*echo CHtml::encode($employee->getTotalHalfDayLeave($startDate, $endDate)); ?></td>
+                <td><?php echo CHtml::encode($employee->getTotalSdsd($startDate, $endDate)); ?></td>
+                <td><?php echo CHtml::encode($employee->getTotalStsd($startDate, $endDate));*/ ?></td>-->
             </tr>
         <?php endforeach; ?>
     </tbody>

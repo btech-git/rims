@@ -135,7 +135,6 @@
                     <div class="small-8 columns">
                         <?php echo $form->hiddenField($model, 'employee_dayoff_id', array('value' => $dayOff->id)); ?>		
                         <?php echo $form->dropDownList($model, 'approval_type', array(
-                            'Revised' => 'Revised', 
                             'Rejected' => 'Rejected', 
                             'Approved' => 'Approved'
                         ), array('prompt' => '[--Select Approval Status--]')); ?>

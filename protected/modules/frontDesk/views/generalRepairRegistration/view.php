@@ -239,14 +239,6 @@ $this->breadcrumbs = array(
             <legend>Details</legend>
             <?php
             $tabsArray = array();
-            $tabsArray['Quick Service'] = array(
-                'id' => 'quickService',
-                'content' => $this->renderPartial('_viewQuickService', array(
-                    'quickServices' => $quickServices,
-                    'ccontroller' => $ccontroller,
-                    'model' => $model
-                ), TRUE)
-            );
             $tabsArray['Service'] = array(
                 'id' => 'service',
                 'content' => $this->renderPartial('_viewServices', array(
@@ -257,6 +249,14 @@ $this->breadcrumbs = array(
                 'id' => 'product',
                 'content' => $this->renderPartial('_viewProducts', array(
                     'products' => $products,
+                    'model' => $model
+                ), TRUE)
+            );
+            $tabsArray['Paket'] = array(
+                'id' => 'package',
+                'content' => $this->renderPartial('_viewPackage', array(
+                    'packages' => $packages,
+                    'ccontroller' => $ccontroller,
                     'model' => $model
                 ), TRUE)
             );

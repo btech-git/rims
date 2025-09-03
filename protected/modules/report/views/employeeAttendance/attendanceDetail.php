@@ -49,7 +49,11 @@
                 'name'=>'total_hour', 
                 'value'=>'CHtml::encode($data->workTimeDiff)', 
             ),
-            'remarks',
+            array(
+                'header' => 'Remarks',
+                'name'=>'remarks', 
+                'value'=>'CHtml::encode($data->remarks)', 
+            ),
             array(
                 'name'=>'employee_onleave_category_id', 
                 'value'=>'CHtml::encode(CHtml::value($data, "employeeOnleaveCategory.name"))', 

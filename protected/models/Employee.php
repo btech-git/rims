@@ -356,6 +356,22 @@ class Employee extends CActiveRecord {
         return ($value === false) ? 0 : $value;
     }
 
+    public function getTotalOvertimeDay($startDate, $endDate) {
+        
+        $sql = "SELECT COALESCE(COUNT(*), 0) AS total_days 
+                FROM " . EmployeeTimesheet::model()->tableName() . "
+                WHERE date BETWEEN :start_date AND :end_date AND employee_id = :employee_id AND duration_overtime > 0 AND employee_onleave_category_id = 16
+                GROUP BY employee_id";
+
+        $value = CActiveRecord::$db->createCommand($sql)->queryScalar(array(
+            ':start_date' => $startDate,
+            ':end_date' => $endDate,
+            ':employee_id' => $this->id,
+        ));
+
+        return ($value === false) ? 0 : $value;
+    }
+
     public function getTotalDayOff($startDate, $endDate) {
         
         $sql = "SELECT COALESCE(COUNT(*), 0) AS total_days 
@@ -468,6 +484,38 @@ class Employee extends CActiveRecord {
         return ($value === false) ? 0 : $value;
     }
     
+    public function getTotalSickDay($startDate, $endDate) {
+        
+        $sql = "SELECT COALESCE(COUNT(*), 0) AS total_days 
+                FROM " . EmployeeTimesheet::model()->tableName() . "
+                WHERE date BETWEEN :start_date AND :end_date AND employee_id = :employee_id AND employee_onleave_category_id = 17
+                GROUP BY employee_id";
+
+        $value = CActiveRecord::$db->createCommand($sql)->queryScalar(array(
+            ':start_date' => $startDate,
+            ':end_date' => $endDate,
+            ':employee_id' => $this->id,
+        ));
+
+        return ($value === false) ? 0 : $value;
+    }
+
+    public function getTotalBusinessTripDay($startDate, $endDate) {
+        
+        $sql = "SELECT COALESCE(COUNT(*), 0) AS total_days 
+                FROM " . EmployeeTimesheet::model()->tableName() . "
+                WHERE date BETWEEN :start_date AND :end_date AND employee_id = :employee_id AND employee_onleave_category_id = 18
+                GROUP BY employee_id";
+
+        $value = CActiveRecord::$db->createCommand($sql)->queryScalar(array(
+            ':start_date' => $startDate,
+            ':end_date' => $endDate,
+            ':employee_id' => $this->id,
+        ));
+
+        return ($value === false) ? 0 : $value;
+    }
+
     public function getUsername() {
         $user = Users::model()->findByAttributes(array('employee_id' => $this->id));
         
