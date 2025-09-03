@@ -37,6 +37,7 @@
                                     'id' => 'info2',
                                     'content' => $this->renderPartial('_infoVehicle', array(
                                         'generalRepairRegistration' => $generalRepairRegistration,
+                                        'customer' => $customer,
                                         'vehicle' => $vehicle,
                                     ), true)
                                 ),
