@@ -81,10 +81,10 @@
             <div class="field">
                 <div class="row collapse">
                     <div class="small-4 columns">
-                        <?php echo $form->label($model,'invoice_status', array('class'=>'prefix')); ?>
+                        <?php echo $form->label($model,'status', array('class'=>'prefix')); ?>
                     </div>
                     <div class="small-8 columns">
-                        <?php echo $form->dropDownList($model, 'invoice_status', array(
+                        <?php echo $form->dropDownList($model, 'status', array(
                             'Draft' => 'Draft',
                             'Revised' => 'Need Revision',
                             'Rejected'=>'Rejected',
