@@ -473,6 +473,7 @@ class PaymentInController extends Controller {
             $invoiceHeaderDataProvider->criteria->params[':customer_id'] = $paymentIn->header->customer_id;
         }
         
+        $paymentIn->header->status = 'Draft';
         $paymentIn->header->edited_datetime = date('Y-m-d H:i:s');
         $paymentIn->header->user_id_edited = Yii::app()->user->id;
         

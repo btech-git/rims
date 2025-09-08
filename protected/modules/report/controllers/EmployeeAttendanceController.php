@@ -39,9 +39,9 @@ class EmployeeAttendanceController extends Controller {
             $this->redirect(array('summary'));
         }
         
-//        if (isset($_GET['SaveExcel'])) {
-//            $this->saveToExcel($coaSubCategories , $startDate, $endDate, $branchId, $transactionType);
-//        }
+        if (isset($_GET['SaveExcel'])) {
+            $this->saveToExcel($employeeData , $startDate, $endDate, $branchId);
+        }
 
         $this->render('summary', array(
             'employeeData' => $employeeData,
@@ -91,7 +91,7 @@ class EmployeeAttendanceController extends Controller {
         ));
     }
 
-    protected function saveToExcel($coaSubCategories, $startDate, $endDate, $branchId, $transactionType) {
+    protected function saveToExcel($employeeData , $startDate, $endDate, $branchId) {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
         
@@ -106,82 +106,86 @@ class EmployeeAttendanceController extends Controller {
 
         $documentProperties = $objPHPExcel->getProperties();
         $documentProperties->setCreator('Raperind Motor');
-        $documentProperties->setTitle('Laporan Jurnal Umum Rekap');
+        $documentProperties->setTitle('Rekap Daftar Hadir Karyawan');
 
         $worksheet = $objPHPExcel->setActiveSheetIndex(0);
-        $worksheet->setTitle('Laporan Jurnal Umum Rekap');
+        $worksheet->setTitle('Rekap Daftar Hadir Karyawan');
 
-        $worksheet->mergeCells('A1:B1');
-        $worksheet->mergeCells('A2:B2');
-        $worksheet->mergeCells('A3:B3');
-        
-        $worksheet->getStyle('A1:B3')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-        $worksheet->getStyle('A1:B3')->getFont()->setBold(true);
+        $worksheet->mergeCells('A1:Q1');
+        $worksheet->mergeCells('A2:Q2');
+        $worksheet->mergeCells('A3:Q3');
+       
+        $worksheet->getStyle('A1:Q3')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->getStyle('A1:Q3')->getFont()->setBold(true);
 
         $branch = Branch::model()->findByPk($branchId);
-        $worksheet->setCellValue('A1', CHtml::encode(($branch === null) ? '' : $branch->name));
-        $worksheet->setCellValue('A2', 'Laporan Jurnal Umum Rekap');
+        $worksheet->setCellValue('A1', 'Raperind Motor ' . CHtml::encode(($branch === null) ? '' : $branch->name));
+        $worksheet->setCellValue('A2', 'Laporan Rekap Daftar Hadir Karyawan');
         $worksheet->setCellValue('A3', 'Periode: ' . $startDateString . ' - ' . $endDateString);
 
-        $worksheet->getStyle("A5:J5")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
-        $worksheet->getStyle("A5:J5")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A5:Q5")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A5:Q5")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle('A5:Q5')->getFont()->setBold(true);
+        
+        $worksheet->setCellValue('A5', 'ID');
+        $worksheet->setCellValue('B5', 'NIP');
+        $worksheet->setCellValue('C5', 'Nama');
+        $worksheet->setCellValue('D5', 'Cabang');
+        $worksheet->setCellValue('E5', 'Divisi');
+        $worksheet->setCellValue('F5', 'Posisi');
+        $worksheet->setCellValue('G5', 'Level');
+        $worksheet->setCellValue('H5', 'Kehadiran');
+        $worksheet->setCellValue('I5', 'Cuti');
+        $worksheet->setCellValue('J5', 'Sakit');
+        $worksheet->setCellValue('K5', 'Izin');
+        $worksheet->setCellValue('L5', 'Dinas Luar');
+        $worksheet->setCellValue('M5', 'Tanpa Keterangan');
+        $worksheet->setCellValue('N5', 'Total H. Kerja');
+        $worksheet->setCellValue('O5', 'Libur');
+        $worksheet->setCellValue('P5', 'Terlambat');
+        $worksheet->setCellValue('Q5', 'Lembur');
 
-        $worksheet->getStyle('A5:J5')->getFont()->setBold(true);
-        $worksheet->setCellValue('A5', 'Chart of Account');
-        $worksheet->setCellValue('B5', 'Debit');
-        $worksheet->setCellValue('C5', 'Credit');
+        $counter = 7;
 
-        $counter = 6;
-
-        $accountCategoryDebitBalance = 0.00;
-        $accountCategoryCreditBalance = 0.00;
-        foreach ($coaSubCategories as $coaSubCategory) {
-            $coas = Coa::model()->findAllByAttributes(array('coa_sub_category_id' => $coaSubCategory->id), array('order' => 't.code ASC'));
-            foreach ($coas as $coa) {
-                $journalDebitBalance = $coa->getJournalDebitBalance($startDate, $endDate, $branchId, $transactionType);
-                $journalCreditBalance = $coa->getJournalCreditBalance($startDate, $endDate, $branchId, $transactionType);
-                if ($journalDebitBalance !== 0 || $journalCreditBalance !== 0) { //&& $journalDebitBalance !== $journalCreditBalance) {
-                    $worksheet->setCellValue("A{$counter}", $coa->code . ' - ' . $coa->name);
-                    if (empty($coa->coaIds)) {
-                        $worksheet->setCellValue("B{$counter}", $journalDebitBalance);
-                        $worksheet->setCellValue("C{$counter}", $journalCreditBalance);
-                    }
-                    $counter++;
-            
-                    $groupDebitBalance = 0;
-                    $groupCreditBalance = 0;
-                    if (!empty($coa->coaIds)) {
-                        $coaIds = Coa::model()->findAllByAttributes(array('coa_id' => $coa->id), array('order' => 't.code ASC'));
-                        foreach ($coaIds as $account) {
-                            $journalDebitBalance = $account->getJournalDebitBalance($startDate, $endDate, $branchId, $transactionType);
-                            $journalCreditBalance = $account->getJournalCreditBalance($startDate, $endDate, $branchId, $transactionType);
-                            if (($journalDebitBalance !== 0 || $journalCreditBalance !== 0) && $journalDebitBalance !== $journalCreditBalance) {
-                                $worksheet->setCellValue("A{$counter}", $coa->code . ' - ' . $coa->name);
-                                if (empty($coa->coaIds)) {
-                                    $worksheet->setCellValue("B{$counter}", $journalDebitBalance);
-                                    $worksheet->setCellValue("C{$counter}", $journalCreditBalance);
-                                }
-                                $groupDebitBalance += $journalDebitBalance;
-                                $groupCreditBalance += $journalCreditBalance;
-                                
-                                $counter++;
-                                
-                            }
-                        }
-                    }
+        $dayOfWeekList = array_flip(array('Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'));
+        
+        foreach ($employeeData as $employee) {
+            $currentTimestamp = strtotime($startDate);
+            $endTimestamp = strtotime($endDate);
+            $diff_seconds = $endTimestamp - $currentTimestamp;
+            $diff_days = floor($diff_seconds / (60 * 60 * 24));
+            $holidaysCount = 0;
+        
+            while ($currentTimestamp <= $endTimestamp) {
+                $dayOfWeekNum = date('w', $currentTimestamp);
+                if ((int) $dayOfWeekNum === $dayOfWeekList[$employee->off_day]) {
+                    $holidaysCount++;
                 }
-                $accountCategoryDebitBalance += $journalDebitBalance;
-                $accountCategoryCreditBalance += $journalCreditBalance;
+                $currentTimestamp = strtotime('+1 day', $currentTimestamp);
             }
+        
+            $worksheet->setCellValue("A{$counter}", CHtml::value($employee, 'id'));
+            $worksheet->setCellValue("B{$counter}", CHtml::value($employee, 'code'));
+            $worksheet->setCellValue("C{$counter}", CHtml::value($employee, 'name'));
+            $worksheet->setCellValue("D{$counter}", CHtml::value($employee, 'branch.code'));
+            $worksheet->setCellValue("E{$counter}", CHtml::value($employee, 'division.name'));
+            $worksheet->setCellValue("F{$counter}", CHtml::value($employee, 'position.name'));
+            $worksheet->setCellValue("G{$counter}", CHtml::value($employee, 'level.name'));
+            $worksheet->setCellValue("H{$counter}", $employee->getTotalWorkingDay($startDate, $endDate));
+            $worksheet->setCellValue("I{$counter}", $employee->getTotalPaidLeave($startDate, $endDate));
+            $worksheet->setCellValue("J{$counter}", $employee->getTotalSickDay($startDate, $endDate));
+            $worksheet->setCellValue("K{$counter}", $employee->getTotalFullDayLeave($startDate, $endDate));
+            $worksheet->setCellValue("L{$counter}", $employee->getTotalBusinessTripDay($startDate, $endDate));
+            $worksheet->setCellValue("M{$counter}", $employee->getTotalMissing($startDate, $endDate));
+            $worksheet->setCellValue("N{$counter}", $diff_days - $holidaysCount);
+            $worksheet->setCellValue("O{$counter}", $holidaysCount);
+            $worksheet->setCellValue("P{$counter}", $employee->getTotalLateDay($startDate, $endDate));
+            $worksheet->setCellValue("Q{$counter}", $employee->getTotalOvertimeDay($startDate, $endDate));
 
             $counter++;
         }
         
-        $worksheet->setCellValue("A{$counter}", "Total");
-        $worksheet->setCellValue("B{$counter}", $accountCategoryDebitBalance);
-        $worksheet->setCellValue("C{$counter}", $accountCategoryCreditBalance);
-
-        for ($col = 'A'; $col !== 'D'; $col++) {
+        for ($col = 'A'; $col !== 'Z'; $col++) {
             $objPHPExcel->getActiveSheet()
             ->getColumnDimension($col)
             ->setAutoSize(true);
@@ -190,7 +194,7 @@ class EmployeeAttendanceController extends Controller {
         ob_end_clean();
         
         header('Content-type: application/vnd.ms-excel');
-        header('Content-Disposition: attachment;filename="Laporan Jurnal Umum Rekap.xls"');
+        header('Content-Disposition: attachment;filename="rekap_absensi_karyawan.xls"');
         header('Cache-Control: max-age=0');
 
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');

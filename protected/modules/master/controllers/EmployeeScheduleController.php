@@ -128,35 +128,35 @@ class EmployeeScheduleController extends Controller {
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id the ID of the model to be updated
      */
-    public function actionUpdate($id) {
-        $model = $this->loadModel($id);
-
-        // Uncomment the following line if AJAX validation is needed
-        // $this->performAjaxValidation($model);
-
-        if (isset($_POST['EmployeeSchedule'])) {
-            $model->attributes = $_POST['EmployeeSchedule'];
-            if ($model->save())
-                $this->redirect(array('view', 'id' => $model->id));
-        }
-
-        $this->render('update', array(
-            'model' => $model,
-        ));
-    }
+//    public function actionUpdate($id) {
+//        $model = $this->loadModel($id);
+//
+//        // Uncomment the following line if AJAX validation is needed
+//        // $this->performAjaxValidation($model);
+//
+//        if (isset($_POST['EmployeeSchedule'])) {
+//            $model->attributes = $_POST['EmployeeSchedule'];
+//            if ($model->save())
+//                $this->redirect(array('view', 'id' => $model->id));
+//        }
+//
+//        $this->render('update', array(
+//            'model' => $model,
+//        ));
+//    }
 
     /**
      * Deletes a particular model.
      * If deletion is successful, the browser will be redirected to the 'admin' page.
      * @param integer $id the ID of the model to be deleted
      */
-    public function actionDelete($id) {
-        $this->loadModel($id)->delete();
-
-        // if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
-        if (!isset($_GET['ajax']))
-            $this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
-    }
+//    public function actionDelete($id) {
+//        $this->loadModel($id)->delete();
+//
+//        // if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
+//        if (!isset($_GET['ajax']))
+//            $this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
+//    }
 
     /**
      * Lists all models.
@@ -179,6 +179,10 @@ class EmployeeScheduleController extends Controller {
                 $employeeScheduleData[$employeeSchedule->working_date][$employeeSchedule->branch_id] = array();
             }
             $employeeScheduleData[$employeeSchedule->working_date][$employeeSchedule->branch_id][] = $employeeSchedule->employee->name;
+        }
+
+        if (isset($_GET['SaveExcel'])) {
+            $this->saveToExcel($employeeScheduleData, $branches, $currentDate);
         }
 
         $this->render('index', array(
@@ -227,4 +231,74 @@ class EmployeeScheduleController extends Controller {
         }
     }
 
+    protected function saveToExcel($employeeScheduleData, $branches, $currentDate) {
+        set_time_limit(0);
+        ini_set('memory_limit', '1024M');
+        
+        spl_autoload_unregister(array('YiiBase', 'autoload'));
+        include_once Yii::getPathOfAlias('ext.phpexcel.Classes') . DIRECTORY_SEPARATOR . 'PHPExcel.php';
+        spl_autoload_register(array('YiiBase', 'autoload'));
+
+        $objPHPExcel = new PHPExcel();
+
+        $documentProperties = $objPHPExcel->getProperties();
+        $documentProperties->setCreator('Raperind Motor');
+        $documentProperties->setTitle('Jadwal Karyawan Mingguan');
+
+        $worksheet = $objPHPExcel->setActiveSheetIndex(0);
+        $worksheet->setTitle('Jadwal Karyawan Mingguan');
+
+        $worksheet->mergeCells('A1:M1');
+        $worksheet->mergeCells('A2:M2');
+
+        $worksheet->getStyle('A1:M5')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->getStyle('A1:M5')->getFont()->setBold(true);
+
+        $worksheet->setCellValue('A1', 'Raperind Motor');
+        $worksheet->setCellValue('A2', 'Jadwal Karyawan Mingguan');
+
+        $columnCounter = 'B';
+        foreach ($branches as $branch) {
+            $worksheet->setCellValue("{$columnCounter}5", CHtml::value($branch, 'code'));
+            $columnCounter++;
+        }
+
+        $worksheet->getStyle("A5:{$columnCounter}5")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A5:{$columnCounter}5")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+
+        $counter = 7;
+        for ($i = 0; $i < 7; $i++) {
+            $columnCounter = 'B';
+            $date = date('Y-m-d', strtotime($currentDate . " + {$i} days")); 
+
+            $worksheet->setCellValue("A{$counter}", date('D, d M Y', strtotime($date)));
+            foreach ($branches as $branch) {
+                if (isset($employeeScheduleData[$date][$branch->id])) {
+                    $employeeNames = implode("\r\n", $employeeScheduleData[$date][$branch->id]);
+                    $worksheet->setCellValue("{$columnCounter}{$counter}", $employeeNames);
+                }
+                
+                $columnCounter++;
+            }
+            
+            $counter++;
+        }
+
+        for ($col = 'A'; $col !== 'Z'; $col++) {
+            $objPHPExcel->getActiveSheet()
+            ->getColumnDimension($col)
+            ->setAutoSize(true);
+        }
+        
+        ob_end_clean();
+        // We'll be outputting an excel file
+        header('Content-type: application/vnd.ms-excel');
+        header('Content-Disposition: attachment;filename="jadwal_karyawan_mingguan.xls"');
+        header('Cache-Control: max-age=0');
+        
+        $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
+        $objWriter->save('php://output');
+
+        Yii::app()->end();
+    }
 }

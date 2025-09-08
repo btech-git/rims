@@ -18,8 +18,16 @@ $this->menu=array(
             <span class="fa fa-plus"></span>Tambah Jadwal Karyawan
         </a>
 
-        <h1>Jadwal Karyawan Minggu ini</h1>
+        <h1>Jadwal Karyawan Mingguan</h1>
 
+        <div class="clear"></div>
+
+        <?php echo CHtml::beginForm(array(''), 'get'); ?>
+        <div class="row buttons">
+            <?php echo CHtml::submitButton('Simpan ke Excel', array('name' => 'SaveExcel'));  ?>
+        </div>
+        <?php echo CHtml::endForm(); ?>
+        
         <br />
         
         <table>

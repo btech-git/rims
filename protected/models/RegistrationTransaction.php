@@ -625,7 +625,7 @@ class RegistrationTransaction extends MonthlyTransactionActiveRecord {
 
 //        if ($this->repair_type == 'GR') {
             foreach ($this->registrationServices as $registrationService) {
-                $services[] = $registrationService->service->name . '<br />';
+                $services[] = $registrationService->service->name . ', ';
             }
 //        } else {
 //            foreach ($this->registrationServices as $registrationService) {

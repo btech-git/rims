@@ -1,6 +1,3 @@
-<?php
-
-?>
 <div class="tab reportTab">
     <div class="tabBody">
         <div id="detail_div">
