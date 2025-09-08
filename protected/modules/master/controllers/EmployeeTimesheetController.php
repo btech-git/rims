@@ -49,8 +49,12 @@ class EmployeeTimesheetController extends Controller {
      * @param integer $id the ID of the model to be displayed
      */
     public function actionView($id) {
+        $model = $this->loadModel($id);
+        $postImages = EmployeeTimesheetImages::model()->findAllByAttributes(array('employee_timesheet_id' => $model->id, 'is_inactive' => $model::STATUS_ACTIVE));
+        
         $this->render('view', array(
-            'model' => $this->loadModel($id),
+            'model' => $model,
+            'postImages' => $postImages,
         ));
     }
     
@@ -114,14 +118,29 @@ class EmployeeTimesheetController extends Controller {
      */
     public function actionCreate() {
         $model = new EmployeeTimesheet;
+        $model->employee_onleave_category_id = 16;
 
         // Uncomment the following line if AJAX validation is needed
         // $this->performAjaxValidation($model);
 
         if (isset($_POST['EmployeeTimesheet'])) {
             $model->attributes = $_POST['EmployeeTimesheet'];
-            if ($model->save())
+            if ($model->save()) {
+                
+                $model->employeeTimesheetImages = CUploadedFile::getInstances($model, 'images');
+                foreach ($model->employeeTimesheetImages as $file) {
+                    $contentImage = new EmployeeTimesheetImages();
+                    $contentImage->employee_timesheet_id = $model->id;
+                    $contentImage->is_inactive = EmployeeTimesheet::STATUS_ACTIVE;
+                    $contentImage->extension = $file->extensionName;
+                    $contentImage->save(false);
+
+                    $originalPath = dirname(Yii::app()->request->scriptFile) . '/images/uploads/employeeTimesheet/' . $contentImage->filename;
+                    $file->saveAs($originalPath);
+                }
+
                 $this->redirect(array('view', 'id' => $model->id));
+            }
         }
 
         $this->render('create', array(
@@ -142,8 +161,23 @@ class EmployeeTimesheetController extends Controller {
 
         if (isset($_POST['EmployeeTimesheet'])) {
             $model->attributes = $_POST['EmployeeTimesheet'];
-            if ($model->save())
+            
+            if ($model->save()) {
+                
+                $model->employeeTimesheetImages = CUploadedFile::getInstances($model, 'images');
+                foreach ($model->employeeTimesheetImages as $file) {
+                    $contentImage = new EmployeeTimesheetImages();
+                    $contentImage->employee_timesheet_id = $model->id;
+                    $contentImage->is_inactive = EmployeeTimesheet::STATUS_ACTIVE;
+                    $contentImage->extension = $file->extensionName;
+                    $contentImage->save(false);
+
+                    $originalPath = dirname(Yii::app()->request->scriptFile) . '/images/uploads/employeeTimesheet/' . $contentImage->filename;
+                    $file->saveAs($originalPath);
+                }
+
                 $this->redirect(array('view', 'id' => $model->id));
+            }
         }
 
         $this->render('update', array(

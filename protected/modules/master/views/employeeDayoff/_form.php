@@ -8,6 +8,7 @@
 
     <?php $form = $this->beginWidget('CActiveForm', array(
         'id' => 'employee-dayoff-form',
+        'htmlOptions' => array('enctype' => 'multipart/form-data'),
         // Please note: When you enable ajax validation, make sure the corresponding
         // controller action is handling ajax validation correctly.
         // There is a call to performAjaxValidation() commented in generated controller code.
@@ -209,21 +210,49 @@
         </div>
 
         <div class="small-12 medium-6 columns">
-                <div class="field">
-                    <div class="row collapse">
-                        <div class="small-4 columns">
-                            <?php echo $form->labelEx($model, 'notes'); ?>
-                        </div>
-                        <div class="small-8 columns">
-                            <?php echo $form->textArea($model, 'notes', array('rows' => 6, 'cols' => 50)); ?>
-                            <?php echo $form->error($model, 'notes'); ?>
-                        </div>
+            <div class="field">
+                <div class="row collapse">
+                    <div class="small-4 columns">
+                        <?php echo $form->labelEx($model, 'notes'); ?>
                     </div>
-                </div>		
-
-                <div class="field buttons text-center">
-                    <?php echo CHtml::submitButton($model->isNewRecord ? 'Create' : 'Save', array('class' => 'button cbutton', 'confirm' => 'Are you sure you want to save?')); ?>
+                    <div class="small-8 columns">
+                        <?php echo $form->textArea($model, 'notes', array('rows' => 6, 'cols' => 50)); ?>
+                        <?php echo $form->error($model, 'notes'); ?>
+                    </div>
                 </div>
+            </div>		
+
+            <div class="field">
+                <div class="row collapse">
+                    <div class="small-4 columns">
+                        <?php echo CHtml::label('Attach Images (Upload size max 2MB)', ''); ?>
+                    </div>
+                    <div class="small-8 columns">
+                        <?php $this->widget('CMultiFileUpload', array(
+                            'model' => $model,
+                            'attribute' => 'images',
+                            'accept' => 'jpg|jpeg|png|gif',
+                            'denied' => 'Only jpg, jpeg, png and gif are allowed',
+                            'max' => 10,
+                            'remove' => '[x]',
+                            'duplicate' => 'Already Selected',
+                            'options' => array(
+                                'afterFileSelect' => 'function(e ,v ,m){
+                                    var fileSize = e.files[0].size;
+                                    if (fileSize > 2*1024*1024) {
+                                        alert("Exceeds file upload limit 2MB");
+                                        $(".MultiFile-remove").click();
+                                    }                      
+                                    return true;
+                                }',
+                            ),
+                        )); ?>
+                    </div>
+                </div>
+            </div>
+
+            <div class="field buttons text-center">
+                <?php echo CHtml::submitButton($model->isNewRecord ? 'Create' : 'Save', array('class' => 'button cbutton', 'confirm' => 'Are you sure you want to save?')); ?>
             </div>
         </div>
 

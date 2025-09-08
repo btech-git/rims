@@ -110,4 +110,21 @@ $this->menu=array(
             <?php endforeach; ?>
         </table>
     </div>
+
+    <fieldset>
+        <legend>Attached Images</legend>
+
+        <?php if (!empty($postImages)): ?>
+            <?php $postImage = $postImages[count($postImages) - 1]; ?>
+            <?php $src = Yii::app()->baseUrl . '/images/uploads/employeeDayoff/' . $postImage->filename; ?>
+            <div class="row">
+                <div class="small-3 columns">
+                    <div style="margin-bottom:.5rem">
+                        <?php echo CHtml::image($src, $model->transaction_number . "Image"); ?>
+                    </div>
+                </div>
+            </div>
+        <?php endif; ?>
+    </fieldset>
+
 </div>

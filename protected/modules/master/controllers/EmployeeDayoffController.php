@@ -88,8 +88,12 @@ class EmployeeDayoffController extends Controller {
      * @param integer $id the ID of the model to be displayed
      */
     public function actionView($id) {
+        $model = $this->loadModel($id);
+        $postImages = EmployeeDayoffImages::model()->findAllByAttributes(array('employee_dayoff_id' => $model->id, 'is_inactive' => $model::STATUS_ACTIVE));
+        
         $this->render('view', array(
-            'model' => $this->loadModel($id),
+            'model' => $model,
+            'postImages' => $postImages,
         ));
     }
 
@@ -132,23 +136,18 @@ class EmployeeDayoffController extends Controller {
             
             if ($valid && $model->save()) {
 
-//                $start_date = $model->date_from;
-//                $end_date = date('Y-m-d', strtotime($model->date_to . " +1 days"));
-//                $interval = new DateInterval('P1D');
-//                $date_range = new DatePeriod(new DateTime($start_date), $interval, new DateTime($end_date));
-//
-//                foreach ($date_range as $date) {
-//                    $employeeTimesheet = new EmployeeTimesheet();
-//                    $employeeTimesheet->date = date_format($date, 'Y-m-d');
-//                    $employeeTimesheet->clock_in = '00:00:00';
-//                    $employeeTimesheet->clock_out = '00:00:00';
-//                    $employeeTimesheet->employee_id = $model->employee_id;
-//                    $employeeTimesheet->duration_late = 0;
-//                    $employeeTimesheet->duration_work = 0;
-//                    $employeeTimesheet->employee_onleave_category_id = $model->employee_onleave_category_id;
-//                    $employeeTimesheet->save();
-//                }
-                
+                $model->employeeDayoffImages = CUploadedFile::getInstances($model, 'images');
+                foreach ($model->employeeDayoffImages as $file) {
+                    $contentImage = new EmployeeDayoffImages();
+                    $contentImage->employee_dayoff_id = $model->id;
+                    $contentImage->is_inactive = EmployeeDayoff::STATUS_ACTIVE;
+                    $contentImage->extension = $file->extensionName;
+                    $contentImage->save(false);
+
+                    $originalPath = dirname(Yii::app()->request->scriptFile) . '/images/uploads/employeeDayoff/' . $contentImage->filename;
+                    $file->saveAs($originalPath);
+                }
+
                 $this->redirect(array('view', 'id' => $model->id));
             }
         }
@@ -196,6 +195,7 @@ class EmployeeDayoffController extends Controller {
         $employeeDataProvider = new CActiveDataProvider('Employee', array(
             'criteria' => $employeeCriteria,
         ));
+        
         if (isset($_POST['EmployeeDayoff'])) {
             $model->attributes = $_POST['EmployeeDayoff'];
             $model->status = 'Draft';
@@ -214,6 +214,18 @@ class EmployeeDayoffController extends Controller {
                     ));
                 }
                 
+                $model->employeeDayoffImages = CUploadedFile::getInstances($model, 'images');
+                foreach ($model->employeeDayoffImages as $file) {
+                    $contentImage = new EmployeeDayoffImages();
+                    $contentImage->employee_dayoff_id = $model->id;
+                    $contentImage->is_inactive = EmployeeDayoff::STATUS_ACTIVE;
+                    $contentImage->extension = $file->extensionName;
+                    $contentImage->save(false);
+
+                    $originalPath = dirname(Yii::app()->request->scriptFile) . '/images/uploads/employeeDayoff/' . $contentImage->filename;
+                    $file->saveAs($originalPath);
+                }
+
                 $this->redirect(array('view', 'id' => $model->id));
             }
         }
