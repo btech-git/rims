@@ -35,23 +35,32 @@ class EmployeeYearlyAttendanceController extends Controller {
             $employeeYearlyAttendanceData[$monthValue][$employeeYearlyAttendanceItem['employee_onleave_category_id']]['late_days'] = $employeeYearlyAttendanceItem['late_days'];
         }
         
+        $employeeDaysCountData = array();
+        foreach ($employeeYearlyAttendance as $employeeYearlyAttendanceItem) {
+            $monthValue = intval($employeeYearlyAttendanceItem['month']);
+            if (!isset($employeeDaysCountData[$monthValue])) {
+                $employeeDaysCountData[$monthValue] = 0;
+            }
+            $employeeDaysCountData[$monthValue] += $employeeYearlyAttendanceItem['days'];
+        }
+        
         $yearList = array();
         for ($y = $yearNow - 4; $y <= $yearNow; $y++) {
             $yearList[$y] = $y;
         }
         $onleaveCategories = EmployeeOnleaveCategory::model()->findAllByAttributes(array('is_inactive' => 0), array('order' => 'is_onsite DESC, id ASC'));
         
-//        if (isset($_GET['ResetFilter'])) {
-//            $this->redirect(array('summary'));
-//        }
-//        
-//        if (isset($_GET['SaveExcel'])) {
-//            $this->saveToExcel(
-//                $employeeYearlyAttendanceData,
-//                $yearList,
-//                $year
-//            );
-//        }
+        if (isset($_GET['ResetFilter'])) {
+            $this->redirect(array('summary'));
+        }
+        
+        if (isset($_GET['SaveExcel'])) {
+            $this->saveToExcel(
+                $employeeYearlyAttendanceData,
+                $yearList,
+                $year
+            );
+        }
         
         $this->render('summary', array(
             'employeeYearlyAttendanceData' => $employeeYearlyAttendanceData,
@@ -59,6 +68,7 @@ class EmployeeYearlyAttendanceController extends Controller {
             'year' => $year,
             'onleaveCategories' => $onleaveCategories,
             'employeeId' => $employeeId,
+            'employeeDaysCountData' => $employeeDaysCountData,
         ));
     }
     

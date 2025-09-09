@@ -53,6 +53,10 @@
                 <?php $currentTimestamp = strtotime('+1 day', $currentTimestamp); ?>
             <?php endwhile; ?>
         
+            <?php /*$workingDays = $diff_days - $holidaysCount; ?>
+            <?php $recordedDays = isset($employeeDaysCountData[$month]) ? $employeeDaysCountData[$month] : '0'; ?>
+            <?php $nonRecordedDays = $workingDays - $recordedDays;*/ ?>
+        
             <tr>
                 <td><?php echo CHtml::encode(CHtml::value($employee, 'id')); ?></td>
                 <td><?php echo CHtml::encode(CHtml::value($employee, 'code')); ?></td>
@@ -72,7 +76,7 @@
                 <td><?php echo CHtml::encode($employee->getTotalSickDay($startDate, $endDate)); ?></td>
                 <td><?php echo CHtml::encode($employee->getTotalFullDayLeave($startDate, $endDate)); ?></td>
                 <td><?php echo CHtml::encode($employee->getTotalBusinessTripDay($startDate, $endDate)); ?></td>
-                <td><?php echo CHtml::encode($employee->getTotalMissing($startDate, $endDate)); ?></td>
+                <td><?php //echo CHtml::encode($nonRecordedDays); ?></td>
                 <td><?php echo $diff_days - $holidaysCount; ?></td>
                 <td><?php echo CHtml::encode($holidaysCount); ?></td>
                 <td><?php echo CHtml::encode($employee->getTotalLateDay($startDate, $endDate)); ?></td>

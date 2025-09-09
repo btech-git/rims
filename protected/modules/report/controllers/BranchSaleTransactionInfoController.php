@@ -1,6 +1,6 @@
 <?php
 
-class EmployeeSaleTransactionInfoController extends Controller {
+class BranchSaleTransactionInfoController extends Controller {
 
     public $layout = '//layouts/column1';
     public function filters() {
@@ -19,24 +19,24 @@ class EmployeeSaleTransactionInfoController extends Controller {
         $filterChain->run();
     }
 
-    public function actionHeaderInfo($showDetails, $employeeId, $startDate, $endDate) {
+    public function actionHeaderInfo($showDetails, $branchId, $startDate, $endDate) {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
 
         $page = (isset($_GET['page'])) ? $_GET['page'] : 1;
         
-        $dataProvider = InvoiceHeader::model()->searchByTransactionHeaderInfo($employeeId, $startDate, $endDate, $page);
+        $dataProvider = InvoiceHeader::model()->searchByTransactionHeaderBranchInfo($branchId, $startDate, $endDate, $page);
         
         $this->render('headerInfo', array(
             'dataProvider' => $dataProvider,
             'startDate' => $startDate,
             'endDate' => $endDate,
-            'employeeId' => $employeeId,
+            'branchId' => $branchId,
             'showDetails' => $showDetails,
         ));
     }
 
-    public function actionDetailInfo($employeeId, $startDate, $endDate, $productSubCategoryIdsString) {
+    public function actionDetailInfo($branchId, $startDate, $endDate, $productSubCategoryIdsString) {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
 
@@ -44,13 +44,13 @@ class EmployeeSaleTransactionInfoController extends Controller {
         
         $productSubCategoryIds = explode(',', $productSubCategoryIdsString);
         
-        $dataProvider = InvoiceDetail::model()->searchByTransactionDetailInfo($employeeId, $startDate, $endDate, $productSubCategoryIds, $page);
+        $dataProvider = InvoiceDetail::model()->searchByTransactionDetailBranchInfo($branchId, $startDate, $endDate, $productSubCategoryIds, $page);
         
         $this->render('detailInfo', array(
             'dataProvider' => $dataProvider,
             'startDate' => $startDate,
             'endDate' => $endDate,
-            'employeeId' => $employeeId,
+            'branchId' => $branchId,
         ));
     }
 

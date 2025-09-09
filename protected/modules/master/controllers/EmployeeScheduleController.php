@@ -123,44 +123,6 @@ class EmployeeScheduleController extends Controller {
         ));
     }
 
-    /**
-     * Updates a particular model.
-     * If update is successful, the browser will be redirected to the 'view' page.
-     * @param integer $id the ID of the model to be updated
-     */
-//    public function actionUpdate($id) {
-//        $model = $this->loadModel($id);
-//
-//        // Uncomment the following line if AJAX validation is needed
-//        // $this->performAjaxValidation($model);
-//
-//        if (isset($_POST['EmployeeSchedule'])) {
-//            $model->attributes = $_POST['EmployeeSchedule'];
-//            if ($model->save())
-//                $this->redirect(array('view', 'id' => $model->id));
-//        }
-//
-//        $this->render('update', array(
-//            'model' => $model,
-//        ));
-//    }
-
-    /**
-     * Deletes a particular model.
-     * If deletion is successful, the browser will be redirected to the 'admin' page.
-     * @param integer $id the ID of the model to be deleted
-     */
-//    public function actionDelete($id) {
-//        $this->loadModel($id)->delete();
-//
-//        // if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
-//        if (!isset($_GET['ajax']))
-//            $this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
-//    }
-
-    /**
-     * Lists all models.
-     */
     public function actionIndex() {
 
         $currentDate = date('Y-m-d');
@@ -248,11 +210,11 @@ class EmployeeScheduleController extends Controller {
         $worksheet = $objPHPExcel->setActiveSheetIndex(0);
         $worksheet->setTitle('Jadwal Karyawan Mingguan');
 
-        $worksheet->mergeCells('A1:M1');
-        $worksheet->mergeCells('A2:M2');
+        $worksheet->mergeCells('A1:I1');
+        $worksheet->mergeCells('A2:I2');
 
-        $worksheet->getStyle('A1:M5')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-        $worksheet->getStyle('A1:M5')->getFont()->setBold(true);
+        $worksheet->getStyle('A1:I5')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->getStyle('A1:I5')->getFont()->setBold(true);
 
         $worksheet->setCellValue('A1', 'Raperind Motor');
         $worksheet->setCellValue('A2', 'Jadwal Karyawan Mingguan');
@@ -283,7 +245,12 @@ class EmployeeScheduleController extends Controller {
             
             $counter++;
         }
-
+        
+        for ($j = 7; $j < $counter; $j++) {
+            $objPHPExcel->getActiveSheet()
+                ->getRowDimension($j)
+                ->setRowHeight(256);
+        }
         for ($col = 'A'; $col !== 'Z'; $col++) {
             $objPHPExcel->getActiveSheet()
             ->getColumnDimension($col)

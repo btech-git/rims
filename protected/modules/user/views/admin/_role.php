@@ -92,35 +92,35 @@
                 'Setting Company' => array(
                     'content' => $this->renderPartial(
                         '_formCompany',
-                        array('model' => $model, 'counter' => $counter+248),
+                        array('model' => $model, 'counter' => $counter+254),
                         true
                     )
                 ),
                 'Setting Accounting' => array(
                     'content' => $this->renderPartial(
                         '_formAccounting',
-                        array('model' => $model, 'counter' => $counter+293),
+                        array('model' => $model, 'counter' => $counter+299),
                         true
                     )
                 ),
                 'Setting Product' => array(
                     'content' => $this->renderPartial(
                         '_formProduct',
-                        array('model' => $model, 'counter' => $counter+314),
+                        array('model' => $model, 'counter' => $counter+320),
                         true
                     )
                 ),
                 'Setting Service' => array(
                     'content' => $this->renderPartial(
                         '_formService',
-                        array('model' => $model, 'counter' => $counter+363),
+                        array('model' => $model, 'counter' => $counter+369),
                         true
                     )
                 ),
                 'Setting Vehicle' => array(
                     'content' => $this->renderPartial(
                         '_formVehicle',
-                        array('model' => $model, 'counter' => $counter+412),
+                        array('model' => $model, 'counter' => $counter+418),
                         true
                     )
                 ),
@@ -137,7 +137,7 @@
 
 <br /><br />
 
-<?php $counter = 447; ?>
+<?php $counter = 453; ?>
 <div id="front-role-panel" <?php if (!$model->is_front_access): ?>style="display: none"<?php endif; ?>>
     <?php echo $this->renderPartial('_formRimsFront', array(
         'model'=>$model,

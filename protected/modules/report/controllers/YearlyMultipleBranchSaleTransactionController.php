@@ -1,6 +1,6 @@
 <?php
 
-class YearlyMultipleEmployeeSaleTransactionController extends Controller {
+class YearlyMultipleBranchSaleTransactionController extends Controller {
 
     public function filters() {
         return array(
@@ -10,7 +10,7 @@ class YearlyMultipleEmployeeSaleTransactionController extends Controller {
 
     public function filterAccess($filterChain) {
         if ($filterChain->action->id === 'summary') {
-            if (!(Yii::app()->user->checkAccess('yearlySaleAllFrontReport'))) {
+            if (!(Yii::app()->user->checkAccess('director'))) {
                 $this->redirect(array('/site/login'));
             }
         }
@@ -26,15 +26,13 @@ class YearlyMultipleEmployeeSaleTransactionController extends Controller {
         
         $year = (isset($_GET['Year'])) ? $_GET['Year'] : $yearNow;
         
-        $yearlyMultipleEmployeeSaleReport = InvoiceHeader::getYearlyMultipleEmployeeSaleReport($year);
+        $yearlyMultipleBranchSaleReport = InvoiceHeader::getYearlyMultipleBranchSaleReport($year);
+        $branchIds = array_map(function($yearlyMultipleBranchSaleReportItem) { return $yearlyMultipleBranchSaleReportItem['branch_id']; }, $yearlyMultipleBranchSaleReport);
+        $yearlyMultipleBranchSaleProductReport = InvoiceDetail::getYearlyMultipleBranchSaleProductReport($year, $branchIds);
         
-        $employeeIds = array_map(function($yearlyMultipleEmployeeSaleReportItem) { return $yearlyMultipleEmployeeSaleReportItem['employee_id_sales_person']; }, $yearlyMultipleEmployeeSaleReport);
-        
-        $yearlyMultipleEmployeeSaleProductReport = InvoiceDetail::getYearlyMultipleEmployeeSaleProductReport($year, $employeeIds);
-        
-        $yearlyMultipleEmployeeSaleProductReportData = array();
-        foreach ($yearlyMultipleEmployeeSaleProductReport as $yearlyMultipleEmployeeSaleProductReportItem) {
-            $yearlyMultipleEmployeeSaleProductReportData[$yearlyMultipleEmployeeSaleProductReportItem['employee_id_sales_person']] = $yearlyMultipleEmployeeSaleProductReportItem;
+        $yearlyMultipleBranchSaleProductReportData = array();
+        foreach ($yearlyMultipleBranchSaleProductReport as $yearlyMultipleBranchSaleProductReportItem) {
+            $yearlyMultipleBranchSaleProductReportData[$yearlyMultipleBranchSaleProductReportItem['branch_id']] = $yearlyMultipleBranchSaleProductReportItem;
         }
         
         $yearList = array();
@@ -47,18 +45,18 @@ class YearlyMultipleEmployeeSaleTransactionController extends Controller {
         }
         
         if (isset($_GET['SaveExcel'])) {
-            $this->saveToExcel($yearlyMultipleEmployeeSaleReport, $yearlyMultipleEmployeeSaleProductReportData, $year);
+            $this->saveToExcel($yearlyMultipleBranchSaleReport, $yearlyMultipleBranchSaleProductReportData, $year);
         }
         
         $this->render('summary', array(
-            'yearlyMultipleEmployeeSaleReport' => $yearlyMultipleEmployeeSaleReport,
-            'yearlyMultipleEmployeeSaleProductReportData' => $yearlyMultipleEmployeeSaleProductReportData,
+            'yearlyMultipleBranchSaleReport' => $yearlyMultipleBranchSaleReport,
+            'yearlyMultipleBranchSaleProductReportData' => $yearlyMultipleBranchSaleProductReportData,
             'yearList' => $yearList,
             'year' => $year,
         ));
     }
     
-    protected function saveToExcel($yearlyMultipleEmployeeSaleReport, $yearlyMultipleEmployeeSaleProductReportData, $year) {
+    protected function saveToExcel($yearlyMultipleBranchSaleReport, $yearlyMultipleBranchSaleProductReportData, $year) {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
 
@@ -70,10 +68,10 @@ class YearlyMultipleEmployeeSaleTransactionController extends Controller {
 
         $documentProperties = $objPHPExcel->getProperties();
         $documentProperties->setCreator('Raperind Motor');
-        $documentProperties->setTitle('Penjualan All Front Tahunan');
+        $documentProperties->setTitle('Penjualan All Cabang Tahunan');
 
         $worksheet = $objPHPExcel->setActiveSheetIndex(0);
-        $worksheet->setTitle('Penjualan All Front Tahunan');
+        $worksheet->setTitle('Penjualan All Cabang Tahunan');
 
         $worksheet->mergeCells('A1:W1');
         $worksheet->mergeCells('A2:W2');
@@ -82,12 +80,12 @@ class YearlyMultipleEmployeeSaleTransactionController extends Controller {
         $worksheet->getStyle('A1:W5')->getFont()->setBold(true);
 
         $worksheet->setCellValue('A1', 'Raperind Motor ');
-        $worksheet->setCellValue('A2', 'Laporan Penjualan All Front Tahunan');
+        $worksheet->setCellValue('A2', 'Laporan Penjualan All Cabang Tahunan');
         $worksheet->setCellValue('A3', $year);
         
         $worksheet->getStyle('A5:W5')->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
         $worksheet->setCellValue('A5', 'No');
-        $worksheet->setCellValue('B5', 'Front Name');
+        $worksheet->setCellValue('B5', 'Cabang');
         $worksheet->setCellValue('C5', 'Customer Total');
         $worksheet->setCellValue('D5', 'per Bulan');
         $worksheet->setCellValue('E5', 'Baru');
@@ -109,7 +107,7 @@ class YearlyMultipleEmployeeSaleTransactionController extends Controller {
         $worksheet->setCellValue('U5', 'Average Ban');
         $worksheet->setCellValue('V5', 'Average Oli');
         $worksheet->setCellValue('W5', 'Average Aksesoris');
-        $worksheet->getStyle('A6:W6')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle('A5:W5')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
         $counter = 7;
         $customerQuantitySum = 0;
@@ -134,8 +132,8 @@ class YearlyMultipleEmployeeSaleTransactionController extends Controller {
         $totalPartsAverageDailySum = '0.00';
         $totalPartsPerCustomerSum = '0.00';
         
-        foreach ($yearlyMultipleEmployeeSaleReport as $i => $dataItem) {
-            $detailItem = $yearlyMultipleEmployeeSaleProductReportData[$dataItem['employee_id_sales_person']];
+        foreach ($yearlyMultipleBranchSaleReport as $i => $dataItem) {
+            $detailItem = $yearlyMultipleBranchSaleProductReportData[$dataItem['branch_id']];
             $averageTire = $detailItem['tire_quantity'] > 0 ? $detailItem['tire_price'] / $detailItem['tire_quantity'] : '0.00';
             $averageOil = $detailItem['oil_quantity'] > 0 ? $detailItem['oil_price'] / $detailItem['oil_quantity'] : '0.00';
             $averageAccessories = $detailItem['accessories_quantity'] > 0 ? $detailItem['accessories_price'] / $detailItem['accessories_quantity'] : '0.00';
@@ -150,7 +148,7 @@ class YearlyMultipleEmployeeSaleTransactionController extends Controller {
             $worksheet->getStyle("E{$counter}:J{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
 
             $worksheet->setCellValue("A{$counter}", $i + 1);
-            $worksheet->setCellValue("B{$counter}", $dataItem['employee_name']);
+            $worksheet->setCellValue("B{$counter}", $dataItem['branch_name']);
             $worksheet->setCellValue("C{$counter}", $dataItem['customer_quantity']);
             $worksheet->setCellValue("D{$counter}", $customerAverageDaily);
             $worksheet->setCellValue("E{$counter}", $dataItem['customer_new_quantity']);
@@ -233,7 +231,7 @@ class YearlyMultipleEmployeeSaleTransactionController extends Controller {
         ob_end_clean();
 
         header('Content-type: application/vnd.ms-excel');
-        header('Content-Disposition: attachment;filename="penjualan_all_front_tahunan.xls"');
+        header('Content-Disposition: attachment;filename="penjualan_all_cabang_tahunan.xls"');
         header('Cache-Control: max-age=0');
 
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');

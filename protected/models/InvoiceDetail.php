@@ -200,6 +200,133 @@ class InvoiceDetail extends CActiveRecord {
         return $resultSet;
     }
     
+    public static function getDailyMultipleBranchSaleProductReport($startDate, $endDate, $branchIds) {
+        $branchIdList = empty($branchIds) ? 'NULL' :  implode(',', $branchIds);
+        
+        $params = array(
+            ':start_date' => $startDate,
+            ':end_date' => $endDate,
+        );
+        
+        $sql = "SELECT h.branch_id, SUM(CASE WHEN p.product_sub_category_id IN (442, 444) THEN d.quantity ELSE 0 END) AS tire_quantity, 
+                    SUM(CASE WHEN p.product_sub_category_id = 540 THEN d.quantity ELSE 0 END) AS oil_quantity, 
+                    SUM(CASE WHEN p.product_sub_category_id BETWEEN 636 AND 649 THEN d.quantity ELSE 0 END) AS accessories_quantity, 
+                    SUM(CASE WHEN p.product_sub_category_id IN (442, 444) THEN d.total_price ELSE 0 END) AS tire_price, 
+                    SUM(CASE WHEN p.product_sub_category_id = 540 THEN d.total_price ELSE 0 END) AS oil_price, 
+                    SUM(CASE WHEN p.product_master_category_id = 9 THEN d.total_price ELSE 0 END) AS accessories_price
+                FROM " . InvoiceDetail::model()->tableName() . " d 
+                INNER JOIN " . InvoiceHeader::model()->tableName() . " h ON h.id = d.invoice_id
+                INNER JOIN " . Product::model()->tableName() . " p ON p.id = d.product_id
+                WHERE h.branch_id IN (" . $branchIdList . ") AND h.invoice_date BETWEEN :start_date AND :end_date AND h.status NOT LIKE '%CANCEL%'
+                GROUP BY h.branch_id";
+                
+        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
+        
+        return $resultSet;
+    }
+    
+    public static function getMonthlySingleBranchSaleProductReport($year, $month, $branchId) {
+        $params = array(
+            ':year' => $year,
+            ':month' => $month,
+            ':branch_id' => $branchId,
+        );
+        
+        $sql = "SELECT DAY(h.invoice_date) AS day, SUM(CASE WHEN p.product_sub_category_id IN (442, 444) THEN d.quantity ELSE 0 END) AS tire_quantity, 
+                    SUM(CASE WHEN p.product_sub_category_id = 540 THEN d.quantity ELSE 0 END) AS oil_quantity, 
+                    SUM(CASE WHEN p.product_master_category_id = 9 THEN d.quantity ELSE 0 END) AS accessories_quantity, 
+                    SUM(CASE WHEN p.product_sub_category_id IN (442, 444) THEN d.total_price ELSE 0 END) AS tire_price, 
+                    SUM(CASE WHEN p.product_sub_category_id = 540 THEN d.total_price ELSE 0 END) AS oil_price, 
+                    SUM(CASE WHEN p.product_master_category_id = 9 THEN d.total_price ELSE 0 END) AS accessories_price
+                FROM " . InvoiceDetail::model()->tableName() . " d 
+                INNER JOIN " . InvoiceHeader::model()->tableName() . " h ON h.id = d.invoice_id
+                INNER JOIN " . Product::model()->tableName() . " p ON p.id = d.product_id
+                WHERE h.branch_id = :branch_id AND YEAR(h.invoice_date) = :year AND MONTH(h.invoice_date) = :month AND h.status NOT LIKE '%CANCEL%'
+                GROUP BY DAY(h.invoice_date)";
+                
+        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
+        
+        return $resultSet;
+    }
+    
+    public static function getMonthlyMultipleBranchSaleProductReport($year, $month, $branchIds) {
+        $branchIdList = empty($branchIds) ? 'NULL' :  implode(',', $branchIds);
+        
+        $params = array(
+            ':year' => $year,
+            ':month' => $month,
+        );
+        
+        $sql = "SELECT h.branch_id, SUM(CASE WHEN p.product_sub_category_id IN (442, 444) THEN d.quantity ELSE 0 END) AS tire_quantity, 
+                    SUM(CASE WHEN p.product_sub_category_id = 540 THEN d.quantity ELSE 0 END) AS oil_quantity, 
+                    SUM(CASE WHEN p.product_master_category_id = 9 THEN d.quantity ELSE 0 END) AS accessories_quantity, 
+                    SUM(CASE WHEN p.product_sub_category_id IN (442, 444) THEN d.total_price ELSE 0 END) AS tire_price, 
+                    SUM(CASE WHEN p.product_sub_category_id = 540 THEN d.total_price ELSE 0 END) AS oil_price, 
+                    SUM(CASE WHEN p.product_master_category_id = 9 THEN d.total_price ELSE 0 END) AS accessories_price,
+                    COUNT(d.service_id) AS service_quantity, SUM(CASE WHEN d.service_id IS NOT NULL THEN d.total_price ELSE 0 END) AS service_price
+                FROM " . InvoiceDetail::model()->tableName() . " d 
+                INNER JOIN " . InvoiceHeader::model()->tableName() . " h ON h.id = d.invoice_id
+                LEFT OUTER JOIN " . Product::model()->tableName() . " p ON p.id = d.product_id
+                LEFT OUTER JOIN " . Service::model()->tableName() . " s ON s.id = d.service_id
+                WHERE h.branch_id IN (" . $branchIdList . ") AND YEAR(h.invoice_date) = :year AND MONTH(h.invoice_date) = :month AND h.status NOT LIKE '%CANCEL%'
+                GROUP BY h.branch_id";
+                
+        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
+        
+        return $resultSet;
+    }
+    
+    public static function getYearlySingleBranchSaleProductReport($year, $branchId) {
+        $params = array(
+            ':year' => $year,
+            ':branch_id' => $branchId,
+        );
+        
+        $sql = "SELECT MONTH(h.invoice_date) AS month, SUM(CASE WHEN p.product_sub_category_id IN (442, 444) THEN d.quantity ELSE 0 END) AS tire_quantity, 
+                    SUM(CASE WHEN p.product_sub_category_id = 540 THEN d.quantity ELSE 0 END) AS oil_quantity, 
+                    SUM(CASE WHEN p.product_master_category_id = 9 THEN d.quantity ELSE 0 END) AS accessories_quantity, 
+                    SUM(CASE WHEN p.product_sub_category_id IN (442, 444) THEN d.total_price ELSE 0 END) AS tire_price, 
+                    SUM(CASE WHEN p.product_sub_category_id = 540 THEN d.total_price ELSE 0 END) AS oil_price, 
+                    SUM(CASE WHEN p.product_master_category_id = 9 THEN d.total_price ELSE 0 END) AS accessories_price,
+                    COUNT(d.service_id) AS service_quantity, SUM(CASE WHEN d.service_id IS NOT NULL THEN d.total_price ELSE 0 END) AS service_price
+                FROM " . InvoiceDetail::model()->tableName() . " d 
+                INNER JOIN " . InvoiceHeader::model()->tableName() . " h ON h.id = d.invoice_id
+                LEFT OUTER JOIN " . Product::model()->tableName() . " p ON p.id = d.product_id
+                LEFT OUTER JOIN " . Service::model()->tableName() . " s ON s.id = d.service_id
+                WHERE h.branch_id = :branch_id AND YEAR(h.invoice_date) = :year AND h.status NOT LIKE '%CANCEL%'
+                GROUP BY MONTH(h.invoice_date)";
+                
+        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
+        
+        return $resultSet;
+    }
+    
+    public static function getYearlyMultipleBranchSaleProductReport($year, $branchIds) {
+        $branchIdList = empty($branchIds) ? 'NULL' :  implode(',', $branchIds);
+        
+        $params = array(
+            ':year' => $year,
+        );
+        
+        $sql = "SELECT h.branch_id, SUM(CASE WHEN p.product_sub_category_id IN (442, 444) THEN d.quantity ELSE 0 END) AS tire_quantity, 
+                    SUM(CASE WHEN p.product_sub_category_id = 540 THEN d.quantity ELSE 0 END) AS oil_quantity, 
+                    SUM(CASE WHEN p.product_master_category_id = 9 THEN d.quantity ELSE 0 END) AS accessories_quantity, 
+                    SUM(CASE WHEN p.product_sub_category_id IN (442, 444) THEN d.total_price ELSE 0 END) AS tire_price, 
+                    SUM(CASE WHEN p.product_sub_category_id = 540 THEN d.total_price ELSE 0 END) AS oil_price, 
+                    SUM(CASE WHEN p.product_master_category_id = 9 THEN d.total_price ELSE 0 END) AS accessories_price,
+                    COUNT(d.service_id) AS service_quantity, SUM(CASE WHEN d.service_id IS NOT NULL THEN d.total_price ELSE 0 END) AS service_price
+                FROM " . InvoiceDetail::model()->tableName() . " d 
+                INNER JOIN " . InvoiceHeader::model()->tableName() . " h ON h.id = d.invoice_id
+                LEFT OUTER JOIN " . Product::model()->tableName() . " p ON p.id = d.product_id
+                LEFT OUTER JOIN " . Service::model()->tableName() . " s ON s.id = d.service_id
+                WHERE h.branch_id IN (" . $branchIdList . ") AND YEAR(h.invoice_date) = :year AND h.status NOT LIKE '%CANCEL%'
+                GROUP BY h.branch_id";
+                
+        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
+        
+        return $resultSet;
+    }
+    
     public static function getDailyMultipleEmployeeSaleProductReport($startDate, $endDate, $employeeIds) {
         $employeeIdList = empty($employeeIds) ? 'NULL' :  implode(',', $employeeIds);
         
@@ -420,7 +547,7 @@ class InvoiceDetail extends CActiveRecord {
         $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
         
         return $resultSet;
-    }    
+    }
     
     public function searchByTransactionDetailInfo($employeeId, $startDate, $endDate, $productSubCategoryIds, $page) {
         // Warning: Please modify the following code to remove attributes that
@@ -442,6 +569,35 @@ class InvoiceDetail extends CActiveRecord {
         $criteria->addInCondition('product.product_sub_category_id', $productSubCategoryIds);
         $criteria->addBetweenCondition('invoiceHeader.invoice_date', $startDate, $endDate);
         $criteria->addCondition("invoiceHeader.status NOT LIKE '%CANCEL%' AND registrationTransaction.status NOT LIKE '%CANCEL%'");
+        
+        return new CActiveDataProvider($this, array(
+            'criteria' => $criteria,
+            'sort' => array(
+                'defaultOrder' => 'invoiceHeader.invoice_date DESC',
+            ),
+            'pagination' => array(
+                'pageSize' => 100,
+                'currentPage' => $page - 1,
+            ),
+        ));
+    }
+    
+    public function searchByTransactionDetailBranchInfo($branchId, $startDate, $endDate, $productSubCategoryIds, $page) {
+        // Warning: Please modify the following code to remove attributes that
+        // should not be searched.
+
+        $criteria = new CDbCriteria;
+
+        $criteria->together = 'true';
+        $criteria->with = array(
+            'invoiceHeader',
+            'product',
+        );
+
+        $criteria->compare('invoiceHeader.branch_id', $branchId);
+        $criteria->addInCondition('product.product_sub_category_id', $productSubCategoryIds);
+        $criteria->addBetweenCondition('invoiceHeader.invoice_date', $startDate, $endDate);
+        $criteria->addCondition("invoiceHeader.status NOT LIKE '%CANCEL%'");
         
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,

@@ -16,7 +16,6 @@
         <tr>
             <td>Bank</td>
             <td style="text-align: center">
-                <?php //echo $counter; ?>
                 <?php echo CHtml::checkBox("User[roles][masterBankCreate]", CHtml::resolveValue($model, "roles[masterBankCreate]"), array('id' => 'User_roles_' . $counter++, 'value' => 'masterBankCreate')); ?>
             </td>
             <td style="text-align: center">
@@ -26,14 +25,12 @@
                 <?php echo CHtml::checkBox("User[roles][masterBankView]", CHtml::resolveValue($model, "roles[masterBankView]"), array('id' => 'User_roles_' . $counter++, 'value' => 'masterBankView')); ?>
             </td>
             <td style="text-align: center">
-                <?php //echo $counter; ?>
                 <?php echo CHtml::checkBox("User[roles][masterBankApproval]", CHtml::resolveValue($model, "roles[masterBankApproval]"), array('id' => 'User_roles_' . $counter++, 'value' => 'masterBankApproval')); ?>
             </td>
         </tr>
         <tr>
             <td>COA</td>
             <td style="text-align: center">
-                <?php //echo $counter; ?>
                 <?php echo CHtml::checkBox("User[roles][masterCoaCreate]", CHtml::resolveValue($model, "roles[masterCoaCreate]"), array('id' => 'User_roles_' . $counter++, 'value' => 'masterCoaCreate')); ?>
             </td>
             <td style="text-align: center">
@@ -43,14 +40,12 @@
                 <?php echo CHtml::checkBox("User[roles][masterCoaView]", CHtml::resolveValue($model, "roles[masterCoaView]"), array('id' => 'User_roles_' . $counter++, 'value' => 'masterCoaView')); ?>
             </td>
             <td style="text-align: center">
-                <?php //echo $counter; ?>
                 <?php echo CHtml::checkBox("User[roles][masterCoaApproval]", CHtml::resolveValue($model, "roles[masterCoaApproval]"), array('id' => 'User_roles_' . $counter++, 'value' => 'masterCoaApproval')); ?>
             </td>
         </tr>
         <tr>
             <td>COA Category</td>
             <td style="text-align: center">
-                <?php //echo $counter; ?>
                 <?php echo CHtml::checkBox("User[roles][masterCoaCategoryCreate]", CHtml::resolveValue($model, "roles[masterCoaCategoryCreate]"), array('id' => 'User_roles_' . $counter++, 'value' => 'masterCoaCategoryCreate')); ?>
             </td>
             <td style="text-align: center">
@@ -60,14 +55,12 @@
                 <?php echo CHtml::checkBox("User[roles][masterCoaCategoryView]", CHtml::resolveValue($model, "roles[masterCoaCategoryView]"), array('id' => 'User_roles_' . $counter++, 'value' => 'masterCoaCategoryView')); ?>
             </td>
             <td style="text-align: center">
-                <?php //echo $counter; ?>
                 <?php echo CHtml::checkBox("User[roles][masterCoaCategoryApproval]", CHtml::resolveValue($model, "roles[masterCoaCategoryApproval]"), array('id' => 'User_roles_' . $counter++, 'value' => 'masterCoaCategoryApproval')); ?>
             </td>
         </tr>
         <tr>
             <td>COA Sub Category</td>
             <td style="text-align: center">
-                <?php //echo $counter; ?>
                 <?php echo CHtml::checkBox("User[roles][masterCoaSubCategoryCreate]", CHtml::resolveValue($model, "roles[masterCoaSubCategoryCreate]"), array('id' => 'User_roles_' . $counter++, 'value' => 'masterCoaSubCategoryCreate')); ?>
             </td>
             <td style="text-align: center">
@@ -77,14 +70,12 @@
                 <?php echo CHtml::checkBox("User[roles][masterCoaSubCategoryView]", CHtml::resolveValue($model, "roles[masterCoaSubCategoryView]"), array('id' => 'User_roles_' . $counter++, 'value' => 'masterCoaSubCategoryView')); ?>
             </td>
             <td style="text-align: center">
-                <?php //echo $counter; ?>
                 <?php echo CHtml::checkBox("User[roles][masterCoaSubCategoryApproval]", CHtml::resolveValue($model, "roles[masterCoaSubCategoryApproval]"), array('id' => 'User_roles_' . $counter++, 'value' => 'masterCoaSubCategoryApproval')); ?>
             </td>
         </tr>
         <tr>
             <td>Payment Type</td>
             <td style="text-align: center">
-                <?php //echo $counter; ?>
                 <?php echo CHtml::checkBox("User[roles][masterPaymentTypeCreate]", CHtml::resolveValue($model, "roles[masterPaymentTypeCreate]"), array('id' => 'User_roles_' . $counter++, 'value' => 'masterPaymentTypeCreate')); ?>
             </td>
             <td style="text-align: center">

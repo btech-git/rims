@@ -171,10 +171,11 @@ class EmployeeTimesheet extends CActiveRecord {
     
     public static function getEmployeeYearlyAttendance($employeeId, $year) {
         
-        $sql = "SELECT t.employee_onleave_category_id, MONTH(t.date) as month, MAX(c.name) AS category_name, COUNT(*) AS days, COUNT(CASE WHEN t.duration_late > 300 THEN 0 ELSE NULL END) as late_days
+        $sql = "SELECT t.employee_onleave_category_id, MONTH(t.date) as month, MAX(c.name) AS category_name, COUNT(*) AS days, 
+                    COUNT(CASE WHEN t.duration_late > 300 THEN 0 ELSE NULL END) as late_days
                 FROM " . EmployeeTimesheet::model()->tableName() . " t 
                 INNER JOIN " . EmployeeOnleaveCategory::model()->tableName() . " c ON c.id = t.employee_onleave_category_id
-                WHERE t.employee_id = :employee_id AND YEAR(t.date) = :year
+                WHERE t.employee_id = :employee_id AND YEAR(t.date) = :year AND c.is_inactive = 0
                 GROUP BY t.employee_onleave_category_id, MONTH(t.date)
                 ORDER BY t.employee_onleave_category_id ASC, month ASC";
 

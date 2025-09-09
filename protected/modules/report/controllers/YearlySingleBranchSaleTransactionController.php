@@ -1,6 +1,6 @@
 <?php
 
-class YearlySingleEmployeeSaleTransactionController extends Controller {
+class YearlySingleBranchSaleTransactionController extends Controller {
 
     public function filters() {
         return array(
@@ -10,7 +10,7 @@ class YearlySingleEmployeeSaleTransactionController extends Controller {
 
     public function filterAccess($filterChain) {
         if ($filterChain->action->id === 'summary') {
-            if (!(Yii::app()->user->checkAccess('yearlySaleFrontReport'))) {
+            if (!(Yii::app()->user->checkAccess('director'))) {
                 $this->redirect(array('/site/login'));
             }
         }
@@ -25,20 +25,20 @@ class YearlySingleEmployeeSaleTransactionController extends Controller {
         $yearNow = date('Y');
         
         $year = (isset($_GET['Year'])) ? $_GET['Year'] : $yearNow;
-        $employeeId = (isset($_GET['EmployeeId'])) ? $_GET['EmployeeId'] : '';
+        $branchId = (isset($_GET['BranchId'])) ? $_GET['BranchId'] : '';
         
-        $yearlySingleEmployeeSaleReport = InvoiceHeader::getYearlySingleEmployeeSaleReport($year, $employeeId);
+        $yearlySingleBranchSaleReport = InvoiceHeader::getYearlySingleBranchSaleReport($year, $branchId);
         
-        $yearlySingleEmployeeSaleProductReport = InvoiceDetail::getYearlySingleEmployeeSaleProductReport($year, $employeeId);
+        $yearlySingleBranchSaleProductReport = InvoiceDetail::getYearlySingleBranchSaleProductReport($year, $branchId);
         
-        $yearlySingleEmployeeSaleReportData = array();
-        foreach ($yearlySingleEmployeeSaleReport as $yearlySingleEmployeeSaleReportItem) {
-            $yearlySingleEmployeeSaleReportData[$yearlySingleEmployeeSaleReportItem['month']] = $yearlySingleEmployeeSaleReportItem;
+        $yearlySingleBranchSaleReportData = array();
+        foreach ($yearlySingleBranchSaleReport as $yearlySingleBranchSaleReportItem) {
+            $yearlySingleBranchSaleReportData[$yearlySingleBranchSaleReportItem['month']] = $yearlySingleBranchSaleReportItem;
         }
         
-        $yearlySingleEmployeeSaleProductReportData = array();
-        foreach ($yearlySingleEmployeeSaleProductReport as $yearlySingleEmployeeSaleProductReportItem) {
-            $yearlySingleEmployeeSaleProductReportData[$yearlySingleEmployeeSaleProductReportItem['month']] = $yearlySingleEmployeeSaleProductReportItem;
+        $yearlySingleBranchSaleProductReportData = array();
+        foreach ($yearlySingleBranchSaleProductReport as $yearlySingleBranchSaleProductReportItem) {
+            $yearlySingleBranchSaleProductReportData[$yearlySingleBranchSaleProductReportItem['month']] = $yearlySingleBranchSaleProductReportItem;
         }
         
         $yearList = array();
@@ -51,19 +51,19 @@ class YearlySingleEmployeeSaleTransactionController extends Controller {
         }
         
         if (isset($_GET['SaveExcel'])) {
-            $this->saveToExcel($yearlySingleEmployeeSaleReportData, $yearlySingleEmployeeSaleProductReportData, $year, $employeeId);
+            $this->saveToExcel($yearlySingleBranchSaleReportData, $yearlySingleBranchSaleProductReportData, $year, $branchId);
         }
         
         $this->render('summary', array(
-            'yearlySingleEmployeeSaleReportData' => $yearlySingleEmployeeSaleReportData,
-            'yearlySingleEmployeeSaleProductReportData' => $yearlySingleEmployeeSaleProductReportData,
+            'yearlySingleBranchSaleReportData' => $yearlySingleBranchSaleReportData,
+            'yearlySingleBranchSaleProductReportData' => $yearlySingleBranchSaleProductReportData,
             'yearList' => $yearList,
             'year' => $year,
-            'employeeId' => $employeeId,
+            'branchId' => $branchId,
         ));
     }
     
-    protected function saveToExcel($yearlySingleEmployeeSaleReportData, $yearlySingleEmployeeSaleProductReportData, $year, $employeeId) {
+    protected function saveToExcel($yearlySingleBranchSaleReportData, $yearlySingleBranchSaleProductReportData, $year, $branchId) {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
 
@@ -75,10 +75,10 @@ class YearlySingleEmployeeSaleTransactionController extends Controller {
 
         $documentProperties = $objPHPExcel->getProperties();
         $documentProperties->setCreator('Raperind Motor');
-        $documentProperties->setTitle('Penjualan Front Tahunan');
+        $documentProperties->setTitle('Penjualan Cabang Tahunan');
 
         $worksheet = $objPHPExcel->setActiveSheetIndex(0);
-        $worksheet->setTitle('Penjualan Front Tahunan');
+        $worksheet->setTitle('Penjualan Cabang Tahunan');
 
         $worksheet->mergeCells('A1:R1');
         $worksheet->mergeCells('A2:R2');
@@ -87,9 +87,9 @@ class YearlySingleEmployeeSaleTransactionController extends Controller {
         $worksheet->getStyle('A1:R5')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
         $worksheet->getStyle('A1:R5')->getFont()->setBold(true);
 
-        $employee = Employee::model()->findByPk($employeeId);
+        $branch = Branch::model()->findByPk($branchId);
         $worksheet->setCellValue('A1', 'Raperind Motor ');
-        $worksheet->setCellValue('A2', 'Laporan Penjualan Tahunan ' . CHtml::value($employee, 'name'));
+        $worksheet->setCellValue('A2', 'Laporan Penjualan Tahunan ' . CHtml::value($branch, 'name'));
         $worksheet->setCellValue('A3', $year);
         
         $worksheet->getStyle('A5:R5')->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
@@ -100,10 +100,10 @@ class YearlySingleEmployeeSaleTransactionController extends Controller {
         $worksheet->setCellValue('E5', 'Retail');
         $worksheet->setCellValue('F5', 'Contract Service Unit');
         $worksheet->setCellValue('G5', 'Total Invoice (Rp)');
-        $worksheet->setCellValue('H5', 'Invoice per Unit');
-        $worksheet->setCellValue('I5', 'Jasa (Rp)');
-        $worksheet->setCellValue('J5', 'Jasa / Unit');
-        $worksheet->setCellValue('K5', 'Parts (Rp)');
+        $worksheet->setCellValue('H5', 'Jasa (Rp)');
+        $worksheet->setCellValue('I5', 'Parts (Rp)');
+        $worksheet->setCellValue('J5', 'Invoice per Unit');
+        $worksheet->setCellValue('K5', 'Jasa / Unit');
         $worksheet->setCellValue('L5', 'Parts / Unit');
         $worksheet->setCellValue('M5', 'Total Ban');
         $worksheet->setCellValue('N5', 'Total Oli');
@@ -129,9 +129,9 @@ class YearlySingleEmployeeSaleTransactionController extends Controller {
         $averageOilSum = '0.00';
         $averageAccessoriesSum = '0.00';
         for ($i = 1; $i <= 12; $i++) {
-            if (isset($yearlySingleEmployeeSaleReportData[$i]) && isset($yearlySingleEmployeeSaleProductReportData[$i])) {
-                $dataItem = $yearlySingleEmployeeSaleReportData[$i];
-                $detailItem = $yearlySingleEmployeeSaleProductReportData[$i];
+            if (isset($yearlySingleBranchSaleReportData[$i]) && isset($yearlySingleBranchSaleProductReportData[$i])) {
+                $dataItem = $yearlySingleBranchSaleReportData[$i];
+                $detailItem = $yearlySingleBranchSaleProductReportData[$i];
                 $averageTire = $detailItem['tire_quantity'] > 0 ? $detailItem['tire_price'] / $detailItem['tire_quantity'] : '0.00';
                 $averageOil = $detailItem['oil_quantity'] > 0 ? $detailItem['oil_price'] / $detailItem['oil_quantity'] : '0.00';
                 $averageAccessories = $detailItem['accessories_quantity'] > 0 ? $detailItem['accessories_price'] / $detailItem['accessories_quantity'] : '0.00';
@@ -148,10 +148,10 @@ class YearlySingleEmployeeSaleTransactionController extends Controller {
                 $worksheet->setCellValue("E{$counter}", $dataItem['customer_retail_quantity']);
                 $worksheet->setCellValue("F{$counter}", $dataItem['customer_company_quantity']);
                 $worksheet->setCellValue("G{$counter}", $dataItem['grand_total']);
-                $worksheet->setCellValue("H{$counter}", $totalInvoicePerCustomer);
-                $worksheet->setCellValue("I{$counter}", $dataItem['total_service']);
-                $worksheet->setCellValue("J{$counter}", $totalServicePerCustomer);
-                $worksheet->setCellValue("K{$counter}", $dataItem['total_product']);
+                $worksheet->setCellValue("H{$counter}", $dataItem['total_service']);
+                $worksheet->setCellValue("I{$counter}", $dataItem['total_product']);
+                $worksheet->setCellValue("J{$counter}", $totalInvoicePerCustomer);
+                $worksheet->setCellValue("K{$counter}", $totalServicePerCustomer);
                 $worksheet->setCellValue("L{$counter}", $totalPartsPerCustomer);
                 $worksheet->setCellValue("M{$counter}", $detailItem['tire_quantity']);
                 $worksheet->setCellValue("N{$counter}", $detailItem['oil_quantity']);
@@ -183,6 +183,9 @@ class YearlySingleEmployeeSaleTransactionController extends Controller {
             }
         }
 
+        $worksheet->getStyle("A{$counter}:R{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A{$counter}:R{$counter}")->getFont()->setBold(true);
+        
         $worksheet->setCellValue("A{$counter}", 'TOTAL');
         $worksheet->setCellValue("B{$counter}", $customerQuantitySum);
         $worksheet->setCellValue("C{$counter}", $customerNewQuantitySum);
@@ -190,8 +193,8 @@ class YearlySingleEmployeeSaleTransactionController extends Controller {
         $worksheet->setCellValue("E{$counter}", $customerRetailQuantitySum);
         $worksheet->setCellValue("F{$counter}", $customerCompanyQuantitySum);
         $worksheet->setCellValue("G{$counter}", $grandTotalSum);
-        $worksheet->setCellValue("I{$counter}", $totalServiceSum);
-        $worksheet->setCellValue("K{$counter}", $totalProductSum);
+        $worksheet->setCellValue("H{$counter}", $totalServiceSum);
+        $worksheet->setCellValue("I{$counter}", $totalProductSum);
         $worksheet->setCellValue("M{$counter}", $tireQuantitySum);
         $worksheet->setCellValue("N{$counter}", $oilQuantitySum);
         $worksheet->setCellValue("O{$counter}", $accessoriesQuantitySum);
@@ -208,7 +211,7 @@ class YearlySingleEmployeeSaleTransactionController extends Controller {
         ob_end_clean();
 
         header('Content-type: application/vnd.ms-excel');
-        header('Content-Disposition: attachment;filename="penjualan_front_tahunan.xls"');
+        header('Content-Disposition: attachment;filename="penjualan_cabang_tahunan.xls"');
         header('Cache-Control: max-age=0');
 
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');

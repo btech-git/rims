@@ -81,6 +81,7 @@
                     'monthList' => $monthList,
                     'employee' => $employee,
                     'dayOfWeekList' => $dayOfWeekList,
+                    'employeeDaysCountData' => $employeeDaysCountData,
                 )); ?>
             </div>
 
