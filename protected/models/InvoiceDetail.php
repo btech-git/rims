@@ -213,10 +213,12 @@ class InvoiceDetail extends CActiveRecord {
                     SUM(CASE WHEN p.product_sub_category_id BETWEEN 636 AND 649 THEN d.quantity ELSE 0 END) AS accessories_quantity, 
                     SUM(CASE WHEN p.product_sub_category_id IN (442, 444) THEN d.total_price ELSE 0 END) AS tire_price, 
                     SUM(CASE WHEN p.product_sub_category_id = 540 THEN d.total_price ELSE 0 END) AS oil_price, 
-                    SUM(CASE WHEN p.product_master_category_id = 9 THEN d.total_price ELSE 0 END) AS accessories_price
+                    SUM(CASE WHEN p.product_master_category_id = 9 THEN d.total_price ELSE 0 END) AS accessories_price,
+                    COUNT(d.service_id) AS service_quantity, SUM(CASE WHEN d.service_id IS NOT NULL THEN d.total_price ELSE 0 END) AS service_price
                 FROM " . InvoiceDetail::model()->tableName() . " d 
                 INNER JOIN " . InvoiceHeader::model()->tableName() . " h ON h.id = d.invoice_id
-                INNER JOIN " . Product::model()->tableName() . " p ON p.id = d.product_id
+                LEFT OUTER JOIN " . Product::model()->tableName() . " p ON p.id = d.product_id
+                LEFT OUTER JOIN " . Service::model()->tableName() . " s ON s.id = d.service_id
                 WHERE h.branch_id IN (" . $branchIdList . ") AND h.invoice_date BETWEEN :start_date AND :end_date AND h.status NOT LIKE '%CANCEL%'
                 GROUP BY h.branch_id";
                 

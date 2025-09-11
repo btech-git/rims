@@ -138,7 +138,7 @@ class MonthlyMultipleBranchSaleTransactionController extends Controller {
         $numberOfDays = cal_days_in_month(CAL_GREGORIAN, $month, $year);
         
         foreach ($monthlyMultipleBranchSaleReport as $i => $dataItem) {
-            $detailItem = $monthlyMultipleBranchSaleProductReportData[$dataItem['branch_id_sales_person']];
+            $detailItem = $monthlyMultipleBranchSaleProductReportData[$dataItem['branch_id']];
             $averageTire = $detailItem['tire_quantity'] > 0 ? $detailItem['tire_price'] / $detailItem['tire_quantity'] : '0.00';
             $averageOil = $detailItem['oil_quantity'] > 0 ? $detailItem['oil_price'] / $detailItem['oil_quantity'] : '0.00';
             $averageAccessories = $detailItem['accessories_quantity'] > 0 ? $detailItem['accessories_price'] / $detailItem['accessories_quantity'] : '0.00';
