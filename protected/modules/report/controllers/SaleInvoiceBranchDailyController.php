@@ -155,7 +155,7 @@ class SaleInvoiceBranchDailyController extends Controller {
             $worksheet->setCellValue("P{$counter}", CHtml::value($header, 'registrationTransaction.work_order_number'));
             $worksheet->setCellValue("Q{$counter}", CHtml::value($header, 'registrationTransaction.work_order_date'));
             $worksheet->setCellValue("R{$counter}", CHtml::value($header, 'registrationTransaction.work_order_time'));
-            $worksheet->setCellValue("S{$counter}", CHtml::value($header, 'employeeIdAssignMechanic.name'));
+            $worksheet->setCellValue("S{$counter}", CHtml::value($header, 'registrationTransaction.employeeIdAssignMechanic.name'));
             $worksheet->setCellValue("T{$counter}", CHtml::value($header, 'invoice_number'));
             $worksheet->setCellValue("U{$counter}", CHtml::value($header, 'total_price'));
             $worksheet->setCellValue("V{$counter}", CHtml::value($header, 'invoice_date'));

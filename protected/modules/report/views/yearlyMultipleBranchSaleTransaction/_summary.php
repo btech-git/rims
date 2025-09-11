@@ -42,8 +42,8 @@ Yii::app()->clientScript->registerCss('_report', '
             <th class="width1-7">Total Invoice (Rp)</th>
             <th class="width1-8">Total Service (Rp)</th>
             <th class="width1-9">Total Parts (Rp)</th>
-            <th class="width1-7">Service per Unit</th>
             <th class="width1-7">Invoice per Unit</th>
+            <th class="width1-7">Service per Unit</th>
             <th class="width1-7">Parts per Unit</th>
             <th class="width1-10">Total Ban</th>
             <th class="width1-11">Total Oli</th>
