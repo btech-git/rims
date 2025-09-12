@@ -17,6 +17,7 @@ Yii::app()->clientScript->registerCss('_report', '
 
 <div class="relative">
     <div style="font-weight: bold; text-align: center">
+        <?php $branch = Branch::model()->findByPk($branchId); ?>
         <div style="font-size: larger">RAPERIND MOTOR</div>
         <div style="font-size: larger">Laporan Posisi Stok <?php echo CHtml::encode(CHtml::value($branch, 'name')); ?></div>
         <div>
