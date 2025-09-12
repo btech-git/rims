@@ -17,8 +17,8 @@ Yii::app()->clientScript->registerCss('_report', '
 
 <div class="relative">
     <div style="font-weight: bold; text-align: center">
-        <div style="font-size: larger">RAPERIND MOTOR<?php //echo CHtml::encode(($branch === null) ? '' : $branch->name); ?></div>
-        <div style="font-size: larger">Laporan Posisi Stok</div>
+        <div style="font-size: larger">RAPERIND MOTOR</div>
+        <div style="font-size: larger">Laporan Posisi Stok <?php echo CHtml::encode(CHtml::value($branch, 'name')); ?></div>
         <div>
             <?php echo ' Periode: ' . CHtml::encode(Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($endDate))); ?>
         </div>
@@ -32,6 +32,7 @@ Yii::app()->clientScript->registerCss('_report', '
                 <th style="text-align: center; font-weight: bold; border-bottom: 1px solid">Code</th>
                 <th style="text-align: center; font-weight: bold; border-bottom: 1px solid">Name</th>
                 <th style="text-align: center; font-weight: bold; border-bottom: 1px solid">Ket</th>
+                <th style="text-align: center; font-weight: bold; border-bottom: 1px solid">Satuan</th>
                 <th style="text-align: center; font-weight: bold; border-bottom: 1px solid">Awal</th>
                 <th style="text-align: center; font-weight: bold; border-bottom: 1px solid">Masuk</th>
                 <th style="text-align: center; font-weight: bold; border-bottom: 1px solid">Keluar</th>
@@ -45,7 +46,7 @@ Yii::app()->clientScript->registerCss('_report', '
                 <tr class="items1">
                     <td style="text-align: center; font-weight: bold"><?php echo CHtml::encode(CHtml::value($header, 'id')); ?></td>
                     <td style="text-align: center; font-weight: bold"><?php echo CHtml::encode(CHtml::value($header, 'code')); ?></td>
-                    <td colspan="6" style="font-weight: bold"><?php echo CHtml::encode(CHtml::value($header, 'name')); ?></td>
+                    <td colspan="7" style="font-weight: bold"><?php echo CHtml::encode(CHtml::value($header, 'name')); ?></td>
                 </tr>
 
                 <?php $totalStock = '0.00'; ?>
@@ -63,6 +64,7 @@ Yii::app()->clientScript->registerCss('_report', '
                         <td><?php echo CHtml::encode($stockRow['id']); ?></td>
                         <td><?php echo CHtml::encode($stockRow['name']); ?></td>
                         <td><?php echo CHtml::encode($stockRow['manufacturer_code']); ?></td>
+                        <td><?php echo CHtml::encode($stockRow['unit_name']); ?></td>
                         <td style="text-align: center"><?php echo Yii::app()->numberFormatter->format('#,##0', $stockBegin); ?></td>
                         <td style="text-align: center"><?php echo Yii::app()->numberFormatter->format('#,##0', $stockIn); ?></td>
                         <td style="text-align: center"><?php echo Yii::app()->numberFormatter->format('#,##0', $stockOut); ?></td>
@@ -74,9 +76,13 @@ Yii::app()->clientScript->registerCss('_report', '
                     <?php $totalValue += $inventoryValue; ?>
                 <?php endforeach; ?>
                 <tr>
-                    <td colspan="6" style="font-weight: bold; text-align: right">TOTAL</td>
-                    <td style="font-weight: bold; text-align: center"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $totalStock)); ?></td>
-                    <td style="font-weight: bold; text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $totalValue)); ?></td>
+                    <td colspan="7" style="font-weight: bold; text-align: right">TOTAL</td>
+                    <td style="font-weight: bold; text-align: center">
+                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $totalStock)); ?>
+                    </td>
+                    <td style="font-weight: bold; text-align: right">
+                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $totalValue)); ?>
+                    </td>
                 </tr>
             <?php endforeach; ?>
         </tbody>
