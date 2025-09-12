@@ -118,6 +118,7 @@ class StockCardCategoryController extends Controller {
         ini_set('memory_limit', '1024M');
 
         $endDateFormatted = Yii::app()->dateFormatter->format('d MMMM yyyy', $endDate);
+        $branch = Branch::model()->findByPk($branchId);
 
         spl_autoload_unregister(array('YiiBase', 'autoload'));
         include_once Yii::getPathOfAlias('ext.phpexcel.Classes') . DIRECTORY_SEPARATOR . 'PHPExcel.php';
@@ -139,7 +140,7 @@ class StockCardCategoryController extends Controller {
         $worksheet->getStyle('A1:M3')->getFont()->setBold(true);
         
         $worksheet->setCellValue('A1', 'Raperind Motor');
-        $worksheet->setCellValue('A2', 'Laporan Posisi Stok');
+        $worksheet->setCellValue('A2', 'Laporan Posisi Stok ' . CHtml::value($branch, 'name'));
         $worksheet->setCellValue('A3', 'Periode: ' . $endDateFormatted);
 
         $worksheet->getStyle("A5:M5")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);

@@ -125,6 +125,7 @@ class PayableDetailController extends Controller {
 
         $worksheet->setCellValue('A5', 'Tanggal');
         $worksheet->setCellValue('B5', 'Transaksi #');
+        $worksheet->setCellValue('B5', 'Invoice / SJ #');
         $worksheet->setCellValue('C5', 'Keterangan');
         $worksheet->setCellValue('D5', 'Debit');
         $worksheet->setCellValue('E5', 'Kredit');

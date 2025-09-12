@@ -148,11 +148,10 @@ class PayableSupplierController extends Controller {
                 $totalPayable += $paymentLeft;
             }
             
-            $worksheet->getStyle("A{$counter}:I{$counter}")->getFont()->setBold(true);
-
-            $worksheet->getStyle("A{$counter}:H{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
-            $worksheet->getStyle("A{$counter}:H{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
-            $worksheet->mergeCells("A{$counter}:E{$counter}");
+//            $worksheet->getStyle("A{$counter}:I{$counter}")->getFont()->setBold(true);
+//            $worksheet->getStyle("A{$counter}:H{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+//            $worksheet->getStyle("A{$counter}:H{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
+//            $worksheet->mergeCells("A{$counter}:E{$counter}");
 //            $worksheet->setCellValue("A{$counter}", 'Total');
 //            $worksheet->setCellValue("F{$counter}", $totalPurchase);
 //            $worksheet->setCellValue("G{$counter}", $totalPayment);
