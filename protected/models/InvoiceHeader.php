@@ -2067,10 +2067,11 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
         ));
     }
     
-    public static function getCustomerSaleReport($startDate, $endDate, $customerId, $branchId, $taxValue) {
+    public static function getCustomerSaleReport($startDate, $endDate, $customerId, $branchId, $taxValue, $customerType) {
         $taxValueConditionSql = '';
         $branchConditionSql = '';
         $customerConditionSql = '';
+        $customerTypeConditionSql = '';
       
         $params = array(
             ':start_date' => $startDate,
@@ -2078,26 +2079,35 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
         );
         
         if (!empty($taxValue)) {
-            $taxValueConditionSql = ' AND t.ppn = :tax_value';
-            $this->dataProvider->criteria->params[':tax_value'] = $taxValue;
+            $taxValueConditionSql = ' AND ppn = :tax_value';
+            $params[':tax_value'] = $taxValue;
         }
 
         if (!empty($branchId)) {
-            $branchConditionSql = ' AND i.branch_id = :branch_id';
-            $this->dataProvider->criteria->params[':branch_id'] = $branchId;
+            $branchConditionSql = ' AND branch_id = :branch_id';
+            $params[':branch_id'] = $branchId;
         }
         
         if (!empty($customerId)) {
-            $customerConditionSql = ' AND i.customer_id = :customer_id';
-            $this->dataProvider->criteria->params[':customer_id'] = $customerId;
+            $customerConditionSql = ' AND c.id = :customer_id';
+            $params[':customer_id'] = $customerId;
         }
         
-        $sql = "SELECT i.customer_id, MAX(c.name) AS customer_name, MAX(c.customer_type) AS customer_type, SUM(i.total_price) AS grand_total
-                FROM " . InvoiceHeader::model()->tableName() . " i
-                INNER JOIN " . Customer::model()->tableName() . " c ON c.id = i.customer_id
-                WHERE i.invoice_date BETWEEN :start_date AND :end_date AND i.status NOT LIKE '%CANCEL%' AND c.customer_type = 'Company'
-                GROUP BY i.customer_id
-                ORDER BY MAX(c.name) ASC";
+        if (!empty($customerType)) {
+            $customerTypeConditionSql = ' AND c.customer_type = :customer_type';
+            $params[':customer_type'] = $customerType;
+        }
+        
+        $sql = "SELECT i.customer_id, c.name AS customer_name, c.customer_type AS customer_type, i.grand_total
+                FROM " . Customer::model()->tableName() . " c
+                INNER JOIN (
+                    SELECT customer_id, SUM(total_price) AS grand_total
+                    FROM " . InvoiceHeader::model()->tableName() . " 
+                    WHERE invoice_date BETWEEN :start_date AND :end_date AND status NOT LIKE '%CANCEL%'" . $branchConditionSql . $taxValueConditionSql . "
+                    GROUP BY customer_id
+                ) i ON c.id = i.customer_id
+                WHERE c.status = 'Active'" . $customerConditionSql . $customerTypeConditionSql . "
+                ORDER BY c.name ASC";
                 
         $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
         
