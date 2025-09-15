@@ -61,6 +61,7 @@ class SaleRetailCustomerController extends Controller {
                 'endDate' => $endDate, 
                 'branchId' => $branchId,
                 'taxValue' => $taxValue,
+                'customerId' => $customerId,
             ));
         }
 
@@ -74,6 +75,7 @@ class SaleRetailCustomerController extends Controller {
             'currentSort' => $currentSort,
             'taxValue' => $taxValue,
             'branchId' => $branchId,
+            'customerId' => $customerId,
         ));
     }
 
@@ -104,6 +106,7 @@ class SaleRetailCustomerController extends Controller {
         $endDate = $options['endDate']; 
         $branchId = $options['branchId']; 
         $taxValue = $options['taxValue']; 
+        $customerId = $options['customerId']; 
         
         $documentProperties = $objPHPExcel->getProperties();
         $documentProperties->setCreator('Raperind Motor');
