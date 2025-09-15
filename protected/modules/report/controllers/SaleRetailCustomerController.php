@@ -92,7 +92,7 @@ class SaleRetailCustomerController extends Controller {
         }
     }
 
-    protected function saveToExcel($dataProvider, array $options = array()) {
+    protected function saveToExcel($customerSaleReport, array $options = array()) {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
 
