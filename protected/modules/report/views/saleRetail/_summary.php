@@ -78,7 +78,7 @@ Yii::app()->clientScript->registerCss('_report', '
                                         <?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime(CHtml::value($saleReportRow, 'invoice_date')))); ?>
                                     </td>
                                     <td class="width2-3">
-                                        <?php echo CHtml::encode(CHtml::value($saleReportRow, 'plate_number')); ?>
+                                        <?php echo CHtml::encode(CHtml::value($saleReportRow, 'vehicle.plate_number')); ?>
                                     </td>
                                     <td class="width2-4" style="text-align: right">
                                         <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($saleReportRow, 'product_price'))); ?>

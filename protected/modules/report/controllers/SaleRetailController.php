@@ -146,7 +146,7 @@ class SaleRetailController extends Controller {
                     $worksheet->setCellValue("C{$counter}", $dataItem['customer_type']);
                     $worksheet->setCellValue("D{$counter}", CHtml::value($saleReportRow, 'invoice_number'));
                     $worksheet->setCellValue("E{$counter}", CHtml::value($saleReportRow, 'invoice_date'));
-                    $worksheet->setCellValue("F{$counter}", CHtml::value($saleReportRow, 'plate_number'));
+                    $worksheet->setCellValue("F{$counter}", CHtml::value($saleReportRow, 'vehicle.plate_number'));
                     $worksheet->setCellValue("G{$counter}", CHtml::value($saleReportRow, 'product_price'));
                     $worksheet->setCellValue("H{$counter}", CHtml::value($saleReportRow, 'service_price'));
                     $worksheet->setCellValue("I{$counter}", CHtml::value($saleReportRow, 'ppn_total'));
