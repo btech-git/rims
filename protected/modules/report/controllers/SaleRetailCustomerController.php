@@ -145,14 +145,14 @@ class SaleRetailCustomerController extends Controller {
         $counter++;
             
         $totalSale = 0.00;
-        foreach ($dataProvider->data as $header) {
-            $grandTotal = $header->getTotalSaleCompany($startDate, $endDate, $branchId, $taxValue);
+        foreach ($customerSaleReport as $i => $dataItem) {
+            $grandTotal = CHtml::encode($dataItem['grand_total']);
             $worksheet->getStyle("D{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
 
-            $worksheet->setCellValue("A{$counter}", CHtml::encode(CHtml::value($header, 'id')));
-            $worksheet->setCellValue("B{$counter}", CHtml::encode(CHtml::value($header, 'name')));
-            $worksheet->setCellValue("C{$counter}", CHtml::encode(CHtml::value($header, 'customer_type')));
-            $worksheet->setCellValue("D{$counter}", CHtml::encode($grandTotal));
+            $worksheet->setCellValue("A{$counter}", $dataItem['customer_id']);
+            $worksheet->setCellValue("B{$counter}", $dataItem['customer_name']);
+            $worksheet->setCellValue("C{$counter}", $dataItem['customer_type']);
+            $worksheet->setCellValue("D{$counter}", $grandTotal);
 
             $counter++;
             
@@ -169,7 +169,7 @@ class SaleRetailCustomerController extends Controller {
 
         $counter++;
 
-        for ($col = 'A'; $col !== 'F'; $col++) {
+        for ($col = 'A'; $col !== 'Z'; $col++) {
             $objPHPExcel->getActiveSheet()
             ->getColumnDimension($col)
             ->setAutoSize(true);
