@@ -209,8 +209,7 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
 
                 <hr />
 
-                <div class="right"><?php echo ReportHelper::summaryText($customerSaleReport); ?></div>
-                <br />
+                <div class="right"><?php //echo ReportHelper::summaryText($customerSaleReport); ?></div>
                 <div class="right"><?php //echo ReportHelper::sortText($saleRetailCustomerSummary->dataProvider->sort, array('Name')); ?></div>
                 <div class="clear"></div>
 
@@ -228,22 +227,6 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                 </div>
                 <div class="clear"></div>
             </div>
-            
-            <div class="hide">
-                <div class="right"></div>
-                <div class="clear"></div>
-            </div>
         </div>
     </div>
 </div>
-
-<br/>
-
-<div class="right">
-    <?php /*$this->widget('system.web.widgets.pagers.CLinkPager', array(
-        'itemCount' => $saleRetailCustomerSummary->dataProvider->pagination->itemCount,
-        'pageSize' => $saleRetailCustomerSummary->dataProvider->pagination->pageSize,
-        'currentPage' => $saleRetailCustomerSummary->dataProvider->pagination->getCurrentPage(false),
-    )); */?>
-</div>
-<div class="clear"></div>
