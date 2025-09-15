@@ -14,7 +14,8 @@
 '); ?>
 
 <div style="font-weight: bold; text-align: center">
-    <div style="font-size: larger"><?php echo Yii::app()->name; ?></div>
+    <?php $branch = Branch::model()->findByPk($branchId); ?>
+    <div style="font-size: larger">Raperind Motor <?php echo CHtml::encode(CHtml::value($branch, 'name')); ?></div>
     <div style="font-size: larger">Laporan Hutang Supplier Summary</div>
     <div><?php echo 'Per Tanggal: ' . CHtml::encode(Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($endDate))); ?></div>
 </div>

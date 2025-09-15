@@ -221,10 +221,11 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                 <div class="relative">
                     <?php $this->renderPartial('_summary', array(
                         'customer' => $customer,
-                        'saleRetailCustomerSummary' => $saleRetailCustomerSummary,
                         'startDate' => $startDate,
                         'endDate' => $endDate,
                         'branchId' => $branchId,
+                        'taxValue' => $taxValue,
+                        'saleRetailCustomerSummary' => $saleRetailCustomerSummary,
                     )); ?>
                 </div>
                 <div class="clear"></div>

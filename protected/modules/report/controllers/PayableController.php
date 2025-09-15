@@ -85,9 +85,9 @@ class PayableController extends Controller {
         list($leftPart,, ) = explode('/', $codeNumber);
         list(, $codeNumberConstant) = explode('.', $leftPart);
 
-        if ($codeNumberConstant === 'RCI') {
-            $model = TransactionReceiveItem::model()->findByAttributes(array('receive_item_no' => $codeNumber));
-            $this->redirect(array('/transaction/transactionReceiveItem/showInvoice', 'id' => $model->id));
+        if ($codeNumberConstant === 'PO') {
+            $model = TransactionPurchaseOrder::model()->findByAttributes(array('purchase_order_no' => $codeNumber));
+            $this->redirect(array('/transaction/transactionPurchaseORder/show', 'id' => $model->id));
         } else if ($codeNumberConstant === 'WOE') {
             $model = WorkOrderExpenseHeader::model()->findByAttributes(array('transaction_number' => $codeNumber));
             $this->redirect(array('/accounting/workOrderExpense/show', 'id' => $model->id));
@@ -112,30 +112,31 @@ class PayableController extends Controller {
         $worksheet = $objPHPExcel->setActiveSheetIndex(0);
         $worksheet->setTitle('Laporan Hutang Supplier');
 
-        $worksheet->mergeCells('A1:H1');
-        $worksheet->mergeCells('A2:H2');
-        $worksheet->mergeCells('A3:H3');
+        $worksheet->mergeCells('A1:I1');
+        $worksheet->mergeCells('A2:I2');
+        $worksheet->mergeCells('A3:I3');
 
-        $worksheet->getStyle('A1:H5')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-        $worksheet->getStyle('A1:H5')->getFont()->setBold(true);
+        $worksheet->getStyle('A1:I5')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->getStyle('A1:I5')->getFont()->setBold(true);
         
         $branch = Branch::model()->findByPk($branchId);
         $worksheet->setCellValue('A1', 'Raperind Motor ' . CHtml::encode(CHtml::value($branch, 'name')));
         $worksheet->setCellValue('A2', 'Laporan Hutang Supplier');
         $worksheet->setCellValue('A3', 'Per Tanggal ' . Yii::app()->dateFormatter->format('d MMMM yyyy', $endDate));
 
-        $worksheet->getStyle("A5:H5")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
-        $worksheet->getStyle("A6:H6")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
-
-        $worksheet->getStyle('A5:H5')->getFont()->setBold(true);
+        $worksheet->getStyle("A5:I5")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A5:I5")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle('A5:I5')->getFont()->setBold(true);
+        
         $worksheet->setCellValue('A5', 'Code');
         $worksheet->setCellValue('B5', 'Company');
         $worksheet->setCellValue('C5', 'Name');
-        $worksheet->setCellValue('D5', 'Tanggal');
-        $worksheet->setCellValue('E5', 'PO #');
-        $worksheet->setCellValue('F5', 'Grand Total');
-        $worksheet->setCellValue('G5', 'Payment');
-        $worksheet->setCellValue('H5', 'Remaining');
+        $worksheet->setCellValue('D5', 'PO #');
+        $worksheet->setCellValue('E5', 'Tanggal');
+        $worksheet->setCellValue('F5', 'Invoice #');
+        $worksheet->setCellValue('G5', 'Grand Total');
+        $worksheet->setCellValue('H5', 'Payment');
+        $worksheet->setCellValue('I5', 'Remaining');
 
         $counter = 7;
         
@@ -151,11 +152,12 @@ class PayableController extends Controller {
                 $worksheet->setCellValue("A{$counter}", $header->code);
                 $worksheet->setCellValue("B{$counter}", $header->company);
                 $worksheet->setCellValue("C{$counter}", $header->name);
-                $worksheet->setCellValue("D{$counter}", $payableRow['purchase_order_date']);
-                $worksheet->setCellValue("E{$counter}", $payableRow['invoice_number']);
-                $worksheet->setCellValue("F{$counter}", $purchase);
-                $worksheet->setCellValue("G{$counter}", $paymentAmount);
-                $worksheet->setCellValue("H{$counter}", $paymentLeft);
+                $worksheet->setCellValue("D{$counter}", $payableRow['purchase_order_no']);
+                $worksheet->setCellValue("E{$counter}", $payableRow['purchase_order_date']);
+                $worksheet->setCellValue("F{$counter}", $payableRow['invoice_number']);
+                $worksheet->setCellValue("G{$counter}", $purchase);
+                $worksheet->setCellValue("H{$counter}", $paymentAmount);
+                $worksheet->setCellValue("I{$counter}", $paymentLeft);
 
                 $counter++;
             }
@@ -168,17 +170,18 @@ class PayableController extends Controller {
                 $worksheet->setCellValue("A{$counter}", $header->code);
                 $worksheet->setCellValue("B{$counter}", $header->company);
                 $worksheet->setCellValue("C{$counter}", $header->name);
-                $worksheet->setCellValue("D{$counter}", $payableRow['transaction_date']);
-                $worksheet->setCellValue("E{$counter}", $payableRow['transaction_number']);
-                $worksheet->setCellValue("F{$counter}", $purchase);
-                $worksheet->setCellValue("G{$counter}", $paymentAmount);
-                $worksheet->setCellValue("H{$counter}", $paymentLeft);
+                $worksheet->setCellValue("D{$counter}", $payableRow['registration_number']);
+                $worksheet->setCellValue("E{$counter}", $payableRow['transaction_date']);
+                $worksheet->setCellValue("F{$counter}", $payableRow['transaction_number']);
+                $worksheet->setCellValue("G{$counter}", $purchase);
+                $worksheet->setCellValue("H{$counter}", $paymentAmount);
+                $worksheet->setCellValue("I{$counter}", $paymentLeft);
 
                 $counter++;
             }
         }
 
-        for ($col = 'A'; $col !== 'F'; $col++) {
+        for ($col = 'A'; $col !== 'Z'; $col++) {
             $objPHPExcel->getActiveSheet()
             ->getColumnDimension($col)
             ->setAutoSize(true);

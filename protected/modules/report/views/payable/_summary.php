@@ -32,6 +32,7 @@
             <td colspan="3">
                 <table>
                     <tr>
+                        <th class="width2-2">PO #</th>
                         <th class="width2-1">Tanggal</th>
                         <th class="width2-2">Invoice #</th>
                         <th class="width2-3">Grand Total</th>
@@ -57,16 +58,20 @@
                         <?php $totalPurchase = 0.00; ?>
                         <?php $totalPayment = 0.00; ?>
                         <?php $totalPayable = 0.00; ?>
+                        
                         <?php foreach ($payableData as $payableRow): ?>
                             <?php $purchase = $payableRow['total_price']; ?>
                             <?php $paymentAmount = $payableRow['amount']; ?>
                             <?php $paymentLeft = $payableRow['remaining']; ?>
                             <tr>
+                                <td class="width2-2">
+                                    <?php echo CHtml::link($payableRow['purchase_order_no'], Yii::app()->createUrl("report/payable/redirectTransaction", array("codeNumber" => $payableRow['purchase_order_no'])), array('target' => '_blank'));?>
+                                </td>
                                 <td class="width2-1">
                                     <?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($payableRow['purchase_order_date']))); ?>
                                 </td>
                                 <td class="width2-2">
-                                    <?php echo CHtml::link($payableRow['invoice_number'], Yii::app()->createUrl("report/payable/redirectTransaction", array("codeNumber" => $payableRow['receive_item_no'])), array('target' => '_blank'));?>
+                                    <?php echo CHtml::encode($payableRow['invoice_number']);?>
                                 </td>
                                 <td class="width2-3" style="text-align: right">
                                     <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $purchase)); ?>
@@ -88,6 +93,9 @@
                             <?php $paymentAmount = $payableRow['amount']; ?>
                             <?php $paymentLeft = $payableRow['remaining']; ?>
                             <tr>
+                                <td class="width2-2">
+                                    <?php echo CHtml::encode($payableRow['registration_number']);?>
+                                </td>
                                 <td class="width2-1">
                                     <?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($payableRow['transaction_date']))); ?>
                                 </td>
@@ -109,7 +117,7 @@
                             <?php $totalPayable += $paymentLeft; ?>
                         <?php endforeach; ?>
                         <tr>
-                            <td colspan="2" style="text-align: right">TOTAL</td>
+                            <td colspan="3" style="text-align: right">TOTAL</td>
                             <td class="width2-3" style="text-align: right"> 
                                 <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalPurchase)); ?>
                             </td>

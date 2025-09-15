@@ -44,6 +44,7 @@ class SaleRetailCustomerController extends Controller {
             'startDate' => $startDate,
             'endDate' => $endDate,
             'taxValue' => $taxValue,
+            'branchId' => $branchId,
         );
         $saleRetailCustomerSummary->setupFilter($filters);
 

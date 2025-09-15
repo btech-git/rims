@@ -33,22 +33,28 @@ class SaleRetailCustomerSummary extends CComponent {
         $startDate = (empty($filters['startDate'])) ? date('Y-m-d') : $filters['startDate'];
         $endDate = (empty($filters['endDate'])) ? date('Y-m-d') : $filters['endDate'];
         $taxValue = (empty($filters['taxValue'])) ? '' : $filters['taxValue'];
+        $branchId = (empty($filters['branchId'])) ? '' : $filters['branchId'];
         
         $taxValueConditionSql = '';
+        $branchConditionSql = '';
         
         if (!empty($taxValue)) {
             $taxValueConditionSql = ' AND t.ppn = :tax_value';
+            $this->dataProvider->criteria->params[':tax_value'] = $taxValue;
         }
 
+        if (!empty($branchId)) {
+            $branchConditionSql = ' AND i.branch_id = :branch_id';
+            $this->dataProvider->criteria->params[':branch_id'] = $branchId;
+        }
+        
         $this->dataProvider->criteria->addCondition("EXISTS (
             SELECT id FROM " . InvoiceHeader::model()->tableName() . "
-            WHERE customer_id = t.id AND substr(invoice_date, 1, 10) BETWEEN :start_date AND :end_date AND t.status NOT LIKE '%CANCELLED%'" . $taxValueConditionSql . " 
+            WHERE customer_id = t.id AND substr(invoice_date, 1, 10) BETWEEN :start_date AND :end_date AND t.status NOT LIKE '%CANCELLED%'" . 
+                $taxValueConditionSql . $branchConditionSql . " 
         )");
         $this->dataProvider->criteria->params[':start_date'] = $startDate;
         $this->dataProvider->criteria->params[':end_date'] = $endDate;
-        if (!empty($taxValue)) {
-            $this->dataProvider->criteria->params[':tax_value'] = $taxValue;
-        }
         $this->dataProvider->criteria->compare('t.customer_type', 'Company');
     }
 }

@@ -400,7 +400,7 @@ class Supplier extends CActiveRecord {
         }
         
         $sql = "
-            SELECT r.receive_item_no, r.invoice_number, o.purchase_order_date, r.invoice_grand_total AS total_price, COALESCE(p.amount, 0) AS amount, 
+            SELECT o.purchase_order_no, r.invoice_number, o.purchase_order_date, r.invoice_grand_total AS total_price, COALESCE(p.amount, 0) AS amount, 
             r.invoice_grand_total - COALESCE(p.amount, 0) AS remaining
             FROM " . TransactionPurchaseOrder::model()->tableName() . " o
             INNER JOIN " . TransactionReceiveItem::model()->tableName() . " r ON o.id = r.purchase_order_id
@@ -435,9 +435,10 @@ class Supplier extends CActiveRecord {
         }
         
         $sql = "
-            SELECT w.transaction_number, w.transaction_date, w.grand_total AS total_price, COALESCE(p.amount, 0) AS amount, 
-            w.grand_total - COALESCE(p.amount, 0) AS remaining
+            SELECT r.transaction_number AS registration_number, w.transaction_number, w.transaction_date, w.grand_total AS total_price, COALESCE(p.amount, 0) AS amount, 
+                w.grand_total - COALESCE(p.amount, 0) AS remaining
             FROM " . WorkOrderExpenseHeader::model()->tableName() . " w
+            INNER JOIN " . RegistrationTransaction::model()->tableName() . " r ON r.id = w.registration_transaction_id
             LEFT OUTER JOIN (
                 SELECT d.work_order_expense_header_id, SUM(d.amount) AS amount 
                 FROM " . PayOutDetail::model()->tableName() . " d 
@@ -447,7 +448,7 @@ class Supplier extends CActiveRecord {
             ) p ON w.id = p.work_order_expense_header_id 
             WHERE w.supplier_id = :supplier_id AND (w.grand_total - COALESCE(p.amount, 0)) > 100.00 AND 
             DATE(w.transaction_date) BETWEEN '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND :end_date AND w.status = 'Approved' AND
-            w.user_id_cancelled IS NULL" . $branchConditionSql . "
+                w.user_id_cancelled IS NULL" . $branchConditionSql . "
             ORDER BY w.transaction_date ASC";
 
         $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
@@ -613,10 +614,45 @@ class Supplier extends CActiveRecord {
         }
         
         $sql = "
-            SELECT p.supplier_id, COALESCE(SUM(p.total_price), 0) AS total_price, COALESCE(SUM(p.payment_amount), 0) AS payment_amount, COALESCE(SUM(p.payment_left), 0) AS payment_left
+            SELECT p.supplier_id, COALESCE(SUM(p.total_price), 0) AS total_price, COALESCE(SUM(p.payment_amount), 0) AS payment_amount, 
+                COALESCE(SUM(p.payment_left), 0) AS payment_left
             FROM " . TransactionPurchaseOrder::model()->tableName() . " p 
             WHERE p.supplier_id = :supplier_id AND substr(p.purchase_order_date, 1, 10) BETWEEN '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND :end_date" . $branchConditionSql . "
             GROUP BY p.supplier_id 
+        ";
+
+        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
+
+        return $resultSet;
+    }
+    
+    public function getPayableDetailReport($endDate, $branchId) {
+        $branchConditionSql = '';
+        
+        $params = array(
+            ':supplier_id' => $this->id,
+            ':end_date' => $endDate,
+        );
+        
+        if (!empty($branchId)) {
+            $branchConditionSql = ' AND r.recipient_branch_id = :branch_id';
+            $params[':branch_id'] = $branchId;
+        }
+        
+        $sql = "
+            SELECT r.supplier_id, o.purchase_order_no, r.invoice_number, r.invoice_date, r.invoice_due_date, r.supplier_delivery_number, r.invoice_grand_total,
+                COALESCE(p.payment, 0) AS payment_amount, r.invoice_grand_total - COALESCE(p.payment, 0) AS payment_left
+            FROM " . TransactionReceiveItem::model()->tableName() . " r
+            INNER JOIN " . TransactionPurchaseOrder::model()->tableName() . " o ON o.id = r.purchase_order_id
+            LEFT OUTER JOIN (
+                SELECT receive_item_id, SUM(amount) as payment  
+                FROM " . PayOutDetail::model()->tableName() . " d 
+                INNER JOIN " . PaymentOut::model()->tableName() . " h ON h.id = d.payment_out_id
+                WHERE h.status NOT LIKE '%CANCEL%'
+                GROUP BY receive_item_id 
+            ) p ON r.id = p.receive_item_id
+            WHERE r.supplier_id = :supplier_id AND substr(r.invoice_date, 1, 10) BETWEEN '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND :end_date AND
+                r.user_id_cancelled IS NULL" . $branchConditionSql . "
         ";
 
         $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);

@@ -23,21 +23,18 @@ class PayableDetailController extends Controller {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
 
-//        $account = Search::bind(new Coa('search'), isset($_GET['Coa']) ? $_GET['Coa'] : array());
         $branchId = isset($_GET['BranchId']) ? $_GET['BranchId'] : '';
-        $coaId = (isset($_GET['CoaId'])) ? $_GET['CoaId'] : '';
+        $supplierId = (isset($_GET['SupplierId'])) ? $_GET['SupplierId'] : '';
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
         $pageSize = (isset($_GET['PageSize'])) ? $_GET['PageSize'] : '';
         $currentPage = (isset($_GET['page'])) ? $_GET['page'] : '';
         $currentSort = (isset($_GET['sort'])) ? $_GET['sort'] : '';
 
-        $account = Search::bind(new Coa('search'), isset($_GET['Coa']) ? $_GET['Coa'] : array());
-        $accountDataProvider = $account->search();
-        $accountDataProvider->criteria->compare('t.is_approved', 1);
-        $accountDataProvider->criteria->compare('t.coa_sub_category_id', 15);
-        $accountDataProvider->pagination->pageVar = 'page_dialog';
+        $supplier = Search::bind(new Supplier('search'), isset($_GET['Supplier']) ? $_GET['Supplier'] : array());
+        $supplierDataProvider = $supplier->search();
+        $supplierDataProvider->pagination->pageVar = 'page_dialog';
 
-        $payableDetailSummary = new PayableDetailSummary($account->search());
+        $payableDetailSummary = new PayableDetailSummary($supplier->search());
         $payableDetailSummary->setupLoading();
         $payableDetailSummary->setupPaging($pageSize, $currentPage);
         $payableDetailSummary->setupSorting();
@@ -55,14 +52,14 @@ class PayableDetailController extends Controller {
         }
         
         $this->render('summary', array(
-            'account' => $account,
-            'accountDataProvider' => $accountDataProvider,
+            'supplierId' => $supplierId,
+            'supplier' => $supplier,
+            'supplierDataProvider' => $supplierDataProvider,
             'branchId' => $branchId,
             'payableDetailSummary' => $payableDetailSummary,
             'endDate' => $endDate,
             'currentSort' => $currentSort,
             'currentPage' => $currentPage,
-            'coaId' => $coaId,
         ));
     }
 
@@ -109,63 +106,52 @@ class PayableDetailController extends Controller {
         $worksheet = $objPHPExcel->setActiveSheetIndex(0);
         $worksheet->setTitle('Hutang Supplier Detail');
 
-        $worksheet->mergeCells('A1:G1');
-        $worksheet->mergeCells('A2:G2');
-        $worksheet->mergeCells('A3:G3');
+        $worksheet->mergeCells('A1:I1');
+        $worksheet->mergeCells('A2:I2');
+        $worksheet->mergeCells('A3:I3');
 
-        $worksheet->getStyle('A1:G6')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-        $worksheet->getStyle('A1:G6')->getFont()->setBold(true);
+        $worksheet->getStyle('A1:I6')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->getStyle('A1:I6')->getFont()->setBold(true);
 
         $branch = Branch::model()->findByPk($branchId);
         $worksheet->setCellValue('A1', 'Raperind Motor ' . CHtml::value($branch, 'name'));
         $worksheet->setCellValue('A2', 'Hutang Supplier Detail');
         $worksheet->setCellValue('A3', 'Per Tanggal: ' . Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($endDate)));
 
-        $worksheet->getStyle('A5:G5')->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle('A5:I5')->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
-        $worksheet->setCellValue('A5', 'Tanggal');
-        $worksheet->setCellValue('B5', 'Transaksi #');
-        $worksheet->setCellValue('B5', 'Invoice / SJ #');
-        $worksheet->setCellValue('C5', 'Keterangan');
-        $worksheet->setCellValue('D5', 'Debit');
-        $worksheet->setCellValue('E5', 'Kredit');
-        $worksheet->setCellValue('F5', 'Saldo');
+        $worksheet->setCellValue('A5', 'Supplier ID');
+        $worksheet->setCellValue('B5', 'Supplier Name');
+        $worksheet->setCellValue('C5', 'Tanggal');
+        $worksheet->setCellValue('D5', 'Transaksi #');
+        $worksheet->setCellValue('E5', 'Invoice / SJ #');
+        $worksheet->setCellValue('F5', 'Jatuh Tempo');
+        $worksheet->setCellValue('G5', 'Total');
+        $worksheet->setCellValue('H5', 'Pembayaran');
+        $worksheet->setCellValue('I5', 'Sisa');
 
-        $worksheet->getStyle('A6:G6')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle('A5:I5')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
         $counter = 7;
 
         foreach ($dataProvider->data as $header) {
-            $worksheet->mergeCells("A{$counter}:B{$counter}");
-            $worksheet->mergeCells("C{$counter}:E{$counter}");
-            $worksheet->setCellValue("A{$counter}", CHtml::value($header, 'code'));
-            $worksheet->setCellValue("C{$counter}", CHtml::value($header, 'name'));
-            $saldo = 0; //$header->getBeginningBalancePayable($startDate);
-            $worksheet->setCellValue("F{$counter}", $saldo);
-
-            $counter++;
-
             $payableData = $header->getPayableDetailReport($endDate, $options['branchId']);
             foreach ($payableData as $payableRow) {
-                $amount = $payableRow['amount'];
-                if ($payableRow['transaction_type'] == 'K') {
-                    $saldo += $amount;
-                } else {
-                    $saldo -= $amount;
-                }
-
-                $worksheet->setCellValue("A{$counter}", $payableRow['tanggal_transaksi']);
-                $worksheet->setCellValue("B{$counter}", $payableRow['kode_transaksi']);
-                $worksheet->setCellValue("C{$counter}", $payableRow['remark']);
-                $worksheet->setCellValue("D{$counter}", $payableRow['transaction_type'] == 'D' ? $amount : 0);
-                $worksheet->setCellValue("E{$counter}", $payableRow['transaction_type'] == 'K' ? $amount : 0);
-                $worksheet->setCellValue("F{$counter}", $saldo);
+                $worksheet->setCellValue("A{$counter}", CHtml::value($header, 'id'));
+                $worksheet->setCellValue("B{$counter}", CHtml::value($header, 'name'));
+                $worksheet->setCellValue("C{$counter}", $payableRow['invoice_date']);
+                $worksheet->setCellValue("D{$counter}", $payableRow['purchase_order_no']);
+                $worksheet->setCellValue("E{$counter}", $payableRow['invoice_number']);
+                $worksheet->setCellValue("F{$counter}", $payableRow['invoice_due_date']);
+                $worksheet->setCellValue("G{$counter}", $payableRow['invoice_grand_total']);
+                $worksheet->setCellValue("H{$counter}", $payableRow['payment_amount']);
+                $worksheet->setCellValue("I{$counter}", $payableRow['payment_left']);
 
                 $counter++;
             } 
         }
             
-        for ($col = 'A'; $col !== 'L'; $col++) {
+        for ($col = 'A'; $col !== 'Z'; $col++) {
             $objPHPExcel->getActiveSheet()
             ->getColumnDimension($col)
             ->setAutoSize(true);

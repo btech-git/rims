@@ -9,7 +9,7 @@ Yii::app()->clientScript->registerCss('_report', '
 
 <div style="font-weight: bold; text-align: center">
     <?php $branch = Branch::model()->findByPk($branchId); ?>
-    <div style="font-size: larger">Penjualan per Pelanggan <?php echo CHtml::encode(CHtml::value($branch, 'name'));?></div>
+    <div style="font-size: larger">Penjualan Summary per Pelanggan <?php echo CHtml::encode(CHtml::value($branch, 'name'));?></div>
     <div><?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($startDate))) . ' &nbsp;&ndash;&nbsp; ' . CHtml::encode(Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($endDate))); ?></div>
 </div>
 
@@ -27,13 +27,13 @@ Yii::app()->clientScript->registerCss('_report', '
     
     <tbody>
         <tr>
-            <?php $totalIndividual = Customer::getTotalSaleIndividual($startDate, $endDate, $branchId); ?>
+            <?php $totalIndividual = Customer::getTotalSaleIndividual($startDate, $endDate, $branchId, $taxValue); ?>
             <td colspan="3" style="text-align: center">Individual</td>
             <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalIndividual)); ?></td>
         </tr>
         <?php $totalSale = 0.00; ?>
         <?php foreach ($saleRetailCustomerSummary->dataProvider->data as $header): ?>
-            <?php $grandTotal = $header->getTotalSaleCompany($startDate, $endDate, $branchId); ?>
+            <?php $grandTotal = $header->getTotalSaleCompany($startDate, $endDate, $branchId, $taxValue); ?>
             <tr class="items1">
                 <td class="width1-1"><?php echo CHtml::encode(CHtml::value($header, 'id')); ?></td>
                 <td class="width1-2"><?php echo CHtml::encode(CHtml::value($header, 'name')); ?></td>

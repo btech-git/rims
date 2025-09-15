@@ -97,32 +97,32 @@ class PayableSupplierController extends Controller {
         $worksheet = $objPHPExcel->setActiveSheetIndex(0);
         $worksheet->setTitle('Laporan Hutang Supplier');
 
-        $worksheet->mergeCells('A1:H1');
-        $worksheet->mergeCells('A2:H2');
-        $worksheet->mergeCells('A3:H3');
+        $worksheet->mergeCells('A1:F1');
+        $worksheet->mergeCells('A2:F2');
+        $worksheet->mergeCells('A3:F3');
 
-        $worksheet->getStyle('A1:H3')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-        $worksheet->getStyle('A1:H3')->getFont()->setBold(true);
+        $worksheet->getStyle('A1:F3')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->getStyle('A1:F3')->getFont()->setBold(true);
         
         $branch = Branch::model()->findByPk($branchId);
-        $worksheet->setCellValue('A2', 'Raperind Motor ' . CHtml::encode(CHtml::value($branch, 'name')));
-        $worksheet->setCellValue('A3', 'Laporan Hutang Supplier');
+        $worksheet->setCellValue('A1', 'Raperind Motor ' . CHtml::encode(CHtml::value($branch, 'name')));
+        $worksheet->setCellValue('A2', 'Laporan Hutang Supplier');
         $worksheet->setCellValue('A3', 'Per Tanggal ' . Yii::app()->dateFormatter->format('d MMMM yyyy', $endDate));
 
-        $worksheet->getStyle("A5:H5")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
-        $worksheet->getStyle("A6:H6")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
-
-        $worksheet->getStyle('A5:H6')->getFont()->setBold(true);
+        $worksheet->getStyle("A5:F5")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A5:F5")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle('A5:F6')->getFont()->setBold(true);
+        
         $worksheet->setCellValue('A5', 'Code');
         $worksheet->setCellValue('B5', 'Company');
         $worksheet->setCellValue('C5', 'Name');
-        $worksheet->setCellValue('D5', 'Tanggal');
-        $worksheet->setCellValue('E5', 'PO #');
-        $worksheet->setCellValue('F5', 'Grand Total');
-        $worksheet->setCellValue('G5', 'Payment');
-        $worksheet->setCellValue('H5', 'Remaining');
+//        $worksheet->setCellValue('D5', 'Tanggal');
+//        $worksheet->setCellValue('E5', 'PO #');
+        $worksheet->setCellValue('D5', 'Grand Total');
+        $worksheet->setCellValue('E5', 'Payment');
+        $worksheet->setCellValue('F5', 'Remaining');
 
-        $counter = 8;
+        $counter = 7;
         
         foreach ($payableSummary->dataProvider->data as $header) {
             $payableData = $header->getPayableSupplierReport($endDate, $branchId);
@@ -137,9 +137,9 @@ class PayableSupplierController extends Controller {
                 $worksheet->setCellValue("A{$counter}", $header->code);
                 $worksheet->setCellValue("B{$counter}", $header->company);
                 $worksheet->setCellValue("C{$counter}", $header->name);
-                $worksheet->setCellValue("F{$counter}", $purchase);
-                $worksheet->setCellValue("G{$counter}", $paymentAmount);
-                $worksheet->setCellValue("H{$counter}", $paymentLeft);
+                $worksheet->setCellValue("D{$counter}", $purchase);
+                $worksheet->setCellValue("E{$counter}", $paymentAmount);
+                $worksheet->setCellValue("F{$counter}", $paymentLeft);
 
                 $counter++;
                 
