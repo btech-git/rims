@@ -30,24 +30,9 @@ class SaleRetailCustomerController extends Controller {
 
         $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : date('Y-m-d');
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
-//        $pageSize = (isset($_GET['PageSize'])) ? $_GET['PageSize'] : '';
-        $currentPage = (isset($_GET['page'])) ? $_GET['page'] : '';
-        $currentSort = (isset($_GET['sort'])) ? $_GET['sort'] : '';
         $taxValue = (isset($_GET['TaxValue'])) ? $_GET['TaxValue'] : '';
         $branchId = (isset($_GET['BranchId'])) ? $_GET['BranchId'] : '';
         $customerId = (isset($_GET['CustomerId'])) ? $_GET['CustomerId'] : '';
-
-//        $saleRetailCustomerSummary = new SaleRetailCustomerSummary($customerDataProvider);
-//        $saleRetailCustomerSummary->setupLoading();
-//        $saleRetailCustomerSummary->setupPaging($pageSize, $currentPage);
-//        $saleRetailCustomerSummary->setupSorting();
-//        $filters = array(
-//            'startDate' => $startDate,
-//            'endDate' => $endDate,
-//            'taxValue' => $taxValue,
-//            'branchId' => $branchId,
-//        );
-//        $saleRetailCustomerSummary->setupFilter($filters);
 
         $customerSaleReport = InvoiceHeader::getCustomerSaleReport($startDate, $endDate, $customerId, $branchId, $taxValue);
         
@@ -71,8 +56,6 @@ class SaleRetailCustomerController extends Controller {
             'customerDataProvider' => $customerDataProvider,
             'startDate' => $startDate,
             'endDate' => $endDate,
-            'currentPage' => $currentPage,
-            'currentSort' => $currentSort,
             'taxValue' => $taxValue,
             'branchId' => $branchId,
             'customerId' => $customerId,
