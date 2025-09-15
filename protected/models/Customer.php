@@ -393,39 +393,39 @@ class Customer extends CActiveRecord {
         return ($value === false) ? 0 : $value;
     }
     
-    public function getTotalSaleCompany($startDate, $endDate, $branchId, $taxValue) {
-        $branchConditionSql = '';
-        $taxValueConditionSql = '';
-        
-        $params = array(
-            ':customer_id' => $this->id,
-            ':start_date' => $startDate,
-            ':end_date' => $endDate,
-        );
-        
-        if (!empty($branchId)) {
-            $branchConditionSql = ' AND i.branch_id = :branch_id';
-            $params[':branch_id'] = $branchId;
-        }
-        
-        if (!empty($taxValue)) {
-            $taxValueConditionSql = ' AND i.ppn = :tax_value';
-            $params[':tax_value'] = $taxValue;
-        }
-
-        $sql = "
-            SELECT COALESCE(SUM(total_price), 0) AS total 
-            FROM " . InvoiceHeader::model()->tableName() . " i
-            INNER JOIN " . Customer::model()->tableName() . " c ON c.id = i.customer_id
-            WHERE i.customer_id = :customer_id AND c.customer_type = 'company' AND substr(i.invoice_date, 1, 10) BETWEEN :start_date AND :end_date AND 
-                i.status NOT LIKE '%CANCELLED%'" . $branchConditionSql . $taxValueConditionSql . "
-            GROUP BY customer_id
-        ";
-
-        $value = Yii::app()->db->createCommand($sql)->queryScalar($params);
-
-        return ($value === false) ? 0 : $value;
-    }
+//    public function getTotalSaleCompany($startDate, $endDate, $branchId, $taxValue) {
+//        $branchConditionSql = '';
+//        $taxValueConditionSql = '';
+//        
+//        $params = array(
+//            ':customer_id' => $this->id,
+//            ':start_date' => $startDate,
+//            ':end_date' => $endDate,
+//        );
+//        
+//        if (!empty($branchId)) {
+//            $branchConditionSql = ' AND i.branch_id = :branch_id';
+//            $params[':branch_id'] = $branchId;
+//        }
+//        
+//        if (!empty($taxValue)) {
+//            $taxValueConditionSql = ' AND i.ppn = :tax_value';
+//            $params[':tax_value'] = $taxValue;
+//        }
+//
+//        $sql = "
+//            SELECT COALESCE(SUM(total_price), 0) AS total 
+//            FROM " . InvoiceHeader::model()->tableName() . " i
+//            INNER JOIN " . Customer::model()->tableName() . " c ON c.id = i.customer_id
+//            WHERE i.customer_id = :customer_id AND c.customer_type = 'company' AND substr(i.invoice_date, 1, 10) BETWEEN :start_date AND :end_date AND 
+//                i.status NOT LIKE '%CANCELLED%'" . $branchConditionSql . $taxValueConditionSql . "
+//            GROUP BY customer_id
+//        ";
+//
+//        $value = Yii::app()->db->createCommand($sql)->queryScalar($params);
+//
+//        return ($value === false) ? 0 : $value;
+//    }
     
     public static function getTotalSaleIndividual($startDate, $endDate, $branchId, $taxValue) {
         $branchConditionSql = '';

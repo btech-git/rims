@@ -32,13 +32,15 @@ Yii::app()->clientScript->registerCss('_report', '
             <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalIndividual)); ?></td>
         </tr>
         <?php $totalSale = 0.00; ?>
-        <?php foreach ($saleRetailCustomerSummary->dataProvider->data as $header): ?>
-            <?php $grandTotal = $header->getTotalSaleCompany($startDate, $endDate, $branchId, $taxValue); ?>
+        <?php foreach ($customerSaleReport as $i => $dataItem): ?>
+            <?php $grandTotal = CHtml::encode($dataItem['grand_total']); ?>
             <tr class="items1">
-                <td class="width1-1"><?php echo CHtml::encode(CHtml::value($header, 'id')); ?></td>
-                <td class="width1-2"><?php echo CHtml::encode(CHtml::value($header, 'name')); ?></td>
-                <td class="width1-3"><?php echo CHtml::encode(CHtml::value($header, 'customer_type')); ?></td>
-                <td class="width1-4" style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $grandTotal)); ?></td>
+                <td class="width1-1"><?php echo CHtml::encode($dataItem['customer_id']); ?></td>
+                <td class="width1-2"><?php echo CHtml::encode($dataItem['customer_name']); ?></td>
+                <td class="width1-3"><?php echo CHtml::encode($dataItem['customer_type']); ?></td>
+                <td class="width1-4" style="text-align: right">
+                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $grandTotal)); ?>
+                </td>
             </tr>
             <?php $totalSale += $grandTotal; ?>
         <?php endforeach; ?>

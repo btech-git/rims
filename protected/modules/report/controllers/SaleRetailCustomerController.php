@@ -30,30 +30,33 @@ class SaleRetailCustomerController extends Controller {
 
         $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : date('Y-m-d');
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
-        $pageSize = (isset($_GET['PageSize'])) ? $_GET['PageSize'] : '';
+//        $pageSize = (isset($_GET['PageSize'])) ? $_GET['PageSize'] : '';
         $currentPage = (isset($_GET['page'])) ? $_GET['page'] : '';
         $currentSort = (isset($_GET['sort'])) ? $_GET['sort'] : '';
         $taxValue = (isset($_GET['TaxValue'])) ? $_GET['TaxValue'] : '';
         $branchId = (isset($_GET['BranchId'])) ? $_GET['BranchId'] : '';
+        $customerId = (isset($_GET['CustomerId'])) ? $_GET['CustomerId'] : '';
 
-        $saleRetailCustomerSummary = new SaleRetailCustomerSummary($customerDataProvider);
-        $saleRetailCustomerSummary->setupLoading();
-        $saleRetailCustomerSummary->setupPaging($pageSize, $currentPage);
-        $saleRetailCustomerSummary->setupSorting();
-        $filters = array(
-            'startDate' => $startDate,
-            'endDate' => $endDate,
-            'taxValue' => $taxValue,
-            'branchId' => $branchId,
-        );
-        $saleRetailCustomerSummary->setupFilter($filters);
+//        $saleRetailCustomerSummary = new SaleRetailCustomerSummary($customerDataProvider);
+//        $saleRetailCustomerSummary->setupLoading();
+//        $saleRetailCustomerSummary->setupPaging($pageSize, $currentPage);
+//        $saleRetailCustomerSummary->setupSorting();
+//        $filters = array(
+//            'startDate' => $startDate,
+//            'endDate' => $endDate,
+//            'taxValue' => $taxValue,
+//            'branchId' => $branchId,
+//        );
+//        $saleRetailCustomerSummary->setupFilter($filters);
 
+        $customerSaleReport = InvoiceHeader::getCustomerSaleReport($startDate, $endDate, $customerId, $branchId, $taxValue);
+        
         if (isset($_GET['ResetFilter'])) {
             $this->redirect(array('summary'));
         }
         
         if (isset($_GET['SaveExcel'])) {
-            $this->saveToExcel($saleRetailCustomerSummary->dataProvider, array(
+            $this->saveToExcel($customerSaleReport, array(
                 'startDate' => $startDate, 
                 'endDate' => $endDate, 
                 'branchId' => $branchId,
@@ -62,7 +65,7 @@ class SaleRetailCustomerController extends Controller {
         }
 
         $this->render('summary', array(
-            'saleRetailCustomerSummary' => $saleRetailCustomerSummary,
+            'customerSaleReport' => $customerSaleReport,
             'customer' => $customer,
             'customerDataProvider' => $customerDataProvider,
             'startDate' => $startDate,

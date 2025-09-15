@@ -55,7 +55,7 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                         <span class="prefix">Customer</span>
                                     </div>
                                     <div class="small-8 columns">
-                                        <?php echo CHtml::activeTextField($customer, 'id', array(
+                                        <?php echo CHtml::textField('CustomerId', $customerId, array(
                                             'readonly' => true,
                                             'onclick' => '$("#customer-dialog").dialog("open"); return false;',
                                             'onkeypress' => 'if (event.keyCode == 13) { $("#customer-dialog").dialog("open"); return false; }',
@@ -82,7 +82,7 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                                'header'=>'',
                                             ),
                                             'selectionChanged' => 'js:function(id){
-                                                $("#' . CHtml::activeId($customer, 'id') . '").val($.fn.yiiGridView.getSelection(id));
+                                                $("#CustomerId").val($.fn.yiiGridView.getSelection(id));
                                                 $("#customer-dialog").dialog("close");
                                                 if ($.fn.yiiGridView.getSelection(id) == "") {
                                                     $("#customer_name").html("");
@@ -211,9 +211,9 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
 
                 <hr />
 
-                <div class="right"><?php echo ReportHelper::summaryText($saleRetailCustomerSummary->dataProvider); ?></div>
+                <div class="right"><?php echo ReportHelper::summaryText($customerSaleReport->dataProvider); ?></div>
                 <br />
-                <div class="right"><?php echo ReportHelper::sortText($saleRetailCustomerSummary->dataProvider->sort, array('Name')); ?></div>
+                <div class="right"><?php //echo ReportHelper::sortText($saleRetailCustomerSummary->dataProvider->sort, array('Name')); ?></div>
                 <div class="clear"></div>
 
                 <br />
@@ -225,7 +225,7 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                         'endDate' => $endDate,
                         'branchId' => $branchId,
                         'taxValue' => $taxValue,
-                        'saleRetailCustomerSummary' => $saleRetailCustomerSummary,
+                        'customerSaleReport' => $customerSaleReport,
                     )); ?>
                 </div>
                 <div class="clear"></div>

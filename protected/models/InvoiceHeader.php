@@ -2066,4 +2066,42 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
             ),
         ));
     }
+    
+    public static function getCustomerSaleReport($startDate, $endDate, $customerId, $branchId, $taxValue) {
+        $taxValueConditionSql = '';
+        $branchConditionSql = '';
+        $customerConditionSql = '';
+      
+        $params = array(
+            ':start_date' => $startDate,
+            ':end_date' => $endDate,
+        );
+        
+        if (!empty($taxValue)) {
+            $taxValueConditionSql = ' AND t.ppn = :tax_value';
+            $this->dataProvider->criteria->params[':tax_value'] = $taxValue;
+        }
+
+        if (!empty($branchId)) {
+            $branchConditionSql = ' AND i.branch_id = :branch_id';
+            $this->dataProvider->criteria->params[':branch_id'] = $branchId;
+        }
+        
+        if (!empty($customerId)) {
+            $customerConditionSql = ' AND i.customer_id = :customer_id';
+            $this->dataProvider->criteria->params[':customer_id'] = $customerId;
+        }
+        
+        $sql = "SELECT i.customer_id, MAX(c.name) AS customer_name, MAX(c.customer_type) AS customer_type, SUM(i.total_price) AS grand_total
+                FROM " . InvoiceHeader::model()->tableName() . " i
+                INNER JOIN " . Customer::model()->tableName() . " c ON c.id = i.customer_id
+                WHERE i.invoice_date BETWEEN :start_date AND :end_date AND i.status NOT LIKE '%CANCEL%' AND c.customer_type = 'Company'
+                GROUP BY i.customer_id
+                ORDER BY MAX(c.name) ASC";
+                
+        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
+        
+        return $resultSet;
+    }
+    
 }
