@@ -209,7 +209,7 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
 
                 <hr />
 
-                <div class="right"><?php echo ReportHelper::summaryText($customerSaleReport->dataProvider); ?></div>
+                <div class="right"><?php echo ReportHelper::summaryText($customerSaleReport); ?></div>
                 <br />
                 <div class="right"><?php //echo ReportHelper::sortText($saleRetailCustomerSummary->dataProvider->sort, array('Name')); ?></div>
                 <div class="clear"></div>
