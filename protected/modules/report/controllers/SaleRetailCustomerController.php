@@ -53,7 +53,12 @@ class SaleRetailCustomerController extends Controller {
         }
         
         if (isset($_GET['SaveExcel'])) {
-            $this->saveToExcel($saleRetailCustomerSummary->dataProvider, array('startDate' => $startDate, 'endDate' => $endDate, 'branchId' => $branchId));
+            $this->saveToExcel($saleRetailCustomerSummary->dataProvider, array(
+                'startDate' => $startDate, 
+                'endDate' => $endDate, 
+                'branchId' => $branchId,
+                'taxValue' => $taxValue,
+            ));
         }
 
         $this->render('summary', array(
@@ -126,7 +131,7 @@ class SaleRetailCustomerController extends Controller {
 
         $counter = 7;
         
-        $totalIndividual = Customer::getTotalSaleIndividual($startDate, $endDate, $branchId);
+        $totalIndividual = Customer::getTotalSaleIndividual($startDate, $endDate, $branchId, $taxValue);
         $worksheet->setCellValue("B{$counter}", 'Individual');
         $worksheet->setCellValue("D{$counter}", CHtml::encode($totalIndividual));
             
@@ -134,7 +139,7 @@ class SaleRetailCustomerController extends Controller {
             
         $totalSale = 0.00;
         foreach ($dataProvider->data as $header) {
-            $grandTotal = $header->getTotalSaleCompany($startDate, $endDate, $branchId);
+            $grandTotal = $header->getTotalSaleCompany($startDate, $endDate, $branchId, $taxValue);
             $worksheet->getStyle("D{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
 
             $worksheet->setCellValue("A{$counter}", CHtml::encode(CHtml::value($header, 'id')));
