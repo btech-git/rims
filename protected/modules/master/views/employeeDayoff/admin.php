@@ -168,7 +168,7 @@ $('.search-form form').submit(function(){
                             'type'=>'raw'
                         ),
                         'date_created',
-                        array('name' => 'employee_name', 'value' => '$data->employee->name'),
+                        array('name' => 'employee_id', 'value' => '$data->employee->name'),
                         array(
                             'header'=>'Paid/Unpaid', 
                             'name'=>'off_type',
