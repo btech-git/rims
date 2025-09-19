@@ -52,22 +52,9 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                             <div class="field">
                                 <div class="row collapse">
                                     <div class="small-4 columns">
-                                        <span class="prefix">Branch</span>
-                                    </div>
-                                    <div class="small-8 columns">
-                                          <?php echo CHtml::dropDownlist('BranchId', $branchId, CHtml::listData(Branch::model()->findAllbyAttributes(array('status'=>'Active')), 'id','name'), array('empty'=>'-- All Branch --')); ?>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="medium-6 columns">
-                            <div class="field">
-                                <div class="row collapse">
-                                    <div class="small-2 columns">
                                         <span class="prefix">Tanggal </span>
                                     </div>
-                                    <div class="small-5 columns">
+                                    <div class="small-4 columns">
                                         <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(
                                             'name' => 'StartDate',
                                             'options' => array(
@@ -82,7 +69,7 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                         )); ?>
                                     </div>
 
-                                    <div class="small-5 columns">
+                                    <div class="small-4 columns">
                                         <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(
                                             'name' => 'EndDate',
                                             'options' => array(
@@ -95,6 +82,19 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                                 'placeholder' => 'Sampai',
                                             ),
                                         )); ?>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="medium-6 columns">
+                            <div class="field">
+                                <div class="row collapse">
+                                    <div class="small-4 columns">
+                                        <span class="prefix">Branch</span>
+                                    </div>
+                                    <div class="small-8 columns">
+                                          <?php echo CHtml::dropDownlist('BranchId', $branchId, CHtml::listData(Branch::model()->findAllbyAttributes(array('status'=>'Active')), 'id','name'), array('empty'=>'-- All Branch --')); ?>
                                     </div>
                                 </div>
                             </div>

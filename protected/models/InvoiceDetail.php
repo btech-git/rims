@@ -552,9 +552,6 @@ class InvoiceDetail extends CActiveRecord {
     }
     
     public function searchByTransactionDetailInfo($employeeId, $startDate, $endDate, $productSubCategoryIds, $page) {
-        // Warning: Please modify the following code to remove attributes that
-        // should not be searched.
-
         $criteria = new CDbCriteria;
 
         $criteria->together = 'true';
@@ -585,9 +582,6 @@ class InvoiceDetail extends CActiveRecord {
     }
     
     public function searchByTransactionDetailBranchInfo($branchId, $startDate, $endDate, $productSubCategoryIds, $page) {
-        // Warning: Please modify the following code to remove attributes that
-        // should not be searched.
-
         $criteria = new CDbCriteria;
 
         $criteria->together = 'true';
@@ -611,5 +605,106 @@ class InvoiceDetail extends CActiveRecord {
                 'currentPage' => $page - 1,
             ),
         ));
+    }
+    
+    public function searchByTransactionInfo($productId, $startDate, $endDate, $branchId, $page) {
+        $branchConditionSql = '';
+        
+        $criteria = new CDbCriteria;
+
+        $criteria->together = 'true';
+        $criteria->with = array(
+            'invoice',
+            'product',
+        );
+
+        if (!empty($branchId)) {
+            $branchConditionSql = ' AND invoice.branch_id = :branch_id';
+            $criteria->params[':branch_id'] = $branchId;
+        }
+        
+        $criteria->compare('t.product_id', $productId);
+        $criteria->addBetweenCondition('invoice.invoice_date', $startDate, $endDate);
+        $criteria->addCondition("invoice.status NOT LIKE '%CANCEL%'" . $branchConditionSql);
+        
+        return new CActiveDataProvider($this, array(
+            'criteria' => $criteria,
+            'sort' => array(
+                'defaultOrder' => 'invoice.invoice_date ASC',
+            ),
+            'pagination' => array(
+                'pageSize' => 500,
+                'currentPage' => $page - 1,
+            ),
+        ));
+    }
+    
+    public static function getYearlyTireSaleTransactionData($year, $branchId, $brandId, $subBrandId, $subBrandSeriesId, $masterCategoryId, $subCategoryId, $subMasterCategoryId) {
+        $branchConditionSql = '';
+        $brandConditionSql = '';
+        $subBrandConditionSql = '';
+        $subBrandSeriesConditionSql = '';
+        $masterCategoryConditionSql = '';
+        $subCategoryConditionSql = '';
+        $subMasterCategoryConditionSql = '';
+        
+        $params = array(
+            ':year' => $year,
+        );
+        
+        if (!empty($branchId)) {
+            $branchConditionSql = ' AND i.branch_id = :branch_id';
+            $params[':branch_id'] = $branchId;
+        }
+        
+        if (!empty($brandId)) {
+            $brandConditionSql = ' AND p.brand_id = :brand_id';
+            $params[':brand_id'] = $brandId;
+        }
+        
+        if (!empty($subBrandId)) {
+            $subBrandConditionSql = ' AND p.sub_brand_id = :sub_brand_id';
+            $params[':sub_brand_id'] = $subBrandId;
+        }
+         
+        if (!empty($subBrandSeriesId)) {
+            $subBrandSeriesConditionSql = ' AND p.sub_brand_series_id = :sub_brand_series_id';
+            $params[':sub_brand_series_id'] = $subBrandSeriesId;
+        }
+        
+        if (!empty($masterCategoryId)) {
+            $masterCategoryConditionSql = ' AND p.product_master_category_id = :product_master_category_id';
+            $params[':product_master_category_id'] = $masterCategoryId;
+        }
+         
+        if (!empty($subCategoryId)) {
+            $subCategoryConditionSql = ' AND p.product_sub_category_id = :product_sub_category_id';
+            $params[':product_sub_category_id'] = $subCategoryId;
+        }
+        
+        if (!empty($subMasterCategoryId)) {
+            $subMasterCategoryConditionSql = ' AND p.product_sub_master_category_id = :product_sub_master_category_id';
+            $params[':product_sub_master_category_id'] = $subMasterCategoryId;
+        }
+        
+        $sql = "SELECT EXTRACT(YEAR_MONTH FROM i.invoice_date) AS year_month_value, d.product_id AS product_id, p.name AS product_name, p.manufacturer_code AS product_code, 
+                    b.name AS brand_name, sb.name AS sub_brand_name, sbs.name AS sub_brand_series_name, mc.name AS master_category_name, 
+                    sc.name AS sub_category_name, smc.name AS sub_master_category_name, SUM(d.quantity) AS total_quantity
+                FROM " . InvoiceDetail::model()->tableName() . " d
+                INNER JOIN " . InvoiceHeader::model()->tableName() . " i ON i.id = d.invoice_id
+                INNER JOIN " . Product::model()->tableName() . " p ON p.id = d.product_id
+                INNER JOIN " . Brand::model()->tableName() . " b ON b.id = p.brand_id
+                INNER JOIN " . SubBrand::model()->tableName() . " sb ON sb.id = p.sub_brand_id
+                INNER JOIN " . SubBrandSeries::model()->tableName() . " sbs ON sbs.id = p.sub_brand_series_id
+                INNER JOIN " . ProductMasterCategory::model()->tableName() . " mc ON mc.id = p.product_master_category_id
+                INNER JOIN " . ProductSubCategory::model()->tableName() . " sc ON sc.id = p.product_sub_category_id
+                INNER JOIN " . ProductSubMasterCategory::model()->tableName() . " smc ON smc.id = p.product_sub_master_category_id
+                WHERE YEAR(i.invoice_date) = :year AND i.status NOT LIKE '%CANCELLED%'" . $branchConditionSql . "
+                GROUP BY EXTRACT(YEAR_MONTH FROM invoice_date), d.product_id
+                ORDER BY p.name ASC, year_month_value ASC";
+                
+        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
+
+        return $resultSet;
     }
 }

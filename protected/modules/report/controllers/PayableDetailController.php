@@ -38,7 +38,7 @@ class PayableDetailController extends Controller {
         $payableDetailSummary->setupLoading();
         $payableDetailSummary->setupPaging($pageSize, $currentPage);
         $payableDetailSummary->setupSorting();
-        $payableDetailSummary->setupFilter($endDate, $branchId);
+        $payableDetailSummary->setupFilter($endDate, $branchId, $supplierId);
         
         if (isset($_GET['ResetFilter'])) {
             $this->redirect(array('summary'));

@@ -92,10 +92,11 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
 
                 <div class="relative">
                     <?php $this->renderPartial('_summary', array(
-                        'employeeData' => $employeeData,
+                        'employeePeriodicallyAttendanceData' => $employeePeriodicallyAttendanceData,
+                        'onleaveCategories' => $onleaveCategories,
+                        'employeeDaysCountData' => $employeeDaysCountData,
                         'startDate' => $startDate,
                         'endDate' => $endDate,
-//                        'yearMonth' => $yearMonth,
                     )); ?>
                 </div>
                 <div class="clear"></div>

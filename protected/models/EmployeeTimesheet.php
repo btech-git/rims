@@ -186,4 +186,37 @@ class EmployeeTimesheet extends CActiveRecord {
 
         return $resultSet;
     }
+    
+    public static function getEmployeePeriodicallyAttendance($startDate, $endDate, $branchId) {
+        $branchConditionSql = '';
+        
+        $params = array(
+            ':start_date' => $startDate,
+            ':end_date' => $endDate,
+        );
+        
+        if (!empty($branchId)) {
+            $branchConditionSql = ' AND e.branch_id = :branch_id';
+            $params[':branch_id'] = $branchId;
+        }
+        
+        $sql = "SELECT t.employee_onleave_category_id, t.employee_id, MAX(c.name) AS category_name, MAX(e.name) AS employee_name, MAX(e.code) AS employee_code, 
+                    MAX(b.name) AS branch_name, MAX(p.name) AS position_name, MAX(l.name) AS level_name, MAX(d.name) AS division_name, COUNT(*) AS days, 
+                    COUNT(CASE WHEN t.duration_late > 300 THEN 0 ELSE NULL END) as late_days, 
+                    COUNT(CASE WHEN t.duration_overtime > 300 THEN 0 ELSE NULL END) as overtime_days
+                FROM " . EmployeeTimesheet::model()->tableName() . " t 
+                INNER JOIN " . EmployeeOnleaveCategory::model()->tableName() . " c ON c.id = t.employee_onleave_category_id
+                INNER JOIN " . Employee::model()->tableName() . " e ON e.id = t.employee_id
+                INNER JOIN " . Position::model()->tableName() . " p ON p.id = e.position_id
+                INNER JOIN " . Division::model()->tableName() . " d ON d.id = e.division_id
+                INNER JOIN " . Level::model()->tableName() . " l ON l.id = e.level_id
+                INNER JOIN " . Branch::model()->tableName() . " b ON b.id = e.branch_id
+                WHERE t.date BETWEEN :start_date AND :end_date AND c.is_inactive = 0" . $branchConditionSql . "
+                GROUP BY t.employee_onleave_category_id, t.employee_id
+                ORDER BY employee_name ASC, t.employee_onleave_category_id ASC";
+
+        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
+
+        return $resultSet;
+    }
 }

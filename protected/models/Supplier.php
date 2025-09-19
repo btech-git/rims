@@ -635,7 +635,7 @@ class Supplier extends CActiveRecord {
         );
         
         if (!empty($branchId)) {
-            $branchConditionSql = ' AND r.recipient_branch_id = :branch_id';
+            $branchConditionSql = ' AND o.main_branch_id = :branch_id';
             $params[':branch_id'] = $branchId;
         }
         

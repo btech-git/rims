@@ -25,7 +25,7 @@ class PayableDetailSummary extends CComponent {
         $this->dataProvider->criteria->order = 't.code ASC';
     }
 
-    public function setupFilter($endDate, $branchId) {
+    public function setupFilter($endDate, $branchId, $supplierId) {
         $branchConditionSql = '';
         
         if (!empty($branchId)) {
@@ -42,5 +42,6 @@ class PayableDetailSummary extends CComponent {
         if (!empty($branchId)) {
             $this->dataProvider->criteria->params[':branch_id'] = $branchId;
         }
+        $this->dataProvider->criteria->compare('t.id', $supplierId);
     }
 }

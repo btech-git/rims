@@ -22,17 +22,33 @@ class EmployeeAttendanceController extends Controller {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
 
-//        $yearMonthNow = date('Y-m');
-//        $yearMonth = (isset($_GET['YearMonth'])) ? $_GET['YearMonth'] : $yearMonthNow;
-        
         $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : date('Y-m-d');
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
         $branchId = isset($_GET['BranchId']) ? $_GET['BranchId'] : '';
         
-        if (empty($branchId)) {
-            $employeeData = Employee::model()->findAllByAttributes(array('status' => 'Active', 'is_deleted' => 0), array('order' => 't.name ASC'));
-        } else {
-            $employeeData = Employee::model()->findAllByAttributes(array('status' => 'Active', 'is_deleted' => 0, 'branch_id' => $branchId), array('order' => 't.name ASC'));
+        $employeePeriodicallyAttendance = EmployeeTimesheet::getEmployeePeriodicallyAttendance($startDate, $endDate, $branchId);
+        
+        $onleaveCategories = EmployeeOnleaveCategory::model()->findAllByAttributes(array('is_inactive' => 0), array('order' => 'is_onsite DESC, id ASC'));
+        
+        $employeePeriodicallyAttendanceData = array();
+        foreach ($employeePeriodicallyAttendance as $employeePeriodicallyAttendanceItem) {
+            $employeePeriodicallyAttendanceData[$employeePeriodicallyAttendanceItem['employee_id']][$employeePeriodicallyAttendanceItem['employee_onleave_category_id']]['days'] = $employeePeriodicallyAttendanceItem['days'];
+            $employeePeriodicallyAttendanceData[$employeePeriodicallyAttendanceItem['employee_id']][$employeePeriodicallyAttendanceItem['employee_onleave_category_id']]['late_days'] = $employeePeriodicallyAttendanceItem['late_days'];
+            $employeePeriodicallyAttendanceData[$employeePeriodicallyAttendanceItem['employee_id']][$employeePeriodicallyAttendanceItem['employee_onleave_category_id']]['overtime_days'] = $employeePeriodicallyAttendanceItem['overtime_days'];
+            $employeePeriodicallyAttendanceData[$employeePeriodicallyAttendanceItem['employee_id']]['employee_name'] = $employeePeriodicallyAttendanceItem['employee_name'];
+            $employeePeriodicallyAttendanceData[$employeePeriodicallyAttendanceItem['employee_id']]['employee_code'] = $employeePeriodicallyAttendanceItem['employee_code'];
+            $employeePeriodicallyAttendanceData[$employeePeriodicallyAttendanceItem['employee_id']]['branch_name'] = $employeePeriodicallyAttendanceItem['branch_name'];
+            $employeePeriodicallyAttendanceData[$employeePeriodicallyAttendanceItem['employee_id']]['position_name'] = $employeePeriodicallyAttendanceItem['position_name'];
+            $employeePeriodicallyAttendanceData[$employeePeriodicallyAttendanceItem['employee_id']]['level_name'] = $employeePeriodicallyAttendanceItem['level_name'];
+            $employeePeriodicallyAttendanceData[$employeePeriodicallyAttendanceItem['employee_id']]['division_name'] = $employeePeriodicallyAttendanceItem['division_name'];
+        }
+        
+        $employeeDaysCountData = array();
+        foreach ($employeePeriodicallyAttendance as $employeePeriodicallyAttendanceItem) {
+            if (!isset($employeeDaysCountData[$employeePeriodicallyAttendanceItem['employee_id']])) {
+                $employeeDaysCountData[$employeePeriodicallyAttendanceItem['employee_id']] = 0;
+            }
+            $employeeDaysCountData[$employeePeriodicallyAttendanceItem['employee_id']] += $employeePeriodicallyAttendanceItem['days'];
         }
         
         if (isset($_GET['ResetFilter'])) {
@@ -40,16 +56,16 @@ class EmployeeAttendanceController extends Controller {
         }
         
         if (isset($_GET['SaveExcel'])) {
-            $this->saveToExcel($employeeData , $startDate, $endDate, $branchId);
+            $this->saveToExcel($employeePeriodicallyAttendance , $startDate, $endDate, $branchId);
         }
 
         $this->render('summary', array(
-            'employeeData' => $employeeData,
+            'employeePeriodicallyAttendanceData' => $employeePeriodicallyAttendanceData,
+            'onleaveCategories' => $onleaveCategories,
+            'employeeDaysCountData' => $employeeDaysCountData,
             'startDate' => $startDate,
             'endDate' => $endDate,
             'branchId' => $branchId,
-//            'yearMonth' => $yearMonth,
-//            'yearMonthNow' => $yearMonthNow,
         ));
     }
 

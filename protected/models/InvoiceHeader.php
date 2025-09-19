@@ -2114,4 +2114,19 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
         return $resultSet;
     }
     
+    public static function getYearlyCustomerReceivableReport($year) {
+      
+        $sql = "SELECT i.customer_id, MONTH(i.invoice_date) AS invoice_month, MAX(c.name) AS customer_name, SUM(i.total_price) AS invoice_total, SUM(i.payment_amount) AS invoice_payment, SUM(i.payment_left) AS invoice_outstanding
+                FROM " . InvoiceHeader::model()->tableName() . "  i 
+                INNER JOIN " . Customer::model()->tableName() . " c ON c.id = i.customer_id
+                WHERE YEAR(i.invoice_date) = :year AND c.customer_type = 'Company' AND i.user_id_cancelled IS NULL
+                GROUP BY i.customer_id, MONTH(i.invoice_date)
+                ORDER BY customer_name ASC, invoice_month ASC";
+                
+        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, array(
+            ':year' => $year,
+        ));
+        
+        return $resultSet;
+    }    
 }

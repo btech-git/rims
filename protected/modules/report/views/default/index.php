@@ -274,11 +274,11 @@
                                     'url' => array('/report/receivableDetail/summary'), 
                                     'visible' => Yii::app()->user->checkAccess('receivableReport')
                                 ),
-//                                array(
-//                                    'label' => 'Kartu Piutang Customer', 
-//                                    'url' => array('/report/receivableTransaction/summary'), 
-//                                    'visible' => Yii::app()->user->checkAccess('customerReceivableReport')
-//                                ),
+                                array(
+                                    'label' => 'Piutang Customer Tahunan', 
+                                    'url' => array('/report/yearlyCustomerReceivable/summary'), 
+                                    'visible' => Yii::app()->user->checkAccess('customerReceivableReport')
+                                ),
                                 array(
                                     'label' => 'Rincian Penerimaan Penjualan', 
                                     'url' => array('/report/paymentIn/summary'), 
@@ -860,18 +860,37 @@
                                         'visible' => Yii::app()->user->checkAccess('director')
                                     ),
                                     array(
+                                        'label' => 'Penjualan Ban Tahunan', 
+                                        'url' => array('/report/purchaseFlowSummary/summary'), 
+                                        'visible' => Yii::app()->user->checkAccess('director')
+                                    ),
+                                ),
+                            )); ?>
+                        <?php endif; ?>
+                    </div>
+                    <div class="small-4 columns">
+                        <?php if (
+                            Yii::app()->user->checkAccess('director')
+//                            Yii::app()->user->checkAccess('workOrderServiceReport') ||
+//                            Yii::app()->user->checkAccess('workOrderVehicleReport') ||
+//                            Yii::app()->user->checkAccess('mechanicPerformanceReport')
+                        ): ?>
+                            <h2>Management</h2>
+                            <?php $this->widget('zii.widgets.CMenu', array(
+                                'items' => array(
+                                    array(
                                         'label' => 'Pembelian Harian Summary', 
                                         'url' => array('/report/purchaseFlowSummary/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('director')
                                     ),
                                     array(
-                                        'label' => 'Perpindahan Barang Summary', 
-                                        'url' => array('/report/warehouseFlowSummary/summary'), 
+                                        'label' => 'Pembelian WO', 
+                                        'url' => array('/report/purchaseWorkOrder/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('director')
                                     ),
                                     array(
-                                        'label' => 'Pembelian WO', 
-                                        'url' => array('/report/purchaseWorkOrder/summary'), 
+                                        'label' => 'Perpindahan Barang Summary', 
+                                        'url' => array('/report/warehouseFlowSummary/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('director')
                                     ),
                                     array(
