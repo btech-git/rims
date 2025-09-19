@@ -639,18 +639,35 @@ class InvoiceDetail extends CActiveRecord {
         ));
     }
     
-    public static function getYearlyTireSaleTransactionData($year, $branchId, $brandId, $subBrandId, $subBrandSeriesId, $masterCategoryId, $subCategoryId, $subMasterCategoryId) {
+    public static function getYearlyTireSaleTransactionData($year, $productId, $productCode, $productName, $branchId, $brandId, $subBrandId, $subBrandSeriesId, $subCategoryId, $subMasterCategoryId) {
+        $productIdConditionSql = '';
+        $productNameConditionSql = '';
+        $productCodeConditionSql = '';
         $branchConditionSql = '';
         $brandConditionSql = '';
         $subBrandConditionSql = '';
         $subBrandSeriesConditionSql = '';
-        $masterCategoryConditionSql = '';
         $subCategoryConditionSql = '';
         $subMasterCategoryConditionSql = '';
         
         $params = array(
             ':year' => $year,
         );
+        
+        if (!empty($productId)) {
+            $productIdConditionSql = ' AND d.product_id = :product_id';
+            $params[':product_id'] = $productId;
+        }
+        
+        if (!empty($productCode)) {
+            $productCodeConditionSql = ' AND p.manufacturer_code = :manufacturer_code';
+            $params[':manufacturer_code'] = $productCode;
+        }
+        
+        if (!empty($productName)) {
+            $productNameConditionSql = ' AND p.name = :product_name';
+            $params[':product_name'] = $productName;
+        }
         
         if (!empty($branchId)) {
             $branchConditionSql = ' AND i.branch_id = :branch_id';
@@ -672,11 +689,6 @@ class InvoiceDetail extends CActiveRecord {
             $params[':sub_brand_series_id'] = $subBrandSeriesId;
         }
         
-        if (!empty($masterCategoryId)) {
-            $masterCategoryConditionSql = ' AND p.product_master_category_id = :product_master_category_id';
-            $params[':product_master_category_id'] = $masterCategoryId;
-        }
-         
         if (!empty($subCategoryId)) {
             $subCategoryConditionSql = ' AND p.product_sub_category_id = :product_sub_category_id';
             $params[':product_sub_category_id'] = $subCategoryId;
@@ -699,7 +711,9 @@ class InvoiceDetail extends CActiveRecord {
                 INNER JOIN " . ProductMasterCategory::model()->tableName() . " mc ON mc.id = p.product_master_category_id
                 INNER JOIN " . ProductSubCategory::model()->tableName() . " sc ON sc.id = p.product_sub_category_id
                 INNER JOIN " . ProductSubMasterCategory::model()->tableName() . " smc ON smc.id = p.product_sub_master_category_id
-                WHERE YEAR(i.invoice_date) = :year AND i.status NOT LIKE '%CANCELLED%'" . $branchConditionSql . "
+                WHERE YEAR(i.invoice_date) = :year AND i.status NOT LIKE '%CANCELLED%' AND p.product_master_category_id = 4" . $branchConditionSql . 
+                    $productIdConditionSql . $productCodeConditionSql . $productNameConditionSql . $brandConditionSql . $subBrandConditionSql . 
+                    $subBrandSeriesConditionSql . $subCategoryConditionSql . $subMasterCategoryConditionSql . "
                 GROUP BY EXTRACT(YEAR_MONTH FROM invoice_date), d.product_id
                 ORDER BY p.name ASC, year_month_value ASC";
                 

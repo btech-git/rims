@@ -860,8 +860,13 @@
                                         'visible' => Yii::app()->user->checkAccess('director')
                                     ),
                                     array(
+                                        'label' => 'Penjualan Ban Bulanan', 
+                                        'url' => array('/report/monthlyTireSaleTransaction/summary'), 
+                                        'visible' => Yii::app()->user->checkAccess('director')
+                                    ),
+                                    array(
                                         'label' => 'Penjualan Ban Tahunan', 
-                                        'url' => array('/report/purchaseFlowSummary/summary'), 
+                                        'url' => array('/report/yearlyTireSaleTransaction/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('director')
                                     ),
                                 ),

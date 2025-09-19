@@ -25,16 +25,19 @@ class YearlyTireSaleTransactionController extends Controller {
         
         $yearNow = date('Y');
         $year = (isset($_GET['Year'])) ? $_GET['Year'] : $yearNow;
+        $productId = isset($_GET['ProductId']) ? $_GET['ProductId'] : '';
+        $productCode = isset($_GET['ProductCode']) ? $_GET['ProductCode'] : '';
+        $productName = isset($_GET['ProductName']) ? $_GET['ProductName'] : '';
         $branchId = isset($_GET['BranchId']) ? $_GET['BranchId'] : '';
         $brandId = (isset($_GET['BrandId'])) ? $_GET['BrandId'] : '';
         $subBrandId = (isset($_GET['SubBrandId'])) ? $_GET['SubBrandId'] : '';
         $subBrandSeriesId = (isset($_GET['SubBrandSeriesId'])) ? $_GET['SubBrandSeriesId'] : '';
-        $masterCategoryId = (isset($_GET['MasterCategoryId'])) ? $_GET['MasterCategoryId'] : '';
+        $masterCategoryId = (isset($_GET['MasterCategoryId'])) ? $_GET['MasterCategoryId'] : 4;
         $subCategoryId = (isset($_GET['SubCategoryId'])) ? $_GET['SubCategoryId'] : '';
-        $subMasterCategoryId = (isset($_GET['SubNasterCategoryId'])) ? $_GET['SubNasterCategoryId'] : '';
+        $subMasterCategoryId = (isset($_GET['SubMasterCategoryId'])) ? $_GET['SubMasterCategoryId'] : '';
         
         $invoiceTireInfo = array();
-        $yearlySaleSummary = InvoiceDetail::getYearlyTireSaleTransactionData($year, $branchId, $brandId, $subBrandId, $subBrandSeriesId, $masterCategoryId, $subCategoryId, $subMasterCategoryId);
+        $yearlySaleSummary = InvoiceDetail::getYearlyTireSaleTransactionData($year, $productId, $productCode, $productName, $branchId, $brandId, $subBrandId, $subBrandSeriesId, $subCategoryId, $subMasterCategoryId);
         foreach ($yearlySaleSummary as $yearlySaleSummaryItem) {
             $monthValue = intval(substr($yearlySaleSummaryItem['year_month_value'], 4, 2));
             $invoiceTireInfo[$yearlySaleSummaryItem['product_id']]['product_id'] = $yearlySaleSummaryItem['product_id'];
@@ -65,6 +68,9 @@ class YearlyTireSaleTransactionController extends Controller {
         $this->render('summary', array(
             'yearList' => $yearList,
             'year' => $year,
+            'productId' => $productId,
+            'productCode' => $productCode,
+            'productName' => $productName,
             'branchId' => $branchId,
             'invoiceTireInfo' => $invoiceTireInfo,
             'brandId' => $brandId,
@@ -91,6 +97,46 @@ class YearlyTireSaleTransactionController extends Controller {
             'endDate' => $endDate,
             'product' => $product,
         ));
+    }
+
+    public function actionAjaxHtmlUpdateProductSubBrandSelect() {
+        if (Yii::app()->request->isAjaxRequest) {
+            $productBrandId = isset($_GET['Product']['brand_id']) ? $_GET['Product']['brand_id'] : 0;
+
+            $this->renderPartial('_productSubBrandSelect', array(
+                'productBrandId' => $productBrandId,
+            ));
+        }
+    }
+
+    public function actionAjaxHtmlUpdateProductSubBrandSeriesSelect() {
+        if (Yii::app()->request->isAjaxRequest) {
+            $productSubBrandId = isset($_GET['Product']['sub_brand_id']) ? $_GET['Product']['sub_brand_id'] : 0;
+
+            $this->renderPartial('_productSubBrandSeriesSelect', array(
+                'productSubBrandId' => $productSubBrandId,
+            ));
+        }
+    }
+
+    public function actionAjaxHtmlUpdateProductSubMasterCategorySelect() {
+        if (Yii::app()->request->isAjaxRequest) {
+            $productMasterCategoryId = isset($_GET['Product']['product_master_category_id']) ? $_GET['Product']['product_master_category_id'] : 0;
+
+            $this->renderPartial('_productSubMasterCategorySelect', array(
+                'productMasterCategoryId' => $productMasterCategoryId,
+            ));
+        }
+    }
+
+    public function actionAjaxHtmlUpdateProductSubCategorySelect() {
+        if (Yii::app()->request->isAjaxRequest) {
+            $productSubMasterCategoryId = isset($_GET['Product']['product_sub_master_category_id']) ? $_GET['Product']['product_sub_master_category_id'] : 0;
+
+            $this->renderPartial('_productSubCategorySelect', array(
+                'productSubMasterCategoryId' => $productSubMasterCategoryId,
+            ));
+        }
     }
 
     protected function saveToExcel($invoiceTireInfo, $year, $branchId) {
@@ -182,9 +228,12 @@ class YearlyTireSaleTransactionController extends Controller {
             $autoNumber++;
         }
         
-        $worksheet->setCellValue("D{$counter}", 'Total');
+        $worksheet->getStyle("A{$counter}:S{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A{$counter}:S{$counter}")->getFont()->setBold(true);
+        
+        $worksheet->setCellValue("F{$counter}", 'Total');
         $grandTotal = 0;
-        $footerCounter = 'E';
+        $footerCounter = 'G';
         for ($month = 1; $month <= 12; $month++) {
             if (!isset($groupTotalSums[$month])) {
                 $groupTotalSums[$month] = 0;

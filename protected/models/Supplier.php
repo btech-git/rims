@@ -652,7 +652,7 @@ class Supplier extends CActiveRecord {
                 GROUP BY receive_item_id 
             ) p ON r.id = p.receive_item_id
             WHERE r.supplier_id = :supplier_id AND substr(r.invoice_date, 1, 10) BETWEEN '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND :end_date AND
-                r.user_id_cancelled IS NULL" . $branchConditionSql . "
+                r.user_id_cancelled IS NULL AND r.invoice_grand_total - COALESCE(p.payment, 0) > 0" . $branchConditionSql . "
         ";
 
         $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);

@@ -29,13 +29,21 @@ class PayableDetailSummary extends CComponent {
         $branchConditionSql = '';
         
         if (!empty($branchId)) {
-            $branchConditionSql = ' AND recipient_branch_id = :branch_id';
+            $branchConditionSql = ' AND r.recipient_branch_id = :branch_id';
         }
 
         $this->dataProvider->criteria->addCondition("EXISTS (
-            SELECT supplier_id 
-            FROM " . TransactionReceiveItem::model()->tableName() . "
-            WHERE supplier_id = t.id AND invoice_date BETWEEN '" . AppParam::BEGINNING_TRANSACTION_DATE . " ' AND :end_date" . $branchConditionSql . "
+            SELECT r.supplier_id 
+            FROM " . TransactionReceiveItem::model()->tableName() . " r
+            LEFT OUTER JOIN (
+                SELECT receive_item_id, SUM(amount) as payment  
+                FROM " . PayOutDetail::model()->tableName() . " d 
+                INNER JOIN " . PaymentOut::model()->tableName() . " h ON h.id = d.payment_out_id
+                WHERE h.status NOT LIKE '%CANCEL%'
+                GROUP BY receive_item_id 
+            ) p ON r.id = p.receive_item_id
+            WHERE r.supplier_id = t.id AND r.invoice_date BETWEEN '" . AppParam::BEGINNING_TRANSACTION_DATE . " ' AND :end_date AND
+                r.invoice_grand_total - COALESCE(p.payment, 0) > 0" . $branchConditionSql . "
         )");
 
         $this->dataProvider->criteria->params[':end_date'] = $endDate;

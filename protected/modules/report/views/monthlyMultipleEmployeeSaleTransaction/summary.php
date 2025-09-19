@@ -59,11 +59,6 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                 <hr />
 
                 <div class="relative">
-                    <div class="reportDisplay">
-                        <?php //echo ReportHelper::summaryText($dailyMultipleEmployeeSaleReport->dataProvider); ?>
-                        <?php //echo ReportHelper::sortText($transaksiPembelianSummary->dataProvider->sort, array('Jenis Persediaan', 'Tanggal SO', 'Pelanggan')); ?>
-                    </div>
-
                     <?php $this->renderPartial('_summary', array(
                         'monthlyMultipleEmployeeSaleReport' => $monthlyMultipleEmployeeSaleReport,
                         'monthlyMultipleEmployeeSaleProductReportData' => $monthlyMultipleEmployeeSaleProductReportData,
@@ -73,24 +68,6 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                 </div>
                 <div class="clear"></div>
             </div>
-            
-            <br/>
-
-            <div class="hide">
-                <div class="right"></div>
-                <div class="clear"></div>
-            </div>
         </div>
     </div>
 </div>
-
-<!--<div class="hide">
-    <div class="right">
-        <?php /*$this->widget('system.web.widgets.pagers.CLinkPager', array(
-            'itemCount' => $dailyMultipleEmployeeSaleReport->dataProvider->pagination->itemCount,
-            'pageSize' => $dailyMultipleEmployeeSaleReport->dataProvider->pagination->pageSize,
-            'currentPage' => $dailyMultipleEmployeeSaleReport->dataProvider->pagination->getCurrentPage(false),
-        ));*/ ?>
-    </div>
-    <div class="clear"></div>
-</div>-->
