@@ -43,7 +43,7 @@ class PayableDetailSummary extends CComponent {
                 GROUP BY receive_item_id 
             ) p ON r.id = p.receive_item_id
             WHERE r.supplier_id = t.id AND r.invoice_date BETWEEN '" . AppParam::BEGINNING_TRANSACTION_DATE . " ' AND :end_date AND
-                r.invoice_grand_total - COALESCE(p.payment, 0) > 0" . $branchConditionSql . "
+                r.invoice_grand_total - COALESCE(p.payment, 0) > 100" . $branchConditionSql . "
         )");
 
         $this->dataProvider->criteria->params[':end_date'] = $endDate;
