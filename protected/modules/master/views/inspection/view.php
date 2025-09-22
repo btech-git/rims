@@ -26,15 +26,48 @@ $this->breadcrumbs = array(
         <?php } ?>
         <h1>View <?php echo $model->name ?></h1>
 
-        <?php
-        $this->widget('zii.widgets.CDetailView', array(
+        <?php $this->widget('zii.widgets.CDetailView', array(
             'data' => $model,
             'attributes' => array(
-                //'id',
+                'id',
                 'code',
                 'name',
             ),
-        ));
-        ?>
+        )); ?>
+        
+        <hr />
+        
+        <div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Code</th>
+                        <th>Name</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php $inspectionSections = InspectionSections::model()->findAllByAttributes(array('inspection_id' => $model->id)); ?>
+                    <?php foreach ($inspectionSections as $inspectionSection): ?>
+                        <?php $sectionModules = InspectionSectionModule::model()->findAllByAttributes(array('section_id' => $inspectionSection->section_id)); ?>
+                        <tr>
+                            <td><?php echo CHtml::encode(CHtml::value($inspectionSection, 'section.code')); ?></td>
+                            <td><?php echo CHtml::encode(CHtml::value($inspectionSection, 'section.name')); ?></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">
+                                <table>
+                                    <?php foreach ($sectionModules as $sectionModule): ?>
+                                        <tr>
+                                            <td><?php echo CHtml::encode(CHtml::value($sectionModule, 'module.code')); ?></td>
+                                            <td><?php echo CHtml::encode(CHtml::value($sectionModule, 'module.name')); ?></td>
+                                        </tr>
+                                    <?php endforeach; ?>
+                                </table>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>

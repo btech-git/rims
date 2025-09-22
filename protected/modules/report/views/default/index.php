@@ -821,19 +821,9 @@
 //                            Yii::app()->user->checkAccess('workOrderVehicleReport') ||
 //                            Yii::app()->user->checkAccess('mechanicPerformanceReport')
                         ): ?>
-                            <h2>Management</h2>
+                            <h2>Recap & Analysis</h2>
                             <?php $this->widget('zii.widgets.CMenu', array(
                                 'items' => array(
-                                    array(
-                                        'label' => 'Penjualan Tahunan', 
-                                        'url' => array('/report/yearlySaleSummary/summary'), 
-                                        'visible' => Yii::app()->user->checkAccess('director')
-                                    ),
-                                    array(
-                                        'label' => 'Penjualan Project', 
-                                        'url' => array('/report/saleByProject/summary'), 
-                                        'visible' => Yii::app()->user->checkAccess('director')
-                                    ),
                                     array(
                                         'label' => 'Penjualan Parts Bulanan', 
                                         'url' => array('/report/monthlyProductSale/summary'), 
@@ -847,6 +837,30 @@
                                     array(
                                         'label' => 'Analisis Penjualan Parts', 
                                         'url' => array('/report/productSubMasterCategoryStatistics/summary'), 
+                                        'visible' => Yii::app()->user->checkAccess('director')
+                                    ),
+                                ),
+                            )); ?>
+                        <?php endif; ?>
+                    </div>
+                    <div class="small-4 columns">
+                        <?php if (
+                            Yii::app()->user->checkAccess('director')
+//                            Yii::app()->user->checkAccess('workOrderServiceReport') ||
+//                            Yii::app()->user->checkAccess('workOrderVehicleReport') ||
+//                            Yii::app()->user->checkAccess('mechanicPerformanceReport')
+                        ): ?>
+                            <h2>Management</h2>
+                            <?php $this->widget('zii.widgets.CMenu', array(
+                                'items' => array(
+                                    array(
+                                        'label' => 'Penjualan Tahunan', 
+                                        'url' => array('/report/yearlySaleSummary/summary'), 
+                                        'visible' => Yii::app()->user->checkAccess('director')
+                                    ),
+                                    array(
+                                        'label' => 'Penjualan Project', 
+                                        'url' => array('/report/saleByProject/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('director')
                                     ),
                                     array(

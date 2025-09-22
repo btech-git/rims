@@ -1,6 +1,7 @@
 <?php
 Yii::app()->clientScript->registerScript('report', '
 
+    $("#StartDate").val("' . $startDate . '");
     $("#EndDate").val("' . $endDate . '");
     $("#PageSize").val("' . $stockCardCategorySummary->dataProvider->pagination->pageSize . '");
     $("#CurrentPage").val("' . ($stockCardCategorySummary->dataProvider->pagination->getCurrentPage(false) + 1) . '");
@@ -29,7 +30,22 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                         <?php echo CHtml::hiddenField('page', $currentPage, array('size' => 3, 'id' => 'CurrentPage')); ?>
                                     </div>
                                     
-                                    <div class="small-8 columns">
+                                    <div class="small-4 columns">
+                                        <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(
+                                            'name' => 'StartDate',
+                                            'options' => array(
+                                                'dateFormat' => 'yy-mm-dd',
+                                                'changeMonth'=>true,
+                                                'changeYear'=>true,
+                                            ),
+                                            'htmlOptions' => array(
+                                                'readonly' => true,
+                                                'placeholder' => 'Mulai',
+                                            ),
+                                        )); ?>
+                                    </div>
+                                    
+                                    <div class="small-4 columns">
                                         <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(
                                             'name' => 'EndDate',
                                             'options' => array(
@@ -83,6 +99,7 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
 
                     <?php $this->renderPartial('_summary', array(
                         'stockCardCategorySummary' => $stockCardCategorySummary,
+                        'startDate' => $startDate,
                         'endDate' => $endDate,
                         'branchId' => $branchId,
                     )); ?>

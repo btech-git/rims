@@ -54,7 +54,14 @@ class ProductSubMasterCategoryStatisticsController extends Controller {
             $sortedTotalPricesSum = array_sum($sortedTotalPrices);
             $totalPricesMean = $sortedTotalPricesSum / $sortedTotalPricesCount;
             
+            $yearlyStatistics[$yearlyStatisticsDataItem['product_id']]['code'] = $yearlyStatisticsDataItem['product_code'];
             $yearlyStatistics[$yearlyStatisticsDataItem['product_id']]['name'] = $yearlyStatisticsDataItem['product_name'];
+            $yearlyStatistics[$yearlyStatisticsDataItem['product_id']]['master_category'] = $yearlyStatisticsDataItem['master_category_name'];
+            $yearlyStatistics[$yearlyStatisticsDataItem['product_id']]['sub_master_category'] = $yearlyStatisticsDataItem['sub_master_category_name'];
+            $yearlyStatistics[$yearlyStatisticsDataItem['product_id']]['sub_category'] = $yearlyStatisticsDataItem['sub_category_name'];
+            $yearlyStatistics[$yearlyStatisticsDataItem['product_id']]['brand'] = $yearlyStatisticsDataItem['brand_name'];
+            $yearlyStatistics[$yearlyStatisticsDataItem['product_id']]['sub_brand'] = $yearlyStatisticsDataItem['sub_brand_name'];
+            $yearlyStatistics[$yearlyStatisticsDataItem['product_id']]['sub_brand_series'] = $yearlyStatisticsDataItem['sub_brand_series_name'];
             $yearlyStatistics[$yearlyStatisticsDataItem['product_id']][$yearlyStatisticsDataItem['invoice_month']]['quantityMean'] = $quantitiesMean;
             $yearlyStatistics[$yearlyStatisticsDataItem['product_id']][$yearlyStatisticsDataItem['invoice_month']]['quantityMedian'] = $quantitiesMedian;
             $yearlyStatistics[$yearlyStatisticsDataItem['product_id']][$yearlyStatisticsDataItem['invoice_month']]['totalPriceMean'] = $totalPricesMean;
@@ -71,10 +78,7 @@ class ProductSubMasterCategoryStatisticsController extends Controller {
         }
         
         if (isset($_GET['SaveExcel'])) {
-            $this->saveToExcel(
-                $yearList,
-                $year
-            );
+            $this->saveToExcel($yearlyStatistics, $year);
         }
         
         $this->render('summary', array(
@@ -131,7 +135,7 @@ class ProductSubMasterCategoryStatisticsController extends Controller {
         }
     }
 
-    protected function saveToExcel($yearlyPurchaseSummaryData, $yearList, $year) {
+    protected function saveToExcel($yearlyStatistics, $year) {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
 
@@ -143,20 +147,20 @@ class ProductSubMasterCategoryStatisticsController extends Controller {
 
         $documentProperties = $objPHPExcel->getProperties();
         $documentProperties->setCreator('Raperind Motor');
-        $documentProperties->setTitle('Laporan Penjualan Tahunan');
+        $documentProperties->setTitle('Statistik Penjualan Parts');
 
         $worksheet = $objPHPExcel->setActiveSheetIndex(0);
-        $worksheet->setTitle('Laporan Penjualan Tahunan');
+        $worksheet->setTitle('Statistik Penjualan Parts');
 
         $worksheet->mergeCells('A1:Q1');
         $worksheet->mergeCells('A2:Q2');
         $worksheet->mergeCells('A3:Q3');
 
-        $worksheet->getStyle('A1:Q5')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-        $worksheet->getStyle('A1:Q5')->getFont()->setBold(true);
+        $worksheet->getStyle('A1:Z6')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->getStyle('A1:Z6')->getFont()->setBold(true);
 
         $worksheet->setCellValue('A1', 'Raperind Motor ');
-        $worksheet->setCellValue('A2', 'Laporan Penjualan Tahunan');
+        $worksheet->setCellValue('A2', 'Statistik Penjualan Parts');
         $worksheet->setCellValue('A3', $year);
         $monthList = array(
             1 => 'Jan',
@@ -172,51 +176,56 @@ class ProductSubMasterCategoryStatisticsController extends Controller {
             11 => 'Nov',
             12 => 'Dec',
         );
-        $branches = Branch::model()->findAll();
-        
-        $worksheet->getStyle('A5:Q5')->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
-        $worksheet->setCellValue('A5', 'Bulan');
-        $columnCounter = 'B';
-        foreach ($branches as $branch) {
-            $worksheet->setCellValue("{$columnCounter}5", CHtml::encode(CHtml::value($branch, 'code')));
+        $columnCounter = 'F';
+        $mergeColumnCounter = 'I';
+        for ($month = 1; $month <= 12; $month++) {
+            $worksheet->mergeCells("{$columnCounter}5:{$mergeColumnCounter}5");
+            $worksheet->setCellValue("{$columnCounter}5", $monthList[$month]);
+            $columnCounter++;$columnCounter++;$columnCounter++;$columnCounter++;
+            $mergeColumnCounter++;$mergeColumnCounter++;$mergeColumnCounter++;$mergeColumnCounter++;
+        }
+        
+        $columnCounter = 'F';
+        for ($month = 1; $month <= 12; $month++) {
+            $worksheet->setCellValue("{$columnCounter}6", 'Qty Mean');
+            $columnCounter++;
+            $worksheet->setCellValue("{$columnCounter}6", 'Qty Median');
+            $columnCounter++;
+            $worksheet->setCellValue("{$columnCounter}6", 'Price Mean');
+            $columnCounter++;
+            $worksheet->setCellValue("{$columnCounter}6", 'Price Median');
             $columnCounter++;
         }
-        $worksheet->setCellValue("{$columnCounter}5", 'Total');
+        
+        $worksheet->getStyle("A5:{$columnCounter}5")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A6:{$columnCounter}6")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
-        $worksheet->getStyle('A5:Q5')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
-
-        $counter = 7;
-        $amountTotals = array();
-        for ($month = 1; $month <= 12; $month++) {
-            $worksheet->getStyle("C{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
-
-            $worksheet->setCellValue("A{$counter}", CHtml::encode($monthList[$month]));
-            $amountSum = '0.00';
-            $columnCounter = 'B';
-            foreach ($branches as $branch) {
-                $amount = isset($yearlyPurchaseSummaryData[$month][$branch->id]) ? $yearlyPurchaseSummaryData[$month][$branch->id] : '0.00';
-                $worksheet->setCellValue("{$columnCounter}{$counter}", CHtml::encode($amount));
-                $amountSum += $amount;
-                if (!isset($amountTotals[$branch->id])) {
-                    $amountTotals[$branch->id] = '0.00';
+        $ordinalNumber = 0;
+        $counter = 8;
+        
+        foreach ($yearlyStatistics as $id => $yearlyStatisticsItem) {
+            $worksheet->setCellValue("A{$counter}", ++$ordinalNumber);
+            $worksheet->setCellValue("B{$counter}", $yearlyStatisticsItem['code']);
+            $worksheet->setCellValue("C{$counter}", $yearlyStatisticsItem['name']);
+            $worksheet->setCellValue("D{$counter}", $yearlyStatisticsItem['brand'] . ' - ' .$yearlyStatisticsItem['sub_brand'] . ' - ' . $yearlyStatisticsItem['sub_brand_series']);
+            $worksheet->setCellValue("E{$counter}", $yearlyStatisticsItem['master_category'] . ' - ' .$yearlyStatisticsItem['sub_master_category'] . ' - ' . $yearlyStatisticsItem['sub_category']);
+            $columnCounter = 'F';
+            
+            for ($month = 1; $month <= 12; $month++) {
+                if (isset($yearlyStatisticsItem[$month])) {
+                    $worksheet->setCellValue("{$columnCounter}{$counter}", $yearlyStatisticsItem[$month]['quantityMean']);
+                    $columnCounter++;
+                    $worksheet->setCellValue("{$columnCounter}{$counter}", $yearlyStatisticsItem[$month]['quantityMedian']);
+                    $columnCounter++;
+                    $worksheet->setCellValue("{$columnCounter}{$counter}", $yearlyStatisticsItem[$month]['totalPriceMean']);
+                    $columnCounter++;
+                    $worksheet->setCellValue("{$columnCounter}{$counter}", $yearlyStatisticsItem[$month]['totalPriceMedian']);
+                    $columnCounter++;                    
                 }
-                $amountTotals[$branch->id] += $amount;
-                $columnCounter++;
             }
-            $worksheet->setCellValue("{$columnCounter}{$counter}", CHtml::encode($amountSum));
-
             $counter++;
         }
-        $worksheet->setCellValue("A{$counter}", 'TOTAL');
-        $grandTotal = '0.00';
-        $columnCounter = 'B';
-        foreach ($branches as $branch) {
-            $worksheet->setCellValue("{$columnCounter}{$counter}", CHtml::encode($amountTotals[$branch->id]));
-            $grandTotal += $amountTotals[$branch->id];
-            $columnCounter++;
-        }
-        $worksheet->setCellValue("{$columnCounter}{$counter}", CHtml::encode($grandTotal));
 
         for ($col = 'A'; $col !== 'Z'; $col++) {
             $objPHPExcel->getActiveSheet()
@@ -227,7 +236,7 @@ class ProductSubMasterCategoryStatisticsController extends Controller {
         ob_end_clean();
 
         header('Content-type: application/vnd.ms-excel');
-        header('Content-Disposition: attachment;filename="Laporan Penjualan Tahunan.xls"');
+        header('Content-Disposition: attachment;filename="statistik_penjualan_parts.xls"');
         header('Cache-Control: max-age=0');
 
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');

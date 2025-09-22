@@ -182,7 +182,8 @@ class MonthlyProductSaleController extends Controller {
         foreach ($productSaleData as $productSaleItem) {
             $worksheet->mergeCells("{$columnCounter}5:{$mergeColumnCounter}5");
             $worksheet->setCellValue("{$columnCounter}5", $productSaleItem['product_name']);
-            $columnCounter++;$columnCounter++;$mergeColumnCounter++;$mergeColumnCounter++;
+            $columnCounter++;$columnCounter++;
+            $mergeColumnCounter++;$mergeColumnCounter++;
         }
         $worksheet->mergeCells("{$columnCounter}5:{$mergeColumnCounter}5");
         $worksheet->setCellValue("{$columnCounter}5", 'Total');

@@ -187,10 +187,19 @@ class InvoiceDetail extends CActiveRecord {
             $brandCategoryConditionSql = $brandConditionSql . $categoryConditionSql;
         }
         
-        $sql = "SELECT d.product_id, MONTH(h.invoice_date) AS invoice_month, MAX(p.name) AS product_name, GROUP_CONCAT(d.quantity) AS quantities, GROUP_CONCAT(d.total_price) AS total_prices
+        $sql = "SELECT d.product_id, MONTH(h.invoice_date) AS invoice_month, MAX(p.manufacturer_code) AS product_code, MAX(p.name) AS product_name, 
+                    MAX(b.name) AS brand_name, MAX(sb.name) AS sub_brand_name, MAX(sbs.name) AS sub_brand_series_name, MAX(mc.name) AS master_category_name, 
+                    MAX(smc.name) AS sub_master_category_name, MAX(sc.name) AS sub_category_name, GROUP_CONCAT(d.quantity) AS quantities, 
+                    GROUP_CONCAT(d.total_price) AS total_prices
                 FROM " . InvoiceDetail::model()->tableName() . " d 
                 INNER JOIN " . InvoiceHeader::model()->tableName() . " h ON h.id = d.invoice_id
                 INNER JOIN " . Product::model()->tableName() . " p ON p.id = d.product_id
+                INNER JOIN " . Brand::model()->tableName() . " b ON b.id = p.brand_id
+                INNER JOIN " . SubBrand::model()->tableName() . " sb ON sb.id = p.sub_brand_id
+                INNER JOIN " . SubBrandSeries::model()->tableName() . " sbs ON sbs.id = p.sub_brand_series_id
+                INNER JOIN " . ProductMasterCategory::model()->tableName() . " mc ON mc.id = p.product_master_category_id
+                INNER JOIN " . ProductSubMasterCategory::model()->tableName() . " smc ON smc.id = p.product_sub_master_category_id
+                INNER JOIN " . ProductSubCategory::model()->tableName() . " sc ON sc.id = p.product_sub_category_id
                 WHERE YEAR(h.invoice_date) = :year AND d.product_id IS NOT null" . $branchConditionSql . $brandCategoryConditionSql . " 
                 GROUP BY d.product_id, MONTH(h.invoice_date), p.name
                 ORDER BY p.name ASC";

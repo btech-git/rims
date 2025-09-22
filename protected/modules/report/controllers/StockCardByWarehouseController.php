@@ -205,6 +205,8 @@ class StockCardByWarehouseController extends Controller {
             $stockData = $header->getInventoryStockReport($startDate, $endDate, $warehouse->branch_id);
             $totalStockIn = 0;
             $totalStockOut = 0;
+            $totalValueIn = 0;
+            $totalValueOut = 0;
             $beginningStock = $stock;
             $beginningStockValue = $beginningValue;
             
@@ -220,7 +222,7 @@ class StockCardByWarehouseController extends Controller {
                 $worksheet->setCellValue("A{$counter}", $incrementNumber);
                 $worksheet->setCellValue("B{$counter}", $header->id);
                 $worksheet->setCellValue("C{$counter}", $header->name);
-                $worksheet->setCellValue("D{$counter}", $header->code);
+                $worksheet->setCellValue("D{$counter}", $header->manufacturer_code);
                 $worksheet->setCellValue("E{$counter}", CHtml::value($header, 'productMasterCategory.name') . ' - ' . CHtml::value($header, 'productSubMasterCategory.name') . ' - ' . CHtml::value($header, 'productSubCategory.name'));
                 $worksheet->setCellValue("F{$counter}", CHtml::value($header, 'brand.name') . ' - ' . CHtml::value($header, 'subBrand.name') . ' - ' . CHtml::value($header, 'subBrandSeries.name'));
                 $worksheet->setCellValue("G{$counter}", $stockRow['transaction_date']);
@@ -239,6 +241,8 @@ class StockCardByWarehouseController extends Controller {
                 
                 $totalStockIn += $stockIn;
                 $totalStockOut += $stockOut;
+                $totalValueIn += $inventoryInValue;
+                $totalValueOut += $inventoryOutValue;
                 $counter++;
             
             }
@@ -247,7 +251,9 @@ class StockCardByWarehouseController extends Controller {
             $worksheet->getStyle("K{$counter}:Q{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
             $worksheet->setCellValue("L{$counter}", 'TOTAL');
             $worksheet->setCellValue("M{$counter}", $totalStockIn);
-            $worksheet->setCellValue("N{$counter}", $totalStockOut);
+            $worksheet->setCellValue("N{$counter}", $totalValueIn);
+            $worksheet->setCellValue("O{$counter}", $totalStockOut);
+            $worksheet->setCellValue("P{$counter}", $totalValueOut);
             
             $counter++;$counter++;
             

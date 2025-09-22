@@ -18,7 +18,7 @@
     
     <tbody>
         <?php foreach ($productSubCategoryDataProvider->data as $productSubCategory): ?>
-            <?php $inventoryTotalValues = $productSubCategory->getInventoryTotalValues(); ?>
+            <?php $inventoryTotalValues = $productSubCategory->getInventoryTotalValues($endDate); ?>
             <?php $totalStock = 0; ?>
             <tr>
                 <td><?php echo CHtml::encode(CHtml::value($productSubCategory, 'productMasterCategory.name')); ?></td>

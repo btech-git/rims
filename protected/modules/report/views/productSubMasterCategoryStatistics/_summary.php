@@ -23,10 +23,22 @@
                     <?php for ($month = 1; $month <= 12; $month++): ?>
                         <td style="padding: 16px">
                             <?php if (isset($yearlyStatisticsItem[$month])): ?>
-                                <div><strong>Qty Mean:</strong> <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $yearlyStatisticsItem[$month]['quantityMean'])); ?></div>
-                                <div><strong>Qty Median:</strong> <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $yearlyStatisticsItem[$month]['quantityMedian'])); ?></div>
-                                <div><strong>Prc Mean:</strong> <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $yearlyStatisticsItem[$month]['totalPriceMean'])); ?></div>
-                                <div><strong>Prc Median:</strong> <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $yearlyStatisticsItem[$month]['totalPriceMedian'])); ?></div>
+                                <div>
+                                    <strong>Qty Mean:</strong> 
+                                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $yearlyStatisticsItem[$month]['quantityMean'])); ?>
+                                </div>
+                                <div>
+                                    <strong>Qty Median:</strong> 
+                                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $yearlyStatisticsItem[$month]['quantityMedian'])); ?>
+                                </div>
+                                <div>
+                                    <strong>Prc Mean:</strong> 
+                                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $yearlyStatisticsItem[$month]['totalPriceMean'])); ?>
+                                </div>
+                                <div>
+                                    <strong>Prc Median:</strong> 
+                                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $yearlyStatisticsItem[$month]['totalPriceMedian'])); ?>
+                                </div>
                             <?php endif; ?>
                         </td>
                     <?php endfor; ?>

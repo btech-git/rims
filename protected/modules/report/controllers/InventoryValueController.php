@@ -22,11 +22,15 @@ class InventoryValueController extends Controller {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
         
+        $endDate = isset($_GET['EndDate']) ? $_GET['EndDate'] : date('Y-m-d');
         $currentSort = (isset($_GET['sort'])) ? $_GET['sort'] : '';
+        $pageSize = (isset($_GET['PageSize'])) ? $_GET['PageSize'] : 500;
         $currentPage = (isset($_GET['page'])) ? $_GET['page'] : '';
         
         $productSubCategory = Search::bind(new ProductSubCategory(), isset($_GET['ProductSubCategory']) ? $_GET['ProductSubCategory'] : '');
         $productSubCategoryDataProvider = $productSubCategory->searchByInventoryValueReport();
+        $productSubCategoryDataProvider->pagination->pageSize = $pageSize;
+        $productSubCategoryDataProvider->pagination->currentPage = $currentPage-1;
         $branches = Branch::model()->findAll();
 
         if (isset($_GET['Clear'])) {
@@ -47,6 +51,8 @@ class InventoryValueController extends Controller {
             'productSubCategoryDataProvider' => $productSubCategoryDataProvider,
             'branches' => $branches,
             'currentPage' => $currentPage,
+            'pageSize' => $pageSize,
+            'endDate' => $endDate,
         ));
     }
 
@@ -119,14 +125,16 @@ class InventoryValueController extends Controller {
         $worksheet->getStyle('A5:Q5')->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
         $worksheet->setCellValue('A5', 'No');
-        $worksheet->setCellValue('B5', 'Master Category');
-        $worksheet->setCellValue('C5', 'Master Category ID');
-        $worksheet->setCellValue('D5', 'Sub Master Category');
-        $worksheet->setCellValue('E5', 'Sub Master Category ID');
-        $worksheet->setCellValue('F5', 'Sub Category');
-        $worksheet->setCellValue('G5', 'Sub Category ID');
+        $worksheet->setCellValue('B5', 'ID');
+        $worksheet->setCellValue('C5', 'Master Category');
+        $worksheet->setCellValue('D5', 'ID');
+        $worksheet->setCellValue('E5', 'Sub Master Category');
+        $worksheet->setCellValue('F5', 'ID');
+        $worksheet->setCellValue('G5', 'Sub Category');
+        
         $branches = Branch::model()->findAll();
         $column = 'H';
+        
         foreach ($branches as $branch) {
             $worksheet->setCellValue($column . '5', $branch->code);
             $column++;
@@ -142,13 +150,13 @@ class InventoryValueController extends Controller {
             $inventoryTotalValues = $header->getInventoryTotalValues();
             $totalStock = 0;
             
-            $worksheet->setCellValue("A{$counter}", CHtml::encode($incrementNumber));
-            $worksheet->setCellValue("B{$counter}", CHtml::encode(CHtml::value($header, 'productSubMasterCategory.productMasterCategory.name')));
-            $worksheet->setCellValue("C{$counter}", CHtml::encode(CHtml::value($header, 'productSubMasterCategory.product_master_category_id')));
-            $worksheet->setCellValue("D{$counter}", CHtml::encode(CHtml::value($header, 'productSubMasterCategory.name')));
-            $worksheet->setCellValue("E{$counter}", CHtml::encode(CHtml::value($header, 'product_sub_master_category_id')));
-            $worksheet->setCellValue("F{$counter}", CHtml::encode(CHtml::value($header, 'name')));
-            $worksheet->setCellValue("G{$counter}", CHtml::encode(CHtml::value($header, 'id')));
+            $worksheet->setCellValue("A{$counter}", $incrementNumber);
+            $worksheet->setCellValue("B{$counter}", CHtml::value($header, 'productSubMasterCategory.product_master_category_id'));
+            $worksheet->setCellValue("C{$counter}", CHtml::value($header, 'productSubMasterCategory.productMasterCategory.name'));
+            $worksheet->setCellValue("D{$counter}", CHtml::value($header, 'product_sub_master_category_id'));
+            $worksheet->setCellValue("E{$counter}", CHtml::value($header, 'productSubMasterCategory.name'));
+            $worksheet->setCellValue("F{$counter}", CHtml::value($header, 'id'));
+            $worksheet->setCellValue("G{$counter}", CHtml::value($header, 'name'));
             
             $column = 'H'; 
             foreach ($branches as $branch) {
@@ -162,7 +170,7 @@ class InventoryValueController extends Controller {
                     }
                 }
                 if ($index >= 0) {
-                    $worksheet->setCellValue($column . "{$counter}", CHtml::encode($stockValue));
+                    $worksheet->setCellValue($column . "{$counter}", $stockValue);
                 } else {
                     $worksheet->setCellValue($column . "{$counter}", "0");
                 }
@@ -171,7 +179,7 @@ class InventoryValueController extends Controller {
                 $totalStock += $stockValue; 
             }
                         
-            $worksheet->setCellValue($column++ . $counter, CHtml::encode($totalStock));
+            $worksheet->setCellValue($column++ . $counter, $totalStock);
             $counter++; $incrementNumber++;
         }
 

@@ -1,5 +1,9 @@
 <?php
-Yii::app()->clientScript->registerScript('report', '');
+Yii::app()->clientScript->registerScript('report', '
+    $("#PageSize").val("' . $productSubCategoryDataProvider->pagination->pageSize . '");
+    $("#CurrentPage").val("' . ($productSubCategoryDataProvider->pagination->getCurrentPage(false) + 1) . '");
+    $("#EndDate").val("' . $endDate . '");
+' );
 Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/transaction/report.css');
 ?>
 
@@ -14,15 +18,14 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                 <div class="myForm">
                     <?php echo CHtml::beginForm(array(''), 'get'); ?>
                     
-                    <div class="row">
-                        <?php echo CHtml::hiddenField('page', $currentPage, array('size' => 3, 'id' => 'CurrentPage')); ?>
-                    </div>
+                    <div class="row"><?php echo CHtml::hiddenField('page', $currentPage, array('size' => 3, 'id' => 'CurrentPage')); ?></div>
                         <table>
                             <thead>
                                 <tr>
                                     <td>Master Kategori</td>
                                     <td>Sub Master Kategori</td>
                                     <td>Sub Kategori</td>
+                                    <td>Per Tanggal</td>
                                 </tr>
                             </thead>
                             <tbody>
@@ -76,6 +79,18 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                             )); ?>
                                         </div>
                                     </td>
+                                    <td>
+                                        <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(
+                                            'name' => 'EndDate',
+                                            'options' => array(
+                                                'dateFormat' => 'yy-mm-dd',
+                                            ),
+                                            'htmlOptions' => array(
+                                                'readonly' => true,
+                                                'placeholder' => 'Per Tanggal',
+                                            ),
+                                        )); ?>
+                                    </td>
                                 </tr>
                             </tbody>
                         </table>
@@ -99,20 +114,18 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                     <?php $this->renderPartial('_summary', array(
                         'productSubCategoryDataProvider' => $productSubCategoryDataProvider,
                         'branches' => $branches,
+                        'endDate' => $endDate,
                     )); ?>
                 </div>
                 <div class="clear"></div>
-                <div>
-                    <div class="right">
-                        <?php $this->widget('system.web.widgets.pagers.CLinkPager', array(
-                            'itemCount' => $productSubCategoryDataProvider->pagination->itemCount,
-                            'pageSize' => $productSubCategoryDataProvider->pagination->pageSize,
-                            'currentPage' => $productSubCategoryDataProvider->pagination->getCurrentPage(false),
-                        )); ?>
-                    </div>
-                    <div class="clear"></div>
+                <div class="right">
+                    <?php $this->widget('system.web.widgets.pagers.CLinkPager', array(
+                        'itemCount' => $productSubCategoryDataProvider->pagination->itemCount,
+                        'pageSize' => $productSubCategoryDataProvider->pagination->pageSize,
+                        'currentPage' => $productSubCategoryDataProvider->pagination->getCurrentPage(false),
+                    )); ?>
                 </div>
-
+                <div class="clear"></div>
             </div>
         </div>
     </div>

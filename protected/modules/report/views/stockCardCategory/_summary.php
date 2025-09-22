@@ -21,7 +21,7 @@ Yii::app()->clientScript->registerCss('_report', '
         <div style="font-size: larger">RAPERIND MOTOR</div>
         <div style="font-size: larger">Laporan Posisi Stok <?php echo CHtml::encode(CHtml::value($branch, 'name')); ?></div>
         <div>
-            <?php echo ' Periode: ' . CHtml::encode(Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($endDate))); ?>
+            <?php echo ' Periode: ' . CHtml::encode(Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($startDate))) . ' - ' . CHtml::encode(Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($endDate))); ?>
         </div>
     </div>
 
@@ -52,7 +52,7 @@ Yii::app()->clientScript->registerCss('_report', '
 
                 <?php $totalStock = '0.00'; ?>
                 <?php $totalValue = '0.00'; ?>
-                <?php $stockData = $header->getInventoryStockReport($endDate, $branchId); ?>
+                <?php $stockData = $header->getInventoryStockReport($startDate, $endDate, $branchId); ?>
                 
                 <?php foreach ($stockData as $stockRow): ?>
                     <?php $product = Product::model()->findByPk($stockRow['id']); ?>

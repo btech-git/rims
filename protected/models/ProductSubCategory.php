@@ -263,15 +263,18 @@ class ProductSubCategory extends CActiveRecord {
         return $resultSet;
     }
 
-    public function getInventoryTotalValues() {
+    public function getInventoryTotalValues($endDate) {
         $sql = "SELECT w.branch_id, COALESCE(SUM((i.stock_in + i.stock_out) * i.purchase_price), 0) AS total_value
                 FROM " . InventoryDetail::model()->tableName() . " i
                 INNER JOIN " . Warehouse::model()->tableName() . " w ON w.id = i.warehouse_id
                 INNER JOIN " . Product::model()->tableName() . " p ON p.id = i.product_id
-                WHERE p.product_sub_category_id = :product_sub_category_id AND w.status = 'Active'
+                WHERE p.product_sub_category_id = :product_sub_category_id AND w.status = 'Active' AND i.transaction_date BETWEEN '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND :end_date
                 GROUP BY w.branch_id";
 
-        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, array(':product_sub_category_id' => $this->id));
+        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, array(
+            ':product_sub_category_id' => $this->id,
+            ':end_date' => $endDate
+        ));
 
         return $resultSet;
     }
@@ -344,10 +347,11 @@ class ProductSubCategory extends CActiveRecord {
         return ($value === false) ? 0 : $value;
     }
     
-    public function getInventoryStockReport($endDate, $branchId) {
+    public function getInventoryStockReport($startDate, $endDate, $branchId) {
         $branchConditionSql = '';
         
         $params = array(
+            ':start_date' => $startDate,
             ':end_date' => $endDate,
             ':product_sub_category_id' => $this->id,
         );
@@ -362,7 +366,7 @@ class ProductSubCategory extends CActiveRecord {
                 INNER JOIN " . Warehouse::model()->tableName() . " w ON w.id = i.warehouse_id
                 INNER JOIN " . Product::model()->tableName() . " p ON p.id = i.product_id
                 INNER JOIN " . Unit::model()->tableName() . " u ON u.id = p.unit_id
-                WHERE i.transaction_date > '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND w.status = 'Active' AND i.transaction_date <= :end_date AND
+                WHERE i.transaction_date > :start_date AND w.status = 'Active' AND i.transaction_date <= :end_date AND
                     p.product_sub_category_id = :product_sub_category_id" . $branchConditionSql . "
                 GROUP BY p.id, p.code, p.name, p.manufacturer_code, u.name";
         

@@ -351,22 +351,6 @@
                                     'url' => array('/master/quickService/admin'), 
                                     'visible' => Yii::app()->user->checkAccess('masterQuickServiceCreate') || Yii::app()->user->checkAccess('masterQuickServiceEdit') || Yii::app()->user->checkAccess('masterQuickServiceView') || Yii::app()->user->checkAccess('masterQuickServiceApproval')
                                 ),
-                                array(
-                                    'label' => 'Inspection', 
-                                    'url' => array('/master/inspection/admin'), 
-//                                    'linkOptions' => array('class' => 'titleNav'), 
-                                    'visible' => Yii::app()->user->checkAccess('masterInspectionCreate') || Yii::app()->user->checkAccess('masterInspectionEdit') || Yii::app()->user->checkAccess('masterInspectionView') || Yii::app()->user->checkAccess('masterInspectionApproval')
-                                ),
-                                array(
-                                    'label' => 'Inspection Section', 
-                                    'url' => array('/master/inspectionSection/admin'), 
-                                    'visible' => Yii::app()->user->checkAccess('masterInspectionSectionCreate') || Yii::app()->user->checkAccess('masterInspectionSectionEdit') || Yii::app()->user->checkAccess('masterInspectionSectionView') || Yii::app()->user->checkAccess('masterInspectionSectionApproval')
-                                ),
-                                array(
-                                    'label' => 'Inspection Module', 
-                                    'url' => array('/master/inspectionModule/admin'), 
-                                    'visible' => Yii::app()->user->checkAccess('masterInspectionModuleCreate') || Yii::app()->user->checkAccess('masterInspectionModuleEdit') || Yii::app()->user->checkAccess('masterInspectionModuleView') || Yii::app()->user->checkAccess('masterInspectionModuleApproval')
-                                ),
                             ),
                         )); ?>
                         <?php endif; ?>
@@ -565,6 +549,52 @@
                                     ),
                                 ),
                             )); ?>
+                        <?php endif; ?>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+        <div class="small-32 columns" >
+            <div id="maincontent">
+                <div class="row" style="margin-top:20px" id="noliststyle">
+                    <div class="small-3 columns">
+                        <img src="<?php echo Yii::app()->baseUrl . '/images/service.png' ?>" /> <br/><br/>
+                        <?php if ( 
+                            Yii::app()->user->checkAccess('masterInspectionCreate') || 
+                            Yii::app()->user->checkAccess('masterInspectionEdit') || 
+                            Yii::app()->user->checkAccess('masterInspectionView') || 
+                            Yii::app()->user->checkAccess('masterInspectionApproval') || 
+                            Yii::app()->user->checkAccess('masterInspectionSectionCreate') || 
+                            Yii::app()->user->checkAccess('masterInspectionSectionEdit') || 
+                            Yii::app()->user->checkAccess('masterInspectionSectionView') || 
+                            Yii::app()->user->checkAccess('masterInspectionSectionApproval') || 
+                            Yii::app()->user->checkAccess('masterInspectionModuleCreate') || 
+                            Yii::app()->user->checkAccess('masterInspectionModuleEdit') || 
+                            Yii::app()->user->checkAccess('masterInspectionModuleView') || 
+                            Yii::app()->user->checkAccess('masterInspectionModuleApproval')
+                        ): ?>
+                        <h2>System Check & Reports</h2>
+                        <?php $this->widget('zii.widgets.CMenu', array(
+                            'items' => array(
+                                array(
+                                    'label' => 'Inspection Reports Form', 
+                                    'url' => array('/master/inspection/admin'), 
+//                                    'linkOptions' => array('class' => 'titleNav'), 
+                                    'visible' => Yii::app()->user->checkAccess('masterInspectionCreate') || Yii::app()->user->checkAccess('masterInspectionEdit') || Yii::app()->user->checkAccess('masterInspectionView') || Yii::app()->user->checkAccess('masterInspectionApproval')
+                                ),
+                                array(
+                                    'label' => 'System(s) to Check', 
+                                    'url' => array('/master/inspectionSection/admin'), 
+                                    'visible' => Yii::app()->user->checkAccess('masterInspectionSectionCreate') || Yii::app()->user->checkAccess('masterInspectionSectionEdit') || Yii::app()->user->checkAccess('masterInspectionSectionView') || Yii::app()->user->checkAccess('masterInspectionSectionApproval')
+                                ),
+                                array(
+                                    'label' => 'Function & Components in System', 
+                                    'url' => array('/master/inspectionModule/admin'), 
+                                    'visible' => Yii::app()->user->checkAccess('masterInspectionModuleCreate') || Yii::app()->user->checkAccess('masterInspectionModuleEdit') || Yii::app()->user->checkAccess('masterInspectionModuleView') || Yii::app()->user->checkAccess('masterInspectionModuleApproval')
+                                ),
+                            ),
+                        )); ?>
                         <?php endif; ?>
                     </div>
                 </div>

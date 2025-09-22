@@ -32,6 +32,7 @@ class StockCardCategorySummary extends CComponent {
     public function setupFilter($filters) {
         $branchConditionSql = '';
         
+        $startDate = (empty($filters['startDate'])) ? date('Y-m-d') : $filters['startDate'];
         $endDate = (empty($filters['endDate'])) ? date('Y-m-d') : $filters['endDate'];
         $branchId = (empty($filters['branchId'])) ? '' : $filters['branchId'];
         
@@ -44,8 +45,9 @@ class StockCardCategorySummary extends CComponent {
             FROM " . InventoryDetail::model()->tableName() . " i
             INNER JOIN " . Warehouse::model()->tableName() . " w ON w.id = i.warehouse_id
             INNER JOIN " . Product::model()->tableName() . " p ON p.id = i.product_id
-            WHERE p.product_sub_category_id = t.id AND w.status = 'Active' AND i.transaction_date >= '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND i.transaction_date <= :end_date " . $branchConditionSql . "
+            WHERE p.product_sub_category_id = t.id AND w.status = 'Active' AND i.transaction_date >= :start_date AND i.transaction_date <= :end_date " . $branchConditionSql . "
         )");
+        $this->dataProvider->criteria->params[':start_date'] = $startDate;
         $this->dataProvider->criteria->params[':end_date'] = $endDate;
         
         if (!empty($branchId)) {
