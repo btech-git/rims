@@ -255,31 +255,31 @@ class Supplier extends CActiveRecord {
         ));
     }
 
-    public function searchByPayableSupplierReport($startDate, $endDate, $branchId) {
-        $branchConditionSql = '';
-        
-        $criteria = new CDbCriteria;
-        $criteria->compare('t.id', $this->id);
-        $criteria->params = array(
-            ':start_date' => $startDate,
-            ':end_date' => $endDate,
-        );
-        
-        if (!empty($branchId)) {
-            $branchConditionSql = ' AND main_branch_id = :branch_id';
-            $criteria->params[':branch_id'] = $branchId;
-        }
-        
-        $criteria->addCondition("EXISTS (
-            SELECT supplier_id
-            FROM " . TransactionPurchaseOrder::model()->tableName() . "
-            WHERE supplier_id = t.id AND substring(purchase_order_date, 1, 10) BETWEEN :start_date AND :end_date " . $branchConditionSql . " 
-        )");
-
-        return new CActiveDataProvider($this, array(
-            'criteria' => $criteria,
-        ));
-    }
+//    public function searchByPayableSupplierReport($startDate, $endDate, $branchId) {
+//        $branchConditionSql = '';
+//        
+//        $criteria = new CDbCriteria;
+//        $criteria->compare('t.id', $this->id);
+//        $criteria->params = array(
+//            ':start_date' => $startDate,
+//            ':end_date' => $endDate,
+//        );
+//        
+//        if (!empty($branchId)) {
+//            $branchConditionSql = ' AND main_branch_id = :branch_id';
+//            $criteria->params[':branch_id'] = $branchId;
+//        }
+//        
+//        $criteria->addCondition("EXISTS (
+//            SELECT supplier_id
+//            FROM " . TransactionPurchaseOrder::model()->tableName() . "
+//            WHERE supplier_id = t.id AND substring(purchase_order_date, 1, 10) BETWEEN :start_date AND :end_date " . $branchConditionSql . " 
+//        )");
+//
+//        return new CActiveDataProvider($this, array(
+//            'criteria' => $criteria,
+//        ));
+//    }
 
     public function searchByPayable($startDate) {
         // @todo Please modify the following code to remove attributes that should not be searched.

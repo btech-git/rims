@@ -29,7 +29,25 @@ class PayableTransactionSummary extends CComponent {
         $this->dataProvider->criteria->order = $this->dataProvider->sort->orderBy;
     }
 
-    public function setupFilter($supplierId) {
+    public function setupFilter($supplierId, $startDate, $endDate, $branchId) {
+        $branchConditionSql = '';
+        
+        $this->dataProvider->criteria->params = array(
+            ':start_date' => $startDate,
+            ':end_date' => $endDate,
+        );
+        
+        if (!empty($branchId)) {
+            $branchConditionSql = ' AND main_branch_id = :branch_id';
+            $this->dataProvider->criteria->params[':branch_id'] = $branchId;
+        }
+        
+        $this->dataProvider->criteria->addCondition("EXISTS (
+            SELECT supplier_id
+            FROM " . TransactionPurchaseOrder::model()->tableName() . "
+            WHERE supplier_id = t.id AND substring(purchase_order_date, 1, 10) BETWEEN :start_date AND :end_date AND status_document = 'Approved'" . $branchConditionSql . " 
+        )");
+
         if (!empty($supplierId)) {
             $this->dataProvider->criteria->compare('t.id', $supplierId);
         }

@@ -233,8 +233,6 @@ class PaymentOutComponent extends CComponent {
             if ($detail->isNewRecord) {
                 $detail->payment_out_id = $this->header->id;
             }
-                
-//            $detail->total_invoice = empty($detail->receive_item_id) ? $detail->workOrderExpenseHeader->grand_total : $detail->receiveItem->grandTotal;
 
             $valid = $detail->save(false) && $valid;
             $new_invoice[] = $detail->id;

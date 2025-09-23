@@ -210,8 +210,24 @@ function tanggal($date) {
                             </tr>
                         </table>
 
-                        <div style="font-size: 10px; text-align: left">1. Raperind Motor tidak bertanggung jawab atas kendaraan yang tidak diambil dalam waktu 30 hari setelah kendaraan selesai</div>
-                        <div style="font-size: 10px; text-align: left">2. Raperind Motor bertanggung jawab atas keamanan kendaraan yang ditinggal di workshop dengan penggantian sebesar 10x Jasa, kecuali atas kejadian Force Majeure (Pencurian Kendaraan, Kebakaran, dll)</div>
+                        <div style="font-size: 10px; text-align: left">
+                            1. Raperind Motor tidak bertanggung jawab atas kendaraan yang tidak diambil dalam waktu 30 hari setelah kendaraan selesai
+                        </div>
+                        <div style="font-size: 10px; text-align: left">
+                            2. Raperind Motor bertanggung jawab atas keamanan kendaraan yang ditinggal di workshop dengan penggantian sebesar 10x Jasa, kecuali atas kejadian Force Majeure (Pencurian Kendaraan, Kebakaran, dll)
+                        </div>
+                        <div style="font-size: 10px; text-align: left">
+                            3. Barang yang telah dibeli tidak dapat ditukar atau dikembalikan.
+                        </div>
+                        <div style="font-size: 10px; text-align: left">
+                            4. Jaminan perbaikan satu minggu (300 km) setelah kendaraan diserahkan.
+                        </div>
+                        <div style="font-size: 10px; text-align: left">
+                            5. Kami tidak bertanggung jawab atas barang-barang bekasi yang tidak diambil pada saat penyerahan kendaraan.
+                        </div>
+                        <div style="font-size: 10px; text-align: left">
+                            6. Kami tidak berhubungan dengan pihak ketiga.
+                        </div>
                     </div>
                 <?php endif; ?>
             </div>

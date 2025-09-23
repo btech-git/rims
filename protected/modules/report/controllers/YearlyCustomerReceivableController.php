@@ -97,16 +97,17 @@ class YearlyCustomerReceivableController extends Controller {
         $worksheet->setCellValue('A2', 'Piutang Customer Tahunan');
         $worksheet->setCellValue('A3', 'Periode Tahun: ' . $year);
         
-        $worksheet->getStyle('A5:AM5')->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
-        
         $columnCounterStart = 'C';
         $columnCounterEnd = 'E';
+        
         for ($month = 1; $month <= 12; $month++) {
             $worksheet->mergeCells("{$columnCounterStart}5:{$columnCounterEnd}5");
             $worksheet->setCellValue("{$columnCounterStart}5", $monthList[$month]);
             ++$columnCounterStart; ++$columnCounterStart; ++$columnCounterStart;
             ++$columnCounterEnd; ++$columnCounterEnd; ++$columnCounterEnd;
         }
+        $worksheet->mergeCells("{$columnCounterStart}5:{$columnCounterEnd}5");
+        $worksheet->setCellValue("{$columnCounterStart}5", 'TOTAL');
         
         $worksheet->setCellValue('A6', 'No');
         $worksheet->setCellValue('B6', 'Customer');
@@ -120,9 +121,15 @@ class YearlyCustomerReceivableController extends Controller {
             $columnCounter++;
             
         }
-        $worksheet->setCellValue("{$columnCounter}6", 'Total');
+        $worksheet->setCellValue("{$columnCounter}6", 'Invoice Amount');
+        $columnCounter++;
+        $worksheet->setCellValue("{$columnCounter}6", 'Outstanding');
+        $columnCounter++;
+        $worksheet->setCellValue("{$columnCounter}6", 'Pelunasan');
+        $columnCounter++;
         
-        $worksheet->getStyle('A6:AM6')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A5:{$columnCounter}5")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A6:{$columnCounter}6")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
         $counter = 8;
         $ordinal = 0;
@@ -136,8 +143,11 @@ class YearlyCustomerReceivableController extends Controller {
             $worksheet->setCellValue("A{$counter}", ++$ordinal);
             $worksheet->setCellValue("B{$counter}", $yearlyCustomerReceivableReportDataItem['customer_name']);
             
+            $invoiceTotalSum = 0;
             $invoiceOutstandingSum = 0;
+            $invoicePaymentSum = 0; 
             $columnCounter = 'C';
+            
             for ($month = 1; $month <= 12; $month++) {
                 $invoiceTotal = isset($yearlyCustomerReceivableReportDataItem[$month]['invoice_total']) ? $yearlyCustomerReceivableReportDataItem[$month]['invoice_total'] : '';
                 $invoiceOutstanding = isset($yearlyCustomerReceivableReportDataItem[$month]['invoice_outstanding']) ? $yearlyCustomerReceivableReportDataItem[$month]['invoice_outstanding'] : '';
@@ -148,7 +158,10 @@ class YearlyCustomerReceivableController extends Controller {
                 $columnCounter++;
                 $worksheet->setCellValue("{$columnCounter}{$counter}", $invoicePayment);
                 $columnCounter++;
+                
+                $invoiceTotalSum += $invoiceTotal;
                 $invoiceOutstandingSum += $invoiceOutstanding;
+                $invoicePaymentSum += $invoicePayment;
                 
                 if (!isset($invoiceTotalSums[$month])) {
                     $invoiceTotalSums[$month] = 0;
@@ -165,7 +178,12 @@ class YearlyCustomerReceivableController extends Controller {
                 }
                 $invoicePaymentSums[$month] += $invoicePayment;
             }
+            $worksheet->setCellValue("{$columnCounter}{$counter}", $invoiceTotalSum);
+            $columnCounter++;
             $worksheet->setCellValue("{$columnCounter}{$counter}", $invoiceOutstandingSum);
+            $columnCounter++;
+            $worksheet->setCellValue("{$columnCounter}{$counter}", $invoicePaymentSum);
+            $columnCounter++;
             
             $counter++;
         }
@@ -174,7 +192,11 @@ class YearlyCustomerReceivableController extends Controller {
         $worksheet->getStyle("A{$counter}:AM{$counter}")->getFont()->setBold(true);
         
         $worksheet->setCellValue("B{$counter}", 'TOTAL');
+        
+        $grandTotalInvoice = 0;
         $grandTotalOutstanding = 0;
+        $grandTotalPayment = 0;
+        
         $columnCounter = 'C';
         for ($month = 1; $month <= 12; $month++) {
             if (!isset($invoiceTotalSums[$month])) {
@@ -195,12 +217,19 @@ class YearlyCustomerReceivableController extends Controller {
             $worksheet->setCellValue("{$columnCounter}{$counter}", $invoicePaymentSums[$month]);
             $columnCounter++;
             
+            $grandTotalInvoice += $invoiceTotalSums[$month];
             $grandTotalOutstanding += $invoiceOutstandingSums[$month];
+            $grandTotalPayment += $invoicePaymentSums[$month];
         }
         
+        $worksheet->setCellValue("{$columnCounter}{$counter}", $grandTotalInvoice);
+        $columnCounter++;
         $worksheet->setCellValue("{$columnCounter}{$counter}", $grandTotalOutstanding);
+        $columnCounter++;
+        $worksheet->setCellValue("{$columnCounter}{$counter}", $grandTotalPayment);
+        $columnCounter++;
 
-        for ($col = 'A'; $col !== 'AN'; $col++) {
+        for ($col = 'A'; $col !== 'AZ'; $col++) {
             $objPHPExcel->getActiveSheet()
             ->getColumnDimension($col)
             ->setAutoSize(true);

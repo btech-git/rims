@@ -8,13 +8,6 @@ $this->breadcrumbs = array(
     'View Service ' . $model->name,
 );
 
-// $this->menu=array(
-// 	array('label'=>'List Service', 'url'=>array('index')),
-// 	array('label'=>'Create Service', 'url'=>array('create')),
-// 	array('label'=>'Update Service', 'url'=>array('update', 'id'=>$model->id)),
-// 	array('label'=>'Delete Service', 'url'=>'#', 'linkOptions'=>array('submit'=>array('delete','id'=>$model->id),'confirm'=>'Are you sure you want to delete this item?')),
-// 	array('label'=>'Manage Service', 'url'=>array('admin')),
-// );
 ?>
 <div id="maincontent">
     <div class="clearfix page-action">
@@ -22,8 +15,8 @@ $this->breadcrumbs = array(
         <?php $ccaction = Yii::app()->controller->action->id; ?>
         <a class="button cbutton right" href="<?php echo Yii::app()->baseUrl . '/master/service/admin'; ?>"><span class="fa fa-th-list"></span>Manage Services</a>
         <?php if (Yii::app()->user->checkAccess("masterServiceEdit")) { ?>
-            <a class="button cbutton right" style="margin-right:10px;" href="<?php echo Yii::app()->createUrl('/master/' . $ccontroller . '/update', array('id' => $model->id)); ?>"><span class="fa fa-edit"></span>edit</a>
-            <a class="button cbutton right" style="margin-right:10px;" href="<?php echo Yii::app()->createUrl('/master/' . $ccontroller . '/addProduct', array('id' => $model->id)); ?>"><span class="fa fa-plus"></span>Add Materials</a>
+            <a class="button warning right" style="margin-right:10px;" href="<?php echo Yii::app()->createUrl('/master/' . $ccontroller . '/update', array('id' => $model->id)); ?>"><span class="fa fa-edit"></span>edit</a>
+            <a class="button success right" style="margin-right:10px;" href="<?php echo Yii::app()->createUrl('/master/' . $ccontroller . '/addProduct', array('id' => $model->id)); ?>"><span class="fa fa-plus"></span>Add Materials</a>
         <?php } ?>
 
         <h1>View Service <?php echo $model->name; ?></h1>
@@ -40,15 +33,7 @@ $this->breadcrumbs = array(
                 'code',
                 'name',
                 'description',
-//                array('name'=>'difficulty_level','value'=>$model->getLevel($model)),	
-                //'difficulty_level',
                 'status',
-//                'difficulty',
-//                'difficulty_value', 
-//                'regular', 
-//                'luxury',
-//                'luxury_value',
-//                'luxury_calc', 
                 'standard_rate_per_hour',
                 'flat_rate_hour',
                 'common_price',

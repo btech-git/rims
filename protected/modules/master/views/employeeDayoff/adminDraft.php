@@ -40,10 +40,10 @@ $('.search-form form').submit(function(){
     <div class="row">
         <div class="small-12 columns">
             <div class="clearfix page-action">
-<!--                <a class="button success right" href="<?php //echo Yii::app()->baseUrl . '/master/EmployeeDayoff/create'; ?>">
+                <a class="button success right" href="<?php echo Yii::app()->baseUrl . '/master/EmployeeDayoff/create'; ?>">
                     <span class="fa fa-plus"></span>Create Pengajuan Cuti Karyawan
-                </a>-->
-                <h2>Manage Pengajuan Cuti Karyawan</h2>
+                </a>
+                <h2>Draft Pengajuan Cuti Karyawan</h2>
             </div>
 
             <div class="search-bar">
@@ -60,7 +60,7 @@ $('.search-form form').submit(function(){
             <div class="grid-view">
                 <?php $this->widget('zii.widgets.grid.CGridView', array(
                     'id' => 'employee-dayoff-grid',
-                    'dataProvider' => $dataprovider,
+                    'dataProvider' => $modelDraftDataprovider,
                     'filter' => $model,
                     // 'summaryText'=>'',
                     'template' => '{items}<div class="clearfix">{summary}{pager}</div>',
@@ -75,11 +75,7 @@ $('.search-form form').submit(function(){
                             'type'=>'raw'
                         ),
                         'date_created',
-                        array(
-                            'name' => 'employee_id', 
-                            'value' => '$data->employee->name',
-                            'filter' => false,
-                        ),
+                        array('name' => 'employee_id', 'value' => '$data->employee->name'),
                         array(
                             'header'=>'Paid/Unpaid', 
                             'name'=>'off_type',
@@ -99,17 +95,12 @@ $('.search-form form').submit(function(){
                             'name'=>'status',
                             'value'=>'$data->status',
                             'type'=>'raw',
-                            'filter' => CHtml::activeDropDownList($model, 'status', array(
-                                '' => 'All',
-                                'Draft' => 'Draft',
-                                'Approved' => 'Approved',
-                                'Rejected' => 'Rejected',
-                            )),
+                            'filter' => false,
                         ),
                         'user.username',
-                        array(
-                            'class' => 'CButtonColumn',
-                        ),
+//                        array(
+//                            'class' => 'CButtonColumn',
+//                        ),
                     ),
                 )); ?>
             </div>

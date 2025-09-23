@@ -552,9 +552,14 @@
                         'visible' => Yii::app()->user->checkAccess('absencyReport')
                     ),
                     array(
-                        'label' => 'Cuti Karyawan', 
+                        'label' => 'Pengajuan Cuti Karyawan', 
+                        'url' => array('/master/employeeDayoff/adminDraft'), 
+                        'visible' => Yii::app()->user->checkAccess('employeeLeaveApplicationCreate') || Yii::app()->user->checkAccess('employeeLeaveApplicationView')
+                    ),
+                    array(
+                        'label' => 'Data Cuti Karyawan', 
                         'url' => array('/master/employeeDayoff/admin'), 
-                        'visible' => Yii::app()->user->checkAccess('employeeLeaveApplicationCreate') || Yii::app()->user->checkAccess('employeeLeaveApplicationEdit') || Yii::app()->user->checkAccess('employeeLeaveApplicationView')
+                        'visible' => Yii::app()->user->checkAccess('employeeLeaveApplicationEdit') || Yii::app()->user->checkAccess('employeeLeaveApplicationView')
                     ),
                     array(
                         'label' => 'Payroll', 

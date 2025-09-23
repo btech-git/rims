@@ -54,30 +54,33 @@ class EmployeeDayoffController extends Controller {
 
     public function filterAccess($filterChain) {
         if ($filterChain->action->id === 'create') {
-            if (!(Yii::app()->user->checkAccess('masterEmployeeCreate')))
+            if (!(Yii::app()->user->checkAccess('masterEmployeeCreate'))) {
                 $this->redirect(array('/site/login'));
+            }
         }
 
         if (
-                $filterChain->action->id === 'restore' ||
-                $filterChain->action->id === 'edit' ||
-                $filterChain->action->id === 'update' ||
-                $filterChain->action->id === 'delete'
+            $filterChain->action->id === 'restore' ||
+            $filterChain->action->id === 'edit' ||
+            $filterChain->action->id === 'update' ||
+            $filterChain->action->id === 'delete'
         ) {
-            if (!(Yii::app()->user->checkAccess('masterEmployeeEdit')))
+            if (!(Yii::app()->user->checkAccess('masterEmployeeEdit'))) {
                 $this->redirect(array('/site/login'));
+            }
         }
 
         if (
-                $filterChain->action->id === 'view' ||
-                $filterChain->action->id === 'admin' ||
-                $filterChain->action->id === 'index' ||
-                $filterChain->action->id === 'updateBank' ||
-                $filterChain->action->id === 'updateDeduction' ||
-                $filterChain->action->id === 'updateIncentive'
+            $filterChain->action->id === 'view' ||
+            $filterChain->action->id === 'admin' ||
+            $filterChain->action->id === 'index' ||
+            $filterChain->action->id === 'updateBank' ||
+            $filterChain->action->id === 'updateDeduction' ||
+            $filterChain->action->id === 'updateIncentive'
         ) {
-            if (!(Yii::app()->user->checkAccess('masterEmployeeCreate')) || !(Yii::app()->user->checkAccess('masterEmployeeEdit')))
+            if (!(Yii::app()->user->checkAccess('masterEmployeeCreate')) || !(Yii::app()->user->checkAccess('masterEmployeeEdit'))) {
                 $this->redirect(array('/site/login'));
+            }
         }
 
         $filterChain->run();
@@ -159,25 +162,6 @@ class EmployeeDayoffController extends Controller {
         ));
     }
     
-//    public function actionDateRange($id) {
-//        $model = $this->loadModel($id);
-//        $start_date = $model->date_from;
-//        $end_date = date('Y-m-d', strtotime($model->date_from . " +2 days"));
-//        
-//        $interval = new DateInterval('P1D');
-// 
-//        $date_range = new DatePeriod(new DateTime($start_date), $interval, new DateTime($end_date));
-//        
-//        foreach ($date_range as $date) {
-//            echo $date->format('Y-m-d') . "\n";
-//        }
-//    }
-
-    /**
-     * Updates a particular model.
-     * If update is successful, the browser will be redirected to the 'view' page.
-     * @param integer $id the ID of the model to be updated
-     */
     public function actionUpdate($id) {
         $model = $this->loadModel($id);
 
@@ -271,20 +255,39 @@ class EmployeeDayoffController extends Controller {
             $model->attributes = $_GET['EmployeeDayoff'];
         }
         
-        $modelDraftDataprovider = $model->search();
-        $modelDraftDataprovider->criteria->compare('t.status', 'Draft');
-
-        $modelApprovedDataprovider = $model->search();
-        $modelApprovedDataprovider->criteria->compare('t.status', 'Approved');
-
-        $modelRejectDataprovider = $model->search();
-        $modelRejectDataprovider->criteria->compare('t.status', 'Rejected');
+        $dataprovider = $model->search();
+//        $modelDraftDataprovider->criteria->compare('t.status', 'Draft');
+//
+//        $modelApprovedDataprovider = $model->search();
+//        $modelApprovedDataprovider->criteria->compare('t.status', 'Approved');
+//
+//        $modelRejectDataprovider = $model->search();
+//        $modelRejectDataprovider->criteria->compare('t.status', 'Rejected');
 
         $this->render('admin', array(
             'model' => $model,
+            'dataprovider' => $dataprovider,
+//            'modelApprovedDataprovider' => $modelApprovedDataprovider,
+//            'modelRejectDataprovider' => $modelRejectDataprovider,
+        ));
+    }
+
+    /**
+     * Manages all models.
+     */
+    public function actionAdminDraft() {
+        $model = new EmployeeDayoff('search');
+        $model->unsetAttributes();  // clear any default values
+        if (isset($_GET['EmployeeDayoff'])) {
+            $model->attributes = $_GET['EmployeeDayoff'];
+        }
+        
+        $modelDraftDataprovider = $model->search();
+        $modelDraftDataprovider->criteria->compare('t.status', 'Draft');
+
+        $this->render('adminDraft', array(
+            'model' => $model,
             'modelDraftDataprovider' => $modelDraftDataprovider,
-            'modelApprovedDataprovider' => $modelApprovedDataprovider,
-            'modelRejectDataprovider' => $modelRejectDataprovider,
         ));
     }
 

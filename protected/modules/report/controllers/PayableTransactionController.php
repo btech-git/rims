@@ -36,11 +36,11 @@ class PayableTransactionController extends Controller {
         $supplierDataProvider = $supplier->search();
         $supplierDataProvider->pagination->pageVar = 'page_dialog';
 
-        $payableSummary = new PayableTransactionSummary($supplier->searchByPayableSupplierReport($startDate, $endDate, $branchId));
+        $payableSummary = new PayableTransactionSummary($supplier->search());
         $payableSummary->setupLoading();
         $payableSummary->setupPaging($pageSize, $currentPage);
         $payableSummary->setupSorting();
-        $payableSummary->setupFilter($supplierId);
+        $payableSummary->setupFilter($supplierId, $startDate, $endDate, $branchId);
 
         if (isset($_GET['ResetFilter'])) {
             $this->redirect(array('summary'));
@@ -90,10 +90,10 @@ class PayableTransactionController extends Controller {
 
         $documentProperties = $objPHPExcel->getProperties();
         $documentProperties->setCreator('Raperind Motor');
-        $documentProperties->setTitle('Laporan Hutang Supplier');
+        $documentProperties->setTitle('Kartu Hutang Supplier');
 
         $worksheet = $objPHPExcel->setActiveSheetIndex(0);
-        $worksheet->setTitle('Laporan Hutang Supplier');
+        $worksheet->setTitle('Kartu Hutang Supplier');
 
         $worksheet->mergeCells('A1:H1');
         $worksheet->mergeCells('A2:H2');
@@ -104,7 +104,7 @@ class PayableTransactionController extends Controller {
         
         $branch = Branch::model()->findByPk($branchId);
         $worksheet->setCellValue('A2', 'Raperind Motor ' . CHtml::encode(CHtml::value($branch, 'name')));
-        $worksheet->setCellValue('A3', 'Laporan Hutang Supplier');
+        $worksheet->setCellValue('A3', 'Kartu Hutang Supplier');
         $worksheet->setCellValue('A3', 'Tanggal ' . Yii::app()->dateFormatter->format('d MMMM yyyy', $startDate) . ' - ' . Yii::app()->dateFormatter->format('d MMMM yyyy', $endDate));
 
         $worksheet->getStyle("A5:H5")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
@@ -170,7 +170,7 @@ class PayableTransactionController extends Controller {
         ob_end_clean();
         // We'll be outputting an excel file
         header('Content-type: application/vnd.ms-excel');
-        header('Content-Disposition: attachment;filename="Laporan Hutang Supplier.xls"');
+        header('Content-Disposition: attachment;filename="kartu_hutang_supplier.xls"');
         header('Cache-Control: max-age=0');
         
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');

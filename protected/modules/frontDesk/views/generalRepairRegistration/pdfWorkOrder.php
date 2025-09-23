@@ -232,21 +232,27 @@ function tanggal($date) {
     <div style="width: 100%">
         <table style="border: 1px solid; font-size: 10px; width: 100%; float: center">
             <tr>
-                <td colspan="2" style="border-bottom: 1px solid; text-align: center">Tanda Tangan</td>
+                <td colspan="3" style="border-bottom: 1px solid; text-align: center">Tanda Tangan</td>
             </tr>
             <tr>
                 <td style="height: 70px; border-right: 1px solid; width: 30%">&nbsp;</td>
+                <td style="width: 30%; border-right: 1px solid">&nbsp;</td>
                 <td style="width: 30%">&nbsp;</td>
             </tr>
             <tr>
-                <td style="text-align: center; border-right: 1px solid;">(Front Office)</td>
-                <td style="text-align: center">(Mekanik)</td>
+                <td style="text-align: center; border-right: 1px solid;">Pemilik</td>
+                <td style="text-align: center; border-right: 1px solid;">Receptionist</td>
+                <td style="text-align: center">Mekanik</td>
             </tr>
         </table>
     </div>
 
     <br />
 
-    <div style="font-size: 10px; text-align: left">1. Raperind Motor tidak bertanggung jawab atas kendaraan yang tidak diambil dalam waktu 30 hari setelah kendaraan selesai</div>
-    <div style="font-size: 10px; text-align: left">2. Raperind Motor bertanggung jawab atas keamanan kendaraan yang ditinggal di workshop dengan penggantian sebesar 10x Jasa, kecuali atas kejadian Force Majeure (Pencurian Kendaraan, Kebakaran, dll)</div>
+    <div style="font-size: 10px; text-align: left">
+        1. Raperind Motor tidak bertanggung jawab atas kendaraan yang tidak diambil dalam waktu 30 hari setelah kendaraan selesai
+    </div>
+    <div style="font-size: 10px; text-align: left">
+        2. Raperind Motor bertanggung jawab atas keamanan kendaraan yang ditinggal di workshop dengan penggantian sebesar 10x Jasa, kecuali atas kejadian Force Majeure (Pencurian Kendaraan, Kebakaran, dll)
+    </div>
 </div>

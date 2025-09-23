@@ -30,6 +30,10 @@
         <?php foreach ($productDataProvider->data as $product): ?>
             <?php $tireSaleTotalQuantities = $product->getTireSaleTotalQuantitiesReport($year, $month); ?>
             <?php $totalQuantity = 0; ?>
+            <?php $daysInMonth = cal_days_in_month(CAL_GREGORIAN, $month, $year); ?>
+            <?php $yearMonth = $year . '-' . str_pad($month, 2, '0', STR_PAD_LEFT); ?>
+            <?php $startDate = $yearMonth . '-01'; ?>
+            <?php $endDate = $yearMonth . '-' . $daysInMonth; ?>
             <tr>
                 <td><?php echo CHtml::encode(CHtml::value($product, 'id')); ?></td>
                 <td><?php echo CHtml::encode(CHtml::value($product, 'manufacturer_code')); ?></td>
@@ -51,11 +55,25 @@
                         <?php endif; ?>
                     <?php endforeach; ?>
                     <td style="text-align: center">
-                        <?php echo CHtml::encode($saleQuantity); ?>
+                        <?php echo CHtml::link($saleQuantity, array(
+                            '/report/monthlyTireSaleTransaction/transactionInfo', 
+                            'productId' => $product->id, 
+                            'startDate' => $startDate, 
+                            'endDate' => $endDate,
+                            'branchId' => $branch->id,
+                        ), array('target' => '_blank')); ?>
                     </td>
                     <?php $totalQuantity += $saleQuantity; ?>
                 <?php endforeach; ?>
-                <td style="text-align: center"><?php echo CHtml::encode($totalQuantity); ?></td>
+                <td style="text-align: center">
+                    <?php echo CHtml::link($totalQuantity, array(
+                        '/report/monthlyTireSaleTransaction/transactionInfo', 
+                        'productId' => $product->id, 
+                        'startDate' => $startDate, 
+                        'endDate' => $endDate,
+                        'branchId' => null,
+                    ), array('target' => '_blank')); ?>
+                </td>
             </tr>
         <?php endforeach; ?>
     </tbody>

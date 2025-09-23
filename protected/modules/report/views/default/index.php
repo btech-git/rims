@@ -453,6 +453,11 @@
                                         'visible' => Yii::app()->user->checkAccess('payableReport')
                                     ),
                                     array(
+                                        'label' => 'Kartu Hutang', 
+                                        'url' => array('/report/payableTransaction/summary'), 
+                                        'visible' => Yii::app()->user->checkAccess('payableReport')
+                                    ),
+                                    array(
                                         'label' => 'Rincian Pembayaran Hutang', 
                                         'url' => array('/report/paymentOut/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('paymentOutReport')

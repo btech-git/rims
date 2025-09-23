@@ -96,56 +96,52 @@ class ReceivableDetailController extends Controller {
 
         $documentProperties = $objPHPExcel->getProperties();
         $documentProperties->setCreator('PT. Raperind Motor');
-        $documentProperties->setTitle('Buku Besar Pembantu Piutang');
+        $documentProperties->setTitle('Piutang Customer Detail');
 
         $worksheet = $objPHPExcel->setActiveSheetIndex(0);
-        $worksheet->setTitle('Buku Besar Pembantu Piutang');
+        $worksheet->setTitle('Piutang Customer Detail');
 
-        $worksheet->mergeCells('A1:G1');
-        $worksheet->mergeCells('A2:G2');
-        $worksheet->mergeCells('A3:G3');
+        $worksheet->mergeCells('A1:F1');
+        $worksheet->mergeCells('A2:F2');
+        $worksheet->mergeCells('A3:F3');
 
-        $worksheet->getStyle('A1:G6')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-        $worksheet->getStyle('A1:G6')->getFont()->setBold(true);
+        $worksheet->getStyle('A1:F6')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->getStyle('A1:F6')->getFont()->setBold(true);
 
         $branch = Branch::model()->findByPk($branchId);
-        $worksheet->setCellValue('A1', 'Raperind Motor ' . CHtml::encode(CHtml::value($branch, 'name')));
-        $worksheet->setCellValue('A2', 'Buku Besar Pembantu Piutang');
+        $worksheet->setCellValue('A1', 'Raperind Motor ' . CHtml::value($branch, 'name'));
+        $worksheet->setCellValue('A2', 'Piutang Customer Detail');
         $worksheet->setCellValue('A3', Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($startDate)) . ' - ' . Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($endDate)));
 
-        $worksheet->getStyle('A5:G5')->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle('A5:F5')->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
         $worksheet->setCellValue('A5', 'Tanggal');
-        $worksheet->setCellValue('B5', 'Jenis Transaksi');
-        $worksheet->setCellValue('C5', 'Transaksi #');
-        $worksheet->setCellValue('D5', 'Keterangan');
-        $worksheet->setCellValue('E5', 'Debit');
-        $worksheet->setCellValue('F5', 'Kredit');
-        $worksheet->setCellValue('G5', 'Saldo');
+        $worksheet->setCellValue('B5', 'Transaksi #');
+        $worksheet->setCellValue('C5', 'Keterangan');
+        $worksheet->setCellValue('D5', 'Debit');
+        $worksheet->setCellValue('E5', 'Kredit');
+        $worksheet->setCellValue('F5', 'Saldo');
 
-        $worksheet->getStyle('A6:G6')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle('A5:F5')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
         $counter = 7;
 
         foreach ($receivableDetailSummary->data as $header) {
-            $receivableAmount = $header->getReceivableAmount();
-            if ($receivableAmount !== 0) {
+//            $receivableAmount = $header->getReceivableAmount();
+//            if ($receivableAmount !== 0) {
                 $worksheet->mergeCells("A{$counter}:B{$counter}");
                 $worksheet->mergeCells("C{$counter}:E{$counter}");
-                $worksheet->setCellValue("A{$counter}", CHtml::encode(CHtml::value($header, 'code')));
-                $worksheet->setCellValue("C{$counter}", CHtml::encode(CHtml::value($header, 'name')));
-                $saldo = $header->getBeginningBalanceReceivable($startDate);
-                $worksheet->setCellValue("F{$counter}", CHtml::encode($saldo));
+                $worksheet->setCellValue("A{$counter}", CHtml::value($header, 'code'));
+                $worksheet->setCellValue("C{$counter}", CHtml::value($header, 'name'));
+                $saldo = 0; //$header->getBeginningBalanceReceivable($startDate);
+                $worksheet->setCellValue("F{$counter}", $saldo);
                 
                 $counter++;
                 
-                $receivableData = $header->getReceivableLedgerReport($startDate, $endDate, $options['branchId']);
-                $positiveAmount = 0; 
-                $negativeAmount = 0;
+                $receivableData = $header->getReceivableDetailReport($endDate, $options['branchId']);
                 
                 foreach ($receivableData as $receivableRow) {
-                    $saleAmount = $receivableRow['sale_amount'];
-                    $paymentAmount = $receivableRow['payment_amount'];
+                    $transactionNumber = $receivableRow['kode_transaksi'];
                     $amount = $receivableRow['amount'];
                     if ($receivableRow['transaction_type'] == 'D') {
                         $saldo += $amount;
@@ -153,39 +149,35 @@ class ReceivableDetailController extends Controller {
                         $saldo -= $amount;
                     }
                     
-                    $worksheet->setCellValue("A{$counter}", CHtml::encode($receivableRow['tanggal_transaksi']));
-                    $worksheet->setCellValue("B{$counter}", CHtml::encode($receivableRow['transaction_type']));
-                    $worksheet->setCellValue("C{$counter}", CHtml::encode($receivableRow['kode_transaksi']));
-                    $worksheet->setCellValue("D{$counter}", CHtml::encode($receivableRow['remark']));
-                    $worksheet->setCellValue("E{$counter}", $receivableRow['transaction_type'] == 'D' ? CHtml::encode($amount) : 0);
-                    $worksheet->setCellValue("F{$counter}", $receivableRow['transaction_type'] == 'K' ? CHtml::encode($amount) : 0);
-                    $worksheet->setCellValue("G{$counter}", CHtml::encode($saldo));
-                    
-                    $positiveAmount += $saleAmount;
-                    $negativeAmount += $paymentAmount; 
+                    $worksheet->setCellValue("A{$counter}", $receivableRow['tanggal_transaksi']);
+                    $worksheet->setCellValue("B{$counter}", $transactionNumber);
+                    $worksheet->setCellValue("C{$counter}", $receivableRow['remark']);
+                    $worksheet->setCellValue("D{$counter}", $receivableRow['transaction_type'] == 'D' ? $amount : 0);
+                    $worksheet->setCellValue("E{$counter}", $receivableRow['transaction_type'] == 'K' ? $amount : 0);
+                    $worksheet->setCellValue("F{$counter}", $saldo);
                     
                     $counter++;
                 }
                 
-                $worksheet->mergeCells("A{$counter}:F{$counter}");
-                $worksheet->setCellValue("A{$counter}", "Total Penambahan");
-                $worksheet->setCellValue("G{$counter}", CHtml::encode($positiveAmount));
+//                $worksheet->mergeCells("A{$counter}:F{$counter}");
+//                $worksheet->setCellValue("A{$counter}", "Total Penambahan");
+//                $worksheet->setCellValue("G{$counter}", $positiveAmount));
                 $counter++;
+//                
+//                $worksheet->mergeCells("A{$counter}:F{$counter}");
+//                $worksheet->setCellValue("A{$counter}", "Total Penurunan");
+//                $worksheet->setCellValue("G{$counter}", $negativeAmount));
+//                $counter++;
+//                
+//                $worksheet->mergeCells("A{$counter}:F{$counter}");
+//                $worksheet->setCellValue("A{$counter}", "Perubahan Bersih");
+//                $worksheet->setCellValue("G{$counter}", $saldo));
+//                $counter++; $counter++;
                 
-                $worksheet->mergeCells("A{$counter}:F{$counter}");
-                $worksheet->setCellValue("A{$counter}", "Total Penurunan");
-                $worksheet->setCellValue("G{$counter}", CHtml::encode($negativeAmount));
-                $counter++;
-                
-                $worksheet->mergeCells("A{$counter}:F{$counter}");
-                $worksheet->setCellValue("A{$counter}", "Perubahan Bersih");
-                $worksheet->setCellValue("G{$counter}", CHtml::encode($saldo));
-                $counter++; $counter++;
-                
-            }
+//            }
         }
             
-        for ($col = 'A'; $col !== 'L'; $col++) {
+        for ($col = 'A'; $col !== 'Z'; $col++) {
             $objPHPExcel->getActiveSheet()
             ->getColumnDimension($col)
             ->setAutoSize(true);
@@ -194,7 +186,7 @@ class ReceivableDetailController extends Controller {
         ob_end_clean();
         // We'll be outputting an excel file
         header('Content-type: application/vnd.ms-excel');
-        header('Content-Disposition: attachment;filename="Buku Besar Pembantu Piutang.xls"');
+        header('Content-Disposition: attachment;filename="piutang_customer_detail.xls"');
         header('Cache-Control: max-age=0');
         
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');

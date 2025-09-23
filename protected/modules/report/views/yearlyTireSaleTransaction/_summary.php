@@ -48,9 +48,19 @@
                 </td>
                 <?php $totalSum = 0; ?>
                 <?php for ($month = 1; $month <= 12; $month++): ?>
+                    <?php $daysInMonth = cal_days_in_month(CAL_GREGORIAN, $month, $year); ?>
+                    <?php $yearMonth = $year . '-' . str_pad($month, 2, '0', STR_PAD_LEFT); ?>
+                    <?php $startDate = $yearMonth . '-01'; ?>
+                    <?php $endDate = $yearMonth . '-' . $daysInMonth; ?>
                     <?php $total = isset($invoiceTireSaleInfo['totals'][$month]) ? $invoiceTireSaleInfo['totals'][$month] : ''; ?>
                     <td style="text-align: right">
-                        <?php echo CHtml::encode($total); ?>
+                        <?php echo CHtml::link($total, array(
+                            '/report/yearlyTireSaleTransaction/transactionInfo', 
+                            'productId' => $invoiceTireSaleInfo['product_id'], 
+                            'startDate' => $startDate, 
+                            'endDate' => $endDate,
+                            'branchId' => $branchId,
+                        ), array('target' => '_blank')); ?>
                     </td>
                     <?php $totalSum += $total; ?>
                     <?php if (!isset($groupTotalSums[$month])): ?>

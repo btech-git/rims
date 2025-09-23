@@ -103,6 +103,23 @@ class MonthlyTireSaleTransactionController extends Controller {
         }
     }
 
+    public function actionTransactionInfo($productId, $startDate, $endDate, $branchId) {
+        set_time_limit(0);
+        ini_set('memory_limit', '1024M');
+
+        $page = (isset($_GET['page'])) ? $_GET['page'] : 1;
+        
+        $dataProvider = InvoiceDetail::model()->searchByTransactionInfo($productId, $startDate, $endDate, $branchId, $page);
+        $product = Product::model()->findByPk($productId);
+        
+        $this->render('transactionInfo', array(
+            'dataProvider' => $dataProvider,
+            'startDate' => $startDate,
+            'endDate' => $endDate,
+            'product' => $product,
+        ));
+    }
+
     protected function saveToExcel($productDataProvider, $branches, $year, $month) {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
@@ -159,7 +176,7 @@ class MonthlyTireSaleTransactionController extends Controller {
             $worksheet->setCellValue("B{$counter}", CHtml::value($product, 'manufacturer_code'));
             $worksheet->setCellValue("C{$counter}", CHtml::value($product, 'name'));
             $worksheet->setCellValue("D{$counter}", CHtml::value($product, 'brand.name') . ' - ' . CHtml::value($product, 'subBrand.name') . ' - ' . CHtml::value($product, 'subBrandSeries.name'));
-            $worksheet->setCellValue("E{$counter}", CHtml::value($product, 'masterSubCategoryCode'));
+            $worksheet->setCellValue("E{$counter}", CHtml::value($product, 'productMasterCategory.name') . ' - ' . CHtml::value($product, 'productSubMasterCategory.name') . ' - ' . CHtml::value($product, 'productSubCategory.name'));
             $worksheet->setCellValue("F{$counter}", CHtml::value($product, 'unit.name'));
             
             foreach ($branches as $branch) {
