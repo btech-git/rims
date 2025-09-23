@@ -103,8 +103,8 @@ class PayableTransactionController extends Controller {
         $worksheet->getStyle('A1:H3')->getFont()->setBold(true);
         
         $branch = Branch::model()->findByPk($branchId);
-        $worksheet->setCellValue('A2', 'Raperind Motor ' . CHtml::encode(CHtml::value($branch, 'name')));
-        $worksheet->setCellValue('A3', 'Kartu Hutang Supplier');
+        $worksheet->setCellValue('A1', 'Raperind Motor ' . CHtml::encode(CHtml::value($branch, 'name')));
+        $worksheet->setCellValue('A2', 'Kartu Hutang Supplier');
         $worksheet->setCellValue('A3', 'Tanggal ' . Yii::app()->dateFormatter->format('d MMMM yyyy', $startDate) . ' - ' . Yii::app()->dateFormatter->format('d MMMM yyyy', $endDate));
 
         $worksheet->getStyle("A5:H5")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
@@ -148,17 +148,17 @@ class PayableTransactionController extends Controller {
                 $totalPayable += $paymentLeft;
             }
             
-//            $worksheet->getStyle("A{$counter}:I{$counter}")->getFont()->setBold(true);
-//
-//            $worksheet->getStyle("A{$counter}:H{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
-//            $worksheet->getStyle("A{$counter}:H{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
-//            $worksheet->mergeCells("A{$counter}:E{$counter}");
-//            $worksheet->setCellValue("A{$counter}", 'Total');
-//            $worksheet->setCellValue("F{$counter}", $totalPurchase);
-//            $worksheet->setCellValue("G{$counter}", $totalPayment);
-//            $worksheet->setCellValue("H{$counter}", $totalPayable);
-//
-//            $counter++;$counter++;
+            $worksheet->getStyle("A{$counter}:I{$counter}")->getFont()->setBold(true);
+
+            $worksheet->getStyle("A{$counter}:H{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+            $worksheet->getStyle("A{$counter}:H{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
+            $worksheet->mergeCells("A{$counter}:E{$counter}");
+            $worksheet->setCellValue("A{$counter}", 'Total');
+            $worksheet->setCellValue("F{$counter}", $totalPurchase);
+            $worksheet->setCellValue("G{$counter}", $totalPayment);
+            $worksheet->setCellValue("H{$counter}", $totalPayable);
+
+            $counter++;$counter++;
         }
 
         for ($col = 'A'; $col !== 'J'; $col++) {

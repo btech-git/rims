@@ -40,7 +40,8 @@ class PayableSupplierSummary extends CComponent {
         $this->dataProvider->criteria->addCondition("EXISTS (
             SELECT p.supplier_id
             FROM " . TransactionPurchaseOrder::model()->tableName() . " p 
-            WHERE p.supplier_id = t.id AND substr(p.purchase_order_date, 1, 10) BETWEEN '" . AppParam::BEGINNING_TRANSACTION_DATE ."' AND :end_date" . $branchConditionSql . " 
+            WHERE p.supplier_id = t.id AND substr(p.purchase_order_date, 1, 10) BETWEEN '" . AppParam::BEGINNING_TRANSACTION_DATE ."' AND :end_date AND
+                status_document = 'Approved'" . $branchConditionSql . " 
         )");
         
         $this->dataProvider->criteria->params[':end_date'] = $endDate;
