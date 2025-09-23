@@ -36,8 +36,8 @@ class PayableDetailSummary extends CComponent {
             SELECT r.supplier_id 
             FROM " . TransactionReceiveItem::model()->tableName() . " r 
             INNER JOIN " . TransactionPurchaseOrder::model()->tableName() . " p ON p.id = r.purchase_order_id
-            WHERE r.supplier_id = t.id AND r.invoice_date BETWEEN '" . AppParam::BEGINNING_TRANSACTION_DATE . " ' AND :end_date AND
-                p.status_document = 'Approved'" . $branchConditionSql . "
+            WHERE r.supplier_id = t.id AND r.invoice_date BETWEEN '" . AppParam::BEGINNING_TRANSACTION_DATE . " ' AND :end_date AND p.status_document = 'Approved' AND
+                p.payment_left > 100" . $branchConditionSql . "
         )");
 
         $this->dataProvider->criteria->params[':end_date'] = $endDate;

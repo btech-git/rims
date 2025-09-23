@@ -30,7 +30,8 @@ class PayableTransactionSummary extends CComponent {
     }
 
     public function setupFilter($supplierId, $startDate, $endDate, $branchId) {
-        $branchConditionSql = '';
+        $branchPurchaseConditionSql = '';
+        $branchWorkOrderConditionSql = '';
         
         $this->dataProvider->criteria->params = array(
             ':start_date' => $startDate,
@@ -38,14 +39,19 @@ class PayableTransactionSummary extends CComponent {
         );
         
         if (!empty($branchId)) {
-            $branchConditionSql = ' AND main_branch_id = :branch_id';
+            $branchPurchaseConditionSql = ' AND main_branch_id = :branch_id';
+            $branchWorkOrderConditionSql = ' AND branch_id = :branch_id';
             $this->dataProvider->criteria->params[':branch_id'] = $branchId;
         }
         
         $this->dataProvider->criteria->addCondition("EXISTS (
             SELECT supplier_id
             FROM " . TransactionPurchaseOrder::model()->tableName() . "
-            WHERE supplier_id = t.id AND substring(purchase_order_date, 1, 10) BETWEEN :start_date AND :end_date AND status_document = 'Approved'" . $branchConditionSql . " 
+            WHERE supplier_id = t.id AND substring(purchase_order_date, 1, 10) BETWEEN :start_date AND :end_date AND status_document = 'Approved'" . $branchPurchaseConditionSql . " 
+        ) OR EXISTS (
+            SELECT supplier_id
+            FROM " . WorkOrderExpenseHeader::model()->tableName() . "
+            WHERE supplier_id = t.id AND substring(transaction_date, 1, 10) BETWEEN :start_date AND :end_date AND status = 'Approved'" . $branchWorkOrderConditionSql . " 
         )");
 
         if (!empty($supplierId)) {
