@@ -135,8 +135,8 @@ class PayableTransactionController extends Controller {
                 $worksheet->setCellValue("A{$counter}", $header->code);
                 $worksheet->setCellValue("B{$counter}", $header->company);
                 $worksheet->setCellValue("C{$counter}", $header->name);
-                $worksheet->setCellValue("D{$counter}", $payableRow['purchase_order_date']);
-                $worksheet->setCellValue("E{$counter}", $payableRow['purchase_order_no']);
+                $worksheet->setCellValue("D{$counter}", $payableRow['transaction_date']);
+                $worksheet->setCellValue("E{$counter}", $payableRow['transaction_number']);
                 $worksheet->setCellValue("F{$counter}", $purchase);
                 $worksheet->setCellValue("G{$counter}", $paymentAmount);
                 $worksheet->setCellValue("H{$counter}", $paymentLeft);
