@@ -48,7 +48,7 @@ class StockCardCategoryController extends Controller {
         }
         
         if (isset($_GET['SaveExcel'])) {
-            $this->saveToExcel($stockCardCategorySummary, $endDate, $branchId);
+            $this->saveToExcel($stockCardCategorySummary, $startDate, $endDate, $branchId);
         }
 
         $this->render('summary', array(
@@ -116,10 +116,11 @@ class StockCardCategoryController extends Controller {
         }
     }
 
-    protected function saveToExcel($stockCardSummary, $endDate, $branchId) {
+    protected function saveToExcel($stockCardSummary, $startDate, $endDate, $branchId) {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
 
+        $startDateFormatted = Yii::app()->dateFormatter->format('d MMMM yyyy', $startDate);
         $endDateFormatted = Yii::app()->dateFormatter->format('d MMMM yyyy', $endDate);
         $branch = Branch::model()->findByPk($branchId);
 
@@ -144,7 +145,7 @@ class StockCardCategoryController extends Controller {
         
         $worksheet->setCellValue('A1', 'Raperind Motor');
         $worksheet->setCellValue('A2', 'Laporan Posisi Stok ' . CHtml::value($branch, 'name'));
-        $worksheet->setCellValue('A3', 'Periode: ' . $endDateFormatted);
+        $worksheet->setCellValue('A3', 'Periode: ' . $startDateFormatted . ' - ' . $endDateFormatted);
 
         $worksheet->getStyle("A5:M5")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
         $worksheet->getStyle("A5:M5")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
@@ -174,7 +175,7 @@ class StockCardCategoryController extends Controller {
             $totalStockOut = '0.00';
             $totalStock = '0.00';
             $totalValue = '0.00';
-            $stockData = $header->getInventoryStockReport($endDate, $branchId); 
+            $stockData = $header->getInventoryStockReport($startDate, $endDate, $branchId); 
             
             foreach ($stockData as $stockRow) {
                 $product = Product::model()->findByPk($stockRow['id']);
