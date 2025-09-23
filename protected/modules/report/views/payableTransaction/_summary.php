@@ -64,7 +64,7 @@
                                 <td class="width2-1"><?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($payableRow['transaction_date']))); ?></td>
                                 <td class="width2-2">
                                     <?php echo CHtml::link($payableRow['transaction_number'], Yii::app()->createUrl("report/payableTransaction/redirectTransaction", array(
-                                        "codeNumber" => $payableRow['purchase_order_no']
+                                        "codeNumber" => $payableRow['transaction_number']
                                     )), array('target' => '_blank'));?>
                                 </td>
                                 <td class="width2-3" style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $purchase)); ?></td>
