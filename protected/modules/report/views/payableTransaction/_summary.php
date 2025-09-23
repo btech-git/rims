@@ -61,8 +61,12 @@
                             <?php $paymentAmount = $payableRow['payment_amount']; ?>
                             <?php $paymentLeft = $payableRow['payment_left']; ?>
                             <tr>
-                                <td class="width2-1"><?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($payableRow['purchase_order_date']))); ?></td>
-                                <td class="width2-2"><?php echo CHtml::link($payableRow['purchase_order_no'], Yii::app()->createUrl("report/generalLedger/redirectTransaction", array("codeNumber" => $payableRow['purchase_order_no'])), array('target' => '_blank'));?></td>
+                                <td class="width2-1"><?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($payableRow['transaction_date']))); ?></td>
+                                <td class="width2-2">
+                                    <?php echo CHtml::link($payableRow['transaction_number'], Yii::app()->createUrl("report/payableTransaction/redirectTransaction", array(
+                                        "codeNumber" => $payableRow['purchase_order_no']
+                                    )), array('target' => '_blank'));?>
+                                </td>
                                 <td class="width2-3" style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $purchase)); ?></td>
                                 <td class="width2-4" style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $paymentAmount)); ?></td>
                                 <td class="width2-5" style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $paymentLeft)); ?></td>

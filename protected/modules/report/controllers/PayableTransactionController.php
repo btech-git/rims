@@ -179,4 +179,16 @@ class PayableTransactionController extends Controller {
         Yii::app()->end();
     }
 
+    public function actionRedirectTransaction($codeNumber) {
+        list($leftPart,, ) = explode('/', $codeNumber);
+        list(, $codeNumberConstant) = explode('.', $leftPart);
+
+        if ($codeNumberConstant === 'PO') {
+            $model = TransactionPurchaseOrder::model()->findByAttributes(array('purchase_order_no' => $codeNumber));
+            $this->redirect(array('/transaction/transactionPurchaseOrder/show', 'id' => $model->id));
+        } else if ($codeNumberConstant === 'WOE') {
+            $model = WorkOrderExpenseHeader::model()->findByAttributes(array('transaction_number' => $codeNumber));
+            $this->redirect(array('/accounting/workOrderExpense/show', 'id' => $model->id));
+        }
+    }
 }
