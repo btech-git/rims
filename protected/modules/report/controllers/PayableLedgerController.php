@@ -42,7 +42,7 @@ class PayableLedgerController extends Controller {
         $payableLedgerSummary->setupLoading();
         $payableLedgerSummary->setupPaging($pageSize, $currentPage);
         $payableLedgerSummary->setupSorting();
-        $payableLedgerSummary->setupFilter($startDate, $endDate, $branchId, $coaId);
+        $payableLedgerSummary->setupFilter($startDate, $endDate, $branchId);
         
         if (isset($_GET['ResetFilter'])) {
             $this->redirect(array('summary'));

@@ -980,17 +980,19 @@ class Coa extends CActiveRecord {
         
         $sql = "SELECT kode_transaksi, tanggal_transaksi, transaction_type, remark, amount, purchase_amount, payment_amount, supplier
                 FROM (
-                    SELECT j.coa_id, SUM(total) AS amount, SUM(total) AS purchase_amount, 0 AS payment_amount, kode_transaksi, tanggal_transaksi, debet_kredit AS transaction_type, transaction_subject AS remark, c.name AS supplier
+                    SELECT j.coa_id, SUM(total) AS amount, SUM(total) AS purchase_amount, 0 AS payment_amount, kode_transaksi, tanggal_transaksi, 
+                        debet_kredit AS transaction_type, transaction_subject AS remark, c.name AS supplier
                     FROM " . JurnalUmum::model()->tableName() . " j
                     INNER JOIN " . Coa::model()->tableName() . " c ON c.id = j.coa_id
-                    WHERE j.coa_id = :coa_id AND tanggal_transaksi BETWEEN :start_date AND :end_date AND is_coa_category = 0 AND debet_kredit = 'D'" . $branchConditionSql .
-                    " GROUP BY j.coa_id, kode_transaksi, tanggal_transaksi, debet_kredit, transaction_subject, c.name
+                    WHERE j.coa_id = :coa_id AND tanggal_transaksi BETWEEN :start_date AND :end_date AND is_coa_category = 0 AND debet_kredit = 'D'" . $branchConditionSql . "
+                    GROUP BY j.coa_id, kode_transaksi, tanggal_transaksi, debet_kredit, transaction_subject, c.name
                     UNION
-                    SELECT j.coa_id, SUM(total) AS amount, 0 AS purchase_amount, SUM(total) AS payment_amount, kode_transaksi, tanggal_transaksi, debet_kredit AS transaction_type, transaction_subject AS remark, c.name AS supplier
+                    SELECT j.coa_id, SUM(total) AS amount, 0 AS purchase_amount, SUM(total) AS payment_amount, kode_transaksi, tanggal_transaksi, 
+                        debet_kredit AS transaction_type, transaction_subject AS remark, c.name AS supplier
                     FROM " . JurnalUmum::model()->tableName() . " j
                     INNER JOIN " . Coa::model()->tableName() . " c ON c.id = j.coa_id
-                    WHERE j.coa_id = :coa_id AND tanggal_transaksi BETWEEN :start_date AND :end_date AND is_coa_category = 0 AND debet_kredit = 'K'" . $branchConditionSql .
-                    " GROUP BY j.coa_id, kode_transaksi, tanggal_transaksi, debet_kredit, transaction_subject, c.name
+                    WHERE j.coa_id = :coa_id AND tanggal_transaksi BETWEEN :start_date AND :end_date AND is_coa_category = 0 AND debet_kredit = 'K'" . $branchConditionSql . "
+                    GROUP BY j.coa_id, kode_transaksi, tanggal_transaksi, debet_kredit, transaction_subject, c.name
                 ) t
                 ORDER BY tanggal_transaksi ASC, kode_transaksi ASC";
         

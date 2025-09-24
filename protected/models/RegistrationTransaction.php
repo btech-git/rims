@@ -1280,6 +1280,28 @@ class RegistrationTransaction extends MonthlyTransactionActiveRecord {
         return $total;
     }
     
+    public static function getMonthlyCustomerReceivableData($year, $month, $customerIds) {
+        $customerIdsSql = empty($customerIds) ? 'NULL' : implode(',', $customerIds);
+        
+        $params = array(
+            ':year' => $year,
+            ':month' => $month,
+        );
+        
+        $sql = "SELECT r.customer_id, r.id, r.transaction_number, r.transaction_date, r.grand_total, i.invoice_number, i.invoice_date, i.product_price, i.service_price, 
+                    i.ppn_total, i.total_price, i.transaction_tax_number, i.due_date, i.payment_left, i.payment_amount, h.payment_number, h.payment_date
+                FROM " . RegistrationTransaction::model()->tableName() . " r
+                LEFT OUTER JOIN " . InvoiceHeader::model()->tableName() . " i ON r.id = i.registration_transaction_id
+                LEFT OUTER JOIN " . PaymentInDetail::model()->tableName() . " p ON i.id = p.invoice_header_id
+                LEFT OUTER JOIN " . PaymentIn::model()->tableName() . " h on h.id = p.payment_in_id
+                WHERE YEAR(r.transaction_date) = :year AND MONTH(r.transaction_date) = :month AND r.user_id_cancelled IS NULL AND r.customer_id IN ({$customerIdsSql})
+                ORDER BY r.customer_id, r.id ASC, i.id ASC, p.id ASC ";
+
+        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
+
+        return $resultSet;
+    }
+    
 //    public static function getIndividualCashDailySummary($transactionDate) {
 //        
 //        $sql = "SELECT r.branch_id, SUM(r.grand_total) AS grand_total

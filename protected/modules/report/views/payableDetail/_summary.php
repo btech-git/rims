@@ -44,17 +44,31 @@ Yii::app()->clientScript->registerCss('_report', '
                     </td>
                 </tr>
 
-                <?php $payableData = $header->getPayableDetailReport($endDate, $branchId); ?>
-                <?php foreach ($payableData as $payableRow): ?>
-                    <?php $transactionNumber = $payableRow['purchase_order_no']; ?>
+                <?php $payablePurchaseData = $header->getPayableDetailPurchaseReport($endDate, $branchId); ?>
+                <?php foreach ($payablePurchaseData as $payablePurchaseRow): ?>
+                    <?php $transactionNumber = $payablePurchaseRow['purchase_order_no']; ?>
                     <tr class="items2">
-                        <td><?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($payableRow['invoice_date']))); ?></td>
+                        <td><?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($payablePurchaseRow['invoice_date']))); ?></td>
                         <td><?php echo CHtml::link($transactionNumber, Yii::app()->createUrl("report/payableDetail/redirectTransaction", array("codeNumber" => $transactionNumber)), array('target' => '_blank')); ?></td>
-                        <td><?php echo CHtml::encode($payableRow['invoice_number']); ?></td>
-                        <td><?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($payableRow['invoice_due_date']))); ?></td>
-                        <td style="text-align: right"><?php echo Yii::app()->numberFormatter->format('#,##0', $payableRow['invoice_grand_total']); ?></td>
-                        <td style="text-align: right"><?php echo Yii::app()->numberFormatter->format('#,##0', $payableRow['payment_amount']); ?></td>
-                        <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $payableRow['payment_left'])); ?></td>
+                        <td><?php echo CHtml::encode($payablePurchaseRow['invoice_number']); ?></td>
+                        <td><?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($payablePurchaseRow['invoice_due_date']))); ?></td>
+                        <td style="text-align: right"><?php echo Yii::app()->numberFormatter->format('#,##0', $payablePurchaseRow['invoice_grand_total']); ?></td>
+                        <td style="text-align: right"><?php echo Yii::app()->numberFormatter->format('#,##0', $payablePurchaseRow['payment_amount']); ?></td>
+                        <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $payablePurchaseRow['payment_left'])); ?></td>
+                    </tr>
+                <?php endforeach; ?>
+
+                <?php $payableWorkOrderData = $header->getPayableDetailWorkOrderReport($endDate, $branchId); ?>
+                <?php foreach ($payableWorkOrderData as $payableWorkOrderRow): ?>
+                    <?php $transactionNumber = $payableWorkOrderRow['transaction_number']; ?>
+                    <tr class="items2">
+                        <td><?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($payableWorkOrderRow['transaction_date']))); ?></td>
+                        <td><?php echo CHtml::link($transactionNumber, Yii::app()->createUrl("report/payableDetail/redirectTransaction", array("codeNumber" => $transactionNumber)), array('target' => '_blank')); ?></td>
+                        <td><?php echo CHtml::encode($payableWorkOrderRow['registration_number']); ?></td>
+                        <td><?php //echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($payableWorkOrderRow['invoice_due_date']))); ?></td>
+                        <td style="text-align: right"><?php echo Yii::app()->numberFormatter->format('#,##0', $payableWorkOrderRow['total_price']); ?></td>
+                        <td style="text-align: right"><?php echo Yii::app()->numberFormatter->format('#,##0', $payableWorkOrderRow['payment_amount']); ?></td>
+                        <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $payableWorkOrderRow['payment_left'])); ?></td>
                     </tr>
                 <?php endforeach; ?>
             <?php endforeach; ?>

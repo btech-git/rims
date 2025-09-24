@@ -609,7 +609,7 @@ class Supplier extends CActiveRecord {
         return ($value === false) ? 0 : $value;
     }
     
-    public function getPayableSupplierReport($endDate, $branchId) {
+    public function getPayablePurchaseSupplierReport($endDate, $branchId) {
         $branchConditionSql = '';
         
         $params = array(
@@ -618,24 +618,48 @@ class Supplier extends CActiveRecord {
         );
         
         if (!empty($branchId)) {
-            $branchConditionSql = ' AND p.main_branch_id = :branch_id';
+            $branchConditionSql = ' AND main_branch_id = :branch_id';
             $params[':branch_id'] = $branchId;
         }
         
         $sql = "
-            SELECT p.supplier_id, COALESCE(SUM(p.total_price), 0) AS total_price, COALESCE(SUM(p.payment_amount), 0) AS payment_amount, 
-                COALESCE(SUM(p.payment_left), 0) AS payment_left
-            FROM " . TransactionPurchaseOrder::model()->tableName() . " p 
-            WHERE p.supplier_id = :supplier_id AND substr(p.purchase_order_date, 1, 10) BETWEEN '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND :end_date" . $branchConditionSql . "
-            GROUP BY p.supplier_id 
-        ";
+            SELECT COALESCE(SUM(total_price), 0) AS total_price, COALESCE(SUM(payment_amount), 0) AS payment_amount, 
+                COALESCE(SUM(payment_left), 0) AS payment_left
+            FROM " . TransactionPurchaseOrder::model()->tableName() . "
+            WHERE supplier_id = :supplier_id AND substr(purchase_order_date, 1, 10) BETWEEN '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND :end_date AND
+                status_document = 'Approved'" . $branchConditionSql;
 
-        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
+        $resultSet = Yii::app()->db->createCommand($sql)->queryRow(true, $params);
 
         return $resultSet;
     }
     
-    public function getPayableDetailReport($endDate, $branchId) {
+    public function getPayableWorkOrderSupplierReport($endDate, $branchId) {
+        $branchConditionSql = '';
+        
+        $params = array(
+            ':supplier_id' => $this->id,
+            ':end_date' => $endDate,
+        );
+        
+        if (!empty($branchId)) {
+            $branchConditionSql = ' AND branch_id = :branch_id';
+            $params[':branch_id'] = $branchId;
+        }
+        
+        $sql = "
+            SELECT COALESCE(SUM(grand_total), 0) AS total_price, COALESCE(SUM(total_payment), 0) AS payment_amount, 
+                COALESCE(SUM(payment_remaining), 0) AS payment_left
+            FROM " . WorkOrderExpenseHeader::model()->tableName() . " 
+            WHERE supplier_id = :supplier_id AND transaction_date BETWEEN '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND :end_date AND
+                status = 'Approved'" . $branchConditionSql;
+
+        $resultSet = Yii::app()->db->createCommand($sql)->queryRow(true, $params);
+
+        return $resultSet;
+    }
+    
+    public function getPayableDetailPurchaseReport($endDate, $branchId) {
         $branchConditionSql = '';
         
         $params = array(
@@ -660,9 +684,35 @@ class Supplier extends CActiveRecord {
                 WHERE h.status NOT LIKE '%CANCEL%'
                 GROUP BY receive_item_id 
             ) p ON r.id = p.receive_item_id
-            WHERE r.supplier_id = :supplier_id AND substr(r.invoice_date, 1, 10) BETWEEN '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND :end_date AND
+            WHERE r.supplier_id = :supplier_id AND r.invoice_date BETWEEN '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND :end_date AND
                 r.user_id_cancelled IS NULL AND r.invoice_grand_total - COALESCE(p.payment, 0) > 100" . $branchConditionSql . "
         ";
+
+        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
+
+        return $resultSet;
+    }
+    
+    public function getPayableDetailWorkOrderReport($endDate, $branchId) {
+        $branchConditionSql = '';
+        
+        $params = array(
+            ':supplier_id' => $this->id,
+            ':end_date' => $endDate,
+        );
+        
+        if (!empty($branchId)) {
+            $branchConditionSql = ' AND W.branch_id = :branch_id';
+            $params[':branch_id'] = $branchId;
+        }
+        
+        $sql = "
+            SELECT w.transaction_date, w.transaction_number, r.transaction_number AS registration_number, COALESCE(w.grand_total, 0) AS total_price, 
+                COALESCE(w.total_payment, 0) AS payment_amount, COALESCE(w.payment_remaining, 0) AS payment_left
+            FROM " . WorkOrderExpenseHeader::model()->tableName() . " w
+            INNER JOIN " . RegistrationTransaction::model()->tableName() . " r ON r.id = w.registration_transaction_id
+            WHERE w.supplier_id = :supplier_id AND w.transaction_date BETWEEN '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND :end_date AND
+                w.status = 'Approved'" . $branchConditionSql;
 
         $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
 

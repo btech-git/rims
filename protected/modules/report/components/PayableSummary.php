@@ -42,7 +42,7 @@ class PayableSummary extends CComponent {
         }
         
         $this->dataProvider->criteria->addCondition("EXISTS (
-            SELECT o.supplier_id, SUM(o.total_price - COALESCE(p.amount, 0)) AS remaining
+            SELECT o.supplier_id
             FROM " . TransactionPurchaseOrder::model()->tableName() . " o
             INNER JOIN " . TransactionReceiveItem::model()->tableName() . " r ON o.id = r.purchase_order_id
             LEFT OUTER JOIN (
@@ -52,10 +52,23 @@ class PayableSummary extends CComponent {
                 WHERE h.payment_date BETWEEN '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND :end_date AND h.status NOT LIKE '%CANCEL%'
                 GROUP BY d.receive_item_id
             ) p ON r.id = p.receive_item_id 
-            WHERE o.supplier_id = t.id AND r.invoice_date BETWEEN '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND :end_date
-            AND o.status_document NOT LIKE '%CANCEL%' AND r.user_id_cancelled IS NULL" . $branchConditionSql . " 
-            GROUP BY o.supplier_id 
-            HAVING remaining > 100
+            WHERE o.supplier_id = t.id AND (r.invoice_grand_total - COALESCE(p.amount, 0)) > 100.00 AND 
+                r.invoice_date BETWEEN '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND :end_date AND o.status_document NOT LIKE '%CANCEL%' AND
+                r.user_id_cancelled IS NULL" . $branchConditionSql . " 
+        ) OR EXISTS (
+            SELECT w.supplier_id
+            FROM " . WorkOrderExpenseHeader::model()->tableName() . " w
+            INNER JOIN " . RegistrationTransaction::model()->tableName() . " r ON r.id = w.registration_transaction_id
+            LEFT OUTER JOIN (
+                SELECT d.work_order_expense_header_id, SUM(d.amount) AS amount 
+                FROM " . PayOutDetail::model()->tableName() . " d 
+                INNER JOIN " . PaymentOut::model()->tableName() . " h ON h.id = d.payment_out_id
+                WHERE h.payment_date BETWEEN '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND :end_date AND h.status NOT LIKE '%CANCEL%'
+                GROUP BY d.work_order_expense_header_id
+            ) p ON w.id = p.work_order_expense_header_id 
+            WHERE w.supplier_id = t.id AND (w.grand_total - COALESCE(p.amount, 0)) > 100.00 AND 
+                w.transaction_date BETWEEN '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND :end_date AND w.status = 'Approved' AND
+                w.user_id_cancelled IS NULL" . $branchConditionSql . " 
         )");
         
         $this->dataProvider->criteria->params[':end_date'] = $endDate;

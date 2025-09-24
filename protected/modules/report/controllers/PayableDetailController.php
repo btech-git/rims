@@ -135,17 +135,32 @@ class PayableDetailController extends Controller {
         $counter = 7;
 
         foreach ($dataProvider->data as $header) {
-            $payableData = $header->getPayableDetailReport($endDate, $options['branchId']);
-            foreach ($payableData as $payableRow) {
+            $payablePurchaseData = $header->getPayableDetailPurchaseReport($endDate, $branchId);
+            foreach ($payablePurchaseData as $payablePurchaseRow) {
                 $worksheet->setCellValue("A{$counter}", CHtml::value($header, 'id'));
                 $worksheet->setCellValue("B{$counter}", CHtml::value($header, 'name'));
-                $worksheet->setCellValue("C{$counter}", $payableRow['invoice_date']);
-                $worksheet->setCellValue("D{$counter}", $payableRow['purchase_order_no']);
-                $worksheet->setCellValue("E{$counter}", $payableRow['invoice_number']);
-                $worksheet->setCellValue("F{$counter}", $payableRow['invoice_due_date']);
-                $worksheet->setCellValue("G{$counter}", $payableRow['invoice_grand_total']);
-                $worksheet->setCellValue("H{$counter}", $payableRow['payment_amount']);
-                $worksheet->setCellValue("I{$counter}", $payableRow['payment_left']);
+                $worksheet->setCellValue("C{$counter}", $payablePurchaseRow['invoice_date']);
+                $worksheet->setCellValue("D{$counter}", $payablePurchaseRow['purchase_order_no']);
+                $worksheet->setCellValue("E{$counter}", $payablePurchaseRow['invoice_number']);
+                $worksheet->setCellValue("F{$counter}", $payablePurchaseRow['invoice_due_date']);
+                $worksheet->setCellValue("G{$counter}", $payablePurchaseRow['invoice_grand_total']);
+                $worksheet->setCellValue("H{$counter}", $payablePurchaseRow['payment_amount']);
+                $worksheet->setCellValue("I{$counter}", $payablePurchaseRow['payment_left']);
+
+                $counter++;
+            } 
+            
+            $payableWorkOrderData = $header->getPayableDetailWorkOrderReport($endDate, $branchId);
+            foreach ($payableWorkOrderData as $payableWorkOrderRow) {
+                $worksheet->setCellValue("A{$counter}", CHtml::value($header, 'id'));
+                $worksheet->setCellValue("B{$counter}", CHtml::value($header, 'name'));
+                $worksheet->setCellValue("C{$counter}", $payableWorkOrderRow['transaction_date']);
+                $worksheet->setCellValue("D{$counter}", $payableWorkOrderRow['transaction_number']);
+                $worksheet->setCellValue("E{$counter}", $payableWorkOrderRow['registration_number']);
+//                $worksheet->setCellValue("F{$counter}", $payableWorkOrderRow['invoice_due_date']);
+                $worksheet->setCellValue("G{$counter}", $payableWorkOrderRow['total_price']);
+                $worksheet->setCellValue("H{$counter}", $payableWorkOrderRow['payment_amount']);
+                $worksheet->setCellValue("I{$counter}", $payableWorkOrderRow['payment_left']);
 
                 $counter++;
             } 

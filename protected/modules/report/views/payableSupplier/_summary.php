@@ -37,27 +37,20 @@
         <?php $grandTotalPayment = 0.00; ?>
         <?php $grandTotalPayable = 0.00; ?>
         <?php foreach ($payableSummary->dataProvider->data as $header): ?>
-            <?php $payableData = $header->getPayableSupplierReport($endDate, $branchId); ?>
-            <?php $totalRevenue = 0.00; ?>
-            <?php $totalPayment = 0.00; ?>
-            <?php $totalPayable = 0.00; ?>
-            <?php foreach ($payableData as $payableRow): ?>
-                <?php $revenue = $payableRow['total_price']; ?>
-                <?php $paymentAmount = $payableRow['payment_amount']; ?>
-                <?php $paymentLeft = $payableRow['payment_left']; ?>
-                <?php $totalRevenue += $revenue; ?>
-                <?php $totalPayment += $paymentAmount; ?>
-                <?php $totalPayable += $paymentLeft; ?>
-            <?php endforeach; ?>
+            <?php $payablePurchaseData = $header->getPayablePurchaseSupplierReport($endDate, $branchId); ?>
+            <?php $payableWorkOrderData = $header->getPayableWorkOrderSupplierReport($endDate, $branchId); ?>
+            <?php $totalPrice = $payablePurchaseData['total_price'] + $payableWorkOrderData['total_price']; ?>
+            <?php $totalPayment = $payablePurchaseData['payment_amount'] + $payableWorkOrderData['payment_amount']; ?>
+            <?php $totalRemaining = $payablePurchaseData['payment_left'] + $payableWorkOrderData['payment_left']; ?>
             <tr class="items1">
                 <th class="width1-1"><?php echo CHtml::encode(CHtml::value($header, 'name')); ?></th>
-                <td class="width1-2" style="text-align: right"> <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalRevenue)); ?></td>
-                <td class="width1-3" style="text-align: right"> <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalPayment)); ?></td>
-                <td class="width1-4" style="text-align: right"> <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalPayable)); ?></td>
+                <td class="width1-2" style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalPrice)); ?></td>
+                <td class="width1-3" style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalPayment)); ?></td>
+                <td class="width1-4" style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalRemaining)); ?></td>
             </tr>
-            <?php $grandTotalPurchase += $totalRevenue; ?>
+            <?php $grandTotalPurchase += $totalPrice; ?>
             <?php $grandTotalPayment += $totalPayment; ?>
-            <?php $grandTotalPayable += $totalPayable; ?>
+            <?php $grandTotalPayable += $totalRemaining; ?>
         <?php endforeach; ?>   
     </tbody>
     <tfoot>

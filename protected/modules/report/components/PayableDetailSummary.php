@@ -26,24 +26,36 @@ class PayableDetailSummary extends CComponent {
     }
 
     public function setupFilter($endDate, $branchId, $supplierId) {
-        $branchConditionSql = '';
+        $branchPurchaseConditionSql = '';
+        $branchWorkOrderConditionSql = '';
         
         if (!empty($branchId)) {
-            $branchConditionSql = ' AND p.main_branch_id = :branch_id';
+            $branchPurchaseConditionSql = ' AND p.main_branch_id = :branch_id';
+            $branchWorkOrderConditionSql = ' AND branch_id = :branch_id';
+            $this->dataProvider->criteria->params[':branch_id'] = $branchId;
         }
 
         $this->dataProvider->criteria->addCondition("EXISTS (
             SELECT r.supplier_id 
             FROM " . TransactionReceiveItem::model()->tableName() . " r 
             INNER JOIN " . TransactionPurchaseOrder::model()->tableName() . " p ON p.id = r.purchase_order_id
-            WHERE r.supplier_id = t.id AND r.invoice_date BETWEEN '" . AppParam::BEGINNING_TRANSACTION_DATE . " ' AND :end_date AND p.status_document = 'Approved' AND
-                p.payment_left > 100" . $branchConditionSql . "
+            LEFT OUTER JOIN (
+                SELECT receive_item_id, SUM(amount) as payment  
+                FROM " . PayOutDetail::model()->tableName() . " d 
+                INNER JOIN " . PaymentOut::model()->tableName() . " h ON h.id = d.payment_out_id
+                WHERE h.status NOT LIKE '%CANCEL%'
+                GROUP BY receive_item_id 
+            ) p ON r.id = p.receive_item_id
+            WHERE r.supplier_id = t.id AND r.invoice_date BETWEEN '" . AppParam::BEGINNING_TRANSACTION_DATE . " ' AND :end_date AND r.user_id_cancelled IS NULL AND
+                r.invoice_grand_total - COALESCE(p.payment, 0) > 100" . $branchPurchaseConditionSql . "
+        ) OR EXISTS (
+            SELECT supplier_id
+            FROM " . WorkOrderExpenseHeader::model()->tableName() . "
+            WHERE supplier_id = t.id AND substring(transaction_date, 1, 10) BETWEEN '" . AppParam::BEGINNING_TRANSACTION_DATE ."' AND :end_date AND
+                status = 'Approved'" . $branchWorkOrderConditionSql . " 
         )");
 
         $this->dataProvider->criteria->params[':end_date'] = $endDate;
-        if (!empty($branchId)) {
-            $this->dataProvider->criteria->params[':branch_id'] = $branchId;
-        }
         $this->dataProvider->criteria->compare('t.id', $supplierId);
     }
 }

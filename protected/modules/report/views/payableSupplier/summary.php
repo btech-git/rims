@@ -124,7 +124,7 @@ Yii::app()->clientScript->registerScript('report', '
 
                 <div class="right"><?php echo ReportHelper::summaryText($payableSummary->dataProvider); ?></div>
                 <br />
-                <div class="right"><?php echo ReportHelper::sortText($payableSummary->dataProvider->sort, array('Tanggal', 'Supplier')); ?></div>
+                <div class="right"><?php //echo ReportHelper::sortText($payableSummary->dataProvider->sort, array('Tanggal', 'Supplier')); ?></div>
                 <div class="clear"></div>
 
                 <br />

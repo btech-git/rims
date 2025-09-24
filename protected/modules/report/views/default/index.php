@@ -1,4 +1,4 @@
-<div id="content">
+  <div id="content">
     <div class="row">
         <div class="small-12 columns">
             <div class="breadcrumbs">
@@ -479,7 +479,7 @@
                             <?php $this->widget('zii.widgets.CMenu', array(
                                 'items' => array(
                                     array(
-                                        'label' => 'Pembelian Parts', 
+                                        'label' => 'Faktur Pembelian', 
                                         'url' => array('/report/purchaseInvoiceSummary/summary'), 
                                         'visible' => (Yii::app()->user->checkAccess('purchaseSummaryReport'))
                                     ),
