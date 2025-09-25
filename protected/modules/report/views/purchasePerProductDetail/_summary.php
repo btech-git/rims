@@ -1,13 +1,9 @@
 <?php
 Yii::app()->clientScript->registerCss('_report', '
-    .width1-1 { width: 10% }
+    .width1-1 { width: 20% }
     .width1-2 { width: 15% }
-    .width1-3 { width: 15% }
-    .width1-4 { width: 10% }
-    .width1-5 { width: 10% }
-    .width1-6 { width: 15% }
-    .width1-7 { width: 15% }
-    .width1-8 { width: 15% }
+    .width1-3 { width: 30% }
+    .width1-4 { width: 35% }
     
     .width2-1 { width: 15% }
     .width2-2 { width: 15% }
@@ -33,14 +29,10 @@ Yii::app()->clientScript->registerCss('_report', '
             <th class="width1-1">Product Name</th>
             <th class="width1-2">Code</th>
             <th class="width1-3">Brand</th>
-            <th class="width1-4">Sub Brand</th>
-            <th class="width1-5">Sub Brand Series</th>
-            <th class="width1-6">Category</th>
-            <th class="width1-7">Sub Master Category</th>
-            <th class="width1-8">Sub Category</th>
+            <th class="width1-4">Category</th>
         </tr>
         <tr id="header2">
-            <td colspan="8">
+            <td colspan="4">
                 <table>
                     <tr>
                         <th class="width2-1">PO #</th>
@@ -62,22 +54,28 @@ Yii::app()->clientScript->registerCss('_report', '
                 <tr class="items1">
                     <td class="width1-1"><?php echo CHtml::encode(CHtml::value($header, 'name')); ?></td>
                     <td class="width1-2"><?php echo CHtml::encode(CHtml::value($header, 'manufacturer_code')); ?></td>
-                    <td class="width1-3"><?php echo CHtml::encode(CHtml::value($header, 'brand.name')); ?></td>
-                    <td class="width1-4"><?php echo CHtml::encode(CHtml::value($header, 'subBrand.name')); ?></td>
-                    <td class="width1-5"><?php echo CHtml::encode(CHtml::value($header, 'subBrandSeries.name')); ?></td>
-                    <td class="width1-6"><?php echo CHtml::encode(CHtml::value($header, 'productMasterCategory.name')); ?></td>
-                    <td class="width1-7"><?php echo CHtml::encode(CHtml::value($header, 'productSubMasterCategory.name')); ?></td>
-                    <td class="width1-8"><?php echo CHtml::encode(CHtml::value($header, 'productSubCategory.name')); ?></td>
+                    <td class="width1-3">
+                        <?php echo CHtml::encode(CHtml::value($header, 'brand.name')); ?> -
+                        <?php echo CHtml::encode(CHtml::value($header, 'subBrand.name')); ?> -
+                        <?php echo CHtml::encode(CHtml::value($header, 'subBrandSeries.name')); ?>
+                    </td>
+                    <td class="width1-4">
+                        <?php echo CHtml::encode(CHtml::value($header, 'productMasterCategory.name')); ?> -
+                        <?php echo CHtml::encode(CHtml::value($header, 'productSubMasterCategory.name')); ?> -
+                        <?php echo CHtml::encode(CHtml::value($header, 'productSubCategory.name')); ?>
+                    </td>
                 </tr>
 
                 <tr class="items2">
-                    <td colspan="8">
+                    <td colspan="4">
                         <table>
-                            <?php $totalPurchase = 0.00; ?>
-                            <?php $purchaseOrderData = $header->getPurchasePerProductReport($startDate, $endDate, $branchId); ?>
+                            <?php $totalPurchase = '0.00'; ?>
+                            <?php $totalQuantity = '0.00'; ?>
+                            <?php $purchaseOrderData = $header->getPurchasePerProductReport($startDate, $endDate, $branchId, $supplierId); ?>
                             <?php if (!empty($purchaseOrderData)): ?>
                                 <?php foreach ($purchaseOrderData as $purchaseOrderItem): ?>
                                     <?php $totalPrice = $purchaseOrderItem['total_price']; ?>
+                                    <?php $quantity = $purchaseOrderItem['quantity']; ?>
                                     <tr>
                                         <td class="width2-1">
                                             <?php echo CHtml::link($purchaseOrderItem['purchase_order_no'], Yii::app()->createUrl("transaction/transactionPurchaseOrder/view", array("id" => $purchaseOrderItem['id'])), array('target' => '_blank')); ?>
@@ -87,7 +85,7 @@ Yii::app()->clientScript->registerCss('_report', '
                                         </td>
                                         <td class="width2-3"><?php echo CHtml::encode($purchaseOrderItem['company']); ?></td>
                                         <td class="width2-4" style="text-align: center">
-                                            <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $purchaseOrderItem['quantity'])); ?>
+                                            <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $quantity)); ?>
                                         </td>
                                         <td class="width2-5" style="text-align: right">
                                             <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $purchaseOrderItem['retail_price'])); ?>
@@ -102,11 +100,16 @@ Yii::app()->clientScript->registerCss('_report', '
                                             <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalPrice)); ?>
                                         </td>
                                     </tr>
+                                    <?php $totalQuantity += $quantity; ?>
                                     <?php $totalPurchase += $totalPrice; ?>
                                 <?php endforeach; ?>
                             <?php endif; ?>
                             <tr>
-                                <td style="text-align: right; font-weight: bold" colspan="7">Total</td>
+                                <td style="text-align: right; font-weight: bold" colspan="3">Total</td>
+                                <td style="text-align: center; font-weight: bold" class="width2-8">
+                                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalQuantity)); ?>
+                                </td>
+                                <td colspan="3"></td>
                                 <td style="text-align: right; font-weight: bold" class="width2-8">
                                     <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalPurchase)); ?>
                                 </td>
@@ -119,7 +122,7 @@ Yii::app()->clientScript->registerCss('_report', '
     </tbody>
     <tfoot>
         <tr>
-            <td style="text-align: right; font-weight: bold" colspan="7">TOTAL PEMBELIAN</td>
+            <td style="text-align: right; font-weight: bold" colspan="3">TOTAL PEMBELIAN</td>
             <td style="text-align: right; font-weight: bold" class="width1-8">
                 <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $grandTotalPurchase)); ?>
             </td>

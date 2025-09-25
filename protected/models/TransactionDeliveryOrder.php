@@ -202,8 +202,9 @@ class TransactionDeliveryOrder extends MonthlyTransactionActiveRecord {
     public function getTotalQuantityDelivered() {
         $total = 0;
 
-        foreach ($this->transactionDeliveryOrderDetails as $detail)
+        foreach ($this->transactionDeliveryOrderDetails as $detail) {
             $total += $detail->quantity_delivery;
+        }
 
         return $total;
     }
@@ -212,11 +213,11 @@ class TransactionDeliveryOrder extends MonthlyTransactionActiveRecord {
         $criteria = new CDbCriteria;
 
         $criteria->condition = "EXISTS (
-                SELECT COALESCE(SUM(d.quantity_receive_left), 0) AS quantity_remaining, COALESCE(SUM(d.quantity_movement_left), 0) AS quantity_movement_remaining
-                FROM " . TransactionDeliveryOrderDetail::model()->tableName() . " d
-                WHERE t.id = d.delivery_order_id
-                GROUP BY d.delivery_order_id
-                HAVING quantity_remaining > 0 AND quantity_movement_remaining = 0
+            SELECT COALESCE(SUM(d.quantity_receive_left), 0) AS quantity_remaining, COALESCE(SUM(d.quantity_movement_left), 0) AS quantity_movement_remaining
+            FROM " . TransactionDeliveryOrderDetail::model()->tableName() . " d
+            WHERE t.id = d.delivery_order_id
+            GROUP BY d.delivery_order_id
+            HAVING quantity_remaining > 0 AND quantity_movement_remaining = 0
         ) AND t.request_type IN ('Transfer Request', 'Sent Request') AND t.delivery_date > '2021-12-31' AND t.is_cancelled = 0";
 
         $criteria->compare('id', $this->id);

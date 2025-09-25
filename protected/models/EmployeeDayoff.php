@@ -28,6 +28,7 @@
 class EmployeeDayoff extends CActiveRecord {
     public $images;
 
+    const CONSTANT = 'EDO';
     const STATUS_ACTIVE = 0;
     const STATUS_INACTIVE = 1;
 
@@ -152,6 +153,29 @@ class EmployeeDayoff extends CActiveRecord {
             $this->transaction_number = $employeeDayoff->transaction_number;
         }
 
-        $this->setCodeNumberByNext('transaction_number', $this->employee->branch_id, self::CONSTANT, $currentMonth, $currentYear);
+        $this->setCodeNumberByNext('transaction_number', 'R-0', self::CONSTANT, $currentMonth, $currentYear);
+    }
+    
+    public function setCodeNumberByNext($codeNumberColumnName, $currentBranchCode, $currentConstant, $currentMonth, $currentYear) {
+        if (empty($this->$codeNumberColumnName)) {
+            $branchCode = $currentBranchCode;
+            $constant = $currentConstant;
+            $ordinal = 0;
+        } else {
+            list($leftCode, , $rightCode) = explode('/', $this->$codeNumberColumnName);
+            list($branchCode, $constant) = explode('.', $leftCode);
+            list($ordinal, ) = explode('.', $rightCode);
+        }
+        $year = $currentYear;
+        $month = $currentMonth;
+        
+        if ($currentMonth > $month || $currentYear > $year) {
+            $ordinal = 0;
+        }
+        
+        $arr = array('I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI', 'XII');
+        $month = $month ? $month - 1 : 0;
+        $revisionOrdinal = ord('a');
+        $this->$codeNumberColumnName = sprintf('%s.%s/%04d.%s/%04d.%c', $branchCode, $constant, $year, $arr[$month], $ordinal + 1, $revisionOrdinal);
     }
 }

@@ -17,17 +17,6 @@
     <span style="color: red; font-weight: bold"><?php echo CHtml::errorSummary($transferRequest->header); ?></span>
     <div class="row">
         <div class="small-12 medium-6 columns">
-<!--            <div class="field">
-                <div class="row collapse">
-                    <div class="small-4 columns">
-                        <?php //echo CHtml::label('Request #', ''); ?>
-                    </div>
-                    <div class="small-8 columns">
-                        <?php //echo CHtml::encode(CHtml::value($transferRequest->header, 'transfer_request_no')); ?>
-                        <?php //echo CHtml::error($transferRequest->header, 'transfer_request_no'); ?>
-                    </div>
-                </div>
-            </div>-->
             <div class="field">
                 <div class="row collapse">
                     <div class="small-4 columns">
@@ -57,6 +46,42 @@
             <div class="field">
                 <div class="row collapse">
                     <div class="small-4 columns">
+                        <?php echo CHtml::label('Tanggal Kirim', ''); ?>
+                    </div>
+                    <div class="small-8 columns">
+                        <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(
+                            'model' => $transferRequest->header,
+                            'attribute' => "estimate_arrival_date",
+                            // additional javascript options for the date picker plugin
+                            'options' => array(
+                                'dateFormat' => 'yy-mm-dd',
+                                'changeMonth' => true,
+                                'changeYear' => true,
+                            ),
+                            'htmlOptions' => array(
+                                'readonly' => true,
+                            ),
+                        )); ?>
+                        <?php echo CHtml::error($transferRequest->header, 'estimate_arrival_date'); ?>
+                    </div>
+                </div>
+            </div>
+            <div class="field">
+                <div class="row collapse">
+                    <div class="small-4 columns">
+                        <?php echo CHtml::label('Cabang Tujuan', ''); ?>
+                    </div>
+                    <div class="small-8 columns">
+                        <?php echo CHtml::activeDropDownList($transferRequest->header, 'destination_branch_id', CHtml::listData(Branch::model()->findAllByAttributes(array('status' => 'Active')), 'id', 'name'), array('empty' => '-- Pilih Cabang Tujuan --')); ?>
+                        <?php echo CHtml::error($transferRequest->header, 'destination_branch_id'); ?>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="small-12 medium-6 columns">
+            <div class="field">
+                <div class="row collapse">
+                    <div class="small-4 columns">
                         <?php echo CHtml::label('Status Dokumen', ''); ?>
                     </div>
                     <div class="small-8 columns">
@@ -80,41 +105,8 @@
                         <?php echo CHtml::label('Requester Branch', ''); ?>
                     </div>
                     <div class="small-8 columns">
+                        <?php echo CHtml::activeHiddenField($transferRequest->header, 'requester_branch_id'); ?>
                         <?php echo CHtml::encode(CHtml::value($transferRequest->header, 'requesterBranch.name')); ?>
-                    </div>
-                </div>
-            </div>
-            <div class="field">
-                <div class="row collapse">
-                    <div class="small-4 columns">
-                        <?php echo CHtml::label('Cabang Tujuan', ''); ?>
-                    </div>
-                    <div class="small-8 columns">
-                        <?php echo CHtml::activeDropDownList($transferRequest->header, 'destination_branch_id', CHtml::listData(Branch::model()->findAllByAttributes(array('status' => 'Active')), 'id', 'name'), array('empty' => '-- Pilih Cabang Tujuan --')); ?>
-                        <?php echo CHtml::error($transferRequest->header, 'destination_branch_id'); ?>
-                    </div>
-                </div>
-            </div>
-            <div class="field">
-                <div class="row collapse">
-                    <div class="small-4 columns">
-                        <?php echo CHtml::label('Tanggal Kirim', ''); ?>
-                    </div>
-                    <div class="small-8 columns">
-                        <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(
-                            'model' => $transferRequest->header,
-                            'attribute' => "estimate_arrival_date",
-                            // additional javascript options for the date picker plugin
-                            'options' => array(
-                                'dateFormat' => 'yy-mm-dd',
-                                'changeMonth' => true,
-                                'changeYear' => true,
-                            ),
-                            'htmlOptions' => array(
-                                'readonly' => true,
-                            ),
-                        )); ?>
-                        <?php echo CHtml::error($transferRequest->header, 'estimate_arrival_date'); ?>
                     </div>
                 </div>
             </div>

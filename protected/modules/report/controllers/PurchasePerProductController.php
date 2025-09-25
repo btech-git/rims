@@ -35,12 +35,13 @@ class PurchasePerProductController extends Controller {
         $currentPage = (isset($_GET['page'])) ? $_GET['page'] : '';
         $currentSort = (isset($_GET['sort'])) ? $_GET['sort'] : '';
         $branchId = (isset($_GET['BranchId'])) ? $_GET['BranchId'] : '';
+        $supplierId = (isset($_GET['SupplierId'])) ? $_GET['SupplierId'] : '';
 
         $purchasePerProductSummary = new PurchasePerProductSummary($product->search());
         $purchasePerProductSummary->setupLoading();
         $purchasePerProductSummary->setupPaging($pageSize, $currentPage);
         $purchasePerProductSummary->setupSorting();
-        $purchasePerProductSummary->setupFilter($startDate, $endDate, $branchId);
+        $purchasePerProductSummary->setupFilter($startDate, $endDate, $branchId, $supplierId);
 
         if (isset($_GET['ResetFilter'])) {
             $this->redirect(array('summary'));

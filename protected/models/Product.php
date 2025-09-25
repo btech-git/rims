@@ -862,6 +862,22 @@ class Product extends CActiveRecord {
         return ($value === false) ? 0 : $value;
     }
     
+    public function getAverageSaleSixMonths() {
+        
+        $sql = "
+            SELECT COALESCE(SUM(d.quantity)/6, 0) AS average_sales
+            FROM " . InvoiceHeader::model()->tableName() . " h 
+            INNER JOIN " . InvoiceDetail::model()->tableName() . " d on h.id = d.invoice_id
+            WHERE h.invoice_date >= DATE_SUB(CURDATE(), INTERVAL 6 MONTH) and product_id = :product_id
+        ";
+
+        $value = Yii::app()->db->createCommand($sql)->queryScalar(array(
+            ':product_id' => $this->id,
+        ));
+
+        return ($value === false) ? 0 : $value;
+    }
+    
     public function getPurchasePriceReport($startDate, $endDate, $branchId) {
         $branchConditionSql = '';
         
@@ -1009,8 +1025,9 @@ class Product extends CActiveRecord {
         return $resultSet;
     }
     
-    public function getPurchasePerProductReport($startDate, $endDate, $branchId) {
+    public function getPurchasePerProductReport($startDate, $endDate, $branchId, $supplierId) {
         $branchConditionSql = '';
+        $supplierConditionSql = '';
         
         $params = array(
             ':product_id' => $this->id,
@@ -1023,12 +1040,18 @@ class Product extends CActiveRecord {
             $params[':branch_id'] = $branchId;
         }
         
+        if (!empty($supplierId)) {
+            $supplierConditionSql = ' AND h.supplier_id = :supplier_id';
+            $params[':supplier_id'] = $supplierId;
+        }
+        
         $sql = "
             SELECT h.id, h.purchase_order_no, h.purchase_order_date, s.company, d.quantity, d.retail_price, d.discount, d.unit_price, d.total_price
             FROM " . TransactionPurchaseOrder::model()->tableName() . " h
             INNER JOIN " . TransactionPurchaseOrderDetail::model()->tableName() . " d ON h.id = d.purchase_order_id
             INNER JOIN " . Supplier::model()->tableName() . " s ON s.id = h.supplier_id
-            WHERE d.product_id = :product_id AND substr(h.purchase_order_date, 1, 10) BETWEEN :start_date AND :end_date AND h.status_document NOT LIKE '%CANCEL%'" . $branchConditionSql . "
+            WHERE d.product_id = :product_id AND substr(h.purchase_order_date, 1, 10) BETWEEN :start_date AND :end_date AND 
+                h.status_document NOT LIKE '%CANCEL%'" . $branchConditionSql . $supplierConditionSql . "
             ORDER BY h.purchase_order_date, h.purchase_order_no
         ";
 

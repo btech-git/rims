@@ -526,8 +526,9 @@ class TransferRequestController extends Controller {
             $transferRequest = $this->instantiate($id, '');
             $this->loadState($transferRequest);
 
-            if (isset($_POST['ProductId']))
+            if (isset($_POST['ProductId'])) {
                 $transferRequest->addDetail($_POST['ProductId']);
+            }
 
             $this->renderPartial('_detail', array(
                 'transferRequest' => $transferRequest,

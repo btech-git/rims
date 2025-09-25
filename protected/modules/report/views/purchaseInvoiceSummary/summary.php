@@ -148,26 +148,26 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
 
             <hr />
 
-            <div class="right"><?php echo ReportHelper::summaryText($purchaseInvoiceSummary->dataProvider); ?></div>
-            <div class="clear"></div>
-            <div class="right"><?php //echo ReportHelper::sortText($purchaseInvoiceSummary->dataProvider->sort, array('Tanggal', 'Customer')); ?></div>
-            <div class="clear"></div>
+            <div class="relative">
+                <div class="reportDisplay">
+                    <?php echo ReportHelper::summaryText($purchaseInvoiceSummary->dataProvider); ?>
+                    <?php //echo ReportHelper::sortText($transaksiPembelianSummary->dataProvider->sort, array('Jenis Persediaan', 'Tanggal SO', 'Pelanggan')); ?>
+                </div>
 
-            <div>
                 <?php $this->renderPartial('_summary', array(
                     'purchaseInvoiceSummary' => $purchaseInvoiceSummary, 
                     'startDate' => $startDate, 
                     'endDate' => $endDate,
                 )); ?>
             </div>
-
+            
             <div class="hide">
                 <div class="right">
-                    <?php /*$this->widget('system.web.widgets.pagers.CLinkPager', array(
+                    <?php $this->widget('system.web.widgets.pagers.CLinkPager', array(
                         'itemCount' => $purchaseInvoiceSummary->dataProvider->pagination->itemCount,
                         'pageSize' => $purchaseInvoiceSummary->dataProvider->pagination->pageSize,
                         'currentPage' => $purchaseInvoiceSummary->dataProvider->pagination->getCurrentPage(false),
-                    ));*/ ?>
+                    )); ?>
                 </div>
                 <div class="clear"></div>
             </div>

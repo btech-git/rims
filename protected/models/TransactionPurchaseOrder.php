@@ -56,6 +56,7 @@
 class TransactionPurchaseOrder extends MonthlyTransactionActiveRecord {
 
     const CONSTANT = 'PO';
+    public $search_product;
 
     /**
      * @return string the associated database table name
@@ -103,7 +104,7 @@ class TransactionPurchaseOrder extends MonthlyTransactionActiveRecord {
             array('purchase_order_no', 'unique'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, purchase_order_no, purchase_order_date, status_document, registration_transaction_id, supplier_id, payment_type, estimate_date_arrival, requester_id, main_branch_id, approved_id, total_quantity, price_before_discount, discount, subtotal, ppn, ppn_price, total_price,supplier_name,coa_supplier,coa_name, payment_date_estimate, main_branch_name, approved_name, requester_name, purchase_type, coa_bank_id_estimate, created_datetime, tax_percentage, note, cancelled_datetime, user_id_cancelled, updated_datetime, user_id_updated', 'safe', 'on' => 'search'),
+            array('id, purchase_order_no, purchase_order_date, status_document, registration_transaction_id, supplier_id, payment_type, estimate_date_arrival, requester_id, main_branch_id, approved_id, total_quantity, price_before_discount, discount, subtotal, ppn, ppn_price, total_price,supplier_name,coa_supplier,coa_name, payment_date_estimate, main_branch_name, approved_name, requester_name, purchase_type, coa_bank_id_estimate, created_datetime, tax_percentage, note, cancelled_datetime, user_id_cancelled, updated_datetime, user_id_updated, search_product', 'safe', 'on' => 'search'),
         );
     }
 
@@ -474,17 +475,13 @@ class TransactionPurchaseOrder extends MonthlyTransactionActiveRecord {
         ));
     }
 
-//    public static function pendingJournal() {
-//        $sql = "SELECT p.id, p.purchase_order_no, p.purchase_order_date, s.name as supplier_name, b.name as branch_name, p.payment_status
-//                FROM " . TransactionPurchaseOrder::model()->tableName() . " p
-//                INNER JOIN " . Supplier::model()->tableName() . " s ON s.id = p.supplier_id
-//                INNER JOIN " . Branch::model()->tableName() . " b ON b.id = p.main_branch_id
-//                WHERE p.status_document = 'Approved' AND p.purchase_order_date > '2021-12-31' AND p.purchase_order_no NOT IN (
-//                    SELECT kode_transaksi 
-//                    FROM " . JurnalUmum::model()->tableName() . "
-//                )
-//                ORDER BY p.purchase_order_date DESC";
-//
-//        return $sql;
-//    }
+    public function getProductLists() {
+        $products = array();
+
+        foreach ($this->transactionPurchaseOrderDetails as $detail) {
+            $products[] = empty($detail->product_id) ? '' : $detail->product->name . ' - ' . $detail->quantity . ', ';
+        }
+
+        return $this->search_product = implode('', $products);
+    }
 }

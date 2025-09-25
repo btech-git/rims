@@ -38,6 +38,9 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                             'endDate' => $endDate,
                             'product'=>$product,
                             'branchId' => $branchId,
+                            'supplierId' => $supplierId,
+                            'supplier' => $supplier,
+                            'supplierDataProvider' => $supplierDataProvider,
                         )); ?>
                     </div><!-- search-form -->
                     
@@ -59,6 +62,7 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                         'startDate' => $startDate,
                         'endDate' => $endDate,
                         'branchId' => $branchId,
+                        'supplierId' => $supplierId,
                     )); ?>
                 </div>
                 <div class="clear"></div>

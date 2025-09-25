@@ -29,18 +29,24 @@ class PurchasePerProductDetailController extends Controller {
         $productDataProvider->pagination->pageVar = 'page_dialog';
         $productDataProvider->criteria->compare('t.status', 'Active');
         
+        $supplier = Search::bind(new Supplier('search'), isset($_GET['Supplier']) ? $_GET['Supplier'] : array());
+        $supplierDataProvider = $supplier->search();
+        $supplierDataProvider->pagination->pageVar = 'page_dialog';
+        $supplierDataProvider->criteria->compare('t.status', 'Active');
+
         $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : date('Y-m-d');
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
         $pageSize = (isset($_GET['PageSize'])) ? $_GET['PageSize'] : '';
         $currentPage = (isset($_GET['page'])) ? $_GET['page'] : '';
         $currentSort = (isset($_GET['sort'])) ? $_GET['sort'] : '';
         $branchId = (isset($_GET['BranchId'])) ? $_GET['BranchId'] : '';
+        $supplierId = (isset($_GET['SupplierId'])) ? $_GET['SupplierId'] : '';
 
         $purchasePerProductSummary = new PurchasePerProductSummary($product->search());
         $purchasePerProductSummary->setupLoading();
         $purchasePerProductSummary->setupPaging($pageSize, $currentPage);
         $purchasePerProductSummary->setupSorting();
-        $purchasePerProductSummary->setupFilter($startDate, $endDate, $branchId);
+        $purchasePerProductSummary->setupFilter($startDate, $endDate, $branchId, $supplierId);
 
         if (isset($_GET['ResetFilter'])) {
             $this->redirect(array('summary'));
@@ -59,6 +65,9 @@ class PurchasePerProductDetailController extends Controller {
             'currentPage' => $currentPage,
             'currentSort' => $currentSort,
             'branchId' => $branchId,
+            'supplierId' => $supplierId,
+            'supplier' => $supplier,
+            'supplierDataProvider' => $supplierDataProvider,
         ));
     }
 
@@ -83,19 +92,19 @@ class PurchasePerProductDetailController extends Controller {
         $worksheet = $objPHPExcel->setActiveSheetIndex(0);
         $worksheet->setTitle('Pembelian per Barang Detail');
 
-        $worksheet->mergeCells('A1:O1');
-        $worksheet->mergeCells('A2:O2');
-        $worksheet->mergeCells('A3:O3');
+        $worksheet->mergeCells('A1:P1');
+        $worksheet->mergeCells('A2:P2');
+        $worksheet->mergeCells('A3:P3');
 
-        $worksheet->getStyle('A1:O5')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-        $worksheet->getStyle('A1:O5')->getFont()->setBold(true);
+        $worksheet->getStyle('A1:P5')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->getStyle('A1:P5')->getFont()->setBold(true);
 
         $branch = Branch::model()->findByPk($branchId);
-        $worksheet->setCellValue('A1', 'Raperind Motor ' . CHtml::encode(CHtml::value($branch, 'name')));
+        $worksheet->setCellValue('A1', 'Raperind Motor ' . CHtml::value($branch, 'name'));
         $worksheet->setCellValue('A2', 'Laporan Pembelian per Barang Detail');
         $worksheet->setCellValue('A3', Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($startDate)) . ' - ' . Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($endDate)));
 
-        $worksheet->getStyle('A5:O5')->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle('A5:P5')->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
         $worksheet->setCellValue('A5', 'Product Name');
         $worksheet->setCellValue('B5', 'Code');
@@ -109,13 +118,14 @@ class PurchasePerProductDetailController extends Controller {
         $worksheet->setCellValue('J5', 'Tanggal');
         $worksheet->setCellValue('K5', 'Supplier');
         $worksheet->setCellValue('L5', 'Quantity');
-        $worksheet->setCellValue('M5', 'Price');
+        $worksheet->setCellValue('M5', 'Retail Price');
         $worksheet->setCellValue('N5', 'Discount');
-        $worksheet->setCellValue('O5', 'Total');
+        $worksheet->setCellValue('O5', 'Unit Price');
+        $worksheet->setCellValue('P5', 'Total');
 
-        $worksheet->getStyle('A5:O5')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle('A5:P5')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
-        $counter = 6;
+        $counter = 7;
         
         $grandTotalPurchase = 0.00;
         foreach ($dataProvider->data as $header) {
@@ -134,37 +144,38 @@ class PurchasePerProductDetailController extends Controller {
                 $totalPurchase = 0.00;
                 foreach ($purchaseDetails as $purchaseDetail) {
                     $totalPrice = CHtml::value($purchaseDetail, 'total_price');
+                    $quantity = $purchaseOrderItem['quantity'];
                     $worksheet->getStyle("C{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
 
-                    $worksheet->setCellValue("A{$counter}", CHtml::encode(CHtml::value($header, 'name')));
-                    $worksheet->setCellValue("B{$counter}", CHtml::encode(CHtml::value($header, 'manufacturer_code')));
-                    $worksheet->setCellValue("C{$counter}", CHtml::encode(CHtml::value($header, 'brand.name')));
-                    $worksheet->setCellValue("D{$counter}", CHtml::encode(CHtml::value($header, 'subBrand.name')));
-                    $worksheet->setCellValue("E{$counter}", CHtml::encode(CHtml::value($header, 'subBrandSeries.name')));
-                    $worksheet->setCellValue("F{$counter}", CHtml::encode(CHtml::value($header, 'productMasterCategory.name')));
-                    $worksheet->setCellValue("G{$counter}", CHtml::encode(CHtml::value($header, 'productSubMasterCategory.name')));
-                    $worksheet->setCellValue("H{$counter}", CHtml::encode(CHtml::value($header, 'productSubCategory.name')));
-                    $worksheet->setCellValue("I{$counter}", CHtml::encode(CHtml::value($purchaseDetail, 'purchaseOrder.purchase_order_no')));
-                    $worksheet->setCellValue("J{$counter}", CHtml::encode(CHtml::value($purchaseDetail, 'purchaseOrder.purchase_order_date')));
-                    $worksheet->setCellValue("K{$counter}", CHtml::encode(CHtml::value($purchaseDetail, 'purchaseOrder.supplier.name')));
-                    $worksheet->setCellValue("L{$counter}", CHtml::encode(CHtml::value($purchaseDetail, 'quantity')));
-                    $worksheet->setCellValue("M{$counter}", CHtml::encode(CHtml::value($purchaseDetail, 'unit_price')));
-                    $worksheet->setCellValue("N{$counter}", CHtml::encode(CHtml::value($purchaseDetail, 'discount')));
-                    $worksheet->setCellValue("O{$counter}", CHtml::encode($totalPrice));
+                    $worksheet->setCellValue("A{$counter}", CHtml::value($header, 'name'));
+                    $worksheet->setCellValue("B{$counter}", CHtml::value($header, 'manufacturer_code'));
+                    $worksheet->setCellValue("C{$counter}", CHtml::value($header, 'brand.name'));
+                    $worksheet->setCellValue("D{$counter}", CHtml::value($header, 'subBrand.name'));
+                    $worksheet->setCellValue("E{$counter}", CHtml::value($header, 'subBrandSeries.name'));
+                    $worksheet->setCellValue("F{$counter}", CHtml::value($header, 'productMasterCategory.name'));
+                    $worksheet->setCellValue("G{$counter}", CHtml::value($header, 'productSubMasterCategory.name'));
+                    $worksheet->setCellValue("H{$counter}", CHtml::value($header, 'productSubCategory.name'));
+                    $worksheet->setCellValue("I{$counter}", CHtml::value($purchaseDetail, 'purchaseOrder.purchase_order_no'));
+                    $worksheet->setCellValue("J{$counter}", CHtml::value($purchaseDetail, 'purchaseOrder.purchase_order_date'));
+                    $worksheet->setCellValue("K{$counter}", CHtml::value($purchaseDetail, 'purchaseOrder.supplier.name'));
+                    $worksheet->setCellValue("L{$counter}", CHtml::value($purchaseDetail, 'quantity'));
+                    $worksheet->setCellValue("M{$counter}", CHtml::value($purchaseDetail, 'unit_price'));
+                    $worksheet->setCellValue("N{$counter}", CHtml::value($purchaseDetail, 'discount'));
+                    $worksheet->setCellValue("O{$counter}", $totalPrice);
                     $totalPurchase += $totalPrice;
 
                     $counter++;
                 }
             
                 $worksheet->setCellValue("N{$counter}", 'Total');
-                $worksheet->setCellValue("O{$counter}", CHtml::encode($totalPurchase));
+                $worksheet->setCellValue("O{$counter}", $totalPurchase);
                 $grandTotalPurchase += $totalPurchase;
                 $counter++;$counter++;
             }
         }
             
         $worksheet->setCellValue("N{$counter}", 'TOTAL PEMBELIAN');
-        $worksheet->setCellValue("O{$counter}", CHtml::encode($grandTotalPurchase));
+        $worksheet->setCellValue("O{$counter}", $grandTotalPurchase);
         $counter++;$counter++;
         
         for ($col = 'A'; $col !== 'Z'; $col++) {

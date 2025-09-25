@@ -152,13 +152,6 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                 </div>
                 <div class="clear"></div>
             </div>
-            
-            <br/>
-
-            <div class="hide">
-                <div class="right"></div>
-                <div class="clear"></div>
-            </div>
         </div>
     </div>
 </div>

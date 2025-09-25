@@ -90,8 +90,8 @@
                 <td><?php echo CHtml::activeTextField($product, 'name'); ?></td>
             </tr>
             <tr>
-                <th colspan="2">Tanggal</td>
-                <td colspan="2">
+                <td>Tanggal</td>
+                <td>
                     <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(
                         'name' => 'StartDate',
                         'options' => array(
@@ -119,6 +119,19 @@
                         ),
                     )); ?>
                 </td>
+                <td>Supplier</td>
+                <td>
+                    <?php echo CHtml::textField('SupplierId', $supplierId, array(
+                        'readonly' => true,
+                        'onclick' => '$("#supplier-dialog").dialog("open"); return false;',
+                        'onkeypress' => 'if (event.keyCode == 13) { $("#supplier-dialog").dialog("open"); return false; }'
+                    )); ?>
+
+                    <?php $supplierData = Supplier::model()->findByPk($supplierId); ?>
+                    <?php echo CHtml::openTag('span', array('id' => 'supplier_name')); ?>
+                    <?php echo CHtml::encode(CHtml::value($supplierData, 'name')); ?>
+                    <?php echo CHtml::closeTag('span'); ?>
+                </td>
             </tr>
         </tbody>
     </table>
@@ -128,5 +141,55 @@
         <?php echo CHtml::submitButton('Hapus', array('name' => 'ResetFilter'));  ?>
         <?php echo CHtml::submitButton('Simpan ke Excel', array('name' => 'SaveExcel')); ?>
     </div>
+</div>
 
+<div>
+    <?php $this->beginWidget('zii.widgets.jui.CJuiDialog', array(
+        'id' => 'supplier-dialog',
+        // additional javascript options for the dialog plugin
+        'options' => array(
+            'title' => 'Supplier',
+            'autoOpen' => false,
+            'width' => 'auto',
+            'modal' => true,
+        ),
+    )); ?>
+    <?php $this->widget('zii.widgets.grid.CGridView', array(
+        'id' => 'supplier-grid',
+        'dataProvider' => $supplierDataProvider,
+        'filter' => $supplier,
+        'template' => '{items}<div class="clearfix">{summary}{pager}</div>',
+        'pager' => array(
+            'cssFile' => false,
+            'header' => '',
+        ),
+        'selectionChanged' => 'js:function(id) {
+            $("#SupplierId").val($.fn.yiiGridView.getSelection(id));
+            $("#supplier-dialog").dialog("close");
+            if ($.fn.yiiGridView.getSelection(id) == "")
+            {
+                $("#supplier_name").html("");
+                $("#supplier_code").html("");
+            }
+            else
+            {
+                $.ajax({
+                    type: "POST",
+                    dataType: "JSON",
+                    url: "' . CController::createUrl('ajaxJsonSupplier') . '",
+                    data: $("form").serialize(),
+                    success: function(data) {
+                        $("#supplier_name").html(data.supplier_name);
+                        $("#supplier_code").html(data.supplier_code);
+                    },
+                });
+            }
+        }',
+        'columns' => array(
+            'code',
+            'name',
+            'company',
+        ),
+    )); ?>
+    <?php $this->endWidget('zii.widgets.jui.CJuiDialog'); ?>
 </div>

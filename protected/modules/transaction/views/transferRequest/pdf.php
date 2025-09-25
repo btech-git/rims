@@ -84,7 +84,10 @@ function tanggal($date) {
                                     <th width="15%">Brand</th>
                                     <th width="8%">Qty</th>
                                     <th width="6%">Unit</th>
-                                    <th width="20%">Memo</th>
+                                    <th width="8%">Posisi Stok</th>
+                                    <th width="8%">Rata2 Jual</th>
+                                    <th width="8%">Stok Min</th>
+                                    <th width="15%">Memo</th>
                                 </tr>
                             </thead>
                             <?php $no = 1; ?>
@@ -92,12 +95,19 @@ function tanggal($date) {
                                 <?php foreach ($transferRequest->transactionTransferRequestDetails as $key => $transferRequestDetail): ?>
                                     <tr>
                                         <td class="noo"><?php echo $no; ?></td>
-                                        <td>&nbsp; <?php echo CHtml::encode(CHtml::value($transferRequestDetail, 'product.manufacturer_code')); ?></td>
-                                        <td>&nbsp; <?php echo CHtml::encode(CHtml::value($transferRequestDetail, 'product.name')); ?></td>
-                                        <td>&nbsp; <?php echo CHtml::encode(CHtml::value($transferRequestDetail, 'product.brand.name')); ?></td>
+                                        <td><?php echo CHtml::encode(CHtml::value($transferRequestDetail, 'product.manufacturer_code')); ?></td>
+                                        <td><?php echo CHtml::encode(CHtml::value($transferRequestDetail, 'product.name')); ?></td>
+                                        <td>
+                                            <?php echo CHtml::encode(CHtml::value($transferRequestDetail, 'product.brand.name')); ?>-
+                                            <?php echo CHtml::encode(CHtml::value($transferDetail, 'product.subBrand.name')); ?> -
+                                            <?php echo CHtml::encode(CHtml::value($transferDetail, 'product.subBrandSeries.name')); ?>
+                                        </td>
                                         <td style="text-align: center;"><?php echo CHtml::encode(CHtml::value($transferRequestDetail, 'quantity')); ?></td>
-                                        <td>&nbsp; <?php echo CHtml::encode(CHtml::value($transferRequestDetail, 'unit.name')); ?></td>
-                                        <td>&nbsp; <?php echo CHtml::encode(CHtml::value($transferRequestDetail, 'memo')); ?></td>
+                                        <td><?php echo CHtml::encode(CHtml::value($transferRequestDetail, 'unit.name')); ?></td>
+                                        <td style="text-align: center;"><?php echo CHtml::encode(CHtml::value($transferRequestDetail, 'stock_quantity')); ?></td>
+                                        <td style="text-align: center;"><?php echo CHtml::encode(CHtml::value($transferRequestDetail, 'average_sale_amount')); ?></td>
+                                        <td style="text-align: center;"><?php echo CHtml::encode(CHtml::value($transferRequestDetail, 'product.minimum_stock')); ?></td>
+                                        <td><?php echo CHtml::encode(CHtml::value($transferRequestDetail, 'memo')); ?></td>
                                     </tr>
                                     <?php $no++; ?>
                                 <?php endforeach; ?>
@@ -108,7 +118,7 @@ function tanggal($date) {
                                     <td style="text-align: center; font-weight: bold">
                                         <?php echo CHtml::encode(CHtml::value($transferRequest, 'total_quantity')); ?>
                                     </td>
-                                    <td colspan="2">&nbsp;</td>
+                                    <td colspan="5">&nbsp;</td>
                                 </tr>
                             </tfoot>
                         </table>    

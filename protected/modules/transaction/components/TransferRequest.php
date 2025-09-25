@@ -34,6 +34,7 @@ class TransferRequest extends CComponent {
 	
     public function addDetail($id) {
         $product = Product::model()->findByPk($id);
+        $warehouse = Warehouse::model()->findByAttributes(array('branch_id' => $this->header->requester_branch_id));
 
         $exist = false;
         foreach ($this->details as $i => $detail) {
@@ -48,6 +49,8 @@ class TransferRequest extends CComponent {
             $transferRequestDetail->product_id = $id;
             $transferRequestDetail->unit_id = $product->unit_id;
             $transferRequestDetail->unit_price = $product->hpp;
+            $transferRequestDetail->stock_quantity = $product->getTotalStock($warehouse->id);
+            $transferRequestDetail->average_sale_amount = round($product->getAverageSaleSixMonths(), 2);
             $this->details[] = $transferRequestDetail;
         }
     }

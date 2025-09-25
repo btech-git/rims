@@ -9,6 +9,8 @@ Yii::app()->clientScript->registerCss('_report', '
     .width2-3 { width: 15% }
     .width2-4 { width: 15% }
     .width2-5 { width: 15% }
+    .width2-6 { width: 15% }
+    .width2-7 { width: 15% }
 ');
 ?>
 
@@ -32,9 +34,11 @@ Yii::app()->clientScript->registerCss('_report', '
                     <tr>
                         <th class="width2-1">Transaction #</th>
                         <th class="width2-2">Tanggal</th>
-                        <th class="width2-3">Tipe</th>
-                        <th class="width2-4">Status</th>
-                        <th class="width2-5">Total Price</th>
+                        <th class="width2-3">Kredit/Cash</th>
+                        <th class="width1-4">Type</th>
+                        <th class="width1-5">Parts</th>
+                        <th class="width2-6">Status</th>
+                        <th class="width2-7">Total Price</th>
                     </tr>
                 </table>
             </td>
@@ -61,6 +65,7 @@ Yii::app()->clientScript->registerCss('_report', '
                         <?php if (!empty($purchaseOrderData)): ?>
                             <?php foreach ($purchaseOrderData as $purchaseOrderItem): ?>
                                 <?php $totalPrice = $purchaseOrderItem['total_price']; ?>
+                                <?php $purchaseOrder = TransactionPurchaseOrder::model()->findByPk($purchaseOrderItem['id']); ?>
                                 <tr>
                                     <td class="width2-1">
                                         <?php echo CHtml::link($purchaseOrderItem['purchase_order_no'], Yii::app()->createUrl("transaction/transactionPurchaseOrder/view", array("id" => $purchaseOrderItem['id'])), array('target' => '_blank')); ?>
@@ -69,15 +74,17 @@ Yii::app()->clientScript->registerCss('_report', '
                                         <?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($purchaseOrderItem['purchase_order_date']))); ?>
                                     </td>
                                     <td class="width2-3"><?php echo CHtml::encode($purchaseOrderItem['payment_type']); ?></td>
-                                    <td class="width2-4"><?php echo CHtml::encode($purchaseOrderItem['payment_status']); ?></td>
-                                    <td class="width2-5" style="text-align: right">
+                                    <td class="width2-4"><?php echo CHtml::encode($purchaseOrder->getPurchaseStatus($purchaseOrder->purchase_type)); ?></td>
+                                    <td class="width2-5"><?php echo CHtml::encode($purchaseOrder->getProductLists()); ?></td>
+                                    <td class="width2-6"><?php echo CHtml::encode($purchaseOrderItem['payment_status']); ?></td>
+                                    <td class="width2-7" style="text-align: right">
                                         <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalPrice)); ?>
                                     </td>
                                 </tr>
                                 <?php $totalPurchase += $totalPrice; ?>
                             <?php endforeach; ?>
                             <tr>
-                                <td style="text-align: right; font-weight: bold" colspan="4">Total</td>
+                                <td style="text-align: right; font-weight: bold" colspan="6">Total</td>
                                 <td style="text-align: right; font-weight: bold">
                                     <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalPurchase)); ?>
                                 </td>
@@ -96,17 +103,21 @@ Yii::app()->clientScript->registerCss('_report', '
                                         <?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($workOrderExpenseItem['transaction_date']))); ?>
                                     </td>
                                     <td class="width2-3"><?php echo CHtml::encode($workOrderExpenseItem['registration_number']); ?></td>
+                                    <td class="width2-2">
+                                        <?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($workOrderExpenseItem['registration_date']))); ?>
+                                    </td>
+                                    <td class="width2-4"><?php echo CHtml::encode($workOrderExpenseItem['plate_number']); ?></td>
                                     <td class="width2-4"><?php echo CHtml::encode($workOrderExpenseItem['status']); ?></td>
                                     <td class="width2-5" style="text-align: right">
                                         <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalPrice)); ?>
                                     </td>
                                 </tr>
-                                <?php $totalPurchase += $totalPrice; ?>
+                                <?php $totalWorkOrderExpense += $totalPrice; ?>
                             <?php endforeach; ?>
                             <tr>
-                                <td style="text-align: right; font-weight: bold" colspan="4">Total</td>
+                                <td style="text-align: right; font-weight: bold" colspan="6">Total</td>
                                 <td style="text-align: right; font-weight: bold">
-                                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalPurchase)); ?>
+                                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalWorkOrderExpense)); ?>
                                 </td>
                             </tr>
                             <?php $grandTotalPurchase += $totalPurchase; ?>

@@ -22,7 +22,7 @@ class DeliveryOrders extends CComponent {
             'order' => ' id DESC',
             'condition' => "$cnYearCondition = :cn_year AND $cnMonthCondition = :cn_month AND sender_branch_id = :sender_branch_id",
             'params' => array(':cn_year' => $currentYear, ':cn_month' => $arr[$currentMonth], ':sender_branch_id' => $requesterBranchId),
-                ));
+        ));
 
         if ($transactionDeliveryOrder == null) {
             $branchCode = Branch::model()->findByPk($requesterBranchId)->code;

@@ -16,6 +16,8 @@
  * @property string $quantity_delivery
  * @property string $quantity_delivery_left
  * @property string $memo
+ * @property string $stock_quantity
+ * @property string $average_sale_amount
  *
  * The followings are the available model relations:
  * @property TransactionDeliveryOrderDetail[] $transactionDeliveryOrderDetails
@@ -43,12 +45,12 @@ class TransactionTransferRequestDetail extends CActiveRecord {
         return array(
             array('transfer_request_id, product_id, quantity, unit_price', 'required'),
             array('transfer_request_id, product_id, unit_id', 'numerical', 'integerOnly' => true),
-            array('unit_price, amount', 'length', 'max' => 18),
-            array('quantity, receive_quantity, transfer_request_quantity_left, quantity_delivery, quantity_delivery_left', 'length', 'max' => 10),
+            array('unit_price, amount, average_sale_amount', 'length', 'max' => 18),
+            array('quantity, receive_quantity, transfer_request_quantity_left, quantity_delivery, quantity_delivery_left, stock_quantity', 'length', 'max' => 10),
             array('memo', 'length', 'max' => 200),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, transfer_request_id, product_id, memo, quantity, unit_price, unit_id, amount, receive_quantity, transfer_request_quantity_left, quantity_delivery, quantity_delivery_left', 'safe', 'on' => 'search'),
+            array('id, transfer_request_id, product_id, memo, quantity, unit_price, average_sale_amount, stock_quantity, unit_id, amount, receive_quantity, transfer_request_quantity_left, quantity_delivery, quantity_delivery_left', 'safe', 'on' => 'search'),
         );
     }
 

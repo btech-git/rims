@@ -572,9 +572,11 @@ class Supplier extends CActiveRecord {
         }
         
         $sql = "
-            SELECT w.id, w.transaction_number, w.transaction_date, r.transaction_number AS registration_number, w.status, w.grand_total
+            SELECT w.id, w.transaction_number, w.transaction_date, r.transaction_number AS registration_number, r.transaction_date AS registration_date, 
+                w.status, w.grand_total, v.plate_number
             FROM " . WorkOrderExpenseHeader::model()->tableName() . " w
             INNER JOIN " . RegistrationTransaction::model()->tableName() . " r ON r.id = w.registration_transaction_id
+            INNER JOIN " .Vehicle::model()->tableName() . " v ON v.id = r.vehicle_id
             WHERE w.supplier_id = :supplier_id AND substr(w.transaction_date, 1, 10) BETWEEN :start_date AND :end_date AND w.status NOT LIKE '%CANCEL%'" . $branchConditionSql . "
             ORDER BY w.transaction_date, w.transaction_number
         ";
@@ -702,7 +704,7 @@ class Supplier extends CActiveRecord {
         );
         
         if (!empty($branchId)) {
-            $branchConditionSql = ' AND W.branch_id = :branch_id';
+            $branchConditionSql = ' AND w.branch_id = :branch_id';
             $params[':branch_id'] = $branchId;
         }
         

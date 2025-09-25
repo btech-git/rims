@@ -26,22 +26,31 @@ class PurchasePerProductSummary extends CComponent {
         $this->dataProvider->criteria->order = $this->dataProvider->sort->orderBy;
     }
 
-    public function setupFilter($startDate, $endDate, $branchId) {
+    public function setupFilter($startDate, $endDate, $branchId, $supplierId) {
         $branchConditionSql = '';
+        $supplierConditionSql = '';
         
         if (!empty($branchId)) {
-            $branchConditionSql = ' AND main_branch_id = :branch_id';
+            $branchConditionSql = ' AND h.main_branch_id = :branch_id';
+        }
+
+        if (!empty($supplierId)) {
+            $supplierConditionSql = ' AND h.supplier_id = :supplier_id';
         }
 
         $this->dataProvider->criteria->addCondition("EXISTS (
             SELECT d.id FROM " . TransactionPurchaseOrderDetail::model()->tableName() . " d 
             INNER JOIN " . TransactionPurchaseOrder::model()->tableName() . " h ON h.id = d.purchase_order_id
-            WHERE d.product_id = t.id AND substr(h.purchase_order_date, 1, 10) BETWEEN :start_date AND :end_date AND h.status_document NOT LIKE '%CANCEL%'" . $branchConditionSql . " 
+            WHERE d.product_id = t.id AND substr(h.purchase_order_date, 1, 10) BETWEEN :start_date AND :end_date AND h.status_document NOT LIKE '%CANCEL%'" . 
+                $branchConditionSql . $supplierConditionSql . " 
         )");
         $this->dataProvider->criteria->params[':start_date'] = $startDate;
         $this->dataProvider->criteria->params[':end_date'] = $endDate;
         if (!empty($branchId)) {
             $this->dataProvider->criteria->params[':branch_id'] = $branchId;
+        }
+        if (!empty($supplierId)) {
+            $this->dataProvider->criteria->params[':supplier_id'] = $supplierId;
         }
     }
 }

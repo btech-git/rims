@@ -98,33 +98,34 @@ class PurchaseOrderController extends Controller {
         $worksheet = $objPHPExcel->setActiveSheetIndex(0);
         $worksheet->setTitle('Rincian Pembelian per Pemasok');
 
-        $worksheet->mergeCells('A1:H1');
-        $worksheet->mergeCells('A2:H2');
-        $worksheet->mergeCells('A3:H3');
+        $worksheet->mergeCells('A1:J1');
+        $worksheet->mergeCells('A2:J2');
+        $worksheet->mergeCells('A3:J3');
         
-        $worksheet->getStyle('A1:H5')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-        $worksheet->getStyle('A1:H5')->getFont()->setBold(true);
+        $worksheet->getStyle('A1:J5')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->getStyle('A1:J5')->getFont()->setBold(true);
 
         $branch = Branch::model()->findByPk($branchId);
-        $worksheet->setCellValue('A1', 'Raperind Motor ' . CHtml::encode(CHtml::value($branch, 'name')));
+        $worksheet->setCellValue('A1', 'Raperind Motor ' . CHtml::value($branch, 'name'));
         $worksheet->setCellValue('A2', 'Rincian Pembelian per Pemasok');
         $worksheet->setCellValue('A3', Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($startDate)) . ' - ' . Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($endDate)));
 
-        $worksheet->getStyle('A5:H5')->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle('A5:J5')->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
         $worksheet->setCellValue('A5', 'Code');
         $worksheet->setCellValue('B5', 'Company');
         $worksheet->setCellValue('C5', 'Name');
-        $worksheet->setCellValue('D5', 'Pembelian #');
+        $worksheet->setCellValue('D5', 'Transaction #');
         $worksheet->setCellValue('E5', 'Tanggal');
         $worksheet->setCellValue('F5', 'Payment');
-        $worksheet->setCellValue('G5', 'Status');
-        $worksheet->setCellValue('H5', 'Total Price');
+        $worksheet->setCellValue('G5', 'Type');
+        $worksheet->setCellValue('H5', 'Parts');
+        $worksheet->setCellValue('I5', 'Status');
+        $worksheet->setCellValue('J5', 'Total Price');
 
-        $worksheet->getStyle('A5:H5')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle('A5:J5')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
         $counter = 7;
-        $grandTotalPurchase = '0.00';
         foreach ($dataProvider->data as $header) {
             $purchaseOrderData = $header->getPurchasePerSupplierReport($startDate, $endDate, $branchId);
             $workOrderExpenseData = $header->getWorkOrderExpensePerSupplierReport($startDate, $endDate, $branchId);
@@ -134,15 +135,18 @@ class PurchaseOrderController extends Controller {
             if (!empty($purchaseOrderData)) {
                 foreach ($purchaseOrderData as $purchaseOrderItem) {
                     $totalPrice = $purchaseOrderItem['total_price'];
+                    $purchaseOrder = TransactionPurchaseOrder::model()->findByPk($purchaseOrderItem['id']);
 
-                    $worksheet->setCellValue("A{$counter}", CHtml::encode(CHtml::value($header, 'code')));
-                    $worksheet->setCellValue("B{$counter}", CHtml::encode(CHtml::value($header, 'company')));
-                    $worksheet->setCellValue("C{$counter}", CHtml::encode(CHtml::value($header, 'name')));
-                    $worksheet->setCellValue("D{$counter}", CHtml::encode($purchaseOrderItem['purchase_order_no']));
-                    $worksheet->setCellValue("E{$counter}", CHtml::encode($purchaseOrderItem['purchase_order_date']));
-                    $worksheet->setCellValue("F{$counter}", CHtml::encode($purchaseOrderItem['payment_type']));
-                    $worksheet->setCellValue("G{$counter}", CHtml::encode($purchaseOrderItem['payment_status']));
-                    $worksheet->setCellValue("H{$counter}", CHtml::encode($totalPrice));
+                    $worksheet->setCellValue("A{$counter}", CHtml::value($header, 'code'));
+                    $worksheet->setCellValue("B{$counter}", CHtml::value($header, 'company'));
+                    $worksheet->setCellValue("C{$counter}", CHtml::value($header, 'name'));
+                    $worksheet->setCellValue("D{$counter}", $purchaseOrderItem['purchase_order_no']);
+                    $worksheet->setCellValue("E{$counter}", $purchaseOrderItem['purchase_order_date']);
+                    $worksheet->setCellValue("F{$counter}", $purchaseOrderItem['payment_type']);
+                    $worksheet->setCellValue("G{$counter}", $purchaseOrder->getPurchaseStatus($purchaseOrder->purchase_type));
+                    $worksheet->setCellValue("H{$counter}", $purchaseOrder->getProductLists());
+                    $worksheet->setCellValue("I{$counter}", $purchaseOrderItem['payment_status']);
+                    $worksheet->setCellValue("J{$counter}", $totalPrice);
                     $totalPurchase += $totalPrice;
 
                     $counter++;
@@ -153,15 +157,17 @@ class PurchaseOrderController extends Controller {
                 foreach ($workOrderExpenseData as $workOrderExpenseItem) {
                     $totalPrice = $workOrderExpenseItem['grand_total'];
 
-                    $worksheet->setCellValue("A{$counter}", CHtml::encode(CHtml::value($header, 'code')));
-                    $worksheet->setCellValue("B{$counter}", CHtml::encode(CHtml::value($header, 'company')));
-                    $worksheet->setCellValue("C{$counter}", CHtml::encode(CHtml::value($header, 'name')));
-                    $worksheet->setCellValue("D{$counter}", CHtml::encode($workOrderExpenseItem['transaction_number']));
-                    $worksheet->setCellValue("E{$counter}", CHtml::encode($workOrderExpenseItem['transaction_date']));
-                    $worksheet->setCellValue("F{$counter}", CHtml::encode($workOrderExpenseItem['registration_number']));
-                    $worksheet->setCellValue("G{$counter}", CHtml::encode($workOrderExpenseItem['status']));
-                    $worksheet->setCellValue("H{$counter}", CHtml::encode($totalPrice));
-                    $totalPurchase += $totalPrice;
+                    $worksheet->setCellValue("A{$counter}", CHtml::value($header, 'code'));
+                    $worksheet->setCellValue("B{$counter}", CHtml::value($header, 'company'));
+                    $worksheet->setCellValue("C{$counter}", CHtml::value($header, 'name'));
+                    $worksheet->setCellValue("D{$counter}", $workOrderExpenseItem['transaction_number']);
+                    $worksheet->setCellValue("E{$counter}", $workOrderExpenseItem['transaction_date']);
+                    $worksheet->setCellValue("F{$counter}", $workOrderExpenseItem['registration_number']);
+                    $worksheet->setCellValue("G{$counter}", $workOrderExpenseItem['registration_date']);
+                    $worksheet->setCellValue("H{$counter}", $workOrderExpenseItem['plate_number']);
+                    $worksheet->setCellValue("I{$counter}", $workOrderExpenseItem['status']);
+                    $worksheet->setCellValue("J{$counter}", $totalPrice);
+                    $totalWorkOrderExpense += $totalPrice;
 
                     $counter++;
                 }
