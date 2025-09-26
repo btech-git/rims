@@ -781,10 +781,11 @@
                     
                     <div class="small-4 columns">
                         <?php if (
-                            Yii::app()->user->checkAccess('director')
-//                            Yii::app()->user->checkAccess('workOrderServiceReport') ||
-//                            Yii::app()->user->checkAccess('workOrderVehicleReport') ||
-//                            Yii::app()->user->checkAccess('mechanicPerformanceReport')
+                            Yii::app()->user->checkAccess('saleVehicleMonthlyReport') ||
+                            Yii::app()->user->checkAccess('saleVehicleYearlyReport') ||
+                            Yii::app()->user->checkAccess('customerFollowUpReport') ||
+                            Yii::app()->user->checkAccess('saleTireMonthlyReport') ||
+                            Yii::app()->user->checkAccess('saleTireYearlyReport')
                         ): ?>
                             <h2>Customer Data</h2>
                             <?php $this->widget('zii.widgets.CMenu', array(
@@ -792,17 +793,27 @@
                                     array(
                                         'label' => 'Penjualan per Kendaraan Bulanan', 
                                         'url' => array('/report/saleInvoiceCarSubModelMonthly/summary'), 
-                                        'visible' => Yii::app()->user->checkAccess('director')
+                                        'visible' => Yii::app()->user->checkAccess('saleVehicleMonthlyReport')
                                     ),
                                     array(
                                         'label' => 'Penjualan per Kendaraan Tahunan', 
                                         'url' => array('/report/saleInvoiceCarSubModelYearly/summary'), 
-                                        'visible' => Yii::app()->user->checkAccess('director')
+                                        'visible' => Yii::app()->user->checkAccess('saleVehicleYearlyReport')
                                     ),
                                     array(
                                         'label' => 'Customer Follow Up + Warranty', 
                                         'url' => array('/frontDesk/followUp/adminSales'), 
-                                        'visible' => Yii::app()->user->checkAccess('director')
+                                        'visible' => Yii::app()->user->checkAccess('customerFollowUpReport')
+                                    ),
+                                    array(
+                                        'label' => 'Penjualan Ban Bulanan', 
+                                        'url' => array('/report/monthlyTireSaleTransaction/summary'), 
+                                        'visible' => Yii::app()->user->checkAccess('saleTireMonthlyReport')
+                                    ),
+                                    array(
+                                        'label' => 'Penjualan Ban Tahunan', 
+                                        'url' => array('/report/yearlyTireSaleTransaction/summary'), 
+                                        'visible' => Yii::app()->user->checkAccess('saleTireYearlyReport')
                                     ),
                                 ),
                             )); ?>
@@ -876,16 +887,6 @@
                                     array(
                                         'label' => 'Penjualan Retail Summary', 
                                         'url' => array('/report/saleFlowSummary/summary'), 
-                                        'visible' => Yii::app()->user->checkAccess('director')
-                                    ),
-                                    array(
-                                        'label' => 'Penjualan Ban Bulanan', 
-                                        'url' => array('/report/monthlyTireSaleTransaction/summary'), 
-                                        'visible' => Yii::app()->user->checkAccess('director')
-                                    ),
-                                    array(
-                                        'label' => 'Penjualan Ban Tahunan', 
-                                        'url' => array('/report/yearlyTireSaleTransaction/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('director')
                                     ),
                                 ),
