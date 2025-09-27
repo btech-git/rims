@@ -179,14 +179,12 @@ function tanggal($date) {
             <div>
                 <table style="width: 100%">
                     <tr>
-                        <td style="width: 35%; text-align: center">Yang membuat,</td>
                         <td style="text-align:right; font-size: 11px">TOTAL PRODUCT & SERVICE</td>
-                        <td style="width: 15%; text-align:right; font-size: 11px">Rp. <?php echo number_format($generalRepairRegistration->subtotal, 2, ',', '.') ?> &nbsp; </td>
+                        <td style="width: 25%; text-align:right; font-size: 11px">Rp. <?php echo number_format($generalRepairRegistration->subtotal, 2, ',', '.') ?> &nbsp; </td>
                     </tr>
 
                     <tr>
                         <?php if ($generalRepairRegistration->ppn_price > 0.00): ?>
-                            <td style="border-bottom: none">&nbsp;</td>
                             <td style="text-align:right; font-size: 11px">PPN - <?php echo CHtml::encode(CHtml::value($generalRepairRegistration, 'tax_percentage')); ?>%</td>
                             <td style="text-align:right; font-size: 11px">Rp. <?php echo number_format($generalRepairRegistration->ppn_price, 2, ',', '.') ?> &nbsp; </td>
                         <?php endif; ?>
@@ -194,23 +192,38 @@ function tanggal($date) {
 
                     <tr>
                         <?php if ($generalRepairRegistration->pph_price > 0.00): ?>
-                            <td style="border-top: none">&nbsp;</td>
                             <td style="text-align:right; font-size: 11px">PPH 23</td>
                             <td style="text-align:right; font-size: 11px">Rp. <?php echo number_format($generalRepairRegistration->pph_price, 2, ',', '.') ?> &nbsp; </td>
                         <?php endif; ?>
                     </tr>
 
                     <tr>
-                        <td style="border-top: none">&nbsp;</td>
                         <td style="font-weight: bold; text-align:right; font-size: 11px">GRAND TOTAL</td>
                         <td style="font-weight: bold; text-align:right; font-size: 11px">Rp. <?php echo number_format($generalRepairRegistration->grand_total, 2, ',', '.') ?> &nbsp; </td>
                     </tr>
+                </table>
+            </div>
+            
+            <br />
+
+            <div style="width: 100%">
+                <table style="border: 1px solid; font-size: 10px; width: 100%; float: center">
                     <tr>
-                        <td style="text-align: center"><?php echo CHtml::encode(CHtml::value($generalRepairRegistration, 'user.username')); ?></td>
-                        <td colspan="2">* Note: Jasa Perbaikan & Suku Cadang diluar Estimasi, akan diinformasikan lebih lanjut</td>
+                        <td style="border-bottom: 1px solid; text-align: center">Yang membuat,</td>
+                    </tr>
+                    <tr>
+                        <td style="height: 70px; width: 30%">&nbsp;</td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: center;"><?php echo CHtml::encode(CHtml::value($generalRepairRegistration, 'user.username')); ?></td>
                     </tr>
                 </table>
             </div>
+
+            <br />
+            
+            <div style="font-size: 10px; text-align: left">* Note: Jasa Perbaikan & Suku Cadang diluar Estimasi, akan diinformasikan lebih lanjut</div>
+
         </div>
     </div>
 <?php endfor; ?>
