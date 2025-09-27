@@ -115,6 +115,28 @@ function tanggal($date) {
                     <?php endif; ?>
                 </div>
             </div>
+            
+            <br />
+
+            <div style="width: 100%">
+                <table style="border: 1px solid; font-size: 10px; width: 100%; float: center">
+                    <tr>
+                        <td style="border-bottom: 1px solid; text-align: center; border-right: 1px solid;">Dibuat,</td>
+                        <td style="border-bottom: 1px solid; text-align: center; border-right: 1px solid;">Menyetujui,</td>
+                        <td style="border-bottom: 1px solid; text-align: center">Mengetahui,</td>
+                    </tr>
+                    <tr>
+                        <td style="width: 30%; height: 70px; border-right: 1px solid;">&nbsp;</td>
+                        <td style="width: 30%; border-right: 1px solid">&nbsp;</td>
+                        <td style="width: 30%">&nbsp;</td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: center; border-right: 1px solid; border-top: 1px solid;">(Mella)</td>
+                        <td style="text-align: center; border-right: 1px solid; border-top: 1px solid;">(Regina)</td>
+                        <td style="text-align: center; border-top: 1px solid;">(Newira)</td>
+                    </tr>
+                </table>
+            </div>
         </div>
     </div>
 <?php endfor; ?>

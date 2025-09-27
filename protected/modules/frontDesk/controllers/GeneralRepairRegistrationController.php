@@ -734,7 +734,7 @@ class GeneralRepairRegistrationController extends Controller {
         $customer = Customer::model()->findByPk($generalRepairRegistration->customer_id);
         $vehicle = Vehicle::model()->findByPk($generalRepairRegistration->vehicle_id);
         $branch = Branch::model()->findByPk($generalRepairRegistration->branch_id);
-        $mPDF1 = Yii::app()->ePdf->mpdf('', 'A4-L');
+        $mPDF1 = Yii::app()->ePdf->mpdf('', 'A4');
 
         $stylesheet = file_get_contents(Yii::getPathOfAlias('webroot') . '/css/pdf.css');
         $mPDF1->SetTitle('Estimasi');
@@ -772,7 +772,7 @@ class GeneralRepairRegistrationController extends Controller {
         $customer = Customer::model()->findByPk($generalRepairRegistration->customer_id);
         $vehicle = Vehicle::model()->findByPk($generalRepairRegistration->vehicle_id);
         $branch = Branch::model()->findByPk($generalRepairRegistration->branch_id);
-        $mPDF1 = Yii::app()->ePdf->mpdf('', 'A4-L');
+        $mPDF1 = Yii::app()->ePdf->mpdf('', 'A4');
 
         $stylesheet = file_get_contents(Yii::getPathOfAlias('webroot') . '/css/pdf.css');
         $mPDF1->SetTitle('Work Order');
