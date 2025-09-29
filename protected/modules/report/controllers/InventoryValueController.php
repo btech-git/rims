@@ -42,7 +42,7 @@ class InventoryValueController extends Controller {
         }
         
         if (isset($_GET['SaveExcel'])) {
-            $this->saveToExcel($productSubCategoryDataProvider);
+            $this->saveToExcel($productSubCategoryDataProvider, $endDate);
         }
         
         $this->render('summary', array(
@@ -96,7 +96,7 @@ class InventoryValueController extends Controller {
         }
     }
     
-    protected function saveToExcel($dataProvider) {
+    protected function saveToExcel($dataProvider, $endDate) {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
         
@@ -147,7 +147,7 @@ class InventoryValueController extends Controller {
         $incrementNumber = 1;
 
         foreach ($dataProvider->data as $header) {
-            $inventoryTotalValues = $header->getInventoryTotalValues();
+            $inventoryTotalValues = $header->getInventoryTotalValues($endDate);
             $totalStock = 0;
             
             $worksheet->setCellValue("A{$counter}", $incrementNumber);

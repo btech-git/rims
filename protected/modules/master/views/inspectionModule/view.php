@@ -26,16 +26,39 @@ $this->breadcrumbs = array(
         <?php } ?>
         <h1>View <?php echo $model->name ?></h1>
 
-        <?php
-        $this->widget('zii.widgets.CDetailView', array(
+        <?php $this->widget('zii.widgets.CDetailView', array(
             'data' => $model,
             'attributes' => array(
-                //'id',
+                'id',
                 'code',
                 'name',
-                'checklist_type_id',
+                array(
+                    'name' => 'checklist_type_id',
+                    'value' => $model->checklistType->name,
+                ),
             ),
-        ));
-        ?>
+        )); ?>
+        
+        <hr />
+        
+        <div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Code</th>
+                        <th>Section</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php $sectionModules = InspectionSectionModule::model()->findAllByAttributes(array('module_id' => $model->id)); ?>
+                    <?php foreach ($sectionModules as $sectionModule): ?>
+                        <tr>
+                            <td><?php echo CHtml::encode(CHtml::value($sectionModule, 'section.code')); ?></td>
+                            <td><?php echo CHtml::encode(CHtml::value($sectionModule, 'section.name')); ?></td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>

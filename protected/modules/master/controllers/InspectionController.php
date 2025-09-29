@@ -23,8 +23,9 @@ class InspectionController extends Controller {
             $filterChain->action->id === 'delete' || 
             $filterChain->action->id === 'index'
         ) {
-            if (!(Yii::app()->user->checkAccess('frontOfficeHead')) || !(Yii::app()->user->checkAccess('operationHead')))
+            if (!(Yii::app()->user->checkAccess('frontOfficeHead')) || !(Yii::app()->user->checkAccess('operationHead'))) {
                 $this->redirect(array('/site/login'));
+            }
         }
 
         $filterChain->run();
@@ -35,8 +36,14 @@ class InspectionController extends Controller {
      * @param integer $id the ID of the model to be displayed
      */
     public function actionView($id) {
+        $model = $this->loadModel($id);
+        
+        if (isset($_GET['SaveExcel'])) {
+            $this->saveToExcel($model);
+        }
+
         $this->render('view', array(
-            'model' => $this->loadModel($id),
+            'model' => $model,
         ));
     }
 
@@ -274,4 +281,76 @@ class InspectionController extends Controller {
         }
     }
 
+    protected function saveToExcel($model) {
+        set_time_limit(0);
+        ini_set('memory_limit', '1024M');
+        
+        spl_autoload_unregister(array('YiiBase', 'autoload'));
+        include_once Yii::getPathOfAlias('ext.phpexcel.Classes') . DIRECTORY_SEPARATOR . 'PHPExcel.php';
+        spl_autoload_register(array('YiiBase', 'autoload'));
+
+        $objPHPExcel = new PHPExcel();
+
+        $documentProperties = $objPHPExcel->getProperties();
+        $documentProperties->setCreator('Raperind Motor');
+        $documentProperties->setTitle('Master Inspection');
+
+        $worksheet = $objPHPExcel->setActiveSheetIndex(0);
+        $worksheet->setTitle('Master Inspection');
+
+        $worksheet->mergeCells('A1:G1');
+        $worksheet->mergeCells('A2:G2');
+
+        $worksheet->getStyle('A1:G5')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->getStyle('A1:G5')->getFont()->setBold(true);
+
+        $worksheet->setCellValue('A1', 'Raperind Motor');
+        $worksheet->setCellValue('A2', 'Master Inspection');
+
+        $worksheet->getStyle('A5:G5')->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+
+        $worksheet->setCellValue('A5', 'ID');
+        $worksheet->setCellValue('B5', 'Code');
+        $worksheet->setCellValue('C5', 'Inspection');
+        $worksheet->setCellValue('D5', 'Section Code');
+        $worksheet->setCellValue('E5', 'Section Name');
+        $worksheet->setCellValue('F5', 'Module Code');
+        $worksheet->setCellValue('G5', 'Module Name');
+
+        $worksheet->getStyle('A5:G5')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+
+        $counter = 7;
+        $inspectionSections = InspectionSections::model()->findAllByAttributes(array('inspection_id' => $model->id));
+        foreach ($inspectionSections as $inspectionSection) {
+            $sectionModules = InspectionSectionModule::model()->findAllByAttributes(array('section_id' => $inspectionSection->section_id));
+            foreach ($sectionModules as $sectionModule) {
+                $worksheet->setCellValue("A{$counter}", CHtml::value($model, 'id'));
+                $worksheet->setCellValue("B{$counter}", CHtml::value($model, 'code'));
+                $worksheet->setCellValue("C{$counter}", CHtml::value($model, 'name'));
+                $worksheet->setCellValue("D{$counter}", CHtml::value($inspectionSection, 'section.code'));
+                $worksheet->setCellValue("E{$counter}", CHtml::value($inspectionSection, 'section.name'));
+                $worksheet->setCellValue("F{$counter}", CHtml::value($sectionModule, 'module.code'));
+                $worksheet->setCellValue("G{$counter}", CHtml::value($sectionModule, 'module.name'));
+
+                $counter++;
+            }
+        }
+
+        for ($col = 'A'; $col !== 'Z'; $col++) {
+            $objPHPExcel->getActiveSheet()
+            ->getColumnDimension($col)
+            ->setAutoSize(true);
+        }
+        
+        ob_end_clean();
+        // We'll be outputting an excel file
+        header('Content-type: application/vnd.ms-excel');
+        header('Content-Disposition: attachment;filename="master_inspection.xls"');
+        header('Cache-Control: max-age=0');
+        
+        $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
+        $objWriter->save('php://output');
+
+        Yii::app()->end();
+    }
 }

@@ -361,11 +361,15 @@ class ProductSubCategory extends CActiveRecord {
             $params[':branch_id'] = $branchId;
         }
         
-        $sql = "SELECT p.id, p.code, p.name, p.manufacturer_code, SUM(i.stock_in) AS stock_in, SUM(i.stock_out) AS stock_out, u.name AS unit_name
+        $sql = "SELECT p.id, p.code, p.name, p.manufacturer_code, SUM(i.stock_in) AS stock_in, SUM(i.stock_out) AS stock_out, u.name AS unit_name, 
+                    b.name AS brand, sb.name AS sub_brand, sbs.name AS sub_brand_series
                 FROM " . InventoryDetail::model()->tableName() . " i
                 INNER JOIN " . Warehouse::model()->tableName() . " w ON w.id = i.warehouse_id
                 INNER JOIN " . Product::model()->tableName() . " p ON p.id = i.product_id
                 INNER JOIN " . Unit::model()->tableName() . " u ON u.id = p.unit_id
+                INNER JOIN " . Brand::model()->tableName() . " b ON b.id = p.brand_id
+                INNER JOIN " . SubBrand::model()->tableName() . " sb ON sb.id = p.sub_brand_id
+                INNER JOIN " . SubBrandSeries::model()->tableName() . " sbs ON sbs.id = p.sub_brand_series_id
                 WHERE i.transaction_date > :start_date AND w.status = 'Active' AND i.transaction_date <= :end_date AND
                     p.product_sub_category_id = :product_sub_category_id" . $branchConditionSql . "
                 GROUP BY p.id, p.code, p.name, p.manufacturer_code, u.name";

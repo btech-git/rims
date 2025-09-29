@@ -43,7 +43,7 @@ class CashTransactionController extends Controller {
         }
         
         if (isset($_GET['SaveExcel'])) {
-            $this->saveToExcel($cashTransactionSummary, $branchId, $cashTransactionSummary->dataProvider, array('startDate' => $startDate, 'endDate' => $endDate));
+            $this->saveToExcel($cashTransactionSummary->dataProvider, $branchId, array('startDate' => $startDate, 'endDate' => $endDate));
         }
 
         $this->render('summary', array(
@@ -56,7 +56,7 @@ class CashTransactionController extends Controller {
         ));
     }
 
-    protected function saveToExcel($cashTransactionSummary, $branchId, $dataProvider, array $options = array()) {
+    protected function saveToExcel($dataProvider, $branchId, array $options = array()) {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
         

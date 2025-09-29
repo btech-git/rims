@@ -137,33 +137,34 @@ class StockCardCategoryController extends Controller {
         $worksheet = $objPHPExcel->setActiveSheetIndex(0);
         $worksheet->setTitle('Laporan Posisi Stok');
 
-        $worksheet->mergeCells('A1:M1');
-        $worksheet->mergeCells('A2:M2');
-        $worksheet->mergeCells('A3:M3');
-        $worksheet->getStyle('A1:M3')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-        $worksheet->getStyle('A1:M3')->getFont()->setBold(true);
+        $worksheet->mergeCells('A1:N1');
+        $worksheet->mergeCells('A2:N2');
+        $worksheet->mergeCells('A3:N3');
+        $worksheet->getStyle('A1:N3')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->getStyle('A1:N3')->getFont()->setBold(true);
         
         $worksheet->setCellValue('A1', 'Raperind Motor');
         $worksheet->setCellValue('A2', 'Laporan Posisi Stok ' . CHtml::value($branch, 'name'));
         $worksheet->setCellValue('A3', 'Periode: ' . $startDateFormatted . ' - ' . $endDateFormatted);
 
-        $worksheet->getStyle("A5:M5")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
-        $worksheet->getStyle("A5:M5")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A5:N5")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A5:N5")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
-        $worksheet->getStyle('A5:M5')->getFont()->setBold(true);
+        $worksheet->getStyle('A5:N5')->getFont()->setBold(true);
         $worksheet->setCellValue('A5', 'No');
         $worksheet->setCellValue('B5', 'Category');
         $worksheet->setCellValue('C5', 'ID');
         $worksheet->setCellValue('D5', 'Code');
         $worksheet->setCellValue('E5', 'Name');
-        $worksheet->setCellValue('F5', 'Satuan');
-        $worksheet->setCellValue('G5', 'Nilai Awal');
-        $worksheet->setCellValue('H5', 'Stok Awal');
-        $worksheet->setCellValue('I5', 'Masuk');
-        $worksheet->setCellValue('J5', 'Keluar');
-        $worksheet->setCellValue('K5', 'Stok Akhir');
-        $worksheet->setCellValue('L5', 'Nilai (+/-)');
-        $worksheet->setCellValue('M5', 'Nilai Akhir');
+        $worksheet->setCellValue('F5', 'Brand');
+        $worksheet->setCellValue('G5', 'Satuan');
+        $worksheet->setCellValue('H5', 'Nilai Awal');
+        $worksheet->setCellValue('I5', 'Stok Awal');
+        $worksheet->setCellValue('J5', 'Masuk');
+        $worksheet->setCellValue('K5', 'Keluar');
+        $worksheet->setCellValue('L5', 'Stok Akhir');
+        $worksheet->setCellValue('M5', 'Nilai (+/-)');
+        $worksheet->setCellValue('N5', 'Nilai Akhir');
 
         $counter = 7;
         $incrementNumber = 1;
@@ -180,7 +181,7 @@ class StockCardCategoryController extends Controller {
             foreach ($stockData as $stockRow) {
                 $product = Product::model()->findByPk($stockRow['id']);
                 $averageCogs = $product->getAverageCogs();
-                $stockBegin = $product->getBeginningStockCardReport($branchId);
+                $stockBegin = $product->getBeginningStockCardReport($startDate, $branchId);
                 $stockBeginValue = $stockBegin * $averageCogs;
                 $stockIn = $stockRow['stock_in'];
                 $stockOut = $stockRow['stock_out'];
@@ -193,14 +194,15 @@ class StockCardCategoryController extends Controller {
                 $worksheet->setCellValue("C{$counter}", $stockRow['id']);
                 $worksheet->setCellValue("D{$counter}", $stockRow['name']);
                 $worksheet->setCellValue("E{$counter}", $stockRow['manufacturer_code']);
-                $worksheet->setCellValue("F{$counter}", $stockRow['unit_name']);
-                $worksheet->setCellValue("G{$counter}", $stockBegin);
-                $worksheet->setCellValue("H{$counter}", $stockBeginValue);
-                $worksheet->setCellValue("I{$counter}", $stockIn);
-                $worksheet->setCellValue("J{$counter}", $stockOut);
-                $worksheet->setCellValue("K{$counter}", $stokEnd);
-                $worksheet->setCellValue("L{$counter}", $valueDifference);
-                $worksheet->setCellValue("M{$counter}", $inventoryValue);
+                $worksheet->setCellValue("F{$counter}", $stockRow['brand'] . ' - ' . $stockRow['sub_brand'] . ' - ' . $stockRow['sub_brand_series']);
+                $worksheet->setCellValue("G{$counter}", $stockRow['unit_name']);
+                $worksheet->setCellValue("H{$counter}", $stockBegin);
+                $worksheet->setCellValue("I{$counter}", $stockBeginValue);
+                $worksheet->setCellValue("J{$counter}", $stockIn);
+                $worksheet->setCellValue("K{$counter}", $stockOut);
+                $worksheet->setCellValue("L{$counter}", $stokEnd);
+                $worksheet->setCellValue("M{$counter}", $valueDifference);
+                $worksheet->setCellValue("N{$counter}", $inventoryValue);
                 
                 $totalStockIn += $stockIn;
                 $totalStockOut += $stockOut;
@@ -212,14 +214,14 @@ class StockCardCategoryController extends Controller {
 //            $grandTotalStock += $totalStock;
 //            $grandTotalValue += $totalValue;
             
-            $worksheet->getStyle("H{$counter}:M{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
-            $worksheet->getStyle("F{$counter}:M{$counter}")->getFont()->setBold(true);
+            $worksheet->getStyle("H{$counter}:N{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+            $worksheet->getStyle("F{$counter}:N{$counter}")->getFont()->setBold(true);
             
-            $worksheet->setCellValue("H{$counter}", 'TOTAL');
-            $worksheet->setCellValue("I{$counter}", $totalStockIn);
-            $worksheet->setCellValue("J{$counter}", $totalStockOut);
-            $worksheet->setCellValue("K{$counter}", $totalStock);
-            $worksheet->setCellValue("M{$counter}", $totalValue);
+            $worksheet->setCellValue("I{$counter}", 'TOTAL');
+            $worksheet->setCellValue("J{$counter}", $totalStockIn);
+            $worksheet->setCellValue("K{$counter}", $totalStockOut);
+            $worksheet->setCellValue("M{$counter}", $totalStock);
+            $worksheet->setCellValue("N{$counter}", $totalValue);
             $counter++;$counter++;
         }
             

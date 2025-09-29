@@ -784,11 +784,12 @@ class Product extends CActiveRecord {
         return ($value === false) ? 0 : $value;
     }
     
-    public function getBeginningStockCardReport($branchId) {
+    public function getBeginningStockCardReport($startDate, $branchId) {
         $branchConditionSql = '';
         
         $params = array(
             ':product_id' => $this->id,
+            'start_date' => $startDate,
         );
         
         if (!empty($branchId)) {
@@ -800,7 +801,7 @@ class Product extends CActiveRecord {
             SELECT COALESCE(SUM(i.stock_in + i.stock_out), 0) AS beginning_balance 
             FROM " . InventoryDetail::model()->tableName() . " i
             INNER JOIN " . Warehouse::model()->tableName() . " w ON w.id = i.warehouse_id
-            WHERE i.product_id = :product_id AND w.status = 'Active' AND i.transaction_date = '" . AppParam::BEGINNING_TRANSACTION_DATE . "'" . $branchConditionSql . "
+            WHERE i.product_id = :product_id AND w.status = 'Active' AND i.transaction_date BETWEEN '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND :start_date" . $branchConditionSql . "
             GROUP BY i.product_id
         ";
 

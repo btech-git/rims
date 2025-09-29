@@ -469,9 +469,10 @@ class Service extends CActiveRecord {
             $params[':branch_id'] = $branchId;
         }
         
-        $sql = "SELECT r.invoice_number, r.invoice_date, c.name as customer, v.plate_number as vehicle, p.total_price
+        $sql = "SELECT r.invoice_number, r.invoice_date, c.name as customer, v.plate_number as vehicle, p.total_price, t.work_order_number
                 FROM " . InvoiceDetail::model()->tableName() . " p 
                 INNER JOIN " . InvoiceHeader::model()->tableName() . " r ON r.id = p.invoice_id
+                INNER JOIN " . RegistrationTransaction::model()->tableName() . " t ON t.id = r.registration_transaction_id
                 INNER JOIN " . Customer::model()->tableName() . " c ON c.id = r.customer_id
                 INNER JOIN " . Vehicle::model()->tableName() . " v ON v.id = r.vehicle_id
                 WHERE substr(r.invoice_date, 1, 10) BETWEEN :start_date AND :end_date AND service_id = :service_id AND r.status NOT LIKE '%CANCEL%'" . $branchConditionSql . "
