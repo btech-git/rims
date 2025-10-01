@@ -275,6 +275,11 @@
                                     'visible' => Yii::app()->user->checkAccess('receivableReport')
                                 ),
                                 array(
+                                    'label' => 'Piutang Customer Bulanan', 
+                                    'url' => array('/report/monthlyCustomerReceivable/summary'), 
+                                    'visible' => Yii::app()->user->checkAccess('customerReceivableReport')
+                                ),
+                                array(
                                     'label' => 'Piutang Customer Tahunan', 
                                     'url' => array('/report/yearlyCustomerReceivable/summary'), 
                                     'visible' => Yii::app()->user->checkAccess('customerReceivableReport')

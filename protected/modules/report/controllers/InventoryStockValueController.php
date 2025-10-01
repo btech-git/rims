@@ -51,37 +51,21 @@ class InventoryStockValueController extends Controller {
         ));
     }
 
-    public function actionDetail($id, $endDate) {
-        $product = Product::model()->findByPk($id);
-        $branches = Branch::model()->findAllByAttributes(array('status' => 'Active'));
-        $detailTabs = array();
-        
+    public function actionDetail($id, $endDate, $branchId) {
         $limit = 200;
-        
-        foreach ($branches as $branch) {
-            $latestInventoryData = InventoryDetail::getLatestInventoryData($product->id, $branch->id, $limit, $endDate);
-            $excludeInventoryIds = array_map(function($item) { return $item['id']; }, $latestInventoryData);
-            $inventoryBeginningStock = InventoryDetail::getInventoryBeginningStock($product->id, $branch->id, $excludeInventoryIds);
-            $tabContent = $this->renderPartial('_viewStock', array(
-                'latestInventoryData' => $latestInventoryData,
-                'inventoryBeginningStock' => $inventoryBeginningStock,
-            ), true);
-            $detailTabs[$branch->name] = array('content' => $tabContent);
-        }
-        $latestInventoryData = InventoryDetail::getLatestInventoryData($product->id, '', $limit, $endDate);
+
+        $latestInventoryData = InventoryDetail::getLatestInventoryData($id, $branchId, $limit, $endDate);
         $excludeInventoryIds = array_map(function($item) { return $item['id']; }, $latestInventoryData);
-        $inventoryBeginningStock = InventoryDetail::getInventoryBeginningStock($product->id, '', $excludeInventoryIds);
-        $tabContent = $this->renderPartial('_viewStock', array(
-            'latestInventoryData' => $latestInventoryData,
-            'inventoryBeginningStock' => $inventoryBeginningStock,
-        ), true);
-        $detailTabs['All'] = array('content' => $tabContent);
+        $inventoryBeginningStock = InventoryDetail::getInventoryBeginningStock($id, $branchId, $excludeInventoryIds);
+        $warehouse = Warehouse::model()->findByAttributes(array('branch_id' => $branchId, 'status' => 'Active'));
+        $product = Product::model()->findByPk($id);
 
         $this->render('detail', array(
-            'detailTabs' => $detailTabs,
-            'product' => $product,
-            'branches' => $branches,
+            'latestInventoryData' => $latestInventoryData,
+            'inventoryBeginningStock' => $inventoryBeginningStock,
             'endDate' => $endDate,
+            'warehouse' => $warehouse,
+            'product' => $product,
         ));
     }
 
@@ -203,10 +187,10 @@ class InventoryStockValueController extends Controller {
 
         $documentProperties = $objPHPExcel->getProperties();
         $documentProperties->setCreator('Raperind Motor');
-        $documentProperties->setTitle('Quantity dan Nilai Stok');
+        $documentProperties->setTitle('Stok Quantity dan Nilai Persediaan');
 
         $worksheet = $objPHPExcel->setActiveSheetIndex(0);
-        $worksheet->setTitle('Quantity dan Nilai Stok');
+        $worksheet->setTitle('Stok Quantity dan Nilai Persediaan');
 
         $worksheet->mergeCells('A1:H1');
         $worksheet->mergeCells('A2:H2');
@@ -214,9 +198,10 @@ class InventoryStockValueController extends Controller {
         
         $worksheet->getStyle('A1:H5')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
 
-        $worksheet->getStyle("A1:A2")->getFont()->setBold(true);
+        $worksheet->getStyle("A1:A3")->getFont()->setBold(true);
         $worksheet->setCellValue('A1', 'Raperind Motor');
-        $worksheet->setCellValue('A2', 'Quantity dan Nilai Stok');
+        $worksheet->setCellValue('A2', 'Stok Quantity dan Nilai Persediaan');
+        $worksheet->setCellValue('A3', 'Per Tanggal: ' . Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($endDate)));
 
         $column = 'G'; 
         $worksheet->setCellValue('A5', 'ID');
@@ -287,7 +272,7 @@ class InventoryStockValueController extends Controller {
         ob_end_clean();
 
         header('Content-type: application/vnd.ms-excel');
-        header('Content-Disposition: attachment;filename="quantity_dan_nilai_stok.xls"');
+        header('Content-Disposition: attachment;filename="stok_quantity_dan_nilai_persediaan.xls"');
         header('Cache-Control: max-age=0');
 
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');

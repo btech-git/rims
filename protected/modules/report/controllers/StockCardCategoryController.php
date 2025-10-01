@@ -153,10 +153,10 @@ class StockCardCategoryController extends Controller {
         $worksheet->getStyle('A5:N5')->getFont()->setBold(true);
         $worksheet->setCellValue('A5', 'No');
         $worksheet->setCellValue('B5', 'Category');
-        $worksheet->setCellValue('C5', 'ID');
-        $worksheet->setCellValue('D5', 'Code');
-        $worksheet->setCellValue('E5', 'Name');
-        $worksheet->setCellValue('F5', 'Brand');
+        $worksheet->setCellValue('C5', 'Brand');
+        $worksheet->setCellValue('D5', 'ID');
+        $worksheet->setCellValue('E5', 'Code');
+        $worksheet->setCellValue('F5', 'Name');
         $worksheet->setCellValue('G5', 'Satuan');
         $worksheet->setCellValue('H5', 'Nilai Awal');
         $worksheet->setCellValue('I5', 'Stok Awal');
@@ -190,11 +190,11 @@ class StockCardCategoryController extends Controller {
                 $inventoryValue = $averageCogs * $stokEnd;
             
                 $worksheet->setCellValue("A{$counter}", $incrementNumber);
-                $worksheet->setCellValue("B{$counter}", CHtml::value($header, 'id') . ' - ' . CHtml::value($header, 'code') . ' - ' . CHtml::value($header, 'name'));
-                $worksheet->setCellValue("C{$counter}", $stockRow['id']);
-                $worksheet->setCellValue("D{$counter}", $stockRow['name']);
-                $worksheet->setCellValue("E{$counter}", $stockRow['manufacturer_code']);
-                $worksheet->setCellValue("F{$counter}", $stockRow['brand'] . ' - ' . $stockRow['sub_brand'] . ' - ' . $stockRow['sub_brand_series']);
+                $worksheet->setCellValue("B{$counter}", CHtml::value($header, 'productMasterCategory.name') . ' - ' . CHtml::value($header, 'productSubMasterCategory.name') . ' - ' . CHtml::value($header, 'name'));
+                $worksheet->setCellValue("C{$counter}", $stockRow['brand'] . ' - ' . $stockRow['sub_brand'] . ' - ' . $stockRow['sub_brand_series']);
+                $worksheet->setCellValue("D{$counter}", $stockRow['id']);
+                $worksheet->setCellValue("E{$counter}", $stockRow['name']);
+                $worksheet->setCellValue("F{$counter}", $stockRow['manufacturer_code']);
                 $worksheet->setCellValue("G{$counter}", $stockRow['unit_name']);
                 $worksheet->setCellValue("H{$counter}", $stockBegin);
                 $worksheet->setCellValue("I{$counter}", $stockBeginValue);

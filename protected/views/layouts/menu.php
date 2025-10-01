@@ -547,11 +547,6 @@
                         'visible' => Yii::app()->user->checkAccess('employeeTimesheetCreate') || Yii::app()->user->checkAccess('employeeTimesheetEdit') || Yii::app()->user->checkAccess('employeeTimesheetView')
                     ),
                     array(
-                        'label' => 'Rekap Absensi', 
-                        'url' => array('/report/employeeAttendance/summary'), 
-                        'visible' => Yii::app()->user->checkAccess('absencyReport')
-                    ),
-                    array(
                         'label' => 'Pengajuan Cuti Karyawan', 
                         'url' => array('/master/employeeDayoff/adminDraft'), 
                         'visible' => Yii::app()->user->checkAccess('employeeLeaveApplicationCreate') || Yii::app()->user->checkAccess('employeeLeaveApplicationView')
@@ -570,6 +565,11 @@
                         'label' => 'Jadwal Karyawan', 
                         'url' => array('/master/employeeSchedule/index'), 
                         'visible' => Yii::app()->user->checkAccess('employeeScheduleView')
+                    ),
+                    array(
+                        'label' => 'Rekap Absensi Karyawan', 
+                        'url' => array('/report/employeeAttendance/summary'), 
+                        'visible' => Yii::app()->user->checkAccess('absencyReport')
                     ),
                     array(
                         'label' => 'Absensi Karyawan Tahunan', 

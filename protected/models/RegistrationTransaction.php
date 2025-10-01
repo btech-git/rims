@@ -1288,9 +1288,15 @@ class RegistrationTransaction extends MonthlyTransactionActiveRecord {
             ':month' => $month,
         );
         
-        $sql = "SELECT r.customer_id, r.id, r.transaction_number, r.transaction_date, r.grand_total, i.invoice_number, i.invoice_date, i.product_price, i.service_price, 
-                    i.ppn_total, i.total_price, i.transaction_tax_number, i.due_date, i.payment_left, i.payment_amount, h.payment_number, h.payment_date
+        $sql = "SELECT r.customer_id, r.id, r.transaction_number, r.transaction_date, r.grand_total, b.name AS branch_name, i.invoice_number, i.invoice_date, 
+                    i.product_price, i.service_price, i.ppn_total, i.total_price, i.transaction_tax_number, i.due_date, i.payment_left, i.payment_amount, 
+                    h.payment_number, h.payment_date, v.plate_number, c.name AS car_make, m.name AS car_model, s.name AS car_sub_model
                 FROM " . RegistrationTransaction::model()->tableName() . " r
+                INNER JOIN " . Branch::model()->tableName() . " b ON b.id = r.branch_id
+                INNER JOIN " . Vehicle::model()->tableName() . " v ON v.id = r.vehicle_id
+                INNER JOIN " . VehicleCarMake::model()->tableName() . " c ON c.id = v.car_make_id
+                INNER JOIN " . VehicleCarModel::model()->tableName() . " m ON m.id = v.car_model_id
+                INNER JOIN " . VehicleCarSubModel::model()->tableName() . " s ON s.id = v.car_sub_model_id
                 LEFT OUTER JOIN " . InvoiceHeader::model()->tableName() . " i ON r.id = i.registration_transaction_id
                 LEFT OUTER JOIN " . PaymentInDetail::model()->tableName() . " p ON i.id = p.invoice_header_id
                 LEFT OUTER JOIN " . PaymentIn::model()->tableName() . " h on h.id = p.payment_in_id
