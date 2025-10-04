@@ -101,40 +101,48 @@ class YearlyTireSaleTransactionController extends Controller {
 
     public function actionAjaxHtmlUpdateProductSubBrandSelect() {
         if (Yii::app()->request->isAjaxRequest) {
-            $productBrandId = isset($_GET['Product']['brand_id']) ? $_GET['Product']['brand_id'] : 0;
+            $brandId = isset($_GET['BrandId']) ? $_GET['BrandId'] : '';
+            $subBrandId = (isset($_GET['SubBrandId'])) ? $_GET['SubBrandId'] : '';
 
             $this->renderPartial('_productSubBrandSelect', array(
-                'productBrandId' => $productBrandId,
+                'brandId' => $brandId,
+                'subBrandId' => $subBrandId,
             ));
         }
     }
 
     public function actionAjaxHtmlUpdateProductSubBrandSeriesSelect() {
         if (Yii::app()->request->isAjaxRequest) {
-            $productSubBrandId = isset($_GET['Product']['sub_brand_id']) ? $_GET['Product']['sub_brand_id'] : 0;
+            $subBrandId = isset($_GET['SubBrandId']) ? $_GET['SubBrandId'] : '';
+            $subBrandSeriesId = (isset($_GET['SubBrandSeriesId'])) ? $_GET['SubBrandSeriesId'] : '';
 
             $this->renderPartial('_productSubBrandSeriesSelect', array(
-                'productSubBrandId' => $productSubBrandId,
+                'subBrandId' => $subBrandId,
+                'subBrandSeriesId' => $subBrandSeriesId,
             ));
         }
     }
 
     public function actionAjaxHtmlUpdateProductSubMasterCategorySelect() {
         if (Yii::app()->request->isAjaxRequest) {
-            $productMasterCategoryId = isset($_GET['Product']['product_master_category_id']) ? $_GET['Product']['product_master_category_id'] : 0;
+            $masterCategoryId = isset($_GET['MasterCategoryId']) ? $_GET['MasterCategoryId'] : '';
+            $subMasterCategoryId = isset($_GET['SubMasterCategoryId']) ? $_GET['SubMasterCategoryId'] : '';
 
             $this->renderPartial('_productSubMasterCategorySelect', array(
-                'productMasterCategoryId' => $productMasterCategoryId,
+                'masterCategoryId' => $masterCategoryId,
+                'subMasterCategoryId' => $subMasterCategoryId,
             ));
         }
     }
 
     public function actionAjaxHtmlUpdateProductSubCategorySelect() {
         if (Yii::app()->request->isAjaxRequest) {
-            $productSubMasterCategoryId = isset($_GET['Product']['product_sub_master_category_id']) ? $_GET['Product']['product_sub_master_category_id'] : 0;
+            $subMasterCategoryId = isset($_GET['SubMasterCategoryId']) ? $_GET['SubMasterCategoryId'] : '';
+            $subCategoryId = isset($_GET['SubCategoryId']) ? $_GET['SubCategoryId'] : '';
 
             $this->renderPartial('_productSubCategorySelect', array(
-                'productSubMasterCategoryId' => $productSubMasterCategoryId,
+                'subMasterCategoryId' => $subMasterCategoryId,
+                'subCategoryId' => $subCategoryId,
             ));
         }
     }

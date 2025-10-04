@@ -11,7 +11,10 @@
 </style>
 
 <div class="clearfix page-action">
-    <?php echo CHtml::link('<span class="fa fa-list"></span>Manage Delivery Order', Yii::app()->baseUrl . '/transaction/transactionDeliveryOrder/admin', array('class' => 'button cbutton right', 'visible' => Yii::app()->user->checkAccess("transaction.transactionDeliveryOrder.admin"))) ?>
+    <?php echo CHtml::link('<span class="fa fa-list"></span>Manage Delivery Order', Yii::app()->baseUrl . '/transaction/transactionDeliveryOrder/admin', array(
+        'class' => 'button cbutton right', 
+        'visible' => Yii::app()->user->checkAccess("transaction.transactionDeliveryOrder.admin"), 
+    )); ?>
     <h1>
         <?php if ($deliveryOrder->header->id == "") {
             echo "New Transaction Delivery Order";
@@ -92,8 +95,16 @@
                             <?php echo $form->labelEx($deliveryOrder->header, 'sender_id', array('class' => 'prefix')); ?>
                         </div>
                         <div class="small-8 columns">
-                            <?php echo $form->hiddenField($deliveryOrder->header, 'sender_id', array('value' => $deliveryOrder->header->isNewRecord ? Yii::app()->user->getId() : $deliveryOrder->header->sender_id, 'readonly' => true)); ?>
-                            <?php echo $form->textField($deliveryOrder->header, 'user_name', array('size' => 30, 'maxlength' => 30, 'value' => $deliveryOrder->header->isNewRecord ? Yii::app()->user->getName() : $deliveryOrder->header->user->username, 'readonly' => true)); ?>
+                            <?php echo $form->hiddenField($deliveryOrder->header, 'sender_id', array(
+                                'value' => $deliveryOrder->header->isNewRecord ? Yii::app()->user->getId() : $deliveryOrder->header->sender_id, 
+                                'readonly' => true
+                            )); ?>
+                            <?php echo $form->textField($deliveryOrder->header, 'user_name', array(
+                                'size' => 30, 
+                                'maxlength' => 30, 
+                                'value' => $deliveryOrder->header->isNewRecord ? Yii::app()->user->getName() : $deliveryOrder->header->sender->username, 
+                                'readonly' => true
+                            )); ?>
                             <?php echo $form->error($deliveryOrder->header, 'sender_id'); ?>
                         </div>
                     </div>
@@ -105,7 +116,12 @@
                             <?php echo $form->labelEx($deliveryOrder->header, 'sender_branch_id', array('class' => 'prefix')); ?>
                         </div>
                         <div class="small-8 columns">
-                            <?php echo $form->textField($deliveryOrder->header, 'branch_name', array('size' => 30, 'maxlength' => 30, 'value' => $deliveryOrder->header->senderBranch->name, 'readonly' => true)); ?>
+                            <?php echo $form->textField($deliveryOrder->header, 'branch_name', array(
+                                'size' => 30, 
+                                'maxlength' => 30, 
+                                'value' => $deliveryOrder->header->senderBranch->name, 
+                                'readonly' => true
+                            )); ?>
                             <?php echo $form->error($deliveryOrder->header, 'sender_branch_id'); ?>
                         </div>
                     </div>
@@ -172,7 +188,10 @@
                             </div>
                             <div class="small-8 columns">
                                 <?php echo $form->HiddenField($deliveryOrder->header, 'customer_id', array('readonly' => 'true')); ?>
-                                <?php echo $form->TextField($deliveryOrder->header, 'customer_name', array('readonly' => 'true', 'value' => $deliveryOrder->header->customer_id != "" ? $deliveryOrder->header->customer->name : '')); ?>
+                                <?php echo $form->TextField($deliveryOrder->header, 'customer_name', array(
+                                    'readonly' => 'true', 
+                                    'value' => $deliveryOrder->header->customer_id != "" ? $deliveryOrder->header->customer->name : '',
+                                )); ?>
                                 <?php echo $form->error($deliveryOrder->header, 'customer_id'); ?>
                             </div>
                         </div>

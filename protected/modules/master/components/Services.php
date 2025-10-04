@@ -267,6 +267,9 @@ class Services extends CComponent {
 
         foreach ($this->productDetails as $productDetail) {
             $productDetail->service_id = $this->header->id;
+            if ($productDetail->status == 'Inactive') {
+                $productDetail->quantity = 0;
+            }
                 
             $valid = $valid && $productDetail->save(false);
         }

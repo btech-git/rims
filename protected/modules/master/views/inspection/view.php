@@ -21,7 +21,7 @@ $this->breadcrumbs = array(
             </a>
         <?php } ?>
             
-        <?php echo CHtml::beginForm(array(''), 'get'); ?>
+        <?php echo CHtml::beginForm('', 'get'); ?>
         <?php echo CHtml::submitButton('Simpan ke Excel', array('name' => 'SaveExcel', 'class' => 'button success')); ?>
         <?php echo CHtml::endForm(); ?>
             

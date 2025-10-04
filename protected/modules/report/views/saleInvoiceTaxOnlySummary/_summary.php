@@ -42,6 +42,7 @@
                 <th class="width1-1">Faktur #</th>
                 <th class="width1-2">Tanggal</th>
                 <th class="width1-2">Customer</th>
+                <th class="width1-2">Asuransi</th>
                 <th class="width1-3">Amount</th>
                 <th class="width1-4">Parts (Rp)</th>
                 <th class="width1-5">Jasa (Rp)</th>
@@ -69,9 +70,8 @@
                         <?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($header->invoice_date))); ?>
                             <?php echo CHtml::encode(Yii::app()->dateFormatter->format('hh:mm:ss', strtotime($header->created_datetime))); ?>
                     </td>
-                    <td class="width1-2">
-                        <?php echo CHtml::encode(CHtml::value($header, 'registrationTransaction.customer.name')); ?>
-                    </td>
+                    <td class="width1-2"><?php echo CHtml::encode(CHtml::value($header, 'customer.name')); ?></td>
+                    <td class="width1-2"><?php echo CHtml::encode(CHtml::value($header, 'insuranceCompany.name')); ?></td>
                     <td class="width1-3" style="text-align: right">
                         <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', ($header->subTotalAfterTax))); ?>
                     </td>

@@ -57,7 +57,7 @@ Yii::app()->clientScript->registerCss('_report', '
                 <?php $movementTransactionInfo = isset($monthlyCustomerMovementReportData[$dataItem['id']]) ? $monthlyCustomerMovementReportData[$dataItem['id']] : ''; ?>
                 <tr class="items1">
                     <td style="text-align: center"><?php echo CHtml::encode($dataItem['transaction_number']); ?></td>
-                    <td style="text-align: center"><?php echo CHtml::encode($dataItem['transaction_date']); ?></td>
+                    <td style="text-align: center"><?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($dataItem['transaction_date']))); ?></td>
                     <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $dataItem['grand_total'])); ?></td>
                     <td style="text-align: center"><?php echo CHtml::encode($movementTransactionInfo); ?></td>
                     <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $dataItem['product_price'])); ?></td>
@@ -65,13 +65,13 @@ Yii::app()->clientScript->registerCss('_report', '
                     <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $dataItem['ppn_total'])); ?></td>
                     <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $dataItem['total_price'])); ?></td>
                     <td style="text-align: center"><?php echo CHtml::encode($dataItem['invoice_number']); ?></td>
-                    <td style="text-align: center"><?php echo CHtml::encode($dataItem['invoice_date']); ?></td>
+                    <td style="text-align: center"><?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($dataItem['invoice_date']))); ?></td>
                     <td style="text-align: center"><?php echo CHtml::encode($dataItem['transaction_tax_number']); ?></td>
-                    <td style="text-align: center"><?php echo CHtml::encode($dataItem['due_date']); ?></td>
-                    <td style="text-align: center"><?php echo CHtml::encode($dataItem['payment_left']); ?></td>
-                    <td style="text-align: center"><?php echo CHtml::encode($dataItem['payment_amount']); ?></td>
+                    <td style="text-align: center"><?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($dataItem['due_date']))); ?></td>
+                    <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $dataItem['payment_left'])); ?></td>
+                    <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $dataItem['payment_amount'])); ?></td>
                     <td style="text-align: center"><?php echo CHtml::encode($dataItem['payment_number']); ?></td>
-                    <td style="text-align: center"><?php echo CHtml::encode($dataItem['payment_date']); ?></td>
+                    <td style="text-align: center"><?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($dataItem['payment_date']))); ?></td>
                 </tr>
             <?php endforeach; ?>
         <?php endforeach; ?>

@@ -8,9 +8,6 @@
 
 <br />
 
-<?php $startDate = $year . '-01-01'; ?>
-<?php $endDate = $year . '-12-31'; ?>
-
 <table style="width: 310%">
     <thead>
         <tr>
@@ -49,7 +46,14 @@
                     <?php $invoiceTotal = isset($yearlyCustomerReceivableReportDataItem[$month]['invoice_total']) ? $yearlyCustomerReceivableReportDataItem[$month]['invoice_total'] : ''; ?>
                     <?php $invoiceOutstanding = isset($yearlyCustomerReceivableReportDataItem[$month]['invoice_outstanding']) ? $yearlyCustomerReceivableReportDataItem[$month]['invoice_outstanding'] : ''; ?>
                     <?php $invoicePayment = isset($yearlyCustomerReceivableReportDataItem[$month]['invoice_payment']) ? $yearlyCustomerReceivableReportDataItem[$month]['invoice_payment'] : ''; ?>
-                    <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $invoiceTotal)); ?></td>
+                    <td style="text-align: right">
+                        <?php echo CHtml::link(CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $invoiceTotal)), array(
+                            'transactionInfo', 
+                            'customerId' => $customerId, 
+                            'year' => $year, 
+                            'month' => $month
+                        ), array('target' => '_blank')); ?>
+                    </td>
                     <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $invoiceOutstanding)); ?></td>
                     <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $invoicePayment)); ?></td>
                     <?php $invoiceTotalSum += $invoiceTotal; ?>

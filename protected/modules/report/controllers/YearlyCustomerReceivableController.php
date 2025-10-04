@@ -55,6 +55,39 @@ class YearlyCustomerReceivableController extends Controller {
         ));
     }
     
+    public function actionTransactionInfo($customerId, $year, $month) {
+        set_time_limit(0);
+        ini_set('memory_limit', '1024M');
+
+//        $page = (isset($_GET['page'])) ? $_GET['page'] : 1;
+        
+        $dataProvider = InvoiceHeader::model()->searchByYearlyCustomerReceivableInfo($customerId, $year, $month);
+        $customer = Customer::model()->findByPk($customerId);
+        
+        $monthList =  array(
+            1 => 'Jan',
+            2 => 'Feb',
+            3 => 'Mar',
+            4 => 'Apr',
+            5 => 'May',
+            6 => 'Jun',
+            7 => 'Jul',
+            8 => 'Aug',
+            9 => 'Sep',
+            10 => 'Oct',
+            11 => 'Nov',
+            12 => 'Dec',
+        );
+
+        $this->render('transactionInfo', array(
+            'dataProvider' => $dataProvider,
+            'year' => $year,
+            'month' => $month,
+            'customer' => $customer,
+            'monthList' => $monthList,
+        ));
+    }
+
     protected function saveToExcel($yearlyCustomerReceivableReportData, $year) {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');

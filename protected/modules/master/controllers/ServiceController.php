@@ -76,8 +76,9 @@ class ServiceController extends Controller {
 
         $product = new Product('search');
         $product->unsetAttributes();  // clear any default values
-        if (isset($_GET['Product']))
+        if (isset($_GET['Product'])) {
             $product->attributes = $_GET['Product'];
+        }
 
         $productCriteria = new CDbCriteria;
         $productCriteria->compare('code', $product->code . '%', true, 'AND', false);
@@ -97,14 +98,16 @@ class ServiceController extends Controller {
             ),
         ));
 
-        if (isset($_POST['Cancel']))
+        if (isset($_POST['Cancel'])) {
             $this->redirect(array('view', 'id' => $service->header->id));
+        }
 
         if (isset($_POST['Submit'])) {
             $this->loadState($service);
 
-            if ($service->save(Yii::app()->db))
+            if ($service->save(Yii::app()->db)) {
                 $this->redirect(array('view', 'id' => $service->header->id));
+            }
         }
 
         $this->render('addProduct', array(

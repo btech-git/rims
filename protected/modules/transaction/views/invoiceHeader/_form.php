@@ -63,6 +63,20 @@
                         </div>
                     </div>
                 </div>
+                
+                <?php if (!empty($invoice->header->id)): ?>
+                    <div class="field">
+                        <div class="row collapse">
+                            <div class="medium-4 columns">
+                                <?php echo $form->labelEx($invoice->header, 'transaction_tax_number', array('class' => 'prefix')); ?>
+                            </div>
+                            <div class="medium-8 columns">
+                                <?php echo $form->textField($invoice->header, 'transaction_tax_number'); ?>
+                                <?php echo $form->error($invoice->header, 'transaction_tax_number'); ?>
+                            </div>
+                        </div>
+                    </div>
+                <?php endif; ?>
             </div>
 
             <div class="small-12 medium-6 columns">
@@ -95,22 +109,23 @@
                         </div>
                         <div class="small-8 columns">
                             <?php echo CHtml::encode(CHtml::value($invoice->header, 'customer.tenor')); ?>
-                            <?php /*$this->widget('zii.widgets.jui.CJuiDatePicker',array(
-                                'model' => $invoice->header,
-                                'attribute' => "due_date",
-                                'options'=>array(
-                                    'dateFormat' => 'yy-mm-dd',
-                                    'changeMonth'=>true,
-                                    'changeYear'=>true,
-                                ),
-                                'htmlOptions'=>array(
-                                    'readonly' => true,
-                                ),
-                            ));*/ ?>
-                            <?php //echo $form->error($invoice->header, 'due_date'); ?>
                         </div>
                     </div>
                 </div>
+                
+                <?php if (!empty($invoice->header->id)): ?>
+                    <div class="field">
+                        <div class="row collapse">
+                            <div class="medium-4 columns">
+                                <?php echo $form->labelEx($invoice->header, 'coretax_receipt_number', array('class' => 'prefix')); ?>
+                            </div>
+                            <div class="medium-8 columns">
+                                <?php echo $form->textField($invoice->header, 'coretax_receipt_number'); ?>
+                                <?php echo $form->error($invoice->header, 'coretax_receipt_number'); ?>
+                            </div>
+                        </div>
+                    </div>
+                <?php endif; ?>
             </div>
         </div>
         

@@ -35,10 +35,11 @@ Yii::app()->clientScript->registerScript('search', "
 
 <div id="maincontent">
     <div class="clearfix page-action">
+                <?php echo CHtml::link('<span class="fa fa-plus"></span>Permintaan Harga', Yii::app()->baseUrl . '/frontDesk/productPricingRequest/create', array('class' => 'button success right')) ?>
         <h2>Manage Permintaan Harga</h2>
     </div>
 
-    <div class="search-bar">
+<!--    <div class="search-bar">
         <div class="clearfix button-bar">
             <a href="#" class="search-button right button cbutton secondary">Advanced Search</a>  
             <div class="clearfix"></div>
@@ -46,14 +47,14 @@ Yii::app()->clientScript->registerScript('search', "
                 <?php /*$this->renderPartial('_search', array(
                     'model' => $model,
                 ));*/ ?>
-            </div><!-- search-form -->
+            </div> search-form 
         </div>
-    </div>
+    </div>-->
     
     <div class="grid-view">
         <?php $this->widget('zii.widgets.grid.CGridView', array(
             'id' => 'product-pricing-grid',
-            'dataProvider' => $model->search(),
+            'dataProvider' => $dataProvider,
             'filter' => $model,
             'template' => '{items}<div class="clearfix">{summary}{pager}</div>',
             'pager' => array(
@@ -62,18 +63,28 @@ Yii::app()->clientScript->registerScript('search', "
             ),
             'columns' => array(
                 array(
-                    'name' => 'product_name', 
-                    'value' => '$data->product_name',
+                    'name' => 'transaction_number', 
+                    'value' => '$data->transaction_number',
                 ),
+                array(
+                    'name' => 'vehicle_car_make_id', 
+                    'value' => '$data->vehicleCarMake->name',
+                ),
+                array(
+                    'name' => 'vehicle_car_model_id', 
+                    'value' => '$data->vehicleCarModel->name',
+                ),
+                array(
+                    'name' => 'vehicle_car_sub_model_id', 
+                    'value' => '$data->vehicleCarSubModel->name',
+                ),
+                'production_year',
                 array(
                     'name' => 'request_date',
                     'value' => '$data->request_date',
                 ),
                 array(
-                    'name' => 'quantity',
-                    'value' => '$data->quantity',
-                ),
-                array(
+                    'header' => 'User Request',
                     'name' => 'user_id_request',
                     'value' => '$data->userIdRequest->username',
                 ),
@@ -82,24 +93,13 @@ Yii::app()->clientScript->registerScript('search', "
                     'value' => '$data->request_note',
                 ),
                 array(
-                    'name' => 'branch_id_request',
-                    'value' => '$data->branchIdRequest->code',
-                ),
-                array(
                     'name' => 'reply_date',
                     'value' => '$data->reply_date',
                 ),
                 array(
-                    'name' => 'recommended_price',
-                    'value' => '$data->recommended_price',
-                ),
-                array(
+                    'header' => 'User Reply',
                     'name' => 'user_id_reply',
                     'value' => 'empty($data->user_id_reply) ? "" : $data->userIdReply->username',
-                ),
-                array(
-                    'name' => 'branch_id_reply',
-                    'value' => 'empty($data->branch_id_reply) ? "" : $data->branchIdReply->code',
                 ),
                 array(
                     'name' => 'reply_note',
@@ -107,17 +107,7 @@ Yii::app()->clientScript->registerScript('search', "
                 ),
                 array(
                     'class' => 'CButtonColumn',
-                    'template' => '{reply} {show}',
-                    'buttons' => array(
-                        'reply' => array(
-                            'label' => 'reply',
-                            'url' => 'Yii::app()->createUrl("frontDesk/productPricingRequest/update", array("id"=>$data->id))',
-                        ),
-                        'show' => array(
-                            'label' => 'show',
-                            'url' => 'Yii::app()->createUrl("frontDesk/productPricingRequest/show", array("id"=>$data->id))',
-                        ),
-                    ),
+                    'template' => '{update} {view}',
                 ),
             ),
         )); ?>

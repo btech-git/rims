@@ -23,7 +23,19 @@ $this->breadcrumbs = array(
                                     <span class="prefix">Customer</span>
                                 </div>
                                 <div class="small-8 columns">
-                                    <?php //echo CHtml::textField('PageSize', '', array('size' => 3)); ?>
+                                    <?php echo CHtml::textField('CustomerName', $customerName, array(
+                                        'class' => 'form-select',
+//                                        'onchange' => CHtml::ajax(array(
+//                                            'type' => 'GET',
+//                                            'url' => CController::createUrl('ajaxHtmlUpdateVehicleEntryDataTable'),
+//                                            'update' => '#vehicle_entry_status_data_container',
+//                                        )) . 
+//                                        CHtml::ajax(array(
+//                                            'type' => 'GET',
+//                                            'url' => CController::createUrl('ajaxHtmlUpdateVehicleStatusDataTable'),
+//                                            'update' => '#vehicle_status_data_container',
+//                                        )),
+                                    )); ?>
                                 </div>
                             </div>
                         </div>
@@ -38,16 +50,16 @@ $this->breadcrumbs = array(
                                 <div class="small-8 columns">
                                     <?php echo CHtml::textField('PlateNumber', $plateNumber, array(
                                         'class' => 'form-select',
-                                        'onchange' => CHtml::ajax(array(
-                                            'type' => 'GET',
-                                            'url' => CController::createUrl('ajaxHtmlUpdateVehicleEntryDataTable'),
-                                            'update' => '#vehicle_entry_status_data_container',
-                                        )) . 
-                                        CHtml::ajax(array(
-                                            'type' => 'GET',
-                                            'url' => CController::createUrl('ajaxHtmlUpdateVehicleStatusDataTable'),
-                                            'update' => '#vehicle_status_data_container',
-                                        )),
+//                                        'onchange' => CHtml::ajax(array(
+//                                            'type' => 'GET',
+//                                            'url' => CController::createUrl('ajaxHtmlUpdateVehicleEntryDataTable'),
+//                                            'update' => '#vehicle_entry_status_data_container',
+//                                        )) . 
+//                                        CHtml::ajax(array(
+//                                            'type' => 'GET',
+//                                            'url' => CController::createUrl('ajaxHtmlUpdateVehicleStatusDataTable'),
+//                                            'update' => '#vehicle_status_data_container',
+//                                        )),
                                     )); ?>
                                 </div>
                             </div>
@@ -75,11 +87,11 @@ $this->breadcrumbs = array(
                                             'class' => 'form-select',
                                             'style'=>'margin-bottom:0px;',
                                             'placeholder'=>'Date From',
-                                            'onchange' => CHtml::ajax(array(
-                                                'type' => 'GET',
-                                                'url' => CController::createUrl('ajaxHtmlUpdateVehicleEntryDataTable'),
-                                                'update' => '#vehicle_entry_status_data_container',
-                                            )),
+//                                            'onchange' => CHtml::ajax(array(
+//                                                'type' => 'GET',
+//                                                'url' => CController::createUrl('ajaxHtmlUpdateVehicleEntryDataTable'),
+//                                                'update' => '#vehicle_entry_status_data_container',
+//                                            )),
                                         ),
                                     )); ?>
                                 </div>
@@ -97,11 +109,11 @@ $this->breadcrumbs = array(
                                             'class' => 'form-select',
                                             'style'=>'margin-bottom:0px;',
                                             'placeholder'=>'Date To',
-                                            'onchange' => CHtml::ajax(array(
-                                                'type' => 'GET',
-                                                'url' => CController::createUrl('ajaxHtmlUpdateVehicleEntryDataTable'),
-                                                'update' => '#vehicle_entry_status_data_container',
-                                            )),
+//                                            'onchange' => CHtml::ajax(array(
+//                                                'type' => 'GET',
+//                                                'url' => CController::createUrl('ajaxHtmlUpdateVehicleEntryDataTable'),
+//                                                'update' => '#vehicle_entry_status_data_container',
+//                                            )),
                                         ),
                                     )); ?>
                                 </div>
@@ -128,11 +140,11 @@ $this->breadcrumbs = array(
                                             'class' => 'form-select',
                                             'style'=>'margin-bottom:0px;',
                                             'placeholder'=>'Date From',
-                                            'onchange' => CHtml::ajax(array(
-                                                'type' => 'GET',
-                                                'url' => CController::createUrl('ajaxHtmlUpdateVehicleStatusDataTable'),
-                                                'update' => '#vehicle_status_data_container',
-                                            )),
+//                                            'onchange' => CHtml::ajax(array(
+//                                                'type' => 'GET',
+//                                                'url' => CController::createUrl('ajaxHtmlUpdateVehicleStatusDataTable'),
+//                                                'update' => '#vehicle_status_data_container',
+//                                            )),
                                         ),
                                     )); ?>
                                 </div>
@@ -150,11 +162,11 @@ $this->breadcrumbs = array(
                                             'class' => 'form-select',
                                             'style'=>'margin-bottom:0px;',
                                             'placeholder'=>'Date To',
-                                            'onchange' => CHtml::ajax(array(
-                                                'type' => 'GET',
-                                                'url' => CController::createUrl('ajaxHtmlUpdateVehicleStatusDataTable'),
-                                                'update' => '#vehicle_status_data_container',
-                                            )),
+//                                            'onchange' => CHtml::ajax(array(
+//                                                'type' => 'GET',
+//                                                'url' => CController::createUrl('ajaxHtmlUpdateVehicleStatusDataTable'),
+//                                                'update' => '#vehicle_status_data_container',
+//                                            )),
                                         ),
                                     )); ?>
                                 </div>
@@ -165,6 +177,7 @@ $this->breadcrumbs = array(
 
                 <div class="clear"></div>
                 <div class="row buttons">
+                    <?php echo CHtml::submitButton('Submit', array('name' => 'Submit'));  ?>
                     <?php echo CHtml::submitButton('Hapus', array('name' => 'ResetFilter'));  ?>
                     <?php echo CHtml::submitButton('Simpan ke Excel', array('name' => 'SaveExcel')); ?>
                 </div>

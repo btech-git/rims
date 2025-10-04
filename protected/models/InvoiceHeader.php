@@ -2129,4 +2129,22 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
         
         return $resultSet;
     }    
+    
+    public function searchByYearlyCustomerReceivableInfo($customerId, $year, $month) {
+
+        $criteria = new CDbCriteria;
+
+        $criteria->addCondition("t.customer_id = :customer_id AND t.status NOT LIKE '%CANCEL%' AND MONTH(t.invoice_date) = :invoice_month AND YEAR(t.invoice_date) = :invoice_year");
+        $criteria->params = array(':invoice_month' => $month, ':invoice_year' => $year, ':customer_id' => $customerId);
+        
+        return new CActiveDataProvider($this, array(
+            'criteria' => $criteria,
+            'sort' => array(
+                'defaultOrder' => 't.invoice_date ASC',
+            ),
+            'pagination' => array(
+                'pageSize' => 100,
+            ),
+        ));
+    }
 }

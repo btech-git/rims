@@ -116,6 +116,7 @@
                             'attribute' => "date_from",
                             // additional javascript options for the date picker plugin
                             'options' => array(
+                                'minDate' => '-1W',
                                 'dateFormat' => 'yy-mm-dd',
                                 'changeMonth' => true,
                                 'changeYear' => true,
@@ -161,6 +162,7 @@
                             'attribute' => "date_to",
                             // additional javascript options for the date picker plugin
                             'options' => array(
+                                'minDate' => '-1W',
                                 'dateFormat' => 'yy-mm-dd',
                                 'changeMonth' => true,
                                 'changeYear' => true,

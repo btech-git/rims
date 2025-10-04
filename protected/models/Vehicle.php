@@ -249,16 +249,14 @@ class Vehicle extends CActiveRecord {
         $criteria->compare('insurance_company_id', $this->insurance_company_id);
 
         $criteria->together = 'true';
-        //$criteria->with = array('carMake','carModel','carSubModel','color');
         $criteria->with = array('carMake', 'carModel', 'carSubModel');
         $criteria->compare('carMake.name', $this->car_make, true);
         $criteria->compare('carModel.name', $this->car_model, true);
         $criteria->compare('carSubModel.name', $this->car_sub_model, true);
-        //$criteria->compare('color.name', $this->color, true);
 
         $vehiclePlateNumberOperator = empty($this->plate_number) ? '=' : 'LIKE';
         $vehiclePlateNumberValue = empty($this->plate_number) ? '' : "%{$this->plate_number}%";
-        $criteria->addCondition("t.plate_number {$vehiclePlateNumberOperator} :plate_number");
+        $criteria->addCondition("t.plate_number {$vehiclePlateNumberOperator} :plate_number AND t.status_location = 'Keluar Lokasi'");
         $criteria->params[':plate_number'] = $vehiclePlateNumberValue;
 
         return new CActiveDataProvider($this, array(
@@ -370,7 +368,7 @@ class Vehicle extends CActiveRecord {
         return $this->carMake->name . ' ' . $this->carModel->name . ' ' . $this->carSubModel->name;
     }
     
-    public function searchByEntryStatusLocation() {
+    public function searchByEntryStatusLocation($customerName) {
         $criteria = new CDbCriteria;
 
         $criteria->with = array(
@@ -390,6 +388,7 @@ class Vehicle extends CActiveRecord {
         $criteria->compare('t.color_id', $this->color_id);
         $criteria->compare('t.year', $this->year, true);
         $criteria->compare('t.notes', $this->notes, true);
+        $criteria->compare('customer.name', $customerName, true);
 
         $criteria->order = 't.entry_datetime ASC';
         $criteria->addCondition("t.status_location LIKE '%Masuk%'");
@@ -402,7 +401,7 @@ class Vehicle extends CActiveRecord {
         ));
     }
     
-    public function searchByProcessStatusLocation() {
+    public function searchByProcessStatusLocation($customerName) {
         $criteria = new CDbCriteria;
 
         $criteria->with = array(
@@ -422,6 +421,7 @@ class Vehicle extends CActiveRecord {
         $criteria->compare('t.color_id', $this->color_id);
         $criteria->compare('t.year', $this->year, true);
         $criteria->compare('t.notes', $this->notes, true);
+        $criteria->compare('customer.name', $customerName, true);
 
         $criteria->order = 't.start_service_datetime ASC';
         $criteria->addCondition("t.status_location LIKE '%Progress%'");
@@ -429,7 +429,7 @@ class Vehicle extends CActiveRecord {
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
             'pagination' => array(
-                'pageSize' => 25,
+                'pageSize' => 5,
             ),
         ));
     }

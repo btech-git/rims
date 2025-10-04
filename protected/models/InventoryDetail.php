@@ -396,4 +396,26 @@ class InventoryDetail extends CActiveRecord {
 
         return $value;
     }
+    
+    public static function getInventoryCurrentStocks($productIds, $branchId) {
+        $branchConditionSql = '';
+        $productIdsSql = empty($productIds) ? 'NULL' : implode(',', $productIds);
+        
+        $params = array();
+        
+        if (!empty($branchId)) {
+            $branchConditionSql = ' AND w.branch_id = :branch_id';
+            $params[':branch_id'] = $branchId;
+        }
+        
+        $sql = "SELECT i.product_id, COALESCE(SUM(i.stock_in + i.stock_out), 0) AS total_stock
+                FROM " . InventoryDetail::model()->tableName() . " i
+                INNER JOIN " . Warehouse::model()->tableName() . " w on w.id = i.warehouse_id
+                WHERE i.product_id IN ({$productIdsSql}) AND w.status = 'Active' AND i.transaction_date >= '" . AppParam::BEGINNING_TRANSACTION_DATE . "'" . $branchConditionSql . "
+                GROUP BY i.product_id";
+
+        $value = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
+
+        return $value;
+    }
 }

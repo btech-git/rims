@@ -232,7 +232,7 @@ class MovementOutHeader extends MonthlyTransactionActiveRecord {
     public static function getMonthlyCustomerMovementReport($registrationTransactionIds) {
         $registrationTransactionIdsSql = empty($registrationTransactionIds) ? 'NULL' : implode(',', $registrationTransactionIds);
         
-        $sql = "SELECT registration_transaction_id, GROUP_CONCAT(CONCAT(movement_out_no, ' - ', date_posting)) AS movement_transaction_info 
+        $sql = "SELECT registration_transaction_id, GROUP_CONCAT(CONCAT(movement_out_no, ' - ', DATE(date_posting))) AS movement_transaction_info 
                 FROM " . MovementOutHeader::model()->tableName() . "
                 WHERE registration_transaction_id IN ({$registrationTransactionIdsSql}) AND user_id_cancelled IS NULL
                 GROUP BY registration_transaction_id";

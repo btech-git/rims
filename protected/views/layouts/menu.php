@@ -131,7 +131,7 @@
                     ),
                     array(
                         'label' => 'Permintaan Harga', 
-                        'url' => array('/frontDesk/productPricingRequest/create')
+                        'url' => array('/frontDesk/productPricingRequest/admin')
 //                        'visible' => (Yii::app()->user->checkAccess('inspectionCreate') || Yii::app()->user->checkAccess('inspectionEdit'))
                     ),
                     array(
@@ -249,7 +249,7 @@
                     ),
                     array(
                         'label' => 'Permintaan Harga Cabang', 
-                        'url' => array('/frontDesk/productPricingRequest/admin'), 
+                        'url' => array('/frontDesk/productPricingRequest/adminPending'), 
 //                        'visible' => (Yii::app()->user->checkAccess('workOrderExpenseCreate') || Yii::app()->user->checkAccess('workOrderExpenseEdit'))
                     ),
                     array('label' => 'PELUNASAN', 'url' => array('#'), 'itemOptions' => array('class' => 'title', 'style' => 'text-decoration: underline')),

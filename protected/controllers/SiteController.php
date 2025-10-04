@@ -75,7 +75,7 @@ class SiteController extends Controller {
         $service = Search::bind(new Service('search'), isset($_GET['Service']) ? $_GET['Service'] : '');
 
         $endDate = date('Y-m-d');
-        $pageNumber = isset($_GET['page']) ? $_GET['page'] : 1;
+//        $pageNumber = isset($_GET['page']) ? $_GET['page'] : 1;
         $vehicleDataProvider = $vehicle->searchByDashboard();
         $productDataProvider = $product->search(); //ByStockCheck($pageNumber, $endDate, '>=');
         $customerDataProvider = $customer->searchByDashboard();

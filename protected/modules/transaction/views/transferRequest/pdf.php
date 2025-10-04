@@ -59,14 +59,14 @@ function tanggal($date) {
                         <td style="width: 5%">:</td>
                         <td><?php echo tanggal(CHtml::encode(CHtml::value($transferRequest, 'estimate_arrival_date'))); ?></td>
                     </tr>
-                    <tr>
+<!--                    <tr>
                         <td>User Request</td>
                         <td style="width: 5%">:</td>
-                        <td><?php echo tanggal(CHtml::encode(CHtml::value($transferRequest, 'user.username'))); ?></td>
+                        <td><?php /*echo CHtml::encode(CHtml::value($transferRequest, 'user.username')); ?></td>
                         <td>Approved oleh Cabang</td>
                         <td style="width: 5%">:</td>
-                        <td><?php echo tanggal(CHtml::encode(CHtml::value($transferRequest, 'destinationApprovedBy.username'))); ?></td>
-                    </tr>
+                        <td><?php echo tanggal(CHtml::encode(CHtml::value($transferRequest, 'destinationApprovedBy.username')));*/ ?></td>
+                    </tr>-->
                 </table>
             </div>
 
@@ -143,8 +143,10 @@ function tanggal($date) {
                         <td style="width: 30%">&nbsp;</td>
                     </tr>
                     <tr>
-                        <td style="text-align: center; border-right: 1px solid; border-top: 1px solid;">(Mella)</td>
-                        <td style="text-align: center; border-right: 1px solid; border-top: 1px solid;">(Regina)</td>
+                        <td style="text-align: center; border-right: 1px solid; border-top: 1px solid;">
+                            (<?php echo CHtml::encode(CHtml::value($transferRequest, 'user.username')); ?>)
+                        </td>
+                        <td style="text-align: center; border-right: 1px solid; border-top: 1px solid;"></td>
                         <td style="text-align: center; border-top: 1px solid;">(Newira)</td>
                     </tr>
                 </table>

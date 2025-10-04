@@ -180,6 +180,20 @@ class SaleEstimationHeader extends MonthlyTransactionActiveRecord {
         ));
     }
 
+    /**
+     * Returns the static model of the specified AR class.
+     * Please note that you should have this exact method in all your CActiveRecord descendants!
+     * @param string $className active record class name.
+     * @return SaleEstimationHeader the static model class
+     */
+    public static function model($className = __CLASS__) {
+        return parent::model($className);
+    }
+
+    public function getSubTotalProductService() {
+        return $this->sub_total_product + $this->sub_total_service;
+    }
+
     public function searchByRegistration() {
         // @todo Please modify the following code to remove attributes that should not be searched.
 
@@ -218,20 +232,80 @@ class SaleEstimationHeader extends MonthlyTransactionActiveRecord {
 
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
+            'sort' => array(
+                'defaultOrder' => 'transaction_date DESC',
+            ),
+            'pagination' => array(
+                'pageSize' => 25,
+            ),
         ));
     }
 
-    /**
-     * Returns the static model of the specified AR class.
-     * Please note that you should have this exact method in all your CActiveRecord descendants!
-     * @param string $className active record class name.
-     * @return SaleEstimationHeader the static model class
-     */
-    public static function model($className = __CLASS__) {
-        return parent::model($className);
+    public function searchByOutstanding() {
+        // @todo Please modify the following code to remove attributes that should not be searched.
+
+        $criteria = new CDbCriteria;
+
+        $criteria->compare('id', $this->id);
+        $criteria->compare('transaction_number', $this->transaction_number, true);
+        $criteria->compare('transaction_date', $this->transaction_date, true);
+        $criteria->compare('transaction_time', $this->transaction_time, true);
+        $criteria->compare('repair_type', $this->repair_type, true);
+        $criteria->compare('problem', $this->problem, true);
+        $criteria->compare('total_quantity_service', $this->total_quantity_service);
+        $criteria->compare('sub_total', $this->sub_total, true);
+        $criteria->compare('sub_total_service', $this->sub_total_service, true);
+        $criteria->compare('discount_price_service', $this->discount_price_service, true);
+        $criteria->compare('total_price_service', $this->total_price_service, true);
+        $criteria->compare('total_quantity_product', $this->total_quantity_product);
+        $criteria->compare('sub_total_product', $this->sub_total_product, true);
+        $criteria->compare('discount_price_product', $this->discount_price_product, true);
+        $criteria->compare('total_price_product', $this->total_price_product, true);
+        $criteria->compare('grand_total', $this->grand_total, true);
+        $criteria->compare('status', $this->status, true);
+        $criteria->compare('vehicle_mileage', $this->vehicle_mileage);
+        $criteria->compare('note', $this->note, true);
+        $criteria->compare('created_datetime', $this->created_datetime, true);
+        $criteria->compare('edited_datetime', $this->edited_datetime, true);
+        $criteria->compare('customer_id', $this->customer_id);
+        $criteria->compare('vehicle_id', $this->vehicle_id);
+        $criteria->compare('branch_id', $this->branch_id);
+        $criteria->compare('user_id_created', $this->user_id_created);
+        $criteria->compare('user_id_edited', $this->user_id_edited);
+        $criteria->compare('employee_id_sale_person', $this->employee_id_sale_person);
+        $criteria->compare('tax_product_percentage', $this->tax_product_percentage, true);
+        $criteria->compare('tax_product_amount', $this->tax_product_amount, true);
+        $criteria->compare('tax_service_percentage', $this->tax_service_percentage, true);
+        $criteria->compare('tax_service_amount', $this->tax_service_amount, true);
+
+        $criteria->addCondition("NOT EXISTS (
+            SELECT r.sale_estimation_header_id
+            FROM " . RegistrationTransaction::model()->tableName() . " r
+            WHERE t.id = r.sale_estimation_header_id AND r.status NOT LIKE '%CANCEL%'
+        ) AND t.vehicle_id IS NULL");
+        
+        return new CActiveDataProvider($this, array(
+            'criteria' => $criteria,
+            'sort' => array(
+                'defaultOrder' => 'transaction_date DESC',
+            ),
+            'pagination' => array(
+                'pageSize' => 25,
+            ),
+        ));
     }
 
-    public function getSubTotalProductService() {
-        return $this->sub_total_product + $this->sub_total_service;
+    public function getTotalDiscount() {
+        $total = 0;
+        
+        foreach ($this->saleEstimationProductDetails as $detail) {
+            $total += $detail->discountAmount;
+        }
+        
+        foreach ($this->saleEstimationServiceDetails as $detail) {
+            $total += $detail->discountAmount;
+        }
+        
+        return $total;
     }
 }

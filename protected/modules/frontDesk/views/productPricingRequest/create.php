@@ -9,5 +9,6 @@ $this->breadcrumbs = array(
 ?>
 
 <div id="maincontent">
-    <?php $this->renderPartial('_form', array('model' => $model)); ?>
+    <h1>New Permintaan Harga</h1>
+    <?php $this->renderPartial('_form', array('productPricingRequest' => $productPricingRequest,)); ?>
 </div>

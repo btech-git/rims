@@ -116,4 +116,18 @@ class SaleEstimationServiceDetail extends CActiveRecord {
         return parent::model($className);
     }
 
+    public function getDiscountAmount() {
+        $discountPrice = 0;
+
+        if (!empty($this->discount_type)) {
+            $discountPrice = ($this->discount_type == 'Nominal') ? $this->discount_value : $this->price * $this->discount_value / 100;
+        }
+
+        return $discountPrice;
+    }
+
+    public function getTotalAmount() {
+
+        return $this->price - $this->discountAmount;
+    }
 }
