@@ -68,7 +68,7 @@ Yii::app()->clientScript->registerScript('search', "
                 ),
                 array(
                     'name' => 'vehicle_car_make_id', 
-                    'value' => '$data->getCarMakeModelSubCombination',
+                    'value' => '$data->carMakeModelSubCombination',
                 ),
                 'production_year',
                 array(
