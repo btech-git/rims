@@ -84,6 +84,7 @@ Yii::app()->clientScript->registerScript('search', "
                 array(
                     'name' => 'request_note',
                     'value' => '$data->request_note',
+                    'type'=>array('shortText','length'=>30),
                 ),
                 array(
                     'name' => 'reply_date',
@@ -97,6 +98,7 @@ Yii::app()->clientScript->registerScript('search', "
                 array(
                     'name' => 'reply_note',
                     'value' => '$data->reply_note',
+                    'type'=>array('shortText','length'=>30),
                 ),
                 array(
                     'class' => 'CButtonColumn',
