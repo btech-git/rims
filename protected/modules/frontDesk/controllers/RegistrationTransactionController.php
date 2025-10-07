@@ -471,9 +471,7 @@ class RegistrationTransactionController extends Controller {
         $stylesheet = file_get_contents(Yii::getPathOfAlias('webroot') . '/css/pdf.css');
         $mPDF1->SetTitle('Tanda Terima');
         $mPDF1->WriteHTML($stylesheet, 1);
-//        $mPDF1->SetWatermarkText('LUNAS');
-//        $mPDF1->showWatermarkText = true;
-//        $mPDF1->watermark_font = 'DejaVuSansCondensed'; 
+        
         $mPDF1->WriteHTML($this->renderPartial('pdfPayment', array(
             'invoiceHeader' => $invoiceHeader,
             'invoiceDetailsData' => $invoiceDetailsData,
@@ -483,6 +481,36 @@ class RegistrationTransactionController extends Controller {
             'branch' => $branch,
         ), true));
         $mPDF1->Output('Tanda Terima ' . $invoiceHeader->invoice_number . '.pdf', 'I');
+    }
+
+    public function getInvoiceDetailsData($invoiceHeader) {
+        $pageSize = 9;
+        
+        $invoiceDetails = array();
+        foreach ($invoiceHeader->invoiceDetails as $invoiceDetail) {
+            if (!empty($invoiceDetail->product_id)) {
+                $invoiceDetails[] = $invoiceDetail;
+            }
+        }
+        foreach ($invoiceHeader->invoiceDetails as $invoiceDetail) {
+            if (!empty($invoiceDetail->service_id)) {
+                $invoiceDetails[] = $invoiceDetail;
+            }
+        }
+        
+        $invoiceDetailsData = array();
+        foreach ($invoiceDetails as $i => $invoiceDetail) {
+            $currentPage = intval($i / $pageSize);
+            if (!empty($invoiceDetail->product_id)) {
+                $invoiceDetailsData['items'][$currentPage]['p'][] = $invoiceDetail;
+                $invoiceDetailsData['lastpage']['p'] = $currentPage;
+            } else if (!empty($invoiceDetail->service_id)) {
+                $invoiceDetailsData['items'][$currentPage]['s'][] = $invoiceDetail;
+                $invoiceDetailsData['lastpage']['s'] = $currentPage;
+            }
+        }
+        
+        return $invoiceDetailsData;
     }
 
     public function actionAdminWo() {

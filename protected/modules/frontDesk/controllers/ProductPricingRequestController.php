@@ -74,6 +74,7 @@ class ProductPricingRequestController extends Controller {
         $productPricingRequest->header->request_date = date('Y-m-d');
         $productPricingRequest->header->request_time = date('H:i:s');
         $productPricingRequest->header->branch_id_request = Yii::app()->user->branch_id;
+        $productPricingRequest->header->status = 'Draft';
         $productPricingRequest->header->user_id_reply = null;
         $productPricingRequest->header->reply_date = null;
         $productPricingRequest->header->reply_time = null;
@@ -84,17 +85,7 @@ class ProductPricingRequestController extends Controller {
             $this->loadState($productPricingRequest);
             $productPricingRequest->generateCodeNumber(Yii::app()->dateFormatter->format('M', strtotime($productPricingRequest->header->request_date)), Yii::app()->dateFormatter->format('yyyy', strtotime($productPricingRequest->header->request_date)), $productPricingRequest->header->branch_id_request);
 
-//            $fileName = CUploadedFile::getInstanceByName('file');
-//            if ($fileName !== null) {
-//                $productPricingRequest->header->file = $fileName;
-//                $productPricingRequest->header->extension = $fileName->extensionName;
-//            }
-
             if ($productPricingRequest->save(Yii::app()->db)) {
-//                if ($fileName !== null) {
-//                    $this->saveImageFile($productPricingRequest->header);
-//                }
-                
                 $this->redirect(array('view', 'id' => $productPricingRequest->header->id));
             }
         }
@@ -111,10 +102,6 @@ class ProductPricingRequestController extends Controller {
      */
     public function actionUpdate($id) {
         $productPricingRequest = $this->instantiate($id, 'update');
-//        $productPricingRequest->header->user_id_reply = Yii::app()->user->id;
-//        $productPricingRequest->header->reply_date = date('Y-m-d');
-//        $productPricingRequest->header->reply_time = date('H:i:s');
-//        $productPricingRequest->header->branch_id_reply = Yii::app()->user->branch_id;
 
         if (isset($_POST['Submit']) && IdempotentManager::check()) {
             $this->loadState($productPricingRequest);
@@ -143,6 +130,21 @@ class ProductPricingRequestController extends Controller {
             } 
         }
         $this->render('reply', array(
+            'productPricingRequest' => $productPricingRequest,
+        ));
+    }
+
+    public function actionUpdateReply($id) {
+        $productPricingRequest = $this->instantiate($id, 'update');
+
+        if (isset($_POST['Submit']) && IdempotentManager::check()) {
+            $this->loadState($productPricingRequest);
+            
+            if ($productPricingRequest->save(Yii::app()->db)) {
+                $this->redirect(array('view', 'id' => $productPricingRequest->header->id));
+            } 
+        }
+        $this->render('updateReply', array(
             'productPricingRequest' => $productPricingRequest,
         ));
     }
@@ -184,7 +186,7 @@ class ProductPricingRequestController extends Controller {
             $model->attributes = $_GET['ProductPricingRequestHeader'];
         }
         
-        $dataProvider = $model->search();
+        $dataProvider = $model->searchRequest();
 
         $this->render('admin', array(
             'model' => $model,
@@ -200,79 +202,43 @@ class ProductPricingRequestController extends Controller {
             $model->attributes = $_GET['ProductPricingRequestHeader'];
         }
         
-        $dataProvider = $model->search();
-        $dataProvider->criteria->addCondition('t.user_id_reply IS NULL AND t.is_inactive = 0');
+        $dataProviderReply = $model->searchReply();
+        $dataProviderReply->criteria->addCondition('t.user_id_reply IS NULL AND t.is_inactive = 0');
 
+        $dataProviderRequest = $model->searchRequest();
+        
         $this->render('adminPending', array(
             'model' => $model,
-            'dataProvider' => $dataProvider,
+            'dataProviderReply' => $dataProviderReply,
+            'dataProviderRequest' => $dataProviderRequest,
         ));
     }
 
-//    public function actionAjaxGetVehicleCarModel() {
-//        $data = VehicleCarModel::model()->findAllByAttributes(array('car_make_id' => $_POST['ProductPricingRequest']['vehicle_car_make_id']), array('order' => 'name'));
-//        if (count($data) > 0) {
-//            $data = CHtml::listData($data, 'id', 'name');
-//            echo CHtml::tag('option', array('value' => ''), '[--Select Vehicle Car Model--]', true);
-//            foreach ($data as $value => $name) {
-//                echo CHtml::tag('option', array('value' => $value), CHtml::encode($name), true);
-//            }
-//        } else {
-//            echo CHtml::tag('option', array('value' => ''), '[--Select Vehicle Car Model--]', true);
-//        }
-//    }
-//
-//    public function actionAjaxGetSubBrand() {
-//        $data = SubBrand::model()->findAllByAttributes(array('brand_id' => $_POST['ProductPricingRequest']['brand_id']), array('order' => 'name'));
-//        if (count($data) > 0) {
-//            $data = CHtml::listData($data, 'id', 'name');
-//            echo CHtml::tag('option', array('value' => ''), '[--Select Sub Brand--]', true);
-//            foreach ($data as $value => $name) {
-//                echo CHtml::tag('option', array('value' => $value), CHtml::encode($name), true);
-//            }
-//        } else {
-//            echo CHtml::tag('option', array('value' => ''), '[--Select Sub Brand--]', true);
-//        }
-//    }
-//
-//    public function actionAjaxGetSubBrandSeries() {
-//        $data = SubBrandSeries::model()->findAllByAttributes(array('sub_brand_id' => $_POST['ProductPricingRequest']['sub_brand_id']), array('order' => 'name'));
-//        if (count($data) > 0) {
-//            $data = CHtml::listData($data, 'id', 'name');
-//            echo CHtml::tag('option', array('value' => ''), '[--Select Sub Brand Series--]', true);
-//            foreach ($data as $value => $name) {
-//                echo CHtml::tag('option', array('value' => $value), CHtml::encode($name), true);
-//            }
-//        } else {
-//            echo CHtml::tag('option', array('value' => ''), '[--Select Sub Brand Series--]', true);
-//        }
-//    }
-//
-//    public function actionAjaxGetProductSubMasterCategory() {
-//        $data = ProductSubMasterCategory::model()->findAllByAttributes(array('product_master_category_id' => $_POST['ProductPricingRequest']['product_master_category_id']), array('order' => 'name'));
-//        if (count($data) > 0) {
-//            $data = CHtml::listData($data, 'id', 'nameAndCode');
-//            echo CHtml::tag('option', array('value' => ''), '[--Select Product Sub Master Category--]', true);
-//            foreach ($data as $value => $name) {
-//                echo CHtml::tag('option', array('value' => $value), CHtml::encode($name), true);
-//            }
-//        } else {
-//            echo CHtml::tag('option', array('value' => ''), '[--Select Product Sub Master Category--]', true);
-//        }
-//    }
-//
-//    public function actionAjaxGetProductSubCategory() {
-//        $data = ProductSubCategory::model()->findAllByAttributes(array('product_master_category_id' => $_POST['ProductPricingRequest']['product_master_category_id'], 'product_sub_master_category_id' => $_POST['ProductPricingRequest']['product_sub_master_category_id']), array('order' => 'name'));
-//        if (count($data) > 0) {
-//            $data = CHtml::listData($data, 'id', 'nameAndCode');
-//            echo CHtml::tag('option', array('value' => ''), '[--Select Product Sub Category--]', true);
-//            foreach ($data as $value => $name) {
-//                echo CHtml::tag('option', array('value' => $value), CHtml::encode($name), true);
-//            }
-//        } else {
-//            echo CHtml::tag('option', array('value' => ''), '[--Select Product Sub Category--]', true);
-//        }
-//    }
+    public function actionUpdateApproval($headerId) {
+        $productPricingRequest = $this->instantiate($headerId, 'Approval');
+        $historis = ProductPricingRequestApproval::model()->findAllByAttributes(array('product_pricing_request_header_id' => $headerId));
+        $model = new ProductPricingRequestApproval;
+        $model->product_pricing_request_header_id = $headerId;
+        $model->date = date('Y-m-d');
+        $model->time = date('H:i:s');
+
+        if (isset($_POST['ProductPricingRequestApproval'])) {
+            $model->attributes = $_POST['ProductPricingRequestApproval'];
+            
+            if ($model->save()) {
+                $productPricingRequest->header->status = $model->approval_type;
+                $productPricingRequest->header->update(array('status'));
+                
+                $this->redirect(array('view', 'id' => $headerId));
+            }
+        }
+
+        $this->render('updateApproval', array(
+            'model' => $model,
+            'productPricingRequest' => $productPricingRequest,
+            'historis' => $historis,
+        ));
+    }
 
     public function instantiate($id, $actionType) {
         if (empty($id)) {

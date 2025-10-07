@@ -10,6 +10,11 @@ $this->breadcrumbs = array(
 
 <div id="maincontent">
     <div class="clearfix page-action">
+        
+        <?php if ($model->status == "Draft"): ?>
+            <?php echo CHtml::link('<span class="fa fa-edit"></span>Approval', Yii::app()->baseUrl . '/frontDesk/productPricingRequest/updateApproval?headerId=' . $model->id, array('class' => 'button cbutton right', 'style' => 'margin-right:10px')); ?>
+        <?php endif; ?>
+        
         <?php $ccontroller = Yii::app()->controller->id; ?>
         <?php $ccaction = Yii::app()->controller->action->id; ?>
         <h1>View <?php echo $model->transaction_number ?></h1>
@@ -45,6 +50,7 @@ $this->breadcrumbs = array(
                     'label' => 'Branch Reply', 
                     'value' => CHtml::encode(CHtml::value($model, 'branchIdReply.name'))
                 ),
+                'status',
             ),
         )); ?>
     </div>

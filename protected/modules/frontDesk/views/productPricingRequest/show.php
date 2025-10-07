@@ -56,6 +56,7 @@ $this->breadcrumbs = array(
                     'label' => 'Branch Reply', 
                     'value' => CHtml::encode(CHtml::value($model, 'branchIdReply.name'))
                 ),
+                'status',
             ),
         )); ?>
     </div>

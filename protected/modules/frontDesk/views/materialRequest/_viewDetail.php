@@ -8,11 +8,9 @@
                 <td>Code</td>
                 <td>Kategori</td>
                 <td>Brand</td>
-                <td>Sub Brand</td>
-                <td>Sub Brand Series</td>
                 <td>Quantity</td>
-                <td>Satuan Permintaan</td>
-                <td>Satuan Inventory</td>
+                <td>Satuan Req</td>
+                <td>Satuan Inv</td>
                 <td>COA</td>
                 <td>HPP</td>
                 <td>Total</td>
@@ -26,23 +24,25 @@
                     <td><?php echo $product->name; ?></td>
                     <td><?php echo $product->manufacturer_code; ?></td>
                     <td><?php echo $product->masterSubCategoryCode; ?></td>
-                    <td><?php echo $product->brand->name; ?></td>
-                    <td><?php echo $product->subBrand->name; ?></td>
-                    <td><?php echo $product->subBrandSeries->name; ?></td>
-                    <td style="text-align: center"><?php echo $materialRequestDetail->quantity; ?></td>
+                    <td>
+                        <?php echo $product->brand->name; ?> -
+                        <?php echo $product->subBrand->name; ?> - 
+                        <?php echo $product->subBrandSeries->name; ?>
+                    </td>
+                    <td style="text-align: center"><?php echo number_format($materialRequestDetail->quantity, 2); ?></td>
                     <td><?php echo $materialRequestDetail->unit->name; ?></td>
                     <td><?php echo $materialRequestDetail->product->unit->name; ?></td>
                     <td><?php echo $product->productSubMasterCategory->coaPersediaanBarangDagang->name; ?></td>
-                    <td style="text-align: center"><?php echo $materialRequestDetail->product->hpp; ?></td>
-                    <td style="text-align: center"><?php echo $materialRequestDetail->totalProductPrice; ?></td>
+                    <td style="text-align: right"><?php echo number_format($materialRequestDetail->product->hpp, 2); ?></td>
+                    <td style="text-align: right"><?php echo number_format($materialRequestDetail->totalProductPrice, 2); ?></td>
                 </tr>
             <?php endforeach; ?>
         </tbody>
         <tfoot>
             <tr>
-                <td colspan="7" style="text-align: right; font-weight: bold">Total</td>
-                <td style="text-align: center; font-weight: bold"><?php echo $model->totalQuantity; ?></td>
-                <td colspan="3"><?php echo $model->totalPrice; ?></td>
+                <td colspan="7" style="text-align: right;">Total</td>
+                <td style="text-align: center;"><?php echo number_format($model->totalQuantity, 2); ?></td>
+                <td style="text-align: right;" colspan="5"><?php echo number_format($model->totalPrice, 2); ?></td>
             </tr>
         </tfoot>
     </table>

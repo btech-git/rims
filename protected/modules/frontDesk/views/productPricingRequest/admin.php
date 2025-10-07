@@ -82,6 +82,11 @@ Yii::app()->clientScript->registerScript('search', "
                     'value' => '$data->userIdRequest->username',
                 ),
                 array(
+                    'header' => 'Branch Request',
+                    'name' => 'branch_id_request',
+                    'value' => '$data->branchIdRequest->code',
+                ),
+                array(
                     'name' => 'request_note',
                     'value' => 'substr($data->request_note, 0, 30)',
                 ),

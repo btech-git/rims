@@ -68,7 +68,7 @@ class MonthlyCustomerReceivableController extends Controller {
         }
         
         if (isset($_GET['SaveExcel'])) {
-            $this->saveToExcel($monthlyCustomerReceivableSummary, $monthlyCustomerReceivableReportData, $monthlyCustomerMovementReportData, $month, $year);
+            $this->saveToExcel($monthlyCustomerReceivableSummary, $monthlyCustomerReceivableReportData, $month, $year);
         }
         
         $this->render('summary', array(
@@ -82,7 +82,7 @@ class MonthlyCustomerReceivableController extends Controller {
         ));
     }
     
-    protected function saveToExcel($monthlyCustomerReceivableSummary, $monthlyCustomerReceivableReportData, $monthlyCustomerMovementReportData, $month, $year) {
+    protected function saveToExcel($monthlyCustomerReceivableSummary, $monthlyCustomerReceivableReportData, $month, $year) {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
 
@@ -164,7 +164,7 @@ class MonthlyCustomerReceivableController extends Controller {
         $counter = 8;
         foreach ($monthlyCustomerReceivableSummary->dataProvider->data as $customer) {
             foreach ($monthlyCustomerReceivableReportData[$customer->id] as $i => $dataItem) {
-                $movementTransactionInfo = isset($monthlyCustomerMovementReportData[$dataItem['id']]) ? $monthlyCustomerMovementReportData[$dataItem['id']] : '';
+//                $movementTransactionInfo = isset($monthlyCustomerMovementReportData[$dataItem['id']]) ? $monthlyCustomerMovementReportData[$dataItem['id']] : '';
                 $worksheet->setCellValue("A{$counter}", $i + 1);
                 $worksheet->setCellValue("B{$counter}", CHtml::value($customer, 'name'));
                 $worksheet->setCellValue("C{$counter}", $dataItem['branch_name']);
@@ -182,7 +182,7 @@ class MonthlyCustomerReceivableController extends Controller {
                 $worksheet->setCellValue("T{$counter}", $dataItem['invoice_date']);
                 $worksheet->setCellValue("U{$counter}", $dataItem['invoice_number']);
                 $worksheet->setCellValue("V{$counter}", $dataItem['transaction_tax_number']);
-                $worksheet->setCellValue("AA{$counter}", $movementTransactionInfo);
+                $worksheet->setCellValue("AA{$counter}", $dataItem['invoice_date']);
                 $worksheet->setCellValue("AB{$counter}", $dataItem['payment_number']);
                 $worksheet->setCellValue("AC{$counter}", $dataItem['due_date']);
                 $worksheet->setCellValue("AD{$counter}", $dataItem['payment_left']);

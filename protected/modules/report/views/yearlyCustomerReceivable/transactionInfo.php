@@ -4,7 +4,7 @@ Yii::app()->clientScript->registerCss('_report', '
     .width1-2 { width: 10% }
     .width1-3 { width: 10% }
     .width1-4 { width: 25% }
-    .width1-5 { width: 5% }
+    .width1-5 { width: 10% }
     .width1-6 { width: 10% }
     .width1-7 { width: 10% }
     .width1-8 { width: 10% }
@@ -13,10 +13,19 @@ Yii::app()->clientScript->registerCss('_report', '
 
 <div class="tab reportTab">
     <div class="tabHead">
-        <div style="font-size: larger; font-weight: bold; text-align: center">Laporan Piutang Customer <?php echo CHtml::encode(CHtml::value($customer, 'name')); ?></div>
-        <div><?php echo $monthList[$month] . ' ' . $year; ?></div>
+        <div style="font-size: larger; font-weight: bold; text-align: center">
+            Laporan Piutang Customer <?php echo CHtml::encode(CHtml::value($customer, 'name')); ?>
+        </div>
+        <div style="font-size: larger; font-weight: bold; text-align: center"><?php echo $monthList[$month] . ' ' . $year; ?></div>
     </div>
     
+    <div class="clear"></div>
+    <?php echo CHtml::beginForm('', 'get'); ?>
+        <div class="row buttons">
+            <?php echo CHtml::submitButton('Simpan ke Excel', array('name' => 'SaveExcel')); ?>
+        </div>
+    <?php echo CHtml::endForm(); ?>
+
     <br /> 
     
     <div class="tabBody">

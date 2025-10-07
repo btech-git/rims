@@ -79,6 +79,10 @@ class YearlyCustomerReceivableController extends Controller {
             12 => 'Dec',
         );
 
+        if (isset($_GET['SaveExcel'])) {
+            $this->saveToExcelTransactionInfo($dataProvider, $year, $month, $monthList, $customer);
+        }
+        
         $this->render('transactionInfo', array(
             'dataProvider' => $dataProvider,
             'year' => $year,
@@ -272,6 +276,100 @@ class YearlyCustomerReceivableController extends Controller {
 
         header('Content-type: application/vnd.ms-excel');
         header('Content-Disposition: attachment;filename="piutang_customer_tahunan.xls"');
+        header('Cache-Control: max-age=0');
+
+        $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
+        $objWriter->save('php://output');
+
+        Yii::app()->end();
+    }
+    protected function saveToExcelTransactionInfo($dataProvider, $year, $month, $monthList, $customer) {
+        set_time_limit(0);
+        ini_set('memory_limit', '1024M');
+
+        spl_autoload_unregister(array('YiiBase', 'autoload'));
+        include_once Yii::getPathOfAlias('ext.phpexcel.Classes') . DIRECTORY_SEPARATOR . 'PHPExcel.php';
+        spl_autoload_register(array('YiiBase', 'autoload'));
+        
+        $objPHPExcel = new PHPExcel();
+
+        $documentProperties = $objPHPExcel->getProperties();
+        $documentProperties->setCreator('Raperind Motor');
+        $documentProperties->setTitle('Piutang Customer ' . $monthList[$month] . ' ' . $year);
+
+        $worksheet = $objPHPExcel->setActiveSheetIndex(0);
+        $worksheet->setTitle('Piutang Customer ' . $monthList[$month] . ' ' . $year);
+
+        $worksheet->mergeCells('A1:I1');
+        $worksheet->mergeCells('A2:I2');
+        $worksheet->mergeCells('A3:I3');
+        $worksheet->getStyle('A1:I5')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->getStyle('A1:I5')->getFont()->setBold(true);
+
+        $worksheet->setCellValue('A1', 'Raperind Motor ');
+        $worksheet->setCellValue('A2', 'Piutang Customer ' . CHtml::value($customer, 'name'));
+        $worksheet->setCellValue('A3', $monthList[$month] . ' ' . $year);
+        
+        $worksheet->setCellValue('A5', 'No');
+        $worksheet->setCellValue('B5', 'Invoice #');
+        $worksheet->setCellValue('C5', 'Tanggal');
+        $worksheet->setCellValue('D5', 'Plat #');
+        $worksheet->setCellValue('E5', 'Vehicle');
+        $worksheet->setCellValue('F5', 'Status');
+        $worksheet->setCellValue('G5', 'Total');
+        $worksheet->setCellValue('H5', 'Payment');
+        $worksheet->setCellValue('I5', 'Remaining');
+        
+        $worksheet->getStyle("A5:I5")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A5:I5")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+
+        $counter = 7;
+        $ordinal = 0;
+        $totalPriceSum = '0.00';
+        $totalPaymentSum = '0.00';
+        $totalRemainingSum = '0.00';
+        
+        foreach ($dataProvider->data as $header) {
+            $totalPrice = CHtml::value($header, 'total_price');
+            $paymentAmount = CHtml::value($header, 'payment_amount'); 
+            $paymentLeft = CHtml::value($header, 'payment_left'); 
+            $worksheet->getStyle("G{$counter}:I{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
+
+            $worksheet->setCellValue("A{$counter}", ++$ordinal);
+            $worksheet->setCellValue("B{$counter}", CHtml::value($header, 'invoice_number'));
+            $worksheet->setCellValue("C{$counter}", CHtml::value($header, 'invoice_date'));
+            $worksheet->setCellValue("D{$counter}", CHtml::value($header, 'vehicle.plate_number'));
+            $worksheet->setCellValue("E{$counter}", CHtml::value($header, 'vehicle.carMake.name') . ' - ' . CHtml::value($header, 'vehicle.carModel.name') . ' - ' . CHtml::value($header, 'vehicle.carSubModel.name'));
+            $worksheet->setCellValue("F{$counter}", CHtml::value($header, 'status'));
+            $worksheet->setCellValue("G{$counter}", $totalPrice);
+            $worksheet->setCellValue("H{$counter}", $paymentAmount);
+            $worksheet->setCellValue("I{$counter}", $paymentLeft);
+            
+            $totalPriceSum += $totalPrice;
+            $totalPaymentSum += $paymentAmount;
+            $totalRemainingSum += $paymentLeft;
+            
+            $counter++;
+        }
+
+        $worksheet->getStyle("A{$counter}:I{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A{$counter}:I{$counter}")->getFont()->setBold(true);
+        
+        $worksheet->setCellValue("F{$counter}", 'TOTAL');
+        $worksheet->setCellValue("G{$counter}", $totalPriceSum);
+        $worksheet->setCellValue("H{$counter}", $totalPaymentSum);
+        $worksheet->setCellValue("I{$counter}", $totalRemainingSum);
+        
+        for ($col = 'A'; $col !== 'Z'; $col++) {
+            $objPHPExcel->getActiveSheet()
+            ->getColumnDimension($col)
+            ->setAutoSize(true);
+        }
+
+        ob_end_clean();
+
+        header('Content-type: application/vnd.ms-excel');
+        header('Content-Disposition: attachment;filename="piutang_customer_' . CHtml::value($customer, 'name') . '.xls"');
         header('Cache-Control: max-age=0');
 
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');

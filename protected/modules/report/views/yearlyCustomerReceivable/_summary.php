@@ -54,8 +54,20 @@
                             'month' => $month
                         ), array('target' => '_blank')); ?>
                     </td>
-                    <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $invoiceOutstanding)); ?></td>
-                    <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $invoicePayment)); ?></td>
+                    <td style="text-align: right">
+                        <?php echo CHtml::link(CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $invoiceOutstanding)), array(
+                            'transactionInfo', 
+                            'customerId' => $customerId, 
+                            'year' => $year, 
+                            'month' => $month
+                        ), array('target' => '_blank')); ?></td>
+                    <td style="text-align: right">
+                        <?php echo CHtml::link(CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $invoicePayment)), array(
+                            'transactionInfo', 
+                            'customerId' => $customerId, 
+                            'year' => $year, 
+                            'month' => $month
+                        ), array('target' => '_blank')); ?></td>
                     <?php $invoiceTotalSum += $invoiceTotal; ?>
                     <?php $invoiceOutstandingSum += $invoiceOutstanding; ?>
                     <?php $invoicePaymentSum += $invoicePayment; ?>
