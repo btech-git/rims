@@ -35,7 +35,7 @@ Yii::app()->clientScript->registerScript('search', "
 
 <div id="maincontent">
     <div class="clearfix page-action">
-                <?php echo CHtml::link('<span class="fa fa-plus"></span>Permintaan Harga', Yii::app()->baseUrl . '/frontDesk/productPricingRequest/create', array('class' => 'button success right')) ?>
+        <?php echo CHtml::link('<span class="fa fa-plus"></span>Permintaan Harga', Yii::app()->baseUrl . '/frontDesk/productPricingRequest/create', array('class' => 'button success right')) ?>
         <h2>Manage Permintaan Harga</h2>
     </div>
 

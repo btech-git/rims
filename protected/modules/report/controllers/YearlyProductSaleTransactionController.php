@@ -10,7 +10,7 @@ class YearlyProductSaleTransactionController extends Controller {
 
     public function filterAccess($filterChain) {
         if ($filterChain->action->id === 'summary') {
-            if (!(Yii::app()->user->checkAccess('customerReceivableReport'))) {
+            if (!(Yii::app()->user->checkAccess('director'))) {
                 $this->redirect(array('/site/login'));
             }
         }
@@ -70,9 +70,9 @@ class YearlyProductSaleTransactionController extends Controller {
             $this->redirect(array('summary'));
         }
         
-//        if (isset($_GET['SaveExcel'])) {
-//            $this->saveToExcel($yearlyCustomerReceivableReportData, $year);
-//        }
+        if (isset($_GET['SaveExcel'])) {
+            $this->saveToExcel($yearlyProductSaleTransactionReportData, $inventoryCurrentStockData, $year);
+        }
         
         $this->render('summary', array(
             'yearlyProductSaleTransactionReportData' => $yearlyProductSaleTransactionReportData,
@@ -140,7 +140,7 @@ class YearlyProductSaleTransactionController extends Controller {
         }
     }
 
-    protected function saveToExcel($yearlyCustomerReceivableReportData, $year) {
+    protected function saveToExcel($yearlyProductSaleTransactionReportData, $inventoryCurrentStockData, $year) {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
 
@@ -167,10 +167,10 @@ class YearlyProductSaleTransactionController extends Controller {
 
         $documentProperties = $objPHPExcel->getProperties();
         $documentProperties->setCreator('Raperind Motor');
-        $documentProperties->setTitle('Piutang Customer Tahunan');
+        $documentProperties->setTitle('Penjualan Parts Tahunan');
 
         $worksheet = $objPHPExcel->setActiveSheetIndex(0);
-        $worksheet->setTitle('Piutang Customer Tahunan');
+        $worksheet->setTitle('Penjualan Parts Tahunan');
 
         $worksheet->mergeCells('A1:Z1');
         $worksheet->mergeCells('A2:Z2');
@@ -179,140 +179,95 @@ class YearlyProductSaleTransactionController extends Controller {
         $worksheet->getStyle('A1:AZ6')->getFont()->setBold(true);
 
         $worksheet->setCellValue('A1', 'Raperind Motor ');
-        $worksheet->setCellValue('A2', 'Piutang Customer Tahunan');
+        $worksheet->setCellValue('A2', 'Penjualan Parts & Components Tahunan');
         $worksheet->setCellValue('A3', 'Periode Tahun: ' . $year);
         
-        $columnCounterStart = 'C';
-        $columnCounterEnd = 'E';
-        
+        $worksheet->setCellValue('A5', 'No');
+        $worksheet->setCellValue('B5', 'ID');
+        $worksheet->setCellValue('C5', 'Code');
+        $worksheet->setCellValue('D5', 'Name');
+        $worksheet->setCellValue('E5', 'Brand');
+        $worksheet->setCellValue('F5', 'Category');
+        $columnCounter = 'G';
         for ($month = 1; $month <= 12; $month++) {
-            $worksheet->mergeCells("{$columnCounterStart}5:{$columnCounterEnd}5");
-            $worksheet->setCellValue("{$columnCounterStart}5", $monthList[$month]);
-            ++$columnCounterStart; ++$columnCounterStart; ++$columnCounterStart;
-            ++$columnCounterEnd; ++$columnCounterEnd; ++$columnCounterEnd;
+            $worksheet->setCellValue("{$columnCounter}5", $monthList[$month]);
+            $columnCounter++;
         }
-        $worksheet->mergeCells("{$columnCounterStart}5:{$columnCounterEnd}5");
-        $worksheet->setCellValue("{$columnCounterStart}5", 'TOTAL');
-        
-        $worksheet->setCellValue('A6', 'No');
-        $worksheet->setCellValue('B6', 'Customer');
-        $columnCounter = 'C';
-        for ($month = 1; $month <= 12; $month++) {
-            $worksheet->setCellValue("{$columnCounter}6", 'Invoice Amount');
-            $columnCounter++;
-            $worksheet->setCellValue("{$columnCounter}6", 'Outstanding');
-            $columnCounter++;
-            $worksheet->setCellValue("{$columnCounter}6", 'Pelunasan');
-            $columnCounter++;
-            
-        }
-        $worksheet->setCellValue("{$columnCounter}6", 'Invoice Amount');
+        $worksheet->setCellValue("{$columnCounter}5", 'Total');
         $columnCounter++;
-        $worksheet->setCellValue("{$columnCounter}6", 'Outstanding');
+        $worksheet->setCellValue("{$columnCounter}5", 'Rata2 per Bulan');
         $columnCounter++;
-        $worksheet->setCellValue("{$columnCounter}6", 'Pelunasan');
+        $worksheet->setCellValue("{$columnCounter}5", 'Jual Min');
+        $columnCounter++;
+        $worksheet->setCellValue("{$columnCounter}5", 'Jual Max');
+        $columnCounter++;
+        $worksheet->setCellValue("{$columnCounter}5", 'Jual Median');
+        $columnCounter++;
+        $worksheet->setCellValue("{$columnCounter}5", 'Type Product');
+        $columnCounter++;
+        $worksheet->setCellValue("{$columnCounter}5", 'Klasifikasi');
+        $columnCounter++;
+        $worksheet->setCellValue("{$columnCounter}5", 'Posisi Stok');
+        $columnCounter++;
+        $worksheet->setCellValue("{$columnCounter}5", 'Minimum Stok');
+        $columnCounter++;
+        $worksheet->setCellValue("{$columnCounter}5", 'Target Stok');
+        $columnCounter++;
+        $worksheet->setCellValue("{$columnCounter}5", 'Stock Order Plan');
         $columnCounter++;
         
         $worksheet->getStyle("A5:{$columnCounter}5")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
-        $worksheet->getStyle("A6:{$columnCounter}6")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A5:{$columnCounter}5")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
-        $counter = 8;
+        $counter = 7;
         $ordinal = 0;
-        $invoiceTotalSums = array(); 
-        $invoiceOutstandingSums = array();
-        $invoicePaymentSums = array();
         
-        foreach ($yearlyCustomerReceivableReportData as $customerId => $yearlyCustomerReceivableReportDataItem) {
-            $worksheet->getStyle("E{$counter}:J{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
+        foreach ($yearlyProductSaleTransactionReportData as $productId => $yearlyProductSaleTransactionReportDataItem) {
+            $worksheet->getStyle("G{$counter}:Z{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
 
             $worksheet->setCellValue("A{$counter}", ++$ordinal);
-            $worksheet->setCellValue("B{$counter}", $yearlyCustomerReceivableReportDataItem['customer_name']);
+            $worksheet->setCellValue("B{$counter}", $yearlyProductSaleTransactionReportDataItem['product_id']);
+            $worksheet->setCellValue("C{$counter}", $yearlyProductSaleTransactionReportDataItem['product_code']);
+            $worksheet->setCellValue("D{$counter}", $yearlyProductSaleTransactionReportDataItem['product_name']);
+            $worksheet->setCellValue("E{$counter}", $yearlyProductSaleTransactionReportDataItem['brand_name'] . ' - ' . $yearlyProductSaleTransactionReportDataItem['sub_brand_name'] . ' - ' . $yearlyProductSaleTransactionReportDataItem['sub_brand_series_name']);
+            $worksheet->setCellValue("F{$counter}", $yearlyProductSaleTransactionReportDataItem['master_category_name'] . ' - ' . $yearlyProductSaleTransactionReportDataItem['sub_master_category_name'] . ' - ' . $yearlyProductSaleTransactionReportDataItem['sub_category_name']);
             
-            $invoiceTotalSum = 0;
-            $invoiceOutstandingSum = 0;
-            $invoicePaymentSum = 0; 
-            $columnCounter = 'C';
+            $invoiceTotals = array();
+            $columnCounter = 'G';
             
             for ($month = 1; $month <= 12; $month++) {
-                $invoiceTotal = isset($yearlyCustomerReceivableReportDataItem[$month]['invoice_total']) ? $yearlyCustomerReceivableReportDataItem[$month]['invoice_total'] : '';
-                $invoiceOutstanding = isset($yearlyCustomerReceivableReportDataItem[$month]['invoice_outstanding']) ? $yearlyCustomerReceivableReportDataItem[$month]['invoice_outstanding'] : '';
-                $invoicePayment = isset($yearlyCustomerReceivableReportDataItem[$month]['invoice_payment']) ? $yearlyCustomerReceivableReportDataItem[$month]['invoice_payment'] : '';
+                $invoiceTotal = isset($yearlyProductSaleTransactionReportDataItem['totals'][$month]) ? $yearlyProductSaleTransactionReportDataItem['totals'][$month] : '0.00';
                 $worksheet->setCellValue("{$columnCounter}{$counter}", $invoiceTotal);
                 $columnCounter++;
-                $worksheet->setCellValue("{$columnCounter}{$counter}", $invoiceOutstanding);
-                $columnCounter++;
-                $worksheet->setCellValue("{$columnCounter}{$counter}", $invoicePayment);
-                $columnCounter++;
-                
-                $invoiceTotalSum += $invoiceTotal;
-                $invoiceOutstandingSum += $invoiceOutstanding;
-                $invoicePaymentSum += $invoicePayment;
-                
-                if (!isset($invoiceTotalSums[$month])) {
-                    $invoiceTotalSums[$month] = 0;
-                }
-                $invoiceTotalSums[$month] += $invoiceTotal;
-                
-                if (!isset($invoiceOutstandingSums[$month])) {
-                    $invoiceOutstandingSums[$month] = 0;
-                }
-                $invoiceOutstandingSums[$month] += $invoiceOutstanding;
-                
-                if (!isset($invoicePaymentSums[$month])) {
-                    $invoicePaymentSums[$month] = 0;
-                }
-                $invoicePaymentSums[$month] += $invoicePayment;
+                $invoiceTotals[] = $invoiceTotal;
             }
+            $invoiceTotalSum = array_sum($invoiceTotals);
             $worksheet->setCellValue("{$columnCounter}{$counter}", $invoiceTotalSum);
             $columnCounter++;
-            $worksheet->setCellValue("{$columnCounter}{$counter}", $invoiceOutstandingSum);
+            $invoiceMean = $invoiceTotalSum / 12;
+            $worksheet->setCellValue("{$columnCounter}{$counter}", $invoiceMean);
             $columnCounter++;
-            $worksheet->setCellValue("{$columnCounter}{$counter}", $invoicePaymentSum);
+            $invoiceMinAmount = min($invoiceTotals);
+            $worksheet->setCellValue("{$columnCounter}{$counter}", $invoiceMinAmount);
+            $columnCounter++;
+            $invoiceMaxAmount = max($invoiceTotals);
+            $worksheet->setCellValue("{$columnCounter}{$counter}", $invoiceMaxAmount);
+            $columnCounter++;
+            sort($invoiceTotals);
+            $invoiceMedian = ($invoiceTotals[5] + $invoiceTotals[6]) / 2; 
+            $worksheet->setCellValue("{$columnCounter}{$counter}", $invoiceMedian);
+            $columnCounter++;$columnCounter++;$columnCounter++;
+            $quantityStock = isset($inventoryCurrentStockData[$productId]) ? $inventoryCurrentStockData[$productId] : '0.00';
+            $worksheet->setCellValue("{$columnCounter}{$counter}", $quantityStock);
+            $columnCounter++;
+            $product = Product::model()->findByPk($productId);
+            $worksheet->setCellValue("{$columnCounter}{$counter}", $product->minimum_stock);
+            $columnCounter++;$columnCounter++;
+            $worksheet->setCellValue("{$columnCounter}{$counter}", $product->minimum_stock - $quantityStock);
             $columnCounter++;
             
             $counter++;
         }
-
-        $worksheet->getStyle("A{$counter}:AM{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
-        $worksheet->getStyle("A{$counter}:AM{$counter}")->getFont()->setBold(true);
-        
-        $worksheet->setCellValue("B{$counter}", 'TOTAL');
-        
-        $grandTotalInvoice = 0;
-        $grandTotalOutstanding = 0;
-        $grandTotalPayment = 0;
-        
-        $columnCounter = 'C';
-        for ($month = 1; $month <= 12; $month++) {
-            if (!isset($invoiceTotalSums[$month])) {
-                $invoiceTotalSums[$month] = 0;
-            }
-            $worksheet->setCellValue("{$columnCounter}{$counter}", $invoiceTotalSums[$month]);
-            $columnCounter++;
-            
-            if (!isset($invoiceOutstandingSums[$month])) {
-                $invoiceOutstandingSums[$month] = 0;
-            }
-            $worksheet->setCellValue("{$columnCounter}{$counter}", $invoiceOutstandingSums[$month]);
-            $columnCounter++;
-            
-            if (!isset($invoicePaymentSums[$month])) {
-                $invoicePaymentSums[$month] = 0;
-            }
-            $worksheet->setCellValue("{$columnCounter}{$counter}", $invoicePaymentSums[$month]);
-            $columnCounter++;
-            
-            $grandTotalInvoice += $invoiceTotalSums[$month];
-            $grandTotalOutstanding += $invoiceOutstandingSums[$month];
-            $grandTotalPayment += $invoicePaymentSums[$month];
-        }
-        
-        $worksheet->setCellValue("{$columnCounter}{$counter}", $grandTotalInvoice);
-        $columnCounter++;
-        $worksheet->setCellValue("{$columnCounter}{$counter}", $grandTotalOutstanding);
-        $columnCounter++;
-        $worksheet->setCellValue("{$columnCounter}{$counter}", $grandTotalPayment);
-        $columnCounter++;
 
         for ($col = 'A'; $col !== 'AZ'; $col++) {
             $objPHPExcel->getActiveSheet()
@@ -323,7 +278,7 @@ class YearlyProductSaleTransactionController extends Controller {
         ob_end_clean();
 
         header('Content-type: application/vnd.ms-excel');
-        header('Content-Disposition: attachment;filename="piutang_customer_tahunan.xls"');
+        header('Content-Disposition: attachment;filename="penjualan_parts_components_tahunan.xls"');
         header('Cache-Control: max-age=0');
 
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');

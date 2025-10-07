@@ -352,6 +352,7 @@ class WorkOrderExpenseController extends Controller {
                     $jurnalHutang->debet_kredit = 'K';
                     $jurnalHutang->tanggal_posting = date('Y-m-d');
                     $jurnalHutang->transaction_subject = $workOrderExpense->note;
+                    $jurnalHutang->remark = $workOrderExpense->registrationTransaction->vehicle->plate_number . ' - ' . $workOrderExpense->registrationTransaction->customer->name . ' - ' . empty($workOrderExpense->registrationTransaction->insurance_company_id) ? '' : $workOrderExpense->registrationTransaction->insuranceCompany->name;
                     $jurnalHutang->is_coa_category = 0;
                     $jurnalHutang->transaction_type = 'WOE';
                     $jurnalHutang->save();
@@ -364,7 +365,8 @@ class WorkOrderExpenseController extends Controller {
                     $jurnalUmumKas->total = $workOrderExpense->grand_total;
                     $jurnalUmumKas->debet_kredit = 'D';
                     $jurnalUmumKas->tanggal_posting = date('Y-m-d');
-                    $jurnalUmumKas->transaction_subject = $workOrderExpense->note;
+                    $jurnalHutang->transaction_subject = $workOrderExpense->note;
+                    $jurnalHutang->remark = $workOrderExpense->registrationTransaction->vehicle->plate_number . ' - ' . $workOrderExpense->registrationTransaction->customer->name . ' - ' . empty($workOrderExpense->registrationTransaction->insurance_company_id) ? '' : $workOrderExpense->registrationTransaction->insuranceCompany->name;
                     $jurnalUmumKas->is_coa_category = 0;
                     $jurnalUmumKas->transaction_type = 'WOE';
                     $jurnalUmumKas->save();

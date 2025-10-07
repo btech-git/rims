@@ -56,6 +56,10 @@
             'value' => $workOrderExpense->registrationTransaction->vehicle->plate_number,
         ),
         array(
+            'label' => 'Asuransi',
+            'value' => empty($workOrderExpense->registrationTransaction->insurance_company_id) ? '' : $workOrderExpense->registrationTransaction->insuranceCompany->name,
+        ),
+        array(
             'label' => 'Branch',
             'value' => $workOrderExpense->branch->name,
         ),

@@ -35,6 +35,7 @@ Yii::app()->clientScript->registerScript('search', "
 
 <div id="maincontent">
     <div class="clearfix page-action">
+        <?php echo CHtml::link('<span class="fa fa-list"></span>Manage', Yii::app()->baseUrl . '/frontDesk/productPricingRequest/admin', array('class' => 'button primary right', 'target' => '_blank')) ?>
         <h2>Pending Permintaan Harga</h2>
     </div>
 

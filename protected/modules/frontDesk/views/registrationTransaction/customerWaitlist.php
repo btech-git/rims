@@ -18,32 +18,6 @@
                     true
                 )
             ),
-            'Time Counter' => array(
-                'content' => $this->renderPartial(
-                    '_viewTimeCounter',
-                    array(
-                        'epoxyDatas' => $epoxyDatas,
-                        'paintDatas' => $paintDatas,
-                        'finishingDatas' => $finishingDatas,
-                        'dempulDatas' => $dempulDatas,
-                        'washingDatas' => $washingDatas,
-                        'openingDatas' => $openingDatas,
-                    ),
-                    true
-                )
-            ),
-            'General Repair' => array(
-                'content' => $this->renderPartial(
-                    '_viewGeneralRepair',
-                    array(
-                        'tbaDatas' => $tbaDatas,
-                        'grDatas' => $grDatas,
-                        'grOilDatas' => $grOilDatas,
-                        'grWashDatas' => $grWashDatas,
-                    ),
-                    true
-                )
-            ),
         ),
         // additional javascript options for the tabs plugin
         'options' => array(

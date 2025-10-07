@@ -842,7 +842,7 @@
 //                            Yii::app()->user->checkAccess('workOrderVehicleReport') ||
 //                            Yii::app()->user->checkAccess('mechanicPerformanceReport')
                         ): ?>
-                            <h2>Recap & Analysis</h2>
+                            <h2>Stock Analysis & Order</h2>
                             <?php $this->widget('zii.widgets.CMenu', array(
                                 'items' => array(
                                     array(
@@ -858,6 +858,11 @@
                                     array(
                                         'label' => 'Analisis Penjualan Parts', 
                                         'url' => array('/report/productSubMasterCategoryStatistics/summary'), 
+                                        'visible' => Yii::app()->user->checkAccess('director')
+                                    ),
+                                    array(
+                                        'label' => 'Penjualan Parts & Components Tahunan', 
+                                        'url' => array('/report/yearlyProductSaleTransaction/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('director')
                                     ),
                                 ),
