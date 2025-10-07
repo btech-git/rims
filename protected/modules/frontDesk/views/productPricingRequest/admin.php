@@ -107,7 +107,6 @@ Yii::app()->clientScript->registerScript('search', "
                 ),
                 array(
                     'class' => 'CButtonColumn',
-                    'headerHtmlOptions'=>array('style'=>'width: 300px;'),
                     'htmlOptions'=>array('style'=>'width: 300px;'), 
                     'template' => '{update} {view}',
                 ),
