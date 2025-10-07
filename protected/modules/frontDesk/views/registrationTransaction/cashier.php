@@ -333,7 +333,7 @@ $('form').submit(function(){
                             ),
                             'print' => array(
                                 'label' => 'print',
-                                'url' => '$data->status == "PAID" ? Yii::app()->createUrl("frontDesk/registrationTransaction/pdfPayment", array("id" => $data->id)) : Yii::app()->createUrl("frontDesk/registrationTransaction/pdf", array("id" => $data->id))',
+                                'url' => '$data->status == "PAID" ? Yii::app()->createUrl("frontDesk/registrationTransaction/pdfPayment", array("id" => $data->id), array("target" => "_blank")) : Yii::app()->createUrl("frontDesk/registrationTransaction/pdf", array("id" => $data->id), array("target" => "_blank"))',
                                 'linkOptions' => 'target => _blank',
 //                                'visible' => 'Yii::app()->user->checkAccess("generalRepairCreate") || Yii::app()->user->checkAccess("generalRepairEdit")'
                             ),
