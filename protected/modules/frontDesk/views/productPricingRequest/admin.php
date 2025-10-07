@@ -64,7 +64,7 @@ Yii::app()->clientScript->registerScript('search', "
             'columns' => array(
                 array(
                     'name' => 'transaction_number', 
-                    'value' => '$data->transaction_number',
+                    'value' => 'CHtml::link($data->transaction_number, array("view", "id"=>$data->id))',
                 ),
                 array(
                     'name' => 'vehicle_car_make_id', 
@@ -75,11 +75,11 @@ Yii::app()->clientScript->registerScript('search', "
                     'name' => 'request_date',
                     'value' => '$data->request_date',
                 ),
-//                array(
-//                    'header' => 'User Request',
-//                    'name' => 'user_id_request',
-//                    'value' => '$data->userIdRequest->username',
-//                ),
+                array(
+                    'header' => 'User Request',
+                    'name' => 'user_id_request',
+                    'value' => '$data->userIdRequest->username',
+                ),
                 array(
                     'name' => 'request_note',
                     'value' => '$data->request_note',
@@ -88,19 +88,18 @@ Yii::app()->clientScript->registerScript('search', "
                     'name' => 'reply_date',
                     'value' => '$data->reply_date',
                 ),
-//                array(
-//                    'header' => 'User Reply',
-//                    'name' => 'user_id_reply',
-//                    'value' => 'empty($data->user_id_reply) ? "" : $data->userIdReply->username',
-//                ),
+                array(
+                    'header' => 'User Reply',
+                    'name' => 'user_id_reply',
+                    'value' => 'empty($data->user_id_reply) ? "" : $data->userIdReply->username',
+                ),
                 array(
                     'name' => 'reply_note',
                     'value' => '$data->reply_note',
                 ),
                 array(
                     'class' => 'CButtonColumn',
-                    'template' => '{update} {view}',
-                    'viewButtonOptions' => array('style' => 'font-size: 1.5em; padding: 5px 10px;'),
+                    'template' => '{update}',
                     'updateButtonOptions' => array('style' => 'font-size: 1.2em; padding: 5px 10px;'),
                 ),
             ),
