@@ -100,7 +100,7 @@ Yii::app()->clientScript->registerScript('search', "
                 array(
                     'class' => 'CButtonColumn',
                     'template' => '{update} {view}',
-                    'viewButtonOptions' => array('style' => 'font-size: 1.2em; padding: 5px 10px;'),
+                    'viewButtonOptions' => array('style' => 'font-size: 1.5em; padding: 5px 10px;'),
                     'updateButtonOptions' => array('style' => 'font-size: 1.2em; padding: 5px 10px;'),
                 ),
             ),
