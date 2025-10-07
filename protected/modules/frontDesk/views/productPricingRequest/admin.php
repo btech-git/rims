@@ -65,6 +65,7 @@ Yii::app()->clientScript->registerScript('search', "
                 array(
                     'name' => 'transaction_number', 
                     'value' => 'CHtml::link($data->transaction_number, array("view", "id"=>$data->id))',
+                    'type' => 'raw',
                 ),
                 array(
                     'name' => 'vehicle_car_make_id', 
