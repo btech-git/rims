@@ -68,26 +68,18 @@ Yii::app()->clientScript->registerScript('search', "
                 ),
                 array(
                     'name' => 'vehicle_car_make_id', 
-                    'value' => '$data->vehicleCarMake->name',
-                ),
-                array(
-                    'name' => 'vehicle_car_model_id', 
-                    'value' => '$data->vehicleCarModel->name',
-                ),
-                array(
-                    'name' => 'vehicle_car_sub_model_id', 
-                    'value' => '$data->vehicleCarSubModel->name',
+                    'value' => '$data->getCarMakeModelSubCombination',
                 ),
                 'production_year',
                 array(
                     'name' => 'request_date',
                     'value' => '$data->request_date',
                 ),
-                array(
-                    'header' => 'User Request',
-                    'name' => 'user_id_request',
-                    'value' => '$data->userIdRequest->username',
-                ),
+//                array(
+//                    'header' => 'User Request',
+//                    'name' => 'user_id_request',
+//                    'value' => '$data->userIdRequest->username',
+//                ),
                 array(
                     'name' => 'request_note',
                     'value' => '$data->request_note',
@@ -96,11 +88,11 @@ Yii::app()->clientScript->registerScript('search', "
                     'name' => 'reply_date',
                     'value' => '$data->reply_date',
                 ),
-                array(
-                    'header' => 'User Reply',
-                    'name' => 'user_id_reply',
-                    'value' => 'empty($data->user_id_reply) ? "" : $data->userIdReply->username',
-                ),
+//                array(
+//                    'header' => 'User Reply',
+//                    'name' => 'user_id_reply',
+//                    'value' => 'empty($data->user_id_reply) ? "" : $data->userIdReply->username',
+//                ),
                 array(
                     'name' => 'reply_note',
                     'value' => '$data->reply_note',
