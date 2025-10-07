@@ -56,7 +56,7 @@ Yii::app()->clientScript->registerScript('search', "
             'id' => 'product-pricing-grid',
             'dataProvider' => $dataProvider,
             'filter' => $model,
-            'template' => '{items}<div class="clearfix">{summary}{pager}</div>',
+            'template' => '<div style="overflow-x:scroll ; overflow-y: hidden; margin-bottom: 1.25rem;">{items}</div><div class="clearfix">{summary}{pager}</div>',
             'pager' => array(
                 'cssFile' => false,
                 'header' => '',
