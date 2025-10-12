@@ -107,26 +107,6 @@ class VehicleStatusController extends Controller {
 //    }
     
     public function actionUpdateToProgress($id) {
-        $vehicle = new Vehicle('search');
-        $vehicle->unsetAttributes();  // clear any default values
-
-        $startDateIn = (isset($_GET['StartDateIn'])) ? $_GET['StartDateIn'] : date('Y-m-d');
-        $endDateIn = (isset($_GET['EndDateIn'])) ? $_GET['EndDateIn'] : date('Y-m-d');
-        $startDateProcess = (isset($_GET['StartDateProcess'])) ? $_GET['StartDateProcess'] : date('Y-m-d');
-        $endDateProcess = (isset($_GET['EndDateProcess'])) ? $_GET['EndDateProcess'] : date('Y-m-d');
-        $plateNumber = (isset($_GET['PlateNumber'])) ? $_GET['PlateNumber'] : '';
-        $customerName = (isset($_GET['CustomerName'])) ? $_GET['CustomerName'] : '';
-        
-        $vehicleEntryDataprovider = $vehicle->searchByEntryStatusLocation($customerName);
-        $vehicleEntryDataprovider->pagination->pageVar = 'page_dialog';
-        $vehicleEntryDataprovider->criteria->compare('t.plate_number', $plateNumber, true);
-        $vehicleEntryDataprovider->criteria->addBetweenCondition('DATE(t.entry_datetime)', $startDateIn, $endDateIn);
-        
-        $vehicleProcessDataprovider = $vehicle->searchByProcessStatusLocation($customerName);
-        $vehicleProcessDataprovider->pagination->pageVar = 'page_dialog';
-        $vehicleProcessDataprovider->criteria->compare('t.plate_number', $plateNumber, true);
-        $vehicleProcessDataprovider->criteria->addBetweenCondition('DATE(t.start_service_datetime)', $startDateProcess, $endDateProcess);
-
         $model = Vehicle::model()->findByPk($id);
         $oldVehiclePositionTimer = VehiclePositionTimer::model()->find(array(
             'order' => ' id DESC',
@@ -148,17 +128,7 @@ class VehicleStatusController extends Controller {
             $vehiclePositionTimer->save();
         }
 
-        $this->render('index', array(
-            'vehicle' => $vehicle,
-            'plateNumber' => $plateNumber,
-            'customerName' => $customerName,
-            'startDateIn' => $startDateIn,
-            'endDateIn' => $endDateIn,
-            'startDateProcess' => $startDateProcess,
-            'endDateProcess' => $endDateProcess,
-            'vehicleEntryDataprovider' => $vehicleEntryDataprovider,
-            'vehicleProcessDataprovider' => $vehicleProcessDataprovider,
-        ));
+        $this->redirect(array('index'));
     }
     
     public function actionUpdateToExit($id) {

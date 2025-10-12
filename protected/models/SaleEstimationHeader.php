@@ -62,7 +62,7 @@ class SaleEstimationHeader extends MonthlyTransactionActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('transaction_number, transaction_date, transaction_time, repair_type, status, created_datetime, customer_id, vehicle_id, branch_id, user_id_created, employee_id_sale_person', 'required'),
+            array('transaction_number, transaction_date, transaction_time, repair_type, status, created_datetime, branch_id, user_id_created, employee_id_sale_person', 'required'),
             array('total_quantity_service, total_quantity_product, vehicle_mileage, customer_id, vehicle_id, branch_id, user_id_created, user_id_edited, employee_id_sale_person', 'numerical', 'integerOnly' => true),
             array('repair_type, status', 'length', 'max' => 20),
             array('transaction_number', 'length', 'max' => 30),

@@ -1,4 +1,4 @@
-<div class="<?php echo $isSubmitted ? '' : 'd-none'; ?>" id="transaction-form">
+<div <?php if (!$isSubmitted): ?>style="display: none"<?php endif; ?> id="transaction-form">
     <?php echo CHtml::beginForm(array(), 'POST'); ?>
     
     <div class="form">
@@ -27,7 +27,10 @@
                 <div class="col">
                     <?php echo CHtml::label('Customer', false, array('class' => 'form-label')); ?>
                     <?php echo CHtml::activeHiddenField($saleEstimation->header, 'customer_id', array('value' => $saleEstimation->header->customer_id)); ?>
-                    <?php echo CHtml::textField('CustomerName', empty($vehicleId) ? '' : $customer->name, array('class' => 'form-control', 'readonly' => true)); ?>
+                    <?php echo CHtml::textField('CustomerName', empty($customer) ? '' : $customer->name, array(
+                        'class' => 'form-control', 
+                        'readonly' => true,
+                    )); ?>
                 </div>
             </div>
 
@@ -35,7 +38,7 @@
                 <div class="col">
                     <?php echo CHtml::label('Kendaraan', false, array('class' => 'form-label')); ?>
                     <?php echo CHtml::activeHiddenField($saleEstimation->header, 'vehicle_id', array('value' => $saleEstimation->header->vehicle_id)); ?>
-                    <?php if (empty($vehicleId)): ?>
+                    <?php if (empty($vehicle)): ?>
                         <?php echo CHtml::textField('VehicleName', '', array(
                             'class' => 'form-control readonly-form-input', 
                             'readonly' => true,
@@ -43,28 +46,34 @@
                             'onkeypress' => 'if (event.keyCode == 13) { $("#vehicle-dialog").dialog("open"); return false; }',
                         )); ?>
                     <?php else: ?>
-                        <?php echo CHtml::textField('VehicleName', $vehicle->carMakeModelSubCombination, array('class' => 'form-control', 'readonly' => true)); ?>
+                        <?php echo CHtml::textField('VehicleName', $vehicle->carMakeModelSubCombination, array(
+                            'class' => 'form-control', 
+                            'readonly' => true,
+                        )); ?>
                     <?php endif; ?>
                 </div>
                 <div class="col">
                     <?php echo CHtml::label('Phone', false, array('class' => 'form-label')); ?>
-                    <?php echo CHtml::textField('Phone', empty($vehicleId) ? '' : $customer->phone, array('class' => 'form-control', 'readonly' => true)); ?>
+                    <?php echo CHtml::textField('Phone', empty($customer) ? '' : $customer->phone, array(
+                        'class' => 'form-control', 
+                        'readonly' => true,
+                    )); ?>
                 </div>
             </div>
             <div class="row">
                 <div class="col">
                     <?php echo CHtml::label('Nomor Polisi', false, array('class' => 'form-label')); ?>
-                    <?php echo CHtml::textField('PlateNumber', empty($vehicleId) ? '' : $vehicle->plate_number, array('class' => 'form-control', 'readonly' => true)); ?>
+                    <?php echo CHtml::textField('PlateNumber', empty($vehicle) ? '' : $vehicle->plate_number, array('class' => 'form-control', 'readonly' => true)); ?>
                 </div>
                 <div class="col">
                     <?php echo CHtml::label('Alamat', false, array('class' => 'form-label')); ?>
-                    <?php echo CHtml::textField('Address', empty($vehicleId) ? '' : $customer->address, array('class' => 'form-control', 'readonly' => true)); ?>
+                    <?php echo CHtml::textField('Address', empty($customer) ? '' : $customer->address, array('class' => 'form-control', 'readonly' => true)); ?>
                 </div>
             </div>
             <div class="row">
                 <div class="col">
                     <?php echo CHtml::label('Nomor Rangka', false, array('class' => 'form-label')); ?>
-                    <?php echo CHtml::textField('FrameNumber', empty($vehicleId) ? '' : $vehicle->frame_number, array('class' => 'form-control', 'readonly' => true)); ?>
+                    <?php echo CHtml::textField('FrameNumber', empty($vehicle) ? '' : $vehicle->frame_number, array('class' => 'form-control', 'readonly' => true)); ?>
                 </div>
                 <div class="col">
                     <?php echo CHtml::label('Branch', false, array('class' => 'form-label')); ?>
@@ -138,7 +147,7 @@
     <?php echo CHtml::endForm(); ?>
 </div>
 
-<?php if (empty($vehicleId)): ?>
+<?php if ($saleEstimation->header->vehicle_id === null): ?>
     <?php $this->beginWidget('zii.widgets.jui.CJuiDialog', array(
         'id' => 'vehicle-dialog',
         // additional javascript options for the dialog plugin
@@ -153,7 +162,7 @@
     <?php $this->widget('zii.widgets.grid.CGridView', array(
         'id' => 'vehicle-grid',
         'dataProvider' => $vehicleDataProvider,
-        'filter' => $vehicle,
+        'filter' => $vehicleData,
         'selectionChanged' => 'js:function(id){
             $("#' . CHtml::activeId($saleEstimation->header, 'vehicle_id') . '").val($.fn.yiiGridView.getSelection(id));
             $("#vehicle-dialog").dialog("close");
@@ -182,7 +191,7 @@
         'columns' => array(
             array(
                 'header' => 'Nomor Polisi',
-                'filter' => CHtml::activeTextField($vehicle, 'plate_number'),
+                'filter' => CHtml::activeTextField($vehicleData, 'plate_number'),
                 'value' => 'CHtml::encode(CHtml::value($data, "plate_number"))',
             ),
             array(
@@ -206,8 +215,8 @@
 <script>
     $(document).ready(function() {
         $('#back-button').on('click', function() {
-            $('#transaction-form').addClass('d-none');
-            $('#master-list').removeClass('d-none');
+            $('#transaction-form').hide();
+            $('#master-list').show();
         });
     });
 </script>

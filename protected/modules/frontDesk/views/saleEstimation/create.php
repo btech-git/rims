@@ -36,7 +36,7 @@ $this->breadcrumbs=array(
         'customerName' => $customerName,
         'branches' => $branches,
         'isSubmitted' => $isSubmitted,
-        'vehicle' => $vehicle,
+        'vehicleData' => $vehicleData,
         'vehicleDataProvider' => $vehicleDataProvider,
         'branch' => $branch,
     )); ?>

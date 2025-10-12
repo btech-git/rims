@@ -68,8 +68,8 @@
     var addProductAjaxUrl = "<?php echo CController::createUrl('ajaxHtmlAddProductDetail', array('id' => '__id__', 'productId' => '__productId__')); ?>"
     $(document).ready(function() {
         $('#product-data-table > tbody > tr').on('click', function() {
-            $(this).addClass('table-active');
-            $('td > span > input[type=button]', this).addClass('d-none');
+            $(this).css('background-color', 'lightgray');
+            $('td > span > input[type=button]', this).hide();
             $.ajax({
                 type: "POST",
                 dataType: "HTML",
@@ -85,7 +85,7 @@
             $.ajax({
                 type: "GET",
                 dataType: "HTML",
-                url: "<?php echo CController::createUrl('ajaxHtmlUpdateProductStockTable'); ?>&product_page=" + $(this).attr('href').match(/[?&]product_page=([0-9]+)/)[1],
+                url: "<?php echo CController::createUrl('ajaxHtmlUpdateProductStockTable'); ?>?product_page=" + $(this).attr('href').match(/[?&]product_page=([0-9]+)/)[1],
                 data: $("form").serialize(),
                 success: function(data) {
                     $("#product_data_container").html(data);

@@ -762,8 +762,9 @@ class GeneralRepairRegistration extends CComponent {
     public function getTotalQuantityProduct() {
         $quantity = 0;
 
-        foreach ($this->productDetails as $detail)
+        foreach ($this->productDetails as $detail) {
             $quantity += $detail->quantity;
+        }
 
         return $quantity;
     }

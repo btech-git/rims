@@ -1,4 +1,4 @@
-<div class="<?php echo !$isSubmitted ? '' : 'd-none'; ?>" id="master-list">
+<div <?php if ($isSubmitted): ?>style="display: none"<?php endif; ?> id="master-list">
     
     <?php $this->widget('zii.widgets.jui.CJuiTabs', array(
         'tabs' => array(
@@ -39,8 +39,8 @@
 <script>
     $(document).ready(function() {
         $('#next-button').on('click', function() {
-            $('#master-list').addClass('d-none');
-            $('#transaction-form').removeClass('d-none');
+            $('#master-list').hide();
+            $('#transaction-form').show();
         });
     });
 </script>

@@ -55,7 +55,7 @@ class ProductPricingRequestHeader extends MonthlyTransactionActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('request_date, user_id_request, request_time, request_note, branch_id_request, transaction_number, status', 'required'),
+            array('request_date, user_id_request, request_time, request_note, branch_id_request, transaction_number, status, vehicle_car_make_id, vehicle_car_model_id, vehicle_car_sub_model_id', 'required'),
             array('user_id_request, user_id_reply, production_year, branch_id_request, branch_id_reply, vehicle_car_make_id, vehicle_car_model_id, vehicle_car_sub_model_id, is_inactive', 'numerical', 'integerOnly' => true),
             array('extension', 'length', 'max' => 5),
             array('transaction_number', 'length', 'max' => 60),

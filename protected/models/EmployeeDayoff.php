@@ -27,6 +27,7 @@
  */
 class EmployeeDayoff extends CActiveRecord {
     public $images;
+    public $dayOffRemaining = -1;
 
     const CONSTANT = 'EDO';
     const STATUS_ACTIVE = 0;
@@ -51,9 +52,11 @@ class EmployeeDayoff extends CActiveRecord {
             array('day', 'numerical'),
             array('transaction_number', 'length', 'max' => 50),
             array('status, off_type', 'length', 'max' => 30),
+            array('dayOffRemaining', 'remainingDayOff'),
+            array('day', 'compare', 'compareValue' => 0, 'operator' => '>'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, transaction_number, employee_id, day, notes, date_from, date_to, status, off_type, date_created, time_created, user_id, employee_onleave_category_id, images', 'safe', 'on' => 'search'),
+            array('id, transaction_number, employee_id, day, notes, date_from, date_to, status, off_type, date_created, time_created, user_id, employee_onleave_category_id, images, dayOffRemaining', 'safe', 'on' => 'search'),
         );
     }
 
@@ -177,5 +180,11 @@ class EmployeeDayoff extends CActiveRecord {
         $month = $month ? $month - 1 : 0;
         $revisionOrdinal = ord('a');
         $this->$codeNumberColumnName = sprintf('%s.%s/%04d.%s/%04d.%c', $branchCode, $constant, $year, $arr[$month], $ordinal + 1, $revisionOrdinal);
+    }
+    
+    public function remainingDayOff($attribute, $params) {
+        if ($this->off_type == 'Paid' && $this->dayOffRemaining < 0) {
+            $this->addError($attribute, 'Jumlah hari cuti melebihi kuota tahunan');
+        }
     }
 }

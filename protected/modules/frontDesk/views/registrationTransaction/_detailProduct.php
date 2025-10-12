@@ -1,8 +1,8 @@
-<?php if (count($generalRepairRegistration->productDetails) > 0): ?>
+<?php if (count($registrationTransaction->productDetails) > 0): ?>
     <table>
         <thead>
             <tr>
-                <th>Product name</th>
+                <th>Name</th>
                 <th>Quantity</th>
                 <th>Unit</th>
                 <th>Retail Price</th>
@@ -15,7 +15,7 @@
             </tr>
         </thead>
         <tbody>
-            <?php foreach ($generalRepairRegistration->productDetails as $i => $productDetail): ?>
+            <?php foreach ($registrationTransaction->productDetails as $i => $productDetail): ?>
                 <?php $productInfo = Product::model()->findByPk($productDetail->product_id); ?>
                 <?php echo CHtml::errorSummary($productDetail); ?>
                     <tr <?php if ($productDetail->sale_package_detail_id != null): ?>style="display: none"<?php endif; ?>>
@@ -28,7 +28,7 @@
                                 'onchange' => CHtml::ajax(array(
                                     'type' => 'POST',
                                     'dataType' => 'JSON',
-                                    'url' => CController::createUrl('ajaxJsonTotalProduct', array('id' => $generalRepairRegistration->header->id, 'index' => $i)),
+                                    'url' => CController::createUrl('ajaxJsonTotalProduct', array('id' => $registrationTransaction->header->id, 'index' => $i)),
                                     'success' => 'function(data) {
                                         $("#total_amount_product_' . $i . '").html(data.totalAmountProduct);
                                         $("#total_quantity_product").html(data.totalQuantityProduct);
@@ -51,7 +51,7 @@
                                 'onchange' => CHtml::ajax(array(
                                     'type' => 'POST',
                                     'dataType' => 'JSON',
-                                    'url' => CController::createUrl('ajaxJsonTotalProduct', array('id' => $generalRepairRegistration->header->id, 'index' => $i)),
+                                    'url' => CController::createUrl('ajaxJsonTotalProduct', array('id' => $registrationTransaction->header->id, 'index' => $i)),
                                     'success' => 'function(data) {
                                         $("#total_amount_product_' . $i . '").html(data.totalAmountProduct);
                                         $("#total_quantity_product").html(data.totalQuantityProduct);
@@ -77,7 +77,7 @@
                                 'onchange' => CHtml::ajax(array(
                                     'type' => 'POST',
                                     'dataType' => 'JSON',
-                                    'url' => CController::createUrl('ajaxJsonTotalProduct', array('id' => $generalRepairRegistration->header->id, 'index' => $i)),
+                                    'url' => CController::createUrl('ajaxJsonTotalProduct', array('id' => $registrationTransaction->header->id, 'index' => $i)),
                                     'success' => 'function(data) {
                                         $("#total_amount_product_' . $i . '").html(data.totalAmountProduct);
                                         $("#total_quantity_product").html(data.totalQuantityProduct);
@@ -92,8 +92,7 @@
                                 'class' => "form-control is-valid",
                             )); ?>
                         </td>
-                        <td style="width: 10%">
-                            <?php //echo CHtml::activeHiddenField($productDetail, "[$i]total_price", array('readonly' => true,)); ?>
+                        <td style="width: 10%; text-align: right">
                             <span id="total_amount_product_<?php echo $i; ?>">
                                 <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($productDetail, 'totalAmountProduct'))); ?>
                             </span>
@@ -102,13 +101,28 @@
                             <?php echo CHtml::button('X', array(
                                 'onclick' => CHtml::ajax(array(
                                     'type' => 'POST',
-                                    'url' => CController::createUrl('ajaxHtmlRemoveProductDetail', array('id' => $generalRepairRegistration->header->id, 'index' => $i)),
-                                    'update' => '#product',
+                                    'url' => CController::createUrl('ajaxHtmlRemoveProductDetail', array('id' => $registrationTransaction->header->id, 'index' => $i)),
+                                    'update' => '#detail_product_div',
+                                )) .
+                                CHtml::ajax(array(
+                                    'type' => 'POST',
+                                    'dataType' => 'JSON',
+                                    'url' => CController::createUrl('ajaxJsonTotalProduct', array('id' => $registrationTransaction->header->id, 'index' => $i)),
+                                    'success' => 'function(data) {
+                                        $("#total_amount_product_' . $i . '").html(data.totalAmountProduct);
+                                        $("#total_quantity_product").html(data.totalQuantityProduct);
+                                        $("#sub_total_product").html(data.subTotalProduct);
+                                        $("#total_discount_product").html(data.totalDiscountProduct);
+                                        $("#grand_total_product").html(data.grandTotalProduct);
+                                        $("#sub_total_transaction").html(data.subTotalTransaction);
+                                        $("#tax_item_amount").html(data.taxItemAmount);
+                                        $("#grand_total_transaction").html(data.grandTotalTransaction);
+                                    }',
                                 )),
                             )); ?>
                         </td>
                     </tr>
-                    <tr <?php if ($productDetail->sale_package_detail_id != null): ?>style="display: none"<?php endif; ?>>
+                    <tr>
                         <td colspan="8">
                             Code: <?php echo CHtml::encode(CHtml::value($productInfo, "manufacturer_code")); ?> ||
                             Kategori: <?php echo CHtml::encode(CHtml::value($productInfo, "masterSubCategoryCode")); ?> ||
@@ -120,7 +134,6 @@
                             <?php echo CHtml::button('Stock', array(
                                 'onclick' => '$("#stock-check-dialog_' . $i . '").dialog("open"); return false;'
                             )); ?>
-
                             <?php $this->beginWidget('zii.widgets.jui.CJuiDialog', array(
                                 'id' => "stock-check-dialog_" . $i,
                                 'options' => array(

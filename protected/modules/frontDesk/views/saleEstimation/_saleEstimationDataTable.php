@@ -92,13 +92,11 @@
                         <?php echo CHtml::encode(CHtml::value($data, 'vehicle.carSubModel.name')); ?>
                     </td>
                     <td class="text-end"><?php echo CHtml::encode(CHtml::value($data, 'vehicle_mileage')); ?></td>
-                    <td><?php echo CHtml::encode(CHtml::value($data, 'employeeIdSalesPerson.name')); ?></td>
+                    <td><?php echo CHtml::encode(CHtml::value($data, 'employeeIdSalePerson.name')); ?></td>
                     <td><?php echo CHtml::encode(CHtml::value($data, 'status')); ?></td>
                     <td>
                         <?php echo CHtml::link('view', array("view", "id" => $data->id), array('class' => 'btn btn-info btn-sm')); ?>
-                        <?php if (!empty($data->vehicle_id)): ?>
-                            <?php echo CHtml::link('update', array("update", "id" => $data->id, "vehicleId" => $data->vehicle_id), array('class' => 'btn btn-warning btn-sm')); ?>
-                        <?php endif; ?>
+                        <?php echo CHtml::link('update', array("update", "id" => $data->id), array('class' => 'btn btn-warning btn-sm')); ?>
                     </td>
                 </tr>
             <?php endforeach; ?>

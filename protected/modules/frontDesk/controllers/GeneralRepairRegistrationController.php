@@ -96,21 +96,6 @@ class GeneralRepairRegistrationController extends Controller {
         $generalRepairRegistration->header->pph = 1;
         $generalRepairRegistration->header->pph_price = 0.00;
 
-//        $qs = new QuickService('search');
-//        $qs->unsetAttributes();  // clear any default values
-//        if (isset($_GET['QuickService'])) {
-//            $qs->attributes = $_GET['QuickService'];
-//        }
-//
-//        $qsCriteria = new CDbCriteria;
-//        $qsCriteria->compare('name', $qs->name, true);
-//        $qsCriteria->compare('code', $qs->code, true);
-//        $qsCriteria->compare('rate', $qs->rate, true);
-//
-//        $qsDataProvider = new CActiveDataProvider('QuickService', array(
-//            'criteria' => $qsCriteria,
-//        ));
-
         $service = new Service('search');
         $service->unsetAttributes();  // clear any default values
         if (isset($_GET['Service'])) {
@@ -184,8 +169,6 @@ class GeneralRepairRegistrationController extends Controller {
             'generalRepairRegistration' => $generalRepairRegistration,
             'vehicle' => $vehicle,
             'customer' => $customer,
-//            'qs' => $qs,
-//            'qsDataProvider' => $qsDataProvider,
             'service' => $service,
             'serviceDataProvider' => $serviceDataProvider,
             'product' => $product,

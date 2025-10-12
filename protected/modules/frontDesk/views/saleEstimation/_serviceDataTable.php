@@ -41,8 +41,8 @@
     var addServiceAjaxUrl = "<?php echo CController::createUrl('ajaxHtmlAddServiceDetail', array('id' => '__id__', 'serviceId' => '__serviceId__')); ?>"
     $(document).ready(function() {
         $('#service-data-table > tbody > tr').on('click', function() {
-            $(this).addClass('table-active');
-            $('td > span > input[type=button]', this).addClass('d-none');
+            $(this).css('background-color', 'lightgray');
+            $('td > span > input[type=button]', this).hide();
             $.ajax({
                 type: "POST",
                 dataType: "HTML",
@@ -58,7 +58,7 @@
             $.ajax({
                 type: "GET",
                 dataType: "HTML",
-                url: "<?php echo CController::createUrl('ajaxHtmlUpdateServiceDataTable'); ?>&service_page=" + $(this).attr('href').match(/[?&]service_page=([0-9]+)/)[1],
+                url: "<?php echo CController::createUrl('ajaxHtmlUpdateServiceDataTable'); ?>?service_page=" + $(this).attr('href').match(/[?&]service_page=([0-9]+)/)[1],
                 data: $("form").serialize(),
                 success: function(data) {
                     $("#service_data_container").html(data);

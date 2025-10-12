@@ -128,16 +128,16 @@ class EmployeeDayoffController extends Controller {
             $model->attributes = $_POST['EmployeeDayoff'];
             $model->generateCodeNumber(Yii::app()->dateFormatter->format('M', strtotime($model->date_created)), Yii::app()->dateFormatter->format('yyyy', strtotime($model->date_created)));
             
-            $valid = true;
-            if ($model->employeeOnleaveCategory->number_of_days > 0) {
-                $valid = $model->day == $model->employeeOnleaveCategory->number_of_days ? true : false;
-                
-                if ($valid == false) {
-                    $model->addError('error', 'Jumlah hari cuti melebihi ketentuan.');
-                }
-            } 
-            
-            if ($valid && $model->save()) {
+//            $valid = true;
+//            if ($model->employeeOnleaveCategory->number_of_days > 0) {
+//                $valid = $model->day == $model->employeeOnleaveCategory->number_of_days ? true : false;
+//                
+//                if ($valid == false) {
+//                    $model->addError('error', 'Jumlah hari cuti melebihi ketentuan.');
+//                }
+//            }
+//            
+            if ($model->save()) {
 
                 $model->employeeDayoffImages = CUploadedFile::getInstances($model, 'images');
                 foreach ($model->employeeDayoffImages as $file) {
@@ -162,6 +162,44 @@ class EmployeeDayoffController extends Controller {
         ));
     }
     
+    public function actionAjaxJsonDayOffRemaining() {
+        if (Yii::app()->request->isAjaxRequest) {
+            $employeeId = isset($_POST['EmployeeDayoff']['employee_id']) ? $_POST['EmployeeDayoff']['employee_id'] : '';
+            $dateFrom = isset($_POST['EmployeeDayoff']['date_from']) ? $_POST['EmployeeDayoff']['date_from'] : '';
+            $day = isset($_POST['EmployeeDayoff']['day']) ? $_POST['EmployeeDayoff']['day'] : '';
+            
+            $dayOffRemaining = -1;
+            
+            $employee = Employee::model()->findByPk($employeeId);
+            if ($employee !== null) {
+                list(, $recruitmentMonth, $recruitmentDay) = explode('-', $employee->recruitment_date);
+                list($requestYear, ,) = explode('-', $dateFrom);
+                $startDate = $requestYear . '-' . $recruitmentMonth . '-' . $recruitmentDay;
+                if ($dateFrom < $startDate) {
+                    $startDate = (intval($requestYear) - 1) . '-' . $recruitmentMonth . '-' . $recruitmentDay;
+                }
+                $endDate = date('Y-m-d', strtotime('+1 year -1 day', strtotime($startDate)));
+                
+                $employeeDayOffList = EmployeeDayoff::model()->findAll(array(
+                    'condition' => "t.employee_id = :employee_id AND t.date_from BETWEEN :start_date AND :end_date AND t.status IN ('Approved', 'Draft') AND t.off_type = 'Paid'",
+                    'params' => array(
+                        ':employee_id' => $employee->id,
+                        ':start_date' => $startDate,
+                        ':end_date' => $endDate,
+                    )
+                ));
+                
+                $dayOffNumber = array_sum(array_map(function($employeeDayOff) { return $employeeDayOff->day; }, $employeeDayOffList));
+                
+                $dayOffRemaining = $employee->onleave_allocation - $dayOffNumber - $day;
+            }
+            
+            echo CJSON::encode(array(
+                'dayOffRemaining' => $dayOffRemaining,
+            ));
+        }
+    }
+
     public function actionUpdate($id) {
         $model = $this->loadModel($id);
 

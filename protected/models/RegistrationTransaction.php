@@ -1208,20 +1208,6 @@ class RegistrationTransaction extends MonthlyTransactionActiveRecord {
         
         return $resultSet;
     }
-
-//    public static function pendingJournal() {
-//        $sql = "SELECT p.id, p.transaction_number, p.transaction_date, s.name as customer_name, b.name as branch_name, p.repair_type, p.status
-//                FROM " . RegistrationTransaction::model()->tableName() . " p
-//                INNER JOIN " . Customer::model()->tableName() . " s ON s.id = p.customer_id
-//                INNER JOIN " . Branch::model()->tableName() . " b ON b.id = p.branch_id
-//                WHERE p.transaction_date > '2021-12-31' AND p.transaction_number NOT IN (
-//                    SELECT kode_transaksi 
-//                    FROM " . JurnalUmum::model()->tableName() . "
-//                )
-//                ORDER BY p.transaction_date DESC";
-//
-//        return $sql;
-//    }
     
     public static function getTotalQuantityVehicleCarMakeData($yearMonth, $branchId) {
         $branchConditionSql = '';
@@ -1308,33 +1294,7 @@ class RegistrationTransaction extends MonthlyTransactionActiveRecord {
         return $resultSet;
     }
     
-//    public static function getIndividualCashDailySummary($transactionDate) {
-//        
-//        $sql = "SELECT r.branch_id, SUM(r.grand_total) AS grand_total
-//                FROM " . RegistrationTransaction::model()->tableName() . " r
-//                INNER JOIN " . Customer::model()->tableName() . " c ON c.id = r.customer_id
-//                WHERE c.customer_type = 'Individual' AND r.transaction_date LIKE :transaction_date
-//                GROUP BY r.branch_id";
-//
-//        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, array(
-//            ':transaction_date' => $transactionDate . '%',
-//        ));
-//
-//        return $resultSet;
-//    }
-//    
-//    public static function getCompanyCashDailySummary($transactionDate) {
-//        
-//        $sql = "SELECT r.branch_id, SUM(r.grand_total) AS grand_total
-//                FROM " . RegistrationTransaction::model()->tableName() . " r
-//                INNER JOIN " . Customer::model()->tableName() . " c ON c.id = r.customer_id
-//                WHERE c.customer_type = 'Company' AND r.transaction_date LIKE :transaction_date
-//                GROUP BY r.branch_id";
-//
-//        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, array(
-//            ':transaction_date' => $transactionDate . '%',
-//        ));
-//
-//        return $resultSet;
-//    }
+    public function getTotalProductService() {
+        return $this->total_product_price + $this->total_service_price;
+    }
 }

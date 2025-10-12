@@ -57,10 +57,10 @@ class SaleEstimationController extends Controller {
                 
         $product = Search::bind(new Product('search'), isset($_GET['Product']) ? $_GET['Product'] : '');
         $service = Search::bind(new Service('search'), isset($_GET['Service']) ? $_GET['Service'] : '');
-        $vehicle = Search::bind(new Vehicle('search'), isset($_GET['Vehicle']) ? $_GET['Vehicle'] : '');
+        $vehicleData = Search::bind(new Vehicle('search'), isset($_GET['Vehicle']) ? $_GET['Vehicle'] : '');
         $productDataProvider = $product->searchBySaleEstimation($endDate);
         $serviceDataProvider = $service->searchBySaleEstimation();
-        $vehicleDataProvider = $vehicle->search();
+        $vehicleDataProvider = $vehicleData->search();
         $vehicleDataProvider->criteria->with = array(
             'customer',
         );
@@ -97,7 +97,7 @@ class SaleEstimationController extends Controller {
             'productDataProvider' => $productDataProvider, 
             'service' => $service,
             'serviceDataProvider' => $serviceDataProvider,
-            'vehicle' => $vehicle,
+            'vehicleData' => $vehicleData,
             'vehicleDataProvider' => $vehicleDataProvider,
             'branches' => $branches,
             'endDate' => $endDate,
@@ -167,127 +167,33 @@ class SaleEstimationController extends Controller {
         ));
     }
 
-    public function actionAddProductService($registrationId) {
-        $saleEstimation = $this->instantiate($registrationId);
-        $customer = Customer::model()->findByPk($saleEstimation->header->customer_id);
-        $vehicle = Vehicle::model()->findByPk($saleEstimation->header->vehicle_id);
-        $branches = Branch::model()->findAll();
-        $saleEstimation->header->pph = 1;
-
-        $damage = new Service('search');
-        $damage->unsetAttributes();  // clear any default values
-        if (isset($_GET['Service'])) {
-            $damage->attributes = $_GET['Service'];
-        }
-
-        $damageCriteria = new CDbCriteria;
-        $damageCriteria->together = 'true';
-        $damageCriteria->with = array('serviceCategory', 'serviceType');
-
-        $damageCriteria->compare('t.name', $damage->name, true);
-        $damageCriteria->compare('t.code', $damage->code, true);
-        $damageCriteria->compare('t.service_category_id', $damage->service_category_id);
-        $damageCriteria->compare('t.service_type_id', 2);
-        $explodeKeyword = explode(" ", $damage->findkeyword);
-
-        foreach ($explodeKeyword as $key) {
-            $damageCriteria->compare('t.code', $key, true, 'OR');
-            $damageCriteria->compare('t.name', $key, true, 'OR');
-            $damageCriteria->compare('description', $key, true, 'OR');
-            $damageCriteria->compare('serviceCategory.name', $key, true, 'OR');
-            $damageCriteria->compare('serviceCategory.code', $key, true, 'OR');
-            $damageCriteria->compare('serviceType.name', $key, true, 'OR');
-            $damageCriteria->compare('serviceType.code', $key, true, 'OR');
-        }
-
-        $damageDataProvider = new CActiveDataProvider('Service', array(
-            'criteria' => $damageCriteria,
-        ));
-
-        $service = new Service('search');
-        $service->unsetAttributes();  // clear any default values
-        if (isset($_GET['Service'])) {
-            $service->attributes = $_GET['Service'];
-        }
-
-        $serviceCriteria = new CDbCriteria;
-        $serviceCriteria->together = 'true';
-        $serviceCriteria->with = array('serviceCategory', 'serviceType');
-
-        $serviceCriteria->compare('t.name', $service->name, true);
-        $serviceCriteria->compare('t.code', $service->code, true);
-        $serviceCriteria->compare('t.service_category_id', $service->service_category_id);
-        $serviceCriteria->compare('t.service_type_id', 2);
-        $explodeKeyword = explode(" ", $service->findkeyword);
-
-        foreach ($explodeKeyword as $key) {
-            $serviceCriteria->compare('t.code', $key, true, 'OR');
-            $serviceCriteria->compare('t.name', $key, true, 'OR');
-            $serviceCriteria->compare('description', $key, true, 'OR');
-            $serviceCriteria->compare('serviceCategory.name', $key, true, 'OR');
-            $serviceCriteria->compare('serviceCategory.code', $key, true, 'OR');
-            $serviceCriteria->compare('serviceType.name', $key, true, 'OR');
-            $serviceCriteria->compare('serviceType.code', $key, true, 'OR');
-        }
-
-        $serviceDataProvider = new CActiveDataProvider('Service', array(
-            'criteria' => $serviceCriteria,
-        ));
-
-        $serviceArray = array();
-
-        $product = new Product('search');
-        $product->unsetAttributes();  // clear any default values
-        if (isset($_GET['Product'])) {
-            $product->attributes = $_GET['Product'];
-        }
-
-        $productDataProvider = $product->search();
-
-        if (isset($_POST['Cancel'])) {
-            $this->redirect(array('view', 'id' => $saleEstimation->header->id));
-        }
-
-        if (isset($_POST['Submit']) && IdempotentManager::check()) {
-            $this->loadState($saleEstimation);
-
-            if ($saleEstimation->saveDetails(Yii::app()->db))
-                $this->redirect(array('view', 'id' => $saleEstimation->header->id));
-        }
-
-        $this->render('addProductService', array(
-            'saleEstimation' => $saleEstimation,
-            'vehicle' => $vehicle,
-            'customer' => $customer,
-            'damage' => $damage,
-            'damageDataProvider' => $damageDataProvider,
-            'service' => $service,
-            'serviceDataProvider' => $serviceDataProvider,
-            'product' => $product,
-            'productDataProvider' => $productDataProvider,
-            'serviceArray' => $serviceArray,
-            'branches' => $branches,
-        ));
-    }
-
-    public function actionUpdate($id, $vehicleId) {
-        $saleEstimation = $this->instantiate($id);
-        $vehicle = Vehicle::model()->findByPk($vehicleId); 
-        $customer = Customer::model()->findByPk($vehicle->customer_id);
+    public function actionUpdate($id) {
+        $saleEstimation = $this->instantiate($id, 'update');
         
+        $vehicle = Vehicle::model()->findByPk($saleEstimation->header->vehicle_id);
+        $customer = Customer::model()->findByPk($saleEstimation->header->customer_id);
         $saleEstimation->header->edited_datetime = date('Y-m-d H:i:s');
         $saleEstimation->header->user_id_edited = Yii::app()->user->id;
-        $saleEstimation->header->vehicle_id = $vehicleId;
-        $saleEstimation->header->customer_id = $vehicle->customer_id;
         $branch = Branch::model()->model()->findByPk($saleEstimation->header->branch_id);
 
         $endDate = date('Y-m-d');
                 
         $product = Search::bind(new Product('search'), isset($_GET['Product']) ? $_GET['Product'] : '');
         $service = Search::bind(new Service('search'), isset($_GET['Service']) ? $_GET['Service'] : '');
+        $vehicleData = Search::bind(new Vehicle('search'), isset($_GET['Vehicle']) ? $_GET['Vehicle'] : '');
         $productDataProvider = $product->searchBySaleEstimation($endDate);
         $serviceDataProvider = $service->searchBySaleEstimation();
+        $vehicleDataProvider = $vehicleData->search();
+        $vehicleDataProvider->criteria->with = array(
+            'customer',
+        );
         
+        $customerName = isset($_GET['CustomerName']) ? $_GET['CustomerName'] : '';
+        if (!empty($customerName)) {
+            $vehicleDataProvider->criteria->addCondition('customer.name LIKE :customer_name');
+            $vehicleDataProvider->criteria->params[':customer_name'] = "%{$customerName}%";
+        }
+
         $productPageNumber = isset($_GET['product_page']) ? $_GET['product_page'] : 1;
         $servicePageNumber = isset($_GET['service_page']) ? $_GET['service_page'] : 1;
         $productDataProvider->pagination->pageVar = 'product_page';
@@ -313,12 +219,14 @@ class SaleEstimationController extends Controller {
             'productDataProvider' => $productDataProvider, 
             'service' => $service,
             'serviceDataProvider' => $serviceDataProvider,
-            'vehicleId' => $vehicleId,
-            'vehicle' => $vehicle,
             'branches' => $branches,
             'endDate' => $endDate,
             'branch' => $branch,
+            'vehicle' => $vehicle,
+            'vehicleData' => $vehicleData,
+            'vehicleDataProvider' => $vehicleDataProvider,
             'customer' => $customer,
+            'customerName' => $customerName,
             'isSubmitted' => isset($_POST['Submit']),
         ));
     }

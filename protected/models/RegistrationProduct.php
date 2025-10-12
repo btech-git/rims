@@ -158,6 +158,11 @@ class RegistrationProduct extends CActiveRecord {
         return $priceAfterDiscount + $taxNominal;
     }
     
+    public function getTotalBeforeDiscount() {
+
+        return $this->quantity * $this->sale_price;
+    }
+    
     public function getUnitPriceBeforeTax() {
         
         return $this->registrationTransaction->ppn == 3 ? $this->sale_price / 1.11 : $this->sale_price;

@@ -38,6 +38,15 @@
                                 'minLength' => '2',
                                 'select' => 'js:function(event, ui) {
                                     $("#' . CHtml::activeId($model, 'employee_id') . '").val(ui.item.id);
+                                    $.ajax({
+                                        type: "POST",
+                                        dataType: "JSON",
+                                        url: "' . CController::createUrl('ajaxJsonDayOffRemaining') . '",
+                                        data: $("form").serialize(),
+                                        success: function(data) {
+                                            $("#' . CHtml::activeId($model, 'dayOffRemaining') . '").val(data.dayOffRemaining);
+                                        },
+                                    });
                                 }',
                             ),
                         )); ?>
@@ -98,8 +107,13 @@
                             'Unpaid' => 'Unpaid'
                         ), array(
                             'prompt' => '[--Select off Type--]',
+                            'onchange' => '
+                                if ($(this).val() === "Paid") {
+                                    $("#day_off_remaining_div").show();
+                                } else {
+                                    $("#day_off_remaining_div").hide();
+                                }',
                         )); ?>
-                        <?php //echo $form->textField($model,'day');  ?>
                         <?php echo $form->error($model, 'off_type'); ?>
                     </div>
                 </div>
@@ -133,15 +147,23 @@
                                         var dateTo = new Date(strDateTo);
                                         var diffInTime = dateTo.getTime() - dateFrom.getTime();
                                         var diffInDays = diffInTime / (1000 * 3600 * 24) + 1;
-                                        $("#EmployeeDayoff_day").val(diffInDays);
+                                        $("#' . CHtml::activeId($model, 'day') . '").val(diffInDays);
                                     } else {
                                         var dateFromString = $("#' . CHtml::activeId($model, 'date_from') . '").val();
                                         var dateTo = new Date(dateFromString);
                                         dateTo.setDate(dateTo.getDate() + parseInt(numberOfLeaveDayString) - 1);
                                         var dateToString = dateTo.toISOString().slice(0, 10);
                                         $("#' . CHtml::activeId($model, 'date_to') . '").val(dateToString);
-                                        $("#DateTo").val(dateToString);
                                     }
+                                    $.ajax({
+                                        type: "POST",
+                                        dataType: "JSON",
+                                        url: "' . CController::createUrl('ajaxJsonDayOffRemaining') . '",
+                                        data: $("form").serialize(),
+                                        success: function(data) {
+                                            $("#' . CHtml::activeId($model, 'dayOffRemaining') . '").val(data.dayOffRemaining);
+                                        },
+                                    });
                                 '
                             ),
                         )); ?>
@@ -175,7 +197,16 @@
                                     var dateTo = new Date(strDateTo);
                                     var diffInTime = dateTo.getTime() - dateFrom.getTime();
                                     var diffInDays = diffInTime / (1000 * 3600 * 24) + 1;
-                                    $("#EmployeeDayoff_day").val(diffInDays);
+                                    $("#' . CHtml::activeId($model, 'day') . '").val(diffInDays);
+                                    $.ajax({
+                                        type: "POST",
+                                        dataType: "JSON",
+                                        url: "' . CController::createUrl('ajaxJsonDayOffRemaining') . '",
+                                        data: $("form").serialize(),
+                                        success: function(data) {
+                                            $("#' . CHtml::activeId($model, 'dayOffRemaining') . '").val(data.dayOffRemaining);
+                                        },
+                                    });
                                 ',
                                 'style' => 'display: ' . ($model->employeeOnleaveCategory !== null && (int) $model->employeeOnleaveCategory->number_of_days === 0 ? 'block' : 'none'),
                             ),
@@ -209,6 +240,18 @@
                     </div>
                 </div>
             </div>
+            
+            <div class="field" id="day_off_remaining_div" <?php if ($model->off_type !== 'Paid'): ?>style="display: none"<?php endif; ?>>
+                <div class="row collapse">
+                    <div class="small-4 columns">
+                        <?php echo $form->labelEx($model, 'dayOffRemaining'); ?>
+                    </div>
+                    <div class="small-8 columns">
+                        <?php echo $form->textField($model, 'dayOffRemaining', array('readonly' => true)); ?>
+                        <?php echo $form->error($model, 'dayOffRemaining'); ?>
+                    </div>
+                </div>
+            </div>		
         </div>
 
         <div class="small-12 medium-6 columns">
