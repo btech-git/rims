@@ -97,10 +97,10 @@ Yii::app()->clientScript->registerScript('search', "
                 ),
                 array(
                     'class' => 'CButtonColumn',
-                    'template' => '{update}',
+                    'template' => '{edit}',
                     'buttons' => array(
-                        'update' => array(
-                            'label' => 'update',
+                        'edit' => array(
+                            'label' => 'edit',
                             'url' => 'Yii::app()->createUrl("frontDesk/productPricingRequest/updateReply", array("id"=>$data->id))',
                         ),
                     ),
