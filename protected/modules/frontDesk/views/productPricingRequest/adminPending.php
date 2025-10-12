@@ -102,6 +102,7 @@ Yii::app()->clientScript->registerScript('search', "
                         'edit' => array(
                             'label' => 'edit',
                             'url' => 'Yii::app()->createUrl("frontDesk/productPricingRequest/updateReply", array("id"=>$data->id))',
+                            'visible' => '$data->user_id_reply !== null',
                         ),
                     ),
                 ),
