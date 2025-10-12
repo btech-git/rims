@@ -37,12 +37,14 @@ $this->menu = array(
             <?php endif; ?>
         <?php endif; ?>
         
-        <?php echo CHtml::link('<span class="fa fa-pencil"></span>Edit', array("/transaction/invoiceHeader/update", "id" => $model->id), array(
-            'class' => 'button primary right', 
-            'style' => 'margin-right:10px', 
-        )); ?>
+        <?php if ($model->status == "Draft" && Yii::app()->user->checkAccess("saleInvoiceEdit")): ?>
+            <?php echo CHtml::link('<span class="fa fa-pencil"></span>Edit', array("/transaction/invoiceHeader/update", "id" => $model->id), array(
+                'class' => 'button primary right', 
+                'style' => 'margin-right:10px', 
+            )); ?>
+        <?php endif; ?>
         
-        <?php if ($model->status == "Draft" && Yii::app()->user->checkAccess("invoiceApproval")): ?>
+        <?php if ($model->status == "Draft" && Yii::app()->user->checkAccess("saleInvoiceSupervisor")): ?>
             <?php echo CHtml::link('<span class="fa fa-edit"></span>Approval', Yii::app()->baseUrl . '/transaction/invoiceHeader/updateApproval?id=' . $model->id, array(
                 'class' => 'button cbutton right', 
                 'style' => 'margin-right:10px'
