@@ -37,7 +37,7 @@ $this->menu = array(
             <?php endif; ?>
         <?php endif; ?>
         
-        <?php if ($model->status == "Draft" && Yii::app()->user->checkAccess("saleInvoiceEdit")): ?>
+        <?php if (Yii::app()->user->checkAccess("saleInvoiceEdit")): ?>
             <?php echo CHtml::link('<span class="fa fa-pencil"></span>Edit', array("/transaction/invoiceHeader/update", "id" => $model->id), array(
                 'class' => 'button primary right', 
                 'style' => 'margin-right:10px', 
