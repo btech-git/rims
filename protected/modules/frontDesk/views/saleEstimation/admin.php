@@ -14,7 +14,7 @@ $this->breadcrumbs = array(
     </div>
     <div class="col d-flex justify-content-end">
         <div class="d-gap">
-            <?php //echo CHtml::link('Add', array("create"), array('class' => 'btn btn-success btn-sm')); ?>
+            <?php echo CHtml::link('Add', array("create"), array('class' => 'btn btn-success btn-sm')); ?>
         </div>
     </div>
 </div>

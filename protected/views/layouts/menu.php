@@ -110,6 +110,16 @@
             <?php $this->widget('zii.widgets.CMenu', array(
                 'items' => array(
                     array(
+                        'label' => 'Status Kendaraan', 
+                        'url' => array('/frontDesk/vehicleStatus/index'), 
+                        'visible' => (Yii::app()->user->checkAccess('director'))
+                    ),
+                    array(
+                        'label' => 'Estimasi', 
+                        'url' => array('/frontDesk/saleEstimation/admin'), 
+                        'visible' => (Yii::app()->user->checkAccess('director'))
+                    ),
+                    array(
                         'label' => 'Pendaftaran Customer', 
                         'url' => array('/frontDesk/customerRegistration/vehicleList'), 
                         'visible' => (Yii::app()->user->checkAccess('generalRepairCreate') || Yii::app()->user->checkAccess('bodyRepairCreate'))
@@ -123,11 +133,6 @@
                         'label' => 'Body Repair', 
                         'url' => array('/frontDesk/bodyRepairRegistration/admin'), 
                         'visible' => (Yii::app()->user->checkAccess('bodyRepairCreate') || Yii::app()->user->checkAccess('bodyRepairEdit') || Yii::app()->user->checkAccess('bodyRepairView'))
-                    ),
-                    array(
-                        'label' => 'Status Kendaraan', 
-                        'url' => array('/frontDesk/vehicleStatus/index'), 
-                        'visible' => (Yii::app()->user->checkAccess('generalRepairCreate') || Yii::app()->user->checkAccess('bodyRepairCreate'))
                     ),
                     array(
                         'label' => 'Permintaan Harga', 

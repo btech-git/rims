@@ -160,123 +160,6 @@ $this->breadcrumbs=array(
                                 <br />
                             </div>
                             
-<!--                            <div class="row">
-                                <div class="medium-6 columns">
-                                    <div id="detailQs">
-                                        <div class="field">
-                                            <div class="row collapse">
-                                                <div class="small-4 columns">
-                                                    <?php /*echo CHtml::activeCheckBox($generalRepairRegistration->header,'is_quick_service',array(
-                                                        1 => 1,
-                                                        'disabled' => $generalRepairRegistration->header->is_quick_service == 1 ? false : true, 
-                                                        'onchange' => '
-                                                        if($("#RegistrationTransaction_is_quick_service").is(":checked"))
-                                                        {
-                                                            $("#detail-button").prop("disabled",false);
-                                                        }
-                                                        else{
-                                                            $("#detail-button").prop("disabled",true);
-                                                            $.ajax({
-                                                                type: "POST",
-                                                                //dataType: "JSON",
-                                                                url: "' . CController::createUrl('ajaxHtmlRemoveQuickServiceDetailAll', array('id'=> $generalRepairRegistration->header->id)).'",
-                                                                data: $("form").serialize(),
-                                                                success: function(html) {
-                                                                    $("#quickService").html(html);	
-
-                                                                },
-                                                            });
-                                                        }'
-                                                    )); ?>
-                                                    <label for="is_quick_service">Quick Service</label>
-                                                </div>
-                                                <div class="small-8 columns">
-                                                    <?php echo CHtml::button('add Quick Service', array(
-                                                        'id' => 'detail-button',
-                                                        'name' => 'Detail',
-                                                        // 'class'=>'button extra left',
-                                                        'disabled'=>$generalRepairRegistration->header->is_quick_service == 1 ? false : true,
-                                                        'onclick' => '
-                                                        jQuery("#qs-dialog").dialog("open"); return false;'
-                                                    )); ?>
-                                                    <?php $this->beginWidget('zii.widgets.jui.CJuiDialog', array(
-                                                        'id' => 'qs-dialog',
-                                                        'options' => array(
-                                                            'title' => 'Quick Service',
-                                                            'autoOpen' => false,
-                                                            'width' => 'auto',
-                                                            'modal' => true,
-                                                        ),
-                                                    )); ?>
-                                                    <?php $this->widget('zii.widgets.grid.CGridView', array(
-                                                        'id'=>'qs-grid',
-                                                        'dataProvider'=>$qsDataProvider,
-                                                        'filter'=>$qs,
-                                                        'template' => '{items}<div class="clearfix">{summary}{pager}</div>',
-                                                        'pager'=>array(
-                                                            'cssFile'=>false,
-                                                            'header'=>'',
-                                                        ),
-                                                        'selectionChanged'=>'js:function(id){
-                                                            $("#qs-dialog").dialog("close");
-                                                            $.ajax({
-                                                                type: "POST",
-                                                                url: "' . CController::createUrl('ajaxHtmlAddQuickServiceDetail', array('id'=>$generalRepairRegistration->header->id,'quickServiceId'=>'')). '" + $.fn.yiiGridView.getSelection(id),
-                                                                data: $("form").serialize(),
-                                                                success: function(html) {
-                                                                    $("#quickService").html(html);
-                                                                    $.ajax({
-                                                                        type: "POST",
-                                                                        dataType: "JSON",
-                                                                        url: "' . CController::createUrl('ajaxJsonGrandTotal', array('id' => $generalRepairRegistration->header->id)). '",
-                                                                        data: $("form").serialize(),
-                                                                        success: function(data) {
-                                                                            $("#grand_total_transaction").html(data.grandTotal);
-                                                                            $("#total_quick_service_quantity").html(data.totalQuickServiceQuantity);
-                                                                            $("#sub_total_quick_service").html(data.subTotalQuickService);
-                                                                        },
-                                                                    });
-
-                                                                },
-                                                            });
-                                                            $("#qs-grid").find("tr.selected").each(function(){
-                                                                $(this).removeClass( "selected" );
-                                                            });
-                                                        }',
-                                                        'columns'=>array(
-                                                            'code',
-                                                            'name',
-                                                            'rate',
-                                                            array(
-                                                                'name'=>'rate',
-                                                                'value'=>'Yii::app()->numberFormatter->format("#,##0.00", $data->rate)',
-                                                            ),
-                                                        ),
-                                                    )); ?>
-                                                    <?php $this->endWidget('zii.widgets.jui.CJuiDialog'); ?>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div> 
-                                     end of DetailQs 
-                                </div>
-
-                                <hr />
-                                 DETAIL QUICK SERVICE 
-                                <div class="medium-12 columns">
-                                    <div class="detail">
-                                        <div class="field" id="quickService">
-                                            <div class="row collapse">
-                                                <div class="small-12 columns">
-                                                    <?php $this->renderPartial('_detailQuickService', array('generalRepairRegistration'=>$generalRepairRegistration));*/ ?>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>								
-                                </div>
-                                 END QUICK SERVICE 
-                            </div>-->
-
                             <div class="row">
                                 <div class="medium-12 columns">
                                     <div class="field">
@@ -288,8 +171,6 @@ $this->breadcrumbs=array(
                                                 <?php echo CHtml::button('add Service', array(
                                                     'id' => 'service-detail-button',
                                                     'name' => 'service-detail',
-                                                    // 'class'=>'button extra left',
-                                                    //'disabled'=>'false',
                                                     'onclick' => 'jQuery("#service-dialog").dialog("open"); return false;'
                                                 )); ?>
                                             </div>
@@ -361,10 +242,11 @@ $this->breadcrumbs=array(
                                             </div>
                                         </div>
                                     </div>
-
                                 </div>
                             </div>
+                            
                             <hr />
+                            
                             <div class="row">
                                 <div class="field">
                                     <table>
@@ -491,7 +373,9 @@ $this->breadcrumbs=array(
                                     </table>
                                 </div>
                             </div>
+                            
                             <hr />
+                            
                             <div class="row">
                                 <div class="medium-12 columns">
                                     <div class="field buttons text-center">

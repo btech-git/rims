@@ -7,103 +7,163 @@
         <fieldset class="border border-secondary rounded mb-3 p-3">
             <legend class="float-none w-auto text-dark px-1">FORM ESTIMASI</legend>
             <div class="row">
-                <div class="col">
-                    <?php echo CHtml::activeLabelEx($saleEstimation->header, 'transaction_date', array('class' => 'form-label', 'label' => 'Tanggal')); ?>
-                    <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(
-                        'model' => $saleEstimation->header,
-                        'attribute' => "transaction_date",
-                        'options' => array(
-                            'dateFormat' => 'yy-mm-dd',
-                            'changeMonth' => true,
-                            'changeYear' => true,
-                        ),
-                        'htmlOptions' => array(
-                            'readonly' => true,
-                            'class' => 'form-control readonly-form-input',
-                        ),
-                    )); ?>
-                    <?php echo CHtml::error($saleEstimation->header,'transaction_date'); ?>
-                </div>
-                <div class="col">
-                    <?php echo CHtml::label('Customer', false, array('class' => 'form-label')); ?>
-                    <?php echo CHtml::activeHiddenField($saleEstimation->header, 'customer_id', array('value' => $saleEstimation->header->customer_id)); ?>
-                    <?php echo CHtml::textField('CustomerName', empty($customer) ? '' : $customer->name, array(
-                        'class' => 'form-control', 
-                        'readonly' => true,
-                    )); ?>
-                </div>
-            </div>
+                <div class="medium-12 columns">
+                    <div class="row">
+                        <div class="medium-6 columns">
+                            <div class="field">
+                                <div class="row collapse">
+                                    <div class="small-4 columns">
+                                        <?php echo CHtml::activeLabelEx($saleEstimation->header, 'transaction_date', array('class' => 'form-label', 'label' => 'Tanggal')); ?>
+                                    </div>
+                                    <div class="small-8 columns">
+                                        <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(
+                                            'model' => $saleEstimation->header,
+                                            'attribute' => "transaction_date",
+                                            'options' => array(
+                                                'minDate' => '-1W',
+                                                'maxDate' => '+6M',
+                                                'dateFormat' => 'yy-mm-dd',
+                                                'changeMonth' => true,
+                                                'changeYear' => true,
+                                            ),
+                                            'htmlOptions' => array(
+                                                'readonly' => true,
+                                                'class' => 'form-control readonly-form-input',
+                                            ),
+                                        )); ?>
+                                        <?php echo CHtml::error($saleEstimation->header,'transaction_date'); ?>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="field">
+                                <div class="row collapse">
+                                    <div class="small-4 columns">
+                                        <?php echo CHtml::label('Customer', false, array('class' => 'form-label')); ?>
+                                    </div>
+                                    <div class="small-8 columns">
+                                        <?php echo CHtml::activeHiddenField($saleEstimation->header, 'customer_id', array('value' => $saleEstimation->header->customer_id)); ?>
+                                        <?php echo CHtml::textField('CustomerName', empty($customer) ? '' : $customer->name, array(
+                                            'class' => 'form-control', 
+                                            'readonly' => true,
+                                        )); ?>
+                                    </div>
+                                </div>
+                            </div>
 
-            <div class="row">
-                <div class="col">
-                    <?php echo CHtml::label('Kendaraan', false, array('class' => 'form-label')); ?>
-                    <?php echo CHtml::activeHiddenField($saleEstimation->header, 'vehicle_id', array('value' => $saleEstimation->header->vehicle_id)); ?>
-                    <?php if (empty($vehicle)): ?>
-                        <?php echo CHtml::textField('VehicleName', '', array(
-                            'class' => 'form-control readonly-form-input', 
-                            'readonly' => true,
-                            'onclick' => '$("#vehicle-dialog").dialog("open"); return false;',
-                            'onkeypress' => 'if (event.keyCode == 13) { $("#vehicle-dialog").dialog("open"); return false; }',
-                        )); ?>
-                    <?php else: ?>
-                        <?php echo CHtml::textField('VehicleName', $vehicle->carMakeModelSubCombination, array(
-                            'class' => 'form-control', 
-                            'readonly' => true,
-                        )); ?>
-                    <?php endif; ?>
-                </div>
-                <div class="col">
-                    <?php echo CHtml::label('Phone', false, array('class' => 'form-label')); ?>
-                    <?php echo CHtml::textField('Phone', empty($customer) ? '' : $customer->phone, array(
-                        'class' => 'form-control', 
-                        'readonly' => true,
-                    )); ?>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col">
-                    <?php echo CHtml::label('Nomor Polisi', false, array('class' => 'form-label')); ?>
-                    <?php echo CHtml::textField('PlateNumber', empty($vehicle) ? '' : $vehicle->plate_number, array('class' => 'form-control', 'readonly' => true)); ?>
-                </div>
-                <div class="col">
-                    <?php echo CHtml::label('Alamat', false, array('class' => 'form-label')); ?>
-                    <?php echo CHtml::textField('Address', empty($customer) ? '' : $customer->address, array('class' => 'form-control', 'readonly' => true)); ?>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col">
-                    <?php echo CHtml::label('Nomor Rangka', false, array('class' => 'form-label')); ?>
-                    <?php echo CHtml::textField('FrameNumber', empty($vehicle) ? '' : $vehicle->frame_number, array('class' => 'form-control', 'readonly' => true)); ?>
-                </div>
-                <div class="col">
-                    <?php echo CHtml::label('Branch', false, array('class' => 'form-label')); ?>
-                    <?php echo CHtml::textField('Branch', $branch->name, array('class' => 'form-control', 'readonly' => true)); ?>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col">
-                    <?php echo CHtml::activeLabelEx($saleEstimation->header, 'vehicle_mileage', array('class' => 'form-label', 'label' => 'KM')); ?>
-                    <?php echo CHtml::activeTextField($saleEstimation->header, 'vehicle_mileage', array('class' => 'form-control')); ?>
-                    <?php echo CHtml::error($saleEstimation->header,'vehicle_mileage'); ?>
-                </div>
-                <div class="col">
-                    <?php echo CHtml::activeLabelEx($saleEstimation->header, 'employee_id_sale_person', array('class' => 'form-label', 'label' => 'Salesman')); ?>
-                    <?php echo CHtml::activeDropDownlist($saleEstimation->header, 'employee_id_sale_person', CHtml::listData(Employee::model()->findAllByAttributes(array(
-                        "position_id" => 2,
-                    )), "id", "name"), array("empty" => "--Assign Sales--", 'class' => 'form-select' . ($saleEstimation->header->hasErrors('employee_id_sale_person') ? ' is-invalid' : ''))); ?>
-                    <?php echo CHtml::error($saleEstimation->header, 'employee_id_sale_person', array('class' => 'invalid-feedback d-block')); ?>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col">
-                    <?php echo CHtml::activeLabelEx($saleEstimation->header, 'problem', array('class' => 'form-label')); ?>
-                    <?php echo CHtml::activeTextArea($saleEstimation->header,'problem',array('rows'=>3, 'cols'=>30, 'class' => 'form-control')); ?>
-                    <?php echo CHtml::error($saleEstimation->header,'problem'); ?>
-                </div>
-                <div class="col">
-                    <?php echo CHtml::activeLabelEx($saleEstimation->header, 'note', array('class' => 'form-label')); ?>
-                    <?php echo CHtml::activeTextArea($saleEstimation->header,'note',array('rows'=>3, 'cols'=>30, 'class' => 'form-control')); ?>
-                    <?php echo CHtml::error($saleEstimation->header,'note'); ?>
+                            <div class="field">
+                                <div class="row collapse">
+                                    <div class="small-4 columns">
+                                        <?php echo CHtml::label('Kendaraan', false, array('class' => 'form-label')); ?>
+                                    </div>
+                                    <div class="small-8 columns">
+                                        <?php echo CHtml::activeHiddenField($saleEstimation->header, 'vehicle_id', array('value' => $saleEstimation->header->vehicle_id)); ?>
+                                        <?php if (empty($vehicle)): ?>
+                                            <?php echo CHtml::textField('VehicleName', '', array(
+                                                'class' => 'form-control readonly-form-input', 
+                                                'readonly' => true,
+                                                'onclick' => '$("#vehicle-dialog").dialog("open"); return false;',
+                                                'onkeypress' => 'if (event.keyCode == 13) { $("#vehicle-dialog").dialog("open"); return false; }',
+                                            )); ?>
+                                        <?php else: ?>
+                                            <?php echo CHtml::textField('VehicleName', $vehicle->carMakeModelSubCombination, array(
+                                                'class' => 'form-control', 
+                                                'readonly' => true,
+                                            )); ?>
+                                        <?php endif; ?>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="field">
+                                <div class="row collapse">
+                                    <div class="small-4 columns">
+                                        <?php echo CHtml::label('Nomor Polisi', false, array('class' => 'form-label')); ?>
+                                    </div>
+                                    <div class="small-8 columns">
+                                        <?php echo CHtml::textField('PlateNumber', empty($vehicle) ? '' : $vehicle->plate_number, array('class' => 'form-control', 'readonly' => true)); ?>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="field">
+                                <div class="row collapse">
+                                    <div class="small-4 columns">
+                                        <?php echo CHtml::label('Alamat', false, array('class' => 'form-label')); ?>
+                                    </div>
+                                    <div class="small-8 columns">
+                                        <?php echo CHtml::textField('Address', empty($customer) ? '' : $customer->address, array('class' => 'form-control', 'readonly' => true)); ?>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="field">
+                                <div class="row collapse">
+                                    <div class="small-4 columns">
+                                        <?php echo CHtml::label('Phone', false, array('class' => 'form-label')); ?>
+                                    </div>
+                                    <div class="small-8 columns">
+                                        <?php echo CHtml::textField('Phone', empty($customer) ? '' : $customer->phone, array(
+                                            'class' => 'form-control', 
+                                            'readonly' => true,
+                                        )); ?>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="medium-6 columns">
+                            <div class="field">
+                                <div class="row collapse">
+                                    <div class="small-4 columns">
+                                        <?php echo CHtml::activeLabelEx($saleEstimation->header, 'employee_id_sale_person', array('class' => 'form-label', 'label' => 'Salesman')); ?>
+                                    </div>
+                                    <div class="small-8 columns">
+                                        <?php echo CHtml::activeDropDownlist($saleEstimation->header, 'employee_id_sale_person', CHtml::listData(Employee::model()->findAllByAttributes(array(
+                                            "position_id" => 2,
+                                        )), "id", "name"), array("empty" => "--Assign Sales--", 'class' => 'form-select' . ($saleEstimation->header->hasErrors('employee_id_sale_person') ? ' is-invalid' : ''))); ?>
+                                        <?php echo CHtml::error($saleEstimation->header, 'employee_id_sale_person', array('class' => 'invalid-feedback d-block')); ?>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="field">
+                                <div class="row collapse">
+                                    <div class="small-4 columns">
+                                        <?php echo CHtml::activeLabelEx($saleEstimation->header, 'vehicle_mileage', array('class' => 'form-label', 'label' => 'KM')); ?>
+                                    </div>
+                                    <div class="small-8 columns">
+                                        <?php echo CHtml::activeTextField($saleEstimation->header, 'vehicle_mileage', array('class' => 'form-control')); ?>
+                                        <?php echo CHtml::error($saleEstimation->header,'vehicle_mileage'); ?>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="field">
+                                <div class="row collapse">
+                                    <div class="small-4 columns">
+                                        <?php echo CHtml::activeLabelEx($saleEstimation->header, 'problem', array('class' => 'form-label')); ?>
+                                    </div>
+                                    <div class="small-8 columns">
+                                        <?php echo CHtml::activeTextArea($saleEstimation->header,'problem',array('rows'=>3, 'cols'=>30, 'class' => 'form-control')); ?>
+                                        <?php echo CHtml::error($saleEstimation->header,'problem'); ?>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="field">
+                                <div class="row collapse">
+                                    <div class="small-4 columns">
+                                        <?php echo CHtml::activeLabelEx($saleEstimation->header, 'note', array('class' => 'form-label')); ?>
+                                    </div>
+                                    <div class="small-8 columns">
+                                        <?php echo CHtml::activeTextArea($saleEstimation->header,'note',array('rows'=>3, 'cols'=>30, 'class' => 'form-control')); ?>
+                                        <?php echo CHtml::error($saleEstimation->header,'note'); ?>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </fieldset>
