@@ -819,4 +819,88 @@ class InvoiceDetail extends CActiveRecord {
 
         return $resultSet;
     }
+    
+    public static function getMonthlyProductSaleTransactionReport($year, $month, $productId, $productCode, $productName, $brandId, $subBrandId, $subBrandSeriesId, $masterCategoryId, $subCategoryId, $subMasterCategoryId) {
+        $productIdConditionSql = '';
+        $productNameConditionSql = '';
+        $productCodeConditionSql = '';
+        $brandConditionSql = '';
+        $subBrandConditionSql = '';
+        $subBrandSeriesConditionSql = '';
+        $masterCategoryConditionSql = '';
+        $subCategoryConditionSql = '';
+        $subMasterCategoryConditionSql = '';
+        
+        $params = array(
+            ':year' => $year,
+            ':month' => $month,
+        );
+        
+        if (!empty($productId)) {
+            $productIdConditionSql = ' AND d.product_id = :product_id';
+            $params[':product_id'] = $productId;
+        }
+        
+        if (!empty($productCode)) {
+            $productCodeConditionSql = ' AND p.manufacturer_code = :manufacturer_code';
+            $params[':manufacturer_code'] = $productCode;
+        }
+        
+        if (!empty($productName)) {
+            $productNameConditionSql = ' AND p.name = :product_name';
+            $params[':product_name'] = $productName;
+        }
+        
+        if (!empty($brandId)) {
+            $brandConditionSql = ' AND p.brand_id = :brand_id';
+            $params[':brand_id'] = $brandId;
+        }
+        
+        if (!empty($subBrandId)) {
+            $subBrandConditionSql = ' AND p.sub_brand_id = :sub_brand_id';
+            $params[':sub_brand_id'] = $subBrandId;
+        }
+         
+        if (!empty($subBrandSeriesId)) {
+            $subBrandSeriesConditionSql = ' AND p.sub_brand_series_id = :sub_brand_series_id';
+            $params[':sub_brand_series_id'] = $subBrandSeriesId;
+        }
+        
+        if (!empty($masterCategoryId)) {
+            $masterCategoryConditionSql = ' AND p.product_master_category_id = :product_master_category_id';
+            $params[':product_master_category_id'] = $masterCategoryId;
+        }
+        
+        if (!empty($subCategoryId)) {
+            $subCategoryConditionSql = ' AND p.product_sub_category_id = :product_sub_category_id';
+            $params[':product_sub_category_id'] = $subCategoryId;
+        }
+        
+        if (!empty($subMasterCategoryId)) {
+            $subMasterCategoryConditionSql = ' AND p.product_sub_master_category_id = :product_sub_master_category_id';
+            $params[':product_sub_master_category_id'] = $subMasterCategoryId;
+        }
+        
+        $sql = "SELECT d.product_id, i.branch_id, MAX(p.name) AS product_name, MAX(p.manufacturer_code) AS product_code, 
+                    MAX(b.name) AS brand_name, MAX(sb.name) AS sub_brand_name, MAX(sbs.name) AS sub_brand_series_name, MAX(mc.name) AS master_category_name, 
+                    MAX(sc.name) AS sub_category_name, MAX(smc.name) AS sub_master_category_name, SUM(d.quantity) AS total_quantity
+                FROM " . InvoiceDetail::model()->tableName() . " d
+                INNER JOIN " . InvoiceHeader::model()->tableName() . " i ON i.id = d.invoice_id
+                INNER JOIN " . Product::model()->tableName() . " p ON p.id = d.product_id
+                INNER JOIN " . Brand::model()->tableName() . " b ON b.id = p.brand_id
+                INNER JOIN " . SubBrand::model()->tableName() . " sb ON sb.id = p.sub_brand_id
+                INNER JOIN " . SubBrandSeries::model()->tableName() . " sbs ON sbs.id = p.sub_brand_series_id
+                INNER JOIN " . ProductMasterCategory::model()->tableName() . " mc ON mc.id = p.product_master_category_id
+                INNER JOIN " . ProductSubCategory::model()->tableName() . " sc ON sc.id = p.product_sub_category_id
+                INNER JOIN " . ProductSubMasterCategory::model()->tableName() . " smc ON smc.id = p.product_sub_master_category_id
+                WHERE YEAR(i.invoice_date) = :year AND MONTH(i.invoice_date) = :month AND i.status NOT LIKE '%CANCELLED%'" . $masterCategoryConditionSql .
+                    $productIdConditionSql . $productCodeConditionSql . $productNameConditionSql . $brandConditionSql . $subBrandConditionSql . 
+                    $subBrandSeriesConditionSql . $subCategoryConditionSql . $subMasterCategoryConditionSql . "
+                GROUP BY d.product_id, i.branch_id
+                ORDER BY p.name ASC";
+                
+        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
+
+        return $resultSet;
+    }
 }

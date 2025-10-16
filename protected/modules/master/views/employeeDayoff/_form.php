@@ -72,12 +72,12 @@
                             'options' => $employeeOnleaveCategoryChoiceOptions,
                             'onchange' => '
                                 var numberOfLeaveDayString = $("option[value=" + $(this).val() + "]", this).attr("data-number-of-leave-day");
-                                $("#' . CHtml::activeId($model, 'day') . '").val(numberOfLeaveDayString);
                                 if (numberOfLeaveDayString === "0") {
                                     $("#' . CHtml::activeId($model, 'date_to') . '").prop("readonly", false);
                                     $("#' . CHtml::activeId($model, 'date_to') . '").show();
                                     $("#DateTo").hide();
                                 } else {
+                                    $("#' . CHtml::activeId($model, 'day') . '").val(numberOfLeaveDayString);
                                     $("#' . CHtml::activeId($model, 'date_to') . '").prop("readonly", true);
                                     $("#' . CHtml::activeId($model, 'date_to') . '").hide();
                                     $("#DateTo").show();

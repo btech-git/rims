@@ -417,11 +417,6 @@
                                         'url' => array('/report/paymentByBankMonthly/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('monthlyBankingReport')
                                     ),
-                                    array(
-                                        'label' => 'Transaksi Harian', 
-                                        'url' => array('/report/dailyTransaction/summary'), 
-                                        'visible' => Yii::app()->user->checkAccess('dailyTransactionReport')
-                                    ),
                                 ),
                             )); ?>
                         <?php endif; ?>
@@ -897,6 +892,11 @@
                                     array(
                                         'label' => 'Penjualan Retail Summary', 
                                         'url' => array('/report/saleFlowSummary/summary'), 
+                                        'visible' => Yii::app()->user->checkAccess('director')
+                                    ),
+                                    array(
+                                        'label' => 'Transaksi Harian', 
+                                        'url' => array('/report/dailyTransaction/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('director')
                                     ),
                                 ),

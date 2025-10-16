@@ -53,7 +53,9 @@ class EmployeeDayoff extends CActiveRecord {
             array('transaction_number', 'length', 'max' => 50),
             array('status, off_type', 'length', 'max' => 30),
             array('dayOffRemaining', 'remainingDayOff'),
+            array('date_to', 'disjointDate'),
             array('day', 'compare', 'compareValue' => 0, 'operator' => '>'),
+            array('date_to', 'compare', 'compareAttribute' => 'date_from', 'operator' => '>='),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
             array('id, transaction_number, employee_id, day, notes, date_from, date_to, status, off_type, date_created, time_created, user_id, employee_onleave_category_id, images, dayOffRemaining', 'safe', 'on' => 'search'),
@@ -185,6 +187,16 @@ class EmployeeDayoff extends CActiveRecord {
     public function remainingDayOff($attribute, $params) {
         if ($this->off_type == 'Paid' && $this->dayOffRemaining < 0) {
             $this->addError($attribute, 'Jumlah hari cuti melebihi kuota tahunan');
+        }
+    }
+    
+    public function disjointDate($attribute, $params) {
+        $exists = self::model()->exists("status IN ('Approved', 'Draft') AND :start_date BETWEEN date_from AND date_to OR :end_date BETWEEN date_from AND date_to OR date_from BETWEEN :start_date AND :end_date OR date_to BETWEEN :start_date AND :end_date", array(
+            ':start_date' => $this->date_from,
+            ':end_date' => $this->date_to,
+        ));
+        if ($exists) {
+            $this->addError($attribute, 'Tanggal cuti sudah terdaftar di database.');
         }
     }
 }
