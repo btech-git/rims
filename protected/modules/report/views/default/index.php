@@ -856,6 +856,11 @@
                                         'visible' => Yii::app()->user->checkAccess('director')
                                     ),
                                     array(
+                                        'label' => 'Penjualan Parts & Components Bulanan', 
+                                        'url' => array('/report/monthlyProductSaleTransaction/summary'), 
+                                        'visible' => Yii::app()->user->checkAccess('director')
+                                    ),
+                                    array(
                                         'label' => 'Penjualan Parts & Components Tahunan', 
                                         'url' => array('/report/yearlyProductSaleTransaction/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('director')
