@@ -49,7 +49,7 @@
         <td>Model</td>
         <td>
             <div id="car_model">
-                <?php echo CHtml::activeDropDownList($vehicle, 'car_model_id', CHtml::listData(VehicleCarMake::model()->findAllByAttributes(array('car_make_id' => $vehicle->car_make_id), array('order' => 'name')), 'id', 'name'), array(
+                <?php echo CHtml::activeDropDownList($vehicle, 'car_model_id', CHtml::listData(VehicleCarModel::model()->findAllByAttributes(array('car_make_id' => $vehicle->car_make_id), array('order' => 'name')), 'id', 'name'), array(
                     'empty' => '-- All --',
                     'onchange' => CHtml::ajax(array(
                         'type' => 'GET',
