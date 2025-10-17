@@ -2116,7 +2116,8 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
     
     public static function getYearlyCustomerReceivableReport($year) {
       
-        $sql = "SELECT i.customer_id, MONTH(i.invoice_date) AS invoice_month, MAX(c.name) AS customer_name, SUM(i.total_price) AS invoice_total, SUM(i.payment_amount) AS invoice_payment, SUM(i.payment_left) AS invoice_outstanding
+        $sql = "SELECT i.customer_id, MONTH(i.invoice_date) AS invoice_month, MAX(c.name) AS customer_name, SUM(i.total_price) AS invoice_total, 
+                    SUM(i.payment_amount) AS invoice_payment, SUM(i.payment_left) AS invoice_outstanding
                 FROM " . InvoiceHeader::model()->tableName() . "  i 
                 INNER JOIN " . Customer::model()->tableName() . " c ON c.id = i.customer_id
                 WHERE YEAR(i.invoice_date) = :year AND c.customer_type = 'Company' AND i.user_id_cancelled IS NULL

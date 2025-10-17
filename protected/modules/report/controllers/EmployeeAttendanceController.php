@@ -56,7 +56,7 @@ class EmployeeAttendanceController extends Controller {
         }
         
         if (isset($_GET['SaveExcel'])) {
-            $this->saveToExcel($employeePeriodicallyAttendance , $startDate, $endDate, $branchId);
+            $this->saveToExcel($employeePeriodicallyAttendanceData , $onleaveCategories, $employeeDaysCountData, $startDate, $endDate, $branchId);
         }
 
         $this->render('summary', array(
@@ -107,7 +107,7 @@ class EmployeeAttendanceController extends Controller {
         ));
     }
 
-    protected function saveToExcel($employeeData , $startDate, $endDate, $branchId) {
+    protected function saveToExcel($employeePeriodicallyAttendanceData , $onleaveCategories, $employeeDaysCountData, $startDate, $endDate, $branchId) {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
         
@@ -139,10 +139,7 @@ class EmployeeAttendanceController extends Controller {
         $worksheet->setCellValue('A2', 'Laporan Rekap Daftar Hadir Karyawan');
         $worksheet->setCellValue('A3', 'Periode: ' . $startDateString . ' - ' . $endDateString);
 
-        $worksheet->getStyle("A5:Q5")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
-        $worksheet->getStyle("A5:Q5")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
-        $worksheet->getStyle('A5:Q5')->getFont()->setBold(true);
-        
+        $column = 'H';
         $worksheet->setCellValue('A5', 'ID');
         $worksheet->setCellValue('B5', 'NIP');
         $worksheet->setCellValue('C5', 'Nama');
@@ -150,36 +147,41 @@ class EmployeeAttendanceController extends Controller {
         $worksheet->setCellValue('E5', 'Divisi');
         $worksheet->setCellValue('F5', 'Posisi');
         $worksheet->setCellValue('G5', 'Level');
-        $worksheet->setCellValue('H5', 'Kehadiran');
-        $worksheet->setCellValue('I5', 'Cuti');
-        $worksheet->setCellValue('J5', 'Sakit');
-        $worksheet->setCellValue('K5', 'Izin');
-        $worksheet->setCellValue('L5', 'Dinas Luar');
-        $worksheet->setCellValue('M5', 'Tanpa Keterangan');
-        $worksheet->setCellValue('N5', 'Total H. Kerja');
-        $worksheet->setCellValue('O5', 'Libur');
-        $worksheet->setCellValue('P5', 'Terlambat');
-        $worksheet->setCellValue('Q5', 'Lembur');
+        foreach ($onleaveCategories as $onleaveCategory) {
+            $worksheet->setCellValue("{$column}5", CHtml::value($onleaveCategory, 'name'));
+            $column++;
+        }
+        $worksheet->setCellValue("{$column}5", 'Tanpa Keterangan');
+        $column++;
+        $worksheet->setCellValue("{$column}5", 'Total H. Kerja');
+        $column++;
+        $worksheet->setCellValue("{$column}5", 'Libur');
+        $column++;
+        $worksheet->setCellValue("{$column}5", 'Terlambat');
+        $column++;
+        $worksheet->setCellValue("{$column}5", 'Lembur');
 
+        $worksheet->getStyle("A5:{$column}5")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A5:{$column}5")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle('A5:{$column}5')->getFont()->setBold(true);
+        
         $counter = 7;
 
         $dayOfWeekList = array_flip(array('Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'));
+        $daysOfPeriod = round(((strtotime($endDate) - strtotime($startDate)) / 86400)) + 1;
         
-        foreach ($employeeData as $employee) {
-            $currentTimestamp = strtotime($startDate);
-            $endTimestamp = strtotime($endDate);
-            $diff_seconds = $endTimestamp - $currentTimestamp;
-            $diff_days = floor($diff_seconds / (60 * 60 * 24));
+        foreach ($employeePeriodicallyAttendanceData as $employeeId => $employeePeriodicallyAttendanceItem) {
             $holidaysCount = 0;
-        
-            while ($currentTimestamp <= $endTimestamp) {
-                $dayOfWeekNum = date('w', $currentTimestamp);
-                if ((int) $dayOfWeekNum === $dayOfWeekList[$employee->off_day]) {
+            for ($day = 0; $day < $daysOfPeriod; $day++) {
+                $date = date('Y-m-d', strtotime($startDate . " +{$day} day"));
+                $dayOfWeekNum = date('w', strtotime($date));
+                $employee = Employee::model()->findByPk($employeeId);
+                if (!empty($employee->id) && (int) $dayOfWeekNum === $dayOfWeekList[$employee->off_day]) {
                     $holidaysCount++;
                 }
-                $currentTimestamp = strtotime('+1 day', $currentTimestamp);
             }
         
+            $column = 'H';
             $worksheet->setCellValue("A{$counter}", CHtml::value($employee, 'id'));
             $worksheet->setCellValue("B{$counter}", CHtml::value($employee, 'code'));
             $worksheet->setCellValue("C{$counter}", CHtml::value($employee, 'name'));
@@ -187,16 +189,25 @@ class EmployeeAttendanceController extends Controller {
             $worksheet->setCellValue("E{$counter}", CHtml::value($employee, 'division.name'));
             $worksheet->setCellValue("F{$counter}", CHtml::value($employee, 'position.name'));
             $worksheet->setCellValue("G{$counter}", CHtml::value($employee, 'level.name'));
-            $worksheet->setCellValue("H{$counter}", $employee->getTotalWorkingDay($startDate, $endDate));
-            $worksheet->setCellValue("I{$counter}", $employee->getTotalPaidLeave($startDate, $endDate));
-            $worksheet->setCellValue("J{$counter}", $employee->getTotalSickDay($startDate, $endDate));
-            $worksheet->setCellValue("K{$counter}", $employee->getTotalFullDayLeave($startDate, $endDate));
-            $worksheet->setCellValue("L{$counter}", $employee->getTotalBusinessTripDay($startDate, $endDate));
-            $worksheet->setCellValue("M{$counter}", $employee->getTotalMissing($startDate, $endDate));
-            $worksheet->setCellValue("N{$counter}", $diff_days - $holidaysCount);
-            $worksheet->setCellValue("O{$counter}", $holidaysCount);
-            $worksheet->setCellValue("P{$counter}", $employee->getTotalLateDay($startDate, $endDate));
-            $worksheet->setCellValue("Q{$counter}", $employee->getTotalOvertimeDay($startDate, $endDate));
+            foreach ($onleaveCategories as $onleaveCategory) {
+                $days = isset($employeePeriodicallyAttendanceItem[$onleaveCategory->id]['days']) ? $employeePeriodicallyAttendanceItem[$onleaveCategory->id]['days'] : '0';
+                $worksheet->setCellValue("{$column}{$counter}", $days);
+                $column++;
+            }
+            $lateDays = isset($employeePeriodicallyAttendanceItem[16]['late_days']) ? $employeePeriodicallyAttendanceItem[16]['late_days'] : '0';
+            $overtimeDays = isset($employeePeriodicallyAttendanceItem[16]['overtime_days']) ? $employeePeriodicallyAttendanceItem[16]['overtime_days'] : '0';
+            $workingDays = $daysOfPeriod - $holidaysCount;
+            $recordedDays = isset($employeeDaysCountData[$employeeId]) ? $employeeDaysCountData[$employeeId] : '0';
+            $nonRecordedDays = $workingDays - $recordedDays;
+            $worksheet->setCellValue("{$column}{$counter}", $nonRecordedDays);
+            $column++;
+            $worksheet->setCellValue("{$column}{$counter}", $workingDays);
+            $column++;
+            $worksheet->setCellValue("{$column}{$counter}", $holidaysCount);
+            $column++;
+            $worksheet->setCellValue("{$column}{$counter}", $lateDays);
+            $column++;
+            $worksheet->setCellValue("{$column}{$counter}", $overtimeDays);
 
             $counter++;
         }
