@@ -615,9 +615,9 @@ class CustomerController extends Controller {
     // Get Car Model
     public function actionAjaxGetModel($year, $carmake) {
         $criteria = new CDbCriteria;
-        $criteria->with = array('vehicleCarSubModels', 'vehicleCarSubModels.vehicleCarSubModelDetails');
-        $criteria->together = true;
-        $criteria->condition = '"' . $year . '" BETWEEN vehicleCarSubModelDetails.assembly_year_start and vehicleCarSubModelDetails.assembly_year_end';
+//        $criteria->with = array('vehicleCarSubModels', 'vehicleCarSubModels.vehicleCarSubModelDetails');
+//        $criteria->together = true;
+//        $criteria->condition = '"' . $year . '" BETWEEN vehicleCarSubModelDetails.assembly_year_start and vehicleCarSubModelDetails.assembly_year_end';
         $data = VehicleCarModel::model()->findAllByAttributes(array('car_make_id' => $carmake), $criteria);
 
         if (count($data) > 0) {
@@ -634,9 +634,9 @@ class CustomerController extends Controller {
     // Get Car Sub Model
     public function actionAjaxGetSubModel($year, $carmake, $carmodel) {
         $criteria = new CDbCriteria;
-        $criteria->with = array('vehicleCarSubModelDetails');
-        $criteria->together = true;
-        $criteria->condition = '"' . $year . '" BETWEEN vehicleCarSubModelDetails.assembly_year_start and vehicleCarSubModelDetails.assembly_year_end';
+//        $criteria->with = array('vehicleCarSubModelDetails');
+//        $criteria->together = true;
+//        $criteria->condition = '"' . $year . '" BETWEEN vehicleCarSubModelDetails.assembly_year_start and vehicleCarSubModelDetails.assembly_year_end';
         $criteria->order = 't.name ASC';
 
         $data = VehicleCarSubModel::model()->findAllByAttributes(array('car_make_id' => $carmake, 'car_model_id' => $carmodel), $criteria);
