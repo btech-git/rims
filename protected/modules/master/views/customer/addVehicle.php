@@ -177,7 +177,7 @@
                                 <label class="prefix">Car Model</label>
                             </div>
                             <div class="small-8 columns">
-                                <?php echo CHtml::activeDropDownList($model,"car_model_id", $model->car_make_id != '' ?CHtml::listData(VehicleCarModel::model()->findAllByAttributes(array('car_make_id'=>$model->car_make_id),array('order'=>'name')),'id','name') : array() ,array(
+                                <?php echo CHtml::activeDropDownList($model,"car_model_id", $model->car_make_id != '' ?CHtml::listData(VehicleCarModel::model()->findAll(array('order'=>'name')),'id','name') : array() ,array(
                                         'prompt' => '[--Select Car Model--]',
                                     'onchange'=> '$.ajax({
                                         type: "POST",
@@ -202,7 +202,7 @@
                                 <label class="prefix">Car Sub Model</label>
                             </div>
                             <div class="small-8 columns">
-                                <?php echo CHtml::activeDropDownList($model,"car_sub_model_id", $model->car_model_id != ''?  CHtml::listData(VehicleCarSubModel::model()->findAllByAttributes(array('car_make_id'=>$model->car_make_id,'car_model_id'=>$model->car_model_id)),'id','name') : array() ,array(
+                                <?php echo CHtml::activeDropDownList($model,"car_sub_model_id", $model->car_model_id != ''?  CHtml::listData(VehicleCarSubModel::model()->findAll(array('order'=>'name')),'id','name') : array() ,array(
                                     'prompt' => '[--Select Car Sub Model--]',
                                     'onchange'=> 'jQuery.ajax({
                                         type: "POST",
