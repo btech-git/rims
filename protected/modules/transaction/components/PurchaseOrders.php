@@ -139,8 +139,8 @@ class PurchaseOrders extends CComponent {
         
         if ($isNewRecord) {
             $this->header->payment_amount = 0;
-            $this->header->payment_left = $this->grandTotal;
         }
+        $this->header->payment_left = $this->header->totalRemaining;
         $valid = $this->header->save();
         
         $purchaseDetails = TransactionPurchaseOrderDetail::model()->findAllByAttributes(array('purchase_order_id' => $this->header->id));

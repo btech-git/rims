@@ -75,9 +75,9 @@ function tanggal($date) {
                         <td>Dibuat oleh</td>
                         <td>:</td>
                         <td><?php echo CHtml::encode(CHtml::value($model, 'user.username')); ?></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
+                        <td>WO #</td>
+                        <td>:</td>
+                        <td><?php echo CHtml::encode(CHtml::value($model, 'registrationTransaction.work_order_number')); ?></td>
                     </tr>
                 </table>
             </div>

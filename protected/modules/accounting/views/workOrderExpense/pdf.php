@@ -61,6 +61,12 @@ function tanggal($date) {
                 <td>:</td>
                 <td><?php echo CHtml::encode(CHtml::value($workOrderExpense, 'user.username')); ?></td>
             </tr>
+            <tr>
+                <td>WO #</td>
+                <td>:</td>
+                <td><?php echo CHtml::encode(CHtml::value($workOrderExpense, 'registrationTransaction.work_order_number')); ?></td>
+                <td colspan="3"></td>
+            </tr>
         </table>
     </div>
 

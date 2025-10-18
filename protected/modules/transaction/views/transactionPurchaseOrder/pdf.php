@@ -61,13 +61,18 @@ function tanggal($date) {
                 <td>:</td>
                 <td><?php echo CHtml::encode(CHtml::value($po, 'user.username')); ?></td>
             </tr>
-            <?php if ($po->purchase_type === TransactionPurchaseOrder::TIRE): ?>
-                <tr>
+            <tr>
+                <td>WO #</td>
+                <td>:</td>
+                <td><?php echo CHtml::encode(CHtml::value($po, 'registrationTransaction.work_order_number')); ?></td>
+                <?php if ($po->purchase_type === TransactionPurchaseOrder::TIRE): ?>
                     <td>Type</td>
                     <td>:</td>
                     <td><?php echo CHtml::encode($po->getPurchaseStatus($po->purchase_type)); ?></td>
-                </tr>
-            <?php endif; ?>
+                <?php else: ?>
+                    <td colspan="3"></td>
+                <?php endif; ?>
+            </tr>
         </table>
     </div>
 
