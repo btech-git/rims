@@ -163,7 +163,7 @@ class EmployeeAttendanceController extends Controller {
 
         $worksheet->getStyle("A5:{$column}5")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
         $worksheet->getStyle("A5:{$column}5")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
-        $worksheet->getStyle('A5:{$column}5')->getFont()->setBold(true);
+        $worksheet->getStyle("A5:{$column}5")->getFont()->setBold(true);
         
         $counter = 7;
 
