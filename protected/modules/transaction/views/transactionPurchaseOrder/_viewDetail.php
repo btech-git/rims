@@ -66,7 +66,10 @@
                     Brand: <?php echo CHtml::Encode(CHtml::value($purchaseOrderDetail, 'product.brand.name')); ?> ||
                     Sub Brand: <?php echo CHtml::Encode(CHtml::value($purchaseOrderDetail, 'product.subBrand.name')); ?> ||
                     Brand Series: <?php echo CHtml::Encode(CHtml::value($purchaseOrderDetail, 'product.subBrandSeries.name')); ?> ||
-                    Unit: <?php echo CHtml::encode(CHtml::value($unit, 'name')); ?>
+                    Unit: <?php echo CHtml::encode(CHtml::value($unit, 'name')); ?> ||
+                    Posisi Stok: <?php echo CHtml::encode(CHtml::value($purchaseOrderDetail, 'stock_quantity')); ?> ||
+                    Rata2 Jual: <?php echo CHtml::encode(CHtml::value($purchaseOrderDetail, 'average_sale_amount')); ?> ||
+                    Stok Min: <?php echo CHtml::encode(CHtml::value($product, 'minimum_stock')); ?>
                 </td>
             </tr>
             <tr>

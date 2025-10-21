@@ -95,7 +95,6 @@ function tanggal($date) {
                 <th style="width:10%">Disc</th>
                 <th style="width:10%">After Disc</th>
                 <th style="width:15%">Total</th>
-                <!--<th style="width:10%">Notes</th>-->
             </tr>
             <?php
             $no = 1;
@@ -118,6 +117,16 @@ function tanggal($date) {
                     <td style="text-align:right">Rp. <?php echo number_format($x->discount, 2, ',', '.') ?></td>
                     <td style="text-align:right">Rp. <?php echo number_format($x->unit_price, 2, ',', '.') ?></td>
                     <td style="text-align:right">Rp. <?php echo number_format($x->total_price, 2, ',', '.') ?> &nbsp; </td>
+                </tr>
+                <tr>
+                    <td colspan="10">
+                        <?php $unit = Unit::model()->findByPk($x->unit_id); ?>
+                        Category: <?php echo CHtml::Encode(CHtml::value($x, 'product.productMasterCategory.name')); ?> - <?php echo CHtml::Encode(CHtml::value($x, 'product.productSubMasterCategory.name')); ?> - <?php echo CHtml::Encode(CHtml::value($x, 'product.productSubCategory.name')); ?> ||
+                        Brand: <?php echo CHtml::Encode(CHtml::value($x, 'product.brand.name')); ?> - <?php echo CHtml::Encode(CHtml::value($x, 'product.subBrand.name')); ?> - <?php echo CHtml::Encode(CHtml::value($x, 'product.subBrandSeries.name')); ?> ||
+                        Posisi Stok: <?php echo CHtml::encode(CHtml::value($x, 'stock_quantity')); ?> ||
+                        Rata2 Jual: <?php echo CHtml::encode(CHtml::value($x, 'average_sale_amount')); ?> ||
+                        Stok Min: <?php echo CHtml::encode(CHtml::value($x, 'product.minimum_stock')); ?>
+                    </td>
                 </tr>
                 <?php $no++;
             } ?>

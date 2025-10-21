@@ -34,7 +34,7 @@ class TransferRequest extends CComponent {
 	
     public function addDetail($id) {
         $product = Product::model()->findByPk($id);
-        $warehouse = Warehouse::model()->findByAttributes(array('branch_id' => $this->header->requester_branch_id));
+        $warehouse = Warehouse::model()->findByAttributes(array('branch_id' => $this->header->requester_branch_id, 'status' => 'Active'));
 
         $exist = false;
         foreach ($this->details as $i => $detail) {

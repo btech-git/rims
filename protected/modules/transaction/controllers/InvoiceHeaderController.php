@@ -758,6 +758,21 @@ class InvoiceHeaderController extends Controller {
         ));
     }
 
+    public function actionAjaxJsonTaxAmount($id) {
+        if (Yii::app()->request->isAjaxRequest) {
+            $invoice = $this->instantiate($id, '');
+            $this->loadState($invoice);
+
+            $taxAmountCoretax = CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($invoice->header, 'tax_amount_coretax')));
+            $grandTotalCoretax = CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($invoice->header, 'grand_total_coretax')));
+
+            echo CJSON::encode(array(
+                'taxAmountCoretax' => $taxAmountCoretax,
+                'grandTotalCoretax' => $grandTotalCoretax,
+            ));
+        }
+    }
+
     /**
      * Returns the data model based on the primary key given in the GET variable.
      * If the data model is not found, an HTTP exception will be raised.

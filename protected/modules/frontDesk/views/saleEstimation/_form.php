@@ -121,6 +121,7 @@
                                     <div class="small-8 columns">
                                         <?php echo CHtml::activeDropDownlist($saleEstimation->header, 'employee_id_sale_person', CHtml::listData(Employee::model()->findAllByAttributes(array(
                                             "position_id" => 2,
+                                            'status' => 'Active',
                                         )), "id", "name"), array("empty" => "--Assign Sales--", 'class' => 'form-select' . ($saleEstimation->header->hasErrors('employee_id_sale_person') ? ' is-invalid' : ''))); ?>
                                         <?php echo CHtml::error($saleEstimation->header, 'employee_id_sale_person', array('class' => 'invalid-feedback d-block')); ?>
                                     </div>

@@ -1,5 +1,4 @@
 <div class="clearfix page-action">
-    <h1>Create Invoice</h1>
     <div class="form">
         <?php $form=$this->beginWidget('CActiveForm', array(
             'id'=>'registration-transaction-form',
@@ -195,6 +194,30 @@
                         </div>
                     </div>
                 </div>
+
+                <div class="field">
+                    <div class="row collapse">
+                        <div class="small-4 columns">
+                            <?php echo $form->labelEx($invoice->header, 'Ppn Coretax', array('class' => 'prefix')); ?>
+                        </div>
+                        <div class="small-8 columns">
+                            <?php echo $form->textField($invoice->header, 'tax_amount_coretax', array(
+                                'onchange' => CHtml::ajax(array(
+                                    'type' => 'POST',
+                                    'dataType' => 'JSON',
+                                    'url' => CController::createUrl('ajaxJsonTaxAmount', array('id' => $invoice->header->id)),
+                                    'success' => 'function(data) {
+                                        $("#tax_amount_coretax").html(data.taxAmountCoretax);
+                                    }',
+                                )),
+                            )); ?>
+                            <div id="tax_amount_coretax" style="text-align: right;">
+                                <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($invoice->header, 'tax_amount_coretax'))); ?>
+                            </div>
+                            <?php echo $form->error($invoice->header, 'tax_amount_coretax'); ?>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <div class="small-12 medium-6 columns">
@@ -227,6 +250,30 @@
                         </div>
                         <div class="small-8 columns">
                             <?php echo number_format(CHtml::encode(CHtml::value($invoice->header, 'total_price')), 2); ?>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="field">
+                    <div class="row collapse">
+                        <div class="small-4 columns">
+                            <?php echo $form->labelEx($invoice->header, 'DPP Coretax', array('class' => 'prefix')); ?>
+                        </div>
+                        <div class="small-8 columns">
+                            <?php echo $form->textField($invoice->header, 'grand_total_coretax', array(
+                                'onchange' => CHtml::ajax(array(
+                                    'type' => 'POST',
+                                    'dataType' => 'JSON',
+                                    'url' => CController::createUrl('ajaxJsonTaxAmount', array('id' => $invoice->header->id)),
+                                    'success' => 'function(data) {
+                                        $("#grand_total_coretax").html(data.grandTotalCoretax);
+                                    }',
+                                )),
+                            )); ?>
+                            <div id="grand_total_coretax" style="text-align: right;">
+                                <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($invoice->header, 'grand_total_coretax'))); ?>
+                            </div>
+                            <?php echo $form->error($invoice->header, 'grand_total_coretax'); ?>
                         </div>
                     </div>
                 </div>

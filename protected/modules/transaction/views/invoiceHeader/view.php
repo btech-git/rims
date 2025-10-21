@@ -51,12 +51,12 @@ $this->menu = array(
             )); ?>
         <?php endif; ?>
         
-        <?php if ($model->status != "CANCELLED!!!" && $model->transaction_tax_number == null && $model->ppn_total > 0): ?>
+        <?php //if ($model->status != "CANCELLED!!!" && $model->transaction_tax_number == null && $model->ppn_total > 0): ?>
             <?php echo CHtml::link('<span class="fa fa-edit"></span>Update Faktur Pajak', array("updateTaxNumber", "id" => $model->id), array(
                 'class' => 'button success right', 
                 'style' => 'margin-right:10px'
             )); ?>
-        <?php endif; ?>
+        <?php //endif; ?>
 
         <?php if ($model->status != 'PAID'): ?> 
             <?php echo CHtml::link('<span class="fa fa-print"></span>Print Invoice', array("pdf", "id" => $model->id), array(

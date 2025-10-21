@@ -39,6 +39,7 @@ class PurchaseOrders extends CComponent {
     public function addDetail($productId) {
         
         $product = Product::model()->findByPK($productId);
+        $warehouse = Warehouse::model()->findByAttributes(array('branch_id' => $this->header->main_branch_id, 'status' => 'Active'));
         
         $exist = false;
         foreach ($this->details as $i => $detail) {
@@ -54,6 +55,8 @@ class PurchaseOrders extends CComponent {
             $detail->unit_id = $product->unit_id;
             $detail->retail_price = $product->retail_price;
             $detail->hpp = $product->hpp;
+            $detail->stock_quantity = $product->getTotalStock($warehouse->id);
+            $detail->average_sale_amount = round($product->getAverageSaleSixMonths(), 2);
 
             $this->details[] = $detail;
         }

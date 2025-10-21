@@ -145,7 +145,10 @@
                                                 <label class="prefix"><?php echo $form->labelEx($bodyRepairRegistration->header,'branch_id'); ?></label>
                                             </div>
                                             <div class="small-8 columns">
-                                                <?php echo $form->textField($bodyRepairRegistration->header,'branch_name',array('value'=>$bodyRepairRegistration->header->isNewRecord ? Branch::model()->findByPk(User::model()->findByPk(Yii::app()->user->getId())->branch_id)->name : $bodyRepairRegistration->header->branch->name,'readonly'=>true)); ?>
+                                                <?php echo $form->textField($bodyRepairRegistration->header,'branch_name',array(
+                                                    'value'=>$bodyRepairRegistration->header->isNewRecord ? Branch::model()->findByPk(User::model()->findByPk(Yii::app()->user->getId())->branch_id)->name : $bodyRepairRegistration->header->branch->name,
+                                                    'readonly'=>true
+                                                )); ?>
                                                 <?php echo $form->error($bodyRepairRegistration->header,'branch_id'); ?>
                                             </div>
                                         </div>
@@ -161,6 +164,7 @@
 //                                                    "branch_id" => User::model()->findByPk(Yii::app()->user->getId())->branch_id,
 //                                                    "division_id" => array(2),
                                                     "position_id" => 1,
+                                                    'status' => 'Active',
 //                                                    "level_id" => array(1, 2, 3, 4),
                                                 )), "id", "name"), array("empty" => "--Assign Mechanic--")); ?>
                                                 <?php echo $form->error($bodyRepairRegistration->header,'employee_id_assign_mechanic'); ?>
@@ -178,6 +182,7 @@
 //                                                    "branch_id" => User::model()->findByPk(Yii::app()->user->getId())->branch_id,
 //                                                    "division_id" => array(2),
                                                     "position_id" => 2,
+                                                    'status' => 'Active',
 //                                                    "level_id" => array(1, 2, 3, 4),
                                                 )), "id", "name"), array("empty" => "--Assign Sales--")); ?>
                                                 <?php echo $form->error($bodyRepairRegistration->header,'employee_id_sales_person'); ?>
@@ -191,7 +196,7 @@
                                                 <label class="prefix">Insurance Company</label>
                                             </div>
                                             <div class="small-8 columns">
-                                                <?php echo $form->dropDownlist($bodyRepairRegistration->header,'insurance_company_id',CHtml::listData(InsuranceCompany::model()->findAll(),'id','name'),array(
+                                                <?php echo $form->dropDownlist($bodyRepairRegistration->header,'insurance_company_id',CHtml::listData(InsuranceCompany::model()->findAllByAttributes(array('is_deleted' => 0)),'id','name'),array(
                                                     'prompt'=>'-- Tanpa Asuransi --',
                                                 )); ?>
                                             </div>

@@ -179,8 +179,8 @@ class MonthlyProductSaleTransactionController extends Controller {
         $worksheet->mergeCells('A1:Z1');
         $worksheet->mergeCells('A2:Z2');
         $worksheet->mergeCells('A3:Z3');
-        $worksheet->getStyle('A1:AZ6')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-        $worksheet->getStyle('A1:AZ6')->getFont()->setBold(true);
+        $worksheet->getStyle('A1:BG6')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->getStyle('A1:BG6')->getFont()->setBold(true);
 
         $worksheet->setCellValue('A1', 'Raperind Motor ');
         $worksheet->setCellValue('A2', 'Penjualan Parts & Components Bulanan');
@@ -196,6 +196,8 @@ class MonthlyProductSaleTransactionController extends Controller {
             $worksheet->setCellValue("{$columnStart}5", CHtml::value($branch, 'code'));
             ++$columnStart; ++$columnStart; ++$columnStart; ++$columnStart; ++$columnStart;
             ++$columnEnd; ++$columnEnd; ++$columnEnd; ++$columnEnd; ++$columnEnd;
+            $worksheet->setCellValue("{$columnStart}5", '');
+            ++$columnStart; ++$columnEnd;
         }
         $worksheet->mergeCells("{$columnStart}5:{$columnEnd}5");
         $worksheet->setCellValue("{$columnStart}5", 'All Cabang');
@@ -218,7 +220,7 @@ class MonthlyProductSaleTransactionController extends Controller {
             $worksheet->setCellValue("{$columnCounter}6", 'Min Stok');
             $columnCounter++;
             $worksheet->setCellValue("{$columnCounter}6", 'Posisi Stok');
-            $columnCounter++;
+            $columnCounter++;$columnCounter++;
         }
         $worksheet->setCellValue("{$columnCounter}6", 'Total Jual');
         $columnCounter++;
@@ -263,7 +265,7 @@ class MonthlyProductSaleTransactionController extends Controller {
                 $worksheet->setCellValue("{$columnCounter}{$counter}", $product->minimum_stock);
                 $columnCounter++;
                 $worksheet->setCellValue("{$columnCounter}{$counter}", $quantityStock);
-                $columnCounter++;
+                $columnCounter++;$columnCounter++;
                 $invoiceTotals[] = $invoiceTotal;
                 $quantityStocks[] = $quantityStock;
             }
@@ -283,7 +285,7 @@ class MonthlyProductSaleTransactionController extends Controller {
             $counter++;
         }
 
-        for ($col = 'A'; $col !== 'Z'; $col++) {
+        for ($col = 'A'; $col !== 'BG'; $col++) {
             $objPHPExcel->getActiveSheet()
             ->getColumnDimension($col)
             ->setAutoSize(true);

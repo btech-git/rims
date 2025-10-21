@@ -214,7 +214,19 @@ $this->breadcrumbs=array(
                                 <?php echo $form->labelEx($invoice, 'PPn Coretax', array('class' => 'prefix')); ?>
                             </div>
                             <div class="small-8 columns">
-                                <?php echo $form->textField($invoice, 'tax_amount_coretax'); ?>
+                                <?php echo $form->textField($invoice, 'tax_amount_coretax', array(
+                                    'onchange' => CHtml::ajax(array(
+                                        'type' => 'POST',
+                                        'dataType' => 'JSON',
+                                        'url' => CController::createUrl('ajaxJsonTaxAmount', array('id' => $invoice->id)),
+                                        'success' => 'function(data) {
+                                            $("#tax_amount_coretax").html(data.taxAmountCoretax);
+                                        }',
+                                    )),
+                                )); ?>
+                                <div id="tax_amount_coretax" style="text-align: right;">
+                                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($invoice, 'tax_amount_coretax'))); ?>
+                                </div>
                                 <?php echo $form->error($invoice, 'tax_amount_coretax'); ?>
                             </div>
                         </div>
@@ -266,7 +278,19 @@ $this->breadcrumbs=array(
                                 <?php echo $form->labelEx($invoice, 'DPP Coretax', array('class' => 'prefix')); ?>
                             </div>
                             <div class="small-8 columns">
-                                <?php echo $form->textField($invoice, 'grand_total_coretax'); ?>
+                                <?php echo $form->textField($invoice, 'grand_total_coretax', array(
+                                    'onchange' => CHtml::ajax(array(
+                                        'type' => 'POST',
+                                        'dataType' => 'JSON',
+                                        'url' => CController::createUrl('ajaxJsonTaxAmount', array('id' => $invoice->id)),
+                                        'success' => 'function(data) {
+                                            $("#grand_total_coretax").html(data.grandTotalCoretax);
+                                        }',
+                                    )),
+                                )); ?>
+                                <div id="grand_total_coretax" style="text-align: right;">
+                                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($invoice, 'grand_total_coretax'))); ?>
+                                </div>
                                 <?php echo $form->error($invoice, 'grand_total_coretax'); ?>
                             </div>
                         </div>

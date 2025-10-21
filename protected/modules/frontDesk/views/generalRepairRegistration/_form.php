@@ -121,6 +121,7 @@
 //                                                    "branch_id" => User::model()->findByPk(Yii::app()->user->getId())->branch_id,
 //                                                    "division_id" => array(1, 3, 5),
                                                     "position_id" => 1,
+                                                    'status' => 'Active',
 //                                                    "level_id" => array(1, 2, 3, 4),
                                                 )), "id", "name"), array("empty" => "--Assign Mechanic--")); ?>
                                                 <?php echo $form->error($generalRepairRegistration->header,'employee_id_assign_mechanic'); ?>
@@ -138,6 +139,7 @@
 //                                                    "branch_id" => User::model()->findByPk(Yii::app()->user->getId())->branch_id,
 //                                                    "division_id" => array(2),
                                                     "position_id" => 2,
+                                                    'status' => 'Active',
 //                                                    "level_id" => array(1, 2, 3, 4),
                                                 )), "id", "name"), array("empty" => "--Assign Sales--")); ?>
                                                 <?php echo $form->error($generalRepairRegistration->header,'employee_id_sales_person'); ?>

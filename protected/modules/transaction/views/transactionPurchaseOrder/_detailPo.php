@@ -129,12 +129,17 @@
         </tr>
         <tr>
             <td colspan="7">
+                <?php echo CHtml::activeHiddenField($detail, "[$i]stock_quantity"); ?>
+                <?php echo CHtml::activeHiddenField($detail, "[$i]average_sale_amount"); ?>
+                <?php echo CHtml::activeHiddenField($detail, "[$i]last_buying_price"); ?>
                 Manufacture Code: <?php echo CHtml::encode(CHtml::value($detail, 'product.manufacturer_code')); ?> ||
                 Category: <?php echo CHtml::encode(CHtml::value($detail, 'product.masterSubCategoryCode')); ?> ||
                 Brand: <?php echo CHtml::encode(CHtml::value($detail, 'product.brand.name')); ?> ||
                 Sub Brand: <?php echo CHtml::encode(CHtml::value($detail, 'product.subBrand.name')); ?> ||
                 Brand Series: <?php echo CHtml::encode(CHtml::value($detail, 'product.subBrandSeries.name')); ?> ||
-                <?php echo CHtml::activeHiddenField($detail, "[$i]last_buying_price", array('size' => 5, 'readOnly' => true)); ?>
+                Posisi Stok: <?php echo CHtml::encode(CHtml::value($detail, 'stock_quantity')); ?> ||
+                Rata2 Jual: <?php echo CHtml::encode(CHtml::value($detail, 'average_sale_amount')); ?> ||
+                Stok Min: <?php echo CHtml::encode(CHtml::value($detail, 'product.minimum_stock')); ?> ||
                 <?php echo CHtml::button('Last Buying Price', array(
                     'rel' => $i,
                     'onclick' => '
