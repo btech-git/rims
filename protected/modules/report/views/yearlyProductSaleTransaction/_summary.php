@@ -1,5 +1,3 @@
-<?php $dateNumList = range(1, 31); ?>
-
 <div style="font-weight: bold; text-align: center">
     <div style="font-size: larger">Raperind Motor</div>
     <div style="font-size: larger">Laporan Penjualan Parts & Components Tahunan</div>
@@ -7,6 +5,8 @@
 </div>
 
 <br />
+
+<?php $maxMonthNum = (int) $year === (int) $yearNow ? $monthNow : 12; ?>
 
 <table style="width: 100%">
     <thead>
@@ -38,12 +38,16 @@
                 <?php $invoiceTotals = array(); ?>
                 <?php for ($month = 1; $month <= 12; $month++): ?>
                     <?php $invoiceTotal = isset($yearlyProductSaleTransactionReportDataItem['totals'][$month]) ? $yearlyProductSaleTransactionReportDataItem['totals'][$month] : '0.00'; ?>
-                    <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $invoiceTotal)); ?></td>
+                    <?php if ($month <= $maxMonthNum): ?>
+                        <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $invoiceTotal)); ?></td>
+                    <?php else: ?>
+                        <td></td>
+                    <?php endif; ?>
                     <?php $invoiceTotals[] = $invoiceTotal; ?>
                 <?php endfor; ?>
                 <?php $invoiceTotalSum = array_sum($invoiceTotals); ?>
                 <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $invoiceTotalSum)); ?></td>
-                <?php $invoiceMean = $invoiceTotalSum / 12; ?>
+                <?php $invoiceMean = $invoiceTotalSum / $maxMonthNum; ?>
                 <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $invoiceMean)); ?></td>
                 <?php $invoiceMinAmount = min($invoiceTotals); ?>
                 <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $invoiceMinAmount)); ?></td>

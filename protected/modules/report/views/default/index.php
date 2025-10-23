@@ -904,6 +904,11 @@
                                         'url' => array('/report/dailyTransaction/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('director')
                                     ),
+                                    array(
+                                        'label' => 'Penjualan Customer Terbaik', 
+                                        'url' => array('/report/customerTopSaleTransaction/summary'), 
+                                        'visible' => Yii::app()->user->checkAccess('director')
+                                    ),
                                 ),
                             )); ?>
                         <?php endif; ?>

@@ -23,6 +23,7 @@ class YearlyProductSaleTransactionController extends Controller {
         ini_set('memory_limit', '1024M');
         
         $yearNow = date('Y');
+        $monthNow = date('m');
         $year = (isset($_GET['Year'])) ? $_GET['Year'] : $yearNow;
         $productId = isset($_GET['ProductId']) ? $_GET['ProductId'] : '';
         $productCode = isset($_GET['ProductCode']) ? $_GET['ProductCode'] : '';
@@ -71,7 +72,7 @@ class YearlyProductSaleTransactionController extends Controller {
         }
         
         if (isset($_GET['SaveExcel'])) {
-            $this->saveToExcel($yearlyProductSaleTransactionReportData, $inventoryCurrentStockData, $year);
+            $this->saveToExcel($yearlyProductSaleTransactionReportData, $inventoryCurrentStockData, $year, $yearNow, $monthNow);
         }
         
         $this->render('summary', array(
@@ -79,6 +80,8 @@ class YearlyProductSaleTransactionController extends Controller {
             'inventoryCurrentStockData' => $inventoryCurrentStockData,
             'yearList' => $yearList,
             'year' => $year,
+            'yearNow' => $yearNow,
+            'monthNow' => $monthNow,
             'productId' => $productId,
             'productCode' => $productCode,
             'productName' => $productName,
@@ -140,7 +143,7 @@ class YearlyProductSaleTransactionController extends Controller {
         }
     }
 
-    protected function saveToExcel($yearlyProductSaleTransactionReportData, $inventoryCurrentStockData, $year) {
+    protected function saveToExcel($yearlyProductSaleTransactionReportData, $inventoryCurrentStockData, $year, $yearNow, $monthNow) {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
 
@@ -222,6 +225,7 @@ class YearlyProductSaleTransactionController extends Controller {
         $counter = 7;
         $ordinal = 0;
         
+        $maxMonthNum = (int) $year === (int) $yearNow ? $monthNow : 12;
         foreach ($yearlyProductSaleTransactionReportData as $productId => $yearlyProductSaleTransactionReportDataItem) {
             $worksheet->getStyle("G{$counter}:Z{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
 
@@ -237,14 +241,14 @@ class YearlyProductSaleTransactionController extends Controller {
             
             for ($month = 1; $month <= 12; $month++) {
                 $invoiceTotal = isset($yearlyProductSaleTransactionReportDataItem['totals'][$month]) ? $yearlyProductSaleTransactionReportDataItem['totals'][$month] : '0.00';
-                $worksheet->setCellValue("{$columnCounter}{$counter}", $invoiceTotal);
+                $worksheet->setCellValue("{$columnCounter}{$counter}", $month <= $maxMonthNum ? $invoiceTotal : '');
                 $columnCounter++;
                 $invoiceTotals[] = $invoiceTotal;
             }
             $invoiceTotalSum = array_sum($invoiceTotals);
             $worksheet->setCellValue("{$columnCounter}{$counter}", $invoiceTotalSum);
             $columnCounter++;
-            $invoiceMean = $invoiceTotalSum / 12;
+            $invoiceMean = $invoiceTotalSum / $maxMonthNum;
             $worksheet->setCellValue("{$columnCounter}{$counter}", $invoiceMean);
             $columnCounter++;
             $invoiceMinAmount = min($invoiceTotals);

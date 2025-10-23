@@ -470,7 +470,7 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
         
         $sql = "SELECT SUM(payment_left) AS remaining
                 FROM " . InvoiceHeader::model()->tableName() . "
-                WHERE payment_left > 0 AND invoice_date > '" . AppParam::BEGINNING_TRANSACTION_DATE . "'";
+                WHERE payment_left > 0 AND invoice_date >= '" . AppParam::BEGINNING_TRANSACTION_DATE . "'";
                 
         $value = Yii::app()->db->createCommand($sql)->queryScalar(array());
 
@@ -2114,10 +2114,9 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
         return $resultSet;
     }
     
-    public static function getYearlyCustomerReceivableReport($year) {
+    public static function getYearlyCustomerInvoiceReport($year) {
       
-        $sql = "SELECT i.customer_id, MONTH(i.invoice_date) AS invoice_month, MAX(c.name) AS customer_name, SUM(i.total_price) AS invoice_total, 
-                    SUM(i.payment_amount) AS invoice_payment, SUM(i.payment_left) AS invoice_outstanding
+        $sql = "SELECT i.customer_id, MONTH(i.invoice_date) AS invoice_month, MAX(c.name) AS customer_name, SUM(i.total_price) AS invoice_total
                 FROM " . InvoiceHeader::model()->tableName() . "  i 
                 INNER JOIN " . Customer::model()->tableName() . " c ON c.id = i.customer_id
                 WHERE YEAR(i.invoice_date) = :year AND c.customer_type = 'Company' AND i.user_id_cancelled IS NULL
@@ -2127,6 +2126,102 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
         $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, array(
             ':year' => $year,
         ));
+        
+        return $resultSet;
+    }    
+    
+    public static function getYearlyCustomerPaymentReport($year) {
+      
+        $sql = "SELECT i.customer_id, MONTH(i.payment_date) AS payment_month, MAX(c.name) AS customer_name, SUM(i.payment_amount) AS payment_total
+                FROM " . PaymentIn::model()->tableName() . "  i
+                INNER JOIN " . Customer::model()->tableName() . " c ON c.id = i.customer_id
+                WHERE YEAR(i.payment_date) = :year AND c.customer_type = 'Company' AND i.user_id_cancelled IS NULL
+                GROUP BY i.customer_id, MONTH(i.payment_date)
+                ORDER BY customer_name ASC, payment_month ASC";
+                
+        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, array(
+            ':year' => $year,
+        ));
+        
+        return $resultSet;
+    }    
+    
+    public static function getBeginningCustomerInvoiceReport($year) {
+      
+        $sql = "SELECT i.customer_id, MAX(c.name) AS customer_name, SUM(i.total_price) AS beginning_invoice_total
+                FROM " . InvoiceHeader::model()->tableName() . "  i 
+                INNER JOIN " . Customer::model()->tableName() . " c ON c.id = i.customer_id
+                WHERE i.invoice_date >= '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND i.invoice_date < :invoice_date AND c.customer_type = 'Company' AND i.user_id_cancelled IS NULL
+                GROUP BY i.customer_id";
+                
+        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, array(
+            ':invoice_date' => $year . '-01-01',
+        ));
+        
+        return $resultSet;
+    }    
+  
+    public static function getBeginningCustomerPaymentReport($year) {
+      
+        $sql = "SELECT i.customer_id, MAX(c.name) AS customer_name, SUM(i.payment_amount) AS beginning_payment_total
+                FROM " . PaymentIn::model()->tableName() . "  i
+                INNER JOIN " . Customer::model()->tableName() . " c ON c.id = i.customer_id
+                WHERE i.payment_date >= '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND i.payment_date < :payment_date AND c.customer_type = 'Company' AND i.user_id_cancelled IS NULL
+                GROUP BY i.customer_id";
+                
+        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, array(
+            ':payment_date' => $year . '-01-01',
+        ));
+        
+        return $resultSet;
+    }    
+    
+    public static function getCustomerCompanyTopSaleReport($year, $branchId) {
+        $branchConditionSql = '';
+      
+        $params = array(
+            ':year' => $year,
+        );
+        
+        if (!empty($branchId)) {
+            $branchConditionSql = ' AND i.branch_id = :branch_id';
+            $params[':branch_id'] = $branchId;
+        }
+        
+        $sql = "SELECT i.customer_id, MAX(c.name) AS customer_name, COUNT(i.id) AS quantity_invoice, SUM(i.total_price) AS total_price
+                FROM " . InvoiceHeader::model()->tableName() . " i 
+                INNER JOIN " . Customer::model()->tableName() . " c ON c.id = i.customer_id
+                WHERE YEAR(i.invoice_date) = :year AND c.customer_type = 'Company' AND i.user_id_cancelled IS NULL" . $branchConditionSql . " 
+                GROUP BY i.customer_id
+                ORDER BY total_price DESC, quantity_invoice DESC
+                LIMIT 20";
+                
+        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
+        
+        return $resultSet;
+    }    
+    
+    public static function getCustomerIndividualTopSaleReport($year, $branchId) {
+        $branchConditionSql = '';
+      
+        $params = array(
+            ':year' => $year,
+        );
+        
+        if (!empty($branchId)) {
+            $branchConditionSql = ' AND i.branch_id = :branch_id';
+            $params[':branch_id'] = $branchId;
+        }
+        
+        $sql = "SELECT i.customer_id, MAX(c.name) AS customer_name, COUNT(i.id) AS quantity_invoice, SUM(i.total_price) AS total_price
+                FROM " . InvoiceHeader::model()->tableName() . " i 
+                INNER JOIN " . Customer::model()->tableName() . " c ON c.id = i.customer_id
+                WHERE YEAR(i.invoice_date) = :year AND c.customer_type = 'Individual' AND i.user_id_cancelled IS NULL" . $branchConditionSql . " 
+                GROUP BY i.customer_id
+                ORDER BY total_price DESC, quantity_invoice DESC
+                LIMIT 20";
+                
+        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
         
         return $resultSet;
     }    

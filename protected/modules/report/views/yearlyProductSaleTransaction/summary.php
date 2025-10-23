@@ -72,6 +72,8 @@ Yii::app()->clientScript->registerScript('search', "
                         'yearlyProductSaleTransactionReportData' => $yearlyProductSaleTransactionReportData,
                         'inventoryCurrentStockData' => $inventoryCurrentStockData,
                         'year' => $year,
+                        'yearNow' => $yearNow,
+                        'monthNow' => $monthNow,
                         'monthList' => $monthList,
                     )); ?>
                 </div>

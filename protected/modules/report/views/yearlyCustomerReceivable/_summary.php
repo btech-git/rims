@@ -11,41 +11,44 @@
 <table style="width: 310%">
     <thead>
         <tr>
-            <th colspan="2"></th>
+            <th colspan="3"></th>
             <?php for ($month = 1; $month <= 12; $month++): ?>
                 <th colspan="3" style="text-align: center"><?php echo CHtml::encode($monthList[$month]); ?></th>
             <?php endfor; ?>
-            <th colspan="3" style="text-align: center">Total</th>
+            <th colspan="2" style="text-align: center">Total</th>
         </tr>
         <tr>
             <th style="width: 10px">No.</th>
             <th style="width: 300px">Customer</th>
+            <th style="width: 150px">Beginning Receivable</th>
             <?php for ($month = 1; $month <= 12; $month++): ?>
-                <th>Invoice Amount</th>
+                <th>Invoice</th>
+                <th>Payment</th>
                 <th>Outstanding</th>
-                <th>Pelunasan</th>
             <?php endfor; ?>
-            <th>Invoice Amount</th>
-            <th>Outstanding</th>
-            <th>Pelunasan</th>
+            <th>Invoice</th>
+            <th>Payment</th>
         </tr>
     </thead>
     <tbody>
         <?php $ordinal = 0; ?>
         <?php $invoiceTotalSums = array(); ?>
-        <?php $invoiceOutstandingSums = array(); ?>
-        <?php $invoicePaymentSums = array(); ?>
-        <?php foreach ($yearlyCustomerReceivableReportData as $customerId => $yearlyCustomerReceivableReportDataItem): ?>
+        <?php $paymentTotalSums = array(); ?>
+        <?php $outstandingSums = array(); ?>
+        <?php foreach ($yearlyCustomerReportData as $customerId => $yearlyCustomerReportDataItem): ?>
             <tr>
+                <?php $beginningInvoiceTotal = isset($yearlyCustomerReportDataItem['beginning_invoice_total']) ? $yearlyCustomerReportDataItem['beginning_invoice_total'] : ''; ?>
+                <?php $beginningPaymentTotal = isset($yearlyCustomerReportDataItem['beginning_payment_total']) ? $yearlyCustomerReportDataItem['beginning_payment_total'] : ''; ?>
+                <?php $beginningOutstanding = $beginningInvoiceTotal - $beginningPaymentTotal; ?>
                 <td style="text-align: center"><?php echo ++$ordinal; ?></td>
-                <td><?php echo $yearlyCustomerReceivableReportDataItem['customer_name']; ?></td>
+                <td><?php echo $yearlyCustomerReportDataItem['customer_name']; ?></td>
+                <td style="text-align: right"><?php echo Yii::app()->numberFormatter->format('#,##0.00', $beginningOutstanding); ?></td>
                 <?php $invoiceTotalSum = 0; ?>
-                <?php $invoiceOutstandingSum = 0; ?>
-                <?php $invoicePaymentSum = 0; ?>
+                <?php $paymentTotalSum = 0; ?>
+                <?php $currentOutstanding = $beginningOutstanding; ?>
                 <?php for ($month = 1; $month <= 12; $month++): ?>
-                    <?php $invoiceTotal = isset($yearlyCustomerReceivableReportDataItem[$month]['invoice_total']) ? $yearlyCustomerReceivableReportDataItem[$month]['invoice_total'] : ''; ?>
-                    <?php $invoiceOutstanding = isset($yearlyCustomerReceivableReportDataItem[$month]['invoice_outstanding']) ? $yearlyCustomerReceivableReportDataItem[$month]['invoice_outstanding'] : ''; ?>
-                    <?php $invoicePayment = isset($yearlyCustomerReceivableReportDataItem[$month]['invoice_payment']) ? $yearlyCustomerReceivableReportDataItem[$month]['invoice_payment'] : ''; ?>
+                    <?php $invoiceTotal = isset($yearlyCustomerReportDataItem[$month]['invoice_total']) ? $yearlyCustomerReportDataItem[$month]['invoice_total'] : ''; ?>
+                    <?php $paymentTotal = isset($yearlyCustomerReportDataItem[$month]['payment_total']) ? $yearlyCustomerReportDataItem[$month]['payment_total'] : ''; ?>
                     <td style="text-align: right">
                         <?php echo CHtml::link(CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $invoiceTotal)), array(
                             'transactionInfo', 
@@ -55,49 +58,42 @@
                         ), array('target' => '_blank')); ?>
                     </td>
                     <td style="text-align: right">
-                        <?php echo CHtml::link(CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $invoiceOutstanding)), array(
+                        <?php echo CHtml::link(CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $paymentTotal)), array(
                             'transactionInfo', 
                             'customerId' => $customerId, 
                             'year' => $year, 
                             'month' => $month
                         ), array('target' => '_blank')); ?></td>
-                    <td style="text-align: right">
-                        <?php echo CHtml::link(CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $invoicePayment)), array(
-                            'transactionInfo', 
-                            'customerId' => $customerId, 
-                            'year' => $year, 
-                            'month' => $month
-                        ), array('target' => '_blank')); ?></td>
+                    <?php $currentOutstanding += $invoiceTotal - $paymentTotal; ?>
+                    <td style="text-align: right"><?php echo Yii::app()->numberFormatter->format('#,##0.00', $currentOutstanding); ?></td>
+                    
                     <?php $invoiceTotalSum += $invoiceTotal; ?>
-                    <?php $invoiceOutstandingSum += $invoiceOutstanding; ?>
-                    <?php $invoicePaymentSum += $invoicePayment; ?>
+                    <?php $paymentTotalSum += $paymentTotal; ?>
                     
                     <?php if (!isset($invoiceTotalSums[$month])): ?>
                         <?php $invoiceTotalSums[$month] = 0; ?>
                     <?php endif; ?>
                     <?php $invoiceTotalSums[$month] += $invoiceTotal; ?>
                     
-                    <?php if (!isset($invoiceOutstandingSums[$month])): ?>
-                        <?php $invoiceOutstandingSums[$month] = 0; ?>
+                    <?php if (!isset($paymentTotalSums[$month])): ?>
+                        <?php $paymentTotalSums[$month] = 0; ?>
                     <?php endif; ?>
-                    <?php $invoiceOutstandingSums[$month] += $invoiceOutstanding; ?>
+                    <?php $paymentTotalSums[$month] += $paymentTotal; ?>
                     
-                    <?php if (!isset($invoicePaymentSums[$month])): ?>
-                        <?php $invoicePaymentSums[$month] = 0; ?>
+                    <?php if (!isset($outstandingSums[$month])): ?>
+                        <?php $outstandingSums[$month] = 0; ?>
                     <?php endif; ?>
-                    <?php $invoicePaymentSums[$month] += $invoicePayment; ?>
+                    <?php $outstandingSums[$month] += $currentOutstanding; ?>
                 <?php endfor; ?>
                 <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $invoiceTotalSum)); ?></td>
-                <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $invoiceOutstandingSum)); ?></td>
-                <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $invoicePaymentSum)); ?></td>
+                <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $paymentTotalSum)); ?></td>
             </tr>
         <?php endforeach; ?>
     </tbody>
     <tfoot>
         <tr>
-            <td style="text-align: right" colspan="2">Total</td>
+            <td style="text-align: right" colspan="3">Total</td>
             <?php $grandTotalInvoice = 0; ?>
-            <?php $grandTotalOutstanding = 0; ?>
             <?php $grandTotalPayment = 0; ?>
             <?php for ($month = 1; $month <= 12; $month++): ?>
             
@@ -106,22 +102,20 @@
                 <?php endif; ?>
                 <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $invoiceTotalSums[$month])); ?></td>
                 
-                <?php if (!isset($invoiceOutstandingSums[$month])): ?>
-                    <?php $invoiceOutstandingSums[$month] = 0; ?>
+                <?php if (!isset($paymentTotalSums[$month])): ?>
+                    <?php $paymentTotalSums[$month] = 0; ?>
                 <?php endif; ?>
-                <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $invoiceOutstandingSums[$month])); ?></td>
+                <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $paymentTotalSums[$month])); ?></td>
                 
-                <?php if (!isset($invoicePaymentSums[$month])): ?>
-                    <?php $invoicePaymentSums[$month] = 0; ?>
+                <?php if (!isset($outstandingSums[$month])): ?>
+                    <?php $outstandingSums[$month] = 0; ?>
                 <?php endif; ?>
-                <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $invoicePaymentSums[$month])); ?></td>
+                <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $outstandingSums[$month])); ?></td>
                 
                 <?php $grandTotalInvoice += $invoiceTotalSums[$month]; ?>
-                <?php $grandTotalOutstanding += $invoiceOutstandingSums[$month]; ?>
-                <?php $grandTotalPayment += $invoicePaymentSums[$month]; ?>
+                <?php $grandTotalPayment += $paymentTotalSums[$month]; ?>
             <?php endfor; ?>
             <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $grandTotalInvoice)); ?></td>
-            <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $grandTotalOutstanding)); ?></td>
             <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $grandTotalPayment)); ?></td>
         </tr>
     </tfoot>

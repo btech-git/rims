@@ -25,14 +25,31 @@ class YearlyCustomerReceivableController extends Controller {
         $yearNow = date('Y');
         $year = (isset($_GET['Year'])) ? $_GET['Year'] : $yearNow;
         
-        $yearlyCustomerReceivableReport = InvoiceHeader::getYearlyCustomerReceivableReport($year);
+        $yearlyCustomerInvoiceReport = InvoiceHeader::getYearlyCustomerInvoiceReport($year);
+        $yearlyCustomerPaymentReport = InvoiceHeader::getYearlyCustomerPaymentReport($year);
+        $beginningCustomerInvoiceReport = InvoiceHeader::getBeginningCustomerInvoiceReport($year);
+        $beginningCustomerPaymentReport = InvoiceHeader::getBeginningCustomerPaymentReport($year);
         
-        $yearlyCustomerReceivableReportData = array();
-        foreach ($yearlyCustomerReceivableReport as $yearlyCustomerReceivableReportItem) {
-            $yearlyCustomerReceivableReportData[$yearlyCustomerReceivableReportItem['customer_id']][$yearlyCustomerReceivableReportItem['invoice_month']]['invoice_total'] = $yearlyCustomerReceivableReportItem['invoice_total'];
-            $yearlyCustomerReceivableReportData[$yearlyCustomerReceivableReportItem['customer_id']][$yearlyCustomerReceivableReportItem['invoice_month']]['invoice_payment'] = $yearlyCustomerReceivableReportItem['invoice_payment'];
-            $yearlyCustomerReceivableReportData[$yearlyCustomerReceivableReportItem['customer_id']][$yearlyCustomerReceivableReportItem['invoice_month']]['invoice_outstanding'] = $yearlyCustomerReceivableReportItem['invoice_outstanding'];
-            $yearlyCustomerReceivableReportData[$yearlyCustomerReceivableReportItem['customer_id']]['customer_name'] = $yearlyCustomerReceivableReportItem['customer_name'];
+        $yearlyCustomerReportData = array();
+        
+        foreach ($yearlyCustomerInvoiceReport as $yearlyCustomerInvoiceReportItem) {
+            $yearlyCustomerReportData[$yearlyCustomerInvoiceReportItem['customer_id']][$yearlyCustomerInvoiceReportItem['invoice_month']]['invoice_total'] = $yearlyCustomerInvoiceReportItem['invoice_total'];
+            $yearlyCustomerReportData[$yearlyCustomerInvoiceReportItem['customer_id']]['customer_name'] = $yearlyCustomerInvoiceReportItem['customer_name'];
+        }
+        
+        foreach ($yearlyCustomerPaymentReport as $yearlyCustomerPaymentReportItem) {
+            $yearlyCustomerReportData[$yearlyCustomerPaymentReportItem['customer_id']][$yearlyCustomerPaymentReportItem['payment_month']]['payment_total'] = $yearlyCustomerPaymentReportItem['payment_total'];
+            $yearlyCustomerReportData[$yearlyCustomerPaymentReportItem['customer_id']]['customer_name'] = $yearlyCustomerPaymentReportItem['customer_name'];
+        }
+        
+        foreach ($beginningCustomerInvoiceReport as $beginningCustomerInvoiceReportItem) {
+            $yearlyCustomerReportData[$beginningCustomerInvoiceReportItem['customer_id']]['beginning_invoice_total'] = $beginningCustomerInvoiceReportItem['beginning_invoice_total'];
+            $yearlyCustomerReportData[$beginningCustomerInvoiceReportItem['customer_id']]['customer_name'] = $beginningCustomerInvoiceReportItem['customer_name'];
+        }
+        
+        foreach ($beginningCustomerPaymentReport as $beginningCustomerPaymentReportItem) {
+            $yearlyCustomerReportData[$beginningCustomerPaymentReportItem['customer_id']]['beginning_payment_total'] = $beginningCustomerPaymentReportItem['beginning_payment_total'];
+            $yearlyCustomerReportData[$beginningCustomerPaymentReportItem['customer_id']]['customer_name'] = $beginningCustomerPaymentReportItem['customer_name'];
         }
         
         $yearList = array();
@@ -45,11 +62,11 @@ class YearlyCustomerReceivableController extends Controller {
         }
         
         if (isset($_GET['SaveExcel'])) {
-            $this->saveToExcel($yearlyCustomerReceivableReportData, $year);
+            $this->saveToExcel($yearlyCustomerReportData, $year);
         }
         
         $this->render('summary', array(
-            'yearlyCustomerReceivableReportData' => $yearlyCustomerReceivableReportData,
+            'yearlyCustomerReportData' => $yearlyCustomerReportData,
             'yearList' => $yearList,
             'year' => $year,
         ));
@@ -59,8 +76,6 @@ class YearlyCustomerReceivableController extends Controller {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
 
-//        $page = (isset($_GET['page'])) ? $_GET['page'] : 1;
-        
         $dataProvider = InvoiceHeader::model()->searchByYearlyCustomerReceivableInfo($customerId, $year, $month);
         $customer = Customer::model()->findByPk($customerId);
         
@@ -92,7 +107,7 @@ class YearlyCustomerReceivableController extends Controller {
         ));
     }
 
-    protected function saveToExcel($yearlyCustomerReceivableReportData, $year) {
+    protected function saveToExcel($yearlyCustomerReportData, $year) {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
 
@@ -148,21 +163,20 @@ class YearlyCustomerReceivableController extends Controller {
         
         $worksheet->setCellValue('A6', 'No');
         $worksheet->setCellValue('B6', 'Customer');
-        $columnCounter = 'C';
+        $worksheet->setCellValue('C6', 'Beginning');
+        $columnCounter = 'D';
         for ($month = 1; $month <= 12; $month++) {
-            $worksheet->setCellValue("{$columnCounter}6", 'Invoice Amount');
+            $worksheet->setCellValue("{$columnCounter}6", 'Invoice');
+            $columnCounter++;
+            $worksheet->setCellValue("{$columnCounter}6", 'Payment');
             $columnCounter++;
             $worksheet->setCellValue("{$columnCounter}6", 'Outstanding');
             $columnCounter++;
-            $worksheet->setCellValue("{$columnCounter}6", 'Pelunasan');
-            $columnCounter++;
             
         }
-        $worksheet->setCellValue("{$columnCounter}6", 'Invoice Amount');
+        $worksheet->setCellValue("{$columnCounter}6", 'Invoice');
         $columnCounter++;
-        $worksheet->setCellValue("{$columnCounter}6", 'Outstanding');
-        $columnCounter++;
-        $worksheet->setCellValue("{$columnCounter}6", 'Pelunasan');
+        $worksheet->setCellValue("{$columnCounter}6", 'Payment');
         $columnCounter++;
         
         $worksheet->getStyle("A5:{$columnCounter}5")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
@@ -171,55 +185,57 @@ class YearlyCustomerReceivableController extends Controller {
         $counter = 8;
         $ordinal = 0;
         $invoiceTotalSums = array(); 
-        $invoiceOutstandingSums = array();
-        $invoicePaymentSums = array();
+        $paymentTotalSums = array();
+        $outstandingSums = array();
         
-        foreach ($yearlyCustomerReceivableReportData as $customerId => $yearlyCustomerReceivableReportDataItem) {
+        foreach ($yearlyCustomerReportData as $yearlyCustomerReportDataItem) {
             $worksheet->getStyle("E{$counter}:J{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
 
+            $beginningInvoiceTotal = isset($yearlyCustomerReportDataItem['beginning_invoice_total']) ? $yearlyCustomerReportDataItem['beginning_invoice_total'] : '0.00';
+            $beginningPaymentTotal = isset($yearlyCustomerReportDataItem['beginning_payment_total']) ? $yearlyCustomerReportDataItem['beginning_payment_total'] : '0.00';
+            $beginningOutstanding = $beginningInvoiceTotal - $beginningPaymentTotal; 
+            
             $worksheet->setCellValue("A{$counter}", ++$ordinal);
-            $worksheet->setCellValue("B{$counter}", $yearlyCustomerReceivableReportDataItem['customer_name']);
+            $worksheet->setCellValue("B{$counter}", $yearlyCustomerReportDataItem['customer_name']);
+            $worksheet->setCellValue("C{$counter}", $beginningOutstanding);
             
             $invoiceTotalSum = 0;
-            $invoiceOutstandingSum = 0;
-            $invoicePaymentSum = 0; 
-            $columnCounter = 'C';
+            $paymentTotalSum = 0;
+            $currentOutstanding = $beginningOutstanding;
+            $columnCounter = 'D';
             
             for ($month = 1; $month <= 12; $month++) {
-                $invoiceTotal = isset($yearlyCustomerReceivableReportDataItem[$month]['invoice_total']) ? $yearlyCustomerReceivableReportDataItem[$month]['invoice_total'] : '';
-                $invoiceOutstanding = isset($yearlyCustomerReceivableReportDataItem[$month]['invoice_outstanding']) ? $yearlyCustomerReceivableReportDataItem[$month]['invoice_outstanding'] : '';
-                $invoicePayment = isset($yearlyCustomerReceivableReportDataItem[$month]['invoice_payment']) ? $yearlyCustomerReceivableReportDataItem[$month]['invoice_payment'] : '';
+                $invoiceTotal = isset($yearlyCustomerReportDataItem[$month]['invoice_total']) ? $yearlyCustomerReportDataItem[$month]['invoice_total'] : '0.00';
+                $paymentTotal = isset($yearlyCustomerReportDataItem[$month]['payment_total']) ? $yearlyCustomerReportDataItem[$month]['payment_total'] : '0.00';
                 $worksheet->setCellValue("{$columnCounter}{$counter}", $invoiceTotal);
                 $columnCounter++;
-                $worksheet->setCellValue("{$columnCounter}{$counter}", $invoiceOutstanding);
+                $worksheet->setCellValue("{$columnCounter}{$counter}", $paymentTotal);
                 $columnCounter++;
-                $worksheet->setCellValue("{$columnCounter}{$counter}", $invoicePayment);
+                $currentOutstanding += $invoiceTotal - $paymentTotal;
+                $worksheet->setCellValue("{$columnCounter}{$counter}", $currentOutstanding);
                 $columnCounter++;
                 
                 $invoiceTotalSum += $invoiceTotal;
-                $invoiceOutstandingSum += $invoiceOutstanding;
-                $invoicePaymentSum += $invoicePayment;
+                $paymentTotalSum += $paymentTotal;
                 
                 if (!isset($invoiceTotalSums[$month])) {
                     $invoiceTotalSums[$month] = 0;
                 }
                 $invoiceTotalSums[$month] += $invoiceTotal;
                 
-                if (!isset($invoiceOutstandingSums[$month])) {
-                    $invoiceOutstandingSums[$month] = 0;
+                if (!isset($paymentTotalSums[$month])) {
+                    $paymentTotalSums[$month] = 0;
                 }
-                $invoiceOutstandingSums[$month] += $invoiceOutstanding;
+                $paymentTotalSums[$month] += $paymentTotal;
                 
-                if (!isset($invoicePaymentSums[$month])) {
-                    $invoicePaymentSums[$month] = 0;
+                if (!isset($outstandingSums[$month])) {
+                    $outstandingSums[$month] = 0;
                 }
-                $invoicePaymentSums[$month] += $invoicePayment;
+                $outstandingSums[$month] += $currentOutstanding;
             }
             $worksheet->setCellValue("{$columnCounter}{$counter}", $invoiceTotalSum);
             $columnCounter++;
-            $worksheet->setCellValue("{$columnCounter}{$counter}", $invoiceOutstandingSum);
-            $columnCounter++;
-            $worksheet->setCellValue("{$columnCounter}{$counter}", $invoicePaymentSum);
+            $worksheet->setCellValue("{$columnCounter}{$counter}", $paymentTotalSum);
             $columnCounter++;
             
             $counter++;
@@ -231,10 +247,9 @@ class YearlyCustomerReceivableController extends Controller {
         $worksheet->setCellValue("B{$counter}", 'TOTAL');
         
         $grandTotalInvoice = 0;
-        $grandTotalOutstanding = 0;
         $grandTotalPayment = 0;
         
-        $columnCounter = 'C';
+        $columnCounter = 'D';
         for ($month = 1; $month <= 12; $month++) {
             if (!isset($invoiceTotalSums[$month])) {
                 $invoiceTotalSums[$month] = 0;
@@ -242,26 +257,23 @@ class YearlyCustomerReceivableController extends Controller {
             $worksheet->setCellValue("{$columnCounter}{$counter}", $invoiceTotalSums[$month]);
             $columnCounter++;
             
-            if (!isset($invoiceOutstandingSums[$month])) {
-                $invoiceOutstandingSums[$month] = 0;
+            if (!isset($paymentTotalSums[$month])) {
+                $paymentTotalSums[$month] = 0;
             }
-            $worksheet->setCellValue("{$columnCounter}{$counter}", $invoiceOutstandingSums[$month]);
+            $worksheet->setCellValue("{$columnCounter}{$counter}", $paymentTotalSums[$month]);
             $columnCounter++;
             
-            if (!isset($invoicePaymentSums[$month])) {
-                $invoicePaymentSums[$month] = 0;
+            if (!isset($outstandingSums[$month])) {
+                $outstandingSums[$month] = 0;
             }
-            $worksheet->setCellValue("{$columnCounter}{$counter}", $invoicePaymentSums[$month]);
+            $worksheet->setCellValue("{$columnCounter}{$counter}", $outstandingSums[$month]);
             $columnCounter++;
             
             $grandTotalInvoice += $invoiceTotalSums[$month];
-            $grandTotalOutstanding += $invoiceOutstandingSums[$month];
-            $grandTotalPayment += $invoicePaymentSums[$month];
+            $grandTotalPayment += $paymentTotalSums[$month];
         }
         
         $worksheet->setCellValue("{$columnCounter}{$counter}", $grandTotalInvoice);
-        $columnCounter++;
-        $worksheet->setCellValue("{$columnCounter}{$counter}", $grandTotalOutstanding);
         $columnCounter++;
         $worksheet->setCellValue("{$columnCounter}{$counter}", $grandTotalPayment);
         $columnCounter++;
