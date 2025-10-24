@@ -63,7 +63,7 @@
                 </thead>
 
                 <tbody>
-                    <?php $slowMovingItems = $inventoryDetail->getSlowMovingItems($startDate, $endDate, $brandId, $subBrandId, $subBrandSeriesId, $productMasterCategoryId, $productSubMasterCategoryId, $productSubCategoryId, $productId, $productCode, $productName); ?>
+                    <?php $slowMovingItems = $inventoryDetail->getSlowMovingItems($startDate, $endDate, $brandId, $subBrandId, $subBrandSeriesId, $productMasterCategoryId, $productSubMasterCategoryId, $productSubCategoryId, $branchId, $productId, $productCode, $productName); ?>
                     <?php foreach ($slowMovingItems as $slowMovingItem): ?>
                         <tr>
                             <td><?php echo CHtml::encode($slowMovingItem['id']); ?></td>
