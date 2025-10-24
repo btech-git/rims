@@ -9,14 +9,15 @@
             <table>
                 <thead>
                     <tr>
-                        <td>ID</td>
-                        <td>Code</td>
-                        <td>Product Name</td>
-                        <td>Category</td>
-                        <td>Brand</td>
-                        <td>Sub Brand</td>
-                        <td>Sub Brand Series</td>
-                        <td>Qty Sales</td>
+                        <th>No</th>
+                        <th>ID</th>
+                        <th>Code</th>
+                        <th>Product Name</th>
+                        <th>Category</th>
+                        <th>Brand</th>
+                        <th>Sub Brand</th>
+                        <th>Sub Brand Series</th>
+                        <th>Qty Sales</th>
                         <!--<td>Total</td>-->
                     </tr>
                 </thead>
@@ -51,14 +52,15 @@
             <table>
                 <thead>
                     <tr>
-                        <td>ID</td>
-                        <td>Code</td>
-                        <td>Product Name</td>
-                        <td>Category</td>
-                        <td>Brand</td>
-                        <td>Sub Brand</td>
-                        <td>Sub Brand Series</td>
-                        <td>Qty Sales</td>
+                        <th>No</th>
+                        <th>ID</th>
+                        <th>Code</th>
+                        <th>Product Name</th>
+                        <th>Category</th>
+                        <th>Brand</th>
+                        <th>Sub Brand</th>
+                        <th>Sub Brand Series</th>
+                        <th>Qty Sales</th>
                         <!--<td>Total</td>-->
                     </tr>
                 </thead>
