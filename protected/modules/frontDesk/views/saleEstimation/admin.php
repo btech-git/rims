@@ -8,24 +8,22 @@ $this->breadcrumbs = array(
 );
 ?>
 
-<div class="row d-print-none">
-    <div class="col d-flex justify-content-start">
-        <h4>Manage Estimasi</h4>
-    </div>
-    <div class="col d-flex justify-content-end">
-        <div class="d-gap">
-            <?php echo CHtml::link('Add', array("create"), array('class' => 'btn btn-success btn-sm')); ?>
+<div id="maincontent">
+    <div class="clearfix page-action">
+        <?php echo CHtml::link('Add', array("create"), array(
+            'class' => 'button success right', 
+            'style' => 'margin-right:10px',
+            'target' =>'_blank',
+        )); ?>
+        <h1>Manage Estimasi</h1>
+
+        <div class="grid-view">
+            <?php $this->renderPartial('_saleEstimationDataTable', array(
+                'model' => $model,
+                'dataProvider' => $dataProvider,
+                'customerName' => $customerName,
+                'plateNumber' => $plateNumber,
+            )); ?>
         </div>
     </div>
-</div>
-
-<hr />
-
-<div id="sale_estimation_data_container">
-    <?php $this->renderPartial('_saleEstimationDataTable', array(
-        'model' => $model,
-        'dataProvider' => $dataProvider,
-        'customerName' => $customerName,
-        'plateNumber' => $plateNumber,
-    )); ?>
 </div>

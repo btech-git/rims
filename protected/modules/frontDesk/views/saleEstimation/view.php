@@ -15,11 +15,32 @@ $this->breadcrumbs = array(
     <div class="col d-flex justify-content-end">
         <div class="d-gap">
             <?php $registrationTransaction = RegistrationTransaction::model()->findByAttributes(array('sale_estimation_header_id' => $model->id)); ?>
-            <?php if (empty($registrationTransaction)): ?>
-                <?php echo CHtml::link('<i class="bi-plus"></i> Registration', array("/frontDesk/registrationTransaction/create", "estimationId" => $model->id), array('class' => 'btn btn-success btn-sm')); ?>
-            <?php endif; ?>
-            <?php echo CHtml::link('Manage', array("admin"), array('class' => 'btn btn-info btn-sm')); ?>
-            <?php echo CHtml::link('Edit', array("update", 'id' => $model->id, 'vehicleId' => $model->vehicle_id), array('class' => 'btn btn-warning btn-sm')); ?>
+            <?php //if (empty($registrationTransaction)): ?>
+                <?php echo CHtml::link('Add Registration', array("/frontDesk/registrationTransaction/create", "estimationId" => $model->id), array(
+                    'class' => 'button success right', 
+                    'style' => 'margin-right:10px',
+                    'target' =>'_blank',
+                )); ?>
+            <?php //endif; ?>
+            
+            <?php echo CHtml::link('Manage', array("admin"), array(
+                'class'=> 'button cbutton left', 
+                'style' => 'margin-right:10px',
+                'target' =>'_blank',
+            )); ?>
+            
+            <?php echo CHtml::link('Edit', array("update", 'id' => $model->id, 'vehicleId' => $model->vehicle_id), array(
+                'class'=> 'button warning right', 
+                'style' => 'margin-right:10px',
+                'target' =>'_blank',
+            )); ?>
+
+            <?php echo CHtml::link('<i class="bi-printer"></i> Print Estimasi', array("pdf", 'id' => $model->id), array(
+                'class'=>'button warning left', 
+                'style' => 'margin-right:10px', 
+                'target' =>'_blank',
+            )); ?>
+
         </div>
     </div>
 </div>
@@ -180,11 +201,6 @@ $this->breadcrumbs = array(
         </table>
     </fieldset>
 
-    <?php echo CHtml::link('<i class="bi-printer"></i> Print Estimasi', array("pdf", 'id' => $model->id), array(
-        'class' => 'btn btn-secondary btn-sm', 
-        'target' => '_blank'
-    )); ?>
-    
 <?php echo CHtml::endForm(); ?>
 
 <?php $this->beginWidget('zii.widgets.jui.CJuiDialog', array(
