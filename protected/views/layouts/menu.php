@@ -91,6 +91,9 @@
     <?php endif; ?>
     
     <?php if (
+        Yii::app()->user->checkAccess('saleEstimationCreate') || 
+        Yii::app()->user->checkAccess('saleEstimationEdit') || 
+        Yii::app()->user->checkAccess('saleEstimationView') || 
         Yii::app()->user->checkAccess('generalRepairCreate') || 
         Yii::app()->user->checkAccess('generalRepairEdit') || 
         Yii::app()->user->checkAccess('generalRepairView') || 
@@ -112,22 +115,22 @@
                     array(
                         'label' => 'Estimasi', 
                         'url' => array('/frontDesk/saleEstimation/admin'), 
-                        'visible' => (Yii::app()->user->checkAccess('director'))
+                        'visible' => (Yii::app()->user->checkAccess('saleEstimationCreate') || Yii::app()->user->checkAccess('saleEstimationEdit') || Yii::app()->user->checkAccess('saleEstimationView')),
                     ),
                     array(
                         'label' => 'Pendaftaran Customer', 
                         'url' => array('/frontDesk/customerRegistration/vehicleList'), 
-                        'visible' => (Yii::app()->user->checkAccess('generalRepairCreate') || Yii::app()->user->checkAccess('bodyRepairCreate'))
+                        'visible' => (Yii::app()->user->checkAccess('generalRepairCreate') || Yii::app()->user->checkAccess('bodyRepairCreate')),
                     ),
                     array(
                         'label' => 'General Repair', 
                         'url' => array('/frontDesk/generalRepairRegistration/admin'), 
-                        'visible' => (Yii::app()->user->checkAccess('generalRepairCreate') || Yii::app()->user->checkAccess('generalRepairEdit') || Yii::app()->user->checkAccess('generalRepairView'))
+                        'visible' => (Yii::app()->user->checkAccess('generalRepairCreate') || Yii::app()->user->checkAccess('generalRepairEdit') || Yii::app()->user->checkAccess('generalRepairView')),
                     ),
                     array(
                         'label' => 'Body Repair', 
                         'url' => array('/frontDesk/bodyRepairRegistration/admin'), 
-                        'visible' => (Yii::app()->user->checkAccess('bodyRepairCreate') || Yii::app()->user->checkAccess('bodyRepairEdit') || Yii::app()->user->checkAccess('bodyRepairView'))
+                        'visible' => (Yii::app()->user->checkAccess('bodyRepairCreate') || Yii::app()->user->checkAccess('bodyRepairEdit') || Yii::app()->user->checkAccess('bodyRepairView')),
                     ),
                     array(
                         'label' => 'Permintaan Harga', 
@@ -137,42 +140,42 @@
                     array(
                         'label' => 'Vehicle System Check', 
                         'url' => array('/frontDesk/vehicleInspection/admin'), 
-                        'visible' => (Yii::app()->user->checkAccess('inspectionCreate') || Yii::app()->user->checkAccess('inspectionEdit') || Yii::app()->user->checkAccess('inspectionView'))
+                        'visible' => (Yii::app()->user->checkAccess('inspectionCreate') || Yii::app()->user->checkAccess('inspectionEdit') || Yii::app()->user->checkAccess('inspectionView')),
                     ),
                     array(
                         'label' => 'Work Orders', 
                         'url' => array('/frontDesk/workOrder/admin'),
-                        'visible' => Yii::app()->user->checkAccess('workOrderApproval')
+                        'visible' => Yii::app()->user->checkAccess('workOrderApproval'),
                     ),
                     array(
                         'label' => 'WO Outstanding', 
                         'url' => array('/frontDesk/workOrder/adminOutstanding'),
-                        'visible' => Yii::app()->user->checkAccess('workOrderApproval')
+                        'visible' => Yii::app()->user->checkAccess('workOrderApproval'),
                     ),
                     array(
                         'label' => 'Kasir', 
                         'url' => array('/frontDesk/registrationTransaction/cashier'), 
-                        'visible' => (Yii::app()->user->checkAccess('cashierApproval'))
+                        'visible' => (Yii::app()->user->checkAccess('cashierApproval')),
                     ),
                     array(
                         'label' => 'Daftar Antrian Customer', 
                         'url' => array('/frontDesk/registrationTransaction/customerWaitlist'), 
-                        'visible' => Yii::app()->user->checkAccess('customerQueueApproval')
+                        'visible' => Yii::app()->user->checkAccess('customerQueueApproval'),
                     ),
                     array(
                         'label' => 'Follow Up Warranty', 
                         'url' => array('/frontDesk/followUp/adminWarranty'), 
-                        'visible' => Yii::app()->user->checkAccess('customerFollowUp')
+                        'visible' => Yii::app()->user->checkAccess('customerFollowUp'),
                     ),
                     array(
                         'label' => 'Follow Up Service', 
                         'url' => array('/frontDesk/followUp/adminService'), 
-                        'visible' => Yii::app()->user->checkAccess('serviceFollowUp')
+                        'visible' => Yii::app()->user->checkAccess('serviceFollowUp'),
                     ),
                     array(
                         'label' => 'Status Kendaraan', 
                         'url' => array('/frontDesk/vehicleStatus/index'), 
-                        'visible' => (Yii::app()->user->checkAccess('director'))
+                        'visible' => (Yii::app()->user->checkAccess('director')),
                     ),
                 ),
             )); ?>

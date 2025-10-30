@@ -6,19 +6,19 @@ class SaleEstimationController extends Controller {
 
     public function filters() {
         return array(
-//            'access',
+            'access',
         );
     }
 
     public function filterAccess($filterChain) {
         if ($filterChain->action->id === 'create') {
-            if (!(Yii::app()->user->checkAccess('bodyRepairCreate'))) {
+            if (!(Yii::app()->user->checkAccess('saleEstimationCreate'))) {
                 $this->redirect(array('/site/login'));
             }
         }
 
         if ($filterChain->action->id === 'update') {
-            if (!(Yii::app()->user->checkAccess('bodyRepairEdit'))) {
+            if (!(Yii::app()->user->checkAccess('saleEstimationEdit'))) {
                 $this->redirect(array('/site/login'));
             }
         }
@@ -33,7 +33,7 @@ class SaleEstimationController extends Controller {
             $filterChain->action->id === 'view' ||
             $filterChain->action->id === 'showRealization'
         ) {
-            if (!(Yii::app()->user->checkAccess('bodyRepairCreate')) || !(Yii::app()->user->checkAccess('bodyRepairEdit'))) {
+            if (!(Yii::app()->user->checkAccess('saleEstimationCreate')) || !(Yii::app()->user->checkAccess('saleEstimationEdit')) || !(Yii::app()->user->checkAccess('saleEstimationView'))) {
                 $this->redirect(array('/site/login'));
             }
         }

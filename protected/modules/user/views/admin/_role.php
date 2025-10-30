@@ -32,40 +32,38 @@
                 'Transaksi' => array(
                     'content' => $this->renderPartial('_formTransaction', array(
                         'model' => $model, 
-                        'counter' => $counter+24
+                        'counter' => $counter+28
                     ), true)
                 ),
                 'Operasional' => array(
                     'content' => $this->renderPartial('_formOperational', array(
                         'model' => $model, 
-                        'counter' => $counter+72
+                        'counter' => $counter+76
                     ), true)
                 ),
                 'Gudang' => array(
                     'content' => $this->renderPartial('_formInventory', array(
                         'model' => $model, 
-                        'counter' => $counter+111
+                        'counter' => $counter+115
                     ), true)
                 ),
                 'Management' => array(
                     'content' => $this->renderPartial('_formIdleManagement', array(
                         'model' => $model, 
-                        'counter' => $counter+138
+                        'counter' => $counter+142
                     ), true)
                 ),
                 'Accounting/Finance' => array(
-                    'content' => $this->renderPartial(
-                        '_formFinance',
-                        array('model' => $model, 'counter' => $counter+151),
-                        true
-                    )
+                    'content' => $this->renderPartial('_formFinance', array(
+                        'model' => $model, 
+                        'counter' => $counter+155
+                    ), true)
                 ),
                 'HRD' => array(
-                    'content' => $this->renderPartial(
-                        '_formHumanResource',
-                        array('model' => $model, 'counter' => $counter+157),
-                        true
-                    )
+                    'content' => $this->renderPartial('_formHumanResource', array(
+                        'model' => $model, 
+                        'counter' => $counter+161
+                    ), true)
                 ),
             ),
             // additional javascript options for the tabs plugin
@@ -83,46 +81,40 @@
         <?php $this->widget('zii.widgets.jui.CJuiTabs', array(
             'tabs' => array(
                 'Laporan' => array(
-                    'content' => $this->renderPartial(
-                        '_formReport',
-                        array('model' => $model, 'counter' => $counter+178),
-                        true
-                    )
+                    'content' => $this->renderPartial('_formReport', array(
+                        'model' => $model, 
+                        'counter' => $counter+182
+                    ), true)
                 ),
                 'Setting Company' => array(
-                    'content' => $this->renderPartial(
-                        '_formCompany',
-                        array('model' => $model, 'counter' => $counter+259),
-                        true
-                    )
+                    'content' => $this->renderPartial('_formCompany', array(
+                        'model' => $model, 
+                        'counter' => $counter+268
+                    ), true)
                 ),
                 'Setting Accounting' => array(
                     'content' => $this->renderPartial(
                         '_formAccounting',
-                        array('model' => $model, 'counter' => $counter+304),
+                        array('model' => $model, 'counter' => $counter+313),
                         true
                     )
                 ),
                 'Setting Product' => array(
-                    'content' => $this->renderPartial(
-                        '_formProduct',
-                        array('model' => $model, 'counter' => $counter+325),
-                        true
-                    )
+                    'content' => $this->renderPartial('_formProduct', array(
+                        'model' => $model, 
+                        'counter' => $counter+334
+                    ), true)
                 ),
                 'Setting Service' => array(
-                    'content' => $this->renderPartial(
-                        '_formService',
-                        array('model' => $model, 'counter' => $counter+374),
-                        true
-                    )
+                    'content' => $this->renderPartial('_formService', array(
+                        'model' => $model, 
+                        'counter' => $counter+383
+                    ), true)
                 ),
-                'Setting Vehicle' => array(
-                    'content' => $this->renderPartial(
-                        '_formVehicle',
-                        array('model' => $model, 'counter' => $counter+423),
-                        true
-                    )
+                'Setting Vehicle' => array('content' => $this->renderPartial('_formVehicle', array(
+                    'model' => $model, 
+                    'counter' => $counter+432
+                    ), true)
                 ),
             ),
             // additional javascript options for the tabs plugin
@@ -137,7 +129,7 @@
 
 <br /><br />
 
-<?php $counter = 458; ?>
+<?php $counter = 467; ?>
 <div id="front-role-panel" <?php if (!$model->is_front_access): ?>style="display: none"<?php endif; ?>>
     <?php echo $this->renderPartial('_formRimsFront', array(
         'model'=>$model,

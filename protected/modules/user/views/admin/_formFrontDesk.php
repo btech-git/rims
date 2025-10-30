@@ -14,6 +14,21 @@
     </thead>
     <tbody>
         <tr>
+            <td>Estimasi</td>
+            <td style="text-align: center">
+                <?php echo CHtml::checkBox("User[roles][saleEstimationCreate]", CHtml::resolveValue($model, "roles[saleEstimationCreate]"), array('id' => 'User_roles_' . $counter++, 'value' => 'saleEstimationCreate')); ?>
+            </td>
+            <td style="text-align: center">
+                <?php echo CHtml::checkBox("User[roles][saleEstimationEdit]", CHtml::resolveValue($model, "roles[saleEstimationEdit]"), array('id' => 'User_roles_' . $counter++, 'value' => 'saleEstimationEdit')); ?>
+            </td>
+            <td style="text-align: center">
+                <?php echo CHtml::checkBox("User[roles][saleEstimationView]", CHtml::resolveValue($model, "roles[saleEstimationView]"), array('id' => 'User_roles_' . $counter++, 'value' => 'saleEstimationView')); ?>
+            </td>
+            <td style="text-align: center">
+                <?php echo CHtml::checkBox("User[roles][saleEstimationSupervisor]", CHtml::resolveValue($model, "roles[saleEstimationSupervisor]"), array('id' => 'User_roles_' . $counter++, 'value' => 'saleEstimationSupervisor')); ?>
+            </td>
+        </tr>
+        <tr>
             <td>General Repair</td>
             <td style="text-align: center">
                 <?php echo CHtml::checkBox("User[roles][generalRepairCreate]", CHtml::resolveValue($model, "roles[generalRepairCreate]"), array('id' => 'User_roles_' . $counter++, 'value' => 'generalRepairCreate')); ?>

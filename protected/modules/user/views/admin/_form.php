@@ -14,34 +14,34 @@ Yii::app()->clientScript->registerScript('userRoles', "
     }
 
     $(document).ready(function(){
-        checkRoles(0, 1, 470);
-        checkRoles(1, 2, 470);
+        checkRoles(0, 1, 479);
+        checkRoles(1, 2, 479);
         checkRoles(2, 3, 7);
-        checkRoles(8, 9, 25);
-        checkRoles(26, 27, 36);
-        checkRoles(37, 38, 51);
-        checkRoles(52, 53, 62);
-        checkRoles(63, 64, 73);
-        checkRoles(74, 75, 112);
-        checkRoles(113, 114, 139);
-        checkRoles(140, 141, 152);
-        checkRoles(153, 154, 158);
-        checkRoles(159, 160, 179);
-        checkRoles(180, 181, 260);
-        checkRoles(261, 262, 305);
-        checkRoles(306, 307, 326);
-        checkRoles(327, 328, 375);
-        checkRoles(376, 377, 424);
-        checkRoles(425, 426, 457);
-        checkRoles(458, 459, 470);
+        checkRoles(8, 9, 29);
+        checkRoles(30, 31, 40);
+        checkRoles(41, 42, 55);
+        checkRoles(56, 57, 66);
+        checkRoles(67, 68, 77);
+        checkRoles(78, 79, 116);
+        checkRoles(117, 118, 143);
+        checkRoles(144, 145, 156);
+        checkRoles(157, 158, 162);
+        checkRoles(163, 164, 183);
+        checkRoles(184, 185, 269);
+        checkRoles(270, 271, 314);
+        checkRoles(315, 316, 335);
+        checkRoles(336, 337, 384);
+        checkRoles(385, 386, 433);
+        checkRoles(434, 435, 466);
+        checkRoles(467, 468, 479);
     });
 
     $('#" . CHtml::activeId($model, 'roles') . "_0').click(function(){
-        checkRoles(0, 1, 470);
+        checkRoles(0, 1, 479);
     });
 
     $('#" . CHtml::activeId($model, 'roles') . "_1').click(function(){
-        checkRoles(1, 2, 470);
+        checkRoles(1, 2, 479);
     });
 
     $('#" . CHtml::activeId($model, 'roles') . "_2').click(function(){
@@ -49,81 +49,81 @@ Yii::app()->clientScript->registerScript('userRoles', "
     });
 
     $('#" . CHtml::activeId($model, 'roles') . "_8').click(function(){
-        checkRoles(8, 9, 25);
+        checkRoles(8, 9, 29);
     });
 	
-    $('#" . CHtml::activeId($model, 'roles') . "_26').click(function(){
-        checkRoles(26, 27, 36);
+    $('#" . CHtml::activeId($model, 'roles') . "_30').click(function(){
+        checkRoles(30, 31, 40);
     });
 	
-    $('#" . CHtml::activeId($model, 'roles') . "_37').click(function(){
-        checkRoles(37, 38, 51);
+    $('#" . CHtml::activeId($model, 'roles') . "_41').click(function(){
+        checkRoles(41, 42, 55);
     });
 	
-    $('#" . CHtml::activeId($model, 'roles') . "_52').click(function(){
-        checkRoles(52, 53, 62);
+    $('#" . CHtml::activeId($model, 'roles') . "_56').click(function(){
+        checkRoles(56, 57, 66);
     });
 	
-    $('#" . CHtml::activeId($model, 'roles') . "_63').click(function(){
-        checkRoles(63, 64, 73);
+    $('#" . CHtml::activeId($model, 'roles') . "_67').click(function(){
+        checkRoles(67, 68, 77);
     });
 	
-    $('#" . CHtml::activeId($model, 'roles') . "_74').click(function(){
-        checkRoles(74, 75, 112);
+    $('#" . CHtml::activeId($model, 'roles') . "_78').click(function(){
+        checkRoles(78, 79, 116);
     });
 		
-    $('#" . CHtml::activeId($model, 'roles') . "_113').click(function(){
-        checkRoles(113, 114, 139);
+    $('#" . CHtml::activeId($model, 'roles') . "_117').click(function(){
+        checkRoles(117, 118, 143);
     });
 		
-    $('#" . CHtml::activeId($model, 'roles') . "_140').click(function(){
-        checkRoles(140, 141, 152);
+    $('#" . CHtml::activeId($model, 'roles') . "_144').click(function(){
+        checkRoles(144, 145, 156);
     });
 		
-    $('#" . CHtml::activeId($model, 'roles') . "_153').click(function(){
-        checkRoles(153, 154, 158);
+    $('#" . CHtml::activeId($model, 'roles') . "_157').click(function(){
+        checkRoles(157, 158, 162);
     });
 		
-    $('#" . CHtml::activeId($model, 'roles') . "_159').click(function(){
-        checkRoles(159, 160, 179);
+    $('#" . CHtml::activeId($model, 'roles') . "_163').click(function(){
+        checkRoles(163, 164, 183);
     });
 		
-    $('#" . CHtml::activeId($model, 'roles') . "_180').click(function(){
-        checkRoles(180, 181, 260);
+    $('#" . CHtml::activeId($model, 'roles') . "_184').click(function(){
+        checkRoles(184, 185, 269);
     });
 		
-    $('#" . CHtml::activeId($model, 'roles') . "_261').click(function(){
-        checkRoles(261, 262, 305);
+    $('#" . CHtml::activeId($model, 'roles') . "_270').click(function(){
+        checkRoles(270, 271, 314);
     });
 		
-    $('#" . CHtml::activeId($model, 'roles') . "_306').click(function(){
-        checkRoles(306, 307, 326);
+    $('#" . CHtml::activeId($model, 'roles') . "_315').click(function(){
+        checkRoles(315, 316, 335);
     });
 		
-    $('#" . CHtml::activeId($model, 'roles') . "_327').click(function(){
-        checkRoles(327, 328, 375);
+    $('#" . CHtml::activeId($model, 'roles') . "_336').click(function(){
+        checkRoles(336, 337, 384);
     });
 		
-    $('#" . CHtml::activeId($model, 'roles') . "_376').click(function(){
-        checkRoles(376, 377, 424);
+    $('#" . CHtml::activeId($model, 'roles') . "_385').click(function(){
+        checkRoles(385, 386, 433);
     });
 		
-    $('#" . CHtml::activeId($model, 'roles') . "_425').click(function(){
-        checkRoles(425, 426, 457);
+    $('#" . CHtml::activeId($model, 'roles') . "_434').click(function(){
+        checkRoles(434, 435, 466);
     });
 		
-    $('#" . CHtml::activeId($model, 'roles') . "_458').click(function(){
-        checkRoles(458, 459, 470);
+    $('#" . CHtml::activeId($model, 'roles') . "_467').click(function(){
+        checkRoles(467, 468, 479);
     });
 	
     $('#" . CHtml::activeId($model, 'is_main_access') . "').click(function(){
         if ($(this).prop('checked')) {
-            for (i = 2; i <= 458; i++) {
+            for (i = 2; i <= 467; i++) {
                 $('#" . CHtml::activeId($model, 'roles') . "_' + i).removeAttr('disabled');
                 $('#main-role-panel').show();
             }
         } else {
-            for (i = 2; i <= 458; i++) {
+            for (i = 2; i <= 467; i++) {
                 $('#" . CHtml::activeId($model, 'roles') . "_' + i).removeAttr('checked');
                 $('#" . CHtml::activeId($model, 'roles') . "_' + i).attr('disabled', true);
                 $('#main-role-panel').hide();
@@ -133,12 +133,12 @@ Yii::app()->clientScript->registerScript('userRoles', "
     
     $('#" . CHtml::activeId($model, 'is_front_access') . "').click(function(){
         if ($(this).prop('checked')) {
-            for (i = 458; i <= 470; i++) {
+            for (i = 467; i <= 479; i++) {
                 $('#" . CHtml::activeId($model, 'roles') . "_' + i).removeAttr('disabled');
                 $('#front-role-panel').show();
             }
         } else {
-            for (i = 458; i <= 470; i++) {
+            for (i = 467; i <= 479; i++) {
                 $('#" . CHtml::activeId($model, 'roles') . "_' + i).removeAttr('checked');
                 $('#" . CHtml::activeId($model, 'roles') . "_' + i).attr('disabled', true);
                 $('#front-role-panel').hide();

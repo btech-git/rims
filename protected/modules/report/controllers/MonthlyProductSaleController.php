@@ -12,7 +12,7 @@ class MonthlyProductSaleController extends Controller {
 
     public function filterAccess($filterChain) {
         if ($filterChain->action->id === 'summary') {
-            if (!(Yii::app()->user->checkAccess('director') )) {
+            if (!(Yii::app()->user->checkAccess('monthlyProductSaleReport') )) {
                 $this->redirect(array('/site/login'));
             }
         }
