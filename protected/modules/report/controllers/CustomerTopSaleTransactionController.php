@@ -69,58 +69,64 @@ class CustomerTopSaleTransactionController extends Controller {
         $worksheet = $objPHPExcel->setActiveSheetIndex(0);
         $worksheet->setTitle('Penjualan Customer Terbaik');
 
-        $worksheet->mergeCells('A1:E1');
-        $worksheet->mergeCells('A2:E2');
-        $worksheet->mergeCells('A3:E3');
+        $worksheet->mergeCells('A1:G1');
+        $worksheet->mergeCells('A2:G2');
+        $worksheet->mergeCells('A3:G3');
 
-        $worksheet->getStyle('A1:E6')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-        $worksheet->getStyle('A1:E6')->getFont()->setBold(true);
+        $worksheet->getStyle('A1:G6')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->getStyle('A1:G6')->getFont()->setBold(true);
 
         $branch = Branch::model()->findByPk($branchId);
         $worksheet->setCellValue('A1', 'Raperind Motor ');
         $worksheet->setCellValue('A2', 'Laporan Penjualan Customer Terbaik ' . CHtml::value($branch, 'name'));
         $worksheet->setCellValue('A3', 'Periode: ' . $year);
         
-        $worksheet->mergeCells('A5:E5');
-        $worksheet->getStyle('A5:E5')->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->mergeCells('A5:G5');
+        $worksheet->getStyle('A5:G5')->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
         $worksheet->setCellValue('A5', 'Company');
         $worksheet->setCellValue('A6', 'No');
         $worksheet->setCellValue('B6', 'ID');
         $worksheet->setCellValue('C6', 'Name');
         $worksheet->setCellValue('D6', 'Quantity');
-        $worksheet->setCellValue('E6', 'Total');
-        $worksheet->getStyle('A6:E6')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->setCellValue('E6', 'Parts');
+        $worksheet->setCellValue('F6', 'Service');
+        $worksheet->setCellValue('G6', 'Total');
+        $worksheet->getStyle('A6:G6')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
         $counter = 7;
         foreach ($customerCompanyTopSaleReport as $i => $dataItemCompany) {
                 $worksheet->getStyle("D{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-                $worksheet->getStyle("E{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
+                $worksheet->getStyle("E{$counter}:G{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
 
                 $worksheet->setCellValue("A{$counter}", $i + 1);
                 $worksheet->setCellValue("B{$counter}", $dataItemCompany['customer_id']);
                 $worksheet->setCellValue("C{$counter}", $dataItemCompany['customer_name']);
                 $worksheet->setCellValue("D{$counter}", $dataItemCompany['quantity_invoice']);
-                $worksheet->setCellValue("E{$counter}", $dataItemCompany['total_price']);
+                $worksheet->setCellValue("E{$counter}", $dataItemCompany['product_price']);
+                $worksheet->setCellValue("F{$counter}", $dataItemCompany['service_price']);
+                $worksheet->setCellValue("G{$counter}", $dataItemCompany['total_price']);
                 
                 $counter++;
         }
         $counter++;
 
-        $worksheet->getStyle("A{$counter}:E{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
-        $worksheet->mergeCells("A{$counter}:E{$counter}");
-        $worksheet->getStyle("A{$counter}:E{$counter}")->getFont()->setBold(true);
+        $worksheet->getStyle("A{$counter}:G{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->mergeCells("A{$counter}:G{$counter}");
+        $worksheet->getStyle("A{$counter}:G{$counter}")->getFont()->setBold(true);
         $worksheet->setCellValue("A{$counter}", 'Individual');
-        $worksheet->getStyle("A{$counter}:E{$counter}")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A{$counter}:G{$counter}")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
         $counter++;$counter++;
         foreach ($customerIndividualTopSaleReport as $i => $dataItemIndividual) {
                 $worksheet->getStyle("D{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-                $worksheet->getStyle("E{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
+                $worksheet->getStyle("E{$counter}:G{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
 
                 $worksheet->setCellValue("A{$counter}", $i + 1);
                 $worksheet->setCellValue("B{$counter}", $dataItemIndividual['customer_id']);
                 $worksheet->setCellValue("C{$counter}", $dataItemIndividual['customer_name']);
                 $worksheet->setCellValue("D{$counter}", $dataItemIndividual['quantity_invoice']);
-                $worksheet->setCellValue("E{$counter}", $dataItemIndividual['total_price']);
+                $worksheet->setCellValue("E{$counter}", $dataItemIndividual['product_price']);
+                $worksheet->setCellValue("F{$counter}", $dataItemIndividual['service_price']);
+                $worksheet->setCellValue("G{$counter}", $dataItemIndividual['total_price']);
                 
                 $counter++;
         }

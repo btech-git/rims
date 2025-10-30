@@ -76,8 +76,9 @@ class YearlyCustomerReceivableController extends Controller {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
 
-        $dataProvider = InvoiceHeader::model()->searchByYearlyCustomerReceivableInfo($customerId, $year, $month);
         $customer = Customer::model()->findByPk($customerId);
+        $dataProvider = JurnalUmum::model()->searchByYearlyCustomerReceivableInfo($customer->coa_id, $year, $month);
+        $beginningBalance = JurnalUmum::model()->getYearlyCustomerReceivableBeginningBalance($customer->coa_id, $year, $month);
         
         $monthList =  array(
             1 => 'Jan',
@@ -100,6 +101,7 @@ class YearlyCustomerReceivableController extends Controller {
         
         $this->render('transactionInfo', array(
             'dataProvider' => $dataProvider,
+            'beginningBalance' => $beginningBalance,
             'year' => $year,
             'month' => $month,
             'customer' => $customer,

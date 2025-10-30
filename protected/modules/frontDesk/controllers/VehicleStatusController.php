@@ -28,6 +28,8 @@ class VehicleStatusController extends Controller {
         $endDateIn = (isset($_GET['EndDateIn'])) ? $_GET['EndDateIn'] : date('Y-m-d');
         $startDateProcess = (isset($_GET['StartDateProcess'])) ? $_GET['StartDateProcess'] : date('Y-m-d');
         $endDateProcess = (isset($_GET['EndDateProcess'])) ? $_GET['EndDateProcess'] : date('Y-m-d');
+        $startDateExit = (isset($_GET['StartDateExit'])) ? $_GET['StartDateExit'] : date('Y-m-d');
+        $endDateExit = (isset($_GET['EndDateExit'])) ? $_GET['EndDateExit'] : date('Y-m-d');
         $plateNumber = (isset($_GET['PlateNumber'])) ? $_GET['PlateNumber'] : '';
         $customerName = (isset($_GET['CustomerName'])) ? $_GET['CustomerName'] : '';
         
@@ -41,6 +43,11 @@ class VehicleStatusController extends Controller {
         $vehicleProcessDataprovider->criteria->compare('t.plate_number', $plateNumber, true);
         $vehicleProcessDataprovider->criteria->addBetweenCondition('DATE(t.start_service_datetime)', $startDateProcess, $endDateProcess);
 
+        $vehicleExitDataprovider = $vehicle->searchByExitStatusLocation($customerName);
+        $vehicleExitDataprovider->pagination->pageVar = 'page_dialog_process';
+        $vehicleExitDataprovider->criteria->compare('t.plate_number', $plateNumber, true);
+        $vehicleExitDataprovider->criteria->addBetweenCondition('DATE(t.start_service_datetime)', $startDateExit, $endDateExit);
+
         if (isset($_GET['SaveExcel'])) {
             $this->saveToExcel($vehicleEntryDataprovider, $vehicleProcessDataprovider, $startDateIn, $endDateIn, $startDateProcess, $endDateProcess);
         }
@@ -53,8 +60,11 @@ class VehicleStatusController extends Controller {
             'endDateIn' => $endDateIn,
             'startDateProcess' => $startDateProcess,
             'endDateProcess' => $endDateProcess,
+            'startDateExit' => $startDateExit,
+            'endDateExit' => $endDateExit,
             'vehicleEntryDataprovider' => $vehicleEntryDataprovider,
             'vehicleProcessDataprovider' => $vehicleProcessDataprovider,
+            'vehicleExitDataprovider' => $vehicleExitDataprovider,
         ));
     }
     

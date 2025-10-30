@@ -429,7 +429,40 @@ class Vehicle extends CActiveRecord {
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
             'pagination' => array(
-                'pageSize' => 5,
+                'pageSize' => 25,
+            ),
+        ));
+    }
+    
+    public function searchByExitStatusLocation($customerName) {
+        $criteria = new CDbCriteria;
+
+        $criteria->with = array(
+            'customer',
+            'carMake',
+            'carModel',
+            'carSubModel',
+        );
+
+        $criteria->compare('t.id', $this->id);
+        $criteria->compare('t.plate_number', $this->plate_number, true);
+        $criteria->compare('t.machine_number', $this->machine_number, true);
+        $criteria->compare('t.frame_number', $this->frame_number, true);
+        $criteria->compare('t.car_make_id', $this->car_make_id);
+        $criteria->compare('t.car_model_id', $this->car_model_id);
+        $criteria->compare('t.car_sub_model_id', $this->car_sub_model_id);
+        $criteria->compare('t.color_id', $this->color_id);
+        $criteria->compare('t.year', $this->year, true);
+        $criteria->compare('t.notes', $this->notes, true);
+        $criteria->compare('customer.name', $customerName, true);
+
+        $criteria->order = 't.start_service_datetime ASC';
+        $criteria->addCondition("t.status_location LIKE '%Keluar%'");
+
+        return new CActiveDataProvider($this, array(
+            'criteria' => $criteria,
+            'pagination' => array(
+                'pageSize' => 25,
             ),
         ));
     }

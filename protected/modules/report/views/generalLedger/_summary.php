@@ -75,8 +75,8 @@ Yii::app()->clientScript->registerCss('_report', '
                                 <?php $generalLedgerData = $generalLedgerReportData[$header->id]; ?>
                                 <?php $currentBalance = $beginningBalance; ?>
                                 <?php foreach ($generalLedgerData as $generalLedgerRow): ?>
-                                    <?php $debitAmount = $generalLedgerRow['debet_kredit'] == 'D' ? $generalLedgerRow['total'] : 0 ?>
-                                    <?php $creditAmount = $generalLedgerRow['debet_kredit'] == 'K' ? $generalLedgerRow['total'] : 0 ?>
+                                    <?php $debitAmount = $generalLedgerRow['debet_kredit'] == 'D' ? $generalLedgerRow['total'] : 0; ?>
+                                    <?php $creditAmount = $generalLedgerRow['debet_kredit'] == 'K' ? $generalLedgerRow['total'] : 0; ?>
                                     <?php $currentBalance += $debitAmount - $creditAmount; ?>
                                     <tr>
                                         <td class="width2-1">

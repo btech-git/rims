@@ -2132,7 +2132,9 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
     
     public static function getYearlyCustomerPaymentReport($year) {
       
-        $sql = "SELECT i.customer_id, MONTH(i.payment_date) AS payment_month, MAX(c.name) AS customer_name, SUM(i.payment_amount) AS payment_total
+        $sql = "SELECT i.customer_id, MONTH(i.payment_date) AS payment_month, MAX(c.name) AS customer_name, 
+                    SUM(i.payment_amount + tax_service_amount + downpayment_amount + discount_product_amount + discount_service_amount + 
+                    bank_administration_fee + merimen_fee + bank_fee_amount) AS payment_total
                 FROM " . PaymentIn::model()->tableName() . "  i
                 INNER JOIN " . Customer::model()->tableName() . " c ON c.id = i.customer_id
                 WHERE YEAR(i.payment_date) = :year AND c.customer_type = 'Company' AND i.user_id_cancelled IS NULL
@@ -2151,7 +2153,8 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
         $sql = "SELECT i.customer_id, MAX(c.name) AS customer_name, SUM(i.total_price) AS beginning_invoice_total
                 FROM " . InvoiceHeader::model()->tableName() . "  i 
                 INNER JOIN " . Customer::model()->tableName() . " c ON c.id = i.customer_id
-                WHERE i.invoice_date >= '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND i.invoice_date < :invoice_date AND c.customer_type = 'Company' AND i.user_id_cancelled IS NULL
+                WHERE i.invoice_date >= '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND i.invoice_date < :invoice_date AND c.customer_type = 'Company' AND 
+                    i.user_id_cancelled IS NULL
                 GROUP BY i.customer_id";
                 
         $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, array(
@@ -2163,10 +2166,12 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
   
     public static function getBeginningCustomerPaymentReport($year) {
       
-        $sql = "SELECT i.customer_id, MAX(c.name) AS customer_name, SUM(i.payment_amount) AS beginning_payment_total
+        $sql = "SELECT i.customer_id, MAX(c.name) AS customer_name, SUM(i.payment_amount + tax_service_amount + downpayment_amount + discount_product_amount + 
+                    discount_service_amount + bank_administration_fee + merimen_fee + bank_fee_amount) AS beginning_payment_total
                 FROM " . PaymentIn::model()->tableName() . "  i
                 INNER JOIN " . Customer::model()->tableName() . " c ON c.id = i.customer_id
-                WHERE i.payment_date >= '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND i.payment_date < :payment_date AND c.customer_type = 'Company' AND i.user_id_cancelled IS NULL
+                WHERE i.payment_date >= '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND i.payment_date < :payment_date AND c.customer_type = 'Company' AND 
+                    i.user_id_cancelled IS NULL
                 GROUP BY i.customer_id";
                 
         $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, array(
@@ -2188,7 +2193,8 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
             $params[':branch_id'] = $branchId;
         }
         
-        $sql = "SELECT i.customer_id, MAX(c.name) AS customer_name, COUNT(i.id) AS quantity_invoice, SUM(i.total_price) AS total_price
+        $sql = "SELECT i.customer_id, MAX(c.name) AS customer_name, COUNT(i.id) AS quantity_invoice, SUM(i.product_price) AS product_price, 
+                    SUM(i.service_price) AS service_price, SUM(i.total_price) AS total_price
                 FROM " . InvoiceHeader::model()->tableName() . " i 
                 INNER JOIN " . Customer::model()->tableName() . " c ON c.id = i.customer_id
                 WHERE YEAR(i.invoice_date) = :year AND c.customer_type = 'Company' AND i.user_id_cancelled IS NULL" . $branchConditionSql . " 
@@ -2213,7 +2219,8 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
             $params[':branch_id'] = $branchId;
         }
         
-        $sql = "SELECT i.customer_id, MAX(c.name) AS customer_name, COUNT(i.id) AS quantity_invoice, SUM(i.total_price) AS total_price
+        $sql = "SELECT i.customer_id, MAX(c.name) AS customer_name, COUNT(i.id) AS quantity_invoice, SUM(i.product_price) AS product_price, 
+                    SUM(i.service_price) AS service_price, SUM(i.total_price) AS total_price
                 FROM " . InvoiceHeader::model()->tableName() . " i 
                 INNER JOIN " . Customer::model()->tableName() . " c ON c.id = i.customer_id
                 WHERE YEAR(i.invoice_date) = :year AND c.customer_type = 'Individual' AND i.user_id_cancelled IS NULL" . $branchConditionSql . " 
@@ -2224,23 +2231,5 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
         $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
         
         return $resultSet;
-    }    
-    
-    public function searchByYearlyCustomerReceivableInfo($customerId, $year, $month) {
-
-        $criteria = new CDbCriteria;
-
-        $criteria->addCondition("t.customer_id = :customer_id AND t.status NOT LIKE '%CANCEL%' AND MONTH(t.invoice_date) = :invoice_month AND YEAR(t.invoice_date) = :invoice_year");
-        $criteria->params = array(':invoice_month' => $month, ':invoice_year' => $year, ':customer_id' => $customerId);
-        
-        return new CActiveDataProvider($this, array(
-            'criteria' => $criteria,
-            'sort' => array(
-                'defaultOrder' => 't.invoice_date ASC',
-            ),
-            'pagination' => array(
-                'pageSize' => 100,
-            ),
-        ));
     }
 }

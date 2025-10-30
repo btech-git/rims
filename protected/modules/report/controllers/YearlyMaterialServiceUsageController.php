@@ -1,6 +1,6 @@
 <?php
 
-class YearlyProductSaleTransactionController extends Controller {
+class YearlyMaterialServiceUsageController extends Controller {
 
     public function filters() {
         return array(
@@ -36,24 +36,24 @@ class YearlyProductSaleTransactionController extends Controller {
         $subCategoryId = (isset($_GET['SubCategoryId'])) ? $_GET['SubCategoryId'] : '';
         $subMasterCategoryId = (isset($_GET['SubMasterCategoryId'])) ? $_GET['SubMasterCategoryId'] : '';
         
-        $yearlyProductSaleTransactionReportData = array();
-        $yearlyProductSaleTransactionReport = InvoiceDetail::getYearlyProductSaleTransactionReport($year, $productId, $productCode, $productName, $branchId, $brandId, $subBrandId, $subBrandSeriesId, $masterCategoryId, $subCategoryId, $subMasterCategoryId);
-        foreach ($yearlyProductSaleTransactionReport as $reportItem) {
-            $monthValue = intval($reportItem['invoice_month']);
-            $yearlyProductSaleTransactionReportData[$reportItem['product_id']]['product_id'] = $reportItem['product_id'];
-            $yearlyProductSaleTransactionReportData[$reportItem['product_id']]['product_name'] = $reportItem['product_name'];
-            $yearlyProductSaleTransactionReportData[$reportItem['product_id']]['product_code'] = $reportItem['product_code'];
-            $yearlyProductSaleTransactionReportData[$reportItem['product_id']]['brand_name'] = $reportItem['brand_name'];
-            $yearlyProductSaleTransactionReportData[$reportItem['product_id']]['sub_brand_name'] = $reportItem['sub_brand_name'];
-            $yearlyProductSaleTransactionReportData[$reportItem['product_id']]['sub_brand_series_name'] = $reportItem['sub_brand_series_name'];
-            $yearlyProductSaleTransactionReportData[$reportItem['product_id']]['master_category_name'] = $reportItem['master_category_name'];
-            $yearlyProductSaleTransactionReportData[$reportItem['product_id']]['sub_category_name'] = $reportItem['sub_category_name'];
-            $yearlyProductSaleTransactionReportData[$reportItem['product_id']]['sub_master_category_name'] = $reportItem['sub_master_category_name'];
-            $yearlyProductSaleTransactionReportData[$reportItem['product_id']]['totals'][$monthValue] = $reportItem['total_quantity'];
+        $yearlyMaterialServiceUsageReportData = array();
+        $yearlyMaterialServiceUsageReport = MaterialRequestDetail::getYearlyMaterialServiceUsageReport($year, $productId, $productCode, $productName, $branchId, $brandId, $subBrandId, $subBrandSeriesId, $masterCategoryId, $subCategoryId, $subMasterCategoryId);
+        foreach ($yearlyMaterialServiceUsageReport as $reportItem) {
+            $monthValue = intval($reportItem['material_month']);
+            $yearlyMaterialServiceUsageReportData[$reportItem['product_id']]['product_id'] = $reportItem['product_id'];
+            $yearlyMaterialServiceUsageReportData[$reportItem['product_id']]['product_name'] = $reportItem['product_name'];
+            $yearlyMaterialServiceUsageReportData[$reportItem['product_id']]['product_code'] = $reportItem['product_code'];
+            $yearlyMaterialServiceUsageReportData[$reportItem['product_id']]['brand_name'] = $reportItem['brand_name'];
+            $yearlyMaterialServiceUsageReportData[$reportItem['product_id']]['sub_brand_name'] = $reportItem['sub_brand_name'];
+            $yearlyMaterialServiceUsageReportData[$reportItem['product_id']]['sub_brand_series_name'] = $reportItem['sub_brand_series_name'];
+            $yearlyMaterialServiceUsageReportData[$reportItem['product_id']]['master_category_name'] = $reportItem['master_category_name'];
+            $yearlyMaterialServiceUsageReportData[$reportItem['product_id']]['sub_category_name'] = $reportItem['sub_category_name'];
+            $yearlyMaterialServiceUsageReportData[$reportItem['product_id']]['sub_master_category_name'] = $reportItem['sub_master_category_name'];
+            $yearlyMaterialServiceUsageReportData[$reportItem['product_id']]['totals'][$monthValue] = $reportItem['total_quantity'];
         }
 
         
-        $productIds = array_map(function($reportItem) { return $reportItem['product_id']; }, $yearlyProductSaleTransactionReport);
+        $productIds = array_map(function($reportItem) { return $reportItem['product_id']; }, $yearlyMaterialServiceUsageReport);
         
         $inventoryCurrentStocks = InventoryDetail::getInventoryCurrentStocks($productIds, $branchId);
         
@@ -72,11 +72,11 @@ class YearlyProductSaleTransactionController extends Controller {
         }
         
         if (isset($_GET['SaveExcel'])) {
-            $this->saveToExcel($yearlyProductSaleTransactionReportData, $inventoryCurrentStockData, $year, $yearNow, $monthNow);
+            $this->saveToExcel($yearlyMaterialServiceUsageReportData, $inventoryCurrentStockData, $year, $yearNow, $monthNow);
         }
         
         $this->render('summary', array(
-            'yearlyProductSaleTransactionReportData' => $yearlyProductSaleTransactionReportData,
+            'yearlyMaterialServiceUsageReportData' => $yearlyMaterialServiceUsageReportData,
             'inventoryCurrentStockData' => $inventoryCurrentStockData,
             'yearList' => $yearList,
             'year' => $year,
@@ -143,7 +143,7 @@ class YearlyProductSaleTransactionController extends Controller {
         }
     }
 
-    protected function saveToExcel($yearlyProductSaleTransactionReportData, $inventoryCurrentStockData, $year, $yearNow, $monthNow) {
+    protected function saveToExcel($yearlyMaterialServiceUsageReportData, $inventoryCurrentStockData, $year, $yearNow, $monthNow) {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
 
@@ -170,10 +170,10 @@ class YearlyProductSaleTransactionController extends Controller {
 
         $documentProperties = $objPHPExcel->getProperties();
         $documentProperties->setCreator('Raperind Motor');
-        $documentProperties->setTitle('Penjualan Parts Tahunan');
+        $documentProperties->setTitle('Pemakaian Material Tahunan');
 
         $worksheet = $objPHPExcel->setActiveSheetIndex(0);
-        $worksheet->setTitle('Penjualan Parts Tahunan');
+        $worksheet->setTitle('Pemakaian Material Tahunan');
 
         $worksheet->mergeCells('A1:Z1');
         $worksheet->mergeCells('A2:Z2');
@@ -182,7 +182,7 @@ class YearlyProductSaleTransactionController extends Controller {
         $worksheet->getStyle('A1:AZ6')->getFont()->setBold(true);
 
         $worksheet->setCellValue('A1', 'Raperind Motor ');
-        $worksheet->setCellValue('A2', 'Penjualan Parts & Components Tahunan');
+        $worksheet->setCellValue('A2', 'Pemakaian Material Tahunan');
         $worksheet->setCellValue('A3', 'Periode Tahun: ' . $year);
         
         $worksheet->setCellValue('A5', 'No');
@@ -200,13 +200,11 @@ class YearlyProductSaleTransactionController extends Controller {
         $columnCounter++;
         $worksheet->setCellValue("{$columnCounter}5", 'Rata2 per Bulan');
         $columnCounter++;
-        $worksheet->setCellValue("{$columnCounter}5", 'Jual Min');
+        $worksheet->setCellValue("{$columnCounter}5", 'Pakai Min');
         $columnCounter++;
-        $worksheet->setCellValue("{$columnCounter}5", 'Jual Max');
+        $worksheet->setCellValue("{$columnCounter}5", 'Pakai Max');
         $columnCounter++;
-        $worksheet->setCellValue("{$columnCounter}5", 'Jual Median');
-        $columnCounter++;
-        $worksheet->setCellValue("{$columnCounter}5", 'Klasifikasi');
+        $worksheet->setCellValue("{$columnCounter}5", 'Pakai Median');
         $columnCounter++;
         $worksheet->setCellValue("{$columnCounter}5", 'Posisi Stok');
         $columnCounter++;
@@ -224,48 +222,48 @@ class YearlyProductSaleTransactionController extends Controller {
         $ordinal = 0;
         
         $maxMonthNum = (int) $year === (int) $yearNow ? $monthNow : 12;
-        foreach ($yearlyProductSaleTransactionReportData as $productId => $yearlyProductSaleTransactionReportDataItem) {
+        foreach ($yearlyMaterialServiceUsageReportData as $productId => $yearlyMaterialServiceUsageReportDataItem) {
             $worksheet->getStyle("G{$counter}:Z{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
 
             $worksheet->setCellValue("A{$counter}", ++$ordinal);
-            $worksheet->setCellValue("B{$counter}", $yearlyProductSaleTransactionReportDataItem['product_id']);
-            $worksheet->setCellValue("C{$counter}", $yearlyProductSaleTransactionReportDataItem['product_code']);
-            $worksheet->setCellValue("D{$counter}", $yearlyProductSaleTransactionReportDataItem['product_name']);
-            $worksheet->setCellValue("E{$counter}", $yearlyProductSaleTransactionReportDataItem['brand_name'] . ' - ' . $yearlyProductSaleTransactionReportDataItem['sub_brand_name'] . ' - ' . $yearlyProductSaleTransactionReportDataItem['sub_brand_series_name']);
-            $worksheet->setCellValue("F{$counter}", $yearlyProductSaleTransactionReportDataItem['master_category_name'] . ' - ' . $yearlyProductSaleTransactionReportDataItem['sub_master_category_name'] . ' - ' . $yearlyProductSaleTransactionReportDataItem['sub_category_name']);
+            $worksheet->setCellValue("B{$counter}", $yearlyMaterialServiceUsageReportDataItem['product_id']);
+            $worksheet->setCellValue("C{$counter}", $yearlyMaterialServiceUsageReportDataItem['product_code']);
+            $worksheet->setCellValue("D{$counter}", $yearlyMaterialServiceUsageReportDataItem['product_name']);
+            $worksheet->setCellValue("E{$counter}", $yearlyMaterialServiceUsageReportDataItem['brand_name'] . ' - ' . $yearlyMaterialServiceUsageReportDataItem['sub_brand_name'] . ' - ' . $yearlyMaterialServiceUsageReportDataItem['sub_brand_series_name']);
+            $worksheet->setCellValue("F{$counter}", $yearlyMaterialServiceUsageReportDataItem['master_category_name'] . ' - ' . $yearlyMaterialServiceUsageReportDataItem['sub_master_category_name'] . ' - ' . $yearlyMaterialServiceUsageReportDataItem['sub_category_name']);
             
-            $invoiceTotals = array();
+            $materialTotals = array();
             $columnCounter = 'G';
             
             for ($month = 1; $month <= 12; $month++) {
-                $invoiceTotal = isset($yearlyProductSaleTransactionReportDataItem['totals'][$month]) ? $yearlyProductSaleTransactionReportDataItem['totals'][$month] : '0.00';
-                $worksheet->setCellValue("{$columnCounter}{$counter}", $month <= $maxMonthNum ? $invoiceTotal : '');
+                $materialTotal = isset($yearlyMaterialServiceUsageReportDataItem['totals'][$month]) ? $yearlyMaterialServiceUsageReportDataItem['totals'][$month] : '0.00';
+                $worksheet->setCellValue("{$columnCounter}{$counter}", $month <= $maxMonthNum ? $materialTotal : '');
                 $columnCounter++;
-                $invoiceTotals[] = $invoiceTotal;
+                $materialTotals[] = $materialTotal;
             }
-            $invoiceTotalSum = array_sum($invoiceTotals);
-            $worksheet->setCellValue("{$columnCounter}{$counter}", $invoiceTotalSum);
+            $materialTotalSum = array_sum($materialTotals);
+            $worksheet->setCellValue("{$columnCounter}{$counter}", $materialTotalSum);
             $columnCounter++;
-            $invoiceMean = $invoiceTotalSum / $maxMonthNum;
-            $worksheet->setCellValue("{$columnCounter}{$counter}", $invoiceMean);
+            $materialMean = $materialTotalSum / $maxMonthNum;
+            $worksheet->setCellValue("{$columnCounter}{$counter}", $materialMean);
             $columnCounter++;
-            $invoiceMinAmount = min($invoiceTotals);
-            $worksheet->setCellValue("{$columnCounter}{$counter}", $invoiceMinAmount);
+            $materialMinAmount = min($materialTotals);
+            $worksheet->setCellValue("{$columnCounter}{$counter}", $materialMinAmount);
             $columnCounter++;
-            $invoiceMaxAmount = max($invoiceTotals);
-            $worksheet->setCellValue("{$columnCounter}{$counter}", $invoiceMaxAmount);
+            $materialMaxAmount = max($materialTotals);
+            $worksheet->setCellValue("{$columnCounter}{$counter}", $materialMaxAmount);
             $columnCounter++;
-            sort($invoiceTotals);
-            $invoiceMedian = ($invoiceTotals[5] + $invoiceTotals[6]) / 2; 
-            $worksheet->setCellValue("{$columnCounter}{$counter}", $invoiceMedian);
-            $columnCounter++;$columnCounter++;
+            sort($materialTotals);
+            $materialMedian = ($materialTotals[5] + $materialTotals[6]) / 2; 
+            $worksheet->setCellValue("{$columnCounter}{$counter}", $materialMedian);
+            $columnCounter++;
             $quantityStock = isset($inventoryCurrentStockData[$productId]) ? $inventoryCurrentStockData[$productId] : '0.00';
             $worksheet->setCellValue("{$columnCounter}{$counter}", $quantityStock);
             $columnCounter++;
             $product = Product::model()->findByPk($productId);
             $worksheet->setCellValue("{$columnCounter}{$counter}", $product->minimum_stock);
             $columnCounter++;
-            $worksheet->setCellValue("{$columnCounter}{$counter}", round($invoiceMedian, 0));
+            $worksheet->setCellValue("{$columnCounter}{$counter}", round($materialMedian, 0));
             $columnCounter++;
             $worksheet->setCellValue("{$columnCounter}{$counter}", $product->minimum_stock - $quantityStock);
             $columnCounter++;
@@ -282,7 +280,7 @@ class YearlyProductSaleTransactionController extends Controller {
         ob_end_clean();
 
         header('Content-type: application/vnd.ms-excel');
-        header('Content-Disposition: attachment;filename="penjualan_parts_components_tahunan.xls"');
+        header('Content-Disposition: attachment;filename="pemakaian_material_tahunan.xls"');
         header('Cache-Control: max-age=0');
 
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');

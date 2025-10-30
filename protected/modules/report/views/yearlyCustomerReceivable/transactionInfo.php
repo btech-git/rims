@@ -32,61 +32,50 @@ Yii::app()->clientScript->registerCss('_report', '
         <table class="report">
             <thead style="position: sticky; top: 0">
                 <tr id="header1">
-                    <th class="width1-1">Invoice #</th>
+                    <th class="width1-1">Transaksi #</th>
                     <th class="width1-2">Tanggal</th>
-                    <th class="width1-3">Plat #</th>
-                    <th class="width1-4">Vehicle</th>
-                    <th class="width1-5">Status</th>
-                    <th class="width1-6">Total</th>
-                    <th class="width1-7">Payment</th>
-                    <th class="width1-8">Remaining</th>
+                    <th class="width1-3">Note</th>
+                    <th class="width1-4">Remarks</th>
+                    <th class="width1-5">Debit</th>
+                    <th class="width1-6">Credit</th>
+                    <th class="width1-7">Saldo</th>
                 </tr>
             </thead>
             <tbody>
-                <?php $totalPriceSum = '0.00'; ?>
-                <?php $totalPaymentSum = '0.00'; ?>
-                <?php $totalRemainingSum = '0.00'; ?>
-                <?php foreach ($dataProvider->data as $header): ?>
-                    <?php $totalPrice = CHtml::value($header, 'total_price'); ?>
-                    <?php $paymentAmount = CHtml::value($header, 'payment_amount'); ?>
-                    <?php $paymentLeft = CHtml::value($header, 'payment_left'); ?>
+                <?php $totalDebitSum = '0.00'; ?>
+                <?php $totalCreditSum = '0.00'; ?>
+                <?php $currentBalance = $beginningBalance; ?>
+                <tr>
+                    <td colspan="6" style="text-align: right; font-weight: bold"> Saldo Awal</td>
+                    <td style="text-align: right; font-weight: bold"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $beginningBalance)); ?></td>
+                </tr>
+                <?php foreach($dataProvider->data as $header): ?>
+                    <?php $debitAmount = $header->debet_kredit == 'D' ? $header->total : 0; ?>
+                    <?php $creditAmount = $header->debet_kredit == 'K' ? $header->total : 0; ?>
+                    <?php $currentBalance += $debitAmount - $creditAmount; ?>
                     <tr class="items1">
-                        <td><?php echo CHtml::encode(CHtml::value($header, 'invoice_number')); ?></td>
-                        <td><?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($header->invoice_date))); ?></td>
-                        <td><?php echo CHtml::encode(CHtml::value($header, 'vehicle.plate_number')); ?></td>
-                        <td>
-                            <?php echo CHtml::encode(CHtml::value($header, 'vehicle.carMake.name')); ?> -
-                            <?php echo CHtml::encode(CHtml::value($header, 'vehicle.carModel.name')); ?> - 
-                            <?php echo CHtml::encode(CHtml::value($header, 'vehicle.carSubModel.name')); ?>
-                        </td>
-                        <td><?php echo CHtml::encode(CHtml::value($header, 'status')); ?></td>
-                        <td style="text-align: right">
-                            <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $totalPrice)); ?>
-                        </td>
-                        <td style="text-align: right">
-                            <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $paymentAmount)); ?>
-                        </td>
-                        <td style="text-align: right">
-                            <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $paymentLeft)); ?>
-                        </td>
+                        <td><?php echo CHtml::encode(CHtml::value($header, 'kode_transaksi')); ?></td>
+                        <td><?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($header->tanggal_transaksi))); ?></td>
+                        <td><?php echo CHtml::encode(CHtml::value($header, 'transaction_subject')); ?></td>
+                        <td><?php echo CHtml::encode(CHtml::value($header, 'remark')); ?></td>
+                        <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $debitAmount)); ?></td>
+                        <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $creditAmount)); ?></td>
+                        <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $currentBalance)); ?></td>
                     </tr>
-                    <?php $totalPriceSum += $totalPrice; ?>
-                    <?php $totalPaymentSum += $paymentAmount; ?>
-                    <?php $totalRemainingSum += $paymentLeft; ?>
+                    <?php $totalDebitSum += $debitAmount; ?>
+                    <?php $totalCreditSum += $creditAmount; ?>
                 <?php endforeach; ?>
             </tbody>
             <tfoot>
                 <tr>
-                    <td colspan="5" style="text-align: right; font-weight: bold">TOTAL</td>
+                    <td colspan="4" style="text-align: right; font-weight: bold">TOTAL</td>
                     <td style="text-align: right; font-weight: bold">
-                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $totalPriceSum)); ?>
+                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $totalDebitSum)); ?>
                     </td>
                     <td style="text-align: right; font-weight: bold">
-                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $totalPaymentSum)); ?>
+                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $totalCreditSum)); ?>
                     </td>
-                    <td style="text-align: right; font-weight: bold">
-                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $totalRemainingSum)); ?>
-                    </td>
+                    <td></td>
                 </tr>
             </tfoot>
         </table>

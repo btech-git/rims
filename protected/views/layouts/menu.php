@@ -110,11 +110,6 @@
             <?php $this->widget('zii.widgets.CMenu', array(
                 'items' => array(
                     array(
-                        'label' => 'Status Kendaraan', 
-                        'url' => array('/frontDesk/vehicleStatus/index'), 
-                        'visible' => (Yii::app()->user->checkAccess('director'))
-                    ),
-                    array(
                         'label' => 'Estimasi', 
                         'url' => array('/frontDesk/saleEstimation/admin'), 
                         'visible' => (Yii::app()->user->checkAccess('director'))
@@ -173,6 +168,11 @@
                         'label' => 'Follow Up Service', 
                         'url' => array('/frontDesk/followUp/adminService'), 
                         'visible' => Yii::app()->user->checkAccess('serviceFollowUp')
+                    ),
+                    array(
+                        'label' => 'Status Kendaraan', 
+                        'url' => array('/frontDesk/vehicleStatus/index'), 
+                        'visible' => (Yii::app()->user->checkAccess('director'))
                     ),
                 ),
             )); ?>

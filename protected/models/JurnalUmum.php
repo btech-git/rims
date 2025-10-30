@@ -711,4 +711,48 @@ class JurnalUmum extends CActiveRecord {
             ),
         ));
     }
+    
+    public function searchByYearlyCustomerReceivableInfo($coaId, $year, $month) {
+
+        $criteria = new CDbCriteria;
+
+        $criteria->addCondition("t.coa_id = :coa_id AND MONTH(t.tanggal_transaksi) = :transaction_month AND YEAR(t.tanggal_transaksi) = :transaction_year");
+        $criteria->params = array(':transaction_month' => $month, ':transaction_year' => $year, ':coa_id' => $coaId);
+        
+        return new CActiveDataProvider($this, array(
+            'criteria' => $criteria,
+            'sort' => array(
+                'defaultOrder' => 't.tanggal_transaksi ASC',
+            ),
+            'pagination' => array(
+                'pageSize' => 100,
+            ),
+        ));
+    }
+    
+    public static function getYearlyCustomerReceivableBeginningBalance($coaId, $year, $month) {
+        $sql = "
+            SELECT IF(a.normal_balance = 'Debit', COALESCE(SUM(j.amount), 0), COALESCE(SUM(j.amount), 0) * -1) AS beginning_balance 
+            FROM (
+                SELECT coa_id, tanggal_transaksi, total AS amount, branch_id
+                FROM " . JurnalUmum::model()->tableName() . "
+                WHERE debet_kredit = 'D' AND is_coa_category = 0 
+                UNION ALL
+                SELECT coa_id, tanggal_transaksi, total * -1 AS amount, branch_id
+                FROM " . JurnalUmum::model()->tableName() . "
+                WHERE debet_kredit = 'K' AND is_coa_category = 0
+            ) j
+            INNER JOIN " . Coa::model()->tableName() . " a ON a.id = j.coa_id
+            WHERE j.coa_id = :coa_id AND j.tanggal_transaksi < :tanggal_transaksi AND j.tanggal_transaksi >= '" . AppParam::BEGINNING_TRANSACTION_DATE . "'
+            GROUP BY j.coa_id
+        ";
+
+        $value = CActiveRecord::$db->createCommand($sql)->queryScalar(array(
+            ':coa_id' => $coaId,
+            ':tanggal_transaksi' => $year . '-' . $month .'-01',
+        ));
+
+        return ($value === false) ? 0 : $value;
+    }
+
 }

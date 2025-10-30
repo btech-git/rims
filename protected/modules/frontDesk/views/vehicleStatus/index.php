@@ -23,19 +23,7 @@ $this->breadcrumbs = array(
                                     <span class="prefix">Customer</span>
                                 </div>
                                 <div class="small-8 columns">
-                                    <?php echo CHtml::textField('CustomerName', $customerName, array(
-                                        'class' => 'form-select',
-//                                        'onchange' => CHtml::ajax(array(
-//                                            'type' => 'GET',
-//                                            'url' => CController::createUrl('ajaxHtmlUpdateVehicleEntryDataTable'),
-//                                            'update' => '#vehicle_entry_status_data_container',
-//                                        )) . 
-//                                        CHtml::ajax(array(
-//                                            'type' => 'GET',
-//                                            'url' => CController::createUrl('ajaxHtmlUpdateVehicleStatusDataTable'),
-//                                            'update' => '#vehicle_status_data_container',
-//                                        )),
-                                    )); ?>
+                                    <?php echo CHtml::textField('CustomerName', $customerName, array('class' => 'form-select',)); ?>
                                 </div>
                             </div>
                         </div>
@@ -48,19 +36,7 @@ $this->breadcrumbs = array(
                                     <span class="prefix">Plat #</span>
                                 </div>
                                 <div class="small-8 columns">
-                                    <?php echo CHtml::textField('PlateNumber', $plateNumber, array(
-                                        'class' => 'form-select',
-//                                        'onchange' => CHtml::ajax(array(
-//                                            'type' => 'GET',
-//                                            'url' => CController::createUrl('ajaxHtmlUpdateVehicleEntryDataTable'),
-//                                            'update' => '#vehicle_entry_status_data_container',
-//                                        )) . 
-//                                        CHtml::ajax(array(
-//                                            'type' => 'GET',
-//                                            'url' => CController::createUrl('ajaxHtmlUpdateVehicleStatusDataTable'),
-//                                            'update' => '#vehicle_status_data_container',
-//                                        )),
-                                    )); ?>
+                                    <?php echo CHtml::textField('PlateNumber', $plateNumber, array('class' => 'form-select',)); ?>
                                 </div>
                             </div>
                         </div>
@@ -87,11 +63,6 @@ $this->breadcrumbs = array(
                                             'class' => 'form-select',
                                             'style'=>'margin-bottom:0px;',
                                             'placeholder'=>'Date From',
-//                                            'onchange' => CHtml::ajax(array(
-//                                                'type' => 'GET',
-//                                                'url' => CController::createUrl('ajaxHtmlUpdateVehicleEntryDataTable'),
-//                                                'update' => '#vehicle_entry_status_data_container',
-//                                            )),
                                         ),
                                     )); ?>
                                 </div>
@@ -109,11 +80,6 @@ $this->breadcrumbs = array(
                                             'class' => 'form-select',
                                             'style'=>'margin-bottom:0px;',
                                             'placeholder'=>'Date To',
-//                                            'onchange' => CHtml::ajax(array(
-//                                                'type' => 'GET',
-//                                                'url' => CController::createUrl('ajaxHtmlUpdateVehicleEntryDataTable'),
-//                                                'update' => '#vehicle_entry_status_data_container',
-//                                            )),
                                         ),
                                     )); ?>
                                 </div>
@@ -140,11 +106,6 @@ $this->breadcrumbs = array(
                                             'class' => 'form-select',
                                             'style'=>'margin-bottom:0px;',
                                             'placeholder'=>'Date From',
-//                                            'onchange' => CHtml::ajax(array(
-//                                                'type' => 'GET',
-//                                                'url' => CController::createUrl('ajaxHtmlUpdateVehicleStatusDataTable'),
-//                                                'update' => '#vehicle_status_data_container',
-//                                            )),
                                         ),
                                     )); ?>
                                 </div>
@@ -162,13 +123,66 @@ $this->breadcrumbs = array(
                                             'class' => 'form-select',
                                             'style'=>'margin-bottom:0px;',
                                             'placeholder'=>'Date To',
-//                                            'onchange' => CHtml::ajax(array(
-//                                                'type' => 'GET',
-//                                                'url' => CController::createUrl('ajaxHtmlUpdateVehicleStatusDataTable'),
-//                                                'update' => '#vehicle_status_data_container',
-//                                            )),
                                         ),
                                     )); ?>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="medium-6 columns">
+                        <div class="field">
+                            <div class="row collapse">
+                                <div class="small-4 columns">
+                                    <span class="prefix">Tanggal Keluar</span>
+                                </div>
+                                <div class="small-4 columns">
+                                    <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(
+                                        'name'=>'StartDateExit',
+                                        'value' => $startDateExit,
+                                        'options'=>array(
+                                            'dateFormat'=>'yy-mm-dd',
+                                            'changeMonth'=>true,
+                                            'changeYear'=>true,
+                                        ),
+                                        'htmlOptions'=>array(
+                                            'class' => 'form-select',
+                                            'style'=>'margin-bottom:0px;',
+                                            'placeholder'=>'Date From',
+                                        ),
+                                    )); ?>
+                                </div>
+
+                                <div class="small-4 columns">
+                                    <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(
+                                        'name'=>'EndDateExit',
+                                        'value' => $endDateExit,
+                                        'options'=>array(
+                                            'dateFormat'=>'yy-mm-dd',
+                                            'changeMonth'=>true,
+                                            'changeYear'=>true,
+                                        ),
+                                        'htmlOptions'=>array(
+                                            'class' => 'form-select',
+                                            'style'=>'margin-bottom:0px;',
+                                            'placeholder'=>'Date To',
+                                        ),
+                                    )); ?>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="medium-6 columns">
+                        <div class="field">
+                            <div class="row collapse">
+                                <div class="small-4 columns">
+                                    <span class="prefix"></span>
+                                </div>
+                                <div class="small-8 columns">
+                                    
                                 </div>
                             </div>
                         </div>
@@ -200,11 +214,21 @@ $this->breadcrumbs = array(
 
                 <hr />
 
-                <div id="vehicle_status_data_container">
+                <div id="vehicle_progress_status_data_container">
                     <?php $this->renderPartial('_vehicleProcess', array(
                         'startDateProcess' => $startDateProcess,
                         'endDateProcess' => $endDateProcess,
                         'vehicleProcessDataprovider' => $vehicleProcessDataprovider,
+                    )); ?>
+                </div>
+                
+                <hr />
+
+                <div id="vehicle_exit_status_data_container">
+                    <?php $this->renderPartial('_vehicleExit', array(
+                        'startDateExit' => $startDateExit,
+                        'endDateExit' => $endDateExit,
+                        'vehicleExitDataprovider' => $vehicleExitDataprovider,
                     )); ?>
                 </div>
             </div>

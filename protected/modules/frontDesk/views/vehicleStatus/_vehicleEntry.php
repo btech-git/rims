@@ -6,7 +6,7 @@
     <?php echo ReportHelper::summaryText($vehicleEntryDataprovider); ?>
 </div>
 
-<div class="table-responsive">
+<div style="overflow-x:scroll ; overflow-y: hidden; margin-bottom: 1.25rem;">
     <?php echo CHtml::beginForm(); ?>
     <table class="table table-bordered table-striped">
         <thead>
@@ -22,7 +22,6 @@
                 <th class="text-center" style="min-width: 100px">Tanggal</th>
                 <th class="text-center" style="min-width: 100px">WO #</th>
                 <th class="text-center" style="min-width: 100px">SL #</th>
-                <th class="text-center" style="min-width: 130px">Status</th>
                 <th class="text-center" style="min-width: 150px">User Entry</th>
                 <th class="text-center" colspan="3">Service</th>
             </tr>
@@ -68,7 +67,6 @@
                     </td>
                     <td><?php echo CHtml::encode(CHtml::value($registrationTransaction, 'work_order_number')); ?></td>
                     <td><?php echo CHtml::encode(CHtml::value($registrationTransaction, 'sales_order_number')); ?></td>
-                    <td><?php echo CHtml::encode(CHtml::value($registrationTransaction, 'status')); ?></td>
                     <td><?php echo CHtml::encode(CHtml::value($data, 'entryUser.username')); ?></td>
                     <td>
                         <?php if (empty($registrationTransaction)): ?>

@@ -21,7 +21,6 @@
             <th style="text-align: center">Jual Min</th>
             <th style="text-align: center">Jual Max</th>
             <th style="text-align: center">Jual Median</th>
-            <th style="text-align: center">Type</th>
             <th style="text-align: center">Klasifikasi</th>
             <th style="text-align: center">Stock</th>
             <th style="text-align: center">Min</th>
@@ -57,12 +56,11 @@
                 <?php $invoiceMedian = ($invoiceTotals[5] + $invoiceTotals[6]) / 2; ?>
                 <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $invoiceMedian)); ?></td>
                 <td></td>
-                <td></td>
                 <?php $quantityStock = isset($inventoryCurrentStockData[$productId]) ? $inventoryCurrentStockData[$productId] : '0.00'; ?>
                 <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $quantityStock)); ?></td>
                 <?php $product = Product::model()->findByPk($productId); ?>
                 <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $product->minimum_stock)); ?></td>
-                <td style="text-align: right"><?php //echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $product->)); ?></td>
+                <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $invoiceMedian)); ?></td>
                 <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $product->minimum_stock - $quantityStock)); ?></td>
             </tr>
         <?php endforeach; ?>
