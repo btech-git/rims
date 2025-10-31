@@ -362,26 +362,11 @@ class EmployeeController extends Controller {
         }
     }
 
-//    public function actionRestore($id) {
-//        $this->loadModel($id)->restore();
-//
-//        if (!isset($_GET['ajax']))
-//            $this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
-//    }
-
-    /**
-     * Lists all models.
-     */
     public function actionIndex() {
-        //$dataProvider=new CActiveDataProvider('Employee');
-        // $criteria = new CDbCriteria();
-        // $criteria->together = true;
-        // $criteria->with= array('registrationService'=>array('with'=>array('registrationServiceEmployees'=>array('with'=>array('employee')))));
-        //$criteria->addCondition("")
-        // $registrationTransactions = RegistrationTransaction::model()->findAll($criteria);
+        $employeeBirthdayList = Employee::getEmployeeBirthdayList();
+        
         $this->render('index', array(
-                //'dataProvider'=>$dataProvider,
-                // 	'registrationTransactions'=>$registrationTransactions,
+            'employeeBirthdayList' => $employeeBirthdayList,
         ));
     }
 
