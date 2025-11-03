@@ -832,10 +832,13 @@
                 <div class="row" style="margin-top:20px" id="noliststyle">
                     <div class="small-4 columns">
                         <?php if (
-                            Yii::app()->user->checkAccess('director')
-//                            Yii::app()->user->checkAccess('workOrderServiceReport') ||
-//                            Yii::app()->user->checkAccess('workOrderVehicleReport') ||
-//                            Yii::app()->user->checkAccess('mechanicPerformanceReport')
+                            Yii::app()->user->checkAccess('monthlyProductSaleReport') ||
+                            Yii::app()->user->checkAccess('monthlyServiceSaleReport') ||
+                            Yii::app()->user->checkAccess('productCategoryStatisticsReport') ||
+                            Yii::app()->user->checkAccess('monthlyProductSaleTransactionReport') ||
+                            Yii::app()->user->checkAccess('yearlyProductSaleTransactionReport') ||
+                            Yii::app()->user->checkAccess('monthlyMaterialServiceUsage') ||
+                            Yii::app()->user->checkAccess('yearlyMaterialServiceUsage')
                         ): ?>
                             <h2>Stock Analysis & Order</h2>
                             <?php $this->widget('zii.widgets.CMenu', array(
@@ -843,26 +846,36 @@
                                     array(
                                         'label' => 'Penjualan Parts Bulanan', 
                                         'url' => array('/report/monthlyProductSale/summary'), 
-                                        'visible' => Yii::app()->user->checkAccess('director')
+                                        'visible' => Yii::app()->user->checkAccess('monthlyProductSaleReport')
                                     ),
                                     array(
                                         'label' => 'Penjualan Jasa Bulanan', 
                                         'url' => array('/report/monthlyServiceSale/summary'), 
-                                        'visible' => Yii::app()->user->checkAccess('director')
+                                        'visible' => Yii::app()->user->checkAccess('monthlyServiceSaleReport')
                                     ),
                                     array(
                                         'label' => 'Analisis Penjualan Parts', 
                                         'url' => array('/report/productSubMasterCategoryStatistics/summary'), 
-                                        'visible' => Yii::app()->user->checkAccess('director')
+                                        'visible' => Yii::app()->user->checkAccess('productCategoryStatisticsReport')
                                     ),
                                     array(
                                         'label' => 'Penjualan Parts & Components Bulanan', 
                                         'url' => array('/report/monthlyProductSaleTransaction/summary'), 
-                                        'visible' => Yii::app()->user->checkAccess('director')
+                                        'visible' => Yii::app()->user->checkAccess('monthlyProductSaleTransactionReport')
                                     ),
                                     array(
                                         'label' => 'Penjualan Parts & Components Tahunan', 
                                         'url' => array('/report/yearlyProductSaleTransaction/summary'), 
+                                        'visible' => Yii::app()->user->checkAccess('yearlyProductSaleTransactionReport')
+                                    ),
+                                    array(
+                                        'label' => 'Pemakaian Bahan Material Bulanan', 
+                                        'url' => array('/report/monthlyMaterialServiceUsage/summary'), 
+                                        'visible' => Yii::app()->user->checkAccess('director')
+                                    ),
+                                    array(
+                                        'label' => 'Pemakaian Bahan Material Tahunan', 
+                                        'url' => array('/report/yearlyMaterialServiceUsage/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('director')
                                     ),
                                 ),

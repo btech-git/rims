@@ -14,8 +14,8 @@ Yii::app()->clientScript->registerScript('userRoles', "
     }
 
     $(document).ready(function(){
-        checkRoles(0, 1, 479);
-        checkRoles(1, 2, 479);
+        checkRoles(0, 1, 481);
+        checkRoles(1, 2, 481);
         checkRoles(2, 3, 7);
         checkRoles(8, 9, 29);
         checkRoles(30, 31, 40);
@@ -27,21 +27,21 @@ Yii::app()->clientScript->registerScript('userRoles', "
         checkRoles(144, 145, 156);
         checkRoles(157, 158, 162);
         checkRoles(163, 164, 183);
-        checkRoles(184, 185, 269);
-        checkRoles(270, 271, 314);
-        checkRoles(315, 316, 335);
-        checkRoles(336, 337, 384);
-        checkRoles(385, 386, 433);
-        checkRoles(434, 435, 466);
-        checkRoles(467, 468, 479);
+        checkRoles(184, 185, 271);
+        checkRoles(272, 273, 316);
+        checkRoles(317, 318, 337);
+        checkRoles(338, 339, 386);
+        checkRoles(387, 388, 435);
+        checkRoles(436, 437, 468);
+        checkRoles(469, 470, 481);
     });
 
     $('#" . CHtml::activeId($model, 'roles') . "_0').click(function(){
-        checkRoles(0, 1, 479);
+        checkRoles(0, 1, 481);
     });
 
     $('#" . CHtml::activeId($model, 'roles') . "_1').click(function(){
-        checkRoles(1, 2, 479);
+        checkRoles(1, 2, 481);
     });
 
     $('#" . CHtml::activeId($model, 'roles') . "_2').click(function(){
@@ -89,41 +89,41 @@ Yii::app()->clientScript->registerScript('userRoles', "
     });
 		
     $('#" . CHtml::activeId($model, 'roles') . "_184').click(function(){
-        checkRoles(184, 185, 269);
+        checkRoles(184, 185, 271);
     });
 		
-    $('#" . CHtml::activeId($model, 'roles') . "_270').click(function(){
-        checkRoles(270, 271, 314);
+    $('#" . CHtml::activeId($model, 'roles') . "_272').click(function(){
+        checkRoles(272, 273, 316);
     });
 		
-    $('#" . CHtml::activeId($model, 'roles') . "_315').click(function(){
-        checkRoles(315, 316, 335);
+    $('#" . CHtml::activeId($model, 'roles') . "_317').click(function(){
+        checkRoles(317, 318, 337);
     });
 		
-    $('#" . CHtml::activeId($model, 'roles') . "_336').click(function(){
-        checkRoles(336, 337, 384);
+    $('#" . CHtml::activeId($model, 'roles') . "_338').click(function(){
+        checkRoles(338, 339, 386);
     });
 		
-    $('#" . CHtml::activeId($model, 'roles') . "_385').click(function(){
-        checkRoles(385, 386, 433);
+    $('#" . CHtml::activeId($model, 'roles') . "_387').click(function(){
+        checkRoles(387, 388, 435;
     });
 		
-    $('#" . CHtml::activeId($model, 'roles') . "_434').click(function(){
-        checkRoles(434, 435, 466);
+    $('#" . CHtml::activeId($model, 'roles') . "_436').click(function(){
+        checkRoles(436, 437, 468);
     });
 		
-    $('#" . CHtml::activeId($model, 'roles') . "_467').click(function(){
-        checkRoles(467, 468, 479);
+    $('#" . CHtml::activeId($model, 'roles') . "_469').click(function(){
+        checkRoles(469, 470, 481);
     });
 	
     $('#" . CHtml::activeId($model, 'is_main_access') . "').click(function(){
         if ($(this).prop('checked')) {
-            for (i = 2; i <= 467; i++) {
+            for (i = 2; i <= 469; i++) {
                 $('#" . CHtml::activeId($model, 'roles') . "_' + i).removeAttr('disabled');
                 $('#main-role-panel').show();
             }
         } else {
-            for (i = 2; i <= 467; i++) {
+            for (i = 2; i <= 469; i++) {
                 $('#" . CHtml::activeId($model, 'roles') . "_' + i).removeAttr('checked');
                 $('#" . CHtml::activeId($model, 'roles') . "_' + i).attr('disabled', true);
                 $('#main-role-panel').hide();
@@ -133,12 +133,12 @@ Yii::app()->clientScript->registerScript('userRoles', "
     
     $('#" . CHtml::activeId($model, 'is_front_access') . "').click(function(){
         if ($(this).prop('checked')) {
-            for (i = 467; i <= 479; i++) {
+            for (i = 469; i <= 481; i++) {
                 $('#" . CHtml::activeId($model, 'roles') . "_' + i).removeAttr('disabled');
                 $('#front-role-panel').show();
             }
         } else {
-            for (i = 467; i <= 479; i++) {
+            for (i = 469; i <= 481; i++) {
                 $('#" . CHtml::activeId($model, 'roles') . "_' + i).removeAttr('checked');
                 $('#" . CHtml::activeId($model, 'roles') . "_' + i).attr('disabled', true);
                 $('#front-role-panel').hide();

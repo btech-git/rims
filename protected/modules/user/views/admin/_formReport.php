@@ -2,7 +2,7 @@
     <thead>
         <tr>
             <th style="text-align: center; width: 50%">
-                <?php //echo $counter; ?>
+                <?php echo $counter; ?>
                 <?php echo CHtml::checkBox("User[roles][reportHead]", CHtml::resolveValue($model, "roles[reportHead]"), array('id' => 'User_roles_' . $counter, 'value' => 'reportHead')); ?>
                 <?php echo CHtml::label('SELECT ALL', 'User_roles_' . $counter++, array('style' => 'display: inline')); ?>
             </th>
@@ -562,8 +562,20 @@
         <tr>
             <td>Penjualan Parts & Components Tahunan</td>
             <td style="text-align: center">
-                <?php //echo $counter; ?>
                 <?php echo CHtml::checkBox("User[roles][yearlyProductSaleTransactionReport]", CHtml::resolveValue($model, "roles[yearlyProductSaleTransactionReport]"), array('id' => 'User_roles_' . $counter++, 'value' => 'yearlyProductSaleTransactionReport')); ?>
+            </td>
+        </tr>
+        <tr>
+            <td>Pemakaian Bahan Material Bulanan</td>
+            <td style="text-align: center">
+                <?php echo CHtml::checkBox("User[roles][monthlyMaterialServiceUsageReport]", CHtml::resolveValue($model, "roles[monthlyMaterialServiceUsageReport]"), array('id' => 'User_roles_' . $counter++, 'value' => 'monthlyMaterialServiceUsageReport')); ?>
+            </td>
+        </tr>
+        <tr>
+            <td>Pemakaian Bahan Material Tahunan</td>
+            <td style="text-align: center">
+                <?php echo $counter; ?>
+                <?php echo CHtml::checkBox("User[roles][yearlyMaterialServiceUsageReport]", CHtml::resolveValue($model, "roles[yearlyMaterialServiceUsageReport]"), array('id' => 'User_roles_' . $counter++, 'value' => 'yearlyMaterialServiceUsageReport')); ?>
             </td>
         </tr>
     </tbody>

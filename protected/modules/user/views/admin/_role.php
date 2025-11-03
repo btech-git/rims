@@ -89,31 +89,30 @@
                 'Setting Company' => array(
                     'content' => $this->renderPartial('_formCompany', array(
                         'model' => $model, 
-                        'counter' => $counter+268
+                        'counter' => $counter+270
                     ), true)
                 ),
                 'Setting Accounting' => array(
-                    'content' => $this->renderPartial(
-                        '_formAccounting',
-                        array('model' => $model, 'counter' => $counter+313),
-                        true
-                    )
+                    'content' => $this->renderPartial('_formAccounting', array(
+                        'model' => $model, 
+                        'counter' => $counter+315
+                    ), true)
                 ),
                 'Setting Product' => array(
                     'content' => $this->renderPartial('_formProduct', array(
                         'model' => $model, 
-                        'counter' => $counter+334
+                        'counter' => $counter+336
                     ), true)
                 ),
                 'Setting Service' => array(
                     'content' => $this->renderPartial('_formService', array(
                         'model' => $model, 
-                        'counter' => $counter+383
+                        'counter' => $counter+385
                     ), true)
                 ),
                 'Setting Vehicle' => array('content' => $this->renderPartial('_formVehicle', array(
                     'model' => $model, 
-                    'counter' => $counter+432
+                    'counter' => $counter+434
                     ), true)
                 ),
             ),
@@ -129,7 +128,7 @@
 
 <br /><br />
 
-<?php $counter = 467; ?>
+<?php $counter = 469; ?>
 <div id="front-role-panel" <?php if (!$model->is_front_access): ?>style="display: none"<?php endif; ?>>
     <?php echo $this->renderPartial('_formRimsFront', array(
         'model'=>$model,
