@@ -45,7 +45,7 @@
                     <?php endforeach; ?>
 
                     <td><?php echo CHtml::encode($totalStock); ?></td>
-                    <td class="text-end">
+                    <td style="text-align: right">
                         <?php $registrationProduct = RegistrationProduct::model()->findByAttributes(array('product_id' => $product->id), array('order' => 't.id DESC')); ?>
                         <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($registrationProduct, 'sale_price'))); ?>
                     </td>
@@ -58,7 +58,7 @@
     </table>
 </div>
 
-<div class="text-end" id="product-data-pager">
+<div style="text-align: right" id="product-data-pager">
     <?php $this->widget('system.web.widgets.pagers.CLinkPager', array(
         'pages' => $productDataProvider->pagination,
     )); ?>

@@ -59,7 +59,7 @@
                             'class' => "form-control",
                         )); ?>
                     </td>
-                    <td class="text-end">
+                    <td style="text-align: right">
                         <?php echo CHtml::activeHiddenField($serviceDetail,"[$i]total_price",array('readonly'=>true)); ?>
                         <span id="total_amount_<?php echo $i; ?>">
                             <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($serviceDetail, 'totalAmount'))); ?>

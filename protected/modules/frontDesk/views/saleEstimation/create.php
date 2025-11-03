@@ -22,6 +22,7 @@ $this->breadcrumbs=array(
 
 <div id="maincontent">
     <?php echo $this->renderPartial('_list', array(
+        'saleEstimation' => $saleEstimation,
         'product' => $product, 
         'productDataProvider' => $productDataProvider, 
         'service' => $service,

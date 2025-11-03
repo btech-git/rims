@@ -53,11 +53,15 @@ Yii::app()->clientScript->registerCss('_report', '
                         <td><?php echo CHtml::encode(CHtml::value($header, 'code')); ?></td>
                         <td><?php echo CHtml::encode(CHtml::value($header, 'manufacturer_code')); ?></td>
                         <td><?php echo CHtml::encode(CHtml::value($header, 'name')); ?></td>
-                        <td><?php echo CHtml::encode(CHtml::value($header, 'masterSubCategoryCode')); ?></td>
-                        <td colspan="7">
+                        <td colspan="4">
                             <?php echo CHtml::encode(CHtml::value($header, 'brand.name')); ?> - 
                             <?php echo CHtml::encode(CHtml::value($header, 'subBrand.name')); ?> - 
                             <?php echo CHtml::encode(CHtml::value($header, 'subBrandSeries.name')); ?>
+                        </td>
+                        <td colspan="4">
+                            <?php echo CHtml::encode(CHtml::value($header, 'productMasterCategory.name')); ?> - 
+                            <?php echo CHtml::encode(CHtml::value($header, 'productSubMasterCategory.name')); ?> - 
+                            <?php echo CHtml::encode(CHtml::value($header, 'productSubCategory.name')); ?>
                         </td>
                     </tr>
 

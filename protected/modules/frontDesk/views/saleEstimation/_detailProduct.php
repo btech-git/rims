@@ -88,7 +88,7 @@
                             'class' => "form-control",
                         )); ?>
                     </td>
-                    <td class="text-end">
+                    <td style="text-align: right">
                         <span id="total_price_product_<?php echo $i; ?>">
                             <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($productDetail, 'total_price'))); ?>
                         </span>

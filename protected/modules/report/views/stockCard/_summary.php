@@ -47,14 +47,18 @@ Yii::app()->clientScript->registerCss('_report', '
                 <?php //if ($stock > 0): ?>
                     <tr class="items1">
                         <td><?php echo CHtml::encode(CHtml::value($header, 'id')); ?></td>
+                        <td><?php echo CHtml::encode(CHtml::value($header, 'manufacturer_code')); ?></td>
                         <td><?php echo CHtml::encode(CHtml::value($header, 'name')); ?></td>
                         <td colspan="2">
                             <?php echo CHtml::encode(CHtml::value($header, 'brand.name')); ?> -
                             <?php echo CHtml::encode(CHtml::value($header, 'subBrand.name')); ?> -
                             <?php echo CHtml::encode(CHtml::value($header, 'subBrandSeries.name')); ?>
                         </td>
-                        <td><?php echo CHtml::encode(CHtml::value($header, 'code')); ?></td>
-                        <td><?php echo CHtml::encode(CHtml::value($header, 'masterSubCategoryCode')); ?></td>
+                        <td>
+                            <?php echo CHtml::encode(CHtml::value($header, 'productMasterCategory.name')); ?> - 
+                            <?php echo CHtml::encode(CHtml::value($header, 'productSubMasterCategory.name')); ?> - 
+                            <?php echo CHtml::encode(CHtml::value($header, 'productSubCategory.name')); ?>
+                        </td>
                         <td style="text-align: center; font-weight: bold">
                             <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $stock)); ?>
                         </td>

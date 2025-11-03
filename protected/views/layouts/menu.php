@@ -473,6 +473,16 @@
             <?php $this->widget('zii.widgets.CMenu', array(
                 'items' => array(
                     array(
+                        'label' => 'Hutang Jatuh Tempo', 
+                        'url' => array('/accounting/payableIncomingDue/index'), 
+                        'visible' => Yii::app()->user->checkAccess('director')
+                    ),
+                    array(
+                        'label' => 'Piutang Jatuh Tempo', 
+                        'url' => array('/accounting/receivableIncomingDue/index'), 
+                        'visible' => Yii::app()->user->checkAccess('director')
+                    ),
+                    array(
                         'label' => 'Analisa Keuangan', 
                         'url' => array('/accounting/forecasting/admin'), 
                         'visible' => Yii::app()->user->checkAccess('financialAnalysisReport')

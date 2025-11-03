@@ -95,6 +95,7 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                         'employeePeriodicallyAttendanceData' => $employeePeriodicallyAttendanceData,
                         'onleaveCategories' => $onleaveCategories,
                         'employeeDaysCountData' => $employeeDaysCountData,
+                        'nationalHolidaysCount' => $nationalHolidaysCount,
                         'startDate' => $startDate,
                         'endDate' => $endDate,
                     )); ?>

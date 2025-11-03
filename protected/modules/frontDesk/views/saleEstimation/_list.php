@@ -1,4 +1,4 @@
-<div <?php if ($isSubmitted): ?>style="display: none"<?php endif; ?> id="master-list">
+<div <?php if (!$saleEstimation->header->isNewRecord || $isSubmitted): ?>style="display: none"<?php endif; ?> id="master-list">
     
     <?php $this->widget('zii.widgets.jui.CJuiTabs', array(
         'tabs' => array(

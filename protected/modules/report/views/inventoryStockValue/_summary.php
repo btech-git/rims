@@ -10,8 +10,6 @@
             <th style="text-align: center">Code</th>
             <th style="text-align: center">Name</th>
             <th style="text-align: center">Brand</th>
-            <th style="text-align: center">Sub Brand</th>
-            <th style="text-align: center">Sub Brand Series</th>
             <th style="text-align: center">Category</th>
             <th style="text-align: center">Unit</th>
             <?php foreach ($branches as $branch): ?>
@@ -31,10 +29,16 @@
                 <td><?php echo CHtml::encode(CHtml::value($product, 'id')); ?></td>
                 <td><?php echo CHtml::encode(CHtml::value($product, 'manufacturer_code')); ?></td>
                 <td><?php echo CHtml::encode(CHtml::value($product, 'name')); ?></td>
-                <td><?php echo CHtml::encode(CHtml::value($product, 'brand.name')); ?></td>
-                <td><?php echo CHtml::encode(CHtml::value($product, 'subBrand.name')); ?></td>
-                <td><?php echo CHtml::encode(CHtml::value($product, 'subBrandSeries.name')); ?></td>
-                <td><?php echo CHtml::encode(CHtml::value($product, 'masterSubCategoryCode')); ?></td>
+                <td>
+                    <?php echo CHtml::encode(CHtml::value($product, 'brand.name')); ?> - 
+                    <?php echo CHtml::encode(CHtml::value($product, 'subBrand.name')); ?> - 
+                    <?php echo CHtml::encode(CHtml::value($product, 'subBrandSeries.name')); ?>
+                </td>
+                <td>
+                    <?php echo CHtml::encode(CHtml::value($product, 'productMasterCategory.name')); ?> - 
+                    <?php echo CHtml::encode(CHtml::value($product, 'productSubMasterCategory.name')); ?> - 
+                    <?php echo CHtml::encode(CHtml::value($product, 'productSubCategory.name')); ?>
+                </td>
                 <td><?php echo CHtml::encode(CHtml::value($product, 'unit.name')); ?></td>
                 
                 <?php foreach ($branches as $branch): ?>

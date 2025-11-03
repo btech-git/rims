@@ -51,6 +51,11 @@ class EmployeeAttendanceController extends Controller {
             $employeeDaysCountData[$employeePeriodicallyAttendanceItem['employee_id']] += $employeePeriodicallyAttendanceItem['days'];
         }
         
+        $nationalHolidaysCount = PublicDayOff::model()->count(array(
+            'condition' => 't.date BETWEEN :start_date AND :end_date', 
+            'params' => array(':start_date' => $startDate, ':end_date' => $endDate),
+        ));
+        
         if (isset($_GET['ResetFilter'])) {
             $this->redirect(array('summary'));
         }
@@ -63,6 +68,7 @@ class EmployeeAttendanceController extends Controller {
             'employeePeriodicallyAttendanceData' => $employeePeriodicallyAttendanceData,
             'onleaveCategories' => $onleaveCategories,
             'employeeDaysCountData' => $employeeDaysCountData,
+            'nationalHolidaysCount' => $nationalHolidaysCount,
             'startDate' => $startDate,
             'endDate' => $endDate,
             'branchId' => $branchId,

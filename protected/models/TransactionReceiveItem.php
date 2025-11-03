@@ -563,8 +563,9 @@ class TransactionReceiveItem extends MonthlyTransactionActiveRecord {
             $params[':branch_id'] = $branchId;
         }
         
-        $sql = "SELECT EXTRACT(YEAR_MONTH FROM invoice_date) AS year_month_value, i.supplier_id, MAX(c.name) AS supplier_name, COUNT(DISTINCT(i.purchase_order_id)) AS quantity_order, 
-                COUNT(*) AS quantity_invoice, SUM(i.invoice_sub_total) AS sub_total, SUM(i.invoice_tax_nominal) AS total_tax, SUM(i.invoice_grand_total) AS total_price 
+        $sql = "SELECT EXTRACT(YEAR_MONTH FROM invoice_date) AS year_month_value, i.supplier_id, MAX(c.name) AS supplier_name, 
+                    COUNT(DISTINCT(i.purchase_order_id)) AS quantity_order, COUNT(*) AS quantity_invoice, SUM(i.invoice_sub_total) AS sub_total, 
+                    SUM(i.invoice_tax_nominal) AS total_tax, SUM(i.invoice_grand_total) AS total_price 
                 FROM " . TransactionReceiveItem::model()->tableName() . " i 
                 INNER JOIN " . Supplier::model()->tableName() . " c ON c.id = i.supplier_id
                 WHERE YEAR(i.invoice_date) = :year AND MONTH(i.invoice_date) = :month AND i.user_id_cancelled IS NULL AND i.invoice_tax_nominal = 0" . $branchConditionSql . "
@@ -573,6 +574,27 @@ class TransactionReceiveItem extends MonthlyTransactionActiveRecord {
                 
         $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
 
+        return $resultSet;
+    }
+    
+    public static function getPayableIncomingDueDate() {
+        $sql = "SELECT r.invoice_number, r.invoice_date, r.invoice_due_date, s.name as supplier, r.invoice_grand_total, p.amount AS payment, 
+                    r.invoice_grand_total - p.amount AS remaining
+                FROM " . TransactionReceiveItem::model()->tableName() . " r
+                INNER JOIN " . Supplier::model()->tableName() . " s ON s.id = r.supplier_id
+                INNER JOIN (
+                    SELECT d.receive_item_id, SUM(d.amount) AS amount
+                    FROM " . PayOutDetail::model()->tableName() . " d
+                    INNER JOIN " . PaymentOut::model()->tableName() . " h ON h.id = d.payment_out_id
+                    WHERE h.user_id_cancelled IS NULL AND h.status = 'Approved'
+                    GROUP BY d.receive_item_id
+                ) p ON r.id = p.receive_item_id
+                WHERE r.invoice_due_date BETWEEN '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND DATE_ADD(NOW(), INTERVAL 30 DAY) AND 
+                    r.invoice_grand_total - p.amount > 100 AND user_id_cancelled IS NULL
+                ORDER BY r.invoice_due_date ASC";
+                
+        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true);
+        
         return $resultSet;
     }
 }

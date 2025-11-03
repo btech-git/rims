@@ -65,12 +65,12 @@ Yii::app()->clientScript->registerCss('_report', '
                     <tr class="items2">
                         <td><?php echo CHtml::encode($stockRow['id']); ?></td>
                         <td><?php echo CHtml::encode($stockRow['name']); ?></td>
-                        <td><?php echo CHtml::encode($stockRow['manufacturer_code']); ?></td>
                         <td>
                             <?php echo CHtml::encode($stockRow['brand']); ?> -
                             <?php echo CHtml::encode($stockRow['sub_brand']); ?> -
                             <?php echo CHtml::encode($stockRow['sub_brand_series']); ?>
                         </td>
+                        <td><?php echo CHtml::encode($stockRow['manufacturer_code']); ?></td>
                         <td><?php echo CHtml::encode($stockRow['unit_name']); ?></td>
                         <td style="text-align: center"><?php echo Yii::app()->numberFormatter->format('#,##0', $stockBegin); ?></td>
                         <td style="text-align: center"><?php echo Yii::app()->numberFormatter->format('#,##0', $stockIn); ?></td>

@@ -24,7 +24,8 @@
             <?php endforeach; ?>
             <th style="text-align: center">Tanpa Keterangan</th>
             <th style="text-align: center">Total H. Kerja</th>
-            <th style="text-align: center">Libur</th>
+            <th style="text-align: center">Libur Mingguan</th>
+            <th style="text-align: center">Libur Nasional</th>
             <th style="text-align: center">Terlambat</th>
             <th style="text-align: center">Lembur</th>
         </tr>
@@ -61,12 +62,13 @@
                 <?php endforeach; ?>
                 <?php $lateDays = isset($employeePeriodicallyAttendanceItem[16]['late_days']) ? $employeePeriodicallyAttendanceItem[16]['late_days'] : '0'; ?>
                 <?php $overtimeDays = isset($employeePeriodicallyAttendanceItem[16]['overtime_days']) ? $employeePeriodicallyAttendanceItem[16]['overtime_days'] : '0'; ?>
-                <?php $workingDays = $daysOfPeriod - $holidaysCount; ?>
+                <?php $workingDays = $daysOfPeriod - $holidaysCount - $nationalHolidaysCount; ?>
                 <?php $recordedDays = isset($employeeDaysCountData[$employeeId]) ? $employeeDaysCountData[$employeeId] : '0'; ?>
                 <?php $nonRecordedDays = $workingDays - $recordedDays; ?>
                 <td style="text-align: right"><?php echo CHtml::encode($nonRecordedDays); ?></td>
                 <td style="text-align: right"><?php echo CHtml::encode($workingDays); ?></td>
                 <td style="text-align: right"><?php echo CHtml::encode($holidaysCount); ?></td>
+                <td style="text-align: right"><?php echo CHtml::encode($nationalHolidaysCount); ?></td>
                 <td style="text-align: right"><?php echo CHtml::encode($lateDays); ?></td>
                 <td style="text-align: right"><?php echo CHtml::encode($overtimeDays); ?></td>
             </tr>

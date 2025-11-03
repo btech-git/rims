@@ -17,7 +17,8 @@
                 <th>Tanpa Keterangan</th>
                 <th>Total H. Kerja</th>
                 <th>Terlambat</th>
-                <th>Libur</th>
+                <th>Libur Mingguan</th>
+                <th>Libur Nasional</th>
             </tr>
         </thead>
         <tbody>
@@ -32,6 +33,11 @@
                             <?php $holidaysCount++; ?>
                         <?php endif; ?>
                     <?php endfor; ?>
+                    <?php $nationalHolidaysCount = PublicDayOff::model()->count(array(
+                        'condition' => 'YEAR(t.date) = :year AND MONTH(t.date) = :month', 
+                        'params' => array(':year' => $year, ':month' => $month),
+                    )); ?>
+
                     <tr class="items1">
                         <td style="text-align: left"><?php echo CHtml::encode($monthList[$month]); ?></td>
                         <?php foreach ($onleaveCategories as $onleaveCategory): ?>
@@ -39,13 +45,14 @@
                             <td style="text-align: right"><?php echo CHtml::encode($days); ?></td>
                         <?php endforeach; ?>
                         <?php $lateDays = isset($employeeYearlyAttendanceData[$month][16]['late_days']) ? $employeeYearlyAttendanceData[$month][16]['late_days'] : '0'; ?>
-                        <?php $workingDays = $daysOfMonth - $holidaysCount; ?>
+                        <?php $workingDays = $daysOfMonth - $holidaysCount - $nationalHolidaysCount; ?>
                         <?php $recordedDays = isset($employeeDaysCountData[$month]) ? $employeeDaysCountData[$month] : '0'; ?>
                         <?php $nonRecordedDays = $workingDays - $recordedDays; ?>
                         <td style="text-align: right"><?php echo CHtml::encode($nonRecordedDays); ?></td>
                         <td style="text-align: right"><?php echo CHtml::encode($workingDays); ?></td>
                         <td style="text-align: right"><?php echo CHtml::encode($lateDays); ?></td>
                         <td style="text-align: right"><?php echo CHtml::encode($holidaysCount); ?></td>
+                        <td style="text-align: right"><?php echo CHtml::encode($nationalHolidaysCount); ?></td>
                     </tr>
                 <?php endfor; ?>
             <?php endif; ?>

@@ -1,4 +1,4 @@
-<div <?php if (!$isSubmitted): ?>style="display: none"<?php endif; ?> id="transaction-form">
+<div <?php if ($saleEstimation->header->isNewRecord && !$isSubmitted): ?>style="display: none"<?php endif; ?> id="transaction-form">
     <?php echo CHtml::beginForm(array(), 'POST'); ?>
     
     <div class="form">
@@ -196,7 +196,7 @@
         <div class="d-grid">
             <div class="row">
                 <div class="col text-center">
-                    <?php echo CHtml::htmlButton('Back', array('id' => 'back-button', 'class'=>'btn btn-warning btn-sm')); ?>
+                    <?php echo CHtml::htmlButton($saleEstimation->header->isNewRecord ? 'Back' : 'Add Product Service', array('id' => 'back-button', 'class'=>'btn btn-warning btn-sm')); ?>
                     <?php echo CHtml::submitButton('Cancel', array('name' => 'Cancel', 'confirm' => 'Are you sure you want to cancel?', 'class'=>'btn btn-danger btn-sm')); ?>
                     <?php echo CHtml::submitButton('Submit', array('name' => 'Submit', 'confirm' => 'Are you sure you want to save?', 'class'=>'btn btn-success btn-sm')); ?>
                 </div>

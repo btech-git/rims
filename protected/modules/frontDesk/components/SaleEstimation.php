@@ -70,22 +70,20 @@ class SaleEstimation extends CComponent {
     public function validate() {
         $valid = $this->header->validate();
 
-        if (count($this->productDetails) > 0) {
-            foreach ($this->productDetails as $productDetail) {
-                $fields = array('quantity');
-                $valid = $productDetail->validate($fields) && $valid;
-            }
-        } else {
-            $valid = true;
+        if (count($this->productDetails) <= 0 && count($this->serviceDetails) <= 0) {
+            $valid = false;
         }
         
-        if (count($this->serviceDetails) > 0) {
+        if ($valid) {
             foreach ($this->productDetails as $productDetail) {
                 $fields = array('quantity');
                 $valid = $productDetail->validate($fields) && $valid;
             }
-        } else {
-            $valid = true;
+        
+            foreach ($this->productDetails as $productDetail) {
+                $fields = array('quantity');
+                $valid = $productDetail->validate($fields) && $valid;
+            }
         }
 
         return $valid;

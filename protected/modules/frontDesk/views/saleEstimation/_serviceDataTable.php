@@ -31,7 +31,7 @@
     </table>
 </div>
 
-<div class="text-end" id="service-data-pager">
+<div style="text-align: right" id="service-data-pager">
     <?php $this->widget('system.web.widgets.pagers.CLinkPager', array(
         'pages' => $serviceDataProvider->pagination,
     )); ?>
