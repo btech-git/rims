@@ -95,7 +95,7 @@ Yii::app()->clientScript->registerScript('userRoles', "
     $('#" . CHtml::activeId($model, 'roles') . "_272').click(function(){
         checkRoles(272, 273, 316);
     });
-		
+	
     $('#" . CHtml::activeId($model, 'roles') . "_317').click(function(){
         checkRoles(317, 318, 337);
     });
@@ -105,9 +105,9 @@ Yii::app()->clientScript->registerScript('userRoles', "
     });
 		
     $('#" . CHtml::activeId($model, 'roles') . "_387').click(function(){
-        checkRoles(387, 388, 435;
+        checkRoles(387, 388, 435);
     });
-		
+	
     $('#" . CHtml::activeId($model, 'roles') . "_436').click(function(){
         checkRoles(436, 437, 468);
     });

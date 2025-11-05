@@ -208,6 +208,7 @@ $this->menu = array(
                         <th style="text-align: center">Code</th>
                         <th style="text-align: center">Product</th>
                         <th style="text-align: center">Quantity</th>
+                        <th style="text-align: center">Satuan</th>
                         <th style="text-align: center">Unit Price</th>
                         <th style="text-align: center">Discount</th>
                         <th style="text-align: center">Total</th>
@@ -221,6 +222,7 @@ $this->menu = array(
                                     <td><?php echo $detail->product->manufacturer_code; ?></td>
                                     <td><?php echo $detail->product->name; ?></td>
                                     <td style="text-align: center"><?php echo $detail->quantity; ?></td>
+                                    <td><?php echo $detail->product->unit->name; ?></td>
                                     <td style="text-align: right"><?php echo number_format($detail->unit_price, 2); ?></td>
                                     <td style="text-align: right"><?php echo number_format($detail->discount, 2); ?></td>
                                     <td style="text-align: right"><?php echo number_format($detail->total_price, 2); ?></td>

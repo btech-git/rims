@@ -131,7 +131,7 @@ class MovementOuts extends CComponent {
                         $detail->return_order_detail_id = null;
                         $detail->registration_product_id = $registrationDetail->id;
                         $detail->product_id = $registrationDetail->product_id;
-                        $detail->unit_id = $registrationDetail->product->unit_id;
+                        $detail->unit_id = $registrationDetail->unit_id;
                         $detail->warehouse_id = $warehouse->id; //$warehouseBranchProductCategory === null ? null : $warehouseBranchProductCategory->warehouse_id;
                         $detail->quantity_transaction = $registrationDetail->quantity_movement_left;
                         $detail->quantity_stock = $registrationDetail->product->getTotalStock($warehouse->id);

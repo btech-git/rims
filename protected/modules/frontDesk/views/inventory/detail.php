@@ -68,7 +68,7 @@ $this->breadcrumbs=array(
                             <?php endforeach; ?>
                             <?php if ($index >= 0): ?>
                                 <td style="text-align: center">
-                                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($inventoryTotalQuantities[$i], 'total_stock'))); ?>
+                                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.000', CHtml::value($inventoryTotalQuantities[$i], 'total_stock'))); ?>
                                     <?php $totalStock += CHtml::value($inventoryTotalQuantities[$i], 'total_stock'); ?>
                                     <?php //$totalCogs += CHtml::value($inventoryCostOfGoodsSold[$i], 'cogs'); ?>
                                 </td>
@@ -76,7 +76,7 @@ $this->breadcrumbs=array(
                                 <td>0</td>
                             <?php endif; ?>
                         <?php endforeach; ?>
-                        <td style="text-align: center"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $totalStock)); ?></td>
+                        <td style="text-align: center"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.000', $totalStock)); ?></td>
                         <!--<td><?php //echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $totalCogs)); ?></td>-->
                     </tr>
                 </tbody>

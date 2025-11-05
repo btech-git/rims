@@ -43,7 +43,7 @@ class InventoryDetail extends CActiveRecord {
             array('transaction_number', 'length', 'max' => 50),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, inventory_id, product_id, warehouse_id, unit_id, transaction_type, transaction_number, transaction_date, stock_in, stock_out, notes, purchase_price', 'safe', 'on' => 'search'),
+            array('id, inventory_id, product_id, warehouse_id, transaction_type, transaction_number, transaction_date, stock_in, stock_out, notes, purchase_price', 'safe', 'on' => 'search'),
         );
     }
 

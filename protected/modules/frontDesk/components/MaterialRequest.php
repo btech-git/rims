@@ -151,11 +151,17 @@ class MaterialRequest extends CComponent {
         
         foreach ($this->details as $detail) {
             if ($detail->product->unit_id !== $detail->unit_id) {
-                $unitConversion = UnitConversion::model()->findByAttributes(array('unit_from_id' => $detail->product->unit_id, 'unit_to_id' => $detail->unit_id));
+                $unitConversion = UnitConversion::model()->findByAttributes(array(
+                    'unit_from_id' => $detail->product->unit_id, 
+                    'unit_to_id' => $detail->unit_id
+                ));
                 if ($unitConversion !== null) {
                     continue;
                 }
-                $unitConversion = UnitConversion::model()->findByAttributes(array('unit_from_id' => $detail->unit_id, 'unit_to_id' => $detail->product->unit_id));
+                $unitConversion = UnitConversion::model()->findByAttributes(array(
+                    'unit_from_id' => $detail->unit_id, 
+                    'unit_to_id' => $detail->product->unit_id
+                ));
                 if ($unitConversion !== null) {
                     continue;
                 }

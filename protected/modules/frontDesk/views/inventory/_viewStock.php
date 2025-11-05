@@ -30,10 +30,10 @@
                     <td><?php echo CHtml::encode($latestInventoryItem['transaction_type']); ?></td>
                     <td><?php echo CHtml::link($latestInventoryItem['transaction_number'], Yii::app()->createUrl("frontDesk/inventory/redirectTransaction", array("codeNumber" => $latestInventoryItem['transaction_number'])), array('target' => '_blank')); ?></td>
                     <td><?php echo CHtml::encode($latestInventoryItem['transaction_date']); ?></td>
-                    <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $lastCurrentStock)); ?></td>
-                    <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $latestInventoryItem['stock_in'])); ?></td>
-                    <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $latestInventoryItem['stock_out'])); ?></td>
-                    <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $currentStock)); ?></td>
+                    <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.000', $lastCurrentStock)); ?></td>
+                    <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.000', $latestInventoryItem['stock_in'])); ?></td>
+                    <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.000', $latestInventoryItem['stock_out'])); ?></td>
+                    <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.000', $currentStock)); ?></td>
                     <td><?php echo CHtml::encode($latestInventoryItem['warehouse_code']); ?></td>
                     <td><?php echo CHtml::encode($latestInventoryItem['notes']); ?></td>
                 </tr>

@@ -20,50 +20,50 @@
                 'Pending' => array(
                     'content' => $this->renderPartial('_formPending', array(
                         'model' => $model, 
-                        'counter' => $counter
-                    ), true)
+                        'counter' => $counter,
+                    ), true),
                 ),
                 'Resepsionis' => array(
                     'content' => $this->renderPartial('_formFrontDesk', array(
                         'model' => $model, 
-                        'counter' => $counter+6
-                    ), true)
+                        'counter' => $counter+6,
+                    ), true),
                 ),
                 'Transaksi' => array(
                     'content' => $this->renderPartial('_formTransaction', array(
                         'model' => $model, 
-                        'counter' => $counter+28
-                    ), true)
+                        'counter' => $counter+28,
+                    ), true),
                 ),
                 'Operasional' => array(
                     'content' => $this->renderPartial('_formOperational', array(
                         'model' => $model, 
-                        'counter' => $counter+76
-                    ), true)
+                        'counter' => $counter+76,
+                    ), true),
                 ),
                 'Gudang' => array(
                     'content' => $this->renderPartial('_formInventory', array(
                         'model' => $model, 
-                        'counter' => $counter+115
-                    ), true)
+                        'counter' => $counter+115,
+                    ), true),
                 ),
                 'Management' => array(
                     'content' => $this->renderPartial('_formIdleManagement', array(
                         'model' => $model, 
-                        'counter' => $counter+142
-                    ), true)
+                        'counter' => $counter+142,
+                    ), true),
                 ),
                 'Accounting/Finance' => array(
                     'content' => $this->renderPartial('_formFinance', array(
                         'model' => $model, 
-                        'counter' => $counter+155
-                    ), true)
+                        'counter' => $counter+155,
+                    ), true),
                 ),
                 'HRD' => array(
                     'content' => $this->renderPartial('_formHumanResource', array(
                         'model' => $model, 
-                        'counter' => $counter+161
-                    ), true)
+                        'counter' => $counter+161,
+                    ), true),
                 ),
             ),
             // additional javascript options for the tabs plugin
@@ -110,9 +110,10 @@
                         'counter' => $counter+385
                     ), true)
                 ),
-                'Setting Vehicle' => array('content' => $this->renderPartial('_formVehicle', array(
-                    'model' => $model, 
-                    'counter' => $counter+434
+                'Setting Vehicle' => array(
+                    'content' => $this->renderPartial('_formVehicle', array(
+                        'model' => $model, 
+                        'counter' => $counter+434
                     ), true)
                 ),
             ),

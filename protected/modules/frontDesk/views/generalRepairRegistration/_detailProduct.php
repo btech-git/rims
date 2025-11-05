@@ -21,7 +21,10 @@
                     <tr <?php if ($productDetail->sale_package_detail_id != null): ?>style="display: none"<?php endif; ?>>
                         <td>
                             <?php echo CHtml::activeHiddenField($productDetail, "[$i]product_id"); ?>
-                            <?php echo CHtml::activeTextField($productDetail, "[$i]product_name", array('readonly' => true, 'value' => $productDetail->product_id != "" ? $productDetail->product->name : '')); ?>
+                            <?php echo CHtml::activeTextField($productDetail, "[$i]product_name", array(
+                                'readonly' => true, 
+                                'value' => $productDetail->product_id != "" ? $productDetail->product->name : ''
+                            )); ?>
                         </td>
                         <td>
                             <?php echo CHtml::activeTextField($productDetail, "[$i]quantity", array(
@@ -43,8 +46,12 @@
                                 'class' => "form-control is-valid",
                             )); ?>
                         </td>
-                        <td><?php echo CHtml::encode(CHtml::value($productInfo, "unit.name")); ?></td>
-                        <td><?php echo CHtml::activeTextField($productDetail, "[$i]retail_price", array('readonly' => true,)); ?></td>
+                        <td>
+                            <?php echo CHtml::activeDropdownList($productDetail, "[$i]unit_id", CHtml::listData(Unit::model()->findAll(array(
+                                'condition' => 'id = :unit_id OR id IN (SELECT unit_to_id FROM rims_unit_conversion WHERE unit_from_id = :unit_id)',
+                                'params' => array(':unit_id' => $productInfo->unit_id),
+                            )), "id", "name"), array("empty" => "-- Pilih Satuan --")); ?>
+                        </td>
                         <td><?php echo CHtml::activeTextField($productDetail, "[$i]recommended_selling_price", array('readonly' => true,)); ?></td>
                         <td>
                             <?php echo CHtml::activeTextField($productDetail, "[$i]sale_price", array(

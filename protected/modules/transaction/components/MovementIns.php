@@ -41,7 +41,10 @@ class MovementIns extends CComponent {
                 foreach ($receiveItem->transactionReceiveItemDetails as $receiveItemDetail) {
                     if ($receiveItemDetail->quantity_movement_left > 0) {
 
-                        $warehouseBranchProductCategory = WarehouseBranchProductCategory::model()->findByAttributes(array('branch_id' => $this->header->branch_id, 'product_master_category_id' => $receiveItemDetail->product->product_master_category_id));
+                        $warehouseBranchProductCategory = WarehouseBranchProductCategory::model()->findByAttributes(array(
+                            'branch_id' => $this->header->branch_id, 
+                            'product_master_category_id' => $receiveItemDetail->product->product_master_category_id
+                        ));
                         $detail = new MovementInDetail();
                         $detail->receive_item_detail_id = $receiveItemDetail->id;
                         $detail->return_item_detail_id = null;
@@ -59,7 +62,10 @@ class MovementIns extends CComponent {
                 foreach ($returnItem->transactionReturnItemDetails as $returnDetail) {
                     if ($receiveItemDetail->quantity_movement_left > 0) {
 
-                        $warehouseBranchProductCategory = WarehouseBranchProductCategory::model()->findByAttributes(array('branch_id' => $this->header->branch_id, 'product_master_category_id' => $returnDetail->product->product_master_category_id));
+                        $warehouseBranchProductCategory = WarehouseBranchProductCategory::model()->findByAttributes(array(
+                            'branch_id' => $this->header->branch_id, 
+                            'product_master_category_id' => $returnDetail->product->product_master_category_id
+                        ));
                         $detail = new MovementInDetail();
                         $detail->receive_item_detail_id = null;
                         $detail->return_item_detail_id = $returnDetail->id;
@@ -132,7 +138,11 @@ class MovementIns extends CComponent {
         foreach ($this->details as $detail) {
 
             if ($detail->id == "") {
-                $moveDetail = MovementInDetail::model()->findByAttributes(array('movement_in_header_id' => $this->header->id, 'product_id' => $detail->product_id, 'warehouse_id' => $detail->warehouse_id));
+                $moveDetail = MovementInDetail::model()->findByAttributes(array(
+                    'movement_in_header_id' => $this->header->id, 
+                    'product_id' => $detail->product_id, 
+                    'warehouse_id' => $detail->warehouse_id
+                ));
                 if (!empty($moveDetail)) {
                     $moveDetail->quantity += $detail->quantity;
                     $moveDetail->save() && $valid;

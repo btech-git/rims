@@ -10,7 +10,7 @@ class MovementInHeaderController extends Controller {
 
     public function filters() {
         return array(
-//            'access',
+            'access',
         );
     }
 
