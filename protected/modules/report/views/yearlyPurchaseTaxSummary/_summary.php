@@ -5,6 +5,13 @@
 
 '); ?>
 
+<div style="font-weight: bold; text-align: center">
+    <div style="font-size: larger">Laporan Pembelian Ppn Tahunan</div>
+    <div><?php echo CHtml::encode($year); ?></div>
+</div>
+
+<br />
+
 <fieldset>
     <legend>Penjualan Total</legend>
     <table class="report">

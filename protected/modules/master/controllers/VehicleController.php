@@ -135,7 +135,12 @@ class VehicleController extends Controller {
             $model->attributes = $_POST['Vehicle'];
 
             //Search for Vehicle Sub Model Detail
-            $subModelDetail = VehicleCarSubModelDetail::model()->findByAttributes(array('car_sub_model_id' => $_POST['Vehicle']['car_sub_model_id'], 'transmission' => $_POST['Vehicle']['transmission'], 'fuel_type' => $_POST['Vehicle']['fuel_type'], 'power' => $_POST['Vehicle']['power']))->id;
+            $subModelDetail = VehicleCarSubModelDetail::model()->findByAttributes(array(
+                'car_sub_model_id' => $_POST['Vehicle']['car_sub_model_id'], 
+                'transmission' => $_POST['Vehicle']['transmission'], 
+                'fuel_type' => $_POST['Vehicle']['fuel_type'], 
+                'power' => $_POST['Vehicle']['power']
+            ))->id;
             $model->car_sub_model_detail_id = $subModelDetail;
             $model->plate_number = $model->getPlateNumberCombination();
 
@@ -234,6 +239,7 @@ class VehicleController extends Controller {
             'condition' => "t.vehicle_id = :vehicle_id",
             'params' => array(':vehicle_id' => $id)
         ));
+        $statusNote = isset($_POST['StatusNote']) ? $_POST['StatusNote'] : '';
         
         if ($oldVehiclePositionTimer === null) {
             $statusLocation = 'Masuk Lokasi';
@@ -285,14 +291,17 @@ class VehicleController extends Controller {
                     $vehiclePositionTimer = new VehiclePositionTimer();
                     $vehiclePositionTimer->entry_date = date('Y-m-d');
                     $vehiclePositionTimer->entry_time = date('H:i:s');
+                    $vehiclePositionTimer->entry_note = $statusNote;
                 } elseif ($model->status_location == 'On-Progress') {
                     $vehiclePositionTimer = $oldVehiclePositionTimer;
                     $vehiclePositionTimer->process_date = date('Y-m-d');
                     $vehiclePositionTimer->process_time = date('H:i:s');
+                    $vehiclePositionTimer->process_note = $statusNote;
                 } elseif ($model->status_location == 'Keluar Lokasi') {
                     $vehiclePositionTimer = $oldVehiclePositionTimer;
                     $vehiclePositionTimer->exit_date = date('Y-m-d');
                     $vehiclePositionTimer->exit_time = date('H:i:s');
+                    $vehiclePositionTimer->exit_note = $statusNote;
                 }
                 $vehiclePositionTimer->vehicle_id = $id;
 
@@ -306,6 +315,7 @@ class VehicleController extends Controller {
 
         $this->render('updateLocation', array(
             'model' => $model,
+            'statusNote' => $statusNote,
             'statusErrorMessage' => $statusErrorMessage,
         ));
     }

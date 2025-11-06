@@ -37,13 +37,6 @@
 
             <hr />
 
-            <div style="font-weight: bold; text-align: center">
-                <div style="font-size: larger">Laporan Pembelian Ppn Tahunan</div>
-                <div><?php echo CHtml::encode($year); ?></div>
-            </div>
-
-            <br />
-
             <?php $monthList = array(
                 1 => 'Jan',
                 2 => 'Feb',
@@ -60,6 +53,13 @@
             ); ?>
 
             <div class="relative">
+                <div class="reportDisplay">
+                    <?php $dataCount = count($yearlyPurchaseSummaryData); ?>
+                    <?php if ($dataCount > 0): ?>
+                        <?php echo "Displaying 1-{$dataCount} of {$dataCount} result(s)."; ?>
+                    <?php endif; ?>
+                </div>
+                
                 <?php $this->renderPartial('_summary', array(
                     'yearlyPurchaseSummaryData' => $yearlyPurchaseSummaryData,
                     'year' => $year,

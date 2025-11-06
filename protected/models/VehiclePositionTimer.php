@@ -12,6 +12,9 @@
  * @property string $process_time
  * @property string $exit_date
  * @property string $exit_time
+ * @property string $entry_note
+ * @property string $process_note
+ * @property string $exit_note
  *
  * The followings are the available model relations:
  * @property Vehicle $vehicle
@@ -34,11 +37,10 @@ class VehiclePositionTimer extends CActiveRecord {
         return array(
             array('vehicle_id, entry_date, entry_time', 'required'),
             array('vehicle_id', 'numerical', 'integerOnly' => true),
-            array('exit_time', 'length', 'max' => 45),
-            array('process_date, process_time, exit_date', 'safe'),
+            array('process_date, process_time, exit_date, exit_time, entry_note, process_note, exit_note', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, vehicle_id, entry_date, entry_time, process_date, process_time, exit_date, exit_time', 'safe', 'on' => 'search'),
+            array('id, vehicle_id, entry_date, entry_time, process_date, process_time, exit_date, exit_time, entry_note, process_note, exit_note', 'safe', 'on' => 'search'),
         );
     }
 

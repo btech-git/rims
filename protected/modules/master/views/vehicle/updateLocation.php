@@ -87,16 +87,22 @@ $this->menu=array(
         <div class="row">
             <div class="field">
                 <div class="row collapse">
-                    <div class="small-4 columns">
+                    <div class="small-3 columns">
                         <?php echo $form->labelEx($model, 'status_location', array('class' => 'prefix')); ?>
                     </div>
-                    <div class="small-8 columns">
+                    <div class="small-3 columns">
                         <?php echo $form->dropDownList($model, 'status_location', array(
                             'Masuk Lokasi' => 'Masuk Lokasi',
                             'On-Progress' => 'On-Progress',
                             'Keluar Lokasi' => 'Keluar Lokasi',
                         ), array('empty' => '-- Pilih Status --')); ?>
                         <?php echo $form->error($model, 'status_location'); ?>
+                    </div>
+                    <div class="small-3 columns">
+                        <?php echo $form->labelEx($model, 'Note', array('class' => 'prefix')); ?>
+                    </div>
+                    <div class="small-3 columns">
+                        <?php echo CHtml::textArea('StatusNote', $statusNote, array('rows' => 5, 'cols' => 20)); ?>
                     </div>
                 </div>			
             </div>

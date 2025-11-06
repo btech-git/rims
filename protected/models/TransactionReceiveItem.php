@@ -578,7 +578,7 @@ class TransactionReceiveItem extends MonthlyTransactionActiveRecord {
     }
     
     public static function getPayableIncomingDueDate() {
-        $sql = "SELECT r.invoice_number, r.invoice_date, r.invoice_due_date, s.name as supplier, r.invoice_grand_total, p.amount AS payment, 
+        $sql = "SELECT r.id, r.invoice_number, r.invoice_date, r.invoice_due_date, s.name as supplier, r.invoice_grand_total, p.amount AS payment, 
                     r.invoice_grand_total - p.amount AS remaining
                 FROM " . TransactionReceiveItem::model()->tableName() . " r
                 INNER JOIN " . Supplier::model()->tableName() . " s ON s.id = r.supplier_id

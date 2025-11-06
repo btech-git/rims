@@ -56,8 +56,10 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
 
                 <div class="relative">
                     <div class="reportDisplay">
-                        <?php //echo ReportHelper::summaryText($dailyMultipleEmployeeSaleReport->dataProvider); ?>
-                        <?php //echo ReportHelper::sortText($transaksiPembelianSummary->dataProvider->sort, array('Jenis Persediaan', 'Tanggal SO', 'Pelanggan')); ?>
+                        <?php $dataCount = count($yearlySingleEmployeeSaleReportData); ?>
+                        <?php if ($dataCount > 0): ?>
+                            <?php echo "Displaying 1-{$dataCount} of {$dataCount} result(s)."; ?>
+                        <?php endif; ?>
                     </div>
 
                     <?php $this->renderPartial('_summary', array(

@@ -2234,7 +2234,7 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
     }
     
     public static function getReceivableIncomingDueDate() {
-        $sql = "SELECT i.invoice_number, i.invoice_date, i.due_date, c.name as customer, v.plate_number, i.total_price, i.payment_amount, i.payment_left
+        $sql = "SELECT i.id, i.invoice_number, i.invoice_date, i.due_date, c.name as customer, v.plate_number, i.total_price, i.payment_amount, i.payment_left
                 FROM " . InvoiceHeader::model()->tableName() . " i 
                 INNER JOIN " . Customer::model()->tableName() . " c ON c.id = i.customer_id
                 INNER JOIN " . Vehicle::model()->tableName() . " v ON v.id = i.vehicle_id

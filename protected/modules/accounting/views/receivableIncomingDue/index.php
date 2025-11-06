@@ -19,7 +19,7 @@
             <?php foreach ($receivableIncomingDueDate as $i => $dataItem): ?>
                 <tr>
                     <td><?php echo CHtml::encode($i + 1); ?></td>
-                    <td><?php echo CHtml::encode($dataItem['invoice_number']); ?></td>
+                    <td><?php echo CHtml::link(CHtml::encode($dataItem['invoice_number']), array("/transaction/invoiceHeader/show", "id" => $dataItem['id'])); ?></td>
                     <td><?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($dataItem['invoice_date']))); ?></td>
                     <td><?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($dataItem['due_date']))); ?></td>
                     <td><?php echo CHtml::encode($dataItem['customer']); ?></td>
