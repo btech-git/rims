@@ -50,21 +50,3 @@ Yii::app()->clientScript->registerScript('search', "
     </div>
     <div class="clear"></div>
 </div>
-
-<script>
-    //$('ul.yiiPager > li > a').click(function(e) {
-        //e.preventDefault();
-        //$.ajax({
-        //    type: 'GET',
-        //    url: '/raperind/frontDesk/inventory/ajaxHtmlUpdateProductSubBrandSelect',
-        //    data: $('form').serialize(),
-        //    success: function(html) {
-        //        $('#product_stock_table').html(html);
-        //    }
-        //});
-        //var href = $(e.target).attr('href');
-        //var pageNumber = href.replace(/.+(?:&|\?)page=(\d+)(?:&|$).*/g, '$1');
-        //$('#page').val(pageNumber);
-        //console.log(href, pageNumber);
-    //});
-</script>
