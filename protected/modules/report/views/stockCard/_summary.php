@@ -46,15 +46,17 @@ Yii::app()->clientScript->registerCss('_report', '
                 <?php $beginningValue = $header->getBeginningValueReport($startDate, $branchId); ?>
                 <?php //if ($stock > 0): ?>
                     <tr class="items1">
-                        <td><?php echo CHtml::encode(CHtml::value($header, 'id')); ?></td>
-                        <td><?php echo CHtml::encode(CHtml::value($header, 'manufacturer_code')); ?></td>
-                        <td><?php echo CHtml::encode(CHtml::value($header, 'name')); ?></td>
+                        <td colspan="2">
+                            <?php echo CHtml::encode(CHtml::value($header, 'id')); ?> - 
+                            <?php echo CHtml::encode(CHtml::value($header, 'manufacturer_code')); ?> - 
+                            <?php echo CHtml::encode(CHtml::value($header, 'name')); ?>
+                        </td>
                         <td colspan="2">
                             <?php echo CHtml::encode(CHtml::value($header, 'brand.name')); ?> -
                             <?php echo CHtml::encode(CHtml::value($header, 'subBrand.name')); ?> -
                             <?php echo CHtml::encode(CHtml::value($header, 'subBrandSeries.name')); ?>
                         </td>
-                        <td>
+                        <td colspan="2">
                             <?php echo CHtml::encode(CHtml::value($header, 'productMasterCategory.name')); ?> - 
                             <?php echo CHtml::encode(CHtml::value($header, 'productSubMasterCategory.name')); ?> - 
                             <?php echo CHtml::encode(CHtml::value($header, 'productSubCategory.name')); ?>
