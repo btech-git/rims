@@ -42,7 +42,7 @@ Yii::app()->clientScript->registerCss('_report', '
                 <tr class="items1">
                     <td colspan="2">
                         <?php echo CHtml::encode(CHtml::value($header, 'id')); ?> - 
-                        <?php echo CHtml::encode(CHtml::value($header, 'code')); ?> - 
+                        <?php echo CHtml::encode(CHtml::value($header, 'manufacturer_code')); ?> - 
                         <?php echo CHtml::encode(CHtml::value($header, 'name')); ?>
                     </td>
                     <td>
