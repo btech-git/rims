@@ -264,6 +264,7 @@ class GeneralRepairRegistration extends CComponent {
             $productDetail->retail_price = $product->retail_price;
             $productDetail->recommended_selling_price = $product->recommended_selling_price;
             $productDetail->sale_price = $product->retail_price;
+            $productDetail->unit_id = $product->unit_id;
             $productDetail->sale_package_detail_id = null;
             $productDetail->sale_package_header_id = null;
             $this->productDetails[] = $productDetail;
