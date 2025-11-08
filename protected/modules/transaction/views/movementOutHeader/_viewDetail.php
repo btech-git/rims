@@ -12,8 +12,9 @@
                 <th>Sub Brand</th>
                 <th>Sub Brand Series</th>
                 <th>Warehouse</th>
-                <th>Quantity Transaction</th>
                 <th>Quantity Stock</th>
+                <th>Satuan Stock</th>
+                <th>Quantity Transaction</th>
                 <th>Quantity</th>
                 <th>Satuan</th>
                 <!--<th>Status</th>-->
@@ -31,8 +32,9 @@
                     <td><?php echo CHtml::encode(CHtml::value($product, 'subBrand.name')); ?></td>
                     <td><?php echo CHtml::encode(CHtml::value($product, 'subBrandSeries.name')); ?></td>
                     <td><?php echo $detail->warehouse == "" ? "" : $detail->warehouse->name ?></td>
-                    <td><?php echo $detail->quantity_transaction; ?></td>
                     <td><?php echo $detail->quantity_stock; ?></td>
+                    <td><?php echo CHtml::encode(CHtml::value($product, 'unit.name')); ?></td>
+                    <td><?php echo $detail->quantity_transaction; ?></td>
                     <td><?php echo $detail->quantity; ?></td>
                     <td><?php echo CHtml::encode(CHtml::value($detail, 'unit.name')); ?></td>
                     <?php //$stockInventory = Inventory::model()->findByAttributes(array('product_id' => $detail->product_id, 'warehouse_id' => $detail->warehouse_id)); ?>
