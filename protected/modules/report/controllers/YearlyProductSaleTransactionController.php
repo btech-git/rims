@@ -49,6 +49,7 @@ class YearlyProductSaleTransactionController extends Controller {
             $yearlyProductSaleTransactionReportData[$reportItem['product_id']]['master_category_name'] = $reportItem['master_category_name'];
             $yearlyProductSaleTransactionReportData[$reportItem['product_id']]['sub_category_name'] = $reportItem['sub_category_name'];
             $yearlyProductSaleTransactionReportData[$reportItem['product_id']]['sub_master_category_name'] = $reportItem['sub_master_category_name'];
+            $yearlyProductSaleTransactionReportData[$reportItem['product_id']]['unit_name'] = $reportItem['unit_name'];
             $yearlyProductSaleTransactionReportData[$reportItem['product_id']]['totals'][$monthValue] = $reportItem['total_quantity'];
         }
 
@@ -191,7 +192,8 @@ class YearlyProductSaleTransactionController extends Controller {
         $worksheet->setCellValue('D5', 'Name');
         $worksheet->setCellValue('E5', 'Brand');
         $worksheet->setCellValue('F5', 'Category');
-        $columnCounter = 'G';
+        $worksheet->setCellValue('G5', 'Satuan');
+        $columnCounter = 'H';
         for ($month = 1; $month <= 12; $month++) {
             $worksheet->setCellValue("{$columnCounter}5", $monthList[$month]);
             $columnCounter++;
@@ -233,9 +235,10 @@ class YearlyProductSaleTransactionController extends Controller {
             $worksheet->setCellValue("D{$counter}", $yearlyProductSaleTransactionReportDataItem['product_name']);
             $worksheet->setCellValue("E{$counter}", $yearlyProductSaleTransactionReportDataItem['brand_name'] . ' - ' . $yearlyProductSaleTransactionReportDataItem['sub_brand_name'] . ' - ' . $yearlyProductSaleTransactionReportDataItem['sub_brand_series_name']);
             $worksheet->setCellValue("F{$counter}", $yearlyProductSaleTransactionReportDataItem['master_category_name'] . ' - ' . $yearlyProductSaleTransactionReportDataItem['sub_master_category_name'] . ' - ' . $yearlyProductSaleTransactionReportDataItem['sub_category_name']);
+            $worksheet->setCellValue("G{$counter}", $yearlyProductSaleTransactionReportDataItem['unit_name']);
             
             $invoiceTotals = array();
-            $columnCounter = 'G';
+            $columnCounter = 'H';
             
             for ($month = 1; $month <= 12; $month++) {
                 $invoiceTotal = isset($yearlyProductSaleTransactionReportDataItem['totals'][$month]) ? $yearlyProductSaleTransactionReportDataItem['totals'][$month] : '0.00';

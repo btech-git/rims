@@ -22,7 +22,7 @@
                         <?php echo CHtml::link(CHtml::encode($dataItem['invoice_number']), array(
                             "/transaction/transactionReceiveItem/show", 
                             "id" => $dataItem['id']
-                        )); ?>
+                        ), array('target' => '_blank')); ?>
                     </td>
                     <td><?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($dataItem['invoice_date']))); ?></td>
                     <td><?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($dataItem['invoice_due_date']))); ?></td>

@@ -799,7 +799,7 @@ class InvoiceDetail extends CActiveRecord {
         
         $sql = "SELECT MONTH(i.invoice_date) AS invoice_month, d.product_id AS product_id, MAX(p.name) AS product_name, MAX(p.manufacturer_code) AS product_code, 
                     MAX(b.name) AS brand_name, MAX(sb.name) AS sub_brand_name, MAX(sbs.name) AS sub_brand_series_name, MAX(mc.name) AS master_category_name, 
-                    MAX(sc.name) AS sub_category_name, MAX(smc.name) AS sub_master_category_name, SUM(d.quantity) AS total_quantity
+                    MAX(sc.name) AS sub_category_name, MAX(smc.name) AS sub_master_category_name, SUM(d.quantity) AS total_quantity, u.name AS unit_name
                 FROM " . InvoiceDetail::model()->tableName() . " d
                 INNER JOIN " . InvoiceHeader::model()->tableName() . " i ON i.id = d.invoice_id
                 INNER JOIN " . Product::model()->tableName() . " p ON p.id = d.product_id
@@ -809,6 +809,7 @@ class InvoiceDetail extends CActiveRecord {
                 INNER JOIN " . ProductMasterCategory::model()->tableName() . " mc ON mc.id = p.product_master_category_id
                 INNER JOIN " . ProductSubCategory::model()->tableName() . " sc ON sc.id = p.product_sub_category_id
                 INNER JOIN " . ProductSubMasterCategory::model()->tableName() . " smc ON smc.id = p.product_sub_master_category_id
+                INNER JOIN " . Unit::model()->tableName() . " u ON u.id = p.unit_id
                 WHERE YEAR(i.invoice_date) = :year AND i.status NOT LIKE '%CANCELLED%'" . $branchConditionSql . $masterCategoryConditionSql .
                     $productIdConditionSql . $productCodeConditionSql . $productNameConditionSql . $brandConditionSql . $subBrandConditionSql . 
                     $subBrandSeriesConditionSql . $subCategoryConditionSql . $subMasterCategoryConditionSql . "
