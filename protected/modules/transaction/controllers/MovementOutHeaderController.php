@@ -175,45 +175,44 @@ class MovementOutHeaderController extends Controller {
         $movementOut->header->movement_type = $movementType;
         $movementOut->header->status = 'Draft';
         $movementOut->header->branch_id = Yii::app()->user->branch_id;
-//        $this->performAjaxValidation($movementOut->header);
 
         if ($movementType == 1) {
-            $deliveryOrder = TransactionDeliveryOrder::model()->findByPk($transactionId);
+//            $deliveryOrder = TransactionDeliveryOrder::model()->findByPk($transactionId);
             $movementOut->header->delivery_order_id = $transactionId;
             $movementOut->header->return_order_id = null;
             $movementOut->header->material_request_header_id = null;
             $movementOut->header->registration_transaction_id = null;
-//            $movementOut->header->branch_id = $deliveryOrder->sender_branch_id;
             
         } else if ($movementType == 2) {
-            $returnOrder = TransactionReturnOrder::model()->findByPk($transactionId);
+//            $returnOrder = TransactionReturnOrder::model()->findByPk($transactionId);
             $movementOut->header->delivery_order_id = null;
             $movementOut->header->return_order_id = $transactionId;
             $movementOut->header->material_request_header_id = null;
             $movementOut->header->registration_transaction_id = null;
-//            $movementOut->header->branch_id = $returnOrder->recipient_branch_id;
             
         } else if ($movementType == 3) {
-            $registrationTransaction = RegistrationTransaction::model()->findByPk($transactionId);
+//            $registrationTransaction = RegistrationTransaction::model()->findByPk($transactionId);
             $movementOut->header->delivery_order_id = null;
             $movementOut->header->return_order_id = null;
             $movementOut->header->material_request_header_id = null;
             $movementOut->header->registration_transaction_id = $transactionId;
-//            $movementOut->header->branch_id = $registrationTransaction->branch_id;
         } else if ($movementType == 4) {
-            $materialRequest = MaterialRequestHeader::model()->findByPk($transactionId);
+//            $materialRequest = MaterialRequestHeader::model()->findByPk($transactionId);
             $movementOut->header->delivery_order_id = null;
             $movementOut->header->return_order_id = null;
             $movementOut->header->registration_transaction_id = null;
             $movementOut->header->material_request_header_id = $transactionId;
-//            $movementOut->header->branch_id = $materialRequest->branch_id;
         } else {
             $this->redirect(array('admin'));
         }
             
-//        $warehouses = Warehouse::model()->findAllByAttributes(array('branch_id' => $movementOut->header->branch_id, 'status' => 'Active'));
-
         $movementOut->addDetails($transactionId, $movementType);
+        
+        $yearNow = date('Y');
+        $yearList = array();
+        for ($y = $yearNow; $y >= $yearNow - 2; $y--) {
+            $yearList[$y] = $y;
+        }
         
         if (isset($_POST['Cancel'])) {
             $this->redirect(array('admin'));
@@ -230,7 +229,7 @@ class MovementOutHeaderController extends Controller {
 
         $this->render('create', array(
             'movementOut' => $movementOut,
-//            'warehouses' => $warehouses,
+            'yearList' => $yearList,
         ));
     }
 
@@ -247,8 +246,13 @@ class MovementOutHeaderController extends Controller {
 
         // Uncomment the following line if AJAX validation is needed
         $this->performAjaxValidation($movementOut->header);
-//        $warehouses = Warehouse::model()->findAllByAttributes(array('branch_id' => $movementOut->header->branch_id));
 
+        $yearNow = date('Y');
+        $yearList = array();
+        for ($y = $yearNow; $y >= $yearNow - 2; $y--) {
+            $yearList[$y] = $y;
+        }
+        
         if (isset($_POST['Cancel'])) {
             $this->redirect(array('admin'));
         }
@@ -273,7 +277,7 @@ class MovementOutHeaderController extends Controller {
 
         $this->render('update', array(
             'movementOut' => $movementOut,
-//            'warehouses' => $warehouses,
+            'yearList' => $yearList,
         ));
     }
 
@@ -861,6 +865,7 @@ class MovementOutHeaderController extends Controller {
                         $inventoryDetail->notes = $notes;
                         $inventoryDetail->purchase_price = $movementDetail->product->averageCogs;
                         $inventoryDetail->transaction_time = date('H:i:s');
+                        $inventoryDetail->production_year = $movementDetail->production_year;
                         $inventoryDetail->save(false);
                     }
                     

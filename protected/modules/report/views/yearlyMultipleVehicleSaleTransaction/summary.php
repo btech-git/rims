@@ -59,8 +59,7 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
 
                 <div class="relative">
                     <?php $this->renderPartial('_summary', array(
-                        'customerCompanyTopSaleReport' => $customerCompanyTopSaleReport,
-                        'customerIndividualTopSaleReport' => $customerIndividualTopSaleReport,
+                        'yearlyMultipleVehicleSaleReport' => $yearlyMultipleVehicleSaleReport,
                         'year' => $year,
                         'branchId' => $branchId,
                     )); ?>

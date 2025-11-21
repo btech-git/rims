@@ -165,8 +165,13 @@ class MovementInHeaderController extends Controller {
         }
         
         $movementIn->header->movement_type = $movementType;
-//        $warehouses = Warehouse::model()->findAllByAttributes(array('branch_id' => $movementIn->header->branch_id));
         $movementIn->addDetails($transactionId, $movementType);
+        
+        $yearNow = date('Y');
+        $yearList = array();
+        for ($y = $yearNow; $y >= $yearNow - 2; $y--) {
+            $yearList[$y] = $y;
+        }
         
         if (isset($_POST['Cancel'])) {
             $this->redirect(array('admin'));
@@ -183,7 +188,7 @@ class MovementInHeaderController extends Controller {
 
         $this->render('create', array(
             'movementIn' => $movementIn,
-//            'warehouses' => $warehouses,
+            'yearList' => $yearList,
         ));
     }
 
@@ -203,8 +208,15 @@ class MovementInHeaderController extends Controller {
         $receiveItem = new TransactionReceiveItem('search');
         $receiveItem->unsetAttributes();
         
-        if (isset($_POST['Cancel']))
+        $yearNow = date('Y');
+        $yearList = array();
+        for ($y = $yearNow; $y >= $yearNow - 2; $y--) {
+            $yearList[$y] = $y;
+        }
+        
+        if (isset($_POST['Cancel'])) {
             $this->redirect(array('admin'));
+        }
 
         if (isset($_POST['MovementInHeader']) && IdempotentManager::check()) {
             $this->loadState($movementIn);
@@ -225,7 +237,7 @@ class MovementInHeaderController extends Controller {
 
         $this->render('update', array(
             'movementIn' => $movementIn,
-//            'warehouses' => $warehouses,
+            'yearList' => $yearList,
         ));
     }
 
@@ -667,6 +679,7 @@ class MovementInHeaderController extends Controller {
                     $inventoryDetail->notes = "Data from Movement In";
                     $inventoryDetail->purchase_price = $movementDetail->product->averageCogs;
                     $inventoryDetail->transaction_time = date('H:i:s');
+                    $inventoryDetail->production_year = $movementDetail->production_year;
 
                     $inventoryDetail->save(false);
                 }

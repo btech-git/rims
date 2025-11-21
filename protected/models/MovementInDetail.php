@@ -12,6 +12,7 @@
  * @property string $quantity_transaction
  * @property string $quantity
  * @property integer $warehouse_id
+ * @property integer $production_year
  *
  * The followings are the available model relations:
  * @property MovementInHeader $movementInHeader
@@ -46,12 +47,12 @@ class MovementInDetail extends CActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('movement_in_header_id, product_id, quantity_transaction, quantity, warehouse_id', 'required'),
-            array('receive_item_detail_id, return_item_detail_id, movement_in_header_id, product_id, warehouse_id', 'numerical', 'integerOnly' => true),
+            array('movement_in_header_id, product_id, quantity_transaction, quantity, warehouse_id, production_year', 'required'),
+            array('receive_item_detail_id, return_item_detail_id, movement_in_header_id, product_id, warehouse_id, production_year', 'numerical', 'integerOnly' => true),
             array('quantity_transaction, quantity', 'length', 'max' => 10),
             // The following rule is used by search().
             // Please remove those attributes that should not be searched.
-            array('id, receive_item_detail_id, return_item_detail_id, movement_in_header_id, product_id, quantity_transaction, quantity, warehouse_id', 'safe', 'on' => 'search'),
+            array('id, receive_item_detail_id, return_item_detail_id, movement_in_header_id, product_id, quantity_transaction, quantity, warehouse_id, production_year', 'safe', 'on' => 'search'),
         );
     }
 
@@ -83,6 +84,7 @@ class MovementInDetail extends CActiveRecord {
             'quantity_transaction' => 'Quantity Transaction',
             'quantity' => 'Quantity',
             'warehouse_id' => 'Warehouse',
+            'production_year' => 'Production Year',
         );
     }
 
@@ -104,6 +106,7 @@ class MovementInDetail extends CActiveRecord {
         $criteria->compare('quantity_transaction', $this->quantity_transaction);
         $criteria->compare('quantity', $this->quantity);
         $criteria->compare('warehouse_id', $this->warehouse_id);
+        $criteria->compare('production_year', $this->production_year);
 
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,

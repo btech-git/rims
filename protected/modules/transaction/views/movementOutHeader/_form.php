@@ -63,7 +63,6 @@
                         </div>
                         <div class="small-8 columns">
                             <?php echo CHtml::encode($movementOut->header->getMovementType($movementOut->header->movement_type)); ?>
-                            <?php echo $form->error($movementOut->header, 'movement_type'); ?>
                         </div>
                     </div>
                 </div>
@@ -75,7 +74,6 @@
                         </div>
                         <div class="small-8 columns">
                             <?php echo CHtml::encode(CHtml::value($movementOut->header, 'branch.name')); ?>
-                            <?php echo $form->error($movementOut->header, 'branch_id'); ?>
                         </div>
                     </div>
                 </div>
@@ -86,7 +84,10 @@
                             <?php echo $form->labelEx($movementOut->header, 'status', array('class' => 'prefix')); ?>
                         </div>
                         <div class="small-8 columns">
-                            <?php echo CHtml::encode(CHtml::value($movementOut->header, 'status')); ?>
+                            <?php echo $form->textField($movementOut->header, 'status', array(
+                                'value' => $movementOut->header->status,
+                                'readonly' => true,
+                            )); ?>
                             <?php echo $form->error($movementOut->header, 'status'); ?>
                         </div>
                     </div>
@@ -104,8 +105,7 @@
                                 </div>
                                 <div class="small-8 columns">
                                     <?php echo $form->hiddenField($movementOut->header, 'delivery_order_id'); ?>
-                                    <?php echo $form->textField($movementOut->header, 'delivery_order_number', array(
-                                        'value' => $movementOut->header->delivery_order_id == "" ? "" : TransactionDeliveryOrder::model()->findByPk($movementOut->header->delivery_order_id)->delivery_order_no,
+                                    <?php echo CHtml::textField('DeliveryNumber', $movementOut->header->delivery_order_id == "" ? "" : TransactionDeliveryOrder::model()->findByPk($movementOut->header->delivery_order_id)->delivery_order_no, array(
                                         'readonly' => true,
                                     )); ?>
                                     <?php echo $form->error($movementOut->header, 'delivery_order_id'); ?>
@@ -135,7 +135,7 @@
                         <div class="field">
                             <div class="row collapse">
                                 <div class="small-4 columns">
-                                    <label>Reference Type</label>
+                                    <?php echo $form->labelEx($movementOut->header, 'Reference Type', array('class' => 'prefix')); ?>
                                 </div>
                                 <div class="small-8 columns">
                                     <input id="MovementOutHeader_reference_type" readonly="readonly" name="MovementOutHeader[reference_type]" type="text" value="<?php echo $movementOut->header->delivery_order_id == "" ? "" : $type; ?>">
@@ -146,7 +146,7 @@
                         <div class="field">
                             <div class="row collapse">
                                 <div class="small-4 columns">
-                                    <label>Reference #</label>
+                                    <?php echo $form->labelEx($movementOut->header, 'Reference #', array('class' => 'prefix')); ?>
                                 </div>
                                 <div class="small-8 columns">
                                     <input id="MovementOutHeader_reference_number" readonly="readonly" name="MovementOutHeader[reference_number]" type="text" value="<?php echo $movementOut->header->delivery_order_id == "" ? "" : $requestNumber; ?>">
@@ -163,8 +163,7 @@
                                 </div>
                                 <div class="small-8 columns">
                                     <?php echo $form->hiddenField($movementOut->header, 'return_order_id'); ?>
-                                    <?php echo $form->textField($movementOut->header, 'return_order_number', array(
-                                        'value' => $movementOut->header->return_order_id == "" ? "" : TransactionReturnOrder::model()->findByPk($movementOut->header->return_order_id)->return_order_no,
+                                    <?php echo CHtml::textField('ReturnNumber', $movementOut->header->return_order_id == "" ? "" : TransactionReturnOrder::model()->findByPk($movementOut->header->return_order_id)->return_order_no, array(
                                         'readonly' => true,
                                     )); ?>
                                     <?php echo $form->error($movementOut->header, 'return_order_id'); ?>
@@ -181,8 +180,7 @@
                                 </div>
                                 <div class="small-8 columns">
                                     <?php echo $form->hiddenField($movementOut->header, 'registration_transaction_id'); ?>
-                                    <?php echo $form->textField($movementOut->header, 'transaction_number', array(
-                                        'value' => $movementOut->header->registration_transaction_id == "" ? "" : RegistrationTransaction::model()->findByPk($movementOut->header->registration_transaction_id)->transaction_number,
+                                    <?php echo CHtml::textField('TransactionNumber', $movementOut->header->registration_transaction_id == "" ? "" : RegistrationTransaction::model()->findByPk($movementOut->header->registration_transaction_id)->transaction_number, array(
                                         'readonly' => true,
                                     )); ?>
                                     <?php echo $form->error($movementOut->header, 'registration_transaction_id'); ?>
@@ -200,8 +198,7 @@
                                 <div class="small-8 columns">
                                     <?php $materialRequest = MaterialRequestHeader::model()->findByPk($movementOut->header->material_request_header_id); ?>
                                     <?php echo $form->hiddenField($movementOut->header, 'material_request_header_id'); ?>
-                                    <?php echo $form->textField($movementOut->header, 'transaction_number', array(
-                                        'value' => $materialRequest->transaction_number,
+                                    <?php echo CHtml::textField('TransactionNumber', $materialRequest->transaction_number, array(
                                         'readonly' => true,
                                     )); ?>
                                     <?php echo $form->error($movementOut->header, 'material_request_header_id'); ?>
@@ -220,8 +217,10 @@
                         </div>
                         
                         <div class="small-8 columns">
-                            <?php echo $form->hiddenField($movementOut->header, 'user_id', array('readonly' => true, 'value' => $movementOut->header->isNewRecord ? Yii::app()->user->getId() : $movementOut->header->user_id)); ?>
-                            <?php echo $movementOut->header->isNewRecord ? CHtml::encode(Yii::app()->user->getName()) : $movementOut->header->user->username; ?>
+                            <?php echo $form->hiddenField($movementOut->header, 'user_id', array('value' => $movementOut->header->isNewRecord ? Yii::app()->user->getId() : $movementOut->header->user_id)); ?>
+                            <?php echo CHtml::textField('UserName', $movementOut->header->isNewRecord ? CHtml::encode(Yii::app()->user->getName()) : $movementOut->header->user->username, array(
+                                'readonly' => true,
+                            )); ?>
                             <?php echo $form->error($movementOut->header, 'user_id'); ?>
                         </div>
                     </div>
@@ -239,7 +238,7 @@
                     <div class="detail" id="detail_div">
                         <?php $this->renderPartial('_detail', array(
                             'movementOut' => $movementOut,
-//                            'warehouses' => $warehouses,
+                            'yearList' => $yearList,
                         )); ?>
                     </div>
                 </div>	

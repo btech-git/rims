@@ -46,6 +46,8 @@
  * @property string $date_reject
  * @property string $time_reject
  * @property integer $user_id_reject
+ * @property integer $tire_size_id
+ * @property integer $oil_sae_id
  *
  * The followings are the available model relations:
  * @property ConsignmentInDetail[] $consignmentInDetails
@@ -92,6 +94,8 @@
  * @property UserIdApproval $userIdApproval
  * @property UserIdEdit $userIdEdit
  * @property UserIdReject $userIdReject
+ * @property TireSize $tireSize
+ * @property OilSae $oilSae
  */
 class Product extends CActiveRecord {
 
@@ -124,7 +128,7 @@ class Product extends CActiveRecord {
         // will receive user inputs.
         return array(
             array('code, manufacturer_code, name, production_year, brand_id, extension, product_master_category_id, product_sub_master_category_id, product_sub_category_id, retail_price, minimum_stock, margin_type, ppn, unit_id, user_id, minimum_selling_price', 'required'),
-            array('production_year, brand_id, sub_brand_id, sub_brand_series_id, product_master_category_id, product_sub_master_category_id, product_sub_category_id, vehicle_car_make_id, vehicle_car_model_id, stock, minimum_stock, margin_type, margin_amount, ppn, unit_id, unit_id_conversion, is_approved, is_rejected, user_id_approval, user_id_edit, user_id, user_id_reject', 'numerical', 'integerOnly' => true),
+            array('production_year, brand_id, sub_brand_id, sub_brand_series_id, product_master_category_id, product_sub_master_category_id, product_sub_category_id, vehicle_car_make_id, vehicle_car_model_id, stock, minimum_stock, margin_type, margin_amount, ppn, unit_id, unit_id_conversion, is_approved, is_rejected, user_id_approval, user_id_edit, user_id, user_id_reject, tire_size_id, oil_sae_id', 'numerical', 'integerOnly' => true),
             array('code', 'length', 'max' => 20),
             array('manufacturer_code, barcode, extension', 'length', 'max' => 50),
             array('manufacturer_code', 'unique', 'on' => 'insert'),
@@ -134,7 +138,7 @@ class Product extends CActiveRecord {
             array('date_posting, date_approval, date_edit, time_approval, date_reject, time_reject', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, code, manufacturer_code, barcode, name, user_id_edit, date_edit, description, production_year, brand_id, sub_brand_id, sub_brand_series_id, extension, product_master_category_id, product_sub_master_category_id, product_sub_category_id, vehicle_car_make_id, vehicle_car_model_id, purchase_price, recommended_selling_price, hpp, retail_price, stock, minimum_selling_price, minimum_stock, margin_type, margin_amount, is_usable, status, product_master_category_code, product_master_category_name, product_sub_master_category_code, product_sub_master_category_name, product_sub_category_code, product_sub_category_name,product_brand_name,product_supplier,findkeyword, ppn, product_sub_brand_name, product_sub_brand_series_name, unit_id, date_posting, user_id, is_approved, user_id_approval, date_approval, user_id, unit_conversion_multiplier, unit_id_conversion, user_id_reject, is_rejected, time_approval, date_reject, time_reject', 'safe', 'on' => 'search'),
+            array('id, code, manufacturer_code, barcode, name, user_id_edit, date_edit, description, production_year, brand_id, sub_brand_id, sub_brand_series_id, extension, product_master_category_id, product_sub_master_category_id, product_sub_category_id, vehicle_car_make_id, vehicle_car_model_id, purchase_price, recommended_selling_price, hpp, retail_price, stock, minimum_selling_price, minimum_stock, margin_type, margin_amount, is_usable, status, product_master_category_code, product_master_category_name, product_sub_master_category_code, product_sub_master_category_name, product_sub_category_code, product_sub_category_name,product_brand_name,product_supplier,findkeyword, ppn, product_sub_brand_name, product_sub_brand_series_name, unit_id, date_posting, user_id, is_approved, user_id_approval, date_approval, user_id, unit_conversion_multiplier, unit_id_conversion, user_id_reject, is_rejected, time_approval, date_reject, time_reject, tire_size_id, oil_sae_id', 'safe', 'on' => 'search'),
         );
     }
 
@@ -183,6 +187,8 @@ class Product extends CActiveRecord {
             'userIdEdit' => array(self::BELONGS_TO, 'Users', 'user_id_edit'),
             'userIdReject' => array(self::BELONGS_TO, 'Users', 'user_id_reject'),
             'registrationProducts' => array(self::HAS_MANY, 'RegistrationProduct', 'product_id'),
+            'tireSize' => array(self::BELONGS_TO, 'TireSize', 'tire_size_id'),
+            'oilSae' => array(self::BELONGS_TO, 'OilSae', 'oil_sae_id'),
         );
     }
 
@@ -230,6 +236,8 @@ class Product extends CActiveRecord {
             'date_approval' => 'Tanggal Approval',
             'user_id_edit' => 'User Edit',
             'date_edit' => 'Tanggal Edit',
+            'tire_size_id' => 'Tire Size',
+            'oil_sae_id' => 'Oil SAE',
         );
     }
 
@@ -271,6 +279,8 @@ class Product extends CActiveRecord {
         $criteria->compare('t.date_posting', $this->date_posting);
         $criteria->compare('t.is_approved', $this->is_approved);
         $criteria->compare('t.user_id_approval', $this->user_id_approval);
+        $criteria->compare('t.tire_size_id', $this->tire_size_id);
+        $criteria->compare('t.oil_sae_id', $this->oil_sae_id);
 
         $criteria->together = true;
         $criteria->with = array('productSubMasterCategory', 'productMasterCategory', 'productSubCategory', 'brand', 'subBrand', 'subBrandSeries');
@@ -651,11 +661,11 @@ class Product extends CActiveRecord {
     }
 
     public function getTireSaleTotalQuantitiesReport($year, $month) {
-        $sql = "SELECT h.branch_id, COALESCE(SUM(d.quantity), 0) AS total_quantity
+        $sql = "SELECT h.branch_id, d.production_year, COALESCE(SUM(d.quantity), 0) AS total_quantity
                 FROM " . InvoiceDetail::model()->tableName() . " d
                 INNER JOIN " . InvoiceHeader::model()->tableName() . " h ON h.id = d.invoice_id
                 WHERE d.product_id = :product_id AND h.user_id_cancelled IS NULL AND YEAR(h.invoice_date) = :year AND MONTH(h.invoice_date) = :month
-                GROUP BY h.branch_id";
+                GROUP BY h.branch_id, d.production_year";
 
         $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, array(
             ':product_id' => $this->id, 

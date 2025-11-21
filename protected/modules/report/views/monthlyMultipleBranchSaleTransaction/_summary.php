@@ -100,7 +100,7 @@ Yii::app()->clientScript->registerCss('_report', '
                 <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $dataItem['total_service'])); ?></td>
                 <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $dataItem['total_product'])); ?></td>
                 <td style="text-align: center">
-                    <?php echo CHtml::link(CHtml::encode($detailItem['tire_quantity']), array(
+                    <?php echo CHtml::link(CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $detailItem['tire_quantity'])), array(
                         '/report/branchSaleTransactionInfo/detailInfo', 
                         'branchId' => $dataItem['branch_id'], 
                         'startDate' => $startDate, 
@@ -109,7 +109,8 @@ Yii::app()->clientScript->registerCss('_report', '
                     ), array('target' => '_blank')); ?>
                 </td>
                 <td style="text-align: center">
-                    <?php echo CHtml::link(CHtml::encode($detailItem['oil_quantity']), array(
+                    <?php $oilQuantity = isset($monthlyMultipleBranchSaleOilQuantityReportData[$dataItem['branch_id']]) ? $monthlyMultipleBranchSaleOilQuantityReportData[$dataItem['branch_id']] : 0; ?>
+                    <?php echo CHtml::link(CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $oilQuantity)), array(
                         '/report/branchSaleTransactionInfo/detailInfo', 
                         'branchId' => $dataItem['branch_id'], 
                         'startDate' => $startDate, 
@@ -118,7 +119,7 @@ Yii::app()->clientScript->registerCss('_report', '
                     ), array('target' => '_blank')); ?>
                 </td>
                 <td style="text-align: center">
-                    <?php echo CHtml::link(CHtml::encode($detailItem['accessories_quantity']), array(
+                    <?php echo CHtml::link(CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $detailItem['accessories_quantity'])), array(
                         '/report/branchSaleTransactionInfo/detailInfo', 
                         'branchId' => $dataItem['branch_id'], 
                         'startDate' => $startDate, 

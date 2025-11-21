@@ -19,24 +19,8 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                     <div class="small-4 columns">
                                         <span class="prefix">Periode</span>
                                     </div>
-                                    <div class="small-4 columns">
-                                        <?php echo CHtml::dropDownList('Month', $month, array(
-                                            '01' => 'Jan',
-                                            '02' => 'Feb',
-                                            '03' => 'Mar',
-                                            '04' => 'Apr',
-                                            '05' => 'May',
-                                            '06' => 'Jun',
-                                            '07' => 'Jul',
-                                            '08' => 'Aug',
-                                            '09' => 'Sep',
-                                            '10' => 'Oct',
-                                            '11' => 'Nov',
-                                            '12' => 'Dec',
-                                        )); ?>
-                                    </div>
 
-                                    <div class="small-4 columns">
+                                    <div class="small-8 columns">
                                         <?php echo CHtml::dropDownList('Year', $year, $yearList); ?>
                                     </div>
                                 </div>
@@ -75,11 +59,9 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
 
                 <div class="relative">
                     <?php $this->renderPartial('_summary', array(
-                        'monthlySingleBranchSaleReportData' => $monthlySingleBranchSaleReportData,
-                        'monthlySingleBranchSaleProductReportData' => $monthlySingleBranchSaleProductReportData,
-                        'monthlySingleBranchSaleOilQuantityReportData' => $monthlySingleBranchSaleOilQuantityReportData,
+                        'yearlyMultipleCustomerCompanySaleReport' => $yearlyMultipleCustomerCompanySaleReport,
+                        'yearlyMultipleCustomerIndividualSaleReport' => $yearlyMultipleCustomerIndividualSaleReport,
                         'year' => $year,
-                        'month' => $month,
                         'branchId' => $branchId,
                     )); ?>
                 </div>

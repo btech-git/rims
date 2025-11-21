@@ -297,14 +297,11 @@
                     <div class="small-4 columns">
                         <?php if (
                             Yii::app()->user->checkAccess('saleSummaryReport') || 
-                            Yii::app()->user->checkAccess('saleCustomerSummaryReport') || 
-                            Yii::app()->user->checkAccess('saleCustomerReport') || 
                             Yii::app()->user->checkAccess('saleProductSummaryReport') || 
                             Yii::app()->user->checkAccess('saleServiceSummaryReport') || 
                             Yii::app()->user->checkAccess('saleProductReport') || 
                             Yii::app()->user->checkAccess('saleServiceSummaryReport') || 
                             Yii::app()->user->checkAccess('saleServiceReport') || 
-                            Yii::app()->user->checkAccess('saleVehicleReport') || 
                             Yii::app()->user->checkAccess('saleServiceProductCategoryReport') || 
                             Yii::app()->user->checkAccess('saleRetailReport')
                         ): ?>
@@ -315,16 +312,6 @@
                                         'label' => 'Penjualan Summary', 
                                         'url' => array('/report/saleInvoiceSummary/summary'), 
                                         'visible' => (Yii::app()->user->checkAccess('saleSummaryReport'))
-                                    ),
-                                    array(
-                                        'label' => 'Penjualan per Pelanggan', 
-                                        'url' => array('/report/saleRetailCustomer/summary'), 
-                                        'visible' => (Yii::app()->user->checkAccess('saleCustomerSummaryReport'))
-                                    ),
-                                    array(
-                                        'label' => 'Rincian Penjualan per Pelanggan', 
-                                        'url' => array('/report/saleRetail/summary'), 
-                                        'visible' => (Yii::app()->user->checkAccess('saleCustomerReport'))
                                     ),
                                     array(
                                         'label' => 'Penjualan per Barang', 
@@ -345,11 +332,6 @@
                                         'label' => 'Rincian Penjualan per Jasa', 
                                         'url' => array('/report/saleRetailServiceDetail/summary'), 
                                         'visible' => (Yii::app()->user->checkAccess('saleServiceReport'))
-                                    ),
-                                    array(
-                                        'label' => 'Rincian Penjualan per Kendaraan', 
-                                        'url' => array('/report/saleVehicleProduct/summary'), 
-                                        'visible' => (Yii::app()->user->checkAccess('saleVehicleReport'))
                                     ),
                                     array(
                                         'label' => 'Penjualan Jasa + Kategori Produk', 
@@ -781,6 +763,9 @@
                     
                     <div class="small-4 columns">
                         <?php if (
+                            Yii::app()->user->checkAccess('saleCustomerSummaryReport') || 
+                            Yii::app()->user->checkAccess('saleCustomerReport') || 
+                            Yii::app()->user->checkAccess('saleVehicleReport') || 
                             Yii::app()->user->checkAccess('saleVehicleMonthlyReport') ||
                             Yii::app()->user->checkAccess('saleVehicleYearlyReport') ||
                             Yii::app()->user->checkAccess('customerFollowUpReport') ||
@@ -791,14 +776,29 @@
                             <?php $this->widget('zii.widgets.CMenu', array(
                                 'items' => array(
                                     array(
-                                        'label' => 'Penjualan per Kendaraan Bulanan', 
+                                        'label' => 'Penjualan per Customer', 
+                                        'url' => array('/report/saleRetailCustomer/summary'), 
+                                        'visible' => (Yii::app()->user->checkAccess('saleCustomerSummaryReport'))
+                                    ),
+                                    array(
+                                        'label' => 'Rincian Penjualan per Customer', 
+                                        'url' => array('/report/saleRetail/summary'), 
+                                        'visible' => (Yii::app()->user->checkAccess('saleCustomerReport'))
+                                    ),
+                                    array(
+                                        'label' => 'Penjualan per Model Kendaraan Bulanan', 
                                         'url' => array('/report/saleInvoiceCarSubModelMonthly/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('saleVehicleMonthlyReport')
                                     ),
                                     array(
-                                        'label' => 'Penjualan per Kendaraan Tahunan', 
+                                        'label' => 'Penjualan per Model Kendaraan Tahunan', 
                                         'url' => array('/report/saleInvoiceCarSubModelYearly/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('saleVehicleYearlyReport')
+                                    ),
+                                    array(
+                                        'label' => 'Rincian Penjualan per Brand Kendaraan', 
+                                        'url' => array('/report/saleVehicleProduct/summary'), 
+                                        'visible' => (Yii::app()->user->checkAccess('saleVehicleReport'))
                                     ),
                                     array(
                                         'label' => 'Customer Follow Up + Warranty', 

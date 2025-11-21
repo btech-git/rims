@@ -14,6 +14,7 @@
  * @property string $discount
  * @property string $unit_price
  * @property string $total_price
+ * @property string $production_year
  *
  * The followings are the available model relations:
  * @property InvoiceHeader $invoice
@@ -47,13 +48,13 @@ class InvoiceDetail extends CActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('invoice_id, unit_price, total_price', 'required'),
-            array('invoice_id, service_id, product_id, sale_package_header_id, quick_service_id', 'numerical', 'integerOnly' => true),
+            array('invoice_id, unit_price, total_price, production_year', 'required'),
+            array('invoice_id, service_id, product_id, sale_package_header_id, quick_service_id, production_year', 'numerical', 'integerOnly' => true),
             array('unit_price, total_price, discount', 'length', 'max' => 18),
             array('quantity', 'length', 'max' => 10),
             // The following rule is used by search().
             // Please remove those attributes that should not be searched.
-            array('id, invoice_id, service_id, product_id, quick_service_id, sale_package_header_id, quantity, unit_price, total_price, discount', 'safe', 'on' => 'search'),
+            array('id, invoice_id, service_id, product_id, quick_service_id, sale_package_header_id, quantity, unit_price, total_price, discount, production_year', 'safe', 'on' => 'search'),
         );
     }
 
@@ -87,6 +88,7 @@ class InvoiceDetail extends CActiveRecord {
             'quantity' => 'Quantity',
             'unit_price' => 'Unit Price',
             'total_price' => 'Total Price',
+            'production_year' => 'Tahun Produksi',
         );
     }
 
@@ -110,6 +112,7 @@ class InvoiceDetail extends CActiveRecord {
         $criteria->compare('discount', $this->discount, true);
         $criteria->compare('unit_price', $this->unit_price, true);
         $criteria->compare('total_price', $this->total_price, true);
+        $criteria->compare('production_year', $this->production_year, true);
 
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
@@ -260,6 +263,26 @@ class InvoiceDetail extends CActiveRecord {
         return $resultSet;
     }
     
+    public static function getMonthlySingleBranchSaleOilQuantityReport($year, $month, $branchId) {
+        $params = array(
+            ':year' => $year,
+            ':month' => $month,
+            ':branch_id' => $branchId,
+        );
+        
+        $sql = "SELECT DAY(h.invoice_date) AS day, d.quantity, p.unit_id
+                FROM " . InvoiceDetail::model()->tableName() . " d 
+                INNER JOIN " . InvoiceHeader::model()->tableName() . " h ON h.id = d.invoice_id
+                INNER JOIN " . Product::model()->tableName() . " p ON p.id = d.product_id
+                WHERE h.branch_id = :branch_id AND YEAR(h.invoice_date) = :year AND MONTH(h.invoice_date) = :month AND h.status NOT LIKE '%CANCEL%' AND 
+                    p.product_sub_category_id = 540
+                ORDER BY DAY(h.invoice_date) ASC";
+                
+        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
+        
+        return $resultSet;
+    }
+    
     public static function getMonthlyMultipleBranchSaleProductReport($year, $month, $branchIds) {
         $branchIdList = empty($branchIds) ? 'NULL' :  implode(',', $branchIds);
         
@@ -281,6 +304,27 @@ class InvoiceDetail extends CActiveRecord {
                 LEFT OUTER JOIN " . Service::model()->tableName() . " s ON s.id = d.service_id
                 WHERE h.branch_id IN (" . $branchIdList . ") AND YEAR(h.invoice_date) = :year AND MONTH(h.invoice_date) = :month AND h.status NOT LIKE '%CANCEL%'
                 GROUP BY h.branch_id";
+                
+        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
+        
+        return $resultSet;
+    }
+    
+    public static function getMonthlyMultipleBranchSaleOilQuantityReport($year, $month, $branchIds) {
+        $branchIdList = empty($branchIds) ? 'NULL' :  implode(',', $branchIds);
+        
+        $params = array(
+            ':year' => $year,
+            ':month' => $month,
+        );
+        
+        $sql = "SELECT h.branch_id, d.quantity, p.unit_id
+                FROM " . InvoiceDetail::model()->tableName() . " d 
+                INNER JOIN " . InvoiceHeader::model()->tableName() . " h ON h.id = d.invoice_id
+                LEFT OUTER JOIN " . Product::model()->tableName() . " p ON p.id = d.product_id
+                WHERE h.branch_id IN (" . $branchIdList . ") AND YEAR(h.invoice_date) = :year AND MONTH(h.invoice_date) = :month AND 
+                    h.status NOT LIKE '%CANCEL%' AND p.product_sub_category_id = 540
+                ORDER BY h.branch_id ASC";
                 
         $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
         
@@ -312,6 +356,24 @@ class InvoiceDetail extends CActiveRecord {
         return $resultSet;
     }
     
+    public static function getYearlySingleBranchSaleOilQuantityReport($year, $branchId) {
+        $params = array(
+            ':year' => $year,
+            ':branch_id' => $branchId,
+        );
+        
+        $sql = "SELECT MONTH(h.invoice_date) AS month, d.quantity, p.unit_id
+                FROM " . InvoiceDetail::model()->tableName() . " d 
+                INNER JOIN " . InvoiceHeader::model()->tableName() . " h ON h.id = d.invoice_id
+                LEFT OUTER JOIN " . Product::model()->tableName() . " p ON p.id = d.product_id
+                WHERE h.branch_id = :branch_id AND YEAR(h.invoice_date) = :year AND h.status NOT LIKE '%CANCEL%' AND p.product_sub_category_id = 540
+                ORDER BY MONTH(h.invoice_date) ASC";
+                
+        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
+        
+        return $resultSet;
+    }
+    
     public static function getYearlyMultipleBranchSaleProductReport($year, $branchIds) {
         $branchIdList = empty($branchIds) ? 'NULL' :  implode(',', $branchIds);
         
@@ -332,6 +394,26 @@ class InvoiceDetail extends CActiveRecord {
                 LEFT OUTER JOIN " . Service::model()->tableName() . " s ON s.id = d.service_id
                 WHERE h.branch_id IN (" . $branchIdList . ") AND YEAR(h.invoice_date) = :year AND h.status NOT LIKE '%CANCEL%'
                 GROUP BY h.branch_id";
+                
+        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
+        
+        return $resultSet;
+    }
+    
+    public static function getYearlyMultipleBranchSaleOilQuantityReport($year, $branchIds) {
+        $branchIdList = empty($branchIds) ? 'NULL' :  implode(',', $branchIds);
+        
+        $params = array(
+            ':year' => $year,
+        );
+        
+        $sql = "SELECT h.branch_id, d.quantity, p.unit_id
+                FROM " . InvoiceDetail::model()->tableName() . " d 
+                INNER JOIN " . InvoiceHeader::model()->tableName() . " h ON h.id = d.invoice_id
+                LEFT OUTER JOIN " . Product::model()->tableName() . " p ON p.id = d.product_id
+                WHERE h.branch_id IN (" . $branchIdList . ") AND YEAR(h.invoice_date) = :year AND h.status NOT LIKE '%CANCEL%' AND 
+                    p.product_sub_category_id = 540
+                ORDER BY h.branch_id ASC";
                 
         $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
         

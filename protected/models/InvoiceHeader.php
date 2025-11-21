@@ -2114,6 +2114,41 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
         return $resultSet;
     }
     
+    public static function getVehicleSaleReport($startDate, $endDate, $customerId, $branchId) {
+        $branchConditionSql = '';
+        $customerConditionSql = '';
+      
+        $params = array(
+            ':start_date' => $startDate,
+            ':end_date' => $endDate,
+        );
+        
+        if (!empty($branchId)) {
+            $branchConditionSql = ' AND branch_id = :branch_id';
+            $params[':branch_id'] = $branchId;
+        }
+        
+        if (!empty($customerId)) {
+            $customerConditionSql = ' AND c.id = :customer_id';
+            $params[':customer_id'] = $customerId;
+        }
+        
+        $sql = "SELECT i.customer_id, c.name AS customer_name, c.customer_type AS customer_type, i.grand_total
+                FROM " . Customer::model()->tableName() . " c
+                INNER JOIN (
+                    SELECT customer_id, SUM(total_price) AS grand_total
+                    FROM " . InvoiceHeader::model()->tableName() . " 
+                    WHERE invoice_date BETWEEN :start_date AND :end_date AND status NOT LIKE '%CANCEL%'" . $branchConditionSql . $taxValueConditionSql . "
+                    GROUP BY customer_id
+                ) i ON c.id = i.customer_id
+                WHERE c.status = 'Active'" . $customerConditionSql . $customerTypeConditionSql . "
+                ORDER BY c.name ASC";
+                
+        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
+        
+        return $resultSet;
+    }
+    
     public static function getYearlyCustomerInvoiceReport($year) {
       
         $sql = "SELECT i.customer_id, MONTH(i.invoice_date) AS invoice_month, MAX(c.name) AS customer_name, SUM(i.total_price) AS invoice_total
@@ -2193,14 +2228,13 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
             $params[':branch_id'] = $branchId;
         }
         
-        $sql = "SELECT i.customer_id, MAX(c.name) AS customer_name, COUNT(i.id) AS quantity_invoice, SUM(i.product_price) AS product_price, 
-                    SUM(i.service_price) AS service_price, SUM(i.total_price) AS total_price
-                FROM " . InvoiceHeader::model()->tableName() . " i 
-                INNER JOIN " . Customer::model()->tableName() . " c ON c.id = i.customer_id
-                WHERE YEAR(i.invoice_date) = :year AND c.customer_type = 'Company' AND i.user_id_cancelled IS NULL" . $branchConditionSql . " 
-                GROUP BY i.customer_id
-                ORDER BY total_price DESC, quantity_invoice DESC
-                LIMIT 20";
+        $sql = "SELECT h.customer_id, MAX(c.name) AS customer_name, MAX(c.customer_type) AS customer_type, MAX(c.mobile_phone) AS customer_phone, 
+                    COUNT(h.id) AS invoice_quantity, SUM(h.product_price) AS total_product, SUM(h.total_price) AS grand_total, SUM(h.service_price) AS total_service
+                FROM " . InvoiceHeader::model()->tableName() . " h 
+                INNER JOIN " . Customer::model()->tableName() . " c ON c.id = h.customer_id
+                WHERE YEAR(h.invoice_date) = :year AND c.customer_type = 'Company' AND h.status NOT LIKE '%CANCEL%'" . $branchConditionSql . " 
+                GROUP BY h.customer_id
+                ORDER BY grand_total DESC, invoice_quantity DESC";
                 
         $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
         
@@ -2219,14 +2253,47 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
             $params[':branch_id'] = $branchId;
         }
         
-        $sql = "SELECT i.customer_id, MAX(c.name) AS customer_name, COUNT(i.id) AS quantity_invoice, SUM(i.product_price) AS product_price, 
-                    SUM(i.service_price) AS service_price, SUM(i.total_price) AS total_price
-                FROM " . InvoiceHeader::model()->tableName() . " i 
-                INNER JOIN " . Customer::model()->tableName() . " c ON c.id = i.customer_id
-                WHERE YEAR(i.invoice_date) = :year AND c.customer_type = 'Individual' AND i.user_id_cancelled IS NULL" . $branchConditionSql . " 
-                GROUP BY i.customer_id
-                ORDER BY total_price DESC, quantity_invoice DESC
-                LIMIT 20";
+        $sql = "SELECT h.customer_id, MAX(c.name) AS customer_name, MAX(c.customer_type) AS customer_type, MAX(c.mobile_phone) AS customer_phone, 
+                    COUNT(h.id) AS invoice_quantity, SUM(h.product_price) AS total_product, SUM(h.total_price) AS grand_total, SUM(h.service_price) AS total_service
+                FROM " . InvoiceHeader::model()->tableName() . " h 
+                INNER JOIN " . Customer::model()->tableName() . " c ON c.id = h.customer_id
+                WHERE YEAR(h.invoice_date) = :year AND c.customer_type = 'Individual' AND h.status NOT LIKE '%CANCEL%'" . $branchConditionSql . " 
+                GROUP BY h.customer_id
+                ORDER BY grand_total DESC, invoice_quantity DESC
+                LIMIT 50";
+                
+        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
+        
+        return $resultSet;
+    }
+    
+    public static function getMultipleVehicleSaleReport($year, $branchId) {
+        $branchConditionSql = '';
+      
+        $params = array(
+            ':year' => $year,
+        );
+        
+        if (!empty($branchId)) {
+            $branchConditionSql = ' AND i.branch_id = :branch_id';
+            $params[':branch_id'] = $branchId;
+        }
+        
+        $sql = "SELECT h.vehicle_id, MAX(v.plate_number) AS plate_number, MAX(k.name) AS car_make, MAX(d.name) AS car_model, MAX(s.name) AS car_sub_model, 
+                    MAX(r.name) AS color_name, MAX(c.customer_type) AS customer_type, MAX(v.customer_id) AS customer_id, MAX(c.name) AS customer_name, 
+                    MAX(c.mobile_phone) AS customer_phone, COUNT(h.id) AS invoice_quantity, SUM(h.product_price) AS total_product, 
+                    SUM(h.total_price) AS grand_total, SUM(h.service_price) AS total_service
+                FROM " . InvoiceHeader::model()->tableName() . " h 
+                INNER JOIN " . Vehicle::model()->tableName() . " v ON v.id = h.vehicle_id
+                INNER JOIN " . VehicleCarMake::model()->tableName() . " k ON k.id = v.car_make_id
+                INNER JOIN " . VehicleCarModel::model()->tableName() . " d ON d.id = v.car_model_id
+                INNER JOIN " . VehicleCarSubModel::model()->tableName() . " s ON s.id = v.car_sub_model_id
+                INNER JOIN " . Colors::model()->tableName() . " r ON r.id = v.color_id
+                INNER JOIN " . Customer::model()->tableName() . " c ON c.id = v.customer_id
+                WHERE YEAR(h.invoice_date) = :year AND h.status NOT LIKE '%CANCEL%'" . $branchConditionSql . " 
+                GROUP BY h.vehicle_id
+                ORDER BY grand_total DESC, invoice_quantity DESC
+                LIMIT 50";
                 
         $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
         

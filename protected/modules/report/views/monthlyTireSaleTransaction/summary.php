@@ -36,6 +36,7 @@ Yii::app()->clientScript->registerScript('search', "
         'productDataProvider' => $productDataProvider,
         'branches' => $branches,
         'year' => $year,
+        'yearNow' => $yearNow,
         'month' => $month,
     )); ?>
 </div>

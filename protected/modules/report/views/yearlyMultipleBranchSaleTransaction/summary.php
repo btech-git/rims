@@ -52,6 +52,7 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                     <?php $this->renderPartial('_summary', array(
                         'yearlyMultipleBranchSaleReport' => $yearlyMultipleBranchSaleReport,
                         'yearlyMultipleBranchSaleProductReportData' => $yearlyMultipleBranchSaleProductReportData,
+                        'yearlyMultipleBranchSaleOilQuantityReportData' => $yearlyMultipleBranchSaleOilQuantityReportData,
                         'year' => $year,
                     )); ?>
                 </div>

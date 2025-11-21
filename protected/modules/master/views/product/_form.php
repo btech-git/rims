@@ -47,21 +47,25 @@
                         <div class="small-8 columns">
                             <?php echo $form->dropDownList($product->header, 'product_master_category_id', CHtml::listData(ProductMasterCategory::model()->findAll(array('order' => 'name ASC')), 'id', 'nameAndCode'), array(
                                 'prompt' => '[--Select Product Master Category--]',
-                                'onchange' => 'jQuery.ajax({
-                                    type: "POST",
-                                    //dataType: "JSON",
-                                    url: "' . CController::createUrl('ajaxGetProductSubMasterCategory') . '",
-                                    data: jQuery("form").serialize(),
-                                    success: function(data){
-                                        console.log(data);
-                                        jQuery("#Product_code").val("");
-                                        jQuery("#Product_product_sub_master_category_id").html(data);
-                                        if (jQuery("#Product_product_sub_master_category_id").val() == ""){
-                                            jQuery(".additional-specification").slideUp();
+                                'onchange' => '
+                                    $("#' . CHtml::activeId($product->header, 'tire_size_id') . '").val("");
+                                    $("#' . CHtml::activeId($product->header, 'oil_sae_id') . '").val("");
+                                    $("#tire_size_div").hide();
+                                    $("#oil_sae_div").hide();
+                                    jQuery.ajax({
+                                        type: "POST",
+                                        url: "' . CController::createUrl('ajaxGetProductSubMasterCategory') . '",
+                                        data: jQuery("form").serialize(),
+                                        success: function(data){
+                                            jQuery("#Product_code").val("");
+                                            jQuery("#Product_product_sub_master_category_id").html(data);
+                                            if (jQuery("#Product_product_sub_master_category_id").val() == ""){
+                                                jQuery(".additional-specification").slideUp();
                                                 jQuery("#Product_product_sub_category_id").html("<option value=\"\">[--Select Product Sub Category--]</option>");
-                                        }
-                                    },
-                                });'
+                                            }
+                                        },
+                                    });
+                                '
                             )); ?>
                             <?php echo $form->error($product->header, 'product_master_category_id'); ?>
                         </div>
@@ -77,19 +81,29 @@
                         <div class="small-8 columns">
                             <?php echo $form->dropDownList($product->header, 'product_sub_master_category_id', $product->header->product_master_category_id != '' ? CHtml::listData(ProductSubMasterCategory::model()->findAllByAttributes(array('product_master_category_id' => $product->header->product_master_category_id)), 'id', 'nameAndCode') : array(), array(
                                 'prompt' => '[--Select Product Sub Master Category--]',
-                                'onchange' => 'jQuery.ajax({
-                                type: "POST",
-                                url: "' . CController::createUrl('ajaxGetProductSubCategory') . '",
-                                data: jQuery("form").serialize(),
-                                success: function(data){
-                                    console.log(data);
-                                    jQuery("#Product_code").val("");
-                                    if (jQuery("#Product_product_sub_master_category_id").val() == ""){
-                                        jQuery(".additional-specification").slideUp();
+                                'onchange' => '
+                                    $("#' . CHtml::activeId($product->header, 'tire_size_id') . '").val("");
+                                    $("#' . CHtml::activeId($product->header, 'oil_sae_id') . '").val("");
+                                    $("#tire_size_div").hide();
+                                    $("#oil_sae_div").hide();
+                                    if ($(this).val() === "26") {
+                                        $("#tire_size_div").show();
+                                    } else if ($(this).val() === "39" || $(this).val() === "40") {
+                                        $("#oil_sae_div").show();
                                     }
-                                    jQuery("#Product_product_sub_category_id").html(data);
-                                },
-                            });'
+                                    jQuery.ajax({
+                                        type: "POST",
+                                        url: "' . CController::createUrl('ajaxGetProductSubCategory') . '",
+                                        data: jQuery("form").serialize(),
+                                        success: function(data){
+                                            jQuery("#Product_code").val("");
+                                            if (jQuery("#Product_product_sub_master_category_id").val() == ""){
+                                                jQuery(".additional-specification").slideUp();
+                                            }
+                                            jQuery("#Product_product_sub_category_id").html(data);
+                                        },
+                                    });
+                                '
                             )); ?>
                             <?php echo $form->error($product->header, 'product_sub_master_category_id'); ?>
                         </div>
@@ -178,6 +192,34 @@
                     </div>
                 </div>
 
+                <div class="field" id="tire_size_div" style="display: <?php echo $product->header->product_sub_master_category_id !== null && $product->header->product_sub_master_category_id == 26 ? 'block' : 'none'; ?>">
+                    <div class="row collapse">
+                        <div class="small-4 columns">
+                            <?php echo $form->labelEx($product->header, 'tire_size_id', array('class' => 'prefix')); ?>
+                        </div>
+                        <div class="small-8 columns">
+                            <?php echo $form->dropDownList($product->header, 'tire_size_id', CHtml::listData(TireSize::model()->findAll(), 'id', 'name'), array(
+                                'empty' => '-- Pilih Ukuran Ban',
+                            )); ?>
+                            <?php echo $form->error($product->header, 'tire_size_id'); ?>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="field" id="oil_sae_div" style="display: <?php echo $product->header->product_sub_master_category_id !== null && ($product->header->product_sub_master_category_id == 39 || $product->header->product_sub_master_category_id == 40) ? 'block' : 'none'; ?>">
+                    <div class="row collapse">
+                        <div class="small-4 columns">
+                            <?php echo $form->labelEx($product->header, 'oil_sae_id', array('class' => 'prefix')); ?>
+                        </div>
+                        <div class="small-8 columns">
+                            <?php echo $form->dropDownList($product->header, 'oil_sae_id', CHtml::listData(OilSae::model()->findAll(), 'id', 'name'), array(
+                                'empty' => '-- Pilih SAE',
+                            )); ?>
+                            <?php echo $form->error($product->header, 'oil_sae_id'); ?>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="field">
                     <div class="row collapse">
                         <div class="small-4 columns">
@@ -196,23 +238,11 @@
                 <div class="field">
                     <div class="row collapse">
                         <div class="small-4 columns">
-                            <?php echo $form->labelEx($product->header, 'description', array('class' => 'prefix')); ?>
-                        </div>
-                        <div class="small-8 columns">
-                            <?php echo $form->textArea($product->header, 'description', array('rows' => 6, 'cols' => 50)); ?>
-                            <?php echo $form->error($product->header, 'description'); ?>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="field">
-                    <div class="row collapse">
-                        <div class="small-4 columns">
                             <?php echo $form->labelEx($product->header, 'production_year', array('class' => 'prefix')); ?>
                         </div>
 
                         <div class="small-8 columns">
-                            <?php $range = range(date('Y', strtotime('+1 years')), 1988); ?>
+                            <?php $range = range(date('Y', strtotime('+1 years')), date('Y', strtotime('-5 years'))); ?>
                             <?php echo $form->dropDownList($product->header, 'production_year', array_combine($range, $range)); ?>
                             <?php echo $form->error($product->header, 'production_year'); ?>
                         </div>
@@ -288,6 +318,20 @@
                                 'prompt' => '[--Select Sub Brand Series--]',
                             )); ?>
                             <?php echo $form->error($product->header, 'sub_brand_series_id'); ?>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="small-12 medium-5b columns">
+                <div class="field">
+                    <div class="row collapse">
+                        <div class="small-4 columns">
+                            <?php echo $form->labelEx($product->header, 'description', array('class' => 'prefix')); ?>
+                        </div>
+                        <div class="small-8 columns">
+                            <?php echo $form->textArea($product->header, 'description', array('rows' => 6, 'cols' => 50)); ?>
+                            <?php echo $form->error($product->header, 'description'); ?>
                         </div>
                     </div>
                 </div>
@@ -441,22 +485,6 @@
                     </div>
                 <?php endif; ?>
 
-                <!--                <div class="field">
-                                    <div class="row collapse">
-                                        <div class="small-4 columns">
-<?php /* echo $form->labelEx($product->header, 'stock', array('class' => 'prefix')); ?>
-  </div>
-  <div class="small-8 columns">
-  <?php if ($product->header->isNewRecord): ?>
-  <?php echo $form->textField($product->header, 'stock', array('size' => 10, 'maxlength' => 10)); ?>
-  <?php else: ?>
-  <?php echo CHtml::encode(Yii::app()->numberFormatter->format("#,##0.00", CHtml::value($product->header, 'stock'))); ?>
-  <?php endif; ?>
-  <?php echo $form->error($product->header, 'stock'); */ ?>
-                                        </div>
-                                    </div>
-                                </div>-->
-
                 <div class="field">
                     <div class="row collapse">
                         <div class="small-4 columns">
@@ -498,14 +526,11 @@
                         </div>
                     </div>
                 </div>
-
-                <div class="field buttons text-center">
-                    <?php echo CHtml::submitButton($product->header->isNewRecord ? 'Create' : 'Save', array('class' => 'button cbutton')); ?>
-                </div>
             </div>
+        </div>
 
-            <!-- begin RIGHT -->
-            <div class="small-12 medium-5b columns">
+        <div class="row">
+            <div class="small-12 medium-6 columns">
                 <?php $this->renderPartial('_battery', array('form' => $form, 'product' => $product, 'productSpecificationBattery' => $productSpecificationBattery)); ?>
                 <?php $this->renderPartial('_oil', array('form' => $form, 'product' => $product, 'productSpecificationOil' => $productSpecificationOil)); ?>
                 <?php $this->renderPartial('_tire', array('form' => $form, 'product' => $product, 'productSpecificationTire' => $productSpecificationTire)); ?>
@@ -532,8 +557,9 @@
                 </div>
 
                 <div class="clearfix"></div>
-
-                <!-- Product Complement -->
+            </div>
+            <!-- begin RIGHT -->
+            <div class="small-12 medium-5b columns">
                 <?php echo CHtml::button('Add Product Complement', array(
                     'id' => 'product-complement-button',
                     'name' => 'product-complement',
@@ -750,6 +776,10 @@
 
                 <div id="product-substitute">
                     <?php $this->renderPartial('_detailSubstitute', array('product' => $product)); ?>
+                </div>
+
+                <div class="field buttons text-center">
+                    <?php echo CHtml::submitButton($product->header->isNewRecord ? 'Create' : 'Save', array('class' => 'button cbutton')); ?>
                 </div>
             </div>
             <!-- end RIGHT -->

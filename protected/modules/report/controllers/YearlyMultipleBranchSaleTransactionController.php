@@ -29,10 +29,30 @@ class YearlyMultipleBranchSaleTransactionController extends Controller {
         $yearlyMultipleBranchSaleReport = InvoiceHeader::getYearlyMultipleBranchSaleReport($year);
         $branchIds = array_map(function($yearlyMultipleBranchSaleReportItem) { return $yearlyMultipleBranchSaleReportItem['branch_id']; }, $yearlyMultipleBranchSaleReport);
         $yearlyMultipleBranchSaleProductReport = InvoiceDetail::getYearlyMultipleBranchSaleProductReport($year, $branchIds);
+        $yearlyMultipleBranchSaleOilQuantityReport = InvoiceDetail::getYearlyMultipleBranchSaleOilQuantityReport($year, $branchIds);
         
         $yearlyMultipleBranchSaleProductReportData = array();
         foreach ($yearlyMultipleBranchSaleProductReport as $yearlyMultipleBranchSaleProductReportItem) {
             $yearlyMultipleBranchSaleProductReportData[$yearlyMultipleBranchSaleProductReportItem['branch_id']] = $yearlyMultipleBranchSaleProductReportItem;
+        }
+        
+        $unitConversions = UnitConversion::model()->findAllByAttributes(array('unit_to_id' => 1));
+        $unitConversionFactors = array();
+        foreach ($unitConversions as $unitConversion) {
+            $unitConversionFactors[$unitConversion->unit_from_id] = $unitConversion->multiplier;
+        }
+        
+        $yearlyMultipleBranchSaleOilQuantityReportData = array();
+        foreach ($yearlyMultipleBranchSaleOilQuantityReport as $yearlyMultipleBranchSaleOilQuantityReportItem) {
+            if (!isset($yearlyMultipleBranchSaleOilQuantityReportData[$yearlyMultipleBranchSaleOilQuantityReportItem['branch_id']])) {
+                $yearlyMultipleBranchSaleOilQuantityReportData[$yearlyMultipleBranchSaleOilQuantityReportItem['branch_id']] = '0.00';
+            }
+            $multiplier = 1;
+            if (isset($unitConversionFactors[$yearlyMultipleBranchSaleOilQuantityReportItem['unit_id']])) {
+                $multiplier = $unitConversionFactors[$yearlyMultipleBranchSaleOilQuantityReportItem['unit_id']];
+            }
+            $quantity = $multiplier * $yearlyMultipleBranchSaleOilQuantityReportItem['quantity'];
+            $yearlyMultipleBranchSaleOilQuantityReportData[$yearlyMultipleBranchSaleOilQuantityReportItem['branch_id']] += $quantity;
         }
         
         $yearList = array();
@@ -45,18 +65,19 @@ class YearlyMultipleBranchSaleTransactionController extends Controller {
         }
         
         if (isset($_GET['SaveExcel'])) {
-            $this->saveToExcel($yearlyMultipleBranchSaleReport, $yearlyMultipleBranchSaleProductReportData, $year);
+            $this->saveToExcel($yearlyMultipleBranchSaleReport, $yearlyMultipleBranchSaleProductReportData, $yearlyMultipleBranchSaleOilQuantityReportData, $year);
         }
         
         $this->render('summary', array(
             'yearlyMultipleBranchSaleReport' => $yearlyMultipleBranchSaleReport,
             'yearlyMultipleBranchSaleProductReportData' => $yearlyMultipleBranchSaleProductReportData,
+            'yearlyMultipleBranchSaleOilQuantityReportData' => $yearlyMultipleBranchSaleOilQuantityReportData,
             'yearList' => $yearList,
             'year' => $year,
         ));
     }
     
-    protected function saveToExcel($yearlyMultipleBranchSaleReport, $yearlyMultipleBranchSaleProductReportData, $year) {
+    protected function saveToExcel($yearlyMultipleBranchSaleReport, $yearlyMultipleBranchSaleProductReportData, $yearlyMultipleBranchSaleOilQuantityReportData, $year) {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
 
@@ -165,7 +186,8 @@ class YearlyMultipleBranchSaleTransactionController extends Controller {
             $worksheet->setCellValue("P{$counter}", $totalPartsPerCustomer);
             $worksheet->setCellValue("Q{$counter}", $totalPartsAverageDaily);
             $worksheet->setCellValue("R{$counter}", $detailItem['tire_quantity']);
-            $worksheet->setCellValue("S{$counter}", $detailItem['oil_quantity']);
+            $oilQuantity = isset($yearlyMultipleBranchSaleOilQuantityReportData[$dataItem['branch_id']]) ? $yearlyMultipleBranchSaleOilQuantityReportData[$dataItem['branch_id']] : 0;
+            $worksheet->setCellValue("S{$counter}", $oilQuantity);
             $worksheet->setCellValue("T{$counter}", $detailItem['accessories_quantity']);
             $worksheet->setCellValue("U{$counter}", $averageTire);
             $worksheet->setCellValue("V{$counter}", $averageOil);
@@ -180,7 +202,7 @@ class YearlyMultipleBranchSaleTransactionController extends Controller {
             $totalServiceSum += $dataItem['total_service'];
             $totalProductSum += $dataItem['total_product'];
             $tireQuantitySum += $detailItem['tire_quantity'];
-            $oilQuantitySum += $detailItem['oil_quantity'];
+            $oilQuantitySum += $oilQuantity;
             $accessoriesQuantitySum += $detailItem['accessories_quantity'];
             $averageTireSum += $averageTire;
             $averageOilSum += $averageOil;

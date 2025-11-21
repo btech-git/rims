@@ -15,6 +15,7 @@
  * @property string $stock_out
  * @property string $notes
  * @property string $purchase_price
+ * @property integer $production_year
  *
  * The followings are the available model relations:
  * @property Inventory $inventory

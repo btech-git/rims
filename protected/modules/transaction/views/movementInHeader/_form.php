@@ -12,20 +12,12 @@
     } ?></h1>
 
     <div class="form">
-
         <?php $form = $this->beginWidget('CActiveForm', array(
             'id' => 'movement-in-header-form',
             'htmlOptions' => array('enctype' => 'multipart/form-data'),
-            // Please note: When you enable ajax validation, make sure the corresponding
-            // controller action is handling ajax validation correctly.
-            // There is a call to performAjaxValidation() commented in generated controller code.
-            // See class documentation of CActiveForm for details on this.
             'enableAjaxValidation' => false,
         )); ?>
-
-
         <p class="note">Fields with <span class="required">*</span> are required.</p>
-
         <?php echo $form->errorSummary($movementIn->header); ?>
 
         <div class="row">
@@ -63,15 +55,7 @@
                         </div>
                         <div class="small-8 columns">
                             <?php echo $form->hiddenField($movementIn->header, 'branch_id'); ?>
-                            <?php echo CHtml::encode(CHtml::value($movementIn->header, 'branch.name')); ?>
-                            <?php /*echo $form->dropDownlist($movementIn->header, 'branch_id', CHtml::listData(Branch::model()->findAllByAttributes(array('status' => 'Active')), 'id', 'name'), array(
-                                'prompt' => '[--Select Branch--]', 
-                                'onchange' => CHtml::ajax(array(
-                                    'type' => 'POST',
-                                    'url' => CController::createUrl('ajaxHtmlUpdateAllWarehouse', array('id' => $movementIn->header->id)),
-                                    'update' => '#detail_div',
-                                )),
-                            ));*/ ?>
+                            <?php echo CHtml::textField('BranchName', $movementIn->header->branch->name, array('readonly' => true,)); ?>
                             <?php echo $form->error($movementIn->header, 'branch_id'); ?>
                         </div>
                     </div>
@@ -82,8 +66,13 @@
                             <?php echo $form->labelEx($movementIn->header, 'user_id', array('class' => 'prefix')); ?>
                         </div>
                         <div class="small-8 columns">
-                            <?php echo $form->hiddenField($movementIn->header, 'user_id', array('readonly' => true, 'value' => $movementIn->header->isNewRecord ? Yii::app()->user->getId() : $movementIn->header->user_id)); ?>
-                            <?php echo $form->textField($movementIn->header, 'user_name', array('size' => 30, 'maxlength' => 30, 'value' => $movementIn->header->isNewRecord ? Yii::app()->user->getName() : $movementIn->header->user->username, 'readonly' => true)); ?>
+                            <?php echo $form->hiddenField($movementIn->header, 'user_id', array('value' => $movementIn->header->isNewRecord ? Yii::app()->user->getId() : $movementIn->header->user_id)); ?>
+                            <?php echo $form->textField($movementIn->header, 'user_name', array(
+                                'size' => 30, 
+                                'maxlength' => 30, 
+                                'value' => $movementIn->header->isNewRecord ? Yii::app()->user->getName() : $movementIn->header->user->username, 
+                                'readonly' => true
+                            )); ?>
                             <?php echo $form->error($movementIn->header, 'user_id'); ?> 
                         </div>
                     </div>
@@ -95,7 +84,10 @@
                             <?php echo $form->labelEx($movementIn->header, 'status', array('class' => 'prefix')); ?>
                         </div>
                         <div class="small-8 columns">
-                            <?php echo $form->textField($movementIn->header, 'status', array('value' => $movementIn->header->isNewRecord ? 'Draft' : $movementIn->header->status, 'readonly' => true)); ?>
+                            <?php echo $form->textField($movementIn->header, 'status', array(
+                                'value' => $movementIn->header->isNewRecord ? 'Draft' : $movementIn->header->status, 
+                                'readonly' => true,
+                            )); ?>
                             <?php echo $form->error($movementIn->header, 'status'); ?>
                         </div>
                     </div>
@@ -109,7 +101,9 @@
                             <?php echo $form->labelEx($movementIn->header, 'movement_type', array('class' => 'prefix')); ?>
                         </div>
                         <div class="small-8 columns">
-                            <?php echo CHtml::encode($movementIn->header->getMovementType($movementIn->header->movement_type)); ?>
+                            <?php echo CHtml::textField('MovementType', $movementIn->header->getMovementType($movementIn->header->movement_type), array(
+                                'readonly' => true,
+                            )); ?>
                             <?php echo $form->error($movementIn->header, 'movement_type'); ?>
                         </div>
                     </div>
@@ -149,7 +143,7 @@
                         <div class="field">
                             <div class="row collapse">
                                 <div class="small-4 columns">
-                                    <label>Reference Type</label>
+                                    <?php echo $form->labelEx($movementIn->header, 'Reference Type', array('class' => 'prefix')); ?>
                                 </div>
                                 <div class="small-8 columns">
                                     <input id="MovementInHeader_reference_type" readonly="readonly" name="MovementInHeader[reference_type]" type="text" value="<?php echo $movementIn->header->receive_item_id == "" ? "" : $type; ?>">
@@ -161,7 +155,7 @@
                         <div class="field">
                             <div class="row collapse">
                                 <div class="small-4 columns">
-                                    <label>Reference #</label>
+                                    <?php echo $form->labelEx($movementIn->header, 'Reference #', array('class' => 'prefix')); ?>
                                 </div>
                                 <div class="small-8 columns">
                                     <input id="MovementInHeader_reference_number" readonly="readonly" name="MovementInHeader[reference_number]" type="text" value="<?php echo $movementIn->header->receive_item_id == "" ? "" : $requestNumber; ?>">
@@ -207,7 +201,7 @@
                     <div class="detail" id="detail_div">
                         <?php $this->renderPartial('_detail', array(
                             'movementIn' => $movementIn,
-//                            'warehouses' => $warehouses,
+                            'yearList' => $yearList,
                         )); ?>
                     </div>
                 </div>	

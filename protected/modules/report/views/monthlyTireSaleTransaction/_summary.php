@@ -13,6 +13,13 @@
 <table>
     <thead style="position: sticky; top: 0">
         <tr>
+            <th colspan="6"></th>
+            <?php foreach ($branches as $branch): ?>
+                <th style="text-align: center" colspan="3"><?php echo CHtml::encode(CHtml::value($branch, 'code')); ?></th>
+            <?php endforeach; ?>
+            <th></th>
+        </tr>
+        <tr>
             <th style="text-align: center">ID</th>
             <th style="text-align: center">Code</th>
             <th style="text-align: center">Name</th>
@@ -20,7 +27,9 @@
             <th style="text-align: center">Category</th>
             <th style="text-align: center">Unit</th>
             <?php foreach ($branches as $branch): ?>
-                <th style="text-align: center"><?php echo CHtml::encode(CHtml::value($branch, 'code')); ?></th>
+                <?php foreach (range($yearNow - 2, $yearNow) as $year): ?>
+                    <th style="text-align: center"><?php echo CHtml::encode($year); ?></th>
+                <?php endforeach; ?>
             <?php endforeach; ?>
             <th style="text-align: center">Total</th>
         </tr>
@@ -47,23 +56,25 @@
                 <td><?php echo CHtml::encode(CHtml::value($product, 'unit.name')); ?></td>
                 
                 <?php foreach ($branches as $branch): ?>
-                    <?php $saleQuantity = '0'; ?>
-                    <?php foreach ($tireSaleTotalQuantities as $i => $tireSaleTotalQuantity): ?>
-                        <?php if ($tireSaleTotalQuantity['branch_id'] == $branch->id): ?>
-                            <?php $saleQuantity = CHtml::value($tireSaleTotalQuantities[$i], 'total_quantity'); ?>
-                            <?php break; ?>
-                        <?php endif; ?>
+                    <?php foreach (range($yearNow - 2, $yearNow) as $year): ?>
+                        <?php $saleQuantity = '0'; ?>
+                        <?php foreach ($tireSaleTotalQuantities as $i => $tireSaleTotalQuantity): ?>
+                            <?php if ($tireSaleTotalQuantity['branch_id'] == $branch->id && $tireSaleTotalQuantity['production_year'] == $year): ?>
+                                <?php $saleQuantity = CHtml::value($tireSaleTotalQuantities[$i], 'total_quantity'); ?>
+                                <?php break; ?>
+                            <?php endif; ?>
+                        <?php endforeach; ?>
+                        <td style="text-align: center">
+                            <?php echo CHtml::link($saleQuantity, array(
+                                '/report/monthlyTireSaleTransaction/transactionInfo', 
+                                'productId' => $product->id, 
+                                'startDate' => $startDate, 
+                                'endDate' => $endDate,
+                                'branchId' => $branch->id,
+                            ), array('target' => '_blank')); ?>
+                        </td>
+                        <?php $totalQuantity += $saleQuantity; ?>
                     <?php endforeach; ?>
-                    <td style="text-align: center">
-                        <?php echo CHtml::link($saleQuantity, array(
-                            '/report/monthlyTireSaleTransaction/transactionInfo', 
-                            'productId' => $product->id, 
-                            'startDate' => $startDate, 
-                            'endDate' => $endDate,
-                            'branchId' => $branch->id,
-                        ), array('target' => '_blank')); ?>
-                    </td>
-                    <?php $totalQuantity += $saleQuantity; ?>
                 <?php endforeach; ?>
                 <td style="text-align: center">
                     <?php echo CHtml::link($totalQuantity, array(

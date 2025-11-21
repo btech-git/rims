@@ -28,7 +28,7 @@
                     <td><?php echo $product->product->manufacturer_code; ?></td>
                     <td><?php echo $product->product->name; ?></td>
                     <td><?php echo $product->quantity; ?></td>
-                    <td><?php echo $product->unit->name; ?></td>
+                    <td><?php echo CHtml::encode(CHtml::value($product, 'product.unit.name')); ?></td>
                     <?php if (Yii::app()->user->checkAccess('director')): ?>
                         <td><?php echo number_format($product->hpp,2); ?></td>
                     <?php endif; ?>

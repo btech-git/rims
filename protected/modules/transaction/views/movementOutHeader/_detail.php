@@ -5,8 +5,7 @@
                 <th class="required">ID</th>
                 <th class="required">Product</th>
                 <th>Code</th>
-                <th>Kategori</th>
-                <th>Brand</th>
+                <th>Tahun</th>
                 <th class="required">Warehouse</th>
                 <th class="required">Qty Stock</th>
                 <th class="required">Satuan Stock</th>
@@ -28,23 +27,23 @@
                         <?php echo CHtml::activeHiddenField($detail, "[$i]registration_product_id"); ?>
                         <?php echo CHtml::activeHiddenField($detail, "[$i]material_request_detail_id"); ?>
                         <?php echo CHtml::activeHiddenField($detail, "[$i]product_id"); ?>
-                        <?php echo CHtml::activeTextField($detail, "[$i]product_name", array('size' => 20, 'maxlength' => 20, 'readonly' => true, 'value' => $detail->product_id != "" ? $detail->product->name : '')); ?>
+                        <?php echo CHtml::activeTextField($detail, "[$i]product_name", array(
+                            'size' => 20, 
+                            'maxlength' => 20, 
+                            'readonly' => true, 
+                            'value' => $detail->product_id != "" ? $detail->product->name : ''
+                        )); ?>
                     </td>
                     <td><?php echo CHtml::encode(CHtml::value($product, 'manufacturer_code')); ?></td>
                     <td>
-                        <?php echo CHtml::encode(CHtml::value($product, 'productMasterCategory.name')); ?> - 
-                        <?php echo CHtml::encode(CHtml::value($product, 'productSubMasterCategory.name')); ?> - 
-                        <?php echo CHtml::encode(CHtml::value($product, 'productSubCategory.name')); ?>
-                    </td>
-                    <td>
-                        <?php echo CHtml::encode(CHtml::value($product, 'brand.name')); ?> - 
-                        <?php echo CHtml::encode(CHtml::value($product, 'subBrand.name')); ?> - 
-                        <?php echo CHtml::encode(CHtml::value($product, 'subBrandSeries.name')); ?>
+                        <?php echo CHtml::activeDropdownList($detail, "[$i]production_year", $yearList, array(
+                            'empty' => '-- Pilih Tahun --', 
+                            'disabled' => $product->product_sub_master_category_id != 26,
+                        )); ?>
                     </td>
                     <td>
                         <?php echo CHtml::activeHiddenField($detail, "[$i]warehouse_id"); ?>
                         <?php echo CHtml::encode(CHtml::value($detail, "warehouse.code")); ?>
-                        <?php //echo CHtml::activeDropDownList($detail, "[$i]warehouse_id", CHtml::listData($warehouses, 'id', 'name'), array('prompt' => '[--Select Warehouse--]', 'readonly' => 'readonly')); ?>
                     </td>
                     <td>
                         <?php echo CHtml::activeHiddenField($detail, "[$i]quantity_stock"); ?>
@@ -60,22 +59,22 @@
                     </td>
                     <td>
                         <?php if ($movementOut->header->isNewRecord): ?>
-                        <?php echo CHtml::activeTextField($detail, "[$i]quantity", array(
-                            'class' => 'qtyleft_input productID_' . $detail->product_id, 
-                            'rel' => $detail->product_id,
-                            'onchange'=> '
-                                var qty = +jQuery("#MovementOutDetail_'.$i.'_quantity").val();
-                                var temp = +jQuery("#MovementOutDetail_'.$i.'_quantity_transaction").val();
-                                var count = temp - qty;
+                            <?php echo CHtml::activeTextField($detail, "[$i]quantity", array(
+                                'class' => 'qtyleft_input productID_' . $detail->product_id, 
+                                'rel' => $detail->product_id,
+                                'onchange'=> '
+                                    var qty = +jQuery("#MovementOutDetail_'.$i.'_quantity").val();
+                                    var temp = +jQuery("#MovementOutDetail_'.$i.'_quantity_transaction").val();
+                                    var count = temp - qty;
 
-                                if (count < 0) {
-                                    alert("QTY Movement could not be less than QTY LEFT.");
-                                    $( "#save" ).prop( "disabled", true );
-                                } else {
-                                    $( "#save" ).prop( "disabled", false );
-                                }
-                            ',
-                        )); ?>
+                                    if (count < 0) {
+                                        alert("QTY Movement could not be less than QTY LEFT.");
+                                        $( "#save" ).prop( "disabled", true );
+                                    } else {
+                                        $( "#save" ).prop( "disabled", false );
+                                    }
+                                ',
+                            )); ?>
                         <?php else: ?>
                             <?php echo CHtml::activeTextField($detail, "[$i]quantity"); ?> 
                         <?php endif; ?>
@@ -96,18 +95,16 @@
                         )); ?>
                     </td>
                 </tr>	
-<!--                <tr>
+                <tr>
                     <td colspan="12">
-                        <?php /*
-                            $inventory = Inventory::model()->findByAttributes(array('product_id' => $detail->product_id, 'warehouse_id' => $detail->warehouse_id));
-                            $stock = !empty($inventory) ? $inventory->total_stock : 0;
-                        ?>
-                            <?php if ($stock < 0): ?>
-                                <?php echo $detail->warehouse->name . '- ( ' . $stock . ' )'; ?>
-                            <?php endif;*/ ?>
-                        <?php //endforeach; ?>
+                        <?php echo CHtml::encode(CHtml::value($product, 'productMasterCategory.name')); ?> - 
+                        <?php echo CHtml::encode(CHtml::value($product, 'productSubMasterCategory.name')); ?> - 
+                        <?php echo CHtml::encode(CHtml::value($product, 'productSubCategory.name')); ?> || 
+                        <?php echo CHtml::encode(CHtml::value($product, 'brand.name')); ?> - 
+                        <?php echo CHtml::encode(CHtml::value($product, 'subBrand.name')); ?> - 
+                        <?php echo CHtml::encode(CHtml::value($product, 'subBrandSeries.name')); ?>
                     </td>
-                </tr>-->
+                </tr>
             <?php endforeach; ?>
         </tbody>
     </table>

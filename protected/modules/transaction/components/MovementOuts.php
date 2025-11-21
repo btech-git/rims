@@ -131,7 +131,7 @@ class MovementOuts extends CComponent {
                         $detail->return_order_detail_id = null;
                         $detail->registration_product_id = $registrationDetail->id;
                         $detail->product_id = $registrationDetail->product_id;
-                        $detail->unit_id = $registrationDetail->unit_id;
+                        $detail->unit_id = $registrationDetail->product->unit_id;
                         $detail->warehouse_id = $warehouse->id; //$warehouseBranchProductCategory === null ? null : $warehouseBranchProductCategory->warehouse_id;
                         $detail->quantity_transaction = $registrationDetail->quantity_movement_left;
                         $detail->quantity_stock = $registrationDetail->product->getTotalStock($warehouse->id);
@@ -207,9 +207,9 @@ class MovementOuts extends CComponent {
     public function validate() {
         $valid = $this->header->validate();
 
-        if ($this->header->isNewRecord && $this->header->movement_type !== 4) {
-            $valid = $this->validateDetailsQuantityStock() && $valid;
-        }
+//        if ($this->header->isNewRecord && $this->header->movement_type !== 4) {
+//            $valid = $this->validateDetailsQuantityStock() && $valid;
+//        }
 
         if (count($this->details) > 0) {
             foreach ($this->details as $detail) {
@@ -227,7 +227,7 @@ class MovementOuts extends CComponent {
         $valid = true;
         
         foreach ($this->details as $detail) {
-            if ($detail->quantity_stock <= 0) {
+            if ($detail->quantity_stock < 0) {
                 $valid = false;
                 $this->header->addError('error', 'Quantity stok tidak mencukupi!');
             } else if ($detail->unit_id !== $detail->product->unit_id) {

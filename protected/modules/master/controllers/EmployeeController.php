@@ -365,8 +365,16 @@ class EmployeeController extends Controller {
     public function actionIndex() {
         $employeeBirthdayList = Employee::getEmployeeBirthdayList();
         
+        $employeeBirthdayData = array();
+        foreach ($employeeBirthdayList as $employeeBirthdayItem) {
+            if (!isset($employeeBirthdayData[$employeeBirthdayItem['birth_month']])) {
+                $employeeBirthdayData[$employeeBirthdayItem['birth_month']] = array();
+            }
+            $employeeBirthdayData[$employeeBirthdayItem['birth_month']][] = $employeeBirthdayItem;
+        }
+        
         $this->render('index', array(
-            'employeeBirthdayList' => $employeeBirthdayList,
+            'employeeBirthdayData' => $employeeBirthdayData,
         ));
     }
 

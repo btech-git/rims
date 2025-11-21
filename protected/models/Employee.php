@@ -354,12 +354,13 @@ class Employee extends CActiveRecord {
     }
     
     public static function getEmployeeBirthdayList() {
-        $sql = "SELECT e.id_card, e.name, e.mobile_phone_number, d.name AS division, p.name AS position, l.name AS level, e.employment_type, e.birth_date
+        $sql = "SELECT MONTH(e.birth_date) as birth_month, e.id_card, e.name, e.mobile_phone_number, d.name AS division, p.name AS position, l.name AS level, e.employment_type, e.birth_date
                 FROM " . Employee::model()->tableName() . " e 
                 INNER JOIN " . Division::model()->tableName() . " d ON d.id = e.division_id
                 INNER JOIN " . Position::model()->tableName() . " p ON p.id = e.position_id
                 INNER JOIN " . Level::model()->tableName() . " l ON l.id = e.level_id
-                WHERE MONTH(e.birth_date) = MONTH(NOW()) AND e.status = 'Active'";
+                WHERE e.status = 'Active'
+                ORDER BY birth_month ASC, DAY(e.birth_date)ASC, YEAR(e.birth_date)ASC";
                 
         $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true);
         

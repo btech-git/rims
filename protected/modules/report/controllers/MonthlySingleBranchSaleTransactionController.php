@@ -30,8 +30,8 @@ class MonthlySingleBranchSaleTransactionController extends Controller {
         $branchId = (isset($_GET['BranchId'])) ? $_GET['BranchId'] : '';
         
         $monthlySingleBranchSaleReport = InvoiceHeader::getMonthlySingleBranchSaleReport($year, $month, $branchId);
-        
         $monthlySingleBranchSaleProductReport = InvoiceDetail::getMonthlySingleBranchSaleProductReport($year, $month, $branchId);
+        $monthlySingleBranchSaleOilQuantityReport = InvoiceDetail::getMonthlySingleBranchSaleOilQuantityReport($year, $month, $branchId);
         
         $monthlySingleBranchSaleReportData = array();
         foreach ($monthlySingleBranchSaleReport as $monthlySingleBranchSaleReportItem) {
@@ -41,6 +41,25 @@ class MonthlySingleBranchSaleTransactionController extends Controller {
         $monthlySingleBranchSaleProductReportData = array();
         foreach ($monthlySingleBranchSaleProductReport as $monthlySingleBranchSaleProductReportItem) {
             $monthlySingleBranchSaleProductReportData[$monthlySingleBranchSaleProductReportItem['day']] = $monthlySingleBranchSaleProductReportItem;
+        }
+        
+        $unitConversions = UnitConversion::model()->findAllByAttributes(array('unit_to_id' => 1));
+        $unitConversionFactors = array();
+        foreach ($unitConversions as $unitConversion) {
+            $unitConversionFactors[$unitConversion->unit_from_id] = $unitConversion->multiplier;
+        }
+        
+        $monthlySingleBranchSaleOilQuantityReportData = array();
+        foreach ($monthlySingleBranchSaleOilQuantityReport as $monthlySingleBranchSaleOilQuantityReportItem) {
+            if (!isset($monthlySingleBranchSaleOilQuantityReportData[$monthlySingleBranchSaleOilQuantityReportItem['day']])) {
+                $monthlySingleBranchSaleOilQuantityReportData[$monthlySingleBranchSaleOilQuantityReportItem['day']] = '0.00';
+            }
+            $multiplier = 1;
+            if (isset($unitConversionFactors[$monthlySingleBranchSaleOilQuantityReportItem['unit_id']])) {
+                $multiplier = $unitConversionFactors[$monthlySingleBranchSaleOilQuantityReportItem['unit_id']];
+            }
+            $quantity = $multiplier * $monthlySingleBranchSaleOilQuantityReportItem['quantity'];
+            $monthlySingleBranchSaleOilQuantityReportData[$monthlySingleBranchSaleOilQuantityReportItem['day']] += $quantity;
         }
         
         $yearList = array();
@@ -53,12 +72,13 @@ class MonthlySingleBranchSaleTransactionController extends Controller {
         }
         
         if (isset($_GET['SaveExcel'])) {
-            $this->saveToExcel($monthlySingleBranchSaleReportData, $monthlySingleBranchSaleProductReportData, $month, $year, $branchId);
+            $this->saveToExcel($monthlySingleBranchSaleReportData, $monthlySingleBranchSaleProductReportData, $monthlySingleBranchSaleOilQuantityReportData, $month, $year, $branchId);
         }
         
         $this->render('summary', array(
             'monthlySingleBranchSaleReportData' => $monthlySingleBranchSaleReportData,
             'monthlySingleBranchSaleProductReportData' => $monthlySingleBranchSaleProductReportData,
+            'monthlySingleBranchSaleOilQuantityReportData' => $monthlySingleBranchSaleOilQuantityReportData,
             'yearList' => $yearList,
             'year' => $year,
             'month' => $month,
@@ -66,7 +86,7 @@ class MonthlySingleBranchSaleTransactionController extends Controller {
         ));
     }
     
-    protected function saveToExcel($monthlySingleBranchSaleReportData, $monthlySingleBranchSaleProductReportData, $month, $year, $branchId) {
+    protected function saveToExcel($monthlySingleBranchSaleReportData, $monthlySingleBranchSaleProductReportData, $monthlySingleBranchSaleOilQuantityReportData, $month, $year, $branchId) {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
 
@@ -157,7 +177,8 @@ class MonthlySingleBranchSaleTransactionController extends Controller {
                 $worksheet->setCellValue("K{$counter}", $totalServicePerCustomer);
                 $worksheet->setCellValue("L{$counter}", $totalPartsPerCustomer);
                 $worksheet->setCellValue("M{$counter}", $detailItem['tire_quantity']);
-                $worksheet->setCellValue("N{$counter}", $detailItem['oil_quantity']);
+                $oilQuantity = isset($monthlySingleBranchSaleOilQuantityReportData[$dataItem['day']]) ? $monthlySingleBranchSaleOilQuantityReportData[$dataItem['day']] : 0;
+                $worksheet->setCellValue("N{$counter}", $oilQuantity);
                 $worksheet->setCellValue("O{$counter}", $detailItem['accessories_quantity']);
                 $worksheet->setCellValue("P{$counter}", $averageTire);
                 $worksheet->setCellValue("Q{$counter}", $averageOil);
@@ -172,7 +193,7 @@ class MonthlySingleBranchSaleTransactionController extends Controller {
                 $totalServiceSum += $dataItem['total_service'];
                 $totalProductSum += $dataItem['total_product'];
                 $tireQuantitySum += $detailItem['tire_quantity'];
-                $oilQuantitySum += $detailItem['oil_quantity'];
+                $oilQuantitySum += $oilQuantity;
                 $accessoriesQuantitySum += $detailItem['accessories_quantity'];
                 $averageTireSum += $averageTire;
                 $averageOilSum += $averageOil;

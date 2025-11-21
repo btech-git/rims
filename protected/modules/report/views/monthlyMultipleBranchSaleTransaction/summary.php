@@ -59,14 +59,10 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                 <hr />
 
                 <div class="relative">
-                    <div class="reportDisplay">
-                        <?php //echo ReportHelper::summaryText($dailyMultipleEmployeeSaleReport->dataProvider); ?>
-                        <?php //echo ReportHelper::sortText($transaksiPembelianSummary->dataProvider->sort, array('Jenis Persediaan', 'Tanggal SO', 'Pelanggan')); ?>
-                    </div>
-
                     <?php $this->renderPartial('_summary', array(
                         'monthlyMultipleBranchSaleReport' => $monthlyMultipleBranchSaleReport,
                         'monthlyMultipleBranchSaleProductReportData' => $monthlyMultipleBranchSaleProductReportData,
+                        'monthlyMultipleBranchSaleOilQuantityReportData' => $monthlyMultipleBranchSaleOilQuantityReportData,
                         'year' => $year,
                         'month' => $month,
                     )); ?>

@@ -107,7 +107,7 @@ Yii::app()->clientScript->registerCss('_report', '
                 <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $totalServicePerCustomer)); ?></td>
                 <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $totalPartsPerCustomer)); ?></td>
                 <td style="text-align: center">
-                    <?php echo CHtml::link(CHtml::encode($detailItem['tire_quantity']), array(
+                    <?php echo CHtml::link(CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $detailItem['tire_quantity'])), array(
                         '/report/branchSaleTransactionInfo/detailInfo', 
                         'branchId' => $dataItem['branch_id'], 
                         'startDate' => $startDate, 
@@ -116,7 +116,8 @@ Yii::app()->clientScript->registerCss('_report', '
                     ), array('target' => '_blank')); ?>
                 </td>
                 <td style="text-align: center">
-                    <?php echo CHtml::link(CHtml::encode($detailItem['oil_quantity']), array(
+                    <?php $oilQuantity = isset($yearlyMultipleBranchSaleOilQuantityReportData[$dataItem['branch_id']]) ? $yearlyMultipleBranchSaleOilQuantityReportData[$dataItem['branch_id']] : 0; ?>
+                    <?php echo CHtml::link(CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $oilQuantity)), array(
                         '/report/branchSaleTransactionInfo/detailInfo', 
                         'branchId' => $dataItem['branch_id'], 
                         'startDate' => $startDate, 
@@ -125,7 +126,7 @@ Yii::app()->clientScript->registerCss('_report', '
                     ), array('target' => '_blank')); ?>
                 </td>
                 <td style="text-align: center">
-                    <?php echo CHtml::link(CHtml::encode($detailItem['accessories_quantity']), array(
+                    <?php echo CHtml::link(CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $detailItem['accessories_quantity'])), array(
                         '/report/branchSaleTransactionInfo/detailInfo', 
                         'branchId' => $dataItem['branch_id'], 
                         'startDate' => $startDate, 
@@ -146,7 +147,7 @@ Yii::app()->clientScript->registerCss('_report', '
             <?php $totalServiceSum += $dataItem['total_service']; ?>
             <?php $totalProductSum += $dataItem['total_product']; ?>
             <?php $tireQuantitySum += $detailItem['tire_quantity']; ?>
-            <?php $oilQuantitySum += $detailItem['oil_quantity']; ?>
+            <?php $oilQuantitySum += $oilQuantity; ?>
             <?php $accessoriesQuantitySum += $detailItem['accessories_quantity']; ?>
             <?php $averageTireSum += $averageTire; ?>
             <?php $averageOilSum += $averageOil; ?>
@@ -167,9 +168,9 @@ Yii::app()->clientScript->registerCss('_report', '
             <td></td>
             <td></td>
             <td></td>
-            <td style="text-align: center"><?php echo CHtml::encode($tireQuantitySum); ?></td>
-            <td style="text-align: center"><?php echo CHtml::encode($oilQuantitySum); ?></td>
-            <td style="text-align: center"><?php echo CHtml::encode($accessoriesQuantitySum); ?></td>
+            <td style="text-align: center"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $tireQuantitySum)); ?></td>
+            <td style="text-align: center"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $oilQuantitySum)); ?></td>
+            <td style="text-align: center"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $accessoriesQuantitySum)); ?></td>
             <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $averageTireSum)); ?></td>
             <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $averageOilSum)); ?></td>
             <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $averageAccessoriesSum)); ?></td>

@@ -19,6 +19,7 @@
  * @property string $quantity_receive_left
  * @property string $quantity_stock
  * @property integer $unit_id
+ * @property integer $production_year
  *
  * The followings are the available model relations:
  * @property MovementOutHeader $movementOutHeader
@@ -52,11 +53,11 @@ class MovementOutDetail extends CActiveRecord {
         // will receive user inputs.
         return array(
             array('movement_out_header_id, product_id, unit_id, quantity_transaction, warehouse_id, quantity', 'required'),
-            array('movement_out_header_id, delivery_order_detail_id, return_order_detail_id, material_request_detail_id, registration_product_id, registration_service_id, unit_id, product_id, warehouse_id', 'numerical', 'integerOnly' => true),
+            array('movement_out_header_id, delivery_order_detail_id, return_order_detail_id, material_request_detail_id, registration_product_id, registration_service_id, unit_id, product_id, warehouse_id, production_year', 'numerical', 'integerOnly' => true),
             array('quantity_transaction, quantity, quantity_stock, quantity_receive, quantity_receive_left', 'length', 'max' => 10),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, movement_out_header_id, delivery_order_detail_id, return_order_detail_id, material_request_detail_id, registration_product_id, registration_service_id, unit_id, product_id, quantity_transaction, warehouse_id, quantity, quantity_receive, quantity_receive_left, quantity_stock', 'safe', 'on' => 'search'),
+            array('id, movement_out_header_id, delivery_order_detail_id, return_order_detail_id, material_request_detail_id, registration_product_id, registration_service_id, unit_id, product_id, quantity_transaction, warehouse_id, quantity, quantity_receive, quantity_receive_left, quantity_stock, production_year', 'safe', 'on' => 'search'),
         );
     }
 
@@ -99,6 +100,7 @@ class MovementOutDetail extends CActiveRecord {
             'quantity' => 'Quantity',
             'quantity_receive' => 'Quantity Receive',
             'quantity_receive_left' => 'Quantity Receive Left',
+            'production_year' => 'Production Year',
         );
     }
 
@@ -133,6 +135,7 @@ class MovementOutDetail extends CActiveRecord {
         $criteria->compare('quantity', $this->quantity);
         $criteria->compare('quantity_receive', $this->quantity_receive);
         $criteria->compare('quantity_receive_left', $this->quantity_receive_left);
+        $criteria->compare('production_year', $this->production_year);
 
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,

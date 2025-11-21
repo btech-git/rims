@@ -1,6 +1,6 @@
 <?php
 
-class CustomerTopSaleTransactionController extends Controller {
+class YearlyMultipleVehicleSaleTransactionController extends Controller {
 
     public function filters() {
         return array(
@@ -27,8 +27,7 @@ class CustomerTopSaleTransactionController extends Controller {
         $year = (isset($_GET['Year'])) ? $_GET['Year'] : $yearNow;
         $branchId = (isset($_GET['BranchId'])) ? $_GET['BranchId'] : '';
         
-        $customerCompanyTopSaleReport = InvoiceHeader::getCustomerCompanyTopSaleReport($year, $branchId);
-        $customerIndividualTopSaleReport = InvoiceHeader::getCustomerIndividualTopSaleReport($year, $branchId);
+        $yearlyMultipleVehicleSaleReport = InvoiceHeader::getMultipleVehicleSaleReport($year, $branchId);
         
         $yearList = array();
         for ($y = $yearNow - 4; $y <= $yearNow; $y++) {
@@ -40,12 +39,11 @@ class CustomerTopSaleTransactionController extends Controller {
         }
         
         if (isset($_GET['SaveExcel'])) {
-            $this->saveToExcel($customerCompanyTopSaleReport, $customerIndividualTopSaleReport, $year, $branchId);
+            $this->saveToExcel($yearlyMultipleVehicleSaleReport, $year, $branchId);
         }
         
         $this->render('summary', array(
-            'customerCompanyTopSaleReport' => $customerCompanyTopSaleReport,
-            'customerIndividualTopSaleReport' => $customerIndividualTopSaleReport,
+            'yearlyMultipleVehicleSaleReport' => $yearlyMultipleVehicleSaleReport,
             'yearList' => $yearList,
             'year' => $year,
             'branchId' => $branchId,

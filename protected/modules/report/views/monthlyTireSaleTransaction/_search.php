@@ -87,8 +87,8 @@
                 <td>ID</td>
                 <td>Code</td>
                 <td>Name</td>
-                <td>Tanggal Mulai</td>
-                <td>Tanggal Akhir</td>
+                <td>Bulan</td>
+                <td>Tahun</td>
             </tr>
         </thead>
 

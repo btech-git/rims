@@ -154,9 +154,26 @@ class Invoices extends CComponent {
         $this->header->total_discount = $this->getTotalDiscount();
         $valid = $this->header->save();
 
+        $movementOutHeaders = MovementOutHeader::model()->findAllByAttributes(array(
+            'registration_transaction_id' => $this->header->registration_transaction_id,
+        ));
+        
         //save request detail
         foreach ($this->details as $detail) {
+            $productionYear = 0;
+            foreach ($movementOutHeaders as $movementOutHeader) {
+                foreach ($movementOutHeader->movementOutDetails as $movementOutDetail) {
+                    if ($movementOutDetail->product_id === $detail->product_id && (int) $movementOutDetail->production_year > 0) {
+                        $productionYear = $movementOutDetail->production_year;
+                        break;
+                    }
+                }
+                if ($productionYear > 0) {
+                    break;
+                }
+            }
             $detail->invoice_id = $this->header->id;
+            $detail->production_year = $productionYear;
             $valid = $detail->save(false) && $valid;
         }
 
