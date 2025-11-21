@@ -33,29 +33,9 @@ class SaleInvoiceProjectController extends Controller {
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
         $branchId = (isset($_GET['BranchId'])) ? $_GET['BranchId'] : '';
         $customerId = (isset($_GET['CustomerId'])) ? $_GET['CustomerId'] : '';
-//        $pageSize = (isset($_GET['PageSize'])) ? $_GET['PageSize'] : '';
-//        $currentPage = (isset($_GET['page'])) ? $_GET['page'] : '';
         $currentSort = (isset($_GET['sort'])) ? $_GET['sort'] : '';
         
         $saleProjectReport = InvoiceHeader::getSaleByProjectReport($startDate, $endDate, $branchId, $customerId);
-//        $saleRetailSummary = new SaleByProjectSummary($customerData->search());
-//        $saleRetailSummary->setupLoading();
-//        $saleRetailSummary->setupPaging($pageSize, $currentPage);
-//        $saleRetailSummary->setupSorting();
-//        $filters = array(
-//            'startDate' => $startDate,
-//            'endDate' => $endDate,
-//            'branchId' => $branchId,
-//        );
-//        $saleRetailSummary->setupFilter($filters);
-//
-//        $customerIds = array_map(function($customer) { return $customer->id; }, $saleRetailSummary->dataProvider->data);
-//        
-//        $saleProjectReport = InvoiceHeader::getSaleByProjectReport($customerIds, $startDate, $endDate, $branchId);
-//        $saleProjectReportData = array();
-//        foreach ($saleProjectReport as $saleProjectReportItem) {
-//            $saleProjectReportData[$saleProjectReportItem['customer_id']][] = $saleProjectReportItem;
-//        }
 
         if (isset($_GET['ResetFilter'])) {
             $this->redirect(array('summary'));
@@ -66,7 +46,7 @@ class SaleInvoiceProjectController extends Controller {
                 'startDate' => $startDate, 
                 'endDate' => $endDate,
                 'branchId' => $branchId,
-                'customer' => $customer,
+                'customerId' => $customerId,
             ));
         }
 
@@ -95,7 +75,7 @@ class SaleInvoiceProjectController extends Controller {
         }
     }
 
-    protected function saveToExcel($dataProvider, array $options = array()) {
+    protected function saveToExcel($saleProjectReport, array $options = array()) {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
 
@@ -108,7 +88,7 @@ class SaleInvoiceProjectController extends Controller {
         $startDate = $options['startDate'];
         $endDate = $options['endDate']; 
         $branchId = $options['branchId']; 
-        $customerData = $options['customerData']; 
+        $customerId = $options['customerId']; 
         
         $documentProperties = $objPHPExcel->getProperties();
         $documentProperties->setCreator('Raperind Motor');
@@ -117,83 +97,77 @@ class SaleInvoiceProjectController extends Controller {
         $worksheet = $objPHPExcel->setActiveSheetIndex(0);
         $worksheet->setTitle('Penjualan Project');
 
-        $worksheet->mergeCells('A1:M1');
-        $worksheet->mergeCells('A2:M2');
-        $worksheet->mergeCells('A3:M3');
+        $worksheet->mergeCells('A1:L1');
+        $worksheet->mergeCells('A2:L2');
+        $worksheet->mergeCells('A3:L3');
 
-        $worksheet->getStyle('A1:M6')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-        $worksheet->getStyle('A1:M6')->getFont()->setBold(true);
+        $worksheet->getStyle('A1:L6')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->getStyle('A1:L6')->getFont()->setBold(true);
 
         $branch = Branch::model()->findByPk($branchId);
+        $customer = Customer::model()->findByPk($customerId);
         $worksheet->setCellValue('A1', 'Raperind Motor ' . CHtml::encode(CHtml::value($branch, 'name')));
-        $worksheet->setCellValue('A2', 'Penjualan Project' . CHtml::encode(CHtml::value($customerData, 'name')));
+        $worksheet->setCellValue('A2', 'Penjualan Project' . CHtml::encode(CHtml::value($customer, 'name')));
         $worksheet->setCellValue('A3', Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($startDate)) . ' - ' . Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($endDate)));
 
-        $worksheet->getStyle('A5:M5')->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle('A5:L5')->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
-        $worksheet->setCellValue('A5', 'Customer');
-        $worksheet->setCellValue('B5', 'COA');
-        $worksheet->setCellValue('C5', 'Penjualan #');
-        $worksheet->setCellValue('D5', 'Tanggal');
-        $worksheet->setCellValue('E5', 'Vehicle');
-        $worksheet->setCellValue('F5', 'Type');
-        $worksheet->setCellValue('G5', 'ID');
-        $worksheet->setCellValue('H5', 'Item');
-        $worksheet->setCellValue('I5', 'Quantity');
-        $worksheet->setCellValue('J5', 'Harga');
-        $worksheet->setCellValue('K5', 'HPP');
-        $worksheet->setCellValue('L5', 'COGS');
-        $worksheet->setCellValue('M5', 'Total Sales');
+        $worksheet->setCellValue('A5', 'Penjualan #');
+        $worksheet->setCellValue('B5', 'Tanggal');
+        $worksheet->setCellValue('C5', 'Customer');
+        $worksheet->setCellValue('D5', 'Vehicle');
+        $worksheet->setCellValue('E5', 'Type');
+        $worksheet->setCellValue('F5', 'ID');
+        $worksheet->setCellValue('G5', 'Item');
+        $worksheet->setCellValue('H5', 'Quantity');
+        $worksheet->setCellValue('I5', 'Harga');
+        $worksheet->setCellValue('J5', 'HPP');
+        $worksheet->setCellValue('K5', 'COGS');
+        $worksheet->setCellValue('L5', 'Total Sales');
 
-        $worksheet->getStyle('A6:M6')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle('A6:L6')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
-        $counter = 8;
-        $grandTotalSale = '0.00';
+        $counter = 7;
+        $totalSale = '0.00';
         $grandTotalCogs = '0.00';
         
-        foreach ($dataProvider->data as $header) {
-            $saleReportData = $header->getSaleByProjectReport($startDate, $endDate, $branchId);
-            if (!empty($saleReportData)) {
-                foreach ($saleReportData as $saleReportRow) {
-                    $quantity = CHtml::encode($saleReportRow['quantity']);
-                    $unitPrice = $saleReportRow['unit_price'];
-                    $cogs = $saleReportRow['hpp'];
-                    $grandTotal = $saleReportRow['total_price'];
-                    $totalCogs = $cogs * $quantity;
-                    $worksheet->getStyle("G{$counter}:L{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
+        foreach ($saleProjectReport as $i => $dataItem) {
+                $quantity = CHtml::encode($dataItem['quantity']);
+                $unitPrice = $dataItem['unit_price'];
+                $cogs = $dataItem['hpp'];
+                $grandTotal = $dataItem['total_price'];
+                $totalCogs = $cogs * $quantity;
+                $worksheet->getStyle("H{$counter}:L{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
 
-                    $worksheet->setCellValue("A{$counter}", CHtml::encode(CHtml::value($header, 'name')));
-                    $worksheet->setCellValue("B{$counter}", CHtml::encode(CHtml::value($header, 'coa.name')));
-                    $worksheet->setCellValue("C{$counter}", CHtml::encode($saleReportRow['invoice_number']));
-                    $worksheet->setCellValue("D{$counter}", CHtml::encode($saleReportRow['invoice_date']));
-                    $worksheet->setCellValue("E{$counter}", CHtml::encode($saleReportRow['plate_number']));
-                    if (empty($saleReportRow['product'])) {
-                        $worksheet->setCellValue("F{$counter}", 'Jasa');
-                        $worksheet->setCellValue("G{$counter}", CHtml::encode($saleReportRow['service_id']));
-                        $worksheet->setCellValue("H{$counter}", CHtml::encode($saleReportRow['service']));
-                    } else {
-                        $worksheet->setCellValue("F{$counter}", 'Parts');
-                        $worksheet->setCellValue("G{$counter}", CHtml::encode($saleReportRow['product_id']));
-                        $worksheet->setCellValue("H{$counter}", CHtml::encode($saleReportRow['product']));
-                    }
-                    $worksheet->setCellValue("I{$counter}", $quantity);
-                    $worksheet->setCellValue("J{$counter}", $unitPrice);
-                    $worksheet->setCellValue("K{$counter}", $cogs);
-                    $worksheet->setCellValue("L{$counter}", $totalCogs);
-                    $worksheet->setCellValue("M{$counter}", $grandTotal);
-                    $counter++;
-                    
-                    $grandTotalSale += $grandTotal;
-                    $grandTotalCogs += $totalCogs;
+                $worksheet->setCellValue("A{$counter}", CHtml::encode($dataItem['invoice_number']));
+                $worksheet->setCellValue("B{$counter}", CHtml::encode($dataItem['invoice_date']));
+                $worksheet->setCellValue("C{$counter}", CHtml::encode($dataItem['customer_name']));
+                $worksheet->setCellValue("D{$counter}", CHtml::encode($dataItem['plate_number']));
+                if (empty($dataItem['product'])) {
+                    $worksheet->setCellValue("E{$counter}", 'Jasa');
+                    $worksheet->setCellValue("F{$counter}", CHtml::encode($dataItem['service_id']));
+                    $worksheet->setCellValue("G{$counter}", CHtml::encode($dataItem['service']));
+                } else {
+                    $worksheet->setCellValue("E{$counter}", 'Parts');
+                    $worksheet->setCellValue("F{$counter}", CHtml::encode($dataItem['product_id']));
+                    $worksheet->setCellValue("G{$counter}", CHtml::encode($dataItem['product']));
                 }
-            }
-        }
-        $worksheet->getStyle("A{$counter}:M{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
-        $worksheet->getStyle("A{$counter}:M{$counter}")->getFont()->setBold(true);
+                $worksheet->setCellValue("H{$counter}", $quantity);
+                $worksheet->setCellValue("I{$counter}", $unitPrice);
+                $worksheet->setCellValue("J{$counter}", $cogs);
+                $worksheet->setCellValue("K{$counter}", $totalCogs);
+                $worksheet->setCellValue("L{$counter}", $grandTotal);
+                $counter++;
 
-        $worksheet->setCellValue("K{$counter}", 'TOTAL');
-        $worksheet->setCellValue("L{$counter}", CHtml::encode($grandTotalCogs));
-        $worksheet->setCellValue("M{$counter}", CHtml::encode($grandTotalSale));
+                $totalSale += $grandTotal;
+                $grandTotalCogs += $totalCogs;
+        }
+        $worksheet->getStyle("A{$counter}:L{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A{$counter}:L{$counter}")->getFont()->setBold(true);
+
+        $worksheet->setCellValue("J{$counter}", 'TOTAL');
+        $worksheet->setCellValue("K{$counter}", CHtml::encode($grandTotalCogs));
+        $worksheet->setCellValue("L{$counter}", CHtml::encode($totalSale));
 
         for ($col = 'A'; $col !== 'Z'; $col++) {
             $objPHPExcel->getActiveSheet()
@@ -204,7 +178,7 @@ class SaleInvoiceProjectController extends Controller {
         ob_end_clean();
 
         header('Content-type: application/vnd.ms-excel');
-        header('Content-Disposition: attachment;filename="Penjualan Project.xls"');
+        header('Content-Disposition: attachment;filename="penjualan_project.xls"');
         header('Cache-Control: max-age=0');
 
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');

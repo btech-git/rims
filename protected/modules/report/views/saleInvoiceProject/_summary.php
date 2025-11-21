@@ -26,23 +26,23 @@ Yii::app()->clientScript->registerCss('_report', '
 <table class="report">
     <thead style="position: sticky; top: 0">
         <tr id="header1">
-            <th class="width2-1">Penjualan #</th>
-            <th class="width2-2">Tanggal</th>
-            <th class="width2-3">Customer</th>
-            <th class="width2-4">Vehicle</th>
-            <th class="width2-5">Type</th>
-            <th class="width2-6">ID</th>
-            <th class="width2-7">Item</th>
-            <th class="width2-8">Quantity</th>
-            <th class="width2-9">Harga</th>
-            <th class="width2-10">HPP</th>
-            <th class="width2-11">COGS</th>
-            <th class="width2-12">Total</th>
+            <th class="width1-1">Penjualan #</th>
+            <th class="width1-2">Tanggal</th>
+            <th class="width1-3">Customer</th>
+            <th class="width1-4">Vehicle</th>
+            <th class="width1-5">Type</th>
+            <th class="width1-6">ID</th>
+            <th class="width1-7">Item</th>
+            <th class="width1-8">Quantity</th>
+            <th class="width1-9">Harga</th>
+            <th class="width1-10">HPP</th>
+            <th class="width1-11">COGS</th>
+            <th class="width1-12">Total Sales</th>
         </tr>
     </thead>
     <tbody>
-        <?php $totalSale = 0.00; ?>
-        <?php $grandTotalCogs = 0.00; ?>
+        <?php $totalSale = '0.00'; ?>
+        <?php $grandTotalCogs = '0.00'; ?>
         <?php foreach ($saleProjectReport as $i => $dataItem): ?>
             <?php $quantity = CHtml::encode($dataItem['quantity']); ?>
             <?php $unitPrice = $dataItem['unit_price']; ?>
