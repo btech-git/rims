@@ -48,21 +48,11 @@ Yii::app()->clientScript->registerCss('_report', '
         <?php $accountNumber = $generalLedgerSummary->dataProvider->pagination->getCurrentPage(false) * $generalLedgerSummary->dataProvider->pagination->pageSize + 1; ?>
         <?php foreach ($generalLedgerSummary->dataProvider->data as $i => $header): ?>
             <?php $beginningBalance = isset($ledgerBeginningBalanceData[$header->id]) ? $ledgerBeginningBalanceData[$header->id] : '0.00'; ?>
-            <?php /*$nonZeroValueExists = false; ?>
-            <?php if ((int)$beginningBalance > 0): ?>
-                <?php $nonZeroValueExists = true; ?>
-                <?php break; ?>
-            <?php endif; */?>
-            <?php //if ((int)$beginningBalance !== 0): ?>
                 <tr class="items1">
                     <td><?php echo $accountNumber++; ?></td>
                     <td><?php echo CHtml::encode(CHtml::value($header, 'id')); ?> - <?php echo CHtml::encode(CHtml::value($header, 'name')); ?></td>
                     <td style="text-align: right; font-weight: bold">
-                        <?php //if ($header->coa_category_id > 5 && $header->coa_category_id < 11): ?>
-                            <?php //echo '0'; ?>
-                        <?php //else: ?>
-                            <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $beginningBalance)); ?>
-                        <?php //endif; ?>
+                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $beginningBalance)); ?>
                     </td>
                 </tr>
 

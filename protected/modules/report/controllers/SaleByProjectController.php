@@ -24,8 +24,8 @@ class SaleByProjectController extends Controller {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
 
-        $customer = Search::bind(new Customer('search'), isset($_GET['Customer']) ? $_GET['Customer'] : array());
-        $customerDataProvider = $customer->search();
+        $customerData = Search::bind(new Customer('search'), isset($_GET['Customer']) ? $_GET['Customer'] : array());
+        $customerDataProvider = $customerData->search();
         $customerDataProvider->criteria->compare('t.customer_type', 'Company');
         $customerDataProvider->pagination->pageVar = 'page_dialog';
 
@@ -36,9 +36,7 @@ class SaleByProjectController extends Controller {
         $currentPage = (isset($_GET['page'])) ? $_GET['page'] : '';
         $currentSort = (isset($_GET['sort'])) ? $_GET['sort'] : '';
         
-        $customerData = Customer::model()->findByPk($customer->id);
-
-        $saleRetailSummary = new SaleByProjectSummary($customer->search());
+        $saleRetailSummary = new SaleByProjectSummary($customerData->search());
         $saleRetailSummary->setupLoading();
         $saleRetailSummary->setupPaging($pageSize, $currentPage);
         $saleRetailSummary->setupSorting();
@@ -48,6 +46,14 @@ class SaleByProjectController extends Controller {
             'branchId' => $branchId,
         );
         $saleRetailSummary->setupFilter($filters);
+
+        $customerIds = array_map(function($customer) { return $customer->id; }, $saleRetailSummary->dataProvider->data);
+        
+        $saleProjectReport = InvoiceHeader::getSaleByProjectReport($customerIds, $startDate, $endDate, $branchId);
+        $saleProjectReportData = array();
+        foreach ($saleProjectReport as $saleProjectReportItem) {
+            $saleProjectReportData[$saleProjectReportItem['customer_id']][] = $saleProjectReportItem;
+        }
 
         if (isset($_GET['ResetFilter'])) {
             $this->redirect(array('summary'));
@@ -64,13 +70,13 @@ class SaleByProjectController extends Controller {
 
         $this->render('summary', array(
             'saleRetailSummary' => $saleRetailSummary,
-            'customer' => $customer,
+            'saleProjectReportData' => $saleProjectReportData,
+            'customerData' => $customerData,
             'customerDataProvider' => $customerDataProvider,
             'startDate' => $startDate,
             'endDate' => $endDate,
             'branchId' => $branchId,
             'currentSort' => $currentSort,
-            'customerData' => $customerData,
         ));
     }
 

@@ -16,34 +16,6 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
             <div>
                 <div class="myForm">
                     <?php echo CHtml::beginForm(array(''), 'get'); ?>
-<!--                    <div class="row">
-                        <div class="medium-6 columns">
-                            <div class="field">
-                                <div class="row collapse">
-                                    <div class="small-4 columns">
-                                        <span class="prefix">Jumlah per Halaman</span>
-                                    </div>
-                                    <div class="small-8 columns">
-                                        <?php //echo CHtml::textField('PageSize', '', array('size' => 3)); ?>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="medium-6 columns">
-                            <div class="field">
-                                <div class="row collapse">
-                                    <div class="small-4 columns">
-                                        <span class="prefix">Halaman saat ini</span>
-                                    </div>
-                                    <div class="small-8 columns">
-                                        <?php //echo CHtml::textField('page', '', array('size' => 3, 'id' => 'CurrentPage')); ?>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>-->
-                    
                     <div class="row">
                         <div class="medium-6 columns">
                             <div class="field">
@@ -52,14 +24,14 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                         <span class="prefix">Customer</span>
                                     </div>
                                     <div class="small-8 columns">
-                                        <?php echo CHtml::textField('CustomerId', $customerId, array(
+                                        <?php echo CHtml::textField('VehicleId', $vehicleId, array(
                                             'readonly' => true,
-                                            'onclick' => '$("#customer-dialog").dialog("open"); return false;',
-                                            'onkeypress' => 'if (event.keyCode == 13) { $("#customer-dialog").dialog("open"); return false; }',
+                                            'onclick' => '$("#vehicle-dialog").dialog("open"); return false;',
+                                            'onkeypress' => 'if (event.keyCode == 13) { $("#vehicle-dialog").dialog("open"); return false; }',
                                         )); ?>
 
                                         <?php $this->beginWidget('zii.widgets.jui.CJuiDialog', array(
-                                            'id' => 'customer-dialog',
+                                            'id' => 'vehicle-dialog',
                                             // additional javascript options for the dialog plugin
                                             'options' => array(
                                                 'title' => 'Customer',
@@ -70,73 +42,68 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                         )); ?>
 
                                         <?php $this->widget('zii.widgets.grid.CGridView', array(
-                                            'id' => 'customer-grid',
-                                            'dataProvider' => $customerDataProvider,
-                                            'filter' => $customer,
+                                            'id' => 'vehicle-grid',
+                                            'dataProvider' => $vehicleDataProvider,
+                                            'filter' => $vehicle,
                                             'template' => '{items}<div class="clearfix">{summary}{pager}</div>',
                                             'pager'=>array(
                                                'cssFile'=>false,
                                                'header'=>'',
                                             ),
                                             'selectionChanged' => 'js:function(id){
-                                                $("#' . CHtml::activeId($customer, 'id') . '").val($.fn.yiiGridView.getSelection(id));
-                                                $("#customer-dialog").dialog("close");
+                                                $("#VehicleId").val($.fn.yiiGridView.getSelection(id));
+                                                $("#vehicle-dialog").dialog("close");
                                                 if ($.fn.yiiGridView.getSelection(id) == "") {
-                                                    $("#customer_name").html("");
+                                                    $("#vehicle_plate_number").html("");
                                                 } else {
                                                     $.ajax({
                                                         type: "POST",
                                                         dataType: "JSON",
-                                                        url: "' . CController::createUrl('ajaxJsonCustomer') . '",
+                                                        url: "' . CController::createUrl('ajaxJsonVehicle') . '",
                                                         data: $("form").serialize(),
                                                         success: function(data) {
-                                                            $("#customer_name").html(data.customer_name);
+                                                            $("#vehicle_plate_number").html(data.vehicle_plate_number);
                                                         },
                                                     });
                                                 }
                                             }',
                                             'columns' => array(
-                                                'name',
+                                                'plate_number',
                                                 array(
-                                                    'name' => 'email',
-                                                    'value' => 'CHtml::encode(CHtml::value($data, "email"))',
+                                                    'name' => 'car_make_id',
+                                                    'value' => 'CHtml::encode(CHtml::value($data, "carMake.name"))',
                                                 ),
                                                 array(
-                                                    'name' => 'customer_type',
+                                                    'name' => 'car_model_id',
                                                     'filter' => false, 
-                                                    'value' => '$data->customer_type',
+                                                    'value' => '$data->carModel->name',
                                                 ),
                                                 array(
-                                                    'header' => 'COA account',
-                                                    'value' => 'empty($data->coa_id) ? "" : $data->coa->name',
+                                                    'name' => 'car_sub_model_id',
+                                                    'value' => '$data->carSubModel->name',
                                                 ),
                                                 array(
-                                                    'header' => 'PIC',
-                                                    'value' => 'empty($data->customerPics) ? "" : $data->customerPics[0]->name',
+                                                    'name' => 'customer_id',
+                                                    'value' => '$data->customer->name',
                                                 ),
                                             ),
                                         )); ?>
                                         <?php $this->endWidget(); ?>
-                                        <?php echo CHtml::openTag('span', array('id' => 'customer_name')); ?>
-                                        <?php echo CHtml::encode(CHtml::value($customer, 'name')); ?>
+                                        <?php echo CHtml::openTag('span', array('id' => 'vehicle_plate_number')); ?>
+                                        <?php echo CHtml::encode(CHtml::value($vehicle, 'plate_number')); ?>
                                         <?php echo CHtml::closeTag('span'); ?> 
 
                                     </div>
                                 </div>
                             </div>
-                        </div>
                         
-                        <div class="medium-6 columns">
                             <div class="field">
                                 <div class="row collapse">
                                     <div class="small-4 columns">
-                                        <span class="prefix">Type</span>
+                                        <span class="prefix">Branch</span>
                                     </div>
                                     <div class="small-8 columns">
-                                        <?php echo CHtml::dropDownlist('CustomerType', $customerType, array(
-                                            'Individual' => 'Individual', 
-                                            'Company' => 'Company'
-                                        ), array('empty' => '-- All Type --')); ?>
+                                          <?php echo CHtml::dropDownlist('BranchId', $branchId, CHtml::listData(Branch::model()->findAllbyAttributes(array('status'=>'Active')), 'id','name'), array('empty'=>'-- All Branch --')); ?>
                                     </div>
                                 </div>
                             </div>
@@ -147,10 +114,10 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                         <div class="medium-6 columns">
                             <div class="field">
                                 <div class="row collapse">
-                                    <div class="small-2 columns">
+                                    <div class="small-4 columns">
                                         <span class="prefix">Tanggal </span>
                                     </div>
-                                    <div class="small-5 columns">
+                                    <div class="small-4 columns">
                                         <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(
                                             'name' => 'StartDate',
                                             'options' => array(
@@ -165,7 +132,7 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                         )); ?>
                                     </div>
 
-                                    <div class="small-5 columns">
+                                    <div class="small-4 columns">
                                         <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(
                                             'name' => 'EndDate',
                                             'options' => array(
@@ -178,19 +145,6 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                                 'placeholder' => 'Sampai',
                                             ),
                                         )); ?>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="medium-6 columns">
-                            <div class="field">
-                                <div class="row collapse">
-                                    <div class="small-4 columns">
-                                        <span class="prefix">Branch</span>
-                                    </div>
-                                    <div class="small-8 columns">
-                                          <?php echo CHtml::dropDownlist('BranchId', $branchId, CHtml::listData(Branch::model()->findAllbyAttributes(array('status'=>'Active')), 'id','name'), array('empty'=>'-- All Branch --')); ?>
                                     </div>
                                 </div>
                             </div>
@@ -213,7 +167,7 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
 
                 <div class="relative">
                     <?php $this->renderPartial('_summary', array(
-                        'customerSaleReport' => $customerSaleReport,
+                        'vehicleSaleReport' => $vehicleSaleReport,
                         'startDate' => $startDate,
                         'endDate' => $endDate,
                         'branchId' => $branchId,

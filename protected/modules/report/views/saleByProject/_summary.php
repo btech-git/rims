@@ -21,7 +21,7 @@ Yii::app()->clientScript->registerCss('_report', '
 
 <div style="font-weight: bold; text-align: center">
     <div style="font-size: larger">Penjualan Project <?php echo CHtml::encode(CHtml::value($customerData, 'name')); ?></div>
-    <div><?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($startDate))) . ' &nbsp;&ndash;&nbsp; ' . CHtml::encode(Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($endDate))); ?></div>
+    <div><?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($startDate))) . ' &nbsp;&ndash;&nbsp; ' . CHtml::encode(Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($endDate))); ?></div>
 </div>
 
 <br />
@@ -67,43 +67,41 @@ Yii::app()->clientScript->registerCss('_report', '
                     <table>
                         <?php $totalSale = 0.00; ?>
                         <?php $grandTotalCogs = 0.00; ?>
-                        <?php $saleReportData = $header->getSaleByProjectReport($startDate, $endDate, $branchId); ?>
-                        <?php if (!empty($saleReportData)): ?>
-                            <?php foreach ($saleReportData as $saleReportRow): ?>
-                                <?php $quantity = CHtml::encode($saleReportRow['quantity']); ?>
-                                <?php $unitPrice = $saleReportRow['unit_price']; ?>
-                                <?php $cogs = $saleReportRow['hpp']; ?>
+                        <?php if (isset($saleProjectReportData[$header->id])): ?>
+                            <?php $saleProjectData = $saleProjectReportData[$header->id]; ?>
+                            <?php foreach ($saleProjectData as $saleProjectRow): ?>
+                                <?php $quantity = CHtml::encode($saleProjectRow['quantity']); ?>
+                                <?php $unitPrice = $saleProjectRow['unit_price']; ?>
+                                <?php $cogs = $saleProjectRow['hpp']; ?>
                                 <?php $totalCogs = $cogs * $quantity; ?>
-                                <?php $grandTotal = $saleReportRow['total_price']; ?>
+                                <?php $grandTotal = $saleProjectRow['total_price']; ?>
                                 <tr>
                                     <td class="width2-1">
-                                        <?php echo CHtml::link($saleReportRow['invoice_number'], Yii::app()->createUrl("transaction/invoiceHeader/view", array("id" => $saleReportRow['id'])), array('target' => '_blank')); ?>
+                                        <?php echo CHtml::link($saleProjectRow['invoice_number'], Yii::app()->createUrl("transaction/invoiceHeader/view", array("id" => $saleProjectRow['id'])), array('target' => '_blank')); ?>
                                     </td>
                                     <td class="width2-2">
-                                        <?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($saleReportRow['invoice_date']))); ?>
+                                        <?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($saleProjectRow['invoice_date']))); ?>
                                     </td>
-                                    <td class="width2-3">
-                                        <?php echo CHtml::encode($saleReportRow['plate_number']); ?>
-                                    </td>
+                                    <td class="width2-3"><?php echo CHtml::encode($saleProjectRow['plate_number']); ?></td>
                                     <td class="width2-4">
-                                        <?php if (empty($saleReportRow['product'])): ?>
+                                        <?php if (empty($saleProjectRow['product'])): ?>
                                             <?php echo 'Jasa'; ?>
                                         <?php else: ?>
                                             <?php echo 'Parts'; ?>
                                         <?php endif; ?>
                                     </td>
                                     <td class="width2-5">
-                                        <?php if (empty($saleReportRow['product'])): ?>
-                                            <?php echo CHtml::encode($saleReportRow['service_id']); ?>
+                                        <?php if (empty($saleProjectRow['product'])): ?>
+                                            <?php echo CHtml::encode($saleProjectRow['service_id']); ?>
                                         <?php else: ?>
-                                            <?php echo CHtml::encode($saleReportRow['product_id']); ?>
+                                            <?php echo CHtml::encode($saleProjectRow['product_id']); ?>
                                         <?php endif; ?>
                                     </td>
                                     <td class="width2-6">
-                                        <?php if (empty($saleReportRow['product'])): ?>
-                                            <?php echo CHtml::encode($saleReportRow['service']); ?>
+                                        <?php if (empty($saleProjectRow['product'])): ?>
+                                            <?php echo CHtml::encode($saleProjectRow['service']); ?>
                                         <?php else: ?>
-                                            <?php echo CHtml::encode($saleReportRow['product']); ?>
+                                            <?php echo CHtml::encode($saleProjectRow['product']); ?>
                                         <?php endif; ?>
                                     </td>
                                     <td class="width2-7" style="text-align: center">

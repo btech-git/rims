@@ -15,35 +15,7 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
         <div id="detail_div">
             <div>
                 <div class="myForm">
-                    <?php echo CHtml::beginForm(array(''), 'get'); ?>
-<!--                    <div class="row">
-                        <div class="medium-6 columns">
-                            <div class="field">
-                                <div class="row collapse">
-                                    <div class="small-4 columns">
-                                        <span class="prefix">Jumlah per Halaman</span>
-                                    </div>
-                                    <div class="small-8 columns">
-                                        <?php //echo CHtml::textField('PageSize', '', array('size' => 3)); ?>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="medium-6 columns">
-                            <div class="field">
-                                <div class="row collapse">
-                                    <div class="small-4 columns">
-                                        <span class="prefix">Halaman saat ini</span>
-                                    </div>
-                                    <div class="small-8 columns">
-                                        <?php //echo CHtml::textField('page', '', array('size' => 3, 'id' => 'CurrentPage')); ?>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>-->
-                    
+                    <?php echo CHtml::beginForm(array(''), 'get'); ?>                    
                     <div class="row">
                         <div class="medium-6 columns">
                             <div class="field">
@@ -147,10 +119,10 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                         <div class="medium-6 columns">
                             <div class="field">
                                 <div class="row collapse">
-                                    <div class="small-2 columns">
+                                    <div class="small-4 columns">
                                         <span class="prefix">Tanggal </span>
                                     </div>
-                                    <div class="small-5 columns">
+                                    <div class="small-4 columns">
                                         <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(
                                             'name' => 'StartDate',
                                             'options' => array(
@@ -165,7 +137,7 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                         )); ?>
                                     </div>
 
-                                    <div class="small-5 columns">
+                                    <div class="small-4 columns">
                                         <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(
                                             'name' => 'EndDate',
                                             'options' => array(
@@ -212,6 +184,13 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                 <hr />
 
                 <div class="relative">
+                    <div class="reportDisplay">
+                        <?php $dataCount = count($customerSaleReport); ?>
+                        <?php if ($dataCount > 0): ?>
+                            <?php echo "Displaying 1-{$dataCount} of {$dataCount} result(s)."; ?>
+                        <?php endif; ?>
+                    </div>
+                    
                     <?php $this->renderPartial('_summary', array(
                         'customerSaleReport' => $customerSaleReport,
                         'startDate' => $startDate,

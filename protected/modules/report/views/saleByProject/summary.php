@@ -55,7 +55,7 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                         <span class="prefix">Customer</span>
                                     </div>
                                     <div class="small-8 columns">
-                                        <?php echo CHtml::activeTextField($customer, 'id', array(
+                                        <?php echo CHtml::activeTextField($customerData, 'id', array(
                                             'readonly' => true,
                                             'onclick' => '$("#customer-dialog").dialog("open"); return false;',
                                             'onkeypress' => 'if (event.keyCode == 13) { $("#customer-dialog").dialog("open"); return false; }',
@@ -75,14 +75,14 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                         <?php $this->widget('zii.widgets.grid.CGridView', array(
                                             'id' => 'customer-grid',
                                             'dataProvider' => $customerDataProvider,
-                                            'filter' => $customer,
+                                            'filter' => $customerData,
                                             'template' => '{items}<div class="clearfix">{summary}{pager}</div>',
                                             'pager'=>array(
                                                'cssFile'=>false,
                                                'header'=>'',
                                             ),
                                             'selectionChanged' => 'js:function(id){
-                                                $("#' . CHtml::activeId($customer, 'id') . '").val($.fn.yiiGridView.getSelection(id));
+                                                $("#' . CHtml::activeId($customerData, 'id') . '").val($.fn.yiiGridView.getSelection(id));
                                                 $("#customer-dialog").dialog("close");
                                                 if ($.fn.yiiGridView.getSelection(id) == "") {
                                                     $("#customer_name").html("");
@@ -147,10 +147,10 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                         <div class="medium-6 columns">
                             <div class="field">
                                 <div class="row collapse">
-                                    <div class="small-2 columns">
+                                    <div class="small-4 columns">
                                         <span class="prefix">Tanggal </span>
                                     </div>
-                                    <div class="small-5 columns">
+                                    <div class="small-4 columns">
                                         <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(
                                             'name' => 'StartDate',
                                             'options' => array(
@@ -165,7 +165,7 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                         )); ?>
                                     </div>
 
-                                    <div class="small-5 columns">
+                                    <div class="small-4 columns">
                                         <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(
                                             'name' => 'EndDate',
                                             'options' => array(
@@ -199,8 +199,6 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                 <hr />
 
                 <div class="right"><?php echo ReportHelper::summaryText($saleRetailSummary->dataProvider); ?></div>
-                <br />
-                <div class="right"><?php echo ReportHelper::sortText($saleRetailSummary->dataProvider->sort, array('Name')); ?></div>
                 <div class="clear"></div>
 
                 <br />
@@ -208,17 +206,13 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                 <div class="relative">
                     <?php $this->renderPartial('_summary', array(
                         'saleRetailSummary' => $saleRetailSummary,
+                        'saleProjectReportData' => $saleProjectReportData,
                         'startDate' => $startDate,
                         'endDate' => $endDate,
                         'branchId' => $branchId,
                         'customerData' => $customerData,
                     )); ?>
                 </div>
-                <div class="clear"></div>
-            </div>
-            
-            <div class="hide">
-                <div class="right"></div>
                 <div class="clear"></div>
             </div>
         </div>

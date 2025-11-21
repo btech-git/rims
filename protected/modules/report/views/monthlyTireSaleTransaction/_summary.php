@@ -65,7 +65,7 @@
                             <?php endif; ?>
                         <?php endforeach; ?>
                         <td style="text-align: center">
-                            <?php echo CHtml::link($saleQuantity, array(
+                            <?php echo CHtml::link(Yii::app()->numberFormatter->format('#,##0', $saleQuantity), array(
                                 '/report/monthlyTireSaleTransaction/transactionInfo', 
                                 'productId' => $product->id, 
                                 'startDate' => $startDate, 
@@ -77,7 +77,7 @@
                     <?php endforeach; ?>
                 <?php endforeach; ?>
                 <td style="text-align: center">
-                    <?php echo CHtml::link($totalQuantity, array(
+                    <?php echo CHtml::link(Yii::app()->numberFormatter->format('#,##0', $totalQuantity), array(
                         '/report/monthlyTireSaleTransaction/transactionInfo', 
                         'productId' => $product->id, 
                         'startDate' => $startDate, 

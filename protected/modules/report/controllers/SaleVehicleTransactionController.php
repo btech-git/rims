@@ -49,15 +49,13 @@ class SaleVehicleTransactionController extends Controller {
         }
 
         $this->render('summary', array(
-            'customerSaleReport' => $vehicleSaleReport,
-            'customer' => $vehicle,
-            'customerDataProvider' => $vehicleDataProvider,
+            'vehicleSaleReport' => $vehicleSaleReport,
+            'vehicle' => $vehicle,
+            'vehicleDataProvider' => $vehicleDataProvider,
             'startDate' => $startDate,
             'endDate' => $endDate,
-            'taxValue' => $taxValue,
             'branchId' => $branchId,
-            'customerId' => $vehicleId,
-            'customerType' => $vehicleType,
+            'vehicleId' => $vehicleId,
         ));
     }
 
