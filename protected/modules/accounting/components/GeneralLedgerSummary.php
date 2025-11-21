@@ -8,7 +8,7 @@ class GeneralLedgerSummary extends CComponent {
         $this->dataProvider = $dataProvider;
     }
 
-    public function setupLoading($startDate, $endDate, $accountId) {
+    public function setupLoading() {
         $this->dataProvider->criteria->with = array(
             'jurnalUmums',
         );
@@ -29,12 +29,21 @@ class GeneralLedgerSummary extends CComponent {
         $this->dataProvider->criteria->order = $this->dataProvider->sort->orderBy;
     }
 
-    public function setupFilter($startDate, $endDate, $accountId) {
-        $startDate = (empty($startDate)) ? date('Y-m-d') : $startDate;
-        $endDate = (empty($endDate)) ? date('Y-m-d') : $endDate;
+    public function setupFilter($accountIdList, $startDate, $endDate, $branchId) {
+        $inIdsSql = 'NULL';
+        if (!empty($accountIdList)) {
+            $inIdsSql = implode(',', $accountIdList);
+        }
+        
+        $branchConditionSql = '';
+        
+        if (!empty($branchId)) {
+            $branchConditionSql = ' AND branch_id = :branch_id';
+            $this->dataProvider->criteria->params[':branch_id'] = $branchId;
+        }
+        
         $this->dataProvider->criteria->addBetweenCondition('jurnalUmums.tanggal_transaksi', $startDate, $endDate);
-
-        $this->dataProvider->criteria->compare('t.id', '836');
+        $this->dataProvider->criteria->addCondition("coa_id IN ({$inIdsSql})" . $branchConditionSql);
     }
 
     public function getSaldo($startDate) {

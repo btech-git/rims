@@ -1,6 +1,6 @@
 <?php
 
-class SaleByProjectController extends Controller {
+class SaleInvoiceProjectController extends Controller {
 
     public $layout = '//layouts/column1';
     

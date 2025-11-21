@@ -38,7 +38,7 @@ class SaleByProjectSummary extends CComponent {
         }
 
         $this->dataProvider->criteria->addCondition("EXISTS (
-            SELECT id FROM " . InvoiceHeader::model()->tableName() . "
+            SELECT customer_id FROM " . InvoiceHeader::model()->tableName() . "
             WHERE customer_id = t.id AND substr(invoice_date, 1, 10) BETWEEN :start_date AND :end_date AND t.status NOT LIKE '%CANCELLED%'" . $branchConditionSql . "
         )");
         $this->dataProvider->criteria->params[':start_date'] = $startDate;
