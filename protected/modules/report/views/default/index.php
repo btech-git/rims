@@ -786,6 +786,11 @@
                                         'visible' => (Yii::app()->user->checkAccess('saleCustomerReport'))
                                     ),
                                     array(
+                                        'label' => 'Penjualan per Customer Tahunan', 
+                                        'url' => array('/report/yearlyMultipleCustomerSaleTransaction/summary'), 
+                                        'visible' => (Yii::app()->user->checkAccess('saleCustomerSummaryReport'))
+                                    ),
+                                    array(
                                         'label' => 'Penjualan per Model Kendaraan Bulanan', 
                                         'url' => array('/report/saleInvoiceCarSubModelMonthly/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('saleVehicleMonthlyReport')
@@ -799,6 +804,11 @@
                                         'label' => 'Rincian Penjualan per Brand Kendaraan', 
                                         'url' => array('/report/saleVehicleProduct/summary'), 
                                         'visible' => (Yii::app()->user->checkAccess('saleVehicleReport'))
+                                    ),
+                                    array(
+                                        'label' => 'Penjualan per Kendaraan Customer Tahunan', 
+                                        'url' => array('/report/yearlyMultipleVehicleSaleTransaction/summary'), 
+                                        'visible' => (Yii::app()->user->checkAccess('saleCustomerSummaryReport'))
                                     ),
                                     array(
                                         'label' => 'Customer Follow Up + Warranty', 
