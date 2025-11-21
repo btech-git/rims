@@ -2315,7 +2315,7 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
         return $resultSet;
     }
     
-    public function getSaleByProjectReport($customerIds, $startDate, $endDate, $branchId) {
+    public static function getSaleByProjectReport($customerIds, $startDate, $endDate, $branchId) {
         $inIdsSql = 'NULL';
         if (!empty($customerIds)) {
             $inIdsSql = implode(',', $customerIds);
