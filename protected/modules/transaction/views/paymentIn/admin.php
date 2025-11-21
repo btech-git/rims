@@ -92,15 +92,6 @@ $('.search-form form').submit(function(){
                         'header' => '',
                     ),
                     'columns' => array(
-//                        array(
-//                            'name' => 'invoice_id', 
-//                            'value' => 'empty($data->invoice_id) ? "N/A" : CHtml::link($data->invoice->invoice_number, array("invoiceHeader/view", "id"=>$data->invoice_id))',
-//                            'type' => 'raw'
-//                        ),
-//                        array(
-//                            'header' => 'Plate #', 
-//                            'value' => 'empty($data->invoice_id) ? "N/A" : empty($data->invoice->vehicle_id) ? "N/A" : $data->invoice->vehicle->plate_number'
-//                        ),
                         array(
                             'name' => 'payment_number',
                             'value' => 'CHtml::link($data->payment_number, array("view", "id"=>$data->id))',
@@ -116,12 +107,6 @@ $('.search-form form').submit(function(){
                             'value' => 'AppHelper::formatMoney($data->payment_amount)',
                             'htmlOptions' => array('style' => 'text-align: right'),
                         ),
-//                        'notes',
-//                        array(
-//                            'header' => 'Invoice Status',
-//                            'name' => 'invoice_status',
-//                            'value' => 'empty($data->invoice_id) ? "N/A" : $data->invoice->status',
-//                        ),
                         array(
                             'header' => 'Insurance',
                             'value' => 'empty($data->insurance_company_id) ? "N/A" : $data->insuranceCompany->name',
@@ -137,8 +122,8 @@ $('.search-form form').submit(function(){
                             'value' => 'empty($data->paymentInApprovals) ? "N/A" : $data->paymentInApprovals[0]->supervisor->username '
                         ),
                         array(
-                            'header' => 'Approval Status',
-                            'value' => 'empty($data->paymentInApprovals) ? "N/A" : $data->getApprovalStatus()'
+                            'header' => 'Status',
+                            'value' => '$data->status'
                         ),
                         array(
                             'header' => 'Tanggal Input',
