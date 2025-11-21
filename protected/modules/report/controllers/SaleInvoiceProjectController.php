@@ -24,55 +24,57 @@ class SaleInvoiceProjectController extends Controller {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
 
-        $customerData = Search::bind(new Customer('search'), isset($_GET['Customer']) ? $_GET['Customer'] : array());
-        $customerDataProvider = $customerData->search();
+        $customer = Search::bind(new Customer('search'), isset($_GET['Customer']) ? $_GET['Customer'] : array());
+        $customerDataProvider = $customer->search();
         $customerDataProvider->criteria->compare('t.customer_type', 'Company');
         $customerDataProvider->pagination->pageVar = 'page_dialog';
 
         $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : date('Y-m-d');
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
         $branchId = (isset($_GET['BranchId'])) ? $_GET['BranchId'] : '';
-        $pageSize = (isset($_GET['PageSize'])) ? $_GET['PageSize'] : '';
-        $currentPage = (isset($_GET['page'])) ? $_GET['page'] : '';
+        $customerId = (isset($_GET['CustomerId'])) ? $_GET['CustomerId'] : '';
+//        $pageSize = (isset($_GET['PageSize'])) ? $_GET['PageSize'] : '';
+//        $currentPage = (isset($_GET['page'])) ? $_GET['page'] : '';
         $currentSort = (isset($_GET['sort'])) ? $_GET['sort'] : '';
         
-        $saleRetailSummary = new SaleByProjectSummary($customerData->search());
-        $saleRetailSummary->setupLoading();
-        $saleRetailSummary->setupPaging($pageSize, $currentPage);
-        $saleRetailSummary->setupSorting();
-        $filters = array(
-            'startDate' => $startDate,
-            'endDate' => $endDate,
-            'branchId' => $branchId,
-        );
-        $saleRetailSummary->setupFilter($filters);
-
-        $customerIds = array_map(function($customer) { return $customer->id; }, $saleRetailSummary->dataProvider->data);
-        
-        $saleProjectReport = InvoiceHeader::getSaleByProjectReport($customerIds, $startDate, $endDate, $branchId);
-        $saleProjectReportData = array();
-        foreach ($saleProjectReport as $saleProjectReportItem) {
-            $saleProjectReportData[$saleProjectReportItem['customer_id']][] = $saleProjectReportItem;
-        }
+        $saleProjectReport = InvoiceHeader::getSaleByProjectReport($startDate, $endDate, $branchId, $customerId);
+//        $saleRetailSummary = new SaleByProjectSummary($customerData->search());
+//        $saleRetailSummary->setupLoading();
+//        $saleRetailSummary->setupPaging($pageSize, $currentPage);
+//        $saleRetailSummary->setupSorting();
+//        $filters = array(
+//            'startDate' => $startDate,
+//            'endDate' => $endDate,
+//            'branchId' => $branchId,
+//        );
+//        $saleRetailSummary->setupFilter($filters);
+//
+//        $customerIds = array_map(function($customer) { return $customer->id; }, $saleRetailSummary->dataProvider->data);
+//        
+//        $saleProjectReport = InvoiceHeader::getSaleByProjectReport($customerIds, $startDate, $endDate, $branchId);
+//        $saleProjectReportData = array();
+//        foreach ($saleProjectReport as $saleProjectReportItem) {
+//            $saleProjectReportData[$saleProjectReportItem['customer_id']][] = $saleProjectReportItem;
+//        }
 
         if (isset($_GET['ResetFilter'])) {
             $this->redirect(array('summary'));
         }
         
         if (isset($_GET['SaveExcel'])) {
-            $this->saveToExcel($saleRetailSummary->dataProvider, array(
+            $this->saveToExcel($saleProjectReport, array(
                 'startDate' => $startDate, 
                 'endDate' => $endDate,
                 'branchId' => $branchId,
-                'customerData' => $customerData,
+                'customer' => $customer,
             ));
         }
 
         $this->render('summary', array(
-            'saleRetailSummary' => $saleRetailSummary,
-            'saleProjectReportData' => $saleProjectReportData,
-            'customerData' => $customerData,
+            'saleProjectReport' => $saleProjectReport,
+            'customer' => $customer,
             'customerDataProvider' => $customerDataProvider,
+            'customerId' => $customerId,
             'startDate' => $startDate,
             'endDate' => $endDate,
             'branchId' => $branchId,

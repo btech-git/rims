@@ -2,9 +2,6 @@
 Yii::app()->clientScript->registerScript('report', '
     $("#StartDate").val("' . $startDate . '");
     $("#EndDate").val("' . $endDate . '");
-    $("#PageSize").val("' . $saleRetailSummary->dataProvider->pagination->pageSize . '");
-    $("#CurrentPage").val("' . ($saleRetailSummary->dataProvider->pagination->getCurrentPage(false) + 1) . '");
-    $("#CurrentSort").val("' . $currentSort . '");
 ');
 Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/transaction/report.css');
 ?>
@@ -19,7 +16,7 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
             <div>
                 <div class="myForm">
                     <?php echo CHtml::beginForm(array(''), 'get'); ?>
-                    <div class="row">
+<!--                    <div class="row">
                         <div class="medium-6 columns">
                             <div class="field">
                                 <div class="row collapse">
@@ -27,7 +24,7 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                         <span class="prefix">Jumlah per Halaman</span>
                                     </div>
                                     <div class="small-8 columns">
-                                        <?php echo CHtml::textField('PageSize', '', array('size' => 3)); ?>
+                                        <?php /*echo CHtml::textField('PageSize', '', array('size' => 3)); ?>
                                     </div>
                                 </div>
                             </div>
@@ -40,12 +37,12 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                         <span class="prefix">Halaman saat ini</span>
                                     </div>
                                     <div class="small-8 columns">
-                                        <?php echo CHtml::textField('page', '', array('size' => 3, 'id' => 'CurrentPage')); ?>
+                                        <?php echo CHtml::textField('page', '', array('size' => 3, 'id' => 'CurrentPage'));*/ ?>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </div>-->
                     
                     <div class="row">
                         <div class="medium-6 columns">
@@ -55,7 +52,7 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                         <span class="prefix">Customer</span>
                                     </div>
                                     <div class="small-8 columns">
-                                        <?php echo CHtml::activeTextField($customerData, 'id', array(
+                                        <?php echo CHtml::textField('CustomerId', $customerId, array(
                                             'readonly' => true,
                                             'onclick' => '$("#customer-dialog").dialog("open"); return false;',
                                             'onkeypress' => 'if (event.keyCode == 13) { $("#customer-dialog").dialog("open"); return false; }',
@@ -75,14 +72,14 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                         <?php $this->widget('zii.widgets.grid.CGridView', array(
                                             'id' => 'customer-grid',
                                             'dataProvider' => $customerDataProvider,
-                                            'filter' => $customerData,
+                                            'filter' => $customer,
                                             'template' => '{items}<div class="clearfix">{summary}{pager}</div>',
                                             'pager'=>array(
                                                'cssFile'=>false,
                                                'header'=>'',
                                             ),
                                             'selectionChanged' => 'js:function(id){
-                                                $("#' . CHtml::activeId($customerData, 'id') . '").val($.fn.yiiGridView.getSelection(id));
+                                                $("#CustomerId").val($.fn.yiiGridView.getSelection(id));
                                                 $("#customer-dialog").dialog("close");
                                                 if ($.fn.yiiGridView.getSelection(id) == "") {
                                                     $("#customer_name").html("");
@@ -121,6 +118,7 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                         )); ?>
                                         <?php $this->endWidget(); ?>
                                         <?php echo CHtml::openTag('span', array('id' => 'customer_name')); ?>
+                                        <?php $customerData = Customer::model()->findByPk($customerId); ?>
                                         <?php echo CHtml::encode(CHtml::value($customerData, 'name')); ?>
                                         <?php echo CHtml::closeTag('span'); ?> 
 
@@ -198,15 +196,16 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
 
                 <hr />
 
-                <div class="right"><?php echo ReportHelper::summaryText($saleRetailSummary->dataProvider); ?></div>
-                <div class="clear"></div>
-
-                <br />
-        
                 <div class="relative">
+                    <div class="reportDisplay">
+                        <?php $dataCount = count($saleProjectReport); ?>
+                        <?php if ($dataCount > 0): ?>
+                            <?php echo "Displaying 1-{$dataCount} of {$dataCount} result(s)."; ?>
+                        <?php endif; ?>
+                    </div>
+                    
                     <?php $this->renderPartial('_summary', array(
-                        'saleRetailSummary' => $saleRetailSummary,
-                        'saleProjectReportData' => $saleProjectReportData,
+                        'saleProjectReport' => $saleProjectReport,
                         'startDate' => $startDate,
                         'endDate' => $endDate,
                         'branchId' => $branchId,
@@ -218,14 +217,3 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
         </div>
     </div>
 </div>
-
-<br/>
-
-<div class="right">
-    <?php $this->widget('system.web.widgets.pagers.CLinkPager', array(
-        'itemCount' => $saleRetailSummary->dataProvider->pagination->itemCount,
-        'pageSize' => $saleRetailSummary->dataProvider->pagination->pageSize,
-        'currentPage' => $saleRetailSummary->dataProvider->pagination->getCurrentPage(false),
-    )); ?>
-</div>
-<div class="clear"></div>
