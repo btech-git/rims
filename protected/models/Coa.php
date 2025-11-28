@@ -285,7 +285,7 @@ class Coa extends CActiveRecord {
 
     public function getCodeNumber($coaSubCategory) {
         $lastCode = Coa::model()->find(array(
-            'order' => 'id DESC',
+            'order' => 'code DESC',
             'condition' => 'coa_sub_category_id = :coa_sub_category_id AND is_approved = 1',
             'params' => array(':coa_sub_category_id' => $coaSubCategory),
         ));

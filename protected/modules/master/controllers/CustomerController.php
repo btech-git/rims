@@ -104,8 +104,9 @@ class CustomerController extends Controller {
         
         $service = new Service('search');
         $service->unsetAttributes();  // clear any default values
-        if (isset($_GET['Service']))
+        if (isset($_GET['Service'])) {
             $service->attributes = $_GET['Service'];
+        }
 
         $serviceCriteria = new CDbCriteria;
         $serviceCriteria->together = 'true';
@@ -211,11 +212,11 @@ class CustomerController extends Controller {
         $customer = $this->instantiate($id);
         $service = new Service('search');
         $service->unsetAttributes();  // clear any default values
-        if (isset($_GET['Service']))
+        if (isset($_GET['Service'])) {
             $service->attributes = $_GET['Service'];
+        }
 
         $serviceCriteria = new CDbCriteria;
-        //$positionCriteria->compare('code',$position->code.'%',true,'AND', false);
         $serviceCriteria->together = 'true';
         $serviceCriteria->with = array('serviceCategory', 'serviceType');
 
@@ -396,7 +397,6 @@ class CustomerController extends Controller {
 
             $customer = $this->instantiate($id);
             $this->loadState($customer);
-            //print_r(CJSON::encode($salesOrder->details));
             $customer->removeDetailAt($index);
             $this->renderPartial('_detailPhone', array('customer' => $customer), false, true);
         }
@@ -421,7 +421,6 @@ class CustomerController extends Controller {
 
             $customer = $this->instantiate($id);
             $this->loadState($customer);
-            //print_r(CJSON::encode($salesOrder->details));
             $customer->removeMobileDetailAt($index);
             $this->renderPartial('_detailMobile', array('customer' => $customer), false, true);
         }
@@ -447,7 +446,6 @@ class CustomerController extends Controller {
 
             $customer = $this->instantiate($id);
             $this->loadState($customer);
-            //print_r(CJSON::encode($salesOrder->details));
             $customer->removeVehicleDetailAt($index);
             Yii::app()->clientscript->scriptMap['jquery-ui.min.js'] = false;
             Yii::app()->clientscript->scriptMap['jquery.js'] = false;
@@ -513,11 +511,9 @@ class CustomerController extends Controller {
         $data = City::model()->findAllByAttributes(array('province_id' => $_POST['Customer']['province_id']), array('order' => 'name ASC'));
 
         if (count($data) > 0) {
-
             $data = CHtml::listData($data, 'id', 'name');
             echo CHtml::tag('option', array('value' => ''), '[--Select City--]', true);
             foreach ($data as $value => $name) {
-
                 echo CHtml::tag('option', array('value' => $value), CHtml::encode($name), true);
             }
         } else {
@@ -529,11 +525,9 @@ class CustomerController extends Controller {
         $data = City::model()->findAllByAttributes(array('province_id' => $_POST['CustomerPic']['province_id']), array('order' => 'name ASC'));
 
         if (count($data) > 0) {
-
             $data = CHtml::listData($data, 'id', 'name');
             echo CHTML::tag('option', array('value' => ''), '[--Select City--]', true);
             foreach ($data as $value => $name) {
-
                 echo CHtml::tag('option', array('value' => $value), CHtml::encode($name), true);
             }
         } else {
@@ -545,11 +539,9 @@ class CustomerController extends Controller {
         $data = City::model()->findAllByAttributes(array('province_id' => $_POST['CustomerPic'][$index]['province_id']), array('order' => 'name ASC'));
 
         if (count($data) > 0) {
-
             $data = CHtml::listData($data, 'id', 'name');
             echo CHTML::tag('option', array('value' => ''), '[--Select City--]', true);
             foreach ($data as $value => $name) {
-
                 echo CHtml::tag('option', array('value' => $value), CHtml::encode($name), true);
             }
         } else {
@@ -564,8 +556,6 @@ class CustomerController extends Controller {
         $criteria->together = true;
         $criteria->condition = '"' . $year . '" BETWEEN vehicleCarSubModelDetails.assembly_year_start and vehicleCarSubModelDetails.assembly_year_end';
         $data = VehicleCarMake::model()->findAll($criteria);
-
-        //$data = VehicleCarMake::model()->findAllByAttributes(array('car_make_id'=>$_POST['Vehicle']['car_make_id']));
 
         if (count($data) > 0) {
             $data = CHtml::listData($data, 'id', 'name');
@@ -587,7 +577,6 @@ class CustomerController extends Controller {
             $data = CHtml::listData($data, 'id', 'name');
             echo CHtml::tag('option', array('value' => ''), '[--Select Car Model--]', true);
             foreach ($data as $value => $name) {
-
                 echo CHtml::tag('option', array('value' => $value), CHtml::encode($name), true);
             }
         } else {
@@ -600,11 +589,9 @@ class CustomerController extends Controller {
         $data = VehicleCarSubModel::model()->findAllByAttributes(array('car_make_id' => $carmake, 'car_model_id' => $carmodel));
 
         if (count($data) > 0) {
-
             $data = CHtml::listData($data, 'id', 'name');
             echo CHtml::tag('option', array('value' => ''), '[--Select Car SubModel--]', true);
             foreach ($data as $value => $name) {
-
                 echo CHtml::tag('option', array('value' => $value), CHtml::encode($name), true);
             }
         } else {
@@ -615,9 +602,6 @@ class CustomerController extends Controller {
     // Get Car Model
     public function actionAjaxGetModel($year, $carmake) {
         $criteria = new CDbCriteria;
-//        $criteria->with = array('vehicleCarSubModels', 'vehicleCarSubModels.vehicleCarSubModelDetails');
-//        $criteria->together = true;
-//        $criteria->condition = '"' . $year . '" BETWEEN vehicleCarSubModelDetails.assembly_year_start and vehicleCarSubModelDetails.assembly_year_end';
         $data = VehicleCarModel::model()->findAllByAttributes(array('car_make_id' => $carmake), $criteria);
 
         if (count($data) > 0) {
@@ -634,9 +618,6 @@ class CustomerController extends Controller {
     // Get Car Sub Model
     public function actionAjaxGetSubModel($year, $carmake, $carmodel) {
         $criteria = new CDbCriteria;
-//        $criteria->with = array('vehicleCarSubModelDetails');
-//        $criteria->together = true;
-//        $criteria->condition = '"' . $year . '" BETWEEN vehicleCarSubModelDetails.assembly_year_start and vehicleCarSubModelDetails.assembly_year_end';
         $criteria->order = 't.name ASC';
 
         $data = VehicleCarSubModel::model()->findAllByAttributes(array('car_make_id' => $carmake, 'car_model_id' => $carmodel), $criteria);
@@ -848,16 +829,12 @@ class CustomerController extends Controller {
 
     //get Service Category
     public function actionAjaxGetServiceCategory($serviceType) {
-
-
         $data = ServiceCategory::model()->findAllByAttributes(array('service_type_id' => $serviceType), array('order' => 'name ASC'));
 
         if (count($data) > 0) {
-
             $data = CHtml::listData($data, 'id', 'name');
             echo CHtml::tag('option', array('value' => ''), '[--Select Service Category--]', true);
             foreach ($data as $value => $name) {
-
                 echo CHtml::tag('option', array('value' => $value), CHtml::encode($name), true);
             }
         } else {
@@ -867,16 +844,12 @@ class CustomerController extends Controller {
 
     // get service
     public function actionAjaxGetService($serviceType, $serviceCategory) {
-
-
         $data = Service::model()->findAllByAttributes(array('service_type_id' => $serviceType, 'service_category_id' => $serviceCategory), array('order' => 'name ASC'));
 
         if (count($data) > 0) {
-
             $data = CHtml::listData($data, 'id', 'name');
             echo CHtml::tag('option', array('value' => ''), '[--Select Service--]', true);
             foreach ($data as $value => $name) {
-
                 echo CHtml::tag('option', array('value' => $value), CHtml::encode($name), true);
             }
         } else {
@@ -887,7 +860,6 @@ class CustomerController extends Controller {
     public function instantiate($id) {
         if (empty($id)) {
             $customer = new Customers(new Customer(), array(), array(), array(), array(), array());
-            //print_r("test");
         } else {
             $customerModel = $this->loadModel($id);
             $customer = new Customers($customerModel, $customerModel->customerPhones, $customerModel->customerMobiles, $customerModel->customerPics, $customerModel->vehicles, $customerModel->customerServiceRates);
@@ -902,9 +874,9 @@ class CustomerController extends Controller {
 
         if (isset($_POST['CustomerPhone'])) {
             foreach ($_POST['CustomerPhone'] as $i => $item) {
-                if (isset($customer->phoneDetails[$i]))
+                if (isset($customer->phoneDetails[$i])) {
                     $customer->phoneDetails[$i]->attributes = $item;
-                else {
+                } else {
                     $value = new CustomerPhone();
                     $value->attributes = $item;
                     $customer->phoneDetails[] = $value;
@@ -912,9 +884,9 @@ class CustomerController extends Controller {
             }
             if (count($_POST['CustomerPhone']) < count($customer->phoneDetails))
                 array_splice($customer->phoneDetails, $i + 1);
-        } else
+        } else {
             $customer->phoneDetails = array();
-
+        }
 
         if (isset($_POST['CustomerMobile'])) {
             foreach ($_POST['CustomerMobile'] as $i => $item) {
@@ -926,47 +898,53 @@ class CustomerController extends Controller {
                     $customer->mobileDetails[] = $value;
                 }
             }
-            if (count($_POST['CustomerMobile']) < count($customer->mobileDetails))
+            if (count($_POST['CustomerMobile']) < count($customer->mobileDetails)) {
                 array_splice($customer->mobileDetails, $i + 1);
-        } else
+            }
+        } else {
             $customer->mobileDetails = array();
-
+        }
 
         if (isset($_POST['CustomerPic'])) {
             foreach ($_POST['CustomerPic'] as $i => $item) {
-                if (isset($customer->picDetails[$i]))
+                if (isset($customer->picDetails[$i])) {
                     $customer->picDetails[$i]->attributes = $item;
-                else {
+                } else {
                     $value = new CustomerPic();
                     $value->attributes = $item;
                     $customer->picDetails[] = $value;
                 }
             }
-            if (count($_POST['CustomerPic']) < count($customer->picDetails))
+            if (count($_POST['CustomerPic']) < count($customer->picDetails)) {
                 array_splice($customer->picDetails, $i + 1);
-        } else
+            }
+        } else {
             $customer->picDetails = array();
+        }
 
         if (isset($_POST['Vehicle'])) {
             foreach ($_POST['Vehicle'] as $i => $item) {
-                if (isset($customer->vehicleDetails[$i]))
+                if (isset($customer->vehicleDetails[$i])) {
                     $customer->vehicleDetails[$i]->attributes = $item;
-                else {
+                } else {
                     $value = new Vehicle();
                     $value->attributes = $item;
                     $customer->vehicleDetails[] = $value;
                 }
             }
-            if (count($_POST['Vehicle']) < count($customer->vehicleDetails))
+            
+            if (count($_POST['Vehicle']) < count($customer->vehicleDetails)) {
                 array_splice($customer->vehicleDetails, $i + 1);
-        } else
+            }
+        } else {
             $customer->vehicleDetails = array();
+        }
 
         if (isset($_POST['CustomerServiceRate'])) {
             foreach ($_POST['CustomerServiceRate'] as $i => $item) {
-                if (isset($customer->serviceDetails[$i]))
+                if (isset($customer->serviceDetails[$i])) {
                     $customer->serviceDetails[$i]->attributes = $item;
-                else {
+                } else {
                     $value = new CustomerServiceRate();
                     $value->attributes = $item;
                     $customer->serviceDetails[] = $value;
@@ -974,28 +952,16 @@ class CustomerController extends Controller {
             }
             if (count($_POST['CustomerServiceRate']) < count($customer->serviceDetails))
                 array_splice($customer->serviceDetails, $i + 1);
-        } else
+        } else {
             $customer->serviceDetails = array();
+        }
     }
 
-    // public function actionRegistration(){
-    // 		$this->render('registration',array(
-    // 		//'model'=>$model,
-    // 		'customer'=>$customer,
-    // 	));
-    // }
-
-    /**
-     * Returns the data model based on the primary key given in the GET variable.
-     * If the data model is not found, an HTTP exception will be raised.
-     * @param integer $id the ID of the model to be loaded
-     * @return Customer the loaded model
-     * @throws CHttpException
-     */
     public function loadModel($id) {
         $model = Customer::model()->findByPk($id);
-        if ($model === null)
+        if ($model === null) {
             throw new CHttpException(404, 'The requested page does not exist.');
+        }
         return $model;
     }
 

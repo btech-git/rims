@@ -27,22 +27,8 @@
 
         <div class="row">
             <div class="small-12 medium-6 columns">
-<!--                <div class="field">
-                    <div class="row collapse">
-                        <div class="small-4 columns">
-                            <label class="prefix"><?php //echo $form->labelEx($purchaseOrder->header, 'purchase_order_no'); ?></label>
-                        </div>
-                        <div class="small-8 columns">
-                            <?php //echo CHtml::encode(CHtml::value($purchaseOrder->header, 'purchase_order_no')); ?>
-                            <?php //echo $form->textField($purchaseOrder->header, 'purchase_order_no', array('size' => 30, 'maxlength' => 30, 'readonly' => true)); ?>
-                            <?php //echo $form->error($purchaseOrder->header, 'purchase_order_no'); ?>
-                        </div>
-                    </div>
-                </div>-->
-
                 <?php $hourList = array_map(function($num) { return str_pad($num, 2, '0', STR_PAD_LEFT); }, range(0, 23)); ?>
                 <?php $hourChoices = array_combine($hourList, $hourList); ?>
-
                 <?php $minuteList = array_map(function($num) { return str_pad($num, 2, '0', STR_PAD_LEFT); }, range(0, 59)); ?>
                 <?php $minuteChoices = array_combine($minuteList, $minuteList); ?>
 
@@ -59,7 +45,7 @@
                                 'value' => $purchaseOrderDate,
                                 // additional javascript options for the date picker plugin
                                 'options' => array(
-                                    'minDate' => '-1W',
+                                    'minDate' => '-7W',
                                     'maxDate' => '+6M',
                                     'dateFormat' => 'yy-mm-dd',
                                     'changeMonth' => true,
