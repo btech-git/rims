@@ -272,25 +272,11 @@ $this->menu = array(
                         <div class="field">
                             <div class="row collapse">
                                 <div class="small-4 columns">
-                                    <span class="prefix">Address</span>
-                                </div>
-
-                                <div class="small-8 columns">
-                                    <textarea name="" id="Customer_customer_address" cols="30" rows="5" readonly="true"><?php echo $model->customer_id != "" ? $model->customer->address . '&#13;&#10;' . $model->customer->province->name . '&#13;&#10;' . $model->customer->city->name . '&#13;&#10;' . $model->customer->zipcode : ''; ?></textarea>
-                                </div>
-                            </div>
-                        </div>
-                    </div> <!-- end div large -->
-
-                    <div class="large-6 columns">
-                        <div class="field">
-                            <div class="row collapse">
-                                <div class="small-4 columns">
                                     <span class="prefix">Phone</span>
                                 </div>
 
                                 <div class="small-8 columns">
-                                    <textarea name="" id="Customer_phones" cols="30" rows="5" readonly="true"><?php echo CHtml::encode(CHtml::value($model, 'customer.phone')); ?></textarea>
+                                    <input name="" id="Customer_phones" readonly="true"><?php echo CHtml::encode(CHtml::value($model, 'customer.phone')); ?></textarea>
                                 </div>
                             </div>
                         </div>
@@ -302,18 +288,32 @@ $this->menu = array(
                                 </div>
 
                                 <div class="small-8 columns">
-                                    <textarea name="" id="Customer_mobiles" cols="30" rows="5" readonly="true"><?php echo CHtml::encode(CHtml::value($model, 'customer.mobile_phone')) ?></textarea>
+                                    <input name="" id="Customer_mobiles" readonly="true"><?php echo CHtml::encode(CHtml::value($model, 'customer.mobile_phone')); ?></textarea>
                                 </div>
                             </div>
                         </div>
+                    </div> <!-- end div large -->
 
+                    <div class="large-6 columns">
                         <div class="field">
                             <div class="row collapse">
                                 <div class="small-4 columns">
                                     <span class="prefix">Email</span>
                                 </div>
                                 <div class="small-8 columns">
-                                    <input type="text" readonly="true" id="Customer_email" value="<?php echo $model->customer_id != "" ? $model->customer->email : ''; ?>"> 
+                                    <input type="text" readonly="true" id="Customer_email" value="<?php echo CHtml::encode(CHtml::value($model, 'customer.email')); ?>"> 
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="field">
+                            <div class="row collapse">
+                                <div class="small-4 columns">
+                                    <span class="prefix">Address</span>
+                                </div>
+
+                                <div class="small-8 columns">
+                                    <textarea name="" id="Customer_customer_address" cols="30" rows="5" readonly="true"><?php echo $model->customer_id != "" ? $model->customer->address . '&#13;&#10;' . $model->customer->province->name . '&#13;&#10;' . $model->customer->city->name . '&#13;&#10;' . $model->customer->zipcode : ''; ?></textarea>
                                 </div>
                             </div>
                         </div>
