@@ -320,7 +320,7 @@ $this->menu = array(
                     </div>
                 </fieldset>
             <?php endif; ?>
-            <?php if ($model->vehicle_id != ""): ?>
+            <?php /*if ($model->vehicle_id != ""): ?>
                 <fieldset>
                     <legend>Vehicle</legend>
 
@@ -448,7 +448,7 @@ $this->menu = array(
                         </div>
                     </div><!-- end div large -->
                 </fieldset>
-            <?php endif; ?>
+            <?php endif;*/ ?>
                     
             <fieldset>
                 <legend>Payment Detail</legend>
@@ -457,7 +457,7 @@ $this->menu = array(
                         <thead>
                             <tr>
                                 <th>Invoice #</th>
-                                <th>Customer</th>
+                                <th>Plate #</th>
                                 <th>Asuransi</th>
                                 <th>Memo</th>
                                 <th>Total Invoice</th>
@@ -473,7 +473,7 @@ $this->menu = array(
                             <?php foreach ($model->paymentInDetails as $detail): ?>
                             <tr>
                                 <td><?php echo CHtml::link($detail->invoiceHeader->invoice_number, array("/transaction/invoiceHeader/show", "id" => $detail->invoice_header_id), array('target' => 'blank')); ?></td>
-                                <td><?php echo CHtml::encode(CHtml::value($detail, 'invoiceHeader.customer.name')); ?></td>
+                                <td><?php echo CHtml::encode(CHtml::value($detail, 'invoiceHeader.vehicle.plate_number')); ?></td>
                                 <td><?php echo CHtml::encode(CHtml::value($detail, 'invoiceHeader.insuranceCompany.name')); ?></td>
                                 <td><?php echo CHtml::encode(CHtml::value($detail, 'memo')); ?></td>
                                 <td style="text-align: right">
