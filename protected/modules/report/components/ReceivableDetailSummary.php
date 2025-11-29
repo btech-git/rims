@@ -29,10 +29,11 @@ class ReceivableDetailSummary extends CComponent {
         $this->dataProvider->criteria->order = 't.code ASC';
     }
 
-    public function setupFilter($endDate, $branchId) {
+    public function setupFilter($endDate, $branchId, $coaId) {
         $this->dataProvider->criteria->addCondition("t.code NOT LIKE '%.000'");
         $this->dataProvider->criteria->compare('t.coa_sub_category_id', 8);
         $this->dataProvider->criteria->compare('t.is_approved', 1);
+        $this->dataProvider->criteria->compare('t.id', $coaId);
         
         $branchConditionSql = '';
         

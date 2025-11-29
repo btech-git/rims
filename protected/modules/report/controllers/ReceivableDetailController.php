@@ -41,7 +41,7 @@ class ReceivableDetailController extends Controller {
         $receivableDetailSummary->setupLoading();
         $receivableDetailSummary->setupPaging($pageSize, $currentPage);
         $receivableDetailSummary->setupSorting();
-        $receivableDetailSummary->setupFilter($endDate, $branchId);
+        $receivableDetailSummary->setupFilter($endDate, $branchId, $coaId);
 
         if (isset($_GET['ResetFilter'])) {
             $this->redirect(array('summary'));
