@@ -276,7 +276,7 @@ $this->menu = array(
                                 </div>
 
                                 <div class="small-8 columns">
-                                    <input type="text" id="Customer_phones" value="<?php echo CHtml::encode(CHtml::value($model, 'customer.phone')); ?>">
+                                    <input type="text" readonly="true" id="Customer_phones" value="<?php echo CHtml::encode(CHtml::value($model, 'customer.phone')); ?>">
                                 </div>
                             </div>
                         </div>
@@ -288,7 +288,7 @@ $this->menu = array(
                                 </div>
 
                                 <div class="small-8 columns">
-                                    <input type="text" id="Customer_mobiles" value="<?php echo CHtml::encode(CHtml::value($model, 'customer.mobile_phone')); ?>">
+                                    <input type="text" readonly="true" id="Customer_mobiles" value="<?php echo CHtml::encode(CHtml::value($model, 'customer.mobile_phone')); ?>">
                                 </div>
                             </div>
                         </div>
