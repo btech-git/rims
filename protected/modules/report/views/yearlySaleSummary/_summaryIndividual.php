@@ -6,7 +6,7 @@
 '); ?>
 
 <fieldset>
-    <legend>Penjualan Individual</legend>
+    <legend>Penjualan Retail</legend>
     <table class="report">
         <thead style="position: sticky; top: 0">
             <tr id="header1">
