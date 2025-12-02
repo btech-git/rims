@@ -32,7 +32,7 @@
                             'model' => $model,
                             'attribute' => "payment_date",
                             'options'=>array(
-                                'minDate' => '-7W',
+                                'minDate' => '-13W',
                                 'maxDate' => '+6M',
                                 'dateFormat' => 'yy-mm-dd',
                                 'changeMonth'=>true,
