@@ -433,4 +433,69 @@ class InventoryDetail extends CActiveRecord {
 
         return $value;
     }
+    
+    public static function getInventoryTireStockReport($startYear, $endYear, $brandId, $subBrandId, $subBrandSeriesId, $productId, $productCode, $productName, $tireSizeId) {
+        $brandIdConditionSql = '';
+        $subBrandIdConditionSql = '';
+        $subBrandSeriesIdConditionSql = '';
+        $productIdConditionSql = '';
+        $productCodeConditionSql = '';
+        $productNameConditionSql = '';
+        $tireSizeConditionSql = '';
+
+        $params = array(
+            ':start_year' => $startYear,
+            ':end_year' => $endYear,
+        );
+
+        if (!empty($brandId)) {
+            $brandIdConditionSql = " AND brand_id = :brand_id";
+            $params[':brand_id'] = $brandId;
+        }
+
+        if (!empty($subBrandId)) {
+            $subBrandIdConditionSql = " AND sub_brand_id = :sub_brand_id";
+            $params[':sub_brand_id'] = $subBrandId;
+        }
+
+        if (!empty($subBrandSeriesId)) {
+            $subBrandSeriesIdConditionSql = " AND sub_brand_series_id = :sub_brand_series_id";
+            $params[':sub_brand_series_id'] = $subBrandSeriesId;
+        }
+
+        if (!empty($productId)) {
+            $productIdConditionSql = " AND i.product_id = :product_id";
+            $params[':product_id'] = $productId;
+        }
+
+        if (!empty($productCode)) {
+            $productCodeConditionSql = " AND product_code LIKE :product_code";
+            $params[':product_code'] = "%$productCode%";
+        }
+
+        if (!empty($productName)) {
+            $productNameConditionSql = " AND product_name LIKE :product_name";
+            $params[':product_name'] = "%$productName%";
+        }
+
+        if (!empty($tireSizeId)) {
+            $tireSizeConditionSql = " AND tire_size_id = :tire_size_id";
+            $params[':tire_size_id'] = $tireSizeId;
+        }
+
+        $sql = "SELECT w.branch_id, i.production_year, i.product_id, MAX(p.name) AS product_name, MAX(p.manufacturer_code) AS product_code, 
+                    MAX(p.brand_id) AS brand_id, MAX(p.sub_brand_id) AS sub_brand_id, MAX(p.sub_brand_series_id) AS sub_brand_series_id, 
+                    MAX(p.tire_size_id) AS tire_size_id, COALESCE(SUM(stock_in + stock_out), 0) AS total_stock
+                FROM " . InventoryDetail::model()->tableName() . " i 
+                INNER JOIN " . Product::model()->tableName() . " p ON p.id = i.product_id
+                INNER JOIN " . Warehouse::model()->tableName() . " w ON w.id = i.warehouse_id
+                WHERE p.product_sub_master_category_id = 26 AND i.transaction_date >= '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND w.status = 'Active'
+                GROUP BY w.branch_id, i.production_year, i.product_id
+                HAVING total_stock <> 0 AND i.production_year BETWEEN :start_year AND :end_year" . $brandIdConditionSql . $subBrandIdConditionSql . 
+                    $subBrandSeriesIdConditionSql . $productIdConditionSql . $productCodeConditionSql . $productNameConditionSql . $tireSizeConditionSql;
+
+        $value = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
+
+        return $value;
+    }
 }

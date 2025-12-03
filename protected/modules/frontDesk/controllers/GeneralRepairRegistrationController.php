@@ -344,6 +344,8 @@ class GeneralRepairRegistrationController extends Controller {
             $dataProvider->criteria->addCondition('t.branch_id = :branch_id');
             $dataProvider->criteria->params[':branch_id'] = Yii::app()->user->branch_id;
         }
+        $dataProvider->criteria->addCondition("repair_type = 'GR'");
+        $dataProvider->criteria->addBetweenCondition('SUBSTRING(t.transaction_date, 1, 10)', $startDate, $endDate);
         
         $dataProvider->criteria->together = true;
         $dataProvider->criteria->with = array(

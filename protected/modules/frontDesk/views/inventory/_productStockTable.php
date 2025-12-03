@@ -26,7 +26,7 @@
             <tr>
                 <td><?php echo CHtml::link(CHtml::value($product, 'id'), array('detail', 'id' => $product->id, 'endDate' => $endDate)); ?></td>
                 <td><?php echo CHtml::encode(CHtml::value($product, 'manufacturer_code')); ?></td>
-                <td><?php echo CHtml::link(CHtml::value($product, 'name'), array('detail', 'id' => $product->id, 'endDate' => $endDate)); ?></td>
+                <td><?php echo CHtml::link(CHtml::value($product, 'nameAndSpecification'), array('detail', 'id' => $product->id, 'endDate' => $endDate)); ?></td>
                 <td>
                     <?php echo CHtml::encode(CHtml::value($product, 'brand.name')); ?> - 
                     <?php echo CHtml::encode(CHtml::value($product, 'subBrand.name')); ?> - 

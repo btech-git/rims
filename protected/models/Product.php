@@ -661,11 +661,11 @@ class Product extends CActiveRecord {
     }
 
     public function getTireSaleTotalQuantitiesReport($year, $month) {
-        $sql = "SELECT h.branch_id, d.production_year, COALESCE(SUM(d.quantity), 0) AS total_quantity
+        $sql = "SELECT h.branch_id, COALESCE(SUM(d.quantity), 0) AS total_quantity
                 FROM " . InvoiceDetail::model()->tableName() . " d
                 INNER JOIN " . InvoiceHeader::model()->tableName() . " h ON h.id = d.invoice_id
                 WHERE d.product_id = :product_id AND h.user_id_cancelled IS NULL AND YEAR(h.invoice_date) = :year AND MONTH(h.invoice_date) = :month
-                GROUP BY h.branch_id, d.production_year";
+                GROUP BY h.branch_id";
 
         $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, array(
             ':product_id' => $this->id, 
@@ -1069,5 +1069,17 @@ class Product extends CActiveRecord {
         $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
         
         return $resultSet;
+    }
+    
+    public function getNameAndSpecification() {
+        $nameAndSpec = $this->name;
+        
+        if ($this->product_sub_master_category_id == 26) {
+            $nameAndSpec .= $this->tire_size_id === null ? '' : (' - ' . $this->tireSize->name);
+        } else if ($this->product_sub_master_category_id == 39 || $this->product_sub_master_category_id == 40) {
+            $nameAndSpec .= $this->oil_sae_id === null ? '' : (' - ' . $this->oilSae->name);
+        }
+        
+        return $nameAndSpec;
     }
 }

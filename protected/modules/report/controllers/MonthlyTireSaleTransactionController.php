@@ -112,12 +112,14 @@ class MonthlyTireSaleTransactionController extends Controller {
         
         $dataProvider = InvoiceDetail::model()->searchByTransactionInfo($productId, $startDate, $endDate, $branchId, $page);
         $product = Product::model()->findByPk($productId);
+        $branch = Branch::model()->findByPk($branchId);
         
         $this->render('transactionInfo', array(
             'dataProvider' => $dataProvider,
             'startDate' => $startDate,
             'endDate' => $endDate,
             'product' => $product,
+            'branch' => $branch,
         ));
     }
 

@@ -122,7 +122,7 @@
                 <td>Code</td>
                 <td>Name</td>
                 <td>Per Tanggal</td>
-                <td>Stok Operator</td>
+                <td>Komparasi Stok</td>
             </tr>
         </thead>
 

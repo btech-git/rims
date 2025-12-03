@@ -52,7 +52,7 @@
                             'model' => $cashTransaction->header,
                             'attribute' => "transaction_date",
                             'options'=>array(
-                                'minDate' => '-1M',
+                                'minDate' => '-2M',
                                 'maxDate' => '+6M',
                                 'dateFormat' => 'yy-mm-dd',
                                 'changeMonth'=>true,
