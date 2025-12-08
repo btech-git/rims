@@ -344,6 +344,7 @@ class TransactionReceiveItemController extends Controller {
             $receiveItem->invoice_sub_total = $receiveItem->subTotal;
             $receiveItem->invoice_tax_nominal = $receiveItem->taxNominal;
             $receiveItem->invoice_grand_total = $receiveItem->grandTotal;
+            $receiveItem->invoice_grand_total_rounded = $receiveItem->grandTotal + $receiveItem->invoice_rounding_nominal;
             
             if ($receiveItem->save(Yii::app()->db)) {
                 foreach ($receiveItem->transactionReceiveItemDetails as $detail) {
