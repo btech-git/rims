@@ -101,6 +101,11 @@
                                         'url' => array('/report/stockCardCategory/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('stockPositionReport')
                                     ),
+                                    array(
+                                        'label' => 'Stok Ban per Tahun Produksi', 
+                                        'url' => array('/report/stockTire/check'), 
+                                        'visible' => Yii::app()->user->checkAccess('stockPositionReport')
+                                    ),
                                 ),
                             )); ?>
                         <?php endif; ?>
