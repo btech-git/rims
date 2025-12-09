@@ -34,23 +34,14 @@
                                 'attribute' => $startDate,
                                 'options' => array(
                                     'dateFormat' => 'yy-mm-dd',
+                                    'changeMonth' => true,
+                                    'changeYear' => true,
                                 ),
                                 'htmlOptions' => array(
                                     'readonly' => true,
                                     'placeholder' => 'Transaction Date From'
                                 ),
                             )); ?>
-                            <?php /*$attribute = 'transaction_date'; ?>
-                            <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(
-                                'id' => CHtml::activeId($model, $attribute . '_0'),
-                                'model' => $model,
-                                'attribute' => $attribute . "_from",
-                                'options' => array('dateFormat' => 'yy-mm-dd'),
-                                'htmlOptions' => array(
-                                    'style' => 'margin-bottom:0px; width: 155px',
-                                    'placeholder' => 'Transaction Date From'
-                                ),
-                            ));*/ ?>
                         </div>
                         <div class="medium-2 columns" style="text-align: center; vertical-align: middle">
                             S/D
@@ -61,22 +52,14 @@
                                 'attribute' => $endDate,
                                 'options' => array(
                                     'dateFormat' => 'yy-mm-dd',
+                                    'changeMonth' => true,
+                                    'changeYear' => true,
                                 ),
                                 'htmlOptions' => array(
                                     'readonly' => true,
                                     'placeholder' => 'Transaction Date To'
                                 ),
                             )); ?>
-                            <?php /*$this->widget('zii.widgets.jui.CJuiDatePicker', array(
-                                'id' => CHtml::activeId($model, $attribute . '_1'),
-                                'model' => $model,
-                                'attribute' => $attribute . "_to",
-                                'options' => array('dateFormat' => 'yy-mm-dd'),
-                                'htmlOptions' => array(
-                                    'style' => 'margin-bottom:0px; width: 155px',
-                                    'placeholder' => 'Transaction Date To'
-                                ),
-                            ));*/ ?>
                         </div>
                     </div>
                 </div>

@@ -327,8 +327,6 @@ class GeneralRepairRegistrationController extends Controller {
     }
         
     public function actionAdmin() {
-//        $model = new RegistrationTransaction('search');
-//        $model->unsetAttributes();  // clear any default values
 
         $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : '';
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : '';

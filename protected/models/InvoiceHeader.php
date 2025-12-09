@@ -356,9 +356,6 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
     }
     
     public function searchByReport() {
-        // Warning: Please modify the following code to remove attributes that
-        // should not be searched.
-
         $criteria = new CDbCriteria;
 
         $criteria->compare('id', $this->id);
@@ -391,11 +388,6 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
         $criteria->compare('t.tax_percentage', $this->tax_percentage);
         $criteria->compare('t.insurance_company_id', $this->insurance_company_id);
         $criteria->compare('t.number_of_print', $this->number_of_print);
-
-        if ($this->invoice_date != NULL OR $this->invoice_date_to != NULL) {
-            $criteria->addBetweenCondition('invoice_date', $this->invoice_date, $this->invoice_date_to);
-            $criteria->addBetweenCondition('due_date', $this->invoice_date, $this->invoice_date_to);
-        }
 
         $criteria->together = 'true';
         $criteria->with = array('customer');

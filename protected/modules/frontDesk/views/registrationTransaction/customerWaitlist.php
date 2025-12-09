@@ -2,22 +2,20 @@
     <?php $this->widget('zii.widgets.jui.CJuiTabs', array(
         'tabs' => array(
             'Customer Waitlist' => array(
-                'content' => $this->renderPartial(
-                    '_viewCustomerWaitlist',
-                    array(
+                'content' => $this->renderPartial('_viewCustomerWaitlist', array(
                         'model' => $model,
                         'modelDataProvider' => $modelDataProvider,
                     ),
                     true
                 )
             ),
-            'Mechanics' => array(
-                'content' => $this->renderPartial(
-                    '_viewMechanics',
-                    array(),
-                    true
-                )
-            ),
+//            'Mechanics' => array(
+//                'content' => $this->renderPartial(
+//                    '_viewMechanics',
+//                    array(),
+//                    true
+//                )
+//            ),
         ),
         // additional javascript options for the tabs plugin
         'options' => array(

@@ -244,7 +244,7 @@ class WorkOrderController extends Controller {
         $workOrderSummary->setupLoading();
         $workOrderSummary->setupPaging($pageSize, $currentPage);
         $workOrderSummary->setupSorting();
-        $workOrderSummary->setupFilterOutstanding();
+        $workOrderSummary->setupFilterOutstanding($startDate, $endDate);
 
         if (isset($_GET['ResetFilter'])) {
             $this->redirect(array('summary'));
@@ -257,6 +257,8 @@ class WorkOrderController extends Controller {
         $this->render('adminOutstanding', array(
             'model' => $model,
             'workOrderSummary' => $workOrderSummary,
+            'startDate' => $startDate,
+            'endDate' => $endDate,
         ));
     }
     

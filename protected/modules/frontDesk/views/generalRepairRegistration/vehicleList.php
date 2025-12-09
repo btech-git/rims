@@ -213,7 +213,6 @@ $('.search-form form').submit(function(){
                 'columns' => array(
                     array(
                         'header' => 'Customer',
-//                        'filter' => CHtml::textField('CustomerName', $customerName),
                         'value' => 'CHtml::link($data->customer->name, array("/master/customer/update", "id"=>$data->customer_id))',
                         'type'=>'raw',
                     ),

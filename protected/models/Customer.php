@@ -593,7 +593,7 @@ class Customer extends CActiveRecord {
             SELECT p.customer_id, COALESCE(SUM(p.total_price), 0) AS total_price, COALESCE(SUM(p.payment_amount), 0) AS payment_amount, 
                 COALESCE(SUM(p.payment_left), 0) AS payment_left
             FROM " . InvoiceHeader::model()->tableName() . " p 
-            WHERE p.customer_id = :customer_id AND p.invoice_date BETWEEN '2024-01-01' AND :end_date AND p.user_id_cancelled IS NULL" . $branchConditionSql . "
+            WHERE p.customer_id = :customer_id AND p.invoice_date BETWEEN '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND :end_date AND p.user_id_cancelled IS NULL" . $branchConditionSql . "
             GROUP BY p.customer_id
         ";
 

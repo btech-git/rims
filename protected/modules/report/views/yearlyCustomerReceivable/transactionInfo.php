@@ -29,6 +29,10 @@ Yii::app()->clientScript->registerCss('_report', '
     <br /> 
     
     <div class="tabBody">
+        <div class="reportDisplay">
+            <?php echo ReportHelper::summaryText($dataProvider); ?>
+        </div>
+
         <table class="report">
             <thead style="position: sticky; top: 0">
                 <tr id="header1">

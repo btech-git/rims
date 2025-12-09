@@ -14,8 +14,6 @@
 
 <br />
 
-<?php $startDate = '2024-01-01'; ?>
-
 <table class="report">
     <thead style="position: sticky; top: 0">
         <tr id="header1">
@@ -60,7 +58,6 @@
                 <td style="text-align: right"><?php echo CHtml::link(Yii::app()->numberFormatter->format('#,##0', $totalReceivable), array(
                     '/report/receivableCustomer/transactionInfo', 
                     'customerId' => $header->id, 
-                    'startDate' => $startDate, 
                     'endDate' => $endDate,
                 ), array('target' => '_blank')); ?></td>
             </tr>

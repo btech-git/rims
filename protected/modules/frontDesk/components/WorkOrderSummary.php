@@ -31,17 +31,18 @@ class WorkOrderSummary extends CComponent {
     }
 
     public function setupFilter($startDate, $endDate) {
-        $this->dataProvider->criteria->addBetweenCondition('t.transaction_date', $startDate, $endDate);
+        $this->dataProvider->criteria->addBetweenCondition('SUBSTRING(t.transaction_date, 1, 10)', $startDate, $endDate);
 
     }
 
-    public function setupFilterOutstanding() {
+    public function setupFilterOutstanding($startDate, $endDate) {
         $this->dataProvider->criteria->addCondition("NOT EXISTS (
             SELECT i.registration_transaction_id
             FROM " . InvoiceHeader::model()->tableName() . " i
             WHERE t.id = i.registration_transaction_id
-        ) AND t.work_order_number IS NOT NULL AND t.status NOT LIKE '%CANCELLED%' AND t.transaction_date > '2023-12-31'");
+        ) AND t.work_order_number IS NOT NULL AND t.status NOT LIKE '%CANCELLED%'");
 
+        $this->dataProvider->criteria->addBetweenCondition('SUBSTRING(t.transaction_date, 1, 10)', $startDate, $endDate);
 
     }
 }

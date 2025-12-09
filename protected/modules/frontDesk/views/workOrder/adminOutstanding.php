@@ -1,6 +1,8 @@
 <?php
 Yii::app()->clientScript->registerScript('report', '
     $(".breadcrumbs").addClass("hide");
+    $("#StartDate").val("' . $startDate . '");
+    $("#EndDate").val("' . $endDate . '");
     $("#PageSize").val("' . $workOrderSummary->dataProvider->pagination->pageSize . '");
     $("#CurrentPage").val("' . ($workOrderSummary->dataProvider->pagination->getCurrentPage(false) + 1) . '");
 ');
@@ -104,8 +106,6 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                 <div class="small-8 columns">
                                     <?php echo CHtml::activeDropDownList($model, 'status', array(
                                         ''=>'-- All --',
-    //                                    'Registration'=>'Registration',
-    //                                    'Pending'=>'Pending',
                                         'Waitlist'=>'Waitlist',
                                         'Processing WO'=>'Processing WO',
                                         'Assigned'=>'Assigned',
@@ -130,6 +130,48 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                         'GR'=>'GR',
                                         'BR'=>'BR',
                                     )); ?>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="medium-6 columns">
+                        <div class="field">
+                            <div class="row collapse">
+                                <div class="small-4 columns">
+                                    <span class="prefix">Tanggal</span>
+                                </div>
+                                <div class="small-8 columns">
+                                    <div class="medium-5 columns">
+                                        <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(
+                                            'name' => 'StartDate',
+                                            'options' => array(
+                                                'dateFormat' => 'yy-mm-dd',
+                                                'changeMonth' => true,
+                                                'changeYear' => true,
+                                            ),
+                                            'htmlOptions' => array(
+                                                'readonly' => true,
+                                                'placeholder' => 'Mulai'
+                                            ),
+                                        )); ?>
+                                    </div>
+                                    <div class="medium-2 columns" style="text-align: center; vertical-align: middle">
+                                        S/D
+                                    </div>
+                                    <div class="medium-5 columns">
+                                        <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(
+                                            'name' => 'EndDate',
+                                            'options' => array(
+                                                'dateFormat' => 'yy-mm-dd',
+                                                'changeMonth' => true,
+                                                'changeYear' => true,
+                                            ),
+                                            'htmlOptions' => array(
+                                                'readonly' => true,
+                                                'placeholder' => 'Sampai'
+                                            ),
+                                        )); ?>
+                                    </div>
                                 </div>
                             </div>
                         </div>

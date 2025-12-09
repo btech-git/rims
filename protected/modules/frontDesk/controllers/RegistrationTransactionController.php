@@ -892,6 +892,31 @@ class RegistrationTransactionController extends Controller {
         ));
     }
 
+    public function getDataProviderTimecounter($modelCriteria) {
+        $cri = new CActiveDataProvider('RegistrationService', array(
+            'criteria' => $modelCriteria,
+            'sort' => array(
+                'defaultOrder' => 'registrationTransaction.vehicle_id',
+                'attributes' => array(
+                    'customer_name' => array(
+                        'asc' => 'customer.name ASC',
+                        'desc' => 'customer.name DESC',
+                    ),
+                    'pic_name' => array(
+                        'asc' => 'pic.name ASC',
+                        'desc' => 'pic.name DESC',
+                    ),
+                    '*',
+                ),
+            ),
+            'pagination' => array(
+                'pageSize' => 10,
+            ),
+        ));
+
+        return $cri;
+    }
+
     public function actionAjaxHtmlAddProductDetail($id) {
         if (Yii::app()->request->isAjaxRequest) {
             $registrationTransaction = $this->instantiate($id, '');
