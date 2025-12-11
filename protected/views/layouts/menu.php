@@ -159,7 +159,7 @@
                     ),
                     array(
                         'label' => 'Daftar Antrian Customer', 
-                        'url' => array('/frontDesk/registrationTransaction/customerWaitlist'), 
+                        'url' => array('/frontDesk/customerWaitlist/index'), 
                         'visible' => Yii::app()->user->checkAccess('customerQueueApproval'),
                     ),
                     array(

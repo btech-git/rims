@@ -56,7 +56,6 @@ class GeneralRepairRegistrationController extends Controller {
         $vehicle = Vehicle::model()->findByPk($vehicleId);
         $customer = Customer::model()->findByPk($vehicle->customer_id);
 
-        $generalRepairRegistration->header->transaction_date = date('Y-m-d H:i:s');
         $generalRepairRegistration->header->created_datetime = date('Y-m-d H:i:s');
         $generalRepairRegistration->header->user_id = Yii::app()->user->id;
         $generalRepairRegistration->header->vehicle_id = $vehicleId;
@@ -66,6 +65,9 @@ class GeneralRepairRegistrationController extends Controller {
         $generalRepairRegistration->header->vehicle_exit_datetime = null;
         $generalRepairRegistration->header->vehicle_start_service_datetime = null;
         $generalRepairRegistration->header->vehicle_finish_service_datetime = null;
+        $generalRepairDate = isset($_POST['GeneralRepairDate']) ? $_POST['GeneralRepairDate'] : date('Y-m-d');
+        $generalRepairHour = isset($_POST['GeneralRepairHour']) ? $_POST['GeneralRepairHour'] : date('H');
+        $generalRepairMinute = isset($_POST['GeneralRepairMinute']) ? $_POST['GeneralRepairMinute'] : date('i');
 
         if (isset($_POST['Cancel'])) {
             $this->redirect(array('admin'));
@@ -74,6 +76,7 @@ class GeneralRepairRegistrationController extends Controller {
         if (isset($_POST['Submit']) && IdempotentManager::check()) {
 //            if ($_POST['_FormSubmit_'] === 'Submit') {
             $this->loadState($generalRepairRegistration);
+            $generalRepairRegistration->header->transaction_date = "{$generalRepairDate} {$generalRepairHour}:{$generalRepairMinute}:00";
             $generalRepairRegistration->generateCodeNumber(Yii::app()->dateFormatter->format('M', strtotime($generalRepairRegistration->header->transaction_date)), Yii::app()->dateFormatter->format('yyyy', strtotime($generalRepairRegistration->header->transaction_date)), $generalRepairRegistration->header->branch_id);
 
             if ($generalRepairRegistration->save(Yii::app()->db)) {
@@ -85,6 +88,9 @@ class GeneralRepairRegistrationController extends Controller {
             'generalRepairRegistration' => $generalRepairRegistration,
             'vehicle' => $vehicle,
             'customer' => $customer,
+            'generalRepairDate' => $generalRepairDate,
+            'generalRepairHour' => $generalRepairHour,
+            'generalRepairMinute' => $generalRepairMinute,
         ));
     }
 

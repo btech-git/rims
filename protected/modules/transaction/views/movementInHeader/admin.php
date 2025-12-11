@@ -69,12 +69,12 @@ $('.search-form form').submit(function(){
                             'value' => 'CHTml::link($data->movement_in_number, array("view", "id"=>$data->id))',
                             'type' => 'raw'
                         ),
-                        'date_posting',
-//                        array(
-//                            'name' => 'branch_id',
-//                            'filter' => CHtml::activeDropDownList($model, 'branch_id', CHtml::listData(Branch::model()->findAll(array('order' => 'name')), 'id', 'name'), array('empty' => '-- All --')),
-//                            'value' => '$data->branch->name'
-//                        ),
+                        array(
+                            'header' => 'Tanggal',
+                            'name' => 'date_posting',
+                            'filter' => false,
+                            'value' => 'Yii::app()->dateFormatter->format("d MMM yyyy HH:mm:ss", $data->date_posting)'
+                        ),
                         array(
                             'name' => 'receive_item_number',
                             'value' => '(!empty($data->receiveItem->receive_item_no)?$data->receiveItem->receive_item_no:"")'

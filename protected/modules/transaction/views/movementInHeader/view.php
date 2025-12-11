@@ -83,14 +83,16 @@ $this->menu = array(
         <?php $this->widget('zii.widgets.CDetailView', array(
             'data' => $model,
             'attributes' => array(
-                //'id',
                 'movement_in_number',
-                'date_posting',
+                array(
+                    'name' => 'date_posting', 
+                    'value' => Yii::app()->dateFormatter->format("d MMM yyyy HH:mm:ss", strtotime($model->date_posting)),
+                ),
                 array(
                     'name' => 'branch_id', 
                     'value' => $model->branch_id == "" ? '-' : $model->branch->name,
                 ),
-//                'user.username',
+                'user.username',
                 'status',
                 'created_datetime',
             ),

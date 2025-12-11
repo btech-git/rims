@@ -170,11 +170,13 @@ class MovementOutHeaderController extends Controller {
         
         $movementOut = $this->instantiate(null, 'create');
         $movementOut->header->created_datetime = date('Y-m-d H:i:s');
-        $movementOut->header->date_posting = Yii::app()->dateFormatter->format('yyyy-M-dd', strtotime($movementOut->header->date_posting)) . ' ' . date('H:i:s');
         $movementOut->header->registration_service_id = null;
         $movementOut->header->movement_type = $movementType;
         $movementOut->header->status = 'Draft';
         $movementOut->header->branch_id = Yii::app()->user->branch_id;
+        $movementOutDate = isset($_POST['MovementOutDate']) ? $_POST['MovementOutDate'] : date('Y-m-d');
+        $movementOutHour = isset($_POST['MovementOutHour']) ? $_POST['MovementOutHour'] : date('H');
+        $movementOutMinute = isset($_POST['MovementOutMinute']) ? $_POST['MovementOutMinute'] : date('i');
 
         if ($movementType == 1) {
 //            $deliveryOrder = TransactionDeliveryOrder::model()->findByPk($transactionId);
@@ -221,6 +223,7 @@ class MovementOutHeaderController extends Controller {
         if (isset($_POST['MovementOutHeader']) && IdempotentManager::check()) {
             $this->loadState($movementOut);
             $movementOut->generateCodeNumber(Yii::app()->dateFormatter->format('M', strtotime($movementOut->header->date_posting)), Yii::app()->dateFormatter->format('yyyy', strtotime($movementOut->header->date_posting)), $movementOut->header->branch_id);
+            $movementOut->header->date_posting = "{$movementOutDate} {$movementOutHour}:{$movementOutMinute}:00";
             
             if ($movementOut->save(Yii::app()->db)) {
                 $this->redirect(array('view', 'id' => $movementOut->header->id));
@@ -229,6 +232,9 @@ class MovementOutHeaderController extends Controller {
 
         $this->render('create', array(
             'movementOut' => $movementOut,
+            'movementOutDate' => $movementOutDate,
+            'movementOutHour' => $movementOutHour,
+            'movementOutMinute' => $movementOutMinute,
             'yearList' => $yearList,
         ));
     }
@@ -244,6 +250,10 @@ class MovementOutHeaderController extends Controller {
         $movementOut->header->updated_datetime = date('Y-m-d H:i:s');
         $movementOut->header->user_id_updated = Yii::app()->user->id;
 
+        $movementOutDate = isset($_POST['MovementOutDate']) ? $_POST['MovementOutDate'] : date('Y-m-d');
+        $movementOutHour = isset($_POST['MovementOutHour']) ? $_POST['MovementOutHour'] : date('H');
+        $movementOutMinute = isset($_POST['MovementOutMinute']) ? $_POST['MovementOutMinute'] : date('i');
+        
         // Uncomment the following line if AJAX validation is needed
         $this->performAjaxValidation($movementOut->header);
 
@@ -259,6 +269,8 @@ class MovementOutHeaderController extends Controller {
 
         if (isset($_POST['MovementOutHeader']) && IdempotentManager::check()) {
             $this->loadState($movementOut);
+            $movementOut->header->date_posting = "{$movementOutDate} {$movementOutHour}:{$movementOutMinute}:00";
+            
             JurnalUmum::model()->deleteAllByAttributes(array(
                 'kode_transaksi' => $movementOut->header->movement_out_no,
                 'branch_id' => $movementOut->header->branch_id,
@@ -277,6 +289,9 @@ class MovementOutHeaderController extends Controller {
 
         $this->render('update', array(
             'movementOut' => $movementOut,
+            'movementOutDate' => $movementOutDate,
+            'movementOutHour' => $movementOutHour,
+            'movementOutMinute' => $movementOutMinute,
             'yearList' => $yearList,
         ));
     }

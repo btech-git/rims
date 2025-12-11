@@ -62,7 +62,10 @@ $this->menu=array(
             'attributes'=>array(
                 'id',
                 'purchase_order_no',
-                'purchase_order_date',
+                array(
+                    'name' =>'purchase_order_date',
+                    'value' => Yii::app()->dateFormatter->format("d MMM yyyy HH:mm:ss", strtotime($model->purchase_order_date)),
+                ),
                 array(
                     'name' =>'purchase_type',
                     'value'=>$model->getPurchaseStatus($model->purchase_type),

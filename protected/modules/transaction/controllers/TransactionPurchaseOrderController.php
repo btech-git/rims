@@ -132,7 +132,6 @@ class TransactionPurchaseOrderController extends Controller {
         $purchaseOrder = $this->instantiate(null, 'create');
         $purchaseOrder->header->main_branch_id = Yii::app()->user->branch_id;
         $purchaseOrder->header->coa_bank_id_estimate = 7;
-//        $purchaseOrder->header->purchase_order_date = date('Y-m-d H:i:s');
         $purchaseOrderDate = isset($_POST['PurchaseOrderDate']) ? $_POST['PurchaseOrderDate'] : date('Y-m-d');
         $purchaseOrderHour = isset($_POST['PurchaseOrderHour']) ? $_POST['PurchaseOrderHour'] : date('H');
         $purchaseOrderMinute = isset($_POST['PurchaseOrderMinute']) ? $_POST['PurchaseOrderMinute'] : date('i');
@@ -216,8 +215,9 @@ class TransactionPurchaseOrderController extends Controller {
         $destinationBranch = Search::bind(new Branch('search'), isset($_GET['Branch']) ? $_GET['Branch'] : array());
         $destinationBranchDataProvider = $destinationBranch->search();
 
-        if (isset($_POST['Cancel']))
+        if (isset($_POST['Cancel'])) {
             $this->redirect(array('admin'));
+        }
 
         if (isset($_POST['TransactionPurchaseOrder']) && IdempotentManager::check()) {
             $this->loadState($purchaseOrder);

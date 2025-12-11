@@ -67,7 +67,12 @@ $('.search-form form').submit(function(){
                             'name' => 'movement_out_no',
                             'value' => 'CHTml::link($data->movement_out_no, array("view", "id"=>$data->id))', 'type' => 'raw'
                         ),
-                        'date_posting',
+                        array(
+                            'header' => 'Tanggal',
+                            'name' => 'date_posting',
+                            'filter' => false,
+                            'value' => 'Yii::app()->dateFormatter->format("d MMM yyyy HH:mm:ss", $data->date_posting)'
+                        ),
                         'status',
                         array(
                             'name' => 'registration_transaction_number',

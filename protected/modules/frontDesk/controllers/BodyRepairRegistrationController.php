@@ -57,7 +57,6 @@ class BodyRepairRegistrationController extends Controller {
         $vehicle = Vehicle::model()->findByPk($vehicleId);
         $customer = Customer::model()->findByPk($vehicle->customer_id);
 
-        $bodyRepairRegistration->header->transaction_date = date('Y-m-d H:i:s');
         $bodyRepairRegistration->header->work_order_time = date('H:i:s');
         $bodyRepairRegistration->header->created_datetime = date('Y-m-d H:i:s');
         $bodyRepairRegistration->header->user_id = Yii::app()->user->id;
@@ -68,6 +67,9 @@ class BodyRepairRegistrationController extends Controller {
         $bodyRepairRegistration->header->vehicle_exit_datetime = null;
         $bodyRepairRegistration->header->vehicle_start_service_datetime = null;
         $bodyRepairRegistration->header->vehicle_finish_service_datetime = null;
+        $bodyRepairDate = isset($_POST['BodyRepairDate']) ? $_POST['BodyRepairDate'] : date('Y-m-d');
+        $bodyRepairHour = isset($_POST['BodyRepairHour']) ? $_POST['BodyRepairHour'] : date('H');
+        $bodyRepairMinute = isset($_POST['BodyRepairMinute']) ? $_POST['BodyRepairMinute'] : date('i');
 
         if (isset($_POST['Cancel'])) {
             $this->redirect(array('admin'));
@@ -75,6 +77,7 @@ class BodyRepairRegistrationController extends Controller {
 
         if (isset($_POST['Submit']) && IdempotentManager::check()) {
             $this->loadState($bodyRepairRegistration);
+            $bodyRepairRegistration->header->transaction_date = "{$bodyRepairDate} {$bodyRepairHour}:{$bodyRepairMinute}:00";
             $bodyRepairRegistration->generateCodeNumber(Yii::app()->dateFormatter->format('M', strtotime($bodyRepairRegistration->header->transaction_date)), Yii::app()->dateFormatter->format('yyyy', strtotime($bodyRepairRegistration->header->transaction_date)), $bodyRepairRegistration->header->branch_id);
 
             if ($bodyRepairRegistration->save(Yii::app()->db)) {
@@ -86,6 +89,9 @@ class BodyRepairRegistrationController extends Controller {
             'bodyRepairRegistration' => $bodyRepairRegistration,
             'vehicle' => $vehicle,
             'customer' => $customer,
+            'bodyRepairDate' => $bodyRepairDate,
+            'bodyRepairHour' => $bodyRepairHour,
+            'bodyRepairMinute' => $bodyRepairMinute,
         ));
     }
 

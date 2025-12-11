@@ -90,14 +90,20 @@
                                     <?php endif; ?>
 
                                     <div class="field">
+                                        <?php $hourList = array_map(function($num) { return str_pad($num, 2, '0', STR_PAD_LEFT); }, range(0, 23)); ?>
+                                        <?php $hourChoices = array_combine($hourList, $hourList); ?>
+                                        <?php $minuteList = array_map(function($num) { return str_pad($num, 2, '0', STR_PAD_LEFT); }, range(0, 59)); ?>
+                                        <?php $minuteChoices = array_combine($minuteList, $minuteList); ?>
+
                                         <div class="row collapse">
                                             <div class="small-4 columns">
                                                 <label class="prefix"><?php echo $form->labelEx($bodyRepairRegistration->header,'transaction_date'); ?></label>
                                             </div>
-                                            <div class="small-8 columns">
+                                            <div class="small-4 columns">
                                                 <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(
-                                                    'model' => $bodyRepairRegistration->header,
-                                                    'attribute' => "transaction_date",
+                                                    'name' => 'BodyRepairDate',
+                                                    'value' => $bodyRepairDate,
+                                                    // additional javascript options for the date picker plugin
                                                     'options' => array(
                                                         'minDate' => '-7W',
                                                         'maxDate' => '+6M',
@@ -109,7 +115,13 @@
                                                         'readonly' => true,
                                                     ),
                                                 )); ?>
-                                                <?php echo $form->error($bodyRepairRegistration->header,'transaction_date'); ?>
+                                            </div>
+                                            <div class="small-2 columns">
+                                                <?php echo CHtml::dropDownList('BodyRepairHour', $bodyRepairHour, $hourChoices); ?>
+                                            </div>
+                                            <div class="small-2 columns">
+                                                <?php echo CHtml::dropDownList('BodyRepairMinute', $bodyRepairMinute, $minuteChoices); ?>
+                                                <?php echo $form->error($bodyRepairRegistration->header, 'transaction_date'); ?>
                                             </div>
                                         </div>
                                     </div>

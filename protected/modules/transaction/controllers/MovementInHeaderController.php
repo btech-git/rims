@@ -145,7 +145,9 @@ class MovementInHeaderController extends Controller {
 
         $movementIn = $this->instantiate(null, 'create');
         $movementIn->header->created_datetime = date('Y-m-d H:i:s');
-        $movementIn->header->date_posting = date('Y-m-d H:i:s');
+        $movementInDate = isset($_POST['MovementInDate']) ? $_POST['MovementInDate'] : date('Y-m-d');
+        $movementInHour = isset($_POST['MovementInHour']) ? $_POST['MovementInHour'] : date('H');
+        $movementInMinute = isset($_POST['MovementInMinute']) ? $_POST['MovementInMinute'] : date('i');
         $this->performAjaxValidation($movementIn->header);
 
         if ($movementType == 1) {
@@ -180,6 +182,7 @@ class MovementInHeaderController extends Controller {
         if (isset($_POST['MovementInHeader']) && IdempotentManager::check()) {
             $this->loadState($movementIn);
             $movementIn->generateCodeNumber(Yii::app()->dateFormatter->format('M', strtotime($movementIn->header->date_posting)), Yii::app()->dateFormatter->format('yyyy', strtotime($movementIn->header->date_posting)), $movementIn->header->branch_id);
+            $movementIn->header->date_posting = "{$movementInDate} {$movementInHour}:{$movementInMinute}:00";
             
             if ($movementIn->save(Yii::app()->db)) {
                 $this->redirect(array('view', 'id' => $movementIn->header->id));
@@ -188,6 +191,9 @@ class MovementInHeaderController extends Controller {
 
         $this->render('create', array(
             'movementIn' => $movementIn,
+            'movementInDate' => $movementInDate,
+            'movementInHour' => $movementInHour,
+            'movementInMinute' => $movementInMinute,
             'yearList' => $yearList,
         ));
     }
@@ -202,6 +208,9 @@ class MovementInHeaderController extends Controller {
         $movementIn->header->status = 'Draft';
         $movementIn->header->updated_datetime = date('Y-m-d H:i:s');
         $movementIn->header->user_id_updated = Yii::app()->user->id;
+        $movementInDate = isset($_POST['MovementInDate']) ? $_POST['MovementInDate'] : date('Y-m-d');
+        $movementInHour = isset($_POST['MovementInHour']) ? $_POST['MovementInHour'] : date('H');
+        $movementInMinute = isset($_POST['MovementInMinute']) ? $_POST['MovementInMinute'] : date('i');
 
         // Uncomment the following line if AJAX validation is needed
         $this->performAjaxValidation($movementIn->header);
@@ -220,6 +229,8 @@ class MovementInHeaderController extends Controller {
 
         if (isset($_POST['MovementInHeader']) && IdempotentManager::check()) {
             $this->loadState($movementIn);
+            $movementIn->header->date_posting = "{$movementInDate} {$movementInHour}:{$movementInMinute}:00";
+            
             JurnalUmum::model()->deleteAllByAttributes(array(
                 'kode_transaksi' => $movementIn->header->movement_in_number,
             ));
@@ -237,6 +248,9 @@ class MovementInHeaderController extends Controller {
 
         $this->render('update', array(
             'movementIn' => $movementIn,
+            'movementInDate' => $movementInDate,
+            'movementInHour' => $movementInHour,
+            'movementInMinute' => $movementInMinute,
             'yearList' => $yearList,
         ));
     }

@@ -110,14 +110,14 @@ $this->breadcrumbs = array(
                             )); ?>
                         <?php endif; ?>
                     
-                        <?php if (empty($invoices) /*&& !($model->status == 'Approved' || $model->status == 'Finished' || $model->status == 'CANCELLED!!!')*/): ?>
-                            <?php //if (!empty($model->registrationServices) && (!empty($model->registrationProducts) && $model->getTotalQuantityMovementLeft() == 0)): ?>
+                        <?php if (empty($invoices) && !($model->status == 'Approved' || $model->status == 'Finished' || $model->status == 'CANCELLED!!!')): ?>
+                            <?php if (!empty($model->registrationServices) && (!empty($model->registrationProducts) && $model->getTotalQuantityMovementLeft() == 0)): ?>
                                 <?php echo CHtml::link('<span class="fa fa-plus"></span>Generate Invoice', array("/transaction/invoiceHeader/create", "registrationId" => $model->id), array(
                                     'class' => 'button success left', 
                                     'style' => 'margin-right:10px',
                                     'visible' => Yii::app()->user->checkAccess("generalRepairCreate") || Yii::app()->user->checkAccess("generalRepairEdit")
                                 )); ?>
-                            <?php /*elseif (!empty($model->registrationServices) && empty($model->registrationProducts)): ?>
+                            <?php elseif (!empty($model->registrationServices) && empty($model->registrationProducts)): ?>
                                 <?php echo CHtml::link('<span class="fa fa-plus"></span>Generate Invoice', array("/transaction/invoiceHeader/create", "registrationId" => $model->id), array(
                                     'class' => 'button success left', 
                                     'style' => 'margin-right:10px',
@@ -129,7 +129,7 @@ $this->breadcrumbs = array(
                                     'style' => 'margin-right:10px',
                                     'visible' => Yii::app()->user->checkAccess("generalRepairCreate") || Yii::app()->user->checkAccess("generalRepairEdit")
                                 )); ?>
-                            <?php endif;*/ ?>
+                            <?php endif; ?>
                         <?php endif; ?>
 
                         <?php if (Yii::app()->user->checkAccess("generalRepairCreate") || Yii::app()->user->checkAccess("generalRepairEdit")): ?>

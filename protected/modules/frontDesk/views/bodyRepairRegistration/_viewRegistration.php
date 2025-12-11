@@ -20,7 +20,7 @@
                             <span class="prefix">Transaction Date</span>
                         </div>
                         <div class="small-8 columns">
-                            <input type="text" readonly="true" value="<?php echo $model->transaction_date; ?>"> 
+                            <input type="text" readonly="true" value="<?php echo Yii::app()->dateFormatter->format("d MMM yyyy HH:mm:ss", strtotime($model->transaction_date)); ?>"> 
                         </div>
                     </div>
                 </div>

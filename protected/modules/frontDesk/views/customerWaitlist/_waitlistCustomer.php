@@ -1,5 +1,5 @@
 <div style="text-align: right">
-    <?php echo ReportHelper::summaryText($modelDataProvider); ?>
+    <?php echo ReportHelper::summaryText($dataProvider); ?>
 </div>
 
 <table>
@@ -9,6 +9,7 @@
             <th style="text-align: center">Car</th>
             <th style="text-align: center">Plate #</th>
             <th style="text-align: center">WO #</th>
+            <th style="text-align: center">Tanggal</th>
             <th style="text-align: center">Status</th>
             <th style="text-align: center">Duration</th>
             <th style="text-align: center">BR/GR</th>
@@ -16,7 +17,7 @@
         </tr>
     </thead>
     <tbody>
-        <?php foreach ($modelDataProvider->data as $model): ?>
+        <?php foreach ($dataProvider->data as $model): ?>
             <tr>
                 <td>
                     <?php echo $model->customer_id != null ? CHtml::link($model->customer->name, array(
@@ -25,9 +26,9 @@
                     ), array('target' => '_blank')) : ' '; ?>
                 </td>
                 <td>
-                    <?php echo $model->vehicle->carMake != null ? $model->vehicle->carMake->name : ' '; ?>
-                    <?php echo $model->vehicle->carModel != null ? $model->vehicle->carModel->name : ' '; ?>
-                    <?php echo $model->vehicle->carSubModel != null ? $model->vehicle->carSubModel->name : ' '; ?>
+                    <?php echo CHtml::encode(CHtml::value($model, 'vehicle.carMake.name')); ?>
+                    <?php echo CHtml::encode(CHtml::value($model, 'vehicle.carModel.name')); ?>
+                    <?php echo CHtml::encode(CHtml::value($model, 'vehicle.carSubModel.name')); ?>
                 </td>
                 <td>
                     <?php echo $model->vehicle != null ? CHtml::link($model->vehicle->plate_number, array(
@@ -41,6 +42,7 @@
                         "id" => $model->id
                     ), array('target' => '_blank')) : ' '; ?>
                 </td>
+                <td><?php echo CHtml::encode(Yii::app()->dateFormatter->format("d MMM yyyy H:m:s", CHtml::value($model, 'transaction_date'))); ?></td>
                 <td><?php echo $model->status != null ? $model->status : '-'; ?></td>
                 <?php if ($model->repair_type == 'GR') {
                     $regServices = RegistrationService::model()->findAllByAttributes(array(
@@ -65,3 +67,9 @@
         <?php endforeach; ?>
     </tbody>
 </table>
+
+<div class="text-end">
+    <?php $this->widget('system.web.widgets.pagers.CLinkPager', array(
+        'pages' => $dataProvider->pagination,
+    )); ?>
+</div>

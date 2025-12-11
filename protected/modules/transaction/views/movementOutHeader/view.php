@@ -91,7 +91,10 @@ $this->menu = array(
             'attributes' => array(
                 'id',
                 'movement_out_no',
-                'date_posting',
+                array(
+                    'name' => 'date_posting', 
+                    'value' => Yii::app()->dateFormatter->format("d MMM yyyy HH:mm:ss", strtotime($model->date_posting)),
+                ),
                 array(
                     'name' => 'branch_id', 
                     'value' => $model->branch_id == "" ? '-' : $model->branch->name

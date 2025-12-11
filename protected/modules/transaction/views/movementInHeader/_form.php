@@ -23,14 +23,20 @@
         <div class="row">
             <div class="small-12 medium-6 columns">
                 <div class="field">
+                    <?php $hourList = array_map(function($num) { return str_pad($num, 2, '0', STR_PAD_LEFT); }, range(0, 23)); ?>
+                    <?php $hourChoices = array_combine($hourList, $hourList); ?>
+                    <?php $minuteList = array_map(function($num) { return str_pad($num, 2, '0', STR_PAD_LEFT); }, range(0, 59)); ?>
+                    <?php $minuteChoices = array_combine($minuteList, $minuteList); ?>
+                    
                     <div class="row collapse">
                         <div class="small-4 columns">
                             <?php echo $form->labelEx($movementIn->header, 'date_posting', array('class' => 'prefix')); ?>
                         </div>
-                        <div class="small-8 columns">
+                        <div class="small-4 columns">
                             <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(
-                                'model' => $movementIn->header,
-                                'attribute' => "date_posting",
+                                'name' => 'MovementInDate',
+                                'value' => $movementInDate,
+                                // additional javascript options for the date picker plugin
                                 'options' => array(
                                     'minDate' => '-7W',
                                     'maxDate' => '+6M',
@@ -40,9 +46,14 @@
                                 ),
                                 'htmlOptions' => array(
                                     'readonly' => true,
-//                                    'value' => date('Y-m-d'),
                                 ),
                             )); ?>
+                        </div>
+                        <div class="small-2 columns">
+                            <?php echo CHtml::dropDownList('MovementInHour', $movementInHour, $hourChoices); ?>
+                        </div>
+                        <div class="small-2 columns">
+                            <?php echo CHtml::dropDownList('MovementInMinute', $movementInMinute, $minuteChoices); ?>
                             <?php echo $form->error($movementIn->header, 'date_posting'); ?>
                         </div>
                     </div>

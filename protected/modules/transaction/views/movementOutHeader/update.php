@@ -21,6 +21,9 @@ $this->breadcrumbs=array(
 <div id="maincontent">
     <?php $this->renderPartial('_form', array(
         'movementOut'=>$movementOut,
+        'movementOutDate' => $movementOutDate,
+        'movementOutHour' => $movementOutHour,
+        'movementOutMinute' => $movementOutMinute,
         'yearList' => $yearList,
     )); ?>
 </div>
