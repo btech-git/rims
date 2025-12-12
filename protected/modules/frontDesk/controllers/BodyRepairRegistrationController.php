@@ -241,6 +241,9 @@ class BodyRepairRegistrationController extends Controller {
         $customer = Customer::model()->findByPk($vehicle->customer_id);
         $bodyRepairRegistration->header->edited_datetime = date('Y-m-d H:i:s');
         $bodyRepairRegistration->header->user_id_edited = Yii::app()->user->id;
+        $bodyRepairDate = isset($_POST['BodyRepairDate']) ? $_POST['BodyRepairDate'] : date('Y-m-d');
+        $bodyRepairHour = isset($_POST['BodyRepairHour']) ? $_POST['BodyRepairHour'] : date('H');
+        $bodyRepairMinute = isset($_POST['BodyRepairMinute']) ? $_POST['BodyRepairMinute'] : date('i');
 
         if (isset($_POST['RegistrationTransaction'])) {
             $this->loadState($bodyRepairRegistration);
@@ -254,6 +257,9 @@ class BodyRepairRegistrationController extends Controller {
             'bodyRepairRegistration' => $bodyRepairRegistration,
             'vehicle' => $vehicle,
             'customer' => $customer,
+            'bodyRepairDate' => $bodyRepairDate,
+            'bodyRepairHour' => $bodyRepairHour,
+            'bodyRepairMinute' => $bodyRepairMinute,
         ));
     }
 

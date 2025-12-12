@@ -192,6 +192,9 @@ class GeneralRepairRegistrationController extends Controller {
         $customer = Customer::model()->findByPk($vehicle->customer_id);
         $generalRepairRegistration->header->edited_datetime = date('Y-m-d H:i:s');
         $generalRepairRegistration->header->user_id_edited = Yii::app()->user->id;
+        $generalRepairDate = isset($_POST['GeneralRepairDate']) ? $_POST['GeneralRepairDate'] : date('Y-m-d');
+        $generalRepairHour = isset($_POST['GeneralRepairHour']) ? $_POST['GeneralRepairHour'] : date('H');
+        $generalRepairMinute = isset($_POST['GeneralRepairMinute']) ? $_POST['GeneralRepairMinute'] : date('i');
 
         if (isset($_POST['RegistrationTransaction'])) {
             $this->loadState($generalRepairRegistration);
@@ -205,6 +208,9 @@ class GeneralRepairRegistrationController extends Controller {
             'generalRepairRegistration' => $generalRepairRegistration,
             'vehicle' => $vehicle,
             'customer' => $customer,
+            'generalRepairDate' => $generalRepairDate,
+            'generalRepairHour' => $generalRepairHour,
+            'generalRepairMinute' => $generalRepairMinute,
         ));
     }
 
