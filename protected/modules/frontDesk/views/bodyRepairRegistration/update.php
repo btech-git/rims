@@ -22,16 +22,9 @@ $this->menu=array(
         'bodyRepairRegistration' => $bodyRepairRegistration,
         'vehicle' => $vehicle,
         'customer' => $customer,
-//        'damage' => $damage,
-//        'damageDataProvider' =>$damageDataProvider,
-//        'qs' => $qs,
-//        'qsDataProvider' => $qsDataProvider,
-//        'service' => $service,
-//        'serviceDataProvider' => $serviceDataProvider,
-//        'product' => $product,
-//        'productDataProvider' => $productDataProvider,
-//        'serviceArray' => $serviceArray,
-//        'type' => $type,
+        'bodyRepairDate' => $bodyRepairDate,
+        'bodyRepairHour' => $bodyRepairHour,
+        'bodyRepairMinute' => $bodyRepairMinute,
     )); ?>
 </div>
 	

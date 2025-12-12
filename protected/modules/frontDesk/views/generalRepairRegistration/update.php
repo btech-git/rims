@@ -22,6 +22,9 @@ $this->menu=array(
         'generalRepairRegistration' => $generalRepairRegistration,
         'vehicle' => $vehicle,
         'customer' => $customer,
+        'generalRepairDate' => $generalRepairDate,
+        'generalRepairHour' => $generalRepairHour,
+        'generalRepairMinute' => $generalRepairMinute,
     )); ?>
 </div>
 	
