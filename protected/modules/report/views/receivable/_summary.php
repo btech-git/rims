@@ -1,7 +1,7 @@
 <?php Yii::app()->clientScript->registerCss('_report', '
     .width1-1 { width: 35% }
     .width1-2 { width: 15% }
-    .width1-2 { width: 50% }
+    .width1-3 { width: 50% }
     
     .width2-1 { width: 15% }
     .width2-2 { width: 15% }
