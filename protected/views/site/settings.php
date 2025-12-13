@@ -290,6 +290,16 @@
                                         'url' => array('/master/unitConversion/admin'), 
                                         'visible' => Yii::app()->user->checkAccess('masterUnitCreate') || Yii::app()->user->checkAccess('masterUnitEdit') || Yii::app()->user->checkAccess('masterUnitView') || Yii::app()->user->checkAccess('masterUnitApproval')
                                     ),
+                                    array(
+                                        'label' => 'Ukuran Ban', 
+                                        'url' => array('/master/tireSize/admin'), 
+//                                        'visible' => Yii::app()->user->checkAccess('masterUnitCreate') || Yii::app()->user->checkAccess('masterUnitEdit') || Yii::app()->user->checkAccess('masterUnitView') || Yii::app()->user->checkAccess('masterUnitApproval')
+                                    ),
+                                    array(
+                                        'label' => 'Oli SAE', 
+                                        'url' => array('/master/oilSae/admin'), 
+//                                        'visible' => Yii::app()->user->checkAccess('masterUnitCreate') || Yii::app()->user->checkAccess('masterUnitEdit') || Yii::app()->user->checkAccess('masterUnitView') || Yii::app()->user->checkAccess('masterUnitApproval')
+                                    ),
                                 ),
                             )); ?>
                         <?php endif; ?>

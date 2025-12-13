@@ -59,9 +59,9 @@ Yii::app()->clientScript->registerCss('_report', '
                         <?php $totalSale = 0.00; ?>
                         <?php $saleRetailVehicleData = $header->getSaleVehicleReport($startDate, $endDate, $branchId); ?>
                         <?php foreach ($saleRetailVehicleData as $saleRetailVehicleRow): ?>
-                        <?php $invoiceHeader = InvoiceHeader::model()->findByPk($saleRetailVehicleRow['id']); ?>
-                        <?php $discountProduct = $invoiceHeader->getTotalDiscountProduct(); ?>
-                        <?php $discountService = $invoiceHeader->getTotalDiscountService(); ?>
+                            <?php $invoiceHeader = InvoiceHeader::model()->findByPk($saleRetailVehicleRow['id']); ?>
+                            <?php $discountProduct = $invoiceHeader->getTotalDiscountProduct(); ?>
+                            <?php $discountService = $invoiceHeader->getTotalDiscountService(); ?>
                             <?php $grandTotal = $saleRetailVehicleRow['total_price']; ?>
                             <tr>
                                 <td class="width2-1"><?php echo CHtml::encode($saleRetailVehicleRow['invoice_number']); ?></td>

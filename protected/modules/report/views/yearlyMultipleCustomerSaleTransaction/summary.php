@@ -17,11 +17,36 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                             <div class="field">
                                 <div class="row collapse">
                                     <div class="small-4 columns">
-                                        <span class="prefix">Periode</span>
+                                        <span class="prefix">Tanggal </span>
+                                    </div>
+                                    <div class="small-4 columns">
+                                        <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(
+                                            'name' => 'StartDate',
+                                            'options' => array(
+                                                'dateFormat' => 'yy-mm-dd',
+                                                'changeMonth'=>true,
+                                                'changeYear'=>true,
+                                            ),
+                                            'htmlOptions' => array(
+                                                'readonly' => true,
+                                                'placeholder' => 'Mulai',
+                                            ),
+                                        )); ?>
                                     </div>
 
-                                    <div class="small-8 columns">
-                                        <?php echo CHtml::dropDownList('Year', $year, $yearList); ?>
+                                    <div class="small-4 columns">
+                                        <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(
+                                            'name' => 'EndDate',
+                                            'options' => array(
+                                                'dateFormat' => 'yy-mm-dd',
+                                                'changeMonth'=>true,
+                                                'changeYear'=>true,
+                                            ),
+                                            'htmlOptions' => array(
+                                                'readonly' => true,
+                                                'placeholder' => 'Sampai',
+                                            ),
+                                        )); ?>
                                     </div>
                                 </div>
                             </div>
@@ -36,13 +61,44 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                         <?php echo CHtml::dropDownList('BranchId', $branchId, CHtml::listData(Branch::model()->findAll(array(
                                             'condition' => "status = 'Active'", 
                                             'order' => 'name ASC'
-                                        )), 'id', 'name'), array('empty' => '-- Pilih Cabang --')); ?>
+                                        )), 'id', 'name'), array('empty' => '-- All Branch --')); ?>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
 
+                    <div class="row">
+                        <div class="medium-6 columns">
+                            <div class="field">
+                                <div class="row collapse">
+                                    <div class="small-4 columns">
+                                        <span class="prefix">Customer</span>
+                                    </div>
+
+                                    <div class="small-8 columns">
+                                        <?php echo CHtml::textField('CustomerName', $customerName); ?>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="medium-6 columns">
+                            <div class="field">
+                                <div class="row collapse">
+                                    <div class="small-4 columns">
+                                        <span class="prefix">Type</span>
+                                    </div>
+                                    <div class="small-8 columns">
+                                        <?php echo CHtml::dropDownList('CustomerType', $customerType, array(
+                                            'Company' => 'Company',
+                                            'Individual' => 'Individual',
+                                        ), array('empty' => '-- All Type --')); ?>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
                     <div class="clear"></div>
                     <div class="row buttons">
                         <?php echo CHtml::submitButton('Tampilkan', array('onclick' => '$("#CurrentSort").val(""); return true;')); ?>

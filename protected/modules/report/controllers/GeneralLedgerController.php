@@ -119,38 +119,6 @@ class GeneralLedgerController extends Controller {
         }
     }
 
-//    public function actionAjaxHtmlUpdateCoaSubCategorySelect() {
-//        if (Yii::app()->request->isAjaxRequest) {
-//            $coaCategoryId = isset($_GET['Coa']['coa_category_id']) ? $_GET['Coa']['coa_category_id'] : 0;
-//
-//            $this->renderPartial('_coaSubCategorySelect', array(
-//                'coaCategoryId' => $coaCategoryId,
-//            ));
-//        }
-//    }
-
-//    public function actionAjaxHtmlAccount() {
-//        if (Yii::app()->request->isAjaxRequest) {
-//            $startAccount = (isset($_GET['StartAccount'])) ? $_GET['StartAccount'] : '';
-//            $endAccount = (isset($_GET['EndAccount'])) ? $_GET['EndAccount'] : '';
-//
-//            $accounts = Account::model()->findAllByAttributes(array(
-//                'branch_id' => $_POST['BranchId'],
-//            ), array(
-//                'order' => 'code ASC',
-//            ));
-//
-//            $account = Search::bind(new Account('search'), isset($_GET['Account']) ? $_GET['Account'] : array());
-//
-//            $this->renderPartial('_account', array(
-//                'account' => $account,
-//                'accounts' => $accounts,
-//                'startAccount' => $startAccount,
-//                'endAccount' => $endAccount,
-//            ));
-//        }
-//    }
-
     protected function saveToExcel($dataProvider, array $options = array()) {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');

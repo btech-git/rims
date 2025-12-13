@@ -2209,11 +2209,14 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
         return $resultSet;
     }    
     
-    public static function getCustomerCompanyTopSaleReport($year, $branchId) {
+    public static function getCustomerCompanyTopSaleReport($startDate, $endDate, $customerName, $customerType, $branchId) {
         $branchConditionSql = '';
+        $customerNameConditionSql = '';
+        $customerTypeConditionSql = '';
       
         $params = array(
-            ':year' => $year,
+            ':start_date' => $startDate,
+            ':end_date' => $endDate,
         );
         
         if (!empty($branchId)) {
@@ -2221,11 +2224,21 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
             $params[':branch_id'] = $branchId;
         }
         
+        if (!empty($customerName)) {
+            $customerNameConditionSql = ' AND c.name LIKE :customer_name';
+            $params[':customer_name'] = $customerName;
+        }
+        
+        if (!empty($customerType)) {
+            $customerTypeConditionSql = ' AND c.customer_type = :customer_type';
+            $params[':customer_type'] = $customerType;
+        }
+        
         $sql = "SELECT h.customer_id, MAX(c.name) AS customer_name, MAX(c.customer_type) AS customer_type, MAX(c.mobile_phone) AS customer_phone, 
                     COUNT(h.id) AS invoice_quantity, SUM(h.product_price) AS total_product, SUM(h.total_price) AS grand_total, SUM(h.service_price) AS total_service
                 FROM " . InvoiceHeader::model()->tableName() . " h 
                 INNER JOIN " . Customer::model()->tableName() . " c ON c.id = h.customer_id
-                WHERE YEAR(h.invoice_date) = :year AND c.customer_type = 'Company' AND h.status NOT LIKE '%CANCEL%'" . $branchConditionSql . " 
+                WHERE h.invoice_date BETWEEN :start_date AND :end_date AND c.customer_type = 'Company' AND h.status NOT LIKE '%CANCEL%'" . $branchConditionSql . " 
                 GROUP BY h.customer_id
                 ORDER BY grand_total DESC, invoice_quantity DESC";
                 

@@ -22,13 +22,14 @@ class YearlyMultipleCustomerSaleTransactionController extends Controller {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
         
-        $yearNow = date('Y');
-        
-        $year = (isset($_GET['Year'])) ? $_GET['Year'] : $yearNow;
+        $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : date('Y-m-d');
+        $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
         $branchId = (isset($_GET['BranchId'])) ? $_GET['BranchId'] : '';
+        $customerName = (isset($_GET['CustomerName'])) ? $_GET['CustomerName'] : '';
+        $customerType = (isset($_GET['CustomerType'])) ? $_GET['CustomerType'] : '';
         
-        $yearlyMultipleCustomerCompanySaleReport = InvoiceHeader::getCustomerCompanyTopSaleReport($year, $branchId);
-        $yearlyMultipleCustomerIndividualSaleReport = InvoiceHeader::getCustomerIndividualTopSaleReport($year, $branchId);
+        $yearlyMultipleCustomerCompanySaleReport = InvoiceHeader::getCustomerCompanyTopSaleReport($startDate, $endDate, $customerName, $customerType, $branchId);
+        $yearlyMultipleCustomerIndividualSaleReport = InvoiceHeader::getCustomerIndividualTopSaleReport($startDate, $endDate, $customerName, $customerType, $branchId);
         
         $yearList = array();
         for ($y = $yearNow - 4; $y <= $yearNow; $y++) {

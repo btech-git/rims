@@ -51,28 +51,19 @@ $('.search-form form').submit(function(){
     <div class="clearfix page-action">
         <?php if (Yii::app()->user->checkAccess("masterProductCategoryCreate")) { ?>
             <a class="button success right" href="<?php echo Yii::app()->baseUrl . '/master/productMasterCategory/create'; ?>"><span class="fa fa-plus"></span>New Product Master Category</a>
-<?php } ?>
+        <?php } ?>
         <h1>Manage Product Master Category</h1>
 
 
         <!-- BEGIN aSearch -->
         <div class="search-bar">
             <div class="clearfix button-bar">
-                <!--<div class="left clearfix bulk-action">
-                        <span class="checkbox"><span class="fa fa-reply fa-rotate-270"></span></span>
-                        <input type="submit" value="Archive" class="button secondary cbutton" name="archive">         
-                        <input type="submit" value="Delete" class="button secondary cbutton" name="delete">      
-        </div>-->
-                <a href="#" class="search-button right button cbutton secondary">Advanced Search</a>	
-<?php //echo CHtml::link('Advanced Search','#',array('class'=>'search-button right button cbutton secondary'));  ?>
             </div>
             <div class="clearfix"></div>
             <div class="search-form" style="display:none">
-                <?php
-                $this->renderPartial('_search', array(
+                <?php $this->renderPartial('_search', array(
                     'model' => $model,
-                ));
-                ?>
+                )); ?>
             </div><!-- search-form -->
         </div>
         <!-- END aSearch -->		
@@ -149,7 +140,5 @@ $('.search-form form').submit(function(){
             ));
             ?>
         </div>
-        <!-- END gridview -->
     </div>
-    <!-- END maincontent -->		
 </div>
