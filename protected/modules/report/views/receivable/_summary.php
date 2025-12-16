@@ -101,7 +101,7 @@
                     </table>
                 </td>
             </tr>
-            <?php if (++$i == 5): ?>
+            <?php if (++$i == 10): ?>
                 <?php break; ?>
             <?php endif; ?>
         <?php endforeach; ?>   
