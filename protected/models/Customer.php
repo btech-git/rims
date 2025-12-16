@@ -532,26 +532,26 @@ class Customer extends CActiveRecord {
     }
     
     public function getReceivableReport($endDate, $branchId, $plateNumber) {
-        $branchConditionSql = '';
-        $plateNumberConditionSql = '';
+//        $branchConditionSql = '';
+//        $plateNumberConditionSql = '';
         
         $params = array(
             ':customer_id' => $this->id,
             ':end_date' => $endDate,
         );
         
-        if (!empty($branchId)) {
-            $branchConditionSql = ' AND i.branch_id = :branch_id';
-            $params[':branch_id'] = $branchId;
-        }
-        
-        if (!empty($plateNumber)) {
-            $plateNumberConditionSql = ' AND v.plate_number LIKE :plate_number';
-            $params[':plate_number'] = "%{$plateNumber}%";
-        }
+//        if (!empty($branchId)) {
+//            $branchConditionSql = ' AND i.branch_id = :branch_id';
+//            $params[':branch_id'] = $branchId;
+//        }
+//        
+//        if (!empty($plateNumber)) {
+//            $plateNumberConditionSql = ' AND v.plate_number LIKE :plate_number';
+//            $params[':plate_number'] = "%{$plateNumber}%";
+//        }
         
         $sql = "SELECT * FROM rims_invoice_header i
-                WHERE t.id = i.customer_id AND i.user_id_cancelled IS NULL AND i.invoice_date BETWEEN '2024-01-01' AND '2025-10-16' AND i.total_price - (
+                WHERE i.customer_id = :customer_id AND i.user_id_cancelled IS NULL AND i.invoice_date BETWEEN '2024-01-01' AND :end_date AND i.total_price - (
                     SELECT COALESCE(SUM(d.amount), 0) + COALESCE(SUM(d.tax_service_amount), 0) + COALESCE(SUM(d.discount_amount), 0) +
                         COALESCE(SUM(d.bank_administration_fee), 0) + COALESCE(SUM(d.merimen_fee), 0) + COALESCE(SUM(d.downpayment_amount), 0)
                     FROM rims_payment_in_detail d
