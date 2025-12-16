@@ -48,7 +48,7 @@
             <tr class="items1">
                 <th class="width1-1"><?php echo CHtml::encode(CHtml::value($header, 'name')); ?></th>
                 <th class="width1-2"><?php echo CHtml::encode(CHtml::value($header, 'customer_type')); ?></th>
-                <th class="width1-3"><?php echo CHtml::encode(CHtml::value($header, 'note')); ?></th>
+                <th class="width1-3"><?php echo $i; ?></th>
             </tr>
             <tr class="items2">
                 <td colspan="3">
