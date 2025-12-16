@@ -58,8 +58,8 @@
                         <?php $totalReceivable = 0.00; ?>
                         <?php foreach ($receivableData as $receivableRow): ?>
                             <?php $revenue = $receivableRow['total_price']; ?>
-                            <?php //$paymentAmount = $receivableRow['amount']; ?>
-                            <?php //$paymentLeft = $receivableRow['remaining']; ?>
+                            <?php $paymentAmount = PaymentInDetail::getReceivablePaymentReport($endDate, $receivableRow['id']); ?>
+                            <?php $paymentLeft = $revenue - $paymentAmount; ?>
                             <tr>
                                 <td class="width2-1">
                                     <?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($receivableRow['invoice_date']))); ?>
@@ -75,10 +75,10 @@
                                     <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $revenue)); ?>
                                 </td>
                                 <td class="width2-6" style="text-align: right">
-                                    <?php //echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $paymentAmount)); ?>
+                                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $paymentAmount)); ?>
                                 </td>
                                 <td class="width2-7" style="text-align: right">
-                                    <?php //echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $paymentLeft)); ?>
+                                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $paymentLeft)); ?>
                                 </td>
                             </tr>
                             <?php $totalRevenue += $revenue; ?>
