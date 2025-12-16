@@ -63,6 +63,16 @@ class ReceivableSummary extends CComponent {
 //                COALESCE(p.bank_administration_fee, 0) - COALESCE(p.merimen_fee, 0) - COALESCE(p.downpayment_amount, 0) > 100 " . $branchConditionSql . $plateConditionSql . " 
 //        )");
         
+        $this->dataProvider->criteria->addCondition("EXISTS (
+            SELECT * FROM rims_invoice_header i
+            WHERE c.id = i.customer_id AND i.user_id_cancelled IS NULL AND i.invoice_date BETWEEN '2024-01-01' AND '2025-10-16' AND i.total_price - (
+                SELECT COALESCE(SUM(d.amount), 0)
+                FROM rims_payment_in_detail d
+                INNER JOIN rims_payment_in h ON h.id = d.payment_in_id
+                WHERE i.id = d.invoice_header_id AND h.user_id_cancelled IS NULL AND h.payment_date BETWEEN '2024-01-01' AND '2025-10-16'
+            ) > 0
+        )");
+        
 //        $this->dataProvider->criteria->addCondition("EXISTS (
 //            SELECT i.coa_id, SUM(CASE WHEN debet_kredit = 'D' THEN total ELSE 0 END) AS debit, SUM(CASE WHEN debet_kredit = 'K' THEN total ELSE 0 END) AS credit
 //            FROM " . JurnalUmum::model()->tableName() . " i
