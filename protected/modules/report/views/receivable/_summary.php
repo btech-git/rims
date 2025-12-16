@@ -101,9 +101,9 @@
                     </table>
                 </td>
             </tr>
-            <?php if (++$i == 13): ?>
+            <?php /*if (++$i == 13): ?>
                 <?php break; ?>
-            <?php endif; ?>
+            <?php endif;*/ ?>
         <?php endforeach; ?>   
     </tbody>
 </table>
