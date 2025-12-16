@@ -139,12 +139,11 @@ class PaymentInDetail extends CActiveRecord {
             ':invoice_id' => $invoiceId,
         );
         
-        $sql = "SELECT d.invoice_header_id, COALESCE(SUM(d.amount), 0) + COALESCE(SUM(d.tax_service_amount), 0) + COALESCE(SUM(d.discount_amount), 0) +
+        $sql = "SELECT COALESCE(SUM(d.amount), 0) + COALESCE(SUM(d.tax_service_amount), 0) + COALESCE(SUM(d.discount_amount), 0) +
                     COALESCE(SUM(d.bank_administration_fee), 0) + COALESCE(SUM(d.merimen_fee), 0) + COALESCE(SUM(d.downpayment_amount), 0) AS payment_amount
                 FROM rims_payment_in_detail d
                 INNER JOIN rims_payment_in h ON h.id = d.payment_in_id
-                WHERE d.invoice_header_id = :invoice_id AND h.user_id_cancelled IS NULL AND h.payment_date BETWEEN '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND :end_date
-                GROUP BY d.invoice_header_id";
+                WHERE d.invoice_header_id = :invoice_id AND h.user_id_cancelled IS NULL AND h.payment_date BETWEEN '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND :end_date";
         
         $resultSet = Yii::app()->db->createCommand($sql)->queryScalar($params);
 
