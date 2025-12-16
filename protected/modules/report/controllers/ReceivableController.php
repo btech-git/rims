@@ -52,7 +52,7 @@ class ReceivableController extends Controller {
             'customerId' => $customerId,
         );
         $receivableSummary->setupFilter($filters);
-
+        
         if (isset($_GET['ResetFilter'])) {
             $this->redirect(array('summary'));
         }
