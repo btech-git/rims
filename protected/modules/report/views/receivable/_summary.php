@@ -82,8 +82,8 @@
                                 </td>
                             </tr>
                             <?php $totalRevenue += $revenue; ?>
-                            <?php //$totalPayment += $paymentAmount; ?>
-                            <?php //$totalReceivable += $paymentLeft; ?>
+                            <?php $totalPayment += $paymentAmount; ?>
+                            <?php $totalReceivable += $paymentLeft; ?>
                         <?php endforeach; ?>
                         <tr>
                             <td colspan="4" style="text-align: right">TOTAL</td>
@@ -91,10 +91,10 @@
                                 <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalRevenue)); ?>
                             </td>
                             <td class="width2-6" style="text-align: right"> 
-                                <?php //echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalPayment)); ?>
+                                <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalPayment)); ?>
                             </td>
                             <td class="width2-7" style="text-align: right"> 
-                                <?php //echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalReceivable)); ?>
+                                <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalReceivable)); ?>
                             </td>
                         </tr>     
                     </table>
