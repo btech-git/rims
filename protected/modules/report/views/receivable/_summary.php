@@ -43,7 +43,7 @@
         </tr>
     </thead>
     <tbody>
-        <?php /*foreach ($receivableSummary->dataProvider->data as $header): ?>
+        <?php foreach ($receivableSummary->dataProvider->data as $header): ?>
             <tr class="items1">
                 <th class="width1-1"><?php echo CHtml::encode(CHtml::value($header, 'name')); ?></th>
                 <th class="width1-2"><?php echo CHtml::encode(CHtml::value($header, 'customer_type')); ?></th>
@@ -100,6 +100,7 @@
                     </table>
                 </td>
             </tr>
-        <?php endforeach;*/ ?>   
+            <?php break; ?>
+        <?php endforeach; ?>   
     </tbody>
 </table>
