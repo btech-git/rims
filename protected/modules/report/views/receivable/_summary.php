@@ -44,11 +44,11 @@
     </thead>
     <tbody>
         <?php $i = 0; ?>
-        <?php /*foreach ($receivableSummary->dataProvider->data as $header): ?>
+        <?php foreach ($receivableSummary->dataProvider->data as $header): ?>
             <tr class="items1">
                 <th class="width1-1"><?php echo CHtml::encode(CHtml::value($header, 'name')); ?></th>
                 <th class="width1-2"><?php echo CHtml::encode(CHtml::value($header, 'customer_type')); ?></th>
-                <th class="width1-3"><?php echo $i; ?></th>
+                <th class="width1-3"><?php echo CHtml::encode(CHtml::value($header, 'note')); ?></th>
             </tr>
             <tr class="items2">
                 <td colspan="3">
@@ -104,6 +104,6 @@
             <?php if (++$i == 1): ?>
                 <?php break; ?>
             <?php endif; ?>
-        <?php endforeach;*/ ?>   
+        <?php endforeach; ?>   
     </tbody>
 </table>
