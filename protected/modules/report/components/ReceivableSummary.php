@@ -65,7 +65,7 @@ class ReceivableSummary extends CComponent {
         
         $this->dataProvider->criteria->addCondition("EXISTS (
             SELECT * FROM rims_invoice_header i
-            WHERE c.id = i.customer_id AND i.user_id_cancelled IS NULL AND i.invoice_date BETWEEN '2024-01-01' AND '2025-10-16' AND i.total_price - (
+            WHERE t.id = i.customer_id AND i.user_id_cancelled IS NULL AND i.invoice_date BETWEEN '2024-01-01' AND '2025-10-16' AND i.total_price - (
                 SELECT COALESCE(SUM(d.amount), 0)
                 FROM rims_payment_in_detail d
                 INNER JOIN rims_payment_in h ON h.id = d.payment_in_id
