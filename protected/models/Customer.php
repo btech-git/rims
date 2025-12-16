@@ -551,12 +551,12 @@ class Customer extends CActiveRecord {
 //        }
         
         $sql = "SELECT * FROM rims_invoice_header i
-                WHERE i.customer_id = :customer_id AND i.user_id_cancelled IS NULL AND i.invoice_date BETWEEN '2024-01-01' AND :end_date AND i.total_price - (
+                WHERE i.customer_id = :customer_id AND i.user_id_cancelled IS NULL AND i.invoice_date BETWEEN '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND :end_date AND i.total_price - (
                     SELECT COALESCE(SUM(d.amount), 0) + COALESCE(SUM(d.tax_service_amount), 0) + COALESCE(SUM(d.discount_amount), 0) +
                         COALESCE(SUM(d.bank_administration_fee), 0) + COALESCE(SUM(d.merimen_fee), 0) + COALESCE(SUM(d.downpayment_amount), 0)
                     FROM rims_payment_in_detail d
                     INNER JOIN rims_payment_in h ON h.id = d.payment_in_id
-                    WHERE i.id = d.invoice_header_id AND h.user_id_cancelled IS NULL AND h.payment_date BETWEEN '2024-01-01' AND '2025-10-16'
+                    WHERE i.id = d.invoice_header_id AND h.user_id_cancelled IS NULL AND h.payment_date BETWEEN '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND :end_date
                 ) > 0";
         
 //        $sql = "
