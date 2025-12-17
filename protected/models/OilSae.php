@@ -96,4 +96,8 @@ class OilSae extends CActiveRecord {
         return parent::model($className);
     }
 
+    public function getOilName() {
+        
+        return $this->sae . ' - ' . $this->winter_grade . ' - ' . $this->hot_grade;
+    }
 }

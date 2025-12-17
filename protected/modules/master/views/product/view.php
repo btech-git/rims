@@ -41,9 +41,20 @@ $this->menu=array(
                 'description',
                 'production_year',
                 array(
+                    'name'=>'tire_size_id', 
+                    'header' => 'Ukuran Ban',
+                    'value'=> empty($model->tire_size_id) ? "" : $model->tireSize->tireName,
+                ),
+                array(
+                    'name'=>'oil_sae_id', 
+                    'label' => 'Oli Spesifikasi',
+                    'value'=> empty($model->oil_sae_id) ? "" : $model->oilSae->oilName,
+                ),
+                array(
                     'name'=>'unit_id', 
-                    'header' => 'Satuan',
-                    'value'=>$model->unit->name),
+                    'label' => 'Satuan',
+                    'value'=>$model->unit->name
+                ),
                 array('name'=>'product_master_category_id', 'value'=>$model->productMasterCategory->name),
                 array('name'=>'product_sub_master_category_id', 'value'=>$model->productSubMasterCategory->name),
                 array('name'=>'product_sub_category_id', 'value'=>$model->productSubCategory->name),
