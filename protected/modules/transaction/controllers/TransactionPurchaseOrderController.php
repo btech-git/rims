@@ -950,12 +950,11 @@ class TransactionPurchaseOrderController extends Controller {
                                 $productPrice->hpp = $poDetail->unit_price;
                                 $productPrice->quantity = $poDetail->quantity;
                                 $productPrice->hpp_average = $average;
+                                $productPrice->save();
 
-                                if ($productPrice->save()) {
-                                    $product = Product::model()->findByPk($poDetail->product_id);
-                                    $product->hpp = $product->getAverageCogs();
-                                    $product->save();
-                                }
+                                $product = Product::model()->findByPk($poDetail->product_id);
+                                $product->hpp = $product->getAverageCogs();
+                                $product->save();
                             }
                         }
                         $purchaseOrder->update(array('status_document', 'approved_id'));
