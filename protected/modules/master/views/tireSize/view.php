@@ -4,7 +4,7 @@
 
 $this->breadcrumbs=array(
 	'Tire Sizes'=>array('index'),
-	$model->name,
+	$model->section_width,
 );
 
 $this->menu=array(
@@ -16,12 +16,17 @@ $this->menu=array(
 );
 ?>
 
-<h1>View TireSize #<?php echo $model->id; ?></h1>
+<h1>View Tire Specifications #<?php echo $model->id; ?></h1>
 
 <?php $this->widget('zii.widgets.CDetailView', array(
-	'data'=>$model,
-	'attributes'=>array(
-		'id',
-		'name',
-	),
+    'data'=>$model,
+    'attributes'=>array(
+        'id',
+        'section_width',
+        'aspect_ratio',
+        'construction_type',
+        'rim_diameter',
+        'load_rating',
+        'speed_rating',
+    ),
 )); ?>

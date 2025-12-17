@@ -13,6 +13,6 @@ $this->menu=array(
 );
 ?>
 
-<h1>Create OilSae</h1>
+<h1>Create Oil Specifications</h1>
 
 <?php $this->renderPartial('_form', array('model'=>$model)); ?>

@@ -65,8 +65,9 @@ class OilSaeController extends Controller {
 
         if (isset($_POST['OilSae'])) {
             $model->attributes = $_POST['OilSae'];
-            if ($model->save())
+            if ($model->save()) {
                 $this->redirect(array('view', 'id' => $model->id));
+            }
         }
 
         $this->render('create', array(
@@ -87,8 +88,9 @@ class OilSaeController extends Controller {
 
         if (isset($_POST['OilSae'])) {
             $model->attributes = $_POST['OilSae'];
-            if ($model->save())
+            if ($model->save()) {
                 $this->redirect(array('view', 'id' => $model->id));
+            }
         }
 
         $this->render('update', array(

@@ -80,9 +80,15 @@ Yii::app()->clientScript->registerCss('_report', '
                                     <?php echo CHtml::encode(CHtml::value($header, 'vehicle.carModel.name')); ?> -
                                     <?php echo CHtml::encode(CHtml::value($header, 'vehicle.carSubModel.name')); ?>
                                 </td>
-                                <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($header, 'total_price'))); ?></td>
-                                <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($header, 'payment_amount'))); ?></td>
-                                <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $paymentLeft)); ?></td>
+                                <td style="text-align: right">
+                                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($header, 'total_price'))); ?>
+                                </td>
+                                <td style="text-align: right">
+                                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($header, 'payment_amount'))); ?>
+                                </td>
+                                <td style="text-align: right">
+                                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $paymentLeft)); ?>
+                                </td>
                             </tr>
                             <?php $totalPriceSum += $totalPrice; ?>
                             <?php $paymentTotalSum += $paymentTotal; ?>

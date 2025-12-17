@@ -4,7 +4,7 @@
 
 $this->breadcrumbs=array(
 	'Oil Saes'=>array('index'),
-	$model->name=>array('view','id'=>$model->id),
+	$model->sae=>array('view','id'=>$model->id),
 	'Update',
 );
 
@@ -16,6 +16,6 @@ $this->menu=array(
 );
 ?>
 
-<h1>Update OilSae <?php echo $model->id; ?></h1>
+<h1>Update Oil Specifications <?php echo $model->id; ?></h1>
 
 <?php $this->renderPartial('_form', array('model'=>$model)); ?>

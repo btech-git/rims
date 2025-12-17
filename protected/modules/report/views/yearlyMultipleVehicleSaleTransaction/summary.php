@@ -1,4 +1,9 @@
 <?php
+Yii::app()->clientScript->registerScript('report', '
+    $("#StartDate").val("' . $startDate . '");
+    $("#EndDate").val("' . $endDate . '");
+');
+
 Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/transaction/report.css');
 ?>
 
@@ -17,11 +22,64 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                             <div class="field">
                                 <div class="row collapse">
                                     <div class="small-4 columns">
-                                        <span class="prefix">Periode</span>
+                                        <span class="prefix">Customer</span>
                                     </div>
 
                                     <div class="small-8 columns">
-                                        <?php echo CHtml::dropDownList('Year', $year, $yearList); ?>
+                                        <?php echo CHtml::textField('CustomerName', $customerName); ?>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="medium-6 columns">
+                            <div class="field">
+                                <div class="row collapse">
+                                    <div class="small-4 columns">
+                                        <span class="prefix">Plat #</span>
+                                    </div>
+                                    <div class="small-8 columns">
+                                        <?php echo CHtml::textField('PlateNumber', $plateNumber); ?>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="medium-6 columns">
+                            <div class="field">
+                                <div class="row collapse">
+                                    <div class="small-4 columns">
+                                        <span class="prefix">Tanggal </span>
+                                    </div>
+                                    <div class="small-4 columns">
+                                        <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(
+                                            'name' => 'StartDate',
+                                            'options' => array(
+                                                'dateFormat' => 'yy-mm-dd',
+                                                'changeMonth'=>true,
+                                                'changeYear'=>true,
+                                            ),
+                                            'htmlOptions' => array(
+                                                'readonly' => true,
+                                                'placeholder' => 'Mulai',
+                                            ),
+                                        )); ?>
+                                    </div>
+
+                                    <div class="small-4 columns">
+                                        <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(
+                                            'name' => 'EndDate',
+                                            'options' => array(
+                                                'dateFormat' => 'yy-mm-dd',
+                                                'changeMonth'=>true,
+                                                'changeYear'=>true,
+                                            ),
+                                            'htmlOptions' => array(
+                                                'readonly' => true,
+                                                'placeholder' => 'Sampai',
+                                            ),
+                                        )); ?>
                                     </div>
                                 </div>
                             </div>
@@ -59,9 +117,11 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
 
                 <div class="relative">
                     <?php $this->renderPartial('_summary', array(
-                        'yearlyMultipleVehicleSaleReport' => $yearlyMultipleVehicleSaleReport,
-                        'year' => $year,
+                        'yearlyMultipleVehicleCompanySaleReport' => $yearlyMultipleVehicleCompanySaleReport,
+                        'yearlyMultipleVehicleIndividualSaleReport' => $yearlyMultipleVehicleIndividualSaleReport,
                         'branchId' => $branchId,
+                        'startDate' => $startDate,
+                        'endDate' => $endDate,
                     )); ?>
                 </div>
             </div>

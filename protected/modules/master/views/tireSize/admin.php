@@ -31,7 +31,7 @@ $('.search-form form').submit(function(){
         <?php //if (Yii::app()->user->checkAccess("masterProductCategoryCreate")) { ?>
             <a class="button success right" href="<?php echo Yii::app()->baseUrl . '/master/tireSize/create'; ?>"><span class="fa fa-plus"></span>New</a>
         <?php //} ?>
-        <h1>Manage Tire Sizes</h1>
+        <h1>Manage Tire Specifications</h1>
 
         <div class="search-bar">
             <div class="clearfix button-bar">
@@ -56,7 +56,12 @@ $('.search-form form').submit(function(){
                 ),
                 'columns' => array(
                     'id',
-                    'name',
+                    'section_width',
+                    'aspect_ratio',
+                    'construction_type',
+                    'rim_diameter',
+                    'load_rating',
+                    'speed_rating',
                     array(
 			'class'=>'CButtonColumn',
                     ),

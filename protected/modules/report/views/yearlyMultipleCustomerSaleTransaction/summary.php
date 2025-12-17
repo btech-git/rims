@@ -1,4 +1,9 @@
 <?php
+Yii::app()->clientScript->registerScript('report', '
+    $("#StartDate").val("' . $startDate . '");
+    $("#EndDate").val("' . $endDate . '");
+');
+
 Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/transaction/report.css');
 ?>
 
@@ -12,6 +17,37 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
             <div>
                 <div class="myForm">
                     <?php echo CHtml::beginForm(array(''), 'get'); ?>
+                    <div class="row">
+                        <div class="medium-6 columns">
+                            <div class="field">
+                                <div class="row collapse">
+                                    <div class="small-4 columns">
+                                        <span class="prefix">Customer</span>
+                                    </div>
+
+                                    <div class="small-8 columns">
+                                        <?php echo CHtml::textField('CustomerName', $customerName); ?>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="medium-6 columns">
+                            <div class="field">
+                                <div class="row collapse">
+                                    <div class="small-4 columns">
+                                        <span class="prefix">Cabang</span>
+                                    </div>
+                                    <div class="small-8 columns">
+                                        <?php echo CHtml::dropDownList('BranchId', $branchId, CHtml::listData(Branch::model()->findAll(array(
+                                            'condition' => "status = 'Active'", 
+                                            'order' => 'name ASC'
+                                        )), 'id', 'name'), array('empty' => '-- All Branch --')); ?>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
                     <div class="row">
                         <div class="medium-6 columns">
                             <div class="field">
@@ -54,51 +90,11 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                         <div class="medium-6 columns">
                             <div class="field">
                                 <div class="row collapse">
-                                    <div class="small-4 columns">
-                                        <span class="prefix">Cabang</span>
-                                    </div>
-                                    <div class="small-8 columns">
-                                        <?php echo CHtml::dropDownList('BranchId', $branchId, CHtml::listData(Branch::model()->findAll(array(
-                                            'condition' => "status = 'Active'", 
-                                            'order' => 'name ASC'
-                                        )), 'id', 'name'), array('empty' => '-- All Branch --')); ?>
-                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <div class="row">
-                        <div class="medium-6 columns">
-                            <div class="field">
-                                <div class="row collapse">
-                                    <div class="small-4 columns">
-                                        <span class="prefix">Customer</span>
-                                    </div>
-
-                                    <div class="small-8 columns">
-                                        <?php echo CHtml::textField('CustomerName', $customerName); ?>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="medium-6 columns">
-                            <div class="field">
-                                <div class="row collapse">
-                                    <div class="small-4 columns">
-                                        <span class="prefix">Type</span>
-                                    </div>
-                                    <div class="small-8 columns">
-                                        <?php echo CHtml::dropDownList('CustomerType', $customerType, array(
-                                            'Company' => 'Company',
-                                            'Individual' => 'Individual',
-                                        ), array('empty' => '-- All Type --')); ?>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
                     <div class="clear"></div>
                     <div class="row buttons">
                         <?php echo CHtml::submitButton('Tampilkan', array('onclick' => '$("#CurrentSort").val(""); return true;')); ?>
@@ -117,8 +113,9 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                     <?php $this->renderPartial('_summary', array(
                         'yearlyMultipleCustomerCompanySaleReport' => $yearlyMultipleCustomerCompanySaleReport,
                         'yearlyMultipleCustomerIndividualSaleReport' => $yearlyMultipleCustomerIndividualSaleReport,
-                        'year' => $year,
                         'branchId' => $branchId,
+                        'startDate' => $startDate,
+                        'endDate' => $endDate,
                     )); ?>
                 </div>
             </div>

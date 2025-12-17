@@ -4,7 +4,7 @@
 
 $this->breadcrumbs=array(
 	'Tire Sizes'=>array('index'),
-	$model->name=>array('view','id'=>$model->id),
+	$model->section_width=>array('view','id'=>$model->id),
 	'Update',
 );
 
@@ -16,6 +16,6 @@ $this->menu=array(
 );
 ?>
 
-<h1>Update TireSize <?php echo $model->id; ?></h1>
+<h1>Update Tire Specifications <?php echo $model->id; ?></h1>
 
 <?php $this->renderPartial('_form', array('model'=>$model)); ?>

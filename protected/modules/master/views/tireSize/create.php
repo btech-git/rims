@@ -13,6 +13,6 @@ $this->menu=array(
 );
 ?>
 
-<h1>Create TireSize</h1>
+<h1>Create Tire Specifications</h1>
 
 <?php $this->renderPartial('_form', array('model'=>$model)); ?>

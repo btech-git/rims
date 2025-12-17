@@ -31,7 +31,7 @@ $('.search-form form').submit(function(){
         <?php //if (Yii::app()->user->checkAccess("masterProductCategoryCreate")) { ?>
             <a class="button success right" href="<?php echo Yii::app()->baseUrl . '/master/oilSae/create'; ?>"><span class="fa fa-plus"></span>New</a>
         <?php //} ?>
-        <h1>Manage Oil Sae</h1>
+        <h1>Manage Oil Specifications</h1>
 
         <div class="search-bar">
             <div class="clearfix button-bar">
@@ -56,7 +56,9 @@ $('.search-form form').submit(function(){
                 ),
                 'columns' => array(
                     'id',
-                    'name',
+                    'sae',
+                    'winter_grade',
+                    'hot_grade',
                     array(
                         'class'=>'CButtonColumn',
                     ),

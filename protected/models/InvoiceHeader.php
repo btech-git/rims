@@ -2027,6 +2027,27 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
         ));
     }
 
+    public function searchByVehicleSaleTransactionInfo($vehicleId, $branchId, $startDate, $endDate, $page) {
+
+        $criteria = new CDbCriteria;
+
+        $criteria->compare('t.vehicle_id', $vehicleId);
+        $criteria->compare('t.branch_id', $branchId);
+        $criteria->addBetweenCondition('t.invoice_date', $startDate, $endDate);
+        $criteria->addCondition("t.status NOT LIKE '%CANCEL%'");
+        
+        return new CActiveDataProvider($this, array(
+            'criteria' => $criteria,
+            'sort' => array(
+                'defaultOrder' => 't.invoice_date ASC',
+            ),
+            'pagination' => array(
+                'pageSize' => 500,
+                'currentPage' => $page - 1,
+            ),
+        ));
+    }
+
     public function searchByTransactionHeaderBranchInfo($branchId, $startDate, $endDate, $page) {
         // Warning: Please modify the following code to remove attributes that
         // should not be searched.

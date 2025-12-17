@@ -5,7 +5,12 @@
  *
  * The followings are the available columns in table '{{tire_size}}':
  * @property integer $id
- * @property string $name
+ * @property string $section_width
+ * @property string $aspect_ratio
+ * @property string $construction_type
+ * @property string $rim_diameter
+ * @property string $load_rating
+ * @property string $speed_rating
  *
  * The followings are the available model relations:
  * @property Product[] $products
@@ -26,11 +31,11 @@ class TireSize extends CActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('name', 'required'),
-            array('name', 'length', 'max' => 60),
+            array('section_width, aspect_ratio, construction_type, rim_diameter', 'required'),
+            array('section_width, aspect_ratio, construction_type, rim_diameter, load_rating, speed_rating', 'length', 'max' => 20),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, name', 'safe', 'on' => 'search'),
+            array('id, section_width, aspect_ratio, construction_type, rim_diameter, load_rating, speed_rating', 'safe', 'on' => 'search'),
         );
     }
 
@@ -51,7 +56,12 @@ class TireSize extends CActiveRecord {
     public function attributeLabels() {
         return array(
             'id' => 'ID',
-            'name' => 'Name',
+            'section_width' => 'Section Width',
+            'aspect_ratio' => 'Aspect Ratio',
+            'construction_type' => 'Construction Type',
+            'rim_diameter' => 'Rim Diameter',
+            'load_rating' => 'Load Rating',
+            'speed_rating' => 'Speed Rating',
         );
     }
 
@@ -73,7 +83,12 @@ class TireSize extends CActiveRecord {
         $criteria = new CDbCriteria;
 
         $criteria->compare('id', $this->id);
-        $criteria->compare('name', $this->name, true);
+        $criteria->compare('section_width', $this->section_width, true);
+        $criteria->compare('aspect_ratio', $this->aspect_ratio, true);
+        $criteria->compare('construction_type', $this->construction_type, true);
+        $criteria->compare('rim_diameter', $this->rim_diameter, true);
+        $criteria->compare('load_rating', $this->load_rating, true);
+        $criteria->compare('speed_rating', $this->speed_rating, true);
 
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,

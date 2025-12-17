@@ -5,7 +5,9 @@
  *
  * The followings are the available columns in table '{{oil_sae}}':
  * @property integer $id
- * @property string $name
+ * @property string $sae
+ * @property string $winter_grade
+ * @property string $hot_grade
  *
  * The followings are the available model relations:
  * @property Product[] $products
@@ -26,11 +28,11 @@ class OilSae extends CActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('name', 'required'),
-            array('name', 'length', 'max' => 60),
+            array('sae, winter_grade, hot_grade', 'required'),
+            array('sae, winter_grade, hot_grade', 'length', 'max' => 20),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, name', 'safe', 'on' => 'search'),
+            array('id, sae, winter_grade, hot_grade', 'safe', 'on' => 'search'),
         );
     }
 
@@ -51,7 +53,9 @@ class OilSae extends CActiveRecord {
     public function attributeLabels() {
         return array(
             'id' => 'ID',
-            'name' => 'Name',
+            'sae' => 'SAE',
+            'winter_grade' => 'Winter Grade',
+            'hot_grade' => 'Hot Grade',
         );
     }
 
@@ -73,7 +77,9 @@ class OilSae extends CActiveRecord {
         $criteria = new CDbCriteria;
 
         $criteria->compare('id', $this->id);
-        $criteria->compare('name', $this->name, true);
+        $criteria->compare('sae', $this->sae, true);
+        $criteria->compare('winter_grade', $this->winter_grade, true);
+        $criteria->compare('hot_grade', $this->hot_grade, true);
 
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
