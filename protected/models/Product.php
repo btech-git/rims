@@ -1075,9 +1075,9 @@ class Product extends CActiveRecord {
         $nameAndSpec = $this->name;
         
         if ($this->product_sub_master_category_id == 26) {
-            $nameAndSpec .= $this->tire_size_id === null ? '' : (' - ' . $this->tireSize->name);
+            $nameAndSpec .= $this->tire_size_id === null ? '' : (' - ' . $this->tireSize->tireName);
         } else if ($this->product_sub_master_category_id == 39 || $this->product_sub_master_category_id == 40) {
-            $nameAndSpec .= $this->oil_sae_id === null ? '' : (' - ' . $this->oilSae->name);
+            $nameAndSpec .= $this->oil_sae_id === null ? '' : (' - ' . $this->oilSae->oilName);
         }
         
         return $nameAndSpec;
