@@ -5,8 +5,6 @@
         <th style="text-align: center">Code</th>
         <th style="text-align: center">Kategori</th>
         <th style="text-align: center">Brand</th>
-        <th style="text-align: center">Sub Brand</th>
-        <th style="text-align: center">Sub Brand Series</th>
         <th style="text-align: center; width: 10%">Quantity</th>
         <th style="text-align: center; width: 10%">Satuan Permintaan</th>
         <th style="text-align: center; width: 10%">Satuan Inventory</th>
@@ -16,30 +14,22 @@
     <?php foreach ($materialRequest->details as $i => $detail): ?>
         <?php $productInfo = Product::model()->findByPk($detail->product_id); ?>
         <tr style="background-color: azure">
-            <td>
-                <?php echo CHtml::encode(CHtml::value($productInfo, 'id')); ?>
-            </td>
+            <td><?php echo CHtml::encode(CHtml::value($productInfo, 'id')); ?></td>
             <td>
                 <?php echo CHtml::activeHiddenField($detail, "[$i]product_id"); ?>
                 <?php echo CHtml::encode(CHtml::value($productInfo, 'name')); ?>
             </td>
+            <td><?php echo CHtml::encode(CHtml::value($productInfo, 'manufacturer_code')); ?></td>
+            <td><?php echo CHtml::encode(CHtml::value($productInfo, 'masterSubCategoryCode')); ?></td>
             <td>
-                <?php echo CHtml::encode(CHtml::value($productInfo, 'manufacturer_code')); ?>
-            </td>
-            <td>
-                <?php echo CHtml::encode(CHtml::value($productInfo, 'masterSubCategoryCode')); ?>
-            </td>
-            <td>
-                <?php echo CHtml::encode(CHtml::value($productInfo, 'brand.name')); ?>
-            </td>
-            <td>
-                <?php echo CHtml::encode(CHtml::value($productInfo, 'subBrand.name')); ?>
-            </td>
-            <td>
+                <?php echo CHtml::encode(CHtml::value($productInfo, 'brand.name')); ?> -
+                <?php echo CHtml::encode(CHtml::value($productInfo, 'subBrand.name')); ?> - 
                 <?php echo CHtml::encode(CHtml::value($productInfo, 'subBrandSeries.name')); ?>
             </td>
             <td style="text-align: center">
-                <?php echo CHtml::activeTextField($detail, "[$i]quantity", array('size' => 7, 'maxLength' => 20,
+                <?php echo CHtml::activeTextField($detail, "[$i]quantity", array(
+                    'size' => 7, 
+                    'maxLength' => 20,
                     'onchange' => 'if (parseInt($(this).val()) > parseInt($("#current_stock_' . $i . '").val())) $(this).val($("#current_stock_' . $i . '").val())
                         $.ajax({
                             type: "POST",
@@ -58,12 +48,8 @@
                 <?php echo CHtml::activeDropDownList($detail, "[$i]unit_id", CHtml::listData(Unit::model()->findAll(), 'id', 'name'), array('prompt'=>'[--Select Unit --]')); ?>
                 <?php echo CHtml::error($detail, 'unit_id'); ?>
             </td>
-            <td>
-                <?php echo CHtml::encode(CHtml::value($productInfo, 'unit.name')); ?>
-            </td>
-            <td>
-                <?php echo CHtml::encode(CHtml::value($productInfo, 'productSubMasterCategory.coaPersediaanBarangDagang.name')); ?>
-            </td>
+            <td><?php echo CHtml::encode(CHtml::value($productInfo, 'unit.name')); ?></td>
+            <td><?php echo CHtml::encode(CHtml::value($productInfo, 'productSubMasterCategory.coaPersediaanBarangDagang.name')); ?></td>
             <td>
                 <?php echo CHtml::button('Delete', array(
                     'onclick' => CHtml::ajax(array(
