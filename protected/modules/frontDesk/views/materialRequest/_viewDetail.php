@@ -25,14 +25,14 @@
                     <td><?php echo $product->manufacturer_code; ?></td>
                     <td><?php echo $product->masterSubCategoryCode; ?></td>
                     <td>
-                        <?php echo $product->brand->name; ?> -
-                        <?php echo $product->subBrand->name; ?> - 
-                        <?php echo $product->subBrandSeries->name; ?>
+                        <?php echo CHtml::encode(CHtml::value($product, 'brand.name')); ?> -
+                        <?php echo CHtml::encode(CHtml::value($product, 'subBrand.name')); ?> - 
+                        <?php echo CHtml::encode(CHtml::value($product, 'subBrandSeries.name')); ?>
                     </td>
                     <td style="text-align: center"><?php echo number_format($materialRequestDetail->quantity, 2); ?></td>
-                    <td><?php echo $materialRequestDetail->unit->name; ?></td>
-                    <td><?php echo $materialRequestDetail->product->unit->name; ?></td>
-                    <td><?php echo $product->productSubMasterCategory->coaPersediaanBarangDagang->name; ?></td>
+                    <td><?php echo CHtml::encode(CHtml::value($materialRequestDetail, 'unit.name')); ?></td>
+                    <td><?php echo CHtml::encode(CHtml::value($materialRequestDetail, 'product.unit.name')); ?></td>
+                    <td><?php echo CHtml::encode(CHtml::value($product, 'productSubMasterCategory.coaPersediaanBarangDagang.name')); ?></td>
                     <td style="text-align: right"><?php echo number_format($materialRequestDetail->product->hpp, 2); ?></td>
                     <td style="text-align: right"><?php echo number_format($materialRequestDetail->totalProductPrice, 2); ?></td>
                 </tr>
