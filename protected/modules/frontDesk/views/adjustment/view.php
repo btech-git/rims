@@ -93,28 +93,28 @@ $this->menu = array(
                                 'product.subBrandSeries.name: Sub Brand Series',
                                 array(
                                     'header' => 'Jumlah Stok',
-                                    'value' => 'number_format($data->quantity_current, 0)',
+                                    'value' => 'number_format($data->quantity_current, 2)',
                                     'htmlOptions' => array(
                                         'style' => 'text-align: center',
                                     ),
                                 ),
                                 array(
                                     'header' => 'Jumlah Penyesuaian',
-                                    'value' => 'number_format($data->quantity_adjustment, 0)',
+                                    'value' => 'number_format($data->quantity_adjustment, 2)',
                                     'htmlOptions' => array(
                                         'style' => 'text-align: center',
                                     ),
                                 ),
                                 array(
                                     'header' => 'Jumlah Perbedaan',
-                                    'value' => 'number_format($data->getQuantityDifference(), 0)',
+                                    'value' => 'number_format($data->getQuantityDifference(), 2)',
                                     'htmlOptions' => array(
                                         'style' => 'text-align: center',
                                     ),
                                 ),
                                 array(
                                     'header' => 'Jumlah Stok Tujuan',
-                                    'value' => 'number_format($data->quantity_current_destination, 0)',
+                                    'value' => 'number_format($data->quantity_current_destination, 2)',
                                     'htmlOptions' => array(
                                         'style' => 'text-align: center',
                                     ),
@@ -122,7 +122,7 @@ $this->menu = array(
                                 ),
                                 array(
                                     'header' => 'Jumlah Penyesuaian Tujuan',
-                                    'value' => 'number_format($data->quantity_adjustment_destination, 0)',
+                                    'value' => 'number_format($data->quantity_adjustment_destination, 2)',
                                     'htmlOptions' => array(
                                         'style' => 'text-align: center',
                                     ),
@@ -130,7 +130,7 @@ $this->menu = array(
                                 ),
                                 array(
                                     'header' => 'Jumlah Perbedaan Tujuan',
-                                    'value' => 'number_format($data->getQuantityDifferenceDestination(), 0)',
+                                    'value' => 'number_format($data->getQuantityDifferenceDestination(), 2)',
                                     'htmlOptions' => array(
                                         'style' => 'text-align: center',
                                     ),
