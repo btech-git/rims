@@ -218,7 +218,7 @@ class TransactionDeliveryOrder extends MonthlyTransactionActiveRecord {
             WHERE t.id = d.delivery_order_id
             GROUP BY d.delivery_order_id
             HAVING quantity_remaining > 0 AND quantity_movement_remaining = 0
-        ) AND t.request_type IN ('Transfer Request', 'Sent Request') AND t.delivery_date > '2021-12-31' AND t.is_cancelled = 0";
+        ) AND t.request_type IN ('Transfer Request', 'Sent Request') AND t.delivery_date >= '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND t.is_cancelled = 0";
 
         $criteria->compare('id', $this->id);
         $criteria->compare('t.delivery_date', $this->delivery_date, true);
@@ -242,12 +242,10 @@ class TransactionDeliveryOrder extends MonthlyTransactionActiveRecord {
         $criteria = new CDbCriteria;
 
         $criteria->condition = "EXISTS (
-            SELECT COALESCE(SUM(d.quantity_movement_left), 0) AS quantity_remaining
+            SELECT d.delivery_order_id
             FROM " . TransactionDeliveryOrderDetail::model()->tableName() . " d
-            WHERE t.id = d.delivery_order_id
-            GROUP BY d.delivery_order_id
-            HAVING quantity_remaining > 0
-        ) AND t.delivery_date > '2022-12-31' AND t.is_cancelled = 0";
+            WHERE t.id = d.delivery_order_id AND COALESCE(SUM(d.quantity_movement_left), 0) > 0
+        ) AND t.delivery_date >= '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND t.is_cancelled = 0";
 
         $criteria->compare('id', $this->id);
         $criteria->compare('t.delivery_date', $this->delivery_date, true);

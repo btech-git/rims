@@ -38,7 +38,7 @@ $this->menu=array(
         <tbody>
             <?php $n = 0; ?>
             <?php foreach ($employeeBirthdayData as $month => $employeeBirthdayDataItem): ?>
-            <tr class="items1" style="background-color: lightblue">
+                <tr class="items1" style="background-color: lightblue">
                     <td style="text-align: center; font-weight: bold; font-size: larger" colspan="9"><?php echo CHtml::encode($monthNames[$month]); ?></td>
                 </tr>
                 <?php foreach ($employeeBirthdayDataItem as $dataItem): ?>
