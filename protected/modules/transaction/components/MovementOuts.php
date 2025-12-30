@@ -270,48 +270,56 @@ class MovementOuts extends CComponent {
         
         $valid = $this->header->save();
 
-        $movementOutDetails = MovementOutDetail::model()->findAllByAttributes(array('movement_out_header_id' => $this->header->id));
-        $detail_id = array();
-        
-        foreach ($movementOutDetails as $movementOutDetail) {
-            $detail_id[] = $movementOutDetail->id;
-        }
-        
-        $new_detail = array();
+//        $movementOutDetails = MovementOutDetail::model()->findAllByAttributes(array('movement_out_header_id' => $this->header->id));
+//        $detail_id = array();
+//        
+//        foreach ($movementOutDetails as $movementOutDetail) {
+//            $detail_id[] = $movementOutDetail->id;
+//        }
+//        
+//        $new_detail = array();
 
         //save request detail
         foreach ($this->details as $detail) {
             if ($detail->quantity_transaction > 0) {
-                if ($detail->id == "") {
-                    $moveDetail = MovementOutDetail::model()->findByAttributes(array(
-                        'movement_out_header_id' => $this->header->id, 
-                        'product_id' => $detail->product_id, 
-                        'warehouse_id' => $detail->warehouse_id
-                    ));
-                    if (!empty($moveDetail)) {
-                        $moveDetail->quantity += $detail->quantity;
-                        $moveDetail->save() && $valid;
-                    } else {
-                        $detail->movement_out_header_id = $this->header->id;
-                        $valid = $detail->save() && $valid;
-                    }
-                } else {
+//                if ($detail->id == "") {
+//                    $moveDetail = MovementOutDetail::model()->findByAttributes(array(
+//                        'movement_out_header_id' => $this->header->id, 
+//                        'product_id' => $detail->product_id, 
+//                        'warehouse_id' => $detail->warehouse_id
+//                    ));
+//                    if (!empty($moveDetail)) {
+//                        $moveDetail->quantity += $detail->quantity;
+//                        $valid = $moveDetail->save() && $valid;
+//                    } else {
+//                        $detail->movement_out_header_id = $this->header->id;
+//                        $valid = $detail->save() && $valid;
+//                    }
+//                }
+                if ($detail->isNewRecord) {
                     $detail->movement_out_header_id = $this->header->id;
-                    $valid = $detail->save() && $valid;
                 }
+                $valid = $detail->save() && $valid;
 
-                $new_detail[] = $detail->id;
+//                $new_detail[] = $detail->id;
             }
+        }
+        
+        $detailIdsToBeDeleted = explode(',', trim($this->header->detailIdsToBeDeleted, ','));
+        if (!empty($detailIdsToBeDeleted)) {
+            $criteria = new CDbCriteria;
+            $criteria->addInCondition('id', $detailIdsToBeDeleted);
+            MovementOutDetail::model()->deleteAll($criteria);
         }
 
         //delete details
-        $delete_array = array_diff($detail_id, $new_detail);
-        
-        if ($delete_array != NULL) {
-            $criteria = new CDbCriteria;
-            $criteria->addInCondition('id', $delete_array);
-            MovementOutDetail::model()->deleteAll($criteria);
-        }
+//        $delete_array = array_diff($detail_id, $new_detail);
+//        
+//        if ($delete_array != NULL) {
+//            $criteria = new CDbCriteria;
+//            $criteria->addInCondition('id', $delete_array);
+//            MovementOutDetail::model()->deleteAll($criteria);
+//        }
 
         $this->saveTransactionLog();
         

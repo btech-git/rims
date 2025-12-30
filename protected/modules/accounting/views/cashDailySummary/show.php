@@ -59,33 +59,6 @@
                     'name' => 'status', 
                     'value' => '$data->status'
                 ),
-//                array(
-//                    'name' => 'invoice_id', 
-//                    'value' => 'CHtml::link($data->invoice->invoice_number, array("/transaction/invoiceHeader/view", "id"=>$data->invoice_id))',
-//                    'type' => 'raw'
-//                ),
-//                array(
-//                    'header' => 'Tanggal Inv', 
-//                    'value' => 'CHtml::encode(Yii::app()->dateFormatter->format("d MMM yyyy", $data->invoice->invoice_date))',
-//                ),
-//                array(
-//                    'header' => 'Jatuh Tempo', 
-//                    'value' => 'CHtml::encode(Yii::app()->dateFormatter->format("d MMM yyyy", $data->invoice->due_date))',
-//                ),
-//                array(
-//                    'header' => 'Plate #', 
-//                    'value' => 'empty($data->invoice_id) ? "N/A" : empty($data->invoice->vehicle_id) ? "N/A" : $data->invoice->vehicle->plate_number'
-//                ),
-//                array(
-//                    'header' => 'Invoice Status',
-//                    'name' => 'invoice_status',
-//                    'value' => '$data->invoice->status',
-//                ),
-//                array(
-//                    'header' => 'Remaining', 
-//                    'value' => 'AppHelper::formatMoney($data->invoice->payment_left)',
-//                    'htmlOptions' => array('style' => 'text-align: right'),
-//                ),
             ),
         )); ?>
     </div>

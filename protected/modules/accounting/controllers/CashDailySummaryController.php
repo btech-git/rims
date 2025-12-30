@@ -239,21 +239,6 @@ class CashDailySummaryController extends Controller {
         ));
     }
     
-//    public function actionApprovalBranch($branchId, $transactionDate, $totalPerBranch) {
-//        
-//        $cashDailyApproval = new CashDailyApproval;
-//        $cashDailyApproval->transaction_date = $transactionDate;
-//        $cashDailyApproval->amount = $totalPerBranch;
-//        $cashDailyApproval->user_id = Yii::app()->user->id;
-//        $cashDailyApproval->approval_date = date('Y-m-d');
-//        $cashDailyApproval->approval_time = date('H:i:s');
-//        $cashDailyApproval->branch_id = $branchId;
-//
-//        if ($cashDailyApproval->save(Yii::app()->db)) {                
-//            $this->redirect(array('summary'));
-//        }
-//    }
-
     protected function reportGrandTotalRetailTransaction($dataProvider) {
         $grandTotal = 0.00;
 
@@ -263,69 +248,6 @@ class CashDailySummaryController extends Controller {
 
         return $grandTotal;
     }
-
-    /**
-     * Updates a particular model.
-     * If update is successful, the browser will be redirected to the 'view' page.
-     * @param integer $id the ID of the model to be updated
-     */
-//    public function actionCreate($transactionDate) {
-//        
-//        $cashDaily = new CashDailySummary();
-//        $cashDaily->transaction_date = $transactionDate;
-////        $cashDaily->branch_id = $branchId;
-////        $cashDaily->payment_type_id = $paymentTypeId;
-//        $cashDaily->user_id = Yii::app()->user->id;
-//
-//        $sql = "SELECT COALESCE(SUM(p.payment_amount), 0) as total_amount
-//                FROM " . PaymentIn::model()->tableName() . " p 
-//                INNER JOIN " . Customer::model()->tableName() . " c ON c.id = p.customer_id
-//                WHERE p.payment_date = :payment_date AND c.customer_type = 'Individual'";
-//        
-//        $paymentInRetailAmount = Yii::app()->db->createCommand($sql)->queryScalar(array(
-//            ':payment_date' => $transactionDate,
-////            ':branch_id' => $branchId,
-////            ':payment_type_id' => $paymentTypeId,
-//        ));
-//        
-//        $cashDaily->amount = $paymentInRetailAmount;
-//        
-//        $model = new PaymentIn('search');
-//        $model->unsetAttributes();  // clear any default values
-//
-//        $dataProvider = $model->searchByRetailCashDailyReport();
-//        $dataProvider->criteria->with = array('customer');
-//        $dataProvider->criteria->compare('customer.customer_type', 'Individual');   
-//        $dataProvider->criteria->compare('t.payment_date', $transactionDate, true);
-////        $dataProvider->criteria->compare('t.branch_id', $branchId);
-////        $dataProvider->criteria->compare('t.payment_type_id', $paymentTypeId);
-//            
-//        if (isset($_POST['CashDailySummary'])) {
-//            $cashDaily->attributes = $_POST['CashDailySummary'];
-//            $cashDaily->images = CUploadedFile::getInstances($cashDaily, 'images');
-//            
-//            if ($cashDaily->save(Yii::app()->db)) {
-//                foreach ($cashDaily->images as $file) {
-//                    $contentImage = new CashDailyImages;
-//                    $contentImage->cash_daily_summary_id = $cashDaily->id;
-//                    $contentImage->extension = $file->extensionName;
-//                    $contentImage->save(false);
-//
-//                    $originalPath = dirname(Yii::app()->request->scriptFile) . '/images/uploads/cashDaily/' . $contentImage->filename;
-//                    $file->saveAs($originalPath);
-//                }
-//
-////                echo CHtml::script('window.opener.location.reload(false); window.close();');
-////                Yii::app()->end();
-//                $this->redirect(array('summary'));
-//            } 
-//        }
-//
-//        $this->render('create', array(
-//            'cashDaily' => $cashDaily,
-//            'dataProvider' => $dataProvider,
-//        ));
-//    }
 
     public function actionApproval($transactionDate, $branchId) {
         
@@ -439,81 +361,30 @@ class CashDailySummaryController extends Controller {
         ));
     }
 
-    /**
-     * Deletes a particular model.
-     * If deletion is successful, the browser will be redirected to the 'admin' page.
-     * @param integer $id the ID of the model to be deleted
-     */
-//    public function actionDelete($id) {
-//        $this->loadModel($id)->delete();
-//
-//        // if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
-//        if (!isset($_GET['ajax']))
-//            $this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
-//    }
+    public function actionTransactionInfo($branchId, $transactionDate, $transactionType) {
+        set_time_limit(0);
+        ini_set('memory_limit', '1024M');
 
-//    public function actionAdmin() {
-//        $model = new CashDailyApproval();
-//        
-//        $monthNow = date('m');
-//        $yearNow = date('Y');
-//        
-//        $monthStart = isset($_GET['MonthStart']) ? $_GET['MonthStart'] : $monthNow;
-//        $monthEnd = isset($_GET['MonthEnd']) ? $_GET['MonthEnd'] : $monthNow;
-//        $yearStart = isset($_GET['YearStart']) ? $_GET['YearStart'] : $yearNow;
-//        $yearEnd = isset($_GET['YearEnd']) ? $_GET['YearEnd'] : $yearNow;
-//        
-//        $approvalList = $model->getApprovalList($monthStart, $yearStart, $monthEnd, $yearEnd);
-//        
-//        $approvalsRefs = array();
-//        foreach ($approvalList as $approval) {
-//            $approvalsRefs[$approval['transaction_date']] = array();
-//            $approvalsRefs[$approval['transaction_date']][0] = $approval['username'];
-//            $approvalsRefs[$approval['transaction_date']][1] = $approval['approval_date'];
-//            $approvalsRefs[$approval['transaction_date']][2] = $approval['amount'];
+        $page = (isset($_GET['page'])) ? $_GET['page'] : 1;
+        
+        if ($transactionType == 1) {
+            $dataProvider = InvoiceHeader::model()->searchByCashDailySaleRetailInfo($branchId, $transactionDate, $page);
+        } elseif ($transactionType == 2) {
+            $dataProvider = InvoiceHeader::model()->searchByCashDailySaleWholesaleInfo($branchId, $transactionDate, $page);
+        } else {
+            $dataProvider = InvoiceHeader::model()->searchByCashDailySaleTotalInfo($branchId, $transactionDate, $page);
+        }
+        
+//        if (isset($_GET['SaveExcelDetail'])) {
+//            $this->saveToTransactionInfoExcel($dataProvider, $customerId, $branchId, $startDate, $endDate);
 //        }
-//        
-//        $monthYearLimit = $yearEnd * 12 + $monthEnd;
-//        
-//        $approvals = array();
-//        $index = 0;
-//        
-//        $currentMonth = $monthStart;
-//        $currentYear = $yearStart;
-//        while ($currentYear * 12 + $currentMonth <= $monthYearLimit) {
-//            $numberOfDaysInMonth = cal_days_in_month(CAL_GREGORIAN, $currentMonth, $currentYear);
-//            for ($d = 0; $d < $numberOfDaysInMonth; $d++) {
-//                $currentDate = sprintf('%04d-%02d-%02d', $currentYear, $currentMonth, $d + 1);
-//                $approvals[$index] = array();
-//                $approvals[$index]['transaction_date'] = $currentDate;
-//                $approvals[$index]['transaction_day_of_week'] = date('l', strtotime($currentDate));
-//                $approvals[$index]['username'] = isset($approvalsRefs[$currentDate][0]) ? $approvalsRefs[$currentDate][0] : '';
-//                $approvals[$index]['approval_date'] = isset($approvalsRefs[$currentDate][1]) ? $approvalsRefs[$currentDate][1] : '';
-//                $approvals[$index]['amount'] = isset($approvalsRefs[$currentDate][2]) ? $approvalsRefs[$currentDate][2] : '0.00';
-//                $index++;
-//            }
-//            if ((int) $currentMonth < 12) {
-//                $currentMonth++;
-//            } else {
-//                $currentMonth = 1;
-//                $currentYear++;
-//            }
-//        }
-//        
-//        $yearList = array();
-//        for ($y = $yearNow - 4; $y <= $yearNow; $y++) {
-//            $yearList[$y] = $y;
-//        }
-//        
-//        $this->render('admin', array(
-//            'approvals' => $approvals,
-//            'monthStart' => $monthStart,
-//            'monthEnd' => $monthEnd,
-//            'yearStart' => $yearStart,
-//            'yearEnd' => $yearEnd,
-//            'yearList' => $yearList,
-//        ));
-//    }
+
+        $this->render('transactionInfo', array(
+            'dataProvider' => $dataProvider,
+            'transactionDate' => $transactionDate,
+            'branchId' => $branchId,
+        ));
+    }
 
     public function actionIndex() {
         $model = new CashDailySummary();

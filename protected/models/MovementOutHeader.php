@@ -45,6 +45,7 @@ class MovementOutHeader extends MonthlyTransactionActiveRecord {
     public $return_order_number;
     public $registration_transaction_number;
     public $material_request_number;
+    public $detailIdsToBeDeleted;
 
     /**
      * Returns the static model of the specified AR class.
@@ -74,7 +75,7 @@ class MovementOutHeader extends MonthlyTransactionActiveRecord {
             array('movement_out_no', 'length', 'max' => 30),
             array('status', 'length', 'max' => 20),
             array('movement_out_no', 'unique'),
-            array('updated_datetime, cancelled_datetime', 'safe'),
+            array('updated_datetime, cancelled_datetime, detailIdsToBeDeleted', 'safe'),
             // The following rule is used by search().
             // Please remove those attributes that should not be searched.
             array('id, movement_out_no, date_posting, created_datetime, delivery_order_id, branch_id, movement_type, user_id, supervisor_id, status, return_order_id,delivery_order_number, return_order_number, registration_transaction_number, registration_transaction_id, branch_name, registration_service_id, material_request_header_id, cancelled_datetime, user_id_cancelled, updated_datetime, user_id_updated', 'safe', 'on' => 'search'),

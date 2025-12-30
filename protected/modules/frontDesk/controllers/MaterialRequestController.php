@@ -171,12 +171,14 @@ class MaterialRequestController extends Controller {
             $this->loadState($materialRequest);
             $materialRequest->header->setCodeNumberByRevision('transaction_number');
 
-            if ($materialRequest->save(Yii::app()->db))
+            if ($materialRequest->save(Yii::app()->db)) {
                 $this->redirect(array('view', 'id' => $materialRequest->header->id));
+            }
         }
 
-        if (isset($_POST['Cancel']))
+        if (isset($_POST['Cancel'])) {
             $this->redirect(array('admin'));
+        }
 
         $this->render('update', array(
             'materialRequest' => $materialRequest,

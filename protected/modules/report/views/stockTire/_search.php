@@ -52,7 +52,7 @@
                 <td><?php echo CHtml::textField('ProductCode', $productCode, array('style' => 'width:100px')); ?></td>
                 <td><?php echo CHtml::textField('ProductName', $productName); ?></td>
                 <td>
-                    <?php echo CHtml::dropDownList('TireSizeId', $tireSizeId, CHtml::listData(TireSize::model()->findAll(array('order' => 't.name ASC')), 'id', 'name'), array(
+                    <?php echo CHtml::dropDownList('TireSizeId', $tireSizeId, CHtml::listData(TireSize::model()->findAll(array('order' => 't.section_width ASC')), 'id', 'tireName'), array(
                         'empty' => '-- All --',
                     )); ?>
                 </td>

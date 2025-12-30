@@ -859,11 +859,10 @@ class Product extends CActiveRecord {
     public function getAverageCogs() {
         
         $sql = "
-            SELECT COALESCE(SUM(unit_price * quantity) / SUM(quantity), 0) as cogs
+            SELECT COALESCE(SUM(d.total_price) / SUM(d.quantity), 0) as cogs
             FROM " . TransactionPurchaseOrderDetail::model()->tableName() . " d
             INNER JOIN " . TransactionPurchaseOrder::model()->tableName() . " h ON h.id = d.purchase_order_id
-            WHERE d.product_id = :product_id AND h.status_document = 'Approved' AND h.purchase_order_date > '" . AppParam::BEGINNING_TRANSACTION_DATE . "'
-            GROUP BY d.product_id
+            WHERE d.product_id = :product_id AND h.status_document = 'Approved' AND h.purchase_order_date >= '" . AppParam::BEGINNING_TRANSACTION_DATE . "'
         ";
 
         $value = Yii::app()->db->createCommand($sql)->queryScalar(array(

@@ -1,3 +1,5 @@
+<?php $detailIdsToBeDeleted = explode(',', trim($movementOut->header->detailIdsToBeDeleted, ',')); ?>
+
 <?php if (!empty($movementOut->details)): ?>
     <table>
         <thead>
@@ -19,7 +21,7 @@
         <tbody>
             <?php foreach ($movementOut->details as $i => $detail): ?>
                 <?php $product = Product::model()->findByPK($detail->product_id); ?>
-                <tr>
+                <tr style="<?php if (in_array($detail->id, $detailIdsToBeDeleted)): ?>display: none<?php endif; ?>">
                     <td><?php echo CHtml::encode(CHtml::value($detail, "product_id")); ?></td>
                     <td>
                         <?php echo CHtml::activeHiddenField($detail, "[$i]delivery_order_detail_id"); ?>
@@ -86,16 +88,23 @@
                         <?php echo CHtml::error($detail, 'unit_id'); ?>
                     </td>
                     <td>
-                        <?php echo CHtml::button('X', array(
-                            'onclick' => CHtml::ajax(array(
+                        <?php echo CHtml::button('Delete', array(
+                            'onclick' => (!empty($detail->id) ? '
+                                var detailId = ' . $detail->id . ';
+                                var idsInput = $("#' . CHtml::activeId($movementOut->header, 'detailIdsToBeDeleted') . '");
+                                idsInput.val(idsInput.val() + "," + detailId);
+                                var row = $(this).closest("tr");
+                                row.hide();
+                                row.next().hide();
+                            ' : CHtml::ajax(array(
                                 'type' => 'POST',
-                                'url' => CController::createUrl('ajaxHtmlRemoveDetail', array('id' => $movementOut->header->id, 'index' => $i)),
-                                'update' => '#mmtype',
-                            )),
+                                'url' => CController::createUrl('AjaxHtmlRemoveDetail', array('id' => $movementOut->header->id, 'index' => $i)),
+                                'update' => '#detail_div',
+                            ))),
                         )); ?>
                     </td>
                 </tr>	
-                <tr>
+                <tr style="<?php if (in_array($detail->id, $detailIdsToBeDeleted)): ?>display: none<?php endif; ?>">
                     <td colspan="12">
                         <?php echo CHtml::encode(CHtml::value($product, 'productMasterCategory.name')); ?> - 
                         <?php echo CHtml::encode(CHtml::value($product, 'productSubMasterCategory.name')); ?> - 

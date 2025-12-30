@@ -240,10 +240,9 @@
         <fieldset>
             <legend>Detail</legend>
 
-            <br />
-            
             <div class="row">
                 <div class="large-12 columns">
+                    <?php echo CHtml::activeHiddenField($movementOut->header, 'detailIdsToBeDeleted'); ?>
                     <div class="detail" id="detail_div">
                         <?php $this->renderPartial('_detail', array(
                             'movementOut' => $movementOut,

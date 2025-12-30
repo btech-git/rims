@@ -26,23 +26,29 @@ $this->menu = array(
     <div class="clearfix page-action">
         <?php $ccontroller = Yii::app()->controller->id; ?>
         <?php $ccaction = Yii::app()->controller->action->id; ?>
-        <?php echo CHtml::link('<span class="fa fa-list"></span>Manage Permintaan Bahan', Yii::app()->baseUrl . '/frontDesk/materialRequest/admin', array(
+        <?php echo CHtml::link('<span class="fa fa-list"></span>Manage', Yii::app()->baseUrl . '/frontDesk/materialRequest/admin', array(
             'class' => 'button cbutton right',
             'visible' => Yii::app()->user->checkAccess("frontDesk.materialRequest.admin")
         ));  ?>
 
         <?php //if ($materialRequest->status_document != 'Approved' && $materialRequest->status_document != 'Rejected'): ?>
             <?php echo CHtml::link('<span class="fa fa-edit"></span>Edit', Yii::app()->baseUrl . '/frontDesk/materialRequest/update?id=' . $materialRequest->id, array(
-                'class' => 'button cbutton right',
+                'class' => 'button warning right',
                 'style' => 'margin-right:10px',
                 'visible' => Yii::app()->user->checkAccess("materialRequestEdit")
             )); ?>
         <?php //endif; ?>
 
         <?php if ($materialRequest->status_document == "Draft" && Yii::app()->user->checkAccess("materialRequestApproval")): ?>
-            <?php echo CHtml::link('<span class="fa fa-edit"></span>Approval', Yii::app()->baseUrl . '/frontDesk/materialRequest/updateApproval?headerId=' . $materialRequest->id, array('class' => 'button cbutton right', 'style' => 'margin-right:10px')) ?>
+            <?php echo CHtml::link('<span class="fa fa-edit"></span>Approval', Yii::app()->baseUrl . '/frontDesk/materialRequest/updateApproval?headerId=' . $materialRequest->id, array(
+                'class' => 'button success right', 
+                'style' => 'margin-right:10px',
+            )) ?>
         <?php elseif ($materialRequest->status_document != "Draft" && Yii::app()->user->checkAccess("materialRequestSupervisor")): ?>
-            <?php echo CHtml::link('<span class="fa fa-edit"></span>Update Approval', Yii::app()->baseUrl . '/frontDesk/materialRequest/updateApproval?headerId=' . $materialRequest->id, array('class' => 'button cbutton right', 'style' => 'margin-right:10px')) ?>
+            <?php echo CHtml::link('<span class="fa fa-edit"></span>Update Approval', Yii::app()->baseUrl . '/frontDesk/materialRequest/updateApproval?headerId=' . $materialRequest->id, array(
+                'class' => 'button success right', 
+                'style' => 'margin-right:10px',
+            )) ?>
         <?php endif; ?>
         
         <?php if (Yii::app()->user->checkAccess("materialRequestSupervisor")): ?>

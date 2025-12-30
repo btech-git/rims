@@ -1266,11 +1266,11 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
         $sql = "SELECT r.branch_id, SUM(r.total_price) AS grand_total
                 FROM " . InvoiceHeader::model()->tableName() . " r
                 INNER JOIN " . Customer::model()->tableName() . " c ON c.id = r.customer_id
-                WHERE c.customer_type = 'Individual' AND r.invoice_date LIKE :transaction_date
+                WHERE c.customer_type = 'Individual' AND r.invoice_date = :transaction_date
                 GROUP BY r.branch_id";
 
         $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, array(
-            ':transaction_date' => $transactionDate . '%',
+            ':transaction_date' => $transactionDate,
         ));
 
         return $resultSet;
@@ -2013,6 +2013,74 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
         $criteria->compare('t.customer_id', $customerId);
         $criteria->compare('t.branch_id', $branchId);
         $criteria->addBetweenCondition('t.invoice_date', $startDate, $endDate);
+        $criteria->addCondition("t.status NOT LIKE '%CANCEL%'");
+        
+        return new CActiveDataProvider($this, array(
+            'criteria' => $criteria,
+            'sort' => array(
+                'defaultOrder' => 't.invoice_date ASC',
+            ),
+            'pagination' => array(
+                'pageSize' => 500,
+                'currentPage' => $page - 1,
+            ),
+        ));
+    }
+
+    public function searchByCashDailySaleRetailInfo($branchId, $transactionDate, $page) {
+
+        $criteria = new CDbCriteria;
+
+        $criteria->together = 'true';
+        $criteria->with = array('customer');
+
+        $criteria->compare('customer.customer_type', 'Individual');
+        $criteria->compare('t.branch_id', $branchId);
+        $criteria->compare('t.invoice_date', $transactionDate);
+        $criteria->addCondition("t.status NOT LIKE '%CANCEL%'");
+        
+        return new CActiveDataProvider($this, array(
+            'criteria' => $criteria,
+            'sort' => array(
+                'defaultOrder' => 't.invoice_date ASC',
+            ),
+            'pagination' => array(
+                'pageSize' => 500,
+                'currentPage' => $page - 1,
+            ),
+        ));
+    }
+
+    public function searchByCashDailySaleWholesaleInfo($branchId, $transactionDate, $page) {
+
+        $criteria = new CDbCriteria;
+
+        $criteria->together = 'true';
+        $criteria->with = array('customer');
+
+        $criteria->compare('customer.customer_type', 'Company');
+        $criteria->compare('t.branch_id', $branchId);
+        $criteria->compare('t.invoice_date', $transactionDate);
+        $criteria->addCondition("t.status NOT LIKE '%CANCEL%'");
+        
+        return new CActiveDataProvider($this, array(
+            'criteria' => $criteria,
+            'sort' => array(
+                'defaultOrder' => 't.invoice_date ASC',
+            ),
+            'pagination' => array(
+                'pageSize' => 500,
+                'currentPage' => $page - 1,
+            ),
+        ));
+    }
+
+    public function searchByCashDailySaleTotalInfo($branchId, $transactionDate, $page) {
+
+        $criteria = new CDbCriteria;
+
+        $criteria->compare('t.branch_id', $branchId);
+        $criteria->compare('t.invoice_date', $transactionDate);
         $criteria->addCondition("t.status NOT LIKE '%CANCEL%'");
         
         return new CActiveDataProvider($this, array(

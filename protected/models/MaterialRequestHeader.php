@@ -37,6 +37,7 @@ class MaterialRequestHeader extends MonthlyTransactionActiveRecord {
 
     const CONSTANT = 'MR';
 
+    public $detailIdsToBeDeleted;
     /**
      * Returns the static model of the specified AR class.
      * @param string $className active record class name.
@@ -64,7 +65,7 @@ class MaterialRequestHeader extends MonthlyTransactionActiveRecord {
             array('branch_id, user_id, user_id_updated, user_id_cancelled, registration_transaction_id', 'numerical', 'integerOnly' => true),
             array('total_quantity, total_quantity_movement_out, total_quantity_remaining', 'length', 'max' => 10),
             array('transaction_number, status_document, status_progress', 'length', 'max' => 50),
-            array('note, created_datetime, updated_datetime, cancelled_datetime', 'safe'),
+            array('note, created_datetime, updated_datetime, cancelled_datetime, detailIdsToBeDeleted', 'safe'),
             array('transaction_number', 'unique'),
             // The following rule is used by search().
             // Please remove those attributes that should not be searched.

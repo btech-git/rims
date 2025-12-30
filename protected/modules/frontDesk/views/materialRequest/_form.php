@@ -215,6 +215,7 @@
                 <div class="row">
                     <?php echo CHtml::button('Cari Barang', array('name' => 'Search', 'onclick' => '$("#product-dialog").dialog("open"); return false;', 'onkeypress' => 'if (event.keyCode == 13) { $("#product-dialog").dialog("open"); return false; }')); ?>
                     <?php echo CHtml::hiddenField('ProductId'); ?>
+                    <?php echo CHtml::activeHiddenField($materialRequest->header, 'detailIdsToBeDeleted'); ?>
                 </div>
 
                 <br /><br />

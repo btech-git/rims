@@ -541,18 +541,18 @@ class MovementOutHeaderController extends Controller {
     }
 
     //Add Detail
-    public function actionAjaxHtmlAddDetail($id, $detailId, $type) {
-        if (Yii::app()->request->isAjaxRequest) {
-            $movementOut = $this->instantiate($id, '');
-            $this->loadState($movementOut);
-
-            $movementOut->addDetail($detailId, $type);
-            Yii::app()->clientscript->scriptMap['jquery-ui.min.js'] = false;
-            Yii::app()->clientscript->scriptMap['jquery.js'] = false;
-            Yii::app()->clientscript->scriptMap['jquery.yiigridview.js'] = false;
-            $this->renderPartial('_detail', array('movementOut' => $movementOut), false, true);
-        }
-    }
+//    public function actionAjaxHtmlAddDetail($id, $detailId, $type) {
+//        if (Yii::app()->request->isAjaxRequest) {
+//            $movementOut = $this->instantiate($id, '');
+//            $this->loadState($movementOut);
+//
+//            $movementOut->addDetail($detailId, $type);
+//            Yii::app()->clientscript->scriptMap['jquery-ui.min.js'] = false;
+//            Yii::app()->clientscript->scriptMap['jquery.js'] = false;
+//            Yii::app()->clientscript->scriptMap['jquery.yiigridview.js'] = false;
+//            $this->renderPartial('_detail', array('movementOut' => $movementOut), false, true);
+//        }
+//    }
 
     public function actionAjaxHtmlRemoveDetail($id, $index) {
         if (Yii::app()->request->isAjaxRequest) {
@@ -562,8 +562,17 @@ class MovementOutHeaderController extends Controller {
             $movementOut->removeDetailAt($index);
             Yii::app()->clientscript->scriptMap['jquery-ui.min.js'] = false;
             Yii::app()->clientscript->scriptMap['jquery.js'] = false;
-            //Yii::app()->clientscript->scriptMap['jquery.yiigridview.js'] = false;
-            $this->renderPartial('_detail', array('movementOut' => $movementOut), false, true);
+
+            $yearNow = date('Y');
+            $yearList = array();
+            for ($y = $yearNow; $y >= $yearNow - 2; $y--) {
+                $yearList[$y] = $y;
+            }
+
+            $this->renderPartial('_detail', array(
+                'movementOut' => $movementOut,
+                'yearList' => $yearList,
+            ), false, true);
         }
     }
 

@@ -191,6 +191,13 @@ class MaterialRequest extends CComponent {
             $valid = $valid && $detail->save(false);
         }
 
+        $detailIdsToBeDeleted = explode(',', trim($this->header->detailIdsToBeDeleted, ','));
+        if (!empty($detailIdsToBeDeleted)) {
+            $criteria = new CDbCriteria;
+            $criteria->addInCondition('id', $detailIdsToBeDeleted);
+            MaterialRequestDetail::model()->deleteAll($criteria);
+        }
+
         return $valid;
     }
 
