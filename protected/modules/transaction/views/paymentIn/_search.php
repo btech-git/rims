@@ -94,16 +94,16 @@
                 </div>
             </div>
             
-            <div class="field">
+<!--            <div class="field">
                 <div class="row collapse">
                     <div class="small-4 columns">
-                        <?php echo CHtml::label('Plate #', '', array('class'=>'prefix')); ?>
+                        <?php /*echo CHtml::label('Plate #', '', array('class'=>'prefix')); ?>
                     </div>
                     <div class="small-8 columns">
-                        <?php echo CHtml::textField('PlateNumber', $plateNumber, array('size'=>50,'maxlength'=>50)); ?>
+                        <?php echo CHtml::textField('PlateNumber', $plateNumber, array('size'=>50,'maxlength'=>50));*/ ?>
                     </div>
                 </div>
-            </div>	
+            </div>	-->
 
         </div>
             

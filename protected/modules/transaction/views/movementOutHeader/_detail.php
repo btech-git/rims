@@ -86,11 +86,25 @@
                         <?php echo CHtml::error($detail, 'unit_id'); ?>
                     </td>
                     <td>
+                <?php /*echo CHtml::button('Delete', array(
+                    'onclick' => (!empty($detail->id) ? '
+                        var detailId = ' . $detail->id . ';
+                        var idsInput = $("#' . CHtml::activeId($materialRequest->header, 'detailIdsToBeDeleted') . '");
+                        idsInput.val(idsInput.val() + "," + detailId);
+                        var row = $(this).closest("tr");
+                        row.hide();
+                        row.next().hide();
+                    ' : CHtml::ajax(array(
+                        'type' => 'POST',
+                        'url' => CController::createUrl('ajaxHtmlRemoveProduct', array('id' => $materialRequest->header->id, 'index' => $i)),
+                        'update' => '#detail_div',
+                    ))),
+                ));*/ ?>
                         <?php echo CHtml::button('X', array(
                             'onclick' => CHtml::ajax(array(
                                 'type' => 'POST',
                                 'url' => CController::createUrl('ajaxHtmlRemoveDetail', array('id' => $movementOut->header->id, 'index' => $i)),
-                                'update' => '#mmtype',
+                                'update' => '#detail_div',
                             )),
                         )); ?>
                     </td>

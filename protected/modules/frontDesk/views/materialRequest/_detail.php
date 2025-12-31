@@ -1,5 +1,3 @@
-<?php $detailIdsToBeDeleted = explode(',', trim($materialRequest->header->detailIdsToBeDeleted, ',')); ?>
-
 <table style="border: 1px solid">
     <tr style="background-color: skyblue">
         <th style="text-align: center">ID</th>
@@ -15,7 +13,7 @@
     </tr>
     <?php foreach ($materialRequest->details as $i => $detail): ?>
         <?php $productInfo = Product::model()->findByPk($detail->product_id); ?>
-        <tr style="background-color: azure; <?php if (in_array($detail->id, $detailIdsToBeDeleted)): ?>display: none<?php endif; ?>">
+        <tr style="background-color: azure">
             <td><?php echo CHtml::encode(CHtml::value($productInfo, 'id')); ?></td>
             <td>
                 <?php echo CHtml::activeHiddenField($detail, "[$i]product_id"); ?>
@@ -54,23 +52,16 @@
             <td><?php echo CHtml::encode(CHtml::value($productInfo, 'productSubMasterCategory.coaPersediaanBarangDagang.name')); ?></td>
             <td>
                 <?php echo CHtml::button('Delete', array(
-                    'onclick' => (!empty($detail->id) ? '
-                        var detailId = ' . $detail->id . ';
-                        var idsInput = $("#' . CHtml::activeId($materialRequest->header, 'detailIdsToBeDeleted') . '");
-                        idsInput.val(idsInput.val() + "," + detailId);
-                        var row = $(this).closest("tr");
-                        row.hide();
-                        row.next().hide();
-                    ' : CHtml::ajax(array(
+                    'onclick' => CHtml::ajax(array(
                         'type' => 'POST',
                         'url' => CController::createUrl('AjaxHtmlRemoveProduct', array('id' => $materialRequest->header->id, 'index' => $i)),
                         'update' => '#detail_div',
-                    ))),
+                    )),
                 )); ?>
             </td>
         </tr>
         
-        <tr style="background-color: white; <?php if (in_array($detail->id, $detailIdsToBeDeleted)): ?>display: none<?php endif; ?>">
+        <tr>
             <td colspan="12">
                 <div class="row">
                     <div class="small-12 columns" style="padding-left: 0px; padding-right: 0px;">
