@@ -71,7 +71,7 @@ function tanggal($date) {
                 <td><?php echo $generalRepairRegistration->customer->address; ?></td>
                 <td>NO. POLISI</td>
                 <td>:</td>
-                <td><?php echo $generalRepairRegistration->vehicle->plateNumberCombination; ?></td>
+                <td><?php echo $generalRepairRegistration->vehicle->plate_number; ?></td>
             </tr>
             <tr>
                 <td>TELP / HP</td>
