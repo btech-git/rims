@@ -2542,10 +2542,11 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
         }
         
         $sql = "SELECT i.id, v.car_sub_model_id, i.invoice_number, i.invoice_date, c.name AS customer_name, v.plate_number, i.product_price, i.service_price, 
-                    i.ppn_total, i.pph_total, i.total_price
+                    i.ppn_total, i.pph_total, i.total_price, r.name as insurance_company
                 FROM " . InvoiceHeader::model()->tableName() . " i
                 INNER JOIN " . Vehicle::model()->tableName() . " v ON v.id = i.vehicle_id
                 INNER JOIN " . Customer::model()->tableName() . " c ON c.id = i.customer_id
+                LEFT OUTER JOIN " . InsuranceCompany::model()->tableName() . " r ON r.id = i.insurance_company_id
                 WHERE v.car_sub_model_id IN ({$carSubModelIdsSql}) AND i.user_id_cancelled IS NULL AND i.invoice_date BETWEEN :start_date AND :end_date" . 
                     $branchConditionSql . "
                 ORDER BY v.car_sub_model_id ASC, i.invoice_date ASC, i.invoice_number ASC";
