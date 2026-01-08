@@ -377,41 +377,41 @@ $this->menu = array(
                         </tbody>
                         <tfoot>
                             <tr>
-                                <td style="text-align: right" colspan="11">Sub Total</td>
+                                <td style="text-align: right" colspan="11">Total Amount</td>
                                 <td style="text-align: right">
                                     <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($model, 'payment_amount'))); ?>
                                 </td>
                             </tr>
-<!--                            <tr>
-                                <td style="text-align: right" colspan="10">Diskon</td>
+                            <tr>
+                                <td style="text-align: right" colspan="10">Total Diskon</td>
                                 <td style="text-align: right">
-                                    <?php /*echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($model, 'discount_product_amount'))); ?>
+                                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($model, 'discount_product_amount'))); ?>
                                 </td>
                             </tr>
                             <tr>
-                                <td style="text-align: right" colspan="10">Beban Administrasi Bank</td>
+                                <td style="text-align: right" colspan="10">Total Administrasi Bank</td>
                                 <td style="text-align: right">
                                     <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($model, 'bank_administration_fee'))); ?>
                                 </td>
                             </tr>
                             <tr>
-                                <td style="text-align: right" colspan="10">Beban Merimen</td>
+                                <td style="text-align: right" colspan="10">Total Beban Merimen</td>
                                 <td style="text-align: right">
-                                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($model, 'merimen_fee'))); */?>
+                                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($model, 'merimen_fee'))); ?>
                                 </td>
-                            </tr>-->
+                            </tr>
                             <tr>
-                                <td style="text-align: right" colspan="11">Downpayment</td>
+                                <td style="text-align: right" colspan="11">Total Downpayment</td>
                                 <td style="text-align: right">
                                     <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($model, 'downpayment_amount'))); ?>
                                 </td>
                             </tr>
-<!--                            <tr>
-                                <td style="text-align: right" colspan="10">Biaya Bank</td>
+                            <tr>
+                                <td style="text-align: right" colspan="10">Total Biaya Bank</td>
                                 <td style="text-align: right">
-                                    <?php //echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($model, 'bank_fee_amount'))); ?>
+                                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($model, 'bank_fee_amount'))); ?>
                                 </td>
-                            </tr>-->
+                            </tr>
                             <tr>
                                 <td style="text-align: right" colspan="11">Total Payment</td>
                                 <td style="text-align: right">
