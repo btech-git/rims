@@ -307,4 +307,17 @@ class CashTransaction extends MonthlyTransactionActiveRecord {
 
         return $sql;
     }
+    
+    public function getDetailNote() {
+        
+        $detailNoteList = array();
+        
+        foreach ($this->cashTransactionDetails as $detail) {
+            
+            $detailNoteList[] = $detail->notes;
+        }
+        $detailNoteUniqueList = array_unique(explode(', ', implode(', ', $detailNoteList)));
+        
+        return implode(', ', $detailNoteUniqueList);
+    }
 }

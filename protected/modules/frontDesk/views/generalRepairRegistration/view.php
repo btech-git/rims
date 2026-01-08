@@ -53,7 +53,7 @@ $this->breadcrumbs = array(
                         <?php if (count($invoices) == 0): ?>
                             <?php if (Yii::app()->user->checkAccess("generalRepairEdit")): ?>
                                 <?php echo CHtml::link('<span class="fa fa-edit"></span>Edit Customer Data', Yii::app()->baseUrl . '/frontDesk/generalRepairRegistration/update?id=' . $model->id, array(
-                                    'class' => 'button cbutton left', 
+                                    'class' => 'button warning left', 
                                     'style' => 'margin-right:10px', 
                                     'visible' => Yii::app()->user->checkAccess("generalRepairEdit")
                                 )); ?>

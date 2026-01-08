@@ -20,7 +20,8 @@
         </td>
         <td>Merk</td>
         <td>
-            <?php echo CHtml::activeDropDownList($vehicle, 'car_make_id', CHtml::listData(VehicleCarMake::model()->findAll(), 'id', 'name'), array('empty' => '-- All --',
+            <?php echo CHtml::activeDropDownList($vehicle, 'car_make_id', CHtml::listData(VehicleCarMake::model()->findAll(), 'id', 'name'), array(
+                'empty' => '-- All --',
                 'onchange' => CHtml::ajax(array(
                         'type' => 'GET',
                         'url' => CController::createUrl('ajaxHtmlUpdateCarModelSelect'),
@@ -42,7 +43,8 @@
         <td>Model</td>
         <td>
             <div id="car_model">
-                <?php echo CHtml::activeDropDownList($vehicle, 'car_model_id', CHtml::listData(VehicleCarModel::model()->findAll(), 'id', 'name'), array('empty' => '-- All --',
+                <?php echo CHtml::activeDropDownList($vehicle, 'car_model_id', CHtml::listData(VehicleCarModel::model()->findAll(), 'id', 'name'), array(
+                    'empty' => '-- All --',
                     'onchange' => CHtml::ajax(array(
                         'type' => 'GET',
                         'url' => CController::createUrl('ajaxHtmlUpdateCarSubModelSelect'),
@@ -63,7 +65,8 @@
         <td>Sub Model</td>
         <td>
             <div id="car_sub_model">
-                <?php echo CHtml::activeDropDownList($vehicle, 'car_sub_model_id', CHtml::listData(VehicleCarSubModel::model()->findAll(), 'id', 'name'), array('empty' => '-- All --',
+                <?php echo CHtml::activeDropDownList($vehicle, 'car_sub_model_id', CHtml::listData(VehicleCarSubModel::model()->findAll(), 'id', 'name'), array(
+                    'empty' => '-- All --',
                     'onchange' => '
                         $.fn.yiiGridView.update("vehicle-grid", {data: {
                             Vehicle: {

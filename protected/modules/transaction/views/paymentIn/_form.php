@@ -122,7 +122,12 @@
                     </div>
                     <div class="small-8 columns">
                         <?php echo $form->hiddenField($model, 'user_id', array('value' => $model->isNewRecord ? Yii::app()->user->getId() : $model->user_id, 'readonly' => true)); ?>
-                        <?php echo $form->textField($model, 'user.username', array('size' => 30, 'maxlength' => 30, 'value' => $model->isNewRecord ? Yii::app()->user->getName() : $model->user->username, 'readonly' => true)); ?>
+                        <?php echo $form->textField($model, 'user.username', array(
+                            'size' => 30, 
+                            'maxlength' => 30, 
+                            'value' => $model->isNewRecord ? Yii::app()->user->getName() : $model->user->username, 
+                            'readonly' => true,
+                        )); ?>
                         <?php echo $form->error($model, 'user_id'); ?>
                     </div>
                 </div>
@@ -135,7 +140,10 @@
                         <?php echo $form->labelEx($model, 'status'); ?>
                     </div>
                     <div class="small-8 columns">
-                        <?php echo $form->textField($model, 'status', array('value' => $model->isNewRecord ? 'Draft' : $model->status, 'readonly' => true)); ?>
+                        <?php echo $form->textField($model, 'status', array(
+                            'value' => $model->isNewRecord ? 'Draft' : $model->status, 
+                            'readonly' => true
+                        )); ?>
                         <?php echo $form->error($model, 'status'); ?>
                     </div>
                 </div>

@@ -52,66 +52,36 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                             <div class="field">
                                 <div class="row collapse">
                                     <div class="small-4 columns">
-                                        <span class="prefix">Car Make</span>
+                                        <span class="prefix">Tanggal </span>
                                     </div>
-                                    <div class="small-8 columns">
-                                        <?php echo CHtml::activeTextField($carMake, 'id', array(
-                                            'readonly' => true,
-                                            'onclick' => '$("#car-make-dialog").dialog("open"); return false;',
-                                            'onkeypress' => 'if (event.keyCode == 13) { $("#car-make-dialog").dialog("open"); return false; }',
-                                        )); ?>
-
-                                        <?php $this->beginWidget('zii.widgets.jui.CJuiDialog', array(
-                                            'id' => 'car-make-dialog',
+                                    <div class="small-4 columns">
+                                        <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(
+                                            'name' => 'StartDate',
                                             'options' => array(
-                                                'title' => 'Car Make',
-                                                'autoOpen' => false,
-                                                'width' => 'auto',
-                                                'modal' => true,
+                                                'dateFormat' => 'yy-mm-dd',
+                                                'changeMonth'=>true,
+                                                'changeYear'=>true,
+                                            ),
+                                            'htmlOptions' => array(
+                                                'readonly' => true,
+                                                'placeholder' => 'Mulai',
                                             ),
                                         )); ?>
+                                    </div>
 
-                                        <div class="row">
-                                            <div class="small-12 columns" style="padding-left: 0px; padding-right: 0px;">
-                                                <?php $this->widget('zii.widgets.grid.CGridView', array(
-                                                    'id'=>'car-make-grid',
-                                                    'dataProvider'=>$carMakeDataProvider,
-                                                    'filter'=>null,
-                                                    'template' => '{items}<div class="clearfix">{summary}{pager}</div>',
-                                                    'pager'=>array(
-                                                        'cssFile'=>false,
-                                                        'header'=>'',
-                                                    ),
-                                                    'selectionChanged'=>'js:function(id){
-                                                        $("#' . CHtml::activeId($carMake, 'id') . '").val($.fn.yiiGridView.getSelection(id));
-                                                        $("#car-make-dialog").dialog("close");
-                                                        if ($.fn.yiiGridView.getSelection(id) == "") {
-                                                            $("#car_make_name").html("");
-                                                        } else {
-                                                            $.ajax({
-                                                                type: "POST",
-                                                                dataType: "JSON",
-                                                                url: "' . CController::createUrl('ajaxJsonCarMake') . '",
-                                                                data: $("form").serialize(),
-                                                                success: function(data) {
-                                                                    $("#car_make_name").html(data.car_make_name);
-                                                                },
-                                                            });
-                                                        }
-                                                    }',
-                                                    'columns'=>array(
-                                                        'id',
-                                                        'name',
-                                                    ),
-                                                )); ?>
-                                            </div>
-                                        </div>
-                                        <?php $this->endWidget('zii.widgets.jui.CJuiDialog'); ?>
-
-                                        <?php echo CHtml::openTag('span', array('id' => 'car_make_name')); ?>
-                                        <?php echo CHtml::encode(CHtml::value($carMake, 'name')); ?>
-                                        <?php echo CHtml::closeTag('span'); ?> 
-
+                                    <div class="small-4 columns">
+                                        <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(
+                                            'name' => 'EndDate',
+                                            'options' => array(
+                                                'dateFormat' => 'yy-mm-dd',
+                                                'changeMonth'=>true,
+                                                'changeYear'=>true,
+                                            ),
+                                            'htmlOptions' => array(
+                                                'readonly' => true,
+                                                'placeholder' => 'Sampai',
+                                            ),
+                                        )); ?>
                                     </div>
                                 </div>
                             </div>
@@ -136,36 +106,36 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                             <div class="field">
                                 <div class="row collapse">
                                     <div class="small-2 columns">
-                                        <span class="prefix">Tanggal </span>
+                                        <span class="prefix">Vehicle</span>
                                     </div>
-                                    <div class="small-5 columns">
-                                        <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(
-                                            'name' => 'StartDate',
-                                            'options' => array(
-                                                'dateFormat' => 'yy-mm-dd',
-                                                'changeMonth'=>true,
-                                                'changeYear'=>true,
-                                            ),
-                                            'htmlOptions' => array(
-                                                'readonly' => true,
-                                                'placeholder' => 'Mulai',
-                                            ),
+                                    <div class="small-3 columns">
+                                        <?php echo CHtml::dropDownList('CarMakeId', $carMakeId, CHtml::listData(VehicleCarMake::model()->findAll(array('order' => 't.name ASC')), 'id', 'name'), array(
+                                            'empty' => '-- All --',
+                                            'onchange' => CHtml::ajax(array(
+                                                'type' => 'GET',
+                                                'url' => CController::createUrl('ajaxHtmlUpdateCarModelSelect'),
+                                                'update' => '#car_model',
+                                            )),
                                         )); ?>
                                     </div>
-
-                                    <div class="small-5 columns">
-                                        <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(
-                                            'name' => 'EndDate',
-                                            'options' => array(
-                                                'dateFormat' => 'yy-mm-dd',
-                                                'changeMonth'=>true,
-                                                'changeYear'=>true,
-                                            ),
-                                            'htmlOptions' => array(
-                                                'readonly' => true,
-                                                'placeholder' => 'Sampai',
-                                            ),
-                                        )); ?>
+                                    <div class="small-3 columns">
+                                        <div id="car_model">
+                                            <?php echo CHtml::dropDownList('CarModelId', $carModelId, CHtml::listData(VehicleCarModel::model()->findAllByAttributes(array('car_make_id' => $carMakeId), array('order' => 'name')), 'id', 'name'), array(
+                                                'empty' => '-- All --',
+                                                'onchange' => CHtml::ajax(array(
+                                                    'type' => 'GET',
+                                                    'url' => CController::createUrl('ajaxHtmlUpdateCarSubModelSelect'),
+                                                    'update' => '#car_sub_model',
+                                                )),
+                                            )); ?>
+                                        </div>
+                                    </div>
+                                    <div class="small-4 columns">
+                                        <div id="car_sub_model">
+                                            <?php echo CHtml::dropDownList('CarSubModelId', $carSubModelId, CHtml::listData(VehicleCarSubModel::model()->findAllByAttributes(array('car_model_id' => $carModelId), array('order' => 'name')), 'id', 'name'), array(
+                                                'empty' => '-- All --',
+                                            )); ?>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -187,17 +157,14 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                 <hr />
 
                 <div class="right"><?php echo ReportHelper::summaryText($saleVehicleProductSummary->dataProvider); ?></div>
-                <br />
-                <div class="right"><?php echo ReportHelper::sortText($saleVehicleProductSummary->dataProvider->sort, array('Name')); ?></div>
                 <div class="clear"></div>
 
                 <br />
         
-                <div class="relative">
+                <div class="relative">                    
                     <?php $this->renderPartial('_summary', array(
                         'saleVehicleProductSummary' => $saleVehicleProductSummary,
-                        'carMake' => $carMake,
-                        'carMakeDataProvider' => $carMakeDataProvider,
+                        'saleInvoiceVehicleReportData' => $saleInvoiceVehicleReportData,
                         'startDate' => $startDate,
                         'endDate' => $endDate,
                         'branchId' => $branchId,
@@ -208,14 +175,3 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
         </div>
     </div>
 </div>
-            
-<br/>
-
-<div class="right">
-    <?php /*$this->widget('system.web.widgets.pagers.CLinkPager', array(
-        'itemCount' => $saleRetailProductSummary->dataProvider->pagination->itemCount,
-        'pageSize' => $saleRetailProductSummary->dataProvider->pagination->pageSize,
-        'currentPage' => $saleRetailProductSummary->dataProvider->pagination->getCurrentPage(false),
-    ));*/ ?>
-</div>
-<div class="clear"></div>

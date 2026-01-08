@@ -4,16 +4,28 @@
 ); ?>
 
 <div id="link">
-    <?php echo CHtml::link('<span class="fa fa-th-list"></span>Manage', Yii::app()->baseUrl.'/accounting/paymentOut/admin' , array('class'=>'button cbutton right','style'=>'margin-right:10px')); ?>
+    <?php echo CHtml::link('<span class="fa fa-th-list"></span>Manage', Yii::app()->baseUrl.'/accounting/paymentOut/admin' , array(
+        'class'=>'button cbutton right',
+        'style'=>'margin-right:10px'
+    )); ?>
 
     <?php if (Yii::app()->user->checkAccess("paymentOutEdit") && !($paymentOut->status == 'CANCELLED!!!')): // || $paymentOut->status == 'Rejected')): ?>
-        <?php echo CHtml::link('<span class="fa fa-edit"></span>Edit', Yii::app()->baseUrl.'/accounting/paymentOut/update?id=' . $paymentOut->id, array('class'=>'button cbutton right','style'=>'margin-right:10px')) ?>
+        <?php echo CHtml::link('<span class="fa fa-edit"></span>Edit', Yii::app()->baseUrl.'/accounting/paymentOut/update?id=' . $paymentOut->id, array(
+            'class'=>'button warning right',
+            'style'=>'margin-right:10px'
+        )) ?>
     <?php endif; ?>
 
     <?php if ($paymentOut->status == "Draft" && Yii::app()->user->checkAccess("paymentOutApproval") && !($paymentOut->status == 'CANCELLED!!!')): ?>
-        <?php echo CHtml::link('<span class="fa fa-edit"></span>Approval', Yii::app()->baseUrl . '/accounting/paymentOut/updateApproval?headerId=' . $paymentOut->id, array('class' => 'button cbutton right', 'style' => 'margin-right:10px')) ?>
+        <?php echo CHtml::link('<span class="fa fa-edit"></span>Approval', Yii::app()->baseUrl . '/accounting/paymentOut/updateApproval?headerId=' . $paymentOut->id, array(
+            'class' => 'button success right', 
+            'style' => 'margin-right:10px'
+        )) ?>
     <?php elseif ($paymentOut->status != "Draft" && Yii::app()->user->checkAccess("paymentOutSupervisor") && !($paymentOut->status == 'CANCELLED!!!')): ?>
-        <?php echo CHtml::link('<span class="fa fa-edit"></span>Update Approval', Yii::app()->baseUrl . '/accounting/paymentOut/updateApproval?headerId=' . $paymentOut->id, array('class' => 'button cbutton right', 'style' => 'margin-right:10px')) ?>
+        <?php echo CHtml::link('<span class="fa fa-edit"></span>Update Approval', Yii::app()->baseUrl . '/accounting/paymentOut/updateApproval?headerId=' . $paymentOut->id, array(
+            'class' => 'button success right', 
+            'style' => 'margin-right:10px'
+        )) ?>
     <?php endif; ?>
     
     <?php //if (!($paymentOut->status == 'CANCELLED!!!')): ?>

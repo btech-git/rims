@@ -147,6 +147,8 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                 <div class="relative">
                     <?php $this->renderPartial('_summary', array(
                         'receivableSummary' => $receivableSummary,
+                        'receivableReportData' => $receivableReportData,
+                        'receivablePaymentReportData' => $receivablePaymentReportData,
                         'endDate' => $endDate,
                         'branchId' => $branchId,
                         'customerId' => $customerId,
@@ -174,7 +176,7 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
         'id' => 'customer-grid',
         'dataProvider' => $customerDataProvider,
         'filter' => $customer,
-        'template' => '{items}<div class="clearfix">{summary}{pager}</div>',
+//        'template' => '{items}<div class="clearfix">{summary}{pager}</div>',
         'pager' => array(
             'cssFile' => false,
             'header' => '',

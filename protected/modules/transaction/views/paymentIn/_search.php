@@ -94,17 +94,16 @@
                 </div>
             </div>
             
-<!--            <div class="field">
+            <div class="field">
                 <div class="row collapse">
                     <div class="small-4 columns">
-                        <?php /*echo CHtml::label('Plate #', '', array('class'=>'prefix')); ?>
+                        <?php echo CHtml::label('Plate #', '', array('class'=>'prefix')); ?>
                     </div>
                     <div class="small-8 columns">
-                        <?php echo CHtml::textField('PlateNumber', $plateNumber, array('size'=>50,'maxlength'=>50));*/ ?>
+                        <?php echo $form->textField($model, 'plate_number_list'); ?>
                     </div>
                 </div>
-            </div>	-->
-
+            </div>
         </div>
             
         <div class="small-12 medium-6 columns">
@@ -115,7 +114,7 @@
                         <?php echo $form->label($model,'customer_id', array('class'=>'prefix')); ?>
                     </div>
                     <div class="small-8 columns">
-                        <?php echo $form->textField($model,'customer_name'); ?>
+                        <?php echo $form->textField($model, 'customer_name'); ?>
                     </div>
                 </div>
             </div>	
@@ -152,6 +151,17 @@
                     </div>
                     <div class="small-8 columns">
                         <?php echo $form->dropDownList($model, 'insurance_company_id', CHtml::listData(InsuranceCompany::model()->findAll(array('order' => 'name')), 'id', 'name'), array('empty' => '-- all --')); ?>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="field">
+                <div class="row collapse">
+                    <div class="small-4 columns">
+                        <?php echo CHtml::label('Invoice #', '', array('class'=>'prefix')); ?>
+                    </div>
+                    <div class="small-8 columns">
+                        <?php echo $form->textField($model, 'invoice_number_list'); ?>
                     </div>
                 </div>
             </div>

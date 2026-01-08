@@ -160,6 +160,8 @@ class PaymentInComponent extends CComponent {
         $this->header->insurance_company_id = $this->details[0]->invoiceHeader->insurance_company_id;
         $valid = $this->header->save(false);
 
+        $invoiceNumberList = array();
+        $plateNumberList = array();
         foreach ($this->details as $i => $detail) {
             if ($detail->amount <= 0.00 && $detail->tax_service_amount <= 0.00 && $detail->discount_amount <= 0.00 && $detail->bank_administration_fee <= 0.00 && $detail->merimen_fee <= 0.00) {
                 continue;
@@ -171,8 +173,15 @@ class PaymentInComponent extends CComponent {
                 
             $detail->tax_service_percentage = $detail->is_tax_service === 2 ? 0 : 0.02;
             $valid = $detail->save(false) && $valid;
-
+            
+            $invoiceNumberList[] = $detail->invoiceHeader->invoice_number;
+            $plateNumberList[] = $detail->invoiceHeader->vehicle->plate_number;
         }
+        $invoiceNumberUniqueList = array_unique(explode(', ', implode(', ', $invoiceNumberList)));
+        $plateNumberUniqueList = array_unique(explode(', ', implode(', ', $plateNumberList)));
+        $this->header->invoice_number_list = implode(', ', $invoiceNumberUniqueList);
+        $this->header->plate_number_list = implode(', ', $plateNumberUniqueList);
+        $this->header->update(array('invoice_number_list', 'plate_number_list'));
 
         $this->header->images = CUploadedFile::getInstances($this->header, 'images');
         foreach ($this->header->images as $file) {

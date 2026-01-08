@@ -33,6 +33,8 @@
  * @property string $merimen_fee
  * @property integer $insurance_company_id
  * @property string $bank_fee_amount
+ * @property string $plate_number_list
+ * @property string $invoice_number_list
  *
  * The followings are the available model relations:
  * @property InvoiceHeader $invoice
@@ -90,9 +92,10 @@ class PaymentIn extends MonthlyTransactionActiveRecord {
             array('payment_type, status', 'length', 'max' => 30),
             array('nomor_giro', 'length', 'max' => 20),
             array('payment_number', 'unique'),
+            array('invoice_number_list, plate_number_list', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, invoice_id, payment_number, payment_date, created_datetime, payment_amount, notes, downpayment_amount, customer_id, vehicle_id, payment_type, user_id, branch_id, insurance_company_id, invoice_status, status, nomor_giro, company_bank_id, cash_payment_type, bank_id, invoice_number, customer_name, payment_type_id, is_tax_service, tax_service_amount, cancelled_datetime, user_id_cancelled, edited_datetime, user_id_edited, discount_product_amount, discount_service_amount, bank_administration_fee, merimen_fee, bank_fee_amount', 'safe', 'on' => 'search'),
+            array('id, invoice_id, payment_number, payment_date, created_datetime, payment_amount, notes, downpayment_amount, customer_id, vehicle_id, payment_type, user_id, branch_id, insurance_company_id, invoice_status, status, nomor_giro, company_bank_id, cash_payment_type, bank_id, invoice_number, customer_name, payment_type_id, is_tax_service, tax_service_amount, cancelled_datetime, user_id_cancelled, edited_datetime, user_id_edited, discount_product_amount, discount_service_amount, bank_administration_fee, merimen_fee, bank_fee_amount, invoice_number_list, plate_number_list', 'safe', 'on' => 'search'),
         );
     }
 
@@ -192,6 +195,8 @@ class PaymentIn extends MonthlyTransactionActiveRecord {
         $criteria->compare('bank_administration_fee', $this->bank_administration_fee);
         $criteria->compare('merimen_fee', $this->merimen_fee);
         $criteria->compare('t.insurance_company_id', $this->insurance_company_id);
+        $criteria->compare('invoice_number_list', $this->invoice_number_list, true);
+        $criteria->compare('plate_number_list', $this->plate_number_list, true);
 
         $criteria->together = 'true';
         $criteria->with = array('invoice');
@@ -356,7 +361,7 @@ class PaymentIn extends MonthlyTransactionActiveRecord {
         $total = '0.00';
         
         foreach ($this->paymentInDetails as $detail) {
-            $total += $detail->amount + $detail->tax_service_amount;
+            $total += $detail->totalAmount;
         }
         
         return $total;

@@ -11,13 +11,11 @@ Yii::app()->clientScript->registerCss('_report', '
     .width1-8 { width: 5% }
     .width1-9 { width: 10% }
     .width1-10 { width: 10% }
-    .width1-11 { width: 10% }
-    .width1-12 { width: 10% }
 ');
 ?>
 
 <div style="font-weight: bold; text-align: center">
-    <div style="font-size: larger">Penjualan Project (HPP + COGS) <?php echo CHtml::encode(CHtml::value($customerData, 'name')); ?></div>
+    <div style="font-size: larger">Penjualan Project <?php echo CHtml::encode(CHtml::value($customerData, 'name')); ?></div>
     <div><?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($startDate))) . ' &nbsp;&ndash;&nbsp; ' . CHtml::encode(Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($endDate))); ?></div>
 </div>
 
@@ -36,9 +34,7 @@ Yii::app()->clientScript->registerCss('_report', '
             <th class="width1-7">Item</th>
             <th class="width1-8">Quantity</th>
             <th class="width1-9">Harga</th>
-            <th class="width1-10">HPP</th>
-            <th class="width1-11">COGS</th>
-            <th class="width1-12">Total Sales</th>
+            <th class="width1-10">Total Sales</th>
         </tr>
     </thead>
     <tbody>
@@ -47,8 +43,6 @@ Yii::app()->clientScript->registerCss('_report', '
         <?php foreach ($saleProjectReport as $i => $dataItem): ?>
             <?php $quantity = CHtml::encode($dataItem['quantity']); ?>
             <?php $unitPrice = $dataItem['unit_price']; ?>
-            <?php $cogs = $dataItem['hpp']; ?>
-            <?php $totalCogs = $cogs * $quantity; ?>
             <?php $grandTotal = $dataItem['total_price']; ?>
             <tr>
                 <td>
@@ -85,16 +79,12 @@ Yii::app()->clientScript->registerCss('_report', '
                 </td>
                 <td style="text-align: center"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $quantity)); ?></td>
                 <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $unitPrice)); ?></td>
-                <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $cogs)); ?></td>
-                <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalCogs)); ?></td>
                 <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $grandTotal)); ?></td>
             </tr>
             <?php $totalSale += $grandTotal; ?>
-            <?php $grandTotalCogs += $totalCogs; ?>
         <?php endforeach; ?>
         <tr>
-            <td style="text-align: right; font-weight: bold" colspan="11">Total</td>
-            <td style="text-align: right; font-weight: bold"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $grandTotalCogs)); ?></td>
+            <td style="text-align: right; font-weight: bold" colspan="10">Total</td>
             <td style="text-align: right; font-weight: bold"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalSale)); ?></td>
         </tr>
     </tbody>

@@ -27,20 +27,25 @@ class ReceivableController extends Controller {
         $pageSize = (isset($_GET['PageSize'])) ? $_GET['PageSize'] : '';
         $currentPage = (isset($_GET['page'])) ? $_GET['page'] : '';
         $currentSort = (isset($_GET['sort'])) ? $_GET['sort'] : '';
-        $branchId = (isset($_GET['BranchId'])) ? $_GET['BranchId'] : 1;
+        $branchId = (isset($_GET['BranchId'])) ? $_GET['BranchId'] : '';
         $plateNumber = (isset($_GET['PlateNumber'])) ? $_GET['PlateNumber'] : '';
-        $customerId = (isset($_GET['InsuranceCompanyId'])) ? $_GET['InsuranceCompanyId'] : '';
+        $customerId = (isset($_GET['CustomerId'])) ? $_GET['CustomerId'] : '';
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
         
-//        $coa = Search::bind(new Coa('search'), isset($_GET['Coa']) ? $_GET['Coa'] : array());
-//        $coaDataProvider = $coa->search();
-//        $coaDataProvider->pagination->pageVar = 'page_dialog';
-//        $coaDataProvider->criteria->addCondition("t.coa_category_id = 15 AND t.coa_sub_category_id = 8 AND (t.name NOT LIKE '%Asuransi%' OR t.name NOT LIKE '%Insurance%')");
-
+        if (isset($_GET['ResetFilter'])) {
+            $pageSize = '';
+            $currentPage = '';
+            $currentSort = '';
+            $branchId = '';
+            $plateNumber = '';
+            $customerId = '';
+            $endDate = date('Y-m-d');
+        }
+        
         $customer = Search::bind(new Customer('search'), isset($_GET['Customer']) ? $_GET['Customer'] : array());
         $customerDataProvider = $customer->search();
         $customerDataProvider->pagination->pageVar = 'page_dialog';
-
+        
         $receivableSummary = new ReceivableSummary($customer->search());
         $receivableSummary->setupLoading();
         $receivableSummary->setupPaging($pageSize, $currentPage);
@@ -53,8 +58,22 @@ class ReceivableController extends Controller {
         );
         $receivableSummary->setupFilter($filters);
         
-        if (isset($_GET['ResetFilter'])) {
-            $this->redirect(array('summary'));
+        $customerIds = array_map(function($customer) { return $customer->id; }, $receivableSummary->dataProvider->data);
+        $receivableReport = InvoiceHeader::getReceivableReport($endDate, $branchId, $plateNumber, $customerIds);
+        $invoiceHeaderIds = array_map(function($receivableReportItem) { return $receivableReportItem['id']; }, $receivableReport);
+        $receivablePaymentReport = PaymentInDetail::getReceivablePaymentReport($endDate, $invoiceHeaderIds);
+        
+        $receivableReportData = array();
+        foreach ($receivableReport as $receivableReportItem) {
+            if (!isset($receivableReportData[$receivableReportItem['customer_id']])) {
+                $receivableReportData[$receivableReportItem['customer_id']] = array();
+            }
+            $receivableReportData[$receivableReportItem['customer_id']][] = $receivableReportItem;
+        }
+        
+        $receivablePaymentReportData = array();
+        foreach ($receivablePaymentReport as $receivablePaymentReportItem) {
+            $receivablePaymentReportData[$receivablePaymentReportItem['invoice_header_id']] = $receivablePaymentReportItem['payment_amount'];
         }
         
         if (isset($_GET['SaveExcel'])) {
@@ -62,16 +81,15 @@ class ReceivableController extends Controller {
         }
 
         $this->render('summary', array(
-//            'coa' => $coa,
-//            'coaDataProvider'=> $coaDataProvider,
-//            'coaId' => $coaId,
+            'receivableSummary' => $receivableSummary,
+            'receivableReportData' => $receivableReportData,
+            'receivablePaymentReportData' => $receivablePaymentReportData,
             'plateNumber' => $plateNumber,
             'customer' => $customer,
             'customerDataProvider' => $customerDataProvider,
             'customerId' => $customerId,
             'branchId' => $branchId,
             'endDate' => $endDate,
-            'receivableSummary' => $receivableSummary,
             'currentSort' => $currentSort,
             'currentPage' => $currentPage,
         ));

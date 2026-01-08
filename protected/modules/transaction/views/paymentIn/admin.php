@@ -102,6 +102,8 @@ $('.search-form form').submit(function(){
                             'name' => 'customer_name', 
                             'value' => 'empty($data->customer_id) ? "N/A" : $data->customer->name'
                         ),
+                        'plate_number_list',
+                        'invoice_number_list',
                         array(
                             'name' => 'payment_amount', 
                             'value' => 'AppHelper::formatMoney($data->payment_amount)',

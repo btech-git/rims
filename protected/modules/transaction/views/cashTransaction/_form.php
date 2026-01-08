@@ -210,40 +210,6 @@
                     </div>
 
                     <div class="large-6 columns">
-<!--                        <div class="field">
-                            <div class="row collapse">
-                                <div class="small-4 columns">
-                                    <label for="" class="prefix">COA Debit Amount</label>
-                                </div>
-                                
-                                <div class="small-8 columns">
-                                    <?php /*echo $form->textField($cashTransaction->header, 'coa_debit', array(
-                                        'size' => 20,
-                                        'maxlength' => 20,
-                                        'readonly' => true,
-                                        'value' => $cashTransaction->header->coa_id != "" ? Coa::model()->findByPk($cashTransaction->header->coa_id)->debit : ''
-                                    )); ?>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="field">
-                            <div class="row collapse">
-                                <div class="small-4 columns">
-                                    <label for="" class="prefix">COA Credit Amount</label>
-                                </div>
-                                
-                                <div class="small-8 columns">
-                                    <?php echo $form->textField($cashTransaction->header, 'coa_credit', array(
-                                        'size' => 20,
-                                        'maxlength' => 20,
-                                        'readonly' => true,
-                                        'value' => $cashTransaction->header->coa_id != "" ? Coa::model()->findByPk($cashTransaction->header->coa_id)->credit : ''
-                                    ));*/ ?>
-                                </div>
-                            </div>
-                        </div>-->
-
                         <div class="field">
                             <div class="row collapse">
                                 <div class="small-4 columns">
@@ -278,28 +244,6 @@
                             }
                         '
                     )); ?>
-                    <?php /*echo CHtml::button('Count Total', array(
-                        'id' => 'total-button',
-                        'name' => 'Total',
-                        'style' => 'display:none',
-                        'onclick' => '
-                            $.ajax({
-                                type: "POST",
-                                url: "' . CController::createUrl('ajaxGetTotal', array('id' => $cashTransaction->header->id,)) . '",
-                                data: $("form").serialize(),
-                                dataType: "json",
-                                success: function(data) {
-                                    //console.log(data.total);
-                                    //console.log(data.requestType);
-                                    if ($("#CashTransaction_transaction_type").val()=="In") {
-                                        $("#CashTransaction_credit_amount").val(data.total);
-                                    } else {
-                                        $("#CashTransaction_debit_amount").val(data.total);
-                                    }
-                                },
-                            });
-                        ',
-                    ));*/ ?>
                 </p>
                 <div class="row">
                     <div class="large-12 columns">
@@ -371,8 +315,6 @@
 
 </div><!-- form -->
 
-
-<!--COA Kas-->
 <?php $this->beginWidget('zii.widgets.jui.CJuiDialog', array(
     'id' => 'coa-kas-dialog',
     // additional javascript options for the dialog plugin

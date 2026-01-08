@@ -2169,53 +2169,6 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
         ));
     }
     
-    public static function getCustomerSaleReport($startDate, $endDate, $customerId, $branchId, $taxValue, $customerType) {
-        $taxValueConditionSql = '';
-        $branchConditionSql = '';
-        $customerConditionSql = '';
-        $customerTypeConditionSql = '';
-      
-        $params = array(
-            ':start_date' => $startDate,
-            ':end_date' => $endDate,
-        );
-        
-        if (!empty($taxValue)) {
-            $taxValueConditionSql = ' AND ppn = :tax_value';
-            $params[':tax_value'] = $taxValue;
-        }
-
-        if (!empty($branchId)) {
-            $branchConditionSql = ' AND branch_id = :branch_id';
-            $params[':branch_id'] = $branchId;
-        }
-        
-        if (!empty($customerId)) {
-            $customerConditionSql = ' AND c.id = :customer_id';
-            $params[':customer_id'] = $customerId;
-        }
-        
-        if (!empty($customerType)) {
-            $customerTypeConditionSql = ' AND c.customer_type = :customer_type';
-            $params[':customer_type'] = $customerType;
-        }
-        
-        $sql = "SELECT i.customer_id, c.name AS customer_name, c.customer_type AS customer_type, i.grand_total
-                FROM " . Customer::model()->tableName() . " c
-                INNER JOIN (
-                    SELECT customer_id, SUM(total_price) AS grand_total
-                    FROM " . InvoiceHeader::model()->tableName() . " 
-                    WHERE invoice_date BETWEEN :start_date AND :end_date AND status NOT LIKE '%CANCEL%'" . $branchConditionSql . $taxValueConditionSql . "
-                    GROUP BY customer_id
-                ) i ON c.id = i.customer_id
-                WHERE c.status = 'Active'" . $customerConditionSql . $customerTypeConditionSql . "
-                ORDER BY c.name ASC";
-                
-        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
-        
-        return $resultSet;
-    }
-    
     public static function getVehicleSaleReport($startDate, $endDate, $vehicleId, $branchId) {
         $branchConditionSql = '';
         $vehicleConditionSql = '';
@@ -2517,11 +2470,16 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
         
         $sql = "
             SELECT r.id, r.customer_id, r.invoice_number, r.invoice_date, d.product_id, p.name AS product, d.service_id, s.name AS service, d.quantity, 
-                d.unit_price, d.total_price, v.plate_number AS plate_number, p.hpp, c.name AS customer_name
+                d.unit_price, d.total_price, v.plate_number AS plate_number, p.hpp, c.name AS customer_name, i.work_order_number, r.registration_transaction_id,
+                m.name AS car_make, o.name AS car_model, sm.name AS car_sub_model
             FROM " . InvoiceHeader::model()->tableName() . " r
             INNER JOIN " . InvoiceDetail::model()->tableName() . " d ON r.id = d.invoice_id
+            INNER JOIN " . RegistrationTransaction::model()->tableName() . " i ON i.id = r.registration_transaction_id
             INNER JOIN " . Customer::model()->tableName() . " c ON c.id = r.customer_id
             INNER JOIN " . Vehicle::model()->tableName() . " v ON v.id = r.vehicle_id
+            INNER JOIN " . VehicleCarMake::model()->tableName() . " m ON m.id = v.car_make_id
+            INNER JOIN " . VehicleCarModel::model()->tableName() . " o ON o.id = v.car_model_id
+            INNER JOIN " . VehicleCarSubModel::model()->tableName() . " sm ON sm.id = v.car_sub_model_id
             LEFT OUTER JOIN " . Product::model()->tableName() . " p ON p.id = d.product_id
             LEFT OUTER JOIN " . Service::model()->tableName() . " s ON s.id = d.service_id
             WHERE substr(r.invoice_date, 1, 10) BETWEEN :start_date AND :end_date AND r.status NOT LIKE '%CANCELLED%' AND c.customer_type = 'Company'" . 
@@ -2531,6 +2489,69 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
 
         $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
         
+        return $resultSet;
+    }
+    
+    public static function getReceivableReport($endDate, $branchId, $plateNumber, $customerIds) {
+        $customerIdsSql = empty($customerIds) ? 'NULL' : implode(',', $customerIds);
+        $branchConditionSql = '';
+        $plateNumberConditionSql = '';
+        
+        $params = array(
+            ':end_date' => $endDate,
+        );
+        
+        if (!empty($branchId)) {
+            $branchConditionSql = ' AND i.branch_id = :branch_id';
+            $params[':branch_id'] = $branchId;
+        }
+        
+        if (!empty($plateNumber)) {
+            $plateNumberConditionSql = ' AND v.plate_number LIKE :plate_number';
+            $params[':plate_number'] = "%{$plateNumber}%";
+        }
+        
+        $sql = "SELECT i.id, i.customer_id, i.invoice_number, i.invoice_date, i.due_date, v.plate_number, i.total_price
+                FROM " . InvoiceHeader::model()->tableName() . " i
+                INNER JOIN " . Vehicle::model()->tableName() . " v ON v.id = i.vehicle_id
+                WHERE i.customer_id IN ({$customerIdsSql}) AND i.user_id_cancelled IS NULL AND i.invoice_date BETWEEN '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND :end_date AND i.total_price - (
+                    SELECT COALESCE(SUM(d.amount + d.tax_service_amount + d.discount_amount + d.bank_administration_fee + d.merimen_fee + d.downpayment_amount), 0)
+                    FROM " . PaymentInDetail::model()->tableName() . " d
+                    INNER JOIN " . PaymentIn::model()->tableName() . " h ON h.id = d.payment_in_id
+                    WHERE i.id = d.invoice_header_id AND h.user_id_cancelled IS NULL AND h.payment_date BETWEEN '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND :end_date
+                ) > 0" . $branchConditionSql . $plateNumberConditionSql . "
+                ORDER BY i.customer_id ASC, i.invoice_date ASC";
+        
+        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
+
+        return $resultSet;
+    }
+    
+    public static function getSaleInvoiceVehicleReport($startDate, $endDate, $branchId, $carSubModelIds) {
+        $carSubModelIdsSql = empty($carSubModelIds) ? 'NULL' : implode(',', $carSubModelIds);
+        $branchConditionSql = '';
+        
+        $params = array(
+            ':start_date' => $startDate,
+            ':end_date' => $endDate,
+        );
+        
+        if (!empty($branchId)) {
+            $branchConditionSql = ' AND i.branch_id = :branch_id';
+            $params[':branch_id'] = $branchId;
+        }
+        
+        $sql = "SELECT i.id, v.car_sub_model_id, i.invoice_number, i.invoice_date, c.name AS customer_name, v.plate_number, i.product_price, i.service_price, 
+                    i.ppn_total, i.pph_total, i.total_price
+                FROM " . InvoiceHeader::model()->tableName() . " i
+                INNER JOIN " . Vehicle::model()->tableName() . " v ON v.id = i.vehicle_id
+                INNER JOIN " . Customer::model()->tableName() . " c ON c.id = i.customer_id
+                WHERE v.car_sub_model_id IN ({$carSubModelIdsSql}) AND i.user_id_cancelled IS NULL AND i.invoice_date BETWEEN :start_date AND :end_date" . 
+                    $branchConditionSql . "
+                ORDER BY v.car_sub_model_id ASC, i.invoice_date ASC, i.invoice_number ASC";
+        
+        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
+
         return $resultSet;
     }
 }

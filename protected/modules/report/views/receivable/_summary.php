@@ -43,34 +43,33 @@
         </tr>
     </thead>
     <tbody>
-        <?php foreach ($receivableSummary->dataProvider->data as $header): ?>
+        <?php foreach ($receivableSummary->dataProvider->data as $customer): ?>
             <tr class="items1">
-                <th class="width1-1"><?php echo CHtml::encode(CHtml::value($header, 'name')); ?></th>
-                <th class="width1-2"><?php echo CHtml::encode(CHtml::value($header, 'customer_type')); ?></th>
-                <th class="width1-3"><?php echo CHtml::encode(CHtml::value($header, 'note')); ?></th>
+                <th class="width1-1"><?php echo CHtml::encode(CHtml::value($customer, 'name')); ?></th>
+                <th class="width1-2"><?php echo CHtml::encode(CHtml::value($customer, 'customer_type')); ?></th>
+                <th class="width1-3"><?php echo CHtml::encode(CHtml::value($customer, 'note')); ?></th>
             </tr>
             <tr class="items2">
                 <td colspan="3">
                     <table>
-                        <?php $receivableData = $header->getReceivableReport($endDate, $branchId, $plateNumber); ?>
                         <?php $totalRevenue = 0.00; ?>
                         <?php $totalPayment = 0.00; ?>
                         <?php $totalReceivable = 0.00; ?>
-                        <?php foreach ($receivableData as $receivableRow): ?>
-                            <?php $revenue = $receivableRow['total_price']; ?>
-                            <?php $paymentAmount = PaymentInDetail::getReceivablePaymentReport($endDate, $receivableRow['id']); ?>
+                        <?php foreach ($receivableReportData[$customer->id] as $receivableReportItem): ?>
+                            <?php $revenue = $receivableReportItem['total_price']; ?>
+                            <?php $paymentAmount = isset($receivablePaymentReportData[$receivableReportItem['id']]) ? $receivablePaymentReportData[$receivableReportItem['id']] : '0.00'; ?>
                             <?php $paymentLeft = $revenue - $paymentAmount; ?>
                             <tr>
                                 <td class="width2-1">
-                                    <?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($receivableRow['invoice_date']))); ?>
+                                    <?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($receivableReportItem['invoice_date']))); ?>
                                 </td>
                                 <td class="width2-2">
-                                    <?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($receivableRow['due_date']))); ?>
+                                    <?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($receivableReportItem['due_date']))); ?>
                                 </td>
                                 <td class="width2-3">
-                                    <?php echo CHtml::link($receivableRow['invoice_number'], Yii::app()->createUrl("report/generalLedger/redirectTransaction", array("codeNumber" => $receivableRow['invoice_number'])), array('target' => '_blank'));?>
+                                    <?php echo CHtml::link($receivableReportItem['invoice_number'], Yii::app()->createUrl("report/generalLedger/redirectTransaction", array("codeNumber" => $receivableReportItem['invoice_number'])), array('target' => '_blank'));?>
                                 </td>
-                                <td class="width2-4"><?php //echo CHtml::encode($receivableRow['vehicle']); ?></td>
+                                <td class="width2-4"><?php echo CHtml::encode($receivableReportItem['plate_number']); ?></td>
                                 <td class="width2-5" style="text-align: right">
                                     <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $revenue)); ?>
                                 </td>

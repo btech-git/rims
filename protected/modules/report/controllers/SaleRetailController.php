@@ -35,7 +35,7 @@ class SaleRetailController extends Controller {
         $taxValue = (isset($_GET['TaxValue'])) ? $_GET['TaxValue'] : '';
         $customerType = (isset($_GET['CustomerType'])) ? $_GET['CustomerType'] : '';
         
-        $customerSaleReport = InvoiceHeader::getCustomerSaleReport($startDate, $endDate, $customerId, $branchId, $taxValue, $customerType);
+        $customerSaleReport = Customer::getCustomerSaleReport($startDate, $endDate, $customerId, $branchId, $taxValue, $customerType);
         
         if (isset($_GET['ResetFilter'])) {
             $this->redirect(array('summary'));

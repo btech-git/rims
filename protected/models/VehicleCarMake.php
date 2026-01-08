@@ -141,37 +141,37 @@ class VehicleCarMake extends CActiveRecord {
         }
     }
     
-    public function getSaleVehicleReport($startDate, $endDate, $branchId) {
-        $branchConditionSql = '';
-        
-        $params = array(
-            ':car_make_id' => $this->id,
-            ':start_date' => $startDate,
-            ':end_date' => $endDate,
-        );
-        
-        if (!empty($branchId)) {
-            $branchConditionSql = ' AND r.branch_id = :branch_id';
-            $params[':branch_id'] = $branchId;
-        }
-        
-        
-        $sql = "
-            SELECT r.id, r.invoice_number, r.invoice_date, r.product_price, r.service_price, r.total_price, c.name AS customer, r.ppn_total, r.pph_total, 
-                r.total_discount, v.plate_number, i.name AS insurance_name
-            FROM " . Vehicle::model()->tableName() . " v
-            INNER JOIN " . InvoiceHeader::model()->tableName() . " r ON v.id = r.vehicle_id
-            INNER JOIN " . Customer::model()->tableName() . " c ON c.id = r.customer_id
-            LEFT OUTER JOIN " . InsuranceCompany::model()->tableName() ." i ON i.id = r.insurance_company_id
-            WHERE substr(r.invoice_date, 1, 10) BETWEEN :start_date AND :end_date AND v.car_make_id = :car_make_id AND r.status NOT LIKE '%CANCEL%'" . 
-                $branchConditionSql . "
-            ORDER BY r.invoice_date ASC, r.invoice_number ASC
-        ";
-        
-        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
-        
-        return $resultSet;
-    }
+//    public function getSaleVehicleReport($startDate, $endDate, $branchId) {
+//        $branchConditionSql = '';
+//        
+//        $params = array(
+//            ':car_make_id' => $this->id,
+//            ':start_date' => $startDate,
+//            ':end_date' => $endDate,
+//        );
+//        
+//        if (!empty($branchId)) {
+//            $branchConditionSql = ' AND r.branch_id = :branch_id';
+//            $params[':branch_id'] = $branchId;
+//        }
+//        
+//        
+//        $sql = "
+//            SELECT r.id, r.invoice_number, r.invoice_date, r.product_price, r.service_price, r.total_price, c.name AS customer, r.ppn_total, r.pph_total, 
+//                r.total_discount, v.plate_number, i.name AS insurance_name
+//            FROM " . Vehicle::model()->tableName() . " v
+//            INNER JOIN " . InvoiceHeader::model()->tableName() . " r ON v.id = r.vehicle_id
+//            INNER JOIN " . Customer::model()->tableName() . " c ON c.id = r.customer_id
+//            LEFT OUTER JOIN " . InsuranceCompany::model()->tableName() ." i ON i.id = r.insurance_company_id
+//            WHERE substr(r.invoice_date, 1, 10) BETWEEN :start_date AND :end_date AND v.car_make_id = :car_make_id AND r.status NOT LIKE '%CANCEL%'" . 
+//                $branchConditionSql . "
+//            ORDER BY r.invoice_date ASC, r.invoice_number ASC
+//        ";
+//        
+//        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
+//        
+//        return $resultSet;
+//    }
     
     public function getSaleVehicleServiceReport($startDate, $endDate, $branchId) {
         $branchConditionSql = '';

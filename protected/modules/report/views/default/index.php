@@ -914,6 +914,11 @@
                                     ),
                                     array(
                                         'label' => 'Penjualan Project', 
+                                        'url' => array('/report/saleInvoiceProjectNonCogs/summary'), 
+                                        'visible' => Yii::app()->user->checkAccess('director')
+                                    ),
+                                    array(
+                                        'label' => 'Penjualan Project (HPP + COGS)', 
                                         'url' => array('/report/saleInvoiceProject/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('director')
                                     ),
@@ -930,6 +935,11 @@
                                     array(
                                         'label' => 'Transaksi Harian', 
                                         'url' => array('/report/dailyTransaction/summary'), 
+                                        'visible' => Yii::app()->user->checkAccess('director')
+                                    ),
+                                    array(
+                                        'label' => 'Outstanding Work Order', 
+                                        'url' => array('/report/outstandingWorkOrder/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('director')
                                     ),
                                 ),

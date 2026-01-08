@@ -22,14 +22,14 @@ $this->menu = array(
         
         <?php $ccontroller = Yii::app()->controller->id; ?>
         <?php $ccaction = Yii::app()->controller->action->id; ?>
-        <?php echo CHtml::link('<span class="fa fa-th-list"></span>Manage Payment In', Yii::app()->baseUrl . '/transaction/paymentIn/admin', array(
+        <?php echo CHtml::link('<span class="fa fa-th-list"></span>Manage', Yii::app()->baseUrl . '/transaction/paymentIn/admin', array(
             'class' => 'button cbutton right', 
             'style' => 'margin-right:10px',
         )) ?>
         <?php if ($model->status !== 'CANCELLED!!!' && $model->status !== 'Approved'): ?>
             <?php if (Yii::app()->user->checkAccess("paymentInEdit")): //!($model->status == 'Approved' || $model->status == 'Rejected')): ?>
                 <?php echo CHtml::link('<span class="fa fa-edit"></span>Edit', Yii::app()->baseUrl.'/transaction/paymentIn/update?id=' . $model->id, array(
-                    'class'=>'button cbutton right',
+                    'class'=>'button warning right',
                     'style'=>'margin-right:10px',
                 )) ?>
             <?php endif; ?>
@@ -320,135 +320,6 @@ $this->menu = array(
                     </div>
                 </fieldset>
             <?php endif; ?>
-            <?php /*if ($model->vehicle_id != ""): ?>
-                <fieldset>
-                    <legend>Vehicle</legend>
-
-                    <?php
-                    $vehicleId = $plate = $machine = $frame = $chasis = $power = $carMake = $carModel = $carSubModel = $carColor = "";
-                    if ($model->vehicle_id != "") {
-                        $vehicle = Vehicle::model()->findByPk($model->vehicle_id);
-                        if (!empty($vehicle)) {
-                            $vehicleId = $vehicle->id;
-                            $plate = $vehicle->plate_number != "" ? $vehicle->plate_number : '';
-                            $machine = $vehicle->machine_number != "" ? $vehicle->machine_number : '';
-                            $frame = $vehicle->frame_number != "" ? $vehicle->frame_number : '';
-                            $chasis = $vehicle->chasis_code != "" ? $vehicle->chasis_code : '';
-                            $power = $vehicle->power != "" ? $vehicle->power : '';
-                            $carMake = $vehicle->car_make_id != "" ? $vehicle->carMake->name : '';
-                            $carModel = $vehicle->car_model_id != "" ? $vehicle->carModel->name : '';
-                            $carSubModel = $vehicle->car_sub_model_detail_id != "" ? $vehicle->carSubModel->name : '';
-                            $carColor = $vehicle->color_id != "" ? Colors:: model()->findByPk($vehicle->color_id)->name : '';
-                        }
-                    }
-                    ?>
-                    <div class="large-6 columns">
-                        <div class="field">
-                            <div class="row collapse">
-                                <div class="small-4 columns">
-                                    <span class="prefix">Plate Number</span>
-                                </div>
-                                <div class="small-8 columns">
-                                    <input type="text" readonly="true" id="Vehicle_plate_number" value="<?php echo $plate != "" ? $plate : ''; ?>"> 
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="field">
-                            <div class="row collapse">
-                                <div class="small-4 columns">
-                                    <span class="prefix">Machine Number</span>
-                                </div>
-                                <div class="small-8 columns">
-                                    <input type="text" readonly="true" id="Vehicle_machine_number" value="<?php echo $machine != "" ? $machine : ''; ?>"> 
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="field">
-                            <div class="row collapse">
-                                <div class="small-4 columns">
-                                    <span class="prefix">Frame Number</span>
-                                </div>
-                                <div class="small-8 columns">
-                                    <input type="text" readonly="true" id="Vehicle_frame_number" value="<?php echo $frame != "" ? $frame : ''; ?>"> 
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="field">
-                            <div class="row collapse">
-                                <div class="small-4 columns">
-                                    <span class="prefix">Chasis Code</span>
-                                </div>
-                                <div class="small-8 columns">
-                                    <input type="text" readonly="true" id="Vehicle_chasis_code" value="<?php echo $chasis != "" ? $chasis : ''; ?>"> 
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="field">
-                            <div class="row collapse">
-                                <div class="small-4 columns">
-                                    <span class="prefix">Power CC</span>
-                                </div>
-                                <div class="small-8 columns">
-                                    <input type="text" readonly="true" id="Vehicle_power" value="<?php echo $power != "" ? $power : ''; ?>"> 
-                                </div>
-                            </div>
-                        </div>
-                    </div> <!-- end div large -->
-
-                    <div class="large-6 columns">
-                        <div class="field">
-                            <div class="row collapse">
-                                <div class="small-4 columns">
-                                    <span class="prefix">Car Make</span>
-                                </div>
-                                <div class="small-8 columns">
-                                    <input type="text" readonly="true" id="Vehicle_car_make_name" value="<?php echo $carMake != "" ? $carMake : ''; ?>"> 
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="field">
-                            <div class="row collapse">
-                                <div class="small-4 columns">
-                                    <span class="prefix">Car Model</span>
-                                </div>
-
-                                <div class="small-8 columns">
-                                    <input type="text" readonly="true" id="Vehicle_car_model_name" value="<?php echo $carModel != "" ? $carModel : ''; ?>"> 
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="field">
-                            <div class="row collapse">
-                                <div class="small-4 columns">
-                                    <span class="prefix">Car Sub Model</span>
-                                </div>
-
-                                <div class="small-8 columns">
-                                    <input type="text" readonly="true" id="Vehicle_car_sub_model_name" value="<?php echo $carSubModel != "" ? $carSubModel : ''; ?>"> 
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="field">
-                            <div class="row collapse">
-                                <div class="small-4 columns">
-                                    <span class="prefix">Color</span>
-                                </div>
-
-                                <div class="small-8 columns">
-                                    <input type="text" readonly="true" id="Vehicle_car_color_name" value="<?php echo $carColor != "" ? $carColor : ''; ?>"> 
-                                </div>
-                            </div>
-                        </div>
-                    </div><!-- end div large -->
-                </fieldset>
-            <?php endif;*/ ?>
                     
             <fieldset>
                 <legend>Payment Detail</legend>
@@ -466,7 +337,8 @@ $this->menu = array(
                                 <th>Biaya Bank</th>
                                 <th>Biaya Merimen</th>
                                 <th>DP</th>
-                                <th>Payment Amount</th>
+                                <th>Amount</th>
+                                <th>Total</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -497,20 +369,23 @@ $this->menu = array(
                                 <td style="text-align: right">
                                     <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($detail, 'amount'))); ?>
                                 </td>
+                                <td style="text-align: right">
+                                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($detail, 'totalAmount'))); ?>
+                                </td>
                             </tr>
                             <?php endforeach; ?>
                         </tbody>
                         <tfoot>
                             <tr>
-                                <td style="text-align: right" colspan="10">Total Amount + Pph</td>
+                                <td style="text-align: right" colspan="11">Sub Total</td>
                                 <td style="text-align: right">
-                                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($model, 'totalDetail'))); ?>
+                                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($model, 'payment_amount'))); ?>
                                 </td>
                             </tr>
-                            <tr>
+<!--                            <tr>
                                 <td style="text-align: right" colspan="10">Diskon</td>
                                 <td style="text-align: right">
-                                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($model, 'discount_product_amount'))); ?>
+                                    <?php /*echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($model, 'discount_product_amount'))); ?>
                                 </td>
                             </tr>
                             <tr>
@@ -522,29 +397,29 @@ $this->menu = array(
                             <tr>
                                 <td style="text-align: right" colspan="10">Beban Merimen</td>
                                 <td style="text-align: right">
-                                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($model, 'merimen_fee'))); ?>
+                                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($model, 'merimen_fee'))); */?>
                                 </td>
-                            </tr>
+                            </tr>-->
                             <tr>
-                                <td style="text-align: right" colspan="10">Downpayment</td>
+                                <td style="text-align: right" colspan="11">Downpayment</td>
                                 <td style="text-align: right">
                                     <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($model, 'downpayment_amount'))); ?>
                                 </td>
                             </tr>
-                            <tr>
+<!--                            <tr>
                                 <td style="text-align: right" colspan="10">Biaya Bank</td>
                                 <td style="text-align: right">
-                                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($model, 'bank_fee_amount'))); ?>
+                                    <?php //echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($model, 'bank_fee_amount'))); ?>
                                 </td>
-                            </tr>
+                            </tr>-->
                             <tr>
-                                <td style="text-align: right" colspan="10">Total Payment</td>
+                                <td style="text-align: right" colspan="11">Total Payment</td>
                                 <td style="text-align: right">
                                     <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($model, 'totalPayment'))); ?>
                                 </td>
                             </tr>
                             <tr>
-                                <td style="text-align: right" colspan="10">Total Invoice</td>
+                                <td style="text-align: right" colspan="11">Total Invoice</td>
                                 <td style="text-align: right">
                                     <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($model, 'totalInvoice'))); ?>
                                 </td>

@@ -22,18 +22,32 @@ class SaleVehicleProductController extends Controller {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
         
-        $carMake = Search::bind(new VehicleCarMake('search'), isset($_GET['VehicleCarMake']) ? $_GET['VehicleCarMake'] : array());
-        $carMakeDataProvider = $carMake->search();
-        $carMakeDataProvider->pagination->pageVar = 'page_dialog';
-
         $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : date('Y-m-d');
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
+        $branchId = (isset($_GET['BranchId'])) ? $_GET['BranchId'] : '';
+        $carMakeId = (isset($_GET['CarMakeId'])) ? $_GET['CarMakeId'] : '';
+        $carModelId = (isset($_GET['CarModelId'])) ? $_GET['CarModelId'] : '';
+        $carSubModelId = (isset($_GET['CarSubModelId'])) ? $_GET['CarSubModelId'] : '';
         $pageSize = (isset($_GET['PageSize'])) ? $_GET['PageSize'] : '';
         $currentPage = (isset($_GET['page'])) ? $_GET['page'] : '';
         $currentSort = (isset($_GET['sort'])) ? $_GET['sort'] : '';
-        $branchId = (isset($_GET['BranchId'])) ? $_GET['BranchId'] : '';
 
-        $saleVehicleProductSummary = new SaleVehicleProductSummary($carMake->search());
+        if (isset($_GET['ResetFilter'])) {
+            $startDate = date('Y-m-d');
+            $endDate = date('Y-m-d');
+            $branchId = '';
+            $carMakeId = '';
+            $carModelId = '';
+            $carSubModelId = '';
+            $pageSize = '';
+            $currentPage = '';
+            $currentSort = '';
+
+        }
+        
+        $carSubModel = Search::bind(new VehicleCarSubModel('search'), isset($_GET['VehicleCarSubModel']) ? $_GET['VehicleCarSubModel'] : array());
+        
+        $saleVehicleProductSummary = new SaleVehicleProductSummary($carSubModel->search());
         $saleVehicleProductSummary->setupLoading();
         $saleVehicleProductSummary->setupPaging($pageSize, $currentPage);
         $saleVehicleProductSummary->setupSorting();
@@ -41,34 +55,70 @@ class SaleVehicleProductController extends Controller {
             'startDate' => $startDate,
             'endDate' => $endDate,
             'branchId' => $branchId,
+            'carMakeId' => $carMakeId,
+            'carModelId' => $carModelId,
+            'carSubModelId' => $carSubModelId,
         );
         $saleVehicleProductSummary->setupFilter($filters);
-
-        if (isset($_GET['ResetFilter'])) {
-            $this->redirect(array('summary'));
+        
+        $carSubModelIds = array_map(function($carSubModel) { return $carSubModel->id; }, $saleVehicleProductSummary->dataProvider->data);
+        $saleInvoiceVehicleReport = InvoiceHeader::getSaleInvoiceVehicleReport($startDate, $endDate, $branchId, $carSubModelIds);
+        
+        $saleInvoiceVehicleReportData = array();
+        foreach ($saleInvoiceVehicleReport as $saleInvoiceVehicleReportItem) {
+            if (!isset($saleInvoiceVehicleReportData[$saleInvoiceVehicleReportItem['car_sub_model_id']])) {
+                $saleInvoiceVehicleReportData[$saleInvoiceVehicleReportItem['car_sub_model_id']] = array();
+            }
+            $saleInvoiceVehicleReportData[$saleInvoiceVehicleReportItem['car_sub_model_id']][] = $saleInvoiceVehicleReportItem;
         }
         
-        if (isset($_GET['SaveExcel'])) {
-            $this->saveToExcel($saleVehicleProductSummary->dataProvider, array(
-                'startDate' => $startDate, 
-                'endDate' => $endDate, 
-                'branchId' => $branchId,
-            ));
-        }
+//        if (isset($_GET['SaveExcel'])) {
+//            $this->saveToExcel($saleInvoiceVehicleReportData, array(
+//                'startDate' => $startDate, 
+//                'endDate' => $endDate, 
+//                'branchId' => $branchId,
+//            ));
+//        }
         
         $this->render('summary', array(
-            'carMake' => $carMake,
-            'carMakeDataProvider' => $carMakeDataProvider,
             'saleVehicleProductSummary' => $saleVehicleProductSummary,
+            'saleInvoiceVehicleReportData' => $saleInvoiceVehicleReportData,
             'startDate' => $startDate,
             'endDate' => $endDate,
             'branchId' => $branchId,
+            'carMakeId' => $carMakeId,
+            'carModelId' => $carModelId,
+            'carSubModelId' => $carSubModelId,
             'currentSort' => $currentSort,
             'pageSize' => $pageSize,
             'currentPage' => $currentPage,
         ));
     }
     
+    public function actionAjaxHtmlUpdateCarModelSelect() {
+        if (Yii::app()->request->isAjaxRequest) {
+            $carMakeId = (isset($_GET['CarMakeId'])) ? $_GET['CarMakeId'] : '';
+            $carModelId = (isset($_GET['CarModelId'])) ? $_GET['CarModelId'] : '';
+
+            $this->renderPartial('_carModelSelect', array(
+                'carMakeId' => $carMakeId,
+                'carModelId' => $carModelId,
+            ));
+        }
+    }
+    
+    public function actionAjaxHtmlUpdateCarSubModelSelect() {
+        if (Yii::app()->request->isAjaxRequest) {
+            $carModelId = (isset($_GET['CarModelId'])) ? $_GET['CarModelId'] : '';
+            $carSubModelId = (isset($_GET['CarSubModelId'])) ? $_GET['CarSubModelId'] : '';
+
+            $this->renderPartial('_carSubModelSelect', array(
+                'carModelId' => $carModelId,
+                'carSubModelId' => $carSubModelId,
+            ));
+        }
+    }
+
     protected function saveToExcel($dataProvider, array $options = array()) {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');

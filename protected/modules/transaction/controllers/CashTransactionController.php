@@ -301,21 +301,29 @@ class CashTransactionController extends Controller {
         $model = new CashTransaction('search');
         $model->unsetAttributes();  // clear any default values
         
-        if (isset($_GET['CashTransaction']))
+        if (isset($_GET['CashTransaction'])) {
             $model->attributes = $_GET['CashTransaction'];
+        }
         
         $user = Users::model()->findByPk(Yii::app()->user->getId());
         $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : '';
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : '';
+        $coaId = (isset($_GET['CoaId'])) ? $_GET['CoaId'] : '';
         
         $cashInTransactionDataProvider = $model->search();
         $cashInTransactionDataProvider->criteria->addCondition('t.transaction_type = "In"');
         $cashInTransactionDataProvider->criteria->addBetweenCondition('t.transaction_date', $startDate, $endDate);
+        $cashInTransactionDataProvider->criteria->compare('coa_id', $coaId);
 
         $cashOutTransactionDataProvider = $model->search();
         $cashOutTransactionDataProvider->criteria->addCondition('t.transaction_type = "Out"');
         $cashOutTransactionDataProvider->criteria->addBetweenCondition('t.transaction_date', $startDate, $endDate);
+        $cashOutTransactionDataProvider->criteria->compare('coa_id', $coaId);
         
+        $coa = Search::bind(new Coa('search'), isset($_GET['Coa']) ? $_GET['Coa'] : array());
+        $coaDataProvider = $coa->search();
+        $coaDataProvider->pagination->pageVar = 'page_dialog';
+
         if (!Yii::app()->user->checkAccess('director')) {
             $cashInTransactionDataProvider->criteria->addCondition('t.branch_id = :branch_id');
             $cashInTransactionDataProvider->criteria->params[':branch_id'] = Yii::app()->user->branch_id;
@@ -326,10 +334,13 @@ class CashTransactionController extends Controller {
         $this->render('admin', array(
             'model' => $model,
             'user' => $user,
+            'coa' => $coa,
+            'coaDataProvider' => $coaDataProvider,
             'cashInTransactionDataProvider' => $cashInTransactionDataProvider,
             'cashOutTransactionDataProvider' => $cashOutTransactionDataProvider,
             'startDate' => $startDate,
             'endDate' => $endDate,
+            'coaId' => $coaId,
         ));
     }
 
@@ -373,6 +384,18 @@ class CashTransactionController extends Controller {
             $this->renderPartial('_subCategorySelect', array(
                 'categoryId' => $categoryId,
             ), false, true);
+        }
+    }
+
+    public function actionAjaxJsonCoa() {
+        if (Yii::app()->request->isAjaxRequest) {
+            $coaId = (isset($_POST['CoaId'])) ? $_POST['CoaId'] : '';
+            $coa = Coa::model()->findByPk($coaId);
+
+            $object = array(
+                'coa_name' => CHtml::value($coa, 'combinationName'),
+            );
+            echo CJSON::encode($object);
         }
     }
 

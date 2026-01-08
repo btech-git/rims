@@ -1,6 +1,6 @@
 <?php
 
-class SaleInvoiceProjectController extends Controller {
+class SaleInvoiceProjectNonCogsController extends Controller {
 
     public $layout = '//layouts/column1';
     
@@ -97,20 +97,20 @@ class SaleInvoiceProjectController extends Controller {
         $worksheet = $objPHPExcel->setActiveSheetIndex(0);
         $worksheet->setTitle('Penjualan Project');
 
-        $worksheet->mergeCells('A1:N1');
-        $worksheet->mergeCells('A2:N2');
-        $worksheet->mergeCells('A3:N3');
+        $worksheet->mergeCells('A1:L1');
+        $worksheet->mergeCells('A2:L2');
+        $worksheet->mergeCells('A3:L3');
 
-        $worksheet->getStyle('A1:N6')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-        $worksheet->getStyle('A1:N6')->getFont()->setBold(true);
+        $worksheet->getStyle('A1:L6')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->getStyle('A1:L6')->getFont()->setBold(true);
 
         $branch = Branch::model()->findByPk($branchId);
         $customer = Customer::model()->findByPk($customerId);
         $worksheet->setCellValue('A1', 'Raperind Motor ' . CHtml::value($branch, 'name'));
-        $worksheet->setCellValue('A2', 'Penjualan Project (HPP + COGS)' . CHtml::value($customer, 'name'));
+        $worksheet->setCellValue('A2', 'Penjualan Project' . CHtml::value($customer, 'name'));
         $worksheet->setCellValue('A3', Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($startDate)) . ' - ' . Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($endDate)));
 
-        $worksheet->getStyle('A5:N5')->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle('A5:L5')->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
         $worksheet->setCellValue('A5', 'Penjualan #');
         $worksheet->setCellValue('B5', 'Tanggal');
@@ -123,11 +123,9 @@ class SaleInvoiceProjectController extends Controller {
         $worksheet->setCellValue('I5', 'Item');
         $worksheet->setCellValue('J5', 'Quantity');
         $worksheet->setCellValue('K5', 'Harga');
-        $worksheet->setCellValue('L5', 'HPP');
-        $worksheet->setCellValue('M5', 'COGS');
-        $worksheet->setCellValue('N5', 'Total Sales');
+        $worksheet->setCellValue('L5', 'Total Sales');
 
-        $worksheet->getStyle('A6:N6')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle('A6:L6')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
         $counter = 7;
         $totalSale = '0.00';
@@ -136,10 +134,8 @@ class SaleInvoiceProjectController extends Controller {
         foreach ($saleProjectReport as $i => $dataItem) {
             $quantity = $dataItem['quantity'];
             $unitPrice = $dataItem['unit_price'];
-            $cogs = $dataItem['hpp'];
             $grandTotal = $dataItem['total_price'];
-            $totalCogs = $cogs * $quantity;
-            $worksheet->getStyle("H{$counter}:L{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
+            $worksheet->getStyle("J{$counter}:L{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
 
             $worksheet->setCellValue("A{$counter}", $dataItem['invoice_number']);
             $worksheet->setCellValue("B{$counter}", $dataItem['invoice_date']);
@@ -158,20 +154,16 @@ class SaleInvoiceProjectController extends Controller {
             }
             $worksheet->setCellValue("J{$counter}", $quantity);
             $worksheet->setCellValue("K{$counter}", $unitPrice);
-            $worksheet->setCellValue("L{$counter}", $cogs);
-            $worksheet->setCellValue("M{$counter}", $totalCogs);
-            $worksheet->setCellValue("N{$counter}", $grandTotal);
+            $worksheet->setCellValue("L{$counter}", $grandTotal);
             $counter++;
 
             $totalSale += $grandTotal;
-            $grandTotalCogs += $totalCogs;
         }
-        $worksheet->getStyle("A{$counter}:N{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
-        $worksheet->getStyle("A{$counter}:N{$counter}")->getFont()->setBold(true);
+        $worksheet->getStyle("A{$counter}:L{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A{$counter}:L{$counter}")->getFont()->setBold(true);
 
-        $worksheet->setCellValue("L{$counter}", 'TOTAL');
-        $worksheet->setCellValue("M{$counter}", $grandTotalCogs);
-        $worksheet->setCellValue("N{$counter}", $totalSale);
+        $worksheet->setCellValue("K{$counter}", 'TOTAL');
+        $worksheet->setCellValue("L{$counter}", $totalSale);
 
         for ($col = 'A'; $col !== 'Z'; $col++) {
             $objPHPExcel->getActiveSheet()
@@ -182,7 +174,7 @@ class SaleInvoiceProjectController extends Controller {
         ob_end_clean();
 
         header('Content-type: application/vnd.ms-excel');
-        header('Content-Disposition: attachment;filename="penjualan_project_hpp_cogs.xls"');
+        header('Content-Disposition: attachment;filename="penjualan_project.xls"');
         header('Cache-Control: max-age=0');
 
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');

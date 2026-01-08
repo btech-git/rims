@@ -52,8 +52,11 @@ $('.search-form form').submit(function(){
                         <?php $this->renderPartial('_search', array(
                             'model' => $model,
                             'user' => $user,
+                            'coa' => $coa,
+                            'coaDataProvider' => $coaDataProvider,
                             'startDate' => $startDate,
                             'endDate' => $endDate,
+                            'coaId' => $coaId,
                         )); ?>
                     </div><!-- search-form -->
                 </div>
@@ -101,6 +104,10 @@ $('.search-form form').submit(function(){
                                 'style' => 'text-align: right',
                             ),
                         ),
+                        array(
+                            'header' => 'Note',
+                            'value' => '$data->getDetailNote()',
+                        ),
                         'status',
                         array(
                             'header' => 'Approved By',
@@ -112,21 +119,16 @@ $('.search-form form').submit(function(){
                             'filter' => false,
                             'value' => 'Yii::app()->dateFormatter->format("d MMM yyyy HH:mm:ss", $data->created_datetime)'
                         ),
-                        array(
-                            'class' => 'CButtonColumn',
-                            'template' => '{view}',
-                            'buttons' => array(
-//                                'update' => array(
-//                                    'label' => 'update',
-//                                    'url' => 'Yii::app()->createUrl("transaction/cashTransaction/update", array("id"=>$data->id))',
-//                                    'visible' => 'Yii::app()->user->checkAccess("cashTransactionEdit")', //$data->status_document != "Approved" && $data->status_document != "Rejected" && ',
+//                        array(
+//                            'class' => 'CButtonColumn',
+//                            'template' => '{view}',
+//                            'buttons' => array(
+//                                'view' => array(
+//                                    'label' => 'view',
+//                                    'url' => 'Yii::app()->createUrl("transaction/cashTransaction/view", array("id"=>$data->id))',
 //                                ),
-                                'view' => array(
-                                    'label' => 'view',
-                                    'url' => 'Yii::app()->createUrl("transaction/cashTransaction/view", array("id"=>$data->id))',
-                                ),
-                            ),
-                        ),
+//                            ),
+//                        ),
                     ),
                 )); ?>
             </div>
@@ -172,6 +174,10 @@ $('.search-form form').submit(function(){
                                 'style' => 'text-align: right',
                             ),
                         ),
+                        array(
+                            'header' => 'Note',
+                            'value' => '$data->getDetailNote()',
+                        ),
                         'status',
                         array(
                             'header' => 'Approved By',
@@ -183,21 +189,16 @@ $('.search-form form').submit(function(){
                             'filter' => false,
                             'value' => 'Yii::app()->dateFormatter->format("d MMM yyyy HH:mm:ss", $data->created_datetime)'
                         ),
-                        array(
-                            'class' => 'CButtonColumn',
-                            'template' => '{view}',
-                            'buttons' => array(
-//                                'update' => array(
-//                                    'label' => 'update',
-//                                    'url' => 'Yii::app()->createUrl("transaction/cashTransaction/update", array("id"=>$data->id))',
-//                                    'visible' => 'Yii::app()->user->checkAccess("cashTransactionEdit")', //$data->status_document != "Approved" && $data->status_document != "Rejected" && ',
+//                        array(
+//                            'class' => 'CButtonColumn',
+//                            'template' => '{view}',
+//                            'buttons' => array(
+//                                'view' => array(
+//                                    'label' => 'view',
+//                                    'url' => 'Yii::app()->createUrl("transaction/cashTransaction/view", array("id"=>$data->id))',
 //                                ),
-                                'view' => array(
-                                    'label' => 'view',
-                                    'url' => 'Yii::app()->createUrl("transaction/cashTransaction/view", array("id"=>$data->id))',
-                                ),
-                            ),
-                        ),
+//                            ),
+//                        ),
                     ),
                 )); ?>
             </div>

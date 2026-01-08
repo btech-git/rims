@@ -132,20 +132,18 @@ class PaymentInDetail extends CActiveRecord {
         return $this->amount + $this->tax_service_amount + $this->discount_amount + $this->bank_administration_fee + $this->merimen_fee + $this->downpayment_amount;
     }
     
-    public static function getReceivablePaymentReport($endDate, $invoiceId) {
+    public static function getReceivablePaymentReport($endDate, $invoiceHeaderIds) {
+        $invoiceHeaderIdsSql = empty($invoiceHeaderIds) ? 'NULL' : implode(',', $invoiceHeaderIds);
         
-        $params = array(
+        $sql = "SELECT d.invoice_header_id, COALESCE(SUM(d.amount + d.tax_service_amount + d.discount_amount + d.bank_administration_fee + d.merimen_fee + d.downpayment_amount), 0) AS payment_amount
+                FROM " . PaymentInDetail::model()->tableName() . " d
+                INNER JOIN " . PaymentIn::model()->tableName() . " h ON h.id = d.payment_in_id
+                WHERE d.invoice_header_id IN ({$invoiceHeaderIdsSql}) AND h.user_id_cancelled IS NULL AND h.payment_date BETWEEN '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND :end_date
+                GROUP BY d.invoice_header_id";
+        
+        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, array(
             ':end_date' => $endDate,
-            ':invoice_id' => $invoiceId,
-        );
-        
-        $sql = "SELECT COALESCE(SUM(d.amount), 0) + COALESCE(SUM(d.tax_service_amount), 0) + COALESCE(SUM(d.discount_amount), 0) +
-                    COALESCE(SUM(d.bank_administration_fee), 0) + COALESCE(SUM(d.merimen_fee), 0) + COALESCE(SUM(d.downpayment_amount), 0) AS payment_amount
-                FROM rims_payment_in_detail d
-                INNER JOIN rims_payment_in h ON h.id = d.payment_in_id
-                WHERE d.invoice_header_id = :invoice_id AND h.user_id_cancelled IS NULL AND h.payment_date BETWEEN '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND :end_date";
-        
-        $resultSet = Yii::app()->db->createCommand($sql)->queryScalar($params);
+        ));
 
         return $resultSet;
     }
