@@ -331,14 +331,14 @@ $this->menu = array(
                                 <th>Plate #</th>
                                 <th>Asuransi</th>
                                 <th>Memo</th>
-                                <th>Total Invoice</th>
                                 <th>Pph</th>
                                 <th>Disc</th>
                                 <th>Biaya Bank</th>
                                 <th>Biaya Merimen</th>
                                 <th>DP</th>
                                 <th>Amount</th>
-                                <th>Total</th>
+                                <th>Total Payment</th>
+                                <th>Total Invoice</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -348,9 +348,6 @@ $this->menu = array(
                                 <td><?php echo CHtml::encode(CHtml::value($detail, 'invoiceHeader.vehicle.plate_number')); ?></td>
                                 <td><?php echo CHtml::encode(CHtml::value($detail, 'invoiceHeader.insuranceCompany.name')); ?></td>
                                 <td><?php echo CHtml::encode(CHtml::value($detail, 'memo')); ?></td>
-                                <td style="text-align: right">
-                                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($detail, 'total_invoice'))); ?>
-                                </td>
                                 <td style="text-align: right">
                                     <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($detail, 'tax_service_amount'))); ?>
                                 </td>
@@ -372,15 +369,15 @@ $this->menu = array(
                                 <td style="text-align: right">
                                     <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($detail, 'totalAmount'))); ?>
                                 </td>
+                                <td style="text-align: right">
+                                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($detail, 'total_invoice'))); ?>
+                                </td>
                             </tr>
                             <?php endforeach; ?>
                         </tbody>
                         <tfoot>
                             <tr>
                                 <td style="text-align: right; font-weight: bold" colspan="4">Total</td>
-                                <td style="text-align: right; font-weight: bold">
-                                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($model, 'totalInvoice'))); ?>
-                                </td>
                                 <td style="text-align: right; font-weight: bold">
                                     <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($model, 'tax_service_amount'))); ?>
                                 </td>
@@ -401,6 +398,9 @@ $this->menu = array(
                                 </td>
                                 <td style="text-align: right; font-weight: bold">
                                     <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($model, 'totalPayment'))); ?>
+                                </td>
+                                <td style="text-align: right; font-weight: bold">
+                                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($model, 'totalInvoice'))); ?>
                                 </td>
                             </tr>
                         </tfoot>
