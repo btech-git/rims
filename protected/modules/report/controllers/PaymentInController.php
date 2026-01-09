@@ -180,7 +180,7 @@ class PaymentInController extends Controller {
                 $worksheet->setCellValue("C{$counter}", CHtml::value($header, 'customer.name'));
                 $worksheet->setCellValue("D{$counter}", CHtml::value($detail, 'invoiceHeader.insuranceCompany.name'));
                 $worksheet->setCellValue("E{$counter}", CHtml::value($header, 'status'));
-                $worksheet->setCellValue("F{$counter}", CHtml::value($header, 'companyBank.bank.name'));
+                $worksheet->setCellValue("F{$counter}", CHtml::value($header, 'companyBank.account_name'));
                 $worksheet->setCellValue("G{$counter}", CHtml::value($header, 'paymentType.name'));
                 $worksheet->setCellValue("H{$counter}", CHtml::value($header, 'notes'));
                 $worksheet->setCellValue("I{$counter}", CHtml::value($header, 'user.username'));
