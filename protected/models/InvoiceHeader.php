@@ -344,6 +344,9 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
         $criteria->compare('t.note', $this->note, true);
         $criteria->compare('t.tax_percentage', $this->tax_percentage);
 
+        $criteria->together = 'true';
+        $criteria->with = array('customer', 'vehicle');
+        
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
             'Pagination' => array(

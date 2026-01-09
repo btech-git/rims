@@ -500,11 +500,6 @@ class InvoiceHeaderController extends Controller {
      */
     public function actionCreate($registrationId) {
 
-//        $invoiceHeader = InvoiceHeader::model()->findByAttributes(array('registration_transaction_id' => $registrationId));
-//        if ($invoiceHeader !== null) {
-//            $this->redirect(array('view', 'id' => $invoiceHeader->id));
-//        }
-        
         $invoice = $this->instantiate(null, 'create');
 
         $registrationTransaction = RegistrationTransaction::model()->findByPk($registrationId);

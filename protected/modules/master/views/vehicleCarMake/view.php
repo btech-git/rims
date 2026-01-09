@@ -44,6 +44,7 @@ $this->menu = array(
                 'name',
                 'status',
                 'created_datetime',
+                'user.username',
             ),
         )); ?>
     </div>
