@@ -59,13 +59,20 @@ Yii::app()->clientScript->registerCss('_report', '
                 <td colspan="3">
                     <table>
                         <?php $totalSale = 0.00; ?>
+                        <?php $params = array(
+                            ':customer_id' => $dataItem['customer_id'],
+                            ':start_date' => $startDate,
+                            ':end_date' => $endDate,
+                        ); ?>
+                        <?php $branchConditionSql = ''; ?>
+                        <?php if (!empty($branchId)): ?>
+                            <?php $branchConditionSql = ' AND branch_id = :branch_id'; ?>
+                            <?php $params[':branch_id'] = $branchId; ?>
+                        <?php endif; ?>
+        
                         <?php $saleReportData = InvoiceHeader::model()->findAll(array(
-                            'condition' => 'customer_id = :customer_id AND invoice_date BETWEEN :start_date AND :end_date', 
-                            'params' => array(
-                                ':customer_id' => $dataItem['customer_id'],
-                                ':start_date' => $startDate,
-                                ':end_date' => $endDate,
-                            ),
+                            'condition' => "customer_id = :customer_id AND invoice_date BETWEEN :start_date AND :end_date" . $branchConditionSql, 
+                            'params' => $params,
                         )); ?>
                         <?php if (!empty($saleReportData)): ?>
                             <?php foreach ($saleReportData as $saleReportRow): ?>

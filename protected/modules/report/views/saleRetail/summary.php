@@ -51,7 +51,7 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                                'header'=>'',
                                             ),
                                             'selectionChanged' => 'js:function(id){
-                                                $("#' . CHtml::activeId($customer, 'id') . '").val($.fn.yiiGridView.getSelection(id));
+                                                $("#CustomerId").val($.fn.yiiGridView.getSelection(id));
                                                 $("#customer-dialog").dialog("close");
                                                 if ($.fn.yiiGridView.getSelection(id) == "") {
                                                     $("#customer_name").html("");

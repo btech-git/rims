@@ -2193,7 +2193,7 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
         
         $sql = "SELECT i.vehicle_id, MAX(v.plate_number) AS plate_number, MAX(k.name) AS car_make, MAX(d.name) AS car_model, MAX(s.name) AS car_sub_model, 
                     MAX(c.name) AS customer_name, SUM(total_price) AS grand_total
-                FROM " . InvoiceHeader::model()->tableName() . "  i 
+                FROM " . InvoiceHeader::model()->tableName() . " i 
                 INNER JOIN " . Vehicle::model()->tableName() . " v ON v.id = i.vehicle_id
                 INNER JOIN " . VehicleCarMake::model()->tableName() . " k ON k.id = v.car_make_id
                 INNER JOIN " . VehicleCarModel::model()->tableName() . " d ON d.id = v.car_model_id
@@ -2210,13 +2210,11 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
     
     public static function getYearlyCustomerInvoiceReport($year) {
       
-        $sql = "SELECT i.customer_id, i.insurance_company_id, MONTH(i.invoice_date) AS invoice_month, MAX(c.name) AS customer_name, 
-                    SUM(i.total_price) AS invoice_total
-                FROM " . InvoiceHeader::model()->tableName() . "  i 
-                LEFT OUTER JOIN " . Customer::model()->tableName() . " c ON c.id = i.customer_id
-                LEFT OUTER JOIN " . InsuranceCompany::model()->tableName() . " ic ON ic.id = i.insurance_company_id
+        $sql = "SELECT i.customer_id, MONTH(i.invoice_date) AS invoice_month, MAX(c.name) AS customer_name, SUM(i.total_price) AS invoice_total
+                FROM " . InvoiceHeader::model()->tableName() . " i 
+                INNER JOIN " . Customer::model()->tableName() . " c ON c.id = i.customer_id
                 WHERE YEAR(i.invoice_date) = :year AND c.customer_type = 'Company' AND i.user_id_cancelled IS NULL
-                GROUP BY i.customer_id, i.insurance_company_id, MONTH(i.invoice_date)
+                GROUP BY i.customer_id, MONTH(i.invoice_date)
                 ORDER BY customer_name ASC, invoice_month ASC";
                 
         $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, array(
@@ -2228,14 +2226,13 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
     
     public static function getYearlyCustomerPaymentReport($year) {
       
-        $sql = "SELECT i.customer_id, i.insurance_company_id, MONTH(i.payment_date) AS payment_month, MAX(c.name) AS customer_name, 
+        $sql = "SELECT i.customer_id, MONTH(i.payment_date) AS payment_month, MAX(c.name) AS customer_name, 
                     SUM(i.payment_amount + tax_service_amount + downpayment_amount + discount_product_amount + discount_service_amount + 
                     bank_administration_fee + merimen_fee + bank_fee_amount) AS payment_total
-                FROM " . PaymentIn::model()->tableName() . "  i
-                LEFT OUTER JOIN " . Customer::model()->tableName() . " c ON c.id = i.customer_id
-                LEFT OUTER JOIN " . InsuranceCompany::model()->tableName() . " ic ON ic.id = i.insurance_company_id
+                FROM " . PaymentIn::model()->tableName() . " i
+                INNER JOIN " . Customer::model()->tableName() . " c ON c.id = i.customer_id
                 WHERE YEAR(i.payment_date) = :year AND c.customer_type = 'Company' AND i.user_id_cancelled IS NULL
-                GROUP BY i.customer_id, i.insurance_company_id, MONTH(i.payment_date)
+                GROUP BY i.customer_id, MONTH(i.payment_date)
                 ORDER BY customer_name ASC, payment_month ASC";
                 
         $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, array(
@@ -2248,7 +2245,7 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
     public static function getBeginningCustomerInvoiceReport($year) {
       
         $sql = "SELECT i.customer_id, MAX(c.name) AS customer_name, SUM(i.total_price) AS beginning_invoice_total
-                FROM " . InvoiceHeader::model()->tableName() . "  i 
+                FROM " . InvoiceHeader::model()->tableName() . " i 
                 INNER JOIN " . Customer::model()->tableName() . " c ON c.id = i.customer_id
                 WHERE i.invoice_date >= '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND i.invoice_date < :invoice_date AND c.customer_type = 'Company' AND 
                     i.user_id_cancelled IS NULL

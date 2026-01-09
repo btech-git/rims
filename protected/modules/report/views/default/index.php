@@ -301,6 +301,8 @@
 
                     <div class="small-4 columns">
                         <?php if (
+                            Yii::app()->user->checkAccess('saleCustomerSummaryReport') || 
+                            Yii::app()->user->checkAccess('saleCustomerReport') || 
                             Yii::app()->user->checkAccess('saleSummaryReport') || 
                             Yii::app()->user->checkAccess('saleProductSummaryReport') || 
                             Yii::app()->user->checkAccess('saleServiceSummaryReport') || 
@@ -352,6 +354,16 @@
                                         'label' => 'Penjualan Retail', 
                                         'url' => array('/report/saleFlowSummary/transaction'), 
                                         'visible' => (Yii::app()->user->checkAccess('saleRetailReport'))
+                                    ),
+                                    array(
+                                        'label' => 'Penjualan per Customer', 
+                                        'url' => array('/report/saleRetailCustomer/summary'), 
+                                        'visible' => (Yii::app()->user->checkAccess('saleCustomerSummaryReport'))
+                                    ),
+                                    array(
+                                        'label' => 'Rincian Penjualan per Customer', 
+                                        'url' => array('/report/saleRetail/summary'), 
+                                        'visible' => (Yii::app()->user->checkAccess('saleCustomerReport'))
                                     ),
                                 ),
                             )); ?>
@@ -780,16 +792,6 @@
                             <h2>Customer Data</h2>
                             <?php $this->widget('zii.widgets.CMenu', array(
                                 'items' => array(
-                                    array(
-                                        'label' => 'Penjualan per Customer', 
-                                        'url' => array('/report/saleRetailCustomer/summary'), 
-                                        'visible' => (Yii::app()->user->checkAccess('saleCustomerSummaryReport'))
-                                    ),
-                                    array(
-                                        'label' => 'Rincian Penjualan per Customer', 
-                                        'url' => array('/report/saleRetail/summary'), 
-                                        'visible' => (Yii::app()->user->checkAccess('saleCustomerReport'))
-                                    ),
                                     array(
                                         'label' => 'Penjualan per Customer Tahunan', 
                                         'url' => array('/report/yearlyMultipleCustomerSaleTransaction/summary'), 
