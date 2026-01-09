@@ -151,7 +151,7 @@ class PaymentInComponent extends CComponent {
 
     public function flush() {
         $this->header->payment_type = $this->header->paymentType->name;
-        $this->header->payment_amount = $this->totalDetailAmount;
+        $this->header->payment_amount = $this->totalDetail;
         $this->header->tax_service_amount = $this->totalServiceTax;
         $this->header->discount_product_amount = $this->totalDiscount;
         $this->header->bank_administration_fee = $this->totalBankAdminFee;
