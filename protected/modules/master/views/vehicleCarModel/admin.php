@@ -88,6 +88,7 @@ $('.search-form form').submit(function(){
                         'type' => 'raw'
                     ),
                     'description',
+                    'user.username',
                     array(
                         'header' => 'Input',
                         'name' => 'created_datetime',

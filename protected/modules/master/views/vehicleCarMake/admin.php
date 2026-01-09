@@ -163,6 +163,7 @@ $('.search-form form').submit(function(){
                             'Inactive' => 'Inactive',
                         )),
                     ),
+                    'user.username',
                     array(
                         'header' => 'Input',
                         'name' => 'created_datetime',
