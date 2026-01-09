@@ -2210,11 +2210,13 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
     
     public static function getYearlyCustomerInvoiceReport($year) {
       
-        $sql = "SELECT i.customer_id, MONTH(i.invoice_date) AS invoice_month, MAX(c.name) AS customer_name, SUM(i.total_price) AS invoice_total
+        $sql = "SELECT i.customer_id, i.insurance_company_id, MONTH(i.invoice_date) AS invoice_month, MAX(c.name) AS customer_name, 
+                    SUM(i.total_price) AS invoice_total
                 FROM " . InvoiceHeader::model()->tableName() . "  i 
-                INNER JOIN " . Customer::model()->tableName() . " c ON c.id = i.customer_id
+                LEFT OUTER JOIN " . Customer::model()->tableName() . " c ON c.id = i.customer_id
+                LEFT OUTER JOIN " . InsuranceCompany::model()->tableName() . " ic ON ic.id = i.insurance_company_id
                 WHERE YEAR(i.invoice_date) = :year AND c.customer_type = 'Company' AND i.user_id_cancelled IS NULL
-                GROUP BY i.customer_id, MONTH(i.invoice_date)
+                GROUP BY i.customer_id, i.insurance_company_id, MONTH(i.invoice_date)
                 ORDER BY customer_name ASC, invoice_month ASC";
                 
         $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, array(
@@ -2226,13 +2228,14 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
     
     public static function getYearlyCustomerPaymentReport($year) {
       
-        $sql = "SELECT i.customer_id, MONTH(i.payment_date) AS payment_month, MAX(c.name) AS customer_name, 
+        $sql = "SELECT i.customer_id, i.insurance_company_id, MONTH(i.payment_date) AS payment_month, MAX(c.name) AS customer_name, 
                     SUM(i.payment_amount + tax_service_amount + downpayment_amount + discount_product_amount + discount_service_amount + 
                     bank_administration_fee + merimen_fee + bank_fee_amount) AS payment_total
                 FROM " . PaymentIn::model()->tableName() . "  i
-                INNER JOIN " . Customer::model()->tableName() . " c ON c.id = i.customer_id
+                LEFT OUTER JOIN " . Customer::model()->tableName() . " c ON c.id = i.customer_id
+                LEFT OUTER JOIN " . InsuranceCompany::model()->tableName() . " ic ON ic.id = i.insurance_company_id
                 WHERE YEAR(i.payment_date) = :year AND c.customer_type = 'Company' AND i.user_id_cancelled IS NULL
-                GROUP BY i.customer_id, MONTH(i.payment_date)
+                GROUP BY i.customer_id, i.insurance_company_id, MONTH(i.payment_date)
                 ORDER BY customer_name ASC, payment_month ASC";
                 
         $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, array(
