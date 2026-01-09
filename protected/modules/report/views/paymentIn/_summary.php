@@ -35,13 +35,14 @@ Yii::app()->clientScript->registerCss('_report', '
             <th class="width1-1">Payment #</th>
             <th class="width1-2">Tanggal</th>
             <th class="width1-3">Customer</th>
+            <th class="width1-3">Asuransi</th>
             <th class="width1-4">Note</th>
             <th class="width1-5">Status</th>
             <th class="width1-6">Payment Type</th>
             <th class="width1-7">Admin</th>
         </tr>
         <tr id="header2">
-            <td colspan="7">
+            <td colspan="8">
                 <table>
                     <tr>
                         <th class="width2-1">Invoice #</th>
@@ -66,13 +67,14 @@ Yii::app()->clientScript->registerCss('_report', '
                 </td>
                 <td class="width1-2"><?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($header->payment_date))); ?></td>
                 <td class="width1-3"><?php echo CHtml::encode(CHtml::value($header, 'customer.name')); ?></td>
+                <td class="width1-3"><?php echo CHtml::encode(CHtml::value($header, 'insuranceCompany.name')); ?></td>
                 <td class="width1-4"><?php echo CHtml::encode(CHtml::value($header, 'notes')); ?></td>
                 <td class="width1-5"><?php echo CHtml::encode($header->status); ?></td>
                 <td class="width1-6"><?php echo CHtml::encode(CHtml::value($header, 'paymentType.name')); ?></td>
                 <td class="width1-7"><?php echo CHtml::encode(CHtml::value($header, 'user.username')); ?></td>
             </tr>
             <tr class="items2">
-                <td colspan="7">
+                <td colspan="8">
                     <table>
                         <?php foreach ($header->paymentInDetails as $detail): ?>
                             <tr>
