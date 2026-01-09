@@ -155,7 +155,7 @@ class PaymentInController extends Controller {
 
         $worksheet->getStyle('A5:T5')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
-        $counter = 7;
+        $counter = 6;
         $totalInvoice = 0.00;
         $totalTaxService = 0.00;
         $totalDiscount = 0.00;
