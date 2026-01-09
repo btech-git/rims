@@ -357,7 +357,7 @@ class PaymentInController extends Controller {
         $invoiceHeaderDataProvider = $invoiceHeader->searchForPaymentIn();
         $invoiceHeaderDataProvider->criteria->together = 'true';
         $invoiceHeaderDataProvider->criteria->with = array('customer', 'vehicle');
-        $invoiceHeaderDataProvider->criteria->compare('vehicle.plate_number', $this->note, true);
+//        $invoiceHeaderDataProvider->criteria->compare('vehicle.plate_number', $this->note, true);
 
         if (!empty($customerId)) {
             $paymentIn->header->customer_id = $customerId;
