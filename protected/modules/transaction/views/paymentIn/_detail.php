@@ -3,14 +3,16 @@
         <tr>
             <th>Invoice #</th>
             <th>Asuransi</th>
+            <th>Plat #</th>
             <th>Memo</th>
-            <th>Total Invoice</th>
             <th colspan="2">PPh</th>
             <th>Disc</th>
             <th>Biaya Bank</th>
             <th>Biaya Merimen</th>
             <th>DP</th>
-            <th class="required">Payment Amount</th>
+            <th>Amount</th>
+            <th>Total Payment</th>
+            <th>Total Invoice</th>
             <th></th>
         </tr>
     </thead>
@@ -23,11 +25,8 @@
                     <?php echo CHtml::encode(CHtml::value($detail, "invoiceHeader.invoice_number")); ?>
                 </td>
                 <td><?php echo CHtml::encode(CHtml::value($detail, "invoiceHeader.insuranceCompany.name")); ?></td>
+                <td><?php echo CHtml::encode(CHtml::value($detail, "invoiceHeader.vehicle.plate_number")); ?></td>
                 <td><?php echo CHtml::activeTextField($detail, "[$i]memo"); ?></td>
-                <td style="text-align: right">
-                    <?php echo CHtml::activeHiddenField($detail, "[$i]total_invoice"); ?>
-                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($detail, "total_invoice"))); ?>
-                </td>
                 <td>
                     <?php echo CHtml::activeDropDownList($detail, "[$i]is_tax_service", array(
                         '3' => 'Include Pph',
@@ -42,9 +41,10 @@
                             data: $("form").serialize(),
                             success: function(data) {
                                 $("#tax_service_amount_' . $i . '").html(data.taxServiceAmount);
-                                $("#bank_fee_amount").html(data.bankFeeAmount);
+                                $("#total_payment_detail_' . $i . '").html(data.totalDetailAmount);
+                                $("#total_tax_service_amount").html(data.totalTaxServiceAmount);
                                 $("#total_invoice").html(data.totalInvoice);
-                                $("#total_payment").html(data.totalPayment);
+                                $("#total_detail_amount").html(data.totalPayment);
                             },
                         });',
                         'class' => "form-control is-valid",
@@ -59,9 +59,10 @@
                             data: $("form").serialize(),
                             success: function(data) {
                                 $("#tax_service_amount_' . $i . '").html(data.taxServiceAmount);
-                                $("#bank_fee_amount").html(data.bankFeeAmount);
+                                $("#total_payment_detail_' . $i . '").html(data.totalDetailAmount);
+                                $("#total_tax_service_amount").html(data.totalTaxServiceAmount);
                                 $("#total_invoice").html(data.totalInvoice);
-                                $("#total_payment").html(data.totalPayment);
+                                $("#total_detail_amount").html(data.totalPayment);
                             },
                         });',                        
                     )); ?>
@@ -76,10 +77,10 @@
                             data: $("form").serialize(),
                             success: function(data) {
                                 $("#discount_amount_' . $i . '").html(data.discountAmount);
+                                $("#total_payment_detail_' . $i . '").html(data.totalDetailAmount);
                                 $("#total_discount").html(data.totalDiscountAmount);
-                                $("#bank_fee_amount").html(data.bankFeeAmount);
                                 $("#total_invoice").html(data.totalInvoice);
-                                $("#total_payment").html(data.totalPayment);
+                                $("#total_detail_amount").html(data.totalPayment);
                             },
                         });',                        
                     )); ?>
@@ -94,10 +95,10 @@
                             data: $("form").serialize(),
                             success: function(data) {
                                 $("#bank_admin_fee_amount_' . $i . '").html(data.bankAdminFeeAmount);
+                                $("#total_payment_detail_' . $i . '").html(data.totalDetailAmount);
                                 $("#total_bank_admin_fee").html(data.totalBankAdminFeeAmount);
-                                $("#bank_fee_amount").html(data.bankFeeAmount);
                                 $("#total_invoice").html(data.totalInvoice);
-                                $("#total_payment").html(data.totalPayment);
+                                $("#total_detail_amount").html(data.totalPayment);
                             },
                         });',                        
                     )); ?>
@@ -112,8 +113,8 @@
                             data: $("form").serialize(),
                             success: function(data) {
                                 $("#merimen_fee_amount_' . $i . '").html(data.merimenFeeAmount);
+                                $("#total_payment_detail_' . $i . '").html(data.totalDetailAmount);
                                 $("#total_merimen_fee").html(data.totalMerimenFeeAmount);
-                                $("#bank_fee_amount").html(data.bankFeeAmount);
                                 $("#total_invoice").html(data.totalInvoice);
                                 $("#total_payment").html(data.totalPayment);
                             },
@@ -130,8 +131,8 @@
                             data: $("form").serialize(),
                             success: function(data) {
                                 $("#downpayment_amount_' . $i . '").html(data.downpaymentAmount);
+                                $("#total_payment_detail_' . $i . '").html(data.totalDetailAmount);
                                 $("#total_downpayment_amount").html(data.totalDownpaymentAmount);
-                                $("#bank_fee_amount").html(data.bankFeeAmount);
                                 $("#total_invoice").html(data.totalInvoice);
                                 $("#total_payment").html(data.totalPayment);
                             },
@@ -148,13 +149,23 @@
                             data: $("form").serialize(),
                             success: function(data) {
                                 $("#payment_amount_' . $i . '").html(data.paymentAmount);
-                                $("#bank_fee_amount").html(data.bankFeeAmount);
+                                $("#total_payment_detail_' . $i . '").html(data.totalDetailAmount);
+                                $("#total_payment_amount").html(data.totalAmount);
                                 $("#total_invoice").html(data.totalInvoice);
                                 $("#total_payment").html(data.totalPayment);
                             },
                         });',                        
                     )); ?>
                     <span id="payment_amount_<?php echo $i; ?>"></span>
+                </td>
+                <td style="text-align: right">
+                    <span id="total_payment_detail_<?php echo $i; ?>">
+                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($detail, 'totalAmount'))); ?>
+                    </span>
+                </td>
+                <td style="text-align: right">
+                    <?php echo CHtml::activeHiddenField($detail, "[$i]total_invoice"); ?>
+                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($detail, "total_invoice"))); ?>
                 </td>
                 <td>
                     <?php echo CHtml::button('X', array(
@@ -170,85 +181,48 @@
     </tbody>
     <tfoot>
         <tr>
-            <td colspan="10" style="text-align: right">Downpayment</td>
+            <td colspan="5" style="text-align: right">Total</td>
             <td style="text-align: right">
-                <span id="total_downpayment_amount">
-                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($paymentIn->header, 'totalDownpayment'))); ?>
+                <span id="total_tax_service_amount">
+                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($paymentIn->header, 'tax_service_amount'))); ?>
                 </span>
             </td>
-            <td></td>
-        </tr>
-        <tr>
-            <td colspan="10" style="text-align: right">Total Amount + PPh</td>
-            <td style="text-align: right">
-                <span id="total_amount">
-                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($paymentIn->header, 'totalDetail'))); ?>
-                </span>
-            </td>
-            <td></td>
-        </tr>
-        <tr>
-            <td colspan="10" style="text-align: right">Total Diskon</td>
             <td style="text-align: right">
                 <span id="total_discount">
                     <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($paymentIn->header, 'discount_product_amount'))); ?>
                 </span>
             </td>
-            <td></td>
-        </tr>
-        <tr>
-            <td colspan="10" style="text-align: right">Total Beban Administrasi Bank</td>
             <td style="text-align: right">
                 <span id="total_bank_admin_fee">
                     <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($paymentIn->header, 'bank_administration_fee'))); ?>
                 </span>
             </td>
-            <td></td>
-        </tr>
-        <tr>
-            <td colspan="10" style="text-align: right">Total Beban Merimen</td>
             <td style="text-align: right">
                 <span id="total_merimen_fee">
                     <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($paymentIn->header, 'merimen_fee'))); ?>
                 </span>
             </td>
-            <td></td>
-        </tr>
-        <tr>
-            <td colspan="10" style="text-align: right">Biaya Bank</td>
             <td style="text-align: right">
-                <span id="bank_fee_amount">
-                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($paymentIn->header, 'bank_fee_amount'))); ?>
+                <span id="total_downpayment_amount">
+                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($paymentIn->header, 'downpayment_amount'))); ?>
                 </span>
             </td>
-            <td></td>
-        </tr>
-        <tr>
-            <td colspan="10" style="text-align: right">Total Payment</td>
             <td style="text-align: right">
-                <span id="total_payment">
-                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($paymentIn->header, 'totalPayment'))); ?>
+                <span id="total_payment_amount">
+                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($paymentIn->header, 'payment_amount'))); ?>
                 </span>
             </td>
-            <td></td>
-        </tr>
-        <tr>
-            <td colspan="10" style="text-align: right">Total Invoice</td>
+            <td style="text-align: right">
+                <span id="total_detail_amount">
+                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($paymentIn, 'totalPayment'))); ?>
+                </span>
+            </td>
             <td style="text-align: right">
                 <span id="total_invoice">
-                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($paymentIn->header, 'totalInvoice'))); ?>
+                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($paymentIn, 'totalInvoice'))); ?>
                 </span>
             </td>
             <td></td>
         </tr>
-<!--        <tr>
-            <td colspan="4">Total PPh</td>
-            <td style="text-align: right">
-                <span id="total_service_tax">
-                    <?php //echo CHtml::encode(CHtml::value($paymentIn->header, 'totalServiceTax')); ?>
-                </span>
-            </td>
-            <td colspan="2"></td>
-        </tr>-->
     </tfoot>
 </table>

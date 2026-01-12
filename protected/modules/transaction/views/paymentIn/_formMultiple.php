@@ -21,8 +21,8 @@
                             'model' => $paymentIn->header,
                             'attribute' => "payment_date",
                             'options'=>array(
-                                'minDate' => '-13W',
-                                'maxDate' => '+6M',
+//                                'minDate' => '-13W',
+//                                'maxDate' => '+6M',
                                 'dateFormat' => 'yy-mm-dd',
                                 'changeMonth'=>true,
                                 'changeYear'=>true,
@@ -255,17 +255,18 @@
                 'value' => 'Yii::app()->dateFormatter->format("d MMM yyyy", $data->invoice_date)'
             ),
             array(
-                'name' => 'vehicle_id',
+                'name' => 'plate_number',
                 'header' => 'Plat #',
                 'value' => 'empty($data->vehicle_id) ? "" : $data->vehicle->plate_number',
             ),
             array(
                 'name' => 'customer_id',
                 'header' => 'Customer',
+                'filter' => '',
                 'value' => 'empty($data->customer_id) ? "" : $data->customer->name',
             ),
             array(
-                'name' => 'insurance_company_id',
+                'name' => 'insurance_company_name',
                 'header' => 'Asuransi',
                 'value' => 'empty($data->insurance_company_id) ? "" : $data->insuranceCompany->name',
             ),

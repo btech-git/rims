@@ -1,7 +1,7 @@
 <h1>List Asuransi</h1>
    
 <div id="link">
-    <?php echo CHtml::link('<span class="fa fa-th-list"></span>Manage Payment In', Yii::app()->baseUrl.'/transaction/paymentIn/admin' , array(
+    <?php echo CHtml::link('<span class="fa fa-th-list"></span>Manage', Yii::app()->baseUrl.'/transaction/paymentIn/admin' , array(
         'class'=>'button cbutton',
     )); ?>
 </div>
@@ -21,7 +21,7 @@
             'value' => '$data->name',
         ),
         array(
-            'name' => 'coa_id',
+            'name' => 'coa_name',
             'header' => 'COA Piutang',
             'value' => 'empty($data->coa_id) ? "" : $data->coa->name',
         ),
