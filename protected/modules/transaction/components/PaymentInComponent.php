@@ -227,14 +227,16 @@ class PaymentInComponent extends CComponent {
     }
     
     public function getBankFeeAmount() {
-        $bankFeeAmount = 0.00;
+        $bankFeeAmount = '0.00';
         
-        if ($this->header->paymentType->bank_fee_type == 1) {
-            $bankFeeAmount = $this->getTotalInvoice() * $this->header->paymentType->bank_fee_amount / 100;
-        } elseif ($this->header->paymentType->bank_fee_type == 2) {
-            $bankFeeAmount = $this->header->paymentType->bank_fee_amount;
-        } else {
-            $bankFeeAmount = '0.00';
+        if (!empty($this->header->payment_type_id)) {
+            if ($this->header->paymentType->bank_fee_type == 1) {
+                $bankFeeAmount = $this->getTotalInvoice() * $this->header->paymentType->bank_fee_amount / 100;
+            } elseif ($this->header->paymentType->bank_fee_type == 2) {
+                $bankFeeAmount = $this->header->paymentType->bank_fee_amount;
+            } else {
+                $bankFeeAmount = '0.00';
+            }
         }
         
         return $bankFeeAmount;
