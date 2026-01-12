@@ -245,8 +245,9 @@ class PaymentInController extends Controller {
         $invoice = Search::bind(new InvoiceHeader('search'), isset($_GET['InvoiceHeader']) ? $_GET['InvoiceHeader'] : '');
         $invoice->unsetAttributes();
         
-        if (isset($_GET['InvoiceHeader']))
+        if (isset($_GET['InvoiceHeader'])) {
             $invoice->attributes = $_GET['InvoiceHeader'];
+        }
         
         $invoiceCriteria = new CDbCriteria;
         $invoiceCriteria->addCondition('t.status != "CANCELLED" AND t.payment_left > 0');
@@ -336,10 +337,14 @@ class PaymentInController extends Controller {
         $insuranceCompany = Search::bind(new InsuranceCompany('search'), isset($_GET['InsuranceCompany']) ? $_GET['InsuranceCompany'] : array());
         $insuranceCompanyDataProvider = $insuranceCompany->search();
         $insuranceCompanyDataProvider->criteria->order = 't.name ASC';
+        
+        $coaName = isset($_GET['CoaName']) ? $_GET['CoaName'] : '';
+        $insuranceCompanyDataProvider->criteria->compare('coa.name', $coaName, true);
 
         $this->render('insuranceList', array(
             'insuranceCompany' => $insuranceCompany,
             'insuranceCompanyDataProvider' => $insuranceCompanyDataProvider,
+            'coaName' => $coaName,
         ));
     }
 
@@ -355,9 +360,6 @@ class PaymentInController extends Controller {
 
         $invoiceHeader = Search::bind(new InvoiceHeader('search'), isset($_GET['InvoiceHeader']) ? $_GET['InvoiceHeader'] : array());
         $invoiceHeaderDataProvider = $invoiceHeader->searchForPaymentIn();
-        $invoiceHeaderDataProvider->criteria->together = 'true';
-        $invoiceHeaderDataProvider->criteria->with = array('customer', 'vehicle');
-//        $invoiceHeaderDataProvider->criteria->compare('vehicle.plate_number', $this->note, true);
 
         if (!empty($customerId)) {
             $paymentIn->header->customer_id = $customerId;
@@ -1056,8 +1058,10 @@ class PaymentInController extends Controller {
                 'bankAdminFeeAmount' => CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($paymentIn->details[$index], 'bank_administration_fee'))),
                 'merimenFeeAmount' => CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($paymentIn->details[$index], 'merimen_fee'))),
                 'downpaymentAmount' => CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($paymentIn->details[$index], 'downpayment_amount'))),
+                'totalDetailAmount' => CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($paymentIn->details[$index], 'totalAmount'))),
                 'totalAmount' => CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($paymentIn, 'totalDetail'))),
                 'totalDiscountAmount' => CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($paymentIn, 'totalDiscount'))),
+                'totalTaxServiceAmount' => CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($paymentIn, 'totalServiceTax'))),
                 'totalBankAdminFeeAmount' => CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($paymentIn, 'totalBankAdminFee'))),
                 'totalMerimenFeeAmount' => CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($paymentIn, 'totalMerimenFee'))),
                 'totalDownpaymentAmount' => CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($paymentIn, 'totalDownpaymentAmount'))),
