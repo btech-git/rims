@@ -158,7 +158,8 @@ class TransactionPurchaseOrderController extends Controller {
             $registrationTransaction->attributes = $_GET['RegistrationTransaction'];
         }
         $registrationTransactionCriteria = new CDbCriteria;
-        $registrationTransactionCriteria->compare('t.transaction_number', $registrationTransaction->transaction_number, true);
+        $registrationTransactionCriteria->compare('t.work_order_number', $registrationTransaction->work_order_number, true);
+        $registrationTransactionCriteria->compare('t.sales_order_number', $registrationTransaction->sales_order_number, true);
         $registrationTransactionCriteria->together = 'true';
         $registrationTransactionCriteria->with = array(
             'vehicle', 
