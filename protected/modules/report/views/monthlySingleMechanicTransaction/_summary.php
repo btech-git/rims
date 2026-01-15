@@ -20,7 +20,8 @@ Yii::app()->clientScript->registerCss('_report', '
 
 <div style="font-weight: bold; text-align: center">
     <?php $employee = Employee::model()->findByPk($employeeId); ?>
-    <div style="font-size: larger">Laporan Penjualan Bulanan <?php echo CHtml::encode(CHtml::value($employee, 'name')); ?></div>
+    <div style="font-size: larger">Laporan Penjualan Bulanan </div>
+    <div><?php echo CHtml::encode(CHtml::value($employee, 'name')); ?></div>
     <div><?php echo CHtml::encode(strftime("%B",mktime(0,0,0,$month))); ?> <?php echo CHtml::encode($year); ?></div>
 </div>
 
@@ -56,13 +57,23 @@ Yii::app()->clientScript->registerCss('_report', '
                 <?php $detailItem = $monthlySingleMechanicTransactionServiceReportData[$i]; ?>
                 <?php $averageService = $detailItem['service_quantity'] > 0 ? $dataItem['total_service'] / $detailItem['service_quantity'] : '0.00'; ?>
                 <tr class="items1">
-                    <td><?php echo CHtml::encode($dataItem['day']); ?></td>
+                    <td style="text-align: center"><?php echo CHtml::encode($dataItem['day']); ?></td>
                     <td style="text-align: center"><?php echo CHtml::encode($dataItem['vehicle_quantity']); ?></td>
-                    <td style="text-align: center"><?php echo CHtml::encode($dataItem['work_order_quantity']); ?></td>
+                    <td style="text-align: center">
+                        <?php echo CHtml::link($dataItem['work_order_quantity'], array(
+                            '/report/monthlySingleMechanicTransaction/transactionInfo', 
+                            'mechanicId' => $employeeId, 
+                            'year' => $year, 
+                            'month' => $month, 
+                            'day' => $dataItem['day'], 
+                        ), array('target' => '_blank')); ?>
+                    </td>
                     <td></td>
                     <td style="text-align: center"><?php echo CHtml::encode($dataItem['customer_retail_quantity']); ?></td>
                     <td style="text-align: center"><?php echo CHtml::encode($dataItem['customer_company_quantity']); ?></td>
-                    <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $detailItem['service_quantity'])); ?></td>
+                    <td style="text-align: right">
+                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $detailItem['service_quantity'])); ?>
+                    </td>
                     <td></td>
                     <td></td>
                     <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $dataItem['total_service'])); ?></td>
@@ -77,7 +88,7 @@ Yii::app()->clientScript->registerCss('_report', '
                 <?php $averageServiceSum += $averageService; ?>
             <?php else: ?>
                 <tr class="items1">
-                    <td><?php echo $i; ?></td>
+                    <td style="text-align: center"><?php echo $i; ?></td>
                     <td colspan="10">&nbsp;</td>
                 </tr>
             <?php endif; ?>

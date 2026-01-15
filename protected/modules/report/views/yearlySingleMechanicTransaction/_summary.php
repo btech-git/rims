@@ -20,7 +20,8 @@ Yii::app()->clientScript->registerCss('_report', '
 
 <div style="font-weight: bold; text-align: center">
     <?php $employee = Employee::model()->findByPk($employeeId); ?>
-    <div style="font-size: larger">Laporan Penjualan Tahunan <?php echo CHtml::encode(CHtml::value($employee, 'name')); ?></div>
+    <div style="font-size: larger">Laporan Penjualan Tahunan</div>
+    <div style="font-size: larger"><?php echo CHtml::encode(CHtml::value($employee, 'name')); ?></div>
     <div><?php echo CHtml::encode($year); ?></div>
 </div>
 
@@ -58,7 +59,14 @@ Yii::app()->clientScript->registerCss('_report', '
                 <tr class="items1">
                     <td><?php echo CHtml::encode($dataItem['month']); ?></td>
                     <td style="text-align: center"><?php echo CHtml::encode($dataItem['vehicle_quantity']); ?></td>
-                    <td style="text-align: center"><?php echo CHtml::encode($dataItem['work_order_quantity']); ?></td>
+                    <td style="text-align: center">
+                        <?php echo CHtml::link($dataItem['work_order_quantity'], array(
+                            '/report/yearlySingleMechanicTransaction/transactionInfo', 
+                            'mechanicId' => $employee->id, 
+                            'month' => $dataItem['month'], 
+                            'year' => $year,
+                        ), array('target' => '_blank')); ?>
+                    </td>
                     <td></td>
                     <td style="text-align: center"><?php echo CHtml::encode($dataItem['customer_retail_quantity']); ?></td>
                     <td style="text-align: center"><?php echo CHtml::encode($dataItem['customer_company_quantity']); ?></td>

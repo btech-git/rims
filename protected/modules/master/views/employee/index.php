@@ -10,6 +10,26 @@ $this->menu=array(
 	array('label'=>'Create Employee', 'url'=>array('create')),
 	array('label'=>'Manage Employee', 'url'=>array('admin')),
 );
+
+Yii::app()->clientScript->registerCss('birthdayList', '
+    .month-row {
+        border: 3px solid white;
+    }
+    .month-column:hover {
+        background-color: blue;
+        color: white;
+    }
+');
+
+Yii::app()->clientScript->registerScript('birthdayList', "
+    $(document).ready(function() {
+        $('.month-row').click(function() {
+            $('.birthday-data-row').hide();
+            var month = $(this).attr('data-target-month');
+            $('.birthday-data-row-' + month).show();
+        });
+    });
+");
 ?>
 
 <div style="font-weight: bold; text-align: center">
@@ -38,11 +58,11 @@ $this->menu=array(
         <tbody>
             <?php $n = 0; ?>
             <?php foreach ($employeeBirthdayData as $month => $employeeBirthdayDataItem): ?>
-                <tr class="items1" style="background-color: lightblue">
-                    <td style="text-align: center; font-weight: bold; font-size: larger" colspan="9"><?php echo CHtml::encode($monthNames[$month]); ?></td>
+                <tr class="items1 month-row" style="background-color: lightblue" data-target-month="<?php echo $month; ?>">
+                    <td class="month-column" style="text-align: center; font-weight: bold; font-size: larger" colspan="9"><?php echo CHtml::encode($monthNames[$month]); ?></td>
                 </tr>
                 <?php foreach ($employeeBirthdayDataItem as $dataItem): ?>
-                    <tr class="items1">
+                    <tr class="items1 birthday-data-row birthday-data-row-<?php echo $month; ?>" style="<?php echo (int) $month === (int) date('m') ? '' : 'display: none' ?>">
                         <td style="text-align: center"><?php echo ++$n; ?></td>
                         <td style="text-align: right">
                             <?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($dataItem['birth_date']))); ?>

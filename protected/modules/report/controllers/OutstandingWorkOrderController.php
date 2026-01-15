@@ -116,48 +116,53 @@ class OutstandingWorkOrderController extends Controller {
         $worksheet = $objPHPExcel->setActiveSheetIndex(0);
         $worksheet->setTitle('Outstanding Work Order');
 
-        $worksheet->mergeCells('A1:J1');
-        $worksheet->mergeCells('A2:J2');
-        $worksheet->mergeCells('A3:J3');
+        $worksheet->mergeCells('A1:L1');
+        $worksheet->mergeCells('A2:L2');
+        $worksheet->mergeCells('A3:L3');
         
-        $worksheet->getStyle('A1:J3')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-        $worksheet->getStyle('A1:J3')->getFont()->setBold(true);
+        $worksheet->getStyle('A1:L3')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->getStyle('A1:L3')->getFont()->setBold(true);
+        
         $branch = Branch::model()->findByPk($branchId);
         $worksheet->setCellValue('A1', 'Raperind Motor ' . CHtml::encode(CHtml::value($branch, 'name')));
         $worksheet->setCellValue('A2', 'Outstanding Work Order');
         $worksheet->setCellValue('A3', $startDateFormatted . ' - ' . $endDateFormatted);
 
-        $worksheet->getStyle('A5:J6')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-        $worksheet->getStyle("A5:J5")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
-        $worksheet->getStyle("A6:J6")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle('A5:L5')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->getStyle("A5:L5")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A5:L5")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
-        $worksheet->getStyle('A5:J5')->getFont()->setBold(true);
+        $worksheet->getStyle('A5:L5')->getFont()->setBold(true);
         $worksheet->setCellValue('A5', 'No');
         $worksheet->setCellValue('B5', 'Work Order #');
-        $worksheet->setCellValue('C5', 'Tanggal');
-        $worksheet->setCellValue('D5', 'Customer');
-        $worksheet->setCellValue('E5', 'Vehicle');
-        $worksheet->setCellValue('F5', 'Plat #');
-        $worksheet->setCellValue('G5', 'Status');
-        $worksheet->setCellValue('H5', 'Parts (Rp)');
-        $worksheet->setCellValue('I5', 'Jasa (Rp)');
-        $worksheet->setCellValue('J5', 'Movement #');
+        $worksheet->setCellValue('C5', 'RG #');
+        $worksheet->setCellValue('D5', 'Tanggal');
+        $worksheet->setCellValue('E5', 'Customer');
+        $worksheet->setCellValue('F5', 'Vehicle');
+        $worksheet->setCellValue('G5', 'Plat #');
+        $worksheet->setCellValue('H5', 'Status');
+        $worksheet->setCellValue('I5', 'Parts (Rp)');
+        $worksheet->setCellValue('J5', 'Jasa (Rp)');
+        $worksheet->setCellValue('K5', 'Movement #');
+        $worksheet->setCellValue('L5', 'User Input');
 
-        $counter = 7;
+        $counter = 6;
 
         foreach ($outstandingWorkOrderSummary->dataProvider->data as $i => $header) {
             $movementOutHeaders = $header->movementOutHeaders;
             $movementOutHeaderCodeNumbers = array_map(function($movementOutHeader) { return $movementOutHeader->movement_out_no; }, $movementOutHeaders);
             $worksheet->setCellValue("A{$counter}", CHtml::encode($i + 1));
             $worksheet->setCellValue("B{$counter}", CHtml::value($header, 'work_order_number'));
-            $worksheet->setCellValue("C{$counter}", CHtml::value($header, 'work_order_date'));
-            $worksheet->setCellValue("D{$counter}", CHtml::encode(CHtml::value($header, 'customer.name')));
-            $worksheet->setCellValue("E{$counter}", CHtml::value($header, 'vehicle.carMake.name') . ' - ' . CHtml::value($header, 'vehicle.carModel.name') . ' - ' . CHtml::value($header, 'vehicle.carSubModel.name'));
-            $worksheet->setCellValue("F{$counter}", CHtml::value($header, 'vehicle.plate_number'));
-            $worksheet->setCellValue("G{$counter}", CHtml::value($header, 'status'));
-            $worksheet->setCellValue("H{$counter}", CHtml::value($header, 'total_product_price'));
-            $worksheet->setCellValue("I{$counter}", CHtml::value($header, 'total_service_price'));
-            $worksheet->setCellValue("J{$counter}", CHtml::encode(implode(', ', $movementOutHeaderCodeNumbers)));
+            $worksheet->setCellValue("C{$counter}", CHtml::value($header, 'transaction_number'));
+            $worksheet->setCellValue("D{$counter}", CHtml::value($header, 'work_order_date'));
+            $worksheet->setCellValue("E{$counter}", CHtml::encode(CHtml::value($header, 'customer.name')));
+            $worksheet->setCellValue("F{$counter}", CHtml::value($header, 'vehicle.carMake.name') . ' - ' . CHtml::value($header, 'vehicle.carModel.name') . ' - ' . CHtml::value($header, 'vehicle.carSubModel.name'));
+            $worksheet->setCellValue("G{$counter}", CHtml::value($header, 'vehicle.plate_number'));
+            $worksheet->setCellValue("H{$counter}", CHtml::value($header, 'status'));
+            $worksheet->setCellValue("I{$counter}", CHtml::value($header, 'total_product_price'));
+            $worksheet->setCellValue("J{$counter}", CHtml::value($header, 'total_service_price'));
+            $worksheet->setCellValue("K{$counter}", CHtml::encode(implode(', ', $movementOutHeaderCodeNumbers)));
+            $worksheet->setCellValue("L{$counter}", CHtml::value($header, 'user.username'));
             $counter++;
         }
 

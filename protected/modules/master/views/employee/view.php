@@ -68,7 +68,22 @@ $this->menu = array(
                     array(
                         'label' => 'Created by',
                         'name' => 'user_id', 
-                        'value' => empty($model->user_id) ? 'N/A' : $model->user->username
+                        'value' => empty($model->user_id) ? 'N/A' : $model->user->username,
+                    ),
+                    array(
+                        'label' => 'Created Date',
+                        'name' => 'created_datetime', 
+                        'value' => $model->created_datetime,
+                    ),
+                    array(
+                        'label' => 'Updated by',
+                        'name' => 'user_id_updated', 
+                        'value' => empty($model->user_id_updated) ? 'N/A' : $model->userIdUpdated->username,
+                    ),
+                    array(
+                        'label' => 'Updated Date',
+                        'name' => 'updated_datetime', 
+                        'value' => $model->updated_datetime,
                     ),
                 ),
             )); ?>

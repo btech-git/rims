@@ -25,7 +25,6 @@ Yii::app()->clientScript->registerCss('_report', '
 <br />
 
 <fieldset>
-    <legend>Company</legend>
     <table class="report">
         <thead>
             <tr id="header1">
@@ -33,6 +32,7 @@ Yii::app()->clientScript->registerCss('_report', '
                 <th class="width1-2">ID</th>
                 <th class="width1-3">Name</th>
                 <th class="width1-4">Phone</th>
+                <th class="width1-4">Type</th>
                 <th class="width1-5"># of Invoice</th>
                 <th class="width1-6">Total Invoice (Rp)</th>
                 <th class="width1-7">Total Parts (Rp)</th>
@@ -42,7 +42,7 @@ Yii::app()->clientScript->registerCss('_report', '
             </tr>
         </thead>
         <tbody>
-            <?php foreach ($yearlyMultipleCustomerCompanySaleReport as $i => $dataItemCompany): ?>
+            <?php foreach ($yearlyMultipleCustomerSaleReport as $i => $dataItemCompany): ?>
                 <?php $invoiceHeader = InvoiceHeader::model()->find(array(
                     'condition' => 't.customer_id = :customer_id AND t.user_id_cancelled IS NULL', 
                     'params' => array(':customer_id' => $dataItemCompany['customer_id']),
@@ -61,6 +61,7 @@ Yii::app()->clientScript->registerCss('_report', '
                         ), array('target' => '_blank')); ?>
                     </td>
                     <td><?php echo CHtml::encode($dataItemCompany['customer_phone']); ?></td>
+                    <td><?php echo CHtml::encode($dataItemCompany['customer_type']); ?></td>
                     <td style="text-align: center">
                         <?php echo CHtml::link(CHtml::encode($dataItemCompany['invoice_quantity']), array(
                             'transactionInfo', 
@@ -95,7 +96,7 @@ Yii::app()->clientScript->registerCss('_report', '
     </table>
 </fieldset>
 
-<br />
+<!--<br />
 
 <fieldset>
     <legend>Individual</legend>
@@ -115,7 +116,7 @@ Yii::app()->clientScript->registerCss('_report', '
             </tr>
         </thead>
         <tbody>
-            <?php foreach ($yearlyMultipleCustomerIndividualSaleReport as $i => $dataItemIndividual): ?>
+            <?php /*foreach ($yearlyMultipleCustomerIndividualSaleReport as $i => $dataItemIndividual): ?>
                 <?php $invoiceHeader = InvoiceHeader::model()->find(array(
                     'condition' => 't.customer_id = :customer_id AND t.user_id_cancelled IS NULL', 
                     'params' => array(':customer_id' => $dataItemIndividual['customer_id']),
@@ -163,7 +164,7 @@ Yii::app()->clientScript->registerCss('_report', '
                         <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $daysDiff)); ?>
                     </td>
                 </tr>
-            <?php endforeach; ?>
+            <?php endforeach; */?>
         </tbody>
     </table>
-</fieldset>
+</fieldset>-->

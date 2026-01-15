@@ -30,26 +30,46 @@ class YearlyCustomerReceivableController extends Controller {
         $beginningCustomerInvoiceReport = InvoiceHeader::getBeginningCustomerInvoiceReport($year);
         $beginningCustomerPaymentReport = InvoiceHeader::getBeginningCustomerPaymentReport($year);
         
-        $yearlyCustomerReportData = array();
+        $yearlyCustomerReport = array();
         
         foreach ($yearlyCustomerInvoiceReport as $yearlyCustomerInvoiceReportItem) {
-            $yearlyCustomerReportData[$yearlyCustomerInvoiceReportItem['customer_id']][$yearlyCustomerInvoiceReportItem['invoice_month']]['invoice_total'] = $yearlyCustomerInvoiceReportItem['invoice_total'];
-            $yearlyCustomerReportData[$yearlyCustomerInvoiceReportItem['customer_id']]['customer_name'] = $yearlyCustomerInvoiceReportItem['customer_name'];
+            $yearlyCustomerReport[$yearlyCustomerInvoiceReportItem['customer_id']][$yearlyCustomerInvoiceReportItem['invoice_month']]['invoice_total'] = $yearlyCustomerInvoiceReportItem['invoice_total'];
+            $yearlyCustomerReport[$yearlyCustomerInvoiceReportItem['customer_id']]['customer_name'] = $yearlyCustomerInvoiceReportItem['customer_name'];
         }
         
         foreach ($yearlyCustomerPaymentReport as $yearlyCustomerPaymentReportItem) {
-            $yearlyCustomerReportData[$yearlyCustomerPaymentReportItem['customer_id']][$yearlyCustomerPaymentReportItem['payment_month']]['payment_total'] = $yearlyCustomerPaymentReportItem['payment_total'];
-            $yearlyCustomerReportData[$yearlyCustomerPaymentReportItem['customer_id']]['customer_name'] = $yearlyCustomerPaymentReportItem['customer_name'];
+            $yearlyCustomerReport[$yearlyCustomerPaymentReportItem['customer_id']][$yearlyCustomerPaymentReportItem['payment_month']]['payment_total'] = $yearlyCustomerPaymentReportItem['payment_total'];
+            $yearlyCustomerReport[$yearlyCustomerPaymentReportItem['customer_id']]['customer_name'] = $yearlyCustomerPaymentReportItem['customer_name'];
         }
         
         foreach ($beginningCustomerInvoiceReport as $beginningCustomerInvoiceReportItem) {
-            $yearlyCustomerReportData[$beginningCustomerInvoiceReportItem['customer_id']]['beginning_invoice_total'] = $beginningCustomerInvoiceReportItem['beginning_invoice_total'];
-            $yearlyCustomerReportData[$beginningCustomerInvoiceReportItem['customer_id']]['customer_name'] = $beginningCustomerInvoiceReportItem['customer_name'];
+            $yearlyCustomerReport[$beginningCustomerInvoiceReportItem['customer_id']]['beginning_invoice_total'] = $beginningCustomerInvoiceReportItem['beginning_invoice_total'];
+            $yearlyCustomerReport[$beginningCustomerInvoiceReportItem['customer_id']]['customer_name'] = $beginningCustomerInvoiceReportItem['customer_name'];
         }
         
         foreach ($beginningCustomerPaymentReport as $beginningCustomerPaymentReportItem) {
-            $yearlyCustomerReportData[$beginningCustomerPaymentReportItem['customer_id']]['beginning_payment_total'] = $beginningCustomerPaymentReportItem['beginning_payment_total'];
-            $yearlyCustomerReportData[$beginningCustomerPaymentReportItem['customer_id']]['customer_name'] = $beginningCustomerPaymentReportItem['customer_name'];
+            $yearlyCustomerReport[$beginningCustomerPaymentReportItem['customer_id']]['beginning_payment_total'] = $beginningCustomerPaymentReportItem['beginning_payment_total'];
+            $yearlyCustomerReport[$beginningCustomerPaymentReportItem['customer_id']]['customer_name'] = $beginningCustomerPaymentReportItem['customer_name'];
+        }
+        
+        $yearlyCustomerReportData = array();
+        foreach ($yearlyCustomerReport as $customerId => $yearlyCustomerReportItem) {
+            $beginningInvoiceTotal = isset($yearlyCustomerReportItem['beginning_invoice_total']) ? $yearlyCustomerReportItem['beginning_invoice_total'] : '0.00';
+            $beginningPaymentTotal = isset($yearlyCustomerReportItem['beginning_payment_total']) ? $yearlyCustomerReportItem['beginning_payment_total'] : '0.00';
+            $beginningOutstanding = $beginningInvoiceTotal - $beginningPaymentTotal;
+            
+            $currentOutstanding = $beginningOutstanding;
+            $allOustandingEmpty = true;
+            for ($month = 1; $month <= 12; $month++) {
+                $invoiceTotal = isset($yearlyCustomerReportItem[$month]['invoice_total']) ? $yearlyCustomerReportItem[$month]['invoice_total'] : '0.00';
+                $paymentTotal = isset($yearlyCustomerReportItem[$month]['payment_total']) ? $yearlyCustomerReportItem[$month]['payment_total'] : '0.00';
+                $currentOutstanding += $invoiceTotal - $paymentTotal;
+                
+                $allOustandingEmpty = $allOustandingEmpty && ($currentOutstanding == 0);
+            }
+            if (!$allOustandingEmpty) {
+                $yearlyCustomerReportData[$customerId] = $yearlyCustomerReportItem;
+            }
         }
         
         $yearList = array();

@@ -23,13 +23,10 @@ class YearlyMultipleMechanicTransactionController extends Controller {
         ini_set('memory_limit', '1024M');
         
         $yearNow = date('Y');
-        
         $year = (isset($_GET['Year'])) ? $_GET['Year'] : $yearNow;
         
         $yearlyMultipleMechanicTransactionReport = InvoiceHeader::getYearlyMultipleMechanicTransactionReport($year);
-        
         $employeeIds = array_map(function($yearlyMultipleMechanicTransactionReportItem) { return $yearlyMultipleMechanicTransactionReportItem['employee_id_assign_mechanic']; }, $yearlyMultipleMechanicTransactionReport);
-        
         $yearlyMultipleMechanicTransactionServiceReport = InvoiceDetail::getYearlyMultipleMechanicTransactionServiceReport($year, $employeeIds);
         
         $yearlyMultipleMechanicTransactionServiceReportData = array();
@@ -58,6 +55,22 @@ class YearlyMultipleMechanicTransactionController extends Controller {
         ));
     }
     
+    public function actionTransactionInfo($mechanicId, $year) {
+        set_time_limit(0);
+        ini_set('memory_limit', '1024M');
+
+        $page = (isset($_GET['page'])) ? $_GET['page'] : 1;
+        
+        $dataProvider = InvoiceHeader::model()->searchByMechanicYearlyTransactionInfo($mechanicId, $year, $page);
+        $employee = Employee::model()->findByPk($mechanicId);
+        
+        $this->render('transactionInfo', array(
+            'dataProvider' => $dataProvider,
+            'year' => $year,
+            'employee' => $employee,
+        ));
+    }
+
     protected function saveToExcel($yearlyMultipleMechanicTransactionReport, $yearlyMultipleMechanicTransactionServiceReportData, $year) {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');

@@ -54,6 +54,9 @@
  * @property integer $children_quantity
  * @property string $clock_in_time
  * @property string $clock_out_time
+ * @property string $created_datetime
+ * @property string $updated_datetime
+ * @property integer $user_id_updated
  * 
  * The followings are the available model relations:
  * @property Province $province
@@ -95,17 +98,17 @@ class Employee extends CActiveRecord {
         // will receive user inputs.
         return array(
             array('name, local_address, home_address, sex, email, id_card, branch_id, basic_salary, skills, onleave_allocation, clock_in_time, clock_out_time, off_day', 'required'),
-            array('province_id, city_id, home_province, home_city, branch_id, registration_service_id, is_deleted, deleted_by, division_id, position_id, level_id, employee_head_id, onleave_allocation, children_quantity', 'numerical', 'integerOnly' => true),
+            array('province_id, city_id, home_province, home_city, branch_id, registration_service_id, is_deleted, deleted_by, division_id, position_id, level_id, employee_head_id, onleave_allocation, children_quantity, user_id_updated', 'numerical', 'integerOnly' => true),
             array('name, mother_name, bank_name, birth_place, emergency_contact_name', 'length', 'max' => 100),
             array('sex, status, basic_salary', 'length', 'max' => 10),
             array('email, mobile_phone_number, marriage_status, emergency_contact_relationship', 'length', 'max' => 60),
             array('id_card, driving_license, off_day, religion, family_card_number, bank_account_number, tax_registration_number', 'length', 'max' => 30),
             array('salary_type, payment_type, code, school_degree, school_subject, employment_type, emergency_contact_mobile_phone', 'length', 'max' => 50),
             array('availability', 'length', 'max' => 5),
-            array('deleted_at, recruitment_date, birth_date, emergency_contact_address', 'safe'),
+            array('deleted_at, recruitment_date, birth_date, emergency_contact_address, created_datetime, updated_datetime', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, name, local_address, home_address, province_id, city_id, home_province, home_city, sex, email, id_card, driving_license, branch_id, status, salary_type, basic_salary, payment_type, code, availability, skills, registration_service_id, is_deleted, deleted_at, deleted_by, off_day, recruitment_date, mother_name, bank_name, birth_place, emergency_contact_name, mobile_phone_number, marriage_status, emergency_contact_relationship, driving_license, off_day, religion, family_card_number, bank_account_number, tax_registration_number, code, school_degree, school_subject, employment_type, emergency_contact_mobile_phone, division_id, position_id, level_id, employee_head_id, onleave_allocation, children_quantity, clock_in_time, clock_out_time', 'safe', 'on' => 'search'),
+            array('id, name, local_address, home_address, province_id, city_id, home_province, home_city, sex, email, id_card, driving_license, branch_id, status, salary_type, basic_salary, payment_type, code, availability, skills, registration_service_id, is_deleted, deleted_at, deleted_by, off_day, recruitment_date, mother_name, bank_name, birth_place, emergency_contact_name, mobile_phone_number, marriage_status, emergency_contact_relationship, driving_license, off_day, religion, family_card_number, bank_account_number, tax_registration_number, code, school_degree, school_subject, employment_type, emergency_contact_mobile_phone, division_id, position_id, level_id, employee_head_id, onleave_allocation, children_quantity, clock_in_time, clock_out_time, created_datetime, updated_datetime, user_id_updated', 'safe', 'on' => 'search'),
         );
     }
 
@@ -121,7 +124,6 @@ class Employee extends CActiveRecord {
             'city' => array(self::BELONGS_TO, 'City', 'city_id'),
             'homeProvince' => array(self::BELONGS_TO, 'Province', 'home_province'),
             'homeCity' => array(self::BELONGS_TO, 'City', 'home_city'),
-//			'registrationService' => array(self::BELONGS_TO, 'RegistrationService', 'registration_service_id'),
             'employeeBanks' => array(self::HAS_MANY, 'EmployeeBank', 'employee_id'),
             'employeeBranchDivisionPositionLevels' => array(self::HAS_MANY, 'EmployeeBranchDivisionPositionLevel', 'employee_id'),
             'employeeDeductions' => array(self::HAS_MANY, 'EmployeeDeductions', 'employee_id'),
@@ -140,6 +142,7 @@ class Employee extends CActiveRecord {
             'level' => array(self::BELONGS_TO, 'Level', 'level_id'),
             'employeeHead' => array(self::BELONGS_TO, 'Employee', 'employee_head_id'),
             'user' => array(self::BELONGS_TO, 'Users', 'user_id'),
+            'userIdUpdated' => array(self::BELONGS_TO, 'Users', 'user_id_updated'),
         );
     }
 
@@ -203,18 +206,6 @@ class Employee extends CActiveRecord {
         );
     }
 
-    /**
-     * Retrieves a list of models based on the current search/filter conditions.
-     *
-     * Typical usecase:
-     * - Initialize the model fields with values from filter form.
-     * - Execute this method to get CActiveDataProvider instance which will filter
-     * models according to data in model fields.
-     * - Pass data provider to CGridView, CListView or any similar widget.
-     *
-     * @return CActiveDataProvider the data provider that can return the models
-     * based on the search/filter conditions.
-     */
     public function search() {
         // @todo Please modify the following code to remove attributes that should not be searched.
 
@@ -291,18 +282,11 @@ class Employee extends CActiveRecord {
         ));
     }
 
-    /**
-     * Returns the static model of the specified AR class.
-     * Please note that you should have this exact method in all your CActiveRecord descendants!
-     * @param string $className active record class name.
-     * @return Employee the static model class
-     */
     public static function model($className = __CLASS__) {
         return parent::model($className);
     }
 
     public function searchByMechanicPerformance() {
-        // @todo Please modify the following code to remove attributes that should not be searched.
 
         $criteria = new CDbCriteria;
 

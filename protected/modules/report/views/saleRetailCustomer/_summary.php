@@ -37,7 +37,15 @@ Yii::app()->clientScript->registerCss('_report', '
             <?php $grandTotal = CHtml::encode($dataItem['grand_total']); ?>
             <tr class="items1">
                 <td class="width1-1"><?php echo CHtml::encode($dataItem['customer_id']); ?></td>
-                <td class="width1-2"><?php echo CHtml::encode($dataItem['customer_name']); ?></td>
+                <td class="width1-2">
+                    <?php echo CHtml::link($dataItem['customer_name'], array(
+                        '/report/saleRetailCustomer/transactionInfo', 
+                        'customerId' => $dataItem['customer_id'], 
+                        'startDate' => $startDate, 
+                        'endDate' => $endDate,
+                        'branchId' => empty($branchId) ? null : $branch->id,
+                    ), array('target' => '_blank')); ?>
+                </td>
                 <td class="width1-3"><?php echo CHtml::encode($dataItem['customer_type']); ?></td>
                 <td class="width1-4" style="text-align: right">
                     <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $grandTotal)); ?>

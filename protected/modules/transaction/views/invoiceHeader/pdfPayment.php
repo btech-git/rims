@@ -177,20 +177,28 @@ function tanggal($date) {
                             <tr>
                                 <td style="font-size: 11px">Printed by : <?php echo Yii::app()->user->getName(); ?></td>
                                 <td style="text-align:right; width: 20%; font-size: 11px">TOTAL PARTS & JASA</td>
-                                <td style="text-align:right; width: 20%; font-size: 11px">Rp. <?php echo number_format($invoiceHeader->subTotalBeforeDiscount, 2, ',', '.') ?> &nbsp; </td>
+                                <td style="text-align:right; width: 20%; font-size: 11px">
+                                    Rp. <?php echo number_format($invoiceHeader->subTotalBeforeDiscount, 2, ',', '.') ?>
+                                </td>
                             </tr>
 
                             <tr>
                                 <td style="font-size: 11px">Note : <?php echo CHtml::encode(CHtml::value($invoiceHeader, 'note')); ?></td>
                                 <td style="text-align:right; width: 20%; font-size: 11px">TOTAL DISKON</td>
-                                <td style="text-align:right; width: 20%; font-size: 11px">Rp. <?php echo number_format($invoiceHeader->totalDiscountProductService, 2, ',', '.') ?> &nbsp; </td>
+                                <td style="text-align:right; width: 20%; font-size: 11px">
+                                    Rp. <?php echo number_format($invoiceHeader->totalDiscountProductService, 2, ',', '.') ?>
+                                </td>
                             </tr>
 
                             <?php if ($invoiceHeader->ppn_total > 0): ?>
                                 <tr>
                                     <td></td>
-                                    <td style="text-align:right; font-size: 11px">PPN - <?php echo CHtml::encode(CHtml::value($invoiceHeader, 'tax_percentage')); ?>%</td>
-                                    <td style="text-align:right; font-size: 11px">Rp. <?php echo number_format($invoiceHeader->ppn_total, 2, ',', '.') ?> &nbsp; </td>
+                                    <td style="text-align:right; font-size: 11px">
+                                        PPN - <?php echo CHtml::encode(CHtml::value($invoiceHeader, 'tax_percentage')); ?>%
+                                    </td>
+                                    <td style="text-align:right; font-size: 11px">
+                                        Rp. <?php echo number_format($invoiceHeader->ppn_total, 2, ',', '.') ?>
+                                    </td>
                                 </tr>
                             <?php endif; ?>
 
@@ -198,14 +206,18 @@ function tanggal($date) {
                                 <tr>
                                     <td></td>
                                     <td style="text-align:right; font-size: 11px">PPH 23</td>
-                                    <td style="text-align:right; font-size: 11px">Rp. <?php echo number_format($invoiceHeader->pph_total, 2, ',', '.') ?> &nbsp; </td>
+                                    <td style="text-align:right; font-size: 11px">
+                                        Rp. <?php echo number_format($invoiceHeader->pph_total, 2, ',', '.') ?>
+                                    </td>
                                 </tr>
                             <?php endif; ?>
 
                             <tr>
                                 <td></td>
                                 <td style="font-weight: bold; text-align:right; font-size: 11px">GRAND TOTAL</td>
-                                <td style="font-weight: bold; text-align:right; font-size: 11px">Rp. <?php echo number_format($invoiceHeader->total_price, 2, ',', '.') ?> &nbsp; </td>
+                                <td style="font-weight: bold; text-align:right; font-size: 11px">
+                                    Rp. <?php echo number_format($invoiceHeader->total_price, 2, ',', '.') ?>
+                                </td>
                             </tr>
                         </table>
                         

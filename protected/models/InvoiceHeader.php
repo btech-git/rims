@@ -2176,6 +2176,133 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
         ));
     }
     
+    public function searchByCustomerTransactionInfo($customerId, $startDate, $endDate, $branchId, $page) {
+        $criteria = new CDbCriteria;
+
+        $criteria->compare('t.customer_id', $customerId);
+        $criteria->compare('t.branch_id', $branchId);
+        $criteria->addBetweenCondition('t.invoice_date', $startDate, $endDate);
+        $criteria->addCondition("t.status NOT LIKE '%CANCEL%'");
+        
+        return new CActiveDataProvider($this, array(
+            'criteria' => $criteria,
+            'sort' => array(
+                'defaultOrder' => 't.invoice_date ASC',
+            ),
+            'pagination' => array(
+                'pageSize' => 100,
+                'currentPage' => $page - 1,
+            ),
+        ));
+    }
+    
+    public function searchByMechanicDatePeriodeTransactionInfo($mechanicId, $startDate, $endDate, $page) {
+        $criteria = new CDbCriteria;
+
+        $criteria->together = 'true';
+        $criteria->with = array(
+            'registrationTransaction'
+        );
+
+        $criteria->compare('registrationTransaction.employee_id_assign_mechanic', $mechanicId);
+        $criteria->addBetweenCondition('t.invoice_date', $startDate, $endDate);
+        $criteria->addCondition("t.status NOT LIKE '%CANCEL%'");
+        
+        return new CActiveDataProvider($this, array(
+            'criteria' => $criteria,
+            'sort' => array(
+                'defaultOrder' => 't.invoice_date ASC',
+            ),
+            'pagination' => array(
+                'pageSize' => 500,
+                'currentPage' => $page - 1,
+            ),
+        ));
+    }
+    
+    public function searchByMechanicDailyTransactionInfo($mechanicId, $year, $month, $day, $page) {
+        $criteria = new CDbCriteria;
+
+        $criteria->together = 'true';
+        $criteria->with = array(
+            'registrationTransaction'
+        );
+
+        $criteria->addCondition("t.status NOT LIKE '%CANCEL%' AND YEAR(t.invoice_date) = :year AND MONTH(t.invoice_date) = :month AND DAY(t.invoice_date) = :day
+                AND registrationTransaction.employee_id_assign_mechanic = :mechanic_id");
+        $criteria->params = array(
+            ':year' => $year, 
+            ':month' => $month,
+            ':day' => $day,
+            ':mechanic_id' => $mechanicId,
+        );
+        
+        return new CActiveDataProvider($this, array(
+            'criteria' => $criteria,
+            'sort' => array(
+                'defaultOrder' => 't.invoice_date ASC',
+            ),
+            'pagination' => array(
+                'pageSize' => 500,
+                'currentPage' => $page - 1,
+            ),
+        ));
+    }
+    
+    public function searchByMechanicMonthlyTransactionInfo($mechanicId, $year, $month, $page) {
+        $criteria = new CDbCriteria;
+
+        $criteria->together = 'true';
+        $criteria->with = array(
+            'registrationTransaction'
+        );
+
+        $criteria->addCondition("t.status NOT LIKE '%CANCEL%' AND YEAR(t.invoice_date) = :year AND MONTH(t.invoice_date) = :month AND
+            registrationTransaction.employee_id_assign_mechanic = :mechanic_id");
+        $criteria->params = array(
+            ':year' => $year, 
+            ':month' => $month,
+            ':mechanic_id' => $mechanicId,
+        );
+        
+        return new CActiveDataProvider($this, array(
+            'criteria' => $criteria,
+            'sort' => array(
+                'defaultOrder' => 't.invoice_date ASC',
+            ),
+            'pagination' => array(
+                'pageSize' => 500,
+                'currentPage' => $page - 1,
+            ),
+        ));
+    }
+    
+    public function searchByMechanicYearlyTransactionInfo($mechanicId, $year, $page) {
+        $criteria = new CDbCriteria;
+
+        $criteria->together = 'true';
+        $criteria->with = array(
+            'registrationTransaction'
+        );
+
+        $criteria->addCondition("t.status NOT LIKE '%CANCEL%' AND YEAR(t.invoice_date) = :year AND registrationTransaction.employee_id_assign_mechanic = :mechanic_id");
+        $criteria->params = array(
+            ':year' => $year, 
+            ':mechanic_id' => $mechanicId,
+        );
+        
+        return new CActiveDataProvider($this, array(
+            'criteria' => $criteria,
+            'sort' => array(
+                'defaultOrder' => 't.invoice_date ASC',
+            ),
+            'pagination' => array(
+                'pageSize' => 500,
+                'currentPage' => $page - 1,
+            ),
+        ));
+    }
+    
     public static function getVehicleSaleReport($startDate, $endDate, $vehicleId, $branchId) {
         $branchConditionSql = '';
         $vehicleConditionSql = '';
@@ -2279,9 +2406,10 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
         return $resultSet;
     }    
     
-    public static function getCustomerCompanyTopSaleReport($startDate, $endDate, $customerName, $branchId) {
+    public static function getCustomerTopSaleReport($startDate, $endDate, $customerName, $customerType, $branchId) {
         $branchConditionSql = '';
         $customerNameConditionSql = '';
+        $customerTypeConditionSql = '';
       
         $params = array(
             ':start_date' => $startDate,
@@ -2298,53 +2426,58 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
             $params[':customer_name'] = "%{$customerName}%";
         }
         
+        if (!empty($customerType)) {
+            $customerTypeConditionSql = ' AND c.customer_type = :customer_type';
+            $params[':customer_type'] = $customerType;
+        }
+        
         $sql = "SELECT h.customer_id, MAX(c.name) AS customer_name, MAX(c.customer_type) AS customer_type, MAX(c.mobile_phone) AS customer_phone, 
                     COUNT(h.id) AS invoice_quantity, SUM(h.product_price) AS total_product, SUM(h.total_price) AS grand_total, SUM(h.service_price) AS total_service
                 FROM " . InvoiceHeader::model()->tableName() . " h 
                 INNER JOIN " . Customer::model()->tableName() . " c ON c.id = h.customer_id
-                WHERE h.invoice_date BETWEEN :start_date AND :end_date AND c.customer_type = 'Company' AND h.status NOT LIKE '%CANCEL%'" . 
-                    $branchConditionSql . $customerNameConditionSql . " 
+                WHERE h.invoice_date BETWEEN :start_date AND :end_date AND h.status NOT LIKE '%CANCEL%'" . 
+                    $branchConditionSql . $customerNameConditionSql . $customerTypeConditionSql . " 
                 GROUP BY h.customer_id
-                ORDER BY grand_total DESC, invoice_quantity DESC";
+                ORDER BY invoice_quantity DESC, grand_total DESC";
                 
         $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
         
         return $resultSet;
     }
     
-    public static function getCustomerIndividualTopSaleReport($startDate, $endDate, $customerName, $branchId) {
-        $branchConditionSql = '';
-        $customerNameConditionSql = '';
-      
-        $params = array(
-            ':start_date' => $startDate,
-            ':end_date' => $endDate,
-        );
-        
-        if (!empty($branchId)) {
-            $branchConditionSql = ' AND h.branch_id = :branch_id';
-            $params[':branch_id'] = $branchId;
-        }
-        
-        if (!empty($customerName)) {
-            $customerNameConditionSql = ' AND c.name LIKE :customer_name';
-            $params[':customer_name'] = "%{$customerName}%";
-        }
-        
-        $sql = "SELECT h.customer_id, MAX(c.name) AS customer_name, MAX(c.customer_type) AS customer_type, MAX(c.mobile_phone) AS customer_phone, 
-                    COUNT(h.id) AS invoice_quantity, SUM(h.product_price) AS total_product, SUM(h.total_price) AS grand_total, SUM(h.service_price) AS total_service
-                FROM " . InvoiceHeader::model()->tableName() . " h 
-                INNER JOIN " . Customer::model()->tableName() . " c ON c.id = h.customer_id
-                WHERE h.invoice_date BETWEEN :start_date AND :end_date AND c.customer_type = 'Individual' AND h.status NOT LIKE '%CANCEL%'" . 
-                    $branchConditionSql . $customerNameConditionSql . " 
-                GROUP BY h.customer_id
-                ORDER BY grand_total DESC, invoice_quantity DESC
-                LIMIT 50";
-                
-        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
-        
-        return $resultSet;
-    }
+//    public static function getCustomerIndividualTopSaleReport($startDate, $endDate, $customerName, $branchId) {
+//        $branchConditionSql = '';
+//        $customerNameConditionSql = '';
+//      
+//        $params = array(
+//            ':start_date' => $startDate,
+//            ':end_date' => $endDate,
+//        );
+//        
+//        if (!empty($branchId)) {
+//            $branchConditionSql = ' AND h.branch_id = :branch_id';
+//            $params[':branch_id'] = $branchId;
+//        }
+//        
+//        if (!empty($customerName)) {
+//            $customerNameConditionSql = ' AND c.name LIKE :customer_name';
+//            $params[':customer_name'] = "%{$customerName}%";
+//        }
+//        
+//        $sql = "SELECT h.customer_id, MAX(c.name) AS customer_name, MAX(c.customer_type) AS customer_type, MAX(c.mobile_phone) AS customer_phone, 
+//                    COUNT(h.id) AS invoice_quantity, SUM(h.product_price) AS total_product, SUM(h.total_price) AS grand_total, SUM(h.service_price) AS total_service
+//                FROM " . InvoiceHeader::model()->tableName() . " h 
+//                INNER JOIN " . Customer::model()->tableName() . " c ON c.id = h.customer_id
+//                WHERE h.invoice_date BETWEEN :start_date AND :end_date AND c.customer_type = 'Individual' AND h.status NOT LIKE '%CANCEL%'" . 
+//                    $branchConditionSql . $customerNameConditionSql . " 
+//                GROUP BY h.customer_id
+//                ORDER BY grand_total DESC, invoice_quantity DESC
+//                LIMIT 50";
+//                
+//        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
+//        
+//        return $resultSet;
+//    }
     
     public static function getMultipleVehicleCompanySaleReport($startDate, $endDate, $branchId, $customerName, $plateNumber) {
         $branchConditionSql = '';

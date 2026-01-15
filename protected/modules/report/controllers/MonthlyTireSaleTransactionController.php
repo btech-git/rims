@@ -49,7 +49,7 @@ class MonthlyTireSaleTransactionController extends Controller {
         }
         
         if (isset($_GET['SaveExcel'])) {
-            $this->saveToExcel($productDataProvider, $branches, $year, $yearNow, $month);
+            $this->saveToExcel($productDataProvider, $branches, $year, $month);
         }
 
         $this->render('summary', array(
@@ -123,7 +123,7 @@ class MonthlyTireSaleTransactionController extends Controller {
         ));
     }
 
-    protected function saveToExcel($productDataProvider, $branches, $year, $yearNow, $month) {
+    protected function saveToExcel($productDataProvider, $branches, $year, $month) {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
 
@@ -144,45 +144,31 @@ class MonthlyTireSaleTransactionController extends Controller {
         $worksheet->mergeCells('A2:O2');
         $worksheet->mergeCells('A3:O3');
         
-        $worksheet->getStyle('A1:AE6')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-        $worksheet->getStyle("A1:O3")->getFont()->setBold(true);
+        $worksheet->getStyle('A1:O5')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->getStyle("A1:O5")->getFont()->setBold(true);
         
         $worksheet->setCellValue('A1', 'Raperind Motor');
         $worksheet->setCellValue('A2', 'Penjualan Ban Bulanan');
         $worksheet->setCellValue('A3', strftime("%B",mktime(0,0,0,$month)) . ' - ' . $year);
 
-        $columnStart = 'G';
-        $columnEnd = 'I';
-        
+        $columnHeader = 'G';
+        $worksheet->setCellValue('A5', 'ID');
+        $worksheet->setCellValue('B5', 'Code');
+        $worksheet->setCellValue('C5', 'Name');
+        $worksheet->setCellValue('D5', 'Brand');
+        $worksheet->setCellValue('E5', 'Category');
+        $worksheet->setCellValue('F5', 'Satuan');
         foreach ($branches as $branch) {
-            $worksheet->mergeCells("{$columnStart}5:{$columnEnd}5");
-            $worksheet->setCellValue("{$columnStart}5", CHtml::value($branch, 'code'));
-            ++$columnStart; ++$columnStart; ++$columnStart; 
-            ++$columnEnd; ++$columnEnd; ++$columnEnd;
+            $worksheet->setCellValue("{$columnHeader}5", CHtml::value($branch, 'code'));
+            $columnHeader++;
         }
-        
-        $column = 'G';
-        $worksheet->setCellValue('A6', 'ID');
-        $worksheet->setCellValue('B6', 'Code');
-        $worksheet->setCellValue('C6', 'Name');
-        $worksheet->setCellValue('D6', 'Brand');
-        $worksheet->setCellValue('E6', 'Category');
-        $worksheet->setCellValue('F6', 'Satuan');
-        foreach ($branches as $branch) {
-            foreach (range($yearNow - 2, $yearNow) as $year) {
-                $worksheet->setCellValue("{$column}6", $year);
-                $column++;
-            }
-        }
-        $worksheet->setCellValue("{$column}6", 'Total');
+        $worksheet->setCellValue("{$columnHeader}5", 'Total');
 
-        $worksheet->getStyle("A5:{$column}6")->getFont()->setBold(true);
-        $worksheet->getStyle("A5:{$column}5")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
-        $worksheet->getStyle("A6:{$column}6")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A5:{$columnHeader}5")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A5:{$columnHeader}5")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
-        $counter = 8;
+        $counter = 6;
         foreach ($productDataProvider->data as $product) {
-            $worksheet->getStyle("C{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
             $tireSaleTotalQuantities = $product->getTireSaleTotalQuantitiesReport($year, $month);
             $totalQuantity = 0;
             $column = 'G'; 
@@ -195,25 +181,21 @@ class MonthlyTireSaleTransactionController extends Controller {
             $worksheet->setCellValue("F{$counter}", CHtml::value($product, 'unit.name'));
             
             foreach ($branches as $branch) {
-                foreach (range($yearNow - 2, $yearNow) as $year) {
-                    $saleQuantity = '0'; 
-
-                    foreach ($tireSaleTotalQuantities as $i => $tireSaleTotalQuantity) {
-                        if ($tireSaleTotalQuantity['branch_id'] == $branch->id && $tireSaleTotalQuantity['production_year'] == $year) {
-                            $saleQuantity = CHtml::value($tireSaleTotalQuantities[$i], 'total_quantity');
-                            break;
-                        }
+                $saleQuantity = 0; 
+                foreach ($tireSaleTotalQuantities as $i => $tireSaleTotalQuantity) {
+                    if ($tireSaleTotalQuantity['branch_id'] == $branch->id) {
+                        $saleQuantity = CHtml::value($tireSaleTotalQuantities[$i], 'total_quantity');
+                        break;
                     }
-                    $worksheet->setCellValue("{$column}{$counter}", $saleQuantity);
-                    $column++;
-
-                    $totalQuantity += $saleQuantity;
                 }
+                $worksheet->setCellValue("{$column}{$counter}", $saleQuantity);
+                $column++;
+
+                $totalQuantity += $saleQuantity;
             }
             
             $worksheet->setCellValue("{$column}{$counter}", $totalQuantity);
             $counter++;
-
         }
         
         for ($col = 'A'; $col !== 'Z'; $col++) {

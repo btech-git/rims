@@ -5,13 +5,14 @@ Yii::app()->clientScript->registerCss('_report', '
     .width1-3 { width: 20% }
 
     .width2-1 { width: 10% }
-    .width2-2 { width: 10% }
+    .width2-2 { width: 8% }
     .width2-3 { width: 10% }
-    .width2-4 { width: 10% }
+    .width2-4 { width: 8% }
     .width2-5 { width: 10% }
-    .width2-6 { width: 15% }
-    .width2-7 { width: 15% }
-    .width2-8 { width: 15% }
+    .width2-6 { width: 10% }
+    .width2-7 { width: 10% }
+    .width2-8 { width: 10% }
+    .width2-9 { width: 15% }
 ');
 ?>
 
@@ -37,12 +38,13 @@ Yii::app()->clientScript->registerCss('_report', '
                     <tr>
                         <th class="width2-1">Penjualan #</th>
                         <th class="width2-2">Tanggal</th>
-                        <th class="width2-3">Vehicle</th>
-                        <th class="width2-4">WO #</th>
-                        <th class="width2-5">Total</th>
-                        <th class="width2-6">Sales</th>
-                        <th class="width2-7">Mechanic</th>
-                        <th class="width2-8">Note</th>
+                        <th class="width2-3">Asuransi</th>
+                        <th class="width2-4">Plat #</th>
+                        <th class="width2-5">WO #</th>
+                        <th class="width2-7">Sales</th>
+                        <th class="width2-8">Mechanic</th>
+                        <th class="width2-9">Note</th>
+                        <th class="width2-6">Total</th>
                     </tr>
                 </table>
             </td>
@@ -84,31 +86,29 @@ Yii::app()->clientScript->registerCss('_report', '
                                     <td class="width2-2">
                                         <?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime(CHtml::value($saleReportRow, 'invoice_date')))); ?>
                                     </td>
-                                    <td class="width2-3">
-                                        <?php echo CHtml::encode(CHtml::value($saleReportRow, 'vehicle.plate_number')); ?>
-                                    </td>
-                                    <td class="width2-4">
+                                    <td class="width2-3"><?php echo CHtml::encode(CHtml::value($saleReportRow, 'insuranceCompany.name')); ?></td>
+                                    <td class="width2-4"><?php echo CHtml::encode(CHtml::value($saleReportRow, 'vehicle.plate_number')); ?></td>
+                                    <td class="width2-5">
                                         <?php echo CHtml::link(CHtml::encode(CHtml::value($saleReportRow, 'registrationTransaction.work_order_number')), Yii::app()->createUrl("frontDesk/registrationTransaction/view", array("id" => CHtml::value($saleReportRow, 'registration_transaction_id'))), array('target' => '_blank')); ?>
                                     </td>
-                                    <td class="width2-5" style="text-align: right">
-                                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $grandTotal)); ?>
-                                    </td>
-                                    <td class="width2-6" style="text-align: right">
+                                    <td class="width2-7" style="text-align: right">
                                         <?php echo CHtml::encode(CHtml::value($saleReportRow, 'registrationTransaction.employeeIdSalesPerson.name')); ?>
                                     </td>
-                                    <td class="width2-7" style="text-align: right">
+                                    <td class="width2-8" style="text-align: right">
                                         <?php echo CHtml::encode(CHtml::value($saleReportRow, 'registrationTransaction.employeeIdAssignMechanic.name')); ?>
                                     </td>
-                                    <td class="width2-8" style="text-align: right">
+                                    <td class="width2-9" style="text-align: right">
                                         <?php echo CHtml::encode(CHtml::value($saleReportRow, 'registrationTransaction.note')); ?>
+                                    </td>
+                                    <td class="width2-6" style="text-align: right">
+                                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $grandTotal)); ?>
                                     </td>
                                 </tr>
                                 <?php $totalSale += $grandTotal; ?>
                             <?php endforeach; ?>
                             <tr>
-                                <td style="text-align: right" colspan="4">Total</td>
+                                <td style="text-align: right" colspan="8">Total</td>
                                 <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalSale)); ?></td>
-                                <td colspan="3"></td>
                             </tr>
                         <?php endif; ?>
                     </table>

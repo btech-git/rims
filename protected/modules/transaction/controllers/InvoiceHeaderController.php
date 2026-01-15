@@ -391,11 +391,9 @@ class InvoiceHeaderController extends Controller {
         $mPDF1->WriteHTML($stylesheet, 1);
 
         # renderPartial (only 'view' of current controller)
-        $mPDF1->WriteHTML(
-                $this->renderPartial('pdfInvoices', array(
-                    'invoices' => $invoices,
-                        ), true)
-        );
+        $mPDF1->WriteHTML($this->renderPartial('pdfInvoices', array(
+            'invoices' => $invoices,
+        ), true));
         // $mPDF1->WriteHTML(CHtml::image(Yii::getPathOfAlias('webroot.css') . '/bg.gif' ));
         $mPDF1->Output('Invoice.pdf', 'D');
     }
@@ -406,9 +404,13 @@ class InvoiceHeaderController extends Controller {
         $customer = Customer::model()->findByPk($invoiceHeader->customer_id);
         $vehicle = Vehicle::model()->findByPk($invoiceHeader->vehicle_id);
         $branch = Branch::model()->findByPk($invoiceHeader->branch_id);
-        $mPDF1 = Yii::app()->ePdf->mpdf('', 'A4');
+
+        $invoiceHeader->number_of_print += 1;
+        $invoiceHeader->user_id_printed = Yii::app()->user->getId();
+        $invoiceHeader->save();
 
         $stylesheet = file_get_contents(Yii::getPathOfAlias('webroot') . '/css/pdf.css');
+        $mPDF1 = Yii::app()->ePdf->mpdf('', 'A4');
         $mPDF1->SetTitle('Invoice');
         $mPDF1->WriteHTML($stylesheet, 1);
         $mPDF1->WriteHTML($this->renderPartial('pdf', array(
@@ -463,9 +465,6 @@ class InvoiceHeaderController extends Controller {
         $stylesheet = file_get_contents(Yii::getPathOfAlias('webroot') . '/css/pdf.css');
         $mPDF1->SetTitle('Tanda Terima');
         $mPDF1->WriteHTML($stylesheet, 1);
-//        $mPDF1->SetWatermarkText('LUNAS');
-//        $mPDF1->showWatermarkText = true;
-//        $mPDF1->watermark_font = 'DejaVuSansCondensed'; 
         $mPDF1->WriteHTML($this->renderPartial('pdfPayment', array(
             'invoiceHeader' => $invoiceHeader,
             'invoiceDetailsData' => $invoiceDetailsData,
@@ -477,22 +476,22 @@ class InvoiceHeaderController extends Controller {
         $mPDF1->Output('Tanda Terima ' . $invoiceHeader->invoice_number . '.pdf', 'I');
     }
 
-    public function actionAjaxJsonPrintCounter($id) {
-        if (Yii::app()->request->isAjaxRequest) {
-            $invoiceHeader = InvoiceHeader::model()->findByPk($id);
-            $invoiceHeader->number_of_print += 1;
-            $invoiceHeader->user_id_printed = Yii::app()->user->getId();
-            if ($invoiceHeader->save()) {
-                $status = 'OK';
-            } else {
-                $status = 'Not OK';
-            }
-
-            echo CJSON::encode(array(
-                'status' => $status,
-            ));
-        }
-    }
+//    public function actionAjaxJsonPrintCounter($id) {
+//        if (Yii::app()->request->isAjaxRequest) {
+//            $invoiceHeader = InvoiceHeader::model()->findByPk($id);
+//            $invoiceHeader->number_of_print += 1;
+//            $invoiceHeader->user_id_printed = Yii::app()->user->getId();
+//            if ($invoiceHeader->save()) {
+//                $status = 'OK';
+//            } else {
+//                $status = 'Not OK';
+//            }
+//
+//            echo CJSON::encode(array(
+//                'status' => $status,
+//            ));
+//        }
+//    }
 
     /**
      * Creates a new model.
@@ -618,8 +617,9 @@ class InvoiceHeaderController extends Controller {
         $this->loadModel($id)->delete();
 
         // if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
-        if (!isset($_GET['ajax']))
+        if (!isset($_GET['ajax'])) {
             $this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
+        }
     }
 
     public function actionCancel($id) {
@@ -912,9 +912,6 @@ class InvoiceHeaderController extends Controller {
     public function actionAjaxCustomer($id) {
 
         if (Yii::app()->request->isAjaxRequest) {
-            // $invoice = $this->instantiate($id);
-            // $this->loadState($invoice);
-
             $customer = Customer::model()->findByPk($id);
 
             $object = array(

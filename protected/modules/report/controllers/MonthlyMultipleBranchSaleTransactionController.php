@@ -258,7 +258,7 @@ class MonthlyMultipleBranchSaleTransactionController extends Controller {
         ob_end_clean();
 
         header('Content-type: application/vnd.ms-excel');
-        header('Content-Disposition: attachment;filename="penjualan_all_front_bulanan.xls"');
+        header('Content-Disposition: attachment;filename="penjualan_cabang_bulanan.xls"');
         header('Cache-Control: max-age=0');
 
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');

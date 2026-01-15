@@ -54,7 +54,13 @@ Yii::app()->clientScript->registerCss('_report', '
                 <td><?php echo CHtml::encode($i + 1); ?></td>
                 <td><?php echo CHtml::encode($dataItem['employee_name']); ?></td>
                 <td style="text-align: center"><?php echo CHtml::encode($dataItem['vehicle_quantity']); ?></td>
-                <td style="text-align: center"><?php echo CHtml::encode($dataItem['work_order_quantity']); ?></td>
+                <td style="text-align: center">
+                    <?php echo CHtml::link($dataItem['work_order_quantity'], array(
+                        '/report/yearlyMultipleMechanicTransaction/transactionInfo', 
+                        'mechanicId' => $dataItem['employee_id_assign_mechanic'], 
+                        'year' => $year,
+                    ), array('target' => '_blank')); ?>
+                </td>
                 <td></td>
                 <td style="text-align: center"><?php echo CHtml::encode($dataItem['customer_retail_quantity']); ?></td>
                 <td style="text-align: center"><?php echo CHtml::encode($dataItem['customer_company_quantity']); ?></td>

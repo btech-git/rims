@@ -21,8 +21,8 @@
                             'model' => $paymentIn->header,
                             'attribute' => "payment_date",
                             'options'=>array(
-                                'minDate' => '-8W',
-                                'maxDate' => '+6M',
+//                                'minDate' => '-8W',
+//                                'maxDate' => '+6M',
                                 'dateFormat' => 'yy-mm-dd',
                                 'changeMonth'=>true,
                                 'changeYear'=>true,
@@ -163,12 +163,12 @@
 
     <hr />
 
-    <?php if ($paymentIn->header->isNewRecord): ?>
+    <?php //if ($paymentIn->header->isNewRecord): ?>
         <div class="row">
             <?php echo CHtml::button('Tambah Invoice', array('name' => 'Search', 'onclick' => '$("#invoice-dialog").dialog("open"); return false;', 'onkeypress' => 'if (event.keyCode == 13) { $("#invoice-dialog").dialog("open"); return false; }')); ?>
             <?php echo CHtml::hiddenField('SaleInvoiceId'); ?>
         </div>
-    <?php endif; ?>
+    <?php //endif; ?>
 
     <br />
     

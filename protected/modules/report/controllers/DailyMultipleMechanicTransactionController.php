@@ -51,6 +51,23 @@ class DailyMultipleMechanicTransactionController extends Controller {
         ));
     }
     
+    public function actionTransactionInfo($mechanicId, $startDate, $endDate) {
+        set_time_limit(0);
+        ini_set('memory_limit', '1024M');
+
+        $page = (isset($_GET['page'])) ? $_GET['page'] : 1;
+        
+        $dataProvider = InvoiceHeader::model()->searchByMechanicDatePeriodeTransactionInfo($mechanicId, $startDate, $endDate, $page);
+        $employee = Employee::model()->findByPk($mechanicId);
+        
+        $this->render('transactionInfo', array(
+            'dataProvider' => $dataProvider,
+            'startDate' => $startDate,
+            'endDate' => $endDate,
+            'employee' => $employee,
+        ));
+    }
+
     protected function saveToExcel($dailyMultipleMechanicTransactionReport, $dailyMultipleMechanicTransactionServiceReportData, $startDate, $endDate) {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');

@@ -118,7 +118,7 @@ $this->breadcrumbs = array(
                                 <td><?php echo $service->note; ?></td>
                                 <td style="text-align: right"><?php echo number_format($service->price,2); ?></td>
                                 <td><?php echo $service->discount_type; ?></td>
-                                <td><?php echo $service->discount_type == 'Percent' ? $service->discount_price : number_format($service->discount_price,2);; ?></td>
+                                <td><?php echo $service->discount_type == 'Percent' ? $service->discount_price : number_format($service->discount_price,2); ?></td>
                                 <td style="text-align: right"><?php echo number_format($service->total_price,2); ?></td>
                             </tr>
                         <?php endforeach ?>

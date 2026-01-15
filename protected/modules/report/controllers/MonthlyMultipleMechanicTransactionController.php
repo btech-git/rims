@@ -61,6 +61,23 @@ class MonthlyMultipleMechanicTransactionController extends Controller {
         ));
     }
     
+    public function actionTransactionInfo($mechanicId, $month, $year) {
+        set_time_limit(0);
+        ini_set('memory_limit', '1024M');
+
+        $page = (isset($_GET['page'])) ? $_GET['page'] : 1;
+        
+        $dataProvider = InvoiceHeader::model()->searchByMechanicMonthlyTransactionInfo($mechanicId, $year, $month, $page);
+        $employee = Employee::model()->findByPk($mechanicId);
+        
+        $this->render('transactionInfo', array(
+            'dataProvider' => $dataProvider,
+            'month' => $month,
+            'year' => $year,
+            'employee' => $employee,
+        ));
+    }
+
     protected function saveToExcel($monthlyMultipleMechanicTransactionReport, $monthlyMultipleMechanicTransactionServiceReportData, $month, $year) {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');

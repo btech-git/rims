@@ -31,17 +31,18 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                 </div>
                             </div>
                         </div>
+                        
                         <div class="medium-6 columns">
                             <div class="field">
                                 <div class="row collapse">
                                     <div class="small-4 columns">
-                                        <span class="prefix">Cabang</span>
+                                        <span class="prefix">Type</span>
                                     </div>
                                     <div class="small-8 columns">
-                                        <?php echo CHtml::dropDownList('BranchId', $branchId, CHtml::listData(Branch::model()->findAll(array(
-                                            'condition' => "status = 'Active'", 
-                                            'order' => 'name ASC'
-                                        )), 'id', 'name'), array('empty' => '-- All Branch --')); ?>
+                                        <?php echo CHtml::dropDownList('CustomerType', $customerType, array(
+                                            'Company' => 'PT',
+                                            'Individual' => 'Retail',
+                                        ), array('empty' => '-- All --')); ?>
                                     </div>
                                 </div>
                             </div>
@@ -87,9 +88,19 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                 </div>
                             </div>
                         </div>
+                        
                         <div class="medium-6 columns">
                             <div class="field">
                                 <div class="row collapse">
+                                    <div class="small-4 columns">
+                                        <span class="prefix">Cabang</span>
+                                    </div>
+                                    <div class="small-8 columns">
+                                        <?php echo CHtml::dropDownList('BranchId', $branchId, CHtml::listData(Branch::model()->findAll(array(
+                                            'condition' => "status = 'Active'", 
+                                            'order' => 'name ASC'
+                                        )), 'id', 'name'), array('empty' => '-- All Branch --')); ?>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -111,8 +122,8 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
 
                 <div class="relative">
                     <?php $this->renderPartial('_summary', array(
-                        'yearlyMultipleCustomerCompanySaleReport' => $yearlyMultipleCustomerCompanySaleReport,
-                        'yearlyMultipleCustomerIndividualSaleReport' => $yearlyMultipleCustomerIndividualSaleReport,
+                        'yearlyMultipleCustomerSaleReport' => $yearlyMultipleCustomerSaleReport,
+//                        'yearlyMultipleCustomerIndividualSaleReport' => $yearlyMultipleCustomerIndividualSaleReport,
                         'branchId' => $branchId,
                         'startDate' => $startDate,
                         'endDate' => $endDate,

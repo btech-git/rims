@@ -411,9 +411,13 @@ class RegistrationTransactionController extends Controller {
         $customer = Customer::model()->findByPk($invoiceHeader->customer_id);
         $vehicle = Vehicle::model()->findByPk($invoiceHeader->vehicle_id);
         $branch = Branch::model()->findByPk($invoiceHeader->branch_id);
-        $mPDF1 = Yii::app()->ePdf->mpdf('', 'A4');
+
+        $invoiceHeader->number_of_print += 1;
+        $invoiceHeader->user_id_printed = Yii::app()->user->getId();
+        $invoiceHeader->save();
 
         $stylesheet = file_get_contents(Yii::getPathOfAlias('webroot') . '/css/pdf.css');
+        $mPDF1 = Yii::app()->ePdf->mpdf('', 'A4');
         $mPDF1->SetTitle('Invoice');
         $mPDF1->WriteHTML($stylesheet, 1);
         $mPDF1->WriteHTML($this->renderPartial('pdf', array(
@@ -539,22 +543,22 @@ class RegistrationTransactionController extends Controller {
         ));
     }
 
-    public function actionAjaxJsonPrintCounter($id) {
-        if (Yii::app()->request->isAjaxRequest) {
-            $invoiceHeader = InvoiceHeader::model()->findByPk($id);
-            $invoiceHeader->number_of_print += 1;
-            $invoiceHeader->user_id_printed =Yii::app()->user->getId();
-            if ($invoiceHeader->save()) {
-                $status = 'OK';
-            } else {
-                $status = 'Not OK';
-            }
-
-            echo CJSON::encode(array(
-                'status' => $status,
-            ));
-        }
-    }
+//    public function actionAjaxJsonPrintCounter($id) {
+//        if (Yii::app()->request->isAjaxRequest) {
+//            $invoiceHeader = InvoiceHeader::model()->findByPk($id);
+//            $invoiceHeader->number_of_print += 1;
+//            $invoiceHeader->user_id_printed =Yii::app()->user->getId();
+//            if ($invoiceHeader->save()) {
+//                $status = 'OK';
+//            } else {
+//                $status = 'Not OK';
+//            }
+//
+//            echo CJSON::encode(array(
+//                'status' => $status,
+//            ));
+//        }
+//    }
 
     public function instantiate($id, $actionType) {
         if (empty($id)) {

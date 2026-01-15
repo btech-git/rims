@@ -26,23 +26,25 @@ class YearlyMultipleCustomerSaleTransactionController extends Controller {
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
         $branchId = (isset($_GET['BranchId'])) ? $_GET['BranchId'] : '';
         $customerName = (isset($_GET['CustomerName'])) ? $_GET['CustomerName'] : '';
+        $customerType = (isset($_GET['CustomerType'])) ? $_GET['CustomerType'] : '';
         
-        $yearlyMultipleCustomerCompanySaleReport = InvoiceHeader::getCustomerCompanyTopSaleReport($startDate, $endDate, $customerName, $branchId);
-        $yearlyMultipleCustomerIndividualSaleReport = InvoiceHeader::getCustomerIndividualTopSaleReport($startDate, $endDate, $customerName, $branchId);
+        $yearlyMultipleCustomerSaleReport = InvoiceHeader::getCustomerTopSaleReport($startDate, $endDate, $customerName, $customerType, $branchId);
+//        $yearlyMultipleCustomerIndividualSaleReport = InvoiceHeader::getCustomerIndividualTopSaleReport($startDate, $endDate, $customerName, $branchId);
         
         if (isset($_GET['ResetFilter'])) {
             $this->redirect(array('summary'));
         }
         
         if (isset($_GET['SaveExcel'])) {
-            $this->saveToExcel($yearlyMultipleCustomerCompanySaleReport, $yearlyMultipleCustomerIndividualSaleReport, $startDate, $endDate, $branchId);
+            $this->saveToExcel($yearlyMultipleCustomerSaleReport, $startDate, $endDate, $branchId);
         }
         
         $this->render('summary', array(
-            'yearlyMultipleCustomerCompanySaleReport' => $yearlyMultipleCustomerCompanySaleReport,
-            'yearlyMultipleCustomerIndividualSaleReport' => $yearlyMultipleCustomerIndividualSaleReport,
+            'yearlyMultipleCustomerSaleReport' => $yearlyMultipleCustomerSaleReport,
+//            'yearlyMultipleCustomerIndividualSaleReport' => $yearlyMultipleCustomerIndividualSaleReport,
             'branchId' => $branchId,
             'customerName' => $customerName,
+            'customerType' => $customerType,
             'startDate' => $startDate,
             'endDate' => $endDate,
         ));
@@ -69,7 +71,7 @@ class YearlyMultipleCustomerSaleTransactionController extends Controller {
         ));
     }
 
-    protected function saveToExcel($yearlyMultipleCustomerCompanySaleReport, $yearlyMultipleCustomerIndividualSaleReport, $startDate, $endDate, $branchId) {
+    protected function saveToExcel($yearlyMultipleCustomerSaleReport, $startDate, $endDate, $branchId) {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
 
@@ -100,7 +102,6 @@ class YearlyMultipleCustomerSaleTransactionController extends Controller {
         
         $worksheet->mergeCells('A5:K5');
         $worksheet->getStyle('A5:K5')->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
-        $worksheet->setCellValue('A5', 'Company');
         $worksheet->setCellValue('A6', 'No');
         $worksheet->setCellValue('B6', 'ID');
         $worksheet->setCellValue('C6', 'Type');
@@ -115,7 +116,7 @@ class YearlyMultipleCustomerSaleTransactionController extends Controller {
         $worksheet->getStyle('A6:K6')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
         $counter = 7;
-        foreach ($yearlyMultipleCustomerCompanySaleReport as $i => $dataItemCompany) {
+        foreach ($yearlyMultipleCustomerSaleReport as $i => $dataItemCompany) {
             $worksheet->getStyle("E{$counter}:G{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
             $invoiceHeader = InvoiceHeader::model()->find(array(
                 'condition' => 't.customer_id = :customer_id AND t.user_id_cancelled IS NULL', 
@@ -141,40 +142,40 @@ class YearlyMultipleCustomerSaleTransactionController extends Controller {
 
             $counter++;
         }
-        $counter++;
-
-        $worksheet->getStyle("A{$counter}:K{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
-        $worksheet->mergeCells("A{$counter}:K{$counter}");
-        $worksheet->getStyle("A{$counter}:K{$counter}")->getFont()->setBold(true);
-        $worksheet->setCellValue("A{$counter}", 'Individual');
-        $worksheet->getStyle("A{$counter}:K{$counter}")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
-        $counter++;$counter++;
-        foreach ($yearlyMultipleCustomerIndividualSaleReport as $i => $dataItemIndividual) {
-            $worksheet->getStyle("E{$counter}:G{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
-            $invoiceHeader = InvoiceHeader::model()->find(array(
-                'condition' => 't.customer_id = :customer_id AND t.user_id_cancelled IS NULL', 
-                'params' => array(':customer_id' => $dataItemIndividual['customer_id']),
-                'order' => 't.invoice_date ASC',
-            ));
-            $startSeconds = strtotime($invoiceHeader->invoice_date);
-            $endSeconds = strtotime($endDate);
-            $secondsDiff = $endSeconds - $startSeconds;
-            $daysDiff = round($secondsDiff / (60 * 60 * 24));
-
-            $worksheet->setCellValue("A{$counter}", $i + 1);
-            $worksheet->setCellValue("B{$counter}", $dataItemIndividual['customer_id']);
-            $worksheet->setCellValue("C{$counter}", $dataItemIndividual['customer_type']);
-            $worksheet->setCellValue("D{$counter}", $dataItemIndividual['customer_name']);
-            $worksheet->setCellValue("E{$counter}", $dataItemIndividual['customer_phone']);
-            $worksheet->setCellValue("F{$counter}", $dataItemIndividual['invoice_quantity']);
-            $worksheet->setCellValue("G{$counter}", $dataItemIndividual['grand_total']);
-            $worksheet->setCellValue("H{$counter}", $dataItemIndividual['total_product']);
-            $worksheet->setCellValue("I{$counter}", $dataItemIndividual['total_service']);
-            $worksheet->setCellValue("J{$counter}", CHtml::value($invoiceHeader, 'invoice_date'));
-            $worksheet->setCellValue("K{$counter}", $daysDiff);
-
-            $counter++;
-        }
+//        $counter++;
+//
+//        $worksheet->getStyle("A{$counter}:K{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+//        $worksheet->mergeCells("A{$counter}:K{$counter}");
+//        $worksheet->getStyle("A{$counter}:K{$counter}")->getFont()->setBold(true);
+//        $worksheet->setCellValue("A{$counter}", 'Individual');
+//        $worksheet->getStyle("A{$counter}:K{$counter}")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+//        $counter++;$counter++;
+//        foreach ($yearlyMultipleCustomerIndividualSaleReport as $i => $dataItemIndividual) {
+//            $worksheet->getStyle("E{$counter}:G{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
+//            $invoiceHeader = InvoiceHeader::model()->find(array(
+//                'condition' => 't.customer_id = :customer_id AND t.user_id_cancelled IS NULL', 
+//                'params' => array(':customer_id' => $dataItemIndividual['customer_id']),
+//                'order' => 't.invoice_date ASC',
+//            ));
+//            $startSeconds = strtotime($invoiceHeader->invoice_date);
+//            $endSeconds = strtotime($endDate);
+//            $secondsDiff = $endSeconds - $startSeconds;
+//            $daysDiff = round($secondsDiff / (60 * 60 * 24));
+//
+//            $worksheet->setCellValue("A{$counter}", $i + 1);
+//            $worksheet->setCellValue("B{$counter}", $dataItemIndividual['customer_id']);
+//            $worksheet->setCellValue("C{$counter}", $dataItemIndividual['customer_type']);
+//            $worksheet->setCellValue("D{$counter}", $dataItemIndividual['customer_name']);
+//            $worksheet->setCellValue("E{$counter}", $dataItemIndividual['customer_phone']);
+//            $worksheet->setCellValue("F{$counter}", $dataItemIndividual['invoice_quantity']);
+//            $worksheet->setCellValue("G{$counter}", $dataItemIndividual['grand_total']);
+//            $worksheet->setCellValue("H{$counter}", $dataItemIndividual['total_product']);
+//            $worksheet->setCellValue("I{$counter}", $dataItemIndividual['total_service']);
+//            $worksheet->setCellValue("J{$counter}", CHtml::value($invoiceHeader, 'invoice_date'));
+//            $worksheet->setCellValue("K{$counter}", $daysDiff);
+//
+//            $counter++;
+//        }
         
         for ($col = 'A'; $col !== 'Z'; $col++) {
             $objPHPExcel->getActiveSheet()

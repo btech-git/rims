@@ -16,8 +16,9 @@ class EmployeeController extends Controller {
 
     public function filterAccess($filterChain) {
         if ($filterChain->action->id === 'create') {
-            if (!(Yii::app()->user->checkAccess('masterEmployeeCreate')))
+            if (!(Yii::app()->user->checkAccess('masterEmployeeCreate'))) {
                 $this->redirect(array('/site/login'));
+            }
         }
 
         if (
@@ -26,8 +27,9 @@ class EmployeeController extends Controller {
                 $filterChain->action->id === 'update' ||
                 $filterChain->action->id === 'delete'
         ) {
-            if (!(Yii::app()->user->checkAccess('masterEmployeeEdit')))
+            if (!(Yii::app()->user->checkAccess('masterEmployeeEdit'))) {
                 $this->redirect(array('/site/login'));
+            }
         }
 
         if (
@@ -38,8 +40,9 @@ class EmployeeController extends Controller {
                 $filterChain->action->id === 'updateDeduction' ||
                 $filterChain->action->id === 'updateIncentive'
         ) {
-            if (!(Yii::app()->user->checkAccess('masterEmployeeCreate')) || !(Yii::app()->user->checkAccess('masterEmployeeEdit')))
+            if (!(Yii::app()->user->checkAccess('masterEmployeeCreate')) || !(Yii::app()->user->checkAccess('masterEmployeeEdit'))) {
                 $this->redirect(array('/site/login'));
+            }
         }
 
         $filterChain->run();
@@ -68,6 +71,7 @@ class EmployeeController extends Controller {
             'criteria' => $attendanceCriteria,
             'pagination' => array('pageSize' => 31),
         ));
+        
         $this->render('view', array(
             'model' => $this->loadModel($id),
             'employeeBanks' => $employeeBanks,
@@ -141,6 +145,7 @@ class EmployeeController extends Controller {
 
         $employee = $this->instantiate(null);
         $employee->header->user_id = Yii::app()->user->id;
+        $employee->header->created_datetime = date('Y-m-d H:i:s');
         $employee->header->clock_in_time = '08:30:00';
         $employee->header->clock_out_time = '17:00:00';
         $employee->header->birth_date = '1985-01-01';
@@ -167,22 +172,19 @@ class EmployeeController extends Controller {
         ));
     }
 
-    /**
-     * Updates a particular model.
-     * If update is successful, the browser will be redirected to the 'view' page.
-     * @param integer $id the ID of the model to be updated
-     */
     public function actionUpdate($id) {
         
         $employee = $this->instantiate($id);
         $this->performAjaxValidation($employee->header);
 
-        $employee->header->user_id = Yii::app()->user->id;
+        $employee->header->user_id_updated = Yii::app()->user->id;
+        $employee->header->updated_datetime = date('Y-m-d H:i:s');
 
         $branch = new Branch('search');
         $branch->unsetAttributes();  // clear any default values
-        if (isset($_GET['Division']))
+        if (isset($_GET['Division'])) {
             $branch->attributes = $_GET['Division'];
+        }
 
         $branchCriteria = new CDbCriteria;
         $branchCriteria->compare('name', $branch->name, true);
@@ -197,6 +199,7 @@ class EmployeeController extends Controller {
                 $this->redirect(array('view', 'id' => $employee->header->id));
             }
         }
+        
         $this->render('update', array(
             'employee' => $employee,
             'branch' => $branch,
@@ -206,10 +209,13 @@ class EmployeeController extends Controller {
 
     public function actionUpdateBank($empId, $bankId) {
 
+        $employee = $this->instantiate($empId);
         $bank = new Bank('search');
         $bank->unsetAttributes();  // clear any default values
-        if (isset($_GET['Bank']))
+        
+        if (isset($_GET['Bank'])) {
             $bank->attributes = $_GET['Bank'];
+        }
 
         $bankCriteria = new CDbCriteria;
         $bankCriteria->compare('code', $bank->code . '%', true, 'AND', false);
@@ -219,14 +225,14 @@ class EmployeeController extends Controller {
             'criteria' => $bankCriteria,
         ));
 
-        $employee = $this->instantiate($empId);
 
         // $this->performAjaxValidation($customer->header);
         $model = EmployeeBank::model()->findByPk($bankId);
         if (isset($_POST['EmployeeBank'])) {
             $model->attributes = $_POST['EmployeeBank'];
-            if ($model->save())
+            if ($model->save()) {
                 $this->redirect(array('view', 'id' => $empId));
+            }
         }
 
         $this->render('update', array(
@@ -240,8 +246,10 @@ class EmployeeController extends Controller {
     public function actionUpdateIncentive($empId, $incentiveId) {
         $incentive = new Incentive('search');
         $incentive->unsetAttributes();  // clear any default values
-        if (isset($_GET['Incentive']))
+        
+        if (isset($_GET['Incentive'])) {
             $incentive->attributes = $_GET['Incentive'];
+        }
 
         $incentiveCriteria = new CDbCriteria;
         $incentiveCriteria->compare('id', $incentive->id . '%', true, 'AND', false);
@@ -253,12 +261,12 @@ class EmployeeController extends Controller {
 
         $employee = $this->instantiate($empId);
 
-        // $this->performAjaxValidation($customer->header);
         $model = EmployeeIncentives::model()->findByPk($incentiveId);
         if (isset($_POST['EmployeeIncentives'])) {
             $model->attributes = $_POST['EmployeeIncentives'];
-            if ($model->save())
+            if ($model->save()) {
                 $this->redirect(array('view', 'id' => $empId));
+            }
         }
 
         $this->render('update', array(
@@ -273,8 +281,9 @@ class EmployeeController extends Controller {
 
         $deduction = new Deduction('search');
         $deduction->unsetAttributes();  // clear any default values
-        if (isset($_GET['Deduction']))
+        if (isset($_GET['Deduction'])) {
             $deduction->attributes = $_GET['Deduction'];
+        }
 
         $deductionCriteria = new CDbCriteria;
         $deductionCriteria->compare('id', $deduction->id . '%', true, 'AND', false);
@@ -289,8 +298,9 @@ class EmployeeController extends Controller {
         $model = EmployeeDeductions::model()->findByPk($deductionId);
         if (isset($_POST['EmployeeDeductions'])) {
             $model->attributes = $_POST['EmployeeDeductions'];
-            if ($model->save())
+            if ($model->save()) {
                 $this->redirect(array('view', 'id' => $empId));
+            }
         }
 
         $this->render('update', array(
@@ -344,11 +354,6 @@ class EmployeeController extends Controller {
         }
     }
 
-    /**
-     * Deletes a particular model.
-     * If deletion is successful, the browser will be redirected to the 'admin' page.
-     * @param integer $id the ID of the model to be deleted
-     */
     public function actionDelete($id) {
         $model = $this->loadModel($id);
         $model->is_deleted = 1;
@@ -379,9 +384,6 @@ class EmployeeController extends Controller {
         ));
     }
 
-    /**
-     * Manages all models.
-     */
     public function actionAdmin() {
         $model = new Employee('search');
         $model->unsetAttributes();  // clear any default values
@@ -498,17 +500,13 @@ class EmployeeController extends Controller {
         }
     }
 
-    /**
-     * Returns the data model based on the primary key given in the GET variable.
-     * If the data model is not found, an HTTP exception will be raised.
-     * @param integer $id the ID of the model to be loaded
-     * @return Employee the loaded model
-     * @throws CHttpException
-     */
     public function loadModel($id) {
         $model = Employee::model()->findByPk($id);
-        if ($model === null)
+        
+        if ($model === null) {
             throw new CHttpException(404, 'The requested page does not exist.');
+        }
+        
         return $model;
     }
 
