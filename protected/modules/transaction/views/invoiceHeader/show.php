@@ -20,7 +20,7 @@ $this->breadcrumbs = array(
                 <td><?php echo $model->invoice_number; ?></td>
                 <td width="10%">Invoice Status</td>
                 <td width="30%">
-                    <input type="text" id = "status" style="background-color:red;color:white" value="<?php echo $model->status; ?>">
+                    <input type="text" id ="status" style="background-color:red;color:white" value="<?php echo $model->status; ?>">
                 </td>
             </tr>
             
@@ -28,21 +28,21 @@ $this->breadcrumbs = array(
                 <td>Customer</td>
                 <td><?php echo CHtml::encode(CHtml::value($model, 'customer.name')); ?></td>
                 <td width="10%">Registration #</td>
-                <td width="30%">
-                    <?php echo CHtml::link($registration->transaction_number, array($registration->repair_type == 'GR' ? "/frontDesk/generalRepairRegistration/show" : "/frontDesk/bodyRepairRegistration/show", "id"=>$registration->id), array('target' => 'blank')); ?>
-                </td>
+                <td width="30%"><?php echo CHtml::link($registration->transaction_number, array($registration->repair_type == 'GR' ? "/frontDesk/generalRepairRegistration/show" : "/frontDesk/bodyRepairRegistration/show", "id"=>$registration->id), array('target' => 'blank')); ?></td>
             </tr>
             
             <tr>
                 <td>Invoice Date</td>
-                <td><?php echo $model->invoice_date; ?></td>
+                <td><?php echo Yii::app()->dateFormatter->format("d MMM yyyy", strtotime($model->invoice_date)); ?></td>
                 <td width="10%">SO #</td>
-                <td width="30%"><?php echo CHtml::encode(CHtml::value($registration, 'sales_order_number')); ?></td>
+                <td width="30%">
+                    <?php echo CHtml::encode(CHtml::value($registration, 'sales_order_number')); ?>
+                </td>
             </tr>
             
             <tr>
                 <td>Due Date</td>
-                <td><?php echo $model->due_date; ?></td>
+                <td><?php echo Yii::app()->dateFormatter->format("d MMM yyyy", strtotime($model->due_date)); ?></td>
                 <td width="10%">Vehicle</td>
                 <td width="30%">
                     <?php echo CHtml::encode(CHtml::value($model, 'vehicle.carMake.name')); ?> -

@@ -85,7 +85,7 @@ $this->menu = array(
                                 </div>
                                 
                                 <div class="small-8 columns">
-                                    <input type="text" readonly="true" value="<?php echo $model->payment_date; ?>"> 
+                                    <input type="text" readonly="true" value="<?php echo Yii::app()->dateFormatter->format("d MMM yyyy", strtotime($model->payment_date)); ?>"> 
                                 </div>
                             </div>
                         </div>

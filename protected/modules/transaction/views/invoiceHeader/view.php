@@ -84,7 +84,7 @@ $this->breadcrumbs = array(
             
             <tr>
                 <td>Invoice Date</td>
-                <td><?php echo $model->invoice_date; ?></td>
+                <td><?php echo Yii::app()->dateFormatter->format("d MMM yyyy", strtotime($model->invoice_date)); ?></td>
                 <td width="10%">SO #</td>
                 <td width="30%">
                     <?php echo CHtml::encode(CHtml::value($registration, 'sales_order_number')); ?>
@@ -93,7 +93,7 @@ $this->breadcrumbs = array(
             
             <tr>
                 <td>Due Date</td>
-                <td><?php echo $model->due_date; ?></td>
+                <td><?php echo Yii::app()->dateFormatter->format("d MMM yyyy", strtotime($model->due_date)); ?></td>
                 <td width="10%">Vehicle</td>
                 <td width="30%">
                     <?php echo CHtml::encode(CHtml::value($model, 'vehicle.carMake.name')); ?> -
@@ -111,9 +111,7 @@ $this->breadcrumbs = array(
             
             <tr>
                 <td width="10%">Insurance Company</td>
-                <td width="30%">
-                    <?php echo CHtml::encode(CHtml::value($model, 'insuranceCompany.name')); ?>
-                </td>
+                <td width="30%"><?php echo CHtml::encode(CHtml::value($model, 'insuranceCompany.name')); ?></td>
                 <td width="10%">Bupot #</td>
                 <td width="30%"><?php echo CHtml::encode(CHtml::value($model, 'coretax_receipt_number')); ?></td>
             </tr>
@@ -122,9 +120,7 @@ $this->breadcrumbs = array(
                 <td width="10%">Repair Type</td>
                 <td width="30%"><?php echo CHtml::encode(CHtml::value($model, 'registrationTransaction.repair_type')); ?></td>
                 <td width="10%">F. Pajak #</td>
-                <td width="30%">
-                    <?php echo CHtml::encode(CHtml::value($model, 'transaction_tax_number')); ?>
-                </td>
+                <td width="30%"><?php echo CHtml::encode(CHtml::value($model, 'transaction_tax_number')); ?></td>
             </tr>
             
             <tr>
@@ -348,7 +344,9 @@ $this->breadcrumbs = array(
                     <tbody>
                         <?php foreach ($payments as $key => $payment): ?>
                             <tr>
-                                <td><?php echo CHtml::link($payment->paymentIn->payment_number, array("/transaction/paymentIn/show", "id"=>$payment->payment_in_id), array('target' => 'blank')); ?></td>
+                                <td>
+                                    <?php echo CHtml::link($payment->paymentIn->payment_number, array("/transaction/paymentIn/show", "id"=>$payment->payment_in_id), array('target' => 'blank')); ?>
+                                </td>
                                 <td><?php echo $payment->paymentIn->payment_date; ?></td>
                                 <td><?php echo $payment->paymentIn->paymentType->name; ?></td>
                                 <td><?php echo number_format($payment->amount, 2); ?></td>
@@ -422,7 +420,10 @@ $this->breadcrumbs = array(
     
     <?php if ($model->status !== 'CANCELLED!!!'): ?>
         <div>
-            <?php echo CHtml::submitButton('Processing Journal', array('name' => 'Process', 'confirm' => 'Are you sure you want to process into journal transactions?')); ?>
+            <?php echo CHtml::submitButton('Processing Journal', array(
+                'name' => 'Process', 
+                'confirm' => 'Are you sure you want to process into journal transactions?'
+            )); ?>
         </div>
     <?php endif; ?>
 </div>
