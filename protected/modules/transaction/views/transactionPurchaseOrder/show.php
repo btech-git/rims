@@ -91,7 +91,7 @@ $this->breadcrumbs=array(
 
     $tabsArray['Detail Item'] = array(
         'id'=>'test1',
-        'content'=>$this->renderPartial('_viewDetail',  array(
+        'content'=>$this->renderPartial('_showDetail',  array(
             'purchaseOrderDetails'=>$purchaseOrderDetails,
             'ccontroller'=>$ccontroller,
             'model'=>$model
@@ -99,38 +99,30 @@ $this->breadcrumbs=array(
     );
     $tabsArray['Detail Approval'] = array(
         'id'=>'test2',
-        'content'=>$this->renderPartial('_viewDetailApproval', array(
+        'content'=>$this->renderPartial('_showDetailApproval', array(
             'model'=>$model
         ),TRUE)
     );
     $tabsArray['Detail Receive'] = array(
         'id'=>'test3',
-        'content'=>$this->renderPartial('_viewDetailReceive', array(
+        'content'=>$this->renderPartial('_showDetailReceive', array(
             'purchaseOrderDetails'=>$purchaseOrderDetails,
             'model'=>$model
         ),TRUE)
     );
     $tabsArray['Detail Invoice'] = array(
         'id'=>'test4',
-        'content'=>$this->renderPartial('_viewDetailInvoice', array(
+        'content'=>$this->renderPartial('_showDetailInvoice', array(
             'purchaseOrderDetails'=>$purchaseOrderDetails,
             'model'=>$model
         ),TRUE)
     );
     $tabsArray['Detail Payment'] = array(
         'id'=>'test5',
-        'content'=>$this->renderPartial('_viewDetailPayment', array(
+        'content'=>$this->renderPartial('_showDetailPayment', array(
             'model'=>$model
         ),TRUE)
     );
-    if (Yii::app()->user->checkAccess("generalManager")) {
-        $tabsArray['Journal'] = array(
-            'id'=>'test6',
-            'content'=>$this->renderPartial('_viewJournal', array(
-                'model'=>$model
-            ),TRUE)
-        );
-    }
     ?>
     <?php $this->widget('zii.widgets.jui.CJuiTabs', array(
         'tabs' => $tabsArray,
