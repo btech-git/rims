@@ -311,3 +311,19 @@ $this->breadcrumbs = array(
         </fieldset>
     </div>        
 </div>
+
+<script>
+    $(document).ready(function() {
+        var hasFlash = <?php echo $hasFlash ? 'true' : 'false' ?>;
+        if (hasFlash) {
+            $("#cancel-message-dialog").dialog({modal: 'false'});
+        }
+    });
+    
+    var label = $('#status');
+    var text = label.text();
+    //console.log(label.text());
+    if (label.val() === "PAID") {
+        label.css("background-color", "green");
+    }
+</script>
