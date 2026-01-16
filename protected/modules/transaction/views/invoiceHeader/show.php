@@ -27,62 +27,69 @@ $this->breadcrumbs = array(
             <tr>
                 <td>Customer</td>
                 <td><?php echo CHtml::encode(CHtml::value($model, 'customer.name')); ?></td>
-                <td>Reference Type</td>
-                <td><?php echo $model->reference_type == 1 ? 'Sales Order' : 'Retail Sales'; ?></td>
+                <td width="10%">Registration #</td>
+                <td width="30%">
+                    <?php echo CHtml::link($registration->transaction_number, array($registration->repair_type == 'GR' ? "/frontDesk/generalRepairRegistration/show" : "/frontDesk/bodyRepairRegistration/show", "id"=>$registration->id), array('target' => 'blank')); ?>
+                </td>
             </tr>
             
             <tr>
                 <td>Invoice Date</td>
                 <td><?php echo $model->invoice_date; ?></td>
                 <td width="10%">SO #</td>
-                <td width="30%">
-                    <?php echo empty($registration) ? '' : CHtml::encode(CHtml::value($registration, 'sales_order_number')); ?>
-                </td>
+                <td width="30%"><?php echo CHtml::encode(CHtml::value($registration, 'sales_order_number')); ?></td>
             </tr>
             
             <tr>
                 <td>Due Date</td>
                 <td><?php echo $model->due_date; ?></td>
-                <td width="10%">Registration #</td>
-                <td width="30%"><?php echo empty($registration) ? '' :  CHtml::link($registration->transaction_number, array($registration->repair_type == 'GR' ? "/frontDesk/generalRepairRegistration/view" : "/frontDesk/bodyRepairRegistration/view", "id"=>$registration->id), array('target' => 'blank')); ?></td>
+                <td width="10%">Vehicle</td>
+                <td width="30%">
+                    <?php echo CHtml::encode(CHtml::value($model, 'vehicle.carMake.name')); ?> -
+                    <?php echo CHtml::encode(CHtml::value($model, 'vehicle.carModel.name')); ?> - 
+                    <?php echo CHtml::encode(CHtml::value($model, 'vehicle.carSubModel.name')); ?>                    
+                </td>
             </tr>
             
             <tr>
                 <td width="10%">Payment Est Date</td>
                 <td width="30%"><?php echo $model->payment_date_estimate; ?></td>
                 <td width="10%">Plate #</td>
-                <td width="30%"><?php echo empty($registration) ? '' : CHtml::encode(CHtml::value($registration, 'vehicle.plate_number')); ?>
-                </td>
+                <td width="30%"><?php echo CHtml::encode(CHtml::value($model, 'vehicle.plate_number')); ?></td>
             </tr>
             
             <tr>
                 <td width="10%">Insurance Company</td>
-                <td width="30%">
-                    <?php echo CHtml::encode(CHtml::value($registration, 'insuranceCompany.name')); ?>
-                </td>
-                <td width="10%">Car Make</td>
-                <td width="30%"><?php echo empty($registration) ? '' :  CHtml::encode(CHtml::value($registration, 'vehicle.carMake.name')); ?></td>
+                <td width="30%"><?php echo CHtml::encode(CHtml::value($model, 'insuranceCompany.name')); ?></td>
+                <td width="10%">Bupot #</td>
+                <td width="30%"><?php echo CHtml::encode(CHtml::value($model, 'coretax_receipt_number')); ?></td>
             </tr>
             
             <tr>
                 <td width="10%">Repair Type</td>
                 <td width="30%"><?php echo CHtml::encode(CHtml::value($model, 'registrationTransaction.repair_type')); ?></td>
-                <td width="10%">Car Model</td>
-                <td width="30%">
-                    <?php echo empty($registration) ? '' : CHtml::encode(CHtml::value($registration, 'vehicle.carModel.name')); ?>
-                </td>
+                <td width="10%">F. Pajak #</td>
+                <td width="30%"><?php echo CHtml::encode(CHtml::value($model, 'transaction_tax_number')); ?></td>
             </tr>
             
             <tr>
                 <td>Reference Number</td>
-                <td><?php if ($model->reference_type == 1): ?>
-                        <?php echo $model->salesOrder->sale_order_no; ?>
-                    <?php else : ?>
-                        <?php echo $model->registration_transaction_id; ?>
-                    <?php endif ?>
+                <td>
+                    <?php if ($model->reference_type == 1): ?>
+                        <?php echo CHtml::encode(CHtml::value($model, 'salesOrder.sale_order_no')); ?>
+                    <?php else: ?>
+                        <?php echo CHtml::encode(CHtml::value($model, 'registrationTransaction.work_order_number')); ?>
+                    <?php endif; ?>
                 </td>
-                <td width="10%">Car Detail</td>
-                <td width="30%"><?php echo empty($registration) ? '' :  CHtml::encode(CHtml::value($registration, 'vehicle.carSubModel.name')); ?></td>
+                <td width="10%">DPP Coretax</td>
+                <td width="30%"><?php echo number_format(CHtml::encode(CHtml::value($model, 'grand_total_coretax')), 2); ?></td>
+            </tr>
+                
+            <tr>
+                <td>Reference Type</td>
+                <td><?php echo $model->reference_type == 1 ? 'Sales Order' : 'Retail Sales'; ?></td>
+                <td width="10%">PPn Coretax</td>
+                <td width="30%"><?php echo number_format(CHtml::encode(CHtml::value($model, 'tax_amount_coretax')), 2); ?></td>
             </tr>
                 
             <?php if (Yii::app()->user->checkAccess("director")): ?>
@@ -124,10 +131,10 @@ $this->breadcrumbs = array(
         ?>
         
         <?php
-        $QserviceCriteria = new CDbCriteria;
-        $QserviceCriteria->addCondition('invoice_id =' . $model->id);
-        $QserviceCriteria->addCondition('quick_service_id != ""');
-        $Qservices = InvoiceDetail::model()->findAll($QserviceCriteria);
+        $PackageCriteria = new CDbCriteria;
+        $PackageCriteria->addCondition('invoice_id =' . $model->id);
+        $PackageCriteria->addCondition('sale_package_header_id != ""');
+        $Packages = InvoiceDetail::model()->findAll($PackageCriteria);
         ?>
         <fieldset>
             <legend>Details</legend>
@@ -138,6 +145,7 @@ $this->breadcrumbs = array(
                         <th style="text-align: center">Code</th>
                         <th style="text-align: center">Product</th>
                         <th style="text-align: center">Quantity</th>
+                        <th style="text-align: center">Satuan</th>
                         <th style="text-align: center">Unit Price</th>
                         <th style="text-align: center">Discount</th>
                         <th style="text-align: center">Total</th>
@@ -151,6 +159,7 @@ $this->breadcrumbs = array(
                                     <td><?php echo $detail->product->manufacturer_code; ?></td>
                                     <td><?php echo $detail->product->name; ?></td>
                                     <td style="text-align: center"><?php echo $detail->quantity; ?></td>
+                                    <td><?php echo $detail->product->unit->name; ?></td>
                                     <td style="text-align: right"><?php echo number_format($detail->unit_price, 2); ?></td>
                                     <td style="text-align: right"><?php echo number_format($detail->discount, 2); ?></td>
                                     <td style="text-align: right"><?php echo number_format($detail->total_price, 2); ?></td>
@@ -187,23 +196,25 @@ $this->breadcrumbs = array(
                 </table>
             <?php endif; ?>
             
-            <?php if (count($Qservices) > 0): ?>
+            <?php if (count($Packages) > 0): ?>
                 <table>
                     <thead>
                         <tr>
-                            <th>Quick Service</th>
+                            <th>Paket</th>
+                            <th>Quantity</th>
                             <th>Unit Price</th>
-                            <th>Price</th>
+                            <th>Total Price</th>
                         </tr>
                     </thead>
                     
                     <tbody>
                         <?php foreach ($details as $i => $detail): ?>
-                            <?php if ($detail->quick_service_id != ""): ?>
+                            <?php if ($detail->sale_package_header_id != ""): ?>
                                 <tr>
-                                    <td><?php echo $detail->quickService->name; ?></td>
-                                    <td><?php echo number_format($detail->unit_price, 2); ?></td>
-                                    <td><?php echo number_format($detail->total_price, 2); ?></td>
+                                    <td><?php echo $detail->salePackageHeader->name; ?></td>
+                                    <td style="text-align: center"><?php echo number_format($detail->quantity, 0); ?></td>
+                                    <td style="text-align: right"><?php echo number_format($detail->unit_price, 2); ?></td>
+                                    <td style="text-align: right"><?php echo number_format($detail->total_price, 2); ?></td>
                                 </tr>
                             <?php endif; ?>
                         <?php endforeach; ?>
@@ -224,54 +235,44 @@ $this->breadcrumbs = array(
                     font-weight: bold;
                 }
             </style>
-            
-            <table class="totalTable">
-                <?php if ($model->reference_type == 2): ?>
-                    <tr>
-                        <td class="title">Service Price</td>
-                        <td>Rp. <?php echo number_format($model->service_price, 2); ?></td>
-                    </tr>
-                <?php endif; ?>
-
+            <table>
                 <tr>
-                    <td class="title"><?php echo $model->reference_type == 1 ? 'Subtotal' : 'Product Price' ?></td>
-                    <td>Rp. <?php echo number_format($model->product_price, 2) ?></td>
-                </tr>
-                <?php if ($model->reference_type == 2): ?>
-                    <tr>
-                        <td class="title">Quick Service Price</td>
-                        <td>Rp. <?php echo number_format($model->quick_service_price, 2); ?></td>
-                    </tr>
-                <?php endif; ?>
-                <tr>
+                    <td class="title">Service Price</td>
+                    <td style="text-align: right">Rp. <?php echo number_format($model->service_price, 2); ?></td>
                     <td class="title">Sub Total</td>
-                    <td>Rp. <?php echo number_format($model->subTotal, 2) ?></td>
+                    <td style="text-align: right">Rp. <?php echo number_format($model->subTotal, 2) ?></td>
                 </tr>
+                
                 <tr>
+                    <td class="title"><?php echo 'Product Price' ?></td>
+                    <td style="text-align: right">Rp. <?php echo number_format($model->product_price, 2) ?></td>
                     <td class="title">PPN <?php echo CHtml::encode(CHtml::value($model, 'tax_percentage')); ?>%</td>
-                    <td>Rp. <?php echo $model->ppn == 1 ? number_format($model->ppn_total, 2) : 0.00; ?></td>
+                    <td style="text-align: right">Rp. <?php echo number_format($model->ppn_total, 2); ?></td>
                 </tr>
 
-                <?php if ($model->reference_type == 2): ?>
-                    <tr>
-                        <td class="title">PPH (2%) </td>
-                        <td>Rp. <?php echo number_format($model->pph_total, 2) ?></td>
-                    </tr>
-                <?php endif ?>
+                <tr>
+                    <td class="title">Paket Price</td>
+                    <td style="text-align: right">Rp. <?php echo number_format($model->package_price, 2); ?></td>
+                    <td class="title">PPH (2%) </td>
+                    <td style="text-align: right">Rp. <?php echo number_format($model->pph_total, 2) ?></td>
+                </tr>
 
                 <tr>
+                    <td colspan="2"></td>
                     <td class="title">Total Price</td>
-                    <td><strong>Rp. <?php echo number_format($model->total_price, 2) ?></strong></td>
+                    <td style="text-align: right"><strong>Rp. <?php echo number_format($model->total_price, 2) ?></strong></td>
                 </tr>	
 
                 <tr>
+                    <td colspan="2"></td>
                     <td class="title">Total Payment</td>
-                    <td><strong>Rp. <?php echo number_format($model->payment_amount, 2) ?></strong></td>
+                    <td style="text-align: right"><strong>Rp. <?php echo number_format($model->payment_amount, 2) ?></strong></td>
                 </tr>	
 
                 <tr>
+                    <td colspan="2"></td>
                     <td class="title">Remaining Receivable</td>
-                    <td><strong>Rp. <?php echo number_format($model->payment_left, 2) ?></strong></td>
+                    <td style="text-align: right"><strong>Rp. <?php echo number_format($model->payment_left, 2) ?></strong></td>
                 </tr>
             </table>
         </fieldset>
@@ -292,7 +293,9 @@ $this->breadcrumbs = array(
                     <tbody>
                         <?php foreach ($payments as $key => $payment): ?>
                             <tr>
-                                <td><?php echo CHtml::link($payment->paymentIn->payment_number, array("/transaction/paymentIn/view", "id"=>$payment->payment_in_id), array('target' => 'blank')); ?></td>
+                                <td>
+                                    <?php echo CHtml::link($payment->paymentIn->payment_number, array("/transaction/paymentIn/view", "id"=>$payment->payment_in_id), array('target' => 'blank')); ?>
+                                </td>
                                 <td><?php echo $payment->paymentIn->payment_date; ?></td>
                                 <td><?php echo $payment->paymentIn->paymentType->name; ?></td>
                                 <td><?php echo number_format($payment->amount, 2); ?></td>

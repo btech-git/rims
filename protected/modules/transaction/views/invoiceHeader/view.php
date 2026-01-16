@@ -6,14 +6,6 @@ $this->breadcrumbs = array(
     'Invoice Headers' => array('admin'),
     $model->id,
 );
-
-$this->menu = array(
-    array('label' => 'List InvoiceHeader', 'url' => array('index')),
-    array('label' => 'Create InvoiceHeader', 'url' => array('create')),
-    array('label' => 'Update InvoiceHeader', 'url' => array('update', 'id' => $model->id)),
-    array('label' => 'Delete InvoiceHeader', 'url' => '#', 'linkOptions' => array('submit' => array('delete', 'id' => $model->id), 'confirm' => 'Are you sure you want to delete this item?')),
-    array('label' => 'Manage InvoiceHeader', 'url' => array('admin')),
-);
 ?>
 
 <?php echo CHtml::beginForm(); ?>
