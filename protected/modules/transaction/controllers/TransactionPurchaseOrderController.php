@@ -176,7 +176,7 @@ class TransactionPurchaseOrderController extends Controller {
                 FROM " . TransactionPurchaseOrderDetail::model()->tableName() . "
                 GROUP BY purchase_order_id
             ) d ON h.id = d.purchase_order_id
-            WHERE t.id = i.registration_transaction_id AND d.quantity_left > 0
+            WHERE t.id = h.registration_transaction_id AND d.quantity_left > 0
         ) AND t.work_order_number IS NOT NULL AND t.total_product_price > 0 AND t.status NOT LIKE '%CANCELLED%' AND 
         t.transaction_date >= '" . AppParam::BEGINNING_TRANSACTION_DATE . "'");
 
