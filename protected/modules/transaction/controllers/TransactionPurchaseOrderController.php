@@ -306,7 +306,7 @@ class TransactionPurchaseOrderController extends Controller {
         $registrationTransactionCriteria->compare('customer.name', $registrationTransaction->customer_name, true);
 
         $registrationTransactionCriteria->addCondition("NOT EXISTS (
-            SELECT i.registration_transaction_id
+            SELECT h.registration_transaction_id
             FROM " . TransactionPurchaseOrder::model()->tableName() . " h
             INNER JOIN (
                 SELECT purchase_order_id, SUM(purchase_order_quantity_left) AS quantity_left
