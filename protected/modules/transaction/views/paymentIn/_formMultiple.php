@@ -165,7 +165,11 @@
 
     <?php //if ($paymentIn->header->isNewRecord): ?>
         <div class="row">
-            <?php echo CHtml::button('Tambah Invoice', array('name' => 'Search', 'onclick' => '$("#invoice-dialog").dialog("open"); return false;', 'onkeypress' => 'if (event.keyCode == 13) { $("#invoice-dialog").dialog("open"); return false; }')); ?>
+            <?php echo CHtml::button('Tambah Invoice', array(
+                'name' => 'Search', 
+                'onclick' => '$("#invoice-dialog").dialog("open"); return false;', 
+                'onkeypress' => 'if (event.keyCode == 13) { $("#invoice-dialog").dialog("open"); return false; }'
+            )); ?>
             <?php echo CHtml::hiddenField('SaleInvoiceId'); ?>
         </div>
     <?php //endif; ?>
@@ -216,7 +220,7 @@
 
 </div><!-- form -->
 
-<?php if ($paymentIn->header->isNewRecord): ?>
+<?php //if ($paymentIn->header->isNewRecord): ?>
     <?php $this->beginWidget('zii.widgets.jui.CJuiDialog', array(
         'id' => 'invoice-dialog',
         // additional javascript options for the dialog plugin
@@ -301,4 +305,4 @@
 
     <?php $this->endWidget('zii.widgets.jui.CJuiDialog'); ?>
 
-<?php endif; ?>
+<?php //endif; ?>
