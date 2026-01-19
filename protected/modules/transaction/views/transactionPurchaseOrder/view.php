@@ -24,7 +24,7 @@ $this->menu=array(
         
         <?php if ($model->status_document == "Draft" && $model->status_document != 'CANCELLED!!!'): ?>
             <?php echo CHtml::link('<span class="fa fa-edit"></span>Edit', Yii::app()->baseUrl.'/transaction/transactionPurchaseOrder/update?id=' . $model->id, array(
-                'class'=>'button cbutton right',
+                'class'=>'button warning right',
                 'style'=>'margin-right:10px', 
                 'visible' => Yii::app()->user->checkAccess("purchaseOrderEdit")
             )); ?>

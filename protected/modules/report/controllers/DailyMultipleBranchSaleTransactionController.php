@@ -26,17 +26,16 @@ class DailyMultipleBranchSaleTransactionController extends Controller {
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
         $dailyMultipleBranchSaleReport = InvoiceHeader::getDailyMultipleBranchSaleReport($startDate, $endDate);
         
+        if (isset($_GET['ResetFilter'])) {
+            $startDate = date('Y-m-d');
+            $endDate = date('Y-m-d');
+        }
+        
         $branchIds = array_map(function($dailyMultipleBranchSaleReportItem) { return $dailyMultipleBranchSaleReportItem['branch_id']; }, $dailyMultipleBranchSaleReport);
-        
         $dailyMultipleBranchSaleProductReport = InvoiceDetail::getDailyMultipleBranchSaleProductReport($startDate, $endDate, $branchIds);
-        
         $dailyMultipleBranchSaleProductReportData = array();
         foreach ($dailyMultipleBranchSaleProductReport as $dailyMultipleBranchSaleProductReportItem) {
             $dailyMultipleBranchSaleProductReportData[$dailyMultipleBranchSaleProductReportItem['branch_id']] = $dailyMultipleBranchSaleProductReportItem;
-        }
-        
-        if (isset($_GET['ResetFilter'])) {
-            $this->redirect(array('summary'));
         }
         
         if (isset($_GET['SaveExcel'])) {

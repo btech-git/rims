@@ -73,9 +73,6 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                 <hr />
 
                 <div class="relative">
-                    <div class="reportDisplay">
-                    </div>
-
                     <?php $this->renderPartial('_summary', array(
                         'dailyMultipleBranchSaleReport' => $dailyMultipleBranchSaleReport,
                         'dailyMultipleBranchSaleProductReportData' => $dailyMultipleBranchSaleProductReportData,

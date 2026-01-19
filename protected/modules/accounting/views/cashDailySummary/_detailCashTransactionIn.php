@@ -13,7 +13,7 @@
     </thead>
     
     <tbody>
-        <?php $totalIn = 0.00; ?>
+        <?php $totalIn = '0.00'; ?>
         <?php foreach ($cashTransactionInDataProvider->data as $i => $header): ?>
             <?php $amountIn = CHtml::value($header, 'credit_amount'); ?>
             <tr>
@@ -25,21 +25,13 @@
                         )) . '", "_blank", "top=100, left=225, width=900, height=650"); return false;'
                     )); ?>
                 </td>
-                <td>
-                    <?php echo CHtml::encode(CHtml::value($header, 'coa.name')); ?>
-                </td>
+                <td><?php echo CHtml::encode(CHtml::value($header, 'coa.name')); ?></td>
                 <td style="text-align: right">
                     <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $amountIn)); ?>
                 </td>
-                <td>
-                    <?php echo CHtml::encode(CHtml::value($header, 'branch.name')); ?>
-                </td>
-                <td>
-                    <?php echo CHtml::encode(CHtml::value($header, 'paymentType.name')); ?>
-                </td>
-                <td>
-                    <?php echo CHtml::encode(CHtml::value($header, 'user.username')); ?>
-                </td>
+                <td><?php echo CHtml::encode(CHtml::value($header, 'branch.name')); ?></td>
+                <td><?php echo CHtml::encode(CHtml::value($header, 'paymentType.name')); ?></td>
+                <td><?php echo CHtml::encode(CHtml::value($header, 'user.username')); ?></td>
                 <td>
                     <?php if (!empty($header->cashTransactionApprovals)): ?>
                         <?php echo CHtml::encode($header->cashTransactionApprovals[0]->supervisor->username); ?>

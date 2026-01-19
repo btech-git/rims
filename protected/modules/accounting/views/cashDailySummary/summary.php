@@ -62,12 +62,18 @@ $this->menu=array(
                         <div class="medium-6 columns">
                             <div class="field">
                                 <?php //echo CHtml::resetButton('Clear', array('class'=>'button secondary')); ?>
-                                <?php echo CHtml::submitButton('Show', array('onclick' => '$("#CurrentSort").val(""); return true;', 'class'=>'button info right')); ?>
+                                <?php echo CHtml::submitButton('Show', array(
+                                    'onclick' => '$("#CurrentSort").val(""); return true;', 
+                                    'class'=>'button info right'
+                                )); ?>
+                                <?php echo CHtml::submitButton('Simpan ke Excel', array('name' => 'SaveExcel')); ?>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+            
+            <?php echo CHtml::endForm(); ?>
             
             <hr />
             

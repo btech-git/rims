@@ -198,6 +198,14 @@ class CashDailySummaryController extends Controller {
             }
         }
 
+        if (isset($_GET['SaveExcel'])) {
+            $this->saveToExcel($paymentTypes, $transactionDate, $branches, $paymentInRetailList, $paymentInWholesaleDataProvider, $paymentOutDataProvider, $cashTransactionInDataProvider, $cashTransactionOutDataProvider,
+                $saleOrderDataProvider, $retailTransactionHeadDataProvider, $retailTransaction1DataProvider, $retailTransaction2DataProvider,
+                $retailTransaction4DataProvider, $retailTransaction5DataProvider, $retailTransaction6DataProvider, $retailTransaction8DataProvider,
+                $wholesaleTransactionDataProvider, $purchaseOrderDataProvider, $transactionJournalDataProvider, $cashDailySummary
+            );
+        }
+        
         $this->render('summary', array(
             'paymentTypes' => $paymentTypes,
             'paymentInWholesale' => $paymentInWholesale,
@@ -520,6 +528,398 @@ class CashDailySummaryController extends Controller {
             $model = AssetPurchase::model()->findByAttributes(array('transaction_number' => $codeNumber));
             $this->redirect(array('/accounting/assetManagement/show', 'id' => $model->id));
         }
+    }
+    
+    protected function saveToExcel($paymentTypes, $transactionDate, $branches, $paymentInRetailList, $paymentInWholesaleDataProvider, $paymentOutDataProvider, 
+        $cashTransactionInDataProvider, $cashTransactionOutDataProvider, $saleOrderDataProvider, $retailTransactionHeadDataProvider, 
+        $retailTransaction1DataProvider, $retailTransaction2DataProvider, $retailTransaction4DataProvider, $retailTransaction5DataProvider, 
+        $retailTransaction6DataProvider, $retailTransaction8DataProvider, $wholesaleTransactionDataProvider, $purchaseOrderDataProvider, 
+        $transactionJournalDataProvider, $cashDailySummary
+    ) {
+        set_time_limit(0);
+        ini_set('memory_limit', '1024M');
+
+        spl_autoload_unregister(array('YiiBase', 'autoload'));
+        include_once Yii::getPathOfAlias('ext.phpexcel.Classes') . DIRECTORY_SEPARATOR . 'PHPExcel.php';
+        spl_autoload_register(array('YiiBase', 'autoload'));
+
+        $objPHPExcel = new PHPExcel();
+
+        $documentProperties = $objPHPExcel->getProperties();
+        $documentProperties->setCreator('Raperind Motor');
+        $documentProperties->setTitle('Cash Daily Summary');
+
+        $worksheet = $objPHPExcel->setActiveSheetIndex(0);
+        $worksheet->setTitle('Cash Daily Summary');
+
+        $worksheet->mergeCells('A1:O1');
+        $worksheet->mergeCells('A2:O2');
+        $worksheet->mergeCells('A3:O3');
+
+        $worksheet->getStyle('A1:O6')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->getStyle('A1:O6')->getFont()->setBold(true);
+
+        $worksheet->setCellValue('A1', 'Raperind Motor');
+        $worksheet->setCellValue('A2', 'Cash Daily Summary');
+        $worksheet->setCellValue('A3', Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($transactionDate)));
         
+        $worksheet->setCellValue("A5", 'Payment In Retail');
+        $worksheet->setCellValue('A6', 'Branch');
+        $columnHeadCounter = 'B';
+        $paymentDailyTotals = array();
+        foreach ($paymentTypes as $paymentType) {
+            $worksheet->setCellValue("{$columnHeadCounter}6", CHtml::value($paymentType, 'name'));
+            $paymentDailyTotals[$paymentType->id] = '0.00';
+            $columnHeadCounter++;
+        }
+        $dailyTotal = '0.00';
+        $worksheet->setCellValue("{$columnHeadCounter}6", 'Total');
+        
+        $worksheet->mergeCells("A5:{$columnHeadCounter}5");
+        $worksheet->getStyle("A5:{$columnHeadCounter}5")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A6:{$columnHeadCounter}6")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+
+        $counter = 7;
+        foreach ($paymentInRetailList as $paymentInRetailItem) {
+            $totalPerBranch = '0.00'; 
+            $columnCounter = 'A';
+            foreach ($paymentInRetailItem as $paymentTypeId => $paymentInRetail) {
+                if ($paymentTypeId > 0) {
+                    $worksheet->setCellValue("{$columnCounter}{$counter}", $paymentInRetail);
+                    $paymentDailyTotals[$paymentTypeId] += $paymentInRetail; 
+                } else {
+                    $worksheet->setCellValue("A{$counter}", $paymentInRetail);                    
+                }
+                
+                if ($paymentTypeId > 0) {
+                    $totalPerBranch += $paymentInRetail;
+                }
+                
+                $columnCounter++;
+            }
+            
+            $worksheet->setCellValue("{$columnCounter}{$counter}", $totalPerBranch);
+            $dailyTotal += $totalPerBranch;
+            $counter++;
+        }
+        
+        $worksheet->getStyle("A{$counter}:{$columnCounter}{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A{$counter}:{$columnCounter}{$counter}")->getFont()->setBold(true);
+        
+        $columnCounter = 'B';
+        $worksheet->setCellValue("A{$counter}", 'Total Daily Cash');
+        foreach ($paymentTypes as $paymentType) {
+            $worksheet->setCellValue("{$columnCounter}{$counter}", $paymentDailyTotals[$paymentType->id]);
+            $columnCounter++;
+        }
+        $worksheet->setCellValue("{$columnCounter}{$counter}", $dailyTotal);
+        $counter++;$counter++;$counter++;
+        
+        $worksheet->mergeCells("A{$counter}:G{$counter}");
+        $worksheet->getStyle("A{$counter}:G{$counter}")->getFont()->setBold(true);
+        $worksheet->getStyle("A{$counter}:G{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A{$counter}:G{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->setCellValue("A{$counter}", 'Payment In NON Retail');
+        $counter++;
+        $worksheet->getStyle("A{$counter}:G{$counter}")->getFont()->setBold(true);
+        $worksheet->getStyle("A{$counter}:G{$counter}")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A{$counter}:G{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->setCellValue("A{$counter}", 'No');
+        $worksheet->setCellValue("B{$counter}", 'Branch');
+        $worksheet->setCellValue("C{$counter}", 'Customer');
+        $worksheet->setCellValue("D{$counter}", 'Payment #');
+        $worksheet->setCellValue("E{$counter}", 'Notes');
+        $worksheet->setCellValue("F{$counter}", 'Payment Type');
+        $worksheet->setCellValue("G{$counter}", 'Amount');
+        $counter++;
+        
+        $grandTotalPaymentInWholesale = '0.00';
+        foreach ($paymentInWholesaleDataProvider->data as $i => $paymentIn) {
+            $totalAmount = $paymentIn->payment_amount;
+            $worksheet->setCellValue("A{$counter}", $i + 1);
+            $worksheet->setCellValue("B{$counter}", CHtml::value($paymentIn, 'branch.name'));
+            $worksheet->setCellValue("C{$counter}", CHtml::value($paymentIn, 'customer.name'));
+            $worksheet->setCellValue("D{$counter}", CHtml::value($paymentIn, 'payment_number'));
+            $worksheet->setCellValue("E{$counter}", CHtml::value($paymentIn, 'notes'));
+            $worksheet->setCellValue("F{$counter}", CHtml::value($paymentIn, 'paymentType.name'));
+            $worksheet->setCellValue("G{$counter}", $totalAmount);
+            $grandTotalPaymentInWholesale += $totalAmount;
+            $counter++;
+        }
+        $worksheet->getStyle("A{$counter}:G{$counter}")->getFont()->setBold(true);
+        $worksheet->getStyle("A{$counter}:G{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        
+        $worksheet->setCellValue("F{$counter}", 'TOTAL');
+        $worksheet->setCellValue("G{$counter}", $grandTotalPaymentInWholesale);
+        $counter++;$counter++;$counter++;
+
+        $worksheet->mergeCells("A{$counter}:G{$counter}");
+        $worksheet->getStyle("A{$counter}:G{$counter}")->getFont()->setBold(true);
+        $worksheet->getStyle("A{$counter}:G{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A{$counter}:G{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->setCellValue("A{$counter}", 'Payment Out');
+        $counter++;
+        $worksheet->getStyle("A{$counter}:G{$counter}")->getFont()->setBold(true);
+        $worksheet->getStyle("A{$counter}:G{$counter}")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A{$counter}:G{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->setCellValue("A{$counter}", 'No');
+        $worksheet->setCellValue("B{$counter}", 'Branch');
+        $worksheet->setCellValue("C{$counter}", 'Supplier');
+        $worksheet->setCellValue("D{$counter}", 'Payment #');
+        $worksheet->setCellValue("E{$counter}", 'Notes');
+        $worksheet->setCellValue("F{$counter}", 'Payment Type');
+        $worksheet->setCellValue("G{$counter}", 'Amount');
+        $counter++;
+        
+        $grandTotalPaymentOut = '0.00';
+        foreach ($paymentOutDataProvider->data as $i => $paymentOut) {
+            $totalAmount = $paymentOut->payment_amount;
+            $worksheet->setCellValue("A{$counter}", $i + 1);
+            $worksheet->setCellValue("B{$counter}", CHtml::value($paymentOut, 'branch.name'));
+            $worksheet->setCellValue("C{$counter}", CHtml::value($paymentOut, 'supplier.name'));
+            $worksheet->setCellValue("D{$counter}", CHtml::value($paymentOut, 'payment_number'));
+            $worksheet->setCellValue("E{$counter}", CHtml::value($paymentOut, 'notes'));
+            $worksheet->setCellValue("F{$counter}", CHtml::value($paymentOut, 'paymentType.name'));
+            $worksheet->setCellValue("G{$counter}", $totalAmount);
+            $grandTotalPaymentOut += $totalAmount;
+            $counter++;
+        }
+        $worksheet->getStyle("A{$counter}:G{$counter}")->getFont()->setBold(true);
+        $worksheet->getStyle("A{$counter}:G{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        
+        $worksheet->setCellValue("F{$counter}", 'TOTAL');
+        $worksheet->setCellValue("G{$counter}", $grandTotalPaymentOut);
+        $counter++;$counter++;$counter++;
+
+        $worksheet->mergeCells("A{$counter}:F{$counter}");
+        $worksheet->getStyle("A{$counter}:F{$counter}")->getFont()->setBold(true);
+        $worksheet->getStyle("A{$counter}:F{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A{$counter}:F{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->setCellValue("A{$counter}", 'Jurnal Penyesuaian');
+        $counter++;
+        $worksheet->getStyle("A{$counter}:F{$counter}")->getFont()->setBold(true);
+        $worksheet->getStyle("A{$counter}:F{$counter}")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A{$counter}:F{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->setCellValue("A{$counter}", 'No');
+        $worksheet->setCellValue("B{$counter}", 'Transaction #');
+        $worksheet->setCellValue("C{$counter}", 'Branch');
+        $worksheet->setCellValue("D{$counter}", 'Debit');
+        $worksheet->setCellValue("E{$counter}", 'Credit');
+        $worksheet->setCellValue("F{$counter}", 'Keterangan');
+        $counter++;
+        
+        $totalDebit = '0.00'; 
+        $totalCredit = '0.00';
+        foreach ($transactionJournalDataProvider->data as $i => $header) {
+            $debitAmount = $header->debet_kredit === 'D' ? $header->total : '0.00'; 
+            $creditAmount = $header->debet_kredit === 'K' ? $header->total : '0.00'; 
+            $worksheet->setCellValue("A{$counter}", $i + 1);
+            $worksheet->setCellValue("B{$counter}", CHtml::value($header, 'kode_transaksi'));
+            $worksheet->setCellValue("C{$counter}", CHtml::value($header, 'branch.name'));
+            $worksheet->setCellValue("D{$counter}", $debitAmount);
+            $worksheet->setCellValue("E{$counter}", $creditAmount);
+            $worksheet->setCellValue("F{$counter}", CHtml::value($header, 'transaction_subject'));
+            
+            $totalDebit += $debitAmount;
+            $totalCredit += $creditAmount; 
+            $counter++;
+        }
+        $worksheet->getStyle("A{$counter}:F{$counter}")->getFont()->setBold(true);
+        $worksheet->getStyle("A{$counter}:F{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        
+        $worksheet->setCellValue("C{$counter}", 'TOTAL');
+        $worksheet->setCellValue("D{$counter}", $totalDebit);
+        $worksheet->setCellValue("E{$counter}", $totalCredit);
+        $counter++;$counter++;$counter++;
+
+        $worksheet->mergeCells("A{$counter}:H{$counter}");
+        $worksheet->getStyle("A{$counter}:H{$counter}")->getFont()->setBold(true);
+        $worksheet->getStyle("A{$counter}:H{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A{$counter}:H{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->setCellValue("A{$counter}", 'Transaction In');
+        $counter++;
+        $worksheet->getStyle("A{$counter}:H{$counter}")->getFont()->setBold(true);
+        $worksheet->getStyle("A{$counter}:H{$counter}")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A{$counter}:H{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->setCellValue("A{$counter}", 'No');
+        $worksheet->setCellValue("B{$counter}", 'Transaction #');
+        $worksheet->setCellValue("C{$counter}", 'Account');
+        $worksheet->setCellValue("D{$counter}", 'Amount');
+        $worksheet->setCellValue("E{$counter}", 'Branch');
+        $worksheet->setCellValue("F{$counter}", 'Type');
+        $worksheet->setCellValue("G{$counter}", 'Created By');
+        $worksheet->setCellValue("H{$counter}", 'Approved By');
+        $counter++;
+        
+        $totalIn = '0.00'; 
+        foreach ($cashTransactionInDataProvider->data as $i => $header) {
+            $amountIn = CHtml::value($header, 'credit_amount');
+            $worksheet->setCellValue("A{$counter}", $i + 1);
+            $worksheet->setCellValue("B{$counter}", CHtml::value($header, 'transaction_number'));
+            $worksheet->setCellValue("C{$counter}", CHtml::value($header, 'coa.name'));
+            $worksheet->setCellValue("D{$counter}", $amountIn);
+            $worksheet->setCellValue("E{$counter}", CHtml::value($header, 'branch.name'));
+            $worksheet->setCellValue("F{$counter}", CHtml::value($header, 'paymentType.name'));
+            $worksheet->setCellValue("G{$counter}", CHtml::value($header, 'user.username'));
+            $cashApproval = CashTransactionApproval::model()->findByAttributes(array(
+                'cash_transaction_id' => $header->id,
+                'approval_type' => 'Approved',
+            ), array('order' => 't.id DESC'));
+            $worksheet->setCellValue("H{$counter}", empty($cashApproval) ? '' : $cashApproval->supervisor->username);
+            
+            $totalIn += $amountIn;
+            $counter++;
+        }
+        $worksheet->getStyle("A{$counter}:H{$counter}")->getFont()->setBold(true);
+        $worksheet->getStyle("A{$counter}:H{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        
+        $worksheet->setCellValue("C{$counter}", 'TOTAL');
+        $worksheet->setCellValue("D{$counter}", $totalIn);
+        $counter++;$counter++;$counter++;
+
+        $worksheet->mergeCells("A{$counter}:H{$counter}");
+        $worksheet->getStyle("A{$counter}:H{$counter}")->getFont()->setBold(true);
+        $worksheet->getStyle("A{$counter}:H{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A{$counter}:H{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->setCellValue("A{$counter}", 'Transaction Out');
+        $counter++;
+        $worksheet->getStyle("A{$counter}:H{$counter}")->getFont()->setBold(true);
+        $worksheet->getStyle("A{$counter}:H{$counter}")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A{$counter}:H{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->setCellValue("A{$counter}", 'No');
+        $worksheet->setCellValue("B{$counter}", 'Transaction #');
+        $worksheet->setCellValue("C{$counter}", 'Account');
+        $worksheet->setCellValue("D{$counter}", 'Amount');
+        $worksheet->setCellValue("E{$counter}", 'Branch');
+        $worksheet->setCellValue("F{$counter}", 'Type');
+        $worksheet->setCellValue("G{$counter}", 'Created By');
+        $worksheet->setCellValue("H{$counter}", 'Approved By');
+        $counter++;
+        
+        $totalOut = '0.00'; 
+        foreach ($cashTransactionOutDataProvider->data as $i => $header) {
+            $amountOut = CHtml::value($header, 'debit_amount');
+            $worksheet->setCellValue("A{$counter}", $i + 1);
+            $worksheet->setCellValue("B{$counter}", CHtml::value($header, 'transaction_number'));
+            $worksheet->setCellValue("C{$counter}", CHtml::value($header, 'coa.name'));
+            $worksheet->setCellValue("D{$counter}", $amountOut);
+            $worksheet->setCellValue("E{$counter}", CHtml::value($header, 'branch.name'));
+            $worksheet->setCellValue("F{$counter}", CHtml::value($header, 'paymentType.name'));
+            $worksheet->setCellValue("G{$counter}", CHtml::value($header, 'user.username'));
+            $cashApproval = CashTransactionApproval::model()->findByAttributes(array(
+                'cash_transaction_id' => $header->id,
+                'approval_type' => 'Approved',
+            ), array('order' => 't.id DESC'));
+            $worksheet->setCellValue("H{$counter}", empty($cashApproval) ? '' : $cashApproval->supervisor->username);
+            
+            $totalOut += $amountOut;
+            $counter++;
+        }
+        $worksheet->getStyle("A{$counter}:H{$counter}")->getFont()->setBold(true);
+        $worksheet->getStyle("A{$counter}:H{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        
+        $worksheet->setCellValue("C{$counter}", 'TOTAL');
+        $worksheet->setCellValue("D{$counter}", $totalOut);
+        $counter++;$counter++;$counter++;
+
+        $worksheet->mergeCells("A{$counter}:G{$counter}");
+        $worksheet->getStyle("A{$counter}:G{$counter}")->getFont()->setBold(true);
+        $worksheet->getStyle("A{$counter}:G{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A{$counter}:G{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->setCellValue("A{$counter}", 'Purchase Order');
+        $counter++;
+        $worksheet->getStyle("A{$counter}:G{$counter}")->getFont()->setBold(true);
+        $worksheet->getStyle("A{$counter}:G{$counter}")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A{$counter}:G{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->setCellValue("A{$counter}", 'No');
+        $worksheet->setCellValue("B{$counter}", 'Transaction #');
+        $worksheet->setCellValue("C{$counter}", 'Branch');
+        $worksheet->setCellValue("D{$counter}", 'Supplier');
+        $worksheet->setCellValue("E{$counter}", 'Approved By');
+        $worksheet->setCellValue("F{$counter}", 'Note');
+        $worksheet->setCellValue("G{$counter}", 'Amount');
+        $counter++;
+        
+        $grandTotal = '0.00'; 
+        foreach ($purchaseOrderDataProvider->data as $i => $header) {
+            $totalPrice = CHtml::value($header, 'total_price'); 
+            $worksheet->setCellValue("A{$counter}", $i + 1);
+            $worksheet->setCellValue("B{$counter}", CHtml::value($header, 'purchase_order_no'));
+            $worksheet->setCellValue("C{$counter}", CHtml::value($header, 'mainBranch.name'));
+            $worksheet->setCellValue("D{$counter}", CHtml::value($header, 'supplier.name'));
+            $worksheet->setCellValue("E{$counter}", CHtml::value($header, 'approval.username'));
+            $worksheet->setCellValue("F{$counter}", CHtml::value($header, 'status_document'));
+            $worksheet->setCellValue("G{$counter}", $totalPrice);
+            
+            $grandTotal += $totalPrice;
+            $counter++;
+        }
+        $worksheet->getStyle("A{$counter}:G{$counter}")->getFont()->setBold(true);
+        $worksheet->getStyle("A{$counter}:G{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        
+        $worksheet->setCellValue("F{$counter}", 'TOTAL');
+        $worksheet->setCellValue("G{$counter}", $grandTotal);
+        $counter++;$counter++;$counter++;
+
+        $worksheet->getStyle("A{$counter}:E{$counter}")->getFont()->setBold(true);
+        $worksheet->getStyle("A{$counter}:E{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A{$counter}:E{$counter}")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A{$counter}:E{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        
+        $worksheet->setCellValue("A{$counter}", 'Branch');
+        $worksheet->setCellValue("B{$counter}", 'Retail');
+        $worksheet->setCellValue("C{$counter}", 'Wholesale');
+        $worksheet->setCellValue("D{$counter}", 'Sale Order');
+        $worksheet->setCellValue("E{$counter}", 'Total');
+        $counter++;
+        
+        $retailGrandTotal = '0.00';
+        $wholesaleGrandTotal = '0.00';
+        $saleOrderGrandTotal = '0.00';
+        $branchGrandTotal = '0.00';
+        foreach ($branches as $branch) {
+            $retailTotal = isset($cashDailySummary['retail'][$branch->id]) ? $cashDailySummary['retail'][$branch->id] : '0.00';
+            $wholeSaleTotal = isset($cashDailySummary['wholesale'][$branch->id]) ? $cashDailySummary['wholesale'][$branch->id] : '0.00';
+            $saleOrderTotal = isset($cashDailySummary['saleorder'][$branch->id]) ? $cashDailySummary['saleorder'][$branch->id] : '0.00';
+            $branchTotal = $retailTotal + $wholeSaleTotal + $saleOrderTotal;
+            
+            $worksheet->setCellValue("A{$counter}", CHtml::value($branch, 'name'));
+            $worksheet->setCellValue("B{$counter}", $retailTotal);
+            $worksheet->setCellValue("C{$counter}", $wholeSaleTotal);
+            $worksheet->setCellValue("D{$counter}", $saleOrderTotal);
+            $worksheet->setCellValue("E{$counter}", $branchTotal);
+            
+            $retailGrandTotal += $retailTotal;
+            $wholesaleGrandTotal += $wholeSaleTotal;
+            $saleOrderGrandTotal += $saleOrderTotal;
+            $branchGrandTotal += $branchTotal;
+            $counter++;
+        }
+        $worksheet->getStyle("A{$counter}:E{$counter}")->getFont()->setBold(true);
+        $worksheet->getStyle("A{$counter}:E{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        
+        $worksheet->setCellValue("A{$counter}", 'TOTAL');
+        $worksheet->setCellValue("B{$counter}", $retailGrandTotal);
+        $worksheet->setCellValue("C{$counter}", $wholesaleGrandTotal);
+        $worksheet->setCellValue("D{$counter}", $saleOrderGrandTotal);
+        $worksheet->setCellValue("E{$counter}", $branchGrandTotal);
+        $counter++;$counter++;$counter++;
+
+        for ($col = 'A'; $col !== 'Z'; $col++) {
+            $objPHPExcel->getActiveSheet()
+            ->getColumnDimension($col)
+            ->setAutoSize(true);
+        }
+
+        ob_end_clean();
+
+        header('Content-type: application/vnd.ms-excel');
+        header('Content-Disposition: attachment;filename="cash_daily_summary.xls"');
+        header('Cache-Control: max-age=0');
+
+        $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
+        $objWriter->save('php://output');
+
+        Yii::app()->end();
     }
 }

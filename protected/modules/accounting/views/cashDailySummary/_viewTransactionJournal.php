@@ -25,20 +25,15 @@
                             "codeNumber" => $header->kode_transaksi
                         )) . '", "_blank", "top=100, left=225, width=900, height=650"); return false;'
                     )); ?>
-                    <?php //echo CHtml::encode(CHtml::value($header, 'kode_transaksi')); ?>
                 </td>
-                <td style="text-align: right">
-                    <?php echo CHtml::encode(CHtml::value($header, 'branch.name')); ?>
-                </td>
+                <td style="text-align: right"><?php echo CHtml::encode(CHtml::value($header, 'branch.name')); ?></td>
                 <td style="text-align: right">
                     <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $debitAmount)); ?>
                 </td>
                 <td style="text-align: right">
                     <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $creditAmount)); ?>
                 </td>
-                <td style="text-align: right">
-                    <?php echo CHtml::encode(CHtml::value($header, 'transaction_subject')); ?>
-                </td>
+                <td style="text-align: right"><?php echo CHtml::encode(CHtml::value($header, 'transaction_subject')); ?></td>
             </tr>
             <?php 
             $totalDebit += $debitAmount;
