@@ -146,7 +146,7 @@ class RegistrationTransaction extends MonthlyTransactionActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('customer_id, vehicle_id, product_status, service_status, vehicle_status, tax_percentage', 'required'),
+            array('customer_id, vehicle_id, tax_percentage', 'required'),
             array('customer_id, pic_id, vehicle_id, branch_id, user_id, total_quickservice, total_quantity_package, total_service, is_quick_service, is_insurance, insurance_company_id, laststatusupdate_by, ppn, pph, vehicle_mileage, total_time, priority_level, is_passed, employee_id_assign_mechanic, employee_id_sales_person, tax_percentage, user_id_cancelled, user_id_edited, sale_estimation_header_id, is_new_customer, user_id_created_downpayment, is_downpayment_paid', 'numerical', 'integerOnly' => true),
             array('transaction_number, repair_type, work_order_number, payment_status, payment_type, sales_order_number, customer_work_order_number, vehicle_status, downpayment_transaction_number, downpayment_status', 'length', 'max' => 30),
             array('total_quickservice_price, total_price_package, subtotal_service, discount_service, total_service_price, subtotal_product, discount_product, total_product_price, grand_total, downpayment_amount', 'length', 'max' => 18),
