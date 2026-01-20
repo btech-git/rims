@@ -66,7 +66,7 @@
                             <span class="prefix">Created By</span>
                         </div>
                         <div class="small-8 columns">
-                            <input type="text" readonly="true" value="<?php echo $model->userIdCreatedDownpayment->username; ?>"> 
+                            <input type="text" readonly="true" value="<?php echo CHtml::encode(CHtml::value($model, 'userIdCreatedDownpayment.username')); ?>"> 
                         </div>
                     </div>
                 </div>
