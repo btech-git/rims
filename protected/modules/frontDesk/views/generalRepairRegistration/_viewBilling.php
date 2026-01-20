@@ -3,16 +3,16 @@
     <div class="row">
         <div class="large-12 columns">
             <div class="large-6 columns">
-                <div class="field">
+<!--                <div class="field">
                     <div class="row collapse">
                         <div class="small-4 columns">
                             <span class="prefix">Total Quick Service Price</span>
                         </div>
                         <div class="small-8 columns">
-                            <input type="text" readonly="true" value="<?php echo number_format($model->total_quickservice_price, 2); ?>"> 
+                            <input type="text" readonly="true" value="<?php //echo number_format($model->total_quickservice_price, 2); ?>"> 
                         </div>
                     </div>
-                </div>
+                </div>-->
 
                 <div class="field">
                     <div class="row collapse">
@@ -69,16 +69,16 @@
                     </div>
                 </div>
 
-                <div class="field">
+<!--                <div class="field">
                     <div class="row collapse">
                         <div class="small-4 columns">
                             <span class="prefix">PPH Price</span>
                         </div>
                         <div class="small-8 columns">
-                            <input type="text" readonly="true" value="<?php echo number_format($model->pph_price, 2); ?>"> 
+                            <input type="text" readonly="true" value="<?php //echo number_format($model->pph_price, 2); ?>"> 
                         </div>
                     </div>
-                </div>
+                </div>-->
                 <hr style="border:solid 2px; margin-top:0px; color:black">
                 <div class="field">
                     <div class="row collapse">
@@ -87,6 +87,16 @@
                         </div>
                         <div class="small-8 columns">
                             <input type="text" readonly="true" value="<?php echo number_format($model->grand_total, 2); ?>"> 
+                        </div>
+                    </div>
+                </div>
+                <div class="field">
+                    <div class="row collapse">
+                        <div class="small-4 columns">
+                            <span class="prefix">Downpayment</span>
+                        </div>
+                        <div class="small-8 columns">
+                            <input type="text" readonly="true" value="<?php echo number_format($model->downpayment_amount, 2); ?>"> 
                         </div>
                     </div>
                 </div>

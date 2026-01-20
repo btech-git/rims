@@ -149,8 +149,6 @@ class Invoices extends CComponent {
             $this->header->is_new_customer = $invoiceHeader === null ? 1 : 0;
         }
         
-//        $this->header->total_price = $registrationTransaction->subtotal_product + $registrationTransaction->subtotal_service + $registrationTransaction->ppn_price;
-//        $this->header->payment_date_estimate = $this->header->due_date;
         $this->header->total_discount = $this->getTotalDiscount();
         $valid = $this->header->save();
 

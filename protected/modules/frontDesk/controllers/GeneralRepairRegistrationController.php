@@ -214,6 +214,44 @@ class GeneralRepairRegistrationController extends Controller {
         ));
     }
 
+    public function actionAddDownpayment($id) {
+        $generalRepairRegistration = $this->instantiate($id, 'addDownpayment');
+        $vehicle = Vehicle::model()->findByPk($generalRepairRegistration->header->vehicle_id);
+        $customer = Customer::model()->findByPk($vehicle->customer_id);
+        
+        $generalRepairRegistration->header->downpayment_transaction_date = date('Y-m-d');
+        $generalRepairRegistration->header->downpayment_created_datetime = date('Y-m-d H:i:s');
+        $generalRepairRegistration->header->user_id_created_downpayment = Yii::app()->user->id;
+        $generalRepairRegistration->header->is_downpayment_paid = 0;
+        $generalRepairRegistration->header->downpayment_status = 'Issued';
+
+        $products = RegistrationProduct::model()->findAll(array(
+            'condition' => 'registration_transaction_id = :registration_transaction_id AND sale_package_detail_id IS NULL', 
+            'params' => array(':registration_transaction_id' => $id)
+        ));
+        $services = RegistrationService::model()->findAllByAttributes(array(
+            'registration_transaction_id' => $id,
+            'is_body_repair' => 0
+        ));
+        
+        if (isset($_POST['Submit']) && IdempotentManager::check()) {
+            $this->loadState($generalRepairRegistration);
+            $generalRepairRegistration->generateCodeNumberDownpayment(Yii::app()->dateFormatter->format('M', strtotime($generalRepairRegistration->header->downpayment_transaction_date)), Yii::app()->dateFormatter->format('yyyy', strtotime($generalRepairRegistration->header->downpayment_transaction_date)), $generalRepairRegistration->header->branch_id);
+
+            if ($generalRepairRegistration->save(Yii::app()->db)) {
+                $this->redirect(array('view', 'id' => $generalRepairRegistration->header->id));
+            }
+        }
+
+        $this->render('addDownpayment', array(
+            'generalRepairRegistration' => $generalRepairRegistration,
+            'vehicle' => $vehicle,
+            'customer' => $customer,
+            'services' => $services,
+            'products' => $products,
+        ));
+    }
+
     public function actionView($id) {
         $model = $this->loadModel($id);
         
@@ -482,25 +520,6 @@ class GeneralRepairRegistrationController extends Controller {
             'reals' => $reals,
         ));
     }
-
-    /**
-     * Deletes a particular model.
-     * If deletion is successful, the browser will be redirected to the 'admin' page.
-     * @param integer $id the ID of the model to be deleted
-     */
-//    public function actionDelete($id) {
-//        $model = $this->loadModel($id);
-//        $registrationRealizationProcess = RegistrationRealizationProcess::model()->findAllByAttributes(array('registration_transaction_id' => $model->id));
-//        foreach($registrationRealizationProcess as $detail) {
-//            $detail->delete();
-//        }
-//        $model->delete();
-//
-//        // if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
-//        if (!isset($_GET['ajax'])) {
-//            $this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
-//        }
-//    }
 
     public function actionDeleteImage($id) {
         $model = RegistrationInsuranceImages::model()->findByPk($id);
@@ -1261,8 +1280,9 @@ class GeneralRepairRegistrationController extends Controller {
 
     public function loadModel($id) {
         $model = RegistrationTransaction::model()->findByPk($id);
-        if ($model === null)
+        if ($model === null) {
             throw new CHttpException(404, 'The requested page does not exist.');
+        }
 
         return $model;
     }

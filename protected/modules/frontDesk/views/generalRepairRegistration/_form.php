@@ -1,9 +1,3 @@
-<?php
-/* @var $this RegistrationTransactionController */
-/* @var $generalRepairRegistration->header RegistrationTransaction */
-/* @var $form CActiveForm */
-?>
-
 <div id="maincontent">
     <div class="clearfix page-action">
         <a class="button cbutton right" href="<?php echo Yii::app()->baseUrl.'/frontDesk/generalRepairRegistration/admin';?>"><span class="fa fa-th-list"></span>Manage General Repair Registration</a>

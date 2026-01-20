@@ -316,6 +316,18 @@ $this->breadcrumbs = array(
 
                 <tr>
                     <td colspan="2"></td>
+                    <td class="title">Downpayment</td>
+                    <td style="text-align: right"><strong>Rp. <?php echo number_format($model->downpayment_amount, 2) ?></strong></td>
+                </tr>	
+
+                <tr>
+                    <td colspan="2"></td>
+                    <td class="title">Jumlah Tagihan</td>
+                    <td style="text-align: right"><strong>Rp. <?php echo number_format($model->invoice_amount, 2) ?></strong></td>
+                </tr>	
+
+                <tr>
+                    <td colspan="2"></td>
                     <td class="title">Total Payment</td>
                     <td style="text-align: right"><strong>Rp. <?php echo number_format($model->payment_amount, 2) ?></strong></td>
                 </tr>	

@@ -200,15 +200,15 @@ $this->breadcrumbs = array(
                                     'model' => $model,
                                 ), true)
                             ),
-                            'Customer Info' => array(
-                                'id' => 'info3',
-                                'content' => $this->renderPartial('_viewCustomer', array(
-                                    'model' => $model,
-                                ), true)
-                            ),
                             'Vehicle Info' => array(
                                 'id' => 'info4',
                                 'content' => $this->renderPartial('_viewVehicle', array(
+                                    'model' => $model,
+                                ), true)
+                            ),
+                            'DP Info' => array(
+                                'id' => 'info3',
+                                'content' => $this->renderPartial('_viewDownpayment', array(
                                     'model' => $model,
                                 ), true)
                             ),

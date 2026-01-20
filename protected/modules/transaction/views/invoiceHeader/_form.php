@@ -218,6 +218,30 @@
                         </div>
                     </div>
                 </div>
+                
+                <div class="field">
+                    <div class="row collapse">
+                        <div class="small-4 columns">
+                            <?php echo $form->labelEx($invoice->header, 'DPP Coretax', array('class' => 'prefix')); ?>
+                        </div>
+                        <div class="small-8 columns">
+                            <?php echo $form->textField($invoice->header, 'grand_total_coretax', array(
+                                'onchange' => CHtml::ajax(array(
+                                    'type' => 'POST',
+                                    'dataType' => 'JSON',
+                                    'url' => CController::createUrl('ajaxJsonTaxAmount', array('id' => $invoice->header->id)),
+                                    'success' => 'function(data) {
+                                        $("#grand_total_coretax").html(data.grandTotalCoretax);
+                                    }',
+                                )),
+                            )); ?>
+                            <div id="grand_total_coretax" style="text-align: right;">
+                                <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($invoice->header, 'grand_total_coretax'))); ?>
+                            </div>
+                            <?php echo $form->error($invoice->header, 'grand_total_coretax'); ?>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <div class="small-12 medium-6 columns">
@@ -257,23 +281,21 @@
                 <div class="field">
                     <div class="row collapse">
                         <div class="small-4 columns">
-                            <?php echo $form->labelEx($invoice->header, 'DPP Coretax', array('class' => 'prefix')); ?>
+                            <?php echo $form->labelEx($invoice->header, 'downpayment_amount', array('class' => 'prefix')); ?>
                         </div>
                         <div class="small-8 columns">
-                            <?php echo $form->textField($invoice->header, 'grand_total_coretax', array(
-                                'onchange' => CHtml::ajax(array(
-                                    'type' => 'POST',
-                                    'dataType' => 'JSON',
-                                    'url' => CController::createUrl('ajaxJsonTaxAmount', array('id' => $invoice->header->id)),
-                                    'success' => 'function(data) {
-                                        $("#grand_total_coretax").html(data.grandTotalCoretax);
-                                    }',
-                                )),
-                            )); ?>
-                            <div id="grand_total_coretax" style="text-align: right;">
-                                <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($invoice->header, 'grand_total_coretax'))); ?>
-                            </div>
-                            <?php echo $form->error($invoice->header, 'grand_total_coretax'); ?>
+                            <?php echo number_format(CHtml::encode(CHtml::value($invoice->header, 'downpayment_amount')), 2); ?>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="field">
+                    <div class="row collapse">
+                        <div class="small-4 columns">
+                            <?php echo $form->labelEx($invoice->header, 'Jumlah Tagihan', array('class' => 'prefix')); ?>
+                        </div>
+                        <div class="small-8 columns">
+                            <?php echo number_format(CHtml::encode(CHtml::value($invoice->header, 'invoice_amount')), 2); ?>
                         </div>
                     </div>
                 </div>
