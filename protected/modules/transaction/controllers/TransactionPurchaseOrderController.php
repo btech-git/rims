@@ -178,12 +178,12 @@ class TransactionPurchaseOrderController extends Controller {
             ) d ON h.id = d.purchase_order_id
             WHERE t.id = h.registration_transaction_id AND d.quantity_left > 0
         ) AND t.work_order_number IS NOT NULL AND t.total_product_price > 0 AND t.status NOT LIKE '%CANCELLED%' AND 
-        t.transaction_date >= '" . AppParam::BEGINNING_TRANSACTION_DATE . "'");
+        t.work_order_date >= '" . AppParam::BEGINNING_TRANSACTION_DATE . "'");
 
         $registrationTransactionDataProvider = new CActiveDataProvider('RegistrationTransaction', array(
             'criteria' => $registrationTransactionCriteria,
             'sort' => array(
-                "defaultOrder" => "t.work_order_number DESC, t.transaction_date DESC",
+                "defaultOrder" => "t.work_order_number DESC, t.work_order_date DESC",
             ),
         ));
 
