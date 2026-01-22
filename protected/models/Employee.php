@@ -338,7 +338,8 @@ class Employee extends CActiveRecord {
     }
     
     public static function getEmployeeBirthdayList() {
-        $sql = "SELECT MONTH(e.birth_date) as birth_month, e.id_card, e.name, e.mobile_phone_number, d.name AS division, p.name AS position, l.name AS level, e.employment_type, e.birth_date
+        $sql = "SELECT MONTH(e.birth_date) as birth_month, e.id_card, e.name, e.mobile_phone_number, d.name AS division, p.name AS position, l.name AS level, 
+                    e.employment_type, e.birth_date, TIMESTAMPDIFF(YEAR, birth_date, CURDATE()) AS age
                 FROM " . Employee::model()->tableName() . " e 
                 INNER JOIN " . Division::model()->tableName() . " d ON d.id = e.division_id
                 INNER JOIN " . Position::model()->tableName() . " p ON p.id = e.position_id

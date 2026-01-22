@@ -32,6 +32,40 @@ Yii::app()->clientScript->registerScript('birthdayList', "
 ");
 ?>
 
+<div style="font-weight: bold">
+    <div>Today's Employee Birthday</div>
+    <div>
+        <?php $employeeList = Employee::model()->findAll(array('condition' => "MONTH(t.birth_date) = MONTH(CURDATE()) AND DAY(t.birth_date) = DAY(CURDATE()) AND t.status = 'Active'")); ?>
+        <table>
+            <tr>
+                <th>Name</th>
+                <th>Umur</th>
+                <th>ID</th>
+                <th>Division</th>
+                <th>Position</th>
+                <th>Level</th>
+                <th>Status</th>
+            </tr>
+            <?php foreach ($employeeList as $employee): ?>
+                <?php $birthDate = new DateTime($employee->birth_date); ?>
+                <?php $today = new DateTime('today'); ?>
+                <?php $age = $birthDate->diff($today); ?>
+                <tr>
+                    <td><?php echo CHtml::encode(CHtml::value($employee, 'name')); ?></td>
+                    <td><?php echo CHtml::encode($age->y); ?></td>
+                    <td><?php echo CHtml::encode(CHtml::value($employee, 'id_card')); ?></td>
+                    <td><?php echo CHtml::encode(CHtml::value($employee, 'division.name')); ?></td>
+                    <td><?php echo CHtml::encode(CHtml::value($employee, 'position.name')); ?></td>
+                    <td><?php echo CHtml::encode(CHtml::value($employee, 'level.name')); ?></td>
+                    <td><?php echo CHtml::encode(CHtml::value($employee, 'employment_type')); ?></td>
+                </tr>
+            <?php endforeach; ?>
+        </table>
+    </div>
+</div>
+
+<hr /> 
+
 <div style="font-weight: bold; text-align: center">
     <div style="font-size: larger">Employee Birthday List</div>
 </div>
@@ -44,22 +78,23 @@ Yii::app()->clientScript->registerScript('birthdayList', "
     <table class="report">
         <thead>
             <tr id="header1">
-                <th class="width1-1">No</th>
-                <th class="width1-9">Tanggal Lahir</th>
-                <th class="width1-3">Name</th>
-                <th class="width1-2">ID</th>
-                <th class="width1-4">Phone</th>
-                <th class="width1-5">Division</th>
-                <th class="width1-6">Position</th>
-                <th class="width1-7">Level</th>
-                <th class="width1-8">Status</th>
+                <th>No</th>
+                <th>Tanggal Lahir</th>
+                <th>Name</th>
+                <th>Umur</th>
+                <th>ID</th>
+                <th>Phone</th>
+                <th>Division</th>
+                <th>Position</th>
+                <th>Level</th>
+                <th>Status</th>
             </tr>
         </thead>
         <tbody>
             <?php $n = 0; ?>
             <?php foreach ($employeeBirthdayData as $month => $employeeBirthdayDataItem): ?>
                 <tr class="items1 month-row" style="background-color: lightblue" data-target-month="<?php echo $month; ?>">
-                    <td class="month-column" style="text-align: center; font-weight: bold; font-size: larger" colspan="9"><?php echo CHtml::encode($monthNames[$month]); ?></td>
+                    <td class="month-column" style="text-align: center; font-weight: bold; font-size: larger" colspan="10"><?php echo CHtml::encode($monthNames[$month]); ?></td>
                 </tr>
                 <?php foreach ($employeeBirthdayDataItem as $dataItem): ?>
                     <tr class="items1 birthday-data-row birthday-data-row-<?php echo $month; ?>" style="<?php echo (int) $month === (int) date('m') ? '' : 'display: none' ?>">
@@ -68,6 +103,7 @@ Yii::app()->clientScript->registerScript('birthdayList', "
                             <?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($dataItem['birth_date']))); ?>
                         </td>
                         <td><?php echo CHtml::encode($dataItem['name']); ?></td>
+                        <td style="text-align: center"><?php echo CHtml::encode($dataItem['age']); ?></td>
                         <td><?php echo CHtml::encode($dataItem['id_card']); ?></td>
                         <td><?php echo CHtml::encode($dataItem['mobile_phone_number']); ?></td>
                         <td><?php echo CHtml::encode($dataItem['division']); ?></td>

@@ -48,9 +48,21 @@ class PaymentInComponent extends CComponent {
         if (!$exist) {
             $detail = new PaymentInDetail;
             $detail->invoice_header_id = $invoiceId;
+            $detail->registration_transaction_id = $invoiceHeader->registration_transaction_id;
             $detail->total_invoice = $invoiceHeader->total_price;
             $this->details[] = $detail;
         }
+    }
+
+    public function addDownpayment($registrationId) {
+
+        $registrationTransaction = RegistrationTransaction::model()->findByPk($registrationId);
+        $this->header->customer_id = $registrationTransaction->customer_id;
+
+        $detail = new PaymentInDetail;
+        $detail->registration_transaction_id = $registrationId;
+        $detail->downpayment_amount = $registrationTransaction->downpayment_amount;
+        $this->details[] = $detail;
     }
 
     public function removeDetailAt($index) {
@@ -108,10 +120,13 @@ class PaymentInComponent extends CComponent {
 
     public function validatePaymentAmount() {
         $valid = true;
-        foreach ($this->details as $detail) {
-            if ($detail->totalAmount > $detail->total_invoice) {
-                $valid = false;
-                $this->header->addError('error', 'Pelunasan tidak dapat melebihi total invoice.');                
+        
+        if (count($this->details) > 1 || $this->details[0]->invoice_header_id !== null) {
+            foreach ($this->details as $detail) {
+                if ($detail->totalAmount > $detail->total_invoice) {
+                    $valid = false;
+                    $this->header->addError('error', 'Pelunasan tidak dapat melebihi total invoice.');                
+                }
             }
         }
 
@@ -159,13 +174,13 @@ class PaymentInComponent extends CComponent {
         $this->header->bank_administration_fee = $this->totalBankAdminFee;
         $this->header->merimen_fee = $this->totalMerimenFee;
         $this->header->downpayment_amount = $this->totalDownpaymentAmount;
-        $this->header->insurance_company_id = $this->details[0]->invoiceHeader->insurance_company_id;
+        $this->header->insurance_company_id = $this->details[0]->invoice_header_id === null ? $this->details[0]->registrationTransaction->insurance_company_id : $this->details[0]->invoiceHeader->insurance_company_id;
         $valid = $this->header->save(false);
 
         $invoiceNumberList = array();
         $plateNumberList = array();
         foreach ($this->details as $i => $detail) {
-            if ($detail->amount <= 0.00 && $detail->tax_service_amount <= 0.00 && $detail->discount_amount <= 0.00 && $detail->bank_administration_fee <= 0.00 && $detail->merimen_fee <= 0.00) {
+            if ($detail->amount <= '0.00' && $detail->tax_service_amount <= '0.00' && $detail->discount_amount <= '0.00' && $detail->bank_administration_fee <= '0.00' && $detail->merimen_fee <= '0.00' && $detail->downpayment_amount <= '0.00') {
                 continue;
             }
 
@@ -176,8 +191,13 @@ class PaymentInComponent extends CComponent {
             $detail->tax_service_percentage = $detail->is_tax_service === 2 ? 0 : 0.02;
             $valid = $detail->save(false) && $valid;
             
-            $invoiceNumberList[] = $detail->invoiceHeader->invoice_number;
-            $plateNumberList[] = $detail->invoiceHeader->vehicle->plate_number;
+            $invoiceNumberList[] = $detail->invoice_header_id === null ? $detail->registrationTransaction->downpayment_transaction_number : $detail->invoiceHeader->invoice_number;
+            $plateNumberList[] = $detail->invoice_header_id === null ? $detail->registrationTransaction->vehicle->plate_number : $detail->invoiceHeader->vehicle->plate_number;
+            
+            if ($detail->invoice_header_id === null && $detail->registration_transaction_id !== null) {
+                $detail->registrationTransaction->is_downpayment_paid = 1; 
+                $detail->registrationTransaction->update(array('is_downpayment_paid'));
+            }
         }
         $invoiceNumberUniqueList = array_unique(explode(', ', implode(', ', $invoiceNumberList)));
         $plateNumberUniqueList = array_unique(explode(', ', implode(', ', $plateNumberList)));

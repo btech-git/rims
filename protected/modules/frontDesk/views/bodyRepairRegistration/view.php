@@ -16,150 +16,136 @@ $this->breadcrumbs = array(
             <?php $invoices = InvoiceHeader::model()->findAllByAttributes(array('registration_transaction_id' => $model->id, 'user_id_cancelled' => null)); ?>
             <div class="row">
                 <div class="large-12 columns">
-                    <?php echo CHtml::link('<span class="fa fa-list"></span>Manage Registration', array("admin"), array(
+                    <?php echo CHtml::link('<span class="fa fa-list"></span>Manage', array("admin"), array(
                         'class' => 'button cbutton left', 
                         'style' => 'margin-right:10px', 
                         'visible' => Yii::app()->user->checkAccess("bodyRepairCreate") || Yii::app()->user->checkAccess("bodyRepairEdit") || Yii::app()->user->checkAccess("bodyRepairView")
                     )); ?>
              
                     <?php if (!empty($model->work_order_number) && $model->total_service > 0): ?>
-                        <?php echo CHtml::link('<span class="fa fa-print"></span> Print Work Order', array("pdfWorkOrder", "id" => $model->id), array(
-                            'class'=>'button warning right', 
+                        <?php echo CHtml::link('<span class="fa fa-print"></span> WO', array("pdfWorkOrder", "id" => $model->id), array(
+                            'class'=>'button info right', 
                             'style' => 'margin-right:10px', 
-                            'target' =>'_blank'
-                        )) ?>
+                            'target' =>'_blank',
+                            'visible' => Yii::app()->user->checkAccess("bodyRepairCreate") || Yii::app()->user->checkAccess("bodyRepairEdit")
+                        )); ?>
                     <?php endif; ?>
                     <?php if (!empty($model->sales_order_number) && $model->status !== 'Finished'): ?>
-                        <?php echo CHtml::link('<span class="fa fa-print"></span> Print Sales Order', array("pdfSaleOrder", "id" => $model->id), array(
-                            'class'=>'button warning right', 
+                        <?php echo CHtml::link('<span class="fa fa-print"></span> SO', array("pdfSaleOrder", "id" => $model->id), array(
+                            'class'=>'button info right', 
                             'style' => 'margin-right:10px', 
-                            'target' =>'_blank'
-                        )) ?>
+                            'target' =>'_blank',
+                            'visible' => Yii::app()->user->checkAccess("bodyRepairCreate") || Yii::app()->user->checkAccess("bodyRepairEdit")
+                        )); ?>
                     <?php endif; ?>
                     <?php if ($model->status !== 'Finished'): ?>
-                        <?php echo CHtml::link('<span class="fa fa-print"></span> Print Estimasi', array("pdf", "id" => $model->id), array(
-                            'class'=>'button warning right', 
+                        <?php echo CHtml::link('<span class="fa fa-print"></span> Estimasi', array("pdf", "id" => $model->id), array(
+                            'class'=>'button info right', 
                             'style' => 'margin-right:10px', 
-                            'target' =>'_blank'
-                        )) ?>
+                            'target' =>'_blank',
+                            'visible' => Yii::app()->user->checkAccess("bodyRepairCreate") || Yii::app()->user->checkAccess("bodyRepairEdit")
+                        )); ?>
                     <?php endif; ?>
                     
                     <?php if ($model->status !== 'Finished' && $model->status !== 'CANCELLED!!!'): ?>
                         <?php if (count($invoices) == 0): ?>
                             <?php if (Yii::app()->user->checkAccess("bodyRepairEdit")): ?>
-                                <?php echo CHtml::link('<span class="fa fa-edit"></span>Edit Customer Data', Yii::app()->baseUrl . '/frontDesk/bodyRepairRegistration/update?id=' . $model->id, array(
+                                <?php echo CHtml::link('<span class="fa fa-edit"></span>Edit Data', Yii::app()->baseUrl . '/frontDesk/bodyRepairRegistration/update?id=' . $model->id, array(
                                     'class' => 'button warning left', 
-                                    'style' => 'margin-right:10px'
+                                    'style' => 'margin-right:10px', 
+                                    'visible' => Yii::app()->user->checkAccess("bodyRepairEdit")
                                 )); ?>
                             <?php endif; ?>
-                            <?php echo CHtml::link('<span class="fa fa-plus"></span>Product & Service', Yii::app()->baseUrl . '/frontDesk/bodyRepairRegistration/addProductService?registrationId=' . $model->id, array(
+
+                            <?php echo CHtml::link('<span class="fa fa-plus"></span>Parts & Service', Yii::app()->baseUrl . '/frontDesk/bodyRepairRegistration/addProductService?registrationId=' . $model->id, array(
                                 'class' => 'button success left', 
-                                'style' => 'margin-right:10px',
+                                'style' => 'margin-right:10px', 
                                 'visible' => Yii::app()->user->checkAccess("bodyRepairCreate") || Yii::app()->user->checkAccess("bodyRepairEdit")
                             )); ?>
                         <?php endif; ?>
-                    
+
                         <?php if (Yii::app()->user->checkAccess("bodyRepairSupervisor") && count($invoices) > 0): ?>
-                            <?php echo CHtml::link('<span class="fa fa-edit"></span>Revisi Customer Data', Yii::app()->baseUrl . '/frontDesk/bodyRepairRegistration/update?id=' . $model->id, array(
-                                'class' => 'button cbutton left', 
+                            <?php echo CHtml::link('<span class="fa fa-edit"></span>Revisi Data', Yii::app()->baseUrl . '/frontDesk/bodyRepairRegistration/update?id=' . $model->id, array(
+                                'class' => 'button warning left', 
                                 'style' => 'margin-right:10px'
                             )); ?>
-                            <?php echo CHtml::link('<span class="fa fa-plus"></span>Revisi Product & Service', Yii::app()->baseUrl . '/frontDesk/bodyRepairRegistration/addProductService?registrationId=' . $model->id, array(
+                            <?php echo CHtml::link('<span class="fa fa-plus"></span>Revisi Parts & Service', Yii::app()->baseUrl . '/frontDesk/bodyRepairRegistration/addProductService?registrationId=' . $model->id, array(
                                 'class' => 'button success left', 
                                 'style' => 'margin-right:10px'
                             )); ?>
                         <?php endif; ?>
 
-                        <?php if (empty($model->sales_order_number) && (Yii::app()->user->checkAccess("bodyRepairCreate") || Yii::app()->user->checkAccess("bodyRepairEdit"))): ?>
-                            <?php echo CHtml::button('Generate Sales Order', array(
+                        <?php if (empty($model->sales_order_number) && !empty($model->registrationProducts)): ?>
+                            <?php echo CHtml::button('Generate SO', array(
                                 'id' => 'detail-button',
                                 'name' => 'Detail',
                                 'class' => 'button cbutton left',
                                 'style' => 'margin-right:10px',
-                                'disabled' => $model->sales_order_number == null ? false : true,
-                                'onclick' => ' 
-                                    $.ajax({
-                                        type: "POST",
-                                        //dataType: "JSON",
-                                        url: "' . CController::createUrl('generateSalesOrder', array('id' => $model->id)) . '",
-                                        data: $("form").serialize(),
-                                        success: function(html) {
-                                            alert("Sales Order Succesfully Generated");
-                                            location.reload();
-                                        },
-                                    })
-                                '
+                                'visible' => Yii::app()->user->checkAccess("bodyRepairCreate") || Yii::app()->user->checkAccess("bodyRepairEdit"),
+                                'onclick' => '$.ajax({
+                                    type: "POST",
+                                    //dataType: "JSON",
+                                    url: "' . CController::createUrl('generateSalesOrder', array('id' => $model->id)) . '",
+                                    data: $("form").serialize(),
+                                    success: function(html) {
+                                        alert("Sales Order Succesfully Generated");
+                                        location.reload();
+                                    },
+                                })'
                             )); ?>
                         <?php endif; ?>
 
                         <?php
-                        $servicesReg = RegistrationService::model()->findAllByAttributes(array('registration_transaction_id' => $model->id));
+                        $servicesReg = RegistrationService::model()->findAllByAttributes(array('registration_transaction_id' => $model->id, 'is_body_repair' => 0));
                         $quickServicesReg = RegistrationQuickService::model()->findByAttributes(array('registration_transaction_id' => $model->id));
                         ?>
                     
                         <?php if (count($model->registrationServices) > 0 && empty($model->work_order_number)): ?>
-                            <?php echo CHtml::link('<span class="fa fa-check"></span> Generate Work Order', array("generateWorkOrder", "id" => $model->id), array(
+                            <?php echo CHtml::link('<span class="fa fa-check"></span> Generate WO', array("generateWorkOrder", "id" => $model->id), array(
                                 'class' => 'button success left', 
                                 'style' => 'margin-right:10px',
                                 'visible' => Yii::app()->user->checkAccess("bodyRepairCreate") || Yii::app()->user->checkAccess("bodyRepairEdit")
                             )); ?>
                         <?php endif; ?>
                     
-                        <?php if (empty($invoices) /*&& !($model->status == 'Approved' || $model->status == 'Finished' || $model->status == 'CANCELLED!!!')*/): ?>
+                        <?php if (empty($invoices) && !($model->status == 'Approved' || $model->status == 'Finished' || $model->status == 'CANCELLED!!!')): ?>
                             <?php if (!empty($model->registrationServices) && (!empty($model->registrationProducts) && $model->getTotalQuantityMovementLeft() == 0)): ?>
                                 <?php echo CHtml::link('<span class="fa fa-plus"></span>Generate Invoice', array("/transaction/invoiceHeader/create", "registrationId" => $model->id), array(
                                     'class' => 'button success left', 
                                     'style' => 'margin-right:10px',
                                     'visible' => Yii::app()->user->checkAccess("bodyRepairCreate") || Yii::app()->user->checkAccess("bodyRepairEdit")
                                 )); ?>
-                                <?php /*echo CHtml::link('<span class="fa fa-check"></span>Approval', array("updateApproval", "id" => $model->id), array(
-                                    'class' => 'button success left', 
-                                    'style' => 'margin-right:10px', 
-                                ));*/ ?>
                             <?php elseif (!empty($model->registrationServices) && empty($model->registrationProducts)): ?>
                                 <?php echo CHtml::link('<span class="fa fa-plus"></span>Generate Invoice', array("/transaction/invoiceHeader/create", "registrationId" => $model->id), array(
                                     'class' => 'button success left', 
                                     'style' => 'margin-right:10px',
                                     'visible' => Yii::app()->user->checkAccess("bodyRepairCreate") || Yii::app()->user->checkAccess("bodyRepairEdit")
                                 )); ?>
-                                <?php /*echo CHtml::link('<span class="fa fa-check"></span>Approval', array("updateApproval", "id" => $model->id), array(
-                                    'class' => 'button success left', 
-                                    'style' => 'margin-right:10px', 
-                                ));*/ ?>
                             <?php elseif (empty($model->registrationServices) && !empty($model->registrationProducts) && $model->getTotalQuantityMovementLeft() == 0): ?>
                                 <?php echo CHtml::link('<span class="fa fa-plus"></span>Generate Invoice', array("/transaction/invoiceHeader/create", "registrationId" => $model->id), array(
                                     'class' => 'button success left', 
                                     'style' => 'margin-right:10px',
                                     'visible' => Yii::app()->user->checkAccess("bodyRepairCreate") || Yii::app()->user->checkAccess("bodyRepairEdit")
                                 )); ?>
-                                <?php /*echo CHtml::link('<span class="fa fa-check"></span>Approval', array("updateApproval", "id" => $model->id), array(
-                                    'class' => 'button success left', 
-                                    'style' => 'margin-right:10px', 
-                                ));*/ ?>
                             <?php endif; ?>
                         <?php endif; ?>
-
-                        <?php /*if ($model->status == "Approved" && $model->status !== 'CANCELLED!!!'): ?>
-                            <?php echo CHtml::link('<span class="fa fa-plus"></span>Generate Invoice', array("/transaction/invoiceHeader/create", "registrationId" => $model->id), array(
-                                'class' => 'button success left', 
-                                'style' => 'margin-right:10px', 
-                            )); ?>
-                        <?php endif;*/ ?>
 
                         <?php if (Yii::app()->user->checkAccess("bodyRepairCreate") || Yii::app()->user->checkAccess("bodyRepairEdit")): ?>
                             <?php echo CHtml::button('Show Realization', array(
                                 'id' => 'real-button',
                                 'name' => 'Real',
                                 'class' => 'button cbutton left',
-                                'onclick' => 'window.location.href = "showRealization?id=' . $model->id . '";'
+                                'onclick' => 'window.location.href = "showRealization?id=' . $model->id . '";',
+                                'visible' => Yii::app()->user->checkAccess("bodyRepairCreate") || Yii::app()->user->checkAccess("bodyRepairEdit")
                             )); ?>
                         <?php endif; ?>
                     <?php endif; ?>
-    
-                    <?php if (Yii::app()->user->checkAccess("bodyRepairSupervisor") && $model->status !== 'Finished' && $model->status !== 'CANCELLED!!!'): ?>
+                    
+                    <?php if (Yii::app()->user->checkAccess("bodyRepairSupervisor")): ?>
                         <?php echo CHtml::link('<span class="fa fa-minus"></span>Cancel Transaction', array("/frontDesk/bodyRepairRegistration/cancel", "id" => $model->id), array(
                             'class' => 'button alert left', 
-                            'style' => 'margin-left:10px', 
+                            'style' => 'margin-left:10px',
+                            'visible' => Yii::app()->user->checkAccess("bodyRepairCreate") || Yii::app()->user->checkAccess("bodyRepairEdit")
                         )); ?>
                     <?php endif; ?>
 
@@ -187,15 +173,15 @@ $this->breadcrumbs = array(
                             'confirm' => 'Are you sure you want to finish this services?', 
                             'class' => 'button info right', 
                             'style' => 'margin-right:10px',
-                            'visible' => Yii::app()->user->checkAccess("bodyRepairCreate") || Yii::app()->user->checkAccess("bodyRepairEdit"),
+                            'visible' => Yii::app()->user->checkAccess("bodyRepairCreate") || Yii::app()->user->checkAccess("bodyRepairEdit")
                         )); ?>
                     <?php endif; ?>
-
-                    <?php if (empty($model->work_order_number) && $model->status !== 'Pending' && empty($model->sales_order_number)): ?>
-                        <?php echo CHtml::link('<span class="fa fa-bookmark"></span>Pending', Yii::app()->baseUrl.'/frontDesk/bodyRepairRegistration/pendingOrder?id=' . $model->id, array(
-                            'class'=>'button secondary right', 
-                            'style' => 'margin-right:10px',
-                            'visible' => Yii::app()->user->checkAccess("bodyRepairCreate") || Yii::app()->user->checkAccess("bodyRepairEdit"),
+                    
+                    <?php if (empty($invoices) && $model->downpayment_amount == 0 && $model->is_downpayment_paid == 0): ?>
+                        <?php echo CHtml::link('<span class="fa fa-plus"></span>Downpayment', Yii::app()->baseUrl . '/frontDesk/bodyRepairRegistration/addDownpayment?id=' . $model->id, array(
+                            'class' => 'button success left', 
+                            'style' => 'margin-left:10px', 
+                            'visible' => Yii::app()->user->checkAccess("bodyRepairCreate") || Yii::app()->user->checkAccess("bodyRepairEdit")
                         )); ?>
                     <?php endif; ?>
                 </div>
@@ -220,15 +206,15 @@ $this->breadcrumbs = array(
                                     'model' => $model,
                                 ), true)
                             ),
-                            'Customer Info' => array(
-                                'id' => 'info3',
-                                'content' => $this->renderPartial('_viewCustomer', array(
-                                    'model' => $model,
-                                ), true)
-                            ),
                             'Vehicle Info' => array(
                                 'id' => 'info4',
                                 'content' => $this->renderPartial('_viewVehicle', array(
+                                    'model' => $model,
+                                ), true)
+                            ),
+                            'DP Info' => array(
+                                'id' => 'info3',
+                                'content' => $this->renderPartial('_viewDownpayment', array(
                                     'model' => $model,
                                 ), true)
                             ),

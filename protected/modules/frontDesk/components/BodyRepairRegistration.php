@@ -76,6 +76,26 @@ class BodyRepairRegistration extends CComponent {
         $this->header->setCodeNumberByNext('sales_order_number', $branchCode, RegistrationTransaction::CONSTANT_SALE_ORDER, $currentMonth, $currentYear);
     }
 
+    public function generateCodeNumberDownpayment($currentMonth, $currentYear, $branchId) {
+        $arr = array(1 => 'I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI', 'XII');
+        $cnYearCondition = "substring_index(substring_index(substring_index(downpayment_transaction_number, '/', 2), '/', -1), '.', 1)";
+        $cnMonthCondition = "substring_index(substring_index(substring_index(downpayment_transaction_number, '/', 2), '/', -1), '.', -1)";
+        $registrationTransaction = RegistrationTransaction::model()->find(array(
+            'order' => ' downpayment_transaction_number DESC',
+            'condition' => "$cnYearCondition = :cn_year AND $cnMonthCondition = :cn_month AND branch_id = :branch_id",
+            'params' => array(':cn_year' => $currentYear, ':cn_month' => $arr[$currentMonth], ':branch_id' => $branchId),
+        ));
+
+        if ($registrationTransaction == null) {
+            $branchCode = Branch::model()->findByPk($branchId)->code;
+        } else {
+            $branchCode = $registrationTransaction->branch->code;
+            $this->header->downpayment_transaction_number = $registrationTransaction->downpayment_transaction_number;
+        }
+
+        $this->header->setCodeNumberByNext('downpayment_transaction_number', $branchCode, RegistrationTransaction::CONSTANT_DOWNPAYMENT, $currentMonth, $currentYear);
+    }
+    
     public function addDamageDetail($serviceId) {
         $damageDetail = new RegistrationDamage();
         $service = Service::model()->findByPk($serviceId);

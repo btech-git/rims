@@ -263,6 +263,44 @@ class BodyRepairRegistrationController extends Controller {
         ));
     }
 
+    public function actionAddDownpayment($id) {
+        $bodyRepairRegistration = $this->instantiate($id, 'addDownpayment');
+        $vehicle = Vehicle::model()->findByPk($bodyRepairRegistration->header->vehicle_id);
+        $customer = Customer::model()->findByPk($vehicle->customer_id);
+        
+        $bodyRepairRegistration->header->downpayment_transaction_date = date('Y-m-d');
+        $bodyRepairRegistration->header->downpayment_created_datetime = date('Y-m-d H:i:s');
+        $bodyRepairRegistration->header->user_id_created_downpayment = Yii::app()->user->id;
+        $bodyRepairRegistration->header->is_downpayment_paid = 0;
+        $bodyRepairRegistration->header->downpayment_status = 'Issued';
+
+        $products = RegistrationProduct::model()->findAll(array(
+            'condition' => 'registration_transaction_id = :registration_transaction_id AND sale_package_detail_id IS NULL', 
+            'params' => array(':registration_transaction_id' => $id)
+        ));
+        $services = RegistrationService::model()->findAllByAttributes(array(
+            'registration_transaction_id' => $id,
+            'is_body_repair' => 0
+        ));
+        
+        if (isset($_POST['Submit']) && IdempotentManager::check()) {
+            $this->loadState($bodyRepairRegistration);
+            $bodyRepairRegistration->generateCodeNumberDownpayment(Yii::app()->dateFormatter->format('M', strtotime($bodyRepairRegistration->header->downpayment_transaction_date)), Yii::app()->dateFormatter->format('yyyy', strtotime($bodyRepairRegistration->header->downpayment_transaction_date)), $bodyRepairRegistration->header->branch_id);
+
+            if ($bodyRepairRegistration->save(Yii::app()->db)) {
+                $this->redirect(array('view', 'id' => $bodyRepairRegistration->header->id));
+            }
+        }
+
+        $this->render('addDownpayment', array(
+            'bodyRepairRegistration' => $bodyRepairRegistration,
+            'vehicle' => $vehicle,
+            'customer' => $customer,
+            'services' => $services,
+            'products' => $products,
+        ));
+    }
+
     public function actionView($id) {
 
         $model = $this->loadModel($id);

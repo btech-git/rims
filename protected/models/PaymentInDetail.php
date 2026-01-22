@@ -17,10 +17,12 @@
  * @property string $bank_administration_fee
  * @property string $merimen_fee
  * @property string $downpayment_amount
+ * @property integer $registration_transaction_id
  *
  * The followings are the available model relations:
  * @property PaymentIn $paymentIn
  * @property InvoiceHeader $invoiceHeader
+ * @property RegistrationTransaction $registrationTransaction
  */
 class PaymentInDetail extends CActiveRecord {
 
@@ -46,14 +48,14 @@ class PaymentInDetail extends CActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('payment_in_id, invoice_header_id', 'required'),
-            array('payment_in_id, invoice_header_id, is_tax_service', 'numerical', 'integerOnly' => true),
+            array('payment_in_id', 'required'),
+            array('payment_in_id, invoice_header_id, is_tax_service, registration_transaction_id', 'numerical', 'integerOnly' => true),
             array('total_invoice, amount, tax_service_amount, discount_amount, bank_administration_fee, merimen_fee, downpayment_amount', 'length', 'max' => 18),
             array('memo', 'length', 'max' => 100),
             array('tax_service_percentage', 'length', 'max' => 10),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, total_invoice, amount, memo, payment_in_id, invoice_header_id, is_tax_service, tax_service_amount, downpayment_amount, tax_service_percentage, discount_amount, bank_administration_fee, merimen_fee', 'safe', 'on' => 'search'),
+            array('id, total_invoice, amount, memo, payment_in_id, invoice_header_id, is_tax_service, tax_service_amount, downpayment_amount, tax_service_percentage, discount_amount, bank_administration_fee, merimen_fee, registration_transaction_id', 'safe', 'on' => 'search'),
         );
     }
 
@@ -66,6 +68,7 @@ class PaymentInDetail extends CActiveRecord {
         return array(
             'paymentIn' => array(self::BELONGS_TO, 'PaymentIn', 'payment_in_id'),
             'invoiceHeader' => array(self::BELONGS_TO, 'InvoiceHeader', 'invoice_header_id'),
+            'registrationTransaction' => array(self::BELONGS_TO, 'RegistrationTransaction', 'registration_transaction_id'),
         );
     }
 
@@ -83,6 +86,7 @@ class PaymentInDetail extends CActiveRecord {
             'is_tax_service' => 'Is Tax Service',
             'tax_service_amount' => 'Tax Service Amount',
             'tax_service_percentage' => 'Tax Service Percentage',
+            'registration_transaction_id' => 'Registration Transaction',
         );
     }
 
@@ -112,6 +116,7 @@ class PaymentInDetail extends CActiveRecord {
         $criteria->compare('is_tax_service', $this->is_tax_service);
         $criteria->compare('tax_service_amount', $this->tax_service_amount, true);
         $criteria->compare('tax_service_percentage', $this->tax_service_percentage, true);
+        $criteria->compare('registration_transaction_id', $this->registration_transaction_id);
 
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,

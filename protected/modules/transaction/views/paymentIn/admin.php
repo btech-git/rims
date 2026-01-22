@@ -231,6 +231,42 @@ $('.search-form form').submit(function(){
                     )); ?>
                 </div>
             </fieldset>
+            
+            <fieldset>
+                <legend>Pending DP</legend>
+                <div class="grid-view">
+                    <?php $this->widget('zii.widgets.grid.CGridView', array(
+                        'id' => 'downpayment-grid',
+                        // 'dataProvider'=>$vehicleDataProvider,
+                        'dataProvider' => $downpaymentDataProvider,
+                        'filter' => $registrationTransaction,
+                        'template' => '{items}<div class="clearfix">{summary}{pager}</div>',
+                        'pager' => array(
+                            'cssFile' => false,
+                            'header' => '',
+                        ),
+                        'columns' => array(
+                            array(
+                                'name' => 'downpayment_transaction_number',
+                                'value' => '$data->downpayment_transaction_number',
+                                'type' => 'raw'
+                            ),
+                            'downpayment_transaction_date',
+                            'vehicle.plate_number',
+                            'downpayment_note',
+                            'downpayment_amount',
+                            array(
+                                'header' => '',
+                                'type' => 'raw',
+                                'value' => 'CHtml::link("Create", array("createDownpayment", "registrationId"=>$data->id))',
+                                'htmlOptions' => array(
+                                    'style' => 'text-align: center;'
+                                ),
+                            ),
+                        ),
+                    )); ?>
+                </div>
+            </fieldset>
         </div>
     </div> <!-- end row -->
 </div> <!-- end maintenance -->

@@ -380,6 +380,35 @@ class PaymentInController extends Controller {
          ));
     }
    
+    public function actionCreateDownpayment($registrationId) {
+        $paymentIn = $this->instantiate(null, 'create');
+        
+        $paymentIn->header->payment_date = date('Y-m-d');
+        $paymentIn->header->payment_time = date('H:i:s');
+        $paymentIn->header->created_datetime = date('Y-m-d H:i:s');
+        $paymentIn->header->branch_id = Yii::app()->user->branch_id;
+        $paymentIn->header->status = 'Draft';
+        $paymentIn->header->user_id = Yii::app()->user->id;
+        $paymentIn->addDownpayment($registrationId);
+        
+        if (isset($_POST['Cancel'])) {
+            $this->redirect(array('admin'));
+        }
+
+        if (isset($_POST['Submit']) && IdempotentManager::check()) {
+            $this->loadState($paymentIn);
+            $paymentIn->generateCodeNumber(Yii::app()->dateFormatter->format('M', strtotime($paymentIn->header->payment_date)), Yii::app()->dateFormatter->format('yyyy', strtotime($paymentIn->header->payment_date)), $paymentIn->header->branch_id);
+            
+            if ($paymentIn->save(Yii::app()->db)) {
+                $this->redirect(array('view', 'id' => $paymentIn->header->id));
+            }
+        }
+
+        $this->render('createDownpayment', array(
+            'paymentIn' => $paymentIn,
+         ));
+    }
+   
     public function actionAjaxHtmlAddInvoices($id) {
         if (Yii::app()->request->isAjaxRequest) {
             $paymentIn = $this->instantiate($id, '');
@@ -582,6 +611,27 @@ class PaymentInController extends Controller {
             )
         ));
         
+        $registrationTransaction = new RegistrationTransaction('search');
+        $registrationTransaction->unsetAttributes();
+        $downpaymentCriteria = new CDbCriteria;
+        $downpaymentCriteria->addCondition('t.downpayment_amount > 0 AND t.is_downpayment_paid = 0 AND t.status NOT LIKE "%CANCEL%"');
+        $downpaymentCriteria->compare('t.downpayment_transaction_number', $registrationTransaction->downpayment_transaction_number, true);
+        $downpaymentCriteria->compare('t.downpayment_transaction_date', $registrationTransaction->downpayment_transaction_date, true);
+        $downpaymentCriteria->compare('t.downpayment_amount', $registrationTransaction->downpayment_amount, true);
+        $downpaymentCriteria->compare('t.downpayment_status', $registrationTransaction->downpayment_status, true);
+        $downpaymentCriteria->compare('t.customer_id', $registrationTransaction->customer_id);
+        $downpaymentCriteria->compare('t.downpayment_note', $registrationTransaction->downpayment_note, true);
+        
+        $downpaymentDataProvider = new CActiveDataProvider('RegistrationTransaction', array(
+            'criteria' => $downpaymentCriteria,
+            'sort' => array(
+                'defaultOrder' => 't.downpayment_transaction_date DESC',
+            ),
+            'pagination' => array(
+                'pageSize' => 50,
+            )
+        ));
+        
         $model = new PaymentIn('search');
         $model->unsetAttributes();  // clear any default values
 
@@ -627,6 +677,8 @@ class PaymentInController extends Controller {
             'dataProvider' => $dataProvider,
             'startDate' => $startDate,
             'endDate' => $endDate,
+            'registrationTransaction' => $registrationTransaction,
+            'downpaymentDataProvider' => $downpaymentDataProvider,
         ));
     }
 

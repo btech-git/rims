@@ -9,7 +9,6 @@
             <th>Disc</th>
             <th>Biaya Bank</th>
             <th>Biaya Merimen</th>
-            <th>DP</th>
             <th>Amount</th>
             <th>Total Payment</th>
             <th>Total Invoice</th>
@@ -22,6 +21,7 @@
             <tr>
                 <td>
                     <?php echo CHtml::activeHiddenField($detail, "[$i]invoice_header_id"); ?>
+                    <?php echo CHtml::activeHiddenField($detail, "[$i]registration_transaction_id"); ?>
                     <?php echo CHtml::encode(CHtml::value($detail, "invoiceHeader.invoice_number")); ?>
                 </td>
                 <td><?php echo CHtml::encode(CHtml::value($detail, "invoiceHeader.insuranceCompany.name")); ?></td>
@@ -122,24 +122,6 @@
                     )); ?>
                     <span id="merimen_fee_amount_<?php echo $i; ?>"></span>
                 </td>
-                <td style="text-align: right">
-                    <?php echo CHtml::activeTextField($detail, "[$i]downpayment_amount", array(
-                        'onchange' => '$.ajax({
-                            type: "POST",
-                            dataType: "JSON",
-                            url: "' . CController::createUrl('ajaxJsonGrandTotal', array('id' => $paymentIn->header->id, 'index'=>$i)) . '",
-                            data: $("form").serialize(),
-                            success: function(data) {
-                                $("#downpayment_amount_' . $i . '").html(data.downpaymentAmount);
-                                $("#total_payment_detail_' . $i . '").html(data.totalDetailAmount);
-                                $("#total_downpayment_amount").html(data.totalDownpaymentAmount);
-                                $("#total_invoice").html(data.totalInvoice);
-                                $("#total_payment").html(data.totalPayment);
-                            },
-                        });',                        
-                    )); ?>
-                    <span id="downpayment_amount_<?php echo $i; ?>"></span>
-                </td>
                 <td>
                     <?php echo CHtml::activeTextField($detail, "[$i]amount", array(
                         'onchange' => '$.ajax({
@@ -200,11 +182,6 @@
             <td style="text-align: right">
                 <span id="total_merimen_fee">
                     <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($paymentIn->header, 'merimen_fee'))); ?>
-                </span>
-            </td>
-            <td style="text-align: right">
-                <span id="total_downpayment_amount">
-                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($paymentIn->header, 'downpayment_amount'))); ?>
                 </span>
             </td>
             <td style="text-align: right">

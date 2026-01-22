@@ -20,7 +20,7 @@ $this->menu=array(
         
         <?php $ccontroller = Yii::app()->controller->id; ?>
         <?php $ccaction = Yii::app()->controller->action->id; ?>
-        <?php echo CHtml::link('<span class="fa fa-list"></span>Manage Purchase Order', Yii::app()->baseUrl.'/transaction/transactionPurchaseOrder/admin', array('class'=>'button cbutton right','style'=>'margin-left:10px')) ?>
+        <?php echo CHtml::link('<span class="fa fa-list"></span>Manage', Yii::app()->baseUrl.'/transaction/transactionPurchaseOrder/admin', array('class'=>'button cbutton right','style'=>'margin-left:10px')) ?>
         
         <?php if ($model->status_document == "Draft" && $model->status_document != 'CANCELLED!!!'): ?>
             <?php echo CHtml::link('<span class="fa fa-edit"></span>Edit', Yii::app()->baseUrl.'/transaction/transactionPurchaseOrder/update?id=' . $model->id, array(
@@ -29,18 +29,18 @@ $this->menu=array(
                 'visible' => Yii::app()->user->checkAccess("purchaseOrderEdit")
             )); ?>
             <?php echo CHtml::link('<span class="fa fa-edit"></span>Approval', Yii::app()->baseUrl.'/transaction/transactionPurchaseOrder/updateApproval?headerId=' . $model->id , array(
-                'class'=>'button cbutton right',
+                'class'=>'button success right',
                 'style'=>'margin-right:10px', 
                 'visible' => Yii::app()->user->checkAccess("purchaseOrderApproval")
             )); ?>
         <?php elseif ($model->status_document != "Draft" && $model->status_document != 'CANCELLED!!!'): ?>
             <?php echo CHtml::link('<span class="fa fa-edit"></span>Revisi', Yii::app()->baseUrl.'/transaction/transactionPurchaseOrder/update?id=' . $model->id, array(
-                'class'=>'button cbutton right',
+                'class'=>'button warning right',
                 'style'=>'margin-right:10px', 
                 'visible' => Yii::app()->user->checkAccess("purchaseOrderSupervisor")
             )); ?>
             <?php echo CHtml::link('<span class="fa fa-edit"></span>Update Approval', Yii::app()->baseUrl.'/transaction/transactionPurchaseOrder/updateApproval?headerId=' . $model->id , array(
-                'class'=>'button cbutton right',
+                'class'=>'button success right',
                 'style'=>'margin-right:10px', 
                 'visible' => Yii::app()->user->checkAccess("purchaseOrderSupervisor")
             )); ?>
@@ -48,10 +48,20 @@ $this->menu=array(
         
         <?php //if ($model->status_document == 'Approved'): ?>
             <div class="field buttons text-right">
-                <?php echo CHtml::link('<span class="fa fa-print"></span>Print PO', Yii::app()->baseUrl.'/transaction/transactionPurchaseOrder/pdf?id=' . $model->id, array('class'=>'button warning right','style'=>'margin-right:10px', 'target' => 'blank')) ?>
+                <?php echo CHtml::link('<span class="fa fa-print"></span>Print PO', Yii::app()->baseUrl.'/transaction/transactionPurchaseOrder/pdf?id=' . $model->id, array(
+                    'class'=>'button info right',
+                    'style'=>'margin-right:10px', 
+                    'target' => 'blank'
+                )); ?>
             </div>
         <?php //endif; ?>
 
+        <?php if (Yii::app()->user->checkAccess("saleInvoiceSupervisor")): ?>
+            <?php echo CHtml::link('<span class="fa fa-minus"></span>Cancel Transaction', array("/transaction/transactionPurchaseOrder/cancel", "id" => $model->id), array(
+                'class' => 'button alert left', 
+                'style' => 'margin-right:10px', 
+            )); ?>
+        <?php endif; ?>
         
         <br />
         
@@ -196,13 +206,6 @@ $this->menu=array(
         <?php echo CHtml::submitButton('Processing Journal', array('name' => 'Process', 'confirm' => 'Are you sure you want to process into journal transactions?')); ?>
         <?php echo CHtml::endForm(); ?>
     </div>
-<?php endif; ?>
-
-<?php if (Yii::app()->user->checkAccess("saleInvoiceSupervisor")): ?>
-    <?php echo CHtml::link('<span class="fa fa-minus"></span>Cancel Transaction', array("/transaction/transactionPurchaseOrder/cancel", "id" => $model->id), array(
-        'class' => 'button alert right', 
-        'style' => 'margin-right:10px', 
-    )); ?>
 <?php endif; ?>
 
 <?php $this->beginWidget('zii.widgets.jui.CJuiDialog', array(
