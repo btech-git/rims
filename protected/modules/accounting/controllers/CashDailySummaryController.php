@@ -564,8 +564,9 @@ class CashDailySummaryController extends Controller {
         $worksheet->setCellValue('A3', Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($transactionDate)));
         
         $worksheet->setCellValue("A5", 'Payment In Retail');
-        $worksheet->setCellValue('A6', 'Branch');
-        $columnHeadCounter = 'B';
+        $worksheet->setCellValue('A6', 'No');
+        $worksheet->setCellValue('B6', 'Branch');
+        $columnHeadCounter = 'C';
         $paymentDailyTotals = array();
         foreach ($paymentTypes as $paymentType) {
             $worksheet->setCellValue("{$columnHeadCounter}6", CHtml::value($paymentType, 'name'));
@@ -580,15 +581,17 @@ class CashDailySummaryController extends Controller {
         $worksheet->getStyle("A6:{$columnHeadCounter}6")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
         $counter = 7;
+        $ordinal = 1;
         foreach ($paymentInRetailList as $paymentInRetailItem) {
             $totalPerBranch = '0.00'; 
-            $columnCounter = 'A';
+            $columnCounter = 'B';
             foreach ($paymentInRetailItem as $paymentTypeId => $paymentInRetail) {
                 if ($paymentTypeId > 0) {
                     $worksheet->setCellValue("{$columnCounter}{$counter}", $paymentInRetail);
                     $paymentDailyTotals[$paymentTypeId] += $paymentInRetail; 
                 } else {
-                    $worksheet->setCellValue("A{$counter}", $paymentInRetail);                    
+                    $worksheet->setCellValue("A{$counter}", $ordinal); 
+                    $worksheet->setCellValue("B{$counter}", $paymentInRetail);
                 }
                 
                 if ($paymentTypeId > 0) {
@@ -600,14 +603,15 @@ class CashDailySummaryController extends Controller {
             
             $worksheet->setCellValue("{$columnCounter}{$counter}", $totalPerBranch);
             $dailyTotal += $totalPerBranch;
-            $counter++;
+            $counter++;     
+            $ordinal++;
         }
         
         $worksheet->getStyle("A{$counter}:{$columnCounter}{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
         $worksheet->getStyle("A{$counter}:{$columnCounter}{$counter}")->getFont()->setBold(true);
         
-        $columnCounter = 'B';
-        $worksheet->setCellValue("A{$counter}", 'Total Daily Cash');
+        $columnCounter = 'C';
+        $worksheet->setCellValue("B{$counter}", 'Total Daily Cash');
         foreach ($paymentTypes as $paymentType) {
             $worksheet->setCellValue("{$columnCounter}{$counter}", $paymentDailyTotals[$paymentType->id]);
             $columnCounter++;
@@ -861,33 +865,40 @@ class CashDailySummaryController extends Controller {
         $worksheet->setCellValue("G{$counter}", $grandTotal);
         $counter++;$counter++;$counter++;
 
-        $worksheet->getStyle("A{$counter}:E{$counter}")->getFont()->setBold(true);
-        $worksheet->getStyle("A{$counter}:E{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
-        $worksheet->getStyle("A{$counter}:E{$counter}")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
-        $worksheet->getStyle("A{$counter}:E{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->mergeCells("A{$counter}:F{$counter}");
+        $worksheet->getStyle("A{$counter}:F{$counter}")->getFont()->setBold(true);
+        $worksheet->getStyle("A{$counter}:F{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A{$counter}:F{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->setCellValue("A{$counter}", 'Penjualan Harian');
+        $counter++;
+        $worksheet->getStyle("A{$counter}:F{$counter}")->getFont()->setBold(true);
+        $worksheet->getStyle("A{$counter}:F{$counter}")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A{$counter}:F{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
         
-        $worksheet->setCellValue("A{$counter}", 'Branch');
-        $worksheet->setCellValue("B{$counter}", 'Retail');
-        $worksheet->setCellValue("C{$counter}", 'Wholesale');
-        $worksheet->setCellValue("D{$counter}", 'Sale Order');
-        $worksheet->setCellValue("E{$counter}", 'Total');
+        $worksheet->setCellValue("A{$counter}", 'No');
+        $worksheet->setCellValue("B{$counter}", 'Branch');
+        $worksheet->setCellValue("C{$counter}", 'Retail');
+        $worksheet->setCellValue("D{$counter}", 'Wholesale');
+        $worksheet->setCellValue("E{$counter}", 'Sale Order');
+        $worksheet->setCellValue("F{$counter}", 'Total');
         $counter++;
         
         $retailGrandTotal = '0.00';
         $wholesaleGrandTotal = '0.00';
         $saleOrderGrandTotal = '0.00';
         $branchGrandTotal = '0.00';
-        foreach ($branches as $branch) {
+        foreach ($branches as $i => $branch) {
             $retailTotal = isset($cashDailySummary['retail'][$branch->id]) ? $cashDailySummary['retail'][$branch->id] : '0.00';
             $wholeSaleTotal = isset($cashDailySummary['wholesale'][$branch->id]) ? $cashDailySummary['wholesale'][$branch->id] : '0.00';
             $saleOrderTotal = isset($cashDailySummary['saleorder'][$branch->id]) ? $cashDailySummary['saleorder'][$branch->id] : '0.00';
             $branchTotal = $retailTotal + $wholeSaleTotal + $saleOrderTotal;
             
-            $worksheet->setCellValue("A{$counter}", CHtml::value($branch, 'name'));
-            $worksheet->setCellValue("B{$counter}", $retailTotal);
-            $worksheet->setCellValue("C{$counter}", $wholeSaleTotal);
-            $worksheet->setCellValue("D{$counter}", $saleOrderTotal);
-            $worksheet->setCellValue("E{$counter}", $branchTotal);
+            $worksheet->setCellValue("A{$counter}", $i + 1);
+            $worksheet->setCellValue("B{$counter}", CHtml::value($branch, 'name'));
+            $worksheet->setCellValue("C{$counter}", $retailTotal);
+            $worksheet->setCellValue("D{$counter}", $wholeSaleTotal);
+            $worksheet->setCellValue("E{$counter}", $saleOrderTotal);
+            $worksheet->setCellValue("F{$counter}", $branchTotal);
             
             $retailGrandTotal += $retailTotal;
             $wholesaleGrandTotal += $wholeSaleTotal;
@@ -895,14 +906,14 @@ class CashDailySummaryController extends Controller {
             $branchGrandTotal += $branchTotal;
             $counter++;
         }
-        $worksheet->getStyle("A{$counter}:E{$counter}")->getFont()->setBold(true);
-        $worksheet->getStyle("A{$counter}:E{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A{$counter}:F{$counter}")->getFont()->setBold(true);
+        $worksheet->getStyle("A{$counter}:F{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
         
-        $worksheet->setCellValue("A{$counter}", 'TOTAL');
-        $worksheet->setCellValue("B{$counter}", $retailGrandTotal);
-        $worksheet->setCellValue("C{$counter}", $wholesaleGrandTotal);
-        $worksheet->setCellValue("D{$counter}", $saleOrderGrandTotal);
-        $worksheet->setCellValue("E{$counter}", $branchGrandTotal);
+        $worksheet->setCellValue("B{$counter}", 'TOTAL');
+        $worksheet->setCellValue("C{$counter}", $retailGrandTotal);
+        $worksheet->setCellValue("D{$counter}", $wholesaleGrandTotal);
+        $worksheet->setCellValue("E{$counter}", $saleOrderGrandTotal);
+        $worksheet->setCellValue("F{$counter}", $branchGrandTotal);
         $counter++;$counter++;$counter++;
 
         for ($col = 'A'; $col !== 'Z'; $col++) {
