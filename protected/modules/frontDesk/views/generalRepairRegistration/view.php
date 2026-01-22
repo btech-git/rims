@@ -159,7 +159,7 @@ $this->breadcrumbs = array(
                         )); ?>
                     <?php endif; ?>
 
-                    <?php if (!empty($invoices) && (!empty($model->sales_order_number) || !empty($model->work_order_number))): ?>
+                    <?php if (!empty($invoices) && $model->status !== 'Finished' && (!empty($model->sales_order_number) || !empty($model->work_order_number))): ?>
                         <?php echo CHtml::submitButton('Finish Transaction', array(
                             'name' => 'SubmitFinish', 
                             'confirm' => 'Are you sure you want to finish this transaction?', 
@@ -169,7 +169,7 @@ $this->breadcrumbs = array(
                         )); ?>
                     <?php endif; ?>
 
-                    <?php if ($model->service_status !== 'Done' && $model->total_service > 0): ?>
+                    <?php if ($model->service_status !== 'Done' && $model->total_service > 0 && $model->status !== 'Finished'): ?>
                         <?php echo CHtml::submitButton('Finish Service', array(
                             'name' => 'SubmitService', 
                             'confirm' => 'Are you sure you want to finish this services?', 
