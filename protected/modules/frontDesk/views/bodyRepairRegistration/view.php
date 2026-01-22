@@ -22,7 +22,7 @@ $this->breadcrumbs = array(
                         'visible' => Yii::app()->user->checkAccess("bodyRepairCreate") || Yii::app()->user->checkAccess("bodyRepairEdit") || Yii::app()->user->checkAccess("bodyRepairView")
                     )); ?>
              
-                    <?php if (!empty($model->work_order_number) && $model->total_service > 0): ?>
+                    <?php if (!empty($model->work_order_number) && $model->total_service > 0 && $model->status !== 'Finished'): ?>
                         <?php echo CHtml::link('<span class="fa fa-print"></span> WO', array("pdfWorkOrder", "id" => $model->id), array(
                             'class'=>'button info right', 
                             'style' => 'margin-right:10px', 
