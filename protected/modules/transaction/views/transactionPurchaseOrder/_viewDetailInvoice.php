@@ -45,7 +45,7 @@
                     </tr>
                     <tr>
                         <td width="15%">Approval Time</td>
-                        <td><?php echo Yii::app()->dateFormatter->format("H:M:s", $receiveHeader->time_approval_invoice); ?></td>
+                        <td><?php echo Yii::app()->dateFormatter->format("H:i:s", $receiveHeader->time_approval_invoice); ?></td>
                     </tr>
                 <?php else: ?>
                     <tr>

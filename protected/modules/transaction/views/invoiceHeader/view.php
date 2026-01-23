@@ -361,7 +361,7 @@ $this->breadcrumbs = array(
                                 </td>
                                 <td><?php echo $payment->paymentIn->payment_date; ?></td>
                                 <td><?php echo $payment->paymentIn->paymentType->name; ?></td>
-                                <td><?php echo number_format($payment->amount, 2); ?></td>
+                                <td style="text-align: right"><?php echo number_format($payment->totalAmount, 2); ?></td>
                                 <td><?php echo $payment->paymentIn->notes; ?></td>
                                 <td><?php echo $payment->paymentIn->status; ?></td>
                             </tr>

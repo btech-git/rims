@@ -4,16 +4,18 @@
 /* @var $form CActiveForm */
 ?>
 <div class="clearfix page-action">
-    <?php echo CHtml::link('<span class="fa fa-list"></span>Manage Purchase Order',
+    <?php echo CHtml::link('<span class="fa fa-list"></span>Manage',
         Yii::app()->baseUrl . '/transaction/transactionPurchaseOrder/admin', array(
             'class' => 'button cbutton right',
             'visible' => Yii::app()->user->checkAccess("transaction.transactionPurchaseOrder.admin")
         )) ?>
-    <h1><?php if ($purchaseOrder->header->id == "") {
-            echo "New Transaction Purchase Order";
+    <h1>
+        <?php if ($purchaseOrder->header->id == "") {
+            echo "New";
         } else {
-            echo "Update Transaction Purchase Order";
-        } ?></h1>
+            echo "Update";
+        } ?>
+    </h1>
     <div class="form">
         <?php $form = $this->beginWidget('CActiveForm', array(
             'id' => 'transaction-purchase-order-form',

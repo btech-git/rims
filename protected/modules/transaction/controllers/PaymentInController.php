@@ -208,7 +208,6 @@ class PaymentInController extends Controller {
             'model' => $model,
             'postImages' => $postImages,
             'revisionHistories' => $revisionHistories,
-//            'invoice' => $invoice,
         ));
     }
 

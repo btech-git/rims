@@ -48,7 +48,7 @@ Yii::app()->clientScript->registerScript('search', "
 	
 <div id="maincontent">
     <div class="clearfix page-action">
-        <?php echo CHtml::link('<span class="fa fa-plus"></span>New Purchase Order', Yii::app()->baseUrl.'/transaction/transactionPurchaseOrder/create', array('class'=>'button success right', 'visible'=>Yii::app()->user->checkAccess("purchaseOrderCreate"))) ?>
+        <?php echo CHtml::link('<span class="fa fa-plus"></span>New', Yii::app()->baseUrl.'/transaction/transactionPurchaseOrder/create', array('class'=>'button success right', 'visible'=>Yii::app()->user->checkAccess("purchaseOrderCreate"))) ?>
         <h1>Manage Transaction Purchase Orders</h1>
         
         <div class="search-bar">
