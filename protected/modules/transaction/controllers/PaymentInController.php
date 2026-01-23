@@ -66,16 +66,16 @@ class PaymentInController extends Controller {
                 'branch_id' => $model->branch_id,
             ));
 
-            foreach ($model->paymentInDetails as $detail) {
-                $invoiceHeader = InvoiceHeader::model()->findByPk($detail->invoice_header_id);
-                if ($invoiceHeader->payment_left > 0.00) {
-                    $invoiceHeader->status = 'PARTIALLY PAID';
-                } else {
-                    $invoiceHeader->status = 'PAID';
-                }
-
-                $invoiceHeader->update(array('status'));
-            }
+//            foreach ($model->paymentInDetails as $detail) {
+//                $invoiceHeader = InvoiceHeader::model()->findByPk($detail->invoice_header_id);
+//                if ($invoiceHeader->payment_left > 0.00) {
+//                    $invoiceHeader->status = 'PARTIALLY PAID';
+//                } else {
+//                    $invoiceHeader->status = 'PAID';
+//                }
+//
+//                $invoiceHeader->update(array('status'));
+//            }
 
             if (!empty($model->insurance_company_id)) {
                 $coaId = $model->insuranceCompany->coa_id;
