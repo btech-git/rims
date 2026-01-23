@@ -49,7 +49,6 @@ class PaymentInController extends Controller {
         $model = $this->loadModel($id);
         $revisionHistories = PaymentInApproval::model()->findAllByAttributes(array('payment_in_id' => $model->id));
         $postImages = PaymentInImages::model()->findAllByAttributes(array('payment_in_id' => $model->id, 'is_inactive' => $model::STATUS_ACTIVE));
-//        $invoice = InvoiceHeader::model()->findByPk($model->invoice_id);
         
         if (isset($_POST['SubmitFinish'])) {
             foreach ($model->paymentInDetails as $detail) {
@@ -821,8 +820,8 @@ class PaymentInController extends Controller {
 
                     if ($model->approval_type == 'Approved') {
                         foreach ($paymentIn->paymentInDetails as $detail) {
-                            $registrationTransaction = RegistrationTransaction::model()->findByPk($invoiceHeader->registration_transaction_id);
                             $invoiceHeader = InvoiceHeader::model()->findByPk($detail->invoice_header_id);
+                            $registrationTransaction = RegistrationTransaction::model()->findByPk($invoiceHeader->registration_transaction_id);
                             $paymentAmount = $invoiceHeader->getTotalPayment() + $detail->downpayment_amount + $detail->discount_amount + $detail->bank_administration_fee + $detail->merimen_fee;
                             $invoiceHeader->payment_amount = $paymentAmount;
                             $invoiceHeader->payment_left = $invoiceHeader->getTotalRemaining();
