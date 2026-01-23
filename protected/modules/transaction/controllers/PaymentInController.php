@@ -821,18 +821,21 @@ class PaymentInController extends Controller {
 
                     if ($model->approval_type == 'Approved') {
                         foreach ($paymentIn->paymentInDetails as $detail) {
+                            $registrationTransaction = RegistrationTransaction::model()->findByPk($invoiceHeader->registration_transaction_id);
                             $invoiceHeader = InvoiceHeader::model()->findByPk($detail->invoice_header_id);
                             $paymentAmount = $invoiceHeader->getTotalPayment() + $detail->downpayment_amount + $detail->discount_amount + $detail->bank_administration_fee + $detail->merimen_fee;
                             $invoiceHeader->payment_amount = $paymentAmount;
                             $invoiceHeader->payment_left = $invoiceHeader->getTotalRemaining();
 
-                            if ($invoiceHeader->payment_left > 0.00) {
+                            if (!empty($invoiceHeader) && $invoiceHeader->payment_left > '0.00') {
                                 $invoiceHeader->status = 'PARTIALLY PAID';
-                            } else {
-                                $registrationTransaction = RegistrationTransaction::model()->findByPk($invoiceHeader->registration_transaction_id);
+                            } elseif (!empty($invoiceHeader) && $invoiceHeader->payment_left == '0.00') {
                                 $registrationTransaction->status = 'Finished';
                                 $registrationTransaction->update(array('status'));
                                 $invoiceHeader->status = 'PAID';
+                            } elseif (empty($invoiceHeader) && !empty($registrationTransaction) && $registrationTransaction->downpayment_amount > '0.00') {
+                                $registrationTransaction->is_downpayment_paid = 1; 
+                                $registrationTransaction->update(array('is_downpayment_paid'));
                             }
 
                             $invoiceHeader->update(array('payment_amount', 'payment_left', 'status'));
