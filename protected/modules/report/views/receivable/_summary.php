@@ -52,9 +52,9 @@
             <tr class="items2">
                 <td colspan="3">
                     <table>
-                        <?php $totalRevenue = 0.00; ?>
-                        <?php $totalPayment = 0.00; ?>
-                        <?php $totalReceivable = 0.00; ?>
+                        <?php $totalRevenue = '0.00'; ?>
+                        <?php $totalPayment = '0.00'; ?>
+                        <?php $totalReceivable = '0.00'; ?>
                         <?php foreach ($receivableReportData[$customer->id] as $receivableReportItem): ?>
                             <?php $revenue = $receivableReportItem['total_price']; ?>
                             <?php $paymentAmount = isset($receivablePaymentReportData[$receivableReportItem['id']]) ? $receivablePaymentReportData[$receivableReportItem['id']] : '0.00'; ?>
