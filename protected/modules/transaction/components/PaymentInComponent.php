@@ -180,9 +180,9 @@ class PaymentInComponent extends CComponent {
         $invoiceNumberList = array();
         $plateNumberList = array();
         foreach ($this->details as $i => $detail) {
-            if ($detail->amount <= '0.00' && $detail->tax_service_amount <= '0.00' && $detail->discount_amount <= '0.00' && $detail->bank_administration_fee <= '0.00' && $detail->merimen_fee <= '0.00' && $detail->downpayment_amount <= '0.00') {
-                continue;
-            }
+//            if ($detail->amount <= '0.00' && $detail->tax_service_amount <= '0.00' && $detail->discount_amount <= '0.00' && $detail->bank_administration_fee <= '0.00' && $detail->merimen_fee <= '0.00' && $detail->downpayment_amount <= '0.00') {
+//                continue;
+//            }
 
             if ($detail->isNewRecord) {
                 $detail->payment_in_id = $this->header->id;

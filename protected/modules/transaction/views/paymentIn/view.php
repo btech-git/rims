@@ -323,7 +323,7 @@ $this->menu = array(
                     
             <fieldset>
                 <legend>Payment Detail</legend>
-                <?php if ($model->paymentInDetails[0]->invoice_header_id === null && $model->paymentInDetails[0]->registration_transaction_id !== null): ?>
+                <?php if (!empty($model->paymentInDetails) && $model->paymentInDetails[0]->invoice_header_id === null && $model->paymentInDetails[0]->registration_transaction_id !== null): ?>
                     <?php $detail = $model->paymentInDetails[0]; ?>
                     <div id="downpayment-Detail">
                         <table>
