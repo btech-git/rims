@@ -844,27 +844,27 @@ class Coa extends CActiveRecord {
         return $resultSet;
     }
     
-    public function getBeginningBalanceReceivableDetail() {
-        $sql = "
-            SELECT COALESCE(SUM(j.amount), 0) AS beginning_balance 
-            FROM (
-                SELECT coa_id, tanggal_transaksi, total AS amount
-                FROM " . JurnalUmum::model()->tableName() . "
-                WHERE debet_kredit = 'D' AND is_coa_category = 0 AND tanggal_transaksi > '" . AppParam::BEGINNING_TRANSACTION_DATE . "'
-                UNION ALL
-                SELECT coa_id, tanggal_transaksi, total * -1 AS amount
-                FROM " . JurnalUmum::model()->tableName() . "
-                WHERE debet_kredit = 'K' AND is_coa_category = 0 AND tanggal_transaksi > '" . AppParam::BEGINNING_TRANSACTION_DATE . "'
-            ) j
-            WHERE j.coa_id = :account_id
-        ";
-
-        $value = Yii::app()->db->createCommand($sql)->queryScalar(array(
-            ':account_id' => $this->id,
-        ));
-
-        return ($value === false) ? 0 : $value;
-    }
+//    public function getBeginningBalanceReceivableDetail() {
+//        $sql = "
+//            SELECT COALESCE(SUM(j.amount), 0) AS beginning_balance 
+//            FROM (
+//                SELECT coa_id, tanggal_transaksi, total AS amount
+//                FROM " . JurnalUmum::model()->tableName() . "
+//                WHERE debet_kredit = 'D' AND is_coa_category = 0 AND tanggal_transaksi >= '" . AppParam::BEGINNING_TRANSACTION_DATE . "'
+//                UNION ALL
+//                SELECT coa_id, tanggal_transaksi, total * -1 AS amount
+//                FROM " . JurnalUmum::model()->tableName() . "
+//                WHERE debet_kredit = 'K' AND is_coa_category = 0 AND tanggal_transaksi >= '" . AppParam::BEGINNING_TRANSACTION_DATE . "'
+//            ) j
+//            WHERE j.coa_id = :account_id
+//        ";
+//
+//        $value = Yii::app()->db->createCommand($sql)->queryScalar(array(
+//            ':account_id' => $this->id,
+//        ));
+//
+//        return ($value === false) ? 0 : $value;
+//    }
 
     public function getReceivableDetailReport($endDate, $branchId) {
         $branchConditionSql = '';

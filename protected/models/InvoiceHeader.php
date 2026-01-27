@@ -2042,6 +2042,27 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
         ));
     }
 
+    public function searchByInsuranceSaleTransactionInfo($insuranceId, $branchId, $startDate, $endDate, $page) {
+
+        $criteria = new CDbCriteria;
+
+        $criteria->compare('t.insurance_company_id', $insuranceId);
+        $criteria->compare('t.branch_id', $branchId);
+        $criteria->addBetweenCondition('t.invoice_date', $startDate, $endDate);
+        $criteria->addCondition("t.status NOT LIKE '%CANCEL%'");
+        
+        return new CActiveDataProvider($this, array(
+            'criteria' => $criteria,
+            'sort' => array(
+                'defaultOrder' => 't.invoice_date ASC',
+            ),
+            'pagination' => array(
+                'pageSize' => 500,
+                'currentPage' => $page - 1,
+            ),
+        ));
+    }
+
     public function searchByCashDailySaleRetailInfo($branchId, $transactionDate, $page) {
 
         $criteria = new CDbCriteria;
@@ -2188,6 +2209,26 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
         $criteria = new CDbCriteria;
 
         $criteria->compare('t.customer_id', $customerId);
+        $criteria->compare('t.branch_id', $branchId);
+        $criteria->addBetweenCondition('t.invoice_date', $startDate, $endDate);
+        $criteria->addCondition("t.status NOT LIKE '%CANCEL%'");
+        
+        return new CActiveDataProvider($this, array(
+            'criteria' => $criteria,
+            'sort' => array(
+                'defaultOrder' => 't.invoice_date ASC',
+            ),
+            'pagination' => array(
+                'pageSize' => 100,
+                'currentPage' => $page - 1,
+            ),
+        ));
+    }
+    
+    public function searchByInsuranceTransactionInfo($insuranceId, $startDate, $endDate, $branchId, $page) {
+        $criteria = new CDbCriteria;
+
+        $criteria->compare('t.insurance_company_id', $insuranceId);
         $criteria->compare('t.branch_id', $branchId);
         $criteria->addBetweenCondition('t.invoice_date', $startDate, $endDate);
         $criteria->addCondition("t.status NOT LIKE '%CANCEL%'");
@@ -2414,6 +2455,76 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
         return $resultSet;
     }    
     
+    public static function getYearlyInsuranceInvoiceReport($year) {
+      
+        $sql = "SELECT i.insurance_company_id, MONTH(i.invoice_date) AS invoice_month, MAX(c.name) AS insurance_name, SUM(i.total_price) AS invoice_total
+                FROM " . InvoiceHeader::model()->tableName() . " i 
+                INNER JOIN " . InsuranceCompany::model()->tableName() . " c ON c.id = i.insurance_company_id
+                WHERE YEAR(i.invoice_date) = :year AND i.user_id_cancelled IS NULL
+                GROUP BY i.insurance_company_id, MONTH(i.invoice_date)
+                ORDER BY insurance_name ASC, invoice_month ASC";
+                
+        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, array(
+            ':year' => $year,
+        ));
+        
+        return $resultSet;
+    }    
+    
+    public static function getYearlyInsurancePaymentReport($year) {
+      
+        $sql = "SELECT i.insurance_company_id, MONTH(h.payment_date) AS payment_month, MAX(c.name) AS insurance_name, 
+                    SUM(h.payment_amount + h.tax_service_amount + h.downpayment_amount + h.discount_product_amount + h.discount_service_amount + 
+                    h.bank_administration_fee + h.merimen_fee + h.bank_fee_amount) AS payment_total
+                FROM " . PaymentIn::model()->tableName() . " h
+                INNER JOIN " . PaymentInDetail::model()->tableName() . " d ON h.id = d.payment_in_id
+                INNER JOIN " . InvoiceHeader::model()->tableName() . " i ON i.id = d.invoice_header_id
+                INNER JOIN " . InsuranceCompany::model()->tableName() . " c ON c.id = i.insurance_company_id
+                WHERE YEAR(h.payment_date) = :year AND h.user_id_cancelled IS NULL
+                GROUP BY i.insurance_company_id, MONTH(h.payment_date)
+                ORDER BY insurance_name ASC, payment_month ASC";
+                
+        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, array(
+            ':year' => $year,
+        ));
+        
+        return $resultSet;
+    }    
+    
+    public static function getBeginningInsuranceInvoiceReport($year) {
+      
+        $sql = "SELECT i.insurance_company_id, MAX(c.name) AS insurance_name, SUM(i.total_price) AS beginning_invoice_total
+                FROM " . InvoiceHeader::model()->tableName() . " i 
+                INNER JOIN " . InsuranceCompany::model()->tableName() . " c ON c.id = i.insurance_company_id
+                WHERE i.invoice_date >= '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND i.invoice_date < :invoice_date AND 
+                    i.user_id_cancelled IS NULL
+                GROUP BY i.insurance_company_id";
+                
+        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, array(
+            ':invoice_date' => $year . '-01-01',
+        ));
+        
+        return $resultSet;
+    }    
+  
+    public static function getBeginningInsurancePaymentReport($year) {
+      
+        $sql = "SELECT i.insurance_company_id, MAX(c.name) AS insurance_name, SUM(h.payment_amount + h.tax_service_amount + h.downpayment_amount + 
+                    h.discount_product_amount + h.discount_service_amount + h.bank_administration_fee + h.merimen_fee + bank_fee_amount) AS beginning_payment_total
+                FROM " . PaymentIn::model()->tableName() . " h
+                INNER JOIN " . PaymentInDetail::model()->tableName() . " d ON h.id = d.payment_in_id
+                INNER JOIN " . InvoiceHeader::model()->tableName() . " i ON i.id = d.invoice_header_id
+                INNER JOIN " . InsuranceCompany::model()->tableName() . " c ON c.id = i.insurance_company_id
+                WHERE h.payment_date    >= '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND h.payment_date < :payment_date AND i.user_id_cancelled IS NULL
+                GROUP BY i.insurance_company_id";
+                
+        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, array(
+            ':payment_date' => $year . '-01-01',
+        ));
+        
+        return $resultSet;
+    }    
+    
     public static function getCustomerTopSaleReport($startDate, $endDate, $customerName, $customerType, $branchId) {
         $branchConditionSql = '';
         $customerNameConditionSql = '';
@@ -2446,6 +2557,39 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
                 WHERE h.invoice_date BETWEEN :start_date AND :end_date AND h.status NOT LIKE '%CANCEL%'" . 
                     $branchConditionSql . $customerNameConditionSql . $customerTypeConditionSql . " 
                 GROUP BY h.customer_id
+                ORDER BY invoice_quantity DESC, grand_total DESC";
+                
+        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
+        
+        return $resultSet;
+    }
+    
+    public static function getInsuranceTopSaleReport($startDate, $endDate, $insuranceId, $branchId) {
+        $branchConditionSql = '';
+        $insuranceConditionSql = '';
+      
+        $params = array(
+            ':start_date' => $startDate,
+            ':end_date' => $endDate,
+        );
+        
+        if (!empty($branchId)) {
+            $branchConditionSql = ' AND h.branch_id = :branch_id';
+            $params[':branch_id'] = $branchId;
+        }
+        
+        if (!empty($insuranceId)) {
+            $insuranceConditionSql = ' AND h.insurance_company_id = :insurance_id';
+            $params[':insurance_id'] = $insuranceId;
+        }
+        
+        $sql = "SELECT h.insurance_company_id, MAX(c.name) AS insurance_name, COUNT(h.id) AS invoice_quantity, SUM(h.product_price) AS total_product, 
+                    SUM(h.total_price) AS grand_total, SUM(h.service_price) AS total_service, o.name AS coa_name
+                FROM " . InvoiceHeader::model()->tableName() . " h 
+                INNER JOIN " . InsuranceCompany::model()->tableName() . " c ON c.id = h.insurance_company_id
+                INNER JOIN " . Coa::model()->tableName() . " o ON o.id = c.coa_id
+                WHERE h.invoice_date BETWEEN :start_date AND :end_date AND h.status NOT LIKE '%CANCEL%'" . $branchConditionSql . $insuranceConditionSql . " 
+                GROUP BY h.insurance_company_id
                 ORDER BY invoice_quantity DESC, grand_total DESC";
                 
         $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
@@ -2487,10 +2631,11 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
 //        return $resultSet;
 //    }
     
-    public static function getMultipleVehicleCompanySaleReport($startDate, $endDate, $branchId, $customerName, $plateNumber) {
+    public static function getMultipleVehicleSaleReport($startDate, $endDate, $branchId, $customerName, $plateNumber, $customerType) {
         $branchConditionSql = '';
         $customerNameConditionSql = '';
         $plateNumberConditionSql = '';
+        $customerTypeConditionSql = '';
       
         $params = array(
             ':start_date' => $startDate,
@@ -2512,6 +2657,11 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
             $params[':plate_number'] = "%{$plateNumber}%";
         }
         
+        if (!empty($customerType)) {
+            $customerTypeConditionSql = ' AND c.customer_type = :customer_type';
+            $params[':customer_type'] = $customerType;
+        }
+        
         $sql = "SELECT h.vehicle_id, MAX(v.plate_number) AS plate_number, MAX(k.name) AS car_make, MAX(d.name) AS car_model, MAX(s.name) AS car_sub_model, 
                     MAX(r.name) AS color_name, MAX(c.customer_type) AS customer_type, MAX(v.customer_id) AS customer_id, MAX(c.name) AS customer_name, 
                     MAX(c.mobile_phone) AS customer_phone, COUNT(h.id) AS invoice_quantity, SUM(h.product_price) AS total_product, 
@@ -2524,64 +2674,64 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
                 INNER JOIN " . VehicleCarSubModel::model()->tableName() . " s ON s.id = v.car_sub_model_id
                 INNER JOIN " . Colors::model()->tableName() . " r ON r.id = v.color_id
                 INNER JOIN " . Customer::model()->tableName() . " c ON c.id = v.customer_id
-                WHERE h.invoice_date BETWEEN :start_date AND :end_date AND h.status NOT LIKE '%CANCEL%' AND c.customer_type = 'Company'" . 
-                    $branchConditionSql . $customerNameConditionSql . $plateNumberConditionSql . " 
+                WHERE h.invoice_date BETWEEN :start_date AND :end_date AND h.status NOT LIKE '%CANCEL%'" . $branchConditionSql . $customerNameConditionSql . 
+                    $plateNumberConditionSql . $customerTypeConditionSql . " 
                 GROUP BY h.vehicle_id
-                ORDER BY grand_total DESC, invoice_quantity DESC
-                LIMIT 50";
+                ORDER BY invoice_quantity DESC, grand_total DESC
+                LIMIT 300";
                 
         $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
         
         return $resultSet;
     }
     
-    public static function getMultipleVehicleIndividualSaleReport($startDate, $endDate, $branchId, $customerName, $plateNumber) {
-        $branchConditionSql = '';
-        $customerNameConditionSql = '';
-        $plateNumberConditionSql = '';
-      
-        $params = array(
-            ':start_date' => $startDate,
-            ':end_date' => $endDate,
-        );
-        
-        if (!empty($branchId)) {
-            $branchConditionSql = ' AND h.branch_id = :branch_id';
-            $params[':branch_id'] = $branchId;
-        }
-        
-        if (!empty($customerName)) {
-            $customerNameConditionSql = ' AND c.name LIKE :customer_name';
-            $params[':customer_name'] = "%{$customerName}%";
-        }
-        
-        if (!empty($plateNumber)) {
-            $plateNumberConditionSql = ' AND v.plate_number LIKE :plate_number';
-            $params[':plate_number'] = "%{$plateNumber}%";
-        }
-        
-        $sql = "SELECT h.vehicle_id, MAX(v.plate_number) AS plate_number, MAX(k.name) AS car_make, MAX(d.name) AS car_model, MAX(s.name) AS car_sub_model, 
-                    MAX(r.name) AS color_name, MAX(c.customer_type) AS customer_type, MAX(v.customer_id) AS customer_id, MAX(c.name) AS customer_name, 
-                    MAX(c.mobile_phone) AS customer_phone, COUNT(h.id) AS invoice_quantity, SUM(h.product_price) AS total_product, 
-                    SUM(h.total_price) AS grand_total, SUM(h.service_price) AS total_service, MAX(t.vehicle_mileage) AS mileage
-                FROM " . InvoiceHeader::model()->tableName() . " h 
-                INNER JOIN " . RegistrationTransaction::model()->tableName() . " t ON t.id = h.registration_transaction_id
-                INNER JOIN " . Vehicle::model()->tableName() . " v ON v.id = h.vehicle_id
-                INNER JOIN " . VehicleCarMake::model()->tableName() . " k ON k.id = v.car_make_id
-                INNER JOIN " . VehicleCarModel::model()->tableName() . " d ON d.id = v.car_model_id
-                INNER JOIN " . VehicleCarSubModel::model()->tableName() . " s ON s.id = v.car_sub_model_id
-                INNER JOIN " . Colors::model()->tableName() . " r ON r.id = v.color_id
-                INNER JOIN " . Customer::model()->tableName() . " c ON c.id = v.customer_id
-                WHERE h.invoice_date BETWEEN :start_date AND :end_date AND h.status NOT LIKE '%CANCEL%' AND c.customer_type = 'Individual'" . 
-                    $branchConditionSql . $customerNameConditionSql . $plateNumberConditionSql . " 
-                GROUP BY h.vehicle_id
-                ORDER BY grand_total DESC, invoice_quantity DESC
-                LIMIT 50";
-                
-        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
-        
-        return $resultSet;
-    }
+//    public static function getMultipleVehicleIndividualSaleReport($startDate, $endDate, $branchId, $customerName, $plateNumber) {
+//        $branchConditionSql = '';
+//        $customerNameConditionSql = '';
+//        $plateNumberConditionSql = '';
+//      
+//        $params = array(
+//            ':start_date' => $startDate,
+//            ':end_date' => $endDate,
+//        );
+//        
+//        if (!empty($branchId)) {
+//            $branchConditionSql = ' AND h.branch_id = :branch_id';
+//            $params[':branch_id'] = $branchId;
+//        }
+//        
+//        if (!empty($customerName)) {
+//            $customerNameConditionSql = ' AND c.name LIKE :customer_name';
+//            $params[':customer_name'] = "%{$customerName}%";
+//        }
+//        
+//        if (!empty($plateNumber)) {
+//            $plateNumberConditionSql = ' AND v.plate_number LIKE :plate_number';
+//            $params[':plate_number'] = "%{$plateNumber}%";
+//        }
+//        
+//        $sql = "SELECT h.vehicle_id, MAX(v.plate_number) AS plate_number, MAX(k.name) AS car_make, MAX(d.name) AS car_model, MAX(s.name) AS car_sub_model, 
+//                    MAX(r.name) AS color_name, MAX(c.customer_type) AS customer_type, MAX(v.customer_id) AS customer_id, MAX(c.name) AS customer_name, 
+//                    MAX(c.mobile_phone) AS customer_phone, COUNT(h.id) AS invoice_quantity, SUM(h.product_price) AS total_product, 
+//                    SUM(h.total_price) AS grand_total, SUM(h.service_price) AS total_service, MAX(t.vehicle_mileage) AS mileage
+//                FROM " . InvoiceHeader::model()->tableName() . " h 
+//                INNER JOIN " . RegistrationTransaction::model()->tableName() . " t ON t.id = h.registration_transaction_id
+//                INNER JOIN " . Vehicle::model()->tableName() . " v ON v.id = h.vehicle_id
+//                INNER JOIN " . VehicleCarMake::model()->tableName() . " k ON k.id = v.car_make_id
+//                INNER JOIN " . VehicleCarModel::model()->tableName() . " d ON d.id = v.car_model_id
+//                INNER JOIN " . VehicleCarSubModel::model()->tableName() . " s ON s.id = v.car_sub_model_id
+//                INNER JOIN " . Colors::model()->tableName() . " r ON r.id = v.color_id
+//                INNER JOIN " . Customer::model()->tableName() . " c ON c.id = v.customer_id
+//                WHERE h.invoice_date BETWEEN :start_date AND :end_date AND h.status NOT LIKE '%CANCEL%' AND c.customer_type = 'Individual'" . 
+//                    $branchConditionSql . $customerNameConditionSql . $plateNumberConditionSql . " 
+//                GROUP BY h.vehicle_id
+//                ORDER BY grand_total DESC, invoice_quantity DESC
+//                LIMIT 50";
+//                
+//        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
+//        
+//        return $resultSet;
+//    }
     
     public static function getReceivableIncomingDueDate() {
         $sql = "SELECT i.id, i.invoice_number, i.invoice_date, i.due_date, c.name as customer, v.plate_number, i.total_price, i.payment_amount, i.payment_left

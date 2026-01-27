@@ -164,8 +164,9 @@ class InsuranceCompany extends CActiveRecord {
         $color = '';
         if ($data->color_id) {
             $colors = Colors::model()->findByPk($data->color_id);
-            if ($colors['name'])
+            if ($colors['name']) {
                 $color = $colors['name'];
+            }
         }
         return $color;
     }
@@ -246,6 +247,75 @@ class InsuranceCompany extends CActiveRecord {
 
         $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
 
+        return $resultSet;
+    }
+    
+    public function getReceivableInsuranceReport($endDate, $branchId) {
+        $branchConditionSql = '';
+        
+        $params = array(
+            ':insurance_company_id' => $this->id,
+            ':end_date' => $endDate,
+        );
+        
+        if (!empty($branchId)) {
+            $branchConditionSql = ' AND branch_id = :branch_id';
+            $params[':branch_id'] = $branchId;
+        }
+        
+        $sql = "
+            SELECT insurance_company_id, COALESCE(SUM(total_price), 0) AS total_price, COALESCE(SUM(payment_amount), 0) AS payment_amount, 
+                COALESCE(SUM(payment_left), 0) AS payment_left
+            FROM " . InvoiceHeader::model()->tableName() . "
+            WHERE insurance_company_id = :insurance_company_id AND invoice_date BETWEEN '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND :end_date AND
+                user_id_cancelled IS NULL AND payment_left > 100" . $branchConditionSql . "
+            GROUP BY insurance_company_id
+        ";
+
+        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
+
+        return $resultSet;
+    }
+    
+    public static function getInsuranceSaleReport($startDate, $endDate, $insuranceId, $branchId, $taxValue) {
+        $taxValueConditionSql = '';
+        $branchConditionSql = '';
+        $insuranceConditionSql = '';
+      
+        $params = array(
+            ':start_date' => $startDate,
+            ':end_date' => $endDate,
+        );
+        
+        if (!empty($taxValue)) {
+            $taxValueConditionSql = ' AND ppn = :tax_value';
+            $params[':tax_value'] = $taxValue;
+        }
+
+        if (!empty($branchId)) {
+            $branchConditionSql = ' AND branch_id = :branch_id';
+            $params[':branch_id'] = $branchId;
+        }
+        
+        if (!empty($insuranceId)) {
+            $insuranceConditionSql = ' AND i.id = :insurance_id';
+            $params[':insurance_id'] = $insuranceId;
+        }
+        
+        $sql = "SELECT ic.id AS insurance_company_id, ic.name AS insurance_name, c.name AS coa_name, i.grand_total
+                FROM " . InsuranceCompany::model()->tableName() . " ic
+                INNER JOIN " . Coa::model()->tableName() . " c ON c.id = ic.coa_id
+                INNER JOIN (
+                    SELECT insurance_company_id, SUM(total_price) AS grand_total
+                    FROM " . InvoiceHeader::model()->tableName() . " 
+                    WHERE invoice_date BETWEEN :start_date AND :end_date AND status NOT LIKE '%CANCEL%'" . $branchConditionSql . $taxValueConditionSql . "
+                    GROUP BY insurance_company_id
+                ) i ON ic.id = i.insurance_company_id
+                WHERE ic.is_deleted = 0" . $insuranceConditionSql . "
+                ORDER BY i.grand_total DESC";
+                
+        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
+        
         return $resultSet;
     }
 }
