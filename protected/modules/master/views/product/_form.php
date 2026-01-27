@@ -198,8 +198,8 @@
                             <?php echo $form->labelEx($product->header, 'tire_size_id', array('class' => 'prefix')); ?>
                         </div>
                         <div class="small-8 columns">
-                            <?php echo $form->dropDownList($product->header, 'tire_size_id', CHtml::listData(TireSize::model()->findAll(), 'id', 'name'), array(
-                                'empty' => '-- Pilih Ukuran Ban',
+                            <?php echo $form->dropDownList($product->header, 'tire_size_id', CHtml::listData(TireSize::model()->findAll(), 'id', 'tireName'), array(
+                                'empty' => '-- Pilih Ukuran --',
                             )); ?>
                             <?php echo $form->error($product->header, 'tire_size_id'); ?>
                         </div>
@@ -212,8 +212,8 @@
                             <?php echo $form->labelEx($product->header, 'oil_sae_id', array('class' => 'prefix')); ?>
                         </div>
                         <div class="small-8 columns">
-                            <?php echo $form->dropDownList($product->header, 'oil_sae_id', CHtml::listData(OilSae::model()->findAll(), 'id', 'name'), array(
-                                'empty' => '-- Pilih SAE',
+                            <?php echo $form->dropDownList($product->header, 'oil_sae_id', CHtml::listData(OilSae::model()->findAll(), 'id', 'oilName'), array(
+                                'empty' => '-- Pilih SAE --',
                             )); ?>
                             <?php echo $form->error($product->header, 'oil_sae_id'); ?>
                         </div>
