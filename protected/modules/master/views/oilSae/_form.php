@@ -22,12 +22,6 @@
     <?php echo $form->errorSummary($model); ?>
 
     <div class="row">
-        <?php echo $form->labelEx($model, 'sae'); ?>
-        <?php echo $form->textField($model, 'sae', array('size' => 20, 'maxlength' => 20)); ?>
-        <?php echo $form->error($model, 'sae'); ?>
-    </div>
-
-    <div class="row">
         <?php echo $form->labelEx($model, 'winter_grade'); ?>
         <?php echo $form->textField($model, 'winter_grade', array('size' => 20, 'maxlength' => 20)); ?>
         <?php echo $form->error($model, 'winter_grade'); ?>

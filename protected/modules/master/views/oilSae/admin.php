@@ -56,7 +56,6 @@ $('.search-form form').submit(function(){
                 ),
                 'columns' => array(
                     'id',
-                    'sae',
                     'winter_grade',
                     'hot_grade',
                     array(

@@ -22,7 +22,6 @@ $this->menu = array(
     'data' => $model,
     'attributes' => array(
         'id',
-        'sae',
         'winter_grade',
         'hot_grade',
     ),

@@ -19,11 +19,6 @@
     </div>
 
     <div class="row">
-        <?php echo $form->label($model, 'sae'); ?>
-        <?php echo $form->textField($model, 'sae', array('size' => 20, 'maxlength' => 20)); ?>
-    </div>
-
-    <div class="row">
         <?php echo $form->label($model, 'winter_grade'); ?>
         <?php echo $form->textField($model, 'winter_grade', array('size' => 20, 'maxlength' => 20)); ?>
     </div>
