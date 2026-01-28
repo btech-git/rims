@@ -177,10 +177,10 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
         'dataProvider' => $customerDataProvider,
         'filter' => $customer,
 //        'template' => '{items}<div class="clearfix">{summary}{pager}</div>',
-        'pager' => array(
-            'cssFile' => false,
-            'header' => '',
-        ),
+//        'pager' => array(
+//            'cssFile' => false,
+//            'header' => '',
+//        ),
         'selectionChanged' => 'js:function(id) {
             $("#CustomerId").val($.fn.yiiGridView.getSelection(id));
             $("#customer-dialog").dialog("close");
