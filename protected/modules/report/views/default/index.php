@@ -106,6 +106,11 @@
                                         'url' => array('/report/stockTire/check'), 
                                         'visible' => Yii::app()->user->checkAccess('stockPositionReport')
                                     ),
+                                    array(
+                                        'label' => 'Stok Oli', 
+                                        'url' => array('/report/stockOil/check'), 
+                                        'visible' => Yii::app()->user->checkAccess('stockPositionReport')
+                                    ),
                                 ),
                             )); ?>
                         <?php endif; ?>

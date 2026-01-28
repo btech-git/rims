@@ -181,8 +181,7 @@ class ReceivableController extends Controller {
                 $totalReceivable += $paymentLeft;
             }
             
-            $worksheet->getStyle("A{$counter}:{$counter}")->getFont()->setBold(true);
-
+            $worksheet->getStyle("A{$counter}:G{$counter}")->getFont()->setBold(true);
             $worksheet->getStyle("A{$counter}:G{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
             $worksheet->getStyle("A{$counter}:G{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
             $worksheet->mergeCells("A{$counter}:D{$counter}");
