@@ -4,7 +4,7 @@ Yii::app()->clientScript->registerCss('_report', '
     .width1-2 { width: 7% }
     .width1-3 { width: 20% }
     .width1-4 { width: 20% }
-    .width1-5 { width: 10% }
+    .width1-5 { width: 20% }
     .width1-6 { width: 5% }
     .width1-7 { width: 10% }
     .width1-8 { width: 10% }
@@ -28,6 +28,7 @@ Yii::app()->clientScript->registerCss('_report', '
             <th class="width1-4">Parts</th>
             <th class="width1-5">Sub Category</th>
             <th class="width1-6">Quantity</th>
+            <th class="width1-6">Satuan</th>
             <th class="width1-7">Unit Price</th>
             <th class="width1-8">Total</th>
         </tr>
@@ -45,10 +46,15 @@ Yii::app()->clientScript->registerCss('_report', '
                 </td>
                 <td><?php echo CHtml::encode(CHtml::value($detail, 'invoiceHeader.customer.name')); ?></td>
                 <td><?php echo CHtml::encode(CHtml::value($detail, 'product.name')); ?></td>
-                <td><?php echo CHtml::encode(CHtml::value($detail, 'product.productSubCategory.name')); ?></td>
+                <td>
+                    <?php echo CHtml::encode(CHtml::value($detail, 'product.productMasterCategory.name')); ?> -
+                    <?php echo CHtml::encode(CHtml::value($detail, 'product.productSubMasterCategory.name')); ?> -
+                    <?php echo CHtml::encode(CHtml::value($detail, 'product.productSubCategory.name')); ?>
+                </td>
                 <td style="text-align: center">
                     <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $quantity)); ?>
                 </td>
+                <td><?php echo CHtml::encode(CHtml::value($detail, 'product.unit.name')); ?></td>
                 <td style="text-align: right">
                     <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($detail, 'unit_price'))); ?>
                 </td>

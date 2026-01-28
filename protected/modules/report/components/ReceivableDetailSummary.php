@@ -45,7 +45,7 @@ class ReceivableDetailSummary extends CComponent {
             SELECT coa_id 
             FROM " . JurnalUmum::model()->tableName() . "
             WHERE coa_id = t.id AND tanggal_transaksi BETWEEN '" . AppParam::BEGINNING_TRANSACTION_DATE . " ' AND :end_date" . $branchConditionSql . "
-        )");
+        ) AND t.name NOT LIKE '%Asuransi%'");
 
         $this->dataProvider->criteria->params[':end_date'] = $endDate;
         if (!empty($branchId)) {

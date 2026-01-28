@@ -27,26 +27,28 @@ class YearlyMultipleVehicleSaleTransactionController extends Controller {
         $branchId = (isset($_GET['BranchId'])) ? $_GET['BranchId'] : '';
         $customerName = (isset($_GET['CustomerName'])) ? $_GET['CustomerName'] : '';
         $plateNumber = (isset($_GET['PlateNumber'])) ? $_GET['PlateNumber'] : '';
+        $customerType = (isset($_GET['CustomerType'])) ? $_GET['CustomerType'] : '';
         
-        $yearlyMultipleVehicleCompanySaleReport = InvoiceHeader::getMultipleVehicleCompanySaleReport($startDate, $endDate, $branchId, $customerName, $plateNumber);
-        $yearlyMultipleVehicleIndividualSaleReport = InvoiceHeader::getMultipleVehicleIndividualSaleReport($startDate, $endDate, $branchId, $customerName, $plateNumber);
+        $yearlyMultipleVehicleSaleReport = InvoiceHeader::getMultipleVehicleSaleReport($startDate, $endDate, $branchId, $customerName, $plateNumber, $customerType);
+//        $yearlyMultipleVehicleIndividualSaleReport = InvoiceHeader::getMultipleVehicleIndividualSaleReport($startDate, $endDate, $branchId, $customerName, $plateNumber);
         
         if (isset($_GET['ResetFilter'])) {
             $this->redirect(array('summary'));
         }
         
         if (isset($_GET['SaveExcel'])) {
-            $this->saveToExcel($yearlyMultipleVehicleCompanySaleReport, $yearlyMultipleVehicleIndividualSaleReport, $startDate, $endDate, $branchId);
+            $this->saveToExcel($yearlyMultipleVehicleSaleReport, $startDate, $endDate, $branchId);
         }
         
         $this->render('summary', array(
-            'yearlyMultipleVehicleCompanySaleReport' => $yearlyMultipleVehicleCompanySaleReport,
-            'yearlyMultipleVehicleIndividualSaleReport' => $yearlyMultipleVehicleIndividualSaleReport,
+            'yearlyMultipleVehicleSaleReport' => $yearlyMultipleVehicleSaleReport,
+//            'yearlyMultipleVehicleIndividualSaleReport' => $yearlyMultipleVehicleIndividualSaleReport,
             'branchId' => $branchId,
             'customerName' => $customerName,
             'plateNumber' => $plateNumber,
             'startDate' => $startDate,
             'endDate' => $endDate,
+            'customerType' => $customerType,
         ));
     }
     

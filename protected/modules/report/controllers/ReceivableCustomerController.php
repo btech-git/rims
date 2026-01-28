@@ -24,9 +24,6 @@ class ReceivableCustomerController extends Controller {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
 
-        $pageSize = (isset($_GET['PageSize'])) ? $_GET['PageSize'] : '';
-        $currentPage = (isset($_GET['page'])) ? $_GET['page'] : '';
-        $currentSort = (isset($_GET['sort'])) ? $_GET['sort'] : '';
         $branchId = (isset($_GET['BranchId'])) ? $_GET['BranchId'] : '';
         $customerId = (isset($_GET['CustomerId'])) ? $_GET['CustomerId'] : '';
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
@@ -37,7 +34,7 @@ class ReceivableCustomerController extends Controller {
 
         $receivableSummary = new ReceivableCustomerSummary($customer->search());
         $receivableSummary->setupLoading();
-        $receivableSummary->setupPaging($pageSize, $currentPage);
+//        $receivableSummary->setupPaging($pageSize, $currentPage);
         $receivableSummary->setupSorting();
         $filters = array(
             'endDate' => $endDate,
@@ -60,8 +57,6 @@ class ReceivableCustomerController extends Controller {
             'branchId' => $branchId,
             'endDate' => $endDate,
             'receivableSummary' => $receivableSummary,
-            'currentSort' => $currentSort,
-            'currentPage' => $currentPage,
         ));
     }
 

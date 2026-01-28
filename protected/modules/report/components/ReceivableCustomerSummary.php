@@ -40,7 +40,7 @@ class ReceivableCustomerSummary extends CComponent {
         $this->dataProvider->criteria->addCondition("EXISTS (
             SELECT p.customer_id, SUM(p.payment_left) AS remaining
             FROM " . InvoiceHeader::model()->tableName() . " p 
-            WHERE p.customer_id = t.id AND p.invoice_date BETWEEN '2024-01-01' AND :end_date" . $branchConditionSql . " 
+            WHERE p.customer_id = t.id AND p.invoice_date BETWEEN '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND :end_date" . $branchConditionSql . " 
             GROUP BY p.customer_id
             HAVING remaining > 100
         )");

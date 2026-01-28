@@ -26,7 +26,6 @@ Yii::app()->clientScript->registerCss('_report', '
 <br />
 
 <fieldset>
-    <legend>Company</legend>
     <table class="report">
         <thead>
             <tr id="header1">
@@ -44,7 +43,7 @@ Yii::app()->clientScript->registerCss('_report', '
             </tr>
         </thead>
         <tbody>
-            <?php foreach ($yearlyMultipleVehicleCompanySaleReport as $i => $dataItemCompany): ?>
+            <?php foreach ($yearlyMultipleVehicleSaleReport as $i => $dataItemCompany): ?>
                 <?php $invoiceHeader = InvoiceHeader::model()->find(array(
                     'condition' => 't.vehicle_id = :vehicle_id AND t.user_id_cancelled IS NULL', 
                     'params' => array(':vehicle_id' => $dataItemCompany['vehicle_id']),
@@ -74,7 +73,7 @@ Yii::app()->clientScript->registerCss('_report', '
                             'vehicleId' => $dataItemCompany['vehicle_id'], 
                             'branchId' => $branchId,
                             'startDate' => $startDate, 
-                            'endDate' => $endDate
+                            'endDate' => $endDate,
                         ), array('target' => '_blank')); ?>
                     </td>
                     <td style="text-align: right">
@@ -102,7 +101,7 @@ Yii::app()->clientScript->registerCss('_report', '
     </table>
 </fieldset>
 
-<br />
+<!--<br />
 
 <fieldset>
     <legend>Individual</legend>
@@ -123,7 +122,7 @@ Yii::app()->clientScript->registerCss('_report', '
             </tr>
         </thead>
         <tbody>
-            <?php foreach ($yearlyMultipleVehicleIndividualSaleReport as $i => $dataItemIndividual): ?>
+            <?php /*foreach ($yearlyMultipleVehicleIndividualSaleReport as $i => $dataItemIndividual): ?>
                 <?php $invoiceHeader = InvoiceHeader::model()->find(array(
                     'condition' => 't.vehicle_id = :vehicle_id AND t.user_id_cancelled IS NULL', 
                     'params' => array(':vehicle_id' => $dataItemCompany['vehicle_id']),
@@ -176,7 +175,7 @@ Yii::app()->clientScript->registerCss('_report', '
                         <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $daysDiff)); ?>
                     </td>
                 </tr>
-            <?php endforeach; ?>
+            <?php endforeach; */?>
         </tbody>
     </table>
-</fieldset>
+</fieldset>-->

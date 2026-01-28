@@ -374,10 +374,10 @@ class RegistrationTransactionController extends Controller {
         $invoiceDataProvider = new CActiveDataProvider('InvoiceHeader', array(
             'criteria' => $invoiceCriteria, 
             'sort' => array(
-                'defaultOrder' => 'invoice_date DESC',
+                'defaultOrder' => 'invoice_date DESC, invoice_number ASC',
             ),
             'pagination' => array(
-                'pageSize' => 10,
+                'pageSize' => 50,
             )
         ));
 
@@ -397,6 +397,10 @@ class RegistrationTransactionController extends Controller {
             'criteria' => $customerCriteria,
         ));
 
+        if (isset($_GET['SaveExcel'])) {
+            $this->saveToExcel($invoiceDataProvider);
+        }
+        
         $this->render('cashier', array(
             'invoice' => $invoice,
             'invoiceDataProvider' => $invoiceDataProvider,
@@ -799,5 +803,86 @@ class RegistrationTransactionController extends Controller {
                 'insurance' => $insuranceId
             ), false, true);
         }
+    }
+    
+    protected function saveToExcel($invoiceDataProvider) {
+        set_time_limit(0);
+        ini_set('memory_limit', '1024M');
+
+        spl_autoload_unregister(array('YiiBase', 'autoload'));
+        include_once Yii::getPathOfAlias('ext.phpexcel.Classes') . DIRECTORY_SEPARATOR . 'PHPExcel.php';
+        spl_autoload_register(array('YiiBase', 'autoload'));
+
+        $objPHPExcel = new PHPExcel();
+
+        $documentProperties = $objPHPExcel->getProperties();
+        $documentProperties->setCreator('Raperind Motor');
+        $documentProperties->setTitle('Transaksi Kasir');
+
+        $worksheet = $objPHPExcel->setActiveSheetIndex(0);
+        $worksheet->setTitle('Transaksi Kasir');
+
+        $worksheet->mergeCells('A1:L1');
+        $worksheet->mergeCells('A2:L2');
+        $worksheet->mergeCells('A3:L3');
+
+        $worksheet->getStyle('A1:L6')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->getStyle('A1:L6')->getFont()->setBold(true);
+
+        $worksheet->setCellValue('A1', 'Raperind Motor');
+        $worksheet->setCellValue('A2', 'Transaksi Kasir ');
+        
+        $worksheet->mergeCells('A5:L5');
+        $worksheet->getStyle('A5:L5')->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->setCellValue('A6', 'No');
+        $worksheet->setCellValue('B6', 'Invoice #');
+        $worksheet->setCellValue('C6', 'Tanggal');
+        $worksheet->setCellValue('D6', 'RG #');
+        $worksheet->setCellValue('E6', 'Plat #');
+        $worksheet->setCellValue('F6', 'Kendaraan');
+        $worksheet->setCellValue('G6', 'Customer');
+        $worksheet->setCellValue('H6', 'Asuransi');
+        $worksheet->setCellValue('I6', 'Status');
+        $worksheet->setCellValue('J6', 'Invoice (Rp)');
+        $worksheet->setCellValue('K6', 'Pembayaran (Rp)');
+        $worksheet->setCellValue('L6', 'Sisa (Rp)');
+        $worksheet->getStyle('A6:L6')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+
+        $counter = 7;
+        foreach ($invoiceDataProvider->data as $i => $dataItem) {
+            $worksheet->getStyle("J{$counter}:L{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
+            
+            $worksheet->setCellValue("A{$counter}", $i + 1);
+            $worksheet->setCellValue("B{$counter}", CHtml::value($dataItem, 'invoice_number'));
+            $worksheet->setCellValue("C{$counter}", CHtml::value($dataItem, 'invoice_date'));
+            $worksheet->setCellValue("D{$counter}", CHtml::value($dataItem, 'registrationTransaction.transaction_number'));
+            $worksheet->setCellValue("E{$counter}", CHtml::value($dataItem, 'vehicle.plate_number'));
+            $worksheet->setCellValue("F{$counter}", CHtml::value($dataItem, 'vehicle.carMake.name') . ' - ' . CHtml::value($dataItem, 'vehicle.carModel.name') . ' - ' . CHtml::value($dataItem, 'vehicle.carSubModel.name'));
+            $worksheet->setCellValue("G{$counter}", CHtml::value($dataItem, 'customer.name'));
+            $worksheet->setCellValue("H{$counter}", CHtml::value($dataItem, 'insuranceCompany.name'));
+            $worksheet->setCellValue("I{$counter}", CHtml::value($dataItem, 'status'));
+            $worksheet->setCellValue("J{$counter}", CHtml::value($dataItem, 'total_price'));
+            $worksheet->setCellValue("K{$counter}", CHtml::value($dataItem, 'payment_amount'));
+            $worksheet->setCellValue("L{$counter}", CHtml::value($dataItem, 'payment_left'));
+
+            $counter++;
+        }
+        
+        for ($col = 'A'; $col !== 'Z'; $col++) {
+            $objPHPExcel->getActiveSheet()
+            ->getColumnDimension($col)
+            ->setAutoSize(true);
+        }
+
+        ob_end_clean();
+
+        header('Content-type: application/vnd.ms-excel');
+        header('Content-Disposition: attachment;filename="transaksi_kasir.xls"');
+        header('Cache-Control: max-age=0');
+
+        $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
+        $objWriter->save('php://output');
+
+        Yii::app()->end();
     }
 }

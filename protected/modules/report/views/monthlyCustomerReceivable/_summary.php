@@ -51,7 +51,7 @@ Yii::app()->clientScript->registerCss('_report', '
     <tbody>
         <?php foreach ($monthlyCustomerReceivableSummary->dataProvider->data as $i => $customer): ?>
             <tr class="items1">
-                <td colspan="16"><?php echo CHtml::encode($i + 1); ?> - <?php echo CHtml::encode(CHtml::value($customer, 'name')); ?></td>
+                <td colspan="16" style="font-weight: bold; text-align: center"><?php echo CHtml::encode($i + 1); ?> - <?php echo CHtml::encode(CHtml::value($customer, 'name')); ?></td>
             </tr>
             <?php foreach ($monthlyCustomerReceivableReportData[$customer->id] as $dataItem): ?>
                 <?php $movementTransactionInfo = isset($monthlyCustomerMovementReportData[$dataItem['id']]) ? $monthlyCustomerMovementReportData[$dataItem['id']] : ''; ?>

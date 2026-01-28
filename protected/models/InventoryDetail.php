@@ -498,4 +498,70 @@ class InventoryDetail extends CActiveRecord {
 
         return $value;
     }
+    
+    public static function getInventoryOilStockReport($startYear, $endYear, $brandId, $subBrandId, $subBrandSeriesId, $productId, $productCode, $productName, $oilSaeId) {
+        $brandIdConditionSql = '';
+        $subBrandIdConditionSql = '';
+        $subBrandSeriesIdConditionSql = '';
+        $productIdConditionSql = '';
+        $productCodeConditionSql = '';
+        $productNameConditionSql = '';
+        $oilSaeConditionSql = '';
+
+        $params = array(
+            ':start_year' => $startYear,
+            ':end_year' => $endYear,
+        );
+
+        if (!empty($brandId)) {
+            $brandIdConditionSql = " AND brand_id = :brand_id";
+            $params[':brand_id'] = $brandId;
+        }
+
+        if (!empty($subBrandId)) {
+            $subBrandIdConditionSql = " AND sub_brand_id = :sub_brand_id";
+            $params[':sub_brand_id'] = $subBrandId;
+        }
+
+        if (!empty($subBrandSeriesId)) {
+            $subBrandSeriesIdConditionSql = " AND sub_brand_series_id = :sub_brand_series_id";
+            $params[':sub_brand_series_id'] = $subBrandSeriesId;
+        }
+
+        if (!empty($productId)) {
+            $productIdConditionSql = " AND i.product_id = :product_id";
+            $params[':product_id'] = $productId;
+        }
+
+        if (!empty($productCode)) {
+            $productCodeConditionSql = " AND product_code LIKE :product_code";
+            $params[':product_code'] = "%$productCode%";
+        }
+
+        if (!empty($productName)) {
+            $productNameConditionSql = " AND product_name LIKE :product_name";
+            $params[':product_name'] = "%$productName%";
+        }
+
+        if (!empty($oilSaeId)) {
+            $oilSaeConditionSql = " AND oil_sae_id = :oil_sae_id";
+            $params[':oil_sae_id'] = $oilSaeId;
+        }
+
+        $sql = "SELECT w.branch_id, i.product_id, MAX(p.name) AS product_name, MAX(p.manufacturer_code) AS product_code, 
+                    MAX(p.brand_id) AS brand_id, MAX(p.sub_brand_id) AS sub_brand_id, MAX(p.sub_brand_series_id) AS sub_brand_series_id, 
+                    MAX(p.oil_sae_id) AS oil_sae_id, COALESCE(SUM(stock_in + stock_out), 0) AS total_stock
+                FROM " . InventoryDetail::model()->tableName() . " i 
+                INNER JOIN " . Product::model()->tableName() . " p ON p.id = i.product_id
+                INNER JOIN " . Warehouse::model()->tableName() . " w ON w.id = i.warehouse_id
+                WHERE p.product_sub_master_category_id BETWEEN 39 AND 45 AND i.transaction_date >= '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND 
+                    w.status = 'Active'" . $brandIdConditionSql . $subBrandIdConditionSql . $subBrandSeriesIdConditionSql . $productIdConditionSql . 
+                    $productCodeConditionSql . $productNameConditionSql . $oilSaeConditionSql . "
+                GROUP BY w.branch_id, i.product_id
+                HAVING total_stock <> 0";
+
+        $value = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
+
+        return $value;
+    }
 }

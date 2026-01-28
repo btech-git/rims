@@ -16,6 +16,7 @@
             <th style="text-align: center">ID</th>
             <th style="text-align: center">Code</th>
             <th style="text-align: center">Name</th>
+            <th style="text-align: center">Size</th>
             <th style="text-align: center">Brand</th>
             <th style="text-align: center">Category</th>
             <th style="text-align: center">Unit</th>
@@ -38,6 +39,7 @@
                 <td><?php echo CHtml::encode(CHtml::value($product, 'id')); ?></td>
                 <td><?php echo CHtml::encode(CHtml::value($product, 'manufacturer_code')); ?></td>
                 <td><?php echo CHtml::encode(CHtml::value($product, 'name')); ?></td>
+                <td><?php echo CHtml::encode(CHtml::value($product, 'tireSize.tireName')); ?></td>
                 <td>
                     <?php echo CHtml::encode(CHtml::value($product, 'brand.name')); ?> - 
                     <?php echo CHtml::encode(CHtml::value($product, 'subBrand.name')); ?> - 

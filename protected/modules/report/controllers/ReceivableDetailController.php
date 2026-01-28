@@ -35,6 +35,7 @@ class ReceivableDetailController extends Controller {
         $accountDataProvider = $account->search();
         $accountDataProvider->criteria->compare('t.is_approved', 1);
         $accountDataProvider->criteria->compare('t.coa_sub_category_id', 8);
+        $accountDataProvider->criteria->addCondition("t.name NOT LIKE '%Asuransi%'");
         $accountDataProvider->pagination->pageVar = 'page_dialog';
 
         $receivableDetailSummary = new ReceivableDetailSummary($account->search());
@@ -199,67 +200,9 @@ class ReceivableDetailController extends Controller {
         list($leftPart,, ) = explode('/', $codeNumber);
         list(, $codeNumberConstant) = explode('.', $leftPart);
 
-        if ($codeNumberConstant === 'PO') {
-            $model = TransactionPurchaseOrder::model()->findByAttributes(array('purchase_order_no' => $codeNumber));
-            $this->redirect(array('/transaction/transactionPurchaseOrder/show', 'id' => $model->id));
-        } else if ($codeNumberConstant === 'RG') {
-            $model = RegistrationTransaction::model()->findByAttributes(array('transaction_number' => $codeNumber));
-            if ($model->repair_type == 'GR') {
-                $this->redirect(array('/frontDesk/generalRepairRegistration/show', 'id' => $model->id));
-            } else {
-                $this->redirect(array('/frontDesk/bodyRepairRegistration/show', 'id' => $model->id));                
-            }
-        } else if ($codeNumberConstant === 'DO') {
-            $model = TransactionDeliveryOrder::model()->findByAttributes(array('delivery_order_no' => $codeNumber));
-            $this->redirect(array('/transaction/transactionDeliveryOrder/show', 'id' => $model->id));
-        } else if ($codeNumberConstant === 'RCI') {
-            $model = TransactionReceiveItem::model()->findByAttributes(array('receive_item_no' => $codeNumber));
-            $this->redirect(array('/transaction/transactionReceiveItem/show', 'id' => $model->id));
-        } else if ($codeNumberConstant === 'CASH') {
-            $model = CashTransaction::model()->findByAttributes(array('transaction_number' => $codeNumber));
-            $this->redirect(array('/transaction/cashTransaction/show', 'id' => $model->id));
-        } else if ($codeNumberConstant === 'CSI') {
-            $model = ConsignmentInHeader::model()->findByAttributes(array('consignment_in_number' => $codeNumber));
-            $this->redirect(array('/transaction/consignmentInHeader/show', 'id' => $model->id));
-        } else if ($codeNumberConstant === 'CSO') {
-            $model = ConsignmentOutHeader::model()->findByAttributes(array('consignment_out_no' => $codeNumber));
-            $this->redirect(array('/transaction/consignmentOutHeader/show', 'id' => $model->id));
-        } else if ($codeNumberConstant === 'MO') {
-            $model = MovementOutHeader::model()->findByAttributes(array('movement_out_no' => $codeNumber));
-            $this->redirect(array('/transaction/movementOutHeader/show', 'id' => $model->id));
-        } else if ($codeNumberConstant === 'MI') {
-            $model = MovementInHeader::model()->findByAttributes(array('movement_in_number' => $codeNumber));
-            $this->redirect(array('/transaction/movementInHeader/show', 'id' => $model->id));
-        } else if ($codeNumberConstant === 'Pin') {
+        if ($codeNumberConstant === 'Pin') {
             $model = PaymentIn::model()->findByAttributes(array('payment_number' => $codeNumber));
             $this->redirect(array('/transaction/paymentIn/show', 'id' => $model->id));
-        } else if ($codeNumberConstant === 'Pout') {
-            $model = PaymentOut::model()->findByAttributes(array('payment_number' => $codeNumber));
-            $this->redirect(array('/accounting/paymentOut/show', 'id' => $model->id));
-        } else if ($codeNumberConstant === 'RTI') {
-            $model = TransactionReturnItem::model()->findByAttributes(array('return_item_no' => $codeNumber));
-            $this->redirect(array('/transaction/transactionReturnItem/show', 'id' => $model->id));
-        } else if ($codeNumberConstant === 'TR') {
-            $model = TransactionTransferRequest::model()->findByAttributes(array('transfer_request_no' => $codeNumber));
-            $this->redirect(array('/transaction/transferRequest/show', 'id' => $model->id));
-        } else if ($codeNumberConstant === 'SR') {
-            $model = TransactionSentRequest::model()->findByAttributes(array('sent_request_no' => $codeNumber));
-            $this->redirect(array('/transaction/transactionSentRequest/show', 'id' => $model->id));
-        } else if ($codeNumberConstant === 'JAD') {
-            $model = JournalAdjustmentHeader::model()->findByAttributes(array('transaction_number' => $codeNumber));
-            $this->redirect(array('/accounting/journalAdjustment/show', 'id' => $model->id));
-        } else if ($codeNumberConstant === 'SA') {
-            $model = StockAdjustmentHeader::model()->findByAttributes(array('stock_adjustment_number' => $codeNumber));
-            $this->redirect(array('/frontDest/adjustment/show', 'id' => $model->id));
-        } else if ($codeNumberConstant === 'DAS') {
-            $model = AssetDepreciation::model()->findByAttributes(array('transaction_number' => $codeNumber));
-            $this->redirect(array('/accounting/assetManagement/show', 'id' => $model->asset_purchase_id));
-        } else if ($codeNumberConstant === 'SAS') {
-            $model = AssetSale::model()->findByAttributes(array('transaction_number' => $codeNumber));
-            $this->redirect(array('/accounting/assetManagement/show', 'id' => $model->asset_purchase_id));
-        } else if ($codeNumberConstant === 'PAS') {
-            $model = AssetPurchase::model()->findByAttributes(array('transaction_number' => $codeNumber));
-            $this->redirect(array('/accounting/assetManagement/show', 'id' => $model->id));
         } else if ($codeNumberConstant === 'INV') {
             $model = InvoiceHeader::model()->findByAttributes(array('invoice_number' => $codeNumber));
             $this->redirect(array('/transaction/invoiceHeader/show', 'id' => $model->id));

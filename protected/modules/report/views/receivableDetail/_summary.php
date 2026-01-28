@@ -43,7 +43,7 @@ Yii::app()->clientScript->registerCss('_report', '
                 <?php //$receivableAmount = $header->getReceivableAmount(); ?>
                 <?php //if ($receivableAmount !== 0): ?>
                     <tr>
-                        <td colspan="5">
+                        <td colspan="5" style="text-align: center; font-weight: bold">
                             <?php echo CHtml::encode(CHtml::value($header, 'code')); ?> - 
                             <?php echo CHtml::encode(CHtml::value($header, 'name')); ?>
                         </td>

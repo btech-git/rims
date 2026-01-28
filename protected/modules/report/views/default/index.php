@@ -1,4 +1,4 @@
-  <div id="content">
+<div id="content">
     <div class="row">
         <div class="small-12 columns">
             <div class="breadcrumbs">
@@ -265,11 +265,6 @@
                                     'visible' => Yii::app()->user->checkAccess('customerReceivableReport')
                                 ),
                                 array(
-                                    'label' => 'Faktur Belum Lunas Asuransi', 
-                                    'url' => array('/report/receivableInsuranceCompany/summary'), 
-                                    'visible' => Yii::app()->user->checkAccess('insuranceReceivableReport')
-                                ),
-                                array(
                                     'label' => 'Piutang Customer', 
                                     'url' => array('/report/receivableCustomer/summary'), 
                                     'visible' => Yii::app()->user->checkAccess('receivableReport')
@@ -287,6 +282,31 @@
                                 array(
                                     'label' => 'Piutang Customer Tahunan', 
                                     'url' => array('/report/yearlyCustomerReceivable/summary'), 
+                                    'visible' => Yii::app()->user->checkAccess('customerReceivableReport')
+                                ),
+                                array(
+                                    'label' => 'Faktur Belum Lunas Asuransi', 
+                                    'url' => array('/report/receivableInsuranceCompany/summary'), 
+                                    'visible' => Yii::app()->user->checkAccess('insuranceReceivableReport')
+                                ),
+                                array(
+                                    'label' => 'Piutang Asuransi', 
+                                    'url' => array('/report/receivableInsuranceData/summary'), 
+                                    'visible' => Yii::app()->user->checkAccess('receivableReport')
+                                ),
+                                array(
+                                    'label' => 'Piutang Asuransi Detail', 
+                                    'url' => array('/report/receivableInsuranceDetail/summary'), 
+                                    'visible' => Yii::app()->user->checkAccess('receivableReport')
+                                ),
+                                array(
+                                    'label' => 'Piutang Asuransi Bulanan', 
+                                    'url' => array('/report/monthlyInsuranceReceivable/summary'), 
+                                    'visible' => Yii::app()->user->checkAccess('customerReceivableReport')
+                                ),
+                                array(
+                                    'label' => 'Piutang Asuransi Tahunan', 
+                                    'url' => array('/report/yearlyInsuranceReceivable/summary'), 
                                     'visible' => Yii::app()->user->checkAccess('customerReceivableReport')
                                 ),
                                 array(
@@ -357,6 +377,16 @@
                                     array(
                                         'label' => 'Rincian Penjualan per Customer', 
                                         'url' => array('/report/saleRetail/summary'), 
+                                        'visible' => (Yii::app()->user->checkAccess('saleCustomerReport'))
+                                    ),
+                                    array(
+                                        'label' => 'Penjualan per Asuransi', 
+                                        'url' => array('/report/saleRetailInsurance/summary'), 
+                                        'visible' => (Yii::app()->user->checkAccess('saleCustomerSummaryReport'))
+                                    ),
+                                    array(
+                                        'label' => 'Rincian Penjualan per Asuransi', 
+                                        'url' => array('/report/saleRetailInsuranceDetail/summary'), 
                                         'visible' => (Yii::app()->user->checkAccess('saleCustomerReport'))
                                     ),
                                 ),
@@ -792,6 +822,11 @@
                                         'visible' => (Yii::app()->user->checkAccess('saleCustomerSummaryReport'))
                                     ),
                                     array(
+                                        'label' => 'Penjualan per Asuransi Tahunan', 
+                                        'url' => array('/report/yearlyMultipleInsuranceSaleTransaction/summary'), 
+                                        'visible' => (Yii::app()->user->checkAccess('saleCustomerSummaryReport'))
+                                    ),
+                                    array(
                                         'label' => 'Penjualan per Model Kendaraan Bulanan', 
                                         'url' => array('/report/saleInvoiceCarSubModelMonthly/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('saleVehicleMonthlyReport')
@@ -824,6 +859,16 @@
                                     array(
                                         'label' => 'Penjualan Ban Tahunan', 
                                         'url' => array('/report/yearlyTireSaleTransaction/summary'), 
+                                        'visible' => Yii::app()->user->checkAccess('saleTireYearlyReport')
+                                    ),
+                                    array(
+                                        'label' => 'Penjualan Oli Bulanan', 
+                                        'url' => array('/report/monthlyOilSaleTransaction/summary'), 
+                                        'visible' => Yii::app()->user->checkAccess('saleTireMonthlyReport')
+                                    ),
+                                    array(
+                                        'label' => 'Penjualan Oli Tahunan', 
+                                        'url' => array('/report/yearlyOilSaleTransaction/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('saleTireYearlyReport')
                                     ),
                                 ),

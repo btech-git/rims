@@ -141,10 +141,10 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                         <div class="medium-6 columns">
                             <div class="field">
                                 <div class="row collapse">
-                                    <div class="small-2 columns">
+                                    <div class="small-4 columns">
                                         <span class="prefix">Tanggal </span>
                                     </div>
-                                    <div class="small-5 columns">
+                                    <div class="small-4 columns">
                                         <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(
                                             'name' => 'StartDate',
                                             'options' => array(
@@ -159,7 +159,7 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                         )); ?>
                                     </div>
 
-                                    <div class="small-5 columns">
+                                    <div class="small-4 columns">
                                         <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(
                                             'name' => 'EndDate',
                                             'options' => array(

@@ -1,15 +1,12 @@
 <?php
-/* @var $this RegistrationTransactionController */
-/* @var $model RegistrationTransaction */
-
 $this->breadcrumbs = array(
     'Body Repair Transactions' => array('admin'),
     'Manage',
 );
 
 $this->menu = array(
-    array('label' => 'List RegistrationTransaction', 'url' => array('admin')),
-    array('label' => 'Create RegistrationTransaction', 'url' => array('index')),
+    array('label' => 'List Registration Transaction', 'url' => array('admin')),
+    array('label' => 'Create Registration Transaction', 'url' => array('index')),
 );
 
 Yii::app()->clientScript->registerScript('search', "
@@ -28,7 +25,10 @@ $('.search-form form').submit(function(){
 
 <div id="maincontent">
     <div class="clearfix page-action">
-        <?php echo CHtml::link('<span class="fa fa-plus"></span>New Registration', Yii::app()->baseUrl . '/frontDesk/customerRegistration/vehicleList', array('class' => 'button success right', 'visible' => Yii::app()->user->checkAccess("bodyRepairCreate"))); ?>
+        <?php echo CHtml::link('<span class="fa fa-plus"></span>New Registration', Yii::app()->baseUrl . '/frontDesk/customerRegistration/vehicleList', array(
+            'class' => 'button success right', 
+            'visible' => Yii::app()->user->checkAccess("bodyRepairCreate")
+        )); ?>
         <h1>Manage Body Repair Registrations</h1>
 
         <div class="search-bar">

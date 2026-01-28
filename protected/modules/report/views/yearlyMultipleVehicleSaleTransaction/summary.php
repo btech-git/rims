@@ -50,6 +50,39 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                             <div class="field">
                                 <div class="row collapse">
                                     <div class="small-4 columns">
+                                        <span class="prefix">Type</span>
+                                    </div>
+                                    <div class="small-8 columns">
+                                        <?php echo CHtml::dropDownList('CustomerType', $customerType, array(
+                                            'Company' => 'PT',
+                                            'Individual' => 'Retail',
+                                        ), array('empty' => '-- All Type --')); ?>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="medium-6 columns">
+                            <div class="field">
+                                <div class="row collapse">
+                                    <div class="small-4 columns">
+                                        <span class="prefix">Cabang</span>
+                                    </div>
+                                    <div class="small-8 columns">
+                                        <?php echo CHtml::dropDownList('BranchId', $branchId, CHtml::listData(Branch::model()->findAll(array(
+                                            'condition' => "status = 'Active'", 
+                                            'order' => 'name ASC'
+                                        )), 'id', 'name'), array('empty' => '-- All Cabang --')); ?>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="medium-6 columns">
+                            <div class="field">
+                                <div class="row collapse">
+                                    <div class="small-4 columns">
                                         <span class="prefix">Tanggal </span>
                                     </div>
                                     <div class="small-4 columns">
@@ -87,15 +120,15 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                         <div class="medium-6 columns">
                             <div class="field">
                                 <div class="row collapse">
-                                    <div class="small-4 columns">
+<!--                                    <div class="small-4 columns">
                                         <span class="prefix">Cabang</span>
                                     </div>
                                     <div class="small-8 columns">
-                                        <?php echo CHtml::dropDownList('BranchId', $branchId, CHtml::listData(Branch::model()->findAll(array(
+                                        <?php /*echo CHtml::dropDownList('BranchId', $branchId, CHtml::listData(Branch::model()->findAll(array(
                                             'condition' => "status = 'Active'", 
                                             'order' => 'name ASC'
-                                        )), 'id', 'name'), array('empty' => '-- Pilih Cabang --')); ?>
-                                    </div>
+                                        )), 'id', 'name'), array('empty' => '-- Pilih Cabang --'));*/ ?>
+                                    </div>-->
                                 </div>
                             </div>
                         </div>
@@ -117,8 +150,8 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
 
                 <div class="relative">
                     <?php $this->renderPartial('_summary', array(
-                        'yearlyMultipleVehicleCompanySaleReport' => $yearlyMultipleVehicleCompanySaleReport,
-                        'yearlyMultipleVehicleIndividualSaleReport' => $yearlyMultipleVehicleIndividualSaleReport,
+                        'yearlyMultipleVehicleSaleReport' => $yearlyMultipleVehicleSaleReport,
+//                        'yearlyMultipleVehicleIndividualSaleReport' => $yearlyMultipleVehicleIndividualSaleReport,
                         'branchId' => $branchId,
                         'startDate' => $startDate,
                         'endDate' => $endDate,

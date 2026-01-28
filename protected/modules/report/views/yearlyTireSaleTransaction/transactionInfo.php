@@ -15,8 +15,8 @@ Yii::app()->clientScript->registerCss('_report', '
     <div style="font-size: larger">Laporan Transaksi Penjualan</div>
     <div style="font-size: larger">
         <?php echo CHtml::encode(CHtml::value($product, 'id')); ?> - 
-        <?php echo CHtml::encode(CHtml::value($product, 'manufacturer_code')); ?> -
-        <?php echo CHtml::encode(CHtml::value($product, 'name')); ?>
+        <?php echo CHtml::encode(CHtml::value($product, 'name')); ?> -
+        <?php echo CHtml::encode(CHtml::value($product, 'tireSize.tireName')); ?>
     </div>
     <div><?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($startDate))) . ' &nbsp;&ndash;&nbsp; ' . CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($endDate))); ?></div>
 </div>

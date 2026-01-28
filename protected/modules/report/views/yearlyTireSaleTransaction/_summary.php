@@ -19,6 +19,7 @@
             <th style="width: 5%">ID</th>
             <th style="width: 10%">Code</th>
             <th style="width: 10%">Name</th>
+            <th style="width: 10%">Size</th>
             <th style="width: 10%">Brand</th>
             <th style="width: 10%">Category</th>
             <?php for ($month = 1; $month <= 12; $month++): ?>
@@ -36,6 +37,7 @@
                 <td><?php echo $invoiceTireSaleInfo['product_id']; ?></td>
                 <td><?php echo $invoiceTireSaleInfo['product_code']; ?></td>
                 <td><?php echo $invoiceTireSaleInfo['product_name']; ?></td>
+                <td><?php echo $invoiceTireSaleInfo['tire_name']; ?></td>
                 <td>
                     <?php echo $invoiceTireSaleInfo['brand_name']; ?> -
                     <?php echo $invoiceTireSaleInfo['sub_brand_name']; ?> -

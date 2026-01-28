@@ -2,15 +2,14 @@
 Yii::app()->clientScript->registerCss('_report', '
     .width1-1 { width: 15% }
     .width1-2 { width: 15% }
-    .width1-3 { width: 10% }
-    .width1-4 { width: 25% }
-    .width1-5 { width: 10% }
-    .width1-6 { width: 10% }
-    .width1-7 { width: 10% }
+    .width1-3 { width: 55% }
+    .width1-4 { width: 15% }
 
-    .width2-1 { width: 20% }
+    .width2-1 { width: 50% }
     .width2-2 { width: 10% }
-    .width2-3 { width: 55% }
+    .width2-3 { width: 10% }
+    .width2-4 { width: 15% }
+    .width2-5 { width: 15% }
 ');
 ?>
 
@@ -37,8 +36,9 @@ Yii::app()->clientScript->registerCss('_report', '
                         <tr>
                             <th class="width2-1">Parts/Service</th>
                             <th class="width2-2">Quantity</th>
-                            <th class="width2-3">Unit Price</th>
-                            <th class="width2-3">Total</th>
+                            <th class="width2-3">Satuan</th>
+                            <th class="width2-4">Unit Price</th>
+                            <th class="width2-5">Total</th>
                         </tr>
                     </table>
                 </td>
@@ -67,10 +67,13 @@ Yii::app()->clientScript->registerCss('_report', '
                                     <td class="width2-2" style="text-align: right">
                                         <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($detail, 'quantity'))); ?>
                                     </td>
-                                    <td class="width2-2" style="text-align: right">
+                                    <td class="width2-3">
+                                        <?php echo $detail->product_id === null ? 'pcs' : CHtml::encode(CHtml::value($detail, 'product.unit.name')); ?>
+                                    </td>
+                                    <td class="width2-4" style="text-align: right">
                                         <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($detail, 'unit_price'))); ?>
                                     </td>
-                                    <td class="width2-2" style="text-align: right">
+                                    <td class="width2-5" style="text-align: right">
                                         <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($detail, 'total_price'))); ?>
                                     </td>
                                 </tr>

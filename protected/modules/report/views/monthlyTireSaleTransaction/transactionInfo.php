@@ -1,22 +1,22 @@
 <?php
 Yii::app()->clientScript->registerCss('_report', '
     .width1-1 { width: 10% }
-    .width1-2 { width: 5% }
+    .width1-2 { width: 7% }
     .width1-3 { width: 20% }
-    .width1-4 { width: 10% }
+    .width1-4 { width: 8% }
     .width1-5 { width: 20% }
     .width1-6 { width: 5% }
-    .width1-7 { width: 10% }
-    .width1-8 { width: 5% }
+    .width1-7 { width: 8% }
+    .width1-8 { width: 7% }
 ');
 ?>
 
 <div style="font-weight: bold; text-align: center">
-    <div style="font-size: larger">Laporan Transaksi Penjualan <?php echo CHtml::encode(CHtml::value($branch, 'name')); ?></div>
+    <div style="font-size: larger">Laporan Transaksi Penjualan <?php echo CHtml::encode(CHtml::value($branch, 'code')); ?></div>
     <div style="font-size: larger">
         <?php echo CHtml::encode(CHtml::value($product, 'id')); ?> - 
-        <?php echo CHtml::encode(CHtml::value($product, 'manufacturer_code')); ?> -
-        <?php echo CHtml::encode(CHtml::value($product, 'name')); ?>
+        <?php echo CHtml::encode(CHtml::value($product, 'name')); ?> -
+        <?php echo CHtml::encode(CHtml::value($product, 'tireSize.tireName')); ?>
     </div>
     <div><?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($startDate))) . ' &nbsp;&ndash;&nbsp; ' . CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($endDate))); ?></div>
 </div>
@@ -55,8 +55,8 @@ Yii::app()->clientScript->registerCss('_report', '
                             <?php echo CHtml::encode(CHtml::value($header, 'invoice.vehicle.carSubModel.name')); ?>
                         </td>
                         <td class="width1-6"><?php echo CHtml::encode(CHtml::value($header, 'invoice.status')); ?></td>
-                        <td class="width1-6"><?php echo CHtml::encode(CHtml::value($header, 'production_year')); ?></td>
-                        <td class="width1-7" style="text-align: right">
+                        <td class="width1-7"><?php echo CHtml::encode(CHtml::value($header, 'production_year')); ?></td>
+                        <td class="width1-8" style="text-align: right">
                             <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $quantity)); ?>
                         </td>
                     </tr>

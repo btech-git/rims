@@ -338,7 +338,12 @@ $this->menu = array(
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td><?php echo CHtml::link($detail->registrationTransaction->downpayment_transaction_number, array("/transaction/registrationTransaction/show", "id" => $detail->registration_transaction_id), array('target' => 'blank')); ?></td>
+                                    <td>
+                                        <?php echo CHtml::link($detail->registrationTransaction->downpayment_transaction_number, array(
+                                            "/transaction/registrationTransaction/show", 
+                                            "id" => $detail->registration_transaction_id
+                                        ), array('target' => 'blank')); ?>
+                                    </td>
                                     <td><?php echo CHtml::encode(CHtml::value($detail, 'registrationTransaction.downpayment_transaction_date')); ?></td>
                                     <td><?php echo CHtml::encode(CHtml::value($detail, 'registrationTransaction.vehicle.plate_number')); ?></td>
                                     <td><?php echo CHtml::encode(CHtml::value($detail, 'registrationTransaction.downpayment_note')); ?></td>
@@ -500,8 +505,12 @@ $this->menu = array(
                                     <td style="text-align: center"><?php echo $i + 1; ?></td>
                                     <td class="width1-4"><?php echo CHtml::encode(CHtml::value($header, 'branchAccountCode')); ?></td>
                                     <td class="width1-5"><?php echo CHtml::encode(CHtml::value($header, 'branchAccountName')); ?></td>
-                                    <td class="width1-6" style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $amountDebit)); ?></td>
-                                    <td class="width1-7" style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $amountCredit)); ?></td>
+                                    <td class="width1-6" style="text-align: right">
+                                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $amountDebit)); ?>
+                                    </td>
+                                    <td class="width1-7" style="text-align: right">
+                                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $amountCredit)); ?>
+                                    </td>
                                 </tr>
 
                                 <?php $totalDebit += $amountDebit; ?>

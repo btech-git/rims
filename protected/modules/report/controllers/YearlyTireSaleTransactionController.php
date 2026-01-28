@@ -49,6 +49,7 @@ class YearlyTireSaleTransactionController extends Controller {
             $invoiceTireInfo[$yearlySaleSummaryItem['product_id']]['master_category_name'] = $yearlySaleSummaryItem['master_category_name'];
             $invoiceTireInfo[$yearlySaleSummaryItem['product_id']]['sub_category_name'] = $yearlySaleSummaryItem['sub_category_name'];
             $invoiceTireInfo[$yearlySaleSummaryItem['product_id']]['sub_master_category_name'] = $yearlySaleSummaryItem['sub_master_category_name'];
+            $invoiceTireInfo[$yearlySaleSummaryItem['product_id']]['tire_name'] = $yearlySaleSummaryItem['tire_name'];
             $invoiceTireInfo[$yearlySaleSummaryItem['product_id']]['totals'][$monthValue] = $yearlySaleSummaryItem['total_quantity'];
         }
 
@@ -164,21 +165,21 @@ class YearlyTireSaleTransactionController extends Controller {
         $worksheet = $objPHPExcel->setActiveSheetIndex(0);
         $worksheet->setTitle('Penjualan Tahunan Tire');
 
-        $worksheet->mergeCells('A1:S1');
-        $worksheet->mergeCells('A2:S2');
-        $worksheet->mergeCells('A3:S3');
+        $worksheet->mergeCells('A1:T1');
+        $worksheet->mergeCells('A2:T2');
+        $worksheet->mergeCells('A3:T3');
         
-        $worksheet->getStyle('A1:S3')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-        $worksheet->getStyle('A1:S3')->getFont()->setBold(true);
+        $worksheet->getStyle('A1:T3')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->getStyle('A1:T3')->getFont()->setBold(true);
         
         $branch = Branch::model()->findByPk($branchId);
         $worksheet->setCellValue('A1', 'Raperind Motor' . CHtml::value($branch, 'name'));
         $worksheet->setCellValue('A2', 'Laporan Penjualan Tahunan Tire');
         $worksheet->setCellValue('A3', $year);
 
-        $worksheet->getStyle("A5:S5")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
-        $worksheet->getStyle("A5:S5")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
-        $worksheet->getStyle('A5:S5')->getFont()->setBold(true);
+        $worksheet->getStyle("A5:T5")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A5:T5")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle('A5:T5')->getFont()->setBold(true);
 
         $monthList = array(
             1 => 'Jan',
@@ -199,9 +200,10 @@ class YearlyTireSaleTransactionController extends Controller {
         $worksheet->setCellValue("B5", 'ID');
         $worksheet->setCellValue("C5", 'Code');
         $worksheet->setCellValue("D5", 'Name');
-        $worksheet->setCellValue("E5", 'Brand');
-        $worksheet->setCellValue("F5", 'Category');
-        $columnCounter = 'G';
+        $worksheet->setCellValue("E5", 'Size');
+        $worksheet->setCellValue("F5", 'Brand');
+        $worksheet->setCellValue("G5", 'Category');
+        $columnCounter = 'H';
         for ($month = 1; $month <= 12; $month++) {
             $worksheet->setCellValue("{$columnCounter}5", CHtml::encode($monthList[$month]));
             $columnCounter++;
@@ -216,10 +218,11 @@ class YearlyTireSaleTransactionController extends Controller {
             $worksheet->setCellValue("B{$counter}", $invoiceTireSaleInfo['product_id']);
             $worksheet->setCellValue("C{$counter}", $invoiceTireSaleInfo['product_code']);
             $worksheet->setCellValue("D{$counter}", $invoiceTireSaleInfo['product_name']);
-            $worksheet->setCellValue("E{$counter}", $invoiceTireSaleInfo['brand_name'] . ' - ' . $invoiceTireSaleInfo['sub_brand_name'] . ' - ' . $invoiceTireSaleInfo['sub_brand_series_name']);
-            $worksheet->setCellValue("F{$counter}", $invoiceTireSaleInfo['master_category_name'] . ' - ' . $invoiceTireSaleInfo['sub_category_name'] . ' - ' . $invoiceTireSaleInfo['sub_master_category_name']);
+            $worksheet->setCellValue("E{$counter}", $invoiceTireSaleInfo['tire_name']);
+            $worksheet->setCellValue("F{$counter}", $invoiceTireSaleInfo['brand_name'] . ' - ' . $invoiceTireSaleInfo['sub_brand_name'] . ' - ' . $invoiceTireSaleInfo['sub_brand_series_name']);
+            $worksheet->setCellValue("G{$counter}", $invoiceTireSaleInfo['master_category_name'] . ' - ' . $invoiceTireSaleInfo['sub_category_name'] . ' - ' . $invoiceTireSaleInfo['sub_master_category_name']);
             $totalSum = 0;
-            $columnCounter = 'G';
+            $columnCounter = 'H';
             for ($month = 1; $month <= 12; $month++) {
                 $total = isset($invoiceTireSaleInfo['totals'][$month]) ? $invoiceTireSaleInfo['totals'][$month] : '';
                 $worksheet->setCellValue("{$columnCounter}{$counter}", $total);
@@ -236,12 +239,12 @@ class YearlyTireSaleTransactionController extends Controller {
             $autoNumber++;
         }
         
-        $worksheet->getStyle("A{$counter}:S{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
-        $worksheet->getStyle("A{$counter}:S{$counter}")->getFont()->setBold(true);
+        $worksheet->getStyle("A{$counter}:T{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A{$counter}:T{$counter}")->getFont()->setBold(true);
         
-        $worksheet->setCellValue("F{$counter}", 'Total');
+        $worksheet->setCellValue("G{$counter}", 'Total');
         $grandTotal = 0;
-        $footerCounter = 'G';
+        $footerCounter = 'H';
         for ($month = 1; $month <= 12; $month++) {
             if (!isset($groupTotalSums[$month])) {
                 $groupTotalSums[$month] = 0;

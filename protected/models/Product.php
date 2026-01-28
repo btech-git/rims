@@ -577,6 +577,41 @@ class Product extends CActiveRecord {
         ));
     }
 
+    public function searchByOilSaleReport($pageNumber, $year, $month) {
+
+        $criteria = new CDbCriteria;
+
+        $criteria->compare('t.id', $this->id);
+        $criteria->compare('t.code', $this->code, true);
+        $criteria->compare('t.manufacturer_code', $this->manufacturer_code, true);
+        $criteria->compare('t.name', $this->name, true);
+        $criteria->compare('t.brand_id', $this->brand_id);
+        $criteria->compare('t.sub_brand_id', $this->sub_brand_id);
+        $criteria->compare('t.sub_brand_series_id', $this->sub_brand_series_id);
+        $criteria->compare('t.product_master_category_id', 6);
+        $criteria->compare('t.product_sub_master_category_id', $this->product_sub_master_category_id);
+        $criteria->compare('t.product_sub_category_id', $this->product_sub_category_id);
+        $criteria->compare('t.unit_id', $this->unit_id);
+        $criteria->compare('t.status', 'Active');
+
+        $criteria->addCondition("EXISTS (
+            SELECT d.product_id
+            FROM " . InvoiceDetail::model()->tableName() . " d
+            INNER JOIN " . InvoiceHeader::model()->tableName() . " h ON h.id = d.invoice_id
+            WHERE t.id = d.product_id AND h.user_id_cancelled IS NULL AND YEAR(h.invoice_date) = :year AND MONTH(h.invoice_date) = :month
+        )");
+        $criteria->params[':year'] = $year;
+        $criteria->params[':month'] = $month;
+        
+        return new CActiveDataProvider($this, array(
+            'criteria' => $criteria,
+            'pagination' => array(
+                'pageSize' => 500,
+                'currentPage' => $pageNumber - 1,
+            ),
+        ));
+    }
+
     public function searchByStockCard() {
 
         $criteria = new CDbCriteria;
@@ -661,6 +696,22 @@ class Product extends CActiveRecord {
     }
 
     public function getTireSaleTotalQuantitiesReport($year, $month) {
+        $sql = "SELECT h.branch_id, COALESCE(SUM(d.quantity), 0) AS total_quantity
+                FROM " . InvoiceDetail::model()->tableName() . " d
+                INNER JOIN " . InvoiceHeader::model()->tableName() . " h ON h.id = d.invoice_id
+                WHERE d.product_id = :product_id AND h.user_id_cancelled IS NULL AND YEAR(h.invoice_date) = :year AND MONTH(h.invoice_date) = :month
+                GROUP BY h.branch_id";
+
+        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, array(
+            ':product_id' => $this->id, 
+            ':year' => $year,
+            ':month' => $month
+        ));
+
+        return $resultSet;
+    }
+
+    public function getOilSaleTotalQuantitiesReport($year, $month) {
         $sql = "SELECT h.branch_id, COALESCE(SUM(d.quantity), 0) AS total_quantity
                 FROM " . InvoiceDetail::model()->tableName() . " d
                 INNER JOIN " . InvoiceHeader::model()->tableName() . " h ON h.id = d.invoice_id

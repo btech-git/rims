@@ -23,20 +23,23 @@ Yii::app()->clientScript->registerScript('search', "
             $(this).text('Customer Filter');
 	}
 	return false;
-});*/
+});
 $('form').submit(function(){
     $('#registration-transaction-grid').yiiGridView('update', {
         data: $(this).serialize()
     });
     return false;
-});
+});*/
 "); ?>
 
-<?php echo CHtml::beginForm(); ?>
 <div id="maincontent">
     <div class="clearfix page-action">
         <h1>Cashier</h1>
+        <?php echo CHtml::beginForm(); ?>
+        <?php echo CHtml::endForm(); ?>
+        
         <div class="search-bar">
+            <?php echo CHtml::beginForm(array(''), 'get'); ?>
             <div class="clearfix button-bar">
                 <div class="row">
                     <table>
@@ -163,6 +166,7 @@ $('form').submit(function(){
                             <td style="text-align: center; font-weight: bold">Customer Type</td>
                             <td style="text-align: center; font-weight: bold">Status</td>
                             <td style="text-align: center; font-weight: bold">Branch</td>
+                            <td></td>
                         </tr>
                         
                         <tr>                            
@@ -188,8 +192,8 @@ $('form').submit(function(){
                             <td>
                                 <?php echo CHtml::activeDropDownList($invoice, 'customer_type', array(
                                     '' => '-- All --',
-                                    'Company' => 'Company',
-                                    'Individual' => 'Individual',
+                                    'Company' => 'PT',
+                                    'Individual' => 'Retail',
                                 ),  array(
                                     'onchange' => '
                                         $.fn.yiiGridView.update("registration-transaction-grid", {data: {InvoiceHeader: {
@@ -210,10 +214,10 @@ $('form').submit(function(){
                             <td>
                                 <?php echo CHtml::activeDropDownList($invoice, 'status', array(
                                     '' => '-- All --',
-                                    'INVOICING' => 'INVOICING',
+                                    'Approved' => 'APPROVED',
                                     'PARTIALLY PAID' => 'PARTIALLY PAID',
-//                                    'NOT PAID' => 'NOT PAID',
                                     'PAID' => 'PAID',
+                                    'CANCELLED!!!' => 'CANCEL',
                                 ), array(
                                     'onchange' => '
                                         $.fn.yiiGridView.update("registration-transaction-grid", {data: {InvoiceHeader: {
@@ -247,10 +251,12 @@ $('form').submit(function(){
                                     ',
                                 )); ?>
                             </td>
+                            <td><?php echo CHtml::submitButton('Simpan ke Excel', array('name' => 'SaveExcel')); ?></td>
                         </tr>
                     </table>
                 </div>
             </div>
+            <?php echo CHtml::endForm(); ?>
         </div>
         
         <div class="grid-view">
@@ -344,7 +350,6 @@ $('form').submit(function(){
         </div>
     </div>
 </div>
-<?php echo CHtml::endForm(); ?>
 
 
 <?php $this->beginWidget('zii.widgets.jui.CJuiDialog', array(

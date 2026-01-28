@@ -140,24 +140,25 @@ class MonthlyTireSaleTransactionController extends Controller {
         $worksheet = $objPHPExcel->setActiveSheetIndex(0);
         $worksheet->setTitle('Penjualan Ban Bulanan');
 
-        $worksheet->mergeCells('A1:O1');
-        $worksheet->mergeCells('A2:O2');
-        $worksheet->mergeCells('A3:O3');
+        $worksheet->mergeCells('A1:P1');
+        $worksheet->mergeCells('A2:P2');
+        $worksheet->mergeCells('A3:P3');
         
-        $worksheet->getStyle('A1:O5')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-        $worksheet->getStyle("A1:O5")->getFont()->setBold(true);
+        $worksheet->getStyle('A1:P5')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->getStyle("A1:P5")->getFont()->setBold(true);
         
         $worksheet->setCellValue('A1', 'Raperind Motor');
         $worksheet->setCellValue('A2', 'Penjualan Ban Bulanan');
         $worksheet->setCellValue('A3', strftime("%B",mktime(0,0,0,$month)) . ' - ' . $year);
 
-        $columnHeader = 'G';
+        $columnHeader = 'H';
         $worksheet->setCellValue('A5', 'ID');
         $worksheet->setCellValue('B5', 'Code');
         $worksheet->setCellValue('C5', 'Name');
-        $worksheet->setCellValue('D5', 'Brand');
-        $worksheet->setCellValue('E5', 'Category');
-        $worksheet->setCellValue('F5', 'Satuan');
+        $worksheet->setCellValue('D5', 'Size');
+        $worksheet->setCellValue('E5', 'Brand');
+        $worksheet->setCellValue('F5', 'Category');
+        $worksheet->setCellValue('G5', 'Satuan');
         foreach ($branches as $branch) {
             $worksheet->setCellValue("{$columnHeader}5", CHtml::value($branch, 'code'));
             $columnHeader++;
@@ -171,14 +172,15 @@ class MonthlyTireSaleTransactionController extends Controller {
         foreach ($productDataProvider->data as $product) {
             $tireSaleTotalQuantities = $product->getTireSaleTotalQuantitiesReport($year, $month);
             $totalQuantity = 0;
-            $column = 'G'; 
+            $column = 'H'; 
             
             $worksheet->setCellValue("A{$counter}", CHtml::value($product, 'id'));
             $worksheet->setCellValue("B{$counter}", CHtml::value($product, 'manufacturer_code'));
             $worksheet->setCellValue("C{$counter}", CHtml::value($product, 'name'));
-            $worksheet->setCellValue("D{$counter}", CHtml::value($product, 'brand.name') . ' - ' . CHtml::value($product, 'subBrand.name') . ' - ' . CHtml::value($product, 'subBrandSeries.name'));
-            $worksheet->setCellValue("E{$counter}", CHtml::value($product, 'productMasterCategory.name') . ' - ' . CHtml::value($product, 'productSubMasterCategory.name') . ' - ' . CHtml::value($product, 'productSubCategory.name'));
-            $worksheet->setCellValue("F{$counter}", CHtml::value($product, 'unit.name'));
+            $worksheet->setCellValue("D{$counter}", CHtml::value($product, 'tireSize.tireName'));
+            $worksheet->setCellValue("E{$counter}", CHtml::value($product, 'brand.name') . ' - ' . CHtml::value($product, 'subBrand.name') . ' - ' . CHtml::value($product, 'subBrandSeries.name'));
+            $worksheet->setCellValue("F{$counter}", CHtml::value($product, 'productMasterCategory.name') . ' - ' . CHtml::value($product, 'productSubMasterCategory.name') . ' - ' . CHtml::value($product, 'productSubCategory.name'));
+            $worksheet->setCellValue("G{$counter}", CHtml::value($product, 'unit.name'));
             
             foreach ($branches as $branch) {
                 $saleQuantity = 0; 
