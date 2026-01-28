@@ -114,9 +114,9 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                         )); ?>
 
                                         <?php echo CHtml::openTag('span', array('id' => 'customer_name')); ?>
-                                        <?php $customer = Customer::model()->findByPk($customerId); ?>
-                                        <?php echo CHtml::encode(CHtml::value($customer, 'name')); ?>
-                                        <?php echo CHtml::closeTag('span'); ?>    
+                                        <?php $customerModel = Customer::model()->findByPk($customerId); ?>
+                                        <?php echo CHtml::encode(CHtml::value($customerModel, 'name')); ?>
+                                        <?php echo CHtml::closeTag('span'); ?>
                                     </div>
                                 </div>
                             </div>
@@ -176,11 +176,11 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
         'id' => 'customer-grid',
         'dataProvider' => $customerDataProvider,
         'filter' => $customer,
-//        'template' => '{items}<div class="clearfix">{summary}{pager}</div>',
-//        'pager' => array(
-//            'cssFile' => false,
-//            'header' => '',
-//        ),
+        'template' => '{items}<div class="clearfix">{summary}{pager}</div>',
+        'pager' => array(
+            'cssFile' => false,
+            'header' => '',
+        ),
         'selectionChanged' => 'js:function(id) {
             $("#CustomerId").val($.fn.yiiGridView.getSelection(id));
             $("#customer-dialog").dialog("close");
@@ -200,10 +200,18 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
         }',
         'columns' => array(
             'name',
-            'customer_type',
+            array(
+                'header'=>'Type', 
+                'name'=>'customer_type',
+                'filter'=>CHtml::activeDropDownList($customer, 'customer_type', array(
+                    ''=>'All',
+                    'Company' => 'PT',
+                    'Individual' => 'Retail',
+                )),
+                'value'=>'$data->customer_type',
+            ),
+            'mobile_phone',
             'email',
-            'note',
-            'status',
         ),
     )); ?>
     <?php $this->endWidget('zii.widgets.jui.CJuiDialog'); ?>
