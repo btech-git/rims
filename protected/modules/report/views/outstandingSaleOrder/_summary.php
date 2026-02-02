@@ -24,7 +24,7 @@
         <?php $branch = Branch::model()->findByPk($branchId); ?>
         Raperind Motor <?php echo CHtml::encode(CHtml::value($branch, 'name')); ?>
     </div>
-    <div style="font-size: larger">Laporan Outstanding Work Order</div>
+    <div style="font-size: larger">Laporan Outstanding Sales Order</div>
     <div><?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($startDate))) . ' &nbsp;&ndash;&nbsp; ' . CHtml::encode(Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($endDate))); ?></div>
 </div>
 
@@ -35,7 +35,7 @@
         <thead style="position: sticky; top: 0">
             <tr id="header1">
                 <th class="width1-1">No</th>
-                <th class="width1-2">WO #</th>
+                <th class="width1-2">SO #</th>
                 <th class="width1-3">Tanggal</th>
                 <th class="width1-4">Customer</th>
                 <th class="width1-5">Vehicle</th>
@@ -47,16 +47,16 @@
             </tr>
         </thead>
         <tbody>
-            <?php foreach ($outstandingWorkOrderSummary->dataProvider->data as $i => $header): ?>
+            <?php foreach ($outstandingSaleOrderSummary->dataProvider->data as $i => $header): ?>
                 <?php $movementOutHeaders = $header->movementOutHeaders; ?>
                 <?php $movementOutHeaderCodeNumbers = array_map(function($movementOutHeader) { return $movementOutHeader->movement_out_no; }, $movementOutHeaders); ?>
                 <tr class="items1">
                     <td class="width1-1"><?php echo CHtml::encode($i + 1); ?></td>
                     <td class="width1-2">
-                        <?php echo CHtml::link(CHtml::encode($header->work_order_number), array("/frontDesk/registrationTransaction/view", "id"=>$header->id), array("target" => "_blank")); ?>
+                        <?php echo CHtml::link(CHtml::encode($header->sales_order_number), array("/frontDesk/registrationTransaction/view", "id"=>$header->id), array("target" => "_blank")); ?>
                     </td>
                     <td class="width1-3">
-                        <?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy hh:mm:ss', strtotime($header->work_order_date))); ?>
+                        <?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy hh:mm:ss', strtotime($header->sales_order_date))); ?>
                     </td>
                     <td class="width1-4"><?php echo CHtml::encode(CHtml::value($header, 'customer.name')); ?></td>
                     <td class="width1-5">

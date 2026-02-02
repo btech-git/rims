@@ -805,7 +805,7 @@ class InvoiceDetail extends CActiveRecord {
                 INNER JOIN " . ProductSubCategory::model()->tableName() . " sc ON sc.id = p.product_sub_category_id
                 INNER JOIN " . ProductSubMasterCategory::model()->tableName() . " smc ON smc.id = p.product_sub_master_category_id
                 LEFT OUTER JOIN " . TireSize::model()->tableName() . " ts ON ts.id = p.tire_size_id
-                WHERE YEAR(i.invoice_date) = :year AND i.status NOT LIKE '%CANCELLED%' AND p.product_master_category_id = 4" . $branchConditionSql . 
+                WHERE YEAR(i.invoice_date) = :year AND i.status NOT LIKE '%CANCELLED%' AND p.product_sub_category_id IN (442, 443, 444)" . $branchConditionSql . 
                     $productIdConditionSql . $productCodeConditionSql . $productNameConditionSql . $brandConditionSql . $subBrandConditionSql . 
                     $subBrandSeriesConditionSql . $subCategoryConditionSql . $subMasterCategoryConditionSql . "
                 GROUP BY EXTRACT(YEAR_MONTH FROM invoice_date), d.product_id
@@ -890,9 +890,9 @@ class InvoiceDetail extends CActiveRecord {
                 INNER JOIN " . ProductSubCategory::model()->tableName() . " sc ON sc.id = p.product_sub_category_id
                 INNER JOIN " . ProductSubMasterCategory::model()->tableName() . " smc ON smc.id = p.product_sub_master_category_id
                 LEFT OUTER JOIN " . OilSae::model()->tableName() . " os ON os.id = p.oil_sae_id
-                WHERE YEAR(i.invoice_date) = :year AND i.status NOT LIKE '%CANCELLED%' AND p.product_master_category_id = 6" . $branchConditionSql . 
-                    $productIdConditionSql . $productCodeConditionSql . $productNameConditionSql . $brandConditionSql . $subBrandConditionSql . 
-                    $subBrandSeriesConditionSql . $subCategoryConditionSql . $subMasterCategoryConditionSql . "
+                WHERE YEAR(i.invoice_date) = :year AND i.status NOT LIKE '%CANCELLED%' AND p.product_sub_master_category_id IN (39, 40, 42) AND 
+                    p.oil_sae_id IS NOT NULL" . $branchConditionSql . $productIdConditionSql . $productCodeConditionSql . $productNameConditionSql . 
+                    $brandConditionSql . $subBrandConditionSql . $subBrandSeriesConditionSql . $subCategoryConditionSql . $subMasterCategoryConditionSql . "
                 GROUP BY EXTRACT(YEAR_MONTH FROM invoice_date), d.product_id
                 ORDER BY p.name ASC, year_month_value ASC";
                 

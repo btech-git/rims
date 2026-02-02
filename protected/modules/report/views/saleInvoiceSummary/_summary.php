@@ -1,14 +1,14 @@
 <?php Yii::app()->clientScript->registerCss('_report', '
     .width1-1 { width: 10% }
-    .width1-2 { width: 8% }
+    .width1-2 { width: 7% }
     .width1-3 { width: 8% }
-    .width1-4 { width: 23% }
-    .width1-5 { width: 5% }
-    .width1-6 { width: 9% }
+    .width1-4 { width: 20% }
+    .width1-5 { width: 10% }
+    .width1-6 { width: 7% }
     .width1-7 { width: 10% }
     .width1-8 { width: 10% }
     .width1-9 { width: 10% }
-    .width1-10 { width: 5% }
+    .width1-10 { width: 8% }
 
     .width2-1 { width: 15% }
     .width2-2 { width: 15% }
@@ -34,8 +34,8 @@
             <th class="width1-2">Tanggal</th>
             <th class="width1-3">Jatuh Tempo</th>
             <th class="width1-4">Customer</th>
-            <th class="width1-5">Type</th>
-            <th class="width1-6">Vehicle</th>
+            <th class="width1-5">Asuransi</th>
+            <th class="width1-6">Plat #</th>
             <th class="width1-7">Grand Total</th>
             <th class="width1-8">Payment</th>
             <th class="width1-9">Remaining</th>
@@ -70,7 +70,7 @@
                     <?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($header->due_date))); ?>
                 </td>
                 <td class="width1-4"><?php echo CHtml::encode(CHtml::value($header, 'customer.name')); ?></td>
-                <td class="width1-5"><?php echo CHtml::encode(CHtml::value($header, 'customer.customer_type')); ?></td>
+                <td class="width1-5"><?php echo CHtml::encode(CHtml::value($header, 'insuranceCompany.name')); ?></td>
                 <td class="width1-6" style="text-align: right"><?php echo CHtml::encode($header->vehicle->plate_number); ?></td>
                 <td class="width1-7" style="text-align: right">
                     <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', ($header->total_price))); ?>

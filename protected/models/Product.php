@@ -564,7 +564,7 @@ class Product extends CActiveRecord {
             FROM " . InvoiceDetail::model()->tableName() . " d
             INNER JOIN " . InvoiceHeader::model()->tableName() . " h ON h.id = d.invoice_id
             WHERE t.id = d.product_id AND h.user_id_cancelled IS NULL AND YEAR(h.invoice_date) = :year AND MONTH(h.invoice_date) = :month
-        )");
+        ) AND t.product_sub_category_id IN (442, 443, 444)");
         $criteria->params[':year'] = $year;
         $criteria->params[':month'] = $month;
         
@@ -599,7 +599,7 @@ class Product extends CActiveRecord {
             FROM " . InvoiceDetail::model()->tableName() . " d
             INNER JOIN " . InvoiceHeader::model()->tableName() . " h ON h.id = d.invoice_id
             WHERE t.id = d.product_id AND h.user_id_cancelled IS NULL AND YEAR(h.invoice_date) = :year AND MONTH(h.invoice_date) = :month
-        )");
+        ) AND t.oil_sae_id IS NOT NULL");
         $criteria->params[':year'] = $year;
         $criteria->params[':month'] = $month;
         

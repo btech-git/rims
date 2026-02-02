@@ -50,8 +50,8 @@
                 
                 <?php foreach ($branches as $branch): ?>
                     <?php $saleQuantity = '0'; ?>
-                    <?php foreach ($oilSaleTotalQuantities as $i => $tireSaleTotalQuantity): ?>
-                        <?php if ($tireSaleTotalQuantity['branch_id'] == $branch->id): ?>
+                    <?php foreach ($oilSaleTotalQuantities as $i => $oilSaleTotalQuantity): ?>
+                        <?php if ($oilSaleTotalQuantity['branch_id'] == $branch->id): ?>
                             <?php $saleQuantity = CHtml::value($oilSaleTotalQuantities[$i], 'total_quantity'); ?>
                             <?php break; ?>
                         <?php endif; ?>

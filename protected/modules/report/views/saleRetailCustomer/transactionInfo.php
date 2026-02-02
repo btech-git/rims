@@ -2,14 +2,15 @@
 Yii::app()->clientScript->registerCss('_report', '
     .width1-1 { width: 10% }
     .width1-2 { width: 8% }
-    .width1-3 { width: 8% }
-    .width1-4 { width: 20% }
-    .width1-5 { width: 10% }
-    .width1-6 { width: 10% }
-    .width1-7 { width: 10% }
-    .width1-8 { width: 10% }
-    .width1-9 { width: 10% }
-    .width1-10 { width: 5% }
+    .width1-3 { width: 10% }
+    .width1-4 { width: 7% }
+    .width1-5 { width: 20% }
+    .width1-6 { width: 7% }
+    .width1-7 { width: 7% }
+    .width1-8 { width: 8% }
+    .width1-9 { width: 8% }
+    .width1-10 { width: 8% }
+    .width1-10 { width: 7% }
 ');
 ?>
 
@@ -30,14 +31,15 @@ Yii::app()->clientScript->registerCss('_report', '
                 <tr id="header1">
                     <th class="width1-1">Invoice #</th>
                     <th class="width1-2">Tanggal</th>
-                    <th class="width1-3">Plat #</th>
-                    <th class="width1-4">Vehicle</th>
-                    <th class="width1-5">Parts (Rp)</th>
-                    <th class="width1-6">Jasa (Rp)</th>
-                    <th class="width1-7">Total (Rp)</th>
-                    <th class="width1-8">Pembayaran (Rp)</th>
-                    <th class="width1-9">Sisa (Rp)</th>
-                    <th class="width1-10">Status</th>
+                    <th class="width1-3">Asuransi</th>
+                    <th class="width1-4">Plat #</th>
+                    <th class="width1-5">Vehicle</th>
+                    <th class="width1-6">Parts (Rp)</th>
+                    <th class="width1-7">Jasa (Rp)</th>
+                    <th class="width1-8">Total (Rp)</th>
+                    <th class="width1-9">Pembayaran (Rp)</th>
+                    <th class="width1-10">Sisa (Rp)</th>
+                    <th class="width1-11">Status</th>
                 </tr>
             </thead>
             <tbody>
@@ -49,6 +51,7 @@ Yii::app()->clientScript->registerCss('_report', '
                         <td>
                             <?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($header->invoice_date))); ?>
                         </td>
+                        <td><?php echo CHtml::encode(CHtml::value($header, 'insuranceCompany.name')); ?></td>
                         <td><?php echo CHtml::encode(CHtml::value($header, 'vehicle.plate_number')); ?></td>
                         <td>
                             <?php echo CHtml::encode(CHtml::value($header, 'vehicle.carMake.name')); ?> -
