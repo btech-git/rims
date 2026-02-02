@@ -984,6 +984,16 @@
                                         'url' => array('/report/outstandingWorkOrder/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('director')
                                     ),
+                                    array(
+                                        'label' => 'Outstanding Sales Order', 
+                                        'url' => array('/report/outstandingSaleOrder/summary'), 
+                                        'visible' => Yii::app()->user->checkAccess('director')
+                                    ),
+                                    array(
+                                        'label' => 'Outstanding Registration Transaction', 
+                                        'url' => array('/report/outstandingRegistrationTransaction/summary'), 
+                                        'visible' => Yii::app()->user->checkAccess('director')
+                                    ),
                                 ),
                             )); ?>
                         <?php endif; ?>
