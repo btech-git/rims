@@ -230,18 +230,18 @@ class YearlyMultipleVehicleSaleTransactionController extends Controller {
         $worksheet = $objPHPExcel->setActiveSheetIndex(0);
         $worksheet->setTitle('Penjualan Kendaraan ');
 
-        $worksheet->mergeCells('A1:N1');
-        $worksheet->mergeCells('A2:N2');
-        $worksheet->mergeCells('A3:N3');
+        $worksheet->mergeCells('A1:O1');
+        $worksheet->mergeCells('A2:O2');
+        $worksheet->mergeCells('A3:O3');
 
-        $worksheet->getStyle('A1:N5')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-        $worksheet->getStyle('A1:N5')->getFont()->setBold(true);
+        $worksheet->getStyle('A1:O5')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->getStyle('A1:O5')->getFont()->setBold(true);
 
         $worksheet->setCellValue('A1', 'Raperind Motor ' . CHtml::value($branch, 'name'));
         $worksheet->setCellValue('A2', 'Transaksi Penjualan ' . CHtml::value($vehicle, 'plate_number') . ' - ' . CHtml::value($vehicle, 'carMake.name') . ' - ' . CHtml::value($vehicle, 'carModel.name') . ' - ' . CHtml::value($vehicle, 'carSubModel.name'));
         $worksheet->setCellValue('A3', Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($startDate)) . ' - ' . Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($endDate)));
         
-        $worksheet->getStyle('A5:N5')->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle('A5:O5')->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
         $worksheet->setCellValue('A5', 'No');
         $worksheet->setCellValue('B5', 'Date Last Invoice');
         $worksheet->setCellValue('C5', 'KM');
@@ -256,9 +256,10 @@ class YearlyMultipleVehicleSaleTransactionController extends Controller {
         $worksheet->setCellValue('L5', 'Note');
         $worksheet->setCellValue('M5', 'Salesman');
         $worksheet->setCellValue('N5', 'Mechanic');
-        $worksheet->getStyle('A6:N6')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->setCellValue('O5', 'Asuransi');
+        $worksheet->getStyle('A5:O5')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
-        $counter = 7;
+        $counter = 6;
         foreach ($dataProvider->data as $i => $header) {
             
             $worksheet->setCellValue("A{$counter}", $i + 1);
@@ -274,6 +275,7 @@ class YearlyMultipleVehicleSaleTransactionController extends Controller {
             $worksheet->setCellValue("L{$counter}", CHtml::value($header, 'registrationTransaction.note'));
             $worksheet->setCellValue("M{$counter}", CHtml::value($header, 'registrationTransaction.employeeIdSalesPerson.name'));
             $worksheet->setCellValue("N{$counter}", CHtml::value($header, 'registrationTransaction.employeeIdAssignMechanic.name'));
+            $worksheet->setCellValue("O{$counter}", CHtml::value($header, 'insuranceCompany.name'));
 
             $counter++;
         }
@@ -287,7 +289,7 @@ class YearlyMultipleVehicleSaleTransactionController extends Controller {
         ob_end_clean();
 
         header('Content-type: application/vnd.ms-excel');
-        header('Content-Disposition: attachment;filename="penjualan_kendaraan.xls"');
+        header('Content-Disposition: attachment;filename="rincian_penjualan_kendaraan.xls"');
         header('Cache-Control: max-age=0');
 
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');

@@ -3,12 +3,15 @@
     .width1-2 { width: 15% }
     .width1-3 { width: 50% }
     
-    .width2-1 { width: 15% }
-    .width2-2 { width: 15% }
-    .width2-3 { width: 15% }
-    .width2-4 { width: 15% }
-    .width2-5 { width: 15% }
+    .width2-1 { width: 7% }
+    .width2-2 { width: 8% }
+    .width2-3 { width: 10% }
+    .width2-4 { width: 10% }
+    .width2-5 { width: 20% }
     .width2-6 { width: 15% }
+    .width2-7 { width: 10% }
+    .width2-8 { width: 10% }
+    .width2-9 { width: 10% }
 '); ?>
 
 <div style="font-weight: bold; text-align: center">
@@ -24,7 +27,7 @@
         <tr id="header1">
             <th class="width1-1">Name</th>
             <th class="width1-2">Type</th>
-            <th class="width1-3">Note</th>
+            <th class="width1-3">Akun</th>
         </tr>
         <tr id="header2">
             <td colspan="3">
@@ -33,10 +36,12 @@
                         <th class="width2-1">Tanggal</th>
                         <th class="width2-2">Jatuh Tempo</th>
                         <th class="width2-3">Faktur #</th>
-                        <th class="width2-4">Vehicle</th>
-                        <th class="width2-5">Grand Total</th>
-                        <th class="width2-6">Payment</th>
-                        <th class="width2-7">Remaining</th>
+                        <th class="width2-4">Plat #</th>
+                        <th class="width2-5">Kendaraan</th>
+                        <th class="width2-6">Asuransi</th>
+                        <th class="width2-7">Grand Total</th>
+                        <th class="width2-8">Payment</th>
+                        <th class="width2-9">Remaining</th>
                     </tr>
                 </table>
             </td>
@@ -47,7 +52,7 @@
             <tr class="items1">
                 <th class="width1-1"><?php echo CHtml::encode(CHtml::value($customer, 'name')); ?></th>
                 <th class="width1-2"><?php echo CHtml::encode(CHtml::value($customer, 'customer_type')); ?></th>
-                <th class="width1-3"><?php echo CHtml::encode(CHtml::value($customer, 'note')); ?></th>
+                <th class="width1-3"><?php echo CHtml::encode(CHtml::value($customer, 'coa.name')); ?></th>
             </tr>
             <tr class="items2">
                 <td colspan="3">
@@ -70,13 +75,19 @@
                                     <?php echo CHtml::link($receivableReportItem['invoice_number'], Yii::app()->createUrl("report/generalLedger/redirectTransaction", array("codeNumber" => $receivableReportItem['invoice_number'])), array('target' => '_blank'));?>
                                 </td>
                                 <td class="width2-4"><?php echo CHtml::encode($receivableReportItem['plate_number']); ?></td>
-                                <td class="width2-5" style="text-align: right">
+                                <td class="width2-5">
+                                    <?php echo CHtml::encode($receivableReportItem['car_make']); ?> - 
+                                    <?php echo CHtml::encode($receivableReportItem['car_model']); ?> - 
+                                    <?php echo CHtml::encode($receivableReportItem['car_sub_model']); ?>
+                                </td>
+                                <td class="width2-6"><?php echo CHtml::encode($receivableReportItem['insurance']); ?></td>
+                                <td class="width2-7" style="text-align: right">
                                     <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $revenue)); ?>
                                 </td>
-                                <td class="width2-6" style="text-align: right">
+                                <td class="width2-8" style="text-align: right">
                                     <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $paymentAmount)); ?>
                                 </td>
-                                <td class="width2-7" style="text-align: right">
+                                <td class="width2-9" style="text-align: right">
                                     <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $paymentLeft)); ?>
                                 </td>
                             </tr>
@@ -85,14 +96,14 @@
                             <?php $totalReceivable += $paymentLeft; ?>
                         <?php endforeach; ?>
                         <tr>
-                            <td colspan="4" style="text-align: right">TOTAL</td>
-                            <td class="width2-5" style="text-align: right"> 
+                            <td colspan="6" style="text-align: right; font-weight: bold">TOTAL</td>
+                            <td class="width2-7" style="text-align: right; font-weight: bold"> 
                                 <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalRevenue)); ?>
                             </td>
-                            <td class="width2-6" style="text-align: right"> 
+                            <td class="width2-8" style="text-align: right; font-weight: bold"> 
                                 <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalPayment)); ?>
                             </td>
-                            <td class="width2-7" style="text-align: right"> 
+                            <td class="width2-9" style="text-align: right; font-weight: bold"> 
                                 <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalReceivable)); ?>
                             </td>
                         </tr>     

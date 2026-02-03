@@ -24,7 +24,7 @@ Yii::app()->clientScript->registerCss('_report', '
         <?php echo CHtml::encode(CHtml::value($vehicle, 'customer.name')); ?> - 
         <?php echo CHtml::encode(CHtml::value($vehicle, 'customer.customer_type')); ?>
     </div>
-    <div><?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($startDate))) . ' &nbsp;&ndash;&nbsp; ' . CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($endDate))); ?></div>
+    <div><?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($startDate))) . ' &nbsp;&ndash;&nbsp; ' . CHtml::encode(Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($endDate))); ?></div>
 </div>
 
 <br />
@@ -36,6 +36,7 @@ Yii::app()->clientScript->registerCss('_report', '
             <th class="width1-2">KM</th>
             <th class="width1-3">WO #</th>
             <th class="width1-4">Invoice #</th>
+            <th class="width1-5">Asuransi</th>
             <th class="width1-5">Salesman</th>
             <th class="width1-6">Mechanic</th>
             <th class="width1-7">Total Invoice</th>
@@ -68,6 +69,7 @@ Yii::app()->clientScript->registerCss('_report', '
                         'id' => $header->id, 
                     ), array('target' => '_blank')); ?>
                 </td>
+                <td><?php echo CHtml::encode(CHtml::value($header, 'insuranceCompany.name')); ?></td>
                 <td><?php echo CHtml::encode(CHtml::value($header, 'registrationTransaction.employeeIdSalesPerson.name')); ?></td>
                 <td><?php echo CHtml::encode(CHtml::value($header, 'registrationTransaction.employeeIdAssignMechanic.name')); ?></td>
                 <td style="text-align: right">
@@ -87,7 +89,7 @@ Yii::app()->clientScript->registerCss('_report', '
     </tbody>
     <tfoot>
         <tr>
-            <td style="font-weight: bold; text-align: right; border-top: 1px solid" colspan="6">TOTAL</td>
+            <td style="font-weight: bold; text-align: right; border-top: 1px solid" colspan="7">TOTAL</td>
             <td style="font-weight: bold; text-align: right; border-top: 1px solid">
                 <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $totalInvoice)); ?>
             </td>

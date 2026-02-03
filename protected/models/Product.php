@@ -1073,13 +1073,19 @@ class Product extends CActiveRecord {
             $params[':customer_type'] = $customerType;
         }
         
-        $sql = "SELECT r.invoice_number, r.invoice_date, c.name as customer, v.plate_number as vehicle, p.quantity, p.unit_price, p.total_price
+        $sql = "SELECT r.invoice_number, r.invoice_date, c.name as customer, v.plate_number, p.quantity, p.unit_price, p.total_price, 
+                    k.name AS car_make, d.name AS car_model, s.name AS car_sub_model, i.name AS insurance
                 FROM " . InvoiceDetail::model()->tableName() . " p 
                 INNER JOIN " . InvoiceHeader::model()->tableName() . " r ON r.id = p.invoice_id
                 INNER JOIN " . Customer::model()->tableName() . " c ON c.id = r.customer_id
                 INNER JOIN " . Vehicle::model()->tableName() . " v ON v.id = r.vehicle_id
-                WHERE substr(r.invoice_date, 1, 10) BETWEEN :start_date AND :end_date AND p.product_id = :product_id AND r.status NOT LIKE '%CANCEL%'" . $branchConditionSql . $customerTypeConditionSql . "
-                ORDER BY r.invoice_date ASC";
+                INNER JOIN " . VehicleCarMake::model()->tableName() . " k ON k.id = v.car_make_id
+                INNER JOIN " . VehicleCarModel::model()->tableName() . " d ON d.id = v.car_model_id
+                INNER JOIN " . VehicleCarSubModel::model()->tableName() . " s ON s.id = v.car_sub_model_id
+                LEFT OUTER JOIN " . InsuranceCompany::model()->tableName() . " i ON i.id = r.insurance_company_id
+                WHERE substr(r.invoice_date, 1, 10) BETWEEN :start_date AND :end_date AND p.product_id = :product_id AND r.status NOT LIKE '%CANCEL%'" . 
+                    $branchConditionSql . $customerTypeConditionSql . "
+                ORDER BY r.invoice_date ASC, r.invoice_number ASC";
         
         $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
         

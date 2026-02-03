@@ -215,18 +215,18 @@ class YearlyMultipleCustomerSaleTransactionController extends Controller {
         $worksheet = $objPHPExcel->setActiveSheetIndex(0);
         $worksheet->setTitle('Penjualan Customer ');
 
-        $worksheet->mergeCells('A1:Q1');
-        $worksheet->mergeCells('A2:Q2');
-        $worksheet->mergeCells('A3:Q3');
+        $worksheet->mergeCells('A1:R1');
+        $worksheet->mergeCells('A2:R2');
+        $worksheet->mergeCells('A3:R3');
 
-        $worksheet->getStyle('A1:Q5')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-        $worksheet->getStyle('A1:Q5')->getFont()->setBold(true);
+        $worksheet->getStyle('A1:R5')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->getStyle('A1:R5')->getFont()->setBold(true);
 
         $worksheet->setCellValue('A1', 'Raperind Motor ' . CHtml::value($branch, 'name'));
         $worksheet->setCellValue('A2', 'Transaksi Penjualan ' . CHtml::value($customer, 'name'));
         $worksheet->setCellValue('A3', Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($startDate)) . ' - ' . Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($endDate)));
         
-        $worksheet->getStyle('A5:Q5')->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle('A5:R5')->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
         $worksheet->setCellValue('A5', 'No');
         $worksheet->setCellValue('B5', 'ID');
         $worksheet->setCellValue('C5', 'Date Last Invoice');
@@ -244,7 +244,8 @@ class YearlyMultipleCustomerSaleTransactionController extends Controller {
         $worksheet->setCellValue('O5', 'Note');
         $worksheet->setCellValue('P5', 'Salesman');
         $worksheet->setCellValue('Q5', 'Mechanic');
-        $worksheet->getStyle('A6:Q6')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->setCellValue('R5', 'Asuransi');
+        $worksheet->getStyle('A6:R6')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
         $counter = 7;
         foreach ($dataProvider->data as $i => $header) {
@@ -265,6 +266,7 @@ class YearlyMultipleCustomerSaleTransactionController extends Controller {
             $worksheet->setCellValue("O{$counter}", CHtml::value($header, 'registrationTransaction.note'));
             $worksheet->setCellValue("P{$counter}", CHtml::value($header, 'registrationTransaction.employeeIdSalesPerson.name'));
             $worksheet->setCellValue("Q{$counter}", CHtml::value($header, 'registrationTransaction.employeeIdAssignMechanic.name'));
+            $worksheet->setCellValue("R{$counter}", CHtml::value($header, 'insuranceCompany.name'));
 
             $counter++;
         }
@@ -278,7 +280,7 @@ class YearlyMultipleCustomerSaleTransactionController extends Controller {
         ob_end_clean();
 
         header('Content-type: application/vnd.ms-excel');
-        header('Content-Disposition: attachment;filename="penjualan_customer.xls"');
+        header('Content-Disposition: attachment;filename="rincian_penjualan_customer_tahunan.xls"');
         header('Cache-Control: max-age=0');
 
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');

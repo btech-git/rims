@@ -55,7 +55,7 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                         <span class="prefix">Branch</span>
                                     </div>
                                     <div class="small-8 columns">
-                                        <?php echo CHtml::dropDownlist('BranchId', $branchId, CHtml::listData(Branch::model()->findAllbyAttributes(array('status' => 'Active')), 'id', 'name'), array('empty' => '-- All Branch --')); ?>
+                                        <?php echo CHtml::dropDownlist('BranchId', $branchId, CHtml::listData(Branch::model()->findAllbyAttributes(array('status' => 'Active')), 'id', 'name'), array('empty' => '-- All --')); ?>
                                     </div>
                                 </div>
                             </div>
@@ -65,10 +65,13 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                             <div class="field">
                                 <div class="row collapse">
                                     <div class="small-4 columns">
-                                        <span class="prefix">VehiclePlate #</span>
+                                        <span class="prefix">Type</span>
                                     </div>
                                     <div class="small-8 columns">
-                                        <?php echo CHtml::textField('PlateNumber', $plateNumber); ?>
+                                        <?php echo CHtml::dropDownlist('CustomerType', $customerType, array(
+                                            'Individual' => 'Retail',
+                                            'Company' => 'PT',
+                                        ), array('empty' => '-- All --')); ?>
                                     </div>
                                 </div>
                             </div>
@@ -152,7 +155,6 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                         'endDate' => $endDate,
                         'branchId' => $branchId,
                         'customerId' => $customerId,
-                        'plateNumber' => $plateNumber,
                     )); ?>
                 </div>
                 <div class="clear"></div>

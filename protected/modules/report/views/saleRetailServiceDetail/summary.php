@@ -53,27 +53,6 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                     </div>
                     
                     <div class="row">
-<!--                        <div class="medium-6 columns">
-                            <div class="field">
-                                <div class="row collapse">
-                                    <div class="small-4 columns">
-                                        <span class="prefix">Service Code</span>
-                                    </div>
-                                    <div class="small-8 columns">
-                                        <?php /*echo CHtml::activeTextField($service, 'code', array(
-                                            'onchange' => '
-                                            $.fn.yiiGridView.update("service-grid", {data: {Service: {
-                                                service_category_id: $("#Service_service_category_id").val(),
-                                                service_type_id: $("#Service_service_type_id").val(),
-                                                code: $(this).val(),
-                                                name: $("#Service_name").val(),
-                                            } } });',
-                                        ));*/ ?>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>-->
-                        
                         <div class="medium-6 columns">
                             <div class="field">
                                 <div class="row collapse">
@@ -161,147 +140,7 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                     </div>
                     
                     <div class="row">
-<!--                        <div class="medium-6 columns">
-                            <div class="field">
-                                <div class="row collapse">
-                                    <div class="small-4 columns">
-                                        <span class="prefix">Service</span>
-                                    </div>
-                                    <div class="small-8 columns">
-                                        <?php /*echo CHtml::activeTextField($service, 'id', array(
-                                            'readonly' => true,
-                                            'onclick' => '$("#service-dialog").dialog("open"); return false;',
-                                            'onkeypress' => 'if (event.keyCode == 13) { $("#service-dialog").dialog("open"); return false; }',
-                                        )); ?>
-
-                                         Service Dialog and Grid 
-                                        <?php $this->beginWidget('zii.widgets.jui.CJuiDialog', array(
-                                            'id' => 'service-dialog',
-                                            'options' => array(
-                                                'title' => 'Service',
-                                                'autoOpen' => false,
-                                                'width' => 'auto',
-                                                'modal' => true,
-                                            ),
-                                        )); ?>
-                                        <?php echo CHtml::beginForm(); ?>
-                                            <div class="row">
-                                                <div class="small-12 columns" style="padding-left: 0px; padding-right: 0px;">
-                                                    <table>
-                                                        <thead>
-                                                            <tr>
-                                                                <td>Code</td>
-                                                                <td>Name</td>
-                                                                <td>Kategori</td>
-                                                                <td>Type</td>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                            <tr>
-                                                                <td>
-                                                                    <?php echo CHtml::activeTextField($service, 'code', array(
-                                                                        'onchange' => '
-                                                                        $.fn.yiiGridView.update("service-grid", {data: {Service: {
-                                                                            service_category_id: $("#Service_service_category_id").val(),
-                                                                            service_type_id: $("#Service_service_type_id").val(),
-                                                                            code: $(this).val(),
-                                                                            name: $("#Service_name").val(),
-                                                                        } } });',
-                                                                    )); ?>
-                                                                </td>
-                                                                <td>
-                                                                    <?php echo CHtml::activeTextField($service, 'name', array(
-                                                                        'onchange' => '
-                                                                        $.fn.yiiGridView.update("service-grid", {data: {Service: {
-                                                                            service_category_id: $("#Service_service_category_id").val(),
-                                                                            service_type_id: $("#Service_service_type_id").val(),
-                                                                            code: $("#Service_code").val(),
-                                                                            name: $(this).val(),
-                                                                        } } });',
-                                                                    )); ?>
-                                                                </td>
-                                                                <td>
-                                                                    <?php echo CHtml::activeDropDownList($service, 'service_category_id', CHtml::listData(ServiceCategory::model()->findAll(), 'id', 'name'), array('empty' => '-- All --',
-                                                                        'onchange' => '
-                                                                        $.fn.yiiGridView.update("service-grid", {data: {Service: {
-                                                                            service_category_id: $(this).val(),
-                                                                            service_type_id: $("#Service_service_type_id").val(),
-                                                                            code: $("#Service_code").val(),
-                                                                            name: $("#Service_name").val(),
-                                                                        } } });',
-                                                                    )); ?>
-                                                                </td>
-                                                                <td>
-                                                                    <div>
-                                                                        <?php echo CHtml::activeDropDownList($service, 'service_type_id', CHtml::listData(ServiceType::model()->findAll(), 'id', 'name'), array('empty' => '-- All --',
-                                                                            'onchange' => '
-                                                                            $.fn.yiiGridView.update("service-grid", {data: {Service: {
-                                                                                service_category_id: $("#Service_service_category_id").val(),
-                                                                                service_type_id: $(this).val(),
-                                                                                code: $("#Service_code").val(),
-                                                                                name: $("#Service_name").val(),
-                                                                            } } });',
-                                                                        )); ?>
-                                                                    </div>
-                                                                </td>
-                                                            </tr>
-                                                        </tbody>
-                                                    </table>
-
-                                                    <?php $this->widget('zii.widgets.grid.CGridView', array(
-                                                        'id'=>'service-grid',
-                                                        'dataProvider'=>$serviceDataProvider,
-                                                        'filter'=>null,
-                                                        'template' => '{items}<div class="clearfix">{summary}{pager}</div>',
-                                                        'pager'=>array(
-                                                            'cssFile'=>false,
-                                                            'header'=>'',
-                                                        ),
-                                                        'selectionChanged'=>'js:function(id){
-                                                            $("#' . CHtml::activeId($service, 'id') . '").val($.fn.yiiGridView.getSelection(id));
-                                                            $("#service-dialog").dialog("close");
-                                                            if ($.fn.yiiGridView.getSelection(id) == "") {
-                                                                $("#service_name").html("");
-                                                            } else {
-                                                                $.ajax({
-                                                                    type: "POST",
-                                                                    dataType: "JSON",
-                                                                    url: "' . CController::createUrl('ajaxJsonService') . '",
-                                                                    data: $("form").serialize(),
-                                                                    success: function(data) {
-                                                                        $("#service_name").html(data.service_name);
-                                                                    },
-                                                                });
-                                                            }
-                                                        }',
-                                                        'columns'=>array(
-                                                            'code',
-                                                            'name',
-                                                            array(
-                                                                'name' => 'service_category_id',
-                                                                'value' => '$data->serviceCategory->name',
-                                                            ),
-                                                            array(
-                                                                'name' => 'service_type_id',
-                                                                'value' => '$data->serviceType->name',
-                                                            ),
-                                                        ),
-                                                    )); ?>
-                                                </div>
-                                            </div>
-                                        <?php echo CHtml::endForm(); ?>
-                                        <?php $this->endWidget('zii.widgets.jui.CJuiDialog'); ?>
-
-                                        <?php echo CHtml::openTag('span', array('id' => 'service_name')); ?>
-                                        <?php echo CHtml::encode(CHtml::value($service, 'name')); ?>
-                                        <?php echo CHtml::closeTag('span');*/ ?> 
-
-                                    </div>
-                                </div>
-                            </div>
-                        </div>-->
-                        
-                        <div class="medium-12 columns">
+                        <div class="medium-6 columns">
                             <div class="field">
                                 <div class="row collapse">
                                     <div class="small-4 columns">
@@ -339,6 +178,23 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                 </div>
                             </div>
                         </div>
+
+                        <div class="medium-6 columns">
+                            <div class="field">
+                                <div class="row collapse">
+                                    <div class="small-4 columns">
+                                        <span class="prefix">Customer Type</span>
+                                    </div>
+                                     <div class="small-8 columns">
+                                        <?php echo CHtml::dropDownList('CustomerType', $customerType, array(
+                                            '' => '-- All --',
+                                            'Individual' => 'Retail',
+                                            'Company' => 'PT',
+                                        )); ?>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
                     <div class="clear"></div>
@@ -362,6 +218,7 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                         'startDate' => $startDate,
                         'endDate' => $endDate,
                         'branchId' => $branchId,
+                        'customerType' => $customerType,
                     )); ?>
                 </div>
                 <div class="clear"></div>

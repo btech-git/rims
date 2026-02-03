@@ -51,7 +51,12 @@ Yii::app()->clientScript->registerCss('_report', '
     <tbody>
         <?php foreach ($cashTransactionSummary->dataProvider->data as $header): ?>
             <tr class="items1">
-                <td class="width1-1"><?php echo CHtml::link(CHtml::encode($header->transaction_number), array("/transaction/cashTransaction/view", "id"=>$header->id), array("target" => "_blank")); ?></td>
+                <td class="width1-1">
+                    <?php echo CHtml::link(CHtml::encode($header->transaction_number), array(
+                        "/transaction/cashTransaction/view", 
+                        "id"=>$header->id
+                    ), array("target" => "_blank")); ?>
+                </td>
                 <td class="width1-2"><?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($header->transaction_date))); ?></td>
                 <td class="width1-3"><?php echo CHtml::encode(CHtml::value($header, 'transaction_type')); ?></td>
                 <td class="width1-4"><?php echo CHtml::encode(CHtml::value($header, 'coa.name')); ?></td>

@@ -97,12 +97,12 @@ class SaleInvoiceProjectController extends Controller {
         $worksheet = $objPHPExcel->setActiveSheetIndex(0);
         $worksheet->setTitle('Penjualan Project');
 
-        $worksheet->mergeCells('A1:N1');
-        $worksheet->mergeCells('A2:N2');
-        $worksheet->mergeCells('A3:N3');
+        $worksheet->mergeCells('A1:O1');
+        $worksheet->mergeCells('A2:O2');
+        $worksheet->mergeCells('A3:O3');
 
-        $worksheet->getStyle('A1:N6')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-        $worksheet->getStyle('A1:N6')->getFont()->setBold(true);
+        $worksheet->getStyle('A1:O5')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->getStyle('A1:O5')->getFont()->setBold(true);
 
         $branch = Branch::model()->findByPk($branchId);
         $customer = Customer::model()->findByPk($customerId);
@@ -115,21 +115,22 @@ class SaleInvoiceProjectController extends Controller {
         $worksheet->setCellValue('A5', 'Penjualan #');
         $worksheet->setCellValue('B5', 'Tanggal');
         $worksheet->setCellValue('C5', 'Customer');
-        $worksheet->setCellValue('D5', 'Vehicle');
-        $worksheet->setCellValue('E5', 'Plat #');
-        $worksheet->setCellValue('F5', 'WO #');
-        $worksheet->setCellValue('G5', 'Type');
-        $worksheet->setCellValue('H5', 'ID');
-        $worksheet->setCellValue('I5', 'Item');
-        $worksheet->setCellValue('J5', 'Quantity');
-        $worksheet->setCellValue('K5', 'Harga');
-        $worksheet->setCellValue('L5', 'HPP');
-        $worksheet->setCellValue('M5', 'COGS');
-        $worksheet->setCellValue('N5', 'Total Sales');
+        $worksheet->setCellValue('D5', 'Asuransi');
+        $worksheet->setCellValue('E5', 'Kendaraan');
+        $worksheet->setCellValue('F5', 'Plat #');
+        $worksheet->setCellValue('G5', 'WO #');
+        $worksheet->setCellValue('H5', 'Type');
+        $worksheet->setCellValue('I5', 'ID');
+        $worksheet->setCellValue('J5', 'Item');
+        $worksheet->setCellValue('K5', 'Quantity');
+        $worksheet->setCellValue('L5', 'Harga');
+        $worksheet->setCellValue('M5', 'HPP');
+        $worksheet->setCellValue('N5', 'COGS');
+        $worksheet->setCellValue('O5', 'Total Sales');
 
-        $worksheet->getStyle('A6:N6')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle('A5:O5')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
-        $counter = 7;
+        $counter = 6;
         $totalSale = '0.00';
         $grandTotalCogs = '0.00';
         
@@ -144,34 +145,35 @@ class SaleInvoiceProjectController extends Controller {
             $worksheet->setCellValue("A{$counter}", $dataItem['invoice_number']);
             $worksheet->setCellValue("B{$counter}", $dataItem['invoice_date']);
             $worksheet->setCellValue("C{$counter}", $dataItem['customer_name']);
-            $worksheet->setCellValue("D{$counter}", $dataItem['car_make'] . ' - ' . $dataItem['car_model'] . ' - ' . $dataItem['car_sub_model']);
-            $worksheet->setCellValue("E{$counter}", $dataItem['plate_number']);
-            $worksheet->setCellValue("F{$counter}", $dataItem['work_order_number']);
+            $worksheet->setCellValue("D{$counter}", $dataItem['insurance']);
+            $worksheet->setCellValue("E{$counter}", $dataItem['car_make'] . ' - ' . $dataItem['car_model'] . ' - ' . $dataItem['car_sub_model']);
+            $worksheet->setCellValue("F{$counter}", $dataItem['plate_number']);
+            $worksheet->setCellValue("G{$counter}", $dataItem['work_order_number']);
             if (empty($dataItem['product'])) {
-                $worksheet->setCellValue("G{$counter}", 'Jasa');
-                $worksheet->setCellValue("H{$counter}", $dataItem['service_id']);
-                $worksheet->setCellValue("I{$counter}", $dataItem['service']);
+                $worksheet->setCellValue("H{$counter}", 'Jasa');
+                $worksheet->setCellValue("I{$counter}", $dataItem['service_id']);
+                $worksheet->setCellValue("J{$counter}", $dataItem['service']);
             } else {
-                $worksheet->setCellValue("G{$counter}", 'Parts');
-                $worksheet->setCellValue("H{$counter}", $dataItem['product_id']);
-                $worksheet->setCellValue("I{$counter}", $dataItem['product']);
+                $worksheet->setCellValue("H{$counter}", 'Parts');
+                $worksheet->setCellValue("I{$counter}", $dataItem['product_id']);
+                $worksheet->setCellValue("J{$counter}", $dataItem['product']);
             }
-            $worksheet->setCellValue("J{$counter}", $quantity);
-            $worksheet->setCellValue("K{$counter}", $unitPrice);
-            $worksheet->setCellValue("L{$counter}", $cogs);
-            $worksheet->setCellValue("M{$counter}", $totalCogs);
-            $worksheet->setCellValue("N{$counter}", $grandTotal);
+            $worksheet->setCellValue("K{$counter}", $quantity);
+            $worksheet->setCellValue("L{$counter}", $unitPrice);
+            $worksheet->setCellValue("M{$counter}", $cogs);
+            $worksheet->setCellValue("N{$counter}", $totalCogs);
+            $worksheet->setCellValue("O{$counter}", $grandTotal);
             $counter++;
 
             $totalSale += $grandTotal;
             $grandTotalCogs += $totalCogs;
         }
-        $worksheet->getStyle("A{$counter}:N{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
-        $worksheet->getStyle("A{$counter}:N{$counter}")->getFont()->setBold(true);
+        $worksheet->getStyle("A{$counter}:O{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A{$counter}:O{$counter}")->getFont()->setBold(true);
 
-        $worksheet->setCellValue("L{$counter}", 'TOTAL');
-        $worksheet->setCellValue("M{$counter}", $grandTotalCogs);
-        $worksheet->setCellValue("N{$counter}", $totalSale);
+        $worksheet->setCellValue("M{$counter}", 'TOTAL');
+        $worksheet->setCellValue("N{$counter}", $grandTotalCogs);
+        $worksheet->setCellValue("O{$counter}", $totalSale);
 
         for ($col = 'A'; $col !== 'Z'; $col++) {
             $objPHPExcel->getActiveSheet()

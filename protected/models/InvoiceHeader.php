@@ -2769,7 +2769,7 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
         $sql = "
             SELECT r.id, r.customer_id, r.invoice_number, r.invoice_date, d.product_id, p.name AS product, d.service_id, s.name AS service, d.quantity, 
                 d.unit_price, d.total_price, v.plate_number AS plate_number, p.hpp, c.name AS customer_name, i.work_order_number, r.registration_transaction_id,
-                m.name AS car_make, o.name AS car_model, sm.name AS car_sub_model
+                m.name AS car_make, o.name AS car_model, sm.name AS car_sub_model, ic.name AS insurance
             FROM " . InvoiceHeader::model()->tableName() . " r
             INNER JOIN " . InvoiceDetail::model()->tableName() . " d ON r.id = d.invoice_id
             INNER JOIN " . RegistrationTransaction::model()->tableName() . " i ON i.id = r.registration_transaction_id
@@ -2780,6 +2780,7 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
             INNER JOIN " . VehicleCarSubModel::model()->tableName() . " sm ON sm.id = v.car_sub_model_id
             LEFT OUTER JOIN " . Product::model()->tableName() . " p ON p.id = d.product_id
             LEFT OUTER JOIN " . Service::model()->tableName() . " s ON s.id = d.service_id
+            LEFT OUTER JOIN " . InsuranceCompany::model()->tableName() . " ic ON ic.id = r.insurance_company_id
             WHERE substr(r.invoice_date, 1, 10) BETWEEN :start_date AND :end_date AND r.status NOT LIKE '%CANCELLED%' AND c.customer_type = 'Company'" . 
                 $branchConditionSql . $customerConditionSql . "
             ORDER BY r.invoice_date ASC, r.invoice_number ASC
@@ -2790,10 +2791,10 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
         return $resultSet;
     }
     
-    public static function getReceivableReport($endDate, $branchId, $plateNumber, $customerIds) {
+    public static function getReceivableReport($endDate, $branchId, $customerType, $customerIds) {
         $customerIdsSql = empty($customerIds) ? 'NULL' : implode(',', $customerIds);
         $branchConditionSql = '';
-        $plateNumberConditionSql = '';
+        $customerTypeConditionSql = '';
         
         $params = array(
             ':end_date' => $endDate,
@@ -2804,20 +2805,26 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
             $params[':branch_id'] = $branchId;
         }
         
-        if (!empty($plateNumber)) {
-            $plateNumberConditionSql = ' AND v.plate_number LIKE :plate_number';
-            $params[':plate_number'] = "%{$plateNumber}%";
+        if (!empty($customerType)) {
+            $customerTypeConditionSql = ' AND c.customer_type = :customer_type';
+            $params[':customer_type'] = $customerType;
         }
         
-        $sql = "SELECT i.id, i.customer_id, i.invoice_number, i.invoice_date, i.due_date, v.plate_number, i.total_price
+        $sql = "SELECT i.id, i.customer_id, i.invoice_number, i.invoice_date, i.due_date, v.plate_number, i.total_price, ic.name AS insurance, 
+                    k.name AS car_make, d.name AS car_model, s.name AS car_sub_model
                 FROM " . InvoiceHeader::model()->tableName() . " i
+                INNER JOIN " . Customer::model()->tableName() . " c ON c.id = i.customer_id
                 INNER JOIN " . Vehicle::model()->tableName() . " v ON v.id = i.vehicle_id
+                INNER JOIN " . VehicleCarMake::model()->tableName() . " k ON k.id = v.car_make_id
+                INNER JOIN " . VehicleCarModel::model()->tableName() . " d ON d.id = v.car_model_id
+                INNER JOIN " . VehicleCarSubModel::model()->tableName() . " s ON s.id = v.car_sub_model_id
+                LEFT OUTER JOIN " . InsuranceCompany::model()->tableName() . " ic ON ic.id = i.insurance_company_id
                 WHERE i.customer_id IN ({$customerIdsSql}) AND i.user_id_cancelled IS NULL AND i.invoice_date BETWEEN '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND :end_date AND i.total_price - (
                     SELECT COALESCE(SUM(d.amount + d.tax_service_amount + d.discount_amount + d.bank_administration_fee + d.merimen_fee + d.downpayment_amount), 0)
                     FROM " . PaymentInDetail::model()->tableName() . " d
                     INNER JOIN " . PaymentIn::model()->tableName() . " h ON h.id = d.payment_in_id
                     WHERE i.id = d.invoice_header_id AND h.user_id_cancelled IS NULL AND h.payment_date BETWEEN '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND :end_date
-                ) > 0" . $branchConditionSql . $plateNumberConditionSql . "
+                ) > 0" . $branchConditionSql . $customerTypeConditionSql . "
                 ORDER BY i.customer_id ASC, i.invoice_date ASC";
         
         $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);

@@ -66,6 +66,45 @@ class BodyRepairCostingController extends Controller {
         ));
     }
 
+    public function actionTransactionProductInfo($registrationId) {
+        set_time_limit(0);
+        ini_set('memory_limit', '1024M');
+
+        $registrationProductData = RegistrationProduct::model()->findAllByAttributes(array('registration_transaction_id' => $registrationId));
+        $registrationTransaction = RegistrationTransaction::model()->findByPk($registrationId);
+        
+        $this->render('transactionProductInfo', array(
+            'registrationProductData' => $registrationProductData,
+            'registrationTransaction' => $registrationTransaction,
+        ));
+    }
+
+    public function actionTransactionExpenseInfo($registrationId) {
+        set_time_limit(0);
+        ini_set('memory_limit', '1024M');
+
+        $workOrderExpenseData = WorkOrderExpenseHeader::model()->findAllByAttributes(array('registration_transaction_id' => $registrationId));
+        $registrationTransaction = RegistrationTransaction::model()->findByPk($registrationId);
+        
+        $this->render('transactionExpenseInfo', array(
+            'workOrderExpenseData' => $workOrderExpenseData,
+            'registrationTransaction' => $registrationTransaction,
+        ));
+    }
+
+    public function actionTransactionMaterialInfo($registrationId) {
+        set_time_limit(0);
+        ini_set('memory_limit', '1024M');
+
+        $materialRequestData = MaterialRequestHeader::model()->findAllByAttributes(array('registration_transaction_id' => $registrationId));
+        $registrationTransaction = RegistrationTransaction::model()->findByPk($registrationId);
+        
+        $this->render('transactionMaterialInfo', array(
+            'materialRequestData' => $materialRequestData,
+            'registrationTransaction' => $registrationTransaction,
+        ));
+    }
+
     public function actionAjaxJsonCustomer() {
         if (Yii::app()->request->isAjaxRequest) {
             $customerId = (isset($_POST['Customer']['id'])) ? $_POST['Customer']['id'] : '';

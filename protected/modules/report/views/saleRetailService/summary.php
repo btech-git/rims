@@ -53,27 +53,6 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                     </div>
                     
                     <div class="row">
-<!--                        <div class="medium-6 columns">
-                            <div class="field">
-                                <div class="row collapse">
-                                    <div class="small-4 columns">
-                                        <span class="prefix">Service Code</span>
-                                    </div>
-                                    <div class="small-8 columns">
-                                        <?php /*echo CHtml::activeTextField($service, 'code', array(
-                                            'onchange' => '
-                                            $.fn.yiiGridView.update("service-grid", {data: {Service: {
-                                                service_category_id: $("#Service_service_category_id").val(),
-                                                service_type_id: $("#Service_service_type_id").val(),
-                                                code: $(this).val(),
-                                                name: $("#Service_name").val(),
-                                            } } });',
-                                        ));*/ ?>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>-->
-                        
                         <div class="medium-6 columns">
                             <div class="field">
                                 <div class="row collapse">
@@ -163,52 +142,8 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                         </div>
                     </div>
                     
-<!--                    <div class="row">
-                        <div class="medium-6 columns">
-                            <div class="field">
-                                <div class="row collapse">
-                                    <div class="small-4 columns">
-                                        <span class="prefix">Service Kategori</span>
-                                    </div>
-                                    <div class="small-8 columns">
-                                        <?php /*echo CHtml::activeDropDownList($service, 'service_category_id', CHtml::listData(ServiceCategory::model()->findAll(), 'id', 'name'), array('empty' => '-- All --',
-                                            'onchange' => '
-                                            $.fn.yiiGridView.update("service-grid", {data: {Service: {
-                                                service_category_id: $(this).val(),
-                                                service_type_id: $("#Service_service_type_id").val(),
-                                                code: $("#Service_code").val(),
-                                                name: $("#Service_name").val(),
-                                            } } });',
-                                        )); ?>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="medium-6 columns">
-                            <div class="field">
-                                <div class="row collapse">
-                                    <div class="small-4 columns">
-                                        <span class="prefix">Service Type</span>
-                                    </div>
-                                    <div class="small-8 columns">
-                                        <?php echo CHtml::activeDropDownList($service, 'service_type_id', CHtml::listData(ServiceType::model()->findAll(), 'id', 'name'), array('empty' => '-- All --',
-                                            'onchange' => '
-                                            $.fn.yiiGridView.update("service-grid", {data: {Service: {
-                                                service_category_id: $("#Service_service_category_id").val(),
-                                                service_type_id: $(this).val(),
-                                                code: $("#Service_code").val(),
-                                                name: $("#Service_name").val(),
-                                            } } });',
-                                        ));*/ ?>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>-->
-                    
                     <div class="row">                        
-                        <div class="medium-12 columns">
+                        <div class="medium-6 columns">
                             <div class="field">
                                 <div class="row collapse">
                                     <div class="small-4 columns">

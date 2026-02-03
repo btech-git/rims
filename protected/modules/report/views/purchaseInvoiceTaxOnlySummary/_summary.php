@@ -64,7 +64,10 @@
                 <?php foreach ($receiveItems as $receiveItem): ?>
                     <tr class="items1">
                         <td class="width1-1">
-                            <?php echo CHtml::link(CHtml::encode($header->purchase_order_no), array("/transaction/transactionPurchaseOrder/view", "id"=>$header->id), array("target" => "_blank")); ?>
+                            <?php echo CHtml::link(CHtml::encode($header->purchase_order_no), array(
+                                "/transaction/transactionPurchaseOrder/view", 
+                                "id"=>$header->id
+                            ), array("target" => "_blank")); ?>
                         </td>
                         <td class="width1-2">
                             <?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy hh:mm:ss', strtotime($header->purchase_order_date))); ?>

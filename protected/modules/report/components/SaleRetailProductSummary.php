@@ -37,25 +37,22 @@ class SaleRetailProductSummary extends CComponent {
         
         if (!empty($branchId)) {
             $branchConditionSql = ' AND h.branch_id = :branch_id';
+            $this->dataProvider->criteria->params[':branch_id'] = $branchId;
         }
 
         if (!empty($customerType)) {
             $customerTypeConditionSql = ' AND c.customer_type = :customer_type';
+            $this->dataProvider->criteria->params[':customer_type'] = $customerType;
         }
 
         $this->dataProvider->criteria->addCondition("EXISTS (
             SELECT d.id FROM " . InvoiceDetail::model()->tableName() . " d 
             INNER JOIN " . InvoiceHeader::model()->tableName() . " h ON h.id = d.invoice_id
             INNER JOIN " . Customer::model()->tableName() . " c ON c.id = h.customer_id
-            WHERE d.product_id = t.id AND substr(h.invoice_date, 1, 10) BETWEEN :start_date AND :end_date AND h.status NOT LIKE '%CANCEL%'" . $branchConditionSql . $customerTypeConditionSql . " 
+            WHERE d.product_id = t.id AND substr(h.invoice_date, 1, 10) BETWEEN :start_date AND :end_date AND h.status NOT LIKE '%CANCEL%'" . 
+                $branchConditionSql . $customerTypeConditionSql . " 
         )");
         $this->dataProvider->criteria->params[':start_date'] = $startDate;
         $this->dataProvider->criteria->params[':end_date'] = $endDate;
-        if (!empty($branchId)) {
-            $this->dataProvider->criteria->params[':branch_id'] = $branchId;
-        }
-        if (!empty($customerType)) {
-            $this->dataProvider->criteria->params[':customer_type'] = $customerType;
-        }
     }
 }

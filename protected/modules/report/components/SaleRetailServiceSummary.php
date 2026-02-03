@@ -32,38 +32,32 @@ class SaleRetailServiceSummary extends CComponent {
         $branchId = (empty($filters['branchId'])) ? '' : $filters['branchId'];
         $serviceTypeId = (empty($filters['serviceTypeId'])) ? '' : $filters['serviceTypeId'];
         $serviceCategoryId = (empty($filters['serviceCategoryId'])) ? '' : $filters['serviceCategoryId'];
+        $customerType = (empty($filters['customerType'])) ? '' : $filters['customerType'];
         
         $branchConditionSql = '';
-        $serviceTypeConditionSql = '';
-        $serviceCategoryConditionSql = '';
+        $customerTypeConditionSql = '';
         
         if (!empty($branchId)) {
             $branchConditionSql = ' AND h.branch_id = :branch_id';
+            $this->dataProvider->criteria->params[':branch_id'] = $branchId;
         }
 
-        if (!empty($serviceTypeId)) {
-            $serviceTypeConditionSql = ' AND t.service_type_id = :service_type_id';
-        }
-
-        if (!empty($serviceCategoryId)) {
-            $serviceCategoryConditionSql = ' AND t.service_category_id = :service_category_id';
+        if (!empty($customerType)) {
+            $customerTypeConditionSql = ' AND c.customer_type = :customer_type';
+            $this->dataProvider->criteria->params[':customer_type'] = $customerType;
         }
 
         $this->dataProvider->criteria->addCondition("EXISTS (
             SELECT d.id FROM " . InvoiceDetail::model()->tableName() . " d 
             INNER JOIN " . InvoiceHeader::model()->tableName() . " h ON h.id = d.invoice_id
-            WHERE d.service_id = t.id AND substr(h.invoice_date, 1, 10) BETWEEN :start_date AND :end_date AND h.status NOT LIKE '%CANCEL%'" . $branchConditionSql . " 
-        )" . $serviceTypeConditionSql . $serviceCategoryConditionSql );
+            INNER JOIN " . Customer::model()->tableName() . " c ON c.id = h.customer_id
+            WHERE d.service_id = t.id AND substr(h.invoice_date, 1, 10) BETWEEN :start_date AND :end_date AND h.status NOT LIKE '%CANCEL%'" . 
+                $branchConditionSql . $customerTypeConditionSql . " 
+        )");
+        
         $this->dataProvider->criteria->params[':start_date'] = $startDate;
         $this->dataProvider->criteria->params[':end_date'] = $endDate;
-        if (!empty($branchId)) {
-            $this->dataProvider->criteria->params[':branch_id'] = $branchId;
-        }
-        if (!empty($serviceTypeId)) {
-            $this->dataProvider->criteria->params[':service_type_id'] = $serviceTypeId;
-        }
-        if (!empty($serviceCategoryId)) {
-            $this->dataProvider->criteria->params[':service_category_id'] = $serviceCategoryId;
-        }
+        $this->dataProvider->criteria->compare('t.service_type_id', $serviceTypeId);
+        $this->dataProvider->criteria->compare('t.service_category_id', $serviceCategoryId);
     }
 }

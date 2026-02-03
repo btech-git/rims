@@ -30,7 +30,6 @@ class ReceivableDetailSummary extends CComponent {
     }
 
     public function setupFilter($endDate, $branchId, $coaId) {
-        $this->dataProvider->criteria->addCondition("t.code NOT LIKE '%.000'");
         $this->dataProvider->criteria->compare('t.coa_sub_category_id', 8);
         $this->dataProvider->criteria->compare('t.is_approved', 1);
         $this->dataProvider->criteria->compare('t.id', $coaId);
@@ -39,17 +38,15 @@ class ReceivableDetailSummary extends CComponent {
         
         if (!empty($branchId)) {
             $branchConditionSql = ' AND branch_id = :branch_id';
+            $this->dataProvider->criteria->params[':branch_id'] = $branchId;
         }
 
         $this->dataProvider->criteria->addCondition("EXISTS (
             SELECT coa_id 
             FROM " . JurnalUmum::model()->tableName() . "
             WHERE coa_id = t.id AND tanggal_transaksi BETWEEN '" . AppParam::BEGINNING_TRANSACTION_DATE . " ' AND :end_date" . $branchConditionSql . "
-        ) AND t.name NOT LIKE '%Asuransi%'");
+        ) AND t.code NOT LIKE '%.000'");
 
         $this->dataProvider->criteria->params[':end_date'] = $endDate;
-        if (!empty($branchId)) {
-            $this->dataProvider->criteria->params[':branch_id'] = $branchId;
-        }
     }
 }

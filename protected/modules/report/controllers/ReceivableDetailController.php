@@ -35,7 +35,7 @@ class ReceivableDetailController extends Controller {
         $accountDataProvider = $account->search();
         $accountDataProvider->criteria->compare('t.is_approved', 1);
         $accountDataProvider->criteria->compare('t.coa_sub_category_id', 8);
-        $accountDataProvider->criteria->addCondition("t.name NOT LIKE '%Asuransi%'");
+//        $accountDataProvider->criteria->addCondition("t.name NOT LIKE '%Asuransi%'");
         $accountDataProvider->pagination->pageVar = 'page_dialog';
 
         $receivableDetailSummary = new ReceivableDetailSummary($account->search());
