@@ -323,8 +323,6 @@ class GeneralRepairRegistration extends CComponent {
                 $fields = array('price');
                 $valid = $detail->validate($fields) && $valid;
             }
-        } else {
-            $valid = true;
         }
         
         if (count($this->productDetails) > 0) {
@@ -332,8 +330,6 @@ class GeneralRepairRegistration extends CComponent {
                 $fields = array('quantity');
                 $valid = $productDetail->validate($fields) && $valid;
             }
-        } else {
-            $valid = true;
         }
         
         if (count($this->serviceDetails) > 0) {
@@ -341,8 +337,6 @@ class GeneralRepairRegistration extends CComponent {
                 $fields = array('quantity');
                 $valid = $productDetail->validate($fields) && $valid;
             }
-        } else {
-            $valid = true;
         }
 
         return $valid;
@@ -351,7 +345,13 @@ class GeneralRepairRegistration extends CComponent {
     public function validateExistingCustomer() {
         $valid = true;
         
-        $registrationTransaction = RegistrationTransaction::model()->findByAttributes(array('transaction_date' => $this->header->transaction_date, 'vehicle_id' => $this->header->vehicle_id));
+        $registrationTransaction = RegistrationTransaction::model()->findAll(array(
+            'condition' => 'SUBSTRING(transaction_date, 1, 10) = :transaction_date AND vehicle_id = :vehicle_id',
+            'params' => array(
+                ':transaction_date' => date('Y-m-d', strtotime($this->header->transaction_date)),
+                ':vehicle_id' => $this->header->vehicle_id,
+            ),
+        ));
 
         if (!empty($registrationTransaction)) {
             $valid = false;
