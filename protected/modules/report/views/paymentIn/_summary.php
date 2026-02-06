@@ -1,13 +1,14 @@
 <?php
 Yii::app()->clientScript->registerCss('_report', '
     .width1-1 { width: 10% }
-    .width1-2 { width: 8% }
+    .width1-2 { width: 7% }
     .width1-3 { width: 20% }
-    .width1-4 { width: 20% }
+    .width1-4 { width: 15% }
     .width1-5 { width: 10% }
     .width1-6 { width: 8% }
     .width1-7 { width: 10% }
     .width1-8 { width: 10% }
+    .width1-9 { width: 10% }
 ');
 ?>
 
@@ -29,10 +30,11 @@ Yii::app()->clientScript->registerCss('_report', '
             <th class="width1-2">Tanggal</th>
             <th class="width1-3">Customer</th>
             <th class="width1-4">Asuransi</th>
-            <th class="width1-5">Invoice #</th>
+            <th class="width1-5">Transaksi #</th>
             <th class="width1-6">Plat #</th>
-            <th class="width1-7">Payment</th>
-            <th class="width1-8">Invoice</th>
+            <th class="width1-7">DP</th>
+            <th class="width1-8">Payment</th>
+            <th class="width1-9">Invoice</th>
         </tr>
     </thead>
     <tbody>
@@ -44,17 +46,38 @@ Yii::app()->clientScript->registerCss('_report', '
                 <?php $totalInvoice = CHtml::value($detail, 'total_invoice'); ?>
                 <tr class="items1">
                     <td class="width1-1">
-                        <?php echo CHtml::link(CHtml::encode($header->payment_number), array("/transaction/paymentIn/view", "id"=>$header->id), array("target" => "_blank")); ?>
+                        <?php echo CHtml::link(CHtml::encode($header->payment_number), array(
+                            "/transaction/paymentIn/view", 
+                            "id" => $header->id,
+                        ), array("target" => "_blank")); ?>
                     </td>
                     <td class="width1-2"><?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($header->payment_date))); ?></td>
                     <td class="width1-3"><?php echo CHtml::encode(CHtml::value($header, 'customer.name')); ?></td>
                     <td class="width1-4"><?php echo CHtml::encode(CHtml::value($header, 'insuranceCompany.name')); ?></td>
-                    <td class="width1-5"><?php echo CHtml::encode(CHtml::value($detail, 'invoiceHeader.invoice_number')); ?></td>
-                    <td class="width1-6"><?php echo CHtml::encode(CHtml::value($detail, 'invoiceHeader.vehicle.plate_number')); ?></td>
+                    <?php if ($detail->invoice_header_id !== null): ?>
+                        <td class="width1-5">
+                            <?php echo CHtml::link(CHtml::encode(CHtml::value($detail, 'invoiceHeader.invoice_number')), array(
+                                "/transaction/invoiceHeader/view", 
+                                "id" => $detail->invoice_header_id
+                            ), array("target" => "_blank")); ?>
+                        </td>
+                        <td class="width1-6"><?php echo CHtml::encode(CHtml::value($detail, 'invoiceHeader.vehicle.plate_number')); ?></td>
+                    <?php else: ?>
+                        <td class="width1-5">
+                            <?php echo CHtml::link(CHtml::encode(CHtml::value($detail, 'registrationTransaction.transaction_number')), array(
+                                "/frontDesk/registrationTransaction/view", 
+                                "id" => $detail->registration_transaction_id
+                            ), array("target" => "_blank")); ?>
+                        </td>
+                        <td class="width1-6"><?php echo CHtml::encode(CHtml::value($detail, 'registrationTransaction.vehicle.plate_number')); ?></td>
+                    <?php endif; ?>
                     <td class="width1-7" style="text-align: right">
-                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalAmount)); ?>
+                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($detail, 'downpayment_amount'))); ?>
                     </td>
                     <td class="width1-8" style="text-align: right">
+                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalAmount)); ?>
+                    </td>
+                    <td class="width1-9" style="text-align: right">
                         <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalInvoice)); ?>
                     </td>
                 </tr>
@@ -65,7 +88,7 @@ Yii::app()->clientScript->registerCss('_report', '
     </tbody>
     <tfoot>
         <tr>
-            <td colspan="6" style="text-align: right; font-weight: bold">TOTAL: </td>
+            <td colspan="7" style="text-align: right; font-weight: bold">TOTAL: </td>
             <td style="text-align: right; font-weight: bold">
                 <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $paymentAmount)); ?>
             </td>

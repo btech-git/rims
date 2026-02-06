@@ -41,6 +41,8 @@ Yii::app()->clientScript->registerScript('search', "
                         'masterCategoryId' => $masterCategoryId,
                         'subCategoryId' => $subCategoryId,
                         'subMasterCategoryId' => $subMasterCategoryId,
+                        'convertToLitre' => $convertToLitre,
+                        'oilSaeId' => $oilSaeId,
                     )); ?>
                 </div><!-- search-form -->
 
@@ -79,6 +81,8 @@ Yii::app()->clientScript->registerScript('search', "
                     'year' => $year,
                     'monthList' => $monthList,
                     'branchId' => $branchId,
+                    'unitConversion' => $unitConversion,
+                    'convertToLitre' => $convertToLitre,
                 )); ?>
             </div>
             <div class="clear"></div>

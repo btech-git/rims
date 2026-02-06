@@ -8,6 +8,7 @@
                 <td>Master Kategori</td>
                 <td>Sub Master Kategori</td>
                 <td>Sub Kategori</td>
+                <td>SAE</td>
             </tr>
         </thead>
         <tbody>
@@ -77,6 +78,11 @@
                         )); ?>
                     </div>
                 </td>
+                <td>
+                    <?php echo CHtml::dropDownList('OilSaeId', $oilSaeId, CHtml::listData(OilSae::model()->findAll(array('order' => 't.id ASC')), 'id', 'oilName'), array(
+                        'empty' => '-- All --',
+                    )); ?>
+                </td>
             </tr>
         </tbody>
     </table>
@@ -89,6 +95,7 @@
                 <td>Name</td>
                 <td>Branch</td>
                 <td>Tahun</td>
+                <td>Convert Liter</td>
             </tr>
         </thead>
 
@@ -101,6 +108,11 @@
                     <?php echo CHtml::dropDownlist('BranchId', $branchId, CHtml::listData(Branch::model()->findAllbyAttributes(array('status'=>'Active')), 'id','name'), array('empty'=>'-- All Branch --')); ?>
                 </td>
                 <td><?php echo CHtml::dropDownList('Year', $year, $yearList); ?></td>
+                <td>
+                    <?php echo CHtml::dropDownList('ConvertToLitre', $convertToLitre, array(
+                        1 => 'Rubah ke Liter'
+                    ), array('empty' => 'Satuan Asal')); ?>
+                </td>
             </tr>
         </tbody>
     </table>

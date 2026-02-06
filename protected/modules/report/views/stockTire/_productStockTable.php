@@ -1,5 +1,5 @@
 <div style="text-align: right">
-    <span style="text-align: center"><h2>Kartu Stok Ban</h2></span>
+    <span style="text-align: center"><h2>Stok Gudang Ban</h2></span>
 </div>
 
 <table>

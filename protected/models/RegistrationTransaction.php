@@ -42,15 +42,14 @@
  * @property string $subtotal
  * @property string $ppn_price
  * @property string $pph_price
- * @property integer $vehicle_mileage
+ * @property string $vehicle_mileage
  * @property string $note
- * @property string $is_passed
- * @property string $product_status
- * @property string $service_status
- * @property string $vehicle_status
+ * @property integer $is_passed
  * @property integer $total_time
+ * @property string $service_status
  * @property integer $priority_level
  * @property string $customer_work_order_number
+ * @property string $vehicle_status
  * @property string $transaction_date_out
  * @property string $transaction_time_out
  * @property integer $employee_id_assign_mechanic
@@ -59,50 +58,71 @@
  * @property string $created_datetime
  * @property string $cancelled_datetime
  * @property integer $user_id_cancelled
+ * @property string $feedback
  * @property string $edited_datetime
  * @property integer $user_id_edited
  * @property integer $sale_estimation_header_id
- * @property string $feedback
+ * @property string $product_status
  * @property string $vehicle_entry_datetime
  * @property string $vehicle_exit_datetime
  * @property string $vehicle_start_service_datetime
  * @property string $vehicle_finish_service_datetime
+ * @property string $initial_condition_memo
+ * @property string $initial_recommendation
+ * @property string $final_condition_memo
+ * @property string $final_recommendation
  * @property integer $is_new_customer
  * @property integer $total_quantity_package
  * @property string $total_price_package
  * @property string $downpayment_transaction_number
- * @property string $downpayment_transaction-date
+ * @property string $downpayment_transaction_date
  * @property string $downpayment_amount
  * @property string $downpayment_status
  * @property string $downpayment_note
  * @property string $downpayment_created_datetime
  * @property integer $user_id_created_downpayment
  * @property integer $is_downpayment_paid
+ * @property integer $employee_id_mechanic_helper_1
+ * @property integer $employee_id_mechanic_helper_2
+ * @property integer $employee_id_mechanic_helper_3
  *
  * The followings are the available model relations:
  * @property InvoiceHeader[] $invoiceHeaders
+ * @property MaterialRequestHeader[] $materialRequestHeaders
  * @property MovementOutHeader[] $movementOutHeaders
+ * @property MovementOutHeader[] $movementOutHeaders1
+ * @property PaymentInDetail[] $paymentInDetails
+ * @property RegistrationApproval[] $registrationApprovals
+ * @property RegistrationBodyRepairDetail[] $registrationBodyRepairDetails
  * @property RegistrationDamage[] $registrationDamages
  * @property RegistrationInsuranceData[] $registrationInsuranceDatas
+ * @property RegistrationMemo[] $registrationMemos
+ * @property RegistrationPackage[] $registrationPackages
  * @property RegistrationPayment[] $registrationPayments
  * @property RegistrationProduct[] $registrationProducts
- * @property RegistrationPackage[] $registrationPackages
  * @property RegistrationQuickService[] $registrationQuickServices
- * @property RegistrationMemo[] $registrationMemos
  * @property RegistrationRealizationProcess[] $registrationRealizationProcesses
  * @property RegistrationService[] $registrationServices
+ * @property RegistrationServiceManagement[] $registrationServiceManagements
+ * @property Users $userIdCreatedDownpayment
+ * @property Employee $employeeIdMechanicHelper1
+ * @property Employee $employeeIdMechanicHelper2
+ * @property Employee $employeeIdMechanicHelper3
+ * @property Employee $employeeIdAssignMechanic
+ * @property Employee $employeeIdSalesPerson
+ * @property Users $userIdCancelled
+ * @property Users $userIdEdited
+ * @property SaleEstimationHeader $saleEstimationHeader
  * @property CustomerPic $pic
  * @property Branch $branch
- * @property SaleEstimationHeader $saleEstimationHeader
  * @property InsuranceCompany $insuranceCompany
- * @property User $user
- * @property UserIdCancelled $userIdCancelled
- * @property UserIdEdited $userIdEdited
- * @property UserIdCreatedDownpayment $userIdCreatedDownpayment
+ * @property Users $user
  * @property Customer $customer
  * @property Vehicle $vehicle
- * @property EmployeeIdAssignMechanic $employeeIdAssignMechanic
- * @property RegistrationServiceManagement[] $registrationServiceManagements
+ * @property TransactionPurchaseOrder[] $transactionPurchaseOrders
+ * @property TransactionReturnItem[] $transactionReturnItems
+ * @property VehicleInspection[] $vehicleInspections
+ * @property WorkOrderExpenseHeader[] $workOrderExpenseHeaders
  */
 class RegistrationTransaction extends MonthlyTransactionActiveRecord {
 
@@ -117,9 +137,6 @@ class RegistrationTransaction extends MonthlyTransactionActiveRecord {
     const PRIORITY_MEDIUM_LITERAL = 'Medium';
     const PRIORITY_LOW_LITERAL = 'low';
 
-    /**
-     * @return string the associated database table name
-     */
     public $customer_name;
     public $customer_type;
     public $pic_name;
@@ -135,6 +152,9 @@ class RegistrationTransaction extends MonthlyTransactionActiveRecord {
     public $transaction_date_from;
     public $transaction_date_to;
 
+    /**
+     * @return string the associated database table name
+     */
     public function tableName() {
         return '{{registration_transaction}}';
     }
@@ -146,19 +166,18 @@ class RegistrationTransaction extends MonthlyTransactionActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('customer_id, vehicle_id, tax_percentage', 'required'),
-            array('customer_id, pic_id, vehicle_id, branch_id, user_id, total_quickservice, total_quantity_package, total_service, is_quick_service, is_insurance, insurance_company_id, laststatusupdate_by, ppn, pph, vehicle_mileage, total_time, priority_level, is_passed, employee_id_assign_mechanic, employee_id_sales_person, tax_percentage, user_id_cancelled, user_id_edited, sale_estimation_header_id, is_new_customer, user_id_created_downpayment, is_downpayment_paid', 'numerical', 'integerOnly' => true),
-            array('transaction_number, repair_type, work_order_number, payment_status, payment_type, sales_order_number, customer_work_order_number, vehicle_status, downpayment_transaction_number, downpayment_status', 'length', 'max' => 30),
-            array('total_quickservice_price, total_price_package, subtotal_service, discount_service, total_service_price, subtotal_product, discount_product, total_product_price, grand_total, downpayment_amount', 'length', 'max' => 18),
+            array('customer_id, vehicle_id', 'required'),
+            array('customer_id, pic_id, vehicle_id, branch_id, user_id, total_quickservice, total_service, is_quick_service, is_insurance, insurance_company_id, laststatusupdate_by, ppn, pph, is_passed, total_time, priority_level, employee_id_assign_mechanic, employee_id_sales_person, tax_percentage, user_id_cancelled, user_id_edited, sale_estimation_header_id, is_new_customer, total_quantity_package, user_id_created_downpayment, is_downpayment_paid, employee_id_mechanic_helper_1, employee_id_mechanic_helper_2, employee_id_mechanic_helper_3', 'numerical', 'integerOnly' => true),
+            array('transaction_number, repair_type, work_order_number, payment_status, payment_type, sales_order_number, customer_work_order_number, downpayment_transaction_number, downpayment_status', 'length', 'max' => 30),
+            array('total_quickservice_price, subtotal_service, discount_service, total_service_price, subtotal_product, discount_product, total_product_price, grand_total, total_price_package, downpayment_amount', 'length', 'max' => 18),
             array('total_product, subtotal, ppn_price, pph_price', 'length', 'max' => 10),
             array('status', 'length', 'max' => 50),
-            array('product_status, service_status', 'length', 'max' => 100),
-            array('vehicle_mileage', 'compare', 'compareValue' => 0, 'operator' => '>'),
-            array('transaction_number, work_order_number, sales_order_number', 'unique'),
-            array('transaction_date, problem, work_order_date, work_order_time, sales_order_date, note, customer_type, transaction_date_out, transaction_time_out, feedback, vehicle_entry_datetime, vehicle_exit_datetime, vehicle_start_service_datetime, vehicle_finish_service_datetime, downpayment_transaction-date, downpayment_note, downpayment_created_datetime', 'safe'),
+            array('service_status, product_status', 'length', 'max' => 100),
+            array('vehicle_status', 'length', 'max' => 20),
+            array('transaction_date, problem, work_order_date, work_order_time, sales_order_date, vehicle_mileage, note, transaction_date_out, transaction_time_out, created_datetime, cancelled_datetime, feedback, edited_datetime, vehicle_entry_datetime, vehicle_exit_datetime, vehicle_start_service_datetime, vehicle_finish_service_datetime, initial_condition_memo, initial_recommendation, final_condition_memo, final_recommendation, downpayment_transaction_date, downpayment_note, downpayment_created_datetime', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, transaction_number, transaction_date, repair_type, work_order_number, problem, work_order_date, work_order_time, customer_id, pic_id, vehicle_id, feedback, branch_id, user_id, total_quickservice, total_quickservice_price, total_service, subtotal_service, discount_service, total_service_price, total_product, subtotal_product, discount_product, total_product_price, is_new_customer, is_quick_service, is_insurance, insurance_company_id, status, grand_total, work_order_number, work_order_date, status, payment_status, payment_type, customer_name, pic_name, plate_number, branch_name, sales_order_number, sales_order_date, car_make_code, car_model_code, search_service, search_product, car_color, transaction_date_from, transaction_date_to, subtotal, ppn, pph, ppn_price, pph_price, vehicle_mileage, note, customer_type, is_passed, total_time, product_status, service_status, priority_level, customer_work_order_number, vehicle_status, transaction_date_out, transaction_time_out, employee_id_assign_mechanic, employee_id_sales_person, tax_percentage, created_datetime, cancelled_datetime, user_id_cancelled, edited_datetime, user_id_edited, sale_estimation_header_id, vehicle_entry_datetime, vehicle_exit_datetime, vehicle_start_service_datetime, vehicle_finish_service_datetime, downpayment_transaction_number, downpayment_transaction_date, downpayment_amount, downpayment_status, downpayment_note, downpayment_created_datetime, user_id_created_downpayment, is_downpayment_paid', 'safe', 'on' => 'search'),
+            array('id, transaction_number, transaction_date, repair_type, problem, customer_id, pic_id, vehicle_id, branch_id, user_id, total_quickservice, total_quickservice_price, total_service, subtotal_service, discount_service, total_service_price, total_product, subtotal_product, discount_product, total_product_price, is_quick_service, is_insurance, insurance_company_id, grand_total, work_order_number, work_order_date, work_order_time, status, payment_status, payment_type, laststatusupdate_by, sales_order_number, sales_order_date, ppn, pph, subtotal, ppn_price, pph_price, vehicle_mileage, note, is_passed, total_time, service_status, priority_level, customer_work_order_number, vehicle_status, transaction_date_out, transaction_time_out, employee_id_assign_mechanic, employee_id_sales_person, tax_percentage, created_datetime, cancelled_datetime, user_id_cancelled, feedback, edited_datetime, user_id_edited, sale_estimation_header_id, product_status, vehicle_entry_datetime, vehicle_exit_datetime, vehicle_start_service_datetime, vehicle_finish_service_datetime, initial_condition_memo, initial_recommendation, final_condition_memo, final_recommendation, is_new_customer, total_quantity_package, total_price_package, downpayment_transaction_number, downpayment_transaction_date, downpayment_amount, downpayment_status, downpayment_note, downpayment_created_datetime, user_id_created_downpayment, is_downpayment_paid, employee_id_mechanic_helper_1, employee_id_mechanic_helper_2, employee_id_mechanic_helper_3', 'safe', 'on' => 'search'),
         );
     }
 
@@ -170,33 +189,41 @@ class RegistrationTransaction extends MonthlyTransactionActiveRecord {
         // class name for the relations automatically generated below.
         return array(
             'invoiceHeaders' => array(self::HAS_MANY, 'InvoiceHeader', 'registration_transaction_id'),
+            'materialRequestHeaders' => array(self::HAS_MANY, 'MaterialRequestHeader', 'registration_transaction_id'),
             'movementOutHeaders' => array(self::HAS_MANY, 'MovementOutHeader', 'registration_transaction_id'),
+            'movementOutHeaders1' => array(self::HAS_MANY, 'MovementOutHeader', 'registration_service_id'),
+            'paymentInDetails' => array(self::HAS_MANY, 'PaymentInDetail', 'registration_transaction_id'),
             'registrationApprovals' => array(self::HAS_MANY, 'RegistrationApproval', 'registration_transaction_id'),
+            'registrationBodyRepairDetails' => array(self::HAS_MANY, 'RegistrationBodyRepairDetail', 'registration_transaction_id'),
             'registrationDamages' => array(self::HAS_MANY, 'RegistrationDamage', 'registration_transaction_id'),
             'registrationInsuranceDatas' => array(self::HAS_MANY, 'RegistrationInsuranceData', 'registration_transaction_id'),
+            'registrationMemos' => array(self::HAS_MANY, 'RegistrationMemo', 'registration_transaction_id'),
+            'registrationPackages' => array(self::HAS_MANY, 'RegistrationPackage', 'registration_transaction_id'),
             'registrationPayments' => array(self::HAS_MANY, 'RegistrationPayment', 'registration_transaction_id'),
             'registrationProducts' => array(self::HAS_MANY, 'RegistrationProduct', 'registration_transaction_id'),
-            'registrationPackages' => array(self::HAS_MANY, 'RegistrationPackage', 'registration_transaction_id'),
             'registrationQuickServices' => array(self::HAS_MANY, 'RegistrationQuickService', 'registration_transaction_id'),
-            'registrationMemos' => array(self::HAS_MANY, 'RegistrationMemo', 'registration_transaction_id'),
             'registrationRealizationProcesses' => array(self::HAS_MANY, 'RegistrationRealizationProcess', 'registration_transaction_id'),
             'registrationServices' => array(self::HAS_MANY, 'RegistrationService', 'registration_transaction_id'),
-            'registrationBodyRepairDetails' => array(self::HAS_MANY, 'RegistrationBodyRepairDetail', 'registration_transaction_id'),
+            'registrationServiceManagements' => array(self::HAS_MANY, 'RegistrationServiceManagement', 'registration_transaction_id'),
+            'userIdCreatedDownpayment' => array(self::BELONGS_TO, 'Users', 'user_id_created_downpayment'),
+            'employeeIdMechanicHelper1' => array(self::BELONGS_TO, 'Employee', 'employee_id_mechanic_helper_1'),
+            'employeeIdMechanicHelper2' => array(self::BELONGS_TO, 'Employee', 'employee_id_mechanic_helper_2'),
+            'employeeIdMechanicHelper3' => array(self::BELONGS_TO, 'Employee', 'employee_id_mechanic_helper_3'),
+            'employeeIdAssignMechanic' => array(self::BELONGS_TO, 'Employee', 'employee_id_assign_mechanic'),
+            'employeeIdSalesPerson' => array(self::BELONGS_TO, 'Employee', 'employee_id_sales_person'),
+            'userIdCancelled' => array(self::BELONGS_TO, 'Users', 'user_id_cancelled'),
+            'userIdEdited' => array(self::BELONGS_TO, 'Users', 'user_id_edited'),
+            'saleEstimationHeader' => array(self::BELONGS_TO, 'SaleEstimationHeader', 'sale_estimation_header_id'),
             'pic' => array(self::BELONGS_TO, 'CustomerPic', 'pic_id'),
             'branch' => array(self::BELONGS_TO, 'Branch', 'branch_id'),
             'insuranceCompany' => array(self::BELONGS_TO, 'InsuranceCompany', 'insurance_company_id'),
-            'user' => array(self::BELONGS_TO, 'User', 'user_id'),
-            'userIdCancelled' => array(self::BELONGS_TO, 'User', 'user_id_cancelled'),
-            'userIdEdited' => array(self::BELONGS_TO, 'User', 'user_id_edited'),
-            'userIdCreatedDownpayment' => array(self::BELONGS_TO, 'User', 'user_id_created_downpayment'),
-            'employeeIdAssignMechanic' => array(self::BELONGS_TO, 'Employee', 'employee_id_assign_mechanic'),
-            'employeeIdSalesPerson' => array(self::BELONGS_TO, 'Employee', 'employee_id_sales_person'),
+            'user' => array(self::BELONGS_TO, 'Users', 'user_id'),
             'customer' => array(self::BELONGS_TO, 'Customer', 'customer_id'),
             'vehicle' => array(self::BELONGS_TO, 'Vehicle', 'vehicle_id'),
-            'saleEstimationHeader' => array(self::BELONGS_TO, 'SaleEstimationHeader', 'sale_estimation_header_id'),
-            'registrationServiceManagements' => array(self::HAS_MANY, 'RegistrationServiceManagement', 'registration_transaction_id'),
+            'transactionPurchaseOrders' => array(self::HAS_MANY, 'TransactionPurchaseOrder', 'registration_transaction_id'),
+            'transactionReturnItems' => array(self::HAS_MANY, 'TransactionReturnItem', 'registration_transaction_id'),
+            'vehicleInspections' => array(self::HAS_MANY, 'VehicleInspection', 'registration_transaction_id'),
             'workOrderExpenseHeaders' => array(self::HAS_MANY, 'WorkOrderExpenseHeader', 'registration_transaction_id'),
-            'materialRequestHeaders' => array(self::HAS_MANY, 'MaterialRequestHeader', 'registration_transaction_id'),
         );
     }
 
@@ -251,38 +278,53 @@ class RegistrationTransaction extends MonthlyTransactionActiveRecord {
             'subtotal' => 'Subtotal',
             'ppn_price' => 'Ppn Price',
             'pph_price' => 'Pph Price',
-            'vehicle_mileage' => 'KM',
-            'note' => 'Catatan',
-            'is_passed' => 'Quality Control',
+            'vehicle_mileage' => 'Vehicle Mileage',
+            'note' => 'Note',
+            'is_passed' => 'Is Passed',
             'total_time' => 'Total Time',
             'service_status' => 'Service Status',
-            'vehicle_status' => 'Vehicle Status',
             'priority_level' => 'Priority Level',
-            'customer_work_order_number' => 'SPK #',
-            'transaction_date_out' => 'Check Out Date',
-            'transaction_time_out' => 'Check Out Time',
-            'employee_id_assign_mechanic' => 'Assign Mechanic',
-            'employee_id_sales_person' => 'Sales',
-            'tax_percentage' => 'PPn %',
-            'feedback' => 'Customer Feedback',
-            'is_new_customer' => 'New Customer',
+            'customer_work_order_number' => 'Customer WO #',
+            'vehicle_status' => 'Vehicle Status',
+            'transaction_date_out' => 'Transaction Date Out',
+            'transaction_time_out' => 'Transaction Time Out',
+            'employee_id_assign_mechanic' => 'Lead Mechanic',
+            'employee_id_sales_person' => 'Sales Person',
+            'tax_percentage' => 'Tax Percentage',
+            'created_datetime' => 'Created Datetime',
+            'cancelled_datetime' => 'Cancelled Datetime',
+            'user_id_cancelled' => 'User Id Cancelled',
+            'feedback' => 'Feedback',
+            'edited_datetime' => 'Edited Datetime',
+            'user_id_edited' => 'User Id Edited',
+            'sale_estimation_header_id' => 'Sales Estimation',
+            'product_status' => 'Product Status',
+            'vehicle_entry_datetime' => 'Vehicle Entry Datetime',
+            'vehicle_exit_datetime' => 'Vehicle Exit Datetime',
+            'vehicle_start_service_datetime' => 'Vehicle Start Service Datetime',
+            'vehicle_finish_service_datetime' => 'Vehicle Finish Service Datetime',
+            'initial_condition_memo' => 'Initial Condition Memo',
+            'initial_recommendation' => 'Initial Recommendation',
+            'final_condition_memo' => 'Final Condition Memo',
+            'final_recommendation' => 'Final Recommendation',
+            'is_new_customer' => 'Is New Customer',
+            'total_quantity_package' => 'Total Quantity Package',
+            'total_price_package' => 'Total Price Package',
+            'downpayment_transaction_number' => 'Downpayment Transaction Number',
+            'downpayment_transaction_date' => 'Downpayment Transaction Date',
+            'downpayment_amount' => 'Downpayment Amount',
+            'downpayment_status' => 'Downpayment Status',
+            'downpayment_note' => 'Downpayment Note',
+            'downpayment_created_datetime' => 'Downpayment Created Datetime',
+            'user_id_created_downpayment' => 'User Id Created Downpayment',
+            'is_downpayment_paid' => 'Is Downpayment Paid',
+            'employee_id_mechanic_helper_1' => 'Mechanic Helper 1',
+            'employee_id_mechanic_helper_2' => 'Mechanic Helper 2',
+            'employee_id_mechanic_helper_3' => 'Mechanic Helper 3',
         );
     }
 
-    /**
-     * Retrieves a list of models based on the current search/filter conditions.
-     *
-     * Typical usecase:
-     * - Initialize the model fields with values from filter form.
-     * - Execute this method to get CActiveDataProvider instance which will filter
-     * models according to data in model fields.
-     * - Pass data provider to CGridView, CListView or any similar widget.
-     *
-     * @return CActiveDataProvider the data provider that can return the models
-     * based on the search/filter conditions.
-     */
     public function search() {
-        // @todo Please modify the following code to remove attributes that should not be searched.
 
         $criteria = new CDbCriteria;
 
@@ -669,12 +711,6 @@ class RegistrationTransaction extends MonthlyTransactionActiveRecord {
         ));
     }
 
-    /**
-     * Returns the static model of the specified AR class.
-     * Please note that you should have this exact method in all your CActiveRecord descendants!
-     * @param string $className active record class name.
-     * @return RegistrationTransaction the static model class
-     */
     public static function model($className = __CLASS__) {
         return parent::model($className);
     }
@@ -705,17 +741,9 @@ class RegistrationTransaction extends MonthlyTransactionActiveRecord {
     public function getServices() {
         $services = array();
 
-//        if ($this->repair_type == 'GR') {
-            foreach ($this->registrationServices as $registrationService) {
-                $services[] = $registrationService->service->name . ', ';
-            }
-//        } else {
-//            foreach ($this->registrationServices as $registrationService) {
-//                if ($registrationService->is_body_repair == 1) {
-//                    $services[] = $registrationService->service->name . '<br />';
-//                }
-//            }
-//        }
+        foreach ($this->registrationServices as $registrationService) {
+            $services[] = $registrationService->service->name . ', ';
+        }
 
         return $this->search_service = implode('', $services);
     }
@@ -1247,7 +1275,13 @@ class RegistrationTransaction extends MonthlyTransactionActiveRecord {
         $criteria->compare('carMake.name', $this->car_make_code, true);
         $criteria->compare('carModel.name', $this->car_model_code, true);
 
-        $criteria->addCondition("t.id IN (SELECT registration_transaction_id FROM " . InvoiceHeader::model()->tableName() . ") AND t.branch_id IN (SELECT branch_id FROM " . UserBranch::model()->tableName() . " WHERE users_id = :userId)");
+        $criteria->addCondition("
+            t.id IN (
+                SELECT registration_transaction_id FROM " . InvoiceHeader::model()->tableName() . "
+            ) AND t.branch_id IN (
+                SELECT branch_id FROM " . UserBranch::model()->tableName() . " WHERE users_id = :userId
+            )
+        ");
         $criteria->params = array(':userId' => Yii::app()->user->id);
 
         return new CActiveDataProvider($this, array(

@@ -28,9 +28,10 @@ class StockOilController extends Controller {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
         
-        $yearNow = date('Y');
+//        $yearNow = date('Y');
         
-        $endYear = isset($_GET['EndYear']) ? $_GET['EndYear'] : date('Y');
+//        $endYear = isset($_GET['EndYear']) ? $_GET['EndYear'] : date('Y');
+        $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
         $brandId = isset($_GET['BrandId']) ? $_GET['BrandId'] : '';
         $subBrandId = isset($_GET['SubBrandId']) ? $_GET['SubBrandId'] : '';
         $subBrandSeriesId = isset($_GET['SubBrandSeriesId']) ? $_GET['SubBrandSeriesId'] : '';
@@ -38,9 +39,10 @@ class StockOilController extends Controller {
         $productName = isset($_GET['ProductName']) ? $_GET['ProductName'] : '';
         $productCode = isset($_GET['ProductCode']) ? $_GET['ProductCode'] : '';
         $oilSaeId = isset($_GET['OilSaeId']) ? $_GET['OilSaeId'] : '';
+        $convertToLitre = isset($_GET['ConvertToLitre']) ? $_GET['ConvertToLitre'] : '';
         
         if (isset($_GET['ResetFilter'])) {
-            $endYear = date('Y');
+            $endDate = date('Y-m-d');
             $brandId = '';
             $subBrandId = '';
             $subBrandSeriesId = '';
@@ -48,11 +50,12 @@ class StockOilController extends Controller {
             $productName = '';
             $productCode = '';
             $oilSaeId = '';
+            $convertToLitre = '';
         }
         
-        $startYear = max(2024, $endYear - 2);
+//        $startYear = max(2024, $endYear - 2);
         
-        $inventoryOilStockReport = InventoryDetail::getInventoryOilStockReport($startYear, $endYear, $brandId, $subBrandId, $subBrandSeriesId, $productId, $productCode, $productName, $oilSaeId);
+        $inventoryOilStockReport = InventoryDetail::getInventoryOilStockReport($endDate, $brandId, $subBrandId, $subBrandSeriesId, $productId, $productCode, $productName, $oilSaeId);
         
         $inventoryOilStockReportData = array();
         foreach ($inventoryOilStockReport as $inventoryOilStockReportItem) {
@@ -60,13 +63,14 @@ class StockOilController extends Controller {
         }
         
         $branches = Branch::model()->findAll();
+        $unitConversion = UnitConversion::model()->findByAttributes(array('unit_to_id' => $convertToLitre));
 
-        $yearList = array();
-        for ($y = $yearNow - 4; $y <= $yearNow; $y++) {
-            if ($y >= 2024) {
-                $yearList[$y] = $y;
-            }
-        }
+//        $yearList = array();
+//        for ($y = $yearNow - 4; $y <= $yearNow; $y++) {
+//            if ($y >= 2024) {
+//                $yearList[$y] = $y;
+//            }
+//        }
         
 //        if (isset($_GET['SaveExcel'])) {
 //            $this->saveToExcel($productDataProvider, $branches, $endYear);
@@ -74,9 +78,9 @@ class StockOilController extends Controller {
 
         $this->render('check', array(
             'inventoryOilStockReportData' => $inventoryOilStockReportData,
-            'startYear' => $startYear,
-            'endYear' => $endYear,
-            'yearList' => $yearList,
+//            'startYear' => $startYear,
+            'endDate' => $endDate,
+//            'yearList' => $yearList,
             'brandId' => $brandId,
             'subBrandId' => $subBrandId,
             'subBrandSeriesId' => $subBrandSeriesId,
@@ -85,6 +89,8 @@ class StockOilController extends Controller {
             'productName' => $productName,
             'oilSaeId' => $oilSaeId,
             'branches' => $branches,
+            'convertToLitre' => $convertToLitre,
+            'unitConversion' => $unitConversion,
         ));
     }
 

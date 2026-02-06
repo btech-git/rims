@@ -2,6 +2,11 @@
 /* @var $this RegistrationTransactionController */
 /* @var $model RegistrationTransaction */
 
+Yii::app()->clientScript->registerScript('report', '
+
+    $("#EndDate").val("' . $endDate . '");
+');
+
 Yii::app()->clientScript->registerScript('search', "
     $('.search-button').click(function(){
 	$('.search-form').toggle();
@@ -23,8 +28,7 @@ Yii::app()->clientScript->registerScript('search', "
     
     <div class="search-form" style="display:none">
         <?php $this->renderPartial('_search',array(
-            'endYear' => $endYear,
-            'yearList' => $yearList,
+            'endDate' => $endDate,
             'brandId' => $brandId,
             'subBrandId' => $subBrandId,
             'subBrandSeriesId' => $subBrandSeriesId,
@@ -32,6 +36,7 @@ Yii::app()->clientScript->registerScript('search', "
             'productCode' => $productCode,
             'productName' => $productName,
             'oilSaeId' => $oilSaeId,
+            'convertToLitre' => $convertToLitre,
         )); ?>
     </div><!-- search-form -->
     <?php echo CHtml::endForm(); ?>
@@ -41,7 +46,8 @@ Yii::app()->clientScript->registerScript('search', "
     <?php $this->renderPartial('_productStockTable', array(
         'branches' => $branches,
         'inventoryOilStockReportData' => $inventoryOilStockReportData,
-        'startYear' => $startYear,
-        'endYear' => $endYear,
+        'endDate' => $endDate,
+        'unitConversion' => $unitConversion,
+        'convertToLitre' => $convertToLitre,
     )); ?>
 </div>

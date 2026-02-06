@@ -19,8 +19,9 @@ class BodyRepairMechanicController extends Controller {
             $filterChain->action->id === 'workOrderResumeService' ||
             $filterChain->action->id === 'workOrderStartService'
         ) {
-            if (!(Yii::app()->user->checkAccess('brMechanicCreate')) || !(Yii::app()->user->checkAccess('brMechanicEdit')))
+            if (!(Yii::app()->user->checkAccess('brMechanicCreate')) || !(Yii::app()->user->checkAccess('brMechanicEdit'))) {
                 $this->redirect(array('/site/login'));
+            }
         }
 
         $filterChain->run();

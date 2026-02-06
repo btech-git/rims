@@ -816,7 +816,7 @@ class InvoiceDetail extends CActiveRecord {
         return $resultSet;
     }
     
-    public static function getYearlyOilSaleTransactionData($year, $productId, $productCode, $productName, $branchId, $brandId, $subBrandId, $subBrandSeriesId, $subCategoryId, $subMasterCategoryId) {
+    public static function getYearlyOilSaleTransactionData($year, $productId, $productCode, $productName, $branchId, $brandId, $subBrandId, $subBrandSeriesId, $subCategoryId, $subMasterCategoryId, $oilSaeId) {
         $productIdConditionSql = '';
         $productNameConditionSql = '';
         $productCodeConditionSql = '';
@@ -826,6 +826,7 @@ class InvoiceDetail extends CActiveRecord {
         $subBrandSeriesConditionSql = '';
         $subCategoryConditionSql = '';
         $subMasterCategoryConditionSql = '';
+        $oilSaeConditionSql = '';
         
         $params = array(
             ':year' => $year,
@@ -876,13 +877,19 @@ class InvoiceDetail extends CActiveRecord {
             $params[':product_sub_master_category_id'] = $subMasterCategoryId;
         }
         
+        if (!empty($oilSaeId)) {
+            $oilSaeConditionSql = ' AND p.oil_sae_id = :oil_sae_id';
+            $params[':oil_sae_id'] = $oilSaeId;
+        }
+        
         $sql = "SELECT EXTRACT(YEAR_MONTH FROM i.invoice_date) AS year_month_value, d.product_id AS product_id, p.name AS product_name, 
                     p.manufacturer_code AS product_code, b.name AS brand_name, sb.name AS sub_brand_name, sbs.name AS sub_brand_series_name, 
                     mc.name AS master_category_name, sc.name AS sub_category_name, smc.name AS sub_master_category_name, SUM(d.quantity) AS total_quantity, 
-                    CONCAT(os.winter_grade, ' - ', os.hot_grade) AS oil_name
+                    CONCAT(os.winter_grade, ' - ', os.hot_grade) AS oil_name, u.name AS unit_name
                 FROM " . InvoiceDetail::model()->tableName() . " d
                 INNER JOIN " . InvoiceHeader::model()->tableName() . " i ON i.id = d.invoice_id
                 INNER JOIN " . Product::model()->tableName() . " p ON p.id = d.product_id
+                INNER JOIN " . Unit::model()->tableName() . " u ON u.id = p.unit_id
                 INNER JOIN " . Brand::model()->tableName() . " b ON b.id = p.brand_id
                 INNER JOIN " . SubBrand::model()->tableName() . " sb ON sb.id = p.sub_brand_id
                 INNER JOIN " . SubBrandSeries::model()->tableName() . " sbs ON sbs.id = p.sub_brand_series_id
@@ -892,7 +899,8 @@ class InvoiceDetail extends CActiveRecord {
                 LEFT OUTER JOIN " . OilSae::model()->tableName() . " os ON os.id = p.oil_sae_id
                 WHERE YEAR(i.invoice_date) = :year AND i.status NOT LIKE '%CANCELLED%' AND p.product_sub_master_category_id IN (39, 40, 42) AND 
                     p.oil_sae_id IS NOT NULL" . $branchConditionSql . $productIdConditionSql . $productCodeConditionSql . $productNameConditionSql . 
-                    $brandConditionSql . $subBrandConditionSql . $subBrandSeriesConditionSql . $subCategoryConditionSql . $subMasterCategoryConditionSql . "
+                    $brandConditionSql . $subBrandConditionSql . $subBrandSeriesConditionSql . $subCategoryConditionSql . $subMasterCategoryConditionSql . 
+                    $oilSaeConditionSql . "
                 GROUP BY EXTRACT(YEAR_MONTH FROM invoice_date), d.product_id
                 ORDER BY p.name ASC, year_month_value ASC";
                 

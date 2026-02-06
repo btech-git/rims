@@ -147,9 +147,9 @@ class BodyRepairRegistrationController extends Controller {
         $damageCriteria->compare('t.code', $damage->code, true);
         $damageCriteria->compare('t.service_category_id', $damage->service_category_id);
         $damageCriteria->compare('t.service_type_id', 2);
-        $explodeKeyword = explode(" ", $damage->findkeyword);
+        $explodeDamageKeyword = explode(" ", $damage->findkeyword);
 
-        foreach ($explodeKeyword as $key) {
+        foreach ($explodeDamageKeyword as $key) {
             $damageCriteria->compare('t.code', $key, true, 'OR');
             $damageCriteria->compare('t.name', $key, true, 'OR');
             $damageCriteria->compare('description', $key, true, 'OR');
@@ -178,10 +178,12 @@ class BodyRepairRegistrationController extends Controller {
         $serviceCriteria->compare('t.name', $service->name, true);
         $serviceCriteria->compare('t.code', $service->code, true);
         $serviceCriteria->compare('t.service_category_id', $service->service_category_id);
-//        $serviceCriteria->compare('t.service_type_id', 2);
-        $explodeKeyword = explode(" ", $service->findkeyword);
+        $serviceCriteria->compare('t.is_deleted', 0);
+        $serviceCriteria->compare('t.status', 'Active');
+        $serviceCriteria->compare('t.is_approved', 1);
+        $explodeServiceKeyword = explode(" ", $service->findkeyword);
 
-        foreach ($explodeKeyword as $key) {
+        foreach ($explodeServiceKeyword as $key) {
             $serviceCriteria->compare('t.code', $key, true, 'OR');
             $serviceCriteria->compare('t.name', $key, true, 'OR');
             $serviceCriteria->compare('description', $key, true, 'OR');

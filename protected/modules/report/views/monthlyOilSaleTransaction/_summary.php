@@ -19,7 +19,7 @@
             <th style="text-align: center">SAE</th>
             <th style="text-align: center">Brand</th>
             <th style="text-align: center">Category</th>
-            <th style="text-align: center">Unit</th>
+            <th style="text-align: center">Satuan</th>
             <?php foreach ($branches as $branch): ?>
                 <th style="text-align: center"><?php echo CHtml::encode(CHtml::value($branch, 'code')); ?></th>
             <?php endforeach; ?>
@@ -35,6 +35,7 @@
             <?php $yearMonth = $year . '-' . str_pad($month, 2, '0', STR_PAD_LEFT); ?>
             <?php $startDate = $yearMonth . '-01'; ?>
             <?php $endDate = $yearMonth . '-' . $daysInMonth; ?>
+            <?php $multiplier = $unitConversion !== null && $unitConversion->unit_from_id == $product->unit_id ? $unitConversion->multiplier : 1; ?>
             <tr>
                 <td><?php echo CHtml::encode(CHtml::value($product, 'id')); ?></td>
                 <td><?php echo CHtml::encode(CHtml::value($product, 'manufacturer_code')); ?></td>
@@ -46,13 +47,20 @@
                     <?php echo CHtml::encode(CHtml::value($product, 'subBrandSeries.name')); ?>
                 </td>
                 <td><?php echo CHtml::encode(CHtml::value($product, 'masterSubCategoryCode')); ?></td>
-                <td><?php echo CHtml::encode(CHtml::value($product, 'unit.name')); ?></td>
+                <td>
+                    <?php if (empty($convertToLitre)): ?>
+                        <?php echo CHtml::encode(CHtml::value($product, 'unit.name')); ?>
+                    <?php else: ?>
+                        <?php echo 'Liter'; ?>
+                    <?php endif; ?>
+                </td>
                 
                 <?php foreach ($branches as $branch): ?>
-                    <?php $saleQuantity = '0'; ?>
+                    <?php $saleQuantity = 0; ?>
                     <?php foreach ($oilSaleTotalQuantities as $i => $oilSaleTotalQuantity): ?>
                         <?php if ($oilSaleTotalQuantity['branch_id'] == $branch->id): ?>
-                            <?php $saleQuantity = CHtml::value($oilSaleTotalQuantities[$i], 'total_quantity'); ?>
+                            <?php $originalQuantity = CHtml::value($oilSaleTotalQuantities[$i], 'total_quantity'); ?>
+                            <?php $saleQuantity = $multiplier * $originalQuantity; ?>
                             <?php break; ?>
                         <?php endif; ?>
                     <?php endforeach; ?>

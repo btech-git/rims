@@ -22,6 +22,7 @@
             <th style="width: 10%">SAE</th>
             <th style="width: 10%">Brand</th>
             <th style="width: 10%">Category</th>
+            <th style="width: 5%">Satuan</th>
             <?php for ($month = 1; $month <= 12; $month++): ?>
                 <th style="width: 256px"><?php echo CHtml::encode($monthList[$month]); ?></th>
             <?php endfor; ?>
@@ -32,6 +33,9 @@
         <?php $groupTotalSums = array(); ?>
         <?php $autoNumber = 1; ?>
         <?php foreach ($invoiceOilInfo as $invoiceOilSaleInfo): ?>
+            <?php $totalSum = 0; ?>
+            <?php $product = Product::model()->findByPk($invoiceOilSaleInfo['product_id']); ?>
+            <?php $multiplier = $unitConversion !== null && $unitConversion->unit_from_id == $product->unit_id ? $unitConversion->multiplier : 1; ?>
             <tr>
                 <td style="text-align: center"><?php echo $autoNumber; ?></td>
                 <td><?php echo $invoiceOilSaleInfo['product_id']; ?></td>
@@ -48,13 +52,20 @@
                     <?php echo $invoiceOilSaleInfo['sub_category_name']; ?> -
                     <?php echo $invoiceOilSaleInfo['sub_master_category_name']; ?>
                 </td>
-                <?php $totalSum = 0; ?>
+                <td>
+                    <?php if (empty($convertToLitre)): ?>
+                        <?php echo $invoiceOilSaleInfo['unit_name']; ?>
+                    <?php else: ?>
+                        <?php echo 'Liter'; ?>
+                    <?php endif; ?>
+                </td>
                 <?php for ($month = 1; $month <= 12; $month++): ?>
                     <?php $daysInMonth = cal_days_in_month(CAL_GREGORIAN, $month, $year); ?>
                     <?php $yearMonth = $year . '-' . str_pad($month, 2, '0', STR_PAD_LEFT); ?>
                     <?php $startDate = $yearMonth . '-01'; ?>
                     <?php $endDate = $yearMonth . '-' . $daysInMonth; ?>
-                    <?php $total = isset($invoiceOilSaleInfo['totals'][$month]) ? $invoiceOilSaleInfo['totals'][$month] : ''; ?>
+                    <?php $originalQuantity = isset($invoiceOilSaleInfo['totals'][$month]) ? $invoiceOilSaleInfo['totals'][$month] : ''; ?>
+                    <?php $total = $multiplier * $originalQuantity; ?>
                     <td style="text-align: right">
                         <?php echo CHtml::link($total, array(
                             '/report/yearlyOilSaleTransaction/transactionInfo', 

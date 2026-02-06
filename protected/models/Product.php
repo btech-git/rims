@@ -577,7 +577,7 @@ class Product extends CActiveRecord {
         ));
     }
 
-    public function searchByOilSaleReport($pageNumber, $year, $month) {
+    public function searchByOilSaleReport($pageNumber, $year, $month, $oilSaeId) {
 
         $criteria = new CDbCriteria;
 
@@ -593,6 +593,7 @@ class Product extends CActiveRecord {
         $criteria->compare('t.product_sub_category_id', $this->product_sub_category_id);
         $criteria->compare('t.unit_id', $this->unit_id);
         $criteria->compare('t.status', 'Active');
+        $criteria->compare('t.oil_sae_id', $oilSaeId);
 
         $criteria->addCondition("EXISTS (
             SELECT d.product_id

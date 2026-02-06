@@ -6,6 +6,7 @@
  * The followings are the available columns in table '{{employee}}':
  * @property integer $id
  * @property string $name
+ * @property string $recruitment_date
  * @property string $local_address
  * @property string $home_address
  * @property integer $province_id
@@ -28,64 +29,86 @@
  * @property integer $is_deleted
  * @property string $deleted_at
  * @property integer $deleted_by
- * @property string $recruitment_date
+ * @property string $off_day
  * @property string $mobile_phone_number
- * @property string $mother_name
- * @property string $religion
  * @property string $marriage_status
- * @property string $family_card_number
- * @property string $school_degree
- * @property string $school_subject
- * @property string $bank_name
- * @property string $bank_account_number
- * @property string $tax_registration_number
- * @property string $employment_type
+ * @property integer $children_quantity
+ * @property string $emergency_contact_relationship
  * @property integer $division_id
  * @property integer $position_id
  * @property integer $level_id
  * @property integer $employee_head_id
- * @property string $birth_date
+ * @property string $mother_name
+ * @property string $bank_name
  * @property string $birth_place
  * @property string $emergency_contact_name
- * @property string $emergency_contact_relationship
+ * @property string $religion
+ * @property string $family_card_number
+ * @property string $bank_account_number
+ * @property string $tax_registration_number
+ * @property string $school_degree
+ * @property string $school_subject
+ * @property string $employment_type
  * @property string $emergency_contact_mobile_phone
+ * @property string $birth_date
  * @property string $emergency_contact_address
  * @property integer $onleave_allocation
- * @property integer $children_quantity
+ * @property integer $user_id
  * @property string $clock_in_time
  * @property string $clock_out_time
  * @property string $created_datetime
  * @property string $updated_datetime
  * @property integer $user_id_updated
- * 
+ *
  * The followings are the available model relations:
  * @property Province $province
+ * @property Users $user
  * @property City $city
  * @property Province $homeProvince
  * @property City $homeCity
- * @property RegistrationService $registrationService
+ * @property Branch $branch
+ * @property Division $division
+ * @property Position $position
+ * @property Level $level
+ * @property Employee $employeeHead
+ * @property Employee[] $employees
+ * @property EmployeeAbsence[] $employeeAbsences
+ * @property EmployeeAttendance[] $employeeAttendances
  * @property EmployeeBank[] $employeeBanks
  * @property EmployeeBranchDivisionPositionLevel[] $employeeBranchDivisionPositionLevels
+ * @property EmployeeDayoff[] $employeeDayoffs
  * @property EmployeeDeductions[] $employeeDeductions
  * @property EmployeeIncentives[] $employeeIncentives
  * @property EmployeeMobile[] $employeeMobiles
  * @property EmployeePhone[] $employeePhones
+ * @property EmployeeSchedule[] $employeeSchedules
+ * @property EmployeeTimesheet[] $employeeTimesheets
  * @property EquipmentMaintenance[] $equipmentMaintenances
+ * @property EquipmentMaintenances[] $equipmentMaintenances1
+ * @property RegistrationBodyRepairDetail[] $registrationBodyRepairDetails
+ * @property RegistrationBodyRepairDetail[] $registrationBodyRepairDetails1
+ * @property RegistrationBodyRepairDetail[] $registrationBodyRepairDetails2
  * @property RegistrationService[] $registrationServices
  * @property RegistrationServiceEmployee[] $registrationServiceEmployees
- * @property WorkOrderDetail[] $workOrderDetails
+ * @property RegistrationServiceManagement[] $registrationServiceManagements
+ * @property RegistrationServiceManagement[] $registrationServiceManagements1
+ * @property RegistrationServiceManagement[] $registrationServiceManagements2
+ * @property RegistrationServiceManagement[] $registrationServiceManagements3
+ * @property RegistrationServiceManagement[] $registrationServiceManagements4
+ * @property RegistrationServiceManagement[] $registrationServiceManagements5
+ * @property RegistrationServiceSupervisor[] $registrationServiceSupervisors
  * @property RegistrationTransaction[] $registrationTransactions
+ * @property RegistrationTransaction[] $registrationTransactions1
+ * @property RegistrationTransaction[] $registrationTransactions2
+ * @property RegistrationTransaction[] $registrationTransactions3
+ * @property RegistrationTransaction[] $registrationTransactions4
+ * @property SaleEstimationHeader[] $saleEstimationHeaders
  */
 class Employee extends CActiveRecord {
 
     /**
      * @return string the associated database table name
      */
-    public $city_name;
-    public $province_name;
-    public $home_province_name;
-    public $home_city_name;
-
     public function tableName() {
         return '{{employee}}';
     }
@@ -97,18 +120,18 @@ class Employee extends CActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('name, local_address, home_address, sex, email, id_card, branch_id, basic_salary, skills, onleave_allocation, clock_in_time, clock_out_time, off_day', 'required'),
-            array('province_id, city_id, home_province, home_city, branch_id, registration_service_id, is_deleted, deleted_by, division_id, position_id, level_id, employee_head_id, onleave_allocation, children_quantity, user_id_updated', 'numerical', 'integerOnly' => true),
+            array('name, recruitment_date, sex, branch_id, user_id, clock_in_time, clock_out_time', 'required'),
+            array('province_id, city_id, home_province, home_city, branch_id, registration_service_id, is_deleted, deleted_by, children_quantity, division_id, position_id, level_id, employee_head_id, onleave_allocation, user_id, user_id_updated', 'numerical', 'integerOnly' => true),
             array('name, mother_name, bank_name, birth_place, emergency_contact_name', 'length', 'max' => 100),
             array('sex, status, basic_salary', 'length', 'max' => 10),
             array('email, mobile_phone_number, marriage_status, emergency_contact_relationship', 'length', 'max' => 60),
             array('id_card, driving_license, off_day, religion, family_card_number, bank_account_number, tax_registration_number', 'length', 'max' => 30),
             array('salary_type, payment_type, code, school_degree, school_subject, employment_type, emergency_contact_mobile_phone', 'length', 'max' => 50),
             array('availability', 'length', 'max' => 5),
-            array('deleted_at, recruitment_date, birth_date, emergency_contact_address, created_datetime, updated_datetime', 'safe'),
+            array('local_address, home_address, skills, deleted_at, birth_date, emergency_contact_address, created_datetime, updated_datetime', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, name, local_address, home_address, province_id, city_id, home_province, home_city, sex, email, id_card, driving_license, branch_id, status, salary_type, basic_salary, payment_type, code, availability, skills, registration_service_id, is_deleted, deleted_at, deleted_by, off_day, recruitment_date, mother_name, bank_name, birth_place, emergency_contact_name, mobile_phone_number, marriage_status, emergency_contact_relationship, driving_license, off_day, religion, family_card_number, bank_account_number, tax_registration_number, code, school_degree, school_subject, employment_type, emergency_contact_mobile_phone, division_id, position_id, level_id, employee_head_id, onleave_allocation, children_quantity, clock_in_time, clock_out_time, created_datetime, updated_datetime, user_id_updated', 'safe', 'on' => 'search'),
+            array('id, name, recruitment_date, local_address, home_address, province_id, city_id, home_province, home_city, sex, email, id_card, driving_license, branch_id, status, salary_type, basic_salary, payment_type, code, availability, skills, registration_service_id, is_deleted, deleted_at, deleted_by, off_day, mobile_phone_number, marriage_status, children_quantity, emergency_contact_relationship, division_id, position_id, level_id, employee_head_id, mother_name, bank_name, birth_place, emergency_contact_name, religion, family_card_number, bank_account_number, tax_registration_number, school_degree, school_subject, employment_type, emergency_contact_mobile_phone, birth_date, emergency_contact_address, onleave_allocation, user_id, clock_in_time, clock_out_time, created_datetime, updated_datetime, user_id_updated', 'safe', 'on' => 'search'),
         );
     }
 
@@ -120,29 +143,47 @@ class Employee extends CActiveRecord {
         // class name for the relations automatically generated below.
         return array(
             'province' => array(self::BELONGS_TO, 'Province', 'province_id'),
-            'branch' => array(self::BELONGS_TO, 'Branch', 'branch_id'),
+            'user' => array(self::BELONGS_TO, 'Users', 'user_id'),
             'city' => array(self::BELONGS_TO, 'City', 'city_id'),
             'homeProvince' => array(self::BELONGS_TO, 'Province', 'home_province'),
             'homeCity' => array(self::BELONGS_TO, 'City', 'home_city'),
-            'employeeBanks' => array(self::HAS_MANY, 'EmployeeBank', 'employee_id'),
-            'employeeBranchDivisionPositionLevels' => array(self::HAS_MANY, 'EmployeeBranchDivisionPositionLevel', 'employee_id'),
-            'employeeDeductions' => array(self::HAS_MANY, 'EmployeeDeductions', 'employee_id'),
-            'employeeIncentives' => array(self::HAS_MANY, 'EmployeeIncentives', 'employee_id'),
-            'employeeMobiles' => array(self::HAS_MANY, 'EmployeeMobile', 'employee_id'),
-            'employeePhones' => array(self::HAS_MANY, 'EmployeePhone', 'employee_id'),
-            'equipmentMaintenances' => array(self::HAS_MANY, 'EquipmentMaintenance', 'employee_id'),
-            'registrationServices' => array(self::HAS_MANY, 'RegistrationService', 'start_mechanic_id'),
-            'registrationServices1' => array(self::HAS_MANY, 'RegistrationService', 'supervisor_id'),
-            'registrationServicesFinish' => array(self::HAS_MANY, 'RegistrationService', 'finish_mechanic_id'),
-            'workOrderDetails' => array(self::HAS_MANY, 'WorkOrderDetail', 'employee_id'),
-            'registrationTransactions' => array(self::HAS_MANY, 'RegistrationTransaction', 'employee_id_assign_mechanic'),
-            'registrationTransactionSalesmans' => array(self::HAS_MANY, 'RegistrationTransaction', 'employee_id_sales_person'),
+            'branch' => array(self::BELONGS_TO, 'Branch', 'branch_id'),
             'division' => array(self::BELONGS_TO, 'Division', 'division_id'),
             'position' => array(self::BELONGS_TO, 'Position', 'position_id'),
             'level' => array(self::BELONGS_TO, 'Level', 'level_id'),
             'employeeHead' => array(self::BELONGS_TO, 'Employee', 'employee_head_id'),
-            'user' => array(self::BELONGS_TO, 'Users', 'user_id'),
-            'userIdUpdated' => array(self::BELONGS_TO, 'Users', 'user_id_updated'),
+            'employees' => array(self::HAS_MANY, 'Employee', 'employee_head_id'),
+            'employeeAbsences' => array(self::HAS_MANY, 'EmployeeAbsence', 'employee_id'),
+            'employeeAttendances' => array(self::HAS_MANY, 'EmployeeAttendance', 'employee_id'),
+            'employeeBanks' => array(self::HAS_MANY, 'EmployeeBank', 'employee_id'),
+            'employeeBranchDivisionPositionLevels' => array(self::HAS_MANY, 'EmployeeBranchDivisionPositionLevel', 'employee_id'),
+            'employeeDayoffs' => array(self::HAS_MANY, 'EmployeeDayoff', 'employee_id'),
+            'employeeDeductions' => array(self::HAS_MANY, 'EmployeeDeductions', 'employee_id'),
+            'employeeIncentives' => array(self::HAS_MANY, 'EmployeeIncentives', 'employee_id'),
+            'employeeMobiles' => array(self::HAS_MANY, 'EmployeeMobile', 'employee_id'),
+            'employeePhones' => array(self::HAS_MANY, 'EmployeePhone', 'employee_id'),
+            'employeeSchedules' => array(self::HAS_MANY, 'EmployeeSchedule', 'employee_id'),
+            'employeeTimesheets' => array(self::HAS_MANY, 'EmployeeTimesheet', 'employee_id'),
+            'equipmentMaintenances' => array(self::HAS_MANY, 'EquipmentMaintenance', 'employee_id'),
+            'equipmentMaintenances1' => array(self::HAS_MANY, 'EquipmentMaintenances', 'employee_id'),
+            'registrationBodyRepairDetails' => array(self::HAS_MANY, 'RegistrationBodyRepairDetail', 'mechanic_id'),
+            'registrationBodyRepairDetails1' => array(self::HAS_MANY, 'RegistrationBodyRepairDetail', 'mechanic_head_id'),
+            'registrationBodyRepairDetails2' => array(self::HAS_MANY, 'RegistrationBodyRepairDetail', 'mechanic_assigned_id'),
+            'registrationServices' => array(self::HAS_MANY, 'RegistrationService', 'supervisor_id'),
+            'registrationServiceEmployees' => array(self::HAS_MANY, 'RegistrationServiceEmployee', 'employee_id'),
+            'registrationServiceManagements' => array(self::HAS_MANY, 'RegistrationServiceManagement', 'start_mechanic_id'),
+            'registrationServiceManagements1' => array(self::HAS_MANY, 'RegistrationServiceManagement', 'finish_mechanic_id'),
+            'registrationServiceManagements2' => array(self::HAS_MANY, 'RegistrationServiceManagement', 'pause_mechanic_id'),
+            'registrationServiceManagements3' => array(self::HAS_MANY, 'RegistrationServiceManagement', 'resume_mechanic_id'),
+            'registrationServiceManagements4' => array(self::HAS_MANY, 'RegistrationServiceManagement', 'assign_mechanic_id'),
+            'registrationServiceManagements5' => array(self::HAS_MANY, 'RegistrationServiceManagement', 'supervisor_id'),
+            'registrationServiceSupervisors' => array(self::HAS_MANY, 'RegistrationServiceSupervisor', 'supervisor_id'),
+            'registrationTransactions' => array(self::HAS_MANY, 'RegistrationTransaction', 'employee_id_mechanic_helper_1'),
+            'registrationTransactions1' => array(self::HAS_MANY, 'RegistrationTransaction', 'employee_id_mechanic_helper_2'),
+            'registrationTransactions2' => array(self::HAS_MANY, 'RegistrationTransaction', 'employee_id_mechanic_helper_3'),
+            'registrationTransactions3' => array(self::HAS_MANY, 'RegistrationTransaction', 'employee_id_assign_mechanic'),
+            'registrationTransactions4' => array(self::HAS_MANY, 'RegistrationTransaction', 'employee_id_sales_person'),
+            'saleEstimationHeaders' => array(self::HAS_MANY, 'SaleEstimationHeader', 'employee_id_sale_person'),
         );
     }
 
@@ -152,60 +193,75 @@ class Employee extends CActiveRecord {
     public function attributeLabels() {
         return array(
             'id' => 'ID',
-            'name' => 'Nama Karyawan',
-            'local_address' => 'Alamat Domisili',
-            'home_address' => 'Alamat KTP',
-            'bank_name' => 'Nama Bank',
+            'name' => 'Name',
+            'recruitment_date' => 'Recruitment Date',
+            'local_address' => 'Local Address',
+            'home_address' => 'Home Address',
+            'province_id' => 'Province',
             'city_id' => 'City',
             'home_province' => 'Home Province',
             'home_city' => 'Home City',
-            'sex' => 'Jenis Kelamin',
+            'sex' => 'Sex',
             'email' => 'Email',
-            'id_card' => 'NIK',
-            'driving_licence' => 'SIM',
-            'branch_id' => 'Lokasi Cabang',
+            'id_card' => 'Id Card',
+            'driving_license' => 'Driving License',
+            'branch_id' => 'Branch',
             'status' => 'Status',
             'salary_type' => 'Salary Type',
             'basic_salary' => 'Basic Salary',
             'payment_type' => 'Payment Type',
-            'code' => 'NIP',
+            'code' => 'Code',
             'availability' => 'Availability',
-            'recruitment_date' => 'Tanggal Mulai Kerja',
             'skills' => 'Skills',
             'registration_service_id' => 'Registration Service',
-            'off_day' => 'Hari Libur',
-            'mother_name' => 'Nama Ibu Kandung',
-            'birth_place' => 'Tempat Lahir',
-            'emergency_contact_name' => 'Nama',
-            'division_id' => 'Divisi',
-            'employee_head_id' => 'Atasan',
-            'position_id' => 'Posisi',
+            'is_deleted' => 'Is Deleted',
+            'deleted_at' => 'Deleted At',
+            'deleted_by' => 'Deleted By',
+            'off_day' => 'Off Day',
+            'mobile_phone_number' => 'Mobile Phone Number',
+            'marriage_status' => 'Marriage Status',
+            'children_quantity' => 'Children Quantity',
+            'emergency_contact_relationship' => 'Emergency Contact Relationship',
+            'division_id' => 'Division',
+            'position_id' => 'Position',
             'level_id' => 'Level',
-            'mobile_phone_number' => 'No Telpon',
-            'marriage_status' => 'Status Perkawinan',
-            'emergency_contact_relationship' => 'Hubungan',
-            'religion' => 'Agama',
-            'family_card_number' => 'Kartu Keluarga',
-            'bank_account_number' => 'No. Rekening',
-            'tax_registration_number' => 'NPWP',
-            'school_degree' => 'Pendidikan',
-            'school_subject' => 'Jurusan',
-            'employment_type' => 'Status Karyawan',
-            'emergency_contact_mobile_phone' => 'No Telpon',
-            'birth_date' => 'Tanggal Lahir',
-            'emergency_contact_address' => 'Alamat',
+            'employee_head_id' => 'Employee Head',
+            'mother_name' => 'Mother Name',
+            'bank_name' => 'Bank Name',
+            'birth_place' => 'Birth Place',
+            'emergency_contact_name' => 'Emergency Contact Name',
+            'religion' => 'Religion',
+            'family_card_number' => 'Family Card Number',
+            'bank_account_number' => 'Bank Account Number',
+            'tax_registration_number' => 'Tax Registration Number',
+            'school_degree' => 'School Degree',
+            'school_subject' => 'School Subject',
+            'employment_type' => 'Employment Type',
+            'emergency_contact_mobile_phone' => 'Emergency Contact Mobile Phone',
+            'birth_date' => 'Birth Date',
+            'emergency_contact_address' => 'Emergency Contact Address',
+            'onleave_allocation' => 'Onleave Allocation',
+            'user_id' => 'User',
+            'clock_in_time' => 'Clock In Time',
+            'clock_out_time' => 'Clock Out Time',
+            'created_datetime' => 'Created Datetime',
+            'updated_datetime' => 'Updated Datetime',
+            'user_id_updated' => 'User Id Updated',
         );
     }
 
     /**
-     * @return array
+     * Retrieves a list of models based on the current search/filter conditions.
+     *
+     * Typical usecase:
+     * - Initialize the model fields with values from filter form.
+     * - Execute this method to get CActiveDataProvider instance which will filter
+     * models according to data in model fields.
+     * - Pass data provider to CGridView, CListView or any similar widget.
+     *
+     * @return CActiveDataProvider the data provider that can return the models
+     * based on the search/filter conditions.
      */
-    public function behaviors() {
-        return array(
-            'SoftDelete' => array('class' => 'application.components.behaviors.SoftDeleteBehavior'),
-        );
-    }
-
     public function search() {
         // @todo Please modify the following code to remove attributes that should not be searched.
 
@@ -213,6 +269,7 @@ class Employee extends CActiveRecord {
 
         $criteria->compare('id', $this->id);
         $criteria->compare('name', $this->name, true);
+        $criteria->compare('recruitment_date', $this->recruitment_date, true);
         $criteria->compare('local_address', $this->local_address, true);
         $criteria->compare('home_address', $this->home_address, true);
         $criteria->compare('province_id', $this->province_id);
@@ -231,20 +288,46 @@ class Employee extends CActiveRecord {
         $criteria->compare('code', $this->code, true);
         $criteria->compare('availability', $this->availability, true);
         $criteria->compare('skills', $this->skills, true);
+        $criteria->compare('registration_service_id', $this->registration_service_id);
+        $criteria->compare('is_deleted', $this->is_deleted);
+        $criteria->compare('deleted_at', $this->deleted_at, true);
+        $criteria->compare('deleted_by', $this->deleted_by);
         $criteria->compare('off_day', $this->off_day, true);
+        $criteria->compare('mobile_phone_number', $this->mobile_phone_number, true);
+        $criteria->compare('marriage_status', $this->marriage_status, true);
+        $criteria->compare('children_quantity', $this->children_quantity);
+        $criteria->compare('emergency_contact_relationship', $this->emergency_contact_relationship, true);
+        $criteria->compare('division_id', $this->division_id);
+        $criteria->compare('position_id', $this->position_id);
+        $criteria->compare('level_id', $this->level_id);
+        $criteria->compare('employee_head_id', $this->employee_head_id);
+        $criteria->compare('mother_name', $this->mother_name, true);
+        $criteria->compare('bank_name', $this->bank_name, true);
+        $criteria->compare('birth_place', $this->birth_place, true);
+        $criteria->compare('emergency_contact_name', $this->emergency_contact_name, true);
+        $criteria->compare('religion', $this->religion, true);
+        $criteria->compare('family_card_number', $this->family_card_number, true);
+        $criteria->compare('bank_account_number', $this->bank_account_number, true);
+        $criteria->compare('tax_registration_number', $this->tax_registration_number, true);
+        $criteria->compare('school_degree', $this->school_degree, true);
+        $criteria->compare('school_subject', $this->school_subject, true);
+        $criteria->compare('employment_type', $this->employment_type, true);
+        $criteria->compare('emergency_contact_mobile_phone', $this->emergency_contact_mobile_phone, true);
+        $criteria->compare('birth_date', $this->birth_date, true);
+        $criteria->compare('emergency_contact_address', $this->emergency_contact_address, true);
+        $criteria->compare('onleave_allocation', $this->onleave_allocation);
+        $criteria->compare('user_id', $this->user_id);
         $criteria->compare('clock_in_time', $this->clock_in_time, true);
         $criteria->compare('clock_out_time', $this->clock_out_time, true);
-        $criteria->compare('recruitment_date', $this->recruitment_date);
-        $criteria->compare('is_deleted', 0);
+        $criteria->compare('created_datetime', $this->created_datetime, true);
+        $criteria->compare('updated_datetime', $this->updated_datetime, true);
+        $criteria->compare('user_id_updated', $this->user_id_updated);
 
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
-            'sort' => array(
-                'defaultOrder' => 't.status ASC, t.name ASC',
-            ),
         ));
     }
-    
+
     public function searchResigned() {
         // @todo Please modify the following code to remove attributes that should not be searched.
 

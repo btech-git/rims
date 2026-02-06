@@ -117,6 +117,8 @@ class GeneralRepairRegistrationController extends Controller {
         $serviceCriteria->compare('t.service_category_id', $service->service_category_id);
         $serviceCriteria->compare('t.service_type_id', $service->service_type_id);
         $serviceCriteria->compare('t.is_deleted', 0);
+        $serviceCriteria->compare('t.status', 'Active');
+        $serviceCriteria->compare('t.is_approved', 1);
         $explodeKeyword = explode(" ", $service->findkeyword);
 
         foreach ($explodeKeyword as $key) {

@@ -140,7 +140,7 @@ class PaymentInController extends Controller {
         $worksheet->setCellValue('G5', 'Payment Type');
         $worksheet->setCellValue('H5', 'Note');
         $worksheet->setCellValue('I5', 'Admin');
-        $worksheet->setCellValue('J5', 'Invoice #');
+        $worksheet->setCellValue('J5', 'Transaksi #');
         $worksheet->setCellValue('K5', 'Tanggal');
         $worksheet->setCellValue('L5', 'Kendaraan');
         $worksheet->setCellValue('M5', 'Pph 23');
@@ -179,15 +179,21 @@ class PaymentInController extends Controller {
                 $worksheet->setCellValue("A{$counter}", CHtml::value($header, 'payment_number'));
                 $worksheet->setCellValue("B{$counter}", CHtml::value($header, 'payment_date'));
                 $worksheet->setCellValue("C{$counter}", CHtml::value($header, 'customer.name'));
-                $worksheet->setCellValue("D{$counter}", CHtml::value($detail, 'invoiceHeader.insuranceCompany.name'));
+                $worksheet->setCellValue("D{$counter}", CHtml::value($header, 'insuranceCompany.name'));
                 $worksheet->setCellValue("E{$counter}", CHtml::value($header, 'status'));
                 $worksheet->setCellValue("F{$counter}", CHtml::value($header, 'companyBank.account_name'));
                 $worksheet->setCellValue("G{$counter}", CHtml::value($header, 'paymentType.name'));
                 $worksheet->setCellValue("H{$counter}", CHtml::value($header, 'notes'));
                 $worksheet->setCellValue("I{$counter}", CHtml::value($header, 'user.username'));
-                $worksheet->setCellValue("J{$counter}", CHtml::value($detail, 'invoiceHeader.invoice_number'));
-                $worksheet->setCellValue("K{$counter}", CHtml::value($detail, 'invoiceHeader.invoice_date'));
-                $worksheet->setCellValue("L{$counter}", CHtml::value($detail, 'invoiceHeader.vehicle.plate_number'));
+                if ($detail->invoice_header_id !== null) {
+                    $worksheet->setCellValue("J{$counter}", CHtml::value($detail, 'invoiceHeader.invoice_number'));
+                    $worksheet->setCellValue("K{$counter}", CHtml::value($detail, 'invoiceHeader.invoice_date'));
+                    $worksheet->setCellValue("L{$counter}", CHtml::value($detail, 'invoiceHeader.vehicle.plate_number'));
+                } else {
+                    $worksheet->setCellValue("J{$counter}", CHtml::value($detail, 'registrationTransaction.transaction_number'));
+                    $worksheet->setCellValue("K{$counter}", CHtml::value($detail, 'registrationTransaction.transaction_date'));
+                    $worksheet->setCellValue("L{$counter}", CHtml::value($detail, 'registrationTransaction.vehicle.plate_number'));
+                }
                 $worksheet->setCellValue("M{$counter}", $taxServiceAmount);
                 $worksheet->setCellValue("N{$counter}", $discountAmount);
                 $worksheet->setCellValue("O{$counter}", $bankAdminAmount);
@@ -196,7 +202,7 @@ class PaymentInController extends Controller {
                 $worksheet->setCellValue("R{$counter}", $receivedAmount);
                 $worksheet->setCellValue("S{$counter}", $totalReceivedAmount);
                 $worksheet->setCellValue("T{$counter}", $invoiceAmount);
-                $worksheet->setCellValue("U{$counter}", CHtml::value($detail, 'invoiceHeader.payment_left'));
+                $worksheet->setCellValue("U{$counter}", $detail->invoice_header_id !== null ? CHtml::value($detail, 'invoiceHeader.payment_left') : '0.00');
                 $worksheet->setCellValue("V{$counter}", CHtml::value($detail, 'memo'));
 
                 $counter++;
@@ -213,8 +219,8 @@ class PaymentInController extends Controller {
         
         $worksheet->mergeCells("A{$counter}:L{$counter}");
         $worksheet->getStyle("A{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
-        $worksheet->getStyle("M{$counter}:T{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
-        $worksheet->getStyle("A{$counter}:T{$counter}")->getFont()->setBold(true);
+        $worksheet->getStyle("M{$counter}:V{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A{$counter}:V{$counter}")->getFont()->setBold(true);
         
         $worksheet->setCellValue("A{$counter}", 'TOTAL');
         $worksheet->setCellValue("M{$counter}", $totalTaxService);

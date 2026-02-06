@@ -8,6 +8,7 @@
                 <td>Master Kategori</td>
                 <td>Sub Master Kategori</td>
                 <td>Sub Kategori</td>
+                <td>SAE</td>
             </tr>
         </thead>
         <tbody>
@@ -40,7 +41,7 @@
 
                 <td>
                     <div id="product_sub_brand_series">
-                        <?php echo CHtml::activeDropDownList($product, 'sub_brand_series_id', CHtml::listData(SubBrandSeries::model()->findAll(array('order' => 'name ASC')), 'id', 'name'), array(
+                        <?php echo CHtml::activeDropDownList($product, 'sub_brand_series_id', CHtml::listData(SubBrandSeries::model()->findAllByAttributes(array('sub_brand_id' => $product->sub_brand_id), array('order' => 'name ASC')), 'id', 'name'), array(
                             'empty' => '-- All --',
                             'order' => 'name',
                         )); ?>
@@ -48,13 +49,13 @@
                 </td>
 
                 <td>
-                    <?php $productMasterCategory = ProductMasterCategory::model()->findByPk(4); ?>
+                    <?php $productMasterCategory = ProductMasterCategory::model()->findByPk(6); ?>
                     <?php echo CHtml::encode(CHtml::value($productMasterCategory, 'name')); ?>
                 </td>
 
                 <td>
                     <div id="product_sub_master_category">
-                        <?php echo CHtml::activeDropDownList($product, 'product_sub_master_category_id', CHtml::listData(ProductSubMasterCategory::model()->findAllByAttributes(array('product_master_category_id' => 4), array('order' => 'name ASC')), 'id', 'name'), array(
+                        <?php echo CHtml::activeDropDownList($product, 'product_sub_master_category_id', CHtml::listData(ProductSubMasterCategory::model()->findAllByAttributes(array('product_master_category_id' => $productMasterCategory->id), array('order' => 'name ASC')), 'id', 'name'), array(
                             'empty' => '-- All --',
                             'order' => 'name',
                             'onchange' => CHtml::ajax(array(
@@ -69,13 +70,18 @@
                 <td>
                     <div id="product_sub_category">
                         <?php echo CHtml::activeDropDownList($product, 'product_sub_category_id', CHtml::listData(ProductSubCategory::model()->findAll(array(
-                            'condition' => 'product_sub_master_category_id IN (25, 26, 27)',
+                            'condition' => 'product_master_category_id IN (6)',
                             'order' => 'name ASC'
                         )), 'id', 'name'), array(
                             'empty' => '-- All --',
                             'order' => 'name',
                         )); ?>
                     </div>
+                </td>
+                <td>
+                    <?php echo CHtml::dropDownList('OilSaeId', $oilSaeId, CHtml::listData(OilSae::model()->findAll(array('order' => 't.id ASC')), 'id', 'oilName'), array(
+                        'empty' => '-- All --',
+                    )); ?>
                 </td>
             </tr>
         </tbody>
@@ -89,6 +95,7 @@
                 <td>Name</td>
                 <td>Bulan</td>
                 <td>Tahun</td>
+                <td>Convert Liter</td>
             </tr>
         </thead>
 
@@ -117,6 +124,11 @@
                     )); ?>
                 </td>
                 <td><?php echo CHtml::dropDownList('Year', $year, $yearList); ?></td>
+                <td>
+                    <?php echo CHtml::dropDownList('ConvertToLitre', $convertToLitre, array(
+                        1 => 'Rubah ke Liter'
+                    ), array('empty' => 'Satuan Asal')); ?>
+                </td>
             </tr>
         </tbody>
     </table>

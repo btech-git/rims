@@ -5,9 +5,6 @@
                 <td>Brand</td>
                 <td>Sub Brand</td>
                 <td>Sub Brand Series</td>
-                <td>ID</td>
-                <td>Code</td>
-                <td>Name</td>
                 <td>SAE</td>
             </tr>
         </thead>
@@ -47,9 +44,6 @@
                         )); ?>
                     </div>
                 </td>
-                <td><?php echo CHtml::textField('ProductId', $productId, array('style' => 'width:100px')); ?></td>
-                <td><?php echo CHtml::textField('ProductCode', $productCode, array('style' => 'width:100px')); ?></td>
-                <td><?php echo CHtml::textField('ProductName', $productName); ?></td>
                 <td>
                     <?php echo CHtml::dropDownList('OilSaeId', $oilSaeId, CHtml::listData(OilSae::model()->findAll(array('order' => 't.id ASC')), 'id', 'oilName'), array(
                         'empty' => '-- All --',
@@ -59,6 +53,44 @@
         </tbody>
     </table>
 
+    <table>
+        <thead>
+            <tr>
+                <td>ID</td>
+                <td>Code</td>
+                <td>Name</td>
+                <td>Convert Liter</td>
+                <td>Per Tanggal</td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><?php echo CHtml::textField('ProductId', $productId); ?></td>
+                <td><?php echo CHtml::textField('ProductCode', $productCode); ?></td>
+                <td><?php echo CHtml::textField('ProductName', $productName); ?></td>
+                <td>
+                    <?php echo CHtml::dropDownList('ConvertToLitre', $convertToLitre, array(
+                        1 => 'Rubah ke Liter'
+                    ), array('empty' => 'Satuan Asal')); ?>
+                </td>
+                <td>
+                    <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(
+                        'name' => 'EndDate',
+                        'options' => array(
+                            'dateFormat' => 'yy-mm-dd',
+                            'changeMonth'=>true,
+                            'changeYear'=>true,
+                        ),
+                        'htmlOptions' => array(
+                            'readonly' => true,
+                            'placeholder' => 'Per Tanggal',
+                        ),
+                    )); ?>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    
     <div>
         <?php echo CHtml::submitButton('Tampilkan', array('onclick' => '$("#CurrentSort").val(""); return true;')); ?>
         <?php echo CHtml::submitButton('Hapus', array('name' => 'ResetFilter'));  ?>

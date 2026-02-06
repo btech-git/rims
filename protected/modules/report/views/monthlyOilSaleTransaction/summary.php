@@ -26,6 +26,8 @@ Yii::app()->clientScript->registerScript('search', "
             'month' => $month,
             'product'=>$product,
             'currentPage' => $currentPage,
+            'convertToLitre' => $convertToLitre,
+            'oilSaeId' => $oilSaeId,
         )); ?>
     </div><!-- search-form -->
     <?php echo CHtml::endForm(); ?>
@@ -38,6 +40,8 @@ Yii::app()->clientScript->registerScript('search', "
         'year' => $year,
         'yearNow' => $yearNow,
         'month' => $month,
+        'unitConversion' => $unitConversion,
+        'convertToLitre' => $convertToLitre,
     )); ?>
 </div>
 

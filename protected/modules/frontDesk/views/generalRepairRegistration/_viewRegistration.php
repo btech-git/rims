@@ -105,10 +105,43 @@
                 <div class="field">
                     <div class="row collapse">
                         <div class="small-4 columns">
-                            <span class="prefix">Assigned Mechanic</span>
+                            <span class="prefix">Lead Mechanic</span>
                         </div>
                         <div class="small-8 columns">
                             <input type="text" readonly="true" value="<?php echo !empty($model->employee_id_assign_mechanic) ? $model->employeeIdAssignMechanic->name : ''; ?>"> 
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="field">
+                    <div class="row collapse">
+                        <div class="small-4 columns">
+                            <span class="prefix">Mechanic Helper 1</span>
+                        </div>
+                        <div class="small-8 columns">
+                            <input type="text" readonly="true" value="<?php echo CHtml::encode(CHtml::value($model, 'employeeIdMechanicHelper1.name')); ?>"> 
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="field">
+                    <div class="row collapse">
+                        <div class="small-4 columns">
+                            <span class="prefix">Mechanic Helper 2</span>
+                        </div>
+                        <div class="small-8 columns">
+                            <input type="text" readonly="true" value="<?php echo CHtml::encode(CHtml::value($model, 'employeeIdMechanicHelper2.name')); ?>"> 
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="field">
+                    <div class="row collapse">
+                        <div class="small-4 columns">
+                            <span class="prefix">Mechanic Helper 3</span>
+                        </div>
+                        <div class="small-8 columns">
+                            <input type="text" readonly="true" value="<?php echo CHtml::encode(CHtml::value($model, 'employeeIdMechanicHelper3.name')); ?>"> 
                         </div>
                     </div>
                 </div>
@@ -284,7 +317,6 @@
                         </div>
                     </div>
                 <?php endif; ?>
-
             </div><!-- end div large -->
         </div>
     </div>

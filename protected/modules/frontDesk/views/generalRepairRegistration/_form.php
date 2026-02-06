@@ -129,12 +129,66 @@
                                                     "position_id" => 1,
                                                     'status' => 'Active',
 //                                                    "level_id" => array(1, 2, 3, 4),
-                                                )), "id", "name"), array("empty" => "--Assign Mechanic--")); ?>
+                                                )), "id", "name"), array("empty" => "--Assign Mechanic Leader--")); ?>
                                                 <?php echo $form->error($generalRepairRegistration->header,'employee_id_assign_mechanic'); ?>
                                             </div>
                                         </div>
                                     </div>
 
+                                    <div class="field">
+                                        <div class="row collapse">
+                                            <div class="small-4 columns">
+                                                <label class="prefix"><?php echo $form->labelEx($generalRepairRegistration->header,'employee_id_mechanic_helper_1'); ?></label>
+                                            </div>
+                                            <div class="small-8 columns">
+                                                <?php echo CHtml::activeDropDownlist($generalRepairRegistration->header, 'employee_id_mechanic_helper_1', CHtml::listData(Employee::model()->findAllByAttributes(array(
+//                                                    "branch_id" => User::model()->findByPk(Yii::app()->user->getId())->branch_id,
+//                                                    "division_id" => array(1, 3, 5),
+                                                    "position_id" => 1,
+                                                    'status' => 'Active',
+//                                                    "level_id" => array(1, 2, 3, 4),
+                                                )), "id", "name"), array("empty" => "--Assign Helper 1--")); ?>
+                                                <?php echo $form->error($generalRepairRegistration->header,'employee_id_mechanic_helper_1'); ?>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="field">
+                                        <div class="row collapse">
+                                            <div class="small-4 columns">
+                                                <label class="prefix"><?php echo $form->labelEx($generalRepairRegistration->header,'employee_id_mechanic_helper_2'); ?></label>
+                                            </div>
+                                            <div class="small-8 columns">
+                                                <?php echo CHtml::activeDropDownlist($generalRepairRegistration->header, 'employee_id_mechanic_helper_2', CHtml::listData(Employee::model()->findAllByAttributes(array(
+//                                                    "branch_id" => User::model()->findByPk(Yii::app()->user->getId())->branch_id,
+//                                                    "division_id" => array(1, 3, 5),
+                                                    "position_id" => 1,
+                                                    'status' => 'Active',
+//                                                    "level_id" => array(1, 2, 3, 4),
+                                                )), "id", "name"), array("empty" => "--Assign Helper 2--")); ?>
+                                                <?php echo $form->error($generalRepairRegistration->header,'employee_id_mechanic_helper_2'); ?>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="field">
+                                        <div class="row collapse">
+                                            <div class="small-4 columns">
+                                                <label class="prefix"><?php echo $form->labelEx($generalRepairRegistration->header,'employee_id_mechanic_helper_3'); ?></label>
+                                            </div>
+                                            <div class="small-8 columns">
+                                                <?php echo CHtml::activeDropDownlist($generalRepairRegistration->header, 'employee_id_mechanic_helper_3', CHtml::listData(Employee::model()->findAllByAttributes(array(
+//                                                    "branch_id" => User::model()->findByPk(Yii::app()->user->getId())->branch_id,
+//                                                    "division_id" => array(1, 3, 5),
+                                                    "position_id" => 1,
+                                                    'status' => 'Active',
+//                                                    "level_id" => array(1, 2, 3, 4),
+                                                )), "id", "name"), array("empty" => "--Assign Helper 3--")); ?>
+                                                <?php echo $form->error($generalRepairRegistration->header,'employee_id_mechanic_helper_3'); ?>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
                                     <div class="field">
                                         <div class="row collapse">
                                             <div class="small-4 columns">
@@ -147,25 +201,11 @@
                                                     "position_id" => 2,
                                                     'status' => 'Active',
 //                                                    "level_id" => array(1, 2, 3, 4),
-                                                )), "id", "name"), array("empty" => "--Assign Sales--")); ?>
+                                                )), "id", "name"), array("empty" => "--Assign Sales Person--")); ?>
                                                 <?php echo $form->error($generalRepairRegistration->header,'employee_id_sales_person'); ?>
                                             </div>
                                         </div>
                                     </div>
-
-                                    <?php if ($customer->customer_type === 'Company'): ?>
-                                        <div class="field">
-                                            <div class="row collapse">
-                                                <div class="small-4 columns">
-                                                    <label class="prefix"><?php echo $form->labelEx($generalRepairRegistration->header, 'customer_work_order_number'); ?></label>
-                                                </div>
-                                                <div class="small-8 columns">
-                                                    <?php echo $form->textField($generalRepairRegistration->header, 'customer_work_order_number'); ?>
-                                                    <?php echo $form->error($generalRepairRegistration->header,'customer_work_order_number'); ?>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    <?php endif; ?>
                                 </div> 
                                 <!-- END COLUMN 6-->
                                 <div class="medium-6 columns">
@@ -205,25 +245,40 @@
                                             </div>
                                         </div>
                                     </div>
+
+                                    <?php if ($customer->customer_type === 'Company'): ?>
+                                        <div class="field">
+                                            <div class="row collapse">
+                                                <div class="small-4 columns">
+                                                    <label class="prefix"><?php echo $form->labelEx($generalRepairRegistration->header, 'customer_work_order_number'); ?></label>
+                                                </div>
+                                                <div class="small-8 columns">
+                                                    <?php echo $form->textField($generalRepairRegistration->header, 'customer_work_order_number'); ?>
+                                                    <?php echo $form->error($generalRepairRegistration->header,'customer_work_order_number'); ?>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    <?php endif; ?>
+                                    <div class="field">
+                                        <div class="row collapse">
+                                            <div class="small-2 columns">
+                                                <label class="prefix"><?php echo $form->labelEx($generalRepairRegistration->header,'problem'); ?></label>
+                                            </div>
+                                            <div class="small-10 columns">
+                                                <?php echo $form->textArea($generalRepairRegistration->header,'problem',array('rows'=>5, 'cols'=>50)); ?>
+                                                <?php echo $form->error($generalRepairRegistration->header,'problem'); ?>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div> <!-- end row -->
+                    
+                    <hr />
+                            
                     <div class="row">
                         <div class="medium-12 columns">
-                            <div class="field">
-                                <div class="row collapse">
-                                    <div class="small-2 columns">
-                                        <label class="prefix"><?php echo $form->labelEx($generalRepairRegistration->header,'problem'); ?></label>
-                                    </div>
-                                    <div class="small-10 columns">
-                                        <?php echo $form->textArea($generalRepairRegistration->header,'problem',array('rows'=>5, 'cols'=>50)); ?>
-                                        <?php echo $form->error($generalRepairRegistration->header,'problem'); ?>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <hr />
                             
                             <div class="field buttons text-center">
                                 <?php //echo CHtml::hiddenField('_FormSubmit_', ''); ?>

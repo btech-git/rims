@@ -34,9 +34,18 @@ class MonthlyOilSaleTransactionController extends Controller {
         
         $month = isset($_GET['Month']) ? $_GET['Month'] : $monthNow;
         $year = (isset($_GET['Year'])) ? $_GET['Year'] : $yearNow;
+        $oilSaeId = isset($_GET['OilSaeId']) ? $_GET['OilSaeId'] : '';
+        $convertToLitre = isset($_GET['ConvertToLitre']) ? $_GET['ConvertToLitre'] : '';
+        
+        if (isset($_GET['ResetFilter'])) {
+            $month = $monthNow;
+            $year = $yearNow;
+            $oilSaeId = '';
+            $convertToLitre = '';
+        }
         
         $product = Search::bind(new Product(), isset($_GET['Product']) ? $_GET['Product'] : '');
-        $productDataProvider = $product->searchByOilSaleReport($currentPage, $year, $month);
+        $productDataProvider = $product->searchByOilSaleReport($currentPage, $year, $month, $oilSaeId);
         $branches = Branch::model()->findAllByAttributes(array('status' => 'Active'));
 
         $yearList = array();
@@ -44,12 +53,10 @@ class MonthlyOilSaleTransactionController extends Controller {
             $yearList[$y] = $y;
         }
         
-        if (isset($_GET['ResetFilter'])) {
-            $product->unsetAttributes();
-        }
+        $unitConversion = UnitConversion::model()->findByAttributes(array('unit_to_id' => $convertToLitre));
         
         if (isset($_GET['SaveExcel'])) {
-            $this->saveToExcel($productDataProvider, $branches, $year, $month);
+            $this->saveToExcel($productDataProvider, $branches, $year, $month, $unitConversion, $convertToLitre);
         }
 
         $this->render('summary', array(
@@ -61,6 +68,9 @@ class MonthlyOilSaleTransactionController extends Controller {
             'productDataProvider' => $productDataProvider,
             'branches' => $branches,
             'currentPage' => $currentPage,
+            'convertToLitre' => $convertToLitre,
+            'unitConversion' => $unitConversion,
+            'oilSaeId' => $oilSaeId,
         ));
     }
 
@@ -123,7 +133,7 @@ class MonthlyOilSaleTransactionController extends Controller {
         ));
     }
 
-    protected function saveToExcel($productDataProvider, $branches, $year, $month) {
+    protected function saveToExcel($productDataProvider, $branches, $year, $month, $unitConversion, $convertToLitre) {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
 
@@ -172,6 +182,7 @@ class MonthlyOilSaleTransactionController extends Controller {
         foreach ($productDataProvider->data as $product) {
             $oilSaleTotalQuantities = $product->getOilSaleTotalQuantitiesReport($year, $month);
             $totalQuantity = 0;
+            $multiplier = $unitConversion !== null && $unitConversion->unit_from_id == $product->unit_id ? $unitConversion->multiplier : 1;
             $column = 'H'; 
             
             $worksheet->setCellValue("A{$counter}", CHtml::value($product, 'id'));
@@ -180,13 +191,14 @@ class MonthlyOilSaleTransactionController extends Controller {
             $worksheet->setCellValue("D{$counter}", CHtml::value($product, 'oilSae.oilName'));
             $worksheet->setCellValue("E{$counter}", CHtml::value($product, 'brand.name') . ' - ' . CHtml::value($product, 'subBrand.name') . ' - ' . CHtml::value($product, 'subBrandSeries.name'));
             $worksheet->setCellValue("F{$counter}", CHtml::value($product, 'productMasterCategory.name') . ' - ' . CHtml::value($product, 'productSubMasterCategory.name') . ' - ' . CHtml::value($product, 'productSubCategory.name'));
-            $worksheet->setCellValue("G{$counter}", CHtml::value($product, 'unit.name'));
+            $worksheet->setCellValue("G{$counter}", empty($convertToLitre) ? CHtml::value($product, 'unit.name') : 'Liter');
             
             foreach ($branches as $branch) {
                 $saleQuantity = 0; 
                 foreach ($oilSaleTotalQuantities as $i => $oilSaleTotalQuantity) {
                     if ($oilSaleTotalQuantity['branch_id'] == $branch->id) {
-                        $saleQuantity = CHtml::value($oilSaleTotalQuantities[$i], 'total_quantity');
+                        $originalQuantity = CHtml::value($oilSaleTotalQuantities[$i], 'total_quantity');
+                        $saleQuantity = $multiplier * $originalQuantity;
                         break;
                     }
                 }

@@ -500,7 +500,7 @@ class InventoryDetail extends CActiveRecord {
         return $value;
     }
     
-    public static function getInventoryOilStockReport($startYear, $endYear, $brandId, $subBrandId, $subBrandSeriesId, $productId, $productCode, $productName, $oilSaeId) {
+    public static function getInventoryOilStockReport($endDate, $brandId, $subBrandId, $subBrandSeriesId, $productId, $productCode, $productName, $oilSaeId) {
         $brandIdConditionSql = '';
         $subBrandIdConditionSql = '';
         $subBrandSeriesIdConditionSql = '';
@@ -510,8 +510,7 @@ class InventoryDetail extends CActiveRecord {
         $oilSaeConditionSql = '';
 
         $params = array(
-            ':start_year' => $startYear,
-            ':end_year' => $endYear,
+            ':end_date' => $endDate,
         );
 
         if (!empty($brandId)) {
@@ -549,15 +548,15 @@ class InventoryDetail extends CActiveRecord {
             $params[':oil_sae_id'] = $oilSaeId;
         }
 
-        $sql = "SELECT w.branch_id, i.product_id, MAX(p.name) AS product_name, MAX(p.manufacturer_code) AS product_code, 
-                    MAX(p.brand_id) AS brand_id, MAX(p.sub_brand_id) AS sub_brand_id, MAX(p.sub_brand_series_id) AS sub_brand_series_id, 
-                    MAX(p.oil_sae_id) AS oil_sae_id, COALESCE(SUM(stock_in + stock_out), 0) AS total_stock
+        $sql = "SELECT w.branch_id, i.product_id, MAX(p.name) AS product_name, MAX(p.manufacturer_code) AS product_code, MAX(p.brand_id) AS brand_id, 
+                    MAX(p.sub_brand_id) AS sub_brand_id, MAX(p.sub_brand_series_id) AS sub_brand_series_id, MAX(p.oil_sae_id) AS oil_sae_id, 
+                    COALESCE(SUM(stock_in + stock_out), 0) AS total_stock
                 FROM " . InventoryDetail::model()->tableName() . " i 
                 INNER JOIN " . Product::model()->tableName() . " p ON p.id = i.product_id
                 INNER JOIN " . Warehouse::model()->tableName() . " w ON w.id = i.warehouse_id
-                WHERE p.product_sub_master_category_id IN (39, 40, 42) AND i.transaction_date >= '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND 
-                    w.status = 'Active'" . $brandIdConditionSql . $subBrandIdConditionSql . $subBrandSeriesIdConditionSql . $productIdConditionSql . 
-                    $productCodeConditionSql . $productNameConditionSql . $oilSaeConditionSql . "
+                WHERE p.product_sub_master_category_id IN (39, 40, 42) AND w.status = 'Active' AND 
+                    i.transaction_date BETWEEN '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND :end_date" . $brandIdConditionSql . $subBrandIdConditionSql . 
+                    $subBrandSeriesIdConditionSql . $productIdConditionSql . $productCodeConditionSql . $productNameConditionSql . $oilSaeConditionSql . "
                 GROUP BY w.branch_id, i.product_id
                 HAVING total_stock <> 0";
 

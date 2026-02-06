@@ -42,7 +42,7 @@
             <th class="width1-10">Status</th>
         </tr>
         <tr id="header2">
-            <td colspan="11">
+            <td colspan="10">
                 <table>
                     <tr>
                         <th class="width2-1">Payment in #</th>
@@ -84,16 +84,19 @@
                 <td class="width1-10" style="text-align: right"><?php echo CHtml::encode(CHtml::value($header, 'status')); ?></td>
             </tr>
             <tr class="items2">
-                <td colspan="11">
+                <td colspan="10">
                     <table>
                         <?php if (!empty($header->paymentInDetails )): ?>
-                        <?php $totalPayment = 0; ?>
+                        <?php $totalPayment = '0.00'; ?>
                             <?php foreach ($header->paymentInDetails as $paymentInDetail): ?>
                                 <?php $amount = CHtml::value($paymentInDetail, 'amount'); ?>
                                 <?php $total = CHtml::value($paymentInDetail, 'totalAmount'); ?>
                                 <tr>
                                     <td class="width2-1">
-                                        <?php echo CHtml::link(CHtml::encode($paymentInDetail->paymentIn->payment_number), array("/transaction/paymentIn/view", "id"=>$paymentInDetail->paymentIn->id), array("target" => "_blank")); ?>
+                                        <?php echo CHtml::link(CHtml::encode($paymentInDetail->paymentIn->payment_number), array(
+                                            "/transaction/paymentIn/view", 
+                                            "id"=>$paymentInDetail->paymentIn->id
+                                        ), array("target" => "_blank")); ?>
                                     </td>
                                     <td class="width2-2">
                                         <?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($paymentInDetail->paymentIn->payment_date))); ?>

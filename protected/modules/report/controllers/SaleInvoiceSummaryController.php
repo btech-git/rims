@@ -108,8 +108,9 @@ class SaleInvoiceSummaryController extends Controller {
     public function reportGrandTotal($dataProvider) {
         $grandTotal = 0.00;
 
-        foreach ($dataProvider->data as $data)
+        foreach ($dataProvider->data as $data) {
             $grandTotal += $data->total_price;
+        }
 
         return $grandTotal;
     }
@@ -117,8 +118,9 @@ class SaleInvoiceSummaryController extends Controller {
     public function reportTotalPayment($dataProvider) {
         $grandTotal = 0.00;
 
-        foreach ($dataProvider->data as $data)
+        foreach ($dataProvider->data as $data) {
             $grandTotal += $data->payment_amount;
+        }
 
         return $grandTotal;
     }
@@ -126,8 +128,9 @@ class SaleInvoiceSummaryController extends Controller {
     public function reportTotalRemaining($dataProvider) {
         $grandTotal = 0.00;
 
-        foreach ($dataProvider->data as $data)
+        foreach ($dataProvider->data as $data) {
             $grandTotal += $data->payment_left;
+        }
 
         return $grandTotal;
     }
@@ -152,20 +155,20 @@ class SaleInvoiceSummaryController extends Controller {
         $worksheet = $objPHPExcel->setActiveSheetIndex(0);
         $worksheet->setTitle('Laporan Faktur Penjualan');
 
-        $worksheet->mergeCells('A1:M1');
-        $worksheet->mergeCells('A2:M2');
-        $worksheet->mergeCells('A3:M3');
+        $worksheet->mergeCells('A1:V1');
+        $worksheet->mergeCells('A2:V2');
+        $worksheet->mergeCells('A3:V3');
         
-        $worksheet->getStyle('A1:M5')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-        $worksheet->getStyle('A1:M5')->getFont()->setBold(true);
+        $worksheet->getStyle('A1:V5')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->getStyle('A1:V5')->getFont()->setBold(true);
         
         $branch = Branch::model()->findByPk($branchId);
         $worksheet->setCellValue('A1', 'Raperind Motor ' . CHtml::encode(CHtml::value($branch, 'name')));
         $worksheet->setCellValue('A2', 'Laporan Faktur Penjualan');
         $worksheet->setCellValue('A3', $startDateFormatted . ' - ' . $endDateFormatted);
 
-        $worksheet->getStyle("A5:L5")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
-        $worksheet->getStyle("A5:L5")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A5:V5")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A5:V5")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
         $worksheet->setCellValue('A5', 'Tanggal');
         $worksheet->setCellValue('B5', 'Faktur #');
@@ -174,12 +177,21 @@ class SaleInvoiceSummaryController extends Controller {
         $worksheet->setCellValue('E5', 'Type');
         $worksheet->setCellValue('F5', 'Asuransi');
         $worksheet->setCellValue('G5', 'Plat #');
-        $worksheet->setCellValue('H5', 'Vehicle');
+        $worksheet->setCellValue('H5', 'Kendaraan');
         $worksheet->setCellValue('I5', 'Grand Total');
         $worksheet->setCellValue('J5', 'Payment');
         $worksheet->setCellValue('K5', 'Remaining');
         $worksheet->setCellValue('L5', 'Status');
         $worksheet->setCellValue('M5', 'User');
+        $worksheet->setCellValue('N5', 'Payment #');
+        $worksheet->setCellValue('O5', 'Tanggal');
+        $worksheet->setCellValue('P5', 'Jumlah');
+        $worksheet->setCellValue('Q5', 'PPh 21');
+        $worksheet->setCellValue('R5', 'Diskon');
+        $worksheet->setCellValue('S5', 'Biaya Bank');
+        $worksheet->setCellValue('T5', 'Biaya Merimen');
+        $worksheet->setCellValue('U5', 'Total');
+        $worksheet->setCellValue('V5', 'Memo');
 
         $counter = 6;
 
@@ -188,29 +200,40 @@ class SaleInvoiceSummaryController extends Controller {
         $grandTotalRemaining = '0.00';
         
         foreach ($saleInvoiceSummary->dataProvider->data as $header) {
-            $totalPrice = $header->total_price; 
-            $totalPayment = $header->payment_amount;
-            $totalRemaining = $header->payment_left;
-            
-            $worksheet->setCellValue("A{$counter}", CHtml::value($header, 'invoice_date'));
-            $worksheet->setCellValue("B{$counter}", CHtml::value($header, 'invoice_number'));
-            $worksheet->setCellValue("C{$counter}", CHtml::value($header, 'due_date'));
-            $worksheet->setCellValue("D{$counter}", CHtml::value($header, 'customer.name'));
-            $worksheet->setCellValue("E{$counter}", CHtml::value($header, 'customer.customer_type'));
-            $worksheet->setCellValue("F{$counter}", CHtml::value($header, 'insuranceCompany.name'));
-            $worksheet->setCellValue("G{$counter}", CHtml::value($header, 'vehicle.plate_number'));
-            $worksheet->setCellValue("H{$counter}", CHtml::value($header, 'vehicle.carMake.name') . ' - ' . CHtml::value($header, 'vehicle.carModel.name') . ' - ' . CHtml::value($header, 'vehicle.carSubModel.name'));
-            $worksheet->setCellValue("I{$counter}", $totalPrice);
-            $worksheet->setCellValue("J{$counter}", $totalPayment);
-            $worksheet->setCellValue("K{$counter}", $totalRemaining);
-            $worksheet->setCellValue("L{$counter}", CHtml::value($header, 'status'));
-            $worksheet->setCellValue("M{$counter}", CHtml::value($header, 'user.username'));
-            
-            $grandTotalSale += $totalPrice;
-            $grandTotalPayment += $totalPayment;
-            $grandTotalRemaining += $totalRemaining;
-            
-            $counter++;
+            foreach ($header->paymentInDetails as $paymentInDetail) {
+                $totalPrice = $header->total_price; 
+                $totalPayment = $header->payment_amount;
+                $totalRemaining = $header->payment_left;
+
+                $worksheet->setCellValue("A{$counter}", CHtml::value($header, 'invoice_date'));
+                $worksheet->setCellValue("B{$counter}", CHtml::value($header, 'invoice_number'));
+                $worksheet->setCellValue("C{$counter}", CHtml::value($header, 'due_date'));
+                $worksheet->setCellValue("D{$counter}", CHtml::value($header, 'customer.name'));
+                $worksheet->setCellValue("E{$counter}", CHtml::value($header, 'customer.customer_type'));
+                $worksheet->setCellValue("F{$counter}", CHtml::value($header, 'insuranceCompany.name'));
+                $worksheet->setCellValue("G{$counter}", CHtml::value($header, 'vehicle.plate_number'));
+                $worksheet->setCellValue("H{$counter}", CHtml::value($header, 'vehicle.carMake.name') . ' - ' . CHtml::value($header, 'vehicle.carModel.name') . ' - ' . CHtml::value($header, 'vehicle.carSubModel.name'));
+                $worksheet->setCellValue("I{$counter}", $totalPrice);
+                $worksheet->setCellValue("J{$counter}", $totalPayment);
+                $worksheet->setCellValue("K{$counter}", $totalRemaining);
+                $worksheet->setCellValue("L{$counter}", CHtml::value($header, 'status'));
+                $worksheet->setCellValue("M{$counter}", CHtml::value($header, 'user.username'));
+                $worksheet->setCellValue("N{$counter}", CHtml::value($paymentInDetail, 'paymentIn.payment_number'));
+                $worksheet->setCellValue("O{$counter}", CHtml::value($paymentInDetail, 'paymentIn.payment_date'));
+                $worksheet->setCellValue("P{$counter}", CHtml::value($paymentInDetail, 'amount'));
+                $worksheet->setCellValue("Q{$counter}", CHtml::value($paymentInDetail, 'tax_service_amount'));
+                $worksheet->setCellValue("R{$counter}", CHtml::value($paymentInDetail, 'discount_amount'));
+                $worksheet->setCellValue("S{$counter}", CHtml::value($paymentInDetail, 'bank_administration_fee'));
+                $worksheet->setCellValue("T{$counter}", CHtml::value($paymentInDetail, 'merimen_fee'));
+                $worksheet->setCellValue("U{$counter}", CHtml::value($paymentInDetail, 'totalAmount'));
+                $worksheet->setCellValue("V{$counter}", CHtml::value($paymentInDetail, 'memo'));
+
+                $grandTotalSale += $totalPrice;
+                $grandTotalPayment += $totalPayment;
+                $grandTotalRemaining += $totalRemaining;
+
+                $counter++;
+            }
         }
 
         $worksheet->getStyle("A{$counter}:M{$counter}")->getFont()->setBold(true);
