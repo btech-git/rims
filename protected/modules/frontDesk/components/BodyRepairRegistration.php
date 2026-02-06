@@ -330,9 +330,9 @@ class BodyRepairRegistration extends CComponent {
     public function validate() {
 
         $valid = $this->header->validate(array('car_mileage', 'problem', 'insurance_company_id'));
-        if ($this->header->isNewRecord) {
-            $valid = $valid && $this->validateExistingCustomer();
-        }
+//        if ($this->header->isNewRecord) {
+//            $valid = $valid && $this->validateExistingCustomer();
+//        }
 
         return $valid;
     }
