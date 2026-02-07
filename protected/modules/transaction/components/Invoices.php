@@ -42,7 +42,7 @@ class Invoices extends CComponent {
                 $detail->quantity = $saleOrder->quantity;
                 $detail->unit_price = $saleOrder->unit_price;
                 $detail->total_price = $saleOrder->total_price;
-                $detail->discount = 0.00;
+                $detail->discount = '0.00';
                 $this->details[] = $detail;
             } //endforeach
         }//end if

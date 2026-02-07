@@ -518,7 +518,7 @@ class InvoiceHeaderController extends Controller {
         $invoice->header->total_price = $registrationTransaction->grand_total;
         $invoice->header->invoice_amount = $registrationTransaction->grand_total - $registrationTransaction->downpayment_amount;
         $invoice->header->payment_left = $registrationTransaction->grand_total - $registrationTransaction->downpayment_amount;
-        $invoice->header->payment_amount = 0;
+        $invoice->header->payment_amount = '0.00';
         $invoice->header->ppn_total = $registrationTransaction->ppn_price;
         $invoice->header->ppn = ($registrationTransaction->ppn_price > 0) ? 1 : 0;
         $invoice->header->tax_percentage = $registrationTransaction->tax_percentage;
@@ -542,6 +542,62 @@ class InvoiceHeaderController extends Controller {
             $invoice->header->warranty_date = date('Y-m-d', strtotime('+3 days', strtotime($invoice->header->invoice_date))); 
             $invoice->header->follow_up_date = date('Y-m-d', strtotime('+3 months', strtotime($invoice->header->invoice_date))); 
             $invoice->generateCodeNumber(Yii::app()->dateFormatter->format('M', strtotime($invoice->header->invoice_date)), Yii::app()->dateFormatter->format('yyyy', strtotime($invoice->header->invoice_date)), $registrationTransaction->branch_id);
+        
+            if ($invoice->save(Yii::app()->db)) {
+                $this->redirect(array('view', 'id' => $invoice->header->id));
+            }
+        }
+
+        $this->render('create', array(
+            'invoice' => $invoice,
+        ));
+    }
+
+    public function actionCreate($saleOrderId) {
+
+        $invoice = $this->instantiate(null, 'create');
+
+        $salesOrder = TransactionSalesOrder::model()->findByPk($saleOrderId);
+        $invoice->header->reference_type = 1;
+        $invoice->header->sales_order_id = $saleOrderId;
+        $invoice->header->customer_id = $salesOrder->customer_id;
+        $invoice->header->vehicle_id = null;
+        $invoice->header->branch_id = $salesOrder->requester_branch_id;
+        $invoice->header->user_id = Yii::app()->user->getId();
+        $invoice->header->status = "Approved";
+        $invoice->header->total_product = $salesOrder->total_quantity;
+        $invoice->header->total_service = '0.00';
+        $invoice->header->total_quick_service = '0.00';
+        $invoice->header->service_price = '0.00';
+        $invoice->header->product_price = $salesOrder->price_before_discount;
+        $invoice->header->quick_service_price = '0.00';
+        $invoice->header->total_price = $salesOrder->total_price;
+        $invoice->header->invoice_amount = $salesOrder->total_price;
+        $invoice->header->payment_left = $salesOrder->total_price;
+        $invoice->header->payment_amount = '0.00';
+        $invoice->header->ppn_total = $salesOrder->ppn_price;
+        $invoice->header->ppn = ($salesOrder->ppn_price > 0) ? 1 : 0;
+        $invoice->header->tax_percentage = $salesOrder->tax_percentage;
+        $invoice->header->package_price = '0.00';
+        $invoice->header->downpayment_amount = '0.00';
+        $invoice->header->payment_date_estimate = date('Y-m-d');
+        $invoice->header->coa_bank_id_estimate = null;
+        $invoice->header->created_datetime = date('Y-m-d H:i:s');
+        $invoice->header->insurance_company_id = null;
+        
+        $invoice->addDetails($invoice->header->reference_type, $saleOrderId);
+        
+        if (isset($_POST['Cancel'])) {
+            $this->redirect(array('admin'));
+        }
+
+        if (isset($_POST['InvoiceHeader']) && IdempotentManager::check()) {
+
+            $this->loadState($invoice);
+            $invoice->header->due_date = date('Y-m-d',strtotime('+' . $salesOrder->customer->tenor . ' days',strtotime($invoice->header->invoice_date)));
+            $invoice->header->warranty_date = null; 
+            $invoice->header->follow_up_date = null; 
+            $invoice->generateCodeNumber(Yii::app()->dateFormatter->format('M', strtotime($invoice->header->invoice_date)), Yii::app()->dateFormatter->format('yyyy', strtotime($invoice->header->invoice_date)), $salesOrder->branch_id);
         
             if ($invoice->save(Yii::app()->db)) {
                 $this->redirect(array('view', 'id' => $invoice->header->id));

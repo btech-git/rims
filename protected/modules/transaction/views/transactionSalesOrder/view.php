@@ -28,50 +28,46 @@ $this->menu = array(
     <div class="clearfix page-action">
         <?php $ccontroller = Yii::app()->controller->id; ?>
         <?php $ccaction = Yii::app()->controller->action->id; ?>
-        <?php echo CHtml::link('<span class="fa fa-list"></span>Manage Sales Order', Yii::app()->baseUrl . '/transaction/transactionSalesOrder/admin', array(
+        <?php echo CHtml::link('<span class="fa fa-list"></span>Manage', Yii::app()->baseUrl . '/transaction/transactionSalesOrder/admin', array(
             'class' => 'button cbutton right',
             'visible' => Yii::app()->user->checkAccess("transaction.transactionSalesOrder.admin")
         )); ?>
 
         <?php if (Yii::app()->user->checkAccess("saleOrderEdit")): //$model->status_document != 'Approved' && $model->status_document != 'Rejected'): ?>
             <?php echo CHtml::link('<span class="fa fa-edit"></span>Edit', Yii::app()->baseUrl . '/transaction/transactionSalesOrder/update?id=' . $model->id, array(
-                'class' => 'button cbutton right',
+                'class' => 'button warning right',
                 'style' => 'margin-right:10px',
             )); ?>
         <?php else : ?>
             <?php echo CHtml::link('<span class="fa fa-print"></span>Print', Yii::app()->baseUrl . '/transaction/transactionSalesOrder/pdf?id=' . $model->id, array(
-                'class' => 'button cbutton right',
+                'class' => 'button warning right',
                 'style' => 'margin-right:10px',
             )); ?>
         <?php endif; ?>
         
         <?php if ($model->status_document == "Draft" && Yii::app()->user->checkAccess("saleOrderApproval")): ?>
-            <?php echo CHtml::link('<span class="fa fa-edit"></span>Approval', Yii::app()->baseUrl.'/transaction/transactionSalesOrder/updateApproval?headerId=' . $model->id , array('class'=>'button cbutton right','style'=>'margin-right:10px')) ?>
+            <?php echo CHtml::link('<span class="fa fa-edit"></span>Approval', Yii::app()->baseUrl.'/transaction/transactionSalesOrder/updateApproval?headerId=' . $model->id , array(
+                'class'=>'button success right',
+                'style'=>'margin-right:10px'
+            )) ?>
         <?php elseif ($model->status_document != "Draft" && Yii::app()->user->checkAccess("saleOrderSupervisor")): ?>
-            <?php echo CHtml::link('<span class="fa fa-edit"></span>Update Approval', Yii::app()->baseUrl.'/transaction/transactionSalesOrder/updateApproval?headerId=' . $model->id , array('class'=>'button cbutton right','style'=>'margin-right:10px')) ?>
+            <?php echo CHtml::link('<span class="fa fa-edit"></span>Update Approval', Yii::app()->baseUrl.'/transaction/transactionSalesOrder/updateApproval?headerId=' . $model->id , array(
+                'class'=>'button success right',
+                'style'=>'margin-right:10px'
+            )) ?>
         <?php endif; ?>
         
         <?php $checkInvoices = InvoiceHeader::model()->findAllByAttributes(array('sales_order_id' => $model->id)); ?>
         <?php if (count($checkInvoices) == 0): ?>
-            <?php echo CHtml::button('Generate Invoice', array(
-                'id' => 'invoice-button',
-                'name' => 'Invoice',
-                'class' => 'button cbutton right',
+            <?php echo CHtml::link('<span class="fa fa-plus"></span>Generate Invoice', array(
+                "/transaction/invoiceHeader/create", 
+                "saleOrderId" => $model->id
+            ), array(
+                'class' => 'button success left', 
                 'style' => 'margin-right:10px',
-                'onclick' => ' 
-                $.ajax({
-                    type: "POST",
-                    //dataType: "JSON",
-                    url: "' . CController::createUrl('generateInvoice', array('id' => $model->id)) . '",
-                    data: $("form").serialize(),
-                    success: function(html) {
-                        alert("Invoice Succesfully Generated");
-                        location.reload();
-                    },
-                })
-                '
+                'visible' => Yii::app()->user->checkAccess("saleOrderCreate") || Yii::app()->user->checkAccess("saleOrderEdit")
             )); ?>
-        <?php else: ?>
+        <?php /*else: ?>
             <?php echo CHtml::button('Generate Invoice', array(
                 'id' => 'invoice-button',
                 'name' => 'Invoice',
@@ -93,7 +89,7 @@ $this->menu = array(
                     alert("No new invoice generated.");
                 }
                 '
-            )); ?>
+            ));*/ ?>
         <?php endif; ?>
 
         <h1>View Transaction Sales Orders #<?php echo $model->sale_order_no; ?></h1>
