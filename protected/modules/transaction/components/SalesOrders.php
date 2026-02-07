@@ -450,7 +450,7 @@ class SalesOrders extends CComponent {
     }
 
     public function getTaxAmount() {
-        return ($this->header->ppn == 1) ? $this->subTotal * 11 / 100 : 0.00;
+        return ($this->header->ppn == 1) ? $this->subTotal * $this->header->tax_percentage / 100 : '0.00';
     }
 
     public function getGrandTotal() {

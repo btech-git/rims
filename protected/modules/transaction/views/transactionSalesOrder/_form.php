@@ -323,7 +323,7 @@
                             <label class="prefix"><?php echo $form->labelEx($salesOrder->header, 'ppn'); ?></label>
                         </div>
                         <div class="small-8 columns">
-                            <?php echo $form->dropDownList($salesOrder->header, 'ppn', array('1' => 'PPN', '2' => 'Non PPN')); ?>
+                            <?php echo $form->dropDownList($salesOrder->header, 'ppn', array( '2' => 'Non PPN', '1' => 'PPN',)); ?>
                             <?php echo $form->error($salesOrder->header, 'ppn'); ?>
                         </div>
                     </div>
