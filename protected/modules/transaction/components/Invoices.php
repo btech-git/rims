@@ -116,6 +116,23 @@ class Invoices extends CComponent {
         return $valid;
     }
 
+    public function saveSaleOrder($dbConnection) {
+        $dbTransaction = $dbConnection->beginTransaction();
+        try {
+            $valid = $this->validate() && IdempotentManager::build()->save() && $this->flushSaleOrder();
+            if ($valid) {
+                $dbTransaction->commit();
+            } else {
+                $dbTransaction->rollback();
+            }
+        } catch (Exception $e) {
+            $dbTransaction->rollback();
+            $valid = false;
+        }
+
+        return $valid;
+    }
+
     public function validate() {
         $valid = $this->header->validate();
 
@@ -288,6 +305,128 @@ class Invoices extends CComponent {
                 $journalReferences[$jurnalUmumPendapatanPaket]['debet_kredit'] = 'K';
                 $journalReferences[$jurnalUmumPendapatanPaket]['is_coa_category'] = 0;
                 $journalReferences[$jurnalUmumPendapatanPaket]['values'][] = $rPackage->price;
+            }
+        }
+
+        foreach ($journalReferences as $coaId => $journalReference) {
+            $jurnalUmumPersediaan = new JurnalUmum();
+            $jurnalUmumPersediaan->kode_transaksi = $transactionCode;
+            $jurnalUmumPersediaan->tanggal_transaksi = $transactionDate;
+            $jurnalUmumPersediaan->coa_id = $coaId;
+            $jurnalUmumPersediaan->branch_id = $branchId;
+            $jurnalUmumPersediaan->total = array_sum($journalReference['values']);
+            $jurnalUmumPersediaan->debet_kredit = $journalReference['debet_kredit'];
+            $jurnalUmumPersediaan->tanggal_posting = $postingDate;
+            $jurnalUmumPersediaan->transaction_subject = $transactionSubject;
+            $jurnalUmumPersediaan->remark = $remark;
+            $jurnalUmumPersediaan->is_coa_category = $journalReference['is_coa_category'];
+            $jurnalUmumPersediaan->transaction_type = $transactionType;
+            $jurnalUmumPersediaan->save();
+        }
+            
+        $real = new RegistrationRealizationProcess();
+        $real->registration_transaction_id = $this->header->id;
+        $real->name = 'Invoice';
+        $real->checked = 1;
+        $real->checked_date = date('Y-m-d');
+        $real->checked_by = Yii::app()->user->getId();
+        $real->detail = 'Generate Invoice with number #' . $this->header->invoice_number;
+        $real->save();
+        
+        $this->saveTransactionLog();
+        
+        return $valid;
+    }
+    
+    public function flushSaleOrder() {
+        
+        if ($this->header->isNewRecord) {
+            $invoiceHeader = InvoiceHeader::model()->findByAttributes(array('customer_id' => $this->header->customer_id));
+            $this->header->is_new_customer = $invoiceHeader === null ? 1 : 0;
+        }
+        
+        $valid = $this->header->save();
+
+        //save request detail
+        foreach ($this->details as $detail) {
+            $detail->invoice_id = $this->header->id;
+            $valid = $detail->save(false) && $valid;
+        }
+
+        JurnalUmum::model()->deleteAllByAttributes(array(
+            'kode_transaksi' => $this->header->invoice_number,
+        ));
+
+        $transactionType = 'Invoice';
+        $postingDate = date('Y-m-d');
+        $transactionCode = $this->header->invoice_number;
+        $transactionDate = $this->header->invoice_date;
+        $branchId = $this->header->branch_id;
+        $transactionSubject = $this->header->customer->name;
+        $remark = $this->header->note;
+
+        $coaReceivableId = $this->header->customer->coa_id;
+
+        $journalReferences = array();
+        $registrationProducts = RegistrationProduct::model()->findAll(array(
+            'condition' => 'registration_transaction_id = :registration_transaction_id AND sale_package_detail_id IS NULL', 
+            'params' => array(':registration_transaction_id' => $this->header->registration_transaction_id)
+        ));
+        
+        $jurnalUmumReceivable = new JurnalUmum;
+        $jurnalUmumReceivable->kode_transaksi = $transactionCode;
+        $jurnalUmumReceivable->tanggal_transaksi = $transactionDate;
+        $jurnalUmumReceivable->coa_id = $coaReceivableId;
+        $jurnalUmumReceivable->branch_id = $this->header->branch_id;
+        $jurnalUmumReceivable->total = $this->header->total_price;
+        $jurnalUmumReceivable->debet_kredit = 'D';
+        $jurnalUmumReceivable->tanggal_posting = date('Y-m-d');
+        $jurnalUmumReceivable->transaction_subject = $transactionSubject;
+        $jurnalUmumReceivable->remark = $remark;
+        $jurnalUmumReceivable->is_coa_category = 0;
+        $jurnalUmumReceivable->transaction_type = $transactionType;
+        $valid = $jurnalUmumReceivable->save() && $valid;
+
+        if ($this->header->registrationTransaction->ppn_price > 0.00) {
+            $coaPpn = Coa::model()->findByAttributes(array('code' => '224.00.001'));
+            $jurnalUmumPpn = new JurnalUmum;
+            $jurnalUmumPpn->kode_transaksi = $transactionCode;
+            $jurnalUmumPpn->tanggal_transaksi = $transactionDate;
+            $jurnalUmumPpn->coa_id = $coaPpn->id;
+            $jurnalUmumPpn->branch_id = $this->header->branch_id;
+            $jurnalUmumPpn->total = $this->header->registrationTransaction->ppn_price;
+            $jurnalUmumPpn->debet_kredit = 'K';
+            $jurnalUmumPpn->tanggal_posting = date('Y-m-d');
+            $jurnalUmumPpn->transaction_subject = $transactionSubject;
+            $jurnalUmumPpn->remark = $remark;
+            $jurnalUmumPpn->is_coa_category = 0;
+            $jurnalUmumPpn->transaction_type = $transactionType;
+            $valid = $jurnalUmumPpn->save() && $valid;
+        }
+
+        if (count($registrationProducts) > 0) {
+            foreach ($registrationProducts as $key => $rProduct) {
+                $jurnalUmumHpp = $rProduct->product->productSubMasterCategory->coa_hpp;
+                $journalReferences[$jurnalUmumHpp]['debet_kredit'] = 'D';
+                $journalReferences[$jurnalUmumHpp]['is_coa_category'] = 0;
+                $journalReferences[$jurnalUmumHpp]['values'][] = $rProduct->product->averageCogs * $rProduct->quantity;
+
+                $jurnalUmumPenjualan = $rProduct->product->productSubMasterCategory->coa_penjualan_barang_dagang;
+                $journalReferences[$jurnalUmumPenjualan]['debet_kredit'] = 'K';
+                $journalReferences[$jurnalUmumPenjualan]['is_coa_category'] = 0;
+                $journalReferences[$jurnalUmumPenjualan]['values'][] = $rProduct->sale_price * $rProduct->quantity;
+ 
+                $jurnalUmumOutstandingPart = $rProduct->product->productSubMasterCategory->coa_outstanding_part_id;
+                $journalReferences[$jurnalUmumOutstandingPart]['debet_kredit'] = 'K';
+                $journalReferences[$jurnalUmumOutstandingPart]['is_coa_category'] = 0;
+                $journalReferences[$jurnalUmumOutstandingPart]['values'][] = $rProduct->product->averageCogs * $rProduct->quantity;
+
+                if ($rProduct->discount > 0.00) {
+                    $jurnalUmumDiskon = $rProduct->product->productSubMasterCategory->coa_diskon_penjualan;
+                    $journalReferences[$jurnalUmumDiskon]['debet_kredit'] = 'D';
+                    $journalReferences[$jurnalUmumDiskon]['is_coa_category'] = 0;
+                    $journalReferences[$jurnalUmumDiskon]['values'][] = $rProduct->discountAmount;
+                }
             }
         }
 

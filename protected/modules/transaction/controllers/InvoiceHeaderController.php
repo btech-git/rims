@@ -553,7 +553,7 @@ class InvoiceHeaderController extends Controller {
         ));
     }
 
-    public function actionCreate($saleOrderId) {
+    public function actionCreateSaleOrder($saleOrderId) {
 
         $invoice = $this->instantiate(null, 'create');
 
@@ -566,8 +566,8 @@ class InvoiceHeaderController extends Controller {
         $invoice->header->user_id = Yii::app()->user->getId();
         $invoice->header->status = "Approved";
         $invoice->header->total_product = $salesOrder->total_quantity;
-        $invoice->header->total_service = '0.00';
-        $invoice->header->total_quick_service = '0.00';
+        $invoice->header->total_service = 0;
+        $invoice->header->total_quick_service = 0;
         $invoice->header->service_price = '0.00';
         $invoice->header->product_price = $salesOrder->price_before_discount;
         $invoice->header->quick_service_price = '0.00';
@@ -595,11 +595,11 @@ class InvoiceHeaderController extends Controller {
 
             $this->loadState($invoice);
             $invoice->header->due_date = date('Y-m-d',strtotime('+' . $salesOrder->customer->tenor . ' days',strtotime($invoice->header->invoice_date)));
-            $invoice->header->warranty_date = null; 
-            $invoice->header->follow_up_date = null; 
-            $invoice->generateCodeNumber(Yii::app()->dateFormatter->format('M', strtotime($invoice->header->invoice_date)), Yii::app()->dateFormatter->format('yyyy', strtotime($invoice->header->invoice_date)), $salesOrder->branch_id);
+            $invoice->header->warranty_date = date('Y-m-d'); 
+            $invoice->header->follow_up_date = date('Y-m-d'); 
+            $invoice->generateCodeNumber(Yii::app()->dateFormatter->format('M', strtotime($invoice->header->invoice_date)), Yii::app()->dateFormatter->format('yyyy', strtotime($invoice->header->invoice_date)), $salesOrder->requester_branch_id);
         
-            if ($invoice->save(Yii::app()->db)) {
+            if ($invoice->saveSaleOrder(Yii::app()->db)) {
                 $this->redirect(array('view', 'id' => $invoice->header->id));
             }
         }

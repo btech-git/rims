@@ -60,10 +60,10 @@ $this->menu = array(
         <?php $checkInvoices = InvoiceHeader::model()->findAllByAttributes(array('sales_order_id' => $model->id)); ?>
         <?php if (count($checkInvoices) == 0): ?>
             <?php echo CHtml::link('<span class="fa fa-plus"></span>Generate Invoice', array(
-                "/transaction/invoiceHeader/create", 
+                "/transaction/invoiceHeader/createSaleOrder", 
                 "saleOrderId" => $model->id
             ), array(
-                'class' => 'button success left', 
+                'class' => 'button success right', 
                 'style' => 'margin-right:10px',
                 'visible' => Yii::app()->user->checkAccess("saleOrderCreate") || Yii::app()->user->checkAccess("saleOrderEdit")
             )); ?>

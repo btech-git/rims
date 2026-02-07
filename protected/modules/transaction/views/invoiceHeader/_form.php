@@ -79,16 +79,29 @@
             </div>
 
             <div class="small-12 medium-6 columns">
-                <div class="field">
-                    <div class="row collapse">
-                        <div class="small-4 columns">
-                            <?php echo $form->labelEx($invoice->header, 'registration_transaction_id', array('class' => 'prefix')); ?>
-                        </div>
-                        <div class="small-8 columns">
-                            <?php echo CHtml::encode(CHtml::value($invoice->header, 'registrationTransaction.transaction_number')); ?>
+                <?php if (empty($invoice->header->registration_transaction_id)): ?>
+                    <div class="field">
+                        <div class="row collapse">
+                            <div class="small-4 columns">
+                                <?php echo $form->labelEx($invoice->header, 'sales_order_id', array('class' => 'prefix')); ?>
+                            </div>
+                            <div class="small-8 columns">
+                                <?php echo CHtml::encode(CHtml::value($invoice->header, 'salesOrder.sale_order_no')); ?>
+                            </div>
                         </div>
                     </div>
-                </div>
+                <?php else: ?>
+                    <div class="field">
+                        <div class="row collapse">
+                            <div class="small-4 columns">
+                                <?php echo $form->labelEx($invoice->header, 'registration_transaction_id', array('class' => 'prefix')); ?>
+                            </div>
+                            <div class="small-8 columns">
+                                <?php echo CHtml::encode(CHtml::value($invoice->header, 'registrationTransaction.transaction_number')); ?>
+                            </div>
+                        </div>
+                    </div>
+                <?php endif; ?>
                 <div class="field">
                     <div class="row collapse">
                         <div class="small-4 columns">
