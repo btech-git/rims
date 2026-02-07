@@ -4,7 +4,7 @@
 /* @var $form CActiveForm */
 ?>
 <div class="clearfix page-action">
-    <?php echo CHtml::link('<span class="fa fa-list"></span>Manage Sales Order', Yii::app()->baseUrl . '/transaction/transactionSalesOrder/admin', array('class' => 'button cbutton right', 'visible' => Yii::app()->user->checkAccess("transaction.transactionSalesOrder.admin"))) ?>
+    <?php echo CHtml::link('<span class="fa fa-list"></span>Manage', Yii::app()->baseUrl . '/transaction/transactionSalesOrder/admin', array('class' => 'button cbutton right', 'visible' => Yii::app()->user->checkAccess("transaction.transactionSalesOrder.admin"))) ?>
     <h1>
         <?php
         if ($salesOrder->header->id == "") {

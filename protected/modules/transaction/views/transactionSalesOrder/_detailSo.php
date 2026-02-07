@@ -551,7 +551,7 @@
             <td colspan="3">PPn</td>
             <td style="text-align:right">
                 <span id="tax_detail_<?php echo $i; ?>">
-                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', ($salesOrder->header->isNewRecord) ? $detail->tax_amount : $detail->getTaxAmount($salesOrder->header->ppn))); ?>
+                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $detail->tax_amount)); ?>
                 </span>
             </td>
             <td>&nbsp;</td>

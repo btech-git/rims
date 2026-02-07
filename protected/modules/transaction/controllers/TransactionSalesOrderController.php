@@ -215,8 +215,9 @@ class TransactionSalesOrderController extends Controller {
 
         $product = new Product('search');
         $product->unsetAttributes();  // clear any default values
-        if (isset($_GET['Product']))
+        if (isset($_GET['Product'])) {
             $product->attributes = $_GET['Product'];
+        }
 
         $productCriteria = new CDbCriteria;
         $productCriteria->compare('t.id', $product->id, true);
@@ -234,8 +235,9 @@ class TransactionSalesOrderController extends Controller {
             'criteria' => $productCriteria,
         ));
 
-        if (isset($_POST['Cancel']))
+        if (isset($_POST['Cancel'])) {
             $this->redirect(array('admin'));
+        }
 
         if (isset($_POST['TransactionSalesOrder']) && IdempotentManager::check()) {
             $this->loadState($salesOrder);
@@ -300,14 +302,16 @@ class TransactionSalesOrderController extends Controller {
 
         $productDataProvider = new CActiveDataProvider('Product', array('criteria' => $productCriteria,));
 
-        if (isset($_POST['Cancel']))
+        if (isset($_POST['Cancel'])) {
             $this->redirect(array('admin'));
+        }
 
         if (isset($_POST['TransactionSalesOrder']) && IdempotentManager::check()) {
             $this->loadState($salesOrder);
 
-            if ($salesOrder->save(Yii::app()->db))
+            if ($salesOrder->save(Yii::app()->db)) {
                 $this->redirect(array('view', 'id' => $salesOrder->header->id));
+            }
         }
 
         $this->render('update', array(
