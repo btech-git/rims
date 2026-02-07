@@ -1,5 +1,5 @@
 <div style="text-align: right">
-    <?php echo ReportHelper::summaryText($productDataProvider); ?>
+    <?php //echo ReportHelper::summaryText($productDataProvider); ?>
     <span style="text-align: center"><h2>Stok Quantity + Nilai Persediaan</h2></span>
 </div>
 

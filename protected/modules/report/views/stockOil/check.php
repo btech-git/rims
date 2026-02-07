@@ -42,6 +42,13 @@ Yii::app()->clientScript->registerScript('search', "
     <?php echo CHtml::endForm(); ?>
 </div>
 
+<div class="reportDisplay">
+    <?php $dataCount = count($inventoryOilStockReportData); ?>
+    <?php if ($dataCount > 0): ?>
+        <?php echo "Displaying 1-{$dataCount} of {$dataCount} result(s)."; ?>
+    <?php endif; ?>
+</div>
+
 <div id="product_stock_table">
     <?php $this->renderPartial('_productStockTable', array(
         'branches' => $branches,

@@ -111,13 +111,19 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                 <hr />
 
                 <div class="relative">
+                    <div class="reportDisplay" style="text-align: right">
+                        <?php echo ReportHelper::summaryText($productSubCategoryDataProvider); ?>
+                    </div>
+
                     <?php $this->renderPartial('_summary', array(
                         'productSubCategoryDataProvider' => $productSubCategoryDataProvider,
                         'branches' => $branches,
                         'endDate' => $endDate,
                     )); ?>
                 </div>
+                
                 <div class="clear"></div>
+                
                 <div class="right">
                     <?php $this->widget('system.web.widgets.pagers.CLinkPager', array(
                         'itemCount' => $productSubCategoryDataProvider->pagination->itemCount,

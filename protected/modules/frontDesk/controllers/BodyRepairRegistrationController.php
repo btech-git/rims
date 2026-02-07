@@ -408,11 +408,15 @@ class BodyRepairRegistrationController extends Controller {
     }
 
     public function actionAdmin() {
-        $model = new RegistrationTransaction('search');
-        $model->unsetAttributes();  // clear any default values
-
         $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : '';
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : '';
+        $plateNumber = (isset($_GET['PlateNumber'])) ? $_GET['PlateNumber'] : '';
+        $carMake = (isset($_GET['CarMake'])) ? $_GET['CarMake'] : '';
+        $carModel = (isset($_GET['CarModel'])) ? $_GET['CarModel'] : '';
+        $customerName = (isset($_GET['CustomerName'])) ? $_GET['CustomerName'] : '';
+
+        $model = new RegistrationTransaction('search');
+        $model->unsetAttributes();  // clear any default values
 
         if (isset($_GET['RegistrationTransaction'])) {
             $model->attributes = $_GET['RegistrationTransaction'];
@@ -426,11 +430,42 @@ class BodyRepairRegistrationController extends Controller {
         $dataProvider->criteria->addCondition("repair_type = 'BR'");
         $dataProvider->criteria->addBetweenCondition('SUBSTRING(t.transaction_date, 1, 10)', $startDate, $endDate);
 
+        $dataProvider->criteria->together = true;
+        $dataProvider->criteria->with = array(
+            'customer',
+            'branch',
+            'vehicle',
+        );
+        
+        if (!empty($plateNumber)) {
+            $dataProvider->criteria->addCondition('vehicle.plate_number LIKE :plate_number');
+            $dataProvider->criteria->params[':plate_number'] = "%{$plateNumber}%";
+        }
+        
+        if (!empty($carMake)) {
+            $dataProvider->criteria->addCondition('vehicle.car_make_id = :car_make_id');
+            $dataProvider->criteria->params[':car_make_id'] = $carMake;
+        }
+        
+        if (!empty($carModel)) {
+            $dataProvider->criteria->addCondition('vehicle.car_model_id = :car_model_id');
+            $dataProvider->criteria->params[':car_model_id'] = $carModel;
+        }
+        
+        if (!empty($customerName)) {
+            $dataProvider->criteria->addCondition('customer.name LIKE :name');
+            $dataProvider->criteria->params[':name'] = "%{$customerName}%";
+        }
+        
         $this->render('admin', array(
             'model' => $model,
             'dataProvider' => $dataProvider,
             'startDate' => $startDate,
             'endDate' => $endDate,
+            'plateNumber' => $plateNumber,
+            'carMake' => $carMake,
+            'carModel' => $carModel,
+            'customerName' => $customerName,
         ));
     }
 

@@ -42,6 +42,10 @@ $('.search-form form').submit(function(){
                 'model'=>$model,
                 'startDate' => $startDate,
                 'endDate' => $endDate,
+                'plateNumber' => $plateNumber,
+                'carMake' => $carMake,
+                'carModel' => $carModel,
+                'customerName' => $customerName,
             )); ?>
         </div><!-- search-form -->
     </div>

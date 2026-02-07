@@ -1,5 +1,5 @@
 <div style="text-align: right">
-    <?php echo ReportHelper::summaryText($productSubCategoryDataProvider); ?>
+    <?php //echo ReportHelper::summaryText($productSubCategoryDataProvider); ?>
     <span style="text-align: center"><h2>Nilai Stok Persediaan</h2></span>
 </div>
 

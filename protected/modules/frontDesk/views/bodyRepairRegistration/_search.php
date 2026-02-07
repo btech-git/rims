@@ -40,17 +40,6 @@
                                     'placeholder' => 'Transaction Date From'
                                 ),
                             )); ?>
-                            <?php /*$attribute = 'transaction_date'; ?>
-                            <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(
-                                'id' => CHtml::activeId($model, $attribute . '_0'),
-                                'model' => $model,
-                                'attribute' => $attribute . "_from",
-                                'options' => array('dateFormat' => 'yy-mm-dd'),
-                                'htmlOptions' => array(
-                                    'style' => 'margin-bottom:0px; width: 155px',
-                                    'placeholder' => 'Transaction Date From'
-                                ),
-                            ));*/ ?>
                         </div>
                         <div class="medium-2 columns" style="text-align: center; vertical-align: middle">
                             S/D
@@ -67,16 +56,6 @@
                                     'placeholder' => 'Transaction Date To'
                                 ),
                             )); ?>
-                            <?php /*$this->widget('zii.widgets.jui.CJuiDatePicker', array(
-                                'id' => CHtml::activeId($model, $attribute . '_1'),
-                                'model' => $model,
-                                'attribute' => $attribute . "_to",
-                                'options' => array('dateFormat' => 'yy-mm-dd'),
-                                'htmlOptions' => array(
-                                    'style' => 'margin-bottom:0px; width: 155px',
-                                    'placeholder' => 'Transaction Date To'
-                                ),
-                            ));*/ ?>
                         </div>
                     </div>
                 </div>
@@ -88,7 +67,7 @@
                         <?php echo $form->label($model,'plate_number', array('class'=>'prefix')); ?>
                     </div>
                     <div class="small-8 columns">
-                        <?php echo $form->textField($model,'plate_number'); ?>
+                        <?php echo CHtml::textField('PlateNumber', $plateNumber); ?>
                     </div>
                 </div>
             </div>	
@@ -99,7 +78,7 @@
                         <?php echo $form->label($model,'car_make_code', array('class'=>'prefix')); ?>
                     </div>
                     <div class="small-8 columns">
-                        <?php echo $form->textField($model,'car_make_code',array('size'=>18,'maxlength'=>18)); ?>
+                        <?php echo CHtml::dropDownList('CarMake', $carMake, CHtml::listData(VehicleCarMake::model()->findAll(array('order' => 'name')), 'id', 'name'), array('empty' => '-- All --')); ?>
                     </div>
                 </div>
             </div>	
@@ -110,7 +89,7 @@
                         <?php echo $form->label($model,'car_model_code', array('class'=>'prefix')); ?>
                     </div>
                     <div class="small-8 columns">
-                        <?php echo $form->textField($model,'car_model_code',array('size'=>18,'maxlength'=>18)); ?>
+                        <?php echo CHtml::dropDownList('CarModel', $carModel, CHtml::listData(VehicleCarModel::model()->findAll(array('order' => 'name')), 'id', 'name'), array('empty' => '-- All --')); ?>
                     </div>
                 </div>
             </div>	
@@ -127,7 +106,7 @@
                         <?php echo $form->label($model,'customer_name', array('class'=>'prefix')); ?>
                     </div>
                     <div class="small-8 columns">
-                        <?php echo $form->textField($model,'customer_name'); ?>
+                        <?php echo CHtml::textField('CustomerName', $customerName); ?>
                     </div>
                 </div>
             </div>		

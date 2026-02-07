@@ -32,6 +32,10 @@ Yii::app()->clientScript->registerScript('search', "
     <?php echo CHtml::endForm(); ?>
 </div>
 
+<div class="reportDisplay" style="text-align: right">
+    <?php echo ReportHelper::summaryText($productDataProvider); ?>
+</div>
+
 <div id="product_stock_table">
     <?php $this->renderPartial('_summary', array(
         'productDataProvider' => $productDataProvider,
