@@ -368,9 +368,9 @@ class Invoices extends CComponent {
         $coaReceivableId = $this->header->customer->coa_id;
 
         $journalReferences = array();
-        $registrationProducts = RegistrationProduct::model()->findAll(array(
-            'condition' => 'registration_transaction_id = :registration_transaction_id AND sale_package_detail_id IS NULL', 
-            'params' => array(':registration_transaction_id' => $this->header->registration_transaction_id)
+        $saleOrderDetails = TransactionSalesOrderDetail::model()->findAll(array(
+            'condition' => 'sales_order_id = :sales_order_id', 
+            'params' => array(':sales_order_id' => $this->header->sales_order_id)
         ));
         
         $jurnalUmumReceivable = new JurnalUmum;
@@ -387,14 +387,14 @@ class Invoices extends CComponent {
         $jurnalUmumReceivable->transaction_type = $transactionType;
         $valid = $jurnalUmumReceivable->save() && $valid;
 
-        if ($this->header->registrationTransaction->ppn_price > 0.00) {
+        if ($this->header->ppn_total > '0.00') {
             $coaPpn = Coa::model()->findByAttributes(array('code' => '224.00.001'));
             $jurnalUmumPpn = new JurnalUmum;
             $jurnalUmumPpn->kode_transaksi = $transactionCode;
             $jurnalUmumPpn->tanggal_transaksi = $transactionDate;
             $jurnalUmumPpn->coa_id = $coaPpn->id;
             $jurnalUmumPpn->branch_id = $this->header->branch_id;
-            $jurnalUmumPpn->total = $this->header->registrationTransaction->ppn_price;
+            $jurnalUmumPpn->total = $this->header->ppn_total;
             $jurnalUmumPpn->debet_kredit = 'K';
             $jurnalUmumPpn->tanggal_posting = date('Y-m-d');
             $jurnalUmumPpn->transaction_subject = $transactionSubject;
@@ -404,29 +404,27 @@ class Invoices extends CComponent {
             $valid = $jurnalUmumPpn->save() && $valid;
         }
 
-        if (count($registrationProducts) > 0) {
-            foreach ($registrationProducts as $key => $rProduct) {
-                $jurnalUmumHpp = $rProduct->product->productSubMasterCategory->coa_hpp;
-                $journalReferences[$jurnalUmumHpp]['debet_kredit'] = 'D';
-                $journalReferences[$jurnalUmumHpp]['is_coa_category'] = 0;
-                $journalReferences[$jurnalUmumHpp]['values'][] = $rProduct->product->averageCogs * $rProduct->quantity;
+        foreach ($this->details as $detail) {
+            $jurnalUmumHpp = $detail->product->productSubMasterCategory->coa_hpp;
+            $journalReferences[$jurnalUmumHpp]['debet_kredit'] = 'D';
+            $journalReferences[$jurnalUmumHpp]['is_coa_category'] = 0;
+            $journalReferences[$jurnalUmumHpp]['values'][] = $detail->product->averageCogs * $detail->quantity;
 
-                $jurnalUmumPenjualan = $rProduct->product->productSubMasterCategory->coa_penjualan_barang_dagang;
-                $journalReferences[$jurnalUmumPenjualan]['debet_kredit'] = 'K';
-                $journalReferences[$jurnalUmumPenjualan]['is_coa_category'] = 0;
-                $journalReferences[$jurnalUmumPenjualan]['values'][] = $rProduct->sale_price * $rProduct->quantity;
- 
-                $jurnalUmumOutstandingPart = $rProduct->product->productSubMasterCategory->coa_outstanding_part_id;
-                $journalReferences[$jurnalUmumOutstandingPart]['debet_kredit'] = 'K';
-                $journalReferences[$jurnalUmumOutstandingPart]['is_coa_category'] = 0;
-                $journalReferences[$jurnalUmumOutstandingPart]['values'][] = $rProduct->product->averageCogs * $rProduct->quantity;
+            $jurnalUmumPenjualan = $detail->product->productSubMasterCategory->coa_penjualan_barang_dagang;
+            $journalReferences[$jurnalUmumPenjualan]['debet_kredit'] = 'K';
+            $journalReferences[$jurnalUmumPenjualan]['is_coa_category'] = 0;
+            $journalReferences[$jurnalUmumPenjualan]['values'][] = $detail->unit_price * $detail->quantity;
 
-                if ($rProduct->discount > 0.00) {
-                    $jurnalUmumDiskon = $rProduct->product->productSubMasterCategory->coa_diskon_penjualan;
-                    $journalReferences[$jurnalUmumDiskon]['debet_kredit'] = 'D';
-                    $journalReferences[$jurnalUmumDiskon]['is_coa_category'] = 0;
-                    $journalReferences[$jurnalUmumDiskon]['values'][] = $rProduct->discountAmount;
-                }
+            $jurnalUmumOutstandingPart = $detail->product->productSubMasterCategory->coa_outstanding_part_id;
+            $journalReferences[$jurnalUmumOutstandingPart]['debet_kredit'] = 'K';
+            $journalReferences[$jurnalUmumOutstandingPart]['is_coa_category'] = 0;
+            $journalReferences[$jurnalUmumOutstandingPart]['values'][] = $detail->product->averageCogs * $detail->quantity;
+
+            if ($detail->discount > '0.00') {
+                $jurnalUmumDiskon = $detail->product->productSubMasterCategory->coa_diskon_penjualan;
+                $journalReferences[$jurnalUmumDiskon]['debet_kredit'] = 'D';
+                $journalReferences[$jurnalUmumDiskon]['is_coa_category'] = 0;
+                $journalReferences[$jurnalUmumDiskon]['values'][] = $detail->discountAmount;
             }
         }
 
@@ -446,15 +444,6 @@ class Invoices extends CComponent {
             $jurnalUmumPersediaan->save();
         }
             
-        $real = new RegistrationRealizationProcess();
-        $real->registration_transaction_id = $this->header->id;
-        $real->name = 'Invoice';
-        $real->checked = 1;
-        $real->checked_date = date('Y-m-d');
-        $real->checked_by = Yii::app()->user->getId();
-        $real->detail = 'Generate Invoice with number #' . $this->header->invoice_number;
-        $real->save();
-        
         $this->saveTransactionLog();
         
         return $valid;

@@ -40,11 +40,11 @@ class DeliveryOrders extends CComponent {
         if ($requestType == 1) {
             $sales = TransactionSalesOrderDetail::model()->findAllByAttributes(array('sales_order_id' => $requestId));
             foreach ($sales as $key => $sale) {
-                if ($sale->remainingQuantityDelivery > 0) {
+                if ($sale->quantityDeliveryLeft > 0) {
                     $detail = new TransactionDeliveryOrderDetail();
                     $detail->product_id = $sale->product_id;
                     $detail->quantity_request = $sale->quantity;
-                    $detail->quantity_request_left = $sale->remainingQuantityDelivery;
+                    $detail->quantity_request_left = $sale->quantityDeliveryLeft;
                     $detail->sales_order_detail_id = $sale->id;
                     $this->details[] = $detail;
                 }

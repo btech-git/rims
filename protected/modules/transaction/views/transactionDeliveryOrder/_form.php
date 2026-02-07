@@ -37,10 +37,10 @@
         <div class="row">
             <div class="small-12 medium-6 columns">
                 
-                <div class="field">
+<!--                <div class="field">
                     <div class="row collapse">
                         <div class="small-4 columns">
-                            <?php echo $form->labelEx($deliveryOrder->header, 'posting_date', array('class' => 'prefix')); ?>
+                            <?php /*echo $form->labelEx($deliveryOrder->header, 'posting_date', array('class' => 'prefix')); ?>
                         </div>
                         <div class="small-8 columns">
                             <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(
@@ -60,10 +60,10 @@
                                 ),
                             )); ?>
                             <?php //echo $form->textField($deliveryOrder->header, 'posting_date', array('readonly' => true,)); ?>
-                            <?php echo $form->error($deliveryOrder->header, 'posting_date'); ?>
+                            <?php echo $form->error($deliveryOrder->header, 'posting_date');*/ ?>
                         </div>
                     </div>
-                </div>
+                </div>-->
 
                 <div class="field">
                     <div class="row collapse">
@@ -71,6 +71,7 @@
                             <?php echo $form->labelEx($deliveryOrder->header, 'delivery_date', array('class' => 'prefix')); ?>
                         </div>
                         <div class="small-8 columns">
+                            <?php echo $form->hiddenField($deliveryOrder->header, 'posting_date'); ?>
                             <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(
                                 'model' => $deliveryOrder->header,
                                 'attribute' => "delivery_date",
@@ -85,6 +86,31 @@
                                 ),
                             )); ?>
                             <?php echo $form->error($deliveryOrder->header, 'delivery_date'); ?>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="field">
+                    <div class="row collapse">
+                        <div class="small-4 columns">
+                            <?php echo $form->labelEx($deliveryOrder->header, 'estimate_arrival_date', array('class' => 'prefix')); ?>
+                        </div>
+                        <div class="small-8 columns">
+                            <?php //echo $form->textField($deliveryOrder->header, 'estimate_arrival_date', array('readonly' => 'true')); ?>
+                            <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(
+                                'model' => $deliveryOrder->header,
+                                'attribute' => "estimate_arrival_date",
+                                // additional javascript options for the date picker plugin
+                                'options' => array(
+                                    'dateFormat' => 'yy-mm-dd',
+                                    'changeMonth' => true,
+                                    'changeYear' => true,
+                                ),
+                                'htmlOptions' => array(
+                                    'readonly' => true,
+                                ),
+                            )); ?>
+                            <?php echo $form->error($deliveryOrder->header, 'estimate_arrival_date'); ?>
                         </div>
                     </div>
                 </div>
@@ -123,21 +149,6 @@
                                 'readonly' => true
                             )); ?>
                             <?php echo $form->error($deliveryOrder->header, 'sender_branch_id'); ?>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="field">
-                    <div class="row collapse">
-                        <div class="small-4 columns">
-                            <?php echo $form->labelEx($deliveryOrder->header, 'request_type', array('class' => 'prefix')); ?>
-                        </div>
-                        <div class="small-8 columns">
-                            <?php echo $form->textField($deliveryOrder->header, 'request_type', array(
-                                'value' => $deliveryOrder->header->request_type,
-                                'readOnly' => true,
-                            )); ?>
-                            <?php echo $form->error($deliveryOrder->header, 'request_type'); ?>
                         </div>
                     </div>
                 </div>
@@ -263,29 +274,19 @@
                             </div>
                         </div>
                     </div>
+                </div>
 
-                    <div class="field">
-                        <div class="row collapse">
-                            <div class="small-4 columns">
-                                <?php echo $form->labelEx($deliveryOrder->header, 'estimate_arrival_date', array('class' => 'prefix')); ?>
-                            </div>
-                            <div class="small-8 columns">
-                                <?php //echo $form->textField($deliveryOrder->header, 'estimate_arrival_date', array('readonly' => 'true')); ?>
-                                <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(
-                                    'model' => $deliveryOrder->header,
-                                    'attribute' => "estimate_arrival_date",
-                                    // additional javascript options for the date picker plugin
-                                    'options' => array(
-                                        'dateFormat' => 'yy-mm-dd',
-                                        'changeMonth' => true,
-                                        'changeYear' => true,
-                                    ),
-                                    'htmlOptions' => array(
-                                        'readonly' => true,
-                                    ),
-                                )); ?>
-                                <?php echo $form->error($deliveryOrder->header, 'estimate_arrival_date'); ?>
-                            </div>
+                <div class="field">
+                    <div class="row collapse">
+                        <div class="small-4 columns">
+                            <?php echo $form->labelEx($deliveryOrder->header, 'request_type', array('class' => 'prefix')); ?>
+                        </div>
+                        <div class="small-8 columns">
+                            <?php echo $form->textField($deliveryOrder->header, 'request_type', array(
+                                'value' => $deliveryOrder->header->request_type,
+                                'readOnly' => true,
+                            )); ?>
+                            <?php echo $form->error($deliveryOrder->header, 'request_type'); ?>
                         </div>
                     </div>
                 </div>

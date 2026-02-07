@@ -17,16 +17,10 @@
  */
 class TireSize extends CActiveRecord {
 
-    /**
-     * @return string the associated database table name
-     */
     public function tableName() {
         return '{{tire_size}}';
     }
 
-    /**
-     * @return array validation rules for model attributes.
-     */
     public function rules() {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
@@ -39,9 +33,6 @@ class TireSize extends CActiveRecord {
         );
     }
 
-    /**
-     * @return array relational rules.
-     */
     public function relations() {
         // NOTE: you may need to adjust the relation name and the related
         // class name for the relations automatically generated below.
@@ -50,9 +41,6 @@ class TireSize extends CActiveRecord {
         );
     }
 
-    /**
-     * @return array customized attribute labels (name=>label)
-     */
     public function attributeLabels() {
         return array(
             'id' => 'ID',
@@ -65,18 +53,6 @@ class TireSize extends CActiveRecord {
         );
     }
 
-    /**
-     * Retrieves a list of models based on the current search/filter conditions.
-     *
-     * Typical usecase:
-     * - Initialize the model fields with values from filter form.
-     * - Execute this method to get CActiveDataProvider instance which will filter
-     * models according to data in model fields.
-     * - Pass data provider to CGridView, CListView or any similar widget.
-     *
-     * @return CActiveDataProvider the data provider that can return the models
-     * based on the search/filter conditions.
-     */
     public function search() {
         // @todo Please modify the following code to remove attributes that should not be searched.
 
@@ -95,18 +71,12 @@ class TireSize extends CActiveRecord {
         ));
     }
 
-    /**
-     * Returns the static model of the specified AR class.
-     * Please note that you should have this exact method in all your CActiveRecord descendants!
-     * @param string $className active record class name.
-     * @return TireSize the static model class
-     */
     public static function model($className = __CLASS__) {
         return parent::model($className);
     }
 
     public function getTireName() {
         
-        return $this->section_width . ' - ' . $this->aspect_ratio . ' - ' . $this->construction_type . ' - ' . $this->rim_diameter . ' - ' . $this->load_rating . ' - ' . $this->speed_rating;
+        return $this->section_width . ' ' . $this->aspect_ratio . ' ' . $this->construction_type . ' ' . $this->rim_diameter . ' ' . $this->load_rating . ' ' . $this->speed_rating;
     }
 }

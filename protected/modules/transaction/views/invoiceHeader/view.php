@@ -78,14 +78,29 @@ $this->breadcrumbs = array(
             <tr>
                 <td>Customer</td>
                 <td><?php echo CHtml::encode(CHtml::value($model, 'customer.name')); ?></td>
-                <td width="10%">Registration #</td>
-                <td width="30%"><?php echo CHtml::link($registration->transaction_number, array($registration->repair_type == 'GR' ? "/frontDesk/generalRepairRegistration/show" : "/frontDesk/bodyRepairRegistration/show", "id"=>$registration->id), array('target' => 'blank')); ?></td>
+                <?php if (empty($registration)): ?>
+                    <td width="10%">SO #</td>
+                    <td width="30%">
+                        <?php echo CHtml::link($model->salesOrder->sale_order_no, array(
+                            "/transaction/transactionSalesOrder/show", 
+                            "id" => $model->sales_order_id,
+                        ), array('target' => 'blank')); ?>
+                    </td>
+                <?php else: ?>
+                    <td width="10%">Registration #</td>
+                    <td width="30%">
+                        <?php echo CHtml::link($registration->transaction_number, array(
+                            $registration->repair_type == 'GR' ? "/frontDesk/generalRepairRegistration/show" : "/frontDesk/bodyRepairRegistration/show", 
+                            "id" => $registration->id
+                        ), array('target' => 'blank')); ?>
+                    </td>
+                <?php endif; ?>
             </tr>
             
             <tr>
                 <td>Invoice Date</td>
                 <td><?php echo Yii::app()->dateFormatter->format("d MMM yyyy", strtotime($model->invoice_date)); ?></td>
-                <td width="10%">SO #</td>
+                <td width="10%">SL #</td>
                 <td width="30%">
                     <?php echo CHtml::encode(CHtml::value($registration, 'sales_order_number')); ?>
                 </td>
@@ -94,11 +109,9 @@ $this->breadcrumbs = array(
             <tr>
                 <td>Due Date</td>
                 <td><?php echo Yii::app()->dateFormatter->format("d MMM yyyy", strtotime($model->due_date)); ?></td>
-                <td width="10%">Vehicle</td>
-                <td width="30%">
-                    <?php echo CHtml::encode(CHtml::value($model, 'vehicle.carMake.name')); ?> -
-                    <?php echo CHtml::encode(CHtml::value($model, 'vehicle.carModel.name')); ?> - 
-                    <?php echo CHtml::encode(CHtml::value($model, 'vehicle.carSubModel.name')); ?>                    
+                <td>WO #</td>
+                <td>
+                    <?php echo CHtml::encode(CHtml::value($model, 'registrationTransaction.work_order_number')); ?>
                 </td>
             </tr>
             
@@ -112,8 +125,12 @@ $this->breadcrumbs = array(
             <tr>
                 <td width="10%">Insurance Company</td>
                 <td width="30%"><?php echo CHtml::encode(CHtml::value($model, 'insuranceCompany.name')); ?></td>
-                <td width="10%">Bupot #</td>
-                <td width="30%"><?php echo CHtml::encode(CHtml::value($model, 'coretax_receipt_number')); ?></td>
+                <td width="10%">Vehicle</td>
+                <td width="30%">
+                    <?php echo CHtml::encode(CHtml::value($model, 'vehicle.carMake.name')); ?> -
+                    <?php echo CHtml::encode(CHtml::value($model, 'vehicle.carModel.name')); ?> - 
+                    <?php echo CHtml::encode(CHtml::value($model, 'vehicle.carSubModel.name')); ?>                    
+                </td>
             </tr>
             
             <tr>
@@ -122,25 +139,12 @@ $this->breadcrumbs = array(
                 <td width="10%">F. Pajak #</td>
                 <td width="30%"><?php echo CHtml::encode(CHtml::value($model, 'transaction_tax_number')); ?></td>
             </tr>
-            
-            <tr>
-                <td>Reference Number</td>
-                <td>
-                    <?php if ($model->reference_type == 1): ?>
-                        <?php echo CHtml::encode(CHtml::value($model, 'salesOrder.sale_order_no')); ?>
-                    <?php else: ?>
-                        <?php echo CHtml::encode(CHtml::value($model, 'registrationTransaction.work_order_number')); ?>
-                    <?php endif; ?>
-                </td>
-                <td width="10%">DPP Coretax</td>
-                <td width="30%"><?php echo number_format(CHtml::encode(CHtml::value($model, 'grand_total_coretax')), 2); ?></td>
-            </tr>
-                
+             
             <tr>
                 <td>Reference Type</td>
                 <td><?php echo $model->reference_type == 1 ? 'Sales Order' : 'Retail Sales'; ?></td>
-                <td width="10%">PPn Coretax</td>
-                <td width="30%"><?php echo number_format(CHtml::encode(CHtml::value($model, 'tax_amount_coretax')), 2); ?></td>
+                <td width="10%">Bupot #</td>
+                <td width="30%"><?php echo CHtml::encode(CHtml::value($model, 'coretax_receipt_number')); ?></td>
             </tr>
                 
             <?php if (Yii::app()->user->checkAccess("director")): ?>
@@ -309,13 +313,19 @@ $this->breadcrumbs = array(
                 </tr>
 
                 <tr>
-                    <td colspan="2"></td>
+                    <td class="title">DPP Coretax</td>
+                    <td style="text-align: right; font-weight: bold">
+                        <?php echo number_format(CHtml::encode(CHtml::value($model, 'grand_total_coretax')), 2); ?>
+                    </td>
                     <td class="title">Total Price</td>
                     <td style="text-align: right"><strong>Rp. <?php echo number_format($model->total_price, 2) ?></strong></td>
                 </tr>	
 
                 <tr>
-                    <td colspan="2"></td>
+                    <td class="title">PPn Coretax</td>
+                    <td style="text-align: right; font-weight: bold">
+                        <?php echo number_format(CHtml::encode(CHtml::value($model, 'tax_amount_coretax')), 2); ?>
+                    </td>
                     <td class="title">Downpayment</td>
                     <td style="text-align: right"><strong>Rp. <?php echo number_format($model->downpayment_amount, 2) ?></strong></td>
                 </tr>	
@@ -357,7 +367,10 @@ $this->breadcrumbs = array(
                         <?php foreach ($payments as $key => $payment): ?>
                             <tr>
                                 <td>
-                                    <?php echo CHtml::link($payment->paymentIn->payment_number, array("/transaction/paymentIn/show", "id"=>$payment->payment_in_id), array('target' => 'blank')); ?>
+                                    <?php echo CHtml::link($payment->paymentIn->payment_number, array(
+                                        "/transaction/paymentIn/show", 
+                                        "id"=>$payment->payment_in_id
+                                    ), array('target' => 'blank')); ?>
                                 </td>
                                 <td><?php echo $payment->paymentIn->payment_date; ?></td>
                                 <td><?php echo $payment->paymentIn->paymentType->name; ?></td>
@@ -386,10 +399,7 @@ $this->breadcrumbs = array(
 
             <tbody>
                 <?php $totalDebit = 0; $totalCredit = 0; ?>
-                
-                <?php $transactionInvoices = JurnalUmum::model()->findAllByAttributes(array('kode_transaksi' => $model->invoice_number, 'is_coa_category' => 0)); ?>
-                <?php $transactionRegistrations = JurnalUmum::model()->findAllByAttributes(array('kode_transaksi' => $model->registrationTransaction->transaction_number, 'is_coa_category' => 0)); ?>
-                <?php $transactions = empty($transactionInvoices) ? $transactionRegistrations : $transactionInvoices; ?>
+                <?php $transactions = JurnalUmum::model()->findAllByAttributes(array('kode_transaksi' => $model->invoice_number, 'is_coa_category' => 0)); ?>
                 
                 <?php if (!empty($transactions)): ?>
                     <?php foreach ($transactions as $i => $header): ?>
