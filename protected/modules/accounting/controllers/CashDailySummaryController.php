@@ -163,7 +163,7 @@ class CashDailySummaryController extends Controller {
 
         $registrationTransactionIndividualCashDailySummary = InvoiceHeader::getIndividualCashDailySummary($transactionDate);
         $registrationTransactionCompanyCashDailySummary = InvoiceHeader::getCompanyCashDailySummary($transactionDate);
-        $saleOrderCashDailySummary = TransactionSalesOrder::getCashDailySummary($transactionDate);
+//        $saleOrderCashDailySummary = TransactionSalesOrder::getCashDailySummary($transactionDate);
         
         $branches = Branch::model()->findAll(array(
             'condition' => "t.id IN (SELECT branch_id FROM " . UserBranch::model()->tableName() . " WHERE users_id = :user_id)", 
@@ -178,9 +178,9 @@ class CashDailySummaryController extends Controller {
         foreach ($registrationTransactionCompanyCashDailySummary as $registrationTransactionCompanyCashDailyItem) {
             $cashDailySummary['wholesale'][$registrationTransactionCompanyCashDailyItem['branch_id']] = $registrationTransactionCompanyCashDailyItem['grand_total'];
         }
-        foreach ($saleOrderCashDailySummary as $saleOrderCashDailyItem) {
-            $cashDailySummary['saleorder'][$saleOrderCashDailyItem['branch_id']] = $saleOrderCashDailyItem['grand_total'];
-        }
+//        foreach ($saleOrderCashDailySummary as $saleOrderCashDailyItem) {
+//            $cashDailySummary['saleorder'][$saleOrderCashDailyItem['branch_id']] = $saleOrderCashDailyItem['grand_total'];
+//        }
         
         $existingDate = CashDailyApproval::model()->findByAttributes(array('transaction_date' => $transactionDate));
         if (isset($_GET['Approve'])) {
@@ -199,10 +199,11 @@ class CashDailySummaryController extends Controller {
         }
 
         if (isset($_GET['SaveExcel'])) {
-            $this->saveToExcel($paymentTypes, $transactionDate, $branches, $paymentInRetailList, $paymentInWholesaleDataProvider, $paymentOutDataProvider, $cashTransactionInDataProvider, $cashTransactionOutDataProvider,
-                $saleOrderDataProvider, $retailTransactionHeadDataProvider, $retailTransaction1DataProvider, $retailTransaction2DataProvider,
-                $retailTransaction4DataProvider, $retailTransaction5DataProvider, $retailTransaction6DataProvider, $retailTransaction8DataProvider,
-                $wholesaleTransactionDataProvider, $purchaseOrderDataProvider, $transactionJournalDataProvider, $cashDailySummary
+            $this->saveToExcel($paymentTypes, $transactionDate, $branches, $paymentInRetailList, $paymentInWholesaleDataProvider, $paymentOutDataProvider, 
+                $cashTransactionInDataProvider, $cashTransactionOutDataProvider, $saleOrderDataProvider, $retailTransactionHeadDataProvider, 
+                $retailTransaction1DataProvider, $retailTransaction2DataProvider, $retailTransaction4DataProvider, $retailTransaction5DataProvider, 
+                $retailTransaction6DataProvider, $retailTransaction8DataProvider, $wholesaleTransactionDataProvider, $purchaseOrderDataProvider, 
+                $transactionJournalDataProvider, $cashDailySummary
             );
         }
         

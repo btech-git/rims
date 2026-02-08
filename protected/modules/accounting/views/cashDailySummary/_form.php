@@ -73,20 +73,20 @@
             <th>Branch</th>
             <th>Retail</th>
             <th>Wholesale</th>
-            <th>Sale Order</th>
+            <!--<th>Sale Order</th>-->
             <th>Total</th>
         </tr>                    
     </thead>
     <tbody>
         <?php $retailGrandTotal = '0.00'; ?>
         <?php $wholesaleGrandTotal = '0.00'; ?>
-        <?php $saleOrderGrandTotal = '0.00'; ?>
+        <?php //$saleOrderGrandTotal = '0.00'; ?>
         <?php $branchGrandTotal = '0.00'; ?>
         <?php foreach ($branches as $branch): ?>
             <?php $retailTotal = isset($cashDailySummary['retail'][$branch->id]) ? $cashDailySummary['retail'][$branch->id] : '0.00'; ?>
             <?php $wholeSaleTotal = isset($cashDailySummary['wholesale'][$branch->id]) ? $cashDailySummary['wholesale'][$branch->id] : '0.00'; ?>
-            <?php $saleOrderTotal = isset($cashDailySummary['saleorder'][$branch->id]) ? $cashDailySummary['saleorder'][$branch->id] : '0.00'; ?>
-            <?php $branchTotal = $retailTotal + $wholeSaleTotal + $saleOrderTotal; ?>
+            <?php //$saleOrderTotal = isset($cashDailySummary['saleorder'][$branch->id]) ? $cashDailySummary['saleorder'][$branch->id] : '0.00'; ?>
+            <?php $branchTotal = $retailTotal + $wholeSaleTotal; ?>
             <tr>
                 <td><?php echo CHtml::encode(CHtml::value($branch, 'name')); ?></td>
                 <td style="text-align: right">
@@ -105,7 +105,14 @@
                         'transactionType' => 2,
                     ), array('target' => '_blank')); ?>
                 </td>
-                <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $saleOrderTotal)); ?></td>
+<!--                <td style="text-align: right">
+                    <?php /*echo CHtml::link(CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $saleOrderTotal)), array(
+                        'transactionInfo', 
+                        'branchId' => $branch->id,
+                        'transactionDate' => $transactionDate,
+                        'transactionType' => 3,
+                    ), array('target' => '_blank'));*/ ?>
+                </td>-->
                 <td style="text-align: right">
                     <?php echo CHtml::link(CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $branchTotal)), array(
                         'transactionInfo', 
@@ -117,7 +124,7 @@
             </tr>
             <?php $retailGrandTotal += $retailTotal; ?>
             <?php $wholesaleGrandTotal += $wholeSaleTotal; ?>
-            <?php $saleOrderGrandTotal += $saleOrderTotal; ?>
+            <?php //$saleOrderGrandTotal += $saleOrderTotal; ?>
             <?php $branchGrandTotal += $branchTotal; ?>
         <?php endforeach; ?>
     </tbody>
@@ -126,7 +133,7 @@
             <td style="text-align: right">Total</td>
             <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $retailGrandTotal)); ?></td>
             <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $wholesaleGrandTotal)); ?></td>
-            <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $saleOrderGrandTotal)); ?></td>
+            <!--<td style="text-align: right"><?php //echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $saleOrderGrandTotal)); ?></td>-->
             <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $branchGrandTotal)); ?></td>
         </tr>
     </tfoot>
