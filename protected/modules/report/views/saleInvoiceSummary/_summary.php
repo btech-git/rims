@@ -15,7 +15,7 @@
     .width2-3 { width: 15% }
     .width2-4 { width: 15% }
     .width2-5 { width: 15% }
-    .width2-5 { width: 15% }
+    .width2-6 { width: 15% }
 '); ?>
 
 <div style="font-weight: bold; text-align: center">
@@ -42,7 +42,7 @@
             <th class="width1-10">Status</th>
         </tr>
         <tr id="header2">
-            <td colspan="10">
+            <td colspan="11">
                 <table>
                     <tr>
                         <th class="width2-1">Payment in #</th>
@@ -87,7 +87,7 @@
                 <td class="width1-10" style="text-align: right"><?php echo CHtml::encode(CHtml::value($header, 'status')); ?></td>
             </tr>
             <tr class="items2">
-                <td colspan="10">
+                <td colspan="11">
                     <table>
                         <?php if (!empty($header->paymentInDetails )): ?>
                         <?php $totalPayment = '0.00'; ?>
