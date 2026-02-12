@@ -150,19 +150,19 @@ class SaleRetailProductController extends Controller {
         $worksheet = $objPHPExcel->setActiveSheetIndex(0);
         $worksheet->setTitle('Penjualan Retail Product');
 
-        $worksheet->mergeCells('A1:I1');
-        $worksheet->mergeCells('A2:I2');
-        $worksheet->mergeCells('A3:I3');
+        $worksheet->mergeCells('A1:K1');
+        $worksheet->mergeCells('A2:K2');
+        $worksheet->mergeCells('A3:K3');
 
-        $worksheet->getStyle('A1:I5')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-        $worksheet->getStyle('A1:I5')->getFont()->setBold(true);
+        $worksheet->getStyle('A1:K5')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->getStyle('A1:K5')->getFont()->setBold(true);
 
         $branch = Branch::model()->findByPk($branchId);
         $worksheet->setCellValue('A1', 'Raperind Motor ' . CHtml::encode(CHtml::value($branch, 'name')));
         $worksheet->setCellValue('A2', 'Penjualan Retail Product');
         $worksheet->setCellValue('A3', Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($startDate)) . ' - ' . Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($endDate)));
 
-        $worksheet->getStyle('A5:I5')->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle('A5:K5')->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
         $worksheet->setCellValue('A5', 'ID');
         $worksheet->setCellValue('B5', 'Code');
@@ -172,15 +172,18 @@ class SaleRetailProductController extends Controller {
         $worksheet->setCellValue('F5', 'Master Category');
         $worksheet->setCellValue('G5', 'Sub Master Category');
         $worksheet->setCellValue('H5', 'Sub Category');
-        $worksheet->setCellValue('I5', 'Total');
+        $worksheet->setCellValue('I5', 'Quantity');
+        $worksheet->setCellValue('J5', 'Satuan');
+        $worksheet->setCellValue('K5', 'Total');
 
-        $worksheet->getStyle('A5:I5')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle('A5:K5')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
         $counter = 7;
-        $totalSale = 0.00;
+        $totalSale = '0.00';
+        $totalQuantity = '0.00';
         foreach ($dataProvider->data as $header) {
-            $grandTotal = $header->getTotalSales($startDate, $endDate, $branchId, $customerType);
-            $worksheet->getStyle("I{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
+            $totalQuantitySales = $header->getTotalQuantitySales($startDate, $endDate, $branchId, $customerType);
+            $totalAmountSales = $header->getTotalSales($startDate, $endDate, $branchId, $customerType);
 
             $worksheet->setCellValue("A{$counter}", CHtml::encode($header->id));
             $worksheet->setCellValue("B{$counter}", CHtml::encode($header->manufacturer_code));
@@ -190,18 +193,21 @@ class SaleRetailProductController extends Controller {
             $worksheet->setCellValue("F{$counter}", CHtml::encode(CHtml::value($header, 'productMasterCategory.name')));
             $worksheet->setCellValue("G{$counter}", CHtml::encode(CHtml::value($header, 'productSubMasterCategory.name')));
             $worksheet->setCellValue("H{$counter}", CHtml::encode(CHtml::value($header, 'productSubCategory.name')));
-            $worksheet->setCellValue("I{$counter}", CHtml::encode($grandTotal));
+            $worksheet->setCellValue("I{$counter}", CHtml::encode($totalQuantitySales));
+            $worksheet->setCellValue("J{$counter}", CHtml::encode(CHtml::value($header, 'unit.name')));
+            $worksheet->setCellValue("K{$counter}", CHtml::encode($totalAmountSales));
 
+            $totalQuantity += $totalQuantitySales;
+            $totalSale += $totalAmountSales;
             $counter++;
-            
-            $totalSale += $grandTotal;
         }
         
         $worksheet->setCellValue("H{$counter}", 'TOTAL');
+        $worksheet->setCellValue("I{$counter}", CHtml::encode($totalQuantity));
         $worksheet->setCellValue("I{$counter}", CHtml::encode($totalSale));
         $counter++;$counter++;
 
-        for ($col = 'A'; $col !== 'J'; $col++) {
+        for ($col = 'A'; $col !== 'Z'; $col++) {
             $objPHPExcel->getActiveSheet()
             ->getColumnDimension($col)
             ->setAutoSize(true);
