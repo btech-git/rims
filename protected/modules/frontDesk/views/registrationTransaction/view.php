@@ -36,6 +36,12 @@ $this->breadcrumbs = array(
                                     'model' => $model,
                                 ), true)
                             ),
+                            'DP Info' => array(
+                                'id' => 'info3',
+                                'content' => $this->renderPartial('_viewDownpayment', array(
+                                    'model' => $model,
+                                ), true)
+                            ),
                         ),
                         // additional javascript options for the tabs plugin
                         'options' => array(
@@ -249,6 +255,16 @@ $this->breadcrumbs = array(
                                 </div>
                                 <div class="small-8 columns">
                                     <input type="text" readonly="true" value="<?php echo number_format($model->grand_total, 2); ?>"> 
+                                </div>
+                            </div>
+                        </div>
+                        <div class="field">
+                            <div class="row collapse">
+                                <div class="small-4 columns">
+                                    <span class="prefix">Downpayment</span>
+                                </div>
+                                <div class="small-8 columns">
+                                    <input type="text" readonly="true" value="<?php echo number_format($model->downpayment_amount, 2); ?>"> 
                                 </div>
                             </div>
                         </div>
