@@ -31,7 +31,7 @@ $this->breadcrumbs = array(
                                 ), true)
                             ),
                             'Customer Vehicle' => array(
-                                'id' => 'info3',
+                                'id' => 'info2',
                                 'content' => $this->renderPartial('_viewCustomer', array(
                                     'model' => $model,
                                 ), true)
