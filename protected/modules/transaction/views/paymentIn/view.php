@@ -340,7 +340,7 @@ $this->menu = array(
                                 <tr>
                                     <td>
                                         <?php echo CHtml::link($detail->registrationTransaction->downpayment_transaction_number, array(
-                                            "/transaction/registrationTransaction/show", 
+                                            "/frontDesk/registrationTransaction/view", 
                                             "id" => $detail->registration_transaction_id
                                         ), array('target' => 'blank')); ?>
                                     </td>
@@ -376,7 +376,12 @@ $this->menu = array(
                             <?php foreach ($model->paymentInDetails as $detail): ?>
                                 <?php if ($detail->invoice_header_id !== null): ?> 
                                     <tr>
-                                        <td><?php echo CHtml::link($detail->invoiceHeader->invoice_number, array("/transaction/invoiceHeader/show", "id" => $detail->invoice_header_id), array('target' => 'blank')); ?></td>
+                                        <td>
+                                            <?php echo CHtml::link($detail->invoiceHeader->invoice_number, array(
+                                                "/transaction/invoiceHeader/show", 
+                                                "id" => $detail->invoice_header_id
+                                            ), array('target' => 'blank')); ?>
+                                        </td>
                                         <td><?php echo CHtml::encode(CHtml::value($detail, 'invoiceHeader.vehicle.plate_number')); ?></td>
                                         <td><?php echo CHtml::encode(CHtml::value($detail, 'memo')); ?></td>
                                         <td style="text-align: right">
