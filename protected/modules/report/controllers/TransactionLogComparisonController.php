@@ -66,6 +66,8 @@ class TransactionLogComparisonController extends Controller {
             $payload2 = $newData2;
         }
         
+//        var_dump($payload1);
+        
         $this->renderPartial('_summaryPayload', array(
             'payload1' => $payload1,
             'payload2' => $payload2,

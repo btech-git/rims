@@ -24,10 +24,9 @@ class DailyMultipleMechanicTransactionController extends Controller {
         
         $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : date('Y-m-d');
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
+        
         $dailyMultipleMechanicTransactionReport = InvoiceHeader::getDailyMultipleMechanicTransactionReport($startDate, $endDate);
-        
         $employeeIds = array_map(function($dailyMultipleMechanicTransactionItem) { return $dailyMultipleMechanicTransactionItem['employee_id_assign_mechanic']; }, $dailyMultipleMechanicTransactionReport);
-        
         $dailyMultipleMechanicTransactionServiceReport = InvoiceDetail::getDailyMultipleMechanicTransactionServiceReport($startDate, $endDate, $employeeIds);
         
         $dailyMultipleMechanicTransactionServiceReportData = array();
@@ -80,10 +79,10 @@ class DailyMultipleMechanicTransactionController extends Controller {
 
         $documentProperties = $objPHPExcel->getProperties();
         $documentProperties->setCreator('Raperind Motor');
-        $documentProperties->setTitle('All Mechanic Harian');
+        $documentProperties->setTitle('Penjualan Semua Mekanik Harian');
 
         $worksheet = $objPHPExcel->setActiveSheetIndex(0);
-        $worksheet->setTitle('All Mechanic Harian');
+        $worksheet->setTitle('Penjualan Semua Mekanik Harian');
 
         $worksheet->mergeCells('A1:J1');
         $worksheet->mergeCells('A2:J2');
@@ -93,7 +92,7 @@ class DailyMultipleMechanicTransactionController extends Controller {
         $worksheet->getStyle('A1:J5')->getFont()->setBold(true);
 
         $worksheet->setCellValue('A1', 'Raperind Motor');
-        $worksheet->setCellValue('A2', 'Laporan All Mechanic Harian');
+        $worksheet->setCellValue('A2', 'Penjualan Semua Mekanik Harian');
         $worksheet->setCellValue('A3', Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($startDate)) . ' - ' . Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($endDate)));
         
         $worksheet->getStyle('A5:J5')->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
@@ -119,8 +118,6 @@ class DailyMultipleMechanicTransactionController extends Controller {
         foreach ($dailyMultipleMechanicTransactionReport as $dataItem) {
             $detailItem = $dailyMultipleMechanicTransactionServiceReportData[$dataItem['employee_id_assign_mechanic']];
             
-            $worksheet->getStyle("E{$counter}:J{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
-
             $worksheet->setCellValue("A{$counter}", $dataItem['employee_name']);
             $worksheet->setCellValue("B{$counter}", $dataItem['vehicle_quantity']);
             $worksheet->setCellValue("C{$counter}", $dataItem['work_order_quantity']);
@@ -139,6 +136,9 @@ class DailyMultipleMechanicTransactionController extends Controller {
             $counter++;
         }
 
+        $worksheet->getStyle("A{$counter}:J{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A{$counter}:J{$counter}")->getFont()->setBold(true);
+        
         $worksheet->setCellValue("A{$counter}", 'TOTAL');
         $worksheet->setCellValue("B{$counter}", $vehicleQuantitySum);
         $worksheet->setCellValue("C{$counter}", $workOrderQuantitySum);
@@ -156,7 +156,7 @@ class DailyMultipleMechanicTransactionController extends Controller {
         ob_end_clean();
 
         header('Content-type: application/vnd.ms-excel');
-        header('Content-Disposition: attachment;filename="penjualan_mechanic_harian.xls"');
+        header('Content-Disposition: attachment;filename="penjualan_semua_mekanik_harian.xls"');
         header('Cache-Control: max-age=0');
 
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');

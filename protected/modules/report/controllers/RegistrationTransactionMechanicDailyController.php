@@ -75,10 +75,10 @@ class RegistrationTransactionMechanicDailyController extends Controller {
 
         $documentProperties = $objPHPExcel->getProperties();
         $documentProperties->setCreator('Raperind Motor');
-        $documentProperties->setTitle('Laporan Kinerja Mekanik');
+        $documentProperties->setTitle('Penjualan Mekanik Harian');
 
         $worksheet = $objPHPExcel->setActiveSheetIndex(0);
-        $worksheet->setTitle('Laporan Kinerja Mekanik');
+        $worksheet->setTitle('Penjualan Mekanik Harian');
 
         $worksheet->mergeCells('A1:X1');
         $worksheet->mergeCells('A2:X2');
@@ -88,7 +88,7 @@ class RegistrationTransactionMechanicDailyController extends Controller {
         $worksheet->getStyle('A1:X3')->getFont()->setBold(true);
         $branch = Branch::model()->findByPk($branchId);
         $worksheet->setCellValue('A1', 'Raperind Motor ' . CHtml::encode(CHtml::value($branch, 'name')));
-        $worksheet->setCellValue('A2', 'Laporan Kinerja Mekanik');
+        $worksheet->setCellValue('A2', 'Penjualan per Mekanik Harian');
         $worksheet->setCellValue('A3', $startDateFormatted . ' - ' . $endDateFormatted);
 
         $worksheet->getStyle("A5:X5")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
@@ -145,10 +145,6 @@ class RegistrationTransactionMechanicDailyController extends Controller {
             $counter++;
         }
 
-        $worksheet->getStyle("A{$counter}:AA{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
-
-        $counter++;
-
         for ($col = 'A'; $col !== 'Z'; $col++) {
             $objPHPExcel->getActiveSheet()
             ->getColumnDimension($col)
@@ -158,7 +154,7 @@ class RegistrationTransactionMechanicDailyController extends Controller {
         ob_end_clean();
 
         header('Content-type: application/vnd.ms-excel');
-        header('Content-Disposition: attachment;filename="kinerja_mekanik.xls"');
+        header('Content-Disposition: attachment;filename="penjualan_per_mekanik_harian.xls"');
         header('Cache-Control: max-age=0');
         
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');

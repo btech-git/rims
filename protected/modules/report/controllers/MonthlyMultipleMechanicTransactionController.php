@@ -29,9 +29,7 @@ class MonthlyMultipleMechanicTransactionController extends Controller {
         $year = (isset($_GET['Year'])) ? $_GET['Year'] : $yearNow;
         
         $monthlyMultipleMechanicTransactionReport = InvoiceHeader::getMonthlyMultipleMechanicTransactionReport($year, $month);
-        
         $employeeIds = array_map(function($monthlyMultipleMechanicTransactionReportItem) { return $monthlyMultipleMechanicTransactionReportItem['employee_id_assign_mechanic']; }, $monthlyMultipleMechanicTransactionReport);
-        
         $monthlyMultipleMechanicTransactionServiceReport = InvoiceDetail::getMonthlyMultipleMechanicTransactionServiceReport($year, $month, $employeeIds);
         
         $monthlyMultipleMechanicTransactionServiceReportData = array();
@@ -90,10 +88,10 @@ class MonthlyMultipleMechanicTransactionController extends Controller {
 
         $documentProperties = $objPHPExcel->getProperties();
         $documentProperties->setCreator('Raperind Motor');
-        $documentProperties->setTitle('Penjualan All Mechanic Bulanan');
+        $documentProperties->setTitle('Penjualan Semua Mekanik Bulanan');
 
         $worksheet = $objPHPExcel->setActiveSheetIndex(0);
-        $worksheet->setTitle('Penjualan All Mechanic Bulanan');
+        $worksheet->setTitle('Penjualan Semua Mekanik Bulanan');
 
         $worksheet->mergeCells('A1:K1');
         $worksheet->mergeCells('A2:K2');
@@ -103,7 +101,7 @@ class MonthlyMultipleMechanicTransactionController extends Controller {
         $worksheet->getStyle('A1:K5')->getFont()->setBold(true);
 
         $worksheet->setCellValue('A1', 'Raperind Motor ');
-        $worksheet->setCellValue('A2', 'Laporan Penjualan All Mechanic Bulanan');
+        $worksheet->setCellValue('A2', 'Penjualan Semua Mekanik Bulanan');
         $worksheet->setCellValue('A3', strftime("%B",mktime(0,0,0,$month)) . ' ' . $year);
         
         $worksheet->getStyle('A5:K5')->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
@@ -154,6 +152,9 @@ class MonthlyMultipleMechanicTransactionController extends Controller {
             $counter++;
         }
 
+        $worksheet->getStyle("A{$counter}:K{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A{$counter}:K{$counter}")->getFont()->setBold(true);
+        
         $worksheet->setCellValue("A{$counter}", 'TOTAL');
         $worksheet->setCellValue("B{$counter}", $vehicleQuantitySum);
         $worksheet->setCellValue("C{$counter}", $workOrderQuantitySum);
@@ -172,7 +173,7 @@ class MonthlyMultipleMechanicTransactionController extends Controller {
         ob_end_clean();
 
         header('Content-type: application/vnd.ms-excel');
-        header('Content-Disposition: attachment;filename="penjualan_all_mechanic_bulanan.xls"');
+        header('Content-Disposition: attachment;filename="penjualan_semua_mekanik_bulanan.xls"');
         header('Cache-Control: max-age=0');
 
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');

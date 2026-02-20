@@ -12,9 +12,16 @@ class TransactionPurchaseOrderLogData  {
                     $branch = Branch::model()->findByPk($headerFieldValue);
                     $newData['branch'] = $branch === null ? '' : $branch->name;
                     break;
+                case 'destination_branch_id':
+                    $branch = Branch::model()->findByPk($headerFieldValue);
+                    $newData['destination_branch'] = $branch === null ? '' : $branch->name;
+                    break;
                 case 'supplier_id':
                     $supplier = Supplier::model()->findByPk($headerFieldValue);
                     $newData['supplier'] = $supplier === null ? '' : $supplier->name;
+                    break;
+                case 'price_before_discount':
+                    $newData['price_before_discount'] = Yii::app()->numberFormatter->format('#,##0.00', $headerFieldValue);
                     break;
                 case 'registration_transaction_id':
                     $registrationTransaction = RegistrationTransaction::model()->findByPk($headerFieldValue);

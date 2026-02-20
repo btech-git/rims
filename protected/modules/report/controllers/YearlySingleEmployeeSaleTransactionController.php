@@ -75,10 +75,10 @@ class YearlySingleEmployeeSaleTransactionController extends Controller {
 
         $documentProperties = $objPHPExcel->getProperties();
         $documentProperties->setCreator('Raperind Motor');
-        $documentProperties->setTitle('Penjualan Front Tahunan');
+        $documentProperties->setTitle('Penjualan FO Tahunan');
 
         $worksheet = $objPHPExcel->setActiveSheetIndex(0);
-        $worksheet->setTitle('Penjualan Front Tahunan');
+        $worksheet->setTitle('Penjualan FO Tahunan');
 
         $worksheet->mergeCells('A1:R1');
         $worksheet->mergeCells('A2:R2');
@@ -89,7 +89,7 @@ class YearlySingleEmployeeSaleTransactionController extends Controller {
 
         $employee = Employee::model()->findByPk($employeeId);
         $worksheet->setCellValue('A1', 'Raperind Motor ');
-        $worksheet->setCellValue('A2', 'Laporan Penjualan Tahunan ' . CHtml::value($employee, 'name'));
+        $worksheet->setCellValue('A2', 'Penjualan Tahunan ' . CHtml::value($employee, 'name'));
         $worksheet->setCellValue('A3', $year);
         
         $worksheet->getStyle('A5:R5')->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
@@ -183,6 +183,9 @@ class YearlySingleEmployeeSaleTransactionController extends Controller {
             }
         }
 
+        $worksheet->getStyle("A{$counter}:R{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A{$counter}:R{$counter}")->getFont()->setBold(true);
+        
         $worksheet->setCellValue("A{$counter}", 'TOTAL');
         $worksheet->setCellValue("B{$counter}", $customerQuantitySum);
         $worksheet->setCellValue("C{$counter}", $customerNewQuantitySum);
@@ -208,7 +211,7 @@ class YearlySingleEmployeeSaleTransactionController extends Controller {
         ob_end_clean();
 
         header('Content-type: application/vnd.ms-excel');
-        header('Content-Disposition: attachment;filename="penjualan_front_tahunan.xls"');
+        header('Content-Disposition: attachment;filename="penjualan_tahunan_' . CHtml::value($employee, 'name') . '.xls"');
         header('Cache-Control: max-age=0');
 
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');

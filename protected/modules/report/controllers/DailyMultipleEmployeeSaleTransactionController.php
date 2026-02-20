@@ -63,10 +63,10 @@ class DailyMultipleEmployeeSaleTransactionController extends Controller {
 
         $documentProperties = $objPHPExcel->getProperties();
         $documentProperties->setCreator('Raperind Motor');
-        $documentProperties->setTitle('All Front Harian');
+        $documentProperties->setTitle('Penjualan Semua Front Harian');
 
         $worksheet = $objPHPExcel->setActiveSheetIndex(0);
-        $worksheet->setTitle('All Front Harian');
+        $worksheet->setTitle('Penjualan Semua Front Harian');
 
         $worksheet->mergeCells('A1:M1');
         $worksheet->mergeCells('A2:M2');
@@ -76,7 +76,7 @@ class DailyMultipleEmployeeSaleTransactionController extends Controller {
         $worksheet->getStyle('A1:M5')->getFont()->setBold(true);
 
         $worksheet->setCellValue('A1', 'Raperind Motor');
-        $worksheet->setCellValue('A2', 'Laporan All Front Harian');
+        $worksheet->setCellValue('A2', 'Penjualan Semua Front Office Harian');
         $worksheet->setCellValue('A3', Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($startDate)) . ' - ' . Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($endDate)));
         
         $worksheet->getStyle('A5:M5')->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
@@ -166,7 +166,7 @@ class DailyMultipleEmployeeSaleTransactionController extends Controller {
         ob_end_clean();
 
         header('Content-type: application/vnd.ms-excel');
-        header('Content-Disposition: attachment;filename="penjualan_front_harian.xls"');
+        header('Content-Disposition: attachment;filename="penjualan_semua_front_office_harian.xls"');
         header('Cache-Control: max-age=0');
 
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');

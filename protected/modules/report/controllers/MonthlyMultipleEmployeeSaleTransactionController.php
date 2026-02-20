@@ -71,10 +71,10 @@ class MonthlyMultipleEmployeeSaleTransactionController extends Controller {
 
         $documentProperties = $objPHPExcel->getProperties();
         $documentProperties->setCreator('Raperind Motor');
-        $documentProperties->setTitle('Penjualan All Front Bulanan');
+        $documentProperties->setTitle('Penjualan Semua FO Bulanan');
 
         $worksheet = $objPHPExcel->setActiveSheetIndex(0);
-        $worksheet->setTitle('Penjualan All Front Bulanan');
+        $worksheet->setTitle('Penjualan Semua FO Bulanan');
 
         $worksheet->mergeCells('A1:W1');
         $worksheet->mergeCells('A2:W2');
@@ -84,7 +84,7 @@ class MonthlyMultipleEmployeeSaleTransactionController extends Controller {
         $worksheet->getStyle('A1:W5')->getFont()->setBold(true);
 
         $worksheet->setCellValue('A1', 'Raperind Motor ');
-        $worksheet->setCellValue('A2', 'Laporan Penjualan All Front Bulanan');
+        $worksheet->setCellValue('A2', 'Penjualan Semua Front Office Bulanan');
         $worksheet->setCellValue('A3', strftime("%B",mktime(0,0,0,$month)) . ' ' . $year);
        
         $worksheet->getStyle('A5:W5')->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
@@ -236,7 +236,7 @@ class MonthlyMultipleEmployeeSaleTransactionController extends Controller {
         ob_end_clean();
 
         header('Content-type: application/vnd.ms-excel');
-        header('Content-Disposition: attachment;filename="penjualan_all_front_bulanan.xls"');
+        header('Content-Disposition: attachment;filename="penjualan_semua_front_office_bulanan.xls"');
         header('Cache-Control: max-age=0');
 
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');

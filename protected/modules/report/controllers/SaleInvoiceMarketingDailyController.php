@@ -75,10 +75,10 @@ class SaleInvoiceMarketingDailyController extends Controller {
 
         $documentProperties = $objPHPExcel->getProperties();
         $documentProperties->setCreator('Raperind Motor');
-        $documentProperties->setTitle('Laporan Kinerja Front Office');
+        $documentProperties->setTitle('Penjualan FO Harian');
 
         $worksheet = $objPHPExcel->setActiveSheetIndex(0);
-        $worksheet->setTitle('Laporan Kinerja Front Office');
+        $worksheet->setTitle('Penjualan FO Harian');
 
         $worksheet->mergeCells('A1:M1');
         $worksheet->mergeCells('A2:M2');
@@ -89,7 +89,7 @@ class SaleInvoiceMarketingDailyController extends Controller {
         $worksheet->getStyle('A1:M3')->getFont()->setBold(true);
         $branch = Branch::model()->findByPk($branchId);
         $worksheet->setCellValue('A1', 'Raperind Motor ' . CHtml::encode(CHtml::value($branch, 'name')));
-        $worksheet->setCellValue('A2', 'Laporan Kinerja Front Office');
+        $worksheet->setCellValue('A2', 'Penjualan per Front Office Harian');
         $worksheet->setCellValue('A3', $startDateFormatted . ' - ' . $endDateFormatted);
 
         $worksheet->getStyle("A5:AB5")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
@@ -168,7 +168,7 @@ class SaleInvoiceMarketingDailyController extends Controller {
         ob_end_clean();
 
         header('Content-type: application/vnd.ms-excel');
-        header('Content-Disposition: attachment;filename="kinerja_front_office.xls"');
+        header('Content-Disposition: attachment;filename="penjualan_per_front_office_harian.xls"');
         header('Cache-Control: max-age=0');
         
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');

@@ -30,7 +30,6 @@ class MonthlySingleMechanicTransactionController extends Controller {
         $employeeId = (isset($_GET['EmployeeId'])) ? $_GET['EmployeeId'] : '';
         
         $monthlySingleMechanicTransactionReport = InvoiceHeader::getMonthlySingleMechanicTransactionReport($year, $month, $employeeId);
-        
         $monthlySingleMechanicTransactionServiceReport = InvoiceDetail::getMonthlySingleMechanicTransactionServiceReport($year, $month, $employeeId);
         
         $monthlySingleMechanicTransactionReportData = array();
@@ -96,10 +95,10 @@ class MonthlySingleMechanicTransactionController extends Controller {
 
         $documentProperties = $objPHPExcel->getProperties();
         $documentProperties->setCreator('Raperind Motor');
-        $documentProperties->setTitle('Penjualan Mechanic Bulanan');
+        $documentProperties->setTitle('Penjualan Mekanik Bulanan');
 
         $worksheet = $objPHPExcel->setActiveSheetIndex(0);
-        $worksheet->setTitle('Penjualan Mechanic Bulanan');
+        $worksheet->setTitle('Penjualan Mekanik Bulanan');
 
         $worksheet->mergeCells('A1:K1');
         $worksheet->mergeCells('A2:K2');
@@ -109,8 +108,8 @@ class MonthlySingleMechanicTransactionController extends Controller {
         $worksheet->getStyle('A1:K5')->getFont()->setBold(true);
 
         $employee = Employee::model()->findByPk($employeeId);
-        $worksheet->setCellValue('A1', 'Raperind Motor ');
-        $worksheet->setCellValue('A2', 'Laporan Penjualan Bulanan ' . CHtml::value($employee, 'name'));
+        $worksheet->setCellValue('A1', 'Raperind Motor');
+        $worksheet->setCellValue('A2', 'Penjualan Bulanan ' . CHtml::value($employee, 'name'));
         $worksheet->setCellValue('A3', strftime("%B",mktime(0,0,0,$month)) . ' ' . $year);
         
         $worksheet->getStyle('A5:K5')->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
@@ -168,6 +167,9 @@ class MonthlySingleMechanicTransactionController extends Controller {
             }
         }
 
+        $worksheet->getStyle("A{$counter}:K{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A{$counter}:K{$counter}")->getFont()->setBold(true);
+        
         $worksheet->setCellValue("A{$counter}", 'TOTAL');
         $worksheet->setCellValue("B{$counter}", $vehicleQuantitySum);
         $worksheet->setCellValue("C{$counter}", $workOrderQuantitySum);
@@ -186,7 +188,7 @@ class MonthlySingleMechanicTransactionController extends Controller {
         ob_end_clean();
 
         header('Content-type: application/vnd.ms-excel');
-        header('Content-Disposition: attachment;filename="penjualan_mechanic_bulanan.xls"');
+        header('Content-Disposition: attachment;filename="penjualan_bulanan_' . CHtml::value($employee, 'name') . '.xls"');
         header('Cache-Control: max-age=0');
 
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');

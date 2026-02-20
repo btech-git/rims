@@ -23,13 +23,10 @@ class YearlyMultipleEmployeeSaleTransactionController extends Controller {
         ini_set('memory_limit', '1024M');
         
         $yearNow = date('Y');
-        
         $year = (isset($_GET['Year'])) ? $_GET['Year'] : $yearNow;
         
         $yearlyMultipleEmployeeSaleReport = InvoiceHeader::getYearlyMultipleEmployeeSaleReport($year);
-        
         $employeeIds = array_map(function($yearlyMultipleEmployeeSaleReportItem) { return $yearlyMultipleEmployeeSaleReportItem['employee_id_sales_person']; }, $yearlyMultipleEmployeeSaleReport);
-        
         $yearlyMultipleEmployeeSaleProductReport = InvoiceDetail::getYearlyMultipleEmployeeSaleProductReport($year, $employeeIds);
         
         $yearlyMultipleEmployeeSaleProductReportData = array();
@@ -70,10 +67,10 @@ class YearlyMultipleEmployeeSaleTransactionController extends Controller {
 
         $documentProperties = $objPHPExcel->getProperties();
         $documentProperties->setCreator('Raperind Motor');
-        $documentProperties->setTitle('Penjualan All Front Tahunan');
+        $documentProperties->setTitle('Penjualan Semua FO Tahunan');
 
         $worksheet = $objPHPExcel->setActiveSheetIndex(0);
-        $worksheet->setTitle('Penjualan All Front Tahunan');
+        $worksheet->setTitle('Penjualan Semua FO Tahunan');
 
         $worksheet->mergeCells('A1:W1');
         $worksheet->mergeCells('A2:W2');
@@ -82,7 +79,7 @@ class YearlyMultipleEmployeeSaleTransactionController extends Controller {
         $worksheet->getStyle('A1:W5')->getFont()->setBold(true);
 
         $worksheet->setCellValue('A1', 'Raperind Motor ');
-        $worksheet->setCellValue('A2', 'Laporan Penjualan All Front Tahunan');
+        $worksheet->setCellValue('A2', 'Penjualan Semua Front Office Tahunan');
         $worksheet->setCellValue('A3', $year);
         
         $worksheet->getStyle('A5:W5')->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
@@ -233,7 +230,7 @@ class YearlyMultipleEmployeeSaleTransactionController extends Controller {
         ob_end_clean();
 
         header('Content-type: application/vnd.ms-excel');
-        header('Content-Disposition: attachment;filename="penjualan_all_front_tahunan.xls"');
+        header('Content-Disposition: attachment;filename="penjualan_semua_front_office_tahunan.xls"');
         header('Cache-Control: max-age=0');
 
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
