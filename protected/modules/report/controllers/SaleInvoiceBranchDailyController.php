@@ -72,10 +72,10 @@ class SaleInvoiceBranchDailyController extends Controller {
 
         $documentProperties = $objPHPExcel->getProperties();
         $documentProperties->setCreator('Raperind Motor');
-        $documentProperties->setTitle('Laporan Kinerja Cabang');
+        $documentProperties->setTitle('Penjualan per Cabang Harian');
 
         $worksheet = $objPHPExcel->setActiveSheetIndex(0);
-        $worksheet->setTitle('Laporan Kinerja Cabang');
+        $worksheet->setTitle('Penjualan per Cabang Harian');
 
         $worksheet->mergeCells('A1:M1');
         $worksheet->mergeCells('A2:M2');
@@ -85,7 +85,7 @@ class SaleInvoiceBranchDailyController extends Controller {
         $worksheet->getStyle('A1:M3')->getFont()->setBold(true);
         $branch = Branch::model()->findByPk($branchId);
         $worksheet->setCellValue('A1', 'Raperind Motor ' . CHtml::encode(CHtml::value($branch, 'name')));
-        $worksheet->setCellValue('A2', 'Laporan Kinerja Cabang');
+        $worksheet->setCellValue('A2', 'Penjualan per Cabang Harian');
         $worksheet->setCellValue('A3', Yii::app()->dateFormatter->format('d MMMM yyyy', $startDate) . ' - ' . Yii::app()->dateFormatter->format('d MMMM yyyy', $endDate));
 
         $worksheet->getStyle("A5:AI5")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
@@ -182,7 +182,7 @@ class SaleInvoiceBranchDailyController extends Controller {
         ob_end_clean();
 
         header('Content-type: application/vnd.ms-excel');
-        header('Content-Disposition: attachment;filename="kinerja_cabang_harian.xls"');
+        header('Content-Disposition: attachment;filename="penjualan_per_cabang_harian.xls"');
         header('Cache-Control: max-age=0');
         
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');

@@ -20,7 +20,7 @@ Yii::app()->clientScript->registerCss('_report', '
 
 <div style="font-weight: bold; text-align: center">
     <?php $branch = Branch::model()->findByPk($branchId); ?>
-    <div style="font-size: larger">Laporan Penjualan Tahunan <?php echo CHtml::encode(CHtml::value($branch, 'name')); ?></div>
+    <div style="font-size: larger">Penjualan Tahunan Cabang <?php echo CHtml::encode(CHtml::value($branch, 'name')); ?></div>
     <div><?php echo CHtml::encode($year); ?></div>
 </div>
 

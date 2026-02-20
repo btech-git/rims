@@ -103,7 +103,7 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                         <?php $branch = Branch::model()->findByPk($branchId); ?>
                         Raperind Motor <?php echo CHtml::encode(CHtml::value($branch, 'name')); ?>
                     </div>
-                    <div style="font-size: larger">Laporan Bank Bulanan</div>
+                    <div style="font-size: larger">Bank Bulanan</div>
                     <div><?php echo CHtml::encode(strftime("%B",mktime(0,0,0,$month))); ?> <?php echo CHtml::encode($year); ?></div>
                 </div>
 

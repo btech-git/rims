@@ -18,7 +18,7 @@ Yii::app()->clientScript->registerCss('_report', '
     <div style="font-weight: bold; text-align: center">
         <?php //$branch = Branch::model()->findByPk($branchId); ?>
         <div style="font-size: larger">RAPERIND MOTOR<?php //echo CHtml::encode(($branch === null) ? '' : $branch->name); ?></div>
-        <div style="font-size: larger">Rincian Buku Besar Pembantu Hutang</div>
+        <div style="font-size: larger">Buku Besar Pembantu Hutang</div>
         <div>
             <?php //$endDate = date('Y-m-d'); ?>
             <?php echo ' Tanggal: ' . CHtml::encode(Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($startDate))) . ' - ' . CHtml::encode(Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($endDate))); ?>

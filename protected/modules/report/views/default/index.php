@@ -137,7 +137,7 @@
                                         'visible' => Yii::app()->user->checkAccess('workOrderVehicleReport')
                                     ),
                                     array(
-                                        'label' => 'Mekanik Performance', 
+                                        'label' => 'Mechanic Performance', 
                                         'url' => array('/report/mechanicPerformance/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('mechanicPerformanceReport')
                                     ),
@@ -270,7 +270,7 @@
                                     'visible' => Yii::app()->user->checkAccess('customerReceivableReport')
                                 ),
                                 array(
-                                    'label' => 'Piutang Customer', 
+                                    'label' => 'Piutang Customer Summary', 
                                     'url' => array('/report/receivableCustomer/summary'), 
                                     'visible' => Yii::app()->user->checkAccess('receivableReport')
                                 ),
@@ -340,12 +340,12 @@
                             <?php $this->widget('zii.widgets.CMenu', array(
                                 'items' => array(
                                     array(
-                                        'label' => 'Penjualan Summary', 
+                                        'label' => 'Faktur Penjualan Summary', 
                                         'url' => array('/report/saleInvoiceSummary/summary'), 
                                         'visible' => (Yii::app()->user->checkAccess('saleSummaryReport'))
                                     ),
                                     array(
-                                        'label' => 'Penjualan per Barang', 
+                                        'label' => 'Penjualan per Barang Summary', 
                                         'url' => array('/report/saleRetailProduct/summary'), 
                                         'visible' => (Yii::app()->user->checkAccess('saleProductSummaryReport'))
                                     ),
@@ -355,7 +355,7 @@
                                         'visible' => (Yii::app()->user->checkAccess('saleProductReport'))
                                     ),
                                     array(
-                                        'label' => 'Penjualan per Jasa', 
+                                        'label' => 'Penjualan per Jasa Summary', 
                                         'url' => array('/report/saleRetailService/summary'), 
                                         'visible' => (Yii::app()->user->checkAccess('saleServiceSummaryReport'))
                                     ),
@@ -375,7 +375,7 @@
                                         'visible' => (Yii::app()->user->checkAccess('saleServiceProductCategoryReport'))
                                     ),
                                     array(
-                                        'label' => 'Penjualan per Customer', 
+                                        'label' => 'Penjualan per Customer Summary', 
                                         'url' => array('/report/saleRetailCustomer/summary'), 
                                         'visible' => (Yii::app()->user->checkAccess('saleCustomerSummaryReport'))
                                     ),
@@ -385,7 +385,7 @@
                                         'visible' => (Yii::app()->user->checkAccess('saleCustomerReport'))
                                     ),
                                     array(
-                                        'label' => 'Penjualan per Asuransi', 
+                                        'label' => 'Penjualan per Asuransi Summary', 
                                         'url' => array('/report/saleRetailInsurance/summary'), 
                                         'visible' => (Yii::app()->user->checkAccess('saleCustomerSummaryReport'))
                                     ),
@@ -471,17 +471,17 @@
                                         'visible' => Yii::app()->user->checkAccess('supplierPayableReport')
                                     ),
                                     array(
-                                        'label' => 'Hutang Supplier', 
+                                        'label' => 'Hutang Supplier Summary', 
                                         'url' => array('/report/payableSupplier/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('payableReport')
                                     ),
                                     array(
-                                        'label' => 'Hutang Supplier Detail', 
+                                        'label' => 'Rincian Hutang Supplier', 
                                         'url' => array('/report/payableDetail/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('payableReport')
                                     ),
                                     array(
-                                        'label' => 'Kartu Hutang', 
+                                        'label' => 'Kartu Hutang Supplier', 
                                         'url' => array('/report/payableTransaction/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('payableReport')
                                     ),
@@ -512,17 +512,17 @@
                                         'visible' => (Yii::app()->user->checkAccess('purchaseSummaryReport'))
                                     ),
                                     array(
-                                        'label' => 'Pembelian per Pemasok', 
+                                        'label' => 'Pembelian per Supplier Summary', 
                                         'url' => array('/report/purchaseSummary/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('purchaseSupplierSummaryReport')
                                     ),
                                     array(
-                                        'label' => 'Rincian Pembelian per Pemasok', 
+                                        'label' => 'Rincian Pembelian per Supplier', 
                                         'url' => array('/report/purchaseOrder/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('purchaseSupplierReport')
                                     ),
                                     array(
-                                        'label' => 'Pembelian per Parts', 
+                                        'label' => 'Pembelian per Parts Summary', 
                                         'url' => array('/report/purchasePerProduct/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('purchaseProductSummaryReport')
                                     ),
@@ -564,7 +564,7 @@
                                         'visible' => Yii::app()->user->checkAccess('dailySaleBranchReport')
                                     ),
                                     array(
-                                        'label' => 'Penjualan All Cabang Harian', 
+                                        'label' => 'Penjualan Semua Cabang Harian', 
                                         'url' => array('/report/dailyMultipleBranchSaleTransaction/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('dailySaleAllBranchReport')
                                     ),
@@ -574,7 +574,7 @@
                                         'visible' => Yii::app()->user->checkAccess('monthlySaleBranchReport')
                                     ),
                                     array(
-                                        'label' => 'Penjualan All Cabang Bulanan', 
+                                        'label' => 'Penjualan Semua Cabang Bulanan', 
                                         'url' => array('/report/monthlyMultipleBranchSaleTransaction/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('monthlySaleAllBranchReport')
                                     ),
@@ -584,7 +584,7 @@
                                         'visible' => Yii::app()->user->checkAccess('yearlySaleBranchReport')
                                     ),
                                     array(
-                                        'label' => 'Penjualan All Cabang Tahunan', 
+                                        'label' => 'Penjualan Semua Cabang Tahunan', 
                                         'url' => array('/report/yearlyMultipleBranchSaleTransaction/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('yearlySaleAllBranchReport')
                                     ),
@@ -611,7 +611,7 @@
                                         'visible' => Yii::app()->user->checkAccess('dailySaleFrontReport')
                                     ),
                                     array(
-                                        'label' => 'Penjualan All Front Office Harian', 
+                                        'label' => 'Penjualan Semua Front Office Harian', 
                                         'url' => array('/report/dailyMultipleEmployeeSaleTransaction/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('dailySaleAllFrontReport')
                                     ),
@@ -621,7 +621,7 @@
                                         'visible' => Yii::app()->user->checkAccess('monthlySaleFrontReport')
                                     ),
                                     array(
-                                        'label' => 'Penjualan All Front Office Bulanan', 
+                                        'label' => 'Penjualan Semua Front Office Bulanan', 
                                         'url' => array('/report/monthlyMultipleEmployeeSaleTransaction/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('monthlySaleAllFrontReport')
                                     ),
@@ -631,7 +631,7 @@
                                         'visible' => Yii::app()->user->checkAccess('yearlySaleFrontReport')
                                     ),
                                     array(
-                                        'label' => 'Penjualan All Front Office Tahunan', 
+                                        'label' => 'Penjualan Semua Front Office Tahunan', 
                                         'url' => array('/report/yearlyMultipleEmployeeSaleTransaction/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('yearlySaleAllFrontReport')
                                     ),
@@ -658,7 +658,7 @@
                                         'visible' => Yii::app()->user->checkAccess('dailySaleMechanicReport')
                                     ),
                                     array(
-                                        'label' => 'Penjualan all Mekanik Harian', 
+                                        'label' => 'Penjualan Semua Mekanik Harian', 
                                         'url' => array('/report/dailyMultipleMechanicTransaction/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('dailySaleAllMechanicReport')
                                     ),
@@ -668,7 +668,7 @@
                                         'visible' => Yii::app()->user->checkAccess('monthlySaleMechanicReport')
                                     ),
                                     array(
-                                        'label' => 'Penjualan all Mekanik Bulanan', 
+                                        'label' => 'Penjualan Semua Mekanik Bulanan', 
                                         'url' => array('/report/monthlyMultipleMechanicTransaction/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('monthlySaleAllMechanicReport')
                                     ),
@@ -678,7 +678,7 @@
                                         'visible' => Yii::app()->user->checkAccess('yearlySaleMechanicReport')
                                     ),
                                     array(
-                                        'label' => 'Penjualan all Mekanik Tahunan', 
+                                        'label' => 'Penjualan Semua Mekanik Tahunan', 
                                         'url' => array('/report/yearlyMultipleMechanicTransaction/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('yearlySaleAllMechanicReport')
                                     ),

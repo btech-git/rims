@@ -62,10 +62,10 @@ class DailyMultipleBranchSaleTransactionController extends Controller {
 
         $documentProperties = $objPHPExcel->getProperties();
         $documentProperties->setCreator('Raperind Motor');
-        $documentProperties->setTitle('All Cabang Harian');
+        $documentProperties->setTitle('Penjualan Semua Cabang Harian');
 
         $worksheet = $objPHPExcel->setActiveSheetIndex(0);
-        $worksheet->setTitle('All Cabang Harian');
+        $worksheet->setTitle('Penjualan Semua Cabang Harian');
 
         $worksheet->mergeCells('A1:M1');
         $worksheet->mergeCells('A2:M2');
@@ -75,7 +75,7 @@ class DailyMultipleBranchSaleTransactionController extends Controller {
         $worksheet->getStyle('A1:S5')->getFont()->setBold(true);
 
         $worksheet->setCellValue('A1', 'Raperind Motor');
-        $worksheet->setCellValue('A2', 'Laporan All Cabang Harian');
+        $worksheet->setCellValue('A2', 'Penjualan Semua Cabang Harian');
         $worksheet->setCellValue('A3', Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($startDate)) . ' - ' . Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($endDate)));
         
         $worksheet->getStyle('A5:S5')->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
@@ -100,7 +100,7 @@ class DailyMultipleBranchSaleTransactionController extends Controller {
         $worksheet->setCellValue('S5', 'Average Aksesoris(Rp)');
         $worksheet->getStyle('A5:S5')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
-        $counter = 7;
+        $counter = 6;
         $customerQuantitySum = 0;
         $customerNewQuantitySum = 0;
         $customerRepeatQuantitySum = 0;
@@ -183,7 +183,7 @@ class DailyMultipleBranchSaleTransactionController extends Controller {
         ob_end_clean();
 
         header('Content-type: application/vnd.ms-excel');
-        header('Content-Disposition: attachment;filename="penjualan_cabang_harian.xls"');
+        header('Content-Disposition: attachment;filename="penjualan_semua_cabang_harian.xls"');
         header('Cache-Control: max-age=0');
 
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');

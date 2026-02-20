@@ -52,7 +52,7 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                 
                 <div style="font-weight: bold; text-align: center">
                     <div style="font-size: larger">Raperind Motor</div>
-                    <div style="font-size: larger">Laporan Penjualan</div>
+                    <div style="font-size: larger">Penjualan Jasa + Kategori Produk Summary</div>
                     <div><?php echo $monthList[$month] . ' ' . $year; ?></div>
                 </div>
 

@@ -69,10 +69,10 @@ class DeliveryController extends Controller {
 
         $documentProperties = $objPHPExcel->getProperties();
         $documentProperties->setCreator('Raperind Motor');
-        $documentProperties->setTitle('Laporan Pengiriman Barang');
+        $documentProperties->setTitle('Pengiriman Barang');
 
         $worksheet = $objPHPExcel->setActiveSheetIndex(0);
-        $worksheet->setTitle('Laporan Pengiriman Barang');
+        $worksheet->setTitle('Pengiriman Barang');
 
         $worksheet->mergeCells('A1:M1');
         $worksheet->mergeCells('A2:M2');
@@ -82,7 +82,7 @@ class DeliveryController extends Controller {
 
         $branch = Branch::model()->findByPk($branchId);
         $worksheet->setCellValue('A1', 'Raperind Motor ' . CHtml::value($branch, 'name'));
-        $worksheet->setCellValue('A2', 'Laporan Pengiriman Barang');
+        $worksheet->setCellValue('A2', 'Pengiriman Barang');
         $worksheet->setCellValue('A3', Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($options['startDate'])) . ' - ' . Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($options['endDate'])));
 
         $worksheet->getStyle('A5:M5')->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
@@ -150,7 +150,7 @@ class DeliveryController extends Controller {
         ob_end_clean();
         // We'll be outputting an excel file
         header('Content-type: application/vnd.ms-excel');
-        header('Content-Disposition: attachment;filename="laporan_pengiriman_barang.xls"');
+        header('Content-Disposition: attachment;filename="pengiriman_barang.xls"');
         header('Cache-Control: max-age=0');
         
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');

@@ -150,25 +150,25 @@ class SaleInvoiceSummaryController extends Controller {
 
         $documentProperties = $objPHPExcel->getProperties();
         $documentProperties->setCreator('Raperind Motor');
-        $documentProperties->setTitle('Laporan Faktur Penjualan');
+        $documentProperties->setTitle('Faktur Penjualan Summary');
 
         $worksheet = $objPHPExcel->setActiveSheetIndex(0);
-        $worksheet->setTitle('Laporan Faktur Penjualan');
+        $worksheet->setTitle('Faktur Penjualan Summary');
 
-        $worksheet->mergeCells('A1:V1');
-        $worksheet->mergeCells('A2:V2');
-        $worksheet->mergeCells('A3:V3');
+        $worksheet->mergeCells('A1:W1');
+        $worksheet->mergeCells('A2:W2');
+        $worksheet->mergeCells('A3:W3');
         
-        $worksheet->getStyle('A1:V5')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-        $worksheet->getStyle('A1:V5')->getFont()->setBold(true);
+        $worksheet->getStyle('A1:W5')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->getStyle('A1:W5')->getFont()->setBold(true);
         
         $branch = Branch::model()->findByPk($branchId);
         $worksheet->setCellValue('A1', 'Raperind Motor ' . CHtml::encode(CHtml::value($branch, 'name')));
-        $worksheet->setCellValue('A2', 'Laporan Faktur Penjualan');
+        $worksheet->setCellValue('A2', 'Faktur Penjualan Summary');
         $worksheet->setCellValue('A3', $startDateFormatted . ' - ' . $endDateFormatted);
 
-        $worksheet->getStyle("A5:V5")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
-        $worksheet->getStyle("A5:V5")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A5:W5")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A5:W5")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
         $worksheet->setCellValue('A5', 'Tanggal');
         $worksheet->setCellValue('B5', 'Faktur #');
@@ -190,20 +190,35 @@ class SaleInvoiceSummaryController extends Controller {
         $worksheet->setCellValue('R5', 'Diskon');
         $worksheet->setCellValue('S5', 'Biaya Bank');
         $worksheet->setCellValue('T5', 'Biaya Merimen');
-        $worksheet->setCellValue('U5', 'Total');
-        $worksheet->setCellValue('V5', 'Memo');
+        $worksheet->setCellValue('U5', 'DP');
+        $worksheet->setCellValue('V5', 'Total');
+        $worksheet->setCellValue('W5', 'Memo');
 
         $counter = 6;
 
         $grandTotalSale = '0.00';
         $grandTotalPayment = '0.00';
         $grandTotalRemaining = '0.00';
+        $totalAmount = '0.00';
+        $totalTaxServiceAmount = '0.00';
+        $totalDiscountAmount = '0.00';
+        $totalBankFee = '0.00';
+        $totalMerimenFee = '0.00';
+        $totalDownpaymentAmount = '0.00';
+        $totalAmountSum = '0.00';
         
         foreach ($saleInvoiceSummary->dataProvider->data as $header) {
             foreach ($header->paymentInDetails as $paymentInDetail) {
-                $totalPrice = $header->total_price; 
-                $totalPayment = $header->payment_amount;
-                $totalRemaining = $header->payment_left;
+                $totalPrice = CHtml::value($header, 'total_price'); 
+                $totalPayment = CHtml::value($header, 'payment_amount');
+                $totalRemaining = CHtml::value($header, 'payment_left');
+                $amount = CHtml::value($paymentInDetail, 'amount');
+                $taxServiceAmount = CHtml::value($paymentInDetail, 'tax_service_amount');
+                $discountAmount = CHtml::value($paymentInDetail, 'discount_amount');
+                $bankAdministrationFee = CHtml::value($paymentInDetail, 'bank_administration_fee');
+                $merimenFee = CHtml::value($paymentInDetail, 'merimen_fee');
+                $downpaymentAmount = CHtml::value($paymentInDetail, 'downpayment_amount');
+                $totalAmount = CHtml::value($paymentInDetail, 'totalAmount');
 
                 $worksheet->setCellValue("A{$counter}", CHtml::value($header, 'invoice_date'));
                 $worksheet->setCellValue("B{$counter}", CHtml::value($header, 'invoice_number'));
@@ -220,30 +235,45 @@ class SaleInvoiceSummaryController extends Controller {
                 $worksheet->setCellValue("M{$counter}", CHtml::value($header, 'user.username'));
                 $worksheet->setCellValue("N{$counter}", CHtml::value($paymentInDetail, 'paymentIn.payment_number'));
                 $worksheet->setCellValue("O{$counter}", CHtml::value($paymentInDetail, 'paymentIn.payment_date'));
-                $worksheet->setCellValue("P{$counter}", CHtml::value($paymentInDetail, 'amount'));
-                $worksheet->setCellValue("Q{$counter}", CHtml::value($paymentInDetail, 'tax_service_amount'));
-                $worksheet->setCellValue("R{$counter}", CHtml::value($paymentInDetail, 'discount_amount'));
-                $worksheet->setCellValue("S{$counter}", CHtml::value($paymentInDetail, 'bank_administration_fee'));
-                $worksheet->setCellValue("T{$counter}", CHtml::value($paymentInDetail, 'merimen_fee'));
-                $worksheet->setCellValue("U{$counter}", CHtml::value($paymentInDetail, 'totalAmount'));
-                $worksheet->setCellValue("V{$counter}", CHtml::value($paymentInDetail, 'memo'));
+                $worksheet->setCellValue("P{$counter}", $amount);
+                $worksheet->setCellValue("Q{$counter}", $taxServiceAmount);
+                $worksheet->setCellValue("R{$counter}", $discountAmount);
+                $worksheet->setCellValue("S{$counter}", $bankAdministrationFee);
+                $worksheet->setCellValue("T{$counter}", $merimenFee);
+                $worksheet->setCellValue("U{$counter}", $downpaymentAmount);
+                $worksheet->setCellValue("V{$counter}", $totalAmount);
+                $worksheet->setCellValue("W{$counter}", CHtml::value($paymentInDetail, 'memo'));
 
                 $grandTotalSale += $totalPrice;
                 $grandTotalPayment += $totalPayment;
                 $grandTotalRemaining += $totalRemaining;
+                $totalAmount += $amount;
+                $totalTaxServiceAmount += $taxServiceAmount;
+                $totalDiscountAmount += $discountAmount;
+                $totalBankFee += $bankAdministrationFee;
+                $totalMerimenFee += $merimenFee;
+                $totalDownpaymentAmount += $downpaymentAmount;
+                $totalAmountSum += $totalAmount;
 
                 $counter++;
             }
         }
 
-        $worksheet->getStyle("A{$counter}:M{$counter}")->getFont()->setBold(true);
-        $worksheet->getStyle("A{$counter}:M{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A{$counter}:W{$counter}")->getFont()->setBold(true);
+        $worksheet->getStyle("A{$counter}:W{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
         
         $worksheet->setCellValue("G{$counter}", 'Total');
         $worksheet->setCellValue("H{$counter}", 'Rp');
         $worksheet->setCellValue("I{$counter}", $grandTotalSale);
         $worksheet->setCellValue("J{$counter}", $grandTotalPayment);
         $worksheet->setCellValue("K{$counter}", $grandTotalRemaining);
+        $worksheet->setCellValue("P{$counter}", $totalAmount);
+        $worksheet->setCellValue("Q{$counter}", $totalTaxServiceAmount);
+        $worksheet->setCellValue("R{$counter}", $totalDiscountAmount);
+        $worksheet->setCellValue("S{$counter}", $totalBankFee);
+        $worksheet->setCellValue("T{$counter}", $totalMerimenFee);
+        $worksheet->setCellValue("U{$counter}", $totalDownpaymentAmount);
+        $worksheet->setCellValue("V{$counter}", $totalAmountSum);
 
         $counter++;
 
@@ -256,7 +286,7 @@ class SaleInvoiceSummaryController extends Controller {
         ob_end_clean();
 
         header('Content-type: application/vnd.ms-excel');
-        header('Content-Disposition: attachment;filename="laporan_faktur_penjualan.xls"');
+        header('Content-Disposition: attachment;filename="faktur_penjualan_summary.xls"');
         header('Cache-Control: max-age=0');
         
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');

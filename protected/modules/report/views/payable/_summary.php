@@ -14,7 +14,7 @@
 
 <div style="font-weight: bold; text-align: center">
     <div style="font-size: larger"><?php echo Yii::app()->name; ?></div>
-    <div style="font-size: larger">Laporan Faktur Belum Lunas Supplier</div>
+    <div style="font-size: larger">Faktur Belum Lunas Supplier</div>
     <div><?php echo 'Per tanggal: ' . CHtml::encode(Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime(date('Y-m-d')))); ?></div>
 </div>
 

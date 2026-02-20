@@ -96,10 +96,10 @@ class ReceivableInsuranceDataController extends Controller {
 
         $documentProperties = $objPHPExcel->getProperties();
         $documentProperties->setCreator('Raperind Motor');
-        $documentProperties->setTitle('Piutang Asuransi Summary');
+        $documentProperties->setTitle('Piutang Asuransi');
 
         $worksheet = $objPHPExcel->setActiveSheetIndex(0);
-        $worksheet->setTitle('Piutang Asuransi Summary');
+        $worksheet->setTitle('Piutang Asuransi');
 
         $worksheet->mergeCells('A1:E1');
         $worksheet->mergeCells('A2:E2');
@@ -109,7 +109,7 @@ class ReceivableInsuranceDataController extends Controller {
         $worksheet->getStyle('A1:E3')->getFont()->setBold(true);
         $branch = Branch::model()->findByPk($branchId);
         $worksheet->setCellValue('A1', 'Raperind Motor ' . CHtml::value($branch, 'name'));
-        $worksheet->setCellValue('A2', 'Piutang Asuransi Summary');
+        $worksheet->setCellValue('A2', 'Piutang Asuransi');
         $worksheet->setCellValue('A3', 'Per Tanggal ' . Yii::app()->dateFormatter->format('d MMMM yyyy', $endDate));
 
         $worksheet->getStyle("A5:E5")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
@@ -176,7 +176,7 @@ class ReceivableInsuranceDataController extends Controller {
         ob_end_clean();
         // We'll be outputting an excel file
         header('Content-type: application/vnd.ms-excel');
-        header('Content-Disposition: attachment;filename="piutang_customer_summary.xls"');
+        header('Content-Disposition: attachment;filename="piutang_asuransi.xls"');
         header('Cache-Control: max-age=0');
         
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');

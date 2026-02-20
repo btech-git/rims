@@ -64,7 +64,7 @@ class RegistrationVehicleCarMakeController extends Controller {
 
         $documentProperties = $objPHPExcel->getProperties();
         $documentProperties->setCreator('Raperind Motor');
-        $documentProperties->setTitle('Laporan Penyelesaian Pesanan per Kendaraan');
+        $documentProperties->setTitle('Penyelesaian Pesanan per Kendaraan');
 
         $worksheet = $objPHPExcel->setActiveSheetIndex(0);
         $worksheet->setTitle('Penyelesaian per Kendaraan');
@@ -76,7 +76,7 @@ class RegistrationVehicleCarMakeController extends Controller {
         $worksheet->getStyle('A1:G4')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
         $worksheet->getStyle('A1:G4')->getFont()->setBold(true);
         $worksheet->setCellValue('A2', 'Raperind Motor');
-        $worksheet->setCellValue('A3', 'Laporan Penyelesaian Pesanan per Kendaraan');
+        $worksheet->setCellValue('A3', 'Penyelesaian Pesanan per Kendaraan');
         $worksheet->setCellValue('A4', Yii::app()->dateFormatter->format('MMMM yyyy', $yearMonth));
 
         $worksheet->getStyle("A6:G6")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
@@ -153,7 +153,7 @@ class RegistrationVehicleCarMakeController extends Controller {
         ob_end_clean();
         // We'll be outputting an excel file
         header('Content-type: application/vnd.ms-excel');
-        header('Content-Disposition: attachment;filename="Penyelesaian per Kendaraan.xls"');
+        header('Content-Disposition: attachment;filename="penyelesaian_pesanan_per_kendaraan.xls"');
         header('Cache-Control: max-age=0');
         
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');

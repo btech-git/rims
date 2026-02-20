@@ -405,27 +405,26 @@ class TransactionJournalSummaryController extends Controller {
 
         $documentProperties = $objPHPExcel->getProperties();
         $documentProperties->setCreator('Raperind Motor');
-        $documentProperties->setTitle('Laporan Jurnal Umum Rekap');
+        $documentProperties->setTitle('Rekap Jurnal Umum');
 
         $worksheet = $objPHPExcel->setActiveSheetIndex(0);
-        $worksheet->setTitle('Laporan Jurnal Umum Rekap');
+        $worksheet->setTitle('Rekap Jurnal Umum');
 
-        $worksheet->mergeCells('A1:B1');
-        $worksheet->mergeCells('A2:B2');
-        $worksheet->mergeCells('A3:B3');
+        $worksheet->mergeCells('A1:D1');
+        $worksheet->mergeCells('A2:D2');
+        $worksheet->mergeCells('A3:D3');
         
-        $worksheet->getStyle('A1:B3')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-        $worksheet->getStyle('A1:B3')->getFont()->setBold(true);
+        $worksheet->getStyle('A1:D5')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->getStyle('A1:D5')->getFont()->setBold(true);
 
         $branch = Branch::model()->findByPk($branchId);
         $worksheet->setCellValue('A1', 'Raperind Motor ' . CHtml::encode(($branch === null) ? '' : $branch->name));
-        $worksheet->setCellValue('A2', 'Laporan Jurnal Umum Rekap ' . $transactionTypeLiteral);
+        $worksheet->setCellValue('A2', 'Rekap Jurnal Umum ' . $transactionTypeLiteral);
         $worksheet->setCellValue('A3', 'Periode: ' . $startDateString . ' - ' . $endDateString);
 
-        $worksheet->getStyle("A5:J5")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
-        $worksheet->getStyle("A5:J5")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A5:D5")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A5:D5")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
-        $worksheet->getStyle('A5:J5')->getFont()->setBold(true);
         $worksheet->setCellValue('A5', 'Kode COA');
         $worksheet->setCellValue('B5', 'Nama COA');
         $worksheet->setCellValue('C5', 'Debit');
@@ -474,11 +473,14 @@ class TransactionJournalSummaryController extends Controller {
             }
         }
         
+        $worksheet->getStyle("A{$counter}:D{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A{$counter}:D{$counter}")->getFont()->setBold(true);
+        
         $worksheet->setCellValue("B{$counter}", "Total");
         $worksheet->setCellValue("C{$counter}", $totalDebit);
         $worksheet->setCellValue("D{$counter}", $totalCredit);
 
-        for ($col = 'A'; $col !== 'E'; $col++) {
+        for ($col = 'A'; $col !== 'Z'; $col++) {
             $objPHPExcel->getActiveSheet()
             ->getColumnDimension($col)
             ->setAutoSize(true);
@@ -487,7 +489,7 @@ class TransactionJournalSummaryController extends Controller {
         ob_end_clean();
         
         header('Content-type: application/vnd.ms-excel');
-        header('Content-Disposition: attachment;filename="Laporan Jurnal Umum Rekap ' . $transactionTypeLiteral . '.xls"');
+        header('Content-Disposition: attachment;filename="rekap_jurnal_umum_' . $transactionTypeLiteral . '.xls"');
         header('Cache-Control: max-age=0');
 
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');

@@ -21,7 +21,7 @@ Yii::app()->clientScript->registerCss('_report', '
         <?php $branch = Branch::model()->findByPk($branchId); ?>
         <?php echo CHtml::encode(CHtml::value($branch, 'name')); ?>
     </div>
-    <div style="font-size: larger">Laporan Receive Item</div>
+    <div style="font-size: larger">Penerimaan Barang</div>
     <div><?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($startDate))) . ' &nbsp;&ndash;&nbsp; ' . CHtml::encode(Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($endDate))); ?></div>
 </div>
 
@@ -29,7 +29,7 @@ Yii::app()->clientScript->registerCss('_report', '
 
 <table class="report">
     <tr id="header1">
-        <th class="width1-1">Receive #</th>
+        <th class="width1-1">Penerimaan #</th>
         <th class="width1-2">Tanggal</th>
         <th class="width1-3">ETA</th>
         <th class="width1-4">Type</th>

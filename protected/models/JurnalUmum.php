@@ -95,25 +95,11 @@ class JurnalUmum extends CActiveRecord {
         );
     }
 
-    /**
-     * Retrieves a list of models based on the current search/filter conditions.
-     *
-     * Typical usecase:
-     * - Initialize the model fields with values from filter form.
-     * - Execute this method to get CActiveDataProvider instance which will filter
-     * models according to data in model fields.
-     * - Pass data provider to CGridView, CListView or any similar widget.
-     *
-     * @return CActiveDataProvider the data provider that can return the models
-     * based on the search/filter conditions.
-     */
     public function search() {
         // @todo Please modify the following code to remove attributes that should not be searched.
 
         $criteria = new CDbCriteria;
-        // $arrayTransactionDate = array($this->tanggal_transaksi_from,$this->tanggal_transaksi_to);
-        // // var_dump($this->transaction_date);
-        // $criteria->mergeWith($this->dateRangeSearchCriteria('tanggal_transaksi', $arrayTransactionDate)); 
+        
         $criteria->compare('id', $this->id);
         $criteria->compare('kode_transaksi', $this->kode_transaksi, true);
         $criteria->compare('tanggal_transaksi', $this->tanggal_transaksi, true);
@@ -180,12 +166,6 @@ class JurnalUmum extends CActiveRecord {
         ));
     }
 
-    /**
-     * Returns the static model of the specified AR class.
-     * Please note that you should have this exact method in all your CActiveRecord descendants!
-     * @param string $className active record class name.
-     * @return JurnalUmum the static model class
-     */
     public static function model($className = __CLASS__) {
         return parent::model($className);
     }
@@ -233,8 +213,7 @@ class JurnalUmum extends CActiveRecord {
     }
 
     public function searchByReceivable() {
-        // @todo Please modify the following code to remove attributes that should not be searched.
-
+        
         $criteria = new CDbCriteria;
 
         $criteria->addCondition("EXISTS (
@@ -292,14 +271,14 @@ class JurnalUmum extends CActiveRecord {
             FROM (
                 SELECT coa_id, tanggal_transaksi, total AS amount, branch_id
                 FROM " . JurnalUmum::model()->tableName() . "
-                WHERE debet_kredit = 'D' AND is_coa_category = 0 AND tanggal_transaksi > '2022-12-31'
+                WHERE debet_kredit = 'D' AND is_coa_category = 0 AND tanggal_transaksi >= '" . AppParam::BEGINNING_TRANSACTION_DATE . "'
                 UNION ALL
                 SELECT coa_id, tanggal_transaksi, total * -1 AS amount, branch_id
                 FROM " . JurnalUmum::model()->tableName() . "
-                WHERE debet_kredit = 'K' AND is_coa_category = 0 AND tanggal_transaksi > '2022-12-31'
+                WHERE debet_kredit = 'K' AND is_coa_category = 0 AND tanggal_transaksi >= '" . AppParam::BEGINNING_TRANSACTION_DATE . "'
             ) j
             INNER JOIN " . Coa::model()->tableName() . " a ON a.id = j.coa_id
-            WHERE j.coa_id IN ({$inIdsSql}) AND j.tanggal_transaksi < :start_date " . $branchConditionSql . " 
+            WHERE j.coa_id IN ({$inIdsSql}) AND j.tanggal_transaksi <= :start_date " . $branchConditionSql . " 
             GROUP BY j.coa_id
         ";
 
@@ -361,11 +340,11 @@ class JurnalUmum extends CActiveRecord {
             FROM (
                 SELECT coa_id, tanggal_transaksi, total AS debit, 0 AS credit, branch_id
                 FROM " . JurnalUmum::model()->tableName() . "
-                WHERE debet_kredit = 'D' AND is_coa_category = 0 AND tanggal_transaksi > '2022-12-31'
+                WHERE debet_kredit = 'D' AND is_coa_category = 0 AND tanggal_transaksi > '" . AppParam::BEGINNING_TRANSACTION_DATE . "'
                 UNION ALL
                 SELECT coa_id, tanggal_transaksi, 0 AS debit, total AS credit, branch_id
                 FROM " . JurnalUmum::model()->tableName() . "
-                WHERE debet_kredit = 'K' AND is_coa_category = 0 AND tanggal_transaksi > '2022-12-31'
+                WHERE debet_kredit = 'K' AND is_coa_category = 0 AND tanggal_transaksi > '" . AppParam::BEGINNING_TRANSACTION_DATE . "'
             ) j
             INNER JOIN " . Coa::model()->tableName() . " a ON a.id = j.coa_id
             WHERE j.coa_id IN ({$inIdsSql}) AND j.tanggal_transaksi < :start_date " . $branchConditionSql . " 
@@ -397,10 +376,20 @@ class JurnalUmum extends CActiveRecord {
             $params[':remark'] = $remark;
         }
         
-        $sql = "SELECT j.coa_id AS coa_id, c.code AS coa_code, c.name AS coa_name, SUM(IF(j.debet_kredit = 'D', j.total, 0)) AS debit, SUM(IF(j.debet_kredit = 'K', j.total, 0)) AS credit
+        $sql = "SELECT j.coa_id AS coa_id, c.code AS coa_code, c.name AS coa_name, SUM(IF(j.debet_kredit = 'D', j.total, 0)) AS debit, 
+                    SUM(IF(j.debet_kredit = 'K', j.total, 0)) AS credit
                 FROM " . JurnalUmum::model()->tableName() . " j
                 INNER JOIN " . Coa::model()->tableName() . " c on c.id = j.coa_id
-                WHERE j.coa_id NOT IN (SELECT c1.id FROM " . Coa::model()->tableName() . " c1 WHERE EXISTS (SELECT c1.id FROM " . Coa::model()->tableName() . " c2 WHERE c1.id = c2.coa_id)) AND j.tanggal_transaksi BETWEEN :start_date AND :end_date AND j.transaction_type = :transaction_type AND j.is_coa_category = 0 " . $branchConditionSql . $remarkConditionSql . "
+                WHERE j.coa_id NOT IN (
+                    SELECT c1.id 
+                    FROM " . Coa::model()->tableName() . " c1
+                    WHERE EXISTS (
+                        SELECT c1.id 
+                        FROM " . Coa::model()->tableName() . " c2
+                        WHERE c1.id = c2.coa_id
+                    )
+                ) AND j.tanggal_transaksi BETWEEN :start_date AND :end_date AND j.transaction_type = :transaction_type AND j.is_coa_category = 0 " . 
+                    $branchConditionSql . $remarkConditionSql . "
                 GROUP BY j.coa_id
                 ORDER BY c.code ASC";
         
@@ -452,14 +441,14 @@ class JurnalUmum extends CActiveRecord {
         }
         
         $sql = "SELECT SUBSTRING_INDEX(j.tanggal_transaksi, '-', 2) AS transaction_month_year, j.coa_id, j.debet_kredit, cc.id AS category_id, 
-                    cc.`code` AS category_code, cc.`name` AS category_name, s.id AS sub_category_id, s.`code` AS sub_category_code, s.`name` AS sub_category_name, 
-                    c.`code` AS coa_code, c.`name` AS coa_name, c.normal_balance, SUM(j.total) AS total
+                    cc.code AS category_code, cc.name AS category_name, s.id AS sub_category_id, s.code AS sub_category_code, s.name AS sub_category_name, 
+                    c.code AS coa_code, c.name AS coa_name, c.normal_balance, SUM(j.total) AS total
                 FROM " . JurnalUmum::model()->tableName() . " j
                 INNER JOIN " . Coa::model()->tableName() . " c ON c.id = j.coa_id
                 INNER JOIN " . CoaSubCategory::model()->tableName() . " s ON s.id = c.coa_sub_category_id
                 INNER JOIN " . CoaCategory::model()->tableName() . " cc ON cc.id = s.coa_category_id
-                WHERE SUBSTRING_INDEX(j.tanggal_transaksi, '-', 2) BETWEEN :start_year_month AND :end_year_month AND 
-                    c.coa_category_id IN (4, 5, 14, 15, 16, 17, 18, 19, 20, 21, 23) AND c.is_approved = 1" . $branchConditionSql . "
+                WHERE SUBSTRING_INDEX(j.tanggal_transaksi, '-', 2) BETWEEN :start_year_month AND :end_year_month AND c.is_approved = 1 AND 
+                    c.coa_category_id IN (4, 5, 14, 15, 16, 17, 18, 19, 20, 21, 23)" . $branchConditionSql . "
                 GROUP BY SUBSTRING_INDEX(j.tanggal_transaksi, '-', 2), j.coa_id, j.debet_kredit
                 ORDER BY cc.`code`, s.`code` ASC, c.`code` ASC, transaction_month_year ASC";
 
@@ -602,7 +591,8 @@ class JurnalUmum extends CActiveRecord {
         $sql = "SELECT pi.tanggal_transaksi, pi.coa_id, MIN(pt.name) AS coa_name, COALESCE(SUM(pi.total), 0) AS total_amount
                 FROM " . JurnalUmum::model()->tableName() . " pi
                 INNER JOIN " . Coa::model()->tableName() . " pt ON pt.id = pi.coa_id
-                WHERE pi.coa_id " . $coaInSql . " AND YEAR(tanggal_transaksi) = :year AND MONTH(tanggal_transaksi) = :month AND pi.transaction_type = 'Pin' AND pi.is_coa_category = 0 AND pt.coa_sub_category_id IN (1, 2, 3) AND pt.status = 'Approved' AND pi.debet_kredit = 'D'" . $branchConditionSql . "
+                WHERE pi.coa_id " . $coaInSql . " AND YEAR(tanggal_transaksi) = :year AND MONTH(tanggal_transaksi) = :month AND pi.transaction_type = 'Pin' AND
+                    pi.is_coa_category = 0 AND pt.coa_sub_category_id IN (1, 2, 3) AND pt.status = 'Approved' AND pi.debet_kredit = 'D'" . $branchConditionSql . "
                 GROUP BY pi.tanggal_transaksi, pi.coa_id
                 ORDER BY pi.tanggal_transaksi";
 
@@ -613,6 +603,7 @@ class JurnalUmum extends CActiveRecord {
     
     public static function getPaymentOutByBankList($month, $year, $branchId, $coaIds) {
         $branchConditionSql = '';
+        $coaOutSql = '= NULL';
         $params = array(
             ':year' => $year,
             ':month' => $month,
@@ -621,11 +612,15 @@ class JurnalUmum extends CActiveRecord {
             $branchConditionSql = " AND pi.branch_id = :branch_id";
             $params[':branch_id'] = $branchId;
         }
+        if (!empty($coaIds)) {
+            $coaOutSql = "IN (" . implode(',', $coaIds) . ")";
+        }
         
         $sql = "SELECT pi.tanggal_transaksi, pi.coa_id, MIN(pt.name) AS coa_name, COALESCE(SUM(pi.total), 0) AS total_amount
                 FROM " . JurnalUmum::model()->tableName() . " pi
                 INNER JOIN " . Coa::model()->tableName() . " pt ON pt.id = pi.coa_id
-                WHERE YEAR(tanggal_transaksi) = :year AND MONTH(tanggal_transaksi) = :month AND pi.transaction_type = 'Pout' AND pi.is_coa_category = 0 AND pt.coa_sub_category_id IN (1, 2, 3) AND pt.status = 'Approved'" . $branchConditionSql . "
+                WHERE pi.coa_id " . $coaOutSql . " AND YEAR(tanggal_transaksi) = :year AND MONTH(tanggal_transaksi) = :month AND pi.transaction_type = 'Pout' AND 
+                    pi.is_coa_category = 0 AND pt.coa_sub_category_id IN (1, 2, 3) AND pt.status = 'Approved' AND pi.debet_kredit = 'K'" . $branchConditionSql . "
                 GROUP BY pi.tanggal_transaksi, pi.coa_id
                 ORDER BY pi.tanggal_transaksi";
 
@@ -653,12 +648,14 @@ class JurnalUmum extends CActiveRecord {
                 FROM  (
                     SELECT SUBSTRING(tanggal_transaksi, 1, 4) AS year, SUBSTRING(tanggal_transaksi, 6, 2) AS month, SUM(total) AS total_debit, 0 AS total_kredit
                     FROM " . JurnalUmum::model()->tableName() . "
-                    WHERE (SUBSTRING(CURRENT_DATE, 1, 4) - SUBSTRING(tanggal_transaksi, 1, 4)) * 12 + (SUBSTRING(CURRENT_DATE, 6, 2) - SUBSTRING(tanggal_transaksi, 6, 2)) <= 12 AND transaction_type IN ('Pin', 'CASH') AND debet_kredit = 'D'
+                    WHERE (SUBSTRING(CURRENT_DATE, 1, 4) - SUBSTRING(tanggal_transaksi, 1, 4)) * 12 + (SUBSTRING(CURRENT_DATE, 6, 2) - SUBSTRING(tanggal_transaksi, 6, 2)) <= 12 AND 
+                        transaction_type IN ('Pin', 'CASH') AND debet_kredit = 'D'
                     GROUP BY SUBSTRING(tanggal_transaksi, 1, 4), SUBSTRING(tanggal_transaksi, 6, 2)
                     UNION
                     SELECT SUBSTRING(tanggal_transaksi, 1, 4) AS year, SUBSTRING(tanggal_transaksi, 6, 2) AS month, 0 AS total_debit, SUM(total) AS total_kredit
                     FROM " . JurnalUmum::model()->tableName() . "
-                    WHERE (SUBSTRING(CURRENT_DATE, 1, 4) - SUBSTRING(tanggal_transaksi, 1, 4)) * 12 + (SUBSTRING(CURRENT_DATE, 6, 2) - SUBSTRING(tanggal_transaksi, 6, 2)) <= 12 AND transaction_type IN ('Pout', 'CASH') AND debet_kredit = 'K'
+                    WHERE (SUBSTRING(CURRENT_DATE, 1, 4) - SUBSTRING(tanggal_transaksi, 1, 4)) * 12 + (SUBSTRING(CURRENT_DATE, 6, 2) - SUBSTRING(tanggal_transaksi, 6, 2)) <= 12 AND 
+                        transaction_type IN ('Pout', 'CASH') AND debet_kredit = 'K'
                     GROUP BY SUBSTRING(tanggal_transaksi, 1, 4), SUBSTRING(tanggal_transaksi, 6, 2)
                 ) transaction
                 GROUP BY year, month";
@@ -677,8 +674,8 @@ class JurnalUmum extends CActiveRecord {
                         ELSE 0
                     END
                 ), 0) AS total
-                FROM rims_jurnal_umum j 
-                INNER JOIN rims_coa c ON c.id = j.coa_id
+                FROM " . JurnalUmum::model()->tableName() . " j 
+                INNER JOIN " . Coa::model()->tableName() . " c ON c.id = j.coa_id
                 WHERE YEAR(j.tanggal_transaksi) BETWEEN 2024 AND :end_year AND c.coa_sub_category_id = :coa_sub_category_id
                 GROUP BY j.coa_id, YEAR(j.tanggal_transaksi), MONTH(j.tanggal_transaksi)
                 ORDER BY j.coa_id ASC, year ASC, month ASC";

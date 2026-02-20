@@ -15,7 +15,8 @@ Yii::app()->clientScript->registerCss('_report', '
 ?>
 
 <div style="font-weight: bold; text-align: center">
-    <div style="font-size: larger">Laporan Buku Besar <?php echo CHtml::encode($branchId); ?></div>
+    <div style="font-size: larger">Raperind Motor <?php echo CHtml::encode($branchId); ?></div>
+    <div style="font-size: larger">Rincian Buku Besar</div>
     <div><?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($startDate))) . ' &nbsp;&ndash;&nbsp; ' . CHtml::encode(Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($endDate))); ?></div>
 </div>
 

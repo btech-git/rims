@@ -132,10 +132,10 @@ class StockCardCategoryController extends Controller {
 
         $documentProperties = $objPHPExcel->getProperties();
         $documentProperties->setCreator('Raperind Motor');
-        $documentProperties->setTitle('Laporan Posisi Stok');
+        $documentProperties->setTitle('Posisi Stok Gudang');
 
         $worksheet = $objPHPExcel->setActiveSheetIndex(0);
-        $worksheet->setTitle('Laporan Posisi Stok');
+        $worksheet->setTitle('Posisi Stok Gudang');
 
         $worksheet->mergeCells('A1:N1');
         $worksheet->mergeCells('A2:N2');
@@ -144,7 +144,7 @@ class StockCardCategoryController extends Controller {
         $worksheet->getStyle('A1:N3')->getFont()->setBold(true);
         
         $worksheet->setCellValue('A1', 'Raperind Motor');
-        $worksheet->setCellValue('A2', 'Laporan Posisi Stok ' . CHtml::value($branch, 'name'));
+        $worksheet->setCellValue('A2', 'Posisi Stok Gudang ' . CHtml::value($branch, 'name'));
         $worksheet->setCellValue('A3', 'Periode: ' . $startDateFormatted . ' - ' . $endDateFormatted);
 
         $worksheet->getStyle("A5:N5")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
@@ -168,8 +168,6 @@ class StockCardCategoryController extends Controller {
 
         $counter = 7;
         $incrementNumber = 1;
-//        $grandTotalStock = '0.00';
-//        $grandTotalValue = '0.00';
         
         foreach ($stockCardSummary->dataProvider->data as $header) {
             $totalStockIn = '0.00';
@@ -211,8 +209,6 @@ class StockCardCategoryController extends Controller {
                 
                 $counter++; $incrementNumber++;
             }
-//            $grandTotalStock += $totalStock;
-//            $grandTotalValue += $totalValue;
             
             $worksheet->getStyle("H{$counter}:N{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
             $worksheet->getStyle("F{$counter}:N{$counter}")->getFont()->setBold(true);
@@ -225,12 +221,6 @@ class StockCardCategoryController extends Controller {
             $counter++;$counter++;
         }
             
-//        $worksheet->getStyle("F{$counter}:M{$counter}")->getFont()->setBold(true);
-//        $worksheet->setCellValue("I{$counter}", 'GRAND TOTAL');
-//        $worksheet->setCellValue("K{$counter}", $grandTotalStock);
-//        $worksheet->setCellValue("M{$counter}", $grandTotalValue);
-//        $counter++;$counter++;
-
         for ($col = 'A'; $col !== 'Z'; $col++) {
             $objPHPExcel->getActiveSheet()
             ->getColumnDimension($col)
@@ -240,7 +230,7 @@ class StockCardCategoryController extends Controller {
         ob_end_clean();
 
         header('Content-type: application/vnd.ms-excel');
-        header('Content-Disposition: attachment;filename="laporan_posisi_stok.xls"');
+        header('Content-Disposition: attachment;filename="posisi_stok_gudang_' . CHtml::value($branch, 'code') . '.xls"');
         header('Cache-Control: max-age=0');
         
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');

@@ -117,17 +117,17 @@ class ReceivableInsuranceCompanyController extends Controller {
         $worksheet->mergeCells('A2:H2');
         $worksheet->mergeCells('A3:H3');
         
-        $worksheet->getStyle('A1:H3')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-        $worksheet->getStyle('A1:H3')->getFont()->setBold(true);
+        $worksheet->getStyle('A1:H6')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->getStyle('A1:H6')->getFont()->setBold(true);
+        
         $branch = Branch::model()->findByPk($branchId);
-        $worksheet->setCellValue('A2', 'Raperind Motor ' . CHtml::encode(CHtml::value($branch, 'name')));
-        $worksheet->setCellValue('A3', 'Faktur Belum Lunas Asuransi');
+        $worksheet->setCellValue('A1', 'Raperind Motor ' . CHtml::encode(CHtml::value($branch, 'name')));
+        $worksheet->setCellValue('A2', 'Faktur Belum Lunas Asuransi');
         $worksheet->setCellValue('A3', 'Per Tanggal ' . Yii::app()->dateFormatter->format('d MMMM yyyy', $endDate));
 
         $worksheet->getStyle("A5:H5")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
         $worksheet->getStyle("A6:H6")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
-        $worksheet->getStyle('A5:H6')->getFont()->setBold(true);
         $worksheet->setCellValue('A5', 'Name');
         $worksheet->setCellValue('B5', 'COA');
 
@@ -139,7 +139,7 @@ class ReceivableInsuranceCompanyController extends Controller {
         $worksheet->setCellValue('F6', 'Grand Total');
         $worksheet->setCellValue('G6', 'Payment');
         $worksheet->setCellValue('H6', 'Remaining');
-        $counter = 8;
+        $counter = 7;
 
         foreach ($receivableSummary->dataProvider->data as $header) {
             $worksheet->setCellValue("A{$counter}", $header->name);
@@ -185,7 +185,7 @@ class ReceivableInsuranceCompanyController extends Controller {
             $counter++;$counter++;
         }
 
-        for ($col = 'A'; $col !== 'J'; $col++) {
+        for ($col = 'A'; $col !== 'Z'; $col++) {
             $objPHPExcel->getActiveSheet()
             ->getColumnDimension($col)
             ->setAutoSize(true);
@@ -194,7 +194,7 @@ class ReceivableInsuranceCompanyController extends Controller {
         ob_end_clean();
         // We'll be outputting an excel file
         header('Content-type: application/vnd.ms-excel');
-        header('Content-Disposition: attachment;filename="Faktur Belum Lunas Asuransi.xls"');
+        header('Content-Disposition: attachment;filename="faktur_belum_lunas_asuransi.xls"');
         header('Cache-Control: max-age=0');
         
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');

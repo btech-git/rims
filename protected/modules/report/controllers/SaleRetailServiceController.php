@@ -101,10 +101,10 @@ class SaleRetailServiceController extends Controller {
 
         $documentProperties = $objPHPExcel->getProperties();
         $documentProperties->setCreator('Raperind Motor');
-        $documentProperties->setTitle('Penjualan Retail Service');
+        $documentProperties->setTitle('Penjualan per Jasa Summary');
 
         $worksheet = $objPHPExcel->setActiveSheetIndex(0);
-        $worksheet->setTitle('Penjualan Retail Service');
+        $worksheet->setTitle('Penjualan per Jasa Summary');
 
         $worksheet->mergeCells('A1:F1');
         $worksheet->mergeCells('A2:F2');
@@ -115,7 +115,7 @@ class SaleRetailServiceController extends Controller {
 
         $branch = Branch::model()->findByPk($branchId);
         $worksheet->setCellValue('A1', 'Raperind Motor ' . CHtml::encode(CHtml::value($branch, 'name')));
-        $worksheet->setCellValue('A2', 'Penjualan Retail Service');
+        $worksheet->setCellValue('A2', 'Penjualan per Jasa Summary');
         $worksheet->setCellValue('A3', Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($startDate)) . ' - ' . Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($endDate)));
 
         $worksheet->getStyle('A5:F5')->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
@@ -149,11 +149,15 @@ class SaleRetailServiceController extends Controller {
             $grandTotalQuantity += $totalQuantity;
         }
 
+        $worksheet->getStyle("A{$counter}:F{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A{$counter}:F{$counter}")->getFont()->setBold(true);
+        
         $worksheet->setCellValue("D{$counter}", 'TOTAL');
+        $worksheet->setCellValue("E{$counter}", CHtml::encode($grandTotalQuantity));
         $worksheet->setCellValue("F{$counter}", CHtml::encode($totalSale));
         $counter++;$counter++;
 
-        for ($col = 'A'; $col !== 'G'; $col++) {
+        for ($col = 'A'; $col !== 'Z'; $col++) {
             $objPHPExcel->getActiveSheet()
             ->getColumnDimension($col)
             ->setAutoSize(true);
@@ -162,7 +166,7 @@ class SaleRetailServiceController extends Controller {
         ob_end_clean();
 
         header('Content-type: application/vnd.ms-excel');
-        header('Content-Disposition: attachment;filename="Penjualan Retail Service.xls"');
+        header('Content-Disposition: attachment;filename="penjualan_per_jasa_summary.xls"');
         header('Cache-Control: max-age=0');
 
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');

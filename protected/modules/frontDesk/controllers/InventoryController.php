@@ -223,7 +223,7 @@ class InventoryController extends Controller {
 
         $worksheet->getStyle("A1:A2")->getFont()->setBold(true);
         $worksheet->setCellValue('A1', 'Raperind Motor');
-        $worksheet->setCellValue('A2', 'Kartu Stok Gudang');
+        $worksheet->setCellValue('A2', 'Stok Gudang');
 
         $column = 'I'; 
         $worksheet->setCellValue('A5', 'ID');
@@ -286,7 +286,7 @@ class InventoryController extends Controller {
         ob_end_clean();
 
         header('Content-type: application/vnd.ms-excel');
-        header('Content-Disposition: attachment;filename="Kartu Stok Gudang.xls"');
+        header('Content-Disposition: attachment;filename="stok_gudang.xls"');
         header('Cache-Control: max-age=0');
 
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');

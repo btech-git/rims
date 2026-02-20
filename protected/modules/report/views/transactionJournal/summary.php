@@ -12,24 +12,7 @@ Yii::app()->clientScript->registerScript('report', '
             <div class="myForm tabForm customer">
                 <?php echo CHtml::beginForm(array(''), 'get'); ?>
                 <div class="row">
-                    <div class="medium-6 columns">
-<!--                        <div class="field">
-                            <div class="row collapse">
-                                <div class="small-4 columns">
-                                    <span class="prefix">Company </span>
-                                </div>
-                                <div class="small-8 columns">
-                                    <?php /*echo CHtml::dropDownlist('CompanyId', $companyId, CHtml::listData(Company::model()->findAllByAttributes(array('is_deleted' => 0)), 'id', 'name'), array('empty' => '-- All Company --',
-                                        'onchange' => CHtml::ajax(array(
-                                            'type' => 'GET',
-                                            'url' => CController::createUrl('ajaxHtmlUpdateBranchSelect'),
-                                            'update' => '#branch',
-                                        ))
-                                    ));*/ ?>
-                                </div>
-                            </div>
-                        </div>-->
-                        
+                    <div class="medium-6 columns">                        
                         <div class="field">
                             <div class="row collapse">
                                 <div class="small-4 columns">
@@ -74,11 +57,11 @@ Yii::app()->clientScript->registerScript('report', '
                         
                         <div class="field">
                             <div class="row collapse">
-                                <div class="small-2 columns">
+                                <div class="small-4 columns">
                                     <span class="prefix">Tanggal </span>
                                 </div>
                                 
-                                <div class="small-5 columns">
+                                <div class="small-4 columns">
                                     <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(
                                         'name' => 'StartDate',
                                         'options' => array(
@@ -93,7 +76,7 @@ Yii::app()->clientScript->registerScript('report', '
                                     )); ?>
                                 </div>
 
-                                <div class="small-5 columns">
+                                <div class="small-4 columns">
                                     <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(
                                         'name' => 'EndDate',
                                         'options' => array(
@@ -112,17 +95,6 @@ Yii::app()->clientScript->registerScript('report', '
                     </div>
                     
                     <div class="medium-6 columns">
-<!--                        <div class="field">
-                            <div class="row collapse">
-                                <div class="small-4 columns">
-                                    <span class="prefix">Jumlah per Halaman </span>
-                                </div>
-                                
-                                <div class="small-8 columns">
-                                    <?php //echo CHtml::hiddenField('PageSize', $pageSize, array('size' => 3)); ?>
-                                </div>
-                            </div>
-                        </div>-->
                         <div class="field">
                             <div class="row collapse">
                                 <div class="small-4 columns">

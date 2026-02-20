@@ -98,10 +98,10 @@ class MonthlySingleBranchSaleTransactionController extends Controller {
 
         $documentProperties = $objPHPExcel->getProperties();
         $documentProperties->setCreator('Raperind Motor');
-        $documentProperties->setTitle('Penjualan Cabang Bulanan');
+        $documentProperties->setTitle('Penjualan Bulanan Cabang');
 
         $worksheet = $objPHPExcel->setActiveSheetIndex(0);
-        $worksheet->setTitle('Penjualan Cabang Bulanan');
+        $worksheet->setTitle('Penjualan Bulanan Cabang');
 
         $worksheet->mergeCells('A1:O1');
         $worksheet->mergeCells('A2:O2');
@@ -112,7 +112,7 @@ class MonthlySingleBranchSaleTransactionController extends Controller {
 
         $branch = Branch::model()->findByPk($branchId);
         $worksheet->setCellValue('A1', 'Raperind Motor ');
-        $worksheet->setCellValue('A2', 'Laporan Penjualan Bulanan ' . CHtml::value($branch, 'name'));
+        $worksheet->setCellValue('A2', 'Penjualan Bulanan Cabang ' . CHtml::value($branch, 'name'));
         $worksheet->setCellValue('A3', strftime("%B",mktime(0,0,0,$month)) . ' ' . $year);
         
         $worksheet->getStyle('A5:R5')->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
@@ -235,7 +235,7 @@ class MonthlySingleBranchSaleTransactionController extends Controller {
         ob_end_clean();
 
         header('Content-type: application/vnd.ms-excel');
-        header('Content-Disposition: attachment;filename="penjualan_cabang_bulanan.xls"');
+        header('Content-Disposition: attachment;filename="penjualan_bulanan_cabang_' . CHtml::value($branch, 'code') . '.xls"');
         header('Cache-Control: max-age=0');
 
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');

@@ -126,10 +126,10 @@ class CompanySaleByProductCategoryServiceTypeController extends Controller {
 
         $documentProperties = $objPHPExcel->getProperties();
         $documentProperties->setCreator('Raperind Motor');
-        $documentProperties->setTitle('Penjualan Summary Jasa Parts');
+        $documentProperties->setTitle('Penjualan Jasa + Produk');
 
         $worksheet = $objPHPExcel->setActiveSheetIndex(0);
-        $worksheet->setTitle('Penjualan Summary Jasa Parts');
+        $worksheet->setTitle('Penjualan Jasa + Produk');
 
         $branchList = $options['branchList'];
         $monthList = $options['monthList'];
@@ -147,7 +147,7 @@ class CompanySaleByProductCategoryServiceTypeController extends Controller {
         $worksheet->getStyle('A1:Z3')->getFont()->setBold(true);
 
         $worksheet->setCellValue('A1', 'Raperind Motor ');
-        $worksheet->setCellValue('A2', 'Penjualan Jasa + Parts Summary');
+        $worksheet->setCellValue('A2', 'Penjualan Jasa + Kategori Produk Summary');
         $worksheet->setCellValue('A3', $monthList[$month] . ' ' . $year);
         
         $rowCounter = 5;
@@ -346,7 +346,7 @@ class CompanySaleByProductCategoryServiceTypeController extends Controller {
         ob_end_clean();
 
         header('Content-type: application/vnd.ms-excel');
-        header("Content-Disposition: attachment;filename=penjualan_pt_summary_" . $monthList[$month] . '_' . $year . ".xls");
+        header("Content-Disposition: attachment;filename=penjualan_jasa_kategori_produk_summary.xls");
         header('Cache-Control: max-age=0');
 
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');

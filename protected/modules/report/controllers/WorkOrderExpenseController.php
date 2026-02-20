@@ -69,10 +69,10 @@ class WorkOrderExpenseController extends Controller {
 
         $documentProperties = $objPHPExcel->getProperties();
         $documentProperties->setCreator('Raperind Motor');
-        $documentProperties->setTitle('Laporan Sub Pekerjaan Luar');
+        $documentProperties->setTitle('Sub Pekerjaan Luar');
 
         $worksheet = $objPHPExcel->setActiveSheetIndex(0);
-        $worksheet->setTitle('Laporan Sub Pekerjaan Luar');
+        $worksheet->setTitle('Sub Pekerjaan Luar');
 
         $worksheet->mergeCells('A1:I1');
         $worksheet->mergeCells('A2:I2');
@@ -82,7 +82,7 @@ class WorkOrderExpenseController extends Controller {
 
         $branch = Branch::model()->findByPk($branchId);
         $worksheet->setCellValue('A1', 'Raperind Motor ' . CHtml::value($branch, 'name'));
-        $worksheet->setCellValue('A2', 'Laporan Sub Pekerjaan Luar');
+        $worksheet->setCellValue('A2', 'Sub Pekerjaan Luar');
         $worksheet->setCellValue('A3', Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($options['startDate'])) . ' - ' . Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($options['endDate'])));
 
         $worksheet->getStyle('A5:I5')->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
@@ -125,7 +125,7 @@ class WorkOrderExpenseController extends Controller {
         ob_end_clean();
         // We'll be outputting an excel file
         header('Content-type: application/vnd.ms-excel');
-        header('Content-Disposition: attachment;filename="laporan_sub_pekerjaan_luar.xls"');
+        header('Content-Disposition: attachment;filename="sub_pekerjaan_luar.xls"');
         header('Cache-Control: max-age=0');
         
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');

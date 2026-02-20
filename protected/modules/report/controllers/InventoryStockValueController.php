@@ -187,10 +187,10 @@ class InventoryStockValueController extends Controller {
 
         $documentProperties = $objPHPExcel->getProperties();
         $documentProperties->setCreator('Raperind Motor');
-        $documentProperties->setTitle('Stok Quantity dan Nilai Persediaan');
+        $documentProperties->setTitle('Quantity + Nilai Persediaan');
 
         $worksheet = $objPHPExcel->setActiveSheetIndex(0);
-        $worksheet->setTitle('Stok Quantity dan Nilai Persediaan');
+        $worksheet->setTitle('Quantity + Nilai Persediaan');
 
         $worksheet->mergeCells('A1:H1');
         $worksheet->mergeCells('A2:H2');

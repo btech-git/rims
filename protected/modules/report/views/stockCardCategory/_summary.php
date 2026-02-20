@@ -19,7 +19,7 @@ Yii::app()->clientScript->registerCss('_report', '
     <div style="font-weight: bold; text-align: center">
         <?php $branch = Branch::model()->findByPk($branchId); ?>
         <div style="font-size: larger">RAPERIND MOTOR</div>
-        <div style="font-size: larger">Laporan Posisi Stok <?php echo CHtml::encode(CHtml::value($branch, 'name')); ?></div>
+        <div style="font-size: larger">Posisi Stok Gudang <?php echo CHtml::encode(CHtml::value($branch, 'name')); ?></div>
         <div>
             <?php echo ' Periode: ' . CHtml::encode(Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($startDate))) . ' - ' . CHtml::encode(Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($endDate))); ?>
         </div>

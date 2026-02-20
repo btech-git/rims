@@ -161,7 +161,7 @@ class PayableTransactionController extends Controller {
             $counter++;$counter++;
         }
 
-        for ($col = 'A'; $col !== 'J'; $col++) {
+        for ($col = 'A'; $col !== 'Z'; $col++) {
             $objPHPExcel->getActiveSheet()
             ->getColumnDimension($col)
             ->setAutoSize(true);

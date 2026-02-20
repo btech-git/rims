@@ -109,7 +109,7 @@ class SaleRetailCustomerController extends Controller {
         $endDate = $options['endDate']; 
         $branchId = $options['branchId']; 
         $taxValue = $options['taxValue']; 
-        $customerId = $options['customerId']; 
+//        $customerId = $options['customerId']; 
         
         $documentProperties = $objPHPExcel->getProperties();
         $documentProperties->setCreator('Raperind Motor');
@@ -127,7 +127,7 @@ class SaleRetailCustomerController extends Controller {
 
         $branch = Branch::model()->findByPk($branchId);
         $worksheet->setCellValue('A1', 'Raperind Motor ' . CHtml::encode(CHtml::value($branch, 'name')));
-        $worksheet->setCellValue('A2', 'Penjualan per Pelanggan');
+        $worksheet->setCellValue('A2', 'Penjualan per Pelanggan Summary');
         $worksheet->setCellValue('A3', Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($startDate)) . ' - ' . Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($endDate)));
 
         $worksheet->getStyle('A5:D5')->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
@@ -181,7 +181,7 @@ class SaleRetailCustomerController extends Controller {
         ob_end_clean();
 
         header('Content-type: application/vnd.ms-excel');
-        header('Content-Disposition: attachment;filename="summary_penjualan_per_pelanggan.xls"');
+        header('Content-Disposition: attachment;filename="penjualan_per_pelanggan_summary.xls"');
         header('Cache-Control: max-age=0');
 
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');

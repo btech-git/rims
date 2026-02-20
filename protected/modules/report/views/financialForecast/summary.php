@@ -57,7 +57,7 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                 <div style="font-weight: bold; text-align: center">
                     <?php //$branch = Branch::model()->findByPk($branchId); ?>
                     <div style="font-size: larger"><?php //echo CHtml::encode(($branch === null) ? '' : $branch->name); ?></div>
-                    <div style="font-size: larger">Financial Forecast</div>
+                    <div style="font-size: larger">Summary Kas Harian</div>
                     <div>
                         <?php //$dateNow = date('Y-m-d'); ?>
                         <?php echo ' Tanggal: &nbsp;&nbsp; ' . CHtml::encode(Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($dateNow))); ?>

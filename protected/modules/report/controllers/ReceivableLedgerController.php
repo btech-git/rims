@@ -108,8 +108,8 @@ class ReceivableLedgerController extends Controller {
         $worksheet->mergeCells('A2:G2');
         $worksheet->mergeCells('A3:G3');
 
-        $worksheet->getStyle('A1:G6')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-        $worksheet->getStyle('A1:G6')->getFont()->setBold(true);
+        $worksheet->getStyle('A1:G5')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->getStyle('A1:G5')->getFont()->setBold(true);
 
         $branch = Branch::model()->findByPk($branchId);
         $worksheet->setCellValue('A1', 'Raperind Motor ' . CHtml::encode(CHtml::value($branch, 'name')));
@@ -126,9 +126,9 @@ class ReceivableLedgerController extends Controller {
         $worksheet->setCellValue('F5', 'Kredit');
         $worksheet->setCellValue('G5', 'Saldo');
 
-        $worksheet->getStyle('A6:G6')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle('A5:G5')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
-        $counter = 7;
+        $counter = 6;
 
         foreach ($receivableLedgerSummary->data as $header) {
             $receivableAmount = $header->getReceivableAmount();
@@ -188,7 +188,7 @@ class ReceivableLedgerController extends Controller {
             }
         }
             
-        for ($col = 'A'; $col !== 'L'; $col++) {
+        for ($col = 'A'; $col !== 'Z'; $col++) {
             $objPHPExcel->getActiveSheet()
             ->getColumnDimension($col)
             ->setAutoSize(true);
@@ -197,7 +197,7 @@ class ReceivableLedgerController extends Controller {
         ob_end_clean();
         // We'll be outputting an excel file
         header('Content-type: application/vnd.ms-excel');
-        header('Content-Disposition: attachment;filename="Buku Besar Pembantu Piutang.xls"');
+        header('Content-Disposition: attachment;filename="buku_besar_pembantu_piutang.xls"');
         header('Cache-Control: max-age=0');
         
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');

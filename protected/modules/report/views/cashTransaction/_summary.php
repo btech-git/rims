@@ -19,7 +19,7 @@ Yii::app()->clientScript->registerCss('_report', '
         <?php $branch = Branch::model()->findByPk($branchId); ?>
         <?php echo CHtml::encode(CHtml::value($branch, 'name')); ?>
     </div>
-    <div style="font-size: larger">Laporan Cash Transaction</div>
+    <div style="font-size: larger">Transaksi Kas</div>
     <div><?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($startDate))) . ' &nbsp;&ndash;&nbsp; ' . CHtml::encode(Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($endDate))); ?></div>
 </div>
 

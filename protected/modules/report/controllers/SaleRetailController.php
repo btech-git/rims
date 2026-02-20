@@ -96,10 +96,10 @@ class SaleRetailController extends Controller {
         
         $documentProperties = $objPHPExcel->getProperties();
         $documentProperties->setCreator('Raperind Motor');
-        $documentProperties->setTitle('Rincian Penjualan per Pelanggan');
+        $documentProperties->setTitle('Rincian Penjualan per Customer');
 
         $worksheet = $objPHPExcel->setActiveSheetIndex(0);
-        $worksheet->setTitle('Rincian Penjualan per Pelanggan');
+        $worksheet->setTitle('Rincian Penjualan per Customer');
 
         $worksheet->mergeCells('A1:Y1');
         $worksheet->mergeCells('A2:Y2');

@@ -101,10 +101,10 @@ class PayableDetailController extends Controller {
 
         $documentProperties = $objPHPExcel->getProperties();
         $documentProperties->setCreator('PT. Raperind Motor');
-        $documentProperties->setTitle('Hutang Supplier Detail');
+        $documentProperties->setTitle('Rincian Hutang Supplier');
 
         $worksheet = $objPHPExcel->setActiveSheetIndex(0);
-        $worksheet->setTitle('Hutang Supplier Detail');
+        $worksheet->setTitle('Rincian Hutang Supplier');
 
         $worksheet->mergeCells('A1:I1');
         $worksheet->mergeCells('A2:I2');
@@ -115,7 +115,7 @@ class PayableDetailController extends Controller {
 
         $branch = Branch::model()->findByPk($branchId);
         $worksheet->setCellValue('A1', 'Raperind Motor ' . CHtml::value($branch, 'name'));
-        $worksheet->setCellValue('A2', 'Hutang Supplier Detail');
+        $worksheet->setCellValue('A2', 'Rincian Hutang Supplier');
         $worksheet->setCellValue('A3', 'Per Tanggal: ' . Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($endDate)));
 
         $worksheet->getStyle('A5:I5')->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
@@ -175,7 +175,7 @@ class PayableDetailController extends Controller {
         ob_end_clean();
         // We'll be outputting an excel file
         header('Content-type: application/vnd.ms-excel');
-        header('Content-Disposition: attachment;filename="hutang_supplier_detail.xls"');
+        header('Content-Disposition: attachment;filename="rincian_hutang_supplier.xls"');
         header('Cache-Control: max-age=0');
         
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');

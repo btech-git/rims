@@ -8,7 +8,7 @@
 '); ?>
 
 <div style="font-weight: bold; text-align: center">
-    <div style="font-size: larger">Laporan Jurnal Umum</div>
+    <div style="font-size: larger">Laporan Jurnal Umum (unbalanced)</div>
 </div>
 
 <br />

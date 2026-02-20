@@ -17,7 +17,7 @@
 
 <div style="font-weight: bold; text-align: center">
     <div style="font-size: larger">Raperind Motor</div>
-    <div style="font-size: larger">Laporan Faktur Pembelian</div>
+    <div style="font-size: larger">Faktur Pembelian</div>
     <div><?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($startDate))) . ' &nbsp;&ndash;&nbsp; ' . CHtml::encode(Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($endDate))); ?></div>
 </div>
 

@@ -20,7 +20,7 @@ Yii::app()->clientScript->registerCss('_report', '
 ?>
 
 <div style="font-weight: bold; text-align: center">
-    <div style="font-size: larger">Laporan All Cabang Tahunan</div>
+    <div style="font-size: larger">Laporan Semua Cabang Tahunan</div>
     <div><?php echo CHtml::encode($year); ?></div>
 </div>
 

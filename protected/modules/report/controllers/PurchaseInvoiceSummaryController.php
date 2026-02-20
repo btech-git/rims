@@ -85,8 +85,9 @@ class PurchaseInvoiceSummaryController extends Controller {
     public function reportGrandTotal($dataProvider) {
         $grandTotal = 0.00;
 
-        foreach ($dataProvider->data as $data)
+        foreach ($dataProvider->data as $data) {
             $grandTotal += $data->total_price;
+        }
 
         return $grandTotal;
     }
@@ -94,8 +95,9 @@ class PurchaseInvoiceSummaryController extends Controller {
     public function reportTotalPayment($dataProvider) {
         $grandTotal = 0.00;
 
-        foreach ($dataProvider->data as $data)
+        foreach ($dataProvider->data as $data) {
             $grandTotal += $data->payment_amount;
+        }
 
         return $grandTotal;
     }
@@ -103,8 +105,9 @@ class PurchaseInvoiceSummaryController extends Controller {
     public function reportTotalRemaining($dataProvider) {
         $grandTotal = 0.00;
 
-        foreach ($dataProvider->data as $data)
+        foreach ($dataProvider->data as $data) {
             $grandTotal += $data->payment_left;
+        }
 
         return $grandTotal;
     }
@@ -124,10 +127,10 @@ class PurchaseInvoiceSummaryController extends Controller {
 
         $documentProperties = $objPHPExcel->getProperties();
         $documentProperties->setCreator('Raperind Motor');
-        $documentProperties->setTitle('Laporan Faktur Pembelian');
+        $documentProperties->setTitle('Faktur Pembelian');
 
         $worksheet = $objPHPExcel->setActiveSheetIndex(0);
-        $worksheet->setTitle('Laporan Faktur Pembelian');
+        $worksheet->setTitle('Faktur Pembelian');
 
         $worksheet->mergeCells('A1:M1');
         $worksheet->mergeCells('A2:M2');
@@ -137,7 +140,7 @@ class PurchaseInvoiceSummaryController extends Controller {
         $worksheet->getStyle('A1:M3')->getFont()->setBold(true);
         $branch = Branch::model()->findByPk($branchId);
         $worksheet->setCellValue('A1', 'Raperind Motor ' . CHtml::encode(CHtml::value($branch, 'name')));
-        $worksheet->setCellValue('A2', 'Laporan Faktur Pembelian');
+        $worksheet->setCellValue('A2', 'Faktur Pembelian');
         $worksheet->setCellValue('A3', $startDateFormatted . ' - ' . $endDateFormatted);
 
         $worksheet->getStyle("A5:M5")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
@@ -206,7 +209,7 @@ class PurchaseInvoiceSummaryController extends Controller {
         ob_end_clean();
 
         header('Content-type: application/vnd.ms-excel');
-        header('Content-Disposition: attachment;filename="laporan_faktur_pembelian.xls"');
+        header('Content-Disposition: attachment;filename="faktur_pembelian.xls"');
         header('Cache-Control: max-age=0');
         
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');

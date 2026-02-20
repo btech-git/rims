@@ -72,6 +72,28 @@ class YearlyCustomerReceivableController extends Controller {
             }
         }
         
+        $reportData = array();
+        foreach ($yearlyCustomerReportData as $customerId => $yearlyCustomerReportDataItem) {
+            $dataItem = array('customer_id' => $customerId, 'customer_name' => $yearlyCustomerReportDataItem['customer_name']);
+            if (isset($yearlyCustomerReportDataItem['beginning_invoice_total'])) {
+                $dataItem['beginning_invoice_total'] = $yearlyCustomerReportDataItem['beginning_invoice_total'];
+            }
+            if (isset($yearlyCustomerReportDataItem['beginning_payment_total'])) {
+                $dataItem['beginning_payment_total'] = $yearlyCustomerReportDataItem['beginning_payment_total'];
+            }
+            for ($month = 1; $month <= 12; $month++) {
+                if (isset($yearlyCustomerReportDataItem[$month])) {
+                    $dataItem[$month] = $yearlyCustomerReportDataItem[$month];
+                }
+            }
+            $reportData[] = $dataItem;
+        }
+        
+        $this->sortReportData($reportData);
+        
+//        var_dump($reportData);
+        
+        
         $yearList = array();
         for ($y = $yearNow - 4; $y <= $yearNow; $y++) {
             $yearList[$y] = $y;
@@ -86,7 +108,7 @@ class YearlyCustomerReceivableController extends Controller {
         }
         
         $this->render('summary', array(
-            'yearlyCustomerReportData' => $yearlyCustomerReportData,
+            'reportData' => $reportData,
             'yearList' => $yearList,
             'year' => $year,
         ));
@@ -164,8 +186,8 @@ class YearlyCustomerReceivableController extends Controller {
         $worksheet->mergeCells('A1:Z1');
         $worksheet->mergeCells('A2:Z2');
         $worksheet->mergeCells('A3:Z3');
-        $worksheet->getStyle('A1:AZ6')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-        $worksheet->getStyle('A1:AZ6')->getFont()->setBold(true);
+        $worksheet->getStyle('A1:AO6')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->getStyle('A1:AO6')->getFont()->setBold(true);
 
         $worksheet->setCellValue('A1', 'Raperind Motor ');
         $worksheet->setCellValue('A2', 'Piutang Customer Tahunan');
@@ -199,7 +221,6 @@ class YearlyCustomerReceivableController extends Controller {
         $worksheet->setCellValue("{$columnCounter}6", 'Invoice');
         $columnCounter++;
         $worksheet->setCellValue("{$columnCounter}6", 'Payment');
-        $columnCounter++;
         
         $worksheet->getStyle("A5:{$columnCounter}5")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
         $worksheet->getStyle("A6:{$columnCounter}6")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
@@ -263,8 +284,8 @@ class YearlyCustomerReceivableController extends Controller {
             $counter++;
         }
 
-        $worksheet->getStyle("A{$counter}:AM{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
-        $worksheet->getStyle("A{$counter}:AM{$counter}")->getFont()->setBold(true);
+        $worksheet->getStyle("A{$counter}:AO{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A{$counter}:AO{$counter}")->getFont()->setBold(true);
         
         $worksheet->setCellValue("B{$counter}", 'TOTAL');
         
@@ -410,5 +431,18 @@ class YearlyCustomerReceivableController extends Controller {
         $objWriter->save('php://output');
 
         Yii::app()->end();
+    }
+    
+    function sortReportData(&$reportData) {
+        $count = count($reportData);
+        for ($i = 0; $i < $count; $i++) {
+            for ($j = 0; $j < $count - $i - 1; $j++) {
+                if (ucwords($reportData[$j]['customer_name']) > ucwords($reportData[$j + 1]['customer_name'])) {
+                    $temp = $reportData[$j];
+                    $reportData[$j] = $reportData[$j + 1];
+                    $reportData[$j + 1] = $temp;
+                }
+            }
+        }
     }
 }

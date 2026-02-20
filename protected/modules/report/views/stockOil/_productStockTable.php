@@ -1,5 +1,5 @@
 <div style="text-align: center">
-    <span style="text-align: center"><h2>Stok Gudang Oli</h2></span>
+    <span style="text-align: center"><h2>Stok Oli</h2></span>
     <span style="text-align: center">
         <h2>Per Tanggal: <?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($endDate))); ?></h2>
     </span>

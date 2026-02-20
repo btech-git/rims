@@ -2,7 +2,7 @@
 
 <div style="font-weight: bold; text-align: center">
     <div style="font-size: larger">Raperind Motor</div>
-    <div style="font-size: larger">Laporan Piutang Asuransi Tahunan</div>
+    <div style="font-size: larger">Piutang Asuransi Tahunan</div>
     <div><?php echo 'Periode tahun: ' . CHtml::encode($year); ?></div>
 </div>
 

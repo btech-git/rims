@@ -89,10 +89,10 @@ class YearlyMultipleBranchSaleTransactionController extends Controller {
 
         $documentProperties = $objPHPExcel->getProperties();
         $documentProperties->setCreator('Raperind Motor');
-        $documentProperties->setTitle('Penjualan All Cabang Tahunan');
+        $documentProperties->setTitle('Penjualan Semua Cabang Tahunan');
 
         $worksheet = $objPHPExcel->setActiveSheetIndex(0);
-        $worksheet->setTitle('Penjualan All Cabang Tahunan');
+        $worksheet->setTitle('Penjualan Semua Cabang Tahunan');
 
         $worksheet->mergeCells('A1:W1');
         $worksheet->mergeCells('A2:W2');
@@ -101,7 +101,7 @@ class YearlyMultipleBranchSaleTransactionController extends Controller {
         $worksheet->getStyle('A1:W5')->getFont()->setBold(true);
 
         $worksheet->setCellValue('A1', 'Raperind Motor ');
-        $worksheet->setCellValue('A2', 'Laporan Penjualan All Cabang Tahunan');
+        $worksheet->setCellValue('A2', 'Penjualan Semua Cabang Tahunan');
         $worksheet->setCellValue('A3', $year);
         
         $worksheet->getStyle('A5:W5')->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
@@ -253,7 +253,7 @@ class YearlyMultipleBranchSaleTransactionController extends Controller {
         ob_end_clean();
 
         header('Content-type: application/vnd.ms-excel');
-        header('Content-Disposition: attachment;filename="penjualan_cabang_tahunan.xls"');
+        header('Content-Disposition: attachment;filename="penjualan_semua_cabang_tahunan.xls"');
         header('Cache-Control: max-age=0');
 
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');

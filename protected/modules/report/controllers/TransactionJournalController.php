@@ -141,11 +141,11 @@ class TransactionJournalController extends Controller {
         $objPHPExcel = new PHPExcel();
 
         $documentProperties = $objPHPExcel->getProperties();
-        $documentProperties->setCreator('PT. Raperind Motor');
-        $documentProperties->setTitle('Laporan Jurnal Umum');
+        $documentProperties->setCreator('Raperind Motor');
+        $documentProperties->setTitle('Jurnal Umum');
 
         $worksheet = $objPHPExcel->setActiveSheetIndex(0);
-        $worksheet->setTitle('Laporan Jurnal Umum');
+        $worksheet->setTitle('Jurnal Umum');
 
         $worksheet->mergeCells('A1:H1');
         $worksheet->mergeCells('A2:H2');
@@ -154,8 +154,8 @@ class TransactionJournalController extends Controller {
         $worksheet->getStyle('A1:H5')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
         $worksheet->getStyle('A1:H6')->getFont()->setBold(true);
 
-        $worksheet->setCellValue('A1', 'PT. Raperind Motor');
-        $worksheet->setCellValue('A2', 'Laporan Jurnal Umum');
+        $worksheet->setCellValue('A1', 'Raperind Motor');
+        $worksheet->setCellValue('A2', 'Jurnal Umum');
         $worksheet->setCellValue('A3', Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($startDate)) . ' - ' . Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($endDate)));
 
         $worksheet->setCellValue('A5', 'No');
@@ -211,7 +211,7 @@ class TransactionJournalController extends Controller {
         ob_end_clean();
         // We'll be outputting an excel file
         header('Content-type: application/vnd.ms-excel');
-        header('Content-Disposition: attachment;filename="Laporan Jurnal Umum.xls"');
+        header('Content-Disposition: attachment;filename="jurnal_umum.xls"');
         header('Cache-Control: max-age=0');
         
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');

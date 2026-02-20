@@ -158,10 +158,10 @@ class StockCardByWarehouseController extends Controller {
 
         $documentProperties = $objPHPExcel->getProperties();
         $documentProperties->setCreator('Raperind Motor');
-        $documentProperties->setTitle('Laporan Mutasi per Gudang');
+        $documentProperties->setTitle('Mutasi per Gudang');
 
         $worksheet = $objPHPExcel->setActiveSheetIndex(0);
-        $worksheet->setTitle('Laporan Mutasi per Gudang');
+        $worksheet->setTitle('Mutasi per Gudang');
 
         $worksheet->mergeCells('A1:S1');
         $worksheet->mergeCells('A2:S2');
@@ -169,7 +169,7 @@ class StockCardByWarehouseController extends Controller {
         $worksheet->getStyle('A1:S3')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
         $worksheet->getStyle('A1:S3')->getFont()->setBold(true);
         $worksheet->setCellValue('A1', 'Raperind Motor');
-        $worksheet->setCellValue('A2', 'Laporan Mutasi per Gudang ' . CHtml::value($warehouse, 'name'));
+        $worksheet->setCellValue('A2', 'Mutasi per Gudang ' . CHtml::value($warehouse, 'name'));
         $worksheet->setCellValue('A3', $startDateFormatted . ' - ' . $endDateFormatted);
 
         $worksheet->getStyle("A5:S5")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
@@ -268,7 +268,7 @@ class StockCardByWarehouseController extends Controller {
         ob_end_clean();
 
         header('Content-type: application/vnd.ms-excel');
-        header('Content-Disposition: attachment;filename="laporan_mutasi_per_gudang.xls"');
+        header('Content-Disposition: attachment;filename="mutasi_per_gudang_' . CHtml::value($warehouse, 'code') . '.xls"');
         header('Cache-Control: max-age=0');
         
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');

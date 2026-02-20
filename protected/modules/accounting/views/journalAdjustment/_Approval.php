@@ -115,7 +115,7 @@
                     </tr>
                     <tr>
                         <td>
-                            <?php echo $form->hiddenField($model, 'cash_transaction_id',array('value'=>$journalVoucher->id)); ?>		
+                            <?php echo $form->hiddenField($model, 'journal_adjustment_header_id',array('value'=>$journalVoucher->id)); ?>		
                             <?php echo $form->dropDownList($model, 'approval_type', array(
                                 'Revised' => 'Need Revision',
                                 'Rejected'=>'Rejected',

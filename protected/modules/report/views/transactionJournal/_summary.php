@@ -12,7 +12,7 @@
         <?php $branch = Branch::model()->findByPk($branchId); ?>
         <?php echo CHtml::encode(CHtml::value($branch, 'name')); ?>
     </div>
-    <div style="font-size: larger">Laporan Jurnal Umum</div>
+    <div style="font-size: larger">Jurnal Umum</div>
     <div><?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($startDate))) . ' &nbsp;&ndash;&nbsp; ' . CHtml::encode(Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($endDate))); ?></div>
 </div>
 

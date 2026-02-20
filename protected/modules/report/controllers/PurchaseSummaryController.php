@@ -90,10 +90,10 @@ class PurchaseSummaryController extends Controller {
         
         $documentProperties = $objPHPExcel->getProperties();
         $documentProperties->setCreator('Raperind Motor');
-        $documentProperties->setTitle('Laporan Pembelian per Pemasok');
+        $documentProperties->setTitle('Pembelian per Supplier Summary');
 
         $worksheet = $objPHPExcel->setActiveSheetIndex(0);
-        $worksheet->setTitle('Laporan Pembelian per Pemasok');
+        $worksheet->setTitle('Pembelian per Supplier Summary');
 
         $worksheet->mergeCells('A1:E1');
         $worksheet->mergeCells('A2:E2');
@@ -104,7 +104,7 @@ class PurchaseSummaryController extends Controller {
         $worksheet->getStyle('A1:E3')->getFont()->setBold(true);
         $branch = Branch::model()->findByPk($branchId);
         $worksheet->setCellValue('A1', 'Raperind Motor ' . CHtml::encode(CHtml::value($branch, 'name')));
-        $worksheet->setCellValue('A2', 'Laporan Pembelian per Pemasok');
+        $worksheet->setCellValue('A2', 'Pembelian per Supplier Summary');
         $worksheet->setCellValue('A3', Yii::app()->dateFormatter->format('d MMMM yyyy', $startDate) . ' - ' . Yii::app()->dateFormatter->format('d MMMM yyyy', $endDate));
 
         $worksheet->getStyle("A6:E6")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
@@ -156,7 +156,7 @@ class PurchaseSummaryController extends Controller {
         ob_end_clean();
 
         header('Content-type: application/vnd.ms-excel');
-        header('Content-Disposition: attachment;filename="laporan_pembelian_per_pemasok.xls"');
+        header('Content-Disposition: attachment;filename="pembelian_per_supplier_summary.xls"');
         header('Cache-Control: max-age=0');
 
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');

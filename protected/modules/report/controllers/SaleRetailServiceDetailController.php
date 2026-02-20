@@ -111,10 +111,10 @@ class SaleRetailServiceDetailController extends Controller {
 
         $documentProperties = $objPHPExcel->getProperties();
         $documentProperties->setCreator('Raperind Motor');
-        $documentProperties->setTitle('Rincian Penjualan Service');
+        $documentProperties->setTitle('Rincian Penjualan per Jasa');
 
         $worksheet = $objPHPExcel->setActiveSheetIndex(0);
-        $worksheet->setTitle('Rincian Penjualan Service');
+        $worksheet->setTitle('Rincian Penjualan per Jasa');
 
         $worksheet->mergeCells('A1:L1');
         $worksheet->mergeCells('A2:L2');
@@ -125,7 +125,7 @@ class SaleRetailServiceDetailController extends Controller {
 
         $branch = Branch::model()->findByPk($branchId);
         $worksheet->setCellValue('A1', 'Raperind Motor ' . CHtml::value($branch, 'name'));
-        $worksheet->setCellValue('A2', 'Rincian Penjualan Service');
+        $worksheet->setCellValue('A2', 'Rincian Penjualan per Jasa');
         $worksheet->setCellValue('A3', Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($options['startDate'])) . ' - ' . Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($options['endDate'])));
 
         $worksheet->getStyle('A5:L5')->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
@@ -186,7 +186,7 @@ class SaleRetailServiceDetailController extends Controller {
         ob_end_clean();
 
         header('Content-type: application/vnd.ms-excel');
-        header('Content-Disposition: attachment;filename="rincian_penjualan_service.xls"');
+        header('Content-Disposition: attachment;filename="rincian_penjualan_per_jasa.xls"');
         header('Cache-Control: max-age=0');
 
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');

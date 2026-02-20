@@ -145,10 +145,10 @@ class SaleRetailProductController extends Controller {
 
         $documentProperties = $objPHPExcel->getProperties();
         $documentProperties->setCreator('Raperind Motor');
-        $documentProperties->setTitle('Penjualan Retail Product');
+        $documentProperties->setTitle('Penjualan per Barang');
 
         $worksheet = $objPHPExcel->setActiveSheetIndex(0);
-        $worksheet->setTitle('Penjualan Retail Product');
+        $worksheet->setTitle('Penjualan per Barang');
 
         $worksheet->mergeCells('A1:K1');
         $worksheet->mergeCells('A2:K2');
@@ -159,7 +159,7 @@ class SaleRetailProductController extends Controller {
 
         $branch = Branch::model()->findByPk($branchId);
         $worksheet->setCellValue('A1', 'Raperind Motor ' . CHtml::encode(CHtml::value($branch, 'name')));
-        $worksheet->setCellValue('A2', 'Penjualan Retail Product');
+        $worksheet->setCellValue('A2', 'Penjualan per Barang');
         $worksheet->setCellValue('A3', Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($startDate)) . ' - ' . Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($endDate)));
 
         $worksheet->getStyle('A5:K5')->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
@@ -202,9 +202,12 @@ class SaleRetailProductController extends Controller {
             $counter++;
         }
         
+        $worksheet->getStyle("A{$counter}:K{$counter}")->getFont()->setBold(true);
+        $worksheet->getStyle("A{$counter}:K{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        
         $worksheet->setCellValue("H{$counter}", 'TOTAL');
         $worksheet->setCellValue("I{$counter}", CHtml::encode($totalQuantity));
-        $worksheet->setCellValue("I{$counter}", CHtml::encode($totalSale));
+        $worksheet->setCellValue("K{$counter}", CHtml::encode($totalSale));
         $counter++;$counter++;
 
         for ($col = 'A'; $col !== 'Z'; $col++) {
@@ -216,7 +219,7 @@ class SaleRetailProductController extends Controller {
         ob_end_clean();
 
         header('Content-type: application/vnd.ms-excel');
-        header('Content-Disposition: attachment;filename="Penjualan Retail Product.xls"');
+        header('Content-Disposition: attachment;filename="penjualan_per_barang.xls"');
         header('Cache-Control: max-age=0');
         
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');

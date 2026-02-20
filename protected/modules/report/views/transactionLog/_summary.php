@@ -1,9 +1,12 @@
 <?php Yii::app()->clientScript->registerCss('_report', '
     .width1-1 { width: 5% }
-    .width1-2 { width: 5% }
-    .width1-3 { width: 5% }
-    .width1-4 { width: 5% }
-    .width1-5 { width: 5% }
+    .width1-2 { width: 15% }
+    .width1-3 { width: 10% }
+    .width1-4 { width: 10% }
+    .width1-5 { width: 10% }
+    .width1-6 { width: 15% }
+    .width1-7 { width: 15% }
+    .width1-8 { width: 10% }
 
 '); ?>
 
@@ -17,20 +20,26 @@
 <table class="report">
     <thead style="position: sticky; top: 0">
         <tr id="header1">
-            <th class="width1-1">Transaction #</th>
-            <th class="width1-2">Tanggal</th>
-            <th class="width1-3">Log Date</th>
-            <th class="width1-3">Log Time</th>
-            <th class="width1-2">Username</th>
-            <th class="width1-2">Transaction Type</th>
-            <th class="width1-2">Action Type</th>
+            <th class="width1-1"></th>
+            <th class="width1-2">Transaction #</th>
+            <th class="width1-3">Tanggal</th>
+            <th class="width1-4">Log Date</th>
+            <th class="width1-5">Log Time</th>
+            <th class="width1-6">Username</th>
+            <th class="width1-7">Transaction Type</th>
+            <th class="width1-8">Action Type</th>
         </tr>
     </thead>
     <tbody>
         <?php foreach ($transactionLogDataProvider->data as $transactionLogRow): ?>
             <?php list(, $controllerClass) = explode('/', CHtml::value($transactionLogRow, 'controller_class')); ?>
             <tr class="items1">
-                <td class="width1-1"><?php echo CHtml::link(CHtml::value($transactionLogRow, 'transaction_number'), Yii::app()->createUrl("/report/transactionLog/summaryPayload", array('id' => $transactionLogRow->id)), array('target' => '_blank')); ?></td>
+                <td>
+                    <?php echo CHtml::link('Compare', Yii::app()->createUrl("/report/transactionLogComparison/summary", array('transactionNumber' => $transactionLogRow->transaction_number)), array('target' => '_blank')); ?>
+                </td>
+                <td class="width1-1">
+                    <?php echo CHtml::link(CHtml::value($transactionLogRow, 'transaction_number'), Yii::app()->createUrl("/report/transactionLog/summaryPayload", array('id' => $transactionLogRow->id)), array('target' => '_blank')); ?>
+                </td>
                 <td class="width1-2">
                     <?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime(CHtml::value($transactionLogRow, 'transaction_date')))); ?>
                 </td>

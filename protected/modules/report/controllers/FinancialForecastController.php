@@ -159,10 +159,10 @@ class FinancialForecastController extends Controller {
 
         $documentProperties = $objPHPExcel->getProperties();
         $documentProperties->setCreator('Raperind Motor');
-        $documentProperties->setTitle('Laporan Financial Forecast');
+        $documentProperties->setTitle('Summary Kas Harian');
 
         $worksheet = $objPHPExcel->setActiveSheetIndex(0);
-        $worksheet->setTitle('Laporan Financial Forecast');
+        $worksheet->setTitle('Summary Kas Harian');
 
         $worksheet->mergeCells('A1:B1');
         $worksheet->mergeCells('A2:B2');
@@ -170,7 +170,7 @@ class FinancialForecastController extends Controller {
         $worksheet->getStyle('A1:B3')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
         $worksheet->getStyle('A1:B3')->getFont()->setBold(true);
 
-        $worksheet->setCellValue('A2', 'Laporan Financial Forecast');
+        $worksheet->setCellValue('A2', 'Summary Kas Harian');
         $worksheet->setCellValue('A3', CHtml::encode(Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($dateNow))));
 
         $counter = 5;
@@ -214,16 +214,16 @@ class FinancialForecastController extends Controller {
 
 
 
-        for ($col = 'A'; $col !== 'J'; $col++) {
+        for ($col = 'A'; $col !== 'Z'; $col++) {
             $objPHPExcel->getActiveSheet()
-                    ->getColumnDimension($col)
-                    ->setAutoSize(true);
+            ->getColumnDimension($col)
+            ->setAutoSize(true);
         }
 
         ob_end_clean();
         // We'll be outputting an excel file
         header('Content-type: application/vnd.ms-excel');
-        header('Content-Disposition: attachment;filename="Laporan Financial Forecast.xls"');
+        header('Content-Disposition: attachment;filename="summary_kas_harian.xls"');
         header('Cache-Control: max-age=0');
 
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');

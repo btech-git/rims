@@ -143,10 +143,10 @@ class StockCardWithAmountController extends Controller {
 
         $documentProperties = $objPHPExcel->getProperties();
         $documentProperties->setCreator('Raperind Motor');
-        $documentProperties->setTitle('Laporan Mutasi Barang');
+        $documentProperties->setTitle('Mutasi Per Barang');
 
         $worksheet = $objPHPExcel->setActiveSheetIndex(0);
-        $worksheet->setTitle('Laporan Mutasi Barang');
+        $worksheet->setTitle('Mutasi Per Barang');
 
         $worksheet->mergeCells('A1:S1');
         $worksheet->mergeCells('A2:S2');
@@ -154,7 +154,7 @@ class StockCardWithAmountController extends Controller {
         $worksheet->getStyle('A1:S3')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
         $worksheet->getStyle('A1:S3')->getFont()->setBold(true);
         $worksheet->setCellValue('A1', 'Raperind Motor');
-        $worksheet->setCellValue('A2', 'Laporan Mutasi Barang');
+        $worksheet->setCellValue('A2', 'Mutasi Per Barang');
         $worksheet->setCellValue('A3', $startDateFormatted . ' - ' . $endDateFormatted);
 
         $worksheet->getStyle("A5:S5")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
@@ -249,7 +249,7 @@ class StockCardWithAmountController extends Controller {
         ob_end_clean();
 
         header('Content-type: application/vnd.ms-excel');
-        header('Content-Disposition: attachment;filename="laporan_mutasi_barang.xls"');
+        header('Content-Disposition: attachment;filename="mutasi_per_barang.xls"');
         header('Cache-Control: max-age=0');
         
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');

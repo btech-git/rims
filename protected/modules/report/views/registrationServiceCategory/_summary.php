@@ -2,7 +2,7 @@
 
 <div style="font-weight: bold; text-align: center">
     <div style="font-size: larger"><?php echo Yii::app()->name; ?></div>
-    <div style="font-size: larger">Laporan Penyelesaian Pesanan per Pekerjaan </div>
+    <div style="font-size: larger">Penyelesaian Pesanan per Pekerjaan </div>
     <div><?php echo 'Periode bulan: ' . CHtml::encode(Yii::app()->dateFormatter->format('MMMM yyyy', $yearMonth)); ?></div>
 </div>
 

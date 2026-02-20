@@ -112,10 +112,10 @@ class PaymentInController extends Controller {
         
         $documentProperties = $objPHPExcel->getProperties();
         $documentProperties->setCreator('Raperind Motor');
-        $documentProperties->setTitle('Laporan Penerimaan Penjualan');
+        $documentProperties->setTitle('Rincian Penerimaan Penjualan');
 
         $worksheet = $objPHPExcel->setActiveSheetIndex(0);
-        $worksheet->setTitle('Payment In');
+        $worksheet->setTitle('Rincian Penerimaan Penjualan');
 
         $worksheet->mergeCells('A1:V1');
         $worksheet->mergeCells('A2:V2');
@@ -126,7 +126,7 @@ class PaymentInController extends Controller {
 
         $branch = Branch::model()->findByPk($branchId);
         $worksheet->setCellValue('A1', 'Raperind Motor ' . CHtml::value($branch, 'name'));
-        $worksheet->setCellValue('A2', 'Laporan Penerimaan Penjualan');
+        $worksheet->setCellValue('A2', 'Rincian Penerimaan Penjualan');
         $worksheet->setCellValue('A3', Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($startDate)) . ' - ' . Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($endDate)));
 
         $worksheet->getStyle('A5:V5')->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
@@ -241,7 +241,7 @@ class PaymentInController extends Controller {
         ob_end_clean();
         // We'll be outputting an excel file
         header('Content-type: application/vnd.ms-excel');
-        header('Content-Disposition: attachment;filename="laporan_penerimaan_penjualan.xls"');
+        header('Content-Disposition: attachment;filename="rincian_penerimaan_penjualan.xls"');
         header('Cache-Control: max-age=0');
         
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');

@@ -2,7 +2,7 @@
 
 <div style="font-weight: bold; text-align: center">
     <div style="font-size: larger">Raperind Motor</div>
-    <div style="font-size: larger">Laporan Piutang Customer Tahunan</div>
+    <div style="font-size: larger">Piutang Customer Tahunan</div>
     <div><?php echo 'Periode tahun: ' . CHtml::encode($year); ?></div>
 </div>
 
@@ -35,20 +35,21 @@
         <?php $invoiceTotalSums = array(); ?>
         <?php $paymentTotalSums = array(); ?>
         <?php $outstandingSums = array(); ?>
-        <?php foreach ($yearlyCustomerReportData as $customerId => $yearlyCustomerReportDataItem): ?>
+        <?php foreach ($reportData as $reportDataItem): ?>
+            <?php $customerId = $reportDataItem['customer_id']; ?>
             <tr>
-                <?php $beginningInvoiceTotal = isset($yearlyCustomerReportDataItem['beginning_invoice_total']) ? $yearlyCustomerReportDataItem['beginning_invoice_total'] : ''; ?>
-                <?php $beginningPaymentTotal = isset($yearlyCustomerReportDataItem['beginning_payment_total']) ? $yearlyCustomerReportDataItem['beginning_payment_total'] : ''; ?>
+                <?php $beginningInvoiceTotal = isset($reportDataItem['beginning_invoice_total']) ? $reportDataItem['beginning_invoice_total'] : ''; ?>
+                <?php $beginningPaymentTotal = isset($reportDataItem['beginning_payment_total']) ? $reportDataItem['beginning_payment_total'] : ''; ?>
                 <?php $beginningOutstanding = $beginningInvoiceTotal - $beginningPaymentTotal; ?>
                 <td style="text-align: center"><?php echo ++$ordinal; ?></td>
-                <td><?php echo $yearlyCustomerReportDataItem['customer_name']; ?></td>
+                <td><?php echo $reportDataItem['customer_name']; ?></td>
                 <td style="text-align: right"><?php echo Yii::app()->numberFormatter->format('#,##0.00', $beginningOutstanding); ?></td>
                 <?php $invoiceTotalSum = 0; ?>
                 <?php $paymentTotalSum = 0; ?>
                 <?php $currentOutstanding = $beginningOutstanding; ?>
                 <?php for ($month = 1; $month <= 12; $month++): ?>
-                    <?php $invoiceTotal = isset($yearlyCustomerReportDataItem[$month]['invoice_total']) ? $yearlyCustomerReportDataItem[$month]['invoice_total'] : ''; ?>
-                    <?php $paymentTotal = isset($yearlyCustomerReportDataItem[$month]['payment_total']) ? $yearlyCustomerReportDataItem[$month]['payment_total'] : ''; ?>
+                    <?php $invoiceTotal = isset($reportDataItem[$month]['invoice_total']) ? $reportDataItem[$month]['invoice_total'] : ''; ?>
+                    <?php $paymentTotal = isset($reportDataItem[$month]['payment_total']) ? $reportDataItem[$month]['payment_total'] : ''; ?>
                     <td style="text-align: right">
                         <?php echo CHtml::link(CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $invoiceTotal)), array(
                             'transactionInfo', 

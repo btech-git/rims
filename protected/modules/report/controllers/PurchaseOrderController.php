@@ -93,10 +93,10 @@ class PurchaseOrderController extends Controller {
         
         $documentProperties = $objPHPExcel->getProperties();
         $documentProperties->setCreator('Raperind Motor');
-        $documentProperties->setTitle('Rincian Pembelian per Pemasok');
+        $documentProperties->setTitle('Rincian Pembelian per Supplier');
 
         $worksheet = $objPHPExcel->setActiveSheetIndex(0);
-        $worksheet->setTitle('Rincian Pembelian per Pemasok');
+        $worksheet->setTitle('Rincian Pembelian per Supplier');
 
         $worksheet->mergeCells('A1:J1');
         $worksheet->mergeCells('A2:J2');
@@ -107,7 +107,7 @@ class PurchaseOrderController extends Controller {
 
         $branch = Branch::model()->findByPk($branchId);
         $worksheet->setCellValue('A1', 'Raperind Motor ' . CHtml::value($branch, 'name'));
-        $worksheet->setCellValue('A2', 'Rincian Pembelian per Pemasok');
+        $worksheet->setCellValue('A2', 'Rincian Pembelian per Supplier');
         $worksheet->setCellValue('A3', Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($startDate)) . ' - ' . Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($endDate)));
 
         $worksheet->getStyle('A5:J5')->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
@@ -125,7 +125,7 @@ class PurchaseOrderController extends Controller {
 
         $worksheet->getStyle('A5:J5')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
-        $counter = 7;
+        $counter = 6;
         foreach ($dataProvider->data as $header) {
             $purchaseOrderData = $header->getPurchasePerSupplierReport($startDate, $endDate, $branchId);
             $workOrderExpenseData = $header->getWorkOrderExpensePerSupplierReport($startDate, $endDate, $branchId);
@@ -183,7 +183,7 @@ class PurchaseOrderController extends Controller {
         ob_end_clean();
 
         header('Content-type: application/vnd.ms-excel');
-        header('Content-Disposition: attachment;filename="rincian_pembelian_per_pemasok.xls"');
+        header('Content-Disposition: attachment;filename="rincian_pembelian_per_supplier.xls"');
         header('Cache-Control: max-age=0');
 
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');

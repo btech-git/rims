@@ -1,0 +1,2 @@
+<pre style="font-size: larger; display: inline-block; width: 49%"><?php echo str_replace('\\', '', json_encode($payload1, JSON_PRETTY_PRINT)); ?></pre>
+<pre style="font-size: larger; display: inline-block; width: 49%"><?php echo str_replace('\\', '', json_encode($payload2, JSON_PRETTY_PRINT)); ?></pre>

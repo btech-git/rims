@@ -164,8 +164,8 @@ class YearlyInsuranceReceivableController extends Controller {
         $worksheet->mergeCells('A1:Z1');
         $worksheet->mergeCells('A2:Z2');
         $worksheet->mergeCells('A3:Z3');
-        $worksheet->getStyle('A1:AZ6')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-        $worksheet->getStyle('A1:AZ6')->getFont()->setBold(true);
+        $worksheet->getStyle('A1:AO6')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->getStyle('A1:AO6')->getFont()->setBold(true);
 
         $worksheet->setCellValue('A1', 'Raperind Motor ');
         $worksheet->setCellValue('A2', 'Piutang Asuransi Tahunan');
@@ -199,7 +199,6 @@ class YearlyInsuranceReceivableController extends Controller {
         $worksheet->setCellValue("{$columnCounter}6", 'Invoice');
         $columnCounter++;
         $worksheet->setCellValue("{$columnCounter}6", 'Payment');
-        $columnCounter++;
         
         $worksheet->getStyle("A5:{$columnCounter}5")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
         $worksheet->getStyle("A6:{$columnCounter}6")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
@@ -263,8 +262,8 @@ class YearlyInsuranceReceivableController extends Controller {
             $counter++;
         }
 
-        $worksheet->getStyle("A{$counter}:AM{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
-        $worksheet->getStyle("A{$counter}:AM{$counter}")->getFont()->setBold(true);
+        $worksheet->getStyle("A{$counter}:AO{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A{$counter}:AO{$counter}")->getFont()->setBold(true);
         
         $worksheet->setCellValue("B{$counter}", 'TOTAL');
         

@@ -1,6 +1,8 @@
 <div id="maincontent">
     <div class="clearfix page-action">
-        <a class="button cbutton right" href="<?php echo Yii::app()->baseUrl.'/accounting/journalAdjustment/admin';?>"><span class="fa fa-th-list"></span>Manage</a>
+        <a class="button cbutton right" href="<?php echo Yii::app()->baseUrl.'/accounting/journalAdjustment/admin';?>">
+            <span class="fa fa-th-list"></span>Manage
+        </a>
         <h1><?php if ($journalVoucher->header->isNewRecord){ echo "New Jurnal Umum"; }else{ echo "Update Jurnal Umum";}?></h1>
 
         <div class="form">
@@ -113,16 +115,11 @@
             <hr />
 
             <div class="row">
-                <?php /*echo CHtml::button('Tambah Akun', array(
-                    'onclick' => '$("#account-dialog").dialog("open"); return false;',
-                    'onkeypress' => 'if (event.keyCode == 13) { $("#account-dialog").dialog("open"); return false; }'
+                <?php echo CHtml::button('Tambah Akun', array(
+                    'name' => 'Search', 
+                    'onclick' => '$("#account-dialog").dialog("open"); return false;', 
+                    'onkeypress' => 'if (event.keyCode == 13) { $("#account-dialog").dialog("open"); return false; }',
                 )); ?>
-                <?php echo CHtml::hiddenField('CoaId');*/ ?>
-            </div>
-
-            <div class="row">
-                <?php echo CHtml::button('Tambah Akun', array('name' => 'Search', 'onclick' => '$("#account-dialog").dialog("open"); return false;', 'onkeypress' => 'if (event.keyCode == 13) { $("#account-dialog").dialog("open"); return false; }')); ?>
-                <?php //echo CHtml::hiddenField('CoaId'); ?>
             </div>
 
             <br />

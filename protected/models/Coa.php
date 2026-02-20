@@ -128,18 +128,6 @@ class Coa extends CActiveRecord {
         );
     }
 
-    /**
-     * Retrieves a list of models based on the current search/filter conditions.
-     *
-     * Typical usecase:
-     * - Initialize the model fields with values from filter form.
-     * - Execute this method to get CActiveDataProvider instance which will filter
-     * models according to data in model fields.
-     * - Pass data provider to CGridView, CListView or any similar widget.
-     *
-     * @return CActiveDataProvider the data provider that ctotalan return the models
-     * based on the search/filter conditions.
-     */
     public function search() {
         // @todo Please modify the following code to remove attributes that should not be searched.
 
@@ -273,12 +261,6 @@ class Coa extends CActiveRecord {
         ));
     }
 
-    /**
-     * Returns the static model of the specified AR class.
-     * Please note that you should have this exact method in all your CActiveRecord descendants!
-     * @param string $className active record class name.
-     * @return Coa the static model class
-     */
     public static function model($className = __CLASS__) {
         return parent::model($className);
     }
@@ -362,7 +344,8 @@ class Coa extends CActiveRecord {
         $sql = "SELECT COALESCE(SUM(dc.total), 0) AS beginning_balance 
                 FROM " . JurnalUmum::model()->tableName() . " dc
                 INNER JOIN " . Coa::model()->tableName() . " a ON a.id = dc.coa_id
-                WHERE dc.tanggal_transaksi < :start_date AND is_coa_category = 0 AND dc.coa_id = :coa_id" . $branchConditionSql . " AND dc.debet_kredit = 'D' AND dc.tanggal_transaksi > '" . AppParam::BEGINNING_TRANSACTION_DATE . "'";
+                WHERE dc.tanggal_transaksi < :start_date AND is_coa_category = 0 AND dc.coa_id = :coa_id" . $branchConditionSql . " AND
+                    dc.debet_kredit = 'D' AND dc.tanggal_transaksi > '" . AppParam::BEGINNING_TRANSACTION_DATE . "'";
 
         $value = CActiveRecord::$db->createCommand($sql)->queryScalar($params);
 
@@ -383,7 +366,8 @@ class Coa extends CActiveRecord {
         $sql = "SELECT COALESCE(SUM(dc.total), 0) AS beginning_balance 
                 FROM " . JurnalUmum::model()->tableName() . " dc
                 INNER JOIN " . Coa::model()->tableName() . " a ON a.id = dc.coa_id
-                WHERE dc.tanggal_transaksi < :start_date AND is_coa_category = 0 AND dc.coa_id = :coa_id" . $branchConditionSql . " AND dc.debet_kredit = 'K' AND dc.tanggal_transaksi > '" . AppParam::BEGINNING_TRANSACTION_DATE . "'";
+                WHERE dc.tanggal_transaksi < :start_date AND is_coa_category = 0 AND dc.coa_id = :coa_id" . $branchConditionSql . " AND
+                    dc.debet_kredit = 'K' AND dc.tanggal_transaksi > '" . AppParam::BEGINNING_TRANSACTION_DATE . "'";
 
         $value = CActiveRecord::$db->createCommand($sql)->queryScalar($params);
 
@@ -633,7 +617,7 @@ class Coa extends CActiveRecord {
         );
         
         $accountingJournals = $this->getRelated('jurnalUmums', false, array(
-            'condition' => "tanggal_transaksi < :transactionDate AND coa_id = :coa_id AND is_coa_category = 0 tanggal_transaksi > '" . AppParam::BEGINNING_TRANSACTION_DATE . "'",
+            'condition' => "tanggal_transaksi < :transactionDate AND coa_id = :coa_id AND is_coa_category = 0 AND tanggal_transaksi > '" . AppParam::BEGINNING_TRANSACTION_DATE . "'",
             'params' => $params,
         ));
 
@@ -660,23 +644,31 @@ class Coa extends CActiveRecord {
     
     public function getFinancialForecastReport($datePrevious, $dateNow) {
         
-        $sql = "SELECT transaction_date, SUM(receivable_debit) AS total_receivable_debit, SUM(payable_credit) AS total_payable_credit, SUM(journal_debit) AS total_journal_debit, SUM(journal_credit) AS total_journal_credit
+        $sql = "SELECT transaction_date, SUM(receivable_debit) AS total_receivable_debit, SUM(payable_credit) AS total_payable_credit, 
+                    SUM(journal_debit) AS total_journal_debit, SUM(journal_credit) AS total_journal_credit
                 FROM (
-                    SELECT invoice_number AS transaction_number, payment_date_estimate AS transaction_date, coa_bank_id_estimate AS coa_id, branch_id, total_price AS receivable_debit, 0 AS payable_credit, 0 AS journal_debit, 0 AS journal_credit, payment_left AS remaining
+                    SELECT invoice_number AS transaction_number, payment_date_estimate AS transaction_date, coa_bank_id_estimate AS coa_id, branch_id, 
+                        total_price AS receivable_debit, 0 AS payable_credit, 0 AS journal_debit, 0 AS journal_credit, payment_left AS remaining
                     FROM " . InvoiceHeader::model()->tableName() . "
                     WHERE payment_date_estimate BETWEEN :payment_date_estimate AND :date_now AND coa_bank_id_estimate = :coa_bank_id_estimate
                     UNION
-                    SELECT purchase_order_no AS transaction_number, payment_date_estimate AS transaction_date, coa_bank_id_estimate AS coa_id, main_branch_id AS branch_id, 0 AS receivable_debit, total_price AS payable_credit, 0 AS journal_debit, 0 AS journal_credit, payment_left AS remaining
+                    SELECT purchase_order_no AS transaction_number, payment_date_estimate AS transaction_date, coa_bank_id_estimate AS coa_id, 
+                        main_branch_id AS branch_id, 0 AS receivable_debit, total_price AS payable_credit, 0 AS journal_debit, 0 AS journal_credit, 
+                        payment_left AS remaining
                     FROM " . TransactionPurchaseOrder::model()->tableName() . "
                     WHERE payment_date_estimate BETWEEN :payment_date_estimate AND :date_now AND coa_bank_id_estimate = :coa_bank_id_estimate
                     UNION
-                    SELECT kode_transaksi AS transaction_number, tanggal_transaksi AS transaction_date, coa_id, branch_id, 0 AS receivable_debit, 0 AS payable_credit, total AS journal_debit, 0 AS journal_credit, 1 AS remaining
+                    SELECT kode_transaksi AS transaction_number, tanggal_transaksi AS transaction_date, coa_id, branch_id, 0 AS receivable_debit, 
+                        0 AS payable_credit, total AS journal_debit, 0 AS journal_credit, 1 AS remaining
                     FROM " . JurnalUmum::model()->tableName() . "
-                    WHERE debet_kredit = 'D' AND tanggal_transaksi BETWEEN :payment_date_estimate AND :date_now AND coa_id = :coa_bank_id_estimate AND is_coa_category = 0 
+                    WHERE debet_kredit = 'D' AND tanggal_transaksi BETWEEN :payment_date_estimate AND :date_now AND coa_id = :coa_bank_id_estimate AND 
+                        is_coa_category = 0 
                     UNION
-                    SELECT kode_transaksi AS transaction_number, tanggal_transaksi AS transaction_date, coa_id, branch_id, 0 AS receivable_debit, 0 AS payable_credit, 0 AS journal_debit, total AS journal_credit, 1 AS remaining
+                    SELECT kode_transaksi AS transaction_number, tanggal_transaksi AS transaction_date, coa_id, branch_id, 0 AS receivable_debit, 
+                        0 AS payable_credit, 0 AS journal_debit, total AS journal_credit, 1 AS remaining
                     FROM " . JurnalUmum::model()->tableName() . "
-                    WHERE debet_kredit = 'K' AND tanggal_transaksi BETWEEN :payment_date_estimate AND :date_now AND coa_id = :coa_bank_id_estimate AND is_coa_category = 0 
+                    WHERE debet_kredit = 'K' AND tanggal_transaksi BETWEEN :payment_date_estimate AND :date_now AND coa_id = :coa_bank_id_estimate AND 
+                        is_coa_category = 0 
                 ) transaction
                 WHERE remaining > 0
                 GROUP BY transaction_date
@@ -713,49 +705,6 @@ class Coa extends CActiveRecord {
         
         return $resultSet;
     }
-    
-//    public function searchByReceivable() {
-//        // @todo Please modify the following code to remove attributes that should not be searched.
-//
-//        $criteria = new CDbCriteria;
-//
-//        $criteria->addCondition("EXISTS (
-//            SELECT COALESCE(SUM(j.amount), 0) AS beginning_balance 
-//            FROM (
-//                SELECT coa_id, tanggal_transaksi, total AS amount
-//                FROM " . JurnalUmum::model()->tableName() . "
-//                WHERE debet_kredit = 'D' AND is_coa_category = 0 
-//                UNION ALL
-//                SELECT coa_id, tanggal_transaksi, total * -1 AS amount
-//                FROM " . JurnalUmum::model()->tableName() . "
-//                WHERE debet_kredit = 'K' AND is_coa_category = 0 
-//            ) j
-//            WHERE t.id = j.coa_id
-//            GROUP BY j.coa_id
-//            HAVING beginning_balance > 0
-//        )");
-//        
-//        $criteria->compare('t.id', $this->id);
-//        $criteria->compare('t.name', $this->name, true);
-//        $criteria->compare('t.code', $this->code, true);
-//        $criteria->compare('t.coa_category_id', $this->coa_category_id);
-//        $criteria->compare('t.coa_sub_category_id', $this->coa_sub_category_id);
-//        $criteria->compare('normal_balance', $this->normal_balance, true);
-//        $criteria->compare('opening_balance', $this->opening_balance, true);
-//        $criteria->compare('closing_balance', $this->closing_balance, true);
-//        $criteria->compare('debit', $this->debit, true);
-//        $criteria->compare('credit', $this->credit, true);
-//        $criteria->compare('t.is_approved', 1);
-//        $criteria->compare('t.date_approval', $this->date_approval);
-//        $criteria->compare('t.user_id', $this->user_id);
-//
-//        return new CActiveDataProvider($this, array(
-//            'criteria' => $criteria,
-//            'sort' => array(
-//                'defaultOrder' => 't.code ASC',
-//            ),
-//        ));
-//    }
 
     public function getReceivableAmount() {
         $params = array(
@@ -766,12 +715,14 @@ class Coa extends CActiveRecord {
                 FROM (
                     SELECT coa_id, SUM(total) as debet, 0 AS credit
                     FROM " . JurnalUmum::model()->tableName() . "
-                    WHERE coa_id = :coa_id AND debet_kredit = 'D' AND transaction_type IN ('SO', 'Pin', 'RG') AND tanggal_transaksi > '" . AppParam::BEGINNING_TRANSACTION_DATE . "'
+                    WHERE coa_id = :coa_id AND debet_kredit = 'D' AND transaction_type IN ('SO', 'Pin', 'RG') AND 
+                        tanggal_transaksi > '" . AppParam::BEGINNING_TRANSACTION_DATE . "'
                     GROUP BY coa_id
                     UNION
                     SELECT coa_id, 0 as debet, SUM(total) AS credit
                     FROM " . JurnalUmum::model()->tableName() . "
-                    WHERE coa_id = :coa_id AND debet_kredit = 'K' AND transaction_type IN ('SO', 'Pin', 'RG') AND tanggal_transaksi > '" . AppParam::BEGINNING_TRANSACTION_DATE . "'
+                    WHERE coa_id = :coa_id AND debet_kredit = 'K' AND transaction_type IN ('SO', 'Pin', 'RG') AND 
+                        tanggal_transaksi > '" . AppParam::BEGINNING_TRANSACTION_DATE . "'
                     GROUP BY coa_id
                 ) j
                 GROUP BY j.coa_id
@@ -793,12 +744,14 @@ class Coa extends CActiveRecord {
                 FROM (
                     SELECT coa_id, SUM(total) as debet, 0 AS credit
                     FROM " . JurnalUmum::model()->tableName() . "
-                    WHERE coa_id = :coa_id AND tanggal_transaksi < :start_date AND debet_kredit = 'D' AND transaction_type IN ('SO', 'Pin', 'RG') AND tanggal_transaksi > '" . AppParam::BEGINNING_TRANSACTION_DATE . "'
+                    WHERE coa_id = :coa_id AND tanggal_transaksi < :start_date AND debet_kredit = 'D' AND transaction_type IN ('SO', 'Pin', 'RG') AND 
+                        tanggal_transaksi > '" . AppParam::BEGINNING_TRANSACTION_DATE . "'
                     GROUP BY coa_id
                     UNION
                     SELECT coa_id, 0 as debet, SUM(total) AS credit
                     FROM " . JurnalUmum::model()->tableName() . "
-                    WHERE coa_id = :coa_id AND tanggal_transaksi < :start_date AND debet_kredit = 'K' AND transaction_type IN ('SO', 'Pin', 'RG') AND tanggal_transaksi > '" . AppParam::BEGINNING_TRANSACTION_DATE . "'
+                    WHERE coa_id = :coa_id AND tanggal_transaksi < :start_date AND debet_kredit = 'K' AND transaction_type IN ('SO', 'Pin', 'RG') AND 
+                        tanggal_transaksi > '" . AppParam::BEGINNING_TRANSACTION_DATE . "'
                     GROUP BY coa_id
                 ) j
                 GROUP BY j.coa_id";
@@ -825,13 +778,15 @@ class Coa extends CActiveRecord {
         
         $sql = "SELECT kode_transaksi, tanggal_transaksi, transaction_type, remark, amount, sale_amount, payment_amount, customer
                 FROM (
-                    SELECT j.coa_id, SUM(total) AS amount, SUM(total) AS sale_amount, 0 AS payment_amount, kode_transaksi, tanggal_transaksi, debet_kredit AS transaction_type, transaction_subject AS remark, c.name AS customer
+                    SELECT j.coa_id, SUM(total) AS amount, SUM(total) AS sale_amount, 0 AS payment_amount, kode_transaksi, tanggal_transaksi, 
+                        debet_kredit AS transaction_type, transaction_subject AS remark, c.name AS customer
                     FROM " . JurnalUmum::model()->tableName() . " j
                     INNER JOIN " . Coa::model()->tableName() . " c ON c.id = j.coa_id
                     WHERE j.coa_id = :coa_id AND tanggal_transaksi BETWEEN :start_date AND :end_date AND is_coa_category = 0 AND debet_kredit = 'D'" . $branchConditionSql .
                     " GROUP BY j.coa_id, kode_transaksi, tanggal_transaksi, debet_kredit, transaction_subject, c.name
                     UNION
-                    SELECT j.coa_id, SUM(total) AS amount, 0 AS sale_amount, SUM(total) AS payment_amount, kode_transaksi, tanggal_transaksi, debet_kredit AS transaction_type, transaction_subject AS remark, c.name AS customer
+                    SELECT j.coa_id, SUM(total) AS amount, 0 AS sale_amount, SUM(total) AS payment_amount, kode_transaksi, tanggal_transaksi, 
+                        debet_kredit AS transaction_type, transaction_subject AS remark, c.name AS customer
                     FROM " . JurnalUmum::model()->tableName() . " j
                     INNER JOIN " . Coa::model()->tableName() . " c ON c.id = j.coa_id
                     WHERE j.coa_id = :coa_id AND tanggal_transaksi BETWEEN :start_date AND :end_date AND is_coa_category = 0 AND debet_kredit = 'K'" . $branchConditionSql .
@@ -844,28 +799,6 @@ class Coa extends CActiveRecord {
         return $resultSet;
     }
     
-//    public function getBeginningBalanceReceivableDetail() {
-//        $sql = "
-//            SELECT COALESCE(SUM(j.amount), 0) AS beginning_balance 
-//            FROM (
-//                SELECT coa_id, tanggal_transaksi, total AS amount
-//                FROM " . JurnalUmum::model()->tableName() . "
-//                WHERE debet_kredit = 'D' AND is_coa_category = 0 AND tanggal_transaksi >= '" . AppParam::BEGINNING_TRANSACTION_DATE . "'
-//                UNION ALL
-//                SELECT coa_id, tanggal_transaksi, total * -1 AS amount
-//                FROM " . JurnalUmum::model()->tableName() . "
-//                WHERE debet_kredit = 'K' AND is_coa_category = 0 AND tanggal_transaksi >= '" . AppParam::BEGINNING_TRANSACTION_DATE . "'
-//            ) j
-//            WHERE j.coa_id = :account_id
-//        ";
-//
-//        $value = Yii::app()->db->createCommand($sql)->queryScalar(array(
-//            ':account_id' => $this->id,
-//        ));
-//
-//        return ($value === false) ? 0 : $value;
-//    }
-
     public function getReceivableDetailReport($endDate, $branchId) {
         $branchConditionSql = '';
         
@@ -889,29 +822,6 @@ class Coa extends CActiveRecord {
         return $resultSet;
     }
     
-//    public function getPayableDetailReport($endDate, $branchId) {
-//        $branchConditionSql = '';
-//        
-//        $params = array(
-//            ':coa_id' => $this->id,
-//            ':end_date' => $endDate,
-//        );
-//        
-//        if (!empty($branchId)) {
-//            $branchConditionSql = ' AND branch_id = :branch_id';
-//            $params[':branch_id'] = $branchId;
-//        }
-//        
-//        $sql = "SELECT coa_id, total AS amount, kode_transaksi, tanggal_transaksi, debet_kredit AS transaction_type, transaction_subject AS remark
-//                FROM " . JurnalUmum::model()->tableName() . " 
-//                WHERE coa_id = :coa_id AND tanggal_transaksi BETWEEN '" . AppParam::BEGINNING_TRANSACTION_DATE . " ' AND :end_date AND is_coa_category = 0" . $branchConditionSql . " 
-//                ORDER BY tanggal_transaksi ASC, kode_transaksi ASC";
-//        
-//        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
-//        
-//        return $resultSet;
-//    }
-    
     public function getPayableAmount() {
         $params = array(
             ':coa_id' => $this->id,
@@ -921,12 +831,14 @@ class Coa extends CActiveRecord {
                 FROM (
                     SELECT coa_id, SUM(total) as debet, 0 AS credit
                     FROM " . JurnalUmum::model()->tableName() . "
-                    WHERE coa_id = :coa_id AND debet_kredit = 'D' AND transaction_type IN ('CASH', 'DO', 'MO', 'PO', 'Pout', 'RCI', 'RTO', 'WOE') AND tanggal_transaksi > '" . AppParam::BEGINNING_TRANSACTION_DATE . "'
+                    WHERE coa_id = :coa_id AND debet_kredit = 'D' AND transaction_type IN ('CASH', 'DO', 'MO', 'PO', 'Pout', 'RCI', 'RTO', 'WOE') AND 
+                        tanggal_transaksi > '" . AppParam::BEGINNING_TRANSACTION_DATE . "'
                     GROUP BY coa_id
                     UNION
                     SELECT coa_id, 0 as debet, SUM(total) AS credit
                     FROM " . JurnalUmum::model()->tableName() . "
-                    WHERE coa_id = :coa_id AND debet_kredit = 'K' AND transaction_type IN ('CASH', 'DO', 'MO', 'PO', 'Pout', 'RCI', 'RTO', 'WOE') AND tanggal_transaksi > '" . AppParam::BEGINNING_TRANSACTION_DATE . "'
+                    WHERE coa_id = :coa_id AND debet_kredit = 'K' AND transaction_type IN ('CASH', 'DO', 'MO', 'PO', 'Pout', 'RCI', 'RTO', 'WOE') AND 
+                        tanggal_transaksi > '" . AppParam::BEGINNING_TRANSACTION_DATE . "'
                     GROUP BY coa_id
                 ) j
                 GROUP BY j.coa_id
@@ -948,12 +860,16 @@ class Coa extends CActiveRecord {
                 FROM (
                     SELECT coa_id, SUM(total) as debet, 0 AS credit
                     FROM " . JurnalUmum::model()->tableName() . "
-                    WHERE coa_id = :coa_id AND tanggal_transaksi < :start_date AND debet_kredit = 'D' AND transaction_type IN ('CASH', 'DO', 'MO', 'PO', 'Pout', 'RCI', 'RTO', 'WOE') AND tanggal_transaksi > '" . AppParam::BEGINNING_TRANSACTION_DATE . "'
+                    WHERE coa_id = :coa_id AND tanggal_transaksi < :start_date AND debet_kredit = 'D' AND 
+                        transaction_type IN ('CASH', 'DO', 'MO', 'PO', 'Pout', 'RCI', 'RTO', 'WOE') AND 
+                        tanggal_transaksi > '" . AppParam::BEGINNING_TRANSACTION_DATE . "'
                     GROUP BY coa_id
                     UNION
                     SELECT coa_id, 0 as debet, SUM(total) AS credit
                     FROM " . JurnalUmum::model()->tableName() . "
-                    WHERE coa_id = :coa_id AND tanggal_transaksi < :start_date AND debet_kredit = 'K' AND transaction_type IN ('CASH', 'DO', 'MO', 'PO', 'Pout', 'RCI', 'RTO', 'WOE') AND tanggal_transaksi > '" . AppParam::BEGINNING_TRANSACTION_DATE . "'
+                    WHERE coa_id = :coa_id AND tanggal_transaksi < :start_date AND debet_kredit = 'K' AND 
+                        transaction_type IN ('CASH', 'DO', 'MO', 'PO', 'Pout', 'RCI', 'RTO', 'WOE') AND 
+                        tanggal_transaksi > '" . AppParam::BEGINNING_TRANSACTION_DATE . "'
                     GROUP BY coa_id
                 ) j
                 GROUP BY j.coa_id";

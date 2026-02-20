@@ -1,4 +1,4 @@
-<h1>Kelola Data Kas Harian</h1>
+<h1>Approval Kas Harian</h1>
 
 <div id="link">
     <?php echo CHtml::link('<span class="fa fa-plus"></span>Kas Harian Approval', Yii::app()->baseUrl . '/accounting/cashDailySummary/summary', array(

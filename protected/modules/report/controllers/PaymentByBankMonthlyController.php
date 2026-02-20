@@ -145,10 +145,10 @@ class PaymentByBankMonthlyController extends Controller {
         
         $documentProperties = $objPHPExcel->getProperties();
         $documentProperties->setCreator('Raperind Motor');
-        $documentProperties->setTitle('Laporan Bank Bulanan');
+        $documentProperties->setTitle('Bank Bulanan');
 
         $worksheet = $objPHPExcel->setActiveSheetIndex(0);
-        $worksheet->setTitle('Laporan Bank Bulanan');
+        $worksheet->setTitle('Bank Bulanan');
 
         $worksheet->mergeCells('A1:Z1');
         $worksheet->mergeCells('A2:Z2');
@@ -160,7 +160,7 @@ class PaymentByBankMonthlyController extends Controller {
 
         $branch = Branch::model()->findByPk($branchId);
         $worksheet->setCellValue('A1', 'RAPERIND MOTOR ' . CHtml::encode(CHtml::value($branch, 'name')));
-        $worksheet->setCellValue('A2', 'Laporan Bank Bulanan');
+        $worksheet->setCellValue('A2', 'Bank Bulanan');
         $worksheet->setCellValue('A3', CHtml::encode(strftime("%B",mktime(0,0,0,$month))) . ' ' . CHtml::encode($year));
         $worksheet->setCellValue('A5', 'Transaksi Bank Masuk');
 
@@ -276,7 +276,7 @@ class PaymentByBankMonthlyController extends Controller {
         ob_end_clean();
 
         header('Content-type: application/vnd.ms-excel');
-        header('Content-Disposition: attachment;filename="Laporan Bank Bulanan.xls"');
+        header('Content-Disposition: attachment;filename="bank_bulanan.xls"');
         header('Cache-Control: max-age=0');
 
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');

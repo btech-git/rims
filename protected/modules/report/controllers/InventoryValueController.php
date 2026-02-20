@@ -108,10 +108,10 @@ class InventoryValueController extends Controller {
 
         $documentProperties = $objPHPExcel->getProperties();
         $documentProperties->setCreator('PT. Raperind Motor');
-        $documentProperties->setTitle('Laporan Nilai Persediaan');
+        $documentProperties->setTitle('Nilai Stok Persediaan');
 
         $worksheet = $objPHPExcel->setActiveSheetIndex(0);
-        $worksheet->setTitle('Laporan Nilai Persediaan');
+        $worksheet->setTitle('Nilai Stok Persediaan');
 
         $worksheet->mergeCells('A1:Q1');
         $worksheet->mergeCells('A2:Q2');
@@ -121,7 +121,7 @@ class InventoryValueController extends Controller {
         $worksheet->getStyle('A1:Q5')->getFont()->setBold(true);
 
         $worksheet->setCellValue('A1', 'Raperind Motor');
-        $worksheet->setCellValue('A2', 'Laporan Nilai Persediaan');
+        $worksheet->setCellValue('A2', 'Nilai Stok Persediaan');
         $worksheet->setCellValue('A3', 'Per Tanggal: ' . Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($endDate)));
 
         $worksheet->getStyle('A5:Q5')->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
@@ -194,7 +194,7 @@ class InventoryValueController extends Controller {
         ob_end_clean();
         // We'll be outputting an excel file
         header('Content-type: application/vnd.ms-excel');
-        header('Content-Disposition: attachment;filename="laporan_nilai_persediaan.xls"');
+        header('Content-Disposition: attachment;filename="nilai_stok_persediaan.xls"');
         header('Cache-Control: max-age=0');
         
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
