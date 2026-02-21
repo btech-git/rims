@@ -45,7 +45,7 @@ function tanggal($date) {
                     <div style="float: right; width: 40%">
                         <div>
                             Jl. Raya Radin Inten II No. 9 - 8629545/46 Fax. 8627313<br />
-                            Jl. Celebration Boulevard Blok AA 9/35 - 8261594<br />
+                            Jl. Celebration Boulevard Blok AA 9/35 - 82615945<br />
                             Email info@raperind.com
                         </div>
                     </div>
