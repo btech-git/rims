@@ -14,7 +14,7 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
 ?>
 
 <div class="tab reportTab">
-    <div class="tabHead"><h1>Follow Up Customer</h1></div>
+    <!--<div class="tabHead"><h1>Customer Follow Up + Warranty</h1></div>-->
     
     <div class="tabBody">
         <div id="detail_div">

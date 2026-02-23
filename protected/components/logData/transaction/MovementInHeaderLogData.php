@@ -36,6 +36,15 @@ class MovementInHeaderLogData  {
                     $user = Users::model()->findByPk($headerFieldValue);
                     $newData['user_updated'] = $user === null ? '' : $user->username;
                     break;
+                case 'movement_type':
+                    $movementType = '';
+                    if ($headerFieldValue == 1) {
+                        $movementType = 'Receive Item';
+                    } else if ($headerFieldValue == 2) {
+                        $movementType = 'Return Item';
+                    }
+                    $newData['movement_type'] = $movementType;
+                    break;
                 case 'movementInDetails':
                     $newData['movementInDetails'] = array();
                     foreach ($headerFieldValue as $i => $detailItems) {

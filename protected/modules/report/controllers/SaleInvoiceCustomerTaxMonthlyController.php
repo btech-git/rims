@@ -79,10 +79,10 @@ class SaleInvoiceCustomerTaxMonthlyController extends Controller {
 
         $documentProperties = $objPHPExcel->getProperties();
         $documentProperties->setCreator('Raperind Motor');
-        $documentProperties->setTitle('Penjualan Ppn  Recap Bulan');
+        $documentProperties->setTitle('Penjualan Ppn Bulanan');
 
         $worksheet = $objPHPExcel->setActiveSheetIndex(0);
-        $worksheet->setTitle('Penjualan Ppn  Recap Bulan');
+        $worksheet->setTitle('Penjualan Ppn Bulanan');
 
         $worksheet->mergeCells('A1:J1');
         $worksheet->mergeCells('A2:J2');
@@ -92,7 +92,7 @@ class SaleInvoiceCustomerTaxMonthlyController extends Controller {
         $worksheet->getStyle('A1:J5')->getFont()->setBold(true);
 
         $worksheet->setCellValue('A1', 'Raperind Motor ');
-        $worksheet->setCellValue('A2', 'Laporan Penjualan Ppn  Recap Bulan');
+        $worksheet->setCellValue('A2', 'Penjualan PPn Rekap Bulanan');
         $worksheet->setCellValue('A3', strftime("%B",mktime(0,0,0,$month)) . ' ' . $year);
         
         $worksheet->getStyle('A5:J5')->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
@@ -106,9 +106,9 @@ class SaleInvoiceCustomerTaxMonthlyController extends Controller {
         $worksheet->setCellValue('H5', 'Total PPn');
         $worksheet->setCellValue('I5', 'Total PPh');
         $worksheet->setCellValue('J5', 'Total Invoice');
-        $worksheet->getStyle('A6:J6')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle('A5:J5')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
-        $counter = 7;
+        $counter = 6;
         $sumSubTotal = '0.00';
         $sumTotalTax = '0.00';
         $sumTotalTaxIncome = '0.00';
@@ -137,6 +137,10 @@ class SaleInvoiceCustomerTaxMonthlyController extends Controller {
             
             $counter++;
         }
+        
+        $worksheet->getStyle("A{$counter}:J{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A{$counter}:J{$counter}")->getFont()->setBold(true);
+        
         $worksheet->setCellValue("F{$counter}", 'TOTAL');
         $worksheet->setCellValue("G{$counter}", $sumSubTotal);
         $worksheet->setCellValue("H{$counter}", $sumTotalTax);
@@ -152,7 +156,7 @@ class SaleInvoiceCustomerTaxMonthlyController extends Controller {
         ob_end_clean();
 
         header('Content-type: application/vnd.ms-excel');
-        header("Content-Disposition: attachment;filename=laporan_penjualan_ppn_recap_" . strftime("%B",mktime(0,0,0,$month)) . '_' . $year . ".xls");
+        header("Content-Disposition: attachment;filename=penjualan_ppn_rekap_" . strftime("%B",mktime(0,0,0,$month)) . '_' . $year . ".xls");
         header('Cache-Control: max-age=0');
 
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');

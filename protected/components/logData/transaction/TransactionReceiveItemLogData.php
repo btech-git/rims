@@ -8,9 +8,9 @@ class TransactionReceiveItemLogData  {
             switch ($headerFieldName) {
                 case 'id':
                     break;
-                case 'branch_id':
+                case 'destination_branch':
                     $branch = Branch::model()->findByPk($headerFieldValue);
-                    $newData['branch'] = $branch === null ? '' : $branch->name;
+                    $newData['destination_branch'] = $branch === null ? '' : $branch->name;
                     break;
                 case 'coa_id':
                     $coa = Coa::model()->findByPk($headerFieldValue);
@@ -20,31 +20,88 @@ class TransactionReceiveItemLogData  {
                     $paymentType = PaymentType::model()->findByPk($headerFieldValue);
                     $newData['payment_type'] = $paymentType === null ? '' : $paymentType->name;
                     break;
+                case 'supplier_id':
+                    $supplier = Supplier::model()->findByPk($headerFieldValue);
+                    $newData['supplier'] = $supplier === null ? '' : $supplier->name;
+                    break;
+                case 'purchase_order_id':
+                    $purchaseOrder = TransactionPurchaseOrder::model()->findByPk($headerFieldValue);
+                    $newData['purchase_order'] = $purchaseOrder === null ? '' : $purchaseOrder->purchase_order_no;
+                    break;
+                case 'transfer_request_id':
+                    $transferRequest = TransactionTransferRequest::model()->findByPk($headerFieldValue);
+                    $newData['transfer_request'] = $transferRequest === null ? '' : $transferRequest->transafer_request_no;
+                    break;
+                case 'consignment_in_id':
+                    $consignmentIn = ConsignmentInHeader::model()->findByPk($headerFieldValue);
+                    $newData['consignment_in'] = $consignmentIn === null ? '' : $consignmentIn->consignment_in_number;
+                    break;
+                case 'delivery_order_id':
+                    $deliveryOrder = TransactionDeliveryOrder::model()->findByPk($headerFieldValue);
+                    $newData['delivery_order'] = $deliveryOrder === null ? '' : $deliveryOrder->delivery_order_no;
+                    break;
+                case 'movement_out_id':
+                    $movementOut = MovementOutHeader::model()->findByPk($headerFieldValue);
+                    $newData['movement_out'] = $movementOut === null ? '' : $movementOut->movement_out_no;
+                    break;
+                case 'user_id_receive':
+                    $user = Users::model()->findByPk($headerFieldValue);
+                    $newData['user_receive'] = $user === null ? '' : $user->username;
+                    break;
+                case 'user_id_invoice':
+                    $user = Users::model()->findByPk($headerFieldValue);
+                    $newData['user_invoice'] = $user === null ? '' : $user->username;
+                    break;
+                case 'recipient_id':
+                    $user = Users::model()->findByPk($headerFieldValue);
+                    $newData['recipient'] = $user === null ? '' : $user->username;
+                    break;
+                case 'recipient_branch_id':
+                    $branch = Branch::model()->findByPk($headerFieldValue);
+                    $newData['recipient_branch'] = $branch === null ? '' : $branch->name;
+                    break;
                 case 'user_id':
                     $user = Users::model()->findByPk($headerFieldValue);
                     $newData['username_created'] = $user === null ? '' : $user->username;
+                    break;
+                case 'user_id_updated':
+                    $user = Users::model()->findByPk($headerFieldValue);
+                    $newData['user_updated'] = $user === null ? '' : $user->username;
+                    break;
+                case 'user_id_approval_invoice':
+                    $user = Users::model()->findByPk($headerFieldValue);
+                    $newData['user_approval_invoice'] = $user === null ? '' : $user->username;
                     break;
                 case 'user_id_cancelled':
                     $user = Users::model()->findByPk($headerFieldValue);
                     $newData['username_cancelled'] = $user === null ? '' : $user->username;
                     break;
-                case 'cashTransactionDetails':
-                    $newData['cashTransactionDetails'] = array();
+                case 'is_approved_invoice':
+                    $invoiceApproval = '';
+                    if ($headerFieldValue == 1) {
+                        $invoiceApproval = 'Approved';
+                    } else {
+                        $invoiceApproval = 'Draft';
+                    }
+                    $newData['approved_invoice'] = $invoiceApproval;
+                    break;
+                case 'transactionReceiveItemDetails':
+                    $newData['transactionReceiveItemDetails'] = array();
                     foreach ($headerFieldValue as $i => $detailItems) {
                         $detailNewData = array();
                         foreach ($detailItems as $detailFieldName => $detailFieldValue) {
                             switch ($detailFieldName) {
                                 case 'id':
-                                case 'cash_transaction_id':
+                                case 'receive_item_id':
                                     break;
-                                case 'coa_id':
-                                    $detailNewData['coa_name'] = Coa::model()->findByPk($detailFieldValue)->name;
+                                case 'product_id':
+                                    $detailNewData['product_name'] = Product::model()->findByPk($detailFieldValue)->name;
                                     break;
                                 default:
                                     $detailNewData[$detailFieldName] = $detailFieldValue;
                             }
                         }
-                        $newData['cashTransactionDetails'][] = $detailNewData;
+                        $newData['transactionReceiveItemDetails'][] = $detailNewData;
                     }
                     break;
                 default:

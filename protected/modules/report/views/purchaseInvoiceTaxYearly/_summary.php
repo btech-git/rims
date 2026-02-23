@@ -11,8 +11,9 @@
 
 <div style="font-weight: bold; text-align: center">
     <?php $branch = Branch::model()->findByPk($branchId); ?>
-    <div style="font-size: larger">Laporan Pembelian Ppn  Recap Tahun</div>
-    <div><?php echo CHtml::encode($year); ?> - <?php echo empty($branchId) ? 'All' : CHtml::encode(CHtml::value($branch, 'name')); ?></div>
+    <div style="font-size: larger">Raperind Motor <?php echo CHtml::encode(CHtml::value($branch, 'name')); ?></div>
+    <div style="font-size: larger">Pembelian PPn Rekap Tahunan</div>
+    <div><?php echo CHtml::encode($year); ?></div>
 </div>
 
 <br />

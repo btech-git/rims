@@ -53,7 +53,7 @@ class SaleInvoiceCarSubModelMonthlyController extends Controller {
         }
         
         if (isset($_GET['SaveExcel'])) {
-            $this->saveToExcel($invoiceVehicleInfo, $year, $month);
+            $this->saveToExcel($invoiceVehicleInfo, $year, $month, $branchId);
         }
 
         $this->render('summary', array(
@@ -96,7 +96,7 @@ class SaleInvoiceCarSubModelMonthlyController extends Controller {
         }
     }
     
-    protected function saveToExcel($invoiceVehicleInfo, $yearMonth) {
+    protected function saveToExcel($invoiceVehicleInfo, $year, $month, $branchId) {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
 
@@ -108,38 +108,38 @@ class SaleInvoiceCarSubModelMonthlyController extends Controller {
 
         $documentProperties = $objPHPExcel->getProperties();
         $documentProperties->setCreator('Raperind Motor');
-        $documentProperties->setTitle('Laporan Penjualan Bulanan Kendaraan');
+        $documentProperties->setTitle('Penjualan Kendaraan Bulanan');
 
         $worksheet = $objPHPExcel->setActiveSheetIndex(0);
-        $worksheet->setTitle('Penjualan Bulanan Kendaraan');
+        $worksheet->setTitle('Penjualan Kendaraan Bulanan');
 
-        $worksheet->mergeCells('A2:AI2');
-        $worksheet->mergeCells('A3:AI3');
-        $worksheet->mergeCells('A4:AI4');
+        $worksheet->mergeCells('A1:Z1');
+        $worksheet->mergeCells('A2:Z2');
+        $worksheet->mergeCells('A3:Z3');
         
-        $worksheet->getStyle('A1:AI4')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-        $worksheet->getStyle('A1:AI4')->getFont()->setBold(true);
-        $worksheet->setCellValue('A2', 'Raperind Motor');
-        $worksheet->setCellValue('A3', 'Laporan Penjualan Bulanan Kendaraan');
-        $worksheet->setCellValue('A4', Yii::app()->dateFormatter->format('MMMM yyyy', $yearMonth));
+        $worksheet->getStyle('A1:AJ5')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->getStyle('A1:AJ5')->getFont()->setBold(true);
+        
+        $branch = Branch::model()->findByPk($branchId);
+        $worksheet->setCellValue('A1', 'Raperind Motor ' . CHtml::value($branch, 'name'));
+        $worksheet->setCellValue('A2', 'Penjualan per Model Kendaraan Bulanan');
+        $worksheet->setCellValue('A3', CHtml::encode(strftime("%B",mktime(0,0,0,$month))) . ' ' . $year);
 
-        $worksheet->getStyle("A6:AI6")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
-        $worksheet->getStyle("A6:AI6")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A5:AJ5")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A5:AJ5")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
-        $worksheet->getStyle('A5:AI6')->getFont()->setBold(true);
-
-        $worksheet->setCellValue("A6", 'No');
-        $worksheet->setCellValue("B6", 'Car Make');
-        $worksheet->setCellValue("C6", 'Car Model');
-        $worksheet->setCellValue("D6", 'Car Type');
+        $worksheet->setCellValue("A5", 'No');
+        $worksheet->setCellValue("B5", 'Car Make');
+        $worksheet->setCellValue("C5", 'Car Model');
+        $worksheet->setCellValue("D5", 'Car Type');
         $dateNumList = range(1, 31);
         $columnCounter = 'E';
         foreach ($dateNumList as $dateNum) {
-            $worksheet->setCellValue("{$columnCounter}6", $dateNum);
+            $worksheet->setCellValue("{$columnCounter}5", $dateNum);
             $columnCounter++;
         }
-        $worksheet->setCellValue("{$columnCounter}6", 'Total');
-        $counter = 8;
+        $worksheet->setCellValue("{$columnCounter}5", 'Total');
+        $counter = 6;
 
         $groupTotalSums = array();
         $autoNumber = 1;
@@ -151,7 +151,7 @@ class SaleInvoiceCarSubModelMonthlyController extends Controller {
             $totalSum = 0;
             $columnCounter = 'E';
             foreach ($dateNumList as $dateNum) {
-                $transactionDate = $yearMonth . '-' . str_pad($dateNum, 2, '0', STR_PAD_LEFT);
+                $transactionDate = $year . '-' . $month . '-' . str_pad($dateNum, 2, '0', STR_PAD_LEFT);
                 $total = isset($invoiceVehicleCarSubModelInfo['totals'][$transactionDate]) ? $invoiceVehicleCarSubModelInfo['totals'][$transactionDate] : '';
                 $worksheet->setCellValue("{$columnCounter}{$counter}", $total);
                 $totalSum += $total; 
@@ -167,6 +167,9 @@ class SaleInvoiceCarSubModelMonthlyController extends Controller {
             $autoNumber++;
         }
             
+        $worksheet->getStyle("A{$counter}:AJ{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A{$counter}:AJ{$counter}")->getFont()->setBold(true);
+        
         $worksheet->setCellValue("D{$counter}", 'Total');
         $grandTotal = 0;
         $footerCounter = 'E';
@@ -181,7 +184,7 @@ class SaleInvoiceCarSubModelMonthlyController extends Controller {
         $worksheet->setCellValue("{$footerCounter}{$counter}", CHtml::encode($grandTotal));
         $counter++;
 
-        for ($col = 'A'; $col !== 'AG'; $col++) {
+        for ($col = 'A'; $col !== 'AZ'; $col++) {
             $objPHPExcel->getActiveSheet()
             ->getColumnDimension($col)
             ->setAutoSize(true);
@@ -190,7 +193,7 @@ class SaleInvoiceCarSubModelMonthlyController extends Controller {
         ob_end_clean();
         // We'll be outputting an excel file
         header('Content-type: application/vnd.ms-excel');
-        header('Content-Disposition: attachment;filename="penjualan_bulanan_kendaraan.xls"');
+        header('Content-Disposition: attachment;filename="penjualan_per_model_kendaraan_bulanan.xls"');
         header('Cache-Control: max-age=0');
         
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');

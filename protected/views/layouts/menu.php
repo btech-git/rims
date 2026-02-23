@@ -138,6 +138,11 @@
 //                        'visible' => (Yii::app()->user->checkAccess('inspectionCreate') || Yii::app()->user->checkAccess('inspectionEdit'))
                     ),
                     array(
+                        'label' => 'RG Outstanding', 
+                        'url' => array('/frontDesk/registrationTransaction/adminOutstanding'),
+                        'visible' => Yii::app()->user->checkAccess('workOrderApproval'),
+                    ),
+                    array(
                         'label' => 'Vehicle System Check', 
                         'url' => array('/frontDesk/vehicleInspection/admin'), 
                         'visible' => (Yii::app()->user->checkAccess('inspectionCreate') || Yii::app()->user->checkAccess('inspectionEdit') || Yii::app()->user->checkAccess('inspectionView')),

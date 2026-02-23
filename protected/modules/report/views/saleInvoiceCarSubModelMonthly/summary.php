@@ -20,23 +20,6 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                     <div class="small-4 columns">
                                         <span class="prefix">Periode:</span>
                                     </div>
-                                    <?php /*list($yearNow, $monthNow) = explode('-', $yearMonthNow); ?>
-                                    <?php $currentYear = intval($yearNow); ?>
-                                    <?php $currentMonth = intval($monthNow); ?>
-                                    <?php $yearMonthRange = array(); ?>
-                                    <?php for ($i = 0; $i < 36; $i++): ?>
-                                        <?php $month = str_pad($currentMonth, 2, '0', STR_PAD_LEFT); ?>
-                                        <?php $yearMonthRange[$currentYear . '-' . $month] = date('F', mktime(null, null, null, $currentMonth)) . ' ' . $currentYear; ?>
-                                        <?php $currentMonth--; ?>
-                                        <?php if ($currentMonth === 0): ?>
-                                            <?php $currentMonth = 12; ?>
-                                            <?php $currentYear--; ?>
-                                        <?php endif; ?>
-                                    <?php endfor;*/ ?>
-
-<!--                                    <div class="small-8 columns">
-                                        <?php //echo CHtml::dropDownList('YearMonth', $yearMonth, $yearMonthRange); ?>
-                                    </div>-->
                                     
                                     <div class="small-4 columns">
                                         <?php echo CHtml::dropDownList('Month', $month, array(
@@ -136,6 +119,7 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                     <?php $this->renderPartial('_summary', array(
                         'year' => $year,
                         'month' => $month,
+                        'branchId' => $branchId,
                         'invoiceVehicleInfo' => $invoiceVehicleInfo,
                     )); ?>
                 </div>

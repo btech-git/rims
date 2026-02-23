@@ -28,6 +28,7 @@
     </thead>
     
     <tbody>
+        <?php $groupTotalSums = array(); ?>
         <?php foreach ($productDataProvider->data as $product): ?>
             <?php $tireSaleTotalQuantities = $product->getTireSaleTotalQuantitiesReport($year, $month); ?>
             <?php $totalQuantity = 0; ?>
@@ -66,6 +67,10 @@
                         ), array('target' => '_blank')); ?>
                     </td>
                     <?php $totalQuantity += $saleQuantity; ?>
+                    <?php if (!isset($groupTotalSums[$branch->id])): ?>
+                        <?php $groupTotalSums[$branch->id] = 0; ?>
+                    <?php endif; ?>
+                    <?php $groupTotalSums[$branch->id] += $saleQuantity; ?>
                 <?php endforeach; ?>
                 <td style="text-align: center">
                     <?php echo CHtml::link($totalQuantity, array(
@@ -79,4 +84,18 @@
             </tr>
         <?php endforeach; ?>
     </tbody>
+    <tfoot>
+        <tr>
+            <td style="text-align: right" colspan="7">Total</td>
+            <?php $grandTotal = 0; ?>
+            <?php foreach ($branches as $branch): ?>
+                <?php if (!isset($groupTotalSums[$branch->id])): ?>
+                    <?php $groupTotalSums[$branch->id] = 0; ?>
+                <?php endif; ?>
+                <td style="text-align: center"><?php echo CHtml::encode($groupTotalSums[$branch->id]); ?></td>
+                <?php $grandTotal += $groupTotalSums[$branch->id]; ?>
+            <?php endforeach; ?>
+            <td style="text-align: center"><?php echo CHtml::encode($grandTotal); ?></td>
+        </tr>
+    </tfoot>
 </table>

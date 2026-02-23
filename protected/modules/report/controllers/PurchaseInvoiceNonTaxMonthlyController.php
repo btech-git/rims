@@ -85,10 +85,10 @@ class PurchaseInvoiceNonTaxMonthlyController extends Controller {
 
         $documentProperties = $objPHPExcel->getProperties();
         $documentProperties->setCreator('Raperind Motor');
-        $documentProperties->setTitle('Pembelian Ppn  Recap Bulan');
+        $documentProperties->setTitle('Pembelian NON Ppn Bulanan');
 
         $worksheet = $objPHPExcel->setActiveSheetIndex(0);
-        $worksheet->setTitle('Pembelian Ppn  Recap Bulan');
+        $worksheet->setTitle('Pembelian NON Ppn Bulanan');
 
         $worksheet->mergeCells('A1:G1');
         $worksheet->mergeCells('A2:G2');
@@ -98,7 +98,7 @@ class PurchaseInvoiceNonTaxMonthlyController extends Controller {
         $worksheet->getStyle('A1:G5')->getFont()->setBold(true);
 
         $worksheet->setCellValue('A1', 'Raperind Motor ');
-        $worksheet->setCellValue('A2', 'Laporan Pembelian Ppn  Recap Bulan');
+        $worksheet->setCellValue('A2', 'Faktur Pembelian Non PPn  Rekap Bulanan');
         $worksheet->setCellValue('A3', strftime("%B",mktime(0,0,0,$month)) . ' ' . $year);
         
         $worksheet->getStyle('A5:G5')->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
@@ -109,9 +109,9 @@ class PurchaseInvoiceNonTaxMonthlyController extends Controller {
         $worksheet->setCellValue('E5', 'Total DPP');
         $worksheet->setCellValue('F5', 'Total PPn');
         $worksheet->setCellValue('G5', 'Total Invoice');
-        $worksheet->getStyle('A6:G6')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle('A5:G5')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
-        $counter = 7;
+        $counter = 6;
         $sumSubTotal = '0.00';
         $sumTotalTax = '0.00';
         $sumGrandTotal = '0.00';
@@ -134,6 +134,10 @@ class PurchaseInvoiceNonTaxMonthlyController extends Controller {
 
             $counter++;
         }
+        
+        $worksheet->getStyle("A{$counter}:G{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A{$counter}:G{$counter}")->getFont()->setBold(true);
+        
         $worksheet->setCellValue("D{$counter}", 'TOTAL');
         $worksheet->setCellValue("E{$counter}", $sumSubTotal);
         $worksheet->setCellValue("F{$counter}", $sumTotalTax);
@@ -148,7 +152,7 @@ class PurchaseInvoiceNonTaxMonthlyController extends Controller {
         ob_end_clean();
 
         header('Content-type: application/vnd.ms-excel');
-        header("Content-Disposition: attachment;filename=laporan_pembelian_non_ppn_" . strftime("%B",mktime(0,0,0,$month)) . ' ' . $year. ".xls");
+        header("Content-Disposition: attachment;filename=faktur_pembelian_non_ppn_" . strftime("%B",mktime(0,0,0,$month)) . ' ' . $year. ".xls");
         header('Cache-Control: max-age=0');
 
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');

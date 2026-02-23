@@ -1,8 +1,8 @@
 
 <div style="font-weight: bold; text-align: center">
     <?php $branch = Branch::model()->findByPk($branchId); ?>
-    <div style="font-size: larger"><?php echo CHtml::encode(($branch === null) ? '' : $branch->name); ?></div>
-    <div style="font-size: larger">Laporan Profit/Loss Induk</div>
+    <div style="font-size: larger">Raperind Motor <?php echo CHtml::encode(($branch === null) ? '' : $branch->name); ?></div>
+    <div style="font-size: larger">Laba/Rugi (Induk)</div>
     <div><?php echo ' Periode: &nbsp;&nbsp; ' . CHtml::encode(Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($startDate))) . ' - ' . CHtml::encode(Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($endDate))); ?></div>
 </div>
 

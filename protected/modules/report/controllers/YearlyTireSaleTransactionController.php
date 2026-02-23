@@ -160,10 +160,10 @@ class YearlyTireSaleTransactionController extends Controller {
 
         $documentProperties = $objPHPExcel->getProperties();
         $documentProperties->setCreator('Raperind Motor');
-        $documentProperties->setTitle('Laporan Penjualan Tahunan Tire');
+        $documentProperties->setTitle('Penjualan Ban Tahunan');
 
         $worksheet = $objPHPExcel->setActiveSheetIndex(0);
-        $worksheet->setTitle('Penjualan Tahunan Tire');
+        $worksheet->setTitle('Penjualan Ban Tahunan');
 
         $worksheet->mergeCells('A1:T1');
         $worksheet->mergeCells('A2:T2');
@@ -173,8 +173,8 @@ class YearlyTireSaleTransactionController extends Controller {
         $worksheet->getStyle('A1:T3')->getFont()->setBold(true);
         
         $branch = Branch::model()->findByPk($branchId);
-        $worksheet->setCellValue('A1', 'Raperind Motor' . CHtml::value($branch, 'name'));
-        $worksheet->setCellValue('A2', 'Laporan Penjualan Tahunan Tire');
+        $worksheet->setCellValue('A1', 'Raperind Motor ' . CHtml::value($branch, 'name'));
+        $worksheet->setCellValue('A2', 'Penjualan Ban Tahunan');
         $worksheet->setCellValue('A3', $year);
 
         $worksheet->getStyle("A5:T5")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
@@ -209,7 +209,7 @@ class YearlyTireSaleTransactionController extends Controller {
             $columnCounter++;
         }
         $worksheet->setCellValue("{$columnCounter}5", 'Total');
-        $counter = 7;
+        $counter = 6;
 
         $groupTotalSums = array();
         $autoNumber = 1;
@@ -264,7 +264,7 @@ class YearlyTireSaleTransactionController extends Controller {
         ob_end_clean();
         // We'll be outputting an excel file
         header('Content-type: application/vnd.ms-excel');
-        header('Content-Disposition: attachment;filename="penjualan_tahunan_ban.xls"');
+        header('Content-Disposition: attachment;filename="penjualan_ban_tahunan.xls"');
         header('Cache-Control: max-age=0');
         
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');

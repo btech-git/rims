@@ -23,9 +23,6 @@ class BalanceSheetController extends Controller {
         ini_set('memory_limit', '1024M');
         
         $dateNow = date('Y-m-d');
-//        list($yearNow, , ) = explode('-', $dateNow);
-//        $dateStart = $yearNow . '-01-01';
-//        $dateStart = '2022-01-01';
 
         $branchId = (isset($_GET['BranchId'])) ? $_GET['BranchId'] : '';
         $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : $dateNow;
@@ -72,10 +69,10 @@ class BalanceSheetController extends Controller {
 
         $documentProperties = $objPHPExcel->getProperties();
         $documentProperties->setCreator('Raperind Motor');
-        $documentProperties->setTitle('Laporan Balance Sheet Induk');
+        $documentProperties->setTitle('Neraca Induk');
 
         $worksheet = $objPHPExcel->setActiveSheetIndex(0);
-        $worksheet->setTitle('Laporan Balance Sheet Induk');
+        $worksheet->setTitle('Neraca Induk');
 
         $worksheet->mergeCells('A1:B1');
         $worksheet->mergeCells('A2:B2');
@@ -83,8 +80,9 @@ class BalanceSheetController extends Controller {
         $worksheet->getStyle('A1:B3')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
         $worksheet->getStyle('A1:B3')->getFont()->setBold(true);
 
-        $worksheet->setCellValue('A1', 'Laporan Balance Sheet Induk');
-        $worksheet->setCellValue('A2', $startDateString . ' - ' . $endDateString);
+        $worksheet->setCellValue('A1', 'Raperind Motor');
+        $worksheet->setCellValue('A2', 'Neraca (Induk)');
+        $worksheet->setCellValue('A3', $startDateString . ' - ' . $endDateString);
 
         $counter = 5;
 
@@ -283,7 +281,7 @@ class BalanceSheetController extends Controller {
             $counter++;
         }
 
-        for ($col = 'A'; $col !== 'H'; $col++) {
+        for ($col = 'A'; $col !== 'Z'; $col++) {
             $objPHPExcel->getActiveSheet()
             ->getColumnDimension($col)
             ->setAutoSize(true);
@@ -292,7 +290,7 @@ class BalanceSheetController extends Controller {
         ob_end_clean();
         // We'll be outputting an excel file
         header('Content-type: application/vnd.ms-excel');
-        header('Content-Disposition: attachment;filename="Laporan Balance Sheet Induk.xls"');
+        header('Content-Disposition: attachment;filename="neraca_induk.xls"');
         header('Cache-Control: max-age=0');
         
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');

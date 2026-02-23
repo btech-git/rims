@@ -109,7 +109,7 @@ class FollowUpController extends Controller {
         }
         
         if (isset($_GET['SaveExcel'])) {
-            $this->saveToExcelCustomerFollowUp($dataProvider);
+            $this->saveToExcelCustomerFollowUp($dataProvider, $model, $invoiceStartDate, $invoiceEndDate);
         }
 
         $this->render('adminSales', array(
@@ -154,7 +154,7 @@ class FollowUpController extends Controller {
         }
     }
     
-    protected function saveToExcelCustomerFollowUp($dataProvider) {
+    protected function saveToExcelCustomerFollowUp($dataProvider, $model, $invoiceStartDate, $invoiceEndDate) {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
         
@@ -173,36 +173,41 @@ class FollowUpController extends Controller {
 
         $worksheet->mergeCells('A1:S1');
         $worksheet->mergeCells('A2:S2');
-        $worksheet->getStyle('A1:S3')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-        $worksheet->getStyle('A1:S3')->getFont()->setBold(true);
-
-        $worksheet->setCellValue('A1', 'Customer Follow Up');
+        $worksheet->mergeCells('A3:S3');
         
-        $worksheet->getStyle('A3:S3')->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle('A1:S5')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->getStyle('A1:S5')->getFont()->setBold(true);
 
-        $worksheet->setCellValue('A3', 'No');
-        $worksheet->setCellValue('B3', 'Customer');
-        $worksheet->setCellValue('C3', 'HP');
-        $worksheet->setCellValue('D3', 'Plat #');
-        $worksheet->setCellValue('E3', 'Vehicle');
-        $worksheet->setCellValue('F3', 'Color');
-        $worksheet->setCellValue('G3', 'Vehicle System Check # (Last)');
-        $worksheet->setCellValue('H3', 'Last KM');
-        $worksheet->setCellValue('I3', 'Invoice #');
-        $worksheet->setCellValue('J3', 'Invoice Last Date');
-        $worksheet->setCellValue('K3', 'Last Service List');
-        $worksheet->setCellValue('L3', 'Last Parts List');
-        $worksheet->setCellValue('M3', 'Frontliner(s)');
-        $worksheet->setCellValue('N3', 'Mechanic(s)');
-        $worksheet->setCellValue('O3', 'Warranty Date (3days)');
-        $worksheet->setCellValue('P3', 'Follow up Date (3 Months)');
-        $worksheet->setCellValue('Q3', 'Days since Last Service (hari)');
-        $worksheet->setCellValue('R3', 'Notes');
-        $worksheet->setCellValue('S3', 'Follow up Status');
+        $branch = Branch::model()->findByPk($model->branch_id);
+        $worksheet->setCellValue('A1', 'Raperind Motor ' . CHtml::value($branch, 'name'));
+        $worksheet->setCellValue('A2', 'Customer Follow Up + Warranty');
+        $worksheet->setCellValue('A3', Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($invoiceStartDate)) . ' ' . Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($invoiceEndDate)));
+        
+        $worksheet->getStyle('A5:S5')->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
-        $worksheet->getStyle('A3:S3')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->setCellValue('A5', 'No');
+        $worksheet->setCellValue('B5', 'Customer');
+        $worksheet->setCellValue('C5', 'HP');
+        $worksheet->setCellValue('D5', 'Plat #');
+        $worksheet->setCellValue('E5', 'Vehicle');
+        $worksheet->setCellValue('F5', 'Color');
+        $worksheet->setCellValue('G5', 'Vehicle System Check # (Last)');
+        $worksheet->setCellValue('H5', 'Last KM');
+        $worksheet->setCellValue('I5', 'Invoice #');
+        $worksheet->setCellValue('J5', 'Invoice Last Date');
+        $worksheet->setCellValue('K5', 'Last Service List');
+        $worksheet->setCellValue('L5', 'Last Parts List');
+        $worksheet->setCellValue('M5', 'Frontliner(s)');
+        $worksheet->setCellValue('N5', 'Mechanic(s)');
+        $worksheet->setCellValue('O5', 'Warranty Date (3days)');
+        $worksheet->setCellValue('P5', 'Follow up Date (3 Months)');
+        $worksheet->setCellValue('Q5', 'Days since Last Service (hari)');
+        $worksheet->setCellValue('R5', 'Notes');
+        $worksheet->setCellValue('S5', 'Follow up Status');
 
-        $counter = 5;
+        $worksheet->getStyle('A5:S5')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+
+        $counter = 6;
         foreach ($dataProvider->data as $i => $header) {
 
             $worksheet->setCellValue("A{$counter}", $i + 1);
@@ -236,7 +241,7 @@ class FollowUpController extends Controller {
         ob_end_clean();
         // We'll be outputting an excel file
         header('Content-type: application/vnd.ms-excel');
-        header('Content-Disposition: attachment;filename="customer_follow_up.xls"');
+        header('Content-Disposition: attachment;filename="customer_follow_up_warranty.xls"');
         header('Cache-Control: max-age=0');
         
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');

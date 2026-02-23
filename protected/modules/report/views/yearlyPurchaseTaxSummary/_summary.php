@@ -6,7 +6,8 @@
 '); ?>
 
 <div style="font-weight: bold; text-align: center">
-    <div style="font-size: larger">Laporan Pembelian Ppn Tahunan</div>
+    <div style="font-size: larger">Raperind Motor</div>
+    <div style="font-size: large">Faktur Pembelian Ppn Summary</div>
     <div><?php echo CHtml::encode($year); ?></div>
 </div>
 

@@ -169,6 +169,8 @@ class MonthlyTireSaleTransactionController extends Controller {
         $worksheet->getStyle("A5:{$columnHeader}5")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
         $counter = 6;
+        
+        $groupTotalSums = array();
         foreach ($productDataProvider->data as $product) {
             $tireSaleTotalQuantities = $product->getTireSaleTotalQuantitiesReport($year, $month);
             $totalQuantity = 0;
@@ -194,11 +196,31 @@ class MonthlyTireSaleTransactionController extends Controller {
                 $column++;
 
                 $totalQuantity += $saleQuantity;
+                if (!isset($groupTotalSums[$branch->id])) {
+                    $groupTotalSums[$branch->id] = 0;
+                }
+                $groupTotalSums[$branch->id] += $saleQuantity;
             }
             
             $worksheet->setCellValue("{$column}{$counter}", $totalQuantity);
             $counter++;
         }
+        
+        $worksheet->getStyle("A{$counter}:P{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A{$counter}:P{$counter}")->getFont()->setBold(true);
+        
+        $worksheet->setCellValue("G{$counter}", 'Total');
+        $grandTotal = 0;
+        $footerCounter = 'H';
+        foreach ($branches as $branch) {
+            if (!isset($groupTotalSums[$branch->id])) {
+                $groupTotalSums[$branch->id] = 0;
+            }
+            $worksheet->setCellValue("{$footerCounter}{$counter}", $groupTotalSums[$branch->id]);
+            $grandTotal += $groupTotalSums[$branch->id];
+            $footerCounter++;
+        }
+        $worksheet->setCellValue("{$footerCounter}{$counter}", $grandTotal);
         
         for ($col = 'A'; $col !== 'Z'; $col++) {
             $objPHPExcel->getActiveSheet()

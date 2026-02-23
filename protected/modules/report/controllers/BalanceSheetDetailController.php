@@ -23,9 +23,6 @@ class BalanceSheetDetailController extends Controller {
         ini_set('memory_limit', '1024M');
 
         $dateNow = date('Y-m-d');
-//        list($yearNow, , ) = explode('-', $dateNow);
-//        $dateStart = $yearNow . '-01-01';
-//        $dateStart = '2022-01-01';
 
         $branchId = (isset($_GET['BranchId'])) ? $_GET['BranchId'] : '';
         $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : $dateNow;
@@ -102,10 +99,10 @@ class BalanceSheetDetailController extends Controller {
 
         $documentProperties = $objPHPExcel->getProperties();
         $documentProperties->setCreator('Raperind Motor');
-        $documentProperties->setTitle('Laporan Balance Sheet Standar');
+        $documentProperties->setTitle('Neraca Standar');
 
         $worksheet = $objPHPExcel->setActiveSheetIndex(0);
-        $worksheet->setTitle('Laporan Balance Sheet Standar');
+        $worksheet->setTitle('Neraca Standar');
 
         $worksheet->mergeCells('A1:B1');
         $worksheet->mergeCells('A2:B2');
@@ -113,8 +110,10 @@ class BalanceSheetDetailController extends Controller {
         $worksheet->getStyle('A1:B3')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
         $worksheet->getStyle('A1:B3')->getFont()->setBold(true);
 
-        $worksheet->setCellValue('A1', 'Laporan Balance Sheet Standar');
-        $worksheet->setCellValue('A2', $startDateString . ' - ' . $endDateString);
+        $branch = Branch::model()->findByPk($branchId);
+        $worksheet->setCellValue('A1', 'Raperind Motor ' . ($branch === null) ? '' : $branch->name);
+        $worksheet->setCellValue('A2', 'Neraca (Standar)');
+        $worksheet->setCellValue('A3', $startDateString . ' - ' . $endDateString);
 
         $counter = 5;
 
@@ -387,7 +386,7 @@ class BalanceSheetDetailController extends Controller {
             $counter++;
         }
 
-        for ($col = 'A'; $col !== 'H'; $col++) {
+        for ($col = 'A'; $col !== 'Z'; $col++) {
             $objPHPExcel->getActiveSheet()
             ->getColumnDimension($col)
             ->setAutoSize(true);
@@ -396,7 +395,7 @@ class BalanceSheetDetailController extends Controller {
         ob_end_clean();
         // We'll be outputting an excel file
         header('Content-type: application/vnd.ms-excel');
-        header('Content-Disposition: attachment;filename="Laporan Balance Sheet Standar.xls"');
+        header('Content-Disposition: attachment;filename="neraca_standar.xls"');
         header('Cache-Control: max-age=0');
         
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');

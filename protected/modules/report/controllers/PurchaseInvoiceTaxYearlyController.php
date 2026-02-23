@@ -33,6 +33,7 @@ class PurchaseInvoiceTaxYearlyController extends Controller {
         $yearlyPurchaseSubTotalData = array();
         $yearlyPurchaseTotalTaxData = array();
         $yearlyPurchaseSummaryItem = array();
+        
         foreach ($yearlyPurchaseSummary as $yearlyPurchaseSummaryItem) {
             $monthValue = intval(substr($yearlyPurchaseSummaryItem['year_month_value'], 4, 2));
             $yearlyPurchaseTotalPriceData[$monthValue] = $yearlyPurchaseSummaryItem['total_price'];
@@ -103,10 +104,10 @@ class PurchaseInvoiceTaxYearlyController extends Controller {
 
         $documentProperties = $objPHPExcel->getProperties();
         $documentProperties->setCreator('Raperind Motor');
-        $documentProperties->setTitle('Pembelian Ppn  Recap Tahun');
+        $documentProperties->setTitle('Pembelian Ppn Rekap Tahunan');
 
         $worksheet = $objPHPExcel->setActiveSheetIndex(0);
-        $worksheet->setTitle('Pembelian Ppn  Recap Tahun');
+        $worksheet->setTitle('Pembelian Ppn Rekap Tahunan');
 
         $worksheet->mergeCells('A1:G1');
         $worksheet->mergeCells('A2:G2');
@@ -115,8 +116,8 @@ class PurchaseInvoiceTaxYearlyController extends Controller {
         $worksheet->getStyle('A1:G5')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
         $worksheet->getStyle('A1:G5')->getFont()->setBold(true);
 
-        $worksheet->setCellValue('A1', empty($branchId) ? 'Raperind Motor' : 'Raperind Motor ' . CHtml::value($branch, 'name'));
-        $worksheet->setCellValue('A2', 'Laporan Pembelian Ppn  Recap Tahun');
+        $worksheet->setCellValue('A1', 'Raperind Motor ' . CHtml::value($branch, 'name'));
+        $worksheet->setCellValue('A2', 'Pembelian Ppn Rekap Tahunan');
         $worksheet->setCellValue('A3', $year);
         $monthList = array(
             1 => 'Jan',
@@ -141,9 +142,9 @@ class PurchaseInvoiceTaxYearlyController extends Controller {
         $worksheet->setCellValue('E5', 'Total DPP');
         $worksheet->setCellValue('F5', 'Total PPn');
         $worksheet->setCellValue('G5', 'Total Invoice');
-        $worksheet->getStyle('A6:G6')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle('A5:G5')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
-        $counter = 7;
+        $counter = 6;
         $sumSubTotal = '0.00';
         $sumTotalTax = '0.00';
         $sumGrandTotal = '0.00';
@@ -167,6 +168,10 @@ class PurchaseInvoiceTaxYearlyController extends Controller {
 
             $counter++;
         }
+        
+        $worksheet->getStyle("A{$counter}:G{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A{$counter}:G{$counter}")->getFont()->setBold(true);
+        
         $worksheet->setCellValue("D{$counter}", 'TOTAL');
         $worksheet->setCellValue("E{$counter}", $sumSubTotal);
         $worksheet->setCellValue("F{$counter}", $sumTotalTax);
@@ -181,7 +186,7 @@ class PurchaseInvoiceTaxYearlyController extends Controller {
         ob_end_clean();
 
         header('Content-type: application/vnd.ms-excel');
-        header("Content-Disposition: attachment;filename=laporan_pembelian_ppn_recap_" . $year . ".xls");
+        header("Content-Disposition: attachment;filename=pembelian_ppn_rekap_" . $year . ".xls");
         header('Cache-Control: max-age=0');
 
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');

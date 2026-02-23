@@ -180,10 +180,10 @@ class YearlyOilSaleTransactionController extends Controller {
 
         $documentProperties = $objPHPExcel->getProperties();
         $documentProperties->setCreator('Raperind Motor');
-        $documentProperties->setTitle('Laporan Penjualan Tahunan Oli');
+        $documentProperties->setTitle('Penjualan Oli Tahunan');
 
         $worksheet = $objPHPExcel->setActiveSheetIndex(0);
-        $worksheet->setTitle('Penjualan Tahunan Oli');
+        $worksheet->setTitle('Penjualan Oli Tahunan');
 
         $worksheet->mergeCells('A1:U1');
         $worksheet->mergeCells('A2:U2');
@@ -194,7 +194,7 @@ class YearlyOilSaleTransactionController extends Controller {
         
         $branch = Branch::model()->findByPk($branchId);
         $worksheet->setCellValue('A1', 'Raperind Motor' . CHtml::value($branch, 'name'));
-        $worksheet->setCellValue('A2', 'Laporan Penjualan Tahunan Oli');
+        $worksheet->setCellValue('A2', 'Penjualan Oli Tahunan');
         $worksheet->setCellValue('A3', $year);
 
         $worksheet->getStyle("A5:U5")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
@@ -274,11 +274,11 @@ class YearlyOilSaleTransactionController extends Controller {
             if (!isset($groupTotalSums[$month])) {
                 $groupTotalSums[$month] = 0;
             }
-            $worksheet->setCellValue("{$footerCounter}{$counter}", CHtml::encode($groupTotalSums[$month]));
+            $worksheet->setCellValue("{$footerCounter}{$counter}", $groupTotalSums[$month]);
             $grandTotal += $groupTotalSums[$month];
             $footerCounter++;
         }
-        $worksheet->setCellValue("{$footerCounter}{$counter}", CHtml::encode($grandTotal));
+        $worksheet->setCellValue("{$footerCounter}{$counter}", $grandTotal);
 
         for ($col = 'A'; $col !== 'Z'; $col++) {
             $objPHPExcel->getActiveSheet()
@@ -289,7 +289,7 @@ class YearlyOilSaleTransactionController extends Controller {
         ob_end_clean();
         // We'll be outputting an excel file
         header('Content-type: application/vnd.ms-excel');
-        header('Content-Disposition: attachment;filename="penjualan_tahunan_oli.xls"');
+        header('Content-Disposition: attachment;filename="penjualan_oli_tahunan.xls"');
         header('Cache-Control: max-age=0');
         
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');

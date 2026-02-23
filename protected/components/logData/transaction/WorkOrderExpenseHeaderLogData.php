@@ -1,6 +1,6 @@
 <?php
 
-class CashTransactionLogData  {
+class WorkOrderExpenseHeaderLogData  {
     
     public static function make($rootData) {
         $newData = array();
@@ -8,17 +8,17 @@ class CashTransactionLogData  {
             switch ($headerFieldName) {
                 case 'id':
                     break;
+                case 'registration_transaction_id':
+                    $registrationTransaction = RegistrationTransaction::model()->findByPk($headerFieldValue);
+                    $newData['registration_transaction'] = $registrationTransaction === null ? '' : $registrationTransaction->transaction_number;
+                    break;
+                case 'supplier_id':
+                    $supplier = Supplier::model()->findByPk($headerFieldValue);
+                    $newData['supplier'] = $supplier === null ? '' : $supplier->name;
+                    break;
                 case 'branch_id':
                     $branch = Branch::model()->findByPk($headerFieldValue);
                     $newData['branch'] = $branch === null ? '' : $branch->name;
-                    break;
-                case 'coa_id':
-                    $coa = Coa::model()->findByPk($headerFieldValue);
-                    $newData['coa'] = $coa === null ? '' : $coa->name;
-                    break;
-                case 'payment_type_id':
-                    $paymentType = PaymentType::model()->findByPk($headerFieldValue);
-                    $newData['payment_type'] = $paymentType === null ? '' : $paymentType->name;
                     break;
                 case 'user_id':
                     $user = Users::model()->findByPk($headerFieldValue);
@@ -28,27 +28,20 @@ class CashTransactionLogData  {
                     $user = Users::model()->findByPk($headerFieldValue);
                     $newData['username_cancelled'] = $user === null ? '' : $user->username;
                     break;
-                case 'user_id_updated':
-                    $user = Users::model()->findByPk($headerFieldValue);
-                    $newData['username_updated'] = $user === null ? '' : $user->username;
-                    break;
-                case 'cashTransactionDetails':
-                    $newData['cashTransactionDetails'] = array();
+                case 'workOrderExpenseDetails':
+                    $newData['workOrderExpenseDetails'] = array();
                     foreach ($headerFieldValue as $i => $detailItems) {
                         $detailNewData = array();
                         foreach ($detailItems as $detailFieldName => $detailFieldValue) {
                             switch ($detailFieldName) {
                                 case 'id':
-                                case 'cash_transaction_id':
-                                    break;
-                                case 'coa_id':
-                                    $detailNewData['coa_name'] = Coa::model()->findByPk($detailFieldValue)->name;
+                                case 'work_order_expense_header_id':
                                     break;
                                 default:
                                     $detailNewData[$detailFieldName] = $detailFieldValue;
                             }
                         }
-                        $newData['cashTransactionDetails'][] = $detailNewData;
+                        $newData['workOrderExpenseDetails'][] = $detailNewData;
                     }
                     break;
                 default:

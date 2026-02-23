@@ -118,7 +118,6 @@ class BalanceSheetMonthlyController extends Controller {
                 $currentYear++;
             }
         }
-        $branch = empty($branchId) ? '' : Branch::model()->findbyPk($branchId);
 
         spl_autoload_unregister(array('YiiBase', 'autoload'));
         include_once Yii::getPathOfAlias('ext.phpexcel.Classes') . DIRECTORY_SEPARATOR . 'PHPExcel.php';
@@ -128,10 +127,10 @@ class BalanceSheetMonthlyController extends Controller {
 
         $documentProperties = $objPHPExcel->getProperties();
         $documentProperties->setCreator('Raperind Motor');
-        $documentProperties->setTitle('Balance Sheet Multi Periode');
+        $documentProperties->setTitle('Neraca Multi Periode');
 
         $worksheet = $objPHPExcel->setActiveSheetIndex(0);
-        $worksheet->setTitle('Balance Sheet Multi Periode');
+        $worksheet->setTitle('Neraca Multi Periode');
 
         $worksheet->mergeCells('A1:B1');
         $worksheet->mergeCells('A2:B2');
@@ -139,11 +138,10 @@ class BalanceSheetMonthlyController extends Controller {
         $worksheet->getStyle('A1:B3')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
         $worksheet->getStyle('A1:B3')->getFont()->setBold(true);
 
-        $worksheet->setCellValue('A1', 'Balance Sheet Multi Periode');
-        $worksheet->setCellValue('A2', $startYearMonth . ' - ' . $endYearMonth);
-        if (!empty($branch)) {
-            $worksheet->setCellValue('A3', $branch->name);
-        }
+        $branch = Branch::model()->findByPk($branchId);
+        $worksheet->setCellValue('A1', 'Raperind Motor ' . ($branch === null) ? '' : $branch->name);
+        $worksheet->setCellValue('A2', 'Neraca (Multi Periode)');
+        $worksheet->setCellValue('A3', $startYearMonth . ' - ' . $endYearMonth);
 
         $column = 'C'; 
         if (count($yearMonthList) <= 12 && count($yearMonthList) >= 1) {
@@ -266,7 +264,7 @@ class BalanceSheetMonthlyController extends Controller {
         ob_end_clean();
         // We'll be outputting an excel file
         header('Content-type: application/vnd.ms-excel');
-        header('Content-Disposition: attachment;filename="Balance Sheet Multi Periode.xls"');
+        header('Content-Disposition: attachment;filename="neraca_multi_periode.xls"');
         header('Cache-Control: max-age=0');
         
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');

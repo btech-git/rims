@@ -649,7 +649,7 @@
                             Yii::app()->user->checkAccess('yearlySaleMechanicReport') ||
                             Yii::app()->user->checkAccess('yearlySaleAllMechanicReport')
                         ): ?>
-                            <h2>Penjualan Mechanic</h2>
+                            <h2>Penjualan Mekanik</h2>
                             <?php $this->widget('zii.widgets.CMenu', array(
                                 'items' => array(
                                     array(
@@ -706,52 +706,52 @@
                             <?php $this->widget('zii.widgets.CMenu', array(
                                 'items' => array(
                                     array(
-                                        'label' => 'Penjualan PPn (Rincian & Detail)', 
+                                        'label' => 'Faktur Penjualan PPn (Rincian & Detail)', 
                                         'url' => array('/report/saleInvoiceTaxOnlySummary/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('saleTaxReport')
                                     ),
                                     array(
-                                        'label' => 'Pembelian PPn (Rincian & Detail)', 
+                                        'label' => 'Faktur Pembelian PPn (Rincian & Detail)', 
                                         'url' => array('/report/purchaseInvoiceTaxOnlySummary/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('purchaseTaxReport')
                                     ),
                                     array(
-                                        'label' => 'Penjualan Ppn Recap Bulan', 
+                                        'label' => 'Faktur Penjualan Ppn Rekap Bulanan', 
                                         'url' => array('/report/saleInvoiceCustomerTaxMonthly/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('saleTaxReport')
                                     ),
                                     array(
-                                        'label' => 'Pembelian Ppn Recap Bulan', 
+                                        'label' => 'Faktur Pembelian Ppn Rekap Bulanan', 
                                         'url' => array('/report/purchaseInvoiceSupplierTaxMonthly/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('purchaseTaxReport')
                                     ),
                                     array(
-                                        'label' => 'Penjualan Ppn Recap Tahun', 
+                                        'label' => 'Faktur Penjualan Ppn Rekap Tahunan', 
                                         'url' => array('/report/saleInvoiceTaxYearly/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('saleTaxReport')
                                     ),
                                     array(
-                                        'label' => 'Pembelian Ppn Recap Tahun', 
+                                        'label' => 'Faktur Pembelian Ppn Rekap Tahunan', 
                                         'url' => array('/report/purchaseInvoiceTaxYearly/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('purchaseTaxReport')
                                     ),
                                     array(
-                                        'label' => 'Penjualan Ppn Summary', 
+                                        'label' => 'Faktur Penjualan Ppn Summary', 
                                         'url' => array('/report/yearlySaleTaxSummary/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('saleTaxReport')
                                     ),
                                     array(
-                                        'label' => 'Pembelian Ppn Summary', 
+                                        'label' => 'Faktur Pembelian Ppn Summary', 
                                         'url' => array('/report/yearlyPurchaseTaxSummary/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('purchaseTaxReport')
                                     ),
                                     array(
-                                        'label' => 'Penjualan NON Ppn Recap Bulan', 
+                                        'label' => 'Faktur Penjualan NON Ppn Rekap Bulanan', 
                                         'url' => array('/report/saleInvoiceNonTaxMonthly/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('saleTaxReport')
                                     ),
                                     array(
-                                        'label' => 'Pembelian NON Ppn Recap Bulan', 
+                                        'label' => 'Faktur Pembelian NON Ppn Rekap Bulanan', 
                                         'url' => array('/report/purchaseInvoiceNonTaxMonthly/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('purchaseTaxReport')
                                     ),
@@ -1074,7 +1074,7 @@
                             Yii::app()->user->checkAccess('saleRetailReport') ||
                             Yii::app()->user->checkAccess('director')
                         ): ?>
-                            <h2>Transaksi</h2>
+                            <h2>Transaksi Table</h2>
                             <?php $this->widget('zii.widgets.CMenu', array(
                                 'items' => array(
                                     array(

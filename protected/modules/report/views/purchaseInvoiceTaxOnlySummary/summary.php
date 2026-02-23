@@ -110,24 +110,7 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                 </div>
                             </div>
                         </div>
-
-<!--                        <div class="field">
-                            <div class="row collapse">
-                                <div class="small-4 columns">
-                                    <span class="prefix">Status</span>
-                                </div>
-                                 <div class="small-8 columns">
-                                      <?php /*echo CHtml::activeDropDownlist($purchaseOrderHeader, 'status_document', array(
-                                          'Approved' => 'Approved',
-                                          'Draft' => 'Draft',
-                                          'Revised' => 'Revised',
-                                          'Rejected' => 'Rejected',
-                                          'CANCELLED!!!' => 'CANCELLED!!!',
-                                      ), array('empty'=>'-- All Status --'));*/ ?>
-                                </div>
-                            </div>
-                        </div>-->
-
+                        
                         <div class="clear"></div>
                 
                         <div class="row buttons">
@@ -148,12 +131,12 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
 
             <hr />
 
-            <div class="right"><?php echo ReportHelper::summaryText($purchaseInvoiceSummary->dataProvider); ?></div>
-            <div class="clear"></div>
-            <div class="right"><?php //echo ReportHelper::sortText($purchaseInvoiceSummary->dataProvider->sort, array('Tanggal', 'Customer')); ?></div>
-            <div class="clear"></div>
+            <div class="relative">
+                <div class="reportDisplay">
+                    <?php echo ReportHelper::summaryText($purchaseInvoiceSummary->dataProvider); ?>
+                    <?php //echo ReportHelper::sortText($transaksiPembelianSummary->dataProvider->sort, array('Jenis Persediaan', 'Tanggal SO', 'Pelanggan')); ?>
+                </div>
 
-            <div>
                 <?php $this->renderPartial('_summary', array(
                     'purchaseInvoiceSummary' => $purchaseInvoiceSummary, 
                     'startDate' => $startDate, 
@@ -162,13 +145,13 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                 )); ?>
             </div>
 
-            <div class="hide">
+            <div>
                 <div class="right">
-                    <?php /*$this->widget('system.web.widgets.pagers.CLinkPager', array(
+                    <?php $this->widget('system.web.widgets.pagers.CLinkPager', array(
                         'itemCount' => $purchaseInvoiceSummary->dataProvider->pagination->itemCount,
                         'pageSize' => $purchaseInvoiceSummary->dataProvider->pagination->pageSize,
                         'currentPage' => $purchaseInvoiceSummary->dataProvider->pagination->getCurrentPage(false),
-                    ));*/ ?>
+                    )); ?>
                 </div>
                 <div class="clear"></div>
             </div>

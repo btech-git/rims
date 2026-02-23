@@ -41,11 +41,7 @@ class PurchaseInvoiceSupplierTaxMonthlyController extends Controller {
         }
         
         if (isset($_GET['SaveExcel'])) {
-            $this->saveToExcel(
-                $monthlyPurchaseSummary,
-                $month,
-                $year
-            );
+            $this->saveToExcel($monthlyPurchaseSummary, $month, $year, $branchId);
         }
         
         $this->render('summary', array(
@@ -73,7 +69,7 @@ class PurchaseInvoiceSupplierTaxMonthlyController extends Controller {
         ));
     }
     
-    protected function saveToExcel($monthlyPurchaseSummary, $month, $year) {
+    protected function saveToExcel($monthlyPurchaseSummary, $month, $year, $branchId) {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
 
@@ -85,10 +81,10 @@ class PurchaseInvoiceSupplierTaxMonthlyController extends Controller {
 
         $documentProperties = $objPHPExcel->getProperties();
         $documentProperties->setCreator('Raperind Motor');
-        $documentProperties->setTitle('Pembelian Ppn  Recap Bulan');
+        $documentProperties->setTitle('Pembelian Ppn Bulanan');
 
         $worksheet = $objPHPExcel->setActiveSheetIndex(0);
-        $worksheet->setTitle('Pembelian Ppn  Recap Bulan');
+        $worksheet->setTitle('Pembelian Ppn Bulanan');
 
         $worksheet->mergeCells('A1:G1');
         $worksheet->mergeCells('A2:G2');
@@ -97,9 +93,10 @@ class PurchaseInvoiceSupplierTaxMonthlyController extends Controller {
         $worksheet->getStyle('A1:G5')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
         $worksheet->getStyle('A1:G5')->getFont()->setBold(true);
 
-        $worksheet->setCellValue('A1', 'Raperind Motor ');
-        $worksheet->setCellValue('A2', 'Laporan Pembelian Ppn  Recap Bulan');
-        $worksheet->setCellValue('A3', strftime("%B",mktime(0,0,0,$month)) . ' ' . $year);
+        $branch = Branch::model()->findByPk($branchId);
+        $worksheet->setCellValue('A1', 'Raperind Motor ' . CHtml::value($branch, 'name'));
+        $worksheet->setCellValue('A2', 'Pembelian PPn Rekap Bulanan');
+        $worksheet->setCellValue('A3', strftime("%B",mktime(0,0,0, $month)) . ' ' . $year);
         
         $worksheet->getStyle('A5:G5')->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
         $worksheet->setCellValue('A5', 'Supplier');
@@ -109,9 +106,9 @@ class PurchaseInvoiceSupplierTaxMonthlyController extends Controller {
         $worksheet->setCellValue('E5', 'Total DPP');
         $worksheet->setCellValue('F5', 'Total PPn');
         $worksheet->setCellValue('G5', 'Total Invoice');
-        $worksheet->getStyle('A6:G6')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle('A5:G5')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
-        $counter = 7;
+        $counter = 6;
         $sumSubTotal = '0.00';
         $sumTotalTax = '0.00';
         $sumGrandTotal = '0.00';
@@ -134,6 +131,10 @@ class PurchaseInvoiceSupplierTaxMonthlyController extends Controller {
 
             $counter++;
         }
+        
+        $worksheet->getStyle("A{$counter}:G{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A{$counter}:G{$counter}")->getFont()->setBold(true);
+        
         $worksheet->setCellValue("D{$counter}", 'TOTAL');
         $worksheet->setCellValue("E{$counter}", $sumSubTotal);
         $worksheet->setCellValue("F{$counter}", $sumTotalTax);
@@ -148,7 +149,7 @@ class PurchaseInvoiceSupplierTaxMonthlyController extends Controller {
         ob_end_clean();
 
         header('Content-type: application/vnd.ms-excel');
-        header("Content-Disposition: attachment;filename=laporan_pembelian_ppn_recap_" . strftime("%B",mktime(0,0,0,$month)) . '_' . $year .  ".xls");
+        header("Content-Disposition: attachment;filename=pembelian_ppn_recap_" . strftime("%B",mktime(0,0,0,$month)) . '_' . $year .  ".xls");
         header('Cache-Control: max-age=0');
 
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');

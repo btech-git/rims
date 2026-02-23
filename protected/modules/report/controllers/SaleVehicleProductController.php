@@ -135,21 +135,21 @@ class SaleVehicleProductController extends Controller {
 
         $documentProperties = $objPHPExcel->getProperties();
         $documentProperties->setCreator('Raperind Motor');
-        $documentProperties->setTitle('Penjualan per Kendaraan');
+        $documentProperties->setTitle('Penjualan Brand Kendaraan');
 
         $worksheet = $objPHPExcel->setActiveSheetIndex(0);
-        $worksheet->setTitle('Penjualan per Kendaraan');
+        $worksheet->setTitle('Penjualan Brand Kendaraan');
 
         $worksheet->mergeCells('A1:L1');
         $worksheet->mergeCells('A2:L2');
         $worksheet->mergeCells('A3:L3');
 
-        $worksheet->getStyle('A1:L6')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-        $worksheet->getStyle('A1:L6')->getFont()->setBold(true);
+        $worksheet->getStyle('A1:L5')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->getStyle('A1:L5')->getFont()->setBold(true);
 
         $branch = Branch::model()->findByPk($branchId);
         $worksheet->setCellValue('A1', 'Raperind Motor ' . CHtml::value($branch, 'name'));
-        $worksheet->setCellValue('A2', 'Penjualan per Kendaraan');
+        $worksheet->setCellValue('A2', 'Rincian Penjualan per Brand Kendaraan');
         $worksheet->setCellValue('A3', Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($startDate)) . ' - ' . Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($endDate)));
 
         $worksheet->getStyle('A5:L5')->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
@@ -167,9 +167,9 @@ class SaleVehicleProductController extends Controller {
         $worksheet->setCellValue('K5', 'Pph');
         $worksheet->setCellValue('L5', 'Total');
 
-        $worksheet->getStyle('A6:L6')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle('A5:L5')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
-        $counter = 7;
+        $counter = 6;
         
         foreach ($saleVehicleProductSummary->dataProvider->data as $carSubModel) {
             $totalSale = '0.00';
@@ -211,7 +211,7 @@ class SaleVehicleProductController extends Controller {
         ob_end_clean();
 
         header('Content-type: application/vnd.ms-excel');
-        header('Content-Disposition: attachment;filename="penjualan_per_kendaraan.xls"');
+        header('Content-Disposition: attachment;filename="rincian_penjualan_per_brand_kendaraan.xls"');
         header('Cache-Control: max-age=0');
 
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');

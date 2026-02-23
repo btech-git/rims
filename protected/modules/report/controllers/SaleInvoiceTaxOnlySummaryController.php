@@ -120,10 +120,10 @@ class SaleInvoiceTaxOnlySummaryController extends Controller {
 
         $documentProperties = $objPHPExcel->getProperties();
         $documentProperties->setCreator('Raperind Motor');
-        $documentProperties->setTitle('Laporan Faktur Penjualan PPn');
+        $documentProperties->setTitle('Faktur Penjualan PPn');
 
         $worksheet = $objPHPExcel->setActiveSheetIndex(0);
-        $worksheet->setTitle('Laporan Faktur Penjualan PPn');
+        $worksheet->setTitle('Faktur Penjualan PPn');
 
         $worksheet->mergeCells('A1:T1');
         $worksheet->mergeCells('A2:T2');
@@ -134,7 +134,7 @@ class SaleInvoiceTaxOnlySummaryController extends Controller {
         
         $branch = Branch::model()->findByPk($branchId);
         $worksheet->setCellValue('A1', 'Raperind Motor ' . CHtml::value($branch, 'name'));
-        $worksheet->setCellValue('A2', 'Laporan Faktur Penjualan PPn');
+        $worksheet->setCellValue('A2', 'Faktur Penjualan PPn (Rincian & Detail)');
         $worksheet->setCellValue('A3', $startDateFormatted . ' - ' . $endDateFormatted);
 
         $worksheet->getStyle("A5:T5")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
@@ -220,7 +220,7 @@ class SaleInvoiceTaxOnlySummaryController extends Controller {
 
         $worksheet->getStyle("A{$counter}:T{$counter}")->getFont()->setBold(true);
         $worksheet->getStyle("A{$counter}:T{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
-        $worksheet->getStyle("D{$counter}:T{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
+        
         $worksheet->setCellValue("E{$counter}", 'Total');
         $worksheet->setCellValue("F{$counter}", 'Rp');
         $worksheet->setCellValue("G{$counter}", $grandTotalSubAfterTax);
@@ -244,7 +244,7 @@ class SaleInvoiceTaxOnlySummaryController extends Controller {
         ob_end_clean();
 
         header('Content-type: application/vnd.ms-excel');
-        header("Content-Disposition: attachment;filename=laporan_faktur_penjualan_ppn_$endDate.xls");
+        header("Content-Disposition: attachment;filename=faktur_penjualan_ppn_$endDate.xls");
         header('Cache-Control: max-age=0');
         
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');

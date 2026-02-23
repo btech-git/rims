@@ -44,6 +44,9 @@ class PaymentInLogData  {
                     $paymentType = PaymentType::model()->findByPk($headerFieldValue);
                     $newData['payment_type'] = $paymentType === null ? '' : $paymentType->name;
                     break;
+                case 'is_tax_service':
+                    $newData['tax_service'] = $headerFieldValue == 0 ? 'Non' : 'PPh';
+                    break;
                 case 'insurance_company_id':
                     $insuranceCompany = InsuranceCompany::model()->findByPk($headerFieldValue);
                     $newData['insurance_company'] = $insuranceCompany === null ? '' : $insuranceCompany->name;
@@ -59,6 +62,17 @@ class PaymentInLogData  {
                                     break;
                                 case 'invoice_header_id':
                                     $detailNewData['invoice'] = InvoiceHeader::model()->findByPk($detailFieldValue)->invoice_number;
+                                    break;
+                                case 'is_tax_service':
+                                    $taxService = '';
+                                    if ($detailFieldValue == 1) {
+                                        $taxService = 'Add Pph';
+                                    } else if ($detailFieldValue == 2) {
+                                        $taxService = 'Non Pph';
+                                    } else if ($detailFieldValue == 3) {
+                                        $taxService = 'Include Pph';
+                                    }
+                                    $detailNewData['tax_service'] = $taxService;
                                     break;
                                 default:
                                     $detailNewData[$detailFieldName] = $detailFieldValue;

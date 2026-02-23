@@ -15,11 +15,9 @@ Yii::app()->clientScript->registerCss('_report', '
 ?>
 
 <div style="font-weight: bold; text-align: center">
-    <div style="font-size: larger">
-        <?php $branch = Branch::model()->findByPk($model->branch_id); ?>
-        <?php echo CHtml::encode(CHtml::value($branch, 'name')); ?>
-    </div>
-    <div style="font-size: larger">Follow Up Customer</div>
+    <?php $branch = Branch::model()->findByPk($model->branch_id); ?>
+    <div style="font-size: larger">Raperind Motor <?php echo CHtml::encode(CHtml::value($branch, 'name')); ?></div>
+    <div style="font-size: large">Customer Follow Up + Warranty</div>
     <div><?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($invoiceStartDate))) . ' &nbsp;&ndash;&nbsp; ' . CHtml::encode(Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($invoiceEndDate))); ?></div>
 </div>
 

@@ -1,8 +1,9 @@
 <?php $dateNumList = range(1, 31); ?>
 
 <div style="font-weight: bold; text-align: center">
-    <div style="font-size: larger"><?php echo Yii::app()->name; ?></div>
-    <div style="font-size: larger">Laporan Penjualan Bulanan Model Kendaraan </div>
+    <?php $branch = Branch::model()->findByPk($branchId); ?>
+    <div style="font-size: larger">Raperind Motor <?php echo empty($branch) ? '' : CHtml::encode($branch->name); ?></div>
+    <div style="font-size: larger">Penjualan per Model Kendaraan Bulanan</div>
     <div><?php echo CHtml::encode(strftime("%B",mktime(0,0,0,$month))); ?> <?php echo CHtml::encode($year); ?></div>
 </div>
 

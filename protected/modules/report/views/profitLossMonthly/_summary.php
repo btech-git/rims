@@ -17,6 +17,15 @@
     <?php endif; ?>
 <?php endwhile; ?>
 
+<div style="font-weight: bold; text-align: center">
+    <?php $branch = Branch::model()->findByPk($branchId); ?>
+    <div style="font-size: larger">Raperind Motor <?php echo CHtml::encode(($branch === null) ? '' : $branch->name); ?></div>
+    <div style="font-size: larger">Laba / Rugi (Multi Periode)</div>
+    <div><?php echo ' Periode: &nbsp;&nbsp; ' . CHtml::encode(Yii::app()->dateFormatter->format('MMMM', strtotime($startMonthNow))) . ' ' . CHtml::encode($startYearNow) . ' - ' . CHtml::encode(Yii::app()->dateFormatter->format('MMMM', strtotime($endMonthNow))) . ' ' . CHtml::encode($endYearNow); ?></div>
+</div>
+
+<br />
+
 <?php if (count($yearMonthList) <= 12 && count($yearMonthList) >= 1): ?>
     <table style="width: 100%">
         <thead>

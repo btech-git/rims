@@ -79,10 +79,10 @@ class YearlyMultipleInsuranceSaleTransactionController extends Controller {
 
         $documentProperties = $objPHPExcel->getProperties();
         $documentProperties->setCreator('Raperind Motor');
-        $documentProperties->setTitle('Penjualan Asuransi Tahunan');
+        $documentProperties->setTitle('Penjualan per Asuransi Tahunan');
 
         $worksheet = $objPHPExcel->setActiveSheetIndex(0);
-        $worksheet->setTitle('Penjualan Asuransi Tahunan');
+        $worksheet->setTitle('Penjualan per Asuransi Tahunan');
 
         $worksheet->mergeCells('A1:J1');
         $worksheet->mergeCells('A2:J2');
@@ -93,7 +93,7 @@ class YearlyMultipleInsuranceSaleTransactionController extends Controller {
 
         $branch = Branch::model()->findByPk($branchId);
         $worksheet->setCellValue('A1', 'Raperind Motor ' . CHtml::value($branch, 'name'));
-        $worksheet->setCellValue('A2', 'Laporan Penjualan Asuransi Tahunan');
+        $worksheet->setCellValue('A2', 'Penjualan per Asuransi Tahunan');
         $worksheet->setCellValue('A3', Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($startDate)) . ' - ' . Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($endDate)));
         
         $worksheet->getStyle('A5:J5')->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
@@ -144,7 +144,7 @@ class YearlyMultipleInsuranceSaleTransactionController extends Controller {
         ob_end_clean();
 
         header('Content-type: application/vnd.ms-excel');
-        header('Content-Disposition: attachment;filename="penjualan_asuransi_tahunan.xls"');
+        header('Content-Disposition: attachment;filename="penjualan_per_asuransi_tahunan.xls"');
         header('Cache-Control: max-age=0');
 
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');

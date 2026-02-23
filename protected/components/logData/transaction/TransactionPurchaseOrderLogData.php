@@ -20,6 +20,19 @@ class TransactionPurchaseOrderLogData  {
                     $supplier = Supplier::model()->findByPk($headerFieldValue);
                     $newData['supplier'] = $supplier === null ? '' : $supplier->name;
                     break;
+                case 'purchase_type':
+                    $purchaseType = '';
+                    if ($headerFieldValue == 1) {
+                        $purchaseType = 'Spare Part';
+                    } else if ($headerFieldValue == 2) {
+                        $purchaseType = 'Ban';
+                    } else if ($headerFieldValue == 3) {
+                        $purchaseType = 'Umum';
+                    } else {
+                        $purchaseType = 'N/A';
+                    }
+                    $newData['purchase_type'] = $purchaseType;
+                    break;
                 case 'price_before_discount':
                     $newData['price_before_discount'] = Yii::app()->numberFormatter->format('#,##0.00', $headerFieldValue);
                     break;
@@ -69,6 +82,61 @@ class TransactionPurchaseOrderLogData  {
                                     break;
                                 case 'unit_id':
                                     $detailNewData['unit_name'] = Unit::model()->findByPk($detailFieldValue)->name;
+                                    break;
+                                case 'discount1_type':
+                                    $discountType = '';
+                                    if ($detailFieldValue == 1) {
+                                        $discountType = 'Percentage';
+                                    } else if ($detailFieldValue == 2) {
+                                        $discountType = 'Nominal';
+                                    } else {
+                                        $discountType = 'N/A';
+                                    }
+                                    $detailNewData['discount1_type'] = $discountType;
+                                    break;
+                                case 'discount2_type':
+                                    $discountType = '';
+                                    if ($detailFieldValue == 1) {
+                                        $discountType = 'Percentage';
+                                    } else if ($detailFieldValue == 2) {
+                                        $discountType = 'Nominal';
+                                    } else {
+                                        $discountType = 'N/A';
+                                    }
+                                    $detailNewData['discount2_type'] = $discountType;
+                                    break;
+                                case 'discount3_type':
+                                    $discountType = '';
+                                    if ($detailFieldValue == 1) {
+                                        $discountType = 'Percentage';
+                                    } else if ($detailFieldValue == 2) {
+                                        $discountType = 'Nominal';
+                                    } else {
+                                        $discountType = 'N/A';
+                                    }
+                                    $detailNewData['discount3_type'] = $discountType;
+                                    break;
+                                case 'discount4_type':
+                                    $discountType = '';
+                                    if ($detailFieldValue == 1) {
+                                        $discountType = 'Percentage';
+                                    } else if ($detailFieldValue == 2) {
+                                        $discountType = 'Nominal';
+                                    } else {
+                                        $discountType = 'N/A';
+                                    }
+                                    $detailNewData['discount4_type'] = $discountType;
+                                    break;
+                                case 'discount5_type':
+                                    $discountType = '';
+                                    if ($detailFieldValue == 1) {
+                                        $discountType = 'Percentage';
+                                    } else if ($detailFieldValue == 2) {
+                                        $discountType = 'Nominal';
+                                    } else {
+                                        $discountType = 'N/A';
+                                    }
+                                    $detailNewData['discount5_type'] = $discountType;
                                     break;
                                 default:
                                     $detailNewData[$detailFieldName] = $detailFieldValue;

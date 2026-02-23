@@ -71,10 +71,10 @@ class YearlyPurchaseTaxSummaryController extends Controller {
 
         $documentProperties = $objPHPExcel->getProperties();
         $documentProperties->setCreator('Raperind Motor');
-        $documentProperties->setTitle('Laporan Pembelian Tahunan');
+        $documentProperties->setTitle('Faktur Pembelian PPn');
 
         $worksheet = $objPHPExcel->setActiveSheetIndex(0);
-        $worksheet->setTitle('Laporan Pembelian Tahunan');
+        $worksheet->setTitle('Faktur Pembelian PPn');
 
         $worksheet->mergeCells('A1:J1');
         $worksheet->mergeCells('A2:J2');
@@ -84,7 +84,7 @@ class YearlyPurchaseTaxSummaryController extends Controller {
         $worksheet->getStyle('A1:J5')->getFont()->setBold(true);
 
         $worksheet->setCellValue('A1', 'Raperind Motor ');
-        $worksheet->setCellValue('A2', 'Laporan Pembelian Tahunan');
+        $worksheet->setCellValue('A2', 'Faktur Pembelian PPn Summary');
         $worksheet->setCellValue('A3', $year);
         $monthList = array(
             1 => 'Jan',
@@ -114,7 +114,7 @@ class YearlyPurchaseTaxSummaryController extends Controller {
 
         $worksheet->getStyle('A5:J5')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
-        $counter = 7;
+        $counter = 6;
         $amountTotals = array();
         for ($month = 1; $month <= 12; $month++) {
             $worksheet->getStyle("C{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
@@ -136,6 +136,10 @@ class YearlyPurchaseTaxSummaryController extends Controller {
 
             $counter++;
         }
+        
+        $worksheet->getStyle("A{$counter}:J{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A{$counter}:J{$counter}")->getFont()->setBold(true);
+                
         $worksheet->setCellValue("A{$counter}", 'TOTAL');
         $grandTotal = '0.00';
         $columnCounter = 'B';
@@ -155,7 +159,7 @@ class YearlyPurchaseTaxSummaryController extends Controller {
         ob_end_clean();
 
         header('Content-type: application/vnd.ms-excel');
-        header("Content-Disposition: attachment;filename=laporan_pembelian_ppn_summary_" . $year . ".xls");
+        header("Content-Disposition: attachment;filename=faktur_pembelian_ppn_summary_" . $year . ".xls");
         header('Cache-Control: max-age=0');
 
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');

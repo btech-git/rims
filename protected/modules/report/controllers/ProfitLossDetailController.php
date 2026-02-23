@@ -103,10 +103,10 @@ class ProfitLossDetailController extends Controller {
 
         $documentProperties = $objPHPExcel->getProperties();
         $documentProperties->setCreator('Raperind Motor');
-        $documentProperties->setTitle('Laporan Profit Loss Standar');
+        $documentProperties->setTitle('Laba Rugi Standar');
 
         $worksheet = $objPHPExcel->setActiveSheetIndex(0);
-        $worksheet->setTitle('Laporan Profit Loss Standar');
+        $worksheet->setTitle('Laba Rugi Standar');
 
         $worksheet->mergeCells('A1:B1');
         $worksheet->mergeCells('A2:B2');
@@ -115,7 +115,7 @@ class ProfitLossDetailController extends Controller {
         $worksheet->getStyle('A1:B3')->getFont()->setBold(true);
 
         $branch = Branch::model()->findByPk($branchId);
-        $worksheet->setCellValue('A1', 'Laporan Profit Loss Standar');
+        $worksheet->setCellValue('A1', 'Laba / Rugi (Standar)');
         $worksheet->setCellValue('A2', CHtml::encode(($branch === null) ? '' : $branch->name));
         $worksheet->setCellValue('A3', $startDateString . ' - ' . $endDateString);
 
@@ -260,7 +260,7 @@ class ProfitLossDetailController extends Controller {
             $counter++;
         }
 
-        for ($col = 'A'; $col !== 'J'; $col++) {
+        for ($col = 'A'; $col !== 'Z'; $col++) {
             $objPHPExcel->getActiveSheet()
             ->getColumnDimension($col)
             ->setAutoSize(true);
@@ -269,7 +269,7 @@ class ProfitLossDetailController extends Controller {
         ob_end_clean();
         // We'll be outputting an excel file
         header('Content-type: application/vnd.ms-excel');
-        header('Content-Disposition: attachment;filename="Profit Loss Journal Transaction.xls"');
+        header('Content-Disposition: attachment;filename="laba_rugi_standar.xls"');
         header('Cache-Control: max-age=0');
         
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');

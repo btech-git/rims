@@ -79,10 +79,10 @@ class SaleInvoiceNonTaxMonthlyController extends Controller {
 
         $documentProperties = $objPHPExcel->getProperties();
         $documentProperties->setCreator('Raperind Motor');
-        $documentProperties->setTitle('Penjualan Ppn  Recap Bulan');
+        $documentProperties->setTitle('Penjualan Non PPn Bulanan');
 
         $worksheet = $objPHPExcel->setActiveSheetIndex(0);
-        $worksheet->setTitle('Penjualan Ppn  Recap Bulan');
+        $worksheet->setTitle('Penjualan Non PPn Bulanan');
 
         $worksheet->mergeCells('A1:J1');
         $worksheet->mergeCells('A2:J2');
@@ -92,7 +92,7 @@ class SaleInvoiceNonTaxMonthlyController extends Controller {
         $worksheet->getStyle('A1:J5')->getFont()->setBold(true);
 
         $worksheet->setCellValue('A1', 'Raperind Motor ');
-        $worksheet->setCellValue('A2', 'Laporan Penjualan Ppn  Recap Bulan');
+        $worksheet->setCellValue('A2', 'Faktur Penjualan Non PPn Rekap Bulanan');
         $worksheet->setCellValue('A3', strftime("%B",mktime(0,0,0,$month)) . ' ' . $year);
         
         $worksheet->getStyle('A5:J5')->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
@@ -106,30 +106,34 @@ class SaleInvoiceNonTaxMonthlyController extends Controller {
         $worksheet->setCellValue('H5', 'Total PPn');
         $worksheet->setCellValue('I5', 'Total PPh');
         $worksheet->setCellValue('J5', 'Total Invoice');
-        $worksheet->getStyle('A6:J6')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle('A5:J5')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
-        $counter = 7;
+        $counter = 6;
+        $sumProductPrice = '0.00';
+        $sumServicePrice = '0.00';
         $sumSubTotal = '0.00';
         $sumTotalTax = '0.00';
         $sumTotalTaxIncome = '0.00';
         $sumGrandTotal = '0.00';
         foreach ($monthlySaleSummary as $monthlySaleSummaryItem) {
+            $productPrice = $monthlySaleSummaryItem['product_price'];
+            $servicePrice = $monthlySaleSummaryItem['service_price'];
             $subTotal = $monthlySaleSummaryItem['sub_total'];
             $totalTax = $monthlySaleSummaryItem['total_tax'];
             $totalTaxIncome = $monthlySaleSummaryItem['total_tax_income'];
             $totalPrice = $monthlySaleSummaryItem['total_price'];
             
-            $worksheet->getStyle("E{$counter}:J{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
-
             $worksheet->setCellValue("A{$counter}", $monthlySaleSummaryItem['customer_name']);
             $worksheet->setCellValue("B{$counter}", $monthlySaleSummaryItem['quantity_invoice']);
-            $worksheet->setCellValue("E{$counter}", $monthlySaleSummaryItem['product_price']);
-            $worksheet->setCellValue("F{$counter}", $monthlySaleSummaryItem['service_price']);
+            $worksheet->setCellValue("E{$counter}", $productPrice);
+            $worksheet->setCellValue("F{$counter}", $servicePrice);
             $worksheet->setCellValue("G{$counter}", $subTotal);
             $worksheet->setCellValue("H{$counter}", $totalTax);
             $worksheet->setCellValue("I{$counter}", $totalTaxIncome);
             $worksheet->setCellValue("J{$counter}", $totalPrice);
 
+            $sumProductPrice += $productPrice;
+            $sumServicePrice += $servicePrice;
             $sumSubTotal += $subTotal;
             $sumTotalTax += $totalTax;
             $sumTotalTaxIncome += $totalTaxIncome;
@@ -137,7 +141,13 @@ class SaleInvoiceNonTaxMonthlyController extends Controller {
             
             $counter++;
         }
-        $worksheet->setCellValue("F{$counter}", 'TOTAL');
+        
+        $worksheet->getStyle("A{$counter}:J{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A{$counter}:J{$counter}")->getFont()->setBold(true);
+        
+        $worksheet->setCellValue("D{$counter}", 'TOTAL');
+        $worksheet->setCellValue("E{$counter}", $sumProductPrice);
+        $worksheet->setCellValue("F{$counter}", $sumServicePrice);
         $worksheet->setCellValue("G{$counter}", $sumSubTotal);
         $worksheet->setCellValue("H{$counter}", $sumTotalTax);
         $worksheet->setCellValue("I{$counter}", $sumTotalTaxIncome);
@@ -152,7 +162,7 @@ class SaleInvoiceNonTaxMonthlyController extends Controller {
         ob_end_clean();
 
         header('Content-type: application/vnd.ms-excel');
-        header("Content-Disposition: attachment;filename=laporan_penjualan_non_ppn_" . strftime("%B",mktime(0,0,0,$month)) . '_' . $year . ".xls");
+        header("Content-Disposition: attachment;filename=faktur_penjualan_non_ppn_rekap_" . strftime("%B",mktime(0,0,0,$month)) . '_' . $year . ".xls");
         header('Cache-Control: max-age=0');
 
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');

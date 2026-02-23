@@ -3,7 +3,7 @@
 <div style="font-weight: bold; text-align: center">
     <?php $branch = Branch::model()->findByPk($branchId); ?>
     <div style="font-size: larger">Raperind Motor <?php echo CHtml::encode(CHtml::value($branch, 'name')); ?></div>
-    <div style="font-size: larger">Laporan Penjualan Tahunan Oli</div>
+    <div style="font-size: larger">Penjualan Oli Tahunan</div>
     <div><?php echo 'Periode tahun: ' . CHtml::encode($year); ?></div>
 </div>
 
@@ -96,7 +96,7 @@
     </tbody>
     <tfoot>
         <tr>
-            <td style="text-align: right" colspan="7">Total</td>
+            <td style="text-align: right" colspan="8">Total</td>
             <?php $grandTotal = 0; ?>
             <?php for ($month = 1; $month <= 12; $month++): ?>
                 <?php if (!isset($groupTotalSums[$month])): ?>

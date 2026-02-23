@@ -28,8 +28,6 @@ class PurchaseInvoiceTaxOnlySummaryController extends Controller {
 
         $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : date('Y-m-d');
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
-//        $supplierName = (isset($_GET['SupplierName'])) ? $_GET['SupplierName'] : '';
-//        $branchId = (isset($_GET['TransactionPurchaseOrder']['main_branch_id'])) ? $_GET['TransactionPurchaseOrder']['main_branch_id'] : '';
         $pageSize = (isset($_GET['PageSize'])) ? $_GET['PageSize'] : '';
         $currentPage = (isset($_GET['page'])) ? $_GET['page'] : '';
         $currentSort = (isset($_GET['sort'])) ? $_GET['sort'] : '';
@@ -41,7 +39,6 @@ class PurchaseInvoiceTaxOnlySummaryController extends Controller {
         $filters = array(
             'startDate' => $startDate,
             'endDate' => $endDate,
-//            'supplierName' => $supplierName,
         );
         $purchaseInvoiceSummary->setupFilter($filters);
 
@@ -62,7 +59,6 @@ class PurchaseInvoiceTaxOnlySummaryController extends Controller {
             'startDate' => $startDate,
             'endDate' => $endDate,
             'currentSort' => $currentSort,
-//            'supplierName' => $supplierName,
             'supplier'=>$supplier,
             'supplierDataProvider'=>$supplierDataProvider,
         ));
@@ -97,10 +93,10 @@ class PurchaseInvoiceTaxOnlySummaryController extends Controller {
 
         $documentProperties = $objPHPExcel->getProperties();
         $documentProperties->setCreator('Raperind Motor');
-        $documentProperties->setTitle('Laporan Faktur Pembelian PPn');
+        $documentProperties->setTitle('Faktur Pembelian PPn');
 
         $worksheet = $objPHPExcel->setActiveSheetIndex(0);
-        $worksheet->setTitle('Laporan Faktur Pembelian PPn');
+        $worksheet->setTitle('Faktur Pembelian PPn');
 
         $worksheet->mergeCells('A1:N1');
         $worksheet->mergeCells('A2:N2');
@@ -109,8 +105,9 @@ class PurchaseInvoiceTaxOnlySummaryController extends Controller {
         
         $worksheet->getStyle('A1:N3')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
         $worksheet->getStyle('A1:N3')->getFont()->setBold(true);
+        
         $worksheet->setCellValue('A1', 'Raperind Motor ' . CHtml::encode(CHtml::value($purchaseOrderHeader, 'mainBranch.name')));
-        $worksheet->setCellValue('A2', 'Laporan Faktur Pembelian PPn');
+        $worksheet->setCellValue('A2', 'Faktur Pembelian PPn (Rincian & Detail)');
         $worksheet->setCellValue('A3', $startDateFormatted . ' - ' . $endDateFormatted);
 
         $worksheet->getStyle("A6:N6")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
@@ -172,7 +169,7 @@ class PurchaseInvoiceTaxOnlySummaryController extends Controller {
         ob_end_clean();
 
         header('Content-type: application/vnd.ms-excel');
-        header("Content-Disposition: attachment;filename=laporan_faktur_pembelian_ppn_$endDate.xls");
+        header("Content-Disposition: attachment;filename=faktur_pembelian_ppn.xls");
         header('Cache-Control: max-age=0');
         
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');

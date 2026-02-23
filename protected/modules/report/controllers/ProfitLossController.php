@@ -90,10 +90,10 @@ class ProfitLossController extends Controller {
 
         $documentProperties = $objPHPExcel->getProperties();
         $documentProperties->setCreator('Raperind Motor');
-        $documentProperties->setTitle('Laporan Profit Loss Induk');
+        $documentProperties->setTitle('Laba Rugi Induk');
 
         $worksheet = $objPHPExcel->setActiveSheetIndex(0);
-        $worksheet->setTitle('Laporan Profit Loss Induk');
+        $worksheet->setTitle('Laba Rugi Induk');
 
         $worksheet->mergeCells('A1:B1');
         $worksheet->mergeCells('A2:B2');
@@ -102,7 +102,7 @@ class ProfitLossController extends Controller {
         $worksheet->getStyle('A1:B3')->getFont()->setBold(true);
 
         $branch = Branch::model()->findByPk($branchId);
-        $worksheet->setCellValue('A1', 'Laporan Profit Loss Induk');
+        $worksheet->setCellValue('A1', 'Laba / Rugi (Induk)');
         $worksheet->setCellValue('A2', CHtml::encode(($branch === null) ? '' : $branch->name));
         $worksheet->setCellValue('A3', $startDateString . ' - ' . $endDateString);
 
@@ -172,7 +172,7 @@ class ProfitLossController extends Controller {
         ob_end_clean();
         // We'll be outputting an excel file
         header('Content-type: application/vnd.ms-excel');
-        header('Content-Disposition: attachment;filename="Laporan Profit Loss Induk.xls"');
+        header('Content-Disposition: attachment;filename="laba_rugi_induk.xls"');
         header('Cache-Control: max-age=0');
         
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');

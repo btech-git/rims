@@ -48,6 +48,19 @@ class PaymentOutLogData  {
                     $user = Users::model()->findByPk($headerFieldValue);
                     $newData['username_cancelled'] = $user === null ? '' : $user->username;
                     break;
+                case 'movement_type':
+                    $movementType = '';
+                    if ($headerFieldValue == 1) {
+                        $movementType = 'Delivery Order';
+                    } else if ($headerFieldValue == 2) {
+                        $movementType = 'Return Order';
+                    } else if ($headerFieldValue == 3) {
+                        $movementType = 'Retail Sales';
+                    } else if ($headerFieldValue == 4) {
+                        $movementType = 'Material Request';
+                    }
+                    $newData['movement_type'] = $movementType;
+                    break;
                 case 'payOutDetails':
                     $newData['payOutDetails'] = array();
                     foreach ($headerFieldValue as $i => $detailItems) {
