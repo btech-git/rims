@@ -700,7 +700,16 @@
                 'value' => "Yii::app()->dateFormatter->formatDateTime(\$data->transaction_date, 'medium', 'short')",
                 'filter' => false, // Set the filter to false when date range searching
             ),
-            array('name' => 'plate_number', 'value' => '$data->vehicle->plate_number'),
+            array(
+                'name' => 'customer_name',
+                'header' => 'Customer',
+                'value' => '$data->customer->name',
+            ),
+            array(
+                'name' => 'plate_number', 
+                'header' => 'Plat #',
+                'value' => '$data->vehicle->plate_number',
+            ),
             array(
                 'header' => 'Car Make',
                 'value' => 'empty($data->vehicle->carMake) ? "" : $data->vehicle->carMake->name'
@@ -715,11 +724,6 @@
                 'value' => '$data->repair_type',
                 'type' => 'raw',
                 'filter' => false,
-            ),
-            array(
-                'name' => 'customer_name',
-                'header' => 'Customer Name',
-                'value' => '$data->customer->name',
             ),
         )
     )); ?>

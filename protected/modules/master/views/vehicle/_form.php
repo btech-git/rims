@@ -100,7 +100,14 @@
                                         'headerHtmlOptions'=>array('style'=>'width: 5em;'),
                                     ),
                                     'name',
-                                    'customer_type',
+                                    array(
+                                        'name' => 'customer_type',
+                                        'value' => '$data->customer_type',
+                                        'filter' => CHtml::activeDropDownList($customer, 'customer_type', array(
+                                            'Company' => 'Company', 
+                                            'Individual' => 'Individual'
+                                        ), array('empty' => '-- All --')),
+                                    ),
                                     'email',
                                     array(
                                         'name' => 'address',

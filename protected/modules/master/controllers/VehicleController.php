@@ -124,8 +124,11 @@ class VehicleController extends Controller {
         }
 
         $customerCriteria = new CDbCriteria;
+        $customerCriteria->compare('id', $customer->id);
         $customerCriteria->compare('name', $customer->name, true);
-        $customerCriteria->compare('email', $customer->email . '%', true, 'AND', false);
+        $customerCriteria->compare('customer_type', $customer->customer_type);
+        $customerCriteria->compare('address', $customer->address, true);
+        $customerCriteria->compare('email', $customer->email, true);
 
         $customerDataProvider = new CActiveDataProvider('Customer', array(
             'criteria' => $customerCriteria,
@@ -176,9 +179,11 @@ class VehicleController extends Controller {
         }
 
         $customerCriteria = new CDbCriteria;
-        //$positionCriteria->compare('code',$position->code.'%',true,'AND', false);
+        $customerCriteria->compare('id', $customer->id);
         $customerCriteria->compare('name', $customer->name, true);
-        $customerCriteria->compare('email', $customer->email . '%', true, 'AND', false);
+        $customerCriteria->compare('customer_type', $customer->customer_type);
+        $customerCriteria->compare('address', $customer->address, true);
+        $customerCriteria->compare('email', $customer->email, true);
 
         $customerDataProvider = new CActiveDataProvider('Customer', array(
             'criteria' => $customerCriteria,
