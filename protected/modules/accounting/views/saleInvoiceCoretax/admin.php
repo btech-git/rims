@@ -215,7 +215,7 @@ $('#invoiceSearch').submit(function(){
                         ),
                         array(
                             'name' => 'invoice_number', 
-                            'value' => 'CHtml::link($data->invoice_number, array("view", "id"=>$data->id))', 
+                            'value' => 'CHtml::link($data->invoice_number, array("/transaction/invoiceHeader/show", "id"=>$data->id), array("target" => "_blank"))', 
                             'type' => 'raw'
                         ),
                         'invoice_date',
