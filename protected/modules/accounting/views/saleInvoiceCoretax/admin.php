@@ -34,7 +34,7 @@ $('#invoiceSearch').submit(function(){
         <div class="small-12 columns">
             <div class="clearfix page-action">
                 <!-- <a class="button success right" href="<?php //echo Yii::app()->baseUrl.'/transaction/invoiceHeader/create'; ?>"><span class="fa fa-plus"></span>Create Invoice Headers</a> -->
-                <h2>Manage Invoice Headers</h2>
+                <h2>Invoice for Coretax</h2>
             </div>
 
             <div class="search-bar">
@@ -244,7 +244,7 @@ $('#invoiceSearch').submit(function(){
                         'status',
                     ),
                 )); ?>
-                <?php echo CHtml::submitButton('Export E-Faktur (XML)', array('name' => 'SaveXml', 'style' => 'float: left;', 'class' => 'grey-btn')); ?>
+                <?php echo CHtml::submitButton('Export to Coretax (XML)', array('name' => 'SaveXml', 'style' => 'float: left;', 'class' => 'grey-btn')); ?>
                 <?php echo CHtml::endForm(); ?>
 
             </div>
