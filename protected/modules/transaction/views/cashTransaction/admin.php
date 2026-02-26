@@ -176,7 +176,7 @@ $('.search-form form').submit(function(){
                         ),
                         array(
                             'header' => 'Note',
-                            'value' => '$data->getDetailNote()',
+                            'value' => '$data->cashTransactionDetails[0]->notes',
                         ),
                         'status',
                         array(
