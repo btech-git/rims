@@ -113,7 +113,7 @@
             <?php $this->widget('zii.widgets.CMenu', array(
                 'items' => array(
                     array(
-                        'label' => 'Estimasi', 
+                        'label' => 'Estimasi Customer', 
                         'url' => array('/frontDesk/saleEstimation/admin'), 
                         'visible' => (Yii::app()->user->checkAccess('saleEstimationCreate') || Yii::app()->user->checkAccess('saleEstimationEdit') || Yii::app()->user->checkAccess('saleEstimationView')),
                     ),
@@ -250,11 +250,11 @@
                         'url' => array('/transaction/invoiceHeader/admin'), 
                         'visible' => (Yii::app()->user->checkAccess('saleInvoiceCreate') || Yii::app()->user->checkAccess('saleInvoiceEdit') || Yii::app()->user->checkAccess('saleInvoiceView'))
                     ),
-//                    array(
-//                        'label' => 'Faktur Pajak Coretax', 
-//                        'url' => array('/accounting/saleInvoiceCoretax/admin'), 
-//                        'visible' => (Yii::app()->user->checkAccess('saleInvoiceCreate') || Yii::app()->user->checkAccess('saleInvoiceEdit'))
-//                    ),
+                    array(
+                        'label' => 'Faktur Pajak Coretax', 
+                        'url' => array('/accounting/saleInvoiceCoretax/admin'), 
+                        'visible' => (Yii::app()->user->checkAccess('saleInvoiceCreate') || Yii::app()->user->checkAccess('saleInvoiceEdit'))
+                    ),
                     array(
                         'label' => 'Sub Pekerjaan Luar', 
                         'url' => array('/accounting/workOrderExpense/admin'), 
