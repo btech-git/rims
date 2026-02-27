@@ -14,7 +14,7 @@
  * @property integer $requester_id
  * @property integer $main_branch_id
  * @property integer $approved_id
- * @property integer $total_quantity
+ * @property string $total_quantity
  * @property string $price_before_discount
  * @property string $discount
  * @property string $subtotal
@@ -95,9 +95,10 @@ class TransactionPurchaseOrder extends MonthlyTransactionActiveRecord {
         // will receive user inputs.
         return array(
             array('purchase_order_no, purchase_order_date, status_document, payment_type, purchase_type, tax_percentage, supplier_id, requester_id, main_branch_id', 'required'),
-            array('supplier_id, requester_id, main_branch_id, approved_id, total_quantity, ppn, company_bank_id, purchase_type, coa_bank_id_estimate, tax_percentage, user_id_cancelled, user_id_updated', 'numerical', 'integerOnly' => true),
+            array('supplier_id, requester_id, main_branch_id, approved_id, ppn, company_bank_id, purchase_type, coa_bank_id_estimate, tax_percentage, user_id_cancelled, user_id_updated', 'numerical', 'integerOnly' => true),
             array('purchase_order_no, status_document', 'length', 'max' => 30),
             array('payment_type', 'length', 'max' => 20),
+            array('total_quantity', 'length', 'max' => 10),
             array('price_before_discount, discount, subtotal, ppn_price, total_price, payment_amount, payment_left', 'length', 'max' => 18),
             array('estimate_date_arrival, payment_date_estimate, note, registration_transaction_id, updated_datetime, cancelled_datetime', 'safe'),
             array('payment_status', 'length', 'max' => 50),
