@@ -3,7 +3,7 @@
         <tr>
             <th style="text-align: center">No</th>
             <th style="text-align: center">Transaction #</th>
-            <th style="text-align: center">Branch</th>
+            <th style="text-align: center">Status</th>
             <th style="text-align: center">Debit</th>
             <th style="text-align: center">Credit</th>
             <th style="text-align: center">Keterangan</th>
@@ -14,25 +14,21 @@
         <?php $totalDebit = 0.00; $totalCredit = 0.00; ?>
         <?php foreach ($transactionJournalDataProvider->data as $i => $header): ?>
             <?php 
-            $debitAmount = $header->debet_kredit === 'D' ? $header->total : 0; 
-            $creditAmount = $header->debet_kredit === 'K' ? $header->total : 0; 
+            $debitAmount = CHtml::value($header, 'totalDebit'); 
+            $creditAmount = CHtml::value($header, 'totalCredit'); 
             ?>
             <tr>
                 <td><?php echo CHtml::encode($i + 1); ?></td>
                 <td>
-                    <?php echo CHtml::link($header->kode_transaksi, array('javascript:;'), array(
+                    <?php echo CHtml::link($header->transaction_number, array('javascript:;'), array(
                         'onclick' => 'window.open("' . CController::createUrl('/accounting/cashDailySummary/redirectTransaction', array(
-                            "codeNumber" => $header->kode_transaksi
+                            "codeNumber" => $header->transaction_number
                         )) . '", "_blank", "top=100, left=225, width=900, height=650"); return false;'
                     )); ?>
                 </td>
-                <td style="text-align: right"><?php echo CHtml::encode(CHtml::value($header, 'branch.name')); ?></td>
-                <td style="text-align: right">
-                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $debitAmount)); ?>
-                </td>
-                <td style="text-align: right">
-                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $creditAmount)); ?>
-                </td>
+                <td style="text-align: right"><?php echo CHtml::encode(CHtml::value($header, 'status')); ?></td>
+                <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $debitAmount)); ?></td>
+                <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $creditAmount)); ?></td>
                 <td style="text-align: right"><?php echo CHtml::encode(CHtml::value($header, 'transaction_subject')); ?></td>
             </tr>
             <?php 

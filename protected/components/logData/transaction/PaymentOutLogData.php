@@ -8,6 +8,9 @@ class PaymentOutLogData  {
             switch ($headerFieldName) {
                 case 'id':
                     break;
+                case 'payment_amount':
+                    $newData['payment_amount'] = Yii::app()->numberFormatter->format('#,##0.00', $headerFieldValue);
+                    break;
                 case 'branch_id':
                     $branch = Branch::model()->findByPk($headerFieldValue);
                     $newData['branch'] = $branch === null ? '' : $branch->name;
@@ -67,7 +70,6 @@ class PaymentOutLogData  {
                         $detailNewData = array();
                         foreach ($detailItems as $detailFieldName => $detailFieldValue) {
                             switch ($detailFieldName) {
-                                case 'id':
                                 case 'payment_out_id':
                                     break;
                                 case 'receive_item_id':
@@ -77,6 +79,12 @@ class PaymentOutLogData  {
                                 case 'work_order_expense_header_id':
                                     $workOrderExpenseHeader = WorkOrderExpenseHeader::model()->findByPk($detailFieldValue);
                                     $detailNewData['work_order_expense'] = $workOrderExpenseHeader === null ? '' : $workOrderExpenseHeader->transaction_number;
+                                    break;
+                                case 'total_invoice':
+                                    $detailNewData['total_invoice'] = Yii::app()->numberFormatter->format('#,##0.00', $headerFieldValue);
+                                    break;
+                                case 'amount':
+                                    $detailNewData['amount'] = Yii::app()->numberFormatter->format('#,##0.00', $headerFieldValue);
                                     break;
                                 default:
                                     $detailNewData[$detailFieldName] = $detailFieldValue;

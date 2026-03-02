@@ -25,10 +25,8 @@ $this->breadcrumbs = array(
         $this->widget('zii.widgets.CDetailView', array(
             'data' => $model,
             'attributes' => array(
-                //'id',
-                array('name' => 'service_type_code', 'value' => $model->serviceType->code),
+                'id',
                 array('name' => 'service_type_name', 'value' => $model->serviceType->name),
-                array('name' => 'service_category_code', 'value' => $model->serviceCategory->code),
                 array('name' => 'service_category_name', 'value' => $model->serviceCategory->name),
                 'code',
                 'name',
@@ -80,46 +78,6 @@ $this->breadcrumbs = array(
     </table>
 </div>
 
-<!--<div class="row">
-    <h3>Pricelists</h3>
-    <table>
-        <thead>
-            <tr>
-                <td>Car Make</td>
-                <td>Car Model</td>
-                <td>Car Sub Model</td>
-                <td>Difficulty</td>
-                <td>Difficulty value</td>
-                <td>Regular</td>
-                <td>Luxury</td>
-                <td>Luxury Value</td>
-                <td>Luxury Calc</td>
-                <td>Standard Flat Rate per hour</td>
-                <td>Flat rate Hour</td>
-                <td>Price</td>
-                <td>Common Price</td>
-            </tr>
-        </thead>
-<?php /* foreach ($pricelists as $key => $pricelist): ?>
-  <tr>
-  <td><?php echo $pricelist->carMake->name; ?></td>
-  <td><?php echo $pricelist->carModel->name; ?></td>
-  <td><?php echo $pricelist->carSubDetail->name; ?></td>
-  <td><?php echo $pricelist->difficulty; ?></td>
-  <td><?php echo $pricelist->difficulty_value; ?></td>
-  <td><?php echo $pricelist->regular; ?></td>
-  <td><?php echo $pricelist->luxury; ?></td>
-  <td><?php echo $pricelist->luxury_value; ?></td>
-  <td><?php echo $pricelist->luxury_calc; ?></td>
-  <td><?php echo $pricelist->standard_flat_rate_per_hour; ?></td>
-  <td><?php echo $pricelist->flat_rate_hour; ?></td>
-  <td><?php echo $pricelist->price; ?></td>
-  <td><?php echo $pricelist->common_price; ?></td>
-  </tr>
-  <?php endforeach; */ ?>
-    </table>
-</div>-->
-
 <div class="row">
     <h3>Service Complement</h3>
     <table>
@@ -145,12 +103,8 @@ $this->breadcrumbs = array(
             <tr>
                 <th style="text-align: center">Code</th>
                 <th style="text-align: center">Name</th>
-                <th style="text-align: center">Master Category</th>
-                <th style="text-align: center">Sub Master Category</th>
-                <th style="text-align: center">Sub Category</th>
+                <th style="text-align: center">Category</th>
                 <th style="text-align: center">Brand</th>
-                <th style="text-align: center">Sub Brand</th>
-                <th style="text-align: center">Sub Brand Series</th>
                 <th style="text-align: center">Qty Std</th>
                 <th style="text-align: center">Unit</th>
             </tr>
@@ -158,36 +112,60 @@ $this->breadcrumbs = array(
         <tbody>
             <?php foreach ($model->serviceProducts as $detail): ?>	
                 <tr style="background-color: azure;">
-                    <td style="text-align:center;">
-                        <?php echo CHtml::encode(CHtml::value($detail, 'product.manufacturer_code')); ?>
-                    </td>
-                    <td style="text-align:center;">
-                        <?php echo CHtml::encode(CHtml::value($detail, 'product.name')); ?>
-                    </td>
-                    <td style="text-align:center;">
-                        <?php echo CHtml::encode(CHtml::value($detail, 'product.brand.name')); ?>
-                    </td>
-                    <td style="text-align:center;">
-                        <?php echo CHtml::encode(CHtml::value($detail, 'product.subBrand.name')); ?>
-                    </td>
-                    <td style="text-align:center;">
+                    <td><?php echo CHtml::encode(CHtml::value($detail, 'product.manufacturer_code')); ?></td>
+                    <td><?php echo CHtml::encode(CHtml::value($detail, 'product.name')); ?></td>
+                    <td>
+                        <?php echo CHtml::encode(CHtml::value($detail, 'product.brand.name')); ?> - 
+                        <?php echo CHtml::encode(CHtml::value($detail, 'product.subBrand.name')); ?> - 
                         <?php echo CHtml::encode(CHtml::value($detail, 'product.subBrandSeries.name')); ?>
                     </td>
-                    <td style="text-align: center;">
-                        <?php echo CHtml::encode(CHtml::value($detail, 'product.productMasterCategory.name')); ?>
-                    </td>
-                    <td style="text-align: center;">
-                        <?php echo CHtml::encode(CHtml::value($detail, 'product.productSubMasterCategory.name')); ?>
-                    </td>
-                    <td style="text-align: center;">
+                    <td>
+                        <?php echo CHtml::encode(CHtml::value($detail, 'product.productMasterCategory.name')); ?> - 
+                        <?php echo CHtml::encode(CHtml::value($detail, 'product.productSubMasterCategory.name')); ?> - 
                         <?php echo CHtml::encode(CHtml::value($detail, 'product.productSubCategory.name')); ?>
                     </td>
                     <td style="text-align:center;">
                         <?php echo CHtml::encode(CHtml::value($detail, 'quantity')); ?>
                     </td>
-                    <td style="text-align:center;">
+                    <td>
                         <?php echo CHtml::encode(CHtml::value($detail, 'unit.name')); ?>
                     </td>
+                </tr>
+            <?php endforeach; ?>
+        </tbody>
+    </table>
+</div>
+
+<br/>
+
+<div class="row">
+    <h3>Penjualan</h3>
+    <table>
+        <thead>
+            <tr>
+                <th style="text-align: center; width: 3%"></th>
+                <th style="text-align: center">Invoice #</th>
+                <th style="text-align: center">Tanggal</th>
+                <th style="text-align: center">Customer</th>
+                <th style="text-align: center">Vehicle</th>
+                <th style="text-align: center">Plat #</th>
+                <th style="text-align: center">Price</th>
+            </tr>
+        </thead>	
+        <tbody>
+            <?php foreach ($invoiceDetails as $i => $invoiceDetail): ?>	
+                <tr style="background-color: azure;">
+                    <td><?php echo $i + 1; ?></td>
+                    <td><?php echo CHtml::encode(CHtml::value($invoiceDetail, 'invoice.invoice_number')); ?></td>
+                    <td><?php echo CHtml::encode(Yii::app()->dateFormatter->format("d MMM yyyy", strtotime(CHtml::value($invoiceDetail, 'invoice.invoice_date')))); ?></td>
+                    <td><?php echo CHtml::encode(CHtml::value($invoiceDetail, 'invoice.customer.name')); ?></td>
+                    <td>
+                        <?php echo CHtml::encode(CHtml::value($invoiceDetail, 'invoice.vehicle.carMake.name')); ?> - 
+                        <?php echo CHtml::encode(CHtml::value($invoiceDetail, 'invoice.vehicle.carModel.name')); ?> - 
+                        <?php echo CHtml::encode(CHtml::value($invoiceDetail, 'invoice.vehicle.carSubModel.name')); ?>
+                    </td>
+                    <td><?php echo CHtml::encode(CHtml::value($invoiceDetail, 'invoice.vehicle.plate_number')); ?></td>
+                    <td style="text-align:right;"><?php echo number_format(CHtml::encode(CHtml::value($invoiceDetail, 'unit_price')), 2); ?></td>
                 </tr>
             <?php endforeach; ?>
         </tbody>

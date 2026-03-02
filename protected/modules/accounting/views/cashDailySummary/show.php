@@ -35,7 +35,7 @@
             'columns' => array(
                 array(
                     'name' => 'payment_number',
-                    'value' => 'CHtml::link($data->payment_number, array("/transaction/paymentIn/view", "id"=>$data->id))',
+                    'value' => 'CHtml::link($data->payment_number, array("/transaction/paymentIn/show", "id"=>$data->id))',
                     'type' => 'raw'
                 ),
                 array(

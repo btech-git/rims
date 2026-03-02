@@ -129,40 +129,42 @@ class MonthlyServiceSaleController extends Controller {
         $year = $options['year'];
         $numberOfDays = $options['numberOfDays'];
 
-        $worksheet->mergeCells('A1:H1');
-        $worksheet->mergeCells('A2:H2');
-        $worksheet->mergeCells('A3:H3');
-
-        $worksheet->getStyle('A1:H6')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-        $worksheet->getStyle('A1:H6')->getFont()->setBold(true);
+        $worksheet->mergeCells('A1:Z1');
+        $worksheet->mergeCells('A2:Z2');
+        $worksheet->mergeCells('A3:Z3');
 
         $branch = Branch::model()->findByPk($branchId);
         $worksheet->setCellValue('A1', 'Raperind Motor ' . CHtml::value($branch, 'name'));
-        $worksheet->setCellValue('A2', 'Laporan Penjualan Jasa Bulanan');
+        $worksheet->setCellValue('A2', 'Penjualan Jasa Bulanan');
         $worksheet->setCellValue('A3', $monthList[$month] . ' ' . $year);
 
-        $columnCounter = 'B';
+        $columnHeaderCounter = 'B';
         $mergeColumnCounter = 'C';
         foreach ($serviceSaleData as $serviceSaleItem) {
-            $worksheet->mergeCells("{$columnCounter}5:{$mergeColumnCounter}5");
-            $worksheet->setCellValue("{$columnCounter}5", $serviceSaleItem['service_name']);
-            $columnCounter++;$columnCounter++;$mergeColumnCounter++;$mergeColumnCounter++;
+            $worksheet->mergeCells("{$columnHeaderCounter}5:{$mergeColumnCounter}5");
+            $worksheet->setCellValue("{$columnHeaderCounter}5", $serviceSaleItem['service_name']);
+            $columnHeaderCounter++;$columnHeaderCounter++;$mergeColumnCounter++;$mergeColumnCounter++;
         }
-        $worksheet->mergeCells("{$columnCounter}5:{$mergeColumnCounter}5");
-        $worksheet->setCellValue("{$columnCounter}5", 'Total');
-        $columnCounter = 'B';
-        foreach ($serviceSaleData as $serviceSaleItem) {
-            $worksheet->setCellValue("{$columnCounter}6", 'Quantity');
-            $columnCounter++;
-            $worksheet->setCellValue("{$columnCounter}6", 'Price');
-            $columnCounter++;
-        }
-        $worksheet->setCellValue("{$columnCounter}6", 'Quantity');
-        $columnCounter++;
-        $worksheet->setCellValue("{$columnCounter}6", 'Price');
-        $columnCounter++;
+        $worksheet->mergeCells("{$columnHeaderCounter}5:{$mergeColumnCounter}5");
+        $worksheet->setCellValue("{$columnHeaderCounter}5", 'Total');
         
-        $rowCounter = 8;
+        $columnSubHeaderCounter = 'B';
+        foreach ($serviceSaleData as $serviceSaleItem) {
+            $worksheet->setCellValue("{$columnSubHeaderCounter}6", 'Quantity');
+            $columnSubHeaderCounter++;
+            $worksheet->setCellValue("{$columnSubHeaderCounter}6", 'Price');
+            $columnSubHeaderCounter++;
+        }
+        $worksheet->setCellValue("{$columnSubHeaderCounter}6", 'Quantity');
+        $columnSubHeaderCounter++;
+        $worksheet->setCellValue("{$columnSubHeaderCounter}6", 'Price');
+        
+        $worksheet->getStyle("A5:{$columnSubHeaderCounter}5")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A6:{$columnSubHeaderCounter}6")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A1:{$columnSubHeaderCounter}6")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->getStyle("A1:{$columnSubHeaderCounter}6")->getFont()->setBold(true);
+        
+        $rowCounter = 7;
         $footerQuantities = array();
         $footerPrices = array();
         for ($n = 1; $n <= $numberOfDays; $n++) {
@@ -203,19 +205,21 @@ class MonthlyServiceSaleController extends Controller {
         $worksheet->setCellValue("A{$rowCounter}", 'Total');
         $footerQuantitiesSum = '0.00';
         $footerPricesSum = '0.00';
-        $columnCounter = 'B';
+        $columnFooterCounter = 'B';
         foreach ($serviceSaleData as $serviceId => $serviceSaleItem) {
-            $worksheet->setCellValue("{$columnCounter}{$rowCounter}", $footerQuantities[$serviceId]);
-            $columnCounter++;
-            $worksheet->setCellValue("{$columnCounter}{$rowCounter}", $footerPrices[$serviceId]);
-            $columnCounter++;
+            $worksheet->setCellValue("{$columnFooterCounter}{$rowCounter}", $footerQuantities[$serviceId]);
+            $columnFooterCounter++;
+            $worksheet->setCellValue("{$columnFooterCounter}{$rowCounter}", $footerPrices[$serviceId]);
+            $columnFooterCounter++;
             $footerQuantitiesSum += $footerQuantities[$serviceId];
             $footerPricesSum += $footerPrices[$serviceId]; 
         }
-        $worksheet->setCellValue("{$columnCounter}{$rowCounter}", $footerQuantitiesSum);
-        $columnCounter++;
-        $worksheet->setCellValue("{$columnCounter}{$rowCounter}", $footerPricesSum);
-        $columnCounter++;
+        $worksheet->setCellValue("{$columnFooterCounter}{$rowCounter}", $footerQuantitiesSum);
+        $columnFooterCounter++;
+        $worksheet->setCellValue("{$columnFooterCounter}{$rowCounter}", $footerPricesSum);
+        
+        $worksheet->getStyle("A{$rowCounter}:{$columnFooterCounter}{$rowCounter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A{$rowCounter}:{$columnFooterCounter}{$rowCounter}")->getFont()->setBold(true);
         
         for ($col = 'A'; $col !== 'AZ'; $col++) {
             $objPHPExcel->getActiveSheet()
@@ -226,7 +230,7 @@ class MonthlyServiceSaleController extends Controller {
         ob_end_clean();
 
         header('Content-type: application/vnd.ms-excel');
-        header('Content-Disposition: attachment;filename="Laporan Penjualan Jasa Bulanan.xls"');
+        header('Content-Disposition: attachment;filename="penjualan_jasa_bulanan.xls"');
         header('Cache-Control: max-age=0');
 
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');

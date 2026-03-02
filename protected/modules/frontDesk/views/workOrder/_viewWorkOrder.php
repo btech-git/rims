@@ -58,7 +58,10 @@
                             "id" => $activeWorkOrderItem['id']
                         )), array('target' => '_blank')); ?>
                     </td>
-                    <td><?php echo CHtml::encode($activeWorkOrderItem['work_order_date']); ?></td>
+                    <td>
+                        <?php echo CHtml::encode($activeWorkOrderItem['work_order_date']); ?> 
+                        <?php echo CHtml::encode($activeWorkOrderItem['work_order_time']); ?>
+                    </td>
                     <td><?php echo CHtml::encode($registrationTransaction->getMovementOuts()); ?></td>
                     <td>
                         <?php $invoiceHeader = InvoiceHeader::model()->findByAttributes(array('registration_transaction_id' => $activeWorkOrderItem['id'])); ?>

@@ -8,6 +8,15 @@ $this->breadcrumbs = array(
 );
 ?>
 
+<div id="link">
+    <?php if (Yii::app()->user->checkAccess("paymentInSupervisor") && $model->status === 'Approved'): ?>
+        <?php echo CHtml::link('<span class="fa fa-check"></span>Verify Transaction', array("/transaction/paymentIn/verify", "id" => $model->id), array(
+            'class' => 'button success right', 
+            'style' => 'margin-right:10px', 
+        )); ?>
+    <?php endif; ?>
+</div>
+
 <?php echo CHtml::beginForm(); ?>
 <div id="maincontent">
     <h1>View Payment In #<?php echo $model->id; ?></h1>

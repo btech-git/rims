@@ -17,13 +17,18 @@
  * @property string $created_datetime
  * @property string $updated_datetime
  * @property string $cancelled_datetime
+ * @property integer $is_verified
+ * @property integer $user_id_verified
+ * @property string $verified_datetime
  *
  * The followings are the available model relations:
  * @property JournalAdjustmentDetail[] $journalAdjustmentDetails
+ * @property JournalAdjustmentApproval[] $journalAdjustmentApprovals
  * @property Users $user
  * @property UserIdUpdated $userIdUpdated
  * @property UserIdCancelled $userIdCancelled
  * @property Branch $branch
+ * @property UserIdVerified $userIdVerified
  */
 class JournalAdjustmentHeader extends MonthlyTransactionActiveRecord {
 
@@ -43,14 +48,14 @@ class JournalAdjustmentHeader extends MonthlyTransactionActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('transaction_number, date, time, user_id, branch_id, status', 'required'),
-            array('user_id, user_id_updated, user_id_cancelled, branch_id', 'numerical', 'integerOnly' => true),
+            array('transaction_number, date, time, user_id, branch_id, status, is_verified', 'required'),
+            array('user_id, user_id_updated, user_id_cancelled, branch_id, user_id_edited, is_verified, user_id_verified', 'numerical', 'integerOnly' => true),
             array('transaction_number', 'length', 'max' => 60),
             array('status', 'length', 'max' => 20),
-            array('note, created_datetime, updated_datetime, cancelled_datetime', 'safe'),
+            array('note, created_datetime, updated_datetime, cancelled_datetime, verified_datetime', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, transaction_number, date, time, note, user_id, user_id_updated, user_id_cancelled, branch_id, status, created_datetime, updated_datetime, cancelled_datetime', 'safe', 'on' => 'search'),
+            array('id, transaction_number, date, time, note, user_id, user_id_updated, user_id_cancelled, branch_id, status, created_datetime, updated_datetime, cancelled_datetime, is_verified, user_id_verified, verified_datetime', 'safe', 'on' => 'search'),
         );
     }
 
@@ -62,10 +67,12 @@ class JournalAdjustmentHeader extends MonthlyTransactionActiveRecord {
         // class name for the relations automatically generated below.
         return array(
             'journalAdjustmentDetails' => array(self::HAS_MANY, 'JournalAdjustmentDetail', 'journal_adjustment_header_id'),
+            'journalAdjustmentApprovals' => array(self::HAS_MANY, 'JournalAdjustmentApproval', 'journal_adjustment_header_id'),
             'user' => array(self::BELONGS_TO, 'Users', 'user_id'),
             'userIdUpdated' => array(self::BELONGS_TO, 'Users', 'user_id'),
             'userIdCancelled' => array(self::BELONGS_TO, 'Users', 'user_id'),
             'branch' => array(self::BELONGS_TO, 'Branch', 'branch_id'),
+            'userIdVerified' => array(self::BELONGS_TO, 'Users', 'user_id_verified'),
         );
     }
 
@@ -85,18 +92,6 @@ class JournalAdjustmentHeader extends MonthlyTransactionActiveRecord {
         );
     }
 
-    /**
-     * Retrieves a list of models based on the current search/filter conditions.
-     *
-     * Typical usecase:
-     * - Initialize the model fields with values from filter form.
-     * - Execute this method to get CActiveDataProvider instance which will filter
-     * models according to data in model fields.
-     * - Pass data provider to CGridView, CListView or any similar widget.
-     *
-     * @return CActiveDataProvider the data provider that can return the models
-     * based on the search/filter conditions.
-     */
     public function search() {
         // @todo Please modify the following code to remove attributes that should not be searched.
 
@@ -141,14 +136,32 @@ class JournalAdjustmentHeader extends MonthlyTransactionActiveRecord {
         ));
     }
 
-    /**
-     * Returns the static model of the specified AR class.
-     * Please note that you should have this exact method in all your CActiveRecord descendants!
-     * @param string $className active record class name.
-     * @return JournalAdjustmentHeader the static model class
-     */
     public static function model($className = __CLASS__) {
         return parent::model($className);
+    }
+
+    public function searchByDailyCashReport() {
+        // @todo Please modify the following code to remove attributes that should not be searched.
+
+        $criteria = new CDbCriteria;
+        $criteria->compare('id', $this->id);
+        $criteria->compare('transaction_number', $this->transaction_number, true);
+        $criteria->compare('date', $this->date, true);
+        $criteria->compare('time', $this->time, true);
+        $criteria->compare('note', $this->note, true);
+        $criteria->compare('user_id', $this->user_id);
+        $criteria->compare('branch_id', $this->branch_id);
+        $criteria->compare('status', $this->status, true);
+
+        $criteria->addCondition("t.branch_id IN (SELECT branch_id FROM " . UserBranch::model()->tableName() . " WHERE users_id = :userId)");
+        $criteria->params = array(':userId' => Yii::app()->user->id);
+
+        return new CActiveDataProvider($this, array(
+            'criteria' => $criteria,
+            'pagination' => array(
+                'pageSize' => 50,
+            ),
+        ));
     }
 
     public function getTotalDebit() {

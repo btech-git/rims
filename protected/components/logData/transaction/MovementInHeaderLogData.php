@@ -51,7 +51,6 @@ class MovementInHeaderLogData  {
                         $detailNewData = array();
                         foreach ($detailItems as $detailFieldName => $detailFieldValue) {
                             switch ($detailFieldName) {
-                                case 'id':
                                 case 'movement_in_header_id':
                                     break;
                                 case 'product_id':

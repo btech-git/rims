@@ -520,7 +520,12 @@
                     array(
                         'label' => 'Cancelled Transactions', 
                         'url' => array('/accounting/cancelledTransaction/index'), 
-                        'visible' => Yii::app()->user->checkAccess('requestOrderSupervisor')
+//                        'visible' => Yii::app()->user->checkAccess('requestOrderSupervisor')
+                    ),
+                    array(
+                        'label' => 'Saldo Awal COA', 
+                        'url' => array('/accounting/journalBeginning/admin'), 
+//                        'visible' => Yii::app()->user->checkAccess('requestOrderSupervisor')
                     ),
                 ),
             )); ?>

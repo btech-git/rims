@@ -31,6 +31,8 @@ Yii::app()->clientScript->registerCss('_report', '
             <th class="width1-6">Kendaraan</th>
             <th class="width1-7">WO #</th>
             <th class="width1-8">Salesman</th>
+            <th class="width1-8">Status</th>
+            <th class="width1-8">Verified By</th>
             <th class="width1-9">Total</th>
         </tr>
     </thead>
@@ -42,7 +44,7 @@ Yii::app()->clientScript->registerCss('_report', '
                 <td><?php echo $i + 1; ?></td>
                 <td>
                     <?php echo CHtml::link(CHtml::value($header, 'invoice_number'), array(
-                        '/transaction/invoiceHeader/view',
+                        '/transaction/invoiceHeader/show',
                         'id' => $header->id, 
                     ), array('target' => '_blank')); ?>
                 </td>
@@ -60,6 +62,8 @@ Yii::app()->clientScript->registerCss('_report', '
                     ), array('target' => '_blank')); ?>
                 </td>
                 <td><?php echo CHtml::encode(CHtml::value($header, 'registrationTransaction.employeeIdSalesPerson.name')); ?></td>
+                <td><?php echo CHtml::encode(CHtml::value($header, 'status')); ?></td>
+                <td><?php echo CHtml::encode(CHtml::value($header, 'userIdVerified.username')); ?></td>
                 <td style="text-align:right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalPrice)); ?></td>
             </tr>
             <?php $grandTotal += $totalPrice; ?>
@@ -67,7 +71,7 @@ Yii::app()->clientScript->registerCss('_report', '
     </tbody>
     <tfoot>
         <tr>
-            <td colspan="7" style="font-weight: bold; text-align: right">TOTAL</td>
+            <td colspan="9" style="font-weight: bold; text-align: right">TOTAL</td>
             <td style="font-weight: bold; text-align:right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $grandTotal)); ?></td>
         </tr>
     </tfoot>

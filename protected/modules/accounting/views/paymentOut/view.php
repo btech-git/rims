@@ -28,12 +28,17 @@
         )) ?>
     <?php endif; ?>
     
-    <?php //if (!($paymentOut->status == 'CANCELLED!!!')): ?>
+    <?php if (Yii::app()->user->checkAccess("paymentOutSupervisor") && $model->status === 'Approved'): ?>
+        <?php /*echo CHtml::link('<span class="fa fa-check"></span>Verify Transaction', array("/accounting/paymentOut/verify", "id" => $paymentOut->id), array(
+            'class' => 'button success right', 
+            'style' => 'margin-right:10px', 
+        ));*/ ?> 
+        
         <?php echo CHtml::link('<span class="fa fa-minus"></span>Cancel Transaction', array("/accounting/paymentOut/cancel", "id" => $paymentOut->id), array(
             'class' => 'button alert right', 
             'style' => 'margin-right:10px', 
         )); ?>
-    <?php //endif; ?>
+    <?php endif; ?>
 </div>
 
 <h1><?php echo $this->id . '/' . $this->action->id; ?></h1>

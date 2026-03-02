@@ -102,8 +102,8 @@
         'columns' => array(
             array(
                 'header' => 'ID',
-                'name' => 'customer_id',
-                'value' => 'CHtml::value($data, "customer_id")',
+                'name' => 'id',
+                'value' => 'CHtml::value($data, "id")',
             ),
             array(
                 'header' => 'Plate #',

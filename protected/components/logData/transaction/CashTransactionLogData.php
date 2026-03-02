@@ -8,6 +8,12 @@ class CashTransactionLogData  {
             switch ($headerFieldName) {
                 case 'id':
                     break;
+                case 'debit_amount':
+                    $newData['debit_amount'] = Yii::app()->numberFormatter->format('#,##0.00', $headerFieldValue);
+                    break;
+                case 'credit_amount':
+                    $newData['credit_amount'] = Yii::app()->numberFormatter->format('#,##0.00', $headerFieldValue);
+                    break;
                 case 'branch_id':
                     $branch = Branch::model()->findByPk($headerFieldValue);
                     $newData['branch'] = $branch === null ? '' : $branch->name;
@@ -38,11 +44,13 @@ class CashTransactionLogData  {
                         $detailNewData = array();
                         foreach ($detailItems as $detailFieldName => $detailFieldValue) {
                             switch ($detailFieldName) {
-                                case 'id':
                                 case 'cash_transaction_id':
                                     break;
                                 case 'coa_id':
                                     $detailNewData['coa_name'] = Coa::model()->findByPk($detailFieldValue)->name;
+                                    break;
+                                case 'amount':
+                                    $detailNewData['amount'] = Yii::app()->numberFormatter->format('#,##0.00', $headerFieldValue);
                                     break;
                                 default:
                                     $detailNewData[$detailFieldName] = $detailFieldValue;

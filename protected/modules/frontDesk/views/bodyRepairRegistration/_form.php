@@ -132,6 +132,7 @@
                                                 <label class="prefix"><?php echo $form->labelEx($bodyRepairRegistration->header,'branch_id'); ?></label>
                                             </div>
                                             <div class="small-8 columns">
+                                                <?php echo $form->hiddenField($bodyRepairRegistration->header,'user_id'); ?>
                                                 <?php echo $form->textField($bodyRepairRegistration->header,'branch_name',array(
                                                     'value'=>$bodyRepairRegistration->header->isNewRecord ? Branch::model()->findByPk(User::model()->findByPk(Yii::app()->user->getId())->branch_id)->name : $bodyRepairRegistration->header->branch->name,
                                                     'readonly'=>true
@@ -156,7 +157,18 @@
                                     <div class="field">
                                         <div class="row collapse">
                                             <div class="small-4 columns">
-                                                <label class="prefix">Car Mileage (KM)</label>
+                                                <label class="prefix">KM Sebelum</label>
+                                            </div>
+                                            <div class="small-8 columns">
+                                                <?php echo $form->textField($bodyRepairRegistration->header, 'previous_mileage', array('readOnly' => true)); ?>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="field">
+                                        <div class="row collapse">
+                                            <div class="small-4 columns">
+                                                <label class="prefix">KM Sekarang</label>
                                             </div>
                                             <div class="small-8 columns">
                                                 <?php echo $form->textField($bodyRepairRegistration->header, 'vehicle_mileage'); ?>
@@ -164,20 +176,17 @@
                                         </div>
                                     </div>
 
-                                    <?php if ($customer->customer_type === 'Company'): ?>
-                                        <div class="field">
-                                            <div class="row collapse">
-                                                <div class="small-4 columns">
-                                                    <label class="prefix"><?php echo $form->labelEx($bodyRepairRegistration->header, 'customer_work_order_number'); ?></label>
-                                                </div>
-                                                <div class="small-8 columns">
-                                                    <?php echo $form->textField($bodyRepairRegistration->header, 'customer_work_order_number'); ?>
-                                                    <?php echo $form->error($bodyRepairRegistration->header,'customer_work_order_number'); ?>
-                                                </div>
+                                    <div class="field">
+                                        <div class="row collapse">
+                                            <div class="small-4 columns">
+                                                <label class="prefix">KM Rekomendasi Service Selanjutnya</label>
+                                            </div>
+                                            <div class="small-8 columns">
+                                                <?php echo $form->textField($bodyRepairRegistration->header, 'next_mileage'); ?>
                                             </div>
                                         </div>
-                                    <?php endif; ?>
-                                    
+                                    </div>
+
                                     <div class="field">
                                         <div class="row collapse">
                                             <div class="small-4 columns">
@@ -192,6 +201,18 @@
                                 </div> 
                                 <!-- END COLUMN 6-->
                                 <div class="medium-6 columns">
+                                    <div class="field">
+                                        <div class="row collapse">
+                                            <div class="small-4 columns">
+                                                <label class="prefix"><?php echo $form->labelEx($bodyRepairRegistration->header, 'Estimasi Lama Pengerjaan (jam)'); ?></label>
+                                            </div>
+                                            <div class="small-8 columns">
+                                                <?php echo $form->textField($bodyRepairRegistration->header, 'estimate_service_time'); ?>
+                                                <?php echo $form->error($bodyRepairRegistration->header,'estimate_service_time'); ?>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
                                     <div class="field">
                                         <div class="row collapse">
                                             <div class="small-4 columns">
@@ -294,6 +315,20 @@
                                             </div>
                                         </div>
                                     </div>
+                                    
+                                    <?php if ($customer->customer_type === 'Company'): ?>
+                                        <div class="field">
+                                            <div class="row collapse">
+                                                <div class="small-4 columns">
+                                                    <label class="prefix"><?php echo $form->labelEx($bodyRepairRegistration->header, 'customer_work_order_number'); ?></label>
+                                                </div>
+                                                <div class="small-8 columns">
+                                                    <?php echo $form->textField($bodyRepairRegistration->header, 'customer_work_order_number'); ?>
+                                                    <?php echo $form->error($bodyRepairRegistration->header,'customer_work_order_number'); ?>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    <?php endif; ?>
                                 </div>
                             </div>
                         </div>

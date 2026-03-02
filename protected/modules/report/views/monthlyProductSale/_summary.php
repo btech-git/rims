@@ -4,7 +4,7 @@
             <tr id="header1">
                 <th></th>
                 <?php foreach ($productSaleData as $productSaleItem): ?>
-                    <th><?php echo CHtml::encode($productSaleItem['product_name']); ?></th>
+                    <th><?php echo CHtml::encode($productSaleItem['product_id']); ?></th>
                 <?php endforeach; ?>
                 <th style="width: 120px">Total</th>
             </tr>

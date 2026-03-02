@@ -56,6 +56,7 @@ class BodyRepairRegistrationController extends Controller {
         $bodyRepairRegistration = $this->instantiate(null, 'create');
         $vehicle = Vehicle::model()->findByPk($vehicleId);
         $customer = Customer::model()->findByPk($vehicle->customer_id);
+        $lastRegistration = RegistrationTransaction::model()->findByAttributes(array('vehicle_id' => $vehicleId), array('order' => 't.id DESC'));
 
         $bodyRepairRegistration->header->work_order_time = date('H:i:s');
         $bodyRepairRegistration->header->created_datetime = date('Y-m-d H:i:s');
@@ -67,6 +68,7 @@ class BodyRepairRegistrationController extends Controller {
         $bodyRepairRegistration->header->vehicle_exit_datetime = null;
         $bodyRepairRegistration->header->vehicle_start_service_datetime = null;
         $bodyRepairRegistration->header->vehicle_finish_service_datetime = null;
+        $bodyRepairRegistration->header->previous_mileage = empty($lastRegistration) ? 0 : $lastRegistration->vehicle_mileage;
         $bodyRepairDate = isset($_POST['BodyRepairDate']) ? $_POST['BodyRepairDate'] : date('Y-m-d');
         $bodyRepairHour = isset($_POST['BodyRepairHour']) ? $_POST['BodyRepairHour'] : date('H');
         $bodyRepairMinute = isset($_POST['BodyRepairMinute']) ? $_POST['BodyRepairMinute'] : date('i');

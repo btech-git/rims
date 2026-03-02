@@ -147,20 +147,17 @@ class ProductSubMasterCategoryStatisticsController extends Controller {
 
         $documentProperties = $objPHPExcel->getProperties();
         $documentProperties->setCreator('Raperind Motor');
-        $documentProperties->setTitle('Statistik Penjualan Parts');
+        $documentProperties->setTitle('Analisis Penjualan Parts');
 
         $worksheet = $objPHPExcel->setActiveSheetIndex(0);
-        $worksheet->setTitle('Statistik Penjualan Parts');
+        $worksheet->setTitle('Analisis Penjualan Parts');
 
         $worksheet->mergeCells('A1:Q1');
         $worksheet->mergeCells('A2:Q2');
         $worksheet->mergeCells('A3:Q3');
 
-        $worksheet->getStyle('A1:Z6')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-        $worksheet->getStyle('A1:Z6')->getFont()->setBold(true);
-
         $worksheet->setCellValue('A1', 'Raperind Motor ');
-        $worksheet->setCellValue('A2', 'Statistik Penjualan Parts');
+        $worksheet->setCellValue('A2', 'Analisis Penjualan Parts');
         $worksheet->setCellValue('A3', $year);
         $monthList = array(
             1 => 'Jan',
@@ -200,9 +197,11 @@ class ProductSubMasterCategoryStatisticsController extends Controller {
         
         $worksheet->getStyle("A5:{$columnCounter}5")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
         $worksheet->getStyle("A6:{$columnCounter}6")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle('A1:Z6')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->getStyle('A1:Z6')->getFont()->setBold(true);
 
         $ordinalNumber = 0;
-        $counter = 8;
+        $counter = 7;
         
         foreach ($yearlyStatistics as $id => $yearlyStatisticsItem) {
             $worksheet->setCellValue("A{$counter}", ++$ordinalNumber);
@@ -236,7 +235,7 @@ class ProductSubMasterCategoryStatisticsController extends Controller {
         ob_end_clean();
 
         header('Content-type: application/vnd.ms-excel');
-        header('Content-Disposition: attachment;filename="statistik_penjualan_parts.xls"');
+        header('Content-Disposition: attachment;filename="analisis_penjualan_parts.xls"');
         header('Cache-Control: max-age=0');
 
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');

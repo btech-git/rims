@@ -179,8 +179,6 @@ class YearlyProductSaleTransactionController extends Controller {
         $worksheet->mergeCells('A1:Z1');
         $worksheet->mergeCells('A2:Z2');
         $worksheet->mergeCells('A3:Z3');
-        $worksheet->getStyle('A1:AZ6')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-        $worksheet->getStyle('A1:AZ6')->getFont()->setBold(true);
 
         $worksheet->setCellValue('A1', 'Raperind Motor ');
         $worksheet->setCellValue('A2', 'Penjualan Parts & Components Tahunan');
@@ -221,8 +219,10 @@ class YearlyProductSaleTransactionController extends Controller {
         
         $worksheet->getStyle("A5:{$columnCounter}5")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
         $worksheet->getStyle("A5:{$columnCounter}5")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A1:{$columnCounter}5")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->getStyle("A1:{$columnCounter}5")->getFont()->setBold(true);
 
-        $counter = 7;
+        $counter = 6;
         $ordinal = 0;
         
         $maxMonthNum = (int) $year === (int) $yearNow ? $monthNow : 12;
@@ -250,7 +250,7 @@ class YearlyProductSaleTransactionController extends Controller {
             $worksheet->setCellValue("{$columnCounter}{$counter}", $invoiceTotalSum);
             $columnCounter++;
             $invoiceMean = $invoiceTotalSum / $maxMonthNum;
-            $worksheet->setCellValue("{$columnCounter}{$counter}", $invoiceMean);
+            $worksheet->setCellValue("{$columnCounter}{$counter}", round($invoiceMean, 2));
             $columnCounter++;
             $invoiceMinAmount = min($invoiceTotals);
             $worksheet->setCellValue("{$columnCounter}{$counter}", $invoiceMinAmount);
@@ -276,7 +276,7 @@ class YearlyProductSaleTransactionController extends Controller {
             $counter++;
         }
 
-        for ($col = 'A'; $col !== 'AB'; $col++) {
+        for ($col = 'A'; $col !== 'AZ'; $col++) {
             $objPHPExcel->getActiveSheet()
             ->getColumnDimension($col)
             ->setAutoSize(true);

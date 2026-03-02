@@ -8,6 +8,9 @@ class PaymentInLogData  {
             switch ($headerFieldName) {
                 case 'id':
                     break;
+                case 'payment_amount':
+                    $newData['payment_amount'] = Yii::app()->numberFormatter->format('#,##0.00', $headerFieldValue);
+                    break;
                 case 'branch_id':
                     $branch = Branch::model()->findByPk($headerFieldValue);
                     $newData['branch'] = $branch === null ? '' : $branch->name;
@@ -57,11 +60,31 @@ class PaymentInLogData  {
                         $detailNewData = array();
                         foreach ($detailItems as $detailFieldName => $detailFieldValue) {
                             switch ($detailFieldName) {
-                                case 'id':
                                 case 'payment_in_id':
                                     break;
                                 case 'invoice_header_id':
                                     $detailNewData['invoice'] = InvoiceHeader::model()->findByPk($detailFieldValue)->invoice_number;
+                                    break;
+                                case 'total_invoice':
+                                    $detailNewData['total_invoice'] = Yii::app()->numberFormatter->format('#,##0.00', $headerFieldValue);
+                                    break;
+                                case 'amount':
+                                    $detailNewData['amount'] = Yii::app()->numberFormatter->format('#,##0.00', $headerFieldValue);
+                                    break;
+                                case 'tax_service_amount':
+                                    $detailNewData['tax_service_amount'] = Yii::app()->numberFormatter->format('#,##0.00', $headerFieldValue);
+                                    break;
+                                case 'discount_amount':
+                                    $detailNewData['discount_amount'] = Yii::app()->numberFormatter->format('#,##0.00', $headerFieldValue);
+                                    break;
+                                case 'bank_administration_fee':
+                                    $detailNewData['bank_administration_fee'] = Yii::app()->numberFormatter->format('#,##0.00', $headerFieldValue);
+                                    break;
+                                case 'merimen_fee':
+                                    $detailNewData['merimen_fee'] = Yii::app()->numberFormatter->format('#,##0.00', $headerFieldValue);
+                                    break;
+                                case 'downpayment_amount':
+                                    $detailNewData['downpayment_amount'] = Yii::app()->numberFormatter->format('#,##0.00', $headerFieldValue);
                                     break;
                                 case 'is_tax_service':
                                     $taxService = '';

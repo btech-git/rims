@@ -21,6 +21,9 @@
  * @property integer $user_id_cancelled
  * @property string $updated_datetime
  * @property integer $user_id_updated
+ * @property integer $is_verified
+ * @property integer $user_id_verified
+ * @property string $verified_datetime
  *
  * The followings are the available model relations:
  * @property Coa $coa
@@ -31,6 +34,7 @@
  * @property CashTransactionApproval[] $cashTransactionApprovals
  * @property CashTransactionDetail[] $cashTransactionDetails
  * @property CashTransactionImages[] $cashTransactionImages
+ * @property UserIdVerified $userIdVerified
  */
 class CashTransaction extends MonthlyTransactionActiveRecord {
 
@@ -60,17 +64,17 @@ class CashTransaction extends MonthlyTransactionActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('transaction_number, transaction_date, transaction_time, transaction_type, coa_id, branch_id, user_id', 'required'),
-            array('coa_id, branch_id, user_id, user_id_cancelled, user_id_updated', 'numerical', 'integerOnly' => true),
+            array('transaction_number, transaction_date, transaction_time, transaction_type, coa_id, branch_id, user_id, is_verified', 'required'),
+            array('coa_id, branch_id, user_id, user_id_cancelled, user_id_updated, is_verified, user_id_verified', 'numerical', 'integerOnly' => true),
             array('transaction_number', 'length', 'max' => 50),
             array('transaction_type', 'length', 'max' => 20),
             array('debit_amount, credit_amount', 'length', 'max' => 18),
             array('status', 'length', 'max' => 30),
             array('transaction_number', 'unique'),
-            array('note, updated_datetime, cancelled_datetime', 'safe'),
+            array('note, updated_datetime, cancelled_datetime, created_datetime, verified_datetime', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, transaction_number, transaction_date, created_datetime, transaction_time, transaction_type, note, coa_id, debit_amount, credit_amount, branch_id, user_id, status, cancelled_datetime, user_id_cancelled, updated_datetime, user_id_updated', 'safe', 'on' => 'search'),
+            array('id, transaction_number, transaction_date, created_datetime, transaction_time, transaction_type, note, coa_id, debit_amount, credit_amount, branch_id, user_id, status, cancelled_datetime, user_id_cancelled, updated_datetime, user_id_updated, is_verified, user_id_verified, verified_datetime', 'safe', 'on' => 'search'),
         );
     }
 
@@ -90,6 +94,7 @@ class CashTransaction extends MonthlyTransactionActiveRecord {
             'cashTransactionApprovals' => array(self::HAS_MANY, 'CashTransactionApproval', 'cash_transaction_id'),
             'cashTransactionDetails' => array(self::HAS_MANY, 'CashTransactionDetail', 'cash_transaction_id'),
             'cashTransactionImages' => array(self::HAS_MANY, 'CashTransactionImages', 'cash_transaction_id'),
+            'userIdVerified' => array(self::BELONGS_TO, 'Users', 'user_id_verified'),
         );
     }
 
@@ -186,7 +191,7 @@ class CashTransaction extends MonthlyTransactionActiveRecord {
         $criteria->compare('user_id', $this->user_id);
         $criteria->compare('status', $this->status, true);
 
-        $criteria->addCondition("t.status = 'Approved' AND t.branch_id IN (SELECT branch_id FROM " . UserBranch::model()->tableName() . " WHERE users_id = :userId)");
+        $criteria->addCondition("t.status IN ('Approved', 'Verified') AND t.branch_id IN (SELECT branch_id FROM " . UserBranch::model()->tableName() . " WHERE users_id = :userId)");
         $criteria->params = array(':userId' => Yii::app()->user->id);
 
         return new CActiveDataProvider($this, array(

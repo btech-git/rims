@@ -5,10 +5,10 @@
             <th style="text-align: center">Transaction #</th>
             <th style="text-align: center">Account</th>
             <th style="text-align: center">Amount</th>
-            <th style="text-align: center">Branch</th>
+            <th style="text-align: center">Status</th>
             <th style="text-align: center">Type</th>
             <th style="text-align: center">Created By</th>
-            <th style="text-align: center">Approved By</th>
+            <th style="text-align: center">Verified By</th>
         </tr>
     </thead>
     
@@ -29,13 +29,14 @@
                 <td style="text-align: right">
                     <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $amountOut)); ?>
                 </td>
-                <td><?php echo CHtml::encode(CHtml::value($header, 'branch.name')); ?></td>
+                <td><?php echo CHtml::encode(CHtml::value($header, 'status')); ?></td>
                 <td><?php echo CHtml::encode(CHtml::value($header, 'paymentType.name')); ?></td>
                 <td><?php echo CHtml::encode(CHtml::value($header, 'user.username')); ?></td>
                 <td>
-                    <?php if (!empty($header->cashTransactionApprovals)): ?>
+                    <?php echo CHtml::encode(CHtml::value($header, 'userIdVerified.username')); ?>
+                    <?php /*if (!empty($header->cashTransactionApprovals)): ?>
                         <?php echo CHtml::encode($header->cashTransactionApprovals[0]->supervisor->username); ?>
-                    <?php endif; ?>
+                    <?php endif;*/ ?>
                 </td>
             </tr>
             <?php $totalOut += $amountOut; ?>

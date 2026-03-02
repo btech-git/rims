@@ -26,7 +26,7 @@ $this->menu = array(
             'class' => 'button cbutton right', 
             'style' => 'margin-right:10px',
         )) ?>
-        <?php if ($model->status !== 'CANCELLED!!!' && $model->status !== 'Approved'): ?>
+        <?php if ($model->status !== 'CANCELLED!!!' && $model->status !== 'Approved' && $model->status !== 'Verified'): ?>
             <?php if (Yii::app()->user->checkAccess("paymentInEdit")): //!($model->status == 'Approved' || $model->status == 'Rejected')): ?>
                 <?php echo CHtml::link('<span class="fa fa-edit"></span>Edit', Yii::app()->baseUrl.'/transaction/paymentIn/update?id=' . $model->id, array(
                     'class'=>'button warning right',
@@ -50,7 +50,12 @@ $this->menu = array(
                 <?php echo CHtml::submitButton('Finish', array('name' => 'SubmitFinish', 'confirm' => 'Are you sure you want to finish this transaction?', 'class' => 'button warning')); ?>
             <?php endif;*/ ?>
         <?php endif; ?>
-        <?php if (Yii::app()->user->checkAccess("paymentInSupervisor")): ?>
+        <?php if (Yii::app()->user->checkAccess("paymentInSupervisor") && $model->status === 'Approved'): ?>
+            <?php /*echo CHtml::link('<span class="fa fa-check"></span>Verify Transaction', array("/transaction/paymentIn/verify", "id" => $model->id), array(
+                'class' => 'button success right', 
+                'style' => 'margin-right:10px', 
+            ));*/ ?> 
+        
             <?php echo CHtml::link('<span class="fa fa-minus"></span>Cancel Transaction', array("/transaction/paymentIn/cancel", "id" => $model->id), array(
                 'class' => 'button alert right', 
                 'style' => 'margin-right:10px', 

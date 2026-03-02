@@ -24,6 +24,9 @@
  * @property integer $user_id_cancelled
  * @property string $cancelled_datetime
  * @property integer $coa_id_deposit
+ * @property integer $is_verified
+ * @property integer $user_id_verified
+ * @property string $verified_datetime
  *
  * The followings are the available model relations:
  * @property TransactionPurchaseOrder $purchaseOrder
@@ -38,6 +41,7 @@
  * @property PaymentOutApproval[] $paymentOutApprovals
  * @property PaymentType $paymentType
  * @property CoaIdDeposit $coaIdDeposit
+ * @property UserIdVerified $userIdVerified
  */
 class PaymentOut extends MonthlyTransactionActiveRecord {
 
@@ -64,16 +68,17 @@ class PaymentOut extends MonthlyTransactionActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('payment_number, payment_date, supplier_id, payment_amount, notes, user_id, branch_id, status, payment_type_id', 'required'),
-            array('purchase_order_id, supplier_id, user_id, branch_id, company_bank_id, cash_payment_type, bank_id, payment_type_id, user_id_cancelled, coa_id_deposit, user_id_edited', 'numerical', 'integerOnly' => true),
+            array('payment_number, payment_date, supplier_id, payment_amount, notes, user_id, branch_id, status, payment_type_id, is_verified', 'required'),
+            array('purchase_order_id, supplier_id, user_id, branch_id, company_bank_id, cash_payment_type, bank_id, payment_type_id, user_id_cancelled, coa_id_deposit, user_id_edited, is_verified, user_id_verified', 'numerical', 'integerOnly' => true),
             array('payment_number', 'length', 'max' => 50),
             array('payment_amount', 'length', 'max' => 18),
             array('nomor_giro', 'length', 'max' => 20),
             array('payment_type, status', 'length', 'max' => 30),
             array('payment_number', 'unique'),
+            array('created_datetime, cancelled_datetime, edited_datetime, verified_datetime', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, purchase_order_id, purchase_order_number, payment_number, payment_date, created_datetime, edited_datetime, supplier_id, payment_amount, coa_id_deposit, notes, payment_type, user_id, branch_id, user_id_edited, supplier_name, status, company_bank_id, nomor_giro, cash_payment_type, bank_id, payment_type_id, images, cancelled_datetime, user_id_cancelled', 'safe', 'on' => 'search'),
+            array('id, purchase_order_id, purchase_order_number, payment_number, payment_date, created_datetime, edited_datetime, supplier_id, payment_amount, coa_id_deposit, notes, payment_type, user_id, branch_id, user_id_edited, supplier_name, status, company_bank_id, nomor_giro, cash_payment_type, bank_id, payment_type_id, images, cancelled_datetime, user_id_cancelled, is_verified, user_id_verified, verified_datetime', 'safe', 'on' => 'search'),
         );
     }
 
@@ -87,8 +92,8 @@ class PaymentOut extends MonthlyTransactionActiveRecord {
             'purchaseOrder' => array(self::BELONGS_TO, 'TransactionPurchaseOrder', 'purchase_order_id'),
             'supplier' => array(self::BELONGS_TO, 'Supplier', 'supplier_id'),
             'user' => array(self::BELONGS_TO, 'Users', 'user_id'),
-            'userIdCancelled' => array(self::BELONGS_TO, 'User', 'user_id_cancelled'),
-            'userIdEdited' => array(self::BELONGS_TO, 'User', 'user_id_edited'),
+            'userIdCancelled' => array(self::BELONGS_TO, 'Users', 'user_id_cancelled'),
+            'userIdEdited' => array(self::BELONGS_TO, 'Users', 'user_id_edited'),
             'branch' => array(self::BELONGS_TO, 'Branch', 'branch_id'),
             'bank' => array(self::BELONGS_TO, 'Bank', 'bank_id'),
             'companyBank' => array(self::BELONGS_TO, 'CompanyBank', 'company_bank_id'),
@@ -97,6 +102,7 @@ class PaymentOut extends MonthlyTransactionActiveRecord {
             'paymentOutImages' => array(self::HAS_MANY, 'PaymentOutImages', 'payment_out_id'),
             'paymentType' => array(self::BELONGS_TO, 'PaymentType', 'payment_type_id'),
             'coaIdDeposit' => array(self::BELONGS_TO, 'Coa', 'coa_id_deposit'),
+            'userIdVerified' => array(self::BELONGS_TO, 'Users', 'user_id_verified'),
         );
     }
 
@@ -124,18 +130,6 @@ class PaymentOut extends MonthlyTransactionActiveRecord {
         );
     }
 
-    /**
-     * Retrieves a list of models based on the current search/filter conditions.
-     *
-     * Typical usecase:
-     * - Initialize the model fields with values from filter form.
-     * - Execute this method to get CActiveDataProvider instance which will filter
-     * models according to data in model fields.
-     * - Pass data provider to CGridView, CListView or any similar widget.
-     *
-     * @return CActiveDataProvider the data provider that can return the models
-     * based on the search/filter conditions.
-     */
     public function search() {
         // @todo Please modify the following code to remove attributes that should not be searched.
 

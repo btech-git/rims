@@ -36,8 +36,9 @@ class ServiceController extends Controller {
             $filterChain->action->id === 'index' || 
             $filterChain->action->id === 'addProduct'
         ) {
-            if (!(Yii::app()->user->checkAccess('masterServiceCreate')) || !(Yii::app()->user->checkAccess('masterServiceEdit')))
+            if (!(Yii::app()->user->checkAccess('masterServiceCreate')) || !(Yii::app()->user->checkAccess('masterServiceEdit'))) {
                 $this->redirect(array('/site/login'));
+            }
         }
 
         $filterChain->run();
@@ -52,15 +53,17 @@ class ServiceController extends Controller {
         $serviceEquipments = ServiceEquipment::model()->findAllByAttributes(array('service_id' => $id));
         $pricelists = ServicePricelist::model()->findAllByAttributes(array('service_id' => $id));
         $complements = ServiceComplement::model()->findAllByAttributes(array('service_id' => $id));
+        $invoiceDetails = InvoiceDetail::model()->findAllByAttributes(array('service_id' => $model->id), array('limit' => 50, 'order' => 't.id DESC'));
         
         if (isset($_POST['Approve']) && (int) $model->is_approved !== 1) {
             $model->is_approved = 1;
             $model->date_approval = date('Y-m-d');
             
-            if ($model->save(true, array('is_approved', 'date_approval')))
+            if ($model->save(true, array('is_approved', 'date_approval'))) {
                 Yii::app()->user->setFlash('confirm', 'Your data has been approved!!!');
-            else
+            } else {
                 Yii::app()->user->setFlash('error', 'Your data failed to approved!!!');
+            }
         }
 
         $this->render('view', array(
@@ -68,6 +71,7 @@ class ServiceController extends Controller {
             'serviceEquipments' => $serviceEquipments,
             'pricelists' => $pricelists,
             'complements' => $complements,
+            'invoiceDetails' => $invoiceDetails,
         ));
     }
 
@@ -314,9 +318,10 @@ class ServiceController extends Controller {
         $model = new Service('search');
         //$model->disableBehavior('SoftDelete');
         $model->unsetAttributes();  // clear any default values
-        if (isset($_GET['Service']))
+        if (isset($_GET['Service'])) {
             $model->attributes = $_GET['Service'];
-
+        }
+        
         $this->render('admin', array(
             'model' => $model,
         ));

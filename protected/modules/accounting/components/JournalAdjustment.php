@@ -112,6 +112,8 @@ class JournalAdjustment extends CComponent {
             JournalAdjustmentDetail::model()->deleteAll($criteria);
         }
 
+        $this->saveTransactionLog();
+        
         return $valid;
     }
 
@@ -119,10 +121,11 @@ class JournalAdjustment extends CComponent {
         $dbTransaction = $dbConnection->beginTransaction();
         try {
             $valid = $this->validate() && IdempotentManager::build()->save() && $this->flush();
-            if ($valid)
+            if ($valid) {
                 $dbTransaction->commit();
-            else
+            } else {
                 $dbTransaction->rollback();
+            }
         } catch (Exception $e) {
             $dbTransaction->rollback();
             $valid = false;
@@ -131,6 +134,32 @@ class JournalAdjustment extends CComponent {
         return $valid;
     }
 
+    public function saveTransactionLog() {
+        $transactionLog = new TransactionLog();
+        $transactionLog->transaction_number = $this->header->transaction_number;
+        $transactionLog->transaction_date = $this->header->date;
+        $transactionLog->log_date = date('Y-m-d');
+        $transactionLog->log_time = date('H:i:s');
+        $transactionLog->table_name = $this->header->tableName();
+        $transactionLog->table_id = $this->header->id;
+        $transactionLog->user_id = Yii::app()->user->id;
+        $transactionLog->username = Yii::app()->user->username;
+        $transactionLog->controller_class = Yii::app()->controller->module->id  . '/' . Yii::app()->controller->id;
+        $transactionLog->action_name = Yii::app()->controller->action->id;
+        $transactionLog->action_type = $this->actionType;
+        
+        $newData = $this->header->attributes;
+        
+        $newData['journalAdjustmentDetails'] = array();
+        foreach($this->details as $detail) {
+            $newData['journalAdjustmentDetails'][] = $detail->attributes;
+        }
+        
+        $transactionLog->new_data = json_encode($newData);
+
+        $transactionLog->save();
+    }
+    
     public function getTotalDebit() {
         $total = 0.00;
         foreach ($this->details as $detail) {

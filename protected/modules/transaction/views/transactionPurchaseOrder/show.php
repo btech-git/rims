@@ -7,6 +7,16 @@ $this->breadcrumbs=array(
 	$model->id,
 );
 ?>
+
+<div id="link">
+    <?php if (Yii::app()->user->checkAccess("purchaseOrderSupervisor") && $model->status_document === 'Approved'): ?>
+        <?php echo CHtml::link('<span class="fa fa-check"></span>Verify Transaction', array("/transaction/transactionPurchaseOrder/verify", "id" => $model->id), array(
+            'class' => 'button success right', 
+            'style' => 'margin-right:10px', 
+        )); ?>
+    <?php endif; ?>
+</div>
+
 <div id="maincontent">
     <div class="clearfix page-action">
         <?php $ccontroller = Yii::app()->controller->id; ?>

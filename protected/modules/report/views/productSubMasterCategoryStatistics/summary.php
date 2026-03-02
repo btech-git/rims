@@ -135,7 +135,7 @@
             <hr />
 
             <div style="font-weight: bold; text-align: center">
-                <div style="font-size: larger">Laporan Statistics Products Sales</div>
+                <div style="font-size: larger">Analisis Penjualan Parts</div>
                 <div><?php echo CHtml::encode($year); ?></div>
             </div>
 

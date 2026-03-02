@@ -1076,6 +1076,19 @@ class TransactionPurchaseOrderController extends Controller {
         $transactionLog->save();
     }
 
+    public function actionVerify($id) {
+        $model = $this->loadModel($id);
+        $model->status_document = 'Verified';
+        $model->is_verified = 1; 
+        $model->user_id_verified = Yii::app()->user->id;
+        $model->verified_datetime = date('Y-m-d H:i:s');
+        $model->update(array('status_document', 'is_verified', 'user_id_verified', 'verified_datetime'));
+
+        $this->saveTransactionLog('verify', $model);
+        
+        $this->redirect(array('admin'));
+    }
+
     public function actionCancel($id) {
         $model = $this->loadModel($id);
         

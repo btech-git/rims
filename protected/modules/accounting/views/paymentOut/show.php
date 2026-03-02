@@ -5,6 +5,15 @@
 
 <h1><?php echo $this->id . '/' . $this->action->id; ?></h1>
 
+<div id="link">
+    <?php if (Yii::app()->user->checkAccess("paymentOutSupervisor") && $paymentOut->status === 'Approved'): ?>
+        <?php echo CHtml::link('<span class="fa fa-check"></span>Verify Transaction', array("/accounting/paymentOut/verify", "id" => $paymentOut->id), array(
+            'class' => 'button success right', 
+            'style' => 'margin-right:10px', 
+        )); ?>
+    <?php endif; ?>
+</div>
+
 <?php $this->widget('zii.widgets.CDetailView', array(
     'data' => $paymentOut,
     'attributes' => array(

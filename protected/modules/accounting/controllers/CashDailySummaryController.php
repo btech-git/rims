@@ -85,10 +85,10 @@ class CashDailySummaryController extends Controller {
         $saleOrderDataProvider->criteria->compare('t.sale_order_date', $transactionDate);
         $saleOrderDataProvider->criteria->compare('t.requester_branch_id', $branchId);
         
-        $transactionJournal = Search::bind(new JurnalUmum('search'), isset($_GET['JurnalUmum']) ? $_GET['JurnalUmum'] : '');
+        $transactionJournal = Search::bind(new JournalAdjustmentHeader('search'), isset($_GET['JournalAdjustmentHeader']) ? $_GET['JournalAdjustmentHeader'] : '');
         $transactionJournalDataProvider = $transactionJournal->searchByDailyCashReport();
-        $transactionJournalDataProvider->criteria->compare('t.tanggal_transaksi', $transactionDate,true);
-        $transactionJournalDataProvider->criteria->compare('t.branch_id', $branchId);
+        $transactionJournalDataProvider->criteria->compare('t.date', $transactionDate);
+//        $transactionJournalDataProvider->criteria->compare('t.branch_id', $branchId);
         
         $retailTransactionHead = Search::bind(new RegistrationTransaction('search'), isset($_GET['RegistrationTransaction']) ? $_GET['RegistrationTransaction'] : '');
         $retailTransactionHeadDataProvider = $retailTransactionHead->searchByDailyCashReport();
@@ -141,7 +141,7 @@ class CashDailySummaryController extends Controller {
         $purchaseOrder = Search::bind(new TransactionPurchaseOrder('search'), isset($_GET['TransactionPurchaseOrder']) ? $_GET['TransactionPurchaseOrder'] : '');
         $purchaseOrderDataProvider = $purchaseOrder->searchByDailyCashReport();
         $purchaseOrderDataProvider->criteria->compare('t.purchase_order_date', $transactionDate,true);
-        $purchaseOrderDataProvider->criteria->compare('t.main_branch_id', $branchId);
+//        $purchaseOrderDataProvider->criteria->compare('t.main_branch_id', $branchId);
         
         $paymentTypeIdList = array();
         foreach ($paymentTypes as $paymentType) {

@@ -8,6 +8,39 @@ class RegistrationTransactionLogData  {
             switch ($headerFieldName) {
                 case 'id':
                     break;
+                case 'subtotal_service':
+                    $newData['subtotal_service'] = Yii::app()->numberFormatter->format('#,##0.00', $headerFieldValue);
+                    break;
+                case 'discount_service':
+                    $newData['discount_service'] = Yii::app()->numberFormatter->format('#,##0.00', $headerFieldValue);
+                    break;
+                case 'total_service_price':
+                    $newData['total_service_price'] = Yii::app()->numberFormatter->format('#,##0.00', $headerFieldValue);
+                    break;
+                case 'subtotal_product':
+                    $newData['subtotal_product'] = Yii::app()->numberFormatter->format('#,##0.00', $headerFieldValue);
+                    break;
+                case 'discount_product':
+                    $newData['discount_product'] = Yii::app()->numberFormatter->format('#,##0.00', $headerFieldValue);
+                    break;
+                case 'total_product_price':
+                    $newData['total_product_price'] = Yii::app()->numberFormatter->format('#,##0.00', $headerFieldValue);
+                    break;
+                case 'grand_total':
+                    $newData['grand_total'] = Yii::app()->numberFormatter->format('#,##0.00', $headerFieldValue);
+                    break;
+                case 'subtotal':
+                    $newData['subtotal'] = Yii::app()->numberFormatter->format('#,##0.00', $headerFieldValue);
+                    break;
+                case 'ppn_price':
+                    $newData['ppn_price'] = Yii::app()->numberFormatter->format('#,##0.00', $headerFieldValue);
+                    break;
+                case 'total_price_package':
+                    $newData['total_price_package'] = Yii::app()->numberFormatter->format('#,##0.00', $headerFieldValue);
+                    break;
+                case 'downpayment_amount':
+                    $newData['downpayment_amount'] = Yii::app()->numberFormatter->format('#,##0.00', $headerFieldValue);
+                    break;
                 case 'branch_id':
                     $branch = Branch::model()->findByPk($headerFieldValue);
                     $newData['branch'] = $branch === null ? '' : $branch->name;
@@ -54,8 +87,22 @@ class RegistrationTransactionLogData  {
                         $detailNewData = array();
                         foreach ($detailItems as $detailFieldName => $detailFieldValue) {
                             switch ($detailFieldName) {
-                                case 'id':
                                 case 'registration_transaction_id':
+                                    break;
+                                case 'retail_price':
+                                    $detailNewData['retail_price'] = Yii::app()->numberFormatter->format('#,##0.00', $headerFieldValue);
+                                    break;
+                                case 'hpp':
+                                    $detailNewData['hpp'] = Yii::app()->numberFormatter->format('#,##0.00', $headerFieldValue);
+                                    break;
+                                case 'recommended_selling_price':
+                                    $detailNewData['recommended_selling_price'] = Yii::app()->numberFormatter->format('#,##0.00', $headerFieldValue);
+                                    break;
+                                case 'sale_price':
+                                    $detailNewData['sale_price'] = Yii::app()->numberFormatter->format('#,##0.00', $headerFieldValue);
+                                    break;
+                                case 'total_price':
+                                    $detailNewData['total_price'] = Yii::app()->numberFormatter->format('#,##0.00', $headerFieldValue);
                                     break;
                                 case 'product_id':
                                     $detailNewData['product_name'] = Product::model()->findByPk($detailFieldValue)->name;
@@ -73,8 +120,13 @@ class RegistrationTransactionLogData  {
                         $detailNewData = array();
                         foreach ($detailItems as $detailFieldName => $detailFieldValue) {
                             switch ($detailFieldName) {
-                                case 'id':
                                 case 'registration_transaction_id':
+                                    break;
+                                case 'price':
+                                    $detailNewData['price'] = Yii::app()->numberFormatter->format('#,##0.00', $headerFieldValue);
+                                    break;
+                                case 'total_price':
+                                    $detailNewData['total_price'] = Yii::app()->numberFormatter->format('#,##0.00', $headerFieldValue);
                                     break;
                                 case 'service_id':
                                     $detailNewData['service_name'] = Service::model()->findByPk($detailFieldValue)->name;

@@ -74,23 +74,19 @@ Yii::app()->clientScript->registerScript('search', "
                 ),
                 'rowCssClassExpression' => '($data->is_deleted == 1)?"undelete":""',
                 'columns' => array(
-                    //'id',
                     array(
                         'class' => 'CCheckBoxColumn',
                         'selectableRows' => '2',
                         'header' => 'Selected',
                         'value' => '$data->id',
                     ),
-                    array('name' => 'service_type_code', 'value' => '$data->serviceType->code'),
+                    'id',
                     array(
                         'name' => 'service_type_name',
-//                        'filter' => CHtml::activeDropDownList($model, 'service_type_id', CHtml::listData(ServiceType::model()->findAll(array('order' => 'name')), 'id', 'name'), array('empty' => '-- All --')),
                         'value' => '$data->serviceType->name'
                     ),
-                    array('name' => 'service_category_code', 'value' => '$data->serviceCategory->code'),
                     array(
                         'name' => 'service_category_name',
-//                        'filter' => CHtml::activeDropDownList($model, 'service_category_id', CHtml::listData(ServiceCategory::model()->findAll(array('order' => 'name')), 'id', 'name'), array('empty' => '-- All --')),
                         'value' => '$data->serviceCategory->name'
                     ),
                     'code',

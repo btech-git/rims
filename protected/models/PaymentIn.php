@@ -35,6 +35,9 @@
  * @property string $bank_fee_amount
  * @property string $plate_number_list
  * @property string $invoice_number_list
+ * @property integer $is_verified
+ * @property integer $user_id_verified
+ * @property string $verified_datetime
  *
  * The followings are the available model relations:
  * @property InvoiceHeader $invoice
@@ -50,6 +53,7 @@
  * @property PaymentType $paymentType
  * @property PaymentInDetails[] $paymentInDetails
  * @property InsuranceCompany $insuranceCompany
+ * @property UserIdVerified $userIdVerified
  */
 class PaymentIn extends MonthlyTransactionActiveRecord {
 
@@ -85,17 +89,17 @@ class PaymentIn extends MonthlyTransactionActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('notes, payment_time, payment_date, payment_amount, downpayment_amount, user_id, branch_id, status, is_tax_service, tax_service_amount, payment_type_id', 'required'),
-            array('invoice_id, customer_id, vehicle_id, user_id, branch_id, company_bank_id, cash_payment_type, bank_id, payment_type_id, is_tax_service, user_id_cancelled, insurance_company_id, user_id_edited', 'numerical', 'integerOnly' => true),
+            array('notes, payment_time, payment_date, payment_amount, downpayment_amount, user_id, branch_id, status, is_tax_service, tax_service_amount, payment_type_id, is_verified', 'required'),
+            array('invoice_id, customer_id, vehicle_id, user_id, branch_id, company_bank_id, cash_payment_type, bank_id, payment_type_id, is_tax_service, user_id_cancelled, insurance_company_id, user_id_edited, is_verified, user_id_verified', 'numerical', 'integerOnly' => true),
             array('payment_number', 'length', 'max' => 50),
             array('payment_amount, tax_service_amount, downpayment_amount, discount_product_amount, discount_service_amount, bank_administration_fee, merimen_fee, bank_fee_amount', 'length', 'max' => 18),
             array('payment_type, status', 'length', 'max' => 30),
             array('nomor_giro', 'length', 'max' => 20),
             array('payment_number', 'unique'),
-            array('invoice_number_list, plate_number_list', 'safe'),
+            array('invoice_number_list, plate_number_list, created_datetime, cancelled_datetime, edited_datetime, verified_datetime', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, invoice_id, payment_number, payment_date, created_datetime, payment_amount, notes, downpayment_amount, customer_id, vehicle_id, payment_type, user_id, branch_id, insurance_company_id, invoice_status, status, nomor_giro, company_bank_id, cash_payment_type, bank_id, invoice_number, customer_name, payment_type_id, is_tax_service, tax_service_amount, cancelled_datetime, user_id_cancelled, edited_datetime, user_id_edited, discount_product_amount, discount_service_amount, bank_administration_fee, merimen_fee, bank_fee_amount, invoice_number_list, plate_number_list', 'safe', 'on' => 'search'),
+            array('id, invoice_id, payment_number, payment_date, created_datetime, payment_amount, notes, downpayment_amount, customer_id, vehicle_id, payment_type, user_id, branch_id, insurance_company_id, invoice_status, status, nomor_giro, company_bank_id, cash_payment_type, bank_id, invoice_number, customer_name, payment_type_id, is_tax_service, tax_service_amount, cancelled_datetime, user_id_cancelled, edited_datetime, user_id_edited, discount_product_amount, discount_service_amount, bank_administration_fee, merimen_fee, bank_fee_amount, invoice_number_list, plate_number_list, is_verified, user_id_verified, verified_datetime', 'safe', 'on' => 'search'),
         );
     }
 
@@ -110,8 +114,8 @@ class PaymentIn extends MonthlyTransactionActiveRecord {
             'customer' => array(self::BELONGS_TO, 'Customer', 'customer_id'),
             'vehicle' => array(self::BELONGS_TO, 'Vehicle', 'vehicle_id'),
             'user' => array(self::BELONGS_TO, 'Users', 'user_id'),
-            'userIdCancelled' => array(self::BELONGS_TO, 'User', 'user_id_cancelled'),
-            'userIdEdited' => array(self::BELONGS_TO, 'User', 'user_id_edited'),
+            'userIdCancelled' => array(self::BELONGS_TO, 'Users', 'user_id_cancelled'),
+            'userIdEdited' => array(self::BELONGS_TO, 'Users', 'user_id_edited'),
             'branch' => array(self::BELONGS_TO, 'Branch', 'branch_id'),
             'companyBank' => array(self::BELONGS_TO, 'CompanyBank', 'company_bank_id'),
             'paymentInImages' => array(self::HAS_MANY, 'PaymentInImages', 'payment_in_id'),
@@ -119,6 +123,7 @@ class PaymentIn extends MonthlyTransactionActiveRecord {
             'paymentType' => array(self::BELONGS_TO, 'PaymentType', 'payment_type_id'),
             'paymentInDetails' => array(self::HAS_MANY, 'PaymentInDetail', 'payment_in_id'),
             'insuranceCompany' => array(self::BELONGS_TO, 'InsuranceCompany', 'insurance_company_id'),
+            'userIdVerified' => array(self::BELONGS_TO, 'Users', 'user_id_verified'),
         );
     }
 
@@ -152,18 +157,6 @@ class PaymentIn extends MonthlyTransactionActiveRecord {
         );
     }
 
-    /**
-     * Retrieves a list of models based on the current search/filter conditions.
-     *
-     * Typical usecase:
-     * - Initialize the model fields with values from filter form.
-     * - Execute this method to get CActiveDataProvider instance which will filter
-     * models according to data in model fields.
-     * - Pass data provider to CGridView, CListView or any similar widget.
-     *
-     * @return CActiveDataProvider the data provider that can return the models
-     * based on the search/filter conditions.
-     */
     public function search() {
         // @todo Please modify the following code to remove attributes that should not be searched.
 

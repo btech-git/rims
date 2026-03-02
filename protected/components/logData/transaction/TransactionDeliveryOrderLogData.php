@@ -54,7 +54,6 @@ class TransactionDeliveryOrderLogData  {
                         $detailNewData = array();
                         foreach ($detailItems as $detailFieldName => $detailFieldValue) {
                             switch ($detailFieldName) {
-                                case 'id':
                                 case 'delivery_order_id':
                                     break;
                                 case 'product_id':

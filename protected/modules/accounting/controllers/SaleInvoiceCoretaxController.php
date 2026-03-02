@@ -57,7 +57,7 @@ class SaleInvoiceCoretaxController extends Controller {
         }
         
         $dataProvider = $model->searchByAdmin();
-        $dataProvider->criteria->addCondition('t.status != "CANCELLED!!!"');
+        $dataProvider->criteria->addCondition('t.status NOT LIKE "%CANCEL%" AND t.ppn_total > 0 AND t.transaction_tax_number IS NULL');
         
         if (!Yii::app()->user->checkAccess('director')) {
             $dataProvider->criteria->addCondition('t.branch_id = :branch_id');

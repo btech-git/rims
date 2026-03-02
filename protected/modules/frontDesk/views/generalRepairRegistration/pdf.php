@@ -77,12 +77,20 @@ function tanggal($date) {
                         <td><?php echo nl2br($customer->address); ?></td>
                     </tr>
                     <tr>
+                        <td>KM Sebelum</td>
+                        <td>:</td>
+                        <td><?php echo $generalRepairRegistration->previous_mileage; ?></td>
                         <td>PROBLEM</td>
                         <td>:</td>
                         <td><?php echo CHtml::encode(CHtml::value($generalRepairRegistration, 'problem')); ?></td>
-                        <td>KM</td>
+                    </tr>
+                    <tr>
+                        <td>KM Sekarang</td>
                         <td>:</td>
                         <td><?php echo $generalRepairRegistration->vehicle_mileage; ?></td>
+                        <td>KM Service Selanjutnya</td>
+                        <td>:</td>
+                        <td><?php echo CHtml::encode(CHtml::value($generalRepairRegistration, 'next_mileage')); ?></td>
                     </tr>
                 </table>
             </div>

@@ -195,6 +195,19 @@ class JournalAdjustmentController extends Controller {
         ));
     }
 
+    public function actionVerify($id) {
+        $model = $this->loadModel($id);
+        $model->status = 'Verified';
+        $model->is_verified = 1; 
+        $model->user_id_verified = Yii::app()->user->id;
+        $model->verified_datetime = date('Y-m-d H:i:s');
+        $model->update(array('status', 'is_verified', 'user_id_verified', 'verified_datetime'));
+
+        $this->saveTransactionLog('verify', $model);
+        
+        $this->redirect(array('admin'));
+    }
+
     public function actionUpdateApproval($headerId) {
         $journalVoucher = $this->loadModel($headerId);
         $historis = JournalAdjustmentApproval::model()->findAllByAttributes(array('journal_adjustment_header_id' => $headerId));
@@ -233,6 +246,8 @@ class JournalAdjustmentController extends Controller {
                     }
                 }
                 
+                $this->saveTransactionLog('approval', $journalVoucher);
+        
                 $this->redirect(array('view', 'id' => $headerId));
             }
         }
@@ -316,6 +331,39 @@ class JournalAdjustmentController extends Controller {
                 'categoryId' => $categoryId,
             ), false, true);
         }
+    }
+
+    public function saveTransactionLog($actionType, $journalVoucher) {
+        $transactionLog = new TransactionLog();
+        $transactionLog->transaction_number = $journalVoucher->transaction_number;
+        $transactionLog->transaction_date = $journalVoucher->date;
+        $transactionLog->log_date = date('Y-m-d');
+        $transactionLog->log_time = date('H:i:s');
+        $transactionLog->table_name = $journalVoucher->tableName();
+        $transactionLog->table_id = $journalVoucher->id;
+        $transactionLog->user_id = Yii::app()->user->id;
+        $transactionLog->username = Yii::app()->user->username;
+        $transactionLog->controller_class = Yii::app()->controller->module->id  . '/' . Yii::app()->controller->id;
+        $transactionLog->action_name = Yii::app()->controller->action->id;
+        $transactionLog->action_type = $actionType;
+        
+        $newData = $journalVoucher->attributes;
+        
+        if ($actionType === 'approval') {
+            $newData['journalAdjustmentApprovals'] = array();
+            foreach($journalVoucher->journalAdjustmentApprovals as $detail) {
+                $newData['journalAdjustmentApprovals'][] = $detail->attributes;
+            }
+        } else {
+            $newData['journalAdjustmentDetails'] = array();
+            foreach($journalVoucher->journalAdjustmentDetails as $detail) {
+                $newData['journalAdjustmentDetails'][] = $detail->attributes;
+            }
+        }
+        
+        $transactionLog->new_data = json_encode($newData);
+
+        $transactionLog->save();
     }
 
     public function instantiate($id) {

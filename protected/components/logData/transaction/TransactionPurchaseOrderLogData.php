@@ -36,6 +36,24 @@ class TransactionPurchaseOrderLogData  {
                 case 'price_before_discount':
                     $newData['price_before_discount'] = Yii::app()->numberFormatter->format('#,##0.00', $headerFieldValue);
                     break;
+                case 'discount':
+                    $newData['discount'] = Yii::app()->numberFormatter->format('#,##0.00', $headerFieldValue);
+                    break;
+                case 'subtotal':
+                    $newData['subtotal'] = Yii::app()->numberFormatter->format('#,##0.00', $headerFieldValue);
+                    break;
+                case 'ppn_price':
+                    $newData['ppn_price'] = Yii::app()->numberFormatter->format('#,##0.00', $headerFieldValue);
+                    break;
+                case 'total_price':
+                    $newData['total_price'] = Yii::app()->numberFormatter->format('#,##0.00', $headerFieldValue);
+                    break;
+                case 'payment_amount':
+                    $newData['payment_amount'] = Yii::app()->numberFormatter->format('#,##0.00', $headerFieldValue);
+                    break;
+                case 'payment_left':
+                    $newData['payment_left'] = Yii::app()->numberFormatter->format('#,##0.00', $headerFieldValue);
+                    break;
                 case 'registration_transaction_id':
                     $registrationTransaction = RegistrationTransaction::model()->findByPk($headerFieldValue);
                     $newData['registration_transaction'] = $registrationTransaction === null ? '' : $registrationTransaction->transaction_number;
@@ -74,7 +92,6 @@ class TransactionPurchaseOrderLogData  {
                         $detailNewData = array();
                         foreach ($detailItems as $detailFieldName => $detailFieldValue) {
                             switch ($detailFieldName) {
-                                case 'id':
                                 case 'purchase_order_id':
                                     break;
                                 case 'product_id':
@@ -82,6 +99,24 @@ class TransactionPurchaseOrderLogData  {
                                     break;
                                 case 'unit_id':
                                     $detailNewData['unit_name'] = Unit::model()->findByPk($detailFieldValue)->name;
+                                    break;
+                                case 'retail_price':
+                                    $detailNewData['retail_price'] = Yii::app()->numberFormatter->format('#,##0.00', $headerFieldValue);
+                                    break;
+                                case 'unit_price':
+                                    $detailNewData['unit_price'] = Yii::app()->numberFormatter->format('#,##0.00', $headerFieldValue);
+                                    break;
+                                case 'tax_amount':
+                                    $detailNewData['tax_amount'] = Yii::app()->numberFormatter->format('#,##0.00', $headerFieldValue);
+                                    break;
+                                case 'price_before_tax':
+                                    $detailNewData['price_before_tax'] = Yii::app()->numberFormatter->format('#,##0.00', $headerFieldValue);
+                                    break;
+                                case 'total_price':
+                                    $detailNewData['total_price'] = Yii::app()->numberFormatter->format('#,##0.00', $headerFieldValue);
+                                    break;
+                                case 'average_sale_amount':
+                                    $detailNewData['average_sale_amount'] = Yii::app()->numberFormatter->format('#,##0.00', $headerFieldValue);
                                     break;
                                 case 'discount1_type':
                                     $discountType = '';

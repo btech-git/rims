@@ -55,6 +55,7 @@ class GeneralRepairRegistrationController extends Controller {
         $generalRepairRegistration = $this->instantiate(null, 'create');        
         $vehicle = Vehicle::model()->findByPk($vehicleId);
         $customer = Customer::model()->findByPk($vehicle->customer_id);
+        $lastRegistration = RegistrationTransaction::model()->findByAttributes(array('vehicle_id' => $vehicleId), array('order' => 't.id DESC'));
 
         $generalRepairRegistration->header->created_datetime = date('Y-m-d H:i:s');
         $generalRepairRegistration->header->user_id = Yii::app()->user->id;
@@ -65,6 +66,7 @@ class GeneralRepairRegistrationController extends Controller {
         $generalRepairRegistration->header->vehicle_exit_datetime = null;
         $generalRepairRegistration->header->vehicle_start_service_datetime = null;
         $generalRepairRegistration->header->vehicle_finish_service_datetime = null;
+        $generalRepairRegistration->header->previous_mileage = empty($lastRegistration) ? 0 : $lastRegistration->vehicle_mileage;
         $generalRepairDate = isset($_POST['GeneralRepairDate']) ? $_POST['GeneralRepairDate'] : date('Y-m-d');
         $generalRepairHour = isset($_POST['GeneralRepairHour']) ? $_POST['GeneralRepairHour'] : date('H');
         $generalRepairMinute = isset($_POST['GeneralRepairMinute']) ? $_POST['GeneralRepairMinute'] : date('i');

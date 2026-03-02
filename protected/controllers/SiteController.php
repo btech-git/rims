@@ -39,32 +39,28 @@ class SiteController extends Controller {
     public function actionIndex() {
         if (Yii::app()->user->isGuest) {
             $this->redirect(array('/user/login'));
-        } else {
-            $vehicle = Search::bind(new Vehicle('search'), isset($_GET['Vehicle']) ? $_GET['Vehicle'] : '');
-            $vehicleDataProvider = $vehicle->searchByDashboard();
-            $vehicleDataProvider->criteria->with = array(
-                'customer',
-            );
-
-            if (isset($_GET['Vehicle'])) {
-                $vehicle->attributes = $_GET['Vehicle'];
-            }
-
-//            $pricingRequest = new ProductPricingRequest('search');
-//            $pricingRequest->unsetAttributes();  // clear any default values
-//
-//            if (isset($_GET['ProductPricingRequest'])) {
-//                $pricingRequest->attributes = $_GET['ProductPricingRequest'];
-//            }
-//
-//            $pricingRequestDataProvider = $pricingRequest->search();
         }
         
-        $this->render('index', array(
-            'vehicle' => $vehicle,
-            'vehicleDataProvider' => $vehicleDataProvider,
-//            'pricingRequest' => $pricingRequest,
-//            'pricingRequestDataProvider' => $pricingRequestDataProvider,
+        $this->render('index');
+    }
+    
+    public function actionAjaxJsonSearchAnswer() {
+        $searchAsk = isset($_POST['SearchAsk']) ? $_POST['SearchAsk'] : '';
+        
+        $searchAnswer = '';
+        if ($searchAsk === 'abc') {
+            $searchAnswer = '123';
+        } else if ($searchAsk === 'def') {
+            $searchAnswer = '456';
+        } else if ($searchAsk === 'ghi') {
+            $searchAnswer = '789';
+        } else if ($searchAsk !== '') {
+            $searchAnswer= 'Invalid!';
+        }
+        
+        echo CJSON::encode(array(
+            'searchAsk' => $searchAsk,
+            'searchAnswer' => $searchAnswer,
         ));
     }
     

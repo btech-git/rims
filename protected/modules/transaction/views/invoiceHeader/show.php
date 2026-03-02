@@ -8,6 +8,21 @@ $this->breadcrumbs = array(
 );
 ?>
 
+<div id="link">
+    <?php if (Yii::app()->user->checkAccess("saleInvoiceSupervisor") && $model->is_verified == 0): ?>
+        <?php echo CHtml::link('<span class="fa fa-check"></span>Verify Transaction', array("/transaction/invoiceHeader/verify", "id" => $model->id), array(
+            'class' => 'button success right', 
+            'style' => 'margin-right:10px', 
+        )); ?>
+    <?php endif; ?>
+    <?php if ($model->transaction_tax_number == null): ?>
+        <?php echo CHtml::link('<span class="fa fa-plus"></span>Add Coretax Number', array("/transaction/invoiceHeader/addCoretax", "id" => $model->id), array(
+            'class' => 'button info right', 
+            'style' => 'margin-right:10px', 
+        )); ?>
+    <?php endif; ?>
+</div>
+
 <?php echo CHtml::beginForm(); ?>
 <div id="maincontent">
     <div class="clearfix page-action">

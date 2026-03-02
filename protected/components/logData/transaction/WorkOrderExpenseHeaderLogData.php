@@ -8,6 +8,15 @@ class WorkOrderExpenseHeaderLogData  {
             switch ($headerFieldName) {
                 case 'id':
                     break;
+                case 'grand_total':
+                    $newData['grand_total'] = Yii::app()->numberFormatter->format('#,##0.00', $headerFieldValue);
+                    break;
+                case 'total_payment':
+                    $newData['total_payment'] = Yii::app()->numberFormatter->format('#,##0.00', $headerFieldValue);
+                    break;
+                case 'payment_remaining':
+                    $newData['payment_remaining'] = Yii::app()->numberFormatter->format('#,##0.00', $headerFieldValue);
+                    break;
                 case 'registration_transaction_id':
                     $registrationTransaction = RegistrationTransaction::model()->findByPk($headerFieldValue);
                     $newData['registration_transaction'] = $registrationTransaction === null ? '' : $registrationTransaction->transaction_number;
@@ -34,8 +43,10 @@ class WorkOrderExpenseHeaderLogData  {
                         $detailNewData = array();
                         foreach ($detailItems as $detailFieldName => $detailFieldValue) {
                             switch ($detailFieldName) {
-                                case 'id':
                                 case 'work_order_expense_header_id':
+                                    break;
+                                case 'amount':
+                                    $detailNewData['amount'] = Yii::app()->numberFormatter->format('#,##0.00', $headerFieldValue);
                                     break;
                                 default:
                                     $detailNewData[$detailFieldName] = $detailFieldValue;

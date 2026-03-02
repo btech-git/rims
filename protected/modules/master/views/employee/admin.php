@@ -84,13 +84,17 @@ $('.search-form form').submit(function(){
                         'value' => 'Yii::app()->dateFormatter->format("d MMMM yyyy", $data->recruitment_date)'
                     ),
                     array(
+                        'header' => 'Working Period', 
+                        'value' => 'CHtml::encode(CHtml::value($data, "activeWorkingPeriod"))',
+                    ),
+                    array(
                         'name' => 'name', 
                         'value' => 'CHtml::link($data->name, array("view", "id"=>$data->id))', 
                         'type' => 'raw'
                     ),
                     array(
                         'name' => 'branch_id', 
-                        'value' => 'CHtml::encode(CHtml::value($data, "branch.name"))',
+                        'value' => 'CHtml::encode(CHtml::value($data, "branch.code"))',
                     ),
                     array(
                         'name' => 'division_id', 

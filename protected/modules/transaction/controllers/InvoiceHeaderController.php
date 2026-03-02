@@ -655,8 +655,10 @@ class InvoiceHeaderController extends Controller {
             $invoice->coretax_receipt_number = $_POST['InvoiceHeader']['coretax_receipt_number'];
             $invoice->grand_total_coretax = $_POST['InvoiceHeader']['grand_total_coretax'];
             $invoice->tax_amount_coretax = $_POST['InvoiceHeader']['tax_amount_coretax'];
+            $invoice->user_id_coretax = Yii::app()->user->id;
+            $invoice->coretax_datetime = date('Y-m-d H:i:s');
             
-            if ($invoice->update(array('transaction_tax_number', 'tax_amount_coretax', 'grand_total_coretax', 'coretax_receipt_number'))) {
+            if ($invoice->update(array('transaction_tax_number', 'tax_amount_coretax', 'grand_total_coretax', 'coretax_receipt_number', 'user_id_coretax', 'coretax_datetime'))) {
                 $this->redirect(array('view', 'id' => $invoice->id));
             }
         }
@@ -680,11 +682,21 @@ class InvoiceHeaderController extends Controller {
         }
     }
 
+    public function actionVerify($id) {
+        $model = $this->loadModel($id);
+        $model->is_verified = 1; 
+        $model->user_id_verified = Yii::app()->user->id;
+        $model->verified_datetime = date('Y-m-d H:i:s');
+        $model->update(array('is_verified', 'user_id_verified', 'verified_datetime'));
+
+        $this->saveTransactionLog('verify', $model);
+        
+        $this->redirect(array('admin'));
+    }
+
     public function actionCancel($id) {
         $model = $this->loadModel($id);
-        
         $paymentInDetail = PaymentInDetail::model()->findByAttributes(array('invoice_header_id' => $id));
-//        $paymentInHeader = empty($paymentInDetail) ? null : $paymentInDetail->paymentIn;
         
         if (empty($paymentInDetail) || $paymentInDetail->paymentIn->user_id_cancelled !== null) {
             $model->status = 'CANCELLED!!!';

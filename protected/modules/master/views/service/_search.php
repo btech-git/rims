@@ -17,6 +17,17 @@
             <div class="field">
                 <div class="row collapse">
                     <div class="small-4 columns">
+                        <?php echo $form->label($model, 'id', array('class' => 'prefix')); ?>
+                    </div>
+                    <div class="small-8 columns">
+                        <?php echo $form->textField($model, 'id', array('size' => 20, 'maxlength' => 20)); ?>
+                    </div>
+                </div>
+            </div>
+            <!-- BEGIN field -->
+            <div class="field">
+                <div class="row collapse">
+                    <div class="small-4 columns">
                         <?php echo $form->label($model, 'code', array('class' => 'prefix')); ?>
                     </div>
                     <div class="small-8 columns">

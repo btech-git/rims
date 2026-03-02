@@ -8,6 +8,42 @@ class InvoiceHeaderLogData  {
             switch ($headerFieldName) {
                 case 'id':
                     break;
+                case 'service_price':
+                    $newData['service_price'] = Yii::app()->numberFormatter->format('#,##0.00', $headerFieldValue);
+                    break;
+                case 'product_price':
+                    $newData['product_price'] = Yii::app()->numberFormatter->format('#,##0.00', $headerFieldValue);
+                    break;
+                case 'ppn_total':
+                    $newData['ppn_total'] = Yii::app()->numberFormatter->format('#,##0.00', $headerFieldValue);
+                    break;
+                case 'total_discount':
+                    $newData['total_discount'] = Yii::app()->numberFormatter->format('#,##0.00', $headerFieldValue);
+                    break;
+                case 'total_price':
+                    $newData['total_price'] = Yii::app()->numberFormatter->format('#,##0.00', $headerFieldValue);
+                    break;
+                case 'payment_amount':
+                    $newData['payment_amount'] = Yii::app()->numberFormatter->format('#,##0.00', $headerFieldValue);
+                    break;
+                case 'payment_left':
+                    $newData['payment_left'] = Yii::app()->numberFormatter->format('#,##0.00', $headerFieldValue);
+                    break;
+                case 'grand_total_coretax':
+                    $newData['grand_total_coretax'] = Yii::app()->numberFormatter->format('#,##0.00', $headerFieldValue);
+                    break;
+                case 'tax_amount_coretax':
+                    $newData['tax_amount_coretax'] = Yii::app()->numberFormatter->format('#,##0.00', $headerFieldValue);
+                    break;
+                case 'package_price':
+                    $newData['package_price'] = Yii::app()->numberFormatter->format('#,##0.00', $headerFieldValue);
+                    break;
+                case 'downpayment_amount':
+                    $newData['downpayment_amount'] = Yii::app()->numberFormatter->format('#,##0.00', $headerFieldValue);
+                    break;
+                case 'invoice_amount':
+                    $newData['invoice_amount'] = Yii::app()->numberFormatter->format('#,##0.00', $headerFieldValue);
+                    break;
                 case 'branch_id':
                     $branch = Branch::model()->findByPk($headerFieldValue);
                     $newData['branch'] = $branch === null ? '' : $branch->name;
@@ -62,7 +98,6 @@ class InvoiceHeaderLogData  {
                         $detailNewData = array();
                         foreach ($detailItems as $detailFieldName => $detailFieldValue) {
                             switch ($detailFieldName) {
-                                case 'id':
                                 case 'invoice_id':
                                     break;
                                 case 'service_id':
@@ -76,6 +111,15 @@ class InvoiceHeaderLogData  {
                                 case 'quick_service_id':
                                     $quickService = QuickService::model()->findByPk($detailFieldValue);
                                     $detailNewData['quick_service_name'] = $quickService === null ? '' : $quickService->name;
+                                    break;
+                                case 'unit_price':
+                                    $detailNewData['unit_price'] = Yii::app()->numberFormatter->format('#,##0.00', $headerFieldValue);
+                                    break;
+                                case 'discount':
+                                    $detailNewData['discount'] = Yii::app()->numberFormatter->format('#,##0.00', $headerFieldValue);
+                                    break;
+                                case 'total_price':
+                                    $detailNewData['total_price'] = Yii::app()->numberFormatter->format('#,##0.00', $headerFieldValue);
                                     break;
                                 default:
                                     $detailNewData[$detailFieldName] = $detailFieldValue;

@@ -8,6 +8,21 @@ class TransactionReceiveItemLogData  {
             switch ($headerFieldName) {
                 case 'id':
                     break;
+                case 'invoice_sub_total':
+                    $newData['invoice_sub_total'] = Yii::app()->numberFormatter->format('#,##0.00', $headerFieldValue);
+                    break;
+                case 'invoice_tax_nominal':
+                    $newData['invoice_tax_nominal'] = Yii::app()->numberFormatter->format('#,##0.00', $headerFieldValue);
+                    break;
+                case 'invoice_grand_total':
+                    $newData['invoice_grand_total'] = Yii::app()->numberFormatter->format('#,##0.00', $headerFieldValue);
+                    break;
+                case 'invoice_rounding_nominal':
+                    $newData['invoice_rounding_nominal'] = Yii::app()->numberFormatter->format('#,##0.00', $headerFieldValue);
+                    break;
+                case 'invoice_grand_total_rounded':
+                    $newData['invoice_grand_total_rounded'] = Yii::app()->numberFormatter->format('#,##0.00', $headerFieldValue);
+                    break;
                 case 'destination_branch':
                     $branch = Branch::model()->findByPk($headerFieldValue);
                     $newData['destination_branch'] = $branch === null ? '' : $branch->name;
@@ -91,11 +106,13 @@ class TransactionReceiveItemLogData  {
                         $detailNewData = array();
                         foreach ($detailItems as $detailFieldName => $detailFieldValue) {
                             switch ($detailFieldName) {
-                                case 'id':
                                 case 'receive_item_id':
                                     break;
                                 case 'product_id':
                                     $detailNewData['product_name'] = Product::model()->findByPk($detailFieldValue)->name;
+                                    break;
+                                case 'total_price':
+                                    $detailNewData['total_price'] = Yii::app()->numberFormatter->format('#,##0.00', $headerFieldValue);
                                     break;
                                 default:
                                     $detailNewData[$detailFieldName] = $detailFieldValue;

@@ -1,6 +1,6 @@
 <div style="font-weight: bold; text-align: center">
     <div style="font-size: larger">Raperind Motor</div>
-    <div style="font-size: larger">Laporan Penjualan Parts & Components Bulanan</div>
+    <div style="font-size: larger">Penjualan Parts & Components Bulanan</div>
     <div><?php echo 'Periode: ' . CHtml::encode($monthList[$month]) . ' ' . CHtml::encode($year); ?></div>
 </div>
 

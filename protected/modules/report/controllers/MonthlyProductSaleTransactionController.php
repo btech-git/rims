@@ -179,8 +179,6 @@ class MonthlyProductSaleTransactionController extends Controller {
         $worksheet->mergeCells('A1:Z1');
         $worksheet->mergeCells('A2:Z2');
         $worksheet->mergeCells('A3:Z3');
-        $worksheet->getStyle('A1:BG6')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-        $worksheet->getStyle('A1:BG6')->getFont()->setBold(true);
 
         $worksheet->setCellValue('A1', 'Raperind Motor ');
         $worksheet->setCellValue('A2', 'Penjualan Parts & Components Bulanan');
@@ -234,8 +232,10 @@ class MonthlyProductSaleTransactionController extends Controller {
         
         $worksheet->getStyle("A5:{$columnCounter}5")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
         $worksheet->getStyle("A6:{$columnCounter}6")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A1:{$columnCounter}6")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->getStyle("A1:{$columnCounter}6")->getFont()->setBold(true);
 
-        $counter = 8;
+        $counter = 7;
         $ordinal = 0;
         
         foreach ($monthlyProductSaleTransactionReportData as $productId => $monthlyProductSaleTransactionReportDataItem) {
@@ -258,7 +258,7 @@ class MonthlyProductSaleTransactionController extends Controller {
                 $quantityStock = isset($inventoryAllBranchCurrentStockData[$productId][$branch->id]) ? $inventoryAllBranchCurrentStockData[$productId][$branch->id] : '0.00';
                 $worksheet->setCellValue("{$columnCounter}{$counter}", $invoiceTotal);
                 $columnCounter++;
-                $worksheet->setCellValue("{$columnCounter}{$counter}", $invoiceTotal / $numberOfDays);
+                $worksheet->setCellValue("{$columnCounter}{$counter}", round($invoiceTotal / $numberOfDays, 2));
                 $columnCounter++;
                 $worksheet->setCellValue("{$columnCounter}{$counter}", '');
                 $columnCounter++;
@@ -273,7 +273,7 @@ class MonthlyProductSaleTransactionController extends Controller {
             $quantityStockSum = array_sum($quantityStocks); 
             $worksheet->setCellValue("{$columnCounter}{$counter}", $invoiceTotalSum);
             $columnCounter++;
-            $worksheet->setCellValue("{$columnCounter}{$counter}", $invoiceTotalSum / $numberOfDays);
+            $worksheet->setCellValue("{$columnCounter}{$counter}", round($invoiceTotalSum / $numberOfDays, 2));
             $columnCounter++;
             $worksheet->setCellValue("{$columnCounter}{$counter}", '');
             $columnCounter++;

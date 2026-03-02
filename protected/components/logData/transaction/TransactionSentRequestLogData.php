@@ -8,6 +8,9 @@ class TransactionSentRequestLogData  {
             switch ($headerFieldName) {
                 case 'id':
                     break;
+                case 'total_price':
+                    $newData['total_price'] = Yii::app()->numberFormatter->format('#,##0.00', $headerFieldValue);
+                    break;
                 case 'requester_branch_id':
                     $branch = Branch::model()->findByPk($headerFieldValue);
                     $newData['branch_request'] = $branch === null ? '' : $branch->name;
@@ -42,7 +45,6 @@ class TransactionSentRequestLogData  {
                         $detailNewData = array();
                         foreach ($detailItems as $detailFieldName => $detailFieldValue) {
                             switch ($detailFieldName) {
-                                case 'id':
                                 case 'sent_request_id':
                                     break;
                                 case 'product_id':
@@ -50,6 +52,12 @@ class TransactionSentRequestLogData  {
                                     break;
                                 case 'unit_id':
                                     $detailNewData['unit_name'] = Unit::model()->findByPk($detailFieldValue)->name;
+                                    break;
+                                case 'unit_price':
+                                    $detailNewData['unit_price'] = Yii::app()->numberFormatter->format('#,##0.00', $headerFieldValue);
+                                    break;
+                                case 'amount':
+                                    $detailNewData['amount'] = Yii::app()->numberFormatter->format('#,##0.00', $headerFieldValue);
                                     break;
                                 default:
                                     $detailNewData[$detailFieldName] = $detailFieldValue;
