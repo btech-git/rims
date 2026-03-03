@@ -162,7 +162,7 @@ class Vehicle extends CActiveRecord {
 
         $criteria = new CDbCriteria;
 
-        $criteria->compare('id', $this->id);
+        $criteria->compare('t.id', $this->id);
         $criteria->compare('t.plate_number', $this->plate_number, true);
         $criteria->compare('t.plate_number_prefix_id', $this->plate_number_prefix_id);
         $criteria->compare('t.plate_number_ordinal', $this->plate_number_ordinal, true);
@@ -225,7 +225,7 @@ class Vehicle extends CActiveRecord {
 
         $criteria = new CDbCriteria;
 
-        $criteria->compare('id', $this->id);
+        $criteria->compare('t.id', $this->id);
         $criteria->compare('t.plate_number', $this->plate_number, true);
         $criteria->compare('t.plate_number_prefix_id', $this->plate_number_prefix_id);
         $criteria->compare('t.plate_number_ordinal', $this->plate_number_ordinal, true);
@@ -324,7 +324,7 @@ class Vehicle extends CActiveRecord {
             'color',
         );
 
-        $criteria->compare('id', $this->id);
+        $criteria->compare('t.id', $this->id);
         $criteria->compare('t.machine_number', $this->machine_number, true);
         $criteria->compare('frame_number', $this->frame_number, true);
         $criteria->compare('t.car_make_id', $this->car_make_id);
