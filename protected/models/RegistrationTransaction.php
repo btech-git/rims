@@ -1510,8 +1510,8 @@ class RegistrationTransaction extends MonthlyTransactionActiveRecord {
                 INNER JOIN " . VehicleCarSubModel::model()->tableName() . " s on s.id = v.car_sub_model_id
                 INNER JOIN " . Colors::model()->tableName() . " o on o.id = v.color_id
                 INNER JOIN " . Users::model()->tableName() . " u on u.id = r.user_id
-                WHERE r.work_order_number IS NOT NULL AND r.status NOT LIKE '%Finished%' AND r.user_id_cancelled IS NULL AND
-                    SUBSTRING(r.transaction_date, 1, 10) BETWEEN :start_date AND :end_date AND r.branch_id = :branch_id" . $plateNumberConditionSql . 
+                WHERE r.work_order_number IS NOT NULL AND r.user_id_cancelled IS NULL AND r.branch_id = :branch_id AND
+                    SUBSTRING(r.transaction_date, 1, 10) BETWEEN :start_date AND :end_date" . $plateNumberConditionSql . 
                     $carMakeConditionSql . $carModelConditionSql . $workOrderConditionSql . $transactionStatusConditionSql . $repairTypeConditionSql . "
                 ORDER BY r.transaction_date DESC, r.id DESC
                 LIMIT {$limit}";
