@@ -76,10 +76,10 @@ Yii::app()->clientScript->registerScript('search', "
                         'name'=>'recipient_id',
                         'value'=>'(!empty($data->user->username)?$data->user->username:"")'
                     ),
-                    array(
-                        'name'=>'supplier_name',
-                        'value'=>'empty($data->supplier) ? $data->destinationBranch->name : $data->supplier->name'
-                    ),
+//                    array(
+//                        'name'=>'supplier_name',
+//                        'value'=>'empty($data->supplier) ? $data->destinationBranch->name : $data->supplier->name'
+//                    ),
 //                    array(
 //                        'name'=>'recipient_branch_id',
 //                        'filter' => CHtml::activeDropDownList($model, 'recipient_branch_id', CHtml::listData(Branch::model()->findAll(array('order' => 'name')), 'id', 'name'), array('empty' => '-- All --')),
