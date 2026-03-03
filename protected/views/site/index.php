@@ -25,7 +25,7 @@
     <br /><br/>
     
     <div>
-        <?php echo CHtml::beginForm(array('')); ?>
+        <?php /*echo CHtml::beginForm(array('')); ?>
         <?php echo CHtml::textField('SearchAsk', ''); ?>
         <?php echo Chtml::htmlButton('Search', array(
             'name' => 'SearchButton',
@@ -47,7 +47,7 @@
                 }',
             )),
         )); ?>
-        <?php echo CHtml::endForm(); ?>
+        <?php echo CHtml::endForm();*/ ?>
     </div>
     
     <div id="answer-box"></div>
