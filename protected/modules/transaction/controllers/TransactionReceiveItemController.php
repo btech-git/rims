@@ -414,7 +414,7 @@ class TransactionReceiveItemController extends Controller {
         
         $deliveryDataProvider = $delivery->searchByReceive();
         $branchIdsString = Yii::app()->user->branch_id;
-//        $deliveryDataProvider->criteria->addCondition("t.destination_branch = {$branchIdsString}");
+        $deliveryDataProvider->criteria->addCondition("t.destination_branch = {$branchIdsString}");
 
         $purchase = new TransactionPurchaseOrder('search');
         $purchase->unsetAttributes();  // clear any default values

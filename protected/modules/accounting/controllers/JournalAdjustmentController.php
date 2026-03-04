@@ -47,7 +47,7 @@ class JournalAdjustmentController extends Controller {
     }
 
     public function actionCreate() {
-        $journalVoucher = $this->instantiate(null);
+        $journalVoucher = $this->instantiate(null, 'create');
         $journalVoucher->header->date = date('Y-m-d');
         $journalVoucher->header->time = date('H:i:s');
         $journalVoucher->header->status = 'Draft';
@@ -81,7 +81,7 @@ class JournalAdjustmentController extends Controller {
      * @param integer $id the ID of the model to be updated
      */
     public function actionUpdate($id) {
-        $journalVoucher = $this->instantiate($id);
+        $journalVoucher = $this->instantiate($id, 'update');
         $journalVoucher->header->status = 'Draft';
         $journalVoucher->header->updated_datetime = date('Y-m-d H:i:s');
         $journalVoucher->header->user_id_updated = Yii::app()->user->id;
@@ -261,7 +261,7 @@ class JournalAdjustmentController extends Controller {
 
     public function actionAjaxHtmlAddDetail($id) {
         if (Yii::app()->request->isAjaxRequest) {
-            $journalVoucher = $this->instantiate($id);
+            $journalVoucher = $this->instantiate($id,'');
             $this->loadState($journalVoucher);
 
             if (isset($_POST['selectedIds'])) {
@@ -282,7 +282,7 @@ class JournalAdjustmentController extends Controller {
     public function actionAjaxHtmlRemoveAccountDetail($id, $index) {
         if (Yii::app()->request->isAjaxRequest) {
 
-            $journalVoucher = $this->instantiate($id);
+            $journalVoucher = $this->instantiate($id, '');
             $this->loadState($journalVoucher);
 
             $journalVoucher->removeAccountDetailAt($index);
@@ -295,7 +295,7 @@ class JournalAdjustmentController extends Controller {
 
     public function actionAjaxJsonTotalDebit($id, $index) {
         if (Yii::app()->request->isAjaxRequest) {
-            $journalVoucher = $this->instantiate($id);
+            $journalVoucher = $this->instantiate($id, '');
             $this->loadState($journalVoucher);
 
             $debit = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($journalVoucher->details[$index], 'debit')));
@@ -310,7 +310,7 @@ class JournalAdjustmentController extends Controller {
 
     public function actionAjaxJsonTotalCredit($id, $index) {
         if (Yii::app()->request->isAjaxRequest) {
-            $journalVoucher = $this->instantiate($id);
+            $journalVoucher = $this->instantiate($id, '');
             $this->loadState($journalVoucher);
 
             $credit = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($journalVoucher->details[$index], 'credit')));
@@ -366,12 +366,12 @@ class JournalAdjustmentController extends Controller {
         $transactionLog->save();
     }
 
-    public function instantiate($id) {
+    public function instantiate($id, $actionType) {
         if (empty($id)) {
-            $journalVoucher = new JournalAdjustment(new JournalAdjustmentHeader(), array());
+            $journalVoucher = new JournalAdjustment($actionType, new JournalAdjustmentHeader(), array());
         } else {
             $journalVoucherHeader = $this->loadModel($id);
-            $journalVoucher = new JournalAdjustment($journalVoucherHeader, $journalVoucherHeader->journalAdjustmentDetails);
+            $journalVoucher = new JournalAdjustment($actionType, $journalVoucherHeader, $journalVoucherHeader->journalAdjustmentDetails);
         }
 
         return $journalVoucher;

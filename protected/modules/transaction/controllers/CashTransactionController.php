@@ -151,8 +151,9 @@ class CashTransactionController extends Controller {
         $coaDetail = new Coa('search');
         $coaDetail->unsetAttributes();  // clear any default values
         
-        if (isset($_GET['Coa']))
+        if (isset($_GET['Coa'])) {
             $coaDetail->attributes = $_GET['Coa'];
+        }
         
         $coaDetailCriteria = new CDbCriteria;
         $coaDetailCriteria->addCondition("SUBSTRING(t.code, -3 , 3) <> 000 AND t.coa_sub_category_id NOT IN (1, 2, 3) AND t.status = 'Approved'");
@@ -169,8 +170,9 @@ class CashTransactionController extends Controller {
         
         $images = $cashTransaction->header->images = CUploadedFile::getInstances($cashTransaction->header, 'images');
 
-        if (isset($_POST['Cancel']))
+        if (isset($_POST['Cancel'])) {
             $this->redirect(array('admin'));
+        }
 
         if (isset($_POST['CashTransaction']) && IdempotentManager::check()) {
             

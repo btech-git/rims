@@ -49,7 +49,7 @@ class JournalAdjustmentHeader extends MonthlyTransactionActiveRecord {
         // will receive user inputs.
         return array(
             array('transaction_number, date, time, user_id, branch_id, status, is_verified', 'required'),
-            array('user_id, user_id_updated, user_id_cancelled, branch_id, user_id_edited, is_verified, user_id_verified', 'numerical', 'integerOnly' => true),
+            array('user_id, user_id_updated, user_id_cancelled, branch_id, user_id_updated, is_verified, user_id_verified', 'numerical', 'integerOnly' => true),
             array('transaction_number', 'length', 'max' => 60),
             array('status', 'length', 'max' => 20),
             array('note, created_datetime, updated_datetime, cancelled_datetime, verified_datetime', 'safe'),
@@ -69,8 +69,8 @@ class JournalAdjustmentHeader extends MonthlyTransactionActiveRecord {
             'journalAdjustmentDetails' => array(self::HAS_MANY, 'JournalAdjustmentDetail', 'journal_adjustment_header_id'),
             'journalAdjustmentApprovals' => array(self::HAS_MANY, 'JournalAdjustmentApproval', 'journal_adjustment_header_id'),
             'user' => array(self::BELONGS_TO, 'Users', 'user_id'),
-            'userIdUpdated' => array(self::BELONGS_TO, 'Users', 'user_id'),
-            'userIdCancelled' => array(self::BELONGS_TO, 'Users', 'user_id'),
+            'userIdUpdated' => array(self::BELONGS_TO, 'Users', 'user_id_updated'),
+            'userIdCancelled' => array(self::BELONGS_TO, 'Users', 'user_id_cancelled'),
             'branch' => array(self::BELONGS_TO, 'Branch', 'branch_id'),
             'userIdVerified' => array(self::BELONGS_TO, 'Users', 'user_id_verified'),
         );
