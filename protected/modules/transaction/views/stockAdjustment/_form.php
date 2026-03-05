@@ -62,12 +62,11 @@
                             'model' => $model,
                             'attribute' => "date_posting",
                             'options' => array(
-                                'minDate' => '-1W',
-                                'maxDate' => '+6M',
+//                                'minDate' => '-1W',
+//                                'maxDate' => '+6M',
                                 'dateFormat' => 'yy-mm-dd',
                                 'changeMonth' => true,
                                 'changeYear' => true,
-//                                'yearRange'=>'1900:2020'
                             ),
                             'htmlOptions' => array(
 //                                'value' => date('Y-m-d'),
