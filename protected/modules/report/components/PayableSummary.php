@@ -34,10 +34,14 @@ class PayableSummary extends CComponent {
         $branchId = (empty($filters['branchId'])) ? '' : $filters['branchId'];
         $supplierId = (empty($filters['supplierId'])) ? '' : $filters['supplierId'];
         
-        $branchConditionSql = '';
+        $branchPurchaseConditionSql = '';
+        $branchWorkOrderConditionSql = '';
         
         if (!empty($branchId)) {
-            $branchConditionSql = ' AND o.main_branch_id = :branch_id';
+            $branchPurchaseConditionSql = ' AND o.main_branch_id = :branch_id';
+            $this->dataProvider->criteria->params[':branch_id'] = $branchId;
+            
+            $branchWorkOrderConditionSql = ' AND w.branch_id = :branch_id';
             $this->dataProvider->criteria->params[':branch_id'] = $branchId;
         }
         
@@ -54,7 +58,7 @@ class PayableSummary extends CComponent {
             ) p ON r.id = p.receive_item_id 
             WHERE o.supplier_id = t.id AND (r.invoice_grand_total - COALESCE(p.amount, 0)) > 100.00 AND 
                 r.invoice_date BETWEEN '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND :end_date AND o.status_document NOT LIKE '%CANCEL%' AND
-                r.user_id_cancelled IS NULL" . $branchConditionSql . " 
+                r.user_id_cancelled IS NULL" . $branchPurchaseConditionSql . " 
         ) OR EXISTS (
             SELECT w.supplier_id
             FROM " . WorkOrderExpenseHeader::model()->tableName() . " w
@@ -68,7 +72,7 @@ class PayableSummary extends CComponent {
             ) p ON w.id = p.work_order_expense_header_id 
             WHERE w.supplier_id = t.id AND (w.grand_total - COALESCE(p.amount, 0)) > 100.00 AND 
                 w.transaction_date BETWEEN '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND :end_date AND w.status = 'Approved' AND
-                w.user_id_cancelled IS NULL" . $branchConditionSql . " 
+                w.user_id_cancelled IS NULL" . $branchWorkOrderConditionSql . " 
         )");
         
         $this->dataProvider->criteria->params[':end_date'] = $endDate;
