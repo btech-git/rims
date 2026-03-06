@@ -96,7 +96,7 @@ class SaleInvoiceCoretaxController extends Controller {
             'saleInvoiceHeaders' => $saleInvoiceHeaders,
         ), true);
         
-        ob_end_clean();
+        ob_end_flush();
         
         header('Content-type: text/xml');
         header('Content-Disposition: attachment;filename="abc.xml"');
