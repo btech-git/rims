@@ -109,6 +109,6 @@ class SaleInvoiceCoretaxController extends Controller {
 //        echo '<Test><Coba></Coba></Test>';
 //file_put_contents('php://output', '<Test><Coba></Coba></Test>');
 
-        exit();
+        Yii::app()->end();
     }
 }
