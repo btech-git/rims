@@ -108,7 +108,7 @@ class SaleInvoiceCoretaxController extends Controller {
 //        header('Content-Disposition: attachment;filename="abc.xml"');
 //        header('Cache-Control: max-age=0');
         
-        var_dump($output);
+        echo $output;
 //        file_put_contents('php://output', $output);
 //        echo '<?xml version="1.0" encoding="utf-8"
 //<!--//<Test><Coba></Coba></Test>';-->
