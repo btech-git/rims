@@ -73,22 +73,23 @@ class SaleInvoiceCoretaxController extends Controller {
                 }
             }
         }
-
-        if ($arr_category) {
-            if (isset($_GET['SaveXml'])) {
-//                $this->saveToXml($arr_category);
-                $output = $this->renderPartial('exportXml', array(
+        $output = $this->renderPartial('exportXml', array(
             'saleInvoiceHeaders' => $arr_category,
         ), true);
                         var_dump($output);
 
+        if ($arr_category) {
+            if (isset($_GET['SaveXml'])) {
+//                $this->saveToXml($arr_category);
+                
+
             }
         }
 
-        $this->render('admin', array(
-            'model' => $model,
-            'dataProvider' => $dataProvider,
-        ));
+//        $this->render('admin', array(
+//            'model' => $model,
+//            'dataProvider' => $dataProvider,
+//        ));
     }
 
     public function saveToXml($saleInvoiceHeaders) {
