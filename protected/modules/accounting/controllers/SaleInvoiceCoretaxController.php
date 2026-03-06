@@ -104,7 +104,7 @@ class SaleInvoiceCoretaxController extends Controller {
         
 //        ob_end_flush();
         
-//        header('Content-type: text/xml');
+        header('Content-type: text/xml');
 //        header('Content-Disposition: attachment;filename="abc.xml"');
 //        header('Cache-Control: max-age=0');
         
