@@ -97,7 +97,7 @@ class SaleInvoiceCoretaxController extends Controller {
         $this->renderPartial('exportXml', array(
             'saleInvoiceHeaders' => $saleInvoiceHeaders,
         ));
-//
-//        Yii::app()->end();
+
+        Yii::app()->end();
     }
 }
