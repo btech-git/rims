@@ -90,7 +90,7 @@ class SaleInvoiceCoretaxController extends Controller {
 //        set_time_limit(0);
 //        ini_set('memory_limit', '1024M');
         
-//        ob_end_clean();
+        ob_end_clean();
 
         $output = $this->renderPartial('exportXml', array(
             'saleInvoiceHeaders' => $saleInvoiceHeaders,
