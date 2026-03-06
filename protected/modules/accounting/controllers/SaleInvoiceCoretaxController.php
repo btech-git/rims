@@ -78,7 +78,7 @@ class SaleInvoiceCoretaxController extends Controller {
             if (isset($_GET['SaveXml'])) {
 //                $this->saveToXml($arr_category);
                 $output = $this->renderPartial('exportXml', array(
-            'saleInvoiceHeaders' => $saleInvoiceHeaders,
+            'saleInvoiceHeaders' => $arr_category,
         ), true);
                         var_dump($output);
 
