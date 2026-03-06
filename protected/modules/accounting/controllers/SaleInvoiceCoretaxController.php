@@ -95,10 +95,10 @@ class SaleInvoiceCoretaxController extends Controller {
         $output = $this->renderPartial('exportXml', array(
             'saleInvoiceHeaders' => $saleInvoiceHeaders,
         ), true);
-        echo $output;
-//        header('Content-type: text/xml');
-//        header('Content-Disposition: attachment;filename="abc.xml"');
-//        header('Cache-Control: max-age=0');
+//        echo $output;
+        header('Content-type: text/xml');
+        header('Content-Disposition: attachment;filename="abc.xml"');
+        header('Cache-Control: max-age=0');
         
 //        echo '<?xml version="1.0" encoding="utf-8"
 //<!--//<Test><Coba></Coba></Test>';-->
