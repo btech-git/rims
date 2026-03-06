@@ -101,8 +101,8 @@ class SaleInvoiceCoretaxController extends Controller {
 //        ), true);
 //        echo '<?xml version="1.0" encoding="utf-8"
 //<!--//<Test><Coba></Coba></Test>';-->
-        echo '<Test><Coba></Coba></Test>';
-//file_put_contents('php://output', '<Test><Coba></Coba></Test>');
+//        echo '<Test><Coba></Coba></Test>';
+file_put_contents('php://output', '<Test><Coba></Coba></Test>');
 
         Yii::app()->end();
     }
