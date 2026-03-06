@@ -94,11 +94,11 @@ class SaleInvoiceCoretaxController extends Controller {
             'saleInvoiceHeaders' => $saleInvoiceHeaders,
         ), true);
         
+        ob_end_clean();
+        
         header('Content-type: text/xml');
         header('Content-Disposition: attachment;filename="abc.xml"');
         header('Cache-Control: max-age=0');
-        
-        ob_end_clean();
         
         echo $output;
 //        echo '<?xml version="1.0" encoding="utf-8"
