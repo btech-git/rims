@@ -90,20 +90,20 @@ class SaleInvoiceCoretaxController extends Controller {
 //        set_time_limit(0);
 //        ini_set('memory_limit', '1024M');
         
-        ob_end_clean();
+//        ob_end_clean();
 
         $output = $this->renderPartial('exportXml', array(
             'saleInvoiceHeaders' => $saleInvoiceHeaders,
         ), true);
         
-        header('Content-type: text/xml');
-        header('Content-Disposition: attachment;filename="abc.xml"');
+//        header('Content-type: text/xml');
+//        header('Content-Disposition: attachment;filename="abc.xml"');
 //        header('Cache-Control: max-age=0');
         
 //        echo '<?xml version="1.0" encoding="utf-8"
 //<!--//<Test><Coba></Coba></Test>';-->
 //        echo '<Test><Coba></Coba></Test>';
-file_put_contents('php://output', '<Test><Coba></Coba></Test>');
+//file_put_contents('php://output', '<Test><Coba></Coba></Test>');
 
         Yii::app()->end();
     }
