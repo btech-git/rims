@@ -99,7 +99,7 @@ class SaleInvoiceCoretaxController extends Controller {
 //        $output = $this->renderPartial('exportXml', array(
 //            'saleInvoiceHeaders' => $saleInvoiceHeaders,
 //        ), true);
-        echo '<?xml version="1.0" encoding="utf-8"?><Test></Test>';
+        echo '<?xml version="1.0" encoding="utf-8"?><Test><Coba></Coba></Test>';
 
         Yii::app()->end();
     }
