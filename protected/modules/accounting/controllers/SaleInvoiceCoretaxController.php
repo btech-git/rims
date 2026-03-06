@@ -86,7 +86,7 @@ class SaleInvoiceCoretaxController extends Controller {
         ));
     }
 
-    protected function saveToXml($saleInvoiceHeaders) {
+    public function saveToXml($saleInvoiceHeaders) {
 //        set_time_limit(0);
 //        ini_set('memory_limit', '1024M');
         
