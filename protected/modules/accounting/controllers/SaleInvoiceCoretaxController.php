@@ -73,23 +73,17 @@ class SaleInvoiceCoretaxController extends Controller {
                 }
             }
         }
-        $output = $this->renderPartial('exportXml', array(
-            'saleInvoiceHeaders' => $arr_category,
-        ), true);
-                        var_dump($output);
 
         if ($arr_category) {
             if (isset($_GET['SaveXml'])) {
-//                $this->saveToXml($arr_category);
-                
-
+                $this->saveToXml($arr_category);
             }
         }
 
-//        $this->render('admin', array(
-//            'model' => $model,
-//            'dataProvider' => $dataProvider,
-//        ));
+        $this->render('admin', array(
+            'model' => $model,
+            'dataProvider' => $dataProvider,
+        ));
     }
 
     public function saveToXml($saleInvoiceHeaders) {
@@ -108,7 +102,7 @@ class SaleInvoiceCoretaxController extends Controller {
 //        header('Content-Disposition: attachment;filename="abc.xml"');
 //        header('Cache-Control: max-age=0');
         
-        echo $output;
+        var_dump($output);
 //        file_put_contents('php://output', $output);
 //        echo '<?xml version="1.0" encoding="utf-8"
 //<!--//<Test><Coba></Coba></Test>';-->
