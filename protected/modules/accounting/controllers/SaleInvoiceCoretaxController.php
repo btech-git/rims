@@ -90,11 +90,11 @@ class SaleInvoiceCoretaxController extends Controller {
 //        set_time_limit(0);
 //        ini_set('memory_limit', '1024M');
         
+        ob_start();
+        
         header('Content-type: text/xml');
         header('Content-Disposition: attachment;filename="abc.xml"');
         header('Cache-Control: max-age=0');
-        
-        ob_start();
 
         $this->renderPartial('exportXml', array(
             'saleInvoiceHeaders' => $saleInvoiceHeaders,
