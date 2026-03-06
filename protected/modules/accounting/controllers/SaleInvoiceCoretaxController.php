@@ -90,20 +90,19 @@ class SaleInvoiceCoretaxController extends Controller {
 //        set_time_limit(0);
 //        ini_set('memory_limit', '1024M');
         
-        ob_start();
-        
-        header('Content-type: text/xml');
-        header('Content-Disposition: attachment;filename="abc.xml"');
-        header('Cache-Control: max-age=0');
+//        ob_start();
 
-        $this->renderPartial('exportXml', array(
+        $output = $this->renderPartial('exportXml', array(
             'saleInvoiceHeaders' => $saleInvoiceHeaders,
-        ));
-//        $output = '<Test><Coba></Coba></Test>';
+        ), true);
         
-        ob_end_flush();
+//        ob_end_flush();
         
-//        echo $output;
+//        header('Content-type: text/xml');
+//        header('Content-Disposition: attachment;filename="abc.xml"');
+//        header('Cache-Control: max-age=0');
+        
+        var_dump($output);
 //        file_put_contents('php://output', $output);
 //        echo '<?xml version="1.0" encoding="utf-8"
 //<!--//<Test><Coba></Coba></Test>';-->
