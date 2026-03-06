@@ -94,9 +94,10 @@ class SaleInvoiceCoretaxController extends Controller {
         header('Content-Disposition: attachment;filename="eFaktur Coretax.xml"');
         header('Cache-Control: max-age=0');
         
-        $this->renderPartial('exportXml', array(
+        $output = $this->renderPartial('exportXml', array(
             'saleInvoiceHeaders' => $saleInvoiceHeaders,
-        ), false, true);
+        ), true);
+        echo $output;
 
         Yii::app()->end();
     }
