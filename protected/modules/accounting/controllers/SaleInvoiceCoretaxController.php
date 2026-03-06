@@ -87,17 +87,18 @@ class SaleInvoiceCoretaxController extends Controller {
     }
 
     protected function saveToXml($saleInvoiceHeaders) {
-        set_time_limit(0);
-        ini_set('memory_limit', '1024M');
-
-        header('Content-type: text/xml');
-        header('Content-Disposition: attachment;filename="eFaktur Coretax.xml"');
-        header('Cache-Control: max-age=0');
-        
-        $this->renderPartial('exportXml', array(
-            'saleInvoiceHeaders' => $saleInvoiceHeaders,
-        ));
-
-        Yii::app()->end();
+        echo 'abc';
+//        set_time_limit(0);
+//        ini_set('memory_limit', '1024M');
+//
+//        header('Content-type: text/xml');
+//        header('Content-Disposition: attachment;filename="eFaktur Coretax.xml"');
+//        header('Cache-Control: max-age=0');
+//        
+//        $this->renderPartial('exportXml', array(
+//            'saleInvoiceHeaders' => $saleInvoiceHeaders,
+//        ));
+//
+//        Yii::app()->end();
     }
 }
