@@ -87,8 +87,8 @@ class SaleInvoiceCoretaxController extends Controller {
     }
 
     protected function saveToXml($saleInvoiceHeaders) {
-        set_time_limit(0);
-        ini_set('memory_limit', '1024M');
+//        set_time_limit(0);
+//        ini_set('memory_limit', '1024M');
 
         header('Content-type: text/xml');
         header('Content-Disposition: attachment;filename="eFaktur Coretax.xml"');
