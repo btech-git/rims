@@ -92,9 +92,10 @@ class SaleInvoiceCoretaxController extends Controller {
         
 //        ob_start();
 
-        $output = $this->renderPartial('exportXml', array(
-            'saleInvoiceHeaders' => $saleInvoiceHeaders,
-        ), true);
+//        $output = $this->renderPartial('exportXml', array(
+//            'saleInvoiceHeaders' => $saleInvoiceHeaders,
+//        ), true);
+        $output = '<Test><Coba></Coba></Test>';
         
 //        ob_end_flush();
         
