@@ -96,10 +96,10 @@ class SaleInvoiceCoretaxController extends Controller {
         header('Content-Disposition: attachment;filename="abc.xml"');
 //        header('Cache-Control: max-age=0');
         
-        $output = $this->renderPartial('exportXml', array(
-            'saleInvoiceHeaders' => $saleInvoiceHeaders,
-        ), true);
-        echo $output;
+//        $output = $this->renderPartial('exportXml', array(
+//            'saleInvoiceHeaders' => $saleInvoiceHeaders,
+//        ), true);
+        echo '<Test></Test>';
 
         Yii::app()->end();
     }
