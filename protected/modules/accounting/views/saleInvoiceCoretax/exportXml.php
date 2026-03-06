@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+<div>
 <TaxInvoiceBulk xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <TIN>0031486434413000</TIN>
     <ListOfTaxInvoice>
@@ -43,3 +43,4 @@
 <?php endforeach; ?>
     </ListOfTaxInvoice>
 </TaxInvoiceBulk>
+</div>
