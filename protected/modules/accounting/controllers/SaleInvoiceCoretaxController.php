@@ -89,6 +89,8 @@ class SaleInvoiceCoretaxController extends Controller {
     protected function saveToXml($saleInvoiceHeaders) {
 //        set_time_limit(0);
 //        ini_set('memory_limit', '1024M');
+        
+        ob_start();
 
         $output = $this->renderPartial('exportXml', array(
             'saleInvoiceHeaders' => $saleInvoiceHeaders,
@@ -106,6 +108,6 @@ class SaleInvoiceCoretaxController extends Controller {
 //        echo '<Test><Coba></Coba></Test>';
 //file_put_contents('php://output', '<Test><Coba></Coba></Test>');
 
-        Yii::app()->end();
+        exit();
     }
 }
