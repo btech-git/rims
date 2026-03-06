@@ -89,8 +89,6 @@ class SaleInvoiceCoretaxController extends Controller {
     protected function saveToXml($saleInvoiceHeaders) {
 //        set_time_limit(0);
 //        ini_set('memory_limit', '1024M');
-        
-        ob_end_clean();
 
         $output = $this->renderPartial('exportXml', array(
             'saleInvoiceHeaders' => $saleInvoiceHeaders,
@@ -99,6 +97,8 @@ class SaleInvoiceCoretaxController extends Controller {
         header('Content-type: text/xml');
         header('Content-Disposition: attachment;filename="abc.xml"');
         header('Cache-Control: max-age=0');
+        
+        ob_end_clean();
         
         echo $output;
 //        echo '<?xml version="1.0" encoding="utf-8"
