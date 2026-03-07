@@ -146,24 +146,32 @@ class StockAdjustmentDetail extends CActiveRecord {
         }
     }
 
-    public function getCurrentStock($productId, $branchId) {
+    public function getCurrentStock($productId, $branchId, $transactionDate) {
         $branchConditionSql = '';
         
         $params = array(
             ':product_id' => $productId,
+            ':transaction_date' => $transactionDate,
         );
         
         if (!empty($branchId)) {
             $branch = Branch::model()->findByPk($branchId);
-            $warehouse = Warehouse::model()->findByAttributes(array('branch_id' => $branchId, 'status' => 'Active', 'code' => $branch->code));
+            $warehouse = Warehouse::model()->findByAttributes(array(
+                'branch_id' => $branchId, 
+                'status' => 'Active', 
+                'code' => $branch->code
+            ));
             $branchConditionSql = ' AND warehouse_id = :warehouse_id';
             $params[':warehouse_id'] = $warehouse->id;
         }
 
         $sql = "
-            SELECT COALESCE(total_stock, 0)
-            FROM " . Inventory::model()->tableName() . "
-            WHERE product_id = :product_id" . $branchConditionSql
+            SELECT COALESCE(SUM(i.stock_in + i.stock_out), 0)
+            FROM " . InventoryDetail::model()->tableName() . " i 
+            INNER JOIN " . Warehouse::model()->tableName() . " w ON w.id = i.warehouse_id
+            INNER JOIN " . Branch::model()->tableName() ." b ON b.id = w.branch_id
+            WHERE i.product_id = :product_id AND b.status = 'Active' AND 
+                i.transaction_date BETWEEN '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND :transaction_date" . $branchConditionSql
         ;
 
         $value = CActiveRecord::$db->createCommand($sql)->queryScalar($params);

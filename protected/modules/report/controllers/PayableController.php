@@ -143,6 +143,9 @@ class PayableController extends Controller {
         foreach ($payableSummary->dataProvider->data as $header) {
             $payableData = $header->getPayableReport($endDate, $branchId);
             $payableWorkOrderExpenseData = $header->getPayableWorkOrderExpenseReport($endDate, $branchId);
+            $totalPurchase = '0.00';
+            $totalPayment = '0.00';
+            $totalPayable = '0.00';
             
             foreach ($payableData as $payableRow) {
                 $purchase = $payableRow['total_price'];
@@ -159,6 +162,10 @@ class PayableController extends Controller {
                 $worksheet->setCellValue("H{$counter}", $paymentAmount);
                 $worksheet->setCellValue("I{$counter}", $paymentLeft);
 
+                $totalPurchase += $purchase;
+                $totalPayment += $paymentAmount;
+                $totalPayable += $paymentLeft;
+                
                 $counter++;
             }
             
@@ -177,8 +184,23 @@ class PayableController extends Controller {
                 $worksheet->setCellValue("H{$counter}", $paymentAmount);
                 $worksheet->setCellValue("I{$counter}", $paymentLeft);
 
+                $totalPurchase += $purchase;
+                $totalPayment += $paymentAmount;
+                $totalPayable += $paymentLeft;
+                
                 $counter++;
             }
+            
+            $worksheet->getStyle("A{$counter}:I{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+            $worksheet->getStyle("A{$counter}:I{$counter}")->getFont()->setBold(true);
+            
+            $worksheet->setCellValue("F{$counter}", 'Total');
+            $worksheet->setCellValue("G{$counter}", $totalPurchase);
+            $worksheet->setCellValue("H{$counter}", $totalPayment);
+            $worksheet->setCellValue("I{$counter}", $totalPayable);
+
+            $counter++;$counter++;
+            
         }
 
         for ($col = 'A'; $col !== 'Z'; $col++) {

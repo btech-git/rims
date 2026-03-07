@@ -29,9 +29,9 @@ class Adjustment extends CComponent {
                 $detail = new StockAdjustmentDetail();
                 $detail->product_id = $product->id;
                 $detail->warehouse_id = $warehouse->id;
-                $detail->quantity_current = $detail->getCurrentStock($productId, $branchId);
+                $detail->quantity_current = $detail->getCurrentStock($productId, $branchId, $this->header->date_posting);
                 if (!empty($branchIdDestination)) {
-                    $detail->quantity_current_destination = $detail->getCurrentStock($productId, $branchIdDestination);
+                    $detail->quantity_current_destination = $detail->getCurrentStock($productId, $branchIdDestination, $this->header->date_posting);
                 }
                 $this->details[] = $detail;
             }
@@ -44,9 +44,9 @@ class Adjustment extends CComponent {
 
     public function updateProducts() {
         foreach ($this->details as $detail) {
-            $detail->quantity_current = $detail->getCurrentStock($detail->product_id, $this->header->branch_id);
+            $detail->quantity_current = $detail->getCurrentStock($detail->product_id, $this->header->branch_id, $this->header->date_posting);
             if (!empty($this->header->branch_id_destination)) {
-                $detail->quantity_current_destination = $detail->getCurrentStock($detail->product_id, $this->header->branch_id_destination);
+                $detail->quantity_current_destination = $detail->getCurrentStock($detail->product_id, $this->header->branch_id_destination, $this->header->date_posting);
             }
         }
     }

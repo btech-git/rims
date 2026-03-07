@@ -23,17 +23,21 @@ $this->breadcrumbs=array(
                     <td style="text-align: center; font-weight: bold">Manufacturer Code</td>
                     <td style="text-align: center; font-weight: bold">Category</td>
                     <td style="text-align: center; font-weight: bold">Brand</td>
-                    <td style="text-align: center; font-weight: bold">Sub Brand</td>
-                    <td style="text-align: center; font-weight: bold">Sub Brand Series</td>
                     <td style="text-align: center; font-weight: bold">Unit</td>
                 </tr>
                 <tr>
                     <td><?php echo $product->id; ?></td>
                     <td><?php echo $product->manufacturer_code; ?></td>
-                    <td><?php echo $product->masterSubCategoryCode; ?></td>
-                    <td><?php echo CHtml::encode(CHtml::value($product, 'brand.name')); ?></td>
-                    <td><?php echo CHtml::encode(CHtml::value($product, 'subBrand.name')); ?></td>
-                    <td><?php echo CHtml::encode(CHtml::value($product, 'subBrandSeries.name')); ?></td>
+                    <td>
+                        <?php echo CHtml::encode(CHtml::value($product, 'productMasterCategory.name')); ?> -
+                        <?php echo CHtml::encode(CHtml::value($product, 'productSubMasterCategory.name')); ?> - 
+                        <?php echo CHtml::encode(CHtml::value($product, 'productSubCategory.name')); ?>
+                    </td>
+                    <td>
+                        <?php echo CHtml::encode(CHtml::value($product, 'brand.name')); ?> - 
+                        <?php echo CHtml::encode(CHtml::value($product, 'subBrand.name')); ?> - 
+                        <?php echo CHtml::encode(CHtml::value($product, 'subBrandSeries.name')); ?>
+                    </td>
                     <td><?php echo CHtml::encode(CHtml::value($product, 'unit.name')); ?></td>
                 </tr>
             </table>

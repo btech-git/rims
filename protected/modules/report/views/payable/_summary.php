@@ -55,9 +55,9 @@
                     <table>
                         <?php $payableData = $header->getPayableReport($endDate, $branchId); ?>
                         <?php $payableWorkOrderExpenseData = $header->getPayableWorkOrderExpenseReport($endDate, $branchId); ?>
-                        <?php $totalPurchase = 0.00; ?>
-                        <?php $totalPayment = 0.00; ?>
-                        <?php $totalPayable = 0.00; ?>
+                        <?php $totalPurchase = '0.00'; ?>
+                        <?php $totalPayment = '0.00'; ?>
+                        <?php $totalPayable = '0.00'; ?>
                         
                         <?php foreach ($payableData as $payableRow): ?>
                             <?php $purchase = $payableRow['total_price']; ?>
