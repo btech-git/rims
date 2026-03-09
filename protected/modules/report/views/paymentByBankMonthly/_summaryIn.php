@@ -32,7 +32,6 @@
                                         '/report/paymentByBankMonthly/transactionInfo', 
                                         'coaId' => $coa->id, 
                                         'debitCredit' => 'D',
-                                        'transactionType' => 'Pin',
                                         'date' => $date, 
                                     ), array('target' => '_blank')); ?>
                                     <?php //echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $paymentInRetail)); ?>

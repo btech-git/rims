@@ -688,14 +688,13 @@ class JurnalUmum extends CActiveRecord {
         return $resultSet;
     } 
 
-    public function searchByTransactionInfo($coaId, $debitCredit, $transactionType, $date, $page) {
+    public function searchByTransactionInfo($coaId, $debitCredit, $date, $page) {
         $criteria = new CDbCriteria;
 
         $criteria->compare('t.coa_id', $coaId);
         $criteria->compare('t.is_coa_category', 0);
         $criteria->compare('t.debet_kredit', $debitCredit);
         $criteria->compare('t.tanggal_transaksi', $date);
-        $criteria->compare('t.transaction_type', $transactionType);
         
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
