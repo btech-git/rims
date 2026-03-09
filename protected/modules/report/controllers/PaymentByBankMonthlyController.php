@@ -109,13 +109,13 @@ class PaymentByBankMonthlyController extends Controller {
         ));
     }
     
-    public function actionTransactionInfo($coaId, $debitCredit, $transactionType, $date) {
+    public function actionTransactionInfo($coaId, $debitCredit, $date) {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
 
         $page = (isset($_GET['page'])) ? $_GET['page'] : 1;
         
-        $dataProvider = JurnalUmum::model()->searchByTransactionInfo($coaId, $debitCredit, $transactionType, $date, $page);
+        $dataProvider = JurnalUmum::model()->searchByTransactionInfo($coaId, $debitCredit, $date, $page);
         $coa = Coa::model()->findByPk($coaId);
         
         $this->render('transactionInfo', array(
