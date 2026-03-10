@@ -172,6 +172,11 @@ class PaymentOutComponent extends CComponent {
             $this->header->addError('error', 'Pelunasan tidak dapat melebihi total invoice.');
         }
 
+        if ($this->totalPayment <= 0) {
+            $valid = false;
+            $this->header->addError('error', 'Amount Pembayaran tidak boleh 0!!!');              
+        }
+
         return $valid;
     }
 

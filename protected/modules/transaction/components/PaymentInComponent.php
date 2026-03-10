@@ -129,6 +129,11 @@ class PaymentInComponent extends CComponent {
                 }
             }
         }
+        
+        if ($this->totalPayment <= 0) {
+            $valid = false;
+            $this->header->addError('error', 'Amount Pembayaran tidak boleh 0!!!');              
+        }
 
         return $valid;
     }
