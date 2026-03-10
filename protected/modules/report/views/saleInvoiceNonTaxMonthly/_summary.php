@@ -24,6 +24,7 @@
 <table class="report">
     <thead style="position: sticky; top: 0">
         <tr id="header1">
+            <th style="width: 3%">No</th>
             <th class="width1-1">Customer</th>
             <th class="width1-2"># INV</th>
             <th class="width1-3"># FP</th>
@@ -41,12 +42,13 @@
         <?php $sumTotalTax = '0.00'; ?>
         <?php $sumTotalTaxIncome = '0.00'; ?>
         <?php $sumGrandTotal = '0.00'; ?>
-        <?php foreach ($monthlySaleSummary as $monthlySaleSummaryItem): ?>
+        <?php foreach ($monthlySaleSummary as $i => $monthlySaleSummaryItem): ?>
             <?php $subTotal = $monthlySaleSummaryItem['sub_total']; ?>
             <?php $totalTax = $monthlySaleSummaryItem['total_tax']; ?>
             <?php $totalTaxIncome = $monthlySaleSummaryItem['total_tax_income']; ?>
             <?php $totalPrice = $monthlySaleSummaryItem['total_price']; ?>
             <tr class="items1">
+                <td style="text-align: center"><?php echo $i + 1; ?></td>
                 <td style="text-align: left"><?php echo CHtml::encode($monthlySaleSummaryItem['customer_name']); ?></td>
                 <td style="text-align: right">
                     <?php echo CHtml::link(Yii::app()->numberFormatter->format('#,##0', $monthlySaleSummaryItem['quantity_invoice']), array("detail", "month" => $month, "year" => $year, "branchId" => $branchId, "customerId" => $monthlySaleSummaryItem['customer_id']), array("target" => "_blank")); ?>
@@ -80,7 +82,7 @@
     </tbody>
     <tfoot>
         <tr>
-            <td style="text-align: right" colspan="6">TOTAL</td>
+            <td style="text-align: right" colspan="7">TOTAL</td>
             <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $sumSubTotal)); ?></td>
             <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $sumTotalTax)); ?></td>
             <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $sumTotalTaxIncome)); ?></td>

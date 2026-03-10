@@ -98,38 +98,38 @@ class PurchaseInvoiceTaxOnlySummaryController extends Controller {
         $worksheet = $objPHPExcel->setActiveSheetIndex(0);
         $worksheet->setTitle('Faktur Pembelian PPn');
 
-        $worksheet->mergeCells('A1:N1');
-        $worksheet->mergeCells('A2:N2');
-        $worksheet->mergeCells('A3:N3');
-        $worksheet->mergeCells('A4:N4');
+        $worksheet->mergeCells('A1:O1');
+        $worksheet->mergeCells('A2:O2');
+        $worksheet->mergeCells('A3:O3');
         
-        $worksheet->getStyle('A1:N3')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-        $worksheet->getStyle('A1:N3')->getFont()->setBold(true);
+        $worksheet->getStyle('A1:O5')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->getStyle('A1:O5')->getFont()->setBold(true);
         
-        $worksheet->setCellValue('A1', 'Raperind Motor ' . CHtml::encode(CHtml::value($purchaseOrderHeader, 'mainBranch.name')));
+        $worksheet->setCellValue('A1', 'Raperind Motor ' . CHtml::value($purchaseOrderHeader, 'mainBranch.name'));
         $worksheet->setCellValue('A2', 'Faktur Pembelian PPn (Rincian & Detail)');
         $worksheet->setCellValue('A3', $startDateFormatted . ' - ' . $endDateFormatted);
 
-        $worksheet->getStyle("A6:N6")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
-        $worksheet->getStyle("A6:N6")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A5:O5")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A5:O5")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
-        $worksheet->getStyle('A6:N6')->getFont()->setBold(true);
-        $worksheet->setCellValue('A6', 'PO #');
-        $worksheet->setCellValue('B6', 'Tanggal');
-        $worksheet->setCellValue('C6', 'Supplier');
-        $worksheet->setCellValue('D6', 'Invoice #');
-        $worksheet->setCellValue('E6', 'Tanggal Invoice');
-        $worksheet->setCellValue('F6', 'Tanggal SJ');
-        $worksheet->setCellValue('G6', 'SJ #');
-        $worksheet->setCellValue('H6', 'Faktur Pajak #');
-        $worksheet->setCellValue('I6', 'Ppn/Non');
-        $worksheet->setCellValue('J6', 'Price Bruto (Rp)');
-        $worksheet->setCellValue('K6', 'Disc (Rp)');
-        $worksheet->setCellValue('L6', 'DPP (Rp)');
-        $worksheet->setCellValue('M6', 'PPn (Rp)');
-        $worksheet->setCellValue('N6', 'Total (Rp)');
+        $worksheet->setCellValue('A5', 'No');
+        $worksheet->setCellValue('B5', 'PO #');
+        $worksheet->setCellValue('C5', 'Tanggal');
+        $worksheet->setCellValue('D5', 'Supplier');
+        $worksheet->setCellValue('E5', 'Invoice #');
+        $worksheet->setCellValue('F5', 'Tanggal Invoice');
+        $worksheet->setCellValue('G5', 'Tanggal SJ');
+        $worksheet->setCellValue('H5', 'SJ #');
+        $worksheet->setCellValue('I5', 'Faktur Pajak #');
+        $worksheet->setCellValue('J5', 'Ppn/Non');
+        $worksheet->setCellValue('K5', 'Price Bruto (Rp)');
+        $worksheet->setCellValue('L5', 'Disc (Rp)');
+        $worksheet->setCellValue('M5', 'DPP (Rp)');
+        $worksheet->setCellValue('N5', 'PPn (Rp)');
+        $worksheet->setCellValue('O5', 'Total (Rp)');
 
-        $counter = 7;
+        $counter = 6;
+        $ordinalNumber = 1;
 
         foreach ($purchaseInvoiceSummary->dataProvider->data as $header) {
             $receiveItems = TransactionReceiveItem::model()->findAll(array(
@@ -141,22 +141,23 @@ class PurchaseInvoiceTaxOnlySummaryController extends Controller {
                 )
             ));
             foreach ($receiveItems as $receiveItem) {
-                $worksheet->setCellValue("A{$counter}", CHtml::encode(CHtml::value($header, 'purchase_order_no')));
-                $worksheet->setCellValue("B{$counter}", CHtml::encode(CHtml::value($header, 'purchase_order_date')));
-                $worksheet->setCellValue("C{$counter}", CHtml::encode(CHtml::value($header, 'supplier.name')));
-                $worksheet->setCellValue("D{$counter}", CHtml::encode(CHtml::value($receiveItem, 'invoice_number')));
-                $worksheet->setCellValue("E{$counter}", CHtml::encode(CHtml::value($receiveItem, 'invoice_date')) . ' ' . substr(CHtml::encode($receiveItem->created_datetime), -8));
-                $worksheet->setCellValue("F{$counter}", CHtml::encode(CHtml::value($receiveItem, 'receive_item_date')));
-                $worksheet->setCellValue("G{$counter}", CHtml::encode(CHtml::value($receiveItem, 'supplier_delivery_number')));
-                $worksheet->setCellValue("H{$counter}", CHtml::encode(CHtml::value($receiveItem, 'invoice_tax_number')));
-                $worksheet->setCellValue("I{$counter}", CHtml::encode(CHtml::value($header, 'taxStatus')));
-                $worksheet->setCellValue("J{$counter}", CHtml::encode(CHtml::value($receiveItem, 'totalRetailPrice')));
-                $worksheet->setCellValue("K{$counter}", CHtml::encode(CHtml::value($receiveItem, 'totalPurchaseDiscount')));
-                $worksheet->setCellValue("L{$counter}", CHtml::encode(CHtml::value($receiveItem, 'subTotal')));
-                $worksheet->setCellValue("M{$counter}", CHtml::encode(CHtml::value($receiveItem, 'taxNominal')));
-                $worksheet->setCellValue("N{$counter}", CHtml::encode(CHtml::value($receiveItem, 'grandTotal')));
+                $worksheet->setCellValue("A{$counter}", $ordinalNumber);
+                $worksheet->setCellValue("B{$counter}", CHtml::value($header, 'purchase_order_no'));
+                $worksheet->setCellValue("C{$counter}", CHtml::value($header, 'purchase_order_date'));
+                $worksheet->setCellValue("D{$counter}", CHtml::value($header, 'supplier.name'));
+                $worksheet->setCellValue("E{$counter}", CHtml::value($receiveItem, 'invoice_number'));
+                $worksheet->setCellValue("F{$counter}", CHtml::value($receiveItem, 'invoice_date') . ' ' . substr($receiveItem->created_datetime, -8));
+                $worksheet->setCellValue("G{$counter}", CHtml::value($receiveItem, 'receive_item_date'));
+                $worksheet->setCellValue("H{$counter}", CHtml::value($receiveItem, 'supplier_delivery_number'));
+                $worksheet->setCellValue("I{$counter}", CHtml::value($receiveItem, 'invoice_tax_number'));
+                $worksheet->setCellValue("J{$counter}", CHtml::value($header, 'taxStatus'));
+                $worksheet->setCellValue("K{$counter}", CHtml::value($receiveItem, 'totalRetailPrice'));
+                $worksheet->setCellValue("L{$counter}", CHtml::value($receiveItem, 'totalPurchaseDiscount'));
+                $worksheet->setCellValue("M{$counter}", CHtml::value($receiveItem, 'subTotal'));
+                $worksheet->setCellValue("N{$counter}", CHtml::value($receiveItem, 'taxNominal'));
+                $worksheet->setCellValue("O{$counter}", CHtml::value($receiveItem, 'grandTotal'));
 
-                $counter++;
+                $counter++; $ordinalNumber++;
             }
         }
 

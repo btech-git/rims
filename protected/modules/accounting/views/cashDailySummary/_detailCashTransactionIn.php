@@ -26,9 +26,7 @@
                     )); ?>
                 </td>
                 <td><?php echo CHtml::encode(CHtml::value($header, 'coa.name')); ?></td>
-                <td style="text-align: right">
-                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $amountIn)); ?>
-                </td>
+                <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $amountIn)); ?></td>
                 <td><?php echo CHtml::encode(CHtml::value($header, 'status')); ?></td>
                 <td><?php echo CHtml::encode(CHtml::value($header, 'paymentType.name')); ?></td>
                 <td><?php echo CHtml::encode(CHtml::value($header, 'user.username')); ?></td>

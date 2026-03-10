@@ -11,7 +11,7 @@
     </thead>
     
     <tbody>
-        <?php $totalDebit = 0.00; $totalCredit = 0.00; ?>
+        <?php $totalDebit = '0.00'; $totalCredit = '0.00'; ?>
         <?php foreach ($transactionJournalDataProvider->data as $i => $header): ?>
             <?php 
             $debitAmount = CHtml::value($header, 'totalDebit'); 

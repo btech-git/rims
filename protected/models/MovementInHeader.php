@@ -19,6 +19,9 @@
  * @property integer $user_id_cancelled
  * @property string $updated_datetime
  * @property integer $user_id_updated
+ * @property integer $is_verified
+ * @property integer $user_id_verified
+ * @property string $verified_datetime
  *
  * The followings are the available model relations:
  * @property MovementInApproval[] $movementInApprovals
@@ -28,6 +31,7 @@
  * @property TransactionReturnItem $returnItem
  * @property UserIdCancelled $userIdCancelled
  * @property UserIdUpdated $userIdUpdated
+ * @property UserIdVerified $userIdVerified
  */
 class MovementInHeader extends MonthlyTransactionActiveRecord {
 
@@ -61,14 +65,14 @@ class MovementInHeader extends MonthlyTransactionActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('movement_in_number, date_posting, branch_id, movement_type, user_id, status', 'required'),
-            array('branch_id, movement_type, return_item_id, receive_item_id, user_id, supervisor_id, user_id_cancelled, user_id_updated', 'numerical', 'integerOnly' => true),
+            array('movement_in_number, date_posting, branch_id, movement_type, user_id, status, is_verified', 'required'),
+            array('branch_id, movement_type, return_item_id, receive_item_id, user_id, supervisor_id, user_id_cancelled, user_id_updated, is_verified, user_id_verified', 'numerical', 'integerOnly' => true),
             array('movement_in_number, status', 'length', 'max' => 30),
             array('movement_in_number', 'unique'),
-            array('updated_datetime, cancelled_datetime', 'safe'),
+            array('updated_datetime, cancelled_datetime, verified_datetime', 'safe'),
             // The following rule is used by search().
             // Please remove those attributes that should not be searched.
-            array('id, movement_in_number, date_posting, created_datetime, branch_id, movement_type, return_item_id, receive_item_id, user_id, supervisor_id, status, receive_item_number,return_item_number, updated_datetime, user_id_updated', 'safe', 'on' => 'search'),
+            array('id, movement_in_number, date_posting, created_datetime, branch_id, movement_type, return_item_id, receive_item_id, user_id, supervisor_id, status, receive_item_number,return_item_number, updated_datetime, user_id_updated, is_verified, user_id_verified, verified_datetime', 'safe', 'on' => 'search'),
         );
     }
 
@@ -87,6 +91,7 @@ class MovementInHeader extends MonthlyTransactionActiveRecord {
             'user' => array(self::BELONGS_TO, 'Users', 'user_id'),
             'userIdCancelled' => array(self::BELONGS_TO, 'Users', 'user_id_cancelled'),
             'userIdUpdated' => array(self::BELONGS_TO, 'Users', 'user_id_updated'),
+            'userIdVerified' => array(self::BELONGS_TO, 'Users', 'user_id_verified'),
         );
     }
 

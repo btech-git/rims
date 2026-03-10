@@ -160,7 +160,7 @@
                                                 <label class="prefix">KM Sebelum</label>
                                             </div>
                                             <div class="small-8 columns">
-                                                <?php echo $form->textField($bodyRepairRegistration->header, 'previous_mileage', array('readOnly' => true)); ?>
+                                                <?php echo $form->textField($bodyRepairRegistration->header, 'previous_mileage'); ?>
                                             </div>
                                         </div>
                                     </div>

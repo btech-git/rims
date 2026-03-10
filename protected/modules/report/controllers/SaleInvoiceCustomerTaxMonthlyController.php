@@ -84,51 +84,51 @@ class SaleInvoiceCustomerTaxMonthlyController extends Controller {
         $worksheet = $objPHPExcel->setActiveSheetIndex(0);
         $worksheet->setTitle('Penjualan Ppn Bulanan');
 
-        $worksheet->mergeCells('A1:J1');
-        $worksheet->mergeCells('A2:J2');
-        $worksheet->mergeCells('A3:J3');
+        $worksheet->mergeCells('A1:K1');
+        $worksheet->mergeCells('A2:K2');
+        $worksheet->mergeCells('A3:K3');
 
-        $worksheet->getStyle('A1:J5')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-        $worksheet->getStyle('A1:J5')->getFont()->setBold(true);
+        $worksheet->getStyle('A1:K5')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->getStyle('A1:K5')->getFont()->setBold(true);
 
         $worksheet->setCellValue('A1', 'Raperind Motor ');
         $worksheet->setCellValue('A2', 'Penjualan PPn Rekap Bulanan');
         $worksheet->setCellValue('A3', strftime("%B",mktime(0,0,0,$month)) . ' ' . $year);
         
-        $worksheet->getStyle('A5:J5')->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
-        $worksheet->setCellValue('A5', 'Customer');
-        $worksheet->setCellValue('B5', '# INV');
-        $worksheet->setCellValue('C5', '# FP');
-        $worksheet->setCellValue('D5', '# Bupot');
-        $worksheet->setCellValue('E5', 'Parts (Rp)');
-        $worksheet->setCellValue('F5', 'Jasa (Rp)');
-        $worksheet->setCellValue('G5', 'Total DPP');
-        $worksheet->setCellValue('H5', 'Total PPn');
-        $worksheet->setCellValue('I5', 'Total PPh');
-        $worksheet->setCellValue('J5', 'Total Invoice');
-        $worksheet->getStyle('A5:J5')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle('A5:K5')->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->setCellValue('A5', 'No');
+        $worksheet->setCellValue('B5', 'Customer');
+        $worksheet->setCellValue('C5', '# INV');
+        $worksheet->setCellValue('D5', '# FP');
+        $worksheet->setCellValue('E5', '# Bupot');
+        $worksheet->setCellValue('F5', 'Parts (Rp)');
+        $worksheet->setCellValue('G5', 'Jasa (Rp)');
+        $worksheet->setCellValue('H5', 'Total DPP');
+        $worksheet->setCellValue('I5', 'Total PPn');
+        $worksheet->setCellValue('J5', 'Total PPh');
+        $worksheet->setCellValue('K5', 'Total Invoice');
+        $worksheet->getStyle('A5:K5')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
         $counter = 6;
         $sumSubTotal = '0.00';
         $sumTotalTax = '0.00';
         $sumTotalTaxIncome = '0.00';
         $sumGrandTotal = '0.00';
-        foreach ($monthlySaleSummary as $monthlySaleSummaryItem) {
+        foreach ($monthlySaleSummary as $i => $monthlySaleSummaryItem) {
             $subTotal = $monthlySaleSummaryItem['sub_total'];
             $totalTax = $monthlySaleSummaryItem['total_tax'];
             $totalTaxIncome = $monthlySaleSummaryItem['total_tax_income'];
             $totalPrice = $monthlySaleSummaryItem['total_price'];
             
-            $worksheet->getStyle("E{$counter}:J{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
-
-            $worksheet->setCellValue("A{$counter}", $monthlySaleSummaryItem['customer_name']);
-            $worksheet->setCellValue("B{$counter}", $monthlySaleSummaryItem['quantity_invoice']);
-            $worksheet->setCellValue("E{$counter}", $monthlySaleSummaryItem['product_price']);
-            $worksheet->setCellValue("F{$counter}", $monthlySaleSummaryItem['service_price']);
-            $worksheet->setCellValue("G{$counter}", $subTotal);
-            $worksheet->setCellValue("H{$counter}", $totalTax);
-            $worksheet->setCellValue("I{$counter}", $totalTaxIncome);
-            $worksheet->setCellValue("J{$counter}", $totalPrice);
+            $worksheet->setCellValue("A{$counter}", $i + 1);
+            $worksheet->setCellValue("B{$counter}", $monthlySaleSummaryItem['customer_name']);
+            $worksheet->setCellValue("C{$counter}", $monthlySaleSummaryItem['quantity_invoice']);
+            $worksheet->setCellValue("F{$counter}", $monthlySaleSummaryItem['product_price']);
+            $worksheet->setCellValue("G{$counter}", $monthlySaleSummaryItem['service_price']);
+            $worksheet->setCellValue("H{$counter}", $subTotal);
+            $worksheet->setCellValue("I{$counter}", $totalTax);
+            $worksheet->setCellValue("J{$counter}", $totalTaxIncome);
+            $worksheet->setCellValue("K{$counter}", $totalPrice);
 
             $sumSubTotal += $subTotal;
             $sumTotalTax += $totalTax;
@@ -138,14 +138,14 @@ class SaleInvoiceCustomerTaxMonthlyController extends Controller {
             $counter++;
         }
         
-        $worksheet->getStyle("A{$counter}:J{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
-        $worksheet->getStyle("A{$counter}:J{$counter}")->getFont()->setBold(true);
+        $worksheet->getStyle("A{$counter}:K{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A{$counter}:K{$counter}")->getFont()->setBold(true);
         
-        $worksheet->setCellValue("F{$counter}", 'TOTAL');
-        $worksheet->setCellValue("G{$counter}", $sumSubTotal);
-        $worksheet->setCellValue("H{$counter}", $sumTotalTax);
-        $worksheet->setCellValue("I{$counter}", $sumTotalTaxIncome);
-        $worksheet->setCellValue("J{$counter}", $sumGrandTotal);
+        $worksheet->setCellValue("G{$counter}", 'TOTAL');
+        $worksheet->setCellValue("H{$counter}", $sumSubTotal);
+        $worksheet->setCellValue("I{$counter}", $sumTotalTax);
+        $worksheet->setCellValue("J{$counter}", $sumTotalTaxIncome);
+        $worksheet->setCellValue("K{$counter}", $sumGrandTotal);
 
         for ($col = 'A'; $col !== 'Z'; $col++) {
             $objPHPExcel->getActiveSheet()

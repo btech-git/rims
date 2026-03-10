@@ -200,10 +200,7 @@ class CashDailySummaryController extends Controller {
 
         if (isset($_GET['SaveExcel'])) {
             $this->saveToExcel($paymentTypes, $transactionDate, $branches, $paymentInRetailList, $paymentInWholesaleDataProvider, $paymentOutDataProvider, 
-                $cashTransactionInDataProvider, $cashTransactionOutDataProvider, $saleOrderDataProvider, $retailTransactionHeadDataProvider, 
-                $retailTransaction1DataProvider, $retailTransaction2DataProvider, $retailTransaction4DataProvider, $retailTransaction5DataProvider, 
-                $retailTransaction6DataProvider, $retailTransaction8DataProvider, $wholesaleTransactionDataProvider, $purchaseOrderDataProvider, 
-                $transactionJournalDataProvider, $cashDailySummary
+                $cashTransactionInDataProvider, $cashTransactionOutDataProvider, $purchaseOrderDataProvider, $transactionJournalDataProvider, $cashDailySummary
             );
         }
         
@@ -532,10 +529,7 @@ class CashDailySummaryController extends Controller {
     }
     
     protected function saveToExcel($paymentTypes, $transactionDate, $branches, $paymentInRetailList, $paymentInWholesaleDataProvider, $paymentOutDataProvider, 
-        $cashTransactionInDataProvider, $cashTransactionOutDataProvider, $saleOrderDataProvider, $retailTransactionHeadDataProvider, 
-        $retailTransaction1DataProvider, $retailTransaction2DataProvider, $retailTransaction4DataProvider, $retailTransaction5DataProvider, 
-        $retailTransaction6DataProvider, $retailTransaction8DataProvider, $wholesaleTransactionDataProvider, $purchaseOrderDataProvider, 
-        $transactionJournalDataProvider, $cashDailySummary
+        $cashTransactionInDataProvider, $cashTransactionOutDataProvider, $purchaseOrderDataProvider, $transactionJournalDataProvider, $cashDailySummary
     ) {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
@@ -707,7 +701,7 @@ class CashDailySummaryController extends Controller {
         $worksheet->getStyle("A{$counter}:F{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
         $worksheet->setCellValue("A{$counter}", 'No');
         $worksheet->setCellValue("B{$counter}", 'Transaction #');
-        $worksheet->setCellValue("C{$counter}", 'Branch');
+        $worksheet->setCellValue("C{$counter}", 'Status');
         $worksheet->setCellValue("D{$counter}", 'Debit');
         $worksheet->setCellValue("E{$counter}", 'Credit');
         $worksheet->setCellValue("F{$counter}", 'Keterangan');
@@ -716,11 +710,11 @@ class CashDailySummaryController extends Controller {
         $totalDebit = '0.00'; 
         $totalCredit = '0.00';
         foreach ($transactionJournalDataProvider->data as $i => $header) {
-            $debitAmount = $header->debet_kredit === 'D' ? $header->total : '0.00'; 
-            $creditAmount = $header->debet_kredit === 'K' ? $header->total : '0.00'; 
+            $debitAmount = CHtml::value($header, 'totalDebit'); 
+            $creditAmount = CHtml::value($header, 'totalCredit'); 
             $worksheet->setCellValue("A{$counter}", $i + 1);
-            $worksheet->setCellValue("B{$counter}", CHtml::value($header, 'kode_transaksi'));
-            $worksheet->setCellValue("C{$counter}", CHtml::value($header, 'branch.name'));
+            $worksheet->setCellValue("B{$counter}", CHtml::value($header, 'transaction_number'));
+            $worksheet->setCellValue("C{$counter}", CHtml::value($header, 'status'));
             $worksheet->setCellValue("D{$counter}", $debitAmount);
             $worksheet->setCellValue("E{$counter}", $creditAmount);
             $worksheet->setCellValue("F{$counter}", CHtml::value($header, 'transaction_subject'));
@@ -750,10 +744,10 @@ class CashDailySummaryController extends Controller {
         $worksheet->setCellValue("B{$counter}", 'Transaction #');
         $worksheet->setCellValue("C{$counter}", 'Account');
         $worksheet->setCellValue("D{$counter}", 'Amount');
-        $worksheet->setCellValue("E{$counter}", 'Branch');
+        $worksheet->setCellValue("E{$counter}", 'Status');
         $worksheet->setCellValue("F{$counter}", 'Type');
         $worksheet->setCellValue("G{$counter}", 'Created By');
-        $worksheet->setCellValue("H{$counter}", 'Approved By');
+        $worksheet->setCellValue("H{$counter}", 'Verified By');
         $counter++;
         
         $totalIn = '0.00'; 
@@ -763,14 +757,14 @@ class CashDailySummaryController extends Controller {
             $worksheet->setCellValue("B{$counter}", CHtml::value($header, 'transaction_number'));
             $worksheet->setCellValue("C{$counter}", CHtml::value($header, 'coa.name'));
             $worksheet->setCellValue("D{$counter}", $amountIn);
-            $worksheet->setCellValue("E{$counter}", CHtml::value($header, 'branch.name'));
+            $worksheet->setCellValue("E{$counter}", CHtml::value($header, 'status'));
             $worksheet->setCellValue("F{$counter}", CHtml::value($header, 'paymentType.name'));
             $worksheet->setCellValue("G{$counter}", CHtml::value($header, 'user.username'));
-            $cashApproval = CashTransactionApproval::model()->findByAttributes(array(
-                'cash_transaction_id' => $header->id,
-                'approval_type' => 'Approved',
-            ), array('order' => 't.id DESC'));
-            $worksheet->setCellValue("H{$counter}", empty($cashApproval) ? '' : $cashApproval->supervisor->username);
+//            $cashApproval = CashTransactionApproval::model()->findByAttributes(array(
+//                'cash_transaction_id' => $header->id,
+//                'approval_type' => 'Approved',
+//            ), array('order' => 't.id DESC'));
+            $worksheet->setCellValue("H{$counter}", CHtml::value($header, 'userIdVerified.username'));
             
             $totalIn += $amountIn;
             $counter++;
@@ -795,10 +789,10 @@ class CashDailySummaryController extends Controller {
         $worksheet->setCellValue("B{$counter}", 'Transaction #');
         $worksheet->setCellValue("C{$counter}", 'Account');
         $worksheet->setCellValue("D{$counter}", 'Amount');
-        $worksheet->setCellValue("E{$counter}", 'Branch');
+        $worksheet->setCellValue("E{$counter}", 'Status');
         $worksheet->setCellValue("F{$counter}", 'Type');
         $worksheet->setCellValue("G{$counter}", 'Created By');
-        $worksheet->setCellValue("H{$counter}", 'Approved By');
+        $worksheet->setCellValue("H{$counter}", 'Verified By');
         $counter++;
         
         $totalOut = '0.00'; 
@@ -808,14 +802,14 @@ class CashDailySummaryController extends Controller {
             $worksheet->setCellValue("B{$counter}", CHtml::value($header, 'transaction_number'));
             $worksheet->setCellValue("C{$counter}", CHtml::value($header, 'coa.name'));
             $worksheet->setCellValue("D{$counter}", $amountOut);
-            $worksheet->setCellValue("E{$counter}", CHtml::value($header, 'branch.name'));
+            $worksheet->setCellValue("E{$counter}", CHtml::value($header, 'status'));
             $worksheet->setCellValue("F{$counter}", CHtml::value($header, 'paymentType.name'));
             $worksheet->setCellValue("G{$counter}", CHtml::value($header, 'user.username'));
-            $cashApproval = CashTransactionApproval::model()->findByAttributes(array(
-                'cash_transaction_id' => $header->id,
-                'approval_type' => 'Approved',
-            ), array('order' => 't.id DESC'));
-            $worksheet->setCellValue("H{$counter}", empty($cashApproval) ? '' : $cashApproval->supervisor->username);
+//            $cashApproval = CashTransactionApproval::model()->findByAttributes(array(
+//                'cash_transaction_id' => $header->id,
+//                'approval_type' => 'Approved',
+//            ), array('order' => 't.id DESC'));
+            $worksheet->setCellValue("H{$counter}", CHtml::value($header, 'userIdVerified.username'));
             
             $totalOut += $amountOut;
             $counter++;
@@ -838,10 +832,10 @@ class CashDailySummaryController extends Controller {
         $worksheet->getStyle("A{$counter}:G{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
         $worksheet->setCellValue("A{$counter}", 'No');
         $worksheet->setCellValue("B{$counter}", 'Transaction #');
-        $worksheet->setCellValue("C{$counter}", 'Branch');
-        $worksheet->setCellValue("D{$counter}", 'Supplier');
-        $worksheet->setCellValue("E{$counter}", 'Approved By');
-        $worksheet->setCellValue("F{$counter}", 'Note');
+        $worksheet->setCellValue("C{$counter}", 'Supplier');
+        $worksheet->setCellValue("D{$counter}", 'Approved By');
+        $worksheet->setCellValue("E{$counter}", 'Verified By');
+        $worksheet->setCellValue("F{$counter}", 'Status');
         $worksheet->setCellValue("G{$counter}", 'Amount');
         $counter++;
         
@@ -850,9 +844,9 @@ class CashDailySummaryController extends Controller {
             $totalPrice = CHtml::value($header, 'total_price'); 
             $worksheet->setCellValue("A{$counter}", $i + 1);
             $worksheet->setCellValue("B{$counter}", CHtml::value($header, 'purchase_order_no'));
-            $worksheet->setCellValue("C{$counter}", CHtml::value($header, 'mainBranch.name'));
-            $worksheet->setCellValue("D{$counter}", CHtml::value($header, 'supplier.name'));
-            $worksheet->setCellValue("E{$counter}", CHtml::value($header, 'approval.username'));
+            $worksheet->setCellValue("C{$counter}", CHtml::value($header, 'supplier.name'));
+            $worksheet->setCellValue("D{$counter}", CHtml::value($header, 'approval.username'));
+            $worksheet->setCellValue("E{$counter}", CHtml::value($header, 'userIdVerified.username'));
             $worksheet->setCellValue("F{$counter}", CHtml::value($header, 'status_document'));
             $worksheet->setCellValue("G{$counter}", $totalPrice);
             
@@ -866,55 +860,49 @@ class CashDailySummaryController extends Controller {
         $worksheet->setCellValue("G{$counter}", $grandTotal);
         $counter++;$counter++;$counter++;
 
-        $worksheet->mergeCells("A{$counter}:F{$counter}");
-        $worksheet->getStyle("A{$counter}:F{$counter}")->getFont()->setBold(true);
-        $worksheet->getStyle("A{$counter}:F{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
-        $worksheet->getStyle("A{$counter}:F{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->mergeCells("A{$counter}:E{$counter}");
+        $worksheet->getStyle("A{$counter}:E{$counter}")->getFont()->setBold(true);
+        $worksheet->getStyle("A{$counter}:E{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A{$counter}:E{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
         $worksheet->setCellValue("A{$counter}", 'Penjualan Harian');
         $counter++;
-        $worksheet->getStyle("A{$counter}:F{$counter}")->getFont()->setBold(true);
-        $worksheet->getStyle("A{$counter}:F{$counter}")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
-        $worksheet->getStyle("A{$counter}:F{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->getStyle("A{$counter}:E{$counter}")->getFont()->setBold(true);
+        $worksheet->getStyle("A{$counter}:E{$counter}")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A{$counter}:E{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
         
         $worksheet->setCellValue("A{$counter}", 'No');
         $worksheet->setCellValue("B{$counter}", 'Branch');
         $worksheet->setCellValue("C{$counter}", 'Retail');
         $worksheet->setCellValue("D{$counter}", 'Wholesale');
-        $worksheet->setCellValue("E{$counter}", 'Sale Order');
-        $worksheet->setCellValue("F{$counter}", 'Total');
+        $worksheet->setCellValue("E{$counter}", 'Total');
         $counter++;
         
         $retailGrandTotal = '0.00';
         $wholesaleGrandTotal = '0.00';
-        $saleOrderGrandTotal = '0.00';
         $branchGrandTotal = '0.00';
         foreach ($branches as $i => $branch) {
             $retailTotal = isset($cashDailySummary['retail'][$branch->id]) ? $cashDailySummary['retail'][$branch->id] : '0.00';
             $wholeSaleTotal = isset($cashDailySummary['wholesale'][$branch->id]) ? $cashDailySummary['wholesale'][$branch->id] : '0.00';
-            $saleOrderTotal = isset($cashDailySummary['saleorder'][$branch->id]) ? $cashDailySummary['saleorder'][$branch->id] : '0.00';
-            $branchTotal = $retailTotal + $wholeSaleTotal + $saleOrderTotal;
+            $branchTotal = $retailTotal + $wholeSaleTotal;
             
             $worksheet->setCellValue("A{$counter}", $i + 1);
             $worksheet->setCellValue("B{$counter}", CHtml::value($branch, 'name'));
             $worksheet->setCellValue("C{$counter}", $retailTotal);
             $worksheet->setCellValue("D{$counter}", $wholeSaleTotal);
-            $worksheet->setCellValue("E{$counter}", $saleOrderTotal);
-            $worksheet->setCellValue("F{$counter}", $branchTotal);
+            $worksheet->setCellValue("E{$counter}", $branchTotal);
             
             $retailGrandTotal += $retailTotal;
             $wholesaleGrandTotal += $wholeSaleTotal;
-            $saleOrderGrandTotal += $saleOrderTotal;
             $branchGrandTotal += $branchTotal;
             $counter++;
         }
-        $worksheet->getStyle("A{$counter}:F{$counter}")->getFont()->setBold(true);
-        $worksheet->getStyle("A{$counter}:F{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A{$counter}:E{$counter}")->getFont()->setBold(true);
+        $worksheet->getStyle("A{$counter}:E{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
         
         $worksheet->setCellValue("B{$counter}", 'TOTAL');
         $worksheet->setCellValue("C{$counter}", $retailGrandTotal);
         $worksheet->setCellValue("D{$counter}", $wholesaleGrandTotal);
-        $worksheet->setCellValue("E{$counter}", $saleOrderGrandTotal);
-        $worksheet->setCellValue("F{$counter}", $branchGrandTotal);
+        $worksheet->setCellValue("E{$counter}", $branchGrandTotal);
         $counter++;$counter++;$counter++;
 
         for ($col = 'A'; $col !== 'Z'; $col++) {

@@ -35,6 +35,7 @@
     <table class="responsive">
         <thead style="position: sticky; top: 0">
             <tr id="header1">
+                <th style="width: 3%">No</th>
                 <th class="width1-1">PO #</th>
                 <th class="width1-2">Tanggal</th>
                 <th class="width1-3">Supplier</th>
@@ -52,6 +53,7 @@
             </tr>
         </thead>
         <tbody>
+            <?php $ordinalNumber = 1; ?>
             <?php foreach ($purchaseInvoiceSummary->dataProvider->data as $header): ?>
                 <?php $receiveItems = TransactionReceiveItem::model()->findAll(array(
                     'condition' => 'purchase_order_id = :purchase_order_id AND invoice_date BETWEEN :start_date AND :end_date AND user_id_cancelled IS NULL',
@@ -63,6 +65,7 @@
                 )); ?>
                 <?php foreach ($receiveItems as $receiveItem): ?>
                     <tr class="items1">
+                        <td style="text-align: center"><?php echo $ordinalNumber; ?></td>
                         <td class="width1-1">
                             <?php echo CHtml::link(CHtml::encode($header->purchase_order_no), array(
                                 "/transaction/transactionPurchaseOrder/view", 
@@ -100,6 +103,7 @@
                             <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($receiveItem, 'grandTotal'))); ?>
                         </td>
                     </tr>
+                    <?php $ordinalNumber++; ?>
                 <?php endforeach; ?>
             <?php endforeach; ?>
         </tbody>

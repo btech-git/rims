@@ -25,6 +25,9 @@
  * @property integer $is_cancelled
  * @property string $updated_datetime
  * @property integer $user_id_updated
+ * @property integer $is_verified
+ * @property integer $user_id_verified
+ * @property string $verified_datetime
  *
  * The followings are the available model relations:
  * @property MovementOutHeader[] $movementOutHeaders
@@ -42,6 +45,7 @@
  * @property TransactionReturnOrder[] $transactionReturnOrders
  * @property UserIdCancelled $userIdCancelled
  * @property UserIdUpdated $userIdUpdated
+ * @property UserIdVerified $userIdVerified
  */
 class TransactionDeliveryOrder extends MonthlyTransactionActiveRecord {
 
@@ -77,14 +81,14 @@ class TransactionDeliveryOrder extends MonthlyTransactionActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('delivery_order_no, delivery_date, posting_date, sender_id, sender_branch_id', 'required'),
-            array('sender_id, sender_branch_id, sales_order_id, sent_request_id, consignment_out_id, destination_branch, customer_id, transfer_request_id, user_id_cancelled, is_cancelled, user_id_updated', 'numerical', 'integerOnly' => true),
+            array('delivery_order_no, delivery_date, posting_date, sender_id, sender_branch_id, is_verified', 'required'),
+            array('sender_id, sender_branch_id, sales_order_id, sent_request_id, consignment_out_id, destination_branch, customer_id, transfer_request_id, user_id_cancelled, is_cancelled, user_id_updated, is_verified, user_id_verified', 'numerical', 'integerOnly' => true),
             array('delivery_order_no, request_type', 'length', 'max' => 30),
             array('delivery_order_no', 'unique'),
-            array('delivery_date, posting_date, request_date, estimate_arrival_date, sent_request_no, consignment_out_no, transfer_request_no, updated_datetime, cancelled_datetime', 'safe'),
+            array('delivery_date, posting_date, request_date, estimate_arrival_date, sent_request_no, consignment_out_no, transfer_request_no, updated_datetime, cancelled_datetime, verified_datetime', 'safe'),
             // The following rule is used by search().
             // Please remove those attributes that should not be searched.
-            array('id, delivery_order_no, delivery_date, posting_date, created_datetime, sender_id, sender_branch_id, request_type, sales_order_id, sent_request_id, consignment_out_id, request_date, estimate_arrival_date, destination_branch, customer_id, branch_name,customer_name,sales_order_no, transfer_request_detail_id, sent_request_no, consignment_out_no, transfer_request_no, cancelled_datetime, user_id_cancelled, is_cancelled, updated_datetime, user_id_updated', 'safe', 'on' => 'search'),
+            array('id, delivery_order_no, delivery_date, posting_date, created_datetime, sender_id, sender_branch_id, request_type, sales_order_id, sent_request_id, consignment_out_id, request_date, estimate_arrival_date, destination_branch, customer_id, branch_name,customer_name,sales_order_no, transfer_request_detail_id, sent_request_no, consignment_out_no, transfer_request_no, cancelled_datetime, user_id_cancelled, is_cancelled, updated_datetime, user_id_updated, is_verified, user_id_verified, verified_datetime', 'safe', 'on' => 'search'),
         );
     }
 
@@ -111,6 +115,7 @@ class TransactionDeliveryOrder extends MonthlyTransactionActiveRecord {
             'transactionReceiveItems' => array(self::HAS_MANY, 'TransactionReceiveItem', 'delivery_order_id'),
             'transactionReturnItems' => array(self::HAS_MANY, 'TransactionReturnItem', 'delivery_order_id'),
             'transactionReturnOrders' => array(self::HAS_MANY, 'TransactionReturnOrder', 'delivery_order_id'),
+            'userIdVerified' => array(self::BELONGS_TO, 'Users', 'user_id_verified'),
         );
     }
 

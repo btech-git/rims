@@ -2828,7 +2828,8 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
                 INNER JOIN " . VehicleCarModel::model()->tableName() . " d ON d.id = v.car_model_id
                 INNER JOIN " . VehicleCarSubModel::model()->tableName() . " s ON s.id = v.car_sub_model_id
                 LEFT OUTER JOIN " . InsuranceCompany::model()->tableName() . " ic ON ic.id = i.insurance_company_id
-                WHERE i.customer_id IN ({$customerIdsSql}) AND i.user_id_cancelled IS NULL AND i.invoice_date BETWEEN '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND :end_date AND i.total_price - (
+                WHERE i.customer_id IN ({$customerIdsSql}) AND i.user_id_cancelled IS NULL AND i.invoice_date BETWEEN '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND :end_date AND 
+                i.total_price - (
                     SELECT COALESCE(SUM(d.amount + d.tax_service_amount + d.discount_amount + d.bank_administration_fee + d.merimen_fee + d.downpayment_amount), 0)
                     FROM " . PaymentInDetail::model()->tableName() . " d
                     INNER JOIN " . PaymentIn::model()->tableName() . " h ON h.id = d.payment_in_id

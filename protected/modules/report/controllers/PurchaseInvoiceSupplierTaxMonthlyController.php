@@ -86,44 +86,44 @@ class PurchaseInvoiceSupplierTaxMonthlyController extends Controller {
         $worksheet = $objPHPExcel->setActiveSheetIndex(0);
         $worksheet->setTitle('Pembelian Ppn Bulanan');
 
-        $worksheet->mergeCells('A1:G1');
-        $worksheet->mergeCells('A2:G2');
-        $worksheet->mergeCells('A3:G3');
+        $worksheet->mergeCells('A1:H1');
+        $worksheet->mergeCells('A2:H2');
+        $worksheet->mergeCells('A3:H3');
 
-        $worksheet->getStyle('A1:G5')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-        $worksheet->getStyle('A1:G5')->getFont()->setBold(true);
+        $worksheet->getStyle('A1:H5')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->getStyle('A1:H5')->getFont()->setBold(true);
 
         $branch = Branch::model()->findByPk($branchId);
         $worksheet->setCellValue('A1', 'Raperind Motor ' . CHtml::value($branch, 'name'));
         $worksheet->setCellValue('A2', 'Pembelian PPn Rekap Bulanan');
         $worksheet->setCellValue('A3', strftime("%B",mktime(0,0,0, $month)) . ' ' . $year);
         
-        $worksheet->getStyle('A5:G5')->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
-        $worksheet->setCellValue('A5', 'Supplier');
-        $worksheet->setCellValue('B5', '# INV');
-        $worksheet->setCellValue('C5', '# FP');
-        $worksheet->setCellValue('D5', '# Bupot');
-        $worksheet->setCellValue('E5', 'Total DPP');
-        $worksheet->setCellValue('F5', 'Total PPn');
-        $worksheet->setCellValue('G5', 'Total Invoice');
-        $worksheet->getStyle('A5:G5')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle('A5:H5')->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->setCellValue('A5', 'No');
+        $worksheet->setCellValue('B5', 'Supplier');
+        $worksheet->setCellValue('C5', '# INV');
+        $worksheet->setCellValue('D5', '# FP');
+        $worksheet->setCellValue('E5', '# Bupot');
+        $worksheet->setCellValue('F5', 'Total DPP');
+        $worksheet->setCellValue('G5', 'Total PPn');
+        $worksheet->setCellValue('H5', 'Total Invoice');
+        $worksheet->getStyle('A5:H5')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
         $counter = 6;
         $sumSubTotal = '0.00';
         $sumTotalTax = '0.00';
         $sumGrandTotal = '0.00';
-        foreach ($monthlyPurchaseSummary as $monthlyPurchaseSummaryItem) {
+        foreach ($monthlyPurchaseSummary as $i => $monthlyPurchaseSummaryItem) {
             $subTotal = $monthlyPurchaseSummaryItem['sub_total'];
             $totalTax = $monthlyPurchaseSummaryItem['total_tax'];
             $totalPrice = $monthlyPurchaseSummaryItem['total_price'];
             
-            $worksheet->getStyle("E{$counter}:G{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
-
-            $worksheet->setCellValue("A{$counter}", $monthlyPurchaseSummaryItem['supplier_name']);
-            $worksheet->setCellValue("B{$counter}", $monthlyPurchaseSummaryItem['quantity_invoice']);
-            $worksheet->setCellValue("E{$counter}", $subTotal);
-            $worksheet->setCellValue("F{$counter}", $totalTax);
-            $worksheet->setCellValue("G{$counter}", $totalPrice);
+            $worksheet->setCellValue("A{$counter}", $i + 1);
+            $worksheet->setCellValue("B{$counter}", $monthlyPurchaseSummaryItem['supplier_name']);
+            $worksheet->setCellValue("C{$counter}", $monthlyPurchaseSummaryItem['quantity_invoice']);
+            $worksheet->setCellValue("F{$counter}", $subTotal);
+            $worksheet->setCellValue("G{$counter}", $totalTax);
+            $worksheet->setCellValue("H{$counter}", $totalPrice);
 
             $sumSubTotal += $subTotal;
             $sumTotalTax += $totalTax;
@@ -132,13 +132,13 @@ class PurchaseInvoiceSupplierTaxMonthlyController extends Controller {
             $counter++;
         }
         
-        $worksheet->getStyle("A{$counter}:G{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
-        $worksheet->getStyle("A{$counter}:G{$counter}")->getFont()->setBold(true);
+        $worksheet->getStyle("A{$counter}:H{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A{$counter}:H{$counter}")->getFont()->setBold(true);
         
-        $worksheet->setCellValue("D{$counter}", 'TOTAL');
-        $worksheet->setCellValue("E{$counter}", $sumSubTotal);
-        $worksheet->setCellValue("F{$counter}", $sumTotalTax);
-        $worksheet->setCellValue("G{$counter}", $sumGrandTotal);
+        $worksheet->setCellValue("E{$counter}", 'TOTAL');
+        $worksheet->setCellValue("F{$counter}", $sumSubTotal);
+        $worksheet->setCellValue("G{$counter}", $sumTotalTax);
+        $worksheet->setCellValue("H{$counter}", $sumGrandTotal);
 
         for ($col = 'A'; $col !== 'Z'; $col++) {
             $objPHPExcel->getActiveSheet()

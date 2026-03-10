@@ -3,31 +3,37 @@
     <table class="report">
         <thead>
             <tr id="header1">
-                <th>No.</th>
-                <th class="width1-1">Transaksi #</th>
-                <th class="width1-2">Tanggal</th>
-                <th class="width1-3">Akun</th>
-                <th class="width1-4">Status</th>
-                <th class="width1-5">Amount</th>
+                <th style="width: 3%">No.</th>
+                <th style="width: 15%">Transaksi #</th>
+                <th style="width: 45%">Akun</th>
+                <th style="width: 10%">Status</th>
+                <th style="width: 15%">Amount</th>
+                <th style="width: 10%">Verified By</th>
             </tr>
         </thead>
         <tbody>
             <?php foreach ($cashTransactionInData as $i => $header): ?>
                 <tr class="items1">
                     <td style="text-align: center"><?php echo $i + 1; ?></td>
-                    <td class="width1-1">
-                        <?php echo CHtml::link(CHtml::encode($header->transaction_number), array("/transaction/cashTransaction/view", "id"=>$header->id), array("target" => "_blank")); ?>
+                    <td>
+                        <?php echo CHtml::link($header->transaction_number, array("/transaction/cashTransaction/view", "id"=>$header->id)); ?>
                     </td>
-                    <td class="width1-2">
-                        <?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($header->transaction_date))); ?>
-                    </td>
-                    <td class="width1-3"><?php echo CHtml::encode(CHtml::value($header, 'coa.name')); ?></td>
-                    <td class="width1-4"><?php echo CHtml::encode(CHtml::value($header, 'status')); ?></td>
-                    <td class="width1-5" style="text-align: right">
+                    <td><?php echo CHtml::encode(CHtml::value($header, 'coa.name')); ?></td>
+                    <td><?php echo CHtml::encode(CHtml::value($header, 'status')); ?></td>
+                    <td style="text-align: right">
                         <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($header, 'credit_amount'))); ?>
                     </td>
+                    <td>
+                        <?php if ($header->is_verified == 0): ?>
+                            <?php echo CHtml::link('<span class="fa fa-check"></span>Verify', array("/report/dailyTransaction/verifyCashTransaction", "id" => $header->id), array(
+                                'class' => 'button success center', 
+                                'style' => 'margin-right:10px', 
+                            )); ?>
+                        <?php else: ?>
+                            <?php echo CHtml::encode(CHtml::value($header, 'userIdVerified.username')); ?>
+                        <?php endif; ?>
+                    </td>
                 </tr>
-                <?php $i++; ?>
             <?php endforeach; ?>
         </tbody>
     </table>
@@ -40,31 +46,37 @@
     <table class="report">
         <thead>
             <tr id="header1">
-                <th>No.</th>
-                <th class="width1-1">Transaksi #</th>
-                <th class="width1-2">Tanggal</th>
-                <th class="width1-3">Akun</th>
-                <th class="width1-4">Status</th>
-                <th class="width1-5">Amount</th>
+                <th style="width: 3%">No.</th>
+                <th style="width: 15%">Transaksi #</th>
+                <th style="width: 45%">Akun</th>
+                <th style="width: 10%">Status</th>
+                <th style="width: 15%">Amount</th>
+                <th style="width: 10%">Verified By</th>
             </tr>
         </thead>
         <tbody>
             <?php foreach ($cashTransactionOutData as $i => $header): ?>
                 <tr class="items1">
                     <td style="text-align: center"><?php echo $i + 1; ?></td>
-                    <td class="width1-1">
+                    <td>
                         <?php echo CHtml::link(CHtml::encode($header->transaction_number), array("/transaction/cashTransaction/view", "id"=>$header->id), array("target" => "_blank")); ?>
                     </td>
-                    <td class="width1-2">
-                        <?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($header->transaction_date))); ?>
-                    </td>
-                    <td class="width1-3"><?php echo CHtml::encode(CHtml::value($header, 'coa.name')); ?></td>
-                    <td class="width1-4"><?php echo CHtml::encode(CHtml::value($header, 'status')); ?></td>
-                    <td class="width1-5" style="text-align: right">
+                    <td><?php echo CHtml::encode(CHtml::value($header, 'coa.name')); ?></td>
+                    <td><?php echo CHtml::encode(CHtml::value($header, 'status')); ?></td>
+                    <td style="text-align: right">
                         <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($header, 'debit_amount'))); ?>
                     </td>
+                    <td>
+                        <?php if ($header->is_verified == 0): ?>
+                            <?php echo CHtml::link('<span class="fa fa-check"></span>Verify', array("/report/dailyTransaction/verifyCashTransaction", "id" => $header->id), array(
+                                'class' => 'button success center', 
+                                'style' => 'margin-right:10px', 
+                            )); ?>
+                        <?php else: ?>
+                            <?php echo CHtml::encode(CHtml::value($header, 'userIdVerified.username')); ?>
+                        <?php endif; ?>
+                    </td>
                 </tr>
-                <?php $i++; ?>
             <?php endforeach; ?>
         </tbody>
     </table>

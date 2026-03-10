@@ -88,6 +88,9 @@
  * @property integer $employee_id_mechanic_helper_2
  * @property integer $employee_id_mechanic_helper_3
  * @property integer $estimate_service_time
+ * @property integer $is_verified
+ * @property integer $user_id_verified
+ * @property string $verified_datetime
  *
  * The followings are the available model relations:
  * @property InvoiceHeader[] $invoiceHeaders
@@ -126,6 +129,7 @@
  * @property TransactionReturnItem[] $transactionReturnItems
  * @property VehicleInspection[] $vehicleInspections
  * @property WorkOrderExpenseHeader[] $workOrderExpenseHeaders
+ * @property UserIdVerified $userIdVerified
  */
 class RegistrationTransaction extends MonthlyTransactionActiveRecord {
 
@@ -171,18 +175,18 @@ class RegistrationTransaction extends MonthlyTransactionActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('customer_id, vehicle_id', 'required'),
-            array('customer_id, pic_id, vehicle_id, branch_id, user_id, total_quickservice, total_service, is_quick_service, is_insurance, insurance_company_id, laststatusupdate_by, ppn, pph, is_passed, total_time, priority_level, employee_id_assign_mechanic, employee_id_sales_person, tax_percentage, user_id_cancelled, user_id_edited, sale_estimation_header_id, is_new_customer, total_quantity_package, user_id_created_downpayment, is_downpayment_paid, employee_id_mechanic_helper_1, employee_id_mechanic_helper_2, employee_id_mechanic_helper_3, vehicle_mileage, previous_mileage, next_mileage, estimate_service_time', 'numerical', 'integerOnly' => true),
+            array('customer_id, vehicle_id, is_verified', 'required'),
+            array('customer_id, pic_id, vehicle_id, branch_id, user_id, total_quickservice, total_service, is_quick_service, is_insurance, insurance_company_id, laststatusupdate_by, ppn, pph, is_passed, total_time, priority_level, employee_id_assign_mechanic, employee_id_sales_person, tax_percentage, user_id_cancelled, user_id_edited, sale_estimation_header_id, is_new_customer, total_quantity_package, user_id_created_downpayment, is_downpayment_paid, employee_id_mechanic_helper_1, employee_id_mechanic_helper_2, employee_id_mechanic_helper_3, vehicle_mileage, previous_mileage, next_mileage, estimate_service_time, is_verified, user_id_verified', 'numerical', 'integerOnly' => true),
             array('transaction_number, repair_type, work_order_number, payment_status, payment_type, sales_order_number, customer_work_order_number, downpayment_transaction_number, downpayment_status', 'length', 'max' => 30),
             array('total_quickservice_price, subtotal_service, discount_service, total_service_price, subtotal_product, discount_product, total_product_price, grand_total, total_price_package, downpayment_amount', 'length', 'max' => 18),
             array('total_product, subtotal, ppn_price, pph_price', 'length', 'max' => 10),
             array('status', 'length', 'max' => 50),
             array('service_status, product_status', 'length', 'max' => 100),
             array('vehicle_status', 'length', 'max' => 20),
-            array('transaction_date, problem, work_order_date, work_order_time, sales_order_date, note, transaction_date_out, transaction_time_out, created_datetime, cancelled_datetime, feedback, edited_datetime, vehicle_entry_datetime, vehicle_exit_datetime, vehicle_start_service_datetime, vehicle_finish_service_datetime, initial_condition_memo, initial_recommendation, final_condition_memo, final_recommendation, downpayment_transaction_date, downpayment_note, downpayment_created_datetime, user_name', 'safe'),
+            array('transaction_date, problem, work_order_date, work_order_time, sales_order_date, note, transaction_date_out, transaction_time_out, created_datetime, cancelled_datetime, feedback, edited_datetime, vehicle_entry_datetime, vehicle_exit_datetime, vehicle_start_service_datetime, vehicle_finish_service_datetime, initial_condition_memo, initial_recommendation, final_condition_memo, final_recommendation, downpayment_transaction_date, downpayment_note, downpayment_created_datetime, user_name, verified_datetime', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, transaction_number, transaction_date, repair_type, problem, customer_id, pic_id, vehicle_id, branch_id, user_id, total_quickservice, total_quickservice_price, total_service, subtotal_service, discount_service, total_service_price, total_product, subtotal_product, discount_product, total_product_price, is_quick_service, is_insurance, insurance_company_id, grand_total, work_order_number, work_order_date, work_order_time, status, payment_status, payment_type, laststatusupdate_by, sales_order_number, sales_order_date, ppn, pph, subtotal, ppn_price, pph_price, vehicle_mileage, note, is_passed, total_time, service_status, priority_level, customer_work_order_number, vehicle_status, transaction_date_out, transaction_time_out, employee_id_assign_mechanic, employee_id_sales_person, tax_percentage, created_datetime, cancelled_datetime, user_id_cancelled, feedback, edited_datetime, user_id_edited, sale_estimation_header_id, product_status, vehicle_entry_datetime, vehicle_exit_datetime, vehicle_start_service_datetime, vehicle_finish_service_datetime, initial_condition_memo, initial_recommendation, final_condition_memo, final_recommendation, is_new_customer, total_quantity_package, total_price_package, downpayment_transaction_number, downpayment_transaction_date, downpayment_amount, downpayment_status, downpayment_note, downpayment_created_datetime, user_id_created_downpayment, is_downpayment_paid, employee_id_mechanic_helper_1, employee_id_mechanic_helper_2, employee_id_mechanic_helper_3, customer_name, plate_number, previous_mileage, next_mileage, estimate_service_time', 'safe', 'on' => 'search'),
+            array('id, transaction_number, transaction_date, repair_type, problem, customer_id, pic_id, vehicle_id, branch_id, user_id, total_quickservice, total_quickservice_price, total_service, subtotal_service, discount_service, total_service_price, total_product, subtotal_product, discount_product, total_product_price, is_quick_service, is_insurance, insurance_company_id, grand_total, work_order_number, work_order_date, work_order_time, status, payment_status, payment_type, laststatusupdate_by, sales_order_number, sales_order_date, ppn, pph, subtotal, ppn_price, pph_price, vehicle_mileage, note, is_passed, total_time, service_status, priority_level, customer_work_order_number, vehicle_status, transaction_date_out, transaction_time_out, employee_id_assign_mechanic, employee_id_sales_person, tax_percentage, created_datetime, cancelled_datetime, user_id_cancelled, feedback, edited_datetime, user_id_edited, sale_estimation_header_id, product_status, vehicle_entry_datetime, vehicle_exit_datetime, vehicle_start_service_datetime, vehicle_finish_service_datetime, initial_condition_memo, initial_recommendation, final_condition_memo, final_recommendation, is_new_customer, total_quantity_package, total_price_package, downpayment_transaction_number, downpayment_transaction_date, downpayment_amount, downpayment_status, downpayment_note, downpayment_created_datetime, user_id_created_downpayment, is_downpayment_paid, employee_id_mechanic_helper_1, employee_id_mechanic_helper_2, employee_id_mechanic_helper_3, customer_name, plate_number, previous_mileage, next_mileage, estimate_service_time, is_verified, user_id_verified, verified_datetime', 'safe', 'on' => 'search'),
         );
     }
 
@@ -229,6 +233,7 @@ class RegistrationTransaction extends MonthlyTransactionActiveRecord {
             'transactionReturnItems' => array(self::HAS_MANY, 'TransactionReturnItem', 'registration_transaction_id'),
             'vehicleInspections' => array(self::HAS_MANY, 'VehicleInspection', 'registration_transaction_id'),
             'workOrderExpenseHeaders' => array(self::HAS_MANY, 'WorkOrderExpenseHeader', 'registration_transaction_id'),
+            'userIdVerified' => array(self::BELONGS_TO, 'Users', 'user_id_verified'),
         );
     }
 

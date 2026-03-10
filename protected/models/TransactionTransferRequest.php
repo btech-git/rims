@@ -24,6 +24,9 @@
  * @property integer $user_id_cancelled
  * @property string $updated_datetime
  * @property integer $user_id_updated
+ * @property integer $is_verified
+ * @property integer $user_id_verified
+ * @property string $verified_datetime
  *
  * The followings are the available model relations:
  * @property TransactionDeliveryOrder[] $transactionDeliveryOrders
@@ -37,6 +40,7 @@
  * @property TransactionTransferRequestDetail[] $transactionTransferRequestDetails
  * @property UserIdCancelled $userIdCancelled
  * @property UserIdUpdated $userIdUpdated
+ * @property UserIdVerified $userIdVerified
  */
 class TransactionTransferRequest extends MonthlyTransactionActiveRecord {
 
@@ -73,15 +77,15 @@ class TransactionTransferRequest extends MonthlyTransactionActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('transfer_request_no, transfer_request_date, estimate_arrival_date, status_document, requester_id, requester_branch_id, destination_branch_id, total_quantity, total_price', 'required'),
-            array('requester_id, requester_branch_id, approved_by, destination_id, destination_branch_id, total_quantity, destination_approval_status, user_id_cancelled, user_id_updated', 'numerical', 'integerOnly' => true),
+            array('transfer_request_no, transfer_request_date, estimate_arrival_date, status_document, requester_id, requester_branch_id, destination_branch_id, total_quantity, total_price, is_verified', 'required'),
+            array('requester_id, requester_branch_id, approved_by, destination_id, destination_branch_id, total_quantity, destination_approval_status, user_id_cancelled, user_id_updated, is_verified, user_id_verified', 'numerical', 'integerOnly' => true),
             array('transfer_request_no, status_document', 'length', 'max' => 30),
             array('total_price', 'length', 'max' => 18),
             array('transfer_request_no', 'unique'),
-            array('updated_datetime, cancelled_datetime', 'safe'),
+            array('updated_datetime, cancelled_datetime, verified_datetime', 'safe'),
             // The following rule is used by search().
             // Please remove those attributes that should not be searched.
-            array('id, transfer_request_no, transfer_request_date, transfer_request_time, created_datetime, status_document, estimate_arrival_date, requester_id, requester_branch_id, approved_by, destination_id, destination_branch_id, branch_name, total_quantity, total_price, destination_approval_status, destination_approved_by, cancelled_datetime, user_id_cancelled, updated_datetime, user_id_updated', 'safe', 'on' => 'search'),
+            array('id, transfer_request_no, transfer_request_date, transfer_request_time, created_datetime, status_document, estimate_arrival_date, requester_id, requester_branch_id, approved_by, destination_id, destination_branch_id, branch_name, total_quantity, total_price, destination_approval_status, destination_approved_by, cancelled_datetime, user_id_cancelled, updated_datetime, user_id_updated, is_verified, user_id_verified, verified_datetime', 'safe', 'on' => 'search'),
         );
     }
 
@@ -104,6 +108,7 @@ class TransactionTransferRequest extends MonthlyTransactionActiveRecord {
             'userIdUpdated' => array(self::BELONGS_TO, 'Users', 'user_id_updated'),
             'transactionTransferRequestApprovals' => array(self::HAS_MANY, 'TransactionTransferRequestApproval', 'transfer_request_id'),
             'transactionTransferRequestDetails' => array(self::HAS_MANY, 'TransactionTransferRequestDetail', 'transfer_request_id'),
+            'userIdVerified' => array(self::BELONGS_TO, 'Users', 'user_id_verified'),
         );
     }
 

@@ -3,27 +3,33 @@
     <table class="report">
         <thead>
             <tr id="header1">
-                <th>No.</th>
-                <th class="width1-1">Transaksi #</th>
-                <th class="width1-2">Tanggal</th>
-                <th class="width1-3">Tujuan</th>
-                <th class="width1-4">Status</th>
+                <th style="width: 3%">No.</th>
+                <th style="width: 15%">Transaksi #</th>
+                <th style="width: 20%">Tujuan</th>
+                <th style="width: 10%">Status</th>
+                <th style="width: 10%">Verified By</th>
             </tr>
         </thead>
         <tbody>
             <?php foreach ($sentRequestData as $i => $header): ?>
                 <tr class="items1">
                     <td style="text-align: center"><?php echo $i + 1; ?></td>
-                    <td class="width1-1">
+                    <td>
                         <?php echo CHtml::link(CHtml::encode($header->sent_request_no), array("/transaction/transactionSentRequest/view", "id"=>$header->id), array("target" => "_blank")); ?>
                     </td>
-                    <td class="width1-2">
-                        <?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($header->sent_request_date))); ?>
+                    <td><?php echo CHtml::encode(CHtml::value($header, 'destinationBranch.name')); ?></td>
+                    <td><?php echo CHtml::encode(CHtml::value($header, 'status_document')); ?></td>
+                    <td>
+                        <?php if ($header->is_verified == 0): ?>
+                            <?php echo CHtml::link('<span class="fa fa-check"></span>Verify', array("/report/dailyTransaction/verifySent", "id" => $header->id), array(
+                                'class' => 'button success center', 
+                                'style' => 'margin-right:10px', 
+                            )); ?>
+                        <?php else: ?>
+                            <?php echo CHtml::encode(CHtml::value($header, 'userIdVerified.username')); ?>
+                        <?php endif; ?>
                     </td>
-                    <td class="width1-3"><?php echo CHtml::encode(CHtml::value($header, 'destinationBranch.name')); ?></td>
-                    <td class="width1-4"><?php echo CHtml::encode(CHtml::value($header, 'status_document')); ?></td>
                 </tr>
-                <?php $i++; ?>
             <?php endforeach; ?>
         </tbody>
     </table>
@@ -36,27 +42,33 @@
     <table class="report">
         <thead>
             <tr id="header1">
-                <th>No.</th>
-                <th class="width1-1">Transaksi #</th>
-                <th class="width1-2">Tanggal</th>
-                <th class="width1-3">Tujuan</th>
-                <th class="width1-4">Status</th>
+                <th style="width: 3%">No.</th>
+                <th style="width: 15%">Transaksi #</th>
+                <th style="width: 20%">Tujuan</th>
+                <th style="width: 10%">Status</th>
+                <th style="width: 10%">Verified By</th>
             </tr>
         </thead>
         <tbody>
             <?php foreach ($transferRequestData as $i => $header): ?>
                 <tr class="items1">
                     <td style="text-align: center"><?php echo $i + 1; ?></td>
-                    <td class="width1-1">
+                    <td>
                         <?php echo CHtml::link(CHtml::encode($header->transfer_request_no), array("/transaction/transactionTransferRequest/view", "id"=>$header->id), array("target" => "_blank")); ?>
                     </td>
-                    <td class="width1-2">
-                        <?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($header->transfer_request_date))); ?>
+                    <td><?php echo CHtml::encode(CHtml::value($header, 'destinationBranch.name')); ?></td>
+                    <td><?php echo CHtml::encode(CHtml::value($header, 'status_document')); ?></td>
+                    <td>
+                        <?php if ($header->is_verified == 0): ?>
+                            <?php echo CHtml::link('<span class="fa fa-check"></span>Verify', array("/report/dailyTransaction/verifyTransfer", "id" => $header->id), array(
+                                'class' => 'button success center', 
+                                'style' => 'margin-right:10px', 
+                            )); ?>
+                        <?php else: ?>
+                            <?php echo CHtml::encode(CHtml::value($header, 'userIdVerified.username')); ?>
+                        <?php endif; ?>
                     </td>
-                    <td class="width1-3"><?php echo CHtml::encode(CHtml::value($header, 'destinationBranch.name')); ?></td>
-                    <td class="width1-4"><?php echo CHtml::encode(CHtml::value($header, 'status_document')); ?></td>
                 </tr>
-                <?php $i++; ?>
             <?php endforeach; ?>
         </tbody>
     </table>
@@ -69,27 +81,24 @@
     <table class="report">
         <thead>
             <tr id="header1">
-                <th>No.</th>
-                <th class="width1-1">Transaksi #</th>
-                <th class="width1-2">Tanggal</th>
-                <th class="width1-3">Tipe</th>
-                <th class="width1-4">Tujuan</th>
-                <th class="width1-5">Reference #</th>
+                <th style="width: 3%">No.</th>
+                <th style="width: 15%">Transaksi #</th>
+                <th style="width: 10%">Tipe</th>
+                <th style="width: 20%">Tujuan</th>
+                <th style="width: 15%">Reference #</th>
+                <th style="width: 10%">Verified By</th>
             </tr>
         </thead>
         <tbody>
             <?php foreach ($deliveryData as $i => $header): ?>
                 <tr class="items1">
                     <td style="text-align: center"><?php echo $i + 1; ?></td>
-                    <td class="width1-1">
+                    <td>
                         <?php echo CHtml::link(CHtml::encode($header->delivery_order_no), array("/transaction/transactionDeliveryOrder/view", "id"=>$header->id), array("target" => "_blank")); ?>
                     </td>
-                    <td class="width1-2">
-                        <?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($header->delivery_date))); ?>
-                    </td>
-                    <td class="width1-3"><?php echo CHtml::encode(CHtml::value($header, 'request_type')); ?></td>
-                    <td class="width1-4"><?php echo CHtml::encode(CHtml::value($header, 'destinationBranch.name')); ?></td>
-                    <td class="width1-5">
+                    <td><?php echo CHtml::encode(CHtml::value($header, 'request_type')); ?></td>
+                    <td><?php echo CHtml::encode(CHtml::value($header, 'destinationBranch.name')); ?></td>
+                    <td>
                         <?php if (!empty($header->sales_order_id)): ?>
                             <?php echo CHtml::encode(CHtml::value($header, 'salesOrder.sale_order_no')); ?>
                         <?php elseif (!empty($header->sent_request_id)): ?>
@@ -102,8 +111,17 @@
                             <?php echo ''; ?>
                         <?php endif; ?>
                     </td>
+                    <td>
+                        <?php if ($header->is_verified == 0): ?>
+                            <?php echo CHtml::link('<span class="fa fa-check"></span>Verify', array("/report/dailyTransaction/verifyDelivery", "id" => $header->id), array(
+                                'class' => 'button success center', 
+                                'style' => 'margin-right:10px', 
+                            )); ?>
+                        <?php else: ?>
+                            <?php echo CHtml::encode(CHtml::value($header, 'userIdVerified.username')); ?>
+                        <?php endif; ?>
+                    </td>
                 </tr>
-                <?php $i++; ?>
             <?php endforeach; ?>
         </tbody>
     </table>
@@ -116,27 +134,24 @@
     <table class="report">
         <thead>
             <tr id="header1">
-                <th>No.</th>
-                <th class="width1-1">Transaksi #</th>
-                <th class="width1-2">Tanggal</th>
-                <th class="width1-3">Tipe</th>
-                <th class="width1-4">Status</th>
-                <th class="width1-5">Reference #</th>
+                <th style="width: 3%">No.</th>
+                <th style="width: 15%">Transaksi #</th>
+                <th style="width: 10%">Tipe</th>
+                <th style="width: 10%">Status</th>
+                <th style="width: 15%">Reference #</th>
+                <th style="width: 10%">Verified By</th>
             </tr>
         </thead>
         <tbody>
             <?php foreach ($movementOutData as $i => $header): ?>
                 <tr class="items1">
                     <td style="text-align: center"><?php echo $i + 1; ?></td>
-                    <td class="width1-1">
+                    <td>
                         <?php echo CHtml::link(CHtml::encode($header->movement_out_no), array("/transaction/movementOut/view", "id"=>$header->id), array("target" => "_blank")); ?>
                     </td>
-                    <td class="width1-2">
-                        <?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($header->date_posting))); ?>
-                    </td>
-                    <td class="width1-3"><?php echo CHtml::encode($header->getMovementType($header->movement_type)); ?></td>
-                    <td class="width1-4"><?php echo CHtml::encode(CHtml::value($header, 'status')); ?></td>
-                    <td class="width1-5">
+                    <td><?php echo CHtml::encode($header->getMovementType($header->movement_type)); ?></td>
+                    <td><?php echo CHtml::encode(CHtml::value($header, 'status')); ?></td>
+                    <td>
                         <?php if (!empty($header->delivery_order_id)): ?>
                             <?php echo CHtml::encode(CHtml::value($header, 'deliveryOrder.delivery_order_no')); ?>
                         <?php elseif (!empty($header->return_order_id)): ?>
@@ -149,8 +164,17 @@
                             <?php echo ''; ?>
                         <?php endif; ?>
                     </td>
+                    <td>
+                        <?php if ($header->is_verified == 0): ?>
+                            <?php echo CHtml::link('<span class="fa fa-check"></span>Verify', array("/report/dailyTransaction/verifyMovementOut", "id" => $header->id), array(
+                                'class' => 'button success center', 
+                                'style' => 'margin-right:10px', 
+                            )); ?>
+                        <?php else: ?>
+                            <?php echo CHtml::encode(CHtml::value($header, 'userIdVerified.username')); ?>
+                        <?php endif; ?>
+                    </td>
                 </tr>
-                <?php $i++; ?>
             <?php endforeach; ?>
         </tbody>
     </table>
@@ -163,29 +187,28 @@
     <table class="report">
         <thead>
             <tr id="header1">
-                <th>No.</th>
-                <th class="width1-1">Transaksi #</th>
-                <th class="width1-2">Tanggal</th>
-                <th class="width1-3">Tipe</th>
-                <th class="width1-4">Supplier</th>
-                <th class="width1-5">Note</th>
-                <th class="width1-6">Reference #</th>
+                <th style="width: 3%">No.</th>
+                <th style="width: 15%">Transaksi #</th>
+                <th style="width: 15%">Tipe</th>
+                <th style="width: 20%">Supplier</th>
+                <th style="width: 10%">ETA</th>
+                <th style="width: 10%">Tujuan</th>
+                <th style="width: 15%">Reference #</th>
+                <th style="width: 10%">Verified By</th>
             </tr>
         </thead>
         <tbody>
             <?php foreach ($receiveItemData as $i => $header): ?>
                 <tr class="items1">
                     <td style="text-align: center"><?php echo $i + 1; ?></td>
-                    <td class="width1-1">
+                    <td>
                         <?php echo CHtml::link(CHtml::encode($header->receive_item_no), array("/transaction/transactionReceiveItem/view", "id"=>$header->id), array("target" => "_blank")); ?>
                     </td>
-                    <td class="width1-2">
-                        <?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($header->receive_item_date))); ?>
-                    </td>
-                    <td class="width1-3"><?php echo CHtml::encode(CHtml::value($header, 'request_type')); ?></td>
-                    <td class="width1-4"><?php echo CHtml::encode(CHtml::value($header, 'supplier.name')); ?></td>
-                    <td class="width1-5"><?php echo CHtml::encode(CHtml::value($header, 'note')); ?></td>
-                    <td class="width1-6">
+                    <td><?php echo CHtml::encode(CHtml::value($header, 'request_type')); ?></td>
+                    <td><?php echo CHtml::encode(CHtml::value($header, 'supplier.name')); ?></td>
+                    <td><?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime(CHtml::value($header, 'estimate_arrival_date')))); ?></td>
+                    <td><?php echo CHtml::encode(CHtml::value($header, 'destinationBranch.name')); ?></td>
+                    <td>
                         <?php if (!empty($header->purchase_order_id)): ?>
                             <?php echo CHtml::encode(CHtml::value($header, 'purchaseOrder.purchase_order_no')); ?>
                         <?php elseif (!empty($header->transfer_request_id)): ?>
@@ -200,8 +223,17 @@
                             <?php echo ''; ?>
                         <?php endif; ?>
                     </td>
+                    <td>
+                        <?php if ($header->is_verified == 0): ?>
+                            <?php echo CHtml::link('<span class="fa fa-check"></span>Verify', array("/report/dailyTransaction/verifyReceive", "id" => $header->id), array(
+                                'class' => 'button success center', 
+                                'style' => 'margin-right:10px', 
+                            )); ?>
+                        <?php else: ?>
+                            <?php echo CHtml::encode(CHtml::value($header, 'userIdVerified.username')); ?>
+                        <?php endif; ?>
+                    </td>
                 </tr>
-                <?php $i++; ?>
             <?php endforeach; ?>
         </tbody>
     </table>
@@ -214,27 +246,24 @@
     <table class="report">
         <thead>
             <tr id="header1">
-                <th>No.</th>
-                <th class="width1-1">Transaksi #</th>
-                <th class="width1-2">Tanggal</th>
-                <th class="width1-3">Tipe</th>
-                <th class="width1-4">Status</th>
-                <th class="width1-5">Reference #</th>
+                <th style="width: 3%">No.</th>
+                <th style="width: 15%">Transaksi #</th>
+                <th style="width: 10%">Tipe</th>
+                <th style="width: 10%">Status</th>
+                <th style="width: 15%">Reference #</th>
+                <th style="width: 10%">Verified By</th>
             </tr>
         </thead>
         <tbody>
             <?php foreach ($movementInData as $i => $header): ?>
                 <tr class="items1">
                     <td style="text-align: center"><?php echo $i + 1; ?></td>
-                    <td class="width1-1">
+                    <td>
                         <?php echo CHtml::link(CHtml::encode($header->movement_in_number), array("/transaction/movementIn/view", "id"=>$header->id), array("target" => "_blank")); ?>
                     </td>
-                    <td class="width1-2">
-                        <?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($header->date_posting))); ?>
-                    </td>
-                    <td class="width1-3"><?php echo CHtml::encode($header->getMovementType($header->movement_type)); ?></td>
-                    <td class="width1-4"><?php echo CHtml::encode(CHtml::value($header, 'status')); ?></td>
-                    <td class="width1-5">
+                    <td><?php echo CHtml::encode($header->getMovementType($header->movement_type)); ?></td>
+                    <td><?php echo CHtml::encode(CHtml::value($header, 'status')); ?></td>
+                    <td>
                         <?php if (!empty($header->return_item_id)): ?>
                             <?php echo CHtml::encode(CHtml::value($header, 'returnItem.return_item_no')); ?>
                         <?php elseif (!empty($header->receive_item_id)): ?>
@@ -243,8 +272,17 @@
                             <?php echo ''; ?>
                         <?php endif; ?>
                     </td>
+                    <td>
+                        <?php if ($header->is_verified == 0): ?>
+                            <?php echo CHtml::link('<span class="fa fa-check"></span>Verify', array("/report/dailyTransaction/verifyMovementIn", "id" => $header->id), array(
+                                'class' => 'button success center', 
+                                'style' => 'margin-right:10px', 
+                            )); ?>
+                        <?php else: ?>
+                            <?php echo CHtml::encode(CHtml::value($header, 'userIdVerified.username')); ?>
+                        <?php endif; ?>
+                    </td>
                 </tr>
-                <?php $i++; ?>
             <?php endforeach; ?>
         </tbody>
     </table>

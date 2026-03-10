@@ -106,6 +106,8 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                 'content' => $this->renderPartial('_summaryCash', array(
                                     'cashTransactionInData' => $cashTransactionInData,
                                     'cashTransactionOutData' => $cashTransactionOutData,
+                                    'branchId' => $branchId,
+                                    'transactionDate' => $transactionDate,
                                 ), true),
                             ),
                             'Gudang' => array(

@@ -102,6 +102,126 @@ class DailyTransactionController extends Controller {
         ));
     }
     
+    public function actionVerifyCashTransaction($id) {
+        $model = CashTransaction::model()->findByPk($id);
+        $model->is_verified = 1; 
+        $model->user_id_verified = Yii::app()->user->id;
+        $model->verified_datetime = date('Y-m-d H:i:s');
+        $model->update(array('is_verified', 'user_id_verified', 'verified_datetime'));
+
+        $this->redirect(array('summary'));
+    }
+
+    public function actionVerifyPurchase($id) {
+        $model = TransactionPurchaseOrder::model()->findByPk($id);
+        $model->is_verified = 1; 
+        $model->user_id_verified = Yii::app()->user->id;
+        $model->verified_datetime = date('Y-m-d H:i:s');
+        $model->update(array('is_verified', 'user_id_verified', 'verified_datetime'));
+
+        $this->redirect(array('summary'));
+    }
+
+    public function actionVerifyPaymentOut($id) {
+        $model = PaymentOut::model()->findByPk($id);
+        $model->is_verified = 1; 
+        $model->user_id_verified = Yii::app()->user->id;
+        $model->verified_datetime = date('Y-m-d H:i:s');
+        $model->update(array('is_verified', 'user_id_verified', 'verified_datetime'));
+
+        $this->redirect(array('summary'));
+    }
+
+    public function actionVerifyRegistration($id) {
+        $model = RegistrationTransaction::model()->findByPk($id);
+        $model->is_verified = 1; 
+        $model->user_id_verified = Yii::app()->user->id;
+        $model->verified_datetime = date('Y-m-d H:i:s');
+        $model->update(array('is_verified', 'user_id_verified', 'verified_datetime'));
+
+        $this->redirect(array('summary'));
+    }
+
+    public function actionVerifyInvoice($id) {
+        $model = InvoiceHeader::model()->findByPk($id);
+        $model->is_verified = 1; 
+        $model->user_id_verified = Yii::app()->user->id;
+        $model->verified_datetime = date('Y-m-d H:i:s');
+        $model->update(array('is_verified', 'user_id_verified', 'verified_datetime'));
+
+        $this->redirect(array('summary'));
+    }
+
+    public function actionVerifyPaymentIn($id) {
+        $model = PaymentIn::model()->findByPk($id);
+        $model->is_verified = 1; 
+        $model->user_id_verified = Yii::app()->user->id;
+        $model->verified_datetime = date('Y-m-d H:i:s');
+        $model->update(array('is_verified', 'user_id_verified', 'verified_datetime'));
+
+        $this->redirect(array('summary'));
+    }
+
+    public function actionVerifySent($id) {
+        $model = TransactionSentRequest::model()->findByPk($id);
+        $model->is_verified = 1; 
+        $model->user_id_verified = Yii::app()->user->id;
+        $model->verified_datetime = date('Y-m-d H:i:s');
+        $model->update(array('is_verified', 'user_id_verified', 'verified_datetime'));
+
+        $this->redirect(array('summary'));
+    }
+
+    public function actionVerifyTransfer($id) {
+        $model = TransactionTransferRequest::model()->findByPk($id);
+        $model->is_verified = 1; 
+        $model->user_id_verified = Yii::app()->user->id;
+        $model->verified_datetime = date('Y-m-d H:i:s');
+        $model->update(array('is_verified', 'user_id_verified', 'verified_datetime'));
+
+        $this->redirect(array('summary'));
+    }
+
+    public function actionVerifyDelivery($id) {
+        $model = TransactionDeliveryOrder::model()->findByPk($id);
+        $model->is_verified = 1; 
+        $model->user_id_verified = Yii::app()->user->id;
+        $model->verified_datetime = date('Y-m-d H:i:s');
+        $model->update(array('is_verified', 'user_id_verified', 'verified_datetime'));
+
+        $this->redirect(array('summary'));
+    }
+
+    public function actionVerifyMovementOut($id) {
+        $model = MovementOutHeader::model()->findByPk($id);
+        $model->is_verified = 1; 
+        $model->user_id_verified = Yii::app()->user->id;
+        $model->verified_datetime = date('Y-m-d H:i:s');
+        $model->update(array('is_verified', 'user_id_verified', 'verified_datetime'));
+
+        $this->redirect(array('summary'));
+    }
+
+    public function actionVerifyReceive($id) {
+        $model = TransactionReceiveItem::model()->findByPk($id);
+        $model->is_verified = 1; 
+        $model->user_id_verified = Yii::app()->user->id;
+        $model->verified_datetime = date('Y-m-d H:i:s');
+        $model->update(array('is_verified', 'user_id_verified', 'verified_datetime'));
+
+        $this->redirect(array('summary'));
+    }
+
+    public function actionVerifyMovementIn($id) {
+        $model = MovementInHeader::model()->findByPk($id);
+        $model->is_verified = 1; 
+        $model->user_id_verified = Yii::app()->user->id;
+        $model->verified_datetime = date('Y-m-d H:i:s');
+        $model->update(array('is_verified', 'user_id_verified', 'verified_datetime'));
+
+        $this->redirect(array('summary'));
+    }
+
     public function getVehicleTabData($transactionDate, $branchId) {
     
         $condition = "substr(t.transaction_date, 1, 10) BETWEEN '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND :transaction_date AND vehicle.status_location = 'Masuk Bengkel'";

@@ -22,6 +22,9 @@
  * @property integer $user_id_cancelled
  * @property string $updated_datetime
  * @property integer $user_id_updated
+ * @property integer $is_verified
+ * @property integer $user_id_verified
+ * @property string $verified_datetime
  *
  * The followings are the available model relations:
  * @property MovementOutApproval[] $movementOutApprovals
@@ -35,6 +38,7 @@
  * @property MaterialRequestHeader $materialRequestHeader
  * @property UserIdCancelled $userIdCancelled
  * @property UserIdUpdated $userIdUpdated
+ * @property UserIdVerified $userIdVerified
  */
 class MovementOutHeader extends MonthlyTransactionActiveRecord {
 
@@ -70,15 +74,15 @@ class MovementOutHeader extends MonthlyTransactionActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('movement_out_no, date_posting, branch_id, movement_type, user_id, status', 'required'),
-            array('delivery_order_id, return_order_id, registration_transaction_id, registration_service_id, branch_id, movement_type, user_id, supervisor_id, material_request_header_id, user_id_cancelled, user_id_updated', 'numerical', 'integerOnly' => true),
+            array('movement_out_no, date_posting, branch_id, movement_type, user_id, status, is_verified', 'required'),
+            array('delivery_order_id, return_order_id, registration_transaction_id, registration_service_id, branch_id, movement_type, user_id, supervisor_id, material_request_header_id, user_id_cancelled, user_id_updated, is_verified, user_id_verified', 'numerical', 'integerOnly' => true),
             array('movement_out_no', 'length', 'max' => 30),
             array('status', 'length', 'max' => 20),
             array('movement_out_no', 'unique'),
-            array('updated_datetime, cancelled_datetime, detailIdsToBeDeleted', 'safe'),
+            array('updated_datetime, cancelled_datetime, detailIdsToBeDeleted, verified_datetime', 'safe'),
             // The following rule is used by search().
             // Please remove those attributes that should not be searched.
-            array('id, movement_out_no, date_posting, created_datetime, delivery_order_id, branch_id, movement_type, user_id, supervisor_id, status, return_order_id,delivery_order_number, return_order_number, registration_transaction_number, registration_transaction_id, branch_name, registration_service_id, material_request_header_id, cancelled_datetime, user_id_cancelled, updated_datetime, user_id_updated', 'safe', 'on' => 'search'),
+            array('id, movement_out_no, date_posting, created_datetime, delivery_order_id, branch_id, movement_type, user_id, supervisor_id, status, return_order_id,delivery_order_number, return_order_number, registration_transaction_number, registration_transaction_id, branch_name, registration_service_id, material_request_header_id, cancelled_datetime, user_id_cancelled, updated_datetime, user_id_updated, is_verified, user_id_verified, verified_datetime', 'safe', 'on' => 'search'),
         );
     }
 
@@ -102,6 +106,7 @@ class MovementOutHeader extends MonthlyTransactionActiveRecord {
             'movementOutShippings' => array(self::HAS_MANY, 'MovementOutShipping', 'movement_out_id'),
             'transactionReceiveItems' => array(self::HAS_MANY, 'TransactionReceiveItem', 'movement_out_id'),
             'materialRequestHeader' => array(self::BELONGS_TO, 'MaterialRequestHeader', 'material_request_header_id'),
+            'userIdVerified' => array(self::BELONGS_TO, 'Users', 'user_id_verified'),
         );
     }
 
