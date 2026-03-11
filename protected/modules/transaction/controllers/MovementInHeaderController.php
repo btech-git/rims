@@ -76,24 +76,15 @@ class MovementInHeaderController extends Controller {
             $journalReferences = array();
         
             foreach ($details as $movementDetail) {
-                $unitPrice = empty($movementDetail->receiveItemDetail->purchaseOrderDetail) ? $movementDetail->product->averageCogs : $movementDetail->receiveItemDetail->purchaseOrderDetail->unit_price;
+                $unitPrice = empty($movementDetail->receiveItemDetail->purchase_order_detail_id) ? $movementDetail->product->averageCogs : $movementDetail->receiveItemDetail->purchaseOrderDetail->unit_price;
                 $jumlah = $movementDetail->quantity * $unitPrice;
 
                 $value = $jumlah;
-//                $coaMasterTransitId = $movementDetail->product->productMasterCategory->coa_inventory_in_transit;
-//                $journalReferences[$coaMasterTransitId]['debet_kredit'] = 'K';
-//                $journalReferences[$coaMasterTransitId]['is_coa_category'] = 1;
-//                $journalReferences[$coaMasterTransitId]['values'][] = $value;
-
+                
                 $coaSubTransitId = $movementDetail->product->productSubMasterCategory->coa_inventory_in_transit;
                 $journalReferences[$coaSubTransitId]['debet_kredit'] = 'K';
                 $journalReferences[$coaSubTransitId]['is_coa_category'] = 0;
                 $journalReferences[$coaSubTransitId]['values'][] = $value;
-
-//                $coaMasterInventoryId = $movementDetail->product->productMasterCategory->coa_persediaan_barang_dagang;
-//                $journalReferences[$coaMasterInventoryId]['debet_kredit'] = 'D';
-//                $journalReferences[$coaMasterInventoryId]['is_coa_category'] = 1;
-//                $journalReferences[$coaMasterInventoryId]['values'][] = $value;
 
                 $coaSubInventoryId = $movementDetail->product->productSubMasterCategory->coa_persediaan_barang_dagang;
                 $journalReferences[$coaSubInventoryId]['debet_kredit'] = 'D';
@@ -264,8 +255,9 @@ class MovementInHeaderController extends Controller {
         $this->loadModel($id)->delete();
 
         // if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
-        if (!isset($_GET['ajax']))
+        if (!isset($_GET['ajax'])) {
             $this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
+        }
     }
 
     /**
@@ -375,8 +367,9 @@ class MovementInHeaderController extends Controller {
     public function loadModel($id) {
         $model = MovementInHeader::model()->findByPk($id);
         
-        if ($model === null)
+        if ($model === null) {
             throw new CHttpException(404, 'The requested page does not exist.');
+        }
         
         return $model;
     }
@@ -393,7 +386,6 @@ class MovementInHeaderController extends Controller {
     }
 
     public function instantiate($id, $actionType) {
-        ;
         if (empty($id)) {
             $movementIn = new MovementIns($actionType, new MovementInHeader(), array());
         } else {
