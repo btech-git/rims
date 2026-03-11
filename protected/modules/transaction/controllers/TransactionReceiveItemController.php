@@ -77,7 +77,7 @@ class TransactionReceiveItemController extends Controller {
                         $journalReferences[$coaId]['remark'] = $model->request_type;
                         $journalReferences[$coaId]['values'][] = $value;
                     } else if ($model->request_type == 'Internal Delivery Order') {
-                        $value = $detail->qty_received * $detail->product->hpp;
+                        $value = $detail->qty_received * $detail->product->averageCogs;
                         $coaIdTransit = $detail->product->productSubMasterCategory->coa_inventory_in_transit;
                         $journalReferences[$coaIdTransit]['debet_kredit'] = 'D';
                         $journalReferences[$coaIdTransit]['is_coa_category'] = 0;
