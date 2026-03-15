@@ -13,8 +13,12 @@ if (count($movementOuts) != 0) {
                 <td><?php echo $movementOut->date_posting; ?></td>
             </tr>
             <tr>
-                <td  width="20%">branch</td>
+                <td  width="20%">Branch</td>
                 <td><?php echo $movementOut->branch->name; ?></td>
+            </tr>
+            <tr>
+                <td  width="20%">Status</td>
+                <td><?php echo $movementOut->status; ?></td>
             </tr>
             <tr>
                 <td colspan="3">
@@ -25,8 +29,6 @@ if (count($movementOuts) != 0) {
                                 <th>Code</th>
                                 <th>Kategori</th>
                                 <th>Brand</th>
-                                <th>Sub Brand</th>
-                                <th>Sub Brand Series</th>
                                 <th>Warehouse</th>
                                 <th>Quantity Transaction</th>
                                 <th>Quantity</th>
@@ -37,10 +39,16 @@ if (count($movementOuts) != 0) {
                                 <tr>
                                     <td><?php echo $detail->product->name; ?></td>
                                     <td><?php echo CHtml::encode(CHtml::value($detail, 'product.manufacturer_code')); ?></td>
-                                    <td><?php echo CHtml::encode(CHtml::value($detail, 'product.masterSubCategoryCode')); ?></td>
-                                    <td><?php echo CHtml::encode(CHtml::value($detail, 'product.brand.name')); ?></td>
-                                    <td><?php echo CHtml::encode(CHtml::value($detail, 'product.subBrand.name')); ?></td>
-                                    <td><?php echo CHtml::encode(CHtml::value($detail, 'product.subBrandSeries.name')); ?></td>
+                                    <td>
+                                        <?php echo CHtml::encode(CHtml::value($detail, 'product.productMasterCategory.name')); ?> - 
+                                        <?php echo CHtml::encode(CHtml::value($detail, 'product.productMasterSubCategory.name')); ?> - 
+                                        <?php echo CHtml::encode(CHtml::value($detail, 'product.productSubCategory.name')); ?>
+                                    </td>
+                                    <td>
+                                        <?php echo CHtml::encode(CHtml::value($detail, 'product.brand.name')); ?> - 
+                                        <?php echo CHtml::encode(CHtml::value($detail, 'product.subBrand.name')); ?> - 
+                                        <?php echo CHtml::encode(CHtml::value($detail, 'product.subBrandSeries.name')); ?>
+                                    </td>
                                     <td><?php echo $detail->warehouse == "" ? "" : $detail->warehouse->name ?></td>
                                     <td><?php echo $detail->quantity_transaction; ?></td>
                                     <td><?php echo $detail->quantity; ?></td>
