@@ -7,6 +7,14 @@ Yii::app()->clientScript->registerScript('report', '
 Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/transaction/report.css');
 ?>
 
+<style> 
+ .table_wrapper{
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+}
+</style>
+
 <div class="tab reportTab">
     <div class="tabBody">
         <div id="detail_div">
@@ -190,7 +198,7 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
 
                 <br />
 
-                <div style="width: 3000px">
+                <div class="table_wrapper">
                     <?php $this->widget('zii.widgets.jui.CJuiTabs', array(
                         'tabs' => $detailTabs,
                         // additional javascript options for the tabs plugin

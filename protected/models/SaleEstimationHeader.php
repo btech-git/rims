@@ -34,6 +34,7 @@
  * @property integer $user_id_created
  * @property integer $user_id_edited
  * @property integer $employee_id_sale_person
+ * @property integer $previous_mileage
  *
  * The followings are the available model relations:
  * @property Customer $customer
@@ -63,7 +64,7 @@ class SaleEstimationHeader extends MonthlyTransactionActiveRecord {
         // will receive user inputs.
         return array(
             array('transaction_number, transaction_date, transaction_time, repair_type, status, created_datetime, branch_id, user_id_created, employee_id_sale_person', 'required'),
-            array('total_quantity_service, total_quantity_product, vehicle_mileage, customer_id, vehicle_id, branch_id, user_id_created, user_id_edited, employee_id_sale_person', 'numerical', 'integerOnly' => true),
+            array('total_quantity_service, total_quantity_product, vehicle_mileage, customer_id, vehicle_id, branch_id, user_id_created, user_id_edited, employee_id_sale_person, previous_mileage', 'numerical', 'integerOnly' => true),
             array('repair_type, status', 'length', 'max' => 20),
             array('transaction_number', 'length', 'max' => 30),
             array('sub_total_service, discount_price_service, total_price_service, sub_total_product, discount_price_product, total_price_product, grand_total, tax_product_amount, tax_service_amount', 'length', 'max' => 18),
@@ -71,7 +72,7 @@ class SaleEstimationHeader extends MonthlyTransactionActiveRecord {
             array('problem, note, edited_datetime', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, transaction_number, transaction_date, transaction_time, repair_type, problem, total_quantity_service, sub_total_service, discount_price_service, total_price_service, total_quantity_product, sub_total_product, discount_price_product, total_price_product, grand_total, status, vehicle_mileage, note, created_datetime, edited_datetime, customer_id, vehicle_id, branch_id, user_id_created, user_id_edited, employee_id_sale_person, tax_product_percentage, tax_service_percentage, tax_product_amount, tax_service_amount', 'safe', 'on' => 'search'),
+            array('id, transaction_number, transaction_date, transaction_time, repair_type, problem, total_quantity_service, sub_total_service, discount_price_service, total_price_service, total_quantity_product, sub_total_product, discount_price_product, total_price_product, grand_total, status, vehicle_mileage, note, created_datetime, edited_datetime, customer_id, vehicle_id, branch_id, user_id_created, user_id_edited, employee_id_sale_person, tax_product_percentage, tax_service_percentage, tax_product_amount, tax_service_amount, previous_mileage', 'safe', 'on' => 'search'),
         );
     }
 

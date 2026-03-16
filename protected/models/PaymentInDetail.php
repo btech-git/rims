@@ -140,10 +140,12 @@ class PaymentInDetail extends CActiveRecord {
     public static function getReceivablePaymentReport($endDate, $invoiceHeaderIds) {
         $invoiceHeaderIdsSql = empty($invoiceHeaderIds) ? 'NULL' : implode(',', $invoiceHeaderIds);
         
-        $sql = "SELECT d.invoice_header_id, COALESCE(SUM(d.amount + d.tax_service_amount + d.discount_amount + d.bank_administration_fee + d.merimen_fee + d.downpayment_amount), 0) AS payment_amount
+        $sql = "SELECT d.invoice_header_id, COALESCE(SUM(d.amount + d.tax_service_amount + d.discount_amount + d.bank_administration_fee + d.merimen_fee + 
+                    d.downpayment_amount), 0) AS payment_amount
                 FROM " . PaymentInDetail::model()->tableName() . " d
                 INNER JOIN " . PaymentIn::model()->tableName() . " h ON h.id = d.payment_in_id
-                WHERE d.invoice_header_id IN ({$invoiceHeaderIdsSql}) AND h.user_id_cancelled IS NULL AND h.payment_date BETWEEN '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND :end_date
+                WHERE d.invoice_header_id IN ({$invoiceHeaderIdsSql}) AND h.user_id_cancelled IS NULL AND
+                    h.payment_date BETWEEN '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND :end_date
                 GROUP BY d.invoice_header_id";
         
         $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, array(

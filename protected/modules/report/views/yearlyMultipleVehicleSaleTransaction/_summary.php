@@ -36,6 +36,7 @@ Yii::app()->clientScript->registerCss('_report', '
                 <th class="width1-7">Total Invoice (Rp)</th>
                 <th class="width1-8">Total Parts (Rp)</th>
                 <th class="width1-9">Total Service (Rp)</th>
+                <th class="width1-10">Date last Invoice</th>
                 <th class="width1-10">Date 1st Invoice</th>
                 <th class="width1-11">Duration from 1st Invoice</th>
             </tr>
@@ -47,16 +48,18 @@ Yii::app()->clientScript->registerCss('_report', '
                     'params' => array(':vehicle_id' => $dataItemCompany['vehicle_id']),
                     'order' => 't.invoice_date ASC',
                 )); ?>
+                <?php $invoiceLatest = InvoiceHeader::model()->find(array(
+                    'condition' => 't.vehicle_id = :vehicle_id AND t.user_id_cancelled IS NULL', 
+                    'params' => array(':vehicle_id' => $dataItemCompany['vehicle_id']),
+                    'order' => 't.invoice_date DESC',
+                )); ?>
                 <tr class="items1">
                     <td style="text-align: center"><?php echo $i + 1; ?></td>
                     <td><?php echo CHtml::encode($dataItemCompany['vehicle_id']); ?></td>
                     <td>
                         <?php echo CHtml::link(CHtml::encode($dataItemCompany['plate_number']), array(
-                            'transactionInfo', 
-                            'vehicleId' => $dataItemCompany['vehicle_id'], 
-                            'branchId' => $branchId,
-                            'startDate' => $startDate, 
-                            'endDate' => $endDate
+                            '/master/vehicle/view', 
+                            'id' => $dataItemCompany['vehicle_id'], 
                         ), array('target' => '_blank')); ?>
                     </td>
                     <td>
@@ -82,6 +85,9 @@ Yii::app()->clientScript->registerCss('_report', '
                     </td>
                     <td style="text-align: right">
                         <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $dataItemCompany['total_service'])); ?>
+                    </td>
+                    <td style="text-align: right">
+                        <?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime(CHtml::value($invoiceLatest, 'invoice_date')))); ?>
                     </td>
                     <td style="text-align: right">
                         <?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime(CHtml::value($invoiceHeader, 'invoice_date')))); ?>

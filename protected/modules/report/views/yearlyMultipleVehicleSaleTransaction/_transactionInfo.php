@@ -2,13 +2,15 @@
 Yii::app()->clientScript->registerCss('_report', '
     .width1-1 { width: 3% }
     .width1-2 { width: 5% }
-    .width1-3 { width: 10% }
-    .width1-4 { width: 10% }
-    .width1-5 { width: 15% }
-    .width1-6 { width: 15% }
+    .width1-3 { width: 7% }
+    .width1-4 { width: 8% }
+    .width1-5 { width: 8% }
+    .width1-6 { width: 10% }
     .width1-7 { width: 10% }
     .width1-8 { width: 10% }
-    .width1-9 { width: 10% }
+    .width1-9 { width: 8% }
+    .width1-10 { width: 8% }
+    .width1-11 { width: 8% }
 ');
 ?>
 
@@ -34,14 +36,15 @@ Yii::app()->clientScript->registerCss('_report', '
         <tr id="header1">
             <th class="width1-1">No</th>
             <th class="width1-2">KM</th>
-            <th class="width1-3">WO #</th>
-            <th class="width1-4">Invoice #</th>
-            <th class="width1-5">Asuransi</th>
-            <th class="width1-5">Salesman</th>
-            <th class="width1-6">Mechanic</th>
-            <th class="width1-7">Total Invoice</th>
-            <th class="width1-8">Total Jasa</th>
-            <th class="width1-9">Total Parts</th>
+            <th class="width1-3">Tanggal</th>
+            <th class="width1-4">WO #</th>
+            <th class="width1-5">Invoice #</th>
+            <th class="width1-6">Asuransi</th>
+            <th class="width1-7">Salesman</th>
+            <th class="width1-8">Mechanic</th>
+            <th class="width1-9">Invoice (Rp)</th>
+            <th class="width1-10">Jasa (Rp)</th>
+            <th class="width1-11">Parts (Rp)</th>
         </tr>
     </thead>
     <tbody>
@@ -57,6 +60,7 @@ Yii::app()->clientScript->registerCss('_report', '
                 <td style="text-align: right">
                     <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($header, 'registrationTransaction.vehicle_mileage'))); ?>
                 </td>
+                <td><?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($header->invoice_date))); ?></td>
                 <td>
                     <?php echo CHtml::link(CHtml::value($header, 'registrationTransaction.work_order_number'), array(
                         '/frontDesk/registrationTransaction/view',

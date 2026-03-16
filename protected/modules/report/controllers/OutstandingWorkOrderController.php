@@ -120,19 +120,17 @@ class OutstandingWorkOrderController extends Controller {
         $worksheet->mergeCells('A2:L2');
         $worksheet->mergeCells('A3:L3');
         
-        $worksheet->getStyle('A1:L3')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-        $worksheet->getStyle('A1:L3')->getFont()->setBold(true);
+        $worksheet->getStyle('A1:L5')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->getStyle('A1:L5')->getFont()->setBold(true);
         
         $branch = Branch::model()->findByPk($branchId);
         $worksheet->setCellValue('A1', 'Raperind Motor ' . CHtml::encode(CHtml::value($branch, 'name')));
         $worksheet->setCellValue('A2', 'Outstanding Work Order');
         $worksheet->setCellValue('A3', $startDateFormatted . ' - ' . $endDateFormatted);
 
-        $worksheet->getStyle('A5:L5')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
         $worksheet->getStyle("A5:L5")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
         $worksheet->getStyle("A5:L5")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
-        $worksheet->getStyle('A5:L5')->getFont()->setBold(true);
         $worksheet->setCellValue('A5', 'No');
         $worksheet->setCellValue('B5', 'Work Order #');
         $worksheet->setCellValue('C5', 'RG #');
@@ -155,7 +153,7 @@ class OutstandingWorkOrderController extends Controller {
             $worksheet->setCellValue("B{$counter}", CHtml::value($header, 'work_order_number'));
             $worksheet->setCellValue("C{$counter}", CHtml::value($header, 'transaction_number'));
             $worksheet->setCellValue("D{$counter}", CHtml::value($header, 'work_order_date'));
-            $worksheet->setCellValue("E{$counter}", CHtml::encode(CHtml::value($header, 'customer.name')));
+            $worksheet->setCellValue("E{$counter}", CHtml::value($header, 'customer.name'));
             $worksheet->setCellValue("F{$counter}", CHtml::value($header, 'vehicle.carMake.name') . ' - ' . CHtml::value($header, 'vehicle.carModel.name') . ' - ' . CHtml::value($header, 'vehicle.carSubModel.name'));
             $worksheet->setCellValue("G{$counter}", CHtml::value($header, 'vehicle.plate_number'));
             $worksheet->setCellValue("H{$counter}", CHtml::value($header, 'status'));

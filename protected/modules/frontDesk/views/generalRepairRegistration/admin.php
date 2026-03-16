@@ -137,7 +137,7 @@ Yii::app()->clientScript->registerScript('search', "
             ),
             array(
                 'class' => 'CButtonColumn',
-                'template' => '{views} {finish}',
+                'template' => '{views} {rework}',
                 'buttons' => array(
                     'views' => array(
                         'label' => 'view',
@@ -149,13 +149,13 @@ Yii::app()->clientScript->registerScript('search', "
 //                        'url' => 'Yii::app()->createUrl("frontDesk/generalRepairRegistration/update", array("id"=>$data->id))',
 //                        'visible' => 'Yii::app()->user->checkAccess("generalRepairEdit")', //' && $data->status != "Finished" && empty($data->invoiceHeaders)',
 //                    ),
-                    'finish' => array(
-                        'label' => 'finish',
-                        'url' => 'Yii::app()->createUrl("frontDesk/generalRepairRegistration/finishTransaction", array("id"=>$data->id))',
-                        'visible' => '$data->status != "Finished" && Yii::app()->user->checkAccess("generalRepairEdit")',
-                        'options' => array(
-                            'confirm' => 'Are you sure to finish this transaction?',
-                        ),
+                    'rework' => array(
+                        'label' => 'rework',
+                        'url' => 'Yii::app()->createUrl("frontDesk/generalRepairRegistration/reworkTransaction", array("id"=>$data->id))',
+                        'visible' => '$data->status == "Finished" && Yii::app()->user->checkAccess("generalRepairEdit")',
+//                        'options' => array(
+//                            'confirm' => 'Are you sure to finish this transaction?',
+//                        ),
                     ),
                 ),
             ),

@@ -21,7 +21,7 @@ $this->breadcrumbs=array(
 <hr />
 
 <div id="maincontent">
-    <?php echo $this->renderPartial('_list', array(
+    <?php /*echo $this->renderPartial('_list', array(
         'saleEstimation' => $saleEstimation,
         'product' => $product, 
         'productDataProvider' => $productDataProvider, 
@@ -30,15 +30,19 @@ $this->breadcrumbs=array(
         'branches' => $branches,
         'endDate' => $endDate,
         'isSubmitted' => $isSubmitted,
-    )); ?>
+    ));*/ ?>
     
     <?php echo $this->renderPartial('_form', array(
         'saleEstimation' => $saleEstimation,
         'customerName' => $customerName,
         'branches' => $branches,
+        'branch' => $branch,
         'isSubmitted' => $isSubmitted,
         'vehicleData' => $vehicleData,
         'vehicleDataProvider' => $vehicleDataProvider,
-        'branch' => $branch,
+        'product' => $product, 
+        'productDataProvider' => $productDataProvider, 
+        'service' => $service,
+        'serviceDataProvider' => $serviceDataProvider,
     )); ?>
 </div>

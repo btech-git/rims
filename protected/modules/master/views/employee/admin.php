@@ -108,7 +108,11 @@ $('.search-form form').submit(function(){
                         'name' => 'level_id', 
                         'value' => 'CHtml::encode(CHtml::value($data, "level.name"))',
                     ),
-                    'status',
+                    array(
+                        'name' => 'status', 
+                        'filter' => CHtml::activeDropDownList($model, 'status', array('Active' => 'Active', 'Inactive' => 'Inactive'), array('empty' => '-- All --')),
+                        'value' => 'CHtml::encode(CHtml::value($data, "status"))',
+                    ),
                     array('header'=>'username', 'value'=>'CHtml::encode(CHtml::value($data, "username"))'),
                     array(
                         'class' => 'CButtonColumn',

@@ -158,12 +158,20 @@ $('.search-form form').submit(function(){
             ),
             array(
                 'class' => 'CButtonColumn',
-                'template' => '{views}',
+                'template' => '{views} {rework}',
                 'buttons' => array(
                     'views' => array(
                         'label' => 'view',
                         'url' => 'Yii::app()->createUrl("frontDesk/bodyRepairRegistration/view", array("id"=>$data->id))',
                         'visible' => 'Yii::app()->user->checkAccess("bodyRepairCreate") || Yii::app()->user->checkAccess("bodyRepairEdit") || Yii::app()->user->checkAccess("bodyRepairView")',
+                    ),
+                    'rework' => array(
+                        'label' => 'rework',
+                        'url' => 'Yii::app()->createUrl("frontDesk/generalRepairRegistration/reworkTransaction", array("id"=>$data->id))',
+                        'visible' => '$data->status == "Finished" && Yii::app()->user->checkAccess("generalRepairEdit")',
+//                        'options' => array(
+//                            'confirm' => 'Are you sure to finish this transaction?',
+//                        ),
                     ),
                 ),
             ),

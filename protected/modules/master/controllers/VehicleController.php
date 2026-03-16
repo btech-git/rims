@@ -64,8 +64,6 @@ class VehicleController extends Controller {
             $picDetails = "";
         }
         
-//        $registrationTransactions = RegistrationTransaction::model()->findAllByAttributes(array('vehicle_id' => $id));
-
         $registrationTransaction = new RegistrationTransaction('search');
         $registrationTransaction->unsetAttributes();
         
@@ -95,7 +93,37 @@ class VehicleController extends Controller {
                 'defaultOrder' => 't.transaction_date DESC',
             ),
             'pagination' => array(
-                'pageSize' => 30,
+                'pageSize' => 50,
+            )
+        ));
+        
+        $registrationService = new RegistrationService('search');
+        $registrationService->unsetAttributes();
+        
+        if (isset($_GET['RegistrationService'])) {
+            $registrationService->attributes = $_GET['RegistrationService'];
+        }
+
+        $registrationServiceCriteria = new CDbCriteria;
+        $registrationServiceCriteria->compare('id', $registrationService->id);
+        $registrationServiceCriteria->compare('registration_transaction_id', $registrationService->registration_transaction_id);
+        $registrationServiceCriteria->compare('service_id', $registrationService->service_id);
+        $registrationServiceCriteria->compare('service_type_id', $registrationService->service_type_id);
+        $registrationServiceCriteria->compare('price', $registrationService->price, true);
+        $registrationServiceCriteria->compare('total_price', $registrationService->total_price, true);
+        $registrationServiceCriteria->compare('discount_price', $registrationService->discount_price, true);
+        $registrationServiceCriteria->compare('discount_type', $registrationService->discount_type, true);
+
+        $registrationServiceCriteria->together = true;
+        $registrationServiceCriteria->with = array('registrationTransaction');
+        $registrationServiceCriteria->compare('registrationTransaction.vehicle_id', $id);
+        $registrationServiceDataProvider = new CActiveDataProvider('RegistrationService', array(
+            'criteria' => $registrationServiceCriteria,
+            'sort' => array(
+                'defaultOrder' => 't.id DESC',
+            ),
+            'pagination' => array(
+                'pageSize' => 50,
             )
         ));
         
@@ -105,6 +133,8 @@ class VehicleController extends Controller {
             'picDetails' => $picDetails,
             'registrationTransaction' => $registrationTransaction,
             'registrationTransactionDataProvider' => $registrationTransactionDataProvider,
+            'registrationService' => $registrationService,
+            'registrationServiceDataProvider' => $registrationServiceDataProvider,
         ));
     }
 

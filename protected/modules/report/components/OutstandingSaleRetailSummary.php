@@ -1,6 +1,6 @@
 <?php
 
-class OutstandingRegistrationTransactionSummary extends CComponent {
+class OutstandingSaleRetailSummary extends CComponent {
 
     public $dataProvider;
 
@@ -61,8 +61,11 @@ class OutstandingRegistrationTransactionSummary extends CComponent {
             'vehicle',
         );
         
-        $this->dataProvider->criteria->addCondition("substr(t.transaction_date, 1, 10) BETWEEN :start_date AND :end_date AND t.sales_order_number IS NULL AND
-                t.work_order_number IS NULL AND t.user_id_cancelled IS NULL AND t.status NOT IN ('Finished')" . 
+        $this->dataProvider->criteria->addCondition("NOT EXISTS (
+            SELECT registration_transaction_id 
+            FROM " . InvoiceHeader::model()->tableName() . " 
+            WHERE registration_transaction_id = t.id AND user_id_cancelled IS NULL
+        ) AND substr(t.transaction_date, 1, 10) BETWEEN :start_date AND :end_date AND t.status NOT IN ('Finished') AND user_id_cancelled IS NULL" . 
         $branchConditionSql . $customerConditionSql . $plateNumberConditionSql);
         $this->dataProvider->criteria->params[':start_date'] = $startDate;
         $this->dataProvider->criteria->params[':end_date'] = $endDate;

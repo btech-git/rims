@@ -179,8 +179,14 @@ class MaterialRequest extends CComponent {
         $this->header->total_quantity_remaining = $this->header->total_quantity - $this->header->total_quantity_movement_out;
         $valid = $this->header->save(false);
 
+        $detailIdsToBeDeleted = explode(',', trim($this->header->detailIdsToBeDeleted, ','));
+        if (!empty($detailIdsToBeDeleted)) {
+            $criteria = new CDbCriteria;
+            $criteria->addInCondition('id', $detailIdsToBeDeleted);
+            MaterialRequestDetail::model()->deleteAll($criteria);
+        }
+
         foreach ($this->details as $detail) {
-            
             if ($detail->quantity < 0) {
                 continue;
             }
@@ -189,13 +195,6 @@ class MaterialRequest extends CComponent {
             $detail->quantity_remaining = $detail->quantity - $detail->quantity_movement_out;
             $detail->material_request_header_id = $this->header->id;
             $valid = $valid && $detail->save(false);
-        }
-
-        $detailIdsToBeDeleted = explode(',', trim($this->header->detailIdsToBeDeleted, ','));
-        if (!empty($detailIdsToBeDeleted)) {
-            $criteria = new CDbCriteria;
-            $criteria->addInCondition('id', $detailIdsToBeDeleted);
-            MaterialRequestDetail::model()->deleteAll($criteria);
         }
 
         return $valid;

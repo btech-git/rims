@@ -38,7 +38,13 @@ $this->breadcrumbs = array(
                             'visible' => Yii::app()->user->checkAccess("bodyRepairCreate") || Yii::app()->user->checkAccess("bodyRepairEdit")
                         )); ?>
                     <?php endif; ?>
-                    <?php if ($model->status !== 'Finished'): ?>
+                    <?php if ($model->status !== 'Finished' && $model->status !== 'CANCELLED!!!'): ?>
+                        <?php echo CHtml::link('+ KM Kendaraan', array("/frontDesk/bodyRepairRegistration/updateMileage", "id" => $model->id), array(
+                            'class' => 'button success left', 
+                            'style' => 'margin-right:10px',
+                            'visible' => Yii::app()->user->checkAccess("bodyRepairCreate") || Yii::app()->user->checkAccess("bodyRepairEdit")
+                        )); ?>
+                    
                         <?php echo CHtml::link('<span class="fa fa-print"></span> Estimasi', array("pdf", "id" => $model->id), array(
                             'class'=>'button info right', 
                             'style' => 'margin-right:10px', 
@@ -143,8 +149,8 @@ $this->breadcrumbs = array(
                     
                     <?php if (Yii::app()->user->checkAccess("bodyRepairSupervisor")): ?>
                         <?php echo CHtml::link('<span class="fa fa-minus"></span>Cancel Transaction', array("/frontDesk/bodyRepairRegistration/cancel", "id" => $model->id), array(
-                            'class' => 'button alert left', 
-                            'style' => 'margin-left:10px',
+                            'class' => 'button alert right', 
+                            'style' => 'margin-right:10px',
                             'visible' => Yii::app()->user->checkAccess("bodyRepairCreate") || Yii::app()->user->checkAccess("bodyRepairEdit")
                         )); ?>
                     <?php endif; ?>

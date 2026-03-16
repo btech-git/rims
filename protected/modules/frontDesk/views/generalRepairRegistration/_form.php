@@ -1,7 +1,7 @@
 <div id="maincontent">
     <div class="clearfix page-action">
-        <a class="button cbutton right" href="<?php echo Yii::app()->baseUrl.'/frontDesk/generalRepairRegistration/admin';?>"><span class="fa fa-th-list"></span>Manage General Repair Registration</a>
-        <h1><?php if($generalRepairRegistration->header->isNewRecord){ echo "New General Repair Registration"; }else{ echo "Update General Repair Registration";}?></h1>
+        <a class="button cbutton right" href="<?php echo Yii::app()->baseUrl.'/frontDesk/generalRepairRegistration/admin';?>"><span class="fa fa-th-list"></span>Manage</a>
+        <h1><?php if ($generalRepairRegistration->header->isNewRecord){ echo "New"; }else{ echo "Update";}?></h1>
         <div class="form">
             <?php $form=$this->beginWidget('CActiveForm', array(
                 'id'=>'registration-transaction-form',
@@ -20,13 +20,6 @@
                     <div class="row">
                         <?php $this->widget('zii.widgets.jui.CJuiTabs', array(
                             'tabs' => array(
-                                'Customer Info' => array(
-                                    'id' => 'info1',
-                                    'content' => $this->renderPartial('_infoCustomer', array(
-                                        'generalRepairRegistration' => $generalRepairRegistration, 
-                                        'customer' => $customer,
-                                    ), true)
-                                ),
                                 'Vehicle Info' => array(
                                     'id' => 'info2',
                                     'content' => $this->renderPartial('_infoVehicle', array(
@@ -132,6 +125,36 @@
                                     <div class="field">
                                         <div class="row collapse">
                                             <div class="small-4 columns">
+                                                <label class="prefix"><?php echo $form->labelEx($generalRepairRegistration->header,'user_id'); ?></label>
+                                            </div>
+                                            <div class="small-8 columns">
+                                                <?php echo $form->hiddenField($generalRepairRegistration->header,'user_id'); ?>
+                                                <?php echo $form->textField($generalRepairRegistration->header, 'user_name', array('value'=>$generalRepairRegistration->header->user->username, 'readonly'=>true)); ?>
+                                                <?php echo $form->error($generalRepairRegistration->header,'user_id'); ?>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="field">
+                                        <div class="row collapse">
+                                            <div class="small-4 columns">
+                                                <label class="prefix"><?php echo $form->labelEx($generalRepairRegistration->header,'employee_id_sales_person'); ?></label>
+                                            </div>
+                                            <div class="small-8 columns">
+                                                <?php echo CHtml::activeDropDownlist($generalRepairRegistration->header, 'employee_id_sales_person', CHtml::listData(Employee::model()->findAllByAttributes(array(
+                                                    "position_id" => 2,
+                                                    'status' => 'Active',
+                                                )), "id", "name"), array("empty" => "--Assign Sales Person--")); ?>
+                                                <?php echo $form->error($generalRepairRegistration->header,'employee_id_sales_person'); ?>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div> 
+                                <!-- END COLUMN 6-->
+                                <div class="medium-6 columns">
+                                    <div class="field">
+                                        <div class="row collapse">
+                                            <div class="small-4 columns">
                                                 <label class="prefix"><?php echo $form->labelEx($generalRepairRegistration->header,'employee_id_assign_mechanic'); ?></label>
                                             </div>
                                             <div class="small-8 columns">
@@ -189,69 +212,6 @@
                                         </div>
                                     </div>
                                     
-                                    <div class="field">
-                                        <div class="row collapse">
-                                            <div class="small-4 columns">
-                                                <label class="prefix"><?php echo $form->labelEx($generalRepairRegistration->header,'employee_id_sales_person'); ?></label>
-                                            </div>
-                                            <div class="small-8 columns">
-                                                <?php echo CHtml::activeDropDownlist($generalRepairRegistration->header, 'employee_id_sales_person', CHtml::listData(Employee::model()->findAllByAttributes(array(
-                                                    "position_id" => 2,
-                                                    'status' => 'Active',
-                                                )), "id", "name"), array("empty" => "--Assign Sales Person--")); ?>
-                                                <?php echo $form->error($generalRepairRegistration->header,'employee_id_sales_person'); ?>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div> 
-                                <!-- END COLUMN 6-->
-                                <div class="medium-6 columns">
-                                    <div class="field">
-                                        <div class="row collapse">
-                                            <div class="small-4 columns">
-                                                <label class="prefix"><?php echo $form->labelEx($generalRepairRegistration->header,'user_id'); ?></label>
-                                            </div>
-                                            <div class="small-8 columns">
-                                                <?php echo $form->hiddenField($generalRepairRegistration->header,'user_id'); ?>
-                                                <?php echo $form->textField($generalRepairRegistration->header, 'user_name', array('value'=>$generalRepairRegistration->header->user->username, 'readonly'=>true)); ?>
-                                                <?php echo $form->error($generalRepairRegistration->header,'user_id'); ?>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="field">
-                                        <div class="row collapse">
-                                            <div class="small-4 columns">
-                                                <label class="prefix">KM Sebelum</label>
-                                            </div>
-                                            <div class="small-8 columns">
-                                                <?php echo $form->textField($generalRepairRegistration->header, 'previous_mileage'); ?>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="field">
-                                        <div class="row collapse">
-                                            <div class="small-4 columns">
-                                                <label class="prefix">KM Sekarang</label>
-                                            </div>
-                                            <div class="small-8 columns">
-                                                <?php echo $form->textField($generalRepairRegistration->header, 'vehicle_mileage'); ?>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="field">
-                                        <div class="row collapse">
-                                            <div class="small-4 columns">
-                                                <label class="prefix">KM Rekomendasi Service Selanjutnya</label>
-                                            </div>
-                                            <div class="small-8 columns">
-                                                <?php echo $form->textField($generalRepairRegistration->header, 'next_mileage'); ?>
-                                            </div>
-                                        </div>
-                                    </div>
-
                                     <?php if ($customer->customer_type === 'Company'): ?>
                                         <div class="field">
                                             <div class="row collapse">
@@ -265,6 +225,7 @@
                                             </div>
                                         </div>
                                     <?php endif; ?>
+                                    
                                     <div class="field">
                                         <div class="row collapse">
                                             <div class="small-4 columns">

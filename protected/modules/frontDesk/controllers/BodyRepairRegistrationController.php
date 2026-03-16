@@ -56,7 +56,6 @@ class BodyRepairRegistrationController extends Controller {
         $bodyRepairRegistration = $this->instantiate(null, 'create');
         $vehicle = Vehicle::model()->findByPk($vehicleId);
         $customer = Customer::model()->findByPk($vehicle->customer_id);
-        $lastRegistration = RegistrationTransaction::model()->findByAttributes(array('vehicle_id' => $vehicleId), array('order' => 't.id DESC'));
 
         $bodyRepairRegistration->header->work_order_time = date('H:i:s');
         $bodyRepairRegistration->header->created_datetime = date('Y-m-d H:i:s');
@@ -68,7 +67,6 @@ class BodyRepairRegistrationController extends Controller {
         $bodyRepairRegistration->header->vehicle_exit_datetime = null;
         $bodyRepairRegistration->header->vehicle_start_service_datetime = null;
         $bodyRepairRegistration->header->vehicle_finish_service_datetime = null;
-        $bodyRepairRegistration->header->previous_mileage = empty($lastRegistration) ? 0 : $lastRegistration->vehicle_mileage;
         $bodyRepairDate = isset($_POST['BodyRepairDate']) ? $_POST['BodyRepairDate'] : date('Y-m-d');
         $bodyRepairHour = isset($_POST['BodyRepairHour']) ? $_POST['BodyRepairHour'] : date('H');
         $bodyRepairMinute = isset($_POST['BodyRepairMinute']) ? $_POST['BodyRepairMinute'] : date('i');
@@ -292,6 +290,7 @@ class BodyRepairRegistrationController extends Controller {
             $bodyRepairRegistration->generateCodeNumberDownpayment(Yii::app()->dateFormatter->format('M', strtotime($bodyRepairRegistration->header->downpayment_transaction_date)), Yii::app()->dateFormatter->format('yyyy', strtotime($bodyRepairRegistration->header->downpayment_transaction_date)), $bodyRepairRegistration->header->branch_id);
 
             if ($bodyRepairRegistration->save(Yii::app()->db)) {
+                $this->saveTransactionLog('addDownpayment', $bodyRepairRegistration->header);
                 $this->redirect(array('view', 'id' => $bodyRepairRegistration->header->id));
             }
         }
@@ -369,19 +368,6 @@ class BodyRepairRegistrationController extends Controller {
         if (isset($_POST['Vehicle'])) {
             $vehicle->attributes = $_POST['Vehicle'];
 
-//            if ($vehicle->status_location == 'Masuk Bengkel') {
-//                $vehicle->entry_datetime = date('Y-m-d H:i:s');
-//                $registrationTransaction->vehicle_entry_datetime = date('Y-m-d H:i:s');
-//            } elseif ($vehicle->status_location == 'Mulai Service') {
-//                $vehicle->start_service_datetime = date('Y-m-d H:i:s');
-//                $registrationTransaction->vehicle_start_service_datetime = date('Y-m-d H:i:s');
-//            } elseif ($vehicle->status_location == 'Selesai Service') {
-//                $vehicle->finish_service_datetime = date('Y-m-d H:i:s');
-//                $registrationTransaction->vehicle_finish_service_datetime = date('Y-m-d H:i:s');
-//            } elseif ($vehicle->status_location == 'Keluar Bengkel') {
-//                $vehicle->exit_datetime = date('Y-m-d H:i:s');
-//                $registrationTransaction->vehicle_exit_datetime = date('Y-m-d H:i:s');
-//            } else {
             $vehicle->entry_datetime = null;
             $vehicle->start_service_datetime = null;
             $vehicle->finish_service_datetime = null;
@@ -390,7 +376,6 @@ class BodyRepairRegistrationController extends Controller {
             $registrationTransaction->vehicle_start_service_datetime = null;
             $registrationTransaction->vehicle_finish_service_datetime = null;
             $registrationTransaction->vehicle_exit_datetime = null;
-//            }
 
             if ($vehicle->save()) {
                 $this->redirect(array('view', 'id' => $id));
@@ -398,6 +383,29 @@ class BodyRepairRegistrationController extends Controller {
         }
 
         $this->render('updateLocation', array(
+            'vehicle' => $vehicle,
+        ));
+    }
+
+    public function actionUpdateMileage($id) {
+        $registrationTransaction = RegistrationTransaction::model()->findByPk($id);
+        $customer = Customer::model()->findByPk($registrationTransaction->customer_id);
+        $vehicle = Vehicle::model()->findByPk($registrationTransaction->vehicle_id);
+        $lastRegistration = RegistrationTransaction::model()->findByAttributes(array('vehicle_id' => $vehicle->id), array('order' => 't.id DESC'));
+
+        $registrationTransaction->previous_mileage = empty($lastRegistration) ? 0 : $lastRegistration->vehicle_mileage;
+        
+        if (isset($_POST['RegistrationTransaction'])) {
+            $registrationTransaction->attributes = $_POST['RegistrationTransaction'];
+            
+            if ($registrationTransaction->save()) {
+                $this->redirect(array('view', 'id' => $id));
+            }
+        }
+
+        $this->render('updateMileage', array(
+            'registrationTransaction' => $registrationTransaction,
+            'customer' => $customer,
             'vehicle' => $vehicle,
         ));
     }
@@ -471,6 +479,39 @@ class BodyRepairRegistrationController extends Controller {
         ));
     }
 
+    public function actionReworkTransaction($id) {
+        $bodyRepairRegistration = $this->instantiate($id, 'reworkTransaction');
+        
+        $bodyRepairRegistration->header->rework_transaction_date = date('Y-m-d');
+        $bodyRepairRegistration->header->rework_transaction_time = date('H:i:s');
+        $bodyRepairRegistration->header->user_id_rework = Yii::app()->user->id;
+
+        $products = RegistrationProduct::model()->findAll(array(
+            'condition' => 'registration_transaction_id = :registration_transaction_id AND sale_package_detail_id IS NULL', 
+            'params' => array(':registration_transaction_id' => $id)
+        ));
+        $services = RegistrationService::model()->findAllByAttributes(array(
+            'registration_transaction_id' => $id,
+            'is_body_repair' => 0
+        ));
+        
+        if (isset($_POST['Submit']) && IdempotentManager::check()) {
+            $this->loadState($bodyRepairRegistration);
+            $bodyRepairRegistration->generateCodeNumberReworkTransaction(Yii::app()->dateFormatter->format('M', strtotime($bodyRepairRegistration->header->rework_transaction_date)), Yii::app()->dateFormatter->format('yyyy', strtotime($bodyRepairRegistration->header->rework_transaction_date)), $bodyRepairRegistration->header->branch_id);
+
+            if ($bodyRepairRegistration->save(Yii::app()->db)) {
+                $this->saveTransactionLog('reworkTransaction', $bodyRepairRegistration->header);
+                $this->redirect(array('view', 'id' => $bodyRepairRegistration->header->id));
+            }
+        }
+
+        $this->render('reworkTransaction', array(
+            'bodyRepairRegistration' => $bodyRepairRegistration,
+            'services' => $services,
+            'products' => $products,
+        ));
+    }
+    
     public function actionGenerateSalesOrder($id) {
         $model = $this->instantiate($id, 'createSaleOrder');
 

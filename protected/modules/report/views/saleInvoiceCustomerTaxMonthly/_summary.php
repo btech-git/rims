@@ -82,7 +82,7 @@
     </tbody>
     <tfoot>
         <tr>
-            <td style="text-align: right" colspan="6">TOTAL</td>
+            <td style="text-align: right" colspan="7">TOTAL</td>
             <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $sumSubTotal)); ?></td>
             <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $sumTotalTax)); ?></td>
             <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $sumTotalTaxIncome)); ?></td>

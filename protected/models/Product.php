@@ -48,6 +48,7 @@
  * @property integer $user_id_reject
  * @property integer $tire_size_id
  * @property integer $oil_sae_id
+ * @property string $note
  *
  * The followings are the available model relations:
  * @property ConsignmentInDetail[] $consignmentInDetails
@@ -135,10 +136,10 @@ class Product extends CActiveRecord {
             array('name', 'length', 'max' => 30),
             array('purchase_price, recommended_selling_price, hpp, retail_price, status, minimum_selling_price, unit_conversion_multiplier', 'length', 'max' => 10),
             array('is_usable', 'length', 'max' => 5),
-            array('date_posting, date_approval, date_edit, time_approval, date_reject, time_reject', 'safe'),
+            array('date_posting, date_approval, date_edit, time_approval, date_reject, time_reject, note', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, code, manufacturer_code, barcode, name, user_id_edit, date_edit, description, production_year, brand_id, sub_brand_id, sub_brand_series_id, extension, product_master_category_id, product_sub_master_category_id, product_sub_category_id, vehicle_car_make_id, vehicle_car_model_id, purchase_price, recommended_selling_price, hpp, retail_price, stock, minimum_selling_price, minimum_stock, margin_type, margin_amount, is_usable, status, product_master_category_code, product_master_category_name, product_sub_master_category_code, product_sub_master_category_name, product_sub_category_code, product_sub_category_name,product_brand_name,product_supplier,findkeyword, ppn, product_sub_brand_name, product_sub_brand_series_name, unit_id, date_posting, user_id, is_approved, user_id_approval, date_approval, user_id, unit_conversion_multiplier, unit_id_conversion, user_id_reject, is_rejected, time_approval, date_reject, time_reject, tire_size_id, oil_sae_id', 'safe', 'on' => 'search'),
+            array('id, code, manufacturer_code, barcode, name, user_id_edit, date_edit, description, production_year, brand_id, sub_brand_id, sub_brand_series_id, extension, product_master_category_id, product_sub_master_category_id, product_sub_category_id, vehicle_car_make_id, vehicle_car_model_id, purchase_price, recommended_selling_price, hpp, retail_price, stock, minimum_selling_price, minimum_stock, margin_type, margin_amount, is_usable, status, product_master_category_code, product_master_category_name, product_sub_master_category_code, product_sub_master_category_name, product_sub_category_code, product_sub_category_name,product_brand_name,product_supplier,findkeyword, ppn, product_sub_brand_name, product_sub_brand_series_name, unit_id, date_posting, user_id, is_approved, user_id_approval, date_approval, user_id, unit_conversion_multiplier, unit_id_conversion, user_id_reject, is_rejected, time_approval, date_reject, time_reject, tire_size_id, oil_sae_id, note', 'safe', 'on' => 'search'),
         );
     }
 

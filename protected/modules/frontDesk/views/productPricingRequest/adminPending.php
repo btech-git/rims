@@ -61,7 +61,7 @@ Yii::app()->clientScript->registerScript('search', "
                 'production_year',
                 array(
                     'name' => 'request_date',
-                    'value' => '$data->request_date',
+                    'value' => '$data->requestDateTime',
                 ),
                 array(
                     'header' => 'User Request',
@@ -79,7 +79,7 @@ Yii::app()->clientScript->registerScript('search', "
                 ),
                 array(
                     'name' => 'reply_date',
-                    'value' => '$data->reply_date',
+                    'value' => '$data->replyDateTime',
                 ),
                 array(
                     'header' => 'User Reply',

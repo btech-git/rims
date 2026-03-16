@@ -269,7 +269,7 @@ class Employee extends CActiveRecord {
         $criteria->compare('id_card', $this->id_card, true);
         $criteria->compare('driving_license', $this->driving_license, true);
         $criteria->compare('branch_id', $this->branch_id);
-        $criteria->compare('status', $this->status, true);
+        $criteria->compare('status', $this->status);
         $criteria->compare('salary_type', $this->salary_type, true);
         $criteria->compare('basic_salary', $this->basic_salary, true);
         $criteria->compare('payment_type', $this->payment_type, true);

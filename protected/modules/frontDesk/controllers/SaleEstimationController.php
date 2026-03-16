@@ -327,12 +327,14 @@ class SaleEstimationController extends Controller {
     }
 
 //Add Service
-    public function actionAjaxHtmlAddServiceDetail($id, $serviceId) {
+    public function actionAjaxHtmlAddServiceDetail($id) {
         if (Yii::app()->request->isAjaxRequest) {
             $saleEstimation = $this->instantiate($id);
             $this->loadState($saleEstimation);
 
-            $saleEstimation->addServiceDetail($serviceId);
+            if (isset($_POST['ServiceId'])) {
+                $saleEstimation->addServiceDetail($_POST['ServiceId']);
+            }
 
             $this->renderPartial('_detailService', array(
                 'saleEstimation' => $saleEstimation,
@@ -356,13 +358,15 @@ class SaleEstimationController extends Controller {
     }
 
     //Add Product
-    public function actionAjaxHtmlAddProductDetail($id, $productId) {
+    public function actionAjaxHtmlAddProductDetail($id) {
         if (Yii::app()->request->isAjaxRequest) {
             $saleEstimation = $this->instantiate($id);
             $this->loadState($saleEstimation);
             $branches = Branch::model()->findAll();
 
-            $saleEstimation->addProductDetail($productId);
+            if (isset($_POST['ProductId'])) {
+                $saleEstimation->addProductDetail($_POST['ProductId']);
+            }
 
             $this->renderPartial('_detailProduct', array(
                 'saleEstimation' => $saleEstimation,
@@ -377,10 +381,9 @@ class SaleEstimationController extends Controller {
 
             $saleEstimation = $this->instantiate($id);
             $this->loadState($saleEstimation);
+            $branches = Branch::model()->findAll();
 
             $saleEstimation->removeProductDetailAt($index);
-
-            $branches = Branch::model()->findAll();
 
             $this->renderPartial('_detailProduct', array(
                 'saleEstimation' => $saleEstimation,

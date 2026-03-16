@@ -9,6 +9,7 @@
     .width1-8 { width: 30px }
     .width1-9 { width: 30px }
     .width1-10 { width: 30px }
+    .width1-11 { width: 30px }
 '); ?>
 
 <style> 
@@ -24,14 +25,14 @@
         <?php $branch = Branch::model()->findByPk($branchId); ?>
         Raperind Motor <?php echo CHtml::encode(CHtml::value($branch, 'name')); ?>
     </div>
-    <div style="font-size: larger">Laporan Outstanding Registration Transaction</div>
+    <div style="font-size: larger">Laporan Outstanding Penjualan (no invoice + payment)</div>
     <div><?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($startDate))) . ' &nbsp;&ndash;&nbsp; ' . CHtml::encode(Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($endDate))); ?></div>
 </div>
 
 <br />
 
-<div style="white-space: nowrap">
-    <table class="report">
+<div class="table_wrapper">
+    <table class="responsive">
         <thead style="position: sticky; top: 0">
             <tr id="header1">
                 <th class="width1-1">No</th>
@@ -41,41 +42,38 @@
                 <th class="width1-5">Vehicle</th>
                 <th class="width1-6">Plate #</th>
                 <th class="width1-7">Status</th>
-                <th class="width1-8">Parts (Rp)</th>
-                <th class="width1-9">Jasa (Rp)</th>
+                <th class="width1-8">WO #</th>
+                <th class="width1-9">SO #</th>
                 <th class="width1-10">Movement #</th>
+                <th class="width1-11">Total (Rp)</th>
             </tr>
         </thead>
         <tbody>
-            <?php foreach ($outstandingRegistrationTransactionSummary->dataProvider->data as $i => $header): ?>
+            <?php foreach ($outstandingSaleRetailSummary->dataProvider->data as $i => $header): ?>
                 <?php $movementOutHeaders = $header->movementOutHeaders; ?>
                 <?php $movementOutHeaderCodeNumbers = array_map(function($movementOutHeader) { return $movementOutHeader->movement_out_no; }, $movementOutHeaders); ?>
                 <tr class="items1">
-                    <td class="width1-1"><?php echo CHtml::encode($i + 1); ?></td>
-                    <td class="width1-2">
-                        <?php echo CHtml::link(CHtml::encode($header->transaction_number), array(
-                            "/frontDesk/registrationTransaction/show", 
-                            "id"=>$header->id
-                        ), array("target" => "_blank")); ?>
+                    <td><?php echo CHtml::encode($i + 1); ?></td>
+                    <td>
+                        <?php echo CHtml::link(CHtml::encode($header->transaction_number), array("/frontDesk/registrationTransaction/view", "id"=>$header->id), array("target" => "_blank")); ?>
                     </td>
-                    <td class="width1-3">
+                    <td>
                         <?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy hh:mm:ss', strtotime($header->transaction_date))); ?>
                     </td>
-                    <td class="width1-4"><?php echo CHtml::encode(CHtml::value($header, 'customer.name')); ?></td>
-                    <td class="width1-5">
+                    <td><?php echo CHtml::encode(CHtml::value($header, 'customer.name')); ?></td>
+                    <td>
                         <?php echo CHtml::encode(CHtml::value($header, 'vehicle.carMake.name')); ?> -
                         <?php echo CHtml::encode(CHtml::value($header, 'vehicle.carModel.name')); ?> - 
                         <?php echo CHtml::encode(CHtml::value($header, 'vehicle.carSubModel.name')); ?>
                     </td>
-                    <td class="width1-6"><?php echo CHtml::encode(CHtml::value($header, 'vehicle.plate_number')); ?></td>
-                    <td class="width1-7"><?php echo CHtml::encode(CHtml::value($header, 'status')); ?></td>
+                    <td><?php echo CHtml::encode(CHtml::value($header, 'vehicle.plate_number')); ?></td>
+                    <td><?php echo CHtml::encode(CHtml::value($header, 'status')); ?></td>
+                    <td><?php echo CHtml::encode(CHtml::value($header, 'work_order_number')); ?></td>
+                    <td><?php echo CHtml::encode(CHtml::value($header, 'sales_order_number')); ?></td>
+                    <td><?php echo CHtml::encode(implode(', ', $movementOutHeaderCodeNumbers)); ?></td>
                     <td style="text-align: right">
-                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($header, 'total_product_price'))); ?>
+                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($header, 'grand_total'))); ?>
                     </td>
-                    <td style="text-align: right">
-                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($header, 'total_service_price'))); ?>
-                    </td>
-                    <td class="width1-10"><?php echo CHtml::encode(implode(', ', $movementOutHeaderCodeNumbers)); ?></td>
                 </tr>
             <?php endforeach; ?>
         </tbody>

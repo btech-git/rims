@@ -55,7 +55,6 @@ class GeneralRepairRegistrationController extends Controller {
         $generalRepairRegistration = $this->instantiate(null, 'create');        
         $vehicle = Vehicle::model()->findByPk($vehicleId);
         $customer = Customer::model()->findByPk($vehicle->customer_id);
-        $lastRegistration = RegistrationTransaction::model()->findByAttributes(array('vehicle_id' => $vehicleId), array('order' => 't.id DESC'));
 
         $generalRepairRegistration->header->created_datetime = date('Y-m-d H:i:s');
         $generalRepairRegistration->header->user_id = Yii::app()->user->id;
@@ -66,7 +65,6 @@ class GeneralRepairRegistrationController extends Controller {
         $generalRepairRegistration->header->vehicle_exit_datetime = null;
         $generalRepairRegistration->header->vehicle_start_service_datetime = null;
         $generalRepairRegistration->header->vehicle_finish_service_datetime = null;
-        $generalRepairRegistration->header->previous_mileage = empty($lastRegistration) ? 0 : $lastRegistration->vehicle_mileage;
         $generalRepairDate = isset($_POST['GeneralRepairDate']) ? $_POST['GeneralRepairDate'] : date('Y-m-d');
         $generalRepairHour = isset($_POST['GeneralRepairHour']) ? $_POST['GeneralRepairHour'] : date('H');
         $generalRepairMinute = isset($_POST['GeneralRepairMinute']) ? $_POST['GeneralRepairMinute'] : date('i');
@@ -194,6 +192,7 @@ class GeneralRepairRegistrationController extends Controller {
         $generalRepairRegistration = $this->instantiate($id, 'update');
         $vehicle = Vehicle::model()->findByPk($generalRepairRegistration->header->vehicle_id);
         $customer = Customer::model()->findByPk($vehicle->customer_id);
+        
         $generalRepairRegistration->header->edited_datetime = date('Y-m-d H:i:s');
         $generalRepairRegistration->header->user_id_edited = Yii::app()->user->id;
         $generalRepairDate = isset($_POST['GeneralRepairDate']) ? $_POST['GeneralRepairDate'] : date('Y-m-d');
@@ -243,10 +242,12 @@ class GeneralRepairRegistrationController extends Controller {
             $generalRepairRegistration->generateCodeNumberDownpayment(Yii::app()->dateFormatter->format('M', strtotime($generalRepairRegistration->header->downpayment_transaction_date)), Yii::app()->dateFormatter->format('yyyy', strtotime($generalRepairRegistration->header->downpayment_transaction_date)), $generalRepairRegistration->header->branch_id);
 
             if ($generalRepairRegistration->save(Yii::app()->db)) {
+                $this->saveTransactionLog('addDownpayment', $generalRepairRegistration->header);
                 $this->redirect(array('view', 'id' => $generalRepairRegistration->header->id));
             }
         }
 
+            
         $this->render('addDownpayment', array(
             'generalRepairRegistration' => $generalRepairRegistration,
             'vehicle' => $vehicle,
@@ -372,6 +373,29 @@ class GeneralRepairRegistrationController extends Controller {
         ));
     }
 
+    public function actionUpdateMileage($id) {
+        $registrationTransaction = RegistrationTransaction::model()->findByPk($id);
+        $customer = Customer::model()->findByPk($registrationTransaction->customer_id);
+        $vehicle = Vehicle::model()->findByPk($registrationTransaction->vehicle_id);
+        $lastRegistration = RegistrationTransaction::model()->findByAttributes(array('vehicle_id' => $vehicle->id), array('order' => 't.id DESC'));
+
+        $registrationTransaction->previous_mileage = empty($lastRegistration) ? 0 : $lastRegistration->vehicle_mileage;
+        
+        if (isset($_POST['RegistrationTransaction'])) {
+            $registrationTransaction->attributes = $_POST['RegistrationTransaction'];
+            
+            if ($registrationTransaction->save()) {
+                $this->redirect(array('view', 'id' => $id));
+            }
+        }
+
+        $this->render('updateMileage', array(
+            'registrationTransaction' => $registrationTransaction,
+            'customer' => $customer,
+            'vehicle' => $vehicle,
+        ));
+    }
+
     public function actionPendingOrder($id) {
         $model = $this->loadModel($id);
         $model->status = 'Pending';
@@ -438,15 +462,38 @@ class GeneralRepairRegistrationController extends Controller {
         ));
     }
 
-    public function actionFinishTransaction($id) {
-        $model = $this->loadModel($id);
-        $model->status = 'Finished';
-        $model->transaction_date_out = date('Y-m-d');
-        $model->transaction_time_out = date('H:i:s');
+    public function actionReworkTransaction($id) {
+        $generalRepairRegistration = $this->instantiate($id, 'reworkTransaction');
         
-        if ($model->update(array('status', 'transaction_date_out', 'transaction_time_out'))) {
-            $this->redirect(array('admin'));
+        $generalRepairRegistration->header->rework_transaction_date = date('Y-m-d');
+        $generalRepairRegistration->header->rework_transaction_time = date('H:i:s');
+        $generalRepairRegistration->header->user_id_rework = Yii::app()->user->id;
+
+        $products = RegistrationProduct::model()->findAll(array(
+            'condition' => 'registration_transaction_id = :registration_transaction_id AND sale_package_detail_id IS NULL', 
+            'params' => array(':registration_transaction_id' => $id)
+        ));
+        $services = RegistrationService::model()->findAllByAttributes(array(
+            'registration_transaction_id' => $id,
+            'is_body_repair' => 0
+        ));
+        
+        if (isset($_POST['Submit']) && IdempotentManager::check()) {
+            $this->loadState($generalRepairRegistration);
+            $generalRepairRegistration->generateCodeNumberReworkTransaction(Yii::app()->dateFormatter->format('M', strtotime($generalRepairRegistration->header->rework_transaction_date)), Yii::app()->dateFormatter->format('yyyy', strtotime($generalRepairRegistration->header->rework_transaction_date)), $generalRepairRegistration->header->branch_id);
+
+            if ($generalRepairRegistration->save(Yii::app()->db)) {
+                $this->saveTransactionLog('reworkTransaction', $generalRepairRegistration->header);
+            
+                $this->redirect(array('view', 'id' => $generalRepairRegistration->header->id));
+            }
         }
+
+        $this->render('reworkTransaction', array(
+            'generalRepairRegistration' => $generalRepairRegistration,
+            'services' => $services,
+            'products' => $products,
+        ));
     }
     
     public function actionGenerateSalesOrder($id) {

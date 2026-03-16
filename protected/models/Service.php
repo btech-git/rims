@@ -387,7 +387,7 @@ class Service extends CActiveRecord {
         $criteria->compare('description', $this->description, true);
         $criteria->compare('t.service_category_id', $this->service_category_id);
         $criteria->compare('t.service_type_id', $this->service_type_id);
-        $criteria->compare('t.status', $this->status, FALSE);
+        $criteria->compare('t.status', 'Active');
         $criteria->compare('difficulty_level', $this->difficulty_level);
         $criteria->compare('difficulty', $this->difficulty, true);
         $criteria->compare('difficulty_value', $this->difficulty_value, true);

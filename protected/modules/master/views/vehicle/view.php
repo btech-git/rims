@@ -16,16 +16,6 @@ $this->menu = array(
     array('label' => 'Manage Vehicle', 'url' => array('admin')),
 );
 ?>
-<!--<div class="row">
-        <div class="small-12 columns">
-                <div class="breadcrumbs">
-                        <a href="<?php /*echo Yii::app()->baseUrl . '/site/index'; ?>">Home</a>
-                        <a href="<?php echo Yii::app()->baseUrl . '/master/vehicle/admin'; ?>">Vehicle</a>
-                        <a href="<?php echo Yii::app()->baseUrl . '/master/vehicle/admin';*/ ?>">Vehicles</a>
-                        <span>View Vehicles</span>
-                </div>
-        </div>
-</div>-->
 
 <div id="maincontent">
     <div class="clearfix page-action">
@@ -35,9 +25,7 @@ $this->menu = array(
         <?php if (Yii::app()->user->checkAccess("masterVehicleEdit")) { ?>
             <a class="button warning right" style="margin-right:10px;" href="<?php echo Yii::app()->createUrl('/master/' . $ccontroller . '/update', array('id' => $model->id)); ?>"><span class="fa fa-edit"></span>edit</a>		
         <?php } ?>
-        <?php //if (Yii::app()->user->checkAccess("master.registrationTransaction.create")) { ?>
-            <!--<a class="button cbutton right" style="margin-right:10px;" href="<?php //echo Yii::app()->createUrl('/frontDesk/registrationTransaction/create', array('type' => 2, 'id' => $model->id)); ?>"><span class="fa fa-plus"></span>Registration</a>-->
-        <?php //} ?>
+            
         <h1>View Vehicle <?php echo $model->plate_number; ?></h1>
 
         <div class="row">
@@ -164,6 +152,51 @@ $this->menu = array(
                         array(
                             'name' => 'grand_total', 
                             'value' => 'AppHelper::formatMoney($data->grand_total)',
+                            'htmlOptions' => array('style' => 'text-align: right'),
+                        ),
+                    ),
+                )); ?>
+            </div>
+        </fieldset>
+        
+        <br />
+        
+        <fieldset>
+            <legend>Service History</legend>
+            <div class="grid-view">
+                <?php $this->widget('zii.widgets.grid.CGridView', array(
+                    'id' => 'registration-service-grid',
+                    'dataProvider' => $registrationServiceDataProvider,
+                    'filter' => $registrationService,
+                    'template' => '{items}<div class="clearfix">{summary}{pager}</div>',
+                    'pager' => array(
+                        'cssFile' => false,
+                        'header' => '',
+                    ),
+                    'columns' => array(
+                        array(
+                            'header' => 'RG #',
+                            'value' => '$data->registrationTransaction->transaction_number',
+                        ),
+                        array(
+                            'header' => 'Tanggal',
+                            'value' => '$data->registrationTransaction->transaction_date',
+                        ),
+                        array(
+                            'header' => 'Repair',
+                            'value' => '$data->registrationTransaction->repair_type',
+                        ),
+                        array(
+                            'header' => 'Service',
+                            'value' => '$data->service->name',
+                        ),
+                        array(
+                            'header' => 'Type',
+                            'value' => '$data->serviceType->name',
+                        ),
+                        array(
+                            'header' => 'Price', 
+                            'value' => 'AppHelper::formatMoney($data->total_price)',
                             'htmlOptions' => array('style' => 'text-align: right'),
                         ),
                     ),

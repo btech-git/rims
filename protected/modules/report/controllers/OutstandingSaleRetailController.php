@@ -1,6 +1,6 @@
 <?php
 
-class OutstandingRegistrationTransactionController extends Controller {
+class OutstandingSaleRetailController extends Controller {
 
     public $layout = '//layouts/column1';
     
@@ -50,10 +50,10 @@ class OutstandingRegistrationTransactionController extends Controller {
         $customerDataProvider = $customer->search();
         $customerDataProvider->pagination->pageVar = 'page_dialog';
 
-        $outstandingRegistrationTransactionSummary = new OutstandingRegistrationTransactionSummary($registrationTransaction->searchReport());
-        $outstandingRegistrationTransactionSummary->setupLoading();
-        $outstandingRegistrationTransactionSummary->setupPaging($pageSize, $currentPage);
-        $outstandingRegistrationTransactionSummary->setupSorting();
+        $outstandingSaleRetailSummary = new OutstandingSaleRetailSummary($registrationTransaction->searchReport());
+        $outstandingSaleRetailSummary->setupLoading();
+        $outstandingSaleRetailSummary->setupPaging($pageSize, $currentPage);
+        $outstandingSaleRetailSummary->setupSorting();
         $filters = array(
             'startDate' => $startDate,
             'endDate' => $endDate,
@@ -61,15 +61,15 @@ class OutstandingRegistrationTransactionController extends Controller {
             'customerId' => $customerId,
             'plateNumber' => $plateNumber,
         );
-        $outstandingRegistrationTransactionSummary->setupFilter($filters);
+        $outstandingSaleRetailSummary->setupFilter($filters);
 
         if (isset($_GET['SaveExcel'])) {
-            $this->saveToExcel($outstandingRegistrationTransactionSummary, $startDate, $endDate, $branchId);
+            $this->saveToExcel($outstandingSaleRetailSummary, $startDate, $endDate, $branchId);
         }
 
         $this->render('summary', array(
             'registrationTransaction' => $registrationTransaction,
-            'outstandingRegistrationTransactionSummary' => $outstandingRegistrationTransactionSummary,
+            'outstandingSaleRetailSummary' => $outstandingSaleRetailSummary,
             'startDate' => $startDate,
             'endDate' => $endDate,
             'currentSort' => $currentSort,
@@ -83,7 +83,7 @@ class OutstandingRegistrationTransactionController extends Controller {
 
     public function actionAjaxJsonCustomer() {
         if (Yii::app()->request->isAjaxRequest) {
-            $customerId = (isset($_POST['CustomerId'])) ? $_POST['CustomerId'] : '';
+            $customerId = (isset($_POST['InvoiceHeader']['customer_id'])) ? $_POST['InvoiceHeader']['customer_id'] : '';
             $customer = Customer::model()->findByPk($customerId);
 
             $object = array(
@@ -96,7 +96,7 @@ class OutstandingRegistrationTransactionController extends Controller {
         }
     }
 
-    protected function saveToExcel($outstandingRegistrationTransactionSummary, $startDate, $endDate, $branchId) {
+    protected function saveToExcel($outstandingSaleRetailSummary, $startDate, $endDate, $branchId) {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
 
@@ -111,28 +111,26 @@ class OutstandingRegistrationTransactionController extends Controller {
 
         $documentProperties = $objPHPExcel->getProperties();
         $documentProperties->setCreator('Raperind Motor');
-        $documentProperties->setTitle('Outstanding Registration');
+        $documentProperties->setTitle('Outstanding Penjualan');
 
         $worksheet = $objPHPExcel->setActiveSheetIndex(0);
-        $worksheet->setTitle('Outstanding Registration');
+        $worksheet->setTitle('Outstanding Penjualan');
 
-        $worksheet->mergeCells('A1:K1');
-        $worksheet->mergeCells('A2:K2');
-        $worksheet->mergeCells('A3:K3');
+        $worksheet->mergeCells('A1:N1');
+        $worksheet->mergeCells('A2:N2');
+        $worksheet->mergeCells('A3:N3');
         
-        $worksheet->getStyle('A1:K3')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-        $worksheet->getStyle('A1:K3')->getFont()->setBold(true);
+        $worksheet->getStyle('A1:N5')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->getStyle('A1:N5')->getFont()->setBold(true);
         
         $branch = Branch::model()->findByPk($branchId);
         $worksheet->setCellValue('A1', 'Raperind Motor ' . CHtml::encode(CHtml::value($branch, 'name')));
-        $worksheet->setCellValue('A2', 'Outstanding Registration Transaction');
+        $worksheet->setCellValue('A2', 'Outstanding Penjualan');
         $worksheet->setCellValue('A3', $startDateFormatted . ' - ' . $endDateFormatted);
 
-        $worksheet->getStyle('A5:K5')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-        $worksheet->getStyle("A5:K5")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
-        $worksheet->getStyle("A5:K5")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A5:N5")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A5:N5")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
-        $worksheet->getStyle('A5:K5')->getFont()->setBold(true);
         $worksheet->setCellValue('A5', 'No');
         $worksheet->setCellValue('B5', 'RG #');
         $worksheet->setCellValue('C5', 'Tanggal');
@@ -140,27 +138,33 @@ class OutstandingRegistrationTransactionController extends Controller {
         $worksheet->setCellValue('E5', 'Vehicle');
         $worksheet->setCellValue('F5', 'Plat #');
         $worksheet->setCellValue('G5', 'Status');
-        $worksheet->setCellValue('H5', 'Parts (Rp)');
-        $worksheet->setCellValue('I5', 'Jasa (Rp)');
+        $worksheet->setCellValue('H5', 'WO #');
+        $worksheet->setCellValue('I5', 'SO #');
         $worksheet->setCellValue('J5', 'Movement #');
-        $worksheet->setCellValue('K5', 'User Input');
+        $worksheet->setCellValue('K5', 'Parts (Rp)');
+        $worksheet->setCellValue('L5', 'Jasa (Rp)');
+        $worksheet->setCellValue('M5', 'Total (Rp)');
+        $worksheet->setCellValue('N5', 'User Input');
 
         $counter = 6;
 
-        foreach ($outstandingRegistrationTransactionSummary->dataProvider->data as $i => $header) {
+        foreach ($outstandingSaleRetailSummary->dataProvider->data as $i => $header) {
             $movementOutHeaders = $header->movementOutHeaders;
             $movementOutHeaderCodeNumbers = array_map(function($movementOutHeader) { return $movementOutHeader->movement_out_no; }, $movementOutHeaders);
             $worksheet->setCellValue("A{$counter}", CHtml::encode($i + 1));
             $worksheet->setCellValue("B{$counter}", CHtml::value($header, 'transaction_number'));
             $worksheet->setCellValue("C{$counter}", CHtml::value($header, 'transaction_date'));
-            $worksheet->setCellValue("D{$counter}", CHtml::encode(CHtml::value($header, 'customer.name')));
+            $worksheet->setCellValue("D{$counter}", CHtml::value($header, 'customer.name'));
             $worksheet->setCellValue("E{$counter}", CHtml::value($header, 'vehicle.carMake.name') . ' - ' . CHtml::value($header, 'vehicle.carModel.name') . ' - ' . CHtml::value($header, 'vehicle.carSubModel.name'));
             $worksheet->setCellValue("F{$counter}", CHtml::value($header, 'vehicle.plate_number'));
             $worksheet->setCellValue("G{$counter}", CHtml::value($header, 'status'));
-            $worksheet->setCellValue("H{$counter}", CHtml::value($header, 'total_product_price'));
-            $worksheet->setCellValue("I{$counter}", CHtml::value($header, 'total_service_price'));
+            $worksheet->setCellValue("H{$counter}", CHtml::value($header, 'work_order_number'));
+            $worksheet->setCellValue("I{$counter}", CHtml::value($header, 'sales_order_number'));
             $worksheet->setCellValue("J{$counter}", CHtml::encode(implode(', ', $movementOutHeaderCodeNumbers)));
-            $worksheet->setCellValue("K{$counter}", CHtml::value($header, 'user.username'));
+            $worksheet->setCellValue("K{$counter}", CHtml::value($header, 'total_product_price'));
+            $worksheet->setCellValue("L{$counter}", CHtml::value($header, 'total_service_price'));
+            $worksheet->setCellValue("M{$counter}", CHtml::value($header, 'grand_total'));
+            $worksheet->setCellValue("N{$counter}", CHtml::value($header, 'user.username'));
             $counter++;
         }
 
@@ -173,7 +177,7 @@ class OutstandingRegistrationTransactionController extends Controller {
         ob_end_clean();
 
         header('Content-type: application/vnd.ms-excel');
-        header('Content-Disposition: attachment;filename="outstanding_registration_transaction.xls"');
+        header('Content-Disposition: attachment;filename="outstanding_sale_retail.xls"');
         header('Cache-Control: max-age=0');
         
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');

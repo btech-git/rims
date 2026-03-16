@@ -1,6 +1,6 @@
 <?php
 
-class OutstandingRegistrationTransactionSummary extends CComponent {
+class OutstandingPurchaseOrderSummary extends CComponent {
 
     public $dataProvider;
 
@@ -10,8 +10,7 @@ class OutstandingRegistrationTransactionSummary extends CComponent {
 
     public function setupLoading() {
         $this->dataProvider->criteria->with = array(
-            'customer',
-            'vehicle',
+            'supplier',
             'branch',
         );
     }
@@ -26,7 +25,7 @@ class OutstandingRegistrationTransactionSummary extends CComponent {
     }
 
     public function setupSorting() {
-        $this->dataProvider->sort->attributes = array('t.transaction_date', 't.transaction_number');
+        $this->dataProvider->sort->attributes = array('t.purchase_order_date', 't.purchase_order_no');
         $this->dataProvider->criteria->order = $this->dataProvider->sort->orderBy;
     }
 
@@ -34,36 +33,28 @@ class OutstandingRegistrationTransactionSummary extends CComponent {
         $startDate = (empty($filters['startDate'])) ? date('Y-m-d') : $filters['startDate'];
         $endDate = (empty($filters['endDate'])) ? date('Y-m-d') : $filters['endDate'];
         $branchId = (empty($filters['branchId'])) ? '' : $filters['branchId'];
-        $customerId = (empty($filters['customerId'])) ? '' : $filters['customerId'];
-        $plateNumber = (empty($filters['plateNumber'])) ? '' : $filters['plateNumber'];
+        $supplierId = (empty($filters['supplierId'])) ? '' : $filters['supplierId'];
         
         $branchConditionSql = '';
-        $customerConditionSql = '';
-        $plateNumberConditionSql = '';
+        $supplierConditionSql = '';
         
         if (!empty($branchId)) {
-            $branchConditionSql = ' AND t.branch_id = :branch_id';
+            $branchConditionSql = ' AND t.main_branch_id = :branch_id';
             $this->dataProvider->criteria->params[':branch_id'] = $branchId;
         }
 
-        if (!empty($customerId)) {
-            $customerConditionSql = ' AND t.customer_id = :customer_id';
-            $this->dataProvider->criteria->params[':customer_id'] = $customerId;
-        }
-
-        if (!empty($plateNumber)) {
-            $plateNumberConditionSql = ' AND vehicle.plate_number LIKE :plate_number';
-            $this->dataProvider->criteria->params[':plate_number'] = "%{$plateNumber}%";
+        if (!empty($supplierId)) {
+            $supplierConditionSql = ' AND t.supplier_id = :supplier_id';
+            $this->dataProvider->criteria->params[':supplier_id'] = $supplierId;
         }
 
         $this->dataProvider->criteria->with = array(
-            'customer',
-            'vehicle',
+            'supplier',
+            'mainBranch',
         );
         
-        $this->dataProvider->criteria->addCondition("substr(t.transaction_date, 1, 10) BETWEEN :start_date AND :end_date AND t.sales_order_number IS NULL AND
-                t.work_order_number IS NULL AND t.user_id_cancelled IS NULL AND t.status NOT IN ('Finished')" . 
-        $branchConditionSql . $customerConditionSql . $plateNumberConditionSql);
+        $this->dataProvider->criteria->addCondition("substr(t.purchase_order_date, 1, 10) BETWEEN :start_date AND :end_date AND 
+            t.payment_left > 0 AND t.user_id_cancelled IS NULL" . $branchConditionSql . $supplierConditionSql);
         $this->dataProvider->criteria->params[':start_date'] = $startDate;
         $this->dataProvider->criteria->params[':end_date'] = $endDate;
     }

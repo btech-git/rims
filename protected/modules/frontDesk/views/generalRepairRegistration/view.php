@@ -32,6 +32,7 @@ $this->breadcrumbs = array(
                             'visible' => Yii::app()->user->checkAccess("generalRepairCreate") || Yii::app()->user->checkAccess("generalRepairEdit")
                         )); ?>
                     <?php endif; ?>
+                    
                     <?php if (!empty($model->sales_order_number) && $model->status !== 'Finished'): ?>
                         <?php echo CHtml::link('<span class="fa fa-print"></span> SO', array("pdfSaleOrder", "id" => $model->id), array(
                             'class'=>'button info right', 
@@ -40,16 +41,21 @@ $this->breadcrumbs = array(
                             'visible' => Yii::app()->user->checkAccess("generalRepairCreate") || Yii::app()->user->checkAccess("generalRepairEdit")
                         )); ?>
                     <?php endif; ?>
-                    <?php if ($model->status !== 'Finished'): ?>
+                    
+                    <?php if ($model->status !== 'Finished' && $model->status !== 'CANCELLED!!!'): ?>
+                        <?php echo CHtml::link('+ KM Kendaraan', array("/frontDesk/generalRepairRegistration/updateMileage", "id" => $model->id), array(
+                            'class' => 'button success left', 
+                            'style' => 'margin-right:10px',
+                            'visible' => Yii::app()->user->checkAccess("generalRepairCreate") || Yii::app()->user->checkAccess("generalRepairEdit")
+                        )); ?>
+                    
                         <?php echo CHtml::link('<span class="fa fa-print"></span> Estimasi', array("pdf", "id" => $model->id), array(
                             'class'=>'button info right', 
                             'style' => 'margin-right:10px', 
                             'target' =>'_blank',
                             'visible' => Yii::app()->user->checkAccess("generalRepairCreate") || Yii::app()->user->checkAccess("generalRepairEdit")
                         )); ?>
-                    <?php endif; ?>
                     
-                    <?php if ($model->status !== 'Finished' && $model->status !== 'CANCELLED!!!'): ?>
                         <?php if (count($invoices) == 0): ?>
                             <?php if (Yii::app()->user->checkAccess("generalRepairEdit")): ?>
                                 <?php echo CHtml::link('<span class="fa fa-edit"></span>Edit Data', Yii::app()->baseUrl . '/frontDesk/generalRepairRegistration/update?id=' . $model->id, array(
@@ -145,10 +151,9 @@ $this->breadcrumbs = array(
                     
                     <?php if (Yii::app()->user->checkAccess("generalRepairSupervisor")): ?>
                         <?php echo CHtml::link('<span class="fa fa-minus"></span>Cancel Transaction', array("/frontDesk/generalRepairRegistration/cancel", "id" => $model->id), array(
-                            'class' => 'button alert left', 
-                            'style' => 'margin-left:10px',
-                            'visible' => Yii::app()->user->checkAccess("generalRepairCreate") || Yii::app()->user->checkAccess("generalRepairEdit")
-                        )); ?>
+                            'class' => 'button alert right', 
+                            'style' => 'margin-right:10px',
+                        )); ?> 
                     <?php endif; ?>
 
                     <?php if ($model->status == 'Finished' && $model->status !== 'CANCELLED!!!'): ?>

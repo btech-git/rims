@@ -72,7 +72,11 @@
                                     <?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($receivableReportItem['due_date']))); ?>
                                 </td>
                                 <td class="width2-3">
-                                    <?php echo CHtml::link($receivableReportItem['invoice_number'], Yii::app()->createUrl("report/generalLedger/redirectTransaction", array("codeNumber" => $receivableReportItem['invoice_number'])), array('target' => '_blank'));?>
+                                    <?php echo CHtml::link($receivableReportItem['invoice_number'], array(
+                                        '/report/receivable/transactionInfo', 
+                                        'invoiceId' => $receivableReportItem['id'], 
+                                        'endDate' => $endDate,
+                                    ), array('target' => '_blank'));?>
                                 </td>
                                 <td class="width2-4"><?php echo CHtml::encode($receivableReportItem['plate_number']); ?></td>
                                 <td class="width2-5">

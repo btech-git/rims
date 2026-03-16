@@ -1,13 +1,7 @@
-<?php
-/* @var $this RegistrationTransactionController */
-/* @var $bodyRepairRegistration->header RegistrationTransaction */
-/* @var $form CActiveForm */
-?>
-
 <div id="maincontent">
     <div class="clearfix page-action">
-        <a class="button cbutton right" href="<?php echo Yii::app()->baseUrl.'/frontDesk/bodyRepairRegistration/admin';?>"><span class="fa fa-th-list"></span>Manage Body Repair Registration</a>
-        <h1><?php if($bodyRepairRegistration->header->isNewRecord){ echo "New Body Repair Registration"; }else{ echo "Update Body Repair Registration";}?></h1>
+        <a class="button cbutton right" href="<?php echo Yii::app()->baseUrl.'/frontDesk/bodyRepairRegistration/admin';?>"><span class="fa fa-th-list"></span>Manage</a>
+        <h1><?php if($bodyRepairRegistration->header->isNewRecord){ echo "New"; }else{ echo "Update";}?></h1>
         <div class="form">
             <?php $form=$this->beginWidget('CActiveForm', array(
                 'id'=>'registration-transaction-form',
@@ -26,18 +20,12 @@
                     <div class="row">
                         <?php $this->widget('zii.widgets.jui.CJuiTabs', array(
                             'tabs' => array(
-                                'Customer Info' => array(
-                                    'id' => 'info1',
-                                    'content' => $this->renderPartial('_infoCustomer', array(
-                                        'bodyRepairRegistration' => $bodyRepairRegistration, 
-                                        'customer' => $customer,
-                                    ), true)
-                                ),
                                 'Vehicle Info' => array(
                                     'id' => 'info2',
                                     'content' => $this->renderPartial('_infoVehicle', array(
                                         'bodyRepairRegistration' => $bodyRepairRegistration,
                                         'vehicle' => $vehicle,
+                                        'customer' => $customer,
                                     ), true)
                                 ),
                                 'Service Exception Rate' => array(
@@ -157,36 +145,16 @@
                                     <div class="field">
                                         <div class="row collapse">
                                             <div class="small-4 columns">
-                                                <label class="prefix">KM Sebelum</label>
+                                                <label class="prefix">Insurance Company</label>
                                             </div>
                                             <div class="small-8 columns">
-                                                <?php echo $form->textField($bodyRepairRegistration->header, 'previous_mileage'); ?>
+                                                <?php echo $form->dropDownlist($bodyRepairRegistration->header,'insurance_company_id',CHtml::listData(InsuranceCompany::model()->findAllByAttributes(array('is_deleted' => 0)),'id','name'),array(
+                                                    'prompt'=>'-- Tanpa Asuransi --',
+                                                )); ?>
                                             </div>
                                         </div>
                                     </div>
-
-                                    <div class="field">
-                                        <div class="row collapse">
-                                            <div class="small-4 columns">
-                                                <label class="prefix">KM Sekarang</label>
-                                            </div>
-                                            <div class="small-8 columns">
-                                                <?php echo $form->textField($bodyRepairRegistration->header, 'vehicle_mileage'); ?>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="field">
-                                        <div class="row collapse">
-                                            <div class="small-4 columns">
-                                                <label class="prefix">KM Rekomendasi Service Selanjutnya</label>
-                                            </div>
-                                            <div class="small-8 columns">
-                                                <?php echo $form->textField($bodyRepairRegistration->header, 'next_mileage'); ?>
-                                            </div>
-                                        </div>
-                                    </div>
-
+                                    
                                     <div class="field">
                                         <div class="row collapse">
                                             <div class="small-4 columns">
@@ -303,19 +271,6 @@
                                         </div>
                                     </div>
 
-                                    <div class="field">
-                                        <div class="row collapse">
-                                            <div class="small-4 columns">
-                                                <label class="prefix">Insurance Company</label>
-                                            </div>
-                                            <div class="small-8 columns">
-                                                <?php echo $form->dropDownlist($bodyRepairRegistration->header,'insurance_company_id',CHtml::listData(InsuranceCompany::model()->findAllByAttributes(array('is_deleted' => 0)),'id','name'),array(
-                                                    'prompt'=>'-- Tanpa Asuransi --',
-                                                )); ?>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    
                                     <?php if ($customer->customer_type === 'Company'): ?>
                                         <div class="field">
                                             <div class="row collapse">

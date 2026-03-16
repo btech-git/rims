@@ -321,6 +321,18 @@
                         </div>
                     </div>
                 </div>
+                
+                <div class="field">
+                    <div class="row collapse">
+                        <div class="small-4 columns">
+                            <?php echo $form->labelEx($product->header, 'note', array('class' => 'prefix')); ?>
+                        </div>
+                        <div class="small-8 columns">
+                            <?php echo $form->textArea($product->header, 'note', array('rows' => 3, 'cols' => 50)); ?>
+                            <?php echo $form->error($product->header, 'note'); ?>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <div class="small-12 medium-5b columns">
@@ -537,7 +549,7 @@
 
                 <div class="clearfix"></div>
 
-                <?php echo CHtml::button('Add Vehicle', array(
+                <?php echo CHtml::button('+ Kendaraan', array(
                     'id' => 'detail-button',
                     'name' => 'Detail',
                     'class' => 'button extra right',
@@ -551,7 +563,7 @@
                                 },
                         });',
                 )); ?>
-                <h2>Vehicle</h2>
+                <h2>Parts untuk kendaraan:</h2>
                 <div id="vehicle">
                     <?php $this->renderPartial('_detailVehicle', array('product' => $product,)); ?>
                 </div>

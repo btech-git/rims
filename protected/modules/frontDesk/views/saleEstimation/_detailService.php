@@ -72,7 +72,7 @@
                                 'onclick' => CHtml::ajax(array(
                                     'type' => 'POST',
                                     'url' => CController::createUrl('ajaxHtmlRemoveServiceDetail', array('id' => $saleEstimation->header->id, 'index' => $i)),
-                                    'update' => '#detail-product',
+                                    'update' => '#detail_service_div',
                                 )),
                             )); ?>
                         <?php else: ?>
@@ -81,7 +81,7 @@
                                 'onclick' => CHtml::ajax(array(
                                     'type' => 'POST',
                                     'url' => CController::createUrl('ajaxHtmlRemoveServiceDetail', array('id' => $saleEstimation->header->id, 'index' => $i)),
-                                    'update' => '#detail-product',
+                                    'update' => '#detail_service_div',
                                 )),
                             )); ?>
                         <?php endif; ?>

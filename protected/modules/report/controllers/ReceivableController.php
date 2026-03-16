@@ -95,6 +95,39 @@ class ReceivableController extends Controller {
         ));
     }
 
+    public function actionTransactionInfo($invoiceId, $endDate) {
+        set_time_limit(0);
+        ini_set('memory_limit', '1024M');
+
+        $startDate = AppParam::BEGINNING_TRANSACTION_DATE;
+        $invoiceHeader = InvoiceHeader::model()->find(array(
+            'condition' => 't.invoice_date BETWEEN :start_date AND :end_date AND t.id = :invoice_id AND t.user_id_cancelled IS NULL',
+            'params' => array(
+                ':start_date' => $startDate,
+                ':end_date' => $endDate,
+                ':invoice_id' => $invoiceId,
+            )
+        ));
+        $paymentInDetails = PaymentInDetail::model()->with('paymentIn')->findAll(array(
+            'condition' => 't.invoice_header_id = :invoice_id AND paymentIn.payment_date BETWEEN :start_date AND :end_date AND paymentIn.user_id_cancelled IS NULL',
+            'params' => array(
+                ':start_date' => $startDate,
+                ':end_date' => $endDate,
+                ':invoice_id' => $invoiceId,
+            )
+        ));
+        
+//        if (isset($_GET['SaveExcelDetail'])) {
+//            $this->saveToExcelDetailTransaction($dataProvider, $endDate, $customer);
+//        }
+
+        $this->render('transactionInfo', array(
+            'invoiceHeader' => $invoiceHeader,
+            'paymentInDetails' => $paymentInDetails,
+            'endDate' => $endDate,
+        ));
+    }
+
     public function actionAjaxJsonCustomer() {
         if (Yii::app()->request->isAjaxRequest) {
             $customerId = (isset($_POST['CustomerId'])) ? $_POST['CustomerId'] : '';

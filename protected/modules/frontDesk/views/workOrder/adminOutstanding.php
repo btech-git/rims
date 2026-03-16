@@ -9,6 +9,14 @@ Yii::app()->clientScript->registerScript('report', '
 Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/transaction/report.css');
 ?>
 
+<style> 
+ .table_wrapper{
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+}
+</style>
+
 <div class="tab reportTab">
     <div class="tabBody">
         <div id="detail_div">
@@ -198,7 +206,7 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
             
             <br />
 
-            <div class="relative">
+            <div class="table_wrapper">
                 <?php $this->renderPartial('_adminOutstanding', array(
                     'model' => $model,
                     'workOrderSummary' => $workOrderSummary,
