@@ -41,6 +41,7 @@ $this->breadcrumbs=array(
                                     'content' => $this->renderPartial('_infoVehicle', array(
                                         'bodyRepairRegistration' => $bodyRepairRegistration,
                                         'vehicle' => $vehicle,
+                                        'customer' => $customer,
                                     ), true)
                                 ),
                                 'Service Exception Rate' => array(
