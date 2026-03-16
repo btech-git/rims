@@ -980,6 +980,16 @@
                                         'visible' => Yii::app()->user->checkAccess('director')
                                     ),
                                     array(
+                                        'label' => 'Outstanding Purchase Order', 
+                                        'url' => array('/report/outstandingPurchaseOrder/summary'), 
+                                        'visible' => Yii::app()->user->checkAccess('director')
+                                    ),
+                                    array(
+                                        'label' => 'Outstanding Sales Transaction', 
+                                        'url' => array('/report/outstandingSaleRetail/summary'), 
+                                        'visible' => Yii::app()->user->checkAccess('director')
+                                    ),
+                                    array(
                                         'label' => 'Outstanding Work Order', 
                                         'url' => array('/report/outstandingWorkOrder/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('director')
