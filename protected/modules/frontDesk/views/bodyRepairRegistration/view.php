@@ -147,7 +147,7 @@ $this->breadcrumbs = array(
                         <?php endif; ?>
                     <?php endif; ?>
                     
-                    <?php if (Yii::app()->user->checkAccess("bodyRepairSupervisor")): ?>
+                    <?php if (Yii::app()->user->checkAccess("bodyRepairSupervisor") && $model->user_id_cancelled == null): ?>
                         <?php echo CHtml::link('<span class="fa fa-minus"></span>Cancel Transaction', array("/frontDesk/bodyRepairRegistration/cancel", "id" => $model->id), array(
                             'class' => 'button alert right', 
                             'style' => 'margin-right:10px',
@@ -159,6 +159,12 @@ $this->breadcrumbs = array(
                         <?php echo CHtml::link('Status Kendaraan', array("/frontDesk/bodyRepairRegistration/updateLocation", "id" => $model->id, "vehicleId" => $model->vehicle_id), array(
                             'class' => 'button warning left', 
                             'style' => 'margin-left:10px',
+                            'visible' => Yii::app()->user->checkAccess("bodyRepairCreate") || Yii::app()->user->checkAccess("bodyRepairEdit")
+                        )); ?>
+                    
+                        <?php echo CHtml::link('Need Rework', array("/frontDesk/bodyRepairRegistration/reworkTransaction", "id" => $model->id), array(
+                            'class' => 'button warning right', 
+                            'style' => 'margin-right:10px',
                             'visible' => Yii::app()->user->checkAccess("bodyRepairCreate") || Yii::app()->user->checkAccess("bodyRepairEdit")
                         )); ?>
                     <?php endif; ?>

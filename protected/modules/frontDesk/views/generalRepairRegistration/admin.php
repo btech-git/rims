@@ -74,7 +74,11 @@ Yii::app()->clientScript->registerScript('search', "
                 'header' => '#',
                 'value' => '$this->grid->dataProvider->pagination->currentPage*$this->grid->dataProvider->pagination->pageSize + $row+1', //  row is zero based
             ),
-            'transaction_number',
+            array(
+                'name'=>'transaction_number', 
+                'value'=>'CHtml::link($data->transaction_number, array("view", "id"=>$data->id))', 
+                'type'=>'raw',
+            ),
             array(
                 'name' => 'transaction_date',
                 'value' => "Yii::app()->dateFormatter->formatDateTime(\$data->transaction_date, 'medium', 'short')",
@@ -137,7 +141,7 @@ Yii::app()->clientScript->registerScript('search', "
             ),
             array(
                 'class' => 'CButtonColumn',
-                'template' => '{views} {rework}',
+                'template' => '{views}',
                 'buttons' => array(
                     'views' => array(
                         'label' => 'view',
@@ -153,8 +157,6 @@ Yii::app()->clientScript->registerScript('search', "
                         'label' => 'rework',
                         'url' => 'Yii::app()->createUrl("frontDesk/generalRepairRegistration/reworkTransaction", array("id"=>$data->id))',
                         'visible' => '$data->status == "Finished" && Yii::app()->user->checkAccess("generalRepairEdit")',
-//                        'options' => array(
-//                            'confirm' => 'Are you sure to finish this transaction?',
 //                        ),
                     ),
                 ),

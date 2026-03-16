@@ -74,6 +74,51 @@ $this->breadcrumbs = array(
                             <div class="field">
                                 <div class="row collapse">
                                     <div class="small-4 columns">
+                                        <span class="prefix">Plate #</span>
+                                    </div>
+                                    <div class="small-8 columns">
+                                        <input type="text" readonly="true" value="<?php echo $bodyRepairRegistration->header->vehicle->plate_number; ?>"> 
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="field">
+                                <div class="row collapse">
+                                    <div class="small-4 columns">
+                                        <span class="prefix">Kendaraan</span>
+                                    </div>
+                                    <div class="small-8 columns">
+                                        <input type="text" readonly="true" value="<?php echo $bodyRepairRegistration->header->vehicle->carMakeModelSubCombination; ?>"> 
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="field">
+                                <div class="row collapse">
+                                    <div class="small-4 columns">
+                                        <span class="prefix">Warna</span>
+                                    </div>
+                                    <div class="small-8 columns">
+                                        <?php $color = Colors::model()->findByPK($bodyRepairRegistration->header->vehicle->color_id); ?>
+                                        <input type="text" readonly="true" value="<?php echo $color->name; ?>"> 
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="field">
+                                <div class="row collapse">
+                                    <div class="small-4 columns">
+                                        <span class="prefix">KM</span>
+                                    </div>
+                                    <div class="small-8 columns">
+                                        <input type="text" readonly="true" value="<?php echo $bodyRepairRegistration->header->vehicle_mileage; ?>"> 
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="field">
+                                <div class="row collapse">
+                                    <div class="small-4 columns">
                                         <span class="prefix">Repair Type</span>
                                     </div>
                                     <div class="small-8 columns">
@@ -85,10 +130,10 @@ $this->breadcrumbs = array(
                             <div class="field">
                                 <div class="row collapse">
                                     <div class="small-4 columns">
-                                        <span class="prefix">Status</span>
+                                        <span class="prefix">Status Barang</span>
                                     </div>
                                     <div class="small-8 columns">
-                                        <input type="text" readonly="true" value="<?php echo $bodyRepairRegistration->header->status; ?>"> 
+                                        <input type="text" readonly="true" value="<?php echo ($bodyRepairRegistration->header->totalQuantityMovementLeft > 0) ? 'Pending' : 'Completed'; ?>"> 
                                     </div>
                                 </div>
                             </div>
@@ -96,32 +141,21 @@ $this->breadcrumbs = array(
                             <div class="field">
                                 <div class="row collapse">
                                     <div class="small-4 columns">
-                                        <span class="prefix">Service Status</span>
+                                        <span class="prefix">Status Service</span>
                                     </div>
                                     <div class="small-8 columns">
                                         <input type="text" readonly="true" value="<?php echo $bodyRepairRegistration->header->service_status; ?>"> 
                                     </div>
                                 </div>
                             </div>
-
+                            
                             <div class="field">
                                 <div class="row collapse">
                                     <div class="small-4 columns">
-                                        <span class="prefix">Sales</span>
+                                        <span class="prefix">Status Transaksi</span>
                                     </div>
                                     <div class="small-8 columns">
-                                        <input type="text" readonly="true" value="<?php echo !empty($bodyRepairRegistration->header->employee_id_sales_person) ? $bodyRepairRegistration->header->employeeIdSalesPerson->name : ''; ?>"> 
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="field">
-                                <div class="row collapse">
-                                    <div class="small-4 columns">
-                                        <span class="prefix">Problem</span>
-                                    </div>
-                                    <div class="small-8 columns">
-                                        <textarea name="" id="" cols="30" rows="5" readonly="true"><?php echo $bodyRepairRegistration->header->problem; ?></textarea>
+                                        <input type="text" readonly="true" value="<?php echo $bodyRepairRegistration->header->status; ?>"> 
                                     </div>
                                 </div>
                             </div>
@@ -141,47 +175,6 @@ $this->breadcrumbs = array(
                         </div> <!-- end div large -->
 
                         <div class="large-6 columns">
-                            <div class="field">
-                                <div class="row collapse">
-                                    <div class="small-4 columns">
-                                        <span class="prefix">Plate #</span>
-                                    </div>
-                                    <div class="small-8 columns">
-                                        <input type="text" readonly="true" value="<?php echo $bodyRepairRegistration->header->vehicle->plate_number; ?>"> 
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="field">
-                                <div class="row collapse">
-                                    <div class="small-4 columns">
-                                        <span class="prefix">Kendaraan</span>
-                                    </div>
-                                    <div class="small-8 columns">
-                                        <input type="text" readonly="true" value="<?php echo $bodyRepairRegistration->header->vehicle->carMakeModelSubCombination; ?>"> 
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="field">
-                                <div class="row collapse">
-                                    <div class="small-4 columns">
-                                        <span class="prefix">Warna</span>
-                                    </div>
-                                    <div class="small-8 columns">
-                                        <?php $color = Colors::model()->findByPK($bodyRepairRegistration->header->vehicle->color_id); ?>
-                                        <input type="text" readonly="true" value="<?php echo $color->name; ?>"> 
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="field">
-                                <div class="row collapse">
-                                    <div class="small-4 columns">
-                                        <span class="prefix">KM</span>
-                                    </div>
-                                    <div class="small-8 columns">
-                                        <input type="text" readonly="true" value="<?php echo $bodyRepairRegistration->header->vehicle_mileage; ?>"> 
-                                    </div>
-                                </div>
-                            </div>
                             <div class="field">
                                 <div class="row collapse">
                                     <div class="small-4 columns">
@@ -229,10 +222,10 @@ $this->breadcrumbs = array(
                             <div class="field">
                                 <div class="row collapse">
                                     <div class="small-4 columns">
-                                        <span class="prefix">Status Barang</span>
+                                        <span class="prefix">Sales</span>
                                     </div>
                                     <div class="small-8 columns">
-                                        <input type="text" readonly="true" value="<?php echo ($bodyRepairRegistration->header->totalQuantityMovementLeft > 0) ? 'Pending' : 'Completed'; ?>"> 
+                                        <input type="text" readonly="true" value="<?php echo !empty($bodyRepairRegistration->header->employee_id_sales_person) ? $bodyRepairRegistration->header->employeeIdSalesPerson->name : ''; ?>"> 
                                     </div>
                                 </div>
                             </div>
@@ -240,10 +233,54 @@ $this->breadcrumbs = array(
                             <div class="field">
                                 <div class="row collapse">
                                     <div class="small-4 columns">
-                                        <span class="prefix">Status Service</span>
+                                        <span class="prefix">Lead Mechanic</span>
                                     </div>
                                     <div class="small-8 columns">
-                                        <input type="text" readonly="true" value="<?php echo $bodyRepairRegistration->header->service_status; ?>"> 
+                                        <input type="text" readonly="true" value="<?php echo CHtml::encode(CHtml::value($bodyRepairRegistration->header, 'employeeIdAssignMechanic.name')); ?>"> 
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="field">
+                                <div class="row collapse">
+                                    <div class="small-4 columns">
+                                        <span class="prefix">Mechanic Helper 1</span>
+                                    </div>
+                                    <div class="small-8 columns">
+                                        <input type="text" readonly="true" value="<?php echo CHtml::encode(CHtml::value($bodyRepairRegistration->header, 'employeeIdMechanicHelper1.name')); ?>"> 
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="field">
+                                <div class="row collapse">
+                                    <div class="small-4 columns">
+                                        <span class="prefix">Mechanic Helper 2</span>
+                                    </div>
+                                    <div class="small-8 columns">
+                                        <input type="text" readonly="true" value="<?php echo CHtml::encode(CHtml::value($bodyRepairRegistration->header, 'employeeIdMechanicHelper2.name')); ?>"> 
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="field">
+                                <div class="row collapse">
+                                    <div class="small-4 columns">
+                                        <span class="prefix">Mechanic Helper 3</span>
+                                    </div>
+                                    <div class="small-8 columns">
+                                        <input type="text" readonly="true" value="<?php echo CHtml::encode(CHtml::value($bodyRepairRegistration->header, 'employeeIdMechanicHelper3.name')); ?>"> 
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="field">
+                                <div class="row collapse">
+                                    <div class="small-4 columns">
+                                        <span class="prefix">Problem</span>
+                                    </div>
+                                    <div class="small-8 columns">
+                                        <textarea name="" id="" cols="30" rows="5" readonly="true"><?php echo $bodyRepairRegistration->header->problem; ?></textarea>
                                     </div>
                                 </div>
                             </div>

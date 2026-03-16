@@ -70,7 +70,11 @@ $('.search-form form').submit(function(){
                 'header' => '#',
                 'value' => '$this->grid->dataProvider->pagination->currentPage*$this->grid->dataProvider->pagination->pageSize + $row+1', //  row is zero based
             ),
-            'transaction_number',
+            array(
+                'name'=>'transaction_number', 
+                'value'=>'CHtml::link($data->transaction_number, array("view", "id"=>$data->id))', 
+                'type'=>'raw',
+            ),
             array(
                 'name' => 'transaction_date',
                 'value' => "Yii::app()->dateFormatter->formatDateTime(\$data->transaction_date, 'medium', 'short')",
@@ -158,21 +162,19 @@ $('.search-form form').submit(function(){
             ),
             array(
                 'class' => 'CButtonColumn',
-                'template' => '{views} {rework}',
+                'template' => '{views}',
                 'buttons' => array(
                     'views' => array(
                         'label' => 'view',
                         'url' => 'Yii::app()->createUrl("frontDesk/bodyRepairRegistration/view", array("id"=>$data->id))',
                         'visible' => 'Yii::app()->user->checkAccess("bodyRepairCreate") || Yii::app()->user->checkAccess("bodyRepairEdit") || Yii::app()->user->checkAccess("bodyRepairView")',
                     ),
-                    'rework' => array(
-                        'label' => 'rework',
-                        'url' => 'Yii::app()->createUrl("frontDesk/generalRepairRegistration/reworkTransaction", array("id"=>$data->id))',
-                        'visible' => '$data->status == "Finished" && Yii::app()->user->checkAccess("generalRepairEdit")',
-//                        'options' => array(
-//                            'confirm' => 'Are you sure to finish this transaction?',
-//                        ),
-                    ),
+//                    'rework' => array(
+//                        'label' => 'rework',
+//                        'url' => 'Yii::app()->createUrl("frontDesk/generalRepairRegistration/reworkTransaction", array("id"=>$data->id))',
+//                        'visible' => '$data->status == "Finished" && Yii::app()->user->checkAccess("generalRepairEdit")',
+////                        ),
+//                    ),
                 ),
             ),
         ),

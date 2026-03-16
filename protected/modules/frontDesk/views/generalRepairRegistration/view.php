@@ -24,7 +24,7 @@ $this->breadcrumbs = array(
                         'visible' => Yii::app()->user->checkAccess("generalRepairCreate") || Yii::app()->user->checkAccess("generalRepairEdit") || Yii::app()->user->checkAccess("generalRepairView")
                     )); ?>
              
-                    <?php if (!empty($model->work_order_number) && $model->total_service > 0 && $model->status !== 'Finished'): ?>
+                    <?php if (!empty($model->work_order_number) && $model->total_service > 0 && $model->status !== 'Finished' && $model->user_id_cancelled == null): ?>
                         <?php echo CHtml::link('<span class="fa fa-print"></span> WO', array("pdfWorkOrder", "id" => $model->id), array(
                             'class'=>'button info right', 
                             'style' => 'margin-right:10px', 
@@ -33,7 +33,7 @@ $this->breadcrumbs = array(
                         )); ?>
                     <?php endif; ?>
                     
-                    <?php if (!empty($model->sales_order_number) && $model->status !== 'Finished'): ?>
+                    <?php if (!empty($model->sales_order_number) && $model->status !== 'Finished' && $model->user_id_cancelled == null): ?>
                         <?php echo CHtml::link('<span class="fa fa-print"></span> SO', array("pdfSaleOrder", "id" => $model->id), array(
                             'class'=>'button info right', 
                             'style' => 'margin-right:10px', 
@@ -149,7 +149,7 @@ $this->breadcrumbs = array(
                         <?php endif; ?>
                     <?php endif; ?>
                     
-                    <?php if (Yii::app()->user->checkAccess("generalRepairSupervisor")): ?>
+                    <?php if (Yii::app()->user->checkAccess("generalRepairSupervisor") && empty($model->user_id_cancelled)): ?>
                         <?php echo CHtml::link('<span class="fa fa-minus"></span>Cancel Transaction', array("/frontDesk/generalRepairRegistration/cancel", "id" => $model->id), array(
                             'class' => 'button alert right', 
                             'style' => 'margin-right:10px',
@@ -162,9 +162,15 @@ $this->breadcrumbs = array(
                             'style' => 'margin-left:10px',
                             'visible' => Yii::app()->user->checkAccess("generalRepairCreate") || Yii::app()->user->checkAccess("generalRepairEdit")
                         )); ?>
+                    
+                        <?php echo CHtml::link('Need Rework', array("/frontDesk/generalRepairRegistration/reworkTransaction", "id" => $model->id), array(
+                            'class' => 'button warning right', 
+                            'style' => 'margin-right:10px',
+                            'visible' => Yii::app()->user->checkAccess("generalRepairCreate") || Yii::app()->user->checkAccess("generalRepairEdit")
+                        )); ?>
                     <?php endif; ?>
 
-                    <?php if (!empty($invoices) && $model->status !== 'Finished' && (!empty($model->sales_order_number) || !empty($model->work_order_number))): ?>
+                    <?php if (!empty($invoices) && $model->status !== 'Finished' && $model->user_id_cancelled == null && (!empty($model->sales_order_number) || !empty($model->work_order_number))): ?>
                         <?php echo CHtml::submitButton('Finish Transaction', array(
                             'name' => 'SubmitFinish', 
                             'confirm' => 'Are you sure you want to finish this transaction?', 
@@ -174,7 +180,7 @@ $this->breadcrumbs = array(
                         )); ?>
                     <?php endif; ?>
 
-                    <?php if ($model->service_status !== 'Done' && $model->total_service > 0 && $model->status !== 'Finished'): ?>
+                    <?php if ($model->service_status !== 'Done' && $model->total_service > 0 && $model->status !== 'Finished' && $model->user_id_cancelled == null): ?>
                         <?php echo CHtml::submitButton('Finish Service', array(
                             'name' => 'SubmitService', 
                             'confirm' => 'Are you sure you want to finish this services?', 
@@ -184,7 +190,7 @@ $this->breadcrumbs = array(
                         )); ?>
                     <?php endif; ?>
                     
-                    <?php if (empty($invoices) && $model->downpayment_amount == 0 && $model->is_downpayment_paid == 0): ?>
+                    <?php if (empty($invoices) && $model->downpayment_amount == 0 && $model->is_downpayment_paid == 0 && $model->user_id_cancelled == null): ?>
                         <?php echo CHtml::link('<span class="fa fa-plus"></span>Downpayment', Yii::app()->baseUrl . '/frontDesk/generalRepairRegistration/addDownpayment?id=' . $model->id, array(
                             'class' => 'button success left', 
                             'style' => 'margin-left:10px', 

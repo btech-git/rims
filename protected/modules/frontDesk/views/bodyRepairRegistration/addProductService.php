@@ -29,13 +29,13 @@ $this->breadcrumbs=array(
                     <div class="row">
                         <?php $this->widget('zii.widgets.jui.CJuiTabs', array(
                             'tabs' => array(
-                                'Customer Info' => array(
-                                    'id' => 'info1',
-                                    'content' => $this->renderPartial('_infoCustomer', array(
-                                        'bodyRepairRegistration' => $bodyRepairRegistration, 
-                                        'customer' => $customer,
-                                    ), true)
-                                ),
+//                                'Customer Info' => array(
+//                                    'id' => 'info1',
+//                                    'content' => $this->renderPartial('_infoCustomer', array(
+//                                        'bodyRepairRegistration' => $bodyRepairRegistration, 
+//                                        'customer' => $customer,
+//                                    ), true)
+//                                ),
                                 'Vehicle Info' => array(
                                     'id' => 'info2',
                                     'content' => $this->renderPartial('_infoVehicle', array(
