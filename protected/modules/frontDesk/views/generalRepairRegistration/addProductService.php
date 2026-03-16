@@ -81,10 +81,8 @@ $this->breadcrumbs=array(
                                         <th>Date</th>
                                         <th>Type</th>
                                         <th>Car Mileage (KM)</th>
-                                        <th>Branch</th>
                                         <th>User</th>
                                         <th colspan="2">PPn</th>
-                                        <!--<th>PPh</th>-->
                                         <?php if($generalRepairRegistration->header->work_order_number != ""): ?>
                                             <th>WO #</th>
                                         <?php endif; ?>
@@ -96,7 +94,6 @@ $this->breadcrumbs=array(
                                         <td><?php echo CHtml::encode(CHtml::value($generalRepairRegistration->header, 'transaction_date')); ?></td>
                                         <td><?php echo CHtml::encode(CHtml::value($generalRepairRegistration->header, 'repair_type')); ?></td>
                                         <td><?php echo CHtml::encode(CHtml::value($generalRepairRegistration->header, 'vehicle_mileage')); ?></td>
-                                        <td><?php echo CHtml::encode(CHtml::value($generalRepairRegistration->header, 'branch.name')); ?></td>
                                         <td><?php echo CHtml::encode(CHtml::value($generalRepairRegistration->header, 'user.username')); ?></td>
                                         <td>
                                             <?php echo $form->dropDownList($generalRepairRegistration->header, 'ppn', array(

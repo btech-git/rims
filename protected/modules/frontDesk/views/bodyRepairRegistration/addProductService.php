@@ -81,10 +81,8 @@ $this->breadcrumbs=array(
                                         <th>Date</th>
                                         <th>Type</th>
                                         <th>Car Mileage (KM)</th>
-                                        <th>Branch</th>
                                         <th>User</th>
-                                        <th>PPn</th>
-                                        <!--<th>PPh</th>-->
+                                        <th colspan="2">PPn</th>
                                         <?php if ($bodyRepairRegistration->header->work_order_number != ""): ?>
                                             <th>WO #</th>
                                         <?php endif; ?>
@@ -96,7 +94,6 @@ $this->breadcrumbs=array(
                                         <td><?php echo CHtml::encode(CHtml::value($bodyRepairRegistration->header, 'transaction_date')); ?></td>
                                         <td><?php echo CHtml::encode(CHtml::value($bodyRepairRegistration->header, 'repair_type')); ?></td>
                                         <td><?php echo CHtml::encode(CHtml::value($bodyRepairRegistration->header, 'vehicle_mileage')); ?></td>
-                                        <td><?php echo CHtml::encode(CHtml::value($bodyRepairRegistration->header, 'branch.name')); ?></td>
                                         <td><?php echo CHtml::encode(CHtml::value($bodyRepairRegistration->header, 'user.username')); ?></td>
                                         <td>
                                             <?php echo $form->dropDownList($bodyRepairRegistration->header, 'ppn', array(
@@ -117,6 +114,8 @@ $this->breadcrumbs=array(
                                                     }',
                                                 )),
                                             )); ?>
+                                        </td>
+                                        <td>
                                             <?php echo CHtml::activeDropDownList($bodyRepairRegistration->header, 'tax_percentage', array(
                                                 0 => 0,
                                                 10 => 10,
