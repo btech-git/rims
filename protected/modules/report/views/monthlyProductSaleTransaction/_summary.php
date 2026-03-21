@@ -45,6 +45,7 @@
                 <?php $invoiceTotals = array(); ?>
                 <?php $quantityStocks = array(); ?>
                 <?php foreach ($branches as $branch): ?>
+                    <?php $minimumStock = $multiplier * $product->minimum_stock; ?>
                     <?php $invoiceOriginal = isset($monthlyProductSaleTransactionReportDataItem['totals'][$branch->id]) ? $monthlyProductSaleTransactionReportDataItem['totals'][$branch->id] : '0.00'; ?>
                     <?php $invoiceTotal = $multiplier * $invoiceOriginal; ?>
                     <?php $quantityStockOriginal = isset($inventoryAllBranchCurrentStockData[$productId][$branch->id]) ? $inventoryAllBranchCurrentStockData[$productId][$branch->id] : '0.00'; ?>
@@ -52,7 +53,7 @@
                     <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $invoiceTotal)); ?></td>
                     <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $invoiceTotal / $numberOfDays)); ?></td>
                     <td style="text-align: right"></td>
-                    <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $product->minimum_stock)); ?></td>
+                    <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $minimumStock)); ?></td>
                     <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $quantityStock)); ?></td>
                     <?php $invoiceTotals[] = $invoiceTotal; ?>
                     <?php $quantityStocks[] = $quantityStock; ?>
@@ -62,7 +63,7 @@
                 <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $invoiceTotalSum)); ?></td>
                 <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $invoiceTotalSum / $numberOfDays)); ?></td>
                 <td style="text-align: right"></td>
-                <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $product->minimum_stock)); ?></td>
+                <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $minimumStock)); ?></td>
                 <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $quantityStockSum)); ?></td>
             </tr>
         <?php endforeach; ?>
