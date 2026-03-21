@@ -83,7 +83,19 @@
 					<?php echo $form->textField($model,'email',array('size'=>60,'maxlength'=>60)); ?>
 				</div>
 			</div>
-		</div>							
+		</div>
+
+		<!-- BEGIN field -->
+		<div class="field">
+			<div class="row collapse">
+				<div class="small-4 columns">
+					<?php echo CHtml::label('Working Period', '', array('class'=>'prefix')); ?>
+				</div>
+				<div class="small-8 columns">	
+					<?php echo CHtml::dropDownList('WorkingPeriod', '', array('1' => '< 6 bulan', '2' => '>= 6 bulan'), array('empty' => '')); ?>            
+				</div>
+			</div>
+		</div>
 
 	</div>
 

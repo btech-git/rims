@@ -390,12 +390,15 @@ class EmployeeController extends Controller {
         if (isset($_GET['Employee'])) {
             $model->attributes = $_GET['Employee'];
         }
+
+        $workingPeriod = (isset($_GET['WorkingPeriod'])) ? $_GET['WorkingPeriod'] : '';
         
         $dataProvider = $model->search();
 
         $this->render('admin', array(
             'model' => $model,
             'dataProvider' => $dataProvider,
+            'workingPeriod' => $workingPeriod,
         ));
     }
 
