@@ -38,7 +38,7 @@
         <?php $ordinal = 0; ?>
         <?php foreach ($monthlyProductSaleTransactionReportData as $productId => $monthlyProductSaleTransactionReportDataItem): ?>
             <?php $product = Product::model()->findByPk($productId); ?>
-            <?php $multiplier = $unitConversion !== null && $unitConversion->unit_from_id == $product->unit_id ? $unitConversion->multiplier : 1; ?>
+            <?php $multiplier = in_array($product->id, array(39, 40, 41, 42)) && $unitConversion !== null && $unitConversion->unit_from_id == $product->unit_id ? $unitConversion->multiplier : 1; ?>
             <tr>
                 <td style="text-align: center"><?php echo ++$ordinal; ?></td>
                 <td><?php echo $monthlyProductSaleTransactionReportDataItem['product_name']; ?></td>
@@ -47,7 +47,8 @@
                 <?php foreach ($branches as $branch): ?>
                     <?php $invoiceOriginal = isset($monthlyProductSaleTransactionReportDataItem['totals'][$branch->id]) ? $monthlyProductSaleTransactionReportDataItem['totals'][$branch->id] : '0.00'; ?>
                     <?php $invoiceTotal = $multiplier * $invoiceOriginal; ?>
-                    <?php $quantityStock = isset($inventoryAllBranchCurrentStockData[$productId][$branch->id]) ? $inventoryAllBranchCurrentStockData[$productId][$branch->id] : '0.00'; ?>
+                    <?php $quantityStockOriginal = isset($inventoryAllBranchCurrentStockData[$productId][$branch->id]) ? $inventoryAllBranchCurrentStockData[$productId][$branch->id] : '0.00'; ?>
+                    <?php $quantityStock = $multiplier * $quantityStockOriginal; ?>
                     <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $invoiceTotal)); ?></td>
                     <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $invoiceTotal / $numberOfDays)); ?></td>
                     <td style="text-align: right"></td>
