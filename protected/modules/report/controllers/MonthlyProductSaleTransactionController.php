@@ -82,6 +82,8 @@ class MonthlyProductSaleTransactionController extends Controller {
         );
 
         $branches = Branch::model()->findAllByAttributes(array('status' => 'Active'));
+
+        $unitConversion = UnitConversion::model()->findByAttributes(array('unit_to_id' => 1));
         
         if (isset($_GET['ResetFilter'])) {
             $this->redirect(array('summary'));
@@ -108,6 +110,7 @@ class MonthlyProductSaleTransactionController extends Controller {
             'subCategoryId' => $subCategoryId,
             'subMasterCategoryId' => $subMasterCategoryId,
             'branches' => $branches,
+            'unitConversion' => $unitConversion,
         ));
     }
     
