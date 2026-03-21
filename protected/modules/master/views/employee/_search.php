@@ -145,7 +145,7 @@
 				</div>
 				<div class="small-8 columns">	
 					<?php echo  $form->dropDownList($model, 'status', array('Active' => 'Active',
-					'Inactive' => 'Inactive', ), array('prompt' => 'Select',)); ?>
+					'Inactive' => 'Inactive'), array('empty' => '')); ?>
 				</div>
 			</div>
 		</div>	
@@ -158,7 +158,7 @@
 				</div>
 				<div class="small-8 columns">	
 					<?php echo  $form->dropDownList($model, 'salary_type', array('Hourly' => 'Hourly',
-					'Daily' => 'Daily', 'Weekly'=>'Weekly', 'Monthly'=>'Monthly', 'One Time Payment'=>'One Time Payment' ));  ?>
+					'Daily' => 'Daily', 'Weekly'=>'Weekly', 'Monthly'=>'Monthly', 'One Time Payment'=>'One Time Payment'), array('empty' => ''));  ?>
 				</div>
 			</div>
 		</div>	
@@ -183,7 +183,7 @@
 				</div>
 				<div class="small-8 columns">	
 					<?php echo  $form->dropDownList($model, 'payment_type', array('Cash' => 'Cash',
-					'Transfer' => 'Transfer' )); ?>
+					'Transfer' => 'Transfer'), array('empty' => '')); ?>
 				</div>
 			</div>
 		</div>
@@ -200,21 +200,18 @@
 			</div>
 		</div>
 
-				<div class="field">
-					<div class="row collapse">
-						<div class="small-4 columns">
-							<?php echo $form->label($model,'is_deleted', array('class'=>'prefix'));?>
-						</div>
-						<div class="small-8 columns">
-							<?php echo  $form->dropDownList($model, 'is_deleted', array(1=> 'Show Deleted',
-							0 => 'Hide Deleted', ), array('prompt' => 'Select',)); ?>
-						</div>
-					</div>
+		<div class="field">
+			<div class="row collapse">
+				<div class="small-4 columns">
+					<?php echo $form->label($model,'is_deleted', array('class'=>'prefix'));?>
 				</div>
-
-
+				<div class="small-8 columns">
+					<?php echo  $form->dropDownList($model, 'is_deleted', array(1=> 'Show Deleted',
+					0 => 'Hide Deleted'), array('empty' => '')); ?>
+				</div>
+			</div>
+		</div>
 	</div>	
-
 </div>
 
 <div class="field buttons text-right">
