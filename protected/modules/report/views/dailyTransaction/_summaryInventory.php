@@ -21,7 +21,7 @@
                     <td><?php echo CHtml::encode(CHtml::value($header, 'status_document')); ?></td>
                     <td>
                         <?php if ($header->is_verified == 0): ?>
-                            <?php echo CHtml::link('<span class="fa fa-check"></span>Verify', array("/report/dailyTransaction/verifySent", "id" => $header->id), array(
+                            <?php echo CHtml::link('<span class="fa fa-check"></span>Verify', array("/report/dailyTransaction/verifySent", "id" => $header->id, 'branchId' => $branchId, 'transactionDate' => $transactionDate), array(
                                 'class' => 'button success center', 
                                 'style' => 'margin-right:10px', 
                             )); ?>
@@ -60,7 +60,7 @@
                     <td><?php echo CHtml::encode(CHtml::value($header, 'status_document')); ?></td>
                     <td>
                         <?php if ($header->is_verified == 0): ?>
-                            <?php echo CHtml::link('<span class="fa fa-check"></span>Verify', array("/report/dailyTransaction/verifyTransfer", "id" => $header->id), array(
+                            <?php echo CHtml::link('<span class="fa fa-check"></span>Verify', array("/report/dailyTransaction/verifyTransfer", "id" => $header->id, 'branchId' => $branchId, 'transactionDate' => $transactionDate), array(
                                 'class' => 'button success center', 
                                 'style' => 'margin-right:10px', 
                             )); ?>
@@ -113,7 +113,7 @@
                     </td>
                     <td>
                         <?php if ($header->is_verified == 0): ?>
-                            <?php echo CHtml::link('<span class="fa fa-check"></span>Verify', array("/report/dailyTransaction/verifyDelivery", "id" => $header->id), array(
+                            <?php echo CHtml::link('<span class="fa fa-check"></span>Verify', array("/report/dailyTransaction/verifyDelivery", "id" => $header->id, 'branchId' => $branchId, 'transactionDate' => $transactionDate), array(
                                 'class' => 'button success center', 
                                 'style' => 'margin-right:10px', 
                             )); ?>
@@ -166,7 +166,7 @@
                     </td>
                     <td>
                         <?php if ($header->is_verified == 0): ?>
-                            <?php echo CHtml::link('<span class="fa fa-check"></span>Verify', array("/report/dailyTransaction/verifyMovementOut", "id" => $header->id), array(
+                            <?php echo CHtml::link('<span class="fa fa-check"></span>Verify', array("/report/dailyTransaction/verifyMovementOut", "id" => $header->id, 'branchId' => $branchId, 'transactionDate' => $transactionDate), array(
                                 'class' => 'button success center', 
                                 'style' => 'margin-right:10px', 
                             )); ?>
@@ -225,7 +225,7 @@
                     </td>
                     <td>
                         <?php if ($header->is_verified == 0): ?>
-                            <?php echo CHtml::link('<span class="fa fa-check"></span>Verify', array("/report/dailyTransaction/verifyReceive", "id" => $header->id), array(
+                            <?php echo CHtml::link('<span class="fa fa-check"></span>Verify', array("/report/dailyTransaction/verifyReceive", "id" => $header->id, 'branchId' => $branchId, 'transactionDate' => $transactionDate), array(
                                 'class' => 'button success center', 
                                 'style' => 'margin-right:10px', 
                             )); ?>
@@ -274,7 +274,7 @@
                     </td>
                     <td>
                         <?php if ($header->is_verified == 0): ?>
-                            <?php echo CHtml::link('<span class="fa fa-check"></span>Verify', array("/report/dailyTransaction/verifyMovementIn", "id" => $header->id), array(
+                            <?php echo CHtml::link('<span class="fa fa-check"></span>Verify', array("/report/dailyTransaction/verifyMovementIn", "id" => $header->id, 'branchId' => $branchId, 'transactionDate' => $transactionDate), array(
                                 'class' => 'button success center', 
                                 'style' => 'margin-right:10px', 
                             )); ?>

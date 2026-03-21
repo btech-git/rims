@@ -102,124 +102,124 @@ class DailyTransactionController extends Controller {
         ));
     }
     
-    public function actionVerifyCashTransaction($id) {
+    public function actionVerifyCashTransaction($id, $branchId, $transactionDate) {
         $model = CashTransaction::model()->findByPk($id);
         $model->is_verified = 1; 
         $model->user_id_verified = Yii::app()->user->id;
         $model->verified_datetime = date('Y-m-d H:i:s');
-        $model->update(array('is_verified', 'user_id_verified', 'verified_datetime'));
+        // $model->update(array('is_verified', 'user_id_verified', 'verified_datetime'));
 
-        $this->redirect(array('summary'));
+        $this->redirect(array('summary', 'BranchId' => $branchId, 'TransactionDate' => $transactionDate));
     }
 
-    public function actionVerifyPurchase($id) {
+    public function actionVerifyPurchase($id, $branchId, $transactionDate) {
         $model = TransactionPurchaseOrder::model()->findByPk($id);
         $model->is_verified = 1; 
         $model->user_id_verified = Yii::app()->user->id;
         $model->verified_datetime = date('Y-m-d H:i:s');
-        $model->update(array('is_verified', 'user_id_verified', 'verified_datetime'));
+        // $model->update(array('is_verified', 'user_id_verified', 'verified_datetime'));
 
-        $this->redirect(array('summary'));
+        $this->redirect(array('summary', 'BranchId' => $branchId, 'TransactionDate' => $transactionDate));
     }
 
-    public function actionVerifyPaymentOut($id) {
+    public function actionVerifyPaymentOut($id, $branchId, $transactionDate) {
         $model = PaymentOut::model()->findByPk($id);
         $model->is_verified = 1; 
         $model->user_id_verified = Yii::app()->user->id;
         $model->verified_datetime = date('Y-m-d H:i:s');
-        $model->update(array('is_verified', 'user_id_verified', 'verified_datetime'));
+        // $model->update(array('is_verified', 'user_id_verified', 'verified_datetime'));
 
-        $this->redirect(array('summary'));
+        $this->redirect(array('summary', 'BranchId' => $branchId, 'TransactionDate' => $transactionDate));
     }
 
-    public function actionVerifyRegistration($id) {
+    public function actionVerifyRegistration($id, $branchId, $transactionDate) {
         $model = RegistrationTransaction::model()->findByPk($id);
         $model->is_verified = 1; 
         $model->user_id_verified = Yii::app()->user->id;
         $model->verified_datetime = date('Y-m-d H:i:s');
-        $model->update(array('is_verified', 'user_id_verified', 'verified_datetime'));
+        // $model->update(array('is_verified', 'user_id_verified', 'verified_datetime'));
 
-        $this->redirect(array('summary'));
+        $this->redirect(array('summary', 'BranchId' => $branchId, 'TransactionDate' => $transactionDate));
     }
 
-    public function actionVerifyInvoice($id) {
+    public function actionVerifyInvoice($id, $branchId, $transactionDate) {
         $model = InvoiceHeader::model()->findByPk($id);
         $model->is_verified = 1; 
         $model->user_id_verified = Yii::app()->user->id;
         $model->verified_datetime = date('Y-m-d H:i:s');
-        $model->update(array('is_verified', 'user_id_verified', 'verified_datetime'));
+        // $model->update(array('is_verified', 'user_id_verified', 'verified_datetime'));
 
-        $this->redirect(array('summary'));
+        $this->redirect(array('summary', 'BranchId' => $branchId, 'TransactionDate' => $transactionDate));
     }
 
-    public function actionVerifyPaymentIn($id) {
+    public function actionVerifyPaymentIn($id, $branchId, $transactionDate) {
         $model = PaymentIn::model()->findByPk($id);
         $model->is_verified = 1; 
         $model->user_id_verified = Yii::app()->user->id;
         $model->verified_datetime = date('Y-m-d H:i:s');
-        $model->update(array('is_verified', 'user_id_verified', 'verified_datetime'));
+        // $model->update(array('is_verified', 'user_id_verified', 'verified_datetime'));
 
-        $this->redirect(array('summary'));
+        $this->redirect(array('summary', 'BranchId' => $branchId, 'TransactionDate' => $transactionDate));
     }
 
-    public function actionVerifySent($id) {
+    public function actionVerifySent($id, $branchId, $transactionDate) {
         $model = TransactionSentRequest::model()->findByPk($id);
         $model->is_verified = 1; 
         $model->user_id_verified = Yii::app()->user->id;
         $model->verified_datetime = date('Y-m-d H:i:s');
-        $model->update(array('is_verified', 'user_id_verified', 'verified_datetime'));
+        // $model->update(array('is_verified', 'user_id_verified', 'verified_datetime'));
 
-        $this->redirect(array('summary'));
+        $this->redirect(array('summary', 'BranchId' => $branchId, 'TransactionDate' => $transactionDate));
     }
 
-    public function actionVerifyTransfer($id) {
+    public function actionVerifyTransfer($id, $branchId, $transactionDate) {
         $model = TransactionTransferRequest::model()->findByPk($id);
         $model->is_verified = 1; 
         $model->user_id_verified = Yii::app()->user->id;
         $model->verified_datetime = date('Y-m-d H:i:s');
-        $model->update(array('is_verified', 'user_id_verified', 'verified_datetime'));
+        // $model->update(array('is_verified', 'user_id_verified', 'verified_datetime'));
 
-        $this->redirect(array('summary'));
+        $this->redirect(array('summary', 'BranchId' => $branchId, 'TransactionDate' => $transactionDate));
     }
 
-    public function actionVerifyDelivery($id) {
+    public function actionVerifyDelivery($id, $branchId, $transactionDate) {
         $model = TransactionDeliveryOrder::model()->findByPk($id);
         $model->is_verified = 1; 
         $model->user_id_verified = Yii::app()->user->id;
         $model->verified_datetime = date('Y-m-d H:i:s');
-        $model->update(array('is_verified', 'user_id_verified', 'verified_datetime'));
+        // $model->update(array('is_verified', 'user_id_verified', 'verified_datetime'));
 
-        $this->redirect(array('summary'));
+        $this->redirect(array('summary', 'BranchId' => $branchId, 'TransactionDate' => $transactionDate));
     }
 
-    public function actionVerifyMovementOut($id) {
+    public function actionVerifyMovementOut($id, $branchId, $transactionDate) {
         $model = MovementOutHeader::model()->findByPk($id);
         $model->is_verified = 1; 
         $model->user_id_verified = Yii::app()->user->id;
         $model->verified_datetime = date('Y-m-d H:i:s');
-        $model->update(array('is_verified', 'user_id_verified', 'verified_datetime'));
+        // $model->update(array('is_verified', 'user_id_verified', 'verified_datetime'));
 
-        $this->redirect(array('summary'));
+        $this->redirect(array('summary', 'BranchId' => $branchId, 'TransactionDate' => $transactionDate));
     }
 
-    public function actionVerifyReceive($id) {
+    public function actionVerifyReceive($id, $branchId, $transactionDate) {
         $model = TransactionReceiveItem::model()->findByPk($id);
         $model->is_verified = 1; 
         $model->user_id_verified = Yii::app()->user->id;
         $model->verified_datetime = date('Y-m-d H:i:s');
-        $model->update(array('is_verified', 'user_id_verified', 'verified_datetime'));
+        // $model->update(array('is_verified', 'user_id_verified', 'verified_datetime'));
 
-        $this->redirect(array('summary'));
+        $this->redirect(array('summary', 'BranchId' => $branchId, 'TransactionDate' => $transactionDate));
     }
 
-    public function actionVerifyMovementIn($id) {
+    public function actionVerifyMovementIn($id, $branchId, $transactionDate) {
         $model = MovementInHeader::model()->findByPk($id);
         $model->is_verified = 1; 
         $model->user_id_verified = Yii::app()->user->id;
         $model->verified_datetime = date('Y-m-d H:i:s');
-        $model->update(array('is_verified', 'user_id_verified', 'verified_datetime'));
+        // $model->update(array('is_verified', 'user_id_verified', 'verified_datetime'));
 
-        $this->redirect(array('summary'));
+        $this->redirect(array('summary', 'BranchId' => $branchId, 'TransactionDate' => $transactionDate));
     }
 
     public function getVehicleTabData($transactionDate, $branchId) {
