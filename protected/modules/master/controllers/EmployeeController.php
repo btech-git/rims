@@ -396,7 +396,6 @@ class EmployeeController extends Controller {
         $this->render('admin', array(
             'model' => $model,
             'dataProvider' => $dataProvider,
-            'workingPeriod' => $workingPeriod,
         ));
     }
 
