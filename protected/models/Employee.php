@@ -316,6 +316,77 @@ class Employee extends CActiveRecord {
         ));
     }
 
+    public function searchAndByWorkingPeriod($workingPeriod) {
+        // @todo Please modify the following code to remove attributes that should not be searched.
+
+        $criteria = new CDbCriteria;
+
+        $criteria->compare('id', $this->id);
+        $criteria->compare('name', $this->name, true);
+        $criteria->compare('recruitment_date', $this->recruitment_date, true);
+        $criteria->compare('local_address', $this->local_address, true);
+        $criteria->compare('home_address', $this->home_address, true);
+        $criteria->compare('province_id', $this->province_id);
+        $criteria->compare('city_id', $this->city_id);
+        $criteria->compare('home_province', $this->home_province);
+        $criteria->compare('home_city', $this->home_city);
+        $criteria->compare('sex', $this->sex, true);
+        $criteria->compare('email', $this->email, true);
+        $criteria->compare('id_card', $this->id_card, true);
+        $criteria->compare('driving_license', $this->driving_license, true);
+        $criteria->compare('branch_id', $this->branch_id);
+        $criteria->compare('status', $this->status);
+        $criteria->compare('salary_type', $this->salary_type, true);
+        $criteria->compare('basic_salary', $this->basic_salary, true);
+        $criteria->compare('payment_type', $this->payment_type, true);
+        $criteria->compare('code', $this->code, true);
+        $criteria->compare('availability', $this->availability, true);
+        $criteria->compare('skills', $this->skills, true);
+        $criteria->compare('registration_service_id', $this->registration_service_id);
+        $criteria->compare('is_deleted', $this->is_deleted);
+        $criteria->compare('deleted_at', $this->deleted_at, true);
+        $criteria->compare('deleted_by', $this->deleted_by);
+        $criteria->compare('off_day', $this->off_day, true);
+        $criteria->compare('mobile_phone_number', $this->mobile_phone_number, true);
+        $criteria->compare('marriage_status', $this->marriage_status, true);
+        $criteria->compare('children_quantity', $this->children_quantity);
+        $criteria->compare('emergency_contact_relationship', $this->emergency_contact_relationship, true);
+        $criteria->compare('division_id', $this->division_id);
+        $criteria->compare('position_id', $this->position_id);
+        $criteria->compare('level_id', $this->level_id);
+        $criteria->compare('employee_head_id', $this->employee_head_id);
+        $criteria->compare('mother_name', $this->mother_name, true);
+        $criteria->compare('bank_name', $this->bank_name, true);
+        $criteria->compare('birth_place', $this->birth_place, true);
+        $criteria->compare('emergency_contact_name', $this->emergency_contact_name, true);
+        $criteria->compare('religion', $this->religion, true);
+        $criteria->compare('family_card_number', $this->family_card_number, true);
+        $criteria->compare('bank_account_number', $this->bank_account_number, true);
+        $criteria->compare('tax_registration_number', $this->tax_registration_number, true);
+        $criteria->compare('school_degree', $this->school_degree, true);
+        $criteria->compare('school_subject', $this->school_subject, true);
+        $criteria->compare('employment_type', $this->employment_type, true);
+        $criteria->compare('emergency_contact_mobile_phone', $this->emergency_contact_mobile_phone, true);
+        $criteria->compare('birth_date', $this->birth_date, true);
+        $criteria->compare('emergency_contact_address', $this->emergency_contact_address, true);
+        $criteria->compare('onleave_allocation', $this->onleave_allocation);
+        $criteria->compare('user_id', $this->user_id);
+        $criteria->compare('clock_in_time', $this->clock_in_time, true);
+        $criteria->compare('clock_out_time', $this->clock_out_time, true);
+        $criteria->compare('created_datetime', $this->created_datetime, true);
+        $criteria->compare('updated_datetime', $this->updated_datetime, true);
+        $criteria->compare('user_id_updated', $this->user_id_updated);
+
+        if (!empty($workingPeriod)) {
+            $comparator = $workingPeriod == '1' ? '<' : '>=';
+            $criteria->addCondition("DATEDIFF(CURDATE(), recruitment_date) {$comparator} 180");
+        }
+
+        return new CActiveDataProvider($this, array(
+            'criteria' => $criteria,
+        ));
+    }
+
     public function searchResigned() {
         // @todo Please modify the following code to remove attributes that should not be searched.
 

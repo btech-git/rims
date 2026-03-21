@@ -92,7 +92,7 @@
 					<?php echo CHtml::label('Working Period', '', array('class'=>'prefix')); ?>
 				</div>
 				<div class="small-8 columns">	
-					<?php echo CHtml::dropDownList('WorkingPeriod', '', array('1' => '< 6 bulan', '2' => '>= 6 bulan'), array('empty' => '')); ?>            
+					<?php echo CHtml::dropDownList('WorkingPeriod', $workingPeriod, array('1' => '< 6 bulan', '2' => '>= 6 bulan'), array('empty' => '')); ?>            
 				</div>
 			</div>
 		</div>

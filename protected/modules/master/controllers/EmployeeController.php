@@ -392,8 +392,8 @@ class EmployeeController extends Controller {
         }
 
         $workingPeriod = (isset($_GET['WorkingPeriod'])) ? $_GET['WorkingPeriod'] : '';
-        
-        $dataProvider = $model->search();
+
+        $dataProvider = $model->searchAndByWorkingPeriod($workingPeriod);
 
         $this->render('admin', array(
             'model' => $model,
