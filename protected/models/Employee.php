@@ -379,6 +379,7 @@ class Employee extends CActiveRecord {
 
         if (!empty($workingPeriod)) {
             $comparator = $workingPeriod == '1' ? '<' : '>=';
+            echo $comparator;
             $criteria->addCondition("DATEDIFF(CURDATE(), recruitment_date) {$comparator} 180");
         }
 
