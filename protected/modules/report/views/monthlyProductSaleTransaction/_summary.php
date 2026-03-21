@@ -38,7 +38,7 @@
         <?php $ordinal = 0; ?>
         <?php foreach ($monthlyProductSaleTransactionReportData as $productId => $monthlyProductSaleTransactionReportDataItem): ?>
             <?php $product = Product::model()->findByPk($productId); ?>
-            <?php $multiplier = in_array($product->id, array(39, 40, 41, 42)) && $unitConversion !== null && $unitConversion->unit_from_id == $product->unit_id ? $unitConversion->multiplier : 1; ?>
+            <?php $multiplier = in_array($product->product_sub_master_category_id, array(39, 40, 41, 42)) && $unitConversion !== null && $unitConversion->unit_from_id == $product->unit_id ? $unitConversion->multiplier : 1; ?>
             <tr>
                 <td style="text-align: center"><?php echo ++$ordinal; ?></td>
                 <td><?php echo $monthlyProductSaleTransactionReportDataItem['product_name']; ?></td>
