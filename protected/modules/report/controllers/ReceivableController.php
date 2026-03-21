@@ -59,7 +59,7 @@ class ReceivableController extends Controller {
         $receivableSummary->setupFilter($filters);
         
         $customerIds = array_map(function($customer) { return $customer->id; }, $receivableSummary->dataProvider->data);
-        $receivableReport = InvoiceHeader::getReceivableReport($endDate, $branchId, $customerType, $customerIds);
+        $receivableReport = InvoiceHeader::getReceivableReport($endDate, $branchId, $customerIds);
         $invoiceHeaderIds = array_map(function($receivableReportItem) { return $receivableReportItem['id']; }, $receivableReport);
         $receivablePaymentReport = PaymentInDetail::getReceivablePaymentReport($endDate, $invoiceHeaderIds);
         

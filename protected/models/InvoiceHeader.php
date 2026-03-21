@@ -2800,10 +2800,9 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
         return $resultSet;
     }
     
-    public static function getReceivableReport($endDate, $branchId, $customerType, $customerIds) {
+    public static function getReceivableReport($endDate, $branchId, $customerIds) {
         $customerIdsSql = empty($customerIds) ? 'NULL' : implode(',', $customerIds);
         $branchConditionSql = '';
-        $customerTypeConditionSql = '';
         
         $params = array(
             ':end_date' => $endDate,
@@ -2812,11 +2811,6 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
         if (!empty($branchId)) {
             $branchConditionSql = ' AND i.branch_id = :branch_id';
             $params[':branch_id'] = $branchId;
-        }
-        
-        if (!empty($customerType)) {
-            $customerTypeConditionSql = ' AND c.customer_type = :customer_type';
-            $params[':customer_type'] = $customerType;
         }
         
         $sql = "SELECT i.id, i.customer_id, i.invoice_number, i.invoice_date, i.due_date, v.plate_number, i.total_price, ic.name AS insurance, 
@@ -2834,7 +2828,7 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
                     FROM " . PaymentInDetail::model()->tableName() . " d
                     INNER JOIN " . PaymentIn::model()->tableName() . " h ON h.id = d.payment_in_id
                     WHERE i.id = d.invoice_header_id AND h.user_id_cancelled IS NULL AND h.payment_date BETWEEN '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND :end_date
-                ) > 0" . $branchConditionSql . $customerTypeConditionSql . "
+                ) > 0" . $branchConditionSql . "
                 ORDER BY i.customer_id ASC, i.invoice_date ASC";
         
         $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
