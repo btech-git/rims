@@ -380,10 +380,10 @@ class Employee extends CActiveRecord {
         $criteria->compare('updated_datetime', $this->updated_datetime, true);
         $criteria->compare('user_id_updated', $this->user_id_updated);
 
-        if (!empty($this->working_period_mode)) {
-            $comparator = $this->working_period_mode == '1' ? '<' : '>=';
-            $criteria->addCondition("DATEDIFF(CURDATE(), recruitment_date) {$comparator} 180");
-        }
+        // if (!empty($this->working_period_mode)) {
+        //     $comparator = $this->working_period_mode == '1' ? '<' : '>=';
+        //     $criteria->addCondition("DATEDIFF(CURDATE(), recruitment_date) {$comparator} 180");
+        // }
 
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
