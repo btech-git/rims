@@ -106,6 +106,8 @@
  */
 class Employee extends CActiveRecord {
 
+    public $working_period_mode;
+
     /**
      * @return string the associated database table name
      */
@@ -128,10 +130,10 @@ class Employee extends CActiveRecord {
             array('id_card, driving_license, off_day, religion, family_card_number, bank_account_number, tax_registration_number', 'length', 'max' => 30),
             array('salary_type, payment_type, code, school_degree, school_subject, employment_type, emergency_contact_mobile_phone', 'length', 'max' => 50),
             array('availability', 'length', 'max' => 5),
-            array('local_address, home_address, skills, deleted_at, birth_date, emergency_contact_address, created_datetime, updated_datetime', 'safe'),
+            array('local_address, home_address, skills, deleted_at, birth_date, emergency_contact_address, created_datetime, updated_datetime, working_period_mode', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, name, recruitment_date, local_address, home_address, province_id, city_id, home_province, home_city, sex, email, id_card, driving_license, branch_id, status, salary_type, basic_salary, payment_type, code, availability, skills, registration_service_id, is_deleted, deleted_at, deleted_by, off_day, mobile_phone_number, marriage_status, children_quantity, emergency_contact_relationship, division_id, position_id, level_id, employee_head_id, mother_name, bank_name, birth_place, emergency_contact_name, religion, family_card_number, bank_account_number, tax_registration_number, school_degree, school_subject, employment_type, emergency_contact_mobile_phone, birth_date, emergency_contact_address, onleave_allocation, user_id, clock_in_time, clock_out_time, created_datetime, updated_datetime, user_id_updated', 'safe', 'on' => 'search'),
+            array('id, name, recruitment_date, local_address, home_address, province_id, city_id, home_province, home_city, sex, email, id_card, driving_license, branch_id, status, salary_type, basic_salary, payment_type, code, availability, skills, registration_service_id, is_deleted, deleted_at, deleted_by, off_day, mobile_phone_number, marriage_status, children_quantity, emergency_contact_relationship, division_id, position_id, level_id, employee_head_id, mother_name, bank_name, birth_place, emergency_contact_name, religion, family_card_number, bank_account_number, tax_registration_number, school_degree, school_subject, employment_type, emergency_contact_mobile_phone, birth_date, emergency_contact_address, onleave_allocation, user_id, clock_in_time, clock_out_time, created_datetime, updated_datetime, user_id_updated, working_period_mode', 'safe', 'on' => 'search'),
         );
     }
 
@@ -247,6 +249,7 @@ class Employee extends CActiveRecord {
             'created_datetime' => 'Created Datetime',
             'updated_datetime' => 'Updated Datetime',
             'user_id_updated' => 'User Id Updated',
+            'working_period_mode' => 'Working Period Mode',
         );
     }
 
@@ -316,7 +319,7 @@ class Employee extends CActiveRecord {
         ));
     }
 
-    public function searchAndByWorkingPeriod($workingPeriod) {
+    public function searchAndByWorkingPeriodMode() {
         // @todo Please modify the following code to remove attributes that should not be searched.
 
         $criteria = new CDbCriteria;
@@ -377,9 +380,8 @@ class Employee extends CActiveRecord {
         $criteria->compare('updated_datetime', $this->updated_datetime, true);
         $criteria->compare('user_id_updated', $this->user_id_updated);
 
-        if (!empty($workingPeriod)) {
-            $comparator = $workingPeriod == '1' ? '<' : '>=';
-            echo $comparator;
+        if (!empty($this->working_period_mode)) {
+            $comparator = $this->working_period_mode == '1' ? '<' : '>=';
             $criteria->addCondition("DATEDIFF(CURDATE(), recruitment_date) {$comparator} 180");
         }
 

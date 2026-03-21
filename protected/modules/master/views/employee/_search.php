@@ -89,10 +89,10 @@
 		<div class="field">
 			<div class="row collapse">
 				<div class="small-4 columns">
-					<?php echo CHtml::label('Working Period', '', array('class'=>'prefix')); ?>
+					<?php echo $form->label($model, 'working_period_mode', array('class'=>'prefix')); ?>
 				</div>
 				<div class="small-8 columns">	
-					<?php echo CHtml::dropDownList('WorkingPeriod', $workingPeriod, array('1' => 'Kurang dari 6 bulan', '2' => 'Lebih dari atau sama dengan 6 bulan'), array('empty' => '')); ?>            
+					<?php echo $form->dropDownList($model, 'working_period_mode', array('1' => 'Kurang dari 6 bulan', '2' => 'Lebih dari atau sama dengan 6 bulan'), array('empty' => '')); ?>            
 				</div>
 			</div>
 		</div>
