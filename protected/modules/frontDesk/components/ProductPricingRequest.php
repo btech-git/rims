@@ -94,6 +94,7 @@ class ProductPricingRequest extends CComponent {
             $this->header->addError('error', 'Header Error');
         } else {
             $valid = $valid && $this->validateDetailsCount();
+            $valid = $valid && $this->validateDetailsProductCode();
             if (!$valid) {
                 $this->header->addError('error', 'Validate Details Error');
             }
@@ -113,9 +114,25 @@ class ProductPricingRequest extends CComponent {
 
     public function validateDetailsCount() {
         $valid = true;
+        
         if (count($this->details) === 0) {
             $valid = false;
             $this->header->addError('error', 'Form tidak ada data untuk insert database. Minimal satu data detail untuk melakukan penyimpanan.');
+        }
+
+        return $valid;
+    }
+
+    public function validateDetailsProductCode() {
+        $valid = true;
+        
+        foreach ($this->details as $detail) {
+            $product = Product::model()->findByAttributes(array('manufacturer_code' => $detail->product_code));
+            
+            if (!empty($product)) {
+                $valid = false;
+                $this->header->addError('error', 'Data Product yang diinput sudah ada di database.');
+            }
         }
 
         return $valid;

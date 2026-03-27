@@ -17,12 +17,19 @@
                 <?php foreach ($movementOutHeaders as $i => $movementOutHeader): ?>
                     <?php foreach ($movementOutHeader->movementOutDetails as $i => $movementOutDetail): ?>
                         <tr>
-                            <td><?php echo CHtml::link($movementOutHeader->movement_out_no, array("/transaction/movementOutHeader/show", "id"=>$movementOutHeader->id), array('target' => 'blank')); ?></td>
+                            <td>
+                                <?php echo CHtml::link($movementOutHeader->movement_out_no, array(
+                                    "/transaction/movementOutHeader/show", 
+                                    "id"=>$movementOutHeader->id
+                                ), array('target' => 'blank')); ?>
+                            </td>
                             <td><?php echo $movementOutHeader->date_posting; ?></td>
                             <td><?php echo $movementOutHeader->status; ?></td>
                             <td><?php echo $movementOutDetail->product->name; ?></td>
-                            <td><?php echo number_format($movementOutDetail->quantity,0); ?></td>
-                            <td><?php echo number_format(CHtml::encode(CHtml::value($movementOutDetail, 'registrationProduct.quantity_movement_left')),0); ?></td>
+                            <td style="text-align: center"><?php echo number_format($movementOutDetail->quantity,0); ?></td>
+                            <td style="text-align: right">
+                                <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($movementOutDetail, 'registrationProduct.quantity_movement_left'))); ?>
+                            </td>
                         </tr>
                     <?php endforeach; ?>
                 <?php endforeach; ?>

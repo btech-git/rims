@@ -75,7 +75,7 @@
                     <div class="field">
                         <div class="row collapse">
                             <div class="small-4 columns">
-                                <label class="prefix"><?php echo $form->labelEx($productPricingRequest->header, 'Tahun Produksi'); ?></label>
+                                <label class="prefix"><?php echo $form->labelEx($productPricingRequest->header, 'Tahun Kendaraan'); ?></label>
                             </div>
 
                             <div class="small-8 columns">

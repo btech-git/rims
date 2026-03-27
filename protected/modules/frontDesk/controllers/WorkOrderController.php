@@ -139,7 +139,7 @@ class WorkOrderController extends Controller {
         }
         
         if (isset($_GET['SaveExcel'])) {
-            $this->saveToExcel($activeWorkOrderData, array('startDate' => $startDate, 'endDate' => $endDate));
+            $this->saveToExcel($branches, $limit, $startDate, $endDate, $plateNumber, $carMakeId, $carModelId, $workOrderNumber, $transactionStatus, $repairType);
         }
 
         $this->render('admin', array(
@@ -156,7 +156,7 @@ class WorkOrderController extends Controller {
         ));
     }
 
-    protected function saveToExcel($activeWorkOrderData, array $options = array()) {
+    protected function saveToExcel($branches, $limit, $startDate, $endDate, $plateNumber, $carMakeId, $carModelId, $workOrderNumber, $transactionStatus, $repairType) {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
 
@@ -182,15 +182,15 @@ class WorkOrderController extends Controller {
 
         $worksheet->setCellValue('A1', 'Raperind Motor');
         $worksheet->setCellValue('A2', 'Work Order');
-        $worksheet->setCellValue('A3', Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($options['startDate'])) . ' - ' . Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($options['endDate'])));
+        $worksheet->setCellValue('A3', Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($startDate)) . ' - ' . Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($endDate)));
 
         $worksheet->getStyle('A5:P5')->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
         $worksheet->setCellValue('A5', 'Vehicle ID');
         $worksheet->setCellValue('B5', 'Plate #');
-        $worksheet->setCellValue('C5', 'Date');
-        $worksheet->setCellValue('D5', 'Vehicle Model');
-        $worksheet->setCellValue('E5', 'Color');
+        $worksheet->setCellValue('C5', 'Tanggal RG');
+        $worksheet->setCellValue('D5', 'Kendaraan');
+        $worksheet->setCellValue('E5', 'Warna');
         $worksheet->setCellValue('F5', 'RG #');
         $worksheet->setCellValue('G5', 'SL #');
         $worksheet->setCellValue('H5', 'WO #');
@@ -206,25 +206,31 @@ class WorkOrderController extends Controller {
         $worksheet->getStyle('A5:P5')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
         $counter = 6;
-        foreach (array_reverse($activeWorkOrderData) as $activeWorkOrderItem) {
-            $registrationTransaction = RegistrationTransaction::model()->findByPk($activeWorkOrderItem['id']);
-            $invoiceHeader = InvoiceHeader::model()->findByAttributes(array('registration_transaction_id' => $activeWorkOrderItem['id']));
-            $worksheet->setCellValue("A{$counter}", $activeWorkOrderItem['vehicle_id']);
-            $worksheet->setCellValue("B{$counter}", $activeWorkOrderItem['plate_number']);
-            $worksheet->setCellValue("C{$counter}", $activeWorkOrderItem['transaction_date']);
-            $worksheet->setCellValue("D{$counter}", $activeWorkOrderItem['car_make'] . ' - ' . $activeWorkOrderItem['car_model'] . ' - ' . $activeWorkOrderItem['car_sub_model']);
-            $worksheet->setCellValue("E{$counter}", $activeWorkOrderItem['color']);
-            $worksheet->setCellValue("F{$counter}", $activeWorkOrderItem['transaction_number']);
-            $worksheet->setCellValue("G{$counter}", $activeWorkOrderItem['sales_order_number']);
-            $worksheet->setCellValue("H{$counter}", $activeWorkOrderItem['work_order_number']);
-            $worksheet->setCellValue("I{$counter}", $activeWorkOrderItem['work_order_date']);
-            $worksheet->setCellValue("J{$counter}", $registrationTransaction->getMovementOuts());
-            $worksheet->setCellValue("K{$counter}", CHtml::value($invoiceHeader, 'invoice_number'));
-            $worksheet->setCellValue("L{$counter}", $registrationTransaction->getServices());
-            $worksheet->setCellValue("M{$counter}", $activeWorkOrderItem['repair_type']);
-            $worksheet->setCellValue("N{$counter}", $activeWorkOrderItem['problem']);
-            $worksheet->setCellValue("O{$counter}", $activeWorkOrderItem['username']);
-            $worksheet->setCellValue("P{$counter}", $activeWorkOrderItem['status']);
+        foreach ($branches as $branch) {
+            $activeWorkOrderData = RegistrationTransaction::getActiveWorkOrderData($branch->id, $limit, $startDate, $endDate, $plateNumber, $carMakeId, $carModelId, $workOrderNumber, $transactionStatus, $repairType);
+            foreach (array_reverse($activeWorkOrderData) as $activeWorkOrderItem) {
+                $registrationTransaction = RegistrationTransaction::model()->findByPk($activeWorkOrderItem['id']);
+                $invoiceHeader = InvoiceHeader::model()->findByAttributes(array('registration_transaction_id' => $activeWorkOrderItem['id']));
+                
+                $worksheet->setCellValue("A{$counter}", $activeWorkOrderItem['vehicle_id']);
+                $worksheet->setCellValue("B{$counter}", $activeWorkOrderItem['plate_number']);
+                $worksheet->setCellValue("C{$counter}", $activeWorkOrderItem['transaction_date']);
+                $worksheet->setCellValue("D{$counter}", $activeWorkOrderItem['car_make'] . ' - ' . $activeWorkOrderItem['car_model'] . ' - ' . $activeWorkOrderItem['car_sub_model']);
+                $worksheet->setCellValue("E{$counter}", $activeWorkOrderItem['color']);
+                $worksheet->setCellValue("F{$counter}", $activeWorkOrderItem['transaction_number']);
+                $worksheet->setCellValue("G{$counter}", $activeWorkOrderItem['sales_order_number']);
+                $worksheet->setCellValue("H{$counter}", $activeWorkOrderItem['work_order_number']);
+                $worksheet->setCellValue("I{$counter}", $activeWorkOrderItem['work_order_date']);
+                $worksheet->setCellValue("J{$counter}", $registrationTransaction->getMovementOuts());
+                $worksheet->setCellValue("K{$counter}", CHtml::value($invoiceHeader, 'invoice_number'));
+                $worksheet->setCellValue("L{$counter}", $registrationTransaction->getServices());
+                $worksheet->setCellValue("M{$counter}", $activeWorkOrderItem['repair_type']);
+                $worksheet->setCellValue("N{$counter}", $activeWorkOrderItem['problem']);
+                $worksheet->setCellValue("O{$counter}", $activeWorkOrderItem['username']);
+                $worksheet->setCellValue("P{$counter}", $activeWorkOrderItem['status']);
+                
+                $counter++;
+            }
 
             $counter++;
         }
