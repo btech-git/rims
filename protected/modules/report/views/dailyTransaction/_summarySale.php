@@ -41,7 +41,7 @@
                     </td>
                     <td>
                         <?php if ($header->is_verified == 0): ?>
-                            <?php echo CHtml::link('<span></span>Verify', array("/report/dailyTransaction/verifyRegistration", "id" => $header->id), array(
+                            <?php echo CHtml::link('<span></span>Verify', array("/report/dailyTransaction/verifyRegistration", "id" => $header->id, 'branchId' => $branchId, 'transactionDate' => $transactionDate), array(
                                 'class' => 'button success center', 
                                 'style' => 'margin-right:10px', 
                             )); ?>
@@ -99,7 +99,7 @@
                     </td>
                     <td>
                         <?php if ($header->is_verified == 0): ?>
-                            <?php echo CHtml::link('<span></span>Verify', array("/report/dailyTransaction/verifyInvoice", "id" => $header->id), array(
+                            <?php echo CHtml::link('<span></span>Verify', array("/report/dailyTransaction/verifyInvoice", "id" => $header->id, 'branchId' => $branchId, 'transactionDate' => $transactionDate), array(
                                 'class' => 'button success center', 
                                 'style' => 'margin-right:10px', 
                             )); ?>
@@ -143,7 +143,7 @@
                     </td>
                     <td>
                         <?php if ($header->is_verified == 0): ?>
-                            <?php echo CHtml::link('<span class="fa fa-check"></span>Verify', array("/report/dailyTransaction/verifyPaymentIn", "id" => $header->id), array(
+                            <?php echo CHtml::link('<span class="fa fa-check"></span>Verify', array("/report/dailyTransaction/verifyPaymentIn", "id" => $header->id, 'branchId' => $branchId, 'transactionDate' => $transactionDate), array(
                                 'class' => 'button success center', 
                                 'style' => 'margin-right:10px', 
                             )); ?>
@@ -202,7 +202,7 @@
                     </td>
                     <td>
                         <?php if ($header->is_verified == 0): ?>
-                            <?php echo CHtml::link('<span></span>Verify', array("/report/dailyTransaction/verifyRegistration", "id" => $header->id), array(
+                            <?php echo CHtml::link('<span></span>Verify', array("/report/dailyTransaction/verifyRegistration", "id" => $header->id, 'branchId' => $branchId, 'transactionDate' => $transactionDate), array(
                                 'class' => 'button success center', 
                                 'style' => 'margin-right:10px', 
                             )); ?>
@@ -260,7 +260,7 @@
                     </td>
                     <td>
                         <?php if ($header->is_verified == 0): ?>
-                            <?php echo CHtml::link('<span></span>Verify', array("/report/dailyTransaction/verifyInvoice", "id" => $header->id), array(
+                            <?php echo CHtml::link('<span></span>Verify', array("/report/dailyTransaction/verifyInvoice", "id" => $header->id, 'branchId' => $branchId, 'transactionDate' => $transactionDate), array(
                                 'class' => 'button success center', 
                                 'style' => 'margin-right:10px', 
                             )); ?>
@@ -304,7 +304,7 @@
                     </td>
                     <td>
                         <?php if ($header->is_verified == 0): ?>
-                            <?php echo CHtml::link('<span class="fa fa-check"></span>Verify', array("/report/dailyTransaction/verifyPaymentIn", "id" => $header->id), array(
+                            <?php echo CHtml::link('<span class="fa fa-check"></span>Verify', array("/report/dailyTransaction/verifyPaymentIn", "id" => $header->id, 'branchId' => $branchId, 'transactionDate' => $transactionDate), array(
                                 'class' => 'button success center', 
                                 'style' => 'margin-right:10px', 
                             )); ?>

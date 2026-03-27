@@ -38,18 +38,22 @@
         <?php $ordinal = 0; ?>
         <?php foreach ($monthlyProductSaleTransactionReportData as $productId => $monthlyProductSaleTransactionReportDataItem): ?>
             <?php $product = Product::model()->findByPk($productId); ?>
+            <?php $multiplier = in_array($product->product_sub_master_category_id, array(39, 40, 41, 42)) && $unitConversion !== null && $unitConversion->unit_from_id == $product->unit_id ? $unitConversion->multiplier : 1; ?>
             <tr>
                 <td style="text-align: center"><?php echo ++$ordinal; ?></td>
                 <td><?php echo $monthlyProductSaleTransactionReportDataItem['product_name']; ?></td>
                 <?php $invoiceTotals = array(); ?>
                 <?php $quantityStocks = array(); ?>
                 <?php foreach ($branches as $branch): ?>
-                    <?php $invoiceTotal = isset($monthlyProductSaleTransactionReportDataItem['totals'][$branch->id]) ? $monthlyProductSaleTransactionReportDataItem['totals'][$branch->id] : '0.00'; ?>
-                    <?php $quantityStock = isset($inventoryAllBranchCurrentStockData[$productId][$branch->id]) ? $inventoryAllBranchCurrentStockData[$productId][$branch->id] : '0.00'; ?>
+                    <?php $minimumStock = $multiplier * $product->minimum_stock; ?>
+                    <?php $invoiceOriginal = isset($monthlyProductSaleTransactionReportDataItem['totals'][$branch->id]) ? $monthlyProductSaleTransactionReportDataItem['totals'][$branch->id] : '0.00'; ?>
+                    <?php $invoiceTotal = $multiplier * $invoiceOriginal; ?>
+                    <?php $quantityStockOriginal = isset($inventoryAllBranchCurrentStockData[$productId][$branch->id]) ? $inventoryAllBranchCurrentStockData[$productId][$branch->id] : '0.00'; ?>
+                    <?php $quantityStock = $multiplier * $quantityStockOriginal; ?>
                     <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $invoiceTotal)); ?></td>
                     <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $invoiceTotal / $numberOfDays)); ?></td>
                     <td style="text-align: right"></td>
-                    <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $product->minimum_stock)); ?></td>
+                    <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $minimumStock)); ?></td>
                     <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $quantityStock)); ?></td>
                     <?php $invoiceTotals[] = $invoiceTotal; ?>
                     <?php $quantityStocks[] = $quantityStock; ?>
@@ -59,7 +63,7 @@
                 <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $invoiceTotalSum)); ?></td>
                 <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $invoiceTotalSum / $numberOfDays)); ?></td>
                 <td style="text-align: right"></td>
-                <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $product->minimum_stock)); ?></td>
+                <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $minimumStock)); ?></td>
                 <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $quantityStockSum)); ?></td>
             </tr>
         <?php endforeach; ?>

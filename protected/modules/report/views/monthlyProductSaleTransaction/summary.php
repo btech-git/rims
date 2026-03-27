@@ -61,6 +61,7 @@ Yii::app()->clientScript->registerScript('search', "
                         'month' => $month,
                         'monthList' => $monthList,
                         'branches' => $branches,
+                        'unitConversion' => $unitConversion,
                     )); ?>
                 </div>
                 <div class="clear"></div>

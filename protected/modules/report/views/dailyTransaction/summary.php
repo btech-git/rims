@@ -94,12 +94,16 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                     'invoiceHeaderCompanyData' => $invoiceHeaderCompanyData,
                                     'paymentInRetailData' => $paymentInRetailData,
                                     'paymentInCompanyData' => $paymentInCompanyData,
+                                    'branchId' => $branchId,
+                                    'transactionDate' => $transactionDate,
                                 ), true),
                             ),
                             'Pembelian' => array(
                                 'content' => $this->renderPartial('_summaryPurchase', array(
                                     'paymentOutData' => $paymentOutData,
                                     'purchaseOrderData' => $purchaseOrderData,
+                                    'branchId' => $branchId,
+                                    'transactionDate' => $transactionDate,
                                 ), true),
                             ),
                             'Kas' => array(
@@ -118,12 +122,16 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                     'receiveItemData' => $receiveItemData, 
                                     'sentRequestData' => $sentRequestData,
                                     'transferRequestData' => $transferRequestData,
+                                    'branchId' => $branchId,
+                                    'transactionDate' => $transactionDate,
                                 ), true),
                             ),
                             'Kendaraan' => array(
                                 'content' => $this->renderPartial('_summaryVehicle', array(
                                     'vehicleData' => $vehicleData,
                                     'registrationTransactionData' => $registrationTransactionData,
+                                    'branchId' => $branchId,
+                                    'transactionDate' => $transactionDate,
                                 ), true),
                             ),
                         ),

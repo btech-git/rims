@@ -390,8 +390,8 @@ class EmployeeController extends Controller {
         if (isset($_GET['Employee'])) {
             $model->attributes = $_GET['Employee'];
         }
-        
-        $dataProvider = $model->search();
+
+        $dataProvider = $model->searchAndByWorkingPeriodMode();
 
         $this->render('admin', array(
             'model' => $model,
