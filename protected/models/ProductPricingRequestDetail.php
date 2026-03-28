@@ -17,6 +17,9 @@
  * @property integer $product_sub_category_id
  * @property integer $product_pricing_request_header_id
  * @property integer $is_inactive
+ * @property string $product_code
+ * @property integer $unit_id
+ * @property integer $production_year
  *
  * The followings are the available model relations:
  * @property Brand $brand
@@ -26,6 +29,7 @@
  * @property ProductSubMasterCategory $productSubMasterCategory
  * @property SubBrand $subBrand
  * @property SubBrandSeries $subBrandSeries
+ * @property Unit $unit
  */
 class ProductPricingRequestDetail extends CActiveRecord {
 
@@ -43,15 +47,16 @@ class ProductPricingRequestDetail extends CActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('product_name, product_pricing_request_header_id', 'required'),
-            array('brand_id, sub_brand_id, sub_brand_series_id, product_master_category_id, product_sub_master_category_id, product_sub_category_id, product_pricing_request_header_id, is_inactive', 'numerical', 'integerOnly' => true),
+            array('product_name, product_pricing_request_header_id, unit_id, product_code, production_year', 'required'),
+            array('brand_id, sub_brand_id, sub_brand_series_id, product_master_category_id, product_sub_master_category_id, product_sub_category_id, product_pricing_request_header_id, is_inactive, unit_id, production_year', 'numerical', 'integerOnly' => true),
             array('recommended_price', 'length', 'max' => 18),
             array('quantity', 'length', 'max' => 10),
             array('product_name', 'length', 'max' => 100),
+            array('product_code', 'length', 'max' => 50),
             array('memo', 'length', 'max' => 200),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, recommended_price, quantity, product_name, memo, brand_id, sub_brand_id, sub_brand_series_id, product_master_category_id, product_sub_master_category_id, product_sub_category_id, product_pricing_request_header_id, is_inactive', 'safe', 'on' => 'search'),
+            array('id, recommended_price, quantity, product_name, memo, brand_id, sub_brand_id, sub_brand_series_id, product_master_category_id, product_sub_master_category_id, product_sub_category_id, product_pricing_request_header_id, is_inactive, unit_id, product_code, production_year', 'safe', 'on' => 'search'),
         );
     }
 
@@ -69,6 +74,7 @@ class ProductPricingRequestDetail extends CActiveRecord {
             'productSubMasterCategory' => array(self::BELONGS_TO, 'ProductSubMasterCategory', 'product_sub_master_category_id'),
             'subBrand' => array(self::BELONGS_TO, 'SubBrand', 'sub_brand_id'),
             'subBrandSeries' => array(self::BELONGS_TO, 'SubBrandSeries', 'sub_brand_series_id'),
+            'unit' => array(self::BELONGS_TO, 'Unit', 'unit_id'),
         );
     }
 
@@ -93,18 +99,6 @@ class ProductPricingRequestDetail extends CActiveRecord {
         );
     }
 
-    /**
-     * Retrieves a list of models based on the current search/filter conditions.
-     *
-     * Typical usecase:
-     * - Initialize the model fields with values from filter form.
-     * - Execute this method to get CActiveDataProvider instance which will filter
-     * models according to data in model fields.
-     * - Pass data provider to CGridView, CListView or any similar widget.
-     *
-     * @return CActiveDataProvider the data provider that can return the models
-     * based on the search/filter conditions.
-     */
     public function search() {
         // @todo Please modify the following code to remove attributes that should not be searched.
 
@@ -129,14 +123,7 @@ class ProductPricingRequestDetail extends CActiveRecord {
         ));
     }
 
-    /**
-     * Returns the static model of the specified AR class.
-     * Please note that you should have this exact method in all your CActiveRecord descendants!
-     * @param string $className active record class name.
-     * @return ProductPricingRequestDetail the static model class
-     */
     public static function model($className = __CLASS__) {
         return parent::model($className);
     }
-
 }

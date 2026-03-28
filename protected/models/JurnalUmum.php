@@ -708,6 +708,30 @@ class JurnalUmum extends CActiveRecord {
         ));
     }
     
+    public function searchByMonthlyTransactionInfo($coaId, $debitCredit, $year, $month, $page) {
+
+        $criteria = new CDbCriteria;
+
+        $criteria->addCondition("t.coa_id = :coa_id AND t.is_coa_category = 0 AND t.debet_kredit = :debet_kredit AND MONTH(t.tanggal_transaksi) = :transaction_month AND YEAR(t.tanggal_transaksi) = :transaction_year");
+        $criteria->params = array(
+            ':transaction_month' => $month, 
+            ':transaction_year' => $year, 
+            ':coa_id' => $coaId,
+            ':debet_kredit' => $debitCredit,
+        );
+        
+        return new CActiveDataProvider($this, array(
+            'criteria' => $criteria,
+            'sort' => array(
+                'defaultOrder' => 't.tanggal_transaksi ASC',
+            ),
+            'pagination' => array(
+                'pageSize' => 100,
+                'currentPage' => $page - 1,
+            ),
+        ));
+    }
+    
     public function searchByYearlyCustomerReceivableInfo($coaId, $year, $month) {
 
         $criteria = new CDbCriteria;
