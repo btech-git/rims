@@ -126,6 +126,24 @@ class PaymentByBankMonthlyController extends Controller {
         ));
     }
 
+    public function actionMonthlyTransactionInfo($coaId, $debitCredit, $year, $month) {
+        set_time_limit(0);
+        ini_set('memory_limit', '1024M');
+
+        $page = (isset($_GET['page'])) ? $_GET['page'] : 1;
+        
+        $dataProvider = JurnalUmum::model()->searchByMonthlyTransactionInfo($coaId, $debitCredit, $year, $month, $page);
+        $coa = Coa::model()->findByPk($coaId);
+        
+        $this->render('monthlyTransactionInfo', array(
+            'dataProvider' => $dataProvider,
+            'debitCredit' => $debitCredit,
+            'year' => $year,
+            'month' => $month,
+            'coa' => $coa,
+        ));
+    }
+
     protected function saveToExcel(array $options = array()) {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
