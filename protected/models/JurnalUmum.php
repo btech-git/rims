@@ -726,7 +726,7 @@ class JurnalUmum extends CActiveRecord {
                 'defaultOrder' => 't.tanggal_transaksi ASC',
             ),
             'pagination' => array(
-                'pageSize' => 100,
+                'pageSize' => 500,
                 'currentPage' => $page - 1,
             ),
         ));
