@@ -61,7 +61,13 @@
                     <td style="text-align: right">Total Monthly</td>
                     <?php foreach ($selectedCoas as $coa): ?>
                         <td style="text-align: right">
-                            <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $paymentDailyTotals[$coa->id])); ?>
+                            <?php echo CHtml::link(CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $paymentDailyTotals[$coa->id])), array(
+                                '/report/paymentByBankMonthly/monthlyTransactionInfo', 
+                                'coaId' => $coa->id, 
+                                'debitCredit' => 'D',
+                                'year' => $year,
+                                'month' => $month,
+                            ), array('target' => '_blank')); ?>
                         </td>
                     <?php endforeach; ?>
                     <td style="text-align: right; font-weight: bold">
