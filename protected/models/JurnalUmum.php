@@ -688,13 +688,14 @@ class JurnalUmum extends CActiveRecord {
         return $resultSet;
     } 
 
-    public function searchByTransactionInfo($coaId, $debitCredit, $date, $page) {
+    public function searchByTransactionInfo($coaId, $debitCredit, $date, $branchId, $page) {
         $criteria = new CDbCriteria;
 
         $criteria->compare('t.coa_id', $coaId);
         $criteria->compare('t.is_coa_category', 0);
         $criteria->compare('t.debet_kredit', $debitCredit);
         $criteria->compare('t.tanggal_transaksi', $date);
+        $criteria->compare('t.branch_id', $branchId);
         
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
@@ -708,17 +709,24 @@ class JurnalUmum extends CActiveRecord {
         ));
     }
     
-    public function searchByMonthlyTransactionInfo($coaId, $debitCredit, $year, $month, $page) {
+    public function searchByMonthlyTransactionInfo($coaId, $debitCredit, $year, $month, $branchId, $page) {
+        $branchConditionSql = '';
 
         $criteria = new CDbCriteria;
 
-        $criteria->addCondition("t.coa_id = :coa_id AND t.is_coa_category = 0 AND t.debet_kredit = :debet_kredit AND MONTH(t.tanggal_transaksi) = :transaction_month AND YEAR(t.tanggal_transaksi) = :transaction_year");
         $criteria->params = array(
             ':transaction_month' => $month, 
             ':transaction_year' => $year, 
             ':coa_id' => $coaId,
             ':debet_kredit' => $debitCredit,
         );
+        
+        if (!empty($branchId)) {
+            $branchConditionSql = " AND t.branch_id = :branch_id";
+            $criteria->params[':branch_id'] = $branchId;
+        }
+        
+        $criteria->addCondition("t.coa_id = :coa_id AND t.is_coa_category = 0 AND t.debet_kredit = :debet_kredit AND MONTH(t.tanggal_transaksi) = :transaction_month AND YEAR(t.tanggal_transaksi) = :transaction_year" . $branchConditionSql);
         
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
