@@ -145,6 +145,11 @@ class PaymentByBankMonthlyController extends Controller {
                 'month' => $month,
                 'coa' => $coa,
                 'branch' => $branch,
+                'coaId' => $coaId,
+                'debitCredit' => $debitCredit,
+                'year' => $year,
+                'month' => $month,
+                'branchId' => $branchId,
             ));
         }
 

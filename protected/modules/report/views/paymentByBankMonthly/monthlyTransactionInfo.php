@@ -11,6 +11,11 @@ Yii::app()->clientScript->registerCss('_report', '
 <?php echo CHtml::beginForm(array(''), 'get'); ?>
                     
 <div class="row buttons">
+    <?php echo CHtml::hiddenField('coaId', $coaId); ?>
+    <?php echo CHtml::hiddenField('debitCredit', $debitCredit); ?>
+    <?php echo CHtml::hiddenField('year', $year); ?>
+    <?php echo CHtml::hiddenField('month', $month); ?>
+    <?php echo CHtml::hiddenField('branchId', $branchId); ?>
     <?php echo CHtml::submitButton('Simpan ke Excel', array('name' => 'SaveToExcel')); ?>
 </div>
 
