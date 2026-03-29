@@ -109,38 +109,51 @@ class PaymentByBankMonthlyController extends Controller {
         ));
     }
     
-    public function actionTransactionInfo($coaId, $debitCredit, $date) {
+    public function actionTransactionInfo($coaId, $debitCredit, $date, $branchId) {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
 
         $page = (isset($_GET['page'])) ? $_GET['page'] : 1;
         
-        $dataProvider = JurnalUmum::model()->searchByTransactionInfo($coaId, $debitCredit, $date, $page);
+        $dataProvider = JurnalUmum::model()->searchByTransactionInfo($coaId, $debitCredit, $date, $branchId, $page);
         $coa = Coa::model()->findByPk($coaId);
+        $branch = Branch::model()->findByPk($branchId);
         
         $this->render('transactionInfo', array(
             'dataProvider' => $dataProvider,
             'debitCredit' => $debitCredit,
             'date' => $date,
             'coa' => $coa,
+            'branch' => $branch,
         ));
     }
 
-    public function actionMonthlyTransactionInfo($coaId, $debitCredit, $year, $month) {
+    public function actionMonthlyTransactionInfo($coaId, $debitCredit, $year, $month, $branchId) {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
 
         $page = (isset($_GET['page'])) ? $_GET['page'] : 1;
         
-        $dataProvider = JurnalUmum::model()->searchByMonthlyTransactionInfo($coaId, $debitCredit, $year, $month, $page);
+        $dataProvider = JurnalUmum::model()->searchByMonthlyTransactionInfo($coaId, $debitCredit, $year, $month, $branchId, $page);
         $coa = Coa::model()->findByPk($coaId);
+        $branch = Branch::model()->findByPk($branchId);
         
+        if (isset($_GET['SaveToExcel'])) {
+            $this->saveToExcelMonthlyTransactionInfo(array(
+                'dataProvider' => $dataProvider,
+                'year' => $year,
+                'month' => $month,
+                'coa' => $coa,
+                'branch' => $branch,
+            ));
+        }
+
         $this->render('monthlyTransactionInfo', array(
             'dataProvider' => $dataProvider,
-            'debitCredit' => $debitCredit,
             'year' => $year,
             'month' => $month,
             'coa' => $coa,
+            'branch' => $branch,
         ));
     }
 
@@ -295,6 +308,87 @@ class PaymentByBankMonthlyController extends Controller {
 
         header('Content-type: application/vnd.ms-excel');
         header('Content-Disposition: attachment;filename="bank_bulanan.xls"');
+        header('Cache-Control: max-age=0');
+
+        $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
+        $objWriter->save('php://output');
+
+        Yii::app()->end();
+    }
+    
+    protected function saveToExcelMonthlyTransactionInfo(array $options = array()) {
+        set_time_limit(0);
+        ini_set('memory_limit', '1024M');
+
+        spl_autoload_unregister(array('YiiBase', 'autoload'));
+        include_once Yii::getPathOfAlias('ext.phpexcel.Classes') . DIRECTORY_SEPARATOR . 'PHPExcel.php';
+        spl_autoload_register(array('YiiBase', 'autoload'));
+
+        $objPHPExcel = new PHPExcel();
+        
+        $dataProvider = $options['dataProvider'];
+        $month = $options['month'];
+        $year = $options['year'];
+        $branch = $options['branch'];
+        $coa = $options['coa'];
+        
+        $documentProperties = $objPHPExcel->getProperties();
+        $documentProperties->setCreator('Raperind Motor');
+        $documentProperties->setTitle('Transaksi Bank Bulanan');
+
+        $worksheet = $objPHPExcel->setActiveSheetIndex(0);
+        $worksheet->setTitle('Transaksi Bank Bulanan');
+
+        $worksheet->mergeCells('A1:E1');
+        $worksheet->mergeCells('A2:E2');
+        $worksheet->mergeCells('A3:E3');
+        $worksheet->mergeCells('A4:E4');
+
+        $worksheet->getStyle('A1:E6')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->getStyle('A1:E6')->getFont()->setBold(true);
+
+        $worksheet->setCellValue('A1', 'RAPERIND MOTOR ' . CHtml::encode(CHtml::value($branch, 'name')));
+        $worksheet->setCellValue('A2', 'Transaksi Bank Bulanan');
+        $worksheet->setCellValue('A3', CHtml::value($coa, 'code') . ' - ' . CHtml::value($coa, 'name') . ' - ' . CHtml::value($coa, 'coaCategory.name') . ' - ' . CHtml::value($coa, 'coaSubCategory.name'));
+        $worksheet->setCellValue('A4', CHtml::encode(strftime("%B",mktime(0,0,0,$month))) . ' ' . CHtml::encode($year));
+
+        $worksheet->getStyle('A6:E6')->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->setCellValue("A6", 'Transaksi #');
+        $worksheet->setCellValue("B6", 'Tanggal');
+        $worksheet->setCellValue("C6", 'Note');
+        $worksheet->setCellValue("D6", 'Memo');
+        $worksheet->setCellValue("E6", 'Jumlah');
+        $worksheet->getStyle('A6:E6')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+
+        $counter = 7;
+        $totalSum = '0.00';
+        foreach ($dataProvider->data as $header) {
+            $totalAmount = CHtml::value($header, 'total');
+            $worksheet->setCellValue("A{$counter}", CHtml::value($header, 'kode_transaksi'));
+            $worksheet->setCellValue("B{$counter}", Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($header->tanggal_transaksi)));
+            $worksheet->setCellValue("C{$counter}", CHtml::value($header, 'transaction_subject'));
+            $worksheet->setCellValue("D{$counter}", CHtml::value($header, 'remark'));
+            $worksheet->setCellValue("E{$counter}", $totalAmount);
+            $totalSum += $totalAmount;
+
+            $counter++;
+        }
+        
+        $worksheet->getStyle("A{$counter}:Z{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A{$counter}:Z{$counter}")->getFont()->setBold(true);
+        $worksheet->setCellValue("D{$counter}", 'Total');
+        $worksheet->setCellValue("E{$counter}", $totalSum);
+        
+        for ($col = 'A'; $col !== 'Z'; $col++) {
+            $objPHPExcel->getActiveSheet()
+            ->getColumnDimension($col)
+            ->setAutoSize(true);
+        }
+        
+        ob_end_clean();
+
+        header('Content-type: application/vnd.ms-excel');
+        header('Content-Disposition: attachment;filename="transaksi_bank_bulanan.xls"');
         header('Cache-Control: max-age=0');
 
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');

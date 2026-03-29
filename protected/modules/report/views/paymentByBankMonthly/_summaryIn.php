@@ -33,6 +33,7 @@
                                         'coaId' => $coa->id, 
                                         'debitCredit' => 'D',
                                         'date' => $date, 
+                                        'branchId' => $branchId,
                                     ), array('target' => '_blank')); ?>
                                     <?php //echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $paymentInRetail)); ?>
                                     <?php $paymentDailyTotals[$coa->id] += $paymentInRetail; ?>
@@ -66,7 +67,8 @@
                                 'coaId' => $coa->id, 
                                 'debitCredit' => 'D',
                                 'year' => $year,
-                                'month' => $month,
+                                'month' => $month, 
+                                'branchId' => $branchId,
                             ), array('target' => '_blank')); ?>
                         </td>
                     <?php endforeach; ?>

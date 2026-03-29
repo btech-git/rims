@@ -1,15 +1,15 @@
 <?php
 Yii::app()->clientScript->registerCss('_report', '
-	.width1-1 { width: 20% }
-	.width1-2 { width: 50% }
+    .width1-1 { width: 20% }
+    .width1-2 { width: 50% }
 
-	.width2-1 { width: 5% }
-	.width2-2 { width: 15% }
-	.width2-3 { width: 12% }
-	.width2-4 { width: 20% }
-	.width2-5 { width: 20% }
-	.width2-6 { width: 12% }
-	.width2-7 { width: 12% }
+    .width2-1 { width: 5% }
+    .width2-2 { width: 15% }
+    .width2-3 { width: 12% }
+    .width2-4 { width: 20% }
+    .width2-5 { width: 20% }
+    .width2-6 { width: 12% }
+    .width2-7 { width: 12% }
 ');
 ?>
 
@@ -78,13 +78,13 @@ Yii::app()->clientScript->registerCss('_report', '
         <?php $totalDebit += $debitAmount; ?>
         <?php $totalCredit += $creditAmount; ?>
     <?php endforeach; ?>
-        <tr>
-            <td colspan="5" style="font-weight: bold">Total</td>
-            <td class="width2-6" style="text-align: right; font-weight: bold">
-                <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalDebit)); ?>
-            </td>
-            <td class="width2-7" style="text-align: right; font-weight: bold">
-                <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalCredit)); ?>
-            </td>
-        </tr>
+    <tr>
+        <td colspan="5" style="font-weight: bold">Total</td>
+        <td class="width2-6" style="text-align: right; font-weight: bold">
+            <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalDebit)); ?>
+        </td>
+        <td class="width2-7" style="text-align: right; font-weight: bold">
+            <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalCredit)); ?>
+        </td>
+    </tr>
 </table>

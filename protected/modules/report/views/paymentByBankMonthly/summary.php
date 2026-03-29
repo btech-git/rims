@@ -18,7 +18,7 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
         <div id="detail_div">
             <div>
                 <div class="myForm">
-                    <?php echo CHtml::beginForm(array(''), 'get'); ?>                    
+                    <?php echo CHtml::beginForm(array(''), 'get'); ?>
                     <div class="row">                    
                         <div class="medium-6 columns">
                             <div class="field">
@@ -119,6 +119,7 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                         'selectedCoas' => $selectedCoas,
                         'startDate' => $startDate,
                         'endDate' => $endDate,
+                        'branchId' => $branchId,
                     )); ?>
                 </div>
                 
@@ -134,6 +135,7 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                         'selectedCoas' => $selectedCoas,
                         'startDate' => $startDate,
                         'endDate' => $endDate,
+                        'branchId' => $branchId,
                     )); ?>
                 </div>
                 <div class="clear"></div>

@@ -9,7 +9,10 @@ Yii::app()->clientScript->registerCss('_report', '
 ?>
 
 <div style="font-weight: bold; text-align: center">
-    <div style="font-size: larger">Laporan Transaksi Bank Bulanan</div>
+    <div style="font-size: larger">
+        Raperind Motor <?php echo CHtml::encode(CHtml::value($branch, 'name')); ?>
+    </div>
+    <div style="font-size: larger">Transaksi Bank Bulanan</div>
     <div style="font-size: larger">
         <?php echo CHtml::encode(CHtml::value($coa, 'code')); ?> - 
         <?php echo CHtml::encode(CHtml::value($coa, 'name')); ?> - 
@@ -43,7 +46,7 @@ Yii::app()->clientScript->registerCss('_report', '
                         <td class="width1-1"><?php echo CHtml::encode(CHtml::value($header, 'kode_transaksi')); ?></td>
                         <td class="width1-2"><?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($header->tanggal_transaksi))); ?></td>
                         <td class="width1-3"><?php echo CHtml::encode(CHtml::value($header, 'transaction_subject')); ?></td>
-                        <td class="width1-4"><?php echo CHtml::encode(CHtml::value($header, 'debet_kredit')); ?></td>
+                        <td class="width1-4"><?php echo CHtml::encode(CHtml::value($header, 'remark')); ?></td>
                         <td class="width1-5" style="text-align: right">
                             <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalAmount)); ?>
                         </td>
