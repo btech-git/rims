@@ -15,6 +15,7 @@ Yii::app()->clientScript->registerCss('_report', '
     <?php echo CHtml::hiddenField('debitCredit', $debitCredit); ?>
     <?php echo CHtml::hiddenField('date', $date); ?>
     <?php echo CHtml::hiddenField('branchId', $branchId); ?>
+    <?php echo CHtml::hiddenField('inOut', $inOut); ?>
     <?php echo CHtml::submitButton('Simpan ke Excel', array('name' => 'SaveToExcel')); ?>
 </div>
 
@@ -24,7 +25,7 @@ Yii::app()->clientScript->registerCss('_report', '
     <div style="font-size: larger">
         Raperind Motor <?php echo CHtml::encode(CHtml::value($branch, 'name')); ?>
     </div>
-    <div style="font-size: larger">Transaksi Bank Harian</div>
+    <div style="font-size: larger">Transaksi <?php echo $inOut == 'In' ? 'Masuk' : 'Keluar'; ?> Bank Harian</div>
     <div style="font-size: larger">
         <?php echo CHtml::encode(CHtml::value($coa, 'code')); ?> - 
         <?php echo CHtml::encode(CHtml::value($coa, 'name')); ?> - 

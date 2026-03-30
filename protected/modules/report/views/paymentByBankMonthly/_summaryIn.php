@@ -34,6 +34,7 @@
                                         'debitCredit' => 'D',
                                         'date' => $date, 
                                         'branchId' => $branchId,
+                                        'inOut' => 'In',
                                     ), array('target' => '_blank')); ?>
                                     <?php $paymentDailyTotals[$coa->id] += $paymentInRetail; ?>
                                 </td>
@@ -68,6 +69,7 @@
                                 'year' => $year,
                                 'month' => $month, 
                                 'branchId' => $branchId,
+                                'inOut' => 'In',
                             ), array('target' => '_blank')); ?>
                         </td>
                     <?php endforeach; ?>

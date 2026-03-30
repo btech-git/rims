@@ -109,7 +109,7 @@ class PaymentByBankMonthlyController extends Controller {
         ));
     }
     
-    public function actionTransactionInfo($coaId, $debitCredit, $date, $branchId) {
+    public function actionTransactionInfo($coaId, $debitCredit, $date, $branchId, $inOut) {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
 
@@ -125,6 +125,7 @@ class PaymentByBankMonthlyController extends Controller {
                 'date' => $date,
                 'coa' => $coa,
                 'branch' => $branch,
+                'inOut' => $inOut,
             ));
         }
 
@@ -136,10 +137,11 @@ class PaymentByBankMonthlyController extends Controller {
             'coaId' => $coaId,
             'branch' => $branch,
             'branchId' => $branchId,
+            'inOut' => $inOut,
         ));
     }
 
-    public function actionMonthlyTransactionInfo($coaId, $debitCredit, $year, $month, $branchId) {
+    public function actionMonthlyTransactionInfo($coaId, $debitCredit, $year, $month, $branchId, $inOut) {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
 
@@ -156,6 +158,7 @@ class PaymentByBankMonthlyController extends Controller {
                 'month' => $month,
                 'coa' => $coa,
                 'branch' => $branch,
+                'inOut' => $inOut,
             ));
         }
 
@@ -170,6 +173,7 @@ class PaymentByBankMonthlyController extends Controller {
             'year' => $year,
             'month' => $month,
             'branchId' => $branchId,
+            'inOut' => $inOut,
         ));
     }
 
@@ -382,6 +386,7 @@ class PaymentByBankMonthlyController extends Controller {
         $date = $options['date'];
         $branch = $options['branch'];
         $coa = $options['coa'];
+        $inOut = $options['inOut'];
         
         $documentProperties = $objPHPExcel->getProperties();
         $documentProperties->setCreator('Raperind Motor');
@@ -398,8 +403,9 @@ class PaymentByBankMonthlyController extends Controller {
         $worksheet->getStyle('A1:E6')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
         $worksheet->getStyle('A1:E6')->getFont()->setBold(true);
 
+        $transactionInOut = $inOut == 'In' ? 'Masuk' : 'Keluar';
         $worksheet->setCellValue('A1', 'RAPERIND MOTOR ' . CHtml::encode(CHtml::value($branch, 'name')));
-        $worksheet->setCellValue('A2', 'Transaksi Bank Harian');
+        $worksheet->setCellValue('A2', 'Transaksi ' . $transactionInOut . ' Bank Harian');
         $worksheet->setCellValue('A3', CHtml::value($coa, 'code') . ' - ' . CHtml::value($coa, 'name') . ' - ' . CHtml::value($coa, 'coaCategory.name') . ' - ' . CHtml::value($coa, 'coaSubCategory.name'));
         $worksheet->setCellValue('A4', CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($date))));
 
@@ -463,6 +469,7 @@ class PaymentByBankMonthlyController extends Controller {
         $year = $options['year'];
         $branch = $options['branch'];
         $coa = $options['coa'];
+        $inOut = $options['inOut'];
         
         $documentProperties = $objPHPExcel->getProperties();
         $documentProperties->setCreator('Raperind Motor');
@@ -479,8 +486,9 @@ class PaymentByBankMonthlyController extends Controller {
         $worksheet->getStyle('A1:E6')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
         $worksheet->getStyle('A1:E6')->getFont()->setBold(true);
 
+        $transactionInOut = $inOut == 'In' ? 'Masuk' : 'Keluar';
         $worksheet->setCellValue('A1', 'RAPERIND MOTOR ' . CHtml::encode(CHtml::value($branch, 'name')));
-        $worksheet->setCellValue('A2', 'Transaksi Bank Bulanan');
+        $worksheet->setCellValue('A2', 'Transaksi ' . $transactionInOut . ' Bank Bulanan');
         $worksheet->setCellValue('A3', CHtml::value($coa, 'code') . ' - ' . CHtml::value($coa, 'name') . ' - ' . CHtml::value($coa, 'coaCategory.name') . ' - ' . CHtml::value($coa, 'coaSubCategory.name'));
         $worksheet->setCellValue('A4', CHtml::encode(strftime("%B",mktime(0,0,0,$month))) . ' ' . CHtml::encode($year));
 
