@@ -525,6 +525,12 @@ $this->breadcrumbs=array(
                         'name' => 'service_type_id',
                         'value' => '$data->serviceType->name',
                     ),
+                    array(
+                        'name' => 'price',
+                        'header' => 'Price',
+                        'value' => 'number_format($data->lastSalePrice, 2)',
+                        'htmlOptions' => array('style' => 'text-align:right'),
+                    ),
                 ),
             )); ?>
         </div>

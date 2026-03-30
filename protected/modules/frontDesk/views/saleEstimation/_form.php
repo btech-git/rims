@@ -573,7 +573,7 @@
             array(
                 'name' => 'price',
                 'header' => 'Price',
-                'value' => 'number_format($data->price, 2)',
+                'value' => 'number_format($data->lastSalePrice, 2)',
                 'htmlOptions' => array('style' => 'text-align:right'),
             ),
         ),
