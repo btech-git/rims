@@ -8,11 +8,23 @@ Yii::app()->clientScript->registerCss('_report', '
 ');
 ?>
 
+<?php echo CHtml::beginForm(array(''), 'get'); ?>
+                    
+<div class="row buttons">
+    <?php echo CHtml::hiddenField('coaId', $coaId); ?>
+    <?php echo CHtml::hiddenField('debitCredit', $debitCredit); ?>
+    <?php echo CHtml::hiddenField('date', $date); ?>
+    <?php echo CHtml::hiddenField('branchId', $branchId); ?>
+    <?php echo CHtml::submitButton('Simpan ke Excel', array('name' => 'SaveToExcel')); ?>
+</div>
+
+<?php echo CHtml::endForm(); ?>
+
 <div style="font-weight: bold; text-align: center">
     <div style="font-size: larger">
         Raperind Motor <?php echo CHtml::encode(CHtml::value($branch, 'name')); ?>
     </div>
-    <div style="font-size: larger">Transaksi Bank Bulanan</div>
+    <div style="font-size: larger">Transaksi Bank Harian</div>
     <div style="font-size: larger">
         <?php echo CHtml::encode(CHtml::value($coa, 'code')); ?> - 
         <?php echo CHtml::encode(CHtml::value($coa, 'name')); ?> - 
@@ -43,7 +55,11 @@ Yii::app()->clientScript->registerCss('_report', '
                 <?php foreach ($dataProvider->data as $header): ?>
                     <?php $totalAmount = CHtml::value($header, 'total'); ?>
                     <tr class="items1">
-                        <td class="width1-1"><?php echo CHtml::encode(CHtml::value($header, 'kode_transaksi')); ?></td>
+                        <td class="width1-1">
+                            <?php echo CHtml::link(CHtml::value($header, 'kode_transaksi'), Yii::app()->createUrl("report/paymentByBankMonthly/redirectTransaction", array(
+                                "codeNumber" => CHtml::value($header, 'kode_transaksi')
+                            )), array('target' => '_blank'));?>
+                        </td>
                         <td class="width1-2"><?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($header->tanggal_transaksi))); ?></td>
                         <td class="width1-3"><?php echo CHtml::encode(CHtml::value($header, 'transaction_subject')); ?></td>
                         <td class="width1-4"><?php echo CHtml::encode(CHtml::value($header, 'remark')); ?></td>

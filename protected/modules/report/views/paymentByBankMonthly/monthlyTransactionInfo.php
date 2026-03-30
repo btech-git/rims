@@ -56,7 +56,11 @@ Yii::app()->clientScript->registerCss('_report', '
                 <?php foreach ($dataProvider->data as $header): ?>
                     <?php $totalAmount = CHtml::value($header, 'total'); ?>
                     <tr class="items1">
-                        <td class="width1-1"><?php echo CHtml::encode(CHtml::value($header, 'kode_transaksi')); ?></td>
+                        <td class="width1-1">
+                            <?php echo CHtml::link(CHtml::value($header, 'kode_transaksi'), Yii::app()->createUrl("report/paymentByBankMonthly/redirectTransaction", array(
+                                "codeNumber" => CHtml::value($header, 'kode_transaksi')
+                            )), array('target' => '_blank'));?>
+                        </td>
                         <td class="width1-2"><?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($header->tanggal_transaksi))); ?></td>
                         <td class="width1-3"><?php echo CHtml::encode(CHtml::value($header, 'transaction_subject')); ?></td>
                         <td class="width1-4"><?php echo CHtml::encode(CHtml::value($header, 'remark')); ?></td>

@@ -35,7 +35,6 @@
                                         'date' => $date, 
                                         'branchId' => $branchId,
                                     ), array('target' => '_blank')); ?>
-                                    <?php //echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $paymentInRetail)); ?>
                                     <?php $paymentDailyTotals[$coa->id] += $paymentInRetail; ?>
                                 </td>
                                 <?php $totalPerDate += $paymentInRetail; ?>
