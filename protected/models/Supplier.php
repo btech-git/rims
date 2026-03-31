@@ -520,7 +520,7 @@ class Supplier extends CActiveRecord {
         }
         
         $sql = "
-            SELECT id, purchase_order_no, purchase_order_date, payment_type, payment_status, total_price
+            SELECT id, purchase_order_no, purchase_order_date, payment_type, payment_status, total_price, total_quantity
             FROM " . TransactionPurchaseOrder::model()->tableName() . "
             WHERE supplier_id = :supplier_id AND substr(purchase_order_date, 1, 10) BETWEEN :start_date AND :end_date AND status_document NOT LIKE '%CANCEL%'" . $branchConditionSql . "
             ORDER BY purchase_order_date, purchase_order_no
