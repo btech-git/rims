@@ -74,8 +74,9 @@ class WorkOrderController extends Controller {
 
         if (isset($_POST['WorkOrder'])) {
             $model->attributes = $_POST['WorkOrder'];
-            if ($model->save())
+            if ($model->save()) {
                 $this->redirect(array('view', 'id' => $model->id));
+            }
         }
 
         $this->render('update', array(
@@ -92,8 +93,9 @@ class WorkOrderController extends Controller {
         $this->loadModel($id)->delete();
 
         // if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
-        if (!isset($_GET['ajax']))
+        if (!isset($_GET['ajax'])) {
             $this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
+        }
     }
 
     /**
@@ -101,6 +103,7 @@ class WorkOrderController extends Controller {
      */
     public function actionIndex() {
         $dataProvider = new CActiveDataProvider('WorkOrder');
+        
         $this->render('index', array(
             'dataProvider' => $dataProvider,
         ));
@@ -134,8 +137,9 @@ class WorkOrderController extends Controller {
             $detailTabs[$branch->name] = array('content' => $tabContent);
         }
         
-        $detailTabs['All'] = array('content' => $this->renderPartial('_viewWorkOrder', array(
-            'activeWorkOrderData' => $activeWorkOrderData,
+        $activeAllBranchWorkOrderData = RegistrationTransaction::getActiveAllBranchWorkOrderData($limit, $startDate, $endDate, $plateNumber, $carMakeId, $carModelId, $workOrderNumber, $transactionStatus, $repairType);
+        $detailTabs['All'] = array('content' => $this->renderPartial('_viewAllBranchWorkOrder', array(
+            'activeAllBranchWorkOrderData' => $activeAllBranchWorkOrderData,
         ), true));
         
         if (isset($_GET['ResetFilter'])) {
@@ -147,7 +151,6 @@ class WorkOrderController extends Controller {
         }
 
         $this->render('admin', array(
-            'activeWorkOrderData' => $activeWorkOrderData,
             'startDate' => $startDate,
             'endDate' => $endDate,
             'plateNumber' => $plateNumber,
@@ -261,32 +264,50 @@ class WorkOrderController extends Controller {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
 
-        $model = Search::bind(new RegistrationTransaction('search'), isset($_GET['RegistrationTransaction']) ? $_GET['RegistrationTransaction'] : array());
+        $branches = Branch::model()->findAllByAttributes(array('status' => 'Active'));
+        $detailTabs = array();
+        $limit = 5000;
 
         $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : date('Y-m-d');
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
-        $pageSize = (isset($_GET['PageSize'])) ? $_GET['PageSize'] : 50;
-        $currentPage = (isset($_GET['page'])) ? $_GET['page'] : '';
+        $plateNumber = (isset($_GET['PlateNumber'])) ? $_GET['PlateNumber'] : '';
+        $carMakeId = (isset($_GET['CarMakeId'])) ? $_GET['CarMakeId'] : '';
+        $carModelId = (isset($_GET['CarModelId'])) ? $_GET['CarModelId'] : '';
+        $workOrderNumber = (isset($_GET['WorkOrderNumber'])) ? $_GET['WorkOrderNumber'] : '';
+        $transactionStatus = (isset($_GET['TransactionStatus'])) ? $_GET['TransactionStatus'] : '';
+        $repairType = (isset($_GET['RepairType'])) ? $_GET['RepairType'] : '';
 
-        $workOrderSummary = new WorkOrderSummary($model->search());
-        $workOrderSummary->setupLoading();
-        $workOrderSummary->setupPaging($pageSize, $currentPage);
-        $workOrderSummary->setupSorting();
-        $workOrderSummary->setupFilterOutstanding($startDate, $endDate);
-
+        foreach ($branches as $branch) {
+            $outstandingWorkOrderData = RegistrationTransaction::getOutstandingWorkOrderData($branch->id, $limit, $startDate, $endDate, $plateNumber, $carMakeId, $carModelId, $workOrderNumber, $transactionStatus, $repairType);
+            $tabContent = $this->renderPartial('_adminOutstanding', array(
+                'outstandingWorkOrderData' => $outstandingWorkOrderData,
+            ), true);
+            $detailTabs[$branch->name] = array('content' => $tabContent);
+        }
+        
+        $outstandingAllBranchWorkOrderData = RegistrationTransaction::getOutstandingAllBranchWorkOrderData($limit, $startDate, $endDate, $plateNumber, $carMakeId, $carModelId, $workOrderNumber, $transactionStatus, $repairType);
+        $detailTabs['All'] = array('content' => $this->renderPartial('_adminAllBranchOutstanding', array(
+            'outstandingAllBranchWorkOrderData' => $outstandingAllBranchWorkOrderData,
+        ), true));
+        
         if (isset($_GET['ResetFilter'])) {
             $this->redirect(array('summary'));
         }
         
-        if (isset($_GET['SaveExcelOutstanding'])) {
-            $this->saveToExcelOutstanding($workOrderSummary->dataProvider);
+        if (isset($_GET['SaveExcel'])) {
+            $this->saveToExcel($branches, $limit, $startDate, $endDate, $plateNumber, $carMakeId, $carModelId, $workOrderNumber, $transactionStatus, $repairType);
         }
 
         $this->render('adminOutstanding', array(
-            'model' => $model,
-            'workOrderSummary' => $workOrderSummary,
             'startDate' => $startDate,
             'endDate' => $endDate,
+            'plateNumber' => $plateNumber,
+            'carMakeId' => $carMakeId,
+            'carModelId' => $carModelId,
+            'workOrderNumber' => $workOrderNumber,
+            'transactionStatus' => $transactionStatus,
+            'repairType' => $repairType,
+            'detailTabs' => $detailTabs,
         ));
     }
     

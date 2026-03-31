@@ -531,32 +531,48 @@ class RegistrationTransactionController extends Controller {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
 
-        $model = Search::bind(new RegistrationTransaction('search'), isset($_GET['RegistrationTransaction']) ? $_GET['RegistrationTransaction'] : array());
+        $branches = Branch::model()->findAllByAttributes(array('status' => 'Active'));
+        $detailTabs = array();
+        $limit = 5000;
 
         $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : date('Y-m-d');
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
-        $pageSize = (isset($_GET['PageSize'])) ? $_GET['PageSize'] : 100;
-        $currentPage = (isset($_GET['page'])) ? $_GET['page'] : '';
+        $plateNumber = (isset($_GET['PlateNumber'])) ? $_GET['PlateNumber'] : '';
+        $carMakeId = (isset($_GET['CarMakeId'])) ? $_GET['CarMakeId'] : '';
+        $carModelId = (isset($_GET['CarModelId'])) ? $_GET['CarModelId'] : '';
+        $transactionStatus = (isset($_GET['TransactionStatus'])) ? $_GET['TransactionStatus'] : '';
+        $repairType = (isset($_GET['RepairType'])) ? $_GET['RepairType'] : '';
 
-        $registrationPendingSummary = new RegistrationPendingSummary($model->search());
-        $registrationPendingSummary->setupLoading();
-        $registrationPendingSummary->setupPaging($pageSize, $currentPage);
-        $registrationPendingSummary->setupSorting();
-        $registrationPendingSummary->setupFilterOutstanding($startDate, $endDate);
-
+        foreach ($branches as $branch) {
+            $outstandingRegistrationData = RegistrationTransaction::getOutstandingRegistrationData($branch->id, $limit, $startDate, $endDate, $plateNumber, $carMakeId, $carModelId, $transactionStatus, $repairType);
+            $tabContent = $this->renderPartial('_adminOutstanding', array(
+                'outstandingRegistrationData' => $outstandingRegistrationData,
+            ), true);
+            $detailTabs[$branch->name] = array('content' => $tabContent);
+        }
+        
+        $outstandingAllBranchRegistrationData = RegistrationTransaction::getOutstandingAllBranchRegistrationData($limit, $startDate, $endDate, $plateNumber, $carMakeId, $carModelId, $transactionStatus, $repairType);
+        $detailTabs['All'] = array('content' => $this->renderPartial('_adminOutstandingAllBranch', array(
+            'outstandingAllBranchRegistrationData' => $outstandingAllBranchRegistrationData,
+        ), true));
+        
         if (isset($_GET['ResetFilter'])) {
             $this->redirect(array('summary'));
         }
         
-        if (isset($_GET['SaveExcelOutstanding'])) {
-            $this->saveToExcelOutstanding($registrationPendingSummary->dataProvider, $startDate, $endDate);
-        }
+//        if (isset($_GET['SaveExcelOutstanding'])) {
+//            $this->saveToExcelOutstanding($registrationPendingSummary->dataProvider, $startDate, $endDate);
+//        }
 
         $this->render('adminOutstanding', array(
-            'model' => $model,
-            'registrationPendingSummary' => $registrationPendingSummary,
             'startDate' => $startDate,
             'endDate' => $endDate,
+            'plateNumber' => $plateNumber,
+            'carMakeId' => $carMakeId,
+            'carModelId' => $carModelId,
+            'transactionStatus' => $transactionStatus,
+            'repairType' => $repairType,
+            'detailTabs' => $detailTabs,
         ));
     }
     

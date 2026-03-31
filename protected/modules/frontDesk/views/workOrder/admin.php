@@ -184,11 +184,6 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
 
             <hr />
 
-            <div class="right"><?php //echo ReportHelper::summaryText($workOrderSummary->dataProvider); ?></div>
-            <div class="clear"></div>
-            
-            <br />
-
             <div class="relative">
                 <div style="font-weight: bold; text-align: center">
                     <div style="font-size: larger">Raperind Motor</div>

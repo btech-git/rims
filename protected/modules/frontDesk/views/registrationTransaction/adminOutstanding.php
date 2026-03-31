@@ -3,11 +3,17 @@ Yii::app()->clientScript->registerScript('report', '
     $(".breadcrumbs").addClass("hide");
     $("#StartDate").val("' . $startDate . '");
     $("#EndDate").val("' . $endDate . '");
-    $("#PageSize").val("' . $registrationPendingSummary->dataProvider->pagination->pageSize . '");
-    $("#CurrentPage").val("' . ($registrationPendingSummary->dataProvider->pagination->getCurrentPage(false) + 1) . '");
 ');
 Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/transaction/report.css');
 ?>
+
+<style> 
+ .table_wrapper{
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+}
+</style>
 
 <div class="tab reportTab">
     <div class="tabBody">
@@ -22,8 +28,7 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                     <span class="prefix">Plate #</span>
                                 </div>
                                 <div class="small-8 columns">
-                                    <?php echo CHtml::hiddenField('page', '', array('size' => 3, 'id' => 'CurrentPage')); ?>
-                                    <?php echo CHtml::activeTextField($model, 'plate_number'); ?>
+                                    <?php echo CHtml::textField('PlateNumber', $plateNumber); ?>
                                 </div>
                             </div>
                         </div>
@@ -33,11 +38,13 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                         <div class="field">
                             <div class="row collapse">
                                 <div class="small-4 columns">
-                                    <span class="prefix">Branch</span>
+                                    <span class="prefix">Type</span>
                                 </div>
                                 <div class="small-8 columns">
-                                    <?php echo CHtml::activeDropDownList($model, 'branch_id', CHtml::listData(Branch::model()->findAll(), 'id', 'name'), array(
-                                        'empty' => '-- All --',
+                                    <?php echo CHtml::dropDownList('RepairType', $repairType, array(
+                                        ''=>'-- All --',
+                                        'GR'=>'GR',
+                                        'BR'=>'BR',
                                     )); ?>
                                 </div>
                             </div>
@@ -53,7 +60,7 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                     <span class="prefix">Car Make</span>
                                 </div>
                                 <div class="small-8 columns">
-                                    <?php echo CHtml::activeDropDownList($model, 'car_make_code', CHtml::listData(VehicleCarMake::model()->findAll(), 'id', 'name'), array(
+                                    <?php echo CHtml::dropDownList('CarMakeId', $carMakeId, CHtml::listData(VehicleCarMake::model()->findAll(array('order' => 't.name ASC')), 'id', 'name'), array(
                                         'empty' => '-- All --',
                                         'onchange' => 
                                             CHtml::ajax(array(
@@ -74,7 +81,7 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                     <span class="prefix">Car Model</span>
                                 </div>
                                 <div class="small-8 columns">
-                                    <?php echo CHtml::activeDropDownList($model, 'car_model_code', CHtml::listData(VehicleCarModel::model()->findAll(), 'id', 'name'), array(
+                                    <?php echo CHtml::dropDownList('CarModelId', $carModelId, CHtml::listData(VehicleCarModel::model()->findAll(array('order' => 't.name ASC')), 'id', 'name'), array(
                                         'empty' => '-- All --',
                                     )); ?>
                                 </div>
@@ -88,10 +95,35 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                         <div class="field">
                             <div class="row collapse">
                                 <div class="small-4 columns">
-                                    <span class="prefix">WO #</span>
+                                    <span class="prefix">Tanggal</span>
                                 </div>
-                                <div class="small-8 columns">
-                                    <?php echo CHtml::activeTextField($model, 'work_order_number'); ?>
+                                <div class="small-4 columns">
+                                    <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(
+                                        'name' => 'StartDate',
+                                        'options' => array(
+                                            'dateFormat' => 'yy-mm-dd',
+                                            'changeMonth'=>true,
+                                            'changeYear'=>true,
+                                        ),
+                                        'htmlOptions' => array(
+                                            'readonly' => true,
+                                            'placeholder' => 'Mulai',
+                                        ),
+                                    )); ?>
+                                </div>
+                                <div class="small-4 columns">
+                                    <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(
+                                        'name' => 'EndDate',
+                                        'options' => array(
+                                            'dateFormat' => 'yy-mm-dd',
+                                            'changeMonth'=>true,
+                                            'changeYear'=>true,
+                                        ),
+                                        'htmlOptions' => array(
+                                            'readonly' => true,
+                                            'placeholder' => 'Akhir',
+                                        ),
+                                    )); ?>
                                 </div>
                             </div>
                         </div>
@@ -101,77 +133,16 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                         <div class="field">
                             <div class="row collapse">
                                 <div class="small-4 columns">
-                                    <span class="prefix">WO Status</span>
+                                    <span class="prefix">Status</span>
                                 </div>
                                 <div class="small-8 columns">
-                                    <?php echo CHtml::activeDropDownList($model, 'status', array(
+                                    <?php echo CHtml::dropDownList('TransactionStatus', $transactionStatus, array(
                                         ''=>'-- All --',
                                         'Waitlist'=>'Waitlist',
                                         'Processing WO'=>'Processing WO',
                                         'Assigned'=>'Assigned',
                                         'Finished'=>'Finished',
                                     )); ?>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="medium-6 columns">
-                        <div class="field">
-                            <div class="row collapse">
-                                <div class="small-4 columns">
-                                    <span class="prefix">Type</span>
-                                </div>
-                                <div class="small-8 columns">
-                                    <?php echo CHtml::activeDropDownList($model, 'repair_type', array(
-                                        ''=>'-- All --',
-                                        'GR'=>'GR',
-                                        'BR'=>'BR',
-                                    )); ?>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="medium-6 columns">
-                        <div class="field">
-                            <div class="row collapse">
-                                <div class="small-4 columns">
-                                    <span class="prefix">Tanggal</span>
-                                </div>
-                                <div class="small-8 columns">
-                                    <div class="medium-5 columns">
-                                        <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(
-                                            'name' => 'StartDate',
-                                            'options' => array(
-                                                'dateFormat' => 'yy-mm-dd',
-                                                'changeMonth' => true,
-                                                'changeYear' => true,
-                                            ),
-                                            'htmlOptions' => array(
-                                                'readonly' => true,
-                                                'placeholder' => 'Mulai'
-                                            ),
-                                        )); ?>
-                                    </div>
-                                    <div class="medium-2 columns" style="text-align: center; vertical-align: middle">
-                                        S/D
-                                    </div>
-                                    <div class="medium-5 columns">
-                                        <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(
-                                            'name' => 'EndDate',
-                                            'options' => array(
-                                                'dateFormat' => 'yy-mm-dd',
-                                                'changeMonth' => true,
-                                                'changeYear' => true,
-                                            ),
-                                            'htmlOptions' => array(
-                                                'readonly' => true,
-                                                'placeholder' => 'Sampai'
-                                            ),
-                                        )); ?>
-                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -193,32 +164,29 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
 
             <hr />
 
-            <div class="right"><?php echo ReportHelper::summaryText($registrationPendingSummary->dataProvider); ?></div>
-            <div class="clear"></div>
-            
-            <br />
-
             <div class="relative">
-                <?php $this->renderPartial('_adminOutstanding', array(
-                    'model' => $model,
-                    'registrationPendingSummary' => $registrationPendingSummary,
-                    'startDate' => $startDate,
-                    'endDate' => $endDate,
-                )); ?>
+                <div style="font-weight: bold; text-align: center">
+                    <div style="font-size: larger">Raperind Motor</div>
+                    <div style="font-size: larger">Outstanding Registration (Pending Invoice + SL + WO)</div>
+                    <div><?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($startDate))) . ' &nbsp;&ndash;&nbsp; ' . CHtml::encode(Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($endDate))); ?></div>
+                </div>
+
+                <br />
+
+                <div class="table_wrapper">
+                    <?php $this->widget('zii.widgets.jui.CJuiTabs', array(
+                        'tabs' => $detailTabs,
+                        // additional javascript options for the tabs plugin
+                        'options' => array(
+                            'collapsible' => true,
+                        ),
+                        // set id for this widgets
+                        'id' => 'view_tab',
+                    )); ?>
+                </div>
             </div>
             
             <div class="clear"></div>
         </div>
     </div>
-</div>
-
-<div>
-    <div class="right">
-        <?php $this->widget('system.web.widgets.pagers.CLinkPager', array(
-            'itemCount' => $registrationPendingSummary->dataProvider->pagination->itemCount,
-            'pageSize' => $registrationPendingSummary->dataProvider->pagination->pageSize,
-            'currentPage' => $registrationPendingSummary->dataProvider->pagination->getCurrentPage(false),
-        )); ?>
-    </div>
-    <div class="clear"></div>
 </div>

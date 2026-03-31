@@ -1,5 +1,5 @@
 <div class="reportDisplay">
-    <?php $dataCount = count($outstandingWorkOrderData); ?>
+    <?php $dataCount = count($outstandingAllBranchWorkOrderData); ?>
     <?php if ($dataCount > 0): ?>
         <?php echo "Displaying 1-{$dataCount} of {$dataCount} result(s)."; ?>
     <?php endif; ?>
@@ -31,7 +31,7 @@
         </thead>
         
         <tbody>
-            <?php foreach (array_reverse($outstandingWorkOrderData) as $outstandingWorkOrderItem): ?>
+            <?php foreach (array_reverse($outstandingAllBranchWorkOrderData) as $outstandingWorkOrderItem): ?>
                 <?php $registrationTransaction = RegistrationTransaction::model()->findByPk($outstandingWorkOrderItem['id']); ?>
                 <tr>
                     <td><?php echo CHtml::encode($outstandingWorkOrderItem['vehicle_id']); ?></td>
