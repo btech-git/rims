@@ -134,6 +134,10 @@ class WorkOrderController extends Controller {
             $detailTabs[$branch->name] = array('content' => $tabContent);
         }
         
+        $detailTabs['All'] = array('content' => $this->renderPartial('_viewWorkOrder', array(
+            'activeWorkOrderData' => $activeWorkOrderData,
+        ), true));
+        
         if (isset($_GET['ResetFilter'])) {
             $this->redirect(array('summary'));
         }

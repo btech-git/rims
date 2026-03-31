@@ -106,10 +106,30 @@
                 <div class="field">
                     <div class="row collapse">
                         <div class="small-4 columns">
-                            <span class="prefix">Mileage (KM)</span>
+                            <span class="prefix">KM Sebelum</span>
+                        </div>
+                        <div class="small-8 columns">
+                            <input type="text" readonly="true" value="<?php echo $model->previous_mileage; ?>"> 
+                        </div>
+                    </div>
+                </div>
+                <div class="field">
+                    <div class="row collapse">
+                        <div class="small-4 columns">
+                            <span class="prefix">KM Sekarang</span>
                         </div>
                         <div class="small-8 columns">
                             <input type="text" readonly="true" value="<?php echo $model->vehicle_mileage; ?>"> 
+                        </div>
+                    </div>
+                </div>
+                <div class="field">
+                    <div class="row collapse">
+                        <div class="small-4 columns">
+                            <span class="prefix">KM Selanjutnya</span>
+                        </div>
+                        <div class="small-8 columns">
+                            <input type="text" readonly="true" value="<?php echo $model->next_mileage; ?>"> 
                         </div>
                     </div>
                 </div>
