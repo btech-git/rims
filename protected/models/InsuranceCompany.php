@@ -298,7 +298,7 @@ class InsuranceCompany extends CActiveRecord {
         }
         
         if (!empty($insuranceId)) {
-            $insuranceConditionSql = ' AND i.id = :insurance_id';
+            $insuranceConditionSql = ' AND ic.id = :insurance_id';
             $params[':insurance_id'] = $insuranceId;
         }
         
