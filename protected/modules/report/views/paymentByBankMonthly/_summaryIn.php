@@ -1,13 +1,13 @@
 <div class="table_wrapper">
     <fieldset>
         <legend>Transaksi Bank Masuk</legend>
-        <table>
+        <table class="responsive">
             <thead>
                 <tr>
-                    <th style="text-align: center"></th>
+                    <th style="text-align: center; width: 5%"></th>
                     <?php $paymentDailyTotals = array(); ?>
                     <?php foreach ($selectedCoas as $coa): ?>
-                        <th style="text-align: center"><?php echo CHtml::encode(CHtml::value($coa, 'name')); ?></th>
+                        <th style="text-align: center; width: 10%"><?php echo CHtml::encode(CHtml::value($coa, 'name')); ?></th>
                         <?php $paymentDailyTotals[$coa->id] = '0.00'; ?>
                     <?php endforeach; ?>
                     <?php $dailyTotal = '0.00'; ?>
@@ -27,7 +27,7 @@
                             <td><?php echo CHtml::encode($date); ?></td>
                             <?php foreach ($selectedCoas as $coa): ?>
                                 <?php $paymentInRetail = $paymentInItem[$coa->id]; ?>
-                                <td style="text-align: right">
+                                <td style="text-align: right;">
                                     <?php echo CHtml::link(CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $paymentInRetail)), array(
                                         '/report/paymentByBankMonthly/transactionInfo', 
                                         'coaId' => $coa->id, 
@@ -40,7 +40,7 @@
                                 </td>
                                 <?php $totalPerDate += $paymentInRetail; ?>
                             <?php endforeach; ?>
-                            <td style="text-align: right; font-weight: bold">
+                            <td style="text-align: right; font-weight: bold;">
                                 <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalPerDate)); ?>
                             </td>
                         </tr>

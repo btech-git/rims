@@ -1,13 +1,13 @@
 <div class="table_wrapper">
     <fieldset>
         <legend>Transaksi Bank Keluar</legend>
-        <table>
+        <table class="responsive">
             <thead>
                 <tr>
-                    <th style="text-align: center"></th>
+                    <th style="text-align: center; width: 5%"></th>
                     <?php $paymentDailyTotals = array(); ?>
                     <?php foreach ($selectedCoas as $coa): ?>
-                        <th style="text-align: center"><?php echo CHtml::encode(CHtml::value($coa, 'name')); ?></th>
+                        <th style="text-align: center; width: 10%"><?php echo CHtml::encode(CHtml::value($coa, 'name')); ?></th>
                         <?php $paymentDailyTotals[$coa->id] = '0.00'; ?>
                     <?php endforeach; ?>
                     <?php $dailyTotal = '0.00'; ?>

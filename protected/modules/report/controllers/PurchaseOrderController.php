@@ -98,19 +98,19 @@ class PurchaseOrderController extends Controller {
         $worksheet = $objPHPExcel->setActiveSheetIndex(0);
         $worksheet->setTitle('Rincian Pembelian per Supplier');
 
-        $worksheet->mergeCells('A1:J1');
-        $worksheet->mergeCells('A2:J2');
-        $worksheet->mergeCells('A3:J3');
+        $worksheet->mergeCells('A1:K1');
+        $worksheet->mergeCells('A2:K2');
+        $worksheet->mergeCells('A3:K3');
         
-        $worksheet->getStyle('A1:J5')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-        $worksheet->getStyle('A1:J5')->getFont()->setBold(true);
+        $worksheet->getStyle('A1:K5')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->getStyle('A1:K5')->getFont()->setBold(true);
 
         $branch = Branch::model()->findByPk($branchId);
         $worksheet->setCellValue('A1', 'Raperind Motor ' . CHtml::value($branch, 'name'));
         $worksheet->setCellValue('A2', 'Rincian Pembelian per Supplier');
         $worksheet->setCellValue('A3', Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($startDate)) . ' - ' . Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($endDate)));
 
-        $worksheet->getStyle('A5:J5')->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle('A5:K5')->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
         $worksheet->setCellValue('A5', 'Code');
         $worksheet->setCellValue('B5', 'Company');
@@ -121,19 +121,22 @@ class PurchaseOrderController extends Controller {
         $worksheet->setCellValue('G5', 'Type');
         $worksheet->setCellValue('H5', 'Parts');
         $worksheet->setCellValue('I5', 'Status');
-        $worksheet->setCellValue('J5', 'Total Price');
+        $worksheet->setCellValue('J5', 'Quantity');
+        $worksheet->setCellValue('K5', 'Total Price');
 
-        $worksheet->getStyle('A5:J5')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle('A5:K5')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
         $counter = 6;
         foreach ($dataProvider->data as $header) {
             $purchaseOrderData = $header->getPurchasePerSupplierReport($startDate, $endDate, $branchId);
             $workOrderExpenseData = $header->getWorkOrderExpensePerSupplierReport($startDate, $endDate, $branchId);
+            $totalQuantity = 0;
             $totalPurchase = '0.00';
             $totalWorkOrderExpense = '0.00';
             
             if (!empty($purchaseOrderData)) {
                 foreach ($purchaseOrderData as $purchaseOrderItem) {
+                    $quantity = $purchaseOrderItem['total_quantity'];
                     $totalPrice = $purchaseOrderItem['total_price'];
                     $purchaseOrder = TransactionPurchaseOrder::model()->findByPk($purchaseOrderItem['id']);
 
@@ -146,7 +149,9 @@ class PurchaseOrderController extends Controller {
                     $worksheet->setCellValue("G{$counter}", $purchaseOrder->getPurchaseStatus($purchaseOrder->purchase_type));
                     $worksheet->setCellValue("H{$counter}", $purchaseOrder->getProductLists());
                     $worksheet->setCellValue("I{$counter}", $purchaseOrderItem['payment_status']);
-                    $worksheet->setCellValue("J{$counter}", $totalPrice);
+                    $worksheet->setCellValue("J{$counter}", $quantity);
+                    $worksheet->setCellValue("K{$counter}", $totalPrice);
+                    $totalQuantity += $quantity;
                     $totalPurchase += $totalPrice;
 
                     $counter++;
@@ -155,6 +160,7 @@ class PurchaseOrderController extends Controller {
             
             if (!empty($workOrderExpenseData)) {
                 foreach ($workOrderExpenseData as $workOrderExpenseItem) {
+                    $quantity = 1;
                     $totalPrice = $workOrderExpenseItem['grand_total'];
 
                     $worksheet->setCellValue("A{$counter}", CHtml::value($header, 'code'));
@@ -166,7 +172,9 @@ class PurchaseOrderController extends Controller {
                     $worksheet->setCellValue("G{$counter}", $workOrderExpenseItem['registration_date']);
                     $worksheet->setCellValue("H{$counter}", $workOrderExpenseItem['plate_number']);
                     $worksheet->setCellValue("I{$counter}", $workOrderExpenseItem['status']);
-                    $worksheet->setCellValue("J{$counter}", $totalPrice);
+                    $worksheet->setCellValue("J{$counter}", $quantity);
+                    $worksheet->setCellValue("K{$counter}", $totalPrice);
+                    $totalQuantity += $quantity;
                     $totalWorkOrderExpense += $totalPrice;
 
                     $counter++;

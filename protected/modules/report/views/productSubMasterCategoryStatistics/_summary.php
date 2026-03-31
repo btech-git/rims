@@ -5,7 +5,6 @@
 
 '); ?>
 
-
 <div class="grid-view">
     <table class="report" style="width: 2500px">
         <thead style="position: sticky; top: 0">

@@ -22,7 +22,10 @@
                 <tr class="items1">
                     <td style="text-align: center"><?php echo $i + 1; ?></td>
                     <td>
-                        <?php echo CHtml::link(CHtml::encode($header->transaction_number), array("/frontDesk/generalRepairRegistration/view", "id"=>$header->id), array("target" => "_blank")); ?>
+                        <?php echo CHtml::link(CHtml::encode($header->transaction_number), array(
+                            "/frontDesk/generalRepairRegistration/view", 
+                            "id"=>$header->id
+                        ), array("target" => "_blank")); ?>
                     </td>
                     <td><?php echo CHtml::encode(CHtml::value($header, 'repair_type')); ?></td>
                     <td><?php echo CHtml::encode(CHtml::value($header, 'customer.name')); ?></td>
@@ -41,9 +44,15 @@
                     </td>
                     <td>
                         <?php if ($header->is_verified == 0): ?>
-                            <?php echo CHtml::link('<span></span>Verify', array("/report/dailyTransaction/verifyRegistration", "id" => $header->id, 'branchId' => $branchId, 'transactionDate' => $transactionDate), array(
+                            <?php echo CHtml::link('<span></span>Verify', array(
+                                "/report/dailyTransaction/verifyRegistration", 
+                                "id" => $header->id, 
+                                'branchId' => $branchId, 
+                                'transactionDate' => $transactionDate
+                            ), array(
                                 'class' => 'button success center', 
-                                'style' => 'margin-right:10px', 
+                                'style' => 'margin-right:10px',  
+                                'confirm' => 'Are you sure you want to verify this transaction?',
                             )); ?>
                         <?php else: ?>
                             <?php echo CHtml::encode(CHtml::value($header, 'userIdVerified.username')); ?>
@@ -77,7 +86,10 @@
                 <tr class="items1">
                     <td style="text-align: center"><?php echo $i + 1; ?></td>
                     <td>
-                        <?php echo CHtml::link(CHtml::encode($header->invoice_number), array("/transaction/invoiceHeader/view", "id"=>$header->id), array("target" => "_blank")); ?>
+                        <?php echo CHtml::link(CHtml::encode($header->invoice_number), array(
+                            "/transaction/invoiceHeader/view", 
+                            "id"=>$header->id
+                        ), array("target" => "_blank")); ?>
                     </td>
                     <td>
                         <?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($header->due_date))); ?>
@@ -99,9 +111,15 @@
                     </td>
                     <td>
                         <?php if ($header->is_verified == 0): ?>
-                            <?php echo CHtml::link('<span></span>Verify', array("/report/dailyTransaction/verifyInvoice", "id" => $header->id, 'branchId' => $branchId, 'transactionDate' => $transactionDate), array(
+                            <?php echo CHtml::link('<span></span>Verify', array(
+                                "/report/dailyTransaction/verifyInvoice", 
+                                "id" => $header->id, 
+                                'branchId' => $branchId, 
+                                'transactionDate' => $transactionDate
+                            ), array(
                                 'class' => 'button success center', 
-                                'style' => 'margin-right:10px', 
+                                'style' => 'margin-right:10px',
+                                'confirm' => 'Are you sure you want to verify this transaction?',
                             )); ?>
                         <?php else: ?>
                             <?php echo CHtml::encode(CHtml::value($header, 'userIdVerified.username')); ?>
@@ -132,7 +150,10 @@
                 <tr class="items1">
                     <td style="text-align: center"><?php echo $i + 1; ?></td>
                     <td>
-                        <?php echo CHtml::link(CHtml::encode($header->payment_number), array("/transaction/paymentIn/view", "id"=>$header->id), array("target" => "_blank")); ?>
+                        <?php echo CHtml::link(CHtml::encode($header->payment_number), array(
+                            "/transaction/paymentIn/view", 
+                            "id"=>$header->id
+                        ), array("target" => "_blank")); ?>
                     </td>
                     <td><?php echo CHtml::encode(CHtml::value($header, 'payment_type')); ?></td>
                     <td><?php echo CHtml::encode(CHtml::value($header, 'customer.name')); ?></td>
@@ -143,9 +164,15 @@
                     </td>
                     <td>
                         <?php if ($header->is_verified == 0): ?>
-                            <?php echo CHtml::link('<span class="fa fa-check"></span>Verify', array("/report/dailyTransaction/verifyPaymentIn", "id" => $header->id, 'branchId' => $branchId, 'transactionDate' => $transactionDate), array(
+                            <?php echo CHtml::link('<span class="fa fa-check"></span>Verify', array(
+                                "/report/dailyTransaction/verifyPaymentIn", 
+                                "id" => $header->id, 
+                                'branchId' => $branchId, 
+                                'transactionDate' => $transactionDate
+                            ), array(
                                 'class' => 'button success center', 
-                                'style' => 'margin-right:10px', 
+                                'style' => 'margin-right:10px',
+                                'confirm' => 'Are you sure you want to verify this transaction?',
                             )); ?>
                         <?php else: ?>
                             <?php echo CHtml::encode(CHtml::value($header, 'userIdVerified.username')); ?>
@@ -183,7 +210,10 @@
                 <tr class="items1">
                     <td style="text-align: center"><?php echo $i + 1; ?></td>
                     <td>
-                        <?php echo CHtml::link(CHtml::encode($header->transaction_number), array("/frontDesk/generalRepairRegistration/view", "id"=>$header->id), array("target" => "_blank")); ?>
+                        <?php echo CHtml::link(CHtml::encode($header->transaction_number), array(
+                            "/frontDesk/generalRepairRegistration/view", 
+                            "id"=>$header->id
+                        ), array("target" => "_blank")); ?>
                     </td>
                     <td><?php echo CHtml::encode(CHtml::value($header, 'repair_type')); ?></td>
                     <td><?php echo CHtml::encode(CHtml::value($header, 'customer.name')); ?></td>
@@ -202,9 +232,15 @@
                     </td>
                     <td>
                         <?php if ($header->is_verified == 0): ?>
-                            <?php echo CHtml::link('<span></span>Verify', array("/report/dailyTransaction/verifyRegistration", "id" => $header->id, 'branchId' => $branchId, 'transactionDate' => $transactionDate), array(
+                            <?php echo CHtml::link('<span></span>Verify', array(
+                                "/report/dailyTransaction/verifyRegistration", 
+                                "id" => $header->id, 
+                                'branchId' => $branchId, 
+                                'transactionDate' => $transactionDate
+                            ), array(
                                 'class' => 'button success center', 
-                                'style' => 'margin-right:10px', 
+                                'style' => 'margin-right:10px',
+                                'confirm' => 'Are you sure you want to verify this transaction?',
                             )); ?>
                         <?php else: ?>
                             <?php echo CHtml::encode(CHtml::value($header, 'userIdVerified.username')); ?>
@@ -238,7 +274,10 @@
                 <tr class="items1">
                     <td style="text-align: center"><?php echo $i + 1; ?></td>
                     <td>
-                        <?php echo CHtml::link(CHtml::encode($header->invoice_number), array("/transaction/invoiceHeader/view", "id"=>$header->id), array("target" => "_blank")); ?>
+                        <?php echo CHtml::link(CHtml::encode($header->invoice_number), array(
+                            "/transaction/invoiceHeader/view", 
+                            "id"=>$header->id
+                        ), array("target" => "_blank")); ?>
                     </td>
                     <td>
                         <?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($header->due_date))); ?>
@@ -260,9 +299,15 @@
                     </td>
                     <td>
                         <?php if ($header->is_verified == 0): ?>
-                            <?php echo CHtml::link('<span></span>Verify', array("/report/dailyTransaction/verifyInvoice", "id" => $header->id, 'branchId' => $branchId, 'transactionDate' => $transactionDate), array(
+                            <?php echo CHtml::link('<span></span>Verify', array(
+                                "/report/dailyTransaction/verifyInvoice", 
+                                "id" => $header->id, 
+                                'branchId' => $branchId, 
+                                'transactionDate' => $transactionDate
+                            ), array(
                                 'class' => 'button success center', 
-                                'style' => 'margin-right:10px', 
+                                'style' => 'margin-right:10px',
+                                'confirm' => 'Are you sure you want to verify this transaction?',
                             )); ?>
                         <?php else: ?>
                             <?php echo CHtml::encode(CHtml::value($header, 'userIdVerified.username')); ?>
@@ -293,7 +338,10 @@
                 <tr class="items1">
                     <td style="text-align: center"><?php echo $i + 1; ?></td>
                     <td>
-                        <?php echo CHtml::link(CHtml::encode($header->payment_number), array("/transaction/paymentIn/view", "id"=>$header->id), array("target" => "_blank")); ?>
+                        <?php echo CHtml::link(CHtml::encode($header->payment_number), array(
+                            "/transaction/paymentIn/view", 
+                            "id"=>$header->id
+                        ), array("target" => "_blank")); ?>
                     </td>
                     <td><?php echo CHtml::encode(CHtml::value($header, 'payment_type')); ?></td>
                     <td><?php echo CHtml::encode(CHtml::value($header, 'customer.name')); ?></td>
@@ -304,9 +352,15 @@
                     </td>
                     <td>
                         <?php if ($header->is_verified == 0): ?>
-                            <?php echo CHtml::link('<span class="fa fa-check"></span>Verify', array("/report/dailyTransaction/verifyPaymentIn", "id" => $header->id, 'branchId' => $branchId, 'transactionDate' => $transactionDate), array(
+                            <?php echo CHtml::link('<span class="fa fa-check"></span>Verify', array(
+                                "/report/dailyTransaction/verifyPaymentIn", 
+                                "id" => $header->id, 
+                                'branchId' => $branchId, 
+                                'transactionDate' => $transactionDate
+                            ), array(
                                 'class' => 'button success center', 
-                                'style' => 'margin-right:10px', 
+                                'style' => 'margin-right:10px',
+                                'confirm' => 'Are you sure you want to verify this transaction?',
                             )); ?>
                         <?php else: ?>
                             <?php echo CHtml::encode(CHtml::value($header, 'userIdVerified.username')); ?>

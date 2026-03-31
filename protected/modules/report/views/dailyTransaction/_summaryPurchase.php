@@ -29,9 +29,15 @@
                     </td>
                     <td>
                         <?php if ($header->is_verified == 0): ?>
-                            <?php echo CHtml::link('<span class="fa fa-check"></span>Verify', array("/report/dailyTransaction/verifyPurchase", "id" => $header->id, 'branchId' => $branchId, 'transactionDate' => $transactionDate), array(
+                            <?php echo CHtml::link('<span class="fa fa-check"></span>Verify', array(
+                                "/report/dailyTransaction/verifyPurchase", 
+                                "id" => $header->id, 
+                                'branchId' => $branchId, 
+                                'transactionDate' => $transactionDate
+                            ), array(
                                 'class' => 'button success center', 
-                                'style' => 'margin-right:10px', 
+                                'style' => 'margin-right:10px',  
+                                'confirm' => 'Are you sure you want to verify this transaction?',
                             )); ?>
                         <?php else: ?>
                             <?php echo CHtml::encode(CHtml::value($header, 'userIdVerified.username')); ?>
@@ -65,7 +71,10 @@
                 <tr class="items1">
                     <td style="text-align: center"><?php echo $i + 1; ?></td>
                     <td>
-                        <?php echo CHtml::link(CHtml::encode($header->payment_number), array("/transaction/paymentIn/view", "id"=>$header->id), array("target" => "_blank")); ?>
+                        <?php echo CHtml::link(CHtml::encode($header->payment_number), array(
+                            "/transaction/paymentIn/view", 
+                            "id"=>$header->id
+                        ), array("target" => "_blank")); ?>
                     </td>
                     <td><?php echo CHtml::encode(CHtml::value($header, 'paymentType.name')); ?></td>
                     <td><?php echo CHtml::encode(CHtml::value($header, 'supplier.name')); ?></td>
@@ -76,9 +85,15 @@
                     </td>
                     <td>
                         <?php if ($header->is_verified == 0): ?>
-                            <?php echo CHtml::link('<span class="fa fa-check"></span>Verify', array("/report/dailyTransaction/verifyPaymentOut", "id" => $header->id, 'branchId' => $branchId, 'transactionDate' => $transactionDate), array(
+                            <?php echo CHtml::link('<span class="fa fa-check"></span>Verify', array(
+                                "/report/dailyTransaction/verifyPaymentOut", 
+                                "id" => $header->id, 
+                                'branchId' => $branchId, 
+                                'transactionDate' => $transactionDate
+                            ), array(
                                 'class' => 'button success center', 
-                                'style' => 'margin-right:10px', 
+                                'style' => 'margin-right:10px',  
+                                'confirm' => 'Are you sure you want to verify this transaction?',
                             )); ?>
                         <?php else: ?>
                             <?php echo CHtml::encode(CHtml::value($header, 'userIdVerified.username')); ?>

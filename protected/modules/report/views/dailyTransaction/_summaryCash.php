@@ -25,9 +25,15 @@
                     </td>
                     <td>
                         <?php if ($header->is_verified == 0): ?>
-                            <?php echo CHtml::link('<span class="fa fa-check"></span>Verify', array("/report/dailyTransaction/verifyCashTransaction", "id" => $header->id, 'branchId' => $branchId, 'transactionDate' => $transactionDate), array(
+                            <?php echo CHtml::link('<span class="fa fa-check"></span>Verify', array(
+                                "/report/dailyTransaction/verifyCashTransaction", 
+                                "id" => $header->id, 
+                                'branchId' => $branchId, 
+                                'transactionDate' => $transactionDate
+                            ), array(
                                 'class' => 'button success center', 
-                                'style' => 'margin-right:10px', 
+                                'style' => 'margin-right:10px',
+                                'confirm' => 'Are you sure you want to verify this transaction?'
                             )); ?>
                         <?php else: ?>
                             <?php echo CHtml::encode(CHtml::value($header, 'userIdVerified.username')); ?>
@@ -68,9 +74,15 @@
                     </td>
                     <td>
                         <?php if ($header->is_verified == 0): ?>
-                            <?php echo CHtml::link('<span class="fa fa-check"></span>Verify', array("/report/dailyTransaction/verifyCashTransaction", "id" => $header->id, 'branchId' => $branchId, 'transactionDate' => $transactionDate), array(
+                            <?php echo CHtml::link('<span class="fa fa-check"></span>Verify', array(
+                                "/report/dailyTransaction/verifyCashTransaction", 
+                                "id" => $header->id, 
+                                'branchId' => $branchId, 
+                                'transactionDate' => $transactionDate
+                            ), array(
                                 'class' => 'button success center', 
                                 'style' => 'margin-right:10px', 
+                                'confirm' => 'Are you sure you want to verify this transaction?',
                             )); ?>
                         <?php else: ?>
                             <?php echo CHtml::encode(CHtml::value($header, 'userIdVerified.username')); ?>
