@@ -144,7 +144,7 @@ $this->breadcrumbs = array(
                             <?php endif; ?>
                         <?php endif; ?>
 
-                        <?php if (Yii::app()->user->checkAccess("generalRepairCreate") || Yii::app()->user->checkAccess("generalRepairEdit")): ?>
+                        <?php /*if (Yii::app()->user->checkAccess("generalRepairCreate") || Yii::app()->user->checkAccess("generalRepairEdit")): ?>
                             <?php echo CHtml::button('Show Realization', array(
                                 'id' => 'real-button',
                                 'name' => 'Real',
@@ -152,7 +152,7 @@ $this->breadcrumbs = array(
                                 'onclick' => 'window.location.href = "showRealization?id=' . $model->id . '";',
                                 'visible' => Yii::app()->user->checkAccess("generalRepairCreate") || Yii::app()->user->checkAccess("generalRepairEdit")
                             )); ?>
-                        <?php endif; ?>
+                        <?php endif;*/ ?>
                     <?php endif; ?>
                     
                     <?php if (Yii::app()->user->checkAccess("generalRepairSupervisor") && empty($model->user_id_cancelled)): ?>
