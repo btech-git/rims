@@ -101,19 +101,19 @@ class SaleRetailController extends Controller {
         $worksheet = $objPHPExcel->setActiveSheetIndex(0);
         $worksheet->setTitle('Rincian Penjualan per Customer');
 
-        $worksheet->mergeCells('A1:Y1');
-        $worksheet->mergeCells('A2:Y2');
-        $worksheet->mergeCells('A3:Y3');
+        $worksheet->mergeCells('A1:Z1');
+        $worksheet->mergeCells('A2:Z2');
+        $worksheet->mergeCells('A3:Z3');
 
-        $worksheet->getStyle('A1:Y5')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-        $worksheet->getStyle('A1:Y5')->getFont()->setBold(true);
+        $worksheet->getStyle('A1:Z5')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->getStyle('A1:Z5')->getFont()->setBold(true);
 
         $branch = Branch::model()->findByPk($branchId);
         $worksheet->setCellValue('A1', 'Raperind Motor ' . CHtml::encode(CHtml::value($branch, 'name')));
         $worksheet->setCellValue('A2', 'Rincian Penjualan per Customer');
         $worksheet->setCellValue('A3', Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($startDate)) . ' - ' . Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($endDate)));
 
-        $worksheet->getStyle('A5:Y5')->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle('A5:Z5')->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
         $worksheet->setCellValue('A5', 'No');
         $worksheet->setCellValue('B5', 'Customer ID');
@@ -128,20 +128,21 @@ class SaleRetailController extends Controller {
         $worksheet->setCellValue('K5', 'Odometer');
         $worksheet->setCellValue('L5', 'Registration #');
         $worksheet->setCellValue('M5', 'Tanggal RG');
-        $worksheet->setCellValue('N5', 'WO #');
-        $worksheet->setCellValue('O5', 'Tanggal WO');
-        $worksheet->setCellValue('P5', 'SO #');
-        $worksheet->setCellValue('Q5', 'Tanggal SO');
-        $worksheet->setCellValue('R5', 'Last Service');
-        $worksheet->setCellValue('S5', 'Last Parts');
-        $worksheet->setCellValue('T5', 'Invoice #');
-        $worksheet->setCellValue('U5', 'Invoice Total');
-        $worksheet->setCellValue('V5', 'VSC #');
-        $worksheet->setCellValue('W5', 'Note from WO');
-        $worksheet->setCellValue('X5', 'Salesman');
-        $worksheet->setCellValue('Y5', 'Mechanic');
+        $worksheet->setCellValue('N5', 'SPK Customer #');
+        $worksheet->setCellValue('O5', 'WO #');
+        $worksheet->setCellValue('P5', 'Tanggal WO');
+        $worksheet->setCellValue('Q5', 'SO #');
+        $worksheet->setCellValue('R5', 'Tanggal SO');
+        $worksheet->setCellValue('S5', 'Last Service');
+        $worksheet->setCellValue('T5', 'Last Parts');
+        $worksheet->setCellValue('U5', 'Invoice #');
+        $worksheet->setCellValue('V5', 'Invoice Total');
+        $worksheet->setCellValue('W5', 'VSC #');
+        $worksheet->setCellValue('X5', 'Note from WO');
+        $worksheet->setCellValue('Y5', 'Salesman');
+        $worksheet->setCellValue('Z5', 'Mechanic');
 
-        $worksheet->getStyle('A5:Y5')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle('A5:Z5')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
         $counter = 6;
         $ordinal = 1;
@@ -179,28 +180,29 @@ class SaleRetailController extends Controller {
                     $worksheet->setCellValue("K{$counter}", CHtml::value($saleReportRow, 'registrationTransaction.vehicle_mileage'));
                     $worksheet->setCellValue("L{$counter}", CHtml::value($saleReportRow, 'registrationTransaction.transaction_number'));
                     $worksheet->setCellValue("M{$counter}", CHtml::value($saleReportRow, 'registrationTransaction.transaction_date'));
-                    $worksheet->setCellValue("N{$counter}", CHtml::value($saleReportRow, 'registrationTransaction.work_order_number'));
-                    $worksheet->setCellValue("O{$counter}", CHtml::value($saleReportRow, 'registrationTransaction.work_order_date'));
-                    $worksheet->setCellValue("P{$counter}", CHtml::value($saleReportRow, 'registrationTransaction.sales_order_number'));
-                    $worksheet->setCellValue("Q{$counter}", CHtml::value($saleReportRow, 'registrationTransaction.sales_order_date'));
-                    $worksheet->setCellValue("R{$counter}", CHtml::value($saleReportRow, 'productLists'));
-                    $worksheet->setCellValue("S{$counter}", CHtml::value($saleReportRow, 'serviceLists'));
-                    $worksheet->setCellValue("T{$counter}", CHtml::value($saleReportRow, 'invoice_number'));
-                    $worksheet->setCellValue("U{$counter}", $grandTotal);
-                    $worksheet->setCellValue("W{$counter}", CHtml::value($saleReportRow, 'registrationTransaction.note'));
-                    $worksheet->setCellValue("X{$counter}", CHtml::value($saleReportRow, 'registrationTransaction.employeeIdSalesPerson.name'));
-                    $worksheet->setCellValue("Y{$counter}", CHtml::value($saleReportRow, 'registrationTransaction.employeeIdAssignMechanic.name'));
+                    $worksheet->setCellValue("N{$counter}", CHtml::value($saleReportRow, 'registrationTransaction.customer_work_order_number'));
+                    $worksheet->setCellValue("O{$counter}", CHtml::value($saleReportRow, 'registrationTransaction.work_order_number'));
+                    $worksheet->setCellValue("P{$counter}", CHtml::value($saleReportRow, 'registrationTransaction.work_order_date'));
+                    $worksheet->setCellValue("Q{$counter}", CHtml::value($saleReportRow, 'registrationTransaction.sales_order_number'));
+                    $worksheet->setCellValue("R{$counter}", CHtml::value($saleReportRow, 'registrationTransaction.sales_order_date'));
+                    $worksheet->setCellValue("S{$counter}", CHtml::value($saleReportRow, 'productLists'));
+                    $worksheet->setCellValue("T{$counter}", CHtml::value($saleReportRow, 'serviceLists'));
+                    $worksheet->setCellValue("U{$counter}", CHtml::value($saleReportRow, 'invoice_number'));
+                    $worksheet->setCellValue("W{$counter}", $grandTotal);
+                    $worksheet->setCellValue("X{$counter}", CHtml::value($saleReportRow, 'registrationTransaction.note'));
+                    $worksheet->setCellValue("Y{$counter}", CHtml::value($saleReportRow, 'registrationTransaction.employeeIdSalesPerson.name'));
+                    $worksheet->setCellValue("Z{$counter}", CHtml::value($saleReportRow, 'registrationTransaction.employeeIdAssignMechanic.name'));
                     
                     $totalSale += $grandTotal;
                     $counter++; $ordinal++;
                 }
             }
         }
-        $worksheet->getStyle("A{$counter}:Y{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
-        $worksheet->getStyle("A{$counter}:Y{$counter}")->getFont()->setBold(true);
+        $worksheet->getStyle("A{$counter}:Z{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A{$counter}:Z{$counter}")->getFont()->setBold(true);
         
         $worksheet->setCellValue("T{$counter}", 'TOTAL');
-        $worksheet->setCellValue("U{$counter}", $totalSale);
+        $worksheet->setCellValue("W{$counter}", $totalSale);
 
         for ($col = 'A'; $col !== 'Z'; $col++) {
             $objPHPExcel->getActiveSheet()

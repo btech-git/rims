@@ -31,6 +31,7 @@ Yii::app()->clientScript->registerCss('_report', '
             <th class="width1-4">Tanggal</th>
             <th class="width1-5">Asuransi</th>
             <th class="width1-6">Plat #</th>
+            <th class="width1-7">SPK Customer #</th>
             <th class="width1-7">WO #</th>
             <th class="width1-8">Sales</th>
             <th class="width1-9">Mechanic</th>
@@ -71,6 +72,7 @@ Yii::app()->clientScript->registerCss('_report', '
                         <td>
                             <?php echo CHtml::link(CHtml::encode(CHtml::value($saleReportRow, 'vehicle.plate_number')), Yii::app()->createUrl("master/vehicle/view", array("id" => $saleReportRow->vehicle_id)), array('target' => '_blank')); ?>
                         </td>
+                        <td><?php echo CHtml::encode(CHtml::value($saleReportRow, 'registrationTransaction.customer_work_order_number')); ?></td>
                         <td>
                             <?php echo CHtml::link(CHtml::encode(CHtml::value($saleReportRow, 'registrationTransaction.work_order_number')), Yii::app()->createUrl("frontDesk/registrationTransaction/view", array("id" => CHtml::value($saleReportRow, 'registration_transaction_id'))), array('target' => '_blank')); ?>
                         </td>
@@ -91,7 +93,7 @@ Yii::app()->clientScript->registerCss('_report', '
     </tbody>
     <tfoot>
         <tr>
-            <td style="text-align: right" colspan="9">Total</td>
+            <td style="text-align: right" colspan="10">Total</td>
             <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalSale)); ?></td>
         </tr>        
     </tfoot>
