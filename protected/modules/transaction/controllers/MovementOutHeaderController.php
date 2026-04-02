@@ -433,7 +433,11 @@ class MovementOutHeaderController extends Controller {
                 ':kode_transaksi' => $model->movement_out_no,
             ));
 
-            InventoryDetail::model()->updateAll(array('stock_in' => '0.00', 'stock_out' => '0.00'), 'transaction_number = :transaction_number', array(
+            InventoryDetail::model()->updateAll(array(
+                'stock_in' => '0.00', 
+                'stock_out' => '0.00',
+                'purchase_price' => '0.00',
+            ), 'transaction_number = :transaction_number', array(
                 ':transaction_number' => $model->movement_out_no,
             ));
 
