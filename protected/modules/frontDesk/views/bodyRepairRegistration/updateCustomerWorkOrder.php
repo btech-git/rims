@@ -151,7 +151,7 @@ $this->breadcrumbs=array(
                                                 <label class="prefix">KM Sebelum</label>
                                             </div>
                                             <div class="small-8 columns">
-                                                <?php echo $form->textField($registrationTransaction, 'previous_mileage'); ?>
+                                                <?php echo CHtml::encode(CHtml::value($registrationTransaction, 'previous_mileage')); ?>
                                             </div>
                                         </div>
                                     </div>
@@ -162,7 +162,7 @@ $this->breadcrumbs=array(
                                                 <label class="prefix">KM Sekarang</label>
                                             </div>
                                             <div class="small-8 columns">
-                                                <?php echo $form->textField($registrationTransaction, 'vehicle_mileage'); ?>
+                                                <?php echo CHtml::encode(CHtml::value($registrationTransaction, 'vehicle_mileage')); ?>
                                             </div>
                                         </div>
                                     </div>
@@ -173,10 +173,23 @@ $this->breadcrumbs=array(
                                                 <label class="prefix">KM Rekomendasi Service Selanjutnya</label>
                                             </div>
                                             <div class="small-8 columns">
-                                                <?php echo $form->textField($registrationTransaction, 'next_mileage'); ?>
+                                                <?php echo CHtml::encode(CHtml::value($registrationTransaction, 'next_mileage')); ?>
                                             </div>
                                         </div>
                                     </div>
+
+                                    <?php if ($registrationTransaction->customer->customer_type == 'Company'): ?>
+                                        <div class="field">
+                                            <div class="row collapse">
+                                                <div class="small-4 columns">
+                                                    <label class="prefix">SPK Customer #</label>
+                                                </div>
+                                                <div class="small-8 columns">
+                                                    <?php echo $form->textField($registrationTransaction, 'customer_work_order_number'); ?>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    <?php endif; ?>
 
                                     <div class="field">
                                         <div class="row collapse">
