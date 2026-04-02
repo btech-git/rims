@@ -209,13 +209,13 @@ $('#invoiceSearch').submit(function(){
                         'header' => '',
                     ),
                     'columns' => array(
-//                        array(
-//                            'class' => 'CCheckBoxColumn', //CHECKBOX COLUMN ADDED.
-//                            'selectableRows' => 2, //MULTIPLE ROWS CAN BE SELECTED.
-//                            'checked' => function($data) use($prChecked) {
-//                                return in_array($data->id, $prChecked);
-//                            },
-//                        ),
+                        array(
+                            'class' => 'CCheckBoxColumn', //CHECKBOX COLUMN ADDED.
+                            'selectableRows' => 2, //MULTIPLE ROWS CAN BE SELECTED.
+                            'checked' => function($data) use($prChecked) {
+                                return in_array($data->id, $prChecked);
+                            },
+                        ),
                         array(
                             'name' => 'invoice_number', 
                             'value' => 'CHtml::link($data->invoice_number, array("view", "id"=>$data->id))', 
@@ -248,16 +248,15 @@ $('#invoiceSearch').submit(function(){
                     ),
                 )); ?>
 
-<!--                <div class="button-group">
-                    <?php /*if (Yii::app()->user->checkAccess("saleInvoiceEdit")): ?>
+                <div class="button-group">
+                    <?php if (Yii::app()->user->checkAccess("saleInvoiceEdit")): ?>
                         <?php echo CHtml::button("View Invoice", array("id" => "btnProses", 'class' => 'button cbutton')); ?>
                     <?php endif; ?>
                     <?php if (Yii::app()->user->checkAccess("saleInvoiceEdit")): ?>
                         <?php echo CHtml::button("Export PDF", array("id" => "btnProsesPdf", 'class' => 'button cbutton')); ?>
                     <?php endif; ?>
-
-                    <?php echo CHtml::button("Clear Selected", array("id" => "btnClear", 'class' => 'button cbutton'));*/ ?>
-                </div>-->
+                    <?php echo CHtml::button("Clear Selected", array("id" => "btnClear", 'class' => 'button cbutton')); ?>
+                </div>
             </div>
         </div>
     </div> <!-- end row -->
