@@ -173,6 +173,17 @@
                 <div class="field">
                     <div class="row collapse">
                         <div class="small-4 columns">
+                            <span class="prefix">WO Customer #</span>
+                        </div>
+                        <div class="small-8 columns">
+                            <input type="text" readonly="true" value="<?php echo $model->customer_work_order_number; ?>"> 
+                        </div>
+                    </div>
+                </div>
+
+                <div class="field">
+                    <div class="row collapse">
+                        <div class="small-4 columns">
                             <span class="prefix">Work Order #</span>
                         </div>
                         <div class="small-8 columns">
