@@ -209,7 +209,7 @@ $this->breadcrumbs = array(
 
             <fieldset>
                 <legend>Information</legend>
-                <div class="row" style="height: 750px">
+                <div class="row" style="height: 950px">
                     <?php $this->widget('zii.widgets.jui.CJuiTabs', array(
                         'tabs' => array(
                             'Registration' => array(
