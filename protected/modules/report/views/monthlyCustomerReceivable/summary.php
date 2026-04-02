@@ -17,6 +17,35 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                             <div class="field">
                                 <div class="row collapse">
                                     <div class="small-4 columns">
+                                        <span class="prefix">Cabang</span>
+                                    </div>
+
+                                    <div class="small-8 columns">
+                                        <?php echo CHtml::dropDownlist('BranchId', $branchId, CHtml::listData(Branch::model()->findAllbyAttributes(array('status'=>'Active')), 'id','name'), array('empty'=>'-- All Branch --')); ?>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                            
+                        <div class="medium-6 columns">
+                            <div class="field">
+                                <div class="row collapse">
+                                    <div class="small-4 columns">
+                                        <span class="prefix">Customer</span>
+                                    </div>
+                                    <div class="small-8 columns">
+                                        <?php echo CHtml::dropDownList('CustomerId', $customerId, CHtml::listData(Customer::model()->findAllbyAttributes(array('status' => 'Active', 'customer_type' => 'Company'), array('order' => 't.name ASC')), 'id', 'name'), array('empty' => '-- All Customer --')); ?>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="medium-6 columns">
+                            <div class="field">
+                                <div class="row collapse">
+                                    <div class="small-4 columns">
                                         <span class="prefix">Periode</span>
                                     </div>
                                     <div class="small-4 columns">
@@ -44,16 +73,15 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                         </div>
                             
                         <div class="medium-6 columns">
-                            <div class="field">
+<!--                            <div class="field">
                                 <div class="row collapse">
                                     <div class="small-4 columns">
-                                        <span class="prefix">Customer</span>
+                                        <span class="prefix"></span>
                                     </div>
                                     <div class="small-8 columns">
-                                        <?php echo CHtml::dropDownList('CustomerId', $customerId, CHtml::listData(Customer::model()->findAllbyAttributes(array('status' => 'Active', 'customer_type' => 'Company'), array('order' => 't.name ASC')), 'id', 'name'), array('empty' => '-- All Customer --')); ?>
                                     </div>
                                 </div>
-                            </div>
+                            </div>-->
                         </div>
                     </div>
 
@@ -72,6 +100,13 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                 <hr />
 
                 <div class="relative">
+                    <div class="reportDisplay">
+                        <?php $dataCount = count($monthlyCustomerReceivableSummary->dataProvider->data); ?>
+                        <?php if ($dataCount > 0): ?>
+                            <?php echo "Displaying 1-{$dataCount} of {$dataCount} result(s)."; ?>
+                        <?php endif; ?>
+                    </div>
+                    
                     <?php $this->renderPartial('_summary', array(
                         'monthlyCustomerReceivableSummary' => $monthlyCustomerReceivableSummary,
                         'monthlyCustomerReceivableReportData' => $monthlyCustomerReceivableReportData,

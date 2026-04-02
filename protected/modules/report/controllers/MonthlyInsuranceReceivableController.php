@@ -28,6 +28,7 @@ class MonthlyInsuranceReceivableController extends Controller {
         $month = isset($_GET['Month']) ? $_GET['Month'] : $monthNow;
         $year = (isset($_GET['Year'])) ? $_GET['Year'] : $yearNow;
         $insuranceId = (isset($_GET['InsuranceId'])) ? $_GET['InsuranceId'] : '';
+        $branchId = (isset($_GET['BranchId'])) ? $_GET['BranchId'] : '';
         $currentPage = (isset($_GET['page'])) ? $_GET['page'] : '';
 
         $insuranceCompany = Search::bind(new InsuranceCompany('search'), isset($_GET['InsuranceCompany']) ? $_GET['InsuranceCompany'] : array());
@@ -38,11 +39,11 @@ class MonthlyInsuranceReceivableController extends Controller {
         $monthlyInsuranceReceivableSummary->setupLoading();
         $monthlyInsuranceReceivableSummary->setupPaging(100, $currentPage);
         $monthlyInsuranceReceivableSummary->setupSorting();
-        $monthlyInsuranceReceivableSummary->setupFilter($year, $month, $insuranceId);
+        $monthlyInsuranceReceivableSummary->setupFilter($year, $month, $insuranceId, $branchId);
         
         $insuranceIds = array_map(function($insurance) { return $insurance->id; }, $monthlyInsuranceReceivableSummary->dataProvider->data);
         
-        $monthlyInsuranceReceivableReport = RegistrationTransaction::getMonthlyInsuranceReceivableData($year, $month, $insuranceIds);
+        $monthlyInsuranceReceivableReport = RegistrationTransaction::getMonthlyInsuranceReceivableData($year, $month, $branchId, $insuranceIds);
         
         $monthlyInsuranceReceivableReportData = array();
         foreach ($monthlyInsuranceReceivableReport as $monthlyInsuranceReceivableReportItem) {
@@ -79,6 +80,7 @@ class MonthlyInsuranceReceivableController extends Controller {
             'year' => $year,
             'month' => $month,
             'insuranceId' => $insuranceId,
+            'branchId' => $branchId,
         ));
     }
     

@@ -2,7 +2,13 @@
 Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/transaction/report.css');
 ?>
 
-<div class="clear"></div>
+<style> 
+ .table_wrapper{
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+}
+</style>
 
 <div class="tab reportTab">
     <div class="tabHead"></div>
@@ -18,11 +24,25 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                             <div class="field">
                                 <div class="row collapse">
                                     <div class="small-4 columns">
-                                        <span class="prefix">Tahun </span>
+                                        <span class="prefix">Tahun</span>
                                     </div>
 
                                     <div class="small-8 columns">
                                         <?php echo CHtml::dropDownList('Year', $year, $yearList); ?>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="medium-6 columns">
+                            <div class="field">
+                                <div class="row collapse">
+                                    <div class="small-4 columns">
+                                        <span class="prefix">Cabang</span>
+                                    </div>
+
+                                    <div class="small-8 columns">
+                                        <?php echo CHtml::dropDownlist('BranchId', $branchId, CHtml::listData(Branch::model()->findAllbyAttributes(array('status'=>'Active')), 'id','name'), array('empty'=>'-- All Branch --')); ?>
                                     </div>
                                 </div>
                             </div>

@@ -24,11 +24,12 @@ class YearlyCustomerReceivableController extends Controller {
         
         $yearNow = date('Y');
         $year = (isset($_GET['Year'])) ? $_GET['Year'] : $yearNow;
+        $branchId = (isset($_GET['BranchId'])) ? $_GET['BranchId'] : '';
         
-        $yearlyCustomerInvoiceReport = InvoiceHeader::getYearlyCustomerInvoiceReport($year);
-        $yearlyCustomerPaymentReport = InvoiceHeader::getYearlyCustomerPaymentReport($year);
-        $beginningCustomerInvoiceReport = InvoiceHeader::getBeginningCustomerInvoiceReport($year);
-        $beginningCustomerPaymentReport = InvoiceHeader::getBeginningCustomerPaymentReport($year);
+        $yearlyCustomerInvoiceReport = InvoiceHeader::getYearlyCustomerInvoiceReport($year, $branchId);
+        $yearlyCustomerPaymentReport = InvoiceHeader::getYearlyCustomerPaymentReport($year, $branchId);
+        $beginningCustomerInvoiceReport = InvoiceHeader::getBeginningCustomerInvoiceReport($year, $branchId);
+        $beginningCustomerPaymentReport = InvoiceHeader::getBeginningCustomerPaymentReport($year, $branchId);
         
         $yearlyCustomerReport = array();
         
@@ -91,9 +92,6 @@ class YearlyCustomerReceivableController extends Controller {
         
         $this->sortReportData($reportData);
         
-//        var_dump($reportData);
-        
-        
         $yearList = array();
         for ($y = $yearNow - 4; $y <= $yearNow; $y++) {
             $yearList[$y] = $y;
@@ -111,6 +109,7 @@ class YearlyCustomerReceivableController extends Controller {
             'reportData' => $reportData,
             'yearList' => $yearList,
             'year' => $year,
+            'branchId' => $branchId,
         ));
     }
     
@@ -338,6 +337,7 @@ class YearlyCustomerReceivableController extends Controller {
 
         Yii::app()->end();
     }
+    
     protected function saveToExcelTransactionInfo($dataProvider, $year, $month, $monthList, $customer) {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
@@ -433,7 +433,7 @@ class YearlyCustomerReceivableController extends Controller {
         Yii::app()->end();
     }
     
-    function sortReportData(&$reportData) {
+    protected function sortReportData(&$reportData) {
         $count = count($reportData);
         for ($i = 0; $i < $count; $i++) {
             for ($j = 0; $j < $count - $i - 1; $j++) {

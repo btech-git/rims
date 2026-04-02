@@ -24,11 +24,12 @@ class YearlyInsuranceReceivableController extends Controller {
         
         $yearNow = date('Y');
         $year = (isset($_GET['Year'])) ? $_GET['Year'] : $yearNow;
+        $branchId = (isset($_GET['BranchId'])) ? $_GET['BranchId'] : '';
         
-        $yearlyInsuranceInvoiceReport = InvoiceHeader::getYearlyInsuranceInvoiceReport($year);
-        $yearlyInsurancePaymentReport = InvoiceHeader::getYearlyInsurancePaymentReport($year);
-        $beginningInsuranceInvoiceReport = InvoiceHeader::getBeginningInsuranceInvoiceReport($year);
-        $beginningInsurancePaymentReport = InvoiceHeader::getBeginningInsurancePaymentReport($year);
+        $yearlyInsuranceInvoiceReport = InvoiceHeader::getYearlyInsuranceInvoiceReport($year, $branchId);
+        $yearlyInsurancePaymentReport = InvoiceHeader::getYearlyInsurancePaymentReport($year, $branchId);
+        $beginningInsuranceInvoiceReport = InvoiceHeader::getBeginningInsuranceInvoiceReport($year, $branchId);
+        $beginningInsurancePaymentReport = InvoiceHeader::getBeginningInsurancePaymentReport($year, $branchId);
         
         $yearlyInsuranceReport = array();
         
@@ -72,6 +73,25 @@ class YearlyInsuranceReceivableController extends Controller {
             }
         }
         
+        $reportData = array();
+        foreach ($yearlyInsuranceReportData as $insuranceId => $yearlyInsuranceReportDataItem) {
+            $dataItem = array('insurance_id' => $insuranceId, 'insurance_name' => $yearlyInsuranceReportDataItem['insurance_name']);
+            if (isset($yearlyInsuranceReportDataItem['beginning_invoice_total'])) {
+                $dataItem['beginning_invoice_total'] = $yearlyInsuranceReportDataItem['beginning_invoice_total'];
+            }
+            if (isset($yearlyInsuranceReportDataItem['beginning_payment_total'])) {
+                $dataItem['beginning_payment_total'] = $yearlyInsuranceReportDataItem['beginning_payment_total'];
+            }
+            for ($month = 1; $month <= 12; $month++) {
+                if (isset($yearlyInsuranceReportDataItem[$month])) {
+                    $dataItem[$month] = $yearlyInsuranceReportDataItem[$month];
+                }
+            }
+            $reportData[] = $dataItem;
+        }
+        
+        $this->sortReportData($reportData);
+        
         $yearList = array();
         for ($y = $yearNow - 4; $y <= $yearNow; $y++) {
             $yearList[$y] = $y;
@@ -86,9 +106,10 @@ class YearlyInsuranceReceivableController extends Controller {
         }
         
         $this->render('summary', array(
-            'yearlyInsuranceReportData' => $yearlyInsuranceReportData,
+            'reportData' => $reportData,
             'yearList' => $yearList,
             'year' => $year,
+            'branchId' => $branchId,
         ));
     }
     
@@ -410,5 +431,18 @@ class YearlyInsuranceReceivableController extends Controller {
         $objWriter->save('php://output');
 
         Yii::app()->end();
+    }
+    
+    protected function sortReportData(&$reportData) {
+        $count = count($reportData);
+        for ($i = 0; $i < $count; $i++) {
+            for ($j = 0; $j < $count - $i - 1; $j++) {
+                if (ucwords($reportData[$j]['insurance_name']) > ucwords($reportData[$j + 1]['insurance_name'])) {
+                    $temp = $reportData[$j];
+                    $reportData[$j] = $reportData[$j + 1];
+                    $reportData[$j + 1] = $temp;
+                }
+            }
+        }
     }
 }

@@ -107,7 +107,7 @@ class DailyTransactionController extends Controller {
         $model->is_verified = 1; 
         $model->user_id_verified = Yii::app()->user->id;
         $model->verified_datetime = date('Y-m-d H:i:s');
-        // $model->update(array('is_verified', 'user_id_verified', 'verified_datetime'));
+        $model->update(array('is_verified', 'user_id_verified', 'verified_datetime'));
 
         $this->redirect(array('summary', 'BranchId' => $branchId, 'TransactionDate' => $transactionDate));
     }
@@ -117,7 +117,7 @@ class DailyTransactionController extends Controller {
         $model->is_verified = 1; 
         $model->user_id_verified = Yii::app()->user->id;
         $model->verified_datetime = date('Y-m-d H:i:s');
-        // $model->update(array('is_verified', 'user_id_verified', 'verified_datetime'));
+        $model->update(array('is_verified', 'user_id_verified', 'verified_datetime'));
 
         $this->redirect(array('summary', 'BranchId' => $branchId, 'TransactionDate' => $transactionDate));
     }
@@ -127,7 +127,7 @@ class DailyTransactionController extends Controller {
         $model->is_verified = 1; 
         $model->user_id_verified = Yii::app()->user->id;
         $model->verified_datetime = date('Y-m-d H:i:s');
-        // $model->update(array('is_verified', 'user_id_verified', 'verified_datetime'));
+        $model->update(array('is_verified', 'user_id_verified', 'verified_datetime'));
 
         $this->redirect(array('summary', 'BranchId' => $branchId, 'TransactionDate' => $transactionDate));
     }
@@ -137,7 +137,7 @@ class DailyTransactionController extends Controller {
         $model->is_verified = 1; 
         $model->user_id_verified = Yii::app()->user->id;
         $model->verified_datetime = date('Y-m-d H:i:s');
-        // $model->update(array('is_verified', 'user_id_verified', 'verified_datetime'));
+        $model->update(array('is_verified', 'user_id_verified', 'verified_datetime'));
 
         $this->redirect(array('summary', 'BranchId' => $branchId, 'TransactionDate' => $transactionDate));
     }
@@ -147,7 +147,7 @@ class DailyTransactionController extends Controller {
         $model->is_verified = 1; 
         $model->user_id_verified = Yii::app()->user->id;
         $model->verified_datetime = date('Y-m-d H:i:s');
-        // $model->update(array('is_verified', 'user_id_verified', 'verified_datetime'));
+        $model->update(array('is_verified', 'user_id_verified', 'verified_datetime'));
 
         $this->redirect(array('summary', 'BranchId' => $branchId, 'TransactionDate' => $transactionDate));
     }
@@ -157,7 +157,7 @@ class DailyTransactionController extends Controller {
         $model->is_verified = 1; 
         $model->user_id_verified = Yii::app()->user->id;
         $model->verified_datetime = date('Y-m-d H:i:s');
-        // $model->update(array('is_verified', 'user_id_verified', 'verified_datetime'));
+        $model->update(array('is_verified', 'user_id_verified', 'verified_datetime'));
 
         $this->redirect(array('summary', 'BranchId' => $branchId, 'TransactionDate' => $transactionDate));
     }
@@ -167,7 +167,7 @@ class DailyTransactionController extends Controller {
         $model->is_verified = 1; 
         $model->user_id_verified = Yii::app()->user->id;
         $model->verified_datetime = date('Y-m-d H:i:s');
-        // $model->update(array('is_verified', 'user_id_verified', 'verified_datetime'));
+        $model->update(array('is_verified', 'user_id_verified', 'verified_datetime'));
 
         $this->redirect(array('summary', 'BranchId' => $branchId, 'TransactionDate' => $transactionDate));
     }
@@ -177,7 +177,7 @@ class DailyTransactionController extends Controller {
         $model->is_verified = 1; 
         $model->user_id_verified = Yii::app()->user->id;
         $model->verified_datetime = date('Y-m-d H:i:s');
-        // $model->update(array('is_verified', 'user_id_verified', 'verified_datetime'));
+        $model->update(array('is_verified', 'user_id_verified', 'verified_datetime'));
 
         $this->redirect(array('summary', 'BranchId' => $branchId, 'TransactionDate' => $transactionDate));
     }
@@ -187,7 +187,7 @@ class DailyTransactionController extends Controller {
         $model->is_verified = 1; 
         $model->user_id_verified = Yii::app()->user->id;
         $model->verified_datetime = date('Y-m-d H:i:s');
-        // $model->update(array('is_verified', 'user_id_verified', 'verified_datetime'));
+        $model->update(array('is_verified', 'user_id_verified', 'verified_datetime'));
 
         $this->redirect(array('summary', 'BranchId' => $branchId, 'TransactionDate' => $transactionDate));
     }
@@ -197,7 +197,7 @@ class DailyTransactionController extends Controller {
         $model->is_verified = 1; 
         $model->user_id_verified = Yii::app()->user->id;
         $model->verified_datetime = date('Y-m-d H:i:s');
-        // $model->update(array('is_verified', 'user_id_verified', 'verified_datetime'));
+        $model->update(array('is_verified', 'user_id_verified', 'verified_datetime'));
 
         $this->redirect(array('summary', 'BranchId' => $branchId, 'TransactionDate' => $transactionDate));
     }
@@ -207,7 +207,7 @@ class DailyTransactionController extends Controller {
         $model->is_verified = 1; 
         $model->user_id_verified = Yii::app()->user->id;
         $model->verified_datetime = date('Y-m-d H:i:s');
-        // $model->update(array('is_verified', 'user_id_verified', 'verified_datetime'));
+        $model->update(array('is_verified', 'user_id_verified', 'verified_datetime'));
 
         $this->redirect(array('summary', 'BranchId' => $branchId, 'TransactionDate' => $transactionDate));
     }
@@ -217,7 +217,7 @@ class DailyTransactionController extends Controller {
         $model->is_verified = 1; 
         $model->user_id_verified = Yii::app()->user->id;
         $model->verified_datetime = date('Y-m-d H:i:s');
-        // $model->update(array('is_verified', 'user_id_verified', 'verified_datetime'));
+        $model->update(array('is_verified', 'user_id_verified', 'verified_datetime'));
 
         $this->redirect(array('summary', 'BranchId' => $branchId, 'TransactionDate' => $transactionDate));
     }

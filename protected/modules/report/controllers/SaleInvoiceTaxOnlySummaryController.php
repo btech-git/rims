@@ -125,20 +125,20 @@ class SaleInvoiceTaxOnlySummaryController extends Controller {
         $worksheet = $objPHPExcel->setActiveSheetIndex(0);
         $worksheet->setTitle('Faktur Penjualan PPn');
 
-        $worksheet->mergeCells('A1:U1');
-        $worksheet->mergeCells('A2:U2');
-        $worksheet->mergeCells('A3:U3');
+        $worksheet->mergeCells('A1:V1');
+        $worksheet->mergeCells('A2:V2');
+        $worksheet->mergeCells('A3:V3');
        
-        $worksheet->getStyle('A1:U5')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-        $worksheet->getStyle('A1:U5')->getFont()->setBold(true);
+        $worksheet->getStyle('A1:V5')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->getStyle('A1:V5')->getFont()->setBold(true);
         
         $branch = Branch::model()->findByPk($branchId);
         $worksheet->setCellValue('A1', 'Raperind Motor ' . CHtml::value($branch, 'name'));
         $worksheet->setCellValue('A2', 'Faktur Penjualan PPn (Rincian & Detail)');
         $worksheet->setCellValue('A3', $startDateFormatted . ' - ' . $endDateFormatted);
 
-        $worksheet->getStyle("A5:U5")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
-        $worksheet->getStyle("A5:U5")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A5:V5")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A5:V5")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
         
         $worksheet->setCellValue('A5', 'No');
         $worksheet->setCellValue('B5', 'Tanggal');
@@ -156,13 +156,14 @@ class SaleInvoiceTaxOnlySummaryController extends Controller {
         $worksheet->setCellValue('N5', 'Ppn');
         $worksheet->setCellValue('O5', 'Pph');
         $worksheet->setCellValue('P5', 'Total');
-        $worksheet->setCellValue('Q5', 'SPK #');
-        $worksheet->setCellValue('R5', 'Faktur Pajak #');
-        $worksheet->setCellValue('S5', 'FP DPP');
-        $worksheet->setCellValue('T5', 'FP PPn');
-        $worksheet->setCellValue('U5', 'Bupot #');
+        $worksheet->setCellValue('Q5', 'WO #');
+        $worksheet->setCellValue('R5', 'SPK Customer #');
+        $worksheet->setCellValue('S5', 'Faktur Pajak #');
+        $worksheet->setCellValue('T5', 'FP DPP');
+        $worksheet->setCellValue('U5', 'FP PPn');
+        $worksheet->setCellValue('V5', 'Bupot #');
 
-        $counter = 7;
+        $counter = 6;
 
         $grandTotalSubAfterTax = '0.00';
         $grandTotalProductPriceAfterTax = '0.00';
@@ -202,10 +203,11 @@ class SaleInvoiceTaxOnlySummaryController extends Controller {
             $worksheet->setCellValue("O{$counter}", $pphTotal);
             $worksheet->setCellValue("P{$counter}", $totalPrice);
             $worksheet->setCellValue("Q{$counter}", CHtml::value($header, 'registrationTransaction.work_order_number'));
-            $worksheet->setCellValue("R{$counter}", CHtml::value($header, 'transaction_tax_number'));
-            $worksheet->setCellValue("S{$counter}", CHtml::value($header, 'grand_total_coretax'));
-            $worksheet->setCellValue("T{$counter}", CHtml::value($header, 'tax_amount_coretax'));
-            $worksheet->setCellValue("U{$counter}", CHtml::value($header, 'coretax_receipt_number'));
+            $worksheet->setCellValue("R{$counter}", CHtml::value($header, 'registrationTransaction.customer_work_order_number'));
+            $worksheet->setCellValue("S{$counter}", CHtml::value($header, 'transaction_tax_number'));
+            $worksheet->setCellValue("T{$counter}", CHtml::value($header, 'grand_total_coretax'));
+            $worksheet->setCellValue("U{$counter}", CHtml::value($header, 'tax_amount_coretax'));
+            $worksheet->setCellValue("V{$counter}", CHtml::value($header, 'coretax_receipt_number'));
             
             $grandTotalSubAfterTax += $subTotalAfterTax;
             $grandTotalProductPriceAfterTax += $productPriceAfterTax;
@@ -220,8 +222,8 @@ class SaleInvoiceTaxOnlySummaryController extends Controller {
             $counter++;
         }
 
-        $worksheet->getStyle("A{$counter}:U{$counter}")->getFont()->setBold(true);
-        $worksheet->getStyle("A{$counter}:U{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A{$counter}:V{$counter}")->getFont()->setBold(true);
+        $worksheet->getStyle("A{$counter}:V{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
         
         $worksheet->setCellValue("F{$counter}", 'Total');
         $worksheet->setCellValue("G{$counter}", 'Rp');

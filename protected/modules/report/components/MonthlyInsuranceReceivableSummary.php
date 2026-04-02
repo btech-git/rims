@@ -25,14 +25,21 @@ class MonthlyInsuranceReceivableSummary extends CComponent {
         $this->dataProvider->criteria->order = 't.name ASC';
     }
 
-    public function setupFilter($year, $month, $insuranceId) {
+    public function setupFilter($year, $month, $insuranceId, $branchId) {
+        $branchConditionSql = '';
+      
+        if (!empty($branchId)) {
+            $branchConditionSql = ' AND branch_id = :branch_id';
+            $this->dataProvider->criteria->params[':branch_id'] = $branchId;
+        }
+        
         $this->dataProvider->criteria->compare('t.id', $insuranceId);
         $this->dataProvider->criteria->compare('t.is_deleted', 0);
         
         $this->dataProvider->criteria->addCondition("EXISTS (
             SELECT insurance_company_id
             FROM " . RegistrationTransaction::model()->tableName() . "
-            WHERE insurance_company_id = t.id AND YEAR(transaction_date) = :year AND MONTH(transaction_date) = :month AND user_id_cancelled IS NULL
+            WHERE insurance_company_id = t.id AND YEAR(transaction_date) = :year AND MONTH(transaction_date) = :month AND user_id_cancelled IS NULL" . $branchConditionSql. "
         )");
 
         $this->dataProvider->criteria->params[':year'] = $year;

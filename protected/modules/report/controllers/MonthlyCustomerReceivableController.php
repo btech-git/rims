@@ -27,6 +27,7 @@ class MonthlyCustomerReceivableController extends Controller {
         
         $month = isset($_GET['Month']) ? $_GET['Month'] : $monthNow;
         $year = (isset($_GET['Year'])) ? $_GET['Year'] : $yearNow;
+        $branchId = (isset($_GET['BranchId'])) ? $_GET['BranchId'] : '';
         $customerId = (isset($_GET['CustomerId'])) ? $_GET['CustomerId'] : '';
         $currentPage = (isset($_GET['page'])) ? $_GET['page'] : '';
 
@@ -38,11 +39,11 @@ class MonthlyCustomerReceivableController extends Controller {
         $monthlyCustomerReceivableSummary->setupLoading();
         $monthlyCustomerReceivableSummary->setupPaging(100, $currentPage);
         $monthlyCustomerReceivableSummary->setupSorting();
-        $monthlyCustomerReceivableSummary->setupFilter($year, $month, $customerId);
+        $monthlyCustomerReceivableSummary->setupFilter($year, $month, $customerId, $branchId);
         
         $customerIds = array_map(function($customer) { return $customer->id; }, $monthlyCustomerReceivableSummary->dataProvider->data);
         
-        $monthlyCustomerReceivableReport = RegistrationTransaction::getMonthlyCustomerReceivableData($year, $month, $customerIds);
+        $monthlyCustomerReceivableReport = RegistrationTransaction::getMonthlyCustomerReceivableData($year, $month, $branchId, $customerIds);
         
         $monthlyCustomerReceivableReportData = array();
         foreach ($monthlyCustomerReceivableReport as $monthlyCustomerReceivableReportItem) {
@@ -79,6 +80,7 @@ class MonthlyCustomerReceivableController extends Controller {
             'year' => $year,
             'month' => $month,
             'customerId' => $customerId,
+            'branchId' => $branchId,
         ));
     }
     

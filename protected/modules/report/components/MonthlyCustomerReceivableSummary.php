@@ -25,7 +25,14 @@ class MonthlyCustomerReceivableSummary extends CComponent {
         $this->dataProvider->criteria->order = 't.name ASC';
     }
 
-    public function setupFilter($year, $month, $customerId) {
+    public function setupFilter($year, $month, $customerId, $branchId) {
+        $branchConditionSql = '';
+      
+        if (!empty($branchId)) {
+            $branchConditionSql = ' AND branch_id = :branch_id';
+            $this->dataProvider->criteria->params[':branch_id'] = $branchId;
+        }
+        
         $this->dataProvider->criteria->compare('t.id', $customerId);
         $this->dataProvider->criteria->compare('t.status', 'Active');
         $this->dataProvider->criteria->compare('t.customer_type', 'Company');
@@ -33,7 +40,7 @@ class MonthlyCustomerReceivableSummary extends CComponent {
         $this->dataProvider->criteria->addCondition("EXISTS (
             SELECT customer_id
             FROM " . RegistrationTransaction::model()->tableName() . "
-            WHERE YEAR(transaction_date) = :year AND MONTH(transaction_date) = :month AND customer_id = t.id AND user_id_cancelled IS NULL
+            WHERE YEAR(transaction_date) = :year AND MONTH(transaction_date) = :month AND customer_id = t.id AND user_id_cancelled IS NULL" . $branchConditionSql. "
         )");
 
         $this->dataProvider->criteria->params[':year'] = $year;

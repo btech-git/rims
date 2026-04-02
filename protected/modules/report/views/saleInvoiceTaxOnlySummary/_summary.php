@@ -53,7 +53,8 @@
                 <th class="width1-9">Ppn</th>
                 <th class="width1-10">Pph</th>
                 <th class="width1-11">Total</th>
-                <th class="width1-12">SPK #</th>
+                <th class="width1-12">WO #</th>
+                <th class="width1-12">SPK Customer #</th>
                 <th class="width1-13">Faktur Pajak #</th>
                 <th class="width1-14">FP DPP</th>
                 <th class="width1-14">FP PPn</th>
@@ -103,6 +104,9 @@
                     </td>
                     <td class="width1-12" style="text-align: right">
                         <?php echo CHtml::encode(CHtml::value($header, 'registrationTransaction.work_order_number')); ?>
+                    </td>
+                    <td class="width1-12" style="text-align: right">
+                        <?php echo CHtml::encode(CHtml::value($header, 'registrationTransaction.customer_work_order_number')); ?>
                     </td>
                     <td class="width1-12" style="text-align: right">
                         <?php echo CHtml::encode(CHtml::value($header, 'transaction_tax_number')); ?>

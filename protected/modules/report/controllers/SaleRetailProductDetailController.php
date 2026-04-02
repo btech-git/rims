@@ -150,19 +150,19 @@ class SaleRetailProductDetailController extends Controller {
         $worksheet = $objPHPExcel->setActiveSheetIndex(0);
         $worksheet->setTitle('Rincian Penjualan Barang');
 
-        $worksheet->mergeCells('A1:N1');
-        $worksheet->mergeCells('A2:N2');
-        $worksheet->mergeCells('A3:N3');
+        $worksheet->mergeCells('A1:P1');
+        $worksheet->mergeCells('A2:P2');
+        $worksheet->mergeCells('A3:P3');
 
-        $worksheet->getStyle('A1:N5')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-        $worksheet->getStyle('A1:N5')->getFont()->setBold(true);
+        $worksheet->getStyle('A1:P5')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->getStyle('A1:P5')->getFont()->setBold(true);
 
         $branch = Branch::model()->findByPk($branchId);
         $worksheet->setCellValue('A1', 'Raperind Motor ' . CHtml::value($branch, 'name'));
         $worksheet->setCellValue('A2', 'Rincian Penjualan per Barang');
         $worksheet->setCellValue('A3', Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($startDate)) . ' - ' . Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($endDate)));
 
-        $worksheet->getStyle('A5:N5')->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle('A5:P5')->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
         $worksheet->setCellValue('A5', 'ID');
         $worksheet->setCellValue('B5', 'Code');
@@ -175,11 +175,13 @@ class SaleRetailProductDetailController extends Controller {
         $worksheet->setCellValue('I5', 'Asuransi');
         $worksheet->setCellValue('J5', 'Plat #');
         $worksheet->setCellValue('K5', 'Kendaraan');
-        $worksheet->setCellValue('L5', 'Quantity');
-        $worksheet->setCellValue('M5', 'Harga');
-        $worksheet->setCellValue('N5', 'Total');
+        $worksheet->setCellValue('L5', 'WO #');
+        $worksheet->setCellValue('M5', 'SPK Customer #');
+        $worksheet->setCellValue('N5', 'Quantity');
+        $worksheet->setCellValue('O5', 'Harga');
+        $worksheet->setCellValue('P5', 'Total');
 
-        $worksheet->getStyle('A5:N5')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle('A5:P5')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
         $counter = 6;
         foreach ($dataProvider->data as $header) {
@@ -200,19 +202,21 @@ class SaleRetailProductDetailController extends Controller {
                 $worksheet->setCellValue("I{$counter}", $saleRetailRow['insurance']);
                 $worksheet->setCellValue("J{$counter}", $saleRetailRow['plate_number']);
                 $worksheet->setCellValue("K{$counter}", $saleRetailRow['car_make'] . ' - ' . $saleRetailRow['car_model'] . ' - ' . $saleRetailRow['car_sub_model']);
-                $worksheet->setCellValue("L{$counter}", $saleRetailRow['quantity']);
-                $worksheet->setCellValue("M{$counter}", $saleRetailRow['unit_price']);
-                $worksheet->setCellValue("N{$counter}", $total);
+                $worksheet->setCellValue("L{$counter}", $saleRetailRow['work_order_number']);
+                $worksheet->setCellValue("M{$counter}", $saleRetailRow['customer_work_order_number']);
+                $worksheet->setCellValue("N{$counter}", $saleRetailRow['quantity']);
+                $worksheet->setCellValue("O{$counter}", $saleRetailRow['unit_price']);
+                $worksheet->setCellValue("P{$counter}", $total);
 
                 $totalSale += $total;
                 $counter++;
             }
 
-            $worksheet->getStyle("A{$counter}:N{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
-            $worksheet->getStyle("A{$counter}:N{$counter}")->getFont()->setBold(true);
+            $worksheet->getStyle("A{$counter}:P{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+            $worksheet->getStyle("A{$counter}:P{$counter}")->getFont()->setBold(true);
 
-            $worksheet->setCellValue("M{$counter}", 'TOTAL');
-            $worksheet->setCellValue("N{$counter}", $totalSale);
+            $worksheet->setCellValue("O{$counter}", 'TOTAL');
+            $worksheet->setCellValue("P{$counter}", $totalSale);
             $counter++;$counter++;
         }
         
