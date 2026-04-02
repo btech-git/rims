@@ -1409,13 +1409,19 @@ class RegistrationTransaction extends MonthlyTransactionActiveRecord {
         return $total;
     }
     
-    public static function getMonthlyCustomerReceivableData($year, $month, $customerIds) {
+    public static function getMonthlyCustomerReceivableData($year, $month, $branchId, $customerIds) {
         $customerIdsSql = empty($customerIds) ? 'NULL' : implode(',', $customerIds);
-        
+        $branchConditionSql = '';
+      
         $params = array(
             ':year' => $year,
             ':month' => $month,
         );
+        
+        if (!empty($branchId)) {
+            $branchConditionSql = ' AND r.branch_id = :branch_id';
+            $params[':branch_id'] = $branchId;
+        }
         
         $sql = "SELECT r.customer_id, r.id, r.transaction_number, r.transaction_date, r.grand_total, b.name AS branch_name, i.invoice_number, i.invoice_date, 
                     i.product_price, i.service_price, i.ppn_total, i.total_price, i.transaction_tax_number, i.due_date, i.payment_left, i.payment_amount, 
@@ -1430,7 +1436,8 @@ class RegistrationTransaction extends MonthlyTransactionActiveRecord {
                 LEFT OUTER JOIN " . InvoiceHeader::model()->tableName() . " i ON r.id = i.registration_transaction_id
                 LEFT OUTER JOIN " . PaymentInDetail::model()->tableName() . " p ON i.id = p.invoice_header_id
                 LEFT OUTER JOIN " . PaymentIn::model()->tableName() . " h on h.id = p.payment_in_id
-                WHERE YEAR(r.transaction_date) = :year AND MONTH(r.transaction_date) = :month AND r.user_id_cancelled IS NULL AND r.customer_id IN ({$customerIdsSql})
+                WHERE YEAR(r.transaction_date) = :year AND MONTH(r.transaction_date) = :month AND r.user_id_cancelled IS NULL AND 
+                    r.customer_id IN ({$customerIdsSql})" . $branchConditionSql . "
                 ORDER BY r.customer_id, r.id ASC, i.id ASC, p.id ASC ";
 
         $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
@@ -1438,13 +1445,19 @@ class RegistrationTransaction extends MonthlyTransactionActiveRecord {
         return $resultSet;
     }
     
-    public static function getMonthlyInsuranceReceivableData($year, $month, $insuranceIds) {
+    public static function getMonthlyInsuranceReceivableData($year, $month, $branchId, $insuranceIds) {
         $insuranceIdsSql = empty($insuranceIds) ? 'NULL' : implode(',', $insuranceIds);
+        $branchConditionSql = '';
         
         $params = array(
             ':year' => $year,
             ':month' => $month,
         );
+        
+        if (!empty($branchId)) {
+            $branchConditionSql = ' AND r.branch_id = :branch_id';
+            $params[':branch_id'] = $branchId;
+        }
         
         $sql = "SELECT r.insurance_company_id, r.id, r.transaction_number, r.transaction_date, r.grand_total, b.name AS branch_name, i.invoice_number, i.invoice_date, 
                     i.product_price, i.service_price, i.ppn_total, i.total_price, i.transaction_tax_number, i.due_date, i.payment_left, i.payment_amount, 
@@ -1459,7 +1472,7 @@ class RegistrationTransaction extends MonthlyTransactionActiveRecord {
                 LEFT OUTER JOIN " . PaymentInDetail::model()->tableName() . " p ON i.id = p.invoice_header_id
                 LEFT OUTER JOIN " . PaymentIn::model()->tableName() . " h on h.id = p.payment_in_id
                 WHERE YEAR(r.transaction_date) = :year AND MONTH(r.transaction_date) = :month AND r.user_id_cancelled IS NULL AND 
-                    r.insurance_company_id IN ({$insuranceIdsSql})
+                    r.insurance_company_id IN ({$insuranceIdsSql})" . $branchConditionSql . "
                 ORDER BY r.insurance_company_id, r.id ASC, i.id ASC, p.id ASC ";
 
         $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);

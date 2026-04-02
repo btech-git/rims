@@ -1075,10 +1075,11 @@ class Product extends CActiveRecord {
             $params[':customer_type'] = $customerType;
         }
         
-        $sql = "SELECT r.invoice_number, r.invoice_date, c.name as customer, v.plate_number, p.quantity, p.unit_price, p.total_price, 
-                    k.name AS car_make, d.name AS car_model, s.name AS car_sub_model, i.name AS insurance
+        $sql = "SELECT r.invoice_number, r.invoice_date, c.name as customer, v.plate_number, p.quantity, p.unit_price, p.total_price, i.name AS insurance, 
+                    k.name AS car_make, d.name AS car_model, s.name AS car_sub_model, t.work_order_number, t.customer_work_order_number
                 FROM " . InvoiceDetail::model()->tableName() . " p 
                 INNER JOIN " . InvoiceHeader::model()->tableName() . " r ON r.id = p.invoice_id
+                INNER JOIN " . RegistrationTransaction::model()->tableName() . " t ON t.id = r.registration_transaction_id
                 INNER JOIN " . Customer::model()->tableName() . " c ON c.id = r.customer_id
                 INNER JOIN " . Vehicle::model()->tableName() . " v ON v.id = r.vehicle_id
                 INNER JOIN " . VehicleCarMake::model()->tableName() . " k ON k.id = v.car_make_id

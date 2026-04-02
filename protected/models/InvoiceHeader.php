@@ -2397,90 +2397,140 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
         return $resultSet;
     }
     
-    public static function getYearlyCustomerInvoiceReport($year) {
+    public static function getYearlyCustomerInvoiceReport($year, $branchId) {
+        $branchConditionSql = '';
       
+        $params = array(
+            ':year' => $year,
+        );
+        
+        if (!empty($branchId)) {
+            $branchConditionSql = ' AND i.branch_id = :branch_id';
+            $params[':branch_id'] = $branchId;
+        }
+        
         $sql = "SELECT i.customer_id, MONTH(i.invoice_date) AS invoice_month, MAX(c.name) AS customer_name, SUM(i.total_price) AS invoice_total
                 FROM " . InvoiceHeader::model()->tableName() . " i 
                 INNER JOIN " . Customer::model()->tableName() . " c ON c.id = i.customer_id
-                WHERE YEAR(i.invoice_date) = :year AND c.customer_type = 'Company' AND i.user_id_cancelled IS NULL
+                WHERE YEAR(i.invoice_date) = :year AND c.customer_type = 'Company' AND i.user_id_cancelled IS NULL" . $branchConditionSql . "
                 GROUP BY i.customer_id, MONTH(i.invoice_date)
                 ORDER BY customer_name ASC, invoice_month ASC";
                 
-        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, array(
-            ':year' => $year,
-        ));
+        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
         
         return $resultSet;
     }    
     
-    public static function getYearlyCustomerPaymentReport($year) {
+    public static function getYearlyCustomerPaymentReport($year, $branchId) {
+        $branchConditionSql = '';
+      
+        $params = array(
+            ':year' => $year,
+        );
+        
+        if (!empty($branchId)) {
+            $branchConditionSql = ' AND i.branch_id = :branch_id';
+            $params[':branch_id'] = $branchId;
+        }
       
         $sql = "SELECT i.customer_id, MONTH(i.payment_date) AS payment_month, MAX(c.name) AS customer_name, 
                     SUM(i.payment_amount + tax_service_amount + downpayment_amount + discount_product_amount + discount_service_amount + 
                     bank_administration_fee + merimen_fee + bank_fee_amount) AS payment_total
                 FROM " . PaymentIn::model()->tableName() . " i
                 INNER JOIN " . Customer::model()->tableName() . " c ON c.id = i.customer_id
-                WHERE YEAR(i.payment_date) = :year AND c.customer_type = 'Company' AND i.user_id_cancelled IS NULL
+                WHERE YEAR(i.payment_date) = :year AND c.customer_type = 'Company' AND i.user_id_cancelled IS NULL" . $branchConditionSql . "
                 GROUP BY i.customer_id, MONTH(i.payment_date)
                 ORDER BY customer_name ASC, payment_month ASC";
                 
-        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, array(
-            ':year' => $year,
-        ));
+        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
         
         return $resultSet;
     }    
     
-    public static function getBeginningCustomerInvoiceReport($year) {
+    public static function getBeginningCustomerInvoiceReport($year, $branchId) {
+        $branchConditionSql = '';
+      
+        $params = array(
+            ':invoice_date' => $year . '-01-01',
+        );
+        
+        if (!empty($branchId)) {
+            $branchConditionSql = ' AND i.branch_id = :branch_id';
+            $params[':branch_id'] = $branchId;
+        }
       
         $sql = "SELECT i.customer_id, MAX(c.name) AS customer_name, SUM(i.total_price) AS beginning_invoice_total
                 FROM " . InvoiceHeader::model()->tableName() . " i 
                 INNER JOIN " . Customer::model()->tableName() . " c ON c.id = i.customer_id
                 WHERE i.invoice_date >= '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND i.invoice_date < :invoice_date AND c.customer_type = 'Company' AND 
-                    i.user_id_cancelled IS NULL
+                    i.user_id_cancelled IS NULL" . $branchConditionSql . "
                 GROUP BY i.customer_id";
                 
-        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, array(
-            ':invoice_date' => $year . '-01-01',
-        ));
+        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
         
         return $resultSet;
     }    
   
-    public static function getBeginningCustomerPaymentReport($year) {
+    public static function getBeginningCustomerPaymentReport($year, $branchId) {
+        $branchConditionSql = '';
+      
+        $params = array(
+            ':payment_date' => $year . '-01-01',
+        );
+        
+        if (!empty($branchId)) {
+            $branchConditionSql = ' AND i.branch_id = :branch_id';
+            $params[':branch_id'] = $branchId;
+        }
       
         $sql = "SELECT i.customer_id, MAX(c.name) AS customer_name, SUM(i.payment_amount + tax_service_amount + downpayment_amount + discount_product_amount + 
                     discount_service_amount + bank_administration_fee + merimen_fee + bank_fee_amount) AS beginning_payment_total
                 FROM " . PaymentIn::model()->tableName() . "  i
                 INNER JOIN " . Customer::model()->tableName() . " c ON c.id = i.customer_id
                 WHERE i.payment_date >= '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND i.payment_date < :payment_date AND c.customer_type = 'Company' AND 
-                    i.user_id_cancelled IS NULL
+                    i.user_id_cancelled IS NULL" . $branchConditionSql . "
                 GROUP BY i.customer_id";
                 
-        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, array(
-            ':payment_date' => $year . '-01-01',
-        ));
+        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
         
         return $resultSet;
     }    
     
-    public static function getYearlyInsuranceInvoiceReport($year) {
+    public static function getYearlyInsuranceInvoiceReport($year, $branchId) {
+        $branchConditionSql = '';
       
+        $params = array(
+            ':year' => $year,
+        );
+        
+        if (!empty($branchId)) {
+            $branchConditionSql = ' AND i.branch_id = :branch_id';
+            $params[':branch_id'] = $branchId;
+        }
+
         $sql = "SELECT i.insurance_company_id, MONTH(i.invoice_date) AS invoice_month, MAX(c.name) AS insurance_name, SUM(i.total_price) AS invoice_total
                 FROM " . InvoiceHeader::model()->tableName() . " i 
                 INNER JOIN " . InsuranceCompany::model()->tableName() . " c ON c.id = i.insurance_company_id
-                WHERE YEAR(i.invoice_date) = :year AND i.user_id_cancelled IS NULL
+                WHERE YEAR(i.invoice_date) = :year AND i.user_id_cancelled IS NULL" . $branchConditionSql . "
                 GROUP BY i.insurance_company_id, MONTH(i.invoice_date)
                 ORDER BY insurance_name ASC, invoice_month ASC";
                 
-        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, array(
-            ':year' => $year,
-        ));
+        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
         
         return $resultSet;
     }    
     
-    public static function getYearlyInsurancePaymentReport($year) {
+    public static function getYearlyInsurancePaymentReport($year, $branchId) {
+        $branchConditionSql = '';
+      
+        $params = array(
+            ':year' => $year,
+        );
+        
+        if (!empty($branchId)) {
+            $branchConditionSql = ' AND h.branch_id = :branch_id';
+            $params[':branch_id'] = $branchId;
+        }
       
         $sql = "SELECT i.insurance_company_id, MONTH(h.payment_date) AS payment_month, MAX(c.name) AS insurance_name, 
                     SUM(h.payment_amount + h.tax_service_amount + h.downpayment_amount + h.discount_product_amount + h.discount_service_amount + 
@@ -2489,34 +2539,51 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
                 INNER JOIN " . PaymentInDetail::model()->tableName() . " d ON h.id = d.payment_in_id
                 INNER JOIN " . InvoiceHeader::model()->tableName() . " i ON i.id = d.invoice_header_id
                 INNER JOIN " . InsuranceCompany::model()->tableName() . " c ON c.id = i.insurance_company_id
-                WHERE YEAR(h.payment_date) = :year AND h.user_id_cancelled IS NULL
+                WHERE YEAR(h.payment_date) = :year AND h.user_id_cancelled IS NULL" . $branchConditionSql . "
                 GROUP BY i.insurance_company_id, MONTH(h.payment_date)
                 ORDER BY insurance_name ASC, payment_month ASC";
                 
-        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, array(
-            ':year' => $year,
-        ));
+        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
         
         return $resultSet;
     }    
     
-    public static function getBeginningInsuranceInvoiceReport($year) {
+    public static function getBeginningInsuranceInvoiceReport($year, $branchId) {
+        $branchConditionSql = '';
+      
+        $params = array(
+            ':invoice_date' => $year . '-01-01',
+        );
+        
+        if (!empty($branchId)) {
+            $branchConditionSql = ' AND i.branch_id = :branch_id';
+            $params[':branch_id'] = $branchId;
+        }
       
         $sql = "SELECT i.insurance_company_id, MAX(c.name) AS insurance_name, SUM(i.total_price) AS beginning_invoice_total
                 FROM " . InvoiceHeader::model()->tableName() . " i 
                 INNER JOIN " . InsuranceCompany::model()->tableName() . " c ON c.id = i.insurance_company_id
                 WHERE i.invoice_date >= '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND i.invoice_date < :invoice_date AND 
-                    i.user_id_cancelled IS NULL
+                    i.user_id_cancelled IS NULL" . $branchConditionSql . "
                 GROUP BY i.insurance_company_id";
                 
-        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, array(
-            ':invoice_date' => $year . '-01-01',
-        ));
+        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
         
         return $resultSet;
     }    
   
-    public static function getBeginningInsurancePaymentReport($year) {
+    public static function getBeginningInsurancePaymentReport($year, $branchId) {
+        $branchConditionSql = '';
+      
+        $params = array(
+            ':payment_date' => $year . '-01-01',
+        );
+        
+        if (!empty($branchId)) {
+            $branchConditionSql = ' AND h.branch_id = :branch_id';
+            $params[':branch_id'] = $branchId;
+        }
+      
       
         $sql = "SELECT i.insurance_company_id, MAX(c.name) AS insurance_name, SUM(h.payment_amount + h.tax_service_amount + h.downpayment_amount + 
                     h.discount_product_amount + h.discount_service_amount + h.bank_administration_fee + h.merimen_fee + bank_fee_amount) AS beginning_payment_total
@@ -2524,12 +2591,10 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
                 INNER JOIN " . PaymentInDetail::model()->tableName() . " d ON h.id = d.payment_in_id
                 INNER JOIN " . InvoiceHeader::model()->tableName() . " i ON i.id = d.invoice_header_id
                 INNER JOIN " . InsuranceCompany::model()->tableName() . " c ON c.id = i.insurance_company_id
-                WHERE h.payment_date    >= '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND h.payment_date < :payment_date AND i.user_id_cancelled IS NULL
+                WHERE h.payment_date >= '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND h.payment_date < :payment_date AND i.user_id_cancelled IS NULL" . $branchConditionSql . "
                 GROUP BY i.insurance_company_id";
                 
-        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, array(
-            ':payment_date' => $year . '-01-01',
-        ));
+        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
         
         return $resultSet;
     }    

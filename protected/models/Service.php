@@ -476,7 +476,7 @@ class Service extends CActiveRecord {
         }
         
         $sql = "SELECT r.invoice_number, r.invoice_date, c.name as customer, v.plate_number, p.total_price, t.work_order_number,
-                    k.name AS car_make, d.name AS car_model, s.name AS car_sub_model, i.name AS insurance
+                    k.name AS car_make, d.name AS car_model, s.name AS car_sub_model, i.name AS insurance, t.customer_work_order_number
                 FROM " . InvoiceDetail::model()->tableName() . " p 
                 INNER JOIN " . InvoiceHeader::model()->tableName() . " r ON r.id = p.invoice_id
                 INNER JOIN " . RegistrationTransaction::model()->tableName() . " t ON t.id = r.registration_transaction_id
