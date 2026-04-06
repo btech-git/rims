@@ -67,7 +67,7 @@ $this->breadcrumbs=array(
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
+                                <tr>spk
                                     <td><?php echo CHtml::encode(CHtml::value($customer, 'name')); ?></td>
                                     <td><?php echo CHtml::encode(CHtml::value($customer, 'customer_type')); ?></td>
                                     <td><?php echo CHtml::encode(CHtml::value($customer, 'address')); ?></td>
@@ -118,7 +118,7 @@ $this->breadcrumbs=array(
                                             <div class="small-8 columns">
                                                 <?php echo CHtml::encode(CHtml::value($registrationTransaction, 'repair_type')); ?>
                                             </div>
-                                        </div>
+                                     spk   </div>
                                     </div>
 
                                     <div class="field">
@@ -178,7 +178,7 @@ $this->breadcrumbs=array(
                                         </div>
                                     </div>
 
-                                    <?php if ($registrationTransaction->customer->customer_type == 'Company'): ?>
+                                    <?php //if ($registrationTransaction->customer->customer_type == 'Company'): ?>
                                         <div class="field">
                                             <div class="row collapse">
                                                 <div class="small-4 columns">
@@ -189,7 +189,7 @@ $this->breadcrumbs=array(
                                                 </div>
                                             </div>
                                         </div>
-                                    <?php endif; ?>
+                                    <?php //endif; ?>
 
                                     <div class="field">
                                         <div class="row collapse">
