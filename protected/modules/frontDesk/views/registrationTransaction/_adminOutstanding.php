@@ -19,7 +19,6 @@
                 <th>RG #</th>
                 <th>SL #</th>
                 <th>WO #</th>
-                <th>Tanggal WO</th>
                 <th>Movement Out #</th>
                 <th>Invoice #</th>
                 <th>Services</th>
@@ -57,10 +56,6 @@
                         <?php echo CHtml::link(CHtml::encode($outstandingRegistrationItem['work_order_number']), Yii::app()->createUrl("frontDesk/registrationTransaction/view", array(
                             "id" => $outstandingRegistrationItem['id']
                         )), array('target' => '_blank')); ?>
-                    </td>
-                    <td>
-                        <?php echo CHtml::encode($outstandingRegistrationItem['work_order_date']); ?> 
-                        <?php echo CHtml::encode($outstandingRegistrationItem['work_order_time']); ?>
                     </td>
                     <td><?php echo CHtml::encode($registrationTransaction->getMovementOuts()); ?></td>
                     <td>
