@@ -89,6 +89,17 @@ $this->breadcrumbs=array(
                                     <div class="field">
                                         <div class="row collapse">
                                             <div class="small-4 columns">
+                                                <label class="prefix"><?php echo $form->labelEx($registrationTransaction, 'RG #'); ?></label>
+                                            </div>
+                                            <div class="small-8 columns">
+                                                <?php echo CHtml::encode(CHtml::value($registrationTransaction, 'transaction_number')); ?>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="field">
+                                        <div class="row collapse">
+                                            <div class="small-4 columns">
                                                 <label class="prefix"><?php echo $form->labelEx($registrationTransaction, 'transaction_date'); ?></label>
                                             </div>
                                             <div class="small-8 columns">
