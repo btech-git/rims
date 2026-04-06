@@ -178,7 +178,7 @@ $this->breadcrumbs=array(
                                         </div>
                                     </div>
 
-                                    <?php if ($registrationTransaction->customer->customer_type == 'Company'): ?>
+                                    <?php //if ($registrationTransaction->customer->customer_type == 'Company'): ?>
                                         <div class="field">
                                             <div class="row collapse">
                                                 <div class="small-4 columns">
@@ -189,7 +189,7 @@ $this->breadcrumbs=array(
                                                 </div>
                                             </div>
                                         </div>
-                                    <?php endif; ?>
+                                    <?php //endif; ?>
 
                                     <div class="field">
                                         <div class="row collapse">

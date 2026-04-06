@@ -3,7 +3,7 @@
 /* @var $model RegistrationTransaction */
 
 $this->breadcrumbs=array(
-	'General Repair Registration'=>array('admin'),
+	'Body Repair Registration'=>array('admin'),
 	'Create',
 );
 ?>
