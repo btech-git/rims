@@ -62,7 +62,7 @@ class OutstandingRegistrationTransactionSummary extends CComponent {
         );
         
         $this->dataProvider->criteria->addCondition("substr(t.transaction_date, 1, 10) BETWEEN :start_date AND :end_date AND t.sales_order_number IS NULL AND
-                t.work_order_number IS NULL AND t.user_id_cancelled IS NULL AND t.status NOT IN ('Finished')" . 
+                t.work_order_number IS NULL AND t.sales_order_number IS NULL AND t.user_id_cancelled IS NULL AND t.status NOT IN ('Finished')" . 
         $branchConditionSql . $customerConditionSql . $plateNumberConditionSql);
         $this->dataProvider->criteria->params[':start_date'] = $startDate;
         $this->dataProvider->criteria->params[':end_date'] = $endDate;
