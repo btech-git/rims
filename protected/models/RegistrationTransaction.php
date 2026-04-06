@@ -1889,7 +1889,7 @@ class RegistrationTransaction extends MonthlyTransactionActiveRecord {
                     SELECT i.registration_transaction_id
                     FROM " . InvoiceHeader::model()->tableName() . " i
                     WHERE r.id = i.registration_transaction_id
-                ) AND r.work_order_number IS NOT NULL AND r.sales_order_number IS NULL AND r.user_id_cancelled IS NULL AND r.branch_id = :branch_id AND
+                ) AND r.work_order_number IS NULL AND r.sales_order_number IS NULL AND r.user_id_cancelled IS NULL AND r.branch_id = :branch_id AND
                     SUBSTRING(r.transaction_date, 1, 10) BETWEEN :start_date AND :end_date" . $plateNumberConditionSql . $carMakeConditionSql . 
                     $carModelConditionSql . $transactionStatusConditionSql . $repairTypeConditionSql . "
                 ORDER BY r.transaction_date DESC, r.id DESC
@@ -1952,7 +1952,7 @@ class RegistrationTransaction extends MonthlyTransactionActiveRecord {
                     SELECT i.registration_transaction_id
                     FROM " . InvoiceHeader::model()->tableName() . " i
                     WHERE r.id = i.registration_transaction_id
-                ) AND r.work_order_number IS NOT NULL AND r.user_id_cancelled IS NULL AND SUBSTRING(r.transaction_date, 1, 10) BETWEEN :start_date AND :end_date" . 
+                ) AND r.work_order_number IS NULL AND r.sales_order_number IS NULL AND r.user_id_cancelled IS NULL AND SUBSTRING(r.transaction_date, 1, 10) BETWEEN :start_date AND :end_date" . 
                     $plateNumberConditionSql . $carMakeConditionSql . $carModelConditionSql . $transactionStatusConditionSql . $repairTypeConditionSql . "
                 ORDER BY r.transaction_date DESC, r.id DESC
                 LIMIT {$limit}";
