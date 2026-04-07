@@ -174,17 +174,17 @@ class MaterialRequest extends CComponent {
     }
     
     public function flush() {
-        $this->header->total_quantity = $this->getTotalQuantity();
-        $this->header->total_quantity_movement_out = $this->getTotalQuantityMovementOut();
-        $this->header->total_quantity_remaining = $this->header->total_quantity - $this->header->total_quantity_movement_out;
-        $valid = $this->header->save(false);
-
         $detailIdsToBeDeleted = explode(',', trim($this->header->detailIdsToBeDeleted, ','));
         if (!empty($detailIdsToBeDeleted)) {
             $criteria = new CDbCriteria;
             $criteria->addInCondition('id', $detailIdsToBeDeleted);
             MaterialRequestDetail::model()->deleteAll($criteria);
         }
+
+        $this->header->total_quantity = $this->getTotalQuantity();
+        $this->header->total_quantity_movement_out = $this->getTotalQuantityMovementOut();
+        $this->header->total_quantity_remaining = $this->header->total_quantity - $this->header->total_quantity_movement_out;
+        $valid = $this->header->save(false);
 
         foreach ($this->details as $detail) {
             if ($detail->quantity < 0) {
