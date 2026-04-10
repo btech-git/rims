@@ -370,6 +370,11 @@
                         'visible' => (Yii::app()->user->checkAccess('receiveItemCreate') || Yii::app()->user->checkAccess('receiveItemEdit') || Yii::app()->user->checkAccess('receiveItemView'))
                     ),
                     array(
+                        'label' => 'Penerimaan Parts Supply', 
+                        'url' => array('/frontDesk/receiveParts/admin'), 
+//                        'visible' => (Yii::app()->user->checkAccess('consignmentInCreate') || Yii::app()->user->checkAccess('consignmentInEdit') || Yii::app()->user->checkAccess('consignmentInView'))
+                    ),
+                    array(
                         'label' => 'Penerimaan Konsinyasi', 
                         'url' => array('/transaction/consignmentInHeader/admin'), 
                         'visible' => (Yii::app()->user->checkAccess('consignmentInCreate') || Yii::app()->user->checkAccess('consignmentInEdit') || Yii::app()->user->checkAccess('consignmentInView'))
