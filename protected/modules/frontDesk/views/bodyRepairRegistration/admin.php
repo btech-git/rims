@@ -82,14 +82,8 @@ $('.search-form form').submit(function(){
             ),
             array('name' => 'plate_number', 'value' => '$data->vehicle->plate_number'),
             array(
-                'header' => 'Car Make',
-                'name' => 'car_make_code',
-                'value' => 'empty($data->vehicle->carMake) ? "" : $data->vehicle->carMake->name'
-            ),
-            array(
-                'header'=>'Car Model',
-                'name'=>'car_model_code',
-                'value'=>'$data->vehicle->carModel->name'
+                'header' => 'Vehicle',
+                'value' => 'empty($data->vehicle_id) ? "" : $data->vehicle->carMakeModelSubCombination'
             ),
             array(
                 'header' => 'Customer Name',

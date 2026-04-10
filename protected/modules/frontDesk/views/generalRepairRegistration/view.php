@@ -43,6 +43,12 @@ $this->breadcrumbs = array(
                     <?php endif; ?>
                     
                     <?php if ($model->status !== 'Finished' && $model->status !== 'CANCELLED!!!'): ?>
+                        <?php echo CHtml::link('Tanggal Keluar', array("/frontDesk/generalRepairRegistration/updateDischargeDate", "id" => $model->id), array(
+                            'class' => 'button success left', 
+                            'style' => 'margin-right:10px',
+                            'visible' => Yii::app()->user->checkAccess("generalRepairCreate") || Yii::app()->user->checkAccess("generalRepairEdit   ")
+                        )); ?>
+                    
                         <?php echo CHtml::link('+ KM Kendaraan', array("/frontDesk/generalRepairRegistration/updateMileage", "id" => $model->id), array(
                             'class' => 'button success left', 
                             'style' => 'margin-right:10px',

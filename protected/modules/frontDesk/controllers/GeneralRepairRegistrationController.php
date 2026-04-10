@@ -416,6 +416,26 @@ class GeneralRepairRegistrationController extends Controller {
         ));
     }
 
+    public function actionUpdateDischargeDate($id) {
+        $registrationTransaction = RegistrationTransaction::model()->findByPk($id);
+        $customer = Customer::model()->findByPk($registrationTransaction->customer_id);
+        $vehicle = Vehicle::model()->findByPk($registrationTransaction->vehicle_id);
+        
+        if (isset($_POST['RegistrationTransaction'])) {
+            $registrationTransaction->attributes = $_POST['RegistrationTransaction'];
+            
+            if ($registrationTransaction->save()) {
+                $this->redirect(array('view', 'id' => $id));
+            }
+        }
+
+        $this->render('updateDischargeDate', array(
+            'registrationTransaction' => $registrationTransaction,
+            'customer' => $customer,
+            'vehicle' => $vehicle,
+        ));
+    }
+
     public function actionPendingOrder($id) {
         $model = $this->loadModel($id);
         $model->status = 'Pending';

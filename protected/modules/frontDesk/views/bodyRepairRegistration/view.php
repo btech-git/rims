@@ -30,6 +30,7 @@ $this->breadcrumbs = array(
                             'visible' => Yii::app()->user->checkAccess("bodyRepairCreate") || Yii::app()->user->checkAccess("bodyRepairEdit")
                         )); ?>
                     <?php endif; ?>
+                    
                     <?php if (!empty($model->sales_order_number) && $model->status !== 'Finished'): ?>
                         <?php echo CHtml::link('<span class="fa fa-print"></span> SO', array("pdfSaleOrder", "id" => $model->id), array(
                             'class'=>'button info right', 
@@ -38,7 +39,14 @@ $this->breadcrumbs = array(
                             'visible' => Yii::app()->user->checkAccess("bodyRepairCreate") || Yii::app()->user->checkAccess("bodyRepairEdit")
                         )); ?>
                     <?php endif; ?>
+                    
                     <?php if ($model->status !== 'Finished' && $model->status !== 'CANCELLED!!!'): ?>
+                        <?php echo CHtml::link('Tanggal Keluar', array("/frontDesk/bodyRepairRegistration/updateDischargeDate", "id" => $model->id), array(
+                            'class' => 'button success left', 
+                            'style' => 'margin-right:10px',
+                            'visible' => Yii::app()->user->checkAccess("bodyRepairCreate") || Yii::app()->user->checkAccess("bodyRepairEdit")
+                        )); ?>
+                    
                         <?php echo CHtml::link('+ KM Kendaraan', array("/frontDesk/bodyRepairRegistration/updateMileage", "id" => $model->id), array(
                             'class' => 'button success left', 
                             'style' => 'margin-right:10px',

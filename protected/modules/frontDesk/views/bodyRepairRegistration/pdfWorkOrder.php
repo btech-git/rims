@@ -84,85 +84,13 @@ function tanggal($date) {
             <tr>
                 <td>PROBLEM</td>
                 <td>:</td>
-                <td colspan="4"><?php echo $bodyRepairRegistration->problem; ?></td>
+                <td><?php echo nl2br($bodyRepairRegistration->problem); ?></td>
+                <td>ASURANSI</td>
+                <td>:</td>
+                <td><?php echo CHtml::encode(CHtml::value($bodyRepairRegistration, 'insuranceCompany.name')); ?></td>
             </tr>
         </table>
     </div>
-    
-<!--    <div>
-        <table style="border: 1px solid; width: 100%; font-size: 0.5em">
-            <tr>
-                <td>Tahun</td>
-                <td style="width: 10px">:</td>
-                <td style="border-right: 1px solid"><?php /*echo $bodyRepairRegistration->vehicle->year; ?></td>
-                <td><?php echo CHtml::image(Yii::app()->baseUrl . '/images/icons/checkbox.png', 'checkbox', array('style' => 'width: 10px')); ?> Oli Mesin</td>
-                <td style="width: 80px; border-bottom: 1px solid black;">&nbsp;</td>
-                <td><?php echo CHtml::image(Yii::app()->baseUrl . '/images/icons/checkbox.png', 'checkbox', array('style' => 'width: 10px')); ?> Balancing</td>
-                <td style="width: 80px; border-bottom: 1px solid black;">&nbsp;</td>
-                <td><?php echo CHtml::image(Yii::app()->baseUrl . '/images/icons/checkbox.png', 'checkbox', array('style' => 'width: 10px')); ?> AC</td>
-                <td style="width: 80px; border-bottom: 1px solid black;">&nbsp;</td>
-            </tr>
-            <tr>
-                <td>No. Mesin</td>
-                <td>:</td>
-                <td style="border-right: 1px solid"><?php echo $bodyRepairRegistration->vehicle->machine_number; ?></td>
-                <td><?php echo CHtml::image(Yii::app()->baseUrl . '/images/icons/checkbox.png', 'checkbox', array('style' => 'width: 10px')); ?> Oli Gardan</td>
-                <td style="border-bottom: 1px solid black;">&nbsp;</td>
-                <td><?php echo CHtml::image(Yii::app()->baseUrl . '/images/icons/checkbox.png', 'checkbox', array('style' => 'width: 10px')); ?> Spooring</td>
-                <td style="border-bottom: 1px solid black;">&nbsp;</td>
-                <td><?php echo CHtml::image(Yii::app()->baseUrl . '/images/icons/checkbox.png', 'checkbox', array('style' => 'width: 10px')); ?> Freon</td>
-                <td style="border-bottom: 1px solid black;">&nbsp;</td>
-            </tr>
-            <tr>
-                <td>No. Rangka</td>
-                <td>:</td>
-                <td style="border-right: 1px solid"><?php echo $bodyRepairRegistration->vehicle->frame_number; ?></td>
-                <td><?php echo CHtml::image(Yii::app()->baseUrl . '/images/icons/checkbox.png', 'checkbox', array('style' => 'width: 10px')); ?> Oli Transmisi</td>
-                <td style="border-bottom: 1px solid black;">&nbsp;</td>
-                <td><?php echo CHtml::image(Yii::app()->baseUrl . '/images/icons/checkbox.png', 'checkbox', array('style' => 'width: 10px')); ?> Tune Up</td>
-                <td style="border-bottom: 1px solid black;">&nbsp;</td>
-                <td><?php echo CHtml::image(Yii::app()->baseUrl . '/images/icons/checkbox.png', 'checkbox', array('style' => 'width: 10px')); ?> Checking</td>
-                <td style="border-bottom: 1px solid black;">&nbsp;</td>
-            </tr>
-            <tr>
-                <td>Warna</td>
-                <td>:</td>
-                <td style="border-right: 1px solid"><?php echo $bodyRepairRegistration->vehicle->color->name; ?></td>
-                <td><?php echo CHtml::image(Yii::app()->baseUrl . '/images/icons/checkbox.png', 'checkbox', array('style' => 'width: 10px')); ?> Minyak Rem</td>
-                <td style="border-bottom: 1px solid black;">&nbsp;</td>
-                <td><?php echo CHtml::image(Yii::app()->baseUrl . '/images/icons/checkbox.png', 'checkbox', array('style' => 'width: 10px')); ?> Carbon Clean</td>
-                <td style="border-bottom: 1px solid black;">&nbsp;</td>
-                <td><?php echo CHtml::image(Yii::app()->baseUrl . '/images/icons/checkbox.png', 'checkbox', array('style' => 'width: 10px'));*/ ?> Cuci</td>
-                <td style="border-bottom: 1px solid black;">&nbsp;</td>
-            </tr>
-        </table>
-    </div>
-    
-    <div class="body-memo">
-        <table style="font-size: 0.5em">
-            <tr>
-                <td colspan="4" style="text-decoration: underline">Keterangan Pengerjaan yang Dilakukan</td>
-            </tr>
-            <tr>
-                <td style="width: 15%">A = Ganti (Change)</td>
-                <td style="width: 15%">E = Stel (Adjust)</td>
-                <td style="width: 15%">H = Bersihkan</td>
-                <td>Pelanggan memberikan kuasa untuk melaksanakan pekerjaan yang telah dituliskan dan setujui pada Work Order ini.</td>
-            </tr>
-            <tr>
-                <td>B = Check</td>
-                <td>F = Charge</td>
-                <td>R = Reparasi</td>
-                <td>Pelanggan juga mengijinkan untuk menguji coba kendaraan tersebut diluar wilayah Raperind Motor.</td>
-            </tr>
-            <tr>
-                <td>C = Isi (Top Up)</td>
-                <td>G = Kencangkan</td>
-                <td>OH = Overhaul</td>
-                <td>&nbsp;</td>
-            </tr>
-        </table>
-    </div>-->
     
     <?php if (count($bodyRepairRegistration->registrationProducts) > 0): ?>
         <div class="purchase-order">

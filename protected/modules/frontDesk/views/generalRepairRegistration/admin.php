@@ -76,7 +76,7 @@ Yii::app()->clientScript->registerScript('search', "
             ),
             array(
                 'name'=>'transaction_number', 
-                'value'=>'CHtml::link($data->transaction_number, array("view", "id"=>$data->id))', 
+                'value'=>'CHtml::link($data->transaction_number, array("view", "id"=>$data->id), array("class" => "page-link", "data-record-id" => $data->id))', 
                 'type'=>'raw',
             ),
             array(
@@ -86,16 +86,16 @@ Yii::app()->clientScript->registerScript('search', "
             ),
             array('name' => 'plate_number', 'value' => '$data->vehicle->plate_number'),
             array(
-                'header' => 'Car Make',
-                'value' => 'empty($data->vehicle->carMake) ? "" : $data->vehicle->carMake->name'
-            ),
-            array(
-                'header' => 'Car Model',
-                'value' => '$data->vehicle->carModel->name'
+                'header' => 'Vehicle',
+                'value' => 'empty($data->vehicle_id) ? "" : $data->vehicle->carMakeModelSubCombination'
             ),
             array(
                 'header' => 'Customer Name',
                 'value' => '$data->customer->name',
+            ),
+            array(
+                'header' => 'Asuransi',
+                'value' => 'CHtml::encode(CHtml::value($data, "insuranceCompany.name"))'
             ),
             'work_order_number',
             array(
@@ -191,5 +191,16 @@ Yii::app()->clientScript->registerScript('search', "
         if (hasFlash) {
             $("#cancel-message-dialog").dialog({modal: 'false'});
         }
+        $('.page-link').click(function(e) {
+            e.preventDefault();
+            
+            var isMobileSize = window.innerWidth <= 768;
+            
+            if (isMobileSize) {
+                window.location.href = 'viewMobile?id=' + $(this).attr('data-record-id');
+            } else {
+                window.location.href = 'view?id=' + $(this).attr('data-record-id');
+            }
+        });
     });
 </script>
