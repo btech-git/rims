@@ -110,6 +110,7 @@
         <?php endif; ?>
     </table>
 </div>
+
 <br />
 
 <div>
