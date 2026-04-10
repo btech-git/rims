@@ -1,6 +1,6 @@
 <div id="maincontent">
     <div class="clearfix page-action">
-        <h1>Inspeksi Kendaraan Bermotor</h1>
+        <h1>New Vehicle System Check</h1>
         
         <div id="maincontent">
             <?php echo $this->renderPartial('_form', array(
