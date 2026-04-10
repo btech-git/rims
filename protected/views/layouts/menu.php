@@ -143,9 +143,14 @@
                         'visible' => Yii::app()->user->checkAccess('workOrderApproval'),
                     ),
                     array(
-                        'label' => 'Vehicle System Check', 
+                        'label' => 'Vehicle Inspection', 
                         'url' => array('/frontDesk/vehicleInspection/admin'), 
                         'visible' => (Yii::app()->user->checkAccess('inspectionCreate') || Yii::app()->user->checkAccess('inspectionEdit') || Yii::app()->user->checkAccess('inspectionView')),
+                    ),
+                    array(
+                        'label' => 'Vehicle System Check', 
+                        'url' => array('/frontDesk/vehicleSystemCheck/admin'), 
+//                        'visible' => (Yii::app()->user->checkAccess('inspectionCreate') || Yii::app()->user->checkAccess('inspectionEdit') || Yii::app()->user->checkAccess('inspectionView')),
                     ),
                     array(
                         'label' => 'Work Orders', 
