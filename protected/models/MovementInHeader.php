@@ -22,6 +22,7 @@
  * @property integer $is_verified
  * @property integer $user_id_verified
  * @property string $verified_datetime
+ * @property integer $receive_parts_header_id
  *
  * The followings are the available model relations:
  * @property MovementInApproval[] $movementInApprovals
@@ -32,6 +33,7 @@
  * @property UserIdCancelled $userIdCancelled
  * @property UserIdUpdated $userIdUpdated
  * @property UserIdVerified $userIdVerified
+ * @property ReceivePartsHeader $receivePartsHeader
  */
 class MovementInHeader extends MonthlyTransactionActiveRecord {
 
@@ -66,13 +68,13 @@ class MovementInHeader extends MonthlyTransactionActiveRecord {
         // will receive user inputs.
         return array(
             array('movement_in_number, date_posting, branch_id, movement_type, user_id, status, is_verified', 'required'),
-            array('branch_id, movement_type, return_item_id, receive_item_id, user_id, supervisor_id, user_id_cancelled, user_id_updated, is_verified, user_id_verified', 'numerical', 'integerOnly' => true),
+            array('branch_id, movement_type, return_item_id, receive_item_id, user_id, supervisor_id, user_id_cancelled, user_id_updated, is_verified, user_id_verified, receive_parts_header_id', 'numerical', 'integerOnly' => true),
             array('movement_in_number, status', 'length', 'max' => 30),
             array('movement_in_number', 'unique'),
             array('updated_datetime, cancelled_datetime, verified_datetime', 'safe'),
             // The following rule is used by search().
             // Please remove those attributes that should not be searched.
-            array('id, movement_in_number, date_posting, created_datetime, branch_id, movement_type, return_item_id, receive_item_id, user_id, supervisor_id, status, receive_item_number,return_item_number, updated_datetime, user_id_updated, is_verified, user_id_verified, verified_datetime', 'safe', 'on' => 'search'),
+            array('id, movement_in_number, date_posting, created_datetime, branch_id, movement_type, return_item_id, receive_item_id, user_id, supervisor_id, status, receive_item_number,return_item_number, updated_datetime, user_id_updated, is_verified, user_id_verified, verified_datetime, receive_parts_header_id', 'safe', 'on' => 'search'),
         );
     }
 
@@ -92,6 +94,7 @@ class MovementInHeader extends MonthlyTransactionActiveRecord {
             'userIdCancelled' => array(self::BELONGS_TO, 'Users', 'user_id_cancelled'),
             'userIdUpdated' => array(self::BELONGS_TO, 'Users', 'user_id_updated'),
             'userIdVerified' => array(self::BELONGS_TO, 'Users', 'user_id_verified'),
+            'receivePartsHeader' => array(self::BELONGS_TO, 'ReceivePartsHeader', 'receive_parts_header_id'),
         );
     }
 
@@ -170,6 +173,7 @@ class MovementInHeader extends MonthlyTransactionActiveRecord {
         switch($type) {
             case 1: return 'Receive Item';
             case 2: return 'Return Item';
+            case 3: return 'Parts Supply';
             default: return '';
         }
     }

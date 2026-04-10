@@ -13,12 +13,14 @@
  * @property string $quantity
  * @property integer $warehouse_id
  * @property integer $production_year
+ * @property integer $receive_parts_detail_id
  *
  * The followings are the available model relations:
  * @property MovementInHeader $movementInHeader
  * @property Product $product
  * @property Warehouse $warehouse
  * @property TransactionReturnItemDetail $returnItemDetail
+ * @property ReceivePartsDetail $receivePartsDetail
  */
 class MovementInDetail extends CActiveRecord {
 
@@ -48,11 +50,11 @@ class MovementInDetail extends CActiveRecord {
         // will receive user inputs.
         return array(
             array('movement_in_header_id, product_id, quantity_transaction, quantity, warehouse_id, production_year', 'required'),
-            array('receive_item_detail_id, return_item_detail_id, movement_in_header_id, product_id, warehouse_id, production_year', 'numerical', 'integerOnly' => true),
+            array('receive_item_detail_id, return_item_detail_id, movement_in_header_id, product_id, warehouse_id, production_year, receive_parts_detail_id', 'numerical', 'integerOnly' => true),
             array('quantity_transaction, quantity', 'length', 'max' => 10),
             // The following rule is used by search().
             // Please remove those attributes that should not be searched.
-            array('id, receive_item_detail_id, return_item_detail_id, movement_in_header_id, product_id, quantity_transaction, quantity, warehouse_id, production_year', 'safe', 'on' => 'search'),
+            array('id, receive_item_detail_id, return_item_detail_id, movement_in_header_id, product_id, quantity_transaction, quantity, warehouse_id, production_year, receive_parts_detail_id', 'safe', 'on' => 'search'),
         );
     }
 
@@ -68,6 +70,7 @@ class MovementInDetail extends CActiveRecord {
             'warehouse' => array(self::BELONGS_TO, 'Warehouse', 'warehouse_id'),
             'returnItemDetail' => array(self::BELONGS_TO, 'TransactionReturnItemDetail', 'return_item_detail_id'),
             'receiveItemDetail' => array(self::BELONGS_TO, 'TransactionReceiveItemDetail', 'receive_item_detail_id'),
+            'receivePartsDetail' => array(self::BELONGS_TO, 'ReceivePartsDetail', 'receive_parts_detail_id'),
         );
     }
 
