@@ -53,10 +53,10 @@ $this->breadcrumbs = array(
                             'visible' => Yii::app()->user->checkAccess("bodyRepairCreate") || Yii::app()->user->checkAccess("bodyRepairEdit")
                         )); ?>
                     
-                        <?php echo CHtml::link('SPK Customer', array("/frontDesk/generalRepairRegistration/updateCustomerWorkOrder", "id" => $model->id), array(
+                        <?php echo CHtml::link('SPK Customer', array("/frontDesk/bodyRepairRegistration/updateCustomerWorkOrder", "id" => $model->id), array(
                             'class' => 'button success left', 
                             'style' => 'margin-right:10px',
-                            'visible' => Yii::app()->user->checkAccess("generalRepairCreate") || Yii::app()->user->checkAccess("generalRepairEdit")
+                            'visible' => Yii::app()->user->checkAccess("bodyRepairCreate") || Yii::app()->user->checkAccess("bodyRepairEdit")
                         )); ?>
                     
                         <?php echo CHtml::link('<span class="fa fa-print"></span> Estimasi', array("pdf", "id" => $model->id), array(

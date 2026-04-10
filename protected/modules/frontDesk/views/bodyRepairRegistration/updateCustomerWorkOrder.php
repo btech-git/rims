@@ -3,14 +3,14 @@
 /* @var $model RegistrationTransaction */
 
 $this->breadcrumbs=array(
-	'General Repair Registration'=>array('admin'),
+	'Body Repair Registration'=>array('admin'),
 	'Create',
 );
 ?>
 <div id="maincontent">
     <div class="clearfix page-action">
-        <a class="button cbutton right" href="<?php echo Yii::app()->baseUrl.'/frontDesk/generalRepairRegistration/admin';?>"><span class="fa fa-th-list"></span>Manage</a>
-        <h1><?php echo "Update KM Kendaraan"; ?></h1>
+        <a class="button cbutton right" href="<?php echo Yii::app()->baseUrl.'/frontDesk/bodyRepairRegistration/admin';?>"><span class="fa fa-th-list"></span>Manage</a>
+        <h1><?php echo "Update SPK Customer"; ?></h1>
         <div class="form">
             <?php $form=$this->beginWidget('CActiveForm', array(
                 'id'=>'registration-transaction-form',
