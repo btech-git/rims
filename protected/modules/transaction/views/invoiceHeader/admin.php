@@ -196,7 +196,13 @@ $('#invoiceSearch').submit(function(){
                     </div>
                 </div>
             </div>
-
+            
+            <?php echo CHtml::beginForm(); ?>
+            <div>
+                <?php echo CHtml::submitButton('Export', array(
+                    'name' => 'SaveExcel',
+                )); ?>
+            </div>
             <div class="grid-view">
                 <?php $this->widget('zii.widgets.grid.CGridView', array(
                     'id' => 'invoice-header-grid',
@@ -209,13 +215,11 @@ $('#invoiceSearch').submit(function(){
                         'header' => '',
                     ),
                     'columns' => array(
-//                        array(
-//                            'class' => 'CCheckBoxColumn', //CHECKBOX COLUMN ADDED.
-//                            'selectableRows' => 2, //MULTIPLE ROWS CAN BE SELECTED.
-//                            'checked' => function($data) use($prChecked) {
-//                                return in_array($data->id, $prChecked);
-//                            },
-//                        ),
+                        array(
+                            'class' => 'CCheckBoxColumn',
+                            'selectableRows' => 2,
+                            'id' => 'SelectedIds',
+                        ),
                         array(
                             'name' => 'invoice_number', 
                             'value' => 'CHtml::link($data->invoice_number, array("view", "id"=>$data->id))', 
@@ -258,6 +262,8 @@ $('#invoiceSearch').submit(function(){
                     <?php echo CHtml::button("Clear Selected", array("id" => "btnClear", 'class' => 'button cbutton'));*/ ?>
                 </div>-->
             </div>
+            
+            <?php echo CHtml::endForm(); ?>
         </div>
     </div> <!-- end row -->
 </div> <!-- end maintenance -->

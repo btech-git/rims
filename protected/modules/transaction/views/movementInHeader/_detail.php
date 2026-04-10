@@ -23,6 +23,7 @@
                     <td>
                         <?php echo CHtml::activeHiddenField($detail, "[$i]receive_item_detail_id"); ?>
                         <?php echo CHtml::activeHiddenField($detail, "[$i]return_item_detail_id"); ?>
+                        <?php echo CHtml::activeHiddenField($detail, "[$i]receive_parts_detail_id"); ?>
                         <?php echo CHtml::activeHiddenField($detail, "[$i]product_id"); ?>
                         <?php echo CHtml::activeTextField($detail, "[$i]product_name", array(
                             'size' => 20, 

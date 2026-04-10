@@ -145,14 +145,22 @@ class MovementInHeaderController extends Controller {
             $receiveItem = TransactionReceiveItem::model()->findByPk($transactionId);
             $movementIn->header->receive_item_id = $transactionId;
             $movementIn->header->return_item_id = null;
+            $movementIn->header->receive_parts_header_id = null;
             $movementIn->header->branch_id = $receiveItem->recipient_branch_id;
             
         } else if ($movementType == 2) {
             $returnItem = TransactionReturnItem::model()->findByPk($transactionId);
             $movementIn->header->receive_item_id = null;
+            $movementIn->header->receive_parts_header_id = null;
             $movementIn->header->return_item_id = $transactionId;
             $movementIn->header->branch_id = $returnItem->recipient_branch_id;
             
+        } else if ($movementType == 3) {
+            $receivePartsHeader = ReceivePartsHeader::model()->findByPk($transactionId);
+            $movementIn->header->receive_item_id = null;
+            $movementIn->header->return_item_id = null;
+            $movementIn->header->receive_parts_header_id = $transactionId;
+            $movementIn->header->branch_id = $receivePartsHeader->branch_id;
         } else {
             $this->redirect(array('admin'));
         }
@@ -293,7 +301,6 @@ class MovementInHeaderController extends Controller {
         if (isset($_GET['TransactionReceiveItem'])) {
             $receiveItem->attributes = $_GET['TransactionReceiveItem'];
         }
-
         $receiveItemDataProvider = $receiveItem->searchByMovementIn();
     
         $returnItem = new TransactionReturnItem('search');
@@ -302,8 +309,16 @@ class MovementInHeaderController extends Controller {
         if (isset($_GET['TransactionReturnItem'])) {
             $returnItem->attributes = $_GET['TransactionReturnItem'];
         }
-
         $returnItemDataProvider = $returnItem->search();
+
+        /* Receive Parts */
+        $receivePartsHeader = new ReceivePartsHeader('search');
+        $receivePartsHeader->unsetAttributes();
+        
+        if (isset($_GET['ReceivePartsHeader'])) {
+            $receivePartsHeader->attributes = $_GET['ReceivePartsHeader'];
+        }
+        $receivePartsDataProvider = $receivePartsHeader->searchByMovementIn();
 
         $this->render('admin', array(
             'model' => $model,
@@ -312,6 +327,8 @@ class MovementInHeaderController extends Controller {
             'receiveItemDataProvider' => $receiveItemDataProvider,
             'returnItem' => $returnItem,
             'returnItemDataProvider' => $returnItemDataProvider,
+            'receivePartsHeader' => $receivePartsHeader,
+            'receivePartsDataProvider' => $receivePartsDataProvider,
         ));
     }
 

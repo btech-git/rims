@@ -365,7 +365,7 @@ class MovementOutHeaderController extends Controller {
 
         $registrationTransactionDataProvider = $registrationTransaction->searchByMovementOut();
 
-        /* Registration Transaction */
+        /* Material Request */
         $materialRequest = new MaterialRequestHeader('search');
         $materialRequest->unsetAttributes();
         if (isset($_GET['MaterialRequestHeader'])) {
@@ -543,20 +543,6 @@ class MovementOutHeaderController extends Controller {
             $movementOut->details = array();
         }
     }
-
-    //Add Detail
-//    public function actionAjaxHtmlAddDetail($id, $detailId, $type) {
-//        if (Yii::app()->request->isAjaxRequest) {
-//            $movementOut = $this->instantiate($id, '');
-//            $this->loadState($movementOut);
-//
-//            $movementOut->addDetail($detailId, $type);
-//            Yii::app()->clientscript->scriptMap['jquery-ui.min.js'] = false;
-//            Yii::app()->clientscript->scriptMap['jquery.js'] = false;
-//            Yii::app()->clientscript->scriptMap['jquery.yiigridview.js'] = false;
-//            $this->renderPartial('_detail', array('movementOut' => $movementOut), false, true);
-//        }
-//    }
 
     public function actionAjaxHtmlRemoveDetail($id, $index) {
         if (Yii::app()->request->isAjaxRequest) {

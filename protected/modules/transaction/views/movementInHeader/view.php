@@ -113,17 +113,7 @@ $this->menu = array(
                     <label for="right-label" class="right" style="font-weight:bold;">Movement Type</label>
                 </div>
                 <div class="small-9 columns">
-                    <?php
-                    if ($model->movement_type == 1) {
-                        $movementType = "Receive Item";
-                    } elseif ($model->movement_type == 2) {
-                        $movementType = "Return Penjualan";
-                    } else {
-                        $movementType = "";
-                    }
-                    ?>
-
-                    <label for=""><?php echo $movementType; ?></label>
+                    <label for=""><?php echo CHtml::encode($model->getMovementType($model->movement_type)); ?></label>
                 </div>
             </div>
         </div>
@@ -187,7 +177,7 @@ $this->menu = array(
                 </div>
             </div>
         </div>
-    <?php else: ?>
+    <?php elseif ($model->movement_type == 2): ?>
         <div class="row">
             <div class="small-8">
                 <div class="row">
@@ -198,6 +188,20 @@ $this->menu = array(
                     <div class="small-9 columns">
                         <label for=""><?php echo $model->return_item_id != "" ? CHTml::link($model->returnItem->return_item_no, array("/transaction/transactionReturnItem/show", "id" => $model->return_item_id), array('target' => 'blank')) : ""; ?></label>
                  <!--  <input type="text" id="right-label" value="<?php //echo $movementType;  ?>" readonly="true"> -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    <?php elseif ($model->movement_type == 3): ?>
+        <div class="row">
+            <div class="small-8">
+                <div class="row">
+                    <div class="small-3 columns">
+                        <label for="right-label" class="right" style="font-weight:bold;">Reference #</label>
+                    </div>
+                    
+                    <div class="small-9 columns">
+                        <label for=""><?php echo CHtml::link($model->receivePartsHeader->transaction_number, array("/frontDesk/receiveParts/show", "id" => $model->receive_parts_header_id), array('target' => 'blank')); ?></label>
                     </div>
                 </div>
             </div>

@@ -46,22 +46,12 @@ class MovementOuts extends CComponent {
             if ($deliveryOrder !== null) {
                 foreach ($deliveryOrder->transactionDeliveryOrderDetails as $deliveryDetail) {
                     if ($deliveryDetail->quantity_movement_left > 0) {
-//                        $warehouseBranchProductCategory = WarehouseBranchProductCategory::model()->findByAttributes(array(
-//                            'branch_id' => $this->header->branch_id, 
-//                            'product_master_category_id' => $deliveryDetail->product->product_master_category_id
-//                        ));
-//                        $inventoryDetail = InventoryDetail::model()->findByAttributes(array(
-//                            'product_id' => $deliveryDetail->product_id, 
-//                            'warehouse_id' => $warehouseBranchProductCategory->warehouse_id
-//                        ));
-//                        $stock = !empty($inventoryDetail) ? $inventoryDetail->getInventoryTotalStock($productId, $branchId) : 0;
-                        
                         $detail = new MovementOutDetail();
-                        $detail->material_request_detail_id = null;
-                        $detail->registration_service_id = null;
                         $detail->quantity_receive = 0;
                         $detail->quantity_receive_left = 0;
                         $detail->delivery_order_detail_id = $deliveryDetail->id;
+                        $detail->material_request_detail_id = null;
+                        $detail->registration_service_id = null;
                         $detail->return_order_detail_id = null;
                         $detail->registration_product_id = null;
                         $detail->product_id = $deliveryDetail->product_id;
@@ -79,16 +69,6 @@ class MovementOuts extends CComponent {
             if ($returnOrder !== null) {
                 foreach ($returnOrder->transactionReturnOrderDetails as $returnDetail) {
                     if ($returnDetail->quantity_movement_left > 0) {
-//                        $warehouseBranchProductCategory = WarehouseBranchProductCategory::model()->findByAttributes(array(
-//                            'branch_id' => $this->header->branch_id, 
-//                            'product_master_category_id' => $returnDetail->product->product_master_category_id
-//                        ));
-//                        $inventory = Inventory::model()->findByAttributes(array(
-//                            'product_id' => $returnDetail->product_id, 
-//                            'warehouse_id' => $warehouseBranchProductCategory->warehouse_id
-//                        ));
-//                        $stock = !empty($inventory) ? $inventory->total_stock : 0;
-                        
                         $detail = new MovementOutDetail();
                         $detail->material_request_detail_id = null;
                         $detail->registration_service_id = null;
@@ -112,21 +92,11 @@ class MovementOuts extends CComponent {
             if ($registrationTransaction !== null) {
                 foreach ($registrationTransaction->registrationProducts as $registrationDetail) {
                     if ($registrationDetail->quantity_movement_left > 0) {
-//                        $warehouseBranchProductCategory = WarehouseBranchProductCategory::model()->findByAttributes(array(
-//                            'branch_id' => $this->header->branch_id, 
-//                            'product_master_category_id' => $registrationDetail->product->product_master_category_id
-//                        ));
-//                        $inventory = Inventory::model()->findByAttributes(array(
-//                            'product_id' => $registrationDetail->product_id, 
-//                            'warehouse_id' => $warehouseBranchProductCategory->warehouse_id
-//                        ));
-//                        $stock = !empty($inventory) ? $inventory->total_stock : 0;
-                        
                         $detail = new MovementOutDetail();
-                        $detail->material_request_detail_id = null;
-                        $detail->registration_service_id = null;
                         $detail->quantity_receive = 0;
                         $detail->quantity_receive_left = 0;
+                        $detail->material_request_detail_id = null;
+                        $detail->registration_service_id = null;
                         $detail->delivery_order_detail_id = null;
                         $detail->return_order_detail_id = null;
                         $detail->registration_product_id = $registrationDetail->id;
@@ -145,23 +115,13 @@ class MovementOuts extends CComponent {
             if ($materialRequest !== null) {
                 foreach ($materialRequest->materialRequestDetails as $materialRequestDetail) {
                     if ($materialRequestDetail->quantity_remaining > 0) {
-//                        $warehouseBranchProductCategory = WarehouseBranchProductCategory::model()->findByAttributes(array(
-//                            'branch_id' => $this->header->branch_id, 
-//                            'product_master_category_id' => $materialRequestDetail->product->product_master_category_id
-//                        ));
-//                        $inventory = Inventory::model()->findByAttributes(array(
-//                            'product_id' => $materialRequestDetail->product_id, 
-//                            'warehouse_id' => $warehouseBranchProductCategory->warehouse_id
-//                        ));
-//                        $stock = !empty($inventory) ? $inventory->total_stock : 0;
-                        
                         $detail = new MovementOutDetail();
-                        $detail->material_request_detail_id = null;
-                        $detail->registration_service_id = null;
                         $detail->quantity_receive = 0;
                         $detail->quantity_receive_left = 0;
                         $detail->delivery_order_detail_id = null;
                         $detail->return_order_detail_id = null;
+                        $detail->registration_service_id = null;
+                        $detail->registration_product_id = null;
                         $detail->material_request_detail_id = $materialRequestDetail->id;
                         $detail->product_id = $materialRequestDetail->product_id;
                         $detail->unit_id = $materialRequestDetail->unit_id;
@@ -348,7 +308,6 @@ class MovementOuts extends CComponent {
         }
         
         $transactionLog->new_data = json_encode($newData);
-
         $transactionLog->save();
     }
 }

@@ -25,8 +25,8 @@
                                 'model' => $invoice->header,
                                 'attribute' => "invoice_date",
                                 'options' => array(
-//                                    'minDate' => '-7W',
-//                                    'maxDate' => '+6M',
+                                    'minDate' => '-7W',
+                                    'maxDate' => '+6M',
                                     'dateFormat' => 'yy-mm-dd',
                                     'changeMonth' => true,
                                     'changeYear' => true,

@@ -1,199 +1,233 @@
-<?php $ccontroller = Yii::app()->controller->id; ?>
-<?php $ccaction = Yii::app()->controller->action->id; ?>
+<?php
+date_default_timezone_set('Asia/Jakarta');
 
-<?php foreach ($invoices as $key => $invoice): ?>
-	<?php $details = InvoiceDetail::model()->findAllByAttributes(array('invoice_id'=>$invoice->id)); ?>
-    <header class="clearfix">
-      <table width="100%">
-      	<tr>
-      		<td width="40%" align="left">
-      		    <div id="company" >
-			        <div><strong>RAPERIND</strong> Motor</div>
-			        <div>JL. Kalimalang, No. 8, Kampung Dua,<br />Bekasi City, West Java</div>
-			        <div>(021) 8843656</div>
-			        <div><a href="mailto:company@example.com">company@example.com</a></div>
-			    </div>
-      		</td>
-      		<td width="20%">
-		      <div id="logo">
-		        <img src="<?php echo Yii::app()->baseUrl; ?>/images/logo_invoice.png" style="max-width: 90px;">
-		      </div>
-      		</td>
-      		<td width="40%">
-		      <div id="project">
-			       <div><span>Reference Number #:</span> <?php if ($invoice->reference_type == 1): ?>
-								<?php echo $invoice->salesOrder->sale_order_no; ?>
-							<?php else :?>
-								<?php echo $invoice->registration_transaction_id; ?>
-							<?php endif ?></div>
-	               <div><span>Reference Type #:</span> <?php echo $invoice->reference_type == 1 ? 'Sales Order' : 'Retail Sales'; ?></div>
-	               <div><span>Created:</span> <?php echo $invoice->invoice_date; ?></div>
-	               <div><span>Due:</span> <?php echo $invoice->due_date; ?></div>
-	               <div><span style="background-color:red;color:white"><?php echo $invoice->status; ?></span>
-		      </div>
-			</td>
-      	</tr>
-      </table>
-      <h1 >INVOICE #<?php echo $invoice->invoice_number; ?></h1>
+function tanggal($date) {
+    $bulan = array('Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember');
+    $tahun = substr($date, 0, 4);
+    $bulan2 = substr($date, 5, 2);
+    $tanggal = substr($date, 8, 2);
 
-    </header>
-	<div style="height: 800px">
-    <main>
-		<?php 
-			$productCriteria = new CDbCriteria;
-			$productCriteria->addCondition('invoice_id ='.$invoice->id);
-			$productCriteria->addCondition('product_id != ""');
-			$products = InvoiceDetail::model()->findAll($productCriteria);
-		 ?>
-		<?php 
-			$serviceCriteria = new CDbCriteria;
-			$serviceCriteria->addCondition('invoice_id ='.$invoice->id);
-			$serviceCriteria->addCondition('service_id != ""');
-		$services = InvoiceDetail::model()->findAll($serviceCriteria); ?>
-		<?php 
-			$QserviceCriteria = new CDbCriteria;
-			$QserviceCriteria->addCondition('invoice_id ='.$invoice->id);
-			$QserviceCriteria->addCondition('quick_service_id != ""');
-		$Qservices = InvoiceDetail::model()->findAll($QserviceCriteria); ?>
-			<?php if(count($products) > 0) : ?>
-				<table>
-	    	    <thead>
-		    	    <tr>
-						<th>Product</th>
-						<th>Quantity</th>
-						<th width="200px">Unit Price</td>
-						<th width="200px">Price</th>
-					</tr>
-				</thead>
-				<tbody>
-					<?php foreach ($details as $i => $detail): ?>
-						<?php if($detail->product_id != ""): ?>
-				          <tr>
-				            <td class="desc"><?php echo $detail->product->name; ?></td>
-				            <td class="qty"><?php echo $detail->quantity; ?></td>
-				            <!-- <td class="unit"></td> -->
-				            <td class="qty"><?php echo number_format($detail->unit_price, 2, ',', '.'); ?></td>
-				            <td class="total"><?php echo number_format($detail->total_price, 2, ',', '.'); ?></td>
-				          </tr>
-						<?php endif; ?>
-					<?php endforeach; ?>
+    return $tanggal . ' ' . $bulan[(int) $bulan2 - 1] . ' ' . $tahun;
+}
+?>
+<style>
+    .page {
+        background-repeat: no-repeat;
+        background-position: center;
+        background-size: contain;
+    }
+    .container {
+        background-color: rgba(255, 255, 255, 0.8);
+    }
+</style>
 
-				</tbody>
-				
-			</table>
-		<?php endif; ?>
-		<?php if(count($services) > 0 ) : ?>
-			<table>
-	    	    <thead>
-		    	    <tr>
-					<th>Service</th>
-					<th colspan="2"></th>
-					<th width="200px">Price</th>
-				    </tr>
-				</thead>
-				<tbody>
-					<?php foreach ($details as $i => $detail): ?>
-					<?php if ($detail->service_id != ""): ?>
-				          <tr>
-				            <td class="desc"><?php echo $detail->service->name; ?></td>
-				            <td colspan="2">&nbsp;</td>
-				            <td class="total"><?php echo number_format($detail->total_price, 2, ',', '.'); ?></td>
-				          </tr>
-					<?php endif ?>
-					<?php endforeach; ?>
-				</tbody>
-			</table>
-			<?php endif; ?>
-			<?php if (count($Qservices) >0 ): ?>
-			<table>
-	    	    <thead>
-		    	    <tr>
-						<th>Quick Service</th>
-			            <th>&nbsp;</th>
-						<th width="200px">Unit Price</th>
-						<th width="200px">Price</th>
-				    </tr>
-				</thead>
-				<tbody>
-						<?php foreach ($details as $i => $detail): ?>
-							<?php if ($detail->quick_service_id != ""): ?>
-			 		        	<tr>
-						            <td class="desc"><?php echo $detail->quickService->name; ?></td>
-						            <td>&nbsp;</td>
-						            <td class="qty"><?php echo number_format($detail->unit_price, 2, ',', '.'); ?></td>
-						            <td class="total"><?php echo number_format($detail->total_price, 2, ',', '.'); ?></td>
-						        </tr>
-							<?php endif ?>
-						<?php endforeach; ?>
-					</tbody>
-				</table>
-			<?php endif ?>
+<?php //$numberOfPages = count($invoiceDetailsData['items']); ?>
 
-				<table>
-					<tr>
-						<td>Service Price</td>
-						<td class="total" width="200px"><?php echo number_format($invoice->service_price, 2, ',', '.') ?></td>
-					</tr>
-					<tr>
-						<td>Product Price</td>
-						<td width="200px"><?php echo number_format($invoice->product_price, 2, ',', '.') ?></td>
-					</tr>
-					<tr>
-						<td>Quick Service Price</td>
-						<td width="200px"><?php echo number_format($invoice->quick_service_price, 2, ',', '.') ?></td>
-					</tr>
-					<?php if ($invoice->ppn == 1): ?>
-						<tr>
-							<td>PPN (10%) </td>
-							<td width="200px"><?php echo number_format($invoice->ppn_total, 2, ',', '.') ?></td>
-						</tr>
-					<?php endif ?>
-					<?php if ($invoice->pph == 1): ?>
-						<tr>
-							<td>PPH (2%) </td>
-							<td width="200px"><?php echo number_format($invoice->pph_total, 2, ',', '.') ?></td>
-						</tr>
-					<?php endif ?>
-					
-					<tr>
-						<td>Total Price</td>
-						<td width="200px"><?php echo number_format($invoice->total_price, 2, ',', '.') ?></td>
-					</tr>
-				</table>
-      <div id="notices">
-        <div>NOTICE:</div>
-        <div class="notice">A finance charge of 1.5% will be made on unpaid balances after 30 days.</div>
-      </div>
-    </main>
-    <footer>
-      Invoice was created on a computer and is valid without the signature and seal.
-    </footer>
-  	</div>
-</div>
-<?php /*
-       <table cellpadding="0" cellspacing="0" width="100%">
-            
-            <tr class="information">
-                <td colspan="2">
-                    <table width="700px;">
-						<tr>
-							<td>Reference Number</td>
-							<td><?php if ($invoice->reference_type == 1): ?>
-								<?php echo $invoice->salesOrder->sale_order_no; ?>
-							<?php else :?>
-								<?php echo $invoice->registration_transaction_id; ?>
-							<?php endif ?></td>
-							<td>Branch</td>
-							<td><?php echo $invoice->branch->name; ?></td>
-						</tr>
-						<tr>
-							<td>Status</td>
-							<td background-color="red"><label for="" style="background-color:red;color:white"> <?php echo $invoice->status; ?></label></td>
-							<td>User_id</td>
-							<td><?php echo $invoice->user_id; ?></td>
-						</tr>
+<?php foreach ($invoices as $key => $invoiceHeader): ?>
+    <?php $productDetailRowNumber = 0; ?>
+    <?php $serviceDetailRowNumber = 0; ?>
+    <?php /*$invoiceDetailsData = $this->getInvoiceDetailsData($invoiceHeader);*/ ?>
+    <?php $customer = Customer::model()->findByPk($invoiceHeader->customer_id); ?>
+    <?php $vehicle = Vehicle::model()->findByPk($invoiceHeader->vehicle_id); ?>
+    <?php $branch = Branch::model()->findByPk($invoiceHeader->branch_id); ?>
+
+    <?php //for ($j = 0; $j < $numberOfPages; $j++): ?>
+        <?php //$detailItems = $invoiceDetailsData['items'][$j]; ?>
+        <div class="page">
+            <div class="container">
+                <div class="header">
+                    <div style="float: left; width: 20%; text-align: center">
+                        <img src="<?php echo Yii::app()->baseUrl; ?>/images/rap-logo.png" style="width: 75px; height: 64px" />
+                    </div>
+                    <div style="float: right; width: 40%">
+                        <div>
+                            Jl. Raya Jati Asih/Jati Kramat - 84993984/77 Fax. 84993989 <br />
+                            Jl. Raya Kalimalang No. 8, Kp. Dua - 8843656 Fax. 88966753<br />
+                            Jl. Raya Kalimalang Q/2D - 8643594/95 Fax. 8645008
+                        </div>
+                    </div>
+                    <div style="float: right; width: 40%">
+                        <div>
+                            Jl. Raya Radin Inten II No. 9 - 8629545/46 Fax. 8627313<br />
+                            Jl. Celebration Boulevard Blok AA 9/35 - 82615945<br />
+                            Email info@raperind.com
+                        </div>
+                    </div>
+                </div>
+
+                <div style="text-align: center">
+                    <h4>INVOICE</h4>
+                </div>
+
+                <div class="body-memo">
+                    <table>
+                        <tr>
+                            <td>INVOICE #</td>
+                            <td>:</td>
+                            <td><?php echo $invoiceHeader->invoice_number; ?></td>
+                            <td>TGL INVOICE</td>
+                            <td>:</td>
+                            <td><?php echo tanggal($invoiceHeader->invoice_date); ?></td>
+                        </tr>
+                        <tr>
+                            <td>NAMA</td>
+                            <td>:</td>
+                            <td><?php echo $customer->name; ?></td>
+                            <td>NO. POLISI</td>
+                            <td>:</td>
+                            <td><?php echo $invoiceHeader->vehicle->plate_number; ?></td>
+                        </tr>
+                        <tr>
+                            <td>PHONE</td>
+                            <td>:</td>
+                            <td><?php echo $customer->mobile_phone; ?></td>
+                            <td>KENDARAAN</td>
+                            <td>:</td>
+                            <td>
+                                <?php echo $invoiceHeader->vehicle->carMake->name; ?> -
+                                <?php echo $invoiceHeader->vehicle->carModel->name; ?> -
+                                <?php echo $invoiceHeader->vehicle->carSubModel->name; ?>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td>KM</td>
+                            <td>:</td>
+                            <td>
+                                <?php echo $invoiceHeader->registrationTransaction->vehicle_mileage; ?>
+                            </td>
+                        </tr>
                     </table>
-                </td>
-            </tr>
-            </table> */?>
-<?php endforeach ?>
+                </div>
+
+                <?php /*if (isset($detailItems['p']) && count($detailItems['p']) > 0): ?>
+                    <div class="purchase-order">
+                        <table>
+                            <tr>
+                                <th colspan="10" style="text-align: left">SUKU CADANG - SPAREPARTS</th>
+                            </tr>
+                            <tr>
+                                <th style="width: 1%">No</th>
+                                <th style="font-size: 10px">Code</th>
+                                <th style="font-size: 10px">Item Name</th>
+                                <th style="font-size: 10px">Brand Name</th>
+                                <th style="font-size: 10px">Qty</th>
+                                <th style="font-size: 10px">Unit</th>
+                                <th style="width: 10%; font-size: 10px">Price</th>
+                                <th style="width: 10%; font-size: 10px">Disc</th>
+                                <th style="width: 10%; font-size: 10px">After Disc</th>
+                                <th style="width: 10%; font-size: 10px">Sub Total</th>
+                            </tr>
+                            <?php foreach ($detailItems['p'] as $detail): ?>
+                                <tr class="isi">
+                                    <td class="noo"><?php echo ++$productDetailRowNumber; ?></td>
+                                    <td>&nbsp; <?php echo CHtml::encode(CHtml::value($detail, 'product.manufacturer_code')); ?></td>
+                                    <td>&nbsp; <?php echo CHtml::encode(CHtml::value($detail, 'product.name')); ?></td>
+                                    <td>&nbsp; <?php echo CHtml::encode(CHtml::value($detail, 'product.brand.name')); ?></td>
+                                    <td>&nbsp; <?php echo CHtml::encode(CHtml::value($detail, 'quantity')); ?></td>
+                                    <td>&nbsp; <?php echo CHtml::encode(CHtml::value($detail, 'product.unit.name')); ?></td>
+                                    <td style="text-align: right;">&nbsp;  Rp. <?php echo number_format($detail->unit_price, 2, ',', '.'); ?></td>
+                                    <td style="text-align: right;">&nbsp;  Rp. <?php echo number_format($detail->discount, 2, ',', '.'); ?></td>
+                                    <td style="text-align: right;">&nbsp;  Rp. <?php echo number_format($detail->priceAfterDiscount, 2, ',', '.'); ?></td>
+                                    <td style="text-align: right;">&nbsp;  Rp. <?php echo number_format($detail->total_price, 2, ',', '.'); ?></td>
+                                </tr>
+                            <?php endforeach; ?>
+                            <?php if ($j === $invoiceDetailsData['lastpage']['p']): ?>
+                                <tr>
+                                    <td colspan="9" style="text-align: right;">Total Parts</td>
+                                    <td style="text-align: right;">&nbsp;  Rp. <?php echo number_format($invoiceHeader->product_price, 2, ',', '.'); ?></td>
+                                </tr>
+                            <?php endif; ?>
+                        </table>
+                    </div>
+                <?php endif; ?>
+
+                <?php if (isset($detailItems['s']) && count($detailItems['s']) > 0): ?>
+                    <div class="purchase-order">
+                        <table>
+                            <tr>
+                                <th colspan="5" style="text-align: left">JASA PERBAIKAN - SERVICE</th>
+                            </tr>
+                            <tr>
+                                <th style="width: 1%">No</th>
+                                <th style="font-size: 10px">Service</th>
+                                <th style="width: 15%; font-size: 10px">Price</th>
+                                <th style="width: 15%; font-size: 10px">Disc</th>
+                                <th style="width: 15%; font-size: 10px">Sub Total</th>
+                            </tr>
+                            <?php foreach ($detailItems['s'] as $detail): ?>
+                                <tr class="isi">
+                                    <td class="noo"><?php echo ++$serviceDetailRowNumber; ?></td>
+                                    <td>&nbsp; <?php echo CHtml::encode(CHtml::value($detail, 'service.name')); ?></td>
+                                    <td style="text-align: right">&nbsp; Rp. <?php echo number_format($detail->unit_price, 2, ',', '.') ?></td>
+                                    <td style="text-align: right;">&nbsp;  Rp. <?php echo number_format($detail->discount, 2, ',', '.'); ?></td>
+                                    <td style="text-align: right;">&nbsp;  Rp. <?php echo number_format($detail->total_price, 2, ',', '.'); ?></td>
+                                </tr>
+                            <?php endforeach; ?>
+                            <?php if ($j === $invoiceDetailsData['lastpage']['s']): ?>
+                                <tr>
+                                    <td colspan="4" style="text-align: right;">Total Jasa</td>
+                                    <td style="text-align: right;">&nbsp;  Rp. <?php echo number_format($invoiceHeader->service_price, 2, ',', '.'); ?></td>
+                                </tr>
+                            <?php endif; ?>
+                        </table>
+                    </div>
+                <?php endif;*/ ?>
+
+                <?php /*if ($j === $numberOfPages - 1): ?>
+                    <div>
+                        <table style="width: 100%">
+                            <tr>
+                                <td style="font-size: 11px">Printed by : <?php echo Yii::app()->user->getName(); ?></td>
+                                <td style="text-align:right; width: 20%; font-size: 11px">TOTAL PARTS & JASA</td>
+                                <td style="text-align:right; width: 20%; font-size: 11px">
+                                    Rp. <?php echo number_format($invoiceHeader->subTotalBeforeDiscount, 2, ',', '.') ?>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td style="font-size: 11px">Note : <?php echo CHtml::encode(CHtml::value($invoiceHeader, 'note')); ?></td>
+                                <td style="text-align:right; width: 20%; font-size: 11px">TOTAL DISKON</td>
+                                <td style="text-align:right; width: 20%; font-size: 11px">
+                                    Rp. <?php echo number_format($invoiceHeader->totalDiscountProductService, 2, ',', '.') ?>
+                                </td>
+                            </tr>
+
+                            <?php if ($invoiceHeader->ppn_total > 0): ?>
+                                <tr>
+                                    <td></td>
+                                    <td style="text-align:right; font-size: 11px">
+                                        PPN - <?php echo CHtml::encode(CHtml::value($invoiceHeader, 'tax_percentage')); ?>%
+                                    </td>
+                                    <td style="text-align:right; font-size: 11px">
+                                        Rp. <?php echo number_format($invoiceHeader->ppn_total, 2, ',', '.') ?>
+                                    </td>
+                                </tr>
+                            <?php endif; ?>
+
+                            <?php if ($invoiceHeader->pph_total > 0): ?>
+                                <tr>
+                                    <td></td>
+                                    <td style="text-align:right; font-size: 11px">PPH 23</td>
+                                    <td style="text-align:right; font-size: 11px">
+                                        Rp. <?php echo number_format($invoiceHeader->pph_total, 2, ',', '.') ?>
+                                    </td>
+                                </tr>
+                            <?php endif; ?>
+
+                            <tr>
+                                <td></td>
+                                <td style="font-weight: bold; text-align:right; font-size: 11px">GRAND TOTAL</td>
+                                <td style="font-weight: bold; text-align:right; font-size: 11px">
+                                    Rp. <?php echo number_format($invoiceHeader->total_price, 2, ',', '.') ?>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                <?php endif;*/ ?>
+            </div>
+        </div>
+    <?php //endfor; ?>
+<?php endforeach; ?>

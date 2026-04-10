@@ -122,6 +122,12 @@ $('.search-form form').submit(function(){
                                     'returnItemDataProvider' => $returnItemDataProvider,
                                 ), true)
                             ),
+                            'Parts Supply' => array(
+                                'content' => $this->renderPartial('_viewParts', array(
+                                    'receivePartsHeader' => $receivePartsHeader,
+                                    'receivePartsDataProvider' => $receivePartsDataProvider,
+                                ), true)
+                            ),
                         ),
                         // additional javascript options for the tabs plugin
                         'options' => array(

@@ -814,6 +814,11 @@ class InvoiceHeaderController extends Controller {
             $dataProvider->criteria->compare('registrationTransaction.work_order_number', $workOrderNumber, true);
         }
         
+        if (isset($_POST['SaveExcel'])) {
+            $selectedIds = isset($_POST['SelectedIds']) ? $_POST['SelectedIds'] : array();
+            $this->saveToExcel($selectedIds);            
+        }
+        
         $this->render('admin', array(
             'model' => $model,
             'dataProvider' => $dataProvider,
@@ -823,6 +828,78 @@ class InvoiceHeaderController extends Controller {
         ));
     }
 
+    protected function saveToExcel($invoiceHeaderIds) {
+        set_time_limit(0);
+        ini_set('memory_limit', '1024M');
+        
+        spl_autoload_unregister(array('YiiBase', 'autoload'));
+        include_once Yii::getPathOfAlias('ext.phpexcel.Classes') . DIRECTORY_SEPARATOR . 'PHPExcel.php';
+        spl_autoload_register(array('YiiBase', 'autoload'));
+
+        $objPHPExcel = new PHPExcel();
+
+        $documentProperties = $objPHPExcel->getProperties();
+        $documentProperties->setCreator('Raperind Motor');
+        $documentProperties->setTitle('Rekap Tagihan');
+
+        $worksheet = $objPHPExcel->setActiveSheetIndex(0);
+        $worksheet->setTitle('Rekap Tagihan');
+
+        $worksheet->mergeCells('A1:M1');
+        $worksheet->mergeCells('A2:M2');
+        $worksheet->mergeCells('A3:M3');
+
+        $worksheet->getStyle('A1:M5')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->getStyle('A1:M5')->getFont()->setBold(true);
+
+        $worksheet->setCellValue('A1', 'Raperind Motor');
+        $worksheet->setCellValue('A2', 'Rekap Tagihan');
+//        $worksheet->setCellValue('A3', Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($options['startDate'])) . ' - ' . Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($options['endDate'])));
+
+        $worksheet->getStyle('A5:M5')->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+
+        $worksheet->setCellValue('A5', 'Invoice #');
+        $worksheet->setCellValue('B5', 'Tanggal');
+        $worksheet->setCellValue('C5', 'Customer');
+        $worksheet->setCellValue('D5', 'Plat #');
+        $worksheet->setCellValue('E5', 'Total');
+        $worksheet->setCellValue('F5', 'Payment');
+        $worksheet->setCellValue('G5', 'Remaining');
+
+        $worksheet->getStyle('A5:M5')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+
+        $counter = 7;
+        foreach ($invoiceHeaderIds as $invoiceHeaderId) {
+            $invoiceHeader = InvoiceHeader::model()->findByPk($invoiceHeaderId);
+            $worksheet->setCellValue("A{$counter}", CHtml::encode($invoiceHeader->invoice_number));
+            $worksheet->setCellValue("B{$counter}", CHtml::encode($invoiceHeader->invoice_date));
+            $worksheet->setCellValue("C{$counter}", CHtml::encode(CHtml::value($invoiceHeader, 'customer.name')));
+            $worksheet->setCellValue("D{$counter}", CHtml::encode(CHtml::value($invoiceHeader, 'vehicle.plate_number')));
+            $worksheet->setCellValue("E{$counter}", CHtml::encode(CHtml::value($invoiceHeader, 'total_price')));
+            $worksheet->setCellValue("F{$counter}", CHtml::encode(CHtml::value($invoiceHeader, 'payment_amount')));
+            $worksheet->setCellValue("G{$counter}", CHtml::encode(CHtml::value($invoiceHeader, 'payment_left')));
+
+            $counter++;
+        }
+
+        for ($col = 'A'; $col !== 'P'; $col++) {
+            $objPHPExcel->getActiveSheet()
+            ->getColumnDimension($col)
+            ->setAutoSize(true);
+        }
+        
+        ob_end_clean();
+        // We'll be outputting an excel file
+        header('Content-type: application/vnd.ms-excel');
+        header('Content-Disposition: attachment;filename="rekap_tagihan.xls"');
+        header('Cache-Control: max-age=0');
+        
+        $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
+        $objWriter->save('php://output');
+
+        Yii::app()->end();
+    }
+    
     public function actionAjaxJsonTaxAmount($id) {
         if (Yii::app()->request->isAjaxRequest) {
             $invoice = $this->instantiate($id, '');

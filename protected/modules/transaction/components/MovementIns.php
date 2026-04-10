@@ -48,6 +48,7 @@ class MovementIns extends CComponent {
                         $detail = new MovementInDetail();
                         $detail->receive_item_detail_id = $receiveItemDetail->id;
                         $detail->return_item_detail_id = null;
+                        $detail->receive_parts_detail_id = null;
                         $detail->product_id = $receiveItemDetail->product_id;
                         $detail->quantity_transaction = $receiveItemDetail->quantity_movement_left;
                         $detail->warehouse_id = $warehouseBranchProductCategory === null ? null : $warehouseBranchProductCategory->warehouse_id;
@@ -68,9 +69,32 @@ class MovementIns extends CComponent {
                         ));
                         $detail = new MovementInDetail();
                         $detail->receive_item_detail_id = null;
+                        $detail->receive_parts_detail_id = null;
                         $detail->return_item_detail_id = $returnDetail->id;
                         $detail->product_id = $returnDetail->product_id;
                         $detail->quantity_transaction = $returnDetail->quantity_movement_left;
+                        $detail->warehouse_id = $warehouseBranchProductCategory === null ? null : $warehouseBranchProductCategory->warehouse_id;
+                        $this->details[] = $detail;
+                    }
+                }
+            }
+        } else if ($movementType == 3) {
+            $receivePartsHeader = ReceivePartsHeader::model()->findByPk($transactionId);
+
+            if ($receivePartsHeader !== null) {
+                foreach ($receivePartsHeader->receivePartsDetails as $receivePartsDetail) {
+                    if ($receivePartsDetail->quantity_movement_left > 0) {
+
+                        $warehouseBranchProductCategory = WarehouseBranchProductCategory::model()->findByAttributes(array(
+                            'branch_id' => $this->header->branch_id, 
+                            'product_master_category_id' => $receivePartsDetail->product->product_master_category_id
+                        ));
+                        $detail = new MovementInDetail();
+                        $detail->receive_item_detail_id = null;
+                        $detail->return_item_detail_id = null;
+                        $detail->receive_parts_detail_id = $receivePartsDetail->id;
+                        $detail->product_id = $receivePartsDetail->product_id;
+                        $detail->quantity_transaction = $receivePartsDetail->quantity_movement_left;
                         $detail->warehouse_id = $warehouseBranchProductCategory === null ? null : $warehouseBranchProductCategory->warehouse_id;
                         $this->details[] = $detail;
                     }
@@ -134,6 +158,14 @@ class MovementIns extends CComponent {
         
         $new_detail = array();
 
+        //delete details
+        $delete_array = array_diff($detail_id, $new_detail);
+        if ($delete_array != NULL) {
+            $criteria = new CDbCriteria;
+            $criteria->addInCondition('id', $delete_array);
+            MovementInDetail::model()->deleteAll($criteria);
+        }
+
         //save request detail
         foreach ($this->details as $detail) {
 
@@ -158,22 +190,11 @@ class MovementIns extends CComponent {
             }
 
             if ($this->header->movement_type == 1) {
-//                $criteria = new CDbCriteria;
-//                $criteria->together = 'true';
-//                $criteria->with = array('movementInHeader');
-//                $criteria->condition = "movementInHeader.receive_item_id =" . $this->header->receive_item_id . " AND movement_in_header_id != " . $this->header->id;
-//                $mvmntDetails = MovementInDetail::model()->findAll($criteria);
-//                $quantity = 0;
-//                
-//                foreach ($mvmntDetails as $mvmntDetail) {
-//                    $quantity += $mvmntDetail->quantity;
-//                }
-                
                 $receiveDetail = TransactionReceiveItemDetail::model()->findByPk($detail->receive_item_detail_id);
                 $receiveDetail->quantity_movement = $receiveDetail->getQuantityMovement(); //$quantity + $detail->quantity;
                 $receiveDetail->quantity_movement_left = $receiveDetail->getQuantityMovementLeft(); //$detail->quantity_transaction - ($detail->quantity + $quantity);
                 $receiveDetail->save(false);
-            } else {
+            } elseif ($this->header->movement_type == 2) {
                 $criteria = new CDbCriteria;
                 $criteria->together = 'true';
                 $criteria->with = array('movementInHeader');
@@ -185,21 +206,20 @@ class MovementIns extends CComponent {
                     $quantity += $mvmntDetail->quantity;
                 }
                 
-                $receiveDetail = TransactionReturnItemDetail::model()->findByAttributes(array('id' => $detail->return_item_detail_id, 'return_item_id' => $this->header->return_item_id));
-                $receiveDetail->quantity_movement_left = $detail->quantity_transaction - ($detail->quantity + $quantity);
-                $receiveDetail->quantity_movement = $quantity + $detail->quantity;
-                $receiveDetail->save(false);
+                $returnDetail = TransactionReturnItemDetail::model()->findByAttributes(array('id' => $detail->return_item_detail_id, 'return_item_id' => $this->header->return_item_id));
+                $returnDetail->quantity_movement_left = $detail->quantity_transaction - ($detail->quantity + $quantity);
+                $returnDetail->quantity_movement = $quantity + $detail->quantity;
+                $returnDetail->save(false);
+            } elseif ($this->header->movement_type == 3) {                
+                $receivePartsDetail = ReceivePartsDetail::model()->findByPk($detail->receive_parts_detail_id);
+                $receivePartsDetail->quantity_movement_left = $receivePartsDetail->getQuantityMovementLeft();
+                $receivePartsDetail->quantity_movement = $receivePartsDetail->getQuantityMovement();
+                $receivePartsDetail->save(false);
+            } else {
+                continue;
             }
 
             $new_detail[] = $detail->id;
-        }
-
-        //delete details
-        $delete_array = array_diff($detail_id, $new_detail);
-        if ($delete_array != NULL) {
-            $criteria = new CDbCriteria;
-            $criteria->addInCondition('id', $delete_array);
-            MovementInDetail::model()->deleteAll($criteria);
         }
 
         $this->saveTransactionLog();
