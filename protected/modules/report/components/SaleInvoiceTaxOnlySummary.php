@@ -35,7 +35,7 @@ class SaleInvoiceTaxOnlySummary extends CComponent {
     public function setupFilter($filters) {
         $startDate = (empty($filters['startDate'])) ? date('Y-m-d') : $filters['startDate'];
         $endDate = (empty($filters['endDate'])) ? date('Y-m-d') : $filters['endDate'];
-        $this->dataProvider->criteria->addCondition('t.status NOT LIKE "%CANCELLED%"');
+        $this->dataProvider->criteria->addCondition('t.status NOT LIKE "%CANCELLED%" AND t.tax_percentage > 0');
         $this->dataProvider->criteria->addBetweenCondition('t.invoice_date', $startDate, $endDate);
         $this->dataProvider->criteria->compare('vehicle.id', $filters['vehicleId']);
         $this->dataProvider->criteria->compare('customer.customer_type', $filters['customerType'], false);

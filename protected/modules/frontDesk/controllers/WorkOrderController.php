@@ -147,7 +147,7 @@ class WorkOrderController extends Controller {
         }
         
         if (isset($_GET['SaveExcel'])) {
-            $this->saveToExcel($branches, $limit, $startDate, $endDate, $plateNumber, $carMakeId, $carModelId, $workOrderNumber, $transactionStatus, $repairType);
+            $this->saveToExcel($activeAllBranchWorkOrderData, $startDate, $endDate);
         }
 
         $this->render('admin', array(
@@ -163,7 +163,7 @@ class WorkOrderController extends Controller {
         ));
     }
 
-    protected function saveToExcel($branches, $limit, $startDate, $endDate, $plateNumber, $carMakeId, $carModelId, $workOrderNumber, $transactionStatus, $repairType) {
+    protected function saveToExcel($activeAllBranchWorkOrderData, $startDate, $endDate) {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
 
@@ -180,18 +180,18 @@ class WorkOrderController extends Controller {
         $worksheet = $objPHPExcel->setActiveSheetIndex(0);
         $worksheet->setTitle('Work Order');
 
-        $worksheet->mergeCells('A1:P1');
-        $worksheet->mergeCells('A2:P2');
-        $worksheet->mergeCells('A3:P3');
+        $worksheet->mergeCells('A1:Q1');
+        $worksheet->mergeCells('A2:Q2');
+        $worksheet->mergeCells('A3:Q3');
 
-        $worksheet->getStyle('A1:P5')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-        $worksheet->getStyle('A1:P5')->getFont()->setBold(true);
+        $worksheet->getStyle('A1:Q5')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->getStyle('A1:Q5')->getFont()->setBold(true);
 
         $worksheet->setCellValue('A1', 'Raperind Motor');
         $worksheet->setCellValue('A2', 'Work Order');
         $worksheet->setCellValue('A3', Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($startDate)) . ' - ' . Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($endDate)));
 
-        $worksheet->getStyle('A5:P5')->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle('A5:Q5')->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
         $worksheet->setCellValue('A5', 'Vehicle ID');
         $worksheet->setCellValue('B5', 'Plate #');
@@ -199,45 +199,42 @@ class WorkOrderController extends Controller {
         $worksheet->setCellValue('D5', 'Kendaraan');
         $worksheet->setCellValue('E5', 'Warna');
         $worksheet->setCellValue('F5', 'RG #');
-        $worksheet->setCellValue('G5', 'SL #');
-        $worksheet->setCellValue('H5', 'WO #');
-        $worksheet->setCellValue('I5', 'Tanggal WO');
-        $worksheet->setCellValue('J5', 'Movement Out #');
-        $worksheet->setCellValue('K5', 'Invoice #');
-        $worksheet->setCellValue('L5', 'Services');
-        $worksheet->setCellValue('M5', 'Repair Type');
-        $worksheet->setCellValue('N5', 'Problem');
-        $worksheet->setCellValue('O5', 'User');
-        $worksheet->setCellValue('P5', 'WO Status');
+        $worksheet->setCellValue('G5', 'SPK Customer #');
+        $worksheet->setCellValue('H5', 'SL #');
+        $worksheet->setCellValue('I5', 'WO #');
+        $worksheet->setCellValue('J5', 'Tanggal WO');
+        $worksheet->setCellValue('K5', 'Movement Out #');
+        $worksheet->setCellValue('L5', 'Invoice #');
+        $worksheet->setCellValue('M5', 'Services');
+        $worksheet->setCellValue('N5', 'Repair Type');
+        $worksheet->setCellValue('O5', 'Problem');
+        $worksheet->setCellValue('P5', 'User');
+        $worksheet->setCellValue('Q5', 'WO Status');
 
-        $worksheet->getStyle('A5:P5')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle('A5:Q5')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
         $counter = 6;
-        foreach ($branches as $branch) {
-            $activeWorkOrderData = RegistrationTransaction::getActiveWorkOrderData($branch->id, $limit, $startDate, $endDate, $plateNumber, $carMakeId, $carModelId, $workOrderNumber, $transactionStatus, $repairType);
-            foreach (array_reverse($activeWorkOrderData) as $activeWorkOrderItem) {
-                $registrationTransaction = RegistrationTransaction::model()->findByPk($activeWorkOrderItem['id']);
-                $invoiceHeader = InvoiceHeader::model()->findByAttributes(array('registration_transaction_id' => $activeWorkOrderItem['id']));
-                
-                $worksheet->setCellValue("A{$counter}", $activeWorkOrderItem['vehicle_id']);
-                $worksheet->setCellValue("B{$counter}", $activeWorkOrderItem['plate_number']);
-                $worksheet->setCellValue("C{$counter}", $activeWorkOrderItem['transaction_date']);
-                $worksheet->setCellValue("D{$counter}", $activeWorkOrderItem['car_make'] . ' - ' . $activeWorkOrderItem['car_model'] . ' - ' . $activeWorkOrderItem['car_sub_model']);
-                $worksheet->setCellValue("E{$counter}", $activeWorkOrderItem['color']);
-                $worksheet->setCellValue("F{$counter}", $activeWorkOrderItem['transaction_number']);
-                $worksheet->setCellValue("G{$counter}", $activeWorkOrderItem['sales_order_number']);
-                $worksheet->setCellValue("H{$counter}", $activeWorkOrderItem['work_order_number']);
-                $worksheet->setCellValue("I{$counter}", $activeWorkOrderItem['work_order_date']);
-                $worksheet->setCellValue("J{$counter}", $registrationTransaction->getMovementOuts());
-                $worksheet->setCellValue("K{$counter}", CHtml::value($invoiceHeader, 'invoice_number'));
-                $worksheet->setCellValue("L{$counter}", $registrationTransaction->getServices());
-                $worksheet->setCellValue("M{$counter}", $activeWorkOrderItem['repair_type']);
-                $worksheet->setCellValue("N{$counter}", $activeWorkOrderItem['problem']);
-                $worksheet->setCellValue("O{$counter}", $activeWorkOrderItem['username']);
-                $worksheet->setCellValue("P{$counter}", $activeWorkOrderItem['status']);
-                
-                $counter++;
-            }
+        foreach (array_reverse($activeAllBranchWorkOrderData) as $activeWorkOrderItem) {
+            $registrationTransaction = RegistrationTransaction::model()->findByPk($activeWorkOrderItem['id']);
+            $invoiceHeader = InvoiceHeader::model()->findByAttributes(array('registration_transaction_id' => $activeWorkOrderItem['id']));
+
+            $worksheet->setCellValue("A{$counter}", $activeWorkOrderItem['vehicle_id']);
+            $worksheet->setCellValue("B{$counter}", $activeWorkOrderItem['plate_number']);
+            $worksheet->setCellValue("C{$counter}", $activeWorkOrderItem['transaction_date']);
+            $worksheet->setCellValue("D{$counter}", $activeWorkOrderItem['car_make'] . ' - ' . $activeWorkOrderItem['car_model'] . ' - ' . $activeWorkOrderItem['car_sub_model']);
+            $worksheet->setCellValue("E{$counter}", $activeWorkOrderItem['color']);
+            $worksheet->setCellValue("F{$counter}", $activeWorkOrderItem['transaction_number']);
+            $worksheet->setCellValue("G{$counter}", $activeWorkOrderItem['customer_work_order_number']);
+            $worksheet->setCellValue("H{$counter}", $activeWorkOrderItem['sales_order_number']);
+            $worksheet->setCellValue("I{$counter}", $activeWorkOrderItem['work_order_number']);
+            $worksheet->setCellValue("J{$counter}", $activeWorkOrderItem['work_order_date']);
+            $worksheet->setCellValue("K{$counter}", $registrationTransaction->getMovementOuts());
+            $worksheet->setCellValue("L{$counter}", CHtml::value($invoiceHeader, 'invoice_number'));
+            $worksheet->setCellValue("M{$counter}", $registrationTransaction->getServices());
+            $worksheet->setCellValue("N{$counter}", $activeWorkOrderItem['repair_type']);
+            $worksheet->setCellValue("O{$counter}", $activeWorkOrderItem['problem']);
+            $worksheet->setCellValue("P{$counter}", $activeWorkOrderItem['username']);
+            $worksheet->setCellValue("Q{$counter}", $activeWorkOrderItem['status']);
 
             $counter++;
         }
@@ -294,8 +291,8 @@ class WorkOrderController extends Controller {
             $this->redirect(array('summary'));
         }
         
-        if (isset($_GET['SaveExcel'])) {
-            $this->saveToExcel($branches, $limit, $startDate, $endDate, $plateNumber, $carMakeId, $carModelId, $workOrderNumber, $transactionStatus, $repairType);
+        if (isset($_GET['SaveExcelOutstanding'])) {
+            $this->saveToExcelOutstanding($outstandingAllBranchWorkOrderData, $startDate, $endDate);
         }
 
         $this->render('adminOutstanding', array(
@@ -311,7 +308,7 @@ class WorkOrderController extends Controller {
         ));
     }
     
-    protected function saveToExcelOutstanding($dataProvider) {
+    protected function saveToExcelOutstanding($outstandingAllBranchWorkOrderData, $startDate, $endDate) {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
 
@@ -328,56 +325,66 @@ class WorkOrderController extends Controller {
         $worksheet = $objPHPExcel->setActiveSheetIndex(0);
         $worksheet->setTitle('WO Outstanding');
 
-        $worksheet->mergeCells('A1:N1');
-        $worksheet->mergeCells('A2:N2');
-        $worksheet->mergeCells('A3:N3');
+        $worksheet->mergeCells('A1:Q1');
+        $worksheet->mergeCells('A2:Q2');
+        $worksheet->mergeCells('A3:Q3');
 
-        $worksheet->getStyle('A1:N5')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-        $worksheet->getStyle('A1:N5')->getFont()->setBold(true);
+        $worksheet->getStyle('A1:Q5')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->getStyle('A1:Q5')->getFont()->setBold(true);
 
         $worksheet->setCellValue('A1', 'Raperind Motor');
-        $worksheet->setCellValue('A2', 'WO Outstanding (pending invoices)');
+        $worksheet->setCellValue('A2', 'Outstanding Work Order (Pending Invoices)');
+        $worksheet->setCellValue('A3', Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($startDate)) . ' - ' . Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($endDate)));
 
-        $worksheet->getStyle('A4:N4')->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle('A5:Q5')->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
-        $worksheet->setCellValue('A4', 'Vehicle ID');
-        $worksheet->setCellValue('B4', 'Plate #');
-        $worksheet->setCellValue('C4', 'Date');
-        $worksheet->setCellValue('D4', 'Vehicle Model');
-        $worksheet->setCellValue('E4', 'Color');
-        $worksheet->setCellValue('F4', 'WO #');
-        $worksheet->setCellValue('G4', 'Tanggal WO');
-        $worksheet->setCellValue('H4', 'Invoice #');
-        $worksheet->setCellValue('I4', 'Services');
-        $worksheet->setCellValue('J4', 'Repair Type');
-        $worksheet->setCellValue('K4', 'Problem');
-        $worksheet->setCellValue('L4', 'User');
-        $worksheet->setCellValue('M4', 'WO Status');
+        $worksheet->setCellValue('A5', 'Vehicle ID');
+        $worksheet->setCellValue('B5', 'Plate #');
+        $worksheet->setCellValue('C5', 'Tanggal RG');
+        $worksheet->setCellValue('D5', 'Kendaraan');
+        $worksheet->setCellValue('E5', 'Warna');
+        $worksheet->setCellValue('F5', 'RG #');
+        $worksheet->setCellValue('G5', 'SPK Customer #');
+        $worksheet->setCellValue('H5', 'SL #');
+        $worksheet->setCellValue('I5', 'WO #');
+        $worksheet->setCellValue('J5', 'Tanggal WO');
+        $worksheet->setCellValue('K5', 'Movement Out #');
+        $worksheet->setCellValue('L5', 'Invoice #');
+        $worksheet->setCellValue('M5', 'Services');
+        $worksheet->setCellValue('N5', 'Repair Type');
+        $worksheet->setCellValue('O5', 'Problem');
+        $worksheet->setCellValue('P5', 'User');
+        $worksheet->setCellValue('Q5', 'WO Status');
 
-        $worksheet->getStyle('A4:N4')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle('A5:Q5')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
         $counter = 6;
-        foreach ($dataProvider->data as $header) {
-            $worksheet->getStyle("C{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
+        foreach (array_reverse($outstandingAllBranchWorkOrderData) as $outstandingWorkOrderItem) {
+            $registrationTransaction = RegistrationTransaction::model()->findByPk($outstandingWorkOrderItem['id']);
+            $invoiceHeader = InvoiceHeader::model()->findByAttributes(array('registration_transaction_id' => $outstandingWorkOrderItem['id']));
 
-            $worksheet->setCellValue("A{$counter}", CHtml::value($header, 'vehicle_id'));
-            $worksheet->setCellValue("B{$counter}", CHtml::value($header, 'vehicle.plate_number'));
-            $worksheet->setCellValue("C{$counter}", CHtml::value($header, 'transaction_date'));
-            $worksheet->setCellValue("D{$counter}", CHtml::value($header, 'vehicle.carMake.name') . ' ' . CHtml::value($header, 'vehicle.carModel.name'));
-            $worksheet->setCellValue("E{$counter}", $header->vehicle->getColor($header->vehicle,"color_id"));
-            $worksheet->setCellValue("F{$counter}", CHtml::value($header, 'work_order_number'));
-            $worksheet->setCellValue("G{$counter}", CHtml::value($header, 'work_order_date'));
-            $worksheet->setCellValue("H{$counter}", $header->getInvoice($header));
-            $worksheet->setCellValue("I{$counter}", $header->getServices());
-            $worksheet->setCellValue("J{$counter}", CHtml::value($header, 'repair_type'));
-            $worksheet->setCellValue("K{$counter}", CHtml::value($header, 'problem'));
-            $worksheet->setCellValue("L{$counter}", CHtml::value($header, 'user.username'));
-            $worksheet->setCellValue("M{$counter}", CHtml::value($header, 'status'));
+            $worksheet->setCellValue("A{$counter}", $outstandingWorkOrderItem['vehicle_id']);
+            $worksheet->setCellValue("B{$counter}", $outstandingWorkOrderItem['plate_number']);
+            $worksheet->setCellValue("C{$counter}", $outstandingWorkOrderItem['transaction_date']);
+            $worksheet->setCellValue("D{$counter}", $outstandingWorkOrderItem['car_make'] . ' - ' . $outstandingWorkOrderItem['car_model'] . ' - ' . $outstandingWorkOrderItem['car_sub_model']);
+            $worksheet->setCellValue("E{$counter}", $outstandingWorkOrderItem['color']);
+            $worksheet->setCellValue("F{$counter}", $outstandingWorkOrderItem['transaction_number']);
+            $worksheet->setCellValue("G{$counter}", $outstandingWorkOrderItem['customer_work_order_number']);
+            $worksheet->setCellValue("H{$counter}", $outstandingWorkOrderItem['sales_order_number']);
+            $worksheet->setCellValue("I{$counter}", $outstandingWorkOrderItem['work_order_number']);
+            $worksheet->setCellValue("J{$counter}", $outstandingWorkOrderItem['work_order_date']);
+            $worksheet->setCellValue("K{$counter}", $registrationTransaction->getMovementOuts());
+            $worksheet->setCellValue("L{$counter}", CHtml::value($invoiceHeader, 'invoice_number'));
+            $worksheet->setCellValue("M{$counter}", $registrationTransaction->getServices());
+            $worksheet->setCellValue("N{$counter}", $outstandingWorkOrderItem['repair_type']);
+            $worksheet->setCellValue("O{$counter}", $outstandingWorkOrderItem['problem']);
+            $worksheet->setCellValue("P{$counter}", $outstandingWorkOrderItem['username']);
+            $worksheet->setCellValue("Q{$counter}", $outstandingWorkOrderItem['status']);
 
             $counter++;
         }
 
-        for ($col = 'A'; $col !== 'P'; $col++) {
+        for ($col = 'A'; $col !== 'Z'; $col++) {
             $objPHPExcel->getActiveSheet()
             ->getColumnDimension($col)
             ->setAutoSize(true);
@@ -386,7 +393,7 @@ class WorkOrderController extends Controller {
         ob_end_clean();
         // We'll be outputting an excel file
         header('Content-type: application/vnd.ms-excel');
-        header('Content-Disposition: attachment;filename="wo_outstanding.xls"');
+        header('Content-Disposition: attachment;filename="work_order_outstanding.xls"');
         header('Cache-Control: max-age=0');
         
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');

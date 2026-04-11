@@ -187,7 +187,7 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
             <div class="relative">
                 <div style="font-weight: bold; text-align: center">
                     <div style="font-size: larger">Raperind Motor</div>
-                    <div style="font-size: larger">Outstanding Work Order</div>
+                    <div style="font-size: larger">Outstanding Work Order (Pending Invoices)</div>
                     <div><?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($startDate))) . ' &nbsp;&ndash;&nbsp; ' . CHtml::encode(Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($endDate))); ?></div>
                 </div>
 

@@ -17,10 +17,7 @@
                 <th>Kendaraan</th>
                 <th>Warna</th>
                 <th>RG #</th>
-                <th>SL #</th>
-                <th>WO #</th>
-                <th>Movement Out #</th>
-                <th>Invoice #</th>
+                <th>Customer SPK #</th>
                 <th>Services</th>
                 <th>Repair Type</th>
                 <th>Problem</th>
@@ -48,23 +45,9 @@
                         )), array('target' => '_blank')); ?>
                     </td>
                     <td>
-                        <?php echo CHtml::link(CHtml::encode($outstandingRegistrationItem['sales_order_number']), Yii::app()->createUrl("frontDesk/registrationTransaction/view", array(
+                        <?php echo CHtml::link(CHtml::encode($outstandingRegistrationItem['customer_work_order_number']), Yii::app()->createUrl("frontDesk/registrationTransaction/view", array(
                             "id" => $outstandingRegistrationItem['id']
                         )), array('target' => '_blank')); ?>
-                    </td>
-                    <td>
-                        <?php echo CHtml::link(CHtml::encode($outstandingRegistrationItem['work_order_number']), Yii::app()->createUrl("frontDesk/registrationTransaction/view", array(
-                            "id" => $outstandingRegistrationItem['id']
-                        )), array('target' => '_blank')); ?>
-                    </td>
-                    <td><?php echo CHtml::encode($registrationTransaction->getMovementOuts()); ?></td>
-                    <td>
-                        <?php $invoiceHeader = InvoiceHeader::model()->findByAttributes(array('registration_transaction_id' => $outstandingRegistrationItem['id'])); ?>
-                        <?php if ($invoiceHeader !== null): ?>
-                            <?php echo CHtml::link(CHtml::encode(CHtml::value($invoiceHeader, 'invoice_number')), Yii::app()->createUrl("transaction/invoiceHeader/show", array(
-                                "id" => $invoiceHeader->id
-                            )), array('target' => '_blank')); ?>
-                        <?php endif; ?>
                     </td>
                     <td><?php echo CHtml::encode($registrationTransaction->getServices()); ?></td>
                     <td><?php echo CHtml::encode($outstandingRegistrationItem['repair_type']); ?></td>

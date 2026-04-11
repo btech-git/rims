@@ -17,6 +17,7 @@
                 <th>Kendaraan</th>
                 <th>Warna</th>
                 <th>RG #</th>
+                <th>SPK Customer #</th>
                 <th>SL #</th>
                 <th>WO #</th>
                 <th>Tanggal WO</th>
@@ -48,6 +49,7 @@
                             "id" => $activeWorkOrderItem['id']
                         )), array('target' => '_blank')); ?>
                     </td>
+                    <td><?php echo CHtml::encode($activeWorkOrderItem['customer_work_order_number']); ?></td>
                     <td>
                         <?php echo CHtml::link(CHtml::encode($activeWorkOrderItem['sales_order_number']), Yii::app()->createUrl("frontDesk/registrationTransaction/view", array(
                             "id" => $activeWorkOrderItem['id']
