@@ -181,7 +181,7 @@ class Supplier extends CActiveRecord {
 
         $criteria->compare('t.id', $this->id);
         $criteria->compare('t.date', $this->date, true);
-        $criteria->compare('.code', $this->code, true);
+        $criteria->compare('t.code', $this->code, true);
         $criteria->compare('t.name', $this->name, true);
         $criteria->compare('t.company', $this->company, true);
         $criteria->compare('t.position', $this->position, true);
@@ -224,7 +224,7 @@ class Supplier extends CActiveRecord {
         $criteria = new CDbCriteria;
         $criteria->compare('t.id', $this->id);
         $criteria->compare('t.date', $this->date, true);
-        $criteria->compare('.code', $this->code, true);
+        $criteria->compare('t.code', $this->code, true);
         $criteria->compare('t.name', $this->name, true);
         $criteria->compare('t.company', $this->company, true);
         $criteria->compare('t.position', $this->position, true);
