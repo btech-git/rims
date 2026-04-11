@@ -33,7 +33,7 @@ class PayableTransactionController extends Controller {
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
         
         $supplier = Search::bind(new Supplier('search'), isset($_GET['Supplier']) ? $_GET['Supplier'] : array());
-        $supplierDataProvider = $supplier->search();
+        $supplierDataProvider = $supplier->searchByPayableReport();
         $supplierDataProvider->pagination->pageVar = 'page_dialog';
 
         $payableSummary = new PayableTransactionSummary($supplier->search());

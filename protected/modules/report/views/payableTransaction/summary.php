@@ -193,13 +193,10 @@ Yii::app()->clientScript->registerScript('report', '
         'selectionChanged' => 'js:function(id) {
             $("#SupplierId").val($.fn.yiiGridView.getSelection(id));
             $("#supplier-dialog").dialog("close");
-            if ($.fn.yiiGridView.getSelection(id) == "")
-            {
+            if ($.fn.yiiGridView.getSelection(id) == "") {
                 $("#supplier_name").html("");
                 $("#supplier_code").html("");
-            }
-            else
-            {
+            } else {
                 $.ajax({
                     type: "POST",
                     dataType: "JSON",

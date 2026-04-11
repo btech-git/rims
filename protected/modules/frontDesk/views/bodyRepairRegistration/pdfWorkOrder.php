@@ -82,12 +82,17 @@ function tanggal($date) {
                 <td><?php echo $bodyRepairRegistration->vehicle_mileage; ?></td>
             </tr>
             <tr>
-                <td>PROBLEM</td>
-                <td>:</td>
-                <td><?php echo nl2br($bodyRepairRegistration->problem); ?></td>
+                <td rowspan="2" style="vertical-align: top">PROBLEM</td>
+                <td rowspan="2" style="vertical-align: top">:</td>
+                <td rowspan="2" style="vertical-align: top"><?php echo nl2br($bodyRepairRegistration->problem); ?></td>
                 <td>ASURANSI</td>
                 <td>:</td>
                 <td><?php echo CHtml::encode(CHtml::value($bodyRepairRegistration, 'insuranceCompany.name')); ?></td>
+            </tr>
+            <tr>
+                <td>SPK Customer #</td>
+                <td>:</td>
+                <td><?php echo CHtml::encode(CHtml::value($bodyRepairRegistration, 'customer_work_order_number')); ?></td>
             </tr>
         </table>
     </div>
