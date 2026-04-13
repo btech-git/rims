@@ -34,7 +34,7 @@ class DailySaleInvoiceSummaryController extends Controller {
         $currentPage = (isset($_GET['page'])) ? $_GET['page'] : '';
         $currentSort = (isset($_GET['sort'])) ? $_GET['sort'] : '';
         
-        $saleInvoiceSummary = new SaleInvoiceTaxOnlySummary($invoiceHeader->search());
+        $saleInvoiceSummary = new DailySaleInvoiceSummary($invoiceHeader->search());
         $saleInvoiceSummary->setupLoading();
         $saleInvoiceSummary->setupPaging($pageSize, $currentPage);
         $saleInvoiceSummary->setupSorting();
