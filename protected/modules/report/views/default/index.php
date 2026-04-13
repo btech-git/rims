@@ -706,6 +706,11 @@
                             <?php $this->widget('zii.widgets.CMenu', array(
                                 'items' => array(
                                     array(
+                                        'label' => 'Faktur Penjualan Harian (Rincian & Detail)', 
+                                        'url' => array('/report/dailySaleInvoiceSummary/summary'), 
+                                        'visible' => Yii::app()->user->checkAccess('saleTaxReport')
+                                    ),
+                                    array(
                                         'label' => 'Faktur Penjualan PPn (Rincian & Detail)', 
                                         'url' => array('/report/saleInvoiceTaxOnlySummary/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('saleTaxReport')

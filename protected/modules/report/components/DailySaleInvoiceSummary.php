@@ -1,6 +1,6 @@
 <?php
 
-class SaleInvoiceTaxOnlySummary extends CComponent {
+class DailySaleInvoiceSummary extends CComponent {
 
     public $dataProvider;
 
@@ -36,7 +36,7 @@ class SaleInvoiceTaxOnlySummary extends CComponent {
         $startDate = (empty($filters['startDate'])) ? date('Y-m-d') : $filters['startDate'];
         $endDate = (empty($filters['endDate'])) ? date('Y-m-d') : $filters['endDate'];
         
-        $this->dataProvider->criteria->addCondition('t.status NOT LIKE "%CANCELLED%" AND t.tax_percentage > 0');
+        $this->dataProvider->criteria->addCondition('t.status NOT LIKE "%CANCELLED%"');
         $this->dataProvider->criteria->addBetweenCondition('t.invoice_date', $startDate, $endDate);
         $this->dataProvider->criteria->compare('vehicle.plate_number', $filters['plateNumber'], true);
         $this->dataProvider->criteria->compare('customer.customer_type', $filters['customerType']);

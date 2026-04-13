@@ -1,6 +1,6 @@
 <?php
 
-class SaleInvoiceTaxOnlySummaryController extends Controller {
+class DailySaleInvoiceSummaryController extends Controller {
 
     public $layout = '//layouts/column1';
     
@@ -113,10 +113,10 @@ class SaleInvoiceTaxOnlySummaryController extends Controller {
 
         $documentProperties = $objPHPExcel->getProperties();
         $documentProperties->setCreator('Raperind Motor');
-        $documentProperties->setTitle('Faktur Penjualan PPn');
+        $documentProperties->setTitle('Faktur Penjualan Harian');
 
         $worksheet = $objPHPExcel->setActiveSheetIndex(0);
-        $worksheet->setTitle('Faktur Penjualan PPn');
+        $worksheet->setTitle('Faktur Penjualan Harian');
 
         $worksheet->mergeCells('A1:V1');
         $worksheet->mergeCells('A2:V2');
@@ -127,7 +127,7 @@ class SaleInvoiceTaxOnlySummaryController extends Controller {
         
         $branch = Branch::model()->findByPk($branchId);
         $worksheet->setCellValue('A1', 'Raperind Motor ' . CHtml::value($branch, 'name'));
-        $worksheet->setCellValue('A2', 'Faktur Penjualan PPn (Rincian & Detail)');
+        $worksheet->setCellValue('A2', 'Faktur Penjualan Harian (Rincian & Detail)');
         $worksheet->setCellValue('A3', $startDateFormatted . ' - ' . $endDateFormatted);
 
         $worksheet->getStyle("A5:V5")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
