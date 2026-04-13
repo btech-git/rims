@@ -1,7 +1,4 @@
 <?php
-/* @var $this RegistrationTransactionController */
-/* @var $model RegistrationTransaction */
-
 $this->breadcrumbs = array(
     'General Repair Transactions' => array('admin'),
     'Manage',

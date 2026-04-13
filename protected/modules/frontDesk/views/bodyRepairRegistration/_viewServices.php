@@ -1,19 +1,19 @@
-<?php if (count($services) > 0): ?>
-    <table>
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Service name</th>
-                <th>Claim</th>
-                <th>Price</th>
-                <th>Discount Type</th>
-                <th>Discount Price</th>
-                <th>Total Price</th>
-                <th>Hour</th>
-                <th>Note</th>
-            </tr>
-        </thead>
-        <tbody>
+<table>
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Service name</th>
+            <th>Claim</th>
+            <th>Price</th>
+            <th>Discount Type</th>
+            <th>Discount Price</th>
+            <th>Total Price</th>
+            <th>Hour</th>
+            <th>Note</th>
+        </tr>
+    </thead>
+    <tbody>
+        <?php if (count($services) > 0): ?>
             <?php foreach ($services as $i => $service): ?>
                 <tr>
                     <td><?php echo $service->service_id; ?></td>
@@ -26,8 +26,7 @@
                     <td><?php echo $service->hour; ?></td>
                     <td><?php echo $service->note; ?></td>
                 </tr>
-    <?php endforeach ?>
-        </tbody>
-    </table>
-    <?php
- endif ?>
+            <?php endforeach; ?>
+        <?php endif; ?>
+    </tbody>
+</table>

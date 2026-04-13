@@ -1,19 +1,22 @@
-<?php $movementOutHeaders = MovementOutHeader::model()->findAllByAttributes(array('registration_transaction_id'=>$model->id), array('order' => 't.id ASC', 'limit' => 10)); ?>
-<?php if (count($movementOutHeaders) > 0): ?>
-    <div class="detail">
-        <table>
-            <thead>
-                <tr>
-                    <th>Movement Number</th>
-                    <th>Date</th>
-                    <th>Status</th>
-                    <th>Product</th>
-                    <th>Quantity</th>
-                    <th>Qty Left</th>
-                </tr>
-            </thead>
+<?php $movementOutHeaders = MovementOutHeader::model()->findAllByAttributes(array('registration_transaction_id'=>$model->id), array(
+    'order' => 't.id ASC', 
+    'limit' => 10
+)); ?>
+<div class="detail">
+    <table>
+        <thead>
+            <tr>
+                <th>Movement Number</th>
+                <th>Date</th>
+                <th>Status</th>
+                <th>Product</th>
+                <th>Quantity</th>
+                <th>Qty Left</th>
+            </tr>
+        </thead>
 
-            <tbody>
+        <tbody>
+            <?php if (count($movementOutHeaders) > 0): ?>
                 <?php foreach ($movementOutHeaders as $i => $movementOutHeader): ?>
                     <?php foreach ($movementOutHeader->movementOutDetails as $i => $movementOutDetail): ?>
                         <tr>
@@ -33,9 +36,9 @@
                         </tr>
                     <?php endforeach; ?>
                 <?php endforeach; ?>
-            </tbody>
-        </table>
-    </div>
-<?php else: ?>
-    <?php echo "NO Movement Out"; ?>
-<?php endif; ?>
+            <?php else: ?>
+                <?php echo "NO Movement Out"; ?>
+            <?php endif; ?>
+        </tbody>
+    </table>
+</div>

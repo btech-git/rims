@@ -1,20 +1,21 @@
-<?php if (count($bodyRepairRegistration->productDetails) > 0): ?>
-    <table>
-        <thead>
-            <tr>
-                <th>Product name</th>
-                <th>Quantity</th>
-                <th>Unit</th>
-                <th>Retail Price</th>
-                <th>Rec Sell Price</th>
-                <th>Sale Price</th>
-                <th>Discount Type</th>
-                <th>Discount</th>
-                <th>Total Price</th>
-                <th>Action</th>
-            </tr>
-        </thead>
-        <tbody>
+
+<table>
+    <thead>
+        <tr>
+            <th>Product name</th>
+            <th>Quantity</th>
+            <th>Unit</th>
+            <th>Retail Price</th>
+            <th>Rec Sell Price</th>
+            <th>Sale Price</th>
+            <th>Discount Type</th>
+            <th>Discount</th>
+            <th>Total Price</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        <?php if (count($bodyRepairRegistration->productDetails) > 0): ?>
             <?php foreach ($bodyRepairRegistration->productDetails as $i => $productDetail): ?>
                 <?php $productInfo = Product::model()->findByPk($productDetail->product_id); ?>
                 <tr>
@@ -54,8 +55,7 @@
                     <td><?php echo CHtml::activeTextField($productDetail, "[$i]retail_price", array('readonly' => true,)); ?></td>
                     <td><?php echo CHtml::activeTextField($productDetail, "[$i]recommended_selling_price", array('readonly' => true,)); ?></td>
                     <td>
-                        <?php
-                        echo CHtml::activeTextField($productDetail, "[$i]sale_price", array(
+                        <?php echo CHtml::activeTextField($productDetail, "[$i]sale_price", array(
                             'onchange' => CHtml::ajax(array(
                                 'type' => 'POST',
                                 'dataType' => 'JSON',
@@ -73,20 +73,16 @@
                                 }',
                             )),
                             'class' => "form-control is-valid",
-                        ));
-                        ?>
+                        )); ?>
                     </td>
                     <td>
-        <?php
-        echo CHtml::activeDropDownList($productDetail, "[$i]discount_type", array(
-            'Nominal' => 'Nominal',
-            'Percent' => '%'
-                ), array('prompt' => '[--Select Discount Type --]'));
-        ?>
+                        <?php echo CHtml::activeDropDownList($productDetail, "[$i]discount_type", array(
+                            'Nominal' => 'Nominal',
+                            'Percent' => '%'
+                        ), array('prompt' => '[--Select Discount Type --]')); ?>
                     </td>
                     <td>
-                        <?php
-                        echo CHtml::activeTextField($productDetail, "[$i]discount", array(
+                        <?php echo CHtml::activeTextField($productDetail, "[$i]discount", array(
                             'onchange' => CHtml::ajax(array(
                                 'type' => 'POST',
                                 'dataType' => 'JSON',
@@ -104,26 +100,25 @@
                                 }',
                             )),
                             'class' => "form-control is-valid",
-                        ));
-                        ?>
+                        )); ?>
                     </td>
                     <td>
                         <?php echo CHtml::activeHiddenField($productDetail, "[$i]total_price", array('readonly' => true,)); ?>
-                        <?php //echo CHtml::encode(CHtml::value($productDetail, "total_price")); ?>
                         <span id="total_amount_product_<?php echo $i; ?>">
-                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($productDetail, 'totalAmountProduct'))); ?>
+                            <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($productDetail, 'totalAmountProduct'))); ?>
                         </span>
                     </td>
                     <td>
-        <?php
-        echo CHtml::button('X', array(
-            'onclick' => CHtml::ajax(array(
-                'type' => 'POST',
-                'url' => CController::createUrl('ajaxHtmlRemoveProductDetail', array('id' => $bodyRepairRegistration->header->id, 'index' => $i)),
-                'update' => '#product',
-            )),
-        ));
-        ?>
+                        <?php echo CHtml::button('X', array(
+                            'onclick' => CHtml::ajax(array(
+                                'type' => 'POST',
+                                'url' => CController::createUrl('ajaxHtmlRemoveProductDetail', array(
+                                    'id' => $bodyRepairRegistration->header->id, 
+                                    'index' => $i
+                                )),
+                                'update' => '#product',
+                            )),
+                        )); ?>
                     </td>
                 </tr>
                 <tr>
@@ -135,22 +130,19 @@
                         Sub Brand Series: <?php echo CHtml::encode(CHtml::value($productInfo, "subBrandSeries.name")); ?> 
                     </td>			
                     <td>
-                        <?php
-                        echo CHtml::button('Stock', array(
+                        <?php echo CHtml::button('Stock', array(
                             'onclick' => '$("#stock-check-dialog_' . $i . '").dialog("open"); return false;'
-                        ));
-                        ?>
-        <?php
-        $this->beginWidget('zii.widgets.jui.CJuiDialog', array(
-            'id' => "stock-check-dialog_" . $i,
-            'options' => array(
-                'title' => 'Stock',
-                'autoOpen' => false,
-                'width' => 'auto',
-                'modal' => true,
-            ),
-        ));
-        ?>
+                        )); ?>
+                        
+                        <?php $this->beginWidget('zii.widgets.jui.CJuiDialog', array(
+                            'id' => "stock-check-dialog_" . $i,
+                            'options' => array(
+                                'title' => 'Stock',
+                                'autoOpen' => false,
+                                'width' => 'auto',
+                                'modal' => true,
+                            ),
+                        )); ?>
 
                         <div class="row">
                             <div class="small-12 columns" style="padding-left: 0px; padding-right: 0px;">
@@ -163,6 +155,7 @@
                                             <th style="text-align: center">Total</th>
                                         </tr>
                                     </thead>
+                                    
                                     <tbody>
                                         <tr>
                                             <?php $inventoryTotalQuantities = $productInfo->getInventoryTotalQuantities(); ?>
@@ -170,32 +163,32 @@
                                             <?php foreach ($branches as $branch): ?>
                                                 <?php $index = -1; ?>
                                                 <?php foreach ($inventoryTotalQuantities as $i => $inventoryTotalQuantity): ?>
-                <?php if ($inventoryTotalQuantity['branch_id'] == $branch->id): ?>
-                    <?php $index = $i; ?>
-                    <?php break; ?>
-                <?php endif; ?>
-            <?php endforeach; ?>
-                            <?php if ($index >= 0): ?>
+                                                    <?php if ($inventoryTotalQuantity['branch_id'] == $branch->id): ?>
+                                                        <?php $index = $i; ?>
+                                                        <?php break; ?>
+                                                    <?php endif; ?>
+                                                <?php endforeach; ?>
+                                            
+                                                <?php if ($index >= 0): ?>
                                                     <td>
-                <?php echo CHtml::encode(CHtml::value($inventoryTotalQuantities[$i], 'total_stock')); ?>
-                <?php $totalStock += CHtml::value($inventoryTotalQuantities[$i], 'total_stock'); ?>
+                                                        <?php echo CHtml::encode(CHtml::value($inventoryTotalQuantities[$i], 'total_stock')); ?>
+                                                        <?php $totalStock += CHtml::value($inventoryTotalQuantities[$i], 'total_stock'); ?>
                                                     </td>
-                    <?php else: ?>
+                                                <?php else: ?>
                                                     <td>0</td>
-            <?php endif; ?>
-        <?php endforeach; ?>
+                                                <?php endif; ?>
+                                            <?php endforeach; ?>
                                             <td><?php echo CHtml::encode($totalStock); ?></td>
                                         </tr>
                                     </tbody>
                                 </table>
                             </div>
                         </div>
-        <?php $this->endWidget('zii.widgets.jui.CJuiDialog'); ?>
+                        <?php $this->endWidget('zii.widgets.jui.CJuiDialog'); ?>
                     </td>
-                    <td colspan="2"><?php //echo CHtml::activeTextField($productDetail,"[$i]note",array('size' => 20, 'maxLength' => 100, 'placeholder' => 'Note'));  ?></td>
+                    <td colspan="2"></td>
                 </tr>
-    <?php endforeach ?>
-        </tbody>
-    </table>
-    <?php
- endif ?>
+            <?php endforeach; ?>
+        <?php endif; ?>
+    </tbody>
+</table>

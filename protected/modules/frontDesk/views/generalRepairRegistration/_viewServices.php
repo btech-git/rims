@@ -31,7 +31,7 @@
                     <td><?php echo $service->hour; ?></td>
                     <td><?php echo $service->note; ?></td>
                 </tr>
-            <?php endforeach ?>
+            <?php endforeach; ?>
         <?php endif ?>
     </tbody>
 </table>

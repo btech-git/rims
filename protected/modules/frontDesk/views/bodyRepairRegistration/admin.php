@@ -10,16 +10,17 @@ $this->menu = array(
 );
 
 Yii::app()->clientScript->registerScript('search', "
-$('.search-button').click(function(){
+    $('.search-button').click(function(){
 	$('.search-form').toggle();
 	return false;
-});
-$('.search-form form').submit(function(){
+    });
+    
+    $('.search-form form').submit(function(){
 	$('#registration-transaction-grid').yiiGridView('update', {
-		data: $(this).serialize()
+            data: $(this).serialize()
 	});
 	return false;
-});
+    });
 ");
 ?>
 
@@ -39,7 +40,7 @@ $('.search-form form').submit(function(){
         <div class="clearfix"></div>
         <div class="search-form" style="display:none">
             <?php $this->renderPartial('_search',array(
-                'model'=>$model,
+                'model' => $model,
                 'startDate' => $startDate,
                 'endDate' => $endDate,
                 'plateNumber' => $plateNumber,
@@ -72,7 +73,7 @@ $('.search-form form').submit(function(){
             ),
             array(
                 'name'=>'transaction_number', 
-                'value'=>'CHtml::link($data->transaction_number, array("view", "id"=>$data->id))', 
+                'value'=>'CHtml::link($data->transaction_number, array("view", "id"=>$data->id), array("class" => "page-link", "data-record-id" => $data->id))', 
                 'type'=>'raw',
             ),
             array(
@@ -201,5 +202,16 @@ $('.search-form form').submit(function(){
         if (hasFlash) {
             $("#cancel-message-dialog").dialog({modal: 'false'});
         }
+        $('.page-link').click(function(e) {
+            e.preventDefault();
+            
+            var isMobileSize = window.innerWidth <= 768;
+            
+            if (isMobileSize) {
+                window.location.href = 'viewMobile?id=' + $(this).attr('data-record-id');
+            } else {
+                window.location.href = 'view?id=' + $(this).attr('data-record-id');
+            }
+        });
     });
 </script>

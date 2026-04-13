@@ -316,6 +316,28 @@ class GeneralRepairRegistrationController extends Controller {
         ));
     }
 
+    public function actionViewMobile($id) {
+
+        $model = $this->loadModel($id);
+        $services = RegistrationService::model()->findAllByAttributes(array(
+            'registration_transaction_id' => $id,
+            'is_body_repair' => 0
+        ));
+        $products = RegistrationProduct::model()->findAllByAttributes(array('registration_transaction_id' => $id));
+        $damages = RegistrationDamage::model()->findAllByAttributes(array('registration_transaction_id' => $id));
+        $insurances = RegistrationInsuranceData::model()->findAllByAttributes(array('registration_transaction_id' => $id));
+        $registrationBodyRepairDetails = RegistrationBodyRepairDetail::model()->findAllByAttributes(array('registration_transaction_id' => $id));
+
+        $this->render('viewMobile', array(
+            'model' => $model,
+            'services' => $services,
+            'products' => $products,
+            'damages' => $damages,
+            'insurances' => $insurances,
+            'registrationBodyRepairDetails' => $registrationBodyRepairDetails,
+        ));
+    }
+
     public function actionShow($id) {
         $model = $this->loadModel($id);
         

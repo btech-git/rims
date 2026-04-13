@@ -1,16 +1,11 @@
-<?php if($model->work_order_number != ""): ?>
-	<?php $inspections = VehicleInspection::model()->findAllByAttributes(array('work_order_number'=>$model->work_order_number)); ?>
-	<?php if(count($inspections) > 0): ?>
+<?php if ($model->work_order_number != ""): ?>
+    <?php $inspections = VehicleInspection::model()->findAllByAttributes(array('work_order_number'=>$model->work_order_number)); ?>
+    <?php if (count($inspections) > 0): ?>
         <?php foreach ($inspections as $i => $inspection): ?>
             <h1>Inspection Date <?php echo $inspection->inspection_date ?></h1>
             <h2>Vehicle Report</h2>
             <div class="grid-view" id="vehicleReport" >
                 <table class="items">
-                    <thead>
-                        <tr>
-                            <th colspan="2"></th>
-                        </tr>
-                    </thead>
                     <tbody>
                         <tr>
                             <span style="color: green">Checked and Okay At This Time</span> | <span style="color: yellow">May Need Future Attention</span> | <span style="color: red">Requires Immediate Attention<span> | <span style="color: gray">Not Inspected At This Time</span>
@@ -68,11 +63,13 @@
                                         }
                                     ?>
                                 <?php endforeach; ?>
-                <div class="clearfix"></div>
-                <div style="display:none" class="keys"></div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         <?php endforeach; ?>
-	<?php else: ?>
-		<?php echo "NO HISTORY"; ?>
-	<?php endif; ?>
+    <?php else: ?>
+        <?php echo "NO HISTORY"; ?>
+    <?php endif; ?>
 <?php endif; ?>
