@@ -103,9 +103,9 @@
         Yii::app()->user->checkAccess('inspectionCreate') || 
         Yii::app()->user->checkAccess('inspectionEdit') || 
         Yii::app()->user->checkAccess('inspectionView') || 
-        Yii::app()->user->checkAccess('workOrderApproval') || 
-        Yii::app()->user->checkAccess('cashierApproval') || 
-        Yii::app()->user->checkAccess('customerQueueApproval') || 
+        Yii::app()->user->checkAccess('workOrderView') || 
+        Yii::app()->user->checkAccess('cashierView') || 
+        Yii::app()->user->checkAccess('customerQueueView') || 
         Yii::app()->user->checkAccess('customerFollowUp') || 
         Yii::app()->user->checkAccess('serviceFollowUp')
     ): ?>
@@ -138,12 +138,12 @@
 //                        'visible' => (Yii::app()->user->checkAccess('inspectionCreate') || Yii::app()->user->checkAccess('inspectionEdit'))
                     ),
                     array(
-                        'label' => 'RG Outstanding', 
+                        'label' => 'Outstanding Registration', 
                         'url' => array('/frontDesk/registrationTransaction/adminOutstanding'),
-                        'visible' => Yii::app()->user->checkAccess('workOrderApproval'),
+//                        'visible' => Yii::app()->user->checkAccess('workOrderApproval'),
                     ),
                     array(
-                        'label' => 'Vehicle Inspection', 
+                        'label' => 'Inspeksi Kendaraan', 
                         'url' => array('/frontDesk/vehicleInspection/admin'), 
                         'visible' => (Yii::app()->user->checkAccess('inspectionCreate') || Yii::app()->user->checkAccess('inspectionEdit') || Yii::app()->user->checkAccess('inspectionView')),
                     ),
@@ -153,24 +153,24 @@
 //                        'visible' => (Yii::app()->user->checkAccess('inspectionCreate') || Yii::app()->user->checkAccess('inspectionEdit') || Yii::app()->user->checkAccess('inspectionView')),
                     ),
                     array(
-                        'label' => 'Work Orders', 
+                        'label' => 'Work Order Active', 
                         'url' => array('/frontDesk/workOrder/admin'),
-                        'visible' => Yii::app()->user->checkAccess('workOrderApproval'),
+                        'visible' => Yii::app()->user->checkAccess('workOrderView'),
                     ),
                     array(
-                        'label' => 'WO Outstanding', 
+                        'label' => 'Outstanding Work Order', 
                         'url' => array('/frontDesk/workOrder/adminOutstanding'),
-                        'visible' => Yii::app()->user->checkAccess('workOrderApproval'),
+                        'visible' => Yii::app()->user->checkAccess('workOrderView'),
                     ),
                     array(
                         'label' => 'Kasir', 
                         'url' => array('/frontDesk/registrationTransaction/cashier'), 
-                        'visible' => (Yii::app()->user->checkAccess('cashierApproval')),
+                        'visible' => (Yii::app()->user->checkAccess('cashierView')),
                     ),
                     array(
                         'label' => 'Daftar Antrian Customer', 
                         'url' => array('/frontDesk/customerWaitlist/index'), 
-                        'visible' => Yii::app()->user->checkAccess('customerQueueApproval'),
+                        'visible' => Yii::app()->user->checkAccess('customerQueueView'),
                     ),
                     array(
                         'label' => 'Follow Up Warranty', 
@@ -535,7 +535,7 @@
                     array(
                         'label' => 'Saldo Awal COA', 
                         'url' => array('/accounting/journalBeginning/admin'), 
-//                        'visible' => Yii::app()->user->checkAccess('requestOrderSupervisor')
+                        'visible' => Yii::app()->user->checkAccess('director')
                     ),
                 ),
             )); ?>
