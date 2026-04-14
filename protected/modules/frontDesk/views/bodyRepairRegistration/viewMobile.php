@@ -15,7 +15,7 @@ $this->breadcrumbs = array(
             <?php $ccaction = Yii::app()->controller->action->id; ?>
             <?php $invoices = InvoiceHeader::model()->findAllByAttributes(array('registration_transaction_id' => $model->id, 'user_id_cancelled' => null)); ?>
 
-            <h3>View Registration Transaction #<?php echo $model->transaction_number; ?></h3>
+            <h3>View Registration #<?php echo $model->transaction_number; ?></h3>
 
             <fieldset>
                 <legend>Information</legend>

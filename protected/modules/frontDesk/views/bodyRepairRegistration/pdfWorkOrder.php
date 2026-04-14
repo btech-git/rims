@@ -48,10 +48,10 @@ function tanggal($date) {
             <tr>
                 <td>TANGGAL MASUK</td>
                 <td>:</td>
-                <td><?php echo tanggal($bodyRepairRegistration->transaction_date) . ' ' . Yii::app()->dateFormatter->formatDateTime($bodyRepairRegistration->transaction_date, '', 'short'); ?></td>
+                <td><?php echo tanggal($bodyRepairRegistration->work_order_date) . ' ' . $bodyRepairRegistration->work_order_time; ?></td>
                 <td>TANGGAL SELESAI</td>
                 <td>:</td>
-                <td><?php echo tanggal($bodyRepairRegistration->transaction_date) . ' ' . Yii::app()->dateFormatter->formatDateTime($bodyRepairRegistration->transaction_date, '', 'short'); ?></td>
+                <td><?php echo tanggal($bodyRepairRegistration->estimate_discharge_date); ?></td>
             </tr>
             <tr>
                 <td>NAMA CUSTOMER</td>

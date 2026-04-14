@@ -10,7 +10,7 @@ $this->breadcrumbs=array(
 <div id="maincontent">
     <div class="clearfix page-action">
         <a class="button cbutton right" href="<?php echo Yii::app()->baseUrl.'/frontDesk/generalRepairRegistration/admin';?>"><span class="fa fa-th-list"></span>Manage</a>
-        <h1><?php echo "Update KM Kendaraan"; ?></h1>
+        <h1><?php echo "Estimasi Tanggal Keluar"; ?></h1>
         <div class="form">
             <?php $form=$this->beginWidget('CActiveForm', array(
                 'id'=>'registration-transaction-form',
