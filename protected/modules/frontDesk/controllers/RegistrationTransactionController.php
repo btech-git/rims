@@ -16,13 +16,13 @@ class RegistrationTransactionController extends Controller {
 
     public function filterAccess($filterChain) {
         if ($filterChain->action->id === 'cashier') {
-            if (!(Yii::app()->user->checkAccess('cashierApproval'))) {
+            if (!(Yii::app()->user->checkAccess('cashierView'))) {
                 $this->redirect(array('/site/login'));
             }
         }
         
         if ($filterChain->action->id === 'customerWaitlist') {
-            if (!(Yii::app()->user->checkAccess('customerQueueApproval'))) {
+            if (!(Yii::app()->user->checkAccess('customerQueueView'))) {
                 $this->redirect(array('/site/login'));
             }
         }
