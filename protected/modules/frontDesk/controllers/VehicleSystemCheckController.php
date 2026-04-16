@@ -92,6 +92,8 @@ class VehicleSystemCheckController extends Controller {
         $vehicleSystemCheck->addDetailTire();
         
         $registrationTransaction = RegistrationTransaction::model()->findByPk($registrationTransactionId);
+        $product = Search::bind(new Product('search'), isset($_GET['Product']) ? $_GET['Product'] : '');
+        $productDataProvider = $product->searchByVehicleSystemCheck();
 
         if (isset($_POST['Submit']) && IdempotentManager::check()) {
             $this->loadState($vehicleSystemCheck);
@@ -109,6 +111,8 @@ class VehicleSystemCheckController extends Controller {
         $this->render('create', array(
             'vehicleSystemCheck' => $vehicleSystemCheck,
             'registrationTransaction' => $registrationTransaction,
+            'product' => $product, 
+            'productDataProvider' => $productDataProvider,
         ));
     }
 
@@ -185,6 +189,19 @@ class VehicleSystemCheckController extends Controller {
             $model->header->delete();
         } else {
             throw new CHttpException(400, 'Invalid request. Please do not repeat this request again.');
+        }
+    }
+
+    public function actionAjaxProduct($id) {
+        if (Yii::app()->request->isAjaxRequest) {
+            $product = Product::model()->findByPk($id);
+            
+            $object = array(
+                'name' => $product->name,
+                'tire_size' => CHtml::encode(CHtml::value($product, 'tireSize.tireName')),
+            );
+
+            echo CJSON::encode($object);
         }
     }
 

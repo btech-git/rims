@@ -6,6 +6,8 @@
             <?php echo $this->renderPartial('_form', array(
                 'vehicleSystemCheck' => $vehicleSystemCheck,
                 'registrationTransaction' => $registrationTransaction,
+                'product' => $product, 
+                'productDataProvider' => $productDataProvider,
             ));?>
         </div>
 

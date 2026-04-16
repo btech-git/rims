@@ -160,6 +160,7 @@
     <hr />
 
     <div id="detail_div">
+        <?php echo CHtml::hiddenField('ProductMode', ''); ?>
         <?php $this->renderPartial('_detailTire', array(
             'vehicleSystemCheck' => $vehicleSystemCheck,
         )); ?>
@@ -235,3 +236,94 @@
     <?php echo IdempotentManager::generate(); ?>
     <?php echo CHtml::endForm(); ?>
 </div><!-- form -->
+
+<?php $this->beginWidget('zii.widgets.jui.CJuiDialog', array(
+    'id' => 'product-dialog',
+    // additional javascript options for the dialog plugin
+    'options' => array(
+        'title' => 'Ban',
+        'autoOpen' => false,
+        'width' => 'auto',
+        'modal' => true,
+    ),
+)); ?>
+
+<?php $this->widget('zii.widgets.grid.CGridView', array(
+    'id' => 'product-grid',
+    'dataProvider' => $productDataProvider,
+    'filter' => $product,
+    'template' => '{items}<div class="clearfix">{summary}{pager}</div>',
+    'pager' => array(
+        'cssFile' => false,
+        'header' => '',
+    ),
+    'selectionChanged' => 'js:function(id){
+        if ($("#ProductMode").val() === "1") {
+            $("#' . CHtml::activeId($vehicleSystemCheck->header, 'product_id_front_left_before_service') . '").val($.fn.yiiGridView.getSelection(id));
+        } else if ($("#ProductMode").val() === "2") {
+            $("#' . CHtml::activeId($vehicleSystemCheck->header, 'product_id_front_left_after_service') . '").val($.fn.yiiGridView.getSelection(id));
+        } else if ($("#ProductMode").val() === "3") {
+            $("#' . CHtml::activeId($vehicleSystemCheck->header, 'product_id_front_right_before_service') . '").val($.fn.yiiGridView.getSelection(id));
+        } else if ($("#ProductMode").val() === "4") {
+            $("#' . CHtml::activeId($vehicleSystemCheck->header, 'product_id_front_right_after_service') . '").val($.fn.yiiGridView.getSelection(id));
+        } else if ($("#ProductMode").val() === "5") {
+            $("#' . CHtml::activeId($vehicleSystemCheck->header, 'product_id_rear_left_before_service') . '").val($.fn.yiiGridView.getSelection(id));
+        } else if ($("#ProductMode").val() === "6") {
+            $("#' . CHtml::activeId($vehicleSystemCheck->header, 'product_id_rear_left_after_service') . '").val($.fn.yiiGridView.getSelection(id));
+        } else if ($("#ProductMode").val() === "7") {
+            $("#' . CHtml::activeId($vehicleSystemCheck->header, 'product_id_rear_right_before_service') . '").val($.fn.yiiGridView.getSelection(id));
+        } else if ($("#ProductMode").val() === "8") {
+            $("#' . CHtml::activeId($vehicleSystemCheck->header, 'product_id_rear_right_after_service') . '").val($.fn.yiiGridView.getSelection(id));
+        }
+        $("#product-dialog").dialog("close");
+
+        $.ajax({
+            type: "POST",
+            dataType: "JSON",
+            url: "' . CController::createUrl('ajaxProduct', array('id' => '')) . '" + $.fn.yiiGridView.getSelection(id),
+            data: $("form").serialize(),
+            success: function(data) {
+                if ($("#ProductMode").val() === "1") {
+                    $("#product_id_front_left_before_service_span").html(data.name + " - " + data.tire_size);
+                } else if ($("#ProductMode").val() === "2") {
+                    $("#product_id_front_left_after_service_span").html(data.name + " - " + data.tire_size);
+                } else if ($("#ProductMode").val() === "3") {
+                    $("#product_id_front_right_before_service_span").html(data.name + " - " + data.tire_size);
+                } else if ($("#ProductMode").val() === "4") {
+                    $("#product_id_front_right_after_service_span").html(data.name + " - " + data.tire_size);
+                } else if ($("#ProductMode").val() === "5") {
+                    $("#product_id_rear_left_before_service_span").html(data.name + " - " + data.tire_size);
+                } else if ($("#ProductMode").val() === "6") {
+                    $("#product_id_rear_left_after_service_span").html(data.name + " - " + data.tire_size);
+                } else if ($("#ProductMode").val() === "7") {
+                    $("#product_id_rear_right_before_service_span").html(data.name + " - " + data.tire_size);
+                } else if ($("#ProductMode").val() === "8") {
+                    $("#product_id_rear_right_after_service_span").html(data.name + " - " + data.tire_size);
+                }
+            },
+        });
+    }',
+    'columns' => array(
+        'name',
+        'manufacturer_code',
+        'production_year',
+        array(
+            'header' => 'Brand',
+            'value' => 'CHtml::encode(CHtml::value($data, "brand.name"))',
+        ),
+        array(
+            'header' => 'Sub Brand',
+            'value' => 'CHtml::encode(CHtml::value($data, "subBrand.name"))',
+        ),
+        array(
+            'header' => 'Sub Brand Series',
+            'value' => 'CHtml::encode(CHtml::value($data, "subBrandSeries.name"))',
+        ),
+        array(
+            'header' => 'Size',
+            'value' => 'CHtml::encode(CHtml::value($data, "tireSize.tireName"))',
+        ),
+    )
+)); ?>
+<?php $this->endWidget(); ?>
+    
