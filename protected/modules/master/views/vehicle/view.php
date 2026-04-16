@@ -187,6 +187,14 @@ $this->menu = array(
                             'value' => '$data->registrationTransaction->repair_type',
                         ),
                         array(
+                            'header' => 'KM',
+                            'value' => '$data->registrationTransaction->vehicle_mileage',
+                        ),
+                        array(
+                            'header' => 'Problem',
+                            'value' => '$data->registrationTransaction->problem',
+                        ),
+                        array(
                             'header' => 'Service',
                             'value' => '$data->service->name',
                         ),
