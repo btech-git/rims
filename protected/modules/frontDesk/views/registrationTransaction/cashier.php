@@ -301,6 +301,15 @@ $('form').submit(function(){
                         'header' => 'Insurance',
                         'value' => 'empty($data->insurance_company_id) ? "N/A" : $data->insuranceCompany->name',
                     ),
+                    array(
+                        'header' => 'SPK #', 
+                        'value' => '$data->registrationTransaction->customer_work_order_number',
+                    ),
+                    array(
+                        'name' => 'transaction_tax_number',
+                        'header' => 'F. Pajak #', 
+                        'value' => '$data->transaction_tax_number',
+                    ),
                     'status',
                     array(
                         'name' => 'total_price', 
