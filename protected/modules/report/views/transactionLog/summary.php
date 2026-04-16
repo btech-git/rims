@@ -50,8 +50,7 @@ Yii::app()->clientScript->registerScript('report', '
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="medium-6 columns">
+                        
                         <div class="field">
                             <div class="row collapse">
                                 <div class="small-4 columns">
@@ -64,9 +63,7 @@ Yii::app()->clientScript->registerScript('report', '
                             </div>
                         </div>
                     </div>
-                </div>
                 
-                <div class="row">
                     <div class="medium-6 columns">
                         <div class="field">
                             <div class="row collapse">
@@ -84,8 +81,7 @@ Yii::app()->clientScript->registerScript('report', '
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="medium-6 columns">
+                        
                         <div class="field">
                             <div class="row collapse">
                                 <div class="small-4 columns">
@@ -93,7 +89,19 @@ Yii::app()->clientScript->registerScript('report', '
                                 </div>
                                 
                                 <div class="small-8 columns">
-                                    <?php echo CHtml::activeDropDownList($transactionLog, 'controller_class', TransactionModuleScanner::getTransactionList(), array('empty' => '-- All --')); ?>
+                                    <?php echo CHtml::activeDropDownList($transactionLog, 'controller_class', LogModuleScanner::getTransactionList(), array('empty' => '-- All --')); ?>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="field">
+                            <div class="row collapse">
+                                <div class="small-4 columns">
+                                    <span class="prefix">Username</span>
+                                </div>
+                                
+                                <div class="small-8 columns">
+                                    <?php echo CHtml::activeDropDownList($transactionLog, 'user_id', CHtml::listData(Users::model()->findAll(array('order' => 'username ASC')), 'id', 'username'), array('empty' => '-- All --')); ?>
                                 </div>
                             </div>
                         </div>
@@ -105,7 +113,7 @@ Yii::app()->clientScript->registerScript('report', '
                 <div class="row buttons">
                     <?php echo CHtml::submitButton('Tampilkan', array('onclick' => '$("#CurrentSort").val(""); return true;')); ?>
                     <?php echo CHtml::submitButton('Hapus', array('name' => 'ResetFilter'));  ?>
-                    <?php //echo CHtml::submitButton('Simpan ke Excel', array('name' => 'SaveExcel'));  ?>
+                    <?php echo CHtml::submitButton('Simpan ke Excel', array('name' => 'SaveExcel'));  ?>
                 </div>
 
                 <?php echo CHtml::endForm(); ?>

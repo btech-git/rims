@@ -15,11 +15,11 @@ Yii::app()->clientScript->registerScript('report', '
                     <div class="medium-6 columns">
                         <div class="field">
                             <div class="row collapse">
-                                <div class="small-2 columns">
+                                <div class="small-4 columns">
                                     <span class="prefix">Tanggal </span>
                                 </div>
                                 
-                                <div class="small-5 columns">
+                                <div class="small-4 columns">
                                     <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(
                                         'name' => 'StartDate',
                                         'options' => array(
@@ -34,7 +34,7 @@ Yii::app()->clientScript->registerScript('report', '
                                     )); ?>
                                 </div>
 
-                                <div class="small-5 columns">
+                                <div class="small-4 columns">
                                     <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(
                                         'name' => 'EndDate',
                                         'options' => array(
@@ -50,8 +50,7 @@ Yii::app()->clientScript->registerScript('report', '
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="medium-6 columns">
+                        
                         <div class="field">
                             <div class="row collapse">
                                 <div class="small-4 columns">
@@ -64,14 +63,57 @@ Yii::app()->clientScript->registerScript('report', '
                             </div>
                         </div>
                     </div>
-                </div>
 
+                    <div class="medium-6 columns">
+                        <div class="field">
+                            <div class="row collapse">
+                                <div class="small-4 columns">
+                                    <span class="prefix">Action Type</span>
+                                </div>
+                                
+                                <div class="small-8 columns">
+                                    <?php echo CHtml::activeDropDownList($masterLog, 'action_name', array(
+                                        'create' => 'Create',
+                                        'update' => 'Update',
+                                        'approval' => 'Approval',
+                                        'cancel' => 'Cancel',
+                                    ), array('empty' => '-- All --')); ?>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="field">
+                            <div class="row collapse">
+                                <div class="small-4 columns">
+                                    <span class="prefix">Master</span>
+                                </div>
+                                
+                                <div class="small-8 columns">
+                                    <?php echo CHtml::activeDropDownList($masterLog, 'controller_class', LogModuleScanner::getMasterList(), array('empty' => '-- All --')); ?>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="field">
+                            <div class="row collapse">
+                                <div class="small-4 columns">
+                                    <span class="prefix">Username</span>
+                                </div>
+                                
+                                <div class="small-8 columns">
+                                    <?php echo CHtml::activeDropDownList($masterLog, 'user_id', CHtml::listData(Users::model()->findAll(array('order' => 'username ASC')), 'id', 'username'), array('empty' => '-- All --')); ?>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
                 <div class="clear"></div>
                 
                 <div class="row buttons">
                     <?php echo CHtml::submitButton('Tampilkan', array('onclick' => '$("#CurrentSort").val(""); return true;')); ?>
                     <?php echo CHtml::submitButton('Hapus', array('name' => 'ResetFilter'));  ?>
-                    <?php //echo CHtml::submitButton('Simpan ke Excel', array('name' => 'SaveExcel'));  ?>
+                    <?php echo CHtml::submitButton('Simpan ke Excel', array('name' => 'SaveExcel'));  ?>
                 </div>
 
                 <?php echo CHtml::endForm(); ?>
