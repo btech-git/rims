@@ -1,10 +1,10 @@
 <?php
 /* @var $this StockAdjustmentController */
-/* @var $maintenanceRequest StockAdjustmentHeader */
+/* @var $vehicleSystemCheck StockAdjustmentHeader */
 
 $this->breadcrumbs = array(
-    'Maintenance Request' => array('admin'),
-    $maintenanceRequest->id,
+    'Vehicle System Check' => array('admin'),
+    $vehicleSystemCheck->id,
 );
 ?>
 
@@ -12,47 +12,45 @@ $this->breadcrumbs = array(
     <div class="clearfix page-action">
         <?php $ccontroller = Yii::app()->controller->id;
         $ccaction = Yii::app()->controller->action->id; ?>
-        <?php echo CHtml::link('<span class="fa fa-list"></span>Manage Maintenance Request', Yii::app()->baseUrl . '/frontDesk/maintenanceRequest/admin', array('class' => 'button cbutton right', 'visible' => Yii::app()->user->checkAccess("maintenanceRequestCreate"))) ?>
-        <?php echo CHtml::link('<span class="fa fa-edit"></span>Update Approval', Yii::app()->baseUrl . '/frontDesk/maintenanceRequest/updateApproval?headerId=' . $maintenanceRequest->id, array('class' => 'button cbutton right', 'style' => 'margin-right:10px')) ?>
+        <?php echo CHtml::link('<span class="fa fa-list"></span>Manage', Yii::app()->baseUrl . '/frontDesk/vehicleSystemCheck/admin', array('class' => 'button cbutton right', 'visible' => Yii::app()->user->checkAccess("maintenanceRequestCreate"))) ?>
+        <?php //echo CHtml::link('<span class="fa fa-edit"></span>Update Approval', Yii::app()->baseUrl . '/frontDesk/vehicleSystemCheck/updateApproval?headerId=' . $vehicleSystemCheck->id, array('class' => 'button cbutton right', 'style' => 'margin-right:10px')) ?>
 
-        <h1>View Maintenance Request #<?php echo $maintenanceRequest->id; ?></h1>
+        <h1>View Vehicle System Check #<?php echo $vehicleSystemCheck->id; ?></h1>
 
         <?php $this->widget('zii.widgets.CDetailView', array(
-            'data' => $maintenanceRequest,
+            'data' => $vehicleSystemCheck,
             'attributes' => array(
                 'id',
                 'transaction_number',
                 'transaction_date',
-                'transaction_time',
-                'maintenance_type',
-                'description',
-                'status',
                 array(
-                    'name' => 'priority_level',
-                    'header' => 'Priority',
-                    'value' => $maintenanceRequest->priorityLevelConstant,
+                    'label' => 'RG #',
+                    'value' => $vehicleSystemCheck->registrationTransaction->transaction_number,
                 ),
                 array(
-                    'name' => 'branch_id',
-                    'header' => 'Branch',
-                    'value' => $maintenanceRequest->branch->name,
+                    'label' => 'WO #',
+                    'value' => $vehicleSystemCheck->registrationTransaction->work_order_number,
                 ),
                 array(
-                    'name' => 'user_id_requestor',
-                    'header' => 'Requestor',
-                    'value' => $maintenanceRequest->userIdRequestor->username,
+                    'label' => 'Customer',
+                    'value' => $vehicleSystemCheck->registrationTransaction->customer->name,
                 ),
                 array(
-                    'name' => 'user_id_supervisor',
-                    'header' => 'Requestor',
-                    'value' => empty($maintenanceRequest->user_id_supervisor) ? 'N/A' : $maintenanceRequest->userIdSupervisor->username,
+                    'label' => 'Kendaraan',
+                    'value' => $vehicleSystemCheck->registrationTransaction->vehicle->carMakeModelSubCombination,
                 ),
                 array(
-                    'name' => 'user_id',
-                    'header' => 'User',
-                    'value' => $maintenanceRequest->user->username,
+                    'label' => 'Plat #',
+                    'value' => $vehicleSystemCheck->registrationTransaction->vehicle->plate_number,
                 ),
-                'note',
+                array(
+                    'label' => 'Warna',
+                    'value' => $vehicleSystemCheck->registrationTransaction->vehicle->color->name,
+                ),
+                array(
+                    'label' => 'Kilometer',
+                    'value' => $vehicleSystemCheck->registrationTransaction->vehicle_mileage,
+                ),
             ),
         )); ?>
 
@@ -60,31 +58,38 @@ $this->breadcrumbs = array(
         
         <h2>Detail Items</h2>
         
-        <div class="row">
-            <div class="small-12 columns">
-                <div style="max-width: 90em; width: 100%;">
-                    <div style="overflow-y: hidden; margin-bottom: 1.25rem;">
-                        <?php $this->widget('zii.widgets.grid.CGridView', array(
-                            'id' => 'maintenance-request-detail-grid',
-                            'dataProvider' => new CArrayDataProvider($maintenanceRequestDetails),
-                            'columns' => array(
-                                'item_name: Nama Item',
-                                'item_code: Kode Item',
-                                'quantity',
-                                'memo',
-                            ),
-                        )); ?>
-                    </div>
-                </div>
-            </div>
+        <div id="detail_div">
+            <?php $this->renderPartial('_viewDetailTire', array(
+                'vehicleSystemCheck' => $vehicleSystemCheck,
+                'vehicleSystemCheckTireDetails' => $vehicleSystemCheckTireDetails,
+            )); ?>
         </div>
 
         <hr />
+        
+        <div id="detail_div">
+            <?php $this->renderPartial('_viewDetailComponent', array(
+                'vehicleSystemCheck' => $vehicleSystemCheck,
+            )); ?>
+        </div>
 
+        <hr />
+        
         <div class="row">
-            <div class="small-12 columns">
-                <?php //$this->renderPartial('_approval', array('listApproval' => $listApproval)); ?>
-            </div>
+            <table>
+                <tr>
+                    <td>Penjelasan Body Repair</td>
+                    <td><?php echo CHtml::encode(CHtml::value($vehicleSystemCheck, 'body_repair_note')); ?></td>
+                    <td>Rekomendasi Kondisi Kendaraan</td>
+                    <td><?php echo CHtml::encode(CHtml::value($vehicleSystemCheck, 'vehicle_condition_recommendation')); ?></td>
+                </tr>
+                <tr>
+                    <td>Rekomendasi Service Selanjutnya</td>
+                    <td><?php echo CHtml::encode(CHtml::value($vehicleSystemCheck, 'next_service_recommendation')); ?></td>
+                    <td>Periode / KM Service Selanjutnya</td>
+                    <td><?php echo CHtml::encode(CHtml::value($vehicleSystemCheck, 'next_service_kilometer')); ?></td>
+                </tr>
+            </table>
         </div>
     </div>
 </div>

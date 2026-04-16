@@ -12,7 +12,7 @@ $this->breadcrumbs = array(
     <div class="clearfix page-action">
         <?php $ccontroller = Yii::app()->controller->id;
         $ccaction = Yii::app()->controller->action->id; ?>
-        <?php echo CHtml::link('<span class="fa fa-list"></span>Manage Maintenance Request', Yii::app()->baseUrl . '/frontDesk/maintenanceRequest/admin', array('class' => 'button cbutton right', 'visible' => Yii::app()->user->checkAccess("maintenanceRequestCreate"))) ?>
+        <?php echo CHtml::link('<span class="fa fa-list"></span>Manage', Yii::app()->baseUrl . '/frontDesk/maintenanceRequest/admin', array('class' => 'button cbutton right', 'visible' => Yii::app()->user->checkAccess("maintenanceRequestCreate"))) ?>
         <?php echo CHtml::link('<span class="fa fa-edit"></span>Update Approval', Yii::app()->baseUrl . '/frontDesk/maintenanceRequest/updateApproval?headerId=' . $maintenanceRequest->id, array('class' => 'button cbutton right', 'style' => 'margin-right:10px')) ?>
 
         <h1>View Maintenance Request #<?php echo $maintenanceRequest->id; ?></h1>

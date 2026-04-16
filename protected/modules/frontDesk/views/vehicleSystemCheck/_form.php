@@ -55,10 +55,48 @@
             <div class="field">
                 <div class="row collapse">
                     <div class="small-4 columns">
+                        <?php echo CHtml::label('RG #', ''); ?>
+                    </div>
+                    <div class="small-8 columns">
+                        <?php echo CHtml::encode(CHtml::value($vehicleSystemCheck->header, 'registrationTransaction.transaction_number')); ?>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="field">
+                <div class="row collapse">
+                    <div class="small-4 columns">
+                        <?php echo CHtml::label('WO #', ''); ?>
+                    </div>
+                    <div class="small-8 columns">
+                        <?php echo CHtml::encode(CHtml::value($vehicleSystemCheck->header, 'registrationTransaction.work_order_number')); ?>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="field">
+                <div class="row collapse">
+                    <div class="small-4 columns">
                         <?php echo CHtml::label('Customer', ''); ?>
                     </div>
                     <div class="small-8 columns">
                         <?php echo CHtml::encode(CHtml::value($vehicleSystemCheck->header, 'registrationTransaction.customer.name')); ?>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+        
+        <div class="small-12 medium-6 columns">
+            <div class="field">
+                <div class="row collapse">
+                    <div class="small-4 columns">
+                        <?php echo CHtml::label('Kendaraan', ''); ?>
+                    </div>
+                    <div class="small-8 columns">
+                        <?php echo CHtml::encode(CHtml::value($vehicleSystemCheck->header, 'registrationTransaction.vehicle.carMake.name')); ?> -
+                        <?php echo CHtml::encode(CHtml::value($vehicleSystemCheck->header, 'registrationTransaction.vehicle.carModel.name')); ?> -
+                        <?php echo CHtml::encode(CHtml::value($vehicleSystemCheck->header, 'registrationTransaction.vehicle.carSubModel.name')); ?>
                     </div>
                 </div>
             </div>
@@ -84,44 +122,6 @@
                     </div>
                 </div>
             </div>
-        </div>
-        
-        <div class="small-12 medium-6 columns">
-            <div class="field">
-                <div class="row collapse">
-                    <div class="small-4 columns">
-                        <?php echo CHtml::label('Kendaraan', ''); ?>
-                    </div>
-                    <div class="small-8 columns">
-                        <?php echo CHtml::encode(CHtml::value($vehicleSystemCheck->header, 'registrationTransaction.vehicle.carMake.name')); ?> -
-                        <?php echo CHtml::encode(CHtml::value($vehicleSystemCheck->header, 'registrationTransaction.vehicle.carModel.name')); ?> -
-                        <?php echo CHtml::encode(CHtml::value($vehicleSystemCheck->header, 'registrationTransaction.vehicle.carSubModel.name')); ?>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="field">
-                <div class="row collapse">
-                    <div class="small-4 columns">
-                        <?php echo CHtml::label('RG #', ''); ?>
-                    </div>
-                    <div class="small-8 columns">
-                        <?php echo CHtml::encode(CHtml::value($vehicleSystemCheck->header, 'registrationTransaction.transaction_number')); ?>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="field">
-                <div class="row collapse">
-                    <div class="small-4 columns">
-                        <?php echo CHtml::label('WO #', ''); ?>
-                    </div>
-                    <div class="small-8 columns">
-                        <?php echo CHtml::encode(CHtml::value($vehicleSystemCheck->header, 'registrationTransaction.work_order_number')); ?>
-                    </div>
-                </div>
-            </div>
-            
             <div class="field">
                 <div class="row collapse">
                     <div class="small-4 columns">

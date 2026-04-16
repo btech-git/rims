@@ -140,12 +140,10 @@ class VehicleSystemCheckController extends Controller {
     public function actionView($id) {
         $vehicleSystemCheck = $this->loadModel($id);
         $vehicleSystemCheckTireDetails = VehicleSystemCheckTireDetail::model()->findAllByAttributes(array('vehicle_system_check_header_id' => $id));
-        $vehicleSystemCheckComponentDetails = VehicleSystemCheckComponentDetail::model()->findAllByAttributes(array('vehicle_system_check_header_id' => $id));
 
         $this->render('view', array(
             'vehicleSystemCheck' => $vehicleSystemCheck,
-            'vehicleSystemCheckDetails' => $vehicleSystemCheckTireDetails,
-            'vehicleSystemCheckComponentDetails' => $vehicleSystemCheckComponentDetails,
+            'vehicleSystemCheckTireDetails' => $vehicleSystemCheckTireDetails,
         ));
     }
 

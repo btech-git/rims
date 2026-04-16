@@ -23,8 +23,8 @@ $this->menu=array(
 	'attributes'=>array(
 		'id',
 		'registrationTransaction.transaction_number',
-		'service_id',
-		'employee_id',
+		'service.name',
+		'employee.name',
 		'claim',
 		'price',
 		'service_exception_rate',

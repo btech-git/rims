@@ -10,89 +10,88 @@
             <div style="display: inline-block; width: 30%">Sesudah service</div>
             <div style="display: inline-block; width: 30%">Tipe Accu</div>
             <div style="display: inline-block; width: 30%">
-                <?php echo CHtml::activeTextField($vehicleSystemCheck->header, 'accu_type_before_service'); ?>
-                <?php echo CHtml::error($vehicleSystemCheck->header, 'accu_type_before_service'); ?>
+                <?php echo CHtml::encode(CHtml::value($vehicleSystemCheck, 'accu_type_before_service')); ?>
             </div>
             <div style="display: inline-block; width: 30%">
-                <?php echo CHtml::activeTextField($vehicleSystemCheck->header, 'accu_type_after_service'); ?>
-                <?php echo CHtml::error($vehicleSystemCheck->header, 'accu_type_after_service'); ?>
+                <?php echo CHtml::encode(CHtml::value($vehicleSystemCheck, 'accu_type_after_service')); ?>
             </div>
-            <?php foreach ($vehicleSystemCheck->detailComponents[2] as $i => $detail): ?>
+            <?php $vehicleSystemCheckComponentDetails = VehicleSystemCheckComponentDetail::model()->findAllByAttributes(array(
+                'vehicle_system_check_header_id' => $vehicleSystemCheck->id, 
+                'component_inspection_group_id' => $componentInspectionGroup->id,
+            )); ?>
+            <?php foreach ($vehicleSystemCheckComponentDetails as $i => $detail): ?>
                 <div style="display: inline-block; width: 30%">
-                    <?php echo CHtml::activeHiddenField($detail, "[2][$i]component_inspection_id"); ?>
                     <?php echo CHtml::encode(CHtml::value($detail, 'componentInspection.name')); ?>
                 </div>
                 <div style="display: inline-block; width: 30%">
-                    <?php echo CHtml::activeDropDownlist($detail, "[2][$i]component_condition_before_service", array(1 => 'OK', 2 => 'Not OK')); ?>
+                    <?php echo CHtml::encode(CHtml::value($detail, 'component_condition_before_service')); ?>
                 </div>
                 <div style="display: inline-block; width: 30%">
-                    <?php echo CHtml::activeTextField($detail, "[2][$i]component_condition_after_service"); ?>
+                    <?php echo CHtml::encode(CHtml::value($detail, 'component_condition_after_service')); ?>
                 </div>
             <?php endforeach; ?>
         </div>
-        
         <div style="display: table-cell; width: 50%">
             <?php $componentInspectionGroup = ComponentInspectionGroup::model()->findByPk(5); ?>
             <div style="width: 92%; font-size: larger; font-weight: bold; background-color: red; color: white; padding: 4px 8px">
                 <?php echo CHtml::encode(CHtml::value($componentInspectionGroup, 'name')); ?>
             </div>
-            
             <div style="display: table-cell; width: 50%">
                 <div style="display: inline-block; width: 49%"></div>
                 <div style="display: inline-block; width: 49%">Sebelum service</div>
-                <?php foreach ($vehicleSystemCheck->detailComponents[5] as $i => $detail): ?>
+                <?php $vehicleSystemCheckComponentDetails = VehicleSystemCheckComponentDetail::model()->findAllByAttributes(array(
+                    'vehicle_system_check_header_id' => $vehicleSystemCheck->id, 
+                    'component_inspection_group_id' => $componentInspectionGroup->id,
+                )); ?>
+                <?php foreach ($vehicleSystemCheckComponentDetails as $i => $detail): ?>
                     <div style="display: inline-block; width: 49%">
-                        <?php echo CHtml::activeHiddenField($detail, "[5][$i]component_inspection_id"); ?>
                         <?php echo CHtml::encode(CHtml::value($detail, 'componentInspection.name')); ?>
                     </div>
                     <div style="display: inline-block; width: 49%">
-                        <?php echo CHtml::activeDropDownlist($detail, "[5][$i]component_condition_before_service", array(1 => 'OK', 2 => 'Not OK')); ?>
+                        <?php echo CHtml::encode(CHtml::value($detail, 'component_condition_before_service')); ?>
                     </div>
                     <div style="display: inline-block; width: 49%; display: none">
-                        <?php echo CHtml::activeTextField($detail, "[5][$i]component_condition_after_service"); ?>
+                        <?php echo CHtml::encode(CHtml::value($detail, 'component_condition_after_service')); ?>
                     </div>
                 <?php endforeach; ?>
             </div>
-            
             <div style="display: table-cell; width: 49%">
                 <div style="display: inline-block; width: 99%">Setelah service</div>
                 <div style="display: inline-block; width: 81%">
-                    <?php echo CHtml::activeTextArea($vehicleSystemCheck->header, 'undercarriage_condition_after_service', array('rows' => 10)); ?>
-                    <?php echo CHtml::error($vehicleSystemCheck->header, 'undercarriage_condition_after_service'); ?>
+                    <?php echo CHtml::encode(CHtml::value($vehicleSystemCheck, 'undercarriage_condition_after_service')); ?>
                 </div>
             </div>
         </div>
     </div>
-    
     <div style="display: table-row">
         <div style="display: table-cell; width: 50%">
             <?php $componentInspectionGroup = ComponentInspectionGroup::model()->findByPk(3); ?>
             <div style="width: 92%; font-size: larger; font-weight: bold; background-color: red; color: white; padding: 4px 8px">
                 <?php echo CHtml::encode(CHtml::value($componentInspectionGroup, 'name')); ?>
             </div>
-            
             <div style="display: table-cell; width: 50%">
                 <div style="display: inline-block; width: 49%"></div>
                 <div style="display: inline-block; width: 49%">Sebelum service</div>
-                <?php foreach ($vehicleSystemCheck->detailComponents[3] as $i => $detail): ?>
+                <?php $vehicleSystemCheckComponentDetails = VehicleSystemCheckComponentDetail::model()->findAllByAttributes(array(
+                    'vehicle_system_check_header_id' => $vehicleSystemCheck->id, 
+                    'component_inspection_group_id' => $componentInspectionGroup->id,
+                )); ?>
+                <?php foreach ($vehicleSystemCheckComponentDetails as $i => $detail): ?>
                     <div style="display: inline-block; width: 49%">
-                        <?php echo CHtml::activeHiddenField($detail, "[3][$i]component_inspection_id"); ?>
                         <?php echo CHtml::encode(CHtml::value($detail, 'componentInspection.name')); ?>
                     </div>
                     <div style="display: inline-block; width: 49%">
-                        <?php echo CHtml::activeDropDownlist($detail, "[3][$i]component_condition_before_service", array(1 => 'OK', 2 => 'Not OK')); ?>
+                        <?php echo CHtml::encode(CHtml::value($detail, 'component_condition_before_service')); ?>
                     </div>
                     <div style="display: inline-block; width: 49%; display: none">
-                        <?php echo CHtml::activeTextField($detail, "[3][$i]component_condition_after_service"); ?>
+                        <?php echo CHtml::encode(CHtml::value($detail, 'component_condition_after_service')); ?>
                     </div>
                 <?php endforeach; ?>
             </div>
-            
             <div style="display: table-cell; width: 49%">
                 <div style="display: inline-block; width: 99%">Setelah service</div>
                 <div style="display: inline-block; width: 81%">
-                    <?php echo CHtml::activeTextArea($vehicleSystemCheck->header, 'electrical_condition_after_service', array('rows' => 10)); ?>
-                    <?php echo CHtml::error($vehicleSystemCheck->header, 'electrical_condition_after_service'); ?>
+                    <?php echo CHtml::encode(CHtml::value($vehicleSystemCheck, 'electrical_condition_after_service')); ?>
                 </div>
             </div>
         </div>
@@ -101,34 +100,33 @@
             <div style="width: 92%; font-size: larger; font-weight: bold; background-color: red; color: white; padding: 4px 8px">
                 <?php echo CHtml::encode(CHtml::value($componentInspectionGroup, 'name')); ?>
             </div>
-            
             <div style="display: table-cell; width: 50%">
                 <div style="display: inline-block; width: 49%"></div>
                 <div style="display: inline-block; width: 49%">Sebelum service</div>
-                <?php foreach ($vehicleSystemCheck->detailComponents[6] as $i => $detail): ?>
+                <?php $vehicleSystemCheckComponentDetails = VehicleSystemCheckComponentDetail::model()->findAllByAttributes(array(
+                    'vehicle_system_check_header_id' => $vehicleSystemCheck->id, 
+                    'component_inspection_group_id' => $componentInspectionGroup->id,
+                )); ?>
+                <?php foreach ($vehicleSystemCheckComponentDetails as $i => $detail): ?>
                     <div style="display: inline-block; width: 49%">
-                        <?php echo CHtml::activeHiddenField($detail, "[6][$i]component_inspection_id"); ?>
                         <?php echo CHtml::encode(CHtml::value($detail, 'componentInspection.name')); ?>
                     </div>
                     <div style="display: inline-block; width: 49%">
-                        <?php echo CHtml::activeDropDownlist($detail, "[6][$i]component_condition_before_service", array(1 => 'OK', 2 => 'Not OK')); ?>
+                        <?php echo CHtml::encode(CHtml::value($detail, 'component_condition_before_service')); ?>
                     </div>
                     <div style="display: inline-block; width: 49%; display: none">
-                        <?php echo CHtml::activeTextField($detail, "[6][$i]component_condition_after_service"); ?>
+                        <?php echo CHtml::encode(CHtml::value($detail, 'component_condition_after_service')); ?>
                     </div>
                 <?php endforeach; ?>
             </div>
-            
             <div style="display: table-cell; width: 49%">
                 <div style="display: inline-block; width: 99%">Setelah service</div>
                 <div style="display: inline-block; width: 81%">
-                    <?php echo CHtml::activeTextArea($vehicleSystemCheck->header, 'underhood_condition_after_service', array('rows' => 10)); ?>
-                    <?php echo CHtml::error($vehicleSystemCheck->header, 'underhood_condition_after_service'); ?>
+                    <?php echo CHtml::encode(CHtml::value($vehicleSystemCheck, 'underhood_condition_after_service')); ?>
                 </div>
             </div>
         </div>
     </div>
-    
     <div style="display: table-row">
         <div style="display: table-cell; width: 50%">
             <?php $componentInspectionGroup = ComponentInspectionGroup::model()->findByPk(4); ?>
@@ -138,20 +136,22 @@
             <div style="display: inline-block; width: 30%"></div>
             <div style="display: inline-block; width: 30%">Sebelum service</div>
             <div style="display: inline-block; width: 30%">Sesudah service</div>
-            <?php foreach ($vehicleSystemCheck->detailComponents[4] as $i => $detail): ?>
+            <?php $vehicleSystemCheckComponentDetails = VehicleSystemCheckComponentDetail::model()->findAllByAttributes(array(
+                'vehicle_system_check_header_id' => $vehicleSystemCheck->id, 
+                'component_inspection_group_id' => $componentInspectionGroup->id,
+            )); ?>
+            <?php foreach ($vehicleSystemCheckComponentDetails as $i => $detail): ?>
                 <div style="display: inline-block; width: 30%">
-                    <?php echo CHtml::activeHiddenField($detail, "[4][$i]component_inspection_id"); ?>
                     <?php echo CHtml::encode(CHtml::value($detail, 'componentInspection.name')); ?>
                 </div>
                 <div style="display: inline-block; width: 30%">
-                    <?php echo CHtml::activeDropDownlist($detail, "[4][$i]component_condition_before_service", array(1 => 'OK', 2 => 'Not OK')); ?>
+                    <?php echo CHtml::encode(CHtml::value($detail, 'component_condition_before_service')); ?>
                 </div>
                 <div style="display: inline-block; width: 30%">
-                    <?php echo CHtml::activeTextField($detail, "[4][$i]component_condition_after_service"); ?>
+                    <?php echo CHtml::encode(CHtml::value($detail, 'component_condition_after_service')); ?>
                 </div>
             <?php endforeach; ?>
         </div>
-        
         <div style="display: table-cell; width: 50%">
             <?php $componentInspectionGroup = ComponentInspectionGroup::model()->findByPk(7); ?>
             <div style="width: 92%; font-size: larger; font-weight: bold; background-color: red; color: white; padding: 4px 8px">
@@ -160,24 +160,26 @@
             <div style="display: inline-block; width: 30%"></div>
             <div style="display: inline-block; width: 30%">Sebelum service</div>
             <div style="display: inline-block; width: 30%">Sesudah service</div>
-            <?php foreach ($vehicleSystemCheck->detailComponents[7] as $i => $detail): ?>
+            <?php $vehicleSystemCheckComponentDetails = VehicleSystemCheckComponentDetail::model()->findAllByAttributes(array(
+                'vehicle_system_check_header_id' => $vehicleSystemCheck->id, 
+                'component_inspection_group_id' => $componentInspectionGroup->id,
+            )); ?>
+            <?php foreach ($vehicleSystemCheckComponentDetails as $i => $detail): ?>
                 <div style="display: inline-block; width: 30%">
-                    <?php echo CHtml::activeHiddenField($detail, "[7][$i]component_inspection_id"); ?>
                     <?php echo CHtml::encode(CHtml::value($detail, 'componentInspection.name')); ?>
                 </div>
                 <div style="display: inline-block; width: 30%">
-                    <?php echo CHtml::activeDropDownlist($detail, "[7][$i]component_condition_before_service", array(1 => 'OK', 2 => 'Not OK')); ?>
+                    <?php echo CHtml::encode(CHtml::value($detail, 'component_condition_before_service')); ?>
                 </div>
                 <div style="display: inline-block; width: 30%">
-                    <?php echo CHtml::activeTextField($detail, "[7][$i]component_condition_after_service"); ?>
+                    <?php echo CHtml::encode(CHtml::value($detail, 'component_condition_after_service')); ?>
                 </div>
             <?php endforeach; ?>
             <div style="display: inline-block; width: 90%"></div>
             <div style="display: inline-block; width: 90%"></div>
             <div style="display: inline-block; width: 30%">Penjelasan Underhood</div>
             <div style="display: inline-block; width: 60%">
-                <?php echo CHtml::activeTextField($vehicleSystemCheck->header, 'underhood_note'); ?>
-                <?php echo CHtml::error($vehicleSystemCheck->header, 'underhood_note'); ?>
+                <?php echo CHtml::encode(CHtml::value($vehicleSystemCheck, 'underhood_note')); ?>
             </div>
         </div>
     </div>
