@@ -53,7 +53,7 @@ class PurchaseOrders extends CComponent {
             $detail = new TransactionPurchaseOrderDetail();
             $detail->product_id = $productId;
             $detail->unit_id = $product->unit_id;
-            $detail->retail_price = $product->retail_price;
+            $detail->retail_price = $product->hpp;
             $detail->hpp = $product->hpp;
             $detail->stock_quantity = $product->getTotalStock($warehouse->id);
             $detail->average_sale_amount = round($product->getAverageSaleSixMonths(), 2);
@@ -167,10 +167,10 @@ class PurchaseOrders extends CComponent {
             }
 
             $valid = $detail->save(false) && $valid;
-
+            
             if (isset($_POST['TransactionPurchaseOrderDetailRequest'][$detail->product_id])) {
-                $allRequest = TransactionPurchaseOrderDetailRequest::model()->deleteAll('`purchase_order_detail_id` = :purchase_order_detail_id', array(':purchase_order_detail_id' => $detail->id,));
-                $allOrdered = TransactionDetailOrder::model()->deleteAll('`purchase_order_detail_id` = :purchase_order_detail_id', array(':purchase_order_detail_id' => $detail->id,));
+//                $allRequest = TransactionPurchaseOrderDetailRequest::model()->deleteAll('`purchase_order_detail_id` = :purchase_order_detail_id', array(':purchase_order_detail_id' => $detail->id,));
+//                $allOrdered = TransactionDetailOrder::model()->deleteAll('`purchase_order_detail_id` = :purchase_order_detail_id', array(':purchase_order_detail_id' => $detail->id,));
                 foreach ($_POST['TransactionPurchaseOrderDetailRequest'][$detail->product_id] as $key => $detailOrder) {
                     $detailRequest = new TransactionPurchaseOrderDetailRequest();
                     $detailRequest->purchase_order_detail_id = $detail->id;

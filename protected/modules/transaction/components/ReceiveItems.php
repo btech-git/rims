@@ -54,8 +54,7 @@ class ReceiveItems extends CComponent {
                     $this->details[] = $detail;
                 }
             } //endforeach
-        }//end if
-        elseif ($requestType == 2) {
+        } elseif ($requestType == 2) {
             $deliveries = TransactionDeliveryOrderDetail::model()->findAllByAttributes(array('delivery_order_id' => $requestId));
             foreach ($deliveries as $key => $delivery) {
                 if ($delivery->quantity_receive_left > 0) {

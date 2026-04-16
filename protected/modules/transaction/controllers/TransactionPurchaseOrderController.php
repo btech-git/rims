@@ -932,105 +932,104 @@ class TransactionPurchaseOrderController extends Controller {
                     'branch_id' => $purchaseOrder->main_branch_id,
                 ));
 
-//                if ($purchaseOrder->status_document != $model->approval_type) {
-                
-                    if ($model->save()) {
-                        $purchaseOrder->status_document = $model->approval_type;
-                        if ($model->approval_type == 'Approved') {
-                            $purchaseOrder->approved_id = $model->supervisor_id;
+                if ($model->save()) {
+                    $purchaseOrder->status_document = $model->approval_type;
+                    if ($model->approval_type == 'Approved') {
+                        $purchaseOrder->approved_id = $model->supervisor_id;
 
-                            foreach ($purchaseOrder->transactionPurchaseOrderDetails as $poDetail) {
-                                $getAll = ProductPrice::model()->findAllByAttributes(array(
-                                    'product_id' => $poDetail->product_id,
-                                    'supplier_id' => $purchaseOrder->supplier_id
-                                ));
-                                $totalQuantity = 0;
-                                $totalPrice = 0;
-                                $average = 0;
-                                if (count($getAll) > 0) {
-                                    foreach ($getAll as $key => $getOne) {
-                                        $totalQuantity += $getOne->quantity;
-                                        $totalPrice += $getOne->hpp;
-                                    }
-                                    $average = ($totalPrice + $poDetail->unit_price) / ($totalQuantity + $poDetail->quantity);
-                                } else {
-                                    $average = $poDetail->unit_price;
+                        foreach ($purchaseOrder->transactionPurchaseOrderDetails as $poDetail) {
+                            $getAll = ProductPrice::model()->findAllByAttributes(array(
+                                'product_id' => $poDetail->product_id,
+                                'supplier_id' => $purchaseOrder->supplier_id
+                            ));
+                            $totalQuantity = 0;
+                            $totalPrice = 0;
+                            $average = 0;
+                            if (count($getAll) > 0) {
+                                foreach ($getAll as $key => $getOne) {
+                                    $totalQuantity += $getOne->quantity;
+                                    $totalPrice += $getOne->hpp;
                                 }
+                                $average = ($totalPrice + $poDetail->unit_price) / ($totalQuantity + $poDetail->quantity);
+                            } else {
+                                $average = $poDetail->unit_price;
+                            }
 
-                                $productPrice = new ProductPrice;
-                                $productPrice->supplier_id = $purchaseOrder->supplier_id;
-                                $productPrice->product_id = $poDetail->product_id;
-                                $productPrice->purchase_price = $poDetail->unit_price * $poDetail->quantity;
-                                $productPrice->purchase_date = $purchaseOrder->purchase_order_date;
-                                $productPrice->hpp = $poDetail->unit_price;
-                                $productPrice->quantity = $poDetail->quantity;
-                                $productPrice->hpp_average = $average;
-                                $productPrice->save();
+                            $productPrice = new ProductPrice;
+                            $productPrice->supplier_id = $purchaseOrder->supplier_id;
+                            $productPrice->product_id = $poDetail->product_id;
+                            $productPrice->purchase_price = $poDetail->unit_price * $poDetail->quantity;
+                            $productPrice->purchase_date = $purchaseOrder->purchase_order_date;
+                            $productPrice->hpp = $poDetail->unit_price;
+                            $productPrice->quantity = $poDetail->quantity;
+                            $productPrice->hpp_average = $average;
+                            $productPrice->save();
 
-                                $product = Product::model()->findByPk($poDetail->product_id);
-                                $product->hpp = $product->getAverageCogs();
-                                $product->save();
-                                
-                                $registrationProducts = RegistrationProduct::model()->findAllByAttributes(array(
-                                    'product_id' => $product->id,
-                                    'hpp' => '0.00',
-                                ));
-                                
-                                foreach ($registrationProducts as $registrationProduct) {
-                                    $registrationProduct->hpp = $product->hpp;
-                                    $registrationProduct->update(array('hpp'));
-                                }
+                            $product = Product::model()->findByPk($poDetail->product_id);
+                            $product->hpp = $product->getAverageCogs();
+                            $product->retail_price = $poDetail->unit_price * 1.2;
+
+                            $product->update(array('hpp', 'retail_price'));
+
+                            $registrationProducts = RegistrationProduct::model()->findAllByAttributes(array(
+                                'product_id' => $product->id,
+                                'hpp' => '0.00',
+                            ));
+
+                            foreach ($registrationProducts as $registrationProduct) {
+                                $registrationProduct->hpp = $product->hpp;
+                                $registrationProduct->update(array('hpp'));
                             }
                         }
-                        $purchaseOrder->update(array('status_document', 'approved_id'));
-                        
-                        $jurnalUmumHutang = new JurnalUmum;
-                        $jurnalUmumHutang->kode_transaksi = $purchaseOrder->purchase_order_no;
-                        $jurnalUmumHutang->tanggal_transaksi = $purchaseOrder->purchase_order_date;
-                        $jurnalUmumHutang->coa_id = $purchaseOrder->supplier->coa_id;
-                        $jurnalUmumHutang->branch_id = $purchaseOrder->main_branch_id;
-                        $jurnalUmumHutang->total = round($purchaseOrder->subtotal, 2) + round($purchaseOrder->ppn_price, 2);
-                        $jurnalUmumHutang->debet_kredit = 'K';
-                        $jurnalUmumHutang->tanggal_posting = date('Y-m-d');
-                        $jurnalUmumHutang->transaction_subject = $purchaseOrder->supplier->name;
-                        $jurnalUmumHutang->is_coa_category = 0;
-                        $jurnalUmumHutang->transaction_type = 'PO';
-                        $jurnalUmumHutang->save();
-
-                        if ($purchaseOrder->ppn_price > 0.00) {
-                            $coaPpn = Coa::model()->findByAttributes(array('code' => '143.00.001'));
-                            $jurnalUmumPpn = new JurnalUmum;
-                            $jurnalUmumPpn->kode_transaksi = $purchaseOrder->purchase_order_no;
-                            $jurnalUmumPpn->tanggal_transaksi = $purchaseOrder->purchase_order_date;
-                            $jurnalUmumPpn->coa_id = $coaPpn->id;
-                            $jurnalUmumPpn->branch_id = $purchaseOrder->main_branch_id;
-                            $jurnalUmumPpn->total = round($purchaseOrder->ppn_price, 2);
-                            $jurnalUmumPpn->debet_kredit = 'D';
-                            $jurnalUmumPpn->tanggal_posting = date('Y-m-d');
-                            $jurnalUmumPpn->transaction_subject = $purchaseOrder->supplier->name;
-                            $jurnalUmumPpn->is_coa_category = 0;
-                            $jurnalUmumPpn->transaction_type = 'PO';
-                            $jurnalUmumPpn->save();
-                        }
-
-                        $jurnalUmumOutstanding = new JurnalUmum;
-                        $jurnalUmumOutstanding->kode_transaksi = $purchaseOrder->purchase_order_no;
-                        $jurnalUmumOutstanding->tanggal_transaksi = $purchaseOrder->purchase_order_date;
-                        $jurnalUmumOutstanding->coa_id = $purchaseOrder->supplier->coa_outstanding_order;
-                        $jurnalUmumOutstanding->branch_id = $purchaseOrder->main_branch_id;
-                        $jurnalUmumOutstanding->total = round($purchaseOrder->subtotal, 2);
-                        $jurnalUmumOutstanding->debet_kredit = 'D';
-                        $jurnalUmumOutstanding->tanggal_posting = date('Y-m-d');
-                        $jurnalUmumOutstanding->transaction_subject = $purchaseOrder->supplier->name;
-                        $jurnalUmumOutstanding->is_coa_category = 0;
-                        $jurnalUmumOutstanding->transaction_type = 'PO';
-                        $jurnalUmumOutstanding->save();
-
-                        $this->saveTransactionLog('approval', $purchaseOrder);
-        
-                        $this->redirect(array('view', 'id' => $headerId));
                     }
-//                }
+                    $purchaseOrder->update(array('status_document', 'approved_id'));
+
+                    $jurnalUmumHutang = new JurnalUmum;
+                    $jurnalUmumHutang->kode_transaksi = $purchaseOrder->purchase_order_no;
+                    $jurnalUmumHutang->tanggal_transaksi = $purchaseOrder->purchase_order_date;
+                    $jurnalUmumHutang->coa_id = $purchaseOrder->supplier->coa_id;
+                    $jurnalUmumHutang->branch_id = $purchaseOrder->main_branch_id;
+                    $jurnalUmumHutang->total = round($purchaseOrder->subtotal, 2) + round($purchaseOrder->ppn_price, 2);
+                    $jurnalUmumHutang->debet_kredit = 'K';
+                    $jurnalUmumHutang->tanggal_posting = date('Y-m-d');
+                    $jurnalUmumHutang->transaction_subject = $purchaseOrder->supplier->name;
+                    $jurnalUmumHutang->is_coa_category = 0;
+                    $jurnalUmumHutang->transaction_type = 'PO';
+                    $jurnalUmumHutang->save();
+
+                    if ($purchaseOrder->ppn_price > 0.00) {
+                        $coaPpn = Coa::model()->findByAttributes(array('code' => '143.00.001'));
+                        $jurnalUmumPpn = new JurnalUmum;
+                        $jurnalUmumPpn->kode_transaksi = $purchaseOrder->purchase_order_no;
+                        $jurnalUmumPpn->tanggal_transaksi = $purchaseOrder->purchase_order_date;
+                        $jurnalUmumPpn->coa_id = $coaPpn->id;
+                        $jurnalUmumPpn->branch_id = $purchaseOrder->main_branch_id;
+                        $jurnalUmumPpn->total = round($purchaseOrder->ppn_price, 2);
+                        $jurnalUmumPpn->debet_kredit = 'D';
+                        $jurnalUmumPpn->tanggal_posting = date('Y-m-d');
+                        $jurnalUmumPpn->transaction_subject = $purchaseOrder->supplier->name;
+                        $jurnalUmumPpn->is_coa_category = 0;
+                        $jurnalUmumPpn->transaction_type = 'PO';
+                        $jurnalUmumPpn->save();
+                    }
+
+                    $jurnalUmumOutstanding = new JurnalUmum;
+                    $jurnalUmumOutstanding->kode_transaksi = $purchaseOrder->purchase_order_no;
+                    $jurnalUmumOutstanding->tanggal_transaksi = $purchaseOrder->purchase_order_date;
+                    $jurnalUmumOutstanding->coa_id = $purchaseOrder->supplier->coa_outstanding_order;
+                    $jurnalUmumOutstanding->branch_id = $purchaseOrder->main_branch_id;
+                    $jurnalUmumOutstanding->total = round($purchaseOrder->subtotal, 2);
+                    $jurnalUmumOutstanding->debet_kredit = 'D';
+                    $jurnalUmumOutstanding->tanggal_posting = date('Y-m-d');
+                    $jurnalUmumOutstanding->transaction_subject = $purchaseOrder->supplier->name;
+                    $jurnalUmumOutstanding->is_coa_category = 0;
+                    $jurnalUmumOutstanding->transaction_type = 'PO';
+                    $jurnalUmumOutstanding->save();
+
+                    $this->saveTransactionLog('approval', $purchaseOrder);
+
+                    $this->redirect(array('view', 'id' => $headerId));
+                }
             }
 //        } catch (Exception $e) {
 //            $dbTransaction->rollback();
