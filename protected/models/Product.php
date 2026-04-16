@@ -525,6 +525,9 @@ class Product extends CActiveRecord {
         $criteria->compare('t.unit_id', $this->unit_id);
         $criteria->compare('t.status', 'Active');
 
+        $criteria->together = true;
+        $criteria->with = array('productSubMasterCategory', 'productMasterCategory', 'productSubCategory');
+        
         $criteria->addCondition("EXISTS (
             SELECT SUM(stock_in + stock_out) AS total_stock
             FROM " . InventoryDetail::model()->tableName() . " i
@@ -536,6 +539,9 @@ class Product extends CActiveRecord {
         
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
+            'sort' => array(
+                "defaultOrder" => "productMasterCategory.name ASC, productSubMasterCategory.name ASC, productSubCategory.name ASC, t.name ASC",
+            ),
             'pagination' => array(
                 'pageSize' => 500,
                 'currentPage' => $pageNumber - 1,
@@ -574,6 +580,33 @@ class Product extends CActiveRecord {
             'pagination' => array(
                 'pageSize' => 500,
                 'currentPage' => $pageNumber - 1,
+            ),
+        ));
+    }
+
+    public function searchByVehicleSystemCheck() {
+
+        $criteria = new CDbCriteria;
+
+        $criteria->compare('t.id', $this->id);
+        $criteria->compare('t.code', $this->code, true);
+        $criteria->compare('t.manufacturer_code', $this->manufacturer_code, true);
+        $criteria->compare('t.name', $this->name, true);
+        $criteria->compare('t.brand_id', $this->brand_id);
+        $criteria->compare('t.sub_brand_id', $this->sub_brand_id);
+        $criteria->compare('t.sub_brand_series_id', $this->sub_brand_series_id);
+        $criteria->compare('t.product_master_category_id', 4);
+        $criteria->compare('t.product_sub_master_category_id', $this->product_sub_master_category_id);
+        $criteria->compare('t.product_sub_category_id', $this->product_sub_category_id);
+        $criteria->compare('t.unit_id', $this->unit_id);
+        $criteria->compare('t.status', 'Active');
+
+        $criteria->addCondition("t.product_sub_category_id IN (442, 443, 444)");
+        
+        return new CActiveDataProvider($this, array(
+            'criteria' => $criteria,
+            'pagination' => array(
+                'pageSize' => 100,
             ),
         ));
     }

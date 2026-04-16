@@ -208,8 +208,14 @@ class ProductSubCategory extends CActiveRecord {
         $criteria->compare('t.description', $this->description, true);
         $criteria->compare('t.status', $this->status, true);
 
+        $criteria->together = true;
+        $criteria->with = array('productSubMasterCategory', 'productMasterCategory');
+        
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
+            'sort' => array(
+                "defaultOrder" => "productMasterCategory.name ASC, productSubMasterCategory.name ASC, t.name ASC",
+            ),
             'pagination' => array(
                 'pageSize' => 500,
 //                'currentPage' => $pageNumber - 1,
