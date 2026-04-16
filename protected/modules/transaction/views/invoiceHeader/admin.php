@@ -241,6 +241,15 @@ $('#invoiceSearch').submit(function(){
                             'value' => '$data->sales_order_id != null ? "" : $data->registrationTransaction->work_order_number'
                         ),
                         array(
+                            'header' => 'SPK #', 
+                            'value' => '$data->registrationTransaction->customer_work_order_number',
+                        ),
+                        array(
+                            'name' => 'transaction_tax_number',
+                            'header' => 'F. Pajak #', 
+                            'value' => '$data->transaction_tax_number',
+                        ),
+                        array(
                             'name' => 'customer_id', 
                             'value' => '$data->customer_id != null ? $data->customer->name : ""'
                         ),
