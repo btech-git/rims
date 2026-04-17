@@ -19,7 +19,7 @@ class WorkOrderController extends Controller {
             $filterChain->action->id === 'admin' ||
             $filterChain->action->id === 'view' 
         ) {
-            if (!(Yii::app()->user->checkAccess('workOrderApproval'))) {
+            if (!(Yii::app()->user->checkAccess('workOrderView'))) {
                 $this->redirect(array('/site/login'));
             }
         }
