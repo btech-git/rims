@@ -197,10 +197,13 @@ $('#invoiceSearch').submit(function(){
                 </div>
             </div>
             
+            <br /> 
+            
             <?php echo CHtml::beginForm(); ?>
             <div>
-                <?php echo CHtml::submitButton('Export', array(
+                <?php echo CHtml::submitButton('Export to Excel', array(
                     'name' => 'SaveExcel',
+                    'class' => 'button success'
                 )); ?>
             </div>
             <div class="grid-view">
@@ -242,7 +245,7 @@ $('#invoiceSearch').submit(function(){
                         ),
                         array(
                             'header' => 'SPK #', 
-                            'value' => '$data->registrationTransaction->customer_work_order_number',
+                            'value' => '$data->sales_order_id != null ? "" : $data->registrationTransaction->customer_work_order_number',
                         ),
                         array(
                             'name' => 'transaction_tax_number',
