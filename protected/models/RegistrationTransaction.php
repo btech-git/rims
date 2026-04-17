@@ -1416,7 +1416,7 @@ class RegistrationTransaction extends MonthlyTransactionActiveRecord {
             SELECT registration_transaction_id
             FROM " . ReceivePartsHeader::model()->tableName() . "
             WHERE t.id = registration_transaction_id
-        ) AND t.total_product > 0 AND t.transaction_date > '" . AppParam::BEGINNING_TRANSACTION_DATE . "'";
+        ) AND t.work_order_number IS NOT NULL AND t.total_product > 0 AND t.transaction_date > '" . AppParam::BEGINNING_TRANSACTION_DATE . "'";
 
         $criteria->compare('t.id', $this->id);
         $criteria->compare('t.transaction_number', $this->transaction_number, true);
