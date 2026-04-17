@@ -15,15 +15,26 @@
     ),
     'columns' => array(
         array(
+            'name' => 'transaction_number',
+            'header' => 'RG #',
+            'value' => '$data->transaction_number',
+        ),
+        array(
             'name' => 'work_order_number',
             'header' => 'WO #',
-            'value' => '$data->transaction_number',
+            'value' => '$data->work_order_number',
         ),
         array(
             'header' => 'Tanggal',
             'name' => 'transaction_date',
             'filter' => false, 
             'value' => 'Yii::app()->dateFormatter->format("d MMMM yyyy", $data->transaction_date)',
+        ),
+        array(
+            'name' => 'branch_id',
+            'header' => 'Cabang',
+            'filter' => CHtml::activeDropDownList($registrationTransaction, 'branch_id', CHtml::listData(Branch::model()->findAll(array('order' => 'name')), 'id', 'name'), array('empty' => '-- All --')),
+            'value' => '$data->branch->name',
         ),
         'repair_type',
         array(
@@ -35,6 +46,12 @@
             'header' => 'Plate #',
             'filter' => CHtml::textField('VehicleNumber', $vehicleNumber),
             'value' => 'CHtml::value($data, "vehicle.plate_number")',
+        ),
+        array(
+            'header' => 'Asuransi',
+            'name' => 'insurance_company_id',
+            'filter' => CHtml::activeDropDownList($registrationTransaction, 'insurance_company_id', CHtml::listData(InsuranceCompany::model()->findAll(array('order' => 'name')), 'id', 'name'), array('empty' => '-- All --')),
+            'value' => 'CHtml::encode(CHtml::value($data, "insuranceCompany.name"))',
         ),
         'note',
         array(
