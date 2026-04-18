@@ -86,7 +86,7 @@ class BalanceSheetController extends Controller {
 
         $counter = 5;
 
-        $accountCategoryAssetBalance = 0.00;
+        $accountCategoryAssetBalance = '0.00';
         foreach ($accountCategoryAssets as $accountCategoryAsset) {
             $worksheet->getStyle("A{$counter}")->getFont()->setBold(true);
             $worksheet->setCellValue("A{$counter}", CHtml::encode(CHtml::value($accountCategoryAsset, 'name')));
@@ -95,21 +95,21 @@ class BalanceSheetController extends Controller {
 
             $accountCategoryPrimarys = CoaCategory::model()->findAllByAttributes(array('coa_category_id' => $accountCategoryAsset->id), array('order' => 'code'));
             foreach ($accountCategoryPrimarys as $accountCategoryPrimary) {
-                $accountCategoryPrimaryBalance = 0.00;
+                $accountCategoryPrimaryBalance = '0.00';
                 $worksheet->setCellValue("A{$counter}", CHtml::encode(CHtml::value($accountCategoryPrimary, 'name')));
                 
                 $counter++;
 
                 $accountCategorySubs = CoaCategory::model()->findAllByAttributes(array('coa_category_id' => $accountCategoryPrimary->id), array('order' => 'code'));
                 foreach ($accountCategorySubs as $accountCategorySub) {
-                    $accountCategorySubBalance = 0.00;
+                    $accountCategorySubBalance = '0.00';
                     $worksheet->setCellValue("A{$counter}", CHtml::encode(CHtml::value($accountCategorySub, 'name')));
                     
                     $counter++;
 
                     $coaSubCategoryCodes = CoaSubCategory::model()->findAllByAttributes(array('coa_category_id' => $accountCategorySub->id), array('order' => 'code'));
                     foreach ($coaSubCategoryCodes as $accountCategory) {
-                        $accountCategoryBalance = 0.00;
+                        $accountCategoryBalance = '0.00';
                         $coas = Coa::model()->findAllByAttributes(array('coa_sub_category_id' => $accountCategory->id, 'is_approved' => 1, 'coa_id' => null));
                         foreach ($coas as $coa) {
                             $accountGroupBalance = $coa->getBalanceSheetBalance($startDate, $endDate, $branchId);
@@ -160,7 +160,7 @@ class BalanceSheetController extends Controller {
             $counter++;$counter++;
         }
         
-        $accountCategoryLiabilityEquityBalance = 0.00; 
+        $accountCategoryLiabilityEquityBalance = '0.00'; 
         foreach ($accountCategoryLiabilitiesEquities as $accountCategoryLiabilitiesEquity) {
             $worksheet->getStyle("A{$counter}")->getFont()->setBold(true);
             $worksheet->setCellValue("A{$counter}", CHtml::encode(CHtml::value($accountCategoryLiabilitiesEquity, 'name')));
@@ -169,7 +169,7 @@ class BalanceSheetController extends Controller {
             
             $accountCategoryPrimarys = CoaCategory::model()->findAllByAttributes(array('coa_category_id' => $accountCategoryLiabilitiesEquity->id), array('order' => 'code'));
             foreach ($accountCategoryPrimarys as $accountCategoryPrimary) {
-                $accountCategoryPrimaryBalance = 0.00;
+                $accountCategoryPrimaryBalance = '0.00';
                 $worksheet->setCellValue("A{$counter}", CHtml::encode(CHtml::value($accountCategoryPrimary, 'name')));
                 
                 $counter++;
@@ -177,10 +177,11 @@ class BalanceSheetController extends Controller {
                 if ($accountCategoryPrimary->id == 5) {
                     $coaSubCategoryCodes = CoaSubCategory::model()->findAllByAttributes(array('coa_category_id' => $accountCategoryPrimary->id), array('order' => 'code'));
                     foreach ($coaSubCategoryCodes as $accountCategory) {
-                        $accountCategoryBalance = 0.00;
+                        $accountCategoryBalance = '0.00';
                         $coas = Coa::model()->findAllByAttributes(array('coa_sub_category_id' => $accountCategory->id, 'status' => 'Approved'));
                         foreach ($coas as $account) {
-                            $accountBalance = $account->getBalanceTotal($startDate, $endDate, $branchId);
+                            $profitLossBalance = JurnalUmum::getProfitLossData($startDate, $endDate, $branchId);
+                            $accountBalance = $account->id == 1476 ? $profitLossBalance : $account->getBalanceTotal($startDate, $endDate, $branchId);
                             $accountCategoryBalance += $accountBalance;
                         }
                         
@@ -195,7 +196,7 @@ class BalanceSheetController extends Controller {
                 } else {
                     $accountCategorySubs = CoaCategory::model()->findAllByAttributes(array('coa_category_id' => $accountCategoryPrimary->id), array('order' => 'code'));
                     foreach ($accountCategorySubs as $accountCategorySub) {
-                        $accountCategorySubBalance = 0.00;
+                        $accountCategorySubBalance = '0.00';
                         $worksheet->setCellValue("A{$counter}", CHtml::encode(CHtml::value($accountCategory, 'name')));
                         
                         $counter++;
@@ -203,10 +204,10 @@ class BalanceSheetController extends Controller {
                         if ($accountCategorySub->id == 3) {
                             $coaCategorySecondaries = CoaCategory::model()->findAllByAttributes(array('coa_category_id' => $accountCategorySub->id), array('order' => 'code'));
                             foreach ($coaCategorySecondaries as $coaCategorySecondary) {
-                                $accountCategorySecondaryBalance = 0.00;
+                                $accountCategorySecondaryBalance = '0.00';
                                 $coaSubCategoryCodes = CoaSubCategory::model()->findAllByAttributes(array('coa_category_id' => $coaCategorySecondary->id), array('order' => 'code'));
                                 foreach ($coaSubCategoryCodes as $accountCategory) {
-                                    $accountCategoryBalance = 0.00;
+                                    $accountCategoryBalance = '0.00';
                                     $coas = Coa::model()->findAllByAttributes(array('coa_sub_category_id' => $accountCategory->id, 'status' => 'Approved'));
                                     foreach ($coas as $account) {
                                         $accountBalance = $account->getBalanceTotal($startDate, $endDate, $branchId); 
@@ -234,7 +235,7 @@ class BalanceSheetController extends Controller {
                         } else {
                             $coaSubCategoryCodes = CoaSubCategory::model()->findAllByAttributes(array('coa_category_id' => $accountCategorySub->id), array('order' => 'code'));
                             foreach ($coaSubCategoryCodes as $accountCategory) {
-                                $accountCategoryBalance = 0.00; 
+                                $accountCategoryBalance = '0.00'; 
                                 $coas = Coa::model()->findAllByAttributes(array('coa_sub_category_id' => $accountCategory->id, 'status' => 'Approved'));
                                 foreach ($coas as $account) {
                                     $accountBalance = $account->getBalanceTotal($startDate, $endDate, $branchId);
