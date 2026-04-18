@@ -5,7 +5,7 @@
                 <label class="prefix">Vehicle Car Make</label>
             </div>
             <div class="small-8 columns">
-                <?php echo CHtml::activeDropDownList($vehicleDetail, "[$i]vehicle_car_make_id", CHtml::listData(VehicleCarMake::model()->findAll(), 'id', 'name'), array(
+                <?php echo CHtml::activeDropDownList($vehicleDetail, "[$i]vehicle_car_make_id", CHtml::listData(VehicleCarMake::model()->findAll(array('order' => 't.name ASC')), 'id', 'name'), array(
                     'prompt' => '[--Select Vehicle Car Make--]',
                     'onchange' => 'jQuery.ajax({
                         type: "POST",
@@ -29,7 +29,7 @@
                 <label class="prefix">Vehicle Car Model</label>
             </div>
             <div class="small-8 columns">
-                <?php echo CHtml::activeDropDownList($vehicleDetail, "[$i]vehicle_car_model_id", CHtml::listData(VehicleCarModel::model()->findAll(), 'id', 'name'), array(
+                <?php echo CHtml::activeDropDownList($vehicleDetail, "[$i]vehicle_car_model_id", CHtml::listData(VehicleCarModel::model()->findAll(array('order' => 't.name ASC')), 'id', 'name'), array(
                     'prompt' => '[--Select Vehicle Car Model--]',
                 )); ?>
             </div>
