@@ -9,7 +9,7 @@
     <br />
 
     <table style="width: 60%; margin: 0 auto; border-spacing: 0pt">
-        <?php $accountCategoryAssetBalance = 0.00; ?>
+        <?php $accountCategoryAssetBalance = '0.00'; ?>
         <?php foreach ($accountCategoryAssets as $accountCategoryAsset): ?>
             <tr>
                 <td style="font-size: larger; font-weight: bold; text-transform: uppercase">
@@ -20,7 +20,7 @@
 
             <?php $accountCategoryPrimarys = CoaCategory::model()->findAllByAttributes(array('coa_category_id' => $accountCategoryAsset->id), array('order' => 'code ASC')); ?>
             <?php foreach ($accountCategoryPrimarys as $accountCategoryPrimary): ?>
-                <?php $accountCategoryPrimaryBalance = 0.00; ?>
+                <?php $accountCategoryPrimaryBalance = '0.00'; ?>
                 <tr>
                     <td style="padding-left: 25px; font-size: large; font-weight: bold; text-transform: uppercase">
                         <?php echo CHtml::encode(CHtml::value($accountCategoryPrimary, 'name')); ?>
@@ -30,7 +30,7 @@
 
                 <?php $accountCategorySubs = CoaCategory::model()->findAllByAttributes(array('coa_category_id' => $accountCategoryPrimary->id), array('order' => 'code ASC')); ?>
                 <?php foreach ($accountCategorySubs as $accountCategorySub): ?>
-                    <?php $accountCategorySubBalance = 0.00; ?>
+                    <?php $accountCategorySubBalance = '0.00'; ?>
                     <tr>
                         <td style="padding-left: 50px; font-size: large; font-weight: bold; text-transform: uppercase">
                             <?php echo CHtml::encode(CHtml::value($accountCategorySub, 'name')); ?>
@@ -40,7 +40,7 @@
 
                     <?php $coaSubCategoryCodes = CoaSubCategory::model()->findAllByAttributes(array('coa_category_id' => $accountCategorySub->id), array('order' => 'code ASC')); ?>
                     <?php foreach ($coaSubCategoryCodes as $accountCategory): ?>
-                        <?php $accountCategoryBalance = 0.00; ?>
+                        <?php $accountCategoryBalance = '0.00'; ?>
                         <tr>
                             <td style="padding-left: 75px; font-weight: bold; text-transform: capitalize">
                                 <?php //echo CHtml::encode(CHtml::value($accountCategory, 'name')); ?>
@@ -135,7 +135,7 @@
     <br />
 
     <table style="width: 60%; margin: 0 auto; border-spacing: 0pt">
-        <?php $accountCategoryLiabilityEquityBalance = 0.00; ?>
+        <?php $accountCategoryLiabilityEquityBalance = '0.00'; ?>
         <?php foreach ($accountCategoryLiabilitiesEquities as $accountCategoryLiabilitiesEquity): ?>
             <tr>
                 <td style="font-size: larger; font-weight: bold; text-transform: uppercase">
@@ -146,7 +146,7 @@
 
             <?php $accountCategoryPrimarys = CoaCategory::model()->findAllByAttributes(array('coa_category_id' => $accountCategoryLiabilitiesEquity->id), array('order' => 'code ASC')); ?>
             <?php foreach ($accountCategoryPrimarys as $accountCategoryPrimary): ?>
-                <?php $accountCategoryPrimaryBalance = 0.00; ?>
+                <?php $accountCategoryPrimaryBalance = '0.00'; ?>
                 <tr>
                     <td style="padding-left: 25px; font-size: large; font-weight: bold; text-transform: uppercase">
                         <?php echo CHtml::encode(CHtml::value($accountCategoryPrimary, 'name')); ?>
@@ -157,10 +157,11 @@
                 <?php if ($accountCategoryPrimary->id == 5): ?>
                     <?php $coaSubCategoryCodes = CoaSubCategory::model()->findAllByAttributes(array('coa_category_id' => $accountCategoryPrimary->id), array('order' => 'code ASC')); ?>
                     <?php foreach ($coaSubCategoryCodes as $accountCategory): ?>
-                        <?php $accountCategoryBalance = 0.00; ?>
+                        <?php $accountCategoryBalance = '0.00'; ?>
                         <?php $coas = Coa::model()->findAllByAttributes(array('coa_sub_category_id' => $accountCategory->id, 'status' => 'Approved')); ?> 
                         <?php foreach ($coas as $account): ?>
-                            <?php $accountBalance = $account->getBalanceTotal($startDate, $endDate, $branchId); ?>
+                            <?php $profitLossBalance = JurnalUmum::getProfitLossData($startDate, $endDate, $branchId); ?>
+                            <?php $accountBalance = $account->id == 1476 ? $profitLossBalance : $account->getBalanceTotal($startDate, $endDate, $branchId); ?>
                             <?php $accountCategoryBalance += $accountBalance; ?>
                         <?php endforeach; ?>
                         <tr>
@@ -178,7 +179,7 @@
                 <?php else : ?>
                     <?php $accountCategorySubs = CoaCategory::model()->findAllByAttributes(array('coa_category_id' => $accountCategoryPrimary->id), array('order' => 'code ASC')); ?>
                     <?php foreach ($accountCategorySubs as $accountCategorySub): ?>
-                        <?php $accountCategorySubBalance = 0.00; ?>
+                        <?php $accountCategorySubBalance = '0.00'; ?>
                         <tr>
                             <td style="padding-left: 50px; font-size: large; font-weight: bold; text-transform: uppercase">
                                 <?php echo CHtml::encode(CHtml::value($accountCategorySub, 'name')); ?>
@@ -189,10 +190,10 @@
                         <?php if ($accountCategorySub->id == 3): ?>
                             <?php $coaCategorySecondaries = CoaCategory::model()->findAllByAttributes(array('coa_category_id' => $accountCategorySub->id), array('order' => 'code ASC')); ?>
                             <?php foreach ($coaCategorySecondaries as $coaCategorySecondary): ?>
-                                <?php $accountCategorySecondaryBalance = 0.00; ?>
+                                <?php $accountCategorySecondaryBalance = '0.00'; ?>
                                 <?php $coaSubCategoryCodes = CoaSubCategory::model()->findAllByAttributes(array('coa_category_id' => $coaCategorySecondary->id), array('order' => 'code ASC')); ?>
                                 <?php foreach ($coaSubCategoryCodes as $accountCategory): ?>
-                                    <?php $accountCategoryBalance = 0.00; ?>
+                                    <?php $accountCategoryBalance = '0.00'; ?>
                                     <?php $coas = Coa::model()->findAllByAttributes(array('coa_sub_category_id' => $accountCategory->id, 'status' => 'Approved'), array('order' => 'code ASC')); ?> 
                                     <?php foreach ($coas as $account): ?>
                                         <?php $accountBalance = $account->getBalanceTotal($startDate, $endDate, $branchId); ?>
@@ -233,7 +234,7 @@
 
                             <?php $coaSubCategoryCodes = CoaSubCategory::model()->findAllByAttributes(array('coa_category_id' => $accountCategorySub->id), array('order' => 'code ASC')); ?>
                             <?php foreach ($coaSubCategoryCodes as $accountCategory): ?>
-                                <?php $accountCategoryBalance = 0.00; ?>
+                                <?php $accountCategoryBalance = '0.00'; ?>
                                 <?php $coas = Coa::model()->findAllByAttributes(array('coa_sub_category_id' => $accountCategory->id, 'status' => 'Approved'), array('order' => 'code ASC')); ?> 
                                 <?php foreach ($coas as $account): ?>
                                     <?php $accountBalance = $account->getBalanceTotal($startDate, $endDate, $branchId); ?>
