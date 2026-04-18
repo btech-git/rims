@@ -470,7 +470,9 @@ class JurnalUmum extends CActiveRecord {
             $params[':branch_id'] = $branchId;
         }
         
-        $sql = "SELECT SUBSTRING_INDEX(j.tanggal_transaksi, '-', 2) AS transaction_month_year, j.coa_id, j.debet_kredit, cc.id AS category_id, cc.`code` AS category_code, cc.`name` AS category_name, s.id AS sub_category_id, s.`code` AS sub_category_code, s.`name` AS sub_category_name, c.`code` AS coa_code, c.`name` AS coa_name, c.normal_balance, SUM(j.total) AS total
+        $sql = "SELECT SUBSTRING_INDEX(j.tanggal_transaksi, '-', 2) AS transaction_month_year, j.coa_id, j.debet_kredit, cc.id AS category_id, 
+                    cc.`code` AS category_code, cc.`name` AS category_name, s.id AS sub_category_id, s.`code` AS sub_category_code, 
+                    s.`name` AS sub_category_name, c.`code` AS coa_code, c.`name` AS coa_name, c.normal_balance, SUM(j.total) AS total
                 FROM " . JurnalUmum::model()->tableName() . " j
                 INNER JOIN " . Coa::model()->tableName() . " c ON c.id = j.coa_id
                 INNER JOIN " . CoaSubCategory::model()->tableName() . " s ON s.id = c.coa_sub_category_id
@@ -824,5 +826,28 @@ class JurnalUmum extends CActiveRecord {
         ));
 
         return ($value === false) ? 0 : $value;
+    }
+    
+    public static function getProfitLossData($startDate, $endDate, $branchId) {
+        $branchConditionSql = '';
+        
+        $params = array(
+            ':start_date' => $startDate,
+            ':end_date' => $endDate,
+        );
+        
+        if (!empty($branchId)) {
+            $branchConditionSql = ' AND j.branch_id = :branch_id';
+            $params[':branch_id'] = $branchId;
+        }
+        
+        $sql = "SELECT SUM(CASE WHEN j.debet_kredit = 'K' THEN j.total ELSE 0 END) - SUM(CASE WHEN j.debet_kredit = 'D' THEN j.total ELSE 0 END) AS total
+                FROM " . JurnalUmum::model()->tableName() . " j
+                INNER JOIN " . Coa::model()->tableName() . " c ON c.id = j.coa_id
+                WHERE j.tanggal_transaksi BETWEEN :start_date AND :end_date AND c.coa_category_id IN (6, 7, 8, 9, 10) AND c.is_approved = 1" . $branchConditionSql;
+
+        $resultSet = Yii::app()->db->createCommand($sql)->queryScalar($params);
+
+        return $resultSet;
     }
 }
