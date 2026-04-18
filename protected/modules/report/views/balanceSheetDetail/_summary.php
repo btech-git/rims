@@ -217,7 +217,8 @@
                         </tr>
                         <?php $coas = Coa::model()->findAllByAttributes(array('coa_sub_category_id' => $accountCategory->id, 'is_approved' => 1), array('order' => 'code ASC')); ?> 
                         <?php foreach ($coas as $account): ?>
-                            <?php $accountBalance = $account->getBalanceTotal($startDate, $endDate, $branchId); ?>
+                            <?php $profitLossBalance = JurnalUmum::getProfitLossData($startDate, $endDate, $branchId); ?>
+                            <?php $accountBalance = $account->id == 1476 ? $profitLossBalance : $account->getBalanceTotal($startDate, $endDate, $branchId); ?>
                                 <?php if ((int)$accountBalance !== 0): ?>
                                     <tr>
                                         <td style="padding-left: 90px">
@@ -229,7 +230,9 @@
                                                 "BranchId" => $branchId
                                             )), array('target' => '_blank')); ?>
                                         </td>
-                                        <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $accountBalance)); ?></td>
+                                        <td style="text-align: right">
+                                            <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $accountBalance)); ?>
+                                        </td>
                                     </tr>
                                 <?php endif; ?>
                             <?php $accountCategoryBalance += $accountBalance; ?>

@@ -11,8 +11,9 @@ class BalanceSheetDetailController extends Controller {
 
     public function filterAccess($filterChain) {
         if ($filterChain->action->id === 'summary') {
-            if (!(Yii::app()->user->checkAccess('director')))
+            if (!(Yii::app()->user->checkAccess('director'))) {
                 $this->redirect(array('/site/login'));
+            }
         }
 
         $filterChain->run();
@@ -253,7 +254,8 @@ class BalanceSheetDetailController extends Controller {
                             'coa_id' => null
                         ), array('order' => 'code'));
                         foreach ($coas as $account) {
-                            $accountBalance = $account->getBalanceTotal($startDate, $endDate, $branchId);
+                            $profitLossBalance = JurnalUmum::getProfitLossData($startDate, $endDate, $branchId);
+                            $accountBalance = $account->id == 1476 ? $profitLossBalance : $account->getBalanceTotal($startDate, $endDate, $branchId);
                             if ((int) $accountBalance !== 0) {
                                 $worksheet->setCellValue("A{$counter}", CHtml::encode(CHtml::value($account, 'code')) . ' - ' . CHtml::encode(CHtml::value($account, 'name')));
                                 $worksheet->getStyle("B{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
