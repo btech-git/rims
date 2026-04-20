@@ -40,6 +40,8 @@
  * @property integer $is_verified
  * @property integer $user_id_verified
  * @property string $verified_datetime
+ * @property integer $registration_transaction_id_extra_2
+ * @property integer $registration_transaction_id_extra_3
  *
  * The followings are the available model relations:
  * @property PaymentOut[] $paymentOuts
@@ -53,6 +55,8 @@
  * @property TransactionReturnOrder[] $transactionReturnOrders
  * @property CoaBank $coaBankIdEstimate
  * @property RegistrationTransaction $registrationTransaction
+ * @property RegistrationTransaction $registrationTransactionExtra2
+ * @property RegistrationTransaction $registrationTransactionExtra3
  * @property UserIdCancelled $userIdCancelled
  * @property UserIdUpdated $userIdUpdated
  * @property UserIdVerified $userIdVerified
@@ -99,7 +103,7 @@ class TransactionPurchaseOrder extends MonthlyTransactionActiveRecord {
         // will receive user inputs.
         return array(
             array('purchase_order_no, purchase_order_date, status_document, payment_type, purchase_type, tax_percentage, supplier_id, requester_id, main_branch_id, is_verified', 'required'),
-            array('supplier_id, requester_id, main_branch_id, approved_id, ppn, company_bank_id, purchase_type, coa_bank_id_estimate, tax_percentage, registration_transaction_id, user_id_cancelled, user_id_updated, is_verified, user_id_verified', 'numerical', 'integerOnly' => true),
+            array('supplier_id, requester_id, main_branch_id, approved_id, ppn, company_bank_id, purchase_type, coa_bank_id_estimate, tax_percentage, registration_transaction_id, registration_transaction_id_extra_2, registration_transaction_id_extra_3, user_id_cancelled, user_id_updated, is_verified, user_id_verified', 'numerical', 'integerOnly' => true),
             array('purchase_order_no, status_document', 'length', 'max' => 30),
             array('payment_type', 'length', 'max' => 20),
             array('total_quantity', 'length', 'max' => 10),
@@ -109,7 +113,7 @@ class TransactionPurchaseOrder extends MonthlyTransactionActiveRecord {
             array('estimate_date_arrival, payment_date_estimate, note, created_datetime, updated_datetime, cancelled_datetime, verified_datetime', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, purchase_order_no, purchase_order_date, status_document, registration_transaction_id, supplier_id, payment_type, estimate_date_arrival, requester_id, main_branch_id, approved_id, total_quantity, price_before_discount, discount, subtotal, ppn, ppn_price, total_price,supplier_name,coa_supplier,coa_name, payment_date_estimate, main_branch_name, approved_name, requester_name, purchase_type, coa_bank_id_estimate, created_datetime, tax_percentage, note, cancelled_datetime, user_id_cancelled, updated_datetime, user_id_updated, search_product, is_verified, user_id_verified, verified_datetime', 'safe', 'on' => 'search'),
+            array('id, purchase_order_no, purchase_order_date, status_document, registration_transaction_id, registration_transaction_id_extra_2, registration_transaction_id_extra_3, supplier_id, payment_type, estimate_date_arrival, requester_id, main_branch_id, approved_id, total_quantity, price_before_discount, discount, subtotal, ppn, ppn_price, total_price,supplier_name,coa_supplier,coa_name, payment_date_estimate, main_branch_name, approved_name, requester_name, purchase_type, coa_bank_id_estimate, created_datetime, tax_percentage, note, cancelled_datetime, user_id_cancelled, updated_datetime, user_id_updated, search_product, is_verified, user_id_verified, verified_datetime', 'safe', 'on' => 'search'),
         );
     }
 
@@ -134,6 +138,8 @@ class TransactionPurchaseOrder extends MonthlyTransactionActiveRecord {
             'approval' => array(self::BELONGS_TO, 'Users', 'approved_id'),
             'mainBranch' => array(self::BELONGS_TO, 'Branch', 'main_branch_id'),
             'registrationTransaction' => array(self::BELONGS_TO, 'RegistrationTransaction', 'registration_transaction_id'),
+            'registrationTransactionIdExtra2' => array(self::BELONGS_TO, 'RegistrationTransaction', 'registration_transaction_id_extra_2'),
+            'registrationTransactionIdExtra3' => array(self::BELONGS_TO, 'RegistrationTransaction', 'registration_transaction_id_extra_3'),
             'coaBankIdEstimate' => array(self::BELONGS_TO, 'Coa', 'coa_bank_id_estimate'),
             'userIdVerified' => array(self::BELONGS_TO, 'Users', 'user_id_verified'),
         );
@@ -170,6 +176,8 @@ class TransactionPurchaseOrder extends MonthlyTransactionActiveRecord {
             'coa_bank_id_estimate' => 'Coa Bank',
             'tax_percentage' => 'PPn %',
             'registration_transaction_id' => 'WO #',
+            'registration_transaction_id_extra_2' => 'WO 2 #',
+            'registration_transaction_id_extra_3' => 'WO 3 #',
         );
     }
 
@@ -216,6 +224,8 @@ class TransactionPurchaseOrder extends MonthlyTransactionActiveRecord {
         $criteria->compare('t.purchase_type', $this->purchase_type, true);
         $criteria->compare('t.tax_percentage', $this->tax_percentage);
         $criteria->compare('t.registration_transaction_id', $this->registration_transaction_id);
+        $criteria->compare('t.registration_transaction_id_extra_2', $this->registration_transaction_id_extra_2);
+        $criteria->compare('t.registration_transaction_id_extra_3', $this->registration_transaction_id_extra_3);
 
         $criteria->together = 'true';
         $criteria->with = array('supplier');
