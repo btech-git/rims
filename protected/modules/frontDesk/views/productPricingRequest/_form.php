@@ -24,7 +24,7 @@
                                 <label class="prefix">Vehicle Car Make</label>
                             </div>
                             <div class="small-8 columns">
-                                <?php echo CHtml::activeDropDownList($productPricingRequest->header, "vehicle_car_make_id", CHtml::listData(VehicleCarMake::model()->findAll(), 'id', 'name'), array(
+                                <?php echo CHtml::activeDropDownList($productPricingRequest->header, "vehicle_car_make_id", CHtml::listData(VehicleCarMake::model()->findAll(array('order' => 't.name ASC')), 'id', 'name'), array(
                                     'prompt' => '[--Select Car Make--]',
                                     'onchange' => 'jQuery.ajax({
 	                  		type: "POST",
@@ -47,7 +47,7 @@
                                 <label class="prefix">Vehicle Car Model</label>
                             </div>
                             <div class="small-8 columns">
-                                <?php echo CHtml::activeDropDownList($productPricingRequest->header, "vehicle_car_model_id", CHtml::listData(VehicleCarModel::model()->findAll(), 'id', 'name'), array(
+                                <?php echo CHtml::activeDropDownList($productPricingRequest->header, "vehicle_car_model_id", CHtml::listData(VehicleCarModel::model()->findAll(array('order' => 't.name ASC')), 'id', 'name'), array(
                                     'prompt' => '[--Select Car Model--]',
                                 )); ?>
                                 <?php echo $form->error($productPricingRequest->header,'vehicle_car_model_id');  ?>
@@ -62,7 +62,7 @@
                             </div>
 
                             <div class="small-8 columns">
-                                <?php echo $form->dropDownList($productPricingRequest->header, 'vehicle_car_sub_model_id', CHtml::listData(VehicleCarSubModel::model()->findAll(), 'id', 'name'), array(
+                                <?php echo $form->dropDownList($productPricingRequest->header, 'vehicle_car_sub_model_id', CHtml::listData(VehicleCarSubModel::model()->findAll(array('order' => 't.name ASC')), 'id', 'name'), array(
                                     'prompt' => '[--Select Sub Model--]',
                                 )); ?>
                                 <?php echo $form->error($productPricingRequest->header, 'vehicle_car_sub_model_id'); ?>

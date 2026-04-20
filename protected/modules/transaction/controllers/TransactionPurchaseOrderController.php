@@ -168,17 +168,17 @@ class TransactionPurchaseOrderController extends Controller {
         $registrationTransactionCriteria->compare('vehicle.plate_number', $registrationTransaction->plate_number, true);
         $registrationTransactionCriteria->compare('customer.name', $registrationTransaction->customer_name, true);
 
-        $registrationTransactionCriteria->addCondition("NOT EXISTS (
-            SELECT h.registration_transaction_id
-            FROM " . TransactionPurchaseOrder::model()->tableName() . " h
-            INNER JOIN (
-                SELECT purchase_order_id, SUM(purchase_order_quantity_left) AS quantity_left
-                FROM " . TransactionPurchaseOrderDetail::model()->tableName() . "
-                GROUP BY purchase_order_id
-            ) d ON h.id = d.purchase_order_id
-            WHERE t.id = h.registration_transaction_id AND d.quantity_left > 0
-        ) AND t.work_order_number IS NOT NULL AND t.total_product > 0 AND t.status NOT LIKE '%CANCELLED%' AND 
-        t.work_order_date >= '" . AppParam::BEGINNING_TRANSACTION_DATE . "'");
+//        $registrationTransactionCriteria->addCondition("NOT EXISTS (
+//            SELECT h.registration_transaction_id
+//            FROM " . TransactionPurchaseOrder::model()->tableName() . " h
+//            INNER JOIN (
+//                SELECT purchase_order_id, SUM(purchase_order_quantity_left) AS quantity_left
+//                FROM " . TransactionPurchaseOrderDetail::model()->tableName() . "
+//                GROUP BY purchase_order_id
+//            ) d ON h.id = d.purchase_order_id
+//            WHERE t.id = h.registration_transaction_id AND d.quantity_left > 0
+//        ) AND t.work_order_number IS NOT NULL AND t.total_product > 0 AND t.status NOT LIKE '%CANCELLED%' AND 
+//        t.work_order_date >= '" . AppParam::BEGINNING_TRANSACTION_DATE . "'");
 
         $registrationTransactionDataProvider = new CActiveDataProvider('RegistrationTransaction', array(
             'criteria' => $registrationTransactionCriteria,

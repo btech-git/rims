@@ -90,8 +90,18 @@ $this->menu=array(
                 ),
                 array(
                     'name' =>'registration_transaction_id',
-                    'label' => 'Untuk WO #',
+                    'label' => 'Untuk WO 1 #',
                     'value'=>empty($model->registration_transaction_id) ? '' : $model->registrationTransaction->work_order_number,
+                ),
+                array(
+                    'name' =>'registration_transaction_id_extra_2',
+                    'label' => 'Untuk WO 2 #',
+                    'value'=>empty($model->registration_transaction_id_extra_2) ? '' : $model->registrationTransactionIdExtra2->work_order_number,
+                ),
+                array(
+                    'name' =>'registration_transaction_id_extra_3',
+                    'label' => 'Untuk WO 3 #',
+                    'value'=>empty($model->registration_transaction_id_extra_3) ? '' : $model->registrationTransactionIdExtra3->work_order_number,
                 ),
                 'estimate_date_arrival',
                 'payment_date_estimate',
