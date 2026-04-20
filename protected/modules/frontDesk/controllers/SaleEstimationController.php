@@ -555,7 +555,7 @@ class SaleEstimationController extends Controller {
                 'customer_name' => CHtml::value($vehicle, 'customer.name'),
                 'customer_id' => CHtml::value($vehicle, 'customer_id'),
                 'vehicle_plate_number' => CHtml::value($vehicle, 'plate_number'),
-                'vehicle_frame_number' => CHtml::value($vehicle, 'frame_number'),
+                'customer_phone' => CHtml::value($vehicle, 'customer.mobile_phone'),
             );
 
             echo CJSON::encode($object);
