@@ -39,21 +39,6 @@
                             <div class="field">
                                 <div class="row collapse">
                                     <div class="small-4 columns">
-                                        <?php echo CHtml::label('Customer', false, array('class' => 'form-label')); ?>
-                                    </div>
-                                    <div class="small-8 columns">
-                                        <?php echo CHtml::activeHiddenField($saleEstimation->header, 'customer_id', array('value' => $saleEstimation->header->customer_id)); ?>
-                                        <?php echo CHtml::textField('CustomerName', empty($customer) ? '' : $customer->name, array(
-                                            'class' => 'form-control', 
-                                            'readonly' => true,
-                                        )); ?>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="field">
-                                <div class="row collapse">
-                                    <div class="small-4 columns">
                                         <?php echo CHtml::label('Kendaraan', false, array('class' => 'form-label')); ?>
                                     </div>
                                     <div class="small-8 columns">
@@ -78,10 +63,27 @@
                             <div class="field">
                                 <div class="row collapse">
                                     <div class="small-4 columns">
+                                        <?php echo CHtml::label('Customer', false, array('class' => 'form-label')); ?>
+                                    </div>
+                                    <div class="small-8 columns">
+                                        <?php echo CHtml::activeHiddenField($saleEstimation->header, 'customer_id', array('value' => $saleEstimation->header->customer_id)); ?>
+                                        <?php echo CHtml::openTag('span', array('id' => 'customer_name_span')); ?>
+                                        <?php echo CHtml::encode(CHtml::value($saleEstimation->header, 'customer.name')); ?>
+                                        <?php echo CHtml::closeTag('span'); ?>
+                                        <?php echo CHtml::error($saleEstimation->header, 'customer_id'); ?>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="field">
+                                <div class="row collapse">
+                                    <div class="small-4 columns">
                                         <?php echo CHtml::label('Nomor Polisi', false, array('class' => 'form-label')); ?>
                                     </div>
                                     <div class="small-8 columns">
-                                        <?php echo CHtml::textField('PlateNumber', empty($vehicle) ? '' : $vehicle->plate_number, array('class' => 'form-control', 'readonly' => true)); ?>
+                                        <?php echo CHtml::openTag('span', array('id' => 'customer_name_span')); ?>
+                                        <?php echo CHtml::encode(CHtml::value($saleEstimation->header, 'customer.name')); ?>
+                                        <?php echo CHtml::closeTag('span'); ?>
                                     </div>
                                 </div>
                             </div>
@@ -92,7 +94,9 @@
                                         <?php echo CHtml::label('Alamat', false, array('class' => 'form-label')); ?>
                                     </div>
                                     <div class="small-8 columns">
-                                        <?php echo CHtml::textField('Address', empty($customer) ? '' : $customer->address, array('class' => 'form-control', 'readonly' => true)); ?>
+                                        <?php echo CHtml::openTag('span', array('id' => 'customer_name_span')); ?>
+                                        <?php echo CHtml::encode(CHtml::value($saleEstimation->header, 'customer.name')); ?>
+                                        <?php echo CHtml::closeTag('span'); ?>
                                     </div>
                                 </div>
                             </div>
@@ -103,10 +107,9 @@
                                         <?php echo CHtml::label('Phone', false, array('class' => 'form-label')); ?>
                                     </div>
                                     <div class="small-8 columns">
-                                        <?php echo CHtml::textField('Phone', empty($customer) ? '' : $customer->phone, array(
-                                            'class' => 'form-control', 
-                                            'readonly' => true,
-                                        )); ?>
+                                        <?php echo CHtml::openTag('span', array('id' => 'customer_name_span')); ?>
+                                        <?php echo CHtml::encode(CHtml::value($saleEstimation->header, 'customer.name')); ?>
+                                        <?php echo CHtml::closeTag('span'); ?>
                                     </div>
                                 </div>
                             </div>
@@ -260,11 +263,11 @@
             $("#' . CHtml::activeId($saleEstimation->header, 'vehicle_id') . '").val($.fn.yiiGridView.getSelection(id));
             $("#vehicle-dialog").dialog("close");
             if ($.fn.yiiGridView.getSelection(id) == "") {
-                $("#VehicleName").val("");
-                $("#CustomerName").val("");
+                $("#vehicle_name_span").val("");
+                $("#customer_name_span").val("");
                 $("#' . CHtml::activeId($saleEstimation->header, 'customer_id') . '").val("");
-                $("#PlateNumber").val("");
-                $("#FrameNumber").val("");
+                $("#plate_number_span").val("");
+                $("#frame_number_span").val("");
             } else {
                 $.ajax({
                     type: "POST",
@@ -272,11 +275,11 @@
                     url: "' . CController::createUrl('ajaxJsonVehicle', array('id' => $saleEstimation->header->id)) . '",
                     data: $("form").serialize(),
                     success: function(data) {
-                        $("#VehicleName").val(data.vehicle_name);
-                        $("#CustomerName").val(data.customer_name);
+                        $("#vehicle_name_span").val(data.vehicle_name);
+                        $("#customer_name_span").val(data.customer_name);
                         $("#' . CHtml::activeId($saleEstimation->header, 'customer_id') . '").val(data.customer_id);
-                        $("#PlateNumber").val(data.vehicle_plate_number);
-                        $("#FrameNumber").val(data.vehicle_frame_number);
+                        $("#plate_number_span").val(data.vehicle_plate_number);
+                        $("#frame_number_span").val(data.vehicle_frame_number);
                     },
                 });
             }
