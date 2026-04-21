@@ -22,8 +22,8 @@ class BalanceSheetSummary extends CComponent {
     }
 
     public function setupSorting() {
-        $this->dataProvider->sort->defaultOrder = 't.kode_transaksi ASC, t.tanggal_transaksi ASC';
-        $this->dataProvider->criteria->order = $this->dataProvider->sort->orderBy;
+//        $this->dataProvider->sort->defaultOrder = 't.kode_transaksi ASC, t.tanggal_transaksi ASC';
+        $this->dataProvider->criteria->order = 't.tanggal_transaksi ASC, t.kode_transaksi ASC';
     }
 
     public function setupFilter($yearMonth, $accountId, $branchId) {
