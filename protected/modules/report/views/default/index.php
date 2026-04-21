@@ -1108,7 +1108,7 @@
                                         'visible' => Yii::app()->user->checkAccess('director')
                                     ),
                                     array(
-                                        'label' => 'Pembelian WO', 
+                                        'label' => 'Pembelian WO Summary', 
                                         'url' => array('/report/purchaseWorkOrder/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('director')
                                     ),
