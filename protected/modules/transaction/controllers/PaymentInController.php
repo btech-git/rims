@@ -592,6 +592,9 @@ class PaymentInController extends Controller {
         $invoiceCriteria->compare('t.status', $invoice->status, true);
         $invoiceCriteria->compare('t.reference_type', $invoice->reference_type);
         $invoiceCriteria->compare('t.insurance_company_id', $invoice->insurance_company_id);
+        $invoiceCriteria->compare('t.total_price', $invoice->total_price, true);
+        $invoiceCriteria->compare('t.payment_amount', $invoice->payment_amount, true);
+        $invoiceCriteria->compare('t.payment_left', $invoice->payment_left, true);
 //        $invoiceCriteria->addCondition('t.branch_id = :branch_id');
 //        $invoiceCriteria->params[':branch_id'] = Yii::app()->user->branch_id;
         
