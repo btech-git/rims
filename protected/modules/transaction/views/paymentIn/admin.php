@@ -106,7 +106,7 @@ $('.search-form form').submit(function(){
                         'invoice_number_list',
                         array(
                             'name' => 'payment_amount', 
-                            'value' => 'AppHelper::formatMoney($data->payment_amount)',
+                            'value' => '$data->payment_amount == 0 ? AppHelper::formatMoney($data->downpayment_amount) : AppHelper::formatMoney($data->payment_amount)',
                             'htmlOptions' => array('style' => 'text-align: right'),
                         ),
                         array(
