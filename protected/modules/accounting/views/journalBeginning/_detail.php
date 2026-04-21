@@ -50,7 +50,7 @@
                 </td>
 
                 <td style="text-align: right">
-                    <?php echo CHtml::activeTextField($detail, "[$i]difference_balance"); ?>
+                    <?php echo CHtml::activeHiddenField($detail, "[$i]difference_balance"); ?>
                     <div id="difference_balance_<?php echo $i; ?>" style="text-align: right;">
                         <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($detail, 'difference_balance'))); ?>
                     </div>

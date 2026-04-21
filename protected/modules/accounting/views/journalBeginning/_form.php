@@ -40,8 +40,8 @@
                                             'attribute' => 'transaction_date',
                                             // additional javascript options for the date picker plugin
                                             'options' => array(
-//                                                'minDate' => '-1W',
-//                                                'maxDate' => '+6M',
+                                                'changeMonth' => true,
+                                                'changeYear' => true,
                                                 'dateFormat' => 'yy-mm-dd',
                                             ),
                                             'htmlOptions' => array(
