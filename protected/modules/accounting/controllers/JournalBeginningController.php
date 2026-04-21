@@ -24,7 +24,7 @@ class JournalBeginningController extends Controller {
         $journalBeginning = $this->instantiate(null);
         $journalBeginning->header->transaction_date = date('Y-m-d');
         $journalBeginning->header->status = 'Draft';
-        $journalBeginning->header->branch_id = Yii::app()->user->branch_id;
+        $journalBeginning->header->branch_id = Yii::app()->user->checkAccess('director') ? 6 : Yii::app()->user->branch_id;
         $journalBeginning->header->created_datetime = date('Y-m-d H:i:s');
         $journalBeginning->header->updated_datetime = null;
         $journalBeginning->header->cancelled_datetime = null;
