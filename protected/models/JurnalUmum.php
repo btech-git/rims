@@ -278,7 +278,7 @@ class JurnalUmum extends CActiveRecord {
                 WHERE debet_kredit = 'K' AND is_coa_category = 0 AND tanggal_transaksi >= '" . AppParam::BEGINNING_TRANSACTION_DATE . "'
             ) j
             INNER JOIN " . Coa::model()->tableName() . " a ON a.id = j.coa_id
-            WHERE j.coa_id IN ({$inIdsSql}) AND j.tanggal_transaksi <= :start_date " . $branchConditionSql . " 
+            WHERE j.coa_id IN ({$inIdsSql}) AND j.tanggal_transaksi < :start_date " . $branchConditionSql . " 
             GROUP BY j.coa_id
         ";
 
@@ -419,7 +419,8 @@ class JurnalUmum extends CActiveRecord {
                 ), 0) AS total
                 FROM " . JurnalUmum::model()->tableName() . " j
                 INNER JOIN " . Coa::model()->tableName() . " c ON c.id = j.coa_id
-                WHERE SUBSTRING_INDEX(j.tanggal_transaksi, '-', 2) < :start_year_month AND c.coa_category_id IN (4, 5, 14, 15, 16, 17, 18, 19, 20, 21, 23) AND c.is_approved = 1" . $branchConditionSql . "
+                WHERE SUBSTRING_INDEX(j.tanggal_transaksi, '-', 2) < :start_year_month AND c.coa_category_id IN (4, 5, 14, 15, 16, 17, 18, 19, 20, 21, 23) 
+                    AND c.is_approved = 1" . $branchConditionSql . "
                 GROUP BY j.coa_id";
 
         $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
