@@ -136,6 +136,9 @@ class JurnalUmum extends CActiveRecord {
 
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
+            'sort' => array(
+                'defaultOrder' => 't.tanggal_transaksi ASC',
+            ),
             'pagination' => array(
                 'pageSize' => 500,
             ),
