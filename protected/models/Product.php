@@ -672,7 +672,7 @@ class Product extends CActiveRecord {
         ));
     }
 
-    public function searchBySaleEstimation($endDate) {
+    public function searchBySaleEstimation() {
         
         $criteria = new CDbCriteria;
 
@@ -689,14 +689,14 @@ class Product extends CActiveRecord {
         $criteria->compare('t.unit_id', $this->unit_id);
         $criteria->compare('t.status', 'Active');
 
-        $criteria->addCondition("EXISTS (
-            SELECT SUM(stock_in + stock_out) AS total_stock
-            FROM " . InventoryDetail::model()->tableName() . " i
-            INNER JOIN " . Warehouse::model()->tableName() . " w ON w.id = i.warehouse_id
-            WHERE t.id = i.product_id AND w.status = 'Active' AND i.transaction_date BETWEEN '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND :end_date
-            HAVING SUM(stock_in + stock_out) > 0
-        )");
-        $criteria->params[':end_date'] = $endDate;
+//        $criteria->addCondition("EXISTS (
+//            SELECT SUM(stock_in + stock_out) AS total_stock
+//            FROM " . InventoryDetail::model()->tableName() . " i
+//            INNER JOIN " . Warehouse::model()->tableName() . " w ON w.id = i.warehouse_id
+//            WHERE t.id = i.product_id AND w.status = 'Active' AND i.transaction_date BETWEEN '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND :end_date
+//            HAVING SUM(stock_in + stock_out) > 0
+//        )");
+//        $criteria->params[':end_date'] = $endDate;
         
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
