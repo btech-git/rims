@@ -58,7 +58,7 @@ class SaleEstimationController extends Controller {
         $product = Search::bind(new Product('search'), isset($_GET['Product']) ? $_GET['Product'] : '');
         $service = Search::bind(new Service('search'), isset($_GET['Service']) ? $_GET['Service'] : '');
         $vehicleData = Search::bind(new Vehicle('search'), isset($_GET['Vehicle']) ? $_GET['Vehicle'] : '');
-        $productDataProvider = $product->searchBySaleEstimation($endDate);
+        $productDataProvider = $product->searchBySaleEstimation();
         $serviceDataProvider = $service->searchBySaleEstimation();
         $vehicleDataProvider = $vehicleData->search();
         $vehicleDataProvider->criteria->with = array(
