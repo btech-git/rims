@@ -29,7 +29,7 @@
                 </div>
             </div>
 
-            <?php if ($workOrderExpense->header->isNewRecord): ?>
+            <?php //if ($workOrderExpense->header->isNewRecord): ?>
                 <div class="field">
                     <div class="row collapse">
                         <div class="small-4 columns">
@@ -47,7 +47,7 @@
                         </div>
                     </div>
                 </div>
-            <?php endif; ?>
+            <?php //endif; ?>
 
             <div class="field">
                 <div class="row collapse">
