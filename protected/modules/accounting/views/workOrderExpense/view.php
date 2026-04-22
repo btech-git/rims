@@ -5,17 +5,36 @@
 
 
 <div id="link">
-    <?php echo CHtml::link('<span class="fa fa-th-list"></span>Manage', Yii::app()->baseUrl.'/accounting/workOrderExpense/admin' , array('class'=>'button cbutton right','style'=>'margin-right:10px')) ?>
+    <?php echo CHtml::link('<span class="fa fa-th-list"></span>Manage', Yii::app()->baseUrl.'/accounting/workOrderExpense/admin' , array(
+        'class'=>'button cbutton right',
+        'style'=>'margin-right:10px'
+    )) ?>
     
-    <?php echo CHtml::link('<span class="fa fa-edit"></span>Edit', Yii::app()->baseUrl.'/accounting/workOrderExpense/update?id=' . $workOrderExpense->id , array('class'=>'button cbutton right','style'=>'margin-right:10px', 'visible'=>Yii::app()->user->checkAccess("workOrderExpenseEdit"))) ?>
+    <?php echo CHtml::link('<span class="fa fa-edit"></span>Edit', Yii::app()->baseUrl.'/accounting/workOrderExpense/update?id=' . $workOrderExpense->id , array(
+        'class'=>'button warning right',
+        'style'=>'margin-right:10px', 
+        'visible'=>Yii::app()->user->checkAccess("workOrderExpenseEdit")
+    )); ?>
     <?php if ($workOrderExpense->status == "Draft"): //&& Yii::app()->user->checkAccess("workOrderExpenseApproval")): ?>
-        <?php echo CHtml::link('<span class="fa fa-edit"></span>Approval', Yii::app()->baseUrl.'/accounting/workOrderExpense/updateApproval?headerId=' . $workOrderExpense->id , array('class'=>'button cbutton right','style'=>'margin-right:10px', 'visible'=>Yii::app()->user->checkAccess("workOrderExpenseEdit"))) ?>
+        <?php echo CHtml::link('<span class="fa fa-edit"></span>Approval', Yii::app()->baseUrl.'/accounting/workOrderExpense/updateApproval?headerId=' . $workOrderExpense->id , array(
+            'class'=>'button success right',
+            'style'=>'margin-right:10px', 
+            'visible'=>Yii::app()->user->checkAccess("workOrderExpenseEdit")
+        )); ?>
     <?php elseif ($workOrderExpense->status != "Draft"): //&& Yii::app()->user->checkAccess("workOrderExpenseSupervisor")): ?>
-        <?php echo CHtml::link('<span class="fa fa-edit"></span>Update Approval', Yii::app()->baseUrl.'/accounting/workOrderExpense/updateApproval?headerId=' . $workOrderExpense->id , array('class'=>'button cbutton right','style'=>'margin-right:10px', 'visible'=>Yii::app()->user->checkAccess("workOrderExpenseEdit"))) ?>
+        <?php echo CHtml::link('<span class="fa fa-edit"></span>Update Approval', Yii::app()->baseUrl.'/accounting/workOrderExpense/updateApproval?headerId=' . $workOrderExpense->id , array(
+            'class'=>'button success right',
+            'style'=>'margin-right:10px', 
+            'visible'=>Yii::app()->user->checkAccess("workOrderExpenseEdit")
+        )); ?>
     <?php endif; ?>
     
     <div class="field buttons text-right">
-        <?php echo CHtml::link('<span class="fa fa-print"></span>Print', Yii::app()->baseUrl.'/accounting/workOrderExpense/pdf?id=' . $workOrderExpense->id, array('class'=>'button warning right','style'=>'margin-right:10px', 'target' => 'blank')) ?>
+        <?php echo CHtml::link('<span class="fa fa-print"></span>Print', Yii::app()->baseUrl.'/accounting/workOrderExpense/pdf?id=' . $workOrderExpense->id, array(
+            'class'=>'button warning right',
+            'style'=>'margin-right:10px', 
+            'target' => 'blank'
+        )); ?>
     </div>
     
     <?php if (!($workOrderExpense->status == 'CANCELLED!!!')): ?>

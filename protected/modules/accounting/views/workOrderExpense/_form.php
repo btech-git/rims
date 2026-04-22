@@ -280,7 +280,7 @@
 
 </div><!-- form -->
 
-<?php if ($workOrderExpense->header->isNewRecord): ?>
+<?php //if ($workOrderExpense->header->isNewRecord): ?>
     <?php $this->beginWidget('zii.widgets.jui.CJuiDialog', array(
         'id' => 'registration-dialog',
         // additional javascript options for the dialog plugin
@@ -413,5 +413,5 @@
         ),
     )); ?>
     <?php $this->endWidget('zii.widgets.jui.CJuiDialog'); ?>
-<?php endif; ?>
+<?php //endif; ?>
     
