@@ -4,13 +4,13 @@ Yii::app()->clientScript->registerCss('_report', '
 	.width1-2 { width: 50% }
 	.width1-3 { width: 20% }
 
-	.width2-1 { width: 17% }
-	.width2-2 { width: 12% }
-	.width2-3 { width: 15% }
+	.width2-1 { width: 15% }
+	.width2-2 { width: 10% }
+	.width2-3 { width: 25% }
 	.width2-4 { width: 20% }
-	.width2-5 { width: 12% }
-	.width2-6 { width: 12% }
-	.width2-7 { width: 12% }
+	.width2-5 { width: 10% }
+	.width2-6 { width: 10% }
+	.width2-7 { width: 10% }
 ');
 ?>
 
@@ -27,7 +27,7 @@ Yii::app()->clientScript->registerCss('_report', '
         <tr id="header1">
             <th class="width1-1"></th>
             <th class="width1-2">Akun</th>
-            <th class="width1-3" style ="text-align: right;">Saldo Awal</th>
+            <th class="width1-3" style ="text-align: center;">Saldo Awal</th>
         </tr>
         <tr id="header2">
             <td colspan="3">
@@ -50,9 +50,9 @@ Yii::app()->clientScript->registerCss('_report', '
         <?php foreach ($generalLedgerSummary->dataProvider->data as $i => $header): ?>
             <?php $beginningBalance = isset($ledgerBeginningBalanceData[$header->id]) ? $ledgerBeginningBalanceData[$header->id] : '0.00'; ?>
                 <tr class="items1">
-                    <td><?php echo $accountNumber++; ?></td>
-                    <td><?php echo CHtml::encode(CHtml::value($header, 'id')); ?> - <?php echo CHtml::encode(CHtml::value($header, 'name')); ?></td>
-                    <td style="text-align: right; font-weight: bold">
+                    <td class="width1-1"><?php echo $accountNumber++; ?></td>
+                    <td class="width1-2"><?php echo CHtml::encode(CHtml::value($header, 'id')); ?> - <?php echo CHtml::encode(CHtml::value($header, 'name')); ?></td>
+                    <td class="width1-3" style="text-align: right; font-weight: bold">
                         <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $beginningBalance)); ?>
                     </td>
                 </tr>
