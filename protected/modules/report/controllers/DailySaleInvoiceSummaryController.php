@@ -98,7 +98,7 @@ class DailySaleInvoiceSummaryController extends Controller {
         }
     }
 
-    protected function saveToExcel($saleInvoiceSummary, $startDate, $endDate, $branchId) {
+    protected function saveToExcel($saleInvoiceSummary, $startDate, $endDate) {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
 
@@ -125,8 +125,7 @@ class DailySaleInvoiceSummaryController extends Controller {
         $worksheet->getStyle('A1:V5')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
         $worksheet->getStyle('A1:V5')->getFont()->setBold(true);
         
-        $branch = Branch::model()->findByPk($branchId);
-        $worksheet->setCellValue('A1', 'Raperind Motor ' . CHtml::value($branch, 'name'));
+        $worksheet->setCellValue('A1', 'Raperind Motor');
         $worksheet->setCellValue('A2', 'Faktur Penjualan Harian (Rincian & Detail)');
         $worksheet->setCellValue('A3', $startDateFormatted . ' - ' . $endDateFormatted);
 
