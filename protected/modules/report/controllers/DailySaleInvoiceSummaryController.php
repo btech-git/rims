@@ -54,7 +54,7 @@ class DailySaleInvoiceSummaryController extends Controller {
         }
         
         if (isset($_GET['SaveExcel'])) {
-            $this->saveToExcel($saleInvoiceSummary, $startDate, $endDate, $branchId);
+            $this->saveToExcel($saleInvoiceSummary, $startDate, $endDate);
         }
 
         $this->render('summary', array(
