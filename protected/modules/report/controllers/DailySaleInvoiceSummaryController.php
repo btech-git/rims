@@ -240,7 +240,7 @@ class DailySaleInvoiceSummaryController extends Controller {
         ob_end_clean();
 
         header('Content-type: application/vnd.ms-excel');
-        header("Content-Disposition: attachment;filename=faktur_penjualan_ppn_$endDate.xls");
+        header("Content-Disposition: attachment;filename=faktur_penjualan_harian_$endDate.xls");
         header('Cache-Control: max-age=0');
         
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
