@@ -73,6 +73,16 @@ function tanggal($date) {
                     <td colspan="3"></td>
                 <?php endif; ?>
             </tr>
+            <?php if ($po->registration_transaction_id_extra_2 !== null): ?>
+                <tr>
+                    <td>WO #</td>
+                    <td>:</td>
+                    <td><?php echo CHtml::encode(CHtml::value($po, 'registrationTransactionIdExtra2.work_order_number')); ?></td>
+                    <td>WO #</td>
+                    <td>:</td>
+                    <td><?php echo CHtml::encode(CHtml::value($po, 'registrationTransactionIdExtra3.work_order_number')); ?></td>
+                </tr>
+            <?php endif; ?>
         </table>
     </div>
 
