@@ -166,6 +166,7 @@ class AssetDepreciation extends CComponent {
             $jurnalExpense->debet_kredit = 'D';
             $jurnalExpense->tanggal_posting = date('Y-m-d');
             $jurnalExpense->transaction_subject = $assetPurchase->transaction_number;
+            $jurnalExpense->remark = $assetPurchase->description;
             $jurnalExpense->is_coa_category = 0;
             $jurnalExpense->transaction_type = 'DFA';
             $jurnalExpense->save();
