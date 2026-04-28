@@ -385,7 +385,7 @@
                             )); ?>
                         </td>
                         <td>
-                            <?php echo CHtml::activeDropDownList($product, 'brand_id', CHtml::listData(Brand::model()->findAll(), 'id', 'name'), array('empty' => '-- All --',
+                            <?php echo CHtml::activeDropDownList($product, 'brand_id', CHtml::listData(Brand::model()->findAll(array('order' => 't.name ASC')), 'id', 'name'), array('empty' => '-- All --',
                                 'onchange' => CHtml::ajax(array(
                                     'type' => 'GET',
                                     'url' => CController::createUrl('ajaxHtmlUpdateProductSubBrandSelect'),
@@ -405,7 +405,7 @@
                         </td>
                         <td>
                             <div id="product_sub_brand">
-                                <?php echo CHtml::activeDropDownList($product, 'sub_brand_id', CHtml::listData(SubBrand::model()->findAll(), 'id', 'name'), array('empty' => '-- All --',
+                                <?php echo CHtml::activeDropDownList($product, 'sub_brand_id', CHtml::listData(SubBrand::model()->findAll(array('order' => 't.name ASC')), 'id', 'name'), array('empty' => '-- All --',
                                     'onchange' => CHtml::ajax(array(
                                         'type' => 'GET',
                                         'url' => CController::createUrl('ajaxHtmlUpdateProductSubBrandSeriesSelect'),
@@ -416,7 +416,7 @@
                         </td>
                         <td>
                             <div id="product_sub_brand_series">
-                                <?php echo CHtml::activeDropDownList($product, 'sub_brand_series_id', CHtml::listData(SubBrandSeries::model()->findAll(), 'id', 'name'), array('empty' => '-- All --',
+                                <?php echo CHtml::activeDropDownList($product, 'sub_brand_series_id', CHtml::listData(SubBrandSeries::model()->findAll(array('order' => 't.name ASC')), 'id', 'name'), array('empty' => '-- All --',
                                     'onchange' => CHtml::ajax(array(
                                         'type' => 'GET',
                                         'url' => CController::createUrl('ajaxHtmlUpdateProductStockTable'),
@@ -426,7 +426,7 @@
                             </div>
                         </td>
                         <td>
-                            <?php echo CHtml::activeDropDownList($product, 'product_master_category_id', CHtml::listData(ProductMasterCategory::model()->findAll(), 'id', 'name'), array('empty' => '-- All --',
+                            <?php echo CHtml::activeDropDownList($product, 'product_master_category_id', CHtml::listData(ProductMasterCategory::model()->findAll(array('order' => 't.name ASC')), 'id', 'name'), array('empty' => '-- All --',
                                 'onchange' => CHtml::ajax(array(
                                     'type' => 'GET',
                                     'url' => CController::createUrl('ajaxHtmlUpdateProductSubMasterCategorySelect'),
@@ -446,7 +446,7 @@
                         </td>
                         <td>
                             <div id="product_sub_master_category">
-                                <?php echo CHtml::activeDropDownList($product, 'product_sub_master_category_id', CHtml::listData(ProductSubMasterCategory::model()->findAll(), 'id', 'name'), array('empty' => '-- All --',
+                                <?php echo CHtml::activeDropDownList($product, 'product_sub_master_category_id', CHtml::listData(ProductSubMasterCategory::model()->findAll(array('order' => 't.name ASC')), 'id', 'name'), array('empty' => '-- All --',
                                     'onchange' => CHtml::ajax(array(
                                         'type' => 'GET',
                                         'url' => CController::createUrl('ajaxHtmlUpdateProductSubCategorySelect'),
@@ -457,7 +457,7 @@
                         </td>
                         <td>
                             <div id="product_sub_category">
-                                <?php echo CHtml::activeDropDownList($product, 'product_sub_category_id', CHtml::listData(ProductSubCategory::model()->findAll(), 'id', 'name'), array('empty' => '-- All --',
+                                <?php echo CHtml::activeDropDownList($product, 'product_sub_category_id', CHtml::listData(ProductSubCategory::model()->findAll(array('order' => 't.name ASC')), 'id', 'name'), array('empty' => '-- All --',
                                     'onchange' => CHtml::ajax(array(
                                         'type' => 'GET',
                                         'url' => CController::createUrl('ajaxHtmlUpdateProductStockTable'),

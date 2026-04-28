@@ -91,8 +91,8 @@
         </tbody>
         <tfoot>
             <tr>
-                <td class="text-end fw-bold" colspan="4">Total Jasa</td>
-                <td class="text-end fw-bold">
+                <td class="fw-bold" style="text-align: right" colspan="4">Total Jasa</td>
+                <td class="fw-bold" style="text-align: right">
                     <span id="sub_total_service">
                         <?php echo CHtml::encode(Yii::app()->numberFormatter->format("#,##0", CHtml::value($saleEstimation->header, 'sub_total_service'))); ?>                                                
                     </span>

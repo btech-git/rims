@@ -119,14 +119,14 @@
         </tbody>
         <tfoot>
             <tr>
-                <td class="text-end fw-bold" colspan="2">Total Quantity</td>
+                <td class="fw-bold" style="text-align: right" colspan="2">Total Quantity</td>
                 <td class="text-center fw-bold">
                     <span id="total_quantity_product">
                         <?php echo CHtml::encode(Yii::app()->numberFormatter->format("#,##0", CHtml::value($saleEstimation->header,'total_quantity_product'))); ?>                                                
                     </span>
                 </td>
-                <td class="text-end fw-bold" colspan="3">Total Produk</td>
-                <td class="text-end fw-bold">
+                <td class="fw-bold" style="text-align: right" colspan="3">Total Produk</td>
+                <td class="fw-bold" style="text-align: right">
                     <span id="sub_total_product">
                         <?php echo CHtml::encode(Yii::app()->numberFormatter->format("#,##0", CHtml::value($saleEstimation->header, 'sub_total_product'))); ?>                                                
                     </span>
