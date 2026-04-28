@@ -75,10 +75,10 @@ function tanggal($date) {
             </tr>
             <?php if ($po->registration_transaction_id_extra_2 !== null): ?>
                 <tr>
-                    <td>WO #</td>
+                    <td>WO 2 #</td>
                     <td>:</td>
                     <td><?php echo CHtml::encode(CHtml::value($po, 'registrationTransactionIdExtra2.work_order_number')); ?></td>
-                    <td>WO #</td>
+                    <td>WO 3 #</td>
                     <td>:</td>
                     <td><?php echo CHtml::encode(CHtml::value($po, 'registrationTransactionIdExtra3.work_order_number')); ?></td>
                 </tr>

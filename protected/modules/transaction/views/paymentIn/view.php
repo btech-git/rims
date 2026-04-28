@@ -474,8 +474,7 @@ $this->menu = array(
             <fieldset>
                 <legend>Attached Images</legend>
 
-                <?php if (!empty($postImages)): ?>
-                    <?php $postImage = $postImages[count($postImages) - 1]; ?>
+                <?php foreach  ($postImages as $postImage): ?>
                     <?php $src = Yii::app()->baseUrl . '/images/uploads/paymentIn/' . $postImage->filename; ?>
                     <div class="row">
                         <div class="small-3 columns">
@@ -484,7 +483,7 @@ $this->menu = array(
                             </div>
                         </div>
                     </div>
-                <?php endif; ?>
+                <?php endforeach; ?>
             </fieldset>
             
             <br />

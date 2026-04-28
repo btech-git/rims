@@ -44,12 +44,12 @@ $this->menu = array(
         
         <?php if ($model->status == "Draft" && Yii::app()->user->checkAccess("cashTransactionApproval")): ?>
             <?php echo CHtml::link('<span class="fa fa-edit"></span>Approval', Yii::app()->baseUrl . '/transaction/cashTransaction/updateApproval?headerId=' . $model->id, array(
-                'class' => 'button cbutton right', 
+                'class' => 'button success right', 
                 'style' => 'margin-right:10px'
             )); ?>
         <?php elseif ($model->status != "Draft" && Yii::app()->user->checkAccess("cashTransactionSupervisor")): ?>
             <?php echo CHtml::link('<span class="fa fa-edit"></span>Update Approval', Yii::app()->baseUrl . '/transaction/cashTransaction/updateApproval?headerId=' . $model->id, array(
-                'class' => 'button cbutton right', 
+                'class' => 'button success right', 
                 'style' => 'margin-right:10px'
             )); ?>
         <?php endif; ?>
@@ -61,7 +61,7 @@ $this->menu = array(
             )); ?>
         <?php endif; ?>
         
-        <?php echo CHtml::link('<span class="fa fa-th-list"></span>Manage Cash Transaction', Yii::app()->baseUrl . '/transaction/cashTransaction/admin', array(
+        <?php echo CHtml::link('<span class="fa fa-th-list"></span>Manage', Yii::app()->baseUrl . '/transaction/cashTransaction/admin', array(
             'class' => 'button cbutton right', 
             'style' => 'margin-right:10px', 
         )); ?>
