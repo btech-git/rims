@@ -34,6 +34,27 @@ class AssetManagementController extends Controller {
         ));
     }
 
+    public function actionShow($id) {
+        $model = $this->loadModel($id);
+        
+        $jurnalUmum = new JurnalUmum('search');
+        $jurnalUmum->unsetAttributes();  // clear any default values
+        if (isset($_GET['JurnalUmum'])) {
+            $jurnalUmum->attributes = $_GET['JurnalUmum'];
+        }
+        
+        $jurnalUmumDataProvider = $jurnalUmum->search();
+        $jurnalUmumDataProvider->criteria->compare('t.transaction_subject', $model->transaction_number);
+        $jurnalUmumDataProvider->criteria->order = 't.tanggal_transaksi DESC';
+        $jurnalUmumDataProvider->pagination->pageSize = 500;
+        
+        $this->render('show', array(
+            'model' => $model,
+            'jurnalUmum' => $jurnalUmum,
+            'jurnalUmumDataProvider' => $jurnalUmumDataProvider
+        ));
+    }
+
     /**
      * Displays a particular model.
      * @param integer $id the ID of the model to be displayed
@@ -144,7 +165,8 @@ class AssetManagementController extends Controller {
                 $jurnalSale->total = $model->sale_price;
                 $jurnalSale->debet_kredit = 'D';
                 $jurnalSale->tanggal_posting = date('Y-m-d');
-                $jurnalSale->transaction_subject = $model->note;
+                $jurnalSale->transaction_subject = $model->assetPurchase->transaction_number;
+                $jurnalSale->remark = $model->assetPurchase->description;
                 $jurnalSale->is_coa_category = 0;
                 $jurnalSale->transaction_type = 'SFA';
                 $jurnalSale->save();
@@ -157,7 +179,8 @@ class AssetManagementController extends Controller {
                 $jurnalAccumulation->total = $model->assetPurchase->accumulated_depreciation_value;
                 $jurnalAccumulation->debet_kredit = 'D';
                 $jurnalAccumulation->tanggal_posting = date('Y-m-d');
-                $jurnalAccumulation->transaction_subject = $model->note;
+                $jurnalAccumulation->transaction_subject = $model->assetPurchase->transaction_number;
+                $jurnalAccumulation->remark = $model->assetPurchase->description;
                 $jurnalAccumulation->is_coa_category = 0;
                 $jurnalAccumulation->transaction_type = 'SFA';
                 $jurnalAccumulation->save();
@@ -171,7 +194,8 @@ class AssetManagementController extends Controller {
                     $jurnalOtherIncome->total = $model->sale_price + $model->assetPurchase->accumulated_depreciation_value - $model->assetPurchase->purchase_value;
                     $jurnalOtherIncome->debet_kredit = 'K';
                     $jurnalOtherIncome->tanggal_posting = date('Y-m-d');
-                    $jurnalOtherIncome->transaction_subject = $model->note;
+                    $jurnalOtherIncome->transaction_subject = $model->assetPurchase->transaction_number;
+                    $jurnalOtherIncome->remark = $model->assetPurchase->description;
                     $jurnalOtherIncome->is_coa_category = 0;
                     $jurnalOtherIncome->transaction_type = 'SFA';
                     $jurnalOtherIncome->save();
@@ -184,7 +208,8 @@ class AssetManagementController extends Controller {
                     $jurnalOtherIncome->total = $model->assetPurchase->purchase_value - $model->sale_price + $model->assetPurchase->accumulated_depreciation_value;
                     $jurnalOtherIncome->debet_kredit = 'D';
                     $jurnalOtherIncome->tanggal_posting = date('Y-m-d');
-                    $jurnalOtherIncome->transaction_subject = $model->note;
+                    $jurnalOtherIncome->transaction_subject = $model->assetPurchase->transaction_number;
+                    $jurnalOtherIncome->remark = $model->assetPurchase->description;
                     $jurnalOtherIncome->is_coa_category = 0;
                     $jurnalOtherIncome->transaction_type = 'SFA';
                     $jurnalOtherIncome->save();
@@ -198,7 +223,8 @@ class AssetManagementController extends Controller {
                 $jurnalInventory->total = $model->assetPurchase->purchase_value;
                 $jurnalInventory->debet_kredit = 'K';
                 $jurnalInventory->tanggal_posting = date('Y-m-d');
-                $jurnalInventory->transaction_subject = $model->note;
+                $jurnalInventory->transaction_subject = $model->assetPurchase->transaction_number;
+                $jurnalInventory->remark = $model->assetPurchase->description;
                 $jurnalInventory->is_coa_category = 0;
                 $jurnalInventory->transaction_type = 'SFA';
                 $jurnalInventory->save();
@@ -317,8 +343,9 @@ class AssetManagementController extends Controller {
     public function actionAdmin() {
         $model = new AssetPurchase('search');
         $model->unsetAttributes();  // clear any default values
-        if (isset($_GET['AssetPurchase']))
+        if (isset($_GET['AssetPurchase'])) {
             $model->attributes = $_GET['AssetPurchase'];
+        }
 
         $this->render('admin', array(
             'model' => $model,
@@ -364,8 +391,9 @@ class AssetManagementController extends Controller {
     public function loadModelDepreciation($id) {
         $model = AssetDepreciationHeader::model()->findByPk($id);
 
-        if ($model === null)
+        if ($model === null) {
             throw new CHttpException(404, 'The requested page does not exist.');
+        }
 
         return $model;
     }
@@ -373,8 +401,9 @@ class AssetManagementController extends Controller {
     public function loadModelSale($id) {
         $model = AssetSaleHeader::model()->findByPk($id);
 
-        if ($model === null)
+        if ($model === null) {
             throw new CHttpException(404, 'The requested page does not exist.');
+        }
 
         return $model;
     }
@@ -386,9 +415,9 @@ class AssetManagementController extends Controller {
         
         if (isset($_POST['AssetDepreciationDetail'])) {
             foreach ($_POST['AssetDepreciationDetail'] as $i => $item) {
-                if (isset($assetDepreciation->details[$i]))
+                if (isset($assetDepreciation->details[$i])) {
                     $assetDepreciation->details[$i]->attributes = $item;
-                else {
+                } else {
                     $detail = new AssetDepreciationDetail();
                     $detail->attributes = $item;
                     $assetDepreciation->details[] = $detail;

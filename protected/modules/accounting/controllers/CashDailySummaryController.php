@@ -11,14 +11,14 @@ class CashDailySummaryController extends Controller {
     }
 
     public function filterAccess($filterChain) {
-        if (
-            $filterChain->action->id === 'summary' || 
-            $filterChain->action->id === 'approval' || 
-            $filterChain->action->id === 'index' || 
-            $filterChain->action->id === 'admin' || 
-            $filterChain->action->id === 'view'
-        ) {
-            if (!(Yii::app()->user->checkAccess('cashDailyApprovalReport') || !(Yii::app()->user->checkAccess('cashDailySummaryReport')))) {
+        if ($filterChain->action->id === 'summary') {
+            if (!Yii::app()->user->checkAccess('cashDailyApprovalReport')) {
+                $this->redirect(array('/site/login'));
+            }
+        }
+        
+        if ($filterChain->action->id === 'index') {
+            if (!Yii::app()->user->checkAccess('cashDailySummaryReport')) {
                 $this->redirect(array('/site/login'));
             }
         }
@@ -36,27 +36,6 @@ class CashDailySummaryController extends Controller {
         $transactionDate = isset($_GET['TransactionDate']) ? $_GET['TransactionDate'] : date('Y-m-d');
         $branchId = isset($_GET['BranchId']) ? $_GET['BranchId'] : '';
         $totalDaily = isset($_GET['TotalDaily']) ? $_GET['TotalDaily'] : 0.00;
-        $paymentTypes = PaymentType::model()->findAll(); 
-        
-        $branchConditionSql = '';
-        $params = array(
-            ':payment_date' => $transactionDate,
-        );
-        if (!empty($userBranch)) {
-            $branchConditionSql = " AND pi.branch_id IN (SELECT branch_id FROM " . UserBranch::model()->tableName() . " WHERE users_id = :user_id)";
-            $params[':user_id'] = $userId;
-        }
-        
-        $sql = "SELECT pi.branch_id, pi.payment_type_id, b.name as branch_name, pt.name as payment_type_name, COALESCE(SUM(pi.payment_amount), 0) as total_amount
-                FROM " . PaymentIn::model()->tableName() . " pi
-                INNER JOIN " . PaymentType::model()->tableName() . " pt ON pt.id = pi.payment_type_id
-                INNER JOIN " . Branch::model()->tableName() . " b ON b.id = pi.branch_id
-                INNER JOIN " . Customer::model()->tableName() . " c ON c.id = pi.customer_id
-                WHERE pi.payment_date = :payment_date AND c.customer_type = 'Individual' AND pi.status IN ('CLEAR', 'Approved')" . $branchConditionSql . "
-                GROUP BY pi.branch_id, pi.payment_type_id
-                ORDER BY pi.branch_id, pi.payment_type_id";
-        
-        $paymentInRetailResultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
         
         $paymentInWholesale = Search::bind(new PaymentIn(), isset($_GET['PaymentIn']) ? $_GET['PaymentIn'] : '');
         $paymentInWholesaleDataProvider = $paymentInWholesale->searchByDailyCashReport();
@@ -143,22 +122,73 @@ class CashDailySummaryController extends Controller {
         $purchaseOrderDataProvider->criteria->compare('t.purchase_order_date', $transactionDate,true);
 //        $purchaseOrderDataProvider->criteria->compare('t.main_branch_id', $branchId);
         
+        $paymentTypes = PaymentType::model()->findAll(array('condition' => 'id <> 5')); 
+        
         $paymentTypeIdList = array();
         foreach ($paymentTypes as $paymentType) {
             $paymentTypeIdList[] = $paymentType->id;
         }
         
+        $bankTransferList = array();
         $paymentInRetailList = array();
+        
+        $branchConditionSql = '';
+        $params = array(
+            ':payment_date' => $transactionDate,
+        );
+        if (!empty($userBranch)) {
+            $branchConditionSql = " AND pi.branch_id IN (SELECT branch_id FROM " . UserBranch::model()->tableName() . " WHERE users_id = :user_id)";
+            $params[':user_id'] = $userId;
+        }
+        
+        $sql = "SELECT pi.branch_id, pi.payment_type_id, b.name as branch_name, pt.name as payment_type_name, COALESCE(SUM(pi.payment_amount), 0) as total_amount
+                FROM " . PaymentIn::model()->tableName() . " pi
+                INNER JOIN " . PaymentType::model()->tableName() . " pt ON pt.id = pi.payment_type_id
+                INNER JOIN " . Branch::model()->tableName() . " b ON b.id = pi.branch_id
+                INNER JOIN " . Customer::model()->tableName() . " c ON c.id = pi.customer_id
+                WHERE pi.payment_date = :payment_date AND c.customer_type = 'Individual' AND pi.status IN ('CLEAR', 'Approved')" . $branchConditionSql . "
+                GROUP BY pi.branch_id, pi.payment_type_id
+                ORDER BY pi.branch_id, pi.payment_type_id";
+        
+        $paymentInRetailResultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
+        
         $lastBranchId = '';
         foreach ($paymentInRetailResultSet as $paymentInRetailRow) {
             if ($lastBranchId !== $paymentInRetailRow['branch_id']) {
-                $paymentInRetailList[$paymentInRetailRow['branch_id']][0] = $paymentInRetailRow['branch_name'];
+                $paymentInRetailList[$paymentInRetailRow['branch_id']]['name'] = $paymentInRetailRow['branch_name'];
                 foreach ($paymentTypeIdList as $paymentTypeId) {
                     $paymentInRetailList[$paymentInRetailRow['branch_id']][$paymentTypeId] = '0.00';
                 }
             }
             $paymentInRetailList[$paymentInRetailRow['branch_id']][$paymentInRetailRow['payment_type_id']] = $paymentInRetailRow['total_amount'];
             $lastBranchId = $paymentInRetailRow['branch_id'];
+        }
+        
+        $sql = "SELECT pi.branch_id, pi.company_bank_id, COALESCE(SUM(pi.payment_amount), 0) as total_amount
+                FROM rims_payment_in pi
+                INNER JOIN rims_payment_type pt ON pt.id = pi.payment_type_id
+                INNER JOIN rims_customer c ON c.id = pi.customer_id
+                WHERE pi.payment_type_id = 5 AND pi.payment_date = :payment_date AND c.customer_type = 'Individual' AND pi.status IN ('CLEAR', 'Approved')" . $branchConditionSql . "
+                GROUP BY pi.branch_id, pi.company_bank_id
+                ORDER BY pi.branch_id, pi.company_bank_id";
+        
+        $bankTransferResultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
+        
+        $companyBankIds = array();
+        foreach ($bankTransferResultSet as $bankTransferRow) {
+            $bankTransferList[$bankTransferRow['branch_id']][$bankTransferRow['company_bank_id']] = $bankTransferRow['total_amount'];
+            if (!in_array($bankTransferRow['company_bank_id'], $companyBankIds)) {
+                $companyBankIds[] = $bankTransferRow['company_bank_id'];
+            }
+        }
+        
+        $companyBankIdsSql = empty($companyBankIds) ? 'NULL' : implode(',', $companyBankIds);
+        
+        $companyBanks = CompanyBank::model()->findAll(array('condition' => "id IN ({$companyBankIdsSql})"));
+        
+        $companyBankIdList = array();
+        foreach ($companyBanks as $companyBank) {
+            $companyBankIdList[] = $companyBank->id;
         }
 
         $registrationTransactionIndividualCashDailySummary = InvoiceHeader::getIndividualCashDailySummary($transactionDate);
@@ -242,6 +272,8 @@ class CashDailySummaryController extends Controller {
             'transactionJournalDataProvider' => $transactionJournalDataProvider,
             'cashDailySummary' => $cashDailySummary,
             'branches' => $branches,
+            'companyBanks' => $companyBanks,
+            'bankTransferList' => $bankTransferList,
         ));
     }
     
