@@ -31,7 +31,7 @@
                             <div class="field">
                                 <div class="row collapse">
                                     <div class="small-4 columns">
-                                        <label class="prefix"><?php echo CHtml::label('Tanggal', ''); ?></label>
+                                        <label class="prefix"><?php echo CHtml::label('Tanggal Saldo Awal', ''); ?></label>
                                     </div>
 
                                     <div class="small-8 columns">

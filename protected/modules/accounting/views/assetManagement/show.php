@@ -18,7 +18,7 @@ $this->menu=array(
 
 <h1>View Asset Management #<?php echo $model->id; ?></h1>
 
-<a class="button cbutton right" href="<?php echo Yii::app()->baseUrl.'/accounting/assetManagement/admin';?>"><span class="fa fa-th-list"></span>Manage Asset</a>
+<a class="button cbutton right" href="<?php echo Yii::app()->baseUrl.'/accounting/assetManagement/admin';?>"><span class="fa fa-th-list"></span>Manage</a>
                         
 <?php $this->widget('zii.widgets.CDetailView', array(
     'data'=>$model,

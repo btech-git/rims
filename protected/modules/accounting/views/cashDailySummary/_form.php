@@ -5,6 +5,8 @@
         'transactionDate' => $transactionDate,
         'paymentInRetailResultSet' => $paymentInRetailResultSet,
         'paymentInRetailList' => $paymentInRetailList,
+        'companyBanks' => $companyBanks,
+        'bankTransferList' => $bankTransferList,
     )); ?>
 </div>
 

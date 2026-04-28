@@ -115,6 +115,8 @@ $this->menu=array(
                 'transactionJournalDataProvider' => $transactionJournalDataProvider,
                 'cashDailySummary' => $cashDailySummary,
                 'branches' => $branches,
+                'companyBanks' => $companyBanks,
+                'bankTransferList' => $bankTransferList,
             )); ?>
         </div>
     </div>
