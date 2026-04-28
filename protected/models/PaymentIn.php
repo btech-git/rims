@@ -96,6 +96,7 @@ class PaymentIn extends MonthlyTransactionActiveRecord {
             array('payment_type, status', 'length', 'max' => 30),
             array('nomor_giro', 'length', 'max' => 20),
             array('payment_number', 'unique'),
+            array('images', 'validateMinFiles'),
             array('invoice_number_list, plate_number_list, created_datetime, cancelled_datetime, edited_datetime, verified_datetime', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
@@ -288,6 +289,13 @@ class PaymentIn extends MonthlyTransactionActiveRecord {
         }
 
         $this->setCodeNumberByNext('payment_number', $branchCode, PaymentIn::CONSTANT, $currentMonth, $currentYear);
+    }
+
+    public function validateMinFiles($attribute, $params) {
+        $files = CUploadedFile::getInstances($this, $attribute);
+        if (count($files) < 1) {
+            $this->addError($attribute, 'You must upload at least 1 file.');
+        }
     }
     
     public function getApprovalStatus() {

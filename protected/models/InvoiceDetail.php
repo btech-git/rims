@@ -1082,4 +1082,34 @@ class InvoiceDetail extends CActiveRecord {
 
         return $resultSet;
     }
+    
+    public static function getMonthlyTireCustomerSaleTransactionReport($year, $month, $customerName, $productSubCategoryIds) {
+        
+        $customerNameConditionSql = '';
+        $productSubCategoryIdsSql = empty($productSubCategoryIds) ? 'NULL' : implode(',', $productSubCategoryIds);
+        
+        $params = array(
+            ':year' => $year,
+            ':month' => $month,
+        );
+        
+        if (!empty($customerName)) {
+            $customerNameConditionSql = ' AND c.name LIKE :customer_name';
+            $params[':customer_name'] = '%' . $customerName . '%';
+        }
+        
+        $sql = "SELECT h.customer_id, h.branch_id, MIN(c.name) AS customer_name, SUM(d.quantity) AS sale_quantity
+                FROM rims_invoice_detail d
+                INNER JOIN rims_invoice_header h ON h.id = d.invoice_id
+                INNER JOIN rims_product p ON p.id = d.product_id
+                INNER JOIN rims_customer c ON c.id = h.customer_id
+                WHERE p.product_sub_category_id IN ({$productSubCategoryIdsSql}) AND c.customer_type = 'Company' AND h.user_id_cancelled IS NULL AND 
+                    YEAR(h.invoice_date) = :year AND MONTH(h.invoice_date) = :month" . $customerNameConditionSql . "
+                GROUP BY h.customer_id, h.branch_id
+                ORDER BY customer_name ASC";
+                
+        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
+
+        return $resultSet;
+    }
 }
