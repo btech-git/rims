@@ -341,6 +341,6 @@ class PaymentInComponent extends CComponent {
     
     public function getTotalPayment() {
         
-        return $this->totalDetail + $this->totalServiceTax + $this->totalDiscount + $this->totalBankAdminFee + $this->totalMerimenFee + $this->getBankFeeAmount();
+        return $this->totalDetail + $this->totalServiceTax + $this->totalDiscount + $this->totalBankAdminFee + $this->totalMerimenFee + $this->bankFeeAmount + $this->totalDownpaymentAmount;
     }
 }
