@@ -489,7 +489,7 @@ $this->menu = array(
             <br />
 
             <?php $transactions = JurnalUmum::model()->findAllByAttributes(array('kode_transaksi' => $model->payment_number, 'is_coa_category' => 0)); ?>
-            <?php if (Yii::app()->user->checkAccess("paymentInSupervisor")): ?>
+            <?php if (Yii::app()->user->checkAccess("paymentHead")): ?>
                 <fieldset>
                     <legend>Journal Transactions</legend>
                     <table class="report">

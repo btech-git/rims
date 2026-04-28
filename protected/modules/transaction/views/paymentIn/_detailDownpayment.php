@@ -21,7 +21,7 @@
                 <td><?php echo CHtml::encode(CHtml::value($detail, "registrationTransaction.downpayment_note")); ?></td>
                 <td style="text-align: right">
                     <?php echo CHtml::activeHiddenField($detail, "[$i]downpayment_amount"); ?>
-                    <?php echo CHtml::encode(CHtml::value($detail, "downpayment_amount")); ?>
+                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($detail, "downpayment_amount"))); ?>
                 </td>
             </tr>
         <?php endforeach; ?>

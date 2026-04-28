@@ -254,7 +254,11 @@ $('.search-form form').submit(function(){
                             'downpayment_transaction_date',
                             'vehicle.plate_number',
                             'downpayment_note',
-                            'downpayment_amount',
+                            array(
+                                'name' => 'downpayment_amount', 
+                                'value' => 'AppHelper::formatMoney($data->downpayment_amount)',
+                                'htmlOptions' => array('style' => 'text-align: right'),
+                            ),
                             array(
                                 'header' => '',
                                 'type' => 'raw',
