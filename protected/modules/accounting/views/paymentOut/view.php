@@ -269,7 +269,7 @@
 <br />
 
 <?php $transactions = JurnalUmum::model()->findAllByAttributes(array('kode_transaksi' => $paymentOut->payment_number, 'is_coa_category' => 0)); ?>
-<?php if (Yii::app()->user->checkAccess("paymentOutSupervisor")): ?>
+<?php if (Yii::app()->user->checkAccess("paymentHead")): ?>
     <fieldset>
         <legend>Journal Transactions</legend>
         <table class="report">

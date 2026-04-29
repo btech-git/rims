@@ -11,7 +11,14 @@ class JournalBeginningController extends Controller {
     }
 
     public function filterAccess($filterChain) {
-        if ($filterChain->action->id === 'create' || $filterChain->action->id === 'update' || $filterChain->action->id === 'updateApproval') {
+        if (
+            $filterChain->action->id === 'create' || 
+            $filterChain->action->id === 'update' || 
+            $filterChain->action->id === 'admin' || 
+            $filterChain->action->id === 'show' || 
+            $filterChain->action->id === 'updateApproval' || 
+            $filterChain->action->id === 'view'
+        ) {
             if (!(Yii::app()->user->checkAccess('director'))) {
                 $this->redirect(array('/site/login'));
             }

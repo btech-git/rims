@@ -17,14 +17,8 @@ class JournalAdjustmentController extends Controller {
             }
         }
 
-        if ($filterChain->action->id === 'update') {
-            if (!(Yii::app()->user->checkAccess('adjustmentJournalEdit'))) {
-                $this->redirect(array('/site/login'));
-            }
-        }
-
         if ($filterChain->action->id === 'updateApproval') {
-            if (!(Yii::app()->user->checkAccess('adjustmentJournalApproval') || Yii::app()->user->checkAccess('adjustmentJournalSupervisor'))) {
+            if (!(Yii::app()->user->checkAccess('adjustmentJournalApproval'))) {
                 $this->redirect(array('/site/login'));
             }
         }
@@ -36,7 +30,6 @@ class JournalAdjustmentController extends Controller {
         ) {
             if (!(
                 Yii::app()->user->checkAccess('adjustmentJournalCreate') || 
-                Yii::app()->user->checkAccess('adjustmentJournalEdit') || 
                 Yii::app()->user->checkAccess('adjustmentJournalView')
             )) {
                 $this->redirect(array('/site/login'));
@@ -80,39 +73,39 @@ class JournalAdjustmentController extends Controller {
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id the ID of the model to be updated
      */
-    public function actionUpdate($id) {
-        $journalVoucher = $this->instantiate($id, 'update');
-        $journalVoucher->header->status = 'Draft';
-        $journalVoucher->header->updated_datetime = date('Y-m-d H:i:s');
-        $journalVoucher->header->user_id_updated = Yii::app()->user->id;
-
-        // Uncomment the following line if AJAX validation is needed
-        // $this->performAjaxValidation($model);
-
-        $account = Search::bind(new Coa('search'), isset($_GET['Coa']) ? $_GET['Coa'] : array());
-        $dataProvider = $account->search();
-        $dataProvider->criteria->addCondition("t.status = 'Approved'");
-
-        if (isset($_POST['Submit']) && IdempotentManager::check()) {
-            $this->loadState($journalVoucher);
-
-            JurnalUmum::model()->deleteAllByAttributes(array(
-                'kode_transaksi' => $journalVoucher->header->transaction_number,
-            ));
-
-            $journalVoucher->header->setCodeNumberByRevision('transaction_number');
-
-            if ($journalVoucher->save(Yii::app()->db)) {
-                $this->redirect(array('view', 'id' => $journalVoucher->header->id));
-            }
-        }
-
-        $this->render('update', array(
-            'journalVoucher' => $journalVoucher,
-            'account' => $account,
-            'dataProvider' => $dataProvider,
-        ));
-    }
+//    public function actionUpdate($id) {
+//        $journalVoucher = $this->instantiate($id, 'update');
+//        $journalVoucher->header->status = 'Draft';
+//        $journalVoucher->header->updated_datetime = date('Y-m-d H:i:s');
+//        $journalVoucher->header->user_id_updated = Yii::app()->user->id;
+//
+//        // Uncomment the following line if AJAX validation is needed
+//        // $this->performAjaxValidation($model);
+//
+//        $account = Search::bind(new Coa('search'), isset($_GET['Coa']) ? $_GET['Coa'] : array());
+//        $dataProvider = $account->search();
+//        $dataProvider->criteria->addCondition("t.status = 'Approved'");
+//
+//        if (isset($_POST['Submit']) && IdempotentManager::check()) {
+//            $this->loadState($journalVoucher);
+//
+//            JurnalUmum::model()->deleteAllByAttributes(array(
+//                'kode_transaksi' => $journalVoucher->header->transaction_number,
+//            ));
+//
+//            $journalVoucher->header->setCodeNumberByRevision('transaction_number');
+//
+//            if ($journalVoucher->save(Yii::app()->db)) {
+//                $this->redirect(array('view', 'id' => $journalVoucher->header->id));
+//            }
+//        }
+//
+//        $this->render('update', array(
+//            'journalVoucher' => $journalVoucher,
+//            'account' => $account,
+//            'dataProvider' => $dataProvider,
+//        ));
+//    }
 
     /**
      * Manages all models.

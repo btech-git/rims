@@ -4,13 +4,13 @@ class PayableIncomingDueController extends Controller {
 
     public function filters() {
         return array(
-//            'access',
+            'access',
         );
     }
 
     public function filterAccess($filterChain) {
-        if ($filterChain->action->id === 'summary') {
-            if (!(Yii::app()->user->checkAccess('dailySaleAllMechanicReport'))) {
+        if ($filterChain->action->id === 'index') {
+            if (!(Yii::app()->user->checkAccess('payableDueReport'))) {
                 $this->redirect(array('/site/login'));
             }
         }

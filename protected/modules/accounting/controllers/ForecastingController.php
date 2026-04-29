@@ -20,10 +20,10 @@ class ForecastingController extends Controller {
             $filterChain->action->id === 'check' || 
             $filterChain->action->id === 'detail' || 
             $filterChain->action->id === 'create' || 
-            $filterChain->action->id === 'export' || 
+            $filterChain->action->id === 'admin' || 
             $filterChain->action->id === 'view'
         ) {
-            if (!(Yii::app()->user->checkAccess('accountingReport') || !(Yii::app()->user->checkAccess('financeReport')))) {
+            if (!(Yii::app()->user->checkAccess('financialAnalysisReport'))) {
                 $this->redirect(array('/site/login'));
             }
         }
@@ -141,91 +141,6 @@ class ForecastingController extends Controller {
             }
             echo '<br />';
         }
-    }
-
-    public function actionTest() {
-        // $forecastingBank = ForecastingBank::model()->findAll();
-        /* id bank
-          3 	BCA HUFADHA | 5 	BCA PD	| 7 	BCA PT	| 10 	CIMB NIAGA | 14 	Mandiri KMK | 17 	MANDIRI TBM
-         */
-
-        $listbank = new ForecastingComponents();
-
-        $criteria = new CDbCriteria;
-        $criteria->addInCondition('id', $listbank->getListbank());
-        // $criteria->limit=3;
-        // $forecastingBank = ForecastingBank::model()->findAll($criteria);
-        $forecastingBank = Coa::model()->findAll($criteria);
-        $model = new Forecasting;
-
-        // Uncomment the following line if AJAX validation is needed
-        // $this->performAjaxValidation($model);
-
-        if (isset($_POST['Forecasting'])) {
-            $model->attributes = $_POST['Forecasting'];
-            if ($model->save())
-                $this->redirect(array('view', 'id' => $model->id));
-        }
-
-        $priodeStep = (isset($_GET['Forecasting']['priode']) ? $_GET['Forecasting']['priode'] : 0);
-        $priodeStart = (isset($_GET['Forecasting']['payment_date']) ? $_GET['Forecasting']['payment_date'] : date('Y-m-01'));
-        $dateStart = substr($priodeStart, -2);
-        // $priodeStart = (isset($_GET['Forecasting']['payment_date'])?$_GET['Forecasting']['payment_date']:date('Y-m-d'));
-        $priodeEnd = date('Y-m-01', strtotime('+' . $priodeStep . ' months'));
-        // $priodeEnd2	= date('m', strtotime('+'.$priodeStep.' months'));
-        // var_dump($priodeStep . $priodeStart .$priodeEnd . $priodeEnd2);die();
-
-        $begin = new DateTime($priodeStart);
-        $end = new DateTime($priodeEnd);
-        // var_dump($end); die();
-        // $end = $end->modify( '+1 day' ); 
-        $interval = new DateInterval('P1D');
-        $daterange = new DatePeriod($begin, $interval, $end);
-
-        // setting saldo awal berdasarkan bank//
-        // $saldo_awal = [];
-        // foreach ($forecastingBank as $key => $value) {
-        // 	$bankid = Forecasting::model()->getCoaBank($value->id);
-        // 	$saldo_awal[$bankid] = Forecasting::model()->getSaldoAwal($bankid,'2017-04-01');
-        // }
-        // var_dump($saldo_awal); die();
-        // foreach($daterange as $key => $date){
-        // 	if ($date->format("d") == '01') {
-        // 		echo "tgl". $date->format("Y-m-d"); 
-        // 		// foreach ($forecastingBank as $key => $value) {
-        // 			// $bankid = Forecasting::model()->getCoaBank($value->id);
-        // 		echo $saldo_awal = Forecasting::model()->getSaldoAwal(5,$date->format("Y-m-01"));
-        // 		// }
-        // 		echo "<br />";
-        // 	}
-        // }
-        // die();
-        // $lastmonth = date('2016-12-01'); 
-        // $resource_cnt = Forecasting::model()->findAll(array(
-        //   'select'=>'id,bank_id,payment_date, SUM(amount) as amt',
-        //   'condition'=>'bank_id=:bank_id AND YEAR(payment_date) = YEAR(:priodeStart - INTERVAL 1 MONTH) AND MONTH(payment_date) = MONTH(:priodeStart - INTERVAL 1 MONTH)',
-        //   'params'=>array(':bank_id'=>1,':priodeStart'=>$priodeStart))
-        // );
-        // foreach ($resource_cnt as $key => $value) {
-        // 	echo "string ".$value->amt; 
-        // }
-        // var_dump($resource_cnt);
-        // die();
-        // var_dump($daterange); die();
-        // echo $startDate;
-        // echo $priodeStep;
-        // echo $begin;
-        // echo $endpriode;
-        // echo $interval;
-        // var_dump($daterange);
-        // die();
-        $this->render('test', array(
-            'model' => $model,
-            'forecastingBank' => $forecastingBank,
-            // 'forecastingBalance'=>$forecastingBalance,
-            'daterange' => $daterange,
-                // 'saldo_awal'=>$saldo_awal,
-        ));
     }
 
     public function actionAjax() {
@@ -588,8 +503,9 @@ class ForecastingController extends Controller {
             }
             if ($model->save()) {
                 // $model->image->saveAs($path.'/uploads/forecasting');
-                if ($imageUploadFile !== null) // validate to save file
+                if ($imageUploadFile !== null) {// validate to save file
                     $imageUploadFile->saveAs($path . '/uploads/forecasting/' . $imageFileName);
+                }
 
                 $this->redirect(array('view', 'id' => $model->id));
             }

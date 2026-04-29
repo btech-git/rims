@@ -11,23 +11,11 @@ class SaleInvoiceCoretaxController extends Controller {
     }
 
     public function filterAccess($filterChain) {
-        if ($filterChain->action->id === 'create') {
-            if (!(Yii::app()->user->checkAccess('saleInvoiceCreate')))
+        
+        if ($filterChain->action->id === 'admin' || $filterChain->action->id === 'view') {
+            if (!(Yii::app()->user->checkAccess('coretaxInvoiceView'))) {
                 $this->redirect(array('/site/login'));
-        }
-        if ($filterChain->action->id === 'delete' || $filterChain->action->id === 'update') {
-            if (!(Yii::app()->user->checkAccess('saleInvoiceEdit')))
-                $this->redirect(array('/site/login'));
-        }
-        if ($filterChain->action->id === 'view'
-                || $filterChain->action->id === 'memo'
-                || $filterChain->action->id === 'memoDelivery'
-                || $filterChain->action->id === 'admin'
-                || $filterChain->action->id === 'ajaxHtmlAddProduct'
-                || $filterChain->action->id === 'ajaxHtmlRemoveProduct'
-                || $filterChain->action->id === 'ajaxJsonDelivery') {
-            if (!(Yii::app()->user->checkAccess('saleInvoiceCreate') || Yii::app()->user->checkAccess('saleInvoiceEdit')))
-                $this->redirect(array('/site/login'));
+            }
         }
 
         $filterChain->run();

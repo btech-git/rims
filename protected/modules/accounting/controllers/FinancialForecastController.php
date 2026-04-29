@@ -3,16 +3,18 @@
 class FinancialForecastController extends Controller {
 
     public $layout = '//layouts/column1';
+    
     public function filters() {
         return array(
-//            'access',
+            'access',
         );
     }
 
     public function filterAccess($filterChain) {
         if ($filterChain->action->id === 'summary') {
-            if (!(Yii::app()->user->checkAccess('allAccountingReport')))
+            if (!(Yii::app()->user->checkAccess('financialSummary'))) {
                 $this->redirect(array('/site/login'));
+            }
         }
 
         $filterChain->run();
@@ -118,18 +120,6 @@ class FinancialForecastController extends Controller {
             'coa' => $coa,
         ));
     }
-
-//    public function actionApproval($transactionDate, $coaId) {
-//        set_time_limit(0);
-//        ini_set('memory_limit', '1024M');
-//
-//        $coa = Coa::model()->findByPk($coaId);
-//
-//        $this->render('approval', array(
-//            'transactionDate' => $transactionDate,
-//            'coa' => $coa,
-//        ));
-//    }
 
     public function actionRedirectTransaction($codeNumber) {
         list($leftPart,, ) = explode('/', $codeNumber);

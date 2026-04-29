@@ -6,17 +6,38 @@ class AssetManagementController extends Controller {
 
     public function filters() {
         return array(
-//            'access',
+            'access',
         );
     }
 
     public function filterAccess($filterChain) {
         if (
             $filterChain->action->id === 'createPurchase' || 
-            $filterChain->action->id === 'delete' || 
-            $filterChain->action->id === 'update' 
+            $filterChain->action->id === 'createSale' || 
+            $filterChain->action->id === 'createDepreciation' 
         ) {
-            if (!(Yii::app()->user->checkAccess('assetManagement'))) {
+            if (!(Yii::app()->user->checkAccess('assetManagementCreate'))) {
+                $this->redirect(array('/site/login'));
+            }
+        }
+
+        if ($filterChain->action->id === 'update') {
+            if (!(Yii::app()->user->checkAccess('assetManagementEdit'))) {
+                $this->redirect(array('/site/login'));
+            }
+        }
+
+        if (
+            $filterChain->action->id === 'show' || 
+            $filterChain->action->id === 'view' || 
+            $filterChain->action->id === 'viewSale'  || 
+            $filterChain->action->id === 'viewDepreciation'
+        ) {
+            if (!(
+                Yii::app()->user->checkAccess('assetManagementCreate') ||
+                Yii::app()->user->checkAccess('assetManagementEdit') ||
+                Yii::app()->user->checkAccess('assetManagementView')
+            )) {
                 $this->redirect(array('/site/login'));
             }
         }

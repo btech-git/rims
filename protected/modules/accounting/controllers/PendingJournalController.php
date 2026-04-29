@@ -10,18 +10,25 @@ class PendingJournalController extends Controller {
 
     public function filters() {
         return array(
-//            'access',
+            'access',
         );
     }
 
     public function filterAccess($filterChain) {
         if (
-            $filterChain->action->id === 'index' || 
-            $filterChain->action->id === 'viewPurchase' || 
-            $filterChain->action->id === 'viewSale' || 
-            $filterChain->action->id === 'viewTransfer'
+            $filterChain->action->id === 'indexPurchase' || 
+            $filterChain->action->id === 'indexCash' || 
+            $filterChain->action->id === 'indexDelivery' || 
+            $filterChain->action->id === 'indexMovementIn' || 
+            $filterChain->action->id === 'indexMovementOut' || 
+            $filterChain->action->id === 'indexPaymentIn' || 
+            $filterChain->action->id === 'indexPaymentOut' || 
+            $filterChain->action->id === 'indexReceive' || 
+            $filterChain->action->id === 'indexInvoice' || 
+            $filterChain->action->id === 'indexSale' || 
+            $filterChain->action->id === 'indexAdjustmentStock'
         ) {
-            if (!(Yii::app()->user->checkAccess('purchaseHead'))) {
+            if (!(Yii::app()->user->checkAccess('pendingJournalView'))) {
                 $this->redirect(array('/site/login'));
             }
         }

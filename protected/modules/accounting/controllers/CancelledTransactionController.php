@@ -2,10 +2,6 @@
 
 class CancelledTransactionController extends Controller {
 
-    /**
-     * @var string the default layout for the views. Defaults to '//layouts/column2', meaning
-     * using two-column layout. See 'protected/views/layouts/column2.php'.
-     */
     public $layout = '//layouts/column1';
 
     public function filters() {
@@ -15,10 +11,8 @@ class CancelledTransactionController extends Controller {
     }
 
     public function filterAccess($filterChain) {
-        if (
-            $filterChain->action->id === 'index'
-        ) {
-            if (!(Yii::app()->user->checkAccess('requestOrderSupervisor'))) {
+        if ($filterChain->action->id === 'index') {
+            if (!(Yii::app()->user->checkAccess('cancelledTransactionView'))) {
                 $this->redirect(array('/site/login'));
             }
         }
