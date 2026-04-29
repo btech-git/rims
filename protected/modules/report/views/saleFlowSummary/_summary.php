@@ -35,8 +35,8 @@
 
 <br />
 
-<div style="white-space: nowrap">
-    <table class="report">
+<div class="table_wrapper">
+    <table class="responsive">
         <thead style="position: sticky; top: 0">
             <tr id="header1">
                 <th class="width1-1">No</th>

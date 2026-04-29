@@ -8,9 +8,9 @@
 <br />
 
 <table style="width: 60%; margin: 0 auto; border-spacing: 0pt">
-    <?php $profitLossAmount = 0.00; ?>
+    <?php $profitLossAmount = '0.00'; ?>
     <?php foreach ($accountCategoryTypes as $accountCategoryType): ?>
-	<?php $accountCategoryTypeBalance = 0.00; ?>
+	<?php $accountCategoryTypeBalance = '0.00'; ?>
         <tr>
             <td style="font-size: larger; font-weight: bold; text-transform: uppercase">
                 <?php echo CHtml::encode(CHtml::value($accountCategoryType, 'code')); ?> - 
@@ -20,7 +20,7 @@
         </tr>
 	<?php $coaSubCategories = CoaSubCategory::model()->findAllByAttributes(array('coa_category_id' => $accountCategoryType->id), array('order' => 'code ASC')); ?> 
         <?php foreach ($coaSubCategories as $accountCategory): ?>
-            <?php $accountCategoryBalance = 0.00; ?>
+            <?php $accountCategoryBalance = '0.00'; ?>
             <tr>
                 <td style="padding-left: 25px; font-weight: bold; text-transform: capitalize; font-size: 14px;">
                     <?php echo CHtml::encode(CHtml::value($accountCategory, 'code')); ?> - 
@@ -29,7 +29,11 @@
                 <td style="text-align: right; font-weight: bold"></td>
             </tr>
             
-            <?php $coas = Coa::model()->findAllByAttributes(array('coa_sub_category_id' => $accountCategory->id, 'is_approved' => 1, 'coa_id' => null), array('order' => 'code ASC')); ?> 
+            <?php $coas = Coa::model()->findAllByAttributes(array(
+                'coa_sub_category_id' => $accountCategory->id, 
+                'is_approved' => 1, 
+                'coa_id' => null
+            ), array('order' => 'code ASC')); ?> 
             <?php foreach ($coas as $coa): ?>
                 <?php //if ($accountGroupBalance > 0): ?>
                     <tr>
@@ -53,7 +57,7 @@
                                 "StartDate" => $startDate, 
                                 "EndDate" => $endDate, 
                                 "BranchId" => $branchId
-                            )), array('target' => '_blank')); ?>
+                            )), array('target' => '_blank', 'style' => $coaBalance <= '0.00' ? 'color:red' : 'color:blue')); ?>
                         </td>
                     </tr>
 
@@ -78,7 +82,7 @@
                                             "StartDate" => $startDate, 
                                             "EndDate" => $endDate, 
                                             "BranchId" => $branchId
-                                        )), array('target' => '_blank')); ?>
+                                        )), array('target' => '_blank', 'style' => $accountBalance <= '0.00' ? 'color:red' : 'color:blue')); ?>
                                     </td>
                                 </tr>
                                 <?php $accountGroupBalance += $accountBalance; ?>
@@ -86,7 +90,7 @@
                         <?php endforeach; ?>
                         <tr>
                             <td style="text-align: right; font-size: 11px;">TOTAL <?php echo CHtml::encode(CHtml::value($coa, 'name')); ?></td>
-                            <td style="text-align: right; font-size: 11px; border-top: 1px solid">
+                            <td style="text-align: right; font-size: 11px; border-top: 1px solid; color: <?php echo $accountGroupBalance <= '0.00' ? 'red' : 'blue'; ?>">
                                 <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $accountGroupBalance)); ?>
                             </td>
                         </tr>
@@ -101,7 +105,7 @@
                     <?php echo CHtml::encode(CHtml::value($accountCategory, 'name')); ?>
                 </td>
                 
-                <td style="text-align: right; font-weight: bold; border-top: 1px solid">
+                <td style="text-align: right; font-weight: bold; border-top: 1px solid; color: <?php echo $accountCategoryBalance <= '0.00' ? 'red' : 'blue'; ?>">
                     <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $accountCategoryBalance)); ?>
                 </td>
             </tr>
@@ -121,7 +125,7 @@
                 <?php echo CHtml::encode(CHtml::value($accountCategoryType, 'name')); ?>
             </td>
             
-            <td style="text-align: right; font-weight: bold; border-top: 1px solid">
+            <td style="text-align: right; font-weight: bold; border-top: 1px solid; color: <?php echo $accountCategoryTypeBalance <= '0.00' ? 'red' : 'blue'; ?>">
                 <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $accountCategoryTypeBalance)); ?>
             </td>
         </tr>
@@ -133,7 +137,7 @@
     <?php endforeach; ?>
     <tr>
         <td style="text-align: right; font-weight: bold; border-top: 1px solid">Profit / Loss</td>
-        <td style="text-align: right; font-weight: bold; border-top: 1px solid">
+        <td style="text-align: right; font-weight: bold; border-top: 1px solid; color: <?php echo $profitLossAmount <= '0.00' ? 'red' : 'blue'; ?>">
             <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $profitLossAmount)); ?>
         </td>
     </tr>

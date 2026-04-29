@@ -46,7 +46,7 @@
                         "StartDate" => $startDate, 
                         "EndDate" => $endDate, 
                         "BranchId" => $branchId,
-                    )), array('target' => '_blank')); ?>
+                    )), array('target' => '_blank', 'style' => $accountCategoryBalance <= '0.00' ? 'color:red' : 'color:blue')); ?>
                 </td>
             </tr>
             <?php if ((int)$accountCategory->id === 28 || (int)$accountCategory->id === 30 || (int)$accountCategory->id === 31): ?>
@@ -64,7 +64,7 @@
                 TOTAL <?php echo CHtml::encode(CHtml::value($accountCategoryType, 'name')); ?>
             </td>
             
-            <td style="text-align: right; font-weight: bold; border-top: 1px solid">
+            <td style="text-align: right; font-weight: bold; border-top: 1px solid; color: <?php echo $accountCategoryTypeBalance <= '0.00' ? 'red' : 'blue'; ?>">
                 <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $accountCategoryTypeBalance)); ?>
             </td>
         </tr>
@@ -76,7 +76,7 @@
     <?php endforeach; ?>
     <tr>
         <td style="text-align: right; font-weight: bold; border-top: 1px solid">Profit / Loss</td>
-        <td style="text-align: right; font-weight: bold; border-top: 1px solid">
+        <td style="text-align: right; font-weight: bold; border-top: 1px solid; color: <?php echo $profitLossAmount <= '0.00' ? 'red' : 'blue'; ?>">
             <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $profitLossAmount)); ?>
         </td>
     </tr>

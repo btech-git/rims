@@ -6,17 +6,16 @@ class StockOilController extends Controller {
 
     public function filters() {
         return array(
-//            'access',
+            'access',
         );
     }
 
     public function filterAccess($filterChain) {
         if (
             $filterChain->action->id === 'check' || 
-            $filterChain->action->id === 'detail' || 
-            $filterChain->action->id === 'redirectTransaction'
+            $filterChain->action->id === 'detail'
         ) {
-            if (!(Yii::app()->user->checkAccess('warehouseStockReport'))){
+            if (!(Yii::app()->user->checkAccess('stockOilReport'))){
                 $this->redirect(array('/site/login'));
             }
         }

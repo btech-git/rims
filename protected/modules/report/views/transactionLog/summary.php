@@ -2,6 +2,8 @@
 Yii::app()->clientScript->registerScript('report', '
 	$("#StartDate").val("' . $startDate . '");
 	$("#EndDate").val("' . $endDate . '");
+	$("#StartLogDate").val("' . $startLogDate . '");
+	$("#EndLogDate").val("' . $endLogDate . '");
             
 ');
 //Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/transaction/report.css');
@@ -37,6 +39,44 @@ Yii::app()->clientScript->registerScript('report', '
                                 <div class="small-4 columns">
                                     <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(
                                         'name' => 'EndDate',
+                                        'options' => array(
+                                            'dateFormat' => 'yy-mm-dd',
+                                            'changeMonth'=>true,
+                                            'changeYear'=>true,
+                                        ),
+                                        'htmlOptions' => array(
+                                            'readonly' => true,
+                                            'placeholder' => 'Sampai',
+                                        ),
+                                    )); ?>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="field">
+                            <div class="row collapse">
+                                <div class="small-4 columns">
+                                    <span class="prefix">Log Date</span>
+                                </div>
+                                
+                                <div class="small-4 columns">
+                                    <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(
+                                        'name' => 'StartLogDate',
+                                        'options' => array(
+                                            'dateFormat' => 'yy-mm-dd',
+                                            'changeMonth'=>true,
+                                            'changeYear'=>true,
+                                        ),
+                                        'htmlOptions' => array(
+                                            'readonly' => true,
+                                            'placeholder' => 'Mulai',
+                                        ),
+                                    )); ?>
+                                </div>
+
+                                <div class="small-4 columns">
+                                    <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(
+                                        'name' => 'EndLogDate',
                                         'options' => array(
                                             'dateFormat' => 'yy-mm-dd',
                                             'changeMonth'=>true,

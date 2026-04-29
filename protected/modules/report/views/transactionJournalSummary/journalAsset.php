@@ -17,7 +17,7 @@ Yii::app()->clientScript->registerCss('_report', '
 
 <?php $coa = Coa::model()->findByPk($coaId); ?>
 <div style="font-weight: bold; text-align: center">
-    <div style="font-size: larger">Transaction Detail</div>
+    <div style="font-size: larger">Asset Transaction</div>
     <div><?php echo CHtml::encode(CHtml::value($coa, 'code')); ?> - <?php echo CHtml::encode(CHtml::value($coa, 'name')); ?></div>
     <div><?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($startDate))); ?> - <?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($endDate))); ?></div>
 </div>
@@ -29,8 +29,6 @@ Yii::app()->clientScript->registerCss('_report', '
     <?php echo CHtml::hiddenField('StartDate', $startDate); ?>
     <?php echo CHtml::hiddenField('EndDate', $endDate); ?>
     <?php echo CHtml::hiddenField('BranchId', $branchId); ?>
-    <?php echo CHtml::hiddenField('Remark', $remark); ?>
-    <?php echo CHtml::hiddenField('TransactionType', $transactionType); ?>
     <?php echo CHtml::submitButton('Simpan ke Excel', array('name' => 'SaveToExcel')); ?>
 </div>
 

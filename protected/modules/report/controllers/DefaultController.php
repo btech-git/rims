@@ -24,4 +24,7 @@ class DefaultController extends Controller {
         $this->render('index');
     }
 
+    public function actionIndexManagement() {
+        $this->render('indexManagement');
+    }
 }

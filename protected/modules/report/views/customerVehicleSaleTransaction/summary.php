@@ -4,8 +4,8 @@ Yii::app()->clientScript->registerScript('report', '
 
 	$("#StartDate").val("' . $startDate . '");
 	$("#EndDate").val("' . $endDate . '");
-	$("#PageSize").val("' . $saleFlowSummary->dataProvider->pagination->pageSize . '");
-	$("#CurrentPage").val("' . ($saleFlowSummary->dataProvider->pagination->getCurrentPage(false) + 1) . '");
+	$("#PageSize").val("' . $customerVehicleSaleTransactionSummary->dataProvider->pagination->pageSize . '");
+	$("#CurrentPage").val("' . ($customerVehicleSaleTransactionSummary->dataProvider->pagination->getCurrentPage(false) + 1) . '");
 	$("#CurrentSort").val("' . $currentSort . '");
 ');
 //Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/transaction/report.css');
@@ -180,12 +180,12 @@ Yii::app()->clientScript->registerScript('report', '
 
             <div class="relative">
                 <div class="reportDisplay">
-                    <?php echo ReportHelper::summaryText($saleFlowSummary->dataProvider); ?>
+                    <?php echo ReportHelper::summaryText($customerVehicleSaleTransactionSummary->dataProvider); ?>
                     <?php //echo ReportHelper::sortText($transaksiPembelianSummary->dataProvider->sort, array('Jenis Persediaan', 'Tanggal SO', 'Pelanggan')); ?>
                 </div>
 
-                <?php $this->renderPartial('_transaction', array(
-                    'saleFlowSummary' => $saleFlowSummary, 
+                <?php $this->renderPartial('_summary', array(
+                    'customerVehicleSaleTransactionSummary' => $customerVehicleSaleTransactionSummary, 
                     'startDate' => $startDate, 
                     'endDate' => $endDate,
                     'branchId' => $branchId,
@@ -194,9 +194,9 @@ Yii::app()->clientScript->registerScript('report', '
 
             <div class="right">
                 <?php $this->widget('system.web.widgets.pagers.CLinkPager', array(
-                    'itemCount' => $saleFlowSummary->dataProvider->pagination->itemCount,
-                    'pageSize' => $saleFlowSummary->dataProvider->pagination->pageSize,
-                    'currentPage' => $saleFlowSummary->dataProvider->pagination->getCurrentPage(false),
+                    'itemCount' => $customerVehicleSaleTransactionSummary->dataProvider->pagination->itemCount,
+                    'pageSize' => $customerVehicleSaleTransactionSummary->dataProvider->pagination->pageSize,
+                    'currentPage' => $customerVehicleSaleTransactionSummary->dataProvider->pagination->getCurrentPage(false),
                 )); ?>
             </div>
             <div class="clear"></div>

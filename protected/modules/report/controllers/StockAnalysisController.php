@@ -6,18 +6,15 @@ class StockAnalysisController extends Controller {
 
     public function filters() {
         return array(
-//            'access',
+            'access',
         );
     }
 
     public function filterAccess($filterChain) {
-        if (
-            $filterChain->action->id === 'check' || 
-            $filterChain->action->id === 'detail' || 
-            $filterChain->action->id === 'redirectTransaction'
-        ) {
-            if (!(Yii::app()->user->checkAccess('inventoryHead')) || !(Yii::app()->user->checkAccess('consignmentOutEdit')))
+        if ($filterChain->action->id === 'summary') {
+            if (!(Yii::app()->user->checkAccess('stockAnalysisReport'))) {
                 $this->redirect(array('/site/login'));
+            }
         }
 
         $filterChain->run();

@@ -21,6 +21,7 @@
             <?php $totalCredit = '0.00'; ?>
             <?php foreach ($transactionJournalData as $transactionJournalItem): ?>
                 <?php $valid = false; ?>
+                <?php $valid = $valid || $transactionType === 'PFA' || $transactionType === 'DFA' || $transactionType === 'SFA'; ?>
                 <?php $valid = $valid || $transactionType === 'PO'; ?>
                 <?php $valid = $valid || $transactionType === 'Pout'; ?>
                 <?php $valid = $valid || $transactionType === 'Invoice' && (

@@ -23,14 +23,25 @@ class TransactionLogController extends Controller {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
 
-        $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : date('Y-m-d');
-        $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
+        $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : '';
+        $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : '';
+        $startLogDate = (isset($_GET['StartLogDate'])) ? $_GET['StartLogDate'] : '';
+        $endLogDate = (isset($_GET['EndLogDate'])) ? $_GET['EndLogDate'] : '';
         
         $transactionLog = Search::bind(new TransactionLog('search'), isset($_GET['TransactionLog']) ? $_GET['TransactionLog'] : array());
         $transactionLogDataProvider = $transactionLog->search();
-        $transactionLogDataProvider->criteria->addCondition("transaction_date BETWEEN :start_date AND :end_date");
-        $transactionLogDataProvider->criteria->params[':start_date'] = $startDate;
-        $transactionLogDataProvider->criteria->params[':end_date'] = $endDate;
+        
+        if (!empty($startDate && $endDate)) {
+            $transactionLogDataProvider->criteria->addCondition("transaction_date BETWEEN :start_date AND :end_date");
+            $transactionLogDataProvider->criteria->params[':start_date'] = $startDate;
+            $transactionLogDataProvider->criteria->params[':end_date'] = $endDate;
+        }
+        
+        if (!empty($startLogDate && $endLogDate)) {
+            $transactionLogDataProvider->criteria->addCondition("log_date BETWEEN :start_log_date AND :end_log_date");
+            $transactionLogDataProvider->criteria->params[':start_log_date'] = $startLogDate;
+            $transactionLogDataProvider->criteria->params[':end_log_date'] = $endLogDate;
+        }
         $transactionLogDataProvider->pagination->pageSize = 500;
         $transactionLogDataProvider->criteria->order = 't.transaction_date ASC, t.log_time ASC';
         
@@ -45,6 +56,8 @@ class TransactionLogController extends Controller {
         $this->render('summary', array(
             'startDate' => $startDate,
             'endDate' => $endDate,
+            'startLogDate' => $startLogDate,
+            'endLogDate' => $endLogDate,
             'transactionLog' => $transactionLog,
             'transactionLogDataProvider' => $transactionLogDataProvider,
         ));

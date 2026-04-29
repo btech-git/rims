@@ -10,7 +10,10 @@ class TransactionJournalController extends Controller {
 
     public function filterAccess($filterChain) {
         if ($filterChain->action->id === 'summary') {
-            if (!(Yii::app()->user->checkAccess('transactionJournalReport'))) {
+            if (
+                !(Yii::app()->user->checkAccess('transactionJournalReport')) ||
+                !(Yii::app()->user->checkAccess('balanceErrorSummary'))
+            ) {
                 $this->redirect(array('/site/login'));
             }
         }

@@ -76,12 +76,12 @@ class FixedAssetController extends Controller {
         $worksheet->getStyle('A5:H5')->getFont()->setBold(true);
         $worksheet->setCellValue('A5', 'Kode Aktiva');
         $worksheet->setCellValue('B5', 'Nama Aktiva');
-        $worksheet->setCellValue('C5', 'Harga Perolehan');
-        $worksheet->setCellValue('D5', 'Penyesuaian Tahun Ini');
-        $worksheet->setCellValue('E5', 'Akumulasi Depresiasi');
-        $worksheet->setCellValue('F5', 'Book Value');
-        $worksheet->setCellValue('G5', 'Depresiasi Tahun Ini');
-        $worksheet->setCellValue('H5', 'Tanggal Pembelian');
+        $worksheet->setCellValue('C5', 'Tanggal Pembelian');
+        $worksheet->setCellValue('D5', 'Harga Perolehan');
+        $worksheet->setCellValue('E5', 'Penyesuaian Tahun Ini');
+        $worksheet->setCellValue('F5', 'Akumulasi Depresiasi');
+        $worksheet->setCellValue('G5', 'Book Value');
+        $worksheet->setCellValue('H5', 'Depresiasi Tahun Ini');
 
         $counter = 7;
 
@@ -114,12 +114,12 @@ class FixedAssetController extends Controller {
 
                 $worksheet->setCellValue("A{$counter}", CHtml::encode(CHtml::value($detail, 'assetCategory.code')));
                 $worksheet->setCellValue("B{$counter}", CHtml::encode(CHtml::value($detail, 'description')));
-                $worksheet->setCellValue("C{$counter}", CHtml::encode($purchaseValue));
-                $worksheet->setCellValue("D{$counter}", 0);
-                $worksheet->setCellValue("E{$counter}", $accumulatedValue);
-                $worksheet->setCellValue("F{$counter}", $currentValue);
-                $worksheet->setCellValue("G{$counter}", $adjustedValue);
-                $worksheet->setCellValue("H{$counter}", $detail->transaction_date);
+                $worksheet->setCellValue("C{$counter}", $detail->transaction_date);
+                $worksheet->setCellValue("D{$counter}", CHtml::encode($purchaseValue));
+                $worksheet->setCellValue("E{$counter}", 0);
+                $worksheet->setCellValue("F{$counter}", $accumulatedValue);
+                $worksheet->setCellValue("G{$counter}", $currentValue);
+                $worksheet->setCellValue("H{$counter}", $adjustedValue);
                 
                 $totalPurchaseValue += $purchaseValue;
                 $totalAccumulatedValue += $accumulatedValue;
@@ -131,18 +131,18 @@ class FixedAssetController extends Controller {
             }
             
             $worksheet->getStyle("B{$counter}:G{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
-            $worksheet->setCellValue("B{$counter}", 'TOTAL');
-            $worksheet->setCellValue("C{$counter}", CHtml::encode($totalPurchaseValue));
-            $worksheet->setCellValue("D{$counter}", CHtml::encode($totalYearlyValue));
-            $worksheet->setCellValue("E{$counter}", CHtml::encode($totalAccumulatedValue));
-            $worksheet->setCellValue("F{$counter}", CHtml::encode($totalCurrentValue));
-            $worksheet->setCellValue("G{$counter}", CHtml::encode($totalAdjustedValue));
+            $worksheet->setCellValue("C{$counter}", 'TOTAL');
+            $worksheet->setCellValue("D{$counter}", CHtml::encode($totalPurchaseValue));
+            $worksheet->setCellValue("E{$counter}", CHtml::encode($totalYearlyValue));
+            $worksheet->setCellValue("F{$counter}", CHtml::encode($totalAccumulatedValue));
+            $worksheet->setCellValue("G{$counter}", CHtml::encode($totalCurrentValue));
+            $worksheet->setCellValue("H{$counter}", CHtml::encode($totalAdjustedValue));
             
             $counter++;$counter++;
             
         }
 
-        for ($col = 'A'; $col !== 'I'; $col++) {
+        for ($col = 'A'; $col !== 'Z'; $col++) {
             $objPHPExcel->getActiveSheet()
             ->getColumnDimension($col)
             ->setAutoSize(true);

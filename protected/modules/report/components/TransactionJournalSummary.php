@@ -40,4 +40,11 @@ class TransactionJournalSummary extends CComponent {
         $this->dataProvider->criteria->compare('t.remark', $remark, true);
         $this->dataProvider->criteria->compare('t.transaction_type', $transactionType, true);
     }
+
+    public function setupFilterAssetDetail($startDate, $endDate, $coaId, $branchId) {
+        $this->dataProvider->criteria->addBetweenCondition('t.tanggal_transaksi', $startDate, $endDate);
+        $this->dataProvider->criteria->addCondition("t.transaction_type IN ('PFA', 'DFA', 'SFA') AND t.is_coa_category = 0");
+        $this->dataProvider->criteria->compare('t.coa_id', $coaId);
+        $this->dataProvider->criteria->compare('t.branch_id', $branchId);
+    }
 }

@@ -10,8 +10,26 @@ class TransactionJournalSummaryController extends Controller {
     }
 
     public function filterAccess($filterChain) {
-        if ($filterChain->action->id === 'summaryCash') {
-            if (!(Yii::app()->user->checkAccess('summaryCashReport'))) {
+        if ($filterChain->action->id === 'summaryPurchase') {
+            if (!(Yii::app()->user->checkAccess('summaryPurchaseReport'))) {
+                $this->redirect(array('/site/login'));
+            }
+        }
+
+        if ($filterChain->action->id === 'summaryPaymentOut') {
+            if (!(Yii::app()->user->checkAccess('summaryPaymentOutReport'))) {
+                $this->redirect(array('/site/login'));
+            }
+        }
+
+        if ($filterChain->action->id === 'summarySale') {
+            if (!(Yii::app()->user->checkAccess('summarySaleReport'))) {
+                $this->redirect(array('/site/login'));
+            }
+        }
+
+        if ($filterChain->action->id === 'summaryPaymentIn') {
+            if (!(Yii::app()->user->checkAccess('summaryPaymentInReport'))) {
                 $this->redirect(array('/site/login'));
             }
         }
@@ -28,38 +46,26 @@ class TransactionJournalSummaryController extends Controller {
             }
         }
 
+        if ($filterChain->action->id === 'summaryWorkOrderExpense') {
+            if (!(Yii::app()->user->checkAccess('summaryWorkOrderExpenseReport'))) {
+                $this->redirect(array('/site/login'));
+            }
+        }
+
         if ($filterChain->action->id === 'summaryMovementOutMaterial') {
             if (!(Yii::app()->user->checkAccess('summaryMovementOutMaterialReport'))) {
                 $this->redirect(array('/site/login'));
             }
         }
 
-        if ($filterChain->action->id === 'summaryPaymentIn') {
-            if (!(Yii::app()->user->checkAccess('summaryPaymentInReport'))) {
+        if ($filterChain->action->id === 'summaryCash') {
+            if (!(Yii::app()->user->checkAccess('summaryCashReport'))) {
                 $this->redirect(array('/site/login'));
             }
         }
 
-        if ($filterChain->action->id === 'summaryPaymentOut') {
-            if (!(Yii::app()->user->checkAccess('summaryPaymentOutReport'))) {
-                $this->redirect(array('/site/login'));
-            }
-        }
-
-        if ($filterChain->action->id === 'summaryPurchase') {
-            if (!(Yii::app()->user->checkAccess('summaryPurchaseReport'))) {
-                $this->redirect(array('/site/login'));
-            }
-        }
-
-        if ($filterChain->action->id === 'summarySale') {
-            if (!(Yii::app()->user->checkAccess('summarySaleReport'))) {
-                $this->redirect(array('/site/login'));
-            }
-        }
-
-        if ($filterChain->action->id === 'summaryWorkOrderExpense') {
-            if (!(Yii::app()->user->checkAccess('summaryWorkOrderExpenseReport'))) {
+        if ($filterChain->action->id === 'summaryAsset') {
+            if (!(Yii::app()->user->checkAccess('summaryAssetReport'))) {
                 $this->redirect(array('/site/login'));
             }
         }
@@ -390,6 +396,65 @@ class TransactionJournalSummaryController extends Controller {
         ));
     }
 
+    public function actionSummaryAsset() {
+        set_time_limit(0);
+        ini_set('memory_limit', '1024M');
+
+        $branchId = (isset($_GET['BranchId'])) ? $_GET['BranchId'] : '';
+        $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : date('Y-m-d');
+        $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
+        
+        $transactionJournalData = JurnalUmum::getAssetJournalData($startDate, $endDate, $branchId);
+        $transactionTypeLiteral = 'Aset Tetap (Fixed Asset)';
+        
+        if (isset($_GET['ResetFilter'])) {
+            $this->redirect(array('summary'));
+        }
+        
+        if (isset($_GET['SaveExcel'])) {
+            $this->saveToExcelAssetSummary($transactionJournalData , $startDate, $endDate, $branchId, $transactionTypeLiteral);
+        }
+
+        $this->render('summaryAsset', array(
+            'startDate' => $startDate,
+            'endDate' => $endDate,
+            'branchId' => $branchId,
+            'transactionJournalData' => $transactionJournalData,
+            'transactionTypeLiteral' => $transactionTypeLiteral,
+        ));
+    }
+
+    public function actionJournalAsset() {
+        set_time_limit(0);
+        ini_set('memory_limit', '1024M');
+
+        $jurnalUmum = new JurnalUmum('search');
+
+        $coaId = (isset($_GET['CoaId'])) ? $_GET['CoaId'] : '';
+        $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : date('Y-m-d');
+        $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
+        $branchId = (isset($_GET['BranchId'])) ? $_GET['BranchId'] : '';
+
+        $transactionJournalSummary = new TransactionJournalSummary($jurnalUmum->search());
+        $transactionJournalSummary->setupLoading();
+        $transactionJournalSummary->setupPaging(10000, 1);
+        $transactionJournalSummary->setupSorting();
+        $transactionJournalSummary->setupFilterAssetDetail($startDate, $endDate, $coaId, $branchId);
+
+        if (isset($_GET['SaveToExcel'])) {
+            $this->saveToExcelAssetJournal($transactionJournalSummary, $coaId, $startDate, $endDate, $branchId);
+        }
+
+        $this->render('journalAsset', array(
+            'jurnalUmum' => $jurnalUmum,
+            'transactionJournalSummary' => $transactionJournalSummary,
+            'startDate' => $startDate,
+            'endDate' => $endDate,
+            'coaId' => $coaId,
+            'branchId' => $branchId,
+        ));
+    }
+
     protected function saveToExcel($transactionJournalData, $startDate, $endDate, $branchId, $transactionType, $transactionTypeLiteral) {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
@@ -555,11 +620,14 @@ class TransactionJournalSummaryController extends Controller {
             $counter++;
         }
         
+        $worksheet->getStyle("A{$counter}:F{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A{$counter}:F{$counter}")->getFont()->setBold(true);
+        
         $worksheet->setCellValue("D{$counter}", 'TOTAL');
         $worksheet->setCellValue("E{$counter}", $totalDebit);
         $worksheet->setCellValue("F{$counter}", $totalCredit);
 
-        for ($col = 'A'; $col !== 'J'; $col++) {
+        for ($col = 'A'; $col !== 'Z'; $col++) {
             $objPHPExcel->getActiveSheet()
             ->getColumnDimension($col)
             ->setAutoSize(true);
@@ -568,7 +636,168 @@ class TransactionJournalSummaryController extends Controller {
         ob_end_clean();
         // We'll be outputting an excel file
         header('Content-type: application/vnd.ms-excel');
-        header('Content-Disposition: attachment;filename="Journal Detail Transaction.xls"');
+        header('Content-Disposition: attachment;filename="journal_transaction_detail.xls"');
+        header('Cache-Control: max-age=0');
+        
+        $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
+        $objWriter->save('php://output');
+
+        Yii::app()->end();
+    }
+    protected function saveToExcelAssetSummary($transactionJournalData, $startDate, $endDate, $branchId, $transactionTypeLiteral) {
+        set_time_limit(0);
+        ini_set('memory_limit', '1024M');
+        
+        $startDateString = Yii::app()->dateFormatter->format('d MMMM yyyy', $startDate);
+        $endDateString = Yii::app()->dateFormatter->format('d MMMM yyyy', $endDate);
+
+        spl_autoload_unregister(array('YiiBase', 'autoload'));
+        include_once Yii::getPathOfAlias('ext.phpexcel.Classes') . DIRECTORY_SEPARATOR . 'PHPExcel.php';
+        spl_autoload_register(array('YiiBase', 'autoload'));
+
+        $objPHPExcel = new PHPExcel();
+
+        $documentProperties = $objPHPExcel->getProperties();
+        $documentProperties->setCreator('Raperind Motor');
+        $documentProperties->setTitle('Rekap Jurnal Umum');
+
+        $worksheet = $objPHPExcel->setActiveSheetIndex(0);
+        $worksheet->setTitle('Rekap Jurnal Umum');
+
+        $worksheet->mergeCells('A1:D1');
+        $worksheet->mergeCells('A2:D2');
+        $worksheet->mergeCells('A3:D3');
+        
+        $worksheet->getStyle('A1:D5')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->getStyle('A1:D5')->getFont()->setBold(true);
+
+        $branch = Branch::model()->findByPk($branchId);
+        $worksheet->setCellValue('A1', 'Raperind Motor ' . CHtml::encode(($branch === null) ? '' : $branch->name));
+        $worksheet->setCellValue('A2', 'Rekap Jurnal Umum ' . $transactionTypeLiteral);
+        $worksheet->setCellValue('A3', 'Periode: ' . $startDateString . ' - ' . $endDateString);
+
+        $worksheet->getStyle("A5:D5")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A5:D5")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+
+        $worksheet->setCellValue('A5', 'Kode COA');
+        $worksheet->setCellValue('B5', 'Nama COA');
+        $worksheet->setCellValue('C5', 'Debit');
+        $worksheet->setCellValue('D5', 'Credit');
+
+        $counter = 6;
+
+        $totalDebit = '0.00';
+        $totalCredit = '0.00';
+        foreach ($transactionJournalData as $transactionJournalItem) {
+            $worksheet->setCellValue("A{$counter}", CHtml::encode($transactionJournalItem['coa_code']));
+            $worksheet->setCellValue("B{$counter}", CHtml::encode($transactionJournalItem['coa_name']));
+            $worksheet->setCellValue("C{$counter}", CHtml::encode($transactionJournalItem['debit']));
+            $worksheet->setCellValue("D{$counter}", CHtml::encode($transactionJournalItem['credit']));
+            $totalDebit += $transactionJournalItem['debit'];
+            $totalCredit += $transactionJournalItem['credit'];
+
+            $counter++;
+        }
+        
+        $worksheet->getStyle("A{$counter}:D{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A{$counter}:D{$counter}")->getFont()->setBold(true);
+        
+        $worksheet->setCellValue("B{$counter}", "Total");
+        $worksheet->setCellValue("C{$counter}", $totalDebit);
+        $worksheet->setCellValue("D{$counter}", $totalCredit);
+
+        for ($col = 'A'; $col !== 'Z'; $col++) {
+            $objPHPExcel->getActiveSheet()
+            ->getColumnDimension($col)
+            ->setAutoSize(true);
+        }
+
+        ob_end_clean();
+        
+        header('Content-type: application/vnd.ms-excel');
+        header('Content-Disposition: attachment;filename="rekap_jurnal_umum_' . $transactionTypeLiteral . '.xls"');
+        header('Cache-Control: max-age=0');
+
+        $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
+        $objWriter->save('php://output');
+
+        Yii::app()->end();
+    }
+    
+    protected function saveToExcelAssetJournal($transactionJournalSummary, $coaId, $startDate, $endDate) {
+        set_time_limit(0);
+        ini_set('memory_limit', '1024M');
+        
+        $startDateString = Yii::app()->dateFormatter->format('d MMMM yyyy', $startDate);
+        $endDateString = Yii::app()->dateFormatter->format('d MMMM yyyy', $endDate);
+
+        spl_autoload_unregister(array('YiiBase', 'autoload'));
+        include_once Yii::getPathOfAlias('ext.phpexcel.Classes') . DIRECTORY_SEPARATOR . 'PHPExcel.php';
+        spl_autoload_register(array('YiiBase', 'autoload'));
+
+        $objPHPExcel = new PHPExcel();
+
+        $documentProperties = $objPHPExcel->getProperties();
+        $documentProperties->setCreator('Raperind Motor');
+        $documentProperties->setTitle('Journal Asset Detail');
+
+        $worksheet = $objPHPExcel->setActiveSheetIndex(0);
+        $worksheet->setTitle('Journal Asset Detail');
+
+        $worksheet->mergeCells('A1:F1');
+        $worksheet->mergeCells('A2:F2');
+        $worksheet->mergeCells('A3:F3');
+        $worksheet->getStyle('A1:F3')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->getStyle('A1:F5')->getFont()->setBold(true);
+
+        $coa = Coa::model()->findByPk($coaId);
+        $worksheet->setCellValue('A1', 'Journal Asset Detail');
+        $worksheet->setCellValue('A2', CHtml::encode(CHtml::value($coa, 'codeName')));
+        $worksheet->setCellValue('A3', $startDateString . ' - ' . $endDateString);
+        
+        $worksheet->setCellValue('A5', 'Transaksi #');
+        $worksheet->setCellValue('B5', 'Tanggal');
+        $worksheet->setCellValue('C5', 'Description');
+        $worksheet->setCellValue('D5', 'Memo');
+        $worksheet->setCellValue('E5', 'Debet');
+        $worksheet->setCellValue('F5', 'Kredit');
+        $counter = 7;
+
+        $totalDebit = '0.00';
+        $totalCredit = '0.00';
+        foreach ($transactionJournalSummary->dataProvider->data as $header) {
+            $debitAmount = $header->debet_kredit == "D" ? CHtml::encode(CHtml::value($header, 'total')) : 0;
+            $creditAmount = $header->debet_kredit == "K" ? CHtml::encode(CHtml::value($header, 'total')) : 0;
+            
+            $worksheet->setCellValue("A{$counter}", CHtml::encode(CHtml::value($header, 'kode_transaksi')));
+            $worksheet->setCellValue("B{$counter}", CHtml::encode(CHtml::value($header, 'tanggal_transaksi')));
+            $worksheet->setCellValue("C{$counter}", CHtml::encode(CHtml::value($header, 'transaction_subject')));
+            $worksheet->setCellValue("D{$counter}", CHtml::encode(CHtml::value($header, 'remark')));
+            $worksheet->setCellValue("E{$counter}", $debitAmount);
+            $worksheet->setCellValue("F{$counter}", $creditAmount);
+
+            $totalDebit += $debitAmount;
+            $totalCredit += $creditAmount;
+            $counter++;
+        }
+        
+        $worksheet->getStyle("A{$counter}:F{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A{$counter}:F{$counter}")->getFont()->setBold(true);
+        
+        $worksheet->setCellValue("D{$counter}", 'TOTAL');
+        $worksheet->setCellValue("E{$counter}", $totalDebit);
+        $worksheet->setCellValue("F{$counter}", $totalCredit);
+
+        for ($col = 'A'; $col !== 'Z'; $col++) {
+            $objPHPExcel->getActiveSheet()
+            ->getColumnDimension($col)
+            ->setAutoSize(true);
+        }
+
+        ob_end_clean();
+        // We'll be outputting an excel file
+        header('Content-type: application/vnd.ms-excel');
+        header('Content-Disposition: attachment;filename="journal_asset_detail.xls"');
         header('Cache-Control: max-age=0');
         
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');

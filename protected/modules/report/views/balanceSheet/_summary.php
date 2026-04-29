@@ -71,7 +71,7 @@
                                 <?php echo CHtml::encode(CHtml::value($accountCategory, 'code')); ?> - 
                                 <?php echo CHtml::encode(CHtml::value($accountCategory, 'name')); ?>
                             </td>
-                            <td style="text-align: right; font-weight: bold;">
+                            <td style="text-align: right; font-weight: bold; color: <?php echo $accountCategoryBalance <= '0.00' ? 'red' : 'blue'; ?>">
                                 <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $accountCategoryBalance)); ?>
                             </td>
                         </tr>
@@ -89,7 +89,7 @@
                             <?php echo CHtml::encode(CHtml::value($accountCategorySub, 'name')); ?>
                         </td>
 
-                        <td style="text-align: right; font-weight: bold; border-top: 2px solid">
+                        <td style="text-align: right; font-weight: bold; border-top: 2px solid; color: <?php echo $accountCategorySubBalance <= '0.00' ? 'red' : 'blue'; ?>">
                             <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $accountCategorySubBalance)); ?>
                         </td>
                     </tr>
@@ -107,7 +107,7 @@
                         <?php echo CHtml::encode(CHtml::value($accountCategoryPrimary, 'name')); ?>
                     </td>
 
-                    <td style="text-align: right; font-weight: bold; border-top: 3px solid">
+                    <td style="text-align: right; font-weight: bold; border-top: 3px solid; color: <?php echo $accountCategoryPrimaryBalance <= '0.00' ? 'red' : 'blue'; ?>">
                         <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $accountCategoryPrimaryBalance)); ?>
                     </td>
                 </tr>
@@ -125,7 +125,7 @@
                     <?php echo CHtml::encode(CHtml::value($accountCategoryAsset, 'name')); ?>
                 </td>
 
-                <td style="text-align: right; font-weight: bold; border-top: 4px solid; font-size:  1em">
+                <td style="text-align: right; font-weight: bold; border-top: 4px solid; font-size:  1em; color: <?php echo $accountCategoryAssetBalance <= '0.00' ? 'red' : 'blue'; ?>">
                     <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $accountCategoryAssetBalance)); ?>
                 </td>
             </tr>
@@ -170,7 +170,7 @@
                                 <?php echo CHtml::encode(CHtml::value($accountCategory, 'name')); ?>
                             </td>
 
-                            <td style="text-align: right; font-weight: bold;">
+                            <td style="text-align: right; font-weight: bold; color: <?php echo $accountCategoryBalance <= '0.00' ? 'red' : 'blue'; ?>;">
                                 <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $accountCategoryBalance)); ?>
                             </td>
                         </tr>
@@ -205,7 +205,7 @@
                                             <?php echo CHtml::encode(CHtml::value($accountCategory, 'name')); ?>
                                         </td>                                                
 
-                                        <td style="text-align: right; font-weight: bold;">
+                                        <td style="text-align: right; font-weight: bold; color: <?php echo $accountCategoryBalance <= '0.00' ? 'red' : 'blue'; ?>;">
                                             <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $accountCategoryBalance)); ?>
                                         </td>
                                     </tr>
@@ -222,7 +222,7 @@
                                         Total <?php echo CHtml::encode(CHtml::value($coaCategorySecondary, 'name')); ?>
                                     </td>
 
-                                    <td style="text-align: right; font-weight: bold; border-top: 2px solid">
+                                    <td style="text-align: right; font-weight: bold; border-top: 2px solid; color: <?php echo $accountCategorySecondaryBalance <= '0.00' ? 'red' : 'blue'; ?>">
                                         <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $accountCategorySecondaryBalance)); ?>
                                     </td>
                                 </tr>
@@ -247,7 +247,7 @@
                                         <?php echo CHtml::encode(CHtml::value($accountCategory, 'name')); ?>
                                     </td>
 
-                                    <td style="text-align: right; font-weight: bold">
+                                    <td style="text-align: right; font-weight: bold; color: <?php echo $accountCategoryBalance <= '0.00' ? 'red' : 'blue'; ?>">
                                         <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $accountCategoryBalance)); ?>
                                     </td>
                                 </tr>
@@ -265,7 +265,7 @@
                                 TOTAL <?php echo CHtml::encode(CHtml::value($accountCategorySub, 'name')); ?>
                             </td>
 
-                            <td style="text-align: right; font-weight: bold; border-top: 1px solid;">
+                            <td style="text-align: right; font-weight: bold; border-top: 1px solid; color: <?php echo $accountCategorySubBalance <= '0.00' ? 'red' : 'blue'; ?>;">
                                 <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $accountCategorySubBalance)); ?>
                             </td>
                         </tr>
@@ -283,7 +283,7 @@
                         TOTAL <?php echo CHtml::encode(CHtml::value($accountCategoryPrimary, 'name')); ?>
                     </td>
 
-                    <td style="text-align: right; font-weight: bold; border-top: 1px solid">
+                    <td style="text-align: right; font-weight: bold; border-top: 1px solid; color: <?php echo $accountCategoryPrimaryBalance <= '0.00' ? 'red' : 'blue'; ?>">
                         <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $accountCategoryPrimaryBalance)); ?>
                     </td>
                 </tr>
@@ -300,7 +300,7 @@
                     TOTAL <?php echo CHtml::encode(CHtml::value($accountCategoryLiabilitiesEquity, 'name')); ?>
                 </td>
 
-                <td style="text-align: right; font-weight: bold; border-top: 1px solid; font-size:  1em">
+                <td style="text-align: right; font-weight: bold; border-top: 1px solid; font-size:  1em; color: <?php echo $accountCategoryLiabilityEquityBalance <= '0.00' ? 'red' : 'blue'; ?>">
                     <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $accountCategoryLiabilityEquityBalance)); ?>
                 </td>
             </tr>
