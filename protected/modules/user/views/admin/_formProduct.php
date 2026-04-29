@@ -206,138 +206,111 @@
             </td>
         </tr>
         <tr>
-            <td>Equipment</td>
+            <td>Satuan</td>
             <td style="text-align: center">
-                <?php echo CHtml::checkBox("User[roles][masterEquipmentCreate]", CHtml::resolveValue($model, "roles[masterEquipmentCreate]"), array(
+                <?php echo CHtml::checkBox("User[roles][masterUnitCreate]", CHtml::resolveValue($model, "roles[masterUnitCreate]"), array(
                     'id' => 'User_roles_' . $counter++, 
-                    'value' => 'masterEquipmentCreate'
+                    'value' => 'masterUnitCreate'
                 )); ?>
             </td>
             <td style="text-align: center">
-                <?php echo CHtml::checkBox("User[roles][masterEquipmentEdit]", CHtml::resolveValue($model, "roles[masterEquipmentEdit]"), array(
+                <?php echo CHtml::checkBox("User[roles][masterUnitEdit]", CHtml::resolveValue($model, "roles[masterUnitEdit]"), array(
                     'id' => 'User_roles_' . $counter++, 
-                    'value' => 'masterEquipmentEdit'
+                    'value' => 'masterUnitEdit'
                 )); ?>
             </td>
             <td style="text-align: center">
-                <?php echo CHtml::checkBox("User[roles][masterEquipmentView]", CHtml::resolveValue($model, "roles[masterEquipmentView]"), array(
+                <?php echo CHtml::checkBox("User[roles][masterUnitView]", CHtml::resolveValue($model, "roles[masterUnitView]"), array(
                     'id' => 'User_roles_' . $counter++, 
-                    'value' => 'masterEquipmentView'
+                    'value' => 'masterUnitView'
                 )); ?>
             </td>
             <td style="text-align: center">
-                <?php echo CHtml::checkBox("User[roles][masterEquipmentApproval]", CHtml::resolveValue($model, "roles[masterEquipmentApproval]"), array(
+                <?php echo CHtml::checkBox("User[roles][masterUnitApproval]", CHtml::resolveValue($model, "roles[masterUnitApproval]"), array(
                     'id' => 'User_roles_' . $counter++, 
-                    'value' => 'masterEquipmentApproval'
-                )); ?>
-            </td>
-        </tr>
-        <tr>
-            <td>Equipment Type</td>
-            <td style="text-align: center">
-                <?php echo CHtml::checkBox("User[roles][masterEquipmentTypeCreate]", CHtml::resolveValue($model, "roles[masterEquipmentTypeCreate]"), array(
-                    'id' => 'User_roles_' . $counter++, 
-                    'value' => 'masterEquipmentTypeCreate'
-                )); ?>
-            </td>
-            <td style="text-align: center">
-                <?php echo CHtml::checkBox("User[roles][masterEquipmentTypeEdit]", CHtml::resolveValue($model, "roles[masterEquipmentTypeEdit]"), array(
-                    'id' => 'User_roles_' . $counter++, 
-                    'value' => 'masterEquipmentTypeEdit'
-                )); ?>
-            </td>
-            <td style="text-align: center">
-                <?php echo CHtml::checkBox("User[roles][masterEquipmentTypeView]", CHtml::resolveValue($model, "roles[masterEquipmentTypeView]"), array(
-                    'id' => 'User_roles_' . $counter++, 
-                    'value' => 'masterEquipmentTypeView'
-                )); ?>
-            </td>
-            <td style="text-align: center">
-                <?php echo CHtml::checkBox("User[roles][masterEquipmentTypeApproval]", CHtml::resolveValue($model, "roles[masterEquipmentTypeApproval]"), array(
-                    'id' => 'User_roles_' . $counter++, 
-                    'value' => 'masterEquipmentTypeApproval'
+                    'value' => 'masterUnitApproval'
                 )); ?>
             </td>
         </tr>
         <tr>
-            <td>Equipment Sub Type</td>
+            <td>Konversi Satuan</td>
             <td style="text-align: center">
-                <?php echo CHtml::checkBox("User[roles][masterEquipmentSubTypeCreate]", CHtml::resolveValue($model, "roles[masterEquipmentSubTypeCreate]"), array(
+                <?php echo CHtml::checkBox("User[roles][masterConversionCreate]", CHtml::resolveValue($model, "roles[masterConversionCreate]"), array(
                     'id' => 'User_roles_' . $counter++, 
-                    'value' => 'masterEquipmentSubTypeCreate'
+                    'value' => 'masterConversionCreate'
                 )); ?>
             </td>
             <td style="text-align: center">
-                <?php echo CHtml::checkBox("User[roles][masterEquipmentSubTypeEdit]", CHtml::resolveValue($model, "roles[masterEquipmentSubTypeEdit]"), array(
+                <?php echo CHtml::checkBox("User[roles][masterConversionEdit]", CHtml::resolveValue($model, "roles[masterConversionEdit]"), array(
                     'id' => 'User_roles_' . $counter++, 
-                    'value' => 'masterEquipmentSubTypeEdit'
+                    'value' => 'masterConversionEdit'
                 )); ?>
             </td>
             <td style="text-align: center">
-                <?php echo CHtml::checkBox("User[roles][masterEquipmentSubTypeView]", CHtml::resolveValue($model, "roles[masterEquipmentSubTypeView]"), array(
+                <?php echo CHtml::checkBox("User[roles][masterConversionView]", CHtml::resolveValue($model, "roles[masterConversionView]"), array(
                     'id' => 'User_roles_' . $counter++, 
-                    'value' => 'masterEquipmentSubTypeView'
+                    'value' => 'masterConversionView'
                 )); ?>
             </td>
             <td style="text-align: center">
-                <?php echo CHtml::checkBox("User[roles][masterEquipmentSubTypeApproval]", CHtml::resolveValue($model, "roles[masterEquipmentSubTypeApproval]"), array(
+                <?php echo CHtml::checkBox("User[roles][masterConversionApproval]", CHtml::resolveValue($model, "roles[masterConversionApproval]"), array(
                     'id' => 'User_roles_' . $counter++, 
-                    'value' => 'masterEquipmentSubTypeApproval'
-                )); ?>
-            </td>
-        </tr>
-        <tr>
-            <td>Permintaan Maintenance</td>
-            <td style="text-align: center">
-                <?php echo CHtml::checkBox("User[roles][maintenanceRequestCreate]", CHtml::resolveValue($model, "roles[maintenanceRequestCreate]"), array(
-                    'id' => 'User_roles_' . $counter++, 
-                    'value' => 'maintenanceRequestCreate'
-                )); ?>
-            </td>
-            <td style="text-align: center">
-                <?php echo CHtml::checkBox("User[roles][maintenanceRequestEdit]", CHtml::resolveValue($model, "roles[maintenanceRequestEdit]"), array(
-                    'id' => 'User_roles_' . $counter++, 
-                    'value' => 'maintenanceRequestEdit'
-                )); ?>
-            </td>
-            <td style="text-align: center">
-                <?php echo CHtml::checkBox("User[roles][maintenanceRequestView]", CHtml::resolveValue($model, "roles[maintenanceRequestView]"), array(
-                    'id' => 'User_roles_' . $counter++, 
-                    'value' => 'maintenanceRequestView'
-                )); ?>
-            </td>
-            <td style="text-align: center">
-                <?php echo CHtml::checkBox("User[roles][maintenanceRequestApproval]", CHtml::resolveValue($model, "roles[maintenanceRequestApproval]"), array(
-                    'id' => 'User_roles_' . $counter++, 
-                    'value' => 'maintenanceRequestApproval'
+                    'value' => 'masterConversionApproval'
                 )); ?>
             </td>
         </tr>
         <tr>
-            <td>Warehouse</td>
+            <td>Ukuran Ban</td>
             <td style="text-align: center">
-                <?php echo CHtml::checkBox("User[roles][masterWarehouseCreate]", CHtml::resolveValue($model, "roles[masterWarehouseCreate]"), array(
+                <?php echo CHtml::checkBox("User[roles][masterTireSizeCreate]", CHtml::resolveValue($model, "roles[masterTireSizeCreate]"), array(
                     'id' => 'User_roles_' . $counter++, 
-                    'value' => 'masterWarehouseCreate'
+                    'value' => 'masterTireSizeCreate'
                 )); ?>
             </td>
             <td style="text-align: center">
-                <?php echo CHtml::checkBox("User[roles][masterWarehouseEdit]", CHtml::resolveValue($model, "roles[masterWarehouseEdit]"), array(
+                <?php echo CHtml::checkBox("User[roles][masterTireSizeEdit]", CHtml::resolveValue($model, "roles[masterTireSizeEdit]"), array(
                     'id' => 'User_roles_' . $counter++, 
-                    'value' => 'masterWarehouseEdit'
+                    'value' => 'masterTireSizeEdit'
                 )); ?>
             </td>
             <td style="text-align: center">
-                <?php echo CHtml::checkBox("User[roles][masterWarehouseView]", CHtml::resolveValue($model, "roles[masterWarehouseView]"), array(
+                <?php echo CHtml::checkBox("User[roles][masterTireSizeView]", CHtml::resolveValue($model, "roles[masterTireSizeView]"), array(
                     'id' => 'User_roles_' . $counter++, 
-                    'value' => 'masterWarehouseView'
+                    'value' => 'masterTireSizeView'
+                )); ?>
+            </td>
+            <td style="text-align: center">
+                <?php echo CHtml::checkBox("User[roles][masterTireSizeApproval]", CHtml::resolveValue($model, "roles[masterUnitApproval]"), array(
+                    'id' => 'User_roles_' . $counter++, 
+                    'value' => 'masterUnitApproval'
+                )); ?>
+            </td>
+        </tr>
+        <tr>
+            <td>Spesifikasi Oli (SAE)</td>
+            <td style="text-align: center">
+                <?php echo CHtml::checkBox("User[roles][masterOilSpecificationCreate]", CHtml::resolveValue($model, "roles[masterOilSpecificationCreate]"), array(
+                    'id' => 'User_roles_' . $counter++, 
+                    'value' => 'masterOilSpecificationCreate'
+                )); ?>
+            </td>
+            <td style="text-align: center">
+                <?php echo CHtml::checkBox("User[roles][masterOilSpecificationEdit]", CHtml::resolveValue($model, "roles[masterOilSpecificationEdit]"), array(
+                    'id' => 'User_roles_' . $counter++, 
+                    'value' => 'masterOilSpecificationEdit'
+                )); ?>
+            </td>
+            <td style="text-align: center">
+                <?php echo CHtml::checkBox("User[roles][masterOilspecificationView]", CHtml::resolveValue($model, "roles[masterOilspecificationView]"), array(
+                    'id' => 'User_roles_' . $counter++, 
+                    'value' => 'masterOilspecificationView'
                 )); ?>
             </td>
             <td style="text-align: center">
                 <?php //echo $counter; ?>
-                <?php echo CHtml::checkBox("User[roles][masterWarehouseApproval]", CHtml::resolveValue($model, "roles[masterWarehouseApproval]"), array(
+                <?php echo CHtml::checkBox("User[roles][masterOilSpecificationApproval]", CHtml::resolveValue($model, "roles[masterOilSpecificationApproval]"), array(
                     'id' => 'User_roles_' . $counter++, 
-                    'value' => 'masterWarehouseApproval'
+                    'value' => 'masterOilSpecificationApproval'
                 )); ?>
             </td>
         </tr>

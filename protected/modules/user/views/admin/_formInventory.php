@@ -13,12 +13,11 @@
             <th style="text-align: center">Edit</th>
             <th style="text-align: center">View</th>
             <th style="text-align: center">Approval</th>
-            <th style="text-align: center">Supervisor</th>
         </tr>
     </thead>
     <tbody>
         <tr>
-            <td>Barang Masuk Gudang</td>
+            <td>1. Barang Masuk Gudang</td>
             <td style="text-align: center">
                 <?php echo CHtml::checkBox("User[roles][movementInCreate]", CHtml::resolveValue($model, "roles[movementInCreate]"), array(
                     'id' => 'User_roles_' . $counter++, 
@@ -43,15 +42,9 @@
                     'value' => 'movementInApproval'
                 )); ?>
             </td>
-            <td style="text-align: center">
-                <?php echo CHtml::checkBox("User[roles][movementInSupervisor]", CHtml::resolveValue($model, "roles[movementInSupervisor]"), array(
-                    'id' => 'User_roles_' . $counter++, 
-                    'value' => 'movementInSupervisor'
-                )); ?>
-            </td>
         </tr>
         <tr>
-            <td>Barang Keluar Gudang</td>
+            <td>2. Barang Keluar Gudang</td>
             <td style="text-align: center">
                 <?php echo CHtml::checkBox("User[roles][movementOutCreate]", CHtml::resolveValue($model, "roles[movementOutCreate]"), array(
                     'id' => 'User_roles_' . $counter++, 
@@ -76,15 +69,9 @@
                     'value' => 'movementOutApproval'
                 )); ?>
             </td>
-            <td style="text-align: center">
-                <?php echo CHtml::checkBox("User[roles][movementOutSupervisor]", CHtml::resolveValue($model, "roles[movementOutSupervisor]"), array(
-                    'id' => 'User_roles_' . $counter++, 
-                    'value' => 'movementOutSupervisor'
-                )); ?>
-            </td>
         </tr>
         <tr>
-            <td>Pengeluaran Bahan Pemakaian</td>
+            <td>3. Pengeluaran Bahan Pemakaian</td>
             <td style="text-align: center">
                 <?php echo CHtml::checkBox("User[roles][movementServiceCreate]", CHtml::resolveValue($model, "roles[movementServiceCreate]"), array(
                     'id' => 'User_roles_' . $counter++, 
@@ -109,15 +96,9 @@
                     'value' => 'movementServiceApproval'
                 )); ?>
             </td>
-            <td style="text-align: center">
-                <?php echo CHtml::checkBox("User[roles][movementServiceSupervisor]", CHtml::resolveValue($model, "roles[movementServiceSupervisor]"), array(
-                    'id' => 'User_roles_' . $counter++, 
-                    'value' => 'movementServiceSupervisor'
-                )); ?>
-            </td>
         </tr>
         <tr>
-            <td>Permintaan Bahan</td>
+            <td>4. Permintaan Bahan</td>
             <td style="text-align: center">
                 <?php echo CHtml::checkBox("User[roles][materialRequestCreate]", CHtml::resolveValue($model, "roles[materialRequestCreate]"), array(
                     'id' => 'User_roles_' . $counter++, 
@@ -142,15 +123,9 @@
                     'value' => 'materialRequestApproval'
                 )); ?>
             </td>
-            <td style="text-align: center">
-                <?php echo CHtml::checkBox("User[roles][materialRequestSupervisor]", CHtml::resolveValue($model, "roles[materialRequestSupervisor]"), array(
-                    'id' => 'User_roles_' . $counter++, 
-                    'value' => 'materialRequestSupervisor'
-                )); ?>
-            </td>
         </tr>
         <tr>
-            <td>Stok Gudang</td>
+            <td>5. Stok Gudang</td>
             <td>&nbsp;</td>
             <td>&nbsp;</td>
             <td style="text-align: center">
@@ -160,10 +135,9 @@
                 )); ?>
             </td>
             <td>&nbsp;</td>
-            <td>&nbsp;</td>
         </tr>
         <tr>
-            <td>Analisa Stok Barang</td>
+            <td>6. Analisa Stok Barang</td>
             <td>&nbsp;</td>
             <td>&nbsp;</td>
             <td style="text-align: center">
@@ -173,10 +147,9 @@
                 )); ?>
             </td>
             <td>&nbsp;</td>
-            <td>&nbsp;</td>
         </tr>
         <tr>
-            <td>Penyesuaian Stok</td>
+            <td>7. Penyesuaian Stok</td>
             <td style="text-align: center">
                 <?php echo CHtml::checkBox("User[roles][stockAdjustmentCreate]", CHtml::resolveValue($model, "roles[stockAdjustmentCreate]"), array(
                     'id' => 'User_roles_' . $counter++, 
@@ -191,16 +164,10 @@
                 )); ?>
             </td>
             <td style="text-align: center">
+                <?php //echo $counter; ?>
                 <?php echo CHtml::checkBox("User[roles][stockAdjustmentApproval]", CHtml::resolveValue($model, "roles[stockAdjustmentApproval]"), array(
                     'id' => 'User_roles_' . $counter++, 
                     'value' => 'stockAdjustmentApproval'
-                )); ?>
-            </td>
-            <td style="text-align: center">
-                <?php //echo $counter; ?>
-                <?php echo CHtml::checkBox("User[roles][stockAdjustmentSupervisor]", CHtml::resolveValue($model, "roles[stockAdjustmentSupervisor]"), array(
-                    'id' => 'User_roles_' . $counter++, 
-                    'value' => 'stockAdjustmentSupervisor'
                 )); ?>
             </td>
         </tr>

@@ -32,37 +32,37 @@
                 'Transaksi' => array(
                     'content' => $this->renderPartial('_formTransaction', array(
                         'model' => $model, 
-                        'counter' => $counter+28,
+                        'counter' => $counter+39,
                     ), true),
                 ),
                 'Operasional' => array(
                     'content' => $this->renderPartial('_formOperational', array(
                         'model' => $model, 
-                        'counter' => $counter+76,
+                        'counter' => $counter+82,
                     ), true),
                 ),
                 'Gudang' => array(
                     'content' => $this->renderPartial('_formInventory', array(
                         'model' => $model, 
-                        'counter' => $counter+115,
+                        'counter' => $counter+118,
                     ), true),
                 ),
                 'Management' => array(
                     'content' => $this->renderPartial('_formIdleManagement', array(
                         'model' => $model, 
-                        'counter' => $counter+142,
+                        'counter' => $counter+140,
                     ), true),
                 ),
                 'Accounting/Finance' => array(
                     'content' => $this->renderPartial('_formFinance', array(
                         'model' => $model, 
-                        'counter' => $counter+155,
+                        'counter' => $counter+154,
                     ), true),
                 ),
                 'HRD' => array(
                     'content' => $this->renderPartial('_formHumanResource', array(
                         'model' => $model, 
-                        'counter' => $counter+161,
+                        'counter' => $counter+165,
                     ), true),
                 ),
             ),
@@ -80,40 +80,46 @@
     <div>
         <?php $this->widget('zii.widgets.jui.CJuiTabs', array(
             'tabs' => array(
-                'Laporan' => array(
-                    'content' => $this->renderPartial('_formReport', array(
-                        'model' => $model, 
-                        'counter' => $counter+182
-                    ), true)
-                ),
                 'Setting Company' => array(
                     'content' => $this->renderPartial('_formCompany', array(
                         'model' => $model, 
-                        'counter' => $counter+270
-                    ), true)
-                ),
-                'Setting Accounting' => array(
-                    'content' => $this->renderPartial('_formAccounting', array(
-                        'model' => $model, 
-                        'counter' => $counter+315
-                    ), true)
-                ),
-                'Setting Product' => array(
-                    'content' => $this->renderPartial('_formProduct', array(
-                        'model' => $model, 
-                        'counter' => $counter+336
-                    ), true)
-                ),
-                'Setting Service' => array(
-                    'content' => $this->renderPartial('_formService', array(
-                        'model' => $model, 
-                        'counter' => $counter+385
+                        'counter' => $counter+192
                     ), true)
                 ),
                 'Setting Vehicle' => array(
                     'content' => $this->renderPartial('_formVehicle', array(
                         'model' => $model, 
-                        'counter' => $counter+434
+                        'counter' => $counter+229
+                    ), true)
+                ),
+                'Setting Product' => array(
+                    'content' => $this->renderPartial('_formProduct', array(
+                        'model' => $model, 
+                        'counter' => $counter+262
+                    ), true)
+                ),
+                'Setting Service' => array(
+                    'content' => $this->renderPartial('_formService', array(
+                        'model' => $model, 
+                        'counter' => $counter+307
+                    ), true)
+                ),
+                'Setting Accounting' => array(
+                    'content' => $this->renderPartial('_formAccounting', array(
+                        'model' => $model, 
+                        'counter' => $counter+336
+                    ), true)
+                ),
+                'Setting Master' => array(
+                    'content' => $this->renderPartial('_formMaster', array(
+                        'model' => $model, 
+                        'counter' => $counter+357
+                    ), true)
+                ),
+                'Laporan' => array(
+                    'content' => $this->renderPartial('_formReport', array(
+                        'model' => $model, 
+                        'counter' => $counter+414
                     ), true)
                 ),
             ),
@@ -129,7 +135,7 @@
 
 <br /><br />
 
-<?php $counter = 469; ?>
+<?php $counter = 506; ?>
 <div id="front-role-panel" <?php if (!$model->is_front_access): ?>style="display: none"<?php endif; ?>>
     <?php echo $this->renderPartial('_formRimsFront', array(
         'model'=>$model,

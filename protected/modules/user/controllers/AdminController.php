@@ -19,10 +19,7 @@ class AdminController extends Controller {
             }
         }
 
-        if (
-            $filterChain->action->id === 'update' || 
-            $filterChain->action->id === 'delete'
-        ) {
+        if ($filterChain->action->id === 'update') {
             if (!Yii::app()->user->checkAccess('masterUserEdit')) {
                 $this->redirect(array('/site/login'));
             }
@@ -34,8 +31,9 @@ class AdminController extends Controller {
             }
         }
 
-        if ($filterChain->action->id === 'admin') {
-            if (!(Yii::app()->user->checkAccess('masterUserCreate')) || !(Yii::app()->user->checkAccess('masterUserEdit'))) {
+        if ($filterChain->action->id === 'admin' || $filterChain->action->id === 'adminResigned' || $filterChain->action->id === 'view') {
+            if (!(Yii::app()->user->checkAccess('masterUserCreate') || Yii::app()->user->checkAccess('masterUserEdit') || 
+                    Yii::app()->user->checkAccess('masterUserView') || Yii::app()->user->checkAccess('masterUserApproval'))) {
                 $this->redirect(array('/site/login'));
             }
         }

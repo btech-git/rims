@@ -12,7 +12,7 @@
             <th style="text-align: center">Create</th>
             <th style="text-align: center">Edit</th>
             <th style="text-align: center">View</th>
-            <th style="text-align: center">Supervisor</th>
+            <th style="text-align: center">Approval</th>
         </tr>
     </thead>
     <tbody>
@@ -126,21 +126,15 @@
         </tr>
         <tr>
             <td>5. Outstanding Registration</td>
-            <td style="text-align: center">
-                <?php //echo CHtml::checkBox("User[roles][pricingRequestCreate]", CHtml::resolveValue($model, "roles[pricingRequestCreate]"), array('id' => 'User_roles_' . $counter++, 'value' => 'pricingRequestCreate')); ?>
-            </td>
-            <td style="text-align: center">
-                <?php //echo CHtml::checkBox("User[roles][pricingRequestEdit]", CHtml::resolveValue($model, "roles[pricingRequestEdit]"), array('id' => 'User_roles_' . $counter++, 'value' => 'pricingRequestEdit')); ?>
-            </td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
             <td style="text-align: center">
                 <?php echo CHtml::checkBox("User[roles][outstandingRegistrationView]", CHtml::resolveValue($model, "roles[outstandingRegistrationView]"), array(
                     'id' => 'User_roles_' . $counter++, 
                     'value' => 'outstandingRegistrationView'
                 )); ?>
             </td>
-            <td style="text-align: center">
-                <?php //echo CHtml::checkBox("User[roles][pricingRequestApproval]", CHtml::resolveValue($model, "roles[pricingRequestApproval]"), array('id' => 'User_roles_' . $counter++, 'value' => 'pricingRequestApproval')); ?>
-            </td>
+            <td>&nbsp;</td>
         </tr>
         <tr>
             <td>6. Inspeksi Kendaraan</td>
@@ -222,8 +216,8 @@
         </tr>
         <tr>
             <td>10. Kasir</td>
-            <td style="text-align: center"><?php //echo CHtml::checkBox("User[roles][cashierCreate]", CHtml::resolveValue($model, "roles[cashierCreate]"), array('id' => 'User_roles_' . $counter++, 'value' => 'cashierCreate')); ?></td>
-            <td style="text-align: center"><?php //echo CHtml::checkBox("User[roles][cashierEdit]", CHtml::resolveValue($model, "roles[cashierEdit]"), array('id' => 'User_roles_' . $counter++, 'value' => 'cashierEdit')); ?></td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
             <td style="text-align: center">
                 <?php echo CHtml::checkBox("User[roles][cashierView]", CHtml::resolveValue($model, "roles[cashierView]"), array(
                     'id' => 'User_roles_' . $counter++, 
@@ -261,7 +255,6 @@
             <td>&nbsp;</td>
             <td>&nbsp;</td>
             <td style="text-align: center">
-                <?php //echo $counter; ?>
                 <?php echo CHtml::checkBox("User[roles][serviceFollowUp]", CHtml::resolveValue($model, "roles[serviceFollowUp]"), array(
                     'id' => 'User_roles_' . $counter++, 
                     'value' => 'serviceFollowUp'

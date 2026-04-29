@@ -14,34 +14,38 @@ Yii::app()->clientScript->registerScript('userRoles', "
     }
 
     $(document).ready(function(){
-        checkRoles(0, 1, 481);
-        checkRoles(1, 2, 481);
+        checkRoles(0, 1, 518);
+        checkRoles(1, 2, 518);
         checkRoles(2, 3, 7);
-        checkRoles(8, 9, 29);
-        checkRoles(30, 31, 40);
-        checkRoles(41, 42, 55);
-        checkRoles(56, 57, 66);
-        checkRoles(67, 68, 77);
-        checkRoles(78, 79, 116);
-        checkRoles(117, 118, 143);
-        checkRoles(144, 145, 156);
-        checkRoles(157, 158, 162);
-        checkRoles(163, 164, 183);
-        checkRoles(184, 185, 271);
-        checkRoles(272, 273, 316);
-        checkRoles(317, 318, 337);
-        checkRoles(338, 339, 386);
-        checkRoles(387, 388, 435);
-        checkRoles(436, 437, 468);
-        checkRoles(469, 470, 481);
+        checkRoles(8, 9, 40);
+        checkRoles(41, 42, 49);
+        checkRoles(50, 51, 66);
+        checkRoles(67, 68, 75);
+        checkRoles(76, 77, 83);
+        checkRoles(84, 85, 119);
+        checkRoles(120, 121, 141);
+        checkRoles(142, 143, 155);
+        checkRoles(156, 157, 166);
+        checkRoles(167, 168, 193);
+        checkRoles(194, 195, 230);
+        checkRoles(231, 232, 263);
+        checkRoles(264, 265, 308);
+        checkRoles(309, 310, 337);
+        checkRoles(338, 339, 358);
+        checkRoles(359, 360, 375);
+        checkRoles(376, 377, 396);
+        checkRoles(397, 398, 405);
+        checkRoles(406, 407, 415);
+        checkRoles(416, 417, 505);
+        checkRoles(506, 507, 518);
     });
 
     $('#" . CHtml::activeId($model, 'roles') . "_0').click(function(){
-        checkRoles(0, 1, 481);
+        checkRoles(0, 1, 542);
     });
 
     $('#" . CHtml::activeId($model, 'roles') . "_1').click(function(){
-        checkRoles(1, 2, 481);
+        checkRoles(1, 2, 542);
     });
 
     $('#" . CHtml::activeId($model, 'roles') . "_2').click(function(){
@@ -49,81 +53,97 @@ Yii::app()->clientScript->registerScript('userRoles', "
     });
 
     $('#" . CHtml::activeId($model, 'roles') . "_8').click(function(){
-        checkRoles(8, 9, 29);
-    });
-	
-    $('#" . CHtml::activeId($model, 'roles') . "_30').click(function(){
-        checkRoles(30, 31, 40);
+        checkRoles(8, 9, 40);
     });
 	
     $('#" . CHtml::activeId($model, 'roles') . "_41').click(function(){
-        checkRoles(41, 42, 55);
+        checkRoles(41, 42, 49);
     });
 	
-    $('#" . CHtml::activeId($model, 'roles') . "_56').click(function(){
-        checkRoles(56, 57, 66);
+    $('#" . CHtml::activeId($model, 'roles') . "_50').click(function(){
+        checkRoles(50, 51, 66);
     });
 	
     $('#" . CHtml::activeId($model, 'roles') . "_67').click(function(){
-        checkRoles(67, 68, 77);
+        checkRoles(67, 68, 75);
     });
 	
-    $('#" . CHtml::activeId($model, 'roles') . "_78').click(function(){
-        checkRoles(78, 79, 116);
-    });
-		
-    $('#" . CHtml::activeId($model, 'roles') . "_117').click(function(){
-        checkRoles(117, 118, 143);
-    });
-		
-    $('#" . CHtml::activeId($model, 'roles') . "_144').click(function(){
-        checkRoles(144, 145, 156);
-    });
-		
-    $('#" . CHtml::activeId($model, 'roles') . "_157').click(function(){
-        checkRoles(157, 158, 162);
-    });
-		
-    $('#" . CHtml::activeId($model, 'roles') . "_163').click(function(){
-        checkRoles(163, 164, 183);
-    });
-		
-    $('#" . CHtml::activeId($model, 'roles') . "_184').click(function(){
-        checkRoles(184, 185, 271);
-    });
-		
-    $('#" . CHtml::activeId($model, 'roles') . "_272').click(function(){
-        checkRoles(272, 273, 316);
+    $('#" . CHtml::activeId($model, 'roles') . "_76').click(function(){
+        checkRoles(76, 77, 83);
     });
 	
-    $('#" . CHtml::activeId($model, 'roles') . "_317').click(function(){
-        checkRoles(317, 318, 337);
+    $('#" . CHtml::activeId($model, 'roles') . "_84').click(function(){
+        checkRoles(84, 85, 119);
+    });
+	
+    $('#" . CHtml::activeId($model, 'roles') . "_120').click(function(){
+        checkRoles(120, 121, 141);
+    });
+	
+    $('#" . CHtml::activeId($model, 'roles') . "_142').click(function(){
+        checkRoles(142, 143, 155);
+    });
+	
+    $('#" . CHtml::activeId($model, 'roles') . "_156').click(function(){
+        checkRoles(156, 157, 166);
+    });
+		
+    $('#" . CHtml::activeId($model, 'roles') . "_167').click(function(){
+        checkRoles(167, 168, 193);
+    });
+		
+    $('#" . CHtml::activeId($model, 'roles') . "_194').click(function(){
+        checkRoles(194, 195, 230);
+    });
+		
+    $('#" . CHtml::activeId($model, 'roles') . "_231').click(function(){
+        checkRoles(231, 232, 263);
+    });
+		
+    $('#" . CHtml::activeId($model, 'roles') . "_264').click(function(){
+        checkRoles(264, 265, 308);
+    });
+		
+    $('#" . CHtml::activeId($model, 'roles') . "_309').click(function(){
+        checkRoles(309, 310, 337);
     });
 		
     $('#" . CHtml::activeId($model, 'roles') . "_338').click(function(){
-        checkRoles(338, 339, 386);
-    });
-		
-    $('#" . CHtml::activeId($model, 'roles') . "_387').click(function(){
-        checkRoles(387, 388, 435);
+        checkRoles(338, 339, 358);
     });
 	
-    $('#" . CHtml::activeId($model, 'roles') . "_436').click(function(){
-        checkRoles(436, 437, 468);
+    $('#" . CHtml::activeId($model, 'roles') . "_359').click(function(){
+        checkRoles(359, 360, 375);
     });
 		
-    $('#" . CHtml::activeId($model, 'roles') . "_469').click(function(){
-        checkRoles(469, 470, 481);
+    $('#" . CHtml::activeId($model, 'roles') . "_376').click(function(){
+        checkRoles(376, 377, 396);
+    });
+			
+    $('#" . CHtml::activeId($model, 'roles') . "_397').click(function(){
+        checkRoles(397, 398, 405);
+    });
+		
+    $('#" . CHtml::activeId($model, 'roles') . "_406').click(function(){
+        checkRoles(406, 407, 415);
+    });
+		
+    $('#" . CHtml::activeId($model, 'roles') . "_416').click(function(){
+        checkRoles(416, 417, 505);
+    });
+	
+    $('#" . CHtml::activeId($model, 'roles') . "_506').click(function(){
+        checkRoles(506, 507, 518);
     });
 	
     $('#" . CHtml::activeId($model, 'is_main_access') . "').click(function(){
         if ($(this).prop('checked')) {
-            for (i = 2; i <= 469; i++) {
+            for (i = 2; i <= 505; i++) {
                 $('#" . CHtml::activeId($model, 'roles') . "_' + i).removeAttr('disabled');
                 $('#main-role-panel').show();
             }
         } else {
-            for (i = 2; i <= 469; i++) {
+            for (i = 2; i <= 505; i++) {
                 $('#" . CHtml::activeId($model, 'roles') . "_' + i).removeAttr('checked');
                 $('#" . CHtml::activeId($model, 'roles') . "_' + i).attr('disabled', true);
                 $('#main-role-panel').hide();
@@ -133,12 +153,12 @@ Yii::app()->clientScript->registerScript('userRoles', "
     
     $('#" . CHtml::activeId($model, 'is_front_access') . "').click(function(){
         if ($(this).prop('checked')) {
-            for (i = 469; i <= 481; i++) {
+            for (i = 506; i <= 518; i++) {
                 $('#" . CHtml::activeId($model, 'roles') . "_' + i).removeAttr('disabled');
                 $('#front-role-panel').show();
             }
         } else {
-            for (i = 469; i <= 481; i++) {
+            for (i = 506; i <= 518; i++) {
                 $('#" . CHtml::activeId($model, 'roles') . "_' + i).removeAttr('checked');
                 $('#" . CHtml::activeId($model, 'roles') . "_' + i).attr('disabled', true);
                 $('#front-role-panel').hide();
@@ -180,7 +200,7 @@ Yii::app()->clientScript->registerScript('userRoles', "
                     <?php if ($model->isNewRecord): ?>
                         <div class="small-8 columns">
                             <?php echo $form->textField($model, 'username', array('size' => 20, 'maxlength' => 20)); ?>
-                        <?php echo $form->error($model, 'username'); ?>
+                            <?php echo $form->error($model, 'username'); ?>
                         </div>
                     <?php else: ?>
                         <div class="small-8 columns">

@@ -17,7 +17,7 @@
     </thead>
     <tbody>
         <tr>
-            <td>Data Karyawan</td>
+            <td>1. Data Karyawan</td>
             <td style="text-align: center">
                 <?php echo CHtml::checkBox("User[roles][masterEmployeeCreate]", CHtml::resolveValue($model, "roles[masterEmployeeCreate]"), array(
                     'id' => 'User_roles_' . $counter++, 
@@ -44,7 +44,7 @@
             </td>
         </tr>
         <tr>
-            <td>Master Kategori Ketidakhadiran</td>
+            <td>2. Master Kategori Ketidakhadiran</td>
             <td style="text-align: center">
                 <?php echo CHtml::checkBox("User[roles][masterEmployeeOnleaveCategoryCreate]", CHtml::resolveValue($model, "roles[masterEmployeeOnleaveCategoryCreate]"), array(
                     'id' => 'User_roles_' . $counter++, 
@@ -71,7 +71,7 @@
             </td>
         </tr>
         <tr>
-            <td>Public Holiday</td>
+            <td>3. Public Holiday</td>
             <td style="text-align: center">
                 <?php echo CHtml::checkBox("User[roles][masterHolidayCreate]", CHtml::resolveValue($model, "roles[masterHolidayCreate]"), array(
                     'id' => 'User_roles_' . $counter++, 
@@ -98,7 +98,7 @@
             </td>
         </tr>
         <tr>
-            <td>Absensi Karyawan</td>
+            <td>4. Absensi Karyawan</td>
             <td style="text-align: center">
                 <?php echo CHtml::checkBox("User[roles][employeeTimesheetCreate]", CHtml::resolveValue($model, "roles[employeeTimesheetCreate]"), array(
                     'id' => 'User_roles_' . $counter++, 
@@ -117,12 +117,10 @@
                     'value' => 'employeeTimesheetView'
                 )); ?>
             </td>
-            <td style="text-align: center">
-                <?php //echo CHtml::checkBox("User[roles][employeeTimesheetApproval]", CHtml::resolveValue($model, "roles[employeeTimesheetApproval]"), array('id' => 'User_roles_' . $counter++, 'value' => 'employeeTimesheetApproval')); ?>
-            </td>
+            <td>&nbsp;</td>
         </tr>
         <tr>
-            <td>Pengajuan Cuti Karyawan</td>
+            <td>5. Pengajuan Cuti Karyawan</td>
             <td style="text-align: center">
                 <?php echo CHtml::checkBox("User[roles][employeeLeaveApplicationCreate]", CHtml::resolveValue($model, "roles[employeeLeaveApplicationCreate]"), array(
                     'id' => 'User_roles_' . $counter++, 
@@ -141,18 +139,11 @@
                     'value' => 'employeeLeaveApplicationView'
                 )); ?>
             </td>
-            <td style="text-align: center">
-                <?php //echo CHtml::checkBox("User[roles][employeeLeaveApplicationApproval]", CHtml::resolveValue($model, "roles[employeeLeaveApplicationApproval]"), array('id' => 'User_roles_' . $counter++, 'value' => 'employeeLeaveApplicationApproval')); ?>
-            </td>
+            <td>&nbsp;</td>
         </tr>
         <tr>
-            <td>Data Cuti Karyawan</td>
-            <td style="text-align: center">
-                <?php echo CHtml::checkBox("User[roles][employeeLeaveApplicationCreate]", CHtml::resolveValue($model, "roles[employeeLeaveApplicationCreate]"), array(
-                    'id' => 'User_roles_' . $counter++, 
-                    'value' => 'employeeLeaveApplicationCreate'
-                )); ?>
-            </td>
+            <td>6. Data Cuti Karyawan</td>
+            <td>&nbsp;</td>
             <td style="text-align: center">
                 <?php echo CHtml::checkBox("User[roles][employeeLeaveApplicationEdit]", CHtml::resolveValue($model, "roles[employeeLeaveApplicationEdit]"), array(
                     'id' => 'User_roles_' . $counter++, 
@@ -166,15 +157,17 @@
                 )); ?>
             </td>
             <td style="text-align: center">
-                <?php //echo CHtml::checkBox("User[roles][employeeLeaveApplicationApproval]", CHtml::resolveValue($model, "roles[employeeLeaveApplicationApproval]"), array('id' => 'User_roles_' . $counter++, 'value' => 'employeeLeaveApplicationApproval')); ?>
+                <?php echo CHtml::checkBox("User[roles][employeeLeaveApplicationApproval]", CHtml::resolveValue($model, "roles[employeeLeaveApplicationApproval]"), array(
+                    'id' => 'User_roles_' . $counter++, 
+                    'value' => 'employeeLeaveApplicationApproval',
+                )); ?>
             </td>
         </tr>
         <tr>
-            <td>Payroll</td>
+            <td>7. Payroll</td>
             <td>&nbsp;</td>
             <td>&nbsp;</td>
             <td style="text-align: center">
-                <?php //echo $counter; ?>
                 <?php echo CHtml::checkBox("User[roles][payrollReport]", CHtml::resolveValue($model, "roles[payrollReport]"), array(
                     'id' => 'User_roles_' . $counter++, 
                     'value' => 'payrollReport'
@@ -183,49 +176,50 @@
             <td>&nbsp;</td>
         </tr>
         <tr>
-            <td>Jadwal Karyawan</td>
+            <td>8. Jadwal Karyawan</td>
             <td>&nbsp;</td>
             <td>&nbsp;</td>
             <td style="text-align: center">
-                <?php echo CHtml::checkBox("User[roles][absencyReport]", CHtml::resolveValue($model, "roles[absencyReport]"), array(
+                <?php echo CHtml::checkBox("User[roles][employeeScheduleReport]", CHtml::resolveValue($model, "roles[employeeScheduleReport]"), array(
                     'id' => 'User_roles_' . $counter++, 
-                    'value' => 'absencyReport'
+                    'value' => 'employeeScheduleReport'
                 )); ?>
             </td>
             <td>&nbsp;</td>
         </tr>
         <tr>
-            <td>Rekap Absensi Karyawan</td>
+            <td>9. Rekap Absensi Karyawan</td>
             <td>&nbsp;</td>
             <td>&nbsp;</td>
             <td style="text-align: center">
-                <?php echo CHtml::checkBox("User[roles][absencyReport]", CHtml::resolveValue($model, "roles[absencyReport]"), array(
+                <?php echo CHtml::checkBox("User[roles][employeeAbsencyReport]", CHtml::resolveValue($model, "roles[employeeAbsencyReport]"), array(
                     'id' => 'User_roles_' . $counter++, 
-                    'value' => 'absencyReport'
+                    'value' => 'employeeAbsencyReport'
                 )); ?>
             </td>
             <td>&nbsp;</td>
         </tr>
         <tr>
-            <td>Absensi Karyawan Tahunan</td>
+            <td>10. Absensi Karyawan Tahunan</td>
             <td>&nbsp;</td>
             <td>&nbsp;</td>
             <td style="text-align: center">
-                <?php echo CHtml::checkBox("User[roles][absencyReport]", CHtml::resolveValue($model, "roles[absencyReport]"), array(
+                <?php echo CHtml::checkBox("User[roles][yearlyEmployeeAbsencyReport]", CHtml::resolveValue($model, "roles[yearlyEmployeeAbsencyReport]"), array(
                     'id' => 'User_roles_' . $counter++, 
-                    'value' => 'absencyReport'
+                    'value' => 'yearlyEmployeeAbsencyReport'
                 )); ?>
             </td>
             <td>&nbsp;</td>
         </tr>
         <tr>
-            <td>Ulang Tahun Karyawan</td>
+            <td>11. Ulang Tahun Karyawan</td>
             <td>&nbsp;</td>
             <td>&nbsp;</td>
             <td style="text-align: center">
-                <?php echo CHtml::checkBox("User[roles][absencyReport]", CHtml::resolveValue($model, "roles[absencyReport]"), array(
+                <?php //echo $counter; ?>
+                <?php echo CHtml::checkBox("User[roles][employeeBirthdateReport]", CHtml::resolveValue($model, "roles[employeeBirthdateReport]"), array(
                     'id' => 'User_roles_' . $counter++, 
-                    'value' => 'absencyReport'
+                    'value' => 'employeeBirthdateReport'
                 )); ?>
             </td>
             <td>&nbsp;</td>
