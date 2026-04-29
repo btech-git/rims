@@ -16,7 +16,14 @@ class PaymentInController extends Controller {
     }
 
     public function filterAccess($filterChain) {
-        if ($filterChain->action->id === 'create') {
+        if (
+            $filterChain->action->id === 'create' || 
+            $filterChain->action->id === 'createDownpayment' || 
+            $filterChain->action->id === 'createMultiple' || 
+            $filterChain->action->id === 'customerList' || 
+            $filterChain->action->id === 'insuranceList' || 
+            $filterChain->action->id === 'invoiceList'
+        ) {
             if (!(Yii::app()->user->checkAccess('paymentInCreate'))) {
                 $this->redirect(array('/site/login'));
             }
@@ -26,14 +33,14 @@ class PaymentInController extends Controller {
                 $this->redirect(array('/site/login'));
             }
         }
-        if ($filterChain->action->id === 'admin' || $filterChain->action->id === 'memo' || $filterChain->action->id === 'view') {
+        if ($filterChain->action->id === 'admin' || $filterChain->action->id === 'show' || $filterChain->action->id === 'view') {
             if (!(Yii::app()->user->checkAccess('paymentInCreate') || Yii::app()->user->checkAccess('paymentInEdit') || Yii::app()->user->checkAccess('paymentInView'))) {
                 $this->redirect(array('/site/login'));
             }
         }
         
         if ($filterChain->action->id === 'updateApproval') {
-            if (!(Yii::app()->user->checkAccess('paymentInApproval') || Yii::app()->user->checkAccess('paymentInSupervisor'))) {
+            if (!(Yii::app()->user->checkAccess('paymentInApproval'))) {
                 $this->redirect(array('/site/login'));
             }
         }
@@ -823,7 +830,7 @@ class PaymentInController extends Controller {
                     if ($model->approval_type == 'Approved') {
                         foreach ($paymentIn->paymentInDetails as $detail) {
                             $invoiceHeader = InvoiceHeader::model()->findByPk($detail->invoice_header_id);
-                            $registrationTransaction = RegistrationTransaction::model()->findByPk($invoiceHeader->registration_transaction_id);
+                            $registrationTransaction = RegistrationTransaction::model()->findByPk($detail->registration_transaction_id);
                             $paymentAmount = $invoiceHeader->getTotalPayment() + $detail->downpayment_amount + $detail->discount_amount + $detail->bank_administration_fee + $detail->merimen_fee;
                             $invoiceHeader->payment_amount = $paymentAmount;
                             $invoiceHeader->payment_left = $invoiceHeader->getTotalRemaining();
