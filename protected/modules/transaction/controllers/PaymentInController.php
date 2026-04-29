@@ -829,24 +829,26 @@ class PaymentInController extends Controller {
 
                     if ($model->approval_type == 'Approved') {
                         foreach ($paymentIn->paymentInDetails as $detail) {
-                            $invoiceHeader = InvoiceHeader::model()->findByPk($detail->invoice_header_id);
-                            $registrationTransaction = RegistrationTransaction::model()->findByPk($detail->registration_transaction_id);
-                            $paymentAmount = $invoiceHeader->getTotalPayment() + $detail->downpayment_amount + $detail->discount_amount + $detail->bank_administration_fee + $detail->merimen_fee;
-                            $invoiceHeader->payment_amount = $paymentAmount;
-                            $invoiceHeader->payment_left = $invoiceHeader->getTotalRemaining();
+                            if (!empty($detail->invoice_header_id)) {
+                                $invoiceHeader = InvoiceHeader::model()->findByPk($detail->invoice_header_id);
+                                $registrationTransaction = RegistrationTransaction::model()->findByPk($detail->registration_transaction_id);
+                                $paymentAmount = $invoiceHeader->getTotalPayment() + $detail->downpayment_amount + $detail->discount_amount + $detail->bank_administration_fee + $detail->merimen_fee;
+                                $invoiceHeader->payment_amount = $paymentAmount;
+                                $invoiceHeader->payment_left = $invoiceHeader->getTotalRemaining();
 
-                            if (!empty($invoiceHeader) && $invoiceHeader->payment_left > '0.00') {
-                                $invoiceHeader->status = 'PARTIALLY PAID';
-                            } elseif (!empty($invoiceHeader) && $invoiceHeader->payment_left == '0.00') {
-                                $registrationTransaction->status = 'Finished';
-                                $registrationTransaction->update(array('status'));
-                                $invoiceHeader->status = 'PAID';
-                            } elseif (empty($invoiceHeader) && !empty($registrationTransaction) && $registrationTransaction->downpayment_amount > '0.00') {
-                                $registrationTransaction->is_downpayment_paid = 1; 
-                                $registrationTransaction->update(array('is_downpayment_paid'));
+                                if (!empty($invoiceHeader) && $invoiceHeader->payment_left > '0.00') {
+                                    $invoiceHeader->status = 'PARTIALLY PAID';
+                                } elseif (!empty($invoiceHeader) && $invoiceHeader->payment_left == '0.00') {
+                                    $registrationTransaction->status = 'Finished';
+                                    $registrationTransaction->update(array('status'));
+                                    $invoiceHeader->status = 'PAID';
+                                } elseif (empty($invoiceHeader) && !empty($registrationTransaction) && $registrationTransaction->downpayment_amount > '0.00') {
+                                    $registrationTransaction->is_downpayment_paid = 1; 
+                                    $registrationTransaction->update(array('is_downpayment_paid'));
+                                }
+
+                                $invoiceHeader->update(array('payment_amount', 'payment_left', 'status'));
                             }
-
-                            $invoiceHeader->update(array('payment_amount', 'payment_left', 'status'));
                         }
 
                         if (!empty($paymentIn->insurance_company_id)) {
@@ -1060,8 +1062,12 @@ class PaymentInController extends Controller {
             $detail->amount = '0.00';
             $detail->tax_service_percentage = '0.00';
             $detail->tax_service_amount = '0.00';
+            $detail->downpayment_amount = '0.00';
+            $detail->discount_amount = '0.00';
+            $detail->bank_administration_fee = '0.00';
+            $detail->merimen_fee = '0.00';
             $detail->memo = '';
-            $detail->update(array('total_invoice', 'amount', 'tax_service_percentage', 'tax_service_amount', 'memo'));
+            $detail->update(array('total_invoice', 'amount', 'tax_service_percentage', 'tax_service_amount', 'downpayment_amount', 'discount_amount', 'bank_administration_fee', 'merimen_fee', 'memo'));
             
             if (!empty($detail->invoice_header_id)) {
                 $invoiceHeader = InvoiceHeader::model()->findByPk($detail->invoice_header_id);
