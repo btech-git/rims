@@ -1063,10 +1063,12 @@ class PaymentInController extends Controller {
             $detail->memo = '';
             $detail->update(array('total_invoice', 'amount', 'tax_service_percentage', 'tax_service_amount', 'memo'));
             
-            $invoiceHeader = InvoiceHeader::model()->findByPk($detail->invoice_header_id);
-            $invoiceHeader->payment_amount = $invoiceHeader->getTotalPayment();
-            $invoiceHeader->payment_left = $invoiceHeader->getTotalRemaining();
-            $invoiceHeader->update(array('payment_amount', 'payment_left'));
+            if (!empty($detail->invoice_header_id)) {
+                $invoiceHeader = InvoiceHeader::model()->findByPk($detail->invoice_header_id);
+                $invoiceHeader->payment_amount = $invoiceHeader->getTotalPayment();
+                $invoiceHeader->payment_left = $invoiceHeader->getTotalRemaining();
+                $invoiceHeader->update(array('payment_amount', 'payment_left'));
+            }
         }
         
         JurnalUmum::model()->updateAll(array('total' => '0.00'), 'kode_transaksi = :kode_transaksi', array(
