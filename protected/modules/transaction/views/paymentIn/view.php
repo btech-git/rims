@@ -33,27 +33,20 @@ $this->menu = array(
                     'style'=>'margin-right:10px',
                 )) ?>
             <?php endif; ?>
-
-            <?php if ($model->status == "Draft" && Yii::app()->user->checkAccess("paymentInApproval")): ?>
-                <?php echo CHtml::link('<span class="fa fa-check"></span>Approval', Yii::app()->baseUrl . '/transaction/paymentIn/updateApproval?headerId=' . $model->id, array(
-                    'class' => 'button success right', 
-                    'style' => 'margin-right:10px',
-                )); ?>
-            <?php elseif (Yii::app()->user->checkAccess("paymentInApproval")): ?>
-                <?php echo CHtml::link('<span class="fa fa-check"></span>Update Approval', Yii::app()->baseUrl . '/transaction/paymentIn/updateApproval?headerId=' . $model->id, array(
-                    'class' => 'button success right', 
-                    'style' => 'margin-right:10px',
-                )); ?>
-            <?php endif; ?>
-
-                <?php echo CHtml::link('<span class="fa fa-check"></span>Update Approval', Yii::app()->baseUrl . '/transaction/paymentIn/updateApproval?headerId=' . $model->id, array(
-                    'class' => 'button success right', 
-                    'style' => 'margin-right:10px',
-                )); ?>
-            <?php /*if ($model->paymentInDetails[0]->invoiceHeader->registrationTransaction->status != 'Finished'): ?>
-                <?php echo CHtml::submitButton('Finish', array('name' => 'SubmitFinish', 'confirm' => 'Are you sure you want to finish this transaction?', 'class' => 'button warning')); ?>
-            <?php endif;*/ ?>
         <?php endif; ?>
+        
+        <?php if ($model->status == "Draft" && Yii::app()->user->checkAccess("paymentInApproval")): ?>
+            <?php echo CHtml::link('<span class="fa fa-check"></span>Approval', Yii::app()->baseUrl . '/transaction/paymentIn/updateApproval?headerId=' . $model->id, array(
+                'class' => 'button success right', 
+                'style' => 'margin-right:10px',
+            )); ?>
+        <?php elseif ($model->status != "Draft" && Yii::app()->user->checkAccess("paymentHead")): ?>
+            <?php echo CHtml::link('<span class="fa fa-check"></span>Update Approval', Yii::app()->baseUrl . '/transaction/paymentIn/updateApproval?headerId=' . $model->id, array(
+                'class' => 'button success right', 
+                'style' => 'margin-right:10px',
+            )); ?>
+        <?php endif; ?>
+
         <?php if (Yii::app()->user->checkAccess("paymentHead") && $model->status === 'Approved'): ?>
             <?php /*echo CHtml::link('<span class="fa fa-check"></span>Verify Transaction', array("/transaction/paymentIn/verify", "id" => $model->id), array(
                 'class' => 'button success right', 
