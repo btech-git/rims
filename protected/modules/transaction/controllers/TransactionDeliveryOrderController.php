@@ -21,10 +21,7 @@ class TransactionDeliveryOrderController extends Controller {
             }
         }
 
-        if (
-            $filterChain->action->id === 'delete' ||
-            $filterChain->action->id === 'update'
-        ) {
+        if ($filterChain->action->id === 'update') {
             if (!(Yii::app()->user->checkAccess('deliveryEdit'))) {
                 $this->redirect(array('/site/login'));
             }
@@ -33,9 +30,14 @@ class TransactionDeliveryOrderController extends Controller {
         if (
             $filterChain->action->id === 'admin' || 
             $filterChain->action->id === 'index' || 
+            $filterChain->action->id === 'show' || 
             $filterChain->action->id === 'view'
         ) {
-            if (!(Yii::app()->user->checkAccess('deliveryCreate') || Yii::app()->user->checkAccess('deliveryEdit') || Yii::app()->user->checkAccess('deliveryView'))) {
+            if (!(
+                Yii::app()->user->checkAccess('deliveryCreate') || 
+                Yii::app()->user->checkAccess('deliveryEdit') || 
+                Yii::app()->user->checkAccess('deliveryView')
+            )) {
                 $this->redirect(array('/site/login'));
             }
         }

@@ -30,16 +30,17 @@ class TransactionSentRequestController extends Controller {
             }
         }
 
-        if ($filterChain->action->id === 'updateApproval') {
-            if (!(Yii::app()->user->checkAccess('sentRequestApproval') || Yii::app()->user->checkAccess('sentRequestSupervisor'))) {
+        if ($filterChain->action->id === 'updateApproval' || $filterChain->action->id === 'updateApprovalDestination') {
+            if (!(Yii::app()->user->checkAccess('sentRequestApproval'))) {
                 $this->redirect(array('/site/login'));
             }
         }
 
         if (
-                $filterChain->action->id === 'admin' ||
-                $filterChain->action->id === 'index' ||
-                $filterChain->action->id === 'view'
+            $filterChain->action->id === 'admin' ||
+            $filterChain->action->id === 'adminDestination' ||
+            $filterChain->action->id === 'index' ||
+            $filterChain->action->id === 'view'
         ) {
             if (!(
                 Yii::app()->user->checkAccess('sentRequestCreate') || 

@@ -588,7 +588,7 @@ class PaymentInController extends Controller {
         }
 
         $invoiceCriteria = new CDbCriteria;
-        $invoiceCriteria->addCondition('t.payment_left > 1 AND t.invoice_date > "2022-12-31" AND t.status NOT LIKE "%CANCEL%"');
+        $invoiceCriteria->addCondition('t.payment_left > 1 AND t.invoice_date > "2024-12-31" AND t.status NOT LIKE "%CANCEL%"');
 //        $invoiceCriteria->addInCondition('t.branch_id', Yii::app()->user->branch_id);
         $invoiceCriteria->compare('t.branch_id', $invoice->branch_id);
         $invoiceCriteria->compare('t.invoice_number', $invoice->invoice_number, true);
@@ -621,6 +621,10 @@ class PaymentInController extends Controller {
         
         $registrationTransaction = new RegistrationTransaction('search');
         $registrationTransaction->unsetAttributes();
+        if (isset($_GET['RegistrationTransaction'])) {
+            $registrationTransaction->attributes = $_GET['RegistrationTransaction'];
+        }
+
         $downpaymentCriteria = new CDbCriteria;
         $downpaymentCriteria->addCondition('t.downpayment_amount > 0 AND t.is_downpayment_paid = 0 AND t.status NOT LIKE "%CANCEL%"');
         $downpaymentCriteria->compare('t.downpayment_transaction_number', $registrationTransaction->downpayment_transaction_number, true);
@@ -829,9 +833,9 @@ class PaymentInController extends Controller {
 
                     if ($model->approval_type == 'Approved') {
                         foreach ($paymentIn->paymentInDetails as $detail) {
+                            $registrationTransaction = RegistrationTransaction::model()->findByPk($detail->registration_transaction_id);
                             if (!empty($detail->invoice_header_id)) {
                                 $invoiceHeader = InvoiceHeader::model()->findByPk($detail->invoice_header_id);
-                                $registrationTransaction = RegistrationTransaction::model()->findByPk($detail->registration_transaction_id);
                                 $paymentAmount = $invoiceHeader->getTotalPayment() + $detail->downpayment_amount + $detail->discount_amount + $detail->bank_administration_fee + $detail->merimen_fee;
                                 $invoiceHeader->payment_amount = $paymentAmount;
                                 $invoiceHeader->payment_left = $invoiceHeader->getTotalRemaining();
@@ -848,6 +852,11 @@ class PaymentInController extends Controller {
                                 }
 
                                 $invoiceHeader->update(array('payment_amount', 'payment_left', 'status'));
+                            }
+                            
+                            if (!empty($detail->registration_transaction_id) && $detail->downpayment_amount > 0) {
+                                $registrationTransaction->is_downpayment_paid = 1;
+                                $registrationTransaction->update(array('is_downpayment_paid'));
                             }
                         }
 

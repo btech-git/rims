@@ -15,16 +15,13 @@ class TransactionReceiveItemController extends Controller {
     }
 
     public function filterAccess($filterChain) {
-        if ($filterChain->action->id === 'create') {
+        if ($filterChain->action->id === 'create' || $filterChain->action->id === 'addInvoice') {
             if (!(Yii::app()->user->checkAccess('receiveItemCreate'))) {
                 $this->redirect(array('/site/login'));
             }
         }
 
-        if (
-            $filterChain->action->id === 'delete' || 
-            $filterChain->action->id === 'update'
-        ) {
+        if ($filterChain->action->id === 'update') {
             if (!(Yii::app()->user->checkAccess('receiveItemEdit'))) {
                 $this->redirect(array('/site/login'));
             }
@@ -33,6 +30,8 @@ class TransactionReceiveItemController extends Controller {
         if (
             $filterChain->action->id === 'admin' || 
             $filterChain->action->id === 'index' || 
+            $filterChain->action->id === 'show' || 
+            $filterChain->action->id === 'showInvoice' || 
             $filterChain->action->id === 'view'
         ) {
             if (!(Yii::app()->user->checkAccess('receiveItemCreate') || Yii::app()->user->checkAccess('receiveItemEdit') || Yii::app()->user->checkAccess('receiveItemView'))) {

@@ -85,17 +85,13 @@ class MovementIns extends CComponent {
                 foreach ($receivePartsHeader->receivePartsDetails as $receivePartsDetail) {
                     if ($receivePartsDetail->quantity_movement_left > 0) {
 
-                        $warehouseBranchProductCategory = WarehouseBranchProductCategory::model()->findByAttributes(array(
-                            'branch_id' => $this->header->branch_id, 
-                            'product_master_category_id' => $receivePartsDetail->product->product_master_category_id
-                        ));
                         $detail = new MovementInDetail();
                         $detail->receive_item_detail_id = null;
                         $detail->return_item_detail_id = null;
                         $detail->receive_parts_detail_id = $receivePartsDetail->id;
                         $detail->product_id = $receivePartsDetail->product_id;
                         $detail->quantity_transaction = $receivePartsDetail->quantity_movement_left;
-                        $detail->warehouse_id = $warehouseBranchProductCategory === null ? null : $warehouseBranchProductCategory->warehouse_id;
+                        $detail->warehouse_id = 33;
                         $this->details[] = $detail;
                     }
                 }

@@ -29,7 +29,7 @@ class CashTransactionController extends Controller {
         }
 
         if ($filterChain->action->id === 'updateApproval') {
-            if (!(Yii::app()->user->checkAccess('cashTransactionApproval') || Yii::app()->user->checkAccess('cashTransactionSupervisor'))) {
+            if (!(Yii::app()->user->checkAccess('cashTransactionApproval'))) {
                 $this->redirect(array('/site/login'));
             }
         }

@@ -23,7 +23,6 @@ class MovementOutHeaderController extends Controller {
         }
 
         if (
-            $filterChain->action->id === 'delete' ||
             $filterChain->action->id === 'updateDelivered' || 
             $filterChain->action->id === 'updateStatus' || 
             $filterChain->action->id === 'update'
@@ -34,7 +33,7 @@ class MovementOutHeaderController extends Controller {
         }
 
         if ($filterChain->action->id === 'updateApproval') {
-            if (!(Yii::app()->user->checkAccess('movementOutApproval') || Yii::app()->user->checkAccess('movementOutSupervisor'))) {
+            if (!(Yii::app()->user->checkAccess('movementOutApproval'))) {
                 $this->redirect(array('/site/login'));
             }
         }
@@ -42,6 +41,7 @@ class MovementOutHeaderController extends Controller {
         if (
             $filterChain->action->id === 'admin' || 
             $filterChain->action->id === 'index' || 
+            $filterChain->action->id === 'show' || 
             $filterChain->action->id === 'view'
         ) {
             if (!(Yii::app()->user->checkAccess('movementOutCreate') || Yii::app()->user->checkAccess('movementOutEdit') || Yii::app()->user->checkAccess('movementOutView'))) {

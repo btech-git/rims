@@ -31,7 +31,7 @@ class TransactionPurchaseOrderController extends Controller {
         }
 
         if ($filterChain->action->id === 'updateApproval') {
-            if (!(Yii::app()->user->checkAccess('purchaseOrderApproval') || Yii::app()->user->checkAccess('purchaseOrderSupervisor'))) {
+            if (!(Yii::app()->user->checkAccess('purchaseOrderApproval'))) {
                 $this->redirect(array('/site/login'));
             }
         }

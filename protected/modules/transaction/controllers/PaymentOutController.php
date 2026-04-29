@@ -2,10 +2,6 @@
 
 class PaymentOutController extends Controller {
 
-    /**
-     * @var string the default layout for the views. Defaults to '//layouts/column2', meaning
-     * using two-column layout. See 'protected/views/layouts/column2.php'.
-     */
     public $layout = '//layouts/column1';
     public $defaultAction = 'admin';
 
@@ -22,17 +18,14 @@ class PaymentOutController extends Controller {
             }
         }
 
-        if (
-            $filterChain->action->id === 'delete' ||
-            $filterChain->action->id === 'update'
-        ) {
+        if ($filterChain->action->id === 'delete' || $filterChain->action->id === 'update') {
             if (!(Yii::app()->user->checkAccess('paymentOutEdit'))) {
                 $this->redirect(array('/site/login'));
             }
         }
 
         if ($filterChain->action->id === 'updateApproval') {
-            if (!(Yii::app()->user->checkAccess('paymentOutApproval') || Yii::app()->user->checkAccess('paymentOutSupervisor'))) {
+            if (!(Yii::app()->user->checkAccess('paymentOutApproval'))) {
                 $this->redirect(array('/site/login'));
             }
         }
@@ -40,9 +33,14 @@ class PaymentOutController extends Controller {
         if (
             $filterChain->action->id === 'admin' ||
             $filterChain->action->id === 'index' ||
+            $filterChain->action->id === 'show' ||
             $filterChain->action->id === 'view'
         ) {
-            if (!(Yii::app()->user->checkAccess('paymentOutCreate') || Yii::app()->user->checkAccess('paymentOutEdit') || Yii::app()->user->checkAccess('paymentOutView'))) {
+            if (!(
+                Yii::app()->user->checkAccess('paymentOutCreate') || 
+                Yii::app()->user->checkAccess('paymentOutEdit') || 
+                Yii::app()->user->checkAccess('paymentOutView')
+            )) {
                 $this->redirect(array('/site/login'));
             }
         }

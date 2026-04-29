@@ -23,8 +23,8 @@ class TransferRequestController extends Controller {
             }
         }
         
-        if ($filterChain->action->id === 'updateApproval') {
-            if (!(Yii::app()->user->checkAccess('transferRequestApproval') || Yii::app()->user->checkAccess('transferRequestSupervisor'))) {
+        if ($filterChain->action->id === 'updateApproval' || $filterChain->action->id === 'updateApprovalDestination') {
+            if (!(Yii::app()->user->checkAccess('transferRequestApproval'))) {
                 $this->redirect(array('/site/login'));
             }
         }
@@ -32,7 +32,8 @@ class TransferRequestController extends Controller {
         if (
             $filterChain->action->id === 'view' || 
             $filterChain->action->id === 'admin' || 
-            $filterChain->action->id === 'memo'
+            $filterChain->action->id === 'adminDestination' || 
+            $filterChain->action->id === 'show'
         ) {
             if (!(
                 Yii::app()->user->checkAccess('transferRequestCreate') || 

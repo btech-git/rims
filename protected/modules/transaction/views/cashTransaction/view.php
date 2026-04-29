@@ -276,22 +276,34 @@ $this->menu = array(
                     <table>
                         <thead>
                             <tr>
-                                <th>Coa</th>
-                                <th>Normal Balance</th>
-                                <th>Amount</th>
+                                <th style="width: 20%">Coa</th>
+                                <th style="width: 5%">DB/CR</th>
+                                <th style="width: 10%">Amount</th>
                                 <th>Notes</th>
                             </tr>
                         </thead>
                         <tbody>
+                            <?php $totalAmount = '0.00'; ?>
                             <?php foreach ($details as $key => $detail): ?>
+                                <?php $amount = $detail->amount; ?>
                                 <tr>
                                     <td><?php echo $detail->coa != "" ? $model->branch->code . '.' . $detail->coa->name : ''; ?></td>
                                     <td><?php echo $detail->coa != "" ? $detail->coa->normal_balance : '' ?></td>
-                                    <td><?php echo Yii::app()->numberFormatter->format('#,##0.00', $detail->amount); ?></td>
+                                    <td style="text-align: right"><?php echo Yii::app()->numberFormatter->format('#,##0.00', $amount); ?></td>
                                     <td><?php echo $detail->notes; ?></td>
                                 </tr>
+                                <?php $totalAmount += $amount; ?>
                             <?php endforeach; ?>
                         </tbody>
+                        <tfoot>
+                            <tr>
+                                <td colspan="2" style="text-align: right; font-weight: bold">TOTAL</td>
+                                <td style="text-align: right; font-weight: bold">
+                                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $totalAmount)); ?>
+                                </td>
+                                <td>&nbsp;</td>
+                            </tr>
+                        </tfoot>
                     </table>
                 </fieldset>
                 

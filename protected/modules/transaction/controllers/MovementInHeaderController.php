@@ -22,7 +22,6 @@ class MovementInHeaderController extends Controller {
         }
 
         if (
-            $filterChain->action->id === 'delete' || 
             $filterChain->action->id === 'updateReceived' || 
             $filterChain->action->id === 'updateStatus' || 
             $filterChain->action->id === 'update'
@@ -33,7 +32,7 @@ class MovementInHeaderController extends Controller {
         }
 
         if ($filterChain->action->id === 'updateApproval') {
-            if (!(Yii::app()->user->checkAccess('movementInApproval') || Yii::app()->user->checkAccess('movementInSupervisor'))) {
+            if (!(Yii::app()->user->checkAccess('movementInApproval'))) {
                 $this->redirect(array('/site/login'));
             }
         }
@@ -41,6 +40,7 @@ class MovementInHeaderController extends Controller {
         if (
             $filterChain->action->id === 'admin' || 
             $filterChain->action->id === 'index' || 
+            $filterChain->action->id === 'show' || 
             $filterChain->action->id === 'view'
         ) {
             if (!(Yii::app()->user->checkAccess('movementInCreate') || Yii::app()->user->checkAccess('movementInEdit') || Yii::app()->user->checkAccess('movementInView'))) {
