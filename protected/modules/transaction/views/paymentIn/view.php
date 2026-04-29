@@ -50,7 +50,7 @@ $this->menu = array(
                 <?php echo CHtml::submitButton('Finish', array('name' => 'SubmitFinish', 'confirm' => 'Are you sure you want to finish this transaction?', 'class' => 'button warning')); ?>
             <?php endif;*/ ?>
         <?php endif; ?>
-        <?php if (Yii::app()->user->checkAccess("paymentInSupervisor") && $model->status === 'Approved'): ?>
+        <?php if (Yii::app()->user->checkAccess("paymentHead") && $model->status === 'Approved'): ?>
             <?php /*echo CHtml::link('<span class="fa fa-check"></span>Verify Transaction', array("/transaction/paymentIn/verify", "id" => $model->id), array(
                 'class' => 'button success right', 
                 'style' => 'margin-right:10px', 
