@@ -38,12 +38,12 @@ $this->menu = array(
                 <?php echo CHtml::link('<span class="fa fa-check"></span>Approval', Yii::app()->baseUrl . '/transaction/paymentIn/updateApproval?headerId=' . $model->id, array(
                     'class' => 'button success right', 
                     'style' => 'margin-right:10px',
-                )) ?>
-            <?php elseif (Yii::app()->user->checkAccess("paymentHead")): ?>
+                )); ?>
+            <?php elseif (Yii::app()->user->checkAccess("paymentInApproval")): ?>
                 <?php echo CHtml::link('<span class="fa fa-check"></span>Update Approval', Yii::app()->baseUrl . '/transaction/paymentIn/updateApproval?headerId=' . $model->id, array(
                     'class' => 'button success right', 
                     'style' => 'margin-right:10px',
-                )) ?>
+                )); ?>
             <?php endif; ?>
 
             <?php /*if ($model->paymentInDetails[0]->invoiceHeader->registrationTransaction->status != 'Finished'): ?>
