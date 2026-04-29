@@ -16,18 +16,15 @@ class DeductionController extends Controller {
 
     public function filterAccess($filterChain) {
         if ($filterChain->action->id === 'create') {
-            if (!(Yii::app()->user->checkAccess('masterDeductionCreate')))
+            if (!(Yii::app()->user->checkAccess('masterDeductionCreate'))) {
                 $this->redirect(array('/site/login'));
+            }
         }
 
-        if (
-            $filterChain->action->id === 'restore' || 
-            $filterChain->action->id === 'edit' || 
-            $filterChain->action->id === 'update' || 
-            $filterChain->action->id === 'delete'
-        ) {
-            if (!(Yii::app()->user->checkAccess('masterDeductionEdit')))
+        if ($filterChain->action->id === 'restore' || $filterChain->action->id === 'update') {
+            if (!(Yii::app()->user->checkAccess('masterDeductionEdit'))) {
                 $this->redirect(array('/site/login'));
+            }
         }
 
         if (
@@ -35,8 +32,10 @@ class DeductionController extends Controller {
             $filterChain->action->id === 'admin' || 
             $filterChain->action->id === 'index'
         ) {
-            if (!(Yii::app()->user->checkAccess('masterDeductionCreate')) || !(Yii::app()->user->checkAccess('masterDeductionEdit')))
+            if (!(Yii::app()->user->checkAccess('masterDeductionCreate') || Yii::app()->user->checkAccess('masterDeductionEdit') ||
+                Yii::app()->user->checkAccess('masterDeductionView') || Yii::app()->user->checkAccess('masterDeductionApproval'))) {
                 $this->redirect(array('/site/login'));
+            }
         }
 
         $filterChain->run();

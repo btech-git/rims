@@ -16,18 +16,15 @@ class IncentiveController extends Controller {
 
     public function filterAccess($filterChain) {
         if ($filterChain->action->id === 'create') {
-            if (!(Yii::app()->user->checkAccess('masterIncentiveCreate')))
+            if (!(Yii::app()->user->checkAccess('masterIncentiveCreate'))) {
                 $this->redirect(array('/site/login'));
+            }
         }
 
-        if (
-            $filterChain->action->id === 'restore' || 
-            $filterChain->action->id === 'edit' || 
-            $filterChain->action->id === 'update' || 
-            $filterChain->action->id === 'delete'
-        ) {
-            if (!(Yii::app()->user->checkAccess('masterIncentiveEdit')))
+        if ($filterChain->action->id === 'restore' || $filterChain->action->id === 'update') {
+            if (!(Yii::app()->user->checkAccess('masterIncentiveEdit'))) {
                 $this->redirect(array('/site/login'));
+            }
         }
 
         if (
@@ -35,8 +32,10 @@ class IncentiveController extends Controller {
             $filterChain->action->id === 'admin' || 
             $filterChain->action->id === 'index'
         ) {
-            if (!(Yii::app()->user->checkAccess('masterIncentiveCreate')) || !(Yii::app()->user->checkAccess('masterIncentiveEdit')))
+            if (!(Yii::app()->user->checkAccess('masterIncentiveCreate') || Yii::app()->user->checkAccess('masterIncentiveEdit') ||
+                Yii::app()->user->checkAccess('masterIncentiveView') || Yii::app()->user->checkAccess('masterIncentiveApproval'))) {
                 $this->redirect(array('/site/login'));
+            }
         }
 
         $filterChain->run();

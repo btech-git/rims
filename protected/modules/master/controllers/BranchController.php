@@ -10,24 +10,25 @@ class BranchController extends Controller {
 
     public function filters() {
         return array(
-//            'access',
+            'access',
         );
     }
 
     public function filterAccess($filterChain) {
         if ($filterChain->action->id === 'create') {
-            if (!(Yii::app()->user->checkAccess('masterBranchCreate')))
+            if (!(Yii::app()->user->checkAccess('masterBranchCreate'))) {
                 $this->redirect(array('/site/login'));
+            }
         }
 
         if (
             $filterChain->action->id === 'edit' || 
             $filterChain->action->id === 'update' || 
-            $filterChain->action->id === 'delete' || 
             $filterChain->action->id === 'updateDivision'
         ) {
-            if (!(Yii::app()->user->checkAccess('masterBranchEdit')))
+            if (!(Yii::app()->user->checkAccess('masterBranchEdit'))) {
                 $this->redirect(array('/site/login'));
+            }
         }
 
         if (
@@ -36,8 +37,10 @@ class BranchController extends Controller {
             $filterChain->action->id === 'admin' || 
             $filterChain->action->id === 'index'
         ) {
-            if (!(Yii::app()->user->checkAccess('masterBranchCreate')) || !(Yii::app()->user->checkAccess('masterBranchEdit')))
+            if (!(Yii::app()->user->checkAccess('masterBranchCreate')) || !(Yii::app()->user->checkAccess('masterBranchEdit') ||
+                    Yii::app()->user->checkAccess('masterBranchView') || Yii::app()->user->checkAccess('masterBranchApproval'))) {
                 $this->redirect(array('/site/login'));
+            }
         }
 
         $filterChain->run();

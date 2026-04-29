@@ -2,10 +2,6 @@
 
 class EmployeeController extends Controller {
 
-    /**
-     * @var string the default layout for the views. Defaults to '//layouts/column2', meaning
-     * using two-column layout. See 'protected/views/layouts/column2.php'.
-     */
     public $layout = '//layouts/backend';
 
     public function filters() {
@@ -22,10 +18,10 @@ class EmployeeController extends Controller {
         }
 
         if (
-                $filterChain->action->id === 'restore' ||
-                $filterChain->action->id === 'edit' ||
-                $filterChain->action->id === 'update' ||
-                $filterChain->action->id === 'delete'
+            $filterChain->action->id === 'update' ||
+            $filterChain->action->id === 'updateBank' ||
+            $filterChain->action->id === 'updateDeduction' ||
+            $filterChain->action->id === 'updateIncentive'
         ) {
             if (!(Yii::app()->user->checkAccess('masterEmployeeEdit'))) {
                 $this->redirect(array('/site/login'));
@@ -33,14 +29,21 @@ class EmployeeController extends Controller {
         }
 
         if (
-                $filterChain->action->id === 'view' ||
-                $filterChain->action->id === 'admin' ||
-                $filterChain->action->id === 'index' ||
-                $filterChain->action->id === 'updateBank' ||
-                $filterChain->action->id === 'updateDeduction' ||
-                $filterChain->action->id === 'updateIncentive'
+            $filterChain->action->id === 'view' ||
+            $filterChain->action->id === 'admin' ||
+            $filterChain->action->id === 'adminResigned'
         ) {
-            if (!(Yii::app()->user->checkAccess('masterEmployeeCreate')) || !(Yii::app()->user->checkAccess('masterEmployeeEdit'))) {
+            if (!(
+                Yii::app()->user->checkAccess('masterEmployeeCreate') || 
+                Yii::app()->user->checkAccess('masterEmployeeEdit') || 
+                Yii::app()->user->checkAccess('masterEmployeeView')
+            )) {
+                $this->redirect(array('/site/login'));
+            }
+        }
+
+        if ($filterChain->action->id === 'index') {
+            if (!(Yii::app()->user->checkAccess('employeeBirthdateReport'))) {
                 $this->redirect(array('/site/login'));
             }
         }

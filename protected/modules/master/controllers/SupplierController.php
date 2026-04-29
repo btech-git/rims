@@ -12,28 +12,25 @@ class SupplierController extends Controller {
 
     public function filterAccess($filterChain) {
         if ($filterChain->action->id === 'create' ) {
-            if (!(Yii::app()->user->checkAccess('masterSupplierCreate')))
+            if (!(Yii::app()->user->checkAccess('masterSupplierCreate'))) {
                 $this->redirect(array('/site/login'));
+            }
         }
 
-        if (
-            $filterChain->action->id === 'edit' || 
-            $filterChain->action->id === 'update' || 
-            $filterChain->action->id === 'delete'
-        ) {
-            if (!(Yii::app()->user->checkAccess('masterSupplierEdit')))
+        if ($filterChain->action->id === 'update') {
+            if (!(Yii::app()->user->checkAccess('masterSupplierEdit'))) {
                 $this->redirect(array('/site/login'));
+            }
         }
 
         if (
             $filterChain->action->id === 'view' || 
-            $filterChain->action->id === 'admin' || 
-            $filterChain->action->id === 'index' || 
-            $filterChain->action->id === 'addCoa' || 
-            $filterChain->action->id === 'addProduct'
+            $filterChain->action->id === 'admin'
         ) {
-            if (!(Yii::app()->user->checkAccess('masterSupplierCreate')) || !(Yii::app()->user->checkAccess('masterSupplierEdit')))
+            if (!(Yii::app()->user->checkAccess('masterSupplierCreate')) || !(Yii::app()->user->checkAccess('masterSupplierEdit') ||
+                Yii::app()->user->checkAccess('masterSupplierView') || Yii::app()->user->checkAccess('masterSupplierApproval'))) {
                 $this->redirect(array('/site/login'));
+            }
         }
 
         $filterChain->run();

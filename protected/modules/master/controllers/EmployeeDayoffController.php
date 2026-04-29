@@ -9,63 +9,27 @@ class EmployeeDayoffController extends Controller {
     public $layout = '//layouts/backend';
     public $defaultAction = 'admin';
 
-    /**
-     * @return array action filters
-     */
-    // public function filters()
-    // {
-    // 	return array(
-    // 		'accessControl', // perform access control for CRUD operations
-    // 		'postOnly + delete', // we only allow deletion via POST request
-    // 	);
-    // }
-
-    /**
-     * Specifies the access control rules.
-     * This method is used by the 'accessControl' filter.
-     * @return array access control rules
-     */
-//	public function accessRules()
-//	{
-//		return array(
-//			array('allow',  // allow all users to perform 'index' and 'view' actions
-//				'actions'=>array('index','view'),
-//				'users'=>array('*'),
-//			),
-//			array('allow', // allow authenticated user to perform 'create' and 'update' actions
-//				'actions'=>array('create','update'),
-//				'users'=>array('@'),
-//			),
-//			array('allow', // allow admin user to perform 'admin' and 'delete' actions
-//				'actions'=>array('admin','delete'),
-//				'users'=>array('Admin'),
-//			),
-//			array('deny',  // deny all users
-//				'users'=>array('*'),
-//			),
-//		);
-//	}
-
     public function filters() {
         return array(
-//            'access',
+            'access',
         );
     }
 
     public function filterAccess($filterChain) {
         if ($filterChain->action->id === 'create') {
-            if (!(Yii::app()->user->checkAccess('masterEmployeeCreate'))) {
+            if (!(Yii::app()->user->checkAccess('employeeLeaveApplicationCreate'))) {
                 $this->redirect(array('/site/login'));
             }
         }
 
-        if (
-            $filterChain->action->id === 'restore' ||
-            $filterChain->action->id === 'edit' ||
-            $filterChain->action->id === 'update' ||
-            $filterChain->action->id === 'delete'
-        ) {
-            if (!(Yii::app()->user->checkAccess('masterEmployeeEdit'))) {
+        if ($filterChain->action->id === 'update') {
+            if (!(Yii::app()->user->checkAccess('employeeLeaveApplicationEdit'))) {
+                $this->redirect(array('/site/login'));
+            }
+        }
+
+        if ($filterChain->action->id === 'updateApproval') {
+            if (!(Yii::app()->user->checkAccess('employeeLeaveApplicationApproval'))) {
                 $this->redirect(array('/site/login'));
             }
         }
@@ -73,12 +37,14 @@ class EmployeeDayoffController extends Controller {
         if (
             $filterChain->action->id === 'view' ||
             $filterChain->action->id === 'admin' ||
-            $filterChain->action->id === 'index' ||
-            $filterChain->action->id === 'updateBank' ||
-            $filterChain->action->id === 'updateDeduction' ||
-            $filterChain->action->id === 'updateIncentive'
+            $filterChain->action->id === 'adminDraft' ||
+            $filterChain->action->id === 'index'
         ) {
-            if (!(Yii::app()->user->checkAccess('masterEmployeeCreate')) || !(Yii::app()->user->checkAccess('masterEmployeeEdit'))) {
+            if (!(
+                Yii::app()->user->checkAccess('employeeLeaveApplicationCreate') || 
+                Yii::app()->user->checkAccess('employeeLeaveApplicationEdit') || 
+                Yii::app()->user->checkAccess('employeeLeaveApplicationView')
+            )) {
                 $this->redirect(array('/site/login'));
             }
         }

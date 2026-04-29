@@ -16,29 +16,31 @@ class CompanyController extends Controller {
 
     public function filterAccess($filterChain) {
         if ($filterChain->action->id === 'create') {
-            if (!(Yii::app()->user->checkAccess('masterCompanyCreate')))
+            if (!(Yii::app()->user->checkAccess('masterCompanyCreate'))) {
                 $this->redirect(array('/site/login'));
+            }
         }
 
         if (
             $filterChain->action->id === 'edit' || 
             $filterChain->action->id === 'update' || 
-            $filterChain->action->id === 'delete' || 
             $filterChain->action->id === 'restore' || 
             $filterChain->action->id === 'updateBank'
         ) {
-            if (!(Yii::app()->user->checkAccess('masterCompanyEdit')))
+            if (!(Yii::app()->user->checkAccess('masterCompanyEdit'))) {
                 $this->redirect(array('/site/login'));
+            }
         }
 
         if (
             $filterChain->action->id === 'view' || 
-            $filterChain->action->id === 'profile' || 
             $filterChain->action->id === 'admin' || 
             $filterChain->action->id === 'index'
         ) {
-            if (!(Yii::app()->user->checkAccess('masterCompanyCreate')) || !(Yii::app()->user->checkAccess('masterCompanyEdit')))
+            if (!(Yii::app()->user->checkAccess('masterCompanyCreate') || Yii::app()->user->checkAccess('masterCompanyEdit') || 
+                    Yii::app()->user->checkAccess('masterCompanyView') || Yii::app()->user->checkAccess('masterCompanyApproval'))) {
                 $this->redirect(array('/site/login'));
+            }
         }
 
         $filterChain->run();

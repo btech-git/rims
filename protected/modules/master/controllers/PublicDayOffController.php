@@ -16,36 +16,41 @@ class PublicDayOffController extends Controller {
     }
 
     public function filterAccess($filterChain) {
+        if ($filterChain->action->id === 'create') {
+            if (!(Yii::app()->user->checkAccess('masterHolidayCreate'))) {
+                $this->redirect(array('/site/login'));
+            }
+        }
+
+        if ($filterChain->action->id === 'update') {
+            if (!(Yii::app()->user->checkAccess('masterHolidayEdit'))) {
+                $this->redirect(array('/site/login'));
+            }
+        }
+
         if (
-            $filterChain->action->id === 'create' || 
             $filterChain->action->id === 'view' ||
-            $filterChain->action->id === 'edit' || 
-            $filterChain->action->id === 'update' || 
             $filterChain->action->id === 'admin' || 
-            $filterChain->action->id === 'delete' || 
             $filterChain->action->id === 'index'
         ) {
-            if (!(Yii::app()->user->checkAccess('masterHolidayCreate') || Yii::app()->user->checkAccess('masterHolidayEdit')))
+            if (!(
+                Yii::app()->user->checkAccess('masterHolidayCreate') || 
+                Yii::app()->user->checkAccess('masterHolidayEdit') || 
+                Yii::app()->user->checkAccess('masterHolidayView')
+            )) {
                 $this->redirect(array('/site/login'));
+            }
         }
 
         $filterChain->run();
     }
 
-    /**
-     * Displays a particular model.
-     * @param integer $id the ID of the model to be displayed
-     */
     public function actionView($id) {
         $this->render('view', array(
             'model' => $this->loadModel($id),
         ));
     }
 
-    /**
-     * Creates a new model.
-     * If creation is successful, the browser will be redirected to the 'view' page.
-     */
     public function actionCreate() {
         $model = new PublicDayOff;
 
@@ -53,14 +58,12 @@ class PublicDayOffController extends Controller {
         $offCriteria->addCondition("YEAR(date) = '" . date('Y') . "'");
         $offs = PublicDayOff::model()->findAll($offCriteria);
 
-
-        // Uncomment the following line if AJAX validation is needed
-        // $this->performAjaxValidation($model);
-
         if (isset($_POST['PublicDayOff'])) {
             $model->attributes = $_POST['PublicDayOff'];
-            if ($model->save())
+            
+            if ($model->save()) {
                 $this->redirect(array('create'));
+            }
             //$this->redirect(array('view','id'=>$model->id));
         }
 
@@ -87,8 +90,9 @@ class PublicDayOffController extends Controller {
 
         if (isset($_POST['PublicDayOff'])) {
             $model->attributes = $_POST['PublicDayOff'];
-            if ($model->save())
+            if ($model->save()) {
                 $this->redirect(array('view', 'id' => $model->id));
+            }
         }
 
         $this->render('update', array(
@@ -106,8 +110,9 @@ class PublicDayOffController extends Controller {
         $this->loadModel($id)->delete();
 
         // if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
-        if (!isset($_GET['ajax']))
+        if (!isset($_GET['ajax'])) {
             $this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
+        }
     }
 
     /**
@@ -115,6 +120,7 @@ class PublicDayOffController extends Controller {
      */
     public function actionIndex() {
         $dataProvider = new CActiveDataProvider('PublicDayOff');
+        
         $this->render('index', array(
             'dataProvider' => $dataProvider,
         ));
@@ -126,8 +132,10 @@ class PublicDayOffController extends Controller {
     public function actionAdmin() {
         $model = new PublicDayOff('search');
         $model->unsetAttributes();  // clear any default values
-        if (isset($_GET['PublicDayOff']))
+        
+        if (isset($_GET['PublicDayOff'])) {
             $model->attributes = $_GET['PublicDayOff'];
+        }
 
         $this->render('admin', array(
             'model' => $model,
@@ -143,8 +151,11 @@ class PublicDayOffController extends Controller {
      */
     public function loadModel($id) {
         $model = PublicDayOff::model()->findByPk($id);
-        if ($model === null)
+        
+        if ($model === null) {
             throw new CHttpException(404, 'The requested page does not exist.');
+        }
+        
         return $model;
     }
 

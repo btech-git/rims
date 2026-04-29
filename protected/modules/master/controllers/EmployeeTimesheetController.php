@@ -8,46 +8,43 @@ class EmployeeTimesheetController extends Controller {
      */
     public $layout = '//layouts/column2';
 
-    /**
-     * @return array action filters
-     */
     public function filters() {
         return array(
-            'accessControl', // perform access control for CRUD operations
-            'postOnly + delete', // we only allow deletion via POST request
+            'access',
         );
     }
 
-    /**
-     * Specifies the access control rules.
-     * This method is used by the 'accessControl' filter.
-     * @return array access control rules
-     */
-//	public function accessRules()
-//	{
-//		return array(
-//			array('allow',  // allow all users to perform 'index' and 'view' actions
-//				'actions'=>array('index','view'),
-//				'users'=>array('*'),
-//			),
-//			array('allow', // allow authenticated user to perform 'create' and 'update' actions
-//				'actions'=>array('create','update'),
-//				'users'=>array('@'),
-//			),
-//			array('allow', // allow admin user to perform 'admin' and 'delete' actions
-//				'actions'=>array('admin','delete'),
-//				'users'=>array('admin'),
-//			),
-//			array('deny',  // deny all users
-//				'users'=>array('*'),
-//			),
-//		);
-//	}
+    public function filterAccess($filterChain) {
+        if ($filterChain->action->id === 'create') {
+            if (!(Yii::app()->user->checkAccess('employeeTimesheetCreate'))) {
+                $this->redirect(array('/site/login'));
+            }
+        }
 
-    /**
-     * Displays a particular model.
-     * @param integer $id the ID of the model to be displayed
-     */
+        if ($filterChain->action->id === 'update') {
+            if (!(Yii::app()->user->checkAccess('employeeTimesheetEdit'))) {
+                $this->redirect(array('/site/login'));
+            }
+        }
+
+        if (
+            $filterChain->action->id === 'view' ||
+            $filterChain->action->id === 'admin' ||
+            $filterChain->action->id === 'viewEmployeeDetail' ||
+            $filterChain->action->id === 'index'
+        ) {
+            if (!(
+                Yii::app()->user->checkAccess('employeeTimesheetCreate') || 
+                Yii::app()->user->checkAccess('employeeTimesheetEdit') || 
+                Yii::app()->user->checkAccess('employeeTimesheetView')
+            )) {
+                $this->redirect(array('/site/login'));
+            }
+        }
+
+        $filterChain->run();
+    }
+
     public function actionView($id) {
         $model = $this->loadModel($id);
         $postImages = EmployeeTimesheetImages::model()->findAllByAttributes(array('employee_timesheet_id' => $model->id, 'is_inactive' => $model::STATUS_ACTIVE));
