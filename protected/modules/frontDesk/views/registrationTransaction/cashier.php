@@ -76,6 +76,8 @@ $('form').submit(function(){
                                         'attribute'=>$attribute,
                                         'options'=>array(
                                             'dateFormat'=>'yy-mm-dd',
+                                            'changeMonth' => true,
+                                            'changeYear' => true,
                                         ),
                                         'htmlOptions'=>array(
                                             'style'=>'margin-bottom:0px;',
@@ -104,6 +106,8 @@ $('form').submit(function(){
                                         'attribute'=>$attribute."_to",
                                         'options'=>array(
                                             'dateFormat'=>'yy-mm-dd',
+                                            'changeMonth' => true,
+                                            'changeYear' => true,
                                         ),
                                         'htmlOptions'=>array(
                                             'style'=>'margin-bottom:0px;',

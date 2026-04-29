@@ -10,37 +10,32 @@ class ReceivePartsController extends Controller {
 
     public function filters() {
         return array(
-//            'access',
+            'access',
         );
     }
 
     public function filterAccess($filterChain) {
-        if (
-                $filterChain->action->id === 'registrationTransactionList' ||
-                $filterChain->action->id === 'create'
-        ) {
-            if (!(Yii::app()->user->checkAccess('movementServiceCreate'))) {
+        if ($filterChain->action->id === 'registrationTransactionList' || $filterChain->action->id === 'create') {
+            if (!(Yii::app()->user->checkAccess('partsSupplyCreate'))) {
                 $this->redirect(array('/site/login'));
             }
         }
 
-        if (
-                $filterChain->action->id === 'delete' ||
-                $filterChain->action->id === 'update'
-        ) {
-            if (!(Yii::app()->user->checkAccess('movementServiceEdit'))) {
+        if ($filterChain->action->id === 'update') {
+            if (!(Yii::app()->user->checkAccess('partsSupplyEdit'))) {
                 $this->redirect(array('/site/login'));
             }
         }
 
         if (
                 $filterChain->action->id === 'admin' ||
+                $filterChain->action->id === 'show' ||
                 $filterChain->action->id === 'view'
         ) {
             if (!(
-                Yii::app()->user->checkAccess('movementServiceCreate') || 
-                Yii::app()->user->checkAccess('movementServiceEdit') || 
-                Yii::app()->user->checkAccess('movementServiceView')
+                Yii::app()->user->checkAccess('partsSupplyCreate') || 
+                Yii::app()->user->checkAccess('partsSupplyEdit') || 
+                Yii::app()->user->checkAccess('partsSupplyView')
             )) {
                 $this->redirect(array('/site/login'));
             }

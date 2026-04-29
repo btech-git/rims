@@ -109,7 +109,7 @@
                             <span class="prefix">KM Sebelum</span>
                         </div>
                         <div class="small-8 columns">
-                            <input type="text" readonly="true" value="<?php echo $model->previous_mileage; ?>"> 
+                            <input type="text" readonly="true" value="<?php echo number_format($model->previous_mileage, 0); ?>"> 
                         </div>
                     </div>
                 </div>
@@ -119,7 +119,7 @@
                             <span class="prefix">KM Sekarang</span>
                         </div>
                         <div class="small-8 columns">
-                            <input type="text" readonly="true" value="<?php echo $model->vehicle_mileage; ?>"> 
+                            <input type="text" readonly="true" value="<?php echo number_format($model->vehicle_mileage, 0); ?>"> 
                         </div>
                     </div>
                 </div>
@@ -129,7 +129,7 @@
                             <span class="prefix">KM Selanjutnya</span>
                         </div>
                         <div class="small-8 columns">
-                            <input type="text" readonly="true" value="<?php echo $model->next_mileage; ?>"> 
+                            <input type="text" readonly="true" value="<?php echo number_format($model->next_mileage, 0); ?>"> 
                         </div>
                     </div>
                 </div>

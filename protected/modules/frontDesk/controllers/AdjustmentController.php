@@ -18,13 +18,14 @@ class AdjustmentController extends Controller {
         }
         
         if ($filterChain->action->id === 'updateApproval') {
-            if (!(Yii::app()->user->checkAccess('stockAdjustmentApproval') || Yii::app()->user->checkAccess('stockAdjustmentSupervisor'))) {
+            if (!(Yii::app()->user->checkAccess('stockAdjustmentApproval'))) {
                 $this->redirect(array('/site/login'));
             }
         }
         
         if (
             $filterChain->action->id === 'admin' || 
+            $filterChain->action->id === 'show' || 
             $filterChain->action->id === 'view'
         ) {
             if (!(Yii::app()->user->checkAccess('stockAdjustmentCreate') || Yii::app()->user->checkAccess('stockAdjustmentView'))) {

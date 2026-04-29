@@ -13,10 +13,11 @@
             <tr>
                 <th>Vehicle ID</th>
                 <th>Plat #</th>
-                <th>Tanggal RG</th>
                 <th>Kendaraan</th>
                 <th>Warna</th>
                 <th>RG #</th>
+                <th>Tanggal RG</th>
+                <th>Customer</th>
                 <th>SPK Customer #</th>
                 <th>SL #</th>
                 <th>WO #</th>
@@ -28,6 +29,7 @@
                 <th>Problem</th>
                 <th>User</th>
                 <th>WO Status</th>
+                <th>Est Tgl Keluar</th>
             </tr>
         </thead>
         
@@ -37,7 +39,6 @@
                 <tr>
                     <td><?php echo CHtml::encode($outstandingWorkOrderItem['vehicle_id']); ?></td>
                     <td><?php echo CHtml::encode($outstandingWorkOrderItem['plate_number']); ?></td>
-                    <td><?php echo CHtml::encode($outstandingWorkOrderItem['transaction_date']); ?></td>
                     <td>
                         <?php echo CHtml::encode($outstandingWorkOrderItem['car_make']); ?> -
                         <?php echo CHtml::encode($outstandingWorkOrderItem['car_model']); ?> -
@@ -49,6 +50,8 @@
                             "id" => $outstandingWorkOrderItem['id']
                         )), array('target' => '_blank')); ?>
                     </td>
+                    <td><?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($outstandingWorkOrderItem['transaction_date']))); ?></td>
+                    <td><?php echo CHtml::encode($outstandingWorkOrderItem['customer_name']); ?></td>
                     <td><?php echo CHtml::encode($outstandingWorkOrderItem['customer_work_order_number']); ?></td>
                     <td>
                         <?php echo CHtml::link(CHtml::encode($outstandingWorkOrderItem['sales_order_number']), Yii::app()->createUrl("frontDesk/registrationTransaction/view", array(
@@ -78,6 +81,7 @@
                     <td><?php echo CHtml::encode($outstandingWorkOrderItem['problem']); ?></td>
                     <td><?php echo CHtml::encode($outstandingWorkOrderItem['username']); ?></td>
                     <td><?php echo CHtml::encode($outstandingWorkOrderItem['status']); ?></td>
+                    <td><?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($outstandingWorkOrderItem['estimate_discharge_date']))); ?></td>
                 </tr>
             <?php endforeach; ?>
         </tbody>

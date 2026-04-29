@@ -13,16 +13,18 @@
             <tr>
                 <th>Vehicle ID</th>
                 <th>Plat #</th>
-                <th>Tanggal RG</th>
                 <th>Kendaraan</th>
                 <th>Warna</th>
                 <th>RG #</th>
+                <th>Tanggal RG</th>
+                <th>Customer</th>
                 <th>Customer SPK #</th>
                 <th>Services</th>
                 <th>Repair Type</th>
                 <th>Problem</th>
                 <th>User</th>
                 <th>WO Status</th>
+                <th>Est Tgl Keluar</th>
             </tr>
         </thead>
         
@@ -32,7 +34,6 @@
                 <tr>
                     <td><?php echo CHtml::encode($outstandingRegistrationItem['vehicle_id']); ?></td>
                     <td><?php echo CHtml::encode($outstandingRegistrationItem['plate_number']); ?></td>
-                    <td><?php echo CHtml::encode($outstandingRegistrationItem['transaction_date']); ?></td>
                     <td>
                         <?php echo CHtml::encode($outstandingRegistrationItem['car_make']); ?> -
                         <?php echo CHtml::encode($outstandingRegistrationItem['car_model']); ?> -
@@ -44,6 +45,8 @@
                             "id" => $outstandingRegistrationItem['id']
                         )), array('target' => '_blank')); ?>
                     </td>
+                    <td><?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($outstandingRegistrationItem['transaction_date']))); ?></td>
+                    <td><?php echo CHtml::encode($outstandingRegistrationItem['customer_name']); ?></td>
                     <td>
                         <?php echo CHtml::link(CHtml::encode($outstandingRegistrationItem['customer_work_order_number']), Yii::app()->createUrl("frontDesk/registrationTransaction/view", array(
                             "id" => $outstandingRegistrationItem['id']
@@ -54,6 +57,7 @@
                     <td><?php echo CHtml::encode($outstandingRegistrationItem['problem']); ?></td>
                     <td><?php echo CHtml::encode($outstandingRegistrationItem['username']); ?></td>
                     <td><?php echo CHtml::encode($outstandingRegistrationItem['status']); ?></td>
+                    <td><?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($outstandingRegistrationItem['estimate_discharge_date']))); ?></td>
                 </tr>
             <?php endforeach; ?>
         </tbody>

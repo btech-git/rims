@@ -3,14 +3,14 @@
 /* @var $model RegistrationTransaction */
 
 $this->breadcrumbs=array(
-	'Body Repair Registration'=>array('admin'),
-	'Create',
+    'Body Repair Registration'=>array('admin'),
+    'Create',
 );
 ?>
 <div id="maincontent">
     <div class="clearfix page-action">
-        <a class="button cbutton right" href="<?php echo Yii::app()->baseUrl.'/frontDesk/bodyRepairRegistration/admin';?>"><span class="fa fa-th-list"></span>Manage</a>
-        <h1><?php echo "Estimasi Tanggal Keluar"; ?></h1>
+        <a class="button cbutton right" href="<?php echo Yii::app()->baseUrl.'/frontDesk/generalRepairRegistration/admin';?>"><span class="fa fa-th-list"></span>Manage</a>
+        <h1><?php echo "Update Problem Kendaraan"; ?></h1>
         <div class="form">
             <?php $form=$this->beginWidget('CActiveForm', array(
                 'id'=>'registration-transaction-form',
@@ -30,23 +30,29 @@ $this->breadcrumbs=array(
                                 <tr>
                                     <td>Plate #</td>
                                     <td>Machine #</td>
-                                    <td>Car Make</td>
-                                    <td>Model</td>
-                                    <td>Sub Model</td>
+                                    <td>Kendaraan</td>
                                     <td>Color</td>
+                                    <td>KM Sebelum</td>
+                                    <td>KM Sekarang</td>
+                                    <td>KM Selanjutnya</td>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
                                     <td><?php echo CHtml::encode(CHtml::value($vehicle, 'plate_number')); ?></td>
                                     <td><?php echo CHtml::encode(CHtml::value($vehicle, 'machine_number')); ?></td>
-                                    <td><?php echo CHtml::encode(CHtml::value($vehicle, 'carMake.name')); ?></td>
-                                    <td><?php echo CHtml::encode(CHtml::value($vehicle, 'carModel.name')); ?></td>
-                                    <td><?php echo CHtml::encode(CHtml::value($vehicle, 'carSubModel.name')); ?></td>
+                                    <td>
+                                        <?php echo CHtml::encode(CHtml::value($vehicle, 'carMake.name')); ?>
+                                        <?php echo CHtml::encode(CHtml::value($vehicle, 'carModel.name')); ?>
+                                        <?php echo CHtml::encode(CHtml::value($vehicle, 'carSubModel.name')); ?>
+                                    </td>
                                     <td>
                                         <?php $color = Colors::model()->findByPk($vehicle->color_id); ?>
                                         <?php echo CHtml::encode(CHtml::value($color, 'name')); ?>
                                     </td>
+                                    <td><?php echo number_format(CHtml::encode(CHtml::value($registrationTransaction, 'previous_mileage')), 0); ?></td>
+                                    <td><?php echo number_format(CHtml::encode(CHtml::value($registrationTransaction, 'vehicle_mileage')), 0); ?></td>
+                                    <td><?php echo number_format(CHtml::encode(CHtml::value($registrationTransaction, 'next_mileage')), 0); ?></td>
                                 </tr>
                             </tbody>
                         </table>
@@ -89,7 +95,7 @@ $this->breadcrumbs=array(
                                     <div class="field">
                                         <div class="row collapse">
                                             <div class="small-4 columns">
-                                                <label class="prefix"><?php echo $form->labelEx($registrationTransaction, 'RG #'); ?></label>
+                                                <label class="prefix"><?php echo $form->labelEx($registrationTransaction, 'Registration #'); ?></label>
                                             </div>
                                             <div class="small-8 columns">
                                                 <?php echo CHtml::encode(CHtml::value($registrationTransaction, 'transaction_number')); ?>
@@ -133,17 +139,6 @@ $this->breadcrumbs=array(
                                     <div class="field">
                                         <div class="row collapse">
                                             <div class="small-4 columns">
-                                                <label class="prefix"><?php echo $form->labelEx($registrationTransaction,'employee_id_assign_mechanic'); ?></label>
-                                            </div>
-                                            <div class="small-8 columns">
-                                                <?php echo CHtml::encode(CHtml::value($registrationTransaction, 'employeeIdAssignMechanic.name')); ?>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="field">
-                                        <div class="row collapse">
-                                            <div class="small-4 columns">
                                                 <label class="prefix"><?php echo $form->labelEx($registrationTransaction,'employee_id_sales_person'); ?></label>
                                             </div>
                                             <div class="small-8 columns">
@@ -157,10 +152,10 @@ $this->breadcrumbs=array(
                                     <div class="field">
                                         <div class="row collapse">
                                             <div class="small-4 columns">
-                                                <label class="prefix">KM Sebelum</label>
+                                                <label class="prefix"><?php echo $form->labelEx($registrationTransaction,'employee_id_assign_mechanic'); ?></label>
                                             </div>
                                             <div class="small-8 columns">
-                                                <?php echo CHtml::encode(CHtml::value($registrationTransaction, 'previous_mileage')); ?>
+                                                <?php echo CHtml::encode(CHtml::value($registrationTransaction, 'employeeIdAssignMechanic.name')); ?>
                                             </div>
                                         </div>
                                     </div>
@@ -168,68 +163,10 @@ $this->breadcrumbs=array(
                                     <div class="field">
                                         <div class="row collapse">
                                             <div class="small-4 columns">
-                                                <label class="prefix">KM Sekarang</label>
+                                                <label class="prefix">Problem</label>
                                             </div>
                                             <div class="small-8 columns">
-                                                <?php echo CHtml::encode(CHtml::value($registrationTransaction, 'vehicle_mileage')); ?>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="field">
-                                        <div class="row collapse">
-                                            <div class="small-4 columns">
-                                                <label class="prefix">KM Rekomendasi Service Selanjutnya</label>
-                                            </div>
-                                            <div class="small-8 columns">
-                                                <?php echo CHtml::encode(CHtml::value($registrationTransaction, 'next_mileage')); ?>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="field">
-                                        <div class="row collapse">
-                                            <div class="small-4 columns">
-                                                <label class="prefix">SPK Customer #</label>
-                                            </div>
-                                            <div class="small-8 columns">
-                                                <?php echo CHtml::encode(CHtml::value($registrationTransaction, 'customer_work_order_number')); ?>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="field">
-                                        <div class="row collapse">
-                                            <div class="small-4 columns">
-                                                <label class="prefix">Estimasi Tanggal Keluar</label>
-                                            </div>
-                                            <div class="small-8 columns">
-                                                <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(
-                                                    'model' => $registrationTransaction,
-                                                    'attribute' => 'estimate_discharge_date',
-                                                    // additional javascript options for the date picker plugin
-                                                    'options' => array(
-                                                        'minDate' => '-7W',
-                                                        'maxDate' => '+6M',
-                                                        'dateFormat' => 'yy-mm-dd',
-                                                        'changeMonth' => true,
-                                                        'changeYear' => true,
-                                                    ),
-                                                    'htmlOptions' => array(
-                                                        'readonly' => true,
-                                                    ),
-                                                )); ?>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="field">
-                                        <div class="row collapse">
-                                            <div class="small-4 columns">
-                                                <label class="prefix"><?php echo $form->labelEx($registrationTransaction, 'problem'); ?></label>
-                                            </div>
-                                            <div class="small-8 columns">
-                                                <?php echo CHtml::encode(CHtml::value($registrationTransaction, 'problem')); ?>
+                                                <?php echo $form->textArea($registrationTransaction, 'problem', array('rows' => 5, 'columns' => 20)); ?>
                                             </div>
                                         </div>
                                     </div>
@@ -243,8 +180,8 @@ $this->breadcrumbs=array(
                     <div class="row">
                         <div class="medium-12 columns">
                             <div class="field buttons text-center">
-                                <?php echo CHtml::submitButton('Cancel', array('name' => 'Cancel', 'confirm' => 'Are you sure you want to cancel?')); ?>
-                                <?php echo CHtml::submitButton('Submit', array('name' => 'Submit', 'confirm' => 'Are you sure you want to save?', 'class'=>'button cbutton')); ?> 
+                                <?php echo CHtml::submitButton('Cancel', array('name' => 'Cancel', 'confirm' => 'Are you sure you want to cancel?', 'class'=>'button alert')); ?>
+                                <?php echo CHtml::submitButton('Submit', array('name' => 'Submit', 'confirm' => 'Are you sure you want to save?', 'class'=>'button success')); ?> 
                             </div>
                         </div>
                     </div>

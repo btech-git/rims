@@ -3,7 +3,7 @@
 /* @var $bodyRepairRegistration->header RegistrationTransaction */
 
 $this->breadcrumbs = array(
-    'General Repair Transactions' => array('admin'),
+    'Body Repair Transactions' => array('admin'),
     $bodyRepairRegistration->header->id,
 );
 ?>

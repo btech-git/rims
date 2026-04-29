@@ -6,12 +6,12 @@ class SaleEstimationController extends Controller {
 
     public function filters() {
         return array(
-//            'access',
+            'access',
         );
     }
 
     public function filterAccess($filterChain) {
-        if ($filterChain->action->id === 'create') {
+        if ($filterChain->action->id === 'create' || $filterChain->action->id === 'createWithVehicle') {
             if (!(Yii::app()->user->checkAccess('saleEstimationCreate'))) {
                 $this->redirect(array('/site/login'));
             }
@@ -25,13 +25,8 @@ class SaleEstimationController extends Controller {
 
         if (
             $filterChain->action->id === 'admin' ||
-            $filterChain->action->id === 'addProductService' ||
-            $filterChain->action->id === 'generateInvoice' ||
-            $filterChain->action->id === 'generateSalesOrder' ||
-            $filterChain->action->id === 'generateWorkOrder' ||
-            $filterChain->action->id === 'insuranceAddition' ||
             $filterChain->action->id === 'view' ||
-            $filterChain->action->id === 'showRealization'
+            $filterChain->action->id === 'pdf'
         ) {
             if (!(Yii::app()->user->checkAccess('saleEstimationCreate')) || !(Yii::app()->user->checkAccess('saleEstimationEdit')) || !(Yii::app()->user->checkAccess('saleEstimationView'))) {
                 $this->redirect(array('/site/login'));
@@ -296,33 +291,6 @@ class SaleEstimationController extends Controller {
             'endDate' => $endDate,
             'customerName' => $customerName,
             'plateNumber' => $plateNumber,
-        ));
-    }
-
-    public function actionOutstandingWithVehicle($vehicleId) {
-        $model = new SaleEstimationHeader('search');
-        $model->unsetAttributes();  // clear any default values
-
-        $customerName = (isset($_GET['CustomerName'])) ? $_GET['CustomerName'] : '';
-        $plateNumber = (isset($_GET['PlateNumber'])) ? $_GET['PlateNumber'] : '';
-
-        if (isset($_GET['SaleEstimationHeader'])) {
-            $model->attributes = $_GET['SaleEstimationHeader'];
-        }
-
-        $dataProvider = $model->searchByOutstanding();
-        $dataProvider->criteria->together = 'true';
-        $dataProvider->criteria->with = array(
-            'vehicle',
-            'customer',
-        );
-        
-        $this->render('outstandingWithVehicle', array(
-            'model' => $model,
-            'dataProvider' => $dataProvider,
-            'customerName' => $customerName,
-            'plateNumber' => $plateNumber,
-            'vehicleId' => $vehicleId,
         ));
     }
 

@@ -11,29 +11,27 @@ class MaterialRequestController extends Controller {
     }
 
     public function filterAccess($filterChain) {
-        if ($filterChain->action->id === 'create') {
+        if ($filterChain->action->id === 'create' || $filterChain->action->id === 'createIndependent') {
             if (!(Yii::app()->user->checkAccess('materialRequestCreate'))) {
                 $this->redirect(array('/site/login'));
             }
         }
 
-        if (
-            $filterChain->action->id === 'delete' ||
-            $filterChain->action->id === 'update'
-        ) {
+        if ($filterChain->action->id === 'update') {
             if (!(Yii::app()->user->checkAccess('materialRequestEdit'))) {
                 $this->redirect(array('/site/login'));
             }
         }
 
         if ($filterChain->action->id === 'updateApproval') {
-            if (!(Yii::app()->user->checkAccess('materialRequestApproval') || Yii::app()->user->checkAccess('materialRequestSupervisor'))) {
+            if (!(Yii::app()->user->checkAccess('materialRequestApproval'))) {
                 $this->redirect(array('/site/login'));
             }
         }
 
         if (
             $filterChain->action->id === 'admin' || 
+            $filterChain->action->id === 'show' || 
             $filterChain->action->id === 'view'
         ) {
             if (!(

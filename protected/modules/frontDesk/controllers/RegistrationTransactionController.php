@@ -10,7 +10,7 @@ class RegistrationTransactionController extends Controller {
 
     public function filters() {
         return array(
-            'access',
+//            'access',
         );
     }
 
@@ -23,6 +23,24 @@ class RegistrationTransactionController extends Controller {
         
         if ($filterChain->action->id === 'customerWaitlist') {
             if (!(Yii::app()->user->checkAccess('customerQueueView'))) {
+                $this->redirect(array('/site/login'));
+            }
+        }
+
+        if ($filterChain->action->id === 'adminOutstanding') {
+            if (!(Yii::app()->user->checkAccess('outstandingRegistrationView'))) {
+                $this->redirect(array('/site/login'));
+            }
+        }
+
+        if ($filterChain->action->id === 'admin' || $filterChain->action->id === 'view' || $filterChain->action->id === 'viewWo') {
+            if (!(Yii::app()->user->checkAccess('bodyRepairCreate') || 
+                Yii::app()->user->checkAccess('bodyRepairEdit') || 
+                Yii::app()->user->checkAccess('bodyRepairView') ||
+                Yii::app()->user->checkAccess('generalRepairCreate') || 
+                Yii::app()->user->checkAccess('generalRepairEdit') || 
+                Yii::app()->user->checkAccess('generalRepairView')
+            )) {
                 $this->redirect(array('/site/login'));
             }
         }
@@ -613,33 +631,34 @@ class RegistrationTransactionController extends Controller {
         $worksheet = $objPHPExcel->setActiveSheetIndex(0);
         $worksheet->setTitle('RG Outstanding');
 
-        $worksheet->mergeCells('A1:L1');
-        $worksheet->mergeCells('A2:L2');
-        $worksheet->mergeCells('A3:L3');
+        $worksheet->mergeCells('A1:M1');
+        $worksheet->mergeCells('A2:M2');
+        $worksheet->mergeCells('A3:M3');
 
-        $worksheet->getStyle('A1:L5')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-        $worksheet->getStyle('A1:L5')->getFont()->setBold(true);
+        $worksheet->getStyle('A1:M5')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->getStyle('A1:M5')->getFont()->setBold(true);
 
         $worksheet->setCellValue('A1', 'Raperind Motor');
         $worksheet->setCellValue('A2', 'Outstanding Registration (Pending invoice + WO + SL)');
         $worksheet->setCellValue('A3', Yii::app()->dateFormatter->format('d MMMM yyyy', $startDate) . ' - ' . Yii::app()->dateFormatter->format('d MMMM yyyy', $endDate));
 
-        $worksheet->getStyle('A5:L5')->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle('A5:M5')->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
         $worksheet->setCellValue('A5', 'Vehicle ID');
         $worksheet->setCellValue('B5', 'Plate #');
-        $worksheet->setCellValue('C5', 'Tanggal');
-        $worksheet->setCellValue('D5', 'Kendaraan');
-        $worksheet->setCellValue('E5', 'Warna');
-        $worksheet->setCellValue('F5', 'RG #');
-        $worksheet->setCellValue('G5', 'Customer SPK #');
-        $worksheet->setCellValue('H5', 'Services');
-        $worksheet->setCellValue('I5', 'Repair Type');
-        $worksheet->setCellValue('J5', 'Problem');
-        $worksheet->setCellValue('K5', 'User');
-        $worksheet->setCellValue('L5', 'WO Status');
+        $worksheet->setCellValue('C5', 'Kendaraan');
+        $worksheet->setCellValue('D5', 'Warna');
+        $worksheet->setCellValue('E5', 'RG #');
+        $worksheet->setCellValue('F5', 'Tanggal RG');
+        $worksheet->setCellValue('G5', 'Customer');
+        $worksheet->setCellValue('H5', 'Customer SPK #');
+        $worksheet->setCellValue('I5', 'Services');
+        $worksheet->setCellValue('J5', 'Repair Type');
+        $worksheet->setCellValue('K5', 'Problem');
+        $worksheet->setCellValue('L5', 'User');
+        $worksheet->setCellValue('M5', 'WO Status');
 
-        $worksheet->getStyle('A5:L5')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle('A5:M5')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
         $counter = 6;
         foreach (array_reverse($outstandingAllBranchRegistrationData) as $outstandingRegistrationItem) {
@@ -647,16 +666,17 @@ class RegistrationTransactionController extends Controller {
 
             $worksheet->setCellValue("A{$counter}", $outstandingRegistrationItem['vehicle_id']);
             $worksheet->setCellValue("B{$counter}", $outstandingRegistrationItem['plate_number']);
-            $worksheet->setCellValue("C{$counter}", $outstandingRegistrationItem['transaction_date']);
-            $worksheet->setCellValue("D{$counter}", $outstandingRegistrationItem['car_make'] . ' - ' . $outstandingRegistrationItem['car_model'] . ' - ' . $outstandingRegistrationItem['car_sub_model']);
-            $worksheet->setCellValue("E{$counter}", $outstandingRegistrationItem['color']);
-            $worksheet->setCellValue("F{$counter}", $outstandingRegistrationItem['transaction_number']);
-            $worksheet->setCellValue("G{$counter}", $outstandingRegistrationItem['customer_work_order_number']);
-            $worksheet->setCellValue("H{$counter}", $registrationTransaction->getServices());
-            $worksheet->setCellValue("I{$counter}", $outstandingRegistrationItem['repair_type']);
-            $worksheet->setCellValue("J{$counter}", $outstandingRegistrationItem['problem']);
-            $worksheet->setCellValue("K{$counter}", $outstandingRegistrationItem['username']);
-            $worksheet->setCellValue("L{$counter}", $outstandingRegistrationItem['status']);
+            $worksheet->setCellValue("C{$counter}", $outstandingRegistrationItem['car_make'] . ' - ' . $outstandingRegistrationItem['car_model'] . ' - ' . $outstandingRegistrationItem['car_sub_model']);
+            $worksheet->setCellValue("D{$counter}", $outstandingRegistrationItem['color']);
+            $worksheet->setCellValue("E{$counter}", $outstandingRegistrationItem['transaction_number']);
+            $worksheet->setCellValue("F{$counter}", $outstandingRegistrationItem['transaction_date']);
+            $worksheet->setCellValue("G{$counter}", $outstandingRegistrationItem['customer_name']);
+            $worksheet->setCellValue("H{$counter}", $outstandingRegistrationItem['customer_work_order_number']);
+            $worksheet->setCellValue("I{$counter}", $registrationTransaction->getServices());
+            $worksheet->setCellValue("J{$counter}", $outstandingRegistrationItem['repair_type']);
+            $worksheet->setCellValue("K{$counter}", $outstandingRegistrationItem['problem']);
+            $worksheet->setCellValue("L{$counter}", $outstandingRegistrationItem['username']);
+            $worksheet->setCellValue("M{$counter}", $outstandingRegistrationItem['status']);
 
             $counter++;
         }
@@ -941,29 +961,28 @@ class RegistrationTransactionController extends Controller {
         $worksheet->mergeCells('A2:L2');
         $worksheet->mergeCells('A3:L3');
 
-        $worksheet->getStyle('A1:L6')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-        $worksheet->getStyle('A1:L6')->getFont()->setBold(true);
+        $worksheet->getStyle('A1:L5')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->getStyle('A1:L5')->getFont()->setBold(true);
 
         $worksheet->setCellValue('A1', 'Raperind Motor');
         $worksheet->setCellValue('A2', 'Transaksi Kasir ');
         
-        $worksheet->mergeCells('A5:L5');
         $worksheet->getStyle('A5:L5')->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
-        $worksheet->setCellValue('A6', 'No');
-        $worksheet->setCellValue('B6', 'Invoice #');
-        $worksheet->setCellValue('C6', 'Tanggal');
-        $worksheet->setCellValue('D6', 'RG #');
-        $worksheet->setCellValue('E6', 'Plat #');
-        $worksheet->setCellValue('F6', 'Kendaraan');
-        $worksheet->setCellValue('G6', 'Customer');
-        $worksheet->setCellValue('H6', 'Asuransi');
-        $worksheet->setCellValue('I6', 'Status');
-        $worksheet->setCellValue('J6', 'Invoice (Rp)');
-        $worksheet->setCellValue('K6', 'Pembayaran (Rp)');
-        $worksheet->setCellValue('L6', 'Sisa (Rp)');
-        $worksheet->getStyle('A6:L6')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->setCellValue('A5', 'No');
+        $worksheet->setCellValue('B5', 'Invoice #');
+        $worksheet->setCellValue('C5', 'Tanggal');
+        $worksheet->setCellValue('D5', 'RG #');
+        $worksheet->setCellValue('E5', 'Plat #');
+        $worksheet->setCellValue('F5', 'Kendaraan');
+        $worksheet->setCellValue('G5', 'Customer');
+        $worksheet->setCellValue('H5', 'Asuransi');
+        $worksheet->setCellValue('I5', 'Status');
+        $worksheet->setCellValue('J5', 'Invoice (Rp)');
+        $worksheet->setCellValue('K5', 'Pembayaran (Rp)');
+        $worksheet->setCellValue('L5', 'Sisa (Rp)');
+        $worksheet->getStyle('A5:L5')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
-        $counter = 7;
+        $counter = 6;
         foreach ($invoiceDataProvider->data as $i => $dataItem) {
             $worksheet->getStyle("J{$counter}:L{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
             

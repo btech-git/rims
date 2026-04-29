@@ -119,6 +119,5 @@ $this->menu=array(
         </div>
 
         <?php $this->endWidget(); ?>
-
     </div><!-- form -->
 </div>

@@ -15,9 +15,7 @@ class OutstandingOrderController extends Controller {
     }
 
     public function filterAccess($filterChain) {
-        if (
-            $filterChain->action->id === 'index'
-        ) {
+        if ($filterChain->action->id === 'index') {
             if (!(Yii::app()->user->checkAccess('orderOutstandingView'))) {
                 $this->redirect(array('/site/login'));
             }

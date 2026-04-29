@@ -6,27 +6,22 @@ class ProductPricingRequestController extends Controller {
 
     public function filters() {
         return array(
-//            'access',
+            'access',
         );
     }
 
     public function filterAccess($filterChain) {
-        if (
-            $filterChain->action->id === 'create' || 
-            $filterChain->action->id === 'addInterbranch'
-        ) {
-            if (!(Yii::app()->user->checkAccess('productPricingRequestCreate'))) {
+        if ($filterChain->action->id === 'create') {
+            if (!(Yii::app()->user->checkAccess('pricingRequestCreate'))) {
                 $this->redirect(array('/site/login'));
             }
         }
 
         if (
-            $filterChain->action->id === 'edit' || 
-            $filterChain->action->id === 'update' || 
-            $filterChain->action->id === 'delete' || 
-            $filterChain->action->id === 'updateDivision'
+            $filterChain->action->id === 'reply' || 
+            $filterChain->action->id === 'update'
         ) {
-            if (!(Yii::app()->user->checkAccess('productPricingRequestUpdate'))) {
+            if (!(Yii::app()->user->checkAccess('pricingRequestEdit'))) {
                 $this->redirect(array('/site/login'));
             }
         }
@@ -34,9 +29,9 @@ class ProductPricingRequestController extends Controller {
         if (
             $filterChain->action->id === 'view' || 
             $filterChain->action->id === 'admin' || 
-            $filterChain->action->id === 'index'
+            $filterChain->action->id === 'adminPending'
         ) {
-            if (!(Yii::app()->user->checkAccess('productPricingRequestCreate') || Yii::app()->user->checkAccess('productPricingRequestUpdate') || Yii::app()->user->checkAccess('productPricingRequestView'))) {
+            if (!(Yii::app()->user->checkAccess('pricingRequestCreate') || Yii::app()->user->checkAccess('pricingRequestEdit') || Yii::app()->user->checkAccess('pricingRequestView'))) {
                 $this->redirect(array('/site/login'));
             }
         }

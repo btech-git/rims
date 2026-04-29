@@ -110,7 +110,7 @@ $('.search-form form').submit(function(){
                     array(
                         'header' => '',
                         'type' => 'raw',
-                        'value' => 'CHtml::link("Register", array("/frontDesk/generalRepairRegistration/create", "vehicleId"=>$data->id))',
+                        'value' => 'CHtml::link("Register", array("/frontDesk/bodyRepairRegistration/create", "vehicleId"=>$data->id))',
                         'htmlOptions' => array(
                             'style' => 'text-align: center;'
                         ),

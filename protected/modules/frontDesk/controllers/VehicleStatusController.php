@@ -12,7 +12,7 @@ class VehicleStatusController extends Controller {
 
     public function filterAccess($filterChain) {
         if ($filterChain->action->id === 'index') {
-            if (!(Yii::app()->user->checkAccess('director'))) {
+            if (!(Yii::app()->user->checkAccess('vehicleStatusView'))) {
                 $this->redirect(array('/site/login'));
             }
         }

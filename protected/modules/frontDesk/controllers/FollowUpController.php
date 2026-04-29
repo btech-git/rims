@@ -16,28 +16,14 @@ class FollowUpController extends Controller {
     }
 
     public function filterAccess($filterChain) {
-        if ($filterChain->action->id === 'create') {
-            if (!(Yii::app()->user->checkAccess('saleInvoiceCreate'))) {
+        if ($filterChain->action->id === 'adminWarranty') {
+            if (!(Yii::app()->user->checkAccess('customerFollowUp'))) {
                 $this->redirect(array('/site/login'));
             }
         }
 
-        if (
-            $filterChain->action->id === 'delete' ||
-            $filterChain->action->id === 'update'
-        ) {
-            if (!(Yii::app()->user->checkAccess('saleInvoiceEdit'))) {
-                $this->redirect(array('/site/login'));
-            }
-        }
-
-        if (
-            $filterChain->action->id === 'admin' ||
-            $filterChain->action->id === 'index' ||
-            $filterChain->action->id === 'view' ||
-            $filterChain->action->id === 'viewInvoices'
-        ) {
-            if (!(Yii::app()->user->checkAccess('saleInvoiceCreate')) || !(Yii::app()->user->checkAccess('saleInvoiceEdit'))) {
+        if ($filterChain->action->id === 'adminService') {
+            if (!(Yii::app()->user->checkAccess('serviceFollowUp'))) {
                 $this->redirect(array('/site/login'));
             }
         }

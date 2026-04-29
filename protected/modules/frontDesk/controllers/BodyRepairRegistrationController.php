@@ -432,6 +432,26 @@ class BodyRepairRegistrationController extends Controller {
         ));
     }
 
+    public function actionUpdateProblem($id) {
+        $registrationTransaction = RegistrationTransaction::model()->findByPk($id);
+        $customer = Customer::model()->findByPk($registrationTransaction->customer_id);
+        $vehicle = Vehicle::model()->findByPk($registrationTransaction->vehicle_id);
+
+        if (isset($_POST['RegistrationTransaction'])) {
+            $registrationTransaction->attributes = $_POST['RegistrationTransaction'];
+            
+            if ($registrationTransaction->save()) {
+                $this->redirect(array('view', 'id' => $id));
+            }
+        }
+
+        $this->render('updateProblem', array(
+            'registrationTransaction' => $registrationTransaction,
+            'customer' => $customer,
+            'vehicle' => $vehicle,
+        ));
+    }
+
     public function actionUpdateCustomerWorkOrder($id) {
         $registrationTransaction = RegistrationTransaction::model()->findByPk($id);
         $customer = Customer::model()->findByPk($registrationTransaction->customer_id);
@@ -480,6 +500,13 @@ class BodyRepairRegistrationController extends Controller {
     }
 
     public function actionAdmin() {
+        if (!Yii::app()->user->checkAccess('director')) {
+            $branches = Branch::model()->findAllByAttributes(array('id' => Yii::app()->user->branch_id, 'status' => 'Active'));
+        } else {
+            $branches = Branch::model()->findAllByAttributes(array('status' => 'Active'));
+        }
+        $detailTabs = array();
+
         $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : '';
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : '';
         $plateNumber = (isset($_GET['PlateNumber'])) ? $_GET['PlateNumber'] : '';
@@ -487,46 +514,82 @@ class BodyRepairRegistrationController extends Controller {
         $carModel = (isset($_GET['CarModel'])) ? $_GET['CarModel'] : '';
         $customerName = (isset($_GET['CustomerName'])) ? $_GET['CustomerName'] : '';
 
-        $model = new RegistrationTransaction('search');
-        $model->unsetAttributes();  // clear any default values
+        foreach ($branches as $branch) {
+            $model = Search::bind(new RegistrationTransaction('search'), isset($_GET['RegistrationTransaction']) ? $_GET['RegistrationTransaction'] : '');
+            $dataProvider = $model->searchAdmin();
 
-        if (isset($_GET['RegistrationTransaction'])) {
-            $model->attributes = $_GET['RegistrationTransaction'];
-        }
+            $dataProvider->criteria->compare('t.branch_id', $branch->id);
+            $dataProvider->criteria->addCondition("repair_type = 'BR'");
+            $dataProvider->criteria->addBetweenCondition('SUBSTRING(t.transaction_date, 1, 10)', $startDate, $endDate);
+            $dataProvider->criteria->together = true;
+            $dataProvider->criteria->with = array(
+                'customer',
+                'branch',
+                'vehicle',
+            );
 
-        $dataProvider = $model->searchAdmin();
-        if (!Yii::app()->user->checkAccess('director')) {
-            $dataProvider->criteria->addCondition('t.branch_id = :branch_id');
-            $dataProvider->criteria->params[':branch_id'] = Yii::app()->user->branch_id;
-        }
-        $dataProvider->criteria->addCondition("repair_type = 'BR'");
-        $dataProvider->criteria->addBetweenCondition('SUBSTRING(t.transaction_date, 1, 10)', $startDate, $endDate);
+            if (!empty($plateNumber)) {
+                $dataProvider->criteria->addCondition('vehicle.plate_number LIKE :plate_number');
+                $dataProvider->criteria->params[':plate_number'] = "%{$plateNumber}%";
+            }
 
-        $dataProvider->criteria->together = true;
-        $dataProvider->criteria->with = array(
-            'customer',
-            'branch',
-            'vehicle',
-        );
-        
-        if (!empty($plateNumber)) {
-            $dataProvider->criteria->addCondition('vehicle.plate_number LIKE :plate_number');
-            $dataProvider->criteria->params[':plate_number'] = "%{$plateNumber}%";
+            if (!empty($carMake)) {
+                $dataProvider->criteria->addCondition('vehicle.car_make_id = :car_make_id');
+                $dataProvider->criteria->params[':car_make_id'] = $carMake;
+            }
+
+            if (!empty($carModel)) {
+                $dataProvider->criteria->addCondition('vehicle.car_model_id = :car_model_id');
+                $dataProvider->criteria->params[':car_model_id'] = $carModel;
+            }
+
+            if (!empty($customerName)) {
+                $dataProvider->criteria->addCondition('customer.name LIKE :name');
+                $dataProvider->criteria->params[':name'] = "%{$customerName}%";
+            }
+
+            $tabContent = $this->renderPartial('_adminPerBranch', array(
+                'dataProvider' => $dataProvider,
+            ), true);
+            $detailTabs[$branch->name] = array('content' => $tabContent);
         }
         
-        if (!empty($carMake)) {
-            $dataProvider->criteria->addCondition('vehicle.car_make_id = :car_make_id');
-            $dataProvider->criteria->params[':car_make_id'] = $carMake;
-        }
-        
-        if (!empty($carModel)) {
-            $dataProvider->criteria->addCondition('vehicle.car_model_id = :car_model_id');
-            $dataProvider->criteria->params[':car_model_id'] = $carModel;
-        }
-        
-        if (!empty($customerName)) {
-            $dataProvider->criteria->addCondition('customer.name LIKE :name');
-            $dataProvider->criteria->params[':name'] = "%{$customerName}%";
+        if (Yii::app()->user->checkAccess('director')) {
+            $model = Search::bind(new RegistrationTransaction('search'), isset($_GET['RegistrationTransaction']) ? $_GET['RegistrationTransaction'] : '');
+            $dataProvider = $model->searchAdmin();
+
+            $dataProvider->criteria->addCondition("repair_type = 'BR'");
+            $dataProvider->criteria->addBetweenCondition('SUBSTRING(t.transaction_date, 1, 10)', $startDate, $endDate);
+            $dataProvider->criteria->together = true;
+            $dataProvider->criteria->with = array(
+                'customer',
+                'branch',
+                'vehicle',
+            );
+
+            if (!empty($plateNumber)) {
+                $dataProvider->criteria->addCondition('vehicle.plate_number LIKE :plate_number');
+                $dataProvider->criteria->params[':plate_number'] = "%{$plateNumber}%";
+            }
+
+            if (!empty($carMake)) {
+                $dataProvider->criteria->addCondition('vehicle.car_make_id = :car_make_id');
+                $dataProvider->criteria->params[':car_make_id'] = $carMake;
+            }
+
+            if (!empty($carModel)) {
+                $dataProvider->criteria->addCondition('vehicle.car_model_id = :car_model_id');
+                $dataProvider->criteria->params[':car_model_id'] = $carModel;
+            }
+
+            if (!empty($customerName)) {
+                $dataProvider->criteria->addCondition('customer.name LIKE :name');
+                $dataProvider->criteria->params[':name'] = "%{$customerName}%";
+            }
+
+            $detailTabs['All'] = array('content' => $this->renderPartial('_adminAllBranch', array(
+                'dataProvider' => $dataProvider,
+            ), true));
         }
         
         $this->render('admin', array(
@@ -538,6 +601,7 @@ class BodyRepairRegistrationController extends Controller {
             'carMake' => $carMake,
             'carModel' => $carModel,
             'customerName' => $customerName,
+            'detailTabs' => $detailTabs,
         ));
     }
 

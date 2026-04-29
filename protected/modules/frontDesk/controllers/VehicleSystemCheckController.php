@@ -6,13 +6,13 @@ class VehicleSystemCheckController extends Controller {
 
     public function filters() {
         return array(
-//            'access',
+            'access',
         );
     }
 
     public function filterAccess($filterChain) {
-        if ($filterChain->action->id === 'create') {
-            if (!(Yii::app()->user->checkAccess('vehicleSystemCheckCreate'))) {
+        if ($filterChain->action->id === 'create' || $filterChain->action->id === 'registrationTransactionList') {
+            if (!(Yii::app()->user->checkAccess('systemCheckCreate'))) {
                 $this->redirect(array('/site/login'));
             }
         }
@@ -21,25 +21,26 @@ class VehicleSystemCheckController extends Controller {
             $filterChain->action->id === 'delete' ||
             $filterChain->action->id === 'update'
         ) {
-            if (!(Yii::app()->user->checkAccess('vehicleSystemCheckEdit'))) {
+            if (!(Yii::app()->user->checkAccess('systemCheckEdit'))) {
                 $this->redirect(array('/site/login'));
             }
         }
 
-        if ($filterChain->action->id === 'updateApproval') {
-            if (!(Yii::app()->user->checkAccess('vehicleSystemCheckApproval'))) {
-                $this->redirect(array('/site/login'));
-            }
-        }
+//        if ($filterChain->action->id === 'updateApproval') {
+//            if (!(Yii::app()->user->checkAccess('systemCheckApproval'))) {
+//                $this->redirect(array('/site/login'));
+//            }
+//        }
 
         if (
             $filterChain->action->id === 'admin' || 
             $filterChain->action->id === 'view'
         ) {
             if (
-                !(Yii::app()->user->checkAccess('vehicleSystemCheckCreate')) || 
-                !(Yii::app()->user->checkAccess('vehicleSystemCheckEdit')) || 
-                !(Yii::app()->user->checkAccess('vehicleSystemCheckApproval'))
+                !(Yii::app()->user->checkAccess('systemCheckCreate') || 
+                Yii::app()->user->checkAccess('systemCheckEdit') || 
+                Yii::app()->user->checkAccess('systemCheckView') || 
+                Yii::app()->user->checkAccess('systemCheckApproval'))
             ) {
                 $this->redirect(array('/site/login'));
             }
