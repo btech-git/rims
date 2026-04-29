@@ -39,7 +39,7 @@ $this->menu = array(
                     'class' => 'button success right', 
                     'style' => 'margin-right:10px',
                 )) ?>
-            <?php elseif ($model->status != "Draft" && Yii::app()->user->checkAccess("paymentHead")): ?>
+            <?php elseif (Yii::app()->user->checkAccess("paymentHead")): ?>
                 <?php echo CHtml::link('<span class="fa fa-check"></span>Update Approval', Yii::app()->baseUrl . '/transaction/paymentIn/updateApproval?headerId=' . $model->id, array(
                     'class' => 'button success right', 
                     'style' => 'margin-right:10px',
