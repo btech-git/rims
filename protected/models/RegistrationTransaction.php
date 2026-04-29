@@ -1667,8 +1667,9 @@ class RegistrationTransaction extends MonthlyTransactionActiveRecord {
 
         $sql = "SELECT r.vehicle_id, v.plate_number, r.transaction_date, c.name AS car_make, m.name AS car_model, s.name AS car_sub_model, o.name AS color,
                     r.work_order_number, r.work_order_date, r.work_order_time, r.repair_type, r.problem, u.username, r.status, r.id, r.transaction_number, 
-                    r.sales_order_number, r.customer_work_order_number
+                    r.sales_order_number, r.customer_work_order_number, cu.name AS customer_name, r.estimate_discharge_date
                 FROM " . RegistrationTransaction::model()->tableName() . " r
+                INNER JOIN " . Customer::model()->tableName() . " cu on cu.id = r.customer_id
                 INNER JOIN " . Branch::model()->tableName() . " b on b.id = r.branch_id
                 INNER JOIN " . Vehicle::model()->tableName() . " v on v.id = r.vehicle_id
                 INNER JOIN " . VehicleCarMake::model()->tableName() . " c on c.id = v.car_make_id
@@ -1732,8 +1733,9 @@ class RegistrationTransaction extends MonthlyTransactionActiveRecord {
 
         $sql = "SELECT r.vehicle_id, v.plate_number, r.transaction_date, c.name AS car_make, m.name AS car_model, s.name AS car_sub_model, o.name AS color,
                     r.work_order_number, r.work_order_date, r.work_order_time, r.repair_type, r.problem, u.username, r.status, r.id, r.transaction_number, 
-                    r.sales_order_number, r.customer_work_order_number
+                    r.sales_order_number, r.customer_work_order_number, cu.name AS customer_name, r.estimate_discharge_date
                 FROM " . RegistrationTransaction::model()->tableName() . " r
+                INNER JOIN " . Customer::model()->tableName() . " cu on cu.id = r.customer_id
                 INNER JOIN " . Branch::model()->tableName() . " b on b.id = r.branch_id
                 INNER JOIN " . Vehicle::model()->tableName() . " v on v.id = r.vehicle_id
                 INNER JOIN " . VehicleCarMake::model()->tableName() . " c on c.id = v.car_make_id
@@ -1798,8 +1800,9 @@ class RegistrationTransaction extends MonthlyTransactionActiveRecord {
 
         $sql = "SELECT r.vehicle_id, v.plate_number, r.transaction_date, c.name AS car_make, m.name AS car_model, s.name AS car_sub_model, o.name AS color,
                     r.work_order_number, r.work_order_date, r.work_order_time, r.repair_type, r.problem, u.username, r.status, r.id, r.transaction_number, 
-                    r.sales_order_number, r.customer_work_order_number
+                    r.sales_order_number, r.customer_work_order_number, cu.name AS customer_name, r.estimate_discharge_date
                 FROM " . RegistrationTransaction::model()->tableName() . " r
+                INNER JOIN " . Customer::model()->tableName() . " cu on cu.id = r.customer_id
                 INNER JOIN " . Branch::model()->tableName() . " b on b.id = r.branch_id
                 INNER JOIN " . Vehicle::model()->tableName() . " v on v.id = r.vehicle_id
                 INNER JOIN " . VehicleCarMake::model()->tableName() . " c on c.id = v.car_make_id
@@ -1867,8 +1870,9 @@ class RegistrationTransaction extends MonthlyTransactionActiveRecord {
 
         $sql = "SELECT r.vehicle_id, v.plate_number, r.transaction_date, c.name AS car_make, m.name AS car_model, s.name AS car_sub_model, o.name AS color,
                     r.work_order_number, r.work_order_date, r.work_order_time, r.repair_type, r.problem, u.username, r.status, r.id, r.transaction_number, 
-                    r.sales_order_number, r.customer_work_order_number
+                    r.sales_order_number, r.customer_work_order_number, cu.name AS customer_name, r.estimate_discharge_date
                 FROM " . RegistrationTransaction::model()->tableName() . " r
+                INNER JOIN " . Customer::model()->tableName() . " cu on cu.id = r.customer_id
                 INNER JOIN " . Branch::model()->tableName() . " b on b.id = r.branch_id
                 INNER JOIN " . Vehicle::model()->tableName() . " v on v.id = r.vehicle_id
                 INNER JOIN " . VehicleCarMake::model()->tableName() . " c on c.id = v.car_make_id
@@ -1930,8 +1934,10 @@ class RegistrationTransaction extends MonthlyTransactionActiveRecord {
         }
 
         $sql = "SELECT r.vehicle_id, v.plate_number, r.transaction_date, c.name AS car_make, m.name AS car_model, s.name AS car_sub_model, o.name AS color,
-                    r.customer_work_order_number, r.repair_type, r.problem, u.username, r.status, r.id, r.transaction_number
+                    r.customer_work_order_number, r.repair_type, r.problem, u.username, r.status, r.id, r.transaction_number, cu.name AS customer_name,
+                    r.estimate_discharge_date
                 FROM " . RegistrationTransaction::model()->tableName() . " r
+                INNER JOIN " . Customer::model()->tableName() . " cu on cu.id = r.customer_id
                 INNER JOIN " . Branch::model()->tableName() . " b on b.id = r.branch_id
                 INNER JOIN " . Vehicle::model()->tableName() . " v on v.id = r.vehicle_id
                 INNER JOIN " . VehicleCarMake::model()->tableName() . " c on c.id = v.car_make_id
@@ -1992,8 +1998,10 @@ class RegistrationTransaction extends MonthlyTransactionActiveRecord {
         }
 
         $sql = "SELECT r.vehicle_id, v.plate_number, r.transaction_date, c.name AS car_make, m.name AS car_model, s.name AS car_sub_model, o.name AS color,
-                    r.customer_work_order_number, r.repair_type, r.problem, u.username, r.status, r.id, r.transaction_number
+                    r.customer_work_order_number, r.repair_type, r.problem, u.username, r.status, r.id, r.transaction_number, cu.name AS customer_name,
+                    r.estimate_discharge_date
                 FROM " . RegistrationTransaction::model()->tableName() . " r
+                INNER JOIN " . Customer::model()->tableName() . " cu on cu.id = r.customer_id
                 INNER JOIN " . Branch::model()->tableName() . " b on b.id = r.branch_id
                 INNER JOIN " . Vehicle::model()->tableName() . " v on v.id = r.vehicle_id
                 INNER JOIN " . VehicleCarMake::model()->tableName() . " c on c.id = v.car_make_id
