@@ -132,9 +132,12 @@ class TransactionPurchaseOrderController extends Controller {
         $purchaseOrder = $this->instantiate(null, 'create');
         $purchaseOrder->header->main_branch_id = Yii::app()->user->branch_id;
         $purchaseOrder->header->coa_bank_id_estimate = 7;
+        
         $purchaseOrderDate = isset($_POST['PurchaseOrderDate']) ? $_POST['PurchaseOrderDate'] : date('Y-m-d');
         $purchaseOrderHour = isset($_POST['PurchaseOrderHour']) ? $_POST['PurchaseOrderHour'] : date('H');
         $purchaseOrderMinute = isset($_POST['PurchaseOrderMinute']) ? $_POST['PurchaseOrderMinute'] : date('i');
+        $customerName = isset($_POST['CustomerName']) ? $_POST['CustomerName'] : '';
+        
         $this->performAjaxValidation($purchaseOrder->header);
 
         $supplier = new Supplier('search');
@@ -158,6 +161,8 @@ class TransactionPurchaseOrderController extends Controller {
             $registrationTransaction->attributes = $_GET['RegistrationTransaction'];
         }
         $registrationTransactionCriteria = new CDbCriteria;
+        $registrationTransactionCriteria->compare('t.transaction_number', $registrationTransaction->transaction_number, true);
+        $registrationTransactionCriteria->compare('t.transaction_date', $registrationTransaction->transaction_date, true);
         $registrationTransactionCriteria->compare('t.work_order_number', $registrationTransaction->work_order_number, true);
         $registrationTransactionCriteria->compare('t.sales_order_number', $registrationTransaction->sales_order_number, true);
         $registrationTransactionCriteria->together = 'true';
@@ -166,7 +171,7 @@ class TransactionPurchaseOrderController extends Controller {
             'customer', 
         );
         $registrationTransactionCriteria->compare('vehicle.plate_number', $registrationTransaction->plate_number, true);
-        $registrationTransactionCriteria->compare('customer.name', $registrationTransaction->customer_name, true);
+        $registrationTransactionCriteria->compare('customer.name', $customerName, true);
 
 //        $registrationTransactionCriteria->addCondition("NOT EXISTS (
 //            SELECT h.registration_transaction_id
