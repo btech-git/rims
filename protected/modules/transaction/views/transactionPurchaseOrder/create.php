@@ -20,8 +20,6 @@ $this->menu = array(
         'purchaseOrderMinute' => $purchaseOrderMinute,
         'supplier' => $supplier,
         'supplierDataProvider' => $supplierDataProvider,
-        // 'request'=>$request,
-        // 'requestDataProvider'=>$requestDataProvider,
         'product' => $product,
         'productDataProvider' => $productDataProvider,
         'price' => $price,
@@ -29,6 +27,7 @@ $this->menu = array(
         'destinationBranchDataProvider' => $destinationBranchDataProvider,
         'registrationTransaction' => $registrationTransaction,
         'registrationTransactionDataProvider' => $registrationTransactionDataProvider,
+        'customerName' => $customerName,
     )); ?>
 </div>
 
