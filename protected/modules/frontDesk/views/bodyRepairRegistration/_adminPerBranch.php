@@ -36,7 +36,7 @@
                 <tr style="background-color: <?php echo $activeRegistrationItem->status == 'Finished' ? 'greenyellow' : 'salmon'; ?>">
                     <td><?php echo CHtml::encode($runningNumber); ?></td>
                     <td>
-                        <?php echo CHtml::link($activeRegistrationItem->transaction_number, Yii::app()->createUrl("frontDesk/generalRepairRegistration/view", array(
+                        <?php echo CHtml::link($activeRegistrationItem->transaction_number, Yii::app()->createUrl("frontDesk/bodyRepairRegistration/view", array(
                             "id" => $activeRegistrationItem->id
                         )), array('target' => '_blank', 'style' => 'color:blue; text-decoration:underline')); ?>
                     </td>
