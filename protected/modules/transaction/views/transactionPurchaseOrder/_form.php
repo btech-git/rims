@@ -1033,6 +1033,7 @@
         'work_order_date',
         array(
             'header' => 'Customer',
+            'filter' => CHtml::textField('CustomerName', $customerName),
             'value' => 'CHtml::encode(CHtml::value($data, "customer.name"))',
         ),
         array(
