@@ -26,8 +26,8 @@ class GeneralRepairRegistrationController extends Controller {
         if (
             $filterChain->action->id === 'addDownpayment' ||
             $filterChain->action->id === 'addProductService' ||
-            $filterChain->action->id === 'generateSalesOrder' ||
-            $filterChain->action->id === 'generateWorkOrder' ||
+//            $filterChain->action->id === 'generateSalesOrder' ||
+//            $filterChain->action->id === 'generateWorkOrder' ||
             $filterChain->action->id === 'updateCustomerWorkOrder' ||
             $filterChain->action->id === 'updateDischargeDate' ||
             $filterChain->action->id === 'updateLocation' ||

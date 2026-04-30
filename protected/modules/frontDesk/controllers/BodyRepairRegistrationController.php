@@ -25,9 +25,9 @@ class BodyRepairRegistrationController extends Controller {
 
         if (
             $filterChain->action->id === 'addProductService' ||
-            $filterChain->action->id === 'generateInvoice' ||
-            $filterChain->action->id === 'generateSalesOrder' ||
-            $filterChain->action->id === 'generateWorkOrder' ||
+//            $filterChain->action->id === 'generateInvoice' ||
+//            $filterChain->action->id === 'generateSalesOrder' ||
+//            $filterChain->action->id === 'generateWorkOrder' ||
             $filterChain->action->id === 'insuranceAddition' ||
             $filterChain->action->id === 'showRealization'
         ) {
