@@ -145,7 +145,7 @@ class InventoryValueController extends Controller {
 
         $worksheet->getStyle('A5:Q5')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
-        $counter = 7;
+        $counter = 6;
         $incrementNumber = 1;
 
         foreach ($dataProvider->data as $header) {

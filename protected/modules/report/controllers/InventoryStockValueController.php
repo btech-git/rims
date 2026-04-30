@@ -224,7 +224,7 @@ class InventoryStockValueController extends Controller {
         $worksheet->getStyle("A5:{$column}5")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
         $worksheet->getStyle("A5:{$column}5")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
-        $counter = 7;
+        $counter = 6;
         foreach ($dataProvider->data as $header) {
             $worksheet->getStyle("C{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
 
@@ -237,7 +237,7 @@ class InventoryStockValueController extends Controller {
             $worksheet->setCellValue("B{$counter}", CHtml::value($header, 'manufacturer_code'));
             $worksheet->setCellValue("C{$counter}", CHtml::value($header, 'name'));
             $worksheet->setCellValue("D{$counter}", CHtml::value($header, 'brand.name') . ' - ' . CHtml::value($header, 'subBrand.name') . ' - ' . CHtml::value($header, 'subBrandSeries.name'));
-            $worksheet->setCellValue("E{$counter}", CHtml::value($header, 'masterSubCategoryCode'));
+            $worksheet->setCellValue("E{$counter}", CHtml::value($header, 'productMasterCategory.name') . ' - ' . CHtml::value($header, 'productSubMasterCategory.name') . ' - ' . CHtml::value($header, 'productSubCategory.name'));
             $worksheet->setCellValue("F{$counter}", CHtml::value($header, 'unit.name'));
             foreach ($branches as $branch) {
                 $stockValue = 0;
