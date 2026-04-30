@@ -32,7 +32,7 @@ class MovementOutHeaderController extends Controller {
             }
         }
 
-        if ($filterChain->action->id === 'updateApproval') {
+        if ($filterChain->action->id === 'updateApproval' || $filterChain->action->id === 'cancel') {
             if (!(Yii::app()->user->checkAccess('movementOutApproval'))) {
                 $this->redirect(array('/site/login'));
             }
