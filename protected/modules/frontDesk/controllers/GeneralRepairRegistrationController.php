@@ -39,11 +39,7 @@ class GeneralRepairRegistrationController extends Controller {
             }
         }
 
-        if (
-            $filterChain->action->id === 'admin' ||
-            $filterChain->action->id === 'pdf' ||
-            $filterChain->action->id === 'view'
-        ) {
+        if ($filterChain->action->id === 'admin' || $filterChain->action->id === 'view') {
             if (!(
                 Yii::app()->user->checkAccess('generalRepairCreate') || 
                 Yii::app()->user->checkAccess('generalRepairEdit') || 

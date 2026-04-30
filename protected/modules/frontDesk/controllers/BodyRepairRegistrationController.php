@@ -36,10 +36,7 @@ class BodyRepairRegistrationController extends Controller {
             }
         }
 
-        if (
-            $filterChain->action->id === 'admin' ||
-            $filterChain->action->id === 'view'
-        ) {
+        if ($filterChain->action->id === 'admin' || $filterChain->action->id === 'view') {
             if (!(
                 Yii::app()->user->checkAccess('bodyRepairCreate') || 
                 Yii::app()->user->checkAccess('bodyRepairEdit') || 
