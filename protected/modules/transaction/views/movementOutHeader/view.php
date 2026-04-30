@@ -22,7 +22,7 @@ $this->menu = array(
         
         <?php $ccontroller = Yii::app()->controller->id; ?>
         <?php $ccaction = Yii::app()->controller->action->id; ?>
-        <?php echo CHtml::link('<span class="fa fa-list"></span>Manage Movement Out', Yii::app()->baseUrl . '/transaction/movementOutHeader/admin', array('class' => 'button cbutton right', 'visible' => Yii::app()->user->checkAccess("transaction.movementOutHeader.admin"))) ?>
+        <?php echo CHtml::link('<span class="fa fa-list"></span>Manage', Yii::app()->baseUrl . '/transaction/movementOutHeader/admin', array('class' => 'button cbutton right', 'visible' => Yii::app()->user->checkAccess("transaction.movementOutHeader.admin"))) ?>
 
         <?php if ($model->status != 'Draft' || $model->status !== 'CANCELLED!!!'): ?>
             <?php echo CHtml::link('<span class="fa fa-print"></span>Print Movement Out', Yii::app()->baseUrl.'/transaction/movementOutHeader/pdf?id=' . $model->id, array('class'=>'button warning right', 'style' => 'margin-right:10px', 'target' => 'blank')); ?>
@@ -75,7 +75,7 @@ $this->menu = array(
             )); ?>
         <?php endif; ?>
 
-        <?php if (Yii::app()->user->checkAccess("movementOutSupervisor")): ?>
+        <?php if (Yii::app()->user->checkAccess("movementOutApproval")): ?>
             <?php echo CHtml::link('<span class="fa fa-minus"></span>Cancel Transaction', array("/transaction/movementOutHeader/cancel", "id" => $model->id), array(
                 'class' => 'button alert right', 
                 'style' => 'margin-right:10px', 
