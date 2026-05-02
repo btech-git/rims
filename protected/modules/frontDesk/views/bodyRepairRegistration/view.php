@@ -90,7 +90,7 @@ $this->breadcrumbs = array(
                             )); ?>
                         <?php endif; ?>
 
-                        <?php if (Yii::app()->user->checkAccess("bodyRepairSupervisor") && count($invoices) > 0): ?>
+                        <?php if (Yii::app()->user->checkAccess("frontOfficeHead") && count($invoices) > 0): ?>
                             <?php echo CHtml::link('<span class="fa fa-edit"></span>Revisi Data', Yii::app()->baseUrl . '/frontDesk/bodyRepairRegistration/update?id=' . $model->id, array(
                                 'class' => 'button warning left', 
                                 'style' => 'margin-right:10px'
@@ -167,7 +167,7 @@ $this->breadcrumbs = array(
                         <?php endif;*/ ?>
                     <?php endif; ?>
                     
-                    <?php if (Yii::app()->user->checkAccess("bodyRepairSupervisor") && $model->user_id_cancelled == null): ?>
+                    <?php if (Yii::app()->user->checkAccess("frontOfficeHead") && $model->user_id_cancelled == null): ?>
                         <?php echo CHtml::link('<span class="fa fa-minus"></span>Cancel Transaction', array("/frontDesk/bodyRepairRegistration/cancel", "id" => $model->id), array(
                             'class' => 'button alert right', 
                             'style' => 'margin-right:10px',
