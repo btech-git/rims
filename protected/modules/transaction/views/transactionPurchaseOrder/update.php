@@ -30,6 +30,5 @@ $this->menu=array(
         'destinationBranchDataProvider' => $destinationBranchDataProvider,
         'registrationTransaction' => $registrationTransaction,
         'registrationTransactionDataProvider' => $registrationTransactionDataProvider,
-        'customerName' => $customerName,
     )); ?>
 </div>

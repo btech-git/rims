@@ -991,104 +991,68 @@
     ),
 )); ?>
 
-    <?php echo CHtml::beginForm(); ?>
-    <div class="row">
-        <div class="small-12 columns" style="padding-left: 0px; padding-right: 0px;">
-            <table>
-                <thead>
-                    <tr>
-                        <td>Customer</td>
-                        <td>Plat #</td>
-                    </tr>
-                </thead>
-                
-                <tbody>
-                    <tr>
-                        <td>
-                            <?php echo CHtml::textField('CustomerName', $customerName, array(
-                                'onchange' => '
-                                $.fn.yiiGridView.update("registration-transaction-grid", {data: {RegistrationTransaction: {
-                                    customer_name: $(this).val(),
-                                    plate_number: $("#plate_number").val(),
-                                } } });',
-                            )); ?>
-                        </td>
-                        
-                        <td>
-                            <?php /*echo CHtml::activeTextField($coaDetail, 'name', array(
-                                'onchange' => '
-                                $.fn.yiiGridView.update("coa-detail-grid", {data: {Coa: {
-                                    name: $(this).val(),
-                                    code: $("#coa_code").val(),
-                                    coa_category_id: $("#coa_category_id").val(),
-                                    coa_sub_category_id: $("#coa_sub_category_id").val(),
-                                } } });',
-                            ));*/ ?>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-            
-            <?php $this->widget('zii.widgets.grid.CGridView', array(
-                'id' => 'registration-transaction-grid',
-                'dataProvider' => $registrationTransactionDataProvider,
-                'filter' => $registrationTransaction,
-                'template' => '{items}<div class="clearfix">{summary}{pager}</div>',
-                'pager' => array(
-                    'cssFile' => false,
-                    'header' => '',
-                ),
-                'selectionChanged' => 'js:function(id){
-                    if ($("#RegistrationMode").val() === "1") {
-                        $("#' . CHtml::activeId($purchaseOrder->header, 'registration_transaction_id') . '").val($.fn.yiiGridView.getSelection(id));
-                    } else if ($("#RegistrationMode").val() === "2") {
-                        $("#' . CHtml::activeId($purchaseOrder->header, 'registration_transaction_id_extra_2') . '").val($.fn.yiiGridView.getSelection(id));
-                    } else if ($("#RegistrationMode").val() === "3") {
-                        $("#' . CHtml::activeId($purchaseOrder->header, 'registration_transaction_id_extra_3') . '").val($.fn.yiiGridView.getSelection(id));
-                    }
-                    $("#registration-transaction-dialog").dialog("close");
+    <?php echo CHtml::beginForm(); ?>            
+        <?php $this->widget('zii.widgets.grid.CGridView', array(
+            'id' => 'registration-transaction-grid',
+            'dataProvider' => $registrationTransactionDataProvider,
+            'filter' => $registrationTransaction,
+            'template' => '{items}<div class="clearfix">{summary}{pager}</div>',
+            'pager' => array(
+                'cssFile' => false,
+                'header' => '',
+            ),
+            'selectionChanged' => 'js:function(id){
+                if ($("#RegistrationMode").val() === "1") {
+                    $("#' . CHtml::activeId($purchaseOrder->header, 'registration_transaction_id') . '").val($.fn.yiiGridView.getSelection(id));
+                } else if ($("#RegistrationMode").val() === "2") {
+                    $("#' . CHtml::activeId($purchaseOrder->header, 'registration_transaction_id_extra_2') . '").val($.fn.yiiGridView.getSelection(id));
+                } else if ($("#RegistrationMode").val() === "3") {
+                    $("#' . CHtml::activeId($purchaseOrder->header, 'registration_transaction_id_extra_3') . '").val($.fn.yiiGridView.getSelection(id));
+                }
+                $("#registration-transaction-dialog").dialog("close");
 
-                    $.ajax({
-                        type: "POST",
-                        dataType: "JSON",
-                        url: "' . CController::createUrl('ajaxRegistrationTransaction', array('id' => '')) . '" + $.fn.yiiGridView.getSelection(id),
-                        data: $("form").serialize(),
-                        success: function(data) {
-                            if ($("#RegistrationMode").val() === "1") {
-                                $("#registration_transaction_id_span").html(data.work_order_number);
-                            } else if ($("#RegistrationMode").val() === "2") {
-                                $("#registration_transaction_id_extra_2_span").html(data.work_order_number);
-                            } else if ($("#RegistrationMode").val() === "3") {
-                                $("#registration_transaction_id_extra_3_span").html(data.work_order_number);
-                            }
-                        },
-                    });
-                }',
-                'columns' => array(
-                    'work_order_number',
-                    'work_order_date',
-                    'transaction_number',
-                    'transaction_date',
-                    array(
-                        'header' => 'Customer',
-                        'value' => 'CHtml::encode(CHtml::value($data, "customer.name"))',
-                    ),
-                    array(
-                        'header' => 'Plate #',
-                        'value' => 'CHtml::encode(CHtml::value($data, "vehicle.plate_number"))',
-                    ),
-                    array(
-                        'header' => 'Kendaraan',
-                        'value' => 'CHtml::encode(CHtml::value($data, "vehicle.carMakeModelSubCombination"))',
-                    ),
-                    array(
-                        'header' => 'KM',
-                        'value' => 'CHtml::encode(CHtml::value($data, "vehicle_mileage"))',
-                    ),
-                )
-            )); ?>
-        </div>
-    </div>
+                $.ajax({
+                    type: "POST",
+                    dataType: "JSON",
+                    url: "' . CController::createUrl('ajaxRegistrationTransaction', array('id' => '')) . '" + $.fn.yiiGridView.getSelection(id),
+                    data: $("form").serialize(),
+                    success: function(data) {
+                        if ($("#RegistrationMode").val() === "1") {
+                            $("#registration_transaction_id_span").html(data.work_order_number);
+                        } else if ($("#RegistrationMode").val() === "2") {
+                            $("#registration_transaction_id_extra_2_span").html(data.work_order_number);
+                        } else if ($("#RegistrationMode").val() === "3") {
+                            $("#registration_transaction_id_extra_3_span").html(data.work_order_number);
+                        }
+                    },
+                });
+            }',
+            'columns' => array(
+                'work_order_number',
+                'work_order_date',
+                'transaction_number',
+                'transaction_date',
+                array(
+                    'header' => 'Customer',
+                    'filter' => CHtml::activeTextField($registrationTransaction, 'customer_name'),
+                    'value' => 'CHtml::encode(CHtml::value($data, "customer.name"))',
+                ),
+                array(
+                    'header' => 'Plate #',
+                    'filter' => CHtml::activeTextField($registrationTransaction, 'plate_number'),
+                    'value' => 'CHtml::encode(CHtml::value($data, "vehicle.plate_number"))',
+                ),
+                array(
+                    'header' => 'Kendaraan',
+                    'value' => 'CHtml::encode(CHtml::value($data, "vehicle.carMakeModelSubCombination"))',
+                ),
+                array(
+                    'header' => 'KM',
+                    'value' => 'CHtml::encode(Yii::app()->numberFormatter->format("#,##0", CHtml::value($data, "vehicle_mileage")))',
+                    'htmlOptions' => array('style' => 'text-align:right'),
+                ),
+            )
+        )); ?>
     <?php echo CHtml::endForm(); ?>
 <?php $this->endWidget(); ?>
     

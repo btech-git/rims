@@ -137,7 +137,6 @@ class TransactionPurchaseOrderController extends Controller {
         $purchaseOrderDate = isset($_POST['PurchaseOrderDate']) ? $_POST['PurchaseOrderDate'] : date('Y-m-d');
         $purchaseOrderHour = isset($_POST['PurchaseOrderHour']) ? $_POST['PurchaseOrderHour'] : date('H');
         $purchaseOrderMinute = isset($_POST['PurchaseOrderMinute']) ? $_POST['PurchaseOrderMinute'] : date('i');
-        $customerName = isset($_POST['CustomerName']) ? $_POST['CustomerName'] : '';
         
         $this->performAjaxValidation($purchaseOrder->header);
 
@@ -172,7 +171,7 @@ class TransactionPurchaseOrderController extends Controller {
             'customer', 
         );
         $registrationTransactionCriteria->compare('vehicle.plate_number', $registrationTransaction->plate_number, true);
-        $registrationTransactionCriteria->compare('customer.name', $customerName, true);
+        $registrationTransactionCriteria->compare('customer.name', $registrationTransaction->customer_name, true);
 
         $registrationTransactionDataProvider = new CActiveDataProvider('RegistrationTransaction', array(
             'criteria' => $registrationTransactionCriteria,
@@ -246,7 +245,6 @@ class TransactionPurchaseOrderController extends Controller {
             'destinationBranchDataProvider' => $destinationBranchDataProvider,
             'registrationTransaction' => $registrationTransaction,
             'registrationTransactionDataProvider' => $registrationTransactionDataProvider,
-            'customerName' => $customerName,
         ));
     }
 
@@ -262,7 +260,6 @@ class TransactionPurchaseOrderController extends Controller {
         $purchaseOrder->header->status_document = 'Draft';
         $purchaseOrder->header->user_id_updated = Yii::app()->user->id;
         $purchaseOrder->header->updated_datetime = date('Y-m-d H:i:s');
-        $customerName = isset($_POST['CustomerName']) ? $_POST['CustomerName'] : '';
         
         list($orderDate, $orderTime) = explode(' ', $purchaseOrder->header->purchase_order_date);
         list($orderHour, $orderMinute, ) = explode(':', $orderTime);
@@ -300,7 +297,7 @@ class TransactionPurchaseOrderController extends Controller {
             'customer', 
         );
         $registrationTransactionCriteria->compare('vehicle.plate_number', $registrationTransaction->plate_number, true);
-        $registrationTransactionCriteria->compare('customer.name', $customerName, true);
+        $registrationTransactionCriteria->compare('customer.name', $registrationTransaction->customer_name, true);
 
         $registrationTransactionCriteria->addCondition("NOT EXISTS (
             SELECT h.registration_transaction_id
@@ -389,7 +386,6 @@ class TransactionPurchaseOrderController extends Controller {
             'destinationBranchDataProvider' => $destinationBranchDataProvider,
             'registrationTransaction' => $registrationTransaction,
             'registrationTransactionDataProvider' => $registrationTransactionDataProvider,
-            'customerName' => $customerName,
         ));
     }
 
