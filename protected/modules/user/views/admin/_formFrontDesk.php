@@ -37,9 +37,9 @@
                 )); ?>
             </td>
             <td style="text-align: center">
-                <?php echo CHtml::checkBox("User[roles][saleEstimationSupervisor]", CHtml::resolveValue($model, "roles[saleEstimationSupervisor]"), array(
+                <?php echo CHtml::checkBox("User[roles][saleEstimationApproval]", CHtml::resolveValue($model, "roles[saleEstimationApproval]"), array(
                     'id' => 'User_roles_' . $counter++, 
-                    'value' => 'saleEstimationSupervisor'
+                    'value' => 'saleEstimationApproval'
                 )); ?>
             </td>
         </tr>
@@ -64,9 +64,9 @@
                 )); ?>
             </td>
             <td style="text-align: center">
-                <?php echo CHtml::checkBox("User[roles][generalRepairSupervisor]", CHtml::resolveValue($model, "roles[generalRepairSupervisor]"), array(
+                <?php echo CHtml::checkBox("User[roles][generalRepairApproval]", CHtml::resolveValue($model, "roles[generalRepairApproval]"), array(
                     'id' => 'User_roles_' . $counter++, 
-                    'value' => 'generalRepairSupervisor'
+                    'value' => 'generalRepairApproval'
                 )); ?>
             </td>
         </tr>
@@ -91,9 +91,9 @@
                 )); ?>
             </td>
             <td style="text-align: center">
-                <?php echo CHtml::checkBox("User[roles][bodyRepairSupervisor]", CHtml::resolveValue($model, "roles[bodyRepairSupervisor]"), array(
+                <?php echo CHtml::checkBox("User[roles][bodyRepairApproval]", CHtml::resolveValue($model, "roles[bodyRepairApproval]"), array(
                     'id' => 'User_roles_' . $counter++, 
-                    'value' => 'bodyRepairSupervisor'
+                    'value' => 'bodyRepairApproval'
                 )); ?>
             </td>
         </tr>
