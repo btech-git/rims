@@ -21,10 +21,7 @@ class TransactionPurchaseOrderController extends Controller {
             }
         }
 
-        if (
-            $filterChain->action->id === 'delete' || 
-            $filterChain->action->id === 'update'
-        ) {
+        if ($filterChain->action->id === 'update') {
             if (!(Yii::app()->user->checkAccess('purchaseOrderEdit'))) {
                 $this->redirect(array('/site/login'));
             }
@@ -42,7 +39,11 @@ class TransactionPurchaseOrderController extends Controller {
             $filterChain->action->id === 'index' || 
             $filterChain->action->id === 'view'
         ) {
-            if (!(Yii::app()->user->checkAccess('purchaseOrderCreate') || Yii::app()->user->checkAccess('purchaseOrderEdit') || Yii::app()->user->checkAccess('purchaseOrderView'))) {
+            if (!(
+                Yii::app()->user->checkAccess('purchaseOrderCreate') || 
+                Yii::app()->user->checkAccess('purchaseOrderEdit') || 
+                Yii::app()->user->checkAccess('purchaseOrderView')
+            )) {
                 $this->redirect(array('/site/login'));
             }
         }
@@ -261,6 +262,7 @@ class TransactionPurchaseOrderController extends Controller {
         $purchaseOrder->header->status_document = 'Draft';
         $purchaseOrder->header->user_id_updated = Yii::app()->user->id;
         $purchaseOrder->header->updated_datetime = date('Y-m-d H:i:s');
+        $customerName = isset($_POST['CustomerName']) ? $_POST['CustomerName'] : '';
         
         list($orderDate, $orderTime) = explode(' ', $purchaseOrder->header->purchase_order_date);
         list($orderHour, $orderMinute, ) = explode(':', $orderTime);
@@ -298,7 +300,7 @@ class TransactionPurchaseOrderController extends Controller {
             'customer', 
         );
         $registrationTransactionCriteria->compare('vehicle.plate_number', $registrationTransaction->plate_number, true);
-        $registrationTransactionCriteria->compare('customer.name', $registrationTransaction->customer_name, true);
+        $registrationTransactionCriteria->compare('customer.name', $customerName, true);
 
         $registrationTransactionCriteria->addCondition("NOT EXISTS (
             SELECT h.registration_transaction_id
@@ -387,6 +389,7 @@ class TransactionPurchaseOrderController extends Controller {
             'destinationBranchDataProvider' => $destinationBranchDataProvider,
             'registrationTransaction' => $registrationTransaction,
             'registrationTransactionDataProvider' => $registrationTransactionDataProvider,
+            'customerName' => $customerName,
         ));
     }
 
