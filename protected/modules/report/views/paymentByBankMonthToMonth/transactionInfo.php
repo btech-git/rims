@@ -1,0 +1,87 @@
+<?php
+Yii::app()->clientScript->registerCss('_report', '
+    .width1-1 { width: 10% }
+    .width1-2 { width: 10% }
+    .width1-3 { width: 25% }
+    .width1-4 { width: 25% }
+    .width1-5 { width: 10% }
+');
+?>
+
+<?php echo CHtml::beginForm(array(''), 'get'); ?>
+                    
+<div class="row buttons">
+    <?php echo CHtml::hiddenField('year', $year); ?>
+    <?php echo CHtml::hiddenField('month', $month); ?>
+    <?php echo CHtml::hiddenField('debitCredit', $debitCredit); ?>
+    <?php echo CHtml::hiddenField('coaId', $coaId); ?>
+    <?php echo CHtml::hiddenField('branchId', $branchId); ?>
+    <?php echo CHtml::hiddenField('inOut', $inOut); ?>
+    <?php echo CHtml::submitButton('Simpan ke Excel', array('name' => 'SaveToExcel')); ?>
+</div>
+
+<?php echo CHtml::endForm(); ?>
+
+<div style="font-weight: bold; text-align: center">
+    <div style="font-size: larger">
+        Raperind Motor <?php echo CHtml::encode(CHtml::value($branch, 'name')); ?>
+    </div>
+    <div style="font-size: larger">Transaksi <?php echo $inOut == 'In' ? 'Masuk' : 'Keluar'; ?> Bank Bulanan</div>
+    <div style="font-size: larger">
+        <?php echo CHtml::encode(CHtml::value($coa, 'code')); ?> - 
+        <?php echo CHtml::encode(CHtml::value($coa, 'name')); ?> - 
+        <?php echo CHtml::encode(CHtml::value($coa, 'coaCategory.name')); ?> - 
+        <?php echo CHtml::encode(CHtml::value($coa, 'coaSubCategory.name')); ?>
+    </div>
+    <div><?php echo CHtml::encode(strftime("%B",mktime(0,0,0,$month))); ?> <?php echo CHtml::encode($year); ?></div>
+</div>
+
+<br />
+
+<div class="tab reportTab">
+    <div class="tabHead"></div>
+    
+    <div class="tabBody">
+        <table class="report">
+            <thead style="position: sticky; top: 0">
+                <tr id="header1">
+                    <th class="width1-1">Transaksi #</th>
+                    <th class="width1-2">Tanggal</th>
+                    <th class="width1-3">Note</th>
+                    <th class="width1-4">Memo</th>
+                    <th class="width1-5">Total</th>
+                </tr>
+            </thead>
+            
+            <tbody>
+                <?php $totalSum = '0.00'; ?>
+                <?php foreach ($dataProvider->data as $header): ?>
+                    <?php $totalAmount = CHtml::value($header, 'total'); ?>
+                    <tr class="items1">
+                        <td class="width1-1">
+                            <?php echo CHtml::link(CHtml::value($header, 'kode_transaksi'), Yii::app()->createUrl("report/paymentByBankMonthly/redirectTransaction", array(
+                                "codeNumber" => CHtml::value($header, 'kode_transaksi')
+                            )), array('target' => '_blank'));?>
+                        </td>
+                        <td class="width1-2"><?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($header->tanggal_transaksi))); ?></td>
+                        <td class="width1-3"><?php echo CHtml::encode(CHtml::value($header, 'transaction_subject')); ?></td>
+                        <td class="width1-4"><?php echo CHtml::encode(CHtml::value($header, 'remark')); ?></td>
+                        <td class="width1-5" style="text-align: right">
+                            <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalAmount)); ?>
+                        </td>
+                    </tr>
+                    <?php $totalSum += $totalAmount; ?>
+                <?php endforeach; ?>
+            </tbody>
+            
+            <tfoot>
+                <tr>
+                    <td colspan="4" style="text-align: right">TOTAL</td>
+                    <td class="width1-5" style="text-align: right">
+                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalSum)); ?>
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+</div>
