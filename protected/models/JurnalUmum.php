@@ -635,7 +635,7 @@ class JurnalUmum extends CActiveRecord {
                 WHERE pi.coa_id " . $coaInSql . " AND YEAR(tanggal_transaksi) = :year AND MONTH(tanggal_transaksi) = :month AND pi.is_coa_category = 0 AND 
                     pt.coa_sub_category_id IN (1, 2, 3) AND pt.status = 'Approved' AND pi.debet_kredit = 'D'" . $branchConditionSql . "
                 GROUP BY pi.tanggal_transaksi, pi.coa_id
-                ORDER BY pi.tanggal_transaksi";
+                ORDER BY pi.tanggal_transaksi ASC";
 
         $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
 
@@ -663,7 +663,63 @@ class JurnalUmum extends CActiveRecord {
                 WHERE pi.coa_id " . $coaOutSql . " AND YEAR(tanggal_transaksi) = :year AND MONTH(tanggal_transaksi) = :month AND pi.is_coa_category = 0 AND 
                     pt.coa_sub_category_id IN (1, 2, 3) AND pt.status = 'Approved' AND pi.debet_kredit = 'K'" . $branchConditionSql . "
                 GROUP BY pi.tanggal_transaksi, pi.coa_id
-                ORDER BY pi.tanggal_transaksi";
+                ORDER BY pi.tanggal_transaksi ASC";
+
+        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
+
+        return $resultSet;
+    }
+    
+    public static function getPaymentInMonthlyByBankList($startDate, $endDate, $branchId, $coaIds) {
+        $branchConditionSql = '';
+        $coaInSql = '= NULL';
+        $params = array(
+            ':start_date' => $startDate,
+            ':end_date' => $endDate,
+        );
+        if (!empty($branchId)) {
+            $branchConditionSql = " AND pi.branch_id = :branch_id";
+            $params[':branch_id'] = $branchId;
+        }
+        if (!empty($coaIds)) {
+            $coaInSql = "IN (" . implode(',', $coaIds) . ")";
+        }
+        
+        $sql = "SELECT YEAR(pi.tanggal_transaksi) AS year, MONTH(pi.tanggal_transaksi) AS month, pi.coa_id, MIN(pt.name) AS coa_name, COALESCE(SUM(pi.total), 0) AS total_amount
+                FROM " . JurnalUmum::model()->tableName() . " pi
+                INNER JOIN " . Coa::model()->tableName() . " pt ON pt.id = pi.coa_id
+                WHERE pi.coa_id " . $coaInSql . " AND tanggal_transaksi BETWEEN :start_date AND :end_date AND pi.is_coa_category = 0 AND 
+                    pt.coa_sub_category_id IN (1, 2, 3) AND pt.status = 'Approved' AND pi.debet_kredit = 'D'" . $branchConditionSql . "
+                GROUP BY YEAR(pi.tanggal_transaksi), MONTH(pi.tanggal_transaksi), pi.coa_id
+                ORDER BY coa_name ASC, year ASC, month ASC";
+
+        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
+
+        return $resultSet;
+    }
+    
+    public static function getPaymentOutMonthlyByBankList($startDate, $endDate, $branchId, $coaIds) {
+        $branchConditionSql = '';
+        $coaOutSql = '= NULL';
+        $params = array(
+            ':start_date' => $startDate,
+            ':end_date' => $endDate,
+        );
+        if (!empty($branchId)) {
+            $branchConditionSql = " AND pi.branch_id = :branch_id";
+            $params[':branch_id'] = $branchId;
+        }
+        if (!empty($coaIds)) {
+            $coaOutSql = "IN (" . implode(',', $coaIds) . ")";
+        }
+        
+        $sql = "SELECT YEAR(pi.tanggal_transaksi) AS year, MONTH(pi.tanggal_transaksi) AS month, pi.coa_id, MIN(pt.name) AS coa_name, COALESCE(SUM(pi.total), 0) AS total_amount
+                FROM " . JurnalUmum::model()->tableName() . " pi
+                INNER JOIN " . Coa::model()->tableName() . " pt ON pt.id = pi.coa_id
+                WHERE pi.coa_id " . $coaOutSql . " AND tanggal_transaksi BETWEEN :start_date AND :end_date AND pi.is_coa_category = 0 AND 
+                    pt.coa_sub_category_id IN (1, 2, 3) AND pt.status = 'Approved' AND pi.debet_kredit = 'K'" . $branchConditionSql . "
+                GROUP BY YEAR(pi.tanggal_transaksi), MONTH(pi.tanggal_transaksi), pi.coa_id
+                ORDER BY coa_name ASC, year ASC, month ASC";
 
         $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
 

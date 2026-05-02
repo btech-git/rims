@@ -274,7 +274,8 @@ class ProductSubCategory extends CActiveRecord {
                 FROM " . InventoryDetail::model()->tableName() . " i
                 INNER JOIN " . Warehouse::model()->tableName() . " w ON w.id = i.warehouse_id
                 INNER JOIN " . Product::model()->tableName() . " p ON p.id = i.product_id
-                WHERE p.product_sub_category_id = :product_sub_category_id AND w.status = 'Active' AND i.transaction_date BETWEEN '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND :end_date
+                WHERE i.transaction_date BETWEEN '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND :end_date AND
+                    p.product_sub_category_id = :product_sub_category_id AND w.status = 'Active'
                 GROUP BY w.branch_id";
 
         $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, array(
