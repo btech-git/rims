@@ -187,34 +187,44 @@ class MaterialRequest extends CComponent {
         $valid = $this->header->save(false);
 
         foreach ($this->details as $detail) {
-            if ($detail->quantity < 0) {
-                continue;
-            }
+            if (empty($detail->id) || !in_array($detail->id, $detailIdsToBeDeleted)) {
+                if ($detail->quantity < 0) {
+                    continue;
+                }
 
-            $detail->quantity_movement_out = ($this->header->isNewRecord) ? 0 : $detail->getTotalQuantityMovementOut();
-            $detail->quantity_remaining = $detail->quantity - $detail->quantity_movement_out;
-            $detail->material_request_header_id = $this->header->id;
-            $valid = $valid && $detail->save(false);
+                $detail->quantity_movement_out = ($this->header->isNewRecord) ? 0 : $detail->getTotalQuantityMovementOut();
+                $detail->quantity_remaining = $detail->quantity - $detail->quantity_movement_out;
+                $detail->material_request_header_id = $this->header->id;
+                $valid = $valid && $detail->save(false);
+            }
         }
 
         return $valid;
     }
 
     public function getTotalQuantity() {
+        $detailIdsToBeDeleted = explode(',', trim($this->header->detailIdsToBeDeleted, ','));
+        
         $total = '0.00';
 
         foreach ($this->details as $detail) {
-            $total += $detail->quantity;
+            if (empty($detail->id) || !in_array($detail->id, $detailIdsToBeDeleted)) {
+                $total += $detail->quantity;
+            }
         }
         
         return $total;
     }
     
     public function getTotalQuantityMovementOut() {
+        $detailIdsToBeDeleted = explode(',', trim($this->header->detailIdsToBeDeleted, ','));
+        
         $total = '0.00';
 
         foreach ($this->details as $detail) {
-            $total += $detail->quantity_movement_out;
+            if (empty($detail->id) || !in_array($detail->id, $detailIdsToBeDeleted)) {
+                $total += $detail->quantity_movement_out;
+            }
         }
         
         return $total;
