@@ -117,6 +117,7 @@ $this->menu=array(
                 'branches' => $branches,
                 'companyBanks' => $companyBanks,
                 'bankTransferList' => $bankTransferList,
+                'nonEmptyPaymentTypeIds' => $nonEmptyPaymentTypeIds,
             )); ?>
         </div>
     </div>

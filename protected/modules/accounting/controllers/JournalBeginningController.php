@@ -229,25 +229,36 @@ class JournalBeginningController extends Controller {
             $journalBeginning = $this->instantiate($id);
             $this->loadState($journalBeginning);
 
+            $selectedCoaIds = array();
             if (isset($_POST['selectedIds'])) {
-                $coaIds = array();
-                $coaIds = $_POST['selectedIds'];
-                
-                $ledgerBeginningBalances = JurnalUmum::getLedgerBeginningBalances($coaIds, $journalBeginning->header->transaction_date, $journalBeginning->header->branch_id);
-                
-                $beginningBalances = array();
-                foreach ($ledgerBeginningBalances as $ledgerBeginningBalance) {
-                    $beginningBalances[$ledgerBeginningBalance['coa_id']] = $ledgerBeginningBalance['beginning_balance'];
-                }
+                $selectedCoaIds = $_POST['selectedIds'];
+            }
 
-                foreach ($coaIds as $coaId) {
-                    $journalBeginning->addDetail($coaId);
+            $formCoaIds = array();
+            if (isset($_POST['JournalBeginningDetail'])) {
+                foreach ($_POST['JournalBeginningDetail'] as $postDetailItem) {
+                    $formCoaIds[] = $postDetailItem['coa_id'];
                 }
+            }
 
-                foreach ($journalBeginning->details as $detail) {
-                    $detail->current_balance = isset($beginningBalances[$detail->coa_id]) ? $beginningBalances[$detail->coa_id] : '0.00';
-                    $detail->difference_balance = $detail->balanceDifference;
+            $coaIds = array_merge($selectedCoaIds, $formCoaIds);
+
+            $ledgerBeginningBalances = JurnalUmum::getLedgerBeginningBalances($coaIds, $journalBeginning->header->transaction_date, $journalBeginning->header->branch_id);
+
+            $beginningBalances = array();
+            foreach ($ledgerBeginningBalances as $ledgerBeginningBalance) {
+                $beginningBalances[$ledgerBeginningBalance['coa_id']] = $ledgerBeginningBalance['beginning_balance'];
+            }
+
+            foreach ($selectedCoaIds as $selectedCoaId) {
+                if (!in_array($selectedCoaId, $formCoaIds)) {
+                    $journalBeginning->addDetail($selectedCoaId);
                 }
+            }
+
+            foreach ($journalBeginning->details as $detail) {
+                $detail->current_balance = isset($beginningBalances[$detail->coa_id]) ? $beginningBalances[$detail->coa_id] : '0.00';
+                $detail->difference_balance = $detail->balanceDifference;
             }
 
             $this->renderPartial('_detail', array(

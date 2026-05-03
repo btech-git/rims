@@ -7,6 +7,7 @@
         'paymentInRetailList' => $paymentInRetailList,
         'companyBanks' => $companyBanks,
         'bankTransferList' => $bankTransferList,
+        'nonEmptyPaymentTypeIds' => $nonEmptyPaymentTypeIds,
     )); ?>
 </div>
 

@@ -9,8 +9,10 @@
                 <?php $transferDailyTotals[$companyBank->id] = '0.00'; ?>
             <?php endforeach; ?>
             <?php foreach ($paymentTypes as $paymentType): ?>
-                <th style="text-align: center"><?php echo CHtml::encode(CHtml::value($paymentType, 'name')); ?></th>
-                <?php $paymentDailyTotals[$paymentType->id] = '0.00'; ?>
+                <?php if (in_array($paymentType->id, $nonEmptyPaymentTypeIds)):  ?>
+                    <th style="text-align: center"><?php echo CHtml::encode(CHtml::value($paymentType, 'name')); ?></th>
+                    <?php $paymentDailyTotals[$paymentType->id] = '0.00'; ?>
+                <?php endif; ?>
             <?php endforeach; ?>
             <?php $dailyTotal = '0.00'; ?>
             <th style="text-align: center; font-weight: bold">Total</th>
@@ -38,7 +40,7 @@
                     </td>
                 <?php endforeach; ?>
                 <?php foreach ($paymentInRetailItem as $paymentTypeId => $paymentInRetail): ?>
-                    <?php if ($paymentTypeId != 'name' && $paymentTypeId != 5):  ?>
+                    <?php if (in_array($paymentTypeId, $nonEmptyPaymentTypeIds)):  ?>
                         <td style="text-align: right">
                             <?php echo CHtml::link(Yii::app()->numberFormatter->format('#,##0', $paymentInRetail), array('javascript:;'), array(
                                 'onclick' => 'window.open("' . CController::createUrl('/accounting/cashDailySummary/showTransactionDetailByTypeBranchDate', array(
@@ -88,9 +90,11 @@
                 </td>
             <?php endforeach; ?>
             <?php foreach ($paymentTypes as $paymentType): ?>
-                <td style="text-align: right">
-                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $paymentDailyTotals[$paymentType->id])); ?>
-                </td>
+                <?php if (in_array($paymentType->id, $nonEmptyPaymentTypeIds)):  ?>
+                    <td style="text-align: right">
+                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $paymentDailyTotals[$paymentType->id])); ?>
+                    </td>
+                <?php endif; ?>
             <?php endforeach; ?>
             <td style="text-align: right; font-weight: bold">
                 <?php echo CHtml::hiddenField('TotalDaily', $dailyTotal); ?>

@@ -164,6 +164,15 @@ class CashDailySummaryController extends Controller {
             $lastBranchId = $paymentInRetailRow['branch_id'];
         }
         
+        $nonEmptyPaymentTypeIds = array();
+        foreach ($paymentInRetailList as $paymentInRetailItem) {
+            foreach ($paymentInRetailItem as $paymentTypeId => $amount) {
+                if ($paymentTypeId !== 'name' && $paymentTypeId != 5 && !in_array($paymentTypeId, $nonEmptyPaymentTypeIds) && $amount > '0.00') {
+                    $nonEmptyPaymentTypeIds[] = $paymentTypeId;
+                }
+            }
+        }
+        
         $sql = "SELECT pi.branch_id, pi.company_bank_id, COALESCE(SUM(pi.payment_amount), 0) as total_amount
                 FROM rims_payment_in pi
                 INNER JOIN rims_payment_type pt ON pt.id = pi.payment_type_id
@@ -274,6 +283,7 @@ class CashDailySummaryController extends Controller {
             'branches' => $branches,
             'companyBanks' => $companyBanks,
             'bankTransferList' => $bankTransferList,
+            'nonEmptyPaymentTypeIds' => $nonEmptyPaymentTypeIds,
         ));
     }
     

@@ -46,6 +46,11 @@
                                             ),
                                             'htmlOptions' => array(
                                                 'readonly' => true,
+                                                'onchange' => CHtml::ajax(array(
+                                                    'type' => 'POST',
+                                                    'url' => CController::createUrl('AjaxHtmlAddDetail', array('id' => $journalBeginning->header->id)),
+                                                    'update' => '#detail_div',
+                                                )),
                                             ),
                                         )); ?>
                                         <?php echo CHtml::error($journalBeginning->header, 'date'); ?>
