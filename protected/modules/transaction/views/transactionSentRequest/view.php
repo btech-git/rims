@@ -26,13 +26,13 @@ $this->menu = array(
     <div class="clearfix page-action">
         <?php $ccontroller = Yii::app()->controller->id; ?>
         <?php $ccaction = Yii::app()->controller->action->id; ?>
-        <?php echo CHtml::link('<span class="fa fa-list"></span>Manage Sent Request', Yii::app()->baseUrl . '/transaction/transactionSentRequest/admin', array(
+        <?php echo CHtml::link('<span class="fa fa-list"></span>Manage', Yii::app()->baseUrl . '/transaction/transactionSentRequest/admin', array(
             'class' => 'button cbutton right',
         )); ?>
 
         <?php //if ($model->status_document == "Draft"): ?>
             <?php echo CHtml::link('<span class="fa fa-edit"></span>Edit', Yii::app()->baseUrl . '/transaction/transactionSentRequest/update?id=' . $model->id, array(
-                'class' => 'button cbutton right',
+                'class' => 'button warning right',
                 'style' => 'margin-right:10px',
                 'visible' => Yii::app()->user->checkAccess("sentRequestEdit")
             )); ?>
@@ -46,7 +46,7 @@ $this->menu = array(
        
         <?php if ($model->status_document !== 'Draft' || $model->status_document !== 'Rejected' || $model->status_document !== 'Revised'): ?>
             <?php echo CHtml::link('<span class="fa fa-edit"></span>Print Permintaan Barang', array("pdf", "id" => $model->id), array(
-                'class' => 'button warning right', 
+                'class' => 'button info right', 
                 'style' => 'margin-right:10px', 
                 'target' => 'blank'
             )) ?>
