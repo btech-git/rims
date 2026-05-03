@@ -36,6 +36,14 @@ $('.search-form form').submit(function(){
 ");
 ?>
 
+<style> 
+ .table_wrapper{
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+}
+</style>
+
 <div id="maincontent">
     <div class="row">
         <div class="small-12 columns">
@@ -62,145 +70,149 @@ $('.search-form form').submit(function(){
                 </div>
             </div>
 
-            <div class="grid-view">
-                <h2>TRANSACTION IN</h2>
-                <?php $this->widget('zii.widgets.grid.CGridView', array(
-                    'id' => 'cash-transaction-in-grid',
-                    'dataProvider' => $cashInTransactionDataProvider,
-                    'filter' => null,
-                    'template' => '{items}<div class="clearfix">{summary}{pager}</div>',
-                    'pager' => array(
-                        'cssFile' => false,
-                        'header' => '',
-                    ),
-                    'columns' => array(
-                        array( 
-                            'name' => 'transaction_number', 
-                            'value' => 'CHTml::link($data->transaction_number, array("view", "id"=>$data->id))', 
-                            'type' => 'raw'
+            <div class="relative">
+                <div class="table_wrapper">
+                    <h2>TRANSACTION IN</h2>
+                    <?php $this->widget('zii.widgets.grid.CGridView', array(
+                        'id' => 'cash-transaction-in-grid',
+                        'dataProvider' => $cashInTransactionDataProvider,
+                        'filter' => null,
+                        'template' => '{items}<div class="clearfix">{summary}{pager}</div>',
+                        'pager' => array(
+                            'cssFile' => false,
+                            'header' => '',
                         ),
-                        'transaction_date',
-                        'transaction_time',
-                        array(
-                            'header' => 'COA Credit',
-                            'name' => 'coa_name', 
-                            'value' => '$data->coa != "" ? $data->coa->name : "" '
-                        ),
-                        array(
-                            'name' => 'credit_amount',
-                            'value' => 'number_format($data->credit_amount, 2)',
-                            'htmlOptions' => array(
-                                'style' => 'text-align: right',
+                        'columns' => array(
+                            array( 
+                                'name' => 'transaction_number', 
+                                'value' => 'CHTml::link($data->transaction_number, array("view", "id"=>$data->id))', 
+                                'type' => 'raw'
                             ),
-                        ),
-                        array(
-                            'header' => 'COA Debit',
-                            'value' => 'empty($data->cashTransactionDetails) ? "" : $data->cashTransactionDetails[0]->coa->name'
-                        ),
-                        array(
-                            'header' => 'Debit Amount',
-                            'value' => 'empty($data->cashTransactionDetails) ? "0.00" : number_format($data->totalDetails, 2)',
-                            'htmlOptions' => array(
-                                'style' => 'text-align: right',
+                            'transaction_date',
+                            'transaction_time',
+                            array(
+                                'header' => 'COA Credit',
+                                'name' => 'coa_name', 
+                                'value' => '$data->coa != "" ? $data->coa->name : "" '
                             ),
+                            array(
+                                'name' => 'credit_amount',
+                                'value' => 'number_format($data->credit_amount, 2)',
+                                'htmlOptions' => array(
+                                    'style' => 'text-align: right',
+                                ),
+                            ),
+                            array(
+                                'header' => 'COA Debit',
+                                'value' => 'empty($data->cashTransactionDetails) ? "" : $data->cashTransactionDetails[0]->coa->name'
+                            ),
+                            array(
+                                'header' => 'Debit Amount',
+                                'value' => 'empty($data->cashTransactionDetails) ? "0.00" : number_format($data->totalDetails, 2)',
+                                'htmlOptions' => array(
+                                    'style' => 'text-align: right',
+                                ),
+                            ),
+                            array(
+                                'header' => 'Note',
+                                'value' => '$data->getDetailNote()',
+                            ),
+                            'status',
+                            array(
+                                'header' => 'Approved By',
+                                'value' => '$data->status == "Approved" ? $data->cashTransactionApprovals[0]->supervisor->username : "" ',
+                            ),
+                            array(
+                                'header' => 'Input',
+                                'name' => 'created_datetime',
+                                'filter' => false,
+                                'value' => 'Yii::app()->dateFormatter->format("d MMM yyyy HH:mm:ss", $data->created_datetime)'
+                            ),
+    //                        array(
+    //                            'class' => 'CButtonColumn',
+    //                            'template' => '{view}',
+    //                            'buttons' => array(
+    //                                'view' => array(
+    //                                    'label' => 'view',
+    //                                    'url' => 'Yii::app()->createUrl("transaction/cashTransaction/view", array("id"=>$data->id))',
+    //                                ),
+    //                            ),
+    //                        ),
                         ),
-                        array(
-                            'header' => 'Note',
-                            'value' => '$data->getDetailNote()',
-                        ),
-                        'status',
-                        array(
-                            'header' => 'Approved By',
-                            'value' => '$data->status == "Approved" ? $data->cashTransactionApprovals[0]->supervisor->username : "" ',
-                        ),
-                        array(
-                            'header' => 'Input',
-                            'name' => 'created_datetime',
-                            'filter' => false,
-                            'value' => 'Yii::app()->dateFormatter->format("d MMM yyyy HH:mm:ss", $data->created_datetime)'
-                        ),
-//                        array(
-//                            'class' => 'CButtonColumn',
-//                            'template' => '{view}',
-//                            'buttons' => array(
-//                                'view' => array(
-//                                    'label' => 'view',
-//                                    'url' => 'Yii::app()->createUrl("transaction/cashTransaction/view", array("id"=>$data->id))',
-//                                ),
-//                            ),
-//                        ),
-                    ),
-                )); ?>
+                    )); ?>
+                </div>
             </div>
 
-            <div class="grid-view">
-                <h2>TRANSACTION OUT</h2>
-                <?php $this->widget('zii.widgets.grid.CGridView', array(
-                    'id' => 'cash-transaction-out-grid',
-                    'dataProvider' => $cashOutTransactionDataProvider,
-                    'filter' => NULL,
-                    'template' => '{items}<div class="clearfix">{summary}{pager}</div>',
-                    'pager' => array(
-                        'cssFile' => false,
-                        'header' => '',
-                    ),
-                    'columns' => array(
-                        array( 
-                            'name' => 'transaction_number', 
-                            'value' => 'CHTml::link($data->transaction_number, array("view", "id"=>$data->id))', 
-                            'type' => 'raw'
+            <div class="relative">
+                <div class="table_wrapper">
+                    <h2>TRANSACTION OUT</h2>
+                    <?php $this->widget('zii.widgets.grid.CGridView', array(
+                        'id' => 'cash-transaction-out-grid',
+                        'dataProvider' => $cashOutTransactionDataProvider,
+                        'filter' => NULL,
+                        'template' => '{items}<div class="clearfix">{summary}{pager}</div>',
+                        'pager' => array(
+                            'cssFile' => false,
+                            'header' => '',
                         ),
-                        'transaction_date',
-                        array(
-                            'header' => 'COA Debit',
-                            'name' => 'coa_name', 
-                            'value' => '$data->coa != "" ? $data->coa->name : "" '
-                        ),
-                        array(
-                            'name' => 'debit_amount',
-                            'value' => 'number_format($data->debit_amount, 2)',
-                            'htmlOptions' => array(
-                                'style' => 'text-align: right',
+                        'columns' => array(
+                            array( 
+                                'name' => 'transaction_number', 
+                                'value' => 'CHTml::link($data->transaction_number, array("view", "id"=>$data->id))', 
+                                'type' => 'raw'
                             ),
-                        ),
-                        array(
-                            'header' => 'COA Credit',
-                            'value' => 'empty($data->cashTransactionDetails) ? "" : $data->cashTransactionDetails[0]->coa->name'
-                        ),
-                        array(
-                            'header' => 'Credit Amount',
-                            'value' => 'empty($data->cashTransactionDetails) ? "0.00" : number_format($data->totalDetails, 2)',
-                            'htmlOptions' => array(
-                                'style' => 'text-align: right',
+                            'transaction_date',
+                            array(
+                                'header' => 'COA Debit',
+                                'name' => 'coa_name', 
+                                'value' => '$data->coa != "" ? $data->coa->name : "" '
                             ),
+                            array(
+                                'name' => 'debit_amount',
+                                'value' => 'number_format($data->debit_amount, 2)',
+                                'htmlOptions' => array(
+                                    'style' => 'text-align: right',
+                                ),
+                            ),
+                            array(
+                                'header' => 'COA Credit',
+                                'value' => 'empty($data->cashTransactionDetails) ? "" : $data->cashTransactionDetails[0]->coa->name'
+                            ),
+                            array(
+                                'header' => 'Credit Amount',
+                                'value' => 'empty($data->cashTransactionDetails) ? "0.00" : number_format($data->totalDetails, 2)',
+                                'htmlOptions' => array(
+                                    'style' => 'text-align: right',
+                                ),
+                            ),
+                            array(
+                                'header' => 'Note',
+                                'value' => 'empty($data->cashTransactionDetails) ? "" : $data->cashTransactionDetails[0]->notes',
+                            ),
+                            'status',
+                            array(
+                                'header' => 'Approved By',
+                                'value' => '$data->status == "Approved" ? $data->cashTransactionApprovals[0]->supervisor->username : "" ',
+                            ),
+                            array(
+                                'header' => 'Input',
+                                'name' => 'created_datetime',
+                                'filter' => false,
+                                'value' => 'Yii::app()->dateFormatter->format("d MMM yyyy HH:mm:ss", $data->created_datetime)'
+                            ),
+    //                        array(
+    //                            'class' => 'CButtonColumn',
+    //                            'template' => '{view}',
+    //                            'buttons' => array(
+    //                                'view' => array(
+    //                                    'label' => 'view',
+    //                                    'url' => 'Yii::app()->createUrl("transaction/cashTransaction/view", array("id"=>$data->id))',
+    //                                ),
+    //                            ),
+    //                        ),
                         ),
-                        array(
-                            'header' => 'Note',
-                            'value' => 'empty($data->cashTransactionDetails) ? "" : $data->cashTransactionDetails[0]->notes',
-                        ),
-                        'status',
-                        array(
-                            'header' => 'Approved By',
-                            'value' => '$data->status == "Approved" ? $data->cashTransactionApprovals[0]->supervisor->username : "" ',
-                        ),
-                        array(
-                            'header' => 'Input',
-                            'name' => 'created_datetime',
-                            'filter' => false,
-                            'value' => 'Yii::app()->dateFormatter->format("d MMM yyyy HH:mm:ss", $data->created_datetime)'
-                        ),
-//                        array(
-//                            'class' => 'CButtonColumn',
-//                            'template' => '{view}',
-//                            'buttons' => array(
-//                                'view' => array(
-//                                    'label' => 'view',
-//                                    'url' => 'Yii::app()->createUrl("transaction/cashTransaction/view", array("id"=>$data->id))',
-//                                ),
-//                            ),
-//                        ),
-                    ),
-                )); ?>
+                    )); ?>
+                </div>
             </div>
         </div>
     </div> <!-- end row -->
