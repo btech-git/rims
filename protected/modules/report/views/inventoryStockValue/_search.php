@@ -31,7 +31,11 @@
 
                 <td>
                     <div id="product_sub_brand">
-                        <?php echo CHtml::activeDropDownList($product, 'sub_brand_id', CHtml::listData(SubBrand::model()->findAll(array('order' => 'name ASC')), 'id', 'name'), array(
+                        <?php echo CHtml::activeDropDownList($product, 'sub_brand_id', CHtml::listData(SubBrand::model()->findAll(array(
+                            'condition' => 't.brand_id = :brand_id',
+                            'params' => array(':brand_id' => $product->brand_id),
+                            'order' => 'name ASC'
+                        )), 'id', 'name'), array(
                             'empty' => '-- All --',
                             'order' => 'name',
                             'onchange' => CHtml::ajax(array(
@@ -50,7 +54,11 @@
 
                 <td>
                     <div id="product_sub_brand_series">
-                        <?php echo CHtml::activeDropDownList($product, 'sub_brand_series_id', CHtml::listData(SubBrandSeries::model()->findAll(array('order' => 'name ASC')), 'id', 'name'), array(
+                        <?php echo CHtml::activeDropDownList($product, 'sub_brand_series_id', CHtml::listData(SubBrandSeries::model()->findAll(array(
+                            'condition' => 't.sub_brand_id = :sub_brand_id', 
+                            'params' => array(':sub_brand_id' => $product->sub_brand_id),
+                            'order' => 'name ASC'
+                        )), 'id', 'name'), array(
                             'empty' => '-- All --',
                             'order' => 'name',
                             'onchange' => CHtml::ajax(array(
@@ -81,7 +89,11 @@
 
                 <td>
                     <div id="product_sub_master_category">
-                        <?php echo CHtml::activeDropDownList($product, 'product_sub_master_category_id', CHtml::listData(ProductSubMasterCategory::model()->findAll(array('order' => 'name ASC')), 'id', 'name'), array(
+                        <?php echo CHtml::activeDropDownList($product, 'product_sub_master_category_id', CHtml::listData(ProductSubMasterCategory::model()->findAll(array(
+                            'condition' => 't.product_master_category_id = :product_master_category_id', 
+                            'params' => array(':product_master_category_id' => $product->product_master_category_id),
+                            'order' => 'name ASC'
+                        )), 'id', 'name'), array(
                             'empty' => '-- All --',
                             'order' => 'name',
                             'onchange' => CHtml::ajax(array(
@@ -100,7 +112,11 @@
 
                 <td>
                     <div id="product_sub_category">
-                        <?php echo CHtml::activeDropDownList($product, 'product_sub_category_id', CHtml::listData(ProductSubCategory::model()->findAll(array('order' => 'name ASC')), 'id', 'name'), array(
+                        <?php echo CHtml::activeDropDownList($product, 'product_sub_category_id', CHtml::listData(ProductSubCategory::model()->findAll(array(
+                            'condition' => 't.product_sub_master_category_id = :product_sub_master_category_id', 
+                            'params' => array(':product_sub_master_category_id' => $product->product_sub_master_category_id),
+                            'order' => 'name ASC'
+                        )), 'id', 'name'), array(
                             'empty' => '-- All --',
                             'order' => 'name',
                             'onchange' => CHtml::ajax(array(
