@@ -27,7 +27,7 @@ $this->breadcrumbs = array(
                 'class' => 'button success right', 
                 'style' => 'margin-right:10px',
             )); ?>
-        <?php elseif ($journalVoucher->status != "Draft" && Yii::app()->user->checkAccess("adjustmentJournalSupervisor")): ?>
+        <?php elseif ($journalVoucher->status != "Draft" && Yii::app()->user->checkAccess("cashierHead")): ?>
             <?php echo CHtml::link('<span class="fa fa-edit"></span>Update Approval', Yii::app()->baseUrl . '/accounting/journalAdjustment/updateApproval?headerId=' . $journalVoucher->id, array(
                 'class' => 'button cbutton right', 
                 'style' => 'margin-right:10px',

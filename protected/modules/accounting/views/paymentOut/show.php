@@ -6,7 +6,7 @@
 <h1><?php echo $this->id . '/' . $this->action->id; ?></h1>
 
 <div id="link">
-    <?php if (Yii::app()->user->checkAccess("paymentOutSupervisor") && $paymentOut->status === 'Approved'): ?>
+    <?php if (Yii::app()->user->checkAccess("paymentHead") && $paymentOut->status === 'Approved'): ?>
         <?php echo CHtml::link('<span class="fa fa-check"></span>Verify Transaction', array("/accounting/paymentOut/verify", "id" => $paymentOut->id), array(
             'class' => 'button success right', 
             'style' => 'margin-right:10px', 
@@ -227,7 +227,7 @@
 <br />
 
 <?php $transactions = JurnalUmum::model()->findAllByAttributes(array('kode_transaksi' => $paymentOut->payment_number, 'is_coa_category' => 0)); ?>
-<?php if (Yii::app()->user->checkAccess("paymentOutSupervisor")): ?>
+<?php if (Yii::app()->user->checkAccess("paymentHead")): ?>
     <fieldset>
         <legend>Journal Transactions</legend>
         <table class="report">

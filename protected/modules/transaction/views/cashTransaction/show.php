@@ -9,7 +9,7 @@ $this->breadcrumbs = array(
 ?>
 
 <div id="link">
-    <?php if (Yii::app()->user->checkAccess("cashTransactionSupervisor") && $model->status === 'Approved'): ?>
+    <?php if (Yii::app()->user->checkAccess("cashierHead") && $model->status === 'Approved'): ?>
         <?php echo CHtml::link('<span class="fa fa-check"></span>Verify Transaction', array("/transaction/cashTransaction/verify", "id" => $model->id), array(
             'class' => 'button success right', 
             'style' => 'margin-right:10px', 

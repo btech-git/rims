@@ -21,7 +21,7 @@
             'style'=>'margin-right:10px', 
             'visible'=>Yii::app()->user->checkAccess("workOrderExpenseEdit")
         )); ?>
-    <?php elseif ($workOrderExpense->status != "Draft"): //&& Yii::app()->user->checkAccess("workOrderExpenseSupervisor")): ?>
+    <?php elseif ($workOrderExpense->status != "Draft"): //&& Yii::app()->user->checkAccess("purchaseHead")): ?>
         <?php echo CHtml::link('<span class="fa fa-edit"></span>Update Approval', Yii::app()->baseUrl.'/accounting/workOrderExpense/updateApproval?headerId=' . $workOrderExpense->id , array(
             'class'=>'button success right',
             'style'=>'margin-right:10px', 

@@ -20,7 +20,7 @@ $this->menu = array(
     <div class="clearfix page-action">
         <?php $ccontroller = Yii::app()->controller->id; ?>
         <?php $ccaction = Yii::app()->controller->action->id; ?>
-        <?php echo CHtml::link('<span class="fa fa-list"></span>Manage Return Item', Yii::app()->baseUrl . '/transaction/transactionReturnItem/admin', array('class' => 'button cbutton right')) ?>
+        <?php echo CHtml::link('<span class="fa fa-list"></span>Manage', Yii::app()->baseUrl . '/transaction/transactionReturnItem/admin', array('class' => 'button cbutton right')) ?>
 
         <?php
         $movements = MovementInHeader::model()->findAllByAttributes(array('return_item_id' => $model->id));
@@ -35,7 +35,7 @@ $this->menu = array(
         
         <?php if ($model->status == "Draft" && Yii::app()->user->checkAccess("saleReturnApproval")): ?>
             <?php echo CHtml::link('<span class="fa fa-edit"></span>Approval', Yii::app()->baseUrl . '/transaction/transactionReturnItem/updateApproval?headerId=' . $model->id, array('class' => 'button cbutton right', 'style' => 'margin-right:10px')) ?>
-        <?php elseif ($model->status != "Draft" && Yii::app()->user->checkAccess("saleReturnSupervisor")): ?>
+        <?php elseif ($model->status != "Draft" && Yii::app()->user->checkAccess("operationHead")): ?>
             <?php echo CHtml::link('<span class="fa fa-edit"></span>Update Approval', Yii::app()->baseUrl . '/transaction/transactionReturnItem/updateApproval?headerId=' . $model->id, array('class' => 'button cbutton right', 'style' => 'margin-right:10px')) ?>
         <?php endif; ?>
         

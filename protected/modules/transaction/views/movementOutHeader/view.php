@@ -44,12 +44,12 @@ $this->menu = array(
                 <?php echo CHtml::link('<span class="fa fa-edit"></span>Revisi', Yii::app()->baseUrl . '/transaction/movementOutHeader/update?id=' . $model->id, array(
                     'class' => 'button cbutton right', 
                     'style' => 'margin-right:10px', 
-                    'visible' => Yii::app()->user->checkAccess("movementOutSupervisor")
+                    'visible' => Yii::app()->user->checkAccess("inventoryHead")
                 )); ?>
                 <?php echo CHtml::link('<span class="fa fa-edit"></span>Update Approval', Yii::app()->baseUrl . '/transaction/movementOutHeader/updateApproval?headerId=' . $model->id, array(
                     'class' => 'button cbutton right', 
                     'style' => 'margin-right:10px',
-                    'visible' => Yii::app()->user->checkAccess("movementOutSupervisor")
+                    'visible' => Yii::app()->user->checkAccess("inventoryHead")
                 )) ?>
             <?php endif; ?>
         <?php endif; ?>
@@ -75,7 +75,7 @@ $this->menu = array(
             )); ?>
         <?php endif; ?>
 
-        <?php if (Yii::app()->user->checkAccess("movementOutApproval")): ?>
+        <?php if (Yii::app()->user->checkAccess("inventoryHead")): ?>
             <?php echo CHtml::link('<span class="fa fa-minus"></span>Cancel Transaction', array("/transaction/movementOutHeader/cancel", "id" => $model->id), array(
                 'class' => 'button alert right', 
                 'style' => 'margin-right:10px', 

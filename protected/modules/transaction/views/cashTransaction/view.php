@@ -23,12 +23,12 @@ $this->menu = array(
         <?php $ccontroller = Yii::app()->controller->id; ?>
         <?php $ccaction = Yii::app()->controller->action->id; ?>
 
-        <?php //if (Yii::app()->user->checkAccess("paymentInSupervisor")): ?>
+        <?php if (Yii::app()->user->checkAccess("cashierHead")): ?>
             <?php echo CHtml::link('<span class="fa fa-minus"></span>Cancel Transaction', array("/transaction/cashTransaction/cancel", "id" => $model->id), array(
                 'class' => 'button alert right', 
                 'style' => 'margin-right:10px', 
             )); ?>
-        <?php //endif; ?>
+        <?php endif; ?>
         
         <?php echo CHtml::link('<span class="fa fa-plus"></span>Penyesuaian Jurnal', Yii::app()->baseUrl . '/accounting/journalAdjustment/create', array(
             'class' => 'button success right', 
@@ -47,7 +47,7 @@ $this->menu = array(
                 'class' => 'button success right', 
                 'style' => 'margin-right:10px'
             )); ?>
-        <?php elseif ($model->status != "Draft" && Yii::app()->user->checkAccess("cashTransactionSupervisor")): ?>
+        <?php elseif ($model->status != "Draft" && Yii::app()->user->checkAccess("cashierHead")): ?>
             <?php echo CHtml::link('<span class="fa fa-edit"></span>Update Approval', Yii::app()->baseUrl . '/transaction/cashTransaction/updateApproval?headerId=' . $model->id, array(
                 'class' => 'button success right', 
                 'style' => 'margin-right:10px'
@@ -56,7 +56,7 @@ $this->menu = array(
         
         <?php if ($model->status == "Approved"): ?>
             <?php echo CHtml::link('<span class="fa fa-print"></span>Print', Yii::app()->baseUrl . '/transaction/cashTransaction/pdf?id=' . $model->id, array(
-                'class' => 'button warning right', 
+                'class' => 'button info right', 
                 'style' => 'margin-right:10px', 
             )); ?>
         <?php endif; ?>

@@ -41,7 +41,7 @@ $this->menu = array(
 
         <?php if ($transferRequest->status_document == "Draft" && Yii::app()->user->checkAccess("transferRequestApproval")): ?>
             <?php echo CHtml::link('<span class="fa fa-edit"></span>Approval', Yii::app()->baseUrl . '/transaction/transferRequest/updateApproval?headerId=' . $transferRequest->id, array('class' => 'button cbutton right', 'style' => 'margin-right:10px')) ?>
-        <?php elseif ($transferRequest->status_document != "Draft" && Yii::app()->user->checkAccess("transferRequestApproval")): ?>
+        <?php elseif ($transferRequest->status_document != "Draft" && Yii::app()->user->checkAccess("operationHead")): ?>
             <?php echo CHtml::link('<span class="fa fa-edit"></span>Update Approval', Yii::app()->baseUrl . '/transaction/transferRequest/updateApproval?headerId=' . $transferRequest->id, array('class' => 'button cbutton right', 'style' => 'margin-right:10px')) ?>
         <?php endif; ?>
         

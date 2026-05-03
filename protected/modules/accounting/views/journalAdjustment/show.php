@@ -6,7 +6,7 @@ $this->breadcrumbs = array(
 ?>
 
 <div id="link">
-    <?php if (Yii::app()->user->checkAccess("adjustmentJournalSupervisor") && $journalVoucher->status === 'Approved'): ?>
+    <?php if (Yii::app()->user->checkAccess("cashierHead") && $journalVoucher->status === 'Approved'): ?>
         <?php echo CHtml::link('<span class="fa fa-check"></span>Verify Transaction', array("/accounting/journalAdjustment/verify", "id" => $journalVoucher->id), array(
             'class' => 'button success right', 
             'style' => 'margin-right:10px', 

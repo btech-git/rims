@@ -26,7 +26,7 @@ $this->menu = array(
         <?php endif; ?>
         <?php if ($model->status_document == "Draft" && Yii::app()->user->checkAccess("requestOrderApproval")): ?>
             <?php echo CHtml::link('<span class="fa fa-edit"></span>Approval', Yii::app()->baseUrl . '/transaction/transactionRequestOrder/updateApproval?headerId=' . $model->id, array('class' => 'button cbutton right', 'style' => 'margin-right:10px')) ?>
-        <?php elseif ($model->status_document != "Draft" && Yii::app()->user->checkAccess("requestOrderSupervisor")): ?>
+        <?php elseif ($model->status_document != "Draft" && Yii::app()->user->checkAccess("purchaseHead")): ?>
             <?php echo CHtml::link('<span class="fa fa-edit"></span>Update Approval', Yii::app()->baseUrl . '/transaction/transactionRequestOrder/updateApproval?headerId=' . $model->id, array('class' => 'button cbutton right', 'style' => 'margin-right:10px')) ?>
         <?php endif; ?>
 

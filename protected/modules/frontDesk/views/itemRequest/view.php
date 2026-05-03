@@ -42,7 +42,7 @@ $this->menu = array(
 
         <?php /*if ($itemRequest->status_document == "Draft" && Yii::app()->user->checkAccess("itemRequestApproval")): ?>
             <?php echo CHtml::link('<span class="fa fa-edit"></span>Approval', Yii::app()->baseUrl . '/frontDesk/itemRequest/updateApproval?headerId=' . $itemRequest->id, array('class' => 'button cbutton right', 'style' => 'margin-right:10px')) ?>
-        <?php elseif ($itemRequest->status_document != "Draft" && Yii::app()->user->checkAccess("itemRequestSupervisor")): ?>
+        <?php elseif ($itemRequest->status_document != "Draft" && Yii::app()->user->checkAccess("inventoryHead")): ?>
             <?php echo CHtml::link('<span class="fa fa-edit"></span>Update Approval', Yii::app()->baseUrl . '/frontDesk/itemRequest/updateApproval?headerId=' . $itemRequest->id, array('class' => 'button cbutton right', 'style' => 'margin-right:10px')) ?>
         <?php endif;*/ ?>
         

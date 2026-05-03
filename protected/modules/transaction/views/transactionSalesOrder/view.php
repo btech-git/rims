@@ -50,7 +50,7 @@ $this->menu = array(
                 'class'=>'button success right',
                 'style'=>'margin-right:10px'
             )) ?>
-        <?php elseif ($model->status_document != "Draft" && Yii::app()->user->checkAccess("saleOrderSupervisor")): ?>
+        <?php elseif ($model->status_document != "Draft" && Yii::app()->user->checkAccess("salesHead")): ?>
             <?php echo CHtml::link('<span class="fa fa-edit"></span>Update Approval', Yii::app()->baseUrl.'/transaction/transactionSalesOrder/updateApproval?headerId=' . $model->id , array(
                 'class'=>'button success right',
                 'style'=>'margin-right:10px'
@@ -67,29 +67,6 @@ $this->menu = array(
                 'style' => 'margin-right:10px',
                 'visible' => Yii::app()->user->checkAccess("saleOrderCreate") || Yii::app()->user->checkAccess("saleOrderEdit")
             )); ?>
-        <?php /*else: ?>
-            <?php echo CHtml::button('Generate Invoice', array(
-                'id' => 'invoice-button',
-                'name' => 'Invoice',
-                'class' => 'button cbutton right',
-                'style' => 'margin-right:10px',
-                'onclick' => ' 
-                if (confirm("Invoice for this sales order has been created. are you sure to reGENERATE it?")){
-                    $.ajax({
-                        type: "POST",
-                        //dataType: "JSON",
-                        url: "' . CController::createUrl('generateInvoice', array('id' => $model->id)) . '",
-                        data: $("form").serialize(),
-                        success: function(html) {
-                            alert("Invoice Succesfully Generated");
-                            location.reload();
-                        },
-                    })
-                } else {
-                    alert("No new invoice generated.");
-                }
-                '
-            ));*/ ?>
         <?php endif; ?>
 
         <h1>View Transaction Sales Orders #<?php echo $model->sale_order_no; ?></h1>

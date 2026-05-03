@@ -40,12 +40,12 @@ $this->menu = array(
             <?php echo CHtml::link('<span class="fa fa-plus"></span>Add Supporting Docs', Yii::app()->baseUrl . '/transaction/transactionReceiveItem/addInvoice?id=' . $model->id, array('class' => 'button cbutton right', 'style' => 'margin-right:10px', 'visible' => Yii::app()->user->checkAccess("transaction.transactionReceiveItem.update"))) ?>
         <?php endif; ?>
 
-        <?php //if (Yii::app()->user->checkAccess("saleInvoiceSupervisor")): ?>
+        <?php if (Yii::app()->user->checkAccess("operationHead")): ?>
             <?php echo CHtml::link('<span class="fa fa-minus"></span>Cancel Transaction', array("/transaction/transactionReceiveItem/cancel", "id" => $model->id), array(
                 'class' => 'button alert right', 
                 'style' => 'margin-right:10px', 
             )); ?>
-        <?php //endif; ?>
+        <?php endif; ?>
         
         <?php if (empty($model->user_id_cancelled)): ?>
             <?php echo CHtml::link('<span class="fa fa-print"></span>Print Penerimaan', array("pdf", "id" => $model->id), array(

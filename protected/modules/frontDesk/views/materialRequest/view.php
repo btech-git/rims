@@ -44,14 +44,14 @@ $this->menu = array(
                 'class' => 'button success right', 
                 'style' => 'margin-right:10px',
             )) ?>
-        <?php elseif ($materialRequest->status_document != "Draft" && Yii::app()->user->checkAccess("materialRequestSupervisor")): ?>
+        <?php elseif ($materialRequest->status_document != "Draft" && Yii::app()->user->checkAccess("inventoryHead")): ?>
             <?php echo CHtml::link('<span class="fa fa-edit"></span>Update Approval', Yii::app()->baseUrl . '/frontDesk/materialRequest/updateApproval?headerId=' . $materialRequest->id, array(
                 'class' => 'button success right', 
                 'style' => 'margin-right:10px',
             )) ?>
         <?php endif; ?>
         
-        <?php if (Yii::app()->user->checkAccess("materialRequestSupervisor")): ?>
+        <?php if (Yii::app()->user->checkAccess("inventoryHead")): ?>
             <?php echo CHtml::link('<span class="fa fa-minus"></span>Cancel Transaction', array("/frontDesk/materialRequest/cancel", "id" => $materialRequest->id), array(
                 'class' => 'button alert right', 
                 'style' => 'margin-right:10px', 

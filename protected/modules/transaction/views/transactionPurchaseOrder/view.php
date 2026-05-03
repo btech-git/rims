@@ -37,12 +37,12 @@ $this->menu=array(
             <?php echo CHtml::link('<span class="fa fa-edit"></span>Revisi', Yii::app()->baseUrl.'/transaction/transactionPurchaseOrder/update?id=' . $model->id, array(
                 'class'=>'button warning right',
                 'style'=>'margin-right:10px', 
-                'visible' => Yii::app()->user->checkAccess("purchaseOrderSupervisor")
+                'visible' => Yii::app()->user->checkAccess("purchaseHead")
             )); ?>
             <?php echo CHtml::link('<span class="fa fa-edit"></span>Update Approval', Yii::app()->baseUrl.'/transaction/transactionPurchaseOrder/updateApproval?headerId=' . $model->id , array(
                 'class'=>'button success right',
                 'style'=>'margin-right:10px', 
-                'visible' => Yii::app()->user->checkAccess("purchaseOrderSupervisor")
+                'visible' => Yii::app()->user->checkAccess("purchaseHead")
             )); ?>
         <?php endif; ?>
         
@@ -56,7 +56,7 @@ $this->menu=array(
             </div>
         <?php //endif; ?>
 
-        <?php if (Yii::app()->user->checkAccess("saleInvoiceSupervisor")): ?>
+        <?php if (Yii::app()->user->checkAccess("purchaseHead")): ?>
             <?php echo CHtml::link('<span class="fa fa-minus"></span>Cancel Transaction', array("/transaction/transactionPurchaseOrder/cancel", "id" => $model->id), array(
                 'class' => 'button alert left', 
                 'style' => 'margin-right:10px', 

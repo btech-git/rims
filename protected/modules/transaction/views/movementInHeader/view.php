@@ -42,12 +42,12 @@ $this->menu = array(
             <?php echo CHtml::link('<span class="fa fa-edit"></span>Revisi', Yii::app()->baseUrl . '/transaction/movementInHeader/update?id=' . $model->id, array(
                 'class' => 'button warning right', 
                 'style' => 'margin-right:10px', 
-                'visible' => Yii::app()->user->checkAccess("movementInSupervisor")
+                'visible' => Yii::app()->user->checkAccess("inventoryHead")
             )); ?>
             <?php echo CHtml::link('<span class="fa fa-edit"></span>Update Approval', Yii::app()->baseUrl . '/transaction/movementInHeader/updateApproval?headerId=' . $model->id, array(
                 'class' => 'button success right', 
                 'style' => 'margin-right:10px', 
-                'visible' => Yii::app()->user->checkAccess("movementInSupervisor")
+                'visible' => Yii::app()->user->checkAccess("inventoryHead")
             )) ?>
         <?php endif; ?>
         <?php if ($model->status != 'Finished' && $model->status != 'CANCELLED!!!'): ?>
@@ -72,12 +72,12 @@ $this->menu = array(
             )); ?>
         <?php endif; ?>
         
-        <?php //if (Yii::app()->user->checkAccess("saleInvoiceSupervisor")): ?>
+        <?php if (Yii::app()->user->checkAccess("inventoryHead")): ?>
             <?php echo CHtml::link('<span class="fa fa-minus"></span>Cancel Transaction', array("/transaction/movementInHeader/cancel", "id" => $model->id), array(
                 'class' => 'button alert right', 
                 'style' => 'margin-right:10px', 
             )); ?>
-        <?php //endif; ?>
+        <?php endif; ?>
         
         <br />
         
