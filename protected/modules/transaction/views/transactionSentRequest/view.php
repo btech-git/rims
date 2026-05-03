@@ -40,7 +40,7 @@ $this->menu = array(
 
         <?php if ($model->status_document == "Draft" && Yii::app()->user->checkAccess("sentRequestApproval")): ?>
             <?php echo CHtml::link('<span class="fa fa-edit"></span>Approval', Yii::app()->baseUrl . '/transaction/transactionSentRequest/updateApproval?headerId=' . $model->id, array('class' => 'button cbutton right', 'style' => 'margin-right:10px')) ?>
-        <?php elseif ($model->status_document != "Draft" && Yii::app()->user->checkAccess("sentRequestSupervisor")): ?>
+        <?php elseif ($model->status_document != "Draft" && Yii::app()->user->checkAccess("sentRequestApproval")): ?>
             <?php echo CHtml::link('<span class="fa fa-edit"></span>Update Approval', Yii::app()->baseUrl . '/transaction/transactionSentRequest/updateApproval?headerId=' . $model->id, array('class' => 'button cbutton right', 'style' => 'margin-right:10px')) ?>
         <?php endif; ?>
        

@@ -41,11 +41,11 @@ $this->menu = array(
 
         <?php if ($transferRequest->status_document == "Draft" && Yii::app()->user->checkAccess("transferRequestApproval")): ?>
             <?php echo CHtml::link('<span class="fa fa-edit"></span>Approval', Yii::app()->baseUrl . '/transaction/transferRequest/updateApproval?headerId=' . $transferRequest->id, array('class' => 'button cbutton right', 'style' => 'margin-right:10px')) ?>
-        <?php elseif ($transferRequest->status_document != "Draft" && Yii::app()->user->checkAccess("transferRequestSupervisor")): ?>
+        <?php elseif ($transferRequest->status_document != "Draft" && Yii::app()->user->checkAccess("transferRequestApproval")): ?>
             <?php echo CHtml::link('<span class="fa fa-edit"></span>Update Approval', Yii::app()->baseUrl . '/transaction/transferRequest/updateApproval?headerId=' . $transferRequest->id, array('class' => 'button cbutton right', 'style' => 'margin-right:10px')) ?>
         <?php endif; ?>
         
-        <?php if (Yii::app()->user->checkAccess("transferRequestSupervisor")): ?>
+        <?php if (Yii::app()->user->checkAccess("operationHead")): ?>
             <?php echo CHtml::link('<span class="fa fa-minus"></span>Cancel Transaction', array("/transaction/transferRequest/cancel", "id" => $transferRequest->id), array(
                 'class' => 'button alert right', 
                 'style' => 'margin-right:10px', 
