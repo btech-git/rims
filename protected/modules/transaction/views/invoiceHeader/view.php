@@ -15,7 +15,7 @@ $this->breadcrumbs = array(
         <?php $ccaction = Yii::app()->controller->action->id; ?>
 
         <?php if ($model->status !== 'CANCELLED!!!'): ?>
-            <?php if (Yii::app()->user->checkAccess("saleInvoiceSupervisor")): ?>
+            <?php if (Yii::app()->user->checkAccess("salesHead")): ?>
                 <?php echo CHtml::link('<span class="fa fa-minus"></span>Cancel Transaction', array("/transaction/invoiceHeader/cancel", "id" => $model->id), array(
                     'class' => 'button alert right', 
                     'style' => 'margin-right:10px', 
@@ -33,13 +33,6 @@ $this->breadcrumbs = array(
             <?php echo CHtml::link('<span class="fa fa-pencil"></span>Edit', array("/transaction/invoiceHeader/update", "id" => $model->id), array(
                 'class' => 'button primary right', 
                 'style' => 'margin-right:10px', 
-            )); ?>
-        <?php endif; ?>
-        
-        <?php if ($model->status == "Draft" && Yii::app()->user->checkAccess("saleInvoiceSupervisor")): ?>
-            <?php echo CHtml::link('<span class="fa fa-edit"></span>Approval', Yii::app()->baseUrl . '/transaction/invoiceHeader/updateApproval?id=' . $model->id, array(
-                'class' => 'button cbutton right', 
-                'style' => 'margin-right:10px'
             )); ?>
         <?php endif; ?>
         
