@@ -136,7 +136,7 @@ $this->menu = array(
                                     <span class="prefix">Debit</span>
                                 </div>
                                 <div class="small-8 columns">
-                                    <input type="text" readonly="true" value="<?php echo $model->debit_amount; ?>"> 
+                                    <input type="text" readonly="true" value="<?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $model->debit_amount)); ?>"> 
                                 </div>
                             </div>
                         </div>
@@ -147,7 +147,7 @@ $this->menu = array(
                                     <span class="prefix">Credit</span>
                                 </div>
                                 <div class="small-8 columns">
-                                    <input type="text" readonly="true" value="<?php echo $model->credit_amount; ?>"> 
+                                    <input type="text" readonly="true" value="<?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $model->credit_amount)); ?>"> 
                                 </div>
                             </div>
                         </div>
@@ -253,7 +253,7 @@ $this->menu = array(
                                             <span class="prefix">Debit</span>
                                         </div>
                                         <div class="small-8 columns">
-                                            <input type="text" readonly="true" value="<?php echo $model->coa->debit; ?>"> 
+                                            <input type="text" readonly="true" value="<?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $model->coa->debit)); ?>"> 
                                         </div>
                                     </div>
                                 </div>
@@ -263,7 +263,7 @@ $this->menu = array(
                                             <span class="prefix">Credit</span>
                                         </div>
                                         <div class="small-8 columns">
-                                            <input type="text" readonly="true" value="<?php echo $model->coa->credit; ?>"> 
+                                            <input type="text" readonly="true" value="<?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $model->coa->credit)); ?>"> 
                                         </div>
                                     </div>
                                 </div>
@@ -360,8 +360,12 @@ $this->menu = array(
                                         <td style="text-align: center"><?php echo $i + 1; ?></td>
                                         <td class="width1-4"><?php echo CHtml::encode(CHtml::value($header, 'branchAccountCode')); ?></td>
                                         <td class="width1-5"><?php echo CHtml::encode(CHtml::value($header, 'branchAccountName')); ?></td>
-                                        <td class="width1-6" style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $amountDebit)); ?></td>
-                                        <td class="width1-7" style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $amountCredit)); ?></td>
+                                        <td class="width1-6" style="text-align: right">
+                                            <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $amountDebit)); ?>
+                                        </td>
+                                        <td class="width1-7" style="text-align: right">
+                                            <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $amountCredit)); ?>
+                                        </td>
                                     </tr>
 
                                     <?php $totalDebit += $amountDebit; ?>
@@ -373,8 +377,12 @@ $this->menu = array(
                             <tfoot>
                                 <tr>
                                     <td colspan="3" style="text-align: right; font-weight: bold">TOTAL</td>
-                                    <td class="width1-6" style="text-align: right; font-weight: bold; border-top: 1px solid"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $totalDebit)); ?></td>
-                                    <td class="width1-7" style="text-align: right; font-weight: bold; border-top: 1px solid"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $totalCredit)); ?></td>
+                                    <td class="width1-6" style="text-align: right; font-weight: bold; border-top: 1px solid">
+                                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $totalDebit)); ?>
+                                    </td>
+                                    <td class="width1-7" style="text-align: right; font-weight: bold; border-top: 1px solid">
+                                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $totalCredit)); ?>
+                                    </td>
                                 </tr>        
                             </tfoot>
                         </table>
