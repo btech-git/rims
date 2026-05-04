@@ -135,7 +135,7 @@ $this->breadcrumbs = array(
                         <label for="right-label" class="right" style="font-weight:bold;">Reference #</label>
                     </div>
                     <div class="small-9 columns">
-                        <label for=""><?php echo $model->registration_transaction_id != "" ? CHTml::link($model->registrationTransaction->transaction_number, array($model->registrationTransaction->repair_type == "GR" ? "/frontDesk/generalRepairRegistration/view" : "/frontDesk/bodyRepairRegistration/show", "id" => $model->registration_transaction_id), array('target' => 'blank')) : ""; ?></label>
+                        <label for=""><?php echo $model->registration_transaction_id != "" ? CHTml::link($model->registrationTransaction->transaction_number, array($model->registrationTransaction->repair_type == "GR" ? "/frontDesk/generalRepairRegistration/show" : "/frontDesk/bodyRepairRegistration/show", "id" => $model->registration_transaction_id), array('target' => 'blank')) : ""; ?></label>
                     </div>
                 </div>
             </div>

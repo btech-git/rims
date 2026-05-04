@@ -35,7 +35,7 @@
             'buttons'=>array(
                 'views' => array(
                     'label'=>'view',
-                    'url'=>'Yii::app()->createUrl("frontDesk/generalRepairRegistration/view", array("id"=>$data->id))',
+                    'url'=>'Yii::app()->createUrl("frontDesk/registrationTransaction/view", array("id"=>$data->id))',
                 ),
             ),
         ),

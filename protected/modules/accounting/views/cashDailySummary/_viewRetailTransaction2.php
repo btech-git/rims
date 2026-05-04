@@ -11,7 +11,7 @@
         'columns'=>array(
             array(
                 'name' => 'transaction_number', 
-                'value' => 'CHtml::link($data->transaction_number, array("/frontDesk/generalRepairRegistration/view", "id"=>$data->id), array("target" => "_blank"))',
+                'value' => 'CHtml::link($data->transaction_number, array("/frontDesk/registrationTransaction/view", "id"=>$data->id), array("target" => "_blank"))',
                 'type' => 'raw',
             ),
             'transaction_date',

@@ -33,7 +33,7 @@ $this->menu = array(
                 'transaction_date',
                 array(
                     'name' => 'registration_transaction_id', 
-                    'value' => empty($receiveParts->registration_transaction_id) ? "" : CHTml::link($receiveParts->registrationTransaction->transaction_number, array($receiveParts->registrationTransaction->repair_type == "GR" ? "/frontDesk/generalRepairRegistration/view" : "/frontDesk/bodyRepairRegistration/view", "id" => $receiveParts->registration_transaction_id), array('target' => 'blank')),
+                    'value' => empty($receiveParts->registration_transaction_id) ? "" : CHTml::link($receiveParts->registrationTransaction->transaction_number, array("/frontDesk/registrationTransaction/view", "id" => $receiveParts->registration_transaction_id), array('target' => 'blank')),
                     'type'=>'raw',
                 ),
                 array(

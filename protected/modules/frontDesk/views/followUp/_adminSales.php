@@ -53,7 +53,7 @@ Yii::app()->clientScript->registerCss('_report', '
                 </td>
                 <td class="width1-5"><?php echo CHtml::encode(CHtml::value($header, 'registrationTransaction.vehicle_mileage')); ?></td>
                 <td class="width1-4">
-                    <?php echo CHtml::link($header->registrationTransaction->transaction_number, array($header->registrationTransaction->repair_type == "GR" ? "/frontDesk/generalRepairRegistration/view" : "/frontDesk/bodyRepairRegistration/view", "id"=>$header->registration_transaction_id), array("target" => "blank")); ?>
+                    <?php echo CHtml::link($header->registrationTransaction->transaction_number, array("/frontDesk/registrationTransaction/view", "id"=>$header->registration_transaction_id), array('target' => '_blank',)); ?>
                 </td>
                 <td class="width1-5"><?php echo CHtml::encode(CHtml::value($header, 'invoice_number')); ?></td>
                 <td class="width1-6"><?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($header->invoice_date))); ?></td>
@@ -71,3 +71,23 @@ Yii::app()->clientScript->registerCss('_report', '
         <?php endforeach; ?>
     </tbody>
 </table>
+
+<script>
+    $(document).ready(function() {
+        var hasFlash = <?php echo $hasFlash ? 'true' : 'false' ?>;
+        if (hasFlash) {
+            $("#cancel-message-dialog").dialog({modal: 'false'});
+        }
+        $('.page-link').click(function(e) {
+            e.preventDefault();
+            
+            var isMobileSize = window.innerWidth <= 768;
+            
+            if (isMobileSize) {
+                window.location.href = 'viewMobile?id=' + $(this).attr('data-record-id');
+            } else {
+                window.location.href = 'view?id=' + $(this).attr('data-record-id');
+            }
+        });
+    });
+</script>

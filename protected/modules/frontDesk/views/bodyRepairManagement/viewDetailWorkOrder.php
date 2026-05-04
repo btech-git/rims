@@ -59,9 +59,9 @@ $('.search-form form').submit(function(){
 
 <?php echo CHtml::beginForm(); ?>
 <div id="maincontent">
-        <?php echo CHtml::link('Registration', array('/frontDesk/bodyRepairRegistration/view', 'id'=>$registration->id), array('target' => '_blank', 'class'=>'button primary right')); ?>
-        <span style="float: right">&nbsp;&nbsp;&nbsp;</span>
-        <?php echo CHtml::link('Inspection', array('/frontDesk/vehicleInspection/create', 'vehicleId'=>$registration->vehicle_id, 'wonumber' => $registration->work_order_number), array('target' => '_blank', 'class'=>'button success right')); ?>
+    <?php echo CHtml::link('Registration', array('/frontDesk/registrationTransaction/view', 'id'=>$registration->id), array('target' => '_blank',)); ?>
+    <span style="float: right">&nbsp;&nbsp;&nbsp;</span>
+    <?php echo CHtml::link('Inspection', array('/frontDesk/vehicleInspection/create', 'vehicleId'=>$registration->vehicle_id, 'wonumber' => $registration->work_order_number), array('target' => '_blank', 'class'=>'button success right')); ?>
     <div class="clearfix page-action">
         <h1>Manage Body Repair Progress</h1>
         <div>
@@ -372,65 +372,6 @@ $('.search-form form').submit(function(){
             </table>
         </div>
 
-                    <div>
-                        <?php /* $this->widget('zii.widgets.jui.CJuiTabs', array(
-                          'tabs' => array(
-                          'Work Order' => array(
-                          'content' => $this->renderPartial(
-                          '_viewWorkOrderMechanic',
-                          array(
-                          'registration' => $registration,
-                          'memo' => $memo,
-                          ), true
-                          ),
-                          ),
-                          'Products' => array(
-                          'content' => $this->renderPartial(
-                          '_viewProduct',
-                          array(
-                          'registration' => $registration,
-                          ), true
-                          ),
-                          ),
-                          'Services' => array(
-                          'content' => $this->renderPartial(
-                          '_viewService',
-                          array(
-                          'registration' => $registration,
-                          'registrationService' => $registrationService,
-                          'registrationServiceDataProvider' => $registrationServiceDataProvider,
-                          ), true
-                          ),
-                          ),
-                          'Damages' => array(
-                          'content' => $this->renderPartial(
-                          '_viewDamage',
-                          array(
-                          'registration' => $registration,
-                          'registrationDamage' => $registrationDamage,
-                          'registrationDamageDataProvider' => $registrationDamageDataProvider,
-                          ), true
-                          ),
-                          ),
-                          'Service History' => array(
-                          'content' => $this->renderPartial(
-                          '_viewServiceHistory',
-                          array(
-                          'registration' => $registration,
-                          'vehicle' => $vehicle,
-                          ), true
-                          ),
-                          ),
-                          ),
-                          // additional javascript options for the tabs plugin
-                          'options' => array(
-                          'collapsible' => true,
-                          ),
-                          // set id for this widgets
-                          'id' => 'view_tab',
-                          )); */ ?>
-                    </div>
-
         <br />
 
         <div>
@@ -506,3 +447,19 @@ $('.search-form form').submit(function(){
 <?php endif; ?>
 
 <?php echo CHtml::endForm(); ?>  
+
+<script>
+    $(document).ready(function() {
+        $('.page-link').click(function(e) {
+            e.preventDefault();
+            
+            var isMobileSize = window.innerWidth <= 768;
+            
+            if (isMobileSize) {
+                window.location.href = 'viewMobile?id=' + $(this).attr('data-record-id');
+            } else {
+                window.location.href = 'view?id=' + $(this).attr('data-record-id');
+            }
+        });
+    });
+</script>

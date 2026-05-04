@@ -3,33 +3,23 @@
 /* @var $model Brand */
 
 $this->breadcrumbs = array(
-    'Product',
-    'Brands' => array('admin'),
-    'Manage Brands',
+    'Transaction',
+    'Pricing Request' => array('admin'),
+    'Manage',
 );
 
 Yii::app()->clientScript->registerScript('search', "
     $('.search-button').click(function(){
-	$('.search-form').slideToggle(600);
-	$('.bulk-action').toggle();
-	$(this).toggleClass('active');
-        
-	if ($(this).hasClass('active')) {
-            $(this).text('');
-	} else {
-            $(this).text('Advanced Search');
-	}
-        
-	return false;
+        $('.search-form').toggle();
+        return false;
     });
-    
-    $('.search-form form').submit(function() {
-	$('#brand-grid').yiiGridView('update', {
+
+    $('.search-form form').submit(function(){
+        $('#product-pricing-grid').yiiGridView('update', {
             data: $(this).serialize()
-	});
-        
-	return false;
-});
+        });
+        return false;
+    });
 ");
 ?>
 
@@ -39,23 +29,23 @@ Yii::app()->clientScript->registerScript('search', "
         <h2>Manage Permintaan Harga</h2>
     </div>
 
-<!--    <div class="search-bar">
+    <div class="search-bar">
         <div class="clearfix button-bar">
             <a href="#" class="search-button right button cbutton secondary">Advanced Search</a>  
             <div class="clearfix"></div>
             <div class="search-form" style="display:none">
-                <?php /*$this->renderPartial('_search', array(
+                <?php $this->renderPartial('_search', array(
                     'model' => $model,
-                ));*/ ?>
-            </div> search-form 
+                )); ?>
+            </div>
         </div>
-    </div>-->
+    </div>
     
     <div class="grid-view">
         <?php $this->widget('zii.widgets.grid.CGridView', array(
             'id' => 'product-pricing-grid',
             'dataProvider' => $dataProvider,
-            'filter' => $model,
+            'filter' => null,
             'template' => '<div style="overflow-x:scroll ; overflow-y: hidden; margin-bottom: 1.25rem;">{items}</div><div class="clearfix">{summary}{pager}</div>',
             'pager' => array(
                 'cssFile' => false,

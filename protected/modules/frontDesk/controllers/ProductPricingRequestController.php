@@ -234,6 +234,42 @@ class ProductPricingRequestController extends Controller {
             'historis' => $historis,
         ));
     }
+    
+    public function actionAjaxHtmlUpdateCarModelSelect() {
+        if (Yii::app()->request->isAjaxRequest) {
+            $model = new ProductPricingRequestHeader('search');
+            $model->unsetAttributes();  // clear any default values
+
+            if (isset($_GET['ProductPricingRequestHeader'])) {
+                $model->attributes = $_GET['ProductPricingRequestHeader'];
+            }
+
+            $carMakeId = isset($_GET['ProductPricingRequestHeader']['vehicle_car_make_id']) ? $_GET['ProductPricingRequestHeader']['vehicle_car_make_id'] : 0;
+
+            $this->renderPartial('_carModelSelect', array(
+                'model' => $model,
+                'carMakeId' => $carMakeId,
+            ));
+        }
+    }
+    
+    public function actionAjaxHtmlUpdateCarSubModelSelect() {
+        if (Yii::app()->request->isAjaxRequest) {
+            $model = new ProductPricingRequestHeader('search');
+            $model->unsetAttributes();  // clear any default values
+
+            if (isset($_GET['ProductPricingRequestHeader'])) {
+                $model->attributes = $_GET['ProductPricingRequestHeader'];
+            }
+
+            $carModelId = isset($_GET['ProductPricingRequestHeader']['vehicle_car_model_id']) ? $_GET['ProductPricingRequestHeader']['vehicle_car_model_id'] : 0;
+
+            $this->renderPartial('_carSubModelSelect', array(
+                'model' => $model,
+                'carModelId' => $carModelId,
+            ));
+        }
+    }
 
     public function instantiate($id, $actionType) {
         if (empty($id)) {

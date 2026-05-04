@@ -36,9 +36,12 @@
                 <tr style="background-color: <?php echo $activeRegistrationItem->status == 'Finished' ? 'greenyellow' : 'salmon'; ?>">
                     <td><?php echo CHtml::encode($runningNumber); ?></td>
                     <td>
-                        <?php echo CHtml::link($activeRegistrationItem->transaction_number, Yii::app()->createUrl("frontDesk/generalRepairRegistration/view", array(
-                            "id" => $activeRegistrationItem->id
-                        )), array('target' => '_blank', 'style' => 'color:blue; text-decoration:underline')); ?>
+                        <?php echo CHtml::link($activeRegistrationItem->transaction_number, array("view", "id"=>$activeRegistrationItem->id), array(
+                            "class" => "page-link", 
+                            "data-record-id" => $activeRegistrationItem->id, 
+                            'target' => '_blank', 
+                            'style' => 'color:blue; text-decoration:underline'
+                        )); ?>
                     </td>
                     <td><?php echo CHtml::encode(Yii::app()->dateFormatter->format("d MMM yyyy HH:mm:ss", strtotime(CHtml::value($activeRegistrationItem, 'transaction_date')))); ?></td>
                     <td><?php echo CHtml::encode(CHtml::value($activeRegistrationItem, 'vehicle.plate_number')); ?></td>

@@ -3,46 +3,49 @@
 /* @var $model Brand */
 
 $this->breadcrumbs = array(
-    'Product',
-    'Brands' => array('admin'),
-    'Manage Brands',
+    'Transaction',
+    'Pricing Request' => array('admin'),
+    'Manage',
 );
 
 Yii::app()->clientScript->registerScript('search', "
     $('.search-button').click(function(){
-	$('.search-form').slideToggle(600);
-	$('.bulk-action').toggle();
-	$(this).toggleClass('active');
-        
-	if ($(this).hasClass('active')) {
-            $(this).text('');
-	} else {
-            $(this).text('Advanced Search');
-	}
-        
-	return false;
+        $('.search-form').toggle();
+        return false;
     });
-    
-    $('.search-form form').submit(function() {
-	$('#brand-grid').yiiGridView('update', {
+
+    $('.search-form form').submit(function(){
+        $('#reply-pricing-grid').yiiGridView('update', {
             data: $(this).serialize()
-	});
-        
-	return false;
-});
+        });
+        return false;
+    });
 ");
 ?>
 
 <div id="maincontent">
     <div class="clearfix page-action">
+        <?php echo CHtml::link('<span class="fa fa-plus"></span>Permintaan Harga', Yii::app()->baseUrl . '/frontDesk/productPricingRequest/create', array('class' => 'button success right')) ?>
         <h2>Manage Permintaan Harga</h2>
     </div>
 
+    <div class="search-bar">
+        <div class="clearfix button-bar">
+            <a href="#" class="search-button right button cbutton secondary">Advanced Search</a>  
+            <div class="clearfix"></div>
+            <div class="search-form" style="display:none">
+                <?php $this->renderPartial('_search', array(
+                    'model' => $model,
+                )); ?>
+            </div>
+        </div>
+    </div>
+    
     <div class="grid-view">
         <?php $this->widget('zii.widgets.grid.CGridView', array(
-            'id' => 'product-pricing-grid',
+            'id' => 'reply-pricing-grid',
             'dataProvider' => $dataProviderRequest,
-            'filter' => $model,
+            'filter' => null,
             'template' => '<div style="overflow-x:scroll ; overflow-y: hidden; margin-bottom: 1.25rem;">{items}</div><div class="clearfix">{summary}{pager}</div>',
             'pager' => array(
                 'cssFile' => false,
@@ -118,7 +121,7 @@ Yii::app()->clientScript->registerScript('search', "
 
     <div class="grid-view">
         <?php $this->widget('zii.widgets.grid.CGridView', array(
-            'id' => 'product-pricing-grid',
+            'id' => 'pending-pricing-grid',
             'dataProvider' => $dataProviderReply,
             'filter' => $model,
             'template' => '{items}<div class="clearfix">{summary}{pager}</div>',

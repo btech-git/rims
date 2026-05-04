@@ -18,7 +18,7 @@ $this->breadcrumbs = array(
                 'dateTime',
                 array(
                     'name' => 'registration_transaction_id', 
-                    'value' => empty($materialRequest->registration_transaction_id) ? "" : CHtml::link($materialRequest->registrationTransaction->transaction_number, array($materialRequest->registrationTransaction->repair_type == "GR" ? "/frontDesk/generalRepairRegistration/view" : "/frontDesk/bodyRepairRegistration/view", "id" => $materialRequest->registration_transaction_id), array('target' => 'blank')),
+                    'value' => empty($materialRequest->registration_transaction_id) ? "" : CHtml::link($materialRequest->registrationTransaction->transaction_number, array("/frontDesk/registrationTransaction/view", "id" => $materialRequest->registration_transaction_id), array('target' => '_blank',)),
                     'type'=>'raw',
                 ),
                 array(
@@ -96,5 +96,23 @@ $this->breadcrumbs = array(
         'id' => 'view_tab',
     )); ?>
 </div>
-	
 
+<script>
+    $(document).ready(function() {
+        var hasFlash = <?php echo $hasFlash ? 'true' : 'false' ?>;
+        if (hasFlash) {
+            $("#cancel-message-dialog").dialog({modal: 'false'});
+        }
+        $('.page-link').click(function(e) {
+            e.preventDefault();
+            
+            var isMobileSize = window.innerWidth <= 768;
+            
+            if (isMobileSize) {
+                window.location.href = 'viewMobile?id=' + $(this).attr('data-record-id');
+            } else {
+                window.location.href = 'view?id=' + $(this).attr('data-record-id');
+            }
+        });
+    });
+</script>
