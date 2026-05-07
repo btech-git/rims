@@ -37,6 +37,7 @@ Yii::app()->clientScript->registerCss('_report', '
                 <th class="width1-8">Total Parts (Rp)</th>
                 <th class="width1-9">Total Service (Rp)</th>
                 <th class="width1-10">Date last Invoice</th>
+                <th class="width1-11">Duration from last Invoice</th>
                 <th class="width1-10">Date 1st Invoice</th>
                 <th class="width1-11">Duration from 1st Invoice</th>
             </tr>
@@ -88,6 +89,13 @@ Yii::app()->clientScript->registerCss('_report', '
                     </td>
                     <td style="text-align: right">
                         <?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime(CHtml::value($invoiceLatest, 'invoice_date')))); ?>
+                    </td>
+                    <td style="text-align: center">
+                        <?php $startLatestSeconds = strtotime($invoiceLatest->invoice_date); ?>
+                        <?php $endLatesSeconds = strtotime($endDate); ?> 
+                        <?php $secondsLatestDiff = $endLatesSeconds - $startLatestSeconds; ?>
+                        <?php $daysLatestDiff = round($secondsLatestDiff / (60 * 60 * 24)); ?>
+                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $daysLatestDiff)); ?>
                     </td>
                     <td style="text-align: right">
                         <?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime(CHtml::value($invoiceHeader, 'invoice_date')))); ?>

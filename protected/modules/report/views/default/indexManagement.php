@@ -136,6 +136,11 @@
                                         'visible' => Yii::app()->user->checkAccess('director')
                                     ),
                                     array(
+                                        'label' => 'Outstanding Sales Invoice', 
+                                        'url' => array('/report/outstandingSaleInvoice/summary'), 
+                                        'visible' => Yii::app()->user->checkAccess('director')
+                                    ),
+                                    array(
                                         'label' => 'Outstanding Work Order', 
                                         'url' => array('/report/outstandingWorkOrder/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('director')

@@ -28,6 +28,17 @@
                 <div class="field">
                     <div class="row collapse">
                         <div class="small-4 columns">
+                            <span class="prefix">Estimasi Tanggal Keluar</span>
+                        </div>
+                        <div class="small-8 columns">
+                            <input type="text" readonly="true" value="<?php echo Yii::app()->dateFormatter->format("d MMM yyyy", strtotime($model->estimate_discharge_date)); ?>"> 
+                        </div>
+                    </div>
+                </div>
+
+                <div class="field">
+                    <div class="row collapse">
+                        <div class="small-4 columns">
                             <span class="prefix">Repair Type</span>
                         </div>
                         <div class="small-8 columns">
@@ -75,7 +86,7 @@
                             <span class="prefix">Vehicle Status</span>
                         </div>
                         <div class="small-8 columns">
-                            <input type="text" readonly="true" value="<?php echo $model->vehicle->status_location; ?>"> 
+                            <input type="text" readonly="true" value="<?php echo CHtml::encode(CHtml::value($model, 'vehicle.status_location')); ?>"> 
                         </div>
                     </div>
                 </div>
@@ -86,7 +97,7 @@
                             <span class="prefix">Sales</span>
                         </div>
                         <div class="small-8 columns">
-                            <input type="text" readonly="true" value="<?php echo !empty($model->employee_id_sales_person) ? $model->employeeIdSalesPerson->name : ''; ?>"> 
+                            <input type="text" readonly="true" value="<?php echo CHtml::encode(CHtml::value($model, 'employeeIdSalesPerson.name')); ?>"> 
                         </div>
                     </div>
                 </div>
@@ -97,7 +108,7 @@
                             <span class="prefix">Branch</span>
                         </div>
                         <div class="small-8 columns">
-                            <input type="text" readonly="true" value="<?php echo $model->branch != null ? $model->branch->name : ''; ?>">
+                            <input type="text" readonly="true" value="<?php echo CHtml::encode(CHtml::value($model, 'branch.name')); ?>">
                         </div>
                     </div>
                 </div>
@@ -105,14 +116,58 @@
                 <div class="field">
                     <div class="row collapse">
                         <div class="small-4 columns">
-                            <span class="prefix">Assigned Mechanic</span>
+                            <span class="prefix">Lead Mechanic</span>
                         </div>
                         <div class="small-8 columns">
-                            <input type="text" readonly="true" value="<?php echo !empty($model->employee_id_assign_mechanic) ? $model->employeeIdAssignMechanic->name : ''; ?>"> 
+                            <input type="text" readonly="true" value="<?php echo CHtml::encode(CHtml::value($model, 'employeeIdAssignMechanic.name')); ?>"> 
                         </div>
                     </div>
                 </div>
                 
+                <div class="field">
+                    <div class="row collapse">
+                        <div class="small-4 columns">
+                            <span class="prefix">Mechanic Helper 1</span>
+                        </div>
+                        <div class="small-8 columns">
+                            <input type="text" readonly="true" value="<?php echo CHtml::encode(CHtml::value($model, 'employeeIdMechanicHelper1.name')); ?>"> 
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="field">
+                    <div class="row collapse">
+                        <div class="small-4 columns">
+                            <span class="prefix">Mechanic Helper 2</span>
+                        </div>
+                        <div class="small-8 columns">
+                            <input type="text" readonly="true" value="<?php echo CHtml::encode(CHtml::value($model, 'employeeIdMechanicHelper2.name')); ?>"> 
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="field">
+                    <div class="row collapse">
+                        <div class="small-4 columns">
+                            <span class="prefix">Mechanic Helper 3</span>
+                        </div>
+                        <div class="small-8 columns">
+                            <input type="text" readonly="true" value="<?php echo CHtml::encode(CHtml::value($model, 'employeeIdMechanicHelper3.name')); ?>"> 
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="field">
+                    <div class="row collapse">
+                        <div class="small-4 columns">
+                            <span class="prefix">SPK Customer #</span>
+                        </div>
+                        <div class="small-8 columns">
+                            <input type="text" readonly="true" value="<?php echo $model->customer_work_order_number; ?>"> 
+                        </div>
+                    </div>
+                </div>
+
                 <div class="field">
                     <div class="row collapse">
                         <div class="small-4 columns">
@@ -131,7 +186,7 @@
                                 <span class="prefix">Insurance Company</span>
                             </div>
                             <div class="small-8 columns">
-                                <input type="text" readonly="true" value="<?php echo $model->insuranceCompany->name; ?>"> 
+                                <input type="text" readonly="true" value="<?php echo CHtml::encode(CHtml::value($invoice, 'insuranceCompany.name')); ?>"> 
                             </div>
                         </div>
                     </div>
@@ -178,7 +233,7 @@
                             <span class="prefix">Work Order date</span>
                         </div>
                         <div class="small-8 columns">
-                            <input type="text" readonly="true" value="<?php echo $model->work_order_date; ?>"> 
+                            <input type="text" readonly="true" value="<?php echo Yii::app()->dateFormatter->format("d MMM yyyy", strtotime($model->work_order_date)); ?>"> 
                         </div>
                     </div>
                 </div>
@@ -201,7 +256,7 @@
                             <span class="prefix">Status Barang</span>
                         </div>
                         <div class="small-8 columns">
-                            <input type="text" readonly="true" value="<?php echo ($model->totalQuantityMovementLeft > 0) ? 'Pending' : 'Completed'; ?>"> 
+                            <input type="text" readonly="true" value="<?php echo ($model->registrationProducts != null && $model->totalQuantityMovementLeft > 0) ? 'Pending' : 'Completed'; ?>"> 
                         </div>
                     </div>
                 </div>
@@ -224,7 +279,7 @@
                                 <span class="prefix">User Created</span>
                             </div>
                             <div class="small-8 columns">
-                                <input type="text" readonly="true" value="<?php echo $model->user != null ? $model->user->username : ''; ?>"> 
+                                <input type="text" readonly="true" value="<?php echo CHtml::encode(CHtml::value($invoice, 'user.username')); ?>"> 
                             </div>
                         </div>
                     </div>
@@ -235,7 +290,7 @@
                                 <span class="prefix">Date Created</span>
                             </div>
                             <div class="small-8 columns">
-                                <input type="text" readonly="true" value="<?php echo $model->created_datetime; ?>"> 
+                                <input type="text" readonly="true" value="<?php echo Yii::app()->dateFormatter->format("d MMM yyyy HH:mm:ss", strtotime($model->created_datetime)); ?>"> 
                             </div>
                         </div>
                     </div>
@@ -246,7 +301,7 @@
                                 <span class="prefix">User Edited</span>
                             </div>
                             <div class="small-8 columns">
-                                <input type="text" readonly="true" value="<?php echo $model->userIdEdited != null ? $model->userIdEdited->username : ''; ?>"> 
+                                <input type="text" readonly="true" value="<?php echo CHtml::encode(CHtml::value($invoice, 'userIdEdited.username')); ?>"> 
                             </div>
                         </div>
                     </div>
@@ -257,7 +312,7 @@
                                 <span class="prefix">Date Edited</span>
                             </div>
                             <div class="small-8 columns">
-                                <input type="text" readonly="true" value="<?php echo $model->edited_datetime; ?>"> 
+                                <input type="text" readonly="true" value="<?php echo $model->edited_datetime == null ? "" : Yii::app()->dateFormatter->format("d MMM yyyy HH:mm:ss", strtotime($model->edited_datetime)); ?>"> 
                             </div>
                         </div>
                     </div>
@@ -268,7 +323,7 @@
                                 <span class="prefix">User Cancelled</span>
                             </div>
                             <div class="small-8 columns">
-                                <input type="text" readonly="true" value="<?php echo $model->userIdCancelled != null ? $model->userIdCancelled->username : ''; ?>"> 
+                                <input type="text" readonly="true" value="<?php echo CHtml::encode(CHtml::value($invoice, 'userIdCancelled.username')); ?>"> 
                             </div>
                         </div>
                     </div>
@@ -279,12 +334,66 @@
                                 <span class="prefix">Date Cancelled</span>
                             </div>
                             <div class="small-8 columns">
-                                <input type="text" readonly="true" value="<?php echo $model->cancelled_datetime; ?>"> 
+                                <input type="text" readonly="true" value="<?php echo $model->cancelled_datetime == null ? "" : Yii::app()->dateFormatter->format("d MMM yyyy HH:mm:ss", strtotime($model->cancelled_datetime)); ?>"> 
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <div class="row collapse">
+                            <div class="small-4 columns">
+                                <span class="prefix">Rework #</span>
+                            </div>
+                            <div class="small-8 columns">
+                                <input type="text" readonly="true" value="<?php echo $model->rework_transaction_number; ?>"> 
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <div class="row collapse">
+                            <div class="small-4 columns">
+                                <span class="prefix">Rework Date</span>
+                            </div>
+                            <div class="small-8 columns">
+                                <input type="text" readonly="true" value="<?php echo $model->rework_transaction_date == null ? "" : Yii::app()->dateFormatter->format("d MMM yyyy", strtotime($model->rework_transaction_date)); ?> . " " . <?php echo $model->rework_transaction_time; ?>"> 
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <div class="row collapse">
+                            <div class="small-4 columns">
+                                <span class="prefix">Rework Note</span>
+                            </div>
+                            <div class="small-8 columns">
+                                <input type="text" readonly="true" value="<?php echo $model->rework_note; ?>"> 
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <div class="row collapse">
+                            <div class="small-4 columns">
+                                <span class="prefix">Rework Mechanic</span>
+                            </div>
+                            <div class="small-8 columns">
+                                <input type="text" readonly="true" value="<?php echo CHtml::encode(CHtml::value($model, 'employeeIdReworkMechanic.name')); ?>"> 
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <div class="row collapse">
+                            <div class="small-4 columns">
+                                <span class="prefix">Rework User Input</span>
+                            </div>
+                            <div class="small-8 columns">
+                                <input type="text" readonly="true" value="<?php echo CHtml::encode(CHtml::value($invoice, 'userIdRework.username')); ?>"> 
                             </div>
                         </div>
                     </div>
                 <?php endif; ?>
-
             </div><!-- end div large -->
         </div>
     </div>

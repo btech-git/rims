@@ -105,36 +105,6 @@ class CustomerVehicleSaleTransactionController extends Controller {
         }
     }
 
-//    public function reportGrandTotal($dataProvider) {
-//        $grandTotal = 0.00;
-//
-//        foreach ($dataProvider->data as $data) {
-//            $grandTotal += $data->total_price;
-//        }
-//
-//        return $grandTotal;
-//    }
-//
-//    public function reportTotalPayment($dataProvider) {
-//        $grandTotal = 0.00;
-//
-//        foreach ($dataProvider->data as $data) {
-//            $grandTotal += $data->payment_amount;
-//        }
-//
-//        return $grandTotal;
-//    }
-//
-//    public function reportTotalRemaining($dataProvider) {
-//        $grandTotal = 0.00;
-//
-//        foreach ($dataProvider->data as $data) {
-//            $grandTotal += $data->payment_left;
-//        }
-//
-//        return $grandTotal;
-//    }
-
     protected function saveToExcel($saleFlowSummary, $startDate, $endDate, $branchId) {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
@@ -150,26 +120,26 @@ class CustomerVehicleSaleTransactionController extends Controller {
 
         $documentProperties = $objPHPExcel->getProperties();
         $documentProperties->setCreator('Raperind Motor');
-        $documentProperties->setTitle('Penjualan Retail Summary');
+        $documentProperties->setTitle('Penjualan Kendaraan Customer');
 
         $worksheet = $objPHPExcel->setActiveSheetIndex(0);
-        $worksheet->setTitle('Penjualan Retail Summary');
+        $worksheet->setTitle('Penjualan Kendaraan Customer');
 
-        $worksheet->mergeCells('A1:U1');
-        $worksheet->mergeCells('A2:U2');
-        $worksheet->mergeCells('A3:U3');
+        $worksheet->mergeCells('A1:X1');
+        $worksheet->mergeCells('A2:X2');
+        $worksheet->mergeCells('A3:X3');
         
-        $worksheet->getStyle('A1:U3')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-        $worksheet->getStyle('A1:U3')->getFont()->setBold(true);
+        $worksheet->getStyle('A1:X3')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->getStyle('A1:X3')->getFont()->setBold(true);
         
         $branch = Branch::model()->findByPk($branchId);
         $worksheet->setCellValue('A1', 'Raperind Motor ' . CHtml::encode(CHtml::value($branch, 'name')));
-        $worksheet->setCellValue('A2', 'Laporan Penjualan Retail Summary');
+        $worksheet->setCellValue('A2', 'Penjualan Kendaraan Customer');
         $worksheet->setCellValue('A3', $startDateFormatted . ' - ' . $endDateFormatted);
 
-        $worksheet->getStyle("A5:U5")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
-        $worksheet->getStyle("A5:U5")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
-        $worksheet->getStyle('A5:U5')->getFont()->setBold(true);
+        $worksheet->getStyle("A5:X5")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A5:X5")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle('A5:X5')->getFont()->setBold(true);
         
         $worksheet->setCellValue('A5', 'No');
         $worksheet->setCellValue('B5', 'RG #');
@@ -181,17 +151,20 @@ class CustomerVehicleSaleTransactionController extends Controller {
         $worksheet->setCellValue('H5', 'Kendaraan');
         $worksheet->setCellValue('I5', 'Plat #');
         $worksheet->setCellValue('J5', 'Status');
-        $worksheet->setCellValue('K5', 'Work Order');
-        $worksheet->setCellValue('L5', 'Movement Out');
-        $worksheet->setCellValue('M5', 'User Movement');
-        $worksheet->setCellValue('N5', 'Invoice');
-        $worksheet->setCellValue('O5', 'Tanggal Invoice');
-        $worksheet->setCellValue('P5', 'Jam');
-        $worksheet->setCellValue('Q5', 'User Invoice');
-        $worksheet->setCellValue('R5', 'Payment In');
-        $worksheet->setCellValue('S5', 'Tanggal Payment');
-        $worksheet->setCellValue('T5', 'Jam');
-        $worksheet->setCellValue('U5', 'User Payment');
+        $worksheet->setCellValue('K5', 'Problem');
+        $worksheet->setCellValue('L5', 'Salesman');
+        $worksheet->setCellValue('M5', 'User RG');
+        $worksheet->setCellValue('N5', 'Work Order');
+        $worksheet->setCellValue('O5', 'Movement Out');
+        $worksheet->setCellValue('P5', 'User Movement');
+        $worksheet->setCellValue('Q5', 'Invoice');
+        $worksheet->setCellValue('R5', 'Tanggal Invoice');
+        $worksheet->setCellValue('S5', 'Jam');
+        $worksheet->setCellValue('T5', 'User Invoice');
+        $worksheet->setCellValue('U5', 'Payment In');
+        $worksheet->setCellValue('V5', 'Tanggal Payment');
+        $worksheet->setCellValue('W5', 'Jam');
+        $worksheet->setCellValue('X5', 'User Payment');
 
         $counter = 6;
 
@@ -220,17 +193,20 @@ class CustomerVehicleSaleTransactionController extends Controller {
             $worksheet->setCellValue("H{$counter}", CHtml::value($header, 'vehicle.carMake.name') . ' - ' . CHtml::value($header, 'vehicle.carModel.name') . ' - ' . CHtml::value($header, 'vehicle.carSubModel.name'));
             $worksheet->setCellValue("I{$counter}", CHtml::value($header, 'vehicle.plate_number'));
             $worksheet->setCellValue("J{$counter}", CHtml::value($header, 'status'));
-            $worksheet->setCellValue("K{$counter}", CHtml::value($header, 'work_order_number'));
-            $worksheet->setCellValue("L{$counter}", CHtml::encode(implode(', ', $movementOutHeaderCodeNumbers)));
-            $worksheet->setCellValue("M{$counter}", CHtml::encode(implode(', ', $movementOutHeaderUsers)));
-            $worksheet->setCellValue("N{$counter}", CHtml::encode(implode(', ', $invoiceHeaderCodeNumbers)));
-            $worksheet->setCellValue("O{$counter}", CHtml::encode(implode(', ', $invoiceHeaderTransactionDates)));
-            $worksheet->setCellValue("P{$counter}", CHtml::encode(implode(', ', $invoiceHeaderTransactionTimes)));
-            $worksheet->setCellValue("Q{$counter}", CHtml::encode(implode(', ', $invoiceHeaderUsers)));
-            $worksheet->setCellValue("R{$counter}", CHtml::encode(implode(', ', $paymentInHeaderCodeNumbers)));
-            $worksheet->setCellValue("S{$counter}", CHtml::encode(implode(', ', $paymentInHeaderDates)));
-            $worksheet->setCellValue("T{$counter}", CHtml::encode(implode(', ', $paymentInHeaderTimes)));
-            $worksheet->setCellValue("U{$counter}", CHtml::encode(implode(', ', $paymentInHeaderUsers)));
+            $worksheet->setCellValue("K{$counter}", CHtml::value($header, 'problem'));
+            $worksheet->setCellValue("L{$counter}", CHtml::value($header, 'employeeIdSalesPerson.name'));
+            $worksheet->setCellValue("M{$counter}", CHtml::value($header, 'user.username'));
+            $worksheet->setCellValue("N{$counter}", CHtml::value($header, 'work_order_number'));
+            $worksheet->setCellValue("O{$counter}", CHtml::encode(implode(', ', $movementOutHeaderCodeNumbers)));
+            $worksheet->setCellValue("P{$counter}", CHtml::encode(implode(', ', $movementOutHeaderUsers)));
+            $worksheet->setCellValue("Q{$counter}", CHtml::encode(implode(', ', $invoiceHeaderCodeNumbers)));
+            $worksheet->setCellValue("R{$counter}", CHtml::encode(implode(', ', $invoiceHeaderTransactionDates)));
+            $worksheet->setCellValue("S{$counter}", CHtml::encode(implode(', ', $invoiceHeaderTransactionTimes)));
+            $worksheet->setCellValue("T{$counter}", CHtml::encode(implode(', ', $invoiceHeaderUsers)));
+            $worksheet->setCellValue("U{$counter}", CHtml::encode(implode(', ', $paymentInHeaderCodeNumbers)));
+            $worksheet->setCellValue("V{$counter}", CHtml::encode(implode(', ', $paymentInHeaderDates)));
+            $worksheet->setCellValue("W{$counter}", CHtml::encode(implode(', ', $paymentInHeaderTimes)));
+            $worksheet->setCellValue("X{$counter}", CHtml::encode(implode(', ', $paymentInHeaderUsers)));
             $counter++;
         }
 
@@ -243,7 +219,7 @@ class CustomerVehicleSaleTransactionController extends Controller {
         ob_end_clean();
 
         header('Content-type: application/vnd.ms-excel');
-        header('Content-Disposition: attachment;filename="penjualan_retail_summary.xls"');
+        header('Content-Disposition: attachment;filename="penjualan_kendaraan_customer.xls"');
         header('Cache-Control: max-age=0');
         
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');

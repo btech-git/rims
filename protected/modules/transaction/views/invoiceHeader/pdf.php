@@ -102,10 +102,10 @@ function tanggal($date) {
                     <div class="purchase-order">
                         <table>
                             <tr>
-                                <th colspan="10" style="text-align: left">SUKU CADANG - SPAREPARTS</th>
+                                <th colspan="10" style="background-color: skyblue;">SUKU CADANG - SPAREPARTS</th>
                             </tr>
                             <tr>
-                                <th style="width: 1%">No</th>
+                                <th style="width: 2%">No</th>
                                 <th style="font-size: 10px">Code</th>
                                 <th style="font-size: 10px">Item Name</th>
                                 <th style="font-size: 10px">Brand Name</th>
@@ -144,10 +144,10 @@ function tanggal($date) {
                     <div class="purchase-order">
                         <table>
                             <tr>
-                                <th colspan="5" style="text-align: left">JASA PERBAIKAN - SERVICE</th>
+                                <th colspan="5" style="background-color: skyblue;">JASA PERBAIKAN - SERVICE</th>
                             </tr>
                             <tr>
-                                <th style="width: 1%">No</th>
+                                <th style="width: 2%">No</th>
                                 <th style="font-size: 10px">Service</th>
                                 <th style="width: 15%; font-size: 10px">Price</th>
                                 <th style="width: 15%; font-size: 10px">Disc</th>

@@ -30,9 +30,15 @@ $this->breadcrumbs = array(
                                     'model' => $model,
                                 ), true)
                             ),
-                            'Customer Vehicle' => array(
+                            'Billing Estimation' => array(
                                 'id' => 'info2',
-                                'content' => $this->renderPartial('_viewCustomer', array(
+                                'content' => $this->renderPartial('_viewBilling', array(
+                                    'model' => $model,
+                                ), true)
+                            ),
+                            'Vehicle Info' => array(
+                                'id' => 'info4',
+                                'content' => $this->renderPartial('_viewVehicle', array(
                                     'model' => $model,
                                 ), true)
                             ),

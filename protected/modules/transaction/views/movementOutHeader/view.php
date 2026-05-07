@@ -16,7 +16,6 @@ $this->menu = array(
 );
 ?>
 
-<!--<h1>View MovementOutHeader #<?php echo $model->id; ?></h1>-->
 <div id="maincontent">
     <div class="clearfix page-action">
         
@@ -24,55 +23,56 @@ $this->menu = array(
         <?php $ccaction = Yii::app()->controller->action->id; ?>
         <?php echo CHtml::link('<span class="fa fa-list"></span>Manage', Yii::app()->baseUrl . '/transaction/movementOutHeader/admin', array('class' => 'button cbutton right', 'visible' => Yii::app()->user->checkAccess("transaction.movementOutHeader.admin"))) ?>
 
-        <?php if ($model->status != 'Draft' || $model->status !== 'CANCELLED!!!'): ?>
-            <?php echo CHtml::link('<span class="fa fa-print"></span>Print Movement Out', Yii::app()->baseUrl.'/transaction/movementOutHeader/pdf?id=' . $model->id, array('class'=>'button warning right', 'style' => 'margin-right:10px', 'target' => 'blank')); ?>
-        <?php endif; ?>
-        
-        <?php if ($model->status !== 'CANCELLED!!!' && $model->status !== 'Approved'): ?>
+        <?php if ($model->status !== 'CANCELLED!!!'): ?>
             <?php if ($model->status == "Draft"): ?>
                 <?php echo CHtml::link('<span class="fa fa-edit"></span>Edit', Yii::app()->baseUrl . '/transaction/movementOutHeader/update?id=' . $model->id, array(
-                    'class' => 'button cbutton right', 
+                    'class' => 'button warning right', 
                     'style' => 'margin-right:10px', 
                     'visible' => Yii::app()->user->checkAccess("movementOutEdit")
                 )); ?>
                 <?php echo CHtml::link('<span class="fa fa-edit"></span>Approval', Yii::app()->baseUrl . '/transaction/movementOutHeader/updateApproval?headerId=' . $model->id, array(
-                    'class' => 'button cbutton right', 
+                    'class' => 'button success right', 
                     'style' => 'margin-right:10px', 
                     'visible' => Yii::app()->user->checkAccess("movementOutApproval")
                 )) ?>
             <?php elseif ($model->status == "Approved"): ?>
                 <?php echo CHtml::link('<span class="fa fa-edit"></span>Revisi', Yii::app()->baseUrl . '/transaction/movementOutHeader/update?id=' . $model->id, array(
-                    'class' => 'button cbutton right', 
+                    'class' => 'button warning right', 
                     'style' => 'margin-right:10px', 
                     'visible' => Yii::app()->user->checkAccess("inventoryHead")
                 )); ?>
+        
                 <?php echo CHtml::link('<span class="fa fa-edit"></span>Update Approval', Yii::app()->baseUrl . '/transaction/movementOutHeader/updateApproval?headerId=' . $model->id, array(
-                    'class' => 'button cbutton right', 
+                    'class' => 'button success right', 
                     'style' => 'margin-right:10px',
                     'visible' => Yii::app()->user->checkAccess("inventoryHead")
                 )) ?>
-            <?php endif; ?>
-        <?php endif; ?>
+        
+                <?php echo CHtml::link('<span class="fa fa-print"></span>Print', Yii::app()->baseUrl.'/transaction/movementOutHeader/pdf?id=' . $model->id, array(
+                    'class'=>'button info right', 
+                    'style' => 'margin-right:10px', 
+                    'target' => 'blank'
+                )); ?>
 
-        <?php if ($model->status !== 'CANCELLED!!!'): ?>
-            <?php echo CHtml::button('Update Delivered', array(
-                'id' => 'detail-button',
-                'name' => 'Detail',
-                'class' => 'button cbutton right',
-                'style' => 'margin-right:10px',
-                'onclick' => ' 
-                    $.ajax({
-                        type: "POST",
-                        //dataType: "JSON",
-                        url: "' . CController::createUrl('updateDelivered', array('id' => $model->id)) . '",
-                        data: $("form").serialize(),
-                        success: function(html) {
-                            alert("Status Succesfully Updated");
-                            location.reload();
-                        },
-                    })
-                '
-            )); ?>
+                <?php echo CHtml::button('Update Delivered', array(
+                    'id' => 'detail-button',
+                    'name' => 'Detail',
+                    'class' => 'button cbutton right',
+                    'style' => 'margin-right:10px',
+                    'onclick' => ' 
+                        $.ajax({
+                            type: "POST",
+                            //dataType: "JSON",
+                            url: "' . CController::createUrl('updateDelivered', array('id' => $model->id)) . '",
+                            data: $("form").serialize(),
+                            success: function(html) {
+                                alert("Status Succesfully Updated");
+                                location.reload();
+                            },
+                        })
+                    '
+                )); ?>
+            <?php endif; ?>
         <?php endif; ?>
 
         <?php if (Yii::app()->user->checkAccess("inventoryHead")): ?>

@@ -98,7 +98,7 @@ function tanggal($date) {
             <?php if (count($generalRepairRegistration->registrationProducts) > 0): ?>
                 <div class="purchase-order">
                     <table>
-                        <tr style="background-color: skyblue">
+                        <tr style="background-color: skyblue;">
                             <th colspan="10">SUKU CADANG - SPAREPARTS</th>
                         </tr>
                         <tr>

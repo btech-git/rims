@@ -1,6 +1,6 @@
 <?php
 
-class OutstandingRegistrationTransactionController extends Controller {
+class OutstandingSaleInvoiceController extends Controller {
 
     public $layout = '//layouts/column1';
     
@@ -24,7 +24,7 @@ class OutstandingRegistrationTransactionController extends Controller {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
 
-        $registrationTransaction = Search::bind(new RegistrationTransaction('search'), isset($_GET['RegistrationTransaction']) ? $_GET['RegistrationTransaction'] : array());
+        $invoiceHeader = Search::bind(new InvoiceHeader('search'), isset($_GET['InvoiceHeader']) ? $_GET['InvoiceHeader'] : array());
 
         $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : date('Y-m-d');
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
@@ -50,10 +50,10 @@ class OutstandingRegistrationTransactionController extends Controller {
         $customerDataProvider = $customer->search();
         $customerDataProvider->pagination->pageVar = 'page_dialog';
 
-        $outstandingRegistrationTransactionSummary = new OutstandingRegistrationTransactionSummary($registrationTransaction->searchReport());
-        $outstandingRegistrationTransactionSummary->setupLoading();
-        $outstandingRegistrationTransactionSummary->setupPaging($pageSize, $currentPage);
-        $outstandingRegistrationTransactionSummary->setupSorting();
+        $outstandingSaleInvoiceSummary = new OutstandingSaleInvoiceSummary($invoiceHeader->search());
+        $outstandingSaleInvoiceSummary->setupLoading();
+        $outstandingSaleInvoiceSummary->setupPaging($pageSize, $currentPage);
+        $outstandingSaleInvoiceSummary->setupSorting();
         $filters = array(
             'startDate' => $startDate,
             'endDate' => $endDate,
@@ -61,15 +61,15 @@ class OutstandingRegistrationTransactionController extends Controller {
             'customerId' => $customerId,
             'plateNumber' => $plateNumber,
         );
-        $outstandingRegistrationTransactionSummary->setupFilter($filters);
+        $outstandingSaleInvoiceSummary->setupFilter($filters);
 
         if (isset($_GET['SaveExcel'])) {
-            $this->saveToExcel($outstandingRegistrationTransactionSummary, $startDate, $endDate, $branchId);
+            $this->saveToExcel($outstandingSaleInvoiceSummary, $startDate, $endDate, $branchId);
         }
 
         $this->render('summary', array(
-            'registrationTransaction' => $registrationTransaction,
-            'outstandingRegistrationTransactionSummary' => $outstandingRegistrationTransactionSummary,
+            'invoiceHeader' => $invoiceHeader,
+            'outstandingSaleInvoiceSummary' => $outstandingSaleInvoiceSummary,
             'startDate' => $startDate,
             'endDate' => $endDate,
             'currentSort' => $currentSort,
@@ -83,7 +83,7 @@ class OutstandingRegistrationTransactionController extends Controller {
 
     public function actionAjaxJsonCustomer() {
         if (Yii::app()->request->isAjaxRequest) {
-            $customerId = (isset($_POST['CustomerId'])) ? $_POST['CustomerId'] : '';
+            $customerId = (isset($_POST['InvoiceHeader']['customer_id'])) ? $_POST['InvoiceHeader']['customer_id'] : '';
             $customer = Customer::model()->findByPk($customerId);
 
             $object = array(
@@ -96,7 +96,7 @@ class OutstandingRegistrationTransactionController extends Controller {
         }
     }
 
-    protected function saveToExcel($outstandingRegistrationTransactionSummary, $startDate, $endDate, $branchId) {
+    protected function saveToExcel($outstandingSaleInvoiceSummary, $startDate, $endDate, $branchId) {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
 
@@ -111,56 +111,56 @@ class OutstandingRegistrationTransactionController extends Controller {
 
         $documentProperties = $objPHPExcel->getProperties();
         $documentProperties->setCreator('Raperind Motor');
-        $documentProperties->setTitle('Outstanding Registration');
+        $documentProperties->setTitle('Outstanding Invoice');
 
         $worksheet = $objPHPExcel->setActiveSheetIndex(0);
-        $worksheet->setTitle('Outstanding Registration');
+        $worksheet->setTitle('Outstanding Invoice');
 
-        $worksheet->mergeCells('A1:K1');
-        $worksheet->mergeCells('A2:K2');
-        $worksheet->mergeCells('A3:K3');
+        $worksheet->mergeCells('A1:M1');
+        $worksheet->mergeCells('A2:M2');
+        $worksheet->mergeCells('A3:M3');
         
-        $worksheet->getStyle('A1:K3')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-        $worksheet->getStyle('A1:K3')->getFont()->setBold(true);
+        $worksheet->getStyle('A1:M5')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->getStyle('A1:M5')->getFont()->setBold(true);
         
         $branch = Branch::model()->findByPk($branchId);
         $worksheet->setCellValue('A1', 'Raperind Motor ' . CHtml::encode(CHtml::value($branch, 'name')));
-        $worksheet->setCellValue('A2', 'Outstanding Registration Transaction');
+        $worksheet->setCellValue('A2', 'Outstanding Invoice Penjualan');
         $worksheet->setCellValue('A3', $startDateFormatted . ' - ' . $endDateFormatted);
 
-        $worksheet->getStyle('A5:K5')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-        $worksheet->getStyle("A5:K5")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
-        $worksheet->getStyle("A5:K5")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A5:M5")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A5:M5")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
-        $worksheet->getStyle('A5:K5')->getFont()->setBold(true);
         $worksheet->setCellValue('A5', 'No');
-        $worksheet->setCellValue('B5', 'RG #');
+        $worksheet->setCellValue('B5', 'Invoice #');
         $worksheet->setCellValue('C5', 'Tanggal');
         $worksheet->setCellValue('D5', 'Customer');
         $worksheet->setCellValue('E5', 'Vehicle');
         $worksheet->setCellValue('F5', 'Plat #');
         $worksheet->setCellValue('G5', 'Status');
-        $worksheet->setCellValue('H5', 'Parts (Rp)');
-        $worksheet->setCellValue('I5', 'Jasa (Rp)');
-        $worksheet->setCellValue('J5', 'Movement #');
-        $worksheet->setCellValue('K5', 'User Input');
+        $worksheet->setCellValue('H5', 'RG #');
+        $worksheet->setCellValue('I5', 'SPK Customer #');
+        $worksheet->setCellValue('J5', 'Total (Rp)');
+        $worksheet->setCellValue('K5', 'Pembayaran (Rp)');
+        $worksheet->setCellValue('L5', 'Sisa (Rp)');
+        $worksheet->setCellValue('M5', 'User Input');
 
         $counter = 6;
 
-        foreach ($outstandingRegistrationTransactionSummary->dataProvider->data as $i => $header) {
-            $movementOutHeaders = $header->movementOutHeaders;
-            $movementOutHeaderCodeNumbers = array_map(function($movementOutHeader) { return $movementOutHeader->movement_out_no; }, $movementOutHeaders);
+        foreach ($outstandingSaleInvoiceSummary->dataProvider->data as $i => $header) {
             $worksheet->setCellValue("A{$counter}", CHtml::encode($i + 1));
-            $worksheet->setCellValue("B{$counter}", CHtml::value($header, 'transaction_number'));
-            $worksheet->setCellValue("C{$counter}", CHtml::value($header, 'transaction_date'));
-            $worksheet->setCellValue("D{$counter}", CHtml::encode(CHtml::value($header, 'customer.name')));
+            $worksheet->setCellValue("B{$counter}", CHtml::value($header, 'invoice_number'));
+            $worksheet->setCellValue("C{$counter}", CHtml::value($header, 'invoice_date'));
+            $worksheet->setCellValue("D{$counter}", CHtml::value($header, 'customer.name'));
             $worksheet->setCellValue("E{$counter}", CHtml::value($header, 'vehicle.carMake.name') . ' - ' . CHtml::value($header, 'vehicle.carModel.name') . ' - ' . CHtml::value($header, 'vehicle.carSubModel.name'));
             $worksheet->setCellValue("F{$counter}", CHtml::value($header, 'vehicle.plate_number'));
             $worksheet->setCellValue("G{$counter}", CHtml::value($header, 'status'));
-            $worksheet->setCellValue("H{$counter}", CHtml::value($header, 'total_product_price'));
-            $worksheet->setCellValue("I{$counter}", CHtml::value($header, 'total_service_price'));
-            $worksheet->setCellValue("J{$counter}", CHtml::encode(implode(', ', $movementOutHeaderCodeNumbers)));
-            $worksheet->setCellValue("K{$counter}", CHtml::value($header, 'user.username'));
+            $worksheet->setCellValue("H{$counter}", CHtml::value($header, 'registrationTransaction.transaction_number'));
+            $worksheet->setCellValue("I{$counter}", CHtml::value($header, 'registrationTransaction.customer_work_order_number'));
+            $worksheet->setCellValue("J{$counter}", CHtml::value($header, 'total_price'));
+            $worksheet->setCellValue("K{$counter}", CHtml::value($header, 'payment_amount'));
+            $worksheet->setCellValue("L{$counter}", CHtml::value($header, 'payment_left'));
+            $worksheet->setCellValue("M{$counter}", CHtml::value($header, 'user.username'));
             $counter++;
         }
 
@@ -173,7 +173,7 @@ class OutstandingRegistrationTransactionController extends Controller {
         ob_end_clean();
 
         header('Content-type: application/vnd.ms-excel');
-        header('Content-Disposition: attachment;filename="outstanding_registration_transaction.xls"');
+        header('Content-Disposition: attachment;filename="outstanding_sale_invoice.xls"');
         header('Cache-Control: max-age=0');
         
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
