@@ -453,7 +453,7 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
     }
 
     public function getTotalPayment() {
-        $total = 0.00;
+        $total = '0.00';
         
         foreach ($this->paymentInDetails as $detail) {
             $total += $detail->amount + $detail->tax_service_amount;
@@ -464,7 +464,7 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
     
     public function getTotalRemaining() {
         
-        return $this->total_price - $this->payment_amount;
+        return $this->total_price - $this->payment_amount - $this->downpayment_amount;
     }
 
     public function getRemainingDueDate() {
