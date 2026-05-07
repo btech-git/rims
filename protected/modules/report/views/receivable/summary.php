@@ -163,6 +163,17 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
     </div>
 </div>
 
+<div class="hide">
+    <div class="right">
+        <?php $this->widget('system.web.widgets.pagers.CLinkPager', array(
+            'itemCount' => $receivableSummary->dataProvider->pagination->itemCount,
+            'pageSize' => $receivableSummary->dataProvider->pagination->pageSize,
+            'currentPage' => $receivableSummary->dataProvider->pagination->getCurrentPage(false),
+        )); ?>
+    </div>
+    <div class="clear"></div>
+</div>
+
 <div>
     <?php $this->beginWidget('zii.widgets.jui.CJuiDialog', array(
         'id' => 'customer-dialog',
