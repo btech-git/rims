@@ -14,7 +14,18 @@ $this->breadcrumbs = array(
             <?php $ccontroller = Yii::app()->controller->id; ?>
             <?php $ccaction = Yii::app()->controller->action->id; ?>
             <?php $invoices = InvoiceHeader::model()->findAllByAttributes(array('registration_transaction_id' => $model->id, 'user_id_cancelled' => null)); ?>
+            <div class="row">
+                 <div class="large-12 columns">
 
+                    <?php if (Yii::app()->user->checkAccess("frontOfficeHead") && empty($model->user_id_cancelled)): ?>
+                        <?php echo CHtml::link('<span class="fa fa-minus"></span>Cancel Transaction', array("/frontDesk/generalRepairRegistration/cancel", "id" => $model->id), array(
+                            'class' => 'button alert right', 
+                            'style' => 'margin-right:10px',
+                        )); ?> 
+                    <?php endif; ?>
+
+                 </div>
+             </div>
             <h3>View Registration #<?php echo $model->transaction_number; ?></h3>
 
             <fieldset>
