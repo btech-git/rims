@@ -177,12 +177,12 @@ class TransactionPurchaseOrderController extends Controller {
             SELECT h.registration_transaction_id
             FROM " . TransactionPurchaseOrder::model()->tableName() . " h
             WHERE t.id = h.registration_transaction_id
-        ) AND t.total_product > 0 AND t.status <> 'Finished' AND user_id_cancelled IS NULL AND t.work_order_date >= '" . AppParam::BEGINNING_TRANSACTION_DATE . "'");
+        ) AND t.total_product > 0 AND t.status <> 'Finished' AND user_id_cancelled IS NULL AND t.transaction_date >= '" . AppParam::BEGINNING_TRANSACTION_DATE . "'");
 
         $registrationTransactionDataProvider = new CActiveDataProvider('RegistrationTransaction', array(
             'criteria' => $registrationTransactionCriteria,
             'sort' => array(
-                "defaultOrder" => "t.work_order_number DESC, t.work_order_date DESC",
+                "defaultOrder" => "t.transaction_number DESC, t.transaction_date DESC",
             ),
         ));
 
@@ -309,12 +309,12 @@ class TransactionPurchaseOrderController extends Controller {
             SELECT h.registration_transaction_id
             FROM " . TransactionPurchaseOrder::model()->tableName() . " h
             WHERE t.id = h.registration_transaction_id
-        ) AND t.total_product > 0 AND t.status <> 'Finished' AND user_id_cancelled IS NULL AND t.work_order_date >= '" . AppParam::BEGINNING_TRANSACTION_DATE . "'");
+        ) AND t.total_product > 0 AND t.status <> 'Finished' AND user_id_cancelled IS NULL AND t.transaction_date >= '" . AppParam::BEGINNING_TRANSACTION_DATE . "'");
 
         $registrationTransactionDataProvider = new CActiveDataProvider('RegistrationTransaction', array(
             'criteria' => $registrationTransactionCriteria,
             'sort' => array(
-                "defaultOrder" => "t.work_order_number DESC, t.work_order_date DESC",
+                "defaultOrder" => "t.transaction_number DESC, t.transaction_date DESC",
             ),
         ));
 
