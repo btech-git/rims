@@ -124,7 +124,7 @@ class CashTransactionController extends Controller {
         // $this->performAjaxValidation($model);
         $cashTransaction = $this->instantiate(null, 'create');
         
-        $cashTransaction->header->branch_id = Yii::app()->user->branch_id;
+//        $cashTransaction->header->branch_id = Yii::app()->user->branch_id;
         $cashTransaction->header->payment_type_id = 1;
         $cashTransaction->header->transaction_date = date('Y-m-d');
         $cashTransaction->header->transaction_time = date('H:i:s');

@@ -76,7 +76,6 @@
                     </div>
                     <div class="small-8 columns">
                         <?php echo $form->hiddenField($cashTransaction->header, 'coa_id'); ?>
-                        <?php echo CHtml::encode(CHtml::value($cashTransaction, 'branch.code')); ?>
                         <?php echo $form->textField($cashTransaction->header, 'coa_name', array(
                             'size' => 20,
                             'maxlength' => 20,
@@ -103,7 +102,7 @@
                     </div>
                     
                     <div class="small-8 columns">
-                        <?php echo CHtml::encode(CHtml::value($cashTransaction->header, 'branch.name'));?>
+                        <?php echo $form->dropDownList($cashTransaction->header, 'branch_id', CHtml::listData(Branch::model()->findAll(), 'id', 'name'), array('empty' => '-- Pilih Branch --'));?>
                         <?php echo $form->error($cashTransaction->header, 'branch_id'); ?>
                     </div>
                 </div>
