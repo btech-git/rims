@@ -174,9 +174,9 @@ class TransactionPurchaseOrderController extends Controller {
         $registrationTransactionCriteria->compare('customer.name', $registrationTransaction->customer_name, true);
         
         $registrationTransactionCriteria->addCondition("NOT EXISTS (
-            SELECT h.registration_transaction_id
+            SELECT h.registration_transaction_id, h.registration_transaction_id_extra_2, h.registration_transaction_id_extra_3
             FROM " . TransactionPurchaseOrder::model()->tableName() . " h
-            WHERE t.id = h.registration_transaction_id
+            WHERE t.id = h.registration_transaction_id OR t.id = h.registration_transaction_id_extra_2 OR t.id = h.registration_transaction_id_extra_3
         ) AND t.total_product > 0 AND t.status <> 'Finished' AND user_id_cancelled IS NULL AND t.transaction_date >= '" . AppParam::BEGINNING_TRANSACTION_DATE . "'");
 
         $registrationTransactionDataProvider = new CActiveDataProvider('RegistrationTransaction', array(
