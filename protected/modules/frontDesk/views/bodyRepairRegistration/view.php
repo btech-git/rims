@@ -167,7 +167,7 @@ $this->breadcrumbs = array(
                         <?php endif;*/ ?>
                     <?php endif; ?>
                     
-                    <?php if (Yii::app()->user->checkAccess("frontOfficeHead") && $model->user_id_cancelled == null): ?>
+                    <?php if (Yii::app()->user->checkAccess("generalRepairApproval") && $model->user_id_cancelled == null): ?>
                         <?php echo CHtml::link('<span class="fa fa-minus"></span>Cancel Transaction', array("/frontDesk/bodyRepairRegistration/cancel", "id" => $model->id), array(
                             'class' => 'button alert right', 
                             'style' => 'margin-right:10px',

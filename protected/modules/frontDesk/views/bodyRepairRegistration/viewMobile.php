@@ -17,7 +17,7 @@ $this->breadcrumbs = array(
             <div class="row">
                  <div class="large-12 columns">
 
-                    <?php if (Yii::app()->user->checkAccess("frontOfficeHead") && empty($model->user_id_cancelled)): ?>
+                    <?php if (Yii::app()->user->checkAccess("generalRepairApproval") && empty($model->user_id_cancelled)): ?>
                         <?php echo CHtml::link('<span class="fa fa-minus"></span>Cancel Transaction', array("/frontDesk/bodyRepairRegistration/cancel", "id" => $model->id), array(
                             'class' => 'button alert right', 
                             'style' => 'margin-right:10px',
