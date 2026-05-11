@@ -173,11 +173,11 @@ class TransactionPurchaseOrderController extends Controller {
         $registrationTransactionCriteria->compare('vehicle.plate_number', $registrationTransaction->plate_number, true);
         $registrationTransactionCriteria->compare('customer.name', $registrationTransaction->customer_name, true);
         
-        $registrationTransactionCriteria->addCondition("NOT EXISTS (
-            SELECT h.registration_transaction_id
-            FROM " . TransactionPurchaseOrder::model()->tableName() . " h
-            WHERE t.id = h.registration_transaction_id
-        ) AND t.total_product > 0 AND t.status <> 'Finished' AND user_id_cancelled IS NULL AND t.transaction_date >= '" . AppParam::BEGINNING_TRANSACTION_DATE . "'");
+//        $registrationTransactionCriteria->addCondition("NOT EXISTS (
+//            SELECT h.registration_transaction_id
+//            FROM " . TransactionPurchaseOrder::model()->tableName() . " h
+//            WHERE t.id = h.registration_transaction_id
+//        ) AND t.total_product > 0 AND t.status <> 'Finished' AND user_id_cancelled IS NULL AND t.transaction_date >= '" . AppParam::BEGINNING_TRANSACTION_DATE . "'");
 
         $registrationTransactionDataProvider = new CActiveDataProvider('RegistrationTransaction', array(
             'criteria' => $registrationTransactionCriteria,
