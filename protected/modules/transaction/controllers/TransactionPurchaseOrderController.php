@@ -161,17 +161,29 @@ class TransactionPurchaseOrderController extends Controller {
             $registrationTransaction->attributes = $_GET['RegistrationTransaction'];
         }
         $registrationTransactionCriteria = new CDbCriteria;
-        $registrationTransactionCriteria->compare('t.transaction_number', $registrationTransaction->transaction_number, true);
-        $registrationTransactionCriteria->compare('t.transaction_date', $registrationTransaction->transaction_date, true);
-        $registrationTransactionCriteria->compare('t.work_order_number', $registrationTransaction->work_order_number, true);
-        $registrationTransactionCriteria->compare('t.sales_order_number', $registrationTransaction->sales_order_number, true);
         $registrationTransactionCriteria->together = 'true';
         $registrationTransactionCriteria->with = array(
             'vehicle', 
             'customer', 
         );
+        $registrationTransactionCriteria->compare('t.transaction_number', $registrationTransaction->transaction_number, true);
+        $registrationTransactionCriteria->compare('t.transaction_date', $registrationTransaction->transaction_date, true);
+        $registrationTransactionCriteria->compare('t.work_order_number', $registrationTransaction->work_order_number, true);
+        $registrationTransactionCriteria->compare('t.sales_order_number', $registrationTransaction->sales_order_number, true);
         $registrationTransactionCriteria->compare('vehicle.plate_number', $registrationTransaction->plate_number, true);
         $registrationTransactionCriteria->compare('customer.name', $registrationTransaction->customer_name, true);
+        
+        $registrationTransactionCriteria->addCondition("NOT EXISTS (
+            SELECT h.registration_transaction_id
+            FROM " . TransactionPurchaseOrder::model()->tableName() . " h
+            INNER JOIN (
+                SELECT purchase_order_id, SUM(purchase_order_quantity_left) AS quantity_left
+                FROM " . TransactionPurchaseOrderDetail::model()->tableName() . "
+                GROUP BY purchase_order_id
+            ) d ON h.id = d.purchase_order_id
+            WHERE t.id = h.registration_transaction_id AND d.quantity_left > 0
+        ) AND t.work_order_number IS NOT NULL AND t.total_product > 0 AND t.status <> 'Finished' AND user_id_cancelled IS NULL AND 
+        t.work_order_date >= '" . AppParam::BEGINNING_TRANSACTION_DATE . "'");
 
         $registrationTransactionDataProvider = new CActiveDataProvider('RegistrationTransaction', array(
             'criteria' => $registrationTransactionCriteria,
@@ -289,13 +301,13 @@ class TransactionPurchaseOrderController extends Controller {
             $registrationTransaction->attributes = $_GET['RegistrationTransaction'];
         }
         $registrationTransactionCriteria = new CDbCriteria;
-        $registrationTransactionCriteria->compare('t.work_order_number', $registrationTransaction->work_order_number, true);
-        $registrationTransactionCriteria->compare('t.sales_order_number', $registrationTransaction->sales_order_number, true);
         $registrationTransactionCriteria->together = 'true';
         $registrationTransactionCriteria->with = array(
             'vehicle', 
             'customer', 
         );
+        $registrationTransactionCriteria->compare('t.work_order_number', $registrationTransaction->work_order_number, true);
+        $registrationTransactionCriteria->compare('t.sales_order_number', $registrationTransaction->sales_order_number, true);
         $registrationTransactionCriteria->compare('vehicle.plate_number', $registrationTransaction->plate_number, true);
         $registrationTransactionCriteria->compare('customer.name', $registrationTransaction->customer_name, true);
 
@@ -308,7 +320,7 @@ class TransactionPurchaseOrderController extends Controller {
                 GROUP BY purchase_order_id
             ) d ON h.id = d.purchase_order_id
             WHERE t.id = h.registration_transaction_id AND d.quantity_left > 0
-        ) AND t.work_order_number IS NOT NULL AND t.total_product > 0 AND t.status NOT LIKE '%CANCELLED%' AND 
+        ) AND t.work_order_number IS NOT NULL AND t.total_product > 0 AND t.status <> 'Finished' AND user_id_cancelled IS NULL AND 
         t.work_order_date >= '" . AppParam::BEGINNING_TRANSACTION_DATE . "'");
 
         $registrationTransactionDataProvider = new CActiveDataProvider('RegistrationTransaction', array(

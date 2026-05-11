@@ -21,7 +21,9 @@ $this->menu = array(
         
         <?php $ccontroller = Yii::app()->controller->id; ?>
         <?php $ccaction = Yii::app()->controller->action->id; ?>
-        <?php echo CHtml::link('<span class="fa fa-list"></span>Manage', Yii::app()->baseUrl . '/transaction/movementOutHeader/admin', array('class' => 'button cbutton right', 'visible' => Yii::app()->user->checkAccess("transaction.movementOutHeader.admin"))) ?>
+        <?php echo CHtml::link('<span class="fa fa-list"></span>Manage', Yii::app()->baseUrl . '/transaction/movementOutHeader/admin', array(
+            'class' => 'button cbutton right', 
+        )); ?>
 
         <?php if ($model->status !== 'CANCELLED!!!'): ?>
             <?php if ($model->status == "Draft"): ?>

@@ -553,20 +553,11 @@ class MovementInHeaderController extends Controller {
                         $jumlah = $movementDetail->quantity * $unitPrice;
 
                         $value = $jumlah;
-//                        $coaMasterTransitId = $movementDetail->product->productMasterCategory->coa_inventory_in_transit;
-//                        $journalReferences[$coaMasterTransitId]['debet_kredit'] = 'K';
-//                        $journalReferences[$coaMasterTransitId]['is_coa_category'] = 1;
-//                        $journalReferences[$coaMasterTransitId]['values'][] = $value;
 
                         $coaSubTransitId = $movementDetail->product->productSubMasterCategory->coa_inventory_in_transit;
                         $journalReferences[$coaSubTransitId]['debet_kredit'] = 'K';
                         $journalReferences[$coaSubTransitId]['is_coa_category'] = 0;
                         $journalReferences[$coaSubTransitId]['values'][] = $value;
-
-//                        $coaMasterInventoryId = $movementDetail->product->productMasterCategory->coa_persediaan_barang_dagang;
-//                        $journalReferences[$coaMasterInventoryId]['debet_kredit'] = 'D';
-//                        $journalReferences[$coaMasterInventoryId]['is_coa_category'] = 1;
-//                        $journalReferences[$coaMasterInventoryId]['values'][] = $value;
 
                         $coaSubInventoryId = $movementDetail->product->productSubMasterCategory->coa_persediaan_barang_dagang;
                         $journalReferences[$coaSubInventoryId]['debet_kredit'] = 'D';
@@ -659,52 +650,64 @@ class MovementInHeaderController extends Controller {
         $movementInShipping->date = date('Y-m-d');
         $movementInShipping->supervisor_id = Yii::app()->user->getId();
 
-        if ($movementInShipping->save() && IdempotentManager::check() && IdempotentManager::build()->save()) {
+        if (IdempotentManager::check() && IdempotentManager::build()->save()) {
 
             InventoryDetail::model()->deleteAllByAttributes(array(
                 'transaction_number' => $movementIn->header->movement_in_number,
             ));
 
-            foreach ($movementIn->details as $movementDetail) {
-                $inventory = Inventory::model()->findByAttributes(array(
-                    'product_id' => $movementDetail->product_id, 
-                    'warehouse_id' => $movementDetail->warehouse_id
-                ));
-
-                if (empty($inventory)) {
-                    $insertInventory = new Inventory();
-                    $insertInventory->product_id = $movementDetail->product_id;
-                    $insertInventory->warehouse_id = $movementDetail->warehouse_id;
-                    $insertInventory->minimal_stock = 0;
-                    $insertInventory->total_stock = $movementDetail->quantity;
-                    $insertInventory->status = 'Active';
-                    $insertInventory->save();
-
-                    $inventoryId = $insertInventory->id;
+            if ($movementInShipping->save()) {
+                if ($movementIn->header->movement_type == 1) {
+                    $notes = $movementIn->header->receiveItem->request_type;
+                } else if ($movementIn->header->movement_type == 2) {
+                    $notes = 'Return Item';
+                } else if ($movementIn->header->movement_type == 3) {
+                    $notes = 'Receive Parts Supply';
                 } else {
-                    $inventory->total_stock += $movementDetail->quantity;
-                    $inventory->update(array('total_stock'));
-
-                    $inventoryId = $inventory->id;
-
+                    $notes = 'Data from Movement In';
                 }
 
-                if ($movementDetail->quantity > 0) {
-                    $inventoryDetail = new InventoryDetail();
-                    $inventoryDetail->inventory_id = $inventoryId;
-                    $inventoryDetail->product_id = $movementDetail->product_id;
-                    $inventoryDetail->warehouse_id = $movementDetail->warehouse_id;
-                    $inventoryDetail->transaction_type = 'MVI';
-                    $inventoryDetail->transaction_number = $movementIn->header->movement_in_number;
-                    $inventoryDetail->transaction_date = $movementIn->header->date_posting;
-                    $inventoryDetail->stock_in = $movementDetail->quantity;
-                    $inventoryDetail->stock_out = 0;
-                    $inventoryDetail->notes = "Data from Movement In";
-                    $inventoryDetail->purchase_price = $movementDetail->product->averageCogs;
-                    $inventoryDetail->transaction_time = date('H:i:s');
-                    $inventoryDetail->production_year = $movementDetail->production_year;
+                foreach ($movementIn->details as $movementDetail) {
+                    $inventory = Inventory::model()->findByAttributes(array(
+                        'product_id' => $movementDetail->product_id, 
+                        'warehouse_id' => $movementDetail->warehouse_id
+                    ));
 
-                    $inventoryDetail->save(false);
+                    if (empty($inventory)) {
+                        $insertInventory = new Inventory();
+                        $insertInventory->product_id = $movementDetail->product_id;
+                        $insertInventory->warehouse_id = $movementDetail->warehouse_id;
+                        $insertInventory->minimal_stock = 0;
+                        $insertInventory->total_stock = $movementDetail->quantity;
+                        $insertInventory->status = 'Active';
+                        $insertInventory->save();
+
+                        $inventoryId = $insertInventory->id;
+                    } else {
+                        $inventory->total_stock += $movementDetail->quantity;
+                        $inventory->update(array('total_stock'));
+
+                        $inventoryId = $inventory->id;
+
+                    }
+
+                    if ($movementDetail->quantity > 0) {
+                        $inventoryDetail = new InventoryDetail();
+                        $inventoryDetail->inventory_id = $inventoryId;
+                        $inventoryDetail->product_id = $movementDetail->product_id;
+                        $inventoryDetail->warehouse_id = $movementDetail->warehouse_id;
+                        $inventoryDetail->transaction_type = 'MVI';
+                        $inventoryDetail->transaction_number = $movementIn->header->movement_in_number;
+                        $inventoryDetail->transaction_date = $movementIn->header->date_posting;
+                        $inventoryDetail->stock_in = $movementDetail->quantity;
+                        $inventoryDetail->stock_out = 0;
+                        $inventoryDetail->notes = $notes;
+                        $inventoryDetail->purchase_price = $movementDetail->product->averageCogs;
+                        $inventoryDetail->transaction_time = date('H:i:s');
+                        $inventoryDetail->production_year = $movementDetail->production_year;
+
+                        $inventoryDetail->save(false);
+                    }
                 }
             }
         }

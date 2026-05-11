@@ -24,7 +24,6 @@ $this->menu = array(
         <?php $ccaction = Yii::app()->controller->action->id; ?>
         <?php echo CHtml::link('<span class="fa fa-list"></span>Manage', Yii::app()->baseUrl . '/transaction/movementInHeader/admin', array(
             'class' => 'button cbutton right', 
-            'visible' => Yii::app()->user->checkAccess("transaction.movementInHeader.admin"), 
         )); ?>
 
         <?php if ($model->status == "Draft" && $model->status !== 'CANCELLED!!!'): ?>
@@ -50,7 +49,8 @@ $this->menu = array(
                 'visible' => Yii::app()->user->checkAccess("inventoryHead")
             )) ?>
         <?php endif; ?>
-        <?php if ($model->status != 'Finished' && $model->status != 'CANCELLED!!!'): ?>
+        
+        <?php if ($model->status == 'Approved'): ?>
             <?php echo CHtml::button('Update Received', array(
                 'id' => 'detail-button',
                 'name' => 'Detail',
