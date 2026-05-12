@@ -14,28 +14,6 @@ class SiteController extends Controller {
         $filterChain->run();
     }
 
-    /**
-     * Declares class-based actions.
-     */
-//    public function actions() {
-//        return array(
-//            // captcha action renders the CAPTCHA image displayed on the contact page
-//            'captcha' => array(
-//                'class' => 'CCaptchaAction',
-//                'backColor' => 0xFFFFFF,
-//            ),
-//            // page action renders "static" pages stored under 'protected/views/site/pages'
-//            // They can be accessed via: index.php?r=site/page&view=FileName
-//            'page' => array(
-//                'class' => 'CViewAction',
-//            ),
-//        );
-//    }
-
-    /**
-     * This is the default 'index' action that is invoked
-     * when an action is not explicitly requested by users.
-     */
     public function actionIndex() {
         if (Yii::app()->user->isGuest) {
             $this->redirect(array('/user/login'));
@@ -101,6 +79,14 @@ class SiteController extends Controller {
         
         if (isset($_GET['ResetFilter'])) {
             $this->redirect(array('marketing'));
+        }
+        
+        if (isset($_GET['ExportProductExcel'])) {
+            $this->saveToExcelProduct($productDataProvider);
+        }
+         
+        if (isset($_GET['ExportServiceExcel'])) {
+            $this->saveToExcelService($serviceDataProvider);
         }
         
         $this->render('marketing', array(
@@ -271,5 +257,147 @@ class SiteController extends Controller {
     public function actionLogout() {
         Yii::app()->user->logout();
         $this->redirect(Yii::app()->homeUrl);
+    }
+    
+    protected function saveToExcelProduct($dataProvider) {
+        set_time_limit(0);
+        ini_set('memory_limit', '1024M');
+        
+        spl_autoload_unregister(array('YiiBase', 'autoload'));
+        include_once Yii::getPathOfAlias('ext.phpexcel.Classes') . DIRECTORY_SEPARATOR . 'PHPExcel.php';
+        spl_autoload_register(array('YiiBase', 'autoload'));
+
+        $objPHPExcel = new PHPExcel();
+
+        $documentProperties = $objPHPExcel->getProperties();
+        $documentProperties->setCreator('Raperind Motor');
+        $documentProperties->setTitle('Data Parts');
+
+        $worksheet = $objPHPExcel->setActiveSheetIndex(0);
+        $worksheet->setTitle('Data Parts');
+
+        $worksheet->mergeCells('A1:J1');
+        $worksheet->mergeCells('A2:J2');
+        $worksheet->mergeCells('A3:J3');
+
+        $worksheet->getStyle('A1:J5')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->getStyle('A1:J5')->getFont()->setBold(true);
+
+        $worksheet->setCellValue('A1', 'Raperind Motor');
+        $worksheet->setCellValue('A2', 'Data Parts');
+
+        $worksheet->getStyle('A5:J5')->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+
+        $worksheet->setCellValue('A5', 'ID');
+        $worksheet->setCellValue('B5', 'Code');
+        $worksheet->setCellValue('C5', 'Name');
+        $worksheet->setCellValue('D5', 'Brand');
+        $worksheet->setCellValue('E5', 'Category');
+        $worksheet->setCellValue('F5', 'Description');
+        $worksheet->setCellValue('G5', 'Production Year');
+        $worksheet->setCellValue('H5', 'Ukuran Ban');
+        $worksheet->setCellValue('I5', 'SAE');
+        $worksheet->setCellValue('J5', 'Min Stok');
+
+        $worksheet->getStyle('A5:J5')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+
+        $counter = 7;
+        foreach ($dataProvider->data as $header) {
+            $worksheet->setCellValue("A{$counter}", CHtml::value($header, 'id'));
+            $worksheet->setCellValue("B{$counter}", CHtml::value($header, 'manufacturer_code'));
+            $worksheet->setCellValue("C{$counter}", CHtml::value($header, 'name'));
+            $worksheet->setCellValue("D{$counter}", CHtml::value($header, 'brand.name') . ' - ' . CHtml::value($header, 'subBrand.name') . ' - ' . CHtml::value($header, 'subBrandSeries.name'));
+            $worksheet->setCellValue("E{$counter}", CHtml::value($header, 'productMasterCategory.name') . ' - ' . CHtml::value($header, 'productSubMasterCategory.name') . ' - ' . CHtml::value($header, 'productSubCategory.name'));
+            $worksheet->setCellValue("F{$counter}", CHtml::value($header, 'description'));
+            $worksheet->setCellValue("G{$counter}", CHtml::value($header, 'production_year'));
+            $worksheet->setCellValue("H{$counter}", CHtml::value($header, 'tireSize.tireName'));
+            $worksheet->setCellValue("I{$counter}", CHtml::value($header, 'oilSae.oilName'));
+            $worksheet->setCellValue("J{$counter}", CHtml::value($header, 'minimum_stock'));
+
+            $counter++;
+        }
+        for ($col = 'A'; $col !== 'Z'; $col++) {
+            $objPHPExcel->getActiveSheet()
+            ->getColumnDimension($col)
+            ->setAutoSize(true);
+        }
+        
+        ob_end_clean();
+        // We'll be outputting an excel file
+        header('Content-type: application/vnd.ms-excel');
+        header('Content-Disposition: attachment;filename="data_parts.xls"');
+        header('Cache-Control: max-age=0');
+        
+        $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
+        $objWriter->save('php://output');
+
+        Yii::app()->end();
+    }
+    
+    protected function saveToExcelService($dataProvider) {
+        set_time_limit(0);
+        ini_set('memory_limit', '1024M');
+        
+        spl_autoload_unregister(array('YiiBase', 'autoload'));
+        include_once Yii::getPathOfAlias('ext.phpexcel.Classes') . DIRECTORY_SEPARATOR . 'PHPExcel.php';
+        spl_autoload_register(array('YiiBase', 'autoload'));
+
+        $objPHPExcel = new PHPExcel();
+
+        $documentProperties = $objPHPExcel->getProperties();
+        $documentProperties->setCreator('Raperind Motor');
+        $documentProperties->setTitle('Data Service');
+
+        $worksheet = $objPHPExcel->setActiveSheetIndex(0);
+        $worksheet->setTitle('Data Service');
+
+        $worksheet->mergeCells('A1:F1');
+        $worksheet->mergeCells('A2:F2');
+        $worksheet->mergeCells('A3:F3');
+
+        $worksheet->getStyle('A1:F5')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->getStyle('A1:F5')->getFont()->setBold(true);
+
+        $worksheet->setCellValue('A1', 'Raperind Motor');
+        $worksheet->setCellValue('A2', 'Data Service');
+
+        $worksheet->getStyle('A5:F5')->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+
+        $worksheet->setCellValue('A5', 'ID');
+        $worksheet->setCellValue('B5', 'Code');
+        $worksheet->setCellValue('C5', 'Name');
+        $worksheet->setCellValue('E5', 'Category');
+        $worksheet->setCellValue('D5', 'Type');
+        $worksheet->setCellValue('F5', 'Description');
+
+        $worksheet->getStyle('A5:F5')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+
+        $counter = 7;
+        foreach ($dataProvider->data as $header) {
+            $worksheet->setCellValue("A{$counter}", CHtml::value($header, 'id'));
+            $worksheet->setCellValue("B{$counter}", CHtml::value($header, 'manufacturer_code'));
+            $worksheet->setCellValue("C{$counter}", CHtml::value($header, 'name'));
+            $worksheet->setCellValue("D{$counter}", CHtml::value($header, 'serviceCategory.name'));
+            $worksheet->setCellValue("E{$counter}", CHtml::value($header, 'serviceType.name'));
+            $worksheet->setCellValue("F{$counter}", CHtml::value($header, 'description'));
+
+            $counter++;
+        }
+        for ($col = 'A'; $col !== 'Z'; $col++) {
+            $objPHPExcel->getActiveSheet()
+            ->getColumnDimension($col)
+            ->setAutoSize(true);
+        }
+        
+        ob_end_clean();
+        // We'll be outputting an excel file
+        header('Content-type: application/vnd.ms-excel');
+        header('Content-Disposition: attachment;filename="data_services.xls"');
+        header('Cache-Control: max-age=0');
+        
+        $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
+        $objWriter->save('php://output');
+
+        Yii::app()->end();
     }
 }

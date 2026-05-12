@@ -74,6 +74,7 @@
 
 <div class="row buttons" style="text-align: center">
     <?php echo CHtml::submitButton('Hapus', array('name' => 'ResetFilter'));  ?>
+    <?php echo CHtml::submitButton('Export Excel', array('name' => 'ExportServiceExcel'));  ?>
 </div>
 
 <hr />

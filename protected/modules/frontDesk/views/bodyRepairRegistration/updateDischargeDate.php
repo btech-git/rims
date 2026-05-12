@@ -190,6 +190,17 @@ $this->breadcrumbs=array(
                                     <div class="field">
                                         <div class="row collapse">
                                             <div class="small-4 columns">
+                                                <label class="prefix"><?php echo $form->labelEx($registrationTransaction, 'problem'); ?></label>
+                                            </div>
+                                            <div class="small-8 columns">
+                                                <?php echo CHtml::encode(CHtml::value($registrationTransaction, 'problem')); ?>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="field">
+                                        <div class="row collapse">
+                                            <div class="small-4 columns">
                                                 <label class="prefix">SPK Customer #</label>
                                             </div>
                                             <div class="small-8 columns">
@@ -226,10 +237,10 @@ $this->breadcrumbs=array(
                                     <div class="field">
                                         <div class="row collapse">
                                             <div class="small-4 columns">
-                                                <label class="prefix"><?php echo $form->labelEx($registrationTransaction, 'problem'); ?></label>
+                                                <label class="prefix"><?php echo $form->labelEx($registrationTransaction, 'next_service_recommendation'); ?></label>
                                             </div>
                                             <div class="small-8 columns">
-                                                <?php echo CHtml::encode(CHtml::value($registrationTransaction, 'problem')); ?>
+                                                <?php echo $form->textArea($registrationTransaction, 'next_service_recommendation', array('rows' => 5, 'columns' => 20)); ?>
                                             </div>
                                         </div>
                                     </div>

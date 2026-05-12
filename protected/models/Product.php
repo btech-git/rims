@@ -845,7 +845,8 @@ class Product extends CActiveRecord {
             SELECT COALESCE(SUM(i.stock_in + i.stock_out), 0) AS beginning_balance 
             FROM " . InventoryDetail::model()->tableName() . " i
             INNER JOIN " . Warehouse::model()->tableName() . " w ON w.id = i.warehouse_id
-            WHERE i.product_id = :product_id AND w.status = 'Active' AND i.transaction_date >= '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND transaction_date < :start_date" . $branchConditionSql . "
+            WHERE i.product_id = :product_id AND w.status = 'Active' AND i.transaction_date >= '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND
+                transaction_date < :start_date" . $branchConditionSql . "
             GROUP BY i.product_id
         ";
 
@@ -872,6 +873,87 @@ class Product extends CActiveRecord {
             FROM " . InventoryDetail::model()->tableName() . " i
             INNER JOIN " . Warehouse::model()->tableName() . " w ON w.id = i.warehouse_id
             WHERE i.product_id = :product_id AND w.status = 'Active' AND i.transaction_date >= '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND transaction_date < :start_date" . $branchConditionSql . "
+            GROUP BY i.product_id
+        ";
+
+        $value = Yii::app()->db->createCommand($sql)->queryScalar($params);
+
+        return ($value === false) ? 0 : $value;
+    }
+    
+    public function getInventoryTransactionStockReport($startDate, $endDate, $branchId) {
+        $branchConditionSql = '';
+        
+        $params = array(
+            ':start_date' => $startDate,
+            ':end_date' => $endDate,
+            ':product_id' => $this->id,
+        );
+        
+        if (!empty($branchId)) {
+            $branchConditionSql = ' AND w.branch_id = :branch_id AND w.status = "Active"';
+            $params[':branch_id'] = $branchId;
+        }
+        
+        $sql = "SELECT i.transaction_number, i.transaction_date, i.transaction_type, i.notes, i.stock_in, i.stock_out, w.name AS warehouse, 
+                    i.purchase_price
+                FROM " . InventoryDetail::model()->tableName() . " i
+                INNER JOIN " . Warehouse::model()->tableName() . " w ON w.id = i.warehouse_id
+                WHERE i.transaction_date BETWEEN :start_date AND :end_date AND i.product_id = :product_id AND w.status = 'Active' AND 
+                    notes IN ('Sale Retail', 'Purchase Order')" . $branchConditionSql . "
+                ORDER BY i.transaction_date ASC, i.id ASC";
+        
+        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
+        
+        return $resultSet;
+    }
+    
+    public function getBeginningTransactionStockReport($startDate, $branchId) {
+        $branchConditionSql = '';
+        
+        $params = array(
+            ':start_date' => $startDate,
+            ':product_id' => $this->id,
+        );
+        
+        if (!empty($branchId)) {
+            $branchConditionSql = ' AND w.branch_id = :branch_id';
+            $params[':branch_id'] = $branchId;
+        }
+        
+        $sql = "
+            SELECT COALESCE(SUM(i.stock_in + i.stock_out), 0) AS beginning_balance 
+            FROM " . InventoryDetail::model()->tableName() . " i
+            INNER JOIN " . Warehouse::model()->tableName() . " w ON w.id = i.warehouse_id
+            WHERE i.product_id = :product_id AND w.status = 'Active' AND notes IN ('Sale Retail', 'Purchase Order') AND 
+                i.transaction_date >= '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND transaction_date < :start_date" . $branchConditionSql . "
+            GROUP BY i.product_id
+        ";
+
+        $value = Yii::app()->db->createCommand($sql)->queryScalar($params);
+
+        return ($value === false) ? 0 : $value;
+    }
+    
+    public function getBeginningTransactionValueReport($startDate, $branchId) {
+        $branchConditionSql = '';
+        
+        $params = array(
+            ':start_date' => $startDate,
+            ':product_id' => $this->id,
+        );
+        
+        if (!empty($branchId)) {
+            $branchConditionSql = ' AND w.branch_id = :branch_id';
+            $params[':branch_id'] = $branchId;
+        }
+        
+        $sql = "
+            SELECT COALESCE(SUM((i.stock_in + i.stock_out) * i.purchase_price), 0) AS beginning_balance 
+            FROM " . InventoryDetail::model()->tableName() . " i
+            INNER JOIN " . Warehouse::model()->tableName() . " w ON w.id = i.warehouse_id
+            WHERE i.product_id = :product_id AND w.status = 'Active' AND notes IN ('Sale Retail', 'Purchase Order') AND 
+                i.transaction_date >= '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND transaction_date < :start_date" . $branchConditionSql . "
             GROUP BY i.product_id
         ";
 

@@ -58,6 +58,28 @@
                         </div>
                     </div>
                 </div>
+                
+                <div class="field">
+                    <div class="row collapse">
+                        <div class="small-4 columns">
+                            <span class="prefix">Estimasi Tanggal Keluar</span>
+                        </div>
+                        <div class="small-8 columns">
+                            <input type="text" readonly="true" value="<?php echo $model->estimate_discharge_date; ?>"> 
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="field">
+                    <div class="row collapse">
+                        <div class="small-4 columns">
+                            <span class="prefix">Rekomendasi Service Selanjutnya</span>
+                        </div>
+                        <div class="small-8 columns">
+                            <input type="text" readonly="true" value="<?php echo $model->next_service_recommendation; ?>"> 
+                        </div>
+                    </div>
+                </div>
             </div> <!-- end div large -->
 
             <div class="large-6 columns">
@@ -159,17 +181,6 @@
                 <div class="field">
                     <div class="row collapse">
                         <div class="small-4 columns">
-                            <span class="prefix">Type</span>
-                        </div>
-                        <div class="small-8 columns">
-                            <input type="text" readonly="true" value="<?php echo $model->customer->customer_type; ?>"> 
-                        </div>
-                    </div>
-                </div>
-
-                <div class="field">
-                    <div class="row collapse">
-                        <div class="small-4 columns">
                             <span class="prefix">Address</span>
                         </div>
                         <div class="small-8 columns">
@@ -180,6 +191,17 @@
             </div> <!-- end div large -->
 
             <div class="large-6 columns">
+                <div class="field">
+                    <div class="row collapse">
+                        <div class="small-4 columns">
+                            <span class="prefix">Type</span>
+                        </div>
+                        <div class="small-8 columns">
+                            <input type="text" readonly="true" value="<?php echo $model->customer->customer_type; ?>"> 
+                        </div>
+                    </div>
+                </div>
+
                 <div class="field">
                     <div class="row collapse">
                         <div class="small-4 columns">

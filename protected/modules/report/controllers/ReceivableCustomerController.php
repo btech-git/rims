@@ -32,7 +32,7 @@ class ReceivableCustomerController extends Controller {
         $customerDataProvider = $customer->search();
         $customerDataProvider->pagination->pageVar = 'page_dialog';
 
-        $receivableSummary = new ReceivableCustomerSummary($customer->search());
+        $receivableSummary = new ReceivableCustomerSummary($customer->searchByReport());
         $receivableSummary->setupLoading();
 //        $receivableSummary->setupPaging($pageSize, $currentPage);
         $receivableSummary->setupSorting();

@@ -10,7 +10,7 @@ class RegistrationTransactionController extends Controller {
 
     public function filters() {
         return array(
-//            'access',
+            'access',
         );
     }
 
@@ -415,6 +415,33 @@ class RegistrationTransactionController extends Controller {
             'criteria' => $customerCriteria,
         ));
 
+        $registrationTransaction = Search::bind(new RegistrationTransaction('search'), isset($_GET['RegistrationTransaction']) ? $_GET['RegistrationTransaction'] : '');
+        $registrationTransaction->unsetAttributes();
+        
+        if (isset($_GET['RegistrationTransaction'])) {
+            $registrationTransaction->attributes = $_GET['RegistrationTransaction'];
+        }
+        
+        $registrationCriteria = new CDbCriteria;
+        $registrationCriteria->compare('t.transaction_number', $registrationTransaction->transaction_number, true);
+        $registrationCriteria->compare('t.transaction_date', $registrationTransaction->transaction_date, true);
+        $registrationCriteria->compare('repair_type', $registrationTransaction->repair_type, true);
+        if (!Yii::app()->user->checkAccess('director')) {
+            $registrationCriteria->addCondition('t.branch_id = :branch_id');
+            $registrationCriteria->params[':branch_id'] = Yii::app()->user->branch_id;
+        }
+        $registrationCriteria->addCondition("t.status NOT LIKE '%CANCELLED%' AND t.downpayment_transaction_number IS NOT NULL AND t.downpayment_transaction_date > '" . AppParam::BEGINNING_TRANSACTION_DATE . "'");
+
+        $registrationDataProvider = new CActiveDataProvider('RegistrationTransaction', array(
+            'criteria' => $registrationCriteria, 
+            'sort' => array(
+                'defaultOrder' => 'downpayment_transaction_date DESC, downpayment_transaction_number ASC',
+            ),
+            'pagination' => array(
+                'pageSize' => 50,
+            )
+        ));
+
         if (isset($_GET['SaveExcel'])) {
             $this->saveToExcel($invoiceDataProvider);
         }
@@ -424,6 +451,8 @@ class RegistrationTransactionController extends Controller {
             'invoiceDataProvider' => $invoiceDataProvider,
             'customer' => $customer,
             'customerDataProvider' => $customerDataProvider,
+            'registrationTransaction' => $registrationTransaction,
+            'registrationDataProvider' => $registrationDataProvider,
         ));
     }
 
@@ -504,6 +533,55 @@ class RegistrationTransactionController extends Controller {
         }
         
         return $invoiceDetailsData;
+    }
+
+    public function actionPdfDownpayment($id) {
+        $registrationTransaction = RegistrationTransaction::model()->findByPk($id);
+        $registrationProducts = RegistrationProduct::model()->findAllByAttributes(array('registration_transaction_id' => $id));
+        $registrationServices = RegistrationService::model()->findAllByAttributes(array('registration_transaction_id' => $id));
+        $customer = Customer::model()->findByPk($registrationTransaction->customer_id);
+        $vehicle = Vehicle::model()->findByPk($registrationTransaction->vehicle_id);
+        $branch = Branch::model()->findByPk($registrationTransaction->branch_id);
+
+        $stylesheet = file_get_contents(Yii::getPathOfAlias('webroot') . '/css/pdf.css');
+        $mPDF1 = Yii::app()->ePdf->mpdf('', 'A4-L');
+        $mPDF1->SetTitle('Invoice DP');
+        $mPDF1->WriteHTML($stylesheet, 1);
+        $mPDF1->WriteHTML($this->renderPartial('pdfDownpayment', array(
+            'registrationTransaction' => $registrationTransaction,
+            'registrationProducts' => $registrationProducts,
+            'registrationServices' => $registrationServices,
+            'customer' => $customer,
+            'vehicle' => $vehicle,
+            'branch' => $branch,
+        ), true));
+        $mPDF1->Output('Invoice DP ' . $registrationTransaction->transaction_number . '.pdf', 'I');
+    }
+    
+    public function actionPdfPaymentDownpayment($id) {
+        $registrationTransaction = RegistrationTransaction::model()->findByPk($id);
+        $registrationProducts = RegistrationProduct::model()->findAllByAttributes(array('registration_transaction_id' => $id));
+        $registrationServices = RegistrationService::model()->findAllByAttributes(array('registration_transaction_id' => $id));
+        $paymentInDetail = PaymentInDetail::model()->findByAttributes(array('registration_transaction_id' => $id, 'invoice_header_id' => null));
+        $customer = Customer::model()->findByPk($registrationTransaction->customer_id);
+        $vehicle = Vehicle::model()->findByPk($registrationTransaction->vehicle_id);
+        $branch = Branch::model()->findByPk($registrationTransaction->branch_id);
+        $mPDF1 = Yii::app()->ePdf->mpdf('', 'A4-L');
+
+        $stylesheet = file_get_contents(Yii::getPathOfAlias('webroot') . '/css/pdf.css');
+        $mPDF1->SetTitle('Tanda Terima DP');
+        $mPDF1->WriteHTML($stylesheet, 1);
+        
+        $mPDF1->WriteHTML($this->renderPartial('pdfPaymentDownpayment', array(
+            'registrationTransaction' => $registrationTransaction,
+            'registrationProducts' => $registrationProducts,
+            'registrationServices' => $registrationServices,
+            'paymentInDetail' => $paymentInDetail,
+            'customer' => $customer,
+            'vehicle' => $vehicle,
+            'branch' => $branch,
+        ), true));
+        $mPDF1->Output('Tanda Terima DP ' . $registrationTransaction->transaction_number . '.pdf', 'I');
     }
 
     public function actionAdminWo() {

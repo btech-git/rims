@@ -48,12 +48,22 @@
                                         'visible' => Yii::app()->user->checkAccess('stockCardItemReport')
                                     ),
                                     array(
-                                        'label' => 'Mutasi per Barang', 
+                                        'label' => 'Mutasi Stok per Barang', 
                                         'url' => array('/report/stockCardWithAmount/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('stockCardItemReport')
                                     ),
                                     array(
-                                        'label' => 'Mutasi per Gudang', 
+                                        'label' => 'Mutasi Stok Jual Beli Barang', 
+                                        'url' => array('/report/stockCardTransactionProduct/summary'), 
+                                        'visible' => Yii::app()->user->checkAccess('stockCardItemReport')
+                                    ),
+                                    array(
+                                        'label' => 'Mutasi Stok Jual Beli Gudang', 
+                                        'url' => array('/report/stockCardTransactionWarehouse/summary'), 
+                                        'visible' => Yii::app()->user->checkAccess('stockCardWarehouseReport')
+                                    ),
+                                    array(
+                                        'label' => 'Mutasi Stok per Gudang', 
                                         'url' => array('/report/stockCardByWarehouse/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('stockCardWarehouseReport')
                                     ),

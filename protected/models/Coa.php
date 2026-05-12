@@ -1020,4 +1020,25 @@ class Coa extends CActiveRecord {
 
         return $resultSet;
     }
+    
+    public static function getBalanceSheetCoaReport() {
+        
+        $sql = "SELECT c1.id AS id, c1.code AS code, c1.name AS name, IF(c1.coa_id IS NULL, s.code, c2.code) AS parent_code
+                FROM " . Coa::model()->tableName() . " c1
+                LEFT OUTER JOIN " . Coa::model()->tableName() . " c2 ON c2.id = c1.coa_id
+                INNER JOIN " . CoaSubCategory::model()->tableName() . " s ON s.id = c1.coa_sub_category_id
+                UNION
+                SELECT s.id AS id, s.code AS code, s.name AS name, t.code AS parent_code
+                FROM " . CoaSubCategory::model()->tableName() . " s
+                INNER JOIN " . CoaCategory::model()->tableName() . " t ON t.id = s.coa_category_id
+                UNION 
+                SELECT t1.id AS id, t1.code AS code, t1.name AS name, IF(t1.coa_category_id IS NULL, NULL, t2.code) AS parent_code
+                FROM " . CoaCategory::model()->tableName() . " t1
+                LEFT OUTER JOIN " . CoaCategory::model()->tableName() . " t2 ON t2.id = t1.coa_category_id
+                ORDER BY code ASC;";
+
+        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true);
+
+        return $resultSet;
+    }
 }

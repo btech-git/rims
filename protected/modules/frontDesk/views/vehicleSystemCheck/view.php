@@ -22,7 +22,10 @@ $this->breadcrumbs = array(
             'attributes' => array(
                 'id',
                 'transaction_number',
-                'transaction_date',
+                array(
+                    'label' => 'Tanggal',
+                    'value' => Yii::app()->dateFormatter->format("d MMM yyyy HH:mm:ss", strtotime($vehicleSystemCheck->transaction_date)),
+                ),
                 array(
                     'label' => 'RG #',
                     'value' => $vehicleSystemCheck->registrationTransaction->transaction_number,

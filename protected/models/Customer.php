@@ -320,6 +320,52 @@ class Customer extends CActiveRecord {
 
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
+            'pagination' => array(
+                'pageSize' => 500,
+            ),
+        ));
+    }
+
+    public function searchByReport() {
+        // @todo Please modify the following code to remove attributes that should not be searched.
+
+        $criteria = new CDbCriteria;
+
+        $criteria->compare('t.id', $this->id);
+        $criteria->compare('t.name', $this->name, true);
+        $criteria->compare('t.address', $this->address, true);
+        $criteria->compare('t.zipcode', $this->zipcode, true);
+        $criteria->compare('t.province_id', $this->province_id);
+        $criteria->compare('t.city_id', $this->city_id);
+        $criteria->compare('fax', $this->fax, true);
+        $criteria->compare('t.email', $this->email, true);
+        $criteria->compare('t.note', $this->note, true);
+        $criteria->compare('t.default_payment_type', $this->default_payment_type);
+        $criteria->compare('t.customer_type', $this->customer_type, true);
+        $criteria->compare('tenor', $this->tenor);
+        $criteria->compare('LOWER(t.status)', strtolower($this->status), FALSE);
+        $criteria->compare('birthdate', $this->birthdate, true);
+        $criteria->compare('flat_rate', $this->flat_rate, true);
+        $criteria->compare('mobile_phone', $this->mobile_phone, true);
+        $criteria->compare('phone', $this->phone, true);
+        $criteria->compare('t.coa_id', $this->coa_id);
+        $criteria->compare('t.is_approved', $this->is_approved);
+        $criteria->compare('t.date_approval', $this->date_approval);
+        $criteria->compare('t.user_id', $this->user_id);
+
+        $criteria->together = 'true';
+        $criteria->with = array('coa');
+        $criteria->compare('coa.name', $this->coa_name, true);
+        $criteria->compare('coa.code', $this->coa_code, true);
+
+        return new CActiveDataProvider($this, array(
+            'criteria' => $criteria,
+            'sort' => array(
+                'defaultOrder' => 't.name ASC',
+            ),
+            'pagination' => array(
+                'pageSize' => 500,
+            ),
         ));
     }
 

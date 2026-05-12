@@ -21,7 +21,7 @@
                         <?php echo CHtml::label('Tanggal', ''); ?>
                     </div>
                     <div class="small-8 columns">
-                        <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(
+                        <?php /*$this->widget('zii.widgets.jui.CJuiDatePicker', array(
                             'model' => $vehicleSystemCheck->header,
                             'attribute' => "transaction_date",
                             'options' => array(
@@ -35,7 +35,8 @@
                                 'readonly' => true,
 //                                'value' => date('Y-m-d'),
                             ),
-                        )); ?>
+                        ));*/ ?>
+                        <?php echo CHtml::encode(Yii::app()->dateFormatter->format("d MMM yyyy", strtotime(CHtml::value($vehicleSystemCheck->header, 'transaction_date')))); ?>
                         <?php echo CHtml::error($vehicleSystemCheck->header, 'transaction_date'); ?>
                     </div>
                 </div>

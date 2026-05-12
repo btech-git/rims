@@ -88,10 +88,10 @@ class Vehicle extends CActiveRecord {
             array('plate_number_suffix, year, drivetrain', 'length', 'max' => 10),
             array('machine_number, frame_number, chasis_code, transmission', 'length', 'max' => 30),
             array('status_location', 'length', 'max' => 100),
-            array('notes, entry_datetime, start_service_datetime, finish_service_datetime, exit_datetime', 'safe'),
+            array('notes, entry_datetime, start_service_datetime, finish_service_datetime, exit_datetime, customer_name', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, plate_number, plate_number_prefix_id, plate_number_ordinal, plate_number_suffix, machine_number, frame_number, car_make_id, car_model_id, car_sub_model_id, car_sub_model_detail_id, color_id, year, customer_id, customer_pic_id, insurance_company_id, chasis_code, transmission, fuel_type, power, drivetrain, notes, status_location, entry_datetime, start_service_datetime, finish_service_datetime, exit_datetime, entry_user_id, exit_user_id, start_service_user_id', 'safe', 'on' => 'search'),
+            array('id, plate_number, plate_number_prefix_id, plate_number_ordinal, plate_number_suffix, machine_number, frame_number, car_make_id, car_model_id, car_sub_model_id, car_sub_model_detail_id, color_id, year, customer_id, customer_pic_id, insurance_company_id, chasis_code, transmission, fuel_type, power, drivetrain, notes, status_location, entry_datetime, start_service_datetime, finish_service_datetime, exit_datetime, entry_user_id, exit_user_id, start_service_user_id, customer_name', 'safe', 'on' => 'search'),
         );
     }
 
@@ -187,12 +187,11 @@ class Vehicle extends CActiveRecord {
         $criteria->compare('status_location', $this->status_location);
 
         $criteria->together = 'true';
-        //$criteria->with = array('carMake','carModel','carSubModel','color');
-        $criteria->with = array('carMake', 'carModel', 'carSubModel');
+        $criteria->with = array('carMake', 'carModel', 'carSubModel', 'customer');
         $criteria->compare('carMake.name', $this->car_make, true);
         $criteria->compare('carModel.name', $this->car_model, true);
         $criteria->compare('carSubModel.name', $this->car_sub_model, true);
-        //$criteria->compare('color.name', $this->color, true);
+        $criteria->compare('customer.name', $this->customer_name, true);
 
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
@@ -215,7 +214,7 @@ class Vehicle extends CActiveRecord {
                 ),
             ),
             'pagination' => array(
-                'pageSize' => 10,
+                'pageSize' => 50,
             ),
         ));
     }
@@ -256,7 +255,7 @@ class Vehicle extends CActiveRecord {
 
         $vehiclePlateNumberOperator = empty($this->plate_number) ? '=' : 'LIKE';
         $vehiclePlateNumberValue = empty($this->plate_number) ? '' : "%{$this->plate_number}%";
-        $criteria->addCondition("t.plate_number {$vehiclePlateNumberOperator} :plate_number AND t.status_location = 'Keluar Lokasi'");
+        $criteria->addCondition("t.plate_number {$vehiclePlateNumberOperator} :plate_number");
         $criteria->params[':plate_number'] = $vehiclePlateNumberValue;
 
         return new CActiveDataProvider($this, array(

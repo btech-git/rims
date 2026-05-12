@@ -25,7 +25,7 @@ Yii::app()->clientScript->registerScript('search', "
 	return false;
 });
 $('form').submit(function(){
-    $('#registration-transaction-grid').yiiGridView('update', {
+    $('#sale-invoice-grid').yiiGridView('update', {
         data: $(this).serialize()
     });
     return false;
@@ -35,8 +35,6 @@ $('form').submit(function(){
 <div id="maincontent">
     <div class="clearfix page-action">
         <h1>Cashier</h1>
-        <?php echo CHtml::beginForm(); ?>
-        <?php echo CHtml::endForm(); ?>
         
         <div class="search-bar">
             <?php echo CHtml::beginForm(array(''), 'get'); ?>
@@ -54,7 +52,7 @@ $('form').submit(function(){
                             <td>
                                 <?php echo CHtml::activeTextField($invoice, 'invoice_number', array(
                                     'onchange' => '
-                                        $.fn.yiiGridView.update("registration-transaction-grid", {data: {InvoiceHeader: {
+                                        $.fn.yiiGridView.update("sale-invoice-grid", {data: {InvoiceHeader: {
                                             invoice_number: $(this).val(),
                                             invoice_date: $("#' . CHtml::activeId($invoice, 'invoice_date') . '").val(),
                                             invoice_date_to: $("#' . CHtml::activeId($invoice, 'invoice_date_to') . '").val(),
@@ -83,7 +81,7 @@ $('form').submit(function(){
                                             'style'=>'margin-bottom:0px;',
                                             'placeholder'=>'Transaction Date From',
                                             'onchange' => '
-                                                $.fn.yiiGridView.update("registration-transaction-grid", {data: {InvoiceHeader: {
+                                                $.fn.yiiGridView.update("sale-invoice-grid", {data: {InvoiceHeader: {
                                                     invoice_date: $(this).val(),
                                                     invoice_number: $("#' . CHtml::activeId($invoice, 'invoice_number') . '").val(),
                                                     plate_number: $("#' . CHtml::activeId($invoice, 'plate_number') . '").val(),
@@ -113,7 +111,7 @@ $('form').submit(function(){
                                             'style'=>'margin-bottom:0px;',
                                             'placeholder'=>'Transaction Date To',
                                             'onchange' => '
-                                                $.fn.yiiGridView.update("registration-transaction-grid", {data: {InvoiceHeader: {
+                                                $.fn.yiiGridView.update("sale-invoicen-grid", {data: {InvoiceHeader: {
                                                     invoice_date_to: $(this).val(),
                                                     invoice_number: $("#' . CHtml::activeId($invoice, 'invoice_number') . '").val(),
                                                     plate_number: $("#' . CHtml::activeId($invoice, 'plate_number') . '").val(),
@@ -132,7 +130,7 @@ $('form').submit(function(){
                             <td>
                                 <?php echo CHtml::activeTextField($invoice, 'plate_number', array(
                                     'onchange' => '
-                                        $.fn.yiiGridView.update("registration-transaction-grid", {data: {InvoiceHeader: {
+                                        $.fn.yiiGridView.update("sale-invoice-grid", {data: {InvoiceHeader: {
                                             plate_number: $(this).val(),
                                             invoice_number: $("#' . CHtml::activeId($invoice, 'invoice_number') . '").val(),
                                             invoice_date: $("#' . CHtml::activeId($invoice, 'invoice_date') . '").val(),
@@ -149,7 +147,7 @@ $('form').submit(function(){
                             <td>
                                 <?php echo CHtml::activeTextField($invoice, 'customer_name', array(
                                     'onchange' => '
-                                        $.fn.yiiGridView.update("registration-transaction-grid", {data: {InvoiceHeader: {
+                                        $.fn.yiiGridView.update("sale-invoice-grid", {data: {InvoiceHeader: {
                                             customer_name: $(this).val(),
                                             invoice_number: $("#' . CHtml::activeId($invoice, 'invoice_number') . '").val(),
                                             invoice_date: $("#' . CHtml::activeId($invoice, 'invoice_date') . '").val(),
@@ -178,7 +176,7 @@ $('form').submit(function(){
                                 <?php echo CHtml::activeDropDownList($invoice, 'insurance_company_id', CHtml::listData(InsuranceCompany::model()->findAll(array('order' => 'name')), 'id', 'name'), array(
                                     'empty' => '-- all --',
                                     'onchange' => '
-                                        $.fn.yiiGridView.update("registration-transaction-grid", {data: {InvoiceHeader: {
+                                        $.fn.yiiGridView.update("sale-invoice-grid", {data: {InvoiceHeader: {
                                             insurance_company_id: $(this).val(),
                                             invoice_number: $("#' . CHtml::activeId($invoice, 'invoice_number') . '").val(),
                                             invoice_date: $("#' . CHtml::activeId($invoice, 'invoice_date') . '").val(),
@@ -200,7 +198,7 @@ $('form').submit(function(){
                                     'Individual' => 'Retail',
                                 ),  array(
                                     'onchange' => '
-                                        $.fn.yiiGridView.update("registration-transaction-grid", {data: {InvoiceHeader: {
+                                        $.fn.yiiGridView.update("sale-invoice-grid", {data: {InvoiceHeader: {
                                             customer_type: $(this).val(),
                                             invoice_number: $("#' . CHtml::activeId($invoice, 'invoice_number') . '").val(),
                                             invoice_date: $("#' . CHtml::activeId($invoice, 'invoice_date') . '").val(),
@@ -224,7 +222,7 @@ $('form').submit(function(){
                                     'CANCELLED!!!' => 'CANCEL',
                                 ), array(
                                     'onchange' => '
-                                        $.fn.yiiGridView.update("registration-transaction-grid", {data: {InvoiceHeader: {
+                                        $.fn.yiiGridView.update("sale-invoice-grid", {data: {InvoiceHeader: {
                                             status: $(this).val(),
                                             invoice_date: $("#' . CHtml::activeId($invoice, 'invoice_date') . '").val(),
                                             invoice_date_to: $("#' . CHtml::activeId($invoice, 'invoice_date_to') . '").val(),
@@ -242,7 +240,7 @@ $('form').submit(function(){
                                 <?php echo CHtml::activeDropDownList($invoice, 'branch_id', CHtml::listData(Branch::model()->findAll(), 'id', 'name'), array(
                                     'empty' => '-- All --',
                                     'onchange' => '
-                                        $.fn.yiiGridView.update("registration-transaction-grid", {data: {InvoiceHeader: {
+                                        $.fn.yiiGridView.update("sale-invoice-grid", {data: {InvoiceHeader: {
                                             branch_id: $(this).val(),
                                             invoice_date: $("#' . CHtml::activeId($invoice, 'invoice_date') . '").val(),
                                             invoice_date_to: $("#' . CHtml::activeId($invoice, 'invoice_date_to') . '").val(),
@@ -265,7 +263,7 @@ $('form').submit(function(){
         
         <div class="grid-view">
             <?php $this->widget('zii.widgets.grid.CGridView', array(
-                'id' => 'registration-transaction-grid',
+                'id' => 'sale-invoice-grid',
                 'dataProvider' => $invoiceDataProvider,
                 'filter' => null,
                 'template' => '<div style="overflow-x:scroll ; overflow-y: hidden; margin-bottom: 1.25rem;">{items}</div><div class="clearfix">{summary}{pager}</div>',
@@ -281,7 +279,7 @@ $('form').submit(function(){
                     array(
                         'name' => 'invoice_number',
                         'header' => 'Invoice',
-                        'value' => 'CHtml::link($data->invoice_number, array("/transaction/invoiceHeader/view", "id"=>$data->id), array("target" => "blank"))', 
+                        'value' => 'CHtml::link($data->invoice_number, array("/transaction/invoiceHeader/show", "id"=>$data->id), array("target" => "blank"))', 
                         'type' => 'raw'
                     ),
                     array(
@@ -290,7 +288,7 @@ $('form').submit(function(){
                     ),
                     array(
                         'header' => 'Registration #',
-                        'value' => 'CHtml::link($data->registrationTransaction->transaction_number, array("/frontDesk/registrationTransaction/view", "id"=>$data->registration_transaction_id), array("target" => "blank"))', 
+                        'value' => 'CHtml::link($data->registrationTransaction->transaction_number, array("/frontDesk/registrationTransaction/show", "id"=>$data->registration_transaction_id), array("target" => "blank"))', 
                         'type' => 'raw'
                     ),
                     array(
@@ -345,8 +343,8 @@ $('form').submit(function(){
                                     var url = $(this).attr('href');
                                     newwindow=window.open(url,'name','height=600,width=1200,left=100');
                                     if (window.focus) {newwindow.focus()}
-                                    newwindow.onbeforeunload = function(){  $.fn.yiiGridView.update('registration-transaction-grid')}
-                                    newwindow.onunload = function(){  $.fn.yiiGridView.update('registration-transaction-grid')}
+                                    newwindow.onbeforeunload = function(){  $.fn.yiiGridView.update('sale-invoice-grid')}
+                                    newwindow.onunload = function(){  $.fn.yiiGridView.update('sale-invoice-grid')}
                                     return false;
                                 }"
                             ),
@@ -364,6 +362,100 @@ $('form').submit(function(){
     </div>
 </div>
 
+<div id="maincontent">
+    <div class="clearfix page-action">
+        <h1>Downpayment</h1>
+        
+        <div class="grid-view">
+            <?php $this->widget('zii.widgets.grid.CGridView', array(
+                'id' => 'registration-transaction-grid',
+                'dataProvider' => $registrationDataProvider,
+                'filter' => null,
+                'template' => '<div style="overflow-x:scroll ; overflow-y: hidden; margin-bottom: 1.25rem;">{items}</div><div class="clearfix">{summary}{pager}</div>',
+                'pager' => array(
+                    'cssFile' => false,
+                    'header' => '',
+                ),
+                'columns' => array(
+                    array(
+                        'header' => '#',
+                        'value' => '$this->grid->dataProvider->pagination->currentPage*$this->grid->dataProvider->pagination->pageSize + $row+1', //  row is zero based
+                    ),
+                    array(
+                        'name' => 'downpayment_transaction_number',
+                        'header' => 'DP #',
+                        'value' => 'CHtml::link($data->downpayment_transaction_number, array("/frontDesk/registrationTransaction/show", "id"=>$data->id), array("target" => "blank"))', 
+                        'type' => 'raw'
+                    ),
+                    array(
+                        'name' => 'downpayment_transaction_date',
+                        'value' => 'Yii::app()->dateFormatter->format("d MMM yyyy", $data->downpayment_transaction_date)',
+                    ),
+                    array(
+                        'header' => 'Registration #',
+                        'value' => 'CHtml::link($data->transaction_number, array("/frontDesk/registrationTransaction/show", "id"=>$data->id), array("target" => "blank"))', 
+                        'type' => 'raw'
+                    ),
+                    array(
+                        'name' => 'plate_number', 
+                        'value' => '$data->vehicle->plate_number',
+                    ),
+                    array(
+                        'name' => 'customer_name', 
+                        'value' => '$data->customer != null? $data->customer->name : "-"'
+                    ),
+                    array(
+                        'header' => 'Insurance',
+                        'value' => 'empty($data->insurance_company_id) ? "N/A" : $data->insuranceCompany->name',
+                    ),
+                    array(
+                        'header' => 'Status', 
+                        'value' => '$data->downpayment_status',
+                    ),
+                    array(
+                        'header' => 'Note', 
+                        'value' => '$data->downpayment_note',
+                    ),
+                    array(
+                        'header' => 'Total Invoice',
+                        'value' => 'Yii::app()->numberFormatter->format("#,##0.00", $data->grand_total)',
+                        'htmlOptions' => array('style' => 'text-align: right'),
+                    ),
+                    array(
+                        'header' => 'DP Amount',
+                        'value' => 'Yii::app()->numberFormatter->format("#,##0.00", $data->downpayment_amount)',
+                        'htmlOptions' => array('style' => 'text-align: right'),
+                    ),
+                    array(
+                        'class' => 'CButtonColumn',
+                        'template' => '{views} {print}',
+                        'buttons' => array(
+                            'views' => array(
+                                'label' => 'payment',
+                                'url' => 'Yii::app()->createUrl("transaction/paymentIn/createDownpayment",array("registrationId"=>$data->id))',
+                                'visible' => 'Yii::app()->user->checkAccess("paymentInCreate") && !empty($data->downpayment_transaction_number) && $data->is_downpayment_paid != 1',
+                                'click' => "js:function(){
+                                    var url = $(this).attr('href');
+                                    newwindow=window.open(url,'name','height=600,width=1200,left=100');
+                                    if (window.focus) {newwindow.focus()}
+                                    newwindow.onbeforeunload = function(){  $.fn.yiiGridView.update('registration-transaction-grid')}
+                                    newwindow.onunload = function(){  $.fn.yiiGridView.update('registration-transaction-grid')}
+                                    return false;
+                                }"
+                            ),
+                            'print' => array(
+                                'label' => 'print',
+                                'url' => '$data->is_downpayment_paid == 1 ? Yii::app()->createUrl("frontDesk/registrationTransaction/pdfPaymentDownpayment", array("id" => $data->id)) : Yii::app()->createUrl("frontDesk/registrationTransaction/pdfDownpayment", array("id" => $data->id))',
+                                'linkOptions' => 'target => _blank',
+//                                'visible' => 'Yii::app()->user->checkAccess("generalRepairCreate") || Yii::app()->user->checkAccess("generalRepairEdit")'
+                            ),
+                        ),
+                    ),
+                ),
+            )); ?>
+        </div>
+    </div>
+</div>
 
 <?php $this->beginWidget('zii.widgets.jui.CJuiDialog', array(
     'id' => 'customer-dialog',

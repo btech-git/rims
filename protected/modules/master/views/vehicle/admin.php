@@ -1,6 +1,4 @@
 <?php
-/* @var $this VehicleController */
-/* @var $model Vehicle */
 
 $this->breadcrumbs=array(
 	'Vehicle'=>array('admin'),
@@ -14,23 +12,26 @@ $this->menu=array(
 );
 
 Yii::app()->clientScript->registerScript('search', "
-$('.search-button').click(function(){
-	$('.search-form').slideToggle(600);
-	$('.bulk-action').toggle();
-	$(this).toggleClass('active');
-	if($(this).hasClass('active')){
-		$(this).text('');
-	}else {
-		$(this).text('Advanced Search');
-	}
-	return false;
-});
-$('.search-form form').submit(function(){
-	$('#vehicle-grid').yiiGridView('update', {
-		data: $(this).serialize()
-	});
-	return false;
-});
+    $('.search-button').click(function(){
+        $('.search-form').slideToggle(600);
+        $('.bulk-action').toggle();
+        $(this).toggleClass('active');
+        
+        if ($(this).hasClass('active')){
+            $(this).text('');
+        } else {
+            $(this).text('Advanced Search');
+        }
+        return false;
+    });
+    
+    $('.search-form form').submit(function(){
+        $('#vehicle-grid').yiiGridView('update', {
+            data: $(this).serialize()
+        });
+
+        return false;
+    });
 ");
 ?>
 <div id="maincontent">
@@ -42,16 +43,16 @@ $('.search-form form').submit(function(){
         <h1>Manage Customer Vehicles</h1>
 
         <div class="search-bar">
-<!--            <div class="clearfix button-bar">
+            <div class="clearfix button-bar">
                 <a href="#" class="search-button right button cbutton secondary">Advanced Search</a>   
-            </div>-->
+            </div>
 
             <div class="clearfix"></div>
             
             <div class="search-form" style="display:none">
-                <?php /*$this->renderPartial('_search',array(
+                <?php $this->renderPartial('_search',array(
                     'model'=>$model,
-                ));*/ ?>
+                )); ?>
             </div><!-- search-form -->
         </div>
 			

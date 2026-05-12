@@ -1,26 +1,20 @@
-<?php
-/* @var $this CoaController */
-/* @var $model Coa */
-/* @var $form CActiveForm */
-?>
-
 <div class="form">
 
-<?php $form=$this->beginWidget('CActiveForm', array(
+    <?php $form=$this->beginWidget('CActiveForm', array(
 	'id'=>'coa-form',
 	// Please note: When you enable ajax validation, make sure the corresponding
 	// controller action is handling ajax validation correctly.
 	// There is a call to performAjaxValidation() commented in generated controller code.
 	// See class documentation of CActiveForm for details on this.
 	'enableAjaxValidation'=>false,
-)); ?>
+    )); ?>
 
-	<p class="note">Fields with <span class="required">*</span> are required.</p>
+    <p class="note">Fields with <span class="required">*</span> are required.</p>
 
-	<?php echo $form->errorSummary($model); ?>
+    <?php echo $form->errorSummary($model); ?>
 
-	<div class="row">
-            <div class="small-12 medium-6 columns">
+    <div class="row">
+        <div class="small-12 medium-6 columns">
             <?php if (!$model->isNewRecord): ?>
                 <div class="field">
                     <div class="row collapse">
@@ -34,18 +28,6 @@
                     </div>
                 </div>		
             <?php endif; ?>
-
-<!--            <div class="field">
-                <div class="row collapse">
-                    <div class="small-4 columns">
-                        <?php /*echo 'COA Grouping'; ?>
-                    </div>
-                    <div class="small-8 columns">
-                        <?php echo $form->dropDownlist($model, 'coa_id', CHtml::listData(Coa::model()->findAllByAttributes(array('coa_id' => null)),'id','name'), array('empty' => '-- Pilih Group --')); ?>
-                        <?php echo $form->error($model, 'coa_id');*/ ?>
-                    </div>
-                </div>
-            </div>-->
 
             <div class="field">
                 <div class="row collapse">
@@ -83,27 +65,10 @@
                 </div>
             </div>
 
-<!--            <div class="field">
-                <div class="row collapse">
-                    <div class="small-4 columns">
-                        <?php /*echo $form->labelEx($model,'status'); ?>
-                    </div>
-                    <div class="small-8 columns">
-                        <?php echo $form->dropDownlist($model,'status',array(
-                            'Approved'=>'Approved',
-                            'Not Approved'=>'Not Approved'
-                        )); ?>
-                        <?php echo $form->error($model,'status');*/ ?>
-                    </div>
-                </div>
-            </div>-->
-
             <div class="field buttons text-center">
                 <?php echo CHtml::submitButton($model->isNewRecord ? 'Create' : 'Save', array('class'=>'button cbutton')); ?>
             </div>
         </div>
-	</div>
-
-<?php $this->endWidget(); ?>
-
+    </div>
+    <?php $this->endWidget(); ?>
 </div><!-- form -->

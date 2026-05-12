@@ -2,7 +2,7 @@
     $this->pageTitle=Yii::app()->name;
 ?>
 <div id="maincontent">
-    <?php echo CHtml::beginForm(); ?>
+    <?php echo CHtml::beginForm(array(''), 'get'); ?>
 	<div class="clearfix page-action">
             <?php $this->widget('zii.widgets.jui.CJuiTabs', array(
                 'tabs' => array(

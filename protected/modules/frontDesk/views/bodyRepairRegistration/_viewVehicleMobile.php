@@ -1,6 +1,7 @@
 <fieldset>
     <legend>Vehicle</legend>
     <div class="row">
+        <div class="large-12 columns">
             <div class="large-6 columns">
                 <div class="field">
                     <div class="row collapse">
@@ -8,7 +9,7 @@
                             <span class="prefix">Plate Number</span>
                         </div>
                         <div class="small-8 columns">
-                            <input type="text" readonly="true" value="<?php echo CHtml::encode(CHtml::value($model, 'vehicle.plate_number')); ?>"> 
+                            <input type="text" readonly="true" value="<?php echo $model->vehicle->plate_number; ?>"> 
                         </div>
                     </div>
                 </div>
@@ -19,7 +20,7 @@
                             <span class="prefix">Machine Number</span>
                         </div>
                         <div class="small-8 columns">
-                            <input type="text" readonly="true" value="<?php echo CHtml::encode(CHtml::value($model, 'vehicle.machine_number')); ?>"> 
+                            <input type="text" readonly="true" value="<?php echo $model->vehicle->machine_number; ?>"> 
                         </div>
                     </div>
                 </div>
@@ -30,7 +31,7 @@
                             <span class="prefix">Frame Number</span>
                         </div>
                         <div class="small-8 columns">
-                            <input type="text" readonly="true" value="<?php echo CHtml::encode(CHtml::value($model, 'vehicle.frame_number')); ?>"> 
+                            <input type="text" readonly="true" value="<?php echo $model->vehicle->frame_number; ?>"> 
                         </div>
                     </div>
                 </div>
@@ -41,23 +42,48 @@
                             <span class="prefix">Chasis Code</span>
                         </div>
                         <div class="small-8 columns">
-                            <input type="text" readonly="true" value="<?php echo CHtml::encode(CHtml::value($model, 'vehicle.chasis_code')); ?>"> 
+                            <input type="text" readonly="true" value="<?php echo $model->vehicle->chasis_code; ?>"> 
 
 
                         </div>
                     </div>
                 </div>
+                
                 <div class="field">
                     <div class="row collapse">
                         <div class="small-4 columns">
                             <span class="prefix">Power CC</span>
                         </div>
                         <div class="small-8 columns">
-                            <input type="text" readonly="true" value="<?php echo CHtml::encode(CHtml::value($model, 'vehicle.power')); ?>"> 
+                            <input type="text" readonly="true" value="<?php echo $model->vehicle->power; ?>"> 
                         </div>
                     </div>
                 </div>
                 
+                <div class="field">
+                    <div class="row collapse">
+                        <div class="small-4 columns">
+                            <span class="prefix">Estimasi Tanggal Keluar</span>
+                        </div>
+                        <div class="small-8 columns">
+                            <input type="text" readonly="true" value="<?php echo $model->estimate_discharge_date; ?>"> 
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="field">
+                    <div class="row collapse">
+                        <div class="small-4 columns">
+                            <span class="prefix">Rekomendasi Service Selanjutnya</span>
+                        </div>
+                        <div class="small-8 columns">
+                            <input type="text" readonly="true" value="<?php echo $model->next_service_recommendation; ?>"> 
+                        </div>
+                    </div>
+                </div>
+            </div> <!-- end div large -->
+
+            <div class="large-6 columns">
                 <div class="field">
                     <div class="row collapse">
                         <div class="small-4 columns">
@@ -96,7 +122,7 @@
                         </div>
                         <div class="small-8 columns">
                             <?php $color = Colors::model()->findByPK($model->vehicle->color_id); ?>
-                            <input type="text" readonly="true" value="<?php echo CHtml::encode(CHtml::value($color, 'name')); ?>"> 
+                            <input type="text" readonly="true" value="<?php echo empty($color) ? '' : $color->name; ?>"> 
                         </div>
                     </div>
                 </div>
@@ -106,7 +132,7 @@
                             <span class="prefix">KM Sebelum</span>
                         </div>
                         <div class="small-8 columns">
-                            <input type="text" readonly="true" value="<?php echo $model->previous_mileage; ?>"> 
+                            <input type="text" readonly="true" value="<?php echo number_format($model->previous_mileage, 0); ?>"> 
                         </div>
                     </div>
                 </div>
@@ -116,7 +142,7 @@
                             <span class="prefix">KM Sekarang</span>
                         </div>
                         <div class="small-8 columns">
-                            <input type="text" readonly="true" value="<?php echo $model->vehicle_mileage; ?>"> 
+                            <input type="text" readonly="true" value="<?php echo number_format($model->vehicle_mileage, 0); ?>"> 
                         </div>
                     </div>
                 </div>
@@ -126,18 +152,21 @@
                             <span class="prefix">KM Selanjutnya</span>
                         </div>
                         <div class="small-8 columns">
-                            <input type="text" readonly="true" value="<?php echo $model->next_mileage; ?>"> 
+                            <input type="text" readonly="true" value="<?php echo number_format($model->next_mileage, 0); ?>"> 
                         </div>
                     </div>
                 </div>
+            </div><!-- end div large -->
         </div>
     </div>
 </fieldset>
-
 <fieldset>
     <legend>Customer</legend>
     <div class="row">
+        <div class="large-12 columns">
+
             <div class="large-6 columns">
+
                 <div class="field">
                     <div class="row collapse">
                         <div class="small-4 columns">
@@ -152,6 +181,19 @@
                 <div class="field">
                     <div class="row collapse">
                         <div class="small-4 columns">
+                            <span class="prefix">Address</span>
+                        </div>
+                        <div class="small-8 columns">
+                            <textarea name="" id="" cols="30" rows="5" readonly="true"><?php echo $model->customer->address . '&#13;&#10;' . $model->customer->province->name . '&#13;&#10;' . $model->customer->city->name . '&#13;&#10;' . $model->customer->zipcode; ?></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div> <!-- end div large -->
+
+            <div class="large-6 columns">
+                <div class="field">
+                    <div class="row collapse">
+                        <div class="small-4 columns">
                             <span class="prefix">Type</span>
                         </div>
                         <div class="small-8 columns">
@@ -160,16 +202,6 @@
                     </div>
                 </div>
 
-                <div class="field">
-                    <div class="row collapse">
-                        <div class="small-4 columns">
-                            <span class="prefix">Address</span>
-                        </div>
-                        <div class="small-8 columns">
-                            <textarea name="" id="" cols="30" rows="5" readonly="true"><?php echo $model->customer->address . '&#13;&#10;' . $model->customer->province->name . '&#13;&#10;' . $model->customer->city->name . '&#13;&#10;' . $model->customer->zipcode; ?></textarea>
-                        </div>
-                    </div>
-                </div>
                 <div class="field">
                     <div class="row collapse">
                         <div class="small-4 columns">
@@ -201,5 +233,6 @@
                     </div>
                 </div>
             </div><!-- end div large -->
+        </div>
     </div>
 </fieldset>

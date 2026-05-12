@@ -1,6 +1,6 @@
 <?php
 
-class ReceivableCustomerSummary extends CComponent {
+class StockCardTransactionWarehouseSummary extends CComponent {
 
     public $dataProvider;
 
@@ -9,11 +9,14 @@ class ReceivableCustomerSummary extends CComponent {
     }
 
     public function setupLoading() {
-        
+//        $this->dataProvider->criteria->together = TRUE;
+//        $this->dataProvider->criteria->with = array(
+//            'inventoryDetails',
+//        );
     }
 
     public function setupPaging($pageSize, $currentPage) {
-        $pageSize = (empty($pageSize)) ? 100 : $pageSize;
+        $pageSize = (empty($pageSize)) ? 5000 : $pageSize;
         $pageSize = ($pageSize <= 0) ? 1 : $pageSize;
         $this->dataProvider->pagination->pageSize = $pageSize;
 
@@ -27,25 +30,19 @@ class ReceivableCustomerSummary extends CComponent {
     }
 
     public function setupFilter($filters) {
+        $startDate = (empty($filters['startDate'])) ? date('Y-m-d') : $filters['startDate'];
         $endDate = (empty($filters['endDate'])) ? date('Y-m-d') : $filters['endDate'];
-        $branchId = (empty($filters['branchId'])) ? '' : $filters['branchId'];
-        
-        $branchConditionSql = '';
-        
-        if (!empty($branchId)) {
-            $branchConditionSql = ' AND p.branch_id = :branch_id';
-            $this->dataProvider->criteria->params[':branch_id'] = $branchId;
-        }
-        
+
         $this->dataProvider->criteria->addCondition("EXISTS (
-            SELECT p.customer_id, SUM(p.payment_left) AS remaining
-            FROM " . InvoiceHeader::model()->tableName() . " p 
-            WHERE p.customer_id = t.id AND p.user_id_cancelled IS NULL AND p.invoice_date BETWEEN '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND :end_date" . $branchConditionSql . " 
-            GROUP BY p.customer_id
-            HAVING remaining > 100
+            SELECT i.id
+            FROM " . InventoryDetail::model()->tableName() . " i
+            INNER JOIN " . Warehouse::model()->tableName() . " w ON w.id = i.warehouse_id
+            WHERE i.product_id = t.id AND i.warehouse_id = :warehouse_id AND i.transaction_date BETWEEN :start_date AND :end_date AND w.status = 'Active'
+                AND i.notes IN ('Purchase Order', 'Sale Retail')
         )");
-        
+        $this->dataProvider->criteria->params[':start_date'] = $startDate;
         $this->dataProvider->criteria->params[':end_date'] = $endDate;
-        $this->dataProvider->criteria->compare('t.customer_type', 'Company');
+        $this->dataProvider->criteria->params[':warehouse_id'] = $filters['warehouseId'];
     }
+
 }

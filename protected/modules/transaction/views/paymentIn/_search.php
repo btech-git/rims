@@ -12,19 +12,6 @@
 
     <div class="row">
         <div class="small-12 medium-6 columns">
-            <!-- BEGIN FIELDS -->
-            <div class="field">
-                <div class="row collapse">
-                    <div class="small-4 columns">
-                        <?php echo $form->label($model,'invoice_id', array('class'=>'prefix')); ?>
-                    </div>
-                    <div class="small-8 columns">
-                        <?php echo $form->textField($model,'invoice_number'); ?>
-                    </div>
-                </div>
-            </div>	
-
-            <!-- BEGIN FIELDS -->
             <div class="field">
                 <div class="row collapse">
                     <div class="small-4 columns">
@@ -78,6 +65,16 @@
                 </div>
             </div>
             
+            <div class="field">
+                <div class="row collapse">
+                    <div class="small-4 columns">
+                        <?php echo $form->label($model,'payment_amount', array('class'=>'prefix')); ?>
+                    </div>
+                    <div class="small-8 columns">
+                        <?php echo $form->textField($model,'payment_amount'); ?>
+                    </div>
+                </div>
+            </div>	
             <div class="field">
                 <div class="row collapse">
                     <div class="small-4 columns">

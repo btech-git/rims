@@ -14,7 +14,7 @@ Yii::app()->clientScript->registerCss('_report', '
     <?php $warehouse = Warehouse::model()->findByPk($warehouseId); ?>
     <div style="font-weight: bold; text-align: center">
         <div style="font-size: larger">RAPERIND MOTOR</div>
-        <div style="font-size: larger">Mutasi per Gudang <?php echo CHtml::encode(CHtml::value($warehouse, 'name')); ?></div>
+        <div style="font-size: larger">Mutasi Stok Jual Beli Gudang <?php echo CHtml::encode(CHtml::value($warehouse, 'name')); ?></div>
         <div>
             <?php echo ' Tanggal: ' . CHtml::encode(Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($startDate))) . ' - ' . CHtml::encode(Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($endDate))); ?>
         </div>
@@ -37,7 +37,7 @@ Yii::app()->clientScript->registerCss('_report', '
         
         <tbody>
             <?php foreach ($stockCardSummary->dataProvider->data as $header): ?>
-            <?php $stock = $header->getBeginningStockReport($startDate, $warehouse->branch_id); ?>
+            <?php $stock = $header->getBeginningTransactionStockReport($startDate, $warehouse->branch_id); ?>
             <?php //$beginningValue = $header->getBeginningValueReport($startDate, $warehouse->branch_id); ?>
                 <tr class="items1">
                     <td colspan="2">
@@ -61,7 +61,7 @@ Yii::app()->clientScript->registerCss('_report', '
                     <td><?php echo CHtml::encode(CHtml::value($header, 'unit.name')); ?></td>
                 </tr>
 
-                <?php $stockData = $header->getInventoryStockReport($startDate, $endDate, $warehouse->branch_id); ?>
+                <?php $stockData = $header->getInventoryTransactionStockReport($startDate, $endDate, $warehouse->branch_id); ?>
                 <?php $totalStockIn = 0; ?>
                 <?php $totalStockOut = 0; ?>
                 <?php foreach ($stockData as $stockRow): ?>

@@ -429,8 +429,6 @@ class VehicleController extends Controller {
      * Manages all models.
      */
     public function actionAdmin() {
-//		$model=new Vehicle('search');
-//		$model->unsetAttributes();  // clear any default values
 
         $model = Search::bind(new Vehicle('search'), isset($_GET['Vehicle']) ? $_GET['Vehicle'] : '');
         $dataProvider = $model->search();
@@ -457,8 +455,16 @@ class VehicleController extends Controller {
             $dataProvider->criteria->params[':customer_type'] = $customerType;
         }
 
-        if (isset($_GET['Vehicle']))
+        if (isset($_GET['Clear'])) {
+            $model->unsetAttributes();
+            $customerId = '';
+            $customerName = '';
+            $customerType = '';
+        }
+
+        if (isset($_GET['Vehicle'])) {
             $model->attributes = $_GET['Vehicle'];
+        }
 
         $this->render('admin', array(
             'model' => $model,
