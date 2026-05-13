@@ -184,7 +184,7 @@
                             <span class="prefix">Insurance Company</span>
                         </div>
                         <div class="small-8 columns">
-                            <input type="text" readonly="true" value="<?php echo CHtml::encode(CHtml::value($invoice, 'insuranceCompany.name')); ?>"> 
+                            <input type="text" readonly="true" value="<?php echo CHtml::encode(CHtml::value($model, 'insuranceCompany.name')); ?>"> 
                         </div>
                     </div>
                 </div>
@@ -277,7 +277,7 @@
                             <span class="prefix">User Created</span>
                         </div>
                         <div class="small-8 columns">
-                            <input type="text" readonly="true" value="<?php echo CHtml::encode(CHtml::value($invoice, 'user.username')); ?>"> 
+                            <input type="text" readonly="true" value="<?php echo CHtml::encode(CHtml::value($model, 'user.username')); ?>"> 
                         </div>
                     </div>
                 </div>
@@ -299,7 +299,7 @@
                             <span class="prefix">User Edited</span>
                         </div>
                         <div class="small-8 columns">
-                            <input type="text" readonly="true" value="<?php echo CHtml::encode(CHtml::value($invoice, 'userIdEdited.username')); ?>"> 
+                            <input type="text" readonly="true" value="<?php echo CHtml::encode(CHtml::value($model, 'userIdEdited.username')); ?>"> 
                         </div>
                     </div>
                 </div>
@@ -321,7 +321,7 @@
                             <span class="prefix">User Cancelled</span>
                         </div>
                         <div class="small-8 columns">
-                            <input type="text" readonly="true" value="<?php echo CHtml::encode(CHtml::value($invoice, 'userIdCancelled.username')); ?>"> 
+                            <input type="text" readonly="true" value="<?php echo CHtml::encode(CHtml::value($model, 'userIdCancelled.username')); ?>"> 
                         </div>
                     </div>
                 </div>
@@ -387,7 +387,7 @@
                             <span class="prefix">Rework User Input</span>
                         </div>
                         <div class="small-8 columns">
-                            <input type="text" readonly="true" value="<?php echo CHtml::encode(CHtml::value($invoice, 'userIdRework.username')); ?>"> 
+                            <input type="text" readonly="true" value="<?php echo CHtml::encode(CHtml::value($model, 'userIdRework.username')); ?>"> 
                         </div>
                     </div>
                 </div>
