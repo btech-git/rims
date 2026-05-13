@@ -94,7 +94,7 @@
             'code',
             array(
                 'name' => 'name',
-                'value' => 'CHtml::link($data->name, array("/master/service/view", "id"=>$data->id), array("target" => "_blank"))',
+                'value' => 'CHtml::link($data->name, array("showService", "id"=>$data->id), array("target" => "_blank"))',
                 'type'=>'raw',
             ),
             array(

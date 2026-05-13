@@ -106,13 +106,13 @@
             'id',
             array(
                 'name'=>'plate_number', 
-                'value'=>'CHtml::link($data->plate_number, array("/master/vehicle/view", "id"=>$data->id), array("target" => "blank"))', 
+                'value'=>'CHtml::link($data->plate_number, array("showVehicle", "id"=>$data->id), array("target" => "blank"))', 
                 'type'=>'raw'
             ),
             array(
                 'name'=>'customer_name',
                 'header' => 'Customer',
-                'value'=>'CHtml::link($data->customer->name, array("/master/customer/view", "id"=>$data->customer_id), array("target" => "blank"))',
+                'value'=>'CHtml::link($data->customer->name, array("showCustomer", "id"=>$data->customer_id), array("target" => "blank"))',
                 'type'=>'raw'
             ),
             array(

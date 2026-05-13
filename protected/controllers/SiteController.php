@@ -103,6 +103,54 @@ class SiteController extends Controller {
         ));
     }
         
+    public function actionShowCustomer($id) {
+        $model = Customer::model()->findByPk($id);
+        $vehicleDetails = Vehicle::model()->findAllByAttributes(array('customer_id' => $id), array('limit' => 100, 'order' => 'id DESC'));
+        $rateDetails = CustomerServiceRate::model()->findAllByAttributes(array('customer_id' => $id));
+        $invoiceHeaders = InvoiceHeader::model()->findAllByAttributes(array('customer_id' => $model->id, 'user_id_cancelled' => null), array('limit' => 100, 'order' => 't.id DESC'));
+        
+        $this->render('showCustomer', array(
+            'model' => $model,
+            'vehicleDetails' => $vehicleDetails,
+            'rateDetails' => $rateDetails,
+            'invoiceHeaders' => $invoiceHeaders,
+        ));
+    }
+
+    public function actionShowProduct($id) {
+        $model = Product::model()->findByPk($id);
+        $invoiceDetails = InvoiceDetail::model()->findAllByAttributes(array('product_id' => $model->id, 'user_id_cancelled' => null), array('limit' => 100, 'order' => 't.id DESC'));
+        
+        $this->render('showProduct', array(
+            'model' => $model,
+            'invoiceDetails' => $invoiceDetails,
+        ));
+    }
+
+    public function actionShowService($id) {
+        $model = Service::model()->findByPk($id);
+        $serviceEquipments = ServiceEquipment::model()->findAllByAttributes(array('service_id' => $id));
+        $complements = ServiceComplement::model()->findAllByAttributes(array('service_id' => $id));
+        $invoiceDetails = InvoiceDetail::model()->findAllByAttributes(array('service_id' => $model->id), array('limit' => 100, 'order' => 't.id DESC'));
+        
+        $this->render('showService', array(
+            'model' => $model,
+            'serviceEquipments' => $serviceEquipments,
+            'complements' => $complements,
+            'invoiceDetails' => $invoiceDetails,
+        ));
+    }
+
+    public function actionShowVehicle($id) {
+        $model = Vehicle::model()->findByPk($id);
+        $invoiceHeaders = InvoiceHeader::model()->findAllByAttributes(array('vehicle_id' => $model->id, 'user_id_cancelled' => null), array('limit' => 100, 'order' => 't.id DESC'));
+        
+        $this->render('showVehicle', array(
+            'model' => $model,
+            'invoiceHeaders' => $invoiceHeaders,
+        ));
+    }
+
     public function actionAjaxHtmlUpdateProductStockTable() {
         if (Yii::app()->request->isAjaxRequest) {
             $pageNumber = isset($_GET['page']) ? $_GET['page'] : 1;

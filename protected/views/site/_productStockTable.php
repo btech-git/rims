@@ -26,9 +26,9 @@
             <?php $inventoryTotalQuantities = $product->getInventoryTotalQuantitiesByPeriodic($endDate); ?>
             <?php $totalStock = 0; ?>
             <tr>
-                <td><?php echo CHtml::link(CHtml::value($product, 'id'), array('/master/product/view', 'id' => $product->id), array('target' => 'blank')); ?></td>
+                <td><?php echo CHtml::link(CHtml::value($product, 'id'), array('showProduct', 'id' => $product->id), array('target' => 'blank')); ?></td>
                 <td><?php echo CHtml::encode(CHtml::value($product, 'manufacturer_code')); ?></td>
-                <td><?php echo CHtml::link(CHtml::value($product, 'name'), array('/master/product/view', 'id' => $product->id), array('target' => 'blank')); ?></td>
+                <td><?php echo CHtml::link(CHtml::value($product, 'name'), array('showProduct', 'id' => $product->id), array('target' => 'blank')); ?></td>
                 <td><?php echo CHtml::encode(CHtml::value($product, 'brand.name')); ?></td>
                 <td><?php echo CHtml::encode(CHtml::value($product, 'subBrand.name')); ?></td>
                 <td><?php echo CHtml::encode(CHtml::value($product, 'subBrandSeries.name')); ?></td>

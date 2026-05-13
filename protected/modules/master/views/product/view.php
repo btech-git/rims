@@ -43,21 +43,33 @@ $this->menu=array(
                 array(
                     'name'=>'tire_size_id', 
                     'header' => 'Ukuran Ban',
-                    'value'=> empty($model->tire_size_id) ? "" : $model->tireSize->tireName,
+                    'value'=> CHtml::encode(CHtml::value($model, 'tireSize.tireName')),
                 ),
                 array(
                     'name'=>'oil_sae_id', 
                     'label' => 'Oli Spesifikasi',
-                    'value'=> empty($model->oil_sae_id) ? "" : $model->oilSae->oilName,
+                    'value'=> CHtml::encode(CHtml::value($model, 'oilSae.oilName')),
                 ),
                 array(
                     'name'=>'unit_id', 
                     'label' => 'Satuan',
-                    'value'=>$model->unit->name
+                    'value' => CHtml::encode(CHtml::value($model, 'unit.name')),
                 ),
-                array('name'=>'product_master_category_id', 'value'=>$model->productMasterCategory->name),
-                array('name'=>'product_sub_master_category_id', 'value'=>$model->productSubMasterCategory->name),
-                array('name'=>'product_sub_category_id', 'value'=>$model->productSubCategory->name),
+                array(
+                    'label' => 'Master Category',
+                    'name'=>'product_master_category_id', 
+                    'value' => CHtml::encode(CHtml::value($model, 'productMasterCategory.name')),
+                ),
+                array(
+                    'label' => 'Sub Master Category',
+                    'name'=>'product_sub_master_category_id', 
+                    'value' => CHtml::encode(CHtml::value($model, 'productSubMasterCategory.name')),
+                ),
+                array(
+                    'label' => 'Sub Category',
+                    'name'=>'product_sub_category_id', 
+                    'value' => CHtml::encode(CHtml::value($model, 'productSubCategory.name')),
+                ),
                 array(
                     'name' => 'hpp',
                     'value' => Yii::app()->numberFormatter->format("#,##0.00", $model->hpp),
