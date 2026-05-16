@@ -114,7 +114,7 @@ Yii::app()->clientScript->registerScript('search', "
                     ),
                     array(
                         'class' => 'CButtonColumn',
-                        'template' => '{edit} {hapus} {restore}',
+                        'template' => '{edit} {hapus}',
                         'buttons' => array
                             (
                             'edit' => array(
@@ -125,22 +125,22 @@ Yii::app()->clientScript->registerScript('search', "
                             ),
                             'hapus' => array(
                                 'label' => 'delete',
-                                'visible' => '($data->is_deleted == 0)? TRUE:FALSE',
+                                'visible' => '$data->is_deleted = 0 && Yii::app()->user->checkAccess("masterServiceApproval")',
                                 'url' => 'Yii::app()->createUrl("master/service/delete", array("id" => $data->id))',
                                 'options' => array(
                                     // 'class'=>'btn red delete',
                                     'onclick' => 'return confirm("Are you sure want to delete this equipments?");',
                                 )
                             ),
-                            'restore' => array(
-                                'label' => 'UNDELETE',
-                                'visible' => '($data->is_deleted == 1)? TRUE:FALSE',
-                                'url' => 'Yii::app()->createUrl("master/service/restore", array("id" => $data->id))',
-                                'options' => array(
-                                    // 'class'=>'btn red delete',
-                                    'onclick' => 'return confirm("Are you sure want to undelete this Service?");',
-                                )
-                            ),
+//                            'restore' => array(
+//                                'label' => 'UNDELETE',
+//                                'visible' => '($data->is_deleted == 1)? TRUE:FALSE',
+//                                'url' => 'Yii::app()->createUrl("master/service/restore", array("id" => $data->id))',
+//                                'options' => array(
+//                                    // 'class'=>'btn red delete',
+//                                    'onclick' => 'return confirm("Are you sure want to undelete this Service?");',
+//                                )
+//                            ),
                         ),
                     ),
                 ),
