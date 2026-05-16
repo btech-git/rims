@@ -16,27 +16,29 @@ class ServiceController extends Controller {
 
     public function filterAccess($filterChain) {
         if ($filterChain->action->id === 'create') {
-            if (!(Yii::app()->user->checkAccess('masterServiceCreate')))
+            if (!(Yii::app()->user->checkAccess('masterServiceCreate'))) {
                 $this->redirect(array('/site/login'));
+            }
+        }
+
+        if ($filterChain->action->id === 'update' || $filterChain->action->id === 'restore') {
+            if (!(Yii::app()->user->checkAccess('masterServiceEdit'))) {
+                $this->redirect(array('/site/login'));
+            }
+        }
+
+        if ($filterChain->action->id === 'delete') {
+            if (!(Yii::app()->user->checkAccess('masterServiceApproval'))) {
+                $this->redirect(array('/site/login'));
+            }
         }
 
         if (
-            $filterChain->action->id === 'update' || 
-            $filterChain->action->id === 'delete' || 
-            $filterChain->action->id === 'restore'
-        ) {
-            if (!(Yii::app()->user->checkAccess('masterServiceEdit')))
-                $this->redirect(array('/site/login'));
-        }
-
-        if (
-            $filterChain->action->id === 'view' || 
-            $filterChain->action->id === 'profile' || 
+            $filterChain->action->id === 'view' ||
             $filterChain->action->id === 'admin' || 
-            $filterChain->action->id === 'index' || 
-            $filterChain->action->id === 'addProduct'
+            $filterChain->action->id === 'index'
         ) {
-            if (!(Yii::app()->user->checkAccess('masterServiceCreate')) || !(Yii::app()->user->checkAccess('masterServiceEdit'))) {
+            if (!(Yii::app()->user->checkAccess('masterServiceCreate') || Yii::app()->user->checkAccess('masterServiceEdit'))) {
                 $this->redirect(array('/site/login'));
             }
         }
