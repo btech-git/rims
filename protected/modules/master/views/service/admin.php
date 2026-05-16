@@ -125,7 +125,7 @@ Yii::app()->clientScript->registerScript('search', "
                             ),
                             'hapus' => array(
                                 'label' => 'delete',
-                                'visible' => '$data->is_deleted = 0 && Yii::app()->user->checkAccess("masterServiceApproval")',
+                                'visible' => '$data->is_deleted == 0 && Yii::app()->user->checkAccess("masterServiceApproval")',
                                 'url' => 'Yii::app()->createUrl("master/service/delete", array("id" => $data->id))',
                                 'options' => array(
                                     // 'class'=>'btn red delete',
