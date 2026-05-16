@@ -10,7 +10,7 @@ class ServiceController extends Controller {
 
     public function filters() {
         return array(
-//            'access',
+            'access',
         );
     }
 
@@ -285,11 +285,17 @@ class ServiceController extends Controller {
      * @param integer $id the ID of the model to be deleted
      */
     public function actionDelete($id) {
-        $this->loadModel($id)->remove();
+        $model = $this->loadModel($id);
+        $model->status = 'Deleted';
+        $model->deleted_by = Yii::app()->user->id;
+        $model->update(array('status', 'deleted_by'));
+        $model->remove();
 
         // if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
-        if (!isset($_GET['ajax']))
+        if (!isset($_GET['ajax'])) {
+            $this->saveMasterLog($model);
             $this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
+        }
     }
 
     public function actionRestore($id) {
@@ -297,8 +303,9 @@ class ServiceController extends Controller {
         $this->loadModel($id)->restore();
 
         // if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
-        if (!isset($_GET['ajax']))
+        if (!isset($_GET['ajax'])) {
             $this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
+        }
     }
 
     /**
@@ -325,6 +332,24 @@ class ServiceController extends Controller {
         $this->render('admin', array(
             'model' => $model,
         ));
+    }
+    
+    public function saveMasterLog($model) {
+        $masterLog = new MasterLog();
+        $masterLog->name = $model->name;
+        $masterLog->log_date = date('Y-m-d');
+        $masterLog->log_time = date('H:i:s');
+        $masterLog->table_name = $model->tableName();
+        $masterLog->table_id = $model->id;
+        $masterLog->user_id = Yii::app()->user->id;
+        $masterLog->username = Yii::app()->user->username;
+        $masterLog->controller_class = Yii::app()->controller->module->id  . '/' . Yii::app()->controller->id;
+        $masterLog->action_name = Yii::app()->controller->action->id;
+        
+        $newData = $this->header->attributes;
+        $masterLog->new_data = json_encode($newData);
+
+        $masterLog->save();
     }
 
     /**
