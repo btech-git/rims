@@ -60,6 +60,16 @@
                                         'url' => array('/report/balanceSheetMonthly/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('director')
                                     ),
+                                    array(
+                                        'label' => 'Ringkasan Buku Besar Semua Cabang', 
+                                        'url' => array('/report/ledgerSummaryMultipleBranch/summary'), 
+                                        'visible' => Yii::app()->user->checkAccess('director')
+                                    ),
+                                    array(
+                                        'label' => 'Ringkasan Buku Besar Semua PT', 
+                                        'url' => array('/report/ledgerSummaryMultipleCompany/summary'), 
+                                        'visible' => Yii::app()->user->checkAccess('director')
+                                    ),
                                 ),
                             )); ?>
                         <?php endif; ?>

@@ -968,10 +968,77 @@ class JurnalUmum extends CActiveRecord {
                 ), 0) AS balance
                 FROM " . JurnalUmum::model()->tableName() . " j 
                 INNER JOIN " . Coa::model()->tableName() . " c ON c.id = j.coa_id
-                WHERE j.tanggal_transaksi BETWEEN :start_date AND :end_date" . $branchConditionSql . "
+                WHERE c.code < '4' AND j.tanggal_transaksi BETWEEN :start_date AND :end_date" . $branchConditionSql . "
                 GROUP BY j.coa_id
                 ORDER BY c.code ASC";
 
+        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
+
+        return $resultSet;
+    }
+    
+    public static function getLedgerSummaryMultipleBranchReport($startDate, $endDate, $coaCategoryList, $coaSubCategoryList) {
+        $coaCategoryIdsConditionSql = '';
+        if (!empty($coaCategoryList)) {
+            $coaCategoryIdsConditionSql = ' AND c.coa_category_id IN (' . implode(',', $coaCategoryList) . ')';
+        }
+        
+        $coaSubCategoryIdsConditionSql = '';
+        if (!empty($coaSubCategoryList)) {
+            $coaSubCategoryIdsConditionSql = ' AND c.coa_sub_category_id IN (' . implode(',', $coaSubCategoryList) . ')';
+        }
+        
+        $params = array(
+            ':start_date' => $startDate,
+            ':end_date' => $endDate,
+        );
+        
+        $sql = "SELECT j.coa_id, j.branch_id, MAX(c.code) AS coa_code, MAX(c.name) AS coa_name, COALESCE(SUM(
+                    CASE j.debet_kredit WHEN 'D' THEN j.total ELSE 0 END
+                ), 0) AS debit, COALESCE(SUM(
+                    CASE j.debet_kredit WHEN 'K' THEN j.total ELSE 0 END
+                ), 0) AS credit
+                FROM " . JurnalUmum::model()->tableName() . " j 
+                INNER JOIN " . Coa::model()->tableName() . " c ON c.id = j.coa_id
+                INNER JOIN " . Branch::model()->tableName() . " b ON b.id = j.branch_id
+                WHERE j.tanggal_transaksi BETWEEN :start_date AND :end_date" . $coaCategoryIdsConditionSql . $coaSubCategoryIdsConditionSql . "
+                GROUP BY j.coa_id, j.branch_id
+                ORDER BY c.code ASC;";
+        
+        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
+
+        return $resultSet;
+    }
+    
+    public static function getLedgerSummaryMultipleCompanyReport($startDate, $endDate, $coaCategoryList, $coaSubCategoryList) {
+        $coaCategoryIdsConditionSql = '';
+        if (!empty($coaCategoryList)) {
+            $coaCategoryIdsConditionSql = ' AND c.coa_category_id IN (' . implode(',', $coaCategoryList) . ')';
+        }
+        
+        $coaSubCategoryIdsConditionSql = '';
+        if (!empty($coaSubCategoryList)) {
+            $coaSubCategoryIdsConditionSql = ' AND c.coa_sub_category_id IN (' . implode(',', $coaSubCategoryList) . ')';
+        }
+        
+        $params = array(
+            ':start_date' => $startDate,
+            ':end_date' => $endDate,
+        );
+        
+        $sql = "SELECT j.coa_id, b.company_id, MAX(c.code) AS coa_code, MAX(c.name) AS coa_name, COALESCE(SUM(
+                    CASE j.debet_kredit WHEN 'D' THEN j.total ELSE 0 END
+                ), 0) AS debit, COALESCE(SUM(
+                    CASE j.debet_kredit WHEN 'K' THEN j.total ELSE 0 END
+                ), 0) AS credit
+                FROM " . JurnalUmum::model()->tableName() . " j 
+                INNER JOIN " . Coa::model()->tableName() . " c ON c.id = j.coa_id
+                INNER JOIN " . Branch::model()->tableName() . " b ON b.id = j.branch_id
+                INNER JOIN " . Company::model()->tableName() . " p ON p.id = b.company_id
+                WHERE j.tanggal_transaksi BETWEEN :start_date AND :end_date AND p.is_deleted = 0" . $coaCategoryIdsConditionSql . $coaSubCategoryIdsConditionSql . "
+                GROUP BY j.coa_id, b.company_id
+                ORDER BY c.code ASC;";
+        
         $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
 
         return $resultSet;

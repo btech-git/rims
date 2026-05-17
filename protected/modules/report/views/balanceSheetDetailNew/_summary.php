@@ -10,13 +10,54 @@
     
     <table>
         <tbody>
+            <?php $balances = array(); ?>
+            <?php $coaParentCodes = array(); ?>
+            <?php $previousLevel = 0; ?>
+            <?php $currentLevel = 0; ?>
             <?php foreach ($balanceSheetReportData as $coaCode => $balanceSheetReportItem): ?>
+                <?php $currentLevel = $balanceSheetReportItem['level']; ?>
+            
+                <?php $coaParentCodes[$currentLevel] = $balanceSheetReportItem['parent_code']; ?>
+            
                 <?php $balance = isset($balanceSheetReportItem['balance']) ? $balanceSheetReportItem['balance'] : '' ?>
+                <?php $balances[$currentLevel]['amounts'][] = empty($balance) ? '0.00' : $balance; ?>
+            
+                <?php while ($previousLevel > $currentLevel): ?>
+                    <?php $amountSum = array_sum($balances[$previousLevel]['amounts']); ?>
+            
+                    <?php $balances[$previousLevel]['amounts'] = array(); ?>
+                    <?php $balances[$previousLevel - 1]['amounts'][] = $amountSum; ?>
+            
+                    <tr>
+                        <td style="padding-left: <?php echo 32 * ($previousLevel - 1); ?>px">Total <?php echo CHtml::encode($balanceSheetReportData[$coaParentCodes[$previousLevel]]['name']); ?></td>
+                        <td style="text-align: right"><?php echo CHtml::encode($amountSum); ?></td>
+                    </tr>
+                    
+                    <?php $previousLevel--; ?>
+                <?php endwhile; ?>
+                    
                 <tr>
                     <td style="padding-left: <?php echo 32 * $balanceSheetReportItem['level']; ?>px"><?php echo CHtml::encode($coaCode); ?> - <?php echo CHtml::encode($balanceSheetReportItem['name']); ?></td>
                     <td style="text-align: right"><?php echo CHtml::encode($balance); ?></td>
                 </tr>
+                    
+                <?php $previousLevel = $currentLevel; ?>
             <?php endforeach; ?>
+            <?php for ($i = $currentLevel - 1; $i > 0; $i--): ?>
+                <?php while ($previousLevel > $i): ?>
+                    <?php $amountSum = array_sum($balances[$previousLevel]['amounts']); ?>
+            
+                    <?php $balances[$previousLevel]['amounts'] = array(); ?>
+                    <?php $balances[$previousLevel - 1]['amounts'][] = $amountSum; ?>
+            
+                    <tr>
+                        <td style="padding-left: <?php echo 32 * ($previousLevel - 1); ?>px">Total <?php echo CHtml::encode($balanceSheetReportData[$coaParentCodes[$previousLevel]]['name']); ?></td>
+                        <td style="text-align: right"><?php echo CHtml::encode($amountSum); ?></td>
+                    </tr>
+                    
+                    <?php $previousLevel--; ?>
+                <?php endwhile; ?>
+            <?php endfor; ?>
         </tbody>
     </table>
 </div>
