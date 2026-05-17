@@ -463,11 +463,6 @@
                                         'visible' => Yii::app()->user->checkAccess('monthlyBankingReport')
                                     ),
                                     array(
-                                        'label' => 'Bank Multi Bulan', 
-                                        'url' => array('/report/paymentByBankMonthToMonth/summary'), 
-                                        'visible' => Yii::app()->user->checkAccess('monthlyBankingReport')
-                                    ),
-                                    array(
                                         'label' => 'Jurnal Penyesuaian', 
                                         'url' => array('/report/journalAdjustment/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('adjustmentJournalReport')
