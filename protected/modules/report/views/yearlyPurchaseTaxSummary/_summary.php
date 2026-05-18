@@ -14,7 +14,6 @@
 <br />
 
 <fieldset>
-    <legend>Penjualan Total</legend>
     <table class="report">
         <thead style="position: sticky; top: 0">
             <tr id="header1">
