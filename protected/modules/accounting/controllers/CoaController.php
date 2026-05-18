@@ -22,12 +22,14 @@ class CoaController extends Controller {
             }
         }
 
-        if (
-            $filterChain->action->id === 'edit' || 
-            $filterChain->action->id === 'update' || 
-            $filterChain->action->id === 'delete'
-        ) {
+        if ($filterChain->action->id === 'update') {
             if (!(Yii::app()->user->checkAccess('masterCoaEdit'))) {
+                $this->redirect(array('/site/login'));
+            }
+        }
+
+        if ($filterChain->action->id === 'delete') {
+            if (!(Yii::app()->user->checkAccess('masterCoaApproval'))) {
                 $this->redirect(array('/site/login'));
             }
         }
@@ -39,7 +41,11 @@ class CoaController extends Controller {
             $filterChain->action->id === 'cutoOff' || 
             $filterChain->action->id === 'viewCoa'
         ) {
-            if (!(Yii::app()->user->checkAccess('masterCoaCreate')) || !(Yii::app()->user->checkAccess('masterCoaEdit'))) {
+            if (!(
+                Yii::app()->user->checkAccess('masterCoaCreate') || 
+                Yii::app()->user->checkAccess('masterCoaEdit') || 
+                Yii::app()->user->checkAccess('masterCoaView')
+            )) {
                 $this->redirect(array('/site/login'));
             }
         }
@@ -70,14 +76,18 @@ class CoaController extends Controller {
         if (isset($_POST['Approve']) && (int) $model->is_approved !== 1) {
             $model->is_approved = 1;
             $model->date_approval = date('Y-m-d');
+            $model->time_approval = date('H:i:s');
+            $model->user_id_approval = Yii::app()->user->id;
             
-            if ($model->save(true, array('is_approved', 'date_approval'))) {
+            if ($model->save(true, array('is_approved', 'date_approval', 'time_approval'))) {
                 Yii::app()->user->setFlash('confirm', 'Your data has been approved!!!');
             }
         } elseif (isset($_POST['Reject'])) {
             $model->is_approved = 2;
+            $model->rejected_datetime = date('Y-m-d H:i:s');
+            $model->user_id_rejected = Yii::app()->user->id;
             
-            if ($model->save(true, array('is_approved'))) {
+            if ($model->save(true, array('is_approved', 'rejected_datetime', 'user_id_rejected'))) {
                 Yii::app()->user->setFlash('error', 'Your data has been rejected!!!');
             }
         }
@@ -116,7 +126,7 @@ class CoaController extends Controller {
         $model->time_created = date('H:i:s');
         $model->date_approval = null;
         $model->time_approval = null;
-        $model->status = 'Not Approved';
+        $model->status = 'Draft';
         $model->user_id = Yii::app()->user->id;
 
         // Uncomment the following line if AJAX validation is needed
@@ -145,10 +155,11 @@ class CoaController extends Controller {
      */
     public function actionUpdate($id) {
         $model = $this->loadModel($id);
+        $model->updated_datetime = date('Y-m-d H:i:s');
+        $model->user_id_updated = Yii::app()->user->id;
 
         if (isset($_POST['Coa'])) {
             $model->attributes = $_POST['Coa'];
-//            $model->coa_category_id = $model->coaSubCategory->coa_category_id;
 
             if ($model->save()) {
                 $coaLog = new CoaLog();
@@ -172,35 +183,24 @@ class CoaController extends Controller {
         ));
     }
 
-    public function saveMasterLog($model) {
-        $masterLog = new MasterLog();
-        $masterLog->name = $model->name;
-        $masterLog->log_date = date('Y-m-d');
-        $masterLog->log_time = date('H:i:s');
-        $masterLog->table_name = $model->tableName();
-        $masterLog->table_id = $model->id;
-        $masterLog->user_id = Yii::app()->user->id;
-        $masterLog->username = Yii::app()->user->username;
-        $masterLog->controller_class = Yii::app()->controller->module->id  . '/' . Yii::app()->controller->id;
-        $masterLog->action_name = Yii::app()->controller->action->id;
-        
-        $newData = $model->attributes;
-        $masterLog->new_data = json_encode($newData);
-
-        $masterLog->save();
-    }
-
     /**
      * Deletes a particular model.
      * If deletion is successful, the browser will be redirected to the 'admin' page.
      * @param integer $id the ID of the model to be deleted
      */
     public function actionDelete($id) {
-        $this->loadModel($id)->delete();
+        $model = $this->loadModel($id);
+        $model->status = 'Deleted';
+        $model->is_deleted = 1;
+        $model->user_id_deleted = Yii::app()->user->id;
+        $model->deleted_datetime = date('Y-m-d H:i:s');
+        $model->update(array('status', 'is_deleted', 'user_id_deleted', 'deleted_datetime'));
 
         // if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
-        if (!isset($_GET['ajax']))
+        if (!isset($_GET['ajax'])) {
+            $this->saveMasterLog($model);
             $this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
+        }
     }
 
     /**
@@ -225,13 +225,30 @@ class CoaController extends Controller {
 
         if (isset($_GET['SaveExcel'])) {
             $coas = Coa::model()->findAll(array('condition' => 't.is_approved = 1', 'order' => 't.code ASC'));
-        
             $this->saveToExcel($coas);
         }
 
         $this->render('admin', array(
             'model' => $model,
         ));
+    }
+
+    public function saveMasterLog($model) {
+        $masterLog = new MasterLog();
+        $masterLog->name = $model->name;
+        $masterLog->log_date = date('Y-m-d');
+        $masterLog->log_time = date('H:i:s');
+        $masterLog->table_name = $model->tableName();
+        $masterLog->table_id = $model->id;
+        $masterLog->user_id = Yii::app()->user->id;
+        $masterLog->username = Yii::app()->user->username;
+        $masterLog->controller_class = Yii::app()->controller->module->id  . '/' . Yii::app()->controller->id;
+        $masterLog->action_name = Yii::app()->controller->action->id;
+        
+        $newData = $model->attributes;
+        $masterLog->new_data = json_encode($newData);
+
+        $masterLog->save();
     }
 
     /**
@@ -243,8 +260,11 @@ class CoaController extends Controller {
      */
     public function loadModel($id) {
         $model = Coa::model()->findByPk($id);
-        if ($model === null)
+        
+        if ($model === null) {
             throw new CHttpException(404, 'The requested page does not exist.');
+        }
+        
         return $model;
     }
 
@@ -295,16 +315,6 @@ class CoaController extends Controller {
         if (Yii::app()->request->isAjaxRequest) {
             $model = $this->loadModel($id);
 
-            // if (isset($_POST['Level']))
-            // {
-            // 	$model->attributes = $_POST['Level'];
-            // 	if ($model->save())
-            // 	{
-            // 		echo CHtml::script('window.location.href = "' . Yii::app()->user->getReturnUrl(array('admin')) . '";');
-            // 		Yii::app()->end();
-            // 	}
-            // }
-
             $this->renderPartial('_update-dialog', array(
                 'model' => $model,
             ), false, true);
@@ -353,8 +363,9 @@ class CoaController extends Controller {
         $coa = new Coa('search');
         $coa->unsetAttributes();  // clear any default values
 
-        if (isset($_GET['Coa']))
+        if (isset($_GET['Coa'])) {
             $coa->attributes = $_GET['Coa'];
+        }
 
         $coaCriteria = new CDbCriteria;
         $coaCriteria->addCondition("coa_id = 0");
@@ -382,8 +393,6 @@ class CoaController extends Controller {
     }
 
     public function getXlsKartu($showCoas, $tanggal_mulai, $tanggal_sampai, $branch) {
-        // $lastkode = "";
-        // var_dump($customer); die();
         $objPHPExcel = new PHPExcel();
 
         // Set document properties
