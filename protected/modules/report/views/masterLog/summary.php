@@ -76,7 +76,7 @@ Yii::app()->clientScript->registerScript('report', '
                                         'create' => 'Create',
                                         'update' => 'Update',
                                         'approval' => 'Approval',
-                                        'cancel' => 'Cancel',
+                                        'delete' => 'Delete',
                                     ), array('empty' => '-- All --')); ?>
                                 </div>
                             </div>
