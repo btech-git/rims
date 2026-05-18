@@ -493,12 +493,13 @@ class TransactionReceiveItem extends MonthlyTransactionActiveRecord {
     }
     
     public static function getYearlyPurchaseTaxSummary($year) {
-        $sql = "SELECT EXTRACT(YEAR_MONTH FROM invoice_date) AS year_month_value, recipient_branch_id, MIN(b.name) AS branch_name, SUM(invoice_grand_total) AS total_price
+        $sql = "SELECT EXTRACT(YEAR_MONTH FROM invoice_date) AS year_month_value, p.main_branch_id, MIN(b.name) AS branch_name, SUM(invoice_grand_total) AS total_price
                 FROM " . TransactionReceiveItem::model()->tableName() . " i 
-                INNER JOIN " . Branch::model()->tableName() . " b ON b.id = i.recipient_branch_id
-                WHERE YEAR(invoice_date) = :year AND i.user_id_cancelled IS null AND i.invoice_tax_nominal > 0
-                GROUP BY EXTRACT(YEAR_MONTH FROM invoice_date), recipient_branch_id
-                ORDER BY year_month_value ASC, recipient_branch_id ASC";
+                INNER JOIN " . TransactionPurchaseOrder::model()->tableName() . " p ON p.id = i.purchase_order_id
+                INNER JOIN " . Branch::model()->tableName() . " b ON b.id = p.main_branch_id
+                WHERE YEAR(invoice_date) = :year AND i.user_id_cancelled IS null AND p.user_id_cancelled IS null AND i.invoice_tax_nominal > 0
+                GROUP BY EXTRACT(YEAR_MONTH FROM invoice_date), p.main_branch_id
+                ORDER BY year_month_value ASC, p.main_branch_id ASC";
                 
         $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, array(
             ':year' => $year,
@@ -519,7 +520,8 @@ class TransactionReceiveItem extends MonthlyTransactionActiveRecord {
             $params[':branch_id'] = $branchId;
         }
         
-        $sql = "SELECT EXTRACT(YEAR_MONTH FROM invoice_date) AS year_month_value, COUNT(DISTINCT(i.purchase_order_id)) AS quantity_order, COUNT(*) AS quantity_invoice, SUM(i.invoice_sub_total) AS sub_total, SUM(i.invoice_tax_nominal) AS total_tax, SUM(i.invoice_grand_total) AS total_price 
+        $sql = "SELECT EXTRACT(YEAR_MONTH FROM invoice_date) AS year_month_value, COUNT(DISTINCT(i.purchase_order_id)) AS quantity_order, 
+                    COUNT(*) AS quantity_invoice, SUM(i.invoice_sub_total) AS sub_total, SUM(i.invoice_tax_nominal) AS total_tax, SUM(i.invoice_grand_total) AS total_price 
                 FROM " . TransactionReceiveItem::model()->tableName() . " i 
                 WHERE YEAR(i.invoice_date) = :year AND i.user_id_cancelled IS NULL AND i.invoice_tax_nominal > 0 AND i.invoice_number <> ''" . $branchConditionSql . "
                 GROUP BY EXTRACT(YEAR_MONTH FROM invoice_date)
@@ -602,4 +604,31 @@ class TransactionReceiveItem extends MonthlyTransactionActiveRecord {
         
         return $resultSet;
     }
+    
+    public function searchByTransactionDetailInfo($year, $month, $branchId, $page) {
+
+        $criteria = new CDbCriteria;
+        $criteria->together = 'true';
+        $criteria->with = array('purchaseOrder');
+
+        $criteria->params = array(
+            ':transaction_month' => $month, 
+            ':transaction_year' => $year, 
+            ':branch_id' => $branchId, 
+        );
+        
+        $criteria->addCondition("MONTH(t.invoice_date) = :transaction_month AND YEAR(t.invoice_date) = :transaction_year AND t.invoice_tax_nominal > 0 AND t.user_id_cancelled IS NULL AND purchaseOrder.main_branch_id = :branch_id");
+        
+        return new CActiveDataProvider($this, array(
+            'criteria' => $criteria,
+            'sort' => array(
+                'defaultOrder' => 't.invoice_date ASC',
+            ),
+            'pagination' => array(
+                'pageSize' => 500,
+                'currentPage' => $page - 1,
+            ),
+        ));
+    }
+    
 }
