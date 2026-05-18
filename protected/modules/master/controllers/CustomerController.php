@@ -10,35 +10,41 @@ class CustomerController extends Controller {
 
     public function filters() {
         return array(
-//            'access',
+            'access',
         );
     }
 
     public function filterAccess($filterChain) {
         if ($filterChain->action->id === 'create') {
-            if (!(Yii::app()->user->checkAccess('masterCustomerCreate')))
+            if (!(Yii::app()->user->checkAccess('masterCustomerCreate'))) {
                 $this->redirect(array('/site/login'));
+            }
         }
 
-        if (
-            $filterChain->action->id === 'update' || 
-            $filterChain->action->id === 'delete'
-        ) {
-            if (!(Yii::app()->user->checkAccess('masterCustomerEdit')))
+        if ($filterChain->action->id === 'update' || $filterChain->action->id === 'updatePrice' || $filterChain->action->id === 'updateVehicle') {
+            if (!(Yii::app()->user->checkAccess('masterCustomerEdit'))) {
                 $this->redirect(array('/site/login'));
+            }
+        }
+
+        if ($filterChain->action->id === 'delete') {
+            if (!(Yii::app()->user->checkAccess('masterCustomerApproval'))) {
+                $this->redirect(array('/site/login'));
+            }
         }
 
         if (
             $filterChain->action->id === 'view' || 
             $filterChain->action->id === 'admin' || 
-            $filterChain->action->id === 'index' || 
-            $filterChain->action->id === 'addVehicle' || 
-            $filterChain->action->id === 'updatePic' || 
-            $filterChain->action->id === 'updatePrice' || 
-            $filterChain->action->id === 'updateVehicle'
+            $filterChain->action->id === 'index'
         ) {
-            if (!(Yii::app()->user->checkAccess('masterCustomerCreate')) || !(Yii::app()->user->checkAccess('masterCustomerEdit')))
+            if (!(
+                Yii::app()->user->checkAccess('masterCustomerCreate') || 
+                Yii::app()->user->checkAccess('masterCustomerEdit') || 
+                Yii::app()->user->checkAccess('masterCustomerView')
+            )) {
                 $this->redirect(array('/site/login'));
+            }
         }
 
         $filterChain->run();
@@ -58,14 +64,21 @@ class CustomerController extends Controller {
         if (isset($_POST['Approve']) && (int) $model->is_approved !== 1) {
             $model->is_approved = 1;
             $model->date_approval = date('Y-m-d');
+            $model->time_approval = date('H:i:s');
+            $model->user_id_approval = Yii::app()->user->id;
             
-            if ($model->save(true, array('is_approved', 'date_approval')))
+            if ($model->save(true, array('is_approved', 'date_approval', 'time_approval', 'user_id_approval'))) {
                 Yii::app()->user->setFlash('confirm', 'Your data has been approved!!!');
+            }
         } elseif (isset($_POST['Reject'])) {
             $model->is_approved = 2;
+            $model->date_reject = date('Y-m-d');
+            $model->time_reject = date('H:i:s');
+            $model->user_id_reject = Yii::app()->user->id;
             
-            if ($model->save(true, array('is_approved')))
+            if ($model->save(true, array('is_approved', 'date_reject', 'time_reject', 'user_id_reject'))) {
                 Yii::app()->user->setFlash('confirm', 'Your data has been rejected!!!');
+            }
         }
 
         $this->render('view', array(
@@ -83,6 +96,10 @@ class CustomerController extends Controller {
      */
     public function actionCreate() {
         
+        $customer = $this->instantiate(null);
+        $customer->header->user_id = Yii::app()->user->id;
+        $customer->header->date_created = date('Y-m-d H:i:s');
+        
         $coa = new Coa('search');
         $coa->unsetAttributes();  // clear any default values
         if (isset($_GET['Coa'])) {
@@ -97,10 +114,6 @@ class CustomerController extends Controller {
         $coaDataProvider = new CActiveDataProvider('Coa', array(
             'criteria' => $coaCriteria,
         ));
-        
-        $customer = $this->instantiate(null);
-        $customer->header->user_id = Yii::app()->user->id;
-        $customer->header->date_created = date('Y-m-d H:i:s');
         
         $service = new Service('search');
         $service->unsetAttributes();  // clear any default values
@@ -193,6 +206,11 @@ class CustomerController extends Controller {
      * @param integer $id the ID of the model to be updated
      */
     public function actionUpdate($id) {
+        $customer = $this->instantiate($id);
+        $customer->header->user_id_updated = Yii::app()->user->id;
+        $customer->header->updated_datetime = date('Y-m-d H:i:s');
+        
+        $this->performAjaxValidation($customer->header);
 
         $coa = new Coa('search');
         $coa->unsetAttributes();  // clear any default values
@@ -204,12 +222,10 @@ class CustomerController extends Controller {
         $coaCriteria->addCondition("coa_sub_category_id = 8");
         $coaCriteria->compare('code', $coa->code . '%', true, 'AND', false);
         $coaCriteria->compare('name', $coa->name, true);
-
-
         $coaDataProvider = new CActiveDataProvider('Coa', array(
             'criteria' => $coaCriteria,
         ));
-        $customer = $this->instantiate($id);
+        
         $service = new Service('search');
         $service->unsetAttributes();  // clear any default values
         if (isset($_GET['Service'])) {
@@ -239,8 +255,6 @@ class CustomerController extends Controller {
         $serviceDataProvider = new CActiveDataProvider('Service', array(
             'criteria' => $serviceCriteria,
         ));
-
-        $this->performAjaxValidation($customer->header);
 
         if (isset($_POST['Customer'])) {
             $this->loadState($customer);
@@ -292,8 +306,9 @@ class CustomerController extends Controller {
         $model = CustomerPic::model()->findByPk($picId);
         if (isset($_POST['CustomerPic'])) {
             $model->attributes = $_POST['CustomerPic'];
-            if ($model->save())
+            if ($model->save()) {
                 $this->redirect(array('view', 'id' => $custId));
+            }
         }
 
         $this->render('update', array(
@@ -346,11 +361,18 @@ class CustomerController extends Controller {
      * @param integer $id the ID of the model to be deleted
      */
     public function actionDelete($id) {
-        $this->loadModel($id)->delete();
+        $model = $this->loadModel($id);
+        $model->status = 'Deleted';
+        $model->is_deleted = 1;
+        $model->user_id_deleted = Yii::app()->user->id;
+        $model->deleted_datetime = date('Y-m-d H:i:s');
+        $model->update(array('status', 'is_deleted', 'user_id_deleted', 'deleted_datetime'));
 
         // if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
-        if (!isset($_GET['ajax']))
+        if (!isset($_GET['ajax'])) {
+            $this->saveMasterLog($model);
             $this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
+        }
     }
 
     /**
