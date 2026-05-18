@@ -22,15 +22,20 @@
  * @property string $mobile_phone
  * @property string $phone
  * @property integer $coa_id
- * @property integer $is_approved
- * @property string $date_approval
- * @property integer $user_id_approval
  * @property integer $user_id
+ * @property string $date_created
+ * @property integer $is_approved
+ * @property integer $user_id_approval
+ * @property string $date_approval
  * @property string $time_approval
- * @property integer $is_rejected
  * @property string $date_reject
  * @property string $time_reject
  * @property integer $user_id_reject
+ * @property integer $is_deleted
+ * @property integer $user_id_deleted
+ * @property string $deleted_datetime
+ * @property integer $user_id_updated
+ * @property string $updated_datetime
  * @property string $tax_registration_number
  *
  * The followings are the available model relations:
@@ -52,6 +57,8 @@
  * @property User $user
  * @property UserIdApproval $userIdApproval
  * @property UserIdReject $userIdReject
+ * @property UserIdUpdated $userIdUpdated
+ * @property UserIdDeleted $userIdDeleted
  */
 class Customer extends CActiveRecord {
 
@@ -77,7 +84,7 @@ class Customer extends CActiveRecord {
         // will receive user inputs.
         return array(
             array('name, address, province_id, city_id, customer_type, user_id', 'required'),
-            array('province_id, city_id, default_payment_type, tenor, coa_id, is_approved, is_rejected, user_id, user_id_approval, user_id_reject', 'numerical', 'integerOnly' => true),
+            array('province_id, city_id, default_payment_type, tenor, coa_id, is_approved, is_deleted, user_id, user_id_approval, user_id_reject, user_id_updated, user_id_deleted', 'numerical', 'integerOnly' => true),
             array('name, email, phone, mobile_phone', 'length', 'max' => 100),
             array('email', 'email'),
             array('email, mobile_phone', 'unique'),
@@ -86,10 +93,10 @@ class Customer extends CActiveRecord {
             array('zipcode, customer_type, status, flat_rate', 'length', 'max' => 10),
             array('fax', 'length', 'max' => 20),
             array('tax_registration_number', 'length', 'max' => 60),
-            array('date_approval, date_edit, time_approval, date_reject, time_reject', 'safe'),
+            array('date_approval, time_approval, date_reject, time_reject, date_created, updated_datetime, deleted_datetime', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, name, address, province_id, city_id, zipcode, fax, email, note, customer_type, tenor, status, birthdate, flat_rate, default_payment_type, city_name, province_name, plate_number, coa_id, coa_name, coa_code, phone, mobile_phone, is_approved, date_approval, user_id, user_id_approval, user_id_reject, is_rejected, time_approval, date_reject, time_reject, tax_registration_number', 'safe', 'on' => 'search'),
+            array('id, name, address, province_id, city_id, zipcode, fax, email, note, customer_type, tenor, status, birthdate, flat_rate, default_payment_type, city_name, province_name, plate_number, coa_id, coa_name, coa_code, phone, mobile_phone, is_approved, date_approval, date_created, user_id, user_id_approval, user_id_reject, is_deleted, time_approval, date_reject, time_reject, user_id_updated, user_id_deleted, updated_datetime, deleted_datetime, tax_registration_number', 'safe', 'on' => 'search'),
         );
     }
 
@@ -119,6 +126,8 @@ class Customer extends CActiveRecord {
             'user' => array(self::BELONGS_TO, 'Users', 'user_id'),
             'userIdApproval' => array(self::BELONGS_TO, 'Users', 'user_id_approval'),
             'userIdReject' => array(self::BELONGS_TO, 'Users', 'user_id_reject'),
+            'userIdUpdated' => array(self::BELONGS_TO, 'Users', 'user_id_updated'),
+            'userIdDeleted' => array(self::BELONGS_TO, 'Users', 'user_id_deleted'),
         );
     }
 
@@ -151,18 +160,6 @@ class Customer extends CActiveRecord {
         );
     }
 
-    /**
-     * Retrieves a list of models based on the current search/filter conditions.
-     *
-     * Typical usecase:
-     * - Initialize the model fields with values from filter form.
-     * - Execute this method to get CActiveDataProvider instance which will filter
-     * models according to data in model fields.
-     * - Pass data provider to CGridView, CListView or any similar widget.
-     *
-     * @return CActiveDataProvider the data provider that can return the models
-     * based on the search/filter conditions.
-     */
     public function search() {
         // @todo Please modify the following code to remove attributes that should not be searched.
 
