@@ -27,20 +27,27 @@
         <tbody>
             <?php $amountTotals = array(); ?>
             <?php for ($month = 1; $month <= 12; $month++): ?>
-                    <tr class="items1">
-                        <td style="text-align: left"><?php echo CHtml::encode($monthList[$month]); ?></td>
-                        <?php $amountSum = '0.00'; ?>
-                        <?php foreach ($branches as $branch): ?>
-                            <?php $amount = isset($yearlyPurchaseSummaryData[$month][$branch->id]) ? $yearlyPurchaseSummaryData[$month][$branch->id] : '0.00'; ?>
-                            <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $amount)); ?></td>
-                            <?php $amountSum += $amount; ?>
-                            <?php if (!isset($amountTotals[$branch->id])): ?>
-                                <?php $amountTotals[$branch->id] = '0.00'; ?>
-                            <?php endif; ?>
-                            <?php $amountTotals[$branch->id] += $amount; ?>
-                        <?php endforeach; ?>
-                        <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $amountSum)); ?></td>
-                    </tr>
+                <tr class="items1">
+                    <td style="text-align: left"><?php echo CHtml::encode($monthList[$month]); ?></td>
+                    <?php $amountSum = '0.00'; ?>
+                    <?php foreach ($branches as $branch): ?>
+                        <?php $amount = isset($yearlyPurchaseSummaryData[$month][$branch->id]) ? $yearlyPurchaseSummaryData[$month][$branch->id] : '0.00'; ?>
+                        <td style="text-align: right">
+                            <?php echo CHtml::link(CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $amount)), array(
+                                '/report/yearlyPurchaseTaxSummary/transactionDetailInfo', 
+                                'year' => $year, 
+                                'month' => $month, 
+                                'branchId' => $branch->id,
+                            ), array('target' => '_blank')); ?>
+                        </td>
+                        <?php $amountSum += $amount; ?>
+                        <?php if (!isset($amountTotals[$branch->id])): ?>
+                            <?php $amountTotals[$branch->id] = '0.00'; ?>
+                        <?php endif; ?>
+                        <?php $amountTotals[$branch->id] += $amount; ?>
+                    <?php endforeach; ?>
+                    <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $amountSum)); ?></td>
+                </tr>
             <?php endfor; ?>
         </tbody>
         <tfoot>
