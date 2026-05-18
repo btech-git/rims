@@ -14,25 +14,25 @@ $this->breadcrumbs = array(
         <?php $ccontroller = Yii::app()->controller->id; ?>
         <?php $ccaction = Yii::app()->controller->action->id; ?>
 
-        <a class="button success right" href="<?php echo Yii::app()->baseUrl . '/master/customer/admin'; ?>"><span class="fa fa-th-list"></span>Manage Customer</a>
+        <a class="button cbutton right" href="<?php echo Yii::app()->baseUrl . '/master/customer/admin'; ?>"><span class="fa fa-th-list"></span>Manage</a>
         <?php if (Yii::app()->user->checkAccess("masterCustomerEdit")) { ?>
             <a class="button warning right" style="margin-right:10px;"
                href="<?php echo Yii::app()->createUrl('/master/' . $ccontroller . '/update', array('id' => $model->id));
             ?>"><span class="fa fa-pencil"></span>edit</a>
        <?php } ?>
-        <a class="button cbutton right" style="margin-right:10px;" href="<?php echo Yii::app()->createUrl('/master/' . $ccontroller . '/addVehicle', array('id' => $model->id)); ?>">
+        <a class="button success right" style="margin-right:10px;" href="<?php echo Yii::app()->createUrl('/master/' . $ccontroller . '/addVehicle', array('id' => $model->id)); ?>">
             <span class="fa fa-plus"></span>Add Vehicle
         </a>
         <!--        <a class="button cbutton right" style="margin-right:10px;"
                    href="<?php /* echo Yii::app()->createUrl('/frontDesk/registrationTransaction/create',
              array('type' => 1, 'id' => $model->id)); */ ?>"><span class="fa fa-plus"></span>Registration</a>-->
-        <a class="button cbutton right" style="margin-right:10px;" href="<?php echo Yii::app()->createUrl('/transaction/consignmentOutHeader/create'); ?>">
+<!--        <a class="button cbutton right" style="margin-right:10px;" href="<?php echo Yii::app()->createUrl('/transaction/consignmentOutHeader/create'); ?>">
             <span class="fa fa-plus"></span>Consignment Out
-        </a>
+        </a>-->
              
-        <a class="button cbutton right" style="margin-right:10px;" href="<?php echo Yii::app()->createUrl('/transaction/transactionSalesOrder/create'); ?>">
+<!--        <a class="button success right" style="margin-right:10px;" href="<?php echo Yii::app()->createUrl('/transaction/transactionSalesOrder/create'); ?>">
             <span class="fa fa-plus"></span>Sales
-        </a>
+        </a>-->
 
         <h1>View <?php echo $model->name ?></h1>
 
