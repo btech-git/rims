@@ -49,15 +49,7 @@
                     <td style="text-align: right">Total Monthly</td>
                     <?php foreach ($yearMonthList as $yearMonth): ?>
                         <td style="text-align: right">
-                            <?php echo CHtml::link(CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $amountTotals[$yearMonth])), array(
-                                '/report/paymentByBankMonthly/monthlyTransactionInfo', 
-//                                'coaId' => $coa->id, 
-                                'debitCredit' => 'D',
-//                                'year' => $year,
-//                                'month' => $month, 
-                                'branchId' => $branchId,
-                                'inOut' => 'In',
-                            ), array('target' => '_blank')); ?>
+                            <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $amountTotals[$yearMonth])); ?>
                         </td>
                     <?php endforeach; ?>
                     <td style="text-align: right; font-weight: bold">
