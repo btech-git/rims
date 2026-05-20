@@ -22,7 +22,11 @@ class PayableIncomingDueController extends Controller {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
         
-        $payableIncomingDueDate = TransactionReceiveItem::getPayableIncomingDueDate();
+        $supplierName = (isset($_GET['SupplierName'])) ? $_GET['SupplierName'] : '';
+        $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : date('Y-m-d');
+        $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
+        
+        $payableIncomingDueDate = TransactionReceiveItem::getPayableIncomingDueDate($supplierName, $startDate, $endDate);
         
         if (isset($_GET['ResetFilter'])) {
             $this->redirect(array('summary'));
@@ -34,6 +38,9 @@ class PayableIncomingDueController extends Controller {
         
         $this->render('index', array(
             'payableIncomingDueDate' => $payableIncomingDueDate,
+            'supplierName' => $supplierName,
+            'startDate' => $startDate,
+            'endDate' => $endDate,
         ));
     }
 }

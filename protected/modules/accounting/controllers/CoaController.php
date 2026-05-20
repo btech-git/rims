@@ -73,25 +73,6 @@ class CoaController extends Controller {
         $jurnalUmumDataProvider->criteria->addBetweenCondition('t.tanggal_transaksi', $startDate, $endDate);
         $jurnalUmumDataProvider->criteria->compare('t.coa_id', $id);
 
-        if (isset($_POST['Approve']) && (int) $model->is_approved !== 1) {
-            $model->is_approved = 1;
-            $model->date_approval = date('Y-m-d');
-            $model->time_approval = date('H:i:s');
-            $model->user_id_approval = Yii::app()->user->id;
-            
-            if ($model->save(true, array('is_approved', 'date_approval', 'time_approval'))) {
-                Yii::app()->user->setFlash('confirm', 'Your data has been approved!!!');
-            }
-        } elseif (isset($_POST['Reject'])) {
-            $model->is_approved = 2;
-            $model->rejected_datetime = date('Y-m-d H:i:s');
-            $model->user_id_rejected = Yii::app()->user->id;
-            
-            if ($model->save(true, array('is_approved', 'rejected_datetime', 'user_id_rejected'))) {
-                Yii::app()->user->setFlash('error', 'Your data has been rejected!!!');
-            }
-        }
-
         $this->render('view', array(
             'model' => $model,
             'jurnalUmum' => $jurnalUmum,

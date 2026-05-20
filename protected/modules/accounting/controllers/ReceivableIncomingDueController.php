@@ -22,7 +22,11 @@ class ReceivableIncomingDueController extends Controller {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
         
-        $receivableIncomingDueDate = InvoiceHeader::getReceivableIncomingDueDate();
+        $customerName = (isset($_GET['CustomerName'])) ? $_GET['CustomerName'] : '';
+        $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : date('Y-m-d');
+        $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
+        
+        $receivableIncomingDueDate = InvoiceHeader::getReceivableIncomingDueDate($customerName, $startDate, $endDate);
         
         if (isset($_GET['ResetFilter'])) {
             $this->redirect(array('summary'));
@@ -34,6 +38,9 @@ class ReceivableIncomingDueController extends Controller {
         
         $this->render('index', array(
             'receivableIncomingDueDate' => $receivableIncomingDueDate,
+            'customerName' => $customerName,
+            'startDate' => $startDate,
+            'endDate' => $endDate,
         ));
     }
 }
