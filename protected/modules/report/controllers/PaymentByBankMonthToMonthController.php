@@ -63,6 +63,7 @@ class PaymentByBankMonthToMonthController extends Controller {
         
         $paymentOutMonthlyList = array();
         foreach ($paymentOutMonthlyByBankList as $paymentOutMonthlyByBankRow) {
+            $month = str_pad($paymentOutMonthlyByBankRow['month'], 2, '0', STR_PAD_LEFT);
             $paymentOutMonthlyList[$paymentOutMonthlyByBankRow['coa_id']]['name'] = $paymentOutMonthlyByBankRow['coa_name'];
             $paymentOutMonthlyList[$paymentOutMonthlyByBankRow['coa_id']]['amounts'][$paymentOutMonthlyByBankRow['year'] . '-' . $month] = $paymentOutMonthlyByBankRow['total_amount'];
         }
