@@ -95,7 +95,7 @@
             <legend>Penjualan</legend>
             <?php $this->widget('zii.widgets.grid.CGridView', array(
                 'id' => 'sale-grid',
-                'dataProvider' => $productSalesDataProvider,
+                'dataProvider' => $invoiceDetails,
                 'filter' => null,
                 'template' => '<div style="overflow-x:scroll ; overflow-y: hidden; margin-bottom: 1.25rem;">{items}</div><div class="clearfix">{summary}{pager}</div>',
                 'pager' => array(
