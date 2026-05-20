@@ -36,19 +36,21 @@
  * @property string $unit_conversion_multiplier
  * @property integer $user_id
  * @property string $date_posting
- * @property integer $user_id_edit
- * @property string $date_edit
  * @property integer $is_approved
  * @property integer $user_id_approval
  * @property string $date_approval
  * @property string $time_approval
- * @property integer $is_rejected
  * @property string $date_reject
  * @property string $time_reject
  * @property integer $user_id_reject
  * @property integer $tire_size_id
  * @property integer $oil_sae_id
  * @property string $note
+ * @property integer $user_id_edit
+ * @property integer $is_deleted
+ * @property string $updated_datetime
+ * @property integer $user_id_deleted
+ * @property string $deleted_datetime
  *
  * The followings are the available model relations:
  * @property ConsignmentInDetail[] $consignmentInDetails
@@ -93,10 +95,11 @@
  * @property UnitIdConversion $unitIdConversion
  * @property User $user
  * @property UserIdApproval $userIdApproval
- * @property UserIdEdit $userIdEdit
  * @property UserIdReject $userIdReject
  * @property TireSize $tireSize
  * @property OilSae $oilSae
+ * @property UserIdEdit $userIdEdit
+ * @property UserIdDeleted $userIdDeleted
  */
 class Product extends CActiveRecord {
 
@@ -129,17 +132,17 @@ class Product extends CActiveRecord {
         // will receive user inputs.
         return array(
             array('code, manufacturer_code, name, production_year, brand_id, product_master_category_id, product_sub_master_category_id, product_sub_category_id, retail_price, minimum_stock, margin_type, ppn, unit_id, user_id, minimum_selling_price', 'required'),
-            array('production_year, brand_id, sub_brand_id, sub_brand_series_id, product_master_category_id, product_sub_master_category_id, product_sub_category_id, vehicle_car_make_id, vehicle_car_model_id, stock, minimum_stock, margin_type, margin_amount, ppn, unit_id, unit_id_conversion, is_approved, is_rejected, user_id_approval, user_id_edit, user_id, user_id_reject, tire_size_id, oil_sae_id', 'numerical', 'integerOnly' => true),
+            array('production_year, brand_id, sub_brand_id, sub_brand_series_id, product_master_category_id, product_sub_master_category_id, product_sub_category_id, vehicle_car_make_id, vehicle_car_model_id, stock, minimum_stock, margin_type, margin_amount, ppn, unit_id, unit_id_conversion, is_approved, user_id_approval, user_id, user_id_reject, tire_size_id, oil_sae_id, is_deleted, user_id_edit, user_id_deleted', 'numerical', 'integerOnly' => true),
             array('code', 'length', 'max' => 20),
             array('manufacturer_code, barcode, extension', 'length', 'max' => 50),
             array('manufacturer_code', 'unique', 'on' => 'insert'),
             array('name', 'length', 'max' => 30),
             array('purchase_price, recommended_selling_price, hpp, retail_price, status, minimum_selling_price, unit_conversion_multiplier', 'length', 'max' => 10),
             array('is_usable', 'length', 'max' => 5),
-            array('date_posting, date_approval, date_edit, time_approval, date_reject, time_reject, note', 'safe'),
+            array('date_posting, date_approval, time_approval, updated_datetime, deleted_datetime, date_reject, time_reject, note', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, code, manufacturer_code, barcode, name, user_id_edit, date_edit, description, production_year, brand_id, sub_brand_id, sub_brand_series_id, extension, product_master_category_id, product_sub_master_category_id, product_sub_category_id, vehicle_car_make_id, vehicle_car_model_id, purchase_price, recommended_selling_price, hpp, retail_price, stock, minimum_selling_price, minimum_stock, margin_type, margin_amount, is_usable, status, product_master_category_code, product_master_category_name, product_sub_master_category_code, product_sub_master_category_name, product_sub_category_code, product_sub_category_name,product_brand_name,product_supplier,findkeyword, ppn, product_sub_brand_name, product_sub_brand_series_name, unit_id, date_posting, user_id, is_approved, user_id_approval, date_approval, user_id, unit_conversion_multiplier, unit_id_conversion, user_id_reject, is_rejected, time_approval, date_reject, time_reject, tire_size_id, oil_sae_id, note', 'safe', 'on' => 'search'),
+            array('id, code, manufacturer_code, barcode, name, description, production_year, brand_id, sub_brand_id, sub_brand_series_id, extension, product_master_category_id, product_sub_master_category_id, product_sub_category_id, vehicle_car_make_id, vehicle_car_model_id, purchase_price, recommended_selling_price, hpp, retail_price, stock, minimum_selling_price, minimum_stock, margin_type, margin_amount, is_usable, status, product_master_category_code, product_master_category_name, product_sub_master_category_code, product_sub_master_category_name, product_sub_category_code, product_sub_category_name,product_brand_name,product_supplier,findkeyword, ppn, product_sub_brand_name, product_sub_brand_series_name, unit_id, date_posting, user_id, is_approved, user_id_approval, date_approval, unit_conversion_multiplier, unit_id_conversion, user_id_reject, time_approval, date_reject, time_reject, tire_size_id, oil_sae_id, updated_datetime, deleted_datetime, is_deleted, user_id_edit, user_id_deleted, note', 'safe', 'on' => 'search'),
         );
     }
 
@@ -185,11 +188,12 @@ class Product extends CActiveRecord {
             'unitIdConversion' => array(self::BELONGS_TO, 'Unit', 'unit_id_conversion'),
             'user' => array(self::BELONGS_TO, 'Users', 'user_id'),
             'userIdApproval' => array(self::BELONGS_TO, 'Users', 'user_id_approval'),
-            'userIdEdit' => array(self::BELONGS_TO, 'Users', 'user_id_edit'),
             'userIdReject' => array(self::BELONGS_TO, 'Users', 'user_id_reject'),
             'registrationProducts' => array(self::HAS_MANY, 'RegistrationProduct', 'product_id'),
             'tireSize' => array(self::BELONGS_TO, 'TireSize', 'tire_size_id'),
             'oilSae' => array(self::BELONGS_TO, 'OilSae', 'oil_sae_id'),
+            'userIdEdit' => array(self::BELONGS_TO, 'Users', 'user_id_edit'),
+            'userIdDeleted' => array(self::BELONGS_TO, 'Users', 'user_id_deleted'),
         );
     }
 
@@ -235,8 +239,6 @@ class Product extends CActiveRecord {
             'is_approved' => 'Approval',
             'user_id_approval' => 'User Approval',
             'date_approval' => 'Tanggal Approval',
-            'user_id_edit' => 'User Edit',
-            'date_edit' => 'Tanggal Edit',
             'tire_size_id' => 'Tire Size',
             'oil_sae_id' => 'Oil SAE',
         );
