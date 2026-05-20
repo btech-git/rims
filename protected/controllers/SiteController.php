@@ -119,7 +119,7 @@ class SiteController extends Controller {
 
     public function actionShowProduct($id) {
         $model = Product::model()->findByPk($id);
-        $invoiceDetails = InvoiceDetail::model()->findAllByAttributes(array('product_id' => $model->id, 'user_id_cancelled' => null), array('limit' => 100, 'order' => 't.id DESC'));
+        $invoiceDetails = InvoiceDetail::model()->findAllByAttributes(array('product_id' => $model->id), array('limit' => 100, 'order' => 't.id DESC'));
         
         $this->render('showProduct', array(
             'model' => $model,
