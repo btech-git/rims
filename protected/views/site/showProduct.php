@@ -93,60 +93,32 @@
     <div class="large-12 columns">
         <fieldset>
             <legend>Penjualan</legend>
-            <?php $this->widget('zii.widgets.grid.CGridView', array(
-                'id' => 'sale-grid',
-                'dataProvider' => $invoiceDetails,
-                'filter' => null,
-                'template' => '<div style="overflow-x:scroll ; overflow-y: hidden; margin-bottom: 1.25rem;">{items}</div><div class="clearfix">{summary}{pager}</div>',
-                'pager' => array(
-                    'cssFile' => false,
-                    'header' => '',
-                ),
-                'columns' => array(
-                    array(
-                        'header' => 'ID',
-                        'value' => 'empty($data->registration_transaction_id) ? "" : $data->registration_transaction_id',
-                    ),
-                    array(
-                        'header' => 'Customer',
-                        'value' => 'empty($data->registration_transaction_id) ? "" : $data->registrationTransaction->customer->name',
-                    ),
-                    array(
-                        'header' => 'Sales #',
-                        'value' => 'empty($data->registration_transaction_id) ? "" : CHtml::link($data->registrationTransaction->transaction_number, array("/frontDesk/registrationTransaction/view", "id" => $data->registration_transaction_id), array("target" => "blank"))',
-                        'type'=>'raw'
-                    ),
-                    array(
-                        'header' => 'Tanggal',
-                        'value' => 'empty($data->registration_transaction_id) ? "" : $data->registrationTransaction->transaction_date',
-                    ),
-                    array(
-                        'header' => 'Quantity',
-                        'value' => 'number_format($data->quantity, 0)',
-                        'htmlOptions' => array('style' => 'text-align: center'),
-                    ),
-                    array(
-                        'header' => 'DPP',
-                        'value' => 'number_format($data->unitPriceBeforeTax, 2)',
-                        'htmlOptions' => array('style' => 'text-align: right'),
-                    ),
-                    array(
-                        'header' => 'PPn',
-                        'value' => '$data->registrationTransaction->ppnLiteral',
-                        'htmlOptions' => array('style' => 'text-align: center'),
-                    ),
-                    array(
-                        'header' => 'Sell Price',
-                        'value' => 'number_format($data->unitPriceAfterTax, 2)',
-                        'htmlOptions' => array('style' => 'text-align: right'),
-                    ),
-                    array(
-                        'header' => 'Total',
-                        'value' => 'number_format($data->total_price, 2)',
-                        'htmlOptions' => array('style' => 'text-align: right'),
-                    ),
-                ),
-            )); ?>
+            <table>
+                <thead>
+                    <tr>
+                        <th>No</th>
+                        <th>Invoice #</th>
+                        <th>Tanggal</th>
+                        <th>Customer</th>
+                        <th>Quantity</th>
+                        <th>DPP</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($invoiceDetails as $i => $invoiceDetail): ?>
+                        <tr>
+                            <td><?php echo CHtml::encode($i+1); ?></td>
+                            <td><?php echo CHtml::link($invoiceDetail->invoice->invoice_number, array("/transaction/invoiceHeader/show", "id" => $invoiceDetail->invoice_id), array("target" => "blank")); ?></td>
+                            <td><?php echo CHtml::encode(CHtml::value($invoiceDetail, "invoice.invoice_date")); ?></td>
+                            <td><?php echo CHtml::encode(CHtml::value($invoiceDetail, "invoice.customer.name")); ?></td>
+                            <td style="text-align: center"><?php echo number_format($invoiceDetail->quantity, 0); ?></td>
+                            <td style="text-align: right"><?php echo number_format($invoiceDetail->priceAfterDiscount, 2); ?></td>
+                            <td style="text-align: right"><?php echo number_format($invoiceDetail->total_price, 2); ?></td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
         </fieldset>
     </div>
 </div>
