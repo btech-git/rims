@@ -21,6 +21,7 @@
     )); ?>
 
     <hr />
+    <?php echo $form->errorSummary($service->header); ?>
     <p class="note">Fields with <span class="required">*</span> are required.</p>
 
     <div class="row">
