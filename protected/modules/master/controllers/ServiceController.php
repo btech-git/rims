@@ -21,13 +21,13 @@ class ServiceController extends Controller {
             }
         }
 
-        if ($filterChain->action->id === 'update' || $filterChain->action->id === 'restore') {
+        if ($filterChain->action->id === 'update') {
             if (!(Yii::app()->user->checkAccess('masterServiceEdit'))) {
                 $this->redirect(array('/site/login'));
             }
         }
 
-        if ($filterChain->action->id === 'delete') {
+        if ($filterChain->action->id === 'delete' || $filterChain->action->id === 'restore') {
             if (!(Yii::app()->user->checkAccess('masterServiceApproval'))) {
                 $this->redirect(array('/site/login'));
             }
@@ -38,7 +38,11 @@ class ServiceController extends Controller {
             $filterChain->action->id === 'admin' || 
             $filterChain->action->id === 'index'
         ) {
-            if (!(Yii::app()->user->checkAccess('masterServiceCreate') || Yii::app()->user->checkAccess('masterServiceEdit'))) {
+            if (!(
+                Yii::app()->user->checkAccess('masterServiceCreate') || 
+                Yii::app()->user->checkAccess('masterServiceEdit') || 
+                Yii::app()->user->checkAccess('masterServiceView')
+            )) {
                 $this->redirect(array('/site/login'));
             }
         }
@@ -57,17 +61,6 @@ class ServiceController extends Controller {
         $complements = ServiceComplement::model()->findAllByAttributes(array('service_id' => $id));
         $invoiceDetails = InvoiceDetail::model()->findAllByAttributes(array('service_id' => $model->id), array('limit' => 50, 'order' => 't.id DESC'));
         
-        if (isset($_POST['Approve']) && (int) $model->is_approved !== 1) {
-            $model->is_approved = 1;
-            $model->date_approval = date('Y-m-d');
-            
-            if ($model->save(true, array('is_approved', 'date_approval'))) {
-                Yii::app()->user->setFlash('confirm', 'Your data has been approved!!!');
-            } else {
-                Yii::app()->user->setFlash('error', 'Your data failed to approved!!!');
-            }
-        }
-
         $this->render('view', array(
             'model' => $model,
             'serviceEquipments' => $serviceEquipments,
@@ -136,8 +129,9 @@ class ServiceController extends Controller {
         $complement = new Service('search');
         $complement->unsetAttributes();  // clear any default values
 
-        if (isset($_GET['Service']))
+        if (isset($_GET['Service'])) {
             $complement->attributes = $_GET['Service'];
+        }
 
         $complementCriteria = new CDbCriteria;
         $complementCriteria->compare('name', $complement->name, true);
@@ -149,8 +143,9 @@ class ServiceController extends Controller {
         $equipment = new Equipments('search');
         $equipment->unsetAttributes();  // clear any default values
 
-        if (isset($_GET['Equipments']))
+        if (isset($_GET['Equipments'])) {
             $equipment->attributes = $_GET['Equipments'];
+        }
 
         $equipmentCriteria = new CDbCriteria;
         $equipmentCriteria->compare('t.name', $equipment->name, true);
@@ -165,11 +160,11 @@ class ServiceController extends Controller {
 
         $material = new Product('search');
         $material->unsetAttributes();  // clear any default values
-        if (isset($_GET['Products']))
+        if (isset($_GET['Products'])) {
             $material->attributes = $_GET['Products'];
+        }
 
         $materialCriteria = new CDbCriteria;
-        //$positionCriteria->compare('code',$position->code.'%',true,'AND', false);
         $materialCriteria->compare('name', $material->name, true);
 
         $materialDataProvider = new CActiveDataProvider('Product', array(
@@ -186,7 +181,6 @@ class ServiceController extends Controller {
         }
 
         $this->render('create', array(
-            //'model'=>$model,
             'service' => $service,
             'equipment' => $equipment,
             'equipmentDataProvider' => $equipmentDataProvider,
@@ -203,26 +197,18 @@ class ServiceController extends Controller {
      * @param integer $id the ID of the model to be updated
      */
     public function actionUpdate($id) {
-        //$model=$this->loadModel($id);
-        // Uncomment the following line if AJAX validation is needed
-        // $this->performAjaxValidation($model);
-        // if(isset($_POST['Service']))
-        // {
-        // 	$model->attributes=$_POST['Service'];
-        // 	if($model->save())
-        // 		$this->redirect(array('view','id'=>$model->id));
-        // }
-        // $this->render('update',array(
-        // 	'model'=>$model,
-        // ));
+        $service = $this->instantiate($id);
+        $service->header->user_id_updated = Yii::app()->user->id;
+        $service->header->updated_datetime = date('Y-m-d H:i:s');
+        $this->performAjaxValidation($service->header);
 
         $complement = new Service('search');
         $complement->unsetAttributes();  // clear any default values
-        if (isset($_GET['Service']))
+        if (isset($_GET['Service'])) {
             $complement->attributes = $_GET['Service'];
+        }
 
         $complementCriteria = new CDbCriteria;
-        //$positionCriteria->compare('code',$position->code.'%',true,'AND', false);
         $complementCriteria->compare('name', $complement->name, true);
 
         $complementDataProvider = new CActiveDataProvider('Service', array(
@@ -231,11 +217,11 @@ class ServiceController extends Controller {
 
         $equipment = new Equipments('search');
         $equipment->unsetAttributes();  // clear any default values
-        if (isset($_GET['Equipments']))
+        if (isset($_GET['Equipments'])) {
             $equipment->attributes = $_GET['Equipments'];
+        }
 
         $equipmentCriteria = new CDbCriteria;
-        //$positionCriteria->compare('code',$position->code.'%',true,'AND', false);
         $equipmentCriteria->compare('name', $equipment->name, true);
 
         $equipmentDataProvider = new CActiveDataProvider('Equipments', array(
@@ -244,33 +230,25 @@ class ServiceController extends Controller {
 
         $material = new Product('search');
         $material->unsetAttributes();  // clear any default values
-        if (isset($_GET['Products']))
+        if (isset($_GET['Products'])) {
             $material->attributes = $_GET['Products'];
+        }
 
         $materialCriteria = new CDbCriteria;
-        //$positionCriteria->compare('code',$position->code.'%',true,'AND', false);
         $materialCriteria->compare('name', $material->name, true);
 
         $materialDataProvider = new CActiveDataProvider('Product', array(
             'criteria' => $materialCriteria,
         ));
 
-        $service = $this->instantiate($id);
-
-        $this->performAjaxValidation($service->header);
-
         if (isset($_POST['Service'])) {
-
-
             $this->loadState($service);
             if ($service->save(Yii::app()->db)) {
                 $this->redirect(array('view', 'id' => $service->header->id));
-            } else {
-                
             }
         }
+        
         $this->render('update', array(
-            //'model'=>$model,
             'service' => $service,
             'equipment' => $equipment,
             'equipmentDataProvider' => $equipmentDataProvider,
@@ -289,9 +267,10 @@ class ServiceController extends Controller {
     public function actionDelete($id) {
         $model = $this->loadModel($id);
         $model->status = 'Deleted';
+        $model->is_deleted = 1;
         $model->deleted_by = Yii::app()->user->id;
-        $model->update(array('status', 'deleted_by'));
-        $model->remove();
+        $model->deleted_at = date('Y-m-d H:i:s');
+        $model->update(array('status', 'is_deleted', 'deleted_by', 'deleted_at'));
 
         // if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
         if (!isset($_GET['ajax'])) {
@@ -348,7 +327,7 @@ class ServiceController extends Controller {
         $masterLog->controller_class = Yii::app()->controller->module->id  . '/' . Yii::app()->controller->id;
         $masterLog->action_name = Yii::app()->controller->action->id;
         
-        $newData = $this->header->attributes;
+        $newData = $model->attributes;
         $masterLog->new_data = json_encode($newData);
 
         $masterLog->save();
