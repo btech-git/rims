@@ -91,9 +91,9 @@ class Services extends CComponent {
                 $detail->unit_id = $product->unit_id;
                 $this->productDetails[] = $detail;
             }
-        }
-        else
+        } else {
             $this->header->addError('error', 'Invoice tidak ada di dalam detail');
+        }
     }
 
     public function removeProductDetailAt($index) {
