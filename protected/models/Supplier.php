@@ -26,10 +26,17 @@
  * @property string $phone
  * @property string $mobile_phone
  * @property integer $is_approved
- * @property string $date_approval
+ * @property integer $is_deleted
  * @property integer $user_id
- * @property string $time_created
- * @property string $time_approval
+ * @property integer $user_id_updated
+ * @property integer $user_id_approved
+ * @property integer $user_id_rejected
+ * @property integer $user_id_deleted
+ * @property string $created_datetime
+ * @property string $updated_datetime
+ * @property string $approved_datetime
+ * @property string $rejected_datetime
+ * @property string $deleted_datetime
  *
  * The followings are the available model relations:
  * @property ConsignmentInHeader[] $consignmentInHeaders
@@ -49,6 +56,10 @@
  * @property TransactionRequestOrderDetail[] $transactionRequestOrderDetails
  * @property TransactionReturnOrder[] $transactionReturnOrders
  * @property User $user
+ * @property UserIdUpdated $userIdUpdated
+ * @property UserIdApproved $userIdApproved
+ * @property UserIdRejected $userIdRejected
+ * @property UserIdDeleted $userIdDeleted
  */
 class Supplier extends CActiveRecord {
 
@@ -82,17 +93,17 @@ class Supplier extends CActiveRecord {
         // will receive user inputs.
         return array(
             array('code, name, company, address, province_id, city_id, zipcode, email_personal, email_company, npwp, tenor, user_id', 'required'),
-            array('province_id, city_id, tenor, coa_id, coa_outstanding_order, is_approved, user_id', 'numerical', 'integerOnly' => true),
+            array('province_id, city_id, tenor, coa_id, coa_outstanding_order, is_approved, user_id, user_id_approved, user_id_rejected, user_id_updated, user_id_deleted, is_deleted', 'numerical', 'integerOnly' => true),
             array('code, npwp', 'length', 'max' => 20),
             array('name, company, position', 'length', 'max' => 30),
             array('status', 'length', 'max' => 45),
             array('zipcode, company_attribute', 'length', 'max' => 10),
             array('email_personal, email_company, phone', 'length', 'max' => 60),
             array('person_in_charge, mobile_phone', 'length', 'max' => 100),
-            array('date, note, date_approval', 'safe'),
+            array('date, note, approved_datetime, rejected_datetime, updated_datetime, deleted_datetime, created_datetime', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, date, code, name, company, position, address, time_created, time_approval, province_id, city_id, zipcode, email_personal, email_company, npwp, tenor, company_attribute,product_name, coa_id, coa_name, coa_code, coa_outstanding_code, coa_outstanding_name, note, status, phone, person_in_charge, mobile_phone, is_approved, date_approval, user_id', 'safe', 'on' => 'search'),
+            array('id, date, code, name, company, position, address, province_id, city_id, zipcode, email_personal, email_company, npwp, tenor, company_attribute,product_name, coa_id, coa_name, coa_code, coa_outstanding_code, coa_outstanding_name, note, status, phone, person_in_charge, mobile_phone, is_approved, user_id, approved_datetime, rejected_datetime, updated_datetime, deleted_datetime, created_datetime, user_id_approved, user_id_rejected, user_id_updated, user_id_deleted, is_deleted', 'safe', 'on' => 'search'),
         );
     }
 
@@ -128,6 +139,10 @@ class Supplier extends CActiveRecord {
             'transactionRequestOrderDetails' => array(self::HAS_MANY, 'TransactionRequestOrderDetail', 'supplier_id'),
             'transactionReturnOrders' => array(self::HAS_MANY, 'TransactionReturnOrder', 'supplier_id'),
             'user' => array(self::BELONGS_TO, 'Users', 'user_id'),
+            'userIdUpdated' => array(self::BELONGS_TO, 'Users', 'user_id_updated'),
+            'userIdApproved' => array(self::BELONGS_TO, 'Users', 'user_id_approved'),
+            'userIdRejected' => array(self::BELONGS_TO, 'Users', 'user_id_rejected'),
+            'userIdDeleted' => array(self::BELONGS_TO, 'Users', 'user_id_deleted'),
         );
     }
 
@@ -157,7 +172,6 @@ class Supplier extends CActiveRecord {
             'phone' => 'Phone',
             'mobile_phone' => 'Mobile Phone',
             'is_approved' => 'Approval',
-            'date_approval' => 'Tanggal Approval',
             'user_id' => 'User Input',
         );
     }
@@ -201,7 +215,6 @@ class Supplier extends CActiveRecord {
         $criteria->compare('phone', $this->phone);
         $criteria->compare('mobile_phone', $this->mobile_phone);
         $criteria->compare('t.is_approved', $this->is_approved);
-        $criteria->compare('t.date_approval', $this->date_approval);
         $criteria->compare('t.user_id', $this->user_id);
 
         $criteria->together = true;
@@ -244,7 +257,6 @@ class Supplier extends CActiveRecord {
         $criteria->compare('phone', $this->phone);
         $criteria->compare('mobile_phone', $this->mobile_phone);
         $criteria->compare('t.is_approved', $this->is_approved);
-        $criteria->compare('t.date_approval', $this->date_approval);
         $criteria->compare('t.user_id', $this->user_id);
 
         return new CActiveDataProvider($this, array(
@@ -320,7 +332,6 @@ class Supplier extends CActiveRecord {
         $criteria->compare('phone', $this->phone);
         $criteria->compare('mobile_phone', $this->mobile_phone);
         $criteria->compare('t.is_approved', 1);
-        $criteria->compare('t.date_approval', $this->date_approval);
         $criteria->compare('t.user_id', $this->user_id);
 
         return new CActiveDataProvider($this, array(
@@ -383,7 +394,7 @@ class Supplier extends CActiveRecord {
     }
     
     public function getApprovedDatetime() {
-        return $this->date_approval . " " . $this->time_approval;
+        return $this->approved_datetime;
     }
     
     public function getPayableReport($endDate, $branchId) {
