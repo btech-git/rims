@@ -15,6 +15,7 @@
                 <tr>
                     <td style="text-align: center; font-weight: bold; background-color: greenyellow">Gudang</td>
                     <td style="text-align: center">View</td>
+                    <td style="text-align: center">Approval</td>
                 </tr>
                 <tr>
                     <td>Kartu Stok Gudang</td>
@@ -24,6 +25,7 @@
                             'value' => 'warehouseStockReport'
                         )); ?>
                     </td>
+                    <td>&nbsp;</td>
                 </tr>
                 <tr>
                     <td>Mutasi per Barang</td>
@@ -33,6 +35,7 @@
                             'value' => 'stockCardItemReport'
                         )); ?>
                     </td>
+                    <td>&nbsp;</td>
                 </tr>
                 <tr>
                     <td>Mutasi per Gudang</td>
@@ -42,6 +45,7 @@
                             'value' => 'stockCardWarehouseReport'
                         )); ?>
                     </td>
+                    <td>&nbsp;</td>
                 </tr>
                 <tr>
                     <td>Pengiriman Barang</td>
@@ -51,6 +55,7 @@
                             'value' => 'deliveryReport'
                         )); ?>
                     </td>
+                    <td>&nbsp;</td>
                 </tr>
                 <tr>
                     <td>Penerimaan Barang</td>
@@ -60,6 +65,7 @@
                             'value' => 'receiveItemReport'
                         )); ?>
                     </td>
+                    <td>&nbsp;</td>
                 </tr>
                 <tr>
                     <td>Sub Pekerjaan Luar</td>
@@ -69,9 +75,10 @@
                             'value' => 'workOrderExpenseReport'
                         )); ?>
                     </td>
+                    <td>&nbsp;</td>
                 </tr>
                 <tr>
-                    <td style="text-align: center; font-weight: bold; background-color: greenyellow" colspan="2">Persediaan</td>
+                    <td style="text-align: center; font-weight: bold; background-color: greenyellow" colspan="3">Persediaan</td>
                 </tr>
                 <tr>
                     <td>Nilai Stok Persediaan</td>
@@ -81,6 +88,7 @@
                             'value' => 'stockValueReport'
                         )); ?>
                     </td>
+                    <td>&nbsp;</td>
                 </tr>
                 <tr>
                     <td>Stok Quantity + Nilai Stok Persediaan</td>
@@ -90,6 +98,7 @@
                             'value' => 'stockQuantityValueReport'
                         )); ?>
                     </td>
+                    <td>&nbsp;</td>
                 </tr>
                 <tr>
                     <td>Posisi Stok Gudang</td>
@@ -99,6 +108,7 @@
                             'value' => 'stockPositionReport'
                         )); ?>
                     </td>
+                    <td>&nbsp;</td>
                 </tr>
                 <tr>
                     <td>Stok Ban per Tahun Produksi</td>
@@ -108,6 +118,7 @@
                             'value' => 'stockTireReport'
                         )); ?>
                     </td>
+                    <td>&nbsp;</td>
                 </tr>
                 <tr>
                     <td>Stok Oli</td>
@@ -117,9 +128,10 @@
                             'value' => 'stockOilReport'
                         )); ?>
                     </td>
+                    <td>&nbsp;</td>
                 </tr>
                 <tr>
-                    <td style="text-align: center; font-weight: bold; background-color: greenyellow" colspan="2">Pekerjaan Pesanan</td>
+                    <td style="text-align: center; font-weight: bold; background-color: greenyellow" colspan="3">Pekerjaan Pesanan</td>
                 </tr>
                 <tr>
                     <td>Penyelesaian Pesanan per Pekerjaan</td>
@@ -129,6 +141,7 @@
                             'value' => 'workOrderServiceReport'
                         )); ?>
                     </td>
+                    <td>&nbsp;</td>
                 </tr>
                 <tr>
                     <td>Penyelesaian Pesanan per Kendaraan</td>
@@ -138,6 +151,7 @@
                             'value' => 'workOrderVehicleReport'
                         )); ?>
                     </td>
+                    <td>&nbsp;</td>
                 </tr>
                 <tr>
                     <td>Mekanik Performance</td>
@@ -147,6 +161,7 @@
                             'value' => 'mechanicPerformanceReport'
                         )); ?>
                     </td>
+                    <td>&nbsp;</td>
                 </tr>
                 <tr>
                     <td>Salesman Performance</td>
@@ -156,9 +171,10 @@
                             'value' => 'salesmanPerformanceReport'
                         )); ?>
                     </td>
+                    <td>&nbsp;</td>
                 </tr>
                 <tr>
-                    <td style="text-align: center; font-weight: bold; background-color: greenyellow" colspan="2">Buku Besar</td>
+                    <td style="text-align: center; font-weight: bold; background-color: greenyellow" colspan="3">Buku Besar</td>
                 </tr>
                 <tr>
                     <td>Jurnal Umum</td>
@@ -168,6 +184,7 @@
                             'value' => 'transactionJournalReport'
                         )); ?>
                     </td>
+                    <td>&nbsp;</td>
                 </tr>
                 <tr>
                     <td>Ringkasan Buku Besar</td>
@@ -177,6 +194,7 @@
                             'value' => 'journalSummaryReport'
                         )); ?>
                     </td>
+                    <td>&nbsp;</td>
                 </tr>
                 <tr>
                     <td>Rekap Jurnal Umum Pembelian</td>
@@ -186,6 +204,7 @@
                             'value' => 'summaryPurchaseReport'
                         )); ?>
                     </td>
+                    <td>&nbsp;</td>
                 </tr>
                 <tr>
                     <td>Rekap Jurnal Umum Pelunasan Pembelian</td>
@@ -195,6 +214,7 @@
                             'value' => 'summaryPaymentOutReport'
                         )); ?>
                     </td>
+                    <td>&nbsp;</td>
                 </tr>
                 <tr>
                     <td>Rekap Jurnal Umum Penjualan</td>
@@ -204,6 +224,7 @@
                             'value' => 'summarySaleReport'
                         )); ?>
                     </td>
+                    <td>&nbsp;</td>
                 </tr>
                 <tr>
                     <td>Rekap Jurnal Umum Penerimaan Penjualan</td>
@@ -213,6 +234,7 @@
                             'value' => 'summaryPaymentInReport'
                         )); ?>
                     </td>
+                    <td>&nbsp;</td>
                 </tr>
                 <tr>
                     <td>Rekap Jurnal Umum Pemasukan Cabang - Barang</td>
@@ -222,6 +244,7 @@
                             'value' => 'summaryMovementInReport'
                         )); ?>
                     </td>
+                    <td>&nbsp;</td>
                 </tr>
                 <tr>
                     <td>Rekap Jurnal Umum Pengeluaran Cabang - Barang</td>
@@ -231,6 +254,7 @@
                             'value' => 'summaryMovementOutReport'
                         )); ?>
                     </td>
+                    <td>&nbsp;</td>
                 </tr>
                 <tr>
                     <td>Rekap Jurnal Umum Sub Pekerjaan Luar</td>
@@ -240,6 +264,7 @@
                             'value' => 'summaryWorkOrderExpenseReport'
                         )); ?>
                     </td>
+                    <td>&nbsp;</td>
                 </tr>
                 <tr>
                     <td>Rekap Jurnal Umum Material</td>
@@ -249,6 +274,7 @@
                             'value' => 'summaryMovementOutMaterialReport'
                         )); ?>
                     </td>
+                    <td>&nbsp;</td>
                 </tr>
                 <tr>
                     <td>Rekap Jurnal Umum Kas</td>
@@ -258,6 +284,7 @@
                             'value' => 'summaryCashReport'
                         )); ?>
                     </td>
+                    <td>&nbsp;</td>
                 </tr>
                 <tr>
                     <td>Rekap Jurnal Umum Aset Tetap</td>
@@ -267,6 +294,7 @@
                             'value' => 'summaryAssetReport'
                         )); ?>
                     </td>
+                    <td>&nbsp;</td>
                 </tr>
                 <tr>
                     <td>Rincian Buku Besar</td>
@@ -276,9 +304,10 @@
                             'value' => 'generalLedgerReport'
                         )); ?>
                     </td>
+                    <td>&nbsp;</td>
                 </tr>
                 <tr>
-                    <td style="text-align: center; font-weight: bold; background-color: greenyellow" colspan="2">Kas</td>
+                    <td style="text-align: center; font-weight: bold; background-color: greenyellow" colspan="3">Kas</td>
                 </tr>
                 <tr>
                     <td>Approval Kas Harian</td>
@@ -286,6 +315,12 @@
                         <?php echo CHtml::checkBox("User[roles][cashDailyApprovalReport]", CHtml::resolveValue($model, "roles[cashDailyApprovalReport]"), array(
                             'id' => 'User_roles_' . $counter++, 
                             'value' => 'cashDailyApprovalReport'
+                        )); ?>
+                    </td>
+                    <td style="text-align: center">
+                        <?php echo CHtml::checkBox("User[roles][cashDailyApprovalAction]", CHtml::resolveValue($model, "roles[cashDailyApprovalAction]"), array(
+                            'id' => 'User_roles_' . $counter++, 
+                            'value' => 'cashDailyApprovalAction'
                         )); ?>
                     </td>
                 </tr>
@@ -297,6 +332,7 @@
                             'value' => 'cashDailySummaryReport'
                         )); ?>
                     </td>
+                    <td>&nbsp;</td>
                 </tr>
                 <tr>
                     <td>Financial Forecast</td>
@@ -306,6 +342,7 @@
                             'value' => 'financialForecastReport'
                         )); ?>
                     </td>
+                    <td>&nbsp;</td>
                 </tr>
                 <tr>
                     <td>Transaksi Kas</td>
@@ -315,6 +352,7 @@
                             'value' => 'cashTransactionReport'
                         )); ?>
                     </td>
+                    <td>&nbsp;</td>
                 </tr>
                 <tr>
                     <td>Bank Bulanan</td>
@@ -324,6 +362,7 @@
                             'value' => 'monthlyBankingReport'
                         )); ?>
                     </td>
+                    <td>&nbsp;</td>
                 </tr>
                 <tr>
                     <td>Jurnal Penyesuaian</td>
@@ -333,9 +372,10 @@
                             'value' => 'adjustmentJournalReport'
                         )); ?>
                     </td>
+                    <td>&nbsp;</td>
                 </tr>
                 <tr>
-                    <td style="text-align: center; font-weight: bold; background-color: greenyellow" colspan="2">Hutang</td>
+                    <td style="text-align: center; font-weight: bold; background-color: greenyellow" colspan="3">Hutang</td>
                 </tr>
                 <tr>
                     <td>Buku Besar Pembantu Hutang</td>
@@ -345,6 +385,7 @@
                             'value' => 'payableJournalReport'
                         )); ?>
                     </td>
+                    <td>&nbsp;</td>
                 </tr>
                 <tr>
                     <td>Faktur Belum Lunas Supplier</td>
@@ -354,6 +395,7 @@
                             'value' => 'supplierPayableReport'
                         )); ?>
                     </td>
+                    <td>&nbsp;</td>
                 </tr>
                 <tr>
                     <td>Hutang Supplier</td>
@@ -363,6 +405,7 @@
                             'value' => 'payableReport'
                         )); ?>
                     </td>
+                    <td>&nbsp;</td>
                 </tr>
                 <tr>
                     <td>Rincian Pembayaran Hutang</td>
@@ -372,9 +415,10 @@
                             'value' => 'paymentOutReport'
                         )); ?>
                     </td>
+                    <td>&nbsp;</td>
                 </tr>
                 <tr>
-                    <td style="text-align: center; font-weight: bold; background-color: greenyellow" colspan="2">Pembelian</td>
+                    <td style="text-align: center; font-weight: bold; background-color: greenyellow" colspan="3">Pembelian</td>
                 </tr>
                 <tr>
                     <td>Faktur Pembelian</td>
@@ -384,6 +428,7 @@
                             'value' => 'purchaseSummaryReport'
                         )); ?>
                     </td>
+                    <td>&nbsp;</td>
                 </tr>
                 <tr>
                     <td>Pembelian per Supplier</td>
@@ -402,9 +447,10 @@
                             'value' => 'purchaseProductSummaryReport'
                         )); ?>
                     </td>
+                    <td>&nbsp;</td>
                 </tr>
                 <tr>
-                    <td style="text-align: center; font-weight: bold; background-color: greenyellow" colspan="2">Stock Analysis & Order</td>
+                    <td style="text-align: center; font-weight: bold; background-color: greenyellow" colspan="3">Stock Analysis & Order</td>
                 </tr>
                 <tr>
                     <td>Penjualan Parts Bulanan</td>
@@ -414,6 +460,7 @@
                             'value' => 'monthlyProductSaleReport'
                         )); ?>
                     </td>
+                    <td>&nbsp;</td>
                 </tr>
                 <tr>
                     <td>Penjualan Jasa Bulanan</td>
@@ -423,6 +470,7 @@
                             'value' => 'monthlyServiceSaleReport'
                         )); ?>
                     </td>
+                    <td>&nbsp;</td>
                 </tr>
                 <tr>
                     <td>Analisis Penjualan Parts</td>
@@ -432,6 +480,7 @@
                             'value' => 'productCategoryStatisticsReport'
                         )); ?>
                     </td>
+                    <td>&nbsp;</td>
                 </tr>
                 <tr>
                     <td>Penjualan Parts & Components</td>
@@ -441,19 +490,21 @@
                             'value' => 'partsComponentSaleTransactionReport'
                         )); ?>
                     </td>
+                    <td>&nbsp;</td>
                 </tr>
                 <tr>
                     <td>Pemakaian Bahan Material</td>
                     <td style="text-align: center">
-                        <?php //echo $counter; ?>
                         <?php echo CHtml::checkBox("User[roles][monthlyMaterialServiceUsageReport]", CHtml::resolveValue($model, "roles[monthlyMaterialServiceUsageReport]"), array(
                             'id' => 'User_roles_' . $counter++, 
                             'value' => 'monthlyMaterialServiceUsageReport'
                         )); ?>
                     </td>
+                    <td>&nbsp;</td>
                 </tr>
             </table>
         </td>
+        
         <td style="vertical-align: top">
             <table>
                 <tr>
@@ -859,6 +910,7 @@
                 <tr>
                     <td>Penjualan Oli</td>
                     <td style="text-align: center">
+                        <?php //echo $counter; ?>
                         <?php echo CHtml::checkBox("User[roles][saleOilDailyReport]", CHtml::resolveValue($model, "roles[saleOilDailyReport]"), array(
                             'id' => 'User_roles_' . $counter++, 
                             'value' => 'saleOilDailyReport'

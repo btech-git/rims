@@ -6,7 +6,7 @@ class SupplierController extends Controller {
 
     public function filters() {
         return array(
-//            'access',
+            'access',
         );
     }
 
@@ -23,12 +23,19 @@ class SupplierController extends Controller {
             }
         }
 
-        if (
-            $filterChain->action->id === 'view' || 
-            $filterChain->action->id === 'admin'
-        ) {
-            if (!(Yii::app()->user->checkAccess('masterSupplierCreate')) || !(Yii::app()->user->checkAccess('masterSupplierEdit') ||
-                Yii::app()->user->checkAccess('masterSupplierView') || Yii::app()->user->checkAccess('masterSupplierApproval'))) {
+        if ($filterChain->action->id === 'delete') {
+            if (!(Yii::app()->user->checkAccess('masterSupplierApproval'))) {
+                $this->redirect(array('/site/login'));
+            }
+        }
+
+        if ($filterChain->action->id === 'view' || $filterChain->action->id === 'admin') {
+            if (!(
+                Yii::app()->user->checkAccess('masterSupplierCreate') || 
+                Yii::app()->user->checkAccess('masterSupplierEdit') ||
+                Yii::app()->user->checkAccess('masterSupplierView') || 
+                Yii::app()->user->checkAccess('masterSupplierApproval')
+            )) {
                 $this->redirect(array('/site/login'));
             }
         }
@@ -43,12 +50,14 @@ class SupplierController extends Controller {
     public function actionCreate() {
         $supplier = $this->instantiate(null);
         $supplier->header->user_id = Yii::app()->user->id;
+        $supplier->header->created_datetime = date('Y-m-d H:i:s');
         $this->performAjaxValidation($supplier->header);
 
         $bank = new Bank('search');
         $bank->unsetAttributes();  // clear any default values
-        if (isset($_GET['Bank']))
+        if (isset($_GET['Bank'])) {
             $bank->attributes = $_GET['Bank'];
+        }
 
         $bankCriteria = new CDbCriteria;
         $bankCriteria->compare('code', $bank->code . '%', true, 'AND', false);
@@ -115,12 +124,15 @@ class SupplierController extends Controller {
      */
     public function actionUpdate($id) {
         $supplier = $this->instantiate($id);
+        $supplier->header->user_id_updated = Yii::app()->user->id;
+        $supplier->header->updated_datetime = date('Y-m-d H:i:s');
         $this->performAjaxValidation($supplier->header);
 
         $bank = new Bank('search');
         $bank->unsetAttributes();  // clear any default values
-        if (isset($_GET['Bank']))
+        if (isset($_GET['Bank'])) {
             $bank->attributes = $_GET['Bank'];
+        }
 
         $bankCriteria = new CDbCriteria;
         $bankCriteria->compare('code', $bank->code . '%', true, 'AND', false);
@@ -131,8 +143,9 @@ class SupplierController extends Controller {
         ));
         $coa = new Coa('search');
         $coa->unsetAttributes();  // clear any default values
-        if (isset($_GET['Coa']))
+        if (isset($_GET['Coa'])) {
             $coa->attributes = $_GET['Coa'];
+        }
 
         $coaCriteria = new CDbCriteria;
         $coaCriteria->addCondition("coa_sub_category_id = 15");
@@ -146,8 +159,9 @@ class SupplierController extends Controller {
 
         $coaOutstanding = new Coa('search');
         $coaOutstanding->unsetAttributes();  // clear any default values
-        if (isset($_GET['Coa']))
+        if (isset($_GET['Coa'])) {
             $coa->attributes = $_GET['Coa'];
+        }
 
         $coaOutstandingCriteria = new CDbCriteria;
         $coaOutstandingCriteria->addCondition("coa_sub_category_id = 16");
@@ -190,10 +204,6 @@ class SupplierController extends Controller {
 
             if ($supplier->save(Yii::app()->db)) {
                 $this->redirect(array('view', 'id' => $supplier->header->id));
-            } else {
-                foreach ($supplier->phoneDetails as $key => $detail) {
-                    //print_r(CJSON::encode($detail->jenis_persediaan_id));
-                }
             }
         }
 
@@ -218,8 +228,9 @@ class SupplierController extends Controller {
         $supplierProduct = new SupplierProduct('search');
         $supplierProduct->unsetAttributes();  // clear any default values
         
-        if (isset($_GET['SupplierProduct']))
+        if (isset($_GET['SupplierProduct'])) {
             $supplierProduct->attributes = $_GET['SupplierProduct'];
+        }
 
         $supplierProductCriteria = new CDbCriteria;
         $supplierProductCriteria->addCondition("supplier_id = " . $id);
@@ -234,16 +245,6 @@ class SupplierController extends Controller {
             'criteria' => $supplierProductCriteria,
         ));
         
-        if (isset($_POST['Approve']) && (int) $model->is_approved !== 1) {
-            $model->is_approved = 1;
-            $model->date_approval = date('Y-m-d');
-            
-            if ($model->save(true, array('is_approved', 'date_approval')))
-                Yii::app()->user->setFlash('confirm', 'Your data has been approved!!!');
-            else
-                Yii::app()->user->setFlash('error', 'Your data failed to approved!!!');
-        }
-
         $this->render('view', array(
             'model' => $model,
             'picDetails' => $picDetails,
@@ -259,8 +260,9 @@ class SupplierController extends Controller {
 
         $product = new Product('search');
         $product->unsetAttributes();  // clear any default values
-        if (isset($_GET['Product']))
+        if (isset($_GET['Product'])) {
             $product->attributes = $_GET['Product'];
+        }
 
         $productCriteria = new CDbCriteria;
         $productCriteria->compare('code', $product->code . '%', true, 'AND', false);
@@ -280,14 +282,16 @@ class SupplierController extends Controller {
             ),
         ));
 
-        if (isset($_POST['Cancel']))
+        if (isset($_POST['Cancel'])) {
             $this->redirect(array('view', 'id' => $supplier->header->id));
+        }
 
         if (isset($_POST['Submit'])) {
             $this->loadState($supplier);
 
-            if ($supplier->save(Yii::app()->db))
+            if ($supplier->save(Yii::app()->db)) {
                 $this->redirect(array('view', 'id' => $supplier->header->id));
+            }
         }
 
         $this->render('addProduct', array(
@@ -348,11 +352,18 @@ class SupplierController extends Controller {
      * @param integer $id the ID of the model to be deleted
      */
     public function actionDelete($id) {
-        $this->loadModel($id)->delete();
+        $model = $this->loadModel($id);
+        $model->status = 'Deleted';
+        $model->is_deleted = 1;
+        $model->user_id_deleted = Yii::app()->user->id;
+        $model->deleted_datetime = date('Y-m-d H:i:s');
+        $model->update(array('status', 'is_deleted', 'user_id_deleted', 'deleted_datetime'));
 
         // if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
-        if (!isset($_GET['ajax']))
+        if (!isset($_GET['ajax'])) {
+            $this->saveMasterLog($model);
             $this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
+        }
     }
 
     /**
@@ -361,12 +372,31 @@ class SupplierController extends Controller {
     public function actionAdmin() {
         $model = new Supplier('search');
         $model->unsetAttributes();  // clear any default values
-        if (isset($_GET['Supplier']))
+        if (isset($_GET['Supplier'])) {
             $model->attributes = $_GET['Supplier'];
+        }
 
         $this->render('admin', array(
             'model' => $model,
         ));
+    }
+
+    public function saveMasterLog($model) {
+        $masterLog = new MasterLog();
+        $masterLog->name = $model->plate_number;
+        $masterLog->log_date = date('Y-m-d');
+        $masterLog->log_time = date('H:i:s');
+        $masterLog->table_name = $model->tableName();
+        $masterLog->table_id = $model->id;
+        $masterLog->user_id = Yii::app()->user->id;
+        $masterLog->username = Yii::app()->user->username;
+        $masterLog->controller_class = Yii::app()->controller->module->id  . '/' . Yii::app()->controller->id;
+        $masterLog->action_name = Yii::app()->controller->action->id;
+        
+        $newData = $model->attributes;
+        $masterLog->new_data = json_encode($newData);
+
+        $masterLog->save();
     }
 
     // Ajax Get City
@@ -435,8 +465,9 @@ class SupplierController extends Controller {
                 $productDetails = array();
                 $productDetails = $_POST['selectedIds'];
 
-                foreach ($productDetails as $productDetail)
+                foreach ($productDetails as $productDetail) {
                     $supplier->addProduct($productDetail);
+                }
             }
 
             $this->renderPartial('_detailProduct', array(
@@ -536,8 +567,9 @@ class SupplierController extends Controller {
     public function loadModel($id) {
         $model = Supplier::model()->findByPk($id);
 
-        if ($model === null)
+        if ($model === null) {
             throw new CHttpException(404, 'The requested page does not exist.');
+        }
 
         return $model;
     }
@@ -549,33 +581,36 @@ class SupplierController extends Controller {
 
         if (isset($_POST['SupplierBank'])) {
             foreach ($_POST['SupplierBank'] as $i => $item) {
-                if (isset($supplier->bankDetails[$i]))
+                if (isset($supplier->bankDetails[$i])) {
                     $supplier->bankDetails[$i]->attributes = $item;
-                else {
+                } else {
                     $detail = new SupplierBank();
                     $detail->attributes = $item;
                     $supplier->bankDetails[] = $detail;
                 }
             }
-            if (count($_POST['SupplierBank']) < count($supplier->bankDetails))
+            if (count($_POST['SupplierBank']) < count($supplier->bankDetails)) {
                 array_splice($supplier->bankDetails, $i + 1);
-        } else
+            }
+        } else {
             $supplier->bankDetails = array();
+        }
 
         if (isset($_POST['SupplierProduct'])) {
             foreach ($_POST['SupplierProduct'] as $i => $item) {
-                if (isset($supplier->productDetails[$i]))
+                if (isset($supplier->productDetails[$i])) {
                     $supplier->productDetails[$i]->attributes = $item;
-                else {
+                } else {
                     $detail = new SupplierProduct();
                     $detail->attributes = $item;
                     $supplier->productDetails[] = $detail;
                 }
             }
-            if (count($_POST['SupplierProduct']) < count($supplier->productDetails))
+            if (count($_POST['SupplierProduct']) < count($supplier->productDetails)) {
                 array_splice($supplier->productDetails, $i + 1);
-        } else
+            }
+        } else {
             $supplier->productDetails = array();
+        }
     }
-
 }

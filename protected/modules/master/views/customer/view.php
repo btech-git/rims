@@ -191,13 +191,6 @@ $this->breadcrumbs = array(
 <br/>
 
 <div>
-    <?php if ((int) $model->is_approved === 0): ?>
-        <div style="float: left; margin-left: 20px;">
-            <?php echo CHtml::beginForm(); ?>
-                <?php echo CHtml::submitButton('APPROVE', array('name' => 'Approve', 'class' => 'button success')); ?>
-            <?php echo CHtml::endForm(); ?>
-        </div>
-    <?php endif; ?>
     <?php if (Yii::app()->user->checkAccess("director")): ?>
         <div style="float: left; margin-left: 20px;">
             <a class="button cbutton right" style="margin-right:10px;" href="<?php echo Yii::app()->createUrl('/master/' . $ccontroller . '/log', array('customerId' => $model->id)); ?>">

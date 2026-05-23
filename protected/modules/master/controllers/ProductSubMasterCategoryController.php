@@ -10,22 +10,27 @@ class ProductSubMasterCategoryController extends Controller {
 
     public function filters() {
         return array(
-//            'access',
+            'access',
         );
     }
 
     public function filterAccess($filterChain) {
         if ($filterChain->action->id === 'create') {
-            if (!(Yii::app()->user->checkAccess('masterProductSubMasterCategoryCreate')))
+            if (!(Yii::app()->user->checkAccess('masterProductSubMasterCategoryCreate'))) {
                 $this->redirect(array('/site/login'));
+            }
         }
 
-        if (
-            $filterChain->action->id === 'update' || 
-            $filterChain->action->id === 'delete'
-        ) {
-            if (!(Yii::app()->user->checkAccess('masterProductSubMasterCategoryEdit')))
+        if ($filterChain->action->id === 'update') {
+            if (!(Yii::app()->user->checkAccess('masterProductSubMasterCategoryEdit'))) {
                 $this->redirect(array('/site/login'));
+            }
+        }
+
+        if ($filterChain->action->id === 'delete') {
+            if (!(Yii::app()->user->checkAccess('masterProductSubMasterCategoryApproval'))) {
+                $this->redirect(array('/site/login'));
+            }
         }
 
         if (
@@ -33,8 +38,13 @@ class ProductSubMasterCategoryController extends Controller {
             $filterChain->action->id === 'admin' || 
             $filterChain->action->id === 'index'
         ) {
-            if (!(Yii::app()->user->checkAccess('masterProductSubMasterCategoryCreate')) || !(Yii::app()->user->checkAccess('masterProductSubMasterCategoryEdit')))
+            if (!(
+                Yii::app()->user->checkAccess('masterProductSubMasterCategoryCreate') || 
+                Yii::app()->user->checkAccess('masterProductSubMasterCategoryEdit') || 
+                Yii::app()->user->checkAccess('masterProductSubMasterCategoryEdit')
+            )) {
                 $this->redirect(array('/site/login'));
+            }
         }
 
         $filterChain->run();
@@ -141,7 +151,7 @@ class ProductSubMasterCategoryController extends Controller {
             $newOrdinalPenjualan = $ordinalPenjualan + 1;
             $coaPenjualan = new Coa;
             $coaPenjualan->name = 'Penjualan ' . $model->name;
-            $coaPenjualan->code = $prefixHpp . sprintf('%03d', $newOrdinalPenjualan);
+            $coaPenjualan->code = $prefixPenjualan . sprintf('%03d', $newOrdinalPenjualan);
             $coaPenjualan->coa_category_id = 6;
             $coaPenjualan->coa_sub_category_id = 29;
             $coaPenjualan->coa_id = $model->productMasterCategory->coa_penjualan_barang_dagang;
@@ -355,7 +365,7 @@ class ProductSubMasterCategoryController extends Controller {
             $model->coa_outstanding_part_id = $coaOutstanding->id;
             
             if ($model->save()) {
-                $this->saveTransactionLog($model);
+                $this->saveMasterLog($model);
         
                 $this->redirect(array('view', 'id' => $model->id));
             }
@@ -373,13 +383,14 @@ class ProductSubMasterCategoryController extends Controller {
      */
     public function actionUpdate($id) {
         $model = $this->loadModel($id);
+        $model->user_id_updated = Yii::app()->user->id;
+        $model->updated_datetime = date('Y-m-d H:i:s');
 
         if (isset($_POST['ProductSubMasterCategory'])) {
             $model->attributes = $_POST['ProductSubMasterCategory'];
             
             if ($model->save()) {
-                $this->saveTransactionLog($model);
-        
+                $this->saveMasterLog($model);
                 $this->redirect(array('view', 'id' => $model->id));
             }
         }
@@ -389,7 +400,7 @@ class ProductSubMasterCategoryController extends Controller {
         ));
     }
 
-    public function saveTransactionLog($model) {
+    public function saveMasterLog($model) {
         $transactionLog = new MasterLog();
         $transactionLog->name = $model->name;
         $transactionLog->log_date = date('Y-m-d');
@@ -413,11 +424,18 @@ class ProductSubMasterCategoryController extends Controller {
      * @param integer $id the ID of the model to be deleted
      */
     public function actionDelete($id) {
-        $this->loadModel($id)->delete();
+        $model = $this->loadModel($id);
+        $model->is_deleted = 1;
+        $model->status = 'Deleted';
+        $model->user_id_deleted = Yii::app()->user->id;
+        $model->deleted_datetime = date('Y-m-d H:i:s');
+        $model->update(array('is_deleted', 'user_id_deleted', 'deleted_datetime', 'status'));
 
         // if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
-        if (!isset($_GET['ajax']))
+        if (!isset($_GET['ajax'])) {
+            $this->saveMasterLog($model);
             $this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
+        }
     }
 
     /**

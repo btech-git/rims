@@ -16,9 +16,13 @@
  * @property integer $is_approved
  * @property integer $user_id_approval
  * @property string $date_time_approval
- * @property integer $is_rejected
  * @property integer $user_id_reject
  * @property string $date_time_reject
+ * @property integer $is_deleted
+ * @property integer $user_id_updated
+ * @property string $updated_datetime
+ * @property integer $user_id_deleted
+ * @property string $deleted_datetime
  *
  * The followings are the available model relations:
  * @property Product[] $products
@@ -27,6 +31,8 @@
  * @property User $user
  * @property UserIdApproval $userIdApproval
  * @property UserIdReject $userIdReject
+ * @property UserIdUpdated $userIdUpdated
+ * @property UserIdDeleted $userIdDeleted
  */
 class ProductSubCategory extends CActiveRecord {
 
@@ -50,14 +56,14 @@ class ProductSubCategory extends CActiveRecord {
         // will receive user inputs.
         return array(
             array('product_master_category_id, product_sub_master_category_id, code, name, status, user_id', 'required'),
-            array('product_master_category_id, product_sub_master_category_id, user_id, is_approved, user_id_approval, is_rejected, user_id_reject', 'numerical', 'integerOnly' => true),
+            array('product_master_category_id, product_sub_master_category_id, user_id, is_approved, user_id_approval, user_id_reject, is_deleted, user_id_updated, user_id_deleted', 'numerical', 'integerOnly' => true),
             array('code', 'length', 'max' => 20),
             array('name', 'length', 'max' => 30),
             array('status', 'length', 'max' => 10),
-            array('description, date_time_approval, date_time_reject', 'safe'),
+            array('description, date_time_approval, date_time_reject, updated_datetime, deleted_datetime, date_posting', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, product_master_category_id, product_sub_master_category_id, code, name, description, status, product_master_category_code, product_master_category_name, product_sub_master_category_code, product_sub_master_category_name, date_posting, user_id, is_approved, user_id_approval, date_time_approval, user_id_reject, date_time_reject, is_rejected', 'safe', 'on' => 'search'),
+            array('id, product_master_category_id, product_sub_master_category_id, code, name, description, status, product_master_category_code, product_master_category_name, product_sub_master_category_code, product_sub_master_category_name, date_posting, user_id, is_approved, user_id_approval, date_time_approval, user_id_reject, date_time_reject, is_deleted, user_id_updated, user_id_deleted, updated_datetime, deleted_datetime', 'safe', 'on' => 'search'),
         );
     }
 
@@ -74,6 +80,8 @@ class ProductSubCategory extends CActiveRecord {
             'user' => array(self::BELONGS_TO, 'Users', 'user_id'),
             'userIdApproval' => array(self::BELONGS_TO, 'Users', 'user_id_approval'),
             'userIdReject' => array(self::BELONGS_TO, 'Users', 'user_id_reject'),
+            'userIdUpdated' => array(self::BELONGS_TO, 'Users', 'user_id_updated'),
+            'userIdDeleted' => array(self::BELONGS_TO, 'Users', 'user_id_deleted'),
         );
     }
 
@@ -97,18 +105,6 @@ class ProductSubCategory extends CActiveRecord {
         );
     }
 
-    /**
-     * Retrieves a list of models based on the current search/filter conditions.
-     *
-     * Typical usecase:
-     * - Initialize the model fields with values from filter form.
-     * - Execute this method to get CActiveDataProvider instance which will filter
-     * models according to data in model fields.
-     * - Pass data provider to CGridView, CListView or any similar widget.
-     *
-     * @return CActiveDataProvider the data provider that can return the models
-     * based on the search/filter conditions.
-     */
     public function search() {
         // @todo Please modify the following code to remove attributes that should not be searched.
 

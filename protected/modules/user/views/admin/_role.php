@@ -107,19 +107,19 @@
                 'Setting Accounting' => array(
                     'content' => $this->renderPartial('_formAccounting', array(
                         'model' => $model, 
-                        'counter' => $counter+336
+                        'counter' => $counter+324
                     ), true)
                 ),
                 'Setting Master' => array(
                     'content' => $this->renderPartial('_formMaster', array(
                         'model' => $model, 
-                        'counter' => $counter+357
+                        'counter' => $counter+345
                     ), true)
                 ),
                 'Laporan' => array(
                     'content' => $this->renderPartial('_formReport', array(
                         'model' => $model, 
-                        'counter' => $counter+414
+                        'counter' => $counter+405
                     ), true)
                 ),
             ),
@@ -135,7 +135,7 @@
 
 <br /><br />
 
-<?php $counter = 506; ?>
+<?php $counter = 498; ?>
 <div id="front-role-panel" <?php if (!$model->is_front_access): ?>style="display: none"<?php endif; ?>>
     <?php echo $this->renderPartial('_formRimsFront', array(
         'model'=>$model,

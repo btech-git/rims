@@ -311,20 +311,41 @@ class CashTransactionController extends Controller {
         $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : '';
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : '';
         $coaId = (isset($_GET['CoaId'])) ? $_GET['CoaId'] : '';
+        $coaIdDetail = (isset($_GET['CoaIdDetail'])) ? $_GET['CoaIdDetail'] : '';
         
         $cashInTransactionDataProvider = $model->search();
         $cashInTransactionDataProvider->criteria->addCondition('t.transaction_type = "In"');
+        if (!empty($coaIdDetail)) {
+            $cashInTransactionDataProvider->criteria->addCondition("EXISTS (
+                SELECT cash_transaction_id
+                FROM " . CashTransactionDetail::model()->tableName() . "
+                WHERE t.id = cash_transaction_id AND coa_id = :coa_id)"
+            );
+            $cashInTransactionDataProvider->criteria->params[':coa_id'] = $coaIdDetail;
+        }
         $cashInTransactionDataProvider->criteria->addBetweenCondition('t.transaction_date', $startDate, $endDate);
         $cashInTransactionDataProvider->criteria->compare('coa_id', $coaId);
 
         $cashOutTransactionDataProvider = $model->search();
         $cashOutTransactionDataProvider->criteria->addCondition('t.transaction_type = "Out"');
+        if (!empty($coaIdDetail)) {
+            $cashOutTransactionDataProvider->criteria->addCondition("EXISTS (
+                SELECT cash_transaction_id
+                FROM " . CashTransactionDetail::model()->tableName() . "
+                WHERE t.id = cash_transaction_id AND coa_id = :coa_id)"
+            );
+            $cashOutTransactionDataProvider->criteria->params[':coa_id'] = $coaIdDetail;
+        }
         $cashOutTransactionDataProvider->criteria->addBetweenCondition('t.transaction_date', $startDate, $endDate);
         $cashOutTransactionDataProvider->criteria->compare('coa_id', $coaId);
         
         $coa = Search::bind(new Coa('search'), isset($_GET['Coa']) ? $_GET['Coa'] : array());
         $coaDataProvider = $coa->search();
-        $coaDataProvider->pagination->pageVar = 'page_dialog';
+        $coaDataProvider->pagination->pageVar = 'page_dialog_header';
+
+        $coaDetail = Search::bind(new Coa('search'), isset($_GET['Coa']) ? $_GET['Coa'] : array());
+        $coaDetailDataProvider = $coaDetail->search();
+        $coaDetailDataProvider->pagination->pageVar = 'page_dialog_detail';
 
         if (!Yii::app()->user->checkAccess('director')) {
             $cashInTransactionDataProvider->criteria->addCondition('t.branch_id = :branch_id');
@@ -338,11 +359,14 @@ class CashTransactionController extends Controller {
             'user' => $user,
             'coa' => $coa,
             'coaDataProvider' => $coaDataProvider,
+            'coaDetail' => $coaDetail,
+            'coaDetailDataProvider' => $coaDetailDataProvider,
             'cashInTransactionDataProvider' => $cashInTransactionDataProvider,
             'cashOutTransactionDataProvider' => $cashOutTransactionDataProvider,
             'startDate' => $startDate,
             'endDate' => $endDate,
             'coaId' => $coaId,
+            'coaIdDetail' => $coaIdDetail,
         ));
     }
 
@@ -409,6 +433,7 @@ class CashTransactionController extends Controller {
 
             $object = array(
                 'coa_name' => CHtml::value($coa, 'combinationName'),
+                'coa_detail_name' => CHtml::value($coa, 'combinationName'),
             );
             echo CJSON::encode($object);
         }
@@ -423,8 +448,10 @@ class CashTransactionController extends Controller {
      */
     public function loadModel($id) {
         $model = CashTransaction::model()->findByPk($id);
-        if ($model === null)
+        if ($model === null) {
             throw new CHttpException(404, 'The requested page does not exist.');
+        }
+        
         return $model;
     }
 
@@ -483,8 +510,9 @@ class CashTransactionController extends Controller {
                     $cashTransaction->details[] = $detail;
                 }
             }
-            if (count($_POST['CashTransactionDetail']) < count($cashTransaction->details))
+            if (count($_POST['CashTransactionDetail']) < count($cashTransaction->details)) {
                 array_splice($cashTransaction->details, $i + 1);
+            }
         } else {
             $cashTransaction->details = array();
         }

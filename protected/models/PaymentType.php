@@ -10,11 +10,28 @@
  * @property integer $coa_id
  * @property string $bank_fee_amount
  * @property integer $bank_fee_type
+ * @property integer $is_approved
+ * @property integer $is_deleted
+ * @property integer $user_id_created
+ * @property integer $user_id_updated
+ * @property integer $user_id_approved
+ * @property integer $user_id_rejected
+ * @property integer $user_id_deleted
+ * @property string $created_datetime
+ * @property string $updated_datetime
+ * @property string $approved_datetime
+ * @property string $rejected_datetime
+ * @property string $deleted_datetime
  *
  * The followings are the available model relations:
  * @property PaymentIn[] $paymentIns
  * @property PaymentOut[] $paymentOuts
  * @property Coa $coa
+ * @property UserIdCreated $userIdCreated
+ * @property UserIdUpdated $userIdUpdated
+ * @property UserIdApproved $userIdApproved
+ * @property UserIdRejected $userIdRejected
+ * @property UserIdDeleted $userIdDeleted
  */
 class PaymentType extends CActiveRecord {
 
@@ -45,10 +62,11 @@ class PaymentType extends CActiveRecord {
             array('bank_fee_amount', 'length', 'max' => 10),
             array('name', 'length', 'max' => 60),
             array('memo', 'length', 'max' => 100),
-            array('coa_id, bank_fee_type', 'numerical', 'integerOnly' => true),
+            array('coa_id, bank_fee_type, user_id_approved, user_id_rejected, user_id_updated, user_id_deleted, user_id_created, is_deleted, is_approved', 'numerical', 'integerOnly' => true),
+            array('approved_datetime, rejected_datetime, updated_datetime, deleted_datetime, created_datetime', 'safe'),
             // The following rule is used by search().
             // Please remove those attributes that should not be searched.
-            array('id, name, memo, coa_id, bank_fee_amount, bank_fee_type', 'safe', 'on' => 'search'),
+            array('id, name, memo, coa_id, bank_fee_amount, bank_fee_type, user_id_approved, user_id_rejected, user_id_updated, user_id_deleted, user_id_created, is_deleted, is_approved, approved_datetime, rejected_datetime, updated_datetime, deleted_datetime, created_datetime', 'safe', 'on' => 'search'),
         );
     }
 
@@ -62,6 +80,11 @@ class PaymentType extends CActiveRecord {
             'paymentIns' => array(self::HAS_MANY, 'PaymentIn', 'payment_type_id'),
             'paymentOuts' => array(self::HAS_MANY, 'PaymentOut', 'payment_type_id'),
             'coa' => array(self::BELONGS_TO, 'Coa', 'coa_id'),
+            'userIdCreated' => array(self::BELONGS_TO, 'Users', 'user_id_created'),
+            'userIdUpdated' => array(self::BELONGS_TO, 'Users', 'user_id_updated'),
+            'userIdApproved' => array(self::BELONGS_TO, 'Users', 'user_id_approved'),
+            'userIdRejected' => array(self::BELONGS_TO, 'Users', 'user_id_rejected'),
+            'userIdDeleted' => array(self::BELONGS_TO, 'Users', 'user_id_deleted'),
         );
     }
 

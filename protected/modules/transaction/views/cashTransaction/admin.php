@@ -62,9 +62,12 @@ $('.search-form form').submit(function(){
                             'user' => $user,
                             'coa' => $coa,
                             'coaDataProvider' => $coaDataProvider,
+                            'coaDetail' => $coaDetail,
+                            'coaDetailDataProvider' => $coaDetailDataProvider,
                             'startDate' => $startDate,
                             'endDate' => $endDate,
                             'coaId' => $coaId,
+                            'coaIdDetail' => $coaIdDetail,
                         )); ?>
                     </div><!-- search-form -->
                 </div>

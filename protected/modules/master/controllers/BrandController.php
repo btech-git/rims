@@ -10,22 +10,27 @@ class BrandController extends Controller {
 
     public function filters() {
         return array(
-//            'access',
+            'access',
         );
     }
 
     public function filterAccess($filterChain) {
         if ($filterChain->action->id === 'create') {
-            if (!(Yii::app()->user->checkAccess('masterBrandCreate')))
+            if (!(Yii::app()->user->checkAccess('masterBrandCreate'))) {
                 $this->redirect(array('/site/login'));
+            }
         }
 
-        if (
-            $filterChain->action->id === 'update' || 
-            $filterChain->action->id === 'delete'
-        ) {
-            if (!(Yii::app()->user->checkAccess('masterBrandEdit')))
+        if ($filterChain->action->id === 'update') {
+            if (!(Yii::app()->user->checkAccess('masterBrandEdit'))) {
                 $this->redirect(array('/site/login'));
+            }
+        }
+
+        if ($filterChain->action->id === 'delete') {
+            if (!(Yii::app()->user->checkAccess('masterBrandApproval'))) {
+                $this->redirect(array('/site/login'));
+            }
         }
 
         if (
@@ -33,8 +38,13 @@ class BrandController extends Controller {
             $filterChain->action->id === 'admin' || 
             $filterChain->action->id === 'index'
         ) {
-            if (!(Yii::app()->user->checkAccess('masterBrandCreate')) || !(Yii::app()->user->checkAccess('masterBrandEdit')))
+            if (!(
+                Yii::app()->user->checkAccess('masterBrandCreate') || 
+                Yii::app()->user->checkAccess('masterBrandEdit') || 
+                Yii::app()->user->checkAccess('masterBrandView')
+            )) {
                 $this->redirect(array('/site/login'));
+            }
         }
 
         $filterChain->run();
@@ -57,9 +67,7 @@ class BrandController extends Controller {
     public function actionCreate() {
         $model = new Brand;
         $model->user_id = Yii::app()->user->id;
-
-        // Uncomment the following line if AJAX validation is needed
-        // $this->performAjaxValidation($model);
+        $model->date_posting = date('Y-m-d H:i:s');
 
         if (isset($_POST['Brand']) && IdempotentManager::check()) {
             $model->attributes = $_POST['Brand'];
@@ -76,8 +84,11 @@ class BrandController extends Controller {
                 $dbTransaction->rollback();
                 $valid = false;
             }
-            if ($valid)
+            
+            if ($valid) {
+                $this->saveMasterLog($model);
                 $this->redirect(array('view', 'id' => $model->id));
+            }
         }
 
         $this->render('create', array(
@@ -92,14 +103,15 @@ class BrandController extends Controller {
      */
     public function actionUpdate($id) {
         $model = $this->loadModel($id);
-
-        // Uncomment the following line if AJAX validation is needed
-        // $this->performAjaxValidation($model);
+        $model->user_id_edit = Yii::app()->user->id;
+        $model->date_edit = date('Y-m-d H:i:s');
 
         if (isset($_POST['Brand'])) {
             $model->attributes = $_POST['Brand'];
-            if ($model->save())
+            if ($model->save()) {
+                $this->saveMasterLog($model);
                 $this->redirect(array('view', 'id' => $model->id));
+            }
         }
 
         $this->render('update', array(
@@ -113,11 +125,18 @@ class BrandController extends Controller {
      * @param integer $id the ID of the model to be deleted
      */
     public function actionDelete($id) {
-        $this->loadModel($id)->delete();
+        $model = $this->loadModel($id);
+        $model->status = 'Deleted';
+        $model->user_id_deleted = Yii::app()->user->id;
+        $model->is_deleted = 1;
+        $model->deleted_datetime = date('Y-m-d H:i:s');
+        $model->update(array('status', 'is_deleted', 'user_id_deleted', 'deleted_datetime'));
 
         // if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
-        if (!isset($_GET['ajax']))
+        if (!isset($_GET['ajax'])) {
+            $this->saveMasterLog($model);
             $this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
+        }
     }
 
     /**
@@ -136,12 +155,31 @@ class BrandController extends Controller {
     public function actionAdmin() {
         $model = new Brand('search');
         $model->unsetAttributes();  // clear any default values
-        if (isset($_GET['Brand']))
+        if (isset($_GET['Brand'])) {
             $model->attributes = $_GET['Brand'];
+        }
 
         $this->render('admin', array(
             'model' => $model,
         ));
+    }
+
+    public function saveMasterLog($model) {
+        $masterLog = new MasterLog();
+        $masterLog->name = $model->name;
+        $masterLog->log_date = date('Y-m-d');
+        $masterLog->log_time = date('H:i:s');
+        $masterLog->table_name = $model->tableName();
+        $masterLog->table_id = $model->id;
+        $masterLog->user_id = Yii::app()->user->id;
+        $masterLog->username = Yii::app()->user->username;
+        $masterLog->controller_class = Yii::app()->controller->module->id  . '/' . Yii::app()->controller->id;
+        $masterLog->action_name = Yii::app()->controller->action->id;
+        
+        $newData = $model->attributes;
+        $masterLog->new_data = json_encode($newData);
+
+        $masterLog->save();
     }
 
     /**

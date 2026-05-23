@@ -2,45 +2,45 @@
 
 class TireSizeController extends Controller {
 
-    /**
-     * @var string the default layout for the views. Defaults to '//layouts/column2', meaning
-     * using two-column layout. See 'protected/views/layouts/column2.php'.
-     */
     public $layout = '//layouts/column2';
 
-    /**
-     * @return array action filters
-     */
     public function filters() {
         return array(
-//            'accessControl', // perform access control for CRUD operations
-//            'postOnly + delete', // we only allow deletion via POST request
+            'access',
         );
     }
 
-    /**
-     * Specifies the access control rules.
-     * This method is used by the 'accessControl' filter.
-     * @return array access control rules
-     */
-    public function accessRules() {
-        return array(
-            array('allow', // allow all users to perform 'index' and 'view' actions
-                'actions' => array('index', 'view'),
-                'users' => array('*'),
-            ),
-            array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('create', 'update'),
-                'users' => array('@'),
-            ),
-            array('allow', // allow admin user to perform 'admin' and 'delete' actions
-                'actions' => array('admin', 'delete'),
-                'users' => array('admin'),
-            ),
-            array('deny', // deny all users
-                'users' => array('*'),
-            ),
-        );
+    public function filterAccess($filterChain) {
+        if ($filterChain->action->id === 'create' ) {
+            if (!(Yii::app()->user->checkAccess('masterTireSizeCreate'))) {
+                $this->redirect(array('/site/login'));
+            }
+        }
+
+        if ($filterChain->action->id === 'update') {
+            if (!(Yii::app()->user->checkAccess('masterTireSizeEdit'))) {
+                $this->redirect(array('/site/login'));
+            }
+        }
+
+        if ($filterChain->action->id === 'delete') {
+            if (!(Yii::app()->user->checkAccess('masterTireSizeApproval'))) {
+                $this->redirect(array('/site/login'));
+            }
+        }
+
+        if ($filterChain->action->id === 'view' || $filterChain->action->id === 'admin') {
+            if (!(
+                Yii::app()->user->checkAccess('masterTireSizeCreate') || 
+                Yii::app()->user->checkAccess('masterTireSizeEdit') ||
+                Yii::app()->user->checkAccess('masterTireSizeView') || 
+                Yii::app()->user->checkAccess('masterTireSizeApproval')
+            )) {
+                $this->redirect(array('/site/login'));
+            }
+        }
+
+        $filterChain->run();
     }
 
     /**
@@ -59,14 +59,18 @@ class TireSizeController extends Controller {
      */
     public function actionCreate() {
         $model = new TireSize;
+        $model->user_id_created = Yii::app()->user->id;
+        $model->created_datetime = date('Y-m-d H:i:s');
 
         // Uncomment the following line if AJAX validation is needed
         // $this->performAjaxValidation($model);
 
         if (isset($_POST['TireSize'])) {
             $model->attributes = $_POST['TireSize'];
-            if ($model->save())
+            if ($model->save()) {
+                $this->saveMasterLog($model);
                 $this->redirect(array('view', 'id' => $model->id));
+            }
         }
 
         $this->render('create', array(
@@ -81,14 +85,18 @@ class TireSizeController extends Controller {
      */
     public function actionUpdate($id) {
         $model = $this->loadModel($id);
+        $model->user_id_updated = Yii::app()->user->id;
+        $model->updated_datetime = date('Y-m-d H:i:s');
 
         // Uncomment the following line if AJAX validation is needed
         // $this->performAjaxValidation($model);
 
         if (isset($_POST['TireSize'])) {
             $model->attributes = $_POST['TireSize'];
-            if ($model->save())
+            if ($model->save()) {
+                $this->saveMasterLog($model);
                 $this->redirect(array('view', 'id' => $model->id));
+            }
         }
 
         $this->render('update', array(
@@ -102,11 +110,35 @@ class TireSizeController extends Controller {
      * @param integer $id the ID of the model to be deleted
      */
     public function actionDelete($id) {
-        $this->loadModel($id)->delete();
+        $model = $this->loadModel($id);
+        $model->is_deleted = 1;
+        $model->user_id_deleted = Yii::app()->user->id;
+        $model->deleted_datetime = date('Y-m-d H:i:s');
+        $model->update(array('is_deleted', 'user_id_deleted', 'deleted_datetime'));
 
         // if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
-        if (!isset($_GET['ajax']))
+        if (!isset($_GET['ajax'])) {
+            $this->saveMasterLog($model);
             $this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
+        }
+    }
+
+    public function saveMasterLog($model) {
+        $transactionLog = new MasterLog();
+        $transactionLog->name = $model->name;
+        $transactionLog->log_date = date('Y-m-d');
+        $transactionLog->log_time = date('H:i:s');
+        $transactionLog->table_name = $model->tableName();
+        $transactionLog->table_id = $model->id;
+        $transactionLog->user_id = Yii::app()->user->id;
+        $transactionLog->username = Yii::app()->user->username;
+        $transactionLog->controller_class = Yii::app()->controller->module->id  . '/' . Yii::app()->controller->id;
+        $transactionLog->action_name = Yii::app()->controller->action->id;
+        
+        $newData = $model->attributes;
+        $transactionLog->new_data = json_encode($newData);
+
+        $transactionLog->save();
     }
 
     /**
@@ -125,8 +157,9 @@ class TireSizeController extends Controller {
     public function actionAdmin() {
         $model = new TireSize('search');
         $model->unsetAttributes();  // clear any default values
-        if (isset($_GET['TireSize']))
+        if (isset($_GET['TireSize'])) {
             $model->attributes = $_GET['TireSize'];
+        }
 
         $this->render('admin', array(
             'model' => $model,
@@ -142,8 +175,10 @@ class TireSizeController extends Controller {
      */
     public function loadModel($id) {
         $model = TireSize::model()->findByPk($id);
-        if ($model === null)
+        if ($model === null) {
             throw new CHttpException(404, 'The requested page does not exist.');
+        }
+        
         return $model;
     }
 
@@ -157,5 +192,4 @@ class TireSizeController extends Controller {
             Yii::app()->end();
         }
     }
-
 }

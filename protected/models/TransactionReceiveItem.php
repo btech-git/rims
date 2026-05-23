@@ -584,7 +584,19 @@ class TransactionReceiveItem extends MonthlyTransactionActiveRecord {
         return $resultSet;
     }
     
-    public static function getPayableIncomingDueDate() {
+    public static function getPayableIncomingDueDate($supplierName, $startDate, $endDate) {
+        $supplierConditionSql = '';
+        
+        $params = array(
+            ':start_date' => $startDate,
+            ':end_date' => $endDate,
+        );
+        
+        if (!empty($supplierName)) {
+            $supplierConditionSql = ' AND s.name LIKE :supplier_name';
+            $params[':supplier_name'] = "%{$supplierName}%";
+        }
+        
         $sql = "SELECT r.id, r.invoice_number, r.invoice_date, r.invoice_due_date, s.name as supplier, r.invoice_grand_total, p.amount AS payment, 
                     r.invoice_grand_total - p.amount AS remaining
                 FROM " . TransactionReceiveItem::model()->tableName() . " r
@@ -596,11 +608,10 @@ class TransactionReceiveItem extends MonthlyTransactionActiveRecord {
                     WHERE h.user_id_cancelled IS NULL AND h.status = 'Approved'
                     GROUP BY d.receive_item_id
                 ) p ON r.id = p.receive_item_id
-                WHERE r.invoice_due_date BETWEEN '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND DATE_ADD(NOW(), INTERVAL 30 DAY) AND 
-                    r.invoice_grand_total - p.amount > 100 AND user_id_cancelled IS NULL
+                WHERE r.invoice_due_date BETWEEN :start_date AND :end_date AND r.invoice_grand_total - p.amount > 100 AND user_id_cancelled IS NULL" . $supplierConditionSql . " 
                 ORDER BY r.invoice_due_date ASC";
                 
-        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true);
+        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
         
         return $resultSet;
     }

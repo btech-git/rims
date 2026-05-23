@@ -13,6 +13,15 @@
  * @property integer $is_approved
  * @property integer $user_id
  * @property string $created_datetime
+ * @property integer $is_deleted
+ * @property integer $user_id_updated
+ * @property integer $user_id_approved
+ * @property integer $user_id_rejected
+ * @property integer $user_id_deleted
+ * @property string $updated_datetime
+ * @property string $approved_datetime
+ * @property string $rejected_datetime
+ * @property string $deleted_datetime
  *
  * The followings are the available model relations:
  * @property ChasisCode[] $chasisCodes
@@ -25,6 +34,10 @@
  * @property VehicleCarSubModel[] $vehicleCarSubModels
  * @property VehicleCarSubModelDetail[] $vehicleCarSubModelDetails
  * @property User $user
+ * @property UserIdUpdated $userIdUpdated
+ * @property UserIdApproved $userIdApproved
+ * @property UserIdRejected $userIdRejected
+ * @property UserIdDeleted $userIdDeleted
  */
 class VehicleCarModel extends CActiveRecord {
 
@@ -45,13 +58,14 @@ class VehicleCarModel extends CActiveRecord {
         // will receive user inputs.
         return array(
             array('name, car_make_id, service_group_id, status, user_id', 'required'),
-            array('car_make_id, service_group_id, is_approved, user_id', 'numerical', 'integerOnly' => true),
+            array('car_make_id, service_group_id, is_approved, user_id, user_id_approved, user_id_rejected, user_id_updated, user_id_deleted, is_deleted', 'numerical', 'integerOnly' => true),
             array('name', 'length', 'max' => 30),
             array('description', 'length', 'max' => 60),
             array('status', 'length', 'max' => 10),
+            array('approved_datetime, rejected_datetime, updated_datetime, deleted_datetime, created_datetime', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, name, description, car_make_id, service_group_id, created_datetime, car_make, status, is_approved, user_id', 'safe', 'on' => 'search'),
+            array('id, name, description, car_make_id, service_group_id, created_datetime, car_make, status, is_approved, user_id, user_id_approved, user_id_rejected, user_id_updated, user_id_deleted, is_deleted, approved_datetime, rejected_datetime, updated_datetime, deleted_datetime', 'safe', 'on' => 'search'),
         );
     }
 
@@ -72,6 +86,10 @@ class VehicleCarModel extends CActiveRecord {
             'vehicleCarSubModels' => array(self::HAS_MANY, 'VehicleCarSubModel', 'car_model_id'),
             'vehicleCarSubModelDetails' => array(self::HAS_MANY, 'VehicleCarSubModelDetail', 'car_model_id'),
             'user' => array(self::BELONGS_TO, 'Users', 'user_id'),
+            'userIdUpdated' => array(self::BELONGS_TO, 'Users', 'user_id_updated'),
+            'userIdApproved' => array(self::BELONGS_TO, 'Users', 'user_id_approved'),
+            'userIdRejected' => array(self::BELONGS_TO, 'Users', 'user_id_rejected'),
+            'userIdDeleted' => array(self::BELONGS_TO, 'Users', 'user_id_deleted'),
         );
     }
 

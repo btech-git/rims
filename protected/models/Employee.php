@@ -26,9 +26,6 @@
  * @property string $availability
  * @property string $skills
  * @property integer $registration_service_id
- * @property integer $is_deleted
- * @property string $deleted_at
- * @property integer $deleted_by
  * @property string $off_day
  * @property string $mobile_phone_number
  * @property string $marriage_status
@@ -53,12 +50,20 @@
  * @property string $birth_date
  * @property string $emergency_contact_address
  * @property integer $onleave_allocation
- * @property integer $user_id
  * @property string $clock_in_time
  * @property string $clock_out_time
+ * @property integer $user_id
  * @property string $created_datetime
  * @property string $updated_datetime
  * @property integer $user_id_updated
+ * @property integer $is_deleted
+ * @property string $deleted_at
+ * @property integer $deleted_by
+ * @property integer $is_approved
+ * @property integer $user_id_approved
+ * @property integer $user_id_rejected
+ * @property string $approved_datetime
+ * @property string $rejected_datetime
  *
  * The followings are the available model relations:
  * @property Province $province

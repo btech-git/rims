@@ -7,9 +7,26 @@
  * @property integer $id
  * @property string $winter_grade
  * @property string $hot_grade
+ * @property integer $is_approved
+ * @property integer $is_deleted
+ * @property integer $user_id_created
+ * @property integer $user_id_updated
+ * @property integer $user_id_approved
+ * @property integer $user_id_rejected
+ * @property integer $user_id_deleted
+ * @property string $created_datetime
+ * @property string $updated_datetime
+ * @property string $approved_datetime
+ * @property string $rejected_datetime
+ * @property string $deleted_datetime
  *
  * The followings are the available model relations:
  * @property Product[] $products
+ * @property UserIdCreated $userIdCreated
+ * @property UserIdUpdated $userIdUpdated
+ * @property UserIdApproved $userIdApproved
+ * @property UserIdRejected $userIdRejected
+ * @property UserIdDeleted $userIdDeleted
  */
 class OilSae extends CActiveRecord {
 
@@ -28,9 +45,11 @@ class OilSae extends CActiveRecord {
         // will receive user inputs.
         return array(
             array('winter_grade, hot_grade', 'length', 'max' => 20),
+            array('user_id_approved, user_id_rejected, user_id_updated, user_id_deleted, user_id_created, is_deleted, is_approved', 'numerical', 'integerOnly' => true),
+            array('approved_datetime, rejected_datetime, updated_datetime, deleted_datetime, created_datetime', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, winter_grade, hot_grade', 'safe', 'on' => 'search'),
+            array('id, winter_grade, hot_grade, user_id_approved, user_id_rejected, user_id_updated, user_id_deleted, user_id_created, is_deleted, is_approved, approved_datetime, rejected_datetime, updated_datetime, deleted_datetime, created_datetime', 'safe', 'on' => 'search'),
         );
     }
 
@@ -42,6 +61,11 @@ class OilSae extends CActiveRecord {
         // class name for the relations automatically generated below.
         return array(
             'products' => array(self::HAS_MANY, 'Product', 'oil_sae_id'),
+            'userIdCreated' => array(self::BELONGS_TO, 'Users', 'user_id_created'),
+            'userIdUpdated' => array(self::BELONGS_TO, 'Users', 'user_id_updated'),
+            'userIdApproved' => array(self::BELONGS_TO, 'Users', 'user_id_approved'),
+            'userIdRejected' => array(self::BELONGS_TO, 'Users', 'user_id_rejected'),
+            'userIdDeleted' => array(self::BELONGS_TO, 'Users', 'user_id_deleted'),
         );
     }
 

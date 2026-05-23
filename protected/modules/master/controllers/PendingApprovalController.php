@@ -10,7 +10,7 @@ class PendingApprovalController extends Controller {
 
     public function filters() {
         return array(
-//            'access',
+            'access',
         );
     }
 
@@ -120,7 +120,7 @@ class PendingApprovalController extends Controller {
     
     public function actionCoaApproval($coaId) {
         $coa = Coa::model()->findByPk($coaId);
-        $coa->status = 'Approved';
+        $coa->status = 'Active';
         $coa->is_approved = 1;
         $coa->date_approval = date('Y-m-d');
         $coa->time_approval = date('H:i:s');
@@ -133,10 +133,12 @@ class PendingApprovalController extends Controller {
     
     public function actionCoaReject($coaId) {
         $coa = Coa::model()->findByPk($coaId);
-        $coa->status = 'Reject';
+        $coa->status = 'Rejected';
         $coa->is_approved = 2;
+        $coa->rejected_datetime = date('Y-m-d H:i:s');
+        $coa->user_id_rejected = Yii::app()->user->id;
 
-        if ($coa->update(array('is_approved', 'status'))) {
+        if ($coa->update(array('is_approved', 'status', 'rejected_datetime', 'user_id_rejected'))) {
             $this->redirect(array('index'));
         }
     }
@@ -145,6 +147,8 @@ class PendingApprovalController extends Controller {
         $vehicleCarMake = VehicleCarMake::model()->findByPk($makeId);
         $vehicleCarMake->status = 'Active';
         $vehicleCarMake->is_approved = 1;
+        $vehicleCarMake->approved_datetime = date('Y-m-d H:i:s');
+        $vehicleCarMake->user_id_approved = Yii::app()->user->id;
 
         if ($vehicleCarMake->update(array('is_approved', 'status'))) {
             $this->redirect(array('index'));
@@ -153,8 +157,10 @@ class PendingApprovalController extends Controller {
     
     public function actionMakeReject($makeId) {
         $vehicleCarMake = VehicleCarMake::model()->findByPk($makeId);
-        $vehicleCarMake->status = 'Reject';
+        $vehicleCarMake->status = 'Rejected';
         $vehicleCarMake->is_approved = 2;
+        $vehicleCarMake->rejected_datetime = date('Y-m-d H:i:s');
+        $vehicleCarMake->user_id_rejected = Yii::app()->user->id;
 
         if ($vehicleCarMake->update(array('is_approved', 'status'))) {
             $this->redirect(array('index'));
@@ -165,6 +171,8 @@ class PendingApprovalController extends Controller {
         $vehicleCarModel = VehicleCarModel::model()->findByPk($modelId);
         $vehicleCarModel->status = 'Active';
         $vehicleCarModel->is_approved = 1;
+        $vehicleCarModel->approved_datetime = date('Y-m-d H:i:s');
+        $vehicleCarModel->user_id_approved = Yii::app()->user->id;
 
         if ($vehicleCarModel->update(array('is_approved', 'status'))) {
             $this->redirect(array('index'));
@@ -175,6 +183,8 @@ class PendingApprovalController extends Controller {
         $vehicleCarModel = VehicleCarModel::model()->findByPk($modelId);
         $vehicleCarModel->status = 'Reject';
         $vehicleCarModel->is_approved = 2;
+        $vehicleCarModel->rejected_datetime = date('Y-m-d H:i:s');
+        $vehicleCarModel->user_id_rejected = Yii::app()->user->id;
 
         if ($vehicleCarModel->update(array('is_approved', 'status'))) {
             $this->redirect(array('index'));
@@ -184,6 +194,8 @@ class PendingApprovalController extends Controller {
     public function actionSubModelApproval($subModelId) {
         $vehicleCarSubModel = VehicleCarSubModel::model()->findByPk($subModelId);
         $vehicleCarSubModel->is_approved = 1;
+        $vehicleCarSubModel->approved_datetime = date('Y-m-d H:i:s');
+        $vehicleCarSubModel->user_id_approved = Yii::app()->user->id;
 
         if ($vehicleCarSubModel->update(array('is_approved'))) {
             $this->redirect(array('index'));
@@ -193,6 +205,8 @@ class PendingApprovalController extends Controller {
     public function actionSubModelReject($subModelId) {
         $vehicleCarSubModel = Coa::model()->findByPk($subModelId);
         $vehicleCarSubModel->is_approved = 2;
+        $vehicleCarSubModel->rejected_datetime = date('Y-m-d H:i:s');
+        $vehicleCarSubModel->user_id_rejected = Yii::app()->user->id;
 
         if ($vehicleCarSubModel->update(array('is_approved'))) {
             $this->redirect(array('index'));
@@ -203,7 +217,6 @@ class PendingApprovalController extends Controller {
         $customer = Customer::model()->findByPk($customerId);
         $customer->status = 'Active';
         $customer->is_approved = 1;
-        $service->is_rejected = 0;
         $service->user_id_approval = Yii::app()->user->id;
         $service->date_approval = date('Y-m-d');
         $service->time_approval = date('H:i:s');
@@ -216,8 +229,7 @@ class PendingApprovalController extends Controller {
     public function actionCustomerReject($customerId) {
         $customer = Coa::model()->findByPk($customerId);
         $customer->status = 'Reject';
-        $customer->is_approved = 0;
-        $customer->is_rejected = 1;
+        $customer->is_approved = 2;
         $customer->user_id_reject = Yii::app()->user->id;
         $customer->date_reject = date('Y-m-d');
         $customer->time_reject = date('H:i:s');
@@ -231,7 +243,6 @@ class PendingApprovalController extends Controller {
         $product = Product::model()->findByPk($productId);
         $product->status = 'Active';
         $product->is_approved = 1;
-        $product->is_rejected = 0;
         $product->user_id_approval = Yii::app()->user->id;
         $product->date_approval = date('Y-m-d');
         $product->time_approval = date('H:i:s');
@@ -258,8 +269,7 @@ class PendingApprovalController extends Controller {
     public function actionProductReject($productId) {
         $product = Product::model()->findByPk($productId);
         $product->status = 'Reject';
-        $product->is_approved = 0;
-        $product->is_rejected = 1;
+        $product->is_approved = 2;
         $product->user_id_reject = Yii::app()->user->id;
         $product->date_reject = date('Y-m-d');
         $product->time_reject = date('H:i:s');
@@ -274,7 +284,6 @@ class PendingApprovalController extends Controller {
         $productMasterCategory->is_approved = 1;
         $productMasterCategory->user_id_approval = Yii::app()->user->id;
         $productMasterCategory->date_time_approval = date('Y-m-d H:i:s');
-        $productMasterCategory->is_rejected = 0;
         $productMasterCategory->user_id_reject = null;
         $productMasterCategory->date_time_reject = null;
 
@@ -286,10 +295,9 @@ class PendingApprovalController extends Controller {
     public function actionProductMasterCategoryReject($productMasterCategoryId) {
         $productMasterCategory = ProductMasterCategory::model()->findByPk($productMasterCategoryId);
         $productMasterCategory->status = 'Reject';
-        $productMasterCategory->is_approved = 0;
+        $productMasterCategory->is_approved = 2;
         $productMasterCategory->user_id_approval = null;
         $productMasterCategory->date_time_approval = null;
-        $productMasterCategory->is_rejected = 1;
         $productMasterCategory->user_id_reject = Yii::app()->user->id;
         $productMasterCategory->date_time_reject = date('Y-m-d H:i:s');
 
@@ -303,7 +311,6 @@ class PendingApprovalController extends Controller {
         $productSubMasterCategory->is_approved = 1;
         $productSubMasterCategory->user_id_approval = Yii::app()->user->id;
         $productSubMasterCategory->date_time_approval = date('Y-m-d H:i:s');
-        $productSubMasterCategory->is_rejected = 0;
         $productSubMasterCategory->user_id_reject = null;
         $productSubMasterCategory->date_time_reject = null;
 
@@ -318,7 +325,6 @@ class PendingApprovalController extends Controller {
         $productSubMasterCategory->is_approved = 0;
         $productSubMasterCategory->user_id_approval = null;
         $productSubMasterCategory->date_time_approval = null;
-        $productSubMasterCategory->is_rejected = 1;
         $productSubMasterCategory->user_id_reject = Yii::app()->user->id;
         $productSubMasterCategory->date_time_reject = date('Y-m-d H:i:s');
 
@@ -332,7 +338,6 @@ class PendingApprovalController extends Controller {
         $productSubCategory->is_approved = 1;
         $productSubCategory->user_id_approval = Yii::app()->user->id;
         $productSubCategory->date_time_approval = date('Y-m-d H:i:s');
-        $productSubCategory->is_rejected = 0;
         $productSubCategory->user_id_reject = null;
         $productSubCategory->date_time_reject = null;
 
@@ -347,7 +352,6 @@ class PendingApprovalController extends Controller {
         $productSubCategory->is_approved = 0;
         $productSubCategory->user_id_approval = null;
         $productSubCategory->date_time_approval = null;
-        $productSubCategory->is_rejected = 1;
         $productSubCategory->user_id_reject = Yii::app()->user->id;
         $productSubCategory->date_time_reject = date('Y-m-d H:i:s');
 
@@ -360,7 +364,6 @@ class PendingApprovalController extends Controller {
         $service = Service::model()->findByPk($serviceId);
         $service->status = 'Active';
         $service->is_approved = 1;
-        $service->is_rejected = 0;
         $service->user_id_approval = Yii::app()->user->id;
         $service->date_approval = date('Y-m-d');
         $service->time_approval = date('H:i:s');
@@ -373,8 +376,7 @@ class PendingApprovalController extends Controller {
     public function actionServiceReject($serviceId) {
         $service = Service::model()->findByPk($serviceId);
         $service->status = 'Reject';
-        $service->is_approved = 0;
-        $service->is_rejected = 1;
+        $service->is_approved = 2;
         $service->user_id_reject = Yii::app()->user->id;
         $service->date_reject = date('Y-m-d');
         $service->time_reject = date('H:i:s');
@@ -390,7 +392,6 @@ class PendingApprovalController extends Controller {
         $serviceType->is_approved = 1;
         $serviceType->user_id_approval = Yii::app()->user->id;
         $serviceType->date_time_approval = date('Y-m-d H:i:s');
-        $serviceType->is_rejected = 0;
         $serviceType->user_id_reject = null;
         $serviceType->date_time_reject = null;
 
@@ -405,7 +406,6 @@ class PendingApprovalController extends Controller {
         $serviceType->is_approved = 0;
         $serviceType->user_id_approval = null;
         $serviceType->date_time_approval = null;
-        $serviceType->is_rejected = 1;
         $serviceType->user_id_reject = Yii::app()->user->id;
         $serviceType->date_time_reject = date('Y-m-d H:i:s');
 
@@ -420,7 +420,6 @@ class PendingApprovalController extends Controller {
         $serviceCategory->is_approved = 1;
         $serviceCategory->user_id_approval = Yii::app()->user->id;
         $serviceCategory->date_time_approval = date('Y-m-d H:i:s');
-        $serviceCategory->is_rejected = 0;
         $serviceCategory->user_id_reject = null;
         $serviceCategory->date_time_reject = null;
 
@@ -435,7 +434,6 @@ class PendingApprovalController extends Controller {
         $serviceCategory->is_approved = 0;
         $serviceCategory->user_id_approval = null;
         $serviceCategory->date_time_approval = null;
-        $serviceCategory->is_rejected = 1;
         $serviceCategory->user_id_reject = Yii::app()->user->id;
         $serviceCategory->date_time_reject = date('Y-m-d H:i:s');
 
@@ -448,6 +446,8 @@ class PendingApprovalController extends Controller {
         $supplier = Supplier::model()->findByPk($supplierId);
         $supplier->status = 'Active';
         $supplier->is_approved = 1;
+        $supplier->approved_datetime = date('Y-m-d H:i:s');
+        $supplier->user_id_approved = Yii::app()->user->id;
 
         if ($supplier->update(array('is_approved', 'status'))) {
             $this->redirect(array('index'));
@@ -458,6 +458,8 @@ class PendingApprovalController extends Controller {
         $supplier = Supplier::model()->findByPk($supplierId);
         $supplier->status = 'Reject';
         $supplier->is_approved = 2;
+        $supplier->rejected_datetime = date('Y-m-d H:i:s');
+        $supplier->user_id_rejected = Yii::app()->user->id;
 
         if ($supplier->update(array('is_approved', 'status'))) {
             $this->redirect(array('index'));
@@ -468,6 +470,8 @@ class PendingApprovalController extends Controller {
         $warehouse = Warehouse::model()->findByPk($warehouseId);
         $warehouse->status = 'Active';
         $warehouse->is_approved = 1;
+        $warehouse->approved_datetime = date('Y-m-d H:i:s');
+        $warehouse->user_id_approved = Yii::app()->user->id;
 
         if ($warehouse->update(array('is_approved', 'status'))) {
             $this->redirect(array('index'));
@@ -478,6 +482,8 @@ class PendingApprovalController extends Controller {
         $warehouse = Warehouse::model()->findByPk($warehouseId);
         $warehouse->status = 'Reject';
         $warehouse->is_approved = 2;
+        $warehouse->rejected_datetime = date('Y-m-d H:i:s');
+        $warehouse->user_id_rejected = Yii::app()->user->id;
 
         if ($warehouse->update(array('is_approved', 'status'))) {
             $this->redirect(array('index'));

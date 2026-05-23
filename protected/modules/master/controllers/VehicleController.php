@@ -10,32 +10,41 @@ class VehicleController extends Controller {
 
     public function filters() {
         return array(
-//            'access',
+            'access',
         );
     }
 
     public function filterAccess($filterChain) {
-        if ($filterChain->action->id === 'create') {
-            if (!(Yii::app()->user->checkAccess('masterVehicleCreate')))
+        if ($filterChain->action->id === 'create' || $filterChain->action->id === 'inspection') {
+            if (!(Yii::app()->user->checkAccess('masterVehicleCreate'))) {
                 $this->redirect(array('/site/login'));
+            }
         }
 
-        if (
-            $filterChain->action->id === 'update' || 
-            $filterChain->action->id === 'delete'
-        ) {
-            if (!(Yii::app()->user->checkAccess('masterVehicleEdit')))
+        if ($filterChain->action->id === 'update' || $filterChain->action->id === 'updateLocation') {
+            if (!(Yii::app()->user->checkAccess('masterVehicleEdit'))) {
                 $this->redirect(array('/site/login'));
+            }
+        }
+
+        if ($filterChain->action->id === 'delete') {
+            if (!(Yii::app()->user->checkAccess('masterVehicleApproval'))) {
+                $this->redirect(array('/site/login'));
+            }
         }
 
         if (
             $filterChain->action->id === 'view' || 
             $filterChain->action->id === 'admin' || 
-            $filterChain->action->id === 'index' || 
-            $filterChain->action->id === 'inspection'
+            $filterChain->action->id === 'index'
         ) {
-            if (!(Yii::app()->user->checkAccess('masterVehicleCreate')) || !(Yii::app()->user->checkAccess('masterVehicleEdit')))
+            if (!(
+                Yii::app()->user->checkAccess('masterVehicleCreate') || 
+                Yii::app()->user->checkAccess('masterVehicleEdit') || 
+                Yii::app()->user->checkAccess('masterVehicleView')
+            )) {
                 $this->redirect(array('/site/login'));
+            }
         }
 
         $filterChain->run();
@@ -144,6 +153,8 @@ class VehicleController extends Controller {
      */
     public function actionCreate() {
         $model = new Vehicle;
+        $model->user_id_created = Yii::app()->user->id;
+        $model->created_datetime = date('Y-m-d H:i:s');
 
         // Uncomment the following line if AJAX validation is needed
         // $this->performAjaxValidation($model);
@@ -179,7 +190,6 @@ class VehicleController extends Controller {
 
             if ($model->save()) {
                 $this->saveMasterLog($model);
-        
                 $this->redirect(array('view', 'id' => $model->id));
             }
         }
@@ -198,6 +208,8 @@ class VehicleController extends Controller {
      */
     public function actionUpdate($id) {
         $model = $this->loadModel($id);
+        $model->user_id_updated = Yii::app()->user->id;
+        $model->updated_datetime = date('Y-m-d H:i:s');
 
         // Uncomment the following line if AJAX validation is needed
         // $this->performAjaxValidation($model);
@@ -280,16 +292,16 @@ class VehicleController extends Controller {
             $statusLocation = 'Masuk Lokasi';
         } else {
             if ($oldVehiclePositionTimer->entry_date !== null && $oldVehiclePositionTimer->entry_time !== null &&
-                    $oldVehiclePositionTimer->process_date == null && $oldVehiclePositionTimer->process_time == null &&
-                    $oldVehiclePositionTimer->exit_date == null && $oldVehiclePositionTimer->exit_time == null) {
+            $oldVehiclePositionTimer->process_date == null && $oldVehiclePositionTimer->process_time == null &&
+            $oldVehiclePositionTimer->exit_date == null && $oldVehiclePositionTimer->exit_time == null) {
                 $statusLocation = 'On-Progress';
             } else if ($oldVehiclePositionTimer->entry_date !== null && $oldVehiclePositionTimer->entry_time !== null &&
-                    $oldVehiclePositionTimer->process_date !== null && $oldVehiclePositionTimer->process_time !== null &&
-                    $oldVehiclePositionTimer->exit_date == null && $oldVehiclePositionTimer->exit_time == null) {
+            $oldVehiclePositionTimer->process_date !== null && $oldVehiclePositionTimer->process_time !== null &&
+            $oldVehiclePositionTimer->exit_date == null && $oldVehiclePositionTimer->exit_time == null) {
                 $statusLocation = 'Keluar Lokasi';
             } else if ($oldVehiclePositionTimer->entry_date !== null && $oldVehiclePositionTimer->entry_time !== null &&
-                    $oldVehiclePositionTimer->process_date !== null && $oldVehiclePositionTimer->process_time !== null &&
-                    $oldVehiclePositionTimer->exit_date !== null && $oldVehiclePositionTimer->exit_time !== null) {
+            $oldVehiclePositionTimer->process_date !== null && $oldVehiclePositionTimer->process_time !== null &&
+            $oldVehiclePositionTimer->exit_date !== null && $oldVehiclePositionTimer->exit_time !== null) {
                 $statusLocation = 'Masuk Lokasi';
             }
         }
@@ -366,15 +378,13 @@ class VehicleController extends Controller {
         // Uncomment the following line if AJAX validation is needed
         // $this->performAjaxValidation($model);
 
-        $vehicle = $this->instantiate(null);
-
         $inspection = new Inspection('search');
         $inspection->unsetAttributes();  // clear any default values
-        if (isset($_GET['Inspection']))
+        if (isset($_GET['Inspection'])) {
             $inspection->attributes = $_GET['Inspection'];
+        }
 
         $inspectionCriteria = new CDbCriteria;
-        //$positionCriteria->compare('code',$position->code.'%',true,'AND', false);
         $inspectionCriteria->compare('name', $inspection->name, true);
 
         $inspectionDataProvider = new CActiveDataProvider('Inspection', array(
@@ -385,13 +395,11 @@ class VehicleController extends Controller {
         $this->performAjaxValidation($vehicle->header);
 
         if (isset($_POST['Vehicle'])) {
-            /* $model->attributes=$_POST['InspectionSection'];
-              if($model->save())
-              $this->redirect(array('view','id'=>$model->id)); */
-
+            
             $this->loadState($vehicle);
-            if ($vehicle->save())
+            if ($vehicle->save()) {
                 $this->redirect(array('view', 'id' => $vehicle->header->id));
+            }
         }
 
         $this->render('inspection', array(
@@ -408,11 +416,17 @@ class VehicleController extends Controller {
      * @param integer $id the ID of the model to be deleted
      */
     public function actionDelete($id) {
-        $this->loadModel($id)->delete();
+        $model = $this->loadModel($id);
+        $model->is_deleted = 1;
+        $model->user_id_deleted = Yii::app()->user->id;
+        $model->deleted_datetime = date('Y-m-d H:i:s');
+        $model->update(array('is_deleted', 'user_id_deleted', 'deleted_datetime'));
 
         // if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
-        if (!isset($_GET['ajax']))
+        if (!isset($_GET['ajax'])) {
+            $this->saveMasterLog($model);
             $this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
+        }
     }
 
     /**

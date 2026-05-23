@@ -89,8 +89,8 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
 
                 <div class="relative">
                     <?php $this->renderPartial('_summary', array(
-                        'balanceSheetReportData' => $balanceSheetReportData,
-                        'netProfit' => $netProfit,
+                        'profitLossReportData' => $profitLossReportData,
+                        'accountGroupSums' => $accountGroupSums,
                         'startDate' => $startDate,
                         'endDate' => $endDate,
                         'branchId' => $branchId,

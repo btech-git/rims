@@ -29,6 +29,7 @@
                 <th>Problem</th>
                 <th>User</th>
                 <th>WO Status</th>
+                <th>Umur WO</th>
                 <th>Est Tgl Keluar</th>
             </tr>
         </thead>
@@ -81,6 +82,10 @@
                     <td><?php echo CHtml::encode($activeWorkOrderItem['problem']); ?></td>
                     <td><?php echo CHtml::encode($activeWorkOrderItem['username']); ?></td>
                     <td><?php echo CHtml::encode($activeWorkOrderItem['status']); ?></td>
+                    <td>
+                        <?php $outstandingDays = date_diff(date_create($activeWorkOrderItem['work_order_date']), date_create(date('Y-m-d'))); ?>
+                        <?php echo CHtml::encode($outstandingDays->format("%a days")); ?>
+                    </td>
                     <td><?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($activeWorkOrderItem['estimate_discharge_date']))); ?></td>
                 </tr>
             <?php endforeach; ?>

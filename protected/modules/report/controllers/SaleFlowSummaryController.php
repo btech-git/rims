@@ -6,13 +6,13 @@ class SaleFlowSummaryController extends Controller {
     
     public function filters() {
         return array(
-//            'access',
+            'access',
         );
     }
 
     public function filterAccess($filterChain) {
         if ($filterChain->action->id === 'summary') {
-            if (!(Yii::app()->user->checkAccess('saleRetailReport'))) {
+            if (!(Yii::app()->user->checkAccess('saleCustomerReport'))) {
                 $this->redirect(array('/site/login'));
             }
         }

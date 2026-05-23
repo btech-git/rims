@@ -11,9 +11,26 @@
  * @property string $rim_diameter
  * @property string $load_rating
  * @property string $speed_rating
+ * @property integer $is_approved
+ * @property integer $is_deleted
+ * @property integer $user_id_created
+ * @property integer $user_id_updated
+ * @property integer $user_id_approved
+ * @property integer $user_id_rejected
+ * @property integer $user_id_deleted
+ * @property string $created_datetime
+ * @property string $updated_datetime
+ * @property string $approved_datetime
+ * @property string $rejected_datetime
+ * @property string $deleted_datetime
  *
  * The followings are the available model relations:
  * @property Product[] $products
+ * @property UserIdCreated $userIdCreated
+ * @property UserIdUpdated $userIdUpdated
+ * @property UserIdApproved $userIdApproved
+ * @property UserIdRejected $userIdRejected
+ * @property UserIdDeleted $userIdDeleted
  */
 class TireSize extends CActiveRecord {
 
@@ -26,10 +43,12 @@ class TireSize extends CActiveRecord {
         // will receive user inputs.
         return array(
             array('section_width, aspect_ratio, construction_type, rim_diameter', 'required'),
+            array('user_id_approved, user_id_rejected, user_id_updated, user_id_deleted, user_id_created, is_deleted, is_approved', 'numerical', 'integerOnly' => true),
             array('section_width, aspect_ratio, construction_type, rim_diameter, load_rating, speed_rating', 'length', 'max' => 20),
+            array('approved_datetime, rejected_datetime, updated_datetime, deleted_datetime, created_datetime', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, section_width, aspect_ratio, construction_type, rim_diameter, load_rating, speed_rating', 'safe', 'on' => 'search'),
+            array('id, section_width, aspect_ratio, construction_type, rim_diameter, load_rating, speed_rating, user_id_approved, user_id_rejected, user_id_updated, user_id_deleted, user_id_created, is_deleted, is_approved, approved_datetime, rejected_datetime, updated_datetime, deleted_datetime, created_datetime', 'safe', 'on' => 'search'),
         );
     }
 
@@ -38,6 +57,11 @@ class TireSize extends CActiveRecord {
         // class name for the relations automatically generated below.
         return array(
             'products' => array(self::HAS_MANY, 'Product', 'tire_size_id'),
+            'userIdCreated' => array(self::BELONGS_TO, 'Users', 'user_id_created'),
+            'userIdUpdated' => array(self::BELONGS_TO, 'Users', 'user_id_updated'),
+            'userIdApproved' => array(self::BELONGS_TO, 'Users', 'user_id_approved'),
+            'userIdRejected' => array(self::BELONGS_TO, 'Users', 'user_id_rejected'),
+            'userIdDeleted' => array(self::BELONGS_TO, 'Users', 'user_id_deleted'),
         );
     }
 

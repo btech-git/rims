@@ -12,7 +12,7 @@ class CustomerVehicleSaleTransactionController extends Controller {
 
     public function filterAccess($filterChain) {
         if ($filterChain->action->id === 'summary') {
-            if (!(Yii::app()->user->checkAccess('director'))) {
+            if (!(Yii::app()->user->checkAccess('saleCustomerReport'))) {
                 $this->redirect(array('/site/login'));
             }
         }
@@ -153,18 +153,22 @@ class CustomerVehicleSaleTransactionController extends Controller {
         $worksheet->setCellValue('J5', 'Status');
         $worksheet->setCellValue('K5', 'Problem');
         $worksheet->setCellValue('L5', 'Salesman');
-        $worksheet->setCellValue('M5', 'User RG');
-        $worksheet->setCellValue('N5', 'Work Order');
-        $worksheet->setCellValue('O5', 'Movement Out');
-        $worksheet->setCellValue('P5', 'User Movement');
-        $worksheet->setCellValue('Q5', 'Invoice');
-        $worksheet->setCellValue('R5', 'Tanggal Invoice');
-        $worksheet->setCellValue('S5', 'Jam');
-        $worksheet->setCellValue('T5', 'User Invoice');
-        $worksheet->setCellValue('U5', 'Payment In');
-        $worksheet->setCellValue('V5', 'Tanggal Payment');
+        $worksheet->setCellValue('M5', 'Mekanik');
+        $worksheet->setCellValue('N5', 'KM Sebelum');
+        $worksheet->setCellValue('O5', 'KM sekarang');
+        $worksheet->setCellValue('P5', 'KM Service Selanjutnya');
+        $worksheet->setCellValue('Q5', 'User RG');
+        $worksheet->setCellValue('R5', 'Work Order');
+        $worksheet->setCellValue('S5', 'Movement Out');
+        $worksheet->setCellValue('T5', 'User Movement');
+        $worksheet->setCellValue('U5', 'Invoice');
+        $worksheet->setCellValue('V5', 'Tanggal Invoice');
         $worksheet->setCellValue('W5', 'Jam');
-        $worksheet->setCellValue('X5', 'User Payment');
+        $worksheet->setCellValue('X5', 'User Invoice');
+        $worksheet->setCellValue('Y5', 'Payment In');
+        $worksheet->setCellValue('Z5', 'Tanggal Payment');
+        $worksheet->setCellValue('AA5', 'Jam');
+        $worksheet->setCellValue('AB5', 'User Payment');
 
         $counter = 6;
 
@@ -195,22 +199,26 @@ class CustomerVehicleSaleTransactionController extends Controller {
             $worksheet->setCellValue("J{$counter}", CHtml::value($header, 'status'));
             $worksheet->setCellValue("K{$counter}", CHtml::value($header, 'problem'));
             $worksheet->setCellValue("L{$counter}", CHtml::value($header, 'employeeIdSalesPerson.name'));
-            $worksheet->setCellValue("M{$counter}", CHtml::value($header, 'user.username'));
-            $worksheet->setCellValue("N{$counter}", CHtml::value($header, 'work_order_number'));
-            $worksheet->setCellValue("O{$counter}", CHtml::encode(implode(', ', $movementOutHeaderCodeNumbers)));
-            $worksheet->setCellValue("P{$counter}", CHtml::encode(implode(', ', $movementOutHeaderUsers)));
-            $worksheet->setCellValue("Q{$counter}", CHtml::encode(implode(', ', $invoiceHeaderCodeNumbers)));
-            $worksheet->setCellValue("R{$counter}", CHtml::encode(implode(', ', $invoiceHeaderTransactionDates)));
-            $worksheet->setCellValue("S{$counter}", CHtml::encode(implode(', ', $invoiceHeaderTransactionTimes)));
-            $worksheet->setCellValue("T{$counter}", CHtml::encode(implode(', ', $invoiceHeaderUsers)));
-            $worksheet->setCellValue("U{$counter}", CHtml::encode(implode(', ', $paymentInHeaderCodeNumbers)));
-            $worksheet->setCellValue("V{$counter}", CHtml::encode(implode(', ', $paymentInHeaderDates)));
-            $worksheet->setCellValue("W{$counter}", CHtml::encode(implode(', ', $paymentInHeaderTimes)));
-            $worksheet->setCellValue("X{$counter}", CHtml::encode(implode(', ', $paymentInHeaderUsers)));
+            $worksheet->setCellValue("M{$counter}", CHtml::value($header, 'employeeIdAssignMechanic.name'));
+            $worksheet->setCellValue("N{$counter}", CHtml::value($header, 'previous_mileage'));
+            $worksheet->setCellValue("O{$counter}", CHtml::value($header, 'vehicle_mileage'));
+            $worksheet->setCellValue("P{$counter}", CHtml::value($header, 'next_mileage'));
+            $worksheet->setCellValue("Q{$counter}", CHtml::value($header, 'user.username'));
+            $worksheet->setCellValue("R{$counter}", CHtml::value($header, 'work_order_number'));
+            $worksheet->setCellValue("S{$counter}", CHtml::encode(implode(', ', $movementOutHeaderCodeNumbers)));
+            $worksheet->setCellValue("T{$counter}", CHtml::encode(implode(', ', $movementOutHeaderUsers)));
+            $worksheet->setCellValue("U{$counter}", CHtml::encode(implode(', ', $invoiceHeaderCodeNumbers)));
+            $worksheet->setCellValue("V{$counter}", CHtml::encode(implode(', ', $invoiceHeaderTransactionDates)));
+            $worksheet->setCellValue("W{$counter}", CHtml::encode(implode(', ', $invoiceHeaderTransactionTimes)));
+            $worksheet->setCellValue("X{$counter}", CHtml::encode(implode(', ', $invoiceHeaderUsers)));
+            $worksheet->setCellValue("Y{$counter}", CHtml::encode(implode(', ', $paymentInHeaderCodeNumbers)));
+            $worksheet->setCellValue("Z{$counter}", CHtml::encode(implode(', ', $paymentInHeaderDates)));
+            $worksheet->setCellValue("AA{$counter}", CHtml::encode(implode(', ', $paymentInHeaderTimes)));
+            $worksheet->setCellValue("AB{$counter}", CHtml::encode(implode(', ', $paymentInHeaderUsers)));
             $counter++;
         }
 
-        for ($col = 'A'; $col !== 'Z'; $col++) {
+        for ($col = 'A'; $col !== 'AZ'; $col++) {
             $objPHPExcel->getActiveSheet()
             ->getColumnDimension($col)
             ->setAutoSize(true);

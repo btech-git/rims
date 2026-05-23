@@ -10,7 +10,7 @@ class CompanyController extends Controller {
 
     public function filters() {
         return array(
-//            'access',
+            'access',
         );
     }
 
@@ -21,13 +21,14 @@ class CompanyController extends Controller {
             }
         }
 
-        if (
-            $filterChain->action->id === 'edit' || 
-            $filterChain->action->id === 'update' || 
-            $filterChain->action->id === 'restore' || 
-            $filterChain->action->id === 'updateBank'
-        ) {
+        if ($filterChain->action->id === 'update' || $filterChain->action->id === 'updateBank') {
             if (!(Yii::app()->user->checkAccess('masterCompanyEdit'))) {
+                $this->redirect(array('/site/login'));
+            }
+        }
+
+        if ($filterChain->action->id === 'delete' || $filterChain->action->id === 'restore') {
+            if (!(Yii::app()->user->checkAccess('masterCompanyApproval'))) {
                 $this->redirect(array('/site/login'));
             }
         }
@@ -37,8 +38,12 @@ class CompanyController extends Controller {
             $filterChain->action->id === 'admin' || 
             $filterChain->action->id === 'index'
         ) {
-            if (!(Yii::app()->user->checkAccess('masterCompanyCreate') || Yii::app()->user->checkAccess('masterCompanyEdit') || 
-                    Yii::app()->user->checkAccess('masterCompanyView') || Yii::app()->user->checkAccess('masterCompanyApproval'))) {
+            if (!(
+                Yii::app()->user->checkAccess('masterCompanyCreate') || 
+                Yii::app()->user->checkAccess('masterCompanyEdit') || 
+                Yii::app()->user->checkAccess('masterCompanyView') || 
+                Yii::app()->user->checkAccess('masterCompanyApproval')
+            )) {
                 $this->redirect(array('/site/login'));
             }
         }
@@ -65,12 +70,15 @@ class CompanyController extends Controller {
      * If creation is successful, the browser will be redirected to the 'view' page.
      */
     public function actionCreate() {
-        $model = new Company;
+        $company = $this->instantiate(null);
+        $company->header->user_id_created = Yii::app()->user->id;
+        $company->header->created_datetime = date('Y-m-d H:i:s');
 
         $bank = new Bank('search');
         $bank->unsetAttributes();  // clear any default values
-        if (isset($_GET['Bank']))
+        if (isset($_GET['Bank'])) {
             $bank->attributes = $_GET['Bank'];
+        }
 
         $bankCriteria = new CDbCriteria;
         $bankCriteria->compare('t.code', $bank->code . '%', true, 'AND', false);
@@ -82,8 +90,9 @@ class CompanyController extends Controller {
 
         $coa = new Coa('search');
         $coa->unsetAttributes();  // clear any default values
-        if (isset($_GET['Coa']))
+        if (isset($_GET['Coa'])) {
             $coa->attributes = $_GET['Coa'];
+        }
 
         $coaCriteria = new CDbCriteria;
         $coaCriteria->addCondition("coa_sub_category_id IN (1, 2, 3) AND t.status = 'Approved'");
@@ -96,11 +105,11 @@ class CompanyController extends Controller {
 
         $branch = new Branch('search');
         $branch->unsetAttributes();  // clear any default values
-        if (isset($_GET['Branch']))
+        if (isset($_GET['Branch'])) {
             $branch->attributes = $_GET['Branch'];
+        }
 
         $branchCriteria = new CDbCriteria;
-        //$positionCriteria->compare('code',$position->code.'%',true,'AND', false);
         $branchCriteria->compare('name', $branch->name, true);
 
         $branchDataProvider = new CActiveDataProvider('Branch', array(
@@ -108,9 +117,9 @@ class CompanyController extends Controller {
         ));
         $branchArray = array();
 
-        $company = $this->instantiate(null);
         if (isset($_POST['Company'])) {
             $this->loadState($company);
+            
             if ($company->save(Yii::app()->db)) {
                 $this->redirect(array('view', 'id' => $company->header->id));
             }
@@ -134,14 +143,16 @@ class CompanyController extends Controller {
      * @param integer $id the ID of the model to be updated
      */
     public function actionUpdate($id) {
-        //$model=$this->loadModel($id);
-        // Uncomment the following line if AJAX validation is needed
-        // $this->performAjaxValidation($model);
+        $company = $this->instantiate($id);
+        $company->header->user_id_updated = Yii::app()->user->id;
+        $company->header->updated_datetime = date('Y-m-d H:i:s');
+        $this->performAjaxValidation($company->header);
 
         $bank = new Bank('search');
         $bank->unsetAttributes();  // clear any default values
-        if (isset($_GET['Bank']))
+        if (isset($_GET['Bank'])) {
             $bank->attributes = $_GET['Bank'];
+        }
 
         $bankCriteria = new CDbCriteria;
         $bankCriteria->compare('t.code', $bank->code . '%', true, 'AND', false);
@@ -152,8 +163,9 @@ class CompanyController extends Controller {
         ));
         $coa = new Coa('search');
         $coa->unsetAttributes();  // clear any default values
-        if (isset($_GET['Coa']))
+        if (isset($_GET['Coa'])) {
             $coa->attributes = $_GET['COA'];
+        }
 
         $coaCriteria = new CDbCriteria;
         $coaCriteria->addCondition("coa_sub_category_id IN (1, 2, 3) AND t.status = 'Approved'");
@@ -167,8 +179,9 @@ class CompanyController extends Controller {
 
         $branch = new Branch('search');
         $branch->unsetAttributes();  // clear any default values
-        if (isset($_GET['Branch']))
+        if (isset($_GET['Branch'])) {
             $branch->attributes = $_GET['Branch'];
+        }
 
         $branchCriteria = new CDbCriteria;
         //$positionCriteria->compare('code',$position->code.'%',true,'AND', false);
@@ -184,14 +197,7 @@ class CompanyController extends Controller {
             array_push($branchArray, $branchCheck->branch_id);
         }
 
-        $company = $this->instantiate($id);
-
-        $this->performAjaxValidation($company->header);
-
         if (isset($_POST['Company'])) {
-            // $model->attributes=$_POST['Company'];
-            // if($model->save())
-            // 	$this->redirect(array('view','id'=>$model->id));
             $this->loadState($company);
             if ($company->save(Yii::app()->db)) {
                 $this->redirect(array('view', 'id' => $company->header->id));
@@ -216,11 +222,17 @@ class CompanyController extends Controller {
      * @param integer $id the ID of the model to be deleted
      */
     public function actionDelete($id) {
-        $this->loadModel($id)->remove();
+        $model = $this->loadModel($id);
+        $model->is_deleted = 1;
+        $model->user_id_deleted = Yii::app()->user->id;
+        $model->deleted_datetime = date('Y-m-d H:i:s');
+        $model->update(array('is_deleted', 'user_id_deleted', 'deleted_datetime'));
 
         // if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
-        if (!isset($_GET['ajax']))
+        if (!isset($_GET['ajax'])) {
+            $this->saveMasterLog($model);
             $this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
+        }
     }
 
     public function actionRestore($id) {
@@ -228,8 +240,9 @@ class CompanyController extends Controller {
         $this->loadModel($id)->restore();
 
         // if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
-        if (!isset($_GET['ajax']))
+        if (!isset($_GET['ajax'])) {
             $this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
+        }
     }
 
     /**
@@ -255,6 +268,24 @@ class CompanyController extends Controller {
         $this->render('admin', array(
             'model' => $model,
         ));
+    }
+
+    public function saveMasterLog($model) {
+        $masterLog = new MasterLog();
+        $masterLog->name = $model->name;
+        $masterLog->log_date = date('Y-m-d');
+        $masterLog->log_time = date('H:i:s');
+        $masterLog->table_name = $model->tableName();
+        $masterLog->table_id = $model->id;
+        $masterLog->user_id = Yii::app()->user->id;
+        $masterLog->username = Yii::app()->user->username;
+        $masterLog->controller_class = Yii::app()->controller->module->id  . '/' . Yii::app()->controller->id;
+        $masterLog->action_name = Yii::app()->controller->action->id;
+        
+        $newData = $model->attributes;
+        $masterLog->new_data = json_encode($newData);
+
+        $masterLog->save();
     }
 
     //Add Branch Detail

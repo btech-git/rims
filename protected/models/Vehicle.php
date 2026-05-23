@@ -34,6 +34,18 @@
  * @property integer $entry_user_id
  * @property integer $start_service_user_id
  * @property integer $exit_user_id
+ * @property integer $is_approved
+ * @property integer $is_deleted
+ * @property integer $user_id_created
+ * @property integer $user_id_updated
+ * @property integer $user_id_approved
+ * @property integer $user_id_rejected
+ * @property integer $user_id_deleted
+ * @property string $created_datetime
+ * @property string $updated_datetime
+ * @property string $approved_datetime
+ * @property string $rejected_datetime
+ * @property string $deleted_datetime
  *
  * The followings are the available model relations:
  * @property InvoiceHeader[] $invoiceHeaders
@@ -53,6 +65,11 @@
  * @property Customer $customer
  * @property Colors $color
  * @property VehicleInspection[] $vehicleInspections
+ * @property UserIdCreated $userIdCreated
+ * @property UserIdUpdated $userIdUpdated
+ * @property UserIdApproved $userIdApproved
+ * @property UserIdRejected $userIdRejected
+ * @property UserIdDeleted $userIdDeleted
  */
 class Vehicle extends CActiveRecord {
 
@@ -61,7 +78,6 @@ class Vehicle extends CActiveRecord {
     public $car_make;
     public $car_model;
     public $car_sub_model;
-//    public $color;
     public $car_make_code;
     public $car_model_code;
     public $car_color;
@@ -82,16 +98,16 @@ class Vehicle extends CActiveRecord {
         // will receive user inputs.
         return array(
             array('plate_number, car_make_id, car_model_id, car_sub_model_id, color_id, customer_id', 'required'),
-            array('plate_number_prefix_id, car_make_id, car_model_id, car_sub_model_id, car_sub_model_detail_id, color_id, customer_id, customer_pic_id, insurance_company_id, power, entry_user_id, exit_user_id, start_service_user_id', 'numerical', 'integerOnly' => true),
+            array('plate_number_prefix_id, car_make_id, car_model_id, car_sub_model_id, car_sub_model_detail_id, color_id, customer_id, customer_pic_id, insurance_company_id, power, entry_user_id, exit_user_id, start_service_user_id, user_id_approved, user_id_rejected, user_id_updated, user_id_deleted, user_id_created, is_deleted, is_approved', 'numerical', 'integerOnly' => true),
             array('plate_number', 'length', 'max' => 15),
             array('plate_number_ordinal, fuel_type', 'length', 'max' => 20),
             array('plate_number_suffix, year, drivetrain', 'length', 'max' => 10),
             array('machine_number, frame_number, chasis_code, transmission', 'length', 'max' => 30),
             array('status_location', 'length', 'max' => 100),
-            array('notes, entry_datetime, start_service_datetime, finish_service_datetime, exit_datetime, customer_name', 'safe'),
+            array('notes, entry_datetime, start_service_datetime, finish_service_datetime, exit_datetime, customer_name, approved_datetime, rejected_datetime, updated_datetime, deleted_datetime, created_datetime', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, plate_number, plate_number_prefix_id, plate_number_ordinal, plate_number_suffix, machine_number, frame_number, car_make_id, car_model_id, car_sub_model_id, car_sub_model_detail_id, color_id, year, customer_id, customer_pic_id, insurance_company_id, chasis_code, transmission, fuel_type, power, drivetrain, notes, status_location, entry_datetime, start_service_datetime, finish_service_datetime, exit_datetime, entry_user_id, exit_user_id, start_service_user_id, customer_name', 'safe', 'on' => 'search'),
+            array('id, plate_number, plate_number_prefix_id, plate_number_ordinal, plate_number_suffix, machine_number, frame_number, car_make_id, car_model_id, car_sub_model_id, car_sub_model_detail_id, color_id, year, customer_id, customer_pic_id, insurance_company_id, chasis_code, transmission, fuel_type, power, drivetrain, notes, status_location, entry_datetime, start_service_datetime, finish_service_datetime, exit_datetime, entry_user_id, exit_user_id, start_service_user_id, customer_name, approved_datetime, rejected_datetime, updated_datetime, deleted_datetime, created_datetime, user_id_approved, user_id_rejected, user_id_updated, user_id_deleted, user_id_created, is_deleted, is_approved', 'safe', 'on' => 'search'),
         );
     }
 
@@ -119,6 +135,11 @@ class Vehicle extends CActiveRecord {
             'startServiceUser' => array(self::BELONGS_TO, 'Users', 'start_service_user_id'),
             'exitUser' => array(self::BELONGS_TO, 'Users', 'exit_user_id'),
             'vehicleInspections' => array(self::HAS_MANY, 'VehicleInspection', 'vehicle_id'),
+            'userIdCreated' => array(self::BELONGS_TO, 'Users', 'user_id_created'),
+            'userIdUpdated' => array(self::BELONGS_TO, 'Users', 'user_id_updated'),
+            'userIdApproved' => array(self::BELONGS_TO, 'Users', 'user_id_approved'),
+            'userIdRejected' => array(self::BELONGS_TO, 'Users', 'user_id_rejected'),
+            'userIdDeleted' => array(self::BELONGS_TO, 'Users', 'user_id_deleted'),
         );
     }
 

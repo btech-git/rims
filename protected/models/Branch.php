@@ -16,7 +16,18 @@
  * @property string $email
  * @property string $status
  * @property integer $coa_prefix
- * @property integer $company_id
+ * @property integer $is_deleted
+ * @property integer $user_id_deleted
+ * @property integer $user_id_created
+ * @property integer $user_id_updated
+ * @property integer $is_approved
+ * @property integer $user_id_approved
+ * @property integer $user_id_rejected
+ * @property string $deleted_datetime
+ * @property string $created_datetime
+ * @property string $updated_datetime
+ * @property string $approved_datetime
+ * @property string $rejected_datetime
  *
  * The followings are the available model relations:
  * @property Province $province
@@ -46,6 +57,11 @@
  * @property TransactionSalesOrder[] $transactionSalesOrders1
  * @property Warehouse[] $warehouses
  * @property BranchCoaInterbranches[] $branchCoaInterbranches
+ * @property UserIdApproved $userIdApproved
+ * @property UserIdRejected $userIdRejected
+ * @property UserIdUpdated $userIdUpdated
+ * @property UserIdDeleted $userIdDeleted
+ * @property UserIdCreated $userIdCreated
  */
 class Branch extends CActiveRecord {
 
@@ -71,7 +87,7 @@ class Branch extends CActiveRecord {
         return array(
             array('name, address,province_id, city_id, zipcode, email, coa_prefix,code', 'required'),
             array('coa_prefix', 'unique'),
-            array('province_id ,city_id, company_id, coa_interbranch_inventory', 'numerical', 'integerOnly' => true),
+            array('province_id ,city_id, company_id, coa_interbranch_inventory, user_id_approved, user_id_rejected, user_id_updated, user_id_deleted, user_id_created, is_deleted, is_approved', 'numerical', 'integerOnly' => true),
             array('code, phone, fax', 'length', 'max' => 20),
             array('name', 'length', 'max' => 30),
             array('coa_prefix', 'length', 'max' => 3),
@@ -79,9 +95,10 @@ class Branch extends CActiveRecord {
             array('email', 'length', 'max' => 60),
             array('code', 'unique'),
             array('email', 'email'),
+            array('approved_datetime, rejected_datetime, updated_datetime, deleted_datetime, created_datetime', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, code, name, address, province_id, city_id, zipcode, phone, fax, email, status,city_name, province_name, sort_code, coa_prefix, company_id, coa_interbranch_inventory, coa_interbranch_inventory_name, coa_interbranch_inventory_code', 'safe', 'on' => 'search'),
+            array('id, code, name, address, province_id, city_id, zipcode, phone, fax, email, status,city_name, province_name, sort_code, coa_prefix, company_id, coa_interbranch_inventory, coa_interbranch_inventory_name, coa_interbranch_inventory_code, user_id_approved, user_id_rejected, user_id_updated, user_id_deleted, user_id_created, is_deleted, is_approved, approved_datetime, rejected_datetime, updated_datetime, deleted_datetime, created_datetime', 'safe', 'on' => 'search'),
         );
     }
 
@@ -122,12 +139,14 @@ class Branch extends CActiveRecord {
             'paymentIns' => array(self::HAS_MANY, 'PaymentIn', 'branch_id'),
             'coaInterbranchInventory' => array(self::BELONGS_TO, 'Coa', 'coa_interbranch_inventory'),
             'branchCoaInterbranches' => array(self::HAS_MANY, 'BranchCoaInterbranch', 'branch_id_from'),
+            'userIdApproved' => array(self::BELONGS_TO, 'Users', 'user_id_approved'),
+            'userIdRejected' => array(self::BELONGS_TO, 'Users', 'user_id_rejected'),
+            'userIdUpdated' => array(self::BELONGS_TO, 'Users', 'user_id_updated'),
+            'userIdCreated' => array(self::BELONGS_TO, 'Users', 'user_id_created'),
+            'userIdDeleted' => array(self::BELONGS_TO, 'Users', 'user_id_deleted'),
         );
     }
 
-    /**
-     * @return array customized attribute labels (name=>label)
-     */
     public function attributeLabels() {
         return array(
             'id' => 'ID',
@@ -149,18 +168,6 @@ class Branch extends CActiveRecord {
         );
     }
 
-    /**
-     * Retrieves a list of models based on the current search/filter conditions.
-     *
-     * Typical usecase:
-     * - Initialize the model fields with values from filter form.
-     * - Execute this method to get CActiveDataProvider instance which will filter
-     * models according to data in model fields.
-     * - Pass data provider to CGridView, CListView or any similar widget.
-     *
-     * @return CActiveDataProvider the data provider that can return the models
-     * based on the search/filter conditions.
-     */
     public function search() {
         // @todo Please modify the following code to remove attributes that should not be searched.
 
@@ -215,80 +222,7 @@ class Branch extends CActiveRecord {
         ));
     }
 
-    // public function beforeFind($event) {
-    // 	$criteria = $this->getOwner()->getDbCriteria();
-    // 	// only find models with status = 0
-    // 	$criteria->addCondition('status = "Active"');
-    // }
-
-    /* public function defaultScope()
-      {
-      $alias = $this->getTableAlias(false, false);
-      return array(
-      'condition'=>"{$alias}.status = 'Active'",
-      // 'order'=>"t.name ASC",
-      );
-      } */
-
-    /**
-     * Returns the static model of the specified AR class.
-     * Please note that you should have this exact method in all your CActiveRecord descendants!
-     * @param string $className active record class name.
-     * @return Branch the static model class
-     */
     public static function model($className = __CLASS__) {
         return parent::model($className);
     }
-
-//    public function searchByDailyTransaction() {
-//
-//        $criteria = new CDbCriteria;
-//
-//        $criteria->compare('id', $this->id);
-//        $criteria->compare('t.code', $this->code, true);
-//        $criteria->compare('t.name', $this->name, true);
-//        $criteria->compare('company_id', $this->company_id);
-//
-//        return new CActiveDataProvider($this, array(
-//            'criteria' => $criteria,
-//            'pagination' => array(
-//                'pageSize' => 50,
-////                'currentPage' => $pageNumber - 1,
-//            ),
-//        ));
-//    }
-
-//    public function getPaymentInRetailTotalAmounts() {
-//        $sql = "SELECT p.payment_type_id, COALESCE(SUM(p.payment_amount), 0) AS total_amount
-//                FROM " . PaymentIn::model()->tableName() . " p 
-//                INNER JOIN " . InvoiceHeader::model()->tableName() . " i ON i.id = p.invoice_id
-//                WHERE p.branch_id = :branch_id AND i.sales_order_id IS NULL
-//                GROUP BY p.payment_type_id";
-//        
-//        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, array(':branch_id' => $this->id));
-//        
-//        return $resultSet;
-//    }
-     
-//    public function getPaymentOutTotalAmount() {
-//        $sql = "SELECT payment_type_id, COALESCE(SUM(payment_amount), 0) AS total_amount
-//                FROM " . PaymentOut::model()->tableName() . "
-//                WHERE branch_id = :branch_id
-//                GROUP BY payment_type_id";
-//        
-//        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, array(':branch_id' => $this->id));
-//        
-//        return $resultSet;
-//    }
-//     
-//    public function getCashTransactionTotalAmount() {
-//        $sql = "SELECT payment_type_id, COALESCE(SUM(debit_amount), 0) AS total_debit_amount, COALESCE(SUM(credit_amount), 0) AS total_credit_amount
-//                FROM " . CashTransaction::model()->tableName() . "
-//                WHERE branch_id = :branch_id
-//                GROUP BY payment_type_id";
-//        
-//        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, array(':branch_id' => $this->id));
-//        
-//        return $resultSet;
-//    }
 }

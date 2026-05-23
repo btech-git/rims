@@ -13,9 +13,17 @@
  * @property string $status
  * @property integer $branch_id
  * @property integer $is_approved
- * @property string $date_approval
  * @property integer $user_id
  * @property string $created_datetime
+ * @property integer $is_deleted
+ * @property integer $user_id_updated
+ * @property integer $user_id_approved
+ * @property integer $user_id_rejected
+ * @property integer $user_id_deleted
+ * @property string $updated_datetime
+ * @property string $approved_datetime
+ * @property string $rejected_datetime
+ * @property string $deleted_datetime
  *
  * The followings are the available model relations:
  * @property BranchWarehouse[] $branchWarehouses
@@ -26,6 +34,10 @@
  * @property WarehouseSection[] $warehouseSections
  * @property Branch $branch
  * @property User $user
+ * @property UserIdUpdated $userIdUpdated
+ * @property UserIdApproved $userIdApproved
+ * @property UserIdRejected $userIdRejected
+ * @property UserIdDeleted $userIdDeleted
  */
 class Warehouse extends CActiveRecord {
 
@@ -46,15 +58,15 @@ class Warehouse extends CActiveRecord {
         // will receive user inputs.
         return array(
             array('code, name, description, row, column, user_id', 'required'),
-            array('row, column, branch_id, is_approved, user_id', 'numerical', 'integerOnly' => true),
+            array('row, column, branch_id, is_approved, user_id, user_id_approved, user_id_rejected, user_id_updated, user_id_deleted, is_deleted', 'numerical', 'integerOnly' => true),
             array('code', 'length', 'max' => 20),
             array('name', 'length', 'max' => 50),
             array('description', 'length', 'max' => 100),
             array('status', 'length', 'max' => 10),
-            array('date_approval, created_datetime', 'safe'),
+            array('created_datetime, approved_datetime, rejected_datetime, updated_datetime, deleted_datetime', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, code, name, description, row, column, status, warehouses, created_datetime, branch_id, user_id', 'safe', 'on' => 'search'),
+            array('id, code, name, description, row, column, status, warehouses, created_datetime, branch_id, user_id, approved_datetime, rejected_datetime, updated_datetime, deleted_datetime, is_approved, user_id_approved, user_id_rejected, user_id_updated, user_id_deleted, is_deleted', 'safe', 'on' => 'search'),
         );
     }
 
@@ -73,6 +85,10 @@ class Warehouse extends CActiveRecord {
             'warehouseSections' => array(self::HAS_MANY, 'WarehouseSection', 'warehouse_id'),
             'branch' => array(self::BELONGS_TO, 'Branch', 'branch_id'),
             'user' => array(self::BELONGS_TO, 'Users', 'user_id'),
+            'userIdUpdated' => array(self::BELONGS_TO, 'Users', 'user_id_updated'),
+            'userIdApproved' => array(self::BELONGS_TO, 'Users', 'user_id_approved'),
+            'userIdRejected' => array(self::BELONGS_TO, 'Users', 'user_id_rejected'),
+            'userIdDeleted' => array(self::BELONGS_TO, 'Users', 'user_id_deleted'),
         );
     }
 
@@ -90,23 +106,10 @@ class Warehouse extends CActiveRecord {
             'status' => 'Status',
             'branch_id' => 'Branch',
             'is_approved' => 'Approval',
-            'date_approval' => 'Tanggal Approval',
             'user_id' => 'User Input',
         );
     }
 
-    /**
-     * Retrieves a list of models based on the current search/filter conditions.
-     *
-     * Typical usecase:
-     * - Initialize the model fields with values from filter form.
-     * - Execute this method to get CActiveDataProvider instance which will filter
-     * models according to data in model fields.
-     * - Pass data provider to CGridView, CListView or any similar widget.
-     *
-     * @return CActiveDataProvider the data provider that can return the models
-     * based on the search/filter conditions.
-     */
     public function search() {
         // @todo Please modify the following code to remove attributes that should not be searched.
 
@@ -121,7 +124,6 @@ class Warehouse extends CActiveRecord {
         $criteria->compare('LOWER(status)', strtolower($this->status), FALSE);
         $criteria->compare('t.branch_id', $this->branch_id);
         $criteria->compare('t.is_approved', $this->is_approved);
-        $criteria->compare('t.date_approval', $this->date_approval);
         $criteria->compare('t.user_id', $this->user_id);
 
         return new CActiveDataProvider($this, array(
@@ -137,12 +139,6 @@ class Warehouse extends CActiveRecord {
         );
     }
 
-    /**
-     * Returns the static model of the specified AR class.
-     * Please note that you should have this exact method in all your CActiveRecord descendants!
-     * @param string $className active record class name.
-     * @return Warehouse the static model class
-     */
     public static function model($className = __CLASS__) {
         return parent::model($className);
     }

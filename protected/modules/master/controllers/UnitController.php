@@ -10,24 +10,27 @@ class UnitController extends Controller {
 
     public function filters() {
         return array(
-//            'access',
+            'access',
         );
     }
 
     public function filterAccess($filterChain) {
         if ($filterChain->action->id === 'create') {
-            if (!(Yii::app()->user->checkAccess('masterUnitCreate')))
+            if (!(Yii::app()->user->checkAccess('masterUnitCreate'))) {
                 $this->redirect(array('/site/login'));
+            }
         }
 
-        if (
-            $filterChain->action->id === 'restore' || 
-            $filterChain->action->id === 'edit' || 
-            $filterChain->action->id === 'update' || 
-            $filterChain->action->id === 'delete'
-        ) {
-            if (!(Yii::app()->user->checkAccess('masterUnitEdit')))
+        if ($filterChain->action->id === 'update') {
+            if (!(Yii::app()->user->checkAccess('masterUnitEdit'))) {
                 $this->redirect(array('/site/login'));
+            }
+        }
+
+        if ($filterChain->action->id === 'delete') {
+            if (!(Yii::app()->user->checkAccess('masterUnitApproval'))) {
+                $this->redirect(array('/site/login'));
+            }
         }
 
         if (
@@ -35,8 +38,13 @@ class UnitController extends Controller {
             $filterChain->action->id === 'admin' || 
             $filterChain->action->id === 'index'
         ) {
-            if (!(Yii::app()->user->checkAccess('masterUnitCreate')) || !(Yii::app()->user->checkAccess('masterUnitEdit')))
+            if (!(
+                Yii::app()->user->checkAccess('masterUnitCreate') || 
+                Yii::app()->user->checkAccess('masterUnitEdit') || 
+                Yii::app()->user->checkAccess('masterUnitView')
+            )) {
                 $this->redirect(array('/site/login'));
+            }
         }
 
         $filterChain->run();
@@ -58,11 +66,14 @@ class UnitController extends Controller {
      */
     public function actionCreate() {
         $model = new Unit;
+        $model->user_id_created = Yii::app()->user->id;
+        $model->created_datetime = date('Y-m-d H:i:s');
 
         if (isset($_POST['Unit'])) {
             $model->attributes = $_POST['Unit'];
             $model->status = 'Active';
             if ($model->save()) {
+                $this->saveMasterLog($model);
                 $this->redirect(array('view', 'id'=>$model->id));
             }
         }
@@ -79,11 +90,14 @@ class UnitController extends Controller {
      */
     public function actionUpdate($id) {
         $model = $this->loadModel($id);
+        $model->user_id_updated = Yii::app()->user->id;
+        $model->updated_datetime = date('Y-m-d H:i:s');
         
         if (isset($_POST['Unit'])) {
             $model->attributes = $_POST['Unit'];
 
             if ($model->save()) {
+                $this->saveMasterLog($model);
                 $this->redirect(array('view','id'=>$model->id));
             }
         }
@@ -99,11 +113,36 @@ class UnitController extends Controller {
      * @param integer $id the ID of the model to be deleted
      */
     public function actionDelete($id) {
-        $this->loadModel($id)->delete();
+        $model = $this->loadModel($id);
+        $model->is_deleted = 1;
+        $model->status = 'Deleted';
+        $model->user_id_deleted = Yii::app()->user->id;
+        $model->deleted_datetime = date('Y-m-d H:i:s');
+        $model->update(array('is_deleted', 'user_id_deleted', 'deleted_datetime', 'status'));
 
         // if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
-        if (!isset($_GET['ajax']))
+        if (!isset($_GET['ajax'])) {
+            $this->saveMasterLog($model);
             $this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
+        }
+    }
+
+    public function saveMasterLog($model) {
+        $transactionLog = new MasterLog();
+        $transactionLog->name = $model->name;
+        $transactionLog->log_date = date('Y-m-d');
+        $transactionLog->log_time = date('H:i:s');
+        $transactionLog->table_name = $model->tableName();
+        $transactionLog->table_id = $model->id;
+        $transactionLog->user_id = Yii::app()->user->id;
+        $transactionLog->username = Yii::app()->user->username;
+        $transactionLog->controller_class = Yii::app()->controller->module->id  . '/' . Yii::app()->controller->id;
+        $transactionLog->action_name = Yii::app()->controller->action->id;
+        
+        $newData = $model->attributes;
+        $transactionLog->new_data = json_encode($newData);
+
+        $transactionLog->save();
     }
 
     /**

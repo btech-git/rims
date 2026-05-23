@@ -31,6 +31,7 @@ class BalanceSheetDetailNewController extends Controller {
 
         $balanceSheetCoaReport = Coa::getBalanceSheetCoaReport();
         $balanceSheetLedgerReport = JurnalUmum::getBalanceSheetLedgerReport($startDate, $endDate, $branchId);
+        $profitLossLedgerReport = JurnalUmum::getProfitLossLedgerReport($startDate, $endDate, $branchId);
         
         $balanceSheetReportData = array();
         foreach ($balanceSheetCoaReport as $balanceSheetCoaReportItem) {
@@ -44,16 +45,19 @@ class BalanceSheetDetailNewController extends Controller {
             $currentCoaCode = $coaCode;
             while (isset($balanceSheetReportData[$currentCoaCode]) && $balanceSheetReportData[$currentCoaCode]['parent_code'] !== null) {
                 $balanceSheetReportData[$coaCode]['level']++;
-//                if (!isset($balanceSheetCoaReportData[$balanceSheetCoaReportData[$currentCoaCode]['parent_code']])) {
-//                    $balanceSheetCoaReportData[$currentCoaCode]['level'] = -1;
-//                }
                 $currentCoaCode = $balanceSheetReportData[$currentCoaCode]['parent_code'];
             }
         }
         foreach ($balanceSheetLedgerReport as $balanceSheetLedgerReportItem) {
             $balanceSheetReportData[$balanceSheetLedgerReportItem['coa_code']]['balance'] = $balanceSheetLedgerReportItem['balance'];
         }
-//        var_dump($balanceSheetReportData);
+        
+        $netProfit = '0.00';
+        foreach ($profitLossLedgerReport as $profitLossLedgerReportItem) {
+            $coaStartDigitCode = intval($profitLossLedgerReportItem['coa_code'][0]);
+            $balance = isset($profitLossLedgerReportItem['balance']) ? $profitLossLedgerReportItem['balance'] : '0.00';
+            $netProfit += $coaStartDigitCode === 4 || $coaStartDigitCode === 7 ? +$balance : -$balance;
+        }
         
         if (isset($_GET['ResetFilter'])) {
             $this->redirect(array('summary'));
@@ -65,6 +69,7 @@ class BalanceSheetDetailNewController extends Controller {
 
         $this->render('summary', array(
             'balanceSheetReportData' => $balanceSheetReportData,
+            'netProfit' => $netProfit,
             'startDate' => $startDate,
             'endDate' => $endDate,
             'branchId' => $branchId,

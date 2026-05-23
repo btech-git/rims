@@ -417,6 +417,9 @@ $this->menu = array(
         </table>
     <?php endif; ?>
 </div>
+
+<hr />
+    
 <div>
     <?php $movementIns = MovementInHeader::model()->findAllByAttributes(array('receive_item_id' => $model->id)); ?>
     
@@ -435,8 +438,7 @@ $this->menu = array(
             </thead>
             <tbody>
                 <?php foreach ($movementIns as $movementIn): ?>
-                    <?php $movementInDetails = MovementInDetail::model()->findAllByAttributes(array('movement_in_header_id' => $movementIn->id)); ?>
-                    <?php foreach ($movementInDetails as $movementInDetail): ?>
+                    <?php foreach ($movementIn->movementInDetails as $movementInDetail): ?>
                         <tr>
                             <td><?php echo CHtml::link($movementIn->movement_in_number, array("/transaction/movementInHeader/show", "id"=>$movementIn->id)); ?></td>
                             <td><?php echo CHtml::encode(CHtml::value($movementIn, 'date_posting')); ?></td>
@@ -451,6 +453,9 @@ $this->menu = array(
         </table>
     <?php endif; ?>
 </div>
+
+<br />
+
 <?php if ($model->note != 'CANCELLED!!!'): //Yii::app()->user->checkAccess("purchaseHead")): ?>
     <div class="field buttons text-center">
         <?php echo CHtml::beginForm(); ?>

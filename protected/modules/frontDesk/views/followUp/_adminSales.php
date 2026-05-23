@@ -74,10 +74,6 @@ Yii::app()->clientScript->registerCss('_report', '
 
 <script>
     $(document).ready(function() {
-        var hasFlash = <?php echo $hasFlash ? 'true' : 'false' ?>;
-        if (hasFlash) {
-            $("#cancel-message-dialog").dialog({modal: 'false'});
-        }
         $('.page-link').click(function(e) {
             e.preventDefault();
             

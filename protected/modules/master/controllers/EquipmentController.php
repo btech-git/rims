@@ -10,22 +10,27 @@ class EquipmentController extends Controller {
 
     public function filters() {
         return array(
-//            'access',
+            'access',
         );
     }
 
     public function filterAccess($filterChain) {
         if ($filterChain->action->id === 'create') {
-            if (!(Yii::app()->user->checkAccess('masterEquipmentCreate')))
+            if (!(Yii::app()->user->checkAccess('masterEquipmentCreate'))) {
                 $this->redirect(array('/site/login'));
+            }
         }
 
-        if (
-            $filterChain->action->id === 'update' || 
-            $filterChain->action->id === 'delete'
-        ) {
-            if (!(Yii::app()->user->checkAccess('masterEquipmentEdit')))
+        if ($filterChain->action->id === 'update') {
+            if (!(Yii::app()->user->checkAccess('masterEquipmentEdit'))) {
                 $this->redirect(array('/site/login'));
+            }
+        }
+
+        if ($filterChain->action->id === 'delete') {
+            if (!(Yii::app()->user->checkAccess('masterEquipmentApproval'))) {
+                $this->redirect(array('/site/login'));
+            }
         }
 
         if (
@@ -33,8 +38,13 @@ class EquipmentController extends Controller {
             $filterChain->action->id === 'admin' || 
             $filterChain->action->id === 'index'
         ) {
-            if (!(Yii::app()->user->checkAccess('masterEquipmentCreate')) || !(Yii::app()->user->checkAccess('masterEquipmentEdit')))
+            if (!(
+                Yii::app()->user->checkAccess('masterEquipmentCreate') || 
+                Yii::app()->user->checkAccess('masterEquipmentEdit') || 
+                Yii::app()->user->checkAccess('masterEquipmentView')
+            )) {
                 $this->redirect(array('/site/login'));
+            }
         }
 
         $filterChain->run();
@@ -59,14 +69,17 @@ class EquipmentController extends Controller {
      */
     public function actionCreate() {
         $model = new Equipment;
+        $model->user_id_created = Yii::app()->user->id;
+        $model->created_datetime = date('Y-m-d H:i:s');
 
         // Uncomment the following line if AJAX validation is needed
         // $this->performAjaxValidation($model);
 
         if (isset($_POST['Equipment'])) {
             $model->attributes = $_POST['Equipment'];
-            if ($model->save())
+            if ($model->save()) {
                 $this->redirect(array('view', 'id' => $model->id));
+            }
         }
 
         $this->render('create', array(
@@ -74,21 +87,19 @@ class EquipmentController extends Controller {
         ));
     }
 
-    /**
-     * Updates a particular model.
-     * If update is successful, the browser will be redirected to the 'view' page.
-     * @param integer $id the ID of the model to be updated
-     */
     public function actionUpdate($id) {
         $model = $this->loadModel($id);
+        $model->user_id_updated = Yii::app()->user->id;
+        $model->updated_datetime = date('Y-m-d H:i:s');
 
         // Uncomment the following line if AJAX validation is needed
         // $this->performAjaxValidation($model);
 
         if (isset($_POST['Equipment'])) {
             $model->attributes = $_POST['Equipment'];
-            if ($model->save())
+            if ($model->save()) {
                 $this->redirect(array('view', 'id' => $model->id));
+            }
         }
 
         $this->render('update', array(
@@ -96,17 +107,19 @@ class EquipmentController extends Controller {
         ));
     }
 
-    /**
-     * Deletes a particular model.
-     * If deletion is successful, the browser will be redirected to the 'admin' page.
-     * @param integer $id the ID of the model to be deleted
-     */
     public function actionDelete($id) {
-        $this->loadModel($id)->remove();
+        $model = $this->loadModel($id);
+        $model->is_deleted = 1;
+        $model->status = 'Deleted';
+        $model->user_id_deleted = Yii::app()->user->id;
+        $model->deleted_datetime = date('Y-m-d H:i:s');
+        $model->update(array('is_deleted', 'user_id_deleted', 'deleted_datetime', 'status'));
 
         // if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
-        if (!isset($_GET['ajax']))
+        if (!isset($_GET['ajax'])) {
+            $this->saveMasterLog($model);
             $this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
+        }
     }
 
     /**
@@ -114,6 +127,7 @@ class EquipmentController extends Controller {
      */
     public function actionIndex() {
         $dataProvider = new CActiveDataProvider('Equipment');
+        
         $this->render('index', array(
             'dataProvider' => $dataProvider,
         ));
@@ -125,25 +139,22 @@ class EquipmentController extends Controller {
     public function actionAdmin() {
         $model = new Equipment('search');
         $model->unsetAttributes();  // clear any default values
-        if (isset($_GET['Equipment']))
+        if (isset($_GET['Equipment'])) {
             $model->attributes = $_GET['Equipment'];
+        }
 
         $this->render('admin', array(
             'model' => $model,
         ));
     }
 
-    /**
-     * Returns the data model based on the primary key given in the GET variable.
-     * If the data model is not found, an HTTP exception will be raised.
-     * @param integer $id the ID of the model to be loaded
-     * @return Equipment the loaded model
-     * @throws CHttpException
-     */
     public function loadModel($id) {
         $model = Equipment::model()->findByPk($id);
-        if ($model === null)
+        
+        if ($model === null) {
             throw new CHttpException(404, 'The requested page does not exist.');
+        }
+        
         return $model;
     }
 
@@ -157,5 +168,4 @@ class EquipmentController extends Controller {
             Yii::app()->end();
         }
     }
-
 }

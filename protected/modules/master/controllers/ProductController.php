@@ -10,22 +10,27 @@ class ProductController extends Controller {
 
     public function filters() {
         return array(
-//            'access',
+            'access',
         );
     }
 
     public function filterAccess($filterChain) {
         if ($filterChain->action->id === 'create') {
-            if (!(Yii::app()->user->checkAccess('masterProductCreate')))
+            if (!(Yii::app()->user->checkAccess('masterProductCreate'))) {
                 $this->redirect(array('/site/login'));
+            }
         }
 
-        if (
-            $filterChain->action->id === 'update' || 
-            $filterChain->action->id === 'delete'
-        ) {
-            if (!(Yii::app()->user->checkAccess('masterProductEdit')))
+        if ($filterChain->action->id === 'update') {
+            if (!(Yii::app()->user->checkAccess('masterProductEdit'))) {
                 $this->redirect(array('/site/login'));
+            }
+        }
+
+        if ($filterChain->action->id === 'delete') {
+            if (!(Yii::app()->user->checkAccess('masterProductApproval'))) {
+                $this->redirect(array('/site/login'));
+            }
         }
 
         if (
@@ -35,8 +40,13 @@ class ProductController extends Controller {
             $filterChain->action->id === 'admin' || 
             $filterChain->action->id === 'index'
         ) {
-            if (!(Yii::app()->user->checkAccess('masterProductCreate')) || !(Yii::app()->user->checkAccess('masterProductEdit')))
+            if (!(
+                Yii::app()->user->checkAccess('masterProductCreate') || 
+                Yii::app()->user->checkAccess('masterProductEdit') || 
+                Yii::app()->user->checkAccess('masterProductEdit')
+            )) {
                 $this->redirect(array('/site/login'));
+            }
         }
 
         $filterChain->run();
@@ -65,23 +75,6 @@ class ProductController extends Controller {
         
         $movementOutData = MovementOutDetail::model()->findAllByAttributes(array('product_id' => $model->id), array('order' => 't.id DESC', 'limit' => '100'));
         
-        if (isset($_POST['Approve']) && (int) $model->is_approved !== 1) {
-            $model->is_approved = 1;
-            $model->user_id_approval = Yii::app()->user->getId();
-            $model->date_approval = date('Y-m-d H:i:s');
-            
-            if ($model->save(true, array('is_approved', 'user_id_approval', 'date_approval'))) {
-                Yii::app()->user->setFlash('confirm', 'Your data has been approved!!!');
-            }
-            
-        } elseif (isset($_POST['Reject'])) {
-            $model->is_approved = 2;
-            
-            if ($model->save(true, array('is_approved'))) {
-                Yii::app()->user->setFlash('confirm', 'Your data has been rejected!!!');
-            }
-        }
-
         $this->render('view', array(
             'model' => $model,
             'purchaseOrderDetailDataProvider' => $purchaseOrderDetailDataProvider,
@@ -121,7 +114,6 @@ class ProductController extends Controller {
         }
 
         $supplierCriteria = new CDbCriteria;
-        //$positionCriteria->compare('code',$position->code.'%',true,'AND', false);
         $supplierCriteria->compare('name', $supplier->name, true);
 
         $supplierDataProvider = new CActiveDataProvider('Supplier', array(
@@ -150,7 +142,6 @@ class ProductController extends Controller {
         $productComplementSubstituteCriteria = new CDbCriteria;
         $productComplementSubstituteCriteria->together = true;
         $productComplementSubstituteCriteria->with = array('productMasterCategory', 'productSubMasterCategory', 'productSubCategory');
-        //$positionCriteria->compare('code',$position->code.'%',true,'AND', false);
         $productComplementSubstituteCriteria->compare('t.name', $productComplementSubstitute->name, true);
         $productComplementSubstituteCriteria->compare('productMasterCategory.name', $productComplementSubstitute->product_master_category_name, true);
         $productComplementSubstituteCriteria->compare('productSubMasterCategory.name', $productComplementSubstitute->product_sub_master_category_name, true);
@@ -161,7 +152,6 @@ class ProductController extends Controller {
         ));
 
         $this->render('create', array(
-            //'model'=>$model,
             'product' => $product,
             'productSpecificationBattery' => $productSpecificationBattery,
             'productSpecificationOil' => $productSpecificationOil,
@@ -321,23 +311,11 @@ class ProductController extends Controller {
      * @param integer $id the ID of the model to be updated
      */
     public function actionUpdate($id) {
-        //$model=$this->loadModel($id);
-        // Uncomment the following line if AJAX validation is needed
-        // $this->performAjaxValidation($model);
-
-        /* if(isset($_POST['Product']))
-          {
-          $model->attributes=$_POST['Product'];
-          if($model->save())
-          $this->redirect(array('view','id'=>$model->id));
-          }
-
-          $this->render('update',array(
-          'model'=>$model,
-          )); */
 
         $product = $this->instantiate($id);
-        //$this->performAjaxValidation($product->header);
+        $product->header->user_id_edit = Yii::app()->user->id;
+        $product->header->updated_datetime = date('Y-m-d H:i:s');
+
         if ($product->header->productSpecificationBattery == NULL) {
             $productSpecificationBattery = new ProductSpecificationBattery;
         } else {
@@ -360,8 +338,9 @@ class ProductController extends Controller {
 
         $supplier = new Supplier('search');
         $supplier->unsetAttributes();  // clear any default values
-        if (isset($_GET['Supplier']))
+        if (isset($_GET['Supplier'])) {
             $supplier->attributes = $_GET['Supplier'];
+        }
 
         $supplierCriteria = new CDbCriteria;
         //$positionCriteria->compare('code',$position->code.'%',true,'AND', false);
@@ -373,8 +352,9 @@ class ProductController extends Controller {
 
         $unit = new Unit('search');
         $unit->unsetAttributes();  // clear any default values
-        if (isset($_GET['Unit']))
+        if (isset($_GET['Unit'])) {
             $unit->attributes = $_GET['Unit'];
+        }
 
         $unitCriteria = new CDbCriteria;
         $unitCriteria->compare('name', $unit->name, true);
@@ -392,7 +372,6 @@ class ProductController extends Controller {
         $productComplementSubstituteCriteria = new CDbCriteria;
         $productComplementSubstituteCriteria->together = true;
         $productComplementSubstituteCriteria->with = array('productMasterCategory', 'productSubMasterCategory', 'productSubCategory');
-        //$positionCriteria->compare('code',$position->code.'%',true,'AND', false);
         $productComplementSubstituteCriteria->compare('t.name', $productComplementSubstitute->name, true);
         $productComplementSubstituteCriteria->compare('productMasterCategory.name', $productComplementSubstitute->product_master_category_name, true);
         $productComplementSubstituteCriteria->compare('productSubMasterCategory.name', $productComplementSubstitute->product_sub_master_category_name, true);
@@ -406,11 +385,7 @@ class ProductController extends Controller {
             $this->loadState($product);
             if ($product->save(Yii::app()->db)) {
                 $this->redirect(array('view', 'id' => $product->header->id));
-            } /* else {
-              foreach ($customer->phoneDetails as $key => $detail) {
-              //print_r(CJSON::encode($detail->jenis_persediaan_id));
-              }
-              } */
+            }
         }
         $this->render('update', array(
             'product' => $product,
@@ -432,11 +407,18 @@ class ProductController extends Controller {
      * @param integer $id the ID of the model to be deleted
      */
     public function actionDelete($id) {
-        $this->loadModel($id)->delete();
+        $model = $this->loadModel($id);
+        $model->status = 'Deleted';
+        $model->is_deleted = 1;
+        $model->user_id_deleted = Yii::app()->user->id;
+        $model->deleted_datetime = date('Y-m-d H:i:s');
+        $model->update(array('status', 'is_deleted', 'user_id_deleted', 'deleted_datetime'));
 
         // if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
-        if (!isset($_GET['ajax']))
+        if (!isset($_GET['ajax'])) {
+            $this->saveMasterLog($model);
             $this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
+        }
     }
 
     /**
@@ -455,8 +437,9 @@ class ProductController extends Controller {
     public function actionAdmin() {
         $model = new Product('search');
         $model->unsetAttributes();  // clear any default values
-        if (isset($_GET['Product']))
+        if (isset($_GET['Product'])) {
             $model->attributes = $_GET['Product'];
+        }
 
         $this->render('admin', array(
             'model' => $model,

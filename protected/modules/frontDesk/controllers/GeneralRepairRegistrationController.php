@@ -502,8 +502,9 @@ class GeneralRepairRegistrationController extends Controller {
         $carMake = (isset($_GET['CarMake'])) ? $_GET['CarMake'] : '';
         $carModel = (isset($_GET['CarModel'])) ? $_GET['CarModel'] : '';
         $customerName = (isset($_GET['CustomerName'])) ? $_GET['CustomerName'] : '';
+        $tabIndex = (isset($_GET['TabIndex'])) ? $_GET['TabIndex'] : 0;
 
-        foreach ($branches as $branch) {
+        foreach ($branches as $index => $branch) {
             $model = Search::bind(new RegistrationTransaction('search'), isset($_GET['RegistrationTransaction']) ? $_GET['RegistrationTransaction'] : '');
             $dataProvider = $model->searchAdmin();
 
@@ -536,9 +537,12 @@ class GeneralRepairRegistrationController extends Controller {
                 $dataProvider->criteria->addCondition('customer.name LIKE :name');
                 $dataProvider->criteria->params[':name'] = "%{$customerName}%";
             }
+            
+            $dataProvider->pagination->pageVar = 'page_branch_' . $branch->id;
 
             $tabContent = $this->renderPartial('_adminPerBranch', array(
                 'dataProvider' => $dataProvider,
+                'tabIndex' => $index,
             ), true);
             $detailTabs[$branch->name] = array('content' => $tabContent);
         }
@@ -575,9 +579,12 @@ class GeneralRepairRegistrationController extends Controller {
                 $dataProvider->criteria->addCondition('customer.name LIKE :name');
                 $dataProvider->criteria->params[':name'] = "%{$customerName}%";
             }
+            
+            $dataProvider->pagination->pageVar = 'page_branch_all';
 
             $detailTabs['All'] = array('content' => $this->renderPartial('_adminAllBranch', array(
                 'dataProvider' => $dataProvider,
+                'tabIndex' => $index + 1,
             ), true));
         }
         
@@ -591,6 +598,7 @@ class GeneralRepairRegistrationController extends Controller {
             'carModel' => $carModel,
             'customerName' => $customerName,
             'detailTabs' => $detailTabs,
+            'tabIndex' => $tabIndex,
         ));
     }
 

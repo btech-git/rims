@@ -45,104 +45,42 @@ $this->menu = array(
         ));
         ?>
     </div>
-</div>
 
-<!-- <div class="row">
-        <h3>Branch</h5>
+    <div class="row">
+        <h3>Division</h3>
         <table >
-                <thead>
-                        <tr>
-                                <td>Name</td>
-                                
-                        </tr>
-                </thead>
-<?php //foreach ($branchesWarehouses as $key => $branchesWarehouse): ?>
-                        <tr>
-<?php //$branch = Branch::model()->findByPK($branchesWarehouse->branch_id);   ?>
-                                <td><?php //echo $branch->name;   ?></td>	
-                                
-                        </tr>
-<?php //endforeach   ?>
-        </table>
-</div> -->
-<div class="row">
-    <h3>Division</h3>
-    <table >
-        <thead>
-            <tr>
-                <td>Name</td>
-            </tr>
-        </thead>
+            <thead>
+                <tr>
+                    <td>Name</td>
+                </tr>
+            </thead>
             <?php foreach ($warehouseDivisions as $key => $warehouseDivision): ?>
-            <tr>
-            <?php $division = Division::model()->findByPK($warehouseDivision->division_id); ?>
-                <td><?php echo CHtml::encode(CHtml::value($division, 'name')); ?></td>	
-            </tr>
-<?php endforeach; ?>
-    </table>
-</div>
+                <tr>
+                    <?php $division = Division::model()->findByPK($warehouseDivision->division_id); ?>
+                    <td><?php echo CHtml::encode(CHtml::value($division, 'name')); ?></td>	
+                </tr>
+            <?php endforeach; ?>
+        </table>
+    </div>
 
-<div class="row">
-    <h3>Section</h3>
-    <table >
-        <thead>
-            <tr>
-                <td>Code</td>
-                <td>Product</td>
-                <td>Rack Number</td>
-            </tr>
-        </thead>
+    <div class="row">
+        <h3>Section</h3>
+        <table >
+            <thead>
+                <tr>
+                    <td>Code</td>
+                    <td>Product</td>
+                    <td>Rack Number</td>
+                </tr>
+            </thead>
             <?php foreach ($warehouseSections as $key => $warehouseSection): ?>
-            <tr>
-                <td><?php echo $warehouseSection->code; ?></td>
-    <?php $product = Product::model()->findByPK($warehouseSection->product_id); ?>
-                <td><?php echo $product->name; ?></td>	
-                <td><?php echo $warehouseSection->rack_number; ?></td>
-            </tr>
-<?php endforeach; ?>
-    </table>
-</div>
-
-<!--<div class="row">
-<?php /* $form = $this->beginWidget('CActiveForm', array(
-  'id' => 'warehouse-form',
-  // Please note: When you enable ajax validation, make sure the corresponding
-  // controller action is handling ajax validation correctly.
-  // There is a call to performAjaxValidation() commented in generated controller code.
-  // See class documentation of CActiveForm for details on this.
-  'enableAjaxValidation' => false,
-  )); ?>
-
-  <?php echo cHtml::activeCheckBoxList($model, 'warehouses', CHtml::listData(Warehouse::model()->findAll('id != ' . $model->id), 'id', 'name')); ?>
-
-  <?php echo CHtml::button('Assign Section', array(
-  'class' => 'button cbutton',
-  'confirm' => 'All previously assigned sections will be lost. Are you sure?',
-  'onclick' => '
-  $.ajax({
-  type: "POST",
-  //dataType: "JSON",
-  url: "' . CController::createUrl('ajaxAssignSection', array('id' => $model->id)) . '",
-  data: $("form").serialize(),
-  success: function(data){
-  //$("#section").html(data);
-  },
-  });
-  '
-  )); ?>
-
-  <?php $this->endWidget(); */ ?>
-</div>-->
-
-<br/>
-
-<div>
-        <?php if ((int) $model->is_approved === 0): ?>
-        <div style="float: left; margin-left: 20px;">
-            <?php echo CHtml::beginForm(); ?>
-        <?php echo CHtml::submitButton('APPROVE', array('name' => 'Approve', 'class' => 'button success')); ?>
-        <?php echo CHtml::endForm(); ?>
-        </div>
-<?php endif; ?>
-    <div class="clear"></div>
+                <tr>
+                    <td><?php echo $warehouseSection->code; ?></td>
+                    <?php $product = Product::model()->findByPK($warehouseSection->product_id); ?>
+                    <td><?php echo $product->name; ?></td>	
+                    <td><?php echo $warehouseSection->rack_number; ?></td>
+                </tr>
+            <?php endforeach; ?>
+        </table>
+    </div>
 </div>

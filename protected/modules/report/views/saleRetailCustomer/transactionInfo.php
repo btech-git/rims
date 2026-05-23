@@ -14,6 +14,18 @@ Yii::app()->clientScript->registerCss('_report', '
 ');
 ?>
 
+<?php echo CHtml::beginForm(array(''), 'get'); ?>
+                    
+<div class="row buttons">
+    <?php echo CHtml::textField('startDate', $startDate); ?>
+    <?php echo CHtml::textField('endDate', $endDate); ?>
+    <?php echo CHtml::textField('customerId', $customerId); ?>
+    <?php echo CHtml::textField('branchId', $branchId); ?>
+    <?php echo CHtml::submitButton('Simpan ke Excel', array('name' => 'SaveToExcel')); ?>
+</div>
+
+<?php echo CHtml::endForm(); ?>
+
 <div style="font-weight: bold; text-align: center">
     <div style="font-size: larger">Laporan Transaksi Penjualan <?php echo CHtml::encode(CHtml::value($branch, 'name')); ?></div>
     <div style="font-size: larger"><?php echo CHtml::encode(CHtml::value($customer, 'name')); ?></div>
@@ -80,7 +92,7 @@ Yii::app()->clientScript->registerCss('_report', '
             </tbody>
             <tfoot>
                 <tr>
-                    <td colspan="6" style="text-align: right; font-weight: bold">TOTAL</td>
+                    <td colspan="7" style="text-align: right; font-weight: bold">TOTAL</td>
                     <td style="text-align: right; font-weight: bold">
                         <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $grandTotal)); ?>
                     </td>

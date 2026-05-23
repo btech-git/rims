@@ -108,6 +108,26 @@
                 </div>
             </div>	
 
+            <div class="field">
+                <div class="row collapse">
+                    <div class="small-4 columns">
+                        <?php echo 'COA Detail'; ?>
+                    </div>
+                    <div class="small-8 columns">
+                        <?php echo CHtml::textField('CoaIdDetail', $coaIdDetail, array(
+                            'readonly' => true,
+                            'onclick' => '$("#coa-detail-dialog").dialog("open"); return false;', 
+                            'onkeypress' => 'if (event.keyCode == 13) { $("#coa-detail-dialog").dialog("open"); return false; }',
+                        )); ?>
+
+                        <?php echo CHtml::openTag('span', array('id' => 'coa_detail_name')); ?>
+                        <?php $coaDetailModel = Coa::model()->findByPk($coaIdDetail); ?>
+                        <?php echo CHtml::encode(CHtml::value($coaDetailModel, 'name')); ?>
+                        <?php echo CHtml::closeTag('span'); ?>
+                    </div>
+                </div>
+            </div>	
+
             <?php if ((int) $user->branch_id == 6): ?>
                 <div class="field">
                     <div class="row collapse">
@@ -215,7 +235,7 @@
             </table>
             
             <?php $this->widget('zii.widgets.grid.CGridView', array(
-                'id' => 'coa-detail-grid',
+                'id' => 'coa-header-grid',
                 'dataProvider' => $coaDataProvider,
                 'filter' => null,
                 'template' => '{items}<div class="clearfix">{summary}{pager}</div>',
@@ -236,6 +256,79 @@
                             data: $("form").serialize(),
                             success: function(data) {
                                 $("#coa_name").html(data.coa_name);
+                            },
+                        });
+                    }
+                }',
+                'columns' => array(
+                    array(
+                        'name' => 'name', 
+                        'value' => '$data->name', 
+                        'type' => 'raw'
+                    ),
+                    'code',
+                    array(
+                        'name' => 'coa_category_id',
+                        'value' => '$data->coaCategory!="" ?$data->coaCategory->name:""',
+                    ),
+                    array(
+                        'name' => 'coa_sub_category_id',
+                        'value' => '$data->coaSubCategory!="" ?$data->coaSubCategory->name:""'
+                    ),
+                ),
+            )); ?>
+        </div>
+    </div>
+    <?php echo CHtml::endForm(); ?>
+<?php $this->endWidget('zii.widgets.jui.CJuiDialog'); ?>
+
+<!--COA Detail-->
+<?php $this->beginWidget('zii.widgets.jui.CJuiDialog', array(
+    'id' => 'coa-detail-dialog',
+    // additional javascript options for the dialog plugin
+    'options' => array(
+        'title' => 'COA Detail',
+        'autoOpen' => false,
+        'width' => 'auto',
+        'modal' => true,
+    ),
+)); ?>
+    <?php echo CHtml::beginForm(); ?>
+    <div class="row">
+        <div class="small-12 columns" style="padding-left: 0px; padding-right: 0px;">
+            <table>
+                <thead>
+                    <tr>
+                        <td>Code</td>
+                        <td>Name</td>
+                        <td>Category</td>
+                        <td>Sub Category</td>
+                    </tr>
+                </thead>
+            </table>
+            
+            <?php $this->widget('zii.widgets.grid.CGridView', array(
+                'id' => 'coa-detail-grid',
+                'dataProvider' => $coaDetailDataProvider,
+                'filter' => null,
+                'template' => '{items}<div class="clearfix">{summary}{pager}</div>',
+                'pager' => array(
+                    'cssFile' => false,
+                    'header' => '',
+                ),
+                'selectionChanged' => 'js:function(id) {
+                    $("#CoaIdDetail").val($.fn.yiiGridView.getSelection(id));
+                    $("#coa-detail-dialog").dialog("close");
+                    if ($.fn.yiiGridView.getSelection(id) == "") {
+                        $("#coa_detail_name").html("");
+                    } else {
+                        $.ajax({
+                            type: "POST",
+                            dataType: "JSON",
+                            url: "' . CController::createUrl('ajaxJsonCoa') . '",
+                            data: $("form").serialize(),
+                            success: function(data) {
+                                $("#coa_detail_name").html(data.coa_name);
                             },
                         });
                     }

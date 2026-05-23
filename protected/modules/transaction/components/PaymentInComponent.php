@@ -185,10 +185,6 @@ class PaymentInComponent extends CComponent {
         $invoiceNumberList = array();
         $plateNumberList = array();
         foreach ($this->details as $i => $detail) {
-//            if ($detail->amount <= '0.00' && $detail->tax_service_amount <= '0.00' && $detail->discount_amount <= '0.00' && $detail->bank_administration_fee <= '0.00' && $detail->merimen_fee <= '0.00' && $detail->downpayment_amount <= '0.00') {
-//                continue;
-//            }
-
             if ($detail->isNewRecord) {
                 $detail->payment_in_id = $this->header->id;
             }
@@ -199,10 +195,6 @@ class PaymentInComponent extends CComponent {
             $invoiceNumberList[] = $detail->invoice_header_id === null ? $detail->registrationTransaction->downpayment_transaction_number : $detail->invoiceHeader->invoice_number;
             $plateNumberList[] = $detail->invoice_header_id === null ? $detail->registrationTransaction->vehicle->plate_number : $detail->invoiceHeader->vehicle->plate_number;
             
-//            if ($detail->invoice_header_id === null && $detail->registration_transaction_id !== null) {
-//                $detail->registrationTransaction->is_downpayment_paid = 1; 
-//                $detail->registrationTransaction->update(array('is_downpayment_paid'));
-//            }
         }
         $invoiceNumberUniqueList = array_unique(explode(', ', implode(', ', $invoiceNumberList)));
         $plateNumberUniqueList = array_unique(explode(', ', implode(', ', $plateNumberList)));

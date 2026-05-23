@@ -11,6 +11,15 @@
  * @property integer $is_approved
  * @property integer $user_id
  * @property string $created_datetime
+ * @property integer $is_deleted
+ * @property integer $user_id_updated
+ * @property integer $user_id_approved
+ * @property integer $user_id_rejected
+ * @property integer $user_id_deleted
+ * @property string $updated_datetime
+ * @property string $approved_datetime
+ * @property string $rejected_datetime
+ * @property string $deleted_datetime
  *
  * The followings are the available model relations:
  * @property ServicePricelist[] $servicePricelists

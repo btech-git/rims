@@ -10,33 +10,41 @@ class ServiceTypeController extends Controller {
 
     public function filters() {
         return array(
-//            'access',
+            'access',
         );
     }
 
     public function filterAccess($filterChain) {
         if ($filterChain->action->id === 'create') {
-            if (!(Yii::app()->user->checkAccess('masterServiceTypeCreate')))
+            if (!(Yii::app()->user->checkAccess('masterServiceTypeCreate'))) {
                 $this->redirect(array('/site/login'));
+            }
         }
 
-        if (
-            $filterChain->action->id === 'update' || 
-            $filterChain->action->id === 'delete' || 
-            $filterChain->action->id === 'restore'
-        ) {
-            if (!(Yii::app()->user->checkAccess('masterServiceTypeEdit')))
+        if ($filterChain->action->id === 'update') {
+            if (!(Yii::app()->user->checkAccess('masterServiceTypeEdit'))) {
                 $this->redirect(array('/site/login'));
+            }
+        }
+
+        if ($filterChain->action->id === 'delete' || $filterChain->action->id === 'restore') {
+            if (!(Yii::app()->user->checkAccess('masterServiceTypeApproval'))) {
+                $this->redirect(array('/site/login'));
+            }
         }
 
         if (
             $filterChain->action->id === 'view' || 
-            $filterChain->action->id === 'profile' || 
             $filterChain->action->id === 'admin' || 
             $filterChain->action->id === 'index'
         ) {
-            if (!(Yii::app()->user->checkAccess('masterServiceTypeCreate')) || !(Yii::app()->user->checkAccess('masterServiceTypeEdit')))
+            if (!(
+                Yii::app()->user->checkAccess('masterServiceTypeCreate') || 
+                Yii::app()->user->checkAccess('masterServiceTypeEdit') || 
+                Yii::app()->user->checkAccess('masterServiceTypeView')
+            )) {
                 $this->redirect(array('/site/login'));
+            }
         }
 
         $filterChain->run();
@@ -58,11 +66,15 @@ class ServiceTypeController extends Controller {
      */
     public function actionCreate() {
         $model = new ServiceType;
+        $model->user_id_created = Yii::app()->user->id;
+        $model->created_datetime = date('Y-m-d H:i:s');
+        
         $coa = new Coa('search');
         $coa->unsetAttributes();  // clear any default values
 
-        if (isset($_GET['Coa']))
+        if (isset($_GET['Coa'])) {
             $coa->attributes = $_GET['Coa'];
+        }
 
         $coaCriteria = new CDbCriteria;
         $coaCriteria->addCondition("coa_sub_category_id IN (4, 5, 6, 24, 28, 29, 30, 31, 47, 50, 51)");
@@ -78,8 +90,9 @@ class ServiceTypeController extends Controller {
         $coaDiskon = new Coa('search');
         $coaDiskon->unsetAttributes();  // clear any default values
 
-        if (isset($_GET['Coa']))
+        if (isset($_GET['Coa'])) {
             $coaDiskon->attributes = $_GET['Coa'];
+        }
 
         $coaDiskonCriteria = new CDbCriteria;
         $coaDiskonCriteria->addCondition("coa_sub_category_id IN (28, 30)");
@@ -98,8 +111,10 @@ class ServiceTypeController extends Controller {
         if (isset($_POST['ServiceType'])) {
             $model->attributes = $_POST['ServiceType'];
 
-            if ($model->save())
+            if ($model->save()) {
+                $this->saveMasterLog($model);
                 $this->redirect(array('view', 'id' => $model->id));
+            }
         }
 
         $this->render('create', array(
@@ -118,10 +133,14 @@ class ServiceTypeController extends Controller {
      */
     public function actionUpdate($id) {
         $model = $this->loadModel($id);
+        $model->user_id_updated = Yii::app()->user->id;
+        $model->updated_datetime = date('Y-m-d H:i:s');
+        
         $coa = new Coa('search');
         $coa->unsetAttributes();  // clear any default values
-        if (isset($_GET['Coa']))
+        if (isset($_GET['Coa'])) {
             $coa->attributes = $_GET['Coa'];
+        }
 
         $coaCriteria = new CDbCriteria;
         $coaCriteria->addCondition("coa_sub_category_id IN (4, 5, 6, 24, 28, 29, 30, 31, 47, 50, 51)");
@@ -136,8 +155,9 @@ class ServiceTypeController extends Controller {
 
         $coaDiskon = new Coa('search');
         $coaDiskon->unsetAttributes();  // clear any default values
-        if (isset($_GET['Coa']))
+        if (isset($_GET['Coa'])) {
             $coaDiskon->attributes = $_GET['Coa'];
+        }
 
         $coaDiskonCriteria = new CDbCriteria;
         $coaDiskonCriteria->addCondition("coa_sub_category_id IN (28, 30)");
@@ -156,8 +176,10 @@ class ServiceTypeController extends Controller {
         if (isset($_POST['ServiceType'])) {
             $model->attributes = $_POST['ServiceType'];
 
-            if ($model->save())
+            if ($model->save()) {
+                $this->saveMasterLog($model);
                 $this->redirect(array('view', 'id' => $model->id));
+            }
         }
 
         $this->render('update', array(
@@ -175,11 +197,18 @@ class ServiceTypeController extends Controller {
      * @param integer $id the ID of the model to be deleted
      */
     public function actionDelete($id) {
-        $this->loadModel($id)->remove();
+        $model = $this->loadModel($id);
+        $model->is_deleted = 1;
+        $model->status = 'Deleted';
+        $model->user_id_deleted = Yii::app()->user->id;
+        $model->deleted_datetime = date('Y-m-d H:i:s');
+        $model->update(array('is_deleted', 'user_id_deleted', 'deleted_datetime', 'status'));
 
         // if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
-        if (!isset($_GET['ajax']))
+        if (!isset($_GET['ajax'])) {
+            $this->saveMasterLog($model);
             $this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
+        }
     }
 
     public function actionRestore($id) {
@@ -187,8 +216,9 @@ class ServiceTypeController extends Controller {
         $this->loadModel($id)->restore();
 
         // if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
-        if (!isset($_GET['ajax']))
+        if (!isset($_GET['ajax'])) {
             $this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
+        }
     }
 
     /**
@@ -209,21 +239,33 @@ class ServiceTypeController extends Controller {
         $model = new ServiceType('search');
         //$model->disableBehavior('SoftDelete');
         $model->unsetAttributes();  // clear any default values
-        if (isset($_GET['ServiceType']))
+        if (isset($_GET['ServiceType'])) {
             $model->attributes = $_GET['ServiceType'];
+        }
 
         $this->render('admin', array(
             'model' => $model,
         ));
     }
 
-    /**
-     * Returns the data model based on the primary key given in the GET variable.
-     * If the data model is not found, an HTTP exception will be raised.
-     * @param integer $id the ID of the model to be loaded
-     * @return ServiceType the loaded model
-     * @throws CHttpException
-     */
+    public function saveMasterLog($model) {
+        $transactionLog = new MasterLog();
+        $transactionLog->name = $model->name;
+        $transactionLog->log_date = date('Y-m-d');
+        $transactionLog->log_time = date('H:i:s');
+        $transactionLog->table_name = $model->tableName();
+        $transactionLog->table_id = $model->id;
+        $transactionLog->user_id = Yii::app()->user->id;
+        $transactionLog->username = Yii::app()->user->username;
+        $transactionLog->controller_class = Yii::app()->controller->module->id  . '/' . Yii::app()->controller->id;
+        $transactionLog->action_name = Yii::app()->controller->action->id;
+        
+        $newData = $model->attributes;
+        $transactionLog->new_data = json_encode($newData);
+
+        $transactionLog->save();
+    }
+
     public function loadModel($id) {
         $model = ServiceType::model()->findByPk($id);
         if ($model === null)

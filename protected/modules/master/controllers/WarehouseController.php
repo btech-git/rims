@@ -10,31 +10,41 @@ class WarehouseController extends Controller {
 
     public function filters() {
         return array(
-//            'access',
+            'access',
         );
     }
 
     public function filterAccess($filterChain) {
         if ($filterChain->action->id === 'create') {
-            if (!(Yii::app()->user->checkAccess('masterWarehouseCreate')))
+            if (!(Yii::app()->user->checkAccess('masterWarehouseCreate'))) {
                 $this->redirect(array('/site/login'));
+            }
         }
 
-        if (
-            $filterChain->action->id === 'update' || 
-            $filterChain->action->id === 'delete'
-        ) {
-            if (!(Yii::app()->user->checkAccess('masterWarehouseEdit')))
+        if ($filterChain->action->id === 'update') {
+            if (!(Yii::app()->user->checkAccess('masterWarehouseEdit'))) {
                 $this->redirect(array('/site/login'));
+            }
+        }
+
+        if ($filterChain->action->id === 'delete') {
+            if (!(Yii::app()->user->checkAccess('masterWarehouseApproval'))) {
+                $this->redirect(array('/site/login'));
+            }
         }
 
         if (
             $filterChain->action->id === 'view' || 
             $filterChain->action->id === 'admin' || 
-            $filterChain->action->id === 'index' 
+            $filterChain->action->id === 'index'
         ) {
-            if (!(Yii::app()->user->checkAccess('masterWarehouseCreate')) || !(Yii::app()->user->checkAccess('masterWarehouseEdit')))
+            if (!(
+                Yii::app()->user->checkAccess('masterWarehouseCreate') || 
+                Yii::app()->user->checkAccess('masterWarehouseEdit') || 
+                Yii::app()->user->checkAccess('masterWarehouseView')
+            )) {
                 $this->redirect(array('/site/login'));
+            }
         }
 
         $filterChain->run();
@@ -50,15 +60,16 @@ class WarehouseController extends Controller {
         $warehouseDivisions = WarehouseDivision::model()->findAllByAttributes(array('warehouse_id' => $id));
         $warehouseSections = WarehouseSection::model()->findAllByAttributes(array('warehouse_id' => $id));
         
-        if (isset($_POST['Approve']) && (int) $model->is_approved !== 1) {
-            $model->is_approved = 1;
-            $model->date_approval = date('Y-m-d');
-            
-            if ($model->save(true, array('is_approved', 'date_approval')))
-                Yii::app()->user->setFlash('confirm', 'Your data has been approved!!!');
-            else
-                Yii::app()->user->setFlash('error', 'Your data failed to approved!!!');
-        }
+//        if (isset($_POST['Approve']) && (int) $model->is_approved !== 1) {
+//            $model->is_approved = 1;
+//            $model->date_approval = date('Y-m-d');
+//            
+//            if ($model->save(true, array('is_approved', 'date_approval'))) {
+//                Yii::app()->user->setFlash('confirm', 'Your data has been approved!!!');
+//            } else {
+//                Yii::app()->user->setFlash('error', 'Your data failed to approved!!!');
+//            }
+//        }
 
         $this->render('view', array(
             'model' => $model,
@@ -76,11 +87,13 @@ class WarehouseController extends Controller {
         $warehouse = $this->instantiate(null);
         $warehouse->header->user_id = Yii::app()->user->id;
         $warehouse->header->created_datetime = date('Y-m-d H:i:s');
+        $this->performAjaxValidation($warehouse->header);
 
         $branch = new Warehouse('search');
         $branch->unsetAttributes();  // clear any default values
-        if (isset($_GET['Branch']))
+        if (isset($_GET['Branch'])) {
             $branch->attributes = $_GET['Branch'];
+        }
 
         $branchCriteria = new CDbCriteria;
         $branchCriteria->compare('name', $branch->name, true);
@@ -92,8 +105,9 @@ class WarehouseController extends Controller {
         $division = new Division('search');
         $division->unsetAttributes();  // clear any default values
         
-        if (isset($_GET['Division']))
+        if (isset($_GET['Division'])) {
             $division->attributes = $_GET['Division'];
+        }
 
         $divisionCriteria = new CDbCriteria;
         $divisionCriteria->compare('name', $division->name, true);
@@ -105,18 +119,10 @@ class WarehouseController extends Controller {
         $product = new Product('search');
         $product->unsetAttributes();  // clear any default values
         
-        if (isset($_GET['Product']))
+        if (isset($_GET['Product'])) {
             $product->attributes = $_GET['Product'];
-
-//        $productCriteria = new CDbCriteria;
-//        $productCriteria->compare('name', $product->name, true);
-
-//        $productDataProvider = new CActiveDataProvider('Product', array(
-//            'criteria' => $productCriteria,
-//        ));
+        }
         $productDataProvider = $product->search();
-
-        $this->performAjaxValidation($warehouse->header);
 
         if (isset($_POST['Warehouse'])) {
             $this->loadState($warehouse);
@@ -143,11 +149,17 @@ class WarehouseController extends Controller {
      * @param integer $id the ID of the model to be updated
      */
     public function actionUpdate($id) {
+        $warehouse = $this->instantiate($id);
+        $warehouse->header->user_id_updated = Yii::app()->user->id;
+        $warehouse->header->updated_datetime = date('Y-m-d H:i:s');
+        $this->performAjaxValidation($warehouse->header);
+
         $branch = new Branch('search');
         $branch->unsetAttributes();  // clear any default values
         
-        if (isset($_GET['Branch']))
+        if (isset($_GET['Branch'])) {
             $branch->attributes = $_GET['Branch'];
+        }
 
         $branchCriteria = new CDbCriteria;
         $branchCriteria->compare('name', $branch->name, true);
@@ -159,8 +171,9 @@ class WarehouseController extends Controller {
         $division = new Division('search');
         $division->unsetAttributes();  // clear any default values
         
-        if (isset($_GET['Division']))
+        if (isset($_GET['Division'])) {
             $division->attributes = $_GET['Division'];
+        }
 
         $divisionCriteria = new CDbCriteria;
         $divisionCriteria->compare('name', $division->name, true);
@@ -169,24 +182,8 @@ class WarehouseController extends Controller {
             'criteria' => $divisionCriteria,
         ));
 
-//        $product = new Product('search');
-//        $product->unsetAttributes();  // clear any default values
-//        if (isset($_GET['Product']))
-//            $product->attributes = $_GET['Product'];
-        
         $product = Search::bind(new Product('search'), isset($_GET['Product']) ? $_GET['Product'] : array());
         $productDataProvider = $product->search();
-
-//        $productCriteria = new CDbCriteria;
-//        $productCriteria->compare('name', $product->name, true);
-//
-//        $productDataProvider = new CActiveDataProvider('Product', array(
-//            'criteria' => $productCriteria,
-//        ));
-
-        $warehouse = $this->instantiate($id);
-
-        $this->performAjaxValidation($warehouse->header);
 
         if (isset($_POST['Warehouse'])) {
             $this->loadState($warehouse);
@@ -195,6 +192,7 @@ class WarehouseController extends Controller {
                 $this->redirect(array('view', 'id' => $warehouse->header->id));
             } 
         }
+        
         $this->render('update', array(
             'warehouse' => $warehouse,
             'branch' => $branch,
@@ -212,11 +210,18 @@ class WarehouseController extends Controller {
      * @param integer $id the ID of the model to be deleted
      */
     public function actionDelete($id) {
-        $this->loadModel($id)->delete();
+        $model = $this->loadModel($id);
+        $model->status = 'Deleted';
+        $model->is_deleted = 1;
+        $model->user_id_deleted = Yii::app()->user->id;
+        $model->deleted_datetime = date('Y-m-d H:i:s');
+        $model->update(array('status', 'is_deleted', 'user_id_deleted', 'deleted_datetime'));
 
         // if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
-        if (!isset($_GET['ajax']))
+        if (!isset($_GET['ajax'])) {
+            $this->saveMasterLog($model);
             $this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
+        }
     }
 
     /**
@@ -236,12 +241,31 @@ class WarehouseController extends Controller {
         $model = new Warehouse('search');
         $model->unsetAttributes();  // clear any default values
 
-        if (isset($_GET['Warehouse']))
+        if (isset($_GET['Warehouse'])) {
             $model->attributes = $_GET['Warehouse'];
+        }
 
         $this->render('admin', array(
             'model' => $model,
         ));
+    }
+
+    public function saveMasterLog($model) {
+        $masterLog = new MasterLog();
+        $masterLog->name = $model->plate_number;
+        $masterLog->log_date = date('Y-m-d');
+        $masterLog->log_time = date('H:i:s');
+        $masterLog->table_name = $model->tableName();
+        $masterLog->table_id = $model->id;
+        $masterLog->user_id = Yii::app()->user->id;
+        $masterLog->username = Yii::app()->user->username;
+        $masterLog->controller_class = Yii::app()->controller->module->id  . '/' . Yii::app()->controller->id;
+        $masterLog->action_name = Yii::app()->controller->action->id;
+        
+        $newData = $model->attributes;
+        $masterLog->new_data = json_encode($newData);
+
+        $masterLog->save();
     }
 
     //Add Branch Detail
@@ -308,8 +332,9 @@ class WarehouseController extends Controller {
             $product = new Product('search');
             $product->unsetAttributes();  // clear any default values
             
-            if (isset($_GET['Product']))
+            if (isset($_GET['Product'])) {
                 $product->attributes = $_GET['Product'];
+            }
 
             $productCriteria = new CDbCriteria;
             $productCriteria->compare('name', $product->name, true);
@@ -360,8 +385,9 @@ class WarehouseController extends Controller {
 
             $product = new Product('search');
             $product->unsetAttributes();  // clear any default values
-            if (isset($_GET['Product']))
+            if (isset($_GET['Product'])) {
                 $product->attributes = $_GET['Product'];
+            }
 
             $productCriteria = new CDbCriteria;
             $productCriteria->compare('name', $product->name, true);
@@ -395,51 +421,57 @@ class WarehouseController extends Controller {
 
         if (isset($_POST['BranchWarehouse'])) {
             foreach ($_POST['BranchWarehouse'] as $i => $item) {
-                if (isset($warehouse->branchDetails[$i]))
+                if (isset($warehouse->branchDetails[$i])) {
                     $warehouse->branchDetails[$i]->attributes = $item;
-                else {
+                } else {
                     $detail = new BranchWarehouse();
                     $detail->attributes = $item;
                     $warehouse->branchDetails[] = $detail;
                 }
             }
-            if (count($_POST['BranchWarehouse']) < count($warehouse->branchDetails))
+            
+            if (count($_POST['BranchWarehouse']) < count($warehouse->branchDetails)) {
                 array_splice($warehouse->branchDetails, $i + 1);
-        } else
+            }
+        } else {
             $warehouse->branchDetails = array();
+        }
 
         if (isset($_POST['WarehouseDivision'])) {
             foreach ($_POST['WarehouseDivision'] as $i => $item) {
-                if (isset($warehouse->divisionDetails[$i]))
+                if (isset($warehouse->divisionDetails[$i])) {
                     $warehouse->divisionDetails[$i]->attributes = $item;
-                else {
+                } else {
                     $detail = new WarehouseDivision();
                     $detail->attributes = $item;
                     $warehouse->divisionDetails[] = $detail;
                 }
             }
             
-            if (count($_POST['WarehouseDivision']) < count($warehouse->divisionDetails))
+            if (count($_POST['WarehouseDivision']) < count($warehouse->divisionDetails)) {
                 array_splice($warehouse->divisionDetails, $i + 1);
-        } else
+            }
+        } else {
             $warehouse->divisionDetails = array();
+        }
 
         if (isset($_POST['WarehouseSection'])) {
             foreach ($_POST['WarehouseSection'] as $i => $item) {
-                if (isset($warehouse->sectionDetails[$i]))
+                if (isset($warehouse->sectionDetails[$i])) {
                     $warehouse->sectionDetails[$i]->attributes = $item;
-                else {
+                } else {
                     $detail = new WarehouseSection();
                     $detail->attributes = $item;
                     $warehouse->sectionDetails[] = $detail;
                 }
             }
             
-            if (count($_POST['WarehouseSection']) < count($warehouse->sectionDetails))
+            if (count($_POST['WarehouseSection']) < count($warehouse->sectionDetails)) {
                 array_splice($warehouse->sectionDetails, $i + 1);
-        }
-        else
+            }
+        } else {
             $warehouse->sectionDetails = array();
+        }
     }
 
     /**
@@ -452,8 +484,9 @@ class WarehouseController extends Controller {
     public function loadModel($id) {
         $model = Warehouse::model()->findByPk($id);
         
-        if ($model === null)
+        if ($model === null) {
             throw new CHttpException(404, 'The requested page does not exist.');
+        }
         
         return $model;
     }
@@ -468,5 +501,4 @@ class WarehouseController extends Controller {
             Yii::app()->end();
         }
     }
-
 }

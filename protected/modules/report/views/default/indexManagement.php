@@ -111,11 +111,6 @@
                                         'visible' => Yii::app()->user->checkAccess('director')
                                     ),
                                     array(
-                                        'label' => 'Transaksi Retail Summary', 
-                                        'url' => array('/report/saleFlowSummary/summary'), 
-                                        'visible' => Yii::app()->user->checkAccess('director')
-                                    ),
-                                    array(
                                         'label' => 'Payment Type Bulanan', 
                                         'url' => array('/report/paymentMonthly/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('director')
@@ -123,11 +118,6 @@
                                     array(
                                         'label' => 'Konfirmasi Transaksi Harian', 
                                         'url' => array('/report/dailyTransactionConfirmation/summary'), 
-                                        'visible' => Yii::app()->user->checkAccess('director')
-                                    ),
-                                    array(
-                                        'label' => 'Penjualan Kendaraan Customer', 
-                                        'url' => array('/report/customerVehicleSaleTransaction/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('director')
                                     ),
                                 ),

@@ -14,6 +14,11 @@
  * @property integer $is_approved
  * @property integer $user_id_approval
  * @property string $date_approval
+ * @property integer $is_deleted
+ * @property integer $user_id_deleted
+ * @property integer $user_id_rejected
+ * @property string $deleted_datetime
+ * @property string $rejected_datetime
  *
  * The followings are the available model relations:
  * @property Product[] $products
@@ -21,6 +26,8 @@
  * @property User $user
  * @property UserIdApproval $userIdApproval
  * @property UserIdEdit $userIdEdit
+ * @property UserIdRejected $userIdRejected
+ * @property UserIdDeleted $userIdDeleted
  */
 class Brand extends CActiveRecord {
 
@@ -39,13 +46,13 @@ class Brand extends CActiveRecord {
         // will receive user inputs.
         return array(
             array('name, user_id', 'required'),
-            array('user_id_approval, user_id_edit, user_id', 'numerical', 'integerOnly' => true),
+            array('user_id_approval, user_id_edit, user_id, user_id_rejected, user_id_deleted, is_deleted, is_approved', 'numerical', 'integerOnly' => true),
             array('name', 'length', 'max' => 30),
             array('status', 'length', 'max' => 10),
-            array('date_posting, date_approval, date_edit', 'safe'),
+            array('date_posting, date_approval, date_edit, rejected_datetime, deleted_datetime', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, name, status, user_id_approval, user_id_edit, user_id, date_posting, date_approval, date_edit', 'safe', 'on' => 'search'),
+            array('id, name, status, user_id_approval, user_id_edit, user_id, date_posting, date_approval, date_edit, user_id_rejected, user_id_deleted, is_deleted, is_approved, rejected_datetime, deleted_datetime', 'safe', 'on' => 'search'),
         );
     }
 
@@ -61,6 +68,8 @@ class Brand extends CActiveRecord {
             'user' => array(self::BELONGS_TO, 'Users', 'user_id'),
             'userIdApproval' => array(self::BELONGS_TO, 'Users', 'user_id_approval'),
             'userIdEdit' => array(self::BELONGS_TO, 'Users', 'user_id_edit'),
+            'userIdRejected' => array(self::BELONGS_TO, 'Users', 'user_id_rejected'),
+            'userIdDeleted' => array(self::BELONGS_TO, 'Users', 'user_id_deleted'),
         );
     }
 

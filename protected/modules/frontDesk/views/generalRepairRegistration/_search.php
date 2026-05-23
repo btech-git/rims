@@ -10,6 +10,9 @@
         'method'=>'get',
     )); ?>
     <div class="row">
+        <?php echo CHtml::hiddenField('TabIndex', $tabIndex); ?>
+    </div>
+    <div class="row">
         <div class="small-12 medium-6 columns">
             <div class="field">
                 <div class="row collapse">

@@ -10,21 +10,41 @@ class VehicleCarMakeController extends Controller {
 
     public function filters() {
         return array(
-//            'access',
+            'access',
         );
     }
 
     public function filterAccess($filterChain) {
+        if ($filterChain->action->id === 'create') {
+            if (!(Yii::app()->user->checkAccess('masterCarMakeCreate'))) {
+                $this->redirect(array('/site/login'));
+            }
+        }
+
+        if ($filterChain->action->id === 'update') {
+            if (!(Yii::app()->user->checkAccess('masterCarMakeEdit'))) {
+                $this->redirect(array('/site/login'));
+            }
+        }
+
+        if ($filterChain->action->id === 'delete') {
+            if (!(Yii::app()->user->checkAccess('masterCarMakeApproval'))) {
+                $this->redirect(array('/site/login'));
+            }
+        }
+
         if (
-            $filterChain->action->id === 'create' || 
             $filterChain->action->id === 'view' || 
-            $filterChain->action->id === 'update' || 
             $filterChain->action->id === 'admin' || 
-            $filterChain->action->id === 'delete' || 
             $filterChain->action->id === 'index'
         ) {
-            if (!(Yii::app()->user->checkAccess('frontOfficeHead')) || !(Yii::app()->user->checkAccess('idleManagement')))
+            if (!(
+                Yii::app()->user->checkAccess('masterCarMakeCreate') || 
+                Yii::app()->user->checkAccess('masterCarMakeEdit') || 
+                Yii::app()->user->checkAccess('masterCarMakeView')
+            )) {
                 $this->redirect(array('/site/login'));
+            }
         }
 
         $filterChain->run();
@@ -55,8 +75,7 @@ class VehicleCarMakeController extends Controller {
         if (isset($_POST['VehicleCarMake'])) {
             $model->attributes = $_POST['VehicleCarMake'];
             if ($model->save()) {
-                $this->saveTransactionLog($model);
-        
+                $this->saveMasterLog($model);
                 $this->redirect(array('admin'));
             }
         }
@@ -73,6 +92,8 @@ class VehicleCarMakeController extends Controller {
      */
     public function actionUpdate($id) {
         $model = $this->loadModel($id);
+        $model->user_id_updated = Yii::app()->user->id;
+        $model->updated_datetime = date('Y-m-d H:i:s');
 
         // Uncomment the following line if AJAX validation is needed
         // $this->performAjaxValidation($model);
@@ -80,8 +101,7 @@ class VehicleCarMakeController extends Controller {
         if (isset($_POST['VehicleCarMake'])) {
             $model->attributes = $_POST['VehicleCarMake'];
             if ($model->save()) {
-                $this->saveTransactionLog($model);
-        
+                $this->saveMasterLog($model);
                 $this->redirect(array('admin'));
             }
         }
@@ -91,22 +111,22 @@ class VehicleCarMakeController extends Controller {
         ));
     }
 
-    public function saveTransactionLog($model) {
-        $transactionLog = new MasterLog();
-        $transactionLog->name = $model->name;
-        $transactionLog->log_date = date('Y-m-d');
-        $transactionLog->log_time = date('H:i:s');
-        $transactionLog->table_name = $model->tableName();
-        $transactionLog->table_id = $model->id;
-        $transactionLog->user_id = Yii::app()->user->id;
-        $transactionLog->username = Yii::app()->user->username;
-        $transactionLog->controller_class = Yii::app()->controller->module->id  . '/' . Yii::app()->controller->id;
-        $transactionLog->action_name = Yii::app()->controller->action->id;
+    public function saveMasterLog($model) {
+        $masterLog = new MasterLog();
+        $masterLog->name = $model->name;
+        $masterLog->log_date = date('Y-m-d');
+        $masterLog->log_time = date('H:i:s');
+        $masterLog->table_name = $model->tableName();
+        $masterLog->table_id = $model->id;
+        $masterLog->user_id = Yii::app()->user->id;
+        $masterLog->username = Yii::app()->user->username;
+        $masterLog->controller_class = Yii::app()->controller->module->id  . '/' . Yii::app()->controller->id;
+        $masterLog->action_name = Yii::app()->controller->action->id;
         
         $newData = $model->attributes;
-        $transactionLog->new_data = json_encode($newData);
+        $masterLog->new_data = json_encode($newData);
 
-        $transactionLog->save();
+        $masterLog->save();
     }
 
     /**
@@ -115,11 +135,18 @@ class VehicleCarMakeController extends Controller {
      * @param integer $id the ID of the model to be deleted
      */
     public function actionDelete($id) {
-        $this->loadModel($id)->delete();
+        $model = $this->loadModel($id);
+        $model->is_deleted = 1;
+        $model->status = 'Deleted';
+        $model->user_id_deleted = Yii::app()->user->id;
+        $model->deleted_datetime = date('Y-m-d H:i:s');
+        $model->update(array('is_deleted', 'user_id_deleted', 'deleted_datetime', 'status'));
 
         // if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
-        if (!isset($_GET['ajax']))
+        if (!isset($_GET['ajax'])) {
+            $this->saveMasterLog($model);
             $this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
+        }
     }
 
     /**
@@ -138,8 +165,9 @@ class VehicleCarMakeController extends Controller {
     public function actionAdmin() {
         $model = new VehicleCarMake('search');
         $model->unsetAttributes();  // clear any default values
-        if (isset($_GET['VehicleCarMake']))
+        if (isset($_GET['VehicleCarMake'])) {
             $model->attributes = $_GET['VehicleCarMake'];
+        }
 
         $this->render('admin', array(
             'model' => $model,
@@ -155,8 +183,10 @@ class VehicleCarMakeController extends Controller {
      */
     public function loadModel($id) {
         $model = VehicleCarMake::model()->findByPk($id);
-        if ($model === null)
+        if ($model === null) {
             throw new CHttpException(404, 'The requested page does not exist.');
+        }
+        
         return $model;
     }
 

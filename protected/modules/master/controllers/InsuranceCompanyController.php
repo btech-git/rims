@@ -16,26 +16,35 @@ class InsuranceCompanyController extends Controller {
 
     public function filterAccess($filterChain) {
         if ($filterChain->action->id === 'create') {
-            if (!(Yii::app()->user->checkAccess('masterInsuranceCreate')))
+            if (!(Yii::app()->user->checkAccess('masterInsuranceCreate'))) {
                 $this->redirect(array('/site/login'));
+            }
         }
 
-        if (
-            $filterChain->action->id === 'update' || 
-            $filterChain->action->id === 'delete'
-        ) {
-            if (!(Yii::app()->user->checkAccess('masterInsuranceEdit')))
+        if ($filterChain->action->id === 'update') {
+            if (!(Yii::app()->user->checkAccess('masterInsuranceEdit'))) {
                 $this->redirect(array('/site/login'));
+            }
+        }
+
+        if ($filterChain->action->id === 'restore' || $filterChain->action->id === 'delete') {
+            if (!(Yii::app()->user->checkAccess('masterInsuranceEdit'))) {
+                $this->redirect(array('/site/login'));
+            }
         }
 
         if (
             $filterChain->action->id === 'view' || 
             $filterChain->action->id === 'admin' || 
-            $filterChain->action->id === 'index' || 
-            $filterChain->action->id === 'restore'
+            $filterChain->action->id === 'index'
         ) {
-            if (!(Yii::app()->user->checkAccess('masterInsuranceCreate')) || !(Yii::app()->user->checkAccess('masterInsuranceEdit')))
+            if (!(
+                Yii::app()->user->checkAccess('masterInsuranceCreate') || 
+                Yii::app()->user->checkAccess('masterInsuranceEdit') || 
+                Yii::app()->user->checkAccess('masterInsuranceView')
+            )) {
                 $this->redirect(array('/site/login'));
+            }
         }
 
         $filterChain->run();
@@ -66,6 +75,11 @@ class InsuranceCompanyController extends Controller {
      */
     public function actionCreate() {
 
+        $insurance = $this->instantiate(null);
+        $insurance->header->user_id_created = Yii::app()->user->id;
+        $insurance->header->created_datetime = date('Y-m-d H:i:s');
+        $this->performAjaxValidation($insurance->header);
+        
         $service = new Service('search');
         $service->unsetAttributes();  // clear any default values
         if (isset($_GET['Service'])) {
@@ -73,7 +87,6 @@ class InsuranceCompanyController extends Controller {
         }
         
         $serviceCriteria = new CDbCriteria;
-        //$positionCriteria->compare('code',$position->code.'%',true,'AND', false);
         $serviceCriteria->compare('t.name', $service->name, true);
 
         $serviceCriteria->together = 'true';
@@ -86,8 +99,6 @@ class InsuranceCompanyController extends Controller {
         ));
 
         $serviceArray = array();
-        $insurance = $this->instantiate(null);
-        $this->performAjaxValidation($insurance->header);
 
         if (isset($_POST['InsuranceCompany'])) {
             $this->loadState($insurance);
@@ -110,16 +121,19 @@ class InsuranceCompanyController extends Controller {
      * @param integer $id the ID of the model to be updated
      */
     public function actionUpdate($id) {
-        //$model=$this->loadModel($id);
-        // Uncomment the following line if AJAX validation is needed
-        // $this->performAjaxValidation($model);
+        
+        $insurance = $this->instantiate($id);
+        $insurance->header->user_id_updated = Yii::app()->user->id;
+        $insurance->header->updated_datetime = date('Y-m-d H:i:s');
+        $this->performAjaxValidation($insurance->header);
+
         $coa = new Coa('search');
         $coa->unsetAttributes();  // clear any default values
-        if (isset($_GET['Coa']))
+        if (isset($_GET['Coa'])) {
             $coa->attributes = $_GET['Coa'];
+        }
 
         $coaCriteria = new CDbCriteria;
-        //$coaCriteria->addCondition("coa_sub_category_id = 2");
         $coaCriteria->compare('code', $coa->code . '%', true, 'AND', false);
         $coaCriteria->compare('name', $coa->name, true);
 
@@ -130,11 +144,11 @@ class InsuranceCompanyController extends Controller {
 
         $service = new Service('search');
         $service->unsetAttributes();  // clear any default values
-        if (isset($_GET['Service']))
+        if (isset($_GET['Service'])) {
             $service->attributes = $_GET['Service'];
+        }
 
         $serviceCriteria = new CDbCriteria;
-        //$positionCriteria->compare('code',$position->code.'%',true,'AND', false);
         $serviceCriteria->compare('t.name', $service->name, true);
 
         $serviceCriteria->together = 'true';
@@ -151,10 +165,7 @@ class InsuranceCompanyController extends Controller {
         foreach ($serviceChecks as $key => $serviceCheck) {
             array_push($serviceArray, $serviceCheck->service_id);
         }
-        $insurance = $this->instantiate($id);
-
-        $this->performAjaxValidation($insurance->header);
-
+        
         if (isset($_POST['InsuranceCompany'])) {
             $this->loadState($insurance);
             if ($insurance->save(Yii::app()->db)) {
@@ -180,11 +191,17 @@ class InsuranceCompanyController extends Controller {
      * @param integer $id the ID of the model to be deleted
      */
     public function actionDelete($id) {
-        $this->loadModel($id)->remove();
+        $model = $this->loadModel($id);
+        $model->is_deleted = 1;
+        $model->user_id_deleted = Yii::app()->user->id;
+        $model->deleted_datetime = date('Y-m-d H:i:s');
+        $model->update(array('is_deleted', 'user_id_deleted', 'deleted_datetime'));
 
         // if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
-        if (!isset($_GET['ajax']))
+        if (!isset($_GET['ajax'])) {
+            $this->saveMasterLog($model);
             $this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
+        }
     }
 
     public function actionRestore($id) {

@@ -2807,16 +2807,27 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
 //        return $resultSet;
 //    }
     
-    public static function getReceivableIncomingDueDate() {
+    public static function getReceivableIncomingDueDate($customerName, $startDate, $endDate) {
+        $customerConditionSql = '';
+        
+        $params = array(
+            ':start_date' => $startDate,
+            ':end_date' => $endDate,
+        );
+        
+        if (!empty($customerName)) {
+            $customerConditionSql = ' AND c.name LIKE :customer_name';
+            $params[':customer_name'] = "%{$customerName}%";
+        }
+        
         $sql = "SELECT i.id, i.invoice_number, i.invoice_date, i.due_date, c.name as customer, v.plate_number, i.total_price, i.payment_amount, i.payment_left
                 FROM " . InvoiceHeader::model()->tableName() . " i 
                 INNER JOIN " . Customer::model()->tableName() . " c ON c.id = i.customer_id
                 INNER JOIN " . Vehicle::model()->tableName() . " v ON v.id = i.vehicle_id
-                WHERE due_date BETWEEN '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND DATE_ADD(NOW(), INTERVAL 30 DAY) AND payment_left > 100 AND
-                    user_id_cancelled IS NULL
+                WHERE due_date BETWEEN :start_date AND :end_date AND payment_left > 100 AND user_id_cancelled IS NULL" . $customerConditionSql . "
                 ORDER BY i.due_date ASC";
                 
-        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true);
+        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
         
         return $resultSet;
     }

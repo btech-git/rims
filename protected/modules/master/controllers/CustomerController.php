@@ -61,26 +61,6 @@ class CustomerController extends Controller {
         $rateDetails = CustomerServiceRate::model()->findAllByAttributes(array('customer_id' => $id));
         $registrationTransactions = RegistrationTransaction::model()->findAllByAttributes(array('customer_id' => $id), array('limit' => 50, 'order' => 'id DESC'));
         
-        if (isset($_POST['Approve']) && (int) $model->is_approved !== 1) {
-            $model->is_approved = 1;
-            $model->date_approval = date('Y-m-d');
-            $model->time_approval = date('H:i:s');
-            $model->user_id_approval = Yii::app()->user->id;
-            
-            if ($model->save(true, array('is_approved', 'date_approval', 'time_approval', 'user_id_approval'))) {
-                Yii::app()->user->setFlash('confirm', 'Your data has been approved!!!');
-            }
-        } elseif (isset($_POST['Reject'])) {
-            $model->is_approved = 2;
-            $model->date_reject = date('Y-m-d');
-            $model->time_reject = date('H:i:s');
-            $model->user_id_reject = Yii::app()->user->id;
-            
-            if ($model->save(true, array('is_approved', 'date_reject', 'time_reject', 'user_id_reject'))) {
-                Yii::app()->user->setFlash('confirm', 'Your data has been rejected!!!');
-            }
-        }
-
         $this->render('view', array(
             'model' => $model,
             'picDetails' => $picDetails,

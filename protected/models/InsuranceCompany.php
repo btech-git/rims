@@ -14,12 +14,29 @@
  * @property string $fax
  * @property string $npwp
  * @property integer $coa_id
+ * @property integer $is_approved
+ * @property integer $is_deleted
+ * @property integer $user_id_created
+ * @property integer $user_id_updated
+ * @property integer $user_id_approved
+ * @property integer $user_id_rejected
+ * @property integer $user_id_deleted
+ * @property string $created_datetime
+ * @property string $updated_datetime
+ * @property string $approved_datetime
+ * @property string $rejected_datetime
+ * @property string $deleted_datetime
  *
  * The followings are the available model relations:
  * @property Province $province
  * @property City $city
  * @property Coa $coa
  * @property InsuranceCompanyPricelist[] $insuranceCompanyPricelists
+ * @property UserIdCreated $userIdCreated
+ * @property UserIdUpdated $userIdUpdated
+ * @property UserIdApproved $userIdApproved
+ * @property UserIdRejected $userIdRejected
+ * @property UserIdDeleted $userIdDeleted
  */
 class InsuranceCompany extends CActiveRecord {
 
@@ -52,13 +69,14 @@ class InsuranceCompany extends CActiveRecord {
         // will receive user inputs.
         return array(
             array('name, address, province_id, city_id, email, phone, fax, npwp', 'required'),
-            array('province_id, city_id, coa_id', 'numerical', 'integerOnly' => true),
+            array('province_id, city_id, coa_id, user_id_approved, user_id_rejected, user_id_updated, user_id_deleted, user_id_created, is_deleted, is_approved', 'numerical', 'integerOnly' => true),
             array('name', 'length', 'max' => 30),
             array('email', 'length', 'max' => 50),
             array('phone, fax, npwp', 'length', 'max' => 20),
+            array('approved_datetime, rejected_datetime, updated_datetime, deleted_datetime, created_datetime', 'safe'),
             // The following rule is used by search().
             // Please remove those attributes that should not be searched.
-            array('id, name, address, province_id, city_id, email, phone, fax, npwp,province_name,city_name,is_deleted, coa_id, coa_name, coa_code', 'safe', 'on' => 'search'),
+            array('id, name, address, province_id, city_id, email, phone, fax, npwp,province_name,city_name,is_deleted, coa_id, coa_name, coa_code, user_id_approved, user_id_rejected, user_id_updated, user_id_deleted, user_id_created, is_approved, approved_datetime, rejected_datetime, updated_datetime, deleted_datetime, created_datetime', 'safe', 'on' => 'search'),
         );
     }
 
@@ -82,6 +100,11 @@ class InsuranceCompany extends CActiveRecord {
             'city' => array(self::BELONGS_TO, 'City', 'city_id'),
             'insuranceCompanyPricelists' => array(self::HAS_MANY, 'InsuranceCompanyPricelist', 'insurance_company_id'),
             'coa' => array(self::BELONGS_TO, 'Coa', 'coa_id'),
+            'userIdCreated' => array(self::BELONGS_TO, 'Users', 'user_id_created'),
+            'userIdUpdated' => array(self::BELONGS_TO, 'Users', 'user_id_updated'),
+            'userIdApproved' => array(self::BELONGS_TO, 'Users', 'user_id_approved'),
+            'userIdRejected' => array(self::BELONGS_TO, 'Users', 'user_id_rejected'),
+            'userIdDeleted' => array(self::BELONGS_TO, 'Users', 'user_id_deleted'),
         );
     }
 

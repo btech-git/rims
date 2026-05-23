@@ -24,6 +24,13 @@
  * @property string $time_created
  * @property string $time_approval
  * @property integer $user_id_approval
+ * @property integer $is_deleted
+ * @property integer $user_id_deleted
+ * @property integer $user_id_updated
+ * @property integer $user_id_rejected
+ * @property string $deleted_datetime
+ * @property string $updated_datetime
+ * @property string $rejected_datetime
  *
  * The followings are the available model relations:
  * @property CashTransaction[] $cashTransactions
@@ -42,6 +49,9 @@
  * @property Bank[] $banks
  * @property User $user
  * @property UserIdApproval $userIdApproval
+ * @property UserIdRejected $userIdRejected
+ * @property UserIdUpdated $userIdUpdated
+ * @property UserIdDeleted $userIdDeleted
  */
 class Coa extends CActiveRecord {
 
@@ -64,17 +74,17 @@ class Coa extends CActiveRecord {
         // will receive user inputs.
         return array(
             array('name, coa_category_id, coa_sub_category_id, user_id', 'required'),
-            array('coa_category_id, coa_sub_category_id, coa_id, is_approved, user_id, user_id_approval', 'numerical', 'integerOnly' => true),
+            array('coa_category_id, coa_sub_category_id, coa_id, is_approved, user_id, user_id_approval, user_id_rejected, user_id_updated, user_id_deleted, is_deleted', 'numerical', 'integerOnly' => true),
             array('name', 'length', 'max' => 100),
             array('normal_balance', 'length', 'max' => 10),
             array('code', 'length', 'max' => 15),
             array('status', 'length', 'max' => 20),
             array('cash_transaction', 'length', 'max' => 5),
             array('opening_balance, closing_balance, debit, credit', 'length', 'max' => 18),
-            array('date_approval', 'safe'),
+            array('date, time_created, date_approval, time_approval, rejected_datetime, updated_datetime, deleted_datetime', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, name, code, coa_category_id, coa_sub_category_id, coa_category_name, coa_sub_category_name, opening_balance, closing_balance, debit, credit, normal_balance, coa_id, cash_transaction, status, date, is_approved, date_approval, user_id, user_id_approval', 'safe', 'on' => 'search'),
+            array('id, name, code, coa_category_id, coa_sub_category_id, coa_category_name, coa_sub_category_name, opening_balance, closing_balance, debit, credit, normal_balance, coa_id, cash_transaction, status, date, is_approved, date_approval, user_id, user_id_approval, time_created, time_approval, rejected_datetime, updated_datetime, deleted_datetime, user_id_rejected, user_id_updated, user_id_deleted, is_deleted', 'safe', 'on' => 'search'),
         );
     }
 
@@ -103,6 +113,9 @@ class Coa extends CActiveRecord {
             'banks' => array(self::HAS_MANY, 'Bank', 'coa_id'),
             'user' => array(self::BELONGS_TO, 'Users', 'user_id'),
             'userIdApproval' => array(self::BELONGS_TO, 'Users', 'user_id_approval'),
+            'userIdRejected' => array(self::BELONGS_TO, 'Users', 'user_id_rejected'),
+            'userIdUpdated' => array(self::BELONGS_TO, 'Users', 'user_id_updated'),
+            'userIdDeleted' => array(self::BELONGS_TO, 'Users', 'user_id_deleted'),
         );
     }
 
@@ -1038,6 +1051,30 @@ class Coa extends CActiveRecord {
                 FROM " . CoaCategory::model()->tableName() . " t1
                 LEFT OUTER JOIN " . CoaCategory::model()->tableName() . " t2 ON t2.id = t1.coa_category_id
                 WHERE t1.code < '4'
+                ORDER BY code ASC;";
+
+        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true);
+
+        return $resultSet;
+    }
+    
+    public static function getProfitLossCoaReport() {
+        
+        $sql = "SELECT c1.id AS id, c1.code AS code, c1.name AS name, IF(c1.coa_id IS NULL, s.code, c2.code) AS parent_code
+                FROM " . Coa::model()->tableName() . " c1
+                LEFT OUTER JOIN " . Coa::model()->tableName() . " c2 ON c2.id = c1.coa_id
+                INNER JOIN " . CoaSubCategory::model()->tableName() . " s ON s.id = c1.coa_sub_category_id
+                WHERE c1.code >= '4'
+                UNION
+                SELECT s.id AS id, s.code AS code, s.name AS name, t.code AS parent_code
+                FROM " . CoaSubCategory::model()->tableName() . " s
+                INNER JOIN " . CoaCategory::model()->tableName() . " t ON t.id = s.coa_category_id
+                WHERE s.code >= '4'
+                UNION 
+                SELECT t1.id AS id, t1.code AS code, t1.name AS name, IF(t1.coa_category_id IS NULL, NULL, t2.code) AS parent_code
+                FROM " . CoaCategory::model()->tableName() . " t1
+                LEFT OUTER JOIN " . CoaCategory::model()->tableName() . " t2 ON t2.id = t1.coa_category_id
+                WHERE t1.code >= '4'
                 ORDER BY code ASC;";
 
         $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true);

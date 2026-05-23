@@ -23,6 +23,12 @@ class CashDailySummaryController extends Controller {
             }
         }
 
+        if ($filterChain->action->id === 'approval') {
+            if (!Yii::app()->user->checkAccess('cashDailyApprovalAction')) {
+                $this->redirect(array('/site/login'));
+            }
+        }
+
         $filterChain->run();
     }
 
@@ -120,7 +126,6 @@ class CashDailySummaryController extends Controller {
         $purchaseOrder = Search::bind(new TransactionPurchaseOrder('search'), isset($_GET['TransactionPurchaseOrder']) ? $_GET['TransactionPurchaseOrder'] : '');
         $purchaseOrderDataProvider = $purchaseOrder->searchByDailyCashReport();
         $purchaseOrderDataProvider->criteria->compare('t.purchase_order_date', $transactionDate,true);
-//        $purchaseOrderDataProvider->criteria->compare('t.main_branch_id', $branchId);
         
         $paymentTypes = PaymentType::model()->findAll(array('condition' => 'id <> 5')); 
         
@@ -389,6 +394,44 @@ class CashDailySummaryController extends Controller {
         $dataProvider->criteria->compare('t.payment_type_id', $paymentTypeId);
             
         $this->render('show', array(
+            'cashDaily' => $cashDaily,
+            'dataProvider' => $dataProvider,
+        ));
+    }
+
+    public function actionShowTransactionDetailByBankBranchDate($transactionDate, $branchId, $companyBankId) {
+        
+        $cashDaily = new CashDailySummary();
+        $cashDaily->transaction_date = $transactionDate;
+        $cashDaily->branch_id = $branchId;
+        $cashDaily->payment_type_id = 5;
+        $cashDaily->user_id = Yii::app()->user->id;
+        $cashDaily->input_datetime = date('Y-m-d H:i:s');
+
+        $sql = "SELECT COALESCE(SUM(payment_amount), 0) as total_amount
+                FROM " . PaymentIn::model()->tableName() . " p
+                INNER JOIN " . Customer::model()->tableName() . " c ON c.id = p.customer_id
+                WHERE payment_date = :payment_date AND branch_id = :branch_id AND company_bank_id = :company_bank_id AND c.customer_type = 'Individual'";
+        
+        $paymentInRetailAmount = Yii::app()->db->createCommand($sql)->queryScalar(array(
+            ':payment_date' => $transactionDate,
+            ':branch_id' => $branchId,
+            ':company_bank_id' => $companyBankId,
+        ));
+        
+        $cashDaily->amount = $paymentInRetailAmount;
+        
+        $model = new PaymentIn('search');
+        $model->unsetAttributes();  // clear any default values
+
+        $dataProvider = $model->searchByRetailCashDailyReport();
+        $dataProvider->criteria->with = array('customer');
+        $dataProvider->criteria->compare('customer.customer_type', 'Individual');   
+        $dataProvider->criteria->compare('t.payment_date', $transactionDate, true);
+        $dataProvider->criteria->compare('t.branch_id', $branchId);
+        $dataProvider->criteria->compare('t.company_bank_id', $companyBankId);
+            
+        $this->render('showBankTransfer', array(
             'cashDaily' => $cashDaily,
             'dataProvider' => $dataProvider,
         ));

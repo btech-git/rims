@@ -18,9 +18,12 @@
  * @property integer $is_approved
  * @property integer $user_id_approval
  * @property string $date_time_approval
- * @property integer $is_rejected
  * @property integer $user_id_reject
  * @property string $date_time_reject
+ * @property integer $user_id_created
+ * @property integer $user_id_updated
+ * @property string $created_datetime
+ * @property string $updated_datetime
  *
  * The followings are the available model relations:
  * @property CustomerServiceRate[] $customerServiceRates
@@ -30,6 +33,9 @@
  * @property Coa $coaDiskonService
  * @property UserIdApproval $userIdApproval
  * @property UserIdReject $userIdReject
+ * @property UserIdCreated $userIdCreated
+ * @property UserIdUpdated $userIdUpdated
+ * @property DeletedBy $deletedBy
  */
 class ServiceCategory extends CActiveRecord {
 
@@ -64,15 +70,15 @@ class ServiceCategory extends CActiveRecord {
         // will receive user inputs.
         return array(
             array('code, service_number, name, status, service_type_id, is_approved', 'required'),
-            array('service_number, service_type_id, coa_id, is_deleted, deleted_by, coa_diskon_service, is_approved, user_id_approval, is_rejected, user_id_reject', 'numerical', 'integerOnly' => true),
+            array('service_number, service_type_id, coa_id, is_deleted, deleted_by, coa_diskon_service, is_approved, user_id_approval, user_id_reject, user_id_created, user_id_updated', 'numerical', 'integerOnly' => true),
             array('code', 'unique'),
             array('code', 'length', 'max' => 20),
             array('name', 'length', 'max' => 30),
             array('status', 'length', 'max' => 10),
-            array('deleted_at, date_time_approval, date_time_reject', 'safe'),
+            array('deleted_at, date_time_approval, date_time_reject, created_datetime, updated_datetime', 'safe'),
             // The following rule is used by search().
             // Please remove those attributes that should not be searched.
-            array('id, code, service_number, name, status, service_type_id,service_type_name,service_type_code, coa_id, is_deleted, deleted_at, deleted_by, coa_name, coa_code, coa_diskon_service,coa_diskon_service_name,coa_diskon_service_code, is_approved, user_id_approval, date_time_approval, user_id_reject, date_time_reject, is_rejected', 'safe', 'on' => 'search'),
+            array('id, code, service_number, name, status, service_type_id,service_type_name,service_type_code, coa_id, is_deleted, deleted_at, deleted_by, coa_name, coa_code, coa_diskon_service,coa_diskon_service_name,coa_diskon_service_code, is_approved, user_id_approval, date_time_approval, user_id_reject, date_time_reject, user_id_created, user_id_updated, created_datetime, updated_datetime', 'safe', 'on' => 'search'),
         );
     }
 
@@ -102,6 +108,9 @@ class ServiceCategory extends CActiveRecord {
             'coaDiskonService' => array(self::BELONGS_TO, 'Coa', 'coa_diskon_service'),
             'userIdApproval' => array(self::BELONGS_TO, 'Users', 'user_id_approval'),
             'userIdReject' => array(self::BELONGS_TO, 'Users', 'user_id_reject'),
+            'userIdCreated' => array(self::BELONGS_TO, 'Users', 'user_id_created'),
+            'userIdUpdated' => array(self::BELONGS_TO, 'Users', 'user_id_updated'),
+            'DeletedBy' => array(self::BELONGS_TO, 'Users', 'deleted_by'),
         );
     }
 

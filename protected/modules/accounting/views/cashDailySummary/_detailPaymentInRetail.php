@@ -29,10 +29,10 @@
                     <?php $bankTransfer = isset($bankTransferList[$paymentInRetailBranchId][$companyBank->id]) ? $bankTransferList[$paymentInRetailBranchId][$companyBank->id] : '0.00'; ?>
                     <td style="text-align: right">
                         <?php echo CHtml::link(Yii::app()->numberFormatter->format('#,##0', $bankTransfer), array('javascript:;'), array(
-                            'onclick' => 'window.open("' . CController::createUrl('/accounting/cashDailySummary/showTransactionDetailByTypeBranchDate', array(
+                            'onclick' => 'window.open("' . CController::createUrl('/accounting/cashDailySummary/showTransactionDetailByBankBranchDate', array(
                                 "transactionDate" => $transactionDate, 
                                 "branchId" => $paymentInRetailBranchId, 
-//                                "paymentTypeId" => $paymentTypeId
+                                "companyBankId" => $companyBank->id,
                             )) . '", "_blank", "top=100, left=225, width=900, height=650"); return false;'
                         )); ?> 
                         <?php $transferDailyTotals[$companyBank->id] += $bankTransfer; ?>
@@ -67,7 +67,7 @@
                         'transaction_date' => $transactionDate, 
                         'branch_id' => $paymentInRetailBranchId,
                     )); ?>
-                    <?php if (empty($cashDailyApproval)): ?>
+                    <?php if (empty($cashDailyApproval) && Yii::app()->user->checkAccess('cashDailyApprovalAction')): ?>
                         <?php echo CHtml::link('Approve', Yii::app()->createUrl("accounting/cashDailySummary/approval", array(
                             "branchId" => $paymentInRetailBranchId,
                             "transactionDate" => $transactionDate,

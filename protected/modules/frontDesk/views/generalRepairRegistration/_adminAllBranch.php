@@ -1,8 +1,5 @@
 <div class="reportDisplay">
-    <?php $dataCount = count($dataProvider->data); ?>
-    <?php if ($dataCount > 0): ?>
-        <?php echo "Displaying 1-{$dataCount} of {$dataCount} result(s)."; ?>
-    <?php endif; ?>
+    <?php echo ReportHelper::summaryText($dataProvider); ?>
 </div>
 
 <br />
@@ -68,4 +65,14 @@
             <?php endforeach; ?>
         </tbody>
     </table>
+    
+    <div class="right">
+        <?php $this->widget('system.web.widgets.pagers.CLinkPager', array(
+            'pages' => $dataProvider->pagination,
+        )); ?>
+        <span style="display: none"><?php echo $tabIndex; ?></span>
+    </div>
+    <br />
+    <br />
+    <br />
 </div>

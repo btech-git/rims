@@ -402,6 +402,16 @@
                                         'visible' => (Yii::app()->user->checkAccess('saleCustomerReport'))
                                     ),
                                     array(
+                                        'label' => 'Penjualan Retail Summary', 
+                                        'url' => array('/report/saleFlowSummary/summary'), 
+                                        'visible' => Yii::app()->user->checkAccess('saleCustomerReport')
+                                    ),
+                                    array(
+                                        'label' => 'Penjualan Kendaraan Customer', 
+                                        'url' => array('/report/customerVehicleSaleTransaction/summary'), 
+                                        'visible' => Yii::app()->user->checkAccess('saleCustomerReport')
+                                    ),
+                                    array(
                                         'label' => 'Penjualan per Asuransi Summary', 
                                         'url' => array('/report/saleRetailInsurance/summary'), 
                                         'visible' => (Yii::app()->user->checkAccess('saleInsuranceReport'))

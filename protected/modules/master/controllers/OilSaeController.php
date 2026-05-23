@@ -8,45 +8,49 @@ class OilSaeController extends Controller {
      */
     public $layout = '//layouts/column2';
 
-    /**
-     * @return array action filters
-     */
     public function filters() {
         return array(
-//            'accessControl', // perform access control for CRUD operations
-//            'postOnly + delete', // we only allow deletion via POST request
+            'access',
         );
     }
 
-    /**
-     * Specifies the access control rules.
-     * This method is used by the 'accessControl' filter.
-     * @return array access control rules
-     */
-    public function accessRules() {
-        return array(
-            array('allow', // allow all users to perform 'index' and 'view' actions
-                'actions' => array('index', 'view'),
-                'users' => array('*'),
-            ),
-            array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('create', 'update'),
-                'users' => array('@'),
-            ),
-            array('allow', // allow admin user to perform 'admin' and 'delete' actions
-                'actions' => array('admin', 'delete'),
-                'users' => array('admin'),
-            ),
-            array('deny', // deny all users
-                'users' => array('*'),
-            ),
-        );
+    public function filterAccess($filterChain) {
+        if ($filterChain->action->id === 'create') {
+            if (!(Yii::app()->user->checkAccess('masterOilSpecificationCreate'))) {
+                $this->redirect(array('/site/login'));
+            }
+        }
+
+        if ($filterChain->action->id === 'update') {
+            if (!(Yii::app()->user->checkAccess('masterOilSpecificationEdit'))) {
+                $this->redirect(array('/site/login'));
+            }
+        }
+
+        if ($filterChain->action->id === 'delete') {
+            if (!(Yii::app()->user->checkAccess('masterOilSpecificationApproval'))) {
+                $this->redirect(array('/site/login'));
+            }
+        }
+
+        if (
+            $filterChain->action->id === 'view' || 
+            $filterChain->action->id === 'admin' || 
+            $filterChain->action->id === 'index'
+        ) {
+            if (!(
+                Yii::app()->user->checkAccess('masterOilSpecificationCreate') || 
+                Yii::app()->user->checkAccess('masterOilSpecificationEdit') ||
+                Yii::app()->user->checkAccess('masterOilspecificationView') || 
+                Yii::app()->user->checkAccess('masterOilSpecificationApproval')
+            )) {
+                $this->redirect(array('/site/login'));
+            }
+        }
+
+        $filterChain->run();
     }
 
-    /**
-     * Displays a particular model.
-     * @param integer $id the ID of the model to be displayed
-     */
     public function actionView($id) {
         $this->render('view', array(
             'model' => $this->loadModel($id),
@@ -59,9 +63,8 @@ class OilSaeController extends Controller {
      */
     public function actionCreate() {
         $model = new OilSae;
-
-        // Uncomment the following line if AJAX validation is needed
-        // $this->performAjaxValidation($model);
+        $model->user_id_created = Yii::app()->user->id;
+        $model->created_datetime = date('Y-m-d H:i:s');
 
         if (isset($_POST['OilSae'])) {
             $model->attributes = $_POST['OilSae'];
@@ -82,9 +85,8 @@ class OilSaeController extends Controller {
      */
     public function actionUpdate($id) {
         $model = $this->loadModel($id);
-
-        // Uncomment the following line if AJAX validation is needed
-        // $this->performAjaxValidation($model);
+        $model->user_id_updated = Yii::app()->user->id;
+        $model->updated_datetime = date('Y-m-d H:i:s');
 
         if (isset($_POST['OilSae'])) {
             $model->attributes = $_POST['OilSae'];
@@ -104,11 +106,18 @@ class OilSaeController extends Controller {
      * @param integer $id the ID of the model to be deleted
      */
     public function actionDelete($id) {
-        $this->loadModel($id)->delete();
+        $model = $this->loadModel($id);
+        $model->is_deleted = 1;
+        $model->status = 'Deleted';
+        $model->user_id_deleted = Yii::app()->user->id;
+        $model->deleted_datetime = date('Y-m-d H:i:s');
+        $model->update(array('is_deleted', 'user_id_deleted', 'deleted_datetime', 'status'));
 
         // if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
-        if (!isset($_GET['ajax']))
+        if (!isset($_GET['ajax'])) {
+            $this->saveMasterLog($model);
             $this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
+        }
     }
 
     /**

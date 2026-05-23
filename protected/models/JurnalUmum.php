@@ -968,7 +968,38 @@ class JurnalUmum extends CActiveRecord {
                 ), 0) AS balance
                 FROM " . JurnalUmum::model()->tableName() . " j 
                 INNER JOIN " . Coa::model()->tableName() . " c ON c.id = j.coa_id
-                WHERE c.code < '4' AND j.tanggal_transaksi BETWEEN :start_date AND :end_date" . $branchConditionSql . "
+                WHERE c.code < '4' AND is_coa_category = 0 AND j.tanggal_transaksi BETWEEN :start_date AND :end_date" . $branchConditionSql . "
+                GROUP BY j.coa_id
+                ORDER BY c.code ASC";
+
+        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
+
+        return $resultSet;
+    }
+    
+    public static function getProfitLossLedgerReport($startDate, $endDate, $branchId) {
+        $branchConditionSql = '';
+        
+        $params = array(
+            ':start_date' => $startDate,
+            ':end_date' => $endDate,
+        );
+        
+        if (!empty($branchId)) {
+            $branchConditionSql = ' AND j.branch_id = :branch_id';
+            $params[':branch_id'] = $branchId;
+        }
+        
+        $sql = "SELECT j.coa_id, MAX(c.code) AS coa_code, COALESCE(SUM(
+                    CASE c.normal_balance
+                    WHEN 'DEBIT' THEN CASE j.debet_kredit WHEN 'D' THEN +j.total WHEN 'K' THEN -j.total ELSE 0 END
+                    WHEN 'KREDIT' THEN CASE j.debet_kredit WHEN 'K' THEN +j.total WHEN 'D' THEN -j.total ELSE 0 END
+                    ELSE 0
+                    END
+                ), 0) AS balance
+                FROM " . JurnalUmum::model()->tableName() . " j 
+                INNER JOIN " . Coa::model()->tableName() . " c ON c.id = j.coa_id
+                WHERE c.code >= '4' AND j.tanggal_transaksi BETWEEN :start_date AND :end_date" . $branchConditionSql . "
                 GROUP BY j.coa_id
                 ORDER BY c.code ASC";
 

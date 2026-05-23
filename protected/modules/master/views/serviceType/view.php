@@ -43,4 +43,3 @@ $this->breadcrumbs = array(
         ?>
     </div>
 </div>
-</div>

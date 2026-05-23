@@ -141,42 +141,6 @@ class PaymentByBankMonthlyController extends Controller {
         ));
     }
 
-//    public function actionMonthlyTransactionInfo($coaId, $debitCredit, $year, $month, $branchId, $inOut) {
-//        set_time_limit(0);
-//        ini_set('memory_limit', '1024M');
-//
-//        $page = (isset($_GET['page'])) ? $_GET['page'] : 1;
-//        
-//        $dataProvider = JurnalUmum::model()->searchByMonthlyTransactionInfo($coaId, $debitCredit, $year, $month, $branchId, $page);
-//        $coa = Coa::model()->findByPk($coaId);
-//        $branch = Branch::model()->findByPk($branchId);
-//        
-//        if (isset($_GET['SaveToExcel'])) {
-//            $this->saveToExcelMonthlyTransactionInfo(array(
-//                'dataProvider' => $dataProvider,
-//                'year' => $year,
-//                'month' => $month,
-//                'coa' => $coa,
-//                'branch' => $branch,
-//                'inOut' => $inOut,
-//            ));
-//        }
-//
-//        $this->render('monthlyTransactionInfo', array(
-//            'dataProvider' => $dataProvider,
-//            'year' => $year,
-//            'month' => $month,
-//            'coa' => $coa,
-//            'branch' => $branch,
-//            'coaId' => $coaId,
-//            'debitCredit' => $debitCredit,
-//            'year' => $year,
-//            'month' => $month,
-//            'branchId' => $branchId,
-//            'inOut' => $inOut,
-//        ));
-//    }
-
     public function actionRedirectTransaction($codeNumber) {
         list($leftPart,, ) = explode('/', $codeNumber);
         list(, $codeNumberConstant) = explode('.', $leftPart);

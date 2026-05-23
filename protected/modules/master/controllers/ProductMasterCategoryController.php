@@ -10,22 +10,27 @@ class ProductMasterCategoryController extends Controller {
 
     public function filters() {
         return array(
-//            'access',
+            'access',
         );
     }
 
     public function filterAccess($filterChain) {
         if ($filterChain->action->id === 'create') {
-            if (!(Yii::app()->user->checkAccess('masterProductCategoryCreate')))
+            if (!(Yii::app()->user->checkAccess('masterProductCategoryCreate'))) {
                 $this->redirect(array('/site/login'));
+            }
         }
 
-        if (
-            $filterChain->action->id === 'update' || 
-            $filterChain->action->id === 'delete'
-        ) {
-            if (!(Yii::app()->user->checkAccess('masterProductCategoryEdit')))
+        if ($filterChain->action->id === 'update') {
+            if (!(Yii::app()->user->checkAccess('masterProductCategoryEdit'))) {
                 $this->redirect(array('/site/login'));
+            }
+        }
+
+        if ($filterChain->action->id === 'delete') {
+            if (!(Yii::app()->user->checkAccess('masterProductCategoryApproval'))) {
+                $this->redirect(array('/site/login'));
+            }
         }
 
         if (
@@ -33,8 +38,13 @@ class ProductMasterCategoryController extends Controller {
             $filterChain->action->id === 'admin' || 
             $filterChain->action->id === 'index'
         ) {
-            if (!(Yii::app()->user->checkAccess('masterProductCategoryCreate')) || !(Yii::app()->user->checkAccess('masterProductCategoryEdit')))
+            if (!(
+                Yii::app()->user->checkAccess('masterProductCategoryCreate') || 
+                Yii::app()->user->checkAccess('masterProductCategoryEdit') || 
+                Yii::app()->user->checkAccess('masterProductCategoryView')
+            )) {
                 $this->redirect(array('/site/login'));
+            }
         }
 
         $filterChain->run();
@@ -237,7 +247,7 @@ class ProductMasterCategoryController extends Controller {
                 $valid = false;
             }
             if ($valid) {
-                $this->saveTransactionLog($model);
+                $this->saveMasterLog($model);
         
                 $this->redirect(array('view', 'id' => $model->id));
             }
@@ -276,13 +286,16 @@ class ProductMasterCategoryController extends Controller {
      */
     public function actionUpdate($id) {
         $model = $this->loadModel($id);
+        $model->user_id_updated = Yii::app()->user->id;
+        $model->updated_datetime = date('Y-m-d H:i:s');
 
         // Uncomment the following line if AJAX validation is needed
         // $this->performAjaxValidation($model);
         $coaPersediaan = new Coa('search');
         $coaPersediaan->unsetAttributes();  // clear any default values
-        if (isset($_GET['Coa']))
+        if (isset($_GET['Coa'])) {
             $coaPersediaan->attributes = $_GET['Coa'];
+        }
         $coaPersediaanCriteria = new CDbCriteria;
         $coaPersediaanCriteria->addCondition("coa_sub_category_id = 4 and coa_id = 0 and code LIKE '%.000%'");
         $coaPersediaanCriteria->compare('code', $coaPersediaan->code . '%', true, 'AND', false);
@@ -293,8 +306,9 @@ class ProductMasterCategoryController extends Controller {
 
         $coaHpp = new Coa('search');
         $coaHpp->unsetAttributes();  // clear any default values
-        if (isset($_GET['Coa']))
+        if (isset($_GET['Coa'])) {
             $coaHpp->attributes = $_GET['Coa'];
+        }
         $coaHppCriteria = new CDbCriteria;
         $coaHppCriteria->addCondition("coa_sub_category_id = 44 and coa_id = 0 and code LIKE '%.000%'");
         $coaHppCriteria->compare('code', $coaHpp->code . '%', true, 'AND', false);
@@ -305,8 +319,9 @@ class ProductMasterCategoryController extends Controller {
 
         $coaPenjualan = new Coa('search');
         $coaPenjualan->unsetAttributes();  // clear any default values
-        if (isset($_GET['Coa']))
+        if (isset($_GET['Coa'])) {
             $coaPenjualan->attributes = $_GET['Coa'];
+        }
         $coaPenjualanCriteria = new CDbCriteria;
         $coaPenjualanCriteria->addCondition("coa_sub_category_id = 26 and coa_id = 0 and code LIKE '%.000%'");
         $coaPenjualanCriteria->compare('code', $coaPenjualan->code . '%', true, 'AND', false);
@@ -317,8 +332,9 @@ class ProductMasterCategoryController extends Controller {
 
         $coaRetur = new Coa('search');
         $coaRetur->unsetAttributes();  // clear any default values
-        if (isset($_GET['Coa']))
+        if (isset($_GET['Coa'])) {
             $coaRetur->attributes = $_GET['Coa'];
+        }
         $coaReturCriteria = new CDbCriteria;
         $coaReturCriteria->addCondition("coa_sub_category_id = 28 and coa_id = 0 and code LIKE '%.000%'");
         $coaReturCriteria->compare('code', $coaRetur->code . '%', true, 'AND', false);
@@ -329,8 +345,9 @@ class ProductMasterCategoryController extends Controller {
 
         $coaDiskon = new Coa('search');
         $coaDiskon->unsetAttributes();  // clear any default values
-        if (isset($_GET['Coa']))
+        if (isset($_GET['Coa'])) {
             $coaDiskon->attributes = $_GET['Coa'];
+        }
         $coaDiskonCriteria = new CDbCriteria;
         $coaDiskonCriteria->addCondition("coa_sub_category_id = 27 and coa_id = 0 and code LIKE '%.000%'");
         $coaDiskonCriteria->compare('code', $coaDiskon->code . '%', true, 'AND', false);
@@ -341,8 +358,9 @@ class ProductMasterCategoryController extends Controller {
 
         $coaReturPembelian = new Coa('search');
         $coaReturPembelian->unsetAttributes();  // clear any default values
-        if (isset($_GET['Coa']))
+        if (isset($_GET['Coa'])) {
             $coaReturPembelian->attributes = $_GET['Coa'];
+        }
         $coaReturPembelianCriteria = new CDbCriteria;
         $coaReturPembelianCriteria->addCondition("coa_sub_category_id = 48 and coa_id = 0 and code LIKE '%.000%'");
         $coaReturPembelianCriteria->compare('code', $coaReturPembelian->code . '%', true, 'AND', false);
@@ -353,8 +371,9 @@ class ProductMasterCategoryController extends Controller {
 
         $coaDiskonPembelian = new Coa('search');
         $coaDiskonPembelian->unsetAttributes();  // clear any default values
-        if (isset($_GET['Coa']))
+        if (isset($_GET['Coa'])) {
             $coaDiskonPembelian->attributes = $_GET['Coa'];
+        }
         $coaDiskonPembelianCriteria = new CDbCriteria;
         $coaDiskonPembelianCriteria->addCondition("coa_sub_category_id = 47 and coa_id = 0 and code LIKE '%.000%'");
         $coaDiskonPembelianCriteria->compare('code', $coaDiskonPembelian->code . '%', true, 'AND', false);
@@ -365,8 +384,9 @@ class ProductMasterCategoryController extends Controller {
 
         $coaInventory = new Coa('search');
         $coaInventory->unsetAttributes();  // clear any default values
-        if (isset($_GET['Coa']))
+        if (isset($_GET['Coa'])) {
             $coaInventory->attributes = $_GET['Coa'];
+        }
         $coaInventoryCriteria = new CDbCriteria;
         $coaInventoryCriteria->addCondition("coa_sub_category_id = 9 and coa_id = 0 and code LIKE '%.000%'");
         $coaInventoryCriteria->compare('code', $coaInventory->code . '%', true, 'AND', false);
@@ -377,8 +397,9 @@ class ProductMasterCategoryController extends Controller {
 
         $coaConsignment = new Coa('search');
         $coaConsignment->unsetAttributes();  // clear any default values
-        if (isset($_GET['Coa']))
+        if (isset($_GET['Coa'])) {
             $coaConsignment->attributes = $_GET['Coa'];
+        }
         $coaConsignmentCriteria = new CDbCriteria;
         $coaConsignmentCriteria->addCondition("coa_sub_category_id = 51 and coa_id = 0 and code LIKE '%.000%'");
         $coaConsignmentCriteria->compare('code', $coaConsignment->code . '%', true, 'AND', false);
@@ -437,7 +458,7 @@ class ProductMasterCategoryController extends Controller {
                 $valid = false;
             }
             if ($valid) {
-                $this->saveTransactionLog($model);
+                $this->saveMasterLog($model);
         
                 $this->redirect(array('view', 'id' => $model->id));
             }
@@ -469,22 +490,22 @@ class ProductMasterCategoryController extends Controller {
         ));
     }
 
-    public function saveTransactionLog($model) {
-        $transactionLog = new TransactionLog();
-        $transactionLog->name = $model->name;
-        $transactionLog->log_date = date('Y-m-d');
-        $transactionLog->log_time = date('H:i:s');
-        $transactionLog->table_name = $model->tableName();
-        $transactionLog->table_id = $model->id;
-        $transactionLog->user_id = Yii::app()->user->id;
-        $transactionLog->username = Yii::app()->user->username;
-        $transactionLog->controller_class = Yii::app()->controller->module->id  . '/' . Yii::app()->controller->id;
-        $transactionLog->action_name = Yii::app()->controller->action->id;
+    public function saveMasterLog($model) {
+        $masterLog = new TransactionLog();
+        $masterLog->name = $model->name;
+        $masterLog->log_date = date('Y-m-d');
+        $masterLog->log_time = date('H:i:s');
+        $masterLog->table_name = $model->tableName();
+        $masterLog->table_id = $model->id;
+        $masterLog->user_id = Yii::app()->user->id;
+        $masterLog->username = Yii::app()->user->username;
+        $masterLog->controller_class = Yii::app()->controller->module->id  . '/' . Yii::app()->controller->id;
+        $masterLog->action_name = Yii::app()->controller->action->id;
         
         $newData = $model->attributes;
-        $transactionLog->new_data = json_encode($newData);
+        $masterLog->new_data = json_encode($newData);
 
-        $transactionLog->save();
+        $masterLog->save();
     }
 
     /**
@@ -493,11 +514,18 @@ class ProductMasterCategoryController extends Controller {
      * @param integer $id the ID of the model to be deleted
      */
     public function actionDelete($id) {
-        $this->loadModel($id)->delete();
+        $model = $this->loadModel($id);
+        $model->is_deleted = 1;
+        $model->status = 'Deleted';
+        $model->user_id_deleted = Yii::app()->user->id;
+        $model->deleted_datetime = date('Y-m-d H:i:s');
+        $model->update(array('is_deleted', 'user_id_deleted', 'deleted_datetime', 'status'));
 
         // if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
-        if (!isset($_GET['ajax']))
+        if (!isset($_GET['ajax'])) {
+            $this->saveMasterLog($model);
             $this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
+        }
     }
 
     /**
@@ -516,8 +544,9 @@ class ProductMasterCategoryController extends Controller {
     public function actionAdmin() {
         $model = new ProductMasterCategory('search');
         $model->unsetAttributes();  // clear any default values
-        if (isset($_GET['ProductMasterCategory']))
+        if (isset($_GET['ProductMasterCategory'])) {
             $model->attributes = $_GET['ProductMasterCategory'];
+        }
 
         $this->render('admin', array(
             'model' => $model,
@@ -533,8 +562,11 @@ class ProductMasterCategoryController extends Controller {
      */
     public function loadModel($id) {
         $model = ProductMasterCategory::model()->findByPk($id);
-        if ($model === null)
+        
+        if ($model === null) {
             throw new CHttpException(404, 'The requested page does not exist.');
+        }
+        
         return $model;
     }
 

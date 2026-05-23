@@ -42,6 +42,12 @@ class EmployeeController extends Controller {
             }
         }
 
+        if ($filterChain->action->id === 'delete') {
+            if (!(Yii::app()->user->checkAccess('masterEmployeeApproval'))) {
+                $this->redirect(array('/site/login'));
+            }
+        }
+
         if ($filterChain->action->id === 'index') {
             if (!(Yii::app()->user->checkAccess('employeeBirthdateReport'))) {
                 $this->redirect(array('/site/login'));
@@ -91,6 +97,13 @@ class EmployeeController extends Controller {
      * If creation is successful, the browser will be redirected to the 'view' page.
      */
     public function actionCreate() {
+        $employee = $this->instantiate(null);
+        $employee->header->user_id = Yii::app()->user->id;
+        $employee->header->created_datetime = date('Y-m-d H:i:s');
+        $employee->header->clock_in_time = '08:30:00';
+        $employee->header->clock_out_time = '17:00:00';
+        $employee->header->birth_date = '1985-01-01';
+        
         $bank = new Bank('search');
         $bank->unsetAttributes();  // clear any default values
         if (isset($_GET['Bank'])) {
@@ -146,13 +159,6 @@ class EmployeeController extends Controller {
             'criteria' => $branchCriteria,
         ));
 
-        $employee = $this->instantiate(null);
-        $employee->header->user_id = Yii::app()->user->id;
-        $employee->header->created_datetime = date('Y-m-d H:i:s');
-        $employee->header->clock_in_time = '08:30:00';
-        $employee->header->clock_out_time = '17:00:00';
-        $employee->header->birth_date = '1985-01-01';
-        
         if (isset($_POST['Employee'])) {
             $this->loadState($employee);
             if ($employee->save(Yii::app()->db)) {
@@ -227,7 +233,6 @@ class EmployeeController extends Controller {
         $bankDataProvider = new CActiveDataProvider('Bank', array(
             'criteria' => $bankCriteria,
         ));
-
 
         // $this->performAjaxValidation($customer->header);
         $model = EmployeeBank::model()->findByPk($bankId);
@@ -360,7 +365,7 @@ class EmployeeController extends Controller {
     public function actionDelete($id) {
         $model = $this->loadModel($id);
         $model->is_deleted = 1;
-        $model->status = 'Inactive';
+        $model->status = 'Deleted';
         $model->deleted_by = Yii::app()->user->id;
         $model->deleted_at = date('Y-m-d H:i:s');
         $model->update(array('is_deleted', 'deleted_by', 'deleted_at', 'status'));

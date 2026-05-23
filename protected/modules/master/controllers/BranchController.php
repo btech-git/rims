@@ -21,23 +21,24 @@ class BranchController extends Controller {
             }
         }
 
-        if (
-            $filterChain->action->id === 'edit' || 
-            $filterChain->action->id === 'update' || 
-            $filterChain->action->id === 'updateDivision'
-        ) {
+        if ($filterChain->action->id === 'update' || $filterChain->action->id === 'updateDivision') {
             if (!(Yii::app()->user->checkAccess('masterBranchEdit'))) {
+                $this->redirect(array('/site/login'));
+            }
+        }
+
+        if ($filterChain->action->id === 'delete') {
+            if (!(Yii::app()->user->checkAccess('masterBranchApproval'))) {
                 $this->redirect(array('/site/login'));
             }
         }
 
         if (
             $filterChain->action->id === 'view' || 
-            $filterChain->action->id === 'addInterbranch' || 
             $filterChain->action->id === 'admin' || 
             $filterChain->action->id === 'index'
         ) {
-            if (!(Yii::app()->user->checkAccess('masterBranchCreate')) || !(Yii::app()->user->checkAccess('masterBranchEdit') ||
+            if (!(Yii::app()->user->checkAccess('masterBranchCreate') || Yii::app()->user->checkAccess('masterBranchEdit') ||
                     Yii::app()->user->checkAccess('masterBranchView') || Yii::app()->user->checkAccess('masterBranchApproval'))) {
                 $this->redirect(array('/site/login'));
             }
@@ -73,12 +74,15 @@ class BranchController extends Controller {
      */
     public function actionCreate() {
         $branch = $this->instantiate(null);
+        $branch->header->user_id_created = Yii::app()->user->id;
+        $branch->header->created_datetime = date('Y-m-d H:i:s');
 
         $warehouse = new Warehouse('search');
         $warehouse->unsetAttributes();  // clear any default values
         
-        if (isset($_GET['Warehouse']))
+        if (isset($_GET['Warehouse'])) {
             $warehouse->attributes = $_GET['Warehouse'];
+        }
 
         $warehouseCriteria = new CDbCriteria;
         $warehouseCriteria->addCondition("branch_id is null");
@@ -90,8 +94,9 @@ class BranchController extends Controller {
 
         $division = new Division('search');
         $division->unsetAttributes();  // clear any default values
-        if (isset($_GET['Division']))
+        if (isset($_GET['Division'])) {
             $division->attributes = $_GET['Division'];
+        }
 
         $divisionCriteria = new CDbCriteria;
         $divisionCriteria->compare('name', $division->name, true);
@@ -105,8 +110,9 @@ class BranchController extends Controller {
         $coaInterbranch = new Coa('search');
         $coaInterbranch->unsetAttributes();  // clear any default values
         
-        if (isset($_GET['Coa']))
+        if (isset($_GET['Coa'])) {
             $coaInterbranch->attributes = $_GET['Coa'];
+        }
         
         $coaInterbranchCriteria = new CDbCriteria;
         $coaInterbranchCriteria->addCondition("coa_sub_category_id = 7");
@@ -144,32 +150,32 @@ class BranchController extends Controller {
      * @param integer $id the ID of the model to be updated
      */
     public function actionUpdate($id) {
+        $branch = $this->instantiate($id);
+        $branch->header->user_id_updated = Yii::app()->user->id;
+        $branch->header->updated_datetime = date('Y-m-d H:i:s');
+        $this->performAjaxValidation($branch->header);
+
         $warehouse = new Warehouse('search');
         $warehouse->unsetAttributes();  // clear any default values
-        
-        if (isset($_GET['Position']))
-            $warehouse->attributes = $_GET['Position'];
-
+        if (isset($_GET['Warehouse'])) {
+            $warehouse->attributes = $_GET['Warehouse'];
+        }
         $warehouseCriteria = new CDbCriteria;
         $warehouseCriteria->compare('name', $warehouse->name, true);
-
         $warehouseDataProvider = new CActiveDataProvider('Warehouse', array(
             'criteria' => $warehouseCriteria,
         ));
 
         $division = new Division('search');
         $division->unsetAttributes();  // clear any default values
-        
-        if (isset($_GET['Division']))
+        if (isset($_GET['Division'])) {
             $division->attributes = $_GET['Division'];
-
+        }
         $divisionCriteria = new CDbCriteria;
         $divisionCriteria->compare('name', $division->name, true);
-
         $divisionDataProvider = new CActiveDataProvider('Division', array(
             'criteria' => $divisionCriteria,
         ));
-        
         $divisionArray = array();
         $divisionChecks = DivisionBranch::model()->findAllByAttributes(array('branch_id' => $id));
         
@@ -177,14 +183,12 @@ class BranchController extends Controller {
             array_push($divisionArray, $divisionCheck->division_id);
         }
 
-        $branch = $this->instantiate($id);
-        $this->performAjaxValidation($branch->header);
-
         $coaInterbranch = new Coa('search');
         $coaInterbranch->unsetAttributes();  // clear any default values
         
-        if (isset($_GET['Coa']))
+        if (isset($_GET['Coa'])) {
             $coaInterbranch->attributes = $_GET['Coa'];
+        }
         
         $coaInterbranchCriteria = new CDbCriteria;
         $coaInterbranchCriteria->addCondition("coa_sub_category_id = 7");
@@ -217,8 +221,9 @@ class BranchController extends Controller {
 
         $division = new Division('search');
         $division->unsetAttributes();  // clear any default values
-        if (isset($_GET['Division']))
+        if (isset($_GET['Division'])) {
             $division->attributes = $_GET['Division'];
+        }
 
         $divisionCriteria = new CDbCriteria;
         $divisionCriteria->compare('name', $division->name, true);
@@ -232,8 +237,9 @@ class BranchController extends Controller {
         if (isset($_POST['DivisionBranch'])) {
             $model->attributes = $_POST['DivisionBranch'];
             
-            if ($model->save())
+            if ($model->save()) {
                 $this->redirect(array('view', 'id' => $branchId));
+            }
         }
 
         $this->render('update', array(
@@ -249,9 +255,10 @@ class BranchController extends Controller {
 
         $interbranch = new Branch('search');
         $interbranch->unsetAttributes();  // clear any default values
-        if (isset($_GET['Branch']))
+        if (isset($_GET['Branch'])) {
             $interbranch->attributes = $_GET['Branch'];
-
+        }
+        
         $interbranchCriteria = new CDbCriteria;
         $interbranchCriteria->addCondition("id <> $id");
         $interbranchCriteria->compare('id', $interbranch->id);
@@ -265,14 +272,16 @@ class BranchController extends Controller {
             ),
         ));
 
-        if (isset($_POST['Cancel']))
+        if (isset($_POST['Cancel'])) {
             $this->redirect(array('view', 'id' => $branch->header->id));
+        }
 
         if (isset($_POST['Submit'])) {
             $this->loadState($branch);
 
-            if ($branch->save(Yii::app()->db))
+            if ($branch->save(Yii::app()->db)) {
                 $this->redirect(array('view', 'id' => $branch->header->id));
+            }
         }
 
         $this->render('addInterbranch', array(
@@ -288,11 +297,12 @@ class BranchController extends Controller {
             $this->loadState($branch);
 
             if (isset($_POST['selectedIds'])) {
-                $interbranchDetails = array();
+//                $interbranchDetails = array();
                 $interbranchDetails = $_POST['selectedIds'];
 
-                foreach ($interbranchDetails as $interbranchDetail)
+                foreach ($interbranchDetails as $interbranchDetail) {
                     $branch->addInterbranch($interbranchDetail);
+                }
             }
             
             $this->renderPartial('_detailInterbranch', array(
@@ -307,11 +317,18 @@ class BranchController extends Controller {
      * @param integer $id the ID of the model to be deleted
      */
     public function actionDelete($id) {
-        $this->loadModel($id)->delete();
+        $model = $this->loadModel($id);
+        $model->status = 'Deleted';
+        $model->user_id_deleted = Yii::app()->user->id;
+        $model->is_deleted = 1;
+        $model->deleted_datetime = date('Y-m-d H:i:s');
+        $model->update(array('status', 'is_deleted', 'user_id_deleted', 'deleted_datetime'));
 
         // if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
-        if (!isset($_GET['ajax']))
+        if (!isset($_GET['ajax'])) {
+            $this->saveMasterLog($model);
             $this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
+        }
     }
 
     /**
@@ -330,13 +347,32 @@ class BranchController extends Controller {
     public function actionAdmin() {
         $model = new Branch('search');
         $model->unsetAttributes();  // clear any default values
-        
-        if (isset($_GET['Branch']))
+         
+        if (isset($_GET['Branch'])) {
             $model->attributes = $_GET['Branch'];
+        }
 
         $this->render('admin', array(
             'model' => $model,
         ));
+    }
+
+    public function saveMasterLog($model) {
+        $masterLog = new MasterLog();
+        $masterLog->name = $model->name;
+        $masterLog->log_date = date('Y-m-d');
+        $masterLog->log_time = date('H:i:s');
+        $masterLog->table_name = $model->tableName();
+        $masterLog->table_id = $model->id;
+        $masterLog->user_id = Yii::app()->user->id;
+        $masterLog->username = Yii::app()->user->username;
+        $masterLog->controller_class = Yii::app()->controller->module->id  . '/' . Yii::app()->controller->id;
+        $masterLog->action_name = Yii::app()->controller->action->id;
+        
+        $newData = $model->attributes;
+        $masterLog->new_data = json_encode($newData);
+
+        $masterLog->save();
     }
 
     // Get City
@@ -486,78 +522,88 @@ class BranchController extends Controller {
         }
         if (isset($_POST['BranchWarehouse'])) {
             foreach ($_POST['BranchWarehouse'] as $i => $item) {
-                if (isset($branch->warehouseDetails[$i]))
+                if (isset($branch->warehouseDetails[$i])) {
                     $branch->warehouseDetails[$i]->attributes = $item;
-                else {
+                } else {
                     $detail = new BranchWarehouse();
                     $detail->attributes = $item;
                     $branch->warehouseDetails[] = $detail;
                 }
             }
-            if (count($_POST['BranchWarehouse']) < count($branch->warehouseDetails))
+            if (count($_POST['BranchWarehouse']) < count($branch->warehouseDetails)) {
                 array_splice($branch->warehouseDetails, $i + 1);
-        } else
+            }
+        } else {
             $branch->warehouseDetails = array();
+        }
 
         if (isset($_POST['DivisionBranch'])) {
             foreach ($_POST['DivisionBranch'] as $i => $item) {
-                if (isset($branch->divisionDetails[$i]))
+                if (isset($branch->divisionDetails[$i])) {
                     $branch->divisionDetails[$i]->attributes = $item;
-                else {
+                } else {
                     $detail = new DivisionBranch();
                     $detail->attributes = $item;
                     $branch->divisionDetails[] = $detail;
                 }
             }
-            if (count($_POST['DivisionBranch']) < count($branch->divisionDetails))
+            if (count($_POST['DivisionBranch']) < count($branch->divisionDetails)) {
                 array_splice($branch->divisionDetails, $i + 1);
-        } else
+            }
+        } else {
             $branch->divisionDetails = array();
+        }
 
         if (isset($_POST['BranchPhone'])) {
             foreach ($_POST['BranchPhone'] as $i => $item) {
-                if (isset($branch->phoneDetails[$i]))
+                if (isset($branch->phoneDetails[$i])) {
                     $branch->phoneDetails[$i]->attributes = $item;
-                else {
+                } else {
                     $detail = new BranchPhone();
                     $detail->attributes = $item;
                     $branch->phoneDetails[] = $detail;
                 }
             }
-            if (count($_POST['BranchPhone']) < count($branch->phoneDetails))
+            if (count($_POST['BranchPhone']) < count($branch->phoneDetails)) {
                 array_splice($branch->phoneDetails, $i + 1);
-        } else
+            }
+        } else {
             $branch->phoneDetails = array();
+        }
 
         if (isset($_POST['BranchFax'])) {
             foreach ($_POST['BranchFax'] as $i => $item) {
-                if (isset($branch->faxDetails[$i]))
+                if (isset($branch->faxDetails[$i])) {
                     $branch->faxDetails[$i]->attributes = $item;
-                else {
+                } else {
                     $detail = new BranchFax();
                     $detail->attributes = $item;
                     $branch->faxDetails[] = $detail;
                 }
             }
-            if (count($_POST['BranchFax']) < count($branch->faxDetails))
+            if (count($_POST['BranchFax']) < count($branch->faxDetails)) {
                 array_splice($branch->faxDetails, $i + 1);
-        } else
+            }
+        } else {
             $branch->faxDetails = array();
+        }
         
         if (isset($_POST['BranchCoaInterbranch'])) {
             foreach ($_POST['BranchCoaInterbranch'] as $i => $item) {
-                if (isset($branch->interbranchDetails[$i]))
+                if (isset($branch->interbranchDetails[$i])) {
                     $branch->interbranchDetails[$i]->attributes = $item;
-                else {
+                } else {
                     $detail = new BranchCoaInterbranch();
                     $detail->attributes = $item;
                     $branch->interbranchDetails[] = $detail;
                 }
             }
-            if (count($_POST['BranchCoaInterbranch']) < count($branch->interbranchDetails))
+            if (count($_POST['BranchCoaInterbranch']) < count($branch->interbranchDetails)) {
                 array_splice($branch->interbranchDetails, $i + 1);
-        } else
+            }
+        } else {
             $branch->interbranchDetails = array();
+        }
     }
 
     /**
@@ -569,8 +615,9 @@ class BranchController extends Controller {
      */
     public function loadModel($id) {
         $model = Branch::model()->findByPk($id);
-        if ($model === null)
+        if ($model === null) {
             throw new CHttpException(404, 'The requested page does not exist.');
+        }
         return $model;
     }
 
@@ -598,5 +645,4 @@ class BranchController extends Controller {
             echo CJSON::encode($object);
         }
     }
-
 }

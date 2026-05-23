@@ -8,10 +8,27 @@
  * @property string $name
  * @property string $code
  * @property integer $coa_category_id
+ * @property integer $is_approved
+ * @property integer $is_deleted
+ * @property integer $user_id_created
+ * @property integer $user_id_updated
+ * @property integer $user_id_approved
+ * @property integer $user_id_rejected
+ * @property integer $user_id_deleted
+ * @property string $created_datetime
+ * @property string $updated_datetime
+ * @property string $approved_datetime
+ * @property string $rejected_datetime
+ * @property string $deleted_datetime
  *
  * The followings are the available model relations:
  * @property CoaCategory $coaCategory
  * @property Coa[] $coas
+ * @property UserIdCreated $userIdCreated
+ * @property UserIdUpdated $userIdUpdated
+ * @property UserIdApproved $userIdApproved
+ * @property UserIdRejected $userIdRejected
+ * @property UserIdDeleted $userIdDeleted
  */
 class CoaSubCategory extends CActiveRecord {
 
@@ -30,12 +47,13 @@ class CoaSubCategory extends CActiveRecord {
         // will receive user inputs.
         return array(
             array('name, code, coa_category_id', 'required'),
-            array('coa_category_id', 'numerical', 'integerOnly' => true),
+            array('coa_category_id, user_id_approved, user_id_rejected, user_id_updated, user_id_deleted, user_id_created, is_deleted, is_approved', 'numerical', 'integerOnly' => true),
             array('name', 'length', 'max' => 50),
             array('code', 'length', 'max' => 10),
+            array('approved_datetime, rejected_datetime, updated_datetime, deleted_datetime, created_datetime', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, name, code, coa_category_id', 'safe', 'on' => 'search'),
+            array('id, name, code, coa_category_id, user_id_approved, user_id_rejected, user_id_updated, user_id_deleted, user_id_created, is_deleted, is_approved, approved_datetime, rejected_datetime, updated_datetime, deleted_datetime, created_datetime', 'safe', 'on' => 'search'),
         );
     }
 
@@ -48,6 +66,11 @@ class CoaSubCategory extends CActiveRecord {
         return array(
             'coaCategory' => array(self::BELONGS_TO, 'CoaCategory', 'coa_category_id'),
             'coas' => array(self::HAS_MANY, 'Coa', 'coa_sub_category_id'),
+            'userIdCreated' => array(self::BELONGS_TO, 'Users', 'user_id_created'),
+            'userIdUpdated' => array(self::BELONGS_TO, 'Users', 'user_id_updated'),
+            'userIdApproved' => array(self::BELONGS_TO, 'Users', 'user_id_approved'),
+            'userIdRejected' => array(self::BELONGS_TO, 'Users', 'user_id_rejected'),
+            'userIdDeleted' => array(self::BELONGS_TO, 'Users', 'user_id_deleted'),
         );
     }
 
@@ -63,18 +86,6 @@ class CoaSubCategory extends CActiveRecord {
         );
     }
 
-    /**
-     * Retrieves a list of models based on the current search/filter conditions.
-     *
-     * Typical usecase:
-     * - Initialize the model fields with values from filter form.
-     * - Execute this method to get CActiveDataProvider instance which will filter
-     * models according to data in model fields.
-     * - Pass data provider to CGridView, CListView or any similar widget.
-     *
-     * @return CActiveDataProvider the data provider that can return the models
-     * based on the search/filter conditions.
-     */
     public function search() {
         // @todo Please modify the following code to remove attributes that should not be searched.
 
@@ -103,8 +114,9 @@ class CoaSubCategory extends CActiveRecord {
     public function getBalanceTotal($endDate, $branchId) {
         $balanceTotal = 0.00;
 
-        foreach ($this->coas as $accountCategory)
+        foreach ($this->coas as $accountCategory) {
             $balanceTotal += $accountCategory->getBalanceTotal($endDate, $branchId);
+        }
 
         return $balanceTotal;
     }
@@ -112,8 +124,9 @@ class CoaSubCategory extends CActiveRecord {
     public function getProfitLossBalance($startDate, $endDate, $branchId) {
         $balanceTotal = 0.00;
 
-        foreach ($this->coas as $accountCategory)
+        foreach ($this->coas as $accountCategory) {
             $balanceTotal += $accountCategory->getProfitLossBalance($startDate, $endDate, $branchId);
+        }
 
         return $balanceTotal;
     }

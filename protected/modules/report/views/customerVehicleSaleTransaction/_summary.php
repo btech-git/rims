@@ -46,6 +46,8 @@
                 <th class="width1-6">Plate #</th>
                 <th class="width1-7">Status</th>
                 <th class="width1-8">Problem</th>
+                <th class="width1-8">Sales Front</th>
+                <th class="width1-8">Mekanik</th>
                 <th class="width1-9">KM Sebelum</th>
                 <th class="width1-10">KM Sekarang</th>
                 <th class="width1-11">KM Selanjutnya</th>
@@ -70,6 +72,8 @@
                     <td class="width1-6"><?php echo CHtml::encode(CHtml::value($header, 'vehicle.plate_number')); ?></td>
                     <td class="width1-7"><?php echo CHtml::encode(CHtml::value($header, 'status')); ?></td>
                     <td class="width1-8"><?php echo CHtml::encode(CHtml::value($header, 'problem')); ?></td>
+                    <td class="width1-8"><?php echo CHtml::encode(CHtml::value($header, 'employeeIdSalesPerson.name')); ?></td>
+                    <td class="width1-8"><?php echo CHtml::encode(CHtml::value($header, 'employeeIdAssignMechanic.name')); ?></td>
                     <td class="width1-9" style="text-align:right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($header, 'previous_mileage'))); ?></td>
                     <td class="width1-10" style="text-align:right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($header, 'vehicle_mileage'))); ?></td>
                     <td class="width1-11" style="text-align:right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($header, 'next_mileage'))); ?></td>

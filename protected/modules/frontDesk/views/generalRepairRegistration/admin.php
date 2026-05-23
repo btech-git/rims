@@ -55,6 +55,7 @@ Yii::app()->clientScript->registerScript('search', "
                 'carMake' => $carMake,
                 'carModel' => $carModel,
                 'customerName' => $customerName,
+                'tabIndex' => $tabIndex,
             )); ?>
         </div><!-- search-form -->
     </div>
@@ -70,6 +71,7 @@ Yii::app()->clientScript->registerScript('search', "
             // additional javascript options for the tabs plugin
             'options' => array(
                 'collapsible' => true,
+                'active' => $tabIndex,
             ),
             // set id for this widgets
             'id' => 'view_tab',
@@ -114,5 +116,10 @@ Yii::app()->clientScript->registerScript('search', "
                 window.location.href = 'view?id=' + $(this).attr('data-record-id');
             }
         });
+    });
+
+    $('.yiiPager').click(function(e) {
+        e.preventDefault();
+        window.location.href = e.target.href + '&TabIndex=' + $(this).next().text();
     });
 </script>

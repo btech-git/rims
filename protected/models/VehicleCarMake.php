@@ -11,6 +11,15 @@
  * @property integer $is_approved
  * @property integer $user_id
  * @property string $created_datetime
+ * @property integer $is_deleted
+ * @property integer $user_id_updated
+ * @property integer $user_id_approved
+ * @property integer $user_id_rejected
+ * @property integer $user_id_deleted
+ * @property string $updated_datetime
+ * @property string $approved_datetime
+ * @property string $rejected_datetime
+ * @property string $deleted_datetime
  *
  * The followings are the available model relations:
  * @property ChasisCode[] $chasisCodes
@@ -22,6 +31,10 @@
  * @property VehicleCarSubModel[] $vehicleCarSubModels
  * @property VehicleCarSubModelDetail[] $vehicleCarSubModelDetails
  * @property User $user
+ * @property UserIdUpdated $userIdUpdated
+ * @property UserIdApproved $userIdApproved
+ * @property UserIdRejected $userIdRejected
+ * @property UserIdDeleted $userIdDeleted
  */
 class VehicleCarMake extends CActiveRecord {
 
@@ -52,10 +65,11 @@ class VehicleCarMake extends CActiveRecord {
             array('name, status, service_difficulty_rate, user_id', 'required'),
             array('name', 'length', 'max' => 30),
             array('status', 'length', 'max' => 10),
-            array('service_difficulty_rate, is_approved, user_id', 'numerical', 'integerOnly' => true),
+            array('service_difficulty_rate, is_approved, user_id, user_id_approved, user_id_rejected, user_id_updated, user_id_deleted, is_deleted', 'numerical', 'integerOnly' => true),
+            array('approved_datetime, rejected_datetime, updated_datetime, deleted_datetime, created_datetime', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, name, status, service_difficulty_rate, is_approved, created_datetime, user_id', 'safe', 'on' => 'search'),
+            array('id, name, status, service_difficulty_rate, is_approved, created_datetime, user_id, user_id_approved, user_id_rejected, user_id_updated, user_id_deleted, is_deleted, approved_datetime, rejected_datetime, updated_datetime, deleted_datetime', 'safe', 'on' => 'search'),
         );
     }
 
@@ -75,6 +89,10 @@ class VehicleCarMake extends CActiveRecord {
             'vehicleCarSubModels' => array(self::HAS_MANY, 'VehicleCarSubModel', 'car_make_id'),
             'vehicleCarSubModelDetails' => array(self::HAS_MANY, 'VehicleCarSubModelDetail', 'car_make_id'),
             'user' => array(self::BELONGS_TO, 'Users', 'user_id'),
+            'userIdUpdated' => array(self::BELONGS_TO, 'Users', 'user_id_updated'),
+            'userIdApproved' => array(self::BELONGS_TO, 'Users', 'user_id_approved'),
+            'userIdRejected' => array(self::BELONGS_TO, 'Users', 'user_id_rejected'),
+            'userIdDeleted' => array(self::BELONGS_TO, 'Users', 'user_id_deleted'),
         );
     }
 
@@ -92,18 +110,6 @@ class VehicleCarMake extends CActiveRecord {
         );
     }
 
-    /**
-     * Retrieves a list of models based on the current search/filter conditions.
-     *
-     * Typical usecase:
-     * - Initialize the model fields with values from filter form.
-     * - Execute this method to get CActiveDataProvider instance which will filter
-     * models according to data in model fields.
-     * - Pass data provider to CGridView, CListView or any similar widget.
-     *
-     * @return CActiveDataProvider the data provider that can return the models
-     * based on the search/filter conditions.
-     */
     public function search() {
         // @todo Please modify the following code to remove attributes that should not be searched.
 

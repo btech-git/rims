@@ -17,16 +17,21 @@ class SubBrandController extends Controller {
     public function filterAccess($filterChain) {
         if ($filterChain->action->id === 'create'
         ) {
-            if (!(Yii::app()->user->checkAccess('masterSubBrandCreate')))
+            if (!(Yii::app()->user->checkAccess('masterSubBrandCreate'))) {
                 $this->redirect(array('/site/login'));
+            }
         }
 
-        if (
-            $filterChain->action->id === 'update' || 
-            $filterChain->action->id === 'delete'
-        ) {
-            if (!(Yii::app()->user->checkAccess('masterSubBrandEdit')))
+        if ($filterChain->action->id === 'update') {
+            if (!(Yii::app()->user->checkAccess('masterSubBrandEdit'))) {
                 $this->redirect(array('/site/login'));
+            }
+        }
+
+        if ($filterChain->action->id === 'delete') {
+            if (!(Yii::app()->user->checkAccess('masterSubBrandApproval'))) {
+                $this->redirect(array('/site/login'));
+            }
         }
 
         if (
@@ -34,8 +39,13 @@ class SubBrandController extends Controller {
             $filterChain->action->id === 'admin' || 
             $filterChain->action->id === 'index'
         ) {
-            if (!(Yii::app()->user->checkAccess('masterSubBrandCreate')) || !(Yii::app()->user->checkAccess('masterSubBrandEdit')))
+            if (!(
+                Yii::app()->user->checkAccess('masterSubBrandCreate') || 
+                Yii::app()->user->checkAccess('masterSubBrandEdit') || 
+                Yii::app()->user->checkAccess('masterSubBrandView')
+            )) {
                 $this->redirect(array('/site/login'));
+            }
         }
 
         $filterChain->run();
@@ -57,6 +67,8 @@ class SubBrandController extends Controller {
      */
     public function actionCreate() {
         $model = new SubBrand;
+        $model->user_id_created = Yii::app()->user->id;
+        $model->created_datetime = date('Y-m-d H:i:s');
 
         // Uncomment the following line if AJAX validation is needed
         // $this->performAjaxValidation($model);
@@ -64,8 +76,7 @@ class SubBrandController extends Controller {
         if (isset($_POST['SubBrand'])) {
             $model->attributes = $_POST['SubBrand'];
             if ($model->save()) {
-                $this->saveTransactionLog($model);
-        
+                $this->saveMasterLog($model);
                 $this->redirect(array('view', 'id' => $model->id));
             }
         }
@@ -82,6 +93,8 @@ class SubBrandController extends Controller {
      */
     public function actionUpdate($id) {
         $model = $this->loadModel($id);
+        $model->user_id_updated = Yii::app()->user->id;
+        $model->updated_datetime = date('Y-m-d H:i:s');
 
         // Uncomment the following line if AJAX validation is needed
         // $this->performAjaxValidation($model);
@@ -90,8 +103,7 @@ class SubBrandController extends Controller {
             $model->attributes = $_POST['SubBrand'];
             
             if ($model->save()) {
-                $this->saveTransactionLog($model);
-        
+                $this->saveMasterLog($model);
                 $this->redirect(array('view', 'id' => $model->id));
             }
         }
@@ -101,7 +113,7 @@ class SubBrandController extends Controller {
         ));
     }
 
-    public function saveTransactionLog($model) {
+    public function saveMasterLog($model) {
         $transactionLog = new MasterLog();
         $transactionLog->name = $model->name;
         $transactionLog->log_date = date('Y-m-d');
@@ -125,11 +137,17 @@ class SubBrandController extends Controller {
      * @param integer $id the ID of the model to be deleted
      */
     public function actionDelete($id) {
-        $this->loadModel($id)->delete();
+        $model = $this->loadModel($id);
+        $model->is_deleted = 1;
+        $model->user_id_deleted = Yii::app()->user->id;
+        $model->deleted_datetime = date('Y-m-d H:i:s');
+        $model->update(array('is_deleted', 'user_id_deleted', 'deleted_datetime'));
 
         // if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
-        if (!isset($_GET['ajax']))
+        if (!isset($_GET['ajax'])) {
+            $this->saveMasterLog($model);
             $this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
+        }
     }
 
     /**
@@ -148,8 +166,9 @@ class SubBrandController extends Controller {
     public function actionAdmin() {
         $model = new SubBrand('search');
         $model->unsetAttributes();  // clear any default values
-        if (isset($_GET['SubBrand']))
+        if (isset($_GET['SubBrand'])) {
             $model->attributes = $_GET['SubBrand'];
+        }
 
         $this->render('admin', array(
             'model' => $model,
@@ -165,8 +184,11 @@ class SubBrandController extends Controller {
      */
     public function loadModel($id) {
         $model = SubBrand::model()->findByPk($id);
-        if ($model === null)
+        
+        if ($model === null) {
             throw new CHttpException(404, 'The requested page does not exist.');
+        }
+        
         return $model;
     }
 
@@ -180,5 +202,4 @@ class SubBrandController extends Controller {
             Yii::app()->end();
         }
     }
-
 }
