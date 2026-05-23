@@ -46,10 +46,10 @@
                     'name' => 'customer_name', 
                     'value' => '$data->customer->name'
                 ),
-//                array(
-//                    'name' => 'company_bank', 
-//                    'value' => '$data->companyBank->account_name'
-//                ),
+                array(
+                    'name' => 'company_bank', 
+                    'value' => '$data->companyBank->account_name'
+                ),
 //                array(
 //                    'name' => 'payment_type_id', 
 //                    'value' => '$data->paymentType->name'
