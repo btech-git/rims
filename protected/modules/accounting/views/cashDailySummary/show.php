@@ -42,10 +42,10 @@
                     'name' => 'payment_date', 
                     'value' => 'CHtml::encode(Yii::app()->dateFormatter->format("d MMM yyyy", $data->payment_date))',
                 ),
-//                array(
-//                    'name' => 'customer_name', 
-//                    'value' => '$data->customer->name'
-//                ),
+                array(
+                    'name' => 'customer_name', 
+                    'value' => '$data->customer->name'
+                ),
 //                array(
 //                    'name' => 'company_bank', 
 //                    'value' => '$data->companyBank->account_name'
