@@ -48,12 +48,12 @@
                 ),
                 array(
                     'name' => 'company_bank', 
-                    'value' => '$data->companyBank->account_name'
+                    'value' => 'CHtml::encode(CHtml::value($data, "companyBank.account_name"))',
                 ),
-//                array(
-//                    'name' => 'payment_type_id', 
-//                    'value' => '$data->paymentType->name'
-//                ),
+                array(
+                    'name' => 'payment_type_id', 
+                    'value' => '$data->paymentType->name'
+                ),
                 array(
                     'header' => 'Payment', 
                     'value' => 'AppHelper::formatMoney($data->payment_amount)',
