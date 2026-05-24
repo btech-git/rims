@@ -298,7 +298,7 @@ class TransactionJournalController extends Controller {
             $model = TransactionReturnOrder::model()->findByAttributes(array('return_order_no' => $codeNumber));
             $this->redirect(array('/transaction/transactionReturnOrder/view', 'id' => $model->id));
         } else if ($codeNumberConstant === 'JBB') {
-            $model = JournalBeginningHeader::model()->findByAttributes(array('return_order_no' => $codeNumber));
+            $model = JournalBeginningHeader::model()->findByAttributes(array('transaction_number' => $codeNumber));
             $this->redirect(array('/accounting/journalBeginning/view', 'id' => $model->id));
         }
     }
