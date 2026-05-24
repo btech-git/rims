@@ -30,7 +30,7 @@
             
                     <tr>
                         <td style="font-weight: bold; background-color: bisque; padding-left: <?php echo 32 * ($previousLevel - 1); ?>px">Total <?php echo CHtml::encode($profitLossReportData[$coaParentCodes[$previousLevel]]['name']); ?></td>
-                        <td style="font-weight: bold; background-color: bisque; text-align: right"><?php echo CHtml::encode($amountSum === '' ? '' : Yii::app()->numberFormatter->format('#,##0.00', $amountSum)); ?></td>
+                        <td style="font-weight: bold; background-color: bisque; color: <?php echo $amountSum < 0 ? 'red': 'black'; ?>; text-align: right"><?php echo CHtml::encode($amountSum === '' ? '' : Yii::app()->numberFormatter->format('#,##0.00', $amountSum)); ?></td>
                     </tr>
                     
                     <?php $previousLevel--; ?>
@@ -40,7 +40,7 @@
                     <?php $grossProfit = $accountGroupSums[4] - $accountGroupSums[5]; ?>
                     <tr>
                         <td style="font-weight: bold; background-color: greenyellow; padding-left: 16px">Laba Kotor</td>
-                        <td style="font-weight: bold; background-color: greenyellow; text-align: right"><?php echo CHtml::encode($grossProfit === '' ? '' : Yii::app()->numberFormatter->format('#,##0.00', $grossProfit)); ?></td>
+                        <td style="font-weight: bold; background-color: greenyellow; color: <?php echo $grossProfit < 0 ? 'red': 'black'; ?>; text-align: right"><?php echo CHtml::encode($grossProfit === '' ? '' : Yii::app()->numberFormatter->format('#,##0.00', $grossProfit)); ?></td>
                     </tr>
                 <?php endif; ?>
                     
@@ -60,7 +60,7 @@
             
                     <tr>
                         <td style="font-weight: bold; background-color: bisque; padding-left: <?php echo 32 * ($previousLevel - 1); ?>px">Total <?php echo CHtml::encode($profitLossReportData[$coaParentCodes[$previousLevel]]['name']); ?></td>
-                        <td style="font-weight: bold; background-color: bisque; text-align: right"><?php echo CHtml::encode($amountSum === '' ? '' : Yii::app()->numberFormatter->format('#,##0.00', $amountSum)); ?></td>
+                        <td style="font-weight: bold; background-color: bisque; color: <?php echo $amountSum < 0 ? 'red': 'black'; ?>; text-align: right"><?php echo CHtml::encode($amountSum === '' ? '' : Yii::app()->numberFormatter->format('#,##0.00', $amountSum)); ?></td>
                     </tr>
                     
                     <?php $previousLevel--; ?>
@@ -69,7 +69,7 @@
             <?php $netProfit = $accountGroupSums[4] - $accountGroupSums[5] - $accountGroupSums[6] + $accountGroupSums[7] - $accountGroupSums[8]; ?>
             <tr>
                 <td style="font-weight: bold; background-color: greenyellow; padding-left: 16px">Laba Bersih</td>
-                <td style="font-weight: bold; background-color: greenyellow; text-align: right"><?php echo CHtml::encode($netProfit === '' ? '' : Yii::app()->numberFormatter->format('#,##0.00', $netProfit)); ?></td>
+                <td style="font-weight: bold; background-color: greenyellow; color: <?php echo $netProfit < 0 ? 'red': 'black'; ?>; text-align: right"><?php echo CHtml::encode($netProfit === '' ? '' : Yii::app()->numberFormatter->format('#,##0.00', $netProfit)); ?></td>
             </tr>
         </tbody>
     </table>

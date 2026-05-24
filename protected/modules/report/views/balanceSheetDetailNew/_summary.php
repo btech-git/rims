@@ -34,7 +34,7 @@
             
                     <tr>
                         <td style="font-weight: bold; background-color: bisque; padding-left: <?php echo 32 * ($previousLevel - 1); ?>px">Total <?php echo CHtml::encode($balanceSheetReportData[$coaParentCodes[$previousLevel]]['name']); ?></td>
-                        <td style="font-weight: bold; background-color: bisque; text-align: right"><?php echo CHtml::encode($amountSum === '' ? '' : Yii::app()->numberFormatter->format('#,##0.00', $amountSum)); ?></td>
+                        <td style="font-weight: bold; background-color: bisque; color: <?php echo $amountSum < 0 ? 'red': 'black'; ?>; text-align: right"><?php echo CHtml::encode($amountSum === '' ? '' : Yii::app()->numberFormatter->format('#,##0.00', $amountSum)); ?></td>
                     </tr>
                     
                     <?php $previousLevel--; ?>
@@ -42,7 +42,7 @@
                     
                 <tr>
                     <td style="padding-left: <?php echo 32 * $balanceSheetReportItem['level']; ?>px"><?php echo CHtml::encode($coaCode); ?> - <?php echo CHtml::encode($balanceSheetReportItem['name']); ?></td>
-                    <td style="text-align: right"><?php echo CHtml::encode($balance === '' ? '' : Yii::app()->numberFormatter->format('#,##0.00', $balance)); ?></td>
+                    <td style="text-align: right; color: <?php echo $balance < 0 ? 'red': 'black'; ?>;"><?php echo CHtml::encode($balance === '' ? '' : Yii::app()->numberFormatter->format('#,##0.00', $balance)); ?></td>
                 </tr>
                     
                 <?php $previousLevel = $currentLevel; ?>
@@ -56,7 +56,7 @@
             
                     <tr>
                         <td style="font-weight: bold; background-color: bisque; padding-left: <?php echo 32 * ($previousLevel - 1); ?>px">Total <?php echo CHtml::encode($balanceSheetReportData[$coaParentCodes[$previousLevel]]['name']); ?></td>
-                        <td style="font-weight: bold; background-color: bisque; text-align: right"><?php echo CHtml::encode($amountSum === '' ? '' : Yii::app()->numberFormatter->format('#,##0.00', $amountSum)); ?></td>
+                        <td style="font-weight: bold; background-color: bisque; color: <?php echo $amountSum < 0 ? 'red': 'black'; ?>; text-align: right"><?php echo CHtml::encode($amountSum === '' ? '' : Yii::app()->numberFormatter->format('#,##0.00', $amountSum)); ?></td>
                     </tr>
                     
                     <?php $previousLevel--; ?>
