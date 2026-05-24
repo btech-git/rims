@@ -33,8 +33,8 @@
                     <?php $balances[$previousLevel - 1]['amounts'][] = $amountSum; ?>
             
                     <tr>
-                        <td style="padding-left: <?php echo 32 * ($previousLevel - 1); ?>px">Total <?php echo CHtml::encode($balanceSheetReportData[$coaParentCodes[$previousLevel]]['name']); ?></td>
-                        <td style="text-align: right"><?php echo CHtml::encode($amountSum === '' ? '' : Yii::app()->numberFormatter->format('#,##0.00', $amountSum)); ?></td>
+                        <td style="font-weight: bold; background-color: bisque; padding-left: <?php echo 32 * ($previousLevel - 1); ?>px">Total <?php echo CHtml::encode($balanceSheetReportData[$coaParentCodes[$previousLevel]]['name']); ?></td>
+                        <td style="font-weight: bold; background-color: bisque; text-align: right"><?php echo CHtml::encode($amountSum === '' ? '' : Yii::app()->numberFormatter->format('#,##0.00', $amountSum)); ?></td>
                     </tr>
                     
                     <?php $previousLevel--; ?>
@@ -55,8 +55,8 @@
                     <?php $balances[$previousLevel - 1]['amounts'][] = $amountSum; ?>
             
                     <tr>
-                        <td style="padding-left: <?php echo 32 * ($previousLevel - 1); ?>px">Total <?php echo CHtml::encode($balanceSheetReportData[$coaParentCodes[$previousLevel]]['name']); ?></td>
-                        <td style="text-align: right"><?php echo CHtml::encode($amountSum === '' ? '' : Yii::app()->numberFormatter->format('#,##0.00', $amountSum)); ?></td>
+                        <td style="font-weight: bold; background-color: bisque; padding-left: <?php echo 32 * ($previousLevel - 1); ?>px">Total <?php echo CHtml::encode($balanceSheetReportData[$coaParentCodes[$previousLevel]]['name']); ?></td>
+                        <td style="font-weight: bold; background-color: bisque; text-align: right"><?php echo CHtml::encode($amountSum === '' ? '' : Yii::app()->numberFormatter->format('#,##0.00', $amountSum)); ?></td>
                     </tr>
                     
                     <?php $previousLevel--; ?>
