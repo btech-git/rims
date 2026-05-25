@@ -91,7 +91,7 @@
             <div class="field">
                 <div class="row collapse">
                     <div class="small-4 columns">
-                        <?php echo $form->label($model,'coa_id', array('class'=>'prefix')); ?>
+                        <?php echo $form->label($model, 'COA Asal', array('class'=>'prefix')); ?>
                     </div>
                     <div class="small-8 columns">
                         <?php echo CHtml::textField('CoaId', $coaId, array(
@@ -111,7 +111,7 @@
             <div class="field">
                 <div class="row collapse">
                     <div class="small-4 columns">
-                        <?php echo 'COA Detail'; ?>
+                        <?php echo $form->label($model, 'COA Tujuan', array('class'=>'prefix')); ?>
                     </div>
                     <div class="small-8 columns">
                         <?php echo CHtml::textField('CoaIdDetail', $coaIdDetail, array(
@@ -176,7 +176,7 @@
                 <tbody>
                     <tr>
                         <td>
-                            <?php echo CHtml::activeTextField($coa, 'code', array(
+                            <?php echo CHtml::textField('CodeHeader', $codeHeader, array(
                                 'onchange' => '
                                 $.fn.yiiGridView.update("coa-detail-grid", {data: {Coa: {
                                     code: $(this).val(),
@@ -188,7 +188,7 @@
                         </td>
                         
                         <td>
-                            <?php echo CHtml::activeTextField($coa, 'name', array(
+                            <?php echo CHtml::textField('NameHeader', $nameHeader, array(
                                 'onchange' => '
                                 $.fn.yiiGridView.update("coa-detail-grid", {data: {Coa: {
                                     name: $(this).val(),
@@ -200,7 +200,7 @@
                         </td>
                         
                         <td>
-                            <?php echo CHtml::activeDropDownList($coa, 'coa_category_id', CHtml::listData(CoaCategory::model()->findAll(array('order' => 'name')), 'id', 'name'), array(
+                            <?php echo CHtml::dropDownList('CoaCategoryHeaderId', $coaCategoryHeaderId, CHtml::listData(CoaCategory::model()->findAll(array('order' => 'name')), 'id', 'name'), array(
                                 'empty' => '-- All --',
                                 'onchange' => CHtml::ajax(array(
                                     'type' => 'GET',
@@ -218,7 +218,7 @@
                         
                         <td>
                             <div id="sub_category">
-                                <?php echo CHtml::activeDropDownList($coa, 'coa_sub_category_id', CHtml::listData(CoaSubCategory::model()->findAll(array('order' => 'name')), 'id', 'name'), array(
+                                <?php echo CHtml::dropDownList('CoaSubCategoryHeaderId', $coaSubCategoryHeaderId, CHtml::listData(CoaSubCategory::model()->findAll(array('order' => 'name')), 'id', 'name'), array(
                                     'empty' => '-- All --',
                                     'onchange' => '
                                     $.fn.yiiGridView.update("coa-detail-grid", {data: {Coa: {
@@ -305,6 +305,66 @@
                         <td>Sub Category</td>
                     </tr>
                 </thead>
+                
+                <tbody>
+                    <tr>
+                        <td>
+                            <?php echo CHtml::textField('CodeDetail', $codeDetail, array(
+                                'onchange' => '
+                                $.fn.yiiGridView.update("coa-detail-grid", {data: {Coa: {
+                                    code: $(this).val(),
+                                    name: $("#coa_name").val(),
+                                    coa_category_id: $("#coa_category_id").val(),
+                                    coa_sub_category_id: $("#coa_sub_category_id").val(),
+                                } } });',
+                            )); ?>
+                        </td>
+                        
+                        <td>
+                            <?php echo CHtml::textField('NameDetail', $nameDetail, array(
+                                'onchange' => '
+                                $.fn.yiiGridView.update("coa-detail-grid", {data: {Coa: {
+                                    name: $(this).val(),
+                                    code: $("#coa_code").val(),
+                                    coa_category_id: $("#coa_category_id").val(),
+                                    coa_sub_category_id: $("#coa_sub_category_id").val(),
+                                } } });',
+                            )); ?>
+                        </td>
+                        
+                        <td>
+                            <?php echo CHtml::dropDownList('CoaCategoryDetailId', $coaCategoryDetailId, CHtml::listData(CoaCategory::model()->findAll(array('order' => 'name')), 'id', 'name'), array(
+                                'empty' => '-- All --',
+                                'onchange' => CHtml::ajax(array(
+                                    'type' => 'GET',
+                                    'url' => CController::createUrl('ajaxHtmlUpdateSubCategorySelect'),
+                                    'update' => '#sub_category',
+                                )) . '$.fn.yiiGridView.update("coa-detail-grid", {data: {Coa: {
+                                    coa_category_id: $(this).val(),
+                                    id: $("#coa_id").val(),
+                                    code: $("#coa_code").val(),
+                                    name: $("#coa_name").val(),
+                                    coa_sub_category_id: $("#coa_sub_category_id").val(),
+                                } } });',
+                            )); ?>
+                        </td>
+                        
+                        <td>
+                            <div id="sub_category">
+                                <?php echo CHtml::dropDownList('CoaSubCategoryDetailId', $coaSubCategoryDetailId, CHtml::listData(CoaSubCategory::model()->findAll(array('order' => 'name')), 'id', 'name'), array(
+                                    'empty' => '-- All --',
+                                    'onchange' => '
+                                    $.fn.yiiGridView.update("coa-detail-grid", {data: {Coa: {
+                                        coa_sub_category_id: $(this).val(),
+                                        code: $("#coa_code").val(),
+                                        coa_category_id: $("#coa_category_id").val(),
+                                        name: $("#coa_name").val(),
+                                    } } });',
+                                )); ?>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
             </table>
             
             <?php $this->widget('zii.widgets.grid.CGridView', array(

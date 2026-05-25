@@ -166,6 +166,7 @@ class Invoices extends CComponent {
             $this->header->is_new_customer = $invoiceHeader === null ? 1 : 0;
         }
         
+        $this->header->status = $this->header->payment_left == 0 ? 'PAID' : "Approved";
         $this->header->total_discount = $this->getTotalDiscount();
         $valid = $this->header->save();
 
@@ -476,7 +477,7 @@ class Invoices extends CComponent {
     }
     
     public function getTotalDiscount() {
-        $total = 0;
+        $total = '0.00';
         
         foreach($this->details as $detail) {
             $total += $detail->discount;

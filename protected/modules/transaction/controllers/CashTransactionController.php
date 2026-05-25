@@ -312,6 +312,14 @@ class CashTransactionController extends Controller {
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : '';
         $coaId = (isset($_GET['CoaId'])) ? $_GET['CoaId'] : '';
         $coaIdDetail = (isset($_GET['CoaIdDetail'])) ? $_GET['CoaIdDetail'] : '';
+        $codeHeader = (isset($_GET['CodeHeader'])) ? $_GET['CodeHeader'] : '';
+        $nameHeader = (isset($_GET['NameHeader'])) ? $_GET['NameHeader'] : '';
+        $coaCategoryHeaderId = (isset($_GET['CoaCategoryHeaderId'])) ? $_GET['CoaCategoryHeaderId'] : '';
+        $coaSubCategoryHeaderId = (isset($_GET['CoaSubCategoryHeaderId'])) ? $_GET['CoaSubCategoryHeaderId'] : '';
+        $codeDetail = (isset($_GET['CodeDetail'])) ? $_GET['CodeDetail'] : '';
+        $nameDetail = (isset($_GET['NameDetail'])) ? $_GET['NameDetail'] : '';
+        $coaCategoryDetailId = (isset($_GET['CoaCategoryDetailId'])) ? $_GET['CoaCategoryDetailId'] : '';
+        $coaSubCategoryDetailId = (isset($_GET['CoaSubCategoryDetailId'])) ? $_GET['CoaSubCategoryDetailId'] : '';
         
         $cashInTransactionDataProvider = $model->search();
         $cashInTransactionDataProvider->criteria->addCondition('t.transaction_type = "In"');
