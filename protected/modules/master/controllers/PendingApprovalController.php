@@ -46,15 +46,15 @@ class PendingApprovalController extends Controller {
 
         $productMasterCategory = Search::bind(new ProductMasterCategory('search'), isset($_GET['ProductMasterCategory']) ? $_GET['ProductMasterCategory'] : '');
         $productMasterCategoryDataProvider = $productMasterCategory->search();
-        $productMasterCategoryDataProvider->criteria->addCondition('t.is_approved = 0 AND t.user_id_rejected IS NULL');
+        $productMasterCategoryDataProvider->criteria->addCondition('t.is_approved = 0 AND t.user_id_reject IS NULL');
 
         $productSubMasterCategory = Search::bind(new ProductSubMasterCategory('search'), isset($_GET['ProductSubMasterCategory']) ? $_GET['ProductSubMasterCategory'] : '');
         $productSubMasterCategoryDataProvider = $productSubMasterCategory->search();
-        $productSubMasterCategoryDataProvider->criteria->addCondition('t.is_approved = 0 AND t.user_id_rejected IS NULL');
+        $productSubMasterCategoryDataProvider->criteria->addCondition('t.is_approved = 0 AND t.user_id_reject IS NULL');
 
         $productSubCategory = Search::bind(new ProductSubCategory('search'), isset($_GET['ProductSubCategory']) ? $_GET['ProductSubCategory'] : '');
         $productSubCategoryDataProvider = $productSubCategory->search();
-        $productSubCategoryDataProvider->criteria->addCondition('t.is_approved = 0 AND t.user_id_rejected IS NULL');
+        $productSubCategoryDataProvider->criteria->addCondition('t.is_approved = 0 AND t.user_id_reject IS NULL');
 
         $service = Search::bind(new Service('search'), isset($_GET['Service']) ? $_GET['Service'] : '');
         $serviceDataProvider = $service->search();
@@ -62,11 +62,11 @@ class PendingApprovalController extends Controller {
 
         $serviceCategory = Search::bind(new ServiceCategory('search'), isset($_GET['ServiceCategory']) ? $_GET['ServiceCategory'] : '');
         $serviceCategoryDataProvider = $serviceCategory->search();
-        $serviceCategoryDataProvider->criteria->addCondition('t.is_approved = 0 AND t.user_id_rejected IS NULL');
+        $serviceCategoryDataProvider->criteria->addCondition('t.is_approved = 0 AND t.user_id_reject IS NULL');
 
         $serviceType = Search::bind(new ServiceType('search'), isset($_GET['ServiceType']) ? $_GET['ServiceType'] : '');
         $serviceTypeDataProvider = $serviceType->search();
-        $serviceTypeDataProvider->criteria->addCondition('t.is_approved = 0 AND t.user_id_rejected IS NULL');
+        $serviceTypeDataProvider->criteria->addCondition('t.is_approved = 0 AND t.user_id_reject IS NULL');
 
         $warehouse = Search::bind(new Warehouse('search'), isset($_GET['Warehouse']) ? $_GET['Warehouse'] : '');
         $warehouseDataProvider = $warehouse->search();
