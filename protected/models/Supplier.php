@@ -390,7 +390,7 @@ class Supplier extends CActiveRecord {
     }
     
     public function getCreatedDatetime() {
-        return $this->date . " " . $this->time_created;
+        return $this->created_datetime;
     }
     
     public function getApprovedDatetime() {
