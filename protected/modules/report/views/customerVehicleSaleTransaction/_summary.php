@@ -51,32 +51,42 @@
                 <th class="width1-9">KM Sebelum</th>
                 <th class="width1-10">KM Sekarang</th>
                 <th class="width1-11">KM Selanjutnya</th>
+                <th class="width1-11">Rekomendasi Service</th>
+                <th class="width1-11">User Entry</th>
             </tr>
         </thead>
         <tbody>
             <?php foreach ($customerVehicleSaleTransactionSummary->dataProvider->data as $i => $header): ?>
                 <tr class="items1">
-                    <td class="width1-1"><?php echo CHtml::encode($i + 1); ?></td>
-                    <td class="width1-2">
+                    <td><?php echo CHtml::encode($i + 1); ?></td>
+                    <td>
                         <?php echo CHtml::link(CHtml::encode($header->transaction_number), array("/frontDesk/registrationTransaction/view", "id"=>$header->id), array("target" => "_blank")); ?>
                     </td>
-                    <td class="width1-3">
+                    <td>
                         <?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy hh:mm:ss', strtotime($header->transaction_date))); ?>
                     </td>
-                    <td class="width1-4"><?php echo CHtml::encode(CHtml::value($header, 'customer.name')); ?></td>
-                    <td class="width1-5">
+                    <td><?php echo CHtml::encode(CHtml::value($header, 'customer.name')); ?></td>
+                    <td>
                         <?php echo CHtml::encode(CHtml::value($header, 'vehicle.carMake.name')); ?> -
                         <?php echo CHtml::encode(CHtml::value($header, 'vehicle.carModel.name')); ?> - 
                         <?php echo CHtml::encode(CHtml::value($header, 'vehicle.carSubModel.name')); ?>
                     </td>
-                    <td class="width1-6"><?php echo CHtml::encode(CHtml::value($header, 'vehicle.plate_number')); ?></td>
-                    <td class="width1-7"><?php echo CHtml::encode(CHtml::value($header, 'status')); ?></td>
-                    <td class="width1-8"><?php echo CHtml::encode(CHtml::value($header, 'problem')); ?></td>
-                    <td class="width1-8"><?php echo CHtml::encode(CHtml::value($header, 'employeeIdSalesPerson.name')); ?></td>
-                    <td class="width1-8"><?php echo CHtml::encode(CHtml::value($header, 'employeeIdAssignMechanic.name')); ?></td>
-                    <td class="width1-9" style="text-align:right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($header, 'previous_mileage'))); ?></td>
-                    <td class="width1-10" style="text-align:right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($header, 'vehicle_mileage'))); ?></td>
-                    <td class="width1-11" style="text-align:right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($header, 'next_mileage'))); ?></td>
+                    <td><?php echo CHtml::encode(CHtml::value($header, 'vehicle.plate_number')); ?></td>
+                    <td><?php echo CHtml::encode(CHtml::value($header, 'status')); ?></td>
+                    <td><?php echo CHtml::encode(CHtml::value($header, 'problem')); ?></td>
+                    <td><?php echo CHtml::encode(CHtml::value($header, 'employeeIdSalesPerson.name')); ?></td>
+                    <td><?php echo CHtml::encode(CHtml::value($header, 'employeeIdAssignMechanic.name')); ?></td>
+                    <td style="text-align:right">
+                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($header, 'previous_mileage'))); ?>
+                    </td>
+                    <td style="text-align:right">
+                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($header, 'vehicle_mileage'))); ?>
+                    </td>
+                    <td style="text-align:right">
+                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($header, 'next_mileage'))); ?>
+                    </td>
+                    <td><?php echo CHtml::encode(CHtml::value($header, 'next_service_recommendation')); ?></td>
+                    <td><?php echo CHtml::encode(CHtml::value($header, 'user.username')); ?></td>
                 </tr>
             <?php endforeach; ?>
         </tbody>

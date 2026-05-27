@@ -103,7 +103,7 @@ class CashTransactionController extends Controller {
 
         $worksheet->getStyle('A5:M5')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
-        $counter = 7;
+        $counter = 6;
         foreach ($dataProvider->data as $header) {
             foreach ($header->cashTransactionDetails as $detail) {
                 $worksheet->getStyle("E{$counter}:F{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);

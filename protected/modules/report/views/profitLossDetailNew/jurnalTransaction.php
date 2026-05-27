@@ -1,15 +1,37 @@
-<?php echo CHtml::beginForm(array(''), 'get'); ?>
+<?php
+Yii::app()->clientScript->registerCss('_report', '
+	.width1-1 { width: 20% }
+	.width1-2 { width: 50% }
+
+	.width2-1 { width: 5% }
+	.width2-2 { width: 15% }
+	.width2-3 { width: 12% }
+	.width2-4 { width: 20% }
+	.width2-5 { width: 20% }
+	.width2-6 { width: 12% }
+	.width2-7 { width: 12% }
+');
+?>
 
 <div style="font-weight: bold; text-align: center">
     <div style="font-size: larger">Transaction Detail</div>
+    <?php $coa = Coa::model()->findByAttributes(array('code' => $coaCode)); ?>
     <div style="font-size: larger"><?php echo CHtml::encode(CHtml::value($coa, 'codeName')); ?></div>
-    <div><?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($startDate))) . ' &nbsp;&ndash;&nbsp; ' . CHtml::encode(Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($endDate))); ?></div>
+    <div><?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($startDate))); ?> - <?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($endDate))); ?></div>
 </div>
 
 <div class="clear"></div>
 
+<?php echo CHtml::beginForm(array(''), 'get'); ?>
+
 <div class="row buttons">
-    <?php echo CHtml::hiddenField('CoaId', $coaId); ?>
+    <div class="reportDisplay">
+        <?php echo ReportHelper::summaryText($profitLossSummary->dataProvider); ?>
+    </div>
+    
+    <br />
+    
+    <?php echo CHtml::hiddenField('CoaCode', $coaCode); ?>
     <?php echo CHtml::hiddenField('StartDate', $startDate); ?>
     <?php echo CHtml::hiddenField('EndDate', $endDate); ?>
     <?php echo CHtml::hiddenField('BranchId', $branchId); ?>
@@ -32,7 +54,7 @@
     </tr>
     <?php $totalDebet = '0.00'; ?>
     <?php $totalCredit = '0.00'; ?>
-    <?php foreach ($jurnalUmumDataProvider->data as $i => $header): ?>
+    <?php foreach ($profitLossSummary->dataProvider->data as $i => $header): ?>
         <tr>
             <td class="width2-1" style="text-align: center">
                 <?php echo $i+1; ?>

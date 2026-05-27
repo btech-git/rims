@@ -99,6 +99,16 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                 </div>
                             </div>
                         </div>
+                        <div class="field">
+                            <div class="row collapse">
+                                <div class="small-4 columns">
+                                    <label class="prefix">Customer Type</label>
+                                </div>
+                                <div class="small-8 columns">
+                                    <?php echo CHtml::dropDownList('CustomerType', $customertype, array('Company' => 'PT', 'Individual' => 'Retail'), array('empty' => '-- All --')); ?>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 

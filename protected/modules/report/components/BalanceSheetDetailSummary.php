@@ -9,6 +9,10 @@ class BalanceSheetDetailSummary extends CComponent {
     }
 
     public function setupLoading() {
+        $this->dataProvider->criteria->together = true;
+        $this->dataProvider->criteria->with = array(
+            'coa',
+        );
         
     }
 
@@ -26,11 +30,11 @@ class BalanceSheetDetailSummary extends CComponent {
         $this->dataProvider->criteria->order = 't.tanggal_transaksi ASC, t.kode_transaksi ASC';
     }
 
-    public function setupFilter($startDate, $endDate, $coaId, $branchId) {
+    public function setupFilter($startDate, $endDate, $coaCode, $branchId) {
         $this->dataProvider->criteria->addCondition("t.tanggal_transaksi BETWEEN :start_date AND :end_date AND t.is_coa_category = 0");
         $this->dataProvider->criteria->params[':start_date'] = $startDate;
         $this->dataProvider->criteria->params[':end_date'] = $endDate;
-        $this->dataProvider->criteria->compare('t.coa_id', $coaId);
+        $this->dataProvider->criteria->compare('coa.code', $coaCode);
         $this->dataProvider->criteria->compare('t.branch_id', $branchId);
     }
 }

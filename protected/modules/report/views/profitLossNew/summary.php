@@ -51,10 +51,10 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                             'placeholder' => 'Mulai',
                                         ),
                                     )); ?>
+                                    <?php //echo CHtml::hiddenField('StartDate', $startDate); ?>
                                 </div>
 
                                     <div class="small-4 columns">
-                                        <?php //echo CHtml::hiddenField('StartDate', $startDate); ?>
                                         <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(
                                             'name' => 'EndDate',
                                             'options' => array(
@@ -89,11 +89,8 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
 
                 <div class="relative">
                     <?php $this->renderPartial('_summary', array(
-                        'accountCategoryAssets' => $accountCategoryAssets,
-                        'accountCategoryLiabilitiesEquities' => $accountCategoryLiabilitiesEquities,
-                        'accountProfitLoss' => $accountProfitLoss,
-                        'accountProfitLossPrevious' => $accountProfitLossPrevious,
-                        'accountCategoryTypes' => $accountCategoryTypes,
+                        'profitLossReportData' => $profitLossReportData,
+                        'accountGroupSums' => $accountGroupSums,
                         'startDate' => $startDate,
                         'endDate' => $endDate,
                         'branchId' => $branchId,

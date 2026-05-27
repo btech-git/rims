@@ -32,6 +32,7 @@ class SaleInvoiceBranchDailyController extends Controller {
         $currentPage = (isset($_GET['page'])) ? $_GET['page'] : '';
         $currentSort = (isset($_GET['sort'])) ? $_GET['sort'] : '';
         $customerName = (isset($_GET['CustomerName'])) ? $_GET['CustomerName'] : '';
+        $customertype = (isset($_GET['CustomerType'])) ? $_GET['CustomerType'] : '';
         
         $saleInvoiceSummary = new SaleInvoiceBranchDailySummary($invoiceHeader->search());
         $saleInvoiceSummary->setupLoading();
@@ -42,6 +43,7 @@ class SaleInvoiceBranchDailyController extends Controller {
             'endDate' => $endDate,
             'branchId' => $branchId,
             'customerName' => $customerName,
+            'customertype' => $customertype,
         );
         $saleInvoiceSummary->setupFilter($filters);
 
@@ -60,6 +62,7 @@ class SaleInvoiceBranchDailyController extends Controller {
             'startDate' => $startDate,
             'endDate' => $endDate,
             'customerName' => $customerName,
+            'customertype' => $customertype,
             'currentSort' => $currentSort,
         ));
     }

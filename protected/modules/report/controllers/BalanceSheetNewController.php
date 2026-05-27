@@ -1,6 +1,6 @@
 <?php
 
-class BalanceSheetDetailNewController extends Controller {
+class BalanceSheetNewController extends Controller {
 
     public $layout = '//layouts/column1';
     public function filters() {
@@ -22,7 +22,7 @@ class BalanceSheetDetailNewController extends Controller {
     public function actionSummary() {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
-
+        
         $dateNow = date('Y-m-d');
 
         $branchId = (isset($_GET['BranchId'])) ? $_GET['BranchId'] : '';
@@ -75,36 +75,6 @@ class BalanceSheetDetailNewController extends Controller {
             'branchId' => $branchId,
         ));
     }
-    
-    public function actionJurnalTransaction() {
-        set_time_limit(0);
-        ini_set('memory_limit', '1024M');
-
-        $jurnalUmum = new JurnalUmum('search');
-
-        $coaCode = (isset($_GET['CoaCode'])) ? $_GET['CoaCode'] : '';
-        $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : date('Y-m-d');
-        $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
-        $branchId = (isset($_GET['BranchId'])) ? $_GET['BranchId'] : '';
-
-        $balanceSheetSummary = new BalanceSheetDetailSummary($jurnalUmum->search());
-        $balanceSheetSummary->setupLoading();
-        $balanceSheetSummary->setupPaging(1000, 1);
-        $balanceSheetSummary->setupSorting();
-        $balanceSheetSummary->setupFilter($startDate, $endDate, $coaCode, $branchId);
-
-        if (isset($_GET['SaveToExcel'])) {
-            $this->saveToExcelTransactionJournal($balanceSheetSummary, $coaCode, $startDate, $endDate, $branchId);
-        }
-
-        $this->render('jurnalTransaction', array(
-            'balanceSheetSummary' => $balanceSheetSummary,
-            'startDate' => $startDate,
-            'endDate' => $endDate,
-            'coaCode' => $coaCode,
-            'branchId' => $branchId,
-        ));
-    }
 
     protected function saveToExcel($balanceSheetReportData, $netProfit, $startDate, $endDate, $branchId) {
         set_time_limit(0);
@@ -121,10 +91,10 @@ class BalanceSheetDetailNewController extends Controller {
 
         $documentProperties = $objPHPExcel->getProperties();
         $documentProperties->setCreator('Raperind Motor');
-        $documentProperties->setTitle('Neraca Standar');
+        $documentProperties->setTitle('Neraca Induk');
 
         $worksheet = $objPHPExcel->setActiveSheetIndex(0);
-        $worksheet->setTitle('Neraca Standar');
+        $worksheet->setTitle('Neraca Induk');
 
         $worksheet->mergeCells('A1:B1');
         $worksheet->mergeCells('A2:B2');
@@ -135,7 +105,7 @@ class BalanceSheetDetailNewController extends Controller {
 
         $branch = Branch::model()->findByPk($branchId);
         $worksheet->setCellValue('A1', 'Raperind Motor ' . ($branch === null) ? '' : $branch->name);
-        $worksheet->setCellValue('A2', 'Neraca (Standar)');
+        $worksheet->setCellValue('A2', 'Neraca (Induk)');
         $worksheet->setCellValue('A3', $startDateString . ' - ' . $endDateString);
 
         $counter = 5;
@@ -161,20 +131,14 @@ class BalanceSheetDetailNewController extends Controller {
                 $balances[$previousLevel]['amounts'] = array();
                 $balances[$previousLevel - 1]['amounts'][] = $amountSum;
                 
-                $worksheet->getStyle("A{$counter}:B{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
-                $worksheet->getStyle("A{$counter}:B{$counter}")->getFont()->setBold(true);
-                $worksheet->setCellValue("A{$counter}", 'TOTAL ' . $balanceSheetReportData[$coaParentCodes[$previousLevel]]['name']);
+                $worksheet->setCellValue("A{$counter}", $balanceSheetReportData[$coaParentCodes[$previousLevel]]['name']);
                 $worksheet->setCellValue("B{$counter}", $amountSum === '' ? '' : $amountSum);
                 
                 $previousLevel--;
                 $counter++;
             }
             
-            $worksheet->setCellValue("A{$counter}", $coaCode . ' - ' . $balanceSheetReportItem['name']);
-            $worksheet->setCellValue("B{$counter}", $balance === '' ? '' : $balance);
-
             $previousLevel = $currentLevel;
-            $counter++;
         }
         
         for ($i = $currentLevel - 1; $i > 0; $i--) {
@@ -183,9 +147,7 @@ class BalanceSheetDetailNewController extends Controller {
                 $balances[$previousLevel]['amounts'] = array();
                 $balances[$previousLevel - 1]['amounts'][] = $amountSum;
                 
-                $worksheet->getStyle("A{$counter}:B{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
-                $worksheet->getStyle("A{$counter}:B{$counter}")->getFont()->setBold(true);
-                $worksheet->setCellValue("A{$counter}", 'TOTAL ' . $balanceSheetReportData[$coaParentCodes[$previousLevel]]['name']);
+                $worksheet->setCellValue("A{$counter}", $balanceSheetReportData[$coaParentCodes[$previousLevel]]['name']);
                 $worksheet->setCellValue("B{$counter}", $amountSum === '' ? '' : $amountSum);
                 
                 $previousLevel--;
@@ -202,99 +164,7 @@ class BalanceSheetDetailNewController extends Controller {
         ob_end_clean();
         // We'll be outputting an excel file
         header('Content-type: application/vnd.ms-excel');
-        header('Content-Disposition: attachment;filename="neraca_standar.xls"');
-        header('Cache-Control: max-age=0');
-        
-        $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
-        $objWriter->save('php://output');
-
-        Yii::app()->end();
-    }
-    
-    protected function saveToExcelTransactionJournal($balanceSheetSummary, $coaCode, $startDate, $endDate, $branchId) {
-        set_time_limit(0);
-        ini_set('memory_limit', '1024M');
-        
-        $startDateString = Yii::app()->dateFormatter->format('d MMMM yyyy', $startDate);
-        $endDateString = Yii::app()->dateFormatter->format('d MMMM yyyy', $endDate);
-
-        spl_autoload_unregister(array('YiiBase', 'autoload'));
-        include_once Yii::getPathOfAlias('ext.phpexcel.Classes') . DIRECTORY_SEPARATOR . 'PHPExcel.php';
-        spl_autoload_register(array('YiiBase', 'autoload'));
-
-        $objPHPExcel = new PHPExcel();
-
-        $documentProperties = $objPHPExcel->getProperties();
-        $documentProperties->setCreator('Raperind Motor');
-        $documentProperties->setTitle('Transaction Detail');
-
-        $worksheet = $objPHPExcel->setActiveSheetIndex(0);
-        $worksheet->setTitle('Transaction Detail');
-
-        $worksheet->mergeCells('A1:G1');
-        $worksheet->mergeCells('A2:G2');
-        $worksheet->mergeCells('A3:G3');
-        
-        $worksheet->getStyle('A1:G5')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-        $worksheet->getStyle('A1:G5')->getFont()->setBold(true);
-
-        $branch = Branch::model()->findByPk($branchId);
-        $coa = Coa::model()->findByAttributes(array('code' => $coaCode));
-        $worksheet->setCellValue('A1', 'Raperind Motor ' . CHtml::value($branch, 'name'));
-        $worksheet->setCellValue('A2', 'Transaction Detail ' . $coa->code . ' - ' . $coa->name);
-        $worksheet->setCellValue('A3', $startDateString . ' - ' . $endDateString);
-
-        $worksheet->getStyle('A5:G5')->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
-
-        $worksheet->setCellValue('A5', 'No');
-        $worksheet->setCellValue('B5', 'Transaction #');
-        $worksheet->setCellValue('C5', 'Tanggal');
-        $worksheet->setCellValue('D5', 'Deskripsi');
-        $worksheet->setCellValue('E5', 'Memo');
-        $worksheet->setCellValue('F5', 'Debit');
-        $worksheet->setCellValue('G5', 'Credit');
-
-        $worksheet->getStyle('A5:G5')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
-
-        $counter = 6;
-
-        $totalDebet = '0.00';
-        $totalCredit = '0.00';
-        foreach ($balanceSheetSummary->dataProvider->data as $i => $header) { 
-            $debitAmount = $header->debet_kredit == 'D' ? $header->total : '0.00';
-            $creditAmount = $header->debet_kredit == 'K' ? $header->total : '0.00';
-            $worksheet->setCellValue("A{$counter}", $i + 1);
-            $worksheet->setCellValue("B{$counter}", CHtml::value($header, 'kode_transaksi'));
-            $worksheet->setCellValue("C{$counter}", CHtml::value($header, 'tanggal_transaksi'));
-            $worksheet->setCellValue("D{$counter}", CHtml::value($header, 'transaction_subject'));
-            $worksheet->setCellValue("E{$counter}", CHtml::value($header, 'transaction_type'));
-            $worksheet->setCellValue("F{$counter}", $debitAmount);
-            $worksheet->setCellValue("G{$counter}", $creditAmount);
-
-            $totalDebet += $debitAmount;
-            $totalCredit += $creditAmount;
-            $counter++;
-        }
-
-        $worksheet->getStyle("A{$counter}:G{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
-        $worksheet->getStyle("A{$counter}:G{$counter}")->getFont()->setBold(true);
-        
-        $worksheet->setCellValue("E{$counter}", 'TOTAL ');
-        $worksheet->setCellValue("F{$counter}", $totalDebet);
-        $worksheet->setCellValue("G{$counter}", $totalCredit);
-
-        $counter++;
-
-        for ($col = 'A'; $col !== 'Z'; $col++) {
-            $objPHPExcel->getActiveSheet()
-            ->getColumnDimension($col)
-            ->setAutoSize(true);
-        }
-
-        ob_end_clean();
-        // We'll be outputting an excel file
-        header('Content-type: application/vnd.ms-excel');
-        header('Content-Disposition: attachment;filename="transaksi_detail_neraca.xls"');
+        header('Content-Disposition: attachment;filename="neraca_induk.xls"');
         header('Cache-Control: max-age=0');
         
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');

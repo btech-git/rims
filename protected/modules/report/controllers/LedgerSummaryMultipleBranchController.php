@@ -134,6 +134,8 @@ class LedgerSummaryMultipleBranchController extends Controller {
             $worksheet->setCellValue("{$columnCreditHeader}6", 'Credit');
             $columnDebitHeader++;$columnDebitHeader++;$columnCreditHeader++;$columnCreditHeader++;
         }
+        $worksheet->setCellValue("{$columnDebitHeader}6", 'Total Debit');
+        $worksheet->setCellValue("{$columnCreditHeader}6", 'Total Credit');
 
         $worksheet->mergeCells("A1:{$columnCreditHeader}1");
         $worksheet->mergeCells("A2:{$columnCreditHeader}2");
@@ -154,12 +156,16 @@ class LedgerSummaryMultipleBranchController extends Controller {
             $worksheet->setCellValue("B{$counter}", $ledgerSummaryMultipleBranchReportDataItem['name']);
             $columnDebitBody = 'C';
             $columnCreditBody = 'D';
+            $totalDebitSum = '0.00';
+            $totalCreditSum = '0.00';
             foreach ($branches as $branch) {
                 $debit = isset($ledgerSummaryMultipleBranchReportDataItem['amounts'][$branch->id]['debit']) ? $ledgerSummaryMultipleBranchReportDataItem['amounts'][$branch->id]['debit'] : '0.00';
                 $credit = isset($ledgerSummaryMultipleBranchReportDataItem['amounts'][$branch->id]['credit']) ? $ledgerSummaryMultipleBranchReportDataItem['amounts'][$branch->id]['credit'] : '0.00';
                 $worksheet->setCellValue("{$columnDebitBody}{$counter}", $debit);
                 $worksheet->setCellValue("{$columnCreditBody}{$counter}", $credit);
                 $columnDebitBody++;$columnDebitBody++;$columnCreditBody++;$columnCreditBody++;
+                $totalDebitSum += $debit;
+                $totalCreditSum += $credit;
                 
                 if (!isset($debitSums[$branch->id])) {
                     $debitSums[$branch->id] = '0.00';
@@ -170,6 +176,8 @@ class LedgerSummaryMultipleBranchController extends Controller {
                 $debitSums[$branch->id] += $debit;
                 $creditSums[$branch->id] += $credit;
             }
+            $worksheet->setCellValue("{$columnDebitBody}{$counter}", $totalDebitSum);
+            $worksheet->setCellValue("{$columnCreditBody}{$counter}", $totalCreditSum);
             
             $counter++;
         }
