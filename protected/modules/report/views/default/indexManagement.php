@@ -37,7 +37,7 @@
                                     ),
                                     array(
                                         'label' => 'Laba Rugi (Standar)', 
-                                        'url' => array('/report/profitLossDetailNew/summary'), 
+                                        'url' => array('/report/profitLossDetail/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('director')
                                     ),
                                     array(
@@ -52,7 +52,7 @@
                                     ),
                                     array(
                                         'label' => 'Neraca (Standar)', 
-                                        'url' => array('/report/balanceSheetDetailNew/summary'), 
+                                        'url' => array('/report/balanceSheetDetail/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('director')
                                     ),
                                     array(

@@ -1,6 +1,6 @@
 <?php
 
-class BalanceSheetNewController extends Controller {
+class BalanceSheetController extends Controller {
 
     public $layout = '//layouts/column1';
     public function filters() {

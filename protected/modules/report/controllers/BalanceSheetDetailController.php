@@ -1,6 +1,6 @@
 <?php
 
-class ProfitLossDetailNewController extends Controller {
+class BalanceSheetDetailController extends Controller {
 
     public $layout = '//layouts/column1';
     public function filters() {
@@ -29,35 +29,34 @@ class ProfitLossDetailNewController extends Controller {
         $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : $dateNow;
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : $dateNow;
 
-        $profitLossCoaReport = Coa::getProfitLossCoaReport();
+        $balanceSheetCoaReport = Coa::getBalanceSheetCoaReport();
+        $balanceSheetLedgerReport = JurnalUmum::getBalanceSheetLedgerReport($startDate, $endDate, $branchId);
         $profitLossLedgerReport = JurnalUmum::getProfitLossLedgerReport($startDate, $endDate, $branchId);
         
-        $profitLossReportData = array();
-        foreach ($profitLossCoaReport as $profitLossCoaReportItem) {
-            $profitLossReportData[$profitLossCoaReportItem['code']]['id'] = $profitLossCoaReportItem['id'];
-            $profitLossReportData[$profitLossCoaReportItem['code']]['name'] = $profitLossCoaReportItem['name'];
-            $profitLossReportData[$profitLossCoaReportItem['code']]['parent_code'] = $profitLossCoaReportItem['parent_code'];
-            $profitLossReportData[$profitLossCoaReportItem['code']]['level'] = 1;
+        $balanceSheetReportData = array();
+        foreach ($balanceSheetCoaReport as $balanceSheetCoaReportItem) {
+            $balanceSheetReportData[$balanceSheetCoaReportItem['code']]['id'] = $balanceSheetCoaReportItem['id'];
+            $balanceSheetReportData[$balanceSheetCoaReportItem['code']]['name'] = $balanceSheetCoaReportItem['name'];
+            $balanceSheetReportData[$balanceSheetCoaReportItem['code']]['parent_code'] = $balanceSheetCoaReportItem['parent_code'];
+            $balanceSheetReportData[$balanceSheetCoaReportItem['code']]['level'] = 1;
         }
-        foreach ($profitLossCoaReport as $profitLossCoaReportItem) {
-            $coaCode = $profitLossCoaReportItem['code'];
+        foreach ($balanceSheetCoaReport as $balanceSheetCoaReportItem) {
+            $coaCode = $balanceSheetCoaReportItem['code'];
             $currentCoaCode = $coaCode;
-            while (isset($profitLossReportData[$currentCoaCode]) && $profitLossReportData[$currentCoaCode]['parent_code'] !== null) {
-                $profitLossReportData[$coaCode]['level']++;
-                $currentCoaCode = $profitLossReportData[$currentCoaCode]['parent_code'];
+            while (isset($balanceSheetReportData[$currentCoaCode]) && $balanceSheetReportData[$currentCoaCode]['parent_code'] !== null) {
+                $balanceSheetReportData[$coaCode]['level']++;
+                $currentCoaCode = $balanceSheetReportData[$currentCoaCode]['parent_code'];
             }
         }
-        foreach ($profitLossLedgerReport as $profitLossLedgerReportItem) {
-            $profitLossReportData[$profitLossLedgerReportItem['coa_code']]['balance'] = $profitLossLedgerReportItem['balance'];
+        foreach ($balanceSheetLedgerReport as $balanceSheetLedgerReportItem) {
+            $balanceSheetReportData[$balanceSheetLedgerReportItem['coa_code']]['balance'] = $balanceSheetLedgerReportItem['balance'];
         }
         
-        $accountGroupSums = array();
-        foreach ($profitLossReportData as $coaCode => $profitLossReportDataItem) {
-            if (!isset($accountGroupSums[$coaCode[0]])) {
-                $accountGroupSums[$coaCode[0]] = '0.00';
-            }
-            $balance = isset($profitLossReportDataItem['balance']) ? $profitLossReportDataItem['balance'] : '0.00';
-            $accountGroupSums[$coaCode[0]] += $balance;
+        $netProfit = '0.00';
+        foreach ($profitLossLedgerReport as $profitLossLedgerReportItem) {
+            $coaStartDigitCode = intval($profitLossLedgerReportItem['coa_code'][0]);
+            $balance = isset($profitLossLedgerReportItem['balance']) ? $profitLossLedgerReportItem['balance'] : '0.00';
+            $netProfit += $coaStartDigitCode === 4 || $coaStartDigitCode === 7 ? +$balance : -$balance;
         }
         
         if (isset($_GET['ResetFilter'])) {
@@ -65,41 +64,41 @@ class ProfitLossDetailNewController extends Controller {
         }
         
         if (isset($_GET['SaveExcel'])) {
-            $this->saveToExcel($profitLossReportData, $accountGroupSums, $startDate, $endDate, $branchId);
+            $this->saveToExcel($balanceSheetReportData, $netProfit, $startDate, $endDate, $branchId);
         }
 
         $this->render('summary', array(
-            'profitLossReportData' => $profitLossReportData,
-            'accountGroupSums' => $accountGroupSums,
+            'balanceSheetReportData' => $balanceSheetReportData,
+            'netProfit' => $netProfit,
             'startDate' => $startDate,
             'endDate' => $endDate,
             'branchId' => $branchId,
         ));
     }
-
+    
     public function actionJurnalTransaction() {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
 
         $jurnalUmum = new JurnalUmum('search');
-        
+
         $coaCode = (isset($_GET['CoaCode'])) ? $_GET['CoaCode'] : '';
         $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : date('Y-m-d');
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
         $branchId = (isset($_GET['BranchId'])) ? $_GET['BranchId'] : '';
 
-        $profitLossSummary = new ProfitLossSummary($jurnalUmum->search());
-        $profitLossSummary->setupLoading();
-        $profitLossSummary->setupPaging(1000, 1);
-        $profitLossSummary->setupSorting();
-        $profitLossSummary->setupFilter($startDate, $endDate, $coaCode, $branchId);
+        $balanceSheetSummary = new BalanceSheetDetailSummary($jurnalUmum->search());
+        $balanceSheetSummary->setupLoading();
+        $balanceSheetSummary->setupPaging(1000, 1);
+        $balanceSheetSummary->setupSorting();
+        $balanceSheetSummary->setupFilter($startDate, $endDate, $coaCode, $branchId);
 
         if (isset($_GET['SaveToExcel'])) {
-            $this->saveToExcelTransactionJournal($profitLossSummary, $coaCode, $startDate, $endDate, $branchId);
+            $this->saveToExcelTransactionJournal($balanceSheetSummary, $coaCode, $startDate, $endDate, $branchId);
         }
 
         $this->render('jurnalTransaction', array(
-            'profitLossSummary' => $profitLossSummary,
+            'balanceSheetSummary' => $balanceSheetSummary,
             'startDate' => $startDate,
             'endDate' => $endDate,
             'coaCode' => $coaCode,
@@ -107,7 +106,7 @@ class ProfitLossDetailNewController extends Controller {
         ));
     }
 
-    protected function saveToExcel($profitLossReportData, $accountGroupSums, $startDate, $endDate, $branchId) {
+    protected function saveToExcel($balanceSheetReportData, $netProfit, $startDate, $endDate, $branchId) {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
         
@@ -122,10 +121,10 @@ class ProfitLossDetailNewController extends Controller {
 
         $documentProperties = $objPHPExcel->getProperties();
         $documentProperties->setCreator('Raperind Motor');
-        $documentProperties->setTitle('Laba Rugi Standar');
+        $documentProperties->setTitle('Neraca Standar');
 
         $worksheet = $objPHPExcel->setActiveSheetIndex(0);
-        $worksheet->setTitle('Laba Rugi Standar');
+        $worksheet->setTitle('Neraca Standar');
 
         $worksheet->mergeCells('A1:B1');
         $worksheet->mergeCells('A2:B2');
@@ -135,8 +134,8 @@ class ProfitLossDetailNewController extends Controller {
         $worksheet->getStyle('A1:B3')->getFont()->setBold(true);
 
         $branch = Branch::model()->findByPk($branchId);
-        $worksheet->setCellValue('A1', 'Raperind Motor ' . CHtml::value($branch, 'name'));
-        $worksheet->setCellValue('A2', 'Laba / Rugi (Standar)');
+        $worksheet->setCellValue('A1', 'Raperind Motor ' . ($branch === null) ? '' : $branch->name);
+        $worksheet->setCellValue('A2', 'Neraca (Standar)');
         $worksheet->setCellValue('A3', $startDateString . ' - ' . $endDateString);
 
         $counter = 5;
@@ -145,10 +144,16 @@ class ProfitLossDetailNewController extends Controller {
         $coaParentCodes = array();
         $previousLevel = 0;
         $currentLevel = 0;
-        foreach ($profitLossReportData as $coaCode => $profitLossReportItem) {
-            $currentLevel = $profitLossReportItem['level'];
-            $coaParentCodes[$currentLevel] = $profitLossReportItem['parent_code'];
-            $balance = isset($profitLossReportItem['balance']) ? $profitLossReportItem['balance'] : ''; 
+        
+        foreach ($balanceSheetReportData as $coaCode => $balanceSheetReportItem) {
+            $currentLevel = $balanceSheetReportItem['level'];
+            $coaParentCodes[$currentLevel] = $balanceSheetReportItem['parent_code'];
+            
+            if ($coaCode === '303.00.001') {
+                $balance = $netProfit;
+            } else {
+                $balance = isset($balanceSheetReportItem['balance']) ? $balanceSheetReportItem['balance'] : '';
+            }
             $balances[$currentLevel]['amounts'][] = empty($balance) ? '0.00' : $balance;
             
             while ($previousLevel > $currentLevel) {
@@ -156,46 +161,37 @@ class ProfitLossDetailNewController extends Controller {
                 $balances[$previousLevel]['amounts'] = array();
                 $balances[$previousLevel - 1]['amounts'][] = $amountSum;
                 
-                $worksheet->getStyle("A{$counter}:B{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+                $worksheet->getStyle("A{$counter}:B{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
                 $worksheet->getStyle("A{$counter}:B{$counter}")->getFont()->setBold(true);
-                $worksheet->setCellValue("A{$counter}", 'Total ' . $profitLossReportData[$coaParentCodes[$previousLevel]]['name']);
+                $worksheet->setCellValue("A{$counter}", 'TOTAL ' . $balanceSheetReportData[$coaParentCodes[$previousLevel]]['name']);
                 $worksheet->setCellValue("B{$counter}", $amountSum === '' ? '' : $amountSum);
-
-                $counter++;
+                
                 $previousLevel--;
+                $counter++;
             }
             
-            if ((int) $coaCode === 600) {
-                $grossProfit = $accountGroupSums[4] - $accountGroupSums[5]; 
-                $worksheet->getStyle("A{$counter}:B{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
-                $worksheet->getStyle("A{$counter}:B{$counter}")->getFont()->setBold(true);
-                $worksheet->setCellValue("A{$counter}", 'Laba Kotor');
-                $worksheet->setCellValue("B{$counter}", $grossProfit === '' ? '' : $grossProfit);
-                $counter++;
-            }
-            $worksheet->setCellValue("A{$counter}", $coaCode . ' - ' . $profitLossReportItem['name']);
-            $worksheet->setCellValue("B{$counter}", $balance);
-            $counter++;
-            $previousLevel = $currentLevel;
-        }
+            $worksheet->setCellValue("A{$counter}", $coaCode . ' - ' . $balanceSheetReportItem['name']);
+            $worksheet->setCellValue("B{$counter}", $balance === '' ? '' : $balance);
 
+            $previousLevel = $currentLevel;
+            $counter++;
+        }
+        
         for ($i = $currentLevel - 1; $i > 0; $i--) {
             while ($previousLevel > $i) {
                 $amountSum = array_sum($balances[$previousLevel]['amounts']);
                 $balances[$previousLevel]['amounts'] = array();
                 $balances[$previousLevel - 1]['amounts'][] = $amountSum;
-
-                $worksheet->setCellValue("A{$counter}", 'Total ' . $profitLossReportData[$coaParentCodes[$previousLevel]]['name']);
+                
+                $worksheet->getStyle("A{$counter}:B{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+                $worksheet->getStyle("A{$counter}:B{$counter}")->getFont()->setBold(true);
+                $worksheet->setCellValue("A{$counter}", 'TOTAL ' . $balanceSheetReportData[$coaParentCodes[$previousLevel]]['name']);
                 $worksheet->setCellValue("B{$counter}", $amountSum === '' ? '' : $amountSum);
-                $counter++;
+                
                 $previousLevel--;
+                $counter++;
             }
         }
-        $netProfit = $accountGroupSums[4] - $accountGroupSums[5] - $accountGroupSums[6] + $accountGroupSums[7] - $accountGroupSums[8];
-        $worksheet->getStyle("A{$counter}:B{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
-        $worksheet->getStyle("A{$counter}:B{$counter}")->getFont()->setBold(true);
-        $worksheet->setCellValue("A{$counter}", 'Laba Bersih');
-        $worksheet->setCellValue("B{$counter}", $netProfit === '' ? '' : $netProfit);
 
         for ($col = 'A'; $col !== 'Z'; $col++) {
             $objPHPExcel->getActiveSheet()
@@ -206,7 +202,7 @@ class ProfitLossDetailNewController extends Controller {
         ob_end_clean();
         // We'll be outputting an excel file
         header('Content-type: application/vnd.ms-excel');
-        header('Content-Disposition: attachment;filename="profit_loss_standar.xls"');
+        header('Content-Disposition: attachment;filename="neraca_standar.xls"');
         header('Cache-Control: max-age=0');
         
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
@@ -215,7 +211,7 @@ class ProfitLossDetailNewController extends Controller {
         Yii::app()->end();
     }
     
-    protected function saveToExcelTransactionJournal($profitLossSummary, $coaCode, $startDate, $endDate, $branchId) {
+    protected function saveToExcelTransactionJournal($balanceSheetSummary, $coaCode, $startDate, $endDate, $branchId) {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
         
@@ -264,7 +260,7 @@ class ProfitLossDetailNewController extends Controller {
 
         $totalDebet = '0.00';
         $totalCredit = '0.00';
-        foreach ($profitLossSummary->dataProvider->data as $i => $header) { 
+        foreach ($balanceSheetSummary->dataProvider->data as $i => $header) { 
             $debitAmount = $header->debet_kredit == 'D' ? $header->total : '0.00';
             $creditAmount = $header->debet_kredit == 'K' ? $header->total : '0.00';
             $worksheet->setCellValue("A{$counter}", $i + 1);
@@ -298,7 +294,7 @@ class ProfitLossDetailNewController extends Controller {
         ob_end_clean();
         // We'll be outputting an excel file
         header('Content-type: application/vnd.ms-excel');
-        header('Content-Disposition: attachment;filename="transaksi_detail_laba_rugi.xls"');
+        header('Content-Disposition: attachment;filename="transaksi_detail_neraca.xls"');
         header('Cache-Control: max-age=0');
         
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');

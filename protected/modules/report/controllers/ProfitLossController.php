@@ -1,6 +1,6 @@
 <?php
 
-class ProfitLossNewController extends Controller {
+class ProfitLossController extends Controller {
 
     public $layout = '//layouts/column1';
     public function filters() {
