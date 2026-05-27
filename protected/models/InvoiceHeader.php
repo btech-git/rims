@@ -115,7 +115,7 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('invoice_number, invoice_date, due_date, reference_type, branch_id, user_id, status, total_discount, total_price, tax_percentage, number_of_print, package_price, grand_total_coretax, tax_amount_coretax, is_verified', 'required'),
+            array('invoice_number, invoice_date, due_date, reference_type, branch_id, user_id, total_discount, total_price, tax_percentage, number_of_print, package_price, grand_total_coretax, tax_amount_coretax, is_verified', 'required'),
             array('reference_type, sales_order_id, registration_transaction_id, customer_id, vehicle_id, ppn, pph, branch_id, user_id, supervisor_id, total_product, total_service, total_quick_service, coa_bank_id_estimate, tax_percentage, user_id_cancelled, insurance_company_id, number_of_print, user_id_edited, user_id_printed, is_new_customer, warranty_input_user_id, follow_up_input_user_id, is_verified, user_id_verified, user_id_coretax', 'numerical', 'integerOnly' => true),
             array('invoice_number, transaction_tax_number, coretax_receipt_number', 'length', 'max' => 60),
             array('status', 'length', 'max' => 30),
