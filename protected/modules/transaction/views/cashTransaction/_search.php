@@ -178,7 +178,7 @@
                         <td>
                             <?php echo CHtml::textField('CodeHeader', $codeHeader, array(
                                 'onchange' => '
-                                $.fn.yiiGridView.update("coa-detail-grid", {data: {Coa: {
+                                $.fn.yiiGridView.update("coa-header-grid", {data: {Coa: {
                                     code: $(this).val(),
                                     name: $("#coa_name").val(),
                                     coa_category_id: $("#coa_category_id").val(),
@@ -190,7 +190,7 @@
                         <td>
                             <?php echo CHtml::textField('NameHeader', $nameHeader, array(
                                 'onchange' => '
-                                $.fn.yiiGridView.update("coa-detail-grid", {data: {Coa: {
+                                $.fn.yiiGridView.update("coa-header-grid", {data: {Coa: {
                                     name: $(this).val(),
                                     code: $("#coa_code").val(),
                                     coa_category_id: $("#coa_category_id").val(),
@@ -206,7 +206,7 @@
                                     'type' => 'GET',
                                     'url' => CController::createUrl('ajaxHtmlUpdateSubCategorySelect'),
                                     'update' => '#sub_category',
-                                )) . '$.fn.yiiGridView.update("coa-detail-grid", {data: {Coa: {
+                                )) . '$.fn.yiiGridView.update("coa-header-grid", {data: {Coa: {
                                     coa_category_id: $(this).val(),
                                     id: $("#coa_id").val(),
                                     code: $("#coa_code").val(),
@@ -221,7 +221,7 @@
                                 <?php echo CHtml::dropDownList('CoaSubCategoryHeaderId', $coaSubCategoryHeaderId, CHtml::listData(CoaSubCategory::model()->findAll(array('order' => 'name')), 'id', 'name'), array(
                                     'empty' => '-- All --',
                                     'onchange' => '
-                                    $.fn.yiiGridView.update("coa-detail-grid", {data: {Coa: {
+                                    $.fn.yiiGridView.update("coa-header-grid", {data: {Coa: {
                                         coa_sub_category_id: $(this).val(),
                                         code: $("#coa_code").val(),
                                         coa_category_id: $("#coa_category_id").val(),

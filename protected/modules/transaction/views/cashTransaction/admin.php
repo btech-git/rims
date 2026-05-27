@@ -68,6 +68,14 @@ $('.search-form form').submit(function(){
                             'endDate' => $endDate,
                             'coaId' => $coaId,
                             'coaIdDetail' => $coaIdDetail,
+                            'nameHeader' => $nameHeader,
+                            'codeHeader' => $codeHeader,
+                            'coaCategoryHeaderId' => $coaCategoryHeaderId,
+                            'coaSubCategoryHeaderId' => $coaSubCategoryHeaderId,
+                            'nameDetail' => $nameDetail,
+                            'codeDetail' => $codeDetail,
+                            'coaCategoryDetailId' => $coaCategoryDetailId,
+                            'coaSubCategoryDetailId' => $coaSubCategoryDetailId,
                         )); ?>
                     </div><!-- search-form -->
                 </div>

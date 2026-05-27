@@ -350,10 +350,18 @@ class CashTransactionController extends Controller {
         $coa = Search::bind(new Coa('search'), isset($_GET['Coa']) ? $_GET['Coa'] : array());
         $coaDataProvider = $coa->search();
         $coaDataProvider->pagination->pageVar = 'page_dialog_header';
+        $coaDataProvider->criteria->compare('t.name', $nameHeader, true);
+        $coaDataProvider->criteria->compare('t.code', $codeHeader, true);
+        $coaDataProvider->criteria->compare('t.coa_category_id', $coaCategoryHeaderId);
+        $coaDataProvider->criteria->compare('t.coa_sub_category_id', $coaSubCategoryHeaderId);
 
         $coaDetail = Search::bind(new Coa('search'), isset($_GET['Coa']) ? $_GET['Coa'] : array());
         $coaDetailDataProvider = $coaDetail->search();
         $coaDetailDataProvider->pagination->pageVar = 'page_dialog_detail';
+        $coaDetailDataProvider->criteria->compare('t.name', $nameDetail, true);
+        $coaDetailDataProvider->criteria->compare('t.code', $codeDetail, true);
+        $coaDetailDataProvider->criteria->compare('t.coa_category_id', $coaCategoryDetailId);
+        $coaDetailDataProvider->criteria->compare('t.coa_sub_category_id', $coaSubCategoryDetailId);
 
         if (!Yii::app()->user->checkAccess('director')) {
             $cashInTransactionDataProvider->criteria->addCondition('t.branch_id = :branch_id');
@@ -375,6 +383,14 @@ class CashTransactionController extends Controller {
             'endDate' => $endDate,
             'coaId' => $coaId,
             'coaIdDetail' => $coaIdDetail,
+            'nameHeader' => $nameHeader,
+            'codeHeader' => $codeHeader,
+            'coaCategoryHeaderId' => $coaCategoryHeaderId,
+            'coaSubCategoryHeaderId' => $coaSubCategoryHeaderId,
+            'nameDetail' => $nameDetail,
+            'codeDetail' => $codeDetail,
+            'coaCategoryDetailId' => $coaCategoryDetailId,
+            'coaSubCategoryDetailId' => $coaSubCategoryDetailId,
         ));
     }
 
