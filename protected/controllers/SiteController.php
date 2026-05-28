@@ -43,7 +43,6 @@ class SiteController extends Controller {
     }
     
     public function actionMarketing() {
-        echo $_SERVER['REMOTE_ADDR'];
         $vehicle = Search::bind(new Vehicle('search'), isset($_GET['Vehicle']) ? $_GET['Vehicle'] : '');
         $product = Search::bind(new Product('search'), isset($_GET['Product']) ? $_GET['Product'] : '');
         $customer = Search::bind(new Customer('search'), isset($_GET['Customer']) ? $_GET['Customer'] : '');
