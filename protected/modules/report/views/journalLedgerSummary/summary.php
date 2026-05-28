@@ -34,7 +34,6 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                         <div class="clearfix"></div>
                         <div class="search-form" style="display:none">
                             <?php $this->renderPartial('_search', array(
-                                'coaSubCategories' => $coaSubCategories,
                                 'transactionType' => $transactionType,
                                 'startDate' => $startDate,
                                 'endDate' => $endDate,
@@ -51,7 +50,7 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
 
             <div class="relative">
                 <?php $this->renderPartial('_summary', array(
-                    'coaSubCategories' => $coaSubCategories,
+                    'ledgerSummaryReport' => $ledgerSummaryReport,
                     'startDate' => $startDate,
                     'endDate' => $endDate,
                     'branchId' => $branchId,

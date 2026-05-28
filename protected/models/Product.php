@@ -401,57 +401,10 @@ class Product extends CActiveRecord {
         $criteria->compare('subBrand.name', $this->product_sub_brand_name, true);
         $criteria->compare('subBrandSeries.name', $this->product_sub_brand_series_name, true);
 
-        $explodeKeyword = explode(" ", $this->findkeyword);
-
-        foreach ($explodeKeyword as $key) {
-
-            $criteria->compare('t.code', $key, true, 'AND');
-            $criteria->compare('production_year', $key, true, 'AND');
-            $criteria->compare('manufacturer_code', $key, true, 'AND');
-            $criteria->compare('barcode', $key, true, 'AND');
-            $criteria->compare('t.name', $key, true, 'AND');
-            $criteria->compare('t.description', $key, true, 'AND');
-            $criteria->compare('extension', $key, true, 'AND');
-
-            $criteria->compare('productMasterCategory.code', $key, true, 'AND');
-            $criteria->compare('productMasterCategory.name', $key, true, 'AND');
-            $criteria->compare('productSubMasterCategory.code', $key, true, 'AND');
-            $criteria->compare('productSubMasterCategory.name', $key, true, 'AND');
-            // $criteria->compare('productSubCategory.code',$key,true,'OR');
-            // $criteria->compare('productSubCategory.name',$key,true,'OR');
-
-            $criteria->compare('brand.name', $key, true, 'AND');
-        }
-        // $criteria->compare('productSubCategory.code',$this->findkeyword,true,'OR');
-        // $criteria->compare('productSubCategory.name',$this->findkeyword,true,'OR');
-
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
             'sort' => array(
                 "defaultOrder" => "t.status ASC, t.name ASC",
-                'attributes' => array(
-                    'product_master_category_code' => array(
-                        'asc' => 'productMasterCategory.code',
-                        'desc' => 'productMasterCategory.code DESC'
-                    ),
-                    'product_master_category_name' => array(
-                        'asc' => 'productMasterCategory.name',
-                        'desc' => 'productMasterCategory.name DESC'
-                    ),
-                    'product_sub_master_category_code' => array(
-                        'asc' => 'productSubMasterCategory.code',
-                        'desc' => 'productSubMasterCategory.code DESC'
-                    ),
-                    'product_sub_master_category_name' => array(
-                        'asc' => 'productSubMasterCategory.name',
-                        'desc' => 'productSubMasterCategory.name DESC'
-                    ),
-                    'product_sub_category_code' => array(
-                        'asc' => 'productSubMasterCategory.code',
-                        'desc' => 'productSubMasterCategory.code DESC'
-                    ),
-                    '*'
-                )
             ),
             'pagination' => array(
                 'pageSize' => 100,

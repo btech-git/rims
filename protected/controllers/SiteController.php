@@ -47,13 +47,28 @@ class SiteController extends Controller {
         $product = Search::bind(new Product('search'), isset($_GET['Product']) ? $_GET['Product'] : '');
         $customer = Search::bind(new Customer('search'), isset($_GET['Customer']) ? $_GET['Customer'] : '');
         $service = Search::bind(new Service('search'), isset($_GET['Service']) ? $_GET['Service'] : '');
+        $plateNumber = isset($_GET['PlateNumber']) ? $_GET['PlateNumber'] : '';
+        $customerName = isset($_GET['CustomerName']) ? $_GET['CustomerName'] : '';
 
         $endDate = date('Y-m-d');
-//        $pageNumber = isset($_GET['page']) ? $_GET['page'] : 1;
         $vehicleDataProvider = $vehicle->searchByDashboard();
-        $productDataProvider = $product->search(); //ByStockCheck($pageNumber, $endDate, '>=');
+        $productDataProvider = $product->searchByDashboard();
         $customerDataProvider = $customer->searchByDashboard();
         $serviceDataProvider = $service->searchByDashboard();
+        $followUpDataProvider = $vehicle->searchByMarketingFollowUp();
+        $followUpDataProvider->criteria->compare('t.plate_number', $plateNumber, true);
+        $followUpDataProvider->criteria->compare('customer.name', $customerName, true);
+        $followUpDataProvider->criteria->addCondition("DATEDIFF(CURDATE(), (
+            SELECT MAX(i.invoice_date)
+            FROM " . InvoiceHeader::model()->tableName() . " i
+            WHERE t.id = i.vehicle_id AND i.invoice_date > '2023-12-31'
+        )) > 180");
+        $followUpDataProvider->criteria->addCondition("(
+            SELECT COUNT(*)
+            FROM " . InvoiceHeader::model()->tableName() . " i
+            WHERE t.id = i.vehicle_id AND i.invoice_date > '2023-12-31'
+        ) > 3");
+        $followUpDataProvider->pagination->pageVar = 'page_follow_up';
         
         $branches = Branch::model()->findAll();
 
@@ -98,8 +113,11 @@ class SiteController extends Controller {
             'customerDataProvider' => $customerDataProvider,
             'service' => $service,
             'serviceDataProvider' => $serviceDataProvider,
+            'followUpDataProvider' => $followUpDataProvider,
             'branches' => $branches,
             'endDate' => $endDate,
+            'plateNumber' => $plateNumber,
+            'customerName' => $customerName,
         ));
     }
         
@@ -163,6 +181,17 @@ class SiteController extends Controller {
                 'productDataProvider' => $productDataProvider,
                 'branches' => $branches,
                 'endDate' => $endDate,
+            ));
+        }
+    }
+
+    public function actionAjaxHtmlUpdateServiceTable() {
+        if (Yii::app()->request->isAjaxRequest) {
+            $service = Search::bind(new Service('search'), isset($_GET['Service']) ? $_GET['Service'] : '');
+            $serviceDataProvider = $service->searchByDashboard();
+
+            $this->renderPartial('_serviceTable', array(
+                'serviceDataProvider' => $serviceDataProvider,
             ));
         }
     }

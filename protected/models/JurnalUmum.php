@@ -1074,4 +1074,45 @@ class JurnalUmum extends CActiveRecord {
 
         return $resultSet;
     }
+    
+    public static function getLedgerSummaryReport($startDate, $endDate, $coaCategoryList, $coaSubCategoryList, $branchId, $transactionType) {
+        $branchConditionSql = '';
+        $transactionTypeConditionSql = '';
+        
+        $coaCategoryIdsConditionSql = '';
+        if (!empty($coaCategoryList)) {
+            $coaCategoryIdsConditionSql = ' AND c.coa_category_id IN (' . implode(',', $coaCategoryList) . ')';
+        }
+        
+        $coaSubCategoryIdsConditionSql = '';
+        if (!empty($coaSubCategoryList)) {
+            $coaSubCategoryIdsConditionSql = ' AND c.coa_sub_category_id IN (' . implode(',', $coaSubCategoryList) . ')';
+        }
+        
+        $params = array(
+            ':start_date' => $startDate,
+            ':end_date' => $endDate,
+        );
+        
+        if (!empty($branchId)) {
+            $branchConditionSql = ' AND j.branch_id = :branch_id';
+            $params[':branch_id'] = $branchId;
+        }
+        
+        if (!empty($transactionType)) {
+            $transactionTypeConditionSql = ' AND j.transaction_type = :transaction_type';
+            $params[':transaction_type'] = $transactionType;
+        }
+        
+        $sql = "SELECT c.id, MAX(c.code) AS coa_code, MAX(c.name) AS coa_name, SUM(IF(j.debet_kredit = 'D', j.total, 0)) AS debit, SUM(IF(j.debet_kredit = 'K', j.total, 0)) AS credit 
+                FROM rims_jurnal_umum j 
+                INNER JOIN rims_coa c ON c.id = j.coa_id
+                WHERE j.tanggal_transaksi BETWEEN :start_date AND :end_date" . $coaCategoryIdsConditionSql . $coaSubCategoryIdsConditionSql . $branchConditionSql . $transactionTypeConditionSql . "
+                GROUP BY c.id
+                ORDER BY coa_code ASC;";
+        
+        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
+
+        return $resultSet;
+    }
 }

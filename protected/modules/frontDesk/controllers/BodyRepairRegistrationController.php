@@ -510,8 +510,9 @@ class BodyRepairRegistrationController extends Controller {
         $carMake = (isset($_GET['CarMake'])) ? $_GET['CarMake'] : '';
         $carModel = (isset($_GET['CarModel'])) ? $_GET['CarModel'] : '';
         $customerName = (isset($_GET['CustomerName'])) ? $_GET['CustomerName'] : '';
+        $tabIndex = (isset($_GET['TabIndex'])) ? $_GET['TabIndex'] : 0;
 
-        foreach ($branches as $branch) {
+        foreach ($branches as $index => $branch) {
             $model = Search::bind(new RegistrationTransaction('search'), isset($_GET['RegistrationTransaction']) ? $_GET['RegistrationTransaction'] : '');
             $dataProvider = $model->searchAdmin();
 
@@ -545,8 +546,11 @@ class BodyRepairRegistrationController extends Controller {
                 $dataProvider->criteria->params[':name'] = "%{$customerName}%";
             }
 
+            $dataProvider->pagination->pageVar = 'page_branch_' . $branch->id;
+
             $tabContent = $this->renderPartial('_adminPerBranch', array(
                 'dataProvider' => $dataProvider,
+                'tabIndex' => $index,
             ), true);
             $detailTabs[$branch->name] = array('content' => $tabContent);
         }
@@ -586,6 +590,7 @@ class BodyRepairRegistrationController extends Controller {
 
             $detailTabs['All'] = array('content' => $this->renderPartial('_adminAllBranch', array(
                 'dataProvider' => $dataProvider,
+                'tabIndex' => $index + 1,
             ), true));
         }
         
@@ -599,6 +604,7 @@ class BodyRepairRegistrationController extends Controller {
             'carModel' => $carModel,
             'customerName' => $customerName,
             'detailTabs' => $detailTabs,
+            'tabIndex' => $tabIndex,
         ));
     }
 

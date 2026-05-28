@@ -1,6 +1,6 @@
 <?php
 
-class AccountingJournalSummaryController extends Controller {
+class JournalLedgerSummaryController extends Controller {
 
     public $layout = '//layouts/column1';
     public function filters() {
@@ -30,35 +30,18 @@ class AccountingJournalSummaryController extends Controller {
         $coaCategoryList = (isset($_GET['CoaCategoryList'])) ? $_GET['CoaCategoryList'] : array();
         $coaSubCategoryList = (isset($_GET['CoaSubCategoryList'])) ? $_GET['CoaSubCategoryList'] : array();
 
-        $criteria = new CDbCriteria();
-        $criteria->order = 't.code ASC';
-
-        if (!empty($coaCategoryList) && !empty($coaSubCategoryList)) {
-            $criteria->addCondition('t.coa_category_id IN (' . implode(',', $coaCategoryList) . ') OR t.id IN (' . implode(',', $coaSubCategoryList) . ')');
-            $coaSubCategories = CoaSubCategory::model()->findAll($criteria);
-        } elseif (!empty($coaCategoryList) && empty($coaSubCategoryList)) {
-            $criteria->addCondition('t.coa_category_id IN (' . implode(',', $coaCategoryList) . ')');
-            $coaSubCategories = CoaSubCategory::model()->findAll($criteria);
-        } elseif (empty($coaCategoryList) && !empty($coaSubCategoryList)) {
-            $criteria->addCondition('t.id IN (' . implode(',', $coaSubCategoryList) . ')');
-            $coaSubCategories = CoaSubCategory::model()->findAll($criteria);
-        } else {
-            $coaSubCategories = CoaSubCategory::model()->findAll(array(
-                'condition' => 't.coa_category_id NOT IN (11)', 
-                'order' => 't.code ASC'
-            ));
-        }
+        $ledgerSummaryReport = JurnalUmum::getLedgerSummaryReport($startDate, $endDate, $coaCategoryList, $coaSubCategoryList, $branchId, $transactionType);
         
         if (isset($_GET['ResetFilter'])) {
             $this->redirect(array('summary'));
         }
         
         if (isset($_GET['SaveExcel'])) {
-            $this->saveToExcel($coaSubCategories , $startDate, $endDate, $branchId, $transactionType);
+            $this->saveToExcel($ledgerSummaryReport,  $startDate, $endDate, $branchId);
         }
 
         $this->render('summary', array(
-            'coaSubCategories' => $coaSubCategories,
+            'ledgerSummaryReport' => $ledgerSummaryReport,
             'transactionType' => $transactionType,
             'startDate' => $startDate,
             'endDate' => $endDate,
@@ -99,7 +82,7 @@ class AccountingJournalSummaryController extends Controller {
         ));
     }
 
-    protected function saveToExcel($coaSubCategories, $startDate, $endDate, $branchId, $transactionType) {
+    protected function saveToExcel($ledgerSummaryReport, $startDate, $endDate, $branchId) {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
         
@@ -141,56 +124,25 @@ class AccountingJournalSummaryController extends Controller {
 
         $counter = 6;
 
-        $accountCategoryDebitBalance = '0.00';
-        $accountCategoryCreditBalance = '0.00';
-        foreach ($coaSubCategories as $coaSubCategory) {
-            $coas = Coa::model()->findAllByAttributes(array('coa_sub_category_id' => $coaSubCategory->id), array('order' => 't.code ASC'));
-            foreach ($coas as $coa) {
-                $journalDebitBalance = $coa->getJournalDebitBalance($startDate, $endDate, $branchId, $transactionType);
-                $journalCreditBalance = $coa->getJournalCreditBalance($startDate, $endDate, $branchId, $transactionType);
-                if ($journalDebitBalance !== 0 || $journalCreditBalance !== 0) { //&& $journalDebitBalance !== $journalCreditBalance) {
-                    $worksheet->setCellValue("A{$counter}", $coa->code);
-                    $worksheet->setCellValue("B{$counter}", $coa->name);
-                    if (empty($coa->coaIds)) {
-                        $worksheet->setCellValue("C{$counter}", $journalDebitBalance);
-                        $worksheet->setCellValue("D{$counter}", $journalCreditBalance);
-                    }
-                    $counter++;
-            
-                    $groupDebitBalance = 0;
-                    $groupCreditBalance = 0;
-                    if (!empty($coa->coaIds)) {
-                        $coaIds = Coa::model()->findAllByAttributes(array('coa_id' => $coa->id), array('order' => 't.code ASC'));
-                        foreach ($coaIds as $account) {
-                            $journalDebitBalance = $account->getJournalDebitBalance($startDate, $endDate, $branchId, $transactionType);
-                            $journalCreditBalance = $account->getJournalCreditBalance($startDate, $endDate, $branchId, $transactionType);
-                            if (($journalDebitBalance !== 0 || $journalCreditBalance !== 0) && $journalDebitBalance !== $journalCreditBalance) {
-                                $worksheet->setCellValue("A{$counter}", $coa->code);
-                                $worksheet->setCellValue("B{$counter}", $coa->name);
-                                if (empty($coa->coaIds)) {
-                                    $worksheet->setCellValue("C{$counter}", $journalDebitBalance);
-                                    $worksheet->setCellValue("D{$counter}", $journalCreditBalance);
-                                }
-                                $groupDebitBalance += $journalDebitBalance;
-                                $groupCreditBalance += $journalCreditBalance;
-                                
-                                $counter++;
-                                
-                            }
-                        }
-                    }
-                }
-                $accountCategoryDebitBalance += $journalDebitBalance;
-                $accountCategoryCreditBalance += $journalCreditBalance;
-            }
+        $debitSum = '0.00'; 
+        $creditSum = '0.00';
+        foreach ($ledgerSummaryReport as $ledgerSummaryReportItem) {
+            $worksheet->setCellValue("A{$counter}", $ledgerSummaryReportItem['coa_code']);
+            $worksheet->setCellValue("B{$counter}", $ledgerSummaryReportItem['coa_name']);
+            $worksheet->setCellValue("C{$counter}", $ledgerSummaryReportItem['debit']);
+            $worksheet->setCellValue("D{$counter}", $ledgerSummaryReportItem['credit']);
+            $counter++;
+
+            $debitSum += $ledgerSummaryReportItem['debit'];
+            $creditSum += $ledgerSummaryReportItem['credit']; 
         }
         
         $worksheet->getStyle("A{$counter}:D{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
         $worksheet->getStyle("A{$counter}:D{$counter}")->getFont()->setBold(true);
         
         $worksheet->setCellValue("B{$counter}", "Total");
-        $worksheet->setCellValue("C{$counter}", $accountCategoryDebitBalance);
-        $worksheet->setCellValue("D{$counter}", $accountCategoryCreditBalance);
+        $worksheet->setCellValue("C{$counter}", $debitSum);
+        $worksheet->setCellValue("D{$counter}", $creditSum);
 
         for ($col = 'A'; $col !== 'Z'; $col++) {
             $objPHPExcel->getActiveSheet()
@@ -280,7 +232,7 @@ class AccountingJournalSummaryController extends Controller {
         ob_end_clean();
         // We'll be outputting an excel file
         header('Content-type: application/vnd.ms-excel');
-        header('Content-Disposition: attachment;filename="Journal Detail Transaction.xls"');
+        header('Content-Disposition: attachment;filename="transaction_detail_ledger.xls"');
         header('Cache-Control: max-age=0');
         
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');

@@ -167,6 +167,8 @@
             <?php echo CHtml::submitButton('Export Excel', array('name' => 'ExportProductExcel'));  ?>
         </div>
 
+        <hr />
+
         <div id="product_stock_table">
             <?php $this->renderPartial('_productStockTable', array(
                 'productDataProvider' => $productDataProvider,

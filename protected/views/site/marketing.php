@@ -1,6 +1,15 @@
 <?php
     $this->pageTitle=Yii::app()->name;
 ?>
+
+<style> 
+ .table_wrapper{
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+}
+</style>
+
 <div id="maincontent">
     <?php echo CHtml::beginForm(array(''), 'get'); ?>
 	<div class="clearfix page-action">
@@ -30,6 +39,13 @@
                         'content' => $this->renderPartial('_viewService', array(
                             'service' => $service, 
                             'serviceDataProvider' => $serviceDataProvider, 
+                        ), true),
+                    ),
+                    'Follow Up' => array(
+                        'content' => $this->renderPartial('_viewFollowUp', array(
+                            'plateNumber' => $plateNumber,
+                            'customerName' => $customerName,
+                            'followUpDataProvider' => $followUpDataProvider, 
                         ), true),
                     ),
                 ),

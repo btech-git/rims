@@ -1,8 +1,5 @@
 <div class="reportDisplay">
-    <?php $dataCount = count($dataProvider->data); ?>
-    <?php if ($dataCount > 0): ?>
-        <?php echo "Displaying 1-{$dataCount} of {$dataCount} result(s)."; ?>
-    <?php endif; ?>
+    <?php echo ReportHelper::summaryText($dataProvider); ?>
 </div>
 
 <br />
@@ -36,9 +33,7 @@
                 <tr style="background-color: <?php echo $activeRegistrationItem->status == 'Finished' ? 'greenyellow' : 'salmon'; ?>">
                     <td><?php echo CHtml::encode($runningNumber); ?></td>
                     <td>
-                        <?php echo CHtml::link($activeRegistrationItem->transaction_number, Yii::app()->createUrl("frontDesk/bodyRepairRegistration/view", array(
-                            "id" => $activeRegistrationItem->id
-                        )), array(
+                        <?php echo CHtml::link($activeRegistrationItem->transaction_number, array("view", "id"=>$activeRegistrationItem->id), array(
                             "class" => "page-link", 
                             "data-record-id" => $activeRegistrationItem->id, 
                             'target' => '_blank', 
@@ -68,4 +63,13 @@
             <?php endforeach; ?>
         </tbody>
     </table>
+    
+    <div class="right">
+        <?php $this->widget('system.web.widgets.pagers.CLinkPager', array(
+            'pages' => $dataProvider->pagination,
+        )); ?>
+        <span style="display: none"><?php echo $tabIndex; ?></span>
+    </div>
+    <br />
+    <br />
 </div>

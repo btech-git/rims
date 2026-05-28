@@ -202,7 +202,7 @@
                                     ),
                                     array(
                                         'label' => 'Ringkasan Buku Besar', 
-                                        'url' => array('/report/accountingJournalSummary/summary'), 
+                                        'url' => array('/report/journalLedgerSummary/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('journalSummaryReport'),
                                     ),
                                     array(

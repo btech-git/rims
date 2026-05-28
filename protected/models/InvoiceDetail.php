@@ -1099,10 +1099,10 @@ class InvoiceDetail extends CActiveRecord {
         }
         
         $sql = "SELECT h.customer_id, h.branch_id, MIN(c.name) AS customer_name, SUM(d.quantity) AS sale_quantity
-                FROM rims_invoice_detail d
-                INNER JOIN rims_invoice_header h ON h.id = d.invoice_id
-                INNER JOIN rims_product p ON p.id = d.product_id
-                INNER JOIN rims_customer c ON c.id = h.customer_id
+                FROM " . InvoiceDetail::model()->tableName() . " d
+                INNER JOIN " . InvoiceHeader::model()->tableName() . " h ON h.id = d.invoice_id
+                INNER JOIN " . Product::model()->tableName() . " p ON p.id = d.product_id
+                INNER JOIN " . Customer::model()->tableName() . " c ON c.id = h.customer_id
                 WHERE p.product_sub_category_id IN ({$productSubCategoryIdsSql}) AND c.customer_type = 'Company' AND h.user_id_cancelled IS NULL AND 
                     YEAR(h.invoice_date) = :year AND MONTH(h.invoice_date) = :month" . $customerNameConditionSql . "
                 GROUP BY h.customer_id, h.branch_id
@@ -1111,5 +1111,51 @@ class InvoiceDetail extends CActiveRecord {
         $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
 
         return $resultSet;
+    }
+    
+    public function getAverageQuantityProductYearly($productId) {
+        $currentYear = date('Y');
+        $currentMonth = date('m');
+        
+        $sql = "SELECT SUM(d.quantity) AS total_quantity
+                FROM " . InvoiceDetail::model()->tableName() . " d
+                INNER JOIN " . InvoiceHeader::model()->tableName() . " h ON h.id = d.invoice_id
+                WHERE ((YEAR(h.invoice_date) = :year_start AND MONTH(h.invoice_date) >= :month_start) OR (YEAR(h.invoice_date) = :year_end AND MONTH(h.invoice_date) <= :month_end)) AND d.product_id = :product_id
+                GROUP BY YEAR(h.invoice_date), MONTH(h.invoice_date)";
+                
+        $totals = Yii::app()->db->createCommand($sql)->queryColumn(array(
+            ':year_start' => $currentYear - 1,
+            ':month_start' => $currentMonth,
+            ':year_end' => $currentYear,
+            ':month_end' => $currentMonth - 1,
+            ':product_id' => $productId,
+        ));
+        
+        $average = array_sum($totals) / 12;
+
+        return $average;
+    }
+    
+    public function getAverageQuantityServiceYearly($serviceId) {
+        $currentYear = date('Y');
+        $currentMonth = date('m');
+        
+        $sql = "SELECT COUNT(d.service_id) AS total_quantity
+                FROM " . InvoiceDetail::model()->tableName() . " d
+                INNER JOIN " . InvoiceHeader::model()->tableName() . " h ON h.id = d.invoice_id
+                WHERE ((YEAR(h.invoice_date) = :year_start AND MONTH(h.invoice_date) >= :month_start) OR (YEAR(h.invoice_date) = :year_end AND MONTH(h.invoice_date) <= :month_end)) AND d.service_id = :service_id
+                GROUP BY YEAR(h.invoice_date), MONTH(h.invoice_date)";
+                
+        $totals = Yii::app()->db->createCommand($sql)->queryColumn(array(
+            ':year_start' => $currentYear - 1,
+            ':month_start' => $currentMonth,
+            ':year_end' => $currentYear,
+            ':month_end' => $currentMonth - 1,
+            ':service_id' => $serviceId,
+        ));
+        
+        $average = array_sum($totals) / 12;
+
+        return $average;
     }
 }

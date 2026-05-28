@@ -377,6 +377,48 @@ class Vehicle extends CActiveRecord {
         ));
     }
 
+    public function searchByMarketingFollowUp() {
+        // @todo Please modify the following code to remove attributes that should not be searched.
+
+        $criteria = new CDbCriteria;
+
+        $criteria->with = array(
+            'customer',
+            'carMake',
+            'carModel',
+            'carSubModel',
+            'carSubModelDetail',
+            'color',
+        );
+
+        $criteria->compare('t.id', $this->id);
+        $criteria->compare('t.machine_number', $this->machine_number, true);
+        $criteria->compare('frame_number', $this->frame_number, true);
+        $criteria->compare('t.car_make_id', $this->car_make_id);
+        $criteria->compare('t.car_model_id', $this->car_model_id);
+        $criteria->compare('t.car_sub_model_id', $this->car_sub_model_id);
+        $criteria->compare('t.car_sub_model_detail_id', $this->car_sub_model_detail_id);
+        $criteria->compare('t.color_id', $this->color_id);
+        $criteria->compare('year', $this->year, true);
+        $criteria->compare('customer_pic_id', $this->customer_pic_id);
+        $criteria->compare('chasis_code', $this->chasis_code, true);
+        $criteria->compare('transmission', $this->transmission, true);
+        $criteria->compare('fuel_type', $this->fuel_type, true);
+        $criteria->compare('power', $this->power);
+        $criteria->compare('drivetrain', $this->drivetrain, true);
+        $criteria->compare('notes', $this->notes, true);
+        $criteria->compare('customer.customer_type', $this->customer_type);
+
+        $criteria->order = 't.plate_number ASC';
+
+        return new CActiveDataProvider($this, array(
+            'criteria' => $criteria,
+            'pagination' => array(
+                'pageSize' => 100,
+            ),
+        ));
+    }
+
     public function getPlateNumberCombination() {
         $vehiclePlateNumberPrefix = VehiclePlateNumberPrefix::model()->findByPk($this->plate_number_prefix_id);
         $code = empty($vehiclePlateNumberPrefix) ? '' : $vehiclePlateNumberPrefix->code;
