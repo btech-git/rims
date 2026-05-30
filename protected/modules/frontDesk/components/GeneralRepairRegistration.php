@@ -504,8 +504,8 @@ class GeneralRepairRegistration extends CComponent {
         $valid = true;
 
         $this->header->setCodeNumberByRevision('transaction_number');
-        $this->header->total_quickservice = $this->totalQuickServiceQuantity;
-        $this->header->total_quickservice_price = $this->subTotalQuickService;
+//        $this->header->total_quickservice = $this->totalQuickServiceQuantity;
+//        $this->header->total_quickservice_price = $this->subTotalQuickService;
         $this->header->total_service = $this->totalQuantityService;
         $this->header->subtotal_service = $this->subTotalService;
         $this->header->discount_service = $this->totalDiscountService;
