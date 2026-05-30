@@ -782,7 +782,16 @@ class RegistrationTransaction extends MonthlyTransactionActiveRecord {
     }
 
     public function getPpnLiteral() {
-        return ($this->ppn == 0) ? '0%' : '11%';
+        $taxLiteral = '';
+        
+        if ($this->ppn == 1) {
+            $taxLiteral = 'Add PPN';
+        } elseif ($this->ppn == 3) {
+            $taxLiteral = 'Include PPN';
+        } else {
+            $taxLiteral = 'Non PPN';
+        }
+        return $taxLiteral;
     }
 
     public function getPphLiteral() {

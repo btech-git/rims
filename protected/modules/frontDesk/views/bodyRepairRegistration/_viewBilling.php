@@ -48,6 +48,18 @@
                     </div>
                 </div>
                 
+                <hr style="border:solid 2px; margin-top:0px; color:black">
+                
+                <div class="field">
+                    <div class="row collapse">
+                        <div class="small-4 columns">
+                            <span class="prefix">Grand Total</span>
+                        </div>
+                        <div class="small-8 columns">
+                            <input type="text" readonly="true" value="<?php echo number_format($model->grand_total, 2); ?>"> 
+                        </div>
+                    </div>
+                </div>                
             </div> <!-- end div large -->
             <div class="large-6 columns">
                 
@@ -87,21 +99,10 @@
                 <div class="field">
                     <div class="row collapse">
                         <div class="small-4 columns">
-                            <span class="prefix">PPH Price</span>
+                            <span class="prefix">PPn Type</span>
                         </div>
                         <div class="small-8 columns">
-                            <input type="text" readonly="true" value="<?php echo number_format($model->pph_price, 2); ?>"> 
-                        </div>
-                    </div>
-                </div>
-                <hr style="border:solid 2px; margin-top:0px; color:black">
-                <div class="field">
-                    <div class="row collapse">
-                        <div class="small-4 columns">
-                            <span class="prefix">Grand Total</span>
-                        </div>
-                        <div class="small-8 columns">
-                            <input type="text" readonly="true" value="<?php echo number_format($model->grand_total, 2); ?>"> 
+                            <input type="text" readonly="true" value="<?php echo $model->ppnLiteral; ?>"> 
                         </div>
                     </div>
                 </div>

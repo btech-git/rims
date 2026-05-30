@@ -47,17 +47,6 @@
                     </div>
                 </div>
 
-                <div class="field">
-                    <div class="row collapse">
-                        <div class="small-4 columns">
-                            <span class="prefix">PPN Price</span>
-                        </div>
-                        <div class="small-8 columns">
-                            <input type="text" readonly="true" value="<?php echo number_format($model->ppn_price, 2); ?>"> 
-                        </div>
-                    </div>
-                </div>
-
                 <hr style="border:solid 2px; margin-top:0px; color:black">
                 
                 <div class="field">
@@ -81,18 +70,8 @@
                     </div>
                 </div>
             </div> <!-- end div large -->
+            
             <div class="large-6 columns">
-                <div class="field">
-                    <div class="row collapse">
-                        <div class="small-4 columns">
-                            <span class="prefix">Total Quick Service</span>
-                        </div>
-                        <div class="small-8 columns">
-                            <input type="text" readonly="true" value="<?php echo $model->total_quickservice; ?>"> 
-                        </div>
-                    </div>
-                </div>
-
                 <div class="field">
                     <div class="row collapse">
                         <div class="small-4 columns">
@@ -111,6 +90,28 @@
                         </div>
                         <div class="small-8 columns">
                             <input type="text" readonly="true" value="<?php echo $model->total_product; ?>"> 
+                        </div>
+                    </div>
+                </div>
+
+                <div class="field">
+                    <div class="row collapse">
+                        <div class="small-4 columns">
+                            <span class="prefix">PPN Price</span>
+                        </div>
+                        <div class="small-8 columns">
+                            <input type="text" readonly="true" value="<?php echo number_format($model->ppn_price, 2); ?>"> 
+                        </div>
+                    </div>
+                </div>
+
+                <div class="field">
+                    <div class="row collapse">
+                        <div class="small-4 columns">
+                            <span class="prefix">PPn Type</span>
+                        </div>
+                        <div class="small-8 columns">
+                            <input type="text" readonly="true" value="<?php echo $model->ppnLiteral; ?>"> 
                         </div>
                     </div>
                 </div>

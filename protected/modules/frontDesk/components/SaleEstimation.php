@@ -190,9 +190,19 @@ class SaleEstimation extends CComponent {
         return $this->subTotalProductBeforeDiscount + $this->subTotalServiceBeforeDiscount; 
     }
     
-    public function getTaxItemAmount() {
-        return $this->subTotalTransaction * $this->header->tax_product_percentage / 100;
+    public function getTaxItemPercentage() {
+        
+        return $this->header->tax_product_type == 0 ? 0 : 11;
     }
+    
+//    public function getTaxItemAmount() {
+//        $taxAmount = '0.00'; 
+//        
+//        if ($this->header->tax_product_type == 1) {
+//            $this->header->tax_product_amount = $this->subTotalTransaction * $this->header->tax_product_percentage / 100;
+//        }
+//        return 
+//    }
     
     public function getGrandTotalTransaction() {
         return $this->subTotalProduct + $this->subTotalService + $this->taxItemAmount;

@@ -747,25 +747,25 @@ class GeneralRepairRegistration extends CComponent {
         return $valid;
     }
 
-    public function getTotalQuickServiceQuantity() {
-        $quantity = 0;
+//    public function getTotalQuickServiceQuantity() {
+//        $quantity = 0;
+//
+//        foreach ($this->quickServiceDetails as $detail) {
+//            $quantity = $quantity + 1;
+//        }
+//
+//        return $quantity;
+//    }
 
-        foreach ($this->quickServiceDetails as $detail) {
-            $quantity = $quantity + 1;
-        }
-
-        return $quantity;
-    }
-
-    public function getSubTotalQuickService() {
-        $total = 0.00;
-
-        foreach ($this->quickServiceDetails as $detail) {
-            $total += $detail->price;
-        }
-
-        return $total;
-    }
+//    public function getSubTotalQuickService() {
+//        $total = '0.00';
+//
+//        foreach ($this->quickServiceDetails as $detail) {
+//            $total += $detail->price;
+//        }
+//
+//        return $total;
+//    }
 
     public function getTotalQuantityService() {
         $quantity = 0;
@@ -778,7 +778,7 @@ class GeneralRepairRegistration extends CComponent {
     }
 
     public function getSubTotalService() {
-        $total = 0.00;
+        $total = '0.00';
 
         foreach ($this->serviceDetails as $detail) {
             $total += $detail->totalAmount;
@@ -788,7 +788,7 @@ class GeneralRepairRegistration extends CComponent {
     }
 
     public function getTotalDiscountService() {
-        $total = 0.00;
+        $total = '0.00';
 
         foreach ($this->serviceDetails as $detail) {
             $total += $detail->discountAmount;
@@ -812,7 +812,7 @@ class GeneralRepairRegistration extends CComponent {
     }
 
     public function getSubTotalProduct() {
-        $total = 0.00;
+        $total = '0.00';
 
         foreach ($this->productDetails as $detail) {
             $total += $detail->totalAmountProduct;
@@ -827,7 +827,7 @@ class GeneralRepairRegistration extends CComponent {
     }
 
     public function getTotalDiscountProduct() {
-        $total = 0.00;
+        $total = '0.00';
 
         foreach ($this->productDetails as $detail) {
             $total += $detail->discountAmount;
@@ -841,7 +841,7 @@ class GeneralRepairRegistration extends CComponent {
     }
 
     public function getTotalQuantityPackage() {
-        $total = 0.00;
+        $total = '0.00';
 
         foreach ($this->packageDetails as $detail) {
             $total += $detail->quantity;
@@ -851,7 +851,7 @@ class GeneralRepairRegistration extends CComponent {
     }
 
     public function getTotalPricePackage() {
-        $total = 0.00;
+        $total = '0.00';
 
         foreach ($this->packageDetails as $detail) {
             $total += $detail->totalPrice;
@@ -865,7 +865,7 @@ class GeneralRepairRegistration extends CComponent {
     }
 
     public function getTaxItemAmount() {
-        return ((int)$this->header->ppn == 2) ? 0 : $this->subTotalTransaction * $this->header->tax_percentage / 100;
+        return ((int)$this->header->ppn == 0) ? 0 : $this->subTotalTransaction * $this->header->tax_percentage / 100;
     }
 
     public function getGrandTotalTransaction() {

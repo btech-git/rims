@@ -14,9 +14,10 @@
                     Ppn
                 </th>
                 <th style="text-align: right; font-weight: bold; width: 10%">
-                    <?php echo CHtml::activeDropDownList($saleEstimation->header, 'tax_product_percentage', array(
+                    <?php echo CHtml::activeDropDownList($saleEstimation->header, 'tax_product_type', array(
                         0 => 'Non PPn',
-                        11 => 11,
+                        1 => 'Include PPn',
+                        2 => 'Add PPn',
                     ), array(
                         'onchange' => CHtml::ajax(array(
                             'type' => 'POST',

@@ -671,6 +671,11 @@ class BodyRepairRegistration extends CComponent {
             $total += $detail->totalAmount;
         }
 
+        switch ($this->header->ppn) {
+            case 3: return $total / (1 + $this->header->tax_percentage / 100);
+            default: return $total;
+        }
+
         return $total;
     }
 
@@ -732,7 +737,7 @@ class BodyRepairRegistration extends CComponent {
     }
 
     public function getTaxItemAmount() {
-        return ($this->header->ppn == 2) ? 0 : $this->subTotalTransaction * $this->header->tax_percentage / 100;
+        return ($this->header->ppn == 0) ? 0 : $this->subTotalTransaction * $this->header->tax_percentage / 100;
     }
 
     public function getGrandTotalTransaction() {
