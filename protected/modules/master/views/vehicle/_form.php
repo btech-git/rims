@@ -5,7 +5,7 @@
 ?>
 
 <div class="clearfix page-action">
-    <a class="button cbutton right" href="<?php echo Yii::app()->baseUrl . '/master/vehicle/admin'; ?>"><span class="fa fa-th-list"></span>Manage Customer Vehicles</a>
+    <a class="button cbutton right" href="<?php echo Yii::app()->baseUrl . '/master/vehicle/admin'; ?>"><span class="fa fa-th-list"></span>Manage</a>
     <h1>
         <?php if ($model->isNewRecord) {
             echo "New Vehicle";

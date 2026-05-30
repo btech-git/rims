@@ -1,4 +1,9 @@
-<div id="maincontent">
+
+        <a class="button cbutton right" href="<?php echo Yii::app()->baseUrl . '/frontDesk/customerRegistration/vehicleList'; ?>"><span class="fa fa-th-list"></span>Pendaftaran</a>
+        <?php if (Yii::app()->user->checkAccess("masterVehicleEdit")) { ?>
+            <a class="button warning right" style="margin-right:10px;" href="<?php echo Yii::app()->createUrl('/master/' . $ccontroller . '/update', array('id' => $model->id)); ?>"><span class="fa fa-edit"></span>edit</a>		
+        <?php } ?>
+            <div id="maincontent">
         <h1>View Vehicle <?php echo $model->plate_number; ?></h1>
 
         <div class="row">

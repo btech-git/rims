@@ -1,6 +1,11 @@
 <table style="border: 0px solid">
     <tr>
         <td style="border: 0px solid" colspan="2"><h1>List Vehicle</h1></td>
+        <td style="border: 0px solid" colspan="2">
+            <a class="button info right" href="<?php echo Yii::app()->baseUrl.'/master/vehicle/create';?>">
+                <span class="fa fa-plus"></span>New Vehicle
+            </a>
+        </td>
         <td style="border: 0px solid">
             <?php echo CHtml::link('<span class="fa fa-archive"></span>Manage GR', array('/frontDesk/generalRepairRegistration/admin'), array('class'=>'button success right')); ?>
         </td>

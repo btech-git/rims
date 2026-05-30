@@ -21,7 +21,7 @@ $this->menu = array(
     <div class="clearfix page-action">
         <?php $ccontroller = Yii::app()->controller->id; ?>
         <?php $ccaction = Yii::app()->controller->action->id; ?>
-        <a class="button cbutton right" href="<?php echo Yii::app()->baseUrl . '/master/vehicle/admin'; ?>"><span class="fa fa-th-list"></span>Manage Vehicles</a>
+        <a class="button cbutton right" href="<?php echo Yii::app()->baseUrl . '/master/vehicle/admin'; ?>"><span class="fa fa-th-list"></span>Manage</a>
         <?php if (Yii::app()->user->checkAccess("masterVehicleEdit")) { ?>
             <a class="button warning right" style="margin-right:10px;" href="<?php echo Yii::app()->createUrl('/master/' . $ccontroller . '/update', array('id' => $model->id)); ?>"><span class="fa fa-edit"></span>edit</a>		
         <?php } ?>

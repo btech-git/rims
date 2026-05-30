@@ -16,7 +16,11 @@ $this->menu = array(
 ?>
 
 <?php echo CHtml::link('Change Password', array("edit", "id" => $model->id), array('class' => 'button warning')); ?>
-<?php echo CHtml::link('<span class="fa fa-edit"></span>Edit', Yii::app()->baseUrl . '/user/admin/update?id=' . $model->id, array('class' => 'button cbutton right', 'style' => 'margin-right:10px')) ?>
+<?php echo CHtml::link('<span class="fa fa-edit"></span>Edit', Yii::app()->baseUrl . '/user/admin/update?id=' . $model->id, array(
+    'class' => 'button warning right', 
+    'style' => 'margin-right:10px',
+)) ?>
+<a class="button cbutton right" href="<?php echo Yii::app()->baseUrl . '/user/admin/admin'; ?>"><span class="fa fa-th-list"></span>Manage</a>
 <h1><?php echo UserModule::t('View User') . ' "' . $model->username . '"'; ?></h1>
 
 <?php

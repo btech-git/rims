@@ -202,10 +202,7 @@ class InvoiceHeaderController extends Controller {
         $criteria->addInCondition('id', $pr);
         $invoices = InvoiceHeader::model()->findAll($criteria);
 
-        //$details = InvoiceDetail::model()->findAllByAttributes(array('invoice_id'=>$id));
         $this->render('viewInvoices', array(
-            //'model'=>$this->loadModel($id),
-            //'details'=>$details,
             'invoices' => $invoices,
         ));
     }
@@ -924,8 +921,10 @@ class InvoiceHeaderController extends Controller {
      */
     public function loadModel($id) {
         $model = InvoiceHeader::model()->findByPk($id);
-        if ($model === null)
+        if ($model === null) {
             throw new CHttpException(404, 'The requested page does not exist.');
+        }
+        
         return $model;
     }
 
@@ -980,8 +979,9 @@ class InvoiceHeaderController extends Controller {
         if (Yii::app()->request->isAjaxRequest) {
             $product = new Product('search');
             $product->unsetAttributes();  // clear any default values
-            if (isset($_GET['Product']))
+            if (isset($_GET['Product'])) {
                 $product->attributes = $_GET['Product'];
+            }
 
             $productCriteria = new CDbCriteria;
 
@@ -1016,8 +1016,9 @@ class InvoiceHeaderController extends Controller {
 
             $product = new Product('search');
             $product->unsetAttributes();  // clear any default values
-            if (isset($_GET['Product']))
+            if (isset($_GET['Product'])) {
                 $product->attributes = $_GET['Product'];
+            }
 
             $productCriteria = new CDbCriteria;
             $productCriteria->compare('name', $product->name, true);
@@ -1085,15 +1086,19 @@ class InvoiceHeaderController extends Controller {
                 $model->ppn = 1;
                 $model->ppn_total = $model->product_price * 0.1;
                 $model->total_price = $model->product_price * 1.1;
-                if ($model->update(array('ppn', 'ppn_total', 'total_price')))
+                
+                if ($model->update(array('ppn', 'ppn_total', 'total_price'))) {
                     $this->redirect(array('view', 'id' => $model->id));
+                }
             }
             else {
                 $model->ppn = 0;
                 $model->ppn_total = 0;
                 $model->total_price = $model->product_price;
-                if ($model->update(array('ppn', 'ppn_total', 'total_price')))
+                
+                if ($model->update(array('ppn', 'ppn_total', 'total_price'))) {
                     $this->redirect(array('view', 'id' => $model->id));
+                }
             }
         }
         else {
@@ -1103,26 +1108,20 @@ class InvoiceHeaderController extends Controller {
                 $model->ppn = 1;
                 $model->ppn_total = $totalPrice * 0.1;
                 $model->total_price = $totalPrice * 1.1;
-                if ($model->update(array('ppn', 'ppn_total', 'total_price')))
+                
+                if ($model->update(array('ppn', 'ppn_total', 'total_price'))) {
                     $this->redirect(array('view', 'id' => $model->id));
+                }
             }
             else {
                 $model->ppn = 0;
                 $model->ppn_total = 0;
                 $model->total_price = $totalPrice;
-                if ($model->update(array('ppn', 'ppn_total', 'total_price')))
+                
+                if ($model->update(array('ppn', 'ppn_total', 'total_price'))) {
                     $this->redirect(array('view', 'id' => $model->id));
+                }
             }
         }
     }
-
-    // public function actionPph($id,$pph){
-    // 	$model = $this->loadModel($id);
-    // 	$registration = RegistrationTransaction::model()->findByPk($model->registration_transaction_id);
-    // 		$totalPrice = $registration->total_quickservice_price + $registration->subtotal_service + $registration->subtotal_product;
-    // 	if($pph == 1){
-    // 		$model->pph = 1;
-    // 		$model->pph_total = $
-    // 	}
-    // }
 }
