@@ -784,6 +784,11 @@ class GeneralRepairRegistration extends CComponent {
             $total += $detail->totalAmount;
         }
 
+        switch($this->header->ppn) {
+            case 3: return $total / (1 + $this->header->tax_percentage / 100);
+            default: return $total;
+        }
+
         return $total;
     }
 
