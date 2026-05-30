@@ -97,7 +97,7 @@
             'id',
             array(
                 'name' => 'name',
-                'value' => 'CHtml::link($data->name, array("/master/customer/view", "id"=>$data->id), array("target" => "_blank"))',
+                'value' => 'CHtml::link($data->name, array("/site/showCustomer/view", "id"=>$data->id), array("target" => "_blank"))',
                 'type'=>'raw',
             ),
             'mobile_phone',

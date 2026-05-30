@@ -108,7 +108,7 @@
             array(
                 'header' => 'Plate #',
                 'name' => 'plate_number',
-                'value' => 'CHtml::link($data->plate_number, array("/master/vehicle/view", "id"=>$data->id), array("target" => "_blank"))',
+                'value' => 'CHtml::link($data->plate_number, array("/site/showVehicle/view", "id"=>$data->id), array("target" => "_blank"))',
                 'type'=>'raw',
             ),
             array(
@@ -138,7 +138,6 @@
             array(
                 'header' => 'Customer',
                 'value' => '$data->customer->name',
-//                'value' => 'CHtml::link($data->customer->name, array("/master/customer/view", "id"=>$data->customer_id), array("target" => "_blank"))',
                 'type'=>'raw',
             ),
             array(
