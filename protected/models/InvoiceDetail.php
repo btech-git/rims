@@ -1113,7 +1113,7 @@ class InvoiceDetail extends CActiveRecord {
         return $resultSet;
     }
     
-    public function getAverageQuantityProductYearly($productId) {
+    public static function getAverageQuantityProductYearly($productId) {
         $currentYear = date('Y');
         $currentMonth = date('m');
         
@@ -1136,7 +1136,7 @@ class InvoiceDetail extends CActiveRecord {
         return $average;
     }
     
-    public function getAverageQuantityServiceYearly($serviceId) {
+    public static function getAverageQuantityServiceYearly($serviceId) {
         $currentYear = date('Y');
         $currentMonth = date('m');
         
