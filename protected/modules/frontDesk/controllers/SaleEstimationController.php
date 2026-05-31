@@ -410,12 +410,16 @@ class SaleEstimationController extends Controller {
             $this->loadState($saleEstimation);
 
             $taxPercentage = $saleEstimation->taxItemPercentage;
-            $taxTotalTransaction = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $saleEstimation->taxItemAmount));
+            $subTotalTransaction = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $saleEstimation->subTotalTransaction));
+            $taxItemAmount = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $saleEstimation->taxItemAmount));
+            $taxServiceAmount = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $saleEstimation->taxServiceAmount));
             $grandTotalTransaction = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $saleEstimation->grandTotalTransaction));
             
             echo CJSON::encode(array(
+                'subTotalTransaction' => $subTotalTransaction,
                 'taxPercentage' => $taxPercentage,
-                'taxTotalTransaction' => $taxTotalTransaction,
+                'taxItemAmount' => $taxItemAmount,
+                'taxServiceAmount' => $taxServiceAmount,
                 'grandTotalTransaction' => $grandTotalTransaction,
             ));
         }

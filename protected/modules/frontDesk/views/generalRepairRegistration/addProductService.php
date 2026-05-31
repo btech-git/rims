@@ -116,7 +116,7 @@ $this->breadcrumbs=array(
                                             )); ?>
                                         </td>
                                         <td>
-                                            <?php echo $form->dropDownList($generalRepairRegistration->header, 'tax_percentage', array(
+                                            <?php /*echo $form->dropDownList($generalRepairRegistration->header, 'tax_percentage', array(
                                                 0 => 0,
                                                 10 => 10,
                                                 11 => 11,
@@ -132,7 +132,7 @@ $this->breadcrumbs=array(
                                                         $("#sub_total_transaction").html(data.subTotalTransaction);
                                                     }',
                                                 )),
-                                            )); ?>
+                                            ));*/ ?>
                                         </td>
                                         <?php if ($generalRepairRegistration->header->work_order_number != ""): ?>
                                             <td><?php echo CHtml::encode(CHtml::value($generalRepairRegistration->header, 'work_order_number')); ?></td>

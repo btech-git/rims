@@ -524,6 +524,7 @@ class BodyRepairRegistration extends CComponent {
         $this->header->grand_total = $this->grandTotalTransaction;
         $this->header->subtotal = $this->subTotalTransaction;
         $this->header->ppn_price = $this->taxItemAmount;
+        $this->header->tax_percentage = (int)$this->header->ppn == 0 ? 0 : 11;
         $valid = $this->header->save(false);
 
         $bongkar = $sparepart = $ketok_las = $dempul = $epoxy = $cat = $pasang = $poles = $cuci = $finishing = 0;
@@ -665,14 +666,15 @@ class BodyRepairRegistration extends CComponent {
     }
 
     public function getSubTotalService() {
-        $total = 0.00;
+        $total = '0.00';
+        $taxPercentage = (int)$this->header->ppn == 0 ? 0 : 11;
 
         foreach ($this->serviceDetails as $detail) {
             $total += $detail->totalAmount;
         }
 
         switch ($this->header->ppn) {
-            case 3: return $total / (1 + $this->header->tax_percentage / 100);
+            case 3: return $total / (1 + $taxPercentage / 100);
             default: return $total;
         }
 
@@ -680,17 +682,13 @@ class BodyRepairRegistration extends CComponent {
     }
 
     public function getTotalDiscountService() {
-        $total = 0.00;
+        $total = '0.00';
 
         foreach ($this->serviceDetails as $detail) {
             $total += $detail->discountAmount;
         }
 
         return $total;
-    }
-
-    public function getGrandTotalService() {
-        return $this->subTotalService; // - $this->totalDiscountService;
     }
 
     public function getTotalQuantityProduct() {
@@ -704,7 +702,8 @@ class BodyRepairRegistration extends CComponent {
     }
 
     public function getSubTotalProduct() {
-        $total = 0.00;
+        $total = '0.00';
+        $taxPercentage = (int)$this->header->ppn == 0 ? 0 : 11;
 
         foreach ($this->productDetails as $detail) {
             $total += $detail->totalAmountProduct;
@@ -719,7 +718,7 @@ class BodyRepairRegistration extends CComponent {
     }
 
     public function getTotalDiscountProduct() {
-        $total = 0.00;
+        $total = '0.00';
 
         foreach ($this->productDetails as $detail) {
             $total += $detail->discountAmount;
@@ -728,16 +727,14 @@ class BodyRepairRegistration extends CComponent {
         return $total;
     }
 
-    public function getGrandTotalProduct() {
-        return $this->subTotalProduct; // - $this->totalDiscountProduct;
-    }
-
     public function getSubTotalTransaction() {
-        return $this->grandTotalService + $this->grandTotalProduct;
+        return $this->subTotalService + $this->subTotalProduct;
     }
 
     public function getTaxItemAmount() {
-        return ($this->header->ppn == 0) ? 0 : $this->subTotalTransaction * $this->header->tax_percentage / 100;
+        $taxPercentage = (int)$this->header->ppn == 0 ? 0 : 11;
+        
+        return ((int)$this->header->ppn == 0) ? 0 : $this->subTotalTransaction * $taxPercentage / 100;
     }
 
     public function getGrandTotalTransaction() {

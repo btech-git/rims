@@ -1249,21 +1249,16 @@ class GeneralRepairRegistrationController extends Controller {
             $generalRepairRegistration = $this->instantiate($id, '');
             $this->loadStateDetails($generalRepairRegistration);
 
-//            $totalQuickServiceQuantity = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $generalRepairRegistration->totalQuickServiceQuantity));
-//            $subTotalQuickService = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $generalRepairRegistration->subTotalQuickService));
             $totalQuantityService = CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $generalRepairRegistration->totalQuantityService));
             $subTotalService = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $generalRepairRegistration->subTotalService));
             $totalDiscountService = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $generalRepairRegistration->totalDiscountService));
-            $grandTotalService = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $generalRepairRegistration->grandTotalService));
+            $grandTotalService = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $generalRepairRegistration->subTotalService));
             $subTotalTransaction = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $generalRepairRegistration->subTotalTransaction));
             $taxItemAmount = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $generalRepairRegistration->taxItemAmount));
-            $grandTotalProduct = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $generalRepairRegistration->grandTotalProduct));
-//            $taxServiceAmount = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $generalRepairRegistration->taxServiceAmount));
+            $grandTotalProduct = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $generalRepairRegistration->subTotalProduct));
             $grandTotal = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $generalRepairRegistration->grandTotalTransaction));
 
             echo CJSON::encode(array(
-//                'totalQuickServiceQuantity' => $totalQuickServiceQuantity,
-//                'subTotalQuickService' => $subTotalQuickService,
                 'totalQuantityService' => $totalQuantityService,
                 'subTotalService' => $subTotalService,
                 'totalDiscountService' => $totalDiscountService,
@@ -1271,7 +1266,6 @@ class GeneralRepairRegistrationController extends Controller {
                 'subTotalTransaction' => $subTotalTransaction,
                 'taxItemAmount' => $taxItemAmount,
                 'grandTotalProduct' => $grandTotalProduct,
-//                'taxServiceAmount' => $taxServiceAmount,
                 'grandTotal' => $grandTotal,
             ));
         }
