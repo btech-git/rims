@@ -516,11 +516,11 @@ class BodyRepairRegistration extends CComponent {
         $this->header->total_service = $this->totalQuantityService;
         $this->header->subtotal_service = $this->subTotalService;
         $this->header->discount_service = $this->totalDiscountService;
-        $this->header->total_service_price = $this->grandTotalService;
+        $this->header->total_service_price = $this->subTotalService;
         $this->header->total_product = $this->totalQuantityProduct;
         $this->header->subtotal_product = $this->subTotalProduct;
         $this->header->discount_product = $this->totalDiscountProduct;
-        $this->header->total_product_price = $this->grandTotalProduct;
+        $this->header->total_product_price = $this->subTotalProduct;
         $this->header->grand_total = $this->grandTotalTransaction;
         $this->header->subtotal = $this->subTotalTransaction;
         $this->header->ppn_price = $this->taxItemAmount;
