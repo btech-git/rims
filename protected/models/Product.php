@@ -498,7 +498,7 @@ class Product extends CActiveRecord {
                 "defaultOrder" => "productMasterCategory.name ASC, productSubMasterCategory.name ASC, productSubCategory.name ASC, t.name ASC",
             ),
             'pagination' => array(
-                'pageSize' => 500,
+                'pageSize' => 1000,
                 'currentPage' => $pageNumber - 1,
             ),
         ));
