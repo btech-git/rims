@@ -35,6 +35,57 @@ class CustomerRegistrationController extends Controller {
         ));
     }
     
+    public function actionDischargeDate() {
+        $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : '';
+        $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : '';
+        $plateNumber = (isset($_GET['PlateNumber'])) ? $_GET['PlateNumber'] : '';
+        $carMake = (isset($_GET['CarMake'])) ? $_GET['CarMake'] : '';
+        $carModel = (isset($_GET['CarModel'])) ? $_GET['CarModel'] : '';
+        $customerName = (isset($_GET['CustomerName'])) ? $_GET['CustomerName'] : '';
+        
+        $model = Search::bind(new RegistrationTransaction('search'), isset($_GET['RegistrationTransaction']) ? $_GET['RegistrationTransaction'] : '');
+        $dataProvider = $model->searchAdmin();
+        $dataProvider->criteria->addCondition('user_id_cancelled IS NULL AND estimate_discharge_date IS NOT NULL AND t.status NOT IN ("Finished")');
+        $dataProvider->criteria->addBetweenCondition('SUBSTRING(t.transaction_date, 1, 10)', $startDate, $endDate);
+        $dataProvider->criteria->together = true;
+        $dataProvider->criteria->with = array(
+            'customer',
+            'branch',
+            'vehicle',
+        );
+
+        if (!empty($plateNumber)) {
+            $dataProvider->criteria->addCondition('vehicle.plate_number LIKE :plate_number');
+            $dataProvider->criteria->params[':plate_number'] = "%{$plateNumber}%";
+        }
+
+        if (!empty($carMake)) {
+            $dataProvider->criteria->addCondition('vehicle.car_make_id = :car_make_id');
+            $dataProvider->criteria->params[':car_make_id'] = $carMake;
+        }
+
+        if (!empty($carModel)) {
+            $dataProvider->criteria->addCondition('vehicle.car_model_id = :car_model_id');
+            $dataProvider->criteria->params[':car_model_id'] = $carModel;
+        }
+
+        if (!empty($customerName)) {
+            $dataProvider->criteria->addCondition('customer.name LIKE :name');
+            $dataProvider->criteria->params[':name'] = "%{$customerName}%";
+        }
+
+        $this->render('dischargeDate', array(
+            'model' => $model,
+            'dataProvider' => $dataProvider,
+            'startDate' => $startDate,
+            'endDate' => $endDate,
+            'plateNumber' => $plateNumber,
+            'carMake' => $carMake,
+            'carModel' => $carModel,
+            'customerName' => $customerName,
+        ));
+    }
+    
     public function actionAjaxHtmlUpdateCarModelSelect() {
         if (Yii::app()->request->isAjaxRequest) {
             $vehicle = Search::bind(new Vehicle('search'), isset($_GET['Vehicle']) ? $_GET['Vehicle'] : '');

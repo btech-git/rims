@@ -208,6 +208,11 @@
                         'url' => array('/frontDesk/vehicleStatus/index'), 
                         'visible' => (Yii::app()->user->checkAccess('vehicleStatusView')),
                     ),
+                    array(
+                        'label' => 'Estimasi Tanggal Keluar', 
+                        'url' => array('/frontDesk/customerRegistration/dischargeDate'), 
+//                        'visible' => (Yii::app()->user->checkAccess('vehicleStatusView')),
+                    ),
                 ),
             )); ?>
         </li>
