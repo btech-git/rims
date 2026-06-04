@@ -10,7 +10,7 @@
             <CustomDoc/>
             <RefDesc><?php echo $saleInvoiceHeader->invoice_number; ?></RefDesc>
             <FacilityStamp/>
-            <SellerIDTKU>0013388111008000</SellerIDTKU>
+            <SellerIDTKU>0013388111008000000000</SellerIDTKU>
             <BuyerTin><?php echo CHtml::value($saleInvoiceHeader, 'customer.tax_registration_number'); ?></BuyerTin>
             <BuyerDocument>TIN</BuyerDocument>
             <BuyerCountry>IDN</BuyerCountry>
@@ -18,7 +18,7 @@
             <BuyerName><?php echo CHtml::value($saleInvoiceHeader, 'customer.name'); ?></BuyerName>
             <BuyerAdress><?php echo CHtml::value($saleInvoiceHeader, 'customer.address'); ?></BuyerAdress>
             <BuyerEmail><?php echo CHtml::value($saleInvoiceHeader, 'customer.email'); ?></BuyerEmail>
-            <BuyerIDTKU><?php //echo CHtml::value($saleInvoiceHeader, 'customer.tax_registration_number'); ?>000000</BuyerIDTKU>
+            <BuyerIDTKU><?php echo CHtml::value($saleInvoiceHeader, 'customer.tax_registration_number'); ?>000000</BuyerIDTKU>
             <ListOfGoodService>
                 <?php foreach ($saleInvoiceHeader->invoiceDetails as $saleInvoiceDetail): ?>
                 <GoodService>
