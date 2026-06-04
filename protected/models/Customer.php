@@ -518,7 +518,7 @@ class Customer extends CActiveRecord {
             SELECT COALESCE(SUM(i.total_price), 0) AS total_receivable
             FROM " . InvoiceHeader::model()->tableName() . " i
             INNER JOIN " . Customer::model()->tableName() . " c ON c.id = i.customer_id
-            WHERE c.customer_type = 'Individual' AND i.invoice_date BETWEEN '" . AppParam::BEGINNING_TRANSACTION_DATE . " ' AND :end_date" . $branchConditionSql . "
+            WHERE c.customer_type = 'Individual' AND i.user_id_cancelled IS NULL  AND i.invoice_date BETWEEN '" . AppParam::BEGINNING_TRANSACTION_DATE . " ' AND :end_date" . $branchConditionSql . "
         ";
 
         $value = Yii::app()->db->createCommand($sql)->queryScalar($params);
@@ -542,7 +542,7 @@ class Customer extends CActiveRecord {
             SELECT COALESCE(SUM(i.payment_amount), 0) AS total_payment
             FROM " . InvoiceHeader::model()->tableName() . " i
             INNER JOIN " . Customer::model()->tableName() . " c ON c.id = i.customer_id
-            WHERE c.customer_type = 'Individual' AND i.invoice_date BETWEEN '" . AppParam::BEGINNING_TRANSACTION_DATE . " ' AND :end_date" . $branchConditionSql . "
+            WHERE c.customer_type = 'Individual' AND i.user_id_cancelled IS NULL  AND i.invoice_date BETWEEN '" . AppParam::BEGINNING_TRANSACTION_DATE . " ' AND :end_date" . $branchConditionSql . "
         ";
 
         $value = Yii::app()->db->createCommand($sql)->queryScalar($params);
@@ -566,7 +566,7 @@ class Customer extends CActiveRecord {
             SELECT COALESCE(SUM(i.payment_left), 0) AS total_remaining
             FROM " . InvoiceHeader::model()->tableName() . " i
             INNER JOIN " . Customer::model()->tableName() . " c ON c.id = i.customer_id
-            WHERE c.customer_type = 'Individual' AND i.invoice_date BETWEEN '" . AppParam::BEGINNING_TRANSACTION_DATE . " ' AND :end_date" . $branchConditionSql . "
+            WHERE c.customer_type = 'Individual' AND i.user_id_cancelled IS NULL AND i.invoice_date BETWEEN '" . AppParam::BEGINNING_TRANSACTION_DATE . " ' AND :end_date" . $branchConditionSql . "
         ";
 
         $value = Yii::app()->db->createCommand($sql)->queryScalar($params);
