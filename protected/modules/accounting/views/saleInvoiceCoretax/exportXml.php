@@ -1,5 +1,5 @@
 <TaxInvoiceBulk xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-    <TIN>0031486434413000</TIN>
+    <TIN>0013388111008000</TIN>
     <ListOfTaxInvoice>
         <?php foreach ($saleInvoiceHeaders as $saleInvoiceHeader): ?>
         <TaxInvoice>
@@ -10,7 +10,7 @@
             <CustomDoc/>
             <RefDesc><?php echo $saleInvoiceHeader->invoice_number; ?></RefDesc>
             <FacilityStamp/>
-            <SellerIDTKU>0031486434413000000000</SellerIDTKU>
+            <SellerIDTKU>0013388111008000</SellerIDTKU>
             <BuyerTin><?php echo CHtml::value($saleInvoiceHeader, 'customer.tax_registration_number'); ?></BuyerTin>
             <BuyerDocument>TIN</BuyerDocument>
             <BuyerCountry>IDN</BuyerCountry>
