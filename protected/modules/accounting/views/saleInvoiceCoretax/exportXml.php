@@ -1,7 +1,7 @@
 <TaxInvoiceBulk xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <TIN>0031486434413000</TIN>
     <ListOfTaxInvoice>
-<?php foreach ($saleInvoiceHeaders as $saleInvoiceHeader): ?>
+        <?php foreach ($saleInvoiceHeaders as $saleInvoiceHeader): ?>
         <TaxInvoice>
             <TaxInvoiceDate><?php echo CHtml::value($saleInvoiceHeader, 'invoice_date'); ?></TaxInvoiceDate>
             <TaxInvoiceOpt>Normal</TaxInvoiceOpt>
@@ -16,11 +16,11 @@
             <BuyerCountry>IDN</BuyerCountry>
             <BuyerDocumentNumber/>
             <BuyerName><?php echo CHtml::value($saleInvoiceHeader, 'customer.name'); ?></BuyerName>
-            <BuyerAdress><?php echo htmlspecialchars(CHtml::value($saleInvoiceHeader, 'customer.address'), ENT_XML1); ?></BuyerAdress>
+            <BuyerAdress><?php echo CHtml::value($saleInvoiceHeader, 'customer.address'); ?></BuyerAdress>
             <BuyerEmail><?php echo CHtml::value($saleInvoiceHeader, 'customer.email'); ?></BuyerEmail>
             <BuyerIDTKU><?php echo CHtml::value($saleInvoiceHeader, 'customer.tax_registration_number'); ?>000000</BuyerIDTKU>
             <ListOfGoodService>
-<?php foreach ($saleInvoiceHeader->invoiceDetails as $saleInvoiceDetail): ?>
+                <?php foreach ($saleInvoiceHeader->invoiceDetails as $saleInvoiceDetail): ?>
                 <GoodService>
                     <Opt>A</Opt>
                     <Code>720000</Code>
@@ -36,9 +36,9 @@
                     <STLGRate>0</STLGRate>
                     <STLG>0.00</STLG>
                 </GoodService>
-<?php endforeach; ?>
+                <?php endforeach; ?>
             </ListOfGoodService>
         </TaxInvoice>
-<?php endforeach; ?>
+        <?php endforeach; ?>
     </ListOfTaxInvoice>
 </TaxInvoiceBulk>
