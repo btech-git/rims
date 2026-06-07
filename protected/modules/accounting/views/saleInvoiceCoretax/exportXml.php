@@ -22,10 +22,17 @@
             <ListOfGoodService>
                 <?php foreach ($saleInvoiceHeader->invoiceDetails as $saleInvoiceDetail): ?>
                 <GoodService>
-                    <Opt>A</Opt>
-                    <Code>720000</Code>
-                    <Name><?php if (empty($saleInvoiceDetail->service_id)): ?><?php echo CHtml::value($saleInvoiceDetail, 'product.name'); ?><?php else: ?><?php echo CHtml::value($saleInvoiceDetail, 'service.name'); ?><?php endif; ?></Name>
-                    <Unit><?php if (empty($saleInvoiceDetail->service_id)): ?>UM.0018<?php else: ?>UM.0021<?php endif; ?></Unit>
+                    <?php if (empty($saleInvoiceDetail->service_id)): ?>
+                        <Opt>A</Opt>
+                        <Code>720000</Code>
+                        <Name><?php echo CHtml::value($saleInvoiceDetail, 'product.name'); ?></Name>
+                        <Unit>UM.0018</Unit>
+                    <?php else: ?>
+                        <Opt>B</Opt>
+                        <Code>000000</Code>
+                        <Name><?php echo CHtml::value($saleInvoiceDetail, 'service.name'); ?></Name>
+                        <Unit>UM.0021</Unit>
+                    <?php endif; ?>
                     <Price><?php echo CHtml::value($saleInvoiceDetail, 'unit_price'); ?></Price>
                     <Qty><?php echo CHtml::value($saleInvoiceDetail, 'quantity'); ?></Qty>
                     <TotalDiscount>0.00</TotalDiscount>
