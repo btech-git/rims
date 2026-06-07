@@ -45,7 +45,7 @@
                     <td>
                         <?php echo CHtml::encode(CHtml::value($activeRegistrationItem, 'vehicle.carMake.name')); ?> -
                         <?php echo CHtml::encode(CHtml::value($activeRegistrationItem, 'vehicle.carModel.name')); ?> -
-                        <?php echo CHtml::encode(CHtml::value($activeRegistrationItem, 'vehicle.carSubModel.name')); ?> -
+                        <?php echo CHtml::encode(CHtml::value($activeRegistrationItem, 'vehicle.carSubModel.name')); ?>
                     </td>
                     <td><?php echo CHtml::encode(CHtml::value($activeRegistrationItem, 'customer.name')); ?></td>
                     <td><?php echo CHtml::encode(CHtml::value($activeRegistrationItem, 'insuranceCompany.name')); ?></td>

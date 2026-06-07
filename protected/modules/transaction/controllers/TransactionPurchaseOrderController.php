@@ -951,18 +951,17 @@ class TransactionPurchaseOrderController extends Controller {
                             $product = Product::model()->findByPk($poDetail->product_id);
                             $product->hpp = $product->getAverageCogs();
                             $product->retail_price = $poDetail->unit_price * 1.2;
-
                             $product->update(array('hpp', 'retail_price'));
 
-                            $registrationProducts = RegistrationProduct::model()->findAllByAttributes(array(
-                                'product_id' => $product->id,
-                                'hpp' => '0.00',
-                            ));
-
-                            foreach ($registrationProducts as $registrationProduct) {
-                                $registrationProduct->hpp = $product->hpp;
-                                $registrationProduct->update(array('hpp'));
-                            }
+//                            $registrationProducts = RegistrationProduct::model()->findAllByAttributes(array(
+//                                'product_id' => $product->id,
+//                                'hpp' => '0.00',
+//                            ));
+//
+//                            foreach ($registrationProducts as $registrationProduct) {
+//                                $registrationProduct->hpp = $product->hpp;
+//                                $registrationProduct->update(array('hpp'));
+//                            }
                         }
                     }
                     $purchaseOrder->update(array('status_document', 'approved_id'));

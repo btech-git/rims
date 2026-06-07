@@ -575,4 +575,28 @@ class RegistrationService extends CActiveRecord {
 
         return $resultSet;
     }
+    
+    public static function getServiceTransactionCountData($year, $month, $branchId) {
+        $branchConditionSql = '';
+        
+        $params = array(
+            ':year' => $year,
+            ':month' => $month,
+        );
+        
+        if (!empty($branchId)) {
+            $branchConditionSql = ' AND h.branch_id = :branch_id';
+            $params[':branch_id'] = $branchId;
+        }
+        
+        $sql = "SELECT DATE(h.transaction_date) AS transaction_date, COUNT(DISTINCT h.transaction_number, s.service_id) AS service_count
+                FROM " . RegistrationService::model()->tableName() . " s 
+                INNER JOIN " . RegistrationTransaction::model()->tableName() . " h ON h.id = s.registration_transaction_id
+                WHERE YEAR(h.transaction_date) = :year AND MONTH(h.transaction_date) = :month AND h.repair_type = 'BR' AND h.user_id_cancelled IS NULL" . $branchConditionSql . " 
+                GROUP BY DATE(h.transaction_date)";
+
+        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
+
+        return $resultSet;
+    }
 }

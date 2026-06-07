@@ -86,7 +86,8 @@ $('.search-form form').submit(function(){
         array(
             'name' => 'payment_number',
             'header' => 'Pembayaran #',
-            'value' => '$data->payment_number',
+            'value'=>'CHtml::link($data->payment_number, array("view", "id"=>$data->id), array("target" => "blank"))', 
+            'type'=>'raw',
         ),
         array(
             'header' => 'Tanggal Bayar',
@@ -126,22 +127,22 @@ $('.search-form form').submit(function(){
             'filter' => false,
             'value' => 'Yii::app()->dateFormatter->format("d MMM yyyy", $data->created_datetime)'
         ),
-        array(
-            'class' => 'CButtonColumn',
-            'template' => '{view}',
-            'buttons' => array(
+//        array(
+//            'class' => 'CButtonColumn',
+//            'template' => '{view}',
+//            'buttons' => array(
 //                'update' => array(
 //                    'label' => 'update',
 //                    'url' => 'Yii::app()->createUrl("accounting/paymentOut/update", array("id"=>$data->id))',
 //                    'visible' => 'Yii::app()->user->checkAccess("paymentOutEdit")', //$data->status_document != "Approved" && $data->status_document != "Rejected" && ',
 //                ),
-                'view' => array(
-                    'label' => 'view',
-                    'url' => 'Yii::app()->createUrl("accounting/paymentOut/view", array("id"=>$data->id))',
-                ),
-            ),
-            'afterDelete' => 'function(){ location.reload(); }'
-        ),
+//                'view' => array(
+//                    'label' => 'view',
+//                    'url' => 'Yii::app()->createUrl("accounting/paymentOut/view", array("id"=>$data->id))',
+//                ),
+//            ),
+//            'afterDelete' => 'function(){ location.reload(); }'
+//        ),
     ),
 )); ?>
 <?php //echo CHtml::endForm(); ?>

@@ -31,6 +31,14 @@ $('.search-form form').submit(function(){
 ");
 ?>
 
+<style> 
+ .table_wrapper{
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+}
+</style>
+
 <h1>Kelola Data Sub Pekerjaan Luar</h1>
 
 <div id="link">
@@ -79,99 +87,103 @@ $('.search-form form').submit(function(){
     </div>
 </center>
 
-<?php $this->widget('zii.widgets.grid.CGridView', array(
-    'id' => 'work-order-expense-grid',
-    'dataProvider' => $dataProvider,
-    'filter' => null,
-    'template' => '{items}<div class="clearfix">{summary}{pager}</div>',
-    'pager'=>array(
-       'cssFile'=>false,
-       'header'=>'',
-    ),
-    'columns' => array(
-        array(
-            'name' => 'transaction_number',
-            'header' => 'Sub Pekerjaan Luar #',
-            'value'=>'CHtml::link($data->transaction_number, array("/accounting/workOrderExpense/view", "id"=>$data->id), array("target" => "blank"))', 
-            'type'=>'raw',
-        ),
-        array(
-            'header' => 'Tanggal Transaksi',
-            'name' => 'transaction_date',
-            'filter' => false,
-            'value' => 'Yii::app()->dateFormatter->format("d MMM yyyy", $data->transaction_date)'
-        ),
-        array(
-            'header' => 'Supplier',
-            'name' => 'supplier_id',
-            'value' => 'CHtml::value($data, "supplier.name")',
-        ),
-        array(
-            'header' => 'WO #',
-            'value'=>'CHtml::link($data->registrationTransaction->work_order_number, array("/frontDesk/registrationTransaction/view", "id"=>$data->registration_transaction_id), array("target" => "blank"))', 
-            'type'=>'raw',
-        ),
-        array(
-            'header' => 'Repair Type',
-            'value' => 'CHtml::value($data, "registrationTransaction.repair_type")',
-        ),
-        array(
-            'header' => 'Customer',
-            'value' => 'CHtml::value($data, "registrationTransaction.customer.name")',
-        ),
-        array(
-            'header' => 'Plate #',
-            'value' => 'CHtml::value($data, "registrationTransaction.vehicle.plate_number")',
-        ),
-        array(
-            'header' => 'Kendaraan',
-            'value' => 'CHtml::value($data, "registrationTransaction.vehicle.carMakeModelSubCombination")',
-        ),
-        array(
-            'name' => 'note',
-            'value' => 'substr(CHtml::value($data, "note"), 0, 30)',
-        ),
-        array(
-            'name' => 'grand_total',
-            'value' => 'number_format(CHtml::value($data, "grand_total"), 2)',
-            'htmlOptions' => array('style' => 'text-align: right'),
-        ),
-        array(
-            'name' => 'total_payment',
-            'value' => 'number_format(CHtml::value($data, "total_payment"), 2)',
-            'htmlOptions' => array('style' => 'text-align: right'),
-        ),
-        array(
-            'name' => 'payment_remaining',
-            'value' => 'number_format(CHtml::value($data, "payment_remaining"), 2)',
-            'htmlOptions' => array('style' => 'text-align: right'),
-        ),
-        array(
-            'header' => 'Created By',
-            'name' => 'user_id',
-            'filter' => false,
-            'value' => 'empty($data->user_id) ? "N/A" : $data->user->username '
-        ),
-        array(
-            'header' => 'Input',
-            'name' => 'created_datetime',
-            'filter' => false,
-            'value' => 'Yii::app()->dateFormatter->format("d MMM yyyy HH:mm:ss", $data->created_datetime)'
-        ),
-//        array(
-//            'class' => 'CButtonColumn',
-//            'template' => '{view}',
-//            'buttons' => array(
-//                'view' => array(
-//                    'label' => 'view',
-//                    'url' => 'Yii::app()->createUrl("accounting/workOrderExpense/view", array("id"=>$data->id))',
-//                ),
-//            ),
-//            'afterDelete' => 'function(){ location.reload(); }'
-//        ),
-    ),
-)); ?>
-<?php echo CHtml::endForm(); ?>
+<div class="relative">
+    <div class="table_wrapper">
+        <?php $this->widget('zii.widgets.grid.CGridView', array(
+            'id' => 'work-order-expense-grid',
+            'dataProvider' => $dataProvider,
+            'filter' => null,
+            'template' => '{items}<div class="clearfix">{summary}{pager}</div>',
+            'pager'=>array(
+               'cssFile'=>false,
+               'header'=>'',
+            ),
+            'columns' => array(
+                array(
+                    'name' => 'transaction_number',
+                    'header' => 'Sub Pekerjaan Luar #',
+                    'value'=>'CHtml::link($data->transaction_number, array("/accounting/workOrderExpense/view", "id"=>$data->id), array("target" => "blank"))', 
+                    'type'=>'raw',
+                ),
+                array(
+                    'header' => 'Tanggal Transaksi',
+                    'name' => 'transaction_date',
+                    'filter' => false,
+                    'value' => 'Yii::app()->dateFormatter->format("d MMM yyyy", $data->transaction_date)'
+                ),
+                array(
+                    'header' => 'Supplier',
+                    'name' => 'supplier_id',
+                    'value' => 'CHtml::value($data, "supplier.name")',
+                ),
+                array(
+                    'header' => 'WO #',
+                    'value'=>'CHtml::link($data->registrationTransaction->work_order_number, array("/frontDesk/registrationTransaction/view", "id"=>$data->registration_transaction_id), array("target" => "blank"))', 
+                    'type'=>'raw',
+                ),
+                array(
+                    'header' => 'Repair Type',
+                    'value' => 'CHtml::value($data, "registrationTransaction.repair_type")',
+                ),
+                array(
+                    'header' => 'Customer',
+                    'value' => 'CHtml::value($data, "registrationTransaction.customer.name")',
+                ),
+                array(
+                    'header' => 'Plate #',
+                    'value' => 'CHtml::value($data, "registrationTransaction.vehicle.plate_number")',
+                ),
+                array(
+                    'header' => 'Kendaraan',
+                    'value' => 'CHtml::value($data, "registrationTransaction.vehicle.carMakeModelSubCombination")',
+                ),
+                array(
+                    'name' => 'note',
+                    'value' => 'substr(CHtml::value($data, "note"), 0, 30)',
+                ),
+                array(
+                    'name' => 'grand_total',
+                    'value' => 'number_format(CHtml::value($data, "grand_total"), 2)',
+                    'htmlOptions' => array('style' => 'text-align: right'),
+                ),
+                array(
+                    'name' => 'total_payment',
+                    'value' => 'number_format(CHtml::value($data, "total_payment"), 2)',
+                    'htmlOptions' => array('style' => 'text-align: right'),
+                ),
+                array(
+                    'name' => 'payment_remaining',
+                    'value' => 'number_format(CHtml::value($data, "payment_remaining"), 2)',
+                    'htmlOptions' => array('style' => 'text-align: right'),
+                ),
+                array(
+                    'header' => 'Created By',
+                    'name' => 'user_id',
+                    'filter' => false,
+                    'value' => 'empty($data->user_id) ? "N/A" : $data->user->username '
+                ),
+                array(
+                    'header' => 'Input',
+                    'name' => 'created_datetime',
+                    'filter' => false,
+                    'value' => 'Yii::app()->dateFormatter->format("d MMM yyyy HH:mm:ss", $data->created_datetime)'
+                ),
+        //        array(
+        //            'class' => 'CButtonColumn',
+        //            'template' => '{view}',
+        //            'buttons' => array(
+        //                'view' => array(
+        //                    'label' => 'view',
+        //                    'url' => 'Yii::app()->createUrl("accounting/workOrderExpense/view", array("id"=>$data->id))',
+        //                ),
+        //            ),
+        //            'afterDelete' => 'function(){ location.reload(); }'
+        //        ),
+            ),
+        )); ?>
+        <?php echo CHtml::endForm(); ?>
+    </div>
+</div>
 
 <?php $this->beginWidget('zii.widgets.jui.CJuiDialog', array(
     'id' => 'cancel-message-dialog',

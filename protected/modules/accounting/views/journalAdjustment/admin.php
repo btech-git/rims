@@ -71,7 +71,8 @@ Yii::app()->clientScript->registerScript('search', "
                         array(
                             'name' => 'transaction_number',
                             'header' => 'Jurnal #',
-                            'value' => '$data->transaction_number',
+                            'value'=>'CHtml::link($data->transaction_number, array("view", "id"=>$data->id), array("target" => "blank"))', 
+                            'type'=>'raw',
                         ),
                         array(
                             'header' => 'Tanggal',
@@ -97,16 +98,16 @@ Yii::app()->clientScript->registerScript('search', "
                             'filter' => false,
                             'value' => 'Yii::app()->dateFormatter->format("d MMM yyyy HH:mm:ss", $data->created_datetime)'
                         ),
-                        array(
-                            'class' => 'CButtonColumn',
-                            'template' => '{view}',
-                            'buttons' => array(
-                                'view' => array(
-                                    'label' => 'view',
-                                    'url' => 'Yii::app()->createUrl("accounting/journalAdjustment/view", array("id"=>$data->id))',
-                                ),
-                            ),
-                        ),
+//                        array(
+//                            'class' => 'CButtonColumn',
+//                            'template' => '{view}',
+//                            'buttons' => array(
+//                                'view' => array(
+//                                    'label' => 'view',
+//                                    'url' => 'Yii::app()->createUrl("accounting/journalAdjustment/view", array("id"=>$data->id))',
+//                                ),
+//                            ),
+//                        ),
                     ),
                 )); ?>
             </div>

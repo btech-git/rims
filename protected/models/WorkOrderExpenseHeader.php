@@ -197,5 +197,28 @@ class WorkOrderExpenseHeader extends MonthlyTransactionActiveRecord {
             'criteria' => $criteria,
         ));
     }
+    
+    public static function getWorkOrderTransactionCountAndSumData($year, $month, $branchId) {
+        $branchConditionSql = '';
+        
+        $params = array(
+            ':year' => $year,
+            ':month' => $month,
+        );
+        
+        if (!empty($branchId)) {
+            $branchConditionSql = ' AND w.branch_id = :branch_id';
+            $params[':branch_id'] = $branchId;
+        }
+        
+        $sql = "SELECT DATE(w.transaction_date) AS transaction_date, COUNT(*) AS transaction_count, SUM(w.grand_total) AS total
+                FROM " . WorkOrderExpenseHeader::model()->tableName() . " w
+                INNER JOIN " . RegistrationTransaction::model()->tableName() . " r ON r.id = w.registration_transaction_id
+                WHERE YEAR(w.transaction_date) = :year AND MONTH(w.transaction_date) = :month AND r.repair_type = 'BR' AND w.user_id_cancelled IS NULL" . $branchConditionSql . "
+                GROUP BY DATE(w.transaction_date)";
 
+        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
+
+        return $resultSet;
+    }
 }

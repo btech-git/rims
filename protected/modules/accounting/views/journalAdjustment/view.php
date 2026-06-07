@@ -15,12 +15,12 @@ $this->breadcrumbs = array(
             'style' => 'margin-right:10px', 
         )); ?>
 
-        <?php if (Yii::app()->user->checkAccess("adjustmentJournalEdit")): //$journalVoucher->status != "Approved" && $journalVoucher->status != 'Rejected'): ?>
+        <?php /*if (Yii::app()->user->checkAccess("adjustmentJournalEdit")): //$journalVoucher->status != "Approved" && $journalVoucher->status != 'Rejected'): ?>
             <?php echo CHtml::link('<span class="fa fa-edit"></span>Edit', Yii::app()->baseUrl . '/accounting/journalAdjustment/update?id=' . $journalVoucher->id, array(
                 'class' => 'button warning right', 
                 'style' => 'margin-right:10px', 
             )); ?>
-        <?php endif; ?>
+        <?php endif;*/ ?>
 
         <?php if ($journalVoucher->status == "Draft" && Yii::app()->user->checkAccess("adjustmentJournalApproval")): ?>
             <?php echo CHtml::link('<span class="fa fa-check"></span>Approval', Yii::app()->baseUrl . '/accounting/journalAdjustment/updateApproval?headerId=' . $journalVoucher->id, array(
@@ -29,8 +29,15 @@ $this->breadcrumbs = array(
             )); ?>
         <?php elseif ($journalVoucher->status != "Draft" && Yii::app()->user->checkAccess("cashierHead")): ?>
             <?php echo CHtml::link('<span class="fa fa-edit"></span>Update Approval', Yii::app()->baseUrl . '/accounting/journalAdjustment/updateApproval?headerId=' . $journalVoucher->id, array(
-                'class' => 'button cbutton right', 
+                'class' => 'button success right', 
                 'style' => 'margin-right:10px',
+            )); ?>
+        <?php endif; ?>
+
+        <?php if (Yii::app()->user->checkAccess("cashierHead") && $journalVoucher->status === 'Approved'): ?>
+            <?php echo CHtml::link('<span class="fa fa-minus"></span>Cancel Transaction', array("cancel", "id" => $journalVoucher->id), array(
+                'class' => 'button alert right', 
+                'style' => 'margin-right:10px', 
             )); ?>
         <?php endif; ?>
 
@@ -161,6 +168,5 @@ $this->breadcrumbs = array(
                 <?php echo CHtml::endForm(); ?>
             </div>
         <?php endif; ?>
-
     </div>
 </div>

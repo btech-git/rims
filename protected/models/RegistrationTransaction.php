@@ -2032,4 +2032,27 @@ class RegistrationTransaction extends MonthlyTransactionActiveRecord {
 
         return $resultSet;
     }
+    
+    public static function getVehicleTransactionCountData($year, $month, $branchId) {
+        $branchConditionSql = '';
+        
+        $params = array(
+            ':year' => $year,
+            ':month' => $month,
+        );
+        
+        if (!empty($branchId)) {
+            $branchConditionSql = ' AND branch_id = :branch_id';
+            $params[':branch_id'] = $branchId;
+        }
+        
+        $sql = "SELECT DATE(transaction_date) AS transaction_date, COUNT(DISTINCT transaction_number, vehicle_id) AS vehicle_count
+                FROM " . RegistrationTransaction::model()->tableName() . " 
+                WHERE YEAR(transaction_date) = :year AND MONTH(transaction_date) = :month AND repair_type = 'BR' AND user_id_cancelled IS NULL" . $branchConditionSql . " 
+                GROUP BY DATE(transaction_date)";
+
+        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
+
+        return $resultSet;
+    }
 }

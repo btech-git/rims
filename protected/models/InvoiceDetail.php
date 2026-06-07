@@ -1158,4 +1158,29 @@ class InvoiceDetail extends CActiveRecord {
 
         return $average;
     }
+    
+    public static function getServiceTransactionCountData($year, $month, $branchId) {
+        $branchConditionSql = '';
+        
+        $params = array(
+            ':year' => $year,
+            ':month' => $month,
+        );
+        
+        if (!empty($branchId)) {
+            $branchConditionSql = ' AND h.branch_id = :branch_id';
+            $params[':branch_id'] = $branchId;
+        }
+        
+        $sql = "SELECT DATE(h.invoice_date) AS transaction_date, COUNT(DISTINCT h.invoice_number, d.service_id) AS service_count
+                FROM " . InvoiceDetail::model()->tableName() . " d
+                INNER JOIN " . InvoiceHeader::model()->tableName() . " h ON h.id = d.invoice_id
+                INNER JOIN " . RegistrationTransaction::model()->tableName() . " r ON r.id = h.registration_transaction_id
+                WHERE YEAR(h.invoice_date) = :year AND MONTH(h.invoice_date) = :month AND r.repair_type = 'BR' AND h.user_id_cancelled IS NULL" . $branchConditionSql . " 
+                GROUP BY DATE(h.invoice_date)";
+
+        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
+
+        return $resultSet;
+    }
 }

@@ -201,6 +201,28 @@ class JournalAdjustmentController extends Controller {
         $this->redirect(array('admin'));
     }
 
+    public function actionCancel($id) {
+        $model = $this->loadModel($id);
+        $model->status = 'CANCELLED!!!';
+        $model->cancelled_datetime = date('Y-m-d H:i:s');
+        $model->user_id_cancelled = Yii::app()->user->id;
+        $model->update(array('status', 'cancelled_datetime', 'user_id_cancelled'));
+
+        foreach ($model->journalAdjustmentDetails as $detail) {
+            $detail->debit = '0.00';
+            $detail->credit = '0.00';
+            $detail->update(array('debit', 'credit'));
+        }
+        
+        $this->saveTransactionLog('cancel', $model);
+        
+        JurnalUmum::model()->updateAll(array('total' => '0.00'), 'kode_transaksi = :kode_transaksi', array(
+            ':kode_transaksi' => $model->transaction_number,
+        ));
+
+        $this->redirect(array('admin'));
+    }
+
     public function actionUpdateApproval($headerId) {
         $journalVoucher = $this->loadModel($headerId);
         $historis = JournalAdjustmentApproval::model()->findAllByAttributes(array('journal_adjustment_header_id' => $headerId));
@@ -395,8 +417,9 @@ class JournalAdjustmentController extends Controller {
                     $journalVoucher->details[] = $detail;
                 }
             }
-            if (count($_POST['JournalAdjustmentDetail']) < count($journalVoucher->details))
+            if (count($_POST['JournalAdjustmentDetail']) < count($journalVoucher->details)) {
                 array_splice($journalVoucher->details, $i + 1);
+            }
         } else {
             $journalVoucher->details = array();
         }

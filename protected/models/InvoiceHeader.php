@@ -2940,4 +2940,28 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
 
         return $resultSet;
     }
+    
+    public static function getVehicleTransactionCountData($year, $month, $branchId) {
+        $branchConditionSql = '';
+        
+        $params = array(
+            ':year' => $year,
+            ':month' => $month,
+        );
+        
+        if (!empty($branchId)) {
+            $branchConditionSql = ' AND i.branch_id = :branch_id';
+            $params[':branch_id'] = $branchId;
+        }
+        
+        $sql = "SELECT DATE(i.invoice_date) AS transaction_date, COUNT(DISTINCT i.invoice_number, i.vehicle_id) AS vehicle_count
+                FROM " . InvoiceHeader::model()->tableName() . " i 
+                INNER JOIN " . RegistrationTransaction::model()->tableName() . " r ON r.id = i.registration_transaction_id
+                WHERE YEAR(i.invoice_date) = :year AND MONTH(i.invoice_date) = :month AND r.repair_type = 'BR' AND i.user_id_cancelled IS NULL" . $branchConditionSql . " 
+                GROUP BY DATE(i.invoice_date)";
+
+        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
+
+        return $resultSet;
+    }
 }

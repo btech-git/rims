@@ -66,6 +66,11 @@
                                         'visible' => Yii::app()->user->checkAccess('director')
                                     ),
                                     array(
+                                        'label' => 'Rincian Transaksi Bulanan Multi Bank', 
+                                        'url' => array('/report/bankingLedgerMonthly/summary'), 
+                                        'visible' => Yii::app()->user->checkAccess('director')
+                                    ),
+                                    array(
                                         'label' => 'Ringkasan Buku Besar Semua Cabang', 
                                         'url' => array('/report/ledgerSummaryMultipleBranch/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('director')
@@ -118,6 +123,11 @@
                                     array(
                                         'label' => 'Konfirmasi Transaksi Harian', 
                                         'url' => array('/report/dailyTransactionConfirmation/summary'), 
+                                        'visible' => Yii::app()->user->checkAccess('director')
+                                    ),
+                                    array(
+                                        'label' => 'Transaksi Body Repair', 
+                                        'url' => array('/report/bodyRepairMonthlyTransaction/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('director')
                                     ),
                                 ),

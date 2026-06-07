@@ -800,8 +800,28 @@ class JurnalUmum extends CActiveRecord {
                 'defaultOrder' => 't.tanggal_transaksi ASC',
             ),
             'pagination' => array(
-                'pageSize' => 100,
+                'pageSize' => 1000,
                 'currentPage' => $page - 1,
+            ),
+        ));
+    }
+    
+    public function searchByBankingLedgerInfo($coaId, $debitCredit, $startDate, $endDate, $branchId) {
+        $criteria = new CDbCriteria;
+
+        $criteria->compare('t.coa_id', $coaId);
+        $criteria->compare('t.is_coa_category', 0);
+        $criteria->compare('t.debet_kredit', $debitCredit);
+        $criteria->compare('t.branch_id', $branchId);
+        $criteria->addBetweenCondition('t.tanggal_transaksi', $startDate, $endDate);
+        
+        return new CActiveDataProvider($this, array(
+            'criteria' => $criteria,
+            'sort' => array(
+                'defaultOrder' => 't.tanggal_transaksi ASC',
+            ),
+            'pagination' => array(
+                'pageSize' => 1000,
             ),
         ));
     }
