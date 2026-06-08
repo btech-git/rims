@@ -3,7 +3,7 @@
         <?php //$branch = Branch::model()->findByPk($branchId); ?>
         Raperind Motor <?php //echo CHtml::encode(CHtml::value($branch, 'name')); ?>
     </div>
-    <div style="font-size: larger">Transaksi Body Repair</div>
+    <div style="font-size: larger">Body Repair - Panel Report - Monthly</div>
     <div><?php echo CHtml::encode(strftime("%B",mktime(0,0,0,$month))); ?> <?php echo CHtml::encode($year); ?></div>
 </div>
 
@@ -15,11 +15,11 @@
             <thead>
                 <tr>
                     <th style="text-align: center; width: 10%">Tanggal</th>
-                    <th style="text-align: center; width: 10%">Unit In #</th>
-                    <th style="text-align: center; width: 10%">Panel In #</th>
-                    <th style="text-align: center; width: 10%">Unit Out #</th>
-                    <th style="text-align: center; width: 10%">Panel Out #</th>
-                    <th style="text-align: center; width: 10%">Sub Pekerjaan Luar</th>
+                    <th style="text-align: center; width: 10%">Unit Register In #</th>
+                    <th style="text-align: center; width: 10%">Panel Register In #</th>
+                    <th style="text-align: center; width: 10%">Unit Invoiced Out #</th>
+                    <th style="text-align: center; width: 10%">Panel Invoiced Out #</th>
+                    <th style="text-align: center; width: 10%">Sub Pekerjaan Luar Panel #</th>
                     <th style="text-align: center; width: 10%">Total Sub Pekerjaan</th>
                 </tr>
             </thead>
@@ -37,43 +37,43 @@
                     <?php $registrationServiceCount = isset($bodyRepairTransactionInfoData[$transactionDate]['registration_service_count']) ? $bodyRepairTransactionInfoData[$transactionDate]['registration_service_count'] : 0; ?>
                     <?php $invoiceVehicleCount = isset($bodyRepairTransactionInfoData[$transactionDate]['invoice_vehicle_count']) ? $bodyRepairTransactionInfoData[$transactionDate]['invoice_vehicle_count'] : 0; ?>
                     <?php $invoiceServiceCount = isset($bodyRepairTransactionInfoData[$transactionDate]['invoice_service_count']) ? $bodyRepairTransactionInfoData[$transactionDate]['invoice_service_count'] : 0; ?>
-                    <?php $workOrderCount = isset($bodyRepairTransactionInfoData[$transactionDate]['work_order_count']) ? $bodyRepairTransactionInfoData[$transactionDate]['work_order_count'] : 0; ?>
+                    <?php $workOrderCount = isset($bodyRepairTransactionInfoData[$transactionDate]['service_count']) ? $bodyRepairTransactionInfoData[$transactionDate]['service_count'] : 0; ?>
                     <?php $workOrderTotal = isset($bodyRepairTransactionInfoData[$transactionDate]['work_order_total']) ? $bodyRepairTransactionInfoData[$transactionDate]['work_order_total'] : '0.00'; ?>
                     <tr>
                         <td><?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($transactionDate))); ?></td>
                         <td style="text-align: center">
                             <?php echo CHtml::link(CHtml::encode($registrationVehicleCount), array(
-                                '/report/bodyRepairMonthlyTransaction/registrationVehicleInfo', 
+                                'registrationVehicleInfo', 
                                 'transactionDate' => $transactionDate, 
                             ), array('target' => '_blank')); ?>
                         </td>
                         <td style="text-align: center">
                             <?php echo CHtml::link(CHtml::encode($registrationServiceCount), array(
-                                '/report/bodyRepairMonthlyTransaction/registrationServiceInfo', 
+                                'registrationServiceInfo', 
                                 'transactionDate' => $transactionDate, 
                             ), array('target' => '_blank')); ?>
                         </td>
                         <td style="text-align: center">
                             <?php echo CHtml::link(CHtml::encode($invoiceVehicleCount), array(
-                                '/report/bodyRepairMonthlyTransaction/invoiceVehicleInfo', 
+                                'invoiceVehicleInfo', 
                                 'transactionDate' => $transactionDate, 
                             ), array('target' => '_blank')); ?>
                         </td>
                         <td style="text-align: center">
                             <?php echo CHtml::link(CHtml::encode($invoiceServiceCount), array(
-                                '/report/bodyRepairMonthlyTransaction/invoiceServiceInfo', 
+                                'invoiceServiceInfo', 
                                 'transactionDate' => $transactionDate, 
                             ), array('target' => '_blank')); ?>
                         </td>
                         <td style="text-align: center">
                             <?php echo CHtml::link(CHtml::encode($workOrderCount), array(
-                                '/report/bodyRepairMonthlyTransaction/workOrderExpenseInfo', 
+                                'workOrderExpenseInfo', 
                                 'transactionDate' => $transactionDate, 
                             ), array('target' => '_blank')); ?>
                         </td>
                         <td style="text-align: right">
                             <?php echo CHtml::link(CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $workOrderTotal)), array(
-                                '/report/bodyRepairMonthlyTransaction/workOrderExpenseInfo', 
+                                'workOrderExpenseInfo', 
                                 'transactionDate' => $transactionDate, 
                             ), array('target' => '_blank')); ?>
                         </td>
@@ -89,12 +89,48 @@
             <tfoot>
                 <tr>
                     <td>TOTAL</td>
-                    <td style="text-align: center"><?php echo CHtml::encode($registrationVehicleCountSum); ?></td>
-                    <td style="text-align: center"><?php echo CHtml::encode($registrationServiceCountSum); ?></td>
-                    <td style="text-align: center"><?php echo CHtml::encode($invoiceVehicleCountSum); ?></td>
-                    <td style="text-align: center"><?php echo CHtml::encode($invoiceServiceCountSum); ?></td>
-                    <td style="text-align: center"><?php echo CHtml::encode($workOrderCountSum); ?></td>
-                    <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $workOrderTotalSum)); ?></td>
+                    <td style="text-align: center">
+                        <?php echo CHtml::link(CHtml::encode($registrationVehicleCountSum), array(
+                            'registrationVehicleMonthlyInfo', 
+                            'month' => $month,
+                            'year' => $year,
+                        ), array('target' => '_blank')); ?>
+                    </td>
+                    <td style="text-align: center">
+                        <?php echo CHtml::link(CHtml::encode($registrationServiceCountSum), array(
+                            'registrationServiceMonthlyInfo', 
+                            'month' => $month,
+                            'year' => $year,
+                        ), array('target' => '_blank')); ?>
+                    </td>
+                    <td style="text-align: center">
+                        <?php echo CHtml::link(CHtml::encode($invoiceVehicleCountSum), array(
+                            'invoiceVehicleMonthlyInfo', 
+                            'month' => $month,
+                            'year' => $year,
+                        ), array('target' => '_blank')); ?>
+                    </td>
+                    <td style="text-align: center">
+                        <?php echo CHtml::link(CHtml::encode($invoiceServiceCountSum), array(
+                            'invoiceServiceMonthlyInfo', 
+                            'month' => $month,
+                            'year' => $year,
+                        ), array('target' => '_blank')); ?>
+                    </td>
+                    <td style="text-align: center">
+                        <?php echo CHtml::link(CHtml::encode($workOrderCountSum), array(
+                            'workOrderExpenseMonthlyInfo', 
+                            'month' => $month,
+                            'year' => $year,
+                        ), array('target' => '_blank')); ?>
+                    </td>
+                    <td style="text-align: right">
+                        <?php echo CHtml::link(CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $workOrderTotalSum)), array(
+                            'workOrderExpenseMonthlyInfo', 
+                            'month' => $month,
+                            'year' => $year,
+                        ), array('target' => '_blank')); ?>
+                    </td>
                 </tr>
             </tfoot>
         </table>

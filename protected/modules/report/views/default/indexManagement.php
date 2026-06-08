@@ -126,7 +126,7 @@
                                         'visible' => Yii::app()->user->checkAccess('director')
                                     ),
                                     array(
-                                        'label' => 'Transaksi Body Repair', 
+                                        'label' => 'Body Repair - Panel Report - Monthly', 
                                         'url' => array('/report/bodyRepairMonthlyTransaction/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('director')
                                     ),

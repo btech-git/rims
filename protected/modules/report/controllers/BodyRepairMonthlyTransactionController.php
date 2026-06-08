@@ -34,7 +34,7 @@ class BodyRepairMonthlyTransactionController extends Controller {
         $registrationServiceTransactionCountData = RegistrationService::getServiceTransactionCountData($year, $month, $branchId);
         $invoiceVehicleTransactionCountData = InvoiceHeader::getVehicleTransactionCountData($year, $month, $branchId);
         $invoiceServiceTransactionCountDate = InvoiceDetail::getServiceTransactionCountData($year, $month, $branchId);
-        $workOrderTransactionCountAndSumData = WorkOrderExpenseHeader::getWorkOrderTransactionCountAndSumData($year, $month, $branchId);
+        $workOrderTransactionCountAndSumData = RegistrationService::getWorkOrderTransactionSumAndCountData($year, $month, $branchId);
         
         $bodyRepairTransactionInfoData = array();
         foreach ($registrationVehicleTransactionCountData as $registrationVehicleTransactionCountDataItem) {
@@ -50,7 +50,7 @@ class BodyRepairMonthlyTransactionController extends Controller {
             $bodyRepairTransactionInfoData[$invoiceServiceTransactionCountDateItem['transaction_date']]['invoice_service_count'] = $invoiceServiceTransactionCountDateItem['service_count'];
         }
         foreach ($workOrderTransactionCountAndSumData as $workOrderTransactionCountAndSumDataItem) {
-            $bodyRepairTransactionInfoData[$workOrderTransactionCountAndSumDataItem['transaction_date']]['work_order_count'] = $workOrderTransactionCountAndSumDataItem['transaction_count'];
+            $bodyRepairTransactionInfoData[$workOrderTransactionCountAndSumDataItem['transaction_date']]['service_count'] = $workOrderTransactionCountAndSumDataItem['service_count'];
             $bodyRepairTransactionInfoData[$workOrderTransactionCountAndSumDataItem['transaction_date']]['work_order_total'] = $workOrderTransactionCountAndSumDataItem['total'];
         }
         
@@ -65,16 +65,14 @@ class BodyRepairMonthlyTransactionController extends Controller {
             $this->redirect(array('summary'));
         }
         
-//        if (isset($_GET['SaveExcel'])) {
-//            $this->saveToExcel(array(
-//                'paymentInList' => $paymentInList,
-//                'paymentOutList' => $paymentOutList,
-//                'selectedCoas' => $selectedCoas,
-//                'month' => $month,
-//                'year' => $year,
-//                'branchId' => $branchId,
-//            ));
-//        }
+        if (isset($_GET['SaveExcel'])) {
+            $this->saveToExcel(array(
+                'bodyRepairTransactionInfoData' => $bodyRepairTransactionInfoData,
+                'month' => $month,
+                'year' => $year,
+                'numberOfDays' => $numberOfDays,
+            ));
+        }
 
         $this->render('summary', array(
             'bodyRepairTransactionInfoData' => $bodyRepairTransactionInfoData,
@@ -211,6 +209,141 @@ class BodyRepairMonthlyTransactionController extends Controller {
         ));
     }
 
+    public function actionRegistrationVehicleMonthlyInfo($year, $month) {
+        set_time_limit(0);
+        ini_set('memory_limit', '1024M');
+
+        $registrationTransactions = RegistrationTransaction::model()->findAll(array(
+            'condition' => 'YEAR(t.transaction_date) = :year AND MONTH(t.transaction_date) = :month AND repair_type = "BR" AND user_id_cancelled IS NULL',
+            'params' => array(':year' => $year, ':month' => $month),
+            'order' => 't.transaction_date ASC, t.transaction_number ASC',
+        ));
+        
+//        if (isset($_GET['SaveToExcel'])) {
+//            $this->saveToExcelDailyTransactionInfo(array(
+//                'dataProvider' => $dataProvider,
+//                'date' => $date,
+//                'coa' => $coa,
+//                'branch' => $branch,
+//                'inOut' => $inOut,
+//            ));
+//        }
+
+        $this->render('registrationVehicleMonthlyInfo', array(
+            'registrationTransactions' => $registrationTransactions,
+            'year' => $year,
+            'month' => $month,
+        ));
+    }
+
+    public function actionRegistrationServiceMonthlyInfo($year, $month) {
+        set_time_limit(0);
+        ini_set('memory_limit', '1024M');
+
+        $registrationTransactions = RegistrationTransaction::model()->findAll(array(
+            'condition' => 'YEAR(t.transaction_date) = :year AND MONTH(t.transaction_date) = :month AND repair_type = "BR" AND user_id_cancelled IS NULL',
+            'params' => array(':year' => $year, ':month' => $month),
+            'order' => 't.transaction_date ASC, t.transaction_number ASC',
+        ));
+        
+//        if (isset($_GET['SaveToExcel'])) {
+//            $this->saveToExcelDailyTransactionInfo(array(
+//                'dataProvider' => $dataProvider,
+//                'date' => $date,
+//                'coa' => $coa,
+//                'branch' => $branch,
+//                'inOut' => $inOut,
+//            ));
+//        }
+
+        $this->render('registrationServiceMonthlyInfo', array(
+            'registrationTransactions' => $registrationTransactions,
+            'year' => $year,
+            'month' => $month,
+        ));
+    }
+
+    public function actionInvoiceVehicleMonthlyInfo($year, $month) {
+        set_time_limit(0);
+        ini_set('memory_limit', '1024M');
+
+        $invoiceHeaders = InvoiceHeader::model()->with(array('registrationTransaction'))->findAll(array(
+            'condition' => 'YEAR(t.invoice_date) = :year AND MONTH(t.invoice_date) = :month AND registrationTransaction.repair_type = "BR" AND t.user_id_cancelled IS NULL',
+            'params' => array(':year' => $year, ':month' => $month),
+            'order' => 't.invoice_date ASC, t.invoice_number ASC',
+        ));
+        
+//        if (isset($_GET['SaveToExcel'])) {
+//            $this->saveToExcelDailyTransactionInfo(array(
+//                'dataProvider' => $dataProvider,
+//                'date' => $date,
+//                'coa' => $coa,
+//                'branch' => $branch,
+//                'inOut' => $inOut,
+//            ));
+//        }
+
+        $this->render('invoiceVehicleMonthlyInfo', array(
+            'invoiceHeaders' => $invoiceHeaders,
+            'year' => $year,
+            'month' => $month,
+        ));
+    }
+
+    public function actionInvoiceServiceMonthlyInfo($year, $month) {
+        set_time_limit(0);
+        ini_set('memory_limit', '1024M');
+
+        $invoiceHeaders = InvoiceHeader::model()->with(array('registrationTransaction'))->findAll(array(
+            'condition' => 'YEAR(t.invoice_date) = :year AND MONTH(t.invoice_date) = :month AND registrationTransaction.repair_type = "BR" AND t.user_id_cancelled IS NULL',
+            'params' => array(':year' => $year, ':month' => $month),
+            'order' => 't.invoice_date ASC, t.invoice_number ASC',
+        ));
+        
+//        if (isset($_GET['SaveToExcel'])) {
+//            $this->saveToExcelDailyTransactionInfo(array(
+//                'dataProvider' => $dataProvider,
+//                'date' => $date,
+//                'coa' => $coa,
+//                'branch' => $branch,
+//                'inOut' => $inOut,
+//            ));
+//        }
+
+        $this->render('invoiceServiceMonthlyInfo', array(
+            'invoiceHeaders' => $invoiceHeaders,
+            'year' => $year,
+            'month' => $month,
+        ));
+    }
+
+    public function actionWorkOrderExpenseMonthlyInfo($year, $month) {
+        set_time_limit(0);
+        ini_set('memory_limit', '1024M');
+
+        $workOrderExpenses = WorkOrderExpenseHeader::model()->with(array('registrationTransaction'))->findAll(array(
+            'condition' => 'YEAR(t.transaction_date) = :year AND MONTH(t.transaction_date) = :month AND registrationTransaction.repair_type = "BR" AND t.user_id_cancelled IS NULL',
+            'params' => array(':year' => $year, ':month' => $month),
+            'order' => 't.transaction_date ASC, t.transaction_number ASC',
+        ));
+        
+//        if (isset($_GET['SaveToExcel'])) {
+//            $this->saveToExcelDailyTransactionInfo(array(
+//                'dataProvider' => $dataProvider,
+//                'date' => $date,
+//                'coa' => $coa,
+//                'branch' => $branch,
+//                'inOut' => $inOut,
+//            ));
+//        }
+
+        $this->render('workOrderExpenseMonthlyInfo', array(
+            'workOrderExpenses' => $workOrderExpenses,
+            'year' => $year,
+            'month' => $month,
+        ));
+    }
+
     protected function saveToExcel(array $options = array()) {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
@@ -221,157 +354,89 @@ class BodyRepairMonthlyTransactionController extends Controller {
 
         $objPHPExcel = new PHPExcel();
 
-        $paymentInList = $options['paymentInList'];
-        $paymentOutList = $options['paymentOutList'];
-        $selectedCoas = $options['selectedCoas'];
+        $bodyRepairTransactionInfoData = $options['bodyRepairTransactionInfoData'];
         $month = $options['month'];
         $year = $options['year'];
-        $branchId = $options['branchId'];
+        $numberOfDays = $options['numberOfDays'];
         
         $documentProperties = $objPHPExcel->getProperties();
         $documentProperties->setCreator('Raperind Motor');
-        $documentProperties->setTitle('Bank Bulanan');
+        $documentProperties->setTitle('Body Repair Panel');
 
         $worksheet = $objPHPExcel->setActiveSheetIndex(0);
-        $worksheet->setTitle('Bank Bulanan');
+        $worksheet->setTitle('Body Repair Panel');
 
-        $branch = Branch::model()->findByPk($branchId);
-        $worksheet->setCellValue('A1', 'RAPERIND MOTOR ' . CHtml::encode(CHtml::value($branch, 'name')));
-        $worksheet->setCellValue('A2', 'Bank Bulanan');
-        $worksheet->setCellValue('A3', CHtml::encode(strftime("%B",mktime(0,0,0,$month))) . ' ' . CHtml::encode($year));
-        $worksheet->setCellValue('A5', 'Transaksi Bank Masuk');
-
-        $paymentInDailyTotals = array();
-        $columnCounterIn = 'B';
-        foreach ($selectedCoas as $coa) {
-            $worksheet->setCellValue("{$columnCounterIn}6", CHtml::encode(CHtml::value($coa, 'name')));
-            $paymentInDailyTotals[$coa->id] = '0.00'; 
-            $columnCounterIn++;
-        }
-        $dailyInTotal = '0.00';
-        $worksheet->setCellValue("{$columnCounterIn}6", 'Total');
+        $worksheet->mergeCells("A1:G1");
+        $worksheet->mergeCells("A2:G2");
+        $worksheet->mergeCells("A3:G3");
         
-        $worksheet->mergeCells("A1:{$columnCounterIn}1");
-        $worksheet->mergeCells("A2:{$columnCounterIn}2");
-        $worksheet->mergeCells("A3:{$columnCounterIn}3");
-        $worksheet->mergeCells("A5:{$columnCounterIn}5");
+        $worksheet->getStyle("A1:G5")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->getStyle("A1:G5")->getFont()->setBold(true);
+        
+        $worksheet->setCellValue('A1', 'RAPERIND MOTOR');
+        $worksheet->setCellValue('A2', 'Body Repair - Panel Report - Monthly');
+        $worksheet->setCellValue('A3', CHtml::encode(strftime("%B",mktime(0,0,0,$month))) . ' ' . CHtml::encode($year));
 
-        $worksheet->getStyle("A1:{$columnCounterIn}6")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-        $worksheet->getStyle("A1:{$columnCounterIn}6")->getFont()->setBold(true);
-        $worksheet->getStyle("A6:{$columnCounterIn}6")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
-        $worksheet->getStyle("A6:{$columnCounterIn}6")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A5:G5")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        
+        $worksheet->setCellValue("A5", 'Tanggal');
+        $worksheet->setCellValue("B5", 'Unit Register In');
+        $worksheet->setCellValue("C5", 'Panel Register In');
+        $worksheet->setCellValue("D5", 'Unit Invoiced Out');
+        $worksheet->setCellValue("E5", 'Panel Invoiced Out');
+        $worksheet->setCellValue("F5", 'Sub Pekerjaan Luar Panel');
+        $worksheet->setCellValue("G5", 'Total Sub Pekerjaan Luar');
+        
+        $worksheet->getStyle("A5:G5")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
-        $counter = 7;
-        $daysInMonthTransactionIn = cal_days_in_month(CAL_GREGORIAN, $month, $year);
-        $yearMonth = str_pad($year, 2, '0', STR_PAD_LEFT) . '-' . str_pad($month, 2, '0', STR_PAD_LEFT);
-        for ($day = 1; $day <= $daysInMonthTransactionIn; $day++) {
-            $columnCounterIn = 'B';
-            $date = $yearMonth . '-' . str_pad($day, 2, '0', STR_PAD_LEFT);
-            if (isset($paymentInList[$date])) {
-                $paymentInItem = $paymentInList[$date];
-                $totalPerDate = '0.00';
-                $worksheet->setCellValue("A{$counter}", CHtml::encode($date));
+        $counter = 6;
+        $registrationVehicleCountSum = 0;
+        $registrationServiceCountSum = 0;
+        $invoiceVehicleCountSum = 0;
+        $invoiceServiceCountSum = 0;
+        $workOrderCountSum = 0;
+        $workOrderTotalSum = '0.00';
+        
+        for ($i = 1; $i <= $numberOfDays; $i++) {
+            $transactionDate = $year . '-' . $month . '-' . str_pad($i, 2, '0', STR_PAD_LEFT);
+            $registrationVehicleCount = isset($bodyRepairTransactionInfoData[$transactionDate]['registration_vehicle_count']) ? $bodyRepairTransactionInfoData[$transactionDate]['registration_vehicle_count'] : 0;
+            $registrationServiceCount = isset($bodyRepairTransactionInfoData[$transactionDate]['registration_service_count']) ? $bodyRepairTransactionInfoData[$transactionDate]['registration_service_count'] : 0;
+            $invoiceVehicleCount = isset($bodyRepairTransactionInfoData[$transactionDate]['invoice_vehicle_count']) ? $bodyRepairTransactionInfoData[$transactionDate]['invoice_vehicle_count'] : 0;
+            $invoiceServiceCount = isset($bodyRepairTransactionInfoData[$transactionDate]['invoice_service_count']) ? $bodyRepairTransactionInfoData[$transactionDate]['invoice_service_count'] : 0;
+            $workOrderCount = isset($bodyRepairTransactionInfoData[$transactionDate]['service_count']) ? $bodyRepairTransactionInfoData[$transactionDate]['service_count'] : 0;
+            $workOrderTotal = isset($bodyRepairTransactionInfoData[$transactionDate]['work_order_total']) ? $bodyRepairTransactionInfoData[$transactionDate]['work_order_total'] : '0.00';
                 
-                foreach ($selectedCoas as $coa) {
-                    $paymentInRetail = $paymentInItem[$coa->id];
-                    $worksheet->setCellValue("{$columnCounterIn}{$counter}", CHtml::encode($paymentInRetail));
-                    $paymentInDailyTotals[$coa->id] += $paymentInRetail;
-                    $totalPerDate += $paymentInRetail;
-                    $columnCounterIn++;
-                }
-                $worksheet->setCellValue("{$columnCounterIn}{$counter}", CHtml::encode($totalPerDate));
-                $dailyInTotal += $totalPerDate;
-            } else {
-                $worksheet->setCellValue("A{$counter}", CHtml::encode($date));
-                foreach ($selectedCoas as $coa) {
-                    $worksheet->setCellValue("{$columnCounterIn}{$counter}", 0);
-                }
-                $worksheet->setCellValue("{$columnCounterIn}{$counter}", 0);
-                
-            }
+            $worksheet->setCellValue("A{$counter}", $transactionDate);
+            $worksheet->setCellValue("B{$counter}", $registrationVehicleCount);
+            $worksheet->setCellValue("C{$counter}", $registrationServiceCount);
+            $worksheet->setCellValue("D{$counter}", $invoiceVehicleCount);
+            $worksheet->setCellValue("E{$counter}", $invoiceServiceCount);
+            $worksheet->setCellValue("F{$counter}", $workOrderCount);
+            $worksheet->setCellValue("G{$counter}", $workOrderTotal);
+            
+            $registrationVehicleCountSum += $registrationVehicleCount;
+            $registrationServiceCountSum += $registrationServiceCount;
+            $invoiceVehicleCountSum += $invoiceVehicleCount;
+            $invoiceServiceCountSum += $invoiceServiceCount;
+            $workOrderCountSum += $workOrderCount;
+            $workOrderTotalSum += $workOrderTotal;
             
             $counter++;
         }
         
-        $columnCounterInTotal = 'B';
-        $worksheet->setCellValue("A{$counter}", 'Total Monthly');
-        foreach ($selectedCoas as $coa) {
-            $worksheet->setCellValue("{$columnCounterInTotal}{$counter}", CHtml::encode($paymentInDailyTotals[$coa->id]));
-            $columnCounterInTotal++;
-        }
-        $worksheet->setCellValue("{$columnCounterInTotal}{$counter}", CHtml::encode($dailyInTotal));
+        $worksheet->getStyle("A{$counter}:G{$counter}")->getFont()->setBold(true);
+        $worksheet->getStyle("A{$counter}:G{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
         
-        $worksheet->getStyle("A{$counter}:{$columnCounterInTotal}{$counter}")->getFont()->setBold(true);
-        $worksheet->getStyle("A{$counter}:{$columnCounterInTotal}{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
-        $worksheet->getStyle("A{$counter}:{$columnCounterInTotal}{$counter}")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
-        $counter++;$counter++;
-
-        $worksheet->mergeCells("A{$counter}:{$columnCounterInTotal}{$counter}");
-        $worksheet->getStyle("A{$counter}:{$columnCounterInTotal}{$counter}")->getFont()->setBold(true);
-        $worksheet->getStyle("A{$counter}:{$columnCounterInTotal}{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-        $worksheet->setCellValue("A{$counter}", 'Transaksi Bank Keluar');
+        $worksheet->setCellValue("A{$counter}", 'TOTAL');
+        $worksheet->setCellValue("B{$counter}", $registrationVehicleCountSum);
+        $worksheet->setCellValue("C{$counter}", $registrationServiceCountSum);
+        $worksheet->setCellValue("D{$counter}", $invoiceVehicleCountSum);
+        $worksheet->setCellValue("E{$counter}", $invoiceServiceCountSum);
+        $worksheet->setCellValue("F{$counter}", $workOrderCountSum);
+        $worksheet->setCellValue("G{$counter}", $workOrderTotalSum);
+                
         $counter++;
 
-        $paymentOutDailyTotals = array();
-        $columnCounterOut = 'B';
-        foreach ($selectedCoas as $coa) {
-            $worksheet->setCellValue("{$columnCounterOut}{$counter}", CHtml::encode(CHtml::value($coa, 'name')));
-            $paymentOutDailyTotals[$coa->id] = '0.00'; 
-            $columnCounterOut++;
-        }
-        $dailyOutTotal = '0.00';
-        $worksheet->setCellValue("{$columnCounterOut}{$counter}", 'Total');
-        
-        $worksheet->getStyle("A{$counter}:{$columnCounterOut}{$counter}")->getFont()->setBold(true);
-        $worksheet->getStyle("A{$counter}:{$columnCounterOut}{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
-        $worksheet->getStyle("A{$counter}:{$columnCounterOut}{$counter}")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
-        $counter++;$counter++;
-
-        $daysInMonthTransactionOut = cal_days_in_month(CAL_GREGORIAN, $month, $year);
-        $yearMonth = str_pad($year, 2, '0', STR_PAD_LEFT) . '-' . str_pad($month, 2, '0', STR_PAD_LEFT);
-        for ($day = 1; $day <= $daysInMonthTransactionOut; $day++) {
-            $columnCounterOut = 'B';
-            $date = $yearMonth . '-' . str_pad($day, 2, '0', STR_PAD_LEFT);
-            if (isset($paymentOutList[$date])) {
-                $paymentOutItem = $paymentOutList[$date];
-                $totalPerDate = '0.00';
-                $worksheet->setCellValue("A{$counter}", CHtml::encode($date));
-                
-                foreach ($selectedCoas as $coa) {
-                    $paymentOutRetail = $paymentOutItem[$coa->id];
-                    $worksheet->setCellValue("{$columnCounterOut}{$counter}", CHtml::encode($paymentOutRetail));
-                    $paymentOutDailyTotals[$coa->id] += $paymentOutRetail;
-                    $totalPerDate += $paymentOutRetail;
-                    $columnCounterOut++;
-                }
-                $worksheet->setCellValue("{$columnCounterOut}{$counter}", CHtml::encode($totalPerDate));
-                $dailyOutTotal += $totalPerDate;
-            } else {
-                $worksheet->setCellValue("A{$counter}", CHtml::encode($date));
-                foreach ($selectedCoas as $coa) {
-                    $worksheet->setCellValue("{$columnCounterOut}{$counter}", 0);
-                }
-                $worksheet->setCellValue("{$columnCounterOut}{$counter}", 0);
-                
-            }
-            
-            $counter++;
-        }
-
-        $columnCounterOutTotal = 'B';
-        $worksheet->setCellValue("A{$counter}", 'Total Monthly');
-        foreach ($selectedCoas as $coa) {
-            $worksheet->getStyle("{$columnCounterOutTotal}{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
-            $worksheet->setCellValue("{$columnCounterOutTotal}{$counter}", CHtml::encode($paymentOutDailyTotals[$coa->id]));
-            $columnCounterOutTotal++;
-        }
-        $worksheet->setCellValue("{$columnCounterOutTotal}{$counter}", CHtml::encode($dailyOutTotal));
-                
-        $worksheet->getStyle("A{$counter}:{$columnCounterOutTotal}{$counter}")->getFont()->setBold(true);
-        $worksheet->getStyle("A{$counter}:{$columnCounterOutTotal}{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
-        $worksheet->getStyle("A{$counter}:{$columnCounterOutTotal}{$counter}")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
-        $counter++;$counter++;
-
         for ($col = 'A'; $col !== 'Z'; $col++) {
             $objPHPExcel->getActiveSheet()
             ->getColumnDimension($col)
@@ -381,7 +446,7 @@ class BodyRepairMonthlyTransactionController extends Controller {
         ob_end_clean();
 
         header('Content-type: application/vnd.ms-excel');
-        header('Content-Disposition: attachment;filename="bank_bulanan.xls"');
+        header('Content-Disposition: attachment;filename="body_repair_panel_monthly.xls"');
         header('Cache-Control: max-age=0');
 
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
@@ -389,169 +454,4 @@ class BodyRepairMonthlyTransactionController extends Controller {
 
         Yii::app()->end();
     }
-    
-    protected function saveToExcelDailyTransactionInfo(array $options = array()) {
-        set_time_limit(0);
-        ini_set('memory_limit', '1024M');
-
-        spl_autoload_unregister(array('YiiBase', 'autoload'));
-        include_once Yii::getPathOfAlias('ext.phpexcel.Classes') . DIRECTORY_SEPARATOR . 'PHPExcel.php';
-        spl_autoload_register(array('YiiBase', 'autoload'));
-
-        $objPHPExcel = new PHPExcel();
-        
-        $dataProvider = $options['dataProvider'];
-        $date = $options['date'];
-        $branch = $options['branch'];
-        $coa = $options['coa'];
-        $inOut = $options['inOut'];
-        
-        $documentProperties = $objPHPExcel->getProperties();
-        $documentProperties->setCreator('Raperind Motor');
-        $documentProperties->setTitle('Transaksi Bank Harian');
-
-        $worksheet = $objPHPExcel->setActiveSheetIndex(0);
-        $worksheet->setTitle('Transaksi Bank Harian');
-
-        $worksheet->mergeCells('A1:E1');
-        $worksheet->mergeCells('A2:E2');
-        $worksheet->mergeCells('A3:E3');
-        $worksheet->mergeCells('A4:E4');
-
-        $worksheet->getStyle('A1:E6')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-        $worksheet->getStyle('A1:E6')->getFont()->setBold(true);
-
-        $transactionInOut = $inOut == 'In' ? 'Masuk' : 'Keluar';
-        $worksheet->setCellValue('A1', 'RAPERIND MOTOR ' . CHtml::encode(CHtml::value($branch, 'name')));
-        $worksheet->setCellValue('A2', 'Transaksi ' . $transactionInOut . ' Bank Harian');
-        $worksheet->setCellValue('A3', CHtml::value($coa, 'code') . ' - ' . CHtml::value($coa, 'name') . ' - ' . CHtml::value($coa, 'coaCategory.name') . ' - ' . CHtml::value($coa, 'coaSubCategory.name'));
-        $worksheet->setCellValue('A4', CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($date))));
-
-        $worksheet->getStyle('A6:E6')->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
-        $worksheet->setCellValue("A6", 'Transaksi #');
-        $worksheet->setCellValue("B6", 'Tanggal');
-        $worksheet->setCellValue("C6", 'Note');
-        $worksheet->setCellValue("D6", 'Memo');
-        $worksheet->setCellValue("E6", 'Jumlah');
-        $worksheet->getStyle('A6:E6')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
-
-        $counter = 7;
-        $totalSum = '0.00';
-        foreach ($dataProvider->data as $header) {
-            $totalAmount = CHtml::value($header, 'total');
-            $worksheet->setCellValue("A{$counter}", CHtml::value($header, 'kode_transaksi'));
-            $worksheet->setCellValue("B{$counter}", Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($header->tanggal_transaksi)));
-            $worksheet->setCellValue("C{$counter}", CHtml::value($header, 'transaction_subject'));
-            $worksheet->setCellValue("D{$counter}", CHtml::value($header, 'remark'));
-            $worksheet->setCellValue("E{$counter}", $totalAmount);
-            $totalSum += $totalAmount;
-
-            $counter++;
-        }
-        
-        $worksheet->getStyle("A{$counter}:E{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
-        $worksheet->getStyle("A{$counter}:E{$counter}")->getFont()->setBold(true);
-        $worksheet->setCellValue("D{$counter}", 'Total');
-        $worksheet->setCellValue("E{$counter}", $totalSum);
-        
-        for ($col = 'A'; $col !== 'Z'; $col++) {
-            $objPHPExcel->getActiveSheet()
-            ->getColumnDimension($col)
-            ->setAutoSize(true);
-        }
-        
-        ob_end_clean();
-
-        header('Content-type: application/vnd.ms-excel');
-        header('Content-Disposition: attachment;filename="transaksi_bank_' . $transactionInOut . '_harian.xls"');
-        header('Cache-Control: max-age=0');
-
-        $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
-        $objWriter->save('php://output');
-
-        Yii::app()->end();
-    }
-    
-//    protected function saveToExcelMonthlyTransactionInfo(array $options = array()) {
-//        set_time_limit(0);
-//        ini_set('memory_limit', '1024M');
-//
-//        spl_autoload_unregister(array('YiiBase', 'autoload'));
-//        include_once Yii::getPathOfAlias('ext.phpexcel.Classes') . DIRECTORY_SEPARATOR . 'PHPExcel.php';
-//        spl_autoload_register(array('YiiBase', 'autoload'));
-//
-//        $objPHPExcel = new PHPExcel();
-//        
-//        $dataProvider = $options['dataProvider'];
-//        $month = $options['month'];
-//        $year = $options['year'];
-//        $branch = $options['branch'];
-//        $coa = $options['coa'];
-//        $inOut = $options['inOut'];
-//        
-//        $documentProperties = $objPHPExcel->getProperties();
-//        $documentProperties->setCreator('Raperind Motor');
-//        $documentProperties->setTitle('Transaksi Bank Bulanan');
-//
-//        $worksheet = $objPHPExcel->setActiveSheetIndex(0);
-//        $worksheet->setTitle('Transaksi Bank Bulanan');
-//
-//        $worksheet->mergeCells('A1:E1');
-//        $worksheet->mergeCells('A2:E2');
-//        $worksheet->mergeCells('A3:E3');
-//        $worksheet->mergeCells('A4:E4');
-//
-//        $worksheet->getStyle('A1:E6')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-//        $worksheet->getStyle('A1:E6')->getFont()->setBold(true);
-//
-//        $transactionInOut = $inOut == 'In' ? 'Masuk' : 'Keluar';
-//        $worksheet->setCellValue('A1', 'RAPERIND MOTOR ' . CHtml::encode(CHtml::value($branch, 'name')));
-//        $worksheet->setCellValue('A2', 'Transaksi ' . $transactionInOut . ' Bank Bulanan');
-//        $worksheet->setCellValue('A3', CHtml::value($coa, 'code') . ' - ' . CHtml::value($coa, 'name') . ' - ' . CHtml::value($coa, 'coaCategory.name') . ' - ' . CHtml::value($coa, 'coaSubCategory.name'));
-//        $worksheet->setCellValue('A4', CHtml::encode(strftime("%B",mktime(0,0,0,$month))) . ' ' . CHtml::encode($year));
-//
-//        $worksheet->getStyle('A6:E6')->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
-//        $worksheet->setCellValue("A6", 'Transaksi #');
-//        $worksheet->setCellValue("B6", 'Tanggal');
-//        $worksheet->setCellValue("C6", 'Note');
-//        $worksheet->setCellValue("D6", 'Memo');
-//        $worksheet->setCellValue("E6", 'Jumlah');
-//        $worksheet->getStyle('A6:E6')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
-//
-//        $counter = 7;
-//        $totalSum = '0.00';
-//        foreach ($dataProvider->data as $header) {
-//            $totalAmount = CHtml::value($header, 'total');
-//            $worksheet->setCellValue("A{$counter}", CHtml::value($header, 'kode_transaksi'));
-//            $worksheet->setCellValue("B{$counter}", Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($header->tanggal_transaksi)));
-//            $worksheet->setCellValue("C{$counter}", CHtml::value($header, 'transaction_subject'));
-//            $worksheet->setCellValue("D{$counter}", CHtml::value($header, 'remark'));
-//            $worksheet->setCellValue("E{$counter}", $totalAmount);
-//            $totalSum += $totalAmount;
-//
-//            $counter++;
-//        }
-//        
-//        $worksheet->getStyle("A{$counter}:E{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
-//        $worksheet->getStyle("A{$counter}:E{$counter}")->getFont()->setBold(true);
-//        $worksheet->setCellValue("D{$counter}", 'Total');
-//        $worksheet->setCellValue("E{$counter}", $totalSum);
-//        
-//        for ($col = 'A'; $col !== 'Z'; $col++) {
-//            $objPHPExcel->getActiveSheet()
-//            ->getColumnDimension($col)
-//            ->setAutoSize(true);
-//        }
-//        
-//        ob_end_clean();
-//
-//        header('Content-type: application/vnd.ms-excel');
-//        header('Content-Disposition: attachment;filename="transaksi_bank_bulanan.xls"');
-//        header('Cache-Control: max-age=0');
-//
-//        $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
-//        $objWriter->save('php://output');
-//
-//        Yii::app()->end();
-//    }
 }

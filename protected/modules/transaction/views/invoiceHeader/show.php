@@ -16,7 +16,7 @@ $this->breadcrumbs = array(
         )); ?>
     <?php endif; ?>
     <?php if ($model->transaction_tax_number == null): ?>
-        <?php echo CHtml::link('<span class="fa fa-plus"></span>Add Coretax Number', array("/transaction/invoiceHeader/addCoretax", "id" => $model->id), array(
+        <?php echo CHtml::link('<span class="fa fa-plus"></span>Add Coretax Number', array("/transaction/invoiceHeader/updateTaxNumber", "id" => $model->id), array(
             'class' => 'button info right', 
             'style' => 'margin-right:10px', 
         )); ?>
