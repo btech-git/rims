@@ -31,7 +31,7 @@
                         <Opt>B</Opt>
                         <Code>000000</Code>
                         <Name><?php echo CHtml::value($saleInvoiceDetail, 'service.name'); ?></Name>
-                        <Unit>000000</Unit>
+                        <Unit>UM.0030</Unit>
                     <?php endif; ?>
                     <Price><?php echo CHtml::value($saleInvoiceDetail, 'unit_price'); ?></Price>
                     <Qty><?php echo CHtml::value($saleInvoiceDetail, 'quantity'); ?></Qty>
