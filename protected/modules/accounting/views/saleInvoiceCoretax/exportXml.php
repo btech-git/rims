@@ -24,9 +24,9 @@
                 <GoodService>
                     <?php if (empty($saleInvoiceDetail->service_id)): ?>
                         <Opt>A</Opt>
-                        <Code>720000</Code>
+                        <Code>000000</Code>
                         <Name><?php echo CHtml::value($saleInvoiceDetail, 'product.name'); ?></Name>
-                        <Unit>UM.0018</Unit>
+                        <Unit>UM.0021</Unit>
                     <?php else: ?>
                         <Opt>B</Opt>
                         <Code>000000</Code>
