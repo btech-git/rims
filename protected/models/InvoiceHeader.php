@@ -320,7 +320,7 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
                 'defaultOrder' => 'invoice_date DESC',
             ),
             'pagination' => array(
-                'pageSize' => 100,
+                'pageSize' => 50,
             ),
         ));
     }
