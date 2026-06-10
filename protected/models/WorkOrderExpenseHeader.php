@@ -239,7 +239,7 @@ class WorkOrderExpenseHeader extends MonthlyTransactionActiveRecord {
         $sql = "SELECT DATE(w.transaction_date) AS transaction_date, SUM(grand_total) AS total                 
                 FROM " . WorkOrderExpenseHeader::model()->tableName() . " w 
                 INNER JOIN " . RegistrationTransaction::model()->tableName() . " h ON h.id = w.registration_transaction_id
-                WHERE YEAR(w.transaction_date) = :year AND MONTH(w.transaction_date) = :month AND h.repair_type = 'BR' AND " . $branchConditionSql . " 
+                WHERE YEAR(w.transaction_date) = :year AND MONTH(w.transaction_date) = :month AND h.repair_type = 'BR' AND w.user_id_cancelled IS NULL" . $branchConditionSql . " 
                 GROUP BY DATE(w.transaction_date)";
 
         $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
