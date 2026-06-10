@@ -37,7 +37,7 @@
                     <?php $registrationServiceCount = isset($bodyRepairTransactionInfoData[$transactionDate]['registration_service_count']) ? $bodyRepairTransactionInfoData[$transactionDate]['registration_service_count'] : 0; ?>
                     <?php $invoiceVehicleCount = isset($bodyRepairTransactionInfoData[$transactionDate]['invoice_vehicle_count']) ? $bodyRepairTransactionInfoData[$transactionDate]['invoice_vehicle_count'] : 0; ?>
                     <?php $invoiceServiceCount = isset($bodyRepairTransactionInfoData[$transactionDate]['invoice_service_count']) ? $bodyRepairTransactionInfoData[$transactionDate]['invoice_service_count'] : 0; ?>
-                    <?php $workOrderCount = isset($bodyRepairTransactionInfoData[$transactionDate]['service_count']) ? $bodyRepairTransactionInfoData[$transactionDate]['service_count'] : 0; ?>
+                    <?php $workOrderCount = isset($bodyRepairTransactionInfoData[$transactionDate]['work_order_service_count']) ? $bodyRepairTransactionInfoData[$transactionDate]['work_order_service_count'] : 0; ?>
                     <?php $workOrderTotal = isset($bodyRepairTransactionInfoData[$transactionDate]['work_order_total']) ? $bodyRepairTransactionInfoData[$transactionDate]['work_order_total'] : '0.00'; ?>
                     <tr>
                         <td><?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($transactionDate))); ?></td>

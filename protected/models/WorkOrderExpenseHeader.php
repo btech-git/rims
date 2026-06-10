@@ -198,7 +198,7 @@ class WorkOrderExpenseHeader extends MonthlyTransactionActiveRecord {
         ));
     }
     
-    public static function getWorkOrderTransactionCountAndSumData($year, $month, $branchId) {
+    public static function getServiceTransactionCountData($year, $month, $branchId) {
         $branchConditionSql = '';
         
         $params = array(
@@ -211,11 +211,35 @@ class WorkOrderExpenseHeader extends MonthlyTransactionActiveRecord {
             $params[':branch_id'] = $branchId;
         }
         
-        $sql = "SELECT DATE(w.transaction_date) AS transaction_date, COUNT(DISTINCT w.transaction_number, s.service_id) AS service_count, SUM(w.grand_total) AS total
+        $sql = "SELECT DATE(w.transaction_date) AS transaction_date, COUNT(DISTINCT w.transaction_number, s.service_id) AS service_count
                 FROM " . WorkOrderExpenseHeader::model()->tableName() . " w
                 INNER JOIN " . RegistrationTransaction::model()->tableName() . " r ON r.id = w.registration_transaction_id
                 INNER JOIN " . RegistrationService::model()->tableName() . " s  ON r.id = s.registration_transaction_id
                 WHERE YEAR(w.transaction_date) = :year AND MONTH(w.transaction_date) = :month AND r.repair_type = 'BR' AND w.user_id_cancelled IS NULL" . $branchConditionSql . "
+                GROUP BY DATE(w.transaction_date)";
+
+        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
+
+        return $resultSet;
+    }
+    
+    public static function getTotalTransactionSumData($year, $month, $branchId) {
+        $branchConditionSql = '';
+        
+        $params = array(
+            ':year' => $year,
+            ':month' => $month,
+        );
+        
+        if (!empty($branchId)) {
+            $branchConditionSql = ' AND w.branch_id = :branch_id';
+            $params[':branch_id'] = $branchId;
+        }
+        
+        $sql = "SELECT DATE(w.transaction_date) AS transaction_date, SUM(grand_total) AS total                 
+                FROM " . WorkOrderExpenseHeader::model()->tableName() . " w 
+                INNER JOIN " . RegistrationTransaction::model()->tableName() . " h ON h.id = w.registration_transaction_id
+                WHERE YEAR(w.transaction_date) = :year AND MONTH(w.transaction_date) = :month AND h.repair_type = 'BR' AND " . $branchConditionSql . " 
                 GROUP BY DATE(w.transaction_date)";
 
         $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);

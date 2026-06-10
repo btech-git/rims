@@ -34,7 +34,8 @@ class BodyRepairMonthlyTransactionController extends Controller {
         $registrationServiceTransactionCountData = RegistrationService::getServiceTransactionCountData($year, $month, $branchId);
         $invoiceVehicleTransactionCountData = InvoiceHeader::getVehicleTransactionCountData($year, $month, $branchId);
         $invoiceServiceTransactionCountDate = InvoiceDetail::getServiceTransactionCountData($year, $month, $branchId);
-        $workOrderTransactionCountAndSumData = WorkOrderExpenseHeader::getWorkOrderTransactionCountAndSumData($year, $month, $branchId);
+        $workOrderServiceTransactionCountData = WorkOrderExpenseHeader::getServiceTransactionCountData($year, $month, $branchId);
+        $workOrderTotalTransactionSumData = WorkOrderExpenseHeader::getTotalTransactionSumData($year, $month, $branchId);
         
         $bodyRepairTransactionInfoData = array();
         foreach ($registrationVehicleTransactionCountData as $registrationVehicleTransactionCountDataItem) {
@@ -49,9 +50,11 @@ class BodyRepairMonthlyTransactionController extends Controller {
         foreach ($invoiceServiceTransactionCountDate as $invoiceServiceTransactionCountDateItem) {
             $bodyRepairTransactionInfoData[$invoiceServiceTransactionCountDateItem['transaction_date']]['invoice_service_count'] = $invoiceServiceTransactionCountDateItem['service_count'];
         }
-        foreach ($workOrderTransactionCountAndSumData as $workOrderTransactionCountAndSumDataItem) {
-            $bodyRepairTransactionInfoData[$workOrderTransactionCountAndSumDataItem['transaction_date']]['service_count'] = $workOrderTransactionCountAndSumDataItem['service_count'];
-            $bodyRepairTransactionInfoData[$workOrderTransactionCountAndSumDataItem['transaction_date']]['work_order_total'] = $workOrderTransactionCountAndSumDataItem['total'];
+        foreach ($workOrderServiceTransactionCountData as $workOrderServiceTransactionCountDataItem) {
+            $bodyRepairTransactionInfoData[$workOrderServiceTransactionCountDataItem['transaction_date']]['work_order_service_count'] = $workOrderServiceTransactionCountDataItem['service_count'];
+        }
+        foreach ($workOrderTotalTransactionSumData as $workOrderTotalTransactionSumDataItem) {
+            $bodyRepairTransactionInfoData[$workOrderTotalTransactionSumDataItem['transaction_date']]['work_order_total'] = $workOrderTotalTransactionSumDataItem['total'];
         }
         
         $yearList = array();
