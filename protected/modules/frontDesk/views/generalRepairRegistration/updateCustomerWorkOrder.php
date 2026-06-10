@@ -193,7 +193,7 @@ $this->breadcrumbs=array(
                                         <div class="field">
                                             <div class="row collapse">
                                                 <div class="small-4 columns">
-                                                    <label class="prefix">Customer Work Order #</label>
+                                                    <label class="prefix">DMS Reference Number</label>
                                                 </div>
                                                 <div class="small-8 columns">
                                                     <?php echo $form->textField($registrationTransaction, 'customer_document_order_number'); ?>

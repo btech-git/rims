@@ -54,7 +54,7 @@
                     <td class="width1-1"><?php echo CHtml::encode($i + 1); ?></td>
                     <td class="width1-2">
                         <?php echo CHtml::link(CHtml::encode($header->transaction_number), array(
-                            "/frontDesk/registrationTransaction/show", 
+                            "/frontDesk/registrationTransaction/view", 
                             "id"=>$header->id
                         ), array("target" => "_blank")); ?>
                     </td>

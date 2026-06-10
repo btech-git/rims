@@ -1634,13 +1634,14 @@ class RegistrationTransaction extends MonthlyTransactionActiveRecord {
         return $this->total_product_price + $this->total_service_price;
     }
     
-    public static function getActiveWorkOrderData($branchId, $limit, $startDate, $endDate, $plateNumber, $carMakeId, $carModelId, $workOrderNumber, $transactionStatus, $repairType) {
+    public static function getActiveWorkOrderData($branchId, $limit, $startDate, $endDate, $plateNumber, $carMakeId, $carModelId, $workOrderNumber, $transactionStatus, $repairType, $customerName) {
         $plateNumberConditionSql = '';
         $carMakeConditionSql = '';
         $carModelConditionSql = '';
         $workOrderConditionSql = '';
         $transactionStatusConditionSql = '';
         $repairTypeConditionSql = '';
+        $customerNameConditionSql = '';
         
         $params = array(
             ':start_date' => $startDate,
@@ -1678,6 +1679,11 @@ class RegistrationTransaction extends MonthlyTransactionActiveRecord {
             $params[':repair_type'] = $repairType;
         }
 
+        if (!empty($customerName)) {
+            $customerNameConditionSql = ' AND cu.name LIKE :customer_name';
+            $params[':customer_name'] = "%{$customerName}%";
+        }
+
         $sql = "SELECT r.vehicle_id, v.plate_number, r.transaction_date, c.name AS car_make, m.name AS car_model, s.name AS car_sub_model, o.name AS color,
                     r.work_order_number, r.work_order_date, r.work_order_time, r.repair_type, r.problem, u.username, r.status, r.id, r.transaction_number, 
                     r.sales_order_number, r.customer_work_order_number, cu.name AS customer_name, r.estimate_discharge_date
@@ -1691,7 +1697,7 @@ class RegistrationTransaction extends MonthlyTransactionActiveRecord {
                 INNER JOIN " . Colors::model()->tableName() . " o on o.id = v.color_id
                 INNER JOIN " . Users::model()->tableName() . " u on u.id = r.user_id
                 WHERE r.work_order_number IS NOT NULL AND r.user_id_cancelled IS NULL AND r.branch_id = :branch_id AND r.status NOT IN ('Finished') AND
-                    SUBSTRING(r.transaction_date, 1, 10) BETWEEN :start_date AND :end_date" . $plateNumberConditionSql . 
+                    SUBSTRING(r.transaction_date, 1, 10) BETWEEN :start_date AND :end_date" . $plateNumberConditionSql . $customerNameConditionSql . 
                     $carMakeConditionSql . $carModelConditionSql . $workOrderConditionSql . $transactionStatusConditionSql . $repairTypeConditionSql . "
                 ORDER BY r.transaction_date DESC, r.id DESC
                 LIMIT {$limit}";
@@ -1701,13 +1707,14 @@ class RegistrationTransaction extends MonthlyTransactionActiveRecord {
         return $resultSet;
     }
     
-    public static function getActiveAllBranchWorkOrderData($limit, $startDate, $endDate, $plateNumber, $carMakeId, $carModelId, $workOrderNumber, $transactionStatus, $repairType) {
+    public static function getActiveAllBranchWorkOrderData($limit, $startDate, $endDate, $plateNumber, $carMakeId, $carModelId, $workOrderNumber, $transactionStatus, $repairType, $customerName) {
         $plateNumberConditionSql = '';
         $carMakeConditionSql = '';
         $carModelConditionSql = '';
         $workOrderConditionSql = '';
         $transactionStatusConditionSql = '';
         $repairTypeConditionSql = '';
+        $customerNameConditionSql = '';
         
         $params = array(
             ':start_date' => $startDate,
@@ -1742,6 +1749,11 @@ class RegistrationTransaction extends MonthlyTransactionActiveRecord {
         if (!empty($repairType)) {
             $repairTypeConditionSql = ' AND r.repair_type = :repair_type';
             $params[':repair_type'] = $repairType;
+        }
+
+        if (!empty($customerName)) {
+            $customerNameConditionSql = ' AND cu.name LIKE :customer_name';
+            $params[':customer_name'] = "%{$customerName}%";
         }
 
         $sql = "SELECT r.vehicle_id, v.plate_number, r.transaction_date, c.name AS car_make, m.name AS car_model, s.name AS car_sub_model, o.name AS color,
@@ -1758,7 +1770,7 @@ class RegistrationTransaction extends MonthlyTransactionActiveRecord {
                 INNER JOIN " . Users::model()->tableName() . " u on u.id = r.user_id
                 WHERE r.work_order_number IS NOT NULL AND r.user_id_cancelled IS NULL AND r.status NOT IN ('Finished') AND 
                     SUBSTRING(r.transaction_date, 1, 10) BETWEEN :start_date AND :end_date" . $plateNumberConditionSql . $carMakeConditionSql . 
-                    $carModelConditionSql . $workOrderConditionSql . $transactionStatusConditionSql . $repairTypeConditionSql . "
+                    $carModelConditionSql . $workOrderConditionSql . $transactionStatusConditionSql . $repairTypeConditionSql . $customerNameConditionSql . "
                 ORDER BY r.transaction_date DESC, r.id DESC
                 LIMIT {$limit}";
 
@@ -1767,13 +1779,14 @@ class RegistrationTransaction extends MonthlyTransactionActiveRecord {
         return $resultSet;
     }
     
-    public static function getOutstandingWorkOrderData($branchId, $limit, $startDate, $endDate, $plateNumber, $carMakeId, $carModelId, $workOrderNumber, $transactionStatus, $repairType) {
+    public static function getOutstandingWorkOrderData($branchId, $limit, $startDate, $endDate, $plateNumber, $carMakeId, $carModelId, $workOrderNumber, $transactionStatus, $repairType, $customerName) {
         $plateNumberConditionSql = '';
         $carMakeConditionSql = '';
         $carModelConditionSql = '';
         $workOrderConditionSql = '';
         $transactionStatusConditionSql = '';
         $repairTypeConditionSql = '';
+        $customerNameConditionSql = '';
         
         $params = array(
             ':start_date' => $startDate,
@@ -1809,6 +1822,11 @@ class RegistrationTransaction extends MonthlyTransactionActiveRecord {
         if (!empty($repairType)) {
             $repairTypeConditionSql = ' AND r.repair_type = :repair_type';
             $params[':repair_type'] = $repairType;
+        }
+
+        if (!empty($customerName)) {
+            $customerNameConditionSql = ' AND cu.name LIKE :customer_name';
+            $params[':customer_name'] = "%{$customerName}%";
         }
 
         $sql = "SELECT r.vehicle_id, v.plate_number, r.transaction_date, c.name AS car_make, m.name AS car_model, s.name AS car_sub_model, o.name AS color,
@@ -1828,7 +1846,7 @@ class RegistrationTransaction extends MonthlyTransactionActiveRecord {
                     FROM " . InvoiceHeader::model()->tableName() . " i
                     WHERE r.id = i.registration_transaction_id
                 ) AND r.work_order_number IS NOT NULL AND r.user_id_cancelled IS NULL AND r.branch_id = :branch_id AND r.status NOT IN ('Finished') AND
-                    SUBSTRING(r.transaction_date, 1, 10) BETWEEN :start_date AND :end_date" . $plateNumberConditionSql . 
+                    SUBSTRING(r.transaction_date, 1, 10) BETWEEN :start_date AND :end_date" . $plateNumberConditionSql . $customerNameConditionSql .
                     $carMakeConditionSql . $carModelConditionSql . $workOrderConditionSql . $transactionStatusConditionSql . $repairTypeConditionSql . "
                 ORDER BY r.transaction_date DESC, r.id DESC
                 LIMIT {$limit}";
@@ -1838,13 +1856,14 @@ class RegistrationTransaction extends MonthlyTransactionActiveRecord {
         return $resultSet;
     }
     
-    public static function getOutstandingAllBranchWorkOrderData($limit, $startDate, $endDate, $plateNumber, $carMakeId, $carModelId, $workOrderNumber, $transactionStatus, $repairType) {
+    public static function getOutstandingAllBranchWorkOrderData($limit, $startDate, $endDate, $plateNumber, $carMakeId, $carModelId, $workOrderNumber, $transactionStatus, $repairType, $customerName) {
         $plateNumberConditionSql = '';
         $carMakeConditionSql = '';
         $carModelConditionSql = '';
         $workOrderConditionSql = '';
         $transactionStatusConditionSql = '';
         $repairTypeConditionSql = '';
+        $customerNameConditionSql = '';
         
         $params = array(
             ':start_date' => $startDate,
@@ -1879,6 +1898,11 @@ class RegistrationTransaction extends MonthlyTransactionActiveRecord {
         if (!empty($repairType)) {
             $repairTypeConditionSql = ' AND r.repair_type = :repair_type';
             $params[':repair_type'] = $repairType;
+        }
+
+        if (!empty($customerName)) {
+            $customerNameConditionSql = ' AND cu.name LIKE :customer_name';
+            $params[':customer_name'] = "%{$customerName}%";
         }
 
         $sql = "SELECT r.vehicle_id, v.plate_number, r.transaction_date, c.name AS car_make, m.name AS car_model, s.name AS car_sub_model, o.name AS color,
@@ -1899,7 +1923,7 @@ class RegistrationTransaction extends MonthlyTransactionActiveRecord {
                     WHERE r.id = i.registration_transaction_id
                 ) AND r.work_order_number IS NOT NULL AND r.user_id_cancelled IS NULL AND SUBSTRING(r.transaction_date, 1, 10) BETWEEN :start_date AND :end_date" . 
                     $plateNumberConditionSql . $carMakeConditionSql . $carModelConditionSql . $workOrderConditionSql . $transactionStatusConditionSql . 
-                    $repairTypeConditionSql . "
+                    $repairTypeConditionSql . $customerNameConditionSql . "
                 ORDER BY r.transaction_date DESC, r.id DESC
                 LIMIT {$limit}";
 
@@ -1908,11 +1932,11 @@ class RegistrationTransaction extends MonthlyTransactionActiveRecord {
         return $resultSet;
     }
     
-    public static function getOutstandingRegistrationData($branchId, $limit, $startDate, $endDate, $plateNumber, $carMakeId, $carModelId, $transactionStatus, $repairType) {
+    public static function getOutstandingRegistrationData($branchId, $limit, $startDate, $endDate, $plateNumber, $carMakeId, $carModelId, $customerName, $repairType) {
         $plateNumberConditionSql = '';
         $carMakeConditionSql = '';
         $carModelConditionSql = '';
-        $transactionStatusConditionSql = '';
+        $customerNameConditionSql = '';
         $repairTypeConditionSql = '';
         
         $params = array(
@@ -1936,9 +1960,9 @@ class RegistrationTransaction extends MonthlyTransactionActiveRecord {
             $params[':car_model_id'] = $carModelId;
         }
 
-        if (!empty($transactionStatus)) {
-            $transactionStatusConditionSql = ' AND r.status = :transaction_status';
-            $params[':transaction_status'] = $transactionStatus;
+        if (!empty($customerName)) {
+            $customerNameConditionSql = ' AND cu.name LIKE :customer_name';
+            $params[':customer_name'] = "%{$customerName}%";
         }
 
         if (!empty($repairType)) {
@@ -1964,7 +1988,7 @@ class RegistrationTransaction extends MonthlyTransactionActiveRecord {
                     WHERE r.id = i.registration_transaction_id
                 ) AND r.work_order_number IS NULL AND r.sales_order_number IS NULL AND r.user_id_cancelled IS NULL AND r.branch_id = :branch_id AND
                     SUBSTRING(r.transaction_date, 1, 10) BETWEEN :start_date AND :end_date" . $plateNumberConditionSql . $carMakeConditionSql . 
-                    $carModelConditionSql . $transactionStatusConditionSql . $repairTypeConditionSql . "
+                    $carModelConditionSql . $customerNameConditionSql . $repairTypeConditionSql . "
                 ORDER BY r.transaction_date DESC, r.id DESC
                 LIMIT {$limit}";
 
@@ -1973,11 +1997,11 @@ class RegistrationTransaction extends MonthlyTransactionActiveRecord {
         return $resultSet;
     }
     
-    public static function getOutstandingAllBranchRegistrationData($limit, $startDate, $endDate, $plateNumber, $carMakeId, $carModelId, $transactionStatus, $repairType) {
+    public static function getOutstandingAllBranchRegistrationData($limit, $startDate, $endDate, $plateNumber, $carMakeId, $carModelId, $customerName, $repairType) {
         $plateNumberConditionSql = '';
         $carMakeConditionSql = '';
         $carModelConditionSql = '';
-        $transactionStatusConditionSql = '';
+        $customerNameConditionSql = '';
         $repairTypeConditionSql = '';
         
         $params = array(
@@ -2000,9 +2024,9 @@ class RegistrationTransaction extends MonthlyTransactionActiveRecord {
             $params[':car_model_id'] = $carModelId;
         }
 
-        if (!empty($transactionStatus)) {
-            $transactionStatusConditionSql = ' AND r.status = :transaction_status';
-            $params[':transaction_status'] = $transactionStatus;
+        if (!empty($customerName)) {
+            $customerNameConditionSql = ' AND cu.name LIKE :customer_name';
+            $params[':customer_name'] = "%{$customerName}%";
         }
 
         if (!empty($repairType)) {
@@ -2027,7 +2051,7 @@ class RegistrationTransaction extends MonthlyTransactionActiveRecord {
                     FROM " . InvoiceHeader::model()->tableName() . " i
                     WHERE r.id = i.registration_transaction_id
                 ) AND r.work_order_number IS NULL AND r.sales_order_number IS NULL AND r.user_id_cancelled IS NULL AND SUBSTRING(r.transaction_date, 1, 10) BETWEEN :start_date AND :end_date" . 
-                    $plateNumberConditionSql . $carMakeConditionSql . $carModelConditionSql . $transactionStatusConditionSql . $repairTypeConditionSql . "
+                    $plateNumberConditionSql . $carMakeConditionSql . $carModelConditionSql . $customerNameConditionSql . $repairTypeConditionSql . "
                 ORDER BY r.transaction_date DESC, r.id DESC
                 LIMIT {$limit}";
 

@@ -192,7 +192,7 @@ class BodyRepairMonthlyTransactionController extends Controller {
         ini_set('memory_limit', '1024M');
 
         $workOrderExpenses = WorkOrderExpenseHeader::model()->with(array('registrationTransaction'))->findAll(array(
-            'condition' => 'DATE(t.transaction_date) = :transaction_date AND registrationTransaction.repair_type = "BR" AND t.user_id_cancelled IS NULL',
+            'condition' => 'DATE(t.transaction_date) = :transaction_date AND registrationTransaction.repair_type = "BR" AND t.user_id_cancelled IS NULL AND t.supplier_id = 250',
             'params' => array(':transaction_date' => $transactionDate)
         ));
         
@@ -325,7 +325,8 @@ class BodyRepairMonthlyTransactionController extends Controller {
         ini_set('memory_limit', '1024M');
 
         $workOrderExpenses = WorkOrderExpenseHeader::model()->with(array('registrationTransaction'))->findAll(array(
-            'condition' => 'YEAR(t.transaction_date) = :year AND MONTH(t.transaction_date) = :month AND registrationTransaction.repair_type = "BR" AND t.user_id_cancelled IS NULL',
+            'condition' => 'YEAR(t.transaction_date) = :year AND MONTH(t.transaction_date) = :month AND registrationTransaction.repair_type = "BR" AND
+                            w.supplier_id = 250 AND t.user_id_cancelled IS NULL',
             'params' => array(':year' => $year, ':month' => $month),
             'order' => 't.transaction_date ASC, t.transaction_number ASC',
         ));

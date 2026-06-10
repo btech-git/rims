@@ -1,0 +1,305 @@
+<?php
+/* @var $this PaymentInController */
+/* @var $model PaymentIn */
+
+$this->breadcrumbs = array(
+    'Payment Ins' => array('index'),
+    'Manage',
+);
+
+/*$this->menu=array(
+	array('label'=>'List PaymentIn', 'url'=>array('index')),
+	array('label'=>'Create PaymentIn', 'url'=>array('create')),
+);*/
+
+Yii::app()->clientScript->registerScript('search', "
+$('.search-button').click(function(){
+    $('.search-form').slideToggle(600);
+    $('.bulk-action').toggle();
+    $(this).toggleClass('active');
+    
+    if ($(this).hasClass('active')) {
+        $(this).text('');
+    } else {
+        $(this).text('Advanced Search');
+    }
+    
+    return false;
+});
+$('.search-form form').submit(function(){
+    $('#payment-in-grid').yiiGridView('update', {
+        data: $(this).serialize()
+    });
+    
+    return false;
+});
+");
+?>
+
+<div id="maincontent">
+    <div class="row">
+        <div class="small-12 columns">
+            <div class="clearfix page-action">
+                <?php /*echo CHtml::link('<span class="fa fa-list" ></span>Unpaid Invoice List',
+                    Yii::app()->baseUrl . '/transaction/paymentIn/index', array(
+                        'class' => 'button cbutton right',
+                        'style' => 'margin-left:10px',
+                        'visible' => Yii::app()->user->checkAccess("paymentInCreate") || Yii::app()->user->checkAccess("paymentInEdit")
+                    ));*/ ?>
+                <?php /*echo CHtml::link('<span class="fa fa-plus"></span>New Payment In',
+                    Yii::app()->baseUrl . '/transaction/paymentIn/invoiceList', array(
+                        'class' => 'button success right',
+                        'visible' => Yii::app()->user->checkAccess("paymentInCreate")
+                    ));*/ ?>
+                <h2>Manage Payment In</h2>
+                
+                <?php echo CHtml::link('<span class="fa fa-plus"></span>Payment by Customer', Yii::app()->baseUrl . '/transaction/paymentIn/customerList', array(
+                    'class' => 'button success right',
+                    'style' => 'margin-right:10px',
+                    'visible' => Yii::app()->user->checkAccess("paymentInCreate")
+                )); ?>
+                <?php echo CHtml::link('<span class="fa fa-plus"></span>Payment by Insurance', Yii::app()->baseUrl . '/transaction/paymentIn/insuranceList', array(
+                    'class' => 'button success right',
+                    'style' => 'margin-right:10px',
+                    'visible' => Yii::app()->user->checkAccess("paymentInCreate")
+                )); ?>
+            </div>
+
+            <div class="search-bar">
+                <div class="clearfix button-bar">
+                    <?php echo CHtml::link('Advanced Search', '#', array('class' => 'search-button right button cbutton secondary')); ?>
+                    <div class="clearfix"></div>
+                    <div class="search-form" style="display:none">
+                        <?php $this->renderPartial('_search', array(
+                            'model' => $model,
+                            'customerType' => $customerType,
+                            'plateNumber' => $plateNumber,
+                            'startDate' => $startDate,
+                            'endDate' => $endDate,
+                        )); ?>
+                    </div><!-- search-form -->
+                </div>
+            </div>
+
+            <div class="grid-view">
+                <?php $this->widget('zii.widgets.grid.CGridView', array(
+                    'id' => 'payment-in-grid',
+                    'dataProvider' => $dataProvider,
+                    'filter' => NULL,
+                    'template' => '{items}<div class="clearfix">{summary}{pager}</div>',
+                    'pager' => array(
+                        'cssFile' => false,
+                        'header' => '',
+                    ),
+                    'columns' => array(
+                        array(
+                            'name' => 'payment_number',
+                            'value' => 'CHtml::link($data->payment_number, array("view", "id"=>$data->id))',
+                            'type' => 'raw'
+                        ),
+                        'payment_date',
+                        array(
+                            'name' => 'customer_name', 
+                            'value' => 'empty($data->customer_id) ? "N/A" : $data->customer->name'
+                        ),
+                        'plate_number_list',
+                        'invoice_number_list',
+                        array(
+                            'name' => 'payment_amount', 
+                            'value' => '$data->payment_amount == 0 ? AppHelper::formatMoney($data->downpayment_amount) : AppHelper::formatMoney($data->payment_amount)',
+                            'htmlOptions' => array('style' => 'text-align: right'),
+                        ),
+                        array(
+                            'header' => 'Insurance',
+                            'value' => 'empty($data->insurance_company_id) ? "N/A" : $data->insuranceCompany->name',
+                        ),
+                        array(
+                            'header' => 'Created By',
+                            'name' => 'user_id',
+                            'filter' => false,
+                            'value' => 'empty($data->user_id) ? "N/A" : $data->user->username '
+                        ),
+                        array(
+                            'header' => 'Approved By',
+                            'value' => 'empty($data->paymentInApprovals) ? "N/A" : $data->paymentInApprovals[0]->supervisor->username '
+                        ),
+                        array(
+                            'header' => 'Status',
+                            'value' => '$data->status'
+                        ),
+                        array(
+                            'header' => 'Tanggal Input',
+                            'name' => 'created_datetime',
+                            'filter' => false,
+                            'value' => 'Yii::app()->dateFormatter->format("d MMM yyyy", $data->created_datetime)'
+                        ),
+                        array(
+                            'class' => 'CButtonColumn',
+                            'template' => '{view}',
+                            'buttons' => array(
+//                                'update' => array(
+//                                    'label' => 'update',
+//                                    'url' => 'Yii::app()->createUrl("transaction/paymentIn/update", array("id"=>$data->id))',
+//                                    'visible' => 'Yii::app()->user->checkAccess("paymentInEdit")', //$data->status_document != "Approved" && $data->status_document != "Rejected" && ',
+//                                ),
+                                'view' => array(
+                                    'label' => 'view',
+                                    'url' => 'Yii::app()->createUrl("transaction/paymentIn/view", array("id"=>$data->id))',
+                                ),
+                            ),
+                        ),
+                    ),
+                )); ?>
+            </div>
+            
+            <fieldset>
+                <legend>Pending Invoice</legend>
+                <div class="grid-view">
+                    <?php $this->widget('zii.widgets.grid.CGridView', array(
+                        'id' => 'invoice-grid',
+                        // 'dataProvider'=>$vehicleDataProvider,
+                        'dataProvider' => $invoiceDataProvider,
+                        'filter' => $invoice,
+                        'template' => '{items}<div class="clearfix">{summary}{pager}</div>',
+                        'pager' => array(
+                            'cssFile' => false,
+                            'header' => '',
+                        ),
+                        'columns' => array(
+                            array(
+                                'name' => 'invoice_number',
+                                'value' => 'CHTml::link($data->invoice_number, array("invoiceHeader/view", "id"=>$data->id))',
+                                'type' => 'raw'
+                            ),
+                            'invoice_date',
+                            'due_date',
+                            'status',
+                            array(
+                                'name' => 'reference_type',
+                                'value' => '$data->reference_type == 1 ? "Sales Order" : "Retail Sales"'
+                            ),
+                            array(
+                                'name' => 'customer_name', 
+                                'value' => '$data->customer->name'
+                            ),
+                            array(
+                                'header' => 'Plate #', 
+                                'filter' => CHtml::textField('PlateNumberInvoice', $plateNumberInvoice),
+                                'value' => 'empty($data->vehicle_id) ? "N/A" : $data->vehicle->plate_number'
+                            ),
+                            array(
+                                'header' => 'Insurance',
+                                'filter' => CHtml::activeDropDownList($invoice, 'insurance_company_id', CHtml::listData(InsuranceCompany::model()->findAll(array('order' => 'name')), 'id', 'name'), array('empty' => '-- all --')),
+                                'value' => 'empty($data->insurance_company_id) ? "N/A" : $data->insuranceCompany->name',
+                            ),
+                            array(
+                                'name' => 'user_id',
+                                'filter' => CHtml::activeDropDownList($invoice, 'user_id', CHtml::listData(Users::model()->findAll(array('order' => 'username')), 'id', 'username'), array('empty' => '-- all --')),
+                                'header' => 'Created By',
+                                'value' => 'empty($data->user_id) ? "N/A" : $data->user->username',
+                            ),
+//                            array(
+//                                'name' => 'branch_id',
+//                                'header' => 'Branch',
+//                                'filter' => CHtml::activeDropDownList($invoice, 'branch_id', CHtml::listData(Branch::model()->findAll(array('order' => 'name')), 'id', 'name'), array('empty' => '-- all --')),
+//                                'value' => '$data->branch->name',
+//                            ),
+                            array(
+                                'name' => 'total_price', 
+                                'value' => 'AppHelper::formatMoney($data->total_price)',
+                                'htmlOptions' => array('style' => 'text-align: right'),
+                            ),
+                            array(
+                                'name' => 'payment_amount', 
+                                'value' => 'AppHelper::formatMoney($data->payment_amount)',
+                                'htmlOptions' => array('style' => 'text-align: right'),
+                            ),
+                            array(
+                                'name' => 'payment_left', 
+                                'value' => 'AppHelper::formatMoney($data->payment_left)',
+                                'htmlOptions' => array('style' => 'text-align: right'),
+                            ),
+                            array(
+                                'header' => '',
+                                'type' => 'raw',
+                                'value' => 'CHtml::link("Create", array("create", "invoiceId"=>$data->id))',
+                                'htmlOptions' => array(
+                                    'style' => 'text-align: center;'
+                                ),
+                            ),
+                        ),
+                    )); ?>
+                </div>
+            </fieldset>
+            
+            <fieldset>
+                <legend>Pending DP</legend>
+                <div class="grid-view">
+                    <?php $this->widget('zii.widgets.grid.CGridView', array(
+                        'id' => 'downpayment-grid',
+                        // 'dataProvider'=>$vehicleDataProvider,
+                        'dataProvider' => $downpaymentDataProvider,
+                        'filter' => $registrationTransaction,
+                        'template' => '{items}<div class="clearfix">{summary}{pager}</div>',
+                        'pager' => array(
+                            'cssFile' => false,
+                            'header' => '',
+                        ),
+                        'columns' => array(
+                            array(
+                                'name' => 'downpayment_transaction_number',
+                                'value' => '$data->downpayment_transaction_number',
+                                'type' => 'raw'
+                            ),
+                            'downpayment_transaction_date',
+                            'vehicle.plate_number',
+                            'downpayment_note',
+                            array(
+                                'name' => 'downpayment_amount', 
+                                'value' => 'AppHelper::formatMoney($data->downpayment_amount)',
+                                'htmlOptions' => array('style' => 'text-align: right'),
+                            ),
+                            array(
+                                'header' => '',
+                                'type' => 'raw',
+                                'value' => 'CHtml::link("Create", array("createDownpayment", "registrationId"=>$data->id))',
+                                'htmlOptions' => array(
+                                    'style' => 'text-align: center;'
+                                ),
+                            ),
+                        ),
+                    )); ?>
+                </div>
+            </fieldset>
+        </div>
+    </div> <!-- end row -->
+</div> <!-- end maintenance -->
+
+<?php $this->beginWidget('zii.widgets.jui.CJuiDialog', array(
+    'id' => 'cancel-message-dialog',
+    // additional javascript options for the dialog plugin
+    'options' => array(
+        'title' => 'Cancel Message',
+        'autoOpen' => false,
+        'width' => 'auto',
+        'modal' => false,
+    ),
+));?>
+<div>
+    <?php $hasFlash = Yii::app()->user->hasFlash('message'); ?>
+    <?php if ($hasFlash): ?>
+        <div class="flash-error">
+            <?php echo Yii::app()->user->getFlash('message'); ?>
+        </div>
+    <?php endif; ?>
+</div>
+<?php $this->endWidget('zii.widgets.jui.CJuiDialog'); ?>
+
+<script>
+    $(document).ready(function() {
+        var hasFlash = <?php echo $hasFlash ? 'true' : 'false' ?>;
+        if (hasFlash) {
+            $("#cancel-message-dialog").dialog({modal: 'false'});
+        }
+    });
+</script>

@@ -32,28 +32,7 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                 </div>
                             </div>
                         </div>
-                    </div>
-
-                    <div class="medium-6 columns">
-                        <div class="field">
-                            <div class="row collapse">
-                                <div class="small-4 columns">
-                                    <span class="prefix">Type</span>
-                                </div>
-                                <div class="small-8 columns">
-                                    <?php echo CHtml::dropDownList('RepairType', $repairType, array(
-                                        ''=>'-- All --',
-                                        'GR'=>'GR',
-                                        'BR'=>'BR',
-                                    )); ?>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="medium-6 columns">
+                        
                         <div class="field">
                             <div class="row collapse">
                                 <div class="small-4 columns">
@@ -72,26 +51,7 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                 </div>
                             </div>
                         </div>
-                    </div>
-
-                    <div class="medium-6 columns">
-                        <div class="field">
-                            <div class="row collapse">
-                                <div class="small-4 columns">
-                                    <span class="prefix">Car Model</span>
-                                </div>
-                                <div class="small-8 columns">
-                                    <?php echo CHtml::dropDownList('CarModelId', $carModelId, CHtml::listData(VehicleCarModel::model()->findAll(array('order' => 't.name ASC')), 'id', 'name'), array(
-                                        'empty' => '-- All --',
-                                    )); ?>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="medium-6 columns">
+                        
                         <div class="field">
                             <div class="row collapse">
                                 <div class="small-4 columns">
@@ -133,16 +93,38 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                         <div class="field">
                             <div class="row collapse">
                                 <div class="small-4 columns">
-                                    <span class="prefix">Status</span>
+                                    <span class="prefix">BR/GR</span>
                                 </div>
                                 <div class="small-8 columns">
-                                    <?php echo CHtml::dropDownList('TransactionStatus', $transactionStatus, array(
+                                    <?php echo CHtml::dropDownList('RepairType', $repairType, array(
                                         ''=>'-- All --',
-                                        'Waitlist'=>'Waitlist',
-                                        'Processing WO'=>'Processing WO',
-                                        'Assigned'=>'Assigned',
-                                        'Finished'=>'Finished',
+                                        'GR'=>'GR',
+                                        'BR'=>'BR',
                                     )); ?>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="field">
+                            <div class="row collapse">
+                                <div class="small-4 columns">
+                                    <span class="prefix">Car Model</span>
+                                </div>
+                                <div class="small-8 columns">
+                                    <?php echo CHtml::dropDownList('CarModelId', $carModelId, CHtml::listData(VehicleCarModel::model()->findAll(array('order' => 't.name ASC')), 'id', 'name'), array(
+                                        'empty' => '-- All --',
+                                    )); ?>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="field">
+                            <div class="row collapse">
+                                <div class="small-4 columns">
+                                    <span class="prefix">Customer</span>
+                                </div>
+                                <div class="small-8 columns">
+                                    <?php echo CHtml::textField('CustomerName', $customerName); ?>
                                 </div>
                             </div>
                         </div>

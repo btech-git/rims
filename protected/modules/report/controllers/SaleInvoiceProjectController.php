@@ -24,17 +24,19 @@ class SaleInvoiceProjectController extends Controller {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
 
-        $customer = Search::bind(new Customer('search'), isset($_GET['Customer']) ? $_GET['Customer'] : array());
-        $customerDataProvider = $customer->search();
-        $customerDataProvider->criteria->compare('t.customer_type', 'Company');
-        $customerDataProvider->pagination->pageVar = 'page_dialog';
-
         $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : date('Y-m-d');
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
         $branchId = (isset($_GET['BranchId'])) ? $_GET['BranchId'] : '';
         $customerId = (isset($_GET['CustomerId'])) ? $_GET['CustomerId'] : '';
+        $coaName = (isset($_GET['CoaName'])) ? $_GET['CoaName'] : '';
         $currentSort = (isset($_GET['sort'])) ? $_GET['sort'] : '';
         
+        $customer = Search::bind(new Customer('search'), isset($_GET['Customer']) ? $_GET['Customer'] : array());
+        $customerDataProvider = $customer->search();
+//        $customerDataProvider->criteria->compare('t.customer_type', 'Company');
+        $customerDataProvider->criteria->compare('coa.name', $coaName, true);
+        $customerDataProvider->pagination->pageVar = 'page_dialog';
+
         $saleProjectReport = InvoiceHeader::getSaleByProjectReport($startDate, $endDate, $branchId, $customerId);
 
         if (isset($_GET['ResetFilter'])) {
@@ -58,6 +60,7 @@ class SaleInvoiceProjectController extends Controller {
             'startDate' => $startDate,
             'endDate' => $endDate,
             'branchId' => $branchId,
+            'coaName' => $coaName,
             'currentSort' => $currentSort,
         ));
     }

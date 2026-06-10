@@ -106,7 +106,14 @@ Yii::app()->clientScript->registerScript('report', '
                                         }',
                                         'columns' => array(
                                             'name',
-                                            'customer_type',
+                                            array(
+                                                'name' => 'customer_type',
+                                                'filter' => CHtml::activeDropDownList($customer, 'customer_type', array(
+                                                    'Company' => 'Company', 
+                                                    'Individual' => 'Retail'
+                                                ), array('empty' => 'All')),
+                                                'value' => '$data->customer_type',
+                                            ),
                                             'mobile_phone',
                                         ),
                                     )); ?>

@@ -15,7 +15,7 @@
             <div class="field">
                 <div class="row collapse">
                     <div class="small-4 columns">
-                        <span class="prefix">Transaction Date</span>
+                        <span class="prefix">Tanggal</span>
                     </div>
                     <div class="small-8 columns">
                         <input type="text" readonly="true" value="<?php echo Yii::app()->dateFormatter->format("d MMM yyyy HH:mm:ss", strtotime($model->transaction_date)); ?>"> 
@@ -169,7 +169,7 @@
             <div class="field">
                 <div class="row collapse">
                     <div class="small-4 columns">
-                        <span class="prefix">Customer WO #</span>
+                        <span class="prefix">DMS Reference Number</span>
                     </div>
                     <div class="small-8 columns">
                         <input type="text" readonly="true" value="<?php echo $model->customer_document_order_number; ?>"> 

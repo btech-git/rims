@@ -103,7 +103,10 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                                 ),
                                                 array(
                                                     'name' => 'customer_type',
-                                                    'filter' => false,
+                                                    'filter' => CHtml::activeDropDownList($customer, 'customer_type', array(
+                                                        'Company' => 'Company', 
+                                                        'Individual' => 'Retail'
+                                                    ), array('empty' => 'All')),
                                                     'value' => '$data->customer_type',
                                                 ),
                                                 array(

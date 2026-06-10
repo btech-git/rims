@@ -137,16 +137,17 @@ class WorkOrderController extends Controller {
         $workOrderNumber = (isset($_GET['WorkOrderNumber'])) ? $_GET['WorkOrderNumber'] : '';
         $transactionStatus = (isset($_GET['TransactionStatus'])) ? $_GET['TransactionStatus'] : '';
         $repairType = (isset($_GET['RepairType'])) ? $_GET['RepairType'] : '';
+        $customerName = (isset($_GET['CustomerName'])) ? $_GET['CustomerName'] : '';
 
         foreach ($branches as $branch) {
-            $activeWorkOrderData = RegistrationTransaction::getActiveWorkOrderData($branch->id, $limit, $startDate, $endDate, $plateNumber, $carMakeId, $carModelId, $workOrderNumber, $transactionStatus, $repairType);
+            $activeWorkOrderData = RegistrationTransaction::getActiveWorkOrderData($branch->id, $limit, $startDate, $endDate, $plateNumber, $carMakeId, $carModelId, $workOrderNumber, $transactionStatus, $repairType, $customerName);
             $tabContent = $this->renderPartial('_viewWorkOrder', array(
                 'activeWorkOrderData' => $activeWorkOrderData,
             ), true);
             $detailTabs[$branch->name] = array('content' => $tabContent);
         }
         
-        $activeAllBranchWorkOrderData = RegistrationTransaction::getActiveAllBranchWorkOrderData($limit, $startDate, $endDate, $plateNumber, $carMakeId, $carModelId, $workOrderNumber, $transactionStatus, $repairType);
+        $activeAllBranchWorkOrderData = RegistrationTransaction::getActiveAllBranchWorkOrderData($limit, $startDate, $endDate, $plateNumber, $carMakeId, $carModelId, $workOrderNumber, $transactionStatus, $repairType, $customerName);
         $detailTabs['All'] = array('content' => $this->renderPartial('_viewAllBranchWorkOrder', array(
             'activeAllBranchWorkOrderData' => $activeAllBranchWorkOrderData,
         ), true));
@@ -168,6 +169,7 @@ class WorkOrderController extends Controller {
             'workOrderNumber' => $workOrderNumber,
             'transactionStatus' => $transactionStatus,
             'repairType' => $repairType,
+            'customerName' => $customerName,
             'detailTabs' => $detailTabs,
         ));
     }
@@ -284,16 +286,17 @@ class WorkOrderController extends Controller {
         $workOrderNumber = (isset($_GET['WorkOrderNumber'])) ? $_GET['WorkOrderNumber'] : '';
         $transactionStatus = (isset($_GET['TransactionStatus'])) ? $_GET['TransactionStatus'] : '';
         $repairType = (isset($_GET['RepairType'])) ? $_GET['RepairType'] : '';
+        $customerName = (isset($_GET['CustomerName'])) ? $_GET['CustomerName'] : '';
 
         foreach ($branches as $branch) {
-            $outstandingWorkOrderData = RegistrationTransaction::getOutstandingWorkOrderData($branch->id, $limit, $startDate, $endDate, $plateNumber, $carMakeId, $carModelId, $workOrderNumber, $transactionStatus, $repairType);
+            $outstandingWorkOrderData = RegistrationTransaction::getOutstandingWorkOrderData($branch->id, $limit, $startDate, $endDate, $plateNumber, $carMakeId, $carModelId, $workOrderNumber, $transactionStatus, $repairType, $customerName);
             $tabContent = $this->renderPartial('_adminOutstanding', array(
                 'outstandingWorkOrderData' => $outstandingWorkOrderData,
             ), true);
             $detailTabs[$branch->name] = array('content' => $tabContent);
         }
         
-        $outstandingAllBranchWorkOrderData = RegistrationTransaction::getOutstandingAllBranchWorkOrderData($limit, $startDate, $endDate, $plateNumber, $carMakeId, $carModelId, $workOrderNumber, $transactionStatus, $repairType);
+        $outstandingAllBranchWorkOrderData = RegistrationTransaction::getOutstandingAllBranchWorkOrderData($limit, $startDate, $endDate, $plateNumber, $carMakeId, $carModelId, $workOrderNumber, $transactionStatus, $repairType, $customerName);
         $detailTabs['All'] = array('content' => $this->renderPartial('_adminAllBranchOutstanding', array(
             'outstandingAllBranchWorkOrderData' => $outstandingAllBranchWorkOrderData,
         ), true));
@@ -315,6 +318,7 @@ class WorkOrderController extends Controller {
             'workOrderNumber' => $workOrderNumber,
             'transactionStatus' => $transactionStatus,
             'repairType' => $repairType,
+            'customerName' => $customerName,
             'detailTabs' => $detailTabs,
         ));
     }

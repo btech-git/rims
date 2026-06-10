@@ -636,18 +636,18 @@ class RegistrationTransactionController extends Controller {
         $plateNumber = (isset($_GET['PlateNumber'])) ? $_GET['PlateNumber'] : '';
         $carMakeId = (isset($_GET['CarMakeId'])) ? $_GET['CarMakeId'] : '';
         $carModelId = (isset($_GET['CarModelId'])) ? $_GET['CarModelId'] : '';
-        $transactionStatus = (isset($_GET['TransactionStatus'])) ? $_GET['TransactionStatus'] : '';
         $repairType = (isset($_GET['RepairType'])) ? $_GET['RepairType'] : '';
+        $customerName = (isset($_GET['CustomerName'])) ? $_GET['CustomerName'] : '';
 
         foreach ($branches as $branch) {
-            $outstandingRegistrationData = RegistrationTransaction::getOutstandingRegistrationData($branch->id, $limit, $startDate, $endDate, $plateNumber, $carMakeId, $carModelId, $transactionStatus, $repairType);
+            $outstandingRegistrationData = RegistrationTransaction::getOutstandingRegistrationData($branch->id, $limit, $startDate, $endDate, $plateNumber, $carMakeId, $carModelId, $customerName, $repairType);
             $tabContent = $this->renderPartial('_adminOutstanding', array(
                 'outstandingRegistrationData' => $outstandingRegistrationData,
             ), true);
             $detailTabs[$branch->name] = array('content' => $tabContent);
         }
         
-        $outstandingAllBranchRegistrationData = RegistrationTransaction::getOutstandingAllBranchRegistrationData($limit, $startDate, $endDate, $plateNumber, $carMakeId, $carModelId, $transactionStatus, $repairType);
+        $outstandingAllBranchRegistrationData = RegistrationTransaction::getOutstandingAllBranchRegistrationData($limit, $startDate, $endDate, $plateNumber, $carMakeId, $carModelId, $customerName, $repairType);
         $detailTabs['All'] = array('content' => $this->renderPartial('_adminOutstandingAllBranch', array(
             'outstandingAllBranchRegistrationData' => $outstandingAllBranchRegistrationData,
         ), true));
@@ -666,7 +666,7 @@ class RegistrationTransactionController extends Controller {
             'plateNumber' => $plateNumber,
             'carMakeId' => $carMakeId,
             'carModelId' => $carModelId,
-            'transactionStatus' => $transactionStatus,
+            'customerName' => $customerName,
             'repairType' => $repairType,
             'detailTabs' => $detailTabs,
         ));

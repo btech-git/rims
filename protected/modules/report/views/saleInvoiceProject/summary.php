@@ -6,7 +6,13 @@ Yii::app()->clientScript->registerScript('report', '
 Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/transaction/report.css');
 ?>
 
-<div class="clear"></div>
+<style> 
+ .table_wrapper{
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+}
+</style>
 
 <div class="tab reportTab">
     <div class="tabHead"></div>
@@ -103,17 +109,21 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                                 ),
                                                 array(
                                                     'name' => 'customer_type',
-                                                    'filter' => false, 
+                                                    'filter' => CHtml::activeDropDownList($customer, 'customer_type', array(
+                                                        'Company' => 'Company', 
+                                                        'Individual' => 'Retail'
+                                                    ), array('empty' => 'All')),
                                                     'value' => '$data->customer_type',
                                                 ),
                                                 array(
                                                     'header' => 'COA account',
+                                                    'filter' => CHtml::textField('CoaName', $coaName),
                                                     'value' => 'empty($data->coa_id) ? "" : $data->coa->name',
                                                 ),
-                                                array(
-                                                    'header' => 'PIC',
-                                                    'value' => 'empty($data->customerPics) ? "" : $data->customerPics[0]->name',
-                                                ),
+//                                                array(
+//                                                    'header' => 'PIC',
+//                                                    'value' => 'empty($data->customerPics) ? "" : $data->customerPics[0]->name',
+//                                                ),
                                             ),
                                         )); ?>
                                         <?php $this->endWidget(); ?>

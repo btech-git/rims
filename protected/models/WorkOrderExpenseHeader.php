@@ -215,7 +215,8 @@ class WorkOrderExpenseHeader extends MonthlyTransactionActiveRecord {
                 FROM " . WorkOrderExpenseHeader::model()->tableName() . " w
                 INNER JOIN " . RegistrationTransaction::model()->tableName() . " r ON r.id = w.registration_transaction_id
                 INNER JOIN " . RegistrationService::model()->tableName() . " s  ON r.id = s.registration_transaction_id
-                WHERE YEAR(w.transaction_date) = :year AND MONTH(w.transaction_date) = :month AND r.repair_type = 'BR' AND w.user_id_cancelled IS NULL" . $branchConditionSql . "
+                WHERE YEAR(w.transaction_date) = :year AND MONTH(w.transaction_date) = :month AND r.repair_type = 'BR' AND w.user_id_cancelled IS NULL AND 
+                w.supplier_id = 250" . $branchConditionSql . "
                 GROUP BY DATE(w.transaction_date)";
 
         $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
@@ -239,7 +240,8 @@ class WorkOrderExpenseHeader extends MonthlyTransactionActiveRecord {
         $sql = "SELECT DATE(w.transaction_date) AS transaction_date, SUM(w.grand_total) AS total                 
                 FROM " . WorkOrderExpenseHeader::model()->tableName() . " w 
                 INNER JOIN " . RegistrationTransaction::model()->tableName() . " h ON h.id = w.registration_transaction_id
-                WHERE YEAR(w.transaction_date) = :year AND MONTH(w.transaction_date) = :month AND h.repair_type = 'BR' AND w.user_id_cancelled IS NULL" . $branchConditionSql . " 
+                WHERE YEAR(w.transaction_date) = :year AND MONTH(w.transaction_date) = :month AND h.repair_type = 'BR' AND w.user_id_cancelled IS NULL AND 
+                w.supplier_id = 250" . $branchConditionSql . " 
                 GROUP BY DATE(w.transaction_date)";
 
         $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
