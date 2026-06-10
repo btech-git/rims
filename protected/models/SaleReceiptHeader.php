@@ -45,7 +45,7 @@ class SaleReceiptHeader extends MonthlyTransactionActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('transaction_number, transaction_date, due_date, status, customer_id, branch_id, user_id_created, created_datetime', 'required'),
+            array('transaction_number, transaction_date, status, customer_id, branch_id, user_id_created, created_datetime', 'required'),
             array('customer_id, branch_id, user_id_created, user_id_updated, user_id_cancelled', 'numerical', 'integerOnly' => true),
             array('transaction_number', 'length', 'max' => 60),
             array('status', 'length', 'max' => 20),

@@ -1,18 +1,7 @@
 <?php
-/* @var $this PaymentInController */
-/* @var $model PaymentIn */
-
 $this->breadcrumbs = array(
-    'Payment Ins' => array('index'),
+    'Tanda Terima Penjualan' => array('index'),
     $model->id,
-);
-
-$this->menu = array(
-    array('label' => 'List PaymentIn', 'url' => array('index')),
-    array('label' => 'Create PaymentIn', 'url' => array('create')),
-    array('label' => 'Update PaymentIn', 'url' => array('update', 'id' => $model->id)),
-    array('label' => 'Delete PaymentIn', 'url' => '#', 'linkOptions' => array('submit' => array('delete', 'id' => $model->id), 'confirm' => 'Are you sure you want to delete this item?')),
-    array('label' => 'Manage PaymentIn', 'url' => array('admin')),
 );
 ?>
 
@@ -22,44 +11,25 @@ $this->menu = array(
         
         <?php $ccontroller = Yii::app()->controller->id; ?>
         <?php $ccaction = Yii::app()->controller->action->id; ?>
-        <?php echo CHtml::link('<span class="fa fa-th-list"></span>Manage', Yii::app()->baseUrl . '/transaction/paymentIn/admin', array(
+        <?php echo CHtml::link('<span class="fa fa-th-list"></span>Manage', Yii::app()->baseUrl . '/accounting/saleReceipt/admin', array(
             'class' => 'button cbutton right', 
             'style' => 'margin-right:10px',
         )) ?>
-        <?php if ($model->status !== 'CANCELLED!!!' && $model->status !== 'Approved' && $model->status !== 'Verified'): ?>
-            <?php if (Yii::app()->user->checkAccess("paymentInEdit")): //!($model->status == 'Approved' || $model->status == 'Rejected')): ?>
-                <?php echo CHtml::link('<span class="fa fa-edit"></span>Edit', Yii::app()->baseUrl.'/transaction/paymentIn/update?id=' . $model->id, array(
-                    'class'=>'button warning right',
-                    'style'=>'margin-right:10px',
-                )) ?>
-            <?php endif; ?>
+        <?php if ($model->status !== 'CANCELLED!!!' && Yii::app()->user->checkAccess("paymentInEdit")): ?>
+            <?php echo CHtml::link('<span class="fa fa-edit"></span>Edit', Yii::app()->baseUrl.'/accounting/saleReceipt/update?id=' . $model->id, array(
+                'class'=>'button warning right',
+                'style'=>'margin-right:10px',
+            )) ?>
         <?php endif; ?>
         
-        <?php if ($model->status == "Draft" && Yii::app()->user->checkAccess("paymentInApproval")): ?>
-            <?php echo CHtml::link('<span class="fa fa-check"></span>Approval', Yii::app()->baseUrl . '/transaction/paymentIn/updateApproval?headerId=' . $model->id, array(
-                'class' => 'button success right', 
-                'style' => 'margin-right:10px',
-            )); ?>
-        <?php elseif ($model->status != "Draft" && Yii::app()->user->checkAccess("paymentHead")): ?>
-            <?php echo CHtml::link('<span class="fa fa-check"></span>Update Approval', Yii::app()->baseUrl . '/transaction/paymentIn/updateApproval?headerId=' . $model->id, array(
-                'class' => 'button success right', 
-                'style' => 'margin-right:10px',
-            )); ?>
-        <?php endif; ?>
-
         <?php if (Yii::app()->user->checkAccess("paymentHead") && $model->status === 'Approved'): ?>
-            <?php /*echo CHtml::link('<span class="fa fa-check"></span>Verify Transaction', array("/transaction/paymentIn/verify", "id" => $model->id), array(
-                'class' => 'button success right', 
-                'style' => 'margin-right:10px', 
-            ));*/ ?> 
-        
-            <?php echo CHtml::link('<span class="fa fa-minus"></span>Cancel Transaction', array("/transaction/paymentIn/cancel", "id" => $model->id), array(
+            <?php echo CHtml::link('<span class="fa fa-minus"></span>Cancel Transaction', array("/accounting/saleReceipt/cancel", "id" => $model->id), array(
                 'class' => 'button alert right', 
                 'style' => 'margin-right:10px', 
             )); ?>
         <?php endif; ?>
         
-        <h1>View Payment In #<?php echo $model->id; ?></h1>
+        <h1>View Tanda Terima Penjualan #<?php echo $model->id; ?></h1>
     </div>
     
     <div class="row">
@@ -71,11 +41,11 @@ $this->menu = array(
                         <div class="field">
                             <div class="row collapse">
                                 <div class="small-4 columns">
-                                    <span class="prefix">Payment #</span>
+                                    <span class="prefix">Tanda Terima #</span>
                                 </div>
                                 
                                 <div class="small-8 columns">
-                                    <input type="text" readonly="true" value="<?php echo $model->payment_number; ?>"> 
+                                    <input type="text" readonly="true" value="<?php echo $model->transaction_number; ?>"> 
                                 </div>
                             </div>
                         </div>
@@ -83,11 +53,11 @@ $this->menu = array(
                         <div class="field">
                             <div class="row collapse">
                                 <div class="small-4 columns">
-                                    <span class="prefix">Payment Date</span>
+                                    <span class="prefix">Tanggal</span>
                                 </div>
                                 
                                 <div class="small-8 columns">
-                                    <input type="text" readonly="true" value="<?php echo Yii::app()->dateFormatter->format("d MMM yyyy", strtotime($model->payment_date)); ?>"> 
+                                    <input type="text" readonly="true" value="<?php echo Yii::app()->dateFormatter->format("d MMM yyyy", strtotime($model->transaction_date)); ?>"> 
                                 </div>
                             </div>
                         </div>
@@ -95,11 +65,11 @@ $this->menu = array(
                         <div class="field">
                             <div class="row collapse">
                                 <div class="small-4 columns">
-                                    <span class="prefix">Payment Type</span>
+                                    <span class="prefix">Jatuh Tempo</span>
                                 </div>
                                 
                                 <div class="small-8 columns">
-                                    <input type="text" readonly="true" value="<?php echo $model->paymentType->name; ?>"> 
+                                    <input type="text" readonly="true" value="<?php echo Yii::app()->dateFormatter->format("d MMM yyyy", strtotime($model->due_date)); ?>"> 
                                 </div>
                             </div>
                         </div>
@@ -107,11 +77,23 @@ $this->menu = array(
                         <div class="field">
                             <div class="row collapse">
                                 <div class="small-4 columns">
-                                    <span class="prefix">Company Bank</span>
+                                    <span class="prefix">Customer</span>
                                 </div>
                                 
                                 <div class="small-8 columns">
-                                    <input type="text" readonly="true" value="<?php echo CHtml::encode(CHtml::value($model, 'companyBank.account_name')); ?>"> 
+                                    <input type="text" readonly="true" value="<?php echo $model->customer->name; ?>"> 
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="field">
+                            <div class="row collapse">
+                                <div class="small-4 columns">
+                                    <span class="prefix">Type</span>
+                                </div>
+
+                                <div class="small-8 columns">
+                                    <input type="text" readonly="true" id="Customer_customer_type" value="<?php echo $model->customer_id != "" ? $model->customer->customer_type : '' ?>"> 
                                 </div>
                             </div>
                         </div>
@@ -131,11 +113,11 @@ $this->menu = array(
                         <div class="field">
                             <div class="row collapse">
                                 <div class="small-4 columns">
-                                    <span class="prefix">Notes</span>
+                                    <span class="prefix">Note</span>
                                 </div>
                                 
                                 <div class="small-8 columns">
-                                    <textarea name="" id="" cols="30" rows="4" readonly="true"><?php echo $model->notes; ?></textarea>
+                                    <textarea name="" id="" cols="30" rows="4" readonly="true"><?php echo $model->note; ?></textarea>
                                 </div>
                             </div>
                         </div>
@@ -157,23 +139,11 @@ $this->menu = array(
                         <div class="field">
                             <div class="row collapse">
                                 <div class="small-4 columns">
-                                    <span class="prefix">Insurance Company</span>
-                                </div>
-                                
-                                <div class="small-8 columns">
-                                    <input type="text" readonly="true" value="<?php echo CHtml::encode(CHtml::value($model, 'insuranceCompany.name')); ?>"> 
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="field">
-                            <div class="row collapse">
-                                <div class="small-4 columns">
                                     <span class="prefix">User Created</span>
                                 </div>
                                 
                                 <div class="small-8 columns">
-                                    <?php echo CHtml::encode(CHtml::value($model, 'user.username')); ?>
+                                    <?php echo CHtml::encode(CHtml::value($model, 'userIdCreated.username')); ?>
                                 </div>
                             </div>
                         </div>
@@ -198,7 +168,7 @@ $this->menu = array(
                                     </div>
 
                                     <div class="small-8 columns">
-                                        <?php echo CHtml::encode(CHtml::value($model, 'userIdEdited.username')); ?>
+                                        <?php echo CHtml::encode(CHtml::value($model, 'userIdUpdated.username')); ?>
                                     </div>
                                 </div>
                             </div>
@@ -210,7 +180,7 @@ $this->menu = array(
                                     </div>
 
                                     <div class="small-8 columns">
-                                        <?php echo CHtml::encode(CHtml::value($model, 'edited_datetime')); ?>
+                                        <?php echo CHtml::encode(CHtml::value($model, 'updated_datetime')); ?>
                                     </div>
                                 </div>
                             </div>
@@ -243,122 +213,8 @@ $this->menu = array(
                 </div>
             </fieldset>
             
-            <?php if (!empty($model->customer_id)): ?>
-                <fieldset>
-                    <legend>Customer</legend>
-                    <div class="large-6 columns">
-                        <div class="field">
-                            <div class="row collapse">
-                                <div class="small-4 columns">
-                                    <span class="prefix">Name</span>
-                                </div>
-
-                                <div class="small-8 columns">
-                                    <input type="text" readonly="true" id="Customer_customer_name" value="<?php echo CHtml::encode(CHtml::value($model, 'customer.name')); ?>"> 
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="field">
-                            <div class="row collapse">
-                                <div class="small-4 columns">
-                                    <span class="prefix">Type</span>
-                                </div>
-
-                                <div class="small-8 columns">
-                                    <input type="text" readonly="true" id="Customer_customer_type" value="<?php echo $model->customer_id != "" ? $model->customer->customer_type : '' ?>"> 
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="field">
-                            <div class="row collapse">
-                                <div class="small-4 columns">
-                                    <span class="prefix">Phone</span>
-                                </div>
-
-                                <div class="small-8 columns">
-                                    <input type="text" readonly="true" id="Customer_phones" value="<?php echo CHtml::encode(CHtml::value($model, 'customer.phone')); ?>">
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="field">
-                            <div class="row collapse">
-                                <div class="small-4 columns">
-                                    <span class="prefix">Mobile</span>
-                                </div>
-
-                                <div class="small-8 columns">
-                                    <input type="text" readonly="true" id="Customer_mobiles" value="<?php echo CHtml::encode(CHtml::value($model, 'customer.mobile_phone')); ?>">
-                                </div>
-                            </div>
-                        </div>
-                    </div> <!-- end div large -->
-
-                    <div class="large-6 columns">
-                        <div class="field">
-                            <div class="row collapse">
-                                <div class="small-4 columns">
-                                    <span class="prefix">Email</span>
-                                </div>
-                                <div class="small-8 columns">
-                                    <input type="text" readonly="true" id="Customer_email" value="<?php echo CHtml::encode(CHtml::value($model, 'customer.email')); ?>"> 
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="field">
-                            <div class="row collapse">
-                                <div class="small-4 columns">
-                                    <span class="prefix">Address</span>
-                                </div>
-
-                                <div class="small-8 columns">
-                                    <textarea name="" id="Customer_customer_address" cols="30" rows="5" readonly="true"><?php echo $model->customer_id != "" ? $model->customer->address . '&#13;&#10;' . $model->customer->province->name . '&#13;&#10;' . $model->customer->city->name . '&#13;&#10;' . $model->customer->zipcode : ''; ?></textarea>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </fieldset>
-            <?php endif; ?>
-                    
             <fieldset>
-                <legend>Payment Detail</legend>
-                <?php if (!empty($model->paymentInDetails) && $model->paymentInDetails[0]->invoice_header_id === null && $model->paymentInDetails[0]->registration_transaction_id !== null): ?>
-                    <?php $detail = $model->paymentInDetails[0]; ?>
-                    <div id="downpayment-Detail">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>DP #</th>
-                                    <th>Tanggal</th>
-                                    <th>Plate #</th>
-                                    <th>Note</th>
-                                    <th>DP Amount</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>
-                                        <?php echo CHtml::link($detail->registrationTransaction->downpayment_transaction_number, array(
-                                            "/frontDesk/registrationTransaction/view", 
-                                            "id" => $detail->registration_transaction_id
-                                        ), array('target' => 'blank')); ?>
-                                    </td>
-                                    <td><?php echo CHtml::encode(CHtml::value($detail, 'registrationTransaction.downpayment_transaction_date')); ?></td>
-                                    <td><?php echo CHtml::encode(CHtml::value($detail, 'registrationTransaction.vehicle.plate_number')); ?></td>
-                                    <td><?php echo CHtml::encode(CHtml::value($detail, 'registrationTransaction.downpayment_note')); ?></td>
-                                    <td style="text-align: right">
-                                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($detail, 'downpayment_amount'))); ?>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                <?php endif; ?>
-                
-                <?php if (!empty($model->paymentInDetails) && $model->paymentInDetails[0]->invoice_header_id !== null && $model->paymentInDetails[0]->registration_transaction_id !== null): ?>
+                <legend>Transaksi Detail</legend>
                     <div id="invoice-Detail">
                         <table>
                             <thead>
@@ -366,192 +222,37 @@ $this->menu = array(
                                     <th>Invoice #</th>
                                     <th>Plate #</th>
                                     <th>Memo</th>
-                                    <th>Pph</th>
-                                    <th>Disc</th>
-                                    <th>Biaya Bank</th>
-                                    <th>Biaya Merimen</th>
-                                    <th>Amount</th>
-                                    <th>Total Payment</th>
                                     <th>Total Invoice</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <?php foreach ($model->paymentInDetails as $detail): ?>
-                                    <?php if ($detail->invoice_header_id !== null): ?> 
-                                        <tr>
-                                            <td>
-                                                <?php echo CHtml::link($detail->invoiceHeader->invoice_number, array(
-                                                    "/transaction/invoiceHeader/show", 
-                                                    "id" => $detail->invoice_header_id
-                                                ), array('target' => 'blank')); ?>
-                                            </td>
-                                            <td><?php echo CHtml::encode(CHtml::value($detail, 'invoiceHeader.vehicle.plate_number')); ?></td>
-                                            <td><?php echo CHtml::encode(CHtml::value($detail, 'memo')); ?></td>
-                                            <td style="text-align: right">
-                                                <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($detail, 'tax_service_amount'))); ?>
-                                            </td>
-                                            <td style="text-align: right">
-                                                <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($detail, 'discount_amount'))); ?>
-                                            </td>
-                                            <td style="text-align: right">
-                                                <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($detail, 'bank_administration_fee'))); ?>
-                                            </td>
-                                            <td style="text-align: right">
-                                                <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($detail, 'merimen_fee'))); ?>
-                                            </td>
-                                            <td style="text-align: right">
-                                                <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($detail, 'amount'))); ?>
-                                            </td>
-                                            <td style="text-align: right">
-                                                <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($detail, 'totalAmount'))); ?>
-                                            </td>
-                                            <td style="text-align: right">
-                                                <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($detail, 'total_invoice'))); ?>
-                                            </td>
-                                        </tr>
-                                    <?php endif; ?>
+                                <?php foreach ($model->saleReceiptDetails as $detail): ?>
+                                    <tr>
+                                        <td>
+                                            <?php echo CHtml::link($detail->invoiceHeader->invoice_number, array(
+                                                "/transaction/invoiceHeader/show", 
+                                                "id" => $detail->invoice_header_id
+                                            ), array('target' => 'blank')); ?>
+                                        </td>
+                                        <td><?php echo CHtml::encode(CHtml::value($detail, 'invoiceHeader.vehicle.plate_number')); ?></td>
+                                        <td><?php echo CHtml::encode(CHtml::value($detail, 'memo')); ?></td>
+                                        <td style="text-align: right">
+                                            <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($detail, 'invoice_amount'))); ?>
+                                        </td>
+                                    </tr>
                                 <?php endforeach; ?>
                             </tbody>
                             <tfoot>
                                 <tr>
                                     <td style="text-align: right; font-weight: bold" colspan="3">Total</td>
                                     <td style="text-align: right; font-weight: bold">
-                                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($model, 'tax_service_amount'))); ?>
-                                    </td>
-                                    <td style="text-align: right; font-weight: bold">
-                                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($model, 'discount_product_amount'))); ?>
-                                    </td>
-                                    <td style="text-align: right; font-weight: bold">
-                                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($model, 'bank_administration_fee'))); ?>
-                                    </td>
-                                    <td style="text-align: right; font-weight: bold">
-                                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($model, 'merimen_fee'))); ?>
-                                    </td> 
-                                    <td style="text-align: right; font-weight: bold">
-                                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($model, 'payment_amount'))); ?>
-                                    </td>
-                                    <td style="text-align: right; font-weight: bold">
-                                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($model, 'totalPayment'))); ?>
-                                    </td>
-                                    <td style="text-align: right; font-weight: bold">
-                                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($model, 'totalInvoice'))); ?>
+                                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($model, 'total_invoice_amount'))); ?>
                                     </td>
                                 </tr>
                             </tfoot>
                         </table>
                     </div>
-                <?php endif; ?>
             </fieldset>
-
-            <fieldset>
-                <legend>Approval Status</legend>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Approval type</th>
-                            <th>Revision</th>
-                            <th>date</th>
-                            <th>note</th>
-                            <th>supervisor</th>
-                        </tr>
-                    </thead>
-
-                    <tbody>
-                        <?php foreach ($revisionHistories as $key => $history): ?>
-                            <tr>
-                                <td><?php echo $history->approval_type; ?></td>
-                                <td><?php echo $history->revision; ?></td>
-                                <td><?php echo $history->date; ?></td>
-                                <td><?php echo $history->note; ?></td>
-                                <td><?php echo $history->supervisor->username; ?></td>
-                            </tr>
-                        <?php endforeach; ?>
-                    </tbody>
-                </table>
-            </fieldset>
-
-            <fieldset>
-                <legend>Attached Images</legend>
-
-                <?php foreach  ($postImages as $postImage): ?>
-                    <?php $src = Yii::app()->baseUrl . '/images/uploads/paymentIn/' . $postImage->filename; ?>
-                    <div class="row">
-                        <div class="small-3 columns">
-                            <div style="margin-bottom:.5rem">
-                                <?php echo CHtml::image($src, $model->payment_number . "Image"); ?>
-                            </div>
-                        </div>
-                    </div>
-                <?php endforeach; ?>
-            </fieldset>
-            
-            <br />
-
-            <?php $transactions = JurnalUmum::model()->findAllByAttributes(array('kode_transaksi' => $model->payment_number, 'is_coa_category' => 0)); ?>
-            <?php if (Yii::app()->user->checkAccess("paymentHead")): ?>
-                <fieldset>
-                    <legend>Journal Transactions</legend>
-                    <table class="report">
-                        <thead>
-                            <tr id="header1">
-                                <th style="width: 5%">No</th>
-                                <th style="width: 15%">Kode COA</th>
-                                <th>Nama COA</th>
-                                <th style="width: 15%">Debit</th>
-                                <th style="width: 15%">Kredit</th>
-                            </tr>
-                        </thead>
-
-                        <tbody>
-                            <?php $totalDebit = 0; $totalCredit = 0; ?>
-                            <?php foreach ($transactions as $i => $header): ?>
-
-                                <?php $amountDebit = $header->debet_kredit == 'D' ? CHtml::value($header, 'total') : 0; ?>
-                                <?php $amountCredit = $header->debet_kredit == 'K' ? CHtml::value($header, 'total') : 0; ?>
-
-                                <tr>
-                                    <td style="text-align: center"><?php echo $i + 1; ?></td>
-                                    <td class="width1-4"><?php echo CHtml::encode(CHtml::value($header, 'branchAccountCode')); ?></td>
-                                    <td class="width1-5"><?php echo CHtml::encode(CHtml::value($header, 'branchAccountName')); ?></td>
-                                    <td class="width1-6" style="text-align: right">
-                                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $amountDebit)); ?>
-                                    </td>
-                                    <td class="width1-7" style="text-align: right">
-                                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $amountCredit)); ?>
-                                    </td>
-                                </tr>
-
-                                <?php $totalDebit += $amountDebit; ?>
-                                <?php $totalCredit += $amountCredit; ?>
-
-                            <?php endforeach; ?>
-                        </tbody>
-
-                        <tfoot>
-                            <tr>
-                                <td colspan="3" style="text-align: right; font-weight: bold">TOTAL</td>
-                                <td class="width1-6" style="text-align: right; font-weight: bold; border-top: 1px solid">
-                                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $totalDebit)); ?>
-                                </td>
-                                <td class="width1-7" style="text-align: right; font-weight: bold; border-top: 1px solid">
-                                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $totalCredit)); ?>
-                                </td>
-                            </tr>        
-                        </tfoot>
-                    </table>
-                </fieldset>
-            <?php endif; ?>
-
-            <br />
-
-            <?php //if (Yii::app()->user->checkAccess("accountingHead") && $model->status == 'Approved' && empty($transactions)): ?>
-                <div class="field buttons text-center">
-                    <?php echo CHtml::beginForm(); ?>
-                    <?php echo CHtml::submitButton('Processing Journal', array('name' => 'Process')); //, 'confirm' => 'Are you sure you want to process into journal transactions?')); ?>
-                    <?php echo CHtml::endForm(); ?>
-                </div>
-            <?php //endif; ?>
-
         </div>
     </div>
 </div>

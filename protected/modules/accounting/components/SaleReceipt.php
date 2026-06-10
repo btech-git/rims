@@ -128,6 +128,7 @@ class SaleReceipt extends CComponent {
     }
 
     public function flush() {
+        $this->header->due_date = date('Y-m-d',strtotime('+' . $this->header->customer->tenor . ' days', strtotime($this->header->transaction_date)));
         $this->header->total_invoice_amount = $this->totalInvoiceAmount;
         $valid = $this->header->save(false);
 

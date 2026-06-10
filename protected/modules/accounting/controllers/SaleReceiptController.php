@@ -10,7 +10,7 @@ class SaleReceiptController extends Controller {
 
     public function filters() {
         return array(
-            'access',
+//            'access',
         );
     }
 
@@ -23,23 +23,23 @@ class SaleReceiptController extends Controller {
             $filterChain->action->id === 'insuranceList' || 
             $filterChain->action->id === 'invoiceList'
         ) {
-            if (!(Yii::app()->user->checkAccess('paymentInCreate'))) {
+            if (!(Yii::app()->user->checkAccess('saleReceiptCreate'))) {
                 $this->redirect(array('/site/login'));
             }
         }
         if ($filterChain->action->id === 'delete' || $filterChain->action->id === 'update') {
-            if (!(Yii::app()->user->checkAccess('paymentInEdit'))) {
+            if (!(Yii::app()->user->checkAccess('saleReceiptEdit'))) {
                 $this->redirect(array('/site/login'));
             }
         }
         if ($filterChain->action->id === 'admin' || $filterChain->action->id === 'show' || $filterChain->action->id === 'view') {
-            if (!(Yii::app()->user->checkAccess('paymentInCreate') || Yii::app()->user->checkAccess('paymentInEdit') || Yii::app()->user->checkAccess('paymentInView'))) {
+            if (!(Yii::app()->user->checkAccess('saleReceiptCreate') || Yii::app()->user->checkAccess('saleReceiptEdit') || Yii::app()->user->checkAccess('saleReceiptView'))) {
                 $this->redirect(array('/site/login'));
             }
         }
         
         if ($filterChain->action->id === 'updateApproval') {
-            if (!(Yii::app()->user->checkAccess('paymentInApproval'))) {
+            if (!(Yii::app()->user->checkAccess('saleReceiptApproval'))) {
                 $this->redirect(array('/site/login'));
             }
         }
@@ -65,7 +65,7 @@ class SaleReceiptController extends Controller {
         $saleReceipt->header->transaction_date = date('Y-m-d');
         $saleReceipt->header->created_datetime = date('Y-m-d H:i:s');
         $saleReceipt->header->branch_id = Yii::app()->user->branch_id;
-        $saleReceipt->header->status = 'Draft';
+        $saleReceipt->header->status = 'Approved';
         $saleReceipt->header->user_id_created = Yii::app()->user->id;
 
         $invoiceHeader = Search::bind(new InvoiceHeader('search'), isset($_GET['InvoiceHeader']) ? $_GET['InvoiceHeader'] : array());
@@ -75,7 +75,6 @@ class SaleReceiptController extends Controller {
             $saleReceipt->header->customer_id = $customerId;
             $invoiceHeaderDataProvider->criteria->addCondition("t.customer_id = :customer_id");
             $invoiceHeaderDataProvider->criteria->params[':customer_id'] = $customerId;
-            $saleReceipt->header->insurance_company_id = null;
         }
         
         if (isset($_POST['Cancel'])) {
@@ -92,7 +91,7 @@ class SaleReceiptController extends Controller {
         }
 
         $this->render('create', array(
-            'paymentIn' => $saleReceipt,
+            'saleReceipt' => $saleReceipt,
             'invoiceHeader' => $invoiceHeader,
             'invoiceHeaderDataProvider' => $invoiceHeaderDataProvider,
          ));
@@ -104,127 +103,78 @@ class SaleReceiptController extends Controller {
      * @param integer $id the ID of the model to be updated
      */
     public function actionUpdate($id) {
-        $paymentIn = $this->instantiate($id, 'update');
-        $customer = Customer::model()->findByPk($paymentIn->header->customer_id);
+        $saleReceipt = $this->instantiate($id, 'update');
+        $customer = Customer::model()->findByPk($saleReceipt->header->customer_id);
 
         $invoiceHeader = Search::bind(new InvoiceHeader('search'), isset($_GET['InvoiceHeader']) ? $_GET['InvoiceHeader'] : array());
-        $invoiceHeaderDataProvider = $invoiceHeader->searchForPaymentIn();
+        $invoiceHeaderDataProvider = $invoiceHeader->searchForSaleReceipt();
 
-        if (!empty($paymentIn->header->customer_id)) {
+        if (!empty($saleReceipt->header->customer_id)) {
             $invoiceHeaderDataProvider->criteria->addCondition("t.customer_id = :customer_id");
-            $invoiceHeaderDataProvider->criteria->params[':customer_id'] = $paymentIn->header->customer_id;
+            $invoiceHeaderDataProvider->criteria->params[':customer_id'] = $saleReceipt->header->customer_id;
         }
         
-        $paymentIn->header->status = 'Draft';
-        $paymentIn->header->edited_datetime = date('Y-m-d H:i:s');
-        $paymentIn->header->user_id_edited = Yii::app()->user->id;
+        $saleReceipt->header->status = 'Draft';
+        $saleReceipt->header->edited_datetime = date('Y-m-d H:i:s');
+        $saleReceipt->header->user_id_edited = Yii::app()->user->id;
         
         if (isset($_POST['Cancel'])) {
             $this->redirect(array('admin'));
         }
 
         if (isset($_POST['Submit']) && IdempotentManager::check()) {
-            $this->loadState($paymentIn);
+            $this->loadState($saleReceipt);
+            $saleReceipt->header->setCodeNumberByRevision('transaction_number');
             
-            JurnalUmum::model()->deleteAllByAttributes(array(
-                'kode_transaksi' => $paymentIn->header->payment_number,
-                'branch_id' => $paymentIn->header->branch_id,
-            ));
-
-            $paymentIn->header->setCodeNumberByRevision('payment_number');
-            
-            if ($paymentIn->save(Yii::app()->db)) {
-                $this->redirect(array('view', 'id' => $paymentIn->header->id));
+            if ($saleReceipt->save(Yii::app()->db)) {
+                $this->redirect(array('view', 'id' => $saleReceipt->header->id));
             }
         }
 
         $this->render('update', array(
-            'paymentIn' => $paymentIn,
+            'saleReceipt' => $saleReceipt,
             'customer' => $customer,
             'invoiceHeader' => $invoiceHeader,
             'invoiceHeaderDataProvider' => $invoiceHeaderDataProvider,
         ));
     }
 
-    /**
-     * Deletes a particular model.
-     * If deletion is successful, the browser will be redirected to the 'admin' page.
-     * @param integer $id the ID of the model to be deleted
-     */
-    public function actionDelete($id) {
-        $this->loadModel($id)->delete();
-
-        // if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
-        if (!isset($_GET['ajax']))
-            $this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
-    }
-
-    /**
-     * Lists all models.
-     */
-    public function actionIndex() {
-        $invoice = new InvoiceHeader('search');
-        $invoice->unsetAttributes();
-        
-        if (isset($_GET['InvoiceHeader']))
-            $invoice->attributes = $_GET['InvoiceHeader'];
-        
-        $invoiceCriteria = new CDbCriteria;
-        $invoiceCriteria->addCondition('t.status != "CANCELLED" && t.status != "PAID"');
-        $invoiceCriteria->compare('t.invoice_number', $invoice->invoice_number, true);
-        $invoiceCriteria->compare('t.invoice_date', $invoice->invoice_date, true);
-        $invoiceCriteria->compare('t.due_date', $invoice->due_date, true);
-        $invoiceCriteria->compare('t.total_price', $invoice->total_price, true);
-        $invoiceCriteria->compare('t.status', $invoice->status, true);
-        $invoiceCriteria->compare('t.reference_type', $invoice->reference_type);
-        
-        $invoiceCriteria->together = true;
-        $invoiceCriteria->with = array('customer');
-        $invoiceCriteria->compare('customer.name', $invoice->customer_name, true);
-        $invoiceDataProvider = new CActiveDataProvider('InvoiceHeader', array('criteria' => $invoiceCriteria));
-        $dataProvider = new CActiveDataProvider('PaymentIn');
-        
-        $this->render('index', array(
-            'dataProvider' => $dataProvider,
-            'invoice' => $invoice,
-            'invoiceDataProvider' => $invoiceDataProvider,
-        ));
-    }
-
-    /**
-     * Manages all models.
-     */
     public function actionAdmin() {
-        $model = new PaymentIn('search');
+        $model = new SaleReceiptHeader('search');
         $model->unsetAttributes();  // clear any default values
 
-        if (isset($_GET['PaymentIn'])) {
-            $model->attributes = $_GET['PaymentIn'];
+        $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : '';
+        $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : '';
+        $customerName = (isset($_GET['CustomerName'])) ? $_GET['CustomerName'] : '';
+        $customerType = (isset($_GET['CustomerType'])) ? $_GET['CustomerType'] : '';
+        
+        if (isset($_GET['SaleReceiptHeader'])) {
+            $model->attributes = $_GET['SaleReceiptHeader'];
         }
         
         $dataProvider = $model->search();
         $dataProvider->criteria->addBetweenCondition('t.payment_date', $startDate, $endDate);
         
-        if (!Yii::app()->user->checkAccess('director')) {
+        if (!(Yii::app()->user->checkAccess('director') || Yii::app()->user->branch_id == 6)) {
             $dataProvider->criteria->addCondition('t.branch_id = :branch_id');
             $dataProvider->criteria->params[':branch_id'] = Yii::app()->user->branch_id;
         }
-        
-        $dataProvider->criteria->with = array(
-            'customer',
-            'paymentInApprovals',
-            'invoice' => array(
-                'with' => array(
-                    'vehicle',
-                ),
-            ),
-        );
         
         $this->render('admin', array(
             'model' => $model,
             'dataProvider' => $dataProvider,
             'startDate' => $startDate,
             'endDate' => $endDate,
+            'customerName' => $customerName,
+            'customerType' => $customerType,
+        ));
+    }
+
+    public function actionView($id) {
+        $model = $this->loadModel($id);
+
+        $this->render('view', array(
+            'model' => $model,
         ));
     }
 
@@ -237,43 +187,47 @@ class SaleReceiptController extends Controller {
         $model->update(array('status', 'total_invoice_amount', 'cancelled_datetime', 'user_id_cancelled'));
 
         foreach ($model->saleReceiptDetails as $detail) {
-            $detail->total_invoice = '0.00';
-            $detail->amount = '0.00';
-            $detail->tax_service_percentage = '0.00';
-            $detail->tax_service_amount = '0.00';
-            $detail->downpayment_amount = '0.00';
-            $detail->discount_amount = '0.00';
-            $detail->bank_administration_fee = '0.00';
-            $detail->merimen_fee = '0.00';
+            $detail->invoice_amount = '0.00';
             $detail->memo = '';
-            $detail->update(array('total_invoice', 'amount', 'tax_service_percentage', 'tax_service_amount', 'downpayment_amount', 'discount_amount', 'bank_administration_fee', 'merimen_fee', 'memo'));
-            
-            if (!empty($detail->invoice_header_id)) {
-                $invoiceHeader = InvoiceHeader::model()->findByPk($detail->invoice_header_id);
-                $invoiceHeader->payment_amount = $invoiceHeader->getTotalPayment();
-                $invoiceHeader->payment_left = $invoiceHeader->getTotalRemaining();
-                $invoiceHeader->update(array('payment_amount', 'payment_left'));
-            }
+            $detail->update(array('invoice_amount', 'memo'));
         }
         
-        JurnalUmum::model()->updateAll(array('total' => '0.00'), 'kode_transaksi = :kode_transaksi', array(
-            ':kode_transaksi' => $model->payment_number,
-        ));
-
         $this->saveTransactionLog('cancel', $model);
-        
         $this->redirect(array('admin'));
     }
 
-    /**
-     * Returns the data model based on the primary key given in the GET variable.
-     * If the data model is not found, an HTTP exception will be raised.
-     * @param integer $id the ID of the model to be loaded
-     * @return PaymentIn the loaded model
-     * @throws CHttpException
-     */
+    public function actionAjaxHtmlAddInvoices($id) {
+        if (Yii::app()->request->isAjaxRequest) {
+            $saleReceipt = $this->instantiate($id, '');
+            $this->loadState($saleReceipt);
+
+            if (isset($_POST['InvoiceIds'])) {
+                foreach ($_POST['InvoiceIds'] as $invoiceId) {
+                    $saleReceipt->addInvoice($invoiceId);
+                }
+            }
+
+            $this->renderPartial('_detail', array(
+                'saleReceipt' => $saleReceipt,
+            ));
+        }
+    }
+ 
+    public function actionAjaxHtmlRemoveDetail($id, $index) {
+        if (Yii::app()->request->isAjaxRequest) {
+            $saleReceipt = $this->instantiate($id, '');
+            $this->loadState($saleReceipt);
+
+            $saleReceipt->removeDetailAt($index);
+
+            $this->renderPartial('_detail', array(
+                'saleReceipt' => $saleReceipt,
+            ));
+        }
+    }
+    
     public function loadModel($id) {
-        $model = PaymentIn::model()->findByPk($id);
+        $model = SaleReceiptHeader::model()->findByPk($id);
         
         if ($model === null) {
             throw new CHttpException(404, 'The requested page does not exist.');
@@ -282,108 +236,71 @@ class SaleReceiptController extends Controller {
         return $model;
     }
 
-    public function actionAjaxHtmlAddInvoices($id) {
-        if (Yii::app()->request->isAjaxRequest) {
-            $paymentIn = $this->instantiate($id, '');
-            $this->loadState($paymentIn);
-
-            if (isset($_POST['InvoiceIds'])) {
-                foreach ($_POST['InvoiceIds'] as $invoiceId) {
-                    $paymentIn->addInvoice($invoiceId);
-                }
-            }
-
-            $this->renderPartial('_detail', array(
-                'paymentIn' => $paymentIn,
-            ));
-        }
-    }
- 
-    public function actionAjaxHtmlRemoveDetail($id, $index) {
-        if (Yii::app()->request->isAjaxRequest) {
-            $paymentIn = $this->instantiate($id, '');
-            $this->loadState($paymentIn);
-
-            $paymentIn->removeDetailAt($index);
-
-            $this->renderPartial('_detail', array(
-                'paymentIn' => $paymentIn,
-            ));
-        }
-    }
-    
     public function instantiate($id, $actionType) {
         
         if (empty($id)) {
-            $paymentIn = new PaymentInComponent($actionType, new PaymentIn(), array());
+            $saleReceipt = new SaleReceipt($actionType, new SaleReceiptHeader(), array());
         } else {
-            $paymentInModel = $this->loadModel($id);
-            $paymentIn = new PaymentInComponent($actionType, $paymentInModel, $paymentInModel->paymentInDetails);
+            $saleReceiptHeader = $this->loadModel($id);
+            $saleReceipt = new SaleReceipt($actionType, $saleReceiptHeader, $saleReceiptHeader->saleReceiptDetails);
         }
         
-        return $paymentIn;
+        return $saleReceipt;
     }
 
-    public function loadState($paymentIn) {
-        if (isset($_POST['PaymentIn'])) {
-            $paymentIn->header->attributes = $_POST['PaymentIn'];
+    public function loadState($saleReceipt) {
+        if (isset($_POST['SaleReceiptHeader'])) {
+            $saleReceipt->header->attributes = $_POST['SaleReceiptHeader'];
         }
         
-        if (isset($_POST['PaymentInDetail'])) {
-            foreach ($_POST['PaymentInDetail'] as $i => $item) {
-                if (isset($paymentIn->details[$i])) {
-                    $paymentIn->details[$i]->attributes = $item;
+        if (isset($_POST['SaleReceiptDetail'])) {
+            foreach ($_POST['SaleReceiptDetail'] as $i => $item) {
+                if (isset($saleReceipt->details[$i])) {
+                    $saleReceipt->details[$i]->attributes = $item;
                 } else {
-                    $detail = new PaymentInDetail();
+                    $detail = new SaleReceiptDetail();
                     $detail->attributes = $item;
-                    $paymentIn->details[] = $detail;
+                    $saleReceipt->details[] = $detail;
                 }
             }
-            if (count($_POST['PaymentInDetail']) < count($paymentIn->details)) {
-                array_splice($paymentIn->details, $i + 1);
+            if (count($_POST['SaleReceiptDetail']) < count($saleReceipt->details)) {
+                array_splice($saleReceipt->details, $i + 1);
             }
         } else {
-            $paymentIn->details = array();
+            $saleReceipt->details = array();
         }
     }
 
     /**
      * Performs the AJAX validation.
-     * @param PaymentIn $model the model to be validated
+     * @param SaleReceiptHeader $model the model to be validated
      */
     protected function performAjaxValidation($model) {
-        if (isset($_POST['ajax']) && $_POST['ajax'] === 'payment-in-form') {
+        if (isset($_POST['ajax']) && $_POST['ajax'] === 'sale-receipt-form') {
             echo CActiveForm::validate($model);
             Yii::app()->end();
         }
     }
 
-    public function saveTransactionLog($actionType, $paymentIn) {
+    public function saveTransactionLog($actionType, $saleReceipt) {
         $transactionLog = new TransactionLog();
-        $transactionLog->transaction_number = $paymentIn->payment_number;
-        $transactionLog->transaction_date = $paymentIn->payment_date;
+        $transactionLog->transaction_number = $saleReceipt->payment_number;
+        $transactionLog->transaction_date = $saleReceipt->payment_date;
         $transactionLog->log_date = date('Y-m-d');
         $transactionLog->log_time = date('H:i:s');
-        $transactionLog->table_name = $paymentIn->tableName();
-        $transactionLog->table_id = $paymentIn->id;
+        $transactionLog->table_name = $saleReceipt->tableName();
+        $transactionLog->table_id = $saleReceipt->id;
         $transactionLog->user_id = Yii::app()->user->id;
         $transactionLog->username = Yii::app()->user->username;
         $transactionLog->controller_class = Yii::app()->controller->module->id  . '/' . Yii::app()->controller->id;
         $transactionLog->action_name = Yii::app()->controller->action->id;
         $transactionLog->action_type = $actionType;
         
-        $newData = $paymentIn->attributes;
+        $newData = $saleReceipt->attributes;
         
-        if ($actionType === 'approval') {
-            $newData['paymentInApprovals'] = array();
-            foreach($paymentIn->paymentInApprovals as $detail) {
-                $newData['paymentInApprovals'][] = $detail->attributes;
-            }
-        } else {
-            $newData['paymentInDetails'] = array();
-            foreach($paymentIn->paymentInDetails as $detail) {
-                $newData['paymentInDetails'][] = $detail->attributes;
-            }
+        $newData['saleReceiptDetails'] = array();
+        foreach($saleReceipt->saleReceiptDetails as $detail) {
+            $newData['saleReceiptDetails'][] = $detail->attributes;
         }
         
         $transactionLog->new_data = json_encode($newData);
