@@ -13,7 +13,11 @@ $this->breadcrumbs=array(
     </div>
     <div class="col d-flex justify-content-end">
         <div class="d-gap">
-            <?php echo CHtml::link('Manage', array("admin"), array('class' => 'btn btn-info btn-sm')); ?>
+            <?php echo CHtml::link('Manage', array("admin"), array(
+                'class'=> 'button cbutton left', 
+                'style' => 'margin-right:10px',
+                'target' =>'_blank',
+            )); ?>
         </div>
     </div>
 </div>

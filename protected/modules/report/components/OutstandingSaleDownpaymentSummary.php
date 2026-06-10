@@ -1,6 +1,6 @@
 <?php
 
-class OutstandingRegistrationTransactionSummary extends CComponent {
+class OutstandingSaleDownpaymentSummary extends CComponent {
 
     public $dataProvider;
 
@@ -61,8 +61,8 @@ class OutstandingRegistrationTransactionSummary extends CComponent {
             'vehicle',
         );
         
-        $this->dataProvider->criteria->addCondition("substr(t.transaction_date, 1, 10) BETWEEN :start_date AND :end_date AND t.sales_order_number IS NULL AND
-                t.work_order_number IS NULL AND t.user_id_cancelled IS NULL AND t.status NOT IN ('Finished')" . 
+        $this->dataProvider->criteria->addCondition("substr(t.transaction_date, 1, 10) BETWEEN :start_date AND :end_date AND
+            t.downpayment_amount > 0 AND t.is_downpayment_paid = 0 AND t.user_id_cancelled IS NULL AND t.status NOT IN ('Finished')" . 
         $branchConditionSql . $customerConditionSql . $plateNumberConditionSql);
         $this->dataProvider->criteria->params[':start_date'] = $startDate;
         $this->dataProvider->criteria->params[':end_date'] = $endDate;

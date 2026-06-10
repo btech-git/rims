@@ -171,6 +171,11 @@
                                         'visible' => Yii::app()->user->checkAccess('director')
                                     ),
                                     array(
+                                        'label' => 'Outstanding Downpayment', 
+                                        'url' => array('/report/outstandingSaleDownpayment/summary'), 
+                                        'visible' => Yii::app()->user->checkAccess('director')
+                                    ),
+                                    array(
                                         'label' => 'User Performance', 
                                         'url' => array('/report/transactionLogUserCounter/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('director')

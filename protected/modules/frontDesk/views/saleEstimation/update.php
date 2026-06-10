@@ -9,6 +9,23 @@ $this->breadcrumbs=array(
 );
 ?>
 
+<div class="row d-print-none">
+    <div class="col d-flex justify-content-start">
+        <h4>Update Estimasi Penjualan</h4>
+    </div>
+    <div class="col d-flex justify-content-end">
+        <div class="d-gap">
+            <?php echo CHtml::link('Manage', array("admin"), array(
+                'class'=> 'button cbutton left', 
+                'style' => 'margin-right:10px',
+                'target' =>'_blank',
+            )); ?>
+        </div>
+    </div>
+</div>
+
+<hr />
+
 <div id="maincontent">
     <?php echo $this->renderPartial('_list', array(
         'saleEstimation' => $saleEstimation,

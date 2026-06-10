@@ -343,7 +343,6 @@ class SaleEstimationController extends Controller {
         }
     }
 
-    //Delete Phone Detail
     public function actionAjaxHtmlRemoveProductDetail($id, $index) {
         if (Yii::app()->request->isAjaxRequest) {
 
@@ -356,6 +355,33 @@ class SaleEstimationController extends Controller {
             $this->renderPartial('_detailProduct', array(
                 'saleEstimation' => $saleEstimation,
                 'branches' => $branches,
+            ));
+        }
+    }
+
+    public function actionAjaxHtmlAddPartsDetail($id) {
+        if (Yii::app()->request->isAjaxRequest) {
+            $saleEstimation = $this->instantiate($id, 'create');
+            $this->loadState($saleEstimation);
+
+            $saleEstimation->addPartsDetail();
+
+            $this->renderPartial('_detailParts', array(
+                'saleEstimation' => $saleEstimation,
+            ));
+        }
+    }
+
+    public function actionAjaxHtmlRemovePartsDetail($id, $index) {
+        if (Yii::app()->request->isAjaxRequest) {
+
+            $saleEstimation = $this->instantiate($id);
+            $this->loadState($saleEstimation);
+
+            $saleEstimation->removePartsDetailAt($index);
+
+            $this->renderPartial('_detailParts', array(
+                'saleEstimation' => $saleEstimation,
             ));
         }
     }
@@ -397,6 +423,29 @@ class SaleEstimationController extends Controller {
                 'totalPriceProduct' => $totalPriceProduct,
                 'totalQuantityProduct' => $totalQuantityProduct,
                 'subTotalProduct' => $subTotalProduct,
+                'subTotalTransaction' => $subTotalTransaction,
+                'taxTotalTransaction' => $taxTotalTransaction,
+                'grandTotalTransaction' => $grandTotalTransaction,
+            ));
+        }
+    }
+
+    public function actionAjaxJsonTotalParts($id, $index) {
+        if (Yii::app()->request->isAjaxRequest) {
+            $saleEstimation = $this->instantiate($id);
+            $this->loadState($saleEstimation);
+
+            $totalPriceParts = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($saleEstimation->partsDetails[$index], 'totalPrice')));
+            $totalQuantityParts = CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $saleEstimation->totalQuantityParts));
+            $subTotalParts = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $saleEstimation->subTotalParts));
+            $subTotalTransaction = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $saleEstimation->subTotalTransaction));
+            $taxTotalTransaction = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $saleEstimation->taxItemAmount));
+            $grandTotalTransaction = CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $saleEstimation->grandTotalTransaction));
+
+            echo CJSON::encode(array(
+                'totalPriceParts' => $totalPriceParts,
+                'totalQuantityParts' => $totalQuantityParts,
+                'subTotalParts' => $subTotalParts,
                 'subTotalTransaction' => $subTotalTransaction,
                 'taxTotalTransaction' => $taxTotalTransaction,
                 'grandTotalTransaction' => $grandTotalTransaction,
@@ -538,10 +587,10 @@ class SaleEstimationController extends Controller {
 
     public function instantiate($id) {
         if (empty($id)) {
-            $saleEstimation = new SaleEstimation(new SaleEstimationHeader(), array(), array());
+            $saleEstimation = new SaleEstimation(new SaleEstimationHeader(), array(), array(), array());
         } else {
             $saleEstimationModel = $this->loadModel($id);
-            $saleEstimation = new SaleEstimation($saleEstimationModel, $saleEstimationModel->saleEstimationServiceDetails, $saleEstimationModel->saleEstimationProductDetails
+            $saleEstimation = new SaleEstimation($saleEstimationModel, $saleEstimationModel->saleEstimationServiceDetails, $saleEstimationModel->saleEstimationProductDetails, $saleEstimationModel->saleEstimationNewPartsDetails
             );
         }
         return $saleEstimation;
@@ -584,6 +633,23 @@ class SaleEstimationController extends Controller {
             }
         } else {
             $saleEstimation->productDetails = array();
+        }
+
+        if (isset($_POST['SaleEstimationNewPartsDetail'])) {
+            foreach ($_POST['SaleEstimationNewPartsDetail'] as $i => $item) {
+                if (isset($saleEstimation->partsDetails[$i])) {
+                    $saleEstimation->partsDetails[$i]->attributes = $item;
+                } else {
+                    $detail = new SaleEstimationNewPartsDetail();
+                    $detail->attributes = $item;
+                    $saleEstimation->partsDetails[] = $detail;
+                }
+            }
+            if (count($_POST['SaleEstimationNewPartsDetail']) < count($saleEstimation->partsDetails)) {
+                array_splice($saleEstimation->partsDetails, $i + 1);
+            }
+        } else {
+            $saleEstimation->partsDetails = array();
         }
     }
 

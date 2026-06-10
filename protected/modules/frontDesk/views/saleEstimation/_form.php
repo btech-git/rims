@@ -222,6 +222,24 @@
         </fieldset>
 
         <fieldset class="border border-secondary rounded mb-3 p-3">
+            <legend class="float-none w-auto text-dark px-1">NON STOK - SPAREPARTS</legend>
+            <div class="row">
+                <?php echo CHtml::button('Tambah Parts', array(
+                    'name' => 'AddPartsDetail',
+                    'onclick' => CHtml::ajax(array(
+                        'type' => 'POST',
+                        'url' => CController::createUrl('ajaxHtmlAddPartsDetail', array('id' => $saleEstimation->header->id)),
+                        'update' => '#detail_parts_div',
+                    )),
+                )); ?>
+            </div>
+
+            <div id="detail_parts_div">
+                <?php $this->renderPartial('_detailParts', array('saleEstimation' => $saleEstimation,)); ?>
+            </div>
+        </fieldset>
+
+        <fieldset class="border border-secondary rounded mb-3 p-3">
             <legend class="float-none w-auto text-dark px-1">TOTAL TRANSAKSI</legend>
             <div class="detail" id="detail-total">
                 <?php $this->renderPartial('_detailTotal', array('saleEstimation' => $saleEstimation)); ?>

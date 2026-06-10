@@ -5,11 +5,13 @@ class SaleEstimation extends CComponent {
     public $header;
     public $serviceDetails;
     public $productDetails;
+    public $partsDetails;
 
-    public function __construct($header, array $serviceDetails, array $productDetails) {
+    public function __construct($header, array $serviceDetails, array $productDetails, array $partsDetails) {
         $this->header = $header;
         $this->serviceDetails = $serviceDetails;
         $this->productDetails = $productDetails;
+        $this->partsDetails = $partsDetails;
     }
 
     public function generateCodeNumber($currentMonth, $currentYear, $branchId) {
@@ -67,22 +69,37 @@ class SaleEstimation extends CComponent {
         array_splice($this->productDetails, $index, 1);
     }
 
+    public function addPartsDetail() {
+
+        $detail = new SaleEstimationNewPartsDetail;
+        $this->partsDetails[] = $detail;
+    }
+
+    public function removePartsDetailAt($index) {
+        array_splice($this->partsDetails, $index, 1);
+    }
+
     public function validate() {
         $valid = $this->header->validate();
 
-        if (count($this->productDetails) <= 0 && count($this->serviceDetails) <= 0) {
+        if (count($this->productDetails) <= 0 && count($this->serviceDetails) <= 0 && count($this->partsDetails) <= 0) {
             $valid = false;
         }
         
         if ($valid) {
             foreach ($this->productDetails as $productDetail) {
-                $fields = array('quantity');
+                $fields = array('quantity', 'retail_price', 'sale_price', 'discount_value', 'total_price', 'product_id');
                 $valid = $productDetail->validate($fields) && $valid;
             }
         
-            foreach ($this->productDetails as $productDetail) {
-                $fields = array('quantity');
-                $valid = $productDetail->validate($fields) && $valid;
+            foreach ($this->serviceDetails as $serviceDetail) {
+                $fields = array('price', 'discount_value', 'discount_type', 'total_price', 'memo');
+                $valid = $serviceDetail->validate($fields) && $valid;
+            }
+        
+            foreach ($this->partsDetails as $partsDetail) {
+                $fields = array('quantity', 'retail_price', 'sale_price', 'discount_value', 'total_price', 'parts_name', 'parts_code');
+                $valid = $partsDetail->validate($fields) && $valid;
             }
         }
 
@@ -110,6 +127,7 @@ class SaleEstimation extends CComponent {
     public function flush() {
         $this->header->sub_total_service = $this->subTotalService;
         $this->header->sub_total_product = $this->subTotalProduct;
+        $this->header->sub_total_new_parts = $this->subTotalParts;
         $this->header->total_quantity_product = $this->totalQuantityProduct;
         $this->header->sub_total = $this->subTotalTransaction;
         $this->header->tax_product_amount = $this->taxItemAmount;
@@ -132,6 +150,15 @@ class SaleEstimation extends CComponent {
                 $serviceDetail->sale_estimation_header_id = $this->header->id;
                 $serviceDetail->total_price = $serviceDetail->totalAmount;
                 $valid = $serviceDetail->save(false) && $valid;
+            }
+        }
+
+        if (count($this->partsDetails) > 0) {
+            foreach ($this->partsDetails as $partsDetail) {
+                $partsDetail->sale_estimation_header_id = $this->header->id;
+                $partsDetail->total_price = $partsDetail->totalPrice;
+
+                $valid = $partsDetail->save(false) && $valid;
             }
         }
 
@@ -198,8 +225,43 @@ class SaleEstimation extends CComponent {
         return $quantity;
     }
     
+    public function getSubTotalPartsBeforeDiscount() {
+        $total = '0.00';
+
+        foreach ($this->partsDetails as $detail) {
+            $total += $detail->totalBeforeDiscount;
+        }
+
+        return $total;
+    }
+
+    public function getSubTotalParts() {
+        $total = '0.00';
+
+        foreach ($this->partsDetails as $detail) {
+            $total += $detail->totalPrice;
+        }
+
+        switch ($this->header->tax_product_type) {
+            case 1: return $total / (1 + $this->taxItemPercentage / 100);
+            default: return $total;
+        }
+
+        return $total;
+    }
+
+    public function getTotalQuantityParts() {
+        $quantity = 0;
+
+        foreach ($this->partsDetails as $detail) {
+            $quantity += $detail->quantity;
+        }
+
+        return $quantity;
+    }
+    
     public function getSubTotalTransaction() {
-        return $this->subTotalProduct + $this->subTotalService; 
+        return $this->subTotalProduct + $this->subTotalService + $this->subTotalParts; 
     }
     
     public function getTaxItemPercentage() {

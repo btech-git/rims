@@ -856,7 +856,8 @@ class PaymentInController extends Controller {
                             
                             if (!empty($detail->registration_transaction_id) && $detail->downpayment_amount > 0) {
                                 $registrationTransaction->is_downpayment_paid = 1;
-                                $registrationTransaction->update(array('is_downpayment_paid'));
+                                $registrationTransaction->downpayment_status = 'PAID';
+                                $registrationTransaction->update(array('is_downpayment_paid', 'downpayment_status'));
                             }
                         }
 

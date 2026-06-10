@@ -7,13 +7,18 @@ $this->breadcrumbs=array(
 	'Create',
 );
 ?>
+
 <div class="row d-print-none">
     <div class="col d-flex justify-content-start">
         <h4>Create Estimasi Penjualan</h4>
     </div>
     <div class="col d-flex justify-content-end">
         <div class="d-gap">
-            <?php echo CHtml::link('Manage', array("admin"), array('class' => 'btn btn-info btn-sm')); ?>
+            <?php echo CHtml::link('Manage', array("admin"), array(
+                'class'=> 'button cbutton left', 
+                'style' => 'margin-right:10px',
+                'target' =>'_blank',
+            )); ?>
         </div>
     </div>
 </div>
