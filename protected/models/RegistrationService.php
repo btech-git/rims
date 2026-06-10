@@ -613,12 +613,16 @@ class RegistrationService extends CActiveRecord {
             $params[':branch_id'] = $branchId;
         }
         
-        $sql = "SELECT DATE(w.transaction_date) AS transaction_date, COUNT(DISTINCT w.transaction_number, s.service_id) AS service_count, 
-                    SUM(DISTINCT w.transaction_number, w.grand_total) AS total
+        $sql = "SELECT DATE(w.transaction_date) AS transaction_date, COUNT(DISTINCT w.transaction_number, s.service_id) AS service_count, w.total                   
                 FROM " . RegistrationService::model()->tableName() . " s 
                 INNER JOIN " . RegistrationTransaction::model()->tableName() . " h ON h.id = s.registration_transaction_id
-                INNER JOIN " . WorkOrderExpenseHeader::model()->tableName() . " w ON h.id = w.registration_transaction_id
-                WHERE YEAR(w.transaction_date) = :year AND MONTH(w.transaction_date) = :month AND h.repair_type = 'BR' AND w.user_id_cancelled IS NULL" . $branchConditionSql . " 
+                INNER JOIN (
+                    SELECT registration_transaction_id, MAX(transaction_date) AS transaction_date, SUM(grand_total) AS total
+                    FROM " . WorkOrderExpenseHeader::model()->tableName() . "
+                    WHERE w.user_id_cancelled IS NULL
+                    GROUP BY registration_transaction_id
+                ) w ON h.id = w.registration_transaction_id
+                WHERE YEAR(w.transaction_date) = :year AND MONTH(w.transaction_date) = :month AND h.repair_type = 'BR' AND " . $branchConditionSql . " 
                 GROUP BY DATE(w.transaction_date)";
 
         $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
