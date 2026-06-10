@@ -34,7 +34,7 @@ class BodyRepairMonthlyTransactionController extends Controller {
         $registrationServiceTransactionCountData = RegistrationService::getServiceTransactionCountData($year, $month, $branchId);
         $invoiceVehicleTransactionCountData = InvoiceHeader::getVehicleTransactionCountData($year, $month, $branchId);
         $invoiceServiceTransactionCountDate = InvoiceDetail::getServiceTransactionCountData($year, $month, $branchId);
-        $workOrderTransactionCountAndSumData = RegistrationService::getWorkOrderTransactionSumAndCountData($year, $month, $branchId);
+        $workOrderTransactionCountAndSumData = WorkOrderExpenseHeader::getWorkOrderTransactionCountAndSumData($year, $month, $branchId);
         
         $bodyRepairTransactionInfoData = array();
         foreach ($registrationVehicleTransactionCountData as $registrationVehicleTransactionCountDataItem) {
