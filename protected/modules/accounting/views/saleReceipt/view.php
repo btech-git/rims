@@ -15,9 +15,17 @@ $this->breadcrumbs = array(
             'class' => 'button cbutton right', 
             'style' => 'margin-right:10px',
         )) ?>
+        
         <?php if ($model->status !== 'CANCELLED!!!' && Yii::app()->user->checkAccess("paymentInEdit")): ?>
             <?php echo CHtml::link('<span class="fa fa-edit"></span>Edit', Yii::app()->baseUrl.'/accounting/saleReceipt/update?id=' . $model->id, array(
                 'class'=>'button warning right',
+                'style'=>'margin-right:10px',
+            )) ?>
+        <?php endif; ?>
+        
+        <?php if ($model->status !== 'Cancelled' && Yii::app()->user->checkAccess("paymentInEdit")): ?>
+            <?php echo CHtml::link('<span class="fa fa-edit"></span>Print', Yii::app()->baseUrl.'/accounting/saleReceipt/pdf?id=' . $model->id, array(
+                'class'=>'button success right',
                 'style'=>'margin-right:10px',
             )) ?>
         <?php endif; ?>
@@ -215,43 +223,43 @@ $this->breadcrumbs = array(
             
             <fieldset>
                 <legend>Transaksi Detail</legend>
-                    <div id="invoice-Detail">
-                        <table>
-                            <thead>
+                <div id="invoice-detail">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Invoice #</th>
+                                <th>Plate #</th>
+                                <th>Memo</th>
+                                <th>Total Invoice</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach ($model->saleReceiptDetails as $detail): ?>
                                 <tr>
-                                    <th>Invoice #</th>
-                                    <th>Plate #</th>
-                                    <th>Memo</th>
-                                    <th>Total Invoice</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php foreach ($model->saleReceiptDetails as $detail): ?>
-                                    <tr>
-                                        <td>
-                                            <?php echo CHtml::link($detail->invoiceHeader->invoice_number, array(
-                                                "/transaction/invoiceHeader/show", 
-                                                "id" => $detail->invoice_header_id
-                                            ), array('target' => 'blank')); ?>
-                                        </td>
-                                        <td><?php echo CHtml::encode(CHtml::value($detail, 'invoiceHeader.vehicle.plate_number')); ?></td>
-                                        <td><?php echo CHtml::encode(CHtml::value($detail, 'memo')); ?></td>
-                                        <td style="text-align: right">
-                                            <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($detail, 'invoice_amount'))); ?>
-                                        </td>
-                                    </tr>
-                                <?php endforeach; ?>
-                            </tbody>
-                            <tfoot>
-                                <tr>
-                                    <td style="text-align: right; font-weight: bold" colspan="3">Total</td>
-                                    <td style="text-align: right; font-weight: bold">
-                                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($model, 'total_invoice_amount'))); ?>
+                                    <td>
+                                        <?php echo CHtml::link($detail->invoiceHeader->invoice_number, array(
+                                            "/transaction/invoiceHeader/show", 
+                                            "id" => $detail->invoice_header_id
+                                        ), array('target' => 'blank')); ?>
+                                    </td>
+                                    <td><?php echo CHtml::encode(CHtml::value($detail, 'invoiceHeader.vehicle.plate_number')); ?></td>
+                                    <td><?php echo CHtml::encode(CHtml::value($detail, 'memo')); ?></td>
+                                    <td style="text-align: right">
+                                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($detail, 'invoice_amount'))); ?>
                                     </td>
                                 </tr>
-                            </tfoot>
-                        </table>
-                    </div>
+                            <?php endforeach; ?>
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td style="text-align: right; font-weight: bold" colspan="3">Total</td>
+                                <td style="text-align: right; font-weight: bold">
+                                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($model, 'total_invoice_amount'))); ?>
+                                </td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
             </fieldset>
         </div>
     </div>

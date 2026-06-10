@@ -304,6 +304,12 @@
                         'visible' => (Yii::app()->user->checkAccess('coretaxInvoiceView'))
                     ),
                     array(
+                        'label' => 'Rekap Faktur Penjualan', 
+                        'url' => array('/accounting/saleReceipt/admin'), 
+                        'visible' => (Yii::app()->user->checkAccess('saleInvoiceCreate') || Yii::app()->user->checkAccess('saleInvoiceEdit') || 
+                            Yii::app()->user->checkAccess('saleInvoiceView'))
+                    ),
+                    array(
                         'label' => 'Sub Pekerjaan Luar', 
                         'url' => array('/accounting/workOrderExpense/admin'), 
                         'visible' => (Yii::app()->user->checkAccess('workOrderExpenseCreate') || Yii::app()->user->checkAccess('workOrderExpenseEdit') || 

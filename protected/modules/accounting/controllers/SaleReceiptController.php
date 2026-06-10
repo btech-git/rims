@@ -178,9 +178,24 @@ class SaleReceiptController extends Controller {
         ));
     }
 
+    public function actionPdf($id) {
+        $saleReceiptHeader = SaleReceiptHeader::model()->findByPk($id);
+        $customer = Customer::model()->findByPk($saleReceiptHeader->customer_id);
+
+        $stylesheet = file_get_contents(Yii::getPathOfAlias('webroot') . '/css/pdf.css');
+        $mPDF1 = Yii::app()->ePdf->mpdf('', 'A4-L');
+        $mPDF1->SetTitle('Rekap Invoice');
+        $mPDF1->WriteHTML($stylesheet, 1);
+        $mPDF1->WriteHTML($this->renderPartial('pdf', array(
+            'saleReceiptHeader' => $saleReceiptHeader,
+            'customer' => $customer,
+        ), true));
+        $mPDF1->Output('Rekap Invoice ' . $saleReceiptHeader->transaction_number . '.pdf', 'I');
+    }
+    
     public function actionCancel($id) {
         $model = $this->loadModel($id);
-        $model->status = 'CANCELLED!!!';
+        $model->status = 'Cancelled';
         $model->total_invoice_amount = 0;
         $model->cancelled_datetime = date('Y-m-d H:i:s');
         $model->user_id_cancelled = Yii::app()->user->id;
