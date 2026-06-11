@@ -647,14 +647,11 @@ class InvoiceHeaderController extends Controller {
         }
 
         if (isset($_POST['InvoiceHeader']) && IdempotentManager::check()) {
-            $invoice->transaction_tax_number = $_POST['InvoiceHeader']['transaction_tax_number'];
-            $invoice->coretax_receipt_number = $_POST['InvoiceHeader']['coretax_receipt_number'];
-            $invoice->grand_total_coretax = $_POST['InvoiceHeader']['grand_total_coretax'];
-            $invoice->tax_amount_coretax = $_POST['InvoiceHeader']['tax_amount_coretax'];
+            $invoice->attributes = $_POST['InvoiceHeader'];
             $invoice->user_id_coretax = Yii::app()->user->id;
             $invoice->coretax_datetime = date('Y-m-d H:i:s');
             
-            if ($invoice->update(array('transaction_tax_number', 'tax_amount_coretax', 'grand_total_coretax', 'coretax_receipt_number', 'user_id_coretax', 'coretax_datetime'))) {
+            if ($invoice->save()) {
                 $this->redirect(array('view', 'id' => $invoice->id));
             }
         }
@@ -782,7 +779,7 @@ class InvoiceHeaderController extends Controller {
         
         $dataProvider = $model->searchByAdmin();
         
-        if (!Yii::app()->user->checkAccess('director')) {
+        if (!(Yii::app()->user->checkAccess('director') || Yii::app()->user->branch_id == 6)) {
             $dataProvider->criteria->addCondition('t.branch_id = :branch_id');
             $dataProvider->criteria->params[':branch_id'] = Yii::app()->user->branch_id;
         }

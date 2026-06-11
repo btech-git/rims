@@ -497,7 +497,7 @@ class BodyRepairRegistrationController extends Controller {
     }
 
     public function actionAdmin() {
-        if (!Yii::app()->user->checkAccess('director')) {
+        if (!(Yii::app()->user->checkAccess('director') || Yii::app()->user->branch_id == 6)) {
             $branches = Branch::model()->findAllByAttributes(array('id' => Yii::app()->user->branch_id, 'status' => 'Active'));
         } else {
             $branches = Branch::model()->findAllByAttributes(array('status' => 'Active'));
@@ -555,7 +555,7 @@ class BodyRepairRegistrationController extends Controller {
             $detailTabs[$branch->name] = array('content' => $tabContent);
         }
         
-        if (Yii::app()->user->checkAccess('director')) {
+        if (Yii::app()->user->checkAccess('director') || Yii::app()->user->branch_id == 6) {
             $model = Search::bind(new RegistrationTransaction('search'), isset($_GET['RegistrationTransaction']) ? $_GET['RegistrationTransaction'] : '');
             $dataProvider = $model->searchAdmin();
 

@@ -118,7 +118,7 @@ class JournalAdjustmentController extends Controller {
         $journalAdjustmentHeaderDataProvider = $journalAdjustmentHeader->searchByAdmin();
         $journalAdjustmentHeaderDataProvider->criteria->addBetweenCondition('t.date', $startDate, $endDate);
         
-        if (!Yii::app()->user->checkAccess('director')) {
+        if (!(Yii::app()->user->checkAccess('director') || Yii::app()->user->branch_id == 6)) {
             $journalAdjustmentHeaderDataProvider->criteria->addCondition('t.branch_id = :branch_id');
             $journalAdjustmentHeaderDataProvider->criteria->params[':branch_id'] = Yii::app()->user->branch_id;
         }

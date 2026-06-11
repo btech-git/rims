@@ -371,7 +371,7 @@ class RegistrationTransactionController extends Controller {
         $invoiceCriteria->compare('t.status', $invoice->status);
         $invoiceCriteria->compare('t.branch_id', $invoice->branch_id);
         $invoiceCriteria->compare('t.insurance_company_id', $invoice->insurance_company_id);
-        if (!Yii::app()->user->checkAccess('director')) {
+        if (!(Yii::app()->user->checkAccess('director') || Yii::app()->user->branch_id == 6)) {
             $invoiceCriteria->addCondition('t.branch_id = :branch_id');
             $invoiceCriteria->params[':branch_id'] = Yii::app()->user->branch_id;
         }
@@ -426,7 +426,7 @@ class RegistrationTransactionController extends Controller {
         $registrationCriteria->compare('t.transaction_number', $registrationTransaction->transaction_number, true);
         $registrationCriteria->compare('t.transaction_date', $registrationTransaction->transaction_date, true);
         $registrationCriteria->compare('repair_type', $registrationTransaction->repair_type, true);
-        if (!Yii::app()->user->checkAccess('director')) {
+        if (!(Yii::app()->user->checkAccess('director') || Yii::app()->user->branch_id == 6)) {
             $registrationCriteria->addCondition('t.branch_id = :branch_id');
             $registrationCriteria->params[':branch_id'] = Yii::app()->user->branch_id;
         }

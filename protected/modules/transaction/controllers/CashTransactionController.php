@@ -363,7 +363,7 @@ class CashTransactionController extends Controller {
         $coaDetailDataProvider->criteria->compare('t.coa_category_id', $coaCategoryDetailId);
         $coaDetailDataProvider->criteria->compare('t.coa_sub_category_id', $coaSubCategoryDetailId);
 
-        if (!Yii::app()->user->checkAccess('director')) {
+        if (!(Yii::app()->user->checkAccess('director') || Yii::app()->user->branch_id == 6)) {
             $cashInTransactionDataProvider->criteria->addCondition('t.branch_id = :branch_id');
             $cashInTransactionDataProvider->criteria->params[':branch_id'] = Yii::app()->user->branch_id;
             $cashOutTransactionDataProvider->criteria->addCondition('t.branch_id = :branch_id');

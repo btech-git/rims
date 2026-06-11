@@ -611,7 +611,7 @@ class TransactionSalesOrderController extends Controller {
 
         $dataProvider = $model->search();
         
-        if (!Yii::app()->user->checkAccess('director')) {
+        if (!(Yii::app()->user->checkAccess('director') || Yii::app()->user->branch_id == 6)) {
             $dataProvider->criteria->addCondition('t.requester_branch_id = :requester_branch_id');
             $dataProvider->criteria->params[':requester_branch_id'] = Yii::app()->user->branch_id;
         }

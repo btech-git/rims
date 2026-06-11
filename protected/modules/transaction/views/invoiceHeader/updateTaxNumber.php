@@ -46,6 +46,17 @@ $this->breadcrumbs=array(
                     <div class="field">
                         <div class="row collapse">
                             <div class="small-4 columns">
+                                <?php echo $form->labelEx($invoice, 'registration_transaction_id', array('class' => 'prefix')); ?>
+                            </div>
+                            <div class="small-8 columns">
+                                <?php echo CHtml::encode(CHtml::value($invoice, 'registrationTransaction.transaction_number')); ?>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="field">
+                        <div class="row collapse">
+                            <div class="small-4 columns">
                                 <?php echo $form->labelEx($invoice, 'customer_id', array('class' => 'prefix')); ?>
                             </div>
                             <div class="small-8 columns">
@@ -81,17 +92,6 @@ $this->breadcrumbs=array(
                 <div class="small-12 medium-6 columns">
                     <div class="field">
                         <div class="row collapse">
-                            <div class="small-4 columns">
-                                <?php echo $form->labelEx($invoice, 'registration_transaction_id', array('class' => 'prefix')); ?>
-                            </div>
-                            <div class="small-8 columns">
-                                <?php echo CHtml::encode(CHtml::value($invoice, 'registrationTransaction.transaction_number')); ?>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="field">
-                        <div class="row collapse">
                             <div class="medium-4 columns">
                                 <?php echo $form->labelEx($invoice, 'transaction_tax_number', array('class' => 'prefix')); ?>
                             </div>
@@ -110,6 +110,31 @@ $this->breadcrumbs=array(
                             <div class="medium-8 columns">
                                 <?php echo $form->textField($invoice, 'coretax_receipt_number'); ?>
                                 <?php echo $form->error($invoice, 'coretax_receipt_number'); ?>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="field">
+                        <div class="row collapse">
+                            <div class="medium-4 columns">
+                                <?php echo $form->labelEx($invoice, 'transaction_tax_date', array('class' => 'prefix')); ?>
+                            </div>
+                            <div class="medium-8 columns">
+                                <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(
+                                    'model' => $invoice,
+                                    'attribute' => "transaction_tax_date",
+                                    'options' => array(
+                                        'minDate' => '-7W',
+                                        'maxDate' => '+6M',
+                                        'dateFormat' => 'yy-mm-dd',
+                                        'changeMonth' => true,
+                                        'changeYear' => true,
+                                    ),
+                                    'htmlOptions' => array(
+                                        'readonly' => true,
+                                    ),
+                                )); ?>
+                                <?php echo $form->error($invoice, 'transaction_tax_date'); ?>
                             </div>
                         </div>
                     </div>

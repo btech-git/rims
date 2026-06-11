@@ -139,13 +139,20 @@ $this->breadcrumbs = array(
                 <td width="10%">Bupot #</td>
                 <td width="30%"><?php echo CHtml::encode(CHtml::value($model, 'coretax_receipt_number')); ?></td>
             </tr>
+               
+            <tr>
+                <td></td>
+                <td></td>
+                <td width="10%">Tanggal F. Pajak</td>
+                <td width="30%"><?php echo CHtml::encode(Yii::app()->dateFormatter->format("d MMM yyyy", strtotime($model->transaction_tax_date))); ?></td>
+            </tr>
                 
             <?php if (Yii::app()->user->checkAccess("director")): ?>
                 <tr>
                     <td width="10%">User Created</td>
                     <td width="30%"><?php echo CHtml::encode(CHtml::value($model, 'user.username')); ?></td>
                     <td width="10%">Date Created</td>
-                    <td width="30%"><?php echo CHtml::encode(CHtml::value($model, 'created_datetime')); ?></td>
+                    <td width="30%"><?php echo CHtml::encode(Yii::app()->dateFormatter->format("d MMM yyyy H:m:s", strtotime(CHtml::value($model, 'created_datetime')))); ?></td>
                 </tr>
 
                 <tr>
