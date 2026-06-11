@@ -185,9 +185,9 @@
 
 <hr />
 
-<?php $invoiceHeader = InvoiceHeader::model()->findByAttributes(array('registration_transaction_id' => $model->id)); ?>
-<?php if (!empty($invoiceHeader)): ?>
-    <?php $paymentInDetails = PaymentInDetail::model()->findAllByAttributes(array('invoice_header_id' => $invoiceHeader->id)); ?>
+<?php //$invoiceHeader = InvoiceHeader::model()->findByAttributes(array('registration_transaction_id' => $model->id)); ?>
+<?php $paymentInDetails = PaymentInDetail::model()->findAllByAttributes(array('registration_transaction_id' => $model->id)); ?>
+<?php if (!empty($paymentInDetails)): ?>
     <div class="row">
         <div class="large-6 columns">
             <table>
