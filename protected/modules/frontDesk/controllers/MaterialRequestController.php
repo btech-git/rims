@@ -225,7 +225,7 @@ class MaterialRequestController extends Controller {
             ),
         );
         
-        if (!Yii::app()->user->checkAccess('director')) {
+        if (!(Yii::app()->user->checkAccess('director') || Yii::app()->user->branch_id == 6)) {
             $dataProvider->criteria->addCondition('t.branch_id = :branch_id');
             $dataProvider->criteria->params[':branch_id'] = Yii::app()->user->branch_id;
         }
