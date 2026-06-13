@@ -1183,4 +1183,21 @@ class InvoiceDetail extends CActiveRecord {
 
         return $resultSet;
     }
+    
+    public static function getFastMovingAverageProductQuantities($productIds, $startDate, $endDate) {
+        $productIdsSql = empty($productIds) ? 'NULL' : implode(',', $productIds);
+        
+        $sql = "SELECT d.product_id, SUM(d.quantity) / 6 AS average_quantity 
+                FROM rims_invoice_detail d
+                INNER JOIN rims_invoice_header h ON h.id = d.invoice_id
+                WHERE d.product_id IN ({$productIdsSql}) AND d.product_id IS NOT NULL AND h.invoice_date BETWEEN :start_date AND :end_date
+                GROUP BY d.product_id";
+                
+        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, array(
+            ':start_date' => $startDate,
+            ':end_date' => $endDate,
+        ));
+
+        return $resultSet;
+    }
 }

@@ -154,4 +154,30 @@ class PaymentInDetail extends CActiveRecord {
 
         return $resultSet;
     }
+    
+    public static function getPaymentTransactionCountData($year, $month, $branchId) {
+        $branchConditionSql = '';
+        
+        $params = array(
+            ':year' => $year,
+            ':month' => $month,
+        );
+        
+        if (!empty($branchId)) {
+            $branchConditionSql = ' AND h.branch_id = :branch_id';
+            $params[':branch_id'] = $branchId;
+        }
+        
+        $sql = "SELECT DATE(h.payment_date) AS transaction_date, COUNT(DISTINCT h.payment_number, d.invoice_header_id) AS payment_count
+                FROM " . PaymentInDetail::model()->tableName() . " d
+                INNER JOIN " . PaymentIn::model()->tableName() . " h ON h.id = d.payment_in_id
+                INNER JOIN " . InvoiceHeader::model()->tableName() . " i ON i.id = d.invoice_header_id
+                INNER JOIN " . RegistrationTransaction::model()->tableName() . " r ON r.id = i.registration_transaction_id
+                WHERE YEAR(h.payment_date) = :year AND MONTH(h.payment_date) = :month AND r.repair_type = 'BR' AND h.user_id_cancelled IS NULL" . $branchConditionSql . " 
+                GROUP BY DATE(h.payment_date)";
+
+        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
+
+        return $resultSet;
+    }
 }

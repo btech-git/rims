@@ -301,9 +301,6 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
         $criteria->compare('t.insurance_company_id', $this->insurance_company_id);
         $criteria->compare('note', $this->note, true);
 
-//        $criteria->addCondition("t.branch_id IN (SELECT branch_id FROM " . UserBranch::model()->tableName() . " WHERE users_id = :userId)");
-//        $criteria->params = array(':userId' => Yii::app()->user->id);
-
         if ($this->invoice_date != NULL OR $this->invoice_date_to != NULL) {
             $criteria->addBetweenCondition('invoice_date', $this->invoice_date, $this->invoice_date_to);
             $criteria->addBetweenCondition('due_date', $this->invoice_date, $this->invoice_date_to);
@@ -3010,6 +3007,30 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
         }
         
         $sql = "SELECT DATE(i.invoice_date) AS transaction_date, COUNT(DISTINCT i.invoice_number, i.vehicle_id) AS vehicle_count
+                FROM " . InvoiceHeader::model()->tableName() . " i 
+                INNER JOIN " . RegistrationTransaction::model()->tableName() . " r ON r.id = i.registration_transaction_id
+                WHERE YEAR(i.invoice_date) = :year AND MONTH(i.invoice_date) = :month AND r.repair_type = 'BR' AND i.user_id_cancelled IS NULL" . $branchConditionSql . " 
+                GROUP BY DATE(i.invoice_date)";
+
+        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
+
+        return $resultSet;
+    }
+    
+    public static function getInvoiceTransactionCountData($year, $month, $branchId) {
+        $branchConditionSql = '';
+        
+        $params = array(
+            ':year' => $year,
+            ':month' => $month,
+        );
+        
+        if (!empty($branchId)) {
+            $branchConditionSql = ' AND i.branch_id = :branch_id';
+            $params[':branch_id'] = $branchId;
+        }
+        
+        $sql = "SELECT DATE(i.invoice_date) AS transaction_date, COUNT(i.registration_transaction_id) AS invoice_count
                 FROM " . InvoiceHeader::model()->tableName() . " i 
                 INNER JOIN " . RegistrationTransaction::model()->tableName() . " r ON r.id = i.registration_transaction_id
                 WHERE YEAR(i.invoice_date) = :year AND MONTH(i.invoice_date) = :month AND r.repair_type = 'BR' AND i.user_id_cancelled IS NULL" . $branchConditionSql . " 

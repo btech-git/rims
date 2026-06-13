@@ -178,7 +178,7 @@ class WorkOrderExpenseHeader extends MonthlyTransactionActiveRecord {
 
         $criteria = new CDbCriteria;
 
-        $criteria->condition = "t.payment_remaining > 0 AND t.status = 'Approved' AND t.transaction_date > '2022-12-31'";
+        $criteria->condition = "t.payment_remaining > 0 AND t.status = 'Approved' AND t.transaction_date > '" . AppParam::BEGINNING_TRANSACTION_DATE . "'";
         
         $criteria->compare('id', $this->id);
         $criteria->compare('transaction_number', $this->transaction_number, true);
@@ -188,10 +188,8 @@ class WorkOrderExpenseHeader extends MonthlyTransactionActiveRecord {
         $criteria->compare('registration_transaction_id', $this->registration_transaction_id);
         $criteria->compare('branch_id', $this->branch_id);
         $criteria->compare('user_id', $this->user_id);
-//        $criteria->compare('status', $this->status, true);
         $criteria->compare('grand_total', $this->grand_total, true);
         $criteria->compare('total_payment', $this->total_payment, true);
-//        $criteria->compare('payment_remaining', $this->payment_remaining, true);
 
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
@@ -216,7 +214,7 @@ class WorkOrderExpenseHeader extends MonthlyTransactionActiveRecord {
                 INNER JOIN " . RegistrationTransaction::model()->tableName() . " r ON r.id = w.registration_transaction_id
                 INNER JOIN " . RegistrationService::model()->tableName() . " s  ON r.id = s.registration_transaction_id
                 WHERE YEAR(w.transaction_date) = :year AND MONTH(w.transaction_date) = :month AND r.repair_type = 'BR' AND w.user_id_cancelled IS NULL AND 
-                w.supplier_id = 250" . $branchConditionSql . "
+                    w.supplier_id = 250" . $branchConditionSql . "
                 GROUP BY DATE(w.transaction_date)";
 
         $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
@@ -241,7 +239,57 @@ class WorkOrderExpenseHeader extends MonthlyTransactionActiveRecord {
                 FROM " . WorkOrderExpenseHeader::model()->tableName() . " w 
                 INNER JOIN " . RegistrationTransaction::model()->tableName() . " h ON h.id = w.registration_transaction_id
                 WHERE YEAR(w.transaction_date) = :year AND MONTH(w.transaction_date) = :month AND h.repair_type = 'BR' AND w.user_id_cancelled IS NULL AND 
-                w.supplier_id = 250" . $branchConditionSql . " 
+                    w.supplier_id = 250" . $branchConditionSql . " 
+                GROUP BY DATE(w.transaction_date)";
+
+        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
+
+        return $resultSet;
+    }
+    
+    public static function getPaintingTransactionCountData($year, $month, $branchId) {
+        $branchConditionSql = '';
+        
+        $params = array(
+            ':year' => $year,
+            ':month' => $month,
+        );
+        
+        if (!empty($branchId)) {
+            $branchConditionSql = ' AND w.branch_id = :branch_id';
+            $params[':branch_id'] = $branchId;
+        }
+        
+        $sql = "SELECT DATE(w.transaction_date) AS transaction_date, COUNT(w.transaction_number) AS transaction_count
+                FROM " . WorkOrderExpenseHeader::model()->tableName() . " w
+                INNER JOIN " . RegistrationTransaction::model()->tableName() . " r ON r.id = w.registration_transaction_id
+                WHERE YEAR(w.transaction_date) = :year AND MONTH(w.transaction_date) = :month AND r.repair_type = 'BR' AND w.user_id_cancelled IS NULL AND 
+                    w.supplier_id = 250" . $branchConditionSql . "
+                GROUP BY DATE(w.transaction_date)";
+
+        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
+
+        return $resultSet;
+    }
+    
+    public static function getOtherTransactionCountData($year, $month, $branchId) {
+        $branchConditionSql = '';
+        
+        $params = array(
+            ':year' => $year,
+            ':month' => $month,
+        );
+        
+        if (!empty($branchId)) {
+            $branchConditionSql = ' AND w.branch_id = :branch_id';
+            $params[':branch_id'] = $branchId;
+        }
+        
+        $sql = "SELECT DATE(w.transaction_date) AS transaction_date, COUNT(w.transaction_number) AS transaction_count
+                FROM " . WorkOrderExpenseHeader::model()->tableName() . " w
+                INNER JOIN " . RegistrationTransaction::model()->tableName() . " r ON r.id = w.registration_transaction_id
+                WHERE YEAR(w.transaction_date) = :year AND MONTH(w.transaction_date) = :month AND r.repair_type = 'BR' AND w.user_id_cancelled IS NULL AND 
+                    w.supplier_id NOT IN (250)" . $branchConditionSql . "
                 GROUP BY DATE(w.transaction_date)";
 
         $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);

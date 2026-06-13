@@ -1211,4 +1211,42 @@ class Product extends CActiveRecord {
         
         return $nameAndSpec;
     }
+    
+    public static function getMinimumAndFastMovingProductReport($startDate, $endDate) {
+        
+        $sql = "SELECT p.id, p.manufacturer_code, p.name
+                FROM rims_product p
+                WHERE p.minimum_stock >= (
+                    SELECT COALESCE(SUM(i.stock_in + i.stock_out), 0) AS total_stock
+                    FROM rims_inventory_detail i
+                    INNER JOIN rims_warehouse w on w.id = i.warehouse_id
+                    WHERE p.id = i.product_id AND w.status = 'Active' AND i.transaction_date >= '" . AppParam::BEGINNING_TRANSACTION_DATE . "'
+                ) AND (
+                    SELECT SUM(d.quantity) AS total_quantity 
+                    FROM rims_invoice_detail d
+                    INNER JOIN rims_invoice_header h ON h.id = d.invoice_id
+                    WHERE p.id = d.product_id AND d.product_id IS NOT NULL AND h.invoice_date BETWEEN :start_date AND :end_date
+                ) > 120 AND NOT EXISTS (
+                    SELECT SUM(d.quantity) AS total_quantity 
+                    FROM rims_invoice_detail d
+                    INNER JOIN rims_invoice_header h ON h.id = d.invoice_id
+                    WHERE p.id = d.product_id AND d.product_id IS NOT NULL AND h.invoice_date BETWEEN :start_date AND :end_date
+                    GROUP BY MONTH(h.invoice_date)
+                    HAVING total_quantity <= 10
+                ) AND p.id IN (
+                    SELECT d.product_id
+                    FROM rims_invoice_detail d
+                    INNER JOIN rims_invoice_header h ON h.id = d.invoice_id
+                    WHERE p.id = d.product_id AND d.product_id IS NOT NULL AND h.invoice_date BETWEEN :start_date AND :end_date
+                    HAVING CHAR_LENGTH(GROUP_CONCAT(DISTINCT MONTH(h.invoice_date))) - CHAR_LENGTH(REPLACE(GROUP_CONCAT(DISTINCT MONTH(h.invoice_date)), ',', '')) = 5
+                    ORDER BY d.product_id
+                )";
+
+        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, array(
+            ':start_date' => $startDate,
+            ':end_date' => $endDate,
+        ));
+        
+        return $resultSet;
+    }
 }

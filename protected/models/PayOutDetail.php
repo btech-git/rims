@@ -106,4 +106,29 @@ class PayOutDetail extends CActiveRecord {
             'criteria' => $criteria,
         ));
     }
+    
+    public static function getWorkOrderExpensePaymentCountData($year, $month, $branchId) {
+        $branchConditionSql = '';
+        
+        $params = array(
+            ':year' => $year,
+            ':month' => $month,
+        );
+        
+        if (!empty($branchId)) {
+            $branchConditionSql = ' AND h.branch_id = :branch_id';
+            $params[':branch_id'] = $branchId;
+        }
+        
+        $sql = "SELECT DATE(h.payment_date) AS transaction_date, COUNT(DISTINCT h.payment_number, d.work_order_expense_header_id) AS payment_count
+                FROM " . PayOutDetail::model()->tableName() . " d
+                INNER JOIN " . PaymentOut::model()->tableName() . " h ON h.id = d.payment_out_id
+                INNER JOIN " . WorkOrderExpenseHeader::model()->tableName() . " w ON w.id = d.work_order_expense_header_id
+                WHERE YEAR(h.payment_date) = :year AND MONTH(h.payment_date) = :month AND h.user_id_cancelled IS NULL" . $branchConditionSql . " 
+                GROUP BY DATE(h.payment_date)";
+
+        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
+
+        return $resultSet;
+    }
 }
