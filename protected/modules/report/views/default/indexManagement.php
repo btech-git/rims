@@ -127,7 +127,17 @@
                                     ),
                                     array(
                                         'label' => 'Body Repair - Panel Report - Monthly', 
+                                        'url' => array('/report/bodyRepairPanelTransaction/summary'), 
+                                        'visible' => Yii::app()->user->checkAccess('director')
+                                    ),
+                                    array(
+                                        'label' => 'Body Repair Monthly Transaction', 
                                         'url' => array('/report/bodyRepairMonthlyTransaction/summary'), 
+                                        'visible' => Yii::app()->user->checkAccess('director')
+                                    ),
+                                    array(
+                                        'label' => 'Fast Moving Items on Low Stocks', 
+                                        'url' => array('/report/minimumAndFastMovingProduct/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('director')
                                     ),
                                 ),

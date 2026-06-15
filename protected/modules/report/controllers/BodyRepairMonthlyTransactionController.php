@@ -30,31 +30,35 @@ class BodyRepairMonthlyTransactionController extends Controller {
         $year = isset($_GET['Year']) ? $_GET['Year'] : $yearNow;
         $branchId = isset($_GET['BranchId']) ? $_GET['BranchId'] : '';
         
-        $registrationVehicleTransactionCountData = RegistrationTransaction::getVehicleTransactionCountData($year, $month, $branchId);
-        $registrationServiceTransactionCountData = RegistrationService::getServiceTransactionCountData($year, $month, $branchId);
-        $invoiceVehicleTransactionCountData = InvoiceHeader::getVehicleTransactionCountData($year, $month, $branchId);
-        $invoiceServiceTransactionCountDate = InvoiceDetail::getServiceTransactionCountData($year, $month, $branchId);
-        $workOrderServiceTransactionCountData = WorkOrderExpenseHeader::getServiceTransactionCountData($year, $month, $branchId);
-        $workOrderTotalTransactionSumData = WorkOrderExpenseHeader::getTotalTransactionSumData($year, $month, $branchId);
+        $registrationTransactionCountData = RegistrationTransaction::getRegistrationTransactionCountData($year, $month, $branchId);
+        $registrationWorkOrderCountData = RegistrationTransaction::getRegistrationWorkOrderCountData($year, $month, $branchId);
+        $workOrderPaintingTransactionCountData = WorkOrderExpenseHeader::getPaintingTransactionCountData($year, $month, $branchId);
+        $workOrderOtherTransactionCountData = WorkOrderExpenseHeader::getOtherTransactionCountData($year, $month, $branchId);
+        $paymentOutTransactionCountData = PayOutDetail::getWorkOrderExpensePaymentCountData($year, $month, $branchId);
+        $invoiceTransactionCountData = InvoiceHeader::getInvoiceTransactionCountData($year, $month, $branchId);
+        $paymentInransactionCountData = PaymentInDetail::getPaymentTransactionCountData($year, $month, $branchId);
         
         $bodyRepairTransactionInfoData = array();
-        foreach ($registrationVehicleTransactionCountData as $registrationVehicleTransactionCountDataItem) {
-            $bodyRepairTransactionInfoData[$registrationVehicleTransactionCountDataItem['transaction_date']]['registration_vehicle_count'] = $registrationVehicleTransactionCountDataItem['vehicle_count'];
+        foreach ($registrationTransactionCountData as $registrationTransactionCountDataItem) {
+            $bodyRepairTransactionInfoData[$registrationTransactionCountDataItem['transaction_date']]['transaction_count'] = $registrationTransactionCountDataItem['transaction_count'];
         }
-        foreach ($registrationServiceTransactionCountData as $registrationServiceTransactionCountDataItem) {
-            $bodyRepairTransactionInfoData[$registrationServiceTransactionCountDataItem['transaction_date']]['registration_service_count'] = $registrationServiceTransactionCountDataItem['service_count'];
+        foreach ($registrationWorkOrderCountData as $registrationWorkOrderCountDataItem) {
+            $bodyRepairTransactionInfoData[$registrationWorkOrderCountDataItem['transaction_date']]['work_order_count'] = $registrationWorkOrderCountDataItem['work_order_count'];
         }
-        foreach ($invoiceVehicleTransactionCountData as $invoiceVehicleTransactionCountDataItem) {
-            $bodyRepairTransactionInfoData[$invoiceVehicleTransactionCountDataItem['transaction_date']]['invoice_vehicle_count'] = $invoiceVehicleTransactionCountDataItem['vehicle_count'];
+        foreach ($workOrderPaintingTransactionCountData as $workOrderPaintingTransactionCountDataItem) {
+            $bodyRepairTransactionInfoData[$workOrderPaintingTransactionCountDataItem['transaction_date']]['work_order_expense_painting_count'] = $workOrderPaintingTransactionCountDataItem['transaction_count'];
         }
-        foreach ($invoiceServiceTransactionCountDate as $invoiceServiceTransactionCountDateItem) {
-            $bodyRepairTransactionInfoData[$invoiceServiceTransactionCountDateItem['transaction_date']]['invoice_service_count'] = $invoiceServiceTransactionCountDateItem['service_count'];
+        foreach ($workOrderOtherTransactionCountData as $workOrderOtherTransactionCountDataItem) {
+            $bodyRepairTransactionInfoData[$workOrderOtherTransactionCountDataItem['transaction_date']]['work_order_expense_other_count'] = $workOrderOtherTransactionCountDataItem['transaction_count'];
         }
-        foreach ($workOrderServiceTransactionCountData as $workOrderServiceTransactionCountDataItem) {
-            $bodyRepairTransactionInfoData[$workOrderServiceTransactionCountDataItem['transaction_date']]['work_order_service_count'] = $workOrderServiceTransactionCountDataItem['service_count'];
+        foreach ($paymentOutTransactionCountData as $paymentOutTransactionCountDataItem) {
+            $bodyRepairTransactionInfoData[$paymentOutTransactionCountDataItem['transaction_date']]['payment_out_count'] = $paymentOutTransactionCountDataItem['payment_count'];
         }
-        foreach ($workOrderTotalTransactionSumData as $workOrderTotalTransactionSumDataItem) {
-            $bodyRepairTransactionInfoData[$workOrderTotalTransactionSumDataItem['transaction_date']]['work_order_total'] = $workOrderTotalTransactionSumDataItem['total'];
+        foreach ($invoiceTransactionCountData as $invoiceTransactionCountDataItem) {
+            $bodyRepairTransactionInfoData[$invoiceTransactionCountDataItem['transaction_date']]['invoice_count'] = $invoiceTransactionCountDataItem['invoice_count'];
+        }
+        foreach ($paymentInransactionCountData as $paymentInransactionCountData) {
+            $bodyRepairTransactionInfoData[$paymentInransactionCountData['transaction_date']]['payment_in_count'] = $paymentInransactionCountData['payment_count'];
         }
         
         $yearList = array();
@@ -87,7 +91,7 @@ class BodyRepairMonthlyTransactionController extends Controller {
         ));
     }
     
-    public function actionRegistrationVehicleInfo($transactionDate) {
+    public function actionRegistrationTransactionInfo($transactionDate) {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
 
@@ -96,68 +100,70 @@ class BodyRepairMonthlyTransactionController extends Controller {
             'params' => array(':transaction_date' => $transactionDate)
         ));
         
-//        if (isset($_GET['SaveToExcel'])) {
-//            $this->saveToExcelDailyTransactionInfo(array(
-//                'dataProvider' => $dataProvider,
-//                'date' => $date,
-//                'coa' => $coa,
-//                'branch' => $branch,
-//                'inOut' => $inOut,
-//            ));
-//        }
-
-        $this->render('registrationVehicleInfo', array(
+        $this->render('registrationTransactionInfo', array(
             'registrationTransactions' => $registrationTransactions,
             'transactionDate' => $transactionDate,
         ));
     }
 
-    public function actionRegistrationServiceInfo($transactionDate) {
+    public function actionWorkOrderInfo($transactionDate) {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
 
         $registrationTransactions = RegistrationTransaction::model()->findAll(array(
-            'condition' => 'DATE(transaction_date) = :transaction_date AND repair_type = "BR" AND user_id_cancelled IS NULL',
+            'condition' => 'DATE(transaction_date) = :transaction_date AND repair_type = "BR" AND user_id_cancelled IS NULL AND t.work_order_number IS NOT NULL',
             'params' => array(':transaction_date' => $transactionDate)
         ));
         
-//        if (isset($_GET['SaveToExcel'])) {
-//            $this->saveToExcelDailyTransactionInfo(array(
-//                'dataProvider' => $dataProvider,
-//                'date' => $date,
-//                'coa' => $coa,
-//                'branch' => $branch,
-//                'inOut' => $inOut,
-//            ));
-//        }
-
-        $this->render('registrationServiceInfo', array(
+        $this->render('workOrderInfo', array(
             'registrationTransactions' => $registrationTransactions,
             'transactionDate' => $transactionDate,
         ));
     }
 
-    public function actionInvoiceVehicleInfo($transactionDate) {
+    public function actionWorkOrderExpensePaintingInfo($transactionDate) {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
 
-        $invoiceHeaders = InvoiceHeader::model()->with(array('registrationTransaction'))->findAll(array(
-            'condition' => 'DATE(t.invoice_date) = :invoice_date AND registrationTransaction.repair_type = "BR" AND t.user_id_cancelled IS NULL',
-            'params' => array(':invoice_date' => $transactionDate)
+        $workOrderExpenses = WorkOrderExpenseHeader::model()->with(array('registrationTransaction'))->findAll(array(
+            'condition' => 'DATE(t.transaction_date) = :transaction_date AND registrationTransaction.repair_type = "BR" AND t.user_id_cancelled IS NULL AND 
+                t.supplier_id = 250',
+            'params' => array(':transaction_date' => $transactionDate)
         ));
         
-//        if (isset($_GET['SaveToExcel'])) {
-//            $this->saveToExcelDailyTransactionInfo(array(
-//                'dataProvider' => $dataProvider,
-//                'date' => $date,
-//                'coa' => $coa,
-//                'branch' => $branch,
-//                'inOut' => $inOut,
-//            ));
-//        }
+        $this->render('workOrderExpensePaintingInfo', array(
+            'workOrderExpenses' => $workOrderExpenses,
+            'transactionDate' => $transactionDate,
+        ));
+    }
 
-        $this->render('invoiceVehicleInfo', array(
-            'invoiceHeaders' => $invoiceHeaders,
+    public function actionWorkOrderExpenseOtherInfo($transactionDate) {
+        set_time_limit(0);
+        ini_set('memory_limit', '1024M');
+
+        $workOrderExpenses = WorkOrderExpenseHeader::model()->with(array('registrationTransaction'))->findAll(array(
+            'condition' => 'DATE(t.transaction_date) = :transaction_date AND registrationTransaction.repair_type = "BR" AND t.user_id_cancelled IS NULL AND 
+                t.supplier_id NOT IN (250)',
+            'params' => array(':transaction_date' => $transactionDate)
+        ));
+        
+        $this->render('workOrderExpenseOtherInfo', array(
+            'workOrderExpenses' => $workOrderExpenses,
+            'transactionDate' => $transactionDate,
+        ));
+    }
+
+    public function actionPaymentOutInfo($transactionDate) {
+        set_time_limit(0);
+        ini_set('memory_limit', '1024M');
+
+        $paymentOutDetails = PayOutDetail::model()->with(array('paymentOut'))->findAll(array(
+            'condition' => 'DATE(paymentOut.payment_date) = :payment_date AND t.work_order_expense_header_id IS NOT NULL AND paymentOut.user_id_cancelled IS NULL',
+            'params' => array(':payment_date' => $transactionDate)
+        ));
+        
+        $this->render('paymentOutInfo', array(
+            'paymentOutDetails' => $paymentOutDetails,
             'transactionDate' => $transactionDate,
         ));
     }
@@ -171,43 +177,8 @@ class BodyRepairMonthlyTransactionController extends Controller {
             'params' => array(':invoice_date' => $transactionDate)
         ));
         
-//        if (isset($_GET['SaveToExcel'])) {
-//            $this->saveToExcelDailyTransactionInfo(array(
-//                'dataProvider' => $dataProvider,
-//                'date' => $date,
-//                'coa' => $coa,
-//                'branch' => $branch,
-//                'inOut' => $inOut,
-//            ));
-//        }
-
         $this->render('invoiceServiceInfo', array(
             'invoiceHeaders' => $invoiceHeaders,
-            'transactionDate' => $transactionDate,
-        ));
-    }
-
-    public function actionWorkOrderExpenseInfo($transactionDate) {
-        set_time_limit(0);
-        ini_set('memory_limit', '1024M');
-
-        $workOrderExpenses = WorkOrderExpenseHeader::model()->with(array('registrationTransaction'))->findAll(array(
-            'condition' => 'DATE(t.transaction_date) = :transaction_date AND registrationTransaction.repair_type = "BR" AND t.user_id_cancelled IS NULL AND t.supplier_id = 250',
-            'params' => array(':transaction_date' => $transactionDate)
-        ));
-        
-//        if (isset($_GET['SaveToExcel'])) {
-//            $this->saveToExcelDailyTransactionInfo(array(
-//                'dataProvider' => $dataProvider,
-//                'date' => $date,
-//                'coa' => $coa,
-//                'branch' => $branch,
-//                'inOut' => $inOut,
-//            ));
-//        }
-
-        $this->render('workOrderExpenseInfo', array(
-            'workOrderExpenses' => $workOrderExpenses,
             'transactionDate' => $transactionDate,
         ));
     }
@@ -222,16 +193,6 @@ class BodyRepairMonthlyTransactionController extends Controller {
             'order' => 't.transaction_date ASC, t.transaction_number ASC',
         ));
         
-//        if (isset($_GET['SaveToExcel'])) {
-//            $this->saveToExcelDailyTransactionInfo(array(
-//                'dataProvider' => $dataProvider,
-//                'date' => $date,
-//                'coa' => $coa,
-//                'branch' => $branch,
-//                'inOut' => $inOut,
-//            ));
-//        }
-
         $this->render('registrationVehicleMonthlyInfo', array(
             'registrationTransactions' => $registrationTransactions,
             'year' => $year,
@@ -249,16 +210,6 @@ class BodyRepairMonthlyTransactionController extends Controller {
             'order' => 't.transaction_date ASC, t.transaction_number ASC',
         ));
         
-//        if (isset($_GET['SaveToExcel'])) {
-//            $this->saveToExcelDailyTransactionInfo(array(
-//                'dataProvider' => $dataProvider,
-//                'date' => $date,
-//                'coa' => $coa,
-//                'branch' => $branch,
-//                'inOut' => $inOut,
-//            ));
-//        }
-
         $this->render('registrationServiceMonthlyInfo', array(
             'registrationTransactions' => $registrationTransactions,
             'year' => $year,
@@ -276,16 +227,6 @@ class BodyRepairMonthlyTransactionController extends Controller {
             'order' => 't.invoice_date ASC, t.invoice_number ASC',
         ));
         
-//        if (isset($_GET['SaveToExcel'])) {
-//            $this->saveToExcelDailyTransactionInfo(array(
-//                'dataProvider' => $dataProvider,
-//                'date' => $date,
-//                'coa' => $coa,
-//                'branch' => $branch,
-//                'inOut' => $inOut,
-//            ));
-//        }
-
         $this->render('invoiceVehicleMonthlyInfo', array(
             'invoiceHeaders' => $invoiceHeaders,
             'year' => $year,
@@ -303,16 +244,6 @@ class BodyRepairMonthlyTransactionController extends Controller {
             'order' => 't.invoice_date ASC, t.invoice_number ASC',
         ));
         
-//        if (isset($_GET['SaveToExcel'])) {
-//            $this->saveToExcelDailyTransactionInfo(array(
-//                'dataProvider' => $dataProvider,
-//                'date' => $date,
-//                'coa' => $coa,
-//                'branch' => $branch,
-//                'inOut' => $inOut,
-//            ));
-//        }
-
         $this->render('invoiceServiceMonthlyInfo', array(
             'invoiceHeaders' => $invoiceHeaders,
             'year' => $year,
@@ -331,16 +262,6 @@ class BodyRepairMonthlyTransactionController extends Controller {
             'order' => 't.transaction_date ASC, t.transaction_number ASC',
         ));
         
-//        if (isset($_GET['SaveToExcel'])) {
-//            $this->saveToExcelDailyTransactionInfo(array(
-//                'dataProvider' => $dataProvider,
-//                'date' => $date,
-//                'coa' => $coa,
-//                'branch' => $branch,
-//                'inOut' => $inOut,
-//            ));
-//        }
-
         $this->render('workOrderExpenseMonthlyInfo', array(
             'workOrderExpenses' => $workOrderExpenses,
             'year' => $year,
@@ -370,74 +291,80 @@ class BodyRepairMonthlyTransactionController extends Controller {
         $worksheet = $objPHPExcel->setActiveSheetIndex(0);
         $worksheet->setTitle('Body Repair Panel');
 
-        $worksheet->mergeCells("A1:G1");
-        $worksheet->mergeCells("A2:G2");
-        $worksheet->mergeCells("A3:G3");
+        $worksheet->mergeCells("A1:H1");
+        $worksheet->mergeCells("A2:H2");
+        $worksheet->mergeCells("A3:H3");
         
-        $worksheet->getStyle("A1:G5")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-        $worksheet->getStyle("A1:G5")->getFont()->setBold(true);
+        $worksheet->getStyle("A1:H5")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->getStyle("A1:H5")->getFont()->setBold(true);
         
         $worksheet->setCellValue('A1', 'RAPERIND MOTOR');
-        $worksheet->setCellValue('A2', 'Body Repair - Panel Report - Monthly');
+        $worksheet->setCellValue('A2', 'Body Repair Transaction Monthly');
         $worksheet->setCellValue('A3', CHtml::encode(strftime("%B",mktime(0,0,0,$month))) . ' ' . CHtml::encode($year));
 
-        $worksheet->getStyle("A5:G5")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A5:H5")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
         
         $worksheet->setCellValue("A5", 'Tanggal');
-        $worksheet->setCellValue("B5", 'Unit Register In');
-        $worksheet->setCellValue("C5", 'Panel Register In');
-        $worksheet->setCellValue("D5", 'Unit Invoiced Out');
-        $worksheet->setCellValue("E5", 'Panel Invoiced Out');
-        $worksheet->setCellValue("F5", 'Sub Pekerjaan Luar Panel');
-        $worksheet->setCellValue("G5", 'Total Sub Pekerjaan Luar');
+        $worksheet->setCellValue("B5", 'Registration');
+        $worksheet->setCellValue("C5", 'WO');
+        $worksheet->setCellValue("D5", 'Sub Pekerjaan Cat');
+        $worksheet->setCellValue("E5", 'Sub Pekerjaan Lain');
+        $worksheet->setCellValue("F5", 'Payment Sub Pekerjaan');
+        $worksheet->setCellValue("G5", 'Invoice');
+        $worksheet->setCellValue("H5", 'Payment In');
         
-        $worksheet->getStyle("A5:G5")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A5:H5")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
         $counter = 6;
-        $registrationVehicleCountSum = 0;
-        $registrationServiceCountSum = 0;
-        $invoiceVehicleCountSum = 0;
-        $invoiceServiceCountSum = 0;
+        $registrationTransactionCountSum = 0;
         $workOrderCountSum = 0;
-        $workOrderTotalSum = '0.00';
+        $workOrderExpensePaintingCountSum = 0;
+        $workOrderExpenseOtherCountSum = 0;
+        $paymentOutTransactionCountSum = 0;
+        $invoiceTransactionCountSum = 0;
+        $paymentInTransactionCountSum = 0;
         
         for ($i = 1; $i <= $numberOfDays; $i++) {
             $transactionDate = $year . '-' . $month . '-' . str_pad($i, 2, '0', STR_PAD_LEFT);
-            $registrationVehicleCount = isset($bodyRepairTransactionInfoData[$transactionDate]['registration_vehicle_count']) ? $bodyRepairTransactionInfoData[$transactionDate]['registration_vehicle_count'] : 0;
-            $registrationServiceCount = isset($bodyRepairTransactionInfoData[$transactionDate]['registration_service_count']) ? $bodyRepairTransactionInfoData[$transactionDate]['registration_service_count'] : 0;
-            $invoiceVehicleCount = isset($bodyRepairTransactionInfoData[$transactionDate]['invoice_vehicle_count']) ? $bodyRepairTransactionInfoData[$transactionDate]['invoice_vehicle_count'] : 0;
-            $invoiceServiceCount = isset($bodyRepairTransactionInfoData[$transactionDate]['invoice_service_count']) ? $bodyRepairTransactionInfoData[$transactionDate]['invoice_service_count'] : 0;
-            $workOrderCount = isset($bodyRepairTransactionInfoData[$transactionDate]['service_count']) ? $bodyRepairTransactionInfoData[$transactionDate]['service_count'] : 0;
-            $workOrderTotal = isset($bodyRepairTransactionInfoData[$transactionDate]['work_order_total']) ? $bodyRepairTransactionInfoData[$transactionDate]['work_order_total'] : '0.00';
+            $registrationTransactionCount = isset($bodyRepairTransactionInfoData[$transactionDate]['transaction_count']) ? $bodyRepairTransactionInfoData[$transactionDate]['transaction_count'] : 0;
+            $workOrderCount = isset($bodyRepairTransactionInfoData[$transactionDate]['work_order_count']) ? $bodyRepairTransactionInfoData[$transactionDate]['work_order_count'] : 0;
+            $workOrderExpensePaintingCount = isset($bodyRepairTransactionInfoData[$transactionDate]['work_order_expense_painting_count']) ? $bodyRepairTransactionInfoData[$transactionDate]['work_order_expense_painting_count'] : 0;
+            $workOrderExpenseOtherCount = isset($bodyRepairTransactionInfoData[$transactionDate]['work_order_expense_other_count']) ? $bodyRepairTransactionInfoData[$transactionDate]['work_order_expense_other_count'] : 0;
+            $paymentOutTransactionCountData = isset($bodyRepairTransactionInfoData[$transactionDate]['payment_out_count']) ? $bodyRepairTransactionInfoData[$transactionDate]['payment_out_count'] : 0;
+            $invoiceTransactionCount = isset($bodyRepairTransactionInfoData[$transactionDate]['invoice_count']) ? $bodyRepairTransactionInfoData[$transactionDate]['invoice_count'] : 0;
+            $paymentInTransactionCountData = isset($bodyRepairTransactionInfoData[$transactionDate]['payment_in_count']) ? $bodyRepairTransactionInfoData[$transactionDate]['payment_in_count'] : 0;
                 
             $worksheet->setCellValue("A{$counter}", $transactionDate);
-            $worksheet->setCellValue("B{$counter}", $registrationVehicleCount);
-            $worksheet->setCellValue("C{$counter}", $registrationServiceCount);
-            $worksheet->setCellValue("D{$counter}", $invoiceVehicleCount);
-            $worksheet->setCellValue("E{$counter}", $invoiceServiceCount);
-            $worksheet->setCellValue("F{$counter}", $workOrderCount);
-            $worksheet->setCellValue("G{$counter}", $workOrderTotal);
+            $worksheet->setCellValue("B{$counter}", $registrationTransactionCount);
+            $worksheet->setCellValue("C{$counter}", $workOrderCount);
+            $worksheet->setCellValue("D{$counter}", $workOrderExpensePaintingCount);
+            $worksheet->setCellValue("E{$counter}", $workOrderExpenseOtherCount);
+            $worksheet->setCellValue("F{$counter}", $paymentOutTransactionCountData);
+            $worksheet->setCellValue("G{$counter}", $invoiceTransactionCount);
+            $worksheet->setCellValue("H{$counter}", $paymentInTransactionCountData);
             
-            $registrationVehicleCountSum += $registrationVehicleCount;
-            $registrationServiceCountSum += $registrationServiceCount;
-            $invoiceVehicleCountSum += $invoiceVehicleCount;
-            $invoiceServiceCountSum += $invoiceServiceCount;
+            $registrationTransactionCountSum += $registrationTransactionCount;
             $workOrderCountSum += $workOrderCount;
-            $workOrderTotalSum += $workOrderTotal;
+            $workOrderExpensePaintingCountSum += $workOrderExpensePaintingCount;
+            $workOrderExpenseOtherCountSum += $workOrderExpenseOtherCount;
+            $paymentOutTransactionCountSum += $paymentOutTransactionCountData;
+            $invoiceTransactionCountSum += $invoiceTransactionCount;
+            $paymentInTransactionCountSum += $paymentInTransactionCountData; 
             
             $counter++;
         }
         
-        $worksheet->getStyle("A{$counter}:G{$counter}")->getFont()->setBold(true);
-        $worksheet->getStyle("A{$counter}:G{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A{$counter}:H{$counter}")->getFont()->setBold(true);
+        $worksheet->getStyle("A{$counter}:H{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
         
         $worksheet->setCellValue("A{$counter}", 'TOTAL');
-        $worksheet->setCellValue("B{$counter}", $registrationVehicleCountSum);
-        $worksheet->setCellValue("C{$counter}", $registrationServiceCountSum);
-        $worksheet->setCellValue("D{$counter}", $invoiceVehicleCountSum);
-        $worksheet->setCellValue("E{$counter}", $invoiceServiceCountSum);
-        $worksheet->setCellValue("F{$counter}", $workOrderCountSum);
-        $worksheet->setCellValue("G{$counter}", $workOrderTotalSum);
+        $worksheet->setCellValue("B{$counter}", $registrationTransactionCountSum);
+        $worksheet->setCellValue("C{$counter}", $workOrderCountSum);
+        $worksheet->setCellValue("D{$counter}", $workOrderExpensePaintingCountSum);
+        $worksheet->setCellValue("E{$counter}", $workOrderExpenseOtherCountSum);
+        $worksheet->setCellValue("F{$counter}", $paymentOutTransactionCountSum);
+        $worksheet->setCellValue("G{$counter}", $invoiceTransactionCountSum);
+        $worksheet->setCellValue("H{$counter}", $paymentInTransactionCountSum);
                 
         $counter++;
 
@@ -450,7 +377,7 @@ class BodyRepairMonthlyTransactionController extends Controller {
         ob_end_clean();
 
         header('Content-type: application/vnd.ms-excel');
-        header('Content-Disposition: attachment;filename="body_repair_panel_monthly.xls"');
+        header('Content-Disposition: attachment;filename="body_repair_transaction_monthly.xls"');
         header('Cache-Control: max-age=0');
 
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');

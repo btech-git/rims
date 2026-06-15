@@ -464,7 +464,7 @@ class TransactionDeliveryOrderController extends Controller {
             $model->attributes = $_GET['TransactionDeliveryOrder'];
         
         $dataProvider = $model->search();
-        if (!Yii::app()->user->checkAccess('director')) {
+        if (!(Yii::app()->user->checkAccess('director') || Yii::app()->user->branch_id == 6)) {
             $dataProvider->criteria->addCondition('t.sender_branch_id = :sender_branch_id');
             $dataProvider->criteria->params[':sender_branch_id'] = Yii::app()->user->branch_id;
         }

@@ -237,12 +237,16 @@ class StockAdjustmentController extends Controller {
     public function actionAdmin() {
         $model = new StockAdjustmentHeader('search');
         $model->unsetAttributes();  // clear any default values
-        if (isset($_GET['StockAdjustmentHeader']))
+        if (isset($_GET['StockAdjustmentHeader'])) {
             $model->attributes = $_GET['StockAdjustmentHeader'];
+        }
 
         $dataProvider = $model->search();
-        $dataProvider->criteria->addCondition('t.main_branch_id = :main_branch_id');
-        $dataProvider->criteria->params[':main_branch_id'] = Yii::app()->user->branch_id;
+        
+        if (!(Yii::app()->user->checkAccess('director') || Yii::app()->user->branch_id == 6)) {
+            $dataProvider->criteria->addCondition('t.main_branch_id = :main_branch_id');
+            $dataProvider->criteria->params[':main_branch_id'] = Yii::app()->user->branch_id;
+        }
 
         $this->render('admin', array(
             'model' => $model,

@@ -3,7 +3,7 @@
         <?php //$branch = Branch::model()->findByPk($branchId); ?>
         Raperind Motor <?php //echo CHtml::encode(CHtml::value($branch, 'name')); ?>
     </div>
-    <div style="font-size: larger">Body Repair - Panel Report - Monthly</div>
+    <div style="font-size: larger">Body Repair Transaction Monthly</div>
     <div><?php echo CHtml::encode(strftime("%B",mktime(0,0,0,$month))); ?> <?php echo CHtml::encode($year); ?></div>
 </div>
 
@@ -15,104 +15,93 @@
             <thead>
                 <tr>
                     <th style="text-align: center; width: 10%">Tanggal</th>
-                    <th style="text-align: center; width: 10%">Unit Register In #</th>
-                    <th style="text-align: center; width: 10%">Panel Register In #</th>
-                    <th style="text-align: center; width: 10%">Unit Invoiced Out #</th>
-                    <th style="text-align: center; width: 10%">Panel Invoiced Out #</th>
-                    <th style="text-align: center; width: 10%">Sub Pekerjaan Luar Panel #</th>
-                    <th style="text-align: center; width: 10%">Total Sub Pekerjaan</th>
+                    <th style="text-align: center; width: 10%">Registration</th>
+                    <th style="text-align: center; width: 10%">WO</th>
+                    <th style="text-align: center; width: 10%">Sub Pekerjaan Cat</th>
+                    <th style="text-align: center; width: 10%">Sub Pekerjaan Lain</th>
+                    <th style="text-align: center; width: 10%">Payment Sub Pekerjaan</th>
+                    <th style="text-align: center; width: 10%">Invoice</th>
+                    <th style="text-align: center; width: 10%">Payment In</th>
                 </tr>
             </thead>
 
             <tbody>
-                <?php $registrationVehicleCountSum = 0; ?>
-                <?php $registrationServiceCountSum = 0; ?>
-                <?php $invoiceVehicleCountSum = 0; ?>
-                <?php $invoiceServiceCountSum = 0; ?>
+                <?php $registrationTransactionCountSum = 0; ?>
                 <?php $workOrderCountSum = 0; ?>
-                <?php $workOrderTotalSum = '0.00'; ?>
+                <?php $workOrderExpensePaintingCountSum = 0; ?>
+                <?php $workOrderExpenseOtherCountSum = 0; ?>
+                <?php $paymentOutTransactionCountSum = 0; ?>
+                <?php $invoiceTransactionCountSum = 0; ?>
+                <?php $paymentInTransactionCountSum = 0; ?>
                 <?php for ($i = 1; $i <= $numberOfDays; $i++): ?>
                     <?php $transactionDate = $year . '-' . $month . '-' . str_pad($i, 2, '0', STR_PAD_LEFT); ?>
-                    <?php $registrationVehicleCount = isset($bodyRepairTransactionInfoData[$transactionDate]['registration_vehicle_count']) ? $bodyRepairTransactionInfoData[$transactionDate]['registration_vehicle_count'] : 0; ?>
-                    <?php $registrationServiceCount = isset($bodyRepairTransactionInfoData[$transactionDate]['registration_service_count']) ? $bodyRepairTransactionInfoData[$transactionDate]['registration_service_count'] : 0; ?>
-                    <?php $invoiceVehicleCount = isset($bodyRepairTransactionInfoData[$transactionDate]['invoice_vehicle_count']) ? $bodyRepairTransactionInfoData[$transactionDate]['invoice_vehicle_count'] : 0; ?>
-                    <?php $invoiceServiceCount = isset($bodyRepairTransactionInfoData[$transactionDate]['invoice_service_count']) ? $bodyRepairTransactionInfoData[$transactionDate]['invoice_service_count'] : 0; ?>
-                    <?php $workOrderCount = isset($bodyRepairTransactionInfoData[$transactionDate]['work_order_service_count']) ? $bodyRepairTransactionInfoData[$transactionDate]['work_order_service_count'] : 0; ?>
-                    <?php $workOrderTotal = isset($bodyRepairTransactionInfoData[$transactionDate]['work_order_total']) ? $bodyRepairTransactionInfoData[$transactionDate]['work_order_total'] : '0.00'; ?>
+                    <?php $registrationTransactionCount = isset($bodyRepairTransactionInfoData[$transactionDate]['transaction_count']) ? $bodyRepairTransactionInfoData[$transactionDate]['transaction_count'] : 0; ?>
+                    <?php $workOrderCount = isset($bodyRepairTransactionInfoData[$transactionDate]['work_order_count']) ? $bodyRepairTransactionInfoData[$transactionDate]['work_order_count'] : 0; ?>
+                    <?php $workOrderExpensePaintingCount = isset($bodyRepairTransactionInfoData[$transactionDate]['work_order_expense_painting_count']) ? $bodyRepairTransactionInfoData[$transactionDate]['work_order_expense_painting_count'] : 0; ?>
+                    <?php $workOrderExpenseOtherCount = isset($bodyRepairTransactionInfoData[$transactionDate]['work_order_expense_other_count']) ? $bodyRepairTransactionInfoData[$transactionDate]['work_order_expense_other_count'] : 0; ?>
+                    <?php $paymentOutTransactionCountData = isset($bodyRepairTransactionInfoData[$transactionDate]['payment_out_count']) ? $bodyRepairTransactionInfoData[$transactionDate]['payment_out_count'] : 0; ?>
+                    <?php $invoiceTransactionCount = isset($bodyRepairTransactionInfoData[$transactionDate]['invoice_count']) ? $bodyRepairTransactionInfoData[$transactionDate]['invoice_count'] : 0; ?>
+                    <?php $paymentInTransactionCountData = isset($bodyRepairTransactionInfoData[$transactionDate]['payment_in_count']) ? $bodyRepairTransactionInfoData[$transactionDate]['payment_in_count'] : 0; ?>
                     <tr>
                         <td><?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($transactionDate))); ?></td>
                         <td style="text-align: center">
-                            <?php echo CHtml::link(CHtml::encode($registrationVehicleCount), array(
-                                'registrationVehicleInfo', 
-                                'transactionDate' => $transactionDate, 
-                            ), array('target' => '_blank')); ?>
-                        </td>
-                        <td style="text-align: center">
-                            <?php echo CHtml::link(CHtml::encode($registrationServiceCount), array(
-                                'registrationServiceInfo', 
-                                'transactionDate' => $transactionDate, 
-                            ), array('target' => '_blank')); ?>
-                        </td>
-                        <td style="text-align: center">
-                            <?php echo CHtml::link(CHtml::encode($invoiceVehicleCount), array(
-                                'invoiceVehicleInfo', 
-                                'transactionDate' => $transactionDate, 
-                            ), array('target' => '_blank')); ?>
-                        </td>
-                        <td style="text-align: center">
-                            <?php echo CHtml::link(CHtml::encode($invoiceServiceCount), array(
-                                'invoiceServiceInfo', 
+                            <?php echo CHtml::link(CHtml::encode($registrationTransactionCount), array(
+                                'registrationTransactionInfo', 
                                 'transactionDate' => $transactionDate, 
                             ), array('target' => '_blank')); ?>
                         </td>
                         <td style="text-align: center">
                             <?php echo CHtml::link(CHtml::encode($workOrderCount), array(
-                                'workOrderExpenseInfo', 
+                                'workOrderInfo', 
                                 'transactionDate' => $transactionDate, 
                             ), array('target' => '_blank')); ?>
                         </td>
-                        <td style="text-align: right">
-                            <?php echo CHtml::link(CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $workOrderTotal)), array(
+                        <td style="text-align: center">
+                            <?php echo CHtml::link(CHtml::encode($workOrderExpensePaintingCount), array(
+                                'workOrderExpensePaintingInfo', 
+                                'transactionDate' => $transactionDate, 
+                            ), array('target' => '_blank')); ?>
+                        </td>
+                        <td style="text-align: center">
+                            <?php echo CHtml::link(CHtml::encode($workOrderExpenseOtherCount), array(
+                                'workOrderExpenseOtherInfo', 
+                                'transactionDate' => $transactionDate, 
+                            ), array('target' => '_blank')); ?>
+                        </td>
+                        <td style="text-align: center">
+                            <?php echo CHtml::link(CHtml::encode($paymentOutTransactionCountData), array(
+                                'paymentOutInfo', 
+                                'transactionDate' => $transactionDate, 
+                            ), array('target' => '_blank')); ?>
+                        </td>
+                        <td style="text-align: center">
+                            <?php echo CHtml::link(CHtml::encode($invoiceTransactionCount), array(
+                                'invoiceServiceInfo', 
+                                'transactionDate' => $transactionDate, 
+                            ), array('target' => '_blank')); ?>
+                        </td>
+                        <td style="text-align: center">
+                            <?php echo CHtml::link(CHtml::encode($paymentInTransactionCountData), array(
                                 'workOrderExpenseInfo', 
                                 'transactionDate' => $transactionDate, 
                             ), array('target' => '_blank')); ?>
                         </td>
                     </tr>
-                    <?php $registrationVehicleCountSum += $registrationVehicleCount; ?>
-                    <?php $registrationServiceCountSum += $registrationServiceCount; ?>
-                    <?php $invoiceVehicleCountSum += $invoiceVehicleCount; ?>
-                    <?php $invoiceServiceCountSum += $invoiceServiceCount; ?>
+                    <?php $registrationTransactionCountSum += $registrationTransactionCount; ?>
                     <?php $workOrderCountSum += $workOrderCount; ?>
-                    <?php $workOrderTotalSum += $workOrderTotal; ?>
+                    <?php $workOrderExpensePaintingCountSum += $workOrderExpensePaintingCount; ?>
+                    <?php $workOrderExpenseOtherCountSum += $workOrderExpenseOtherCount; ?>
+                    <?php $paymentOutTransactionCountSum += $paymentOutTransactionCountData; ?>
+                    <?php $invoiceTransactionCountSum += $invoiceTransactionCount; ?>
+                    <?php $paymentInTransactionCountSum += $paymentInTransactionCountData; ?>
                 <?php endfor; ?>
             </tbody>
             <tfoot>
                 <tr>
                     <td>TOTAL</td>
                     <td style="text-align: center">
-                        <?php echo CHtml::link(CHtml::encode($registrationVehicleCountSum), array(
-                            'registrationVehicleMonthlyInfo', 
-                            'month' => $month,
-                            'year' => $year,
-                        ), array('target' => '_blank')); ?>
-                    </td>
-                    <td style="text-align: center">
-                        <?php echo CHtml::link(CHtml::encode($registrationServiceCountSum), array(
-                            'registrationServiceMonthlyInfo', 
-                            'month' => $month,
-                            'year' => $year,
-                        ), array('target' => '_blank')); ?>
-                    </td>
-                    <td style="text-align: center">
-                        <?php echo CHtml::link(CHtml::encode($invoiceVehicleCountSum), array(
-                            'invoiceVehicleMonthlyInfo', 
-                            'month' => $month,
-                            'year' => $year,
-                        ), array('target' => '_blank')); ?>
-                    </td>
-                    <td style="text-align: center">
-                        <?php echo CHtml::link(CHtml::encode($invoiceServiceCountSum), array(
-                            'invoiceServiceMonthlyInfo', 
+                        <?php echo CHtml::link(CHtml::encode($registrationTransactionCountSum), array(
+                            'registrationTransactionMonthlyInfo', 
                             'month' => $month,
                             'year' => $year,
                         ), array('target' => '_blank')); ?>
@@ -124,8 +113,36 @@
                             'year' => $year,
                         ), array('target' => '_blank')); ?>
                     </td>
-                    <td style="text-align: right">
-                        <?php echo CHtml::link(CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $workOrderTotalSum)), array(
+                    <td style="text-align: center">
+                        <?php echo CHtml::link(CHtml::encode($workOrderExpensePaintingCountSum), array(
+                            'registrationServiceMonthlyInfo', 
+                            'month' => $month,
+                            'year' => $year,
+                        ), array('target' => '_blank')); ?>
+                    </td>
+                    <td style="text-align: center">
+                        <?php echo CHtml::link(CHtml::encode($workOrderExpenseOtherCountSum), array(
+                            'invoiceVehicleMonthlyInfo', 
+                            'month' => $month,
+                            'year' => $year,
+                        ), array('target' => '_blank')); ?>
+                    </td>
+                    <td style="text-align: center">
+                        <?php echo CHtml::link(CHtml::encode($paymentOutTransactionCountSum), array(
+                            'workOrderExpenseMonthlyInfo', 
+                            'month' => $month,
+                            'year' => $year,
+                        ), array('target' => '_blank')); ?>
+                    </td>
+                    <td style="text-align: center">
+                        <?php echo CHtml::link(CHtml::encode($invoiceTransactionCountSum), array(
+                            'invoiceServiceMonthlyInfo', 
+                            'month' => $month,
+                            'year' => $year,
+                        ), array('target' => '_blank')); ?>
+                    </td>
+                    <td style="text-align: center">
+                        <?php echo CHtml::link(CHtml::encode($paymentInTransactionCountSum), array(
                             'workOrderExpenseMonthlyInfo', 
                             'month' => $month,
                             'year' => $year,

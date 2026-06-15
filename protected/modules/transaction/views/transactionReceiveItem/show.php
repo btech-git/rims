@@ -212,8 +212,6 @@ $this->breadcrumbs = array(
                     <td>Code</td>
                     <td>Kategori</td>
                     <td>Brand</td>
-                    <td>Sub Brand</td>
-                    <td>Sub Brand Series</td>
                     <td>QTY Request</td>
                     <td>QTY Received</td>
                     <?php if ($model->delivery_order_id != ""): ?>
@@ -233,10 +231,16 @@ $this->breadcrumbs = array(
                         <td><?php echo $recieveDetail->product_id == NULL ? '-' : $recieveDetail->product->id; ?></td>
                         <td><?php echo $recieveDetail->product_id == NULL ? '-' : $recieveDetail->product->name; ?></td>
                         <td><?php echo CHtml::encode(CHtml::value($recieveDetail, 'product.manufacturer_code')); ?></td>
-                        <td><?php echo CHtml::encode(CHtml::value($recieveDetail, 'product.masterSubCategoryCode')); ?></td>
-                        <td><?php echo CHtml::encode(CHtml::value($recieveDetail, 'product.brand.name')); ?></td>
-                        <td><?php echo CHtml::encode(CHtml::value($recieveDetail, 'product.subBrand.name')); ?></td>
-                        <td><?php echo CHtml::encode(CHtml::value($recieveDetail, 'product.subBrandSeries.name')); ?></td>
+                        <td>
+                            <?php echo CHtml::encode(CHtml::value($recieveDetail, 'product.productMasterCategory.name')); ?> -
+                            <?php echo CHtml::encode(CHtml::value($recieveDetail, 'product.productSubMasterCategory.name')); ?> -
+                            <?php echo CHtml::encode(CHtml::value($recieveDetail, 'product.productSubCategory.name')); ?>
+                        </td>
+                        <td>
+                            <?php echo CHtml::encode(CHtml::value($recieveDetail, 'product.brand.name')); ?> -
+                            <?php echo CHtml::encode(CHtml::value($recieveDetail, 'product.subBrand.name')); ?> - 
+                            <?php echo CHtml::encode(CHtml::value($recieveDetail, 'product.subBrandSeries.name')); ?>
+                        </td>
                         <td><?php echo $recieveDetail->qty_request; ?></td>
                         <td><?php echo $recieveDetail->qty_received; ?></td>
                         <?php if ($model->delivery_order_id != ""): ?>
@@ -280,7 +284,6 @@ $this->breadcrumbs = array(
                     <td>Qty Received</td>
                     <td>Qty Request Left</td>
                     <td>Note</td>
-                    <td>Barcode</td>
                 </tr>
             </thead>
             <tbody>
@@ -297,7 +300,6 @@ $this->breadcrumbs = array(
                             <td><?php echo $receiveItemDetail->qty_received; ?></td>
                             <td><?php echo $receiveItemDetail->qty_request_left; ?></td>
                             <td><?php echo $receiveItemDetail->note; ?></td>
-                            <td><?php echo $receiveItemDetail->barcode_product; ?></td>
                         </tr>
                     <?php endforeach; ?>
                 <?php endforeach; ?>
