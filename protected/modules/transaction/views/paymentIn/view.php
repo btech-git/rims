@@ -47,7 +47,7 @@ $this->menu = array(
             )); ?>
         <?php endif; ?>
 
-        <?php if (Yii::app()->user->checkAccess("paymentHead") && $model->status === 'Approved'): ?>
+        <?php if (Yii::app()->user->checkAccess("paymentHead") && $model->status !== 'CANCELLED!!!'): ?>
             <?php /*echo CHtml::link('<span class="fa fa-check"></span>Verify Transaction', array("/transaction/paymentIn/verify", "id" => $model->id), array(
                 'class' => 'button success right', 
                 'style' => 'margin-right:10px', 
