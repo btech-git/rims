@@ -117,7 +117,7 @@ $this->breadcrumbs=array(
                     <div class="field">
                         <div class="row collapse">
                             <div class="medium-4 columns">
-                                <?php echo $form->labelEx($invoice, 'transaction_tax_date', array('class' => 'prefix')); ?>
+                                <?php echo $form->labelEx($invoice, 'Tanggal Faktur Pajak', array('class' => 'prefix')); ?>
                             </div>
                             <div class="medium-8 columns">
                                 <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(

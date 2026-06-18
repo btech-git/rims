@@ -37,6 +37,7 @@
                 <th>SPK Customer #</th>
                 <th>Customer WO #</th>
                 <th>Faktur Pajak #</th>
+                <th>Tanggal F Pajak</th>
                 <th>FP DPP</th>
                 <th>FP PPn</th>
                 <th>Bupot #</th>
@@ -46,8 +47,11 @@
             <?php foreach ($saleInvoiceSummary->dataProvider->data as $i => $header): ?>
                 <tr class="items1">
                     <td><?php echo $i + 1; ?></td>
-                    <td class="width1-1">
-                        <?php echo CHtml::link(CHtml::encode($header->invoice_number), array("/transaction/invoiceHeader/view", "id"=>$header->id), array("target" => "_blank")); ?>
+                    <td>
+                        <?php echo CHtml::link(CHtml::encode($header->invoice_number), array(
+                            "/transaction/invoiceHeader/show", 
+                            "id"=>$header->id
+                        ), array("target" => "_blank")); ?>
                     </td>
                     <td>
                         <?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($header->invoice_date))); ?>
@@ -83,27 +87,18 @@
                     <td style="text-align: right">
                         <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', ($header->total_price))); ?>
                     </td>
-                    <td style="text-align: right">
-                        <?php echo CHtml::encode(CHtml::value($header, 'registrationTransaction.work_order_number')); ?>
-                    </td>
-                    <td style="text-align: right">
-                        <?php echo CHtml::encode(CHtml::value($header, 'registrationTransaction.customer_work_order_number')); ?>
-                    </td>
-                    <td style="text-align: right">
-                        <?php echo CHtml::encode(CHtml::value($header, 'registrationTransaction.customer_document_order_number')); ?>
-                    </td>
-                    <td style="text-align: right">
-                        <?php echo CHtml::encode(CHtml::value($header, 'transaction_tax_number')); ?>
-                    </td>
+                    <td><?php echo CHtml::encode(CHtml::value($header, 'registrationTransaction.work_order_number')); ?></td>
+                    <td><?php echo CHtml::encode(CHtml::value($header, 'registrationTransaction.customer_work_order_number')); ?></td>
+                    <td><?php echo CHtml::encode(CHtml::value($header, 'registrationTransaction.customer_document_order_number')); ?></td>
+                    <td><?php echo CHtml::encode(CHtml::value($header, 'transaction_tax_number')); ?></td>
+                    <td><?php echo $header->transaction_tax_date == null ? '' : CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($header->transaction_tax_date))); ?></td>
                     <td style="text-align: right">
                         <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', ($header->grand_total_coretax))); ?>
                     </td>
                     <td style="text-align: right">
                         <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', ($header->tax_amount_coretax))); ?>
                     </td>
-                    <td style="text-align: right">
-                        <?php echo CHtml::encode(CHtml::value($header, 'coretax_receipt_number')); ?>
-                    </td>
+                    <td><?php echo CHtml::encode(CHtml::value($header, 'coretax_receipt_number')); ?></td>
                 </tr>
             <?php endforeach; ?>
         </tbody>

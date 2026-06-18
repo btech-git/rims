@@ -37,6 +37,7 @@
                 <th>SPK Customer #</th>
                 <th>DMS Reference Number</th>
                 <th>Faktur Pajak #</th>
+                <th>Tanggal F Pajak</th>
                 <th>FP DPP</th>
                 <th>FP PPn</th>
                 <th>Bupot #</th>
@@ -90,6 +91,7 @@
                     <td><?php echo CHtml::encode(CHtml::value($header, 'registrationTransaction.customer_work_order_number')); ?></td>
                     <td><?php echo CHtml::encode(CHtml::value($header, 'registrationTransaction.customer_document_order_number')); ?></td>
                     <td><?php echo CHtml::encode(CHtml::value($header, 'transaction_tax_number')); ?></td>
+                    <td><?php echo $header->transaction_tax_date == null ? '' : CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($header->transaction_tax_date))); ?></td>
                     <td style="text-align: right">
                         <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', ($header->grand_total_coretax))); ?>
                     </td>
