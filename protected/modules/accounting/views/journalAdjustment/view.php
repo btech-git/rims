@@ -34,7 +34,7 @@ $this->breadcrumbs = array(
             )); ?>
         <?php endif; ?>
 
-        <?php if (Yii::app()->user->checkAccess("cashierHead") && $journalVoucher->status === 'Approved'): ?>
+        <?php if (Yii::app()->user->checkAccess("cashierHead") && $journalVoucher->status !== 'CANCELLED!!!'): ?>
             <?php echo CHtml::link('<span class="fa fa-minus"></span>Cancel Transaction', array("cancel", "id" => $journalVoucher->id), array(
                 'class' => 'button alert right', 
                 'style' => 'margin-right:10px', 
