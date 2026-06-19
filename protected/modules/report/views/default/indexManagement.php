@@ -71,6 +71,11 @@
                                         'visible' => Yii::app()->user->checkAccess('director')
                                     ),
                                     array(
+                                        'label' => 'Rincian Transaksi Bank Multi Bulan', 
+                                        'url' => array('/report/bankingLedgerMultipleMonths/summary'), 
+                                        'visible' => Yii::app()->user->checkAccess('director')
+                                    ),
+                                    array(
                                         'label' => 'Ringkasan Buku Besar Semua Cabang', 
                                         'url' => array('/report/ledgerSummaryMultipleBranch/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('director')
@@ -93,11 +98,6 @@
                                     array(
                                         'label' => 'Penjualan Tahunan', 
                                         'url' => array('/report/yearlySaleSummary/summary'), 
-                                        'visible' => Yii::app()->user->checkAccess('director')
-                                    ),
-                                    array(
-                                        'label' => 'Penjualan Project', 
-                                        'url' => array('/report/saleInvoiceProjectNonCogs/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('director')
                                     ),
                                     array(
@@ -131,8 +131,18 @@
                                         'visible' => Yii::app()->user->checkAccess('director')
                                     ),
                                     array(
+                                        'label' => 'Body Repair - Panel Report - Yearly', 
+                                        'url' => array('/report/bodyRepairPanelYearlyTransaction/summary'), 
+                                        'visible' => Yii::app()->user->checkAccess('director')
+                                    ),
+                                    array(
                                         'label' => 'Body Repair Monthly Transaction', 
                                         'url' => array('/report/bodyRepairMonthlyTransaction/summary'), 
+                                        'visible' => Yii::app()->user->checkAccess('director')
+                                    ),
+                                    array(
+                                        'label' => 'Body Repair Yearly Transaction', 
+                                        'url' => array('/report/bodyRepairYearlyTransaction/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('director')
                                     ),
                                     array(

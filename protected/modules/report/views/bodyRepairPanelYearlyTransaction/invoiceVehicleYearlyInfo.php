@@ -22,7 +22,7 @@
 <div style="font-weight: bold; text-align: center">
     <div style="font-size: larger">Raperind Motor</div>
     <div style="font-size: larger">Transaksi Body Repair</div>
-    <div><?php echo CHtml::encode(strftime("%B",mktime(0,0,0,$month)) . ' ' . $year); ?></div>
+    <div><?php echo CHtml::encode($year); ?></div>
 </div>
 
 <hr />

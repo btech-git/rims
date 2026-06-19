@@ -42,7 +42,7 @@
                     <th>SPK Customer #</th>
                     <th>WO #</th>
                     <th>RG #</th>
-                    <th>Status</th>
+                    <th>Total</th>
                 </tr>
             </thead>
             <tbody>
@@ -66,7 +66,9 @@
                         <td><?php echo CHtml::encode(CHtml::value($header, 'registrationTransaction.customer_work_order_number')); ?></td>
                         <td><?php echo CHtml::encode(CHtml::value($header, 'registrationTransaction.work_order_number')); ?></td>
                         <td><?php echo CHtml::encode(CHtml::value($header, 'registrationTransaction.transaction_number')); ?></td>
-                        <td><?php echo CHtml::encode(CHtml::value($header, 'status')); ?></td>
+                        <td style="text-align: right">
+                            <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($header, 'total_price'))); ?>
+                        </td>
                     </tr>
                 <?php endforeach; ?>
             </tbody>

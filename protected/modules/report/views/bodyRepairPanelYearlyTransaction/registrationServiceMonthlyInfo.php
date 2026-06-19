@@ -34,6 +34,7 @@
                 <tr id="header1">
                     <th></th>
                     <th>Transaksi #</th>
+                    <th>Tanggal</th>
                     <th>Customer</th>
                     <th>Plat #</th>
                     <th>Kendaraan</th>
@@ -55,6 +56,7 @@
                                     "id" => $header->id
                                 )), array('target' => '_blank'));?>
                             </td>
+                            <td><?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime(CHtml::value($header, 'transaction_date')))); ?></td>
                             <td><?php echo CHtml::encode(CHtml::value($header, 'customer.name')); ?></td>
                             <td><?php echo CHtml::encode(CHtml::value($header, 'vehicle.plate_number')); ?></td>
                             <td>

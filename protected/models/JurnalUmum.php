@@ -818,10 +818,10 @@ class JurnalUmum extends CActiveRecord {
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
             'sort' => array(
-                'defaultOrder' => 't.tanggal_transaksi ASC',
+                'defaultOrder' => 't.tanggal_transaksi ASC, t.kode_transaksi ASC',
             ),
             'pagination' => array(
-                'pageSize' => 1000,
+                'pageSize' => 5000,
             ),
         ));
     }
@@ -848,7 +848,7 @@ class JurnalUmum extends CActiveRecord {
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
             'sort' => array(
-                'defaultOrder' => 't.tanggal_transaksi ASC',
+                'defaultOrder' => 't.tanggal_transaksi ASC, t.kode_transaksi ASC',
             ),
             'pagination' => array(
                 'pageSize' => 500,
@@ -867,7 +867,7 @@ class JurnalUmum extends CActiveRecord {
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
             'sort' => array(
-                'defaultOrder' => 't.tanggal_transaksi ASC',
+                'defaultOrder' => 't.tanggal_transaksi ASC, t.kode_transaksi ASC',
             ),
             'pagination' => array(
                 'pageSize' => 100,
@@ -910,7 +910,7 @@ class JurnalUmum extends CActiveRecord {
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
             'sort' => array(
-                'defaultOrder' => 't.tanggal_transaksi ASC',
+                'defaultOrder' => 't.tanggal_transaksi ASC, t.kode_transaksi ASC',
             ),
             'pagination' => array(
                 'pageSize' => 100,

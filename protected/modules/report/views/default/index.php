@@ -872,6 +872,11 @@
                                         'url' => array('/report/yearlyOilSaleTransaction/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('saleOilDailyReport')
                                     ),
+                                    array(
+                                        'label' => 'Penjualan Customer Project', 
+                                        'url' => array('/report/saleInvoiceProjectNonCogs/summary'), 
+                                        'visible' => Yii::app()->user->checkAccess('saleVehicleCustomerReport')
+                                    ),
                                 ),
                             )); ?>
                         <?php endif; ?>

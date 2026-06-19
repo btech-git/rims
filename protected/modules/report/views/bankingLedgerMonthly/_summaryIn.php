@@ -19,6 +19,8 @@
                                     <tr>
                                         <th>Transaction #</th>
                                         <th>Tanggal</th>
+                                        <th>Keterangan</th>
+                                        <th>Catatan</th>
                                         <th>Total</th>
                                     </tr>
                                 </thead>
@@ -33,6 +35,8 @@
                                             <td>
                                                 <?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime(CHtml::value($detail, 'tanggal_transaksi')))); ?>
                                             </td>
+                                            <td><?php echo CHtml::encode(CHtml::value($detail, 'transaction_subject')); ?></td>
+                                            <td><?php echo CHtml::encode(CHtml::value($detail, 'remark')); ?></td>
                                             <td style="text-align: right">
                                                 <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($detail, 'total'))); ?>
                                             </td>
@@ -42,7 +46,7 @@
                                 </tbody>
                                 <tfoot>
                                     <tr>
-                                        <td colspan="2" style="text-align: right; font-weight: bold">Total</td>
+                                        <td colspan="4" style="text-align: right; font-weight: bold">Total</td>
                                         <td style="text-align: right; font-weight: bold">
                                             <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $paymentDailyTotal)); ?>
                                         </td>

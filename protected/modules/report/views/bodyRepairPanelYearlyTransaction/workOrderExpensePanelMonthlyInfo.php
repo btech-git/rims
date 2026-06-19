@@ -33,42 +33,45 @@
             <thead style="position: sticky; top: 0">
                 <tr id="header1">
                     <th></th>
-                    <th>Transaksi #</th>
+                    <th>Sub Pekerjaan Luar #</th>
                     <th>Tanggal</th>
+                    <th>Supplier</th>
                     <th>Customer</th>
                     <th>Plat #</th>
                     <th>Kendaraan</th>
-                    <th>Panel</th>
-                    <th>Type</th>
-                    <th>WO #</th>
+                    <th>Note</th>
                     <th>SPK Customer #</th>
-                    <th>Status</th>
+                    <th>WO #</th>
+                    <th>Panel</th>
                 </tr>
             </thead>
             <tbody>
+                <?php $totalSum = '0.00'; ?>
                 <?php $runningNumber = 1; ?>
-                <?php foreach ($registrationTransactions as $header): ?>
-                    <?php foreach ($header->registrationServices as $detail): ?>
+                <?php foreach ($workOrderExpenses as $header): ?>
+                    <?php $registrationTransaction = $header->registrationTransaction; ?>
+                    <?php foreach ($registrationTransaction->registrationServices as $detail): ?>
+                        <?php $grandTotal = CHtml::value($header, 'grand_total'); ?>
                         <tr class="items1">
                             <td><?php echo $runningNumber; ?></td>
                             <td>
-                                <?php echo CHtml::link(CHtml::value($header, 'transaction_number'), Yii::app()->createUrl("frontDesk/registrationTransaction/view", array(
+                                <?php echo CHtml::link(CHtml::value($header, 'transaction_number'), Yii::app()->createUrl("accounting/workOrderExpense/show", array(
                                     "id" => $header->id
                                 )), array('target' => '_blank'));?>
                             </td>
                             <td><?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime(CHtml::value($header, 'transaction_date')))); ?></td>
-                            <td><?php echo CHtml::encode(CHtml::value($header, 'customer.name')); ?></td>
-                            <td><?php echo CHtml::encode(CHtml::value($header, 'vehicle.plate_number')); ?></td>
+                            <td><?php echo CHtml::encode(CHtml::value($header, 'supplier.name')); ?></td>
+                            <td><?php echo CHtml::encode(CHtml::value($header, 'registrationTransaction.customer.name')); ?></td>
+                            <td><?php echo CHtml::encode(CHtml::value($header, 'registrationTransaction.vehicle.plate_number')); ?></td>
                             <td>
-                                <?php echo CHtml::encode(CHtml::value($header, 'vehicle.carMake.name')); ?> -
-                                <?php echo CHtml::encode(CHtml::value($header, 'vehicle.carModel.name')); ?> -
-                                <?php echo CHtml::encode(CHtml::value($header, 'vehicle.carSubModel.name')); ?>
+                                <?php echo CHtml::encode(CHtml::value($header, 'registrationTransaction.vehicle.carMake.name')); ?> -
+                                <?php echo CHtml::encode(CHtml::value($header, 'registrationTransaction.vehicle.carModel.name')); ?> -
+                                <?php echo CHtml::encode(CHtml::value($header, 'registrationTransaction.vehicle.carSubModel.name')); ?>
                             </td>
+                            <td><?php echo CHtml::encode(CHtml::value($header, 'note')); ?></td>
+                            <td><?php echo CHtml::encode(CHtml::value($header, 'registrationTransaction.customer_work_order_number')); ?></td>
+                            <td><?php echo CHtml::encode(CHtml::value($header, 'registrationTransaction.work_order_number')); ?></td>
                             <td><?php echo CHtml::encode(CHtml::value($detail, 'service.name')); ?></td>
-                            <td><?php echo CHtml::encode(CHtml::value($detail, 'serviceType.name')); ?></td>
-                            <td><?php echo CHtml::encode(CHtml::value($header, 'work_order_number')); ?></td>
-                            <td><?php echo CHtml::encode(CHtml::value($header, 'customer_work_order_number')); ?></td>
-                            <td><?php echo CHtml::encode(CHtml::value($header, 'status')); ?></td>
                         </tr>
                         <?php $runningNumber++; ?>
                     <?php endforeach; ?>

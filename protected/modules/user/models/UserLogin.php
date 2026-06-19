@@ -51,6 +51,10 @@ class UserLogin extends CFormModel {
                     if (empty($this->branchId) || !in_array($this->branchId, $userBranchIds)) {
                         $this->addError("branchId", UserModule::t("Branch is not assigned to user."));
                     }
+                } else {
+                    if (empty($this->branchId)) {
+                        $this->branchId = 6;
+                    }
                 }
             } else {
                 $this->addError("username", UserModule::t("Username is incorrect."));

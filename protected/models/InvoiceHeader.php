@@ -2906,7 +2906,7 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
         $sql = "
             SELECT r.id, r.customer_id, r.invoice_number, r.invoice_date, d.product_id, p.name AS product, d.service_id, s.name AS service, d.quantity, 
                 d.unit_price, d.total_price, v.plate_number AS plate_number, p.hpp, c.name AS customer_name, i.work_order_number, r.registration_transaction_id,
-                m.name AS car_make, o.name AS car_model, sm.name AS car_sub_model, ic.name AS insurance
+                m.name AS car_make, o.name AS car_model, sm.name AS car_sub_model, ic.name AS insurance, i.vehicle_mileage
             FROM " . InvoiceHeader::model()->tableName() . " r
             INNER JOIN " . InvoiceDetail::model()->tableName() . " d ON r.id = d.invoice_id
             INNER JOIN " . RegistrationTransaction::model()->tableName() . " i ON i.id = r.registration_transaction_id
@@ -3035,6 +3035,52 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
                 INNER JOIN " . RegistrationTransaction::model()->tableName() . " r ON r.id = i.registration_transaction_id
                 WHERE YEAR(i.invoice_date) = :year AND MONTH(i.invoice_date) = :month AND r.repair_type = 'BR' AND i.user_id_cancelled IS NULL" . $branchConditionSql . " 
                 GROUP BY DATE(i.invoice_date)";
+
+        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
+
+        return $resultSet;
+    }
+    
+    public static function getVehicleYearlyTransactionCountData($year, $branchId) {
+        $branchConditionSql = '';
+        
+        $params = array(
+            ':year' => $year,
+        );
+        
+        if (!empty($branchId)) {
+            $branchConditionSql = ' AND i.branch_id = :branch_id';
+            $params[':branch_id'] = $branchId;
+        }
+        
+        $sql = "SELECT MONTH(i.invoice_date) AS transaction_month, COUNT(DISTINCT i.invoice_number, i.vehicle_id) AS vehicle_count
+                FROM " . InvoiceHeader::model()->tableName() . " i 
+                INNER JOIN " . RegistrationTransaction::model()->tableName() . " r ON r.id = i.registration_transaction_id
+                WHERE YEAR(i.invoice_date) = :year AND r.repair_type = 'BR' AND i.user_id_cancelled IS NULL" . $branchConditionSql . " 
+                GROUP BY MONTH(i.invoice_date)";
+
+        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
+
+        return $resultSet;
+    }
+    
+    public static function getInvoiceTransactionYearlyCountData($year, $branchId) {
+        $branchConditionSql = '';
+        
+        $params = array(
+            ':year' => $year,
+        );
+        
+        if (!empty($branchId)) {
+            $branchConditionSql = ' AND i.branch_id = :branch_id';
+            $params[':branch_id'] = $branchId;
+        }
+        
+        $sql = "SELECT MONTH(i.invoice_date) AS transaction_month, COUNT(i.registration_transaction_id) AS invoice_count
+                FROM " . InvoiceHeader::model()->tableName() . " i 
+                INNER JOIN " . RegistrationTransaction::model()->tableName() . " r ON r.id = i.registration_transaction_id
+                WHERE YEAR(i.invoice_date) = :year AND r.repair_type = 'BR' AND i.user_id_cancelled IS NULL" . $branchConditionSql . " 
+                GROUP BY MONTH(i.invoice_date)";
 
         $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
 

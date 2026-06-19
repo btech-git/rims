@@ -4,15 +4,17 @@
         <table class="responsive">
             <thead>
                 <tr>
-                    <?php foreach ($selectedCoas as $coa): ?>
-                        <th style="text-align: center; width: 10%"><?php echo CHtml::encode(CHtml::value($coa, 'name')); ?></th>
+                    <?php foreach ($yearMonths as $yearMonth): ?>
+                        <?php list($year, $month) = explode('-', $yearMonth); ?>
+                        <?php $formattedYearMonth = $monthList[$month] . ' ' . $year; ?>
+                        <th style="text-align: center; width: 10%"><?php echo CHtml::encode($formattedYearMonth); ?></th>
                     <?php endforeach; ?>
                 </tr>
             </thead>
 
             <tbody>
                 <tr style="vertical-align: top">
-                    <?php foreach ($selectedCoas as $coa): ?>
+                    <?php foreach ($yearMonths as $yearMonth): ?>
                         <td>
                             <table>
                                 <thead>
@@ -26,13 +28,15 @@
                                 </thead>
                                 <tbody>
                                     <?php $paymentDailyTotal = '0.00'; ?>
-                                    <?php $dataProvider = $transactionOutDataProviders[$coa->id]; ?>
+                                    <?php $dataProvider = $transactionOutDataProviders[$yearMonth]; ?>
                                     <?php foreach ($dataProvider->data as $detail): ?>
                                         <tr>
                                             <td>
                                                 <?php echo CHtml::link(CHtml::encode(CHtml::value($detail, 'kode_transaksi')), Yii::app()->createUrl("report/bankingLedgerMonthly/redirectTransaction", array("codeNumber" => $detail->kode_transaksi)), array('target' => '_blank')); ?>
                                             </td>
-                                            <td><?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime(CHtml::value($detail, 'tanggal_transaksi')))); ?></td>
+                                            <td>
+                                                <?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime(CHtml::value($detail, 'tanggal_transaksi')))); ?>
+                                            </td>
                                             <td><?php echo CHtml::encode(CHtml::value($detail, 'transaction_subject')); ?></td>
                                             <td><?php echo CHtml::encode(CHtml::value($detail, 'remark')); ?></td>
                                             <td style="text-align: right">

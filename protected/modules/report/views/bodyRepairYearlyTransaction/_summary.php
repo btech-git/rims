@@ -3,8 +3,8 @@
         <?php //$branch = Branch::model()->findByPk($branchId); ?>
         Raperind Motor <?php //echo CHtml::encode(CHtml::value($branch, 'name')); ?>
     </div>
-    <div style="font-size: larger">Body Repair Transaction Monthly</div>
-    <div><?php echo CHtml::encode(strftime("%B",mktime(0,0,0,$month))); ?> <?php echo CHtml::encode($year); ?></div>
+    <div style="font-size: larger">Body Repair Transaction Yearly</div>
+    <div><?php echo CHtml::encode($year); ?></div>
 </div>
 
 <br />
@@ -14,7 +14,7 @@
         <table class="responsive">
             <thead>
                 <tr>
-                    <th style="text-align: center; width: 10%">Tanggal</th>
+                    <th style="text-align: center; width: 10%">Bulan</th>
                     <th style="text-align: center; width: 10%">Registration</th>
                     <th style="text-align: center; width: 10%">WO</th>
                     <th style="text-align: center; width: 10%">Sub Pekerjaan Cat</th>
@@ -33,57 +33,63 @@
                 <?php $paymentOutTransactionCountSum = 0; ?>
                 <?php $invoiceTransactionCountSum = 0; ?>
                 <?php $paymentInTransactionCountSum = 0; ?>
-                <?php for ($i = 1; $i <= $numberOfDays; $i++): ?>
-                    <?php $transactionDate = $year . '-' . $month . '-' . str_pad($i, 2, '0', STR_PAD_LEFT); ?>
-                    <?php $registrationTransactionCount = isset($bodyRepairTransactionInfoData[$transactionDate]['transaction_count']) ? $bodyRepairTransactionInfoData[$transactionDate]['transaction_count'] : 0; ?>
-                    <?php $workOrderCount = isset($bodyRepairTransactionInfoData[$transactionDate]['work_order_count']) ? $bodyRepairTransactionInfoData[$transactionDate]['work_order_count'] : 0; ?>
-                    <?php $workOrderExpensePaintingCount = isset($bodyRepairTransactionInfoData[$transactionDate]['work_order_expense_painting_count']) ? $bodyRepairTransactionInfoData[$transactionDate]['work_order_expense_painting_count'] : 0; ?>
-                    <?php $workOrderExpenseOtherCount = isset($bodyRepairTransactionInfoData[$transactionDate]['work_order_expense_other_count']) ? $bodyRepairTransactionInfoData[$transactionDate]['work_order_expense_other_count'] : 0; ?>
-                    <?php $paymentOutTransactionCount = isset($bodyRepairTransactionInfoData[$transactionDate]['payment_out_count']) ? $bodyRepairTransactionInfoData[$transactionDate]['payment_out_count'] : 0; ?>
-                    <?php $invoiceTransactionCount = isset($bodyRepairTransactionInfoData[$transactionDate]['invoice_count']) ? $bodyRepairTransactionInfoData[$transactionDate]['invoice_count'] : 0; ?>
-                    <?php $paymentInTransactionCount = isset($bodyRepairTransactionInfoData[$transactionDate]['payment_in_count']) ? $bodyRepairTransactionInfoData[$transactionDate]['payment_in_count'] : 0; ?>
+                <?php for ($i = 1; $i <= 12; $i++): ?>
+                    <?php $registrationTransactionCount = isset($bodyRepairTransactionInfoData[$i]['transaction_count']) ? $bodyRepairTransactionInfoData[$i]['transaction_count'] : 0; ?>
+                    <?php $workOrderCount = isset($bodyRepairTransactionInfoData[$i]['work_order_count']) ? $bodyRepairTransactionInfoData[$i]['work_order_count'] : 0; ?>
+                    <?php $workOrderExpensePaintingCount = isset($bodyRepairTransactionInfoData[$i]['work_order_expense_painting_count']) ? $bodyRepairTransactionInfoData[$i]['work_order_expense_painting_count'] : 0; ?>
+                    <?php $workOrderExpenseOtherCount = isset($bodyRepairTransactionInfoData[$i]['work_order_expense_other_count']) ? $bodyRepairTransactionInfoData[$i]['work_order_expense_other_count'] : 0; ?>
+                    <?php $paymentOutTransactionCountData = isset($bodyRepairTransactionInfoData[$i]['payment_out_count']) ? $bodyRepairTransactionInfoData[$i]['payment_out_count'] : 0; ?>
+                    <?php $invoiceTransactionCount = isset($bodyRepairTransactionInfoData[$i]['invoice_count']) ? $bodyRepairTransactionInfoData[$i]['invoice_count'] : 0; ?>
+                    <?php $paymentInTransactionCountData = isset($bodyRepairTransactionInfoData[$i]['payment_in_count']) ? $bodyRepairTransactionInfoData[$i]['payment_in_count'] : 0; ?>
                     <tr>
-                        <td><?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($transactionDate))); ?></td>
+                        <td><?php echo CHtml::encode($monthList[$i]); ?></td>
                         <td style="text-align: center">
                             <?php echo CHtml::link(CHtml::encode($registrationTransactionCount), array(
-                                'registrationTransactionInfo', 
-                                'transactionDate' => $transactionDate, 
+                                'registrationTransactionMonthlyInfo', 
+                                'year' => $year,
+                                'month' => $i,
                             ), array('target' => '_blank')); ?>
                         </td>
                         <td style="text-align: center">
                             <?php echo CHtml::link(CHtml::encode($workOrderCount), array(
-                                'workOrderInfo', 
-                                'transactionDate' => $transactionDate, 
+                                'workOrderMonthlyInfo', 
+                                'year' => $year,
+                                'month' => $i,
                             ), array('target' => '_blank')); ?>
                         </td>
                         <td style="text-align: center">
                             <?php echo CHtml::link(CHtml::encode($workOrderExpensePaintingCount), array(
-                                'workOrderExpensePaintingInfo', 
-                                'transactionDate' => $transactionDate, 
+                                'workOrderExpensePaintingMonthlyInfo', 
+                                'year' => $year,
+                                'month' => $i,
                             ), array('target' => '_blank')); ?>
                         </td>
                         <td style="text-align: center">
                             <?php echo CHtml::link(CHtml::encode($workOrderExpenseOtherCount), array(
-                                'workOrderExpenseOtherInfo', 
-                                'transactionDate' => $transactionDate, 
+                                'workOrderExpenseOtherMonthlyInfo', 
+                                'year' => $year,
+                                'month' => $i,
                             ), array('target' => '_blank')); ?>
                         </td>
                         <td style="text-align: center">
-                            <?php echo CHtml::link(CHtml::encode($paymentOutTransactionCount), array(
-                                'paymentOutInfo', 
-                                'transactionDate' => $transactionDate, 
+                            <?php echo CHtml::link(CHtml::encode($paymentOutTransactionCountData), array(
+                                'paymentOutMonthlyInfo', 
+                                'year' => $year,
+                                'month' => $i,
                             ), array('target' => '_blank')); ?>
                         </td>
                         <td style="text-align: center">
                             <?php echo CHtml::link(CHtml::encode($invoiceTransactionCount), array(
-                                'invoiceTransactionInfo', 
-                                'transactionDate' => $transactionDate, 
+                                'invoiceTransactionMonthlyInfo', 
+                                'year' => $year,
+                                'month' => $i,
                             ), array('target' => '_blank')); ?>
                         </td>
                         <td style="text-align: center">
-                            <?php echo CHtml::link(CHtml::encode($paymentInTransactionCount), array(
-                                'paymentInInfo', 
-                                'transactionDate' => $transactionDate, 
+                            <?php echo CHtml::link(CHtml::encode($paymentInTransactionCountData), array(
+                                'paymentInMonthlyInfo', 
+                                'year' => $year,
+                                'month' => $i,
                             ), array('target' => '_blank')); ?>
                         </td>
                     </tr>
@@ -91,9 +97,9 @@
                     <?php $workOrderCountSum += $workOrderCount; ?>
                     <?php $workOrderExpensePaintingCountSum += $workOrderExpensePaintingCount; ?>
                     <?php $workOrderExpenseOtherCountSum += $workOrderExpenseOtherCount; ?>
-                    <?php $paymentOutTransactionCountSum += $paymentOutTransactionCount; ?>
+                    <?php $paymentOutTransactionCountSum += $paymentOutTransactionCountData; ?>
                     <?php $invoiceTransactionCountSum += $invoiceTransactionCount; ?>
-                    <?php $paymentInTransactionCountSum += $paymentInTransactionCount; ?>
+                    <?php $paymentInTransactionCountSum += $paymentInTransactionCountData; ?>
                 <?php endfor; ?>
             </tbody>
             <tfoot>
@@ -101,50 +107,43 @@
                     <td>TOTAL</td>
                     <td style="text-align: center">
                         <?php echo CHtml::link(CHtml::encode($registrationTransactionCountSum), array(
-                            'registrationTransactionMonthlyInfo', 
-                            'month' => $month,
+                            'registrationTransactionYearlyInfo', 
                             'year' => $year,
                         ), array('target' => '_blank')); ?>
                     </td>
                     <td style="text-align: center">
                         <?php echo CHtml::link(CHtml::encode($workOrderCountSum), array(
-                            'workOrderMonthlyInfo', 
-                            'month' => $month,
+                            'workOrderYearlyInfo', 
                             'year' => $year,
                         ), array('target' => '_blank')); ?>
                     </td>
                     <td style="text-align: center">
                         <?php echo CHtml::link(CHtml::encode($workOrderExpensePaintingCountSum), array(
-                            'workOrderExpensePaintingMonthlyInfo', 
-                            'month' => $month,
+                            'workOrderExpensePaintingYearlyInfo', 
                             'year' => $year,
                         ), array('target' => '_blank')); ?>
                     </td>
                     <td style="text-align: center">
                         <?php echo CHtml::link(CHtml::encode($workOrderExpenseOtherCountSum), array(
-                            'workOrderExpenseOtherMonthlyInfo', 
-                            'month' => $month,
+                            'workOrderExpenseOtherYearlyInfo', 
                             'year' => $year,
                         ), array('target' => '_blank')); ?>
                     </td>
                     <td style="text-align: center">
                         <?php echo CHtml::link(CHtml::encode($paymentOutTransactionCountSum), array(
-                            'paymentOutMonthlyInfo', 
-                            'month' => $month,
+                            'paymentOutYearlyInfo', 
                             'year' => $year,
                         ), array('target' => '_blank')); ?>
                     </td>
                     <td style="text-align: center">
                         <?php echo CHtml::link(CHtml::encode($invoiceTransactionCountSum), array(
-                            'invoiceTransactionMonthlyInfo', 
-                            'month' => $month,
+                            'invoiceTransactionYearlyInfo', 
                             'year' => $year,
                         ), array('target' => '_blank')); ?>
                     </td>
                     <td style="text-align: center">
                         <?php echo CHtml::link(CHtml::encode($paymentInTransactionCountSum), array(
-                            'paymentInMonthlyInfo', 
-                            'month' => $month,
+                            'paymentInYearlyInfo', 
                             'year' => $year,
                         ), array('target' => '_blank')); ?>
                     </td>

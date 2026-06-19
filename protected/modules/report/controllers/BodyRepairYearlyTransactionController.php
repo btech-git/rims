@@ -1,6 +1,6 @@
 <?php
 
-class BodyRepairMonthlyTransactionController extends Controller {
+class BodyRepairYearlyTransactionController extends Controller {
 
     public $layout = '//layouts/column1';
     public function filters() {
@@ -23,50 +23,61 @@ class BodyRepairMonthlyTransactionController extends Controller {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
 
-        $monthNow = date('m');
         $yearNow = date('Y');
         
-        $month = isset($_GET['Month']) ? $_GET['Month'] : $monthNow;
         $year = isset($_GET['Year']) ? $_GET['Year'] : $yearNow;
         $branchId = isset($_GET['BranchId']) ? $_GET['BranchId'] : '';
         
-        $registrationTransactionCountData = RegistrationTransaction::getRegistrationTransactionCountData($year, $month, $branchId);
-        $registrationWorkOrderCountData = RegistrationTransaction::getRegistrationWorkOrderCountData($year, $month, $branchId);
-        $workOrderPaintingTransactionCountData = WorkOrderExpenseHeader::getPaintingTransactionCountData($year, $month, $branchId);
-        $workOrderOtherTransactionCountData = WorkOrderExpenseHeader::getOtherTransactionCountData($year, $month, $branchId);
-        $paymentOutTransactionCountData = PayOutDetail::getWorkOrderExpensePaymentCountData($year, $month, $branchId);
-        $invoiceTransactionCountData = InvoiceHeader::getInvoiceTransactionCountData($year, $month, $branchId);
-        $paymentInransactionCountData = PaymentInDetail::getPaymentTransactionCountData($year, $month, $branchId);
+        $registrationTransactionYearlyCountData = RegistrationTransaction::getRegistrationTransactionYearlyCountData($year, $branchId);
+        $registrationWorkOrderYearlyCountData = RegistrationTransaction::getRegistrationWorkOrderYearlyCountData($year, $branchId);
+        $workOrderPaintingTransactionYearlyCountData = WorkOrderExpenseHeader::getPaintingTransactionYearlyCountData($year, $branchId);
+        $workOrderOtherTransactionYearlyCountData = WorkOrderExpenseHeader::getOtherTransactionYearlyCountData($year, $branchId);
+        $paymentOutTransactionYearlyCountData = PayOutDetail::getWorkOrderExpensePaymentYearlyCountData($year, $branchId);
+        $invoiceTransactionYearlyCountData = InvoiceHeader::getInvoiceTransactionYearlyCountData($year, $branchId);
+        $paymentInransactionYearlyCountData = PaymentInDetail::getPaymentTransactionYearlyCountData($year, $branchId);
         
         $bodyRepairTransactionInfoData = array();
-        foreach ($registrationTransactionCountData as $registrationTransactionCountDataItem) {
-            $bodyRepairTransactionInfoData[$registrationTransactionCountDataItem['transaction_date']]['transaction_count'] = $registrationTransactionCountDataItem['transaction_count'];
+        foreach ($registrationTransactionYearlyCountData as $registrationTransactionYearlyCountDataItem) {
+            $bodyRepairTransactionInfoData[$registrationTransactionYearlyCountDataItem['transaction_month']]['transaction_count'] = $registrationTransactionYearlyCountDataItem['transaction_count'];
         }
-        foreach ($registrationWorkOrderCountData as $registrationWorkOrderCountDataItem) {
-            $bodyRepairTransactionInfoData[$registrationWorkOrderCountDataItem['transaction_date']]['work_order_count'] = $registrationWorkOrderCountDataItem['work_order_count'];
+        foreach ($registrationWorkOrderYearlyCountData as $registrationWorkOrderYearlyCountDataItem) {
+            $bodyRepairTransactionInfoData[$registrationWorkOrderYearlyCountDataItem['transaction_month']]['work_order_count'] = $registrationWorkOrderYearlyCountDataItem['work_order_count'];
         }
-        foreach ($workOrderPaintingTransactionCountData as $workOrderPaintingTransactionCountDataItem) {
-            $bodyRepairTransactionInfoData[$workOrderPaintingTransactionCountDataItem['transaction_date']]['work_order_expense_painting_count'] = $workOrderPaintingTransactionCountDataItem['service_count'];
+        foreach ($workOrderPaintingTransactionYearlyCountData as $workOrderPaintingTransactionYearlyCountDataItem) {
+            $bodyRepairTransactionInfoData[$workOrderPaintingTransactionYearlyCountDataItem['transaction_month']]['work_order_expense_painting_count'] = $workOrderPaintingTransactionYearlyCountDataItem['service_count'];
         }
-        foreach ($workOrderOtherTransactionCountData as $workOrderOtherTransactionCountDataItem) {
-            $bodyRepairTransactionInfoData[$workOrderOtherTransactionCountDataItem['transaction_date']]['work_order_expense_other_count'] = $workOrderOtherTransactionCountDataItem['service_count'];
+        foreach ($workOrderOtherTransactionYearlyCountData as $workOrderOtherTransactionYearlyCountDataItem) {
+            $bodyRepairTransactionInfoData[$workOrderOtherTransactionYearlyCountDataItem['transaction_month']]['work_order_expense_other_count'] = $workOrderOtherTransactionYearlyCountDataItem['service_count'];
         }
-        foreach ($paymentOutTransactionCountData as $paymentOutTransactionCountDataItem) {
-            $bodyRepairTransactionInfoData[$paymentOutTransactionCountDataItem['transaction_date']]['payment_out_count'] = $paymentOutTransactionCountDataItem['payment_count'];
+        foreach ($paymentOutTransactionYearlyCountData as $paymentOutTransactionYearlyCountDataItem) {
+            $bodyRepairTransactionInfoData[$paymentOutTransactionYearlyCountDataItem['transaction_month']]['payment_out_count'] = $paymentOutTransactionYearlyCountDataItem['payment_count'];
         }
-        foreach ($invoiceTransactionCountData as $invoiceTransactionCountDataItem) {
-            $bodyRepairTransactionInfoData[$invoiceTransactionCountDataItem['transaction_date']]['invoice_count'] = $invoiceTransactionCountDataItem['invoice_count'];
+        foreach ($invoiceTransactionYearlyCountData as $invoiceTransactionYearlyCountDataItem) {
+            $bodyRepairTransactionInfoData[$invoiceTransactionYearlyCountDataItem['transaction_month']]['invoice_count'] = $invoiceTransactionYearlyCountDataItem['invoice_count'];
         }
-        foreach ($paymentInransactionCountData as $paymentInransactionCountDataItem) {
-            $bodyRepairTransactionInfoData[$paymentInransactionCountDataItem['transaction_date']]['payment_in_count'] = $paymentInransactionCountDataItem['payment_count'];
+        foreach ($paymentInransactionYearlyCountData as $paymentInransactionYearlyCountDataItem) {
+            $bodyRepairTransactionInfoData[$paymentInransactionYearlyCountDataItem['transaction_month']]['payment_in_count'] = $paymentInransactionYearlyCountDataItem['payment_count'];
         }
+        
+        $monthList = array(
+            1 => 'January',
+            2 => 'February',
+            3 => 'March',
+            4 => 'April',
+            5 => 'May',
+            6 => 'June',
+            7 => 'July',
+            8 => 'August',
+            9 => 'September',
+            10 => 'October',
+            11 => 'November',
+            12 => 'December',
+        );
         
         $yearList = array();
         for ($y = $yearNow - 4; $y <= $yearNow; $y++) {
             $yearList[$y] = $y;
         }
-        
-        $numberOfDays = cal_days_in_month(CAL_GREGORIAN, $month, $year);
         
         if (isset($_GET['ResetFilter'])) {
             $this->redirect(array('summary'));
@@ -75,118 +86,118 @@ class BodyRepairMonthlyTransactionController extends Controller {
         if (isset($_GET['SaveExcel'])) {
             $this->saveToExcel(array(
                 'bodyRepairTransactionInfoData' => $bodyRepairTransactionInfoData,
-                'month' => $month,
                 'year' => $year,
-                'numberOfDays' => $numberOfDays,
+                'monthList' => $monthList,
             ));
         }
 
         $this->render('summary', array(
             'bodyRepairTransactionInfoData' => $bodyRepairTransactionInfoData,
             'yearList' => $yearList,
-            'month' => $month,
             'year' => $year,
-            'numberOfDays' => $numberOfDays,
             'branchId' => $branchId,
+            'monthList' => $monthList,
         ));
     }
     
-    public function actionRegistrationTransactionInfo($transactionDate) {
+    public function actionRegistrationTransactionYearlyInfo($year) {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
 
         $registrationTransactions = RegistrationTransaction::model()->findAll(array(
-            'condition' => 'DATE(transaction_date) = :transaction_date AND repair_type = "BR" AND user_id_cancelled IS NULL',
-            'params' => array(':transaction_date' => $transactionDate)
+            'condition' => 'YEAR(transaction_date) = :year AND repair_type = "BR" AND user_id_cancelled IS NULL',
+            'params' => array(':year' => $year)
         ));
         
-        $this->render('registrationTransactionInfo', array(
+        $this->render('registrationTransactionYearlyInfo', array(
             'registrationTransactions' => $registrationTransactions,
-            'transactionDate' => $transactionDate,
+            'year' => $year,
         ));
     }
 
-    public function actionWorkOrderInfo($transactionDate) {
+    public function actionWorkOrderYearlyInfo($year) {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
 
         $registrationTransactions = RegistrationTransaction::model()->findAll(array(
-            'condition' => 'DATE(transaction_date) = :transaction_date AND repair_type = "BR" AND user_id_cancelled IS NULL AND t.work_order_number IS NOT NULL',
-            'params' => array(':transaction_date' => $transactionDate)
+            'condition' => 'YEAR(transaction_date) = :year AND repair_type = "BR" AND user_id_cancelled IS NULL AND t.work_order_number IS NOT NULL',
+            'params' => array(':year' => $year)
         ));
         
-        $this->render('workOrderInfo', array(
+        $this->render('workOrderYearlyInfo', array(
             'registrationTransactions' => $registrationTransactions,
-            'transactionDate' => $transactionDate,
+            'year' => $year,
         ));
     }
 
-    public function actionWorkOrderExpensePaintingInfo($transactionDate) {
+    public function actionWorkOrderExpensePaintingYearlyInfo($year) {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
 
         $workOrderExpenses = WorkOrderExpenseHeader::model()->with(array('registrationTransaction'))->findAll(array(
-            'condition' => 'DATE(t.transaction_date) = :transaction_date AND registrationTransaction.repair_type = "BR" AND t.user_id_cancelled IS NULL AND 
+            'condition' => 'YEAR(t.transaction_date) = :year AND registrationTransaction.repair_type = "BR" AND t.user_id_cancelled IS NULL AND 
                 t.supplier_id = 250',
-            'params' => array(':transaction_date' => $transactionDate)
+            'params' => array(':year' => $year)
         ));
         
-        $this->render('workOrderExpensePaintingInfo', array(
+        $this->render('workOrderExpensePaintingYearlyInfo', array(
             'workOrderExpenses' => $workOrderExpenses,
-            'transactionDate' => $transactionDate,
+            'year' => $year,
         ));
     }
 
-    public function actionWorkOrderExpenseOtherInfo($transactionDate) {
+    public function actionWorkOrderExpenseOtherYearlyInfo($year) {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
 
         $workOrderExpenses = WorkOrderExpenseHeader::model()->with(array('registrationTransaction'))->findAll(array(
-            'condition' => 'DATE(t.transaction_date) = :transaction_date AND registrationTransaction.repair_type = "BR" AND t.user_id_cancelled IS NULL AND 
+            'condition' => 'YEAR(t.transaction_date) = :year AND registrationTransaction.repair_type = "BR" AND t.user_id_cancelled IS NULL AND 
                 t.supplier_id NOT IN (250)',
-            'params' => array(':transaction_date' => $transactionDate)
+            'params' => array(':year' => $year)
         ));
         
-        $this->render('workOrderExpenseOtherInfo', array(
+        $this->render('workOrderExpenseOtherYearlyInfo', array(
             'workOrderExpenses' => $workOrderExpenses,
-            'transactionDate' => $transactionDate,
+            'year' => $year,
         ));
     }
 
-    public function actionPaymentOutInfo($transactionDate) {
+    public function actionPaymentOutYearlyInfo($year) {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
 
         $paymentOutDetails = PayOutDetail::model()->with(array('paymentOut'))->findAll(array(
-            'condition' => 'DATE(paymentOut.payment_date) = :payment_date AND t.work_order_expense_header_id IS NOT NULL AND paymentOut.user_id_cancelled IS NULL',
-            'params' => array(':payment_date' => $transactionDate)
+            'condition' => 'YEAR(paymentOut.payment_date) = :year AND t.work_order_expense_header_id IS NOT NULL AND paymentOut.user_id_cancelled IS NULL',
+            'params' => array(':year' => $year),
+            'order' => 'paymentOut.payment_date ASC, paymentOut.payment_number ASC',
         ));
         
-        $this->render('paymentOutInfo', array(
+        $this->render('paymentOutYearlyInfo', array(
             'paymentOutDetails' => $paymentOutDetails,
-            'transactionDate' => $transactionDate,
+            'year' => $year,
         ));
     }
 
-    public function actionInvoiceTransactionInfo($transactionDate) {
+    public function actionInvoiceTransactionYearlyInfo($year) {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
 
         $invoiceHeaders = InvoiceHeader::model()->with(array('registrationTransaction'))->findAll(array(
-            'condition' => 'DATE(t.invoice_date) = :invoice_date AND registrationTransaction.repair_type = "BR" AND t.user_id_cancelled IS NULL',
-            'params' => array(':invoice_date' => $transactionDate)
+            'condition' => 'YEAR(t.invoice_date) = :year AND registrationTransaction.repair_type = "BR" AND t.user_id_cancelled IS NULL',
+            'params' => array(':year' => $year),
+            'order' => 't.invoice_date ASC, t.invoice_number ASC',
         ));
         
-        $this->render('invoiceTransactionInfo', array(
+        $this->render('invoiceTransactionYearlyInfo', array(
             'invoiceHeaders' => $invoiceHeaders,
-            'transactionDate' => $transactionDate,
+            'year' => $year,
         ));
     }
 
-    public function actionPaymentInInfo($transactionDate) {
+    public function actionPaymentInYearlyInfo($year) {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
-        
+
         $criteria = new CDbCriteria;
         $criteria->together = 'true';
         $criteria->with = array(
@@ -197,14 +208,15 @@ class BodyRepairMonthlyTransactionController extends Controller {
             ), 
             'paymentIn', 
         );
-        $criteria->condition = 'DATE(paymentIn.payment_date) = :payment_date AND registrationTransaction.repair_type = "BR" AND paymentIn.user_id_cancelled IS NULL';
-        $criteria->params = array(':payment_date' => $transactionDate);
+        $criteria->condition = 'YEAR(paymentIn.payment_date) = :year AND registrationTransaction.repair_type = "BR" AND paymentIn.user_id_cancelled IS NULL';
+        $criteria->params = array(':year' => $year);
+        $criteria->order = 'paymentIn.payment_date ASC, paymentIn.payment_number ASC';
 
         $paymentInDetails = PaymentInDetail::model()->findAll($criteria);
         
-        $this->render('paymentInInfo', array(
+        $this->render('paymentInYearlyInfo', array(
             'paymentInDetails' => $paymentInDetails,
-            'transactionDate' => $transactionDate,
+            'year' => $year,
         ));
     }
 
@@ -230,8 +242,8 @@ class BodyRepairMonthlyTransactionController extends Controller {
         ini_set('memory_limit', '1024M');
 
         $registrationTransactions = RegistrationTransaction::model()->findAll(array(
-            'condition' => 'YEAR(t.transaction_date) = :year AND MONTH(t.transaction_date) = :month AND repair_type = "BR" AND user_id_cancelled IS NULL AND
-                            t.work_order_number IS NOT NULL',
+            'condition' => 'YEAR(t.transaction_date) = :year AND MONTH(t.transaction_date) = :month AND repair_type = "BR" AND
+                            t.work_order_number IS NOT NULL AND t.user_id_cancelled IS NULL',
             'params' => array(':year' => $year, ':month' => $month),
             'order' => 't.transaction_date ASC, t.transaction_number ASC',
         ));
@@ -352,16 +364,15 @@ class BodyRepairMonthlyTransactionController extends Controller {
         $objPHPExcel = new PHPExcel();
 
         $bodyRepairTransactionInfoData = $options['bodyRepairTransactionInfoData'];
-        $month = $options['month'];
+        $monthList = $options['monthList'];
         $year = $options['year'];
-        $numberOfDays = $options['numberOfDays'];
         
         $documentProperties = $objPHPExcel->getProperties();
         $documentProperties->setCreator('Raperind Motor');
-        $documentProperties->setTitle('Body Repair Bulanan');
+        $documentProperties->setTitle('Body Repair Tahunan');
 
         $worksheet = $objPHPExcel->setActiveSheetIndex(0);
-        $worksheet->setTitle('Body Repair Bulanan');
+        $worksheet->setTitle('Body Repair Tahunan');
 
         $worksheet->mergeCells("A1:H1");
         $worksheet->mergeCells("A2:H2");
@@ -371,8 +382,8 @@ class BodyRepairMonthlyTransactionController extends Controller {
         $worksheet->getStyle("A1:H5")->getFont()->setBold(true);
         
         $worksheet->setCellValue('A1', 'RAPERIND MOTOR');
-        $worksheet->setCellValue('A2', 'Body Repair Transaction Monthly');
-        $worksheet->setCellValue('A3', CHtml::encode(strftime("%B",mktime(0,0,0,$month))) . ' ' . CHtml::encode($year));
+        $worksheet->setCellValue('A2', 'Body Repair Transaction Yearly');
+        $worksheet->setCellValue('A3', $year);
 
         $worksheet->getStyle("A5:H5")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
         
@@ -396,17 +407,16 @@ class BodyRepairMonthlyTransactionController extends Controller {
         $invoiceTransactionCountSum = 0;
         $paymentInTransactionCountSum = 0;
         
-        for ($i = 1; $i <= $numberOfDays; $i++) {
-            $transactionDate = $year . '-' . $month . '-' . str_pad($i, 2, '0', STR_PAD_LEFT);
-            $registrationTransactionCount = isset($bodyRepairTransactionInfoData[$transactionDate]['transaction_count']) ? $bodyRepairTransactionInfoData[$transactionDate]['transaction_count'] : 0;
-            $workOrderCount = isset($bodyRepairTransactionInfoData[$transactionDate]['work_order_count']) ? $bodyRepairTransactionInfoData[$transactionDate]['work_order_count'] : 0;
-            $workOrderExpensePaintingCount = isset($bodyRepairTransactionInfoData[$transactionDate]['work_order_expense_painting_count']) ? $bodyRepairTransactionInfoData[$transactionDate]['work_order_expense_painting_count'] : 0;
-            $workOrderExpenseOtherCount = isset($bodyRepairTransactionInfoData[$transactionDate]['work_order_expense_other_count']) ? $bodyRepairTransactionInfoData[$transactionDate]['work_order_expense_other_count'] : 0;
-            $paymentOutTransactionCountData = isset($bodyRepairTransactionInfoData[$transactionDate]['payment_out_count']) ? $bodyRepairTransactionInfoData[$transactionDate]['payment_out_count'] : 0;
-            $invoiceTransactionCount = isset($bodyRepairTransactionInfoData[$transactionDate]['invoice_count']) ? $bodyRepairTransactionInfoData[$transactionDate]['invoice_count'] : 0;
-            $paymentInTransactionCountData = isset($bodyRepairTransactionInfoData[$transactionDate]['payment_in_count']) ? $bodyRepairTransactionInfoData[$transactionDate]['payment_in_count'] : 0;
+        for ($i = 1; $i <= 12; $i++) {
+            $registrationTransactionCount = isset($bodyRepairTransactionInfoData[$i]['transaction_count']) ? $bodyRepairTransactionInfoData[$i]['transaction_count'] : 0;
+            $workOrderCount = isset($bodyRepairTransactionInfoData[$i]['work_order_count']) ? $bodyRepairTransactionInfoData[$i]['work_order_count'] : 0;
+            $workOrderExpensePaintingCount = isset($bodyRepairTransactionInfoData[$i]['work_order_expense_painting_count']) ? $bodyRepairTransactionInfoData[$i]['work_order_expense_painting_count'] : 0;
+            $workOrderExpenseOtherCount = isset($bodyRepairTransactionInfoData[$i]['work_order_expense_other_count']) ? $bodyRepairTransactionInfoData[$i]['work_order_expense_other_count'] : 0;
+            $paymentOutTransactionCountData = isset($bodyRepairTransactionInfoData[$i]['payment_out_count']) ? $bodyRepairTransactionInfoData[$i]['payment_out_count'] : 0;
+            $invoiceTransactionCount = isset($bodyRepairTransactionInfoData[$i]['invoice_count']) ? $bodyRepairTransactionInfoData[$i]['invoice_count'] : 0;
+            $paymentInTransactionCountData = isset($bodyRepairTransactionInfoData[$i]['payment_in_count']) ? $bodyRepairTransactionInfoData[$i]['payment_in_count'] : 0;
                 
-            $worksheet->setCellValue("A{$counter}", $transactionDate);
+            $worksheet->setCellValue("A{$counter}", $monthList[$i]);
             $worksheet->setCellValue("B{$counter}", $registrationTransactionCount);
             $worksheet->setCellValue("C{$counter}", $workOrderCount);
             $worksheet->setCellValue("D{$counter}", $workOrderExpensePaintingCount);
@@ -449,7 +459,7 @@ class BodyRepairMonthlyTransactionController extends Controller {
         ob_end_clean();
 
         header('Content-type: application/vnd.ms-excel');
-        header('Content-Disposition: attachment;filename="body_repair_transaction_monthly.xls"');
+        header('Content-Disposition: attachment;filename="body_repair_transaction_yearly.xls"');
         header('Cache-Control: max-age=0');
 
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');

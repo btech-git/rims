@@ -2129,4 +2129,70 @@ class RegistrationTransaction extends MonthlyTransactionActiveRecord {
 
         return $resultSet;
     }
+    
+    public static function getVehicleYearlyTransactionCountData($year, $branchId) {
+        $branchConditionSql = '';
+        
+        $params = array(
+            ':year' => $year,
+        );
+        
+        if (!empty($branchId)) {
+            $branchConditionSql = ' AND branch_id = :branch_id';
+            $params[':branch_id'] = $branchId;
+        }
+        
+        $sql = "SELECT MONTH(transaction_date) AS transaction_month, COUNT(DISTINCT transaction_number, vehicle_id) AS vehicle_count
+                FROM " . RegistrationTransaction::model()->tableName() . " 
+                WHERE YEAR(transaction_date) = :year AND repair_type = 'BR' AND user_id_cancelled IS NULL" . $branchConditionSql . " 
+                GROUP BY MONTH(transaction_date)";
+
+        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
+
+        return $resultSet;
+    }
+    
+    public static function getRegistrationTransactionYearlyCountData($year, $branchId) {
+        $branchConditionSql = '';
+        
+        $params = array(
+            ':year' => $year,
+        );
+        
+        if (!empty($branchId)) {
+            $branchConditionSql = ' AND branch_id = :branch_id';
+            $params[':branch_id'] = $branchId;
+        }
+        
+        $sql = "SELECT MONTH(transaction_date) AS transaction_month, COUNT(DISTINCT transaction_number) AS transaction_count
+                FROM " . RegistrationTransaction::model()->tableName() . " 
+                WHERE YEAR(transaction_date) = :year AND repair_type = 'BR' AND user_id_cancelled IS NULL" . $branchConditionSql . " 
+                GROUP BY MONTH(transaction_date)";
+
+        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
+
+        return $resultSet;
+    }
+    
+    public static function getRegistrationWorkOrderYearlyCountData($year, $branchId) {
+        $branchConditionSql = '';
+        
+        $params = array(
+            ':year' => $year,
+        );
+        
+        if (!empty($branchId)) {
+            $branchConditionSql = ' AND branch_id = :branch_id';
+            $params[':branch_id'] = $branchId;
+        }
+        
+        $sql = "SELECT MONTH(transaction_date) AS transaction_month, COUNT(DISTINCT work_order_number) AS work_order_count
+                FROM " . RegistrationTransaction::model()->tableName() . " 
+                WHERE YEAR(transaction_date) = :year AND repair_type = 'BR' AND user_id_cancelled IS NULL AND work_order_number IS NOT NULL" . $branchConditionSql . " 
+                GROUP BY MONTH(transaction_date)";
+
+        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
+
+        return $resultSet;
+    }
 }

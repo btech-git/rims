@@ -1,91 +1,78 @@
-<?php
-Yii::app()->clientScript->registerCss('_report', '
-
-    .width1-1 { width: 10% }
-    .width1-2 { width: 5% }
-    .width1-3 { width: 15% }
-    .width1-4 { width: 5% }
-    .width1-5 { width: 5% }
-    .width1-6 { width: 5% }
-    .width1-7 { width: 15% }
-    .width1-8 { width: 5% }
-    .width1-9 { width: 10% }
-    .width1-10 { width: 10% }
-');
-?>
+<style> 
+ .table_wrapper{
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+}
+</style>
 
 <div style="font-weight: bold; text-align: center">
-    <div style="font-size: larger">Penjualan Project <?php echo CHtml::encode(CHtml::value($customerData, 'name')); ?></div>
+    <div style="font-size: larger">
+        <?php $branch = Branch::model()->findByPk($branchId); ?>
+        Raperind Motor <?php echo CHtml::encode(CHtml::value($branch, 'name')); ?>
+    </div>
+    <div style="font-size: larger">Penjualan Customer Project</div>
+    <div style="font-size: larger"><?php echo CHtml::encode(CHtml::value($customerData, 'name')); ?></div>
     <div><?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($startDate))) . ' &nbsp;&ndash;&nbsp; ' . CHtml::encode(Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($endDate))); ?></div>
 </div>
 
 <br />
 
-<table class="report">
-    <thead style="position: sticky; top: 0">
-        <tr id="header1">
-            <th class="width1-1">Penjualan #</th>
-            <th class="width1-2">Tanggal</th>
-            <th class="width1-3">Customer</th>
-            <th class="width1-4">Plat #</th>
-            <th class="width1-1">WO #</th>
-            <th class="width1-5">Type</th>
-            <th class="width1-6">ID</th>
-            <th class="width1-7">Item</th>
-            <th class="width1-8">Quantity</th>
-            <th class="width1-9">Harga</th>
-            <th class="width1-10">Total Sales</th>
-        </tr>
-    </thead>
-    <tbody>
-        <?php $totalSale = '0.00'; ?>
-        <?php $grandTotalCogs = '0.00'; ?>
-        <?php foreach ($saleProjectReport as $i => $dataItem): ?>
-            <?php $quantity = CHtml::encode($dataItem['quantity']); ?>
-            <?php $unitPrice = $dataItem['unit_price']; ?>
-            <?php $grandTotal = $dataItem['total_price']; ?>
-            <tr>
-                <td>
-                    <?php echo CHtml::link($dataItem['invoice_number'], Yii::app()->createUrl("transaction/invoiceHeader/view", array("id" => $dataItem['id'])), array('target' => '_blank')); ?>
-                </td>
-                <td>
-                    <?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($dataItem['invoice_date']))); ?>
-                </td>
-                <td><?php echo CHtml::encode($dataItem['customer_name']); ?></td>
-                <td><?php echo CHtml::encode($dataItem['plate_number']); ?></td>
-                <td>
-                    <?php echo CHtml::link($dataItem['work_order_number'], Yii::app()->createUrl("frontDesk/registrationTransaction/view", array("id" => $dataItem['registration_transaction_id'])), array('target' => '_blank')); ?>
-                </td>
-                <td>
-                    <?php if (empty($dataItem['product'])): ?>
-                        <?php echo 'Jasa'; ?>
-                    <?php else: ?>
-                        <?php echo 'Parts'; ?>
-                    <?php endif; ?>
-                </td>
-                <td>
-                    <?php if (empty($dataItem['product'])): ?>
-                        <?php echo CHtml::encode($dataItem['service_id']); ?>
-                    <?php else: ?>
-                        <?php echo CHtml::encode($dataItem['product_id']); ?>
-                    <?php endif; ?>
-                </td>
-                <td>
-                    <?php if (empty($dataItem['product'])): ?>
-                        <?php echo CHtml::encode($dataItem['service']); ?>
-                    <?php else: ?>
-                        <?php echo CHtml::encode($dataItem['product']); ?>
-                    <?php endif; ?>
-                </td>
-                <td style="text-align: center"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $quantity)); ?></td>
-                <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $unitPrice)); ?></td>
-                <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $grandTotal)); ?></td>
+<div class="table_wrapper">
+    <table class="responsive">
+        <thead style="position: sticky; top: 0">
+            <tr id="header1">
+                <th>Penjualan #</th>
+                <th>Tanggal</th>
+                <th>Customer</th>
+                <th>Plat #</th>
+                <th>WO #</th>
+                <th>ODO</th>
+                <th>Jasa</th>
+                <th>Part</th>
+                <th>Jasa (IDR)</th>
+                <th>Part (IDR)</th>
+                <th>Qty</th>
+                <th>Total exc VAT (IDR)</th>
             </tr>
-            <?php $totalSale += $grandTotal; ?>
-        <?php endforeach; ?>
-        <tr>
-            <td style="text-align: right; font-weight: bold" colspan="10">Total</td>
-            <td style="text-align: right; font-weight: bold"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalSale)); ?></td>
-        </tr>
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            <?php foreach ($saleProjectReport as $i => $dataItem): ?>
+                <?php $quantity = $dataItem['quantity']; ?>
+                <?php $unitPrice = $dataItem['unit_price']; ?>
+                <tr>
+                    <td>
+                        <?php echo CHtml::link($dataItem['invoice_number'], Yii::app()->createUrl("transaction/invoiceHeader/view", array("id" => $dataItem['id'])), array('target' => '_blank')); ?>
+                    </td>
+                    <td>
+                        <?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($dataItem['invoice_date']))); ?>
+                    </td>
+                    <td><?php echo CHtml::encode($dataItem['customer_name']); ?></td>
+                    <td><?php echo CHtml::encode($dataItem['plate_number']); ?></td>
+                    <td>
+                        <?php echo CHtml::link($dataItem['work_order_number'], Yii::app()->createUrl("frontDesk/registrationTransaction/view", array("id" => $dataItem['registration_transaction_id'])), array('target' => '_blank')); ?>
+                    </td>
+                    <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $dataItem['vehicle_mileage'])); ?></td>
+                    <td><?php echo CHtml::encode($dataItem['service']); ?></td>
+                    <td><?php echo CHtml::encode($dataItem['product']); ?></td>
+                    <td style="text-align: right">
+                        <?php if (empty($dataItem['product'])): ?>
+                            <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $unitPrice)); ?>
+                        <?php else: ?>
+                            <?php echo ''; ?>
+                        <?php endif; ?>
+                    </td>
+                    <td style="text-align: right">
+                        <?php if (empty($dataItem['product'])): ?>
+                            <?php echo ''; ?>
+                        <?php else: ?>
+                            <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $unitPrice)); ?>
+                        <?php endif; ?>
+                    </td>
+                    <td style="text-align: center"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $quantity)); ?></td>
+                    <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $dataItem['total_price'])); ?></td>
+                </tr>
+            <?php endforeach; ?>
+        </tbody>
+    </table>
+</div>
