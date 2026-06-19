@@ -67,7 +67,7 @@
  * @property User $user
  * @property UserIdApproval $userIdApproval
  * @property UserIdReject $userIdReject
- * @property UserIdUpdate $userIdUpdate
+ * @property UserIdUpdated $userIdUpdated
  */
 class Service extends CActiveRecord {
 
@@ -102,7 +102,7 @@ class Service extends CActiveRecord {
         // will receive user inputs.
         return array(
             array('code, name, service_category_id, service_type_id, status, difficulty_level, user_id', 'required'),
-            array('service_category_id, service_type_id, difficulty_level, is_approved, user_id, user_id_approval, user_id_reject, user_id_update', 'numerical', 'integerOnly' => true),
+            array('service_category_id, service_type_id, difficulty_level, is_approved, user_id, user_id_approval, user_id_reject, user_id_updated', 'numerical', 'integerOnly' => true),
             array('code', 'unique'),
             array('code', 'length', 'max' => 20),
             array('name', 'length', 'max' => 100),
@@ -111,7 +111,7 @@ class Service extends CActiveRecord {
             array('status, difficulty, difficulty_value, regular, luxury, luxury_value, luxury_calc, standard_rate_per_hour, flat_rate_hour, price, common_price, bongkar, sparepart, ketok_las, dempul, epoxy, cat, pasang, poles, cuci, finishing, price_easy, price_medium, price_hard, price_luxury', 'length', 'max' => 10),
             // The following rule is used by search().
             // Please remove those attributes that should not be searched.
-            array('id, code, name, price, description, created_datetime, service_category_id, service_type_id, status, difficulty_level, service_category_name,service_type_name,service_category_code, service_type_code, difficulty, difficulty_value, regular, luxury, luxury_value, luxury_calc, standard_rate_per_hour, flat_rate_hour, price, common_price, is_deleted, findkeyword, bongkar, sparepart, ketok_las, dempul, epoxy, cat, pasang, poles, cuci, finishing, price_easy, price_medium, price_hard, price_luxury, is_approved, date_approval, user_id, user_id_approval, user_id_reject, time_approval, date_reject, time_reject, user_id_update, updated_datetime', 'safe', 'on' => 'search'),
+            array('id, code, name, price, description, created_datetime, service_category_id, service_type_id, status, difficulty_level, service_category_name,service_type_name,service_category_code, service_type_code, difficulty, difficulty_value, regular, luxury, luxury_value, luxury_calc, standard_rate_per_hour, flat_rate_hour, price, common_price, is_deleted, findkeyword, bongkar, sparepart, ketok_las, dempul, epoxy, cat, pasang, poles, cuci, finishing, price_easy, price_medium, price_hard, price_luxury, is_approved, date_approval, user_id, user_id_approval, user_id_reject, time_approval, date_reject, time_reject, user_id_updated, updated_datetime', 'safe', 'on' => 'search'),
         );
     }
 
@@ -146,7 +146,7 @@ class Service extends CActiveRecord {
             'user' => array(self::BELONGS_TO, 'Users', 'user_id'),
             'userIdApproval' => array(self::BELONGS_TO, 'Users', 'user_id_approval'),
             'userIdReject' => array(self::BELONGS_TO, 'Users', 'user_id_reject'),
-            'userIdUpdate' => array(self::BELONGS_TO, 'Users', 'user_id_update'),
+            'userIdUpdated' => array(self::BELONGS_TO, 'Users', 'user_id_updated'),
         );
     }
 
