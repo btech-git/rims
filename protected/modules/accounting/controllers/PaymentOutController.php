@@ -318,6 +318,11 @@ class PaymentOutController extends Controller {
         $supplierName = isset($_GET['SupplierName']) ? $_GET['SupplierName'] : '';
         $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : '';
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : '';
+        $workOrderSupplier = isset($_GET['WorkOrderSupplier']) ? $_GET['WorkOrderSupplier'] : '';
+        $workOrderNumber = isset($_GET['WorkOrderNumber']) ? $_GET['WorkOrderNumber'] : '';
+        $customerName = isset($_GET['CustomerName']) ? $_GET['CustomerName'] : '';
+        $plateNumber = isset($_GET['PlateNumber']) ? $_GET['PlateNumber'] : '';
+        $receivableSupplier = isset($_GET['ReceivableSupplier']) ? $_GET['ReceivableSupplier'] : '';
 
         if (isset($_GET['pageSize'])) {
             Yii::app()->user->setState('pageSize', (int) $_GET['pageSize']);
@@ -326,6 +331,7 @@ class PaymentOutController extends Controller {
 
         $dataProvider = $paymentOut->search();
         $dataProvider->criteria->addBetweenCondition('t.payment_date', $startDate, $endDate);
+        
         if (!(Yii::app()->user->checkAccess('director') || Yii::app()->user->branch_id == 6)) {
             $dataProvider->criteria->addCondition('t.branch_id = :branch_id');
             $dataProvider->criteria->params[':branch_id'] = Yii::app()->user->branch_id;
@@ -341,11 +347,40 @@ class PaymentOutController extends Controller {
         $receiveItem = Search::bind(new TransactionReceiveItem('search'), isset($_GET['TransactionReceiveItem']) ? $_GET['TransactionReceiveItem'] : array());
         $receiveItemDataProvider = $receiveItem->searchForPaymentOut();
 
+        if (!empty($receivableSupplier)) {
+            $receiveItemDataProvider->criteria->addCondition("supplier.name LIKE :supplier_name");
+            $receiveItemDataProvider->criteria->params[':supplier_name'] = "%{$receivableSupplier}%";
+        }
+
         $workOrderExpense = Search::bind(new WorkOrderExpenseHeader('search'), isset($_GET['WorkOrderExpenseHeader']) ? $_GET['WorkOrderExpenseHeader'] : array());
         $workOrderExpenseDataProvider = $workOrderExpense->searchForPaymentOut();
+        $workOrderExpenseDataProvider->criteria->together = true;
+        $workOrderExpenseDataProvider->criteria->with = array(
+            'supplier', 
+            'registrationTransaction' => array(
+                'with' => array('customer', 'vehicle')
+            )
+        );
 
-        $itemRequest = Search::bind(new ItemRequestHeader('search'), isset($_GET['ItemRequestHeader']) ? $_GET['ItemRequestHeader'] : array());
-        $itemRequestDataProvider = $itemRequest->searchForPaymentOut();
+        if (!empty($workOrderSupplier)) {
+            $workOrderExpenseDataProvider->criteria->addCondition("supplier.name LIKE :supplier_name");
+            $workOrderExpenseDataProvider->criteria->params[':supplier_name'] = "%{$workOrderSupplier}%";
+        }
+
+        if (!empty($workOrderNumber)) {
+            $workOrderExpenseDataProvider->criteria->addCondition("registrationTransaction.work_order_number LIKE :work_order_number");
+            $workOrderExpenseDataProvider->criteria->params[':work_order_number'] = "%{$workOrderNumber}%";
+        }
+
+        if (!empty($customerName)) {
+            $workOrderExpenseDataProvider->criteria->addCondition("customer.name LIKE :customer_name");
+            $workOrderExpenseDataProvider->criteria->params[':customer_name'] = "%{$customerName}%";
+        }
+
+        if (!empty($plateNumber)) {
+            $workOrderExpenseDataProvider->criteria->addCondition("vehicle.plate_number LIKE :plate_number");
+            $workOrderExpenseDataProvider->criteria->params[':plate_number'] = "%{$plateNumber}%";
+        }
 
         $this->render('admin', array(
             'paymentOut' => $paymentOut,
@@ -358,8 +393,11 @@ class PaymentOutController extends Controller {
             'paymentApproval' => $paymentApproval,
             'workOrderExpense' => $workOrderExpense,
             'workOrderExpenseDataProvider' => $workOrderExpenseDataProvider,
-            'itemRequest' => $itemRequest,
-            'itemRequestDataProvider' => $itemRequestDataProvider,
+            'workOrderSupplier' => $workOrderSupplier,
+            'workOrderNumber' => $workOrderNumber,
+            'customerName' => $customerName,
+            'plateNumber' => $plateNumber,
+            'receivableSupplier' => $receivableSupplier,
         ));
     }
 

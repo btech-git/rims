@@ -68,7 +68,7 @@ class ReceivableCustomerController extends Controller {
         $dataProvider = InvoiceHeader::model()->searchByReport();
         $dataProvider->criteria->addBetweenCondition('t.invoice_date', $startDate, $endDate);
         $dataProvider->criteria->compare('t.customer_id', $customerId);
-        $dataProvider->criteria->addCondition("t.user_id_cancelled IS NULL");
+        $dataProvider->criteria->addCondition("t.user_id_cancelled IS NULL AND t.payment_left > 100");
         
         $customer = Customer::model()->findByPk($customerId);
         
@@ -81,6 +81,28 @@ class ReceivableCustomerController extends Controller {
             'endDate' => $endDate,
             'customer' => $customer,
             'customerId' => $customerId,
+        ));
+    }
+
+    public function actionTransactionRetailInfo($endDate) {
+        set_time_limit(0);
+        ini_set('memory_limit', '1024M');
+
+        $startDate = AppParam::BEGINNING_TRANSACTION_DATE;
+        $dataProvider = InvoiceHeader::model()->searchByReport();
+        $dataProvider->criteria->addBetweenCondition('t.invoice_date', $startDate, $endDate);
+        $dataProvider->criteria->addCondition("t.user_id_cancelled IS NULL AND t.payment_left > 100");
+        $dataProvider->criteria->together = 'true';
+        $dataProvider->criteria->with = array('customer');
+        $dataProvider->criteria->addSearchCondition('customer.customer_type', 'Individual');
+        
+//        if (isset($_GET['SaveExcelDetail'])) {
+//            $this->saveToExcelDetailTransaction($dataProvider, $endDate, $customer);
+//        }
+
+        $this->render('transactionRetailInfo', array(
+            'dataProvider' => $dataProvider,
+            'endDate' => $endDate,
         ));
     }
 

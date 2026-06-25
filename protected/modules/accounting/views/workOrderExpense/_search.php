@@ -104,10 +104,10 @@
             <div class="field">
                 <div class="row collapse">
                     <div class="small-4 columns">
-                        <?php echo $form->label($model,'branch_id', array('class'=>'prefix')); ?>
+                        <?php echo CHtml::label('WO #', '', array('class'=>'prefix')); ?>
                     </div>
                     <div class="small-8 columns">
-                        <?php echo CHtml::activeDropDownList($model, 'branch_id', CHtml::listData(Branch::model()->findAllByPk(Yii::app()->user->branch_ids, array('order' => 'name')), 'id', 'name'), array('empty' => '-- All --')); ?>
+                        <?php echo CHtml::textField('WorkOrderNumber', $workOrderNumber); ?>
                     </div>
                 </div>
             </div>	

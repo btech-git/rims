@@ -106,11 +106,6 @@
                                         'visible' => Yii::app()->user->checkAccess('director')
                                     ),
                                     array(
-                                        'label' => 'Penjualan Body Repair', 
-                                        'url' => array('/report/bodyRepairCosting/summary'), 
-                                        'visible' => Yii::app()->user->checkAccess('director')
-                                    ),
-                                    array(
                                         'label' => 'Transaksi Harian', 
                                         'url' => array('/report/dailyTransaction/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('director')
@@ -123,6 +118,11 @@
                                     array(
                                         'label' => 'Konfirmasi Transaksi Harian', 
                                         'url' => array('/report/dailyTransactionConfirmation/summary'), 
+                                        'visible' => Yii::app()->user->checkAccess('director')
+                                    ),
+                                    array(
+                                        'label' => 'Penjualan Body Repair', 
+                                        'url' => array('/report/bodyRepairCosting/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('director')
                                     ),
                                     array(

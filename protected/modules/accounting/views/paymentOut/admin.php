@@ -158,12 +158,17 @@ $('.search-form form').submit(function(){
                     'content' => $this->renderPartial('_viewReceivable', array(
                         'receiveItem' => $receiveItem,
                         'receiveItemDataProvider' => $receiveItemDataProvider,
+                        'receivableSupplier' => $receivableSupplier,
                     ), true)
                 ),
                 'Biaya Sub Pekerjaan' => array(
                     'content' => $this->renderPartial('_viewWorkExpense', array(
                         'workOrderExpense' => $workOrderExpense,
                         'workOrderExpenseDataProvider' => $workOrderExpenseDataProvider,
+                        'workOrderSupplier' => $workOrderSupplier,
+                        'workOrderNumber' => $workOrderNumber,
+                        'customerName' => $customerName,
+                        'plateNumber' => $plateNumber,
                     ), true)
                 ),
 //                'Pembelian non stok' => array(

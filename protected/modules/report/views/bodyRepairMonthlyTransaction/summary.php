@@ -1,6 +1,7 @@
 <?php
 Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/transaction/report.css');
 ?>
+
 <style> 
  .table_wrapper{
     display: block;

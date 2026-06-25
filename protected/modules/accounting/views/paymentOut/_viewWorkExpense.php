@@ -27,18 +27,22 @@
             array(
                 'name' => 'supplier_id',
                 'header' => 'Supplier',
+                'filter' => CHtml::textField('WorkOrderSupplier', $workOrderSupplier),
                 'value' => '$data->supplier->name',
             ),
             array(
                 'header'=>'WO #', 
+                'filter' => CHtml::textField('WorkOrderNumber', $workOrderNumber),
                 'value'=>'empty($data->registration_transaction_id) ? "" : $data->registrationTransaction->work_order_number', 
             ),
             array(
                 'header' => 'Customer',
+                'filter' => CHtml::textField('CustomerName', $customerName),
                 'value' => 'CHtml::value($data, "registrationTransaction.customer.name")',
             ),
             array(
                 'header' => 'Plate #',
+                'filter' => CHtml::textField('PlateNumber', $plateNumber),
                 'value' => 'CHtml::value($data, "registrationTransaction.vehicle.plate_number")',
             ),
             array(

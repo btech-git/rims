@@ -450,13 +450,20 @@ class TransactionPurchaseOrderController extends Controller {
         
         $dataProvider->criteria->addBetweenCondition('SUBSTRING(t.purchase_order_date, 1, 10)', $startDate, $endDate);
 
+        $supplier = new Supplier('search');
+        $supplier->unsetAttributes();  // clear any default values
+        if (isset($_GET['Supplier'])) {
+            $supplier->attributes = $_GET['Supplier'];
+        }
+        $supplierDataProvider = $supplier->search();
+
         $this->render('admin', array(
             'model' => $model,
             'dataProvider' => $dataProvider,
             'startDate' => $startDate,
             'endDate' => $endDate,
-//            'request' => $request,
-//            'requestDataProvider' => $requestDataProvider,
+            'supplier' => $supplier,
+            'supplierDataProvider' => $supplierDataProvider,
         ));
     }
 

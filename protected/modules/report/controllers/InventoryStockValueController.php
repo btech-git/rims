@@ -226,12 +226,14 @@ class InventoryStockValueController extends Controller {
         $worksheet->getStyle("A5:{$column}5")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
         $counter = 6;
+        $totalStockSum = '0.00';
+        $totalAmountSum = '0.00';
         foreach ($dataProvider->data as $header) {
             $worksheet->getStyle("C{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
 
             $inventoryTotalQuantities = $header->getInventoryTotalQuantitiesByPeriodic($endDate);
-            $totalStock = 0;
-            $totalAmount = 0; 
+            $totalStock = '0.00';
+            $totalAmount = '0.00'; 
 
             $column = 'G'; 
             $worksheet->setCellValue("A{$counter}", CHtml::value($header, 'id'));
@@ -241,8 +243,8 @@ class InventoryStockValueController extends Controller {
             $worksheet->setCellValue("E{$counter}", CHtml::value($header, 'productMasterCategory.name') . ' - ' . CHtml::value($header, 'productSubMasterCategory.name') . ' - ' . CHtml::value($header, 'productSubCategory.name'));
             $worksheet->setCellValue("F{$counter}", CHtml::value($header, 'unit.name'));
             foreach ($branches as $branch) {
-                $stockValue = 0;
-                $stockAmount = 0;
+                $stockValue = '0.00';
+                $stockAmount = '0.00';
                 foreach ($inventoryTotalQuantities as $i => $inventoryTotalQuantity) {
                     if ($inventoryTotalQuantity['branch_id'] == $branch->id) {
                         $stockValue = CHtml::value($inventoryTotalQuantities[$i], 'total_stock');
@@ -260,9 +262,18 @@ class InventoryStockValueController extends Controller {
             $column++;
             $worksheet->setCellValue("{$column}{$counter}", $totalAmount);
 
+            $totalStockSum += $totalStock;
+            $totalAmountSum += $totalAmount;
             $counter++;
-
         }
+        
+        $columnfooter = 'G';
+        foreach ($branches as $branch) { 
+            $columnfooter++;$columnfooter++;
+        }
+        $worksheet->setCellValue("{$columnfooter}{$counter}", $totalStockSum);
+        $columnfooter++;
+        $worksheet->setCellValue("{$columnfooter}{$counter}", $totalAmountSum);
         
         for ($col = 'A'; $col !== 'Z'; $col++) {
             $objPHPExcel->getActiveSheet()

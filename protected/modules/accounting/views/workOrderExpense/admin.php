@@ -77,6 +77,7 @@ $('.search-form form').submit(function(){
                     'endDate' => $endDate,
                     'customerId' => $customerId,
                     'plateNumber' => $plateNumber,
+                    'workOrderNumber' => $workOrderNumber,
                     'customer' => $customer,
                     'customerDataProvider' => $customerDataProvider,
                     'supplier' => $supplier,

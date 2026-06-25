@@ -11,6 +11,14 @@ Yii::app()->clientScript->registerScript('search', "
 ");
 ?>
 
+<style> 
+ .table_wrapper{
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+}
+</style>
+
 <div>
     <?php echo CHtml::beginForm(array(''), 'get'); ?>
     

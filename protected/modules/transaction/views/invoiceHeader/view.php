@@ -14,6 +14,11 @@ $this->breadcrumbs = array(
         <?php $ccontroller = Yii::app()->controller->id; ?>
         <?php $ccaction = Yii::app()->controller->action->id; ?>
 
+        <?php echo CHtml::link('<span class="fa fa-list"></span>Manage', array("/transaction/invoiceHeader/admin"), array(
+            'class' => 'button cbutton left', 
+            'style' => 'margin-left:10px', 
+        )); ?>
+        
         <?php if ($model->status !== 'CANCELLED!!!'): ?>
             <?php if (Yii::app()->user->checkAccess("salesHead")): ?>
                 <?php echo CHtml::link('<span class="fa fa-minus"></span>Cancel Transaction', array("/transaction/invoiceHeader/cancel", "id" => $model->id), array(
@@ -31,7 +36,7 @@ $this->breadcrumbs = array(
         
         <?php if (Yii::app()->user->checkAccess("saleInvoiceEdit")): ?>
             <?php echo CHtml::link('<span class="fa fa-pencil"></span>Edit', array("/transaction/invoiceHeader/update", "id" => $model->id), array(
-                'class' => 'button primary right', 
+                'class' => 'button warning right', 
                 'style' => 'margin-right:10px', 
             )); ?>
         <?php endif; ?>
@@ -45,16 +50,18 @@ $this->breadcrumbs = array(
 
         <?php if ($model->status != 'PAID'): ?> 
             <?php echo CHtml::link('<span class="fa fa-print"></span>Print Invoice', array("pdf", "id" => $model->id), array(
-                'class' => 'button warning right', 
+                'class' => 'button success right', 
                 'style' => 'margin-right:10px', 
             )); ?>
         <?php else: ?>
             <?php echo CHtml::link('<span class="fa fa-print"></span>Print Tanda Terima', array("pdfPayment", "id" => $model->id), array(
-                    'class' => 'button warning right', 
-                    'style' => 'margin-right:10px', 
-                )); ?>
+                'class' => 'button success right', 
+                'style' => 'margin-right:10px', 
+            )); ?>
         <?php endif; ?>
 
+        <br /><hr />
+        
         <h1>View Invoice #<?php echo $model->invoice_number; ?></h1>
 
         <table>

@@ -32,6 +32,7 @@
             array(
                 'name' => 'supplier_name',
                 'header' => 'Supplier',
+                'filter' => CHtml::textField('ReceivableSupplier', $receivableSupplier),
                 'value' => 'empty($data->supplier_id) ? "N/A" :$data->supplier->name',
             ),
             array(

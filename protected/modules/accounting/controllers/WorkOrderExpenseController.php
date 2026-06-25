@@ -274,6 +274,7 @@ class WorkOrderExpenseController extends Controller {
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : '';
         $customerId = (isset($_GET['CustomerId'])) ? $_GET['CustomerId'] : '';
         $plateNumber = (isset($_GET['PlateNumber'])) ? $_GET['PlateNumber'] : '';
+        $workOrderNumber = (isset($_GET['WorkOrderNumber'])) ? $_GET['WorkOrderNumber'] : '';
 
         if (isset($_GET['pageSize'])) {
             Yii::app()->user->setState('pageSize', (int) $_GET['pageSize']);
@@ -293,6 +294,10 @@ class WorkOrderExpenseController extends Controller {
         
         if (!empty($customerId)) {
             $dataProvider->criteria->compare('registrationTransaction.customer_id', $customerId);
+        }
+        
+        if (!empty($workOrderNumber)) {
+            $dataProvider->criteria->compare('registrationTransaction.work_order_number', $workOrderNumber, true);
         }
         
         if (!empty($plateNumber)) {
@@ -319,6 +324,7 @@ class WorkOrderExpenseController extends Controller {
             'endDate' => $endDate,
             'customerId' => $customerId,
             'plateNumber' => $plateNumber,
+            'workOrderNumber' => $workOrderNumber,
             'customer' => $customer,
             'customerDataProvider' => $customerDataProvider,
             'supplier' => $supplier,

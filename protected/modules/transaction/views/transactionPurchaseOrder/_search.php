@@ -82,6 +82,7 @@
                 </div>
             </div>
         </div>
+        
         <div class="small-12 medium-6 columns">
             <div class="field">
                 <div class="row collapse">
@@ -90,7 +91,13 @@
                     </div>
                     
                     <div class="small-8 columns">
-                        <?php echo $form->textField($model, 'supplier_name'); ?>
+                        <?php echo $form->hiddenField($model, 'supplier_id'); ?>
+                        <?php echo $form->textField($model, 'supplier_name', array(
+                            'readonly' => true,
+                            'onclick' => '$("#supplier-dialog").dialog("open"); return false;',
+                            'onkeypress' => 'if (event.keyCode == 13) { $("#supplier-dialog").dialog("open"); return false; }',
+                            'value' => $model->supplier_id == "" ? '' : Supplier::model()->findByPk($model->supplier_id)->name
+                        )); ?>
                     </div>
                 </div>
             </div>
@@ -129,7 +136,50 @@
             </div>
         </div>
     </div>
+    <?php $this->endWidget(); ?>
+</div>
 
-<?php $this->endWidget(); ?>
+<div>
+    <?php $this->beginWidget('zii.widgets.jui.CJuiDialog', array(
+        'id' => 'supplier-dialog',
+        // additional javascript options for the dialog plugin
+        'options' => array(
+            'title' => 'Supplier',
+            'autoOpen' => false,
+            'width' => 'auto',
+            'modal' => true,
+        ),
+    )); ?>
 
-</div><!-- search-form -->
+    <?php $this->widget('zii.widgets.grid.CGridView', array(
+        'id' => 'supplier-grid',
+        'dataProvider' => $supplierDataProvider,
+        'filter' => $supplier,
+        'template' => '{items}<div class="clearfix">{summary}{pager}</div>',
+        'pager' => array(
+            'cssFile' => false,
+            'header' => '',
+        ),
+        'selectionChanged' => 'js:function(id){
+            $("#TransactionPurchaseOrder_supplier_id").val($.fn.yiiGridView.getSelection(id));
+            $("#supplier-dialog").dialog("close");
+            $.ajax({
+                type: "POST",
+                dataType: "JSON",
+                url: "' . CController::createUrl('ajaxSupplier', array('id' => '')) . '" + $.fn.yiiGridView.getSelection(id),
+                data: $("form").serialize(),
+                success: function(data) {
+                    $("#TransactionPurchaseOrder_supplier_name").val(data.name);
+                },
+            });
+        }',
+        'columns' => array(
+            'name',
+            'company',
+            'address',
+            'email_company',
+            'mobile_phone',
+        )
+    )); ?>
+    <?php $this->endWidget(); ?>
+</div>

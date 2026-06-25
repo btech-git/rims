@@ -26,22 +26,23 @@ Yii::app()->clientScript->registerCss('_report', '
 
     <br />
 
-    <table style="width: 100%; margin: 0 auto; border-spacing: 0pt">
-        <thead style="position: sticky; top: 0">
-            <tr>
-                <th style="text-align: center; font-weight: bold; border-bottom: 1px solid; width: 15%">Tanggal</th>
-                <th style="text-align: center; font-weight: bold; border-bottom: 1px solid; width: 15%">Transaksi #</th>
-                <th style="text-align: center; font-weight: bold; border-bottom: 1px solid">Keterangan</th>
-                <th style="text-align: center; font-weight: bold; border-bottom: 1px solid; width: 15%">Debit</th>
-                <th style="text-align: center; font-weight: bold; border-bottom: 1px solid; width: 15%">Credit</th>
-                <th style="text-align: center; font-weight: bold; border-bottom: 1px solid; width: 15%">Saldo</th>
-            </tr>
-        </thead>
-        
-        <tbody>
-            <?php foreach ($receivableDetailSummary->dataProvider->data as $header): ?>
-                <?php //$receivableAmount = $header->getReceivableAmount(); ?>
-                <?php //if ($receivableAmount !== 0): ?>
+    <div class="table_wrapper">
+        <table class="responsive">
+            <thead style="position: sticky; top: 0">
+                <tr>
+                    <th style="text-align: center; font-weight: bold; border-bottom: 1px solid; width: 15%">Tanggal</th>
+                    <th style="text-align: center; font-weight: bold; border-bottom: 1px solid; width: 15%">Transaksi #</th>
+                    <th style="text-align: center; font-weight: bold; border-bottom: 1px solid">Keterangan</th>
+                    <th style="text-align: center; font-weight: bold; border-bottom: 1px solid; width: 15%">Debit</th>
+                    <th style="text-align: center; font-weight: bold; border-bottom: 1px solid; width: 15%">Credit</th>
+                    <th style="text-align: center; font-weight: bold; border-bottom: 1px solid; width: 15%">Saldo</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <?php $totalDebit = '0.00'; ?>
+                <?php $totalCredit = '0.00'; ?>
+                <?php foreach ($receivableDetailSummary->dataProvider->data as $header): ?>
                     <tr>
                         <td colspan="5" style="text-align: center; font-weight: bold">
                             <?php echo CHtml::encode(CHtml::value($header, 'code')); ?> - 
@@ -56,28 +57,45 @@ Yii::app()->clientScript->registerCss('_report', '
                     <?php $receivableData = $header->getReceivableDetailReport($endDate, $branchId); ?>
                     <?php foreach ($receivableData as $receivableRow): ?>
                         <?php $transactionNumber = $receivableRow['kode_transaksi']; ?>
-                        <?php $amount = $receivableRow['amount']; ?>
                         <?php if ($receivableRow['transaction_type'] == 'D'): ?>
-                            <?php $saldo += $amount; ?>
+                            <?php $amountDebit = $receivableRow['amount']; ?>
+                            <?php $amountCredit = '0.00'; ?>
+                            <?php $saldo += $amountDebit; ?>
                         <?php else: ?>
-                            <?php $saldo -= $amount; ?>
+                            <?php $amountDebit = '0.00'; ?>
+                            <?php $amountCredit = $receivableRow['amount']; ?>
+                            <?php $saldo -= $amountCredit; ?>
                         <?php endif; ?>
-                    
+
                         <tr class="items2">
                             <td><?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($receivableRow['tanggal_transaksi']))); ?></td>
                             <td><?php echo CHtml::link($transactionNumber, Yii::app()->createUrl("report/receivableDetail/redirectTransaction", array("codeNumber" => $transactionNumber)), array('target' => '_blank')); ?></td>
                             <td><?php echo CHtml::encode($receivableRow['remark']); ?></td>
                             <td style="text-align: right">
-                                <?php echo $receivableRow['transaction_type'] == 'D' ? Yii::app()->numberFormatter->format('#,##0', $amount) : 0; ?>
+                                <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $amountDebit)); ?>
                             </td>
                             <td style="text-align: right">
-                                <?php echo $receivableRow['transaction_type'] == 'K' ? Yii::app()->numberFormatter->format('#,##0', $amount) : 0; ?>
+                                <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $amountCredit)); ?>
                             </td>
                             <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $saldo)); ?></td>
                         </tr>
+                        <?php $totalDebit += $amountDebit; ?>
+                        <?php $totalCredit += $amountCredit; ?>
                     <?php endforeach; ?>
-                <?php //endif; ?>
-            <?php endforeach; ?>
-        </tbody>
-    </table>
+                <?php endforeach; ?>
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="3" style="font-weight: bold; text-align: right">Total</td>
+                    <td style="font-weight: bold; text-align: right">
+                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalDebit)); ?>
+                    </td>
+                    <td style="font-weight: bold; text-align: right">
+                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalCredit)); ?>
+                    </td>
+                    <td>&nbsp;</td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
 </div>

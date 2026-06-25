@@ -186,6 +186,9 @@ class ReceivableController extends Controller {
         $worksheet->setCellValue('L5', 'Remaining');
         $counter = 6;
 
+        $totalRevenueSum = '0.00';
+        $totalPaymentSum = '0.00';
+        $totalReceivableSum = '0.00';
         foreach ($receivableSummary->dataProvider->data as $customer) {
             $totalRevenue = '0.00';
             $totalPayment = '0.00';
@@ -216,18 +219,25 @@ class ReceivableController extends Controller {
                 $totalReceivable += $paymentLeft;
             }
             
-            $worksheet->getStyle("A{$counter}:L{$counter}")->getFont()->setBold(true);
-            $worksheet->getStyle("A{$counter}:L{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
-            $worksheet->getStyle("A{$counter}:L{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
+            $worksheet->getStyle("A{$counter}:O{$counter}")->getFont()->setBold(true);
+            $worksheet->getStyle("A{$counter}:O{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
             $worksheet->mergeCells("A{$counter}:I{$counter}");
             
             $worksheet->setCellValue("A{$counter}", 'Total');
-            $worksheet->setCellValue("J{$counter}", $totalRevenue);
-            $worksheet->setCellValue("K{$counter}", $totalPayment);
-            $worksheet->setCellValue("L{$counter}", $totalReceivable);
+            $worksheet->setCellValue("M{$counter}", $totalRevenue);
+            $worksheet->setCellValue("N{$counter}", $totalPayment);
+            $worksheet->setCellValue("O{$counter}", $totalReceivable);
 
             $counter++;$counter++;
+
+            $totalRevenueSum += $totalRevenue;
+            $totalPaymentSum += $totalPayment;
+            $totalReceivableSum += $totalReceivable;
         }
+        $worksheet->setCellValue("A{$counter}", 'Total');
+        $worksheet->setCellValue("M{$counter}", $totalRevenueSum);
+        $worksheet->setCellValue("N{$counter}", $totalPaymentSum);
+        $worksheet->setCellValue("O{$counter}", $totalReceivableSum);
 
         for ($col = 'A'; $col !== 'Z'; $col++) {
             $objPHPExcel->getActiveSheet()

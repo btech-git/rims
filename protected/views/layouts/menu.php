@@ -732,7 +732,7 @@
                     array(
                         'label' => 'Absensi Karyawan Tahunan', 
                         'url' => array('/report/employeeYearlyAttendance/summary'), 
-                        'visible' => Yii::app()->user->checkAccess('yearlyEmployeeAbsencyReport')
+                        'visible' => Yii::app()->user->checkAccess('employeeAbsencyReport')
                     ),
                     array(
                         'label' => 'Ulang Tahun Karyawan', 

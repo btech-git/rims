@@ -309,7 +309,6 @@
                                     'onkeypress' => 'if (event.keyCode == 13) { $("#supplier-dialog").dialog("open"); return false; }',
                                     'value' => $purchaseOrder->header->supplier_id == "" ? '' : Supplier::model()->findByPk($purchaseOrder->header->supplier_id)->name
                                 )); ?>
-
                                 <?php echo $form->error($purchaseOrder->header, 'supplier_id'); ?>
                             </div>
                         <?php /*else: ?>
@@ -627,15 +626,10 @@
         }',
         'columns' => array(
             'name',
+            'company',
+            'address',
             'email_company',
-            array(
-                'header' => 'Phone',
-                'value' => 'empty($data->supplierMobiles) ? "" : $data->supplierMobiles[0]->mobile_no',
-            ),
-            array(
-                'header' => 'PIC',
-                'value' => 'empty($data->supplierPics) ? "" : $data->supplierPics[0]->name',
-            ),
+            'mobile_phone',
         )
     )); ?>
     <?php $this->endWidget(); ?>

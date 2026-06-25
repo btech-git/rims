@@ -20,23 +20,13 @@ Yii::app()->clientScript->registerCss('_report', '
 <div class="tab reportTab">
     <div class="tabHead">
         <div style="font-size: larger; font-weight: bold; text-align: center">
-            Laporan Transaksi Piutang Customer
-        </div>
-        <div style="font-size: larger; font-weight: bold; text-align: center">
-            <?php echo CHtml::encode(CHtml::value($customer, 'name')); ?>
+            Laporan Transaksi Piutang Customer Retail
         </div>
         <div style="font-size: larger; font-weight: bold; text-align: center">
             <?php echo 'Per Tanggal: ' . CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($endDate))); ?>
         </div>
     </div>
     
-    <div class="clear"></div>
-    <?php echo CHtml::beginForm('', 'get'); ?>
-        <div class="row buttons">
-            <?php echo CHtml::submitButton('Simpan ke Excel', array('name' => 'SaveExcelDetail')); ?>
-        </div>
-    <?php echo CHtml::endForm(); ?>
-
     <br /> 
     
     <div class="tabBody">
@@ -54,6 +44,7 @@ Yii::app()->clientScript->registerCss('_report', '
                             <th class="width1-1">Invoice #</th>
                             <th class="width1-2">Tanggal</th>
                             <th class="width1-3">Jatuh Tempo</th>
+                            <th class="width1-4">Customer</th>
                             <th class="width1-4">Asuransi</th>
                             <th class="width1-5">Plat #</th>
                             <th class="width1-6">Kendaraan</th>
@@ -79,6 +70,7 @@ Yii::app()->clientScript->registerCss('_report', '
                                 </td>
                                 <td><?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($header->invoice_date))); ?></td>
                                 <td><?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($header->due_date))); ?></td>
+                                <td><?php echo CHtml::encode(CHtml::value($header, 'customer.name')); ?></td>
                                 <td><?php echo CHtml::encode(CHtml::value($header, 'insuranceCompany.name')); ?></td>
                                 <td><?php echo CHtml::encode(CHtml::value($header, 'vehicle.plate_number')); ?></td>
                                 <td>
@@ -103,7 +95,7 @@ Yii::app()->clientScript->registerCss('_report', '
                     </tbody>
                     <tfoot>
                         <tr>
-                            <td colspan="6" style="text-align: right; font-weight: bold">Total</td>
+                            <td colspan="7" style="text-align: right; font-weight: bold">Total</td>
                             <td style="text-align: right; font-weight: bold">
                                 <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalPriceSum)); ?>
                             </td>

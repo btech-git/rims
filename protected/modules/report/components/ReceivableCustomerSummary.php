@@ -22,8 +22,8 @@ class ReceivableCustomerSummary extends CComponent {
     }
 
     public function setupSorting() {
-        $this->dataProvider->sort->attributes = array('t.name');
-        $this->dataProvider->criteria->order = $this->dataProvider->sort->orderBy;
+//        $this->dataProvider->sort->attributes = array('t.name');
+        $this->dataProvider->criteria->order = 't.name ASC'; //$this->dataProvider->sort->orderBy;
     }
 
     public function setupFilter($filters) {

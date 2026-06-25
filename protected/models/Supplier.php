@@ -92,7 +92,7 @@ class Supplier extends CActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('code, name, company, address, province_id, city_id, zipcode, email_personal, email_company, npwp, tenor, user_id', 'required'),
+            array('code, name, company, province_id, city_id, user_id', 'required'),
             array('province_id, city_id, tenor, coa_id, coa_outstanding_order, is_approved, user_id, user_id_approved, user_id_rejected, user_id_updated, user_id_deleted, is_deleted', 'numerical', 'integerOnly' => true),
             array('code, npwp', 'length', 'max' => 20),
             array('name, company, position', 'length', 'max' => 30),

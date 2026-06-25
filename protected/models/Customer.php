@@ -518,7 +518,8 @@ class Customer extends CActiveRecord {
             SELECT COALESCE(SUM(i.total_price), 0) AS total_receivable
             FROM " . InvoiceHeader::model()->tableName() . " i
             INNER JOIN " . Customer::model()->tableName() . " c ON c.id = i.customer_id
-            WHERE c.customer_type = 'Individual' AND i.user_id_cancelled IS NULL  AND i.invoice_date BETWEEN '" . AppParam::BEGINNING_TRANSACTION_DATE . " ' AND :end_date" . $branchConditionSql . "
+            WHERE c.customer_type = 'Individual' AND i.user_id_cancelled IS NULL AND i.payment_left > 100 AND 
+                i.invoice_date BETWEEN '" . AppParam::BEGINNING_TRANSACTION_DATE . " ' AND :end_date" . $branchConditionSql . "
         ";
 
         $value = Yii::app()->db->createCommand($sql)->queryScalar($params);
@@ -542,7 +543,8 @@ class Customer extends CActiveRecord {
             SELECT COALESCE(SUM(i.payment_amount), 0) AS total_payment
             FROM " . InvoiceHeader::model()->tableName() . " i
             INNER JOIN " . Customer::model()->tableName() . " c ON c.id = i.customer_id
-            WHERE c.customer_type = 'Individual' AND i.user_id_cancelled IS NULL  AND i.invoice_date BETWEEN '" . AppParam::BEGINNING_TRANSACTION_DATE . " ' AND :end_date" . $branchConditionSql . "
+            WHERE c.customer_type = 'Individual' AND i.user_id_cancelled IS NULL AND i.payment_left > 100 AND 
+                i.invoice_date BETWEEN '" . AppParam::BEGINNING_TRANSACTION_DATE . " ' AND :end_date" . $branchConditionSql . "
         ";
 
         $value = Yii::app()->db->createCommand($sql)->queryScalar($params);
@@ -566,7 +568,8 @@ class Customer extends CActiveRecord {
             SELECT COALESCE(SUM(i.payment_left), 0) AS total_remaining
             FROM " . InvoiceHeader::model()->tableName() . " i
             INNER JOIN " . Customer::model()->tableName() . " c ON c.id = i.customer_id
-            WHERE c.customer_type = 'Individual' AND i.user_id_cancelled IS NULL AND i.invoice_date BETWEEN '" . AppParam::BEGINNING_TRANSACTION_DATE . " ' AND :end_date" . $branchConditionSql . "
+            WHERE c.customer_type = 'Individual' AND i.user_id_cancelled IS NULL AND i.payment_left > 100 AND 
+                i.invoice_date BETWEEN '" . AppParam::BEGINNING_TRANSACTION_DATE . " ' AND :end_date" . $branchConditionSql . "
         ";
 
         $value = Yii::app()->db->createCommand($sql)->queryScalar($params);
@@ -591,8 +594,8 @@ class Customer extends CActiveRecord {
             SELECT p.customer_id, COALESCE(SUM(p.total_price), 0) AS total_price, COALESCE(SUM(p.payment_amount), 0) AS payment_amount, 
                 COALESCE(SUM(p.payment_left), 0) AS payment_left
             FROM " . InvoiceHeader::model()->tableName() . " p 
-            WHERE p.customer_id = :customer_id AND p.invoice_date BETWEEN '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND :end_date AND p.user_id_cancelled IS NULL" . $branchConditionSql . "
-            GROUP BY p.customer_id
+            WHERE p.customer_id = :customer_id AND p.invoice_date BETWEEN '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND :end_date AND
+                p.user_id_cancelled IS NULL AND p.payment_left > 100" . $branchConditionSql . "
         ";
 
         $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);

@@ -1,47 +1,30 @@
 <?php
-/* @var $this TransactionPurchaseOrderController */
-/* @var $model TransactionPurchaseOrder */
-
 $this->breadcrumbs=array(
-	'Transaction Purchase Orders'=>array('admin'),
+	'Purchase Orders'=>array('admin'),
 	'Manage',
 );
 
-$this->menu=array(
-	array('label'=>'List TransactionPurchaseOrder', 'url'=>array('index')),
-	array('label'=>'Create TransactionPurchaseOrder', 'url'=>array('create')),
-);
-
-// Yii::app()->clientScript->registerScript('search', "
-// $('.search-button').click(function(){
-// 	$('.search-form').toggle();
-// 	return false;
-// });
-// $('.search-form form').submit(function(){
-// 	$('#transaction-purchase-order-grid').yiiGridView('update', {
-// 		data: $(this).serialize()
-// 	});
-// 	return false;
-// });
-// ");
 Yii::app()->clientScript->registerScript('search', "
-	$('.search-button').click(function(){
-		$('.search-form').slideToggle(600);
-		$('.bulk-action').toggle();
-		$(this).toggleClass('active');
-		if($(this).hasClass('active')){
-			$(this).text('');
-		}else {
-			$(this).text('Advanced Search');
-		}
-		return false;
-	});
-	$('.search-form form').submit(function(){
-		$('#transaction-purchase-order-grid').yiiGridView('update', {
-			data: $(this).serialize()
-		});
-		return false;
-	});
+    $('.search-button').click(function(){
+        $('.search-form').slideToggle(600);
+        $('.bulk-action').toggle();
+        $(this).toggleClass('active');
+        
+        if ($(this).hasClass('active')){
+            $(this).text('');
+        } else {
+            $(this).text('Advanced Search');
+        }
+        
+        return false;
+    });
+    $('.search-form form').submit(function(){
+        $('#transaction-purchase-order-grid').yiiGridView('update', {
+            data: $(this).serialize()
+        });
+        
+        return false;
+    });
 ");
 ?>
 
@@ -53,11 +36,6 @@ Yii::app()->clientScript->registerScript('search', "
         
         <div class="search-bar">
             <div class="clearfix button-bar">
-            <!--<div class="left clearfix bulk-action">
-                <span class="checkbox"><span class="fa fa-reply fa-rotate-270"></span></span>
-                <input type="submit" value="Archive" class="button secondary cbutton" name="archive">         
-                <input type="submit" value="Delete" class="button secondary cbutton" name="delete">      
-            </div>-->
                 <a href="#" class="search-button right button cbutton secondary">Advanced Search</a>
                 <div class="clearfix"></div>
                 <div class="search-form" style="display:none">
@@ -65,6 +43,8 @@ Yii::app()->clientScript->registerScript('search', "
                         'model'=>$model,
                         'startDate' => $startDate,
                         'endDate' => $endDate,
+                        'supplier' => $supplier,
+                        'supplierDataProvider' => $supplierDataProvider,
                     )); ?>
                 </div><!-- search-form -->				
             </div>

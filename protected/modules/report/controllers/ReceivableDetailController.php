@@ -125,58 +125,54 @@ class ReceivableDetailController extends Controller {
 
         $worksheet->getStyle('A5:F5')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
-        $counter = 7;
+        $counter = 6;
 
+        $totalDebit = '0.00';
+        $totalCredit = '0.00';
         foreach ($receivableDetailSummary->data as $header) {
 //            $receivableAmount = $header->getReceivableAmount();
 //            if ($receivableAmount !== 0) {
-                $worksheet->mergeCells("A{$counter}:B{$counter}");
-                $worksheet->mergeCells("C{$counter}:E{$counter}");
-                $worksheet->setCellValue("A{$counter}", CHtml::value($header, 'code'));
-                $worksheet->setCellValue("C{$counter}", CHtml::value($header, 'name'));
-                $saldo = 0; //$header->getBeginningBalanceReceivable($startDate);
-                $worksheet->setCellValue("F{$counter}", $saldo);
-                
-                $counter++;
-                
-                $receivableData = $header->getReceivableDetailReport($endDate, $options['branchId']);
-                
-                foreach ($receivableData as $receivableRow) {
-                    $transactionNumber = $receivableRow['kode_transaksi'];
-                    $amount = $receivableRow['amount'];
-                    if ($receivableRow['transaction_type'] == 'D') {
-                        $saldo += $amount;
-                    } else {
-                        $saldo -= $amount;
-                    }
-                    
-                    $worksheet->setCellValue("A{$counter}", $receivableRow['tanggal_transaksi']);
-                    $worksheet->setCellValue("B{$counter}", $transactionNumber);
-                    $worksheet->setCellValue("C{$counter}", $receivableRow['remark']);
-                    $worksheet->setCellValue("D{$counter}", $receivableRow['transaction_type'] == 'D' ? $amount : 0);
-                    $worksheet->setCellValue("E{$counter}", $receivableRow['transaction_type'] == 'K' ? $amount : 0);
-                    $worksheet->setCellValue("F{$counter}", $saldo);
-                    
-                    $counter++;
+            $worksheet->mergeCells("A{$counter}:B{$counter}");
+            $worksheet->mergeCells("C{$counter}:E{$counter}");
+            $worksheet->setCellValue("A{$counter}", CHtml::value($header, 'code'));
+            $worksheet->setCellValue("C{$counter}", CHtml::value($header, 'name'));
+            $saldo = 0; //$header->getBeginningBalanceReceivable($startDate);
+            $worksheet->setCellValue("F{$counter}", $saldo);
+
+            $counter++;
+
+            $receivableData = $header->getReceivableDetailReport($endDate, $options['branchId']);
+
+            foreach ($receivableData as $receivableRow) {
+                $transactionNumber = $receivableRow['kode_transaksi'];
+                if ($receivableRow['transaction_type'] == 'D') {
+                    $amountDebit = $receivableRow['amount'];
+                    $amountCredit = '0.00';
+                    $saldo += $amountDebit;
+                } else {
+                    $amountDebit = '0.00';
+                    $amountCredit = $receivableRow['amount']; 
+                    $saldo -= $amountCredit;
                 }
-                
-//                $worksheet->mergeCells("A{$counter}:F{$counter}");
-//                $worksheet->setCellValue("A{$counter}", "Total Penambahan");
-//                $worksheet->setCellValue("G{$counter}", $positiveAmount));
+
+                $worksheet->setCellValue("A{$counter}", $receivableRow['tanggal_transaksi']);
+                $worksheet->setCellValue("B{$counter}", $transactionNumber);
+                $worksheet->setCellValue("C{$counter}", $receivableRow['remark']);
+                $worksheet->setCellValue("D{$counter}", $amountDebit);
+                $worksheet->setCellValue("E{$counter}", $amountCredit);
+                $worksheet->setCellValue("F{$counter}", $saldo);
+
+                $totalDebit += $amountDebit;
+                $totalCredit += $amountCredit;
                 $counter++;
-//                
-//                $worksheet->mergeCells("A{$counter}:F{$counter}");
-//                $worksheet->setCellValue("A{$counter}", "Total Penurunan");
-//                $worksheet->setCellValue("G{$counter}", $negativeAmount));
-//                $counter++;
-//                
-//                $worksheet->mergeCells("A{$counter}:F{$counter}");
-//                $worksheet->setCellValue("A{$counter}", "Perubahan Bersih");
-//                $worksheet->setCellValue("G{$counter}", $saldo));
-//                $counter++; $counter++;
-                
-//            }
+            }
+
+            $counter++;
         }
+        $worksheet->setCellValue("C{$counter}", 'TOTAL');
+        $worksheet->setCellValue("D{$counter}", $totalDebit);
+        $worksheet->setCellValue("E{$counter}", $totalCredit);
+        $worksheet->setCellValue("E{$counter}", $totalDebit - $totalCredit);
             
         for ($col = 'A'; $col !== 'Z'; $col++) {
             $objPHPExcel->getActiveSheet()

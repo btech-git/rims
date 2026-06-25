@@ -25,9 +25,9 @@
         </tr>
     </thead>
     <tbody>
-        <?php $grandTotalRevenue = 0.00; ?>
-        <?php $grandTotalPayment = 0.00; ?>
-        <?php $grandTotalReceivable = 0.00; ?>
+        <?php $grandTotalRevenue = '0.00'; ?>
+        <?php $grandTotalPayment = '0.00'; ?>
+        <?php $grandTotalReceivable = '0.00'; ?>
         <?php $totalReceivableIndividual = Customer::getTotalReceivableIndividual($endDate, $branchId); ?>
         <?php $totalPaymentIndividual = Customer::getTotalPaymentIndividual($endDate, $branchId); ?>
         <?php $totalRemainingIndividual = Customer::getTotalRemainingIndividual($endDate, $branchId); ?>
@@ -35,13 +35,18 @@
             <td colspan="2" style="text-align: center">Individual</td>
             <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalReceivableIndividual)); ?></td>
             <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalPaymentIndividual)); ?></td>
-            <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalRemainingIndividual   )); ?></td>
+            <td style="text-align: right">
+                <?php echo CHtml::link(Yii::app()->numberFormatter->format('#,##0', $totalRemainingIndividual), array(
+                    '/report/receivableCustomer/transactionRetailInfo', 
+                    'endDate' => $endDate,
+                ), array('target' => '_blank')); ?>
+            </td>
         </tr>
         <?php foreach ($receivableSummary->dataProvider->data as $header): ?>
             <?php $receivableData = $header->getReceivableCustomerReport($endDate, $branchId); ?>
-            <?php $totalRevenue = 0.00; ?>
-            <?php $totalPayment = 0.00; ?>
-            <?php $totalReceivable = 0.00; ?>
+            <?php $totalRevenue = '0.00'; ?>
+            <?php $totalPayment = '0.00'; ?>
+            <?php $totalReceivable = '0.00'; ?>
             <?php foreach ($receivableData as $receivableRow): ?>
                 <?php $revenue = $receivableRow['total_price']; ?>
                 <?php $paymentAmount = $receivableRow['payment_amount']; ?>
@@ -55,11 +60,13 @@
                 <th><?php echo CHtml::encode(CHtml::value($header, 'customer_type')); ?></th>
                 <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalRevenue)); ?></td>
                 <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalPayment)); ?></td>
-                <td style="text-align: right"><?php echo CHtml::link(Yii::app()->numberFormatter->format('#,##0', $totalReceivable), array(
-                    '/report/receivableCustomer/transactionInfo', 
-                    'customerId' => $header->id, 
-                    'endDate' => $endDate,
-                ), array('target' => '_blank')); ?></td>
+                <td style="text-align: right">
+                    <?php echo CHtml::link(Yii::app()->numberFormatter->format('#,##0', $totalReceivable), array(
+                        '/report/receivableCustomer/transactionInfo', 
+                        'customerId' => $header->id, 
+                        'endDate' => $endDate,
+                    ), array('target' => '_blank')); ?>
+                </td>
             </tr>
             <?php $grandTotalRevenue += $totalRevenue; ?>
             <?php $grandTotalPayment += $totalPayment; ?>

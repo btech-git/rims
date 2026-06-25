@@ -193,6 +193,9 @@ class WorkOrderExpenseHeader extends MonthlyTransactionActiveRecord {
 
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
+            'pagination' => array(
+                'pageSize' => 50,
+            ),
         ));
     }
     

@@ -10,7 +10,7 @@ class EmployeeYearlyAttendanceController extends Controller {
 
     public function filterAccess($filterChain) {
         if ($filterChain->action->id === 'summary') {
-            if (!(Yii::app()->user->checkAccess('yearlyEmployeeAbsencyReport'))) {
+            if (!(Yii::app()->user->checkAccess('employeeAbsencyReport'))) {
                 $this->redirect(array('/site/login'));
             }
         }

@@ -326,6 +326,12 @@ $this->breadcrumbs = array(
                         'model'=>$model
                     ),TRUE)
                 );
+                $tabsArray['Sub Pekerjaan Luar'] = array(
+                    'id' => 'sub_contractor',
+                    'content' => $this->renderPartial('_viewSubContractor', array(
+                        'model' => $model
+                    ), TRUE)
+                );
                 ?>
                 <?php $this->widget('zii.widgets.jui.CJuiTabs', array(
                     'tabs' => $tabsArray,
