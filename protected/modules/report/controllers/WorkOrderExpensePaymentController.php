@@ -1,6 +1,6 @@
 <?php
 
-class WorkOrderExpenseController extends Controller {
+class WorkOrderExpensePaymentController extends Controller {
 
     public $layout = '//layouts/column1';
     
@@ -33,7 +33,7 @@ class WorkOrderExpenseController extends Controller {
         $currentPage = (isset($_GET['page'])) ? $_GET['page'] : '';
         $currentSort = (isset($_GET['sort'])) ? $_GET['sort'] : '';
 
-        $workOrderExpenseSummary = new WorkOrderExpenseSummary($workOrderExpense->search());
+        $workOrderExpenseSummary = new WorkOrderExpensePaymentSummary($workOrderExpense->search());
         $workOrderExpenseSummary->setupLoading();
         $workOrderExpenseSummary->setupPaging($pageSize, $currentPage);
         $workOrderExpenseSummary->setupSorting();
@@ -74,49 +74,57 @@ class WorkOrderExpenseController extends Controller {
         $worksheet = $objPHPExcel->setActiveSheetIndex(0);
         $worksheet->setTitle('Sub Pekerjaan Luar');
 
-        $worksheet->mergeCells('A1:I1');
-        $worksheet->mergeCells('A2:I2');
-        $worksheet->mergeCells('A3:I3');
-        $worksheet->getStyle('A1:I5')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-        $worksheet->getStyle('A1:I5')->getFont()->setBold(true);
+        $worksheet->mergeCells('A1:M1');
+        $worksheet->mergeCells('A2:M2');
+        $worksheet->mergeCells('A3:M3');
+        $worksheet->getStyle('A1:M5')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->getStyle('A1:M5')->getFont()->setBold(true);
 
         $branch = Branch::model()->findByPk($branchId);
         $worksheet->setCellValue('A1', 'Raperind Motor ' . CHtml::value($branch, 'name'));
-        $worksheet->setCellValue('A2', 'Sub Pekerjaan Luar');
+        $worksheet->setCellValue('A2', 'Sub Pekerjaan Luar Pembayaran');
         $worksheet->setCellValue('A3', Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($options['startDate'])) . ' - ' . Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($options['endDate'])));
 
-        $worksheet->getStyle('A5:I5')->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle('A5:M5')->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
         $worksheet->setCellValue('A5', 'Sub Pekerjaan #');
         $worksheet->setCellValue('B5', 'Tanggal');
         $worksheet->setCellValue('C5', 'RG #');
         $worksheet->setCellValue('D5', 'Supplier');
-        $worksheet->setCellValue('E5', 'Pembuat');
-        $worksheet->setCellValue('F5', 'Note');
-        $worksheet->setCellValue('G5', 'Deskripsi');
-        $worksheet->setCellValue('H5', 'Memo');
-        $worksheet->setCellValue('I5', 'Amount');
+        $worksheet->setCellValue('E5', 'Note');
+        $worksheet->setCellValue('F5', 'Total');
+        $worksheet->setCellValue('G5', 'Payment');
+        $worksheet->setCellValue('H5', 'Remaining');
+        $worksheet->setCellValue('I5', 'Payment #');
+        $worksheet->setCellValue('J5', 'Tanggal');
+        $worksheet->setCellValue('K5', 'Memo');
+        $worksheet->setCellValue('L5', 'Type');
+        $worksheet->setCellValue('M5', 'Amount');
 
-        $worksheet->getStyle('A5:I5')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle('A5:M5')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
         $counter = 6;
         foreach ($dataProvider->data as $header) {
-            foreach ($header->workOrderExpenseDetails as $detail) {
+            foreach ($header->payOutDetails as $detail) {
                 $worksheet->setCellValue("A{$counter}", CHtml::value($header, 'transaction_number'));
                 $worksheet->setCellValue("B{$counter}", CHtml::value($header, 'transaction_date'));
                 $worksheet->setCellValue("C{$counter}", CHtml::value($header, 'registrationTransaction.transaction_number'));
                 $worksheet->setCellValue("D{$counter}", CHtml::value($header, 'supplier.name'));
-                $worksheet->setCellValue("E{$counter}", CHtml::value($header, 'user.username'));
-                $worksheet->setCellValue("F{$counter}", CHtml::value($header, 'note'));
-                $worksheet->setCellValue("G{$counter}", CHtml::value($detail, 'description'));
-                $worksheet->setCellValue("H{$counter}", CHtml::value($detail, 'memo'));
-                $worksheet->setCellValue("I{$counter}", CHtml::value($detail, 'amount'));
+                $worksheet->setCellValue("E{$counter}", CHtml::value($header, 'note'));
+                $worksheet->setCellValue("F{$counter}", CHtml::value($header, 'grand_total'));
+                $worksheet->setCellValue("G{$counter}", CHtml::value($header, 'total_payment'));
+                $worksheet->setCellValue("H{$counter}", CHtml::value($header, 'payment_remaining'));
+                $worksheet->setCellValue("I{$counter}", CHtml::value($detail, 'paymentOut.payment_number'));
+                $worksheet->setCellValue("J{$counter}", CHtml::value($detail, 'paymentOut.payment_date'));
+                $worksheet->setCellValue("K{$counter}", CHtml::value($detail, 'memo'));
+                $worksheet->setCellValue("L{$counter}", CHtml::value($detail, 'paymentOut.paymentType.name'));
+                $worksheet->setCellValue("M{$counter}", CHtml::value($detail, 'amount'));
 
                 $counter++;
             }
         }
 
-        for ($col = 'A'; $col !== 'P'; $col++) {
+        for ($col = 'A'; $col !== 'Z'; $col++) {
             $objPHPExcel->getActiveSheet()
             ->getColumnDimension($col)
             ->setAutoSize(true);
@@ -125,7 +133,7 @@ class WorkOrderExpenseController extends Controller {
         ob_end_clean();
         // We'll be outputting an excel file
         header('Content-type: application/vnd.ms-excel');
-        header('Content-Disposition: attachment;filename="sub_pekerjaan_luar.xls"');
+        header('Content-Disposition: attachment;filename="sub_pekerjaan_luar_pembayaran.xls"');
         header('Cache-Control: max-age=0');
         
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');

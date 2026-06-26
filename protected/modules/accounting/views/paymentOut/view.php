@@ -119,7 +119,7 @@
                 <th style="text-align: center; width: 15%">Sub Pekerjaan #</th>
                 <th style="text-align: center; width: 15%">Tanggal</th>
                 <th style="text-align: center; width: 15%">RG #</th>
-                <th style="text-align: center" colspan="3">Memo</th>
+                <th style="text-align: center">Memo</th>
                 <th style="text-align: center; width: 15%">Total Invoice</th>
                 <th style="text-align: center; width: 15%">Payment</th>
             </tr>
@@ -130,21 +130,25 @@
                 <tr style="background-color: azure">
                     <td>
                         <?php $workOrderExpenseHeader = WorkOrderExpenseHeader::model()->findByPk($detail->work_order_expense_header_id); ?>
-                        <?php echo CHtml::encode($workOrderExpenseHeader->transaction_number); ?>
+                        <?php echo CHtml::link(CHtml::encode($workOrderExpenseHeader->transaction_number), array(
+                            "/accounting/workOrderExpense/show", 
+                            "id" => $header->id
+                        ), array("target" => "_blank")); ?>
                     </td>
+                    <td><?php echo CHtml::encode(Yii::app()->dateFormatter->format("d MMM yyyy", CHtml::value($workOrderExpenseHeader, 'transaction_date'))); ?></td>
                     <td>
-                        <?php echo CHtml::encode(Yii::app()->dateFormatter->format("d MMM yyyy", CHtml::value($workOrderExpenseHeader, 'transaction_date'))); ?>
+                        <?php echo CHtml::link(CHtml::encode($workOrderExpenseHeader->registrationTransaction->transaction_number), array(
+                            "/frontDesk/registrationTransaction/view", 
+                            "id"=>$workOrderExpenseHeader->registration_transaction_id
+                        ), array("target" => "_blank")); ?>
                     </td>
-                    <td>
-                        <?php echo CHtml::link($workOrderExpenseHeader->registrationTransaction->transaction_number, array('javascript:;'), array(
-                            'onclick' => 'window.open("' . CController::createUrl('/accounting/cashDailySummary/redirectTransaction', array(
-                                "codeNumber" => $workOrderExpenseHeader->registrationTransaction->transaction_number
-                            )) . '", "_blank", "top=100, left=225, width=900, height=650"); return false;'
-                        )); ?>
+                    <td><?php echo CHtml::encode(CHtml::value($detail, 'memo')); ?></td>
+                    <td style="text-align: right">
+                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($detail, 'total_invoice'))); ?>
                     </td>
-                    <td style="text-align: right" colspan="3"><?php echo CHtml::encode(CHtml::value($detail, 'memo')); ?></td>
-                    <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($detail, 'total_invoice'))); ?></td>
-                    <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($detail, 'amount'))); ?></td>
+                    <td style="text-align: right">
+                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($detail, 'amount'))); ?>
+                    </td>
                 </tr>
             <?php endforeach; ?>
         </tbody>
@@ -173,11 +177,10 @@
                         <?php echo CHtml::encode(Yii::app()->dateFormatter->format("d MMM yyyy", CHtml::value($receiveItem, 'invoice_date'))); ?>
                     </td>
                     <td>
-                        <?php echo CHtml::link($receiveItem->purchaseOrder->purchase_order_no, array('javascript:;'), array(
-                            'onclick' => 'window.open("' . CController::createUrl('/accounting/cashDailySummary/redirectTransaction', array(
-                                "codeNumber" => $receiveItem->purchaseOrder->purchase_order_no
-                            )) . '", "_blank", "top=100, left=225, width=900, height=650"); return false;'
-                        )); ?>
+                        <?php echo CHtml::link(CHtml::encode($receiveItem->purchaseOrder->purchase_order_no), array(
+                            "/transaction/transactionPurchaseOrder/show", 
+                            "id"=>$receiveItem->purchase_order_id,
+                        ), array("target" => "_blank")); ?>
                     </td>
                     <td>
                         <?php echo CHtml::encode(Yii::app()->dateFormatter->format("d MMM yyyy", CHtml::value($receiveItem, 'purchaseOrder.purchase_order_date'))); ?>
