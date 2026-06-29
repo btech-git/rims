@@ -25,7 +25,7 @@
                                 'model' => $invoice->header,
                                 'attribute' => "invoice_date",
                                 'options' => array(
-//                                    'minDate' => '-7W',
+                                    'minDate' => '-7W',
                                     'maxDate' => '+6M',
                                     'dateFormat' => 'yy-mm-dd',
                                     'changeMonth' => true,
@@ -63,19 +63,17 @@
                     </div>
                 </div>
                 
-                <?php if (!empty($invoice->header->id)): ?>
-                    <div class="field">
-                        <div class="row collapse">
-                            <div class="medium-4 columns">
-                                <?php echo $form->labelEx($invoice->header, 'transaction_tax_number', array('class' => 'prefix')); ?>
-                            </div>
-                            <div class="medium-8 columns">
-                                <?php echo $form->textField($invoice->header, 'transaction_tax_number'); ?>
-                                <?php echo $form->error($invoice->header, 'transaction_tax_number'); ?>
-                            </div>
+                <div class="field">
+                    <div class="row collapse">
+                        <div class="medium-2 columns">
+                            <?php echo $form->labelEx($invoice->header, 'note', array('class' => 'prefix')); ?>
+                        </div>
+                        <div class="medium-10 columns">
+                            <?php echo $form->textArea($invoice->header, 'note', array('rows' => 5, 'cols' => 50)); ?>
+                            <?php echo $form->error($invoice->header, 'note'); ?>
                         </div>
                     </div>
-                <?php endif; ?>
+                </div>
             </div>
 
             <div class="small-12 medium-6 columns">
@@ -128,6 +126,18 @@
                     <div class="field">
                         <div class="row collapse">
                             <div class="medium-4 columns">
+                                <?php echo $form->labelEx($invoice->header, 'transaction_tax_number', array('class' => 'prefix')); ?>
+                            </div>
+                            <div class="medium-8 columns">
+                                <?php echo $form->textField($invoice->header, 'transaction_tax_number'); ?>
+                                <?php echo $form->error($invoice->header, 'transaction_tax_number'); ?>
+                            </div>
+                        </div>
+                    </div>
+                
+                    <div class="field">
+                        <div class="row collapse">
+                            <div class="medium-4 columns">
                                 <?php echo $form->labelEx($invoice->header, 'coretax_receipt_number', array('class' => 'prefix')); ?>
                             </div>
                             <div class="medium-8 columns">
@@ -136,23 +146,38 @@
                             </div>
                         </div>
                     </div>
+                
+                    <div class="field">
+                        <div class="row collapse">
+                            <div class="medium-4 columns">
+                                <?php echo $form->labelEx($invoice->header, 'Tanggal Faktur Pajak', array('class' => 'prefix')); ?>
+                            </div>
+                            <div class="medium-8 columns">
+                                <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(
+                                    'model' => $invoice->header,
+                                    'attribute' => "transaction_tax_date",
+                                    'options' => array(
+                                        'minDate' => '-7W',
+                                        'maxDate' => '+6M',
+                                        'dateFormat' => 'yy-mm-dd',
+                                        'changeMonth' => true,
+                                        'changeYear' => true,
+                                    ),
+                                    'htmlOptions' => array(
+                                        'readonly' => true,
+                                    ),
+                                )); ?>
+                                <?php echo $form->error($invoice->header, 'transaction_tax_date'); ?>
+                            </div>
+                        </div>
+                    </div>
+                    
                 <?php endif; ?>
             </div>
         </div>
         
         <div class="row">
             <div class="small-12 medium-12 columns">
-                <div class="field">
-                    <div class="row collapse">
-                        <div class="medium-2 columns">
-                            <?php echo $form->labelEx($invoice->header, 'note', array('class' => 'prefix')); ?>
-                        </div>
-                        <div class="medium-10 columns">
-                            <?php echo $form->textArea($invoice->header, 'note', array('rows' => 3, 'cols' => 50)); ?>
-                            <?php echo $form->error($invoice->header, 'note'); ?>
-                        </div>
-                    </div>
-                </div>
             </div>
         </div>
 
