@@ -196,7 +196,7 @@ class EmployeeDayoff extends CActiveRecord {
             ':end_date' => $this->date_to,
         ));
         if ($exists) {
-            $this->addError($attribute, 'Tanggal cuti sudah terdaftar di database.');
+            $this->addError($attribute, 'Tanggal cuti sudah terdaftar oleh salah satu employee.');
         }
     }
 }

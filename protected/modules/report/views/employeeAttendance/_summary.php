@@ -29,6 +29,8 @@
                 <th style="text-align: center">Libur Nasional</th>
                 <th style="text-align: center">Terlambat</th>
                 <th style="text-align: center">Lembur</th>
+                <th style="text-align: center">KPI</th>
+                <th style="text-align: center">Status Index</th>
             </tr>
         </thead>
         <tbody>
@@ -72,6 +74,23 @@
                     <td style="text-align: right"><?php echo CHtml::encode($nationalHolidaysCount); ?></td>
                     <td style="text-align: right"><?php echo CHtml::encode($lateDays); ?></td>
                     <td style="text-align: right"><?php echo CHtml::encode($overtimeDays); ?></td>
+                    <?php $attendanceDays = isset($employeePeriodicallyAttendanceItem[16]['days']) ? $employeePeriodicallyAttendanceItem[16]['days'] : '0'; ?>
+                    <?php $attendanceRate = $attendanceDays / $workingDays; ?>
+                    <?php $onTimeDays = $workingDays - $lateDays; ?>
+                    <?php $onTimeRate = $onTimeDays / $attendanceDays; ?>
+                    <?php $notOvertimeDays = $workingDays - $overtimeDays; ?>
+                    <?php $notOvertimeRate = ($attendanceDays - $lateDays - $notOvertimeDays) / $attendanceDays; ?>
+                    <?php $performanceIndexRate = ($attendanceRate + $onTimeRate + $notOvertimeRate) / 3; ?>
+                    <td style="text-align: right"><?php echo CHtml::encode(round($performanceIndexRate * 100, 2)); ?>%</td>
+                    <?php $statusIndex = ''; ?>
+                    <?php if ($performanceIndexRate >= 0.95): ?>
+                        <?php $statusIndex = 'Sangat Baik'; ?>
+                    <?php elseif ($performanceIndexRate < 0.95 && $performanceIndexRate > 0.81): ?>
+                        <?php $statusIndex = 'Baik'; ?>
+                    <?php else: ?>
+                        <?php $statusIndex = 'Perlu Evaluasi'; ?>
+                    <?php endif; ?>
+                    <td style="text-align: right"><?php echo CHtml::encode($statusIndex); ?></td>
                 </tr>
             <?php endforeach; ?>
         </tbody>

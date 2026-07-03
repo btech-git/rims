@@ -139,7 +139,7 @@
         }
         ?>
 
-        <div id="utilities">
+        <div id="utilities" <?php if (isset($_GET['hide_main_menu'])): ?>style="display: none"<?php endif; ?>>
             <div class="row">
                 <div class="medium-12 columns ">
                     <div class="small-1 columns leftside ">
@@ -332,7 +332,7 @@
             </div>
         </div>
         
-        <div id="header">
+        <div id="header" <?php if (isset($_GET['hide_main_menu'])): ?>style="display: none"<?php endif; ?>>
             <div class="row">
                 <div class="small-12 medium-3 columns">
                     <div class="logo">

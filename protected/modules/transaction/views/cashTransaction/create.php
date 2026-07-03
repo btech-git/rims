@@ -8,6 +8,8 @@ $this->breadcrumbs = array(
 );
 ?>
 
+<h1>Create Cash Transaction</h1>
+
 <div id="maincontent">
     <?php $this->renderPartial('_form', array(
         'cashTransaction' => $cashTransaction,

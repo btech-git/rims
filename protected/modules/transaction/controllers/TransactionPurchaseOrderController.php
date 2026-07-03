@@ -441,13 +441,7 @@ class TransactionPurchaseOrderController extends Controller {
         if (!(Yii::app()->user->checkAccess('director') || Yii::app()->user->branch_id == 6)) {
             $dataProvider->criteria->addCondition('t.main_branch_id = :main_branch_id');
             $dataProvider->criteria->params[':main_branch_id'] = Yii::app()->user->branch_id;
-        }
-        $dataProvider->criteria->together = true;
-        $dataProvider->criteria->with = array(
-            'supplier',
-            'mainBranch',
-        );
-        
+        }        
         $dataProvider->criteria->addBetweenCondition('SUBSTRING(t.purchase_order_date, 1, 10)', $startDate, $endDate);
 
         $supplier = new Supplier('search');

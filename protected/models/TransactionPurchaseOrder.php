@@ -229,7 +229,7 @@ class TransactionPurchaseOrder extends MonthlyTransactionActiveRecord {
 
         $criteria->together = 'true';
         $criteria->with = array('supplier');
-        $criteria->compare('supplier.name', $this->supplier_name, true);
+        $criteria->compare('supplier.company', $this->supplier_name, true);
 
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,

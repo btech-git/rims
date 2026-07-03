@@ -24,18 +24,24 @@
             <div class="field">
                 <div class="row collapse">
                     <div class="small-4 columns">
-                        <?php echo $form->labelEx($cashTransaction->header, 'transaction_type',
-                            array('class' => 'prefix')); ?>
+                        <?php echo $form->labelEx($cashTransaction->header, 'transaction_type', array('class' => 'prefix')); ?>
                     </div>
                     
                     <div class="small-8 columns">
-                        <?php echo $form->dropDownList($cashTransaction->header, 'transaction_type', array(
-                            'In' => 'In',
-                            'Out' => 'Out',
-                        ), array(
-                            'prompt' => '[--Select Transaction Type--]',
-                            'onchange' => 'ClearFields();$("#coa").hide();'
-                        )); ?>
+                        <?php if ($cashTransaction->header->isNewRecord): ?>
+                            <?php echo $form->dropDownList($cashTransaction->header, 'transaction_type', array(
+                                'In' => 'In',
+                                'Out' => 'Out',
+                            ), array(
+                                'prompt' => '[--Select Transaction Type--]',
+                                'onchange' => 'ClearFields();$("#coa").hide();'
+                            )); ?>
+                        <?php else: ?>
+                            <?php echo $form->textField($cashTransaction->header, 'transaction_type', array(
+                                'value' => $cashTransaction->header->transaction_type,
+                                'readonly' => true
+                            )); ?>
+                        <?php endif; ?>
                         <?php echo $form->error($cashTransaction->header, 'transaction_type'); ?>
                     </div>
                 </div>
@@ -52,8 +58,8 @@
                             'model' => $cashTransaction->header,
                             'attribute' => "transaction_date",
                             'options'=>array(
-//                                'minDate' => '-2M',
-//                                'maxDate' => '+6M',
+                                'minDate' => '-2M',
+                                'maxDate' => '+6M',
                                 'dateFormat' => 'yy-mm-dd',
                                 'changeMonth'=>true,
                                 'changeYear'=>true,
@@ -95,18 +101,20 @@
             </div>
         </div>
         <div class="small-12 medium-6 columns">
-            <div class="field">
-                <div class="row collapse">
-                    <div class="small-4 columns">
-                        <?php echo $form->labelEx($cashTransaction->header, 'branch_id', array('class' => 'prefix')); ?>
-                    </div>
-                    
-                    <div class="small-8 columns">
-                        <?php echo $form->dropDownList($cashTransaction->header, 'branch_id', CHtml::listData(Branch::model()->findAll(), 'id', 'name'), array('empty' => '-- Pilih Branch --'));?>
-                        <?php echo $form->error($cashTransaction->header, 'branch_id'); ?>
+            <?php if ($cashTransaction->header->isNewRecord): ?>
+                <div class="field">
+                    <div class="row collapse">
+                        <div class="small-4 columns">
+                            <?php echo $form->labelEx($cashTransaction->header, 'branch_id', array('class' => 'prefix')); ?>
+                        </div>
+
+                        <div class="small-8 columns">
+                            <?php echo $form->dropDownList($cashTransaction->header, 'branch_id', CHtml::listData(Branch::model()->findAll(), 'id', 'name'), array('empty' => '-- Pilih Branch --'));?>
+                            <?php echo $form->error($cashTransaction->header, 'branch_id'); ?>
+                        </div>
                     </div>
                 </div>
-            </div>
+            <?php endif; ?>
 
             <div class="field">
                 <div class="row collapse">

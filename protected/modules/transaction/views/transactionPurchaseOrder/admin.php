@@ -77,8 +77,8 @@ Yii::app()->clientScript->registerScript('search', "
                         'value'=>'$data->getPurchaseStatus($data->purchase_type)',
                     ),
                     array(
-                        'name'=>'supplier_name',
-                        'value'=>'empty($data->supplier_id) ? "" : $data->supplier->name',
+                        'name'=>'supplier_id',
+                        'value'=>'empty($data->supplier_id) ? "" : $data->supplier->company',
                     ),
                     array(
                         'name' => 'total_price',
@@ -110,22 +110,6 @@ Yii::app()->clientScript->registerScript('search', "
                         'filter' => false,
                         'value' => 'Yii::app()->dateFormatter->format("d MMM yyyy HH:mm:ss", $data->created_datetime)'
                     ),
-//                    array(
-//                        'class'=>'CButtonColumn',
-//                        'template'=>'{print}',
-//                        'buttons'=>array (
-//                            'edit' => array (
-//                                'label'=>'edit',
-//                                'url'=>'Yii::app()->createUrl("transaction/transactionPurchaseOrder/update", array("id"=>$data->id))',
-//                                'visible'=> 'Yii::app()->user->checkAccess("purchaseOrderEdit")', //$data->status_document != "Approved" && $data->status_document != "Rejected" && ',
-//                            ),
-//                            'print' => array (
-//                                'label'=>'print',
-//                                'url'=>'Yii::app()->createUrl("transaction/transactionPurchaseOrder/pdf", array("id"=>$data->id))',
-//                                'visible'=> '$data->status_document == "Approved" && Yii::app()->user->checkAccess("purchaseOrderEdit")',
-//                            ),
-//                        ),
-//                    ),
                 ),
             )); ?>
         </div>

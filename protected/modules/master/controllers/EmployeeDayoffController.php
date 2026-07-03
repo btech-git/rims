@@ -94,15 +94,15 @@ class EmployeeDayoffController extends Controller {
             $model->attributes = $_POST['EmployeeDayoff'];
             $model->generateCodeNumber(Yii::app()->dateFormatter->format('M', strtotime($model->date_created)), Yii::app()->dateFormatter->format('yyyy', strtotime($model->date_created)));
             
-//            $valid = true;
-//            if ($model->employeeOnleaveCategory->number_of_days > 0) {
-//                $valid = $model->day == $model->employeeOnleaveCategory->number_of_days ? true : false;
-//                
-//                if ($valid == false) {
-//                    $model->addError('error', 'Jumlah hari cuti melebihi ketentuan.');
-//                }
-//            }
-//            
+            $valid = true;
+            if ($model->employeeOnleaveCategory->number_of_days > 0) {
+                $valid = $model->day == $model->employeeOnleaveCategory->number_of_days ? true : false;
+                
+                if ($valid == false) {
+                    $model->addError('error', 'Jumlah hari cuti melebihi ketentuan.');
+                }
+            }
+            
             if ($model->save()) {
 
                 $model->employeeDayoffImages = CUploadedFile::getInstances($model, 'images');
@@ -356,8 +356,6 @@ class EmployeeDayoffController extends Controller {
         $dayOff = EmployeeDayoff::model()->findByPK($headerId);
         $historis = EmployeeDayoffApproval::model()->findAllByAttributes(array('employee_dayoff_id' => $headerId));
         $model = new EmployeeDayoffApproval;
-        //$branch = Branch::model()->findByPK($jurnalPenyesuaian->branch_id);
-        //$model = $this->loadModelDetail($detailId);
         if (isset($_POST['EmployeeDayoffApproval'])) {
             $model->attributes = $_POST['EmployeeDayoffApproval'];
             if ($model->save()) {

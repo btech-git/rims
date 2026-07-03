@@ -3,10 +3,10 @@
 /* @var $model Bank */
 
 $this->breadcrumbs=array(
-	'Accounting',
-	'Banks'=>array('admin'),
-	'Create',
-	);
+    'Accounting',
+    'Banks'=>array('admin'),
+    'Create',
+);
 
 // $this->menu=array(
 // 	array('label'=>'List Bank', 'url'=>array('index')),
@@ -14,5 +14,5 @@ $this->breadcrumbs=array(
 // );
 ?>
 <div id="maincontent">
-	<?php $this->renderPartial('_form', array('model'=>$model)); ?>
+	<?php $this->renderPartial('application.modules.master.views.bank._form', array('model'=>$model)); ?>
 </div>

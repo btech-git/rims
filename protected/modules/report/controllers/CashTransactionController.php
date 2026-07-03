@@ -11,7 +11,7 @@ class CashTransactionController extends Controller {
 
     public function filterAccess($filterChain) {
         if ($filterChain->action->id === 'summary') {
-            if (!(Yii::app()->user->checkAccess('cashTransactionReport'))) {
+            if (!Yii::app()->user->isGuest && !Yii::app()->user->checkAccess('cashTransactionReport')) {
                 $this->redirect(array('/site/login'));
             }
         }
@@ -24,8 +24,8 @@ class CashTransactionController extends Controller {
         ini_set('memory_limit', '1024M');
 
         $cashTransaction = Search::bind(new CashTransaction('search'), isset($_GET['CashTransaction']) ? $_GET['CashTransaction'] : array());
+        
         $branchId = isset($_GET['BranchId']) ? $_GET['BranchId'] : '';
-
         $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : date('Y-m-d');
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
         $pageSize = (isset($_GET['PageSize'])) ? $_GET['PageSize'] : '';
