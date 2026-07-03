@@ -119,12 +119,8 @@ class CashTransactionController extends Controller {
      * If creation is successful, the browser will be redirected to the 'view' page.
      */
     public function actionCreate() {
-        //$model=new CashTransaction;
-        // Uncomment the following line if AJAX validation is needed
-        // $this->performAjaxValidation($model);
         $cashTransaction = $this->instantiate(null, 'create');
         
-//        $cashTransaction->header->branch_id = Yii::app()->user->branch_id;
         $cashTransaction->header->payment_type_id = 1;
         $cashTransaction->header->transaction_date = date('Y-m-d');
         $cashTransaction->header->transaction_time = date('H:i:s');
@@ -168,7 +164,7 @@ class CashTransactionController extends Controller {
             'criteria' => $coaDetailCriteria,
         ));
         
-        $images = $cashTransaction->header->images = CUploadedFile::getInstances($cashTransaction->header, 'images');
+//        $images = $cashTransaction->header->images = CUploadedFile::getInstances($cashTransaction->header, 'images');
 
         if (isset($_POST['Cancel'])) {
             $this->redirect(array('admin'));

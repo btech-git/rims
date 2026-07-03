@@ -167,6 +167,10 @@ class EmployeeAttendanceController extends Controller {
         $worksheet->setCellValue("{$column}5", 'Terlambat');
         $column++;
         $worksheet->setCellValue("{$column}5", 'Lembur');
+        $column++;
+        $worksheet->setCellValue("{$column}5", 'KPI');
+        $column++;
+        $worksheet->setCellValue("{$column}5", 'Status Index');
 
         $worksheet->getStyle("A5:{$column}5")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
         $worksheet->getStyle("A5:{$column}5")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
@@ -215,6 +219,25 @@ class EmployeeAttendanceController extends Controller {
             $worksheet->setCellValue("{$column}{$counter}", $lateDays);
             $column++;
             $worksheet->setCellValue("{$column}{$counter}", $overtimeDays);
+            $column++;
+            $attendanceDays = isset($employeePeriodicallyAttendanceItem[16]['days']) ? $employeePeriodicallyAttendanceItem[16]['days'] : '0';
+            $attendanceRate = $attendanceDays / $workingDays; 
+            $onTimeDays = $workingDays - $lateDays;
+            $onTimeRate = $onTimeDays / $attendanceDays;
+            $notOvertimeDays = $workingDays - $overtimeDays;
+            $notOvertimeRate = ($attendanceDays - $lateDays - $notOvertimeDays) / $attendanceDays;
+            $performanceIndexRate = ($attendanceRate + $onTimeRate + $notOvertimeRate) / 3;
+            $worksheet->setCellValue("{$column}{$counter}", round($performanceIndexRate * 100, 2));
+            $column++;
+            $statusIndex = '';
+            if ($performanceIndexRate >= 0.95) {
+                $statusIndex = 'Sangat Baik';
+            } elseif ($performanceIndexRate < 0.95 && $performanceIndexRate > 0.81) {
+                $statusIndex = 'Baik';
+            } else {
+                $statusIndex = 'Perlu Evaluasi';
+            }
+            $worksheet->setCellValue("{$column}{$counter}", $statusIndex);
 
             $counter++;
         }
