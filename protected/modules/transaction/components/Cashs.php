@@ -67,7 +67,6 @@ class Cashs extends CComponent {
     public function validate() {
         $valid = $this->header->validate();
 
-
         if (count($this->details) > 0) {
             foreach ($this->details as $detail) {
 

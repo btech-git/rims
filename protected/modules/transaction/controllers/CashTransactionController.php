@@ -164,7 +164,7 @@ class CashTransactionController extends Controller {
             'criteria' => $coaDetailCriteria,
         ));
         
-//        $images = $cashTransaction->header->images = CUploadedFile::getInstances($cashTransaction->header, 'images');
+        $cashTransaction->header->images = CUploadedFile::getInstances($cashTransaction->header, 'images');
 
         if (isset($_POST['Cancel'])) {
             $this->redirect(array('admin'));
