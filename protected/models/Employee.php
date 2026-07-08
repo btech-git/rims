@@ -191,6 +191,9 @@ class Employee extends CActiveRecord {
             'registrationTransactions3' => array(self::HAS_MANY, 'RegistrationTransaction', 'employee_id_assign_mechanic'),
             'registrationTransactions4' => array(self::HAS_MANY, 'RegistrationTransaction', 'employee_id_sales_person'),
             'saleEstimationHeaders' => array(self::HAS_MANY, 'SaleEstimationHeader', 'employee_id_sale_person'),
+            'userIdUpdated' => array(self::BELONGS_TO, 'Users', 'user_id_updated'),
+            'userIdApproved' => array(self::BELONGS_TO, 'Users', 'user_id_approved'),
+            'userIdRejected' => array(self::BELONGS_TO, 'Users', 'user_id_rejected'),
         );
     }
 
@@ -386,12 +389,18 @@ class Employee extends CActiveRecord {
         $criteria->compare('user_id_updated', $this->user_id_updated);
 
         if (!empty($this->working_period_mode)) {
-            $comparator = $this->working_period_mode == '1' ? '<' : '>=';
-            $criteria->addCondition("DATEDIFF(CURDATE(), recruitment_date) {$comparator} 180");
+            if ($this->working_period_mode === '-1') {
+                $criteria->addCondition("DATEDIFF(CURDATE(), recruitment_date) > 1800");
+            } else {
+                $criteria->addCondition("DATEDIFF(CURDATE(), recruitment_date) <= {$this->working_period_mode}");
+            }
         }
 
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
+            'sort' => array(
+                'defaultOrder' => 't.recruitment_date ASC, t.name ASC',
+            ),
         ));
     }
 
