@@ -735,6 +735,11 @@
                         'visible' => Yii::app()->user->checkAccess('employeeAbsencyReport')
                     ),
                     array(
+                        'label' => 'Kehadiran Hari Kerja Karyawan', 
+                        'url' => array('/report/monthlyEmployeeAttendance/summary'), 
+                        'visible' => Yii::app()->user->checkAccess('employeeAbsencyReport')
+                    ),
+                    array(
                         'label' => 'Ulang Tahun Karyawan', 
                         'url' => array('/master/employee/index'), 
                         'visible' => Yii::app()->user->checkAccess('employeeBirthdateReport')

@@ -39,7 +39,7 @@ $('.search-form form').submit(function(){
     <div class="clearfix page-action">
         <?php if (Yii::app()->user->checkAccess("masterEmployeeCreate")) { ?>
             <a class="button success right" href="<?php echo Yii::app()->baseUrl . '/master/employee/create'; ?>">
-                <span class="fa fa-plus"></span>New Employee
+                <span class="fa fa-plus"></span>New
             </a>
         <?php } ?>
         <a class="button cbutton alert right" style="margin-right:10px;" href="<?php echo Yii::app()->baseUrl . '/master/employee/adminResigned'; ?>">
@@ -80,17 +80,17 @@ $('.search-form form').submit(function(){
                     'id',
                     'code',
                     array(
+                        'name' => 'name', 
+                        'value' => 'CHtml::link($data->name, array("view", "id"=>$data->id))', 
+                        'type' => 'raw'
+                    ),
+                    array(
                         'name' => 'recruitment_date',
                         'value' => 'Yii::app()->dateFormatter->format("d MMMM yyyy", $data->recruitment_date)'
                     ),
                     array(
                         'header' => 'Working Period', 
                         'value' => 'CHtml::encode(CHtml::value($data, "activeWorkingPeriod"))',
-                    ),
-                    array(
-                        'name' => 'name', 
-                        'value' => 'CHtml::link($data->name, array("view", "id"=>$data->id))', 
-                        'type' => 'raw'
                     ),
                     array(
                         'name' => 'branch_id', 
@@ -124,15 +124,6 @@ $('.search-form form').submit(function(){
                                 'visible' => '(Yii::app()->user->checkAccess("masterEmployeeEdit"))',
                                 'url' => 'Yii::app()->createUrl("master/employee/update", array("id"=>$data->id))',
                             ),
-//                            'resign' => array(
-//                                'label' => 'resign',
-//                                'visible' => '($data->is_deleted == 0)? TRUE:FALSE',
-//                                'url' => 'Yii::app()->createUrl("/master/employee/delete", array("id" => $data->id))',
-//                                'options' => array(
-//                                    // 'class'=>'btn red delete',
-//                                    'onclick' => 'return confirm("Are you sure this Employee is resigned?");',
-//                                )
-//                            ),
                         ),
                     ),
                 ),

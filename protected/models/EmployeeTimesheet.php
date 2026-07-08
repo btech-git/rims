@@ -136,9 +136,9 @@ class EmployeeTimesheet extends CActiveRecord {
         $criteria->compare('clock_in', $this->clock_in, true);
         $criteria->compare('clock_out', $this->clock_out, true);
         $criteria->compare('employee_id', $this->employee_id);
-        $criteria->compare('duration_late', $this->clock_in, true);
-        $criteria->compare('duration_work', $this->clock_out, true);
-        $criteria->compare('duration_overtime', $this->clock_out, true);
+        $criteria->compare('duration_late', $this->duration_late, true);
+        $criteria->compare('duration_work', $this->duration_work, true);
+        $criteria->compare('duration_overtime', $this->duration_overtime, true);
 
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
@@ -153,18 +153,27 @@ class EmployeeTimesheet extends CActiveRecord {
 
     public function getLateTimeDiff() {
         $durationLate = $this->duration_late;
-        $hours = $durationLate > 0 ? floor($durationLate / 3600) : 00;
-        $minutes = $durationLate > 0 ? floor(($durationLate % 3600) / 60) : 00;
-        $seconds = $durationLate > 0 ? $durationLate % 60 : 00;
+        $hours = $durationLate > 0 ? floor($durationLate / 3600) : 0;
+        $minutes = $durationLate > 0 ? floor(($durationLate % 3600) / 60) : 0;
+        $seconds = $durationLate > 0 ? $durationLate % 60 : 0;
 
         return str_pad($hours, 2, '0', STR_PAD_LEFT). ":" . str_pad($minutes, 2, '0', STR_PAD_LEFT). ":" . str_pad($seconds, 2, '0', STR_PAD_LEFT);
     }
     
     public function getWorkTimeDiff() {
         $durationWork = $this->duration_work;
-        $hours = $durationWork > 0 ? floor($durationWork / 3600) : 00;
-        $minutes = $durationWork > 0 ? floor(($durationWork % 3600) / 60) : 00;
-        $seconds = $durationWork > 0 ? $durationWork % 60 : 00;
+        $hours = $durationWork > 0 ? floor($durationWork / 3600) : 0;
+        $minutes = $durationWork > 0 ? floor(($durationWork % 3600) / 60) : 0;
+        $seconds = $durationWork > 0 ? $durationWork % 60 : 0;
+
+        return str_pad($hours, 2, '0', STR_PAD_LEFT). ":" . str_pad($minutes, 2, '0', STR_PAD_LEFT). ":" . str_pad($seconds, 2, '0', STR_PAD_LEFT);
+    }
+    
+    public function getOverTimeDiff() {
+        $durationOvertime = $this->duration_overtime;
+        $hours = $durationOvertime > 0 ? floor($durationOvertime / 3600) : 0;
+        $minutes = $durationOvertime > 0 ? floor(($durationOvertime % 3600) / 60) : 0;
+        $seconds = $durationOvertime > 0 ? $durationOvertime % 60 : 0;
 
         return str_pad($hours, 2, '0', STR_PAD_LEFT). ":" . str_pad($minutes, 2, '0', STR_PAD_LEFT). ":" . str_pad($seconds, 2, '0', STR_PAD_LEFT);
     }
@@ -214,6 +223,24 @@ class EmployeeTimesheet extends CActiveRecord {
                 WHERE t.date BETWEEN :start_date AND :end_date AND c.is_inactive = 0" . $branchConditionSql . "
                 GROUP BY t.employee_onleave_category_id, t.employee_id
                 ORDER BY employee_name ASC, t.employee_onleave_category_id ASC";
+
+        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
+
+        return $resultSet;
+    }
+    
+    public static function getMonthlyEmployeeAttendance($year, $month, $employeeId) {
+        
+        $params = array(
+            ':year' => $year,
+            ':month' => $month,
+            ':employee_id' => $employeeId,
+        );
+        
+        $sql = "SELECT t.id, t.date, t.clock_in, t.clock_out, t.duration_late, t.duration_overtime, t.duration_work, t.remarks, c.name AS category_name
+                FROM " . EmployeeTimesheet::model()->tableName() . " t 
+                INNER JOIN " . EmployeeOnleaveCategory::model()->tableName() . " c ON c.id = t.employee_onleave_category_id
+                WHERE YEAR(t.date) = :year AND MONTH(t.date) = :month AND t.employee_id = :employee_id;";
 
         $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
 
