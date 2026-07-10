@@ -21,14 +21,19 @@
  * @property string $current_value
  * @property integer $company_bank_id
  * @property integer $branch_id
+ * @property string $total_payment
+ * @property string $payment_remaining
+ * @property integer $supplier_id
  *
  * The followings are the available model relations:
  * @property AssetDepreciationDetail[] $assetDepreciationDetails
+ * @property PayOutDetail[] $payOutDetails
  * @property AssetSale[] $assetSales
  * @property AssetCategory $assetCategory
  * @property CompanyBank $companyBank
  * @property Branch $branch
  * @property Users $user
+ * @property Supplier $supplier
  */
 class AssetPurchase extends MonthlyTransactionActiveRecord {
 
@@ -57,16 +62,16 @@ class AssetPurchase extends MonthlyTransactionActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('transaction_number, transaction_date, transaction_time, depreciation_start_date, depreciation_end_date, status, branch_id, asset_category_id, user_id, description, company_bank_id', 'required'),
-            array('monthly_useful_life, asset_category_id, user_id, company_bank_id, branch_id', 'numerical', 'integerOnly' => true),
+            array('transaction_number, transaction_date, transaction_time, depreciation_start_date, depreciation_end_date, status, branch_id, asset_category_id, user_id, description', 'required'),
+            array('monthly_useful_life, asset_category_id, user_id, company_bank_id, branch_id, supplier_id', 'numerical', 'integerOnly' => true),
             array('transaction_number', 'length', 'max' => 50),
-            array('purchase_value, accumulated_depreciation_value, current_value', 'length', 'max' => 18),
+            array('purchase_value, accumulated_depreciation_value, current_value, total_payment, payment_remaining', 'length', 'max' => 18),
             array('status', 'length', 'max' => 20),
             array('description', 'length', 'max' => 100),
             array('note', 'safe'),
             // The following rule is used by search().
             // Please remove those attributes that should not be searched.
-            array('id, transaction_number, transaction_date, transaction_time, purchase_value, branch_id, monthly_useful_life, accumulated_depreciation_value, depreciation_start_date, depreciation_end_date, status, note, asset_category_id, user_id, description, current_value, company_bank_id', 'safe', 'on' => 'search'),
+            array('id, transaction_number, transaction_date, transaction_time, purchase_value, branch_id, monthly_useful_life, accumulated_depreciation_value, depreciation_start_date, depreciation_end_date, status, note, asset_category_id, user_id, description, current_value, company_bank_id, total_payment, payment_remaining, supplier_id', 'safe', 'on' => 'search'),
         );
     }
 
@@ -78,11 +83,13 @@ class AssetPurchase extends MonthlyTransactionActiveRecord {
         // class name for the relations automatically generated below.
         return array(
             'assetDepreciationDetails' => array(self::HAS_MANY, 'AssetDepreciationDetail', 'asset_purchase_id'),
+            'payOutDetails' => array(self::HAS_MANY, 'PayOutDetail', 'asset_purchase_id'),
             'assetSales' => array(self::HAS_MANY, 'AssetSale', 'asset_purchase_id'),
             'assetCategory' => array(self::BELONGS_TO, 'AssetCategory', 'asset_category_id'),
             'companyBank' => array(self::BELONGS_TO, 'CompanyBank', 'company_bank_id'),
             'branch' => array(self::BELONGS_TO, 'Branch', 'branch_id'),
             'user' => array(self::BELONGS_TO, 'Users', 'user_id'),
+            'supplier' => array(self::BELONGS_TO, 'Supplier', 'supplier_id'),
         );
     }
 
@@ -186,5 +193,52 @@ class AssetPurchase extends MonthlyTransactionActiveRecord {
         }
 
         $this->setCodeNumberByNext('transaction_number', $branchCode, AssetPurchase::CONSTANT, $currentMonth, $currentYear);
+    }
+    
+    public function searchForPaymentOut() {
+        // @todo Please modify the following code to remove attributes that should not be searched.
+
+        $criteria = new CDbCriteria;
+
+        $criteria->condition = "t.payment_remaining > 0 AND t.status NOT IN ('Draft') AND t.transaction_date > '" . AppParam::BEGINNING_TRANSACTION_DATE . "'";
+        
+        $criteria->compare('id', $this->id);
+        $criteria->compare('transaction_number', $this->transaction_number, true);
+        $criteria->compare('transaction_date', $this->transaction_date, true);
+        $criteria->compare('transaction_time', $this->transaction_time, true);
+        $criteria->compare('purchase_value', $this->purchase_value, true);
+        $criteria->compare('monthly_useful_life', $this->monthly_useful_life);
+        $criteria->compare('accumulated_depreciation_value', $this->accumulated_depreciation_value, true);
+        $criteria->compare('depreciation_start_date', $this->depreciation_start_date, true);
+        $criteria->compare('depreciation_end_date', $this->depreciation_end_date, true);
+        $criteria->compare('status', $this->status, true);
+        $criteria->compare('note', $this->note, true);
+        $criteria->compare('asset_category_id', $this->asset_category_id);
+        $criteria->compare('user_id', $this->user_id);
+        $criteria->compare('description', $this->description, true);
+        $criteria->compare('current_value', $this->current_value, true);
+        $criteria->compare('company_bank_id', $this->company_bank_id);
+        $criteria->compare('branch_id', $this->branch_id);
+
+        return new CActiveDataProvider($this, array(
+            'criteria' => $criteria,
+            'pagination' => array(
+                'pageSize' => 50,
+            ),
+        ));
+    }
+    
+    public function getTotalPayment() {
+        $total = '0.00';
+        
+        foreach($this->payOutDetails as $detail) {
+            $total += $detail->amount;
+        }
+        
+        return $total;
+    }
+    
+    public function getPaymentRemaining() {
+        return $this->purchase_value - $this->total_payment;
     }
 }

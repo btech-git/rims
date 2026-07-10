@@ -127,22 +127,6 @@ $('.search-form form').submit(function(){
             'filter' => false,
             'value' => 'Yii::app()->dateFormatter->format("d MMM yyyy", $data->created_datetime)'
         ),
-//        array(
-//            'class' => 'CButtonColumn',
-//            'template' => '{view}',
-//            'buttons' => array(
-//                'update' => array(
-//                    'label' => 'update',
-//                    'url' => 'Yii::app()->createUrl("accounting/paymentOut/update", array("id"=>$data->id))',
-//                    'visible' => 'Yii::app()->user->checkAccess("paymentOutEdit")', //$data->status_document != "Approved" && $data->status_document != "Rejected" && ',
-//                ),
-//                'view' => array(
-//                    'label' => 'view',
-//                    'url' => 'Yii::app()->createUrl("accounting/paymentOut/view", array("id"=>$data->id))',
-//                ),
-//            ),
-//            'afterDelete' => 'function(){ location.reload(); }'
-//        ),
     ),
 )); ?>
 <?php //echo CHtml::endForm(); ?>
@@ -169,6 +153,12 @@ $('.search-form form').submit(function(){
                         'workOrderNumber' => $workOrderNumber,
                         'customerName' => $customerName,
                         'plateNumber' => $plateNumber,
+                    ), true)
+                ),
+                'Pembelian Aset' => array(
+                    'content' => $this->renderPartial('_viewAssetPurchase', array(
+                        'assetPurchase' => $assetPurchase,
+                        'assetPurchaseDataProvider' => $assetPurchaseDataProvider,
                     ), true)
                 ),
 //                'Pembelian non stok' => array(

@@ -231,6 +231,43 @@
                 </tr>
             <?php endforeach; ?>
         </tbody>
+    <?php elseif ($paymentOut->movement_type == 4): ?>
+        <thead>
+            <tr style="background-color: skyblue">
+                <th style="text-align: center; width: 10%">Asset #</th>
+                <th style="text-align: center; width: 7%">Tanggal</th>
+                <th style="text-align: center; width: 25%">Deskripsi</th>
+                <th style="text-align: center">Category</th>
+                <th style="text-align: center">Note</th>
+                <th style="text-align: center">Memo</th>
+                <th style="text-align: center; width: 10%">Total Invoice</th>
+                <th style="text-align: center; width: 8%">Payment</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            <?php foreach ($paymentOutDetails as $detail): ?>
+                <tr style="background-color: azure">
+                    <td>
+                        <?php $assetPurchase = AssetPurchase::model()->findByPk($detail->asset_purchase_id); ?>
+                        <?php echo CHtml::encode($assetPurchase->transaction_number); ?>
+                    </td>
+                    <td>
+                        <?php echo CHtml::encode(Yii::app()->dateFormatter->format("d MMM yyyy", CHtml::value($assetPurchase, 'transaction_date'))); ?>
+                    </td>
+                    <td><?php echo CHtml::encode(CHtml::value($assetPurchase, 'description')); ?></td>
+                    <td><?php echo CHtml::encode(CHtml::value($assetPurchase, 'assetCategory.description')); ?></td>
+                    <td><?php echo CHtml::encode(CHtml::value($assetPurchase, 'note')); ?></td>
+                    <td><?php echo CHtml::encode(CHtml::value($detail, 'memo')); ?></td>
+                    <td style="text-align: right">
+                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($detail, 'total_invoice'))); ?>
+                    </td>
+                    <td style="text-align: right">
+                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($detail, 'amount'))); ?>
+                    </td>
+                </tr>
+            <?php endforeach; ?>
+        </tbody>
     <?php endif; ?>
     
     <tfoot>

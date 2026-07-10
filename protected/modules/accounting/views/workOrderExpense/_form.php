@@ -237,7 +237,6 @@
                     </div>
                 </div>
             </div>
-
         </div>
     </div>
 
@@ -359,7 +358,7 @@
             'note',
         ),
     )); ?>
-    <?php $this->endWidget('zii.widgets.jui.CJuiDialog'); ?>
+<?php $this->endWidget('zii.widgets.jui.CJuiDialog'); ?>
     
 <?php if ($workOrderExpense->header->isNewRecord): ?>
     <?php $this->beginWidget('zii.widgets.jui.CJuiDialog', array(
@@ -414,4 +413,3 @@
     )); ?>
     <?php $this->endWidget('zii.widgets.jui.CJuiDialog'); ?>
 <?php endif; ?>
-    

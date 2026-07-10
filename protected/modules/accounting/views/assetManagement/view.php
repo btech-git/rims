@@ -18,18 +18,24 @@ $this->menu=array(
 
 <h1>View Asset Management #<?php echo $model->id; ?></h1>
 
-<a class="button cbutton right" href="<?php echo Yii::app()->baseUrl.'/accounting/assetManagement/admin';?>"><span class="fa fa-th-list"></span>Manage Asset</a>
+<a class="button cbutton right" href="<?php echo Yii::app()->baseUrl.'/accounting/assetManagement/admin';?>"><span class="fa fa-th-list"></span>Manage</a>
                         
 <?php $this->widget('zii.widgets.CDetailView', array(
     'data'=>$model,
     'attributes'=>array(
         'id',
-        'transaction_number',
+        array(
+            'label' => 'Pembelian Aset #',
+            'value' => $model->transaction_number,
+        ),
         array(
             'label' => 'Tanggal',
             'value' => Yii::app()->dateFormatter->format("d MMMM yyyy", $model->transaction_date),
         ),
-        'transaction_time',
+        array(
+            'label' => 'Jam',
+            'value' => $model->transaction_time,
+        ),
         array(
             'label' => 'Category',
             'value' => $model->assetCategory->description,
@@ -43,12 +49,20 @@ $this->menu=array(
             'value' => $model->monthly_useful_life,
         ),
         array(
-            'label' => 'Bank',
-            'value' => $model->companyBank->account_name,
+            'label' => 'Supplier',
+            'value' => $model->supplier->company,
         ),
         array(
             'label' => 'Harga Beli',
             'value' => CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($model, 'purchase_value'))),
+        ),
+        array(
+            'label' => 'Pembayaran',
+            'value' => CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($model, 'total_payment'))),
+        ),
+        array(
+            'label' => 'Sisa Pembayaran',
+            'value' => CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($model, 'payment_remaining'))),
         ),
         array(
             'label' => 'Akumulasi Depresiasi',

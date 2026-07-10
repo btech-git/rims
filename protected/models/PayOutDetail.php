@@ -12,11 +12,13 @@
  * @property integer $receive_item_id
  * @property integer $work_order_expense_header_id
  * @property integer $item_request_header_id
+ * @property integer $asset_purchase_id
  *
  * The followings are the available model relations:
  * @property TransactionReceiveItem $receiveItem
  * @property WorkOrderExpenseHeader $workOrderExpenseHeader
  * @property ItemRequestHeader $itemRequestHeader
+ * @property AssetPurchase $assetPurchase
  * @property PaymentOut $paymentOut
  */
 class PayOutDetail extends CActiveRecord {
@@ -45,12 +47,12 @@ class PayOutDetail extends CActiveRecord {
         // will receive user inputs.
         return array(
             array('payment_out_id', 'required'),
-            array('payment_out_id, receive_item_id, work_order_expense_header_id, item_request_header_id', 'numerical', 'integerOnly' => true),
+            array('payment_out_id, receive_item_id, work_order_expense_header_id, item_request_header_id, asset_purchase_id', 'numerical', 'integerOnly' => true),
             array('total_invoice, amount', 'length', 'max' => 18),
             array('memo', 'length', 'max' => 100),
             // The following rule is used by search().
             // Please remove those attributes that should not be searched.
-            array('id, total_invoice, memo, payment_out_id, receive_item_id, work_order_expense_header_id, amount, item_request_header_id', 'safe', 'on' => 'search'),
+            array('id, total_invoice, memo, payment_out_id, receive_item_id, work_order_expense_header_id, amount, item_request_header_id, asset_purchase_id', 'safe', 'on' => 'search'),
         );
     }
 
@@ -65,6 +67,7 @@ class PayOutDetail extends CActiveRecord {
             'paymentOut' => array(self::BELONGS_TO, 'PaymentOut', 'payment_out_id'),
             'workOrderExpenseHeader' => array(self::BELONGS_TO, 'WorkOrderExpenseHeader', 'work_order_expense_header_id'),
             'itemRequestHeader' => array(self::BELONGS_TO, 'ItemRequestHeader', 'item_request_header_id'),
+            'assetPurchase' => array(self::BELONGS_TO, 'AssetPurchase', 'asset_purchase_id'),
         );
     }
 
@@ -80,6 +83,7 @@ class PayOutDetail extends CActiveRecord {
             'payment_out_id' => 'Payment Out',
             'receive_item_id' => 'Receive Item',
             'work_order_expense_header_id' => 'Sub Pekerjaan Luar',
+            'asset_purchase_id' => 'Pembelian Aset',
         );
     }
 
@@ -101,6 +105,7 @@ class PayOutDetail extends CActiveRecord {
         $criteria->compare('receive_item_id', $this->receive_item_id);
         $criteria->compare('work_order_expense_header_id', $this->work_order_expense_header_id);
         $criteria->compare('item_request_header_id', $this->item_request_header_id);
+        $criteria->compare('asset_purchase_id', $this->asset_purchase_id);
 
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,

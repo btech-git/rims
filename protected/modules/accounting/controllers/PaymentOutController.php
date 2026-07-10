@@ -110,21 +110,31 @@ class PaymentOutController extends Controller {
         if ($movementType == 1) {
             $workOrderExpense = null;
             $itemRequestHeader = null;
+            $assetPurchase = null;
             $receiveItem = TransactionReceiveItem::model()->findByPk($transactionId);
             $supplier = Supplier::model()->findByPk($receiveItem->supplier_id);
             $paymentOut->header->supplier_id = $receiveItem->supplier_id;
         } elseif ($movementType == 2) {
             $receiveItem = null;
             $itemRequestHeader = null;
+            $assetPurchase = null;
             $workOrderExpense = WorkOrderExpenseHeader::model()->findByPk($transactionId);
             $supplier = Supplier::model()->findByPk($workOrderExpense->supplier_id);
             $paymentOut->header->supplier_id = $workOrderExpense->supplier_id;
         } elseif ($movementType == 3) {
             $workOrderExpense = null;
             $receiveItem = null;
+            $assetPurchase = null;
             $itemRequestHeader = ItemRequestHeader::model()->findByPk($transactionId);
             $supplier = Supplier::model()->findByPk($itemRequestHeader->supplier_id);
             $paymentOut->header->supplier_id = $itemRequestHeader->supplier_id;
+        } elseif ($movementType == 4) {
+            $workOrderExpense = null;
+            $itemRequestHeader = null;
+            $receiveItem = null;
+            $assetPurchase = AssetPurchase::model()->findByPk($transactionId);
+            $supplier = Supplier::model()->findByPk($assetPurchase->supplier_id);
+            $paymentOut->header->supplier_id = $assetPurchase->supplier_id;
         } else {
             $paymentOut->header->supplier_id = null;
         }
@@ -382,6 +392,9 @@ class PaymentOutController extends Controller {
             $workOrderExpenseDataProvider->criteria->params[':plate_number'] = "%{$plateNumber}%";
         }
 
+        $assetPurchase = Search::bind(new AssetPurchase('search'), isset($_GET['AssetPurchase']) ? $_GET['AssetPurchase'] : array());
+        $assetPurchaseDataProvider = $assetPurchase->searchForPaymentOut();
+        
         $this->render('admin', array(
             'paymentOut' => $paymentOut,
             'dataProvider' => $dataProvider,
@@ -398,6 +411,8 @@ class PaymentOutController extends Controller {
             'customerName' => $customerName,
             'plateNumber' => $plateNumber,
             'receivableSupplier' => $receivableSupplier,
+            'assetPurchase' => $assetPurchase,
+            'assetPurchaseDataProvider' => $assetPurchaseDataProvider,
         ));
     }
 
@@ -445,7 +460,7 @@ class PaymentOutController extends Controller {
                         $jurnalHutang = new JurnalUmum;
                         $jurnalHutang->kode_transaksi = $paymentOut->payment_number;
                         $jurnalHutang->tanggal_transaksi = $paymentOut->payment_date;
-                        $jurnalHutang->coa_id = $paymentOut->supplier->coa_id;
+                        $jurnalHutang->coa_id = !empty($detail->asset_purchase_id) ? 2988 : $paymentOut->supplier->coa_id;
                         $jurnalHutang->branch_id = $paymentOut->branch_id;
                         $jurnalHutang->total = $detail->amount;
                         $jurnalHutang->debet_kredit = 'D';

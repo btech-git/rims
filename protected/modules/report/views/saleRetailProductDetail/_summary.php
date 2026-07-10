@@ -81,7 +81,7 @@ Yii::app()->clientScript->registerCss('_report', '
                         <?php foreach ($saleRetailData as $saleRetailRow): ?>
                             <?php $total = $saleRetailRow['total_price']; ?>
                             <tr>
-                                <td class="width2-1"><?php echo CHtml::encode($saleRetailRow['invoice_number']); ?></td>
+                                <td class="width2-1"><?php echo CHtml::encode($saleRetailRow['transaction_number']); ?></td>
                                 <td class="width2-2">
                                     <?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($saleRetailRow['invoice_date']))); ?>
                                 </td>

@@ -35,6 +35,7 @@ class PaymentOutComponent extends CComponent {
                     $detail->receive_item_id = $transactionId;
                     $detail->work_order_expense_header_id = null;
                     $detail->item_request_header_id = null;
+                    $detail->asset_purchase_id = null;
                     $detail->total_invoice = $receiveItem->invoice_grand_total;
                     $this->details[] = $detail;
                 }
@@ -56,6 +57,7 @@ class PaymentOutComponent extends CComponent {
                     $detail = new PayOutDetail;
                     $detail->receive_item_id = null;
                     $detail->item_request_header_id = null;
+                    $detail->asset_purchase_id = null;
                     $detail->work_order_expense_header_id = $transactionId;
                     $detail->total_invoice = $workOrderExpense->payment_remaining;
                     $this->details[] = $detail;
@@ -78,8 +80,32 @@ class PaymentOutComponent extends CComponent {
                     $detail = new PayOutDetail;
                     $detail->receive_item_id = null;
                     $detail->work_order_expense_header_id = null;
+                    $detail->asset_purchase_id = null;
                     $detail->item_request_header_id = $transactionId;
                     $detail->total_invoice = $itemRequestHeader->remaining_payment;
+                    $this->details[] = $detail;
+                }
+            } else {
+                $this->header->addError('error', 'Invoice tidak ada di dalam detail');
+            }
+        } elseif ($movementType == 4) {
+            $assetPurchase = AssetPurchase::model()->findByPk($transactionId);
+            
+            if ($assetPurchase != null) {
+                foreach ($this->details as $detail) {
+                    if ($detail->asset_purchase_id == $assetPurchase->id) {
+                        $exist = TRUE;
+                        break;
+                    }
+                }
+
+                if (!$exist) {
+                    $detail = new PayOutDetail;
+                    $detail->receive_item_id = null;
+                    $detail->work_order_expense_header_id = null;
+                    $detail->item_request_header_id = null;
+                    $detail->asset_purchase_id = $transactionId;
+                    $detail->total_invoice = $assetPurchase->purchase_value;
                     $this->details[] = $detail;
                 }
             } else {
@@ -259,6 +285,11 @@ class PaymentOutComponent extends CComponent {
                 $itemRequestHeader->total_payment = $itemRequestHeader->getTotalPayment();
                 $itemRequestHeader->remaining_payment = $itemRequestHeader->getRemainingPayment();
                 $valid = $valid && $itemRequestHeader->update(array('total_payment', 'remaining_payment'));
+            }  elseif (!empty($detail->asset_purchase_id)) {
+                $assetPurchase = AssetPurchase::model()->findByPk($detail->asset_purchase_id);
+                $assetPurchase->total_payment = $assetPurchase->getTotalPayment();
+                $assetPurchase->payment_remaining = $assetPurchase->getPaymentRemaining();
+                $valid = $valid && $assetPurchase->update(array('total_payment', 'payment_remaining'));
             } 
         }
 

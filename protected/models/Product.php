@@ -252,21 +252,21 @@ class Product extends CActiveRecord {
         $criteria->compare('t.id', $this->id);
         $criteria->compare('t.code', $this->code, true);
         $criteria->compare('t.manufacturer_code', $this->manufacturer_code, true);
-        $criteria->compare('barcode', $this->barcode, true);
+        $criteria->compare('t.barcode', $this->barcode, true);
         $criteria->compare('t.name', $this->name, true);
-        $criteria->compare('description', $this->description, true);
-        $criteria->compare('production_year', $this->production_year);
+        $criteria->compare('t.description', $this->description, true);
+        $criteria->compare('t.production_year', $this->production_year);
         $criteria->compare('t.brand_id', $this->brand_id);
         $criteria->compare('t.sub_brand_id', $this->sub_brand_id);
         $criteria->compare('t.sub_brand_series_id', $this->sub_brand_series_id);
-        $criteria->compare('extension', $this->extension, true);
+        $criteria->compare('t.extension', $this->extension, true);
         $criteria->compare('t.product_master_category_id', $this->product_master_category_id);
         $criteria->compare('t.product_sub_master_category_id', $this->product_sub_master_category_id);
         $criteria->compare('t.product_sub_category_id', $this->product_sub_category_id);
         $criteria->compare('t.vehicle_car_make_id', $this->vehicle_car_make_id);
         $criteria->compare('t.vehicle_car_model_id', $this->vehicle_car_model_id);
-        $criteria->compare('purchase_price', $this->purchase_price, true);
-        $criteria->compare('recommended_selling_price', $this->recommended_selling_price, true);
+        $criteria->compare('t.purchase_price', $this->purchase_price, true);
+        $criteria->compare('t.recommended_selling_price', $this->recommended_selling_price, true);
         $criteria->compare('hpp', $this->hpp, true);
         $criteria->compare('retail_price', $this->retail_price, true);
         $criteria->compare('stock', $this->stock);
@@ -285,66 +285,66 @@ class Product extends CActiveRecord {
         $criteria->compare('t.tire_size_id', $this->tire_size_id);
         $criteria->compare('t.oil_sae_id', $this->oil_sae_id);
 
-        $criteria->together = true;
-        $criteria->with = array('productSubMasterCategory', 'productMasterCategory', 'productSubCategory', 'brand', 'subBrand', 'subBrandSeries');
-        $criteria->compare('productMasterCategory.code', $this->product_master_category_code, true);
-        $criteria->compare('productMasterCategory.name', $this->product_master_category_name, true);
-        $criteria->compare('productSubMasterCategory.code', $this->product_sub_master_category_code, true);
-        $criteria->compare('productSubMasterCategory.name', $this->product_sub_master_category_name, true);
-        $criteria->compare('productSubCategory.code', $this->product_sub_category_code, true);
-        $criteria->compare('productSubCategory.name', $this->product_sub_category_name, true);
-        $criteria->compare('brand.name', $this->product_brand_name, true);
-        $criteria->compare('subBrand.name', $this->product_sub_brand_name, true);
-        $criteria->compare('subBrandSeries.name', $this->product_sub_brand_series_name, true);
-
-        $explodeKeyword = explode(" ", $this->findkeyword);
-
-        foreach ($explodeKeyword as $key) {
-
-            $criteria->compare('t.code', $key, true, 'AND');
-            $criteria->compare('production_year', $key, true, 'AND');
-            $criteria->compare('manufacturer_code', $key, true, 'AND');
-            $criteria->compare('barcode', $key, true, 'AND');
-            $criteria->compare('t.name', $key, true, 'AND');
-            $criteria->compare('t.description', $key, true, 'AND');
-            $criteria->compare('extension', $key, true, 'AND');
-
-            $criteria->compare('productMasterCategory.code', $key, true, 'AND');
-            $criteria->compare('productMasterCategory.name', $key, true, 'AND');
-            $criteria->compare('productSubMasterCategory.code', $key, true, 'AND');
-            $criteria->compare('productSubMasterCategory.name', $key, true, 'AND');
-
-            $criteria->compare('brand.name', $key, true, 'AND');
-        }
+//        $criteria->together = true;
+//        $criteria->with = array('productSubMasterCategory', 'productMasterCategory', 'productSubCategory', 'brand', 'subBrand', 'subBrandSeries');
+//        $criteria->compare('productMasterCategory.code', $this->product_master_category_code, true);
+//        $criteria->compare('productMasterCategory.name', $this->product_master_category_name, true);
+//        $criteria->compare('productSubMasterCategory.code', $this->product_sub_master_category_code, true);
+//        $criteria->compare('productSubMasterCategory.name', $this->product_sub_master_category_name, true);
+//        $criteria->compare('productSubCategory.code', $this->product_sub_category_code, true);
+//        $criteria->compare('productSubCategory.name', $this->product_sub_category_name, true);
+//        $criteria->compare('brand.name', $this->product_brand_name, true);
+//        $criteria->compare('subBrand.name', $this->product_sub_brand_name, true);
+//        $criteria->compare('subBrandSeries.name', $this->product_sub_brand_series_name, true);
+//
+//        $explodeKeyword = explode(" ", $this->findkeyword);
+//
+//        foreach ($explodeKeyword as $key) {
+//
+//            $criteria->compare('t.code', $key, true, 'AND');
+//            $criteria->compare('production_year', $key, true, 'AND');
+//            $criteria->compare('manufacturer_code', $key, true, 'AND');
+//            $criteria->compare('barcode', $key, true, 'AND');
+//            $criteria->compare('t.name', $key, true, 'AND');
+//            $criteria->compare('t.description', $key, true, 'AND');
+//            $criteria->compare('extension', $key, true, 'AND');
+//
+//            $criteria->compare('productMasterCategory.code', $key, true, 'AND');
+//            $criteria->compare('productMasterCategory.name', $key, true, 'AND');
+//            $criteria->compare('productSubMasterCategory.code', $key, true, 'AND');
+//            $criteria->compare('productSubMasterCategory.name', $key, true, 'AND');
+//
+//            $criteria->compare('brand.name', $key, true, 'AND');
+//        }
 
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
-            'sort' => array(
-                "defaultOrder" => "t.status ASC, t.name ASC",
-                'attributes' => array(
-                    'product_master_category_code' => array(
-                        'asc' => 'productMasterCategory.code',
-                        'desc' => 'productMasterCategory.code DESC'
-                    ),
-                    'product_master_category_name' => array(
-                        'asc' => 'productMasterCategory.name',
-                        'desc' => 'productMasterCategory.name DESC'
-                    ),
-                    'product_sub_master_category_code' => array(
-                        'asc' => 'productSubMasterCategory.code',
-                        'desc' => 'productSubMasterCategory.code DESC'
-                    ),
-                    'product_sub_master_category_name' => array(
-                        'asc' => 'productSubMasterCategory.name',
-                        'desc' => 'productSubMasterCategory.name DESC'
-                    ),
-                    'product_sub_category_code' => array(
-                        'asc' => 'productSubMasterCategory.code',
-                        'desc' => 'productSubMasterCategory.code DESC'
-                    ),
-                    '*'
-                )
-            ),
+//            'sort' => array(
+//                "defaultOrder" => "t.status ASC, t.name ASC",
+//                'attributes' => array(
+//                    'product_master_category_code' => array(
+//                        'asc' => 'productMasterCategory.code',
+//                        'desc' => 'productMasterCategory.code DESC'
+//                    ),
+//                    'product_master_category_name' => array(
+//                        'asc' => 'productMasterCategory.name',
+//                        'desc' => 'productMasterCategory.name DESC'
+//                    ),
+//                    'product_sub_master_category_code' => array(
+//                        'asc' => 'productSubMasterCategory.code',
+//                        'desc' => 'productSubMasterCategory.code DESC'
+//                    ),
+//                    'product_sub_master_category_name' => array(
+//                        'asc' => 'productSubMasterCategory.name',
+//                        'desc' => 'productSubMasterCategory.name DESC'
+//                    ),
+//                    'product_sub_category_code' => array(
+//                        'asc' => 'productSubMasterCategory.code',
+//                        'desc' => 'productSubMasterCategory.code DESC'
+//                    ),
+//                    '*'
+//                )
+//            ),
             'pagination' => array(
                 'pageSize' => 100,
             ),
@@ -1146,7 +1146,7 @@ class Product extends CActiveRecord {
         }
         
         $sql = "SELECT r.invoice_number, r.invoice_date, c.name as customer, v.plate_number, p.quantity, p.unit_price, p.total_price, i.name AS insurance, 
-                    k.name AS car_make, d.name AS car_model, s.name AS car_sub_model, t.work_order_number, t.customer_work_order_number
+                    k.name AS car_make, d.name AS car_model, s.name AS car_sub_model, t.work_order_number, t.customer_work_order_number, t.transaction_number
                 FROM " . InvoiceDetail::model()->tableName() . " p 
                 INNER JOIN " . InvoiceHeader::model()->tableName() . " r ON r.id = p.invoice_id
                 INNER JOIN " . RegistrationTransaction::model()->tableName() . " t ON t.id = r.registration_transaction_id

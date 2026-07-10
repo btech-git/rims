@@ -3,19 +3,23 @@
         <tr style="background-color: skyblue">
             <?php if ($movementType == 2): ?>
                 <th style="text-align: center; width: 17%">Sub Pekerjaan #</th>
-                <th style="text-align: center; width: 12%">Tanggal</th>
+                <th style="text-align: center; width: 7%">Tanggal</th>
                 <th style="text-align: center; width: 17%">RG #</th>
             <?php elseif ($movementType == 1): ?>
                 <th style="text-align: center; width: 12%">Invoice #</th>
-                <th style="text-align: center; width: 12%">Tanggal</th>
+                <th style="text-align: center; width: 7%">Tanggal</th>
                 <th style="text-align: center; width: 12%">SJ #</th>
                 <th style="text-align: center; width: 12%">Jatuh Tempo</th>
             <?php elseif ($movementType == 3): ?>
                 <th style="text-align: center; width: 12%">Pembelian #</th>
-                <th style="text-align: center; width: 12%">Tanggal</th>
-                <th style="text-align: center; width: 12%">Note</th>
+                <th style="text-align: center; width: 7%">Tanggal</th>
+                <th style="text-align: center; width: 35%">Note</th>
+            <?php elseif ($movementType == 4): ?>
+                <th style="text-align: center; width: 12%">Asset #</th>
+                <th style="text-align: center; width: 7%">Tanggal</th>
+                <th style="text-align: center; width: 35%">Deskripsi</th>
             <?php endif; ?>
-            <th style="text-align: center; width: 12%">Invoice</th>
+            <th style="text-align: center; width: 8%">Invoice</th>
             <th style="text-align: center; width: 12%">Payment</th>
             <th style="text-align: center">Memo</th>
             <th style="width: 5%"></th>
@@ -58,6 +62,16 @@
                         <?php echo CHtml::encode(Yii::app()->dateFormatter->format("d MMM yyyy", CHtml::value($itemRequestHeader, 'transaction_date'))); ?>
                     </td>
                     <td><?php echo CHtml::encode(CHtml::value($itemRequestHeader, 'note')); ?></td>
+                <?php elseif ($movementType == 4): ?>
+                    <?php $assetPurchase = AssetPurchase::model()->findByPk($detail->asset_purchase_id); ?>
+                    <td>
+                        <?php echo CHtml::encode(CHtml::value($assetPurchase, 'transaction_number')); ?>
+                        <?php echo CHtml::error($detail, 'asset_purchase_id'); ?>
+                    </td>
+                    <td>
+                        <?php echo CHtml::encode(Yii::app()->dateFormatter->format("d MMM yyyy", CHtml::value($assetPurchase, 'transaction_date'))); ?>
+                    </td>
+                    <td><?php echo CHtml::encode(CHtml::value($assetPurchase, 'description')); ?></td>
                 <?php endif; ?>
                     
                 <td style="text-align: right">

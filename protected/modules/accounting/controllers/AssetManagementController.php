@@ -106,12 +106,17 @@ class AssetManagementController extends Controller {
         $model->status = 'Approved';
         $model->user_id = Yii::app()->user->id;
 
+        $supplier = Search::bind(new Supplier('search'), isset($_GET['Supplier']) ? $_GET['Supplier'] : array());
+        $supplierDataProvider = $supplier->search();
+        
         if (isset($_POST['Submit']) && IdempotentManager::check()) {
             $model->attributes = $_POST['AssetPurchase'];
-            $model->accumulated_depreciation_value = 0.00;
             $model->depreciation_start_date = date('Y-m-d');
             $model->depreciation_end_date = date('Y-m-d', strtotime($model->depreciation_start_date . ' + ' . $model->assetCategory->number_of_years . ' years'));
             $model->current_value = $model->purchase_value;
+            $model->payment_remaining = $model->purchase_value;
+            $model->total_payment = '0.00';
+            $model->accumulated_depreciation_value = '0.00';
             $model->monthly_useful_life = empty($model->assetCategory) ? 0 : $model->assetCategory->number_of_years * 12;
             $model->generateCodeNumber(Yii::app()->dateFormatter->format('M', strtotime($model->transaction_date)), Yii::app()->dateFormatter->format('yyyy', strtotime($model->transaction_date)), $model->branch_id);
             
@@ -136,7 +141,7 @@ class AssetManagementController extends Controller {
                 $jurnalBanking = new JurnalUmum;
                 $jurnalBanking->kode_transaksi = $model->transaction_number;
                 $jurnalBanking->tanggal_transaksi = $model->transaction_date;
-                $jurnalBanking->coa_id = empty($model->companyBank->coa_id) ? 7 : $model->companyBank->coa_id;
+                $jurnalBanking->coa_id = 2988;
                 $jurnalBanking->branch_id = $model->branch_id;
                 $jurnalBanking->total = $model->purchase_value;
                 $jurnalBanking->debet_kredit = 'K';
@@ -152,6 +157,8 @@ class AssetManagementController extends Controller {
 
         $this->render('createPurchase', array(
             'model' => $model,
+            'supplier' => $supplier,
+            'supplierDataProvider' => $supplierDataProvider,
         ));
     }
 
@@ -316,7 +323,7 @@ class AssetManagementController extends Controller {
                 $jurnalBanking = new JurnalUmum;
                 $jurnalBanking->kode_transaksi = $model->transaction_number;
                 $jurnalBanking->tanggal_transaksi = $model->transaction_date;
-                $jurnalBanking->coa_id = empty($model->companyBank->coa_id) ? 7 : $model->companyBank->coa_id;
+                $jurnalBanking->coa_id = 2988;
                 $jurnalBanking->branch_id = $model->branch_id;
                 $jurnalBanking->total = $model->purchase_value;
                 $jurnalBanking->debet_kredit = 'K';
@@ -344,8 +351,9 @@ class AssetManagementController extends Controller {
         $this->loadModel($id)->delete();
 
         // if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
-        if (!isset($_GET['ajax']))
+        if (!isset($_GET['ajax'])) {
             $this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
+        }
     }
 
     /**
@@ -373,17 +381,37 @@ class AssetManagementController extends Controller {
         ));
     }
 
-    /**
-     * Returns the data model based on the primary key given in the GET variable.
-     * If the data model is not found, an HTTP exception will be raised.
-     * @param integer $id the ID of the model to be loaded
-     * @return AssetPurchase the loaded model
-     * @throws CHttpException
-     */
+    public function actionAjaxJsonSupplier($id) {
+        if (Yii::app()->request->isAjaxRequest) {
+            if (empty($id)) {
+                $model = new AssetPurchase;
+            } else {
+                $model = AssetPurchase::model()->findByPk($id);
+            }
+            
+            if (isset($_POST['AssetPurchase'])) {
+                $model->attributes = $_POST['AssetPurchase'];
+            }
+            
+            $supplier = Supplier::model()->findByPk($model->supplier_id);
+        
+            $object = array(
+                'supplier_id' => CHtml::value($supplier, 'id'),
+                'supplier_name' => CHtml::value($supplier, 'name'),
+                'supplier_company' => CHtml::value($supplier, 'company'),
+                'supplier_address' => nl2br(CHtml::value($supplier, 'address')),
+                
+            );
+            echo CJSON::encode($object);
+        }
+    }
+
     public function loadModel($id) {
         $model = AssetPurchase::model()->findByPk($id);
-        if ($model === null)
+        if ($model === null) {
             throw new CHttpException(404, 'The requested page does not exist.');
+        }
+        
         return $model;
     }
 
