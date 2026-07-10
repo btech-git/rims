@@ -29,24 +29,7 @@ Yii::app()->clientScript->registerScript('report', '
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    
-                    <div class="medium-6 columns">
-                        <div class="field">
-                            <div class="row collapse">
-                                <div class="small-4 columns">
-                                    <label class="prefix">Halaman saat ini</label>
-                                </div>
-                                <div class="small-8 columns">
-                                    <?php echo CHtml::textField('page', '', array('size' => 3, 'id' => 'CurrentPage')); ?>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="row">
-                    <div class="medium-6 columns">
+                        
                         <div class="field">
                             <div class="row collapse">
                                 <div class="small-4 columns">
@@ -117,27 +100,7 @@ Yii::app()->clientScript->registerScript('report', '
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    
-                    <div class="medium-6 columns">
-                        <div class="field">
-                            <div class="row collapse">
-                                <div class="small-4 columns">
-                                    <label class="prefix">Type</label>
-                                </div>
-                                <div class="small-8 columns">
-                                    <?php echo CHtml::dropDownlist('CustomerType', $customerType, array(
-                                        'INDIVIDUAL' => 'INDIVIDUAL', 
-                                        'COMPANY' => 'COMPANY'
-                                    ), array('empty' => '-- All Type --')); ?>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="medium-6 columns">
+                        
                         <div class="field">
                             <div class="row collapse">
                                 <div class="small-4 columns">
@@ -148,25 +111,7 @@ Yii::app()->clientScript->registerScript('report', '
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    
-                    <div class="medium-6 columns">
-                        <div class="field">
-                            <div class="row collapse">
-                                <div class="small-4 columns">
-                                    <span class="prefix">Branch</span>
-                                </div>
-                                 <div class="small-8 columns">
-                                      <?php echo CHtml::activeDropDownlist($invoiceHeader, 'branch_id', CHtml::listData(Branch::model()->findAllbyAttributes(array('status'=>'Active')), 'id','name'), array('empty'=>'-- All Branch --')); ?>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="row">
-
-                    <div class="medium-6 columns">
+                        
                         <div class="field">
                             <div class="row collapse">
                                 <div class="small-4 columns">
@@ -210,20 +155,52 @@ Yii::app()->clientScript->registerScript('report', '
                         <div class="field">
                             <div class="row collapse">
                                 <div class="small-4 columns">
-                                    <span class="prefix">Status</span>
+                                    <label class="prefix">Halaman saat ini</label>
+                                </div>
+                                <div class="small-8 columns">
+                                    <?php echo CHtml::textField('page', '', array('size' => 3, 'id' => 'CurrentPage')); ?>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="field">
+                            <div class="row collapse">
+                                <div class="small-4 columns">
+                                    <span class="prefix">Asuransi</span>
                                 </div>
                                  <div class="small-8 columns">
-                                      <?php echo CHtml::activeDropDownlist($invoiceHeader, 'status', array(
-                                          'INVOICING' => 'INVOICING',
-                                          'PARTIALLY PAID' => 'PARTIALLY PAID',
-                                          'PAID' => 'PAID',
-                                      ), array('empty'=>'-- All Status --')); ?>
+                                      <?php echo CHtml::activeDropDownlist($invoiceHeader, 'insurance_company_id', CHtml::listData(InsuranceCompany::model()->findAll(array('order' => 't.name ASC')), 'id','name'), array('empty'=>'-- All --')); ?>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="field">
+                            <div class="row collapse">
+                                <div class="small-4 columns">
+                                    <label class="prefix">Type</label>
+                                </div>
+                                <div class="small-8 columns">
+                                    <?php echo CHtml::dropDownlist('CustomerType', $customerType, array(
+                                        'INDIVIDUAL' => 'INDIVIDUAL', 
+                                        'COMPANY' => 'COMPANY'
+                                    ), array('empty' => '-- All --')); ?>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="field">
+                            <div class="row collapse">
+                                <div class="small-4 columns">
+                                    <span class="prefix">Branch</span>
+                                </div>
+                                 <div class="small-8 columns">
+                                      <?php echo CHtml::activeDropDownlist($invoiceHeader, 'branch_id', CHtml::listData(Branch::model()->findAllbyAttributes(array('status'=>'Active')), 'id','name'), array('empty'=>'-- All --')); ?>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-
+                
                 <div class="clear"></div>
 
                 <div class="row buttons">
