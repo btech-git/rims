@@ -118,7 +118,9 @@
             <tr style="background-color: skyblue">
                 <th style="text-align: center; width: 15%">Sub Pekerjaan #</th>
                 <th style="text-align: center; width: 15%">Tanggal</th>
-                <th style="text-align: center; width: 15%">RG #</th>
+                <th style="text-align: center; width: 15%">WO #</th>
+                <th style="text-align: center">Customer</th>
+                <th style="text-align: center">Plat #</th>
                 <th style="text-align: center">Memo</th>
                 <th style="text-align: center; width: 15%">Total Invoice</th>
                 <th style="text-align: center; width: 15%">Payment</th>
@@ -137,11 +139,13 @@
                     </td>
                     <td><?php echo CHtml::encode(Yii::app()->dateFormatter->format("d MMM yyyy", CHtml::value($workOrderExpenseHeader, 'transaction_date'))); ?></td>
                     <td>
-                        <?php echo CHtml::link(CHtml::encode($workOrderExpenseHeader->registrationTransaction->transaction_number), array(
+                        <?php echo CHtml::link(CHtml::encode($workOrderExpenseHeader->registrationTransaction->work_order_number), array(
                             "/frontDesk/registrationTransaction/view", 
                             "id"=>$workOrderExpenseHeader->registration_transaction_id
                         ), array("target" => "_blank")); ?>
                     </td>
+                    <td><?php echo CHtml::encode(CHtml::value($workOrderExpenseHeader, 'registrationTransaction.customer.name')); ?></td>
+                    <td><?php echo CHtml::encode(CHtml::value($workOrderExpenseHeader, 'registrationTransaction.vehicle.plate_number')); ?></td>
                     <td><?php echo CHtml::encode(CHtml::value($detail, 'memo')); ?></td>
                     <td style="text-align: right">
                         <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($detail, 'total_invoice'))); ?>
