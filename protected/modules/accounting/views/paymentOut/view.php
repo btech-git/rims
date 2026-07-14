@@ -144,7 +144,7 @@
                             "id"=>$workOrderExpenseHeader->registration_transaction_id
                         ), array("target" => "_blank")); ?>
                     </td>
-                    <td><?php echo CHtml::encode(CHtml::value($workOrderExpenseHeader, 'registrationTransaction.customer.name   ')); ?></td>
+                    <td><?php echo CHtml::encode(CHtml::value($workOrderExpenseHeader, 'registrationTransaction.customer.company')); ?></td>
                     <td><?php echo CHtml::encode(CHtml::value($workOrderExpenseHeader, 'registrationTransaction.vehicle.plate_number')); ?></td>
                     <td><?php echo CHtml::encode(CHtml::value($detail, 'memo')); ?></td>
                     <td style="text-align: right">
