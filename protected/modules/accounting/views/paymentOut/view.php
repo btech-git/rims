@@ -116,14 +116,14 @@
     <?php if ($paymentOut->movement_type == 2): ?>
         <thead>
             <tr style="background-color: skyblue">
-                <th style="text-align: center; width: 15%">Sub Pekerjaan #</th>
-                <th style="text-align: center; width: 15%">Tanggal</th>
-                <th style="text-align: center; width: 15%">WO #</th>
-                <th style="text-align: center">Customer</th>
-                <th style="text-align: center">Plat #</th>
+                <th style="text-align: center; width: 10%">Sub Pekerjaan #</th>
+                <th style="text-align: center; width: 7%">Tanggal</th>
+                <th style="text-align: center; width: 10%">WO #</th>
+                <th style="text-align: center; width: 15%">Customer</th>
+                <th style="text-align: center; width: 8%">Plat #</th>
                 <th style="text-align: center">Memo</th>
-                <th style="text-align: center; width: 15%">Total Invoice</th>
-                <th style="text-align: center; width: 15%">Payment</th>
+                <th style="text-align: center; width: 10%">Total Invoice</th>
+                <th style="text-align: center; width: 10%">Payment</th>
             </tr>
         </thead>
 
@@ -144,7 +144,7 @@
                             "id"=>$workOrderExpenseHeader->registration_transaction_id
                         ), array("target" => "_blank")); ?>
                     </td>
-                    <td><?php echo CHtml::encode(CHtml::value($workOrderExpenseHeader, 'registrationTransaction.customer.name')); ?></td>
+                    <td><?php echo CHtml::encode(CHtml::value($workOrderExpenseHeader, 'registrationTransaction.customer.name   ')); ?></td>
                     <td><?php echo CHtml::encode(CHtml::value($workOrderExpenseHeader, 'registrationTransaction.vehicle.plate_number')); ?></td>
                     <td><?php echo CHtml::encode(CHtml::value($detail, 'memo')); ?></td>
                     <td style="text-align: right">
