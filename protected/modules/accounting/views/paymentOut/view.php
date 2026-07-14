@@ -132,7 +132,7 @@
                         <?php $workOrderExpenseHeader = WorkOrderExpenseHeader::model()->findByPk($detail->work_order_expense_header_id); ?>
                         <?php echo CHtml::link(CHtml::encode($workOrderExpenseHeader->transaction_number), array(
                             "/accounting/workOrderExpense/show", 
-                            "id" => $header->id
+                            "id" => $workOrderExpenseHeader->id
                         ), array("target" => "_blank")); ?>
                     </td>
                     <td><?php echo CHtml::encode(Yii::app()->dateFormatter->format("d MMM yyyy", CHtml::value($workOrderExpenseHeader, 'transaction_date'))); ?></td>
