@@ -397,6 +397,12 @@ class MovementOutHeaderController extends Controller {
             $model->cancelled_datetime = date('Y-m-d H:i:s');
             $model->user_id_cancelled = Yii::app()->user->id;
             $model->update(array('status', 'cancelled_datetime', 'user_id_cancelled'));
+            
+            if (!empty($model->registration_transaction_id)) {
+                $registrationTransaction = RegistrationTransaction::model()->findByPk($model->registration_transaction_id);
+                $registrationTransaction->status = 'Waitlist';
+                $registrationTransaction->update(array('status'));
+            }
 
             foreach($model->movementOutDetails as $detail) {
                 $detail->quantity = 0;

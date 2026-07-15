@@ -53,7 +53,7 @@ class EmployeeDayoff extends CActiveRecord {
             array('transaction_number', 'length', 'max' => 50),
             array('status, off_type', 'length', 'max' => 30),
             array('dayOffRemaining', 'remainingDayOff'),
-            array('date_to', 'disjointDate'),
+//            array('date_to', 'disjointDate'),
             array('day', 'compare', 'compareValue' => 0, 'operator' => '>'),
             array('date_to', 'compare', 'compareAttribute' => 'date_from', 'operator' => '>='),
             // The following rule is used by search().

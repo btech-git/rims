@@ -10,6 +10,14 @@ Yii::app()->clientScript->registerScript('search', "
 ");
 ?>
 
+<style> 
+ .table_wrapper{
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+}
+</style>
+
 <div>
     <?php echo CHtml::beginForm(array(''), 'get'); ?>
     
@@ -44,7 +52,7 @@ Yii::app()->clientScript->registerScript('search', "
     <?php endif; ?>
 </div>
 
-<div id="product_stock_table">
+<div class="table_wrapper">
     <?php $this->renderPartial('_productStockTable', array(
         'branches' => $branches,
         'inventoryTireStockReportData' => $inventoryTireStockReportData,

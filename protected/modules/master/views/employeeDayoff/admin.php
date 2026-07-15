@@ -107,9 +107,9 @@ $('.search-form form').submit(function(){
                             )),
                         ),
                         'user.username',
-                        array(
-                            'class' => 'CButtonColumn',
-                        ),
+//                        array(
+//                            'class' => 'CButtonColumn',
+//                        ),
                     ),
                 )); ?>
             </div>

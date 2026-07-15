@@ -67,9 +67,9 @@ class StockTireController extends Controller {
             }
         }
         
-//        if (isset($_GET['SaveExcel'])) {
-//            $this->saveToExcel($productDataProvider, $branches, $endYear);
-//        }
+        if (isset($_GET['SaveExcel'])) {
+            $this->saveToExcel($inventoryTireStockReportData, $startYear, $endYear, $branches);
+        }
 
         $this->render('check', array(
             'inventoryTireStockReportData' => $inventoryTireStockReportData,
@@ -84,40 +84,6 @@ class StockTireController extends Controller {
             'productName' => $productName,
             'tireSizeId' => $tireSizeId,
             'branches' => $branches,
-        ));
-    }
-
-    public function actionDetail($id, $endDate) {
-        $product = Product::model()->findByPk($id);
-        $branches = Branch::model()->findAllByAttributes(array('status' => 'Active'));
-        $detailTabs = array();
-        
-        $limit = 5000;
-        
-        foreach ($branches as $branch) {
-            $latestInventoryData = InventoryDetail::getLatestInventoryData($product->id, $branch->id, $limit, $endDate);
-            $excludeInventoryIds = array_map(function($item) { return $item['id']; }, $latestInventoryData);
-            $inventoryBeginningStock = InventoryDetail::getInventoryBeginningStock($product->id, $branch->id, $excludeInventoryIds);
-            $tabContent = $this->renderPartial('_viewStock', array(
-                'latestInventoryData' => $latestInventoryData,
-                'inventoryBeginningStock' => $inventoryBeginningStock,
-            ), true);
-            $detailTabs[$branch->name] = array('content' => $tabContent);
-        }
-        $latestInventoryData = InventoryDetail::getLatestInventoryData($product->id, '', $limit, $endDate);
-        $excludeInventoryIds = array_map(function($item) { return $item['id']; }, $latestInventoryData);
-        $inventoryBeginningStock = InventoryDetail::getInventoryBeginningStock($product->id, '', $excludeInventoryIds);
-        $tabContent = $this->renderPartial('_viewStock', array(
-            'latestInventoryData' => $latestInventoryData,
-            'inventoryBeginningStock' => $inventoryBeginningStock,
-        ), true);
-        $detailTabs['All'] = array('content' => $tabContent);
-
-        $this->render('detail', array(
-            'detailTabs' => $detailTabs,
-            'product' => $product,
-            'branches' => $branches,
-            'endDate' => $endDate,
         ));
     }
 
@@ -145,60 +111,7 @@ class StockTireController extends Controller {
         }
     }
 
-    public function actionRedirectTransaction($codeNumber) {
-        list($leftPart,, ) = explode('/', $codeNumber);
-        list(, $codeNumberConstant) = explode('.', $leftPart);
-
-        if ($codeNumberConstant === 'MI') {
-            $model = MovementInHeader::model()->findByAttributes(array('movement_in_number' => $codeNumber));
-            $this->redirect(array('/transaction/movementInHeader/show', 'id' => $model->id));
-        } else if ($codeNumberConstant === 'MO') {
-            $model = MovementOutHeader::model()->findByAttributes(array('movement_out_no' => $codeNumber));
-            $this->redirect(array('/transaction/movementOutHeader/show', 'id' => $model->id));
-        } else if ($codeNumberConstant === 'SA') {
-            $model = StockAdjustmentHeader::model()->findByAttributes(array('stock_adjustment_number' => $codeNumber));
-            $this->redirect(array('/frontDesk/adjustment/show', 'id' => $model->id));
-        }
-    }
-
-    public function actionAjaxHtmlUpdateInventoryDetailGrid($productId, $branchId, $currentPage) {
-        if (Yii::app()->request->isAjaxRequest) {
-            $this->renderPartial('_viewStock', array(
-                'dataProvider' => $this->getInventoryDetailDataProvider($productId, $branchId, $currentPage),
-                'productId' => $productId,
-                'branchId' => $branchId,
-            ));
-        }
-    }
-    
-    public function getInventoryDetailDataProvider($productId, $branchId, $currentPage) {
-        $inventoryDetail = Search::bind(new InventoryDetail(), '');
-        $inventoryDetail->product_id = $productId;
-        $inventoryDetailDataProvider = $inventoryDetail->searchByStock($branchId, $currentPage);
-        
-        return $inventoryDetailDataProvider;
-    }
-    
-    public function actionScript() {
-        $sql = "SELECT GROUP_CONCAT(id SEPARATOR ',') AS ids
-                FROM rims_inventory_detail
-                WHERE transaction_number NOT IN ('Beginning Stock', 'Adjustment Stock')
-                GROUP BY transaction_number, product_id
-                HAVING COUNT(*) > 1";
-        
-        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true);
-        
-        $str = '';
-        foreach ($resultSet as $row) {
-            $str .= strstr($row['ids'], ',');
-        }
-        
-        $deleteSql = "DELETE FROM rims_inventory_detail WHERE id IN (" . ltrim($str, ',') . ")";
-        
-        echo $deleteSql;
-    }
-
-    protected function saveToExcel($dataProvider, $branches, $endDate) {
+    protected function saveToExcel($inventoryTireStockReportData, $startYear, $endYear, $branches) {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
 
@@ -210,69 +123,65 @@ class StockTireController extends Controller {
 
         $documentProperties = $objPHPExcel->getProperties();
         $documentProperties->setCreator('Raperind Motor');
-        $documentProperties->setTitle('Kartu Stok Gudang');
+        $documentProperties->setTitle('Stok Ban per Tahun Produksi');
 
         $worksheet = $objPHPExcel->setActiveSheetIndex(0);
-        $worksheet->setTitle('Kartu Stok Gudang');
-
-        $worksheet->mergeCells('A1:H1');
-        $worksheet->mergeCells('A2:H2');
-        $worksheet->mergeCells('A3:H3');
-        
-        $worksheet->getStyle('A1:H5')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->setTitle('Stok Ban per Tahun Produksi');
 
         $worksheet->getStyle("A1:A2")->getFont()->setBold(true);
         $worksheet->setCellValue('A1', 'Raperind Motor');
-        $worksheet->setCellValue('A2', 'Kartu Stok Gudang');
+        $worksheet->setCellValue('A2', 'Stok Ban per Tahun Produksi');
 
-        $column = 'I'; 
+        $columnHeaderStart = 'F';
+        foreach ($branches as $branch) {
+            $worksheet->setCellValue("{$columnHeaderStart}4", CHtml::value($branch, 'code'));
+            $columnHeaderStart++;$columnHeaderStart++;$columnHeaderStart++;
+        }
+        
+        $columnHeader = 'F';
         $worksheet->setCellValue('A5', 'ID');
         $worksheet->setCellValue('B5', 'Code');
         $worksheet->setCellValue('C5', 'Name');
-        $worksheet->setCellValue('D5', 'Brand');
-        $worksheet->setCellValue('E5', 'Sub Brand');
-        $worksheet->setCellValue('F5', 'Sub Brand Series');
-        $worksheet->setCellValue('G5', 'Category');
-        $worksheet->setCellValue('H5', 'Unit');
+        $worksheet->setCellValue('D5', 'Ukuran');
+        $worksheet->setCellValue('E5', 'Brand');
         foreach ($branches as $branch) {
-            $worksheet->setCellValue("{$column}5", CHtml::value($branch, 'code'));
-            $column++;
-        }
-        $worksheet->setCellValue("{$column}5", 'Total');
-
-        $worksheet->getStyle("A5:{$column}5")->getFont()->setBold(true);
-        $worksheet->getStyle("A5:{$column}5")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
-        $worksheet->getStyle("A5:{$column}5")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
-
-        $counter = 7;
-        foreach ($dataProvider->data as $header) {
-            $worksheet->getStyle("C{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
-
-            $inventoryTotalQuantities = $header->getInventoryTotalQuantitiesByPeriodic($endDate);
-            $totalStock = 0;
-
-            $column = 'I'; 
-            $worksheet->setCellValue("A{$counter}", CHtml::encode(CHtml::value($header, 'id')));
-            $worksheet->setCellValue("B{$counter}", CHtml::encode(CHtml::value($header, 'manufacturer_code')));
-            $worksheet->setCellValue("C{$counter}", CHtml::encode(CHtml::value($header, 'name')));
-            $worksheet->setCellValue("D{$counter}", CHtml::encode(CHtml::value($header, 'brand.name')));
-            $worksheet->setCellValue("E{$counter}", CHtml::encode(CHtml::value($header, 'subBrand.name')));
-            $worksheet->setCellValue("F{$counter}", CHtml::encode(CHtml::value($header, 'subBrandSeries.name')));
-            $worksheet->setCellValue("G{$counter}", CHtml::encode(CHtml::value($header, 'masterSubCategoryCode')));
-            $worksheet->setCellValue("H{$counter}", CHtml::encode(CHtml::value($header, 'unit.name')));
-            foreach ($branches as $branch) {
-                $stockValue = 0;
-                foreach ($inventoryTotalQuantities as $i => $inventoryTotalQuantity) {
-                    if ($inventoryTotalQuantity['branch_id'] == $branch->id) {
-                        $stockValue = CHtml::value($inventoryTotalQuantities[$i], 'total_stock');
-                    }
-                }
-                $worksheet->setCellValue("{$column}{$counter}", CHtml::encode($stockValue));
-                $totalStock += $stockValue;
-                $column++;
+            for ($year = $startYear; $year <= $endYear; $year++) {
+                $worksheet->setCellValue("{$columnHeader}5", $year);
+                $columnHeader++;
             }
-            $worksheet->setCellValue("{$column}{$counter}", CHtml::encode($totalStock));
+        }
+        $worksheet->setCellValue("{$columnHeader}5", 'Total');
 
+        $worksheet->mergeCells("A1:{$columnHeader}1");
+        $worksheet->mergeCells("A2:{$columnHeader}2");
+        $worksheet->mergeCells("A3:{$columnHeader}3");
+        
+        $worksheet->getStyle("A1:{$columnHeader}5")->getFont()->setBold(true);
+        $worksheet->getStyle("A1:{$columnHeader}5")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->getStyle("A4:{$columnHeader}4")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A5:{$columnHeader}5")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+
+        $counter = 6;
+        foreach ($inventoryTireStockReportData as $productId => $inventoryTireStockReportItem) {
+            $totalStockSum = 0;
+            $product = Product::model()->findByPk($productId); 
+
+            $worksheet->setCellValue("A{$counter}", CHtml::value($product, 'id'));
+            $worksheet->setCellValue("B{$counter}", CHtml::value($product, 'manufacturer_code'));
+            $worksheet->setCellValue("C{$counter}", CHtml::value($product, 'name'));
+            $worksheet->setCellValue("D{$counter}", CHtml::value($product, 'tireSize.tireName'));
+            $worksheet->setCellValue("E{$counter}", CHtml::value($product, 'brand.name') . ' - ' . CHtml::value($product, 'subBrand.name') . ' - ' . CHtml::value($product, 'subBrandSeries.name'));
+            foreach ($branches as $branch) {
+                $columnBody = 'F'; 
+                for ($year = $startYear; $year <= $endYear; $year++) {
+                    $totalStock = isset($inventoryTireStockReportItem[$branch->id][$year]) ? $inventoryTireStockReportItem[$branch->id][$year] : '0';
+                    $worksheet->setCellValue("{$columnBody}{$counter}", $totalStock);
+                    $totalStockSum += $totalStock;
+                    $columnBody++;
+                }
+            }
+            
+            $worksheet->setCellValue("{$columnBody}{$counter}", $totalStockSum);
             $counter++;
 
         }
@@ -286,7 +195,7 @@ class StockTireController extends Controller {
         ob_end_clean();
 
         header('Content-type: application/vnd.ms-excel');
-        header('Content-Disposition: attachment;filename="Kartu Stok Gudang.xls"');
+        header('Content-Disposition: attachment;filename="stok_ban_tahun_produksi.xls"');
         header('Cache-Control: max-age=0');
 
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');

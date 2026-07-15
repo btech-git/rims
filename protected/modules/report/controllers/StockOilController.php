@@ -27,9 +27,6 @@ class StockOilController extends Controller {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
         
-//        $yearNow = date('Y');
-        
-//        $endYear = isset($_GET['EndYear']) ? $_GET['EndYear'] : date('Y');
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
         $brandId = isset($_GET['BrandId']) ? $_GET['BrandId'] : '';
         $subBrandId = isset($_GET['SubBrandId']) ? $_GET['SubBrandId'] : '';
@@ -52,8 +49,6 @@ class StockOilController extends Controller {
             $convertToLitre = '';
         }
         
-//        $startYear = max(2024, $endYear - 2);
-        
         $inventoryOilStockReport = InventoryDetail::getInventoryOilStockReport($endDate, $brandId, $subBrandId, $subBrandSeriesId, $productId, $productCode, $productName, $oilSaeId);
         
         $inventoryOilStockReportData = array();
@@ -64,22 +59,13 @@ class StockOilController extends Controller {
         $branches = Branch::model()->findAll();
         $unitConversion = UnitConversion::model()->findByAttributes(array('unit_to_id' => $convertToLitre));
 
-//        $yearList = array();
-//        for ($y = $yearNow - 4; $y <= $yearNow; $y++) {
-//            if ($y >= 2024) {
-//                $yearList[$y] = $y;
-//            }
-//        }
-        
-//        if (isset($_GET['SaveExcel'])) {
-//            $this->saveToExcel($productDataProvider, $branches, $endYear);
-//        }
+        if (isset($_GET['SaveExcel'])) {
+            $this->saveToExcel($inventoryOilStockReportData, $branches, $endDate, $convertToLitre, $unitConversion);
+        }
 
         $this->render('check', array(
             'inventoryOilStockReportData' => $inventoryOilStockReportData,
-//            'startYear' => $startYear,
             'endDate' => $endDate,
-//            'yearList' => $yearList,
             'brandId' => $brandId,
             'subBrandId' => $subBrandId,
             'subBrandSeriesId' => $subBrandSeriesId,
@@ -90,40 +76,6 @@ class StockOilController extends Controller {
             'branches' => $branches,
             'convertToLitre' => $convertToLitre,
             'unitConversion' => $unitConversion,
-        ));
-    }
-
-    public function actionDetail($id, $endDate) {
-        $product = Product::model()->findByPk($id);
-        $branches = Branch::model()->findAllByAttributes(array('status' => 'Active'));
-        $detailTabs = array();
-        
-        $limit = 5000;
-        
-        foreach ($branches as $branch) {
-            $latestInventoryData = InventoryDetail::getLatestInventoryData($product->id, $branch->id, $limit, $endDate);
-            $excludeInventoryIds = array_map(function($item) { return $item['id']; }, $latestInventoryData);
-            $inventoryBeginningStock = InventoryDetail::getInventoryBeginningStock($product->id, $branch->id, $excludeInventoryIds);
-            $tabContent = $this->renderPartial('_viewStock', array(
-                'latestInventoryData' => $latestInventoryData,
-                'inventoryBeginningStock' => $inventoryBeginningStock,
-            ), true);
-            $detailTabs[$branch->name] = array('content' => $tabContent);
-        }
-        $latestInventoryData = InventoryDetail::getLatestInventoryData($product->id, '', $limit, $endDate);
-        $excludeInventoryIds = array_map(function($item) { return $item['id']; }, $latestInventoryData);
-        $inventoryBeginningStock = InventoryDetail::getInventoryBeginningStock($product->id, '', $excludeInventoryIds);
-        $tabContent = $this->renderPartial('_viewStock', array(
-            'latestInventoryData' => $latestInventoryData,
-            'inventoryBeginningStock' => $inventoryBeginningStock,
-        ), true);
-        $detailTabs['All'] = array('content' => $tabContent);
-
-        $this->render('detail', array(
-            'detailTabs' => $detailTabs,
-            'product' => $product,
-            'branches' => $branches,
-            'endDate' => $endDate,
         ));
     }
 
@@ -151,60 +103,7 @@ class StockOilController extends Controller {
         }
     }
 
-    public function actionRedirectTransaction($codeNumber) {
-        list($leftPart,, ) = explode('/', $codeNumber);
-        list(, $codeNumberConstant) = explode('.', $leftPart);
-
-        if ($codeNumberConstant === 'MI') {
-            $model = MovementInHeader::model()->findByAttributes(array('movement_in_number' => $codeNumber));
-            $this->redirect(array('/transaction/movementInHeader/show', 'id' => $model->id));
-        } else if ($codeNumberConstant === 'MO') {
-            $model = MovementOutHeader::model()->findByAttributes(array('movement_out_no' => $codeNumber));
-            $this->redirect(array('/transaction/movementOutHeader/show', 'id' => $model->id));
-        } else if ($codeNumberConstant === 'SA') {
-            $model = StockAdjustmentHeader::model()->findByAttributes(array('stock_adjustment_number' => $codeNumber));
-            $this->redirect(array('/frontDesk/adjustment/show', 'id' => $model->id));
-        }
-    }
-
-    public function actionAjaxHtmlUpdateInventoryDetailGrid($productId, $branchId, $currentPage) {
-        if (Yii::app()->request->isAjaxRequest) {
-            $this->renderPartial('_viewStock', array(
-                'dataProvider' => $this->getInventoryDetailDataProvider($productId, $branchId, $currentPage),
-                'productId' => $productId,
-                'branchId' => $branchId,
-            ));
-        }
-    }
-    
-    public function getInventoryDetailDataProvider($productId, $branchId, $currentPage) {
-        $inventoryDetail = Search::bind(new InventoryDetail(), '');
-        $inventoryDetail->product_id = $productId;
-        $inventoryDetailDataProvider = $inventoryDetail->searchByStock($branchId, $currentPage);
-        
-        return $inventoryDetailDataProvider;
-    }
-    
-    public function actionScript() {
-        $sql = "SELECT GROUP_CONCAT(id SEPARATOR ',') AS ids
-                FROM rims_inventory_detail
-                WHERE transaction_number NOT IN ('Beginning Stock', 'Adjustment Stock')
-                GROUP BY transaction_number, product_id
-                HAVING COUNT(*) > 1";
-        
-        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true);
-        
-        $str = '';
-        foreach ($resultSet as $row) {
-            $str .= strstr($row['ids'], ',');
-        }
-        
-        $deleteSql = "DELETE FROM rims_inventory_detail WHERE id IN (" . ltrim($str, ',') . ")";
-        
-        echo $deleteSql;
-    }
-
-    protected function saveToExcel($dataProvider, $branches, $endDate) {
+    protected function saveToExcel($inventoryOilStockReportData, $branches, $endDate, $convertToLitre, $unitConversion) {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
 
@@ -216,71 +115,61 @@ class StockOilController extends Controller {
 
         $documentProperties = $objPHPExcel->getProperties();
         $documentProperties->setCreator('Raperind Motor');
-        $documentProperties->setTitle('Kartu Stok Gudang');
+        $documentProperties->setTitle('Stok Oli');
 
         $worksheet = $objPHPExcel->setActiveSheetIndex(0);
-        $worksheet->setTitle('Kartu Stok Gudang');
+        $worksheet->setTitle('Stok Oli');
 
-        $worksheet->mergeCells('A1:H1');
-        $worksheet->mergeCells('A2:H2');
-        $worksheet->mergeCells('A3:H3');
-        
-        $worksheet->getStyle('A1:H5')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-
-        $worksheet->getStyle("A1:A2")->getFont()->setBold(true);
         $worksheet->setCellValue('A1', 'Raperind Motor');
-        $worksheet->setCellValue('A2', 'Kartu Stok Gudang');
+        $worksheet->setCellValue('A2', 'Stok Oli');
+        $worksheet->setCellValue('A3', 'Per Tanggal ' . Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($endDate)));
 
-        $column = 'I'; 
+        $columnHeader = 'G'; 
         $worksheet->setCellValue('A5', 'ID');
         $worksheet->setCellValue('B5', 'Code');
         $worksheet->setCellValue('C5', 'Name');
-        $worksheet->setCellValue('D5', 'Brand');
-        $worksheet->setCellValue('E5', 'Sub Brand');
-        $worksheet->setCellValue('F5', 'Sub Brand Series');
-        $worksheet->setCellValue('G5', 'Category');
-        $worksheet->setCellValue('H5', 'Unit');
+        $worksheet->setCellValue('D5', 'Ukuran');
+        $worksheet->setCellValue('E5', 'Brand');
+        $worksheet->setCellValue('F5', 'Satuan');
         foreach ($branches as $branch) {
-            $worksheet->setCellValue("{$column}5", CHtml::value($branch, 'code'));
-            $column++;
+            $worksheet->setCellValue("{$columnHeader}5", CHtml::value($branch, 'code'));
+            $columnHeader++;
         }
-        $worksheet->setCellValue("{$column}5", 'Total');
+        $worksheet->setCellValue("{$columnHeader}5", 'Total');
 
-        $worksheet->getStyle("A5:{$column}5")->getFont()->setBold(true);
-        $worksheet->getStyle("A5:{$column}5")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
-        $worksheet->getStyle("A5:{$column}5")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->mergeCells("A1:{$columnHeader}1");
+        $worksheet->mergeCells("A2:{$columnHeader}2");
+        $worksheet->mergeCells("A3:{$columnHeader}3");
+        
+        $worksheet->getStyle("A1:{$columnHeader}5")->getFont()->setBold(true);
+        $worksheet->getStyle("A1:{$columnHeader}5")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->getStyle("A5:{$columnHeader}5")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A5:{$columnHeader}5")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
-        $counter = 7;
-        foreach ($dataProvider->data as $header) {
-            $worksheet->getStyle("C{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
+        $counter = 6;
+        foreach ($inventoryOilStockReportData as $productId => $inventoryOilStockReportItem) {
 
-            $inventoryTotalQuantities = $header->getInventoryTotalQuantitiesByPeriodic($endDate);
-            $totalStock = 0;
-
-            $column = 'I'; 
-            $worksheet->setCellValue("A{$counter}", CHtml::encode(CHtml::value($header, 'id')));
-            $worksheet->setCellValue("B{$counter}", CHtml::encode(CHtml::value($header, 'manufacturer_code')));
-            $worksheet->setCellValue("C{$counter}", CHtml::encode(CHtml::value($header, 'name')));
-            $worksheet->setCellValue("D{$counter}", CHtml::encode(CHtml::value($header, 'brand.name')));
-            $worksheet->setCellValue("E{$counter}", CHtml::encode(CHtml::value($header, 'subBrand.name')));
-            $worksheet->setCellValue("F{$counter}", CHtml::encode(CHtml::value($header, 'subBrandSeries.name')));
-            $worksheet->setCellValue("G{$counter}", CHtml::encode(CHtml::value($header, 'masterSubCategoryCode')));
-            $worksheet->setCellValue("H{$counter}", CHtml::encode(CHtml::value($header, 'unit.name')));
+            $totalStockSum = '0.00';
+            $product = Product::model()->findByPk($productId);
+            $multiplier = $unitConversion !== null && $unitConversion->unit_from_id == $product->unit_id ? $unitConversion->multiplier : 1;
+            $columnBody = 'G'; 
+            
+            $worksheet->setCellValue("A{$counter}", CHtml::value($product, 'id'));
+            $worksheet->setCellValue("B{$counter}", CHtml::value($product, 'manufacturer_code'));
+            $worksheet->setCellValue("C{$counter}", CHtml::value($product, 'name'));
+            $worksheet->setCellValue("D{$counter}", CHtml::value($product, 'oilSae.oilName'));
+            $worksheet->setCellValue("E{$counter}", CHtml::value($product, 'brand.name') . ' - ' . CHtml::value($product, 'subBrand.name') . ' - ' . CHtml::value($product, 'subBrandSeries.name'));
+            $worksheet->setCellValue("F{$counter}", empty($convertToLitre) ? CHtml::value($product, 'unit.name') : 'Liter');
             foreach ($branches as $branch) {
-                $stockValue = 0;
-                foreach ($inventoryTotalQuantities as $i => $inventoryTotalQuantity) {
-                    if ($inventoryTotalQuantity['branch_id'] == $branch->id) {
-                        $stockValue = CHtml::value($inventoryTotalQuantities[$i], 'total_stock');
-                    }
-                }
-                $worksheet->setCellValue("{$column}{$counter}", CHtml::encode($stockValue));
-                $totalStock += $stockValue;
-                $column++;
+                $originalStock = isset($inventoryOilStockReportItem[$branch->id]) ? $inventoryOilStockReportItem[$branch->id] : 0;
+                $totalStock = $multiplier * $originalStock;
+                $worksheet->setCellValue("{$columnBody}{$counter}", $totalStock);
+                $totalStockSum += $totalStock;
+                $columnBody++;
             }
-            $worksheet->setCellValue("{$column}{$counter}", CHtml::encode($totalStock));
+            $worksheet->setCellValue("{$columnBody}{$counter}", $totalStockSum);
 
             $counter++;
-
         }
         
         for ($col = 'A'; $col !== 'Z'; $col++) {
@@ -292,7 +181,7 @@ class StockOilController extends Controller {
         ob_end_clean();
 
         header('Content-type: application/vnd.ms-excel');
-        header('Content-Disposition: attachment;filename="Kartu Stok Gudang.xls"');
+        header('Content-Disposition: attachment;filename="stok_oli.xls"');
         header('Cache-Control: max-age=0');
 
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');

@@ -2,7 +2,7 @@
     <span style="text-align: center"><h2>Stok Ban per Tahun Produksi</h2></span>
 </div>
 
-<table>
+<table class="responsive">
     <thead style="position: sticky; top: 0">
         <tr>
             <th colspan="5"></th>
