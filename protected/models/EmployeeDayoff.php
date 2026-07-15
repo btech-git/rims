@@ -131,6 +131,9 @@ class EmployeeDayoff extends CActiveRecord {
 
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
+            'sort' => array(
+                'defaultOrder' => 'date_from DESC, transaction_number ASC',
+            ),
         ));
     }
 
