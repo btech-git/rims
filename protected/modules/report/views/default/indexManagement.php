@@ -137,7 +137,7 @@
                                         'linkOptions' => array('target' => '_blank'), 
                                     ),
                                     array(
-                                        'label' => 'Penjualan Body Repair', 
+                                        'label' => 'Penjualan Body Repair - Cost', 
                                         'url' => array('/report/bodyRepairCosting/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('director'),
                                         'linkOptions' => array('target' => '_blank'), 

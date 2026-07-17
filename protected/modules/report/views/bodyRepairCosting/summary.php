@@ -9,6 +9,14 @@ Yii::app()->clientScript->registerScript('report', '
 Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/transaction/report.css');
 ?>
 
+<style> 
+ .table_wrapper{
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+}
+</style>
+
 <div class="clear"></div>
 
 <div class="tab reportTab">

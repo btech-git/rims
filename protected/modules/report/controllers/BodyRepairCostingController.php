@@ -148,7 +148,7 @@ class BodyRepairCostingController extends Controller {
 
         $branch = Branch::model()->findByPk($branchId);
         $worksheet->setCellValue('A1', 'Raperind Motor ' . CHtml::encode(CHtml::value($branch, 'name')));
-        $worksheet->setCellValue('A2', 'Body Repair Costing');
+        $worksheet->setCellValue('A2', 'Laporan Body Repair - Cost');
         $worksheet->setCellValue('A3', Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($startDate)) . ' - ' . Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($endDate)));
 
         $worksheet->getStyle('A5:L5')->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
@@ -183,44 +183,7 @@ class BodyRepairCostingController extends Controller {
             $worksheet->setCellValue("J{$counter}", CHtml::encode(CHtml::value($header, 'totalHpp')));
             $worksheet->setCellValue("K{$counter}", CHtml::encode(CHtml::value($header, 'totalWorkOrderExpense')));
             $worksheet->setCellValue("L{$counter}", CHtml::encode(CHtml::value($header, 'totalMaterialRequest')));
-//            $workOrderExpenses = WorkOrderExpenseHeader::model()->findAllByAttributes(array('registration_transaction_id' => $header->id));
-//            if (!empty($workOrderExpenses)) {
-//                foreach ($workOrderExpenses as $workOrderExpense) {
-//                    foreach ($workOrderExpense->workOrderExpenseDetails as $detail) {
-//                        $worksheet->setCellValue("J{$counter}", CHtml::encode(CHtml::value($workOrderExpense, 'transaction_number')));
-//                        $worksheet->setCellValue("K{$counter}", CHtml::encode(CHtml::value($workOrderExpense, 'transaction_date')));
-//                        $worksheet->setCellValue("L{$counter}", CHtml::encode(CHtml::value($workOrderExpense, 'note')));
-//                        $worksheet->setCellValue("M{$counter}", CHtml::encode(CHtml::value($workOrderExpense, 'supplier.name')));
-//                        $worksheet->setCellValue("N{$counter}", CHtml::encode(CHtml::value($detail, 'description')));
-//                        $worksheet->setCellValue("O{$counter}", CHtml::encode(CHtml::value($detail, 'memo')));
-//                        $worksheet->setCellValue("P{$counter}", CHtml::encode(CHtml::value($detail, 'amount')));
-//                        
-//                        $counter++;
-//                    }                    
-//                }
-//            }
-//            $materialRequestHeaders = MaterialRequestHeader::model()->findAllByAttributes(array('registration_transaction_id' => $header->id));
-//            if (!empty($materialRequestHeaders)) {
-//                foreach ($materialRequestHeaders as $materialRequestHeader) {
-//                    $movementOutHeaders = MovementOutHeader::model()->findAllByAttributes(array('material_request_header_id' => $materialRequestHeader->id));
-//                    foreach ($movementOutHeaders as $movementOutHeader) {
-//                        foreach ($movementOutHeader->movementOutDetails as $detail) {
-//                            $quantity = CHtml::encode(CHtml::value($detail, 'quantity'));
-//                            $cogs = CHtml::encode(CHtml::value($detail, 'product.hpp'));
-//                            $totalCost = $quantity * $cogs;
-//                            $worksheet->setCellValue("J{$counter}", CHtml::encode(CHtml::value($movementOutHeader, 'movement_out_no')));
-//                            $worksheet->setCellValue("K{$counter}", CHtml::encode(CHtml::value($movementOutHeader, 'date_posting')));
-//                            $worksheet->setCellValue("L{$counter}", CHtml::encode(CHtml::value($detail, 'product.name')));
-//                            $worksheet->setCellValue("M{$counter}", CHtml::encode(CHtml::value($detail, 'warehouse.name')));
-//                            $worksheet->setCellValue("N{$counter}", CHtml::encode($quantity));
-//                            $worksheet->setCellValue("O{$counter}", CHtml::encode($cogs));
-//                            $worksheet->setCellValue("P{$counter}", CHtml::encode($totalCost));
-//
-//                            $counter++;
-//                        }
-//                    }
-//                }
-//            }
+            
             $counter++;
         }
         
@@ -235,7 +198,7 @@ class BodyRepairCostingController extends Controller {
         ob_end_clean();
 
         header('Content-type: application/vnd.ms-excel');
-        header('Content-Disposition: attachment;filename="Body Repair Costing.xls"');
+        header('Content-Disposition: attachment;filename="laporan_body_repair_cost.xls"');
         header('Cache-Control: max-age=0');
 
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');

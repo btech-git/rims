@@ -52,7 +52,7 @@ Yii::app()->clientScript->registerScript('search', "
     <?php endif; ?>
 </div>
 
-<div class="table_wrapper">
+<div>
     <?php $this->renderPartial('_productStockTable', array(
         'branches' => $branches,
         'inventoryTireStockReportData' => $inventoryTireStockReportData,

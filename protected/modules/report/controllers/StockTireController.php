@@ -131,6 +131,7 @@ class StockTireController extends Controller {
         $worksheet->getStyle("A1:A2")->getFont()->setBold(true);
         $worksheet->setCellValue('A1', 'Raperind Motor');
         $worksheet->setCellValue('A2', 'Stok Ban per Tahun Produksi');
+        $worksheet->setCellValue('A3', $endYear);
 
         $columnHeaderStart = 'F';
         $columnHeaderEnd = $columnHeaderStart;
@@ -170,7 +171,8 @@ class StockTireController extends Controller {
 
         $counter = 6;
         foreach ($inventoryTireStockReportData as $productId => $inventoryTireStockReportItem) {
-            $totalStockSum = 0;
+            $columnBody = 'F'; 
+            $totalStockSum = '0.00';
             $product = Product::model()->findByPk($productId); 
 
             $worksheet->setCellValue("A{$counter}", CHtml::value($product, 'id'));
@@ -179,9 +181,8 @@ class StockTireController extends Controller {
             $worksheet->setCellValue("D{$counter}", CHtml::value($product, 'tireSize.tireName'));
             $worksheet->setCellValue("E{$counter}", CHtml::value($product, 'brand.name') . ' - ' . CHtml::value($product, 'subBrand.name') . ' - ' . CHtml::value($product, 'subBrandSeries.name'));
             foreach ($branches as $branch) {
-                $columnBody = 'F'; 
                 for ($year = $startYear; $year <= $endYear; $year++) {
-                    $totalStock = isset($inventoryTireStockReportItem[$branch->id][$year]) ? $inventoryTireStockReportItem[$branch->id][$year] : '0';
+                    $totalStock = isset($inventoryTireStockReportItem[$branch->id][$year]) ? $inventoryTireStockReportItem[$branch->id][$year] : '0.00';
                     $worksheet->setCellValue("{$columnBody}{$counter}", $totalStock);
                     $totalStockSum += $totalStock;
                     $columnBody++;
