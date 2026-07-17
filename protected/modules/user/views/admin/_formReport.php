@@ -68,16 +68,6 @@
                     <td>&nbsp;</td>
                 </tr>
                 <tr>
-                    <td>Sub Pekerjaan Luar</td>
-                    <td style="text-align: center">
-                        <?php echo CHtml::checkBox("User[roles][workOrderExpenseReport]", CHtml::resolveValue($model, "roles[workOrderExpenseReport]"), array(
-                            'id' => 'User_roles_' . $counter++, 
-                            'value' => 'workOrderExpenseReport'
-                        )); ?>
-                    </td>
-                    <td>&nbsp;</td>
-                </tr>
-                <tr>
                     <td style="text-align: center; font-weight: bold; background-color: greenyellow" colspan="3">Persediaan</td>
                 </tr>
                 <tr>
@@ -169,6 +159,16 @@
                         <?php echo CHtml::checkBox("User[roles][salesmanPerformanceReport]", CHtml::resolveValue($model, "roles[salesmanPerformanceReport]"), array(
                             'id' => 'User_roles_' . $counter++, 
                             'value' => 'salesmanPerformanceReport'
+                        )); ?>
+                    </td>
+                    <td>&nbsp;</td>
+                </tr>
+                <tr>
+                    <td>Sub Pekerjaan Luar</td>
+                    <td style="text-align: center">
+                        <?php echo CHtml::checkBox("User[roles][workOrderExpenseReport]", CHtml::resolveValue($model, "roles[workOrderExpenseReport]"), array(
+                            'id' => 'User_roles_' . $counter++, 
+                            'value' => 'workOrderExpenseReport'
                         )); ?>
                     </td>
                     <td>&nbsp;</td>
