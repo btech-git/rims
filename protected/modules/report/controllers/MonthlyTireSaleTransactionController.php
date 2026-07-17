@@ -16,7 +16,7 @@ class MonthlyTireSaleTransactionController extends Controller {
             $filterChain->action->id === 'detail' || 
             $filterChain->action->id === 'redirectTransaction'
         ) {
-            if (!(Yii::app()->user->checkAccess('director'))) {
+            if (!(Yii::app()->user->checkAccess('saleTireDailyReport'))) {
                 $this->redirect(array('/site/login'));
             }
         }

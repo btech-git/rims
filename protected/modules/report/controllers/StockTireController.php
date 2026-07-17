@@ -133,9 +133,16 @@ class StockTireController extends Controller {
         $worksheet->setCellValue('A2', 'Stok Ban per Tahun Produksi');
 
         $columnHeaderStart = 'F';
+        $columnHeaderEnd = $columnHeaderStart;
         foreach ($branches as $branch) {
             $worksheet->setCellValue("{$columnHeaderStart}4", CHtml::value($branch, 'code'));
-            $columnHeaderStart++;$columnHeaderStart++;$columnHeaderStart++;
+            for ($i = 0; $i < $endYear - $startYear; $i++) {
+                $columnHeaderEnd++;
+            }
+            $worksheet->mergeCells("{$columnHeaderStart}4:{$columnHeaderEnd}4");
+            $columnHeaderStart = $columnHeaderEnd;
+            $columnHeaderStart++;
+            $columnHeaderEnd = $columnHeaderStart;
         }
         
         $columnHeader = 'F';
