@@ -608,7 +608,7 @@ class TransactionReceiveItem extends MonthlyTransactionActiveRecord {
                     WHERE h.user_id_cancelled IS NULL AND h.status = 'Approved'
                     GROUP BY d.receive_item_id
                 ) p ON r.id = p.receive_item_id
-                WHERE r.invoice_due_date BETWEEN :start_date AND :end_date AND r.invoice_grand_total - p.amount > 100 AND user_id_cancelled IS NULL" . $supplierConditionSql . " 
+                WHERE r.invoice_due_date BETWEEN :start_date AND :end_date AND user_id_cancelled IS NULL" . $supplierConditionSql . " 
                 ORDER BY r.invoice_due_date ASC";
                 
         $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
