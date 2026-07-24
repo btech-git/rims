@@ -34,7 +34,7 @@
             
                     <tr>
                         <td style="padding-left: <?php echo 32 * ($previousLevel - 1); ?>px">
-                            <?php $coaName = isset($balanceSheetReportData[$coaParentCodes[$previousLevel]]['name']) ? $balanceSheetReportData[$coaParentCodes[$previousLevel]]['name'] : ''; ?>
+                            <?php $coaName = isset($balanceSheetReportData[$coaParentCodes[$previousLevel]]) ? $balanceSheetReportData[$coaParentCodes[$previousLevel]]['name'] : ''; ?>
                             <?php echo CHtml::encode($coaName); ?>
                         </td>
                         <td style="color: <?php echo $amountSum < 0 ? 'red': 'black'; ?>; text-align: right">
