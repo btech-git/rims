@@ -34,7 +34,7 @@
             
                     <tr>
                         <td style="font-weight: bold; background-color: bisque; padding-left: <?php echo 32 * ($previousLevel - 1); ?>px">
-                            Total <?php echo CHtml::encode($balanceSheetReportData[$coaParentCodes[$previousLevel]]['name']); ?>
+                            Total <?php echo CHtml::encode(isset($coaParentCodes[$previousLevel]) ? $balanceSheetReportData[$coaParentCodes[$previousLevel]]['name'] : ''); ?>
                         </td>
                         <td style="font-weight: bold; background-color: bisque; color: <?php echo $amountSum < 0 ? 'red': 'black'; ?>; text-align: right">
                             <?php echo CHtml::encode($amountSum === '' ? '' : Yii::app()->numberFormatter->format('#,##0.00', $amountSum)); ?>
