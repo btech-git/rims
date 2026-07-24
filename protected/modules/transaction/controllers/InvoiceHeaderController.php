@@ -107,7 +107,7 @@ class InvoiceHeaderController extends Controller {
 
                 foreach ($model->invoiceDetails as $key => $detail) {
                     if (!empty($detail->product_id)) {
-                        $total = $detail->product->averageCogs * $detail->quantity;
+                        $total = $detail->product->hpp * $detail->quantity;
                         
                         $jurnalUmumHpp = $detail->product->productSubMasterCategory->coa_hpp;
                         $journalReferences[$jurnalUmumHpp]['debet_kredit'] = 'D';
