@@ -40,10 +40,10 @@ class PayableTransactionSummary extends CComponent {
         }
         
         $this->dataProvider->criteria->addCondition("EXISTS (
-            SELECT supplier_id
+            SELECT p.supplier_id
             FROM " . TransactionPurchaseOrder::model()->tableName() . " p 
             INNER JOIN " . TransactionReceiveItem::model()->tableName() . " r ON p.id = r.purchase_order_id
-            WHERE p.supplier_id = t.id AND substring(r.invoice_date, 1, 10) BETWEEN :start_date AND :end_date AND status_document = 'Approved'" . $branchPurchaseConditionSql . "
+            WHERE p.supplier_id = t.id AND substring(r.invoice_date, 1, 10) BETWEEN :start_date AND :end_date AND p.status_document = 'Approved'" . $branchPurchaseConditionSql . "
         ) OR EXISTS (
             SELECT supplier_id
             FROM " . WorkOrderExpenseHeader::model()->tableName() . "
