@@ -27,6 +27,7 @@
     <thead style="position: sticky; top: 0">
         <tr id="header1">
             <th class="width1-1">Tanggal</th>
+            <th class="width1-1">Hari</th>
             <th class="width1-2">Clock In</th>
             <th class="width1-3">Clock Out</th>
             <th class="width1-4">Telat</th>
@@ -44,6 +45,10 @@
                 <?php $date = $year . '-' . $month . '-' . str_pad($i, 2, '0', STR_PAD_LEFT); ?>
                 <tr class="items1">
                     <td style="text-align: center"><?php echo $i; ?></td>
+                    <td>
+                        <?php $dayName = date('l', strtotime($date)); ?>
+                        <?php echo CHtml::encode($dayName); ?>
+                    </td>
                     <?php if (isset($monthlyEmployeeAttendanceData[$date])): ?>
                         <?php $monthlyEmployeeAttendanceSummaryItem = $monthlyEmployeeAttendanceData[$date]; ?>
                         <?php $employeeTimesheet = new EmployeeTimesheet(); ?>
@@ -57,7 +62,17 @@
                         <td><?php echo CHtml::encode($monthlyEmployeeAttendanceSummaryItem['remarks']); ?></td>
                         <td>No</td>
                         <td>No</td>
-                        <td><?php echo CHtml::encode((int) $monthlyEmployeeAttendanceSummaryItem['duration_overtime'] > 900 ? $employeeTimesheet->overTimeDiff : ''); ?></td>
+                        <td>
+                            <?php if ((int) $monthlyEmployeeAttendanceSummaryItem['duration_overtime'] > 900 && (int) $monthlyEmployeeAttendanceSummaryItem['is_overtime_approved'] === 0): ?>
+                                <?php echo CHtml::link('Approval', Yii::app()->createUrl("report/monthlyEmployeeAttendance/overtimeApproval", array(
+                                    "timesheetId" => $monthlyEmployeeAttendanceSummaryItem['id'], 
+                                )), array('target' => '_blank')); ?>
+                            <?php elseif ((int) $monthlyEmployeeAttendanceSummaryItem['duration_overtime'] > 900 && (int) $monthlyEmployeeAttendanceSummaryItem['is_overtime_approved'] === 1): ?>
+                                <?php echo CHtml::encode($employeeTimesheet->overTimeDiff); ?>
+                            <?php else: ?>
+                                <?php echo 'No'; ?>
+                            <?php endif; ?>
+                        </td>
                         <td><?php echo CHtml::encode($monthlyEmployeeAttendanceSummaryItem['category_name']); ?></td>
                     <?php else: ?>
                         <?php $dayName = date('l', strtotime($date)); ?>
@@ -66,7 +81,15 @@
                         <td></td>
                         <td>00:00:00</td>
                         <td></td>
-                        <td><?php echo CHtml::encode($employee->off_day === $dayNames[$dayName] ? 'Yes' : 'No'); ?></td>
+                        <td>
+                            <?php if ($dateExchangeTypes[$date] === 1): ?>
+                                <?php echo 'No'; ?>
+                            <?php elseif ($dateExchangeTypes[$date] === 2): ?>
+                                <?php echo 'Yes'; ?>
+                            <?php else: ?>
+                                <?php echo CHtml::encode($employee->off_day === $dayNames[$dayName] ? 'Yes' : 'No'); ?>
+                            <?php endif; ?>
+                        </td>
                         <td><?php echo CHtml::encode($employee->off_day !== $dayNames[$dayName] ? 'Yes' : 'No'); ?></td>
                         <td></td>
                         <td></td>

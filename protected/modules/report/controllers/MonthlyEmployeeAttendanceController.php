@@ -51,6 +51,33 @@ class MonthlyEmployeeAttendanceController extends Controller {
             'Sunday' => 'Minggu',
         );
         
+        $employeeExchangeDayoffs = array();
+        if (!empty($employeeId)) {
+            $employeeExchangeDayoffs = EmployeeExchangeDayoff::model()->findAll(array(
+                'condition' => 't.employee_id = :employee_id AND ((YEAR(t.date_dayoff_old) = :year AND MONTH(t.date_dayoff_old) = :month) OR (YEAR(t.date_dayoff_new) = :year AND MONTH(t.date_dayoff_new) = :month))',
+                'params' => array(
+                    ':employee_id' => $employeeId, 
+                    ':year' => $year,
+                    ':month' => $month,
+                ),
+            ));
+        }
+        
+        $daysInMonth = cal_days_in_month(CAL_GREGORIAN, $month, $year);
+        
+        $dateExchangeTypes = array();
+        for ($i = 1; $i <= $daysInMonth; $i++) {
+            $date = $year . '-' . $month . '-' . str_pad($i, 2, '0', STR_PAD_LEFT);
+            $dateExchangeTypes[$date] = 0;
+            foreach ($employeeExchangeDayoffs as $employeeExchangeDayoff) {
+                if ($date === $employeeExchangeDayoff->date_dayoff_old) {
+                    $dateExchangeTypes[$date] = 1;
+                } else if ($date === $employeeExchangeDayoff->date_dayoff_new) {
+                    $dateExchangeTypes[$date] = 2;
+                }
+            }
+        }
+        
         if (isset($_GET['ResetFilter'])) {
             $this->redirect(array('summary'));
         }
@@ -66,6 +93,29 @@ class MonthlyEmployeeAttendanceController extends Controller {
             'month' => $month,
             'dayNames' => $dayNames,
             'employeeId' => $employeeId,
+            'dateExchangeTypes' => $dateExchangeTypes,
+        )); 
+    }
+    
+    public function actionOvertimeApproval($timesheetId) {
+        $model = EmployeeTimesheet::model()->findByPk($timesheetId);
+        $postImages = EmployeeTimesheetImages::model()->findAllByAttributes(array('employee_timesheet_id' => $model->id, 'is_inactive' => $model::STATUS_ACTIVE));
+        
+        if (isset($_POST['Approve'])) {
+            $model->is_overtime_approved = 1;
+            $model->update(array('is_overtime_approved'));
+            
+            $this->redirect(array('overtimeApproval', 'timesheetId' => $timesheetId));
+        } elseif (isset($_POST['Reject'])) {
+            $model->is_overtime_approved = 2;
+            $model->update(array('is_overtime_approved'));
+            
+            $this->redirect(array('overtimeApproval', 'timesheetId' => $timesheetId));
+        }
+
+        $this->render('overtimeApproval', array(
+            'model' => $model,
+            'postImages' => $postImages,
         ));
     }
     

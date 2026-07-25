@@ -28,10 +28,11 @@ class PaymentInSummary extends CComponent {
         $this->dataProvider->criteria->order = $this->dataProvider->sort->orderBy;
     }
 
-    public function setupFilter($startDate, $endDate, $branch, $customerType, $plateNumber) {
+    public function setupFilter($startDate, $endDate, $branchId, $customerType, $plateNumber, $customerId) {
         
         $this->dataProvider->criteria->addBetweenCondition('t.payment_date', $startDate, $endDate);
-        $this->dataProvider->criteria->compare('t.branch_id', $branch);
+        $this->dataProvider->criteria->compare('t.branch_id', $branchId);
+        $this->dataProvider->criteria->compare('t.customer_id', $customerId);
         $this->dataProvider->criteria->addCondition("t.user_id_cancelled is null AND t.status = 'Approved'");
         
         if (!empty($customerType)) {

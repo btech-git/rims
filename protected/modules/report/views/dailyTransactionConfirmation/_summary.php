@@ -15,7 +15,9 @@
                 <tr class="items1">
                     <td class="width1-1"><?php echo CHtml::encode($date); ?></td>
                     <?php foreach ($branches as $branch): ?>
-                    <th class="width1-2" style="text-align: center; font-size: larger"><?php echo isset($confirmationListData[$date][$branch->id]) ? '&#10003' : ''; ?></th>
+                        <th class="width1-2" style="text-align: center; font-size: larger">
+                            <?php echo isset($confirmationListData[$date][$branch->id]) ? '&#10003' : ''; ?>
+                        </th>
                     <?php endforeach; ?>
                 </tr>
             <?php endfor; ?>

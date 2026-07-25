@@ -71,6 +71,7 @@
                     'month' => $month,
                     'dayNames' => $dayNames,
                     'employeeId' => $employeeId,
+                    'dateExchangeTypes' => $dateExchangeTypes,
                 )); ?>
             </div>
 
