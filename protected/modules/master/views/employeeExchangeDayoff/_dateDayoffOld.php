@@ -1,0 +1,1 @@
+<?php echo CHtml::activeDropDownlist($model, 'date_dayoff_old', $dayOffOldList, array('empty'=>'-- Pilih --')); ?>

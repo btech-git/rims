@@ -14,6 +14,7 @@
  * @property string $remarks
  * @property integer $employee_onleave_category_id
  * @property string $duration_overtime
+ * @property integer $is_overtime_approved
  *
  * The followings are the available model relations:
  * @property Employee $employee
@@ -41,13 +42,13 @@ class EmployeeTimesheet extends CActiveRecord {
         // will receive user inputs.
         return array(
             array('date, clock_in, employee_id, employee_onleave_category_id', 'required'),
-            array('employee_id, employee_onleave_category_id', 'numerical', 'integerOnly' => true),
+            array('employee_id, employee_onleave_category_id, is_overtime_approved', 'numerical', 'integerOnly' => true),
             array('duration_late, duration_work, duration_overtime', 'length', 'max' => 18),
             array('remarks', 'length', 'max' => 50),
             array('clock_out', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, date, clock_in, clock_out, employee_id, duration_late, duration_work, remarks, employee_onleave_category_id, duration_overtime, images', 'safe', 'on' => 'search'),
+            array('id, date, clock_in, clock_out, employee_id, duration_late, duration_work, remarks, employee_onleave_category_id, duration_overtime, images, is_overtime_approved', 'safe', 'on' => 'search'),
         );
     }
 
@@ -79,6 +80,7 @@ class EmployeeTimesheet extends CActiveRecord {
             'remarks' => 'Remarks',
             'employee_onleave_category_id' => 'Employee Onleave Category',
             'duration_overtime' => 'Duration Overtime',
+            'is_overtime_approved' => 'Approved Overtime',
         );
     }
 
@@ -109,6 +111,7 @@ class EmployeeTimesheet extends CActiveRecord {
         $criteria->compare('remarks', $this->remarks, true);
         $criteria->compare('employee_onleave_category_id', $this->employee_onleave_category_id);
         $criteria->compare('duration_overtime', $this->duration_overtime, true);
+        $criteria->compare('is_overtime_approved', $this->is_overtime_approved);
 
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
@@ -237,7 +240,7 @@ class EmployeeTimesheet extends CActiveRecord {
             ':employee_id' => $employeeId,
         );
         
-        $sql = "SELECT t.id, t.date, t.clock_in, t.clock_out, t.duration_late, t.duration_overtime, t.duration_work, t.remarks, c.name AS category_name
+        $sql = "SELECT t.id, t.date, t.clock_in, t.clock_out, t.duration_late, t.duration_overtime, t.duration_work, t.remarks, c.name AS category_name, t.is_overtime_approved
                 FROM " . EmployeeTimesheet::model()->tableName() . " t 
                 INNER JOIN " . EmployeeOnleaveCategory::model()->tableName() . " c ON c.id = t.employee_onleave_category_id
                 WHERE YEAR(t.date) = :year AND MONTH(t.date) = :month AND t.employee_id = :employee_id;";
@@ -245,5 +248,19 @@ class EmployeeTimesheet extends CActiveRecord {
         $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
 
         return $resultSet;
+    }
+    
+    public function getOvertimeApprovalStatus() {
+        $status = '';
+        
+        if ((int) $this->is_overtime_approved === 1) {
+            $status = 'Approved'; 
+        } elseif ((int) $this->is_overtime_approved === 2) {
+            $status = 'Rejected';
+        } else {
+            $status = 'Not Approved';
+        }
+        
+        return $status;
     }
 }
