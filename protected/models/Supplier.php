@@ -478,16 +478,15 @@ class Supplier extends CActiveRecord {
         );
         
         if (!empty($branchId)) {
-            $branchPurchaseConditionSql = ' AND p.main_branch_id = :branch_id';
+            $branchPurchaseConditionSql = ' AND main_branch_id = :branch_id';
             $branchWorkOrderConditionSql = ' AND branch_id = :branch_id';
             $params[':branch_id'] = $branchId;
         }
         $sql = "
-            SELECT r.invoice_number AS transaction_number, r.invoice_date AS transaction_date, COALESCE(p.total_price, 0) AS total_price, 
-                COALESCE(p.payment_amount, 0) AS payment_amount, COALESCE(p.payment_left, 0) AS payment_left 
-            FROM " . TransactionPurchaseOrder::model()->tableName() . " p 
-            INNER JOIN " . TransactionReceiveItem::model()->tableName() . " r ON p.id = r.purchase_order_id
-            WHERE p.supplier_id = :supplier_id AND substring(r.invoice_date, 1, 10) BETWEEN :start_date AND :end_date AND p.status_document = 'Approved'" . $branchPurchaseConditionSql . "
+            SELECT purchase_order_no AS transaction_number, purchase_order_date AS transaction_date, COALESCE(total_price, 0) AS total_price, 
+                COALESCE(payment_amount, 0) AS payment_amount, COALESCE(payment_left, 0) AS payment_left 
+            FROM " . TransactionPurchaseOrder::model()->tableName() . "
+            WHERE supplier_id = :supplier_id AND substring(purchase_order_date, 1, 10) BETWEEN :start_date AND :end_date AND status_document = 'Approved'" . $branchPurchaseConditionSql . "
             UNION ALL
             SELECT transaction_number, transaction_date, COALESCE(grand_total, 0) AS total_price, COALESCE(total_payment, 0) AS payment_amount, 
                 COALESCE(payment_remaining, 0) AS payment_left 
