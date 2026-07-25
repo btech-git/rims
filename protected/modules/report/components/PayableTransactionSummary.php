@@ -34,15 +34,16 @@ class PayableTransactionSummary extends CComponent {
         $branchWorkOrderConditionSql = '';
         
         if (!empty($branchId)) {
-            $branchPurchaseConditionSql = ' AND main_branch_id = :branch_id';
+            $branchPurchaseConditionSql = ' AND p.main_branch_id = :branch_id';
             $branchWorkOrderConditionSql = ' AND branch_id = :branch_id';
             $this->dataProvider->criteria->params[':branch_id'] = $branchId;
         }
         
         $this->dataProvider->criteria->addCondition("EXISTS (
             SELECT supplier_id
-            FROM " . TransactionPurchaseOrder::model()->tableName() . "
-            WHERE supplier_id = t.id AND substring(purchase_order_date, 1, 10) BETWEEN :start_date AND :end_date AND status_document = 'Approved'" . $branchPurchaseConditionSql . "
+            FROM " . TransactionPurchaseOrder::model()->tableName() . " p 
+            INNER JOIN " . TransactionReceiveItem::model()->tableName() . " r ON p.id = r.purchase_order_id
+            WHERE p.supplier_id = t.id AND substring(r.invoice_date, 1, 10) BETWEEN :start_date AND :end_date AND status_document = 'Approved'" . $branchPurchaseConditionSql . "
         ) OR EXISTS (
             SELECT supplier_id
             FROM " . WorkOrderExpenseHeader::model()->tableName() . "
