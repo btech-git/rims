@@ -483,7 +483,7 @@ class Supplier extends CActiveRecord {
             $params[':branch_id'] = $branchId;
         }
         $sql = "
-            SELECT p.purchase_order_no AS transaction_number, r.invoice_date AS transaction_date, COALESCE(p.total_price, 0) AS total_price, 
+            SELECT r.invoice_number AS transaction_number, r.invoice_date AS transaction_date, COALESCE(p.total_price, 0) AS total_price, 
                 COALESCE(p.payment_amount, 0) AS payment_amount, COALESCE(p.payment_left, 0) AS payment_left 
             FROM " . TransactionPurchaseOrder::model()->tableName() . " p 
             INNER JOIN " . TransactionReceiveItem::model()->tableName() . " r ON p.id = r.purchase_order_id
