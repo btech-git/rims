@@ -61,15 +61,23 @@
                             <?php $paymentAmount = $payableRow['payment_amount']; ?>
                             <?php $paymentLeft = $payableRow['payment_left']; ?>
                             <tr>
-                                <td class="width2-1"><?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($payableRow['transaction_date']))); ?></td>
+                                <td class="width2-1">
+                                    <?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($payableRow['transaction_date']))); ?>
+                                </td>
                                 <td class="width2-2">
                                     <?php echo CHtml::link($payableRow['transaction_number'], Yii::app()->createUrl("report/payableTransaction/redirectTransaction", array(
                                         "codeNumber" => $payableRow['transaction_number']
                                     )), array('target' => '_blank'));?>
                                 </td>
-                                <td class="width2-3" style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $purchase)); ?></td>
-                                <td class="width2-4" style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $paymentAmount)); ?></td>
-                                <td class="width2-5" style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $paymentLeft)); ?></td>
+                                <td class="width2-3" style="text-align: right">
+                                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $purchase)); ?>
+                                </td>
+                                <td class="width2-4" style="text-align: right">
+                                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $paymentAmount)); ?>
+                                </td>
+                                <td class="width2-5" style="text-align: right">
+                                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $paymentLeft)); ?>
+                                </td>
                             </tr>
                             <?php $totalPurchase += $purchase; ?>
                             <?php $totalPayment += $paymentAmount; ?>
@@ -77,9 +85,15 @@
                         <?php endforeach; ?>
                         <tr>
                             <td colspan="2" style="text-align: right">TOTAL</td>
-                            <td class="width2-3" style="text-align: right"> <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalPurchase)); ?></td>
-                            <td class="width2-4" style="text-align: right"> <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalPayment)); ?></td>
-                            <td class="width2-5" style="text-align: right"> <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalPayable)); ?></td>
+                            <td class="width2-3" style="text-align: right"> 
+                                <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalPurchase)); ?>
+                            </td>
+                            <td class="width2-4" style="text-align: right"> 
+                                <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalPayment)); ?>
+                            </td>
+                            <td class="width2-5" style="text-align: right"> 
+                                <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalPayable)); ?>
+                            </td>
                         </tr>     
                     </table>
                 </td>
