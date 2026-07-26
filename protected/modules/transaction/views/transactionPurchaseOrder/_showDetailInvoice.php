@@ -73,9 +73,9 @@
                                         <td><?php echo CHtml::encode(CHtml::value($product, 'name')); ?></td>
                                         <td><?php echo CHtml::encode(CHtml::value($product, 'manufacturer_code')); ?></td>
                                         <td>
-                                            <?php echo CHtml::encode(CHtml::value($product, 'productMasterCategory')); ?> -
-                                            <?php echo CHtml::encode(CHtml::value($product, 'productSubMasterCategory')); ?> -
-                                            <?php echo CHtml::encode(CHtml::value($product, 'productSubCategory')); ?>
+                                            <?php echo CHtml::encode(CHtml::value($product, 'productMasterCategory.name')); ?> -
+                                            <?php echo CHtml::encode(CHtml::value($product, 'productSubMasterCategory.name')); ?> -
+                                            <?php echo CHtml::encode(CHtml::value($product, 'productSubCategory.name')); ?>
                                         </td>
                                         <td>
                                             <?php echo CHtml::encode(CHtml::value($product, 'brand.name')); ?>
