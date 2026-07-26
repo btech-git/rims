@@ -11,7 +11,7 @@
                 </tr>
                 <tr>    
                     <td width="15%">Tanggal</td>
-                    <td><?php echo Yii::app()->dateFormatter->format("d MMMM yyyy", $paymentOutDetail->paymentOut->payment_date); ?></td>
+                    <td><?php echo CHtml::encode(Yii::app()->dateFormatter->format("d MMMM yyyy", $paymentOutDetail->paymentOut->payment_date)); ?></td>
                     <td width="15%">Company Bank</td>
                     <td><?php echo CHtml::encode(CHtml::value($paymentOutDetail, 'paymentOut.companyBank.name')); ?></td>
                 </tr>
@@ -35,13 +35,13 @@
                 </tr>
                 <tr>
                     <td width="15%">Tanggal</td>
-                    <td><?php echo CHtml::encode(CHtml::value($receiveItem, 'invoice_date')); ?></td>
+                    <td><?php echo CHtml::encode(Yii::app()->dateFormatter->format("d MMMM yyyy", $receiveItem, 'invoice_date')); ?></td>
                     <td width="15%">Memo</td>
                     <td><?php echo CHtml::encode(CHtml::value($paymentOutDetail, 'memo')); ?></td>
                 </tr>
                 <tr>
                     <td width="15%">Jatuh Tempo</td>
-                    <td><?php echo CHtml::encode(CHtml::value($receiveItem, 'invoice_due_date')); ?></td>
+                    <td><?php echo CHtml::encode(Yii::app()->dateFormatter->format("d MMMM yyyy", $receiveItem, 'invoice_due_date')); ?></td>
                 </tr>
                 <?php $totalAmount += CHtml::encode(CHtml::value($paymentOutDetail, 'amount')); ?>
             </table>
