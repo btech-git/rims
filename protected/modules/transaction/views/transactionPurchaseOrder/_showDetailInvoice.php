@@ -74,10 +74,16 @@
                                         <td><?php echo CHtml::encode(CHtml::value($product, 'id')); ?></td>
                                         <td><?php echo CHtml::encode(CHtml::value($product, 'name')); ?></td>
                                         <td><?php echo CHtml::encode(CHtml::value($product, 'manufacturer_code')); ?></td>
-                                        <td><?php echo CHtml::encode(CHtml::value($product, 'masterSubCategoryCode')); ?></td>
-                                        <td><?php echo CHtml::encode(CHtml::value($product, 'brand.name')); ?></td>
-                                        <td><?php echo CHtml::encode(CHtml::value($product, 'subBrand.name')); ?></td>
-                                        <td><?php echo CHtml::encode(CHtml::value($product, 'subBrandSeries.name')); ?></td>
+                                        <td>
+                                            <?php echo CHtml::encode(CHtml::value($product, 'productMasterCategory')); ?> -
+                                            <?php echo CHtml::encode(CHtml::value($product, 'productSubMasterCategory')); ?> -
+                                            <?php echo CHtml::encode(CHtml::value($product, 'productSubCategory')); ?>
+                                        </td>
+                                        <td>
+                                            <?php echo CHtml::encode(CHtml::value($product, 'brand.name')); ?>
+                                            <?php echo CHtml::encode(CHtml::value($product, 'subBrand.name')); ?>
+                                            <?php echo CHtml::encode(CHtml::value($product, 'subBrandSeries.name')); ?>
+                                        </td>
                                         <td style="text-align: center"><?php echo CHtml::encode(CHtml::value($receiveDetail, 'qty_request')); ?></td>
                                         <td style="text-align: center"><?php echo CHtml::encode(CHtml::value($receiveDetail, 'qty_received')); ?></td>
                                         <td><?php echo CHtml::encode(CHtml::value($product, 'unit.name')); ?></td>
