@@ -58,8 +58,6 @@
                                     <td>Code</td>
                                     <td>Kategori</td>
                                     <td>Brand</td>
-                                    <td>Sub Brand</td>
-                                    <td>Sub Brand Series</td>
                                     <td>Qty Order</td>
                                     <td>Qty Received</td>
                                     <td>Unit</td>
