@@ -411,7 +411,7 @@ class Supplier extends CActiveRecord {
         }
         
         $sql = "
-            SELECT o.purchase_order_no, r.invoice_number, r.invoice_date, r.invoice_grand_total AS total_price, COALESCE(p.amount, 0) AS amount, 
+            SELECT o.purchase_order_no, r.invoice_number, o.purchase_order_date, r.invoice_grand_total AS total_price, COALESCE(p.amount, 0) AS amount, 
             r.invoice_grand_total - COALESCE(p.amount, 0) AS remaining
             FROM " . TransactionPurchaseOrder::model()->tableName() . " o
             INNER JOIN " . TransactionReceiveItem::model()->tableName() . " r ON o.id = r.purchase_order_id
@@ -423,9 +423,9 @@ class Supplier extends CActiveRecord {
                 GROUP BY d.receive_item_id
             ) p ON r.id = p.receive_item_id 
             WHERE r.supplier_id = :supplier_id AND (r.invoice_grand_total - COALESCE(p.amount, 0)) > 100.00 AND 
-            DATE(r.invoice_date) BETWEEN '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND :end_date AND o.status_document NOT LIKE '%CANCEL%' AND
+            DATE(o.purchase_order_date) BETWEEN '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND :end_date AND o.status_document NOT LIKE '%CANCEL%' AND
             r.user_id_cancelled IS NULL" . $branchConditionSql . "
-            ORDER BY r.invoice_date ASC";
+            ORDER BY o.purchase_order_date ASC";
 
         $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
 
