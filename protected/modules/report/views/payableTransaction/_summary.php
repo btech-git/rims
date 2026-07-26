@@ -84,14 +84,14 @@
                             <?php $totalPayable += $paymentLeft; ?>
                         <?php endforeach; ?>
                         <tr>
-                            <td colspan="2" style="text-align: right">TOTAL</td>
-                            <td class="width2-3" style="text-align: right"> 
+                            <td colspan="2" style="text-align: right; font-weight: bold">TOTAL</td>
+                            <td class="width2-3" style="text-align: right; font-weight: bold"> 
                                 <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalPurchase)); ?>
                             </td>
-                            <td class="width2-4" style="text-align: right"> 
+                            <td class="width2-4" style="text-align: right; font-weight: bold"> 
                                 <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalPayment)); ?>
                             </td>
-                            <td class="width2-5" style="text-align: right"> 
+                            <td class="width2-5" style="text-align: right; font-weight: bold"> 
                                 <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalPayable)); ?>
                             </td>
                         </tr>     

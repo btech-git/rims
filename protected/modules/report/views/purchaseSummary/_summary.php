@@ -52,8 +52,12 @@
     <tfoot>
         <tr id="header1">
             <td colspan="3" style="text-align: right">TOTAL PEMBELIAN</td>
-            <td class="width1-4" style="text-align: right"> <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalPurchase)); ?></td>
-            <td class="width1-4" style="text-align: right"> <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalWorkOrderExpense)); ?></td>
+            <td class="width1-4" style="text-align: right; font-weight: bold"> 
+                <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalPurchase)); ?>
+            </td>
+            <td class="width1-4" style="text-align: right; font-weight: bold"> 
+                <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalWorkOrderExpense)); ?>
+            </td>
         </tr>  
     </tfoot>
 </table>

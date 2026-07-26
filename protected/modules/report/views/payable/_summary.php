@@ -65,7 +65,9 @@
                             <?php $paymentLeft = $payableRow['remaining']; ?>
                             <tr>
                                 <td class="width2-2">
-                                    <?php echo CHtml::link($payableRow['purchase_order_no'], Yii::app()->createUrl("report/payable/redirectTransaction", array("codeNumber" => $payableRow['purchase_order_no'])), array('target' => '_blank'));?>
+                                    <?php echo CHtml::link($payableRow['purchase_order_no'], Yii::app()->createUrl("report/payable/redirectTransaction", array(
+                                        "codeNumber" => $payableRow['purchase_order_no']
+                                    )), array('target' => '_blank'));?>
                                 </td>
                                 <td class="width2-1">
                                     <?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($payableRow['invoice_date']))); ?>
@@ -117,14 +119,14 @@
                             <?php $totalPayable += $paymentLeft; ?>
                         <?php endforeach; ?>
                         <tr>
-                            <td colspan="3" style="text-align: right">TOTAL</td>
-                            <td class="width2-3" style="text-align: right"> 
+                            <td colspan="3" style="text-align: right; font-weight: bold">TOTAL</td>
+                            <td class="width2-3" style="text-align: right; font-weight: bold"> 
                                 <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalPurchase)); ?>
                             </td>
-                            <td class="width2-4" style="text-align: right"> 
+                            <td class="width2-4" style="text-align: right; font-weight: bold"> 
                                 <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalPayment)); ?>
                             </td>
-                            <td class="width2-5" style="text-align: right"> 
+                            <td class="width2-5" style="text-align: right; font-weight: bold"> 
                                 <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalPayable)); ?>
                             </td>
                         </tr>     

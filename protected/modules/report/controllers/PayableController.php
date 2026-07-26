@@ -87,7 +87,7 @@ class PayableController extends Controller {
 
         if ($codeNumberConstant === 'PO') {
             $model = TransactionPurchaseOrder::model()->findByAttributes(array('purchase_order_no' => $codeNumber));
-            $this->redirect(array('/transaction/transactionPurchaseORder/show', 'id' => $model->id));
+            $this->redirect(array('/transaction/transactionPurchaseOrder/show', 'id' => $model->id));
         } else if ($codeNumberConstant === 'WOE') {
             $model = WorkOrderExpenseHeader::model()->findByAttributes(array('transaction_number' => $codeNumber));
             $this->redirect(array('/accounting/workOrderExpense/show', 'id' => $model->id));
