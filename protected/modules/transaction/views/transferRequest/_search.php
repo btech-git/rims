@@ -47,6 +47,22 @@
                     </div>
                 </div>
             </div>
+            
+            <div class="field">
+                <div class="row collapse">
+                    <div class="small-4 columns">
+                        <?php echo $form->label($model, 'status_document', array('class' => 'prefix')); ?>
+                    </div>
+                    <div class="small-8 columns">
+                        <?php echo $form->dropDownList($model, 'status_document', array(
+                            'Draft' => 'Draft',
+                            'Revised' => 'Need Revision',
+                            'Rejected'=>'Rejected',
+                            'Approved' => 'Approved',
+                        ), array('empty' => '-- all --')); ?>
+                    </div>
+                </div>
+            </div>
         </div>	
         
         <div class="small-12 medium-6 columns">

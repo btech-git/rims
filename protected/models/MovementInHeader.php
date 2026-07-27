@@ -214,4 +214,11 @@ class MovementInHeader extends MonthlyTransactionActiveRecord {
             ),
         ));
     }
+    
+    public function getApprovalUser() {
+        $movementInApproval = MovementInApproval::model()->findByAttributes(array('movement_in_id' => $this->id), array('order' => 'id DESC'));
+        
+        return empty($movementInApproval) ? '' : $movementInApproval->supervisor->username;
+        
+    }
 }

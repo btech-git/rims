@@ -25,6 +25,18 @@
         'note',
         'status_document',
         array(
+            'header' => 'Created by',
+            'name' => 'requester_id',
+            'filter' => false,
+            'value' => 'empty($data->requester_id) ? "" : $data->user->username',
+        ),
+        array(
+            'header' => 'Approved by',
+            'name' => 'approved_id',
+            'filter' => false,
+            'value' => 'empty($data->approved_id) ? "" : $data->approval->username',
+        ),
+        array(
             'header' => 'Cancelled by',
             'name' => 'user_id_cancelled',
             'filter' => false,

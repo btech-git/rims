@@ -339,4 +339,13 @@ class TransactionTransferRequest extends MonthlyTransactionActiveRecord {
     public function getTransactionDateTime() {
         return $this->transfer_request_date . ' ' . $this->transfer_request_time;
     }
+    
+    public function getTransactionDateInterval() {
+        $transaction_timestamp = strtotime(date("Y-m-d", strtotime($this->transfer_request_date)));
+        $today_timestamp = strtotime(date("Y-m-d")); 
+        $seconds_diff = $today_timestamp - $transaction_timestamp;
+        $days_ago = floor($seconds_diff / 86400);
+        
+        return $days_ago;
+    }
 }

@@ -23,6 +23,12 @@
         'request_type',
         array('name'=>'customer_id','value'=>'empty($data->customer_id) ? "" :$data->customer->name'),
         array(
+            'header' => 'Created by',
+            'name' => 'sender_id',
+            'filter' => false,
+            'value' => 'empty($data->sender_id) ? "" : $data->sender->username',
+        ),
+        array(
             'header' => 'Cancelled by',
             'name' => 'user_id_cancelled',
             'filter' => false,

@@ -66,11 +66,15 @@ Yii::app()->clientScript->registerScript('search', "
                 'columns'=>array(
                     array(
                         'name'=>'transfer_request_no', 
-                        'value'=>'CHTml::link($data->transfer_request_no, array("view", "id"=>$data->id))', 
+                        'value'=>'CHtml::link($data->transfer_request_no, array("view", "id"=>$data->id))', 
                         'type'=>'raw'
                     ),
                     'transfer_request_date',
                     'transfer_request_time',
+                    array(
+                        'header' => 'Umur (hari)',
+                        'value' => '$data->transactionDateInterval',
+                    ),
                     'status_document',
                     array(
                         'name'=>'requester_branch_id',

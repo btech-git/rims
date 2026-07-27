@@ -24,6 +24,12 @@
         array('name'=>'supplier_id','value'=>'empty($data->supplier_id) ? "" :$data->supplier->company'),
         'note',
         array(
+            'header' => 'Created by',
+            'name' => 'user_id_receive',
+            'filter' => false,
+            'value' => 'empty($data->user_id_receive) ? "" : $data->userIdReceive->username',
+        ),
+        array(
             'header' => 'Cancelled by',
             'name' => 'user_id_cancelled',
             'filter' => false,

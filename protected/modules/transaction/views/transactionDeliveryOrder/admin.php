@@ -131,13 +131,13 @@ Yii::app()->clientScript->registerScript('search', "
                     'model' => $model
                 ), true),
             ),
-            'Consignment Out' => array(
-                'content' => $this->renderPartial('_viewConsignment', array(
-                    'consignmentDataProvider' => $consignmentDataProvider, 
-                    'consignment' => $consignment, 
-                    'model' => $model
-                ), true),
-            ),
+//            'Consignment Out' => array(
+//                'content' => $this->renderPartial('_viewConsignment', array(
+//                    'consignmentDataProvider' => $consignmentDataProvider, 
+//                    'consignment' => $consignment, 
+//                    'model' => $model
+//                ), true),
+//            ),
         ),
         // additional javascript options for the tabs plugin
         'options' => array(

@@ -247,4 +247,11 @@ class MovementOutHeader extends MonthlyTransactionActiveRecord {
 
         return $resultSet;
     }
+    
+    public function getApprovalUser() {
+        $movementOutApproval = MovementOutApproval::model()->findByAttributes(array('movement_out_id' => $this->id), array('order' => 'id DESC'));
+        
+        return empty($movementOutApproval) ? '' : $movementOutApproval->supervisor->username;
+        
+    }
 }

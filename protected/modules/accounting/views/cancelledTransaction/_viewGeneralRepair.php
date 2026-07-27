@@ -24,6 +24,12 @@
         array('name'=>'vehicle_id','value'=>'$data->vehicle->plate_number'),
         'status',
         array(
+            'header' => 'Created by',
+            'name' => 'user_id',
+            'filter' => false,
+            'value' => 'empty($data->user_id) ? "" : $data->user->username',
+        ),
+        array(
             'header' => 'Cancelled by',
             'name' => 'user_id_cancelled',
             'filter' => false,

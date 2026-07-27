@@ -318,11 +318,18 @@ class CashTransaction extends MonthlyTransactionActiveRecord {
         $detailNoteList = array();
         
         foreach ($this->cashTransactionDetails as $detail) {
-            
             $detailNoteList[] = $detail->notes;
         }
+        
         $detailNoteUniqueList = array_unique(explode(', ', implode(', ', $detailNoteList)));
         
         return implode(', ', $detailNoteUniqueList);
+    }
+    
+    public function getApprovalUser() {
+        $cashTransactionApproval = CashTransactionApproval::model()->findByAttributes(array('cash_transaction_id' => $this->id), array('order' => 'id DESC'));
+        
+        return empty($cashTransactionApproval) ? '' : $cashTransactionApproval->supervisor->username;
+        
     }
 }

@@ -325,6 +325,13 @@ class PaymentOut extends MonthlyTransactionActiveRecord {
         
         return $paymentOutApproval->approval_type;
     }
+    
+    public function getApprovalUser() {
+        $paymentOutApproval = PaymentOutApproval::model()->findByAttributes(array('payment_out_id' => $this->id), array('order' => 'id DESC'));
+        
+        return empty($paymentOutApproval) ? '' : $paymentOutApproval->supervisor->username;
+        
+    }
 
     public static function getPaymentByTypeList($month, $year, $branchId) {
         $branchConditionSql = '';

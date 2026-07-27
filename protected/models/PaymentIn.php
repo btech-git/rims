@@ -477,4 +477,11 @@ class PaymentIn extends MonthlyTransactionActiveRecord {
 
         return $resultSet;
     }
+    
+    public function getApprovalUser() {
+        $paymentInApproval = PaymentInApproval::model()->findByAttributes(array('payment_in_id' => $this->id), array('order' => 'id DESC'));
+        
+        return empty($paymentInApproval) ? '' : $paymentInApproval->supervisor->username;
+        
+    }
 }
