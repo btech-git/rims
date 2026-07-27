@@ -62,6 +62,40 @@ class PurchaseSummaryController extends Controller {
         ));
     }
 
+    public function actionDetailPurchaseTransaction($supplierId, $startDate, $endDate) {
+        $purchaseOrders = TransactionPurchaseOrder::model()->findall(array(
+            'condition' => 'supplier_id = :supplier_id AND purchase_order_date BETWEEN :start_date AND :end_date',
+            'params' => array(
+                ':supplier_id' => $supplierId,
+                ':start_date' => $startDate,
+                ':end_date' => $endDate,
+            ),
+        ));
+        
+        $this->render('detailPurchaseTransaction', array(
+            'purchaseOrders' => $purchaseOrders,
+            'startDate' => $startDate,
+            'endDate' => $endDate,
+        ));
+    }
+    
+    public function actionDetailWorkOrderExpenseTransaction($supplierId, $startDate, $endDate) {
+        $workOrderExpenses = WorkOrderExpenseHeader::model()->findall(array(
+            'condition' => 'supplier_id = :supplier_id AND transaction_date BETWEEN :start_date AND :end_date',
+            'params' => array(
+                ':supplier_id' => $supplierId,
+                ':start_date' => $startDate,
+                ':end_date' => $endDate,
+            ),
+        ));
+        
+        $this->render('detailWorkOrderExpenseTransaction', array(
+            'workOrderExpenses' => $workOrderExpenses,
+            'startDate' => $startDate,
+            'endDate' => $endDate,
+        ));
+    }
+    
     public function actionAjaxJsonSupplier($id) {
         if (Yii::app()->request->isAjaxRequest) {
             $supplier = Supplier::model()->findByPk($id);

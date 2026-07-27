@@ -424,7 +424,7 @@ class Supplier extends CActiveRecord {
             ) p ON r.id = p.receive_item_id 
             WHERE r.supplier_id = :supplier_id AND (r.invoice_grand_total - COALESCE(p.amount, 0)) > 100.00 AND 
             DATE(o.purchase_order_date) BETWEEN '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND :end_date AND o.status_document NOT LIKE '%CANCEL%' AND
-            r.user_id_cancelled IS NULL" . $branchConditionSql . "
+                r.user_id_cancelled IS NULL" . $branchConditionSql . "
             ORDER BY o.purchase_order_date ASC";
 
         $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);

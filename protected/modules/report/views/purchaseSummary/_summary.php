@@ -37,10 +37,18 @@
                     <td class="width1-2"><?php echo CHtml::encode(CHtml::value($header, 'company')); ?></td>
                     <td class="width1-3"><?php echo CHtml::encode(CHtml::value($header, 'name')); ?></td>
                     <td class="width1-4" style="text-align: right">
-                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $purchasePrice)); ?>
+                        <?php echo CHtml::link(Yii::app()->numberFormatter->format('#,##0', $purchasePrice), Yii::app()->createUrl("report/purchaseSummary/detailPurchaseTransaction", array(
+                            "supplierId" => $header->id,
+                            "startDate" => $startDate,
+                            "endDate" => $endDate,
+                        )), array('target' => '_blank'));?>
                     </td>
                     <td class="width1-4" style="text-align: right">
-                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $workOrderExpensePrice)); ?>
+                        <?php echo CHtml::link(Yii::app()->numberFormatter->format('#,##0', $workOrderExpensePrice), Yii::app()->createUrl("report/purchaseSummary/detailWorkOrderExpenseTransaction", array(
+                            "supplierId" => $header->id,
+                            "startDate" => $startDate,
+                            "endDate" => $endDate,
+                        )), array('target' => '_blank'));?>
                     </td>
                 </tr>
                 <?php $totalPurchase += $purchasePrice; ?>
