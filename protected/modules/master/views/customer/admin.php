@@ -39,8 +39,8 @@ $('.search-form form').submit(function(){
         <?php if (Yii::app()->user->checkAccess("masterCustomerCreate")) { ?>
             <a class="button success right" href="<?php echo Yii::app()->baseUrl.'/master/customer/create';?>"><span class="fa fa-plus"></span>New</a>
         <?php }?>
-        <?php if (Yii::app()->user->checkAccess("masterCustomerEdit")) { ?>
-            <a class="button success right" href="<?php echo Yii::app()->baseUrl.'/master/customer/exportExcel';?>"><span class="fa fa-print"></span>Export Excel</a> &nbsp;
+        <?php if (Yii::app()->user->checkAccess("director")) { ?>
+            <a class="button warning left" href="<?php echo Yii::app()->baseUrl.'/master/customer/exportExcel';?>"><span class="fa fa-print"></span>Export Excel</a> &nbsp;
         <?php }?>
 
         <h1>Manage Customer</h1>

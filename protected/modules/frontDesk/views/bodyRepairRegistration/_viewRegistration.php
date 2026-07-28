@@ -158,21 +158,10 @@
             <div class="field">
                 <div class="row collapse">
                     <div class="small-4 columns">
-                        <span class="prefix">SPK Customer #</span>
+                        <span class="prefix">Permintaan Awal / Keluhan Customer</span>
                     </div>
                     <div class="small-8 columns">
-                        <input type="text" readonly="true" value="<?php echo $model->customer_work_order_number; ?>"> 
-                    </div>
-                </div>
-            </div>
-
-            <div class="field">
-                <div class="row collapse">
-                    <div class="small-4 columns">
-                        <span class="prefix">DMS Reference Number</span>
-                    </div>
-                    <div class="small-8 columns">
-                        <input type="text" readonly="true" value="<?php echo $model->customer_document_order_number; ?>"> 
+                        <textarea name="" id="" cols="30" rows="5" readonly="true"><?php echo $model->customer_request_note; ?></textarea>
                     </div>
                 </div>
             </div>
@@ -203,6 +192,28 @@
         </div> <!-- end div large -->
 
         <div class="large-6 columns">
+            <div class="field">
+                <div class="row collapse">
+                    <div class="small-4 columns">
+                        <span class="prefix">SPK Customer #</span>
+                    </div>
+                    <div class="small-8 columns">
+                        <input type="text" readonly="true" value="<?php echo $model->customer_work_order_number; ?>"> 
+                    </div>
+                </div>
+            </div>
+
+            <div class="field">
+                <div class="row collapse">
+                    <div class="small-4 columns">
+                        <span class="prefix">DMS Reference #</span>
+                    </div>
+                    <div class="small-8 columns">
+                        <input type="text" readonly="true" value="<?php echo $model->customer_document_order_number; ?>"> 
+                    </div>
+                </div>
+            </div>
+
             <div class="field">
                 <div class="row collapse">
                     <div class="small-4 columns">

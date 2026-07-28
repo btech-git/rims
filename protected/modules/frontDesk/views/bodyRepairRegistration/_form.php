@@ -145,12 +145,11 @@
                                     <div class="field">
                                         <div class="row collapse">
                                             <div class="small-4 columns">
-                                                <label class="prefix">Insurance Company</label>
+                                                <label class="prefix">Permintaan Awal / Keluhan Customer</label>
                                             </div>
                                             <div class="small-8 columns">
-                                                <?php echo $form->dropDownlist($bodyRepairRegistration->header,'insurance_company_id',CHtml::listData(InsuranceCompany::model()->findAllByAttributes(array('is_deleted' => 0)),'id','name'),array(
-                                                    'prompt'=>'-- Tanpa Asuransi --',
-                                                )); ?>
+                                                <?php echo $form->textArea($bodyRepairRegistration->header,'customer_request_note',array('rows'=>5, 'cols'=>50)); ?>
+                                                <?php echo $form->error($bodyRepairRegistration->header,'customer_request_note'); ?>
                                             </div>
                                         </div>
                                     </div>
@@ -169,6 +168,19 @@
                                 </div> 
                                 <!-- END COLUMN 6-->
                                 <div class="medium-6 columns">
+                                    <div class="field">
+                                        <div class="row collapse">
+                                            <div class="small-4 columns">
+                                                <label class="prefix">Insurance Company</label>
+                                            </div>
+                                            <div class="small-8 columns">
+                                                <?php echo $form->dropDownlist($bodyRepairRegistration->header,'insurance_company_id',CHtml::listData(InsuranceCompany::model()->findAllByAttributes(array('is_deleted' => 0)),'id','name'),array(
+                                                    'prompt'=>'-- Tanpa Asuransi --',
+                                                )); ?>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
                                     <div class="field">
                                         <div class="row collapse">
                                             <div class="small-4 columns">

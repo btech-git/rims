@@ -32,6 +32,12 @@ class CustomerController extends Controller {
                 $this->redirect(array('/site/login'));
             }
         }
+        
+        if ($filterChain->action->id === 'exportExcel') {
+            if (!(Yii::app()->user->checkAccess('director'))) {
+                $this->redirect(array('/site/login'));
+            }
+        }
 
         if (
             $filterChain->action->id === 'view' || 
