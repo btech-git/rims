@@ -39,6 +39,7 @@ class SaleFlowSummaryController extends Controller {
         $customer = Search::bind(new Customer('search'), isset($_GET['Customer']) ? $_GET['Customer'] : array());
         $customerDataProvider = $customer->search();
         $customerDataProvider->pagination->pageVar = 'page_dialog';
+        $customerDataProvider->criteria->compare('t.customer_type', 'Individual');
 
         $saleFlowSummary = new SaleFlowSummary($registrationTransaction->searchReport());
         $saleFlowSummary->setupLoading();

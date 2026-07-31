@@ -40,6 +40,8 @@ $this->menu = array(
                     array('name' => 'coa_code', 'value' => $model->coa != "" ? $model->coa->code : ''),
                     array('name' => 'coa_diskon_service_name', 'value' => $model->coaDiskonService != "" ? $model->coaDiskonService->name : ''),
                     array('name' => 'coa_diskon_service_code', 'value' => $model->coaDiskonService != "" ? $model->coaDiskonService->code : ''),
+                    array('name' => 'user_id_created', 'value' => $model->user_id_created != "" ? $model->userIdCreated->username : ''),
+                    array('name' => 'created_datetime', 'value' => $model->created_datetime != "" ? $model->created_datetime : ''),
                 ),
             ));
             ?>

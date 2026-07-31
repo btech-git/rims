@@ -247,14 +247,7 @@ Yii::app()->clientScript->registerScript('report', '
                 'header'=>'Customer Type', 
                 'name'=>'customer_type',
                 'value'=>'$data->customer_type',
-                'type'=>'raw',
-                'filter'=>CHtml::dropDownList('Customer[customer_type]', $customer->customer_type, 
-                    array(
-                        ''=>'All',
-                        'Company' => 'Company',
-                        'Individual' => 'Individual',
-                    )
-                ),
+                'filter' => false,
             ),
             'mobile_phone',
             'email',

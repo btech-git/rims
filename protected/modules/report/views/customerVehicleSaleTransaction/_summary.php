@@ -45,6 +45,7 @@
                 <th class="width1-5">Vehicle</th>
                 <th class="width1-6">Plate #</th>
                 <th class="width1-7">Status</th>
+                <th class="width1-8">Keluhan</th>
                 <th class="width1-8">Problem</th>
                 <th class="width1-8">Sales Front</th>
                 <th class="width1-8">Mekanik</th>
@@ -73,6 +74,7 @@
                     </td>
                     <td><?php echo CHtml::encode(CHtml::value($header, 'vehicle.plate_number')); ?></td>
                     <td><?php echo CHtml::encode(CHtml::value($header, 'status')); ?></td>
+                    <td><?php echo CHtml::encode(CHtml::value($header, 'customer_request_note')); ?></td>
                     <td><?php echo CHtml::encode(CHtml::value($header, 'problem')); ?></td>
                     <td><?php echo CHtml::encode(CHtml::value($header, 'employeeIdSalesPerson.name')); ?></td>
                     <td><?php echo CHtml::encode(CHtml::value($header, 'employeeIdAssignMechanic.name')); ?></td>

@@ -22,6 +22,7 @@
                 <th>SL #</th>
                 <th>WO #</th>
                 <th>Tanggal WO</th>
+                <th>Umur WO</th>
                 <th>Movement Out #</th>
                 <th>Invoice #</th>
                 <th>Services</th>
@@ -66,6 +67,10 @@
                     <td>
                         <?php echo CHtml::encode($outstandingWorkOrderItem['work_order_date']); ?> 
                         <?php echo CHtml::encode($outstandingWorkOrderItem['work_order_time']); ?>
+                    </td>
+                    <td>
+                        <?php $outstandingDays = date_diff(date_create($outstandingWorkOrderItem['work_order_date']), date_create(date('Y-m-d'))); ?>
+                        <?php echo CHtml::encode($outstandingDays->format("%a days")); ?>
                     </td>
                     <td><?php echo CHtml::encode($registrationTransaction->getMovementOuts()); ?></td>
                     <td>

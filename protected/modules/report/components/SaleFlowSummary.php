@@ -63,7 +63,7 @@ class SaleFlowSummary extends CComponent {
             'customer',
             'vehicle',
         );
-        $this->dataProvider->criteria->addCondition("substr(t.transaction_date, 1, 10) BETWEEN :start_date AND :end_date" . $statusConditionSql . $branchConditionSql . $customerConditionSql . $plateNumberConditionSql);
+        $this->dataProvider->criteria->addCondition("substr(t.transaction_date, 1, 10) BETWEEN :start_date AND :end_date AND customer.customer_type = 'Individual'" . $statusConditionSql . $branchConditionSql . $customerConditionSql . $plateNumberConditionSql);
         $this->dataProvider->criteria->params[':start_date'] = $startDate;
         $this->dataProvider->criteria->params[':end_date'] = $endDate;
         if (!empty($transactionStatus)) {

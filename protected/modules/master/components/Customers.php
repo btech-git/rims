@@ -133,7 +133,7 @@ class Customers extends CComponent {
             $this->header->coa_id = 1449;
         } else {
             if ($this->header->isNewRecord) {
-                $existingCoa = Coa::model()->findByAttributes(array('coa_sub_category_id' => 8, 'coa_id' => null), array('order' => 'code DESC'));
+                $existingCoa = Coa::model()->find(array('condition' => "coa_sub_category_id = 8 AND coa_id IS NULL AND code NOT LIKE '___.__.999'", 'order' => 'code DESC'));
                 $ordinal = substr($existingCoa->code, -3);
                 $newOrdinal = $ordinal + 1;
 
