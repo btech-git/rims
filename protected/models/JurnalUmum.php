@@ -47,10 +47,10 @@ class JurnalUmum extends CActiveRecord {
             array('coa_id, branch_id, is_coa_category', 'numerical', 'integerOnly' => true),
             array('kode_transaksi', 'length', 'max' => 30),
             array('remark', 'length', 'max' => 100),
-            array('transaction_subject', 'length', 'max' => 200),
             array('transaction_type', 'length', 'max' => 20),
             array('total', 'length', 'max' => 18),
             array('debet_kredit', 'length', 'max' => 5),
+            array('transaction_subject', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
             array('id, kode_transaksi, tanggal_transaksi, coa_id, total, debet_kredit, tanggal_posting, branch_id, tanggal_mulai, tanggal_sampai, transaction_subject, is_coa_category, transaction_type, remark', 'safe', 'on' => 'search'),
