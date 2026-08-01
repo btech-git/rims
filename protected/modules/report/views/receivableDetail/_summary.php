@@ -44,7 +44,7 @@ Yii::app()->clientScript->registerCss('_report', '
                 <?php $totalCredit = '0.00'; ?>
                 <?php foreach ($receivableDetailSummary->dataProvider->data as $header): ?>
                     <tr>
-                        <td colspan="5" style="text-align: center; font-weight: bold">
+                        <td colspan="5" style="font-weight: bold">
                             <?php echo CHtml::encode(CHtml::value($header, 'code')); ?> - 
                             <?php echo CHtml::encode(CHtml::value($header, 'name')); ?>
                         </td>
