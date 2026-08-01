@@ -87,6 +87,7 @@ class InvoiceHeaderController extends Controller {
                 $jurnalUmumReceivable->transaction_subject = $transactionSubject;
                 $jurnalUmumReceivable->is_coa_category = 0;
                 $jurnalUmumReceivable->transaction_type = $transactionType;
+                $jurnalUmumReceivable->remark = $model->vehicle->plate_number;
                 $valid = $jurnalUmumReceivable->save() && $valid;
 
                 if ($model->ppn_total > 0.00) {
@@ -102,6 +103,7 @@ class InvoiceHeaderController extends Controller {
                     $jurnalUmumPpn->transaction_subject = $transactionSubject;
                     $jurnalUmumPpn->is_coa_category = 0;
                     $jurnalUmumPpn->transaction_type = $transactionType;
+                    $jurnalUmumPpn->remark = $model->vehicle->plate_number;
                     $valid = $jurnalUmumPpn->save() && $valid;
                 }
 
@@ -169,6 +171,7 @@ class InvoiceHeaderController extends Controller {
                     $jurnalUmumPersediaan->transaction_subject = $transactionSubject;
                     $jurnalUmumPersediaan->is_coa_category = $journalReference['is_coa_category'];
                     $jurnalUmumPersediaan->transaction_type = $transactionType;
+                    $jurnalUmumPersediaan->remark = $model->vehicle->plate_number;
                     $jurnalUmumPersediaan->save();
                 }
 
@@ -193,6 +196,116 @@ class InvoiceHeaderController extends Controller {
             'details' => $details,
             'payments' => $payments,
         ));
+    }
+    
+    public function actionRejournalTransaction($startDate, $endDate) {
+        set_time_limit(0);
+        ini_set('memory_limit', '1024M');
+        
+        $sql = "SELECT h.id, h.invoice_number, h.invoice_date, h.branch_id, c.name AS customer_name, v.plate_number, s.coa_hpp, s.coa_outstanding_part_id, p.hpp * d.quantity AS total_hpp
+                FROM rims_invoice_detail d
+                INNER JOIN rims_invoice_header h ON h.id = d.invoice_id
+                INNER JOIN rims_customer c ON c.id = h.customer_id
+                INNER JOIN rims_vehicle v ON v.id = h.vehicle_id
+                INNER JOIN rims_product p ON p.id = d.product_id
+                INNER JOIN rims_product_sub_master_category s ON s.id = p.product_sub_master_category_id
+                WHERE h.invoice_date BETWEEN :start_date AND :end_date
+                ORDER BY h.id ASC";
+                
+        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, array(
+            ':start_date' => $startDate,
+            ':end_date' => $endDate,
+        ));
+        
+        $transactions = array();
+        
+        foreach ($resultSet as $resultSetItem) {
+            if (!isset($transactions[$resultSetItem['id']]['hpp'][$resultSetItem['coa_hpp']])) {
+                $transactions[$resultSetItem['id']]['hpp'][$resultSetItem['coa_hpp']] = '0.00';
+            }
+            $transactions[$resultSetItem['id']]['hpp'][$resultSetItem['coa_hpp']] += $resultSetItem['total_hpp'];
+            if (!isset($transactions[$resultSetItem['id']]['outstanding_part'][$resultSetItem['coa_outstanding_part_id']])) {
+                $transactions[$resultSetItem['id']]['outstanding_part'][$resultSetItem['coa_outstanding_part_id']] = '0.00';
+            }
+            $transactions[$resultSetItem['id']]['outstanding_part'][$resultSetItem['coa_outstanding_part_id']] += $resultSetItem['total_hpp'];
+            
+            $transactions[$resultSetItem['id']]['invoice_number'] = $resultSetItem['invoice_number'];
+            $transactions[$resultSetItem['id']]['invoice_date'] = $resultSetItem['invoice_date'];
+            $transactions[$resultSetItem['id']]['branch_id'] = $resultSetItem['branch_id'];
+            $transactions[$resultSetItem['id']]['customer_name'] = $resultSetItem['customer_name'];
+            $transactions[$resultSetItem['id']]['plate_number'] = $resultSetItem['plate_number'];
+        }
+
+        $valid = true;
+        
+        $lastInvoiceId = '';
+        foreach ($transactions as $invoiceId => $transaction) {
+            $debitCoaIds = array_keys($transaction['hpp']);
+            $creditCoaIds = array_keys($transaction['outstanding_part']);
+            $coaIds = array_merge($debitCoaIds, $creditCoaIds);
+            $coaIdsSql = empty($coaIds) ? 'NULL' : implode(',', $coaIds);
+            
+            $dbTransaction = Yii::app()->db->beginTransaction();
+            try {
+                JurnalUmum::model()->deleteAll(array(
+                    'condition' => "kode_transaksi = :kode_transaksi AND coa_id IN ({$coaIdsSql})",
+                    'params' => array(
+                        ':kode_transaksi' => $transaction['invoice_number'],
+                    ),
+                ));
+
+                foreach ($debitCoaIds as $debitCoaId) {
+                    $jurnalUmum = new JurnalUmum();
+                    $jurnalUmum->kode_transaksi = $transaction['invoice_number'];
+                    $jurnalUmum->tanggal_transaksi = $transaction['invoice_date'];
+                    $jurnalUmum->coa_id = $debitCoaId;
+                    $jurnalUmum->branch_id = $transaction['branch_id'];
+                    $jurnalUmum->total = $transaction['hpp'][$debitCoaId];
+                    $jurnalUmum->debet_kredit = 'D';
+                    $jurnalUmum->tanggal_posting = $transaction['invoice_date'];
+                    $jurnalUmum->transaction_subject = $transaction['customer_name'];
+                    $jurnalUmum->is_coa_category = 0;
+                    $jurnalUmum->transaction_type = 'Invoice';
+                    $jurnalUmum->remark = $transaction['plate_number'];
+                    $valid = $valid && $jurnalUmum->save();
+                }
+
+                foreach ($creditCoaIds as $creditCoaId) {
+                    $jurnalUmum = new JurnalUmum();
+                    $jurnalUmum->kode_transaksi = $transaction['invoice_number'];
+                    $jurnalUmum->tanggal_transaksi = $transaction['invoice_date'];
+                    $jurnalUmum->coa_id = $creditCoaId;
+                    $jurnalUmum->branch_id = $transaction['branch_id'];
+                    $jurnalUmum->total = $transaction['outstanding_part'][$creditCoaId];
+                    $jurnalUmum->debet_kredit = 'K';
+                    $jurnalUmum->tanggal_posting = $transaction['invoice_date'];
+                    $jurnalUmum->transaction_subject = $transaction['customer_name'];
+                    $jurnalUmum->is_coa_category = 0;
+                    $jurnalUmum->transaction_type = 'Invoice';
+                    $jurnalUmum->remark = $transaction['plate_number'];
+                    $valid = $valid && $jurnalUmum->save();
+                }
+
+                if ($valid) {
+                    $dbTransaction->commit();
+                } else {
+                    $dbTransaction->rollback();
+                }
+            } catch (Exception $e) {
+                $dbTransaction->rollback();
+                var_dump($e->getMessage());
+                $valid = false;
+            }
+            
+            $lastInvoiceId = $invoiceId;
+            
+            if ($valid === false) {
+                break;
+            }
+        }
+
+        var_dump($lastInvoiceId);
+        var_dump($valid);
     }
 
     public function actionViewInvoices() {
@@ -256,6 +369,7 @@ class InvoiceHeaderController extends Controller {
                         $jurnalUmumReceivable->transaction_subject = $transactionSubject;
                         $jurnalUmumReceivable->is_coa_category = 0;
                         $jurnalUmumReceivable->transaction_type = $transactionType;
+                        $jurnalUmumReceivable->remark = $model->vehicle->plate_number;
                         $valid = $jurnalUmumReceivable->save() && $valid;
 
                         if ($invoiceHeader->ppn_total > 0.00) {
@@ -271,6 +385,7 @@ class InvoiceHeaderController extends Controller {
                             $jurnalUmumPpn->transaction_subject = $transactionSubject;
                             $jurnalUmumPpn->is_coa_category = 0;
                             $jurnalUmumPpn->transaction_type = $transactionType;
+                            $jurnalUmumPpn->remark = $model->vehicle->plate_number;
                             $valid = $jurnalUmumPpn->save() && $valid;
                         }
 
@@ -328,6 +443,7 @@ class InvoiceHeaderController extends Controller {
                             $jurnalUmumPersediaan->transaction_subject = $transactionSubject;
                             $jurnalUmumPersediaan->is_coa_category = $journalReference['is_coa_category'];
                             $jurnalUmumPersediaan->transaction_type = $transactionType;
+                            $jurnalUmumPersediaan->remark = $model->vehicle->plate_number;
                             $jurnalUmumPersediaan->save();
                         }
 

@@ -138,7 +138,7 @@ class PaymentInController extends Controller {
                     $jurnalPph->total = $detail->tax_service_amount;
                     $jurnalPph->debet_kredit = 'D';
                     $jurnalPph->tanggal_posting = date('Y-m-d');
-                    $jurnalPph->transaction_subject = $model->notes;
+                    $jurnalPph->transaction_subject = $detail->memo;
                     $jurnalPph->remark = $remark;
                     $jurnalPph->is_coa_category = 0;
                     $jurnalPph->transaction_type = 'Pin';
@@ -916,7 +916,7 @@ class PaymentInController extends Controller {
                                 $jurnalPph->total = $detail->tax_service_amount;
                                 $jurnalPph->debet_kredit = 'D';
                                 $jurnalPph->tanggal_posting = date('Y-m-d');
-                                $jurnalPph->transaction_subject = $paymentIn->notes;
+                                $jurnalPph->transaction_subject = $detail->memo;
                                 $jurnalPph->remark = $remark;
                                 $jurnalPph->is_coa_category = 0;
                                 $jurnalPph->transaction_type = 'Pin';

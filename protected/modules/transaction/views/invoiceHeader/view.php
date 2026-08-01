@@ -416,7 +416,7 @@ $this->breadcrumbs = array(
 
                         <tr>
                             <td style="text-align: center"><?php echo $i + 1; ?></td>
-                            <td class="width1-4"><?php echo CHtml::encode(CHtml::value($header, 'branchAccountCode')); ?></td>
+                            <td class="width1-4"><?php echo CHtml::encode(CHtml::value($header, 'coa_id')); ?></td>
                             <td class="width1-5"><?php echo CHtml::encode(CHtml::value($header, 'branchAccountName')); ?></td>
                             <td class="width1-6" style="text-align: right">
                                 <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $amountDebit)); ?>

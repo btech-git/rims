@@ -20,9 +20,9 @@ $this->menu = array(
     <div class="clearfix page-action">
         <?php $ccontroller = Yii::app()->controller->id; ?>
         <?php $ccaction = Yii::app()->controller->action->id; ?>
-        <a class="button cbutton right" href="<?php echo Yii::app()->baseUrl . '/master/serviceCategory/admin'; ?>"><span class="fa fa-th-list"></span>Manage Service Categories</a>
+        <a class="button cbutton right" href="<?php echo Yii::app()->baseUrl . '/master/serviceCategory/admin'; ?>"><span class="fa fa-th-list"></span>Manage</a>
         <?php if (Yii::app()->user->checkAccess("masterServiceCategoryEdit")) { ?>
-            <a class="button cbutton right" style="margin-right:10px;" href="<?php echo Yii::app()->createUrl('/master/' . $ccontroller . '/update', array('id' => $model->id)); ?>"><span class="fa fa-edit"></span>edit</a>		
+            <a class="button warning right" style="margin-right:10px;" href="<?php echo Yii::app()->createUrl('/master/' . $ccontroller . '/update', array('id' => $model->id)); ?>"><span class="fa fa-edit"></span>edit</a>		
         <?php } ?>
         <h1>View Service Category <?php echo $model->name; ?></h1>
         <div class="detail-view-long">
@@ -49,6 +49,46 @@ $this->menu = array(
                         'name' => 'created_datetime', 
                         'label' => 'Date Time Created',
                         'value' => $model->created_datetime != "" ? $model->created_datetime : ''
+                    ),
+                    array(
+                        'name' => 'user_id_updated', 
+                        'label' => 'User Edit',
+                        'value' => $model->user_id_updated != "" ? $model->userIdUpdated->username : '',
+                    ),
+                    array(
+                        'name' => 'updated_datetime', 
+                        'label' => 'Date Time Edit',
+                        'value' => $model->updated_datetime != "" ? $model->updated_datetime : ''
+                    ),
+                    array(
+                        'name' => 'user_id_approval', 
+                        'label' => 'User Approved',
+                        'value' => $model->user_id_approval != "" ? $model->userIdApproval->username : '',
+                    ),
+                    array(
+                        'name' => 'date_time_approval', 
+                        'label' => 'Date Time Approval',
+                        'value' => $model->date_time_approval != "" ? $model->date_time_approval : ''
+                    ),
+                    array(
+                        'name' => 'user_id_reject', 
+                        'label' => 'User Reject',
+                        'value' => $model->user_id_reject != "" ? $model->userIdReject->username : '',
+                    ),
+                    array(
+                        'name' => 'date_time_reject', 
+                        'label' => 'Date Time Rejected',
+                        'value' => $model->date_time_reject != "" ? $model->date_time_reject : ''
+                    ),
+                    array(
+                        'name' => 'deleted_by', 
+                        'label' => 'User Delete',
+                        'value' => $model->deleted_by != "" ? $model->deletedBy->username : '',
+                    ),
+                    array(
+                        'name' => 'deleted_at', 
+                        'label' => 'Date Time Deleted',
+                        'value' => $model->deleted_at != "" ? $model->deleted_at : ''
                     ),
                 ),
             ));
