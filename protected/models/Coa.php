@@ -827,7 +827,7 @@ class Coa extends CActiveRecord {
         
         $sql = "SELECT coa_id, total AS amount, kode_transaksi, tanggal_transaksi, debet_kredit AS transaction_type, transaction_subject AS remark
                 FROM " . JurnalUmum::model()->tableName() . " 
-                WHERE coa_id = :coa_id AND tanggal_transaksi BETWEEN '" . AppParam::BEGINNING_TRANSACTION_DATE . " ' AND :end_date AND is_coa_category = 0" . $branchConditionSql . " 
+                WHERE coa_id = :coa_id AND tanggal_transaksi BETWEEN '2025-01-01' AND :end_date AND is_coa_category = 0" . $branchConditionSql . " 
                 ORDER BY tanggal_transaksi ASC, kode_transaksi ASC";
         
         $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
