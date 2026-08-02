@@ -67,6 +67,7 @@ class InvoiceHeaderController extends Controller {
                 $transactionDate = $model->invoice_date;
                 $branchId = $model->branch_id;
                 $transactionSubject = $model->customer->name;
+                $remark = $model->vehicle->plate_number;
                 
                 if ($model->registrationTransaction->repair_type == 'GR') {
                     $coaReceivableId = ($model->customer->customer_type == 'Company') ? $model->customer->coa_id : 1449;
@@ -87,7 +88,7 @@ class InvoiceHeaderController extends Controller {
                 $jurnalUmumReceivable->transaction_subject = $transactionSubject;
                 $jurnalUmumReceivable->is_coa_category = 0;
                 $jurnalUmumReceivable->transaction_type = $transactionType;
-                $jurnalUmumReceivable->remark = $model->vehicle->plate_number;
+                $jurnalUmumReceivable->remark = $remark;
                 $valid = $jurnalUmumReceivable->save() && $valid;
 
                 if ($model->ppn_total > 0.00) {
@@ -103,7 +104,7 @@ class InvoiceHeaderController extends Controller {
                     $jurnalUmumPpn->transaction_subject = $transactionSubject;
                     $jurnalUmumPpn->is_coa_category = 0;
                     $jurnalUmumPpn->transaction_type = $transactionType;
-                    $jurnalUmumPpn->remark = $model->vehicle->plate_number;
+                    $jurnalUmumPpn->remark = $remark;
                     $valid = $jurnalUmumPpn->save() && $valid;
                 }
 
@@ -171,7 +172,7 @@ class InvoiceHeaderController extends Controller {
                     $jurnalUmumPersediaan->transaction_subject = $transactionSubject;
                     $jurnalUmumPersediaan->is_coa_category = $journalReference['is_coa_category'];
                     $jurnalUmumPersediaan->transaction_type = $transactionType;
-                    $jurnalUmumPersediaan->remark = $model->vehicle->plate_number;
+                    $jurnalUmumPersediaan->remark = $remark;
                     $jurnalUmumPersediaan->save();
                 }
 

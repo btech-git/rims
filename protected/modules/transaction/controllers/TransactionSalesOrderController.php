@@ -16,8 +16,8 @@ class TransactionSalesOrderController extends Controller {
 
     public function filterAccess($filterChain) {
         if (
-            $filterChain->action->id === 'create' ||
-            $filterChain->action->id === 'generateInvoice'
+                $filterChain->action->id === 'create' ||
+                $filterChain->action->id === 'generateInvoice'
         ) {
             if (!(Yii::app()->user->checkAccess('saleOrderCreate'))) {
                 $this->redirect(array('/site/login'));
@@ -25,8 +25,8 @@ class TransactionSalesOrderController extends Controller {
         }
 
         if (
-            $filterChain->action->id === 'delete' ||
-            $filterChain->action->id === 'update'        
+                $filterChain->action->id === 'delete' ||
+                $filterChain->action->id === 'update'
         ) {
             if (!(Yii::app()->user->checkAccess('saleOrderEdit'))) {
                 $this->redirect(array('/site/login'));
@@ -44,10 +44,9 @@ class TransactionSalesOrderController extends Controller {
                 $filterChain->action->id === 'index' ||
                 $filterChain->action->id === 'view' ||
                 $filterChain->action->id === 'showProduct'
-                
         ) {
             if (
-                !(Yii::app()->user->checkAccess('saleOrderCreate') || Yii::app()->user->checkAccess('saleOrderEdit') || Yii::app()->user->checkAccess('saleOrderView'))) {
+                    !(Yii::app()->user->checkAccess('saleOrderCreate') || Yii::app()->user->checkAccess('saleOrderEdit') || Yii::app()->user->checkAccess('saleOrderView'))) {
                 $this->redirect(array('/site/login'));
             }
         }
@@ -77,7 +76,7 @@ class TransactionSalesOrderController extends Controller {
             $transactionSubject = $model->note;
 
             $journalReferences = array();
-        
+
             if ($model->payment_type == "Cash") {
                 $getCoaKas = '121.00.002';
                 $coaKasWithCode = Coa::model()->findByAttributes(array('code' => $getCoaKas));
@@ -116,7 +115,7 @@ class TransactionSalesOrderController extends Controller {
                 $journalReferences[$coaId]['debet_kredit'] = 'K';
                 $journalReferences[$coaId]['is_coa_category'] = 0;
                 $journalReferences[$coaId]['values'][] = $soDetail->retail_price * $soDetail->quantity;
-                
+
                 if ($soDetail->discount > 0) {
                     $coaId = $soDetail->product->productSubMasterCategory->coa_diskon_penjualan;
                     $journalReferences[$coaId]['debet_kredit'] = 'D';
@@ -148,19 +147,18 @@ class TransactionSalesOrderController extends Controller {
                 $journalReferences[$coaId]['debet_kredit'] = 'D';
                 $journalReferences[$coaId]['is_coa_category'] = 0;
                 $journalReferences[$coaId]['values'][] = $hppPrice;
-                
+
                 $coaId = $soDetail->product->productMasterCategory->coa_outstanding_part_id;
                 $journalReferences[$coaId]['debet_kredit'] = 'K';
                 $journalReferences[$coaId]['is_coa_category'] = 1;
                 $journalReferences[$coaId]['values'][] = $hppPrice;
-                
+
                 $coaId = $soDetail->product->productSubMasterCategory->coa_outstanding_part_id;
                 $journalReferences[$coaId]['debet_kredit'] = 'K';
                 $journalReferences[$coaId]['is_coa_category'] = 0;
                 $journalReferences[$coaId]['values'][] = $hppPrice;
-                
             }
-            
+
             foreach ($journalReferences as $coaId => $journalReference) {
                 $jurnalUmumPersediaan = new JurnalUmum();
                 $jurnalUmumPersediaan->kode_transaksi = $transactionCode;
@@ -175,7 +173,7 @@ class TransactionSalesOrderController extends Controller {
                 $jurnalUmumPersediaan->transaction_type = $transactionType;
                 $jurnalUmumPersediaan->save();
             }
-            
+
             $this->redirect(array('view', 'id' => $id));
         }
 
@@ -190,7 +188,7 @@ class TransactionSalesOrderController extends Controller {
      * If creation is successful, the browser will be redirected to the 'view' page.
      */
     public function actionCreate() {
-        
+
         $salesOrder = $this->instantiate(null);
         $salesOrder->header->requester_branch_id = $salesOrder->header->isNewRecord ? Branch::model()->findByPk(User::model()->findByPk(Yii::app()->user->getId())->branch_id)->id : $salesOrder->header->requester_branch_id;
         $salesOrder->header->created_datetime = date('Y-m-d H:i:s');
@@ -199,11 +197,11 @@ class TransactionSalesOrderController extends Controller {
 
         $customer = new Customer('search');
         $customer->unsetAttributes();  // clear any default values
-        
+
         if (isset($_GET['Customer'])) {
             $customer->attributes = $_GET['Customer'];
         }
-        
+
         $customerCriteria = new CDbCriteria;
         $customerCriteria->compare('name', $customer->name, true);
         $customerCriteria->compare('email', $customer->email, true);
@@ -242,7 +240,7 @@ class TransactionSalesOrderController extends Controller {
         if (isset($_POST['TransactionSalesOrder']) && IdempotentManager::check()) {
             $this->loadState($salesOrder);
             $salesOrder->generateCodeNumber(Yii::app()->dateFormatter->format('M', strtotime($salesOrder->header->sale_order_date)), Yii::app()->dateFormatter->format('yyyy', strtotime($salesOrder->header->sale_order_date)), $salesOrder->header->requester_branch_id);
-            
+
             if ($salesOrder->save(Yii::app()->db)) {
                 $this->redirect(array('view', 'id' => $salesOrder->header->id));
             }
@@ -270,11 +268,11 @@ class TransactionSalesOrderController extends Controller {
 
         $customer = new Customer('search');
         $customer->unsetAttributes();  // clear any default values
-        
+
         if (isset($_GET['Customer'])) {
             $customer->attributes = $_GET['Customer'];
         }
-        
+
         $customerCriteria = new CDbCriteria;
         $customerCriteria->compare('name', $customer->name, true);
         $customerDataProvider = new CActiveDataProvider('Customer', array(
@@ -283,7 +281,7 @@ class TransactionSalesOrderController extends Controller {
 
         $product = new Product('search');
         $product->unsetAttributes();  // clear any default values
-        
+
         if (isset($_GET['Product'])) {
             $product->attributes = $_GET['Product'];
         }
@@ -393,7 +391,7 @@ class TransactionSalesOrderController extends Controller {
 
                 $total += $subtotal + $ppn;
             }
-            
+
             $object = array(
                 'priceBeforeDisc' => $priceBeforeDisc,
                 'discount' => $discount,
@@ -432,7 +430,7 @@ class TransactionSalesOrderController extends Controller {
         }
         $newPrice = $subtotal / $quantity;
         $discountAmount = $price - $subtotal;
-        
+
         $object = array(
             'subtotal' => $subtotal,
             'totalquantity' => $totalquantity,
@@ -553,13 +551,119 @@ class TransactionSalesOrderController extends Controller {
         $historis = TransactionSalesOrderApproval::model()->findAllByAttributes(array('sales_order_id' => $headerId));
         $model = new TransactionSalesOrderApproval;
         $model->date = date('Y-m-d H:i:s');
-        $branch = Branch::model()->findByPk($salesOrder->requester_branch_id);
+//        $branch = Branch::model()->findByPk($salesOrder->requester_branch_id);
         if (isset($_POST['TransactionSalesOrderApproval'])) {
             $model->attributes = $_POST['TransactionSalesOrderApproval'];
             if ($model->save()) {
                 $salesOrder->status_document = $model->approval_type;
                 if ($model->approval_type == 'Approved') {
+                    JurnalUmum::model()->deleteAllByAttributes(array(
+                        'kode_transaksi' => $salesOrder->sale_order_no,
+                        'branch_id' => $salesOrder->requester_branch_id,
+                    ));
+                    
                     $salesOrder->approved_id = $model->supervisor_id;
+
+                    $transactionType = 'SO';
+                    $postingDate = date('Y-m-d');
+                    $transactionCode = $model->sale_order_no;
+                    $transactionDate = $model->sale_order_date;
+                    $branchId = $model->requester_branch_id;
+                    $transactionSubject = $model->note;
+
+                    $journalReferences = array();
+
+                    if ($salesOrder->payment_type == "Cash") {
+                        $getCoaKas = '121.00.002';
+                        $coaKasWithCode = Coa::model()->findByAttributes(array('code' => $getCoaKas));
+                        $jurnalUmumKas = new JurnalUmum;
+                        $jurnalUmumKas->kode_transaksi = $salesOrder->sale_order_no;
+                        $jurnalUmumKas->tanggal_transaksi = $salesOrder->sale_order_date;
+                        $jurnalUmumKas->coa_id = $coaKasWithCode->id;
+                        $jurnalUmumKas->branch_id = $salesOrder->requester_branch_id;
+                        $jurnalUmumKas->total = round($salesOrder->total_price, 0);
+                        $jurnalUmumKas->debet_kredit = 'D';
+                        $jurnalUmumKas->tanggal_posting = date('Y-m-d');
+                        $jurnalUmumKas->transaction_subject = $transactionSubject;
+                        $jurnalUmumKas->is_coa_category = 0;
+                        $jurnalUmumKas->transaction_type = 'SO';
+                        $jurnalUmumKas->save();
+                    } else {
+                        //D
+                        $getCoaPiutang = '121.00.001';
+                        $coaPiutangWithCode = Coa::model()->findByAttributes(array('code' => $getCoaPiutang));
+                        $jurnalUmumPiutang = new JurnalUmum;
+                        $jurnalUmumPiutang->kode_transaksi = $salesOrder->sale_order_no;
+                        $jurnalUmumPiutang->tanggal_transaksi = $salesOrder->sale_order_date;
+                        $jurnalUmumPiutang->coa_id = $coaPiutangWithCode->id;
+                        $jurnalUmumPiutang->branch_id = $salesOrder->requester_branch_id;
+                        $jurnalUmumPiutang->total = round($salesOrder->total_price, 0);
+                        $jurnalUmumPiutang->debet_kredit = 'D';
+                        $jurnalUmumPiutang->tanggal_posting = date('Y-m-d');
+                        $jurnalUmumPiutang->transaction_subject = $transactionSubject;
+                        $jurnalUmumPiutang->is_coa_category = 0;
+                        $jurnalUmumPiutang->transaction_type = 'SO';
+                        $jurnalUmumPiutang->save();
+                    }
+
+                    foreach ($salesOrderDetails as $key => $soDetail) {
+                        $coaId = $soDetail->product->productSubMasterCategory->coa_penjualan_barang_dagang;
+                        $journalReferences[$coaId]['debet_kredit'] = 'K';
+                        $journalReferences[$coaId]['is_coa_category'] = 0;
+                        $journalReferences[$coaId]['values'][] = $soDetail->retail_price * $soDetail->quantity;
+
+                        if ($soDetail->discount > 0) {
+                            $coaId = $soDetail->product->productSubMasterCategory->coa_diskon_penjualan;
+                            $journalReferences[$coaId]['debet_kredit'] = 'D';
+                            $journalReferences[$coaId]['is_coa_category'] = 0;
+                            $journalReferences[$coaId]['values'][] = $soDetail->totalDiscount * $soDetail->quantity;
+                        }
+
+                        if ($salesOrder->ppn_price > 0.00) {
+                            $getCoaPpn = '224.00.001';
+                            $coaPpnWithCode = Coa::model()->findByAttributes(array('code' => $getCoaPpn));
+                            $jurnalUmumPpn = new JurnalUmum;
+                            $jurnalUmumPpn->kode_transaksi = $salesOrder->sale_order_no;
+                            $jurnalUmumPpn->tanggal_transaksi = $salesOrder->sale_order_date;
+                            $jurnalUmumPpn->coa_id = $coaPpnWithCode->id;
+                            $jurnalUmumPpn->branch_id = $salesOrder->requester_branch_id;
+                            $jurnalUmumPpn->total = $salesOrder->ppn_price;
+                            $jurnalUmumPpn->debet_kredit = 'K';
+                            $jurnalUmumPpn->tanggal_posting = date('Y-m-d');
+                            $jurnalUmumPpn->transaction_subject = $transactionSubject;
+                            $jurnalUmumPpn->is_coa_category = 0;
+                            $jurnalUmumPpn->transaction_type = 'SO';
+                            $jurnalUmumPpn->save();
+                        }
+
+                        $product = Product::model()->findByPk($soDetail->product_id);
+                        $hppPrice = $product->hpp * $soDetail->quantity;
+
+                        $coaId = $soDetail->product->productSubMasterCategory->coa_hpp;
+                        $journalReferences[$coaId]['debet_kredit'] = 'D';
+                        $journalReferences[$coaId]['is_coa_category'] = 0;
+                        $journalReferences[$coaId]['values'][] = $hppPrice;
+
+                        $coaId = $soDetail->product->productSubMasterCategory->coa_outstanding_part_id;
+                        $journalReferences[$coaId]['debet_kredit'] = 'K';
+                        $journalReferences[$coaId]['is_coa_category'] = 0;
+                        $journalReferences[$coaId]['values'][] = $hppPrice;
+                    }
+
+                    foreach ($journalReferences as $coaId => $journalReference) {
+                        $jurnalUmumPersediaan = new JurnalUmum();
+                        $jurnalUmumPersediaan->kode_transaksi = $transactionCode;
+                        $jurnalUmumPersediaan->tanggal_transaksi = $transactionDate;
+                        $jurnalUmumPersediaan->coa_id = $coaId;
+                        $jurnalUmumPersediaan->branch_id = $branchId;
+                        $jurnalUmumPersediaan->total = array_sum($journalReference['values']);
+                        $jurnalUmumPersediaan->debet_kredit = $journalReference['debet_kredit'];
+                        $jurnalUmumPersediaan->tanggal_posting = $postingDate;
+                        $jurnalUmumPersediaan->transaction_subject = $transactionSubject;
+                        $jurnalUmumPersediaan->is_coa_category = $journalReference['is_coa_category'];
+                        $jurnalUmumPersediaan->transaction_type = $transactionType;
+                        $jurnalUmumPersediaan->save();
+                    }
                 }
 
                 $salesOrder->save(false);
@@ -605,17 +709,17 @@ class TransactionSalesOrderController extends Controller {
         $model->unsetAttributes();  // clear any default values
         if (isset($_GET['TransactionSalesOrder'])) {
             $model->attributes = $_GET['TransactionSalesOrder'];
-        } 
+        }
         $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : '';
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : '';
 
         $dataProvider = $model->search();
-        
+
         if (!(Yii::app()->user->checkAccess('director') || Yii::app()->user->branch_id == 6)) {
             $dataProvider->criteria->addCondition('t.requester_branch_id = :requester_branch_id');
             $dataProvider->criteria->params[':requester_branch_id'] = Yii::app()->user->branch_id;
         }
-        
+
         $dataProvider->criteria->addBetweenCondition('t.sale_order_date', $startDate, $endDate);
 
         $this->render('admin', array(
@@ -700,8 +804,7 @@ class TransactionSalesOrderController extends Controller {
             }
             if (count($_POST['TransactionSalesOrderDetail']) < count($salesOrder->details))
                 array_splice($salesOrder->details, $i + 1);
-        }
-        else {
+        } else {
             $salesOrder->details = array();
         }
     }
@@ -738,7 +841,7 @@ class TransactionSalesOrderController extends Controller {
 
     public function actionGenerateInvoice($id) {
         $salesOrder = $this->instantiate($id);
-        
+
         if ($salesOrder->saveInvoice(Yii::app()->db)) {
             $this->redirect(array('view', 'id' => $id));
         }
@@ -845,7 +948,6 @@ class TransactionSalesOrderController extends Controller {
 
         $customerCriteria->compare('name', $customer->name, true);
         $customerCriteria->compare('customer_type', $customer->customer_type, true);
-
 
         $customerDataProvider = new CActiveDataProvider('Customer', array(
             'criteria' => $customerCriteria,
@@ -969,7 +1071,7 @@ class TransactionSalesOrderController extends Controller {
         $sheet->getStyle('A2:S2')->applyFromArray($styleHorizontalVertivalCenterBold);
         $sheet->getStyle('A3:S3')->applyFromArray($styleHorizontalVertivalCenterBold);
         $sheet->getStyle('A4:S4')->applyFromArray($styleHorizontalVertivalCenterBold);
-        
+
         $objPHPExcel->getActiveSheet()->getColumnDimension('A')->setWidth(15);
         $objPHPExcel->getActiveSheet()->getColumnDimension('B')->setWidth(15);
         $objPHPExcel->getActiveSheet()->getColumnDimension('C')->setWidth(15);
@@ -996,7 +1098,7 @@ class TransactionSalesOrderController extends Controller {
             $objPHPExcel->setActiveSheetIndex(0)->setCellValue('B' . $startrow, $transaction->sale_order_no);
             $objPHPExcel->setActiveSheetIndex(0)->setCellValue('C' . $startrow, $transaction->customer->name);
             $objPHPExcel->setActiveSheetIndex(0)->setCellValue('D' . $startrow, $transaction->payment_type);
-            
+
             $startrow = $startrow + 1;
             foreach ($transaction->transactionSalesOrderDetails as $key => $transactionDetail) {
                 $objPHPExcel->setActiveSheetIndex(0)->setCellValue('A' . $startrow, $transactionDetail->product->code);
@@ -1042,7 +1144,7 @@ class TransactionSalesOrderController extends Controller {
         $objPHPExcel->setActiveSheetIndex(0)->setCellValue('Q' . $startrow, number_format($grandTotal, 2));
         $sheet = $objPHPExcel->getActiveSheet();
         $sheet->getStyle("G" . ($startrow) . ":Q" . ($startrow))->applyFromArray($styleBold);
-        
+
         $objCommentRichText = $objPHPExcel->getActiveSheet(0)->getComment('E5')->getText()->createTextRun('My first comment :)');
         // Miscellaneous glyphs, UTF-8
         // Rename worksheet
@@ -1294,7 +1396,7 @@ class TransactionSalesOrderController extends Controller {
             $lain += $so->discount;
             $bayar += $transaction->realization_balance;
             $piutang += $so->total_price;
-            
+
             $startrow++;
         }
         $objPHPExcel->setActiveSheetIndex(0)->setCellValue('F' . $startrow, "TOTAL");
@@ -1307,7 +1409,7 @@ class TransactionSalesOrderController extends Controller {
         $sheet->getStyle("F" . ($startrow) . ":K" . ($startrow))->applyFromArray($styleBold);
         $sheet->getStyle("F" . ($startrow) . ":K" . ($startrow))->applyFromArray($BStyle);
         $sheet->getStyle("B" . ($startrow) . ":N" . ($startrow))->applyFromArray($styleSize);
-        
+
         $objCommentRichText = $objPHPExcel->getActiveSheet(0)->getComment('E5')->getText()->createTextRun('My first comment :)');
         // Miscellaneous glyphs, UTF-8
         // Rename worksheet

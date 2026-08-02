@@ -76,7 +76,6 @@ class SalesOrders extends CComponent {
         }
 
         return $valid;
-        //print_r('success');
     }
 
     public function validate() {
@@ -116,7 +115,6 @@ class SalesOrders extends CComponent {
         $this->header->subtotal = $this->subTotal;
         $this->header->total_price = $this->grandTotal;
         $valid = $this->header->save();
-        //echo "valid";
 
         $requestDetails = TransactionSalesOrderDetail::model()->findAllByAttributes(array('sales_order_id' => $this->header->id));
         $detail_id = array();
@@ -141,15 +139,12 @@ class SalesOrders extends CComponent {
             //echo 'test';
         }
 
-
-        //delete pricelist
         $delete_array = array_diff($detail_id, $new_detail);
         if ($delete_array != NULL) {
             $criteria = new CDbCriteria;
             $criteria->addInCondition('id', $delete_array);
             TransactionSalesOrderDetail::model()->deleteAll($criteria);
         }
-
 
         return $valid;
     }

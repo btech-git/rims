@@ -74,6 +74,19 @@ class MovementOutHeaderController extends Controller {
             $transactionDate = $model->date_posting;
             $branchId = $model->branch_id;
             $transactionSubject = $model->getMovementType($model->movement_type);
+            $remark = '';
+            
+            if (!empty($model->registration_transaction_id)) {
+                $remark = $model->registrationTransaction->transaction_number;
+            } elseif (!empty($model->delivery_order_id)) {
+                $remark = $model->deliveryOrder->delivery_order_no;
+            } elseif (!empty($model->return_order_id)) {
+                $remark = $model->return_order_number;
+            } elseif (!empty($model->material_request_header_id)) {
+                $remark = $model->materialRequestHeader->transaction_number;
+            } else {
+                $remark = $model->status;
+            }
 
             $journalReferences = array();
         
@@ -134,6 +147,7 @@ class MovementOutHeaderController extends Controller {
                 $jurnalUmumPersediaan->transaction_subject = $transactionSubject;
                 $jurnalUmumPersediaan->is_coa_category = $journalReference['is_coa_category'];
                 $jurnalUmumPersediaan->transaction_type = $transactionType;
+                $jurnalUmumPersediaan->remark = $remark;
                 $jurnalUmumPersediaan->save();
             }
             
@@ -959,4 +973,129 @@ class MovementOutHeaderController extends Controller {
             }
         }
     }
+    
+    public function actionRejournalTransaction($startDate, $endDate) {
+        set_time_limit(0);
+        ini_set('memory_limit', '1024M');
+        
+        $sql = "SELECT h.id, h.movement_out_no, DATE(h.date_posting) AS date_posting, h.branch_id, r.transaction_number AS registration_number, s.coa_persediaan_barang_dagang, 
+                    s.coa_outstanding_part_id, p.hpp * d.quantity AS total_hpp, h.movement_type
+                FROM rims_movement_out_detail d
+                INNER JOIN rims_movement_out_header h ON h.id = d.movement_out_header_id
+                INNER JOIN rims_registration_transaction r ON r.id = h.registration_transaction_id
+                INNER JOIN rims_product p ON p.id = d.product_id
+                INNER JOIN rims_product_sub_master_category s ON s.id = p.product_sub_master_category_id
+                WHERE DATE(h.date_posting) BETWEEN :start_date AND :end_date
+                ORDER BY h.id ASC";
+                
+        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, array(
+            ':start_date' => $startDate,
+            ':end_date' => $endDate,
+        ));
+        
+        $transactions = array();
+        
+        foreach ($resultSet as $resultSetItem) {
+            if (!isset($transactions[$resultSetItem['id']]['persediaan'][$resultSetItem['coa_persediaan_barang_dagang']])) {
+                $transactions[$resultSetItem['id']]['persediaan'][$resultSetItem['coa_persediaan_barang_dagang']] = '0.00';
+            }
+            $transactions[$resultSetItem['id']]['persediaan'][$resultSetItem['coa_persediaan_barang_dagang']] += $resultSetItem['total_hpp'];
+            if (!isset($transactions[$resultSetItem['id']]['outstanding_part'][$resultSetItem['coa_outstanding_part_id']])) {
+                $transactions[$resultSetItem['id']]['outstanding_part'][$resultSetItem['coa_outstanding_part_id']] = '0.00';
+            }
+            $transactions[$resultSetItem['id']]['outstanding_part'][$resultSetItem['coa_outstanding_part_id']] += $resultSetItem['total_hpp'];
+            
+            $transactions[$resultSetItem['id']]['movement_out_no'] = $resultSetItem['movement_out_no'];
+            $transactions[$resultSetItem['id']]['date_posting'] = $resultSetItem['date_posting'];
+            $transactions[$resultSetItem['id']]['branch_id'] = $resultSetItem['branch_id'];
+            $transactions[$resultSetItem['id']]['movement_type'] = $resultSetItem['movement_type'];
+        }
+
+        $valid = true;
+        
+        $lastInvoiceId = '';
+        foreach ($transactions as $invoiceId => $transaction) {
+            $debitCoaIds = array_keys($transaction['persediaan']);
+            $creditCoaIds = array_keys($transaction['outstanding_part']);
+            $coaIds = array_merge($debitCoaIds, $creditCoaIds);
+            $coaIdsSql = empty($coaIds) ? 'NULL' : implode(',', $coaIds);
+            $movementOut = MovementOutHeader::model()->findByAttributes(array('movement_out_no' => $transaction['movement_out_no']));
+            $transactionSubject = $movementOut->getMovementType($transaction['movement_type']);
+            $remark = '';
+
+            if (!empty($movementOut->registration_transaction_id)) {
+                $remark = $movementOut->registrationTransaction->transaction_number;
+            } elseif (!empty($movementOut->delivery_order_id)) {
+                $remark = $movementOut->deliveryOrder->delivery_order_no;
+            } elseif (!empty($movementOut->return_order_id)) {
+                $remark = $movementOut->return_order_number;
+            } elseif (!empty($movementOut->material_request_header_id)) {
+                $remark = $movementOut->materialRequestHeader->transaction_number;
+            } else {
+                $remark = $movementOut->status;
+            }
+            
+            $dbTransaction = Yii::app()->db->beginTransaction();
+            try {
+                JurnalUmum::model()->deleteAll(array(
+                    'condition' => "kode_transaksi = :kode_transaksi AND coa_id IN ({$coaIdsSql})",
+                    'params' => array(
+                        ':kode_transaksi' => $transaction['movement_out_no'],
+                    ),
+                ));
+
+                foreach ($debitCoaIds as $debitCoaId) {
+                    $jurnalUmum = new JurnalUmum();
+                    $jurnalUmum->kode_transaksi = $transaction['movement_out_no'];
+                    $jurnalUmum->tanggal_transaksi = $transaction['date_posting'];
+                    $jurnalUmum->coa_id = $debitCoaId;
+                    $jurnalUmum->branch_id = $transaction['branch_id'];
+                    $jurnalUmum->total = $transaction['persediaan'][$debitCoaId];
+                    $jurnalUmum->debet_kredit = 'K';
+                    $jurnalUmum->tanggal_posting = $transaction['date_posting'];
+                    $jurnalUmum->transaction_subject = $transactionSubject;
+                    $jurnalUmum->is_coa_category = 0;
+                    $jurnalUmum->transaction_type = 'MO';
+                    $jurnalUmum->remark = $remark;
+                    $valid = $valid && $jurnalUmum->save();
+                }
+
+                foreach ($creditCoaIds as $creditCoaId) {
+                    $jurnalUmum = new JurnalUmum();
+                    $jurnalUmum->kode_transaksi = $transaction['movement_out_no'];
+                    $jurnalUmum->tanggal_transaksi = $transaction['date_posting'];
+                    $jurnalUmum->coa_id = $creditCoaId;
+                    $jurnalUmum->branch_id = $transaction['branch_id'];
+                    $jurnalUmum->total = $transaction['outstanding_part'][$creditCoaId];
+                    $jurnalUmum->debet_kredit = 'D';
+                    $jurnalUmum->tanggal_posting = $transaction['date_posting'];
+                    $jurnalUmum->transaction_subject = $transactionSubject;
+                    $jurnalUmum->is_coa_category = 0;
+                    $jurnalUmum->transaction_type = 'MO';
+                    $jurnalUmum->remark = $remark;
+                    $valid = $valid && $jurnalUmum->save();
+                }
+
+                if ($valid) {
+                    $dbTransaction->commit();
+                } else {
+                    $dbTransaction->rollback();
+                }
+            } catch (Exception $e) {
+                $dbTransaction->rollback();
+                var_dump($e->getMessage());
+                $valid = false;
+            }
+            
+            $lastInvoiceId = $invoiceId;
+            
+            if ($valid === false) {
+                break;
+            }
+        }
+
+        var_dump($lastInvoiceId);
+        var_dump($valid);
+    }
+
 }

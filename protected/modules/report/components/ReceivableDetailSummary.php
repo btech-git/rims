@@ -44,7 +44,7 @@ class ReceivableDetailSummary extends CComponent {
         $this->dataProvider->criteria->addCondition("EXISTS (
             SELECT coa_id 
             FROM " . JurnalUmum::model()->tableName() . "
-            WHERE coa_id = t.id AND tanggal_transaksi BETWEEN '" . AppParam::BEGINNING_TRANSACTION_DATE . " ' AND :end_date" . $branchConditionSql . "
+            WHERE coa_id = t.id AND tanggal_transaksi BETWEEN '2025-01-01' AND :end_date" . $branchConditionSql . "
         ) AND t.code NOT LIKE '%.000'");
 
         $this->dataProvider->criteria->params[':end_date'] = $endDate;
