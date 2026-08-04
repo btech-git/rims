@@ -160,11 +160,11 @@ class SaleInvoiceProjectNonCogsController extends Controller {
             if (empty($dataItem['product'])) {
                 $worksheet->setCellValue("K{$counter}", $unitPriceService);
                 $worksheet->setCellValue("L{$counter}", '0.00');
-                $totalUnitPriceParts += $unitPriceService;
+                $totalUnitPriceService += $unitPriceService;
             } else {
                 $worksheet->setCellValue("K{$counter}", '0.00');
                 $worksheet->setCellValue("L{$counter}", $unitPriceParts);
-                $totalUnitPriceService += $unitPriceParts;
+                $totalUnitPriceParts += $unitPriceParts;
             }
             $worksheet->setCellValue("M{$counter}", $quantity);
             $worksheet->setCellValue("N{$counter}", $grandTotal);
