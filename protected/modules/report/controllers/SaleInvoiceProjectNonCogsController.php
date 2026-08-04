@@ -107,7 +107,7 @@ class SaleInvoiceProjectNonCogsController extends Controller {
         $branch = Branch::model()->findByPk($branchId);
         $customer = Customer::model()->findByPk($customerId);
         $worksheet->setCellValue('A1', 'Raperind Motor ' . CHtml::value($branch, 'name'));
-        $worksheet->setCellValue('A2', 'Penjualan Customer Project' . CHtml::value($customer, 'name'));
+        $worksheet->setCellValue('A2', 'Penjualan Customer Project ' . CHtml::value($customer, 'name'));
         $worksheet->setCellValue('A3', Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($startDate)) . ' - ' . Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($endDate)));
 
         $worksheet->getStyle('A5:N5')->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
@@ -142,7 +142,7 @@ class SaleInvoiceProjectNonCogsController extends Controller {
             $serviceAmount = $dataItem['service'];
             $productAmount = $dataItem['product'];
             $quantity = $dataItem['quantity'];
-            $unitPriceParts = $dataItem['unit_price'];
+            $unitPriceParts = $dataItem['unit_price'] * $quantity;
             $unitPriceService = $dataItem['unit_price'];
             $grandTotal = $dataItem['total_price'];
             $worksheet->getStyle("J{$counter}:L{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
