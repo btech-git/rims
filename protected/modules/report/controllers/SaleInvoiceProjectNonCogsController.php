@@ -160,9 +160,11 @@ class SaleInvoiceProjectNonCogsController extends Controller {
             if (empty($dataItem['product'])) {
                 $worksheet->setCellValue("K{$counter}", $unitPriceParts);
                 $worksheet->setCellValue("L{$counter}", '0.00');
+                $totalUnitPriceParts += $unitPriceParts;
             } else {
                 $worksheet->setCellValue("K{$counter}", '0.00');
                 $worksheet->setCellValue("L{$counter}", $unitPriceService);
+                $totalUnitPriceService += $unitPriceService;
             }
             $worksheet->setCellValue("M{$counter}", $quantity);
             $worksheet->setCellValue("N{$counter}", $grandTotal);
@@ -170,13 +172,12 @@ class SaleInvoiceProjectNonCogsController extends Controller {
             $totalServiceAmount += $serviceAmount;
             $totalProductAmount += $productAmount;
             $totalQuantity += $quantity;
-            $totalUnitPriceParts += $unitPriceParts;
-            $totalUnitPriceService += $unitPriceService;
             $grandTotalSum += $grandTotal;
             $counter++;
         }
         
         $worksheet->getStyle("A{$counter}:N{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A{$counter}:N{$counter}")->getFont()->setBold(true);
 
         $worksheet->setCellValue("I{$counter}", $totalServiceAmount);
         $worksheet->setCellValue("J{$counter}", $totalProductAmount);
