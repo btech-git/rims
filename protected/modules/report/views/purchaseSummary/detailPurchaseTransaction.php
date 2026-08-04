@@ -31,6 +31,8 @@ Yii::app()->clientScript->registerCss('_report', '
             <thead style="position: sticky; top: 0">
                 <tr id="header1">
                     <th class="width1-1">PO #</th>
+                    <th class="width1-1">Penerimaan #</th>
+                    <th class="width1-1">Invoice #</th>
                     <th class="width1-2">Tanggal</th>
                     <th class="width1-3">Supplier</th>
                     <th class="width1-4">Type</th>
@@ -42,14 +44,16 @@ Yii::app()->clientScript->registerCss('_report', '
             <tbody>
                 <?php $grandTotal = '0.00'; ?>
                 <?php foreach ($purchaseOrders as $purchaseOrder): ?>
-                    <?php $totalPrice = CHtml::value($purchaseOrder, 'total_price'); ?>
+                    <?php $totalPrice = CHtml::value($purchaseOrder, 'invoice_grand_total'); ?>
                     <tr class="items1">
-                        <td class="width1-1"><?php echo CHtml::encode(CHtml::value($purchaseOrder, 'purchase_order_no')); ?></td>
-                        <td class="width1-2"><?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($purchaseOrder->purchase_order_date))); ?></td>
+                        <td class="width1-1"><?php echo CHtml::encode(CHtml::value($purchaseOrder, 'purchaseOrder.purchase_order_no')); ?></td>
+                        <td class="width1-1"><?php echo CHtml::encode(CHtml::value($purchaseOrder, 'receive_item_no')); ?></td>
+                        <td class="width1-1"><?php echo CHtml::encode(CHtml::value($purchaseOrder, 'invoice_number')); ?></td>
+                        <td class="width1-2"><?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($purchaseOrder->invoice_date))); ?></td>
                         <td class="width1-3"><?php echo CHtml::encode(CHtml::value($purchaseOrder, 'supplier.name')); ?></td>
-                        <td class="width1-4"><?php echo CHtml::encode($purchaseOrder->getPurchaseStatus($purchaseOrder->purchase_type)); ?></td>
-                        <td class="width1-5"><?php echo CHtml::encode(CHtml::value($purchaseOrder, 'payment_status')); ?></td>
-                        <td class="width1-6"><?php echo CHtml::encode(CHtml::value($purchaseOrder, 'status_document')); ?></td>
+                        <td class="width1-4"><?php echo CHtml::encode($purchaseOrder->purchaseOrder->getPurchaseStatus($purchaseOrder->purchaseOrder->purchase_type)); ?></td>
+                        <td class="width1-5"><?php echo CHtml::encode(CHtml::value($purchaseOrder, 'purchaseOrder.payment_status')); ?></td>
+                        <td class="width1-6"><?php echo CHtml::encode(CHtml::value($purchaseOrder, 'purchaseOrder.status_document')); ?></td>
                         <td class="width1-7" style="text-align: right">
                             <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $totalPrice)); ?>
                         </td>

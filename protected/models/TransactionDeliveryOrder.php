@@ -218,7 +218,7 @@ class TransactionDeliveryOrder extends MonthlyTransactionActiveRecord {
         $criteria = new CDbCriteria;
 
         $criteria->condition = "EXISTS (
-            SELECT COALESCE(SUM(d.quantity_receive_left), 0) AS quantity_remaining, COALESCE(SUM(d.quantity_movement_left), 0) AS quantity_movement_remaining
+            SELECT d.delivery_order_id, COALESCE(SUM(d.quantity_receive_left), 0) AS quantity_remaining, COALESCE(SUM(d.quantity_movement_left), 0) AS quantity_movement_remaining
             FROM " . TransactionDeliveryOrderDetail::model()->tableName() . " d
             WHERE t.id = d.delivery_order_id
             GROUP BY d.delivery_order_id

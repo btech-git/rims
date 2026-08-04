@@ -15,8 +15,6 @@
                         <th>Product Name</th>
                         <th>Category</th>
                         <th>Brand</th>
-                        <th>Sub Brand</th>
-                        <th>Sub Brand Series</th>
                         <th>Qty Sales</th>
                         <!--<td>Total</td>-->
                     </tr>
@@ -31,9 +29,11 @@
                             <td><?php echo CHtml::encode($fastMovingItem['code']); ?></td>
                             <td><?php echo CHtml::encode($fastMovingItem['product_name']); ?></td>
                             <td><?php echo CHtml::encode($fastMovingItem['category']); ?></td>
-                            <td><?php echo CHtml::encode($fastMovingItem['brand']); ?></td>
-                            <td><?php echo CHtml::encode($fastMovingItem['sub_brand']); ?></td>
-                            <td><?php echo CHtml::encode($fastMovingItem['sub_brand_series']); ?></td>
+                            <td>
+                                <?php echo CHtml::encode($fastMovingItem['brand']); ?> - 
+                                <?php echo CHtml::encode($fastMovingItem['sub_brand']); ?> - 
+                                <?php echo CHtml::encode($fastMovingItem['sub_brand_series']); ?>
+                            </td>
                             <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $fastMovingItem['total_sale'])); ?></td>
                             <!--<td style="text-align: right"><?php //echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $fastMovingItem['sale_price'])); ?></td>-->
                         </tr>

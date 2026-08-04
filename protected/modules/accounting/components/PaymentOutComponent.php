@@ -267,30 +267,6 @@ class PaymentOutComponent extends CComponent {
 
             $valid = $detail->save(false) && $valid;
             $new_invoice[] = $detail->id;
-
-            if (!empty($detail->receive_item_id)) {
-                $receiveItem = TransactionReceiveItem::model()->findByPk($detail->receive_item_id);
-                $purchaseOrder = TransactionPurchaseOrder::model()->findByPk($receiveItem->purchase_order_id);
-                $purchaseOrder->payment_amount = $purchaseOrder->getTotalPayment();
-                $purchaseOrder->payment_left = $purchaseOrder->getTotalRemaining();
-                $purchaseOrder->payment_status = $purchaseOrder->payment_left > 0 ? 'Partial Payment' : 'PAID';
-                $valid = $valid && $purchaseOrder->update(array('payment_amount', 'payment_left', 'payment_status'));
-            } elseif (!empty($detail->work_order_expense_header_id)) {
-                $workOrderExpenseHeader = WorkOrderExpenseHeader::model()->findByPk($detail->work_order_expense_header_id);
-                $workOrderExpenseHeader->total_payment = $workOrderExpenseHeader->getTotalPayment();
-                $workOrderExpenseHeader->payment_remaining = $workOrderExpenseHeader->getRemainingPayment();
-                $valid = $valid && $workOrderExpenseHeader->update(array('total_payment', 'payment_remaining'));
-            } elseif (!empty($detail->item_request_header_id)) {
-                $itemRequestHeader = ItemRequestHeader::model()->findByPk($detail->item_request_header_id);
-                $itemRequestHeader->total_payment = $itemRequestHeader->getTotalPayment();
-                $itemRequestHeader->remaining_payment = $itemRequestHeader->getRemainingPayment();
-                $valid = $valid && $itemRequestHeader->update(array('total_payment', 'remaining_payment'));
-            }  elseif (!empty($detail->asset_purchase_id)) {
-                $assetPurchase = AssetPurchase::model()->findByPk($detail->asset_purchase_id);
-                $assetPurchase->total_payment = $assetPurchase->getTotalPayment();
-                $assetPurchase->payment_remaining = $assetPurchase->getPaymentRemaining();
-                $valid = $valid && $assetPurchase->update(array('total_payment', 'payment_remaining'));
-            } 
         }
 
         //delete 

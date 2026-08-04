@@ -288,7 +288,7 @@ class GeneralLedgerController extends Controller {
             $this->redirect(array('/transaction/transactionReturnItem/show', 'id' => $model->id));
         } else if ($codeNumberConstant === 'TR') {
             $model = TransactionTransferRequest::model()->findByAttributes(array('transfer_request_no' => $codeNumber));
-            $this->redirect(array('/transaction/transactionTransferRequest/show', 'id' => $model->id));
+            $this->redirect(array('/transaction/transferRequest/view', 'id' => $model->id));
         } else if ($codeNumberConstant === 'SR') {
             $model = TransactionSentRequest::model()->findByAttributes(array('sent_request_no' => $codeNumber));
             $this->redirect(array('/transaction/transactionSentRequest/show', 'id' => $model->id));

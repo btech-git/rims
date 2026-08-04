@@ -411,7 +411,7 @@ class Supplier extends CActiveRecord {
         }
         
         $sql = "
-            SELECT o.purchase_order_no, r.invoice_number, o.purchase_order_date, r.invoice_grand_total AS total_price, COALESCE(p.amount, 0) AS amount, 
+            SELECT o.purchase_order_no, r.invoice_number, r.invoice_date, r.invoice_grand_total AS total_price, COALESCE(p.amount, 0) AS amount, r.receive_item_no,
             r.invoice_grand_total - COALESCE(p.amount, 0) AS remaining
             FROM " . TransactionPurchaseOrder::model()->tableName() . " o
             INNER JOIN " . TransactionReceiveItem::model()->tableName() . " r ON o.id = r.purchase_order_id
@@ -423,9 +423,9 @@ class Supplier extends CActiveRecord {
                 GROUP BY d.receive_item_id
             ) p ON r.id = p.receive_item_id 
             WHERE r.supplier_id = :supplier_id AND (r.invoice_grand_total - COALESCE(p.amount, 0)) > 100.00 AND 
-            DATE(o.purchase_order_date) BETWEEN '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND :end_date AND o.status_document NOT LIKE '%CANCEL%' AND
+            DATE(r.invoice_date) BETWEEN '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND :end_date AND o.status_document NOT LIKE '%CANCEL%' AND
                 r.user_id_cancelled IS NULL" . $branchConditionSql . "
-            ORDER BY o.purchase_order_date ASC";
+            ORDER BY r.invoice_date ASC";
 
         $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
 
@@ -483,15 +483,18 @@ class Supplier extends CActiveRecord {
             $params[':branch_id'] = $branchId;
         }
         $sql = "
-            SELECT purchase_order_no AS transaction_number, purchase_order_date AS transaction_date, COALESCE(total_price, 0) AS total_price, 
-                COALESCE(payment_amount, 0) AS payment_amount, COALESCE(payment_left, 0) AS payment_left 
-            FROM " . TransactionPurchaseOrder::model()->tableName() . "
-            WHERE supplier_id = :supplier_id AND substring(purchase_order_date, 1, 10) BETWEEN :start_date AND :end_date AND status_document = 'Approved'" . $branchPurchaseConditionSql . "
+            SELECT p.purchase_order_no AS purchase_number, r.receive_item_no AS receive_number, r.invoice_number AS transaction_number, r.invoice_date AS transaction_date, 
+                COALESCE(r.invoice_grand_total, 0) AS total_price, COALESCE(r.invoice_payment_amount, 0) AS payment_amount, COALESCE(r.invoice_payment_remaining, 0) AS payment_left 
+            FROM " . TransactionPurchaseOrder::model()->tableName() . " p 
+            INNER JOIN " . TransactionReceiveItem::model()->tableName() . " r ON p.id = r.purchase_order_id
+            WHERE r.supplier_id = :supplier_id AND substring(r.invoice_date, 1, 10) BETWEEN :start_date AND :end_date AND p.status_document = 'Approved' AND
+                r.user_id_cancelled IS NULL" . $branchPurchaseConditionSql . "
             UNION ALL
-            SELECT transaction_number, transaction_date, COALESCE(grand_total, 0) AS total_price, COALESCE(total_payment, 0) AS payment_amount, 
-                COALESCE(payment_remaining, 0) AS payment_left 
+            SELECT transaction_number AS purchase_number, transaction_number AS receive_number, transaction_number AS transaction_number, transaction_date, 
+                COALESCE(grand_total, 0) AS total_price, COALESCE(total_payment, 0) AS payment_amount, COALESCE(payment_remaining, 0) AS payment_left 
             FROM " . WorkOrderExpenseHeader::model()->tableName() . "
             WHERE supplier_id = :supplier_id AND transaction_date BETWEEN :start_date AND :end_date AND status = 'Approved'" . $branchWorkOrderConditionSql . "
+            ORDER BY transaction_date ASC, transaction_number ASC
             ";
 
         $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
@@ -552,14 +555,14 @@ class Supplier extends CActiveRecord {
         );
         
         if (!empty($branchId)) {
-            $branchConditionSql = ' AND main_branch_id = :branch_id';
+            $branchConditionSql = ' AND recipient_branch_id = :branch_id';
             $params[':branch_id'] = $branchId;
         }
         
         $sql = "
-            SELECT COALESCE(SUM(total_price), 0) AS total_purchase 
-            FROM " . TransactionPurchaseOrder::model()->tableName() . "
-            WHERE supplier_id = :supplier_id AND substr(purchase_order_date, 1, 10) BETWEEN :start_date AND :end_date AND status_document NOT LIKE '%CANCEL%'" . $branchConditionSql . "
+            SELECT COALESCE(SUM(invoice_grand_total), 0) AS total_purchase 
+            FROM " . TransactionReceiveItem::model()->tableName() . "
+            WHERE supplier_id = :supplier_id AND substr(invoice_date, 1, 10) BETWEEN :start_date AND :end_date AND user_id_cancelled IS NULL" . $branchConditionSql . "
             GROUP BY supplier_id
         ";
 

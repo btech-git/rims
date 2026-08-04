@@ -20,7 +20,7 @@ Yii::app()->clientScript->registerCss('_report', '
         <div style="font-size: larger">RAPERIND MOTOR <?php echo CHtml::encode(($branch === null) ? '' : $branch->name); ?></div>
         <div style="font-size: larger">Piutang Customer Detail</div>
         <div>
-            <?php echo 'Per Tanggal: ' . CHtml::encode(Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($endDate))); ?>
+            <?php echo 'Tanggal: ' . CHtml::encode(Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($startDate))) . ' - ' . CHtml::encode(Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($endDate))); ?>
         </div>
     </div>
 
@@ -49,12 +49,12 @@ Yii::app()->clientScript->registerCss('_report', '
                             <?php echo CHtml::encode(CHtml::value($header, 'name')); ?>
                         </td>
                         <td style="text-align: right; font-weight: bold">
-                            <?php $saldo = 0; //$header->getBeginningBalanceReceivableDetail(); ?>
+                            <?php $saldo = $header->getBeginningBalanceReceivableDetail($startDate, $endDate, $branchId); ?>
                             <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $saldo)); ?>
                         </td>
                     </tr>
 
-                    <?php $receivableData = $header->getReceivableDetailReport($endDate, $branchId); ?>
+                    <?php $receivableData = $header->getReceivableDetailReport($startDate, $endDate, $branchId); ?>
                     <?php foreach ($receivableData as $receivableRow): ?>
                         <?php $transactionNumber = $receivableRow['kode_transaksi']; ?>
                         <?php if ($receivableRow['transaction_type'] == 'D'): ?>

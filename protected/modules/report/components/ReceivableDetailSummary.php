@@ -29,7 +29,7 @@ class ReceivableDetailSummary extends CComponent {
         $this->dataProvider->criteria->order = 't.code ASC';
     }
 
-    public function setupFilter($endDate, $branchId, $coaId) {
+    public function setupFilter($startDate, $endDate, $branchId, $coaId) {
         $this->dataProvider->criteria->compare('t.coa_sub_category_id', 8);
         $this->dataProvider->criteria->compare('t.is_approved', 1);
         $this->dataProvider->criteria->compare('t.id', $coaId);
@@ -44,9 +44,10 @@ class ReceivableDetailSummary extends CComponent {
         $this->dataProvider->criteria->addCondition("EXISTS (
             SELECT coa_id 
             FROM " . JurnalUmum::model()->tableName() . "
-            WHERE coa_id = t.id AND tanggal_transaksi BETWEEN '2025-01-01' AND :end_date" . $branchConditionSql . "
+            WHERE coa_id = t.id AND tanggal_transaksi BETWEEN :start_date AND :end_date" . $branchConditionSql . "
         ) AND t.code NOT LIKE '%.000'");
 
+        $this->dataProvider->criteria->params[':start_date'] = $startDate;
         $this->dataProvider->criteria->params[':end_date'] = $endDate;
     }
 }

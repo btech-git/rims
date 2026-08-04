@@ -30,12 +30,13 @@ class PurchasePerSupplierSummary extends CComponent {
         $branchConditionSql = '';
         
         if (!empty($branchId)) {
-            $branchConditionSql = ' AND main_branch_id = :branch_id';
+            $branchConditionSql = ' AND receipient_branch_id = :branch_id';
         }
 
         $this->dataProvider->criteria->addCondition("EXISTS (
-            SELECT id FROM " . TransactionPurchaseOrder::model()->tableName() . "
-            WHERE supplier_id = t.id AND substr(purchase_order_date, 1, 10) BETWEEN :start_date AND :end_date AND status_document NOT LIKE '%CANCEL%'" . $branchConditionSql . " 
+            SELECT r.id FROM " . TransactionPurchaseOrder::model()->tableName() . " p 
+            INNER JOIN " . TransactionReceiveItem::model()->tableName() . " r ON p.id = r.purchase_order_id
+            WHERE r.supplier_id = t.id AND substr(r.invoice_date, 1, 10) BETWEEN :start_date AND :end_date AND r.user_id_cancelled IS NULL" . $branchConditionSql . " 
         )");
         $this->dataProvider->criteria->params[':start_date'] = $startDate;
         $this->dataProvider->criteria->params[':end_date'] = $endDate;

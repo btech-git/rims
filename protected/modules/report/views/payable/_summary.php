@@ -65,12 +65,12 @@
                             <?php $paymentLeft = $payableRow['remaining']; ?>
                             <tr>
                                 <td class="width2-2">
-                                    <?php echo CHtml::link($payableRow['purchase_order_no'], Yii::app()->createUrl("report/payable/redirectTransaction", array(
-                                        "codeNumber" => $payableRow['purchase_order_no']
+                                    <?php echo CHtml::link($payableRow['invoice_number'], Yii::app()->createUrl("report/payable/redirectTransaction", array(
+                                        "codeNumber" => $payableRow['invoice_number']
                                     )), array('target' => '_blank'));?>
                                 </td>
                                 <td class="width2-1">
-                                    <?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($payableRow['purchase_order_date']))); ?>
+                                    <?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($payableRow['invoice_date']))); ?>
                                 </td>
                                 <td class="width2-2">
                                     <?php echo CHtml::encode($payableRow['invoice_number']);?>

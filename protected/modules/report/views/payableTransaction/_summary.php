@@ -32,8 +32,10 @@
             <td colspan="3">
                 <table>
                     <tr>
-                        <th class="width2-1">Tanggal</th>
                         <th class="width2-2">PO #</th>
+                        <th class="width2-2">Penerimaan #</th>
+                        <th class="width2-2">Invoice #</th>
+                        <th class="width2-1">Tanggal</th>
                         <th class="width2-3">Grand Total</th>
                         <th class="width2-4">Payment</th>
                         <th class="width2-5">Remaining</th>
@@ -53,21 +55,31 @@
                 <td colspan="3">
                     <table>
                         <?php $payableData = $header->getPayableTransactionReport($startDate, $endDate, $branchId); ?>
-                        <?php $totalPurchase = 0.00; ?>
-                        <?php $totalPayment = 0.00; ?>
-                        <?php $totalPayable = 0.00; ?>
+                        <?php $totalPurchase = '0.00'; ?>
+                        <?php $totalPayment = '0.00'; ?>
+                        <?php $totalPayable = '0.00'; ?>
                         <?php foreach ($payableData as $payableRow): ?>
                             <?php $purchase = $payableRow['total_price']; ?>
                             <?php $paymentAmount = $payableRow['payment_amount']; ?>
                             <?php $paymentLeft = $payableRow['payment_left']; ?>
                             <tr>
-                                <td class="width2-1">
-                                    <?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($payableRow['transaction_date']))); ?>
+                                <td class="width2-2">
+                                    <?php echo CHtml::encode($payableRow['purchase_number'], Yii::app()->createUrl("report/payableTransaction/redirectTransaction", array(
+                                        "codeNumber" => $payableRow['purchase_number']
+                                    )), array('target' => '_blank'));?>
+                                </td>
+                                <td class="width2-2">
+                                    <?php echo CHtml::link($payableRow['receive_number'], Yii::app()->createUrl("report/payableTransaction/redirectTransaction", array(
+                                        "codeNumber" => $payableRow['receive_number']
+                                    )), array('target' => '_blank'));?>
                                 </td>
                                 <td class="width2-2">
                                     <?php echo CHtml::link($payableRow['transaction_number'], Yii::app()->createUrl("report/payableTransaction/redirectTransaction", array(
                                         "codeNumber" => $payableRow['transaction_number']
                                     )), array('target' => '_blank'));?>
+                                </td>
+                                <td class="width2-1">
+                                    <?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($payableRow['transaction_date']))); ?>
                                 </td>
                                 <td class="width2-3" style="text-align: right">
                                     <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $purchase)); ?>
@@ -84,7 +96,7 @@
                             <?php $totalPayable += $paymentLeft; ?>
                         <?php endforeach; ?>
                         <tr>
-                            <td colspan="2" style="text-align: right; font-weight: bold">TOTAL</td>
+                            <td colspan="4" style="text-align: right; font-weight: bold">TOTAL</td>
                             <td class="width2-3" style="text-align: right; font-weight: bold"> 
                                 <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalPurchase)); ?>
                             </td>

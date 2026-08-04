@@ -36,9 +36,19 @@ Yii::app()->clientScript->registerScript('search', "
     <div class="clearfix page-action">
         <?php echo CHtml::link('<span class="fa fa-list"></span>Approval Transfer Request', Yii::app()->baseUrl . '/transaction/transferRequest/adminDestination', array(
             'class' => 'button cbutton right',
+            'style' => 'margin-right:10px',
             'visible' => Yii::app()->user->checkAccess("transferRequestEdit")
-                )); ?> &nbsp;&nbsp;&nbsp;
-        <?php echo CHtml::link('<span class="fa fa-plus"></span>New Transfer Request', Yii::app()->baseUrl.'/transaction/transferRequest/create', array('class'=>'button success right', 'visible'=>Yii::app()->user->checkAccess("transaction.transactionTransferRequest.create"))) ?>
+        )); ?>
+        <?php echo CHtml::link('<span class="fa fa-plus"></span>New', Yii::app()->baseUrl.'/transaction/transferRequest/create', array(
+            'class' => 'button success right', 
+            'style' => 'margin-right:10px',
+            'visible' => Yii::app()->user->checkAccess("transferRequestCreate")
+        )); ?>
+        <?php echo CHtml::link('<span class="fa fa-file"></span>Partial Delivery', Yii::app()->baseUrl.'/transaction/transferRequest/adminPartialDelivery', array(
+            'class' => 'button warning right', 
+            'style' => 'margin-right:10px',
+//            'visible' => Yii::app()->user->checkAccess("transferRequestCreate")
+        )); ?>
         <h1>Manage Transfer Request</h1>
         <div class="search-bar">
             <div class="clearfix button-bar">

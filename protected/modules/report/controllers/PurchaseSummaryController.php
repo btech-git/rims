@@ -63,8 +63,8 @@ class PurchaseSummaryController extends Controller {
     }
 
     public function actionDetailPurchaseTransaction($supplierId, $startDate, $endDate) {
-        $purchaseOrders = TransactionPurchaseOrder::model()->findall(array(
-            'condition' => 'supplier_id = :supplier_id AND purchase_order_date BETWEEN :start_date AND :end_date',
+        $purchaseOrders = TransactionReceiveItem::model()->findall(array(
+            'condition' => 'supplier_id = :supplier_id AND invoice_date BETWEEN :start_date AND :end_date',
             'params' => array(
                 ':supplier_id' => $supplierId,
                 ':start_date' => $startDate,
@@ -76,6 +76,7 @@ class PurchaseSummaryController extends Controller {
             'purchaseOrders' => $purchaseOrders,
             'startDate' => $startDate,
             'endDate' => $endDate,
+            'supplierId' => $supplierId,
         ));
     }
     

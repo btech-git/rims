@@ -26,6 +26,7 @@ class ReceivableDetailController extends Controller {
 //        $account = Search::bind(new Coa('search'), isset($_GET['Coa']) ? $_GET['Coa'] : array());
         $branchId = isset($_GET['BranchId']) ? $_GET['BranchId'] : '';
         $coaId = (isset($_GET['CoaId'])) ? $_GET['CoaId'] : '';
+        $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : date('Y-m-d');
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
         $pageSize = (isset($_GET['PageSize'])) ? $_GET['PageSize'] : '';
         $currentPage = (isset($_GET['page'])) ? $_GET['page'] : '';
@@ -42,7 +43,7 @@ class ReceivableDetailController extends Controller {
         $receivableDetailSummary->setupLoading();
         $receivableDetailSummary->setupPaging($pageSize, $currentPage);
         $receivableDetailSummary->setupSorting();
-        $receivableDetailSummary->setupFilter($endDate, $branchId, $coaId);
+        $receivableDetailSummary->setupFilter($startDate, $endDate, $branchId, $coaId);
 
         if (isset($_GET['ResetFilter'])) {
             $this->redirect(array('summary'));
@@ -50,6 +51,7 @@ class ReceivableDetailController extends Controller {
         
         if (isset($_GET['SaveExcel'])) {
             $this->saveToExcel($receivableDetailSummary->dataProvider, array(
+                'startDate' => $startDate,
                 'endDate' => $endDate, 
                 'branchId' => $branchId,
             ));
@@ -60,6 +62,7 @@ class ReceivableDetailController extends Controller {
             'accountDataProvider' => $accountDataProvider,
             'branchId' => $branchId,
             'receivableDetailSummary' => $receivableDetailSummary,
+            'startDate' => $startDate,
             'endDate' => $endDate,
             'currentSort' => $currentSort,
             'currentPage' => $currentPage,

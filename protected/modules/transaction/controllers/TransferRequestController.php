@@ -459,6 +459,26 @@ class TransferRequestController extends Controller {
         ));
     }
 
+    public function actionAdminPartialDelivery() {
+        $model = new TransactionTransferRequest('search');
+        $model->unsetAttributes();  // clear any default values
+        
+        if (isset($_GET['TransactionTransferRequest'])) {
+            $model->attributes = $_GET['TransactionTransferRequest'];
+        }
+
+        $dataProvider = $model->searchByPartialDelivery();
+        if (!(Yii::app()->user->checkAccess('director') || Yii::app()->user->branch_id == 6)) {
+            $dataProvider->criteria->addCondition('t.requester_branch_id = :requester_branch_id');
+            $dataProvider->criteria->params[':requester_branch_id'] = Yii::app()->user->branch_id;
+        }
+        
+        $this->render('adminPartialDelivery', array(
+            'model' => $model,
+            'dataProvider' => $dataProvider,
+        ));
+    }
+
     public function actionDelete($id) {
         if (Yii::app()->request->isPostRequest) {
             $model = $this->instantiate($id, '');

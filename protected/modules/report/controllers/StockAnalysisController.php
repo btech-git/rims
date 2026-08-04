@@ -36,21 +36,19 @@ class StockAnalysisController extends Controller {
         $productCode = (isset($_GET['ProductCode'])) ? $_GET['ProductCode'] : '';
         $productName = (isset($_GET['ProductName'])) ? $_GET['ProductName'] : '';
         
-        $dataProvider = $inventoryDetail->search();
-        
         if (isset($_GET['ResetFilter'])) {
             $this->redirect(array('summary'));
         }
         
         if (isset($_GET['SaveExcel'])) {
-            $this->saveToExcel($dataProvider, array(
+            $this->saveToExcel($inventoryDetail, array(
                 'startDate' => $startDate, 
                 'endDate' => $endDate,
+                'branchId' => $branchId,
                 'productId' => $productId,
                 'productCode' => $productCode,
                 'productName' => $productName,
                 'brandId' => $brandId,
-                'branchId' => $branchId,
                 'subBrandId' => $subBrandId,
                 'subBrandSeriesId' => $subBrandSeriesId,
                 'productMasterCategoryId' => $productMasterCategoryId,
@@ -124,7 +122,7 @@ class StockAnalysisController extends Controller {
         }
     }
 
-    protected function saveToExcel($dataProvider, array $options = array()) {
+    protected function saveToExcel($inventoryDetail, array $options = array()) {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
         
@@ -133,14 +131,13 @@ class StockAnalysisController extends Controller {
         $productId = (empty($options['productId'])) ? '' : $options['productId'];
         $productCode = (empty($options['productCode'])) ? '' : $options['productCode'];
         $productName = (empty($options['productName'])) ? '' : $options['productName'];
-        $branchId = (empty($options['branchId'])) ? $options['branchId'] : '';
-        $brandId = (empty($options['brandId'])) ? $options['brandId'] : '';
-        $subBrandId = (empty($options['subBrandId'])) ? $options['subBrandId'] : '';
-        $subBrandSeriesId = (empty($options['subBrandSeriesId'])) ? $options['subBrandSeriesId'] : '';
-        $productMasterCategoryId = (empty($options['productMasterCategoryId'])) ? $options['productMasterCategoryId'] : '';
-        $productSubMasterCategoryId = (empty($options['productSubMasterCategoryId'])) ? $options['productSubMasterCategoryId'] : '';
-        $productSubCategoryId = (empty($options['productSubCategoryId'])) ? $options['productSubCategoryId'] : '';
-        $inventoryDetail = Search::bind(new InventoryDetail(), isset($_GET['InventoryDetail']) ? $_GET['InventoryDetail'] : '');
+        $branchId = (!empty($options['branchId'])) ? $options['branchId'] : '';
+        $brandId = (!empty($options['brandId'])) ? $options['brandId'] : '';
+        $subBrandId = (!empty($options['subBrandId'])) ? $options['subBrandId'] : '';
+        $subBrandSeriesId = (!empty($options['subBrandSeriesId'])) ? $options['subBrandSeriesId'] : '';
+        $productMasterCategoryId = (!empty($options['productMasterCategoryId'])) ? $options['productMasterCategoryId'] : '';
+        $productSubMasterCategoryId = (!empty($options['productSubMasterCategoryId'])) ? $options['productSubMasterCategoryId'] : '';
+        $productSubCategoryId = (!empty($options['productSubCategoryId'])) ? $options['productSubCategoryId'] : '';
 
         spl_autoload_unregister(array('YiiBase', 'autoload'));
         include_once Yii::getPathOfAlias('ext.phpexcel.Classes') . DIRECTORY_SEPARATOR . 'PHPExcel.php';
@@ -155,45 +152,48 @@ class StockAnalysisController extends Controller {
         $worksheet = $objPHPExcel->setActiveSheetIndex(0);
         $worksheet->setTitle('Laporan Stok Analisis');
 
-        $worksheet->mergeCells('A1:H1');
-        $worksheet->mergeCells('A2:H2');
-        $worksheet->mergeCells('A3:H3');
+        $worksheet->mergeCells('A1:G1');
+        $worksheet->mergeCells('A2:G2');
+        $worksheet->mergeCells('A3:G3');
+        $worksheet->mergeCells('A5:G5');
 
-        $worksheet->getStyle('A1:H5')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-        $worksheet->getStyle('A1:H6')->getFont()->setBold(true);
+        $worksheet->getStyle('A1:G6')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->getStyle('A1:G6')->getFont()->setBold(true);
 
+        $branch = Branch::model()->findByPk($branchId);
         $worksheet->setCellValue('A1', 'PT. Raperind Motor');
-        $worksheet->setCellValue('A2', 'Laporan Stok Analisis');
+        $worksheet->setCellValue('A2', 'Laporan Stok Analisis' . $branchId);
         $worksheet->setCellValue('A3', Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($startDate)) . ' - ' . Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($endDate)));
 
-        $worksheet->setCellValue('A5', 'No');
-        $worksheet->setCellValue('B5', 'Code');
-        $worksheet->setCellValue('C5', 'Product Name');
-        $worksheet->setCellValue('D5', 'Category');
-        $worksheet->setCellValue('E5', 'Brand');
-        $worksheet->setCellValue('F5', 'Sub Brand');
-        $worksheet->setCellValue('G5', 'Sub Brand Series');
-        $worksheet->setCellValue('H5', 'Total Sales');
+        $worksheet->getStyle('A5:G5')->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
-        $worksheet->getStyle('A5:H5')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->setCellValue('A5', 'Fast Moving Items ' . CHtml::value($branch, 'code'));
+        $worksheet->setCellValue('A6', 'No');
+        $worksheet->setCellValue('B6', 'ID');
+        $worksheet->setCellValue('C6', 'Code');
+        $worksheet->setCellValue('D6', 'Product Name');
+        $worksheet->setCellValue('E6', 'Category');
+        $worksheet->setCellValue('F6', 'Brand');
+        $worksheet->setCellValue('G6', 'Quantity Sales');
+
+        $worksheet->getStyle('A6:G6')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
         $counter = 7; 
         
         $fastMovingItems = $inventoryDetail->getFastMovingItems($startDate, $endDate, $brandId, $subBrandId, $subBrandSeriesId, $productMasterCategoryId, $productSubMasterCategoryId, $productSubCategoryId, $branchId, $productId, $productCode, $productName);
-        foreach ($fastMovingItems as $i => $header) {
-            $worksheet->setCellValue("A{$counter}", CHtml::encode($i + 1));
-            $worksheet->setCellValue("B{$counter}", CHtml::encode($header['code']));
-            $worksheet->setCellValue("C{$counter}", CHtml::encode($header['product_name']));
-            $worksheet->setCellValue("D{$counter}", CHtml::encode($header['category']));
-            $worksheet->setCellValue("E{$counter}", CHtml::encode($header['brand']));
-            $worksheet->setCellValue("F{$counter}", CHtml::encode($header['sub_brand']));
-            $worksheet->setCellValue("G{$counter}", CHtml::encode($header['sub_brand_series']));
-            $worksheet->setCellValue("H{$counter}", CHtml::encode($header['total_sale']));
+        foreach ($fastMovingItems as $i => $fastMovingItem) {
+            $worksheet->setCellValue("A{$counter}", $i + 1);
+            $worksheet->setCellValue("B{$counter}", $fastMovingItem['id']);
+            $worksheet->setCellValue("C{$counter}", $fastMovingItem['code']);
+            $worksheet->setCellValue("D{$counter}", $fastMovingItem['product_name']);
+            $worksheet->setCellValue("E{$counter}", $fastMovingItem['category']);
+            $worksheet->setCellValue("F{$counter}", $fastMovingItem['brand'] . ' - ' . $fastMovingItem['sub_brand'] . ' - ' . $fastMovingItem['sub_brand_series']);
+            $worksheet->setCellValue("G{$counter}", $fastMovingItem['total_sale']);
             $counter++;
 
         }
         
-        for ($col = 'A'; $col !== 'H'; $col++) {
+        for ($col = 'A'; $col !== 'Z'; $col++) {
             $objPHPExcel->getActiveSheet()
             ->getColumnDimension($col)
             ->setAutoSize(true);

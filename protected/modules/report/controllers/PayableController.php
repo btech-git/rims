@@ -85,9 +85,9 @@ class PayableController extends Controller {
         list($leftPart,, ) = explode('/', $codeNumber);
         list(, $codeNumberConstant) = explode('.', $leftPart);
 
-        if ($codeNumberConstant === 'PO') {
-            $model = TransactionPurchaseOrder::model()->findByAttributes(array('purchase_order_no' => $codeNumber));
-            $this->redirect(array('/transaction/transactionPurchaseOrder/show', 'id' => $model->id));
+        if ($codeNumberConstant === 'RCI') {
+            $model = TransactionReceiveItem::model()->findByAttributes(array('receive_item_no' => $codeNumber));
+            $this->redirect(array('/transaction/transactionReceiveItem/show', 'id' => $model->id));
         } else if ($codeNumberConstant === 'WOE') {
             $model = WorkOrderExpenseHeader::model()->findByAttributes(array('transaction_number' => $codeNumber));
             $this->redirect(array('/accounting/workOrderExpense/show', 'id' => $model->id));

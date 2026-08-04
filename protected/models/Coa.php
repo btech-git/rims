@@ -775,6 +775,41 @@ class Coa extends CActiveRecord {
         
     }
     
+    public function getBeginningBalanceReceivableDetail($startDate, $endDate, $branchId) {
+        $branchConditionSql = '';
+        
+        $params = array(
+            ':coa_id' => $this->id,
+            ':start_date' => $startDate,
+            ':end_date' => $endDate,
+        );
+        
+        if (!empty($branchId)) {
+            $branchConditionSql = ' AND branch_id = :branch_id';
+            $params[':branch_id'] = $branchId;
+        }
+        
+        $sql = "SELECT j.debet - j.credit as balance
+                FROM (
+                    SELECT coa_id, SUM(total) as debet, 0 AS credit
+                    FROM " . JurnalUmum::model()->tableName() . "
+                    WHERE coa_id = :coa_id AND tanggal_transaksi < :end_date AND debet_kredit = 'D' AND transaction_type IN ('SO', 'Pin', 'RG') AND 
+                        tanggal_transaksi >= :start_date" . $branchConditionSql . " 
+                    GROUP BY coa_id
+                    UNION
+                    SELECT coa_id, 0 as debet, SUM(total) AS credit
+                    FROM " . JurnalUmum::model()->tableName() . "
+                    WHERE coa_id = :coa_id AND tanggal_transaksi < :end_date AND debet_kredit = 'K' AND transaction_type IN ('SO', 'Pin', 'RG') AND 
+                        tanggal_transaksi >= :start_date" . $branchConditionSql . " 
+                    GROUP BY coa_id
+                ) j";
+
+        $value = CActiveRecord::$db->createCommand($sql)->queryScalar($params);
+
+        return ($value === false) ? 0 : $value;
+        
+    }
+    
     public function getReceivableLedgerReport($startDate, $endDate, $branchId) {
         $branchConditionSql = '';
         
@@ -812,11 +847,12 @@ class Coa extends CActiveRecord {
         return $resultSet;
     }
     
-    public function getReceivableDetailReport($endDate, $branchId) {
+    public function getReceivableDetailReport($startDate, $endDate, $branchId) {
         $branchConditionSql = '';
         
         $params = array(
             ':coa_id' => $this->id,
+            ':start_date' => $startDate,
             ':end_date' => $endDate,
         );
         
@@ -827,7 +863,7 @@ class Coa extends CActiveRecord {
         
         $sql = "SELECT coa_id, total AS amount, kode_transaksi, tanggal_transaksi, debet_kredit AS transaction_type, transaction_subject AS remark
                 FROM " . JurnalUmum::model()->tableName() . " 
-                WHERE coa_id = :coa_id AND tanggal_transaksi BETWEEN '2025-01-01' AND :end_date AND is_coa_category = 0" . $branchConditionSql . " 
+                WHERE coa_id = :coa_id AND tanggal_transaksi BETWEEN :start_date AND :end_date AND is_coa_category = 0" . $branchConditionSql . " 
                 ORDER BY tanggal_transaksi ASC, kode_transaksi ASC";
         
         $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
