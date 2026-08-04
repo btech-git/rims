@@ -13,6 +13,14 @@ Yii::app()->clientScript->registerScript('report', '
 Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/transaction/report.css');
 ?>
 
+<style> 
+ .table_wrapper{
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+}
+</style>
+
 <div class="tab reportTab">
     <!--<div class="tabHead"><h1>Customer Follow Up + Warranty</h1></div>-->
     

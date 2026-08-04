@@ -23,54 +23,56 @@ Yii::app()->clientScript->registerCss('_report', '
 
 <br />
 
-<table class="report">
-    <thead style="position: sticky; top: 0">
-        <tr id="header1">
-            <th class="width1-11"></th>
-            <th class="width1-1">Customer</th>
-            <th class="width1-2">Plat #</th>
-            <th class="width1-3">Kendaraan</th>
-            <th class="width1-11">KM</th>
-            <th class="width1-4">Last RG #</th>
-            <th class="width1-5">Invoice #</th>
-            <th class="width1-6">Invoice Last Date</th>
-            <th class="width1-7">Warrant (3 Days)</th>
-            <th class="width1-8">Follow Up (3 Months)</th>
-            <th class="width1-9">Last Service (Days)</th>
-            <th class="width1-10">Feedback</th>
-        </tr>
-    </thead>
-    <tbody>
-        <?php foreach ($dataProvider->data as $i => $header): ?>
-            <tr class="items1">
-                <td><?php echo CHtml::encode($i+1); ?></td>
-                <td class="width1-1"><?php echo CHtml::encode(CHtml::value($header, 'customer.name')); ?></td>
-                <td class="width1-2"><?php echo CHtml::encode(CHtml::value($header, 'vehicle.plate_number')); ?></td>
-                <td class="width1-3">
-                    <?php echo CHtml::encode(CHtml::value($header, 'vehicle.carMake.name')); ?> -
-                    <?php echo CHtml::encode(CHtml::value($header, 'vehicle.carModel.name')); ?> -
-                    <?php echo CHtml::encode(CHtml::value($header, 'vehicle.carSubModel.name')); ?>
-                </td>
-                <td class="width1-5"><?php echo CHtml::encode(CHtml::value($header, 'registrationTransaction.vehicle_mileage')); ?></td>
-                <td class="width1-4">
-                    <?php echo CHtml::link($header->registrationTransaction->transaction_number, array("/frontDesk/registrationTransaction/view", "id"=>$header->registration_transaction_id), array('target' => '_blank',)); ?>
-                </td>
-                <td class="width1-5"><?php echo CHtml::encode(CHtml::value($header, 'invoice_number')); ?></td>
-                <td class="width1-6"><?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($header->invoice_date))); ?></td>
-                <td class="width1-7"><?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($header->warranty_date))); ?></td>
-                <td class="width1-8"><?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($header->follow_up_date))); ?></td>
-                <td class="width1-9"><?php echo CHtml::encode(CHtml::value($header, 'lastInvoiceDaysNumber')); ?></td>
-                <td class="width1-10">
-                    <?php if (empty($header->registrationTransaction->feedback)): ?>
-                        <?php echo CHtml::link('Feedback', Yii::app()->createUrl("frontDesk/followUp/updateFeedback", array("id"=>$header->registration_transaction_id))); ?>
-                    <?php else: ?>
-                        <?php echo CHtml::encode(CHtml::value($header, 'lastInvoiceDaysNumber')); ?>
-                    <?php endif; ?>
-                </td>
+<div class="table_wrapper">
+    <table class="responsive">
+        <thead style="position: sticky; top: 0">
+            <tr id="header1">
+                <th class="width1-11"></th>
+                <th class="width1-1">Customer</th>
+                <th class="width1-2">Plat #</th>
+                <th class="width1-3">Kendaraan</th>
+                <th class="width1-11">KM</th>
+                <th class="width1-4">Last RG #</th>
+                <th class="width1-5">Invoice #</th>
+                <th class="width1-6">Invoice Last Date</th>
+                <th class="width1-7">Warrant (3 Days)</th>
+                <th class="width1-8">Follow Up (3 Months)</th>
+                <th class="width1-9">Last Service (Days)</th>
+                <th class="width1-10">Feedback</th>
             </tr>
-        <?php endforeach; ?>
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            <?php foreach ($dataProvider->data as $i => $header): ?>
+                <tr class="items1">
+                    <td><?php echo CHtml::encode($i+1); ?></td>
+                    <td class="width1-1"><?php echo CHtml::encode(CHtml::value($header, 'customer.name')); ?></td>
+                    <td class="width1-2"><?php echo CHtml::encode(CHtml::value($header, 'vehicle.plate_number')); ?></td>
+                    <td class="width1-3">
+                        <?php echo CHtml::encode(CHtml::value($header, 'vehicle.carMake.name')); ?> -
+                        <?php echo CHtml::encode(CHtml::value($header, 'vehicle.carModel.name')); ?> -
+                        <?php echo CHtml::encode(CHtml::value($header, 'vehicle.carSubModel.name')); ?>
+                    </td>
+                    <td class="width1-5"><?php echo CHtml::encode(CHtml::value($header, 'registrationTransaction.vehicle_mileage')); ?></td>
+                    <td class="width1-4">
+                        <?php echo CHtml::link($header->registrationTransaction->transaction_number, array("/frontDesk/registrationTransaction/view", "id"=>$header->registration_transaction_id), array('target' => '_blank',)); ?>
+                    </td>
+                    <td class="width1-5"><?php echo CHtml::encode(CHtml::value($header, 'invoice_number')); ?></td>
+                    <td class="width1-6"><?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($header->invoice_date))); ?></td>
+                    <td class="width1-7"><?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($header->warranty_date))); ?></td>
+                    <td class="width1-8"><?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($header->follow_up_date))); ?></td>
+                    <td class="width1-9"><?php echo CHtml::encode(CHtml::value($header, 'lastInvoiceDaysNumber')); ?></td>
+                    <td class="width1-10">
+                        <?php if (empty($header->registrationTransaction->feedback)): ?>
+                            <?php echo CHtml::link('Feedback', Yii::app()->createUrl("frontDesk/followUp/updateFeedback", array("id"=>$header->registration_transaction_id))); ?>
+                        <?php else: ?>
+                            <?php echo CHtml::encode(CHtml::value($header, 'lastInvoiceDaysNumber')); ?>
+                        <?php endif; ?>
+                    </td>
+                </tr>
+            <?php endforeach; ?>
+        </tbody>
+    </table>
+</div>
 
 <script>
     $(document).ready(function() {
