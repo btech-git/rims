@@ -130,7 +130,16 @@ class SaleInvoiceProjectNonCogsController extends Controller {
         $worksheet->getStyle('A5:N5')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
         $counter = 6;
+        
+        $totalServiceAmount = '0.00';
+        $totalProductAmount = '0.00';
+        $totalQuantity = '0.00';
+        $totalUnitPrice = '0.00';
+        $grandTotalSum = '0.00';
+        
         foreach ($saleProjectReport as $i => $dataItem) {
+            $serviceAmount = $dataItem['service'];
+            $productAmount = $dataItem['product'];
             $quantity = $dataItem['quantity'];
             $unitPrice = $dataItem['unit_price'];
             $grandTotal = $dataItem['total_price'];
@@ -144,8 +153,8 @@ class SaleInvoiceProjectNonCogsController extends Controller {
             $worksheet->setCellValue("F{$counter}", $dataItem['plate_number']);
             $worksheet->setCellValue("G{$counter}", $dataItem['work_order_number']);
             $worksheet->setCellValue("H{$counter}", $dataItem['vehicle_mileage']);
-            $worksheet->setCellValue("I{$counter}", $dataItem['service']);
-            $worksheet->setCellValue("J{$counter}", $dataItem['product']);
+            $worksheet->setCellValue("I{$counter}", $serviceAmount);
+            $worksheet->setCellValue("J{$counter}", $productAmount);
             if (empty($dataItem['product'])) {
                 $worksheet->setCellValue("K{$counter}", $unitPrice);
                 $worksheet->setCellValue("L{$counter}", '0.00');
@@ -155,9 +164,25 @@ class SaleInvoiceProjectNonCogsController extends Controller {
             }
             $worksheet->setCellValue("M{$counter}", $quantity);
             $worksheet->setCellValue("N{$counter}", $grandTotal);
+            
+            $totalServiceAmount += $serviceAmount;
+            $totalProductAmount += $productAmount;
+            $totalQuantity += $quantity;
+            $totalUnitPrice += $unitPrice;
+            $grandTotalSum += $grandTotal;
             $counter++;
-
         }
+        
+        $worksheet->getStyle("A{$counter}:N{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+
+        $worksheet->setCellValue("I{$counter}", $totalServiceAmount);
+        $worksheet->setCellValue("J{$counter}", $totalProductAmount);
+        $worksheet->setCellValue("K{$counter}", $totalUnitPrice);
+        $worksheet->setCellValue("L{$counter}", $totalUnitPrice);
+        $worksheet->setCellValue("M{$counter}", $totalQuantity);
+        $worksheet->setCellValue("N{$counter}", $grandTotalSum);
+        $counter++;
+        
         for ($col = 'A'; $col !== 'Z'; $col++) {
             $objPHPExcel->getActiveSheet()
             ->getColumnDimension($col)
