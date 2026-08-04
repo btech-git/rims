@@ -134,14 +134,16 @@ class SaleInvoiceProjectNonCogsController extends Controller {
         $totalServiceAmount = '0.00';
         $totalProductAmount = '0.00';
         $totalQuantity = '0.00';
-        $totalUnitPrice = '0.00';
+        $totalUnitPriceParts = '0.00';
+        $totalUnitPriceService = '0.00';
         $grandTotalSum = '0.00';
         
         foreach ($saleProjectReport as $i => $dataItem) {
             $serviceAmount = $dataItem['service'];
             $productAmount = $dataItem['product'];
             $quantity = $dataItem['quantity'];
-            $unitPrice = $dataItem['unit_price'];
+            $unitPriceParts = $dataItem['unit_price'];
+            $unitPriceService = $dataItem['unit_price'];
             $grandTotal = $dataItem['total_price'];
             $worksheet->getStyle("J{$counter}:L{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
 
@@ -156,11 +158,11 @@ class SaleInvoiceProjectNonCogsController extends Controller {
             $worksheet->setCellValue("I{$counter}", $serviceAmount);
             $worksheet->setCellValue("J{$counter}", $productAmount);
             if (empty($dataItem['product'])) {
-                $worksheet->setCellValue("K{$counter}", $unitPrice);
+                $worksheet->setCellValue("K{$counter}", $unitPriceParts);
                 $worksheet->setCellValue("L{$counter}", '0.00');
             } else {
                 $worksheet->setCellValue("K{$counter}", '0.00');
-                $worksheet->setCellValue("L{$counter}", $unitPrice);
+                $worksheet->setCellValue("L{$counter}", $unitPriceService);
             }
             $worksheet->setCellValue("M{$counter}", $quantity);
             $worksheet->setCellValue("N{$counter}", $grandTotal);
@@ -168,7 +170,8 @@ class SaleInvoiceProjectNonCogsController extends Controller {
             $totalServiceAmount += $serviceAmount;
             $totalProductAmount += $productAmount;
             $totalQuantity += $quantity;
-            $totalUnitPrice += $unitPrice;
+            $totalUnitPriceParts += $unitPriceParts;
+            $totalUnitPriceService += $unitPriceService;
             $grandTotalSum += $grandTotal;
             $counter++;
         }
@@ -177,8 +180,8 @@ class SaleInvoiceProjectNonCogsController extends Controller {
 
         $worksheet->setCellValue("I{$counter}", $totalServiceAmount);
         $worksheet->setCellValue("J{$counter}", $totalProductAmount);
-        $worksheet->setCellValue("K{$counter}", $totalUnitPrice);
-        $worksheet->setCellValue("L{$counter}", $totalUnitPrice);
+        $worksheet->setCellValue("K{$counter}", $totalUnitPriceService);
+        $worksheet->setCellValue("L{$counter}", $totalUnitPriceParts);
         $worksheet->setCellValue("M{$counter}", $totalQuantity);
         $worksheet->setCellValue("N{$counter}", $grandTotalSum);
         $counter++;
