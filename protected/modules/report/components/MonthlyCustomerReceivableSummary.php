@@ -39,8 +39,9 @@ class MonthlyCustomerReceivableSummary extends CComponent {
         
         $this->dataProvider->criteria->addCondition("EXISTS (
             SELECT customer_id
-            FROM " . RegistrationTransaction::model()->tableName() . "
-            WHERE YEAR(transaction_date) = :year AND MONTH(transaction_date) = :month AND customer_id = t.id AND user_id_cancelled IS NULL" . $branchConditionSql. "
+            FROM " . InvoiceHeader::model()->tableName() . "
+            WHERE YEAR(invoice_date) = :year AND MONTH(invoice_date) = :month AND customer_id = t.id AND user_id_cancelled IS NULL AND 
+                insurance_company_id IS NULL" . $branchConditionSql. "
         )");
 
         $this->dataProvider->criteria->params[':year'] = $year;

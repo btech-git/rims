@@ -68,7 +68,7 @@ class ReceivableCustomerController extends Controller {
         $dataProvider = InvoiceHeader::model()->searchByReport();
         $dataProvider->criteria->addBetweenCondition('t.invoice_date', $startDate, $endDate);
         $dataProvider->criteria->compare('t.customer_id', $customerId);
-        $dataProvider->criteria->addCondition("t.user_id_cancelled IS NULL AND t.payment_left > 100");
+        $dataProvider->criteria->addCondition("t.user_id_cancelled IS NULL AND t.insurance_company_id IS NULL AND t.payment_left > 100");
         
         $customer = Customer::model()->findByPk($customerId);
         

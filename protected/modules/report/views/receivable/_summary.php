@@ -38,7 +38,6 @@
                         <th class="width2-3">Faktur #</th>
                         <th class="width2-4">Plat #</th>
                         <th class="width2-5">Kendaraan</th>
-                        <th class="width2-6">Asuransi</th>
                         <th class="width2-7">Grand Total</th>
                         <th class="width2-8">Payment</th>
                         <th class="width2-9">Remaining</th>
@@ -84,7 +83,6 @@
                                     <?php echo CHtml::encode($receivableReportItem['car_model']); ?> - 
                                     <?php echo CHtml::encode($receivableReportItem['car_sub_model']); ?>
                                 </td>
-                                <td class="width2-6"><?php echo CHtml::encode($receivableReportItem['insurance']); ?></td>
                                 <td class="width2-7" style="text-align: right">
                                     <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $revenue)); ?>
                                 </td>
@@ -100,7 +98,7 @@
                             <?php $totalReceivable += $paymentLeft; ?>
                         <?php endforeach; ?>
                         <tr>
-                            <td colspan="6" style="text-align: right; font-weight: bold">TOTAL</td>
+                            <td colspan="5" style="text-align: right; font-weight: bold">TOTAL</td>
                             <td class="width2-7" style="text-align: right; font-weight: bold"> 
                                 <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalRevenue)); ?>
                             </td>

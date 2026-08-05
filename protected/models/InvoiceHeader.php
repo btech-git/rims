@@ -2464,7 +2464,7 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
         $sql = "SELECT i.customer_id, MONTH(i.invoice_date) AS invoice_month, MAX(c.name) AS customer_name, SUM(i.total_price) AS invoice_total
                 FROM " . InvoiceHeader::model()->tableName() . " i 
                 INNER JOIN " . Customer::model()->tableName() . " c ON c.id = i.customer_id
-                WHERE YEAR(i.invoice_date) = :year AND c.customer_type = 'Company' AND i.user_id_cancelled IS NULL" . $branchConditionSql . "
+                WHERE YEAR(i.invoice_date) = :year AND c.customer_type = 'Company' AND i.user_id_cancelled IS NULL AND i.insurance_company_id IS NULL" . $branchConditionSql . "
                 GROUP BY i.customer_id, MONTH(i.invoice_date)
                 ORDER BY customer_name ASC, invoice_month ASC";
                 
@@ -2490,7 +2490,7 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
                     bank_administration_fee + merimen_fee + bank_fee_amount) AS payment_total
                 FROM " . PaymentIn::model()->tableName() . " i
                 INNER JOIN " . Customer::model()->tableName() . " c ON c.id = i.customer_id
-                WHERE YEAR(i.payment_date) = :year AND c.customer_type = 'Company' AND i.user_id_cancelled IS NULL" . $branchConditionSql . "
+                WHERE YEAR(i.payment_date) = :year AND c.customer_type = 'Company' AND i.user_id_cancelled IS NULL AND i.insurance_company_id IS NULL" . $branchConditionSql . "
                 GROUP BY i.customer_id, MONTH(i.payment_date)
                 ORDER BY customer_name ASC, payment_month ASC";
                 
@@ -2515,7 +2515,7 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
                 FROM " . InvoiceHeader::model()->tableName() . " i 
                 INNER JOIN " . Customer::model()->tableName() . " c ON c.id = i.customer_id
                 WHERE i.invoice_date >= '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND i.invoice_date < :invoice_date AND c.customer_type = 'Company' AND 
-                    i.user_id_cancelled IS NULL" . $branchConditionSql . "
+                    i.user_id_cancelled IS NULL AND i.insurance_company_id IS NULL" . $branchConditionSql . "
                 GROUP BY i.customer_id";
                 
         $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
@@ -2540,7 +2540,7 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
                 FROM " . PaymentIn::model()->tableName() . "  i
                 INNER JOIN " . Customer::model()->tableName() . " c ON c.id = i.customer_id
                 WHERE i.payment_date >= '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND i.payment_date < :payment_date AND c.customer_type = 'Company' AND 
-                    i.user_id_cancelled IS NULL" . $branchConditionSql . "
+                    i.user_id_cancelled IS NULL AND i.insurance_company_id IS NULL" . $branchConditionSql . "
                 GROUP BY i.customer_id";
                 
         $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
@@ -2941,7 +2941,7 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
             $params[':branch_id'] = $branchId;
         }
         
-        $sql = "SELECT i.id, i.customer_id, i.invoice_number, i.invoice_date, i.due_date, v.plate_number, i.total_price, ic.name AS insurance, 
+        $sql = "SELECT i.id, i.customer_id, i.invoice_number, i.invoice_date, i.due_date, v.plate_number, i.total_price, 
                     k.name AS car_make, d.name AS car_model, s.name AS car_sub_model
                 FROM " . InvoiceHeader::model()->tableName() . " i
                 INNER JOIN " . Customer::model()->tableName() . " c ON c.id = i.customer_id
@@ -2949,14 +2949,13 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
                 LEFT OUTER JOIN " . VehicleCarMake::model()->tableName() . " k ON k.id = v.car_make_id
                 LEFT OUTER JOIN " . VehicleCarModel::model()->tableName() . " d ON d.id = v.car_model_id
                 LEFT OUTER JOIN " . VehicleCarSubModel::model()->tableName() . " s ON s.id = v.car_sub_model_id
-                LEFT OUTER JOIN " . InsuranceCompany::model()->tableName() . " ic ON ic.id = i.insurance_company_id
-                WHERE i.customer_id IN ({$customerIdsSql}) AND i.user_id_cancelled IS NULL AND i.invoice_date BETWEEN '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND :end_date AND 
-                i.total_price - (
-                    SELECT COALESCE(SUM(d.amount + d.tax_service_amount + d.discount_amount + d.bank_administration_fee + d.merimen_fee + d.downpayment_amount), 0)
-                    FROM " . PaymentInDetail::model()->tableName() . " d
-                    INNER JOIN " . PaymentIn::model()->tableName() . " h ON h.id = d.payment_in_id
-                    WHERE i.id = d.invoice_header_id AND h.user_id_cancelled IS NULL AND h.payment_date BETWEEN '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND :end_date
-                ) > 0" . $branchConditionSql . "
+                WHERE i.customer_id IN ({$customerIdsSql}) AND i.user_id_cancelled IS NULL AND i.insurance_company_id IS NULL AND
+                    i.invoice_date BETWEEN '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND :end_date AND i.total_price - (
+                        SELECT COALESCE(SUM(d.amount + d.tax_service_amount + d.discount_amount + d.bank_administration_fee + d.merimen_fee + d.downpayment_amount), 0)
+                        FROM " . PaymentInDetail::model()->tableName() . " d
+                        INNER JOIN " . PaymentIn::model()->tableName() . " h ON h.id = d.payment_in_id
+                        WHERE i.id = d.invoice_header_id AND h.user_id_cancelled IS NULL AND h.payment_date BETWEEN '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND :end_date
+                    ) > 0" . $branchConditionSql . "
                 ORDER BY i.customer_id ASC, i.invoice_date ASC";
         
         $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);

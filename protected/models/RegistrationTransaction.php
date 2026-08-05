@@ -1587,7 +1587,7 @@ class RegistrationTransaction extends MonthlyTransactionActiveRecord {
                 LEFT OUTER JOIN " . InvoiceHeader::model()->tableName() . " i ON r.id = i.registration_transaction_id
                 LEFT OUTER JOIN " . PaymentInDetail::model()->tableName() . " p ON i.id = p.invoice_header_id
                 LEFT OUTER JOIN " . PaymentIn::model()->tableName() . " h on h.id = p.payment_in_id
-                WHERE YEAR(r.transaction_date) = :year AND MONTH(r.transaction_date) = :month AND r.user_id_cancelled IS NULL AND 
+                WHERE YEAR(r.transaction_date) = :year AND MONTH(r.transaction_date) = :month AND r.user_id_cancelled IS NULL AND i.insurance_company_id IS NULL AND 
                     r.customer_id IN ({$customerIdsSql})" . $branchConditionSql . "
                 ORDER BY r.customer_id, r.id ASC, i.id ASC, p.id ASC ";
 

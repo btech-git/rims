@@ -180,10 +180,9 @@ class ReceivableController extends Controller {
         $worksheet->setCellValue('F5', 'Faktur #');
         $worksheet->setCellValue('G5', 'Plat #');
         $worksheet->setCellValue('H5', 'Kendaraan');
-        $worksheet->setCellValue('I5', 'Asuransi');
-        $worksheet->setCellValue('J5', 'Grand Total');
-        $worksheet->setCellValue('K5', 'Payment');
-        $worksheet->setCellValue('L5', 'Remaining');
+        $worksheet->setCellValue('I5', 'Grand Total');
+        $worksheet->setCellValue('J5', 'Payment');
+        $worksheet->setCellValue('K5', 'Remaining');
         $counter = 6;
 
         $totalRevenueSum = '0.00';
@@ -207,10 +206,9 @@ class ReceivableController extends Controller {
                 $worksheet->setCellValue("F{$counter}", $receivableReportItem['invoice_number']);
                 $worksheet->setCellValue("G{$counter}", $receivableReportItem['plate_number']);
                 $worksheet->setCellValue("H{$counter}", $receivableReportItem['car_make'] . ' - ' . $receivableReportItem['car_model'] . ' - ' . $receivableReportItem['car_sub_model']);
-                $worksheet->setCellValue("I{$counter}", $receivableReportItem['insurance']);
-                $worksheet->setCellValue("J{$counter}", $revenue);
-                $worksheet->setCellValue("K{$counter}", $paymentAmount);
-                $worksheet->setCellValue("L{$counter}", $paymentLeft);
+                $worksheet->setCellValue("I{$counter}", $revenue);
+                $worksheet->setCellValue("J{$counter}", $paymentAmount);
+                $worksheet->setCellValue("K{$counter}", $paymentLeft);
                 
                 $counter++;
             
@@ -234,7 +232,11 @@ class ReceivableController extends Controller {
             $totalPaymentSum += $totalPayment;
             $totalReceivableSum += $totalReceivable;
         }
-        $worksheet->setCellValue("A{$counter}", 'Total');
+        $worksheet->getStyle("A{$counter}:O{$counter}")->getFont()->setBold(true);
+        $worksheet->getStyle("A{$counter}:O{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->mergeCells("A{$counter}:I{$counter}");
+
+        $worksheet->setCellValue("A{$counter}", 'Grand Total');
         $worksheet->setCellValue("M{$counter}", $totalRevenueSum);
         $worksheet->setCellValue("N{$counter}", $totalPaymentSum);
         $worksheet->setCellValue("O{$counter}", $totalReceivableSum);
