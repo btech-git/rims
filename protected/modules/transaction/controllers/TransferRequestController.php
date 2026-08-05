@@ -459,12 +459,26 @@ class TransferRequestController extends Controller {
         ));
     }
 
-    public function actionAdminPartialDelivery() {
-
-        $partialDeliveryReportData = TransactionTransferRequest::getPartialDeliveryData();
+    public function actionPartialList() {
+        $model = new TransactionTransferRequest('search');
+        $model->unsetAttributes();  // clear any default values
         
-        $this->render('adminPartialDelivery', array(
-            'partialDeliveryReportData' => $partialDeliveryReportData,
+        $startDate = isset($_GET['StartDate']) ? $_GET['StartDate'] : AppParam::BEGINNING_TRANSACTION_DATE;
+        $endDate = isset($_GET['EndDate']) ? $_GET['EndDate'] : date('Y-m-d');
+        if (isset($_GET['TransactionTransferRequest'])) {
+            $model->attributes = $_GET['TransactionTransferRequest'];
+        }
+
+        $dataProvider = $model->search();
+        $dataProvider->criteria->addBetweenCondition('t.transfer_request_date', $startDate, $endDate);
+        $dataProvider->criteria->addCondition('(SELECT SUM(d.quantity_delivery_left) FROM rims_transaction_transfer_request_detail d WHERE t.id = d.transfer_request_id) > 0');
+        $dataProvider->criteria->addCondition("t.status_document LIKE '%Approved%' AND t.user_id_cancelled IS NULL");
+        
+        $this->render('partialList', array(
+            'model' => $model,
+            'dataProvider' => $dataProvider,
+            'startDate' => $startDate,
+            'endDate' => $endDate,
         ));
     }
 

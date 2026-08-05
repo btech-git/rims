@@ -85,4 +85,63 @@ class SaleInvoiceCoretaxController extends Controller {
 
         Yii::app()->end();
     }
+    
+    public function actionImportCoretax() {
+        
+        $errorMessage = '';
+                
+        if (isset($_FILES['TaxImportData'])) {
+            $uploadedFiles = CUploadedFile::getInstancesByName('TaxImportData');
+            
+            $dbTransaction = Yii::app()->db->beginTransaction();
+            try {
+                $valid = $this->updateTaxNumberAndDate($uploadedFiles[0]->tempName);
+                if ($valid) {
+                    $dbTransaction->commit();
+                } else {
+                    $dbTransaction->rollback();
+                }
+            } catch (Exception $e) {
+                $dbTransaction->rollback();
+                $valid = false;
+                $this->header->addError('error', $e->getMessage());
+            }
+            
+            if (!$valid) {
+                $errorMessage = 'Data CSV gagal diimport.';
+            } else {
+                $this->redirect(array('admin'));
+            }
+        }
+        
+        $this->render('importCoretax', array(
+            'errorMessage' => $errorMessage,
+        ));
+
+    }
+    
+    public function updateTaxNumberAndDate($filename) {
+        $data = array_map('str_getcsv', file($filename));
+        
+        $valid = true;
+        foreach ($data as $i => $item) {
+            if ($i > 0) {
+                $coretaxNumber = $item[3];
+                $coretaxDate = $item[4];
+                $invoiceNumber = substr($item[14], 0, -2);
+                
+                $invoiceHeader = InvoiceHeader::model()->find(array('condition' => 'invoice_number LIKE :invoice_number', 'params' => array(':invoice_number' => $invoiceNumber . '%')));
+                if ($invoiceHeader !== null) {
+                    $invoiceHeader->transaction_tax_number = $coretaxNumber;
+                    $invoiceHeader->transaction_tax_date = $coretaxDate;
+                    $valid = $valid && $invoiceHeader->save();
+                }
+            }
+            if (!$valid) {
+                break;
+            }
+        }
+        
+        return $valid;
+    }
 }

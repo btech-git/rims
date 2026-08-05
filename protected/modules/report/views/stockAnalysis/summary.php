@@ -256,6 +256,7 @@ Yii::app()->clientScript->registerScript('report', '
                 'productId' => $productId,
                 'productCode' => $productCode,
                 'productName' => $productName,
+                'numberOfDays' => $numberOfDays,
             )); ?>
         </div>
     </div>

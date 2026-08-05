@@ -302,21 +302,6 @@ class TransactionTransferRequest extends MonthlyTransactionActiveRecord {
         ));
     }
 
-    public static function getPartialDeliveryData() {
-        
-        $sql = "SELECT d.transfer_request_id, MAX(h.transfer_request_no) AS transaction_number, MAX(h.transfer_request_date) AS transaction_date, 
-                    MAX(h.transaction_time) AS transaction_time, MAX(h.status_document) AS status_document, MAX(, SUM(d.quantity_delivery) as total_delivery, SUM(d.quantity_delivery_left) AS total_delivery_left
-                FROM " . TransactionTransferRequest::model()->tableName() . " h 
-                INNER JOIN " . TransactionTransferRequestDetail::model()->tableName() . " d ON h.id = d.transfer_request_id
-                WHERE h.destination_approval_status = 1 and user_id_cancelled is null
-                GROUP BY d.transfer_request_id
-                HAVING total_delivery > 0 and total_delivery_left > 0";
-
-        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true);
-
-        return $resultSet;
-    }
-    
     public function getApprovalStatus() {
         $status = '';
 

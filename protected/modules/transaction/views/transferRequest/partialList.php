@@ -25,7 +25,7 @@ Yii::app()->clientScript->registerScript('search', "
         return false;
     });
     $('.search-form form').submit(function() {
-        $('#transaction-transfer-request-grid').yiiGridView('update', {
+        $('#partial-delivery-grid').yiiGridView('update', {
             data: $(this).serialize()
         });
         return false;
@@ -34,39 +34,30 @@ Yii::app()->clientScript->registerScript('search', "
 
 <div id="maincontent">
     <div class="clearfix page-action">
-        <?php echo CHtml::link('<span class="fa fa-list"></span>Approval Transfer Request', Yii::app()->baseUrl . '/transaction/transferRequest/adminDestination', array(
+        <?php echo CHtml::link('<span class="fa fa-list"></span>Manage', Yii::app()->baseUrl . '/transaction/transferRequest/admin', array(
             'class' => 'button cbutton right',
-            'style' => 'margin-right:10px',
-            'visible' => Yii::app()->user->checkAccess("transferRequestEdit")
-        )); ?>
-        <?php echo CHtml::link('<span class="fa fa-plus"></span>New', Yii::app()->baseUrl.'/transaction/transferRequest/create', array(
-            'class' => 'button success right', 
-            'style' => 'margin-right:10px',
-            'visible' => Yii::app()->user->checkAccess("transferRequestCreate")
-        )); ?>
-        <?php echo CHtml::link('<span class="fa fa-minus"></span>Partial Delivery', Yii::app()->baseUrl.'/transaction/transferRequest/partialList', array(
-            'class' => 'button warning right', 
-            'style' => 'margin-right:10px',
-//            'visible' => Yii::app()->user->checkAccess("transferRequestCreate")
+//            'visible' => Yii::app()->user->checkAccess("transferRequestEdit")
         )); ?>
         
-        <h1>Manage Transfer Request</h1>
+        <h1>Transfer Request Partial Delivery</h1>
         <div class="search-bar">
             <div class="clearfix button-bar">
-            <a href="#" class="search-button right button cbutton secondary">Advanced Search</a>
-            <div class="clearfix"></div>
-            <div class="search-form" style="display:none">
-                <?php $this->renderPartial('_search',array(
-                    'model'=>$model,
-                )); ?>
+                <a href="#" class="search-button right button cbutton secondary">Advanced Search</a>
+                <div class="clearfix"></div>
+                <div class="search-form" style="display:none">
+                    <?php $this->renderPartial('_searchPartial',array(
+                        'model' => $model,
+                        'startDate' => $startDate,
+                        'endDate' => $endDate,
+                    )); ?>
                 </div><!-- search-form -->				
             </div>
          </div>
 
-        <h3>Request Branch Asal</h3>
+        <hr />
          <div class="grid-view">
             <?php $this->widget('zii.widgets.grid.CGridView', array(
-                'id'=>'transaction-transfer-request-grid',
+                'id'=>'partial-delivery-grid',
                 'dataProvider'=>$dataProvider,
                 'filter'=> null,
                 'template' => '{items}<div class="clearfix">{summary}{pager}</div>',

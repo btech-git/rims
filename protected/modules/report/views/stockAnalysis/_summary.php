@@ -1,5 +1,7 @@
 <div id="maincontent">
     <div class="clearfix page-action">
+        <?php $numberOfMonths = floor($numberOfDays / 30); ?>
+        <?php $numberOfWeeks = floor($numberOfDays / 7); ?>
         <div class="row">
             <span style="text-align: center">
                 <?php $branch = Branch::model()->findByPk($branchId); ?>
@@ -16,7 +18,8 @@
                         <th>Category</th>
                         <th>Brand</th>
                         <th>Qty Sales</th>
-                        <!--<td>Total</td>-->
+                        <th>Average / bulan</th>
+                        <th>Average / minggu</th>
                     </tr>
                 </thead>
 
@@ -34,8 +37,15 @@
                                 <?php echo CHtml::encode($fastMovingItem['sub_brand']); ?> - 
                                 <?php echo CHtml::encode($fastMovingItem['sub_brand_series']); ?>
                             </td>
-                            <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $fastMovingItem['total_sale'])); ?></td>
-                            <!--<td style="text-align: right"><?php //echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $fastMovingItem['sale_price'])); ?></td>-->
+                            <td style="text-align: right">
+                                <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $fastMovingItem['total_sale'])); ?>
+                            </td>
+                            <td style="text-align: right">
+                                <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $fastMovingItem['total_sale'] / $numberOfMonths)); ?>
+                            </td>
+                            <td style="text-align: right">
+                                <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $fastMovingItem['total_sale'] / $numberOfWeeks)); ?>
+                            </td>
                         </tr>
                     <?php endforeach; ?>
                 </tbody>
@@ -61,7 +71,8 @@
                         <th>Sub Brand</th>
                         <th>Sub Brand Series</th>
                         <th>Qty Sales</th>
-                        <!--<td>Total</td>-->
+                        <th>Average / bulan</th>
+                        <th>Average / minggu</th>
                     </tr>
                 </thead>
 
@@ -77,8 +88,15 @@
                             <td><?php echo CHtml::encode($slowMovingItem['brand']); ?></td>
                             <td><?php echo CHtml::encode($slowMovingItem['sub_brand']); ?></td>
                             <td><?php echo CHtml::encode($slowMovingItem['sub_brand_series']); ?></td>
-                            <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $slowMovingItem['total_sale'])); ?></td>
-                            <!--<td style="text-align: right"><?php //echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $slowMovingItem['sale_price'])); ?></td>-->
+                            <td style="text-align: right">
+                                <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $slowMovingItem['total_sale'])); ?>
+                            </td>
+                            <td style="text-align: right">
+                                <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $slowMovingItem['total_sale'] / $numberOfMonths)); ?>
+                            </td>
+                            <td style="text-align: right">
+                                <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $slowMovingItem['total_sale'] / $numberOfWeeks)); ?>
+                            </td>
                         </tr>
                     <?php endforeach; ?>
                 </tbody>

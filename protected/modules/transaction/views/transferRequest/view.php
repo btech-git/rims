@@ -28,7 +28,7 @@ $this->menu = array(
         <?php $ccaction = Yii::app()->controller->action->id; ?>
         <?php echo CHtml::link('<span class="fa fa-list"></span>Manage', Yii::app()->baseUrl . '/transaction/transferRequest/admin', array(
             'class' => 'button cbutton right',
-            'visible' => Yii::app()->user->checkAccess("transferRequestEdit")
+//            'visible' => Yii::app()->user->checkAccess("transferRequestEdit")
         )); ?>
 
         <?php if ($transferRequest->status_document == 'Draft'): ?>
