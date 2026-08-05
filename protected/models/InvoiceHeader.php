@@ -471,6 +471,9 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
             'pagination' => array(
                 'pageSize' => 1000,
             ),
+            'sort' => array(
+                'defaultOrder' => 't.invoice_date ASC, t.invoice_number ASC',
+            ),
         ));
     }
 

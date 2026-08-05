@@ -37,7 +37,6 @@ class SaleInvoiceSummary extends CComponent {
         $endDate = (empty($filters['endDate'])) ? date('Y-m-d') : $filters['endDate'];
         $this->dataProvider->criteria->addCondition('t.status NOT LIKE "%CANCELLED%"');
         $this->dataProvider->criteria->addBetweenCondition('t.invoice_date', $startDate, $endDate);
-//        $this->dataProvider->criteria->compare('t.customer_id', FALSE);
         $this->dataProvider->criteria->compare('vehicle.id', $filters['vehicleId']);
         $this->dataProvider->criteria->compare('customer.customer_type', $filters['customerType'], false);
         $this->dataProvider->criteria->compare('customer.id', $filters['customerId']);

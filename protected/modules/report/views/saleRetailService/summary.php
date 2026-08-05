@@ -198,6 +198,13 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                 <hr />
 
                 <div class="relative">
+                    <div class="reportDisplay">
+                        <?php $dataCount = count($saleRetailServiceReport); ?>
+                        <?php if ($dataCount > 0): ?>
+                            <?php echo "Displaying 1-{$dataCount} of {$dataCount} result(s)."; ?>
+                        <?php endif; ?>
+                    </div>
+                    
                     <?php $this->renderPartial('_summary', array(
                         'saleRetailServiceReport' => $saleRetailServiceReport,
                         'service' => $service,
