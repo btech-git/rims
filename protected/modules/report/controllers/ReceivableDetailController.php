@@ -144,7 +144,7 @@ class ReceivableDetailController extends Controller {
 
             $counter++;
 
-            $receivableData = $header->getReceivableDetailReport($endDate, $options['branchId']);
+            $receivableData = $header->getReceivableDetailReport($startDate, $endDate, $branchId);
 
             foreach ($receivableData as $receivableRow) {
                 $transactionNumber = $receivableRow['kode_transaksi'];

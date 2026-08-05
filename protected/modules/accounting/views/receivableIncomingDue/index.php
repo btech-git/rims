@@ -87,7 +87,7 @@
             </tr>
         </thead>
         <tbody>
-            <?php foreach ($receivableIncomingDueDate as $i => $dataItem): ?>
+            <?php foreach($receivableIncomingDueDate as $i => $dataItem): ?>
                 <tr>
                     <td><?php echo CHtml::encode($i + 1); ?></td>
                     <td>

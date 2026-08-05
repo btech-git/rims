@@ -236,7 +236,7 @@ class InventoryDetail extends CActiveRecord {
                     $branchIdConditionSql . $productIdConditionSql . $productCodeConditionSql . $productNameConditionSql . " 
                 GROUP BY i.product_id
                 ORDER BY total_sale DESC
-                LIMIT 50";
+                LIMIT 5000";
 
         $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
 
@@ -323,7 +323,7 @@ class InventoryDetail extends CActiveRecord {
                     $branchIdConditionSql . $productIdConditionSql . $productCodeConditionSql . $productNameConditionSql . " 
                 GROUP BY i.product_id
                 ORDER BY total_sale ASC
-                LIMIT 50";
+                LIMIT 5000";
 
         $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
 
