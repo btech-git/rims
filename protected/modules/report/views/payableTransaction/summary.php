@@ -155,15 +155,9 @@ Yii::app()->clientScript->registerScript('report', '
                         'startDate' => $startDate,
                         'endDate' => $endDate,
                         'branchId' => $branchId,
+                        'supplierId' => $supplierId,
                     )); ?>
                 </div>
-                <div class="clear"></div>
-            </div>
-            
-            <br/>
-
-            <div class="hide">
-                <div class="right"></div>
                 <div class="clear"></div>
             </div>
         </div>

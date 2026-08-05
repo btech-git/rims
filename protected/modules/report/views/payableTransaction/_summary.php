@@ -13,8 +13,9 @@
 '); ?>
 
 <div style="font-weight: bold; text-align: center">
+    <?php $supplier = Supplier::model()->findByPk($supplierId); ?>
     <div style="font-size: larger"><?php echo Yii::app()->name; ?></div>
-    <div style="font-size: larger">Kartu Hutang Supplier</div>
+    <div style="font-size: larger">Kartu Hutang Supplier <?php echo CHtml::encode(CHtml::value($supplier, 'name')); ?></div>
     <div><?php echo 'Tanggal: ' . CHtml::encode(Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($startDate))) . ' - ' . CHtml::encode(Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($endDate))); ?></div>
 </div>
 

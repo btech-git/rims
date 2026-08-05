@@ -302,42 +302,21 @@ class TransactionTransferRequest extends MonthlyTransactionActiveRecord {
         ));
     }
 
-    public function searchByPartialDelivery() {
-        //search purchase header which purchased quantity is not fully received yet
-        $criteria = new CDbCriteria;
+    public static function getPartialDeliveryData() {
+        
+        $sql = "SELECT d.transfer_request_id, MAX(h.transfer_request_no) AS transaction_number, MAX(h.transfer_request_date) AS transaction_date, 
+                    MAX(h.transaction_time) AS transaction_time, MAX(h.status_document) AS status_document, MAX(, SUM(d.quantity_delivery) as total_delivery, SUM(d.quantity_delivery_left) AS total_delivery_left
+                FROM " . TransactionTransferRequest::model()->tableName() . " h 
+                INNER JOIN " . TransactionTransferRequestDetail::model()->tableName() . " d ON h.id = d.transfer_request_id
+                WHERE h.destination_approval_status = 1 and user_id_cancelled is null
+                GROUP BY d.transfer_request_id
+                HAVING total_delivery > 0 and total_delivery_left > 0";
 
-        $criteria->condition = "EXISTS (
-            SELECT COALESCE(SUM(d.quantity_delivery_left), 0) AS quantity_remaining
-            FROM " . TransactionTransferRequestDetail::model()->tableName() . " d
-            WHERE t.id = d.transfer_request_id AND d.quantity_delivery > 0
-            GROUP BY d.transfer_request_id
-            HAVING quantity_delivery_left > 0
-        ) AND t.status_document NOT IN ('Draft', 'Rejected') AND t.destination_approval_status = 1 AND t.transfer_request_date > '2024-12-31'";
+        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true);
 
-        $criteria->compare('id', $this->id);
-        $criteria->compare('transfer_request_no', $this->transfer_request_no, true);
-        $criteria->compare('transfer_request_date', $this->transfer_request_date, true);
-        $criteria->compare('status_document', $this->status_document, true);
-        $criteria->compare('estimate_arrival_date', $this->estimate_arrival_date, true);
-        $criteria->compare('requester_id', $this->requester_id);
-        $criteria->compare('requester_branch_id', $this->requester_branch_id);
-        $criteria->compare('approved_by', $this->approved_by);
-        $criteria->compare('destination_id', $this->destination_id);
-        $criteria->compare('destination_branch_id', $this->destination_branch_id);
-        $criteria->compare('total_quantity', $this->total_quantity);
-        $criteria->compare('total_price', $this->total_price, true);
-
-        return new CActiveDataProvider($this, array(
-            'criteria' => $criteria,
-            'sort' => array(
-                'defaultOrder' => 'transfer_request_date DESC',
-            ),
-            'pagination' => array(
-                'pageSize' => 50,
-            ),
-        ));
+        return $resultSet;
     }
-
+    
     public function getApprovalStatus() {
         $status = '';
 

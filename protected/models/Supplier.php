@@ -419,7 +419,7 @@ class Supplier extends CActiveRecord {
                 SELECT d.receive_item_id, SUM(d.amount) AS amount 
                 FROM " . PayOutDetail::model()->tableName() . " d 
                 INNER JOIN " . PaymentOut::model()->tableName() . " h ON h.id = d.payment_out_id
-                WHERE h.status NOT LIKE '%CANCEL%'
+                WHERE h.status NOT LIKE '%CANCEL%' AND h.payment_date BETWEEN '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND :end_date
                 GROUP BY d.receive_item_id
             ) p ON r.id = p.receive_item_id 
             WHERE r.supplier_id = :supplier_id AND (r.invoice_grand_total - COALESCE(p.amount, 0)) > 100.00 AND 
