@@ -49,7 +49,7 @@ Yii::app()->clientScript->registerCss('_report', '
                             <?php echo CHtml::encode(CHtml::value($header, 'name')); ?>
                         </td>
                         <td style="text-align: right; font-weight: bold">
-                            <?php $saldo = $header->getBeginningBalanceReceivableDetail($startDate, $endDate, $branchId); ?>
+                            <?php $saldo = 0; //$header->getBeginningBalanceReceivableDetail($startDate, $endDate, $branchId); ?>
                             <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $saldo)); ?>
                         </td>
                     </tr>
