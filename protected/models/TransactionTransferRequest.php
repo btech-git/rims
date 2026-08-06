@@ -302,6 +302,34 @@ class TransactionTransferRequest extends MonthlyTransactionActiveRecord {
         ));
     }
 
+    public function searchByPartialDelivery() {
+        //search purchase header which purchased quantity is not fully received yet
+        $criteria = new CDbCriteria;
+
+        $criteria->compare('id', $this->id);
+        $criteria->compare('transfer_request_no', $this->transfer_request_no, true);
+        $criteria->compare('transfer_request_date', $this->transfer_request_date, true);
+        $criteria->compare('status_document', 'Approved');
+        $criteria->compare('estimate_arrival_date', $this->estimate_arrival_date, true);
+        $criteria->compare('requester_id', $this->requester_id);
+        $criteria->compare('requester_branch_id', $this->requester_branch_id);
+        $criteria->compare('approved_by', $this->approved_by);
+        $criteria->compare('destination_id', $this->destination_id);
+        $criteria->compare('destination_branch_id', $this->destination_branch_id);
+        $criteria->compare('total_quantity', $this->total_quantity);
+        $criteria->compare('total_price', $this->total_price, true);
+
+        return new CActiveDataProvider($this, array(
+            'criteria' => $criteria,
+            'sort' => array(
+                'defaultOrder' => 'transfer_request_date ASC',
+            ),
+            'pagination' => array(
+                'pageSize' => 100,
+            ),
+        ));
+    }
+
     public function getApprovalStatus() {
         $status = '';
 

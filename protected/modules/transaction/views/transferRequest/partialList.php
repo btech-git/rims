@@ -55,6 +55,15 @@ Yii::app()->clientScript->registerScript('search', "
          </div>
 
         <hr />
+        
+        <div>
+            <?php echo CHtml::beginForm(array(''), 'get'); ?>
+            <?php echo CHtml::submitButton('Simpan ke Excel', array('name' => 'SaveExcel')); ?>
+            <?php echo CHtml::endForm(); ?>
+        </div>
+                  
+        <br />
+        
          <div class="grid-view">
             <?php $this->widget('zii.widgets.grid.CGridView', array(
                 'id'=>'partial-delivery-grid',

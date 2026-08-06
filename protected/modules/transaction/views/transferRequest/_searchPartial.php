@@ -1,13 +1,5 @@
-<?php
-/* @var $this TransactionTransferRequestController */
-/* @var $model TransactionTransferRequest */
-/* @var $form CActiveForm */
-?>
-
 <div class="wide form" id="advSearch">
-
-    <?php echo CHtml::beginForm('', 'get'); ?>
-    
+    <?php echo CHtml::beginForm(array(''), 'get'); ?>
     <div class="row">
         <div class="small-12 medium-6 columns">
             <div class="field">
@@ -45,15 +37,14 @@
                                 'placeholder' => 'Sampai',
                             ),
                         )); ?>
+                    </div>
+                </div>
+
+                <div class="row buttons text-right">
+                    <?php echo CHtml::submitButton('Search', array('class' => 'button cbutton')); ?>
                 </div>
             </div>
-
-            <div class="row buttons text-right">
-                <?php echo CHtml::submitButton('Search', array('class' => 'button cbutton')); ?>
-            </div>
         </div>
-    </div>
-
-<?php echo CHtml::endForm(); ?>
-
-</div><!-- search-form -->
+        <?php echo CHtml::endForm(); ?>
+    </div><!-- search-form -->
+</div>

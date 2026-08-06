@@ -469,11 +469,19 @@ class TransferRequestController extends Controller {
             $model->attributes = $_GET['TransactionTransferRequest'];
         }
 
-        $dataProvider = $model->search();
+        $dataProvider = $model->searchByPartialDelivery();
         $dataProvider->criteria->addBetweenCondition('t.transfer_request_date', $startDate, $endDate);
+        $dataProvider->criteria->addCondition('(SELECT SUM(d.quantity_delivery) FROM rims_transaction_transfer_request_detail d WHERE t.id = d.transfer_request_id) > 0');
         $dataProvider->criteria->addCondition('(SELECT SUM(d.quantity_delivery_left) FROM rims_transaction_transfer_request_detail d WHERE t.id = d.transfer_request_id) > 0');
         $dataProvider->criteria->addCondition("t.status_document LIKE '%Approved%' AND t.user_id_cancelled IS NULL");
         
+        if (isset($_GET['SaveExcel'])) {
+            $this->saveToExcelPartialDelivery($dataProvider, array(
+                'startDate' => $startDate, 
+                'endDate' => $endDate, 
+            ));
+        }
+
         $this->render('partialList', array(
             'model' => $model,
             'dataProvider' => $dataProvider,
@@ -489,14 +497,15 @@ class TransferRequestController extends Controller {
             if ($model->header->purchaseReturnHeaders != NULL || $model->header->receiveHeaders != NULL) {
                 Yii::app()->user->setFlash('message', 'Cannot DELETE this transaction');
             } else {
-                foreach ($model->details as $detail) 
+                foreach ($model->details as $detail) {
                     $detail->delete();
+                }
                 
                 $model->header->delete();
             }
-        }
-        else
+        } else {
             throw new CHttpException(400, 'Invalid request. Please do not repeat this request again.');
+        }
     }
 
     public function actionPdf($id) {
@@ -612,8 +621,10 @@ class TransferRequestController extends Controller {
 
     public function loadModel($id) {
         $model = TransactionTransferRequest::model()->findByPk($id);
-        if ($model === null)
+        if ($model === null) {
             throw new CHttpException(404, 'The requested page does not exist.');
+        }
+        
         return $model;
     }
 
@@ -623,18 +634,97 @@ class TransferRequestController extends Controller {
         }
         if (isset($_POST['TransactionTransferRequestDetail'])) {
             foreach ($_POST['TransactionTransferRequestDetail'] as $i => $item) {
-                if (isset($transferRequest->details[$i]))
+                if (isset($transferRequest->details[$i])) {
                     $transferRequest->details[$i]->attributes = $item;
-                else {
+                } else {
                     $detail = new TransactionTransferRequestDetail();
                     $detail->attributes = $item;
                     $transferRequest->details[] = $detail;
                 }
             }
-            if (count($_POST['TransactionTransferRequestDetail']) < count($transferRequest->details))
+            if (count($_POST['TransactionTransferRequestDetail']) < count($transferRequest->details)) {
                 array_splice($transferRequest->details, $i + 1);
-        }
-        else
+            }
+        } else {
             $transferRequest->details = array();
+        }
+    }
+    
+    protected function saveToExcelPartialDelivery($dataProvider, array $options = array()) {
+        set_time_limit(0);
+        ini_set('memory_limit', '1024M');
+
+        spl_autoload_unregister(array('YiiBase', 'autoload'));
+        include_once Yii::getPathOfAlias('ext.phpexcel.Classes') . DIRECTORY_SEPARATOR . 'PHPExcel.php';
+        spl_autoload_register(array('YiiBase', 'autoload'));
+
+        $objPHPExcel = new PHPExcel();
+
+        $startDate = $options['startDate'];
+        $endDate = $options['endDate']; 
+        
+        $documentProperties = $objPHPExcel->getProperties();
+        $documentProperties->setCreator('Raperind Motor');
+        $documentProperties->setTitle('Partial Delivery');
+
+        $worksheet = $objPHPExcel->setActiveSheetIndex(0);
+        $worksheet->setTitle('Partial Delivery');
+
+        $worksheet->mergeCells('A1:H1');
+        $worksheet->mergeCells('A2:H2');
+        $worksheet->mergeCells('A3:H3');
+
+        $worksheet->getStyle('A1:H5')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->getStyle('A1:H5')->getFont()->setBold(true);
+
+        $worksheet->setCellValue('A1', 'Raperind Motor');
+        $worksheet->setCellValue('A2', 'Transfer Request Partial Delivery');
+        $worksheet->setCellValue('A3', Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($startDate)) . ' - ' . Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($endDate)));
+
+        $worksheet->getStyle('A5:H5')->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+
+        $worksheet->setCellValue('A5', 'Transaction #');
+        $worksheet->setCellValue('B5', 'Tanggal');
+        $worksheet->setCellValue('C5', 'Umur (hari)');
+        $worksheet->setCellValue('D5', 'Status');
+        $worksheet->setCellValue('E5', 'Requester');
+        $worksheet->setCellValue('F5', 'Destination');
+        $worksheet->setCellValue('G5', 'Delivery Status');
+        $worksheet->setCellValue('H5', 'Input Date');
+
+        $worksheet->getStyle('A5:H5')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+
+        $counter = 6;
+        
+        foreach ($dataProvider->data as $i => $dataItem) {
+
+            $worksheet->setCellValue("A{$counter}", CHtml::value($dataItem, 'transfer_request_no'));
+            $worksheet->setCellValue("B{$counter}", CHtml::value($dataItem, 'transfer_request_date') . ' ' . CHtml::value($dataItem, 'transfer_request_time'));
+            $worksheet->setCellValue("C{$counter}", CHtml::value($dataItem, 'transactionDateInterval'));
+            $worksheet->setCellValue("D{$counter}", CHtml::value($dataItem, 'status_document'));
+            $worksheet->setCellValue("E{$counter}", CHtml::value($dataItem, 'requesterBranch.name'));
+            $worksheet->setCellValue("F{$counter}", CHtml::value($dataItem, 'destinationBranch.name'));
+            $worksheet->setCellValue("G{$counter}", CHtml::value($dataItem, 'totalRemainingQuantityDelivered'));
+            $worksheet->setCellValue("H{$counter}", CHtml::value($dataItem, 'created_datetime'));
+
+            $counter++;
+        }
+
+        for ($col = 'A'; $col !== 'Z'; $col++) {
+            $objPHPExcel->getActiveSheet()
+            ->getColumnDimension($col)
+            ->setAutoSize(true);
+        }
+
+        ob_end_clean();
+
+        header('Content-type: application/vnd.ms-excel');
+        header('Content-Disposition: attachment;filename="transfer_request_partial_delivery.xls"');
+        header('Cache-Control: max-age=0');
+
+        $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
+        $objWriter->save('php://output');
+
+        Yii::app()->end();
     }
 }

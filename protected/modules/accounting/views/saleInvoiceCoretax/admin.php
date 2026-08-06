@@ -33,7 +33,7 @@ $('#invoiceSearch').submit(function(){
     <div class="row">
         <div class="small-12 columns">
             <div class="clearfix page-action">
-                <!-- <a class="button success right" href="<?php //echo Yii::app()->baseUrl.'/transaction/invoiceHeader/create'; ?>"><span class="fa fa-plus"></span>Create Invoice Headers</a> -->
+                <a class="button success right" href="<?php echo Yii::app()->baseUrl.'/accounting/saleInvoiceCoretax/importCoretax'; ?>"><span class="fa fa-plus"></span>Import Coretax</a>
                 <h2>Invoice for Coretax</h2>
             </div>
 
