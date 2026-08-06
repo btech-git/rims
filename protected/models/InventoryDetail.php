@@ -322,6 +322,7 @@ class InventoryDetail extends CActiveRecord {
                     $subBrandSeriesIdConditionSql . $productSubMasterCategoryIdConditionSql . $productSubCategoryIdConditionSql . $productMasterCategoryIdConditionSql . 
                     $branchIdConditionSql . $productIdConditionSql . $productCodeConditionSql . $productNameConditionSql . " 
                 GROUP BY i.product_id
+                HAVING sale_price > 0
                 ORDER BY total_sale ASC
                 LIMIT 5000";
 

@@ -41,9 +41,11 @@
                                 <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $fastMovingItem['total_sale'])); ?>
                             </td>
                             <td style="text-align: right">
+                                <?php $numberOfMonths = $numberOfMonths == 0 ? 1 : $numberOfMonths; ?>
                                 <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $fastMovingItem['total_sale'] / $numberOfMonths)); ?>
                             </td>
                             <td style="text-align: right">
+                                <?php $numberOfWeeks = $numberOfWeeks == 0 ? 1 : $numberOfWeeks; ?>
                                 <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $fastMovingItem['total_sale'] / $numberOfWeeks)); ?>
                             </td>
                         </tr>
