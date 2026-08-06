@@ -152,7 +152,7 @@ class CashTransactionController extends Controller {
         }
         
         $coaDetailCriteria = new CDbCriteria;
-        $coaDetailCriteria->addCondition("SUBSTRING(t.code, -3 , 3) <> 000 AND t.coa_sub_category_id NOT IN (1, 2, 3) AND t.status = 'Approved'");
+        $coaDetailCriteria->addCondition("SUBSTRING(t.code, -3 , 3) <> 000 AND t.coa_sub_category_id NOT IN (1, 2, 3) AND t.is_approved = 1");
         $coaDetailCriteria->compare('t.code', $coaDetail->code . '%', true, 'AND', false);
         $coaDetailCriteria->compare('t.name', $coaDetail->name, true);
         $coaDetailCriteria->compare('t.coa_category_id', $coaDetail->coa_category_id);

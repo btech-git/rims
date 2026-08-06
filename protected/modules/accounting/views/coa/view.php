@@ -54,11 +54,11 @@ Yii::app()->clientScript->registerScript('coa', '
                 'status',
                 array(
                     'label' => 'Created',
-                    'value' => $model->createdDatetime,
+                    'value' => Yii::app()->dateFormatter->format("d MMMM yyyy", $model->createdDatetime),
                 ),
                 array(
                     'label' => 'Approved',
-                    'value' => $model->approvedDatetime,
+                    'value' => Yii::app()->dateFormatter->format("d MMMM yyyy", $model->approvedDatetime),
                 ),
             ),
         )); ?>
@@ -164,15 +164,22 @@ Yii::app()->clientScript->registerScript('coa', '
             ),
             'columns' => array(
                 'kode_transaksi',
-                'tanggal_transaksi',
+                array(
+                    'header' => 'Tanggal',
+                    'value' => 'Yii::app()->dateFormatter->format("d MMMM yyyy", $data->tanggal_transaksi)',
+                ),
                 'transaction_type',
+                'transaction_subject',
+                'remark',
                 array(
                     'header' => 'Debit', 
                     'value' => '$data->debet_kredit == "D" ? CHtml::encode(Yii::app()->numberFormatter->format("#,##0.00", $data->total)) : 0', 
+                    'htmlOptions' => array('style' => 'text-align:right'),
                 ),
                 array(
                     'header' => 'Kredit', 
                     'value' => '$data->debet_kredit == "K" ? CHtml::encode(Yii::app()->numberFormatter->format("#,##0.00", $data->total)) : 0', 
+                    'htmlOptions' => array('style' => 'text-align:right'),
                 ),
             )
         )); ?>
