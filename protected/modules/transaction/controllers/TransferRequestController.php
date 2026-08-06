@@ -472,7 +472,7 @@ class TransferRequestController extends Controller {
         $dataProvider = $model->searchByPartialDelivery();
         $dataProvider->criteria->addBetweenCondition('t.transfer_request_date', $startDate, $endDate);
         $dataProvider->criteria->addCondition('(SELECT SUM(d.quantity_delivery_left) FROM rims_transaction_transfer_request_detail d WHERE t.id = d.transfer_request_id) > 0');
-        $dataProvider->criteria->addCondition("t.status_document LIKE 'Approved%' AND t.user_id_cancelled IS NULL");
+        $dataProvider->criteria->addCondition("t.status_document LIKE '%Approved%' AND t.user_id_cancelled IS NULL");
         
         if (isset($_GET['SaveExcel'])) {
             $this->saveToExcelPartialDelivery($dataProvider, array(
