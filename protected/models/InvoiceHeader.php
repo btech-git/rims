@@ -469,7 +469,7 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
             'pagination' => array(
-                'pageSize' => 50000,
+                'pageSize' => 10000,
             ),
             'sort' => array(
                 'defaultOrder' => 't.invoice_date ASC, t.invoice_number ASC',
