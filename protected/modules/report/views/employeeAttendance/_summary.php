@@ -75,13 +75,20 @@
                     <td style="text-align: right"><?php echo CHtml::encode($lateDays); ?></td>
                     <td style="text-align: right"><?php echo CHtml::encode($overtimeDays); ?></td>
                     <?php $attendanceDays = isset($employeePeriodicallyAttendanceItem[16]['days']) ? $employeePeriodicallyAttendanceItem[16]['days'] : '0'; ?>
-                    <?php $attendanceRate = $attendanceDays / $workingDays; ?>
+                    <?php $attendanceRate = $attendanceDays / ($workingDays == 0 ? 1 : $workingDays); ?>
                     <?php $onTimeDays = $workingDays - $lateDays; ?>
                     <?php $onTimeRate = $onTimeDays / $attendanceDays; ?>
                     <?php $notOvertimeDays = $workingDays - $overtimeDays; ?>
                     <?php $notOvertimeRate = ($attendanceDays - $lateDays - $notOvertimeDays) / $attendanceDays; ?>
                     <?php $performanceIndexRate = ($attendanceRate + $onTimeRate + $notOvertimeRate) / 3; ?>
-                    <td style="text-align: right"><?php echo CHtml::encode(round($performanceIndexRate * 100, 2)); ?>%</td>
+                    <td style="text-align: right">
+                        <?php echo CHtml::link(CHtml::encode(round($performanceIndexRate * 100, 2)), Yii::app()->createUrl("report/employeeAttendance/indexPerformanceDetail", array(
+                            "EmployeeId" => $employeeId, 
+                            "StartDate" => $startDate, 
+                            "EndDate" => $endDate, 
+                            "BranchId" => $branchId, 
+                        )), array('target' => '_blank')); ?>%
+                    </td>
                     <?php $statusIndex = ''; ?>
                     <?php if ($performanceIndexRate >= 0.95): ?>
                         <?php $statusIndex = 'Sangat Baik'; ?>
