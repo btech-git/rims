@@ -91,14 +91,14 @@ class ReceivableCustomerController extends Controller {
         $startDate = AppParam::BEGINNING_TRANSACTION_DATE;
         $dataProvider = InvoiceHeader::model()->searchByReport();
         $dataProvider->criteria->addBetweenCondition('t.invoice_date', $startDate, $endDate);
-        $dataProvider->criteria->addCondition("t.user_id_cancelled IS NULL AND t.payment_left > 100");
+        $dataProvider->criteria->addCondition("t.user_id_cancelled IS NULL AND t.payment_left > 100 AND t.insurance_company_id IS NULL");
         $dataProvider->criteria->together = 'true';
         $dataProvider->criteria->with = array('customer');
         $dataProvider->criteria->addSearchCondition('customer.customer_type', 'Individual');
         
-//        if (isset($_GET['SaveExcelDetail'])) {
-//            $this->saveToExcelDetailTransaction($dataProvider, $endDate, $customer);
-//        }
+        if (isset($_GET['SaveExcelRetail'])) {
+            $this->saveToExcelRetailTransaction($dataProvider, $endDate);
+        }
 
         $this->render('transactionRetailInfo', array(
             'dataProvider' => $dataProvider,
@@ -314,6 +314,104 @@ class ReceivableCustomerController extends Controller {
         // We'll be outputting an excel file
         header('Content-type: application/vnd.ms-excel');
         header('Content-Disposition: attachment;filename="transaksi_piutang_customer.xls"');
+        header('Cache-Control: max-age=0');
+        
+        $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
+        $objWriter->save('php://output');
+
+        Yii::app()->end();
+    }
+    
+    protected function saveToExcelRetailTransaction($dataProvider, $endDate) {
+        set_time_limit(0);
+        ini_set('memory_limit', '1024M');
+
+        spl_autoload_unregister(array('YiiBase', 'autoload'));
+        include_once Yii::getPathOfAlias('ext.phpexcel.Classes') . DIRECTORY_SEPARATOR . 'PHPExcel.php';
+        spl_autoload_register(array('YiiBase', 'autoload'));
+
+        $objPHPExcel = new PHPExcel();
+
+        $documentProperties = $objPHPExcel->getProperties();
+        $documentProperties->setCreator('Raperind Motor');
+        $documentProperties->setTitle('Piutang Customer Retail');
+
+        $worksheet = $objPHPExcel->setActiveSheetIndex(0);
+        $worksheet->setTitle('Piutang Customer Retail');
+
+        $worksheet->mergeCells('A1:I1');
+        $worksheet->mergeCells('A2:I2');
+        $worksheet->mergeCells('A3:I3');
+        
+        $worksheet->getStyle('A1:I5')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->getStyle('A1:I5')->getFont()->setBold(true);
+        $worksheet->setCellValue('A1', 'Raperind Motor');
+        $worksheet->setCellValue('A2', 'Piutang Customer Retail');
+        $worksheet->setCellValue('A3', 'Per Tanggal ' . Yii::app()->dateFormatter->format('d MMMM yyyy', $endDate));
+
+        $worksheet->getStyle("A5:I5")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        
+        $worksheet->setCellValue('A5', 'Invoice #');
+        $worksheet->setCellValue('B5', 'Tanggal');
+        $worksheet->setCellValue('C5', 'Jatuh Tempo');
+        $worksheet->setCellValue('D5', 'Customer');
+        $worksheet->setCellValue('E5', 'Plat #');
+        $worksheet->setCellValue('F5', 'Kendaraan');
+        $worksheet->setCellValue('G5', 'Total');
+        $worksheet->setCellValue('H5', 'Payment');
+        $worksheet->setCellValue('I5', 'Remaining');
+        
+        $worksheet->getStyle("A5:I5")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        
+        $counter = 6;
+
+        $totalPriceSum = '0.00';
+        $paymentTotalSum = '0.00';
+        $paymentLeftSum = '0.00'; 
+
+        foreach ($dataProvider->data as $header) {
+            $totalPrice = CHtml::value($header, 'total_price'); 
+            $paymentTotal = CHtml::value($header, 'payment_amount');
+            $paymentLeft = CHtml::value($header, 'payment_left');
+            
+            $worksheet->setCellValue("A{$counter}", CHtml::value($header, 'invoice_number'));
+            $worksheet->setCellValue("B{$counter}", CHtml::value($header, 'invoice_date'));
+            $worksheet->setCellValue("C{$counter}", CHtml::value($header, 'due_date'));
+            $worksheet->setCellValue("D{$counter}", CHtml::value($header, 'customer.name'));
+            $worksheet->setCellValue("E{$counter}", CHtml::value($header, 'vehicle.plate_number'));
+            $worksheet->setCellValue("F{$counter}", CHtml::value($header, 'vehicle.carMake.name') . ' ' . CHtml::value($header, 'vehicle.carModel.name') . ' ' . CHtml::value($header, 'vehicle.carSubModel.name'));
+            $worksheet->setCellValue("G{$counter}", $totalPrice);
+            $worksheet->setCellValue("H{$counter}", $paymentTotal);
+            $worksheet->setCellValue("I{$counter}", $paymentLeft);
+            
+            $totalPriceSum += $totalPrice;
+            $paymentTotalSum += $paymentTotal;
+            $paymentLeftSum += $paymentLeft;
+
+            $counter++;
+        }
+        $worksheet->getStyle("A{$counter}:I{$counter}")->getFont()->setBold(true);
+        $worksheet->getStyle("A{$counter}:I{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A{$counter}:I{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
+        $worksheet->mergeCells("A{$counter}:F{$counter}");
+        
+        $worksheet->setCellValue("A{$counter}", 'Total');
+        $worksheet->setCellValue("G{$counter}", $totalPriceSum);
+        $worksheet->setCellValue("H{$counter}", $paymentTotalSum);
+        $worksheet->setCellValue("I{$counter}", $paymentLeftSum);
+
+        $counter++;
+
+        for ($col = 'A'; $col !== 'Z'; $col++) {
+            $objPHPExcel->getActiveSheet()
+            ->getColumnDimension($col)
+            ->setAutoSize(true);
+        }
+
+        ob_end_clean();
+        // We'll be outputting an excel file
+        header('Content-type: application/vnd.ms-excel');
+        header('Content-Disposition: attachment;filename="transaksi_piutang_customer_retail.xls"');
         header('Cache-Control: max-age=0');
         
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
