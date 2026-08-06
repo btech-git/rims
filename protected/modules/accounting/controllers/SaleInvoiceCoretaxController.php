@@ -128,12 +128,16 @@ class SaleInvoiceCoretaxController extends Controller {
             if ($i > 0) {
                 $coretaxNumber = $item[3];
                 $coretaxDate = $item[4];
+                $coretaxTotal = $item[10];
+                $coretaxTaxAmount = $item[11];
                 $invoiceNumber = substr($item[14], 0, -2);
                 
                 $invoiceHeader = InvoiceHeader::model()->find(array('condition' => 'invoice_number LIKE :invoice_number', 'params' => array(':invoice_number' => $invoiceNumber . '%')));
                 if ($invoiceHeader !== null) {
                     $invoiceHeader->transaction_tax_number = $coretaxNumber;
                     $invoiceHeader->transaction_tax_date = $coretaxDate;
+                    $invoiceHeader->grand_total_coretax = $coretaxTotal;
+                    $invoiceHeader->tax_amount_coretax = $coretaxTaxAmount;
                     $valid = $valid && $invoiceHeader->save();
                 }
             }
