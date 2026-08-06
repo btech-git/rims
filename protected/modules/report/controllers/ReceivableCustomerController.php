@@ -91,7 +91,7 @@ class ReceivableCustomerController extends Controller {
         $startDate = '2026-01-01'; //AppParam::BEGINNING_TRANSACTION_DATE;
         $dataProvider = InvoiceHeader::model()->searchByReport();
         $dataProvider->criteria->addBetweenCondition('t.invoice_date', $startDate, $endDate);
-        $dataProvider->criteria->addCondition("t.user_id_cancelled IS NULL"); // AND t.payment_left > 100 AND t.insurance_company_id IS NULL");
+        $dataProvider->criteria->addCondition("t.user_id_cancelled IS NULL AND t.insurance_company_id IS NULL");
         $dataProvider->criteria->together = 'true';
         $dataProvider->criteria->with = array('customer');
         $dataProvider->criteria->addSearchCondition('customer.customer_type', 'Individual');
