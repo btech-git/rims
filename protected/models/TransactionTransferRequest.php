@@ -309,7 +309,7 @@ class TransactionTransferRequest extends MonthlyTransactionActiveRecord {
         $criteria->compare('id', $this->id);
         $criteria->compare('transfer_request_no', $this->transfer_request_no, true);
         $criteria->compare('transfer_request_date', $this->transfer_request_date, true);
-        $criteria->compare('status_document', 'Approved');
+        $criteria->compare('status_document', $this->status_document);
         $criteria->compare('estimate_arrival_date', $this->estimate_arrival_date, true);
         $criteria->compare('requester_id', $this->requester_id);
         $criteria->compare('requester_branch_id', $this->requester_branch_id);
