@@ -81,14 +81,7 @@
                     <?php $notOvertimeDays = $workingDays - $overtimeDays; ?>
                     <?php $notOvertimeRate = ($attendanceDays - $lateDays - $notOvertimeDays) / $attendanceDays; ?>
                     <?php $performanceIndexRate = ($attendanceRate + $onTimeRate + $notOvertimeRate) / 3; ?>
-                    <td style="text-align: right">
-                        <?php echo CHtml::link(CHtml::encode(round($performanceIndexRate * 100, 2)), Yii::app()->createUrl("report/employeeAttendance/indexPerformanceDetail", array(
-                            "EmployeeId" => $employeeId, 
-                            "StartDate" => $startDate, 
-                            "EndDate" => $endDate, 
-                            "BranchId" => $branchId, 
-                        )), array('target' => '_blank')); ?>%
-                    </td>
+                    <td style="text-align: right"><?php echo CHtml::encode(round($performanceIndexRate * 100, 2)); ?>%</td>
                     <?php $statusIndex = ''; ?>
                     <?php if ($performanceIndexRate >= 0.95): ?>
                         <?php $statusIndex = 'Sangat Baik'; ?>
@@ -97,7 +90,7 @@
                     <?php else: ?>
                         <?php $statusIndex = 'Perlu Evaluasi'; ?>
                     <?php endif; ?>
-                    <td style="text-align: right"><?php echo CHtml::encode($statusIndex); ?></td>
+                    <td><?php echo CHtml::encode($statusIndex); ?></td>
                 </tr>
             <?php endforeach; ?>
         </tbody>
