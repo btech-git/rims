@@ -38,8 +38,8 @@
                     <?php $saleQuantity = isset($dataItem[$branch->id]) ? $dataItem[$branch->id] : 0; ?>
                     <td style="text-align: center">
                         <?php echo CHtml::link($saleQuantity, array(
-                            '/report/monthlyTireSaleTransaction/transactionInfo', 
-//                            'productId' => $product->id, 
+                            '/report/monthlyTireCustomerSaleTransaction/transactionInfo', 
+                            'customerId' => $customerId, 
                             'startDate' => $startDate, 
                             'endDate' => $endDate,
                             'branchId' => $branch->id,
@@ -53,8 +53,8 @@
                 <?php endforeach; ?>
                 <td style="text-align: center">
                     <?php echo CHtml::link($totalQuantity, array(
-                        '/report/monthlyTireSaleTransaction/transactionInfo', 
-//                        'productId' => $product->id, 
+                        '/report/monthlyTireCustomerSaleTransaction/transactionInfo', 
+                        'customerId' => $customerId, 
                         'startDate' => $startDate, 
                         'endDate' => $endDate,
                         'branchId' => null,

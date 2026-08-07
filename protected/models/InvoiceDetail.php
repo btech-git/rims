@@ -730,6 +730,38 @@ class InvoiceDetail extends CActiveRecord {
         ));
     }
     
+    public function searchByCustomerTransactionTireInfo($customerId, $startDate, $endDate, $branchId, $page) {
+        $branchConditionSql = '';
+        
+        $criteria = new CDbCriteria;
+
+        $criteria->together = 'true';
+        $criteria->with = array(
+            'invoice',
+            'product',
+        );
+
+        if (!empty($branchId)) {
+            $branchConditionSql = ' AND invoice.branch_id = :branch_id';
+            $criteria->params[':branch_id'] = $branchId;
+        }
+        
+        $criteria->compare('invoice.customer_id', $customerId);
+        $criteria->addBetweenCondition('invoice.invoice_date', $startDate, $endDate);
+        $criteria->addCondition("invoice.status NOT LIKE '%CANCEL%' AND product.product_sub_category_id IN (442, 443, 444)" . $branchConditionSql);
+        
+        return new CActiveDataProvider($this, array(
+            'criteria' => $criteria,
+            'sort' => array(
+                'defaultOrder' => 'invoice.invoice_date ASC',
+            ),
+            'pagination' => array(
+                'pageSize' => 500,
+                'currentPage' => $page - 1,
+            ),
+        ));
+    }
+    
     public static function getYearlyTireSaleTransactionData($year, $productId, $productCode, $productName, $branchId, $brandId, $subBrandId, $subBrandSeriesId, $subCategoryId, $subMasterCategoryId) {
         $productIdConditionSql = '';
         $productNameConditionSql = '';
