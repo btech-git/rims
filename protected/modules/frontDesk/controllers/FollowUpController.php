@@ -51,9 +51,10 @@ class FollowUpController extends Controller {
         $carSubModel = (isset($_GET['CarSubModel'])) ? $_GET['CarSubModel'] : '';
         $customerName = (isset($_GET['CustomerName'])) ? $_GET['CustomerName'] : '';
         $startMileage = (isset($_GET['StartMileage'])) ? $_GET['StartMileage'] : '';
+        $currentPage = (isset($_GET['page'])) ? $_GET['page'] : '';
 
         $model = Search::bind(new InvoiceHeader('search'), isset($_GET['InvoiceHeader']) ? $_GET['InvoiceHeader'] : '');
-        $dataProvider = $model->searchByFollowUp();
+        $dataProvider = $model->searchByFollowUp($currentPage);
 
         if ($startMileage !== '') {
             $endMileages = array(
@@ -119,6 +120,7 @@ class FollowUpController extends Controller {
             'followUpStartDate' => $followUpStartDate,
             'followUpEndDate' => $followUpEndDate,
             'startMileage' => $startMileage,
+            'currentPage' => $currentPage,
         ));
     }
     

@@ -239,10 +239,11 @@ class MaterialRequestDetail extends CActiveRecord {
         
         $sql = "SELECT MONTH(i.transaction_date) AS material_month, d.product_id AS product_id, MAX(p.name) AS product_name, MAX(p.manufacturer_code) AS product_code, 
                     MAX(b.name) AS brand_name, MAX(sb.name) AS sub_brand_name, MAX(sbs.name) AS sub_brand_series_name, MAX(mc.name) AS master_category_name, 
-                    MAX(sc.name) AS sub_category_name, MAX(smc.name) AS sub_master_category_name, SUM(d.quantity) AS total_quantity
+                    MAX(sc.name) AS sub_category_name, MAX(smc.name) AS sub_master_category_name, SUM(d.quantity) AS total_quantity, MAX(u.name) AS unit_name
                 FROM " . MaterialRequestDetail::model()->tableName() . " d
                 INNER JOIN " . MaterialRequestHeader::model()->tableName() . " i ON i.id = d.material_request_header_id
                 INNER JOIN " . Product::model()->tableName() . " p ON p.id = d.product_id
+                INNER JOIN " . Unit::model()->tableName() . " u ON u.id = d.unit_id
                 INNER JOIN " . Brand::model()->tableName() . " b ON b.id = p.brand_id
                 INNER JOIN " . SubBrand::model()->tableName() . " sb ON sb.id = p.sub_brand_id
                 INNER JOIN " . SubBrandSeries::model()->tableName() . " sbs ON sbs.id = p.sub_brand_series_id
@@ -322,11 +323,12 @@ class MaterialRequestDetail extends CActiveRecord {
         }
         
         $sql = "SELECT d.product_id, i.branch_id, MAX(p.name) AS product_name, MAX(p.manufacturer_code) AS product_code, MAX(b.name) AS brand_name, 
-                    MAX(sb.name) AS sub_brand_name, MAX(sbs.name) AS sub_brand_series_name, MAX(mc.name) AS master_category_name, 
+                    MAX(sb.name) AS sub_brand_name, MAX(sbs.name) AS sub_brand_series_name, MAX(mc.name) AS master_category_name, MAX(u.name) AS unit_name, 
                     MAX(sc.name) AS sub_category_name, MAX(smc.name) AS sub_master_category_name, SUM(d.quantity) AS total_quantity
                 FROM " . MaterialRequestDetail::model()->tableName() . " d
                 INNER JOIN " . MaterialRequestHeader::model()->tableName() . " i ON i.id = d.material_request_header_id
                 INNER JOIN " . Product::model()->tableName() . " p ON p.id = d.product_id
+                INNER JOIN " . Unit::model()->tableName() . " u ON u.id = d.unit_id
                 INNER JOIN " . Brand::model()->tableName() . " b ON b.id = p.brand_id
                 INNER JOIN " . SubBrand::model()->tableName() . " sb ON sb.id = p.sub_brand_id
                 INNER JOIN " . SubBrandSeries::model()->tableName() . " sbs ON sbs.id = p.sub_brand_series_id

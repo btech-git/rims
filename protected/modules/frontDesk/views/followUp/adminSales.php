@@ -36,6 +36,7 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                     <span class="prefix">Customer</span>
                                 </div>
                                 <div class="small-8 columns">
+                                    <?php echo CHtml::hiddenField('page', $currentPage, array('size' => 3, 'id' => 'CurrentPage')); ?>
                                     <?php echo CHtml::textField('CustomerName', $customerName); ?>
                                 </div>
                             </div>
@@ -51,9 +52,26 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                 <div class="small-8 columns">
                                     <?php echo CHtml::dropDownlist('StartMileage', $startMileage, array(
                                         0 => '0 - 9.999',
-                                        10000 => '10.000 - 49.999',
-                                        50000 => '50.000 - 99.999',
-                                        100000 => '100.000 - 149.999',
+                                        10000 => '10.000 - 19.999',
+                                        20000 => '20.000 - 29.999',
+                                        30000 => '30.000 - 39.999',
+                                        40000 => '40.000 - 49.999',
+                                        50000 => '50.000 - 59.999',
+                                        60000 => '60.000 - 69.999',
+                                        70000 => '70.000 - 79.999',
+                                        80000 => '80.000 - 89.999',
+                                        90000 => '90.000 - 99.999',
+                                        100000 => '100.000 - 109.999',
+                                        110000 => '110.000 - 119.999',
+                                        120000 => '120.000 - 129.999',
+                                        130000 => '130.000 - 139.999',
+                                        140000 => '140.000 - 149.999',
+                                        150000 => '150.000 - 159.999',
+                                        160000 => '160.000 - 169.999',
+                                        170000 => '170.000 - 179.999',
+                                        180000 => '180.000 - 189.999',
+                                        190000 => '190.000 - 199.999',
+                                        200000 => '200.000 - 109.999',
                                     ), array('empty' => '-- All --')); ?>
                                 </div>
                             </div>
@@ -64,10 +82,10 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                         <div class="field">
                             <div class="row collapse">
                                 <div class="small-4 columns">
-                                    <span class="prefix">Branch</span>
+                                    <span class="prefix">Plate #</span>
                                 </div>
                                 <div class="small-8 columns">
-                                    <?php echo CHtml::activeDropDownlist($model, 'branch_id', CHtml::listData(Branch::model()->findAllbyAttributes(array('status' => 'Active')), 'id', 'name'), array('empty' => '-- All Branch --')); ?>
+                                    <?php echo CHtml::textField('PlateNumber', $plateNumber); ?>
                                 </div>
                             </div>
                         </div>
@@ -280,13 +298,10 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
     </div>
 </div>
 
-<div class="hide">
-    <div class="right">
-        <?php $this->widget('system.web.widgets.pagers.CLinkPager', array(
-            'itemCount' => $dataProvider->pagination->itemCount,
-            'pageSize' => $dataProvider->pagination->pageSize,
-            'currentPage' => $dataProvider->pagination->getCurrentPage(false),
-        )); ?>
-    </div>
-    <div class="clear"></div>
+<div class="right">
+    <?php $this->widget('system.web.widgets.pagers.CLinkPager', array(
+        'itemCount' => $dataProvider->pagination->itemCount,
+        'pageSize' => $dataProvider->pagination->pageSize,
+        'currentPage' => $dataProvider->pagination->getCurrentPage(false),
+    )); ?>
 </div>

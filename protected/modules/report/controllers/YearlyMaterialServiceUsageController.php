@@ -49,6 +49,7 @@ class YearlyMaterialServiceUsageController extends Controller {
             $yearlyMaterialServiceUsageReportData[$reportItem['product_id']]['master_category_name'] = $reportItem['master_category_name'];
             $yearlyMaterialServiceUsageReportData[$reportItem['product_id']]['sub_category_name'] = $reportItem['sub_category_name'];
             $yearlyMaterialServiceUsageReportData[$reportItem['product_id']]['sub_master_category_name'] = $reportItem['sub_master_category_name'];
+            $yearlyMaterialServiceUsageReportData[$reportItem['product_id']]['unit_name'] = $reportItem['unit_name'];
             $yearlyMaterialServiceUsageReportData[$reportItem['product_id']]['totals'][$monthValue] = $reportItem['total_quantity'];
         }
 
@@ -191,7 +192,8 @@ class YearlyMaterialServiceUsageController extends Controller {
         $worksheet->setCellValue('D5', 'Name');
         $worksheet->setCellValue('E5', 'Brand');
         $worksheet->setCellValue('F5', 'Category');
-        $columnCounter = 'G';
+        $worksheet->setCellValue('G5', 'Satuan');
+        $columnCounter = 'H';
         for ($month = 1; $month <= 12; $month++) {
             $worksheet->setCellValue("{$columnCounter}5", $monthList[$month]);
             $columnCounter++;
@@ -218,7 +220,7 @@ class YearlyMaterialServiceUsageController extends Controller {
         $worksheet->getStyle("A5:{$columnCounter}5")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
         $worksheet->getStyle("A5:{$columnCounter}5")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
-        $counter = 7;
+        $counter = 6;
         $ordinal = 0;
         
         $maxMonthNum = (int) $year === (int) $yearNow ? $monthNow : 12;
@@ -231,9 +233,10 @@ class YearlyMaterialServiceUsageController extends Controller {
             $worksheet->setCellValue("D{$counter}", $yearlyMaterialServiceUsageReportDataItem['product_name']);
             $worksheet->setCellValue("E{$counter}", $yearlyMaterialServiceUsageReportDataItem['brand_name'] . ' - ' . $yearlyMaterialServiceUsageReportDataItem['sub_brand_name'] . ' - ' . $yearlyMaterialServiceUsageReportDataItem['sub_brand_series_name']);
             $worksheet->setCellValue("F{$counter}", $yearlyMaterialServiceUsageReportDataItem['master_category_name'] . ' - ' . $yearlyMaterialServiceUsageReportDataItem['sub_master_category_name'] . ' - ' . $yearlyMaterialServiceUsageReportDataItem['sub_category_name']);
+            $worksheet->setCellValue("G{$counter}", $yearlyMaterialServiceUsageReportDataItem['unit_name']);
             
             $materialTotals = array();
-            $columnCounter = 'G';
+            $columnCounter = 'H';
             
             for ($month = 1; $month <= 12; $month++) {
                 $materialTotal = isset($yearlyMaterialServiceUsageReportDataItem['totals'][$month]) ? $yearlyMaterialServiceUsageReportDataItem['totals'][$month] : '0.00';
@@ -271,7 +274,7 @@ class YearlyMaterialServiceUsageController extends Controller {
             $counter++;
         }
 
-        for ($col = 'A'; $col !== 'AB'; $col++) {
+        for ($col = 'A'; $col !== 'AZ'; $col++) {
             $objPHPExcel->getActiveSheet()
             ->getColumnDimension($col)
             ->setAutoSize(true);

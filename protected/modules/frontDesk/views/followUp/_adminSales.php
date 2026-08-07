@@ -41,6 +41,8 @@ Yii::app()->clientScript->registerCss('_report', '
                 <th>Warrant (3 Days)</th>
                 <th>Follow Up (3 Months)</th>
                 <th>Last Service (Days)</th>
+                <th>Service List</th>
+                <th>Parts List</th>
                 <th>Feedback</th>
             </tr>
         </thead>
@@ -48,9 +50,19 @@ Yii::app()->clientScript->registerCss('_report', '
             <?php foreach ($dataProvider->data as $i => $header): ?>
                 <tr class="items1">
                     <td><?php echo CHtml::encode($i+1); ?></td>
-                    <td><?php echo CHtml::encode(CHtml::value($header, 'customer.name')); ?></td>
+                    <td>
+                        <?php echo CHtml::link($header->customer->name, array(
+                            "/master/customer/view", 
+                            "id"=>$header->customer_id
+                        ), array('target' => '_blank',)); ?>
+                    </td>
                     <td><?php echo CHtml::encode(CHtml::value($header, 'customer.mobile_phone')); ?></td>
-                    <td><?php echo CHtml::encode(CHtml::value($header, 'vehicle.plate_number')); ?></td>
+                    <td>
+                        <?php echo CHtml::link($header->vehicle->plate_number, array(
+                            "/master/vehicle/view", 
+                            "id"=>$header->vehicle_id
+                        ), array('target' => '_blank',)); ?>
+                    </td>
                     <td>
                         <?php echo CHtml::encode(CHtml::value($header, 'vehicle.carMake.name')); ?> -
                         <?php echo CHtml::encode(CHtml::value($header, 'vehicle.carModel.name')); ?> -
@@ -70,6 +82,8 @@ Yii::app()->clientScript->registerCss('_report', '
                     <td><?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($header->warranty_date))); ?></td>
                     <td><?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($header->follow_up_date))); ?></td>
                     <td><?php echo CHtml::encode(CHtml::value($header, 'lastInvoiceDaysNumber')); ?></td>
+                    <td><?php echo CHtml::encode(CHtml::value($header, 'serviceLists')); ?></td>
+                    <td><?php echo CHtml::encode(CHtml::value($header, 'productLists')); ?></td>
                     <td>
                         <?php if (empty($header->registrationTransaction->feedback)): ?>
                             <?php echo CHtml::link('Feedback', Yii::app()->createUrl("frontDesk/followUp/updateFeedback", array("id"=>$header->registration_transaction_id))); ?>

@@ -48,12 +48,11 @@ class MonthlyMaterialServiceUsageController extends Controller {
             $monthlyMaterialServiceUsageReportData[$reportItem['product_id']]['master_category_name'] = $reportItem['master_category_name'];
             $monthlyMaterialServiceUsageReportData[$reportItem['product_id']]['sub_category_name'] = $reportItem['sub_category_name'];
             $monthlyMaterialServiceUsageReportData[$reportItem['product_id']]['sub_master_category_name'] = $reportItem['sub_master_category_name'];
+            $monthlyMaterialServiceUsageReportData[$reportItem['product_id']]['unit_name'] = $reportItem['unit_name'];
             $monthlyMaterialServiceUsageReportData[$reportItem['product_id']]['totals'][$reportItem['branch_id']] = $reportItem['total_quantity'];
         }
-
         
         $productIds = array_map(function($reportItem) { return $reportItem['product_id']; }, $monthlyMaterialServiceUsageReport);
-        
         $inventoryAllBranchCurrentStocks = InventoryDetail::getInventoryAllBranchCurrentStocks($productIds);
         
         $inventoryAllBranchCurrentStockData = array();
@@ -188,8 +187,8 @@ class MonthlyMaterialServiceUsageController extends Controller {
         
         $numberOfDays = cal_days_in_month(CAL_GREGORIAN, $month, $year);
         
-        $columnStart = 'G';
-        $columnEnd = 'J';
+        $columnStart = 'H';
+        $columnEnd = 'K';
         
         foreach ($branches as $branch) {
             $worksheet->mergeCells("{$columnStart}5:{$columnEnd}5");
@@ -208,8 +207,9 @@ class MonthlyMaterialServiceUsageController extends Controller {
         $worksheet->setCellValue('D6', 'Name');
         $worksheet->setCellValue('E6', 'Brand');
         $worksheet->setCellValue('F6', 'Category');
+        $worksheet->setCellValue('G6', 'Satuan');
         
-        $columnCounter = 'G';
+        $columnCounter = 'H';
         foreach ($branches as $branch) {
             $worksheet->setCellValue("{$columnCounter}6", 'Total Jual');
             $columnCounter++;
@@ -244,10 +244,11 @@ class MonthlyMaterialServiceUsageController extends Controller {
             $worksheet->setCellValue("D{$counter}", $monthlyMaterialServiceUsageReportDataItem['product_name']);
             $worksheet->setCellValue("E{$counter}", $monthlyMaterialServiceUsageReportDataItem['brand_name'] . ' - ' . $monthlyMaterialServiceUsageReportDataItem['sub_brand_name'] . ' - ' . $monthlyMaterialServiceUsageReportDataItem['sub_brand_series_name']);
             $worksheet->setCellValue("F{$counter}", $monthlyMaterialServiceUsageReportDataItem['master_category_name'] . ' - ' . $monthlyMaterialServiceUsageReportDataItem['sub_master_category_name'] . ' - ' . $monthlyMaterialServiceUsageReportDataItem['sub_category_name']);
+            $worksheet->setCellValue("G{$counter}", $monthlyMaterialServiceUsageReportDataItem['unit_name']);
             
             $invoiceTotals = array();
             $quantityStocks = array();
-            $columnCounter = 'G';
+            $columnCounter = 'H';
             
             foreach ($branches as $branch) {
                 $invoiceTotal = isset($monthlyMaterialServiceUsageReportDataItem['totals'][$branch->id]) ? $monthlyMaterialServiceUsageReportDataItem['totals'][$branch->id] : '0.00';

@@ -1370,7 +1370,7 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
         return $resultSet;
     }
     
-    public function searchByFollowUp() {
+    public function searchByFollowUp($pageNumber) {
         // @todo Please modify the following code to remove attributes that should not be searched.
 
         $criteria = new CDbCriteria;
@@ -1417,6 +1417,7 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
             ),
             'pagination' => array(
                 'pageSize' => 100,
+                'currentPage' => $pageNumber - 1,
             ),
         ));
     }
