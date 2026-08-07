@@ -28,6 +28,12 @@ class FollowUpController extends Controller {
             }
         }
 
+        if ($filterChain->action->id === 'saveToExcelCustomerFollowUp') {
+            if (!(Yii::app()->user->checkAccess('director'))) {
+                $this->redirect(array('/site/login'));
+            }
+        }
+
         $filterChain->run();
     }
 

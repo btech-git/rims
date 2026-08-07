@@ -530,12 +530,13 @@ class Service extends CActiveRecord {
         }
         
         $sql = "
-            SELECT s.id, s.code, s.name, c.name as category, t.name as type, po.sale_total as total, po.quantity as total_quantity
+            SELECT s.id, s.code, s.name, c.name as category, t.name as type, po.sale_total as total, po.quantity as total_quantity, po.total_tax, po.grand_total
             FROM " . Service::model()->tableName() . " s
             INNER JOIN " . ServiceCategory::model()->tableName() . " c ON c.id = s.service_category_id
             INNER JOIN " . ServiceType::model()->tableName() . " t ON t.id = s.service_type_id
             INNER JOIN (
-                SELECT p.service_id, SUM(p.total_price) AS sale_total, COUNT(p.service_id) AS quantity
+                SELECT p.service_id, SUM(p.total_price) AS sale_total, COUNT(p.service_id) AS quantity, SUM(p.total_price * h.tax_percentage / 100) AS total_tax,
+                    SUM(p.total_price * (1 + h.tax_percentage / 100)) AS grand_total
                 FROM " . InvoiceDetail::model()->tableName() . " p
                 INNER JOIN " . InvoiceHeader::model()->tableName() . " h ON h.id = p.invoice_id
                 WHERE substr(h.invoice_date, 1, 10) BETWEEN :start_date AND :end_date AND h.status NOT LIKE '%CANCEL%'" . $branchConditionSql . "

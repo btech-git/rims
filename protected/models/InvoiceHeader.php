@@ -1413,7 +1413,7 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
             'sort' => array(
-                'defaultOrder' => 'invoice_date DESC',
+                'defaultOrder' => 'invoice_date ASC',
             ),
             'pagination' => array(
                 'pageSize' => 100,

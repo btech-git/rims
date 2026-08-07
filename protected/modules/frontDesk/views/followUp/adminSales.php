@@ -135,7 +135,7 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                         <div class="field">
                             <div class="row collapse">
                                 <div class="small-4 columns">
-                                    <span class="prefix">Tanggal Invoice</span>
+                                    <span class="prefix">Invoice</span>
                                 </div>
                                 <div class="small-4 columns">
                                     <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(
@@ -173,7 +173,7 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                         <div class="field">
                             <div class="row collapse">
                                 <div class="small-4 columns">
-                                    <span class="prefix">Tanggal Warranty</span>
+                                    <span class="prefix">Warranty</span>
                                 </div>
                                 <div class="small-4 columns">
                                     <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(
@@ -211,7 +211,7 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                         <div class="field">
                             <div class="row collapse">
                                 <div class="small-4 columns">
-                                    <span class="prefix">Tanggal Follow Up</span>
+                                    <span class="prefix">Follow Up</span>
                                 </div>
                                 <div class="small-4 columns">
                                     <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(
@@ -251,7 +251,9 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                 <div class="row buttons">
                     <?php echo CHtml::submitButton('Tampilkan', array('onclick' => '$("#CurrentSort").val(""); return true;')); ?>
                     <?php echo CHtml::submitButton('Hapus', array('name' => 'ResetFilter'));  ?>
-                    <?php echo CHtml::submitButton('Simpan ke Excel', array('name' => 'SaveExcel')); ?>
+                    <?php if (Yii::app()->user->checkAccess('director')): ?>
+                        <?php echo CHtml::submitButton('Simpan ke Excel', array('name' => 'SaveExcel')); ?>
+                    <?php endif; ?>
                 </div>
 
                 <?php echo CHtml::endForm(); ?>
