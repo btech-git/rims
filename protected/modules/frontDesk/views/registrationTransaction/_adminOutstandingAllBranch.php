@@ -17,6 +17,7 @@
                 <th>Warna</th>
                 <th>RG #</th>
                 <th>Tanggal RG</th>
+                <th>Umur (hari)</th>
                 <th>Customer</th>
                 <th>Customer SPK #</th>
                 <th>Services</th>
@@ -46,6 +47,10 @@
                         )), array('target' => '_blank')); ?>
                     </td>
                     <td><?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($outstandingRegistrationItem['transaction_date']))); ?></td>
+                    <td>
+                        <?php $outstandingDays = date_diff(date_create($outstandingRegistrationItem['transaction_date']), date_create(date('Y-m-d'))); ?>
+                        <?php echo CHtml::encode($outstandingDays->format("%a days")); ?>
+                    </td>
                     <td><?php echo CHtml::encode($outstandingRegistrationItem['customer_name']); ?></td>
                     <td>
                         <?php echo CHtml::link(CHtml::encode($outstandingRegistrationItem['customer_work_order_number']), Yii::app()->createUrl("frontDesk/registrationTransaction/view", array(

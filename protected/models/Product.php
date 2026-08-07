@@ -1059,7 +1059,75 @@ class Product extends CActiveRecord {
         }
         
         $sql = "
+            SELECT COALESCE(SUM(p.total_price * (1 + r.tax_percentage / 100)), 0) AS total 
+            FROM " . InvoiceDetail::model()->tableName() . " p 
+            INNER JOIN " . InvoiceHeader::model()->tableName() . " r ON r.id = p.invoice_id
+            INNER JOIN " . Customer::model()->tableName() . " c ON c.id = r.customer_id
+            WHERE p.product_id = :product_id AND substr(r.invoice_date, 1, 10) BETWEEN :start_date AND :end_date AND r.status NOT LIKE '%CANCEL%'" . $branchConditionSql . $customerTypeConditionSql . "
+            GROUP BY p.product_id
+        ";
+
+        $value = Yii::app()->db->createCommand($sql)->queryScalar($params);
+
+        return ($value === false) ? 0 : $value;
+    }
+     
+    public function getTotalPrice($startDate, $endDate, $branchId, $customerType) {
+        $branchConditionSql = '';
+        $customerTypeConditionSql = '';
+        
+        $params = array(
+            ':product_id' => $this->id,
+            ':start_date' => $startDate,
+            ':end_date' => $endDate,
+        );
+        
+        if (!empty($branchId)) {
+            $branchConditionSql = ' AND r.branch_id = :branch_id';
+            $params[':branch_id'] = $branchId;
+        }
+        
+        if (!empty($customerType)) {
+            $customerTypeConditionSql = ' AND c.customer_type = :customer_type';
+            $params[':customer_type'] = $customerType;
+        }
+        
+        $sql = "
             SELECT COALESCE(SUM(p.total_price), 0) AS total 
+            FROM " . InvoiceDetail::model()->tableName() . " p 
+            INNER JOIN " . InvoiceHeader::model()->tableName() . " r ON r.id = p.invoice_id
+            INNER JOIN " . Customer::model()->tableName() . " c ON c.id = r.customer_id
+            WHERE p.product_id = :product_id AND substr(r.invoice_date, 1, 10) BETWEEN :start_date AND :end_date AND r.status NOT LIKE '%CANCEL%'" . $branchConditionSql . $customerTypeConditionSql . "
+            GROUP BY p.product_id
+        ";
+
+        $value = Yii::app()->db->createCommand($sql)->queryScalar($params);
+
+        return ($value === false) ? 0 : $value;
+    }
+     
+    public function getTotalTax($startDate, $endDate, $branchId, $customerType) {
+        $branchConditionSql = '';
+        $customerTypeConditionSql = '';
+        
+        $params = array(
+            ':product_id' => $this->id,
+            ':start_date' => $startDate,
+            ':end_date' => $endDate,
+        );
+        
+        if (!empty($branchId)) {
+            $branchConditionSql = ' AND r.branch_id = :branch_id';
+            $params[':branch_id'] = $branchId;
+        }
+        
+        if (!empty($customerType)) {
+            $customerTypeConditionSql = ' AND c.customer_type = :customer_type';
+            $params[':customer_type'] = $customerType;
+        }
+        
+        $sql = "
+            SELECT COALESCE(SUM(p.total_price * r.tax_percentage / 100), 0) AS total 
             FROM " . InvoiceDetail::model()->tableName() . " p 
             INNER JOIN " . InvoiceHeader::model()->tableName() . " r ON r.id = p.invoice_id
             INNER JOIN " . Customer::model()->tableName() . " c ON c.id = r.customer_id

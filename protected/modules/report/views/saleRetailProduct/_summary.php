@@ -20,53 +20,67 @@ Yii::app()->clientScript->registerCss('_report', '
 
 <br />
 
-<table class="report">
-    <thead style="position: sticky; top: 0">
-        <tr id="header1">
-            <th class="width1-1">ID</th>
-            <th class="width1-2">Code</th>
-            <th class="width1-3">Name</th>
-            <th class="width1-4">Brand</th>
-            <th class="width1-5">Category</th>
-            <th class="width1-6">Quantity</th>
-            <th class="width1-7">Satuan</th>
-            <th class="width1-8">Total</th>
-        </tr>
-    </thead>
-    <tbody>
-        <?php $totalQuantity = '0.00'; ?>
-        <?php $totalSale = '0.00'; ?>
-        <?php foreach ($saleRetailProductSummary->dataProvider->data as $header): ?>
-            <?php $totalQuantitySales = $header->getTotalQuantitySales($startDate, $endDate, $branchId, $customerType); ?>
-            <?php $totalAmountSales = $header->getTotalSales($startDate, $endDate, $branchId, $customerType); ?>
-            <tr class="items1">
-                <td><?php echo CHtml::encode(CHtml::value($header, 'id')); ?></td>
-                <td><?php echo CHtml::encode(CHtml::value($header, 'manufacturer_code')); ?></td>
-                <td><?php echo CHtml::encode(CHtml::value($header, 'name')); ?></td>
-                <td>
-                    <?php echo CHtml::encode(CHtml::value($header, 'brand.name')); ?> - 
-                    <?php echo CHtml::encode(CHtml::value($header, 'subBrand.name')); ?> - 
-                    <?php echo CHtml::encode(CHtml::value($header, 'subBrandSeries.name')); ?>
-                </td>
-                <td>
-                    <?php echo CHtml::encode(CHtml::value($header, 'productMasterCategory.name')); ?> -
-                    <?php echo CHtml::encode(CHtml::value($header, 'productSubMasterCategory.name')); ?> - 
-                    <?php echo CHtml::encode(CHtml::value($header, 'productSubCategory.name')); ?>
-                </td>
-                <td style="text-align: center"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalQuantitySales)); ?></td>
-                <td><?php echo CHtml::encode(CHtml::value($header, 'unit.name')); ?></td>
-                <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalAmountSales)); ?></td>
+<div class="table_wrapper">
+    <table class="responsive">
+        <thead style="position: sticky; top: 0">
+            <tr id="header1">
+                <th class="width1-1">ID</th>
+                <th class="width1-2">Code</th>
+                <th class="width1-3">Name</th>
+                <th class="width1-4">Brand</th>
+                <th class="width1-5">Category</th>
+                <th class="width1-6">Quantity</th>
+                <th class="width1-7">Satuan</th>
+                <th class="width1-8">DPP</th>
+                <th class="width1-8">PPn</th>
+                <th class="width1-8">Total</th>
             </tr>
-            <?php $totalQuantity += $totalQuantitySales; ?>
-            <?php $totalSale += $totalAmountSales; ?>
-        <?php endforeach; ?>
-    </tbody>
-    <tfoot>
-        <tr>
-            <td colspan="5" style="text-align: right; font-weight: bold">Total Sales</td>
-            <td style="text-align: right; font-weight: bold"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalQuantity)); ?></td>
-            <td></td>
-            <td style="text-align: right; font-weight: bold"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalSale)); ?></td>
-        </tr>
-    </tfoot>
-</table>
+        </thead>
+        <tbody>
+            <?php $totalQuantity = '0.00'; ?>
+            <?php $totalPrice = '0.00'; ?>
+            <?php $totalTax = '0.00'; ?>
+            <?php $totalSale = '0.00'; ?>
+            <?php foreach ($saleRetailProductSummary->dataProvider->data as $header): ?>
+                <?php $totalQuantitySales = $header->getTotalQuantitySales($startDate, $endDate, $branchId, $customerType); ?>
+                <?php $totalPriceSales = $header->getTotalPrice($startDate, $endDate, $branchId, $customerType); ?>
+                <?php $totalTaxSales = $header->getTotalTax($startDate, $endDate, $branchId, $customerType); ?>
+                <?php $totalAmountSales = $header->getTotalSales($startDate, $endDate, $branchId, $customerType); ?>
+                <tr class="items1">
+                    <td><?php echo CHtml::encode(CHtml::value($header, 'id')); ?></td>
+                    <td><?php echo CHtml::encode(CHtml::value($header, 'manufacturer_code')); ?></td>
+                    <td><?php echo CHtml::encode(CHtml::value($header, 'name')); ?></td>
+                    <td>
+                        <?php echo CHtml::encode(CHtml::value($header, 'brand.name')); ?> - 
+                        <?php echo CHtml::encode(CHtml::value($header, 'subBrand.name')); ?> - 
+                        <?php echo CHtml::encode(CHtml::value($header, 'subBrandSeries.name')); ?>
+                    </td>
+                    <td>
+                        <?php echo CHtml::encode(CHtml::value($header, 'productMasterCategory.name')); ?> -
+                        <?php echo CHtml::encode(CHtml::value($header, 'productSubMasterCategory.name')); ?> - 
+                        <?php echo CHtml::encode(CHtml::value($header, 'productSubCategory.name')); ?>
+                    </td>
+                    <td style="text-align: center"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalQuantitySales)); ?></td>
+                    <td><?php echo CHtml::encode(CHtml::value($header, 'unit.name')); ?></td>
+                    <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalPriceSales)); ?></td>
+                    <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalTaxSales)); ?></td>
+                    <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalAmountSales)); ?></td>
+                </tr>
+                <?php $totalQuantity += $totalQuantitySales; ?>
+                <?php $totalPrice += $totalPriceSales; ?>
+                <?php $totalTax += $totalTaxSales; ?>
+                <?php $totalSale += $totalAmountSales; ?>
+            <?php endforeach; ?>
+        </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="5" style="text-align: right; font-weight: bold">Total Sales</td>
+                <td style="text-align: right; font-weight: bold"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalQuantity)); ?></td>
+                <td></td>
+                <td style="text-align: right; font-weight: bold"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalPrice)); ?></td>
+                <td style="text-align: right; font-weight: bold"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalTax)); ?></td>
+                <td style="text-align: right; font-weight: bold"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalSale)); ?></td>
+            </tr>
+        </tfoot>
+    </table>
+</div>

@@ -266,8 +266,8 @@ class SaleInvoiceSummaryController extends Controller {
         $worksheet->setCellValue("I{$counter}", $grandTotalPayment);
         $worksheet->setCellValue("J{$counter}", $grandTotalRemaining);
         $worksheet->setCellValue("O{$counter}", $totalAmount);
-        $worksheet->setCellValue("P$counter}", $totalTaxServiceAmount);
-        $worksheet->setCellValue("Q$counter}", $totalDiscountAmount);
+        $worksheet->setCellValue("P{$counter}", $totalTaxServiceAmount);
+        $worksheet->setCellValue("Q{$counter}", $totalDiscountAmount);
         $worksheet->setCellValue("R{$counter}", $totalBankFee);
         $worksheet->setCellValue("S{$counter}", $totalMerimenFee);
         $worksheet->setCellValue("T{$counter}", $totalDownpaymentAmount);

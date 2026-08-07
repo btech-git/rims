@@ -709,18 +709,18 @@ class RegistrationTransactionController extends Controller {
         $worksheet = $objPHPExcel->setActiveSheetIndex(0);
         $worksheet->setTitle('RG Outstanding');
 
-        $worksheet->mergeCells('A1:M1');
-        $worksheet->mergeCells('A2:M2');
-        $worksheet->mergeCells('A3:M3');
+        $worksheet->mergeCells('A1:N1');
+        $worksheet->mergeCells('A2:N2');
+        $worksheet->mergeCells('A3:N3');
 
-        $worksheet->getStyle('A1:M5')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-        $worksheet->getStyle('A1:M5')->getFont()->setBold(true);
+        $worksheet->getStyle('A1:N5')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->getStyle('A1:N5')->getFont()->setBold(true);
 
         $worksheet->setCellValue('A1', 'Raperind Motor');
         $worksheet->setCellValue('A2', 'Outstanding Registration (Pending invoice + WO + SL)');
         $worksheet->setCellValue('A3', Yii::app()->dateFormatter->format('d MMMM yyyy', $startDate) . ' - ' . Yii::app()->dateFormatter->format('d MMMM yyyy', $endDate));
 
-        $worksheet->getStyle('A5:M5')->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle('A5:N5')->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
         $worksheet->setCellValue('A5', 'Vehicle ID');
         $worksheet->setCellValue('B5', 'Plate #');
@@ -728,19 +728,21 @@ class RegistrationTransactionController extends Controller {
         $worksheet->setCellValue('D5', 'Warna');
         $worksheet->setCellValue('E5', 'RG #');
         $worksheet->setCellValue('F5', 'Tanggal RG');
-        $worksheet->setCellValue('G5', 'Customer');
-        $worksheet->setCellValue('H5', 'Customer SPK #');
-        $worksheet->setCellValue('I5', 'Services');
-        $worksheet->setCellValue('J5', 'Repair Type');
-        $worksheet->setCellValue('K5', 'Problem');
-        $worksheet->setCellValue('L5', 'User');
-        $worksheet->setCellValue('M5', 'WO Status');
+        $worksheet->setCellValue('G5', 'Umur (hari)');
+        $worksheet->setCellValue('H5', 'Customer');
+        $worksheet->setCellValue('I5', 'Customer SPK #');
+        $worksheet->setCellValue('J5', 'Services');
+        $worksheet->setCellValue('K5', 'Repair Type');
+        $worksheet->setCellValue('L5', 'Problem');
+        $worksheet->setCellValue('M5', 'User');
+        $worksheet->setCellValue('N5', 'WO Status');
 
-        $worksheet->getStyle('A5:M5')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle('A5:N5')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
         $counter = 6;
         foreach (array_reverse($outstandingAllBranchRegistrationData) as $outstandingRegistrationItem) {
             $registrationTransaction = RegistrationTransaction::model()->findByPk($outstandingRegistrationItem['id']);
+            $outstandingDays = date_diff(date_create($outstandingRegistrationItem['transaction_date']), date_create(date('Y-m-d')));
 
             $worksheet->setCellValue("A{$counter}", $outstandingRegistrationItem['vehicle_id']);
             $worksheet->setCellValue("B{$counter}", $outstandingRegistrationItem['plate_number']);
@@ -748,6 +750,7 @@ class RegistrationTransactionController extends Controller {
             $worksheet->setCellValue("D{$counter}", $outstandingRegistrationItem['color']);
             $worksheet->setCellValue("E{$counter}", $outstandingRegistrationItem['transaction_number']);
             $worksheet->setCellValue("F{$counter}", $outstandingRegistrationItem['transaction_date']);
+            $worksheet->setCellValue("F{$counter}", $outstandingDays->format("%a days"));
             $worksheet->setCellValue("G{$counter}", $outstandingRegistrationItem['customer_name']);
             $worksheet->setCellValue("H{$counter}", $outstandingRegistrationItem['customer_work_order_number']);
             $worksheet->setCellValue("I{$counter}", $registrationTransaction->getServices());
