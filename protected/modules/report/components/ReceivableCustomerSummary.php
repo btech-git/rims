@@ -13,7 +13,7 @@ class ReceivableCustomerSummary extends CComponent {
     }
 
     public function setupPaging($pageSize, $currentPage) {
-        $pageSize = (empty($pageSize)) ? 100 : $pageSize;
+        $pageSize = (empty($pageSize)) ? 1000 : $pageSize;
         $pageSize = ($pageSize <= 0) ? 1 : $pageSize;
         $this->dataProvider->pagination->pageSize = $pageSize;
 
@@ -29,6 +29,11 @@ class ReceivableCustomerSummary extends CComponent {
     public function setupFilter($filters) {
         $endDate = (empty($filters['endDate'])) ? date('Y-m-d') : $filters['endDate'];
         $branchId = (empty($filters['branchId'])) ? '' : $filters['branchId'];
+        $coaId = (empty($filters['coaId'])) ? '' : $filters['coaId'];
+        
+        $this->dataProvider->criteria->compare('t.coa_sub_category_id', 8);
+        $this->dataProvider->criteria->compare('t.is_approved', 1);
+        $this->dataProvider->criteria->compare('t.id', $coaId);
         
         $branchConditionSql = '';
         
@@ -38,15 +43,11 @@ class ReceivableCustomerSummary extends CComponent {
         }
         
         $this->dataProvider->criteria->addCondition("EXISTS (
-            SELECT p.customer_id, SUM(p.payment_left) AS remaining
-            FROM " . InvoiceHeader::model()->tableName() . " p 
-            WHERE p.customer_id = t.id AND p.user_id_cancelled IS NULL AND p.invoice_date BETWEEN '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND :end_date AND
-                p.insurance_company_id IS NULL" . $branchConditionSql . " 
-            GROUP BY p.customer_id
-            HAVING remaining > 100
-        )");
-        
+            SELECT coa_id 
+            FROM " . JurnalUmum::model()->tableName() . "
+            WHERE coa_id = t.id AND tanggal_transaksi BETWEEN '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND :end_date" . $branchConditionSql . "
+        ) AND t.code NOT LIKE '%.000'");
+
         $this->dataProvider->criteria->params[':end_date'] = $endDate;
-        $this->dataProvider->criteria->compare('t.customer_type', 'Company');
     }
 }

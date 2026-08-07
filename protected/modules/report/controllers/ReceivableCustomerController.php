@@ -25,20 +25,26 @@ class ReceivableCustomerController extends Controller {
         ini_set('memory_limit', '1024M');
 
         $branchId = (isset($_GET['BranchId'])) ? $_GET['BranchId'] : '';
-        $customerId = (isset($_GET['CustomerId'])) ? $_GET['CustomerId'] : '';
+        $coaId = (isset($_GET['CoaId'])) ? $_GET['CoaId'] : '';
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
+        $pageSize = (isset($_GET['PageSize'])) ? $_GET['PageSize'] : '';
+        $currentPage = (isset($_GET['page'])) ? $_GET['page'] : '';
+        $currentSort = (isset($_GET['sort'])) ? $_GET['sort'] : '';
         
-        $customer = Search::bind(new Customer('search'), isset($_GET['Customer']) ? $_GET['Customer'] : array());
-        $customerDataProvider = $customer->search();
-        $customerDataProvider->pagination->pageVar = 'page_dialog';
+        $account = Search::bind(new Coa('search'), isset($_GET['Coa']) ? $_GET['Coa'] : array());
+        $accountDataProvider = $account->search();
+        $accountDataProvider->criteria->compare('t.is_approved', 1);
+        $accountDataProvider->criteria->compare('t.coa_sub_category_id', 8);
+        $accountDataProvider->pagination->pageVar = 'page_dialog';
 
-        $receivableSummary = new ReceivableCustomerSummary($customer->searchByReport());
+        $receivableSummary = new ReceivableCustomerSummary($account->search());
         $receivableSummary->setupLoading();
-//        $receivableSummary->setupPaging($pageSize, $currentPage);
+        $receivableSummary->setupPaging($pageSize, $currentPage);
         $receivableSummary->setupSorting();
         $filters = array(
             'endDate' => $endDate,
             'branchId' => $branchId,
+            'coaId' => $coaId,
         );
         $receivableSummary->setupFilter($filters);
 
@@ -51,36 +57,37 @@ class ReceivableCustomerController extends Controller {
         }
 
         $this->render('summary', array(
-            'customer'=>$customer,
-            'customerDataProvider'=>$customerDataProvider,
-            'customerId' => $customerId,
+            'account' => $account,
+            'accountDataProvider' => $accountDataProvider,
+            'coaId' => $coaId,
             'branchId' => $branchId,
             'endDate' => $endDate,
             'receivableSummary' => $receivableSummary,
+            'currentSort' => $currentSort,
+            'currentPage' => $currentPage,
         ));
     }
 
-    public function actionTransactionInfo($customerId, $endDate) {
+    public function actionTransactionInfo($coaId, $branchId, $endDate) {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
 
         $startDate = AppParam::BEGINNING_TRANSACTION_DATE;
-        $dataProvider = InvoiceHeader::model()->searchByReport();
-        $dataProvider->criteria->addBetweenCondition('t.invoice_date', $startDate, $endDate);
-        $dataProvider->criteria->compare('t.customer_id', $customerId);
-        $dataProvider->criteria->addCondition("t.user_id_cancelled IS NULL AND t.insurance_company_id IS NULL AND t.payment_left > 100");
+        $dataProvider = JurnalUmum::model()->searchByReceivableReport();
+        $dataProvider->criteria->addBetweenCondition('t.tanggal_transaksi', $startDate, $endDate);
+        $dataProvider->criteria->compare('t.coa_id', $coaId);
+        $dataProvider->criteria->compare('t.branch_id', $branchId);
         
-        $customer = Customer::model()->findByPk($customerId);
+        $coa = Coa::model()->findByPk($coaId);
         
         if (isset($_GET['SaveExcelDetail'])) {
-            $this->saveToExcelDetailTransaction($dataProvider, $endDate, $customer);
+            $this->saveToExcelDetailTransaction($dataProvider, $endDate, $coa);
         }
 
         $this->render('transactionInfo', array(
             'dataProvider' => $dataProvider,
             'endDate' => $endDate,
-            'customer' => $customer,
-            'customerId' => $customerId,
+            'coa' => $coa,
         ));
     }
 
@@ -106,17 +113,16 @@ class ReceivableCustomerController extends Controller {
         ));
     }
 
-    public function actionAjaxJsonCustomer() {
+    public function actionAjaxJsonCoa() {
         if (Yii::app()->request->isAjaxRequest) {
-            $customerId = (isset($_POST['CustomerId'])) ? $_POST['CustomerId'] : '';
-            $customer = Customer::model()->findByPk($customerId);
+            $coaId = (isset($_POST['Coa']['id'])) ? $_POST['Coa']['id'] : '';
+            $coa = Coa::model()->findByPk($coaId);
 
             $object = array(
-                'customer_id' => CHtml::value($customer, 'id'),
-                'customer_name' => CHtml::value($customer, 'name'),
-                'customer_type' => CHtml::value($customer, 'customer_type'),
-                'customer_mobile_phone' => CHtml::value($customer, 'mobile_phone'),
+                'coa_name' => CHtml::value($coa, 'combinationName'),
+                'coa_code' => CHtml::value($coa, 'code'),
             );
+            
             echo CJSON::encode($object);
         }
     }
@@ -225,7 +231,7 @@ class ReceivableCustomerController extends Controller {
         Yii::app()->end();
     }
 
-    protected function saveToExcelDetailTransaction($dataProvider, $endDate, $customer) {
+    protected function saveToExcelDetailTransaction($dataProvider, $endDate, $coa) {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
 
@@ -242,65 +248,67 @@ class ReceivableCustomerController extends Controller {
         $worksheet = $objPHPExcel->setActiveSheetIndex(0);
         $worksheet->setTitle('Piutang Customer Detail');
 
-        $worksheet->mergeCells('A1:I1');
-        $worksheet->mergeCells('A2:I2');
-        $worksheet->mergeCells('A3:I3');
+        $worksheet->mergeCells('A1:G1');
+        $worksheet->mergeCells('A2:G2');
+        $worksheet->mergeCells('A3:G3');
         
-        $worksheet->getStyle('A1:I5')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-        $worksheet->getStyle('A1:I5')->getFont()->setBold(true);
+        $worksheet->getStyle('A1:G5')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->getStyle('A1:G5')->getFont()->setBold(true);
+        
         $worksheet->setCellValue('A1', 'Raperind Motor');
-        $worksheet->setCellValue('A2', 'Piutang Customer ' . CHtml::value($customer, 'name'));
+        $worksheet->setCellValue('A2', 'Piutang Customer ' . CHtml::value($coa, 'name'));
         $worksheet->setCellValue('A3', 'Per Tanggal ' . Yii::app()->dateFormatter->format('d MMMM yyyy', $endDate));
 
-        $worksheet->getStyle("A5:I5")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
-        $worksheet->getStyle("A5:I5")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A5:G5")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A5:G5")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
         
-        $worksheet->setCellValue('A5', 'Invoice #');
+        $worksheet->setCellValue('A5', 'Transaksi #');
         $worksheet->setCellValue('B5', 'Tanggal');
-        $worksheet->setCellValue('C5', 'Jatuh Tempo');
-        $worksheet->setCellValue('D5', 'Asuransi');
-        $worksheet->setCellValue('E5', 'Plat #');
-        $worksheet->setCellValue('F5', 'Kendaraan');
-        $worksheet->setCellValue('G5', 'Total');
-        $worksheet->setCellValue('H5', 'Payment');
-        $worksheet->setCellValue('I5', 'Remaining');
+        $worksheet->setCellValue('C5', 'Keterangan');
+        $worksheet->setCellValue('D5', 'Note');
+        $worksheet->setCellValue('E5', 'Total');
+        $worksheet->setCellValue('F5', 'Pembayaran');
+        $worksheet->setCellValue('G5', 'Sisa');
         
         $counter = 6;
 
-        $totalPriceSum = '0.00';
-        $paymentTotalSum = '0.00';
-        $paymentLeftSum = '0.00'; 
+        $totalDebit = '0.00';
+        $totalCredit = '0.00';
+        $totalRemaining = '0.00';
 
         foreach ($dataProvider->data as $header) {
-            $totalPrice = CHtml::value($header, 'total_price'); 
-            $paymentTotal = CHtml::value($header, 'payment_amount');
-            $paymentLeft = CHtml::value($header, 'payment_left');
+            if ($header->debet_kredit == 'D') {
+                $amountDebit = $header->total;
+                $amountCredit = '0.00';
+            } else {
+                $amountDebit = '0.00';
+                $amountCredit = $header->total;
+            }
+            $remainingAmount = $amountDebit - $amountCredit;
             
-            $worksheet->setCellValue("A{$counter}", CHtml::value($header, 'invoice_number'));
-            $worksheet->setCellValue("B{$counter}", CHtml::value($header, 'invoice_date'));
-            $worksheet->setCellValue("C{$counter}", CHtml::value($header, 'due_date'));
-            $worksheet->setCellValue("D{$counter}", CHtml::value($header, 'insuranceCompany.name'));
-            $worksheet->setCellValue("E{$counter}", CHtml::value($header, 'vehicle.plate_number'));
-            $worksheet->setCellValue("F{$counter}", CHtml::value($header, 'vehicle.carMake.name') . ' ' . CHtml::value($header, 'vehicle.carModel.name') . ' ' . CHtml::value($header, 'vehicle.carSubModel.name'));
-            $worksheet->setCellValue("G{$counter}", $totalPrice);
-            $worksheet->setCellValue("H{$counter}", $paymentTotal);
-            $worksheet->setCellValue("I{$counter}", $paymentLeft);
+            $worksheet->setCellValue("A{$counter}", CHtml::value($header, 'kode_transaksi'));
+            $worksheet->setCellValue("B{$counter}", CHtml::value($header, 'tanggal_transaksi'));
+            $worksheet->setCellValue("C{$counter}", CHtml::value($header, 'remark'));
+            $worksheet->setCellValue("D{$counter}", CHtml::value($header, 'transaction_subject'));
+            $worksheet->setCellValue("E{$counter}", $amountDebit);
+            $worksheet->setCellValue("F{$counter}", $amountCredit);
+            $worksheet->setCellValue("G{$counter}", $remainingAmount);
             
-            $totalPriceSum += $totalPrice;
-            $paymentTotalSum += $paymentTotal;
-            $paymentLeftSum += $paymentLeft;
+            $totalDebit += $amountDebit;
+            $totalCredit += $amountCredit;
+            $totalRemaining += $remainingAmount;
 
             $counter++;
         }
-        $worksheet->getStyle("A{$counter}:I{$counter}")->getFont()->setBold(true);
-        $worksheet->getStyle("A{$counter}:I{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
-        $worksheet->getStyle("A{$counter}:I{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
-        $worksheet->mergeCells("A{$counter}:F{$counter}");
+        $worksheet->getStyle("A{$counter}:G{$counter}")->getFont()->setBold(true);
+        $worksheet->getStyle("A{$counter}:G{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A{$counter}:G{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
+        $worksheet->mergeCells("A{$counter}:D{$counter}");
         
         $worksheet->setCellValue("A{$counter}", 'Total');
-        $worksheet->setCellValue("G{$counter}", $totalPriceSum);
-        $worksheet->setCellValue("H{$counter}", $paymentTotalSum);
-        $worksheet->setCellValue("I{$counter}", $paymentLeftSum);
+        $worksheet->setCellValue("E{$counter}", $totalDebit);
+        $worksheet->setCellValue("F{$counter}", $totalCredit);
+        $worksheet->setCellValue("G{$counter}", $totalRemaining);
 
         $counter++;
 
@@ -313,7 +321,7 @@ class ReceivableCustomerController extends Controller {
         ob_end_clean();
         // We'll be outputting an excel file
         header('Content-type: application/vnd.ms-excel');
-        header('Content-Disposition: attachment;filename="transaksi_piutang_customer.xls"');
+        header('Content-Disposition: attachment;filename="transaksi_detail_piutang_customer.xls"');
         header('Cache-Control: max-age=0');
         
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
@@ -418,5 +426,18 @@ class ReceivableCustomerController extends Controller {
         $objWriter->save('php://output');
 
         Yii::app()->end();
+    }
+    
+    public function actionRedirectTransaction($codeNumber) {
+        list($leftPart,, ) = explode('/', $codeNumber);
+        list(, $codeNumberConstant) = explode('.', $leftPart);
+
+        if ($codeNumberConstant === 'Pin') {
+            $model = PaymentIn::model()->findByAttributes(array('payment_number' => $codeNumber));
+            $this->redirect(array('/transaction/paymentIn/show', 'id' => $model->id));
+        } else if ($codeNumberConstant === 'INV') {
+            $model = InvoiceHeader::model()->findByAttributes(array('invoice_number' => $codeNumber));
+            $this->redirect(array('/transaction/invoiceHeader/show', 'id' => $model->id));
+        }
     }
 }

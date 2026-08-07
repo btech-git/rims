@@ -577,31 +577,31 @@ class Customer extends CActiveRecord {
         return ($value === false) ? 0 : $value;
     }
     
-    public function getReceivableCustomerReport($endDate, $branchId) {
-        $branchConditionSql = '';
-        
-        $params = array(
-            ':customer_id' => $this->id,
-            ':end_date' => $endDate,
-        );
-        
-        if (!empty($branchId)) {
-            $branchConditionSql = ' AND p.branch_id = :branch_id';
-            $params[':branch_id'] = $branchId;
-        }
-        
-        $sql = "
-            SELECT p.customer_id, COALESCE(SUM(p.total_price), 0) AS total_price, COALESCE(SUM(p.payment_amount), 0) AS payment_amount, 
-                COALESCE(SUM(p.payment_left), 0) AS payment_left
-            FROM " . InvoiceHeader::model()->tableName() . " p 
-            WHERE p.customer_id = :customer_id AND p.invoice_date BETWEEN '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND :end_date AND
-                 p.insurance_company_id IS NULL AND p.user_id_cancelled IS NULL AND p.payment_left > 100" . $branchConditionSql . "
-        ";
-
-        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
-
-        return $resultSet;
-    }
+//    public function getReceivableCustomerReport($endDate, $branchId) {
+//        $branchConditionSql = '';
+//        
+//        $params = array(
+//            ':customer_id' => $this->id,
+//            ':end_date' => $endDate,
+//        );
+//        
+//        if (!empty($branchId)) {
+//            $branchConditionSql = ' AND p.branch_id = :branch_id';
+//            $params[':branch_id'] = $branchId;
+//        }
+//        
+//        $sql = "
+//            SELECT p.customer_id, COALESCE(SUM(p.total_price), 0) AS total_price, COALESCE(SUM(p.payment_amount), 0) AS payment_amount, 
+//                COALESCE(SUM(p.payment_left), 0) AS payment_left
+//            FROM " . InvoiceHeader::model()->tableName() . " p 
+//            WHERE p.customer_id = :customer_id AND p.invoice_date BETWEEN '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND :end_date AND
+//                 p.insurance_company_id IS NULL AND p.user_id_cancelled IS NULL AND p.payment_left > 100" . $branchConditionSql . "
+//        ";
+//
+//        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
+//
+//        return $resultSet;
+//    }
     
     public static function getCustomerSaleReport($startDate, $endDate, $customerId, $branchId, $taxValue, $customerType) {
         $taxValueConditionSql = '';

@@ -33,6 +33,7 @@ Yii::app()->clientScript->registerCss('_report', '
                     <th style="text-align: center; font-weight: bold; border-bottom: 1px solid; width: 15%">Tanggal</th>
                     <th style="text-align: center; font-weight: bold; border-bottom: 1px solid; width: 15%">Transaksi #</th>
                     <th style="text-align: center; font-weight: bold; border-bottom: 1px solid">Keterangan</th>
+                    <th style="text-align: center; font-weight: bold; border-bottom: 1px solid">Note</th>
                     <th style="text-align: center; font-weight: bold; border-bottom: 1px solid; width: 15%">Debit</th>
                     <th style="text-align: center; font-weight: bold; border-bottom: 1px solid; width: 15%">Credit</th>
                     <th style="text-align: center; font-weight: bold; border-bottom: 1px solid; width: 15%">Saldo</th>
@@ -71,6 +72,7 @@ Yii::app()->clientScript->registerCss('_report', '
                             <td><?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($receivableRow['tanggal_transaksi']))); ?></td>
                             <td><?php echo CHtml::link($transactionNumber, Yii::app()->createUrl("report/receivableDetail/redirectTransaction", array("codeNumber" => $transactionNumber)), array('target' => '_blank')); ?></td>
                             <td><?php echo CHtml::encode($receivableRow['remark']); ?></td>
+                            <td><?php echo CHtml::encode($receivableRow['transaction_subject']); ?></td>
                             <td style="text-align: right">
                                 <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $amountDebit)); ?>
                             </td>
@@ -86,7 +88,7 @@ Yii::app()->clientScript->registerCss('_report', '
             </tbody>
             <tfoot>
                 <tr>
-                    <td colspan="3" style="font-weight: bold; text-align: right">Total</td>
+                    <td colspan="4" style="font-weight: bold; text-align: right">Total</td>
                     <td style="font-weight: bold; text-align: right">
                         <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalDebit)); ?>
                     </td>

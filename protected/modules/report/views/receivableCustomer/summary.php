@@ -24,16 +24,14 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                         <span class="prefix">Customer</span>
                                     </div>
                                     <div class="small-8 columns">
-                                        <?php echo CHtml::textField('CustomerId', $customerId, array(
+                                        <?php echo CHtml::textField('CoaId', $coaId, array(
                                             'readonly' => true,
-                                            'onclick' => '$("#customer-dialog").dialog("open"); return false;',
-                                            'onkeypress' => 'if (event.keyCode == 13) { $("#customer-dialog").dialog("open"); return false; }'
+                                            'onclick' => 'jQuery("#coa-dialog").dialog("open"); return false;',
                                         )); ?>
-
-                                        <?php echo CHtml::openTag('span', array('id' => 'customer_name')); ?>
-                                        <?php $customerModel = Customer::model()->findByPk($customerId); ?>
-                                        <?php echo CHtml::encode(CHtml::value($customerModel, 'name')); ?>
-                                        <?php echo CHtml::closeTag('span'); ?>
+                                        <?php echo CHtml::openTag('span', array('id' => 'coa_name')); ?>
+                                        <?php $coa = Coa::model()->findByPk($coaId); ?>
+                                        <?php echo CHtml::encode(CHtml::value($coa, 'name')); ?>
+                                        <?php echo CHtml::closeTag('span'); ?> 
                                     </div>
                                 </div>
                             </div>
@@ -126,61 +124,100 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
     </div>
 </div>
 
-<div>
+<div class="grid-view">
     <?php $this->beginWidget('zii.widgets.jui.CJuiDialog', array(
-        'id' => 'customer-dialog',
+        'id' => 'coa-dialog',
         // additional javascript options for the dialog plugin
         'options' => array(
-            'title' => 'Customer',
+            'title' => 'Customer ',
             'autoOpen' => false,
             'width' => 'auto',
             'modal' => true,
         ),
     )); ?>
-    <?php $this->widget('zii.widgets.grid.CGridView', array(
-        'id' => 'customer-grid',
-        'dataProvider' => $customerDataProvider,
-        'filter' => $customer,
-        'template' => '{items}<div class="clearfix">{summary}{pager}</div>',
-        'pager' => array(
-            'cssFile' => false,
-            'header' => '',
-        ),
-        'selectionChanged' => 'js:function(id) {
-            $("#CustomerId").val($.fn.yiiGridView.getSelection(id));
-            $("#customer-dialog").dialog("close");
-            if ($.fn.yiiGridView.getSelection(id) == "") {
-                $("#customer_name").html("");
-            } else {
-                $.ajax({
-                    type: "POST",
-                    dataType: "JSON",
-                    url: "' . CController::createUrl('ajaxJsonCustomer') . '",
-                    data: $("form").serialize(),
-                    success: function(data) {
-                        $("#customer_name").html(data.customer_name);
-                    },
-                });
-            }
-        }',
-        'columns' => array(
-            'name',
-            array(
-                'header'=>'Customer Type', 
-                'name'=>'customer_type',
-                'value'=>'$data->customer_type',
-                'type'=>'raw',
-                'filter'=>CHtml::dropDownList('Customer[customer_type]', $customer->customer_type, 
-                    array(
-                        ''=>'All',
-                        'Company' => 'Company',
-                        'Individual' => 'Individual',
-                    )
+    <?php echo CHtml::beginForm(); ?>
+    <div class="row">
+        <div class="small-12 columns" style="padding-left: 0px; padding-right: 0px;">
+            <table>
+                <thead>
+                    <tr>
+                        <td>Code</td>
+                        <td>Name</td>
+                    </tr>
+                </thead>
+                
+                <tbody>
+                    <tr>
+                        <td>
+                            <?php echo CHtml::activeTextField($account, 'code', array(
+                                'onchange' => '
+                                $.fn.yiiGridView.update("coa-grid", {data: {Coa: {
+                                    code: $(this).val(),
+                                    name: $("#coa_name").val(),
+                                    coa_category_id: $("#coa_category_id").val(),
+                                    coa_sub_category_id: $("#coa_sub_category_id").val(),
+                                } } });',
+                            )); ?>
+                        </td>
+                        
+                        <td>
+                            <?php echo CHtml::activeTextField($account, 'name', array(
+                                'onchange' => '
+                                $.fn.yiiGridView.update("coa-grid", {data: {Coa: {
+                                    name: $(this).val(),
+                                    code: $("#coa_code").val(),
+                                    coa_category_id: $("#coa_category_id").val(),
+                                    coa_sub_category_id: $("#coa_sub_category_id").val(),
+                                } } });',
+                            )); ?>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+    
+            <?php $this->widget('zii.widgets.grid.CGridView', array(
+                'id'=>'coa-grid',
+                'dataProvider'=>$accountDataProvider,
+                'filter' => null,
+                'template' => '{items}<div class="clearfix">{summary}{pager}</div>',
+                'pager'=>array(
+                   'cssFile'=>false,
+                   'header'=>'',
                 ),
-            ),
-            'mobile_phone',
-            'email',
-        ),
-    )); ?>
+                'selectionChanged'=>'js:function(id){
+                    $("#CoaId").val($.fn.yiiGridView.getSelection(id));
+                    $("#coa-dialog").dialog("close");
+                    if ($.fn.yiiGridView.getSelection(id) == "") {
+                        $("#coa_id").html("");
+                        $("#coa_name").html("");
+                    } else {
+                        $.ajax({
+                            type: "POST",
+                            dataType: "JSON",
+                            url: "' . CController::createUrl('ajaxJsonCoa') . '",
+                            data: $("form").serialize(),
+                            success: function(data) {
+                                $("#coa_id").html(data.coa_code);
+                                $("#coa_name").html(data.coa_name);
+                            },
+                        });
+                    }
+                }',
+                'columns'=> array(
+                    'code',
+                    'name',
+                    array(
+                        'name' => 'coa_category_id',
+                        'value' => '$data->coaCategory!="" ? $data->coaCategory->name : ""',
+                    ),
+                    array(
+                        'name' => 'coa_sub_category_id',
+                        'value' => '$data->coaSubCategory!="" ? $data->coaSubCategory->name : ""'
+                    ),
+                ),
+            )); ?>
+        </div>
+    </div>
+    <?php echo CHtml::endForm(); ?>
     <?php $this->endWidget('zii.widgets.jui.CJuiDialog'); ?>
 </div>
