@@ -117,7 +117,6 @@ class SaleInvoiceCoretaxController extends Controller {
         $this->render('importCoretax', array(
             'errorMessage' => $errorMessage,
         ));
-
     }
     
     public function updateTaxNumberAndDate($filename) {
@@ -126,13 +125,16 @@ class SaleInvoiceCoretaxController extends Controller {
         $valid = true;
         foreach ($data as $i => $item) {
             if ($i > 0) {
-                $invoiceNumber = substr($item[14], 0, -2);
-                $invoiceHeader = InvoiceHeader::model()->find(array('condition' => 'invoice_number LIKE :invoice_number', 'params' => array(':invoice_number' => $invoiceNumber . '%')));
+                $invoiceNumber = substr($item[15], 0, -2);
+                $invoiceHeader = InvoiceHeader::model()->find(array(
+                    'condition' => 'invoice_number LIKE :invoice_number', 
+                    'params' => array(':invoice_number' => $invoiceNumber . '%')
+                ));
                 
-                $coretaxNumber = $item[3];
-                $coretaxDate = $item[4];
+                $coretaxNumber = $item[4];
+                $coretaxDate = $item[5];
                 $coretaxTotal = $invoiceHeader->subTotal;
-                $coretaxTaxAmount = $item[11];
+                $coretaxTaxAmount = $item[12];
                 
                 if ($invoiceHeader !== null) {
                     $invoiceHeader->transaction_tax_number = $coretaxNumber;
