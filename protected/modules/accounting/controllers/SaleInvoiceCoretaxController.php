@@ -133,13 +133,12 @@ class SaleInvoiceCoretaxController extends Controller {
                 
                 $coretaxNumber = $item[4];
                 $coretaxDate = $item[5];
-                $coretaxTotal = $invoiceHeader->subTotal;
                 $coretaxTaxAmount = $item[12];
                 
                 if ($invoiceHeader !== null) {
                     $invoiceHeader->transaction_tax_number = $coretaxNumber;
                     $invoiceHeader->transaction_tax_date = $coretaxDate;
-                    $invoiceHeader->grand_total_coretax = $coretaxTotal;
+                    $invoiceHeader->grand_total_coretax = $invoiceHeader->subTotal;
                     $invoiceHeader->tax_amount_coretax = $coretaxTaxAmount;
                     $valid = $valid && $invoiceHeader->save();
                 }
