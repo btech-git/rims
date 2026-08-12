@@ -473,8 +473,8 @@ class PaymentOutController extends Controller {
                         if (!empty($detail->receive_item_id)) {
                             $receiveItem = TransactionReceiveItem::model()->findByPk($detail->receive_item_id);
                             $receiveItem->invoice_payment_amount = $receiveItem->getTotalPayment();
-                            $receiveItem->invoice_payment_left = $receiveItem->getTotalRemaining();
-                            $valid = $valid && $receiveItem->update(array('invoice_payment_amount', 'invoice_payment_left'));
+                            $receiveItem->invoice_payment_remaining = $receiveItem->getTotalRemaining();
+                            $valid = $valid && $receiveItem->update(array('invoice_payment_amount', 'invoice_payment_remaining'));
                             
                             $purchaseOrder = TransactionPurchaseOrder::model()->findByPk($receiveItem->purchase_order_id);
                             $purchaseOrder->payment_amount = $purchaseOrder->getTotalPayment();
