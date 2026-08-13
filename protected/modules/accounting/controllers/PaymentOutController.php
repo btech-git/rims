@@ -421,6 +421,7 @@ class PaymentOutController extends Controller {
         $historis = PaymentOutApproval::model()->findAllByAttributes(array('payment_out_id' => $headerId));
         $model = new PaymentOutApproval;
         $model->date = date('Y-m-d H:i:s');
+        $valid = false;
         
         if (isset($_POST['PaymentOutApproval'])) {
             JurnalUmum::model()->deleteAllByAttributes(array(

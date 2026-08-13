@@ -293,6 +293,12 @@
                             Yii::app()->user->checkAccess('saleOrderView') || Yii::app()->user->checkAccess('saleOrderApproval'))
                     ),
                     array(
+                        'label' => 'Faktur Asuransi OR', 
+                        'url' => array('/accounting/saleInvoiceInsuranceOwnRisk/admin'), 
+                        'visible' => (Yii::app()->user->checkAccess('saleInvoiceCreate') || Yii::app()->user->checkAccess('saleInvoiceEdit') || 
+                            Yii::app()->user->checkAccess('saleInvoiceView'))
+                    ),
+                    array(
                         'label' => 'Faktur Penjualan', 
                         'url' => array('/transaction/invoiceHeader/admin'), 
                         'visible' => (Yii::app()->user->checkAccess('saleInvoiceCreate') || Yii::app()->user->checkAccess('saleInvoiceEdit') || 

@@ -23,21 +23,24 @@ $this->menu = array(
         
         <?php $ccontroller = Yii::app()->controller->id; ?>
         <?php $ccaction = Yii::app()->controller->action->id; ?>
-        <?php echo CHtml::link('<span class="fa fa-list"></span>Manage Receive Item', Yii::app()->baseUrl . '/transaction/transactionReceiveItem/admin', array('class' => 'button cbutton right', 'visible' => Yii::app()->user->checkAccess("transaction.transactionReceiveItem.admin"))) ?>
+        <?php echo CHtml::link('<span class="fa fa-list"></span> Manage', Yii::app()->baseUrl . '/transaction/transactionReceiveItem/admin', array('class' => 'button cbutton right', 'visible' => Yii::app()->user->checkAccess("transaction.transactionReceiveItem.admin"))) ?>
 
         <?php
         $movements = MovementInHeader::model()->findAllByAttributes(array('receive_item_id' => $model->id));
         if (count($movements)== 0):// && $model->request_type != 'Retail Sales'):*/
         ?>
-            <?php echo CHtml::link('<span class="fa fa-edit"></span>Edit', Yii::app()->baseUrl . '/transaction/transactionReceiveItem/update?id=' . $model->id, array(
-                'class' => 'button cbutton right', 
+            <?php echo CHtml::link('<span class="fa fa-edit"></span> Edit', Yii::app()->baseUrl . '/transaction/transactionReceiveItem/update?id=' . $model->id, array(
+                'class' => 'button warning right', 
                 'style' => 'margin-right:10px', 
                 'visible' => Yii::app()->user->checkAccess("receiveItemEdit")
             )); ?>
         <?php endif; ?>
 
         <?php if (empty($model->invoice_number) && !empty($model->purchase_order_id)): ?>
-            <?php echo CHtml::link('<span class="fa fa-plus"></span>Add Supporting Docs', Yii::app()->baseUrl . '/transaction/transactionReceiveItem/addInvoice?id=' . $model->id, array('class' => 'button cbutton right', 'style' => 'margin-right:10px', 'visible' => Yii::app()->user->checkAccess("transaction.transactionReceiveItem.update"))) ?>
+            <?php echo CHtml::link('<span class="fa fa-plus"></span> Supporting Docs', Yii::app()->baseUrl . '/transaction/transactionReceiveItem/addInvoice?id=' . $model->id, array(
+                'class' => 'button success right', 
+                'style' => 'margin-right:10px',
+            )); ?>
         <?php endif; ?>
 
         <?php if (Yii::app()->user->checkAccess("operationHead")): ?>
@@ -49,7 +52,7 @@ $this->menu = array(
         
         <?php if (empty($model->user_id_cancelled)): ?>
             <?php echo CHtml::link('<span class="fa fa-print"></span>Print Penerimaan', array("pdf", "id" => $model->id), array(
-                'class' => 'button warning right', 
+                'class' => 'button info right', 
                 'style' => 'margin-right:10px', 
                 'target' => 'blank'
             )) ?>

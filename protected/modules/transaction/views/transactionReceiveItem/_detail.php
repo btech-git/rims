@@ -13,13 +13,11 @@ if ($receiveItem->header->request_type == 'Purchase Order') {
             <tr>
                 <td>Product</td>
                 <td>Code</td>
-                <td>Kategori</td>
+                <td style="width: 5%">Kategori</td>
                 <td>Brand</td>
-                <td>Sub Brand</td>
-                <td>Sub Brand Series</td>
-                <td>Qty Request</td>
-                <td>Qty Received</td>
-                <td>Qty Request Left</td>
+                <td style="width: 5%">Qty Request</td>
+                <td style="width: 5%">Qty Received</td>
+                <td style="width: 5%">Qty Request Left</td>
                 <td>Unit</td>
                 <td>Note</td>
                 <!--<td>Barcode</td>-->
@@ -35,9 +33,11 @@ if ($receiveItem->header->request_type == 'Purchase Order') {
                         <td><?php echo $receiveItemDetail->product->name; ?></td>
                         <td><?php echo CHtml::encode(CHtml::value($receiveItemDetail, 'product.manufacturer_code')); ?></td>
                         <td><?php echo CHtml::encode(CHtml::value($receiveItemDetail, 'product.masterSubCategoryCode')); ?></td>
-                        <td><?php echo CHtml::encode(CHtml::value($receiveItemDetail, 'product.brand.name')); ?></td>
-                        <td><?php echo CHtml::encode(CHtml::value($receiveItemDetail, 'product.subBrand.name')); ?></td>
-                        <td><?php echo CHtml::encode(CHtml::value($receiveItemDetail, 'product.subBrandSeries.name')); ?></td>
+                        <td>
+                            <?php echo CHtml::encode(CHtml::value($receiveItemDetail, 'product.brand.name')); ?> - 
+                            <?php echo CHtml::encode(CHtml::value($receiveItemDetail, 'product.subBrand.name')); ?> - 
+                            <?php echo CHtml::encode(CHtml::value($receiveItemDetail, 'product.subBrandSeries.name')); ?>
+                        </td>
                         <td><?php echo $receiveItemDetail->qty_request; ?></td>
                         <td><?php echo $receiveItemDetail->qty_received; ?></td>
                         <td><?php echo $receiveItemDetail->qty_request_left; ?></td>
@@ -58,14 +58,12 @@ if ($receiveItem->header->request_type == 'Purchase Order') {
             <tr>
                 <td>Product</td>
                 <td>Code</td>
-                <td>Kategori</td>
+                <td style="width: 5%">Kategori</td>
                 <td>Brand</td>
-                <td>Sub Brand</td>
-                <td>Sub Brand Series</td>
-                <td>Qty Order</td>
+                <td style="width: 5%">Qty Order</td>
                 <td class ="additional <?php echo $request != "Internal Delivery Order" ? 'hide' : ''; ?>">Qty Delivered Left</td>
-                <td>Qty Order Remaining</td>
-                <td>Qty Received</td>
+                <td style="width: 5%">Qty Order Remaining</td>
+                <td style="width: 5%">Qty Received</td>
                 <td>Unit</td>
                 <td>Note</td>
                 <!--<td>Barcode</td>-->
@@ -87,9 +85,11 @@ if ($receiveItem->header->request_type == 'Purchase Order') {
                     </td>
                     <td><?php echo CHtml::encode(CHtml::value($receiveItemDetail, 'manufacturer_code')); ?></td>
                     <td><?php echo CHtml::encode(CHtml::value($receiveItemDetail, 'masterSubCategoryCode')); ?></td>
-                    <td><?php echo CHtml::encode(CHtml::value($receiveItemDetail, 'brand.name')); ?></td>
-                    <td><?php echo CHtml::encode(CHtml::value($receiveItemDetail, 'subBrand.name')); ?></td>
-                    <td><?php echo CHtml::encode(CHtml::value($receiveItemDetail, 'subBrandSeries.name')); ?></td>
+                    <td>
+                        <?php echo CHtml::encode(CHtml::value($receiveItemDetail, 'brand.name')); ?> - 
+                        <?php echo CHtml::encode(CHtml::value($receiveItemDetail, 'subBrand.name')); ?> -
+                        <?php echo CHtml::encode(CHtml::value($receiveItemDetail, 'subBrandSeries.name')); ?>
+                    </td>
                     <td><?php echo CHtml::activeTextField($detail, "[$i]qty_request", array('readOnly' => true)); ?></td>
                     <?php
                     $deliverValue = "";
@@ -130,7 +130,7 @@ if ($receiveItem->header->request_type == 'Purchase Order') {
                             <?php echo CHtml::activeTextField($detail, "[$i]qty_received"); ?> 
                         <?php endif; ?>
                     </td>
-                    <td><?php echo CHtml::encode(CHtml::value($receiveItemDetail, 'brand.name')); ?></td>
+                    <td><?php echo CHtml::encode(CHtml::value($receiveItemDetail, 'unit.name')); ?></td>
                     <td><?php echo CHtml::activeTextField($detail, "[$i]note"); ?></td>
                     <!--<td><?php //echo CHtml::activeTextField($detail, "[$i]barcode_product"); ?></td>-->
                     <td>
