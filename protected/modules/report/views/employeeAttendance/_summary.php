@@ -78,7 +78,7 @@
                     <td style="text-align: right"><?php echo CHtml::encode($nationalHolidaysCount); ?></td>
                     <td style="text-align: right"><?php echo CHtml::encode($lateDays); ?></td>
                     <td style="text-align: right"><?php echo CHtml::encode($overtimeDays); ?></td>
-                    <?php $attendanceDays = isset($employeePeriodicallyAttendanceItem[16]['days']) ? $employeePeriodicallyAttendanceItem[16]['days'] : '0'; ?>
+                    <?php $attendanceDays = isset($employeePeriodicallyAttendanceItem[16]['days']) ? $employeePeriodicallyAttendanceItem[16]['days'] : '1'; ?>
                     <?php $attendanceRate = $attendanceDays / ($workingDays == 0 ? 1 : $workingDays); ?>
                     <?php $onTimeDays = $workingDays - $lateDays; ?>
                     <?php $onTimeRate = $onTimeDays / $attendanceDays; ?>
