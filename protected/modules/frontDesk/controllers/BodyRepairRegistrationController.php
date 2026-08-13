@@ -314,6 +314,10 @@ class BodyRepairRegistrationController extends Controller {
         $insurances = RegistrationInsuranceData::model()->findAllByAttributes(array('registration_transaction_id' => $id));
         $registrationMemos = RegistrationMemo::model()->findAllByAttributes(array('registration_transaction_id' => $id));
         $registrationBodyRepairDetails = RegistrationBodyRepairDetail::model()->findAllByAttributes(array('registration_transaction_id' => $id));
+        $saleInvoiceInsuranceOwnRisk = SaleInvoiceInsuranceOwnRisk::model()->findByAttributes(array(
+            'registration_transaction_id' => $id, 
+            'user_id_cancelled' => null,
+        ));
 
         if (isset($_POST['SubmitMemo']) && !empty($_POST['Memo'])) {
             $registrationMemo = new RegistrationMemo();
@@ -332,6 +336,7 @@ class BodyRepairRegistrationController extends Controller {
             'insurances' => $insurances,
             'registrationMemos' => $registrationMemos,
             'registrationBodyRepairDetails' => $registrationBodyRepairDetails,
+            'saleInvoiceInsuranceOwnRisk' => $saleInvoiceInsuranceOwnRisk,
             'memo' => $memo,
         ));
     }

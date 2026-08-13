@@ -119,6 +119,18 @@ $this->menu = array(
                         <div class="field">
                             <div class="row collapse">
                                 <div class="small-4 columns">
+                                    <span class="prefix">Category</span>
+                                </div>
+                                
+                                <div class="small-8 columns">
+                                    <input type="text" readonly="true" value="<?php echo $model->payment_category; ?>"> 
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="field">
+                            <div class="row collapse">
+                                <div class="small-4 columns">
                                     <span class="prefix">Status</span>
                                 </div>
                                 
@@ -325,7 +337,7 @@ $this->menu = array(
                     
             <fieldset>
                 <legend>Payment Detail</legend>
-                <?php if (!empty($model->paymentInDetails) && $model->paymentInDetails[0]->invoice_header_id === null && $model->paymentInDetails[0]->registration_transaction_id !== null): ?>
+                <?php if (!empty($model->paymentInDetails) && $model->paymentInDetails[0]->invoice_header_id === null && $model->paymentInDetails[0]->registration_transaction_id !== null && $model->paymentInDetails[0]->sale_invoice_insurance_own_risk_id == null): ?>
                     <?php $detail = $model->paymentInDetails[0]; ?>
                     <div id="downpayment-Detail">
                         <table>
@@ -358,6 +370,39 @@ $this->menu = array(
                     </div>
                 <?php endif; ?>
                 
+                <?php if (!empty($model->paymentInDetails) && $model->paymentInDetails[0]->sale_invoice_insurance_own_risk_id !== null): ?>
+                    <?php $detail = $model->paymentInDetails[0]; ?>
+                    <div id="own-risk-detail">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>OR #</th>
+                                    <th>Tanggal</th>
+                                    <th>Plate #</th>
+                                    <th>Note</th>
+                                    <th>OR Amount</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <?php echo CHtml::link($detail->saleInvoiceInsuranceOwnRisk->transaction_number, array(
+                                            "/accounting/saleInvoiceInsuranceOwnRisk/show", 
+                                            "id" => $detail->sale_invoice_insurance_own_risk_id
+                                        ), array('target' => 'blank')); ?>
+                                    </td>
+                                    <td><?php echo CHtml::encode(CHtml::value($detail, 'saleInvoiceInsuranceOwnRisk.transaction_date')); ?></td>
+                                    <td><?php echo CHtml::encode(CHtml::value($detail, 'saleInvoiceInsuranceOwnRisk.vehicle.plate_number')); ?></td>
+                                    <td><?php echo CHtml::encode(CHtml::value($detail, 'saleInvoiceInsuranceOwnRisk.note')); ?></td>
+                                    <td style="text-align: right">
+                                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($detail, 'own_risk_amount'))); ?>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                <?php endif; ?>
+                
                 <?php if (!empty($model->paymentInDetails) && $model->paymentInDetails[0]->invoice_header_id !== null && $model->paymentInDetails[0]->registration_transaction_id !== null): ?>
                     <div id="invoice-Detail">
                         <table>
@@ -366,13 +411,16 @@ $this->menu = array(
                                     <th>Invoice #</th>
                                     <th>Plate #</th>
                                     <th>Memo</th>
+                                    <th>Invoice</th>
+                                    <th>DP</th>
+                                    <th>OR</th>
+                                    <th>Sisa</th>
                                     <th>Pph</th>
                                     <th>Disc</th>
                                     <th>Biaya Bank</th>
                                     <th>Biaya Merimen</th>
                                     <th>Amount</th>
                                     <th>Total Payment</th>
-                                    <th>Total Invoice</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -387,6 +435,18 @@ $this->menu = array(
                                             </td>
                                             <td><?php echo CHtml::encode(CHtml::value($detail, 'invoiceHeader.vehicle.plate_number')); ?></td>
                                             <td><?php echo CHtml::encode(CHtml::value($detail, 'memo')); ?></td>
+                                            <td style="text-align: right">
+                                                <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($detail, 'total_invoice'))); ?>
+                                            </td>
+                                            <td style="text-align: right">
+                                                <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($detail, 'invoiceHeader.downpayment_amount'))); ?>
+                                            </td>
+                                            <td style="text-align: right">
+                                                <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($detail, 'invoiceHeader.insurance_own_risk_amount'))); ?>
+                                            </td>
+                                            <td style="text-align: right">
+                                                <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($detail, 'invoiceRemaining'))); ?>
+                                            </td>
                                             <td style="text-align: right">
                                                 <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($detail, 'tax_service_amount'))); ?>
                                             </td>
@@ -405,16 +465,16 @@ $this->menu = array(
                                             <td style="text-align: right">
                                                 <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($detail, 'totalAmount'))); ?>
                                             </td>
-                                            <td style="text-align: right">
-                                                <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($detail, 'total_invoice'))); ?>
-                                            </td>
                                         </tr>
                                     <?php endif; ?>
                                 <?php endforeach; ?>
                             </tbody>
                             <tfoot>
                                 <tr>
-                                    <td style="text-align: right; font-weight: bold" colspan="3">Total</td>
+                                    <td style="text-align: right; font-weight: bold" colspan="6">Total</td>
+                                    <td style="text-align: right; font-weight: bold">
+                                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($model, 'totalInvoice'))); ?>
+                                    </td>
                                     <td style="text-align: right; font-weight: bold">
                                         <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($model, 'tax_service_amount'))); ?>
                                     </td>
@@ -432,9 +492,6 @@ $this->menu = array(
                                     </td>
                                     <td style="text-align: right; font-weight: bold">
                                         <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($model, 'totalPayment'))); ?>
-                                    </td>
-                                    <td style="text-align: right; font-weight: bold">
-                                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($model, 'totalInvoice'))); ?>
                                     </td>
                                 </tr>
                             </tfoot>

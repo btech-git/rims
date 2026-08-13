@@ -8,7 +8,7 @@ $this->breadcrumbs = array(
 );
 ?>
 
-<h1>Payment In Downpayment (DP)</h1>
+<h1>Payment In Insurance Own Risk (OR)</h1>
 
 <div id="maincontent">
     <?php $this->renderPartial('_formMultiple', array(

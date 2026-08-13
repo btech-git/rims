@@ -59,7 +59,44 @@
                             <input type="text" readonly="true" value="<?php echo number_format($model->grand_total, 2); ?>"> 
                         </div>
                     </div>
-                </div>                
+                </div>
+                
+                <div class="field">
+                    <div class="row collapse">
+                        <div class="small-4 columns">
+                            <span class="prefix">Downpayment</span>
+                        </div>
+                        <div class="small-8 columns">
+                            <input type="text" readonly="true" value="<?php echo number_format($model->downpayment_amount, 2); ?>"> 
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="field">
+                    <div class="row collapse">
+                        <div class="small-4 columns">
+                            <span class="prefix">Asuransi OR</span>
+                        </div>
+                        <div class="small-8 columns">
+                            <?php $saleInvoiceInsuranceOwnRisk = SaleInvoiceInsuranceOwnRisk::model()->findByAttributes(array(
+                                'registration_transaction_id' => $model->id, 
+                                'user_id_cancelled' => null,
+                            )); ?>
+                            <input type="text" readonly="true" value="<?php echo number_format(CHtml::value($saleInvoiceInsuranceOwnRisk, 'amount_invoice'), 2); ?>"> 
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="field">
+                    <div class="row collapse">
+                        <div class="small-4 columns">
+                            <span class="prefix">Total Piutang</span>
+                        </div>
+                        <div class="small-8 columns">
+                            <input type="text" readonly="true" value="<?php echo number_format($model->receivableAmount, 2); ?>"> 
+                        </div>
+                    </div>
+                </div>
             </div> <!-- end div large -->
             <div class="large-6 columns">
                 

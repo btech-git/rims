@@ -59,8 +59,15 @@ class FollowUpController extends Controller {
         if ($startMileage !== '') {
             $endMileages = array(
                 0 => 9999,
-                10000 => 49999,
-                50000 => 99999,
+                10000 => 19999,
+                20000 => 29999,
+                30000 => 39999,
+                40000 => 49999,
+                50000 => 59999,
+                60000 => 69999,
+                70000 => 79999,
+                80000 => 89999,
+                90000 => 99999,
                 100000 => 149999,
             );
             $dataProvider->criteria->addBetweenCondition('registrationTransaction.vehicle_mileage', $startMileage, $endMileages[$startMileage]);
@@ -96,6 +103,7 @@ class FollowUpController extends Controller {
         
         $dataProvider->criteria->addBetweenCondition('t.invoice_date', $invoiceStartDate, $invoiceEndDate);
         $dataProvider->criteria->addCondition("t.status IN ('PAID', 'CLEAR')");
+        $dataProvider->criteria->addCondition("t.invoice_date = (SELECT MAX(p.invoice_date) FROM rims_invoice_header p WHERE t.vehicle_id = p.vehicle_id GROUP BY p.vehicle_id)");
 
         if (isset($_GET['ResetFilter'])) {
             $this->redirect(array('adminSales'));
@@ -165,19 +173,19 @@ class FollowUpController extends Controller {
         $worksheet = $objPHPExcel->setActiveSheetIndex(0);
         $worksheet->setTitle('Customer Follow Up');
 
-        $worksheet->mergeCells('A1:S1');
-        $worksheet->mergeCells('A2:S2');
-        $worksheet->mergeCells('A3:S3');
+        $worksheet->mergeCells('A1:U1');
+        $worksheet->mergeCells('A2:U2');
+        $worksheet->mergeCells('A3:U3');
         
-        $worksheet->getStyle('A1:S5')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-        $worksheet->getStyle('A1:S5')->getFont()->setBold(true);
+        $worksheet->getStyle('A1:U5')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->getStyle('A1:U5')->getFont()->setBold(true);
 
         $branch = Branch::model()->findByPk($model->branch_id);
         $worksheet->setCellValue('A1', 'Raperind Motor ' . CHtml::value($branch, 'name'));
         $worksheet->setCellValue('A2', 'Customer Follow Up + Warranty');
         $worksheet->setCellValue('A3', Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($invoiceStartDate)) . ' ' . Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($invoiceEndDate)));
         
-        $worksheet->getStyle('A5:S5')->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle('A5:U5')->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
         $worksheet->setCellValue('A5', 'No');
         $worksheet->setCellValue('B5', 'Customer');
@@ -197,9 +205,11 @@ class FollowUpController extends Controller {
         $worksheet->setCellValue('P5', 'Follow up Date (3 Months)');
         $worksheet->setCellValue('Q5', 'Days since Last Service (hari)');
         $worksheet->setCellValue('R5', 'Notes');
-        $worksheet->setCellValue('S5', 'Follow up Status');
+        $worksheet->setCellValue('S5', 'Entry User');
+        $worksheet->setCellValue('T5', 'Salesman');
+        $worksheet->setCellValue('U5', 'Follow up Status');
 
-        $worksheet->getStyle('A5:S5')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle('A5:U5')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
         $counter = 6;
         foreach ($dataProvider->data as $i => $header) {
@@ -221,7 +231,9 @@ class FollowUpController extends Controller {
             $worksheet->setCellValue("P{$counter}", CHtml::value($header, 'serviceFollowUpDate'));
             $worksheet->setCellValue("Q{$counter}", CHtml::value($header, 'lastInvoiceDaysNumber'));
             $worksheet->setCellValue("R{$counter}", CHtml::value($header, 'note'));
-            $worksheet->setCellValue("S{$counter}", CHtml::value($header, 'registrationTransaction.feedback'));
+            $worksheet->setCellValue("S{$counter}", CHtml::value($header, 'user.username'));
+            $worksheet->setCellValue("T{$counter}", CHtml::value($header, 'registrationTransaction.employeeIdSalesPerson.name'));
+            $worksheet->setCellValue("U{$counter}", CHtml::value($header, 'registrationTransaction.feedback'));
 
             $counter++;
         }

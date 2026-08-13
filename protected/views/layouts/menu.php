@@ -740,6 +740,11 @@
                         'visible' => Yii::app()->user->checkAccess('employeeAbsencyReport')
                     ),
                     array(
+                        'label' => 'Tukar Hari Libur Karyawan', 
+                        'url' => array('/master/employeeExchangeDayoff/admin'), 
+//                        'visible' => Yii::app()->user->checkAccess('employeeAbsencyReport')
+                    ),
+                    array(
                         'label' => 'Ulang Tahun Karyawan', 
                         'url' => array('/master/employee/index'), 
                         'visible' => Yii::app()->user->checkAccess('employeeBirthdateReport')

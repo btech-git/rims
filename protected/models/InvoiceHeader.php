@@ -66,6 +66,7 @@
  * @property integer $user_id_coretax
  * @property string $coretax_datetime
  * @property string $transaction_tax_date
+ * @property string $insurance_own_risk_amount
  *
  * The followings are the available model relations:
  * @property InvoiceDetail[] $invoiceDetails
@@ -120,12 +121,12 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
             array('reference_type, sales_order_id, registration_transaction_id, customer_id, vehicle_id, ppn, pph, branch_id, user_id, supervisor_id, total_product, total_service, total_quick_service, coa_bank_id_estimate, tax_percentage, user_id_cancelled, insurance_company_id, number_of_print, user_id_edited, user_id_printed, is_new_customer, warranty_input_user_id, follow_up_input_user_id, is_verified, user_id_verified, user_id_coretax', 'numerical', 'integerOnly' => true),
             array('invoice_number, transaction_tax_number, coretax_receipt_number', 'length', 'max' => 60),
             array('status', 'length', 'max' => 30),
-            array('service_price, product_price, quick_service_price, pph_total, ppn_total, total_discount, total_price, payment_amount, payment_left, package_price, grand_total_coretax, tax_amount_coretax, downpayment_amount, invoice_amount', 'length', 'max' => 18),
+            array('service_price, product_price, quick_service_price, pph_total, ppn_total, total_discount, total_price, payment_amount, payment_left, package_price, grand_total_coretax, tax_amount_coretax, downpayment_amount, invoice_amount, insurance_own_risk_amount', 'length', 'max' => 18),
             array('invoice_number', 'unique'),
             array('in_words, note, payment_date_estimate, warranty_date, follow_up_date, warranty_feedback, follow_up_feedback, warranty_input_date_time, follow_up_input_date_time, customer_name, plate_number, insurance_company_name, created_datetime, cancelled_datetime, edited_datetime, verified_datetime, coretax_datetime, transaction_tax_date', 'safe'),
             // The following rule is used by search().
             // Please remove those attributes that should not be searched.
-            array('id, invoice_number, invoice_date, due_date, number_of_print, reference_type, sales_order_id, registration_transaction_id, search_service, search_product, customer_id, vehicle_id, ppn, pph, branch_id, user_id, supervisor_id, status, service_price, product_price, quick_service_price, total_product, warranty_date, follow_up_date, insurance_company_id, total_service, total_quick_service, pph_total, ppn_total, total_discount, total_price, in_words, note, customer_name, invoice_date_to, due_date_to, payment_amount, payment_left,customer_type, payment_date_estimate, coa_bank_id_estimate, plate_number, tax_percentage, created_datetime, cancelled_datetime, user_id_cancelled, edited_datetime, user_id_edited, user_id_printed, is_new_customer, warranty_input_user_id, follow_up_input_user_id, warranty_feedback, follow_up_feedback, warranty_input_date_time, follow_up_input_date_time, package_price, grand_total_coretax, tax_amount_coretax, coretax_receipt_number, insurance_company_name, downpayment_amount, invoice_amount, is_verified, user_id_verified, verified_datetime, user_id_coretax, coretax_datetime, transaction_tax_date', 'safe', 'on' => 'search'),
+            array('id, invoice_number, invoice_date, due_date, number_of_print, reference_type, sales_order_id, registration_transaction_id, search_service, search_product, customer_id, vehicle_id, ppn, pph, branch_id, user_id, supervisor_id, status, service_price, product_price, quick_service_price, total_product, warranty_date, follow_up_date, insurance_company_id, total_service, total_quick_service, pph_total, ppn_total, total_discount, total_price, in_words, note, customer_name, invoice_date_to, due_date_to, payment_amount, payment_left,customer_type, payment_date_estimate, coa_bank_id_estimate, plate_number, tax_percentage, created_datetime, cancelled_datetime, user_id_cancelled, edited_datetime, user_id_edited, user_id_printed, is_new_customer, warranty_input_user_id, follow_up_input_user_id, warranty_feedback, follow_up_feedback, warranty_input_date_time, follow_up_input_date_time, package_price, grand_total_coretax, tax_amount_coretax, coretax_receipt_number, insurance_company_name, downpayment_amount, invoice_amount, is_verified, user_id_verified, verified_datetime, user_id_coretax, coretax_datetime, transaction_tax_date, insurance_own_risk_amount', 'safe', 'on' => 'search'),
         );
     }
 

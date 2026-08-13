@@ -45,10 +45,95 @@ class InvoiceHeaderController extends Controller {
         $filterChain->run();
     }
 
-    /**
-     * Displays a particular model.
-     * @param integer $id the ID of the model to be displayed
-     */
+    public function actionCreate($registrationId) {
+
+        $invoice = $this->instantiate(null, 'create');
+
+        $registrationTransaction = RegistrationTransaction::model()->findByPk($registrationId);
+        $saleInvoiceInsuranceOwnRisk = SaleInvoiceInsuranceOwnRisk::model()->findByAttributes(array(
+            'registration_transaction_id' => $registrationId,
+            'user_id_cancelled' => null,
+        ));
+        $invoice->header->reference_type = 2;
+        $invoice->header->registration_transaction_id = $registrationId;
+        $invoice->header->customer_id = $registrationTransaction->customer_id;
+        $invoice->header->vehicle_id = $registrationTransaction->vehicle_id;
+        $invoice->header->branch_id = $registrationTransaction->branch_id;
+        $invoice->header->user_id = Yii::app()->user->getId();
+        $invoice->header->total_product = $registrationTransaction->total_product;
+        $invoice->header->total_service = $registrationTransaction->total_service;
+        $invoice->header->total_quick_service = $registrationTransaction->total_quickservice;
+        $invoice->header->service_price = $registrationTransaction->total_service_price;
+        $invoice->header->product_price = $registrationTransaction->total_product_price;
+        $invoice->header->quick_service_price = $registrationTransaction->total_quickservice_price;
+        $invoice->header->total_price = $registrationTransaction->grand_total;
+        $invoice->header->invoice_amount = $registrationTransaction->grand_total - $registrationTransaction->downpayment_amount;
+        $invoice->header->payment_left = $registrationTransaction->grand_total - $registrationTransaction->downpayment_amount;
+        $invoice->header->payment_amount = '0.00';
+        $invoice->header->ppn_total = $registrationTransaction->ppn_price;
+        $invoice->header->ppn = ($registrationTransaction->ppn_price > 0) ? 1 : 0;
+        $invoice->header->tax_percentage = $registrationTransaction->tax_percentage;
+        $invoice->header->package_price = $registrationTransaction->total_price_package;
+        $invoice->header->downpayment_amount = ($registrationTransaction->is_downpayment_paid == 0) ? '0.00' : $registrationTransaction->downpayment_amount;
+        $invoice->header->insurance_own_risk_amount = (!empty($saleInvoiceInsuranceOwnRisk) && $saleInvoiceInsuranceOwnRisk->payment_remaining == '0.00') ? $saleInvoiceInsuranceOwnRisk->amount_invoice : '0.00';
+        $invoice->header->payment_date_estimate = date('Y-m-d');
+        $invoice->header->coa_bank_id_estimate = null;
+        $invoice->header->created_datetime = date('Y-m-d H:i:s');
+        $invoice->header->insurance_company_id = empty($registrationTransaction->insurance_company_id) ? null : $registrationTransaction->insurance_company_id;
+        
+        $invoice->addDetails($invoice->header->reference_type, $registrationId);
+        
+        if (isset($_POST['Cancel'])) {
+            $this->redirect(array('admin'));
+        }
+
+        if (isset($_POST['InvoiceHeader']) && IdempotentManager::check()) {
+
+            $this->loadState($invoice);
+            $invoice->header->due_date = date('Y-m-d',strtotime('+' . $registrationTransaction->customer->tenor . ' days',strtotime($invoice->header->invoice_date)));
+            $invoice->header->warranty_date = date('Y-m-d', strtotime('+3 days', strtotime($invoice->header->invoice_date))); 
+            $invoice->header->follow_up_date = date('Y-m-d', strtotime('+3 months', strtotime($invoice->header->invoice_date))); 
+            $invoice->generateCodeNumber(Yii::app()->dateFormatter->format('M', strtotime($invoice->header->invoice_date)), Yii::app()->dateFormatter->format('yyyy', strtotime($invoice->header->invoice_date)), $registrationTransaction->branch_id);
+        
+            if ($invoice->save(Yii::app()->db)) {
+                $this->redirect(array('view', 'id' => $invoice->header->id));
+            }
+        }
+
+        $this->render('create', array(
+            'invoice' => $invoice,
+        ));
+    }
+
+    public function actionUpdate($id) {
+        $invoice = $this->instantiate($id, 'update');
+        $this->performAjaxValidation($invoice->header);
+        
+        $invoice->header->edited_datetime = date('Y-m-d H:i:s');
+        $invoice->header->user_id_edited = Yii::app()->user->id;
+        
+        if (isset($_POST['Cancel'])) {
+            $this->redirect(array('admin'));
+        }
+
+        if (isset($_POST['InvoiceHeader']) && IdempotentManager::check()) {
+            $this->loadState($invoice);
+            JurnalUmum::model()->deleteAllByAttributes(array(
+                'kode_transaksi' => $invoice->header->invoice_number,
+            ));
+
+            $invoice->header->setCodeNumberByRevision('invoice_number');
+            
+            if ($invoice->save(Yii::app()->db)) {
+                $this->redirect(array('view', 'id' => $invoice->header->id));
+            }
+        }
+
+        $this->render('update', array(
+            'invoice' => $invoice,
+        ));
+    }
+
     public function actionView($id) {
         $model = $this->loadModel($id);
         $details = InvoiceDetail::model()->findAllByAttributes(array('invoice_id' => $id));
@@ -82,7 +167,7 @@ class InvoiceHeaderController extends Controller {
                 $jurnalUmumReceivable->tanggal_transaksi = $transactionDate;
                 $jurnalUmumReceivable->coa_id = $coaReceivableId;
                 $jurnalUmumReceivable->branch_id = $branchId;
-                $jurnalUmumReceivable->total = $model->total_price;
+                $jurnalUmumReceivable->total = $model->total_price - $model->downpayment_amount - $model->insurance_own_risk_amount;
                 $jurnalUmumReceivable->debet_kredit = 'D';
                 $jurnalUmumReceivable->tanggal_posting = date('Y-m-d');
                 $jurnalUmumReceivable->transaction_subject = $transactionSubject;
@@ -91,7 +176,39 @@ class InvoiceHeaderController extends Controller {
                 $jurnalUmumReceivable->remark = $remark;
                 $valid = $jurnalUmumReceivable->save() && $valid;
 
-                if ($model->ppn_total > 0.00) {
+                if ($model->downpayment_amount > '0.00') {
+                    $jurnalUmumDownpayment = new JurnalUmum;
+                    $jurnalUmumDownpayment->kode_transaksi = $transactionCode;
+                    $jurnalUmumDownpayment->tanggal_transaksi = $transactionDate;
+                    $jurnalUmumDownpayment->coa_id = 751;
+                    $jurnalUmumDownpayment->branch_id = $branchId;
+                    $jurnalUmumDownpayment->total = $model->downpayment_amount;
+                    $jurnalUmumDownpayment->debet_kredit = 'D';
+                    $jurnalUmumDownpayment->tanggal_posting = date('Y-m-d');
+                    $jurnalUmumDownpayment->transaction_subject = $transactionSubject;
+                    $jurnalUmumDownpayment->is_coa_category = 0;
+                    $jurnalUmumDownpayment->transaction_type = $transactionType;
+                    $jurnalUmumDownpayment->remark = $remark;
+                    $valid = $jurnalUmumDownpayment->save() && $valid;
+                }
+                
+                if ($model->insurance_own_risk_amount > '0.00') {
+                    $jurnalUmumOwnRisk = new JurnalUmum;
+                    $jurnalUmumOwnRisk->kode_transaksi = $transactionCode;
+                    $jurnalUmumOwnRisk->tanggal_transaksi = $transactionDate;
+                    $jurnalUmumOwnRisk->coa_id = ($model->customer->customer_type == 'Company') ? $model->customer->coa_id : 1449;
+                    $jurnalUmumOwnRisk->branch_id = $branchId;
+                    $jurnalUmumOwnRisk->total = $model->insurance_own_risk_amount;
+                    $jurnalUmumOwnRisk->debet_kredit = 'D';
+                    $jurnalUmumOwnRisk->tanggal_posting = date('Y-m-d');
+                    $jurnalUmumOwnRisk->transaction_subject = $transactionSubject;
+                    $jurnalUmumOwnRisk->is_coa_category = 0;
+                    $jurnalUmumOwnRisk->transaction_type = $transactionType;
+                    $jurnalUmumOwnRisk->remark = $remark;
+                    $valid = $jurnalUmumOwnRisk->save() && $valid;
+                }
+
+                if ($model->ppn_total > '0.00') {
                     $coaPpn = Coa::model()->findByAttributes(array('code' => '224.00.001'));
                     $jurnalUmumPpn = new JurnalUmum;
                     $jurnalUmumPpn->kode_transaksi = $transactionCode;
@@ -607,65 +724,6 @@ class InvoiceHeaderController extends Controller {
 //        }
 //    }
 
-    /**
-     * Creates a new model.
-     * If creation is successful, the browser will be redirected to the 'view' page.
-     */
-    public function actionCreate($registrationId) {
-
-        $invoice = $this->instantiate(null, 'create');
-
-        $registrationTransaction = RegistrationTransaction::model()->findByPk($registrationId);
-        $invoice->header->reference_type = 2;
-        $invoice->header->registration_transaction_id = $registrationId;
-        $invoice->header->customer_id = $registrationTransaction->customer_id;
-        $invoice->header->vehicle_id = $registrationTransaction->vehicle_id;
-        $invoice->header->branch_id = $registrationTransaction->branch_id;
-        $invoice->header->user_id = Yii::app()->user->getId();
-        $invoice->header->total_product = $registrationTransaction->total_product;
-        $invoice->header->total_service = $registrationTransaction->total_service;
-        $invoice->header->total_quick_service = $registrationTransaction->total_quickservice;
-        $invoice->header->service_price = $registrationTransaction->total_service_price;
-        $invoice->header->product_price = $registrationTransaction->total_product_price;
-        $invoice->header->quick_service_price = $registrationTransaction->total_quickservice_price;
-        $invoice->header->total_price = $registrationTransaction->grand_total;
-        $invoice->header->invoice_amount = $registrationTransaction->grand_total - $registrationTransaction->downpayment_amount;
-        $invoice->header->payment_left = $registrationTransaction->grand_total - $registrationTransaction->downpayment_amount;
-        $invoice->header->payment_amount = '0.00';
-        $invoice->header->ppn_total = $registrationTransaction->ppn_price;
-        $invoice->header->ppn = ($registrationTransaction->ppn_price > 0) ? 1 : 0;
-        $invoice->header->tax_percentage = $registrationTransaction->tax_percentage;
-        $invoice->header->package_price = $registrationTransaction->total_price_package;
-        $invoice->header->downpayment_amount = ($registrationTransaction->is_downpayment_paid == 0) ? '0.00' : $registrationTransaction->downpayment_amount;
-        $invoice->header->payment_date_estimate = date('Y-m-d');
-        $invoice->header->coa_bank_id_estimate = null;
-        $invoice->header->created_datetime = date('Y-m-d H:i:s');
-        $invoice->header->insurance_company_id = empty($registrationTransaction->insurance_company_id) ? null : $registrationTransaction->insurance_company_id;
-        
-        $invoice->addDetails($invoice->header->reference_type, $registrationId);
-        
-        if (isset($_POST['Cancel'])) {
-            $this->redirect(array('admin'));
-        }
-
-        if (isset($_POST['InvoiceHeader']) && IdempotentManager::check()) {
-
-            $this->loadState($invoice);
-            $invoice->header->due_date = date('Y-m-d',strtotime('+' . $registrationTransaction->customer->tenor . ' days',strtotime($invoice->header->invoice_date)));
-            $invoice->header->warranty_date = date('Y-m-d', strtotime('+3 days', strtotime($invoice->header->invoice_date))); 
-            $invoice->header->follow_up_date = date('Y-m-d', strtotime('+3 months', strtotime($invoice->header->invoice_date))); 
-            $invoice->generateCodeNumber(Yii::app()->dateFormatter->format('M', strtotime($invoice->header->invoice_date)), Yii::app()->dateFormatter->format('yyyy', strtotime($invoice->header->invoice_date)), $registrationTransaction->branch_id);
-        
-            if ($invoice->save(Yii::app()->db)) {
-                $this->redirect(array('view', 'id' => $invoice->header->id));
-            }
-        }
-
-        $this->render('create', array(
-            'invoice' => $invoice,
-        ));
-    }
-
     public function actionCreateSaleOrder($saleOrderId) {
 
         $invoice = $this->instantiate(null, 'create');
@@ -727,35 +785,6 @@ class InvoiceHeaderController extends Controller {
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id the ID of the model to be updated
      */
-    public function actionUpdate($id) {
-        $invoice = $this->instantiate($id, 'update');
-        $this->performAjaxValidation($invoice->header);
-        
-        $invoice->header->edited_datetime = date('Y-m-d H:i:s');
-        $invoice->header->user_id_edited = Yii::app()->user->id;
-        
-        if (isset($_POST['Cancel'])) {
-            $this->redirect(array('admin'));
-        }
-
-        if (isset($_POST['InvoiceHeader']) && IdempotentManager::check()) {
-            $this->loadState($invoice);
-            JurnalUmum::model()->deleteAllByAttributes(array(
-                'kode_transaksi' => $invoice->header->invoice_number,
-            ));
-
-            $invoice->header->setCodeNumberByRevision('invoice_number');
-            
-            if ($invoice->save(Yii::app()->db)) {
-                $this->redirect(array('view', 'id' => $invoice->header->id));
-            }
-        }
-
-        $this->render('update', array(
-            'invoice' => $invoice,
-        ));
-    }
-
     public function actionUpdateTaxNumber($id) {
         $invoice = $this->loadModel($id);
         

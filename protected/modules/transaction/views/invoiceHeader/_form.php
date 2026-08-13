@@ -329,6 +329,17 @@
                 <div class="field">
                     <div class="row collapse">
                         <div class="small-4 columns">
+                            <?php echo $form->labelEx($invoice->header, 'insurance_own_risk_amount', array('class' => 'prefix')); ?>
+                        </div>
+                        <div class="small-8 columns">
+                            <?php echo number_format(CHtml::encode(CHtml::value($invoice->header, 'insurance_own_risk_amount')), 2); ?>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="field">
+                    <div class="row collapse">
+                        <div class="small-4 columns">
                             <?php echo $form->labelEx($invoice->header, 'Jumlah Tagihan', array('class' => 'prefix')); ?>
                         </div>
                         <div class="small-8 columns">

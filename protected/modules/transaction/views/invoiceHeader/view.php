@@ -339,6 +339,12 @@ $this->breadcrumbs = array(
 
                 <tr>
                     <td colspan="2"></td>
+                    <td class="title">Asuransi Own Risk</td>
+                    <td style="text-align: right"><strong>Rp. <?php echo number_format($model->insurance_own_risk_amount, 2) ?></strong></td>
+                </tr>	
+
+                <tr>
+                    <td colspan="2"></td>
                     <td class="title">Jumlah Tagihan</td>
                     <td style="text-align: right"><strong>Rp. <?php echo number_format($model->invoice_amount, 2) ?></strong></td>
                 </tr>	
@@ -416,7 +422,7 @@ $this->breadcrumbs = array(
 
                         <tr>
                             <td style="text-align: center"><?php echo $i + 1; ?></td>
-                            <td class="width1-4"><?php echo CHtml::encode(CHtml::value($header, 'coa_id')); ?></td>
+                            <td class="width1-4"><?php echo CHtml::encode(CHtml::value($header, 'coa.code')); ?></td>
                             <td class="width1-5"><?php echo CHtml::encode(CHtml::value($header, 'branchAccountName')); ?></td>
                             <td class="width1-6" style="text-align: right">
                                 <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $amountDebit)); ?>

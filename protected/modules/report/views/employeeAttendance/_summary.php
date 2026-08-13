@@ -29,6 +29,9 @@
                 <th style="text-align: center">Libur Nasional</th>
                 <th style="text-align: center">Terlambat</th>
                 <th style="text-align: center">Lembur</th>
+                <th style="text-align: center">Kehadiran</th>
+                <th style="text-align: center">Ketepatan Waktu</th>
+                <th style="text-align: center">Kepatuhan Jadwal</th>
                 <th style="text-align: center">KPI</th>
                 <th style="text-align: center">Status Index</th>
             </tr>
@@ -45,6 +48,7 @@
                         <?php $holidaysCount++; ?>
                     <?php endif; ?>
                 <?php endfor; ?>
+                <?php $holidaysCount += isset($holidayChangeCounts[$employeeId]) ? $holidayChangeCounts[$employeeId] : 0; ?>
                 <tr>
                     <td><?php echo CHtml::encode($employeeId); ?></td>
                     <td><?php echo CHtml::encode($employeePeriodicallyAttendanceItem['employee_code']); ?></td>
@@ -80,8 +84,13 @@
                     <?php $onTimeRate = $onTimeDays / $attendanceDays; ?>
                     <?php $notOvertimeDays = $workingDays - $overtimeDays; ?>
                     <?php $notOvertimeRate = ($attendanceDays - $lateDays - $notOvertimeDays) / $attendanceDays; ?>
+                    <?php $onScheduleDays = $onTimeDays - $notOvertimeDays; ?>
+                    <?php $onScheduleRate = $onScheduleDays / $attendanceDays; ?>
                     <?php $performanceIndexRate = ($attendanceRate + $onTimeRate + $notOvertimeRate) / 3; ?>
-                    <td style="text-align: right"><?php echo CHtml::encode(round($performanceIndexRate * 100, 2)); ?>%</td>
+                    <td style="text-align: right"><?php echo CHtml::encode(round($attendanceRate * 100, 0)); ?>%</td>
+                    <td style="text-align: right"><?php echo CHtml::encode(round($onTimeRate * 100, 0)); ?>%</td>
+                    <td style="text-align: right"><?php echo CHtml::encode(round($onScheduleRate * 100, 0)); ?>%</td>
+                    <td style="text-align: right"><?php echo CHtml::encode(round($performanceIndexRate * 100, 0)); ?>%</td>
                     <?php $statusIndex = ''; ?>
                     <?php if ($performanceIndexRate >= 0.95): ?>
                         <?php $statusIndex = 'Sangat Baik'; ?>

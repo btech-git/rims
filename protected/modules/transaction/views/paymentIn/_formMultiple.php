@@ -2,10 +2,6 @@
     <?php $form = $this->beginWidget('CActiveForm', array(
         'id' => 'payment-in-form',
         'htmlOptions' => array('enctype' => 'multipart/form-data'),
-        // Please note: When you enable ajax validation, make sure the corresponding
-        // controller action is handling ajax validation correctly.
-        // There is a call to performAjaxValidation() commented in generated controller code.
-        // See class documentation of CActiveForm for details on this.
         'enableAjaxValidation' => false,
     )); ?>
     <?php echo CHtml::errorSummary($paymentIn->header); ?>
@@ -103,7 +99,7 @@
                         <?php echo CHtml::label('Payment Type', false); ?>
                     </div>
                     <div class="small-8 columns">
-                        <?php echo CHtml::activeDropDownList($paymentIn->header, 'payment_type_id', CHtml::listData(PaymentType::model()->findAll(), 'id', 'name'), array(
+                        <?php echo CHtml::activeDropDownList($paymentIn->header, 'payment_type_id', CHtml::listData(PaymentType::model()->findAllByAttributes(array('is_deleted' => 0)), 'id', 'name'), array(
                             'empty' => '-- Select Payment Type --',
                             'onchange' => '
                                 if ($(this).val() == 1) {
@@ -154,7 +150,7 @@
                         <?php echo CHtml::label('Note', ''); ?>
                     </div>
                     <div class="small-8 columns">
-                        <?php echo CHtml::activeTextArea($paymentIn->header, 'notes'); ?>
+                        <?php echo CHtml::activeTextArea($paymentIn->header, 'notes', array('rows' => 5)); ?>
                     </div>
                 </div>
             </div>
@@ -163,7 +159,7 @@
 
     <hr />
 
-    <?php //if ($paymentIn->header->isNewRecord): ?>
+    <?php if ($paymentIn->header->payment_category == 'Invoice'): ?>
         <div class="row">
             <?php echo CHtml::button('Tambah Invoice', array(
                 'name' => 'Search', 
@@ -172,14 +168,24 @@
             )); ?>
             <?php echo CHtml::hiddenField('SaleInvoiceId'); ?>
         </div>
-    <?php //endif; ?>
+    <?php endif; ?>
 
     <br />
     
     <div id="detail_div">
-        <?php $this->renderPartial('_detail', array(
-            'paymentIn' => $paymentIn,
-        )); ?>
+        <?php if ($paymentIn->header->payment_category == 'Invoice'): ?>
+            <?php $this->renderPartial('_detail', array(
+                'paymentIn' => $paymentIn,
+            )); ?>
+        <?php elseif ($paymentIn->header->payment_category == 'Downpayment'): ?>
+            <?php $this->renderPartial('_detailDownpayment', array(
+                'paymentIn' => $paymentIn,
+            )); ?>
+        <?php else: ?>
+            <?php $this->renderPartial('_detailInvoiceOwnRisk', array(
+                'paymentIn' => $paymentIn,
+            )); ?>
+        <?php endif; ?>
     </div>
 	
     <div class="field">
@@ -220,7 +226,7 @@
 
 </div><!-- form -->
 
-<?php //if ($paymentIn->header->isNewRecord): ?>
+<?php if ($paymentIn->header->payment_category == 'Invoice'): ?>
     <?php $this->beginWidget('zii.widgets.jui.CJuiDialog', array(
         'id' => 'invoice-dialog',
         // additional javascript options for the dialog plugin
@@ -305,4 +311,4 @@
 
     <?php $this->endWidget('zii.widgets.jui.CJuiDialog'); ?>
 
-<?php //endif; ?>
+<?php endif; ?>

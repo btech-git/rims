@@ -136,6 +136,23 @@ Yii::app()->clientScript->registerScript('report', '
                         </div>
                     </div>
                     
+                    <div class="medium-6 columns">
+                        <div class="field">
+                            <div class="row collapse">
+                                <div class="small-4 columns">
+                                    <label class="prefix">Umur WO</label>
+                                </div>
+                                <div class="small-8 columns">
+                                      <?php echo CHtml::dropDownlist('OutstandingDays', $outstandingDays, array(
+                                          7 => '> 7 hari',
+                                          30 => '> 30 hari',
+                                          60 => '> 60 hari',
+                                      ), array('empty'=>'-- All --')); ?>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
                 </div>
                 
                 <div class="clear"></div>

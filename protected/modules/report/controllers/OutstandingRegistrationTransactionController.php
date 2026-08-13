@@ -31,6 +31,7 @@ class OutstandingRegistrationTransactionController extends Controller {
         $customerId = (isset($_GET['CustomerId'])) ? $_GET['CustomerId'] : '';
         $plateNumber = isset($_GET['PlateNumber']) ? $_GET['PlateNumber'] : null;
         $branchId = isset($_GET['BranchId']) ? $_GET['BranchId'] : null;
+        $outstandingDays = (isset($_GET['OutstandingDays'])) ? $_GET['OutstandingDays'] : '';
         $pageSize = (isset($_GET['PageSize'])) ? $_GET['PageSize'] : '';
         $currentPage = (isset($_GET['page'])) ? $_GET['page'] : '';
         $currentSort = (isset($_GET['sort'])) ? $_GET['sort'] : '';
@@ -60,6 +61,7 @@ class OutstandingRegistrationTransactionController extends Controller {
             'branchId' => $branchId,
             'customerId' => $customerId,
             'plateNumber' => $plateNumber,
+            'outstandingDays' => $outstandingDays,
         );
         $outstandingRegistrationTransactionSummary->setupFilter($filters);
 
@@ -78,6 +80,7 @@ class OutstandingRegistrationTransactionController extends Controller {
             'customer'=>$customer,
             'customerDataProvider'=>$customerDataProvider,
             'plateNumber' => $plateNumber,
+            'outstandingDays' => $outstandingDays,
         ));
     }
 

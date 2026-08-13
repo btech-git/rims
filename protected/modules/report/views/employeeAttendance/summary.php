@@ -104,6 +104,7 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                         'nationalHolidaysCount' => $nationalHolidaysCount,
                         'startDate' => $startDate,
                         'endDate' => $endDate,
+                        'holidayChangeCounts' => $holidayChangeCounts,
                     )); ?>
                 </div>
                 <div class="clear"></div>

@@ -36,10 +36,12 @@ class OutstandingRegistrationTransactionSummary extends CComponent {
         $branchId = (empty($filters['branchId'])) ? '' : $filters['branchId'];
         $customerId = (empty($filters['customerId'])) ? '' : $filters['customerId'];
         $plateNumber = (empty($filters['plateNumber'])) ? '' : $filters['plateNumber'];
+        $outstandingDays = (empty($filters['outstandingDays'])) ? '' : $filters['outstandingDays'];
         
         $branchConditionSql = '';
         $customerConditionSql = '';
         $plateNumberConditionSql = '';
+        $outstandingDaysConditionSql = '';
         
         if (!empty($branchId)) {
             $branchConditionSql = ' AND t.branch_id = :branch_id';
@@ -56,6 +58,11 @@ class OutstandingRegistrationTransactionSummary extends CComponent {
             $this->dataProvider->criteria->params[':plate_number'] = "%{$plateNumber}%";
         }
 
+        if (!empty($outstandingDays)) {
+            $outstandingDaysConditionSql = ' AND DATEDIFF(CURDATE(), t.transaction_date) > :outstanding_days';
+            $this->dataProvider->criteria->params[':outstanding_days'] = $outstandingDays;
+        }
+
         $this->dataProvider->criteria->with = array(
             'customer',
             'vehicle',
@@ -63,7 +70,7 @@ class OutstandingRegistrationTransactionSummary extends CComponent {
         
         $this->dataProvider->criteria->addCondition("substr(t.transaction_date, 1, 10) BETWEEN :start_date AND :end_date AND t.sales_order_number IS NULL AND
                 t.work_order_number IS NULL AND t.user_id_cancelled IS NULL AND t.status NOT IN ('Finished')" . 
-        $branchConditionSql . $customerConditionSql . $plateNumberConditionSql);
+        $branchConditionSql . $customerConditionSql . $plateNumberConditionSql . $outstandingDaysConditionSql);
         $this->dataProvider->criteria->params[':start_date'] = $startDate;
         $this->dataProvider->criteria->params[':end_date'] = $endDate;
     }

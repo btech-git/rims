@@ -38,6 +38,7 @@ $('.search-form form').submit(function(){
             </div><!-- search-form -->
         </div>
     </div>
+    
     <div class="grid-view">
         <?php $this->widget('zii.widgets.grid.CGridView', array(
             'id' => 'maintenance-request-header-grid',

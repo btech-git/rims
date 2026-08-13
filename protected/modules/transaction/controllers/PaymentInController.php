@@ -48,10 +48,6 @@ class PaymentInController extends Controller {
         $filterChain->run();
     }
 
-    /**
-     * Displays a particular model.
-     * @param integer $id the ID of the model to be displayed
-     */
     public function actionView($id) {
         $model = $this->loadModel($id);
         $revisionHistories = PaymentInApproval::model()->findAllByAttributes(array('payment_in_id' => $model->id));
@@ -72,142 +68,26 @@ class PaymentInController extends Controller {
                 'branch_id' => $model->branch_id,
             ));
 
-//            foreach ($model->paymentInDetails as $detail) {
-//                $invoiceHeader = InvoiceHeader::model()->findByPk($detail->invoice_header_id);
-//                if ($invoiceHeader->payment_left > 0.00) {
-//                    $invoiceHeader->status = 'PARTIALLY PAID';
-//                } else {
-//                    $invoiceHeader->status = 'PAID';
-//                }
-//
-//                $invoiceHeader->update(array('status'));
-//            }
-
             if (!empty($model->insurance_company_id)) {
-                $coaId = $model->insuranceCompany->coa_id;
+                $coaIdReceivable = $model->insuranceCompany->coa_id;
                 $remark = $model->insuranceCompany->name;
             } else {
-                $coaId = $model->customer->coa_id;
+                $coaIdReceivable = $model->customer->coa_id;
                 $remark = $model->customer->name;
             }
 
-            $totalKas = $model->totalPayment;
-            $jurnalPiutang = new JurnalUmum;
-            $jurnalPiutang->kode_transaksi = $model->payment_number;
-            $jurnalPiutang->tanggal_transaksi = $model->payment_date;
-            $jurnalPiutang->coa_id = $coaId;
-            $jurnalPiutang->branch_id = $model->branch_id;
-            $jurnalPiutang->total = $totalKas;
-            $jurnalPiutang->debet_kredit = 'K';
-            $jurnalPiutang->tanggal_posting = date('Y-m-d');
-            $jurnalPiutang->transaction_subject = $model->notes;
-            $jurnalPiutang->remark = $remark;
-            $jurnalPiutang->is_coa_category = 0;
-            $jurnalPiutang->transaction_type = 'Pin';
-            $jurnalPiutang->save();
-            
             if (!empty($model->paymentType->coa_id)) {
-                $coaId = $model->paymentType->coa_id;
+                $coaIdBank = $model->paymentType->coa_id;
             } else {
-                $coaId = $model->companyBank->coa_id;
+                $coaIdBank = $model->companyBank->coa_id;
             }
 
-            if ($model->totalDetailAmount > 0) {
-                $jurnalUmumKas = new JurnalUmum;
-                $jurnalUmumKas->kode_transaksi = $model->payment_number;
-                $jurnalUmumKas->tanggal_transaksi = $model->payment_date;
-                $jurnalUmumKas->coa_id = $coaId;
-                $jurnalUmumKas->branch_id = $model->branch_id;
-                $jurnalUmumKas->total = $model->totalDetailAmount;
-                $jurnalUmumKas->debet_kredit = 'D';
-                $jurnalUmumKas->tanggal_posting = date('Y-m-d');
-                $jurnalUmumKas->transaction_subject = $model->notes;
-                $jurnalUmumKas->remark = $remark;
-                $jurnalUmumKas->is_coa_category = 0;
-                $jurnalUmumKas->transaction_type = 'Pin';
-                $jurnalUmumKas->save();
-            }
-
-            foreach ($model->paymentInDetails as $detail) {
-                if ($detail->tax_service_amount > 0) {
-                    $jurnalPph = new JurnalUmum;
-                    $jurnalPph->kode_transaksi = $model->payment_number;
-                    $jurnalPph->tanggal_transaksi = $model->payment_date;
-                    $jurnalPph->coa_id = 1473;
-                    $jurnalPph->branch_id = $model->branch_id;
-                    $jurnalPph->total = $detail->tax_service_amount;
-                    $jurnalPph->debet_kredit = 'D';
-                    $jurnalPph->tanggal_posting = date('Y-m-d');
-                    $jurnalPph->transaction_subject = $detail->memo;
-                    $jurnalPph->remark = $remark;
-                    $jurnalPph->is_coa_category = 0;
-                    $jurnalPph->transaction_type = 'Pin';
-                    $jurnalPph->save();
-                }
-            }
-
-            if ($model->downpayment_amount > 0) {
-                $jurnalDownpayment = new JurnalUmum;
-                $jurnalDownpayment->kode_transaksi = $model->payment_number;
-                $jurnalDownpayment->tanggal_transaksi = $model->payment_date;
-                $jurnalDownpayment->coa_id = 751;
-                $jurnalDownpayment->branch_id = $model->branch_id;
-                $jurnalDownpayment->total = $model->downpayment_amount;
-                $jurnalDownpayment->debet_kredit = 'D';
-                $jurnalDownpayment->tanggal_posting = date('Y-m-d');
-                $jurnalDownpayment->transaction_subject = $model->notes;
-                $jurnalDownpayment->remark = $remark;
-                $jurnalDownpayment->is_coa_category = 0;
-                $jurnalDownpayment->transaction_type = 'Pin';
-                $jurnalDownpayment->save();
-            }
-
-            if ($model->discount_product_amount > 0) {
-                $jurnalDiscountProduct = new JurnalUmum;
-                $jurnalDiscountProduct->kode_transaksi = $model->payment_number;
-                $jurnalDiscountProduct->tanggal_transaksi = $model->payment_date;
-                $jurnalDiscountProduct->coa_id = 2935;
-                $jurnalDiscountProduct->branch_id = $model->branch_id;
-                $jurnalDiscountProduct->total = $model->discount_product_amount;
-                $jurnalDiscountProduct->debet_kredit = 'D';
-                $jurnalDiscountProduct->tanggal_posting = date('Y-m-d');
-                $jurnalDiscountProduct->transaction_subject = $model->notes;
-                $jurnalDiscountProduct->remark = $remark;
-                $jurnalDiscountProduct->is_coa_category = 0;
-                $jurnalDiscountProduct->transaction_type = 'Pin';
-                $jurnalDiscountProduct->save();
-            }
-
-            if ($model->bank_administration_fee > 0) {
-                $jurnalBankAdministration = new JurnalUmum;
-                $jurnalBankAdministration->kode_transaksi = $model->payment_number;
-                $jurnalBankAdministration->tanggal_transaksi = $model->payment_date;
-                $jurnalBankAdministration->coa_id = 1111;
-                $jurnalBankAdministration->branch_id = $model->branch_id;
-                $jurnalBankAdministration->total = $model->bank_administration_fee;
-                $jurnalBankAdministration->debet_kredit = 'D';
-                $jurnalBankAdministration->tanggal_posting = date('Y-m-d');
-                $jurnalBankAdministration->transaction_subject = $model->notes;
-                $jurnalBankAdministration->remark = $remark;
-                $jurnalBankAdministration->is_coa_category = 0;
-                $jurnalBankAdministration->transaction_type = 'Pin';
-                $jurnalBankAdministration->save();
-            }
-
-            if ($model->merimen_fee > 0) {
-                $jurnalMerimenFee = new JurnalUmum;
-                $jurnalMerimenFee->kode_transaksi = $model->payment_number;
-                $jurnalMerimenFee->tanggal_transaksi = $model->payment_date;
-                $jurnalMerimenFee->coa_id = 2921;
-                $jurnalMerimenFee->branch_id = $model->branch_id;
-                $jurnalMerimenFee->total = $model->merimen_fee;
-                $jurnalMerimenFee->debet_kredit = 'D';
-                $jurnalMerimenFee->tanggal_posting = date('Y-m-d');
-                $jurnalMerimenFee->transaction_subject = $model->notes;
-                $jurnalMerimenFee->remark = $remark;
-                $jurnalMerimenFee->is_coa_category = 0;
-                $jurnalMerimenFee->transaction_type = 'Pin';
-                $jurnalMerimenFee->save();
+            if ($model->payment_category == 'Invoice') {
+                $this->setJournalTransactionInvoice($model, $coaIdReceivable, $coaIdBank, $remark);
+            } elseif ($model->payment_category == 'Downpayment') {
+                $this->setJournalTransactionDownpayment($model, $coaIdBank, $remark);
+            } else {
+                $this->setJournalTransactionInsuranceOwnRisk($model, $coaIdBank, $remark);
             }
         }
         
@@ -277,6 +157,7 @@ class PaymentInController extends Controller {
         $paymentIn->header->created_datetime = date('Y-m-d H:i:s');
         $paymentIn->header->branch_id = Yii::app()->user->branch_id;
         $paymentIn->header->status = 'Draft';
+        $paymentIn->header->payment_category = 'Invoice';
         $paymentIn->header->user_id = Yii::app()->user->id;
         $paymentIn->addInvoice($invoiceId);
 
@@ -345,6 +226,7 @@ class PaymentInController extends Controller {
         $paymentIn->header->created_datetime = date('Y-m-d H:i:s');
         $paymentIn->header->branch_id = Yii::app()->user->branch_id;
         $paymentIn->header->status = 'Draft';
+        $paymentIn->header->payment_category = 'Invoice';
         $paymentIn->header->user_id = Yii::app()->user->id;
 
         $invoiceHeader = Search::bind(new InvoiceHeader('search'), isset($_GET['InvoiceHeader']) ? $_GET['InvoiceHeader'] : array());
@@ -386,13 +268,14 @@ class PaymentInController extends Controller {
     }
    
     public function actionCreateDownpayment($registrationId) {
-        $paymentIn = $this->instantiate(null, 'create');
+        $paymentIn = $this->instantiate(null, 'createDownpayment');
         
         $paymentIn->header->payment_date = date('Y-m-d');
         $paymentIn->header->payment_time = date('H:i:s');
         $paymentIn->header->created_datetime = date('Y-m-d H:i:s');
         $paymentIn->header->branch_id = Yii::app()->user->branch_id;
         $paymentIn->header->status = 'Draft';
+        $paymentIn->header->payment_category = 'Downpayment';
         $paymentIn->header->user_id = Yii::app()->user->id;
         $paymentIn->addDownpayment($registrationId);
         
@@ -410,6 +293,36 @@ class PaymentInController extends Controller {
         }
 
         $this->render('createDownpayment', array(
+            'paymentIn' => $paymentIn,
+         ));
+    }
+   
+    public function actionCreateInvoiceOwnRisk($invoiceOwnRiskId) {
+        $paymentIn = $this->instantiate(null, 'createOwnRisk');
+        
+        $paymentIn->header->payment_date = date('Y-m-d');
+        $paymentIn->header->payment_time = date('H:i:s');
+        $paymentIn->header->created_datetime = date('Y-m-d H:i:s');
+        $paymentIn->header->branch_id = Yii::app()->user->branch_id;
+        $paymentIn->header->status = 'Draft';
+        $paymentIn->header->payment_category = 'Own Risk';
+        $paymentIn->header->user_id = Yii::app()->user->id;
+        $paymentIn->addInvoiceOwnRisk($invoiceOwnRiskId);
+        
+        if (isset($_POST['Cancel'])) {
+            $this->redirect(array('admin'));
+        }
+
+        if (isset($_POST['Submit']) && IdempotentManager::check()) {
+            $this->loadState($paymentIn);
+            $paymentIn->generateCodeNumber(Yii::app()->dateFormatter->format('M', strtotime($paymentIn->header->payment_date)), Yii::app()->dateFormatter->format('yyyy', strtotime($paymentIn->header->payment_date)), $paymentIn->header->branch_id);
+            
+            if ($paymentIn->save(Yii::app()->db)) {
+                $this->redirect(array('view', 'id' => $paymentIn->header->id));
+            }
+        }
+
+        $this->render('createInvoiceOwnRisk', array(
             'paymentIn' => $paymentIn,
          ));
     }
@@ -588,8 +501,7 @@ class PaymentInController extends Controller {
         }
 
         $invoiceCriteria = new CDbCriteria;
-        $invoiceCriteria->addCondition('t.payment_left > 1 AND t.invoice_date > "2024-12-31" AND t.status NOT LIKE "%CANCEL%"');
-//        $invoiceCriteria->addInCondition('t.branch_id', Yii::app()->user->branch_id);
+        $invoiceCriteria->addCondition("t.payment_left > 100 AND t.invoice_date > '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND t.status NOT LIKE '%CANCEL%'");
         $invoiceCriteria->compare('t.branch_id', $invoice->branch_id);
         $invoiceCriteria->compare('t.invoice_number', $invoice->invoice_number, true);
         $invoiceCriteria->compare('t.invoice_date', $invoice->invoice_date, true);
@@ -602,8 +514,6 @@ class PaymentInController extends Controller {
         $invoiceCriteria->compare('t.total_price', $invoice->total_price, true);
         $invoiceCriteria->compare('t.payment_amount', $invoice->payment_amount, true);
         $invoiceCriteria->compare('t.payment_left', $invoice->payment_left, true);
-//        $invoiceCriteria->addCondition('t.branch_id = :branch_id');
-//        $invoiceCriteria->params[':branch_id'] = Yii::app()->user->branch_id;
         
         $invoiceCriteria->together = true;
         $invoiceCriteria->with = array('customer', 'vehicle');
@@ -644,6 +554,31 @@ class PaymentInController extends Controller {
             )
         ));
         
+        $saleInvoiceInsuranceOwnRisk = new SaleInvoiceInsuranceOwnRisk('search');
+        $saleInvoiceInsuranceOwnRisk->unsetAttributes();
+        if (isset($_GET['SaleInvoiceInsuranceOwnRisk'])) {
+            $saleInvoiceInsuranceOwnRisk->attributes = $_GET['SaleInvoiceInsuranceOwnRisk'];
+        }
+
+        $invoiceOwnRiskCriteria = new CDbCriteria;
+        $invoiceOwnRiskCriteria->addCondition('t.payment_remaining > 0 AND t.user_id_cancelled IS NULL');
+        $invoiceOwnRiskCriteria->compare('t.transaction_number', $saleInvoiceInsuranceOwnRisk->transaction_number, true);
+        $invoiceOwnRiskCriteria->compare('t.transaction_date', $saleInvoiceInsuranceOwnRisk->transaction_date);
+        $invoiceOwnRiskCriteria->compare('t.amount_invoice', $saleInvoiceInsuranceOwnRisk->amount_invoice, true);
+        $invoiceOwnRiskCriteria->compare('t.vehicle_id', $saleInvoiceInsuranceOwnRisk->vehicle_id);
+        $invoiceOwnRiskCriteria->compare('t.customer_id', $saleInvoiceInsuranceOwnRisk->customer_id);
+        $invoiceOwnRiskCriteria->compare('t.insurance_company_id', $saleInvoiceInsuranceOwnRisk->insurance_company_id);
+        
+        $invoiceOwnRiskDataProvider = new CActiveDataProvider('SaleInvoiceInsuranceOwnRisk', array(
+            'criteria' => $invoiceOwnRiskCriteria,
+            'sort' => array(
+                'defaultOrder' => 't.transaction_date DESC',
+            ),
+            'pagination' => array(
+                'pageSize' => 50,
+            )
+        ));
+        
         $model = new PaymentIn('search');
         $model->unsetAttributes();  // clear any default values
 
@@ -661,7 +596,6 @@ class PaymentInController extends Controller {
         
         $dataProvider->criteria->with = array(
             'customer',
-            'paymentInApprovals',
             'invoice' => array(
                 'with' => array(
                     'vehicle',
@@ -691,6 +625,8 @@ class PaymentInController extends Controller {
             'endDate' => $endDate,
             'registrationTransaction' => $registrationTransaction,
             'downpaymentDataProvider' => $downpaymentDataProvider,
+            'saleInvoiceInsuranceOwnRisk' => $saleInvoiceInsuranceOwnRisk,
+            'invoiceOwnRiskDataProvider' => $invoiceOwnRiskDataProvider,
         ));
     }
 
@@ -834,158 +770,61 @@ class PaymentInController extends Controller {
                     if ($model->approval_type == 'Approved') {
                         foreach ($paymentIn->paymentInDetails as $detail) {
                             $registrationTransaction = RegistrationTransaction::model()->findByPk($detail->registration_transaction_id);
-                            if (!empty($detail->invoice_header_id)) {
-                                $invoiceHeader = InvoiceHeader::model()->findByPk($detail->invoice_header_id);
+                            $invoiceHeader = InvoiceHeader::model()->findByPk($detail->invoice_header_id);
+                            $saleInvoiceInsuranceOwnRisk = SaleInvoiceInsuranceOwnRisk::model()->findByPk($detail->sale_invoice_insurance_own_risk_id);
+                            if (!empty($invoiceHeader)) {
                                 $paymentAmount = $invoiceHeader->getTotalPayment() + $detail->downpayment_amount + $detail->discount_amount + $detail->bank_administration_fee + $detail->merimen_fee;
                                 $invoiceHeader->payment_amount = $paymentAmount;
                                 $invoiceHeader->payment_left = $invoiceHeader->getTotalRemaining();
 
-                                if (!empty($invoiceHeader) && $invoiceHeader->payment_left > '0.00') {
+                                if ($invoiceHeader->payment_left > '0.00') {
                                     $invoiceHeader->status = 'PARTIALLY PAID';
-                                } elseif (!empty($invoiceHeader) && $invoiceHeader->payment_left == '0.00') {
+                                } elseif ($invoiceHeader->payment_left == '0.00') {
+                                    $invoiceHeader->status = 'PAID';
+                                    
                                     $registrationTransaction->status = 'Finished';
                                     $registrationTransaction->update(array('status'));
-                                    $invoiceHeader->status = 'PAID';
-                                } elseif (empty($invoiceHeader) && !empty($registrationTransaction) && $registrationTransaction->downpayment_amount > '0.00') {
-                                    $registrationTransaction->is_downpayment_paid = 1; 
-                                    $registrationTransaction->update(array('is_downpayment_paid'));
+                                } else {
+                                    $invoiceHeader->status = 'UNPAID';
                                 }
 
                                 $invoiceHeader->update(array('payment_amount', 'payment_left', 'status'));
                             }
                             
-                            if (!empty($detail->registration_transaction_id) && $detail->downpayment_amount > 0) {
+                            if ($paymentIn->payment_category == 'Downpayment' && $detail->downpayment_amount > 0) {
                                 $registrationTransaction->is_downpayment_paid = 1;
                                 $registrationTransaction->downpayment_status = 'PAID';
                                 $registrationTransaction->update(array('is_downpayment_paid', 'downpayment_status'));
                             }
+                            
+                            if ($paymentIn->payment_category == 'Own Risk'  && $detail->own_risk_amount > 0) {
+                                $saleInvoiceInsuranceOwnRisk->amount_payment = $detail->own_risk_amount;
+                                $saleInvoiceInsuranceOwnRisk->payment_remaining = $saleInvoiceInsuranceOwnRisk->amount_invoice - $saleInvoiceInsuranceOwnRisk->amount_payment;
+                                $saleInvoiceInsuranceOwnRisk->status = 'PAID';
+                                $saleInvoiceInsuranceOwnRisk->update(array('amount_payment', 'payment_remaining', 'status'));
+                            }
                         }
 
                         if (!empty($paymentIn->insurance_company_id)) {
-                            $coaId = $paymentIn->insuranceCompany->coa_id;
+                            $coaIdReceivable = $paymentIn->insuranceCompany->coa_id;
                             $remark = $paymentIn->insuranceCompany->name;
                         } else {
-                            $coaId = $paymentIn->customer->coa_id;
+                            $coaIdReceivable = $paymentIn->customer->coa_id;
                             $remark = $paymentIn->customer->name;
                         }
                         
-                        $totalKas = $paymentIn->totalPayment;
-                        $jurnalPiutang = new JurnalUmum;
-                        $jurnalPiutang->kode_transaksi = $paymentIn->payment_number;
-                        $jurnalPiutang->tanggal_transaksi = $paymentIn->payment_date;
-                        $jurnalPiutang->coa_id = $coaId;
-                        $jurnalPiutang->branch_id = $paymentIn->branch_id;
-                        $jurnalPiutang->total = $totalKas;
-                        $jurnalPiutang->debet_kredit = 'K';
-                        $jurnalPiutang->tanggal_posting = date('Y-m-d');
-                        $jurnalPiutang->transaction_subject = $paymentIn->notes;
-                        $jurnalPiutang->remark = $remark;
-                        $jurnalPiutang->is_coa_category = 0;
-                        $jurnalPiutang->transaction_type = 'Pin';
-                        $jurnalPiutang->save();
-                        
                         if (!empty($paymentIn->paymentType->coa_id)) {
-                            $coaId = $paymentIn->paymentType->coa_id;
+                            $coaIdBank = $paymentIn->paymentType->coa_id;
                         } else {
-                            $coaId = $paymentIn->companyBank->coa_id;
+                            $coaIdBank = $paymentIn->companyBank->coa_id;
                         }
 
-                        if ($paymentIn->totalDetailAmount > 0) {
-                            $jurnalUmumKas = new JurnalUmum;
-                            $jurnalUmumKas->kode_transaksi = $paymentIn->payment_number;
-                            $jurnalUmumKas->tanggal_transaksi = $paymentIn->payment_date;
-                            $jurnalUmumKas->coa_id = $coaId;
-                            $jurnalUmumKas->branch_id = $paymentIn->branch_id;
-                            $jurnalUmumKas->total = $paymentIn->totalDetailAmount;
-                            $jurnalUmumKas->debet_kredit = 'D';
-                            $jurnalUmumKas->tanggal_posting = date('Y-m-d');
-                            $jurnalUmumKas->transaction_subject = $paymentIn->notes;
-                            $jurnalUmumKas->remark = $remark;
-                            $jurnalUmumKas->is_coa_category = 0;
-                            $jurnalUmumKas->transaction_type = 'Pin';
-                            $jurnalUmumKas->save();
-                        }
-                        
-                        foreach ($paymentIn->paymentInDetails as $detail) {
-                            if ($detail->tax_service_amount > 0) {
-                                $jurnalPph = new JurnalUmum;
-                                $jurnalPph->kode_transaksi = $paymentIn->payment_number;
-                                $jurnalPph->tanggal_transaksi = $paymentIn->payment_date;
-                                $jurnalPph->coa_id = 1473;
-                                $jurnalPph->branch_id = $paymentIn->branch_id;
-                                $jurnalPph->total = $detail->tax_service_amount;
-                                $jurnalPph->debet_kredit = 'D';
-                                $jurnalPph->tanggal_posting = date('Y-m-d');
-                                $jurnalPph->transaction_subject = $detail->memo;
-                                $jurnalPph->remark = $remark;
-                                $jurnalPph->is_coa_category = 0;
-                                $jurnalPph->transaction_type = 'Pin';
-                                $jurnalPph->save();
-                            }
-                        }
-                        
-                        if ($paymentIn->downpayment_amount > 0) {
-                            $jurnalDownpayment = new JurnalUmum;
-                            $jurnalDownpayment->kode_transaksi = $paymentIn->payment_number;
-                            $jurnalDownpayment->tanggal_transaksi = $paymentIn->payment_date;
-                            $jurnalDownpayment->coa_id = 751;
-                            $jurnalDownpayment->branch_id = $paymentIn->branch_id;
-                            $jurnalDownpayment->total = $paymentIn->downpayment_amount;
-                            $jurnalDownpayment->debet_kredit = 'D';
-                            $jurnalDownpayment->tanggal_posting = date('Y-m-d');
-                            $jurnalDownpayment->transaction_subject = $paymentIn->notes;
-                            $jurnalDownpayment->remark = $remark;
-                            $jurnalDownpayment->is_coa_category = 0;
-                            $jurnalDownpayment->transaction_type = 'Pin';
-                            $jurnalDownpayment->save();
-                        }
-                        
-                        if ($paymentIn->discount_product_amount > 0) {
-                            $jurnalDiscountProduct = new JurnalUmum;
-                            $jurnalDiscountProduct->kode_transaksi = $paymentIn->payment_number;
-                            $jurnalDiscountProduct->tanggal_transaksi = $paymentIn->payment_date;
-                            $jurnalDiscountProduct->coa_id = 2935;
-                            $jurnalDiscountProduct->branch_id = $paymentIn->branch_id;
-                            $jurnalDiscountProduct->total = $paymentIn->discount_product_amount;
-                            $jurnalDiscountProduct->debet_kredit = 'D';
-                            $jurnalDiscountProduct->tanggal_posting = date('Y-m-d');
-                            $jurnalDiscountProduct->transaction_subject = $paymentIn->notes;
-                            $jurnalDiscountProduct->remark = $remark;
-                            $jurnalDiscountProduct->is_coa_category = 0;
-                            $jurnalDiscountProduct->transaction_type = 'Pin';
-                            $jurnalDiscountProduct->save();
-                        }
-                        
-                        if ($paymentIn->bank_administration_fee > 0) {
-                            $jurnalBankAdministration = new JurnalUmum;
-                            $jurnalBankAdministration->kode_transaksi = $paymentIn->payment_number;
-                            $jurnalBankAdministration->tanggal_transaksi = $paymentIn->payment_date;
-                            $jurnalBankAdministration->coa_id = 1111;
-                            $jurnalBankAdministration->branch_id = $paymentIn->branch_id;
-                            $jurnalBankAdministration->total = $paymentIn->bank_administration_fee;
-                            $jurnalBankAdministration->debet_kredit = 'D';
-                            $jurnalBankAdministration->tanggal_posting = date('Y-m-d');
-                            $jurnalBankAdministration->transaction_subject = $paymentIn->notes;
-                            $jurnalBankAdministration->remark = $remark;
-                            $jurnalBankAdministration->is_coa_category = 0;
-                            $jurnalBankAdministration->transaction_type = 'Pin';
-                            $jurnalBankAdministration->save();
-                        }
-                        
-                        if ($paymentIn->merimen_fee > 0) {
-                            $jurnalMerimenFee = new JurnalUmum;
-                            $jurnalMerimenFee->kode_transaksi = $paymentIn->payment_number;
-                            $jurnalMerimenFee->tanggal_transaksi = $paymentIn->payment_date;
-                            $jurnalMerimenFee->coa_id = 2921;
-                            $jurnalMerimenFee->branch_id = $paymentIn->branch_id;
-                            $jurnalMerimenFee->total = $paymentIn->merimen_fee;
-                            $jurnalMerimenFee->debet_kredit = 'D';
-                            $jurnalMerimenFee->tanggal_posting = date('Y-m-d');
-                            $jurnalMerimenFee->transaction_subject = $paymentIn->notes;
-                            $jurnalMerimenFee->remark = $remark;
-                            $jurnalMerimenFee->is_coa_category = 0;
-                            $jurnalMerimenFee->transaction_type = 'Pin';
-                            $jurnalMerimenFee->save();
+                        if ($paymentIn->payment_category == 'Invoice') {
+                            $this->setJournalTransactionInvoice($paymentIn, $coaIdReceivable, $coaIdBank, $remark);
+                        } elseif ($paymentIn->payment_category == 'Downpayment') {
+                            $this->setJournalTransactionDownpayment($paymentIn, $coaIdBank, $remark);
+                        } else {
+                            $this->setJournalTransactionInsuranceOwnRisk($paymentIn, $coaIdBank, $remark);
                         }
                     }// end if approved
                 }
@@ -1150,5 +989,173 @@ class PaymentInController extends Controller {
 
             echo CJSON::encode($object);
         }
+    }
+    
+    public function setJournalTransactionInvoice($model, $coaIdReceivable, $coaIdBank, $remark) {
+        
+        $totalKas = $model->totalPayment;
+        $jurnalPiutang = new JurnalUmum;
+        $jurnalPiutang->kode_transaksi = $model->payment_number;
+        $jurnalPiutang->tanggal_transaksi = $model->payment_date;
+        $jurnalPiutang->coa_id = $coaIdReceivable;
+        $jurnalPiutang->branch_id = $model->branch_id;
+        $jurnalPiutang->total = $totalKas;
+        $jurnalPiutang->debet_kredit = 'K';
+        $jurnalPiutang->tanggal_posting = date('Y-m-d');
+        $jurnalPiutang->transaction_subject = $model->notes;
+        $jurnalPiutang->remark = $remark;
+        $jurnalPiutang->is_coa_category = 0;
+        $jurnalPiutang->transaction_type = 'Pin';
+        $jurnalPiutang->save();
+
+        if (!empty($model->paymentType->coa_id)) {
+            $coaIdBank = $model->paymentType->coa_id;
+        } else {
+            $coaIdBank = $model->companyBank->coa_id;
+        }
+
+        if ($model->totalDetailAmount > 0) {
+            $jurnalUmumKas = new JurnalUmum;
+            $jurnalUmumKas->kode_transaksi = $model->payment_number;
+            $jurnalUmumKas->tanggal_transaksi = $model->payment_date;
+            $jurnalUmumKas->coa_id = $coaIdBank;
+            $jurnalUmumKas->branch_id = $model->branch_id;
+            $jurnalUmumKas->total = $model->totalDetailAmount;
+            $jurnalUmumKas->debet_kredit = 'D';
+            $jurnalUmumKas->tanggal_posting = date('Y-m-d');
+            $jurnalUmumKas->transaction_subject = $model->notes;
+            $jurnalUmumKas->remark = $remark;
+            $jurnalUmumKas->is_coa_category = 0;
+            $jurnalUmumKas->transaction_type = 'Pin';
+            $jurnalUmumKas->save();
+        }
+
+        foreach ($model->paymentInDetails as $detail) {
+            if ($detail->tax_service_amount > 0) {
+                $jurnalPph = new JurnalUmum;
+                $jurnalPph->kode_transaksi = $model->payment_number;
+                $jurnalPph->tanggal_transaksi = $model->payment_date;
+                $jurnalPph->coa_id = 1473;
+                $jurnalPph->branch_id = $model->branch_id;
+                $jurnalPph->total = $detail->tax_service_amount;
+                $jurnalPph->debet_kredit = 'D';
+                $jurnalPph->tanggal_posting = date('Y-m-d');
+                $jurnalPph->transaction_subject = $detail->memo;
+                $jurnalPph->remark = $remark;
+                $jurnalPph->is_coa_category = 0;
+                $jurnalPph->transaction_type = 'Pin';
+                $jurnalPph->save();
+            }
+        }
+
+        if ($model->discount_product_amount > 0) {
+            $jurnalDiscountProduct = new JurnalUmum;
+            $jurnalDiscountProduct->kode_transaksi = $model->payment_number;
+            $jurnalDiscountProduct->tanggal_transaksi = $model->payment_date;
+            $jurnalDiscountProduct->coa_id = 2935;
+            $jurnalDiscountProduct->branch_id = $model->branch_id;
+            $jurnalDiscountProduct->total = $model->discount_product_amount;
+            $jurnalDiscountProduct->debet_kredit = 'D';
+            $jurnalDiscountProduct->tanggal_posting = date('Y-m-d');
+            $jurnalDiscountProduct->transaction_subject = $model->notes;
+            $jurnalDiscountProduct->remark = $remark;
+            $jurnalDiscountProduct->is_coa_category = 0;
+            $jurnalDiscountProduct->transaction_type = 'Pin';
+            $jurnalDiscountProduct->save();
+        }
+
+        if ($model->bank_administration_fee > 0) {
+            $jurnalBankAdministration = new JurnalUmum;
+            $jurnalBankAdministration->kode_transaksi = $model->payment_number;
+            $jurnalBankAdministration->tanggal_transaksi = $model->payment_date;
+            $jurnalBankAdministration->coa_id = 1111;
+            $jurnalBankAdministration->branch_id = $model->branch_id;
+            $jurnalBankAdministration->total = $model->bank_administration_fee;
+            $jurnalBankAdministration->debet_kredit = 'D';
+            $jurnalBankAdministration->tanggal_posting = date('Y-m-d');
+            $jurnalBankAdministration->transaction_subject = $model->notes;
+            $jurnalBankAdministration->remark = $remark;
+            $jurnalBankAdministration->is_coa_category = 0;
+            $jurnalBankAdministration->transaction_type = 'Pin';
+            $jurnalBankAdministration->save();
+        }
+
+        if ($model->merimen_fee > 0) {
+            $jurnalMerimenFee = new JurnalUmum;
+            $jurnalMerimenFee->kode_transaksi = $model->payment_number;
+            $jurnalMerimenFee->tanggal_transaksi = $model->payment_date;
+            $jurnalMerimenFee->coa_id = 2921;
+            $jurnalMerimenFee->branch_id = $model->branch_id;
+            $jurnalMerimenFee->total = $model->merimen_fee;
+            $jurnalMerimenFee->debet_kredit = 'D';
+            $jurnalMerimenFee->tanggal_posting = date('Y-m-d');
+            $jurnalMerimenFee->transaction_subject = $model->notes;
+            $jurnalMerimenFee->remark = $remark;
+            $jurnalMerimenFee->is_coa_category = 0;
+            $jurnalMerimenFee->transaction_type = 'Pin';
+            $jurnalMerimenFee->save();
+        }
+    }
+    
+    public function setJournalTransactionDownpayment($model, $coaIdBank, $remark) {
+        
+        $jurnalUmumKas = new JurnalUmum;
+        $jurnalUmumKas->kode_transaksi = $model->payment_number;
+        $jurnalUmumKas->tanggal_transaksi = $model->payment_date;
+        $jurnalUmumKas->coa_id = $coaIdBank;
+        $jurnalUmumKas->branch_id = $model->branch_id;
+        $jurnalUmumKas->total = $model->downpayment_amount;
+        $jurnalUmumKas->debet_kredit = 'D';
+        $jurnalUmumKas->tanggal_posting = date('Y-m-d');
+        $jurnalUmumKas->transaction_subject = $model->notes;
+        $jurnalUmumKas->remark = $remark;
+        $jurnalUmumKas->is_coa_category = 0;
+        $jurnalUmumKas->transaction_type = 'Pin';
+        $jurnalUmumKas->save();
+
+        $jurnalDownpayment = new JurnalUmum;
+        $jurnalDownpayment->kode_transaksi = $model->payment_number;
+        $jurnalDownpayment->tanggal_transaksi = $model->payment_date;
+        $jurnalDownpayment->coa_id = 751;
+        $jurnalDownpayment->branch_id = $model->branch_id;
+        $jurnalDownpayment->total = $model->downpayment_amount;
+        $jurnalDownpayment->debet_kredit = 'K';
+        $jurnalDownpayment->tanggal_posting = date('Y-m-d');
+        $jurnalDownpayment->transaction_subject = $model->notes;
+        $jurnalDownpayment->remark = $remark;
+        $jurnalDownpayment->is_coa_category = 0;
+        $jurnalDownpayment->transaction_type = 'Pin';
+        $jurnalDownpayment->save();
+    }
+    
+    public function setJournalTransactionInsuranceOwnRisk($model, $coaIdBank, $remark) {
+        
+        $jurnalUmumKas = new JurnalUmum;
+        $jurnalUmumKas->kode_transaksi = $model->payment_number;
+        $jurnalUmumKas->tanggal_transaksi = $model->payment_date;
+        $jurnalUmumKas->coa_id = $coaIdBank;
+        $jurnalUmumKas->branch_id = $model->branch_id;
+        $jurnalUmumKas->total = $model->own_risk_amount;
+        $jurnalUmumKas->debet_kredit = 'D';
+        $jurnalUmumKas->tanggal_posting = date('Y-m-d');
+        $jurnalUmumKas->transaction_subject = $model->notes;
+        $jurnalUmumKas->remark = $remark;
+        $jurnalUmumKas->is_coa_category = 0;
+        $jurnalUmumKas->transaction_type = 'Pin';
+        $jurnalUmumKas->save();
+
+        $jurnalOwnRisk = new JurnalUmum;
+        $jurnalOwnRisk->kode_transaksi = $model->payment_number;
+        $jurnalOwnRisk->tanggal_transaksi = $model->payment_date;
+        $jurnalOwnRisk->coa_id = ($model->customer->customer_type == 'Company') ? $model->customer->coa_id : 1449;
+        $jurnalOwnRisk->branch_id = $model->branch_id;
+        $jurnalOwnRisk->total = $model->own_risk_amount;
+        $jurnalOwnRisk->debet_kredit = 'K';
+        $jurnalOwnRisk->tanggal_posting = date('Y-m-d');
+        $jurnalOwnRisk->transaction_subject = $model->notes;
+        $jurnalOwnRisk->remark = $remark;
+        $jurnalOwnRisk->is_coa_category = 0;
+        $jurnalOwnRisk->transaction_type = 'Pin';
+        $jurnalOwnRisk->save();
     }
 }

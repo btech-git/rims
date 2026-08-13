@@ -43,6 +43,8 @@ Yii::app()->clientScript->registerCss('_report', '
                 <th>Last Service (Days)</th>
                 <th>Service List</th>
                 <th>Parts List</th>
+                <th>Entry User</th>
+                <th>Salesman</th>
                 <th>Feedback</th>
             </tr>
         </thead>
@@ -84,6 +86,8 @@ Yii::app()->clientScript->registerCss('_report', '
                     <td><?php echo CHtml::encode(CHtml::value($header, 'lastInvoiceDaysNumber')); ?></td>
                     <td><?php echo CHtml::encode(CHtml::value($header, 'serviceLists')); ?></td>
                     <td><?php echo CHtml::encode(CHtml::value($header, 'productLists')); ?></td>
+                    <td><?php echo CHtml::encode(CHtml::value($header, 'user.username')); ?></td>
+                    <td><?php echo CHtml::encode(CHtml::value($header, 'registrationTransaction.employeeIdSalesPerson.name')); ?></td>
                     <td>
                         <?php if (empty($header->registrationTransaction->feedback)): ?>
                             <?php echo CHtml::link('Feedback', Yii::app()->createUrl("frontDesk/followUp/updateFeedback", array("id"=>$header->registration_transaction_id))); ?>

@@ -18,11 +18,14 @@
  * @property string $merimen_fee
  * @property string $downpayment_amount
  * @property integer $registration_transaction_id
+ * @property integer $sale_invoice_insurance_own_risk_id
+ * @property string $own_risk_amount
  *
  * The followings are the available model relations:
  * @property PaymentIn $paymentIn
  * @property InvoiceHeader $invoiceHeader
  * @property RegistrationTransaction $registrationTransaction
+ * @property SaleInvoiceInsuranceOwnRisk $saleInvoiceInsuranceOwnRisk
  */
 class PaymentInDetail extends CActiveRecord {
 
@@ -49,13 +52,13 @@ class PaymentInDetail extends CActiveRecord {
         // will receive user inputs.
         return array(
             array('payment_in_id', 'required'),
-            array('payment_in_id, invoice_header_id, is_tax_service, registration_transaction_id', 'numerical', 'integerOnly' => true),
-            array('total_invoice, amount, tax_service_amount, discount_amount, bank_administration_fee, merimen_fee, downpayment_amount', 'length', 'max' => 18),
+            array('payment_in_id, invoice_header_id, is_tax_service, registration_transaction_id, sale_invoice_insurance_own_risk_id', 'numerical', 'integerOnly' => true),
+            array('total_invoice, amount, tax_service_amount, discount_amount, bank_administration_fee, merimen_fee, downpayment_amount, own_risk_amount', 'length', 'max' => 18),
             array('memo', 'length', 'max' => 100),
             array('tax_service_percentage', 'length', 'max' => 10),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, total_invoice, amount, memo, payment_in_id, invoice_header_id, is_tax_service, tax_service_amount, downpayment_amount, tax_service_percentage, discount_amount, bank_administration_fee, merimen_fee, registration_transaction_id', 'safe', 'on' => 'search'),
+            array('id, total_invoice, amount, memo, payment_in_id, invoice_header_id, is_tax_service, tax_service_amount, downpayment_amount, tax_service_percentage, discount_amount, bank_administration_fee, merimen_fee, registration_transaction_id, sale_invoice_insurance_own_risk_id, own_risk_amount', 'safe', 'on' => 'search'),
         );
     }
 
@@ -69,6 +72,7 @@ class PaymentInDetail extends CActiveRecord {
             'paymentIn' => array(self::BELONGS_TO, 'PaymentIn', 'payment_in_id'),
             'invoiceHeader' => array(self::BELONGS_TO, 'InvoiceHeader', 'invoice_header_id'),
             'registrationTransaction' => array(self::BELONGS_TO, 'RegistrationTransaction', 'registration_transaction_id'),
+            'saleInvoiceInsuranceOwnRisk' => array(self::BELONGS_TO, 'SaleInvoiceInsuranceOwnRisk', 'sale_invoice_insurance_own_risk_id'),
         );
     }
 
@@ -204,5 +208,10 @@ class PaymentInDetail extends CActiveRecord {
         $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
 
         return $resultSet;
+    }
+    
+    public function getInvoiceRemaining() {
+        
+        return $this->total_invoice - $this->invoiceHeader->downpayment_amount - $this->invoiceHeader->insurance_own_risk_amount;
     }
 }

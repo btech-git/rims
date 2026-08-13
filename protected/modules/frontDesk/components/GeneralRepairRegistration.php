@@ -333,6 +333,7 @@ class GeneralRepairRegistration extends CComponent {
 
     public function validate() {
         $valid = $this->header->validate();
+        
 //        if ($this->header->isNewRecord) {
 //            $valid = $valid && $this->validateExistingCustomer();
 //        }

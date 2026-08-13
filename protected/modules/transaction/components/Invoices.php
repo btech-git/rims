@@ -231,8 +231,8 @@ class Invoices extends CComponent {
         $jurnalUmumReceivable->kode_transaksi = $transactionCode;
         $jurnalUmumReceivable->tanggal_transaksi = $transactionDate;
         $jurnalUmumReceivable->coa_id = $coaReceivableId;
-        $jurnalUmumReceivable->branch_id = $this->header->branch_id;
-        $jurnalUmumReceivable->total = $this->header->total_price;
+        $jurnalUmumReceivable->branch_id = $branchId;
+        $jurnalUmumReceivable->total = $this->header->total_price - $this->header->downpayment_amount - $this->header->insurance_own_risk_amount;
         $jurnalUmumReceivable->debet_kredit = 'D';
         $jurnalUmumReceivable->tanggal_posting = date('Y-m-d');
         $jurnalUmumReceivable->transaction_subject = $transactionSubject;
@@ -240,6 +240,38 @@ class Invoices extends CComponent {
         $jurnalUmumReceivable->is_coa_category = 0;
         $jurnalUmumReceivable->transaction_type = $transactionType;
         $valid = $jurnalUmumReceivable->save() && $valid;
+
+        if ($this->header->downpayment_amount > '0.00') {
+            $jurnalUmumDownpayment = new JurnalUmum;
+            $jurnalUmumDownpayment->kode_transaksi = $transactionCode;
+            $jurnalUmumDownpayment->tanggal_transaksi = $transactionDate;
+            $jurnalUmumDownpayment->coa_id = 751;
+            $jurnalUmumDownpayment->branch_id = $branchId;
+            $jurnalUmumDownpayment->total = $this->header->downpayment_amount;
+            $jurnalUmumDownpayment->debet_kredit = 'D';
+            $jurnalUmumDownpayment->tanggal_posting = date('Y-m-d');
+            $jurnalUmumDownpayment->transaction_subject = $transactionSubject;
+            $jurnalUmumDownpayment->is_coa_category = 0;
+            $jurnalUmumDownpayment->transaction_type = $transactionType;
+            $jurnalUmumDownpayment->remark = $remark;
+            $valid = $jurnalUmumDownpayment->save() && $valid;
+        }
+
+        if ($this->header->insurance_own_risk_amount > '0.00') {
+            $jurnalUmumOwnRisk = new JurnalUmum;
+            $jurnalUmumOwnRisk->kode_transaksi = $transactionCode;
+            $jurnalUmumOwnRisk->tanggal_transaksi = $transactionDate;
+            $jurnalUmumOwnRisk->coa_id = ($this->header->customer->customer_type == 'Company') ? $this->header->customer->coa_id : 1449;
+            $jurnalUmumOwnRisk->branch_id = $branchId;
+            $jurnalUmumOwnRisk->total = $this->header->insurance_own_risk_amount;
+            $jurnalUmumOwnRisk->debet_kredit = 'D';
+            $jurnalUmumOwnRisk->tanggal_posting = date('Y-m-d');
+            $jurnalUmumOwnRisk->transaction_subject = $transactionSubject;
+            $jurnalUmumOwnRisk->is_coa_category = 0;
+            $jurnalUmumOwnRisk->transaction_type = $transactionType;
+            $jurnalUmumOwnRisk->remark = $remark;
+            $valid = $jurnalUmumOwnRisk->save() && $valid;
+        }
 
         if ($this->header->registrationTransaction->ppn_price > 0.00) {
             $coaPpn = Coa::model()->findByAttributes(array('code' => '224.00.001'));

@@ -223,11 +223,16 @@ class GeneralRepairRegistrationController extends Controller {
         $vehicle = Vehicle::model()->findByPk($generalRepairRegistration->header->vehicle_id);
         $customer = Customer::model()->findByPk($vehicle->customer_id);
         
-        $generalRepairRegistration->header->downpayment_transaction_date = date('Y-m-d');
-        $generalRepairRegistration->header->downpayment_created_datetime = date('Y-m-d H:i:s');
-        $generalRepairRegistration->header->user_id_created_downpayment = Yii::app()->user->id;
-        $generalRepairRegistration->header->is_downpayment_paid = 0;
-        $generalRepairRegistration->header->downpayment_status = 'Issued';
+        if ($generalRepairRegistration->header->downpayment_amount > 0) {
+            $generalRepairRegistration->header->downpayment_updated_datetime = date('Y-m-d H:i:s');
+            $generalRepairRegistration->header->user_id_updated_downpayment = Yii::app()->user->id;
+        } else {
+            $generalRepairRegistration->header->downpayment_transaction_date = date('Y-m-d');
+            $generalRepairRegistration->header->downpayment_created_datetime = date('Y-m-d H:i:s');
+            $generalRepairRegistration->header->user_id_created_downpayment = Yii::app()->user->id;
+            $generalRepairRegistration->header->is_downpayment_paid = 0;
+            $generalRepairRegistration->header->downpayment_status = 'Issued';
+        }
 
         $products = RegistrationProduct::model()->findAll(array(
             'condition' => 'registration_transaction_id = :registration_transaction_id AND sale_package_detail_id IS NULL', 
@@ -240,11 +245,29 @@ class GeneralRepairRegistrationController extends Controller {
         
         if (isset($_POST['Submit']) && IdempotentManager::check()) {
             $this->loadState($generalRepairRegistration);
-            $generalRepairRegistration->generateCodeNumberDownpayment(Yii::app()->dateFormatter->format('M', strtotime($generalRepairRegistration->header->downpayment_transaction_date)), Yii::app()->dateFormatter->format('yyyy', strtotime($generalRepairRegistration->header->downpayment_transaction_date)), $generalRepairRegistration->header->branch_id);
+            if ($generalRepairRegistration->header->downpayment_amount > 0) {
+                if ($generalRepairRegistration->header->downpayment_transaction_number === null) {
+                    $generalRepairRegistration->generateCodeNumberDownpayment(Yii::app()->dateFormatter->format('M', strtotime($generalRepairRegistration->header->downpayment_transaction_date)), Yii::app()->dateFormatter->format('yyyy', strtotime($generalRepairRegistration->header->downpayment_transaction_date)), $generalRepairRegistration->header->branch_id);
+                }
 
-            if ($generalRepairRegistration->save(Yii::app()->db)) {
-                $this->saveTransactionLog('addDownpayment', $generalRepairRegistration->header);
-                $this->redirect(array('view', 'id' => $generalRepairRegistration->header->id));
+                if ($generalRepairRegistration->save(Yii::app()->db)) {
+                    $jurnalDownpayment = new JurnalUmum;
+                    $jurnalDownpayment->kode_transaksi = $paymentIn->payment_number;
+                    $jurnalDownpayment->tanggal_transaksi = $paymentIn->payment_date;
+                    $jurnalDownpayment->coa_id = 751;
+                    $jurnalDownpayment->branch_id = $paymentIn->branch_id;
+                    $jurnalDownpayment->total = $paymentIn->downpayment_amount;
+                    $jurnalDownpayment->debet_kredit = 'D';
+                    $jurnalDownpayment->tanggal_posting = date('Y-m-d');
+                    $jurnalDownpayment->transaction_subject = $paymentIn->notes;
+                    $jurnalDownpayment->remark = $remark;
+                    $jurnalDownpayment->is_coa_category = 0;
+                    $jurnalDownpayment->transaction_type = 'Pin';
+                    $jurnalDownpayment->save();
+
+                    $this->saveTransactionLog('addDownpayment', $generalRepairRegistration->header);
+                    $this->redirect(array('view', 'id' => $generalRepairRegistration->header->id));
+                }
             }
         }
 

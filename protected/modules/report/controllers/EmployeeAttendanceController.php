@@ -52,6 +52,30 @@ class EmployeeAttendanceController extends Controller {
             $employeeDaysCountData[$employeePeriodicallyAttendanceItem['employee_id']] += $employeePeriodicallyAttendanceItem['days'];
         }
         
+        $employeeExchangeDayoffs = EmployeeExchangeDayoff::model()->findAll(array(
+            'condition' => 'date_dayoff_old BETWEEN :start_date AND :end_date',
+            'params' => array(
+                ':start_date' => $startDate,
+                ':end_date' => $endDate,
+            )
+        ));
+        
+        $holidayChangeCounts = array();
+        foreach ($employeeExchangeDayoffs as $employeeExchangeDayoff) {
+            if (!isset($holidayChangeCounts[$employeeExchangeDayoff->employee_id])) {
+                $holidayChangeCounts[$employeeExchangeDayoff->employee_id] = 0;
+            }
+            $holidayChangeCounts[$employeeExchangeDayoff->employee_id]--;
+        }
+        foreach ($employeeExchangeDayoffs as $employeeExchangeDayoff) {
+            if (!isset($holidayChangeCounts[$employeeExchangeDayoff->employee_id])) {
+                $holidayChangeCounts[$employeeExchangeDayoff->employee_id] = 0;
+            }
+            if ($employeeExchangeDayoff->date_dayoff_new >= $startDate && $employeeExchangeDayoff->date_dayoff_new <= $endDate) {
+                $holidayChangeCounts[$employeeExchangeDayoff->employee_id]++;
+            }
+        }
+        
         $nationalHolidaysCount = PublicDayOff::model()->count(array(
             'condition' => 't.date BETWEEN :start_date AND :end_date', 
             'params' => array(':start_date' => $startDate, ':end_date' => $endDate),
@@ -62,7 +86,7 @@ class EmployeeAttendanceController extends Controller {
         }
         
         if (isset($_GET['SaveExcel'])) {
-            $this->saveToExcel($employeePeriodicallyAttendanceData , $onleaveCategories, $employeeDaysCountData, $startDate, $endDate, $branchId);
+            $this->saveToExcel($employeePeriodicallyAttendanceData , $onleaveCategories, $employeeDaysCountData, $startDate, $endDate, $branchId, $holidayChangeCounts);
         }
 
         $this->render('summary', array(
@@ -73,6 +97,7 @@ class EmployeeAttendanceController extends Controller {
             'startDate' => $startDate,
             'endDate' => $endDate,
             'branchId' => $branchId,
+            'holidayChangeCounts' => $holidayChangeCounts,
         ));
     }
 
@@ -114,7 +139,7 @@ class EmployeeAttendanceController extends Controller {
         ));
     }
 
-    protected function saveToExcel($employeePeriodicallyAttendanceData , $onleaveCategories, $employeeDaysCountData, $startDate, $endDate, $branchId) {
+    protected function saveToExcel($employeePeriodicallyAttendanceData , $onleaveCategories, $employeeDaysCountData, $startDate, $endDate, $branchId, $holidayChangeCounts) {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
         
@@ -168,6 +193,12 @@ class EmployeeAttendanceController extends Controller {
         $column++;
         $worksheet->setCellValue("{$column}5", 'Lembur');
         $column++;
+        $worksheet->setCellValue("{$column}5", 'Kehadiran');
+        $column++;
+        $worksheet->setCellValue("{$column}5", 'Ketepatan Waktu');
+        $column++;
+        $worksheet->setCellValue("{$column}5", 'Kepatuhan Jadwal');
+        $column++;
         $worksheet->setCellValue("{$column}5", 'KPI');
         $column++;
         $worksheet->setCellValue("{$column}5", 'Status Index');
@@ -176,7 +207,7 @@ class EmployeeAttendanceController extends Controller {
         $worksheet->getStyle("A5:{$column}5")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
         $worksheet->getStyle("A5:{$column}5")->getFont()->setBold(true);
         
-        $counter = 7;
+        $counter = 6;
 
         $dayOfWeekList = array_flip(array('Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'));
         $daysOfPeriod = round(((strtotime($endDate) - strtotime($startDate)) / 86400)) + 1;
@@ -191,25 +222,28 @@ class EmployeeAttendanceController extends Controller {
                     $holidaysCount++;
                 }
             }
+            $holidaysCount += isset($holidayChangeCounts[$employeeId]) ? $holidayChangeCounts[$employeeId] : 0;
         
             $column = 'H';
-            $worksheet->setCellValue("A{$counter}", CHtml::value($employee, 'id'));
-            $worksheet->setCellValue("B{$counter}", CHtml::value($employee, 'code'));
-            $worksheet->setCellValue("C{$counter}", CHtml::value($employee, 'name'));
-            $worksheet->setCellValue("D{$counter}", CHtml::value($employee, 'branch.code'));
-            $worksheet->setCellValue("E{$counter}", CHtml::value($employee, 'division.name'));
-            $worksheet->setCellValue("F{$counter}", CHtml::value($employee, 'position.name'));
-            $worksheet->setCellValue("G{$counter}", CHtml::value($employee, 'level.name'));
+            $worksheet->setCellValue("A{$counter}", $employeeId);
+            $worksheet->setCellValue("B{$counter}", $employeePeriodicallyAttendanceItem['employee_code']);
+            $worksheet->setCellValue("C{$counter}", $employeePeriodicallyAttendanceItem['employee_name']);
+            $worksheet->setCellValue("D{$counter}", $employeePeriodicallyAttendanceItem['branch_name']);
+            $worksheet->setCellValue("E{$counter}", $employeePeriodicallyAttendanceItem['division_name']);
+            $worksheet->setCellValue("F{$counter}", $employeePeriodicallyAttendanceItem['position_name']);
+            $worksheet->setCellValue("G{$counter}", $employeePeriodicallyAttendanceItem['level_name']);
             foreach ($onleaveCategories as $onleaveCategory) {
                 $days = isset($employeePeriodicallyAttendanceItem[$onleaveCategory->id]['days']) ? $employeePeriodicallyAttendanceItem[$onleaveCategory->id]['days'] : '0';
                 $worksheet->setCellValue("{$column}{$counter}", $days);
                 $column++;
             }
+            
             $lateDays = isset($employeePeriodicallyAttendanceItem[16]['late_days']) ? $employeePeriodicallyAttendanceItem[16]['late_days'] : '0';
             $overtimeDays = isset($employeePeriodicallyAttendanceItem[16]['overtime_days']) ? $employeePeriodicallyAttendanceItem[16]['overtime_days'] : '0';
             $workingDays = $daysOfPeriod - $holidaysCount;
             $recordedDays = isset($employeeDaysCountData[$employeeId]) ? $employeeDaysCountData[$employeeId] : '0';
             $nonRecordedDays = $workingDays - $recordedDays;
+            
             $worksheet->setCellValue("{$column}{$counter}", $nonRecordedDays);
             $column++;
             $worksheet->setCellValue("{$column}{$counter}", $workingDays);
@@ -220,14 +254,24 @@ class EmployeeAttendanceController extends Controller {
             $column++;
             $worksheet->setCellValue("{$column}{$counter}", $overtimeDays);
             $column++;
+            
             $attendanceDays = isset($employeePeriodicallyAttendanceItem[16]['days']) ? $employeePeriodicallyAttendanceItem[16]['days'] : '0';
             $attendanceRate = $attendanceDays / $workingDays; 
             $onTimeDays = $workingDays - $lateDays;
             $onTimeRate = $onTimeDays / $attendanceDays;
             $notOvertimeDays = $workingDays - $overtimeDays;
             $notOvertimeRate = ($attendanceDays - $lateDays - $notOvertimeDays) / $attendanceDays;
+            $onScheduleDays = $onTimeDays - $notOvertimeDays;
+            $onScheduleRate = $onScheduleDays / $attendanceDays;
             $performanceIndexRate = ($attendanceRate + $onTimeRate + $notOvertimeRate) / 3;
-            $worksheet->setCellValue("{$column}{$counter}", round($performanceIndexRate * 100, 2));
+            
+            $worksheet->setCellValue("{$column}{$counter}", round($attendanceRate * 100, 0) . '%');
+            $column++;
+            $worksheet->setCellValue("{$column}{$counter}", round($onTimeRate * 100, 0) . '%');
+            $column++;
+            $worksheet->setCellValue("{$column}{$counter}", round($onScheduleRate * 100, 0) . '%');
+            $column++;
+            $worksheet->setCellValue("{$column}{$counter}", round($performanceIndexRate * 100, 0) . '%');
             $column++;
             $statusIndex = '';
             if ($performanceIndexRate >= 0.95) {

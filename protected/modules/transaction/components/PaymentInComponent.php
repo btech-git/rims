@@ -65,6 +65,18 @@ class PaymentInComponent extends CComponent {
         $this->details[] = $detail;
     }
 
+    public function addInvoiceOwnRisk($invoiceOwnRiskId) {
+
+        $saleInvoiceInsuranceOwnRisk = SaleInvoiceInsuranceOwnRisk::model()->findByPk($invoiceOwnRiskId);
+        $this->header->customer_id = $saleInvoiceInsuranceOwnRisk->customer_id;
+
+        $detail = new PaymentInDetail;
+        $detail->registration_transaction_id = $saleInvoiceInsuranceOwnRisk->registration_transaction_id;
+        $detail->sale_invoice_insurance_own_risk_id = $invoiceOwnRiskId;
+        $detail->own_risk_amount = $saleInvoiceInsuranceOwnRisk->amount_invoice;
+        $this->details[] = $detail;
+    }
+
     public function removeDetailAt($index) {
         array_splice($this->details, $index, 1);
     }
@@ -179,6 +191,7 @@ class PaymentInComponent extends CComponent {
         $this->header->bank_administration_fee = $this->totalBankAdminFee;
         $this->header->merimen_fee = $this->totalMerimenFee;
         $this->header->downpayment_amount = $this->totalDownpaymentAmount;
+        $this->header->own_risk_amount = $this->totalOwnRiskAmount;
         $this->header->insurance_company_id = $this->details[0]->invoice_header_id === null ? $this->details[0]->registrationTransaction->insurance_company_id : $this->details[0]->invoiceHeader->insurance_company_id;
         $valid = $this->header->save(false);
 
@@ -192,10 +205,22 @@ class PaymentInComponent extends CComponent {
             $detail->tax_service_percentage = $detail->is_tax_service === 2 ? 0 : 0.02;
             $valid = $detail->save(false) && $valid;
             
-            $invoiceNumberList[] = $detail->invoice_header_id === null ? $detail->registrationTransaction->downpayment_transaction_number : $detail->invoiceHeader->invoice_number;
-            $plateNumberList[] = $detail->invoice_header_id === null ? $detail->registrationTransaction->vehicle->plate_number : $detail->invoiceHeader->vehicle->plate_number;
-            
+            $invoiceNumbers = '';
+            $plateNumbers = '';
+            if ($this->header->payment_category == 'Invoice') {
+                $invoiceNumbers = $detail->invoiceHeader->invoice_number;
+                $plateNumbers = $detail->invoiceHeader->vehicle->plate_number;
+            } elseif ($this->header->payment_category == 'Downpayment') {
+                $invoiceNumbers = $detail->registrationTransaction->downpayment_transaction_number;
+                $plateNumbers = $detail->registrationTransaction->vehicle->plate_number;
+            } else {
+                $invoiceNumbers = $detail->saleInvoiceInsuranceOwnRisk->transaction_number;
+                $plateNumbers = $detail->saleInvoiceInsuranceOwnRisk->vehicle->plate_number;
+            }
+            $invoiceNumberList[] = $invoiceNumbers;
+            $plateNumberList[] = $plateNumbers;
         }
+        
         $invoiceNumberUniqueList = array_unique(explode(', ', implode(', ', $invoiceNumberList)));
         $plateNumberUniqueList = array_unique(explode(', ', implode(', ', $plateNumberList)));
         $this->header->invoice_number_list = implode(', ', $invoiceNumberUniqueList);
@@ -262,17 +287,17 @@ class PaymentInComponent extends CComponent {
     }
     
     public function getTotalInvoice() {
-        $total = 0.00;
+        $total = '0.00';
         
         foreach ($this->details as $detail) {
-            $total += $detail->total_invoice;
+            $total += $detail->total_invoice - $detail->invoiceHeader->downpayment_amount - $detail->invoiceHeader->insurance_own_risk_amount;
         }
         
         return $total;
     }
     
     public function getTotalDetail() {
-        $total = 0.00;
+        $total = '0.00';
         
         foreach ($this->details as $detail) {
             $total += $detail->amount;
@@ -282,7 +307,7 @@ class PaymentInComponent extends CComponent {
     }
     
     public function getTotalServiceTax() {
-        $total = 0.00;
+        $total = '0.00';
         
         foreach ($this->details as $detail) {
             $total += $detail->tax_service_amount;
@@ -292,7 +317,7 @@ class PaymentInComponent extends CComponent {
     }
     
     public function getTotalDiscount() {
-        $total = 0.00;
+        $total = '0.00';
         
         foreach ($this->details as $detail) {
             $total += $detail->discount_amount;
@@ -302,7 +327,7 @@ class PaymentInComponent extends CComponent {
     }
     
     public function getTotalBankAdminFee() {
-        $total = 0.00;
+        $total = '0.00';
         
         foreach ($this->details as $detail) {
             $total += $detail->bank_administration_fee;
@@ -312,7 +337,7 @@ class PaymentInComponent extends CComponent {
     }
     
     public function getTotalMerimenFee() {
-        $total = 0.00;
+        $total = '0.00';
         
         foreach ($this->details as $detail) {
             $total += $detail->merimen_fee;
@@ -322,7 +347,7 @@ class PaymentInComponent extends CComponent {
     }
     
     public function getTotalDownpaymentAmount() {
-        $total = 0.00;
+        $total = '0.00';
         
         foreach ($this->details as $detail) {
             $total += $detail->downpayment_amount;
@@ -331,8 +356,18 @@ class PaymentInComponent extends CComponent {
         return $total;
     }
     
+    public function getTotalOwnRiskAmount() {
+        $total = '0.00';
+        
+        foreach ($this->details as $detail) {
+            $total += $detail->own_risk_amount;
+        }
+        
+        return $total;
+    }
+    
     public function getTotalPayment() {
         
-        return $this->totalDetail + $this->totalServiceTax + $this->totalDiscount + $this->totalBankAdminFee + $this->totalMerimenFee + $this->bankFeeAmount + $this->totalDownpaymentAmount;
+        return $this->totalDetail + $this->totalServiceTax + $this->totalDiscount + $this->totalBankAdminFee + $this->totalMerimenFee + $this->bankFeeAmount + $this->totalDownpaymentAmount + $this->totalOwnRiskAmount;
     }
 }

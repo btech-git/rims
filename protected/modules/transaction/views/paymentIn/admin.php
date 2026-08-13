@@ -106,7 +106,7 @@ $('.search-form form').submit(function(){
                         'invoice_number_list',
                         array(
                             'name' => 'payment_amount', 
-                            'value' => '$data->payment_amount == 0 ? AppHelper::formatMoney($data->downpayment_amount) : AppHelper::formatMoney($data->payment_amount)',
+                            'value' => 'AppHelper::formatMoney($data->totalPayment)',
                             'htmlOptions' => array('style' => 'text-align: right'),
                         ),
                         array(
@@ -133,141 +133,41 @@ $('.search-form form').submit(function(){
                             'filter' => false,
                             'value' => 'Yii::app()->dateFormatter->format("d MMM yyyy", $data->created_datetime)'
                         ),
-                        array(
-                            'class' => 'CButtonColumn',
-                            'template' => '{view}',
-                            'buttons' => array(
-//                                'update' => array(
-//                                    'label' => 'update',
-//                                    'url' => 'Yii::app()->createUrl("transaction/paymentIn/update", array("id"=>$data->id))',
-//                                    'visible' => 'Yii::app()->user->checkAccess("paymentInEdit")', //$data->status_document != "Approved" && $data->status_document != "Rejected" && ',
-//                                ),
-                                'view' => array(
-                                    'label' => 'view',
-                                    'url' => 'Yii::app()->createUrl("transaction/paymentIn/view", array("id"=>$data->id))',
-                                ),
-                            ),
-                        ),
                     ),
                 )); ?>
             </div>
             
             <fieldset>
-                <legend>Pending Invoice</legend>
-                <div class="grid-view">
-                    <?php $this->widget('zii.widgets.grid.CGridView', array(
-                        'id' => 'invoice-grid',
-                        // 'dataProvider'=>$vehicleDataProvider,
-                        'dataProvider' => $invoiceDataProvider,
-                        'filter' => $invoice,
-                        'template' => '{items}<div class="clearfix">{summary}{pager}</div>',
-                        'pager' => array(
-                            'cssFile' => false,
-                            'header' => '',
-                        ),
-                        'columns' => array(
-                            array(
-                                'name' => 'invoice_number',
-                                'value' => 'CHTml::link($data->invoice_number, array("invoiceHeader/view", "id"=>$data->id))',
-                                'type' => 'raw'
+                <legend>Pending Payment</legend>
+                <div>
+                    <?php $this->widget('zii.widgets.jui.CJuiTabs', array(
+                        'tabs' => array(
+                            'Invoice Penjualan' => array(
+                                'content' => $this->renderPartial('_viewPendingInvoice', array(
+                                    'invoice' => $invoice,
+                                    'invoiceDataProvider' => $invoiceDataProvider,
+                                    'plateNumberInvoice' => $plateNumberInvoice,
+                                ), true)
                             ),
-                            'invoice_date',
-                            'due_date',
-                            'status',
-                            array(
-                                'name' => 'reference_type',
-                                'value' => '$data->reference_type == 1 ? "Sales Order" : "Retail Sales"'
+                            'Downpayment' => array(
+                                'content' => $this->renderPartial('_viewPendingDownpayment', array(
+                                    'downpaymentDataProvider' => $downpaymentDataProvider,
+                                    'registrationTransaction' => $registrationTransaction,
+                                ), true)
                             ),
-                            array(
-                                'name' => 'customer_name', 
-                                'value' => '$data->customer->name'
-                            ),
-                            array(
-                                'header' => 'Plate #', 
-                                'filter' => CHtml::textField('PlateNumberInvoice', $plateNumberInvoice),
-                                'value' => 'empty($data->vehicle_id) ? "N/A" : $data->vehicle->plate_number'
-                            ),
-                            array(
-                                'header' => 'Insurance',
-                                'filter' => CHtml::activeDropDownList($invoice, 'insurance_company_id', CHtml::listData(InsuranceCompany::model()->findAll(array('order' => 'name')), 'id', 'name'), array('empty' => '-- all --')),
-                                'value' => 'empty($data->insurance_company_id) ? "N/A" : $data->insuranceCompany->name',
-                            ),
-                            array(
-                                'name' => 'user_id',
-                                'filter' => CHtml::activeDropDownList($invoice, 'user_id', CHtml::listData(Users::model()->findAll(array('order' => 'username')), 'id', 'username'), array('empty' => '-- all --')),
-                                'header' => 'Created By',
-                                'value' => 'empty($data->user_id) ? "N/A" : $data->user->username',
-                            ),
-//                            array(
-//                                'name' => 'branch_id',
-//                                'header' => 'Branch',
-//                                'filter' => CHtml::activeDropDownList($invoice, 'branch_id', CHtml::listData(Branch::model()->findAll(array('order' => 'name')), 'id', 'name'), array('empty' => '-- all --')),
-//                                'value' => '$data->branch->name',
-//                            ),
-                            array(
-                                'name' => 'total_price', 
-                                'value' => 'AppHelper::formatMoney($data->total_price)',
-                                'htmlOptions' => array('style' => 'text-align: right'),
-                            ),
-                            array(
-                                'name' => 'payment_amount', 
-                                'value' => 'AppHelper::formatMoney($data->payment_amount)',
-                                'htmlOptions' => array('style' => 'text-align: right'),
-                            ),
-                            array(
-                                'name' => 'payment_left', 
-                                'value' => 'AppHelper::formatMoney($data->payment_left)',
-                                'htmlOptions' => array('style' => 'text-align: right'),
-                            ),
-                            array(
-                                'header' => '',
-                                'type' => 'raw',
-                                'value' => 'CHtml::link("Create", array("create", "invoiceId"=>$data->id))',
-                                'htmlOptions' => array(
-                                    'style' => 'text-align: center;'
-                                ),
+                            'Asuransi OR' => array(
+                                'content' => $this->renderPartial('_viewPendingOwnRisk', array(
+                                    'invoiceOwnRiskDataProvider' => $invoiceOwnRiskDataProvider,
+                                    'saleInvoiceInsuranceOwnRisk' => $saleInvoiceInsuranceOwnRisk,
+                                ), true)
                             ),
                         ),
-                    )); ?>
-                </div>
-            </fieldset>
-            
-            <fieldset>
-                <legend>Pending DP</legend>
-                <div class="grid-view">
-                    <?php $this->widget('zii.widgets.grid.CGridView', array(
-                        'id' => 'downpayment-grid',
-                        // 'dataProvider'=>$vehicleDataProvider,
-                        'dataProvider' => $downpaymentDataProvider,
-                        'filter' => $registrationTransaction,
-                        'template' => '{items}<div class="clearfix">{summary}{pager}</div>',
-                        'pager' => array(
-                            'cssFile' => false,
-                            'header' => '',
+                        // additional javascript options for the tabs plugin
+                        'options' => array(
+                            'collapsible' => true,
                         ),
-                        'columns' => array(
-                            array(
-                                'name' => 'downpayment_transaction_number',
-                                'value' => '$data->downpayment_transaction_number',
-                                'type' => 'raw'
-                            ),
-                            'downpayment_transaction_date',
-                            'vehicle.plate_number',
-                            'downpayment_note',
-                            array(
-                                'name' => 'downpayment_amount', 
-                                'value' => 'AppHelper::formatMoney($data->downpayment_amount)',
-                                'htmlOptions' => array('style' => 'text-align: right'),
-                            ),
-                            array(
-                                'header' => '',
-                                'type' => 'raw',
-                                'value' => 'CHtml::link("Create", array("createDownpayment", "registrationId"=>$data->id))',
-                                'htmlOptions' => array(
-                                    'style' => 'text-align: center;'
-                                ),
-                            ),
-                        ),
+                        // set id for this widgets
+                        'id' => 'view_tab',
                     )); ?>
                 </div>
             </fieldset>
