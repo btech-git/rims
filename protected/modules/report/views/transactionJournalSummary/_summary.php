@@ -30,7 +30,8 @@
                     preg_match('/^411.+$/', $transactionJournalItem['coa_code']) === 1 ||
                     preg_match('/^412.+$/', $transactionJournalItem['coa_code']) === 1 ||
                     preg_match('/^421.+$/', $transactionJournalItem['coa_code']) === 1 ||
-                    preg_match('/^422.+$/', $transactionJournalItem['coa_code']) === 1
+                    preg_match('/^422.+$/', $transactionJournalItem['coa_code']) === 1 ||
+                    preg_match('/^223.+$/', $transactionJournalItem['coa_code']) === 1
                 ); ?>
                 <?php $valid = $valid || $transactionType === 'Pin'; ?>
                 <?php $valid = $valid || $transactionType === 'RCI' && (
