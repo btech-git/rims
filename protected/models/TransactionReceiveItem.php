@@ -406,15 +406,6 @@ class TransactionReceiveItem extends MonthlyTransactionActiveRecord {
     public function searchForPaymentOut() {
         $criteria = new CDbCriteria;
 
-//        $criteria->condition = " 
-//            t.id NOT IN (
-//                SELECT p.receive_item_id
-//                FROM " . PayOutDetail::model()->tableName() . " p
-//                LEFT OUTER JOIN " . PaymentOutApproval::model()->tableName() . " a ON p.payment_out_id = a.payment_out_id
-//                WHERE p.receive_item_id IS NOT null AND a.approval_type = 'Approved'
-//            ) AND t.invoice_number IS NOT NULL AND t.purchase_order_id IS NOT NULL AND t.receive_item_date > '2021-12-31'
-//        ";
-        
         $criteria->compare('id', $this->id);
         $criteria->compare('receive_item_no', $this->receive_item_no, true);
         $criteria->compare('receive_item_date', $this->receive_item_date, true);
@@ -447,7 +438,7 @@ class TransactionReceiveItem extends MonthlyTransactionActiveRecord {
         $criteria->compare('deliveryOrder.delivery_order_no', $this->delivery_order_no, true);
         $criteria->compare('movementOut.movement_out_no', $this->movement_out_no, true);
 
-        $criteria->addCondition("purchaseOrder.payment_left > 100.00 AND t.cancelled_datetime IS null AND t.invoice_number IS NOT null AND t.receive_item_date > '2022-12-31'");
+        $criteria->addCondition("t.invoice_payment_remaining > 100.00 AND t.cancelled_datetime IS null AND t.invoice_number IS NOT null AND t.receive_item_date > '2024-12-31'");
 
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,

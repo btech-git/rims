@@ -15,6 +15,7 @@
  * @property string $total_price
  * @property integer $total_quantity
  * @property string $created_datetime
+ * @property integer $user_id
  *
  * The followings are the available model relations:
  * @property ConsignmentInDetail[] $consignmentInDetails
@@ -54,14 +55,14 @@ class ConsignmentInHeader extends MonthlyTransactionActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('consignment_in_number, date_posting, status_document, supplier_id, date_arrival, total_price', 'required'),
-            array('supplier_id, receive_id, receive_branch, total_quantity', 'numerical', 'integerOnly' => true),
+            array('consignment_in_number, date_posting, status_document, supplier_id, date_arrival, total_price, user_id', 'required'),
+            array('supplier_id, receive_id, receive_branch, total_quantity, user_id', 'numerical', 'integerOnly' => true),
             array('consignment_in_number, status_document', 'length', 'max' => 30),
             array('total_price', 'length', 'max' => 18),
             array('consignment_in_number', 'unique'),
             // The following rule is used by search().
             // Please remove those attributes that should not be searched.
-            array('id, consignment_in_number, date_posting, created_datetime, status_document, supplier_id, date_arrival, receive_id, receive_branch, total_price, total_quantity,supplier_name, branch_name', 'safe', 'on' => 'search'),
+            array('id, consignment_in_number, date_posting, created_datetime, status_document, supplier_id, date_arrival, receive_id, receive_branch, total_price, total_quantity,supplier_name, branch_name, user_id', 'safe', 'on' => 'search'),
         );
     }
 
@@ -78,7 +79,7 @@ class ConsignmentInHeader extends MonthlyTransactionActiveRecord {
             'receiveBranch' => array(self::BELONGS_TO, 'Branch', 'receive_branch'),
             'transactionReceiveItems' => array(self::HAS_MANY, 'TransactionReceiveItem', 'consignment_in_id'),
             'transactionReturnOrders' => array(self::HAS_MANY, 'TransactionReturnOrder', 'consignment_in_id'),
-            'user' => array(self::BELONGS_TO, 'User', 'receive_id'),
+            'user' => array(self::BELONGS_TO, 'Users', 'user_id'),
         );
     }
 

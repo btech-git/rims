@@ -78,6 +78,7 @@
  * @property CoaBank $coaBankIdEstimate
  * @property PaymentIn[] $invoiceHeaders
  * @property InsuranceCompany $insuranceCompany
+ * @property User $user
  * @property UserIdCancelled $userIdCancelled
  * @property UserIdEdited $userIdEdited
  * @property UserIdEdited $userIdPrinted
