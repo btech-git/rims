@@ -54,13 +54,13 @@
             array(
                 'header' => 'Payment',
                 'filter' => false,
-                'value' => 'number_format(CHtml::value($data, "purchaseOrder.payment_amount"), 2)',
+                'value' => 'number_format(CHtml::value($data, "invoice_payment_amount"), 2)',
                 'htmlOptions' => array('style' => 'text-align: right'),
             ),
             array(
                 'header' => 'Remaining',
                 'filter' => false,
-                'value' => 'number_format(CHtml::value($data, "purchaseOrder.payment_left"), 2)',
+                'value' => 'number_format(CHtml::value($data, "invoice_payment_remaining"), 2)',
                 'htmlOptions' => array('style' => 'text-align: right'),
             ),
             array(
