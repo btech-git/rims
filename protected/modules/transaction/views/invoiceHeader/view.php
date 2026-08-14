@@ -35,7 +35,7 @@ $this->breadcrumbs = array(
         <?php endif; ?>
         
         <?php if (Yii::app()->user->checkAccess("saleInvoiceEdit")): ?>
-            <?php echo CHtml::link('<span class="fa fa-pencil"></span>Edit', array("/transaction/invoiceHeader/update", "id" => $model->id), array(
+            <?php echo CHtml::link('<span class="fa fa-pencil"></span> Edit', array("/transaction/invoiceHeader/update", "id" => $model->id), array(
                 'class' => 'button warning right', 
                 'style' => 'margin-right:10px', 
             )); ?>
@@ -50,12 +50,12 @@ $this->breadcrumbs = array(
 
         <?php if ($model->status != 'PAID'): ?> 
             <?php echo CHtml::link('<span class="fa fa-print"></span>Print Invoice', array("pdf", "id" => $model->id), array(
-                'class' => 'button success right', 
+                'class' => 'button info right', 
                 'style' => 'margin-right:10px', 
             )); ?>
         <?php else: ?>
             <?php echo CHtml::link('<span class="fa fa-print"></span>Print Tanda Terima', array("pdfPayment", "id" => $model->id), array(
-                'class' => 'button success right', 
+                'class' => 'button info right', 
                 'style' => 'margin-right:10px', 
             )); ?>
         <?php endif; ?>

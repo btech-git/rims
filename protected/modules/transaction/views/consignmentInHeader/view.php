@@ -36,7 +36,7 @@ $this->menu=array(
                 'status_document',
                 array('name'=>'supplier_name','value'=>$model->supplier->name,),
                 'date_arrival',
-//                'user.username',
+                'user.username',
                 'receiveBranch.name',
                 ),
         )); ?>

@@ -67,6 +67,7 @@ class ConsignmentInHeaderController extends Controller {
     public function actionCreate() {
         
         $consignmentIn = $this->instantiate(null);
+        $consignmentIn->header->user_id = Yii::app()->user->id;
         $consignmentIn->header->receive_branch = Yii::app()->user->branch_id;
         $consignmentIn->header->created_datetime = date('Y-m-d H:i:s');
         $consignmentIn->header->date_posting = date('Y-m-d H:i:s');
