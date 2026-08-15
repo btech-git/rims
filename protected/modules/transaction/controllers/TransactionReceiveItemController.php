@@ -420,18 +420,18 @@ class TransactionReceiveItemController extends Controller {
         
         $purchaseDataProvider = $purchase->searchByReceive();
 
-//        $consignment = new ConsignmentInHeader('search');
-//        $consignment->unsetAttributes();  // clear any default values
-//        if (isset($_GET['ConsignmentInHeader'])) {
-//            $consignment->attributes = $_GET['ConsignmentInHeader'];
-//        }
-//
-//        $consignmentCriteria = new CDbCriteria;
-//        $consignmentDataProvider = new CActiveDataProvider('ConsignmentInHeader', array(
-//            'criteria' => $consignmentCriteria,
-//        ));
-//        $consignmentDataProvider->criteria->addCondition('t.receive_branch = :receive_branch');
-//        $consignmentDataProvider->criteria->params[':receive_branch'] = Yii::app()->user->branch_id;
+        $consignment = new ConsignmentInHeader('search');
+        $consignment->unsetAttributes();  // clear any default values
+        if (isset($_GET['ConsignmentInHeader'])) {
+            $consignment->attributes = $_GET['ConsignmentInHeader'];
+        }
+
+        $consignmentCriteria = new CDbCriteria;
+        $consignmentDataProvider = new CActiveDataProvider('ConsignmentInHeader', array(
+            'criteria' => $consignmentCriteria,
+        ));
+        $consignmentDataProvider->criteria->addCondition('t.receive_branch = :receive_branch');
+        $consignmentDataProvider->criteria->params[':receive_branch'] = Yii::app()->user->branch_id;
 
 //        $movement = new MovementOutHeader('search');
 //        $movement->unsetAttributes();  // clear any default values
@@ -455,8 +455,8 @@ class TransactionReceiveItemController extends Controller {
             'endDate' => $endDate,
             'purchase' => $purchase,
             'purchaseDataProvider' => $purchaseDataProvider,
-//            'consignment' => $consignment,
-//            'consignmentDataProvider' => $consignmentDataProvider,
+            'consignment' => $consignment,
+            'consignmentDataProvider' => $consignmentDataProvider,
             'delivery' => $delivery,
             'deliveryDataProvider' => $deliveryDataProvider,
 //            'movement' => $movement,
