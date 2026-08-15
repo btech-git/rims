@@ -430,8 +430,8 @@ class TransactionReceiveItemController extends Controller {
         $consignmentDataProvider = new CActiveDataProvider('ConsignmentInHeader', array(
             'criteria' => $consignmentCriteria,
         ));
-        $consignmentDataProvider->criteria->addCondition('t.receive_branch = :receive_branch');
-        $consignmentDataProvider->criteria->params[':receive_branch'] = Yii::app()->user->branch_id;
+//        $consignmentDataProvider->criteria->addCondition('t.receive_branch = :receive_branch');
+//        $consignmentDataProvider->criteria->params[':receive_branch'] = Yii::app()->user->branch_id;
 
 //        $movement = new MovementOutHeader('search');
 //        $movement->unsetAttributes();  // clear any default values
