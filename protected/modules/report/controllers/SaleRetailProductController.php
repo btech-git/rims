@@ -150,64 +150,70 @@ class SaleRetailProductController extends Controller {
         $worksheet = $objPHPExcel->setActiveSheetIndex(0);
         $worksheet->setTitle('Penjualan per Barang');
 
-        $worksheet->mergeCells('A1:K1');
-        $worksheet->mergeCells('A2:K2');
-        $worksheet->mergeCells('A3:K3');
+        $worksheet->mergeCells('A1:J1');
+        $worksheet->mergeCells('A2:J2');
+        $worksheet->mergeCells('A3:J3');
 
-        $worksheet->getStyle('A1:K5')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-        $worksheet->getStyle('A1:K5')->getFont()->setBold(true);
+        $worksheet->getStyle('A1:J5')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->getStyle('A1:J5')->getFont()->setBold(true);
 
         $branch = Branch::model()->findByPk($branchId);
-        $worksheet->setCellValue('A1', 'Raperind Motor ' . CHtml::encode(CHtml::value($branch, 'name')));
+        $worksheet->setCellValue('A1', 'Raperind Motor ' . CHtml::value($branch, 'name'));
         $worksheet->setCellValue('A2', 'Penjualan per Barang');
         $worksheet->setCellValue('A3', Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($startDate)) . ' - ' . Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($endDate)));
 
-        $worksheet->getStyle('A5:K5')->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle('A5:J5')->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
         $worksheet->setCellValue('A5', 'ID');
         $worksheet->setCellValue('B5', 'Code');
         $worksheet->setCellValue('C5', 'Name');
         $worksheet->setCellValue('D5', 'Brand');
-        $worksheet->setCellValue('E5', 'Sub Brand');
-        $worksheet->setCellValue('F5', 'Master Category');
-        $worksheet->setCellValue('G5', 'Sub Master Category');
-        $worksheet->setCellValue('H5', 'Sub Category');
-        $worksheet->setCellValue('I5', 'Quantity');
-        $worksheet->setCellValue('J5', 'Satuan');
-        $worksheet->setCellValue('K5', 'Total');
+        $worksheet->setCellValue('E5', 'Master Category');
+        $worksheet->setCellValue('F5', 'Quantity');
+        $worksheet->setCellValue('G5', 'Satuan');
+        $worksheet->setCellValue('H5', 'DPP');
+        $worksheet->setCellValue('I5', 'PPn');
+        $worksheet->setCellValue('J5', 'Total');
 
-        $worksheet->getStyle('A5:K5')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle('A5:J5')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
-        $counter = 7;
+        $counter = 6;
         $totalSale = '0.00';
+        $totalPrice = '0.00';
+        $totalTax = '0.00';
         $totalQuantity = '0.00';
         foreach ($dataProvider->data as $header) {
             $totalQuantitySales = $header->getTotalQuantitySales($startDate, $endDate, $branchId, $customerType);
+            $totalPriceSales = $header->getTotalPrice($startDate, $endDate, $branchId, $customerType);
+            $totalTaxSales = $header->getTotalTax($startDate, $endDate, $branchId, $customerType);
             $totalAmountSales = $header->getTotalSales($startDate, $endDate, $branchId, $customerType);
 
-            $worksheet->setCellValue("A{$counter}", CHtml::encode($header->id));
-            $worksheet->setCellValue("B{$counter}", CHtml::encode($header->manufacturer_code));
-            $worksheet->setCellValue("C{$counter}", CHtml::encode(CHtml::value($header, 'name')));
-            $worksheet->setCellValue("D{$counter}", CHtml::encode(CHtml::value($header, 'brand.name')));
-            $worksheet->setCellValue("E{$counter}", CHtml::encode(CHtml::value($header, 'subBrand.name')));
-            $worksheet->setCellValue("F{$counter}", CHtml::encode(CHtml::value($header, 'productMasterCategory.name')));
-            $worksheet->setCellValue("G{$counter}", CHtml::encode(CHtml::value($header, 'productSubMasterCategory.name')));
-            $worksheet->setCellValue("H{$counter}", CHtml::encode(CHtml::value($header, 'productSubCategory.name')));
-            $worksheet->setCellValue("I{$counter}", CHtml::encode($totalQuantitySales));
-            $worksheet->setCellValue("J{$counter}", CHtml::encode(CHtml::value($header, 'unit.name')));
-            $worksheet->setCellValue("K{$counter}", CHtml::encode($totalAmountSales));
+            $worksheet->setCellValue("A{$counter}", $header->id);
+            $worksheet->setCellValue("B{$counter}", $header->manufacturer_code);
+            $worksheet->setCellValue("C{$counter}", CHtml::value($header, 'name'));
+            $worksheet->setCellValue("D{$counter}", CHtml::value($header, 'brand.name') . ' - ' . CHtml::value($header, 'subBrand.name') . ' - ' . CHtml::value($header, 'subBrandSeries.name'));
+            $worksheet->setCellValue("E{$counter}", CHtml::value($header, 'productMasterCategory.name') . ' - ' . CHtml::value($header, 'productSubMasterCategory.name') . ' - ' . CHtml::value($header, 'productSubCategory.name'));
+            $worksheet->setCellValue("F{$counter}", $totalQuantitySales);
+            $worksheet->setCellValue("G{$counter}", CHtml::value($header, 'unit.name'));
+            $worksheet->setCellValue("H{$counter}", $totalPriceSales);
+            $worksheet->setCellValue("I{$counter}", $totalTaxSales);
+            $worksheet->setCellValue("J{$counter}", $totalAmountSales);
 
             $totalQuantity += $totalQuantitySales;
+            $totalPrice += $totalPriceSales;
+            $totalTax += $totalTaxSales;
             $totalSale += $totalAmountSales;
             $counter++;
         }
         
-        $worksheet->getStyle("A{$counter}:K{$counter}")->getFont()->setBold(true);
-        $worksheet->getStyle("A{$counter}:K{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A{$counter}:J{$counter}")->getFont()->setBold(true);
+        $worksheet->getStyle("A{$counter}:J{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
         
-        $worksheet->setCellValue("H{$counter}", 'TOTAL');
-        $worksheet->setCellValue("I{$counter}", CHtml::encode($totalQuantity));
-        $worksheet->setCellValue("K{$counter}", CHtml::encode($totalSale));
+        $worksheet->setCellValue("E{$counter}", 'TOTAL');
+        $worksheet->setCellValue("F{$counter}", $totalQuantity);
+        $worksheet->setCellValue("H{$counter}", $totalPrice);
+        $worksheet->setCellValue("I{$counter}", $totalTax);
+        $worksheet->setCellValue("J{$counter}", $totalSale);
         $counter++;$counter++;
 
         for ($col = 'A'; $col !== 'Z'; $col++) {

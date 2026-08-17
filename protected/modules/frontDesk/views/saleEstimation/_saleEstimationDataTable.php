@@ -7,80 +7,16 @@
     <table class="table table-bordered table-striped">
         <thead>
             <tr class="table-primary">
-                <th style="min-width: 150px">
-                    Estimasi #
-                </th>
-                <th style="min-width: 100px">
-                    Tanggal
-                </th>
-                <th style="min-width: 250px">
-                    Customer
-                </th>
-                <th style="min-width: 50px" >
-                    Plat #
-                </th>
-                <th style="min-width: 200px">
-                    Mobil Tipe
-                </th>
-                <th style="min-width: 100px">
-                    Mileage (km)
-                </th>
-                <th style="min-width: 150px">
-                    RG #
-                </th>
-                <th style="min-width: 150px">
-                    Salesman
-                </th>
-                <th style="min-width: 80px">
-                    Status
-                </th>
+                <th style="min-width: 150px">Estimasi #</th>
+                <th style="min-width: 100px">Tanggal</th>
+                <th style="min-width: 250px">Customer</th>
+                <th style="min-width: 50px">Plat #</th>
+                <th style="min-width: 200px">Mobil Tipe</th>
+                <th style="min-width: 100px">Mileage (km)</th>
+                <th style="min-width: 150px">RG #</th>
+                <th style="min-width: 150px">Salesman</th>
+                <th style="min-width: 80px">Status</th>
                 <th style="min-width: 50px"></th>
-            </tr>
-            <tr class="table-light">
-                <th>
-                    <?php echo CHtml::activeTextField($model, 'transaction_number', array(
-                        'class' => 'form-control',
-                        'onchange' => CHtml::ajax(array(
-                            'type' => 'POST',
-                            'url' => CController::createUrl('ajaxHtmlUpdateSaleEstimationTable'),
-                            'update' => '#sale_estimation_data_container',
-                        )),
-                    )); ?>
-                </th>
-                <th></th>
-                <th>
-                    <?php echo CHtml::textField('CustomerName', $customerName, array(
-                        'class' => 'form-control',
-                        'onchange' => CHtml::ajax(array(
-                            'type' => 'POST',
-                            'url' => CController::createUrl('ajaxHtmlUpdateSaleEstimationTable'),
-                            'update' => '#sale_estimation_data_container',
-                        )),
-                    )); ?>
-                </th>
-                <th>
-                    <?php echo CHtml::textField('PlateNumber', $plateNumber, array(
-                        'class' => 'form-control',
-                        'onchange' => CHtml::ajax(array(
-                            'type' => 'POST',
-                            'url' => CController::createUrl('ajaxHtmlUpdateSaleEstimationTable'),
-                            'update' => '#sale_estimation_data_container',
-                        )),
-                    )); ?>
-                </th>
-                <th></th>
-                <th></th>
-                <th></th>
-                <th>
-                    <?php echo CHtml::activeDropDownlist($model, 'employee_id_sale_person', CHtml::listData(Employee::model()->findAllByAttributes(array(
-                        "position_id" => 2,
-                    )), "id", "name"), array(
-                        'class' => 'form-control',
-                        "empty" => "--Salesman--"
-                    )); ?>
-                </th>
-                <th></th>
-                <th></th>
             </tr>
         </thead>
         <tbody>

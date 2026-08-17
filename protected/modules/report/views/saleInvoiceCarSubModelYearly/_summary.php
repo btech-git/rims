@@ -48,10 +48,11 @@
                 <?php endfor; ?>
                 <td style="text-align: right">
                     <?php echo CHtml::link($totalSum, array(
-                        '/report/saleInvoiceCarSubModelMonthly/transactionInfo', 
+                        '/report/saleInvoiceCarSubModelYearly/transactionInfo', 
                         'carSubModelId' => $invoiceVehicleCarSubModelInfo['car_sub_model_id'], 
                         'startDate' => $startDate, 
                         'endDate' => $endDate,
+                        'branchId' => $branchId,
                     ), array('target' => '_blank')); ?>
                 </td>
             </tr>

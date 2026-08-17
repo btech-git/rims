@@ -111,7 +111,7 @@ $('form').submit(function(){
                                             'style'=>'margin-bottom:0px;',
                                             'placeholder'=>'Transaction Date To',
                                             'onchange' => '
-                                                $.fn.yiiGridView.update("sale-invoicen-grid", {data: {InvoiceHeader: {
+                                                $.fn.yiiGridView.update("sale-invoice-grid", {data: {InvoiceHeader: {
                                                     invoice_date_to: $(this).val(),
                                                     invoice_number: $("#' . CHtml::activeId($invoice, 'invoice_number') . '").val(),
                                                     plate_number: $("#' . CHtml::activeId($invoice, 'plate_number') . '").val(),

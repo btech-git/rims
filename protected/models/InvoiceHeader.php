@@ -2241,7 +2241,7 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
         ));
     }
 
-    public function searchByTransactionInfo($carSubModelId, $startDate, $endDate, $page) {
+    public function searchByTransactionInfo($carSubModelId, $startDate, $endDate, $branchId, $page) {
         // Warning: Please modify the following code to remove attributes that
         // should not be searched.
 
@@ -2257,6 +2257,7 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
         );
 
         $criteria->compare('vehicle.car_sub_model_id', $carSubModelId);
+        $criteria->compare('t.branch_id', $branchId);
         $criteria->addBetweenCondition('t.invoice_date', $startDate, $endDate);
         $criteria->addCondition("t.status NOT LIKE '%CANCEL%'");
         

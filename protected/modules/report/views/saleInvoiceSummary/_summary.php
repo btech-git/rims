@@ -47,7 +47,12 @@
                 <th class="width1-2">Tanggal</th>
                 <th class="width2-3">Jumlah</th>
                 <th class="width2-4">PPh 21</th>
-                <th class="width2-5">Amount</th>
+                <th class="width2-5">Diskon</th>
+                <th class="width2-5">Biaya Bank</th>
+                <th class="width2-5">Biaya Merimen</th>
+                <th class="width2-5">DP</th>
+                <th class="width2-5">OR</th>
+                <th class="width2-5">Total</th>
                 <th class="width2-6">Memo</th>
             </tr>
         </thead>
@@ -58,7 +63,7 @@
             <?php $totalInvoice = '0.00'; ?>
             <?php $totalPaymentAmount = '0.00'; ?>
             <?php $totalPaymentLeft = '0.00'; ?>
-            <?php $totalPaymentDetail = '0.00'; ?>
+            <?php $totalPaymentSum = '0.00'; ?>
 
             <?php foreach ($saleInvoiceSummary->dataProvider->data as $i => $header): ?>
                 <?php $partsAmount = CHtml::value($header, 'product_price'); ?>
@@ -67,11 +72,13 @@
                 <?php $invoiceAmount = CHtml::value($header, 'total_price'); ?>
                 <?php $paymentAmount = CHtml::value($header, 'payment_amount'); ?>
                 <?php $paymentLeft = CHtml::value($header, 'payment_left'); ?>
+            
                 <?php if (!empty($header->paymentInDetails )): ?>
                     <?php foreach ($header->paymentInDetails as $paymentInDetail): ?>
                         <?php if ($paymentInDetail->paymentIn->status == 'Approved'): ?>
                             <?php $amount = CHtml::value($paymentInDetail, 'amount'); ?>
-                            <?php $paymentDetail = CHtml::value($paymentInDetail, 'totalAmount'); ?>
+                            <?php $totalPayment = CHtml::value($paymentInDetail, 'totalAmount'); ?>
+            
                             <tr class="items1">
                                 <td><?php echo $i + 1; ?></td>
                                 <td class="width1-1">
@@ -120,17 +127,34 @@
                                     <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $amount)); ?>
                                 </td>
                                 <td class="width2-4" style="text-align: right">
-                                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $paymentDetail)); ?>
+                                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $paymentInDetail->tax_service_amount)); ?>
                                 </td>
                                 <td class="width2-4" style="text-align: right">
-                                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $paymentInDetail->tax_service_amount)); ?>
+                                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $paymentInDetail->discount_amount)); ?>
+                                </td>
+                                <td class="width2-4" style="text-align: right">
+                                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $paymentInDetail->bank_administration_fee)); ?>
+                                </td>
+                                <td class="width2-4" style="text-align: right">
+                                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $paymentInDetail->merimen_fee)); ?>
+                                </td>
+                                <td class="width2-4" style="text-align: right">
+                                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $paymentInDetail->downpayment_amount)); ?>
+                                </td>
+                                <td class="width2-4" style="text-align: right">
+                                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $paymentInDetail->own_risk_amount)); ?>
+                                </td>
+                                <td class="width2-4" style="text-align: right">
+                                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalPayment)); ?>
                                 </td>
                                 <td class="width2-5"><?php echo CHtml::encode(CHtml::value($paymentInDetail, 'memo')); ?></td>
                             </tr>
-                            <?php $totalPaymentDetail += $paymentDetail; ?>
+                            <?php $totalPaymentSum += $totalPayment; ?>
+                            
                         <?php endif; ?>
                     <?php endforeach; ?>
                 <?php endif; ?>
+                            
                 <?php $totalParts += $partsAmount; ?>
                 <?php $totalService += $serviceAmount; ?>
                 <?php $totalTax += $taxAmount; ?>
@@ -160,8 +184,8 @@
                 <td class="width1-10" style="text-align: right; font-weight: bold"> 
                     <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalPaymentLeft)); ?>
                 </td>
-                <td colspan="6" style="text-align: right; font-weight: bold"> 
-                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalPaymentDetail)); ?>
+                <td colspan="11" style="text-align: right; font-weight: bold"> 
+                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalPaymentSum)); ?>
                 </td>
                 <td>&nbsp;</td>
             </tr>

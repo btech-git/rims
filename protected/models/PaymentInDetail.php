@@ -138,7 +138,7 @@ class PaymentInDetail extends CActiveRecord {
     }
 
     public function getTotalAmount() {
-        return $this->amount + $this->tax_service_amount + $this->discount_amount + $this->bank_administration_fee + $this->merimen_fee + $this->downpayment_amount;
+        return $this->amount + $this->tax_service_amount + $this->discount_amount + $this->bank_administration_fee + $this->merimen_fee + $this->downpayment_amount + $this->own_risk_amount;
     }
     
     public static function getReceivablePaymentReport($endDate, $invoiceHeaderIds) {

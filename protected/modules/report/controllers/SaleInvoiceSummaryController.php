@@ -155,20 +155,20 @@ class SaleInvoiceSummaryController extends Controller {
         $worksheet = $objPHPExcel->setActiveSheetIndex(0);
         $worksheet->setTitle('Faktur Penjualan Summary');
 
-        $worksheet->mergeCells('A1:V1');
-        $worksheet->mergeCells('A2:V2');
-        $worksheet->mergeCells('A3:V3');
+        $worksheet->mergeCells('A1:W1');
+        $worksheet->mergeCells('A2:W2');
+        $worksheet->mergeCells('A3:W3');
         
-        $worksheet->getStyle('A1:V5')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-        $worksheet->getStyle('A1:V5')->getFont()->setBold(true);
+        $worksheet->getStyle('A1:W5')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->getStyle('A1:W5')->getFont()->setBold(true);
         
         $branch = Branch::model()->findByPk($branchId);
         $worksheet->setCellValue('A1', 'Raperind Motor ' . CHtml::encode(CHtml::value($branch, 'name')));
         $worksheet->setCellValue('A2', 'Faktur Penjualan Summary');
         $worksheet->setCellValue('A3', $startDateFormatted . ' - ' . $endDateFormatted);
 
-        $worksheet->getStyle("A5:V5")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
-        $worksheet->getStyle("A5:V5")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A5:W5")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A5:W5")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
         $worksheet->setCellValue('A5', 'Tanggal');
         $worksheet->setCellValue('B5', 'Faktur #');
@@ -189,9 +189,10 @@ class SaleInvoiceSummaryController extends Controller {
         $worksheet->setCellValue('Q5', 'Diskon');
         $worksheet->setCellValue('R5', 'Biaya Bank');
         $worksheet->setCellValue('S5', 'Biaya Merimen');
-        $worksheet->setCellValue('T5', 'DP');
-        $worksheet->setCellValue('U5', 'Total');
-        $worksheet->setCellValue('V5', 'Memo');
+        $worksheet->setCellValue('T5', 'Downpayment');
+        $worksheet->setCellValue('U5', 'Own Risk');
+        $worksheet->setCellValue('V5', 'Total Payment');
+        $worksheet->setCellValue('W5', 'Memo');
 
         $counter = 6;
 
@@ -204,6 +205,7 @@ class SaleInvoiceSummaryController extends Controller {
         $totalBankFee = '0.00';
         $totalMerimenFee = '0.00';
         $totalDownpaymentAmount = '0.00';
+        $totalOwnRiskAmount = '0.00';
         $totalAmountSum = '0.00';
         
         foreach ($saleInvoiceSummary->dataProvider->data as $header) {
@@ -217,6 +219,7 @@ class SaleInvoiceSummaryController extends Controller {
                 $bankAdministrationFee = CHtml::value($paymentInDetail, 'bank_administration_fee');
                 $merimenFee = CHtml::value($paymentInDetail, 'merimen_fee');
                 $downpaymentAmount = CHtml::value($paymentInDetail, 'downpayment_amount');
+                $ownRiskAmount = CHtml::value($paymentInDetail, 'own_risk_amount');
                 $totalAmount = CHtml::value($paymentInDetail, 'totalAmount');
 
                 $worksheet->setCellValue("A{$counter}", CHtml::value($header, 'invoice_date'));
@@ -239,8 +242,9 @@ class SaleInvoiceSummaryController extends Controller {
                 $worksheet->setCellValue("R{$counter}", $bankAdministrationFee);
                 $worksheet->setCellValue("S{$counter}", $merimenFee);
                 $worksheet->setCellValue("T{$counter}", $downpaymentAmount);
-                $worksheet->setCellValue("U{$counter}", $totalAmount);
-                $worksheet->setCellValue("V{$counter}", CHtml::value($paymentInDetail, 'memo'));
+                $worksheet->setCellValue("U{$counter}", $ownRiskAmount);
+                $worksheet->setCellValue("V{$counter}", $totalAmount);
+                $worksheet->setCellValue("W{$counter}", CHtml::value($paymentInDetail, 'memo'));
 
                 $grandTotalSale += $totalPrice;
                 $grandTotalPayment += $totalPayment;
@@ -251,6 +255,7 @@ class SaleInvoiceSummaryController extends Controller {
                 $totalBankFee += $bankAdministrationFee;
                 $totalMerimenFee += $merimenFee;
                 $totalDownpaymentAmount += $downpaymentAmount;
+                $totalOwnRiskAmount += $ownRiskAmount;
                 $totalAmountSum += $totalAmount;
 
                 $counter++;
@@ -271,7 +276,8 @@ class SaleInvoiceSummaryController extends Controller {
         $worksheet->setCellValue("R{$counter}", $totalBankFee);
         $worksheet->setCellValue("S{$counter}", $totalMerimenFee);
         $worksheet->setCellValue("T{$counter}", $totalDownpaymentAmount);
-        $worksheet->setCellValue("U{$counter}", $totalAmountSum);
+        $worksheet->setCellValue("U{$counter}", $totalOwnRiskAmount);
+        $worksheet->setCellValue("V{$counter}", $totalAmountSum);
 
         $counter++;
 

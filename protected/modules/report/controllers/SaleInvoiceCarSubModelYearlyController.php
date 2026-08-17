@@ -63,13 +63,13 @@ class SaleInvoiceCarSubModelYearlyController extends Controller {
         ));
     }
     
-    public function actionTransactionInfo($carSubModelId, $startDate, $endDate) {
+    public function actionTransactionInfo($carSubModelId, $startDate, $endDate, $branchId) {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
 
         $page = (isset($_GET['page'])) ? $_GET['page'] : 1;
         
-        $dataProvider = InvoiceHeader::model()->searchByTransactionInfo($carSubModelId, $startDate, $endDate, $page);
+        $dataProvider = InvoiceHeader::model()->searchByTransactionInfo($carSubModelId, $startDate, $endDate, $branchId, $page);
         $carSubModel = VehicleCarSubModel::model()->findByPk($carSubModelId);
         
         $this->render('transactionInfo', array(
@@ -77,6 +77,7 @@ class SaleInvoiceCarSubModelYearlyController extends Controller {
             'startDate' => $startDate,
             'endDate' => $endDate,
             'carSubModel' => $carSubModel,
+            'branchId' => $branchId,
         ));
     }
 

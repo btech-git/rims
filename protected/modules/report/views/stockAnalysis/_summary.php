@@ -5,8 +5,12 @@
         <div class="row">
             <span style="text-align: center">
                 <?php $branch = Branch::model()->findByPk($branchId); ?>
-                <h3>Fast Moving Items <?php echo CHtml::encode(CHtml::value($branch, 'name')); ?></h3>
+                <h2>Raperind Motor <?php echo CHtml::encode(CHtml::value($branch, 'name')); ?></h2>
+                <h3>Analisa Penjualan Barang</h3>
+                <div><?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($startDate))) . ' &nbsp;&ndash;&nbsp; ' . CHtml::encode(Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($endDate))); ?></div>
             </span>
+            
+            <hr />
             
             <table>
                 <thead>
@@ -38,7 +42,7 @@
                                 <?php echo CHtml::encode($fastMovingItem['sub_brand_series']); ?>
                             </td>
                             <td style="text-align: right">
-                                <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $fastMovingItem['total_sale'])); ?>
+                                <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $fastMovingItem['total_sale'])); ?>
                             </td>
                             <td style="text-align: right">
                                 <?php $numberOfMonths = $numberOfMonths == 0 ? 1 : $numberOfMonths; ?>
@@ -54,7 +58,7 @@
             </table>
         </div>
         
-        <hr />
+<!--        <hr />
         
         <div class="row">
             <span style="text-align: center">
@@ -79,7 +83,7 @@
                 </thead>
 
                 <tbody>
-                    <?php $slowMovingItems = $inventoryDetail->getSlowMovingItems($startDate, $endDate, $brandId, $subBrandId, $subBrandSeriesId, $productMasterCategoryId, $productSubMasterCategoryId, $productSubCategoryId, $branchId, $productId, $productCode, $productName); ?>
+                    <?php /*$slowMovingItems = $inventoryDetail->getSlowMovingItems($startDate, $endDate, $brandId, $subBrandId, $subBrandSeriesId, $productMasterCategoryId, $productSubMasterCategoryId, $productSubCategoryId, $branchId, $productId, $productCode, $productName); ?>
                     <?php foreach ($slowMovingItems as $i => $slowMovingItem): ?>
                         <tr>
                             <td><?php echo CHtml::encode($i + 1); ?></td>
@@ -100,9 +104,9 @@
                                 <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $slowMovingItem['total_sale'] / $numberOfWeeks)); ?>
                             </td>
                         </tr>
-                    <?php endforeach; ?>
+                    <?php endforeach;*/ ?>
                 </tbody>
             </table>
-        </div>
+        </div>-->
     </div>
 </div>

@@ -280,9 +280,14 @@ class SaleEstimationController extends Controller {
             'vehicle',
             'customer',
         );
-//        $dataProvider->criteria->addCondition('t.branch_id = :branch_id');
-//        $dataProvider->criteria->params[':branch_id'] = Yii::app()->user->branch_id;
-//        $dataProvider->criteria->addBetweenCondition('SUBSTRING(t.transaction_date, 1, 10)', $startDate, $endDate);
+        $dataProvider->criteria->compare('vehicle.plate_number', $plateNumber, true);
+        $dataProvider->criteria->compare('customer.name', $customerName, true);
+        
+        if (!(Yii::app()->user->checkAccess('director')) && Yii::app()->user->branch_id !== 6) {
+            $dataProvider->criteria->addCondition('t.branch_id = :branch_id');
+            $dataProvider->criteria->params[':branch_id'] = Yii::app()->user->branch_id;
+        }
+        $dataProvider->criteria->addBetweenCondition('SUBSTRING(t.transaction_date, 1, 10)', $startDate, $endDate);
 
         $this->render('admin', array(
             'model' => $model,

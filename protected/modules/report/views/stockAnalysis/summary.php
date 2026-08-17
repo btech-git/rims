@@ -172,11 +172,11 @@ Yii::app()->clientScript->registerScript('report', '
                     <div class="medium-6 columns">
                         <div class="field">
                             <div class="row collapse">
-                                <div class="small-2 columns">
+                                <div class="small-4 columns">
                                     <span class="prefix">Periode:</span>
                                 </div>
 
-                                <div class="small-5 columns">
+                                <div class="small-4 columns">
                                     <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(
                                         'name' => 'StartDate',
                                         'options' => array(
@@ -191,7 +191,7 @@ Yii::app()->clientScript->registerScript('report', '
                                     )); ?>
                                 </div>
 
-                                <div class="small-5 columns">
+                                <div class="small-4 columns">
                                     <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(
                                         'name' => 'EndDate',
                                         'options' => array(
