@@ -185,5 +185,14 @@ class ConsignmentInHeader extends MonthlyTransactionActiveRecord {
 
         return ($totalRemaining == 0) ? 'Completed' : 'Partial';
     }
+    
+    public function getOutstandingDays() {
 
+        $date1 = new DateTime(date('Y-m-d'));
+        $date2 = new DateTime($this->date_posting);
+
+        $diff = $date2->diff($date1)->format("%r%a");
+
+        return (int)$diff;
+    }
 }
