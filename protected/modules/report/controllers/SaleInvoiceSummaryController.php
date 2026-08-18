@@ -155,20 +155,20 @@ class SaleInvoiceSummaryController extends Controller {
         $worksheet = $objPHPExcel->setActiveSheetIndex(0);
         $worksheet->setTitle('Faktur Penjualan Summary');
 
-        $worksheet->mergeCells('A1:W1');
-        $worksheet->mergeCells('A2:W2');
-        $worksheet->mergeCells('A3:W3');
+        $worksheet->mergeCells('A1:Z1');
+        $worksheet->mergeCells('A2:Z2');
+        $worksheet->mergeCells('A3:Z3');
         
-        $worksheet->getStyle('A1:W5')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-        $worksheet->getStyle('A1:W5')->getFont()->setBold(true);
+        $worksheet->getStyle('A1:Z5')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->getStyle('A1:Z5')->getFont()->setBold(true);
         
         $branch = Branch::model()->findByPk($branchId);
         $worksheet->setCellValue('A1', 'Raperind Motor ' . CHtml::encode(CHtml::value($branch, 'name')));
         $worksheet->setCellValue('A2', 'Faktur Penjualan Summary');
         $worksheet->setCellValue('A3', $startDateFormatted . ' - ' . $endDateFormatted);
 
-        $worksheet->getStyle("A5:W5")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
-        $worksheet->getStyle("A5:W5")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A5:Z5")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A5:Z5")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
         $worksheet->setCellValue('A5', 'Tanggal');
         $worksheet->setCellValue('B5', 'Faktur #');
@@ -177,22 +177,25 @@ class SaleInvoiceSummaryController extends Controller {
         $worksheet->setCellValue('E5', 'Type');
         $worksheet->setCellValue('F5', 'Plat #');
         $worksheet->setCellValue('G5', 'Kendaraan');
-        $worksheet->setCellValue('H5', 'Grand Total');
-        $worksheet->setCellValue('I5', 'Payment');
-        $worksheet->setCellValue('J5', 'Remaining');
-        $worksheet->setCellValue('K5', 'Status');
-        $worksheet->setCellValue('L5', 'User');
-        $worksheet->setCellValue('M5', 'Payment #');
-        $worksheet->setCellValue('N5', 'Tanggal');
-        $worksheet->setCellValue('O5', 'Jumlah');
-        $worksheet->setCellValue('P5', 'PPh 21');
-        $worksheet->setCellValue('Q5', 'Diskon');
-        $worksheet->setCellValue('R5', 'Biaya Bank');
-        $worksheet->setCellValue('S5', 'Biaya Merimen');
-        $worksheet->setCellValue('T5', 'Downpayment');
-        $worksheet->setCellValue('U5', 'Own Risk');
-        $worksheet->setCellValue('V5', 'Total Payment');
-        $worksheet->setCellValue('W5', 'Memo');
+        $worksheet->setCellValue('H5', 'DPP');
+        $worksheet->setCellValue('I5', 'PPn');
+        $worksheet->setCellValue('J5', 'PPh');
+        $worksheet->setCellValue('K5', 'Grand Total');
+        $worksheet->setCellValue('L5', 'Payment');
+        $worksheet->setCellValue('M5', 'Remaining');
+        $worksheet->setCellValue('N5', 'Status');
+        $worksheet->setCellValue('O5', 'User');
+        $worksheet->setCellValue('P5', 'Payment #');
+        $worksheet->setCellValue('Q5', 'Tanggal');
+        $worksheet->setCellValue('R5', 'Jumlah');
+        $worksheet->setCellValue('S5', 'PPh 21');
+        $worksheet->setCellValue('T5', 'Diskon');
+        $worksheet->setCellValue('U5', 'Biaya Bank');
+        $worksheet->setCellValue('V5', 'Biaya Merimen');
+        $worksheet->setCellValue('W5', 'Downpayment');
+        $worksheet->setCellValue('X5', 'Own Risk');
+        $worksheet->setCellValue('Y5', 'Total Payment');
+        $worksheet->setCellValue('Z5', 'Memo');
 
         $counter = 6;
 
@@ -229,22 +232,25 @@ class SaleInvoiceSummaryController extends Controller {
                 $worksheet->setCellValue("E{$counter}", CHtml::value($header, 'customer.customer_type'));
                 $worksheet->setCellValue("F{$counter}", CHtml::value($header, 'vehicle.plate_number'));
                 $worksheet->setCellValue("G{$counter}", CHtml::value($header, 'vehicle.carMake.name') . ' - ' . CHtml::value($header, 'vehicle.carModel.name') . ' - ' . CHtml::value($header, 'vehicle.carSubModel.name'));
-                $worksheet->setCellValue("H{$counter}", $totalPrice);
-                $worksheet->setCellValue("I{$counter}", $totalPayment);
-                $worksheet->setCellValue("J{$counter}", $totalRemaining);
-                $worksheet->setCellValue("K{$counter}", CHtml::value($header, 'status'));
-                $worksheet->setCellValue("L{$counter}", CHtml::value($header, 'user.username'));
-                $worksheet->setCellValue("M{$counter}", CHtml::value($paymentInDetail, 'paymentIn.payment_number'));
-                $worksheet->setCellValue("N{$counter}", CHtml::value($paymentInDetail, 'paymentIn.payment_date'));
-                $worksheet->setCellValue("O{$counter}", $amount);
-                $worksheet->setCellValue("P{$counter}", $taxServiceAmount);
-                $worksheet->setCellValue("Q{$counter}", $discountAmount);
-                $worksheet->setCellValue("R{$counter}", $bankAdministrationFee);
-                $worksheet->setCellValue("S{$counter}", $merimenFee);
-                $worksheet->setCellValue("T{$counter}", $downpaymentAmount);
-                $worksheet->setCellValue("U{$counter}", $ownRiskAmount);
-                $worksheet->setCellValue("V{$counter}", $totalAmount);
-                $worksheet->setCellValue("W{$counter}", CHtml::value($paymentInDetail, 'memo'));
+                $worksheet->setCellValue("H{$counter}", CHtml::value($header, 'subTotal'));
+                $worksheet->setCellValue("I{$counter}", CHtml::value($header, 'ppn_total'));
+                $worksheet->setCellValue("J{$counter}", CHtml::value($header, 'pph_total'));
+                $worksheet->setCellValue("K{$counter}", $totalPrice);
+                $worksheet->setCellValue("L{$counter}", $totalPayment);
+                $worksheet->setCellValue("M{$counter}", $totalRemaining);
+                $worksheet->setCellValue("N{$counter}", CHtml::value($header, 'status'));
+                $worksheet->setCellValue("O{$counter}", CHtml::value($header, 'user.username'));
+                $worksheet->setCellValue("P{$counter}", CHtml::value($paymentInDetail, 'paymentIn.payment_number'));
+                $worksheet->setCellValue("Q{$counter}", CHtml::value($paymentInDetail, 'paymentIn.payment_date'));
+                $worksheet->setCellValue("R{$counter}", $amount);
+                $worksheet->setCellValue("S{$counter}", $taxServiceAmount);
+                $worksheet->setCellValue("T{$counter}", $discountAmount);
+                $worksheet->setCellValue("U{$counter}", $bankAdministrationFee);
+                $worksheet->setCellValue("V{$counter}", $merimenFee);
+                $worksheet->setCellValue("W{$counter}", $downpaymentAmount);
+                $worksheet->setCellValue("X{$counter}", $ownRiskAmount);
+                $worksheet->setCellValue("Y{$counter}", $totalAmount);
+                $worksheet->setCellValue("Z{$counter}", CHtml::value($paymentInDetail, 'memo'));
 
                 $grandTotalSale += $totalPrice;
                 $grandTotalPayment += $totalPayment;
@@ -267,17 +273,17 @@ class SaleInvoiceSummaryController extends Controller {
         
         $worksheet->setCellValue("F{$counter}", 'Total');
         $worksheet->setCellValue("G{$counter}", 'Rp');
-        $worksheet->setCellValue("H{$counter}", $grandTotalSale);
-        $worksheet->setCellValue("I{$counter}", $grandTotalPayment);
-        $worksheet->setCellValue("J{$counter}", $grandTotalRemaining);
-        $worksheet->setCellValue("O{$counter}", $totalAmount);
-        $worksheet->setCellValue("P{$counter}", $totalTaxServiceAmount);
-        $worksheet->setCellValue("Q{$counter}", $totalDiscountAmount);
-        $worksheet->setCellValue("R{$counter}", $totalBankFee);
-        $worksheet->setCellValue("S{$counter}", $totalMerimenFee);
-        $worksheet->setCellValue("T{$counter}", $totalDownpaymentAmount);
-        $worksheet->setCellValue("U{$counter}", $totalOwnRiskAmount);
-        $worksheet->setCellValue("V{$counter}", $totalAmountSum);
+        $worksheet->setCellValue("K{$counter}", $grandTotalSale);
+        $worksheet->setCellValue("L{$counter}", $grandTotalPayment);
+        $worksheet->setCellValue("M{$counter}", $grandTotalRemaining);
+        $worksheet->setCellValue("R{$counter}", $totalAmount);
+        $worksheet->setCellValue("S{$counter}", $totalTaxServiceAmount);
+        $worksheet->setCellValue("T{$counter}", $totalDiscountAmount);
+        $worksheet->setCellValue("U{$counter}", $totalBankFee);
+        $worksheet->setCellValue("V{$counter}", $totalMerimenFee);
+        $worksheet->setCellValue("W{$counter}", $totalDownpaymentAmount);
+        $worksheet->setCellValue("X{$counter}", $totalOwnRiskAmount);
+        $worksheet->setCellValue("Y{$counter}", $totalAmountSum);
 
         $counter++;
 
