@@ -577,8 +577,10 @@ class TransactionReceiveItem extends MonthlyTransactionActiveRecord {
         return $resultSet;
     }
     
-    public static function getPayableIncomingDueDate($supplierName, $startDate, $endDate) {
+    public static function getPayableIncomingDueDate($supplierName, $startDate, $endDate, $supplierPaymentTerm, $startDueDate, $endDueDate) {
         $supplierConditionSql = '';
+        $supplierPaymentTermConditionSql = '';
+        $dueDateConditionSql = '';
         
         $params = array(
             ':start_date' => $startDate,
@@ -590,19 +592,34 @@ class TransactionReceiveItem extends MonthlyTransactionActiveRecord {
             $params[':supplier_name'] = "%{$supplierName}%";
         }
         
+        if (!empty($supplierPaymentTerm)) {
+            $supplierPaymentTermConditionSql = ' AND s.tenor <= :supplier_payment_term';
+            $params[':supplier_payment_term'] = $supplierPaymentTerm;
+        }
+        
+        if (!empty($startDueDate & $endDueDate)) {
+            $dueDateConditionSql = ' AND r.invoice_due_date BETWEEN :start_due_date AND :end_due_date';
+            $params[':start_due_date'] = $startDueDate;
+            $params[':end_due_date'] = $endDueDate;
+        }
+        
         $sql = "SELECT r.id, r.invoice_number, r.invoice_date, r.invoice_due_date, s.name as supplier, r.invoice_grand_total, p.amount AS payment, 
-                    r.invoice_grand_total - p.amount AS remaining
+                    r.invoice_grand_total - p.amount AS remaining, s.tenor, o.purchase_order_no, o.purchase_order_date, p.payment_number, p.payment_date,
+                    o.id AS purchase_order_id, p.payment_id AS payment_id
                 FROM " . TransactionReceiveItem::model()->tableName() . " r
+                INNER JOIN " . TransactionPurchaseOrder::model()->tableName() . " o ON o.id = r.purchase_order_id
                 INNER JOIN " . Supplier::model()->tableName() . " s ON s.id = r.supplier_id
-                INNER JOIN (
-                    SELECT d.receive_item_id, SUM(d.amount) AS amount
+                LEFT OUTER JOIN (
+                    SELECT d.receive_item_id, SUM(d.amount) AS amount, MAX(h.payment_number) AS payment_number, MAX(h.payment_date) AS payment_date,
+                        MAX(h.id) AS payment_id
                     FROM " . PayOutDetail::model()->tableName() . " d
                     INNER JOIN " . PaymentOut::model()->tableName() . " h ON h.id = d.payment_out_id
                     WHERE h.user_id_cancelled IS NULL AND h.status = 'Approved'
                     GROUP BY d.receive_item_id
                 ) p ON r.id = p.receive_item_id
-                WHERE r.invoice_due_date BETWEEN :start_date AND :end_date AND user_id_cancelled IS NULL" . $supplierConditionSql . " 
-                ORDER BY r.invoice_due_date ASC";
+                WHERE r.invoice_date BETWEEN :start_date AND :end_date AND r.user_id_cancelled IS NULL AND r.invoice_payment_remaining > 0" . 
+                    $supplierConditionSql . $supplierPaymentTermConditionSql . $dueDateConditionSql . " 
+                ORDER BY r.invoice_date ASC";
                 
         $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
         

@@ -305,6 +305,8 @@ class TransactionReceiveItemController extends Controller {
         $receiveItem->invoice_sub_total = $receiveItem->subTotal;
         $receiveItem->invoice_tax_nominal = $receiveItem->taxNominal;
         $receiveItem->invoice_grand_total = $receiveItem->grandTotal;
+        $receiveItem->invoice_payment_amount = $receiveItem->totalPayment;
+        $receiveItem->invoice_payment_remaining = $receiveItem->totalRemaining;
         $this->performAjaxValidation($receiveItem);
 
         if (isset($_POST['Cancel'])) {

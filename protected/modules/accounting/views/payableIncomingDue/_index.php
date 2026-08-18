@@ -1,0 +1,63 @@
+<div style="font-weight: bold; text-align: center">
+    <div style="font-size: larger">Raperind Motor</div>
+    <div style="font-size: larger">Data Hutang Jatuh Tempo</div>
+    <div><?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($startDate))) . ' &nbsp;&ndash;&nbsp; ' . CHtml::encode(Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($endDate))); ?></div>
+</div>
+
+<br />
+
+<fieldset>
+    <table>
+        <thead>
+            <tr>
+                <th>No</th>
+                <th>Invoice #</th>
+                <th>Tanggal Invoice</th>
+                <th>Jatuh Tempo</th>
+                <th>TOP (hari)</th>
+                <th>PO #</th>
+                <th>Tanggal PO</th>
+                <th>Payment #</th>
+                <th>Tanggal Payment</th>
+                <th>Supplier</th>
+                <th>Total</th>
+                <th>Payment</th>
+                <th>Remaining</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php foreach ($payableIncomingDueDate as $i => $dataItem): ?>
+                <tr>
+                    <td><?php echo CHtml::encode($i + 1); ?></td>
+                    <td>
+                        <?php echo CHtml::link(CHtml::encode($dataItem['invoice_number']), array(
+                            "/transaction/transactionReceiveItem/show", 
+                            "id" => $dataItem['id']
+                        ), array('target' => '_blank')); ?>
+                    </td>
+                    <td><?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($dataItem['invoice_date']))); ?></td>
+                    <td><?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($dataItem['invoice_due_date']))); ?></td>
+                    <td><?php echo CHtml::encode($dataItem['tenor']); ?></td>
+                    <td>
+                        <?php echo CHtml::link(CHtml::encode($dataItem['purchase_order_no']), array(
+                            "/transaction/transactionPurchaseOrder/show", 
+                            "id" => $dataItem['purchase_order_id']
+                        ), array('target' => '_blank')); ?>
+                    </td>
+                    <td><?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($dataItem['purchase_order_date']))); ?></td>
+                    <td>
+                        <?php echo CHtml::link(CHtml::encode($dataItem['payment_number']), array(
+                            "/accounting/paymentOut/show", 
+                            "id" => $dataItem['payment_id']
+                        ), array('target' => '_blank')); ?>
+                    </td>
+                    <td><?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($dataItem['payment_date']))); ?></td>
+                    <td><?php echo CHtml::encode($dataItem['supplier']); ?></td>
+                    <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $dataItem['invoice_grand_total'])); ?></td>
+                    <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $dataItem['payment'])); ?></td>
+                    <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $dataItem['remaining'])); ?></td>
+                </tr>
+            <?php endforeach; ?>
+        </tbody>
+    </table>
+</fieldset>

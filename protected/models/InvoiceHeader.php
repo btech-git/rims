@@ -2866,8 +2866,10 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
 //        return $resultSet;
 //    }
     
-    public static function getReceivableIncomingDueDate($customerName, $startDate, $endDate) {
+    public static function getReceivableIncomingDueDate($customerName, $startDate, $endDate, $customerPaymentTerm, $startDueDate, $endDueDate) {
         $customerConditionSql = '';
+        $customerPaymentTermConditionSql = '';
+        $dueDateConditionSql = '';
         
         $params = array(
             ':start_date' => $startDate,
@@ -2879,12 +2881,33 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
             $params[':customer_name'] = "%{$customerName}%";
         }
         
-        $sql = "SELECT i.id, i.invoice_number, i.invoice_date, i.due_date, c.name as customer, v.plate_number, i.total_price, i.payment_amount, i.payment_left
+        if (!empty($customerPaymentTerm)) {
+            $customerPaymentTermConditionSql = ' AND c.tenor <= :customer_payment_term';
+            $params[':customer_payment_term'] = $customerPaymentTerm;
+        }
+        
+        if (!empty($startDueDate & $endDueDate)) {
+            $dueDateConditionSql = ' AND i.due_date BETWEEN :start_due_date AND :end_due_date';
+            $params[':start_due_date'] = $startDueDate;
+            $params[':end_due_date'] = $endDueDate;
+        }
+        
+        $sql = "SELECT i.id, i.invoice_number, i.invoice_date, i.due_date, c.name as customer, c.tenor, v.plate_number, p.payment_number, p.payment_date,
+                    i.total_price, i.payment_amount, i.payment_left, p.payment_id
                 FROM " . InvoiceHeader::model()->tableName() . " i 
                 INNER JOIN " . Customer::model()->tableName() . " c ON c.id = i.customer_id
                 INNER JOIN " . Vehicle::model()->tableName() . " v ON v.id = i.vehicle_id
-                WHERE due_date BETWEEN :start_date AND :end_date AND payment_left > 100 AND user_id_cancelled IS NULL" . $customerConditionSql . "
-                ORDER BY i.due_date ASC";
+                LEFT OUTER JOIN (
+                    SELECT d.invoice_header_id, MAX(h.payment_number) AS payment_number, MAX(h.payment_date) AS payment_date, MAX(h.id) AS payment_id,
+                        SUM(d.amount + d.tax_service_amount + d.discount_amount + d.bank_administration_fee + d.merimen_fee + d.downpayment_amount + d.own_risk_amount) AS payment_amount
+                    FROM " . PaymentInDetail::model()->tableName() . " d 
+                    INNER JOIN " . PaymentIn::model()->tableName() . " h ON h.id = d.payment_in_id
+                    WHERE h.user_id_cancelled IS NULL AND h.status = 'Approved'
+                    GROUP BY d.invoice_header_id
+                ) p ON i.id = p.invoice_header_id
+                WHERE due_date BETWEEN :start_date AND :end_date AND payment_left > 100 AND user_id_cancelled IS NULL" . 
+                    $customerConditionSql . $customerPaymentTermConditionSql . $dueDateConditionSql . "
+                ORDER BY i.due_date ASC, i.invoice_number ASC";
                 
         $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
         
