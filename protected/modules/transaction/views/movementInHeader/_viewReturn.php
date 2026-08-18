@@ -19,13 +19,22 @@
                 'value'=>'CHTml::link($data->return_item_no, array("/transaction/transactionReturnItem/view", "id"=>$data->id))', 
                 'type'=>'raw'
             ),
-            'return_item_date',
+            array(
+                'name' => 'return_item_date',
+                'header' => 'Tanggal',
+                'value' => 'Yii::app()->dateFormatter->format("d MMM yyyy", $data->return_item_date)',
+            ),
+            array(
+                'header' => 'Umur (hari)', 
+                'value' => '$data->outstandingDays',
+                'htmlOptions' => array('style' => 'text-align: center'),
+            ),
             array(
                 'name'=>'customer_id', 
                 'filter' => CHtml::activeTextField($returnItem, 'customer_name'), 
                 'value'=>'empty($data->customer_id) ? "" : $data->customer->name', 
-                'type'=>'raw'
             ),
+            'request_type',
             array(
                 'header'=>'Movements',
                 'value'=> function($data){

@@ -116,51 +116,55 @@ class OutstandingSaleInvoiceController extends Controller {
         $worksheet = $objPHPExcel->setActiveSheetIndex(0);
         $worksheet->setTitle('Outstanding Invoice');
 
-        $worksheet->mergeCells('A1:M1');
-        $worksheet->mergeCells('A2:M2');
-        $worksheet->mergeCells('A3:M3');
+        $worksheet->mergeCells('A1:N1');
+        $worksheet->mergeCells('A2:N2');
+        $worksheet->mergeCells('A3:N3');
         
-        $worksheet->getStyle('A1:M5')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-        $worksheet->getStyle('A1:M5')->getFont()->setBold(true);
+        $worksheet->getStyle('A1:N5')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->getStyle('A1:N5')->getFont()->setBold(true);
         
         $branch = Branch::model()->findByPk($branchId);
-        $worksheet->setCellValue('A1', 'Raperind Motor ' . CHtml::encode(CHtml::value($branch, 'name')));
+        $worksheet->setCellValue('A1', 'Raperind Motor ' . CHtml::value($branch, 'name'));
         $worksheet->setCellValue('A2', 'Outstanding Invoice Penjualan');
         $worksheet->setCellValue('A3', $startDateFormatted . ' - ' . $endDateFormatted);
 
-        $worksheet->getStyle("A5:M5")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
-        $worksheet->getStyle("A5:M5")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A5:N5")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A5:N5")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
         $worksheet->setCellValue('A5', 'No');
         $worksheet->setCellValue('B5', 'Invoice #');
         $worksheet->setCellValue('C5', 'Tanggal');
-        $worksheet->setCellValue('D5', 'Customer');
-        $worksheet->setCellValue('E5', 'Vehicle');
-        $worksheet->setCellValue('F5', 'Plat #');
-        $worksheet->setCellValue('G5', 'Status');
-        $worksheet->setCellValue('H5', 'RG #');
-        $worksheet->setCellValue('I5', 'SPK Customer #');
-        $worksheet->setCellValue('J5', 'Total (Rp)');
-        $worksheet->setCellValue('K5', 'Pembayaran (Rp)');
-        $worksheet->setCellValue('L5', 'Sisa (Rp)');
-        $worksheet->setCellValue('M5', 'User Input');
+        $worksheet->setCellValue('D5', 'Umur (hari)');
+        $worksheet->setCellValue('E5', 'Customer');
+        $worksheet->setCellValue('F5', 'Vehicle');
+        $worksheet->setCellValue('G5', 'Plat #');
+        $worksheet->setCellValue('H5', 'Status');
+        $worksheet->setCellValue('I5', 'RG #');
+        $worksheet->setCellValue('J5', 'SPK Customer #');
+        $worksheet->setCellValue('K5', 'Total (Rp)');
+        $worksheet->setCellValue('L5', 'Pembayaran (Rp)');
+        $worksheet->setCellValue('M5', 'Sisa (Rp)');
+        $worksheet->setCellValue('N5', 'User Input');
 
         $counter = 6;
 
         foreach ($outstandingSaleInvoiceSummary->dataProvider->data as $i => $header) {
-            $worksheet->setCellValue("A{$counter}", CHtml::encode($i + 1));
+            $outstandingDays = date_diff(date_create(CHtml::value($header, 'invoice_date')), date_create(date('Y-m-d')));
+            
+            $worksheet->setCellValue("A{$counter}", $i + 1);
             $worksheet->setCellValue("B{$counter}", CHtml::value($header, 'invoice_number'));
             $worksheet->setCellValue("C{$counter}", CHtml::value($header, 'invoice_date'));
-            $worksheet->setCellValue("D{$counter}", CHtml::value($header, 'customer.name'));
-            $worksheet->setCellValue("E{$counter}", CHtml::value($header, 'vehicle.carMake.name') . ' - ' . CHtml::value($header, 'vehicle.carModel.name') . ' - ' . CHtml::value($header, 'vehicle.carSubModel.name'));
-            $worksheet->setCellValue("F{$counter}", CHtml::value($header, 'vehicle.plate_number'));
-            $worksheet->setCellValue("G{$counter}", CHtml::value($header, 'status'));
-            $worksheet->setCellValue("H{$counter}", CHtml::value($header, 'registrationTransaction.transaction_number'));
-            $worksheet->setCellValue("I{$counter}", CHtml::value($header, 'registrationTransaction.customer_work_order_number'));
-            $worksheet->setCellValue("J{$counter}", CHtml::value($header, 'total_price'));
-            $worksheet->setCellValue("K{$counter}", CHtml::value($header, 'payment_amount'));
-            $worksheet->setCellValue("L{$counter}", CHtml::value($header, 'payment_left'));
-            $worksheet->setCellValue("M{$counter}", CHtml::value($header, 'user.username'));
+            $worksheet->setCellValue("D{$counter}", $outstandingDays->format("%a days"));
+            $worksheet->setCellValue("E{$counter}", CHtml::value($header, 'customer.name'));
+            $worksheet->setCellValue("F{$counter}", CHtml::value($header, 'vehicle.carMake.name') . ' - ' . CHtml::value($header, 'vehicle.carModel.name') . ' - ' . CHtml::value($header, 'vehicle.carSubModel.name'));
+            $worksheet->setCellValue("G{$counter}", CHtml::value($header, 'vehicle.plate_number'));
+            $worksheet->setCellValue("H{$counter}", CHtml::value($header, 'status'));
+            $worksheet->setCellValue("I{$counter}", CHtml::value($header, 'registrationTransaction.transaction_number'));
+            $worksheet->setCellValue("J{$counter}", CHtml::value($header, 'registrationTransaction.customer_work_order_number'));
+            $worksheet->setCellValue("K{$counter}", CHtml::value($header, 'total_price'));
+            $worksheet->setCellValue("L{$counter}", CHtml::value($header, 'payment_amount'));
+            $worksheet->setCellValue("M{$counter}", CHtml::value($header, 'payment_left'));
+            $worksheet->setCellValue("N{$counter}", CHtml::value($header, 'user.username'));
             $counter++;
         }
 

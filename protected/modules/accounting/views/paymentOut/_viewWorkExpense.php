@@ -22,7 +22,12 @@
             array(
                 'name'=>'transaction_date', 
                 'header' => 'Tanggal',
-                'value'=>'$data->transaction_date',
+                'value'=>'Yii::app()->dateFormatter->format("d MMM yyyy", $data->transaction_date)',
+            ),
+            array(
+                'header' => 'Umur (hari)', 
+                'value' => '$data->outstandingDays',
+                'htmlOptions' => array('style' => 'text-align: center'),
             ),
             array(
                 'name' => 'supplier_id',

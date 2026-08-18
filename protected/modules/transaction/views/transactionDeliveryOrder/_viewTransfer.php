@@ -10,10 +10,30 @@
     'columns'=>array(
         array(
             'name'=>'transfer_request_no', 
+                'header' => 'Transaction #',
             'value'=>'CHTml::link($data->transfer_request_no, array("/transaction/transferRequest/view", "id"=>$data->id))', 
             'type'=>'raw'
         ),
-        'transfer_request_date',
+        array(
+            'name' => 'transfer_request_date',
+            'header' => 'Tanggal',
+            'value' => 'Yii::app()->dateFormatter->format("d MMM yyyy", $data->transfer_request_date)',
+        ),
+        array(
+            'name' => 'estimate_arrival_date',
+            'header' => 'ETA',
+            'value' => 'Yii::app()->dateFormatter->format("d MMM yyyy", $data->estimate_arrival_date)',
+        ),
+        array(
+            'header' => 'Umur (hari)', 
+            'value' => '$data->outstandingDays',
+            'htmlOptions' => array('style' => 'text-align: center'),
+        ),
+        array(
+            'name' => 'destination_branch_id',
+            'header' => 'Cabang Tujuan',
+            'value' => '$data->destinationBranch->code',
+        ),
         'status_document',
         array(
             'header'=>'Deliveries',

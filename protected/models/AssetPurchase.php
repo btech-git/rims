@@ -241,4 +241,14 @@ class AssetPurchase extends MonthlyTransactionActiveRecord {
     public function getPaymentRemaining() {
         return $this->purchase_value - $this->total_payment;
     }
+    
+    public function getOutstandingDays() {
+
+        $date1 = new DateTime(date('Y-m-d'));
+        $date2 = new DateTime($this->transaction_date);
+
+        $diff = $date2->diff($date1)->format("%r%a");
+
+        return (int)$diff;
+    }
 }

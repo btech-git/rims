@@ -30,6 +30,11 @@
                 'value' => 'Yii::app()->dateFormatter->format("d MMM yyyy", $data->invoice_date)'
             ),
             array(
+                'header' => 'Umur (hari)', 
+                'value' => '$data->outstandingDays',
+                'htmlOptions' => array('style' => 'text-align: center'),
+            ),
+            array(
                 'name' => 'supplier_name',
                 'header' => 'Supplier',
                 'filter' => CHtml::textField('ReceivableSupplier', $receivableSupplier),

@@ -17,13 +17,27 @@
                 'value'=>'CHTml::link($data->delivery_order_no, array("/transaction/transactionDeliveryOrder/show", "id"=>$data->id))', 
                 'type'=>'raw'
             ),
-            'delivery_date',
             array(
-                'name'=>'customer_id', 
-                'filter' => CHtml::activeTextField($deliveryOrder, 'customer_name'), 
-                'value'=>'empty($data->customer_id) ? "" : $data->customer->name', 
-                'type'=>'raw'
+                'name' => 'delivery_date',
+                'header' => 'Tanggal',
+                'value' => 'Yii::app()->dateFormatter->format("d MMM yyyy", $data->delivery_date)',
             ),
+            array(
+                'name' => 'estimate_arrival_date',
+                'header' => 'ETA',
+                'value' => 'Yii::app()->dateFormatter->format("d MMM yyyy", $data->estimate_arrival_date)',
+            ),
+            array(
+                'header' => 'Umur (hari)', 
+                'value' => '$data->outstandingDays',
+                'htmlOptions' => array('style' => 'text-align: center'),
+            ),
+//            array(
+//                'name'=>'customer_id', 
+//                'filter' => CHtml::activeTextField($deliveryOrder, 'customer_name'), 
+//                'value'=>'empty($data->customer_id) ? "" : $data->customer->name', 
+//                'type'=>'raw'
+//            ),
             array(
                 'name' => 'request_type',
                 'filter' => CHtml::activeDropDownList($deliveryOrder, 'request_type', array(
@@ -33,6 +47,11 @@
                     'Transfer Request' => 'Transfer Request',
                 ), array('empty' => '-- All --')),
                 'value' => '$data->request_type'
+            ),
+            array(
+                'name' => 'destination_branch',
+                'header' => 'Cabang Tujuan',
+                'value' => '$data->destinationBranch->code',
             ),
             array(
                 'header'=>'Movements',

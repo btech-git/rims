@@ -15,7 +15,16 @@
                 'value' => 'CHtml::link($data->transaction_number, array("/accounting/saleInvoiceInsuranceOwnRisk/show", "id"=>$data->id), array("target" => "_blank"))',
                 'type' => 'raw'
             ),
-            'transaction_date',
+            array(
+                'name' => 'transaction_date',
+                'header' => 'Tanggal',
+                'value' => 'Yii::app()->dateFormatter->format("d MMM yyyy", $data->transaction_date)',
+            ),
+            array(
+                'header' => 'Umur (hari)', 
+                'value' => '$data->outstandingDays',
+                'htmlOptions' => array('style' => 'text-align: center'),
+            ),
             array(
                 'name' => 'customer_id',
                 'value' => 'CHtml::encode(CHtml::value($data, "customer.name"))',

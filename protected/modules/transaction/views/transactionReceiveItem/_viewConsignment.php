@@ -13,10 +13,30 @@
         'columns'=>array(
             array(
                 'name'=>'consignment_in_number', 
-                'value'=>'CHTml::link($data->consignment_in_number, array("/transaction/ConsignmentInHeader/view", "id"=>$data->id))', 
-                'type'=>'raw'
+                'header' => 'Transaction #',
+                'value'=>'CHtml::link($data->consignment_in_number, array("/transaction/ConsignmentInHeader/view", "id"=>$data->id))', 
+                'type'=>'raw',
             ),
-            'date_posting',
+            array(
+                'name' => 'date_posting',
+                'header' => 'Tanggal',
+                'value' => 'Yii::app()->dateFormatter->format("d MMM yyyy", $data->date_posting)',
+            ),
+            array(
+                'name' => 'date_arrival',
+                'header' => 'ETA',
+                'value' => 'Yii::app()->dateFormatter->format("d MMM yyyy", $data->date_arrival)',
+            ),
+            array(
+                'header' => 'Umur (hari)', 
+                'value' => '$data->outstandingDays',
+                'htmlOptions' => array('style' => 'text-align: center'),
+            ),
+            array(
+                'header' => 'Supplier',
+                'name'=>'supplier_id',
+                'value'=>'$data->supplier->name'
+            ),
             'status_document',
             array(
                 'header'=>'Receives',

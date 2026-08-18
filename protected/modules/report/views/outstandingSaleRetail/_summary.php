@@ -38,6 +38,7 @@
                 <th class="width1-1">No</th>
                 <th class="width1-2">RG #</th>
                 <th class="width1-3">Tanggal</th>
+                <th class="width1-3">Umur (hari)</th>
                 <th class="width1-4">Customer</th>
                 <th class="width1-5">Vehicle</th>
                 <th class="width1-6">Plate #</th>
@@ -59,6 +60,10 @@
                     </td>
                     <td>
                         <?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy hh:mm:ss', strtotime($header->transaction_date))); ?>
+                    </td>
+                    <td>
+                        <?php $outstandingDays = date_diff(date_create($header->transaction_date), date_create(date('Y-m-d'))); ?>
+                        <?php echo CHtml::encode($outstandingDays->format("%a days")); ?>
                     </td>
                     <td><?php echo CHtml::encode(CHtml::value($header, 'customer.name')); ?></td>
                     <td>

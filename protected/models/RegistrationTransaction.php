@@ -2213,4 +2213,24 @@ class RegistrationTransaction extends MonthlyTransactionActiveRecord {
         
         return $this->grand_total - $this->downpayment_amount - $ownRiskAmount;
     }
+    
+    public function getOutstandingDays() {
+
+        $date1 = new DateTime(date('Y-m-d'));
+        $date2 = new DateTime($this->transaction_date);
+
+        $diff = $date2->diff($date1)->format("%r%a");
+
+        return (int)$diff;
+    }
+    
+    public function getDownpaymentOutstandingDays() {
+
+        $date1 = new DateTime(date('Y-m-d'));
+        $date2 = new DateTime($this->downpayment_transaction_date);
+
+        $diff = $date2->diff($date1)->format("%r%a");
+
+        return (int)$diff;
+    }
 }

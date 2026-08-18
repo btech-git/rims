@@ -15,10 +15,20 @@
         'columns' => array(
             array(
                 'name'=>'transaction_number', 
+                'header' => 'Transaction #',
                 'value'=>'CHtml::link($data->transaction_number, array("/frontDesk/itemRequest/view", "id"=>$data->id))', 
                 'type'=>'raw',
             ),
-            'transaction_date',
+            array(
+                'name' => 'transaction_date',
+                'header' => 'Tanggal',
+                'value' => 'Yii::app()->dateFormatter->format("d MMM yyyy", $data->transaction_date)',
+            ),
+            array(
+                'header' => 'Umur (hari)', 
+                'value' => '$data->outstandingDays',
+                'htmlOptions' => array('style' => 'text-align: center'),
+            ),
             array(
                 'name' => 'supplier_id',
                 'header' => 'Supplier',

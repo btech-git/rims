@@ -13,7 +13,26 @@
             'value'=>'CHTml::link($data->sent_request_no, array("/transaction/transactionSentRequest/view", "id"=>$data->id))', 
             'type'=>'raw'
         ),
-        'sent_request_date',
+        array(
+            'name' => 'sent_request_date',
+            'header' => 'Tanggal',
+            'value' => 'Yii::app()->dateFormatter->format("d MMM yyyy", $data->sent_request_date)',
+        ),
+        array(
+            'name' => 'estimate_arrival_date',
+            'header' => 'ETA',
+            'value' => 'Yii::app()->dateFormatter->format("d MMM yyyy", $data->estimate_arrival_date)',
+        ),
+        array(
+            'header' => 'Umur (hari)', 
+            'value' => '$data->outstandingDays',
+            'htmlOptions' => array('style' => 'text-align: center'),
+        ),
+        array(
+            'name' => 'destination_branch_id',
+            'header' => 'Cabang Tujuan',
+            'value' => '$data->destinationBranch->code',
+        ),
         'status_document',
         array(
             'header'=>'Receives',

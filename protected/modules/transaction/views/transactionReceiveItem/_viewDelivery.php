@@ -16,7 +16,21 @@
                 'value'=>'CHtml::link($data->delivery_order_no, array("/transaction/transactionDeliveryOrder/view", "id"=>$data->id))', 
                 'type'=>'raw'
             ),
-            'delivery_date',
+            array(
+                'name' => 'delivery_date',
+                'header' => 'Tanggal',
+                'value' => 'Yii::app()->dateFormatter->format("d MMM yyyy", $data->delivery_date)',
+            ),
+            array(
+                'name' => 'estimate_arrival_date',
+                'header' => 'ETA',
+                'value' => 'Yii::app()->dateFormatter->format("d MMM yyyy", $data->estimate_arrival_date)',
+            ),
+            array(
+                'header' => 'Umur (hari)', 
+                'value' => '$data->outstandingDays',
+                'htmlOptions' => array('style' => 'text-align: center'),
+            ),
             array(
                 'header'=>'Type', 
                 'value'=>'$data->request_type', 

@@ -10,10 +10,29 @@
     'columns'=>array(
         array(
             'name'=>'sale_order_no', 
-            'value'=>'CHTml::link($data->sale_order_no, array("/transaction/transactionSalesOrder/view", "id"=>$data->id))', 
+            'value'=>'CHtml::link($data->sale_order_no, array("/transaction/transactionSalesOrder/view", "id"=>$data->id))', 
             'type'=>'raw'
         ),
-        'sale_order_date',
+        array(
+            'name' => 'sale_order_date',
+            'header' => 'Tanggal',
+            'value' => 'Yii::app()->dateFormatter->format("d MMM yyyy", $data->sale_order_date)',
+        ),
+        array(
+            'name' => 'estimate_arrival_date',
+            'header' => 'ETA',
+            'value' => 'Yii::app()->dateFormatter->format("d MMM yyyy", $data->estimate_arrival_date)',
+        ),
+        array(
+            'header' => 'Umur (hari)', 
+            'value' => '$data->outstandingDays',
+            'htmlOptions' => array('style' => 'text-align: center'),
+        ),
+        array(
+            'name' => 'customer_id',
+            'header' => 'Customer',
+            'value' => '$data->customer->name',
+        ),
         'status_document',
         array(
             'header'=>'Deliveries',

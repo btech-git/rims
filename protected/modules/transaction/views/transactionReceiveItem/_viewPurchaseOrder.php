@@ -16,11 +16,32 @@
                 'value'=>'CHTml::link($data->purchase_order_no, array("/transaction/transactionPurchaseOrder/view", "id"=>$data->id))', 
                 'type'=>'raw'
             ),
-            'purchase_order_date',
+            array(
+                'name' => 'purchase_order_date',
+                'header' => 'Tanggal',
+                'value' => 'Yii::app()->dateFormatter->format("d MMM yyyy", $data->purchase_order_date)',
+            ),
+            array(
+                'name' => 'estimate_date_arrival',
+                'header' => 'ETA',
+                'value' => 'Yii::app()->dateFormatter->format("d MMM yyyy", $data->estimate_date_arrival)',
+            ),
+            array(
+                'header' => 'Umur (hari)', 
+                'value' => '$data->outstandingDays',
+                'htmlOptions' => array('style' => 'text-align: center'),
+            ),
             array(
                 'name'=>'supplier_name',
                 'value'=>'$data->supplier->name'
             ),
+            
+            array(
+                'name'=>'purchase_type',
+                'header' => 'Kategori Pembelian', 
+                'value'=>'$data->getPurchaseStatus($data->purchase_type)',
+            ),
+            'note',
             'status_document',
             array(
                 'header'=>'Receives',

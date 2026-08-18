@@ -1,6 +1,5 @@
 <h2>Retail Sales</h2>
 <div class="wide form" id="advSearch">
-
     <div class="row">
         <div class="small-12 medium-6 columns">
             <!-- BEGIN FIELDS -->
@@ -24,7 +23,21 @@
                         )); ?>
                     </div>
                 </div>
-            </div>	
+            </div>
+
+            <div class="field buttons text-right">
+                <?php echo CHtml::button('Search', array('class'=>'button cbutton',
+                    'onclick' => '$.fn.yiiGridView.update("retail-sale-grid", {data: {
+                        RegistrationTransaction: {
+                            transaction_date: $("#' . CHtml::activeId($registrationTransaction, 'transaction_date') . '").val(),
+                            customer_name: $("#' . CHtml::activeId($registrationTransaction, 'customer_name') . '").val()
+                        }
+                    } });',
+                )); ?>
+            </div>
+        </div>
+        
+        <div class="small-12 medium-6 columns">
             <div class="field">
                 <div class="row collapse">
                     <div class="small-4 columns">
@@ -35,22 +48,12 @@
                     </div>
                 </div>
             </div>
-
-            <div class="field buttons text-right">
-                <?php echo CHtml::button('Search', array('class'=>'button cbutton',
-                    'onclick' => '$.fn.yiiGridView.update("retail-sale-grid", {data: {
-                            RegistrationTransaction: {
-                                transaction_date: $("#' . CHtml::activeId($registrationTransaction, 'transaction_date') . '").val(),
-                                customer_name: $("#' . CHtml::activeId($registrationTransaction, 'customer_name') . '").val()
-                            }
-                        } });',
-                    )); ?>
-            </div>
         </div>
     </div>	
 </div>	
             
 <hr />
+
 <div class="grid-view">
     <?php $this->widget('zii.widgets.grid.CGridView', array(
         'id'=>'retail-sale-grid',
@@ -64,14 +67,21 @@
         ),
         'columns'=>array(
             array(
+                'header'=>'Transaction #',
                 'name'=>'transaction_number', 
                 'value'=>'CHtml::link($data->transaction_number, array("/frontDesk/registrationTransaction/show", "id"=>$data->id))', 
                 'type'=>'raw'
             ),
             array(
+                'header'=>'Tanggal',
                 'name'=>'transaction_date',
                 'filter' => false,
-                'value'=>'$data->transaction_date'
+                'value'=>'Yii::app()->dateFormatter->format("d MMM yyyy", $data->transaction_date)'
+            ),
+            array(
+                'header' => 'Umur (hari)', 
+                'value' => '$data->outstandingDays',
+                'htmlOptions' => array('style' => 'text-align: center'),
             ),
             array(
                 'name' => 'repair_type',
@@ -85,7 +95,11 @@
                 'name'=>'customer_id', 
                 'filter' => false,
                 'value'=>'empty($data->customer_id) ? "" : $data->customer->name', 
-                'type'=>'raw'
+            ),
+            array(
+                'name'=>'vehicle_id', 
+                'filter' => false,
+                'value'=>'empty($data->vehicle_id) ? "" : $data->vehicle->plate_number', 
             ),
             array(
                 'header'=>'Movements',

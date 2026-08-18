@@ -19,7 +19,12 @@
             array(
                 'name' => 'downpayment_transaction_date',
                 'header' => 'Tanggal',
-                'value' => '$data->downpayment_transaction_date',
+                'value' => 'Yii::app()->dateFormatter->format("d MMM yyyy", $data->downpayment_transaction_date)',
+            ),
+            array(
+                'header' => 'Umur (hari)', 
+                'value' => '$data->downpaymentOutstandingDays',
+                'htmlOptions' => array('style' => 'text-align: center'),
             ),
             array(
                 'name' => 'customer_id',

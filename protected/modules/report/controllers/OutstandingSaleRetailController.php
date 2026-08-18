@@ -116,55 +116,59 @@ class OutstandingSaleRetailController extends Controller {
         $worksheet = $objPHPExcel->setActiveSheetIndex(0);
         $worksheet->setTitle('Outstanding Penjualan');
 
-        $worksheet->mergeCells('A1:N1');
-        $worksheet->mergeCells('A2:N2');
-        $worksheet->mergeCells('A3:N3');
+        $worksheet->mergeCells('A1:O1');
+        $worksheet->mergeCells('A2:O2');
+        $worksheet->mergeCells('A3:O3');
         
-        $worksheet->getStyle('A1:N5')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-        $worksheet->getStyle('A1:N5')->getFont()->setBold(true);
+        $worksheet->getStyle('A1:O5')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->getStyle('A1:O5')->getFont()->setBold(true);
         
         $branch = Branch::model()->findByPk($branchId);
-        $worksheet->setCellValue('A1', 'Raperind Motor ' . CHtml::encode(CHtml::value($branch, 'name')));
+        $worksheet->setCellValue('A1', 'Raperind Motor ' . CHtml::value($branch, 'name'));
         $worksheet->setCellValue('A2', 'Outstanding Penjualan');
         $worksheet->setCellValue('A3', $startDateFormatted . ' - ' . $endDateFormatted);
 
-        $worksheet->getStyle("A5:N5")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
-        $worksheet->getStyle("A5:N5")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A5:O5")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A5:O5")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
         $worksheet->setCellValue('A5', 'No');
         $worksheet->setCellValue('B5', 'RG #');
         $worksheet->setCellValue('C5', 'Tanggal');
-        $worksheet->setCellValue('D5', 'Customer');
-        $worksheet->setCellValue('E5', 'Vehicle');
-        $worksheet->setCellValue('F5', 'Plat #');
-        $worksheet->setCellValue('G5', 'Status');
-        $worksheet->setCellValue('H5', 'WO #');
-        $worksheet->setCellValue('I5', 'SO #');
-        $worksheet->setCellValue('J5', 'Movement #');
-        $worksheet->setCellValue('K5', 'Parts (Rp)');
-        $worksheet->setCellValue('L5', 'Jasa (Rp)');
-        $worksheet->setCellValue('M5', 'Total (Rp)');
-        $worksheet->setCellValue('N5', 'User Input');
+        $worksheet->setCellValue('D5', 'Umur (hari)');
+        $worksheet->setCellValue('E5', 'Customer');
+        $worksheet->setCellValue('F5', 'Vehicle');
+        $worksheet->setCellValue('G5', 'Plat #');
+        $worksheet->setCellValue('H5', 'Status');
+        $worksheet->setCellValue('I5', 'WO #');
+        $worksheet->setCellValue('J5', 'SO #');
+        $worksheet->setCellValue('K5', 'Movement #');
+        $worksheet->setCellValue('L5', 'Parts (Rp)');
+        $worksheet->setCellValue('M5', 'Jasa (Rp)');
+        $worksheet->setCellValue('N5', 'Total (Rp)');
+        $worksheet->setCellValue('O5', 'User Input');
 
         $counter = 6;
 
         foreach ($outstandingSaleRetailSummary->dataProvider->data as $i => $header) {
             $movementOutHeaders = $header->movementOutHeaders;
             $movementOutHeaderCodeNumbers = array_map(function($movementOutHeader) { return $movementOutHeader->movement_out_no; }, $movementOutHeaders);
-            $worksheet->setCellValue("A{$counter}", CHtml::encode($i + 1));
+            $outstandingDays = date_diff(date_create(CHtml::value($header, 'transaction_date')), date_create(date('Y-m-d')));
+            
+            $worksheet->setCellValue("A{$counter}", $i + 1);
             $worksheet->setCellValue("B{$counter}", CHtml::value($header, 'transaction_number'));
             $worksheet->setCellValue("C{$counter}", CHtml::value($header, 'transaction_date'));
-            $worksheet->setCellValue("D{$counter}", CHtml::value($header, 'customer.name'));
-            $worksheet->setCellValue("E{$counter}", CHtml::value($header, 'vehicle.carMake.name') . ' - ' . CHtml::value($header, 'vehicle.carModel.name') . ' - ' . CHtml::value($header, 'vehicle.carSubModel.name'));
-            $worksheet->setCellValue("F{$counter}", CHtml::value($header, 'vehicle.plate_number'));
-            $worksheet->setCellValue("G{$counter}", CHtml::value($header, 'status'));
-            $worksheet->setCellValue("H{$counter}", CHtml::value($header, 'work_order_number'));
-            $worksheet->setCellValue("I{$counter}", CHtml::value($header, 'sales_order_number'));
-            $worksheet->setCellValue("J{$counter}", CHtml::encode(implode(', ', $movementOutHeaderCodeNumbers)));
-            $worksheet->setCellValue("K{$counter}", CHtml::value($header, 'total_product_price'));
-            $worksheet->setCellValue("L{$counter}", CHtml::value($header, 'total_service_price'));
-            $worksheet->setCellValue("M{$counter}", CHtml::value($header, 'grand_total'));
-            $worksheet->setCellValue("N{$counter}", CHtml::value($header, 'user.username'));
+            $worksheet->setCellValue("D{$counter}", $outstandingDays->format("%a days"));
+            $worksheet->setCellValue("E{$counter}", CHtml::value($header, 'customer.name'));
+            $worksheet->setCellValue("F{$counter}", CHtml::value($header, 'vehicle.carMake.name') . ' - ' . CHtml::value($header, 'vehicle.carModel.name') . ' - ' . CHtml::value($header, 'vehicle.carSubModel.name'));
+            $worksheet->setCellValue("G{$counter}", CHtml::value($header, 'vehicle.plate_number'));
+            $worksheet->setCellValue("H{$counter}", CHtml::value($header, 'status'));
+            $worksheet->setCellValue("I{$counter}", CHtml::value($header, 'work_order_number'));
+            $worksheet->setCellValue("J{$counter}", CHtml::value($header, 'sales_order_number'));
+            $worksheet->setCellValue("K{$counter}", implode(', ', $movementOutHeaderCodeNumbers));
+            $worksheet->setCellValue("L{$counter}", CHtml::value($header, 'total_product_price'));
+            $worksheet->setCellValue("M{$counter}", CHtml::value($header, 'total_service_price'));
+            $worksheet->setCellValue("N{$counter}", CHtml::value($header, 'grand_total'));
+            $worksheet->setCellValue("O{$counter}", CHtml::value($header, 'user.username'));
             $counter++;
         }
 

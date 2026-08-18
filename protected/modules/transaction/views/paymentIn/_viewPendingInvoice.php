@@ -15,8 +15,21 @@
                 'value' => 'CHTml::link($data->invoice_number, array("invoiceHeader/view", "id"=>$data->id))',
                 'type' => 'raw'
             ),
-            'invoice_date',
-            'due_date',
+            array(
+                'name' => 'invoice_date',
+                'header' => 'Tanggal',
+                'value' => 'Yii::app()->dateFormatter->format("d MMM yyyy", $data->invoice_date)',
+            ),
+            array(
+                'name' => 'due_date',
+                'header' => 'Jatuh Tempo',
+                'value' => 'Yii::app()->dateFormatter->format("d MMM yyyy", $data->due_date)',
+            ),
+            array(
+                'header' => 'Umur (hari)', 
+                'value' => '$data->remainingDueDate',
+                'htmlOptions' => array('style' => 'text-align: center'),
+            ),
             'status',
             array(
                 'name' => 'reference_type',

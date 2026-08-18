@@ -500,4 +500,14 @@ class TransactionPurchaseOrder extends MonthlyTransactionActiveRecord {
 
         return $this->search_product = implode('', $products);
     }
+    
+    public function getOutstandingDays() {
+
+        $date1 = new DateTime(date('Y-m-d'));
+        $date2 = new DateTime($this->purchase_order_date);
+
+        $diff = $date2->diff($date1)->format("%r%a");
+
+        return (int)$diff;
+    }
 }

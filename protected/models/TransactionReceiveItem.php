@@ -266,7 +266,7 @@ class TransactionReceiveItem extends MonthlyTransactionActiveRecord {
             WHERE t.id = d.receive_item_id
             GROUP BY d.receive_item_id
             HAVING quantity_remaining > 0
-        ) AND t.receive_item_date > '2023-12-31' AND t.cancelled_datetime is null";
+        ) AND t.receive_item_date > '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND t.cancelled_datetime is null";
 
         $criteria->compare('t.id', $this->id);
         $criteria->compare('t.receive_item_no', $this->receive_item_no, true);
@@ -665,5 +665,25 @@ class TransactionReceiveItem extends MonthlyTransactionActiveRecord {
     public function getTotalRemaining() {
         
         return $this->invoice_grand_total - $this->invoice_payment_amount;
+    }
+    
+    public function getOutstandingDays() {
+
+        $date1 = new DateTime(date('Y-m-d'));
+        $date2 = new DateTime($this->invoice_date);
+
+        $diff = $date2->diff($date1)->format("%r%a");
+
+        return (int)$diff;
+    }
+    
+    public function getOutstandingReceiveDays() {
+
+        $date1 = new DateTime(date('Y-m-d'));
+        $date2 = new DateTime($this->receive_item_date);
+
+        $diff = $date2->diff($date1)->format("%r%a");
+
+        return (int)$diff;
     }
 }

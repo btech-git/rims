@@ -175,5 +175,14 @@ class SaleInvoiceInsuranceOwnRisk extends MonthlyTransactionActiveRecord {
         $revisionOrdinal = ord($revisionCode) + 1;
         $this->$codeNumberColumnName = sprintf('%s.%s/%04d.%s/%04d.%c', $branchCode, $constant, $year, $arr[$month], $ordinal, $revisionOrdinal);
     }
+    
+    public function getOutstandingDays() {
 
+        $date1 = new DateTime(date('Y-m-d'));
+        $date2 = new DateTime($this->transaction_date);
+
+        $diff = $date2->diff($date1)->format("%r%a");
+
+        return (int)$diff;
+    }
 }

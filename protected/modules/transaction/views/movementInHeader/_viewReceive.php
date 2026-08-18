@@ -15,7 +15,21 @@
                 'value'=>'CHTml::link($data->receive_item_no, array("/transaction/transactionReceiveItem/show", "id"=>$data->id))', 
                 'type'=>'raw'
             ),
-            'receive_item_date',
+            array(
+                'name' => 'receive_item_date',
+                'header' => 'Tanggal',
+                'value' => 'Yii::app()->dateFormatter->format("d MMM yyyy", $data->receive_item_date)',
+            ),
+            array(
+                'name' => 'estimate_arrival_date',
+                'header' => 'ETA',
+                'value' => 'Yii::app()->dateFormatter->format("d MMM yyyy", $data->estimate_arrival_date)',
+            ),
+            array(
+                'header' => 'Umur (hari)', 
+                'value' => '$data->outstandingReceiveDays',
+                'htmlOptions' => array('style' => 'text-align: center'),
+            ),
             array(
                 'name'=>'supplier_id', 
                 'filter' => CHtml::activeTextField($receiveItem, 'supplier_name'), 

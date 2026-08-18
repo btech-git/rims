@@ -13,13 +13,20 @@
         ),
         'columns'=>array(
             array(
+                'header' => 'Transaction #',
                 'name'=>'transaction_number', 
                 'value'=>'CHtml::link($data->transaction_number, array("/frontDesk/materialRequest/show", "id"=>$data->id))', 
                 'type'=>'raw'
             ),
             array(
+                'header' => 'Tanggal',
                 'name'=>'transaction_date',
-                'value'=>'$data->transaction_date'
+                'value'=>'Yii::app()->dateFormatter->format("d MMM yyyy", $data->transaction_date)'
+            ),
+            array(
+                'header' => 'Umur (hari)', 
+                'value' => '$data->outstandingDays',
+                'htmlOptions' => array('style' => 'text-align: center'),
             ),
             array(
                 'header' => 'WO #',
@@ -29,6 +36,8 @@
                 'header'=>'Customer', 
                 'value'=>'!empty($data->registration_transaction_id) ? $data->registrationTransaction->customer->name : ""', 
             ),
+            'status_document',
+            'status_progress',
             array(
                 'header'=>'Movements',
                 'value'=> function($data){

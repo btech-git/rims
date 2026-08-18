@@ -15,20 +15,35 @@
             array(
                 'name'=>'return_order_no', 
                 'header' => 'Retur Pembelian #',
-                'value'=>'CHTml::link($data->return_order_no, array("/transaction/transactionReturnOrder/view", "id"=>$data->id))', 
+                'value'=>'CHtml::link($data->return_order_no, array("/transaction/transactionReturnOrder/view", "id"=>$data->id))', 
                 'type'=>'raw'
             ),
             array(
                 'name'=>'return_order_date', 
-                'header' => 'Retur Tanggal',
-                'value'=>'$data->return_order_date',
+                'header' => 'Tanggal',
+                'value'=>'Yii::app()->dateFormatter->format("d MMM yyyy", $data->return_order_date)',
+            ),
+            array(
+                'name' => 'estimate_arrival_date',
+                'header' => 'ETA',
+                'value' => 'Yii::app()->dateFormatter->format("d MMM yyyy", $data->estimate_arrival_date)',
+            ),
+            array(
+                'header' => 'Umur (hari)', 
+                'value' => '$data->outstandingDays',
+                'htmlOptions' => array('style' => 'text-align: center'),
             ),
             array(
                 'name'=>'supplier_id', 
                 'filter' => CHtml::activeTextField($returnOrder, 'supplier_name'), 
                 'value'=>'empty($data->supplier_id) ? "" : $data->supplier->name', 
-                'type'=>'raw'
             ),
+            array(
+                'name'=>'branch_destination_id', 
+                'header' => 'Cabang Tujuan',
+                'value'=>'empty($data->branch_destination_id) ? "" : $data->branchDestination->code', 
+            ),
+            'request_type',
             array(
                 'header'=>'Movements',
                 'value'=> function($data){

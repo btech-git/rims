@@ -6,7 +6,7 @@
             <div class="field">
                 <div class="row collapse">
                     <div class="small-4 columns">
-                        <?php echo CHtml::activeLabel($receivePartsHeader, 'transaction_date'); ?>
+                        <?php echo CHtml::activeLabel($receivePartsHeader, 'Tanggal'); ?>
                     </div>
                     <div class="small-8 columns">
                         <?php $this->widget('zii.widgets.jui.CJuiDatePicker',array(
@@ -23,18 +23,8 @@
                         )); ?>
                     </div>
                 </div>
-            </div>	
-            <div class="field">
-                <div class="row collapse">
-                    <div class="small-4 columns">
-                        <?php echo CHtml::activeLabel($receivePartsHeader, 'transaction_type'); ?>
-                    </div>
-                    <div class="small-8 columns">
-                        <?php echo CHtml::activeTextField($receivePartsHeader, 'transaction_type'); ?>
-                    </div>
-                </div>
             </div>
-
+            
             <div class="field buttons text-right">
                 <?php echo CHtml::button('Search', array('class'=>'button cbutton',
                     'onclick' => '$.fn.yiiGridView.update("receive-parts-grid", {data: {
@@ -44,6 +34,18 @@
                         }
                     } });',
                 )); ?>
+            </div>
+        </div>
+        <div class="small-12 medium-6 columns">
+            <div class="field">
+                <div class="row collapse">
+                    <div class="small-4 columns">
+                        <?php //echo CHtml::activeLabel($receivePartsHeader, 'Type'); ?>
+                    </div>
+                    <div class="small-8 columns">
+                        <?php //echo CHtml::activeTextField($receivePartsHeader, 'transaction_type'); ?>
+                    </div>
+                </div>
             </div>
         </div>
     </div>	
@@ -64,16 +66,36 @@
         'columns'=>array(
             array(
                 'name'=>'transaction_number', 
+                'header'=>'Transaction #',
                 'value'=>'CHtml::link($data->transaction_number, array("/frontDesk/receiveParts/show", "id"=>$data->id))', 
                 'type'=>'raw'
             ),
             array(
                 'name'=>'transaction_date',
+                'header'=>'Tanggal',
                 'filter' => false,
-                'value'=>'$data->transaction_date'
+                'value'=>'Yii::app()->dateFormatter->format("d MMM yyyy", $data->transaction_date)'
+            ),
+            array(
+                'header' => 'Umur (hari)', 
+                'value' => '$data->outstandingDays',
+                'htmlOptions' => array('style' => 'text-align: center'),
+            ),
+            array(
+                'name'=>'supplier_delivery_number',
+                'header'=>'SJ #',
+                'filter' => false,
+                'value'=>'$data->supplier_delivery_number'
+            ),
+            array(
+                'name'=>'insurance_company_id',
+                'header'=>'Asuransi',
+                'filter' => false,
+                'value'=>'CHtml::value($data, "insuranceCompany.name")',
             ),
             array(
                 'name' => 'transaction_type',
+                'header'=>'Tipe',
                 'filter' => CHtml::activeDropDownList($receivePartsHeader, 'transaction_type', array(
                     'Asuransi' => 'Asuransi',
                     'Internal' => 'Internal', 
@@ -82,6 +104,7 @@
             ),
             array(
                 'name'=>'registration_transaction_id', 
+                'header'=>'Registration #',
                 'filter' => false,
                 'value'=>'empty($data->registration_transaction_id) ? "" : $data->registrationTransaction->transaction_number', 
                 'type'=>'raw'

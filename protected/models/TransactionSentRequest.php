@@ -217,12 +217,12 @@ class TransactionSentRequest extends MonthlyTransactionActiveRecord {
         $criteria = new CDbCriteria;
 
         $criteria->condition = "EXISTS (
-			SELECT COALESCE(SUM(d.sent_request_quantity_left), 0) AS quantity_remaining
-			FROM " . TransactionSentRequestDetail::model()->tableName() . " d
-			WHERE t.id = d.sent_request_id
-			GROUP BY d.sent_request_id
-			HAVING quantity_remaining > 0
-		)";
+            SELECT COALESCE(SUM(d.sent_request_quantity_left), 0) AS quantity_remaining
+            FROM " . TransactionSentRequestDetail::model()->tableName() . " d
+            WHERE t.id = d.sent_request_id
+            GROUP BY d.sent_request_id
+            HAVING quantity_remaining > 0
+        )";
 
         $criteria->compare('id', $this->id);
         $criteria->compare('sent_request_no', $this->sent_request_no, true);
@@ -251,12 +251,13 @@ class TransactionSentRequest extends MonthlyTransactionActiveRecord {
     public function getApprovalStatus() {
         $status = '';
 
-        if ($this->destination_approval_status == self::STATUS_PENDING)
+        if ($this->destination_approval_status == self::STATUS_PENDING) {
             $status = self::STATUS_PENDING_LITERAL;
-        else if ($this->destination_approval_status == self::STATUS_APPROVED)
+        } else if ($this->destination_approval_status == self::STATUS_APPROVED) {
             $status = self::STATUS_APPROVED_LITERAL;
-        else if ($this->destination_approval_status == self::STATUS_REJECTED)
+        } else if ($this->destination_approval_status == self::STATUS_REJECTED) {
             $status = self::STATUS_REJECTED_LITERAL;
+        }
 
         return $status;
     }
@@ -273,5 +274,15 @@ class TransactionSentRequest extends MonthlyTransactionActiveRecord {
 
     public function getTransactionDateTime() {
         return $this->sent_request_date . ' ' . $this->sent_request_time;
+    }
+    
+    public function getOutstandingDays() {
+
+        $date1 = new DateTime(date('Y-m-d'));
+        $date2 = new DateTime($this->sent_request_date);
+
+        $diff = $date2->diff($date1)->format("%r%a");
+
+        return (int)$diff;
     }
 }

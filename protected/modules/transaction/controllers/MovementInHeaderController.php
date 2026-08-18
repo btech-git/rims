@@ -309,7 +309,7 @@ class MovementInHeaderController extends Controller {
         if (isset($_GET['TransactionReturnItem'])) {
             $returnItem->attributes = $_GET['TransactionReturnItem'];
         }
-        $returnItemDataProvider = $returnItem->search();
+        $returnItemDataProvider = $returnItem->searchByMovementIn();
 
         /* Receive Parts */
         $receivePartsHeader = new ReceivePartsHeader('search');

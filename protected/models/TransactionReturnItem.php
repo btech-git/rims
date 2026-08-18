@@ -200,7 +200,7 @@ class TransactionReturnItem extends MonthlyTransactionActiveRecord {
         $criteria->condition = "EXISTS (
             SELECT COALESCE(SUM(d.quantity_movement_left), 0) AS quantity_remaining
             FROM " . TransactionReturnItemDetail::model()->tableName() . " d
-            WHERE t.id = d.return_item_id
+            WHERE t.id = d.return_item_id AND t.return_item_date > '" . AppParam::BEGINNING_TRANSACTION_DATE . "'
             GROUP BY d.return_item_id
             HAVING quantity_remaining > 0
         )";
@@ -231,5 +231,15 @@ class TransactionReturnItem extends MonthlyTransactionActiveRecord {
                 'pageSize' => 10,
             ),
         ));
+    }
+    
+    public function getOutstandingDays() {
+
+        $date1 = new DateTime(date('Y-m-d'));
+        $date2 = new DateTime($this->return_item_date);
+
+        $diff = $date2->diff($date1)->format("%r%a");
+
+        return (int)$diff;
     }
 }

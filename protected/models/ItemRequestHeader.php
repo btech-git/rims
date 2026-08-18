@@ -198,4 +198,14 @@ class ItemRequestHeader extends MonthlyTransactionActiveRecord {
     public function getRemainingPayment() {
         return $this->total_price - $this->total_payment;
     }
+    
+    public function getOutstandingDays() {
+
+        $date1 = new DateTime(date('Y-m-d'));
+        $date2 = new DateTime($this->transaction_date);
+
+        $diff = $date2->diff($date1)->format("%r%a");
+
+        return (int)$diff;
+    }
 }
