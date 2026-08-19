@@ -164,11 +164,49 @@ function tanggal($date) {
                     </table>
                 </div>
             <?php endif; ?>
+            
+            <?php if (count($saleEstimationHeader->saleEstimationNewPartsDetails) > 0): ?>
+                <div class="purchase-order">
+                    <table>
+                        <tr style="background-color: skyblue">
+                            <th colspan="5">JASA PERBAIKAN - SERVICE</th>
+                        </tr>
+                        <tr>
+                            <th style="width: 1%">No</th>
+                            <th>Code</th>
+                            <th>Parts</th>
+                            <th>Quantity</th>
+                            <th style="width: 10%">Price</th>
+                            <th style="width: 10%">Disc</th>
+                            <th style="width: 15%">Total</th>
+                        </tr>
+                        <?php $no = 1;?>
+                        <?php foreach ($saleEstimationHeader->saleEstimationNewPartsDetails as $part): ?>
+                            <tr class="isi">
+                                <td class="noo"><?php echo $no; ?></td>
+                                <td>&nbsp; <?php echo CHtml::encode(CHtml::value($part, 'parts_code')); ?></td>
+                                <td>&nbsp; <?php echo CHtml::encode(CHtml::value($part, 'parts_name')); ?></td>
+                                <td style="text-align: right">&nbsp; Rp. <?php echo number_format($part->price, 2, ',', '.'); ?></td>
+                                <td style="text-align: right">&nbsp; Rp. <?php echo number_format($part->discountAmount, 2, ',', '.'); ?></td>
+                                <td style="text-align: right">&nbsp; Rp. <?php echo number_format($part->total_price, 2, ',', '.'); ?></td>
+                            </tr>
+                            <?php $no++; ?>
+                        <?php endforeach; ?>
+                        <tr>
+                            <td colspan="4" style="font-weight: bold; text-align: right">TOTAL LAIN-LAIN</td>
+                            <td style="font-weight: bold; text-align: right">
+                                &nbsp;  Rp. <?php echo number_format($saleEstimationHeader->sub_total_new_parts, 2, ',', '.'); ?>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            <?php endif; ?>
+            
             <div>
                 <table style="width: 100%">
                     <tr>
                         <td style="width: 35%; text-align: center">Yang membuat,</td>
-                        <td style="text-align:right; font-size: 11px">TOTAL PARTS & JASA</td>
+                        <td style="text-align:right; font-size: 11px">SUB TOTAL</td>
                         <td style="width: 15%; text-align:right; font-size: 11px">Rp. <?php echo number_format($saleEstimationHeader->sub_total, 2, ',', '.') ?> &nbsp; </td>
                     </tr>
 
@@ -179,7 +217,7 @@ function tanggal($date) {
                     </tr>
 
                     <tr>
-                        <?php if ($saleEstimationHeader->tax_product_amount > 0.00): ?>
+                        <?php if ($saleEstimationHeader->tax_product_amount > '0.00'): ?>
                             <td style="border-bottom: none">&nbsp;</td>
                             <td style="text-align:right; font-size: 11px">PPN - <?php echo CHtml::encode(CHtml::value($saleEstimationHeader, 'tax_product_percentage')); ?>%</td>
                             <td style="text-align:right; font-size: 11px">Rp. <?php echo number_format($saleEstimationHeader->tax_product_amount, 2, ',', '.') ?> &nbsp; </td>
