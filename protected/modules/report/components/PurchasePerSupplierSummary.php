@@ -30,7 +30,7 @@ class PurchasePerSupplierSummary extends CComponent {
         $branchConditionSql = '';
         
         if (!empty($branchId)) {
-            $branchConditionSql = ' AND receipient_branch_id = :branch_id';
+            $branchConditionSql = ' AND p.main_branch_id = :branch_id';
         }
 
         $this->dataProvider->criteria->addCondition("EXISTS (
