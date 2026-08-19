@@ -169,7 +169,7 @@ function tanggal($date) {
                 <div class="purchase-order">
                     <table>
                         <tr style="background-color: skyblue">
-                            <th colspan="5">JASA PERBAIKAN - SERVICE</th>
+                            <th colspan="6">PARTS LAIN-LAIN</th>
                         </tr>
                         <tr>
                             <th style="width: 1%">No</th>
@@ -186,6 +186,7 @@ function tanggal($date) {
                                 <td class="noo"><?php echo $no; ?></td>
                                 <td>&nbsp; <?php echo CHtml::encode(CHtml::value($part, 'parts_code')); ?></td>
                                 <td>&nbsp; <?php echo CHtml::encode(CHtml::value($part, 'parts_name')); ?></td>
+                                <td style="text-align: right">&nbsp; Rp. <?php echo number_format($part->quantity, 0, ',', '.'); ?></td>
                                 <td style="text-align: right">&nbsp; Rp. <?php echo number_format($part->sale_price, 2, ',', '.'); ?></td>
                                 <td style="text-align: right">&nbsp; Rp. <?php echo number_format($part->discountAmount, 2, ',', '.'); ?></td>
                                 <td style="text-align: right">&nbsp; Rp. <?php echo number_format($part->total_price, 2, ',', '.'); ?></td>
@@ -193,7 +194,7 @@ function tanggal($date) {
                             <?php $no++; ?>
                         <?php endforeach; ?>
                         <tr>
-                            <td colspan="4" style="font-weight: bold; text-align: right">TOTAL LAIN-LAIN</td>
+                            <td colspan="6" style="font-weight: bold; text-align: right">TOTAL LAIN-LAIN</td>
                             <td style="font-weight: bold; text-align: right">
                                 &nbsp;  Rp. <?php echo number_format($saleEstimationHeader->sub_total_new_parts, 2, ',', '.'); ?>
                             </td>
