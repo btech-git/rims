@@ -37,7 +37,7 @@ class SaleInvoiceTaxOnlySummary extends CComponent {
         $endDate = (empty($filters['endDate'])) ? date('Y-m-d') : $filters['endDate'];
         
         $this->dataProvider->criteria->addCondition('t.status NOT LIKE "%CANCELLED%" AND t.tax_percentage > 0 AND t.transaction_tax_number IS NOT NULL');
-        $this->dataProvider->criteria->addBetweenCondition('t.invoice_date', $startDate, $endDate);
+        $this->dataProvider->criteria->addBetweenCondition('t.transaction_tax_date', $startDate, $endDate);
         $this->dataProvider->criteria->compare('vehicle.plate_number', $filters['plateNumber'], true);
         $this->dataProvider->criteria->compare('customer.customer_type', $filters['customerType']);
     }
