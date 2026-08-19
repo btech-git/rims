@@ -26,7 +26,7 @@ Yii::app()->clientScript->registerCss('_report', '
 
 <div class="row buttons">
     <div class="reportDisplay">
-        <?php echo ReportHelper::summaryText($profitLossSummary->dataProvider); ?>
+        <?php echo ReportHelper::summaryText($balanceSheetSummary->dataProvider); ?>
     </div>
     
     <br />
