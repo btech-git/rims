@@ -173,9 +173,9 @@ function tanggal($date) {
                         </tr>
                         <tr>
                             <th style="width: 1%">No</th>
-                            <th>Code</th>
+                            <th style="width: 15%">Code</th>
                             <th>Parts</th>
-                            <th>Quantity</th>
+                            <th style="width: 5%">Quantity</th>
                             <th style="width: 10%">Price</th>
                             <th style="width: 10%">Disc</th>
                             <th style="width: 15%">Total</th>
