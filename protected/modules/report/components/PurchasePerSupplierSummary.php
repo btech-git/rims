@@ -37,6 +37,9 @@ class PurchasePerSupplierSummary extends CComponent {
             SELECT r.id FROM " . TransactionPurchaseOrder::model()->tableName() . " p 
             INNER JOIN " . TransactionReceiveItem::model()->tableName() . " r ON p.id = r.purchase_order_id
             WHERE r.supplier_id = t.id AND substr(r.invoice_date, 1, 10) BETWEEN :start_date AND :end_date AND r.user_id_cancelled IS NULL" . $branchConditionSql . " 
+        ) OR EXISTS (
+            SELECT h.id FROM " . WorkOrderExpenseHeader::model()->tableName() . " h
+            WHERE h.supplier_id = t.id AND substr(h.transaction_date, 1, 10) BETWEEN :start_date AND :end_date AND h.user_id_cancelled IS NULL
         )");
         $this->dataProvider->criteria->params[':start_date'] = $startDate;
         $this->dataProvider->criteria->params[':end_date'] = $endDate;
