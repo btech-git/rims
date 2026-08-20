@@ -185,8 +185,11 @@
                             <label class="prefix"><?php echo $form->labelEx($salesOrder->header, 'requester_branch_id'); ?></label>
                         </div>
                         <div class="small-8 columns">
-                            <?php echo $form->hiddenField($salesOrder->header, 'requester_branch_id', array('value' => $salesOrder->header->isNewRecord ? Branch::model()->findByPk(User::model()->findByPk(Yii::app()->user->getId())->branch_id)->id : $salesOrder->header->requester_branch_id, 'readonly' => true)); ?>
-                            <?php echo $form->textField($salesOrder->header, 'requester_branch_name', array('value' => $salesOrder->header->isNewRecord ? Branch::model()->findByPk(User::model()->findByPk(Yii::app()->user->getId())->branch_id)->name : $salesOrder->header->requesterBranch->name, 'readonly' => true)); ?>
+                            <?php echo $form->hiddenField($salesOrder->header, 'requester_branch_id'); ?>
+                            <?php echo $form->textField($salesOrder->header, 'requester_branch_name', array(
+                                'value' => $salesOrder->header->requesterBranch->name, 
+                                'readonly' => true
+                            )); ?>
                             <?php echo $form->error($salesOrder->header, 'requester_branch_id'); ?>
                         </div>
                     </div>

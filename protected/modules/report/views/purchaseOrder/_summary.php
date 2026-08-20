@@ -120,7 +120,7 @@ Yii::app()->clientScript->registerCss('_report', '
                                     </td>
                                     <td class="width2-5"><?php echo CHtml::encode($workOrderExpenseItem['plate_number']); ?></td>
                                     <td class="width2-6"><?php echo CHtml::encode($workOrderExpenseItem['status']); ?></td>
-                                    <td class="width2-7"><?php echo $quantity; ?></td>
+                                    <td class="width2-7" style="text-align: center;"><?php echo $quantity; ?></td>
                                     <td class="width2-8" style="text-align: right">
                                         <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $totalPrice)); ?>
                                     </td>

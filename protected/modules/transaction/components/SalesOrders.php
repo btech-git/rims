@@ -37,20 +37,14 @@ class SalesOrders extends CComponent {
     }
 
     public function addDetail($productId) {
-        //$jenis_persediaan = MasterJenisPersediaan::model()->findAllByAttributes(array('kelompok_persediaan_id' => $id));
         $detail = new TransactionSalesOrderDetail();
         $detail->product_id = $productId;
         $product = Product::model()->findByPK($productId);
         $detail->product_name = $product->name;
         $detail->unit_id = $product->unit_id;
-//		if($product->ppn == 1)
-//			$detail->retail_price = $product->retail_price / 1.1;
-//		else
         $detail->retail_price = $product->retail_price;
         $detail->hpp = $product->hpp;
         $this->details[] = $detail;
-
-        //echo "5";
     }
 
     public function removeDetailAt($index) {
@@ -131,12 +125,12 @@ class SalesOrders extends CComponent {
             $detail->total_quantity = $detail->totalQuantity;
             $detail->discount = $detail->totalDiscount;
 
-            if ($isNewRecord)
+            if ($isNewRecord) {
                 $detail->sales_order_quantity_left = $detail->total_quantity;
+            }
 
             $valid = $detail->save(false) && $valid;
             $new_detail[] = $detail->id;
-            //echo 'test';
         }
 
         $delete_array = array_diff($detail_id, $new_detail);
