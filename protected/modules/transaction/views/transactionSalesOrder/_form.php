@@ -233,7 +233,7 @@
                         </div>
                         <div class="small-8 columns">
                             <?php echo $form->hiddenField($salesOrder->header, 'coa_customer'); ?>
-                            <?php echo $form->textField($salesOrder->header, 'coa_name', array('readonly' => true, 'value' => $salesOrder->header->coa_customer != "" ? Coa::model()->findByPk($salesOrder->coa_customer)->name : '')); ?>
+                            <?php echo $form->textField($salesOrder->header, 'coa_name', array('readonly' => true, 'value' => $salesOrder->header->coa_customer != "" ? $salesOrder->customer->coa->name : '')); ?>
                             <?php echo $form->error($salesOrder->header, 'coa_customer'); ?>
                         </div>
                     </div>

@@ -51,6 +51,7 @@ class FollowUpController extends Controller {
         $carSubModel = (isset($_GET['CarSubModel'])) ? $_GET['CarSubModel'] : '';
         $customerName = (isset($_GET['CustomerName'])) ? $_GET['CustomerName'] : '';
         $startMileage = (isset($_GET['StartMileage'])) ? $_GET['StartMileage'] : '';
+        $customerType = (isset($_GET['CustomerType'])) ? $_GET['CustomerType'] : '';
         $currentPage = (isset($_GET['page'])) ? $_GET['page'] : '';
 
         $model = Search::bind(new InvoiceHeader('search'), isset($_GET['InvoiceHeader']) ? $_GET['InvoiceHeader'] : '');
@@ -101,6 +102,11 @@ class FollowUpController extends Controller {
             $dataProvider->criteria->params[':name'] = "%{$customerName}%";
         }
         
+        if (!empty($customerType)) {
+            $dataProvider->criteria->addCondition('customer.customer_type = :customer_type');
+            $dataProvider->criteria->params[':customer_type'] = $customerType;
+        }
+        
         $dataProvider->criteria->addBetweenCondition('t.invoice_date', $invoiceStartDate, $invoiceEndDate);
         $dataProvider->criteria->addCondition("t.status IN ('PAID', 'CLEAR')");
         $dataProvider->criteria->addCondition("t.invoice_date = (SELECT MAX(p.invoice_date) FROM rims_invoice_header p WHERE t.vehicle_id = p.vehicle_id GROUP BY p.vehicle_id)");
@@ -128,6 +134,7 @@ class FollowUpController extends Controller {
             'followUpStartDate' => $followUpStartDate,
             'followUpEndDate' => $followUpEndDate,
             'startMileage' => $startMileage,
+            'customerType' => $customerType,
             'currentPage' => $currentPage,
         ));
     }

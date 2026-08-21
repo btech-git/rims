@@ -251,26 +251,11 @@ class GeneralRepairRegistrationController extends Controller {
                 }
 
                 if ($generalRepairRegistration->save(Yii::app()->db)) {
-                    $jurnalDownpayment = new JurnalUmum;
-                    $jurnalDownpayment->kode_transaksi = $paymentIn->payment_number;
-                    $jurnalDownpayment->tanggal_transaksi = $paymentIn->payment_date;
-                    $jurnalDownpayment->coa_id = 751;
-                    $jurnalDownpayment->branch_id = $paymentIn->branch_id;
-                    $jurnalDownpayment->total = $paymentIn->downpayment_amount;
-                    $jurnalDownpayment->debet_kredit = 'D';
-                    $jurnalDownpayment->tanggal_posting = date('Y-m-d');
-                    $jurnalDownpayment->transaction_subject = $paymentIn->notes;
-                    $jurnalDownpayment->remark = $remark;
-                    $jurnalDownpayment->is_coa_category = 0;
-                    $jurnalDownpayment->transaction_type = 'Pin';
-                    $jurnalDownpayment->save();
-
                     $this->saveTransactionLog('addDownpayment', $generalRepairRegistration->header);
                     $this->redirect(array('view', 'id' => $generalRepairRegistration->header->id));
                 }
             }
         }
-
             
         $this->render('addDownpayment', array(
             'generalRepairRegistration' => $generalRepairRegistration,

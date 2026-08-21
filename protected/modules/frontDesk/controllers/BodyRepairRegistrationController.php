@@ -267,11 +267,16 @@ class BodyRepairRegistrationController extends Controller {
         $vehicle = Vehicle::model()->findByPk($bodyRepairRegistration->header->vehicle_id);
         $customer = Customer::model()->findByPk($vehicle->customer_id);
         
-        $bodyRepairRegistration->header->downpayment_transaction_date = date('Y-m-d');
-        $bodyRepairRegistration->header->downpayment_created_datetime = date('Y-m-d H:i:s');
-        $bodyRepairRegistration->header->user_id_created_downpayment = Yii::app()->user->id;
-        $bodyRepairRegistration->header->is_downpayment_paid = 0;
-        $bodyRepairRegistration->header->downpayment_status = 'Issued';
+        if ($bodyRepairRegistration->header->downpayment_amount > 0) {
+            $bodyRepairRegistration->header->downpayment_updated_datetime = date('Y-m-d H:i:s');
+            $bodyRepairRegistration->header->user_id_updated_downpayment = Yii::app()->user->id;
+        } else {
+            $bodyRepairRegistration->header->downpayment_transaction_date = date('Y-m-d');
+            $bodyRepairRegistration->header->downpayment_created_datetime = date('Y-m-d H:i:s');
+            $bodyRepairRegistration->header->user_id_created_downpayment = Yii::app()->user->id;
+            $bodyRepairRegistration->header->is_downpayment_paid = 0;
+            $bodyRepairRegistration->header->downpayment_status = 'Issued';
+        }
 
         $products = RegistrationProduct::model()->findAll(array(
             'condition' => 'registration_transaction_id = :registration_transaction_id AND sale_package_detail_id IS NULL', 
@@ -284,11 +289,15 @@ class BodyRepairRegistrationController extends Controller {
         
         if (isset($_POST['Submit']) && IdempotentManager::check()) {
             $this->loadState($bodyRepairRegistration);
-            $bodyRepairRegistration->generateCodeNumberDownpayment(Yii::app()->dateFormatter->format('M', strtotime($bodyRepairRegistration->header->downpayment_transaction_date)), Yii::app()->dateFormatter->format('yyyy', strtotime($bodyRepairRegistration->header->downpayment_transaction_date)), $bodyRepairRegistration->header->branch_id);
+            if ($bodyRepairRegistration->header->downpayment_amount > 0) {
+                if ($bodyRepairRegistration->header->downpayment_transaction_number === null) {
+                    $bodyRepairRegistration->generateCodeNumberDownpayment(Yii::app()->dateFormatter->format('M', strtotime($bodyRepairRegistration->header->downpayment_transaction_date)), Yii::app()->dateFormatter->format('yyyy', strtotime($bodyRepairRegistration->header->downpayment_transaction_date)), $bodyRepairRegistration->header->branch_id);
+                }
 
-            if ($bodyRepairRegistration->save(Yii::app()->db)) {
-                $this->saveTransactionLog('addDownpayment', $bodyRepairRegistration->header);
-                $this->redirect(array('view', 'id' => $bodyRepairRegistration->header->id));
+                if ($bodyRepairRegistration->save(Yii::app()->db)) {
+                    $this->saveTransactionLog('addDownpayment', $bodyRepairRegistration->header);
+                    $this->redirect(array('view', 'id' => $bodyRepairRegistration->header->id));
+                }
             }
         }
 

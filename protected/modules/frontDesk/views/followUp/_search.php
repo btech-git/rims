@@ -139,9 +139,10 @@
             <div class="field">
                 <div class="row collapse">
                     <div class="small-4 columns">
-                        <span class="prefix"></span>
+                        <span class="prefix">Customer Type</span>
                     </div>
                     <div class="small-8 columns" id="car_model">
+                        <?php echo CHtml::dropDownList('CustomerType', $customerType, array('Individual' => 'Retail', 'Company' => 'Contract Service'), array('empty' => '-- All --')); ?>
                     </div>
                 </div>
             </div>
