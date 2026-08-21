@@ -255,7 +255,7 @@ class EmployeeAttendanceController extends Controller {
             $worksheet->setCellValue("{$column}{$counter}", $overtimeDays);
             $column++;
             
-            $attendanceDays = isset($employeePeriodicallyAttendanceItem[16]['days']) ? $employeePeriodicallyAttendanceItem[16]['days'] : '0';
+            $attendanceDays = isset($employeePeriodicallyAttendanceItem[16]['days']) ? $employeePeriodicallyAttendanceItem[16]['days'] : '1';
             $attendanceRate = $attendanceDays / $workingDays; 
             $onTimeDays = $workingDays - $lateDays;
             $onTimeRate = $onTimeDays / $attendanceDays;
