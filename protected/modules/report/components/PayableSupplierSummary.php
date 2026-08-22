@@ -29,28 +29,25 @@ class PayableSupplierSummary extends CComponent {
     public function setupFilter($filters) {
         $endDate = (empty($filters['endDate'])) ? date('Y-m-d') : $filters['endDate'];
         $branchId = (empty($filters['branchId'])) ? '' : $filters['branchId'];
+        $coaId = (empty($filters['coaId'])) ? '' : $filters['coaId'];
         
-        $branchPurchaseConditionSql = '';
-        $branchWorkOrderConditionSql = '';
+        $this->dataProvider->criteria->compare('t.coa_sub_category_id', 15);
+        $this->dataProvider->criteria->compare('t.is_approved', 1);
+        $this->dataProvider->criteria->compare('t.id', $coaId);
+        
+        $branchConditionSql = '';
         
         if (!empty($branchId)) {
-            $branchPurchaseConditionSql = ' AND p.main_branch_id = :branch_id';
-            $branchWorkOrderConditionSql = ' AND branch_id = :branch_id';
+            $branchConditionSql = ' AND p.branch_id = :branch_id';
             $this->dataProvider->criteria->params[':branch_id'] = $branchId;
         }
         
         $this->dataProvider->criteria->addCondition("EXISTS (
-            SELECT p.supplier_id
-            FROM " . TransactionPurchaseOrder::model()->tableName() . " p 
-            WHERE p.supplier_id = t.id AND substr(p.purchase_order_date, 1, 10) BETWEEN '" . AppParam::BEGINNING_TRANSACTION_DATE ."' AND :end_date AND
-                status_document = 'Approved'" . $branchPurchaseConditionSql . " 
-        ) OR EXISTS (
-            SELECT supplier_id
-            FROM " . WorkOrderExpenseHeader::model()->tableName() . "
-            WHERE supplier_id = t.id AND substring(transaction_date, 1, 10) BETWEEN '" . AppParam::BEGINNING_TRANSACTION_DATE ."' AND :end_date AND
-                status = 'Approved'" . $branchWorkOrderConditionSql . " 
-        )");
-        
+            SELECT coa_id 
+            FROM " . JurnalUmum::model()->tableName() . "
+            WHERE coa_id = t.id AND tanggal_transaksi BETWEEN '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND :end_date" . $branchConditionSql . "
+        ) AND t.code NOT LIKE '%.000'");
+
         $this->dataProvider->criteria->params[':end_date'] = $endDate;
     }
 }

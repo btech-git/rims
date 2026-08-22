@@ -625,55 +625,55 @@ class Supplier extends CActiveRecord {
         return ($value === false) ? 0 : $value;
     }
     
-    public function getPayablePurchaseSupplierReport($endDate, $branchId) {
-        $branchConditionSql = '';
-        
-        $params = array(
-            ':supplier_id' => $this->id,
-            ':end_date' => $endDate,
-        );
-        
-        if (!empty($branchId)) {
-            $branchConditionSql = ' AND main_branch_id = :branch_id';
-            $params[':branch_id'] = $branchId;
-        }
-        
-        $sql = "
-            SELECT COALESCE(SUM(total_price), 0) AS total_price, COALESCE(SUM(payment_amount), 0) AS payment_amount, 
-                COALESCE(SUM(payment_left), 0) AS payment_left
-            FROM " . TransactionPurchaseOrder::model()->tableName() . "
-            WHERE supplier_id = :supplier_id AND substr(purchase_order_date, 1, 10) BETWEEN '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND :end_date AND
-                status_document = 'Approved'" . $branchConditionSql;
-
-        $resultSet = Yii::app()->db->createCommand($sql)->queryRow(true, $params);
-
-        return $resultSet;
-    }
-    
-    public function getPayableWorkOrderSupplierReport($endDate, $branchId) {
-        $branchConditionSql = '';
-        
-        $params = array(
-            ':supplier_id' => $this->id,
-            ':end_date' => $endDate,
-        );
-        
-        if (!empty($branchId)) {
-            $branchConditionSql = ' AND branch_id = :branch_id';
-            $params[':branch_id'] = $branchId;
-        }
-        
-        $sql = "
-            SELECT COALESCE(SUM(grand_total), 0) AS total_price, COALESCE(SUM(total_payment), 0) AS payment_amount, 
-                COALESCE(SUM(payment_remaining), 0) AS payment_left
-            FROM " . WorkOrderExpenseHeader::model()->tableName() . " 
-            WHERE supplier_id = :supplier_id AND transaction_date BETWEEN '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND :end_date AND
-                status = 'Approved'" . $branchConditionSql;
-
-        $resultSet = Yii::app()->db->createCommand($sql)->queryRow(true, $params);
-
-        return $resultSet;
-    }
+//    public function getPayablePurchaseSupplierReport($endDate, $branchId) {
+//        $branchConditionSql = '';
+//        
+//        $params = array(
+//            ':supplier_id' => $this->id,
+//            ':end_date' => $endDate,
+//        );
+//        
+//        if (!empty($branchId)) {
+//            $branchConditionSql = ' AND main_branch_id = :branch_id';
+//            $params[':branch_id'] = $branchId;
+//        }
+//        
+//        $sql = "
+//            SELECT COALESCE(SUM(total_price), 0) AS total_price, COALESCE(SUM(payment_amount), 0) AS payment_amount, 
+//                COALESCE(SUM(payment_left), 0) AS payment_left
+//            FROM " . TransactionPurchaseOrder::model()->tableName() . "
+//            WHERE supplier_id = :supplier_id AND substr(purchase_order_date, 1, 10) BETWEEN '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND :end_date AND
+//                status_document = 'Approved'" . $branchConditionSql;
+//
+//        $resultSet = Yii::app()->db->createCommand($sql)->queryRow(true, $params);
+//
+//        return $resultSet;
+//    }
+//    
+//    public function getPayableWorkOrderSupplierReport($endDate, $branchId) {
+//        $branchConditionSql = '';
+//        
+//        $params = array(
+//            ':supplier_id' => $this->id,
+//            ':end_date' => $endDate,
+//        );
+//        
+//        if (!empty($branchId)) {
+//            $branchConditionSql = ' AND branch_id = :branch_id';
+//            $params[':branch_id'] = $branchId;
+//        }
+//        
+//        $sql = "
+//            SELECT COALESCE(SUM(grand_total), 0) AS total_price, COALESCE(SUM(total_payment), 0) AS payment_amount, 
+//                COALESCE(SUM(payment_remaining), 0) AS payment_left
+//            FROM " . WorkOrderExpenseHeader::model()->tableName() . " 
+//            WHERE supplier_id = :supplier_id AND transaction_date BETWEEN '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND :end_date AND
+//                status = 'Approved'" . $branchConditionSql;
+//
+//        $resultSet = Yii::app()->db->createCommand($sql)->queryRow(true, $params);
+//
+//        return $resultSet;
+//    }
     
     public function getPayableDetailPurchaseReport($endDate, $branchId) {
         $branchConditionSql = '';

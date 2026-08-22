@@ -266,15 +266,15 @@ class ReceivableCustomerController extends Controller {
         $worksheet->setCellValue('B5', 'Tanggal');
         $worksheet->setCellValue('C5', 'Keterangan');
         $worksheet->setCellValue('D5', 'Note');
-        $worksheet->setCellValue('E5', 'Total');
+        $worksheet->setCellValue('E5', 'Invoice');
         $worksheet->setCellValue('F5', 'Pembayaran');
-        $worksheet->setCellValue('G5', 'Sisa');
+        $worksheet->setCellValue('G5', 'Saldo');
         
         $counter = 6;
 
         $totalDebit = '0.00';
         $totalCredit = '0.00';
-        $totalRemaining = '0.00';
+        $balanceAmount = '0.00';
 
         foreach ($dataProvider->data as $header) {
             if ($header->debet_kredit == 'D') {
@@ -284,7 +284,7 @@ class ReceivableCustomerController extends Controller {
                 $amountDebit = '0.00';
                 $amountCredit = $header->total;
             }
-            $remainingAmount = $amountDebit - $amountCredit;
+            $balanceAmount += $amountDebit - $amountCredit;
             
             $worksheet->setCellValue("A{$counter}", CHtml::value($header, 'kode_transaksi'));
             $worksheet->setCellValue("B{$counter}", CHtml::value($header, 'tanggal_transaksi'));
@@ -292,23 +292,20 @@ class ReceivableCustomerController extends Controller {
             $worksheet->setCellValue("D{$counter}", CHtml::value($header, 'transaction_subject'));
             $worksheet->setCellValue("E{$counter}", $amountDebit);
             $worksheet->setCellValue("F{$counter}", $amountCredit);
-            $worksheet->setCellValue("G{$counter}", $remainingAmount);
+            $worksheet->setCellValue("G{$counter}", $balanceAmount);
             
             $totalDebit += $amountDebit;
             $totalCredit += $amountCredit;
-            $totalRemaining += $remainingAmount;
 
             $counter++;
         }
         $worksheet->getStyle("A{$counter}:G{$counter}")->getFont()->setBold(true);
         $worksheet->getStyle("A{$counter}:G{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
-        $worksheet->getStyle("A{$counter}:G{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
         $worksheet->mergeCells("A{$counter}:D{$counter}");
         
         $worksheet->setCellValue("A{$counter}", 'Total');
         $worksheet->setCellValue("E{$counter}", $totalDebit);
         $worksheet->setCellValue("F{$counter}", $totalCredit);
-        $worksheet->setCellValue("G{$counter}", $totalRemaining);
 
         $counter++;
 

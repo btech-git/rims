@@ -108,7 +108,7 @@ class FollowUpController extends Controller {
         }
         
         $dataProvider->criteria->addBetweenCondition('t.invoice_date', $invoiceStartDate, $invoiceEndDate);
-        $dataProvider->criteria->addCondition("t.status IN ('PAID', 'CLEAR')");
+        $dataProvider->criteria->addCondition("t.user_id_cancelled IS NULL");
         $dataProvider->criteria->addCondition("t.invoice_date = (SELECT MAX(p.invoice_date) FROM rims_invoice_header p WHERE t.vehicle_id = p.vehicle_id GROUP BY p.vehicle_id)");
 
         if (isset($_GET['ResetFilter'])) {

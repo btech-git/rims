@@ -25,9 +25,6 @@
         </tr>
     </thead>
     <tbody>
-        <?php $grandTotalRevenue = '0.00'; ?>
-        <?php $grandTotalPayment = '0.00'; ?>
-        <?php $grandTotalReceivable = '0.00'; ?>
         <?php $totalReceivableIndividual = Customer::getTotalReceivableIndividual($endDate, $branchId); ?>
         <?php $totalPaymentIndividual = Customer::getTotalPaymentIndividual($endDate, $branchId); ?>
         <?php $totalRemainingIndividual = Customer::getTotalRemainingIndividual($endDate, $branchId); ?>

@@ -17,7 +17,7 @@ Yii::app()->clientScript->registerCss('_report', '
 
 <div class="tab reportTab">
     <div class="tabHead">
-        <div style="font-size: larger; font-weight: bold; text-align: center">Transaksi Detail Piutang Customer</div>
+        <div style="font-size: larger; font-weight: bold; text-align: center">Transaksi Detail Hutang Supplier</div>
         <div style="font-size: larger; font-weight: bold; text-align: center"><?php echo CHtml::encode(CHtml::value($coa, 'name')); ?></div>
         <div style="font-size: larger; font-weight: bold; text-align: center">
             <?php echo 'Per Tanggal: ' . CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($endDate))); ?>
@@ -58,7 +58,7 @@ Yii::app()->clientScript->registerCss('_report', '
                     <tbody>
                         <?php $totalDebit = '0.00'; ?>
                         <?php $totalCredit = '0.00'; ?>
-                        <?php //$totalRemaining = '0.00'; ?>
+                        <?php //$totalBalance = '0.00'; ?>
                         <?php $balanceAmount = '0.00'; ?> 
                         
                         <?php foreach ($dataProvider->data as $header): ?>
@@ -72,7 +72,7 @@ Yii::app()->clientScript->registerCss('_report', '
                             <?php $balanceAmount += $amountDebit - $amountCredit; ?>
 
                             <tr class="items2">
-                                <td><?php echo CHtml::link($header->kode_transaksi, Yii::app()->createUrl("report/receivableCustomer/redirectTransaction", array("codeNumber" => $header->kode_transaksi)), array('target' => '_blank')); ?></td>
+                                <td><?php echo CHtml::link($header->kode_transaksi, Yii::app()->createUrl("report/payableSupplier/redirectTransaction", array("codeNumber" => $header->kode_transaksi)), array('target' => '_blank')); ?></td>
                                 <td><?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($header->tanggal_transaksi))); ?></td>
                                 <td><?php echo CHtml::encode($header->remark); ?></td>
                                 <td><?php echo CHtml::encode($header->transaction_subject); ?></td>
@@ -100,7 +100,7 @@ Yii::app()->clientScript->registerCss('_report', '
                                 <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalCredit)); ?>
                             </td>
                             <td style="font-weight: bold; text-align: right">
-                                <?php //echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalRemaining)); ?>
+                                <?php //echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalBalance)); ?>
                             </td>
                         </tr>
                     </tfoot>
