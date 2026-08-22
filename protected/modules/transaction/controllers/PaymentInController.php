@@ -894,17 +894,18 @@ class PaymentInController extends Controller {
     public function actionCancel($id) {
         $model = $this->loadModel($id);
         $model->status = 'CANCELLED!!!';
-        $model->payment_amount = 0; 
-        $model->tax_service_amount = 0; 
-        $model->downpayment_amount = 0; 
-        $model->discount_product_amount = 0; 
-        $model->discount_service_amount = 0; 
-        $model->bank_administration_fee = 0; 
-        $model->merimen_fee = 0; 
-        $model->bank_fee_amount = 0; 
+        $model->payment_amount = '0.00'; 
+        $model->tax_service_amount = '0.00'; 
+        $model->downpayment_amount = '0.00'; 
+        $model->discount_product_amount = '0.00'; 
+        $model->discount_service_amount = '0.00'; 
+        $model->bank_administration_fee = '0.00'; 
+        $model->merimen_fee = '0.00'; 
+        $model->bank_fee_amount = '0.00'; 
+        $model->own_risk_amount = '0.00'; 
         $model->cancelled_datetime = date('Y-m-d H:i:s');
         $model->user_id_cancelled = Yii::app()->user->id;
-        $model->update(array('status', 'payment_amount', 'tax_service_amount', 'downpayment_amount', 'discount_product_amount', 'discount_service_amount', 'bank_administration_fee', 'merimen_fee', 'bank_fee_amount', 'cancelled_datetime', 'user_id_cancelled'));
+        $model->update(array('status', 'payment_amount', 'tax_service_amount', 'downpayment_amount', 'discount_product_amount', 'discount_service_amount', 'bank_administration_fee', 'merimen_fee', 'bank_fee_amount', 'cancelled_datetime', 'user_id_cancelled', 'own_risk_amount'));
 
         foreach ($model->paymentInDetails as $detail) {
             $detail->total_invoice = '0.00';
@@ -915,14 +916,22 @@ class PaymentInController extends Controller {
             $detail->discount_amount = '0.00';
             $detail->bank_administration_fee = '0.00';
             $detail->merimen_fee = '0.00';
+            $detail->own_risk_amount = '0.00'; 
             $detail->memo = '';
-            $detail->update(array('total_invoice', 'amount', 'tax_service_percentage', 'tax_service_amount', 'downpayment_amount', 'discount_amount', 'bank_administration_fee', 'merimen_fee', 'memo'));
+            $detail->update(array('total_invoice', 'amount', 'tax_service_percentage', 'tax_service_amount', 'downpayment_amount', 'discount_amount', 'bank_administration_fee', 'merimen_fee', 'memo', 'own_risk_amount'));
             
             if (!empty($detail->invoice_header_id)) {
                 $invoiceHeader = InvoiceHeader::model()->findByPk($detail->invoice_header_id);
                 $invoiceHeader->payment_amount = $invoiceHeader->getTotalPayment();
                 $invoiceHeader->payment_left = $invoiceHeader->getTotalRemaining();
                 $invoiceHeader->update(array('payment_amount', 'payment_left'));
+            }
+            
+            if ($model->payment_category == 'Downpayment') {
+                $registrationTransaction = RegistrationTransaction::model()->findByPk($detail->registration_transaction_id);
+                $registrationTransaction->is_downpayment_paid = 0;
+                $registrationTransaction->downpayment_status = 'Issued';
+                $registrationTransaction->update(array('is_downpayment_paid', 'downpayment_status'));
             }
         }
         

@@ -159,6 +159,7 @@
                             <th>Payment #</th>
                             <th>Tanggal</th>
                             <th>Type</th>
+                            <th>Status</th>
                             <th>Note</th>
                             <th>Memo</th>
                             <th>Amount</th>
@@ -177,6 +178,7 @@
                                     <?php echo CHtml::encode(Yii::app()->dateFormatter->format("d MMM yyyy", strtotime(CHtml::value($paymentInDetail, 'paymentIn.payment_date')))); ?>
                                 </td>
                                 <td><?php echo CHtml::encode(CHtml::value($paymentInDetail, 'paymentIn.paymentType.name')); ?></td>
+                                <td><?php echo CHtml::encode(CHtml::value($paymentInDetail, 'status')); ?></td>
                                 <td><?php echo CHtml::encode(CHtml::value($paymentInDetail, 'paymentIn.note')); ?></td>
                                 <td><?php echo CHtml::encode(CHtml::value($paymentInDetail, 'memo')); ?></td>
                                 <td style="text-align: right"><?php echo CHtml::encode(number_format(CHtml::value($paymentInDetail, 'totalAmount'), 2)); ?></td>
