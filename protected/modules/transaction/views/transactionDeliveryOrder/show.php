@@ -336,8 +336,8 @@ $this->breadcrumbs = array(
             </tbody>
             <tfoot>
                 <tr>
-                    <td>TOTAL</td>
-                    <td><?php echo CHtml::encode($totalQuantity); ?></td>
+                    <td colspan="4" style="text-align: right; font-weight: bold">TOTAL</td>
+                    <td style="text-align: center; font-weight: bold"><?php echo CHtml::encode($totalQuantity); ?></td>
                     <td colspan="2">&nbsp;</td>
                 </tr>
             </tfoot>
