@@ -456,8 +456,8 @@ $this->menu = array(
                             <?php echo CHtml::encode(CHtml::value($product, 'productSubMasterCategory.name')); ?> -
                             <?php echo CHtml::encode(CHtml::value($product, 'productSubCategory.name')); ?>
                         </td>
-                        <td><?php echo $quantity; ?></td>
-                        <td><?php echo $movementOutDetail->quantity_transaction; ?></td>
+                        <td style="text-align: center"><?php echo $quantity; ?></td>
+                        <td style="text-align: center"><?php echo $movementOutDetail->quantity_transaction; ?></td>
                         <td><?php echo empty($movementOutDetail->warehouse) ? '' : $movementOutDetail->warehouse->name; ?></td>
                     </tr>
                     <?php $totalQuantity += $quantity; ?>
