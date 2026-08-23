@@ -39,9 +39,10 @@ if (count($deliveryOrders) != 0) {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <?php $quantityReceived = CHtml::encode(CHtml::value($receiveDetail, 'qty_received')); ?>
+                                    <?php $totalQuantity = 0; ?>
                                     <?php $receiveDetails = TransactionReceiveItemDetail::model()->findAllByAttributes(array('receive_item_id' => $receive->id)); ?>
                                     <?php foreach ($receiveDetails as $receiveDetail) : ?>
+                                        <?php $quantityReceived = CHtml::encode(CHtml::value($receiveDetail, 'qty_received')); ?>
                                         <tr>
                                             <td><?php echo CHTml::link($receive->receive_item_no, array("/transaction/transactionReceiveItem/show", "id" => $receive->id), array('target' => 'blank')); ?></td>
                                             <td><?php echo CHtml::encode(CHtml::value($receive, 'receive_item_date')); ?></td>
@@ -54,8 +55,16 @@ if (count($deliveryOrders) != 0) {
                                             <td><?php echo CHtml::encode(CHtml::value($receiveDetail, 'note')); ?></td>
                                             <!--<td><?php //echo $receiveDetail->barcode_product; ?></td>-->
                                         </tr>
+                                        <?php $totalQuantity += $quantityReceived; ?>
                                     <?php endforeach; ?>
                                 </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <td colspan="5" style="text-align: right; font-weight: bold">TOTAL</td>
+                                        <td style="text-align: right; font-weight: bold"><?php echo CHtml::encode($totalQuantity); ?></td>
+                                        <td colspan="3">&nbsp;</td>
+                                    </tr>
+                                </tfoot>
                             </table>
                         </td>
                     </tr>
