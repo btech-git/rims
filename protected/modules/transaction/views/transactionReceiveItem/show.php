@@ -203,7 +203,7 @@ $this->breadcrumbs = array(
     
     <br />
     
-    <?php if (count($recieveDetails) > 0): ?>
+    <?php if (count($receiveDetails) > 0): ?>
         <table>
             <thead>
                 <tr>
@@ -226,31 +226,31 @@ $this->breadcrumbs = array(
             </thead>
             
             <tbody>
-                <?php foreach ($recieveDetails as $key => $recieveDetail): ?>
+                <?php foreach ($receiveDetails as $key => $receiveDetail): ?>
                     <tr>
-                        <td><?php echo $recieveDetail->product_id == NULL ? '-' : $recieveDetail->product->id; ?></td>
-                        <td><?php echo $recieveDetail->product_id == NULL ? '-' : $recieveDetail->product->name; ?></td>
-                        <td><?php echo CHtml::encode(CHtml::value($recieveDetail, 'product.manufacturer_code')); ?></td>
+                        <td><?php echo $receiveDetail->product_id == NULL ? '-' : $receiveDetail->product->id; ?></td>
+                        <td><?php echo $receiveDetail->product_id == NULL ? '-' : $receiveDetail->product->name; ?></td>
+                        <td><?php echo CHtml::encode(CHtml::value($receiveDetail, 'product.manufacturer_code')); ?></td>
                         <td>
-                            <?php echo CHtml::encode(CHtml::value($recieveDetail, 'product.productMasterCategory.name')); ?> -
-                            <?php echo CHtml::encode(CHtml::value($recieveDetail, 'product.productSubMasterCategory.name')); ?> -
-                            <?php echo CHtml::encode(CHtml::value($recieveDetail, 'product.productSubCategory.name')); ?>
+                            <?php echo CHtml::encode(CHtml::value($receiveDetail, 'product.productMasterCategory.name')); ?> -
+                            <?php echo CHtml::encode(CHtml::value($receiveDetail, 'product.productSubMasterCategory.name')); ?> -
+                            <?php echo CHtml::encode(CHtml::value($receiveDetail, 'product.productSubCategory.name')); ?>
                         </td>
                         <td>
-                            <?php echo CHtml::encode(CHtml::value($recieveDetail, 'product.brand.name')); ?> -
-                            <?php echo CHtml::encode(CHtml::value($recieveDetail, 'product.subBrand.name')); ?> - 
-                            <?php echo CHtml::encode(CHtml::value($recieveDetail, 'product.subBrandSeries.name')); ?>
+                            <?php echo CHtml::encode(CHtml::value($receiveDetail, 'product.brand.name')); ?> -
+                            <?php echo CHtml::encode(CHtml::value($receiveDetail, 'product.subBrand.name')); ?> - 
+                            <?php echo CHtml::encode(CHtml::value($receiveDetail, 'product.subBrandSeries.name')); ?>
                         </td>
-                        <td><?php echo $recieveDetail->qty_request; ?></td>
-                        <td><?php echo $recieveDetail->qty_received; ?></td>
+                        <td><?php echo $receiveDetail->qty_request; ?></td>
+                        <td><?php echo $receiveDetail->qty_received; ?></td>
                         <?php if ($model->delivery_order_id != ""): ?>
-                            <td><?php echo $recieveDetail->quantity_delivered; ?></td>
-                            <td><?php echo $recieveDetail->quantity_delivered_left; ?></td>
+                            <td><?php echo $receiveDetail->quantity_delivered; ?></td>
+                            <td><?php echo $receiveDetail->quantity_delivered_left; ?></td>
                         <?php endif; ?>
-                        <td><?php echo $recieveDetail->quantity_movement; ?></td>
-                        <td><?php echo $recieveDetail->quantity_movement_left; ?></td>
-                        <td><?php echo $recieveDetail->qty_request_left; ?></td>
-                        <td><?php echo $recieveDetail->note == NULL ? '-' : $recieveDetail->note; ?></td>
+                        <td><?php echo $receiveDetail->quantity_movement; ?></td>
+                        <td><?php echo $receiveDetail->quantity_movement_left; ?></td>
+                        <td><?php echo $receiveDetail->qty_request_left; ?></td>
+                        <td><?php echo $receiveDetail->note == NULL ? '-' : $receiveDetail->note; ?></td>
                     </tr>
                 <?php endforeach; ?>
             </tbody>
