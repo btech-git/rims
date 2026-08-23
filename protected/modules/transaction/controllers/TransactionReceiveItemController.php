@@ -48,7 +48,7 @@ class TransactionReceiveItemController extends Controller {
      */
     public function actionView($id) {
         $model = $this->loadModel($id);
-        $recieveDetails = TransactionReceiveItemDetail::model()->findAllByAttributes(array('receive_item_id' => $id));
+        $receiveDetails = TransactionReceiveItemDetail::model()->findAllByAttributes(array('receive_item_id' => $id));
         
         if (isset($_POST['Process'])) {
             
@@ -66,7 +66,7 @@ class TransactionReceiveItemController extends Controller {
 
             $journalReferences = array();
 
-            foreach($recieveDetails as $detail) {
+            foreach($receiveDetails as $detail) {
                 if ($detail->qty_received > 0) {
                     if ($model->request_type == 'Purchase Order') {
                         $value = $detail->qty_received * $detail->purchaseOrderDetail->unit_price;
@@ -142,17 +142,17 @@ class TransactionReceiveItemController extends Controller {
         
         $this->render('view', array(
             'model' => $model,
-            'recieveDetails' => $recieveDetails,
+            'receiveDetails' => $receiveDetails,
         ));
     }
 
     public function actionShow($id) {
         $model = $this->loadModel($id);
-        $recieveDetails = TransactionReceiveItemDetail::model()->findAllByAttributes(array('receive_item_id' => $id));
+        $receiveDetails = TransactionReceiveItemDetail::model()->findAllByAttributes(array('receive_item_id' => $id));
         
         $this->render('show', array(
             'model' => $model,
-            'recieveDetails' => $recieveDetails,
+            'receiveDetails' => $receiveDetails,
         ));
     }
 
