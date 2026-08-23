@@ -47,11 +47,11 @@ if (count($deliveryOrders) != 0) {
                                             <td><?php echo CHTml::link($receive->receive_item_no, array("/transaction/transactionReceiveItem/show", "id" => $receive->id), array('target' => 'blank')); ?></td>
                                             <td><?php echo CHtml::encode(CHtml::value($receive, 'receive_item_date')); ?></td>
                                             <td><?php echo CHtml::encode(CHtml::value($receiveDetail, 'product.name')); ?></td>
-                                            <td><?php echo CHtml::encode(CHtml::value($receiveDetail, 'qty_request')); ?></td>
-                                            <td><?php echo CHtml::encode(CHtml::value($receiveDetail, 'quantity_delivered')); ?></td>
-                                            <td><?php echo $quantityReceived; ?></td>
-                                            <td><?php echo CHtml::encode(CHtml::value($receiveDetail, 'quantity_delivered_left')); ?></td>
-                                            <td><?php echo CHtml::encode(CHtml::value($receiveDetail, 'qty_request_left')); ?></td>
+                                            <td style="text-align: center"><?php echo CHtml::encode(CHtml::value($receiveDetail, 'qty_request')); ?></td>
+                                            <td style="text-align: center"><?php echo CHtml::encode(CHtml::value($receiveDetail, 'quantity_delivered')); ?></td>
+                                            <td style="text-align: center"><?php echo $quantityReceived; ?></td>
+                                            <td style="text-align: center"><?php echo CHtml::encode(CHtml::value($receiveDetail, 'quantity_delivered_left')); ?></td>
+                                            <td style="text-align: center"><?php echo CHtml::encode(CHtml::value($receiveDetail, 'qty_request_left')); ?></td>
                                             <td><?php echo CHtml::encode(CHtml::value($receiveDetail, 'note')); ?></td>
                                             <!--<td><?php //echo $receiveDetail->barcode_product; ?></td>-->
                                         </tr>
@@ -61,7 +61,7 @@ if (count($deliveryOrders) != 0) {
                                 <tfoot>
                                     <tr>
                                         <td colspan="5" style="text-align: right; font-weight: bold">TOTAL</td>
-                                        <td style="text-align: right; font-weight: bold"><?php echo CHtml::encode($totalQuantity); ?></td>
+                                        <td style="text-align: center; font-weight: bold"><?php echo CHtml::encode($totalQuantity); ?></td>
                                         <td colspan="3">&nbsp;</td>
                                     </tr>
                                 </tfoot>
