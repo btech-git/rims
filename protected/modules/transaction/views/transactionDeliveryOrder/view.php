@@ -431,11 +431,7 @@ $this->menu = array(
                     <th>Code</th>
                     <th>Product</th>
                     <th>Brand</th>
-                    <th>Sub Brand</th>
-                    <th>Sub Brand Series</th>
-                    <th>Master Category</th>
-                    <th>Sub Master Category</th>
-                    <th>Sub Category</th>
+                    <th>Category</th>
                     <th>Quantity</th>
                     <th>QTY Transaction</th>
                     <th>Gudang</th>
@@ -443,23 +439,37 @@ $this->menu = array(
             </thead>
             
             <tbody>
+                <?php $totalQuantity = 0; ?>
                 <?php foreach ($movementOutHeader->movementOutDetails as $movementOutDetail): ?>
+                    <?php $quantity = CHtml::encode(CHtml::value($movementOutDetail, 'quantity')); ?>
                     <tr>
                         <?php $product = empty($movementOutDetail->product) ? '' : $movementOutDetail->product; ?>
                         <td><?php echo $product->manufacturer_code; ?></td>
                         <td><?php echo $product->name; ?></td>
-                        <td><?php echo $product->brand->name; ?></td>
-                        <td><?php echo CHtml::encode(CHtml::value($product, 'subBrand.name')); ?></td>
-                        <td><?php echo CHtml::encode(CHtml::value($product, 'subBrandSeries.name')); ?></td>
-                        <td><?php echo $product->productMasterCategory->name; ?></td>
-                        <td><?php echo $product->productSubMasterCategory->name; ?></td>
-                        <td><?php echo $product->productSubCategory->name; ?></td>
-                        <td><?php echo $movementOutDetail->quantity; ?></td>
+                        <td>
+                            <?php echo CHtml::encode(CHtml::value($product, 'brand.name')); ?> -
+                            <?php echo CHtml::encode(CHtml::value($product, 'subBrand.name')); ?> - 
+                            <?php echo CHtml::encode(CHtml::value($product, 'subBrandSeries.name')); ?>
+                        </td>
+                        <td>
+                            <?php echo CHtml::encode(CHtml::value($product, 'productMasterCategory.name')); ?> -
+                            <?php echo CHtml::encode(CHtml::value($product, 'productSubMasterCategory.name')); ?> -
+                            <?php echo CHtml::encode(CHtml::value($product, 'productSubCategory.name')); ?>
+                        </td>
+                        <td><?php echo $quantity; ?></td>
                         <td><?php echo $movementOutDetail->quantity_transaction; ?></td>
                         <td><?php echo empty($movementOutDetail->warehouse) ? '' : $movementOutDetail->warehouse->name; ?></td>
                     </tr>
+                    <?php $totalQuantity += $quantity; ?>
                 <?php endforeach; ?>
             </tbody>
+            <tfoot>
+                <tr>
+                    <td>TOTAL</td>
+                    <td><?php echo CHtml::encode($totalQuantity); ?></td>
+                    <td colspan="2">&nbsp;</td>
+                </tr>
+            </tfoot>
         </table>
     <?php endforeach; ?>
 </div>
