@@ -607,7 +607,7 @@ class JurnalUmum extends CActiveRecord {
         return $resultSet;
     }
 
-        public static function getTransactionJournalCount($startDate, $endDate, $transactionType, $branchId, $coaId) {
+    public static function getTransactionJournalCount($startDate, $endDate, $transactionType, $branchId, $coaId) {
         
         $transactionTypeConditionSql = '';
         $branchConditionSql = '';

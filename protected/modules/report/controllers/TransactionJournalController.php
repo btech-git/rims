@@ -93,7 +93,7 @@ class TransactionJournalController extends Controller {
     
     public function actionAjaxJsonCoa() {
         if (Yii::app()->request->isAjaxRequest) {
-            $coaId = (isset($_POST['JurnalUmum']['coa_id'])) ? $_POST['JurnalUmum']['coa_id'] : '';
+            $coaId = (isset($_POST['CoaId'])) ? $_POST['CoaId'] : '';
             $coa = Coa::model()->findByPk($coaId);
 
             $object = array(
