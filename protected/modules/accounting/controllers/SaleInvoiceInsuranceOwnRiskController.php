@@ -182,6 +182,8 @@ class SaleInvoiceInsuranceOwnRiskController extends Controller {
         $customer = Customer::model()->findByPk($saleInvoice->customer_id);
         $vehicle = Vehicle::model()->findByPk($saleInvoice->vehicle_id);
         $branch = Branch::model()->findByPk($saleInvoice->branch_id);
+        $registrationProducts = RegistrationProduct::model()->findAllByAttributes(array('registration_transaction_id' => $saleInvoice->registration_transaction_id));
+        $registrationServices = RegistrationService::model()->findAllByAttributes(array('registration_transaction_id' => $saleInvoice->registration_transaction_id));
 
         $stylesheet = file_get_contents(Yii::getPathOfAlias('webroot') . '/css/pdf.css');
         $mPDF1 = Yii::app()->ePdf->mpdf('', 'A4-L');
@@ -192,6 +194,8 @@ class SaleInvoiceInsuranceOwnRiskController extends Controller {
             'customer' => $customer,
             'vehicle' => $vehicle,
             'branch' => $branch, 
+            'registrationProducts' => $registrationProducts,
+            'registrationServices' => $registrationServices,
         ), true));
         $mPDF1->Output('Invoice OR ' . $saleInvoice->transaction_number . '.pdf', 'I');
     }
