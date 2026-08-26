@@ -66,21 +66,53 @@ class CoaController extends Controller {
     public function actionView($id) {
         $model = $this->loadModel($id);
         
+        $yearNow = date('Y');
+        
         $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : date('Y-m-d');
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
+            $year = (isset($_GET['Year'])) ? $_GET['Year'] : $yearNow;
         
         $jurnalUmum = Search::bind(new JurnalUmum('search'), isset($_GET['JurnalUmum']) ? $_GET['JurnalUmum'] : array());
         $jurnalUmumDataProvider = $jurnalUmum->search();
         $jurnalUmumDataProvider->criteria->addBetweenCondition('t.tanggal_transaksi', $startDate, $endDate);
         $jurnalUmumDataProvider->criteria->compare('t.coa_id', $id);
+        
+        $coaLedgerSummaryReport = JurnalUmum::getCoaLedgerSummary($year, $id);
+        $coaLedgerAddBeginningBalanceSummaryReport = JurnalUmum::getCoaLedgerAddBeginningBalanceSummary($year, $id);
 
+        $yearList = array();
+        for ($y = $yearNow - 4; $y <= $yearNow; $y++) {
+            $yearList[$y] = $y;
+        }
+        
         $this->render('view', array(
             'model' => $model,
             'jurnalUmum' => $jurnalUmum,
             'jurnalUmumDataProvider' => $jurnalUmumDataProvider,
             'startDate' => $startDate,
             'endDate' => $endDate,
+            'coaLedgerSummaryReport' => $coaLedgerSummaryReport,
+            'coaLedgerAddBeginningBalanceSummaryReport' => $coaLedgerAddBeginningBalanceSummaryReport,
+            'year' => $year,
+            'yearList' => $yearList,
         ));
+    }
+
+    public function actionAjaxHtmlUpdateMonthlyLedger($id) {
+        if (Yii::app()->request->isAjaxRequest) {
+            $yearNow = date('Y');
+            
+            $year = (isset($_GET['Year'])) ? $_GET['Year'] : $yearNow;
+        
+            $coaLedgerSummaryReport = JurnalUmum::getCoaLedgerSummary($year, $id);
+        
+            $coaLedgerAddBeginningBalanceSummaryReport = JurnalUmum::getCoaLedgerAddBeginningBalanceSummary($year, $id);
+
+            $this->renderPartial('_monthlyLedger', array(
+                'coaLedgerSummaryReport' => $coaLedgerSummaryReport,
+                'coaLedgerAddBeginningBalanceSummaryReport' => $coaLedgerAddBeginningBalanceSummaryReport,
+            ));
+        }
     }
 
     /**

@@ -424,87 +424,105 @@ class PaymentOutController extends Controller {
         $valid = true;
         
         if (isset($_POST['PaymentOutApproval'])) {
-            JurnalUmum::model()->deleteAllByAttributes(array(
-                'kode_transaksi' => $paymentOut->payment_number,
-                'branch_id' => $paymentOut->branch_id,
-            ));
+            $dbTransaction = Yii::app()->db->beginTransaction();
+            try {
+                JurnalUmum::model()->deleteAllByAttributes(array(
+                    'kode_transaksi' => $paymentOut->payment_number,
+                    'branch_id' => $paymentOut->branch_id,
+                ));
 
-            $model->attributes = $_POST['PaymentOutApproval'];
-            if ($model->save()) {
-                $paymentOut->status = $model->approval_type;
-                $paymentOut->save(false);
+                $model->attributes = $_POST['PaymentOutApproval'];
+                if ($model->save()) {
+                    $paymentOut->status = $model->approval_type;
+                    $paymentOut->save(false);
 
-                if ($model->approval_type == 'Approved') {
-                    if (!empty($paymentOut->paymentType->coa_id)) {
-                        $coaId = $paymentOut->paymentType->coa_id;
-                    } elseif ($paymentOut->payment_type_id == 12) {
-                        $coaId = $paymentOut->coa_id_deposit;
-                    } else {
-                        $coaId = $paymentOut->companyBank->coa_id;
+                    if ($model->approval_type == 'Approved') {
+                        if (!empty($paymentOut->paymentType->coa_id)) {
+                            $coaId = $paymentOut->paymentType->coa_id;
+                        } elseif ($paymentOut->payment_type_id == 12) {
+                            $coaId = $paymentOut->coa_id_deposit;
+                        } else {
+                            $coaId = $paymentOut->companyBank->coa_id;
+                        }
+
+                        $jurnalUmumKas = new JurnalUmum;
+                        $jurnalUmumKas->kode_transaksi = $paymentOut->payment_number;
+                        $jurnalUmumKas->tanggal_transaksi = $paymentOut->payment_date;
+                        $jurnalUmumKas->coa_id = $coaId;
+                        $jurnalUmumKas->branch_id = $paymentOut->branch_id;
+                        $jurnalUmumKas->total = $paymentOut->payment_amount;
+                        $jurnalUmumKas->debet_kredit = 'K';
+                        $jurnalUmumKas->tanggal_posting = date('Y-m-d');
+                        $jurnalUmumKas->transaction_subject = $paymentOut->supplier->company;
+                        $jurnalUmumKas->is_coa_category = 0;
+                        $jurnalUmumKas->transaction_type = 'Pout';
+                        $valid = $valid && $jurnalUmumKas->save();
+
+                        foreach ($paymentOut->payOutDetails as $detail) {
+                            $invoiceNumber = empty($detail->receive_item_id) ? '' : $detail->receiveItem->invoice_number;
+                            $jurnalHutang = new JurnalUmum;
+                            $jurnalHutang->kode_transaksi = $paymentOut->payment_number;
+                            $jurnalHutang->tanggal_transaksi = $paymentOut->payment_date;
+                            $jurnalHutang->coa_id = !empty($detail->asset_purchase_id) ? 2988 : $paymentOut->supplier->coa_id;
+                            $jurnalHutang->branch_id = $paymentOut->branch_id;
+                            $jurnalHutang->total = $detail->amount;
+                            $jurnalHutang->debet_kredit = 'D';
+                            $jurnalHutang->tanggal_posting = date('Y-m-d');
+                            $jurnalHutang->transaction_subject = $paymentOut->supplier->company . ', ' . $detail->memo . ', ' . $invoiceNumber;
+                            $jurnalHutang->is_coa_category = 0;
+                            $jurnalHutang->transaction_type = 'Pout';
+                            $valid = $valid && $jurnalHutang->save();
+                            
+                            if ($paymentOut->payment_date <= date('Y-m-d')) {
+                                if (!empty($detail->receive_item_id)) {
+                                    $receiveItem = TransactionReceiveItem::model()->findByPk($detail->receive_item_id);
+                                    $receiveItem->invoice_payment_amount = $receiveItem->getTotalPayment();
+                                    $receiveItem->invoice_payment_remaining = $receiveItem->getTotalRemaining();
+                                    $valid = $valid && $receiveItem->update(array('invoice_payment_amount', 'invoice_payment_remaining'));
+
+    //                                    $purchaseOrder = TransactionPurchaseOrder::model()->findByPk($receiveItem->purchase_order_id);
+    //                                    $purchaseOrder->payment_amount = $purchaseOrder->getTotalPayment();
+    //                                    $purchaseOrder->payment_left = $purchaseOrder->getTotalRemaining();
+    //                                    $purchaseOrder->payment_status = $purchaseOrder->payment_left > 0 ? 'Partial Payment' : 'PAID';
+    //                                    $valid = $valid && $purchaseOrder->update(array('payment_amount', 'payment_left', 'payment_status'));
+                                } elseif (!empty($detail->work_order_expense_header_id)) {
+                                    $workOrderExpenseHeader = WorkOrderExpenseHeader::model()->findByPk($detail->work_order_expense_header_id);
+                                    $workOrderExpenseHeader->total_payment = $workOrderExpenseHeader->getTotalPayment();
+                                    $workOrderExpenseHeader->payment_remaining = $workOrderExpenseHeader->getRemainingPayment();
+                                    $valid = $valid && $workOrderExpenseHeader->update(array('total_payment', 'payment_remaining'));
+                                } elseif (!empty($detail->item_request_header_id)) {
+                                    $itemRequestHeader = ItemRequestHeader::model()->findByPk($detail->item_request_header_id);
+                                    $itemRequestHeader->total_payment = $itemRequestHeader->getTotalPayment();
+                                    $itemRequestHeader->remaining_payment = $itemRequestHeader->getRemainingPayment();
+                                    $valid = $valid && $itemRequestHeader->update(array('total_payment', 'remaining_payment'));
+                                } elseif (!empty($detail->asset_purchase_id)) {
+                                    $assetPurchase = AssetPurchase::model()->findByPk($detail->asset_purchase_id);
+                                    $assetPurchase->total_payment = $assetPurchase->getTotalPayment();
+                                    $assetPurchase->payment_remaining = $assetPurchase->getPaymentRemaining();
+                                    $valid = $valid && $assetPurchase->update(array('total_payment', 'payment_remaining'));
+                                } 
+
+                                $paymentOut->is_synchronized = 1;
+                                $valid = $valid && $paymentOut->update(array('is_synchronized'));
+                            }
+                        }
                     }
 
-                    $jurnalUmumKas = new JurnalUmum;
-                    $jurnalUmumKas->kode_transaksi = $paymentOut->payment_number;
-                    $jurnalUmumKas->tanggal_transaksi = $paymentOut->payment_date;
-                    $jurnalUmumKas->coa_id = $coaId;
-                    $jurnalUmumKas->branch_id = $paymentOut->branch_id;
-                    $jurnalUmumKas->total = $paymentOut->payment_amount;
-                    $jurnalUmumKas->debet_kredit = 'K';
-                    $jurnalUmumKas->tanggal_posting = date('Y-m-d');
-                    $jurnalUmumKas->transaction_subject = $paymentOut->supplier->company;
-                    $jurnalUmumKas->is_coa_category = 0;
-                    $jurnalUmumKas->transaction_type = 'Pout';
-                    $jurnalUmumKas->save();
-                    
-                    foreach ($paymentOut->payOutDetails as $detail) {
-                        $invoiceNumber = empty($detail->receive_item_id) ? '' : $detail->receiveItem->invoice_number;
-                        $jurnalHutang = new JurnalUmum;
-                        $jurnalHutang->kode_transaksi = $paymentOut->payment_number;
-                        $jurnalHutang->tanggal_transaksi = $paymentOut->payment_date;
-                        $jurnalHutang->coa_id = !empty($detail->asset_purchase_id) ? 2988 : $paymentOut->supplier->coa_id;
-                        $jurnalHutang->branch_id = $paymentOut->branch_id;
-                        $jurnalHutang->total = $detail->amount;
-                        $jurnalHutang->debet_kredit = 'D';
-                        $jurnalHutang->tanggal_posting = date('Y-m-d');
-                        $jurnalHutang->transaction_subject = $paymentOut->supplier->company . ', ' . $detail->memo . ', ' . $invoiceNumber;
-                        $jurnalHutang->is_coa_category = 0;
-                        $jurnalHutang->transaction_type = 'Pout';
-                        $jurnalHutang->save();
-                        
-                        if (!empty($detail->receive_item_id)) {
-                            $receiveItem = TransactionReceiveItem::model()->findByPk($detail->receive_item_id);
-                            $receiveItem->invoice_payment_amount = $receiveItem->getTotalPayment();
-                            $receiveItem->invoice_payment_remaining = $receiveItem->getTotalRemaining();
-                            $valid = $valid && $receiveItem->update(array('invoice_payment_amount', 'invoice_payment_remaining'));
-                            
-                            $purchaseOrder = TransactionPurchaseOrder::model()->findByPk($receiveItem->purchase_order_id);
-                            $purchaseOrder->payment_amount = $purchaseOrder->getTotalPayment();
-                            $purchaseOrder->payment_left = $purchaseOrder->getTotalRemaining();
-                            $purchaseOrder->payment_status = $purchaseOrder->payment_left > 0 ? 'Partial Payment' : 'PAID';
-                            $valid = $valid && $purchaseOrder->update(array('payment_amount', 'payment_left', 'payment_status'));
-                        } elseif (!empty($detail->work_order_expense_header_id)) {
-                            $workOrderExpenseHeader = WorkOrderExpenseHeader::model()->findByPk($detail->work_order_expense_header_id);
-                            $workOrderExpenseHeader->total_payment = $workOrderExpenseHeader->getTotalPayment();
-                            $workOrderExpenseHeader->payment_remaining = $workOrderExpenseHeader->getRemainingPayment();
-                            $valid = $valid && $workOrderExpenseHeader->update(array('total_payment', 'payment_remaining'));
-                        } elseif (!empty($detail->item_request_header_id)) {
-                            $itemRequestHeader = ItemRequestHeader::model()->findByPk($detail->item_request_header_id);
-                            $itemRequestHeader->total_payment = $itemRequestHeader->getTotalPayment();
-                            $itemRequestHeader->remaining_payment = $itemRequestHeader->getRemainingPayment();
-                            $valid = $valid && $itemRequestHeader->update(array('total_payment', 'remaining_payment'));
-                        }  elseif (!empty($detail->asset_purchase_id)) {
-                            $assetPurchase = AssetPurchase::model()->findByPk($detail->asset_purchase_id);
-                            $assetPurchase->total_payment = $assetPurchase->getTotalPayment();
-                            $assetPurchase->payment_remaining = $assetPurchase->getPaymentRemaining();
-                            $valid = $valid && $assetPurchase->update(array('total_payment', 'payment_remaining'));
-                        } 
+                    $this->saveTransactionLog('approval', $paymentOut);
+        
+                    if ($valid) {
+                        $dbTransaction->commit();
+                    } else {
+                        $dbTransaction->rollback();
                     }
                 }
-
-                $this->saveTransactionLog('approval', $paymentOut);
-        
-                $this->redirect(array('view', 'id' => $headerId));
+            } catch (Exception $e) {
+                $dbTransaction->rollback();
+                $valid = false;
+                $paymentOut->addError('error', $e->getMessage());
             }
+
+            $this->redirect(array('view', 'id' => $headerId));
         }
 
         $this->render('updateApproval', array(

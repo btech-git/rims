@@ -26,8 +26,15 @@ Yii::app()->clientScript->registerScript('coa', '
     <div class="clearfix page-action">
         <?php $ccontroller = Yii::app()->controller->id; ?>
         <?php $ccaction = Yii::app()->controller->action->id; ?>
-        <?php echo CHtml::link('<span class="fa fa-list"></span>Manage Coa', Yii::app()->baseUrl . '/accounting/coa/admin', array('class' => 'button cbutton right', 'visible' => Yii::app()->user->checkAccess("accounting.coa.admin"))) ?>
-        <?php echo CHtml::link('<span class="fa fa-edit"></span>Edit', Yii::app()->baseUrl . '/accounting/coa/update?id=' . $model->id, array('class' => 'button cbutton right', 'style' => 'margin-right:10px', 'visible' => Yii::app()->user->checkAccess("accounting.coa.update"))) ?>
+        <?php echo CHtml::link('<span class="fa fa-list"></span>Manage', Yii::app()->baseUrl . '/accounting/coa/admin', array(
+            'class' => 'button cbutton right', 
+//            'visible' => Yii::app()->user->checkAccess("accounting.coa.admin"), 
+        )); ?>
+        <?php echo CHtml::link('<span class="fa fa-edit"></span>Edit', Yii::app()->baseUrl . '/accounting/coa/update?id=' . $model->id, array(
+            'class' => 'button warning right', 
+            'style' => 'margin-right:10px', 
+//            'visible' => Yii::app()->user->checkAccess("accounting.coa.update"), 
+        )); ?>
         <h1>View Coa #<?php echo $model->id; ?></h1>
 
         <?php $this->widget('zii.widgets.CDetailView', array(
@@ -93,9 +100,9 @@ Yii::app()->clientScript->registerScript('coa', '
 <br />
 <?php endif; ?>
 
+<?php echo CHtml::beginForm(array(''), 'get'); ?>
 <fieldset>
     <legend>COA DETAIL</legend>
-    <?php echo CHtml::beginForm(array(''), 'get'); ?>
     <div class="search-bar">
         <div class="clearfix button-bar">
             <div class="row">
@@ -184,135 +191,48 @@ Yii::app()->clientScript->registerScript('coa', '
             )
         )); ?>
     </div>
-    <?php echo CHtml::endForm(); ?>
 </fieldset>
 
 <div>
     <div class="row">
         <div class="large-6 columns">
             <div class="small-4 columns"><label for="">Period : </label></div>
-            <div class="small-6 columns"><input type="text"></div>
-            <div class="small-2 columns"><button>View</button></div>
+            <div class="small-6 columns">
+                <?php echo CHtml::dropDownList('Year', $year, $yearList); ?>
+            </div>
+            <div class="small-2 columns">
+                <?php echo CHtml::button('Tampilkan', array(
+                    'onclick' => '
+                        $.ajax({
+                            type: "GET",
+                            url: "' . CController::createUrl('ajaxHtmlUpdateMonthlyLedger', array('id' => $model->id)) . '", 
+                            data: $("form").serialize(), 
+                            success: function(data) {
+                                $("#monthly_ledger_div").html(data);
+                            },
+                        });	
+                    ',
+                )); ?>
+            </div>
         </div>
     </div>
-    <?php
+    <?php /*
     $criteria = new CDbCriteria();
     $criteria->select = "MONTHNAME(tanggal_posting) as nama_bulan,month(tanggal_posting) as bulan, sum(total) as total";
     $criteria->group = "nama_bulan, bulan";
     $criteria->order = "bulan ASC";
-    $jurnalUmums = JurnalUmum::model()->findAll($criteria);
+    $jurnalUmums = JurnalUmum::model()->findAll($criteria); */
     ?>
-
-    <table>
-        <thead>
-            <tr>
-                <th>Months</th>
-                <th>Debit</th>
-                <th>Credit</th>
-            </tr>
-        </thead>
-        
-        <tbody>
-            <?php $lastmonth = ""; ?>
-            <?php foreach ($jurnalUmums as $key => $jurnalUmum): ?>
-                <tr>
-                    <td><?php echo $lastmonth == $jurnalUmum->nama_bulan ? $lastmonth : $jurnalUmum->nama_bulan; ?></td>
-                    <td><?php echo $lastmonth == $jurnalUmum->nama_bulan ? ($jurnalUmum->debet_kredit == "D" ? CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $jurnalUmum->total)) : '-') : 0; ?></td>
-                    <td><?php echo $lastmonth == $jurnalUmum->nama_bulan ? ($jurnalUmum->debet_kredit == "K" ? CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $jurnalUmum->total)) : '-') : 0; ?></td>
-                    <?php $lastmonth = $jurnalUmum->nama_bulan; ?>
-                </tr>		
-            <?php endforeach; ?>
-        </tbody>
-    </table>
-    <div class="row">
-        <div class="large-12 columns">
-            <table>
-                <thead>
-                    <tr>
-                        <th>Months</th>
-                        <th>Debit</th>
-                        <th>Credit</th>
-                    </tr>
-                </thead>
-                
-                <tbody>
-                    <tr>
-                        <td>January</td>
-                        <td></td>
-                        <td></td>
-                    </tr>
-                    
-                    <tr>
-                        <td>February</td>
-                        <td></td>
-                        <td></td>
-                    </tr>
-                    
-                    <tr>
-                        <td>March</td>
-                        <td></td>
-                        <td></td>
-                    </tr>
-                    
-                    <tr>
-                        <td>April</td>
-                        <td></td>
-                        <td></td>
-                    </tr>
-                    
-                    <tr>
-                        <td>May</td>
-                        <td></td>
-                        <td></td>
-                    </tr>
-                    
-                    <tr>
-                        <td>June</td>
-                        <td></td>
-                        <td></td>
-                    </tr>
-                    
-                    <tr>
-                        <td>July</td>
-                        <td></td>
-                        <td></td>
-                    </tr>
-                    
-                    <tr>
-                        <td>August</td>
-                        <td></td>
-                        <td></td>
-                    </tr>
-                    
-                    <tr>
-                        <td>September</td>
-                        <td></td>
-                        <td></td>
-                    </tr>
-                    
-                    <tr>
-                        <td>October</td>
-                        <td></td>
-                        <td></td>
-                    </tr>
-                    
-                    <tr>
-                        <td>November</td>
-                        <td></td>
-                        <td></td>
-                    </tr>
-                    
-                    <tr>
-                        <td>December</td>
-                        <td></td>
-                        <td></td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
+    
+    <div id="monthly_ledger_div">
+        <?php $this->renderPartial('_monthlyLedger', array(
+            'coaLedgerSummaryReport' => $coaLedgerSummaryReport,
+            'coaLedgerAddBeginningBalanceSummaryReport' => $coaLedgerAddBeginningBalanceSummaryReport,
+        )); ?>
     </div>
 </div>
 
+<?php echo CHtml::endForm(); ?>
 <br/>
 
 <div>

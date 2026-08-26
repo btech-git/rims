@@ -34,7 +34,7 @@ $('.search-form form').submit(function(){
 <h1>Kelola Data Pembayaran Pembelian</h1>
 
 <div id="link">
-    <?php echo CHtml::link('<span class="fa fa-plus"></span>New Payment Out', Yii::app()->baseUrl . '/accounting/paymentOut/supplierList', array(
+    <?php echo CHtml::link('<span class="fa fa-plus"></span> New', Yii::app()->baseUrl . '/accounting/paymentOut/supplierList', array(
         'class' => 'button success right',
         'visible' => Yii::app()->user->checkAccess("paymentOutCreate")
     )); ?>

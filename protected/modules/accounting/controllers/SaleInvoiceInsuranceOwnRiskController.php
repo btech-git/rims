@@ -132,8 +132,8 @@ class SaleInvoiceInsuranceOwnRiskController extends Controller {
             'vehicle',
         );
         
-        $startDate = isset($_GET['StartDate']) ? $_GET['StartDate'] : date('Y-m-d');
-        $endDate = isset($_GET['EndDate']) ? $_GET['EndDate'] : date('Y-m-d');
+        $startDate = isset($_GET['StartDate']) ? $_GET['StartDate'] : '';
+        $endDate = isset($_GET['EndDate']) ? $_GET['EndDate'] : '';
         $customerName = isset($_GET['CustomerName']) ? $_GET['CustomerName'] : '';
         $plateNumber = isset($_GET['PlateNumber']) ? $_GET['PlateNumber'] : '';
 
