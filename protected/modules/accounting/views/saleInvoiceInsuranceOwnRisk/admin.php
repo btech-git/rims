@@ -29,6 +29,7 @@ $('#invoiceSearch').submit(function(){
 ");
 ?>
 
+<?php echo CHtml::beginForm(array(''), 'get'); ?>
 <div id="maincontent">
     <div class="row">
         <div class="small-12 columns">
@@ -149,7 +150,6 @@ $('#invoiceSearch').submit(function(){
             
             <br /> 
             
-            <?php echo CHtml::beginForm(); ?>
             <div class="grid-view">
                 <?php $this->widget('zii.widgets.grid.CGridView', array(
                     'id' => 'invoice-own-risk-grid',
@@ -194,11 +194,11 @@ $('#invoiceSearch').submit(function(){
                 )); ?>
             </div>
             
-            <?php echo CHtml::endForm(); ?>
         </div>
     </div> <!-- end row -->
 </div> <!-- end maintenance -->
 
+<?php echo CHtml::endForm(); ?>
 <?php $this->beginWidget('zii.widgets.jui.CJuiDialog', array(
     'id' => 'cancel-message-dialog',
     // additional javascript options for the dialog plugin

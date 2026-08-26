@@ -46,6 +46,7 @@ $this->breadcrumbs = array(
             <?php echo CHtml::link('<span class="fa fa-print"></span>Print Invoice', array("pdf", "id" => $model->id), array(
                 'class' => 'button info right', 
                 'style' => 'margin-right:10px', 
+                'target' => '_blank',
             )); ?>
         <?php endif; ?>
 
@@ -104,7 +105,7 @@ $this->breadcrumbs = array(
             <?php if (Yii::app()->user->checkAccess("director")): ?>
                 <tr>
                     <td width="10%">User Created</td>
-                    <td width="30%"><?php echo CHtml::encode(CHtml::value($model, 'user.username')); ?></td>
+                    <td width="30%"><?php echo CHtml::encode(CHtml::value($model, 'userIdCreated.username')); ?></td>
                     <td width="10%">Date Created</td>
                     <td width="30%"><?php echo CHtml::encode(Yii::app()->dateFormatter->format("d MMM yyyy H:m:s", strtotime(CHtml::value($model, 'created_datetime')))); ?></td>
                 </tr>
