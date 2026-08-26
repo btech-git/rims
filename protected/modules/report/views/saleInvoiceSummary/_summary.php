@@ -149,18 +149,17 @@
                                 </td>
                                 <td class="width2-5"><?php echo CHtml::encode(CHtml::value($paymentInDetail, 'memo')); ?></td>
                             </tr>
+                            <?php $totalParts += $partsAmount; ?>
+                            <?php $totalService += $serviceAmount; ?>
+                            <?php $totalTax += $taxAmount; ?>
+                            <?php $totalInvoice += $invoiceAmount; ?>
+                            <?php $totalPaymentAmount += $paymentAmount; ?>
+                            <?php $totalPaymentLeft += $paymentLeft; ?>
                             <?php $totalPaymentSum += $totalPayment; ?>
                             
                         <?php endif; ?>
                     <?php endforeach; ?>
                 <?php endif; ?>
-                            
-                <?php $totalParts += $partsAmount; ?>
-                <?php $totalService += $serviceAmount; ?>
-                <?php $totalTax += $taxAmount; ?>
-                <?php $totalInvoice += $invoiceAmount; ?>
-                <?php $totalPaymentAmount += $paymentAmount; ?>
-                <?php $totalPaymentLeft += $paymentLeft; ?>
             <?php endforeach; ?>
         </tbody>
         <tfoot>
