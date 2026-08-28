@@ -23,7 +23,7 @@ class PayableDetailController extends Controller {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
 
-        $branchId = isset($_GET['BranchId']) ? $_GET['BranchId'] : (Yii::app()->user->checkAccess('director') ? '' : Yii::app()->user->branch_id);
+        $branchId = isset($_GET['BranchId']) ? $_GET['BranchId'] : (Yii::app()->user->checkAccess('director') || Yii::app()->user->branch_id == 6 ? '' : Yii::app()->user->branch_id);
         $supplierId = (isset($_GET['SupplierId'])) ? $_GET['SupplierId'] : '';
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
         $pageSize = (isset($_GET['PageSize'])) ? $_GET['PageSize'] : '';

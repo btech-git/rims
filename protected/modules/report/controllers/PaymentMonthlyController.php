@@ -28,7 +28,7 @@ class PaymentMonthlyController extends Controller {
         
         $month = isset($_GET['Month']) ? $_GET['Month'] : $monthNow;
         $year = isset($_GET['Year']) ? $_GET['Year'] : $yearNow;
-        $branchId = isset($_GET['BranchId']) ? $_GET['BranchId'] : (Yii::app()->user->checkAccess('director') ? '' : Yii::app()->user->branch_id);
+        $branchId = isset($_GET['BranchId']) ? $_GET['BranchId'] : (Yii::app()->user->checkAccess('director') || Yii::app()->user->branch_id == 6 ? '' : Yii::app()->user->branch_id);
         
         $paymentTypes = PaymentType::model()->findAll(array('condition' => 'id NOT IN (2, 12)'));
         

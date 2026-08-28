@@ -27,7 +27,7 @@ class MonthlySingleBranchSaleTransactionController extends Controller {
         
         $month = isset($_GET['Month']) ? $_GET['Month'] : $monthNow;
         $year = (isset($_GET['Year'])) ? $_GET['Year'] : $yearNow;
-        $branchId = (isset($_GET['BranchId'])) ? $_GET['BranchId'] : (Yii::app()->user->checkAccess('director') ? '' : Yii::app()->user->branch_id);
+        $branchId = (isset($_GET['BranchId'])) ? $_GET['BranchId'] : (Yii::app()->user->checkAccess('director') || Yii::app()->user->branch_id == 6 ? '' : Yii::app()->user->branch_id);
         
         $monthlySingleBranchSaleReport = InvoiceHeader::getMonthlySingleBranchSaleReport($year, $month, $branchId);
         $monthlySingleBranchSaleProductReport = InvoiceDetail::getMonthlySingleBranchSaleProductReport($year, $month, $branchId);

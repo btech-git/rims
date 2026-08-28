@@ -30,7 +30,7 @@ class PaymentByBankMonthToMonthController extends Controller {
         $monthEnd = isset($_GET['MonthEnd']) ? $_GET['MonthEnd'] : $monthNow;
         $yearStart = isset($_GET['YearStart']) ? $_GET['YearStart'] : $yearNow;
         $yearEnd = isset($_GET['YearEnd']) ? $_GET['YearEnd'] : $yearNow;
-        $branchId = isset($_GET['BranchId']) ? $_GET['BranchId'] : (Yii::app()->user->checkAccess('director') ? '' : Yii::app()->user->branch_id);
+        $branchId = isset($_GET['BranchId']) ? $_GET['BranchId'] : (Yii::app()->user->checkAccess('director') || Yii::app()->user->branch_id == 6 ? '' : Yii::app()->user->branch_id);
         $coaIds = isset($_GET['CoaIds']) ? $_GET['CoaIds'] : array();
         
         $coaList = Coa::model()->findAll(array('condition' => 't.coa_sub_category_id IN (1, 2, 3) AND t.status = "Approved"', 'order' => 't.name ASC'));

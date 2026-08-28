@@ -71,14 +71,14 @@ class DailyMultipleBranchSaleTransactionController extends Controller {
         $worksheet->mergeCells('A2:M2');
         $worksheet->mergeCells('A3:M3');
 
-        $worksheet->getStyle('A1:T5')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-        $worksheet->getStyle('A1:T5')->getFont()->setBold(true);
+        $worksheet->getStyle('A1:S5')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->getStyle('A1:S5')->getFont()->setBold(true);
 
         $worksheet->setCellValue('A1', 'Raperind Motor');
         $worksheet->setCellValue('A2', 'Penjualan Semua Cabang Harian');
         $worksheet->setCellValue('A3', Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($startDate)) . ' - ' . Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($endDate)));
         
-        $worksheet->getStyle('A5:T5')->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle('A5:S5')->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
         $worksheet->setCellValue('A5', 'No');
         $worksheet->setCellValue('B5', 'Branch');
         $worksheet->setCellValue('C5', 'Customer Total');
@@ -87,19 +87,18 @@ class DailyMultipleBranchSaleTransactionController extends Controller {
         $worksheet->setCellValue('F5', 'Retail');
         $worksheet->setCellValue('G5', 'Contract Service Unit');
         $worksheet->setCellValue('H5', 'Total Invoice (Rp)');
-        $worksheet->setCellValue('I5', 'PPn (Rp)');
-        $worksheet->setCellValue('J5', 'Jasa (Rp)');
-        $worksheet->setCellValue('K5', 'Parts (Rp)');
-        $worksheet->setCellValue('L5', 'Invoice per Unit (Rp)');
-        $worksheet->setCellValue('M5', 'Jasa per Unit (Rp)');
-        $worksheet->setCellValue('N5', 'Parts per Unit (Rp)');
-        $worksheet->setCellValue('O5', 'Total Ban');
-        $worksheet->setCellValue('P5', 'Total Oli');
-        $worksheet->setCellValue('Q5', 'Total Aksesoris');
-        $worksheet->setCellValue('R5', 'Average Ban (Rp)');
-        $worksheet->setCellValue('S5', 'Average Oli (Rp)');
-        $worksheet->setCellValue('T5', 'Average Aksesoris(Rp)');
-        $worksheet->getStyle('A5:T5')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->setCellValue('I5', 'Jasa (Rp)');
+        $worksheet->setCellValue('J5', 'Parts (Rp)');
+        $worksheet->setCellValue('K5', 'Invoice per Unit (Rp)');
+        $worksheet->setCellValue('L5', 'Jasa per Unit (Rp)');
+        $worksheet->setCellValue('M5', 'Parts per Unit (Rp)');
+        $worksheet->setCellValue('N5', 'Total Ban');
+        $worksheet->setCellValue('O5', 'Total Oli');
+        $worksheet->setCellValue('P5', 'Total Aksesoris');
+        $worksheet->setCellValue('Q5', 'Average Ban (Rp)');
+        $worksheet->setCellValue('R5', 'Average Oli (Rp)');
+        $worksheet->setCellValue('S5', 'Average Aksesoris(Rp)');
+        $worksheet->getStyle('A5:S5')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
         $counter = 6;
         $customerQuantitySum = 0;
@@ -108,7 +107,6 @@ class DailyMultipleBranchSaleTransactionController extends Controller {
         $customerRetailQuantitySum = 0;
         $customerCompanyQuantitySum = 0;
         $grandTotalSum = '0.00';
-        $totalTaxSum = '0.00';
         $totalServiceSum = '0.00';
         $totalProductSum = '0.00';
         $tireQuantitySum = 0;
@@ -116,7 +114,7 @@ class DailyMultipleBranchSaleTransactionController extends Controller {
         $accessoriesQuantitySum = 0;
         foreach ($dailyMultipleBranchSaleReport as $i => $dataItem) {
             $detailItem = $dailyMultipleBranchSaleProductReportData[$dataItem['branch_id']];
-            $totalInvoicePerCustomer = round($dataItem['grand_total'] / $dataItem['customer_quantity'], 2);
+            $totalInvoicePerCustomer = round($dataItem['sub_total'] / $dataItem['customer_quantity'], 2);
             $totalServicePerCustomer = round($dataItem['total_service'] / $dataItem['customer_quantity'], 2);
             $totalPartsPerCustomer = round($dataItem['total_product'] / $dataItem['customer_quantity'], 2);
             $averageTire = $detailItem['tire_quantity'] > 0 ? $detailItem['tire_price'] / $detailItem['tire_quantity'] : '0.00';
@@ -130,27 +128,25 @@ class DailyMultipleBranchSaleTransactionController extends Controller {
             $worksheet->setCellValue("E{$counter}", $dataItem['customer_repeat_quantity']);
             $worksheet->setCellValue("F{$counter}", $dataItem['customer_retail_quantity']);
             $worksheet->setCellValue("G{$counter}", $dataItem['customer_company_quantity']);
-            $worksheet->setCellValue("H{$counter}", $dataItem['grand_total']);
-            $worksheet->setCellValue("I{$counter}", $dataItem['ppn_total']);
-            $worksheet->setCellValue("J{$counter}", $dataItem['total_service']);
-            $worksheet->setCellValue("K{$counter}", $dataItem['total_product']);
-            $worksheet->setCellValue("L{$counter}", $totalInvoicePerCustomer);
-            $worksheet->setCellValue("M{$counter}", $totalServicePerCustomer);
-            $worksheet->setCellValue("N{$counter}", $totalPartsPerCustomer);
-            $worksheet->setCellValue("O{$counter}", $detailItem['tire_quantity']);
-            $worksheet->setCellValue("P{$counter}", $detailItem['oil_quantity']);
-            $worksheet->setCellValue("Q{$counter}", $detailItem['accessories_quantity']);
-            $worksheet->setCellValue("R{$counter}", $averageTire);
-            $worksheet->setCellValue("S{$counter}", $averageOil);
-            $worksheet->setCellValue("T{$counter}", $averageAccessories);
+            $worksheet->setCellValue("H{$counter}", $dataItem['sub_total']);
+            $worksheet->setCellValue("I{$counter}", $dataItem['total_service']);
+            $worksheet->setCellValue("J{$counter}", $dataItem['total_product']);
+            $worksheet->setCellValue("K{$counter}", $totalInvoicePerCustomer);
+            $worksheet->setCellValue("L{$counter}", $totalServicePerCustomer);
+            $worksheet->setCellValue("M{$counter}", $totalPartsPerCustomer);
+            $worksheet->setCellValue("N{$counter}", $detailItem['tire_quantity']);
+            $worksheet->setCellValue("O{$counter}", $detailItem['oil_quantity']);
+            $worksheet->setCellValue("P{$counter}", $detailItem['accessories_quantity']);
+            $worksheet->setCellValue("Q{$counter}", $averageTire);
+            $worksheet->setCellValue("R{$counter}", $averageOil);
+            $worksheet->setCellValue("S{$counter}", $averageAccessories);
             
             $customerQuantitySum += $dataItem['customer_quantity'];
             $customerNewQuantitySum += $dataItem['customer_new_quantity'];
             $customerRepeatQuantitySum += $dataItem['customer_repeat_quantity'];
             $customerRetailQuantitySum += $dataItem['customer_retail_quantity'];
             $customerCompanyQuantitySum += $dataItem['customer_company_quantity'];
-            $grandTotalSum += $dataItem['grand_total'];
-            $totalTaxSum += $dataItem['ppn_total'];
+            $grandTotalSum += $dataItem['sub_total'];
             $totalServiceSum += $dataItem['total_service'];
             $totalProductSum += $dataItem['total_product'];
             $tireQuantitySum += $detailItem['tire_quantity'];
@@ -160,8 +156,8 @@ class DailyMultipleBranchSaleTransactionController extends Controller {
             $counter++;
         }
         
-        $worksheet->getStyle("A{$counter}:T{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
-        $worksheet->getStyle("A{$counter}:T{$counter}")->getFont()->setBold(true);
+        $worksheet->getStyle("A{$counter}:S{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A{$counter}:S{$counter}")->getFont()->setBold(true);
         
         $worksheet->setCellValue("B{$counter}", 'TOTAL');
         $worksheet->setCellValue("C{$counter}", $customerQuantitySum);
@@ -170,12 +166,11 @@ class DailyMultipleBranchSaleTransactionController extends Controller {
         $worksheet->setCellValue("F{$counter}", $customerRetailQuantitySum);
         $worksheet->setCellValue("G{$counter}", $customerCompanyQuantitySum);
         $worksheet->setCellValue("H{$counter}", $grandTotalSum);
-        $worksheet->setCellValue("I{$counter}", $totalTaxSum);
-        $worksheet->setCellValue("J{$counter}", $totalServiceSum);
-        $worksheet->setCellValue("K{$counter}", $totalProductSum);
-        $worksheet->setCellValue("L{$counter}", $tireQuantitySum);
-        $worksheet->setCellValue("M{$counter}", $oilQuantitySum);
-        $worksheet->setCellValue("N{$counter}", $accessoriesQuantitySum);
+        $worksheet->setCellValue("I{$counter}", $totalServiceSum);
+        $worksheet->setCellValue("J{$counter}", $totalProductSum);
+        $worksheet->setCellValue("N{$counter}", $tireQuantitySum);
+        $worksheet->setCellValue("O{$counter}", $oilQuantitySum);
+        $worksheet->setCellValue("P{$counter}", $accessoriesQuantitySum);
 
         for ($col = 'A'; $col !== 'Z'; $col++) {
             $objPHPExcel->getActiveSheet()

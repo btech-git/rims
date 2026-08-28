@@ -28,7 +28,7 @@ class YearlyProductSaleTransactionController extends Controller {
         $productId = isset($_GET['ProductId']) ? $_GET['ProductId'] : '';
         $productCode = isset($_GET['ProductCode']) ? $_GET['ProductCode'] : '';
         $productName = isset($_GET['ProductName']) ? $_GET['ProductName'] : '';
-        $branchId = isset($_GET['BranchId']) ? $_GET['BranchId'] : (Yii::app()->user->checkAccess('director') ? '' : Yii::app()->user->branch_id);
+        $branchId = isset($_GET['BranchId']) ? $_GET['BranchId'] : (Yii::app()->user->checkAccess('director') || Yii::app()->user->branch_id == 6 ? '' : Yii::app()->user->branch_id);
         $brandId = (isset($_GET['BrandId'])) ? $_GET['BrandId'] : '';
         $subBrandId = (isset($_GET['SubBrandId'])) ? $_GET['SubBrandId'] : '';
         $subBrandSeriesId = (isset($_GET['SubBrandSeriesId'])) ? $_GET['SubBrandSeriesId'] : '';

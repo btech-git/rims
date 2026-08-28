@@ -26,7 +26,7 @@ class RegistrationVehicleCarMakeController extends Controller {
         $yearMonthNow = date('Y-m');
 
         $yearMonth = (isset($_GET['YearMonth'])) ? $_GET['YearMonth'] : $yearMonthNow;
-        $branchId = isset($_GET['BranchId']) ? $_GET['BranchId'] : (Yii::app()->user->checkAccess('director') ? '' : Yii::app()->user->branch_id);
+        $branchId = isset($_GET['BranchId']) ? $_GET['BranchId'] : (Yii::app()->user->checkAccess('director') || Yii::app()->user->branch_id == 6 ? '' : Yii::app()->user->branch_id);
         
         $registrationVehicleInfo = array();
         $registrationVehicleData = RegistrationTransaction::getTotalQuantityVehicleCarMakeData($yearMonth, $branchId);
