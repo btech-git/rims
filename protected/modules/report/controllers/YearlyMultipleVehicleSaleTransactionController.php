@@ -24,7 +24,7 @@ class YearlyMultipleVehicleSaleTransactionController extends Controller {
         
         $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : date('Y-m-d');
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
-        $branchId = (isset($_GET['BranchId'])) ? $_GET['BranchId'] : '';
+        $branchId = (isset($_GET['BranchId'])) ? $_GET['BranchId'] : (Yii::app()->user->checkAccess('director') ? '' : Yii::app()->user->branch_id);
         $customerName = (isset($_GET['CustomerName'])) ? $_GET['CustomerName'] : '';
         $plateNumber = (isset($_GET['PlateNumber'])) ? $_GET['PlateNumber'] : '';
         $customerType = (isset($_GET['CustomerType'])) ? $_GET['CustomerType'] : '';

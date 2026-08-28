@@ -343,6 +343,7 @@
                             <?php echo $form->labelEx($invoice->header, 'Jumlah Tagihan', array('class' => 'prefix')); ?>
                         </div>
                         <div class="small-8 columns">
+                            <?php echo CHtml::activeHiddenField($invoice->header, 'invoice_amount'); ?>
                             <?php echo number_format(CHtml::encode(CHtml::value($invoice->header, 'invoice_amount')), 2); ?>
                         </div>
                     </div>

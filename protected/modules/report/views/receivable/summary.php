@@ -55,7 +55,10 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                         <span class="prefix">Branch</span>
                                     </div>
                                     <div class="small-8 columns">
-                                        <?php echo CHtml::dropDownlist('BranchId', $branchId, CHtml::listData(Branch::model()->findAllbyAttributes(array('status' => 'Active')), 'id', 'name'), array('empty' => '-- All --')); ?>
+                                        <?php echo CHtml::dropDownlist('BranchId', $branchId, CHtml::listData(Branch::model()->findAllbyAttributes(array('status'=>'Active')), 'id','name'), array(
+                                            'empty'=>'-- All Branch --',
+                                            'disabled' => Yii::app()->user->checkAccess('director') ? '' : 'disabled',
+                                        )); ?>
                                     </div>
                                 </div>
                             </div>
@@ -142,7 +145,7 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
 
                 <div class="right"><?php echo ReportHelper::summaryText($receivableSummary->dataProvider); ?></div>
                 <br />
-                <div class="right"><?php echo ReportHelper::sortText($receivableSummary->dataProvider->sort, array('Tanggal', 'Customer')); ?></div>
+                <div class="right"><?php //echo ReportHelper::sortText($receivableSummary->dataProvider->sort, array('Tanggal', 'Customer')); ?></div>
                 <div class="clear"></div>
 
                 <br />

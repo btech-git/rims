@@ -25,7 +25,7 @@ class PaymentInController extends Controller {
         ini_set('memory_limit', '1024M');
 
         $paymentIn = Search::bind(new PaymentIn('search'), isset($_GET['PaymentIn']) ? $_GET['PaymentIn'] : array());
-        $branchId = isset($_GET['BranchId']) ? $_GET['BranchId'] : '';
+        $branchId = isset($_GET['BranchId']) ? $_GET['BranchId'] : (Yii::app()->user->checkAccess('director') ? '' : Yii::app()->user->branch_id);
         $customerId = isset($_GET['CustomerId']) ? $_GET['CustomerId'] : '';
         $customerType = isset($_GET['CustomerType']) ? $_GET['CustomerType'] : '';
         $plateNumber = (isset($_GET['PlateNumber'])) ? $_GET['PlateNumber'] : '';

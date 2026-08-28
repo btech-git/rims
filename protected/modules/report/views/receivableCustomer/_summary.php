@@ -1,9 +1,10 @@
 <?php Yii::app()->clientScript->registerCss('_report', '
-    .width1-1 { width: 40% }
-    .width1-2 { width: 15% }
-    .width1-3 { width: 15% }
-    .width1-4 { width: 15% }
-    .width1-5 { width: 15% }
+    .width1-1 { width: 30% }
+    .width1-2 { width: 10% }
+    .width1-3 { width: 30% }
+    .width1-4 { width: 10% }
+    .width1-5 { width: 10% }
+    .width1-6 { width: 10% }
 '); ?>
 
 <div style="font-weight: bold; text-align: center">
@@ -19,9 +20,10 @@
         <tr id="header1">
             <th class="width1-1">Name</th>
             <th class="width1-2">Type</th>
-            <th class="width1-3">Total Invoice</th>
-            <th class="width1-4">Payment</th>
-            <th class="width1-5">Remaining</th>
+            <th class="width1-3">Akun</th>
+            <th class="width1-4">Invoice</th>
+            <th class="width1-5">Payment</th>
+            <th class="width1-6">Remaining</th>
         </tr>
     </thead>
     <tbody>
@@ -29,71 +31,64 @@
         <?php $totalPaymentIndividual = Customer::getTotalPaymentIndividual($endDate, $branchId); ?>
         <?php $totalRemainingIndividual = Customer::getTotalRemainingIndividual($endDate, $branchId); ?>
         <tr>
-            <td colspan="2" style="text-align: center">Individual</td>
-            <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalReceivableIndividual)); ?></td>
-            <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalPaymentIndividual)); ?></td>
+            <td colspan="3" style="text-align: center">Individual</td>
+            <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $totalReceivableIndividual)); ?></td>
+            <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $totalPaymentIndividual)); ?></td>
             <td style="text-align: right">
                 <?php echo CHtml::link(Yii::app()->numberFormatter->format('#,##0', $totalRemainingIndividual), array(
                     '/report/receivableCustomer/transactionRetailInfo', 
                     'endDate' => $endDate,
+                    'branchId' => $branchId,
                 ), array('target' => '_blank')); ?>
             </td>
         </tr>
-        <?php $totalDebitSum = '0.00'; ?>
-        <?php $totalCreditSum = '0.00'; ?>
+        <?php $totalInvoiceSum = '0.00'; ?>
+        <?php $totalPaymentSum = '0.00'; ?>
         <?php $totalRemainingSum = '0.00'; ?>
-        <?php foreach ($receivableSummary->dataProvider->data as $header): ?>
-            <?php $receivableData = $header->getReceivableCustomerReport($endDate, $branchId); ?>
-            <?php $totalDebit = '0.00'; ?>
-            <?php $totalCredit = '0.00'; ?>
-            <?php foreach ($receivableData as $receivableRow): ?>
-                <?php $transactionNumber = $receivableRow['kode_transaksi']; ?>
-                <?php if ($receivableRow['transaction_type'] == 'D'): ?>
-                    <?php $amountDebit = $receivableRow['amount']; ?>
-                    <?php $amountCredit = '0.00'; ?>
-                <?php else: ?>
-                    <?php $amountDebit = '0.00'; ?>
-                    <?php $amountCredit = $receivableRow['amount']; ?>
-                <?php endif; ?>
-
-                <?php $totalDebit += $amountDebit; ?>
-                <?php $totalCredit += $amountCredit; ?>
-                <?php $remaining = $totalDebit - $totalCredit; ?>
+        
+        <?php foreach ($receivableSummary->dataProvider->data as $customer): ?>
+            <?php $totalRevenue = '0.00'; ?>
+            <?php $totalPayment = '0.00'; ?>
+            <?php $totalReceivable = '0.00'; ?>
+            <?php foreach ($receivableReportData[$customer->id] as $receivableReportItem): ?>
+                <?php $revenue = $receivableReportItem['total_price']; ?>
+                <?php $paymentAmount = isset($receivablePaymentReportData[$receivableReportItem['id']]) ? $receivablePaymentReportData[$receivableReportItem['id']] : '0.00'; ?>
+                <?php $paymentLeft = $revenue - $paymentAmount; ?>
+                <?php $totalRevenue += $revenue; ?>
+                <?php $totalPayment += $paymentAmount; ?>
+                <?php $totalReceivable += $paymentLeft; ?>
             <?php endforeach; ?>
-                
-            <tr>
-                <td style="font-weight: bold">
-                    <?php echo CHtml::encode(CHtml::value($header, 'code')); ?> - 
-                    <?php echo CHtml::encode(CHtml::value($header, 'name')); ?>
-                </td>
-                <td>Company</td>
-                <td style="text-align: right">
-                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalDebit)); ?>
-                </td>
-                <td style="text-align: right">
-                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalCredit)); ?>
-                </td>
-                <td style="text-align: right">
-                    <?php echo CHtml::link(Yii::app()->numberFormatter->format('#,##0', $remaining), array(
+            <tr class="items1">
+                <td><?php echo CHtml::encode(CHtml::value($customer, 'name')); ?></td>
+                <td><?php echo CHtml::encode(CHtml::value($customer, 'customer_type')); ?></td>
+                <td><?php echo CHtml::encode(CHtml::value($customer, 'coa.name')); ?></td>
+                <td style="text-align: right;"> 
+                    <?php echo CHtml::link(Yii::app()->numberFormatter->format('#,##0.00', $totalRevenue), array(
                         '/report/receivableCustomer/transactionInfo', 
-                        'coaId' => $header->id,
+                        'customerId' => $customer->id,
                         'branchId' => $branchId,
                         'endDate' => $endDate,
                     ), array('target' => '_blank')); ?>
                 </td>
+                <td style="text-align: right;"> 
+                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalPayment)); ?>
+                </td>
+                <td style="text-align: right;"> 
+                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalReceivable)); ?>
+                </td>
             </tr>
 
-            <?php $totalDebitSum += $totalDebit; ?>
-            <?php $totalCreditSum += $totalCredit; ?>
-            <?php $totalRemainingSum += $remaining; ?>
-        <?php endforeach; ?>   
+            <?php $totalInvoiceSum += $totalRevenue; ?>
+            <?php $totalPaymentSum += $totalPayment; ?>
+            <?php $totalRemainingSum += $totalReceivable; ?>
+        <?php endforeach; ?>  
     </tbody>
     <tfoot>
         <tr>
-            <td colspan="2">TOTAL</td>
-            <td class="width1-3" style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalDebitSum)); ?></td>
-            <td class="width1-4" style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalCreditSum)); ?></td>
-            <td class="width1-5" style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalRemainingSum)); ?></td>
+            <td colspan="3" style="text-align: right;  font-weight: bold;">TOTAL</td>
+            <td style="text-align: right;  font-weight: bold"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $totalInvoiceSum)); ?></td>
+            <td style="text-align: right;  font-weight: bold"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $totalPaymentSum)); ?></td>
+            <td style="text-align: right;  font-weight: bold"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $totalRemainingSum)); ?></td>
         </tr>
     </tfoot>
 </table>

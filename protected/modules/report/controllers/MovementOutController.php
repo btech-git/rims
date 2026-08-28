@@ -24,7 +24,7 @@ class MovementOutController extends Controller {
         ini_set('memory_limit', '1024M');
 
         $movementOutHeader = Search::bind(new MovementOutHeader('search'), isset($_GET['MovementOutHeader']) ? $_GET['MovementOutHeader'] : array());
-        $branchId = isset($_GET['BranchId']) ? $_GET['BranchId'] : '';
+        $branchId = isset($_GET['BranchId']) ? $_GET['BranchId'] : (Yii::app()->user->checkAccess('director') ? '' : Yii::app()->user->branch_id);
 
         $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : date('Y-m-d');
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');

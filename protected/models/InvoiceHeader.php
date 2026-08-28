@@ -519,6 +519,20 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
         return $total;
     }
     
+    public function getCurrentPayment($endDate) {
+        $sql = "SELECT SUM(d.amount + d.tax_service_amount + d.discount_amount + d. bank_administration_fee + d.merimen_fee + d.downpayment_amount + d.own_risk_amount) AS total_payment
+                FROM " . PaymentInDetail::model()->tableName() . " d 
+                INNER JOIN " . PaymentIn::model()->tableName() . " h ON h.id = d.payment_in_id
+                WHERE d.invoice_header_id = :invoice_header_id AND h.payment_date <= :end_date";
+                
+        $value = Yii::app()->db->createCommand($sql)->queryScalar(array(
+            ':invoice_header_id' => $this->id,
+            ':end_date' => $endDate,
+        ));
+
+        return ($value === false) ? 0 : $value;
+    }
+    
     public function getTotalRemaining() {
         
         return $this->total_price - $this->payment_amount - $this->downpayment_amount;
@@ -1727,7 +1741,7 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
             ':end_date' => $endDate,
         );
         
-        $sql = "SELECT h.branch_id, MAX(b.name) AS branch_name, COUNT(h.customer_id) AS customer_quantity, 
+        $sql = "SELECT h.branch_id, MAX(b.name) AS branch_name, COUNT(h.customer_id) AS customer_quantity, SUM(h.ppn_total) AS ppn_total,
                     COUNT(CASE WHEN h.is_new_customer = 0 THEN 1 END) AS customer_repeat_quantity, COUNT(CASE WHEN h.is_new_customer = 1 THEN 1 END) AS customer_new_quantity, 
                     COUNT(CASE WHEN c.customer_type = 'Individual' THEN 1 END) AS customer_retail_quantity, 
                     COUNT(CASE WHEN c.customer_type = 'Company' THEN 1 END) AS customer_company_quantity, SUM(h.service_price) AS total_service, 
@@ -2970,9 +2984,9 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
             $branchConditionSql = ' AND i.branch_id = :branch_id';
             $params[':branch_id'] = $branchId;
         }
-        
-        $sql = "SELECT i.id, i.customer_id, i.invoice_number, i.invoice_date, i.due_date, v.plate_number, i.total_price, 
-                    k.name AS car_make, d.name AS car_model, s.name AS car_sub_model
+        $sql = "SELECT i.id, i.customer_id, i.invoice_number, i.invoice_date, i.due_date, v.plate_number, i.total_price, i.product_price, i.service_price,
+                    k.name AS car_make, d.name AS car_model, s.name AS car_sub_model, i.ppn_total, i.pph_total, i.product_price + i.service_price + i.package_price AS subtotal,
+                    i.product_price * (1 + i.tax_percentage / 100) AS product_price_after_tax, i.service_price * (1 + i.tax_percentage / 100) AS service_price_after_tax
                 FROM " . InvoiceHeader::model()->tableName() . " i
                 INNER JOIN " . Customer::model()->tableName() . " c ON c.id = i.customer_id
                 LEFT OUTER JOIN " . Vehicle::model()->tableName() . " v ON v.id = i.vehicle_id
@@ -2981,7 +2995,7 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
                 LEFT OUTER JOIN " . VehicleCarSubModel::model()->tableName() . " s ON s.id = v.car_sub_model_id
                 WHERE i.customer_id IN ({$customerIdsSql}) AND i.user_id_cancelled IS NULL AND i.insurance_company_id IS NULL AND
                     i.invoice_date BETWEEN '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND :end_date AND i.total_price - (
-                        SELECT COALESCE(SUM(d.amount + d.tax_service_amount + d.discount_amount + d.bank_administration_fee + d.merimen_fee + d.downpayment_amount), 0)
+                        SELECT COALESCE(SUM(d.amount + d.tax_service_amount + d.discount_amount + d.bank_administration_fee + d.merimen_fee + d.downpayment_amount + d.own_risk_amount), 0)
                         FROM " . PaymentInDetail::model()->tableName() . " d
                         INNER JOIN " . PaymentIn::model()->tableName() . " h ON h.id = d.payment_in_id
                         WHERE i.id = d.invoice_header_id AND h.user_id_cancelled IS NULL AND h.payment_date BETWEEN '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND :end_date

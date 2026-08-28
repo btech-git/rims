@@ -1163,4 +1163,38 @@ class JurnalUmum extends CActiveRecord {
 
         return $resultSet;
     }
+    
+    public static function getCoaLedgerSummary($year, $coaId) {
+        
+        $sql = "SELECT MONTH(tanggal_transaksi) AS transaction_month, SUM(IF(debet_kredit = 'D', total, 0)) AS debit, SUM(IF(debet_kredit = 'K', total, 0)) AS credit 
+                FROM rims_jurnal_umum
+                WHERE YEAR(tanggal_transaksi) = :year AND coa_id = :coa_id
+                GROUP BY MONTH(tanggal_transaksi)
+                ORDER BY transaction_month";
+        
+        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, array(
+            ':year' => $year,
+            ':coa_id' => $coaId,
+        ));
+
+        return $resultSet;
+    }
+    
+    public static function getCoaLedgerAddBeginningBalanceSummary($year, $coaId) {
+        
+        $sqlComponents = array();
+        for ($month = 1; $month <= 12; $month++) {
+            $sqlComponents[] = "SELECT {$month} AS transaction_month, SUM(IF(debet_kredit = 'D', total, 0)) AS debit, SUM(IF(debet_kredit = 'K', total, 0)) AS credit 
+                    FROM rims_jurnal_umum
+                    WHERE tanggal_transaksi BETWEEN '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND LAST_DAY('{$year}-{$month}-01') AND coa_id = :coa_id";
+        }
+        $sql = implode(' UNION ALL ', $sqlComponents);
+        $sql.= ' ORDER BY transaction_month';
+        
+        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, array(
+            ':coa_id' => $coaId,
+        ));
+
+        return $resultSet;
+    }
 }

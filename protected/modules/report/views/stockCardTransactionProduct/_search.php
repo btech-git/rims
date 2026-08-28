@@ -159,8 +159,9 @@
                     )); ?>
                 </td>
                 <td>
-                    <?php echo CHtml::dropDownList('BranchId', $branchId, CHtml::listData(Branch::model()->findAll(array('order' => 'name ASC')), 'id', 'name'), array(
-                        'empty' => '-- All --',
+                    <?php echo CHtml::dropDownlist('BranchId', $branchId, CHtml::listData(Branch::model()->findAllbyAttributes(array('status'=>'Active')), 'id','name'), array(
+                        'empty'=>'-- All Branch --',
+                        'disabled' => Yii::app()->user->checkAccess('director') ? '' : 'disabled',
                     )); ?>
                 </td>
                 <td>

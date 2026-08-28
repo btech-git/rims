@@ -24,7 +24,7 @@ class ReceivableInsuranceDataController extends Controller {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
 
-        $branchId = (isset($_GET['BranchId'])) ? $_GET['BranchId'] : '';
+        $branchId = (isset($_GET['BranchId'])) ? $_GET['BranchId'] : (Yii::app()->user->checkAccess('director') ? '' : Yii::app()->user->branch_id);
         $insuranceCompanyId = (isset($_GET['InsuranceCompanyId'])) ? $_GET['InsuranceCompanyId'] : '';
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
         

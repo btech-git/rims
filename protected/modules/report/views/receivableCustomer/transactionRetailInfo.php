@@ -65,8 +65,8 @@ Yii::app()->clientScript->registerCss('_report', '
                         <?php $paymentLeftSum = '0.00'; ?>
                         <?php foreach ($dataProvider->data as $header): ?>
                             <?php $totalPrice = CHtml::value($header, 'total_price'); ?>
-                            <?php $paymentTotal = CHtml::value($header, 'payment_amount'); ?>
-                            <?php $paymentLeft = CHtml::value($header, 'payment_left'); ?>
+                            <?php $paymentTotal = $header->getCurrentPayment($endDate); ?>
+                            <?php $paymentLeft = $totalPrice - $paymentTotal; ?>
                             <tr class="items1">
                                 <td>
                                     <?php echo CHtml::link(CHtml::value($header, 'invoice_number'), array(

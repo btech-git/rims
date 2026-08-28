@@ -39,7 +39,7 @@ class PurchasePerProductDetailController extends Controller {
         $pageSize = (isset($_GET['PageSize'])) ? $_GET['PageSize'] : '';
         $currentPage = (isset($_GET['page'])) ? $_GET['page'] : '';
         $currentSort = (isset($_GET['sort'])) ? $_GET['sort'] : '';
-        $branchId = (isset($_GET['BranchId'])) ? $_GET['BranchId'] : '';
+        $branchId = (isset($_GET['BranchId'])) ? $_GET['BranchId'] : (Yii::app()->user->checkAccess('director') ? '' : Yii::app()->user->branch_id);
         $supplierId = (isset($_GET['SupplierId'])) ? $_GET['SupplierId'] : '';
 
         $purchasePerProductSummary = new PurchasePerProductSummary($product->search());

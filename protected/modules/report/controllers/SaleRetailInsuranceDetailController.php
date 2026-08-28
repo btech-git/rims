@@ -31,7 +31,7 @@ class SaleRetailInsuranceDetailController extends Controller {
         $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : date('Y-m-d');
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
         $insuranceId = (isset($_GET['InsuranceId'])) ? $_GET['InsuranceId'] : '';
-        $branchId = (isset($_GET['BranchId'])) ? $_GET['BranchId'] : '';
+        $branchId = (isset($_GET['BranchId'])) ? $_GET['BranchId'] : (Yii::app()->user->checkAccess('director') ? '' : Yii::app()->user->branch_id);
         $taxValue = (isset($_GET['TaxValue'])) ? $_GET['TaxValue'] : '';
         
         $insuranceSaleReport = InsuranceCompany::getInsuranceSaleReport($startDate, $endDate, $insuranceId, $branchId, $taxValue);

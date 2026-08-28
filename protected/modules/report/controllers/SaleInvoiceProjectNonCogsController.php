@@ -31,7 +31,7 @@ class SaleInvoiceProjectNonCogsController extends Controller {
 
         $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : date('Y-m-d');
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
-        $branchId = (isset($_GET['BranchId'])) ? $_GET['BranchId'] : '';
+        $branchId = (isset($_GET['BranchId'])) ? $_GET['BranchId'] : (Yii::app()->user->checkAccess('director') ? '' : Yii::app()->user->branch_id);
         $customerId = (isset($_GET['CustomerId'])) ? $_GET['CustomerId'] : '';
         $currentSort = (isset($_GET['sort'])) ? $_GET['sort'] : '';
         

@@ -4,11 +4,13 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
 Yii::app()->clientScript->registerCss('_report', '
     .width1-1 { width: 10% }
     .width1-2 { width: 7% }
-    .width1-3 { width: 25% }
-    .width1-4 { width: 25% }
+    .width1-3 { width: 8% }
+    .width1-4 { width: 20% }
     .width1-5 { width: 10% }
-    .width1-6 { width: 10% }
+    .width1-6 { width: 20% }
     .width1-7 { width: 10% }
+    .width1-8 { width: 10% }
+    .width1-9 { width: 10% }
 ');
 ?>
 
@@ -18,7 +20,7 @@ Yii::app()->clientScript->registerCss('_report', '
 <div class="tab reportTab">
     <div class="tabHead">
         <div style="font-size: larger; font-weight: bold; text-align: center">Transaksi Detail Piutang Customer</div>
-        <div style="font-size: larger; font-weight: bold; text-align: center"><?php echo CHtml::encode(CHtml::value($coa, 'name')); ?></div>
+        <div style="font-size: larger; font-weight: bold; text-align: center"><?php echo CHtml::encode(CHtml::value($customer, 'name')); ?></div>
         <div style="font-size: larger; font-weight: bold; text-align: center">
             <?php echo 'Per Tanggal: ' . CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($endDate))); ?>
         </div>
@@ -28,7 +30,7 @@ Yii::app()->clientScript->registerCss('_report', '
     
     <?php echo CHtml::beginForm('', 'get'); ?>
         <div class="row buttons">
-            <?php echo CHtml::submitButton('Simpan ke Excel', array('name' => 'SaveExcelDetail')); ?>
+            <?php //echo CHtml::submitButton('Simpan ke Excel', array('name' => 'SaveExcelDetail')); ?>
         </div>
     <?php echo CHtml::endForm(); ?>
 
@@ -37,70 +39,82 @@ Yii::app()->clientScript->registerCss('_report', '
     <div class="tabBody">
         <div id="detail_div">
             <div class="relative">
-                <div class="reportDisplay">
-                    <?php echo ReportHelper::summaryText($dataProvider); ?>
-                </div>
-                
-                <br />
-
                 <table class="report">
                     <thead style="position: sticky; top: 0">
                         <tr id="header1">
-                            <th class="width1-1">Transaksi #</th>
+                            <th class="width1-1">Invoice #</th>
                             <th class="width1-2">Tanggal</th>
-                            <th class="width1-3">Keterangan</th>
-                            <th class="width1-4">Note</th>
-                            <th class="width1-5">Invoice</th>
-                            <th class="width1-6">Pembayaran</th>
-                            <th class="width1-7">Saldo</th>
+                            <th class="width1-3">Jatuh Tempo</th>
+                            <th class="width1-5">Plat #</th>
+                            <th class="width1-6">Kendaraan</th>
+                            <th class="width1-7">invoice</th>
+                            <th class="width1-8">Payment</th>
+                            <th class="width1-9">Remaining</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <?php $totalDebit = '0.00'; ?>
-                        <?php $totalCredit = '0.00'; ?>
-                        <?php //$totalRemaining = '0.00'; ?>
-                        <?php $balanceAmount = '0.00'; ?> 
+                        <?php $revenueSum = '0.00'; ?>
+                        <?php $paymentAmountSum = '0.00'; ?>
+                        <?php $paymentLeftSum = '0.00'; ?>
                         
-                        <?php foreach ($dataProvider->data as $header): ?>
-                            <?php if ($header->debet_kredit == 'D'): ?>
-                                <?php $amountDebit = $header->total; ?>
-                                <?php $amountCredit = '0.00'; ?>
-                            <?php else: ?>
-                                <?php $amountDebit = '0.00'; ?>
-                                <?php $amountCredit = $header->total; ?>
-                            <?php endif; ?>
-                            <?php $balanceAmount += $amountDebit - $amountCredit; ?>
+                        <?php foreach ($invoiceHeaders as $invoiceHeader): ?>
+                            <?php $revenue = CHtml::value($invoiceHeader, 'total_price'); ?>
+                            <?php $paymentAmount = '0.00'; ?>
+                            <?php $paymentInDetails = PaymentInDetail::model()->with('paymentIn')->findAll(array(
+                                'condition' => 't.invoice_header_id = :invoice_id AND paymentIn.payment_date BETWEEN :start_date AND :end_date AND paymentIn.user_id_cancelled IS NULL',
+                                'params' => array(
+                                    ':start_date' => $startDate,
+                                    ':end_date' => $endDate,
+                                    ':invoice_id' => $invoiceHeader->id,
+                                )
+                            )); ?>
+                            <?php foreach ($paymentInDetails as $paymentInDetail): ?>
+                                <?php $paymentAmount += $paymentInDetail->totalAmount; ?>
+                            <?php endforeach; ?>
+                            <?php $paymentLeft = $revenue - $paymentAmount; ?>
 
-                            <tr class="items2">
-                                <td><?php echo CHtml::link($header->kode_transaksi, Yii::app()->createUrl("report/receivableCustomer/redirectTransaction", array("codeNumber" => $header->kode_transaksi)), array('target' => '_blank')); ?></td>
-                                <td><?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($header->tanggal_transaksi))); ?></td>
-                                <td><?php echo CHtml::encode($header->remark); ?></td>
-                                <td><?php echo CHtml::encode($header->transaction_subject); ?></td>
-                                <td style="text-align: right">
-                                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $amountDebit)); ?>
+                            <tr class="items1">
+                                <td>
+                                    <?php echo CHtml::link(CHtml::value($invoiceHeader, 'invoice_number'), array(
+                                        '/transaction/invoiceHeader/show', 
+                                        'id' => $invoiceHeader->id, 
+                                    ), array('target' => '_blank')); ?>
+                                </td>
+                                <td><?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($invoiceHeader->invoice_date))); ?></td>
+                                <td><?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($invoiceHeader->due_date))); ?></td>
+                                <td><?php echo CHtml::encode(CHtml::value($invoiceHeader, 'vehicle.plate_number')); ?></td>
+                                <td>
+                                    <?php echo CHtml::encode(CHtml::value($invoiceHeader, 'vehicle.carMake.name')); ?> -
+                                    <?php echo CHtml::encode(CHtml::value($invoiceHeader, 'vehicle.carModel.name')); ?> -
+                                    <?php echo CHtml::encode(CHtml::value($invoiceHeader, 'vehicle.carSubModel.name')); ?>
                                 </td>
                                 <td style="text-align: right">
-                                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $amountCredit)); ?>
+                                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $revenue)); ?>
                                 </td>
                                 <td style="text-align: right">
-                                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $balanceAmount)); ?>
+                                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $paymentAmount)); ?>
+                                </td>
+                                <td style="text-align: right">
+                                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $paymentLeft)); ?>
                                 </td>
                             </tr>
-                            <?php $totalDebit += $amountDebit; ?>
-                            <?php $totalCredit += $amountCredit; ?>
+                            <?php $revenueSum += $revenue; ?>
+                            <?php $paymentAmountSum += $paymentAmount; ?>
+                            <?php $paymentLeftSum += $paymentLeft; ?>
+
                         <?php endforeach; ?>
                     </tbody>
                     <tfoot>
                         <tr>
-                            <td colspan="4" style="font-weight: bold; text-align: right">Total</td>
-                            <td style="font-weight: bold; text-align: right">
-                                <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalDebit)); ?>
+                            <td colspan="5">TOTAL</td>
+                            <td style="text-align: right">
+                                <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $revenueSum)); ?>
                             </td>
-                            <td style="font-weight: bold; text-align: right">
-                                <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalCredit)); ?>
+                            <td style="text-align: right">
+                                <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $paymentAmountSum)); ?>
                             </td>
-                            <td style="font-weight: bold; text-align: right">
-                                <?php //echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalRemaining)); ?>
+                            <td style="text-align: right">
+                                <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $paymentLeftSum)); ?>
                             </td>
                         </tr>
                     </tfoot>
@@ -108,15 +122,4 @@ Yii::app()->clientScript->registerCss('_report', '
             </div>
         </div>
     </div>
-</div>
-
-<div>
-    <div class="right">
-        <?php $this->widget('system.web.widgets.pagers.CLinkPager', array(
-            'itemCount' => $dataProvider->pagination->itemCount,
-            'pageSize' => $dataProvider->pagination->pageSize,
-            'currentPage' => $dataProvider->pagination->getCurrentPage(false),
-        )); ?>
-    </div>
-    <div class="clear"></div>
 </div>

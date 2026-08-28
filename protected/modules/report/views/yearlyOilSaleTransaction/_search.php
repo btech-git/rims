@@ -105,7 +105,10 @@
                 <td><?php echo CHtml::textField('ProductCode', $productCode); ?></td>
                 <td><?php echo CHtml::textField('ProductName', $productName); ?></td>
                 <td>
-                    <?php echo CHtml::dropDownlist('BranchId', $branchId, CHtml::listData(Branch::model()->findAllbyAttributes(array('status'=>'Active')), 'id','name'), array('empty'=>'-- All Branch --')); ?>
+                    <?php echo CHtml::dropDownlist('BranchId', $branchId, CHtml::listData(Branch::model()->findAllbyAttributes(array('status'=>'Active')), 'id','name'), array(
+                        'empty'=>'-- All Branch --',
+                        'disabled' => Yii::app()->user->checkAccess('director') ? '' : 'disabled',
+                    )); ?>
                 </td>
                 <td><?php echo CHtml::dropDownList('Year', $year, $yearList); ?></td>
                 <td>

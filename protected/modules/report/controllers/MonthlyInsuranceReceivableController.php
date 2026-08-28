@@ -28,7 +28,7 @@ class MonthlyInsuranceReceivableController extends Controller {
         $month = isset($_GET['Month']) ? $_GET['Month'] : $monthNow;
         $year = (isset($_GET['Year'])) ? $_GET['Year'] : $yearNow;
         $insuranceId = (isset($_GET['InsuranceId'])) ? $_GET['InsuranceId'] : '';
-        $branchId = (isset($_GET['BranchId'])) ? $_GET['BranchId'] : '';
+        $branchId = (isset($_GET['BranchId'])) ? $_GET['BranchId'] : (Yii::app()->user->checkAccess('director') ? '' : Yii::app()->user->branch_id);
         $currentPage = (isset($_GET['page'])) ? $_GET['page'] : '';
 
         $insuranceCompany = Search::bind(new InsuranceCompany('search'), isset($_GET['InsuranceCompany']) ? $_GET['InsuranceCompany'] : array());

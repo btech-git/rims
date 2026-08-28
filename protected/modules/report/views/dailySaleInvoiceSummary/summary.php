@@ -30,7 +30,7 @@ Yii::app()->clientScript->registerScript('report', '
                             </div>
                         </div>
                     </div>
-                    
+
                     <div class="medium-6 columns">
                         <div class="field">
                             <div class="row collapse">
@@ -44,7 +44,7 @@ Yii::app()->clientScript->registerScript('report', '
                         </div>
                     </div>
                 </div>
-                
+
                 <div class="row">
                     <div class="medium-6 columns">
                         <div class="field">
@@ -53,13 +53,16 @@ Yii::app()->clientScript->registerScript('report', '
                                     <label class="prefix">Customer</label>
                                 </div>
                                 <div class="small-8 columns">
-                                    <?php echo CHtml::activeTextField($invoiceHeader, 'customer_id', array(
+                                    <?php
+                                    echo CHtml::activeTextField($invoiceHeader, 'customer_id', array(
                                         'readonly' => true,
                                         'onclick' => '$("#customer-dialog").dialog("open"); return false;',
                                         'onkeypress' => 'if (event.keyCode == 13) { $("#customer-dialog").dialog("open"); return false; }'
-                                    )); ?>
+                                    ));
+                                    ?>
 
-                                    <?php $this->beginWidget('zii.widgets.jui.CJuiDialog', array(
+                                    <?php
+                                    $this->beginWidget('zii.widgets.jui.CJuiDialog', array(
                                         'id' => 'customer-dialog',
                                         // additional javascript options for the dialog plugin
                                         'options' => array(
@@ -68,8 +71,10 @@ Yii::app()->clientScript->registerScript('report', '
                                             'width' => 'auto',
                                             'modal' => true,
                                         ),
-                                    )); ?>
-                                    <?php $this->widget('zii.widgets.grid.CGridView', array(
+                                    ));
+                                    ?>
+                                    <?php
+                                    $this->widget('zii.widgets.grid.CGridView', array(
                                         'id' => 'customer-grid',
                                         'dataProvider' => $customerDataProvider,
                                         'filter' => $customer,
@@ -108,17 +113,18 @@ Yii::app()->clientScript->registerScript('report', '
                                             'customer_type',
                                             'mobile_phone',
                                         ),
-                                    )); ?>
-                                    <?php $this->endWidget('zii.widgets.jui.CJuiDialog'); ?>
+                                    ));
+                                    ?>
+<?php $this->endWidget('zii.widgets.jui.CJuiDialog'); ?>
 
-                                    <?php echo CHtml::openTag('span', array('id' => 'customer_name')); ?>
-                                    <?php echo CHtml::encode(CHtml::value($invoiceHeader, 'customer.name')); ?>
-                                    <?php echo CHtml::closeTag('span'); ?>    
+<?php echo CHtml::openTag('span', array('id' => 'customer_name')); ?>
+<?php echo CHtml::encode(CHtml::value($invoiceHeader, 'customer.name')); ?>
+<?php echo CHtml::closeTag('span'); ?>    
                                 </div>
                             </div>
                         </div>
                     </div>
-                    
+
                     <div class="medium-6 columns">
                         <div class="field">
                             <div class="row collapse">
@@ -126,10 +132,12 @@ Yii::app()->clientScript->registerScript('report', '
                                     <label class="prefix">Type</label>
                                 </div>
                                 <div class="small-8 columns">
-                                    <?php echo CHtml::dropDownlist('CustomerType', $customerType, array(
-                                        'INDIVIDUAL' => 'INDIVIDUAL', 
-                                        'COMPANY' => 'COMPANY'
-                                    ), array('empty' => '-- All Type --')); ?>
+<?php
+echo CHtml::dropDownlist('CustomerType', $customerType, array(
+    'INDIVIDUAL' => 'INDIVIDUAL',
+    'COMPANY' => 'COMPANY'
+        ), array('empty' => '-- All Type --'));
+?>
                                 </div>
                             </div>
                         </div>
@@ -141,7 +149,7 @@ Yii::app()->clientScript->registerScript('report', '
                         <div class="field">
                             <div class="row collapse">
                                 <div class="small-4 columns">
-                                    <label class="prefix">Vehicle Plate #</label>
+                                    <label class="prefix">Plate #</label>
                                 </div>
                                 <div class="small-8 columns">
                                     <?php echo CHtml::textField('PlateNumber', $plateNumber); ?>
@@ -149,15 +157,18 @@ Yii::app()->clientScript->registerScript('report', '
                             </div>
                         </div>
                     </div>
-                    
+
                     <div class="medium-6 columns">
                         <div class="field">
                             <div class="row collapse">
                                 <div class="small-4 columns">
                                     <span class="prefix">Branch</span>
                                 </div>
-                                 <div class="small-8 columns">
-                                      <?php echo CHtml::activeDropDownlist($invoiceHeader, 'branch_id', CHtml::listData(Branch::model()->findAllbyAttributes(array('status'=>'Active')), 'id','name'), array('empty'=>'-- All Branch --')); ?>
+                                <div class="small-8 columns">
+                                    <?php echo CHtml::activeDropDownlist($invoiceHeader, 'branch_id', CHtml::listData(Branch::model()->findAllbyAttributes(array('status' => 'Active')), 'id', 'name'), array(
+                                        'empty' => '-- All Branch --',
+                                        'disabled' => Yii::app()->user->checkAccess('director') ? '' : 'disabled',
+                                    )); ?>
                                 </div>
                             </div>
                         </div>
@@ -172,35 +183,39 @@ Yii::app()->clientScript->registerScript('report', '
                                 <div class="small-4 columns">
                                     <span class="prefix">Tanggal </span>
                                 </div>
-                                
+
                                 <div class="small-4 columns">
-                                    <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(
+                                    <?php
+                                    $this->widget('zii.widgets.jui.CJuiDatePicker', array(
                                         'name' => 'StartDate',
                                         'options' => array(
                                             'dateFormat' => 'yy-mm-dd',
-                                            'changeMonth'=>true,
-                                            'changeYear'=>true,
+                                            'changeMonth' => true,
+                                            'changeYear' => true,
                                         ),
                                         'htmlOptions' => array(
                                             'readonly' => true,
                                             'placeholder' => 'Mulai',
                                         ),
-                                    )); ?>
+                                    ));
+                                    ?>
                                 </div>
 
                                 <div class="small-4 columns">
-                                    <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(
-                                        'name' => 'EndDate',
-                                        'options' => array(
-                                            'dateFormat' => 'yy-mm-dd',
-                                            'changeMonth'=>true,
-                                            'changeYear'=>true,
-                                        ),
-                                        'htmlOptions' => array(
-                                            'readonly' => true,
-                                            'placeholder' => 'Sampai',
-                                        ),
-                                    )); ?>
+<?php
+$this->widget('zii.widgets.jui.CJuiDatePicker', array(
+    'name' => 'EndDate',
+    'options' => array(
+        'dateFormat' => 'yy-mm-dd',
+        'changeMonth' => true,
+        'changeYear' => true,
+    ),
+    'htmlOptions' => array(
+        'readonly' => true,
+        'placeholder' => 'Sampai',
+    ),
+));
+?>
                                 </div>
                             </div>
                         </div>
@@ -212,11 +227,13 @@ Yii::app()->clientScript->registerScript('report', '
                                 <div class="small-4 columns">
                                     <span class="prefix">PPn/non</span>
                                 </div>
-                                 <div class="small-8 columns">
-                                      <?php echo CHtml::activeDropDownlist($invoiceHeader, 'ppn', array(
-                                          0 => 'Non PPN',
-                                          1 => 'PPN',
-                                      ), array('empty'=>'-- All --')); ?>
+                                <div class="small-8 columns">
+                    <?php
+                    echo CHtml::activeDropDownlist($invoiceHeader, 'ppn', array(
+                        0 => 'Non PPN',
+                        1 => 'PPN',
+                            ), array('empty' => '-- All --'));
+                    ?>
                                 </div>
                             </div>
                         </div>
@@ -227,12 +244,12 @@ Yii::app()->clientScript->registerScript('report', '
 
                 <div class="row buttons">
                     <?php echo CHtml::submitButton('Tampilkan', array('onclick' => '$("#CurrentSort").val(""); return true;')); ?>
-                    <?php echo CHtml::submitButton('Hapus', array('name' => 'ResetFilter'));  ?>
-                    <?php echo CHtml::submitButton('Simpan ke Excel', array('name' => 'SaveExcel'));  ?>
+                    <?php echo CHtml::submitButton('Hapus', array('name' => 'ResetFilter')); ?>
+                    <?php echo CHtml::submitButton('Simpan ke Excel', array('name' => 'SaveExcel')); ?>
                 </div>
 
                 <div class="row">
-                    <?php echo CHtml::hiddenField('sort', '', array('id' => 'CurrentSort')); ?>
+                <?php echo CHtml::hiddenField('sort', '', array('id' => 'CurrentSort')); ?>
                 </div>
 
                 <?php echo CHtml::endForm(); ?>
@@ -243,23 +260,27 @@ Yii::app()->clientScript->registerScript('report', '
 
             <div class="relative">
                 <div class="reportDisplay">
-                    <?php echo ReportHelper::summaryText($saleInvoiceSummary->dataProvider); ?>
-                    <?php //echo ReportHelper::sortText($transaksiPembelianSummary->dataProvider->sort, array('Jenis Persediaan', 'Tanggal SO', 'Pelanggan')); ?>
+                <?php echo ReportHelper::summaryText($saleInvoiceSummary->dataProvider); ?>
+<?php //echo ReportHelper::sortText($transaksiPembelianSummary->dataProvider->sort, array('Jenis Persediaan', 'Tanggal SO', 'Pelanggan'));  ?>
                 </div>
 
-                <?php $this->renderPartial('_summary', array(
-                    'saleInvoiceSummary' => $saleInvoiceSummary, 
-                    'startDate' => $startDate, 
-                    'endDate' => $endDate,
-                )); ?>
+<?php
+$this->renderPartial('_summary', array(
+    'saleInvoiceSummary' => $saleInvoiceSummary,
+    'startDate' => $startDate,
+    'endDate' => $endDate,
+));
+?>
             </div>
 
             <div class="right">
-                <?php $this->widget('system.web.widgets.pagers.CLinkPager', array(
-                    'itemCount' => $saleInvoiceSummary->dataProvider->pagination->itemCount,
-                    'pageSize' => $saleInvoiceSummary->dataProvider->pagination->pageSize,
-                    'currentPage' => $saleInvoiceSummary->dataProvider->pagination->getCurrentPage(false),
-                )); ?>
+<?php
+$this->widget('system.web.widgets.pagers.CLinkPager', array(
+    'itemCount' => $saleInvoiceSummary->dataProvider->pagination->itemCount,
+    'pageSize' => $saleInvoiceSummary->dataProvider->pagination->pageSize,
+    'currentPage' => $saleInvoiceSummary->dataProvider->pagination->getCurrentPage(false),
+));
+?>
             </div>
             <div class="clear"></div>
         </div>

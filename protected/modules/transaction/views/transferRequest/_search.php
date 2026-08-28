@@ -31,7 +31,19 @@
                     </div>
                     
                     <div class="small-8 columns">
-                        <?php echo $form->textField($model, 'transfer_request_date'); ?>
+                        <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(
+                            'model' => $model,
+                            'attribute' => "transfer_request_date",
+                            // additional javascript options for the date picker plugin
+                            'options' => array(
+                                'dateFormat' => 'yy-mm-dd',
+                                'changeMonth' => true,
+                                'changeYear' => true,
+                            ),
+                            'htmlOptions' => array(
+                                'readonly' => true,
+                            ),
+                        )); ?>
                     </div>
                 </div>
             </div>
@@ -43,23 +55,19 @@
                     </div>
                     
                     <div class="small-8 columns">
-                        <?php echo $form->textField($model, 'estimate_arrival_date'); ?>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="field">
-                <div class="row collapse">
-                    <div class="small-4 columns">
-                        <?php echo $form->label($model, 'status_document', array('class' => 'prefix')); ?>
-                    </div>
-                    <div class="small-8 columns">
-                        <?php echo $form->dropDownList($model, 'status_document', array(
-                            'Draft' => 'Draft',
-                            'Revised' => 'Need Revision',
-                            'Rejected'=>'Rejected',
-                            'Approved' => 'Approved',
-                        ), array('empty' => '-- all --')); ?>
+                        <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(
+                            'model' => $model,
+                            'attribute' => "estimate_arrival_date",
+                            // additional javascript options for the date picker plugin
+                            'options' => array(
+                                'dateFormat' => 'yy-mm-dd',
+                                'changeMonth' => true,
+                                'changeYear' => true,
+                            ),
+                            'htmlOptions' => array(
+                                'readonly' => true,
+                            ),
+                        )); ?>
                     </div>
                 </div>
             </div>

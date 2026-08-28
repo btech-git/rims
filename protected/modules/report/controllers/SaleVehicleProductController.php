@@ -24,7 +24,7 @@ class SaleVehicleProductController extends Controller {
         
         $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : date('Y-m-d');
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
-        $branchId = (isset($_GET['BranchId'])) ? $_GET['BranchId'] : '';
+        $branchId = (isset($_GET['BranchId'])) ? $_GET['BranchId'] : (Yii::app()->user->checkAccess('director') ? '' : Yii::app()->user->branch_id);
         $carMakeId = (isset($_GET['CarMakeId'])) ? $_GET['CarMakeId'] : '';
         $carModelId = (isset($_GET['CarModelId'])) ? $_GET['CarModelId'] : '';
         $carSubModelId = (isset($_GET['CarSubModelId'])) ? $_GET['CarSubModelId'] : '';

@@ -17,25 +17,25 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                 <div class="myForm">
                     <?php echo CHtml::beginForm(array(''), 'get'); ?>
                     <div class="row">                        
-                        <div class="medium-6 columns">
+<!--                        <div class="medium-6 columns">
                             <div class="field">
                                 <div class="row collapse">
                                     <div class="small-4 columns">
                                         <span class="prefix">Customer</span>
                                     </div>
                                     <div class="small-8 columns">
-                                        <?php echo CHtml::textField('CoaId', $coaId, array(
+                                        <?php /*echo CHtml::textField('CustomerId', $customerId, array(
                                             'readonly' => true,
-                                            'onclick' => 'jQuery("#coa-dialog").dialog("open"); return false;',
+                                            'onclick' => 'jQuery("#customer-dialog").dialog("open"); return false;',
                                         )); ?>
-                                        <?php echo CHtml::openTag('span', array('id' => 'coa_name')); ?>
-                                        <?php $coa = Coa::model()->findByPk($coaId); ?>
-                                        <?php echo CHtml::encode(CHtml::value($coa, 'name')); ?>
-                                        <?php echo CHtml::closeTag('span'); ?> 
+                                        <?php echo CHtml::openTag('span', array('id' => 'customer_name')); ?>
+                                        <?php $customer = Customer::model()->findByPk($customerId); ?>
+                                        <?php echo CHtml::encode(CHtml::value($customer, 'name')); ?>
+                                        <?php echo CHtml::closeTag('span');*/ ?> 
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        </div>-->
                         
                         <div class="medium-6 columns">
                             <div class="field">
@@ -44,14 +44,15 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                         <span class="prefix">Branch</span>
                                     </div>
                                     <div class="small-8 columns">
-                                        <?php echo CHtml::dropDownlist('BranchId', $branchId, CHtml::listData(Branch::model()->findAllbyAttributes(array('status' => 'Active')), 'id', 'name'), array('empty' => '-- All Branch --')); ?>
+                                        <?php echo CHtml::dropDownlist('BranchId', $branchId, CHtml::listData(Branch::model()->findAllbyAttributes(array('status'=>'Active')), 'id','name'), array(
+                                            'empty'=>'-- All Branch --',
+                                            'disabled' => Yii::app()->user->checkAccess('director') ? '' : 'disabled',
+                                        )); ?>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
 
-                    <div class="row">
                         <div class="medium-6 columns">
                             <div class="field">
                                 <div class="row collapse">
@@ -78,6 +79,7 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                     </div>
 
                     <div class="clear"></div>
+                    
                     <div class="row buttons">
                         <?php echo CHtml::submitButton('Tampilkan', array('onclick' => '$("#CurrentSort").val(""); return true;')); ?>
                         <?php echo CHtml::submitButton('Hapus', array('name' => 'ResetFilter'));  ?>
@@ -86,13 +88,14 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
 
                     <?php echo CHtml::endForm(); ?>
                     <div class="clear"></div>
-
                 </div>
 
                 <hr />
 
                 <div class="right"><?php echo ReportHelper::summaryText($receivableSummary->dataProvider); ?></div>
+                
                 <br />
+                
                 <div class="right"><?php //echo ReportHelper::sortText($receivableSummary->dataProvider->sort, array('Tanggal', 'Customer')); ?></div>
                 
                 <div class="clear"></div>
@@ -100,8 +103,11 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                 <div class="relative">
                     <?php $this->renderPartial('_summary', array(
                         'receivableSummary' => $receivableSummary,
+                        'receivableReportData' => $receivableReportData,
+                        'receivablePaymentReportData' => $receivablePaymentReportData,
                         'endDate' => $endDate,
                         'branchId' => $branchId,
+                        'customerId' => $customerId,
                     )); ?>
                 </div>
             </div>
@@ -109,9 +115,20 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
     </div>
 </div>
 
+<div class="hide">
+    <div class="right">
+        <?php $this->widget('system.web.widgets.pagers.CLinkPager', array(
+            'itemCount' => $receivableSummary->dataProvider->pagination->itemCount,
+            'pageSize' => $receivableSummary->dataProvider->pagination->pageSize,
+            'currentPage' => $receivableSummary->dataProvider->pagination->getCurrentPage(false),
+        )); ?>
+    </div>
+    <div class="clear"></div>
+</div>
+
 <div class="grid-view">
-    <?php $this->beginWidget('zii.widgets.jui.CJuiDialog', array(
-        'id' => 'coa-dialog',
+    <?php /*$this->beginWidget('zii.widgets.jui.CJuiDialog', array(
+        'id' => 'customer-dialog',
         // additional javascript options for the dialog plugin
         'options' => array(
             'title' => 'Customer ',
@@ -123,82 +140,36 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
     <?php echo CHtml::beginForm(); ?>
     <div class="row">
         <div class="small-12 columns" style="padding-left: 0px; padding-right: 0px;">
-            <table>
-                <thead>
-                    <tr>
-                        <td>Code</td>
-                        <td>Name</td>
-                    </tr>
-                </thead>
-                
-                <tbody>
-                    <tr>
-                        <td>
-                            <?php echo CHtml::activeTextField($account, 'code', array(
-                                'onchange' => '
-                                $.fn.yiiGridView.update("coa-grid", {data: {Coa: {
-                                    code: $(this).val(),
-                                    name: $("#coa_name").val(),
-                                    coa_category_id: $("#coa_category_id").val(),
-                                    coa_sub_category_id: $("#coa_sub_category_id").val(),
-                                } } });',
-                            )); ?>
-                        </td>
-                        
-                        <td>
-                            <?php echo CHtml::activeTextField($account, 'name', array(
-                                'onchange' => '
-                                $.fn.yiiGridView.update("coa-grid", {data: {Coa: {
-                                    name: $(this).val(),
-                                    code: $("#coa_code").val(),
-                                    coa_category_id: $("#coa_category_id").val(),
-                                    coa_sub_category_id: $("#coa_sub_category_id").val(),
-                                } } });',
-                            )); ?>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-    
             <?php $this->widget('zii.widgets.grid.CGridView', array(
-                'id'=>'coa-grid',
-                'dataProvider'=>$accountDataProvider,
-                'filter' => null,
+                'id'=>'customer-grid',
+                'dataProvider'=>$customerDataProvider,
+                'filter' => $customer,
                 'template' => '{items}<div class="clearfix">{summary}{pager}</div>',
                 'pager'=>array(
                    'cssFile'=>false,
                    'header'=>'',
                 ),
                 'selectionChanged'=>'js:function(id){
-                    $("#CoaId").val($.fn.yiiGridView.getSelection(id));
-                    $("#coa-dialog").dialog("close");
+                    $("#CustomerId").val($.fn.yiiGridView.getSelection(id));
+                    $("#customer-dialog").dialog("close");
                     if ($.fn.yiiGridView.getSelection(id) == "") {
-                        $("#coa_id").html("");
-                        $("#coa_name").html("");
+                        $("#customer_name").html("");
                     } else {
                         $.ajax({
                             type: "POST",
                             dataType: "JSON",
-                            url: "' . CController::createUrl('ajaxJsonCoa') . '",
+                            url: "' . CController::createUrl('ajaxJsonCustomer') . '",
                             data: $("form").serialize(),
                             success: function(data) {
-                                $("#coa_id").html(data.coa_code);
-                                $("#coa_name").html(data.coa_name);
+                                $("#customer_name").html(data.customer_name);
                             },
                         });
                     }
                 }',
                 'columns'=> array(
-                    'code',
+                    'mobile_phone',
                     'name',
-                    array(
-                        'name' => 'coa_category_id',
-                        'value' => '$data->coaCategory!="" ? $data->coaCategory->name : ""',
-                    ),
-                    array(
-                        'name' => 'coa_sub_category_id',
-                        'value' => '$data->coaSubCategory!="" ? $data->coaSubCategory->name : ""'
-                    ),
+                    'email',
                 ),
             )); ?>
         </div>

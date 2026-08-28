@@ -847,52 +847,52 @@ class Coa extends CActiveRecord {
         return $resultSet;
     }
     
-    public function getReceivableCustomerReport($endDate, $branchId) {
-        $branchConditionSql = '';
-        
-        $params = array(
-            ':coa_id' => $this->id,
-            ':end_date' => $endDate,
-        );
-        
-        if (!empty($branchId)) {
-            $branchConditionSql = ' AND p.branch_id = :branch_id';
-            $params[':branch_id'] = $branchId;
-        }
-        
-        $sql = "SELECT coa_id, total AS amount, kode_transaksi, tanggal_transaksi, debet_kredit AS transaction_type, transaction_subject AS remark
-                FROM " . JurnalUmum::model()->tableName() . " 
-                WHERE coa_id = :coa_id AND tanggal_transaksi BETWEEN '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND :end_date AND is_coa_category = 0" . $branchConditionSql . " 
-                ORDER BY tanggal_transaksi ASC, kode_transaksi ASC";
-        
-        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
-
-        return $resultSet;
-    }
+//    public function getReceivableCustomerReport($endDate, $branchId) {
+//        $branchConditionSql = '';
+//        
+//        $params = array(
+//            ':coa_id' => $this->id,
+//            ':end_date' => $endDate,
+//        );
+//        
+//        if (!empty($branchId)) {
+//            $branchConditionSql = ' AND p.branch_id = :branch_id';
+//            $params[':branch_id'] = $branchId;
+//        }
+//        
+//        $sql = "SELECT coa_id, total AS amount, kode_transaksi, tanggal_transaksi, debet_kredit AS transaction_type, transaction_subject AS remark
+//                FROM " . JurnalUmum::model()->tableName() . " 
+//                WHERE coa_id = :coa_id AND tanggal_transaksi BETWEEN '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND :end_date AND is_coa_category = 0" . $branchConditionSql . " 
+//                ORDER BY tanggal_transaksi ASC, kode_transaksi ASC";
+//        
+//        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
+//
+//        return $resultSet;
+//    }
     
-    public function getReceivableDetailReport($startDate, $endDate, $branchId) {
-        $branchConditionSql = '';
-        
-        $params = array(
-            ':coa_id' => $this->id,
-            ':start_date' => $startDate,
-            ':end_date' => $endDate,
-        );
-        
-        if (!empty($branchId)) {
-            $branchConditionSql = ' AND branch_id = :branch_id';
-            $params[':branch_id'] = $branchId;
-        }
-        
-        $sql = "SELECT coa_id, total AS amount, kode_transaksi, tanggal_transaksi, debet_kredit AS transaction_type, transaction_subject, remark
-                FROM " . JurnalUmum::model()->tableName() . " 
-                WHERE coa_id = :coa_id AND tanggal_transaksi BETWEEN :start_date AND :end_date AND is_coa_category = 0" . $branchConditionSql . " 
-                ORDER BY tanggal_transaksi ASC, kode_transaksi ASC";
-        
-        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
-        
-        return $resultSet;
-    }
+//    public function getReceivableDetailReport($startDate, $endDate, $branchId) {
+//        $branchConditionSql = '';
+//        
+//        $params = array(
+//            ':coa_id' => $this->id,
+//            ':start_date' => $startDate,
+//            ':end_date' => $endDate,
+//        );
+//        
+//        if (!empty($branchId)) {
+//            $branchConditionSql = ' AND branch_id = :branch_id';
+//            $params[':branch_id'] = $branchId;
+//        }
+//        
+//        $sql = "SELECT coa_id, total AS amount, kode_transaksi, tanggal_transaksi, debet_kredit AS transaction_type, transaction_subject, remark
+//                FROM " . JurnalUmum::model()->tableName() . " 
+//                WHERE coa_id = :coa_id AND tanggal_transaksi BETWEEN :start_date AND :end_date AND is_coa_category = 0" . $branchConditionSql . " 
+//                ORDER BY tanggal_transaksi ASC, kode_transaksi ASC";
+//        
+//        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
+//        
+//        return $resultSet;
+//    }
     
     public function getPayableSupplierReport($endDate, $branchId) {
         $branchConditionSql = '';

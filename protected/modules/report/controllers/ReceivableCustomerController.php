@@ -24,32 +24,55 @@ class ReceivableCustomerController extends Controller {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
 
-        $branchId = (isset($_GET['BranchId'])) ? $_GET['BranchId'] : '';
-        $coaId = (isset($_GET['CoaId'])) ? $_GET['CoaId'] : '';
+        $branchId = (isset($_GET['BranchId'])) ? $_GET['BranchId'] : (Yii::app()->user->checkAccess('director') ? '' : Yii::app()->user->branch_id);
+        $customerId = (isset($_GET['CustomerId'])) ? $_GET['CustomerId'] : '';
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
         $pageSize = (isset($_GET['PageSize'])) ? $_GET['PageSize'] : '';
         $currentPage = (isset($_GET['page'])) ? $_GET['page'] : '';
         $currentSort = (isset($_GET['sort'])) ? $_GET['sort'] : '';
         
-        $account = Search::bind(new Coa('search'), isset($_GET['Coa']) ? $_GET['Coa'] : array());
-        $accountDataProvider = $account->search();
-        $accountDataProvider->criteria->compare('t.is_approved', 1);
-        $accountDataProvider->criteria->compare('t.coa_sub_category_id', 8);
-        $accountDataProvider->pagination->pageVar = 'page_dialog';
+        if (isset($_GET['ResetFilter'])) {
+            $pageSize = '';
+            $currentPage = '';
+            $currentSort = '';
+            $branchId = (Yii::app()->user->checkAccess('director') ? '' : Yii::app()->user->branch_id);
+            $customerId = '';
+            $endDate = date('Y-m-d');
+        }
+        
+        $customer = Search::bind(new Customer('search'), isset($_GET['Customer']) ? $_GET['Customer'] : array());
+        $customerDataProvider = $customer->search();
+        $customerDataProvider->criteria->compare('t.status', 'Active');
+        $customerDataProvider->criteria->compare('t.customer_type', 'Company');
+        $customerDataProvider->pagination->pageVar = 'page_dialog';
 
-        $receivableSummary = new ReceivableCustomerSummary($account->search());
+        $receivableSummary = new ReceivableCustomerSummary($customer->search());
         $receivableSummary->setupLoading();
         $receivableSummary->setupPaging($pageSize, $currentPage);
         $receivableSummary->setupSorting();
         $filters = array(
             'endDate' => $endDate,
             'branchId' => $branchId,
-            'coaId' => $coaId,
+            'customerId' => $customerId,
         );
         $receivableSummary->setupFilter($filters);
 
-        if (isset($_GET['ResetFilter'])) {
-            $this->redirect(array('summary'));
+        $customerIds = array_map(function($customer) { return $customer->id; }, $receivableSummary->dataProvider->data);
+        $receivableReport = InvoiceHeader::getReceivableReport($endDate, $branchId, $customerIds);
+        $invoiceHeaderIds = array_map(function($receivableReportItem) { return $receivableReportItem['id']; }, $receivableReport);
+        $receivablePaymentReport = PaymentInDetail::getReceivablePaymentReport($endDate, $invoiceHeaderIds);
+        
+        $receivableReportData = array();
+        foreach ($receivableReport as $receivableReportItem) {
+            if (!isset($receivableReportData[$receivableReportItem['customer_id']])) {
+                $receivableReportData[$receivableReportItem['customer_id']] = array();
+            }
+            $receivableReportData[$receivableReportItem['customer_id']][] = $receivableReportItem;
+        }
+        
+        $receivablePaymentReportData = array();
+        foreach ($receivablePaymentReport as $receivablePaymentReportItem) {
+            $receivablePaymentReportData[$receivablePaymentReportItem['invoice_header_id']] = $receivablePaymentReportItem['payment_amount'];
         }
         
         if (isset($_GET['SaveExcel'])) {
@@ -57,41 +80,53 @@ class ReceivableCustomerController extends Controller {
         }
 
         $this->render('summary', array(
-            'account' => $account,
-            'accountDataProvider' => $accountDataProvider,
-            'coaId' => $coaId,
+            'receivableSummary' => $receivableSummary,
+            'receivableReportData' => $receivableReportData,
+            'receivablePaymentReportData' => $receivablePaymentReportData,
+            'customer' => $customer,
+            'customerDataProvider' => $customerDataProvider,
+            'customerId' => $customerId,
             'branchId' => $branchId,
             'endDate' => $endDate,
-            'receivableSummary' => $receivableSummary,
             'currentSort' => $currentSort,
             'currentPage' => $currentPage,
         ));
     }
 
-    public function actionTransactionInfo($coaId, $branchId, $endDate) {
+    public function actionTransactionInfo($customerId, $branchId, $endDate) {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
 
         $startDate = AppParam::BEGINNING_TRANSACTION_DATE;
-        $dataProvider = JurnalUmum::model()->searchByReceivableReport();
-        $dataProvider->criteria->addBetweenCondition('t.tanggal_transaksi', $startDate, $endDate);
-        $dataProvider->criteria->compare('t.coa_id', $coaId);
-        $dataProvider->criteria->compare('t.branch_id', $branchId);
+        $customer = Customer::model()->findByPk($customerId);
+        $invoiceHeaders = InvoiceHeader::model()->findAll(array(
+            'condition' => "t.invoice_date BETWEEN :start_date AND :end_date AND t.customer_id = :customer_id AND t.user_id_cancelled IS NULL AND
+                t.insurance_company_id IS NULL AND t.total_price - (
+                    SELECT COALESCE(SUM(d.amount + d.tax_service_amount + d.discount_amount + d.bank_administration_fee + d.merimen_fee + d.downpayment_amount + d.own_risk_amount), 0)
+                    FROM " . PaymentInDetail::model()->tableName() . " d
+                    INNER JOIN " . PaymentIn::model()->tableName() . " h ON h.id = d.payment_in_id
+                    WHERE t.id = d.invoice_header_id AND h.user_id_cancelled IS NULL AND h.payment_date BETWEEN '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND :end_date
+                ) > 0",
+            'params' => array(
+                ':start_date' => $startDate,
+                ':end_date' => $endDate,
+                ':customer_id' => $customerId,
+            )
+        ));
         
-        $coa = Coa::model()->findByPk($coaId);
-        
-        if (isset($_GET['SaveExcelDetail'])) {
-            $this->saveToExcelDetailTransaction($dataProvider, $endDate, $coa);
-        }
+//        if (isset($_GET['SaveExcelDetail'])) {
+//            $this->saveToExcelDetailTransaction($dataProvider, $endDate, $customer);
+//        }
 
         $this->render('transactionInfo', array(
-            'dataProvider' => $dataProvider,
+            'invoiceHeaders' => $invoiceHeaders,
+            'startDate' => $startDate,
             'endDate' => $endDate,
-            'coa' => $coa,
+            'customer' => $customer,
         ));
     }
 
-    public function actionTransactionRetailInfo($endDate) {
+    public function actionTransactionRetailInfo($branchId, $endDate) {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
 
@@ -102,6 +137,7 @@ class ReceivableCustomerController extends Controller {
         $dataProvider->criteria->together = 'true';
         $dataProvider->criteria->with = array('customer');
         $dataProvider->criteria->addSearchCondition('customer.customer_type', 'Individual');
+        $dataProvider->criteria->compare('t.branch_id', $branchId);
         
         if (isset($_GET['SaveExcelRetail'])) {
             $this->saveToExcelRetailTransaction($dataProvider, $endDate);
@@ -113,14 +149,13 @@ class ReceivableCustomerController extends Controller {
         ));
     }
 
-    public function actionAjaxJsonCoa() {
+    public function actionAjaxJsonCustomer() {
         if (Yii::app()->request->isAjaxRequest) {
-            $coaId = (isset($_POST['Coa']['id'])) ? $_POST['Coa']['id'] : '';
-            $coa = Coa::model()->findByPk($coaId);
+            $customerId = (isset($_POST['CustomerId'])) ? $_POST['CustomerId'] : '';
+            $customer = Customer::model()->findByPk($customerId);
 
             $object = array(
-                'coa_name' => CHtml::value($coa, 'combinationName'),
-                'coa_code' => CHtml::value($coa, 'code'),
+                'customer_name' => CHtml::value($customer, 'name'),
             );
             
             echo CJSON::encode($object);

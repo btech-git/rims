@@ -71,24 +71,6 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                 </div>
                 <div class="clear"></div>
             </div>
-            
-            <br/>
-
-            <div class="hide">
-                <div class="right"></div>
-                <div class="clear"></div>
-            </div>
         </div>
     </div>
 </div>
-
-<!--<div class="hide">
-    <div class="right">
-        <?php /*$this->widget('system.web.widgets.pagers.CLinkPager', array(
-            'itemCount' => $dailyMultipleMechanicTransactionReport->dataProvider->pagination->itemCount,
-            'pageSize' => $dailyMultipleMechanicTransactionReport->dataProvider->pagination->pageSize,
-            'currentPage' => $dailyMultipleMechanicTransactionReport->dataProvider->pagination->getCurrentPage(false),
-        ));*/ ?>
-    </div>
-    <div class="clear"></div>
-</div>-->

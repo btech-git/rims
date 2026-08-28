@@ -27,6 +27,7 @@
  * @property integer $is_verified
  * @property integer $user_id_verified
  * @property string $verified_datetime
+ * @property integer $is_synchronized
  *
  * The followings are the available model relations:
  * @property TransactionPurchaseOrder $purchaseOrder
@@ -69,7 +70,7 @@ class PaymentOut extends MonthlyTransactionActiveRecord {
         // will receive user inputs.
         return array(
             array('payment_number, payment_date, supplier_id, payment_amount, notes, user_id, branch_id, status, payment_type_id, is_verified', 'required'),
-            array('purchase_order_id, supplier_id, user_id, branch_id, company_bank_id, cash_payment_type, bank_id, payment_type_id, user_id_cancelled, coa_id_deposit, user_id_edited, is_verified, user_id_verified', 'numerical', 'integerOnly' => true),
+            array('purchase_order_id, supplier_id, user_id, branch_id, company_bank_id, cash_payment_type, bank_id, payment_type_id, user_id_cancelled, coa_id_deposit, user_id_edited, is_verified, user_id_verified, is_synchronized', 'numerical', 'integerOnly' => true),
             array('payment_number', 'length', 'max' => 50),
             array('payment_amount', 'length', 'max' => 18),
             array('nomor_giro', 'length', 'max' => 20),
@@ -78,7 +79,7 @@ class PaymentOut extends MonthlyTransactionActiveRecord {
             array('created_datetime, cancelled_datetime, edited_datetime, verified_datetime', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, purchase_order_id, purchase_order_number, payment_number, payment_date, created_datetime, edited_datetime, supplier_id, payment_amount, coa_id_deposit, notes, payment_type, user_id, branch_id, user_id_edited, supplier_name, status, company_bank_id, nomor_giro, cash_payment_type, bank_id, payment_type_id, images, cancelled_datetime, user_id_cancelled, is_verified, user_id_verified, verified_datetime', 'safe', 'on' => 'search'),
+            array('id, purchase_order_id, purchase_order_number, payment_number, payment_date, created_datetime, edited_datetime, supplier_id, payment_amount, coa_id_deposit, notes, payment_type, user_id, branch_id, user_id_edited, supplier_name, status, company_bank_id, nomor_giro, cash_payment_type, bank_id, payment_type_id, images, cancelled_datetime, user_id_cancelled, is_verified, user_id_verified, verified_datetime, is_synchronized', 'safe', 'on' => 'search'),
         );
     }
 
@@ -127,6 +128,7 @@ class PaymentOut extends MonthlyTransactionActiveRecord {
             'cash_payment_type' => 'Cash Payment Type',
             'bank_id' => 'Bank',
             'payment_type_id' => 'Payment Type',
+            'is_synchronized' => 'Synchronized',
         );
     }
 
@@ -152,6 +154,7 @@ class PaymentOut extends MonthlyTransactionActiveRecord {
         $criteria->compare('t.bank_id', $this->bank_id);
         $criteria->compare('t.payment_type_id', $this->payment_type_id);
         $criteria->compare('t.coa_id_deposit', $this->coa_id_deposit);
+        $criteria->compare('t.is_synchronized', $this->is_synchronized);
 
         $criteria->together = true;
         $criteria->with = array('supplier', 'purchaseOrder');

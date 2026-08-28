@@ -73,118 +73,154 @@
                 <?php $paymentAmount = CHtml::value($header, 'payment_amount'); ?>
                 <?php $paymentLeft = CHtml::value($header, 'payment_left'); ?>
             
-                <?php if (!empty($header->paymentInDetails )): ?>
+                <?php if (!empty($header->paymentInDetails)): ?>
                     <?php foreach ($header->paymentInDetails as $paymentInDetail): ?>
-                        <?php if ($paymentInDetail->paymentIn->status == 'Approved'): ?>
-                            <?php $amount = CHtml::value($paymentInDetail, 'amount'); ?>
-                            <?php $totalPayment = CHtml::value($paymentInDetail, 'totalAmount'); ?>
-            
-                            <tr class="items1">
-                                <td><?php echo $i + 1; ?></td>
-                                <td class="width1-1">
-                                    <?php echo CHtml::link(CHtml::encode($header->invoice_number), array(
-                                        "/transaction/invoiceHeader/view", 
-                                        "id"=>$header->id
-                                    ), array("target" => "_blank")); ?>
-                                </td>
-                                <td class="width1-2">
-                                    <?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($header->invoice_date))); ?>
-                                </td>
-                                <td class="width1-3">
-                                    <?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($header->due_date))); ?>
-                                </td>
-                                <td class="width1-4"><?php echo CHtml::encode(CHtml::value($header, 'customer.name')); ?></td>
-                                <td class="width1-6" style="text-align: right"><?php echo CHtml::encode(CHtml::value($header, 'vehicle.plate_number')); ?></td>
-                                <td class="width1-7" style="text-align: right">
-                                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $partsAmount)); ?>
-                                </td>
-                                <td class="width1-7" style="text-align: right">
-                                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $serviceAmount)); ?>
-                                </td>
-                                <td class="width1-7" style="text-align: right">
-                                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $taxAmount)); ?>
-                                </td>
-                                <td class="width1-7" style="text-align: right">
-                                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $invoiceAmount)); ?>
-                                </td>
-                                <td class="width1-8" style="text-align: right">
-                                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $paymentAmount)); ?>
-                                </td>
-                                <td class="width1-9" style="text-align: right">
-                                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $paymentLeft)); ?>
-                                </td>
-                                <td class="width1-10" style="text-align: right"><?php echo CHtml::encode(CHtml::value($header, 'status')); ?></td>
-                                <td class="width2-1">
-                                    <?php echo CHtml::link(CHtml::encode($paymentInDetail->paymentIn->payment_number), array(
-                                        "/transaction/paymentIn/view", 
-                                        "id"=>$paymentInDetail->paymentIn->id
-                                    ), array("target" => "_blank")); ?>
-                                </td>
-                                <td class="width2-2">
-                                    <?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($paymentInDetail->paymentIn->payment_date))); ?>
-                                </td>
-                                <td class="width2-3" style="text-align: right">
-                                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $amount)); ?>
-                                </td>
-                                <td class="width2-4" style="text-align: right">
-                                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $paymentInDetail->tax_service_amount)); ?>
-                                </td>
-                                <td class="width2-4" style="text-align: right">
-                                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $paymentInDetail->discount_amount)); ?>
-                                </td>
-                                <td class="width2-4" style="text-align: right">
-                                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $paymentInDetail->bank_administration_fee)); ?>
-                                </td>
-                                <td class="width2-4" style="text-align: right">
-                                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $paymentInDetail->merimen_fee)); ?>
-                                </td>
-                                <td class="width2-4" style="text-align: right">
-                                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $paymentInDetail->downpayment_amount)); ?>
-                                </td>
-                                <td class="width2-4" style="text-align: right">
-                                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $paymentInDetail->own_risk_amount)); ?>
-                                </td>
-                                <td class="width2-4" style="text-align: right">
-                                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalPayment)); ?>
-                                </td>
-                                <td class="width2-5"><?php echo CHtml::encode(CHtml::value($paymentInDetail, 'memo')); ?></td>
-                            </tr>
-                            <?php $totalParts += $partsAmount; ?>
-                            <?php $totalService += $serviceAmount; ?>
-                            <?php $totalTax += $taxAmount; ?>
-                            <?php $totalInvoice += $invoiceAmount; ?>
-                            <?php $totalPaymentAmount += $paymentAmount; ?>
-                            <?php $totalPaymentLeft += $paymentLeft; ?>
-                            <?php $totalPaymentSum += $totalPayment; ?>
-                            
-                        <?php endif; ?>
+                        <?php $amount = CHtml::value($paymentInDetail, 'amount'); ?>
+                        <?php $totalPayment = CHtml::value($paymentInDetail, 'totalAmount'); ?>
+
+                        <tr class="items1">
+                            <td><?php echo $i + 1; ?></td>
+                            <td class="width1-1">
+                                <?php echo CHtml::link(CHtml::encode($header->invoice_number), array(
+                                    "/transaction/invoiceHeader/view", 
+                                    "id"=>$header->id
+                                ), array("target" => "_blank")); ?>
+                            </td>
+                            <td class="width1-2">
+                                <?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($header->invoice_date))); ?>
+                            </td>
+                            <td class="width1-3">
+                                <?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($header->due_date))); ?>
+                            </td>
+                            <td class="width1-4"><?php echo CHtml::encode(CHtml::value($header, 'customer.name')); ?></td>
+                            <td class="width1-6"><?php echo CHtml::encode(CHtml::value($header, 'vehicle.plate_number')); ?></td>
+                            <td class="width1-7" style="text-align: right">
+                                <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $partsAmount)); ?>
+                            </td>
+                            <td class="width1-7" style="text-align: right">
+                                <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $serviceAmount)); ?>
+                            </td>
+                            <td class="width1-7" style="text-align: right">
+                                <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $taxAmount)); ?>
+                            </td>
+                            <td class="width1-7" style="text-align: right">
+                                <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $invoiceAmount)); ?>
+                            </td>
+                            <td class="width1-8" style="text-align: right">
+                                <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $paymentAmount)); ?>
+                            </td>
+                            <td class="width1-9" style="text-align: right">
+                                <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $paymentLeft)); ?>
+                            </td>
+                            <td class="width1-10" style="text-align: right"><?php echo CHtml::encode(CHtml::value($header, 'status')); ?></td>
+                            <td class="width2-1">
+                                <?php echo CHtml::link(CHtml::encode($paymentInDetail->paymentIn->payment_number), array(
+                                    "/transaction/paymentIn/view", 
+                                    "id"=>$paymentInDetail->paymentIn->id
+                                ), array("target" => "_blank")); ?>
+                            </td>
+                            <td class="width2-2">
+                                <?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($paymentInDetail->paymentIn->payment_date))); ?>
+                            </td>
+                            <td class="width2-3" style="text-align: right">
+                                <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $amount)); ?>
+                            </td>
+                            <td class="width2-4" style="text-align: right">
+                                <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $paymentInDetail->tax_service_amount)); ?>
+                            </td>
+                            <td class="width2-4" style="text-align: right">
+                                <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $paymentInDetail->discount_amount)); ?>
+                            </td>
+                            <td class="width2-4" style="text-align: right">
+                                <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $paymentInDetail->bank_administration_fee)); ?>
+                            </td>
+                            <td class="width2-4" style="text-align: right">
+                                <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $paymentInDetail->merimen_fee)); ?>
+                            </td>
+                            <td class="width2-4" style="text-align: right">
+                                <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $paymentInDetail->downpayment_amount)); ?>
+                            </td>
+                            <td class="width2-4" style="text-align: right">
+                                <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $paymentInDetail->own_risk_amount)); ?>
+                            </td>
+                            <td class="width2-4" style="text-align: right">
+                                <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $totalPayment)); ?>
+                            </td>
+                            <td class="width2-5"><?php echo CHtml::encode(CHtml::value($paymentInDetail, 'memo')); ?></td>
+                        </tr>
                     <?php endforeach; ?>
+                <?php else: ?>
+                    <tr class="items1">
+                        <td><?php echo $i + 1; ?></td>
+                        <td class="width1-1">
+                            <?php echo CHtml::link(CHtml::encode($header->invoice_number), array(
+                                "/transaction/invoiceHeader/view", 
+                                "id"=>$header->id
+                            ), array("target" => "_blank")); ?>
+                        </td>
+                        <td class="width1-2">
+                            <?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($header->invoice_date))); ?>
+                        </td>
+                        <td class="width1-3">
+                            <?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($header->due_date))); ?>
+                        </td>
+                        <td class="width1-4"><?php echo CHtml::encode(CHtml::value($header, 'customer.name')); ?></td>
+                        <td class="width1-6"><?php echo CHtml::encode(CHtml::value($header, 'vehicle.plate_number')); ?></td>
+                        <td class="width1-7" style="text-align: right">
+                            <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $partsAmount)); ?>
+                        </td>
+                        <td class="width1-7" style="text-align: right">
+                            <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $serviceAmount)); ?>
+                        </td>
+                        <td class="width1-7" style="text-align: right">
+                            <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $taxAmount)); ?>
+                        </td>
+                        <td class="width1-7" style="text-align: right">
+                            <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $invoiceAmount)); ?>
+                        </td>
+                        <td class="width1-8" style="text-align: right">
+                            <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $paymentAmount)); ?>
+                        </td>
+                        <td class="width1-9" style="text-align: right">
+                            <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $paymentLeft)); ?>
+                        </td>
+                        <td class="width1-10" style="text-align: right"><?php echo CHtml::encode(CHtml::value($header, 'status')); ?></td>
+                        <td colspan="11">&nbsp;</td>
+                    </tr>
                 <?php endif; ?>
+                <?php $totalParts += $partsAmount; ?>
+                <?php $totalService += $serviceAmount; ?>
+                <?php $totalTax += $taxAmount; ?>
+                <?php $totalInvoice += $invoiceAmount; ?>
+                <?php $totalPaymentAmount += $paymentAmount; ?>
+                <?php $totalPaymentLeft += $paymentLeft; ?>
+                <?php $totalPaymentSum += $totalPayment; ?>
+
             <?php endforeach; ?>
         </tbody>
         <tfoot>
             <tr id="header1">
                 <td colspan="6" style="text-align: right; font-weight: bold">TOTAL</td>
                 <td class="width1-8" style="text-align: right; font-weight: bold"> 
-                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalParts)); ?>
+                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $totalParts)); ?>
                 </td>
                 <td class="width1-8" style="text-align: right; font-weight: bold"> 
-                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalService)); ?>
+                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $totalService)); ?>
                 </td>
                 <td class="width1-8" style="text-align: right; font-weight: bold"> 
-                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalTax)); ?>
+                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $totalTax)); ?>
                 </td>
                 <td class="width1-8" style="text-align: right; font-weight: bold"> 
-                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalInvoice)); ?>
+                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $totalInvoice)); ?>
                 </td>
                 <td class="width1-9" style="text-align: right; font-weight: bold"> 
-                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalPaymentAmount)); ?>
+                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $totalPaymentAmount)); ?>
                 </td>
                 <td class="width1-10" style="text-align: right; font-weight: bold"> 
-                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalPaymentLeft)); ?>
+                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $totalPaymentLeft)); ?>
                 </td>
                 <td colspan="11" style="text-align: right; font-weight: bold"> 
-                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalPaymentSum)); ?>
+                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $totalPaymentSum)); ?>
                 </td>
                 <td>&nbsp;</td>
             </tr>

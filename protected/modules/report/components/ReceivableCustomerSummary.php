@@ -29,25 +29,31 @@ class ReceivableCustomerSummary extends CComponent {
     public function setupFilter($filters) {
         $endDate = (empty($filters['endDate'])) ? date('Y-m-d') : $filters['endDate'];
         $branchId = (empty($filters['branchId'])) ? '' : $filters['branchId'];
-        $coaId = (empty($filters['coaId'])) ? '' : $filters['coaId'];
+        $customerId = (empty($filters['customerId'])) ? '' : $filters['customerId'];
         
-        $this->dataProvider->criteria->compare('t.coa_sub_category_id', 8);
-        $this->dataProvider->criteria->compare('t.is_approved', 1);
-        $this->dataProvider->criteria->compare('t.id', $coaId);
+        $this->dataProvider->criteria->compare('t.status', 'Active');
+        $this->dataProvider->criteria->compare('t.customer_type', 'Company');
+        $this->dataProvider->criteria->compare('t.id', $customerId);
         
         $branchConditionSql = '';
         
         if (!empty($branchId)) {
-            $branchConditionSql = ' AND p.branch_id = :branch_id';
+            $branchConditionSql = ' AND i.branch_id = :branch_id';
             $this->dataProvider->criteria->params[':branch_id'] = $branchId;
         }
         
         $this->dataProvider->criteria->addCondition("EXISTS (
-            SELECT coa_id 
-            FROM " . JurnalUmum::model()->tableName() . "
-            WHERE coa_id = t.id AND tanggal_transaksi BETWEEN '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND :end_date" . $branchConditionSql . "
-        ) AND t.code NOT LIKE '%.000'");
-
+            SELECT i.id FROM " . InvoiceHeader::model()->tableName() . " i
+            WHERE t.id = i.customer_id AND i.user_id_cancelled IS NULL AND i.insurance_company_id IS NULL AND
+                i.invoice_date BETWEEN '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND :end_date AND i.total_price - (
+                    SELECT COALESCE(SUM(d.amount + d.tax_service_amount + d.discount_amount + d.bank_administration_fee + d.merimen_fee + 
+                        d.downpayment_amount + d.own_risk_amount), 0)
+                    FROM " . PaymentInDetail::model()->tableName() . " d
+                    INNER JOIN " . PaymentIn::model()->tableName() . " h ON h.id = d.payment_in_id
+                    WHERE i.id = d.invoice_header_id AND h.user_id_cancelled IS NULL AND h.payment_date BETWEEN '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND :end_date
+                ) > 0" . $branchConditionSql . "
+        )");
+        
         $this->dataProvider->criteria->params[':end_date'] = $endDate;
     }
 }

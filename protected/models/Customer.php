@@ -591,11 +591,20 @@ class Customer extends CActiveRecord {
 //        }
 //        
 //        $sql = "
-//            SELECT p.customer_id, COALESCE(SUM(p.total_price), 0) AS total_price, COALESCE(SUM(p.payment_amount), 0) AS payment_amount, 
-//                COALESCE(SUM(p.payment_left), 0) AS payment_left
-//            FROM " . InvoiceHeader::model()->tableName() . " p 
-//            WHERE p.customer_id = :customer_id AND p.invoice_date BETWEEN '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND :end_date AND
-//                 p.insurance_company_id IS NULL AND p.user_id_cancelled IS NULL AND p.payment_left > 100" . $branchConditionSql . "
+//            SELECT i.customer_id, MAX(c.name) AS customer_name, SUM(i.total_price) AS total_invoice, SUM(COALESCE(p.payment_amount, 0)) AS payment_amount, 
+//                SUM(i.total_price - COALESCE(p.payment_amount, 0)) AS payment_left
+//            FROM " . InvoiceHeader::model()->tableName() . " i
+//            INNER JOIN " . Customer::model()->tableName() . " c ON c.id = i.customer_id
+//            LEFT OUTER JOIN (
+//                SELECT d.invoice_header_id, SUM(d.amount + d.tax_service_amount + d.discount_amount + d.bank_administration_fee + d.merimen_fee + 
+//                    d.downpayment_amount + d.own_risk_amount) AS payment_amount 
+//                FROM " . PaymentInDetail::model()->tableName() . " d 
+//                INNER JOIN " . PaymentIn::model()->tableName() . " h ON h.id = d.payment_in_id
+//                WHERE h.payment_date BETWEEN '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND :end_date AND h.user_id_cancelled IS NULL
+//                GROUP BY d.invoice_header_id
+//            ) p ON i.id = p.invoice_header_id
+//            WHERE i.customer_id = :customer_id AND i.invoice_date BETWEEN '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND :end_date AND
+//                 i.insurance_company_id IS NULL AND i.user_id_cancelled IS NULL AND i.total_price - COALESCE(p.payment_amount, 0) > 100" . $branchConditionSql . "
 //        ";
 //
 //        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);

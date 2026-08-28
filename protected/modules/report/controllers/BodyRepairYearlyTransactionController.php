@@ -26,7 +26,7 @@ class BodyRepairYearlyTransactionController extends Controller {
         $yearNow = date('Y');
         
         $year = isset($_GET['Year']) ? $_GET['Year'] : $yearNow;
-        $branchId = isset($_GET['BranchId']) ? $_GET['BranchId'] : '';
+        $branchId = isset($_GET['BranchId']) ? $_GET['BranchId'] : (Yii::app()->user->checkAccess('director') ? '' : Yii::app()->user->branch_id);
         
         $registrationTransactionYearlyCountData = RegistrationTransaction::getRegistrationTransactionYearlyCountData($year, $branchId);
         $registrationWorkOrderYearlyCountData = RegistrationTransaction::getRegistrationWorkOrderYearlyCountData($year, $branchId);
