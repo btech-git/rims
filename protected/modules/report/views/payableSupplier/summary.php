@@ -23,52 +23,6 @@ Yii::app()->clientScript->registerScript('report', '
                             <div class="field">
                                 <div class="row collapse">
                                     <div class="small-4 columns">
-                                        <span class="prefix">Jumlah per Halaman</span>
-                                    </div>
-                                    <div class="small-8 columns">
-                                        <?php echo CHtml::textField('PageSize', '', array('size' => 3)); ?>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="medium-6 columns">
-                            <div class="field">
-                                <div class="row collapse">
-                                    <div class="small-4 columns">
-                                        <span class="prefix">Halaman saat ini</span>
-                                    </div>
-                                    <div class="small-8 columns">
-                                        <?php echo CHtml::textField('page', '', array('size' => 3, 'id' => 'CurrentPage')); ?>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="medium-6 columns">
-                            <div class="field">
-                                <div class="row collapse">
-                                    <div class="small-4 columns">
-                                        <span class="prefix">Supplier </span>
-                                    </div>
-                                    <div class="small-8 columns">
-                                        <?php echo CHtml::textField('CoaId', $coaId, array(
-                                            'readonly' => true,
-                                            'onclick' => 'jQuery("#coa-dialog").dialog("open"); return false;',
-                                        )); ?>
-                                        <?php echo CHtml::openTag('span', array('id' => 'coa_name')); ?>
-                                        <?php $coa = Coa::model()->findByPk($coaId); ?>
-                                        <?php echo CHtml::encode(CHtml::value($coa, 'name')); ?>
-                                        <?php echo CHtml::closeTag('span'); ?>   
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="medium-6 columns">
-                            <div class="field">
-                                <div class="row collapse">
-                                    <div class="small-4 columns">
                                         <span class="prefix">Branch</span>
                                     </div>
                                     <div class="small-8 columns">
@@ -80,9 +34,7 @@ Yii::app()->clientScript->registerScript('report', '
                                 </div>
                             </div>
                         </div>
-                    </div>
 
-                    <div class="row">
                         <div class="medium-6 columns">
                             <div class="field">
                                 <div class="row collapse">
@@ -123,7 +75,7 @@ Yii::app()->clientScript->registerScript('report', '
 
                 <hr />
 
-                <div class="right"><?php echo ReportHelper::summaryText($payableSummary->dataProvider); ?></div>
+                <div class="right"><?php //echo ReportHelper::summaryText($payableSummary->dataProvider); ?></div>
                 <br />
                 <div class="right"><?php //echo ReportHelper::sortText($payableSummary->dataProvider->sort, array('Tanggal', 'Supplier')); ?></div>
                 <div class="clear"></div>
@@ -138,109 +90,14 @@ Yii::app()->clientScript->registerScript('report', '
 
                     <?php $this->renderPartial('_summary', array(
                         'payableSummary' => $payableSummary,
-                        'endDate' => $endDate,
+                        'payableReportData' => $payableReportData,
+                        'payablePaymentReportData' => $payablePaymentReportData,
+//                        'supplier' => $supplier,
                         'branchId' => $branchId,
+                        'endDate' => $endDate,
                     )); ?>
                 </div>
             </div>
         </div>
     </div>
-</div>
-
-<div class="grid-view">
-    <?php $this->beginWidget('zii.widgets.jui.CJuiDialog', array(
-        'id' => 'coa-dialog',
-        // additional javascript options for the dialog plugin
-        'options' => array(
-            'title' => 'Customer ',
-            'autoOpen' => false,
-            'width' => 'auto',
-            'modal' => true,
-        ),
-    )); ?>
-    <?php echo CHtml::beginForm(); ?>
-    <div class="row">
-        <div class="small-12 columns" style="padding-left: 0px; padding-right: 0px;">
-            <table>
-                <thead>
-                    <tr>
-                        <td>Code</td>
-                        <td>Name</td>
-                    </tr>
-                </thead>
-                
-                <tbody>
-                    <tr>
-                        <td>
-                            <?php echo CHtml::activeTextField($account, 'code', array(
-                                'onchange' => '
-                                $.fn.yiiGridView.update("coa-grid", {data: {Coa: {
-                                    code: $(this).val(),
-                                    name: $("#coa_name").val(),
-                                    coa_category_id: $("#coa_category_id").val(),
-                                    coa_sub_category_id: $("#coa_sub_category_id").val(),
-                                } } });',
-                            )); ?>
-                        </td>
-                        
-                        <td>
-                            <?php echo CHtml::activeTextField($account, 'name', array(
-                                'onchange' => '
-                                $.fn.yiiGridView.update("coa-grid", {data: {Coa: {
-                                    name: $(this).val(),
-                                    code: $("#coa_code").val(),
-                                    coa_category_id: $("#coa_category_id").val(),
-                                    coa_sub_category_id: $("#coa_sub_category_id").val(),
-                                } } });',
-                            )); ?>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-    
-            <?php $this->widget('zii.widgets.grid.CGridView', array(
-                'id'=>'coa-grid',
-                'dataProvider'=>$accountDataProvider,
-                'filter' => null,
-                'template' => '{items}<div class="clearfix">{summary}{pager}</div>',
-                'pager'=>array(
-                   'cssFile'=>false,
-                   'header'=>'',
-                ),
-                'selectionChanged'=>'js:function(id){
-                    $("#CoaId").val($.fn.yiiGridView.getSelection(id));
-                    $("#coa-dialog").dialog("close");
-                    if ($.fn.yiiGridView.getSelection(id) == "") {
-                        $("#coa_id").html("");
-                        $("#coa_name").html("");
-                    } else {
-                        $.ajax({
-                            type: "POST",
-                            dataType: "JSON",
-                            url: "' . CController::createUrl('ajaxJsonCoa') . '",
-                            data: $("form").serialize(),
-                            success: function(data) {
-                                $("#coa_id").html(data.coa_code);
-                                $("#coa_name").html(data.coa_name);
-                            },
-                        });
-                    }
-                }',
-                'columns'=> array(
-                    'code',
-                    'name',
-                    array(
-                        'name' => 'coa_category_id',
-                        'value' => '$data->coaCategory!="" ? $data->coaCategory->name : ""',
-                    ),
-                    array(
-                        'name' => 'coa_sub_category_id',
-                        'value' => '$data->coaSubCategory!="" ? $data->coaSubCategory->name : ""'
-                    ),
-                ),
-            )); ?>
-        </div>
-    </div>
-    <?php echo CHtml::endForm(); ?>
-    <?php $this->endWidget('zii.widgets.jui.CJuiDialog'); ?>
 </div>

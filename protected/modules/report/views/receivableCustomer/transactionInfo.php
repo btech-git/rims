@@ -14,9 +14,6 @@ Yii::app()->clientScript->registerCss('_report', '
 ');
 ?>
 
-
-<div class="clear"></div>
-
 <div class="tab reportTab">
     <div class="tabHead">
         <div style="font-size: larger; font-weight: bold; text-align: center">Transaksi Detail Piutang Customer</div>

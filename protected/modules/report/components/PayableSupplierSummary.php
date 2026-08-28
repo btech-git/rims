@@ -13,7 +13,7 @@ class PayableSupplierSummary extends CComponent {
     }
 
     public function setupPaging($pageSize, $currentPage) {
-        $pageSize = (empty($pageSize)) ? 500 : $pageSize;
+        $pageSize = (empty($pageSize)) ? 1000 : $pageSize;
         $pageSize = ($pageSize <= 0) ? 1 : $pageSize;
         $this->dataProvider->pagination->pageSize = $pageSize;
 
@@ -29,11 +29,11 @@ class PayableSupplierSummary extends CComponent {
     public function setupFilter($filters) {
         $endDate = (empty($filters['endDate'])) ? date('Y-m-d') : $filters['endDate'];
         $branchId = (empty($filters['branchId'])) ? '' : $filters['branchId'];
-        $coaId = (empty($filters['coaId'])) ? '' : $filters['coaId'];
+        $supplierId = (empty($filters['supplierId'])) ? '' : $filters['supplierId'];
         
-        $this->dataProvider->criteria->compare('t.coa_sub_category_id', 15);
+        $this->dataProvider->criteria->compare('t.status', 'Active');
         $this->dataProvider->criteria->compare('t.is_approved', 1);
-        $this->dataProvider->criteria->compare('t.id', $coaId);
+        $this->dataProvider->criteria->compare('t.id', $supplierId);
         
         $branchConditionSql = '';
         
@@ -43,11 +43,18 @@ class PayableSupplierSummary extends CComponent {
         }
         
         $this->dataProvider->criteria->addCondition("EXISTS (
-            SELECT coa_id 
-            FROM " . JurnalUmum::model()->tableName() . "
-            WHERE coa_id = t.id AND tanggal_transaksi BETWEEN '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND :end_date" . $branchConditionSql . "
-        ) AND t.code NOT LIKE '%.000'");
-
+            SELECT i.id 
+            FROM " . TransactionReceiveItem::model()->tableName() . " i
+            INNER JOIN " . TransactionPurchaseOrder::model()->tableName() . " p ON p.id = i.purchase_order_id
+            WHERE t.id = i.supplier_id AND i.user_id_cancelled IS NULL AND i.invoice_date BETWEEN '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND :end_date AND 
+                i.invoice_grand_total - (
+                    SELECT COALESCE(SUM(d.amount), 0)
+                    FROM " . PayOutDetail::model()->tableName() . " d
+                    INNER JOIN " . PaymentOut::model()->tableName() . " h ON h.id = d.payment_out_id
+                    WHERE i.id = d.receive_item_id AND h.user_id_cancelled IS NULL AND h.payment_date BETWEEN '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND :end_date
+                ) > 100" . $branchConditionSql . "
+        )");
+        
         $this->dataProvider->criteria->params[':end_date'] = $endDate;
     }
 }

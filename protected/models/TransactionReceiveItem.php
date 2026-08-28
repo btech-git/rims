@@ -686,4 +686,36 @@ class TransactionReceiveItem extends MonthlyTransactionActiveRecord {
 
         return (int)$diff;
     }
+    
+    public static function getPayableReport($endDate, $branchId, $supplierIds) {
+        $supplierIdsSql = empty($supplierIds) ? 'NULL' : implode(',', $supplierIds);
+        $branchConditionSql = '';
+        
+        $params = array(
+            ':end_date' => $endDate,
+        );
+        
+        if (!empty($branchId)) {
+            $branchConditionSql = ' AND p.branch_id = :branch_id';
+            $params[':branch_id'] = $branchId;
+        }
+        
+        $sql = "SELECT i.id, i.supplier_id, i.invoice_number, i.invoice_date, i.invoice_grand_total
+                FROM " . TransactionReceiveItem::model()->tableName() . " i
+                INNER JOIN " . TransactionPurchaseOrder::model()->tableName() . " p ON p.id = i.purchase_order_id
+                INNER JOIN " . Supplier::model()->tableName() . " c ON c.id = i.supplier_id
+                WHERE i.supplier_id IN ({$supplierIdsSql}) AND i.user_id_cancelled IS NULL AND i.invoice_date BETWEEN '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND :end_date AND 
+                    i.invoice_grand_total - (
+                        SELECT COALESCE(SUM(d.amount), 0)
+                        FROM " . PayOutDetail::model()->tableName() . " d
+                        INNER JOIN " . PaymentOut::model()->tableName() . " h ON h.id = d.payment_out_id
+                        WHERE i.id = d.receive_item_id AND h.user_id_cancelled IS NULL AND h.payment_date BETWEEN '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND :end_date
+                    ) > 100" . $branchConditionSql . "
+                ORDER BY i.supplier_id ASC, i.invoice_date ASC";
+        
+        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
+
+        return $resultSet;
+    }
+    
 }

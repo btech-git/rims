@@ -160,4 +160,21 @@ class PayOutDetail extends CActiveRecord {
 
         return $resultSet;
     }
+    
+    public static function getPayablePaymentReport($endDate, $invoiceHeaderIds) {
+        $invoiceHeaderIdsSql = empty($invoiceHeaderIds) ? 'NULL' : implode(',', $invoiceHeaderIds);
+        
+        $sql = "SELECT d.receive_item_id, COALESCE(SUM(d.amount), 0) AS payment_amount
+                FROM " . PayOutDetail::model()->tableName() . " d
+                INNER JOIN " . PaymentOut::model()->tableName() . " h ON h.id = d.payment_out_id
+                WHERE d.receive_item_id IN ({$invoiceHeaderIdsSql}) AND h.user_id_cancelled IS NULL AND
+                    h.payment_date BETWEEN '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND :end_date
+                GROUP BY d.receive_item_id";
+        
+        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, array(
+            ':end_date' => $endDate,
+        ));
+
+        return $resultSet;
+    }
 }

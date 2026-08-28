@@ -41,10 +41,10 @@ class ReceivableCustomerController extends Controller {
         }
         
         $customer = Search::bind(new Customer('search'), isset($_GET['Customer']) ? $_GET['Customer'] : array());
-        $customerDataProvider = $customer->search();
-        $customerDataProvider->criteria->compare('t.status', 'Active');
-        $customerDataProvider->criteria->compare('t.customer_type', 'Company');
-        $customerDataProvider->pagination->pageVar = 'page_dialog';
+//        $customerDataProvider = $customer->search();
+//        $customerDataProvider->criteria->compare('t.status', 'Active');
+//        $customerDataProvider->criteria->compare('t.customer_type', 'Company');
+//        $customerDataProvider->pagination->pageVar = 'page_dialog';
 
         $receivableSummary = new ReceivableCustomerSummary($customer->search());
         $receivableSummary->setupLoading();
@@ -76,15 +76,15 @@ class ReceivableCustomerController extends Controller {
         }
         
         if (isset($_GET['SaveExcel'])) {
-            $this->saveToExcel($receivableSummary, $endDate, $branchId);
+            $this->saveToExcel($receivableSummary, $receivableReportData, $receivablePaymentReportData, $endDate, $branchId);
         }
 
         $this->render('summary', array(
             'receivableSummary' => $receivableSummary,
             'receivableReportData' => $receivableReportData,
             'receivablePaymentReportData' => $receivablePaymentReportData,
-            'customer' => $customer,
-            'customerDataProvider' => $customerDataProvider,
+//            'customer' => $customer,
+//            'customerDataProvider' => $customerDataProvider,
             'customerId' => $customerId,
             'branchId' => $branchId,
             'endDate' => $endDate,
@@ -99,6 +99,19 @@ class ReceivableCustomerController extends Controller {
 
         $startDate = AppParam::BEGINNING_TRANSACTION_DATE;
         $customer = Customer::model()->findByPk($customerId);
+        $branchConditionSql = '';
+        
+        $params = array(
+            ':start_date' => $startDate,
+            ':end_date' => $endDate,
+            ':customer_id' => $customerId,
+        );
+        
+        if (!empty($branchId)) {
+            $branchConditionSql = ' AND t.branch_id = :branch_id';
+            $params[':branch_id'] = $branchId;
+        }
+        
         $invoiceHeaders = InvoiceHeader::model()->findAll(array(
             'condition' => "t.invoice_date BETWEEN :start_date AND :end_date AND t.customer_id = :customer_id AND t.user_id_cancelled IS NULL AND
                 t.insurance_company_id IS NULL AND t.total_price - (
@@ -107,11 +120,7 @@ class ReceivableCustomerController extends Controller {
                     INNER JOIN " . PaymentIn::model()->tableName() . " h ON h.id = d.payment_in_id
                     WHERE t.id = d.invoice_header_id AND h.user_id_cancelled IS NULL AND h.payment_date BETWEEN '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND :end_date
                 ) > 0",
-            'params' => array(
-                ':start_date' => $startDate,
-                ':end_date' => $endDate,
-                ':customer_id' => $customerId,
-            )
+            'params' => $params,
         ));
         
 //        if (isset($_GET['SaveExcelDetail'])) {
@@ -162,7 +171,7 @@ class ReceivableCustomerController extends Controller {
         }
     }
 
-    protected function saveToExcel($receivableSummary, $endDate, $branchId) {
+    protected function saveToExcel($receivableSummary, $receivableReportData, $receivablePaymentReportData, $endDate, $branchId) {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
 
@@ -179,76 +188,88 @@ class ReceivableCustomerController extends Controller {
         $worksheet = $objPHPExcel->setActiveSheetIndex(0);
         $worksheet->setTitle('Piutang Customer Summary');
 
-        $worksheet->mergeCells('A1:H1');
-        $worksheet->mergeCells('A2:H2');
-        $worksheet->mergeCells('A3:H3');
+        $worksheet->mergeCells('A1:F1');
+        $worksheet->mergeCells('A2:F2');
+        $worksheet->mergeCells('A3:F3');
         
-        $worksheet->getStyle('A1:H3')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-        $worksheet->getStyle('A1:H3')->getFont()->setBold(true);
+        $worksheet->getStyle('A1:F5')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->getStyle('A1:F5')->getFont()->setBold(true);
+        
         $branch = Branch::model()->findByPk($branchId);
-        $worksheet->setCellValue('A2', 'Raperind Motor ' . CHtml::value($branch, 'name'));
-        $worksheet->setCellValue('A3', 'Piutang Customer Summary');
-        $worksheet->setCellValue('A4', 'Per Tanggal ' . Yii::app()->dateFormatter->format('d MMMM yyyy', $endDate));
+        $worksheet->setCellValue('A1', 'Raperind Motor ' . CHtml::value($branch, 'name'));
+        $worksheet->setCellValue('A2', 'Piutang Customer Summary');
+        $worksheet->setCellValue('A3', 'Per Tanggal ' . Yii::app()->dateFormatter->format('d MMMM yyyy', $endDate));
 
-        $worksheet->getStyle("A6:H6")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
-        $worksheet->getStyle("A7:H7")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A5:F5")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A5:F5")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
-        $worksheet->getStyle('A6:H7')->getFont()->setBold(true);
-        $worksheet->setCellValue('A6', 'Name');
-        $worksheet->setCellValue('B6', 'Type');
-        $worksheet->setCellValue('C6', 'Grand Total');
-        $worksheet->setCellValue('D6', 'Payment');
-        $worksheet->setCellValue('E6', 'Remaining');
-        $counter = 9;
+        $worksheet->setCellValue('A5', 'No');
+        $worksheet->setCellValue('B5', 'Name');
+        $worksheet->setCellValue('C5', 'Akun');
+        $worksheet->setCellValue('D5', 'Invoice');
+        $worksheet->setCellValue('E5', 'Payment');
+        $worksheet->setCellValue('F5', 'Remaining');
+        $counter = 6;
 
-        $totalRevenue = 0.00;
-        $totalPayment = 0.00;
-        $totalReceivable = 0.00;
         $totalReceivableIndividual = Customer::getTotalReceivableIndividual($endDate, $branchId);
         $totalPaymentIndividual = Customer::getTotalPaymentIndividual($endDate, $branchId);
         $totalRemainingIndividual = Customer::getTotalRemainingIndividual($endDate, $branchId);
-        $worksheet->mergeCells("A{$counter}:B{$counter}");
+        
+        $worksheet->mergeCells("A{$counter}:C{$counter}");
         $worksheet->getStyle("A{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        
         $worksheet->setCellValue("A{$counter}", 'Individual');
-        $worksheet->setCellValue("C{$counter}", $totalReceivableIndividual);
-        $worksheet->setCellValue("D{$counter}", $totalPaymentIndividual);
-        $worksheet->setCellValue("E{$counter}", $totalRemainingIndividual);
+        $worksheet->setCellValue("D{$counter}", $totalReceivableIndividual);
+        $worksheet->setCellValue("E{$counter}", $totalPaymentIndividual);
+        $worksheet->setCellValue("F{$counter}", $totalRemainingIndividual);
 
         $counter++;
 
-        foreach ($receivableSummary->dataProvider->data as $header) {
-            $receivableData = $header->getReceivableCustomerReport($endDate, $branchId);
-            foreach ($receivableData as $receivableRow) {
-                $revenue = $receivableRow['total_price'];
-                $paymentAmount = $receivableRow['payment_amount'];
-                $paymentLeft = $receivableRow['payment_left'];
-                
-                $worksheet->setCellValue("A{$counter}", $header->name);
-                $worksheet->setCellValue("B{$counter}", $header->customer_type);
-                $worksheet->setCellValue("C{$counter}", $revenue);
-                $worksheet->setCellValue("D{$counter}", $paymentAmount);
-                $worksheet->setCellValue("E{$counter}", $paymentLeft);
-                
-                $counter++;
+        $totalInvoiceSum = '0.00';
+        $totalPaymentSum = '0.00';
+        $totalRemainingSum = '0.00';
+        
+        foreach ($receivableSummary->dataProvider->data as $i => $customer) {
+            $totalRevenue = '0.00';
+            $totalPayment = '0.00';
+            $totalReceivable = '0.00';
             
+            foreach ($receivableReportData[$customer->id] as $receivableReportItem) {
+                $revenue = $receivableReportItem['total_price'];
+                $paymentAmount = isset($receivablePaymentReportData[$receivableReportItem['id']]) ? $receivablePaymentReportData[$receivableReportItem['id']] : '0.00';
+                $paymentLeft = $revenue - $paymentAmount;
                 $totalRevenue += $revenue;
                 $totalPayment += $paymentAmount;
                 $totalReceivable += $paymentLeft;
             }
-        }
-        $worksheet->getStyle("A{$counter}:H{$counter}")->getFont()->setBold(true);
+                
+            $worksheet->setCellValue("A{$counter}", ++$i);
+            $worksheet->setCellValue("B{$counter}", CHtml::value($customer, 'name'));
+            $worksheet->setCellValue("C{$counter}", CHtml::value($customer, 'coa.name'));
+            $worksheet->setCellValue("D{$counter}", $totalRevenue);
+            $worksheet->setCellValue("E{$counter}", $totalPayment);
+            $worksheet->setCellValue("F{$counter}", $totalReceivable);
 
-        $worksheet->getStyle("A{$counter}:H{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
-        $worksheet->getStyle("A{$counter}:H{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
-        $worksheet->mergeCells("A{$counter}:B{$counter}");
+            $totalInvoiceSum += $totalRevenue;
+            $totalPaymentSum += $totalPayment;
+            $totalRemainingSum += $totalReceivable;
+            
+            $counter++;
+
+        }
+        
+        $worksheet->getStyle("A{$counter}:F{$counter}")->getFont()->setBold(true);
+        $worksheet->getStyle("A{$counter}:F{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+
+        $worksheet->mergeCells("A{$counter}:C{$counter}");
         $worksheet->setCellValue("A{$counter}", 'Total');
-        $worksheet->setCellValue("C{$counter}", $totalRevenue + $totalReceivableIndividual);
-        $worksheet->setCellValue("D{$counter}", $totalPayment + $totalPaymentIndividual);
-        $worksheet->setCellValue("E{$counter}", $totalReceivable + $totalRemainingIndividual);
+        $worksheet->setCellValue("D{$counter}", $totalInvoiceSum);
+        $worksheet->setCellValue("E{$counter}", $totalPaymentSum);
+        $worksheet->setCellValue("F{$counter}", $totalRemainingSum);
 
         $counter++;$counter++;
 
-        for ($col = 'A'; $col !== 'J'; $col++) {
+        for ($col = 'A'; $col !== 'Z'; $col++) {
             $objPHPExcel->getActiveSheet()
             ->getColumnDimension($col)
             ->setAutoSize(true);

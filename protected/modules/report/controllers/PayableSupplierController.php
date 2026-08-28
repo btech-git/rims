@@ -25,42 +25,66 @@ class PayableSupplierController extends Controller {
         ini_set('memory_limit', '1024M');
 
         $branchId = (isset($_GET['BranchId'])) ? $_GET['BranchId'] : (Yii::app()->user->checkAccess('director') || Yii::app()->user->branch_id == 6 ? '' : Yii::app()->user->branch_id);
-        $coaId = (isset($_GET['CoaId'])) ? $_GET['CoaId'] : '';
+        $supplierId = (isset($_GET['SupplierId'])) ? $_GET['SupplierId'] : '';
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
         $pageSize = (isset($_GET['PageSize'])) ? $_GET['PageSize'] : '';
         $currentPage = (isset($_GET['page'])) ? $_GET['page'] : '';
         $currentSort = (isset($_GET['sort'])) ? $_GET['sort'] : '';
         
-        $account = Search::bind(new Coa('search'), isset($_GET['Coa']) ? $_GET['Coa'] : array());
-        $accountDataProvider = $account->search();
-        $accountDataProvider->criteria->compare('t.is_approved', 1);
-        $accountDataProvider->criteria->compare('t.coa_sub_category_id', 15);
-        $accountDataProvider->pagination->pageVar = 'page_dialog';
+        if (isset($_GET['ResetFilter'])) {
+            $pageSize = '';
+            $currentPage = '';
+            $currentSort = '';
+            $branchId = (Yii::app()->user->checkAccess('director') ? '' : Yii::app()->user->branch_id);
+            $supplierId = '';
+            $endDate = date('Y-m-d');
+        }
+        
+        $supplier = Search::bind(new Supplier('search'), isset($_GET['Supplier']) ? $_GET['Supplier'] : array());
+//        $supplierDataProvider = $supplier->search();
+//        $supplierDataProvider->criteria->compare('t.status', 'Active');
+//        $supplierDataProvider->pagination->pageVar = 'page_dialog';
 
-        $payableSummary = new PayableSupplierSummary($account->search());
+        $payableSummary = new PayableSupplierSummary($supplier->search());
         $payableSummary->setupLoading();
         $payableSummary->setupPaging($pageSize, $currentPage);
         $payableSummary->setupSorting();
         $filters = array(
             'endDate' => $endDate,
             'branchId' => $branchId,
-            'coaId' => $coaId,
+            'supplierId' => $supplierId,
         );
         $payableSummary->setupFilter($filters);
 
-        if (isset($_GET['ResetFilter'])) {
-            $this->redirect(array('summary'));
+        $supplierIds = array_map(function($supplier) { return $supplier->id; }, $payableSummary->dataProvider->data);
+        $payableReport = TransactionReceiveItem::getPayableReport($endDate, $branchId, $supplierIds);
+        $invoiceHeaderIds = array_map(function($payableReportItem) { return $payableReportItem['id']; }, $payableReport);
+        $payablePaymentReport = PayOutDetail::getPayablePaymentReport($endDate, $invoiceHeaderIds);
+        
+        $payableReportData = array();
+        foreach ($payableReport as $payableReportItem) {
+            if (!isset($payableReportData[$payableReportItem['supplier_id']])) {
+                $payableReportData[$payableReportItem['supplier_id']] = array();
+            }
+            $payableReportData[$payableReportItem['supplier_id']][] = $payableReportItem;
+        }
+        
+        $payablePaymentReportData = array();
+        foreach ($payablePaymentReport as $payablePaymentReportItem) {
+            $payablePaymentReportData[$payablePaymentReportItem['receive_item_id']] = $payablePaymentReportItem['payment_amount'];
         }
         
         if (isset($_GET['SaveExcel'])) {
-            $this->saveToExcel($payableSummary, $endDate, $branchId);
+            $this->saveToExcel($payableSummary, $payableReportData, $payablePaymentReportData, $endDate, $branchId);
         }
 
         $this->render('summary', array(
             'payableSummary' => $payableSummary,
-            'account' => $account,
-            'accountDataProvider' => $accountDataProvider,
-            'coaId' => $coaId,
+            'payableReportData' => $payableReportData,
+            'payablePaymentReportData' => $payablePaymentReportData,
+//            'supplier' => $supplier,
+//            'supplierDataProvider' => $supplierDataProvider,
+            'supplierId' => $supplierId,
             'branchId' => $branchId,
             'endDate' => $endDate,
             'currentSort' => $currentSort,
@@ -68,45 +92,64 @@ class PayableSupplierController extends Controller {
         ));
     }
 
-    public function actionTransactionInfo($coaId, $branchId, $endDate) {
+    public function actionTransactionInfo($supplierId, $branchId, $endDate) {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
 
         $startDate = AppParam::BEGINNING_TRANSACTION_DATE;
-        $dataProvider = JurnalUmum::model()->searchByReceivableReport();
-        $dataProvider->criteria->addBetweenCondition('t.tanggal_transaksi', $startDate, $endDate);
-        $dataProvider->criteria->compare('t.coa_id', $coaId);
-        $dataProvider->criteria->compare('t.branch_id', $branchId);
+        $supplier = Supplier::model()->findByPk($supplierId);
+        $branchConditionSql = '';
         
-        $coa = Coa::model()->findByPk($coaId);
+        $params = array(
+            ':start_date' => $startDate,
+            ':end_date' => $endDate,
+            ':supplier_id' => $supplierId,
+        );
         
-        if (isset($_GET['SaveExcelDetail'])) {
-            $this->saveToExcelDetailTransaction($dataProvider, $endDate, $coa);
+        if (!empty($branchId)) {
+            $branchConditionSql = ' AND purchaseOrder.branch_id = :branch_id';
+            $params[':branch_id'] = $branchId;
         }
+        
+        $invoiceHeaders = TransactionReceiveItem::model()->with('purchaseOrder')->findAll(array(
+            'condition' => "t.invoice_date BETWEEN :start_date AND :end_date AND t.supplier_id = :supplier_id AND t.user_id_cancelled IS NULL AND 
+                t.invoice_grand_total - (
+                    SELECT COALESCE(SUM(d.amount), 0)
+                    FROM " . PayOutDetail::model()->tableName() . " d
+                    INNER JOIN " . PaymentOut::model()->tableName() . " h ON h.id = d.payment_out_id
+                    WHERE t.id = d.receive_item_id AND h.user_id_cancelled IS NULL AND h.payment_date BETWEEN '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND :end_date
+                ) > 100" . $branchConditionSql,
+            'params' => $params,
+        ));
+        
+//        if (isset($_GET['SaveExcelDetail'])) {
+//            $this->saveToExcelDetailTransaction($dataProvider, $endDate, $coa);
+//        }
 
         $this->render('transactionInfo', array(
-            'dataProvider' => $dataProvider,
+            'invoiceHeaders' => $invoiceHeaders,
+            'startDate' => $startDate,
             'endDate' => $endDate,
-            'coa' => $coa,
+            'supplier' => $supplier,
         ));
     }
 
-    public function actionAjaxJsonSupplier() {
-        if (Yii::app()->request->isAjaxRequest) {
-            $supplierId = (isset($_POST['SupplierId'])) ? $_POST['SupplierId'] : '';
-            $supplier = Supplier::model()->findByPk($supplierId);
+//    public function actionAjaxJsonSupplier() {
+//        if (Yii::app()->request->isAjaxRequest) {
+//            $supplierId = (isset($_POST['SupplierId'])) ? $_POST['SupplierId'] : '';
+//            $supplier = Supplier::model()->findByPk($supplierId);
+//
+//            $object = array(
+//                'supplier_id' => CHtml::value($supplier, 'id'),
+//                'supplier_name' => CHtml::value($supplier, 'name'),
+//                'supplier_code' => CHtml::value($supplier, 'code'),
+//                'supplier_mobile_phone' => CHtml::value($supplier, 'mobile_phone'),
+//            );
+//            echo CJSON::encode($object);
+//        }
+//    }
 
-            $object = array(
-                'supplier_id' => CHtml::value($supplier, 'id'),
-                'supplier_name' => CHtml::value($supplier, 'name'),
-                'supplier_code' => CHtml::value($supplier, 'code'),
-                'supplier_mobile_phone' => CHtml::value($supplier, 'mobile_phone'),
-            );
-            echo CJSON::encode($object);
-        }
-    }
-
-    protected function saveToExcel($payableSummary, $endDate, $branchId) {
+    protected function saveToExcel($payableSummary, $payableReportData, $payablePaymentReportData, $endDate, $branchId) {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
 
@@ -127,8 +170,8 @@ class PayableSupplierController extends Controller {
         $worksheet->mergeCells('A2:F2');
         $worksheet->mergeCells('A3:F3');
 
-        $worksheet->getStyle('A1:F3')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-        $worksheet->getStyle('A1:F3')->getFont()->setBold(true);
+        $worksheet->getStyle('A1:F5')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->getStyle('A1:F5')->getFont()->setBold(true);
         
         $branch = Branch::model()->findByPk($branchId);
         $worksheet->setCellValue('A1', 'Raperind Motor ' . CHtml::encode(CHtml::value($branch, 'name')));
@@ -137,45 +180,60 @@ class PayableSupplierController extends Controller {
 
         $worksheet->getStyle("A5:F5")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
         $worksheet->getStyle("A5:F5")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
-        $worksheet->getStyle('A5:F6')->getFont()->setBold(true);
         
-        $worksheet->setCellValue('A5', 'Code');
-        $worksheet->setCellValue('B5', 'Company');
-        $worksheet->setCellValue('C5', 'Name');
-        $worksheet->setCellValue('D5', 'Grand Total');
+        $worksheet->setCellValue('A5', 'No');
+        $worksheet->setCellValue('B5', 'Name');
+        $worksheet->setCellValue('C5', 'Akun');
+        $worksheet->setCellValue('D5', 'Invoice');
         $worksheet->setCellValue('E5', 'Payment');
         $worksheet->setCellValue('F5', 'Remaining');
 
-        $counter = 7;
+        $counter = 6;
         
-        foreach ($payableSummary->dataProvider->data as $header) {
-            $payablePurchaseData = $header->getPayablePurchaseSupplierReport($endDate, $branchId);
-            $payableWorkOrderData = $header->getPayableWorkOrderSupplierReport($endDate, $branchId);
-            $totalPrice = $payablePurchaseData['total_price'] + $payableWorkOrderData['total_price'];
-            $totalPayment = $payablePurchaseData['payment_amount'] + $payableWorkOrderData['payment_amount']; 
-            $totalRemaining = $payablePurchaseData['payment_left'] + $payableWorkOrderData['payment_left'];
+        $totalInvoiceSum = '0.00';
+        $totalPaymentSum = '0.00';
+        $totalRemainingSum = '0.00';
+        
+        foreach ($payableSummary->dataProvider->data as $i => $supplier) {
+            $totalRevenue = '0.00';
+            $totalPayment = '0.00';
+            $totalReceivable = '0.00';
+            
+            foreach ($payableReportData[$supplier->id] as $payableReportItem) {
+                $revenue = $payableReportItem['invoice_grand_total'];
+                $paymentAmount = isset($payablePaymentReportData[$payableReportItem['id']]) ? $payablePaymentReportData[$payableReportItem['id']] : '0.00';
+                $paymentLeft = $revenue - $paymentAmount;
+                $totalRevenue += $revenue;
+                $totalPayment += $paymentAmount;
+                $totalReceivable += $paymentLeft;
+            }
                 
-            $worksheet->setCellValue("A{$counter}", $header->code);
-            $worksheet->setCellValue("B{$counter}", $header->company);
-            $worksheet->setCellValue("C{$counter}", $header->name);
-            $worksheet->setCellValue("D{$counter}", $totalPrice);
+            $worksheet->setCellValue("A{$counter}", ++$i);
+            $worksheet->setCellValue("B{$counter}", CHtml::value($supplier, 'name'));
+            $worksheet->setCellValue("C{$counter}", CHtml::value($supplier, 'coa.name'));
+            $worksheet->setCellValue("D{$counter}", $totalRevenue);
             $worksheet->setCellValue("E{$counter}", $totalPayment);
-            $worksheet->setCellValue("F{$counter}", $totalRemaining);
+            $worksheet->setCellValue("F{$counter}", $totalReceivable);
 
+            $totalInvoiceSum += $totalRevenue;
+            $totalPaymentSum += $totalPayment;
+            $totalRemainingSum += $totalReceivable;
+            
             $counter++;
                 
-//            $worksheet->getStyle("A{$counter}:I{$counter}")->getFont()->setBold(true);
-//            $worksheet->getStyle("A{$counter}:H{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
-//            $worksheet->getStyle("A{$counter}:H{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
-//            $worksheet->mergeCells("A{$counter}:E{$counter}");
-//            $worksheet->setCellValue("A{$counter}", 'Total');
-//            $worksheet->setCellValue("F{$counter}", $totalPurchase);
-//            $worksheet->setCellValue("G{$counter}", $totalPayment);
-//            $worksheet->setCellValue("H{$counter}", $totalPayable);
-//
-//            $counter++;$counter++;
         }
 
+        $worksheet->getStyle("A{$counter}:F{$counter}")->getFont()->setBold(true);
+        $worksheet->getStyle("A{$counter}:F{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->mergeCells("A{$counter}:C{$counter}");
+        
+        $worksheet->setCellValue("A{$counter}", 'Total');
+        $worksheet->setCellValue("D{$counter}", $totalInvoiceSum);
+        $worksheet->setCellValue("E{$counter}", $totalPaymentSum);
+        $worksheet->setCellValue("F{$counter}", $totalRemainingSum);
+
+        $counter++;$counter++;
+        
         for ($col = 'A'; $col !== 'Z'; $col++) {
             $objPHPExcel->getActiveSheet()
             ->getColumnDimension($col)

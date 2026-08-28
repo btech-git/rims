@@ -30,11 +30,19 @@ $this->breadcrumbs = array(
                 <td><?php echo Yii::app()->dateFormatter->format("d MMMM yyyy", $receiveHeader->invoice_due_date); ?></td>
             </tr>
             <tr>
-                <td width="15%">Receive Item No</td>
+                <td width="15%">PO #</td>
+                <td><?php echo CHtml::link($receiveHeader->purchaseOrder->purchase_order_no, array("/transaction/transactionPurchaseOrder/show", "id"=>$receiveHeader->purchase_order_id), array('target' => 'blank')); ?></td>
+            </tr>
+            <tr>
+                <td width="15%">Tanggal PO</td>
+                <td><?php echo Yii::app()->dateFormatter->format("d MMMM yyyy", $receiveHeader->purchaseOrder->purchase_order_date); ?></td>
+            </tr>
+            <tr>
+                <td width="15%">Penerimaan #</td>
                 <td><?php echo CHtml::link($receiveHeader->receive_item_no, array("/transaction/transactionReceiveItem/show", "id"=>$receiveHeader->id), array('target' => 'blank')); ?></td>
             </tr>
             <tr>
-                <td width="15%">Tanggal</td>
+                <td width="15%">Tanggal Terima</td>
                 <td><?php echo Yii::app()->dateFormatter->format("d MMMM yyyy", $receiveHeader->receive_item_date); ?></td>
             </tr>
             <tr>
