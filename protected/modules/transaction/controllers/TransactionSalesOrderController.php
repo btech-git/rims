@@ -566,10 +566,10 @@ class TransactionSalesOrderController extends Controller {
 
                     $transactionType = 'SO';
                     $postingDate = date('Y-m-d');
-                    $transactionCode = $model->sale_order_no;
-                    $transactionDate = $model->sale_order_date;
-                    $branchId = $model->requester_branch_id;
-                    $transactionSubject = $model->note;
+                    $transactionCode = $salesOrder->sale_order_no;
+                    $transactionDate = $salesOrder->sale_order_date;
+                    $branchId = $salesOrder->requester_branch_id;
+                    $transactionSubject = $salesOrder->note;
 
                     $journalReferences = array();
 
@@ -577,10 +577,10 @@ class TransactionSalesOrderController extends Controller {
                         $getCoaKas = '121.00.002';
                         $coaKasWithCode = Coa::model()->findByAttributes(array('code' => $getCoaKas));
                         $jurnalUmumKas = new JurnalUmum;
-                        $jurnalUmumKas->kode_transaksi = $salesOrder->sale_order_no;
-                        $jurnalUmumKas->tanggal_transaksi = $salesOrder->sale_order_date;
+                        $jurnalUmumKas->kode_transaksi = $transactionCode;
+                        $jurnalUmumKas->tanggal_transaksi = $transactionDate;
                         $jurnalUmumKas->coa_id = $coaKasWithCode->id;
-                        $jurnalUmumKas->branch_id = $salesOrder->requester_branch_id;
+                        $jurnalUmumKas->branch_id = $branchId;
                         $jurnalUmumKas->total = round($salesOrder->total_price, 0);
                         $jurnalUmumKas->debet_kredit = 'D';
                         $jurnalUmumKas->tanggal_posting = date('Y-m-d');
@@ -593,10 +593,10 @@ class TransactionSalesOrderController extends Controller {
                         $getCoaPiutang = '121.00.001';
                         $coaPiutangWithCode = Coa::model()->findByAttributes(array('code' => $getCoaPiutang));
                         $jurnalUmumPiutang = new JurnalUmum;
-                        $jurnalUmumPiutang->kode_transaksi = $salesOrder->sale_order_no;
-                        $jurnalUmumPiutang->tanggal_transaksi = $salesOrder->sale_order_date;
+                        $jurnalUmumPiutang->kode_transaksi = $transactionCode;
+                        $jurnalUmumPiutang->tanggal_transaksi = $transactionDate;
                         $jurnalUmumPiutang->coa_id = $coaPiutangWithCode->id;
-                        $jurnalUmumPiutang->branch_id = $salesOrder->requester_branch_id;
+                        $jurnalUmumPiutang->branch_id = $branchId;
                         $jurnalUmumPiutang->total = round($salesOrder->total_price, 0);
                         $jurnalUmumPiutang->debet_kredit = 'D';
                         $jurnalUmumPiutang->tanggal_posting = date('Y-m-d');
@@ -623,10 +623,10 @@ class TransactionSalesOrderController extends Controller {
                             $getCoaPpn = '224.00.001';
                             $coaPpnWithCode = Coa::model()->findByAttributes(array('code' => $getCoaPpn));
                             $jurnalUmumPpn = new JurnalUmum;
-                            $jurnalUmumPpn->kode_transaksi = $salesOrder->sale_order_no;
-                            $jurnalUmumPpn->tanggal_transaksi = $salesOrder->sale_order_date;
+                            $jurnalUmumPpn->kode_transaksi = $transactionCode;
+                            $jurnalUmumPpn->tanggal_transaksi = $transactionDate;
                             $jurnalUmumPpn->coa_id = $coaPpnWithCode->id;
-                            $jurnalUmumPpn->branch_id = $salesOrder->requester_branch_id;
+                            $jurnalUmumPpn->branch_id = $branchId;
                             $jurnalUmumPpn->total = $salesOrder->ppn_price;
                             $jurnalUmumPpn->debet_kredit = 'K';
                             $jurnalUmumPpn->tanggal_posting = date('Y-m-d');
