@@ -505,7 +505,7 @@
                         'visible' => (Yii::app()->user->checkAccess('warehouseStockReport'))
                     ),
                     array(
-                        'label' => 'Analisa Stok Barang', 
+                        'label' => 'Analisa Penjualan Barang', 
                         'url' => array('/report/stockAnalysis/summary'), 
                         'visible' => (Yii::app()->user->checkAccess('stockAnalysisReport'))
                     ),

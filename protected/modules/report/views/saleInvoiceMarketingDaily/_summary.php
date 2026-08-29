@@ -1,25 +1,24 @@
-<?php Yii::app()->clientScript->registerCss('_report', '
-    .width1-1 { width: 10% }
-    .width1-2 { width: 8% }
-    .width1-3 { width: 15% }
-    .width1-4 { width: 5% }
-    .width1-5 { width: 5% }
-    .width1-6 { width: 9% }
-    .width1-7 { width: 8% }
-    .width1-8 { width: 15% }
-    .width1-9 { width:9% }
-    .width1-10 { width: 15% }
-'); ?>
+<style> 
+ .table_wrapper{
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+}
+</style>
 
 <div style="font-weight: bold; text-align: center">
-    <div style="font-size: larger">Raperind Motor</div>
+    <div style="font-size: larger">
+        <?php $branch = Branch::model()->findByPk($branchId); ?>
+        Raperind Motor <?php echo CHtml::encode(CHtml::value($branch, 'code')); ?>
+    </div>
     <div style="font-size: larger">Penjualan per Front Office Harian</div>
     <div><?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($startDate))); ?> - <?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($endDate))); ?></div>
 </div>
 
 <br />
 
-<table class="report">
+<div class="table_wrapper">
+    <table class="responsive">
     <thead style="position: sticky; top: 0">
         <tr id="header1">
             <th></th>

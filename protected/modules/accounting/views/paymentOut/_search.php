@@ -20,10 +20,10 @@
             <div class="field">
                 <div class="row collapse">
                     <div class="small-4 columns">
-                        <?php echo $form->label($model,'payment_number', array('class'=>'prefix')); ?>
+                        <?php echo $form->label($paymentOut,'payment_number', array('class'=>'prefix')); ?>
                     </div>
                     <div class="small-8 columns">
-                        <?php echo $form->textField($model,'payment_number',array('size'=>50,'maxlength'=>50)); ?>
+                        <?php echo $form->textField($paymentOut,'payment_number',array('size'=>50,'maxlength'=>50)); ?>
                     </div>
                 </div>
             </div>	
@@ -32,7 +32,7 @@
             <div class="field">
                 <div class="row collapse">
                     <div class="small-4 columns">
-                        <?php echo $form->label($model,'payment_date', array('class'=>'prefix')); ?>
+                        <?php echo $form->label($paymentOut,'payment_date', array('class'=>'prefix')); ?>
                     </div>
                     <div class="small-8 columns">
                         <div class="medium-5 columns">
@@ -76,10 +76,10 @@
             <div class="field">
                 <div class="row collapse">
                     <div class="small-4 columns">
-                        <?php echo $form->label($model,'supplier_id', array('class'=>'prefix')); ?>
+                        <?php echo $form->label($paymentOut,'supplier_id', array('class'=>'prefix')); ?>
                     </div>
                     <div class="small-8 columns">
-                        <?php echo $form->textField($model,'supplier_name'); ?>
+                        <?php echo $form->textField($paymentOut,'supplier_name'); ?>
                     </div>
                 </div>
             </div>	
@@ -88,10 +88,10 @@
             <div class="field">
                 <div class="row collapse">
                     <div class="small-4 columns">
-                        <?php echo $form->label($model,'payment_type_id', array('class'=>'prefix')); ?>
+                        <?php echo $form->label($paymentOut,'payment_type_id', array('class'=>'prefix')); ?>
                     </div>
                     <div class="small-8 columns">
-                        <?php echo $form->dropDownList($model, 'payment_type_id', CHtml::listData(PaymentType::model()->findAll(array('order' => 'name')), 'id', 'name'), array('empty' => '-- all --')); ?>
+                        <?php echo $form->dropDownList($paymentOut, 'payment_type_id', CHtml::listData(PaymentType::model()->findAll(array('order' => 'name')), 'id', 'name'), array('empty' => '-- all --')); ?>
                     </div>
                 </div>
             </div>	

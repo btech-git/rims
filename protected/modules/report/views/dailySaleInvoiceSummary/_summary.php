@@ -7,7 +7,10 @@
 </style>
 
 <div style="font-weight: bold; text-align: center">
-    <div style="font-size: larger">Raperind Motor</div>
+    <div style="font-size: larger">
+        <?php $branch = Branch::model()->findByPk($branchId); ?>
+        Raperind Motor <?php echo CHtml::encode(CHtml::value($branch, 'code')); ?>
+    </div>
     <div style="font-size: larger">Faktur Penjualan Harian (Rincian & Detail)</div>
     <div><?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($startDate))) . ' &nbsp;&ndash;&nbsp; ' . CHtml::encode(Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($endDate))); ?></div>
 </div>

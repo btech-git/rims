@@ -34,7 +34,9 @@ class RegistrationTransactionMechanicDailySummary extends CComponent {
     public function setupFilter($filters) {
         $startDate = (empty($filters['startDate'])) ? date('Y-m-d') : $filters['startDate'];
         $endDate = (empty($filters['endDate'])) ? date('Y-m-d') : $filters['endDate'];
+        
         $this->dataProvider->criteria->addCondition('t.status NOT LIKE "%CANCELLED%" AND employee_id_assign_mechanic IS NOT NULL');
         $this->dataProvider->criteria->addBetweenCondition('t.transaction_date', $startDate, $endDate);
+        $this->dataProvider->criteria->compare('t.branch_id', $filters['branchId']);
     }
 }

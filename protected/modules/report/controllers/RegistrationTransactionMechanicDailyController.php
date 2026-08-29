@@ -39,6 +39,7 @@ class RegistrationTransactionMechanicDailyController extends Controller {
         $filters = array(
             'startDate' => $startDate,
             'endDate' => $endDate,
+            'branchId' => $branchId,
         );
         $registrationTransactionSummary->setupFilter($filters);
 

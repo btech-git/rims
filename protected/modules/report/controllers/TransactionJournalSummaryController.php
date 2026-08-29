@@ -111,7 +111,7 @@ class TransactionJournalSummaryController extends Controller {
 
         $transactionType = 'Pout';
         $remark = '';
-        $branchId = (isset($_GET['BranchId'])) ? $_GET['BranchId'] : '';
+        $branchId = (isset($_GET['BranchId'])) ? $_GET['BranchId'] : (Yii::app()->user->checkAccess('director') || Yii::app()->user->branch_id == 6 ? '' : Yii::app()->user->branch_id);
         $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : date('Y-m-d');
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
         
@@ -143,7 +143,7 @@ class TransactionJournalSummaryController extends Controller {
 
         $transactionType = 'Invoice';
         $remark = '';
-        $branchId = (isset($_GET['BranchId'])) ? $_GET['BranchId'] : '';
+        $branchId = (isset($_GET['BranchId'])) ? $_GET['BranchId'] : (Yii::app()->user->checkAccess('director') || Yii::app()->user->branch_id == 6 ? '' : Yii::app()->user->branch_id);
         $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : date('Y-m-d');
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
         
@@ -175,7 +175,7 @@ class TransactionJournalSummaryController extends Controller {
 
         $transactionType = 'Pin';
         $remark = '';
-        $branchId = (isset($_GET['BranchId'])) ? $_GET['BranchId'] : '';
+        $branchId = (isset($_GET['BranchId'])) ? $_GET['BranchId'] : (Yii::app()->user->checkAccess('director') || Yii::app()->user->branch_id == 6 ? '' : Yii::app()->user->branch_id);
         $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : date('Y-m-d');
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
         
@@ -207,7 +207,7 @@ class TransactionJournalSummaryController extends Controller {
 
         $transactionType = 'RCI';
         $remark = 'Internal Delivery Order';
-        $branchId = (isset($_GET['BranchId'])) ? $_GET['BranchId'] : '';
+        $branchId = (isset($_GET['BranchId'])) ? $_GET['BranchId'] : (Yii::app()->user->checkAccess('director') || Yii::app()->user->branch_id == 6 ? '' : Yii::app()->user->branch_id);
         $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : date('Y-m-d');
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
         
@@ -239,7 +239,7 @@ class TransactionJournalSummaryController extends Controller {
 
         $transactionType = 'DO';
         $remark = '';
-        $branchId = (isset($_GET['BranchId'])) ? $_GET['BranchId'] : '';
+        $branchId = (isset($_GET['BranchId'])) ? $_GET['BranchId'] : (Yii::app()->user->checkAccess('director') || Yii::app()->user->branch_id == 6 ? '' : Yii::app()->user->branch_id);
         $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : date('Y-m-d');
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
         
@@ -271,7 +271,7 @@ class TransactionJournalSummaryController extends Controller {
 
         $transactionType = 'CASH';
         $remark = '';
-        $branchId = (isset($_GET['BranchId'])) ? $_GET['BranchId'] : '';
+        $branchId = (isset($_GET['BranchId'])) ? $_GET['BranchId'] : (Yii::app()->user->checkAccess('director') || Yii::app()->user->branch_id == 6 ? '' : Yii::app()->user->branch_id);
         $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : date('Y-m-d');
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
         
@@ -303,7 +303,7 @@ class TransactionJournalSummaryController extends Controller {
 
         $transactionType = 'WOE';
         $remark = '';
-        $branchId = (isset($_GET['BranchId'])) ? $_GET['BranchId'] : '';
+        $branchId = (isset($_GET['BranchId'])) ? $_GET['BranchId'] : (Yii::app()->user->checkAccess('director') || Yii::app()->user->branch_id == 6 ? '' : Yii::app()->user->branch_id);
         $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : date('Y-m-d');
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
         
@@ -335,7 +335,7 @@ class TransactionJournalSummaryController extends Controller {
 
         $transactionType = 'MOM';
         $remark = '';
-        $branchId = (isset($_GET['BranchId'])) ? $_GET['BranchId'] : '';
+        $branchId = (isset($_GET['BranchId'])) ? $_GET['BranchId'] : (Yii::app()->user->checkAccess('director') || Yii::app()->user->branch_id == 6 ? '' : Yii::app()->user->branch_id);
         $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : date('Y-m-d');
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
         
@@ -370,7 +370,7 @@ class TransactionJournalSummaryController extends Controller {
         $coaId = (isset($_GET['CoaId'])) ? $_GET['CoaId'] : '';
         $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : date('Y-m-d');
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
-        $branchId = (isset($_GET['BranchId'])) ? $_GET['BranchId'] : '';
+        $branchId = (isset($_GET['BranchId'])) ? $_GET['BranchId'] : (Yii::app()->user->checkAccess('director') || Yii::app()->user->branch_id == 6 ? '' : Yii::app()->user->branch_id);
         $remark = (isset($_GET['Remark'])) ? $_GET['Remark'] : '';
         $transactionType = (isset($_GET['TransactionType'])) ? $_GET['TransactionType'] : '';
 
@@ -400,7 +400,7 @@ class TransactionJournalSummaryController extends Controller {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
 
-        $branchId = (isset($_GET['BranchId'])) ? $_GET['BranchId'] : '';
+        $branchId = (isset($_GET['BranchId'])) ? $_GET['BranchId'] : (Yii::app()->user->checkAccess('director') || Yii::app()->user->branch_id == 6 ? '' : Yii::app()->user->branch_id);
         $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : date('Y-m-d');
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
         
@@ -433,7 +433,7 @@ class TransactionJournalSummaryController extends Controller {
         $coaId = (isset($_GET['CoaId'])) ? $_GET['CoaId'] : '';
         $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : date('Y-m-d');
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
-        $branchId = (isset($_GET['BranchId'])) ? $_GET['BranchId'] : '';
+        $branchId = (isset($_GET['BranchId'])) ? $_GET['BranchId'] : (Yii::app()->user->checkAccess('director') || Yii::app()->user->branch_id == 6 ? '' : Yii::app()->user->branch_id);
 
         $transactionJournalSummary = new TransactionJournalSummary($jurnalUmum->search());
         $transactionJournalSummary->setupLoading();

@@ -1,16 +1,3 @@
-<?php Yii::app()->clientScript->registerCss('_report', '
-    .width1-1 { width: 10% }
-    .width1-2 { width: 8% }
-    .width1-3 { width: 15% }
-    .width1-4 { width: 5% }
-    .width1-5 { width: 5% }
-    .width1-6 { width: 9% }
-    .width1-7 { width: 8% }
-    .width1-8 { width: 15% }
-    .width1-9 { width:9% }
-    .width1-10 { width: 15% }
-'); ?>
-
 <style> 
  .table_wrapper{
     display: block;
@@ -20,7 +7,8 @@
 </style>
 
 <div style="font-weight: bold; text-align: center">
-    <div style="font-size: larger">Raperind Motor</div>
+    <?php $branch = Branch::model()->findByPk($branchId); ?>
+    <div style="font-size: larger">Raperind Motor <?php echo CHtml::encode(CHtml::value($branch, 'code')); ?></div>
     <div style="font-size: larger">Penjualan per Cabang Harian</div>
     <div><?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($startDate))); ?> - <?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($endDate))); ?></div>
 </div>
@@ -67,13 +55,13 @@
                     <td class="width1-8"><?php echo CHtml::encode(CHtml::value($header, 'serviceLists')); ?></td>
                     <td class="width1-9" style="text-align: right">
                         <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', ($header->service_price))); ?>
-                </td>
-                <td class="width1-10"><?php echo CHtml::encode(CHtml::value($header, 'productLists')); ?></td>
-                <td class="width1-9" style="text-align: right">
-                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', ($header->product_price))); ?>
-                </td>
-            </tr>
-        <?php endforeach; ?>
-    </tbody>
-</table>
+                    </td>
+                    <td class="width1-10"><?php echo CHtml::encode(CHtml::value($header, 'productLists')); ?></td>
+                    <td class="width1-9" style="text-align: right">
+                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', ($header->product_price))); ?>
+                    </td>
+                </tr>
+            <?php endforeach; ?>
+        </tbody>
+    </table>
 </div>

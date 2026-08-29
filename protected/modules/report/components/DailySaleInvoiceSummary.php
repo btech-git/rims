@@ -40,5 +40,6 @@ class DailySaleInvoiceSummary extends CComponent {
         $this->dataProvider->criteria->addBetweenCondition('t.invoice_date', $startDate, $endDate);
         $this->dataProvider->criteria->compare('vehicle.plate_number', $filters['plateNumber'], true);
         $this->dataProvider->criteria->compare('customer.customer_type', $filters['customerType']);
+        $this->dataProvider->criteria->compare('t.branch_id', $filters['branchId']);
     }
 }

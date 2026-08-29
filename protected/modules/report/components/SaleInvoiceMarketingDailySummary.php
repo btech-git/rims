@@ -40,5 +40,6 @@ class SaleInvoiceMarketingDailySummary extends CComponent {
         $endDate = (empty($filters['endDate'])) ? date('Y-m-d') : $filters['endDate'];
         $this->dataProvider->criteria->addCondition('t.status NOT LIKE "%CANCELLED%" AND registrationTransaction.employee_id_sales_person IS NOT NULL');
         $this->dataProvider->criteria->addBetweenCondition('t.invoice_date', $startDate, $endDate);
+        $this->dataProvider->criteria->compare('t.branch_id', $filters['branchId']);
     }
 }

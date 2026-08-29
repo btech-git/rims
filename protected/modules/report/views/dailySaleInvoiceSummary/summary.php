@@ -53,8 +53,7 @@ Yii::app()->clientScript->registerScript('report', '
                                     <label class="prefix">Customer</label>
                                 </div>
                                 <div class="small-8 columns">
-                                    <?php
-                                    echo CHtml::activeTextField($invoiceHeader, 'customer_id', array(
+                                    <?php echo CHtml::activeTextField($invoiceHeader, 'customer_id', array(
                                         'readonly' => true,
                                         'onclick' => '$("#customer-dialog").dialog("open"); return false;',
                                         'onkeypress' => 'if (event.keyCode == 13) { $("#customer-dialog").dialog("open"); return false; }'
@@ -71,10 +70,8 @@ Yii::app()->clientScript->registerScript('report', '
                                             'width' => 'auto',
                                             'modal' => true,
                                         ),
-                                    ));
-                                    ?>
-                                    <?php
-                                    $this->widget('zii.widgets.grid.CGridView', array(
+                                    )); ?>
+                                    <?php $this->widget('zii.widgets.grid.CGridView', array(
                                         'id' => 'customer-grid',
                                         'dataProvider' => $customerDataProvider,
                                         'filter' => $customer,
@@ -113,13 +110,12 @@ Yii::app()->clientScript->registerScript('report', '
                                             'customer_type',
                                             'mobile_phone',
                                         ),
-                                    ));
-                                    ?>
-<?php $this->endWidget('zii.widgets.jui.CJuiDialog'); ?>
+                                    )); ?>
+                                    <?php $this->endWidget('zii.widgets.jui.CJuiDialog'); ?>
 
-<?php echo CHtml::openTag('span', array('id' => 'customer_name')); ?>
-<?php echo CHtml::encode(CHtml::value($invoiceHeader, 'customer.name')); ?>
-<?php echo CHtml::closeTag('span'); ?>    
+                                    <?php echo CHtml::openTag('span', array('id' => 'customer_name')); ?>
+                                    <?php echo CHtml::encode(CHtml::value($invoiceHeader, 'customer.name')); ?>
+                                    <?php echo CHtml::closeTag('span'); ?>    
                                 </div>
                             </div>
                         </div>
@@ -132,12 +128,10 @@ Yii::app()->clientScript->registerScript('report', '
                                     <label class="prefix">Type</label>
                                 </div>
                                 <div class="small-8 columns">
-<?php
-echo CHtml::dropDownlist('CustomerType', $customerType, array(
-    'INDIVIDUAL' => 'INDIVIDUAL',
-    'COMPANY' => 'COMPANY'
-        ), array('empty' => '-- All Type --'));
-?>
+                                    <?php echo CHtml::dropDownlist('CustomerType', $customerType, array(
+                                        'INDIVIDUAL' => 'INDIVIDUAL',
+                                        'COMPANY' => 'COMPANY'
+                                    ), array('empty' => '-- All Type --')); ?>
                                 </div>
                             </div>
                         </div>
@@ -165,9 +159,9 @@ echo CHtml::dropDownlist('CustomerType', $customerType, array(
                                     <span class="prefix">Branch</span>
                                 </div>
                                 <div class="small-8 columns">
-                                    <?php echo CHtml::activeDropDownlist($invoiceHeader, 'branch_id', CHtml::listData(Branch::model()->findAllbyAttributes(array('status' => 'Active')), 'id', 'name'), array(
-                                        'empty' => '-- All Branch --',
-                                        'disabled' => Yii::app()->user->checkAccess('director') ? '' : 'disabled',
+                                    <?php echo CHtml::dropDownlist('BranchId', $branchId, CHtml::listData(Branch::model()->findAllbyAttributes(array('status'=>'Active')), 'id','name'), array(
+                                        'empty'=>'-- All Branch --',
+                                        'disabled' => Yii::app()->user->checkAccess('director') || Yii::app()->user->branch_id == 6 ? '' : 'disabled',
                                     )); ?>
                                 </div>
                             </div>
@@ -202,20 +196,18 @@ echo CHtml::dropDownlist('CustomerType', $customerType, array(
                                 </div>
 
                                 <div class="small-4 columns">
-<?php
-$this->widget('zii.widgets.jui.CJuiDatePicker', array(
-    'name' => 'EndDate',
-    'options' => array(
-        'dateFormat' => 'yy-mm-dd',
-        'changeMonth' => true,
-        'changeYear' => true,
-    ),
-    'htmlOptions' => array(
-        'readonly' => true,
-        'placeholder' => 'Sampai',
-    ),
-));
-?>
+                                    <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(
+                                        'name' => 'EndDate',
+                                        'options' => array(
+                                            'dateFormat' => 'yy-mm-dd',
+                                            'changeMonth' => true,
+                                            'changeYear' => true,
+                                        ),
+                                        'htmlOptions' => array(
+                                            'readonly' => true,
+                                            'placeholder' => 'Sampai',
+                                        ),
+                                    )); ?>
                                 </div>
                             </div>
                         </div>
@@ -228,12 +220,10 @@ $this->widget('zii.widgets.jui.CJuiDatePicker', array(
                                     <span class="prefix">PPn/non</span>
                                 </div>
                                 <div class="small-8 columns">
-                    <?php
-                    echo CHtml::activeDropDownlist($invoiceHeader, 'ppn', array(
-                        0 => 'Non PPN',
-                        1 => 'PPN',
-                            ), array('empty' => '-- All --'));
-                    ?>
+                                    <?php echo CHtml::activeDropDownlist($invoiceHeader, 'ppn', array(
+                                        0 => 'Non PPN',
+                                        1 => 'PPN',
+                                    ), array('empty' => '-- All --')); ?>
                                 </div>
                             </div>
                         </div>
@@ -248,9 +238,7 @@ $this->widget('zii.widgets.jui.CJuiDatePicker', array(
                     <?php echo CHtml::submitButton('Simpan ke Excel', array('name' => 'SaveExcel')); ?>
                 </div>
 
-                <div class="row">
-                <?php echo CHtml::hiddenField('sort', '', array('id' => 'CurrentSort')); ?>
-                </div>
+                <div class="row"><?php echo CHtml::hiddenField('sort', '', array('id' => 'CurrentSort')); ?></div>
 
                 <?php echo CHtml::endForm(); ?>
 
@@ -261,26 +249,22 @@ $this->widget('zii.widgets.jui.CJuiDatePicker', array(
             <div class="relative">
                 <div class="reportDisplay">
                 <?php echo ReportHelper::summaryText($saleInvoiceSummary->dataProvider); ?>
-<?php //echo ReportHelper::sortText($transaksiPembelianSummary->dataProvider->sort, array('Jenis Persediaan', 'Tanggal SO', 'Pelanggan'));  ?>
                 </div>
 
-<?php
-$this->renderPartial('_summary', array(
-    'saleInvoiceSummary' => $saleInvoiceSummary,
-    'startDate' => $startDate,
-    'endDate' => $endDate,
-));
-?>
+                <?php $this->renderPartial('_summary', array(
+                    'saleInvoiceSummary' => $saleInvoiceSummary,
+                    'startDate' => $startDate,
+                    'endDate' => $endDate,
+                    'branchId' => $branchId,
+                )); ?>
             </div>
 
             <div class="right">
-<?php
-$this->widget('system.web.widgets.pagers.CLinkPager', array(
-    'itemCount' => $saleInvoiceSummary->dataProvider->pagination->itemCount,
-    'pageSize' => $saleInvoiceSummary->dataProvider->pagination->pageSize,
-    'currentPage' => $saleInvoiceSummary->dataProvider->pagination->getCurrentPage(false),
-));
-?>
+                <?php $this->widget('system.web.widgets.pagers.CLinkPager', array(
+                    'itemCount' => $saleInvoiceSummary->dataProvider->pagination->itemCount,
+                    'pageSize' => $saleInvoiceSummary->dataProvider->pagination->pageSize,
+                    'currentPage' => $saleInvoiceSummary->dataProvider->pagination->getCurrentPage(false),
+                )); ?>
             </div>
             <div class="clear"></div>
         </div>

@@ -39,6 +39,7 @@ class SaleInvoiceMarketingDailyController extends Controller {
         $filters = array(
             'startDate' => $startDate,
             'endDate' => $endDate,
+            'branchId' => $branchId,
         );
         $saleInvoiceSummary->setupFilter($filters);
 

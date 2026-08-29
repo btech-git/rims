@@ -416,6 +416,29 @@ class PaymentOutController extends Controller {
         ));
     }
 
+    public function actionAdminPendingApproval() {
+        $paymentOut = Search::bind(new PaymentOut('search'), isset($_GET['PaymentOut']) ? $_GET['PaymentOut'] : array());
+        
+        if (isset($_GET['pageSize'])) {
+            Yii::app()->user->setState('pageSize', (int) $_GET['pageSize']);
+            unset($_GET['pageSize']);
+        }
+
+        $dataProvider = $paymentOut->searchByPendingApproval();
+        $dataProvider->criteria->order = 't.payment_date DESC';
+        $dataProvider->criteria->addCondition("t.user_id_cancelled IS NULL AND t.payment_date > '" . AppParam::BEGINNING_TRANSACTION_DATE . "'");
+        
+        if (!(Yii::app()->user->checkAccess('director') || Yii::app()->user->branch_id == 6)) {
+            $dataProvider->criteria->addCondition('t.branch_id = :branch_id');
+            $dataProvider->criteria->params[':branch_id'] = Yii::app()->user->branch_id;
+        }
+
+        $this->render('adminPendingApproval', array(
+            'paymentOut' => $paymentOut,
+            'dataProvider' => $dataProvider,
+        ));
+    }
+
     public function actionUpdateApproval($headerId) {
         $paymentOut = PaymentOut::model()->findByPK($headerId);
         $historis = PaymentOutApproval::model()->findAllByAttributes(array('payment_out_id' => $headerId));

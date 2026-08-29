@@ -48,7 +48,7 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
             <div class="relative">
                 <div style="font-weight: bold; text-align: center">
                     <?php $branch = Branch::model()->findByPk($branchId); ?>
-                    <div style="font-size: larger"><?php echo CHtml::encode(($branch === null) ? '' : $branch->name); ?></div>
+                    <div style="font-size: larger">Raperind Motor <?php echo CHtml::encode(CHtml::value($branch, 'code')); ?></div>
                     <div style="font-size: larger">Rekap Jurnal Umum <?php echo $transactionTypeLiteral; ?></div>
                     <div><?php echo ' YTD: &nbsp;&nbsp; ' . CHtml::encode(Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($startDate))) . ' - ' . CHtml::encode(Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($endDate))); ?></div>
                 </div>

@@ -30,6 +30,7 @@ class SaleInvoiceTaxOnlySummaryController extends Controller {
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
         $customerType = (isset($_GET['CustomerType'])) ? $_GET['CustomerType'] : '';
         $plateNumber = (isset($_GET['PlateNumber'])) ? $_GET['PlateNumber'] : '';
+        $branchId = isset($_GET['BranchId']) ? $_GET['BranchId'] : (Yii::app()->user->checkAccess('director') || Yii::app()->user->branch_id == 6 ? '' : Yii::app()->user->branch_id);
         $pageSize = (isset($_GET['PageSize'])) ? $_GET['PageSize'] : '';
         $currentPage = (isset($_GET['page'])) ? $_GET['page'] : '';
         $currentSort = (isset($_GET['sort'])) ? $_GET['sort'] : '';
@@ -43,6 +44,7 @@ class SaleInvoiceTaxOnlySummaryController extends Controller {
             'endDate' => $endDate,
             'customerType' => $customerType,
             'plateNumber' => $plateNumber,
+            'branchId' => $branchId,
         );
         $saleInvoiceSummary->setupFilter($filters);
 
@@ -67,6 +69,7 @@ class SaleInvoiceTaxOnlySummaryController extends Controller {
             'customer'=>$customer,
             'customerDataProvider'=>$customerDataProvider,
             'plateNumber' => $plateNumber,
+            'branchId' => $branchId,
         ));
     }
 

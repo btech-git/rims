@@ -40,5 +40,6 @@ class SaleInvoiceSummary extends CComponent {
         $this->dataProvider->criteria->compare('t.vehicle_id', $filters['vehicleId']);
         $this->dataProvider->criteria->compare('customer.customer_type', $filters['customerType'], false);
         $this->dataProvider->criteria->compare('t.customer_id', $filters['customerId']);
+        $this->dataProvider->criteria->compare('t.branch_id', $filters['branchId']);
     }
 }

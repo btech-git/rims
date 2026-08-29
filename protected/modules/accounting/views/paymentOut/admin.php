@@ -36,35 +36,28 @@ $('.search-form form').submit(function(){
 <div id="link">
     <?php echo CHtml::link('<span class="fa fa-plus"></span> New', Yii::app()->baseUrl . '/accounting/paymentOut/supplierList', array(
         'class' => 'button success right',
-        'visible' => Yii::app()->user->checkAccess("paymentOutCreate")
+        'visible' => Yii::app()->user->checkAccess("paymentOutCreate"),
+        'style'=>'margin-right:10px',
+    )); ?>
+    
+    <?php echo CHtml::link('<span class="fa fa-check"></span> Pending Approval', Yii::app()->baseUrl . '/accounting/paymentOut/adminPendingApproval', array(
+        'class' => 'button warning right',
+        'visible' => Yii::app()->user->checkAccess("paymentOutCreate"),
+        'style'=>'margin-right:10px',
     )); ?>
 </div>
 
-<br />
+<br /><br />
 
 <?php echo CHtml::beginForm(array(''), 'get'); ?>
 <center>
-    <?php
-    $pageSize = Yii::app()->user->getState('pageSize', Yii::app()->params['defaultPageSize']);
-    $pageSizeDropDown = CHtml::dropDownList(
-        'pageSize', $pageSize, array(10 => 10, 25 => 25, 50 => 50, 100 => 100), array(
-            'class' => 'change-pagesize',
-            'onchange' => "$.fn.yiiGridView.update('payment-grid',{data:{pageSize:$(this).val()}});",
-        )
-    );
-    ?>
-
-    <div class="page-size-wrap">
-        <span>Display by:</span><?php echo $pageSizeDropDown; ?>
-    </div>
-    
     <div class="search-bar">
         <div class="clearfix button-bar">
             <?php echo CHtml::link('Advanced Search', '#', array('class' => 'search-button right button cbutton secondary')); ?>
             <div class="clearfix"></div>
             <div class="search-form" style="display:none">
                 <?php $this->renderPartial('_search', array(
-                    'model' => $paymentOut,
+                    'paymentOut' => $paymentOut,
                     'startDate' => $startDate,
                     'endDate' => $endDate,
                 )); ?>
