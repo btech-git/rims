@@ -155,7 +155,7 @@ class MonthlySingleBranchSaleTransactionController extends Controller {
             if (isset($monthlySingleBranchSaleReportData[$i]) && isset($monthlySingleBranchSaleProductReportData[$i])) {
                 $dataItem = $monthlySingleBranchSaleReportData[$i];
                 $detailItem = $monthlySingleBranchSaleProductReportData[$i];
-                $totalInvoicePerCustomer = round($dataItem['grand_total'] / $dataItem['customer_quantity'], 2);
+                $totalInvoicePerCustomer = round($dataItem['sub_total'] / $dataItem['customer_quantity'], 2);
                 $totalServicePerCustomer = round($dataItem['total_service'] / $dataItem['customer_quantity'], 2);
                 $totalPartsPerCustomer = round($dataItem['total_product'] / $dataItem['customer_quantity'], 2);
                 $averageTire = $detailItem['tire_quantity'] > 0 ? $detailItem['tire_price'] / $detailItem['tire_quantity'] : '0.00';
@@ -189,7 +189,7 @@ class MonthlySingleBranchSaleTransactionController extends Controller {
                 $customerRepeatQuantitySum += $dataItem['customer_repeat_quantity'];
                 $customerRetailQuantitySum += $dataItem['customer_retail_quantity'];
                 $customerCompanyQuantitySum += $dataItem['customer_company_quantity'];
-                $grandTotalSum += $dataItem['grand_total'];
+                $grandTotalSum += $dataItem['sub_total'];
                 $totalServiceSum += $dataItem['total_service'];
                 $totalProductSum += $dataItem['total_product'];
                 $tireQuantitySum += $detailItem['tire_quantity'];

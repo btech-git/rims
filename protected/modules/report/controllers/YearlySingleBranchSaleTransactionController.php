@@ -155,7 +155,7 @@ class YearlySingleBranchSaleTransactionController extends Controller {
                 $averageTire = $detailItem['tire_quantity'] > 0 ? $detailItem['tire_price'] / $detailItem['tire_quantity'] : '0.00';
                 $averageOil = $detailItem['oil_quantity'] > 0 ? $detailItem['oil_price'] / $detailItem['oil_quantity'] : '0.00';
                 $averageAccessories = $detailItem['accessories_quantity'] > 0 ? $detailItem['accessories_price'] / $detailItem['accessories_quantity'] : '0.00';
-                $totalInvoicePerCustomer = round($dataItem['grand_total'] / $dataItem['customer_quantity'], 2);
+                $totalInvoicePerCustomer = round($dataItem['sub_total'] / $dataItem['customer_quantity'], 2);
                 $totalServicePerCustomer = round($dataItem['total_service'] / $dataItem['customer_quantity'], 2);
                 $totalPartsPerCustomer = round($dataItem['total_product'] / $dataItem['customer_quantity'], 2);
                 

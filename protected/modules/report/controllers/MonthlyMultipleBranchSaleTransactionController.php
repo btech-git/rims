@@ -164,8 +164,8 @@ class MonthlyMultipleBranchSaleTransactionController extends Controller {
             $averageOil = $detailItem['oil_quantity'] > 0 ? $detailItem['oil_price'] / $detailItem['oil_quantity'] : '0.00';
             $averageAccessories = $detailItem['accessories_quantity'] > 0 ? $detailItem['accessories_price'] / $detailItem['accessories_quantity'] : '0.00';
             $customerAverageDaily = round($dataItem['customer_quantity'] / $numberOfDays, 2);
-            $totalInvoiceAverageDaily = round($dataItem['grand_total'] / $numberOfDays, 2);
-            $totalInvoicePerCustomer = round($dataItem['grand_total'] / $dataItem['customer_quantity'], 2);
+            $totalInvoiceAverageDaily = round($dataItem['sub_total'] / $numberOfDays, 2);
+            $totalInvoicePerCustomer = round($dataItem['sub_total'] / $dataItem['customer_quantity'], 2);
             $totalServiceAverageDaily = round($dataItem['total_service'] / $numberOfDays, 2);
             $totalServicePerCustomer = round($dataItem['total_service'] / $dataItem['customer_quantity'], 2);
             $totalPartsAverageDaily = round($dataItem['total_product'] / $numberOfDays, 2);
