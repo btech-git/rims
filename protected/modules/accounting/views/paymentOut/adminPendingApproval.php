@@ -41,11 +41,13 @@ $('.search-form form').submit(function(){
 
 <div class="field buttons text-left">
     <?php echo CHtml::beginForm(); ?>
-    <?php echo CHtml::submitButton('Processing Approval', array('name' => 'Submit', 'confirm' => 'Are you sure you want to approve all this payments?')); ?>
+    <?php echo CHtml::submitButton('Processing Approval', array(
+        'name' => 'Submit', 
+        'confirm' => 'Are you sure you want to approve all this payments?',
+        'class' => 'button success',
+    )); ?>
     <?php echo CHtml::endForm(); ?>
 </div>
-
-<br /><br />
 
 <?php echo CHtml::beginForm(array(''), 'get'); ?>
 <center>
