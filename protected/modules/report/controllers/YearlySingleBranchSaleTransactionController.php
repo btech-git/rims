@@ -167,7 +167,7 @@ class YearlySingleBranchSaleTransactionController extends Controller {
                 $worksheet->setCellValue("D{$counter}", $dataItem['customer_repeat_quantity']);
                 $worksheet->setCellValue("E{$counter}", $dataItem['customer_retail_quantity']);
                 $worksheet->setCellValue("F{$counter}", $dataItem['customer_company_quantity']);
-                $worksheet->setCellValue("G{$counter}", $dataItem['grand_total']);
+                $worksheet->setCellValue("G{$counter}", $dataItem['sub_total']);
                 $worksheet->setCellValue("H{$counter}", $dataItem['total_service']);
                 $worksheet->setCellValue("I{$counter}", $dataItem['total_product']);
                 $worksheet->setCellValue("J{$counter}", $totalInvoicePerCustomer);
@@ -186,7 +186,7 @@ class YearlySingleBranchSaleTransactionController extends Controller {
                 $customerRepeatQuantitySum += $dataItem['customer_repeat_quantity'];
                 $customerRetailQuantitySum += $dataItem['customer_retail_quantity'];
                 $customerCompanyQuantitySum += $dataItem['customer_company_quantity'];
-                $grandTotalSum += $dataItem['grand_total'];
+                $grandTotalSum += $dataItem['sub_total'];
                 $totalServiceSum += $dataItem['total_service'];
                 $totalProductSum += $dataItem['total_product'];
                 $tireQuantitySum += $detailItem['tire_quantity'];

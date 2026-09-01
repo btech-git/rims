@@ -136,7 +136,7 @@ Yii::app()->clientScript->registerCss('_report', '
             <?php $customerRepeatQuantitySum += $dataItem['customer_repeat_quantity']; ?>
             <?php $customerRetailQuantitySum += $dataItem['customer_retail_quantity']; ?>
             <?php $customerCompanyQuantitySum += $dataItem['customer_company_quantity']; ?>
-            <?php $grandTotalSum += $dataItem['grand_total']; ?>
+            <?php $grandTotalSum += $dataItem['sub_total']; ?>
             <?php $totalServiceSum += $dataItem['total_service']; ?>
             <?php $totalProductSum += $dataItem['total_product']; ?>
             <?php $tireQuantitySum += $detailItem['tire_quantity']; ?>

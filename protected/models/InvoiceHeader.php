@@ -1768,7 +1768,7 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
                     COUNT(CASE WHEN h.is_new_customer = 0 THEN 1 END) AS customer_repeat_quantity, COUNT(CASE WHEN h.is_new_customer = 1 THEN 1 END) AS customer_new_quantity, 
                     COUNT(CASE WHEN c.customer_type = 'Individual' THEN 1 END) AS customer_retail_quantity, 
                     COUNT(CASE WHEN c.customer_type = 'Company' THEN 1 END) AS customer_company_quantity, SUM(h.service_price) AS total_service, 
-                    SUM(h.product_price) AS total_product, SUM(h.total_price) AS grand_total
+                    SUM(h.product_price) AS total_product, SUM(h.service_price + product_price + h.package_price) AS sub_total
                 FROM " . InvoiceHeader::model()->tableName() . " h 
                 INNER JOIN " . Customer::model()->tableName() . " c ON c.id = h.customer_id
                 WHERE YEAR(h.invoice_date) = :year AND MONTH(h.invoice_date) = :month AND h.branch_id = :branch_id AND h.status NOT LIKE '%CANCEL%'
@@ -1812,7 +1812,7 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
                     COUNT(CASE WHEN h.is_new_customer = 0 THEN 1 END) AS customer_repeat_quantity, COUNT(CASE WHEN h.is_new_customer = 1 THEN 1 END) AS customer_new_quantity, 
                     COUNT(CASE WHEN c.customer_type = 'Individual' THEN 1 END) AS customer_retail_quantity, 
                     COUNT(CASE WHEN c.customer_type = 'Company' THEN 1 END) AS customer_company_quantity, SUM(h.service_price) AS total_service, 
-                    SUM(h.product_price) AS total_product, SUM(h.total_price) AS grand_total
+                    SUM(h.product_price) AS total_product, SUM(h.service_price + product_price + h.package_price) AS sub_total
                 FROM " . InvoiceHeader::model()->tableName() . " h 
                 INNER JOIN " . Customer::model()->tableName() . " c ON c.id = h.customer_id
                 WHERE YEAR(h.invoice_date) = :year AND h.branch_id = :branch_id AND h.status NOT LIKE '%CANCEL%'
@@ -1832,7 +1832,7 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
                     COUNT(CASE WHEN h.is_new_customer = 0 THEN 1 END) AS customer_repeat_quantity, COUNT(CASE WHEN h.is_new_customer = 1 THEN 1 END) AS customer_new_quantity, 
                     COUNT(CASE WHEN c.customer_type = 'Individual' THEN 1 END) AS customer_retail_quantity, 
                     COUNT(CASE WHEN c.customer_type = 'Company' THEN 1 END) AS customer_company_quantity, SUM(h.service_price) AS total_service, 
-                    SUM(h.product_price) AS total_product, SUM(h.total_price) AS grand_total
+                    SUM(h.product_price) AS total_product, SUM(h.service_price + product_price + h.package_price) AS sub_total
                 FROM " . InvoiceHeader::model()->tableName() . " h 
                 INNER JOIN " . Branch::model()->tableName() . " b ON b.id = h.branch_id
                 INNER JOIN " . Customer::model()->tableName() . " c ON c.id = h.customer_id
