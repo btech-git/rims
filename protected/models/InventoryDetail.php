@@ -156,7 +156,7 @@ class InventoryDetail extends CActiveRecord {
         ));
     }
 
-    public function getFastMovingItems($startDate, $endDate, $brandId, $subBrandId, $subBrandSeriesId, $productMasterCategoryId, $productSubMasterCategoryId, $productSubCategoryId, $branchId, $productId, $productCode, $productName) {
+    public function getFastMovingItems($year, $brandId, $subBrandId, $subBrandSeriesId, $productMasterCategoryId, $productSubMasterCategoryId, $productSubCategoryId, $branchId, $productId, $productCode, $productName) {
         $brandIdConditionSql = '';
         $subBrandIdConditionSql = '';
         $subBrandSeriesIdConditionSql = '';
@@ -169,8 +169,7 @@ class InventoryDetail extends CActiveRecord {
         $productNameConditionSql = '';
 
         $params = array(
-            ':start_date' => $startDate,
-            ':end_date' => $endDate,
+            ':year' => $year,
         );
 
         if (!empty($brandId)) {
@@ -223,18 +222,18 @@ class InventoryDetail extends CActiveRecord {
             $params[':product_name'] = "%$productName%";
         }
 
-        $sql = "SELECT p.id AS id, p.name AS product_name, p.manufacturer_code AS code, c.name AS category, b.name AS brand, sb.name AS sub_brand, 
-                    sbs.name AS sub_brand_series, COALESCE(SUM(i.stock_out * -1), 0) AS total_sale, COALESCE(SUM(i.stock_out * -1 * i.purchase_price), 0) AS sale_price
+        $sql = "SELECT p.id AS product_id, MONTH(i.transaction_date) AS month, MAX(p.name) AS product_name, MAX(p.manufacturer_code) AS code, MAX(c.name) AS category, 
+                    MAX(b.name) AS brand, MAX(sb.name) AS sub_brand, MAX(sbs.name) AS sub_brand_series, COALESCE(SUM(i.stock_out * -1), 0) AS total_sale
                 FROM " . InventoryDetail::model()->tableName() . " i
                 INNER JOIN " . Product::model()->tableName() . " p ON p.id = i.product_id
                 INNER JOIN " . ProductMasterCategory::model()->tableName() . " c ON c.id = p.product_master_category_id
                 INNER JOIN " . Brand::model()->tableName() . " b ON b.id = p.brand_id
                 INNER JOIN " . SubBrand::model()->tableName() . " sb ON sb.id = p.sub_brand_id
                 INNER JOIN " . SubBrandSeries::model()->tableName() . " sbs ON sbs.id = p.sub_brand_series_id
-                WHERE i.transaction_date BETWEEN :start_date AND :end_date AND i.notes LIKE '%Sale Retail%'" . $brandIdConditionSql . $subBrandIdConditionSql . 
+                WHERE YEAR(i.transaction_date) = :year AND i.notes LIKE '%Sale Retail%'" . $brandIdConditionSql . $subBrandIdConditionSql . 
                     $subBrandSeriesIdConditionSql . $productSubMasterCategoryIdConditionSql . $productSubCategoryIdConditionSql . $productMasterCategoryIdConditionSql . 
                     $branchIdConditionSql . $productIdConditionSql . $productCodeConditionSql . $productNameConditionSql . " 
-                GROUP BY i.product_id
+                GROUP BY p.id, MONTH(i.transaction_date)
                 HAVING total_sale > 0
                 ORDER BY total_sale DESC
                 LIMIT 5000";

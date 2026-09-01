@@ -93,7 +93,7 @@ Yii::app()->clientScript->registerCss('_report', '
     </tbody>
     <tfoot>
         <tr>
-            <td style="font-weight: bold; text-align: right; border-top: 1px solid" colspan="7">TOTAL</td>
+            <td style="font-weight: bold; text-align: right; border-top: 1px solid" colspan="8">TOTAL</td>
             <td style="font-weight: bold; text-align: right; border-top: 1px solid">
                 <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $totalInvoice)); ?>
             </td>

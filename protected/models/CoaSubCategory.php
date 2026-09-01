@@ -20,6 +20,7 @@
  * @property string $approved_datetime
  * @property string $rejected_datetime
  * @property string $deleted_datetime
+ * @property string $cashflow_position
  *
  * The followings are the available model relations:
  * @property CoaCategory $coaCategory
@@ -49,11 +50,12 @@ class CoaSubCategory extends CActiveRecord {
             array('name, code, coa_category_id', 'required'),
             array('coa_category_id, user_id_approved, user_id_rejected, user_id_updated, user_id_deleted, user_id_created, is_deleted, is_approved', 'numerical', 'integerOnly' => true),
             array('name', 'length', 'max' => 50),
+            array('cashflow_position', 'length', 'max' => 20),
             array('code', 'length', 'max' => 10),
             array('approved_datetime, rejected_datetime, updated_datetime, deleted_datetime, created_datetime', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, name, code, coa_category_id, user_id_approved, user_id_rejected, user_id_updated, user_id_deleted, user_id_created, is_deleted, is_approved, approved_datetime, rejected_datetime, updated_datetime, deleted_datetime, created_datetime', 'safe', 'on' => 'search'),
+            array('id, name, code, coa_category_id, user_id_approved, user_id_rejected, user_id_updated, user_id_deleted, user_id_created, is_deleted, is_approved, approved_datetime, rejected_datetime, updated_datetime, deleted_datetime, created_datetime, cashflow_position', 'safe', 'on' => 'search'),
         );
     }
 

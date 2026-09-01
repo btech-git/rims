@@ -89,7 +89,7 @@ Yii::app()->clientScript->registerCss('_report', '
                 <td style="text-align: center"><?php echo CHtml::encode($dataItem['customer_retail_quantity']); ?></td>
                 <td style="text-align: center"><?php echo CHtml::encode($dataItem['customer_company_quantity']); ?></td>
                 <td style="text-align: right">
-                    <?php echo CHtml::link(CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $dataItem['grand_total'])), array(
+                    <?php echo CHtml::link(CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $dataItem['sub_total'])), array(
                         '/report/branchSaleTransactionInfo/headerInfo', 
                         'showDetails' => 1, 
                         'branchId' => $dataItem['branch_id'], 

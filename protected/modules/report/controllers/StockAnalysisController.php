@@ -36,10 +36,53 @@ class StockAnalysisController extends Controller {
         $productCode = (isset($_GET['ProductCode'])) ? $_GET['ProductCode'] : '';
         $productName = (isset($_GET['ProductName'])) ? $_GET['ProductName'] : '';
         
-        $date1 = new DateTime($startDate);
-        $date2 = new DateTime($endDate);
-        $interval = $date1->diff($date2);
-        $numberOfDays = $interval->format('%a days'); 
+        $monthNow = date('m');
+        $yearNow = date('Y');
+        $year = (isset($_GET['Year'])) ? $_GET['Year'] : $yearNow;
+        
+        $numberOfDays = 0;
+        for ($month = 1; $month <= 12; $month++) {
+            if ($year < $yearNow) {
+                $numberOfDays += cal_days_in_month(CAL_GREGORIAN, $month, $year);
+            } elseif ($year == $yearNow) {
+                if ($month < $monthNow) {
+                    $numberOfDays += cal_days_in_month(CAL_GREGORIAN, $month, $year);
+                }
+            }
+        }
+        
+        $fastMovingItems = $inventoryDetail->getFastMovingItems($year, $brandId, $subBrandId, $subBrandSeriesId, $productMasterCategoryId, $productSubMasterCategoryId, $productSubCategoryId, $branchId, $productId, $productCode, $productName);
+        
+        $fastMovingItemsData = array();
+        foreach ($fastMovingItems as $fastMovingItem) {
+            $fastMovingItemsData[$fastMovingItem['product_id']]['product_name'] = $fastMovingItem['product_name'];
+            $fastMovingItemsData[$fastMovingItem['product_id']]['code'] = $fastMovingItem['code'];
+            $fastMovingItemsData[$fastMovingItem['product_id']]['category'] = $fastMovingItem['category'];
+            $fastMovingItemsData[$fastMovingItem['product_id']]['brand'] = $fastMovingItem['brand'];
+            $fastMovingItemsData[$fastMovingItem['product_id']]['sub_brand'] = $fastMovingItem['sub_brand'];
+            $fastMovingItemsData[$fastMovingItem['product_id']]['sub_brand_series'] = $fastMovingItem['sub_brand_series'];
+            $fastMovingItemsData[$fastMovingItem['product_id']]['total_sale'][$fastMovingItem['month']] = $fastMovingItem['total_sale'];
+        }
+        
+        $yearList = array();
+        for ($y = $yearNow - 4; $y <= $yearNow; $y++) {
+            $yearList[$y] = $y;
+        }
+        
+        $monthList = array(
+            '1' => 'Jan',
+            '2' => 'Feb',
+            '3' => 'Mar',
+            '4' => 'Apr',
+            '5' => 'May',
+            '6' => 'Jun',
+            '7' => 'Jul',
+            '8' => 'Aug',
+            '9' => 'Sep',
+            '10' => 'Oct',
+            '11' => 'Nov',
+            '12' => 'Dec',
+        );
         
         if (isset($_GET['ResetFilter'])) {
             $this->redirect(array('summary'));
@@ -60,6 +103,7 @@ class StockAnalysisController extends Controller {
                 'productSubMasterCategoryId' => $productSubMasterCategoryId,
                 'productSubCategoryId' => $productSubCategoryId,
                 'numberOfDays' => $numberOfDays,
+                'fastMovingItems' => $fastMovingItems,
             ));
         }
         
@@ -78,6 +122,10 @@ class StockAnalysisController extends Controller {
             'productSubMasterCategoryId' => $productSubMasterCategoryId,
             'productSubCategoryId' => $productSubCategoryId,
             'numberOfDays' => $numberOfDays,
+            'fastMovingItemsData' => $fastMovingItemsData,
+            'yearList' => $yearList,
+            'year' => $year,
+            'monthList' => $monthList,
         ));
     }
     

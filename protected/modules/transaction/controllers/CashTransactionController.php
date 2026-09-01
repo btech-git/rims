@@ -360,9 +360,9 @@ class CashTransactionController extends Controller {
         $coaDetailDataProvider->criteria->compare('t.coa_sub_category_id', $coaSubCategoryDetailId);
 
         if (!(Yii::app()->user->checkAccess('director') || Yii::app()->user->branch_id == 6)) {
-            $cashInTransactionDataProvider->criteria->addCondition('t.branch_id = :branch_id');
+            $cashInTransactionDataProvider->criteria->addCondition("t.branch_id = :branch_id AND t.user_id NOT IN (SELECT id FROM " . Users::model()->tableName() . " WHERE superuser = 1)");
             $cashInTransactionDataProvider->criteria->params[':branch_id'] = Yii::app()->user->branch_id;
-            $cashOutTransactionDataProvider->criteria->addCondition('t.branch_id = :branch_id');
+            $cashOutTransactionDataProvider->criteria->addCondition("t.branch_id = :branch_id AND t.user_id NOT IN (SELECT id FROM " . Users::model()->tableName() . " WHERE superuser = 1)");
             $cashOutTransactionDataProvider->criteria->params[':branch_id'] = Yii::app()->user->branch_id;
         }
         

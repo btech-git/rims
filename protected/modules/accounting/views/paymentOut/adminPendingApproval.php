@@ -1,6 +1,6 @@
 <?php
 /* @var $this PaymentInController */
-/* @var $paymentOut PaymentIn */
+/* @var $paymentOutHeader PaymentIn */
 
 $this->breadcrumbs = array(
     'Payment Out' => array('admin'),
@@ -39,6 +39,12 @@ $('.search-form form').submit(function(){
     )); ?>
 </div>
 
+<div class="field buttons text-left">
+    <?php echo CHtml::beginForm(); ?>
+    <?php echo CHtml::submitButton('Processing Approval', array('name' => 'Submit', 'confirm' => 'Are you sure you want to approve all this payments?')); ?>
+    <?php echo CHtml::endForm(); ?>
+</div>
+
 <br /><br />
 
 <?php echo CHtml::beginForm(array(''), 'get'); ?>
@@ -58,10 +64,10 @@ $('.search-form form').submit(function(){
                             <div class="field">
                                 <div class="row collapse">
                                     <div class="small-4 columns">
-                                        <?php echo $form->label($paymentOut,'supplier_id', array('class'=>'prefix')); ?>
+                                        <?php echo $form->label($paymentOutHeader,'supplier_id', array('class'=>'prefix')); ?>
                                     </div>
                                     <div class="small-8 columns">
-                                        <?php echo $form->textField($paymentOut,'supplier_name'); ?>
+                                        <?php echo $form->textField($paymentOutHeader,'supplier_name'); ?>
                                     </div>
                                 </div>
                             </div>	
@@ -70,10 +76,10 @@ $('.search-form form').submit(function(){
                             <div class="field">
                                 <div class="row collapse">
                                     <div class="small-4 columns">
-                                        <?php echo $form->label($paymentOut,'payment_type_id', array('class'=>'prefix')); ?>
+                                        <?php echo $form->label($paymentOutHeader,'payment_type_id', array('class'=>'prefix')); ?>
                                     </div>
                                     <div class="small-8 columns">
-                                        <?php echo $form->dropDownList($paymentOut, 'payment_type_id', CHtml::listData(PaymentType::model()->findAll(array('order' => 'name')), 'id', 'name'), array('empty' => '-- all --')); ?>
+                                        <?php echo $form->dropDownList($paymentOutHeader, 'payment_type_id', CHtml::listData(PaymentType::model()->findAll(array('order' => 'name')), 'id', 'name'), array('empty' => '-- all --')); ?>
                                     </div>
                                 </div>
                             </div>	

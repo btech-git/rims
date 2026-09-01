@@ -274,7 +274,7 @@ class SaleEstimationController extends Controller {
             $model->attributes = $_GET['SaleEstimationHeader'];
         }
 
-        $dataProvider = $model->search();
+        $dataProvider = $model->searchByRegistration();
         $dataProvider->criteria->together = 'true';
         $dataProvider->criteria->with = array(
             'vehicle',

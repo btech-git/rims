@@ -130,6 +130,10 @@ $('.search-form form').submit(function(){
                             ),
                             'status',
                             array(
+                                'header' => 'Created By',
+                                'value' => '$data->user->username',
+                            ),
+                            array(
                                 'header' => 'Approved By',
                                 'value' => '$data->status == "Approved" ? $data->cashTransactionApprovals[0]->supervisor->username : "" ',
                             ),
@@ -201,6 +205,10 @@ $('.search-form form').submit(function(){
                                 'value' => 'empty($data->cashTransactionDetails) ? "" : $data->cashTransactionDetails[0]->notes',
                             ),
                             'status',
+                            array(
+                                'header' => 'Created By',
+                                'value' => '$data->user->username',
+                            ),
                             array(
                                 'header' => 'Approved By',
                                 'value' => '$data->status == "Approved" ? $data->cashTransactionApprovals[0]->supervisor->username : "" ',

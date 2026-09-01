@@ -240,25 +240,10 @@ class PaymentOut extends MonthlyTransactionActiveRecord {
         // @todo Please modify the following code to remove attributes that should not be searched.
 
         $criteria = new CDbCriteria;
-
-        $criteria->compare('t.id', $this->id);
-        $criteria->compare('t.purchase_order_id', $this->purchase_order_id);
-        $criteria->compare('t.payment_number', $this->payment_number, true);
-        $criteria->compare('t.payment_date', $this->payment_date, true);
-        $criteria->compare('t.supplier_id', $this->supplier_id);
-        $criteria->compare('t.payment_amount', $this->payment_amount, true);
-        $criteria->compare('t.notes', $this->notes, true);
-        $criteria->compare('t.payment_type', $this->payment_type, true);
-        $criteria->compare('t.user_id', $this->user_id);
-        $criteria->compare('t.branch_id', $this->branch_id);
-        $criteria->compare('t.status', 'Draft');
-        $criteria->compare('t.company_bank_id', $this->company_bank_id);
-        $criteria->compare('t.nomor_giro', $this->nomor_giro, true);
-        $criteria->compare('t.cash_payment_type', $this->cash_payment_type);
-        $criteria->compare('t.bank_id', $this->bank_id);
-        $criteria->compare('t.payment_type_id', $this->payment_type_id);
-        $criteria->compare('t.coa_id_deposit', $this->coa_id_deposit);
+        
         $criteria->compare('t.is_synchronized', 0);
+        $criteria->addCondition("t.user_id_cancelled IS NULL AND t.payment_date BETWEEN '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND CURDATE()");
+        $criteria->order = 't.payment_date DESC';
 
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,

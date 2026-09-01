@@ -7,7 +7,7 @@
                 <?php $branch = Branch::model()->findByPk($branchId); ?>
                 <h2>Raperind Motor <?php echo CHtml::encode(CHtml::value($branch, 'name')); ?></h2>
                 <h3>Analisa Penjualan Barang</h3>
-                <div><?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($startDate))) . ' &nbsp;&ndash;&nbsp; ' . CHtml::encode(Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($endDate))); ?></div>
+                <div><?php echo CHtml::encode($year); ?></div>
             </span>
             
             <hr />
@@ -21,18 +21,21 @@
                         <th>Product Name</th>
                         <th>Category</th>
                         <th>Brand</th>
-                        <th>Qty Sales</th>
+                        <?php for ($month = 1; $month <= 12; $month++): ?>
+                            <th><?php echo CHtml::encode($monthList[$month]); ?></th>
+                        <?php endfor; ?>
+                        <th>Total Sales</th>
                         <th>Average / bulan</th>
                         <th>Average / minggu</th>
                     </tr>
                 </thead>
 
                 <tbody>
-                    <?php $fastMovingItems = $inventoryDetail->getFastMovingItems($startDate, $endDate, $brandId, $subBrandId, $subBrandSeriesId, $productMasterCategoryId, $productSubMasterCategoryId, $productSubCategoryId, $branchId, $productId, $productCode, $productName); ?>
-                    <?php foreach ($fastMovingItems as $i => $fastMovingItem): ?>
+                    <?php $i = 0; ?>
+                    <?php foreach ($fastMovingItemsData as $productId => $fastMovingItem): ?>
                         <tr>
-                            <td><?php echo CHtml::encode($i + 1); ?></td>
-                            <td><?php echo CHtml::encode($fastMovingItem['id']); ?></td>
+                            <td><?php echo CHtml::encode(++$i); ?></td>
+                            <td><?php echo CHtml::encode($productId); ?></td>
                             <td><?php echo CHtml::encode($fastMovingItem['code']); ?></td>
                             <td><?php echo CHtml::encode($fastMovingItem['product_name']); ?></td>
                             <td><?php echo CHtml::encode($fastMovingItem['category']); ?></td>
@@ -41,16 +44,24 @@
                                 <?php echo CHtml::encode($fastMovingItem['sub_brand']); ?> - 
                                 <?php echo CHtml::encode($fastMovingItem['sub_brand_series']); ?>
                             </td>
+                            <?php $totalSaleSum = '0.00'; ?>
+                            <?php for ($month = 1; $month <= 12; $month++): ?>
+                                <?php $totalSale = isset($fastMovingItem['total_sale'][$month]) ? $fastMovingItem['total_sale'][$month] : ''; ?>
+                                <td style="text-align: right">
+                                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalSale)); ?>
+                                </td>
+                                <?php $totalSaleSum += $totalSale; ?>
+                            <?php endfor; ?>
                             <td style="text-align: right">
-                                <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $fastMovingItem['total_sale'])); ?>
+                                <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $totalSaleSum)); ?>
                             </td>
                             <td style="text-align: right">
                                 <?php $numberOfMonths = $numberOfMonths == 0 ? 1 : $numberOfMonths; ?>
-                                <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $fastMovingItem['total_sale'] / $numberOfMonths)); ?>
+                                <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $totalSaleSum / $numberOfMonths)); ?>
                             </td>
                             <td style="text-align: right">
                                 <?php $numberOfWeeks = $numberOfWeeks == 0 ? 1 : $numberOfWeeks; ?>
-                                <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $fastMovingItem['total_sale'] / $numberOfWeeks)); ?>
+                                <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $totalSaleSum / $numberOfWeeks)); ?>
                             </td>
                         </tr>
                     <?php endforeach; ?>

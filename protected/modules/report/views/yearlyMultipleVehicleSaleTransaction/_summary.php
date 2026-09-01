@@ -1,18 +1,10 @@
-<?php
-Yii::app()->clientScript->registerCss('_report', '
-    .width1-1 { width: 3% }
-    .width1-2 { width: 3% }
-    .width1-3 { width: 5% }
-    .width1-4 { width: 15% }
-    .width1-5 { width: 20% }
-    .width1-6 { width: 5% }
-    .width1-7 { width: 10% }
-    .width1-8 { width: 10% }
-    .width1-9 { width: 10% }
-    .width1-10 { width: 5% }
-    .width1-11 { width: 5% }
-');
-?>
+<style> 
+ .table_wrapper{
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+}
+</style>
 
 <div style="font-weight: bold; text-align: center">
     <?php $branch = Branch::model()->findByPk($branchId); ?>
@@ -24,91 +16,93 @@ Yii::app()->clientScript->registerCss('_report', '
 <br />
 
 <fieldset>
-    <table class="report">
-        <thead>
-            <tr id="header1">
-                <th class="width1-1">No</th>
-                <th class="width1-2">ID</th>
-                <th class="width1-3">Plate #</th>
-                <th class="width1-4">Kendaraan</th>
-                <th class="width1-5">Customer</th>
-                <th class="width1-6"># of Invoice</th>
-                <th class="width1-7">Total Invoice (Rp)</th>
-                <th class="width1-8">Total Parts (Rp)</th>
-                <th class="width1-9">Total Service (Rp)</th>
-                <th class="width1-10">Date last Invoice</th>
-                <th class="width1-11">Duration from last Invoice</th>
-                <th class="width1-10">Date 1st Invoice</th>
-                <th class="width1-11">Duration from 1st Invoice</th>
-            </tr>
-        </thead>
-        <tbody>
-            <?php foreach ($yearlyMultipleVehicleSaleReport as $i => $dataItemCompany): ?>
-                <?php $invoiceHeader = InvoiceHeader::model()->find(array(
-                    'condition' => 't.vehicle_id = :vehicle_id AND t.user_id_cancelled IS NULL', 
-                    'params' => array(':vehicle_id' => $dataItemCompany['vehicle_id']),
-                    'order' => 't.invoice_date ASC',
-                )); ?>
-                <?php $invoiceLatest = InvoiceHeader::model()->find(array(
-                    'condition' => 't.vehicle_id = :vehicle_id AND t.user_id_cancelled IS NULL', 
-                    'params' => array(':vehicle_id' => $dataItemCompany['vehicle_id']),
-                    'order' => 't.invoice_date DESC',
-                )); ?>
-                <tr class="items1">
-                    <td style="text-align: center"><?php echo $i + 1; ?></td>
-                    <td><?php echo CHtml::encode($dataItemCompany['vehicle_id']); ?></td>
-                    <td>
-                        <?php echo CHtml::link(CHtml::encode($dataItemCompany['plate_number']), array(
-                            '/master/vehicle/view', 
-                            'id' => $dataItemCompany['vehicle_id'], 
-                        ), array('target' => '_blank')); ?>
-                    </td>
-                    <td>
-                        <?php echo CHtml::encode($dataItemCompany['car_make']); ?> -
-                        <?php echo CHtml::encode($dataItemCompany['car_model']); ?> -
-                        <?php echo CHtml::encode($dataItemCompany['car_sub_model']); ?>
-                    </td>
-                    <td><?php echo CHtml::encode($dataItemCompany['customer_name']); ?></td>
-                    <td style="text-align: center">
-                        <?php echo CHtml::link(CHtml::encode($dataItemCompany['invoice_quantity']), array(
-                            'transactionInfo', 
-                            'vehicleId' => $dataItemCompany['vehicle_id'], 
-                            'branchId' => $branchId,
-                            'startDate' => $startDate, 
-                            'endDate' => $endDate,
-                        ), array('target' => '_blank')); ?>
-                    </td>
-                    <td style="text-align: right">
-                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $dataItemCompany['grand_total'])); ?>
-                    </td>
-                    <td style="text-align: right">
-                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $dataItemCompany['total_product'])); ?>
-                    </td>
-                    <td style="text-align: right">
-                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $dataItemCompany['total_service'])); ?>
-                    </td>
-                    <td style="text-align: right">
-                        <?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime(CHtml::value($invoiceLatest, 'invoice_date')))); ?>
-                    </td>
-                    <td style="text-align: center">
-                        <?php $startLatestSeconds = strtotime($invoiceLatest->invoice_date); ?>
-                        <?php $endLatesSeconds = strtotime($endDate); ?> 
-                        <?php $secondsLatestDiff = $endLatesSeconds - $startLatestSeconds; ?>
-                        <?php $daysLatestDiff = round($secondsLatestDiff / (60 * 60 * 24)); ?>
-                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $daysLatestDiff)); ?>
-                    </td>
-                    <td style="text-align: right">
-                        <?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime(CHtml::value($invoiceHeader, 'invoice_date')))); ?>
-                    </td>
-                    <td style="text-align: center">
-                        <?php $startSeconds = strtotime($invoiceHeader->invoice_date); ?>
-                        <?php $endSeconds = strtotime($endDate); ?> 
-                        <?php $secondsDiff = $endSeconds - $startSeconds; ?>
-                        <?php $daysDiff = round($secondsDiff / (60 * 60 * 24)); ?>
-                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $daysDiff)); ?>
-                    </td>
+    <div class="table_wrapper">
+        <table class="responsive">
+            <thead>
+                <tr id="header1">
+                    <th class="width1-1">No</th>
+                    <th class="width1-2">ID</th>
+                    <th class="width1-3">Plate #</th>
+                    <th class="width1-4">Kendaraan</th>
+                    <th class="width1-5">Customer</th>
+                    <th class="width1-6"># of Invoice</th>
+                    <th class="width1-7">Total Invoice (Rp)</th>
+                    <th class="width1-8">Total Parts (Rp)</th>
+                    <th class="width1-9">Total Service (Rp)</th>
+                    <th class="width1-10">Date last Invoice</th>
+                    <th class="width1-11">Duration from last Invoice</th>
+                    <th class="width1-10">Date 1st Invoice</th>
+                    <th class="width1-11">Duration from 1st Invoice</th>
                 </tr>
-            <?php endforeach; ?>
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                <?php foreach ($yearlyMultipleVehicleSaleReport as $i => $dataItemCompany): ?>
+                    <?php $invoiceHeader = InvoiceHeader::model()->find(array(
+                        'condition' => 't.vehicle_id = :vehicle_id AND t.user_id_cancelled IS NULL', 
+                        'params' => array(':vehicle_id' => $dataItemCompany['vehicle_id']),
+                        'order' => 't.invoice_date ASC',
+                    )); ?>
+                    <?php $invoiceLatest = InvoiceHeader::model()->find(array(
+                        'condition' => 't.vehicle_id = :vehicle_id AND t.user_id_cancelled IS NULL', 
+                        'params' => array(':vehicle_id' => $dataItemCompany['vehicle_id']),
+                        'order' => 't.invoice_date DESC',
+                    )); ?>
+                    <tr class="items1">
+                        <td style="text-align: center"><?php echo $i + 1; ?></td>
+                        <td><?php echo CHtml::encode($dataItemCompany['vehicle_id']); ?></td>
+                        <td>
+                            <?php echo CHtml::link(CHtml::encode($dataItemCompany['plate_number']), array(
+                                '/master/vehicle/view', 
+                                'id' => $dataItemCompany['vehicle_id'], 
+                            ), array('target' => '_blank')); ?>
+                        </td>
+                        <td>
+                            <?php echo CHtml::encode($dataItemCompany['car_make']); ?> -
+                            <?php echo CHtml::encode($dataItemCompany['car_model']); ?> -
+                            <?php echo CHtml::encode($dataItemCompany['car_sub_model']); ?>
+                        </td>
+                        <td><?php echo CHtml::encode($dataItemCompany['customer_name']); ?></td>
+                        <td style="text-align: center">
+                            <?php echo CHtml::link(CHtml::encode($dataItemCompany['invoice_quantity']), array(
+                                'transactionInfo', 
+                                'vehicleId' => $dataItemCompany['vehicle_id'], 
+                                'branchId' => $branchId,
+                                'startDate' => $startDate, 
+                                'endDate' => $endDate,
+                            ), array('target' => '_blank')); ?>
+                        </td>
+                        <td style="text-align: right">
+                            <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $dataItemCompany['grand_total'])); ?>
+                        </td>
+                        <td style="text-align: right">
+                            <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $dataItemCompany['total_product'])); ?>
+                        </td>
+                        <td style="text-align: right">
+                            <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $dataItemCompany['total_service'])); ?>
+                        </td>
+                        <td style="text-align: right">
+                            <?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime(CHtml::value($invoiceLatest, 'invoice_date')))); ?>
+                        </td>
+                        <td style="text-align: center">
+                            <?php $startLatestSeconds = strtotime($invoiceLatest->invoice_date); ?>
+                            <?php $endLatesSeconds = strtotime($endDate); ?> 
+                            <?php $secondsLatestDiff = $endLatesSeconds - $startLatestSeconds; ?>
+                            <?php $daysLatestDiff = round($secondsLatestDiff / (60 * 60 * 24)); ?>
+                            <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $daysLatestDiff)); ?>
+                        </td>
+                        <td style="text-align: right">
+                            <?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime(CHtml::value($invoiceHeader, 'invoice_date')))); ?>
+                        </td>
+                        <td style="text-align: center">
+                            <?php $startSeconds = strtotime($invoiceHeader->invoice_date); ?>
+                            <?php $endSeconds = strtotime($endDate); ?> 
+                            <?php $secondsDiff = $endSeconds - $startSeconds; ?>
+                            <?php $daysDiff = round($secondsDiff / (60 * 60 * 24)); ?>
+                            <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $daysDiff)); ?>
+                        </td>
+                    </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+    </div>
 </fieldset>

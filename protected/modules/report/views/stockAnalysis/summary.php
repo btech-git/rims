@@ -176,34 +176,8 @@ Yii::app()->clientScript->registerScript('report', '
                                     <span class="prefix">Periode:</span>
                                 </div>
 
-                                <div class="small-4 columns">
-                                    <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(
-                                        'name' => 'StartDate',
-                                        'options' => array(
-                                            'dateFormat' => 'yy-mm-dd',
-                                            'changeMonth'=>true,
-                                            'changeYear'=>true,
-                                        ),
-                                        'htmlOptions' => array(
-                                            'readonly' => true,
-                                            'placeholder' => 'Mulai',
-                                        ),
-                                    )); ?>
-                                </div>
-
-                                <div class="small-4 columns">
-                                    <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(
-                                        'name' => 'EndDate',
-                                        'options' => array(
-                                            'dateFormat' => 'yy-mm-dd',
-                                            'changeMonth'=>true,
-                                            'changeYear'=>true,
-                                        ),
-                                        'htmlOptions' => array(
-                                            'readonly' => true,
-                                            'placeholder' => 'Sampai',
-                                        ),
-                                    )); ?>
+                                <div class="small-8 columns">
+                                    <?php echo CHtml::dropDownList('Year', $year, $yearList); ?>
                                 </div>
                             </div>
                         </div>
@@ -257,6 +231,9 @@ Yii::app()->clientScript->registerScript('report', '
                 'productCode' => $productCode,
                 'productName' => $productName,
                 'numberOfDays' => $numberOfDays,
+                'fastMovingItemsData' => $fastMovingItemsData,
+                'year' => $year,
+                'monthList' => $monthList,
             )); ?>
         </div>
     </div>

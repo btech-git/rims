@@ -14,6 +14,8 @@
                 <th style="text-align: center">Brand</th>
                 <th style="text-align: center">Category</th>
                 <th style="text-align: center">Unit</th>
+                <th style="text-align: center">Uk. Ban</th>
+                <th style="text-align: center">SAE</th>
                 <?php foreach ($branches as $branch): ?>
                     <th style="text-align: center"><?php echo CHtml::encode(CHtml::value($branch, 'code')); ?></th>
                 <?php endforeach; ?>
@@ -42,6 +44,8 @@
                         <?php echo CHtml::encode(CHtml::value($product, 'productSubCategory.name')); ?>
                     </td>
                     <td><?php echo CHtml::encode(CHtml::value($product, 'unit.name')); ?></td>
+                    <td><?php echo CHtml::encode(CHtml::value($product, 'tireSize.tireName')); ?></td>
+                    <td><?php echo CHtml::encode(CHtml::value($product, 'oilSae.oilName')); ?></td>
 
                     <?php foreach ($branches as $branch): ?>
                         <?php $stockValue = 0; ?>
