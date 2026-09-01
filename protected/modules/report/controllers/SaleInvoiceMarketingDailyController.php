@@ -142,7 +142,7 @@ class SaleInvoiceMarketingDailyController extends Controller {
             $worksheet->setCellValue("K{$counter}", CHtml::value($header, 'vehicle.carMake.name') . ' - ' . CHtml::value($header, 'vehicle.carModel.name') . ' - ' . CHtml::value($header, 'vehicle.carSubModel.name'));
             $worksheet->setCellValue("L{$counter}", CHtml::value($header, 'vehicle.color.name'));
             $worksheet->setCellValue("M{$counter}", CHtml::value($header, 'invoice_number'));
-            $worksheet->setCellValue("N{$counter}", CHtml::value($header, 'total_price'));
+            $worksheet->setCellValue("N{$counter}", CHtml::value($header, 'subTotal'));
             $worksheet->setCellValue("O{$counter}", CHtml::value($header, 'invoice_date'));
             $worksheet->setCellValue("P{$counter}", substr(CHtml::value($header, 'created_datetime'), -1, 8));
 //            $worksheet->setCellValue("Q{$counter}", CHtml::value($header, 'registrationTransaction.transaction_number'));

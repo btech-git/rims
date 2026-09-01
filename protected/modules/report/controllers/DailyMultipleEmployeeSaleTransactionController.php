@@ -119,7 +119,7 @@ class DailyMultipleEmployeeSaleTransactionController extends Controller {
             $worksheet->setCellValue("E{$counter}", $dataItem['customer_repeat_quantity']);
             $worksheet->setCellValue("F{$counter}", $dataItem['customer_retail_quantity']);
             $worksheet->setCellValue("G{$counter}", $dataItem['customer_company_quantity']);
-            $worksheet->setCellValue("H{$counter}", $dataItem['grand_total']);
+            $worksheet->setCellValue("H{$counter}", $dataItem['sub_total']);
             $worksheet->setCellValue("I{$counter}", $dataItem['total_service']);
             $worksheet->setCellValue("J{$counter}", $dataItem['total_product']);
             $worksheet->setCellValue("K{$counter}", $detailItem['tire_quantity']);
@@ -131,7 +131,7 @@ class DailyMultipleEmployeeSaleTransactionController extends Controller {
             $customerRepeatQuantitySum += $dataItem['customer_repeat_quantity'];
             $customerRetailQuantitySum += $dataItem['customer_retail_quantity'];
             $customerCompanyQuantitySum += $dataItem['customer_company_quantity'];
-            $grandTotalSum += $dataItem['grand_total'];
+            $grandTotalSum += $dataItem['sub_total'];
             $totalServiceSum += $dataItem['total_service'];
             $totalProductSum += $dataItem['total_product'];
             $tireQuantitySum += $detailItem['tire_quantity'];

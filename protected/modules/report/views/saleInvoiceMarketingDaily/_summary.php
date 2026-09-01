@@ -39,7 +39,15 @@
             </tr>
         </thead>
         <tbody>
+            <?php $subTotalSum = '0.00'; ?>
+            <?php $servicePriceSum = '0.00'; ?>
+            <?php $productPriceSum = '0.00'; ?>
+            
             <?php foreach ($saleInvoiceSummary->dataProvider->data as $i => $header): ?>
+                <?php $subTotalAmount = CHtml::value($header, 'subTotal'); ?>
+                <?php $servicePriceAmount = CHtml::value($header, 'service_price'); ?>
+                <?php $productPriceAmount = CHtml::value($header, 'product_price'); ?>
+            
                 <tr class="items1">
                     <td><?php echo $i + 1; ?></td>
                     <td class="width1-1"><?php echo CHtml::encode(CHtml::value($header, 'registrationTransaction.employeeIdSalesPerson.name')); ?></td>
@@ -52,19 +60,37 @@
                         <?php echo CHtml::encode(CHtml::value($header, 'vehicle.carModel.name')); ?> - 
                         <?php echo CHtml::encode(CHtml::value($header, 'vehicle.carSubModel.name')); ?>
                     </td>
-                    <td class="width1-7" style="text-align: right">
-                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', ($header->total_price))); ?>
+                    <td style="text-align: right">
+                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $subTotalAmount)); ?>
                     </td>
-                    <td class="width1-8"><?php echo CHtml::encode(CHtml::value($header, 'serviceLists')); ?></td>
-                    <td class="width1-9" style="text-align: right">
-                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', ($header->service_price))); ?>
+                    <td><?php echo CHtml::encode(CHtml::value($header, 'serviceLists')); ?></td>
+                    <td style="text-align: right">
+                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $servicePriceAmount)); ?>
                     </td>
-                    <td class="width1-10"><?php echo CHtml::encode(CHtml::value($header, 'productLists')); ?></td>
-                    <td class="width1-9" style="text-align: right">
-                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', ($header->product_price))); ?>
+                    <td><?php echo CHtml::encode(CHtml::value($header, 'productLists')); ?></td>
+                    <td style="text-align: right">
+                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $productPriceAmount)); ?>
                     </td>
                 </tr>
+                
+                <?php $subTotalSum += $subTotalAmount; ?>
+                <?php $servicePriceSum += $servicePriceAmount; ?>
+                <?php $productPriceSum += $productPriceAmount; ?>
             <?php endforeach; ?>
         </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="8" style="text-align: right; font-weight: bold">TOTAL</td>
+                <td style="text-align: right; font-weight: bold">
+                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $subTotalAmount)); ?>
+                </td>
+                <td colspan="2" style="text-align: right; font-weight: bold">
+                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $subTotalAmount)); ?>
+                </td>
+                <td colspan="2" style="text-align: right; font-weight: bold">
+                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $subTotalAmount)); ?>
+                </td>
+            </tr>
+        </tfoot>
     </table>
 </div>

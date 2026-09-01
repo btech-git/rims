@@ -90,7 +90,7 @@ Yii::app()->clientScript->registerCss('_report', '
                 <td style="text-align: center"><?php echo CHtml::encode($dataItem['customer_retail_quantity']); ?></td>
                 <td style="text-align: center"><?php echo CHtml::encode($dataItem['customer_company_quantity']); ?></td>
                 <td style="text-align: right">
-                    <?php echo CHtml::link(CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $dataItem['grand_total'])), array(
+                    <?php echo CHtml::link(CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $dataItem['sub_total'])), array(
                         '/report/employeeSaleTransactionInfo/headerInfo', 
                         'showDetails' => 1, 
                         'employeeId' => $dataItem['employee_id_sales_person'], 
@@ -136,7 +136,7 @@ Yii::app()->clientScript->registerCss('_report', '
             <?php $customerRepeatQuantitySum += $dataItem['customer_repeat_quantity']; ?>
             <?php $customerRetailQuantitySum += $dataItem['customer_retail_quantity']; ?>
             <?php $customerCompanyQuantitySum += $dataItem['customer_company_quantity']; ?>
-            <?php $grandTotalSum += $dataItem['grand_total']; ?>
+            <?php $grandTotalSum += $dataItem['sub_total']; ?>
             <?php $totalServiceSum += $dataItem['total_service']; ?>
             <?php $totalProductSum += $dataItem['total_product']; ?>
             <?php $tireQuantitySum += $detailItem['tire_quantity']; ?>

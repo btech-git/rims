@@ -1855,7 +1855,7 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
                     COUNT(CASE WHEN h.is_new_customer = 0 THEN 1 END) AS customer_repeat_quantity, COUNT(CASE WHEN h.is_new_customer = 1 THEN 1 END) AS customer_new_quantity, 
                     COUNT(CASE WHEN c.customer_type = 'Individual' THEN 1 END) AS customer_retail_quantity, 
                     COUNT(CASE WHEN c.customer_type = 'Company' THEN 1 END) AS customer_company_quantity, SUM(h.service_price) AS total_service, 
-                    SUM(h.product_price) AS total_product, SUM(h.total_price) AS grand_total
+                    SUM(h.product_price) AS total_product, SUM(h.service_price + product_price + h.package_price) AS sub_total
                 FROM " . InvoiceHeader::model()->tableName() . " h 
                 INNER JOIN " . RegistrationTransaction::model()->tableName() . " r ON r.id = h.registration_transaction_id
                 INNER JOIN " . Employee::model()->tableName() . " e ON e.id = r.employee_id_sales_person
@@ -1880,7 +1880,7 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
                     COUNT(CASE WHEN h.is_new_customer = 0 THEN 1 END) AS customer_repeat_quantity, COUNT(CASE WHEN h.is_new_customer = 1 THEN 1 END) AS customer_new_quantity, 
                     COUNT(CASE WHEN c.customer_type = 'Individual' THEN 1 END) AS customer_retail_quantity, 
                     COUNT(CASE WHEN c.customer_type = 'Company' THEN 1 END) AS customer_company_quantity, SUM(h.service_price) AS total_service, 
-                    SUM(h.product_price) AS total_product, SUM(h.total_price) AS grand_total
+                    SUM(h.product_price) AS total_product, SUM(h.service_price + product_price + h.package_price) AS sub_total
                 FROM " . InvoiceHeader::model()->tableName() . " h 
                 INNER JOIN " . RegistrationTransaction::model()->tableName() . " r ON r.id = h.registration_transaction_id
                 INNER JOIN " . Employee::model()->tableName() . " e ON e.id = r.employee_id_sales_person
@@ -1904,7 +1904,7 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
                     COUNT(CASE WHEN h.is_new_customer = 0 THEN 1 END) AS customer_repeat_quantity, COUNT(CASE WHEN h.is_new_customer = 1 THEN 1 END) AS customer_new_quantity, 
                     COUNT(CASE WHEN c.customer_type = 'Individual' THEN 1 END) AS customer_retail_quantity, 
                     COUNT(CASE WHEN c.customer_type = 'Company' THEN 1 END) AS customer_company_quantity, SUM(h.service_price) AS total_service, 
-                    SUM(h.product_price) AS total_product, SUM(h.total_price) AS grand_total
+                    SUM(h.product_price) AS total_product, SUM(h.service_price + product_price + h.package_price) AS sub_total
                 FROM " . InvoiceHeader::model()->tableName() . " h 
                 INNER JOIN " . RegistrationTransaction::model()->tableName() . " r ON r.id = h.registration_transaction_id
                 INNER JOIN " . Employee::model()->tableName() . " e ON e.id = r.employee_id_sales_person
@@ -1929,7 +1929,7 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
                     COUNT(CASE WHEN h.is_new_customer = 0 THEN 1 END) AS customer_repeat_quantity, COUNT(CASE WHEN h.is_new_customer = 1 THEN 1 END) AS customer_new_quantity, 
                     COUNT(CASE WHEN c.customer_type = 'Individual' THEN 1 END) AS customer_retail_quantity, 
                     COUNT(CASE WHEN c.customer_type = 'Company' THEN 1 END) AS customer_company_quantity, SUM(h.service_price) AS total_service, 
-                    SUM(h.product_price) AS total_product, SUM(h.total_price) AS grand_total
+                    SUM(h.product_price) AS total_product, SUM(h.service_price + product_price + h.package_price) AS sub_total
                 FROM " . InvoiceHeader::model()->tableName() . " h 
                 INNER JOIN " . RegistrationTransaction::model()->tableName() . " r ON r.id = h.registration_transaction_id
                 INNER JOIN " . Employee::model()->tableName() . " e ON e.id = r.employee_id_sales_person
@@ -1953,7 +1953,7 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
                     COUNT(CASE WHEN h.is_new_customer = 0 THEN 1 END) AS customer_repeat_quantity, COUNT(CASE WHEN h.is_new_customer = 1 THEN 1 END) AS customer_new_quantity, 
                     COUNT(CASE WHEN c.customer_type = 'Individual' THEN 1 END) AS customer_retail_quantity, 
                     COUNT(CASE WHEN c.customer_type = 'Company' THEN 1 END) AS customer_company_quantity, SUM(h.service_price) AS total_service, 
-                    SUM(h.product_price) AS total_product, SUM(h.total_price) AS grand_total
+                    SUM(h.product_price) AS total_product, SUM(h.service_price + product_price + h.package_price) AS sub_total
                 FROM " . InvoiceHeader::model()->tableName() . " h 
                 INNER JOIN " . RegistrationTransaction::model()->tableName() . " r ON r.id = h.registration_transaction_id
                 INNER JOIN " . Employee::model()->tableName() . " e ON e.id = r.employee_id_sales_person
@@ -1972,8 +1972,8 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
             ':end_date' => $endDate,
         );
         
-        $sql = "SELECT r.employee_id_assign_mechanic, MAX(e.name) AS employee_name, COUNT(h.vehicle_id) AS vehicle_quantity, COUNT(r.work_order_number) AS work_order_quantity, 
-                    COUNT(CASE WHEN c.customer_type = 'Individual' THEN 1 END) AS customer_retail_quantity, 
+        $sql = "SELECT r.employee_id_assign_mechanic, MAX(e.name) AS employee_name, COUNT(h.vehicle_id) AS vehicle_quantity, 
+                    COUNT(CASE WHEN c.customer_type = 'Individual' THEN 1 END) AS customer_retail_quantity, COUNT(r.work_order_number) AS work_order_quantity, 
                     COUNT(CASE WHEN c.customer_type = 'Company' THEN 1 END) AS customer_company_quantity, SUM(h.service_price) AS total_service
                 FROM " . InvoiceHeader::model()->tableName() . " h 
                 INNER JOIN " . RegistrationTransaction::model()->tableName() . " r ON r.id = h.registration_transaction_id
@@ -1995,14 +1995,15 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
             ':month' => $month,
         );
         
-        $sql = "SELECT r.employee_id_assign_mechanic, MAX(e.name) AS employee_name, COUNT(h.vehicle_id) AS vehicle_quantity, COUNT(r.work_order_number) AS work_order_quantity, 
-                    COUNT(CASE WHEN c.customer_type = 'Individual' THEN 1 END) AS customer_retail_quantity, 
+        $sql = "SELECT r.employee_id_assign_mechanic, MAX(e.name) AS employee_name, COUNT(h.vehicle_id) AS vehicle_quantity, 
+                    COUNT(CASE WHEN c.customer_type = 'Individual' THEN 1 END) AS customer_retail_quantity, COUNT(r.work_order_number) AS work_order_quantity, 
                     COUNT(CASE WHEN c.customer_type = 'Company' THEN 1 END) AS customer_company_quantity, SUM(h.service_price) AS total_service
                 FROM " . InvoiceHeader::model()->tableName() . " h 
                 INNER JOIN " . RegistrationTransaction::model()->tableName() . " r ON r.id = h.registration_transaction_id
                 INNER JOIN " . Employee::model()->tableName() . " e ON e.id = r.employee_id_assign_mechanic
                 INNER JOIN " . Customer::model()->tableName() . " c ON c.id = h.customer_id
-                WHERE YEAR(h.invoice_date) = :year AND MONTH(h.invoice_date) = :month AND r.employee_id_assign_mechanic IS NOT NULL AND h.status NOT LIKE '%CANCEL%' AND r.status NOT LIKE '%CANCEL%'
+                WHERE YEAR(h.invoice_date) = :year AND MONTH(h.invoice_date) = :month AND r.employee_id_assign_mechanic IS NOT NULL AND 
+                    h.status NOT LIKE '%CANCEL%' AND r.status NOT LIKE '%CANCEL%'
                 GROUP BY r.employee_id_assign_mechanic
                 ORDER BY MAX(e.name) ASC";
                 
@@ -2016,8 +2017,8 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
             ':year' => $year,
         );
         
-        $sql = "SELECT r.employee_id_assign_mechanic, MAX(e.name) AS employee_name, COUNT(h.vehicle_id) AS vehicle_quantity, COUNT(r.work_order_number) AS work_order_quantity, 
-                    COUNT(CASE WHEN c.customer_type = 'Individual' THEN 1 END) AS customer_retail_quantity, 
+        $sql = "SELECT r.employee_id_assign_mechanic, MAX(e.name) AS employee_name, COUNT(h.vehicle_id) AS vehicle_quantity, 
+                    COUNT(CASE WHEN c.customer_type = 'Individual' THEN 1 END) AS customer_retail_quantity, COUNT(r.work_order_number) AS work_order_quantity, 
                     COUNT(CASE WHEN c.customer_type = 'Company' THEN 1 END) AS customer_company_quantity, SUM(h.service_price) AS total_service
                 FROM " . InvoiceHeader::model()->tableName() . " h 
                 INNER JOIN " . RegistrationTransaction::model()->tableName() . " r ON r.id = h.registration_transaction_id
@@ -2077,9 +2078,6 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
     }  
     
     public function searchByTransactionHeaderInfo($employeeId, $startDate, $endDate, $page) {
-        // Warning: Please modify the following code to remove attributes that
-        // should not be searched.
-
         $criteria = new CDbCriteria;
 
         $criteria->together = 'true';

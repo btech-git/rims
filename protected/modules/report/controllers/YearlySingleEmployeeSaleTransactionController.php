@@ -135,7 +135,7 @@ class YearlySingleEmployeeSaleTransactionController extends Controller {
                 $averageTire = $detailItem['tire_quantity'] > 0 ? $detailItem['tire_price'] / $detailItem['tire_quantity'] : '0.00';
                 $averageOil = $detailItem['oil_quantity'] > 0 ? $detailItem['oil_price'] / $detailItem['oil_quantity'] : '0.00';
                 $averageAccessories = $detailItem['accessories_quantity'] > 0 ? $detailItem['accessories_price'] / $detailItem['accessories_quantity'] : '0.00';
-                $totalInvoicePerCustomer = round($dataItem['grand_total'] / $dataItem['customer_quantity'], 2);
+                $totalInvoicePerCustomer = round($dataItem['sub_total'] / $dataItem['customer_quantity'], 2);
                 $totalServicePerCustomer = round($dataItem['total_service'] / $dataItem['customer_quantity'], 2);
                 $totalPartsPerCustomer = round($dataItem['total_product'] / $dataItem['customer_quantity'], 2);
                 
@@ -147,7 +147,7 @@ class YearlySingleEmployeeSaleTransactionController extends Controller {
                 $worksheet->setCellValue("D{$counter}", $dataItem['customer_repeat_quantity']);
                 $worksheet->setCellValue("E{$counter}", $dataItem['customer_retail_quantity']);
                 $worksheet->setCellValue("F{$counter}", $dataItem['customer_company_quantity']);
-                $worksheet->setCellValue("G{$counter}", $dataItem['grand_total']);
+                $worksheet->setCellValue("G{$counter}", $dataItem['sub_total']);
                 $worksheet->setCellValue("H{$counter}", $totalInvoicePerCustomer);
                 $worksheet->setCellValue("I{$counter}", $dataItem['total_service']);
                 $worksheet->setCellValue("J{$counter}", $totalServicePerCustomer);
@@ -165,7 +165,7 @@ class YearlySingleEmployeeSaleTransactionController extends Controller {
                 $customerRepeatQuantitySum += $dataItem['customer_repeat_quantity'];
                 $customerRetailQuantitySum += $dataItem['customer_retail_quantity'];
                 $customerCompanyQuantitySum += $dataItem['customer_company_quantity'];
-                $grandTotalSum += $dataItem['grand_total'];
+                $grandTotalSum += $dataItem['sub_total'];
                 $totalServiceSum += $dataItem['total_service'];
                 $totalProductSum += $dataItem['total_product'];
                 $tireQuantitySum += $detailItem['tire_quantity'];
