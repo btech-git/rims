@@ -73,7 +73,7 @@ Yii::app()->clientScript->registerCss('_report', '
 
                 <?php $dataItem = $yearlySingleBranchSaleReportData[$i]; ?>
                 <?php $detailItem = $yearlySingleBranchSaleProductReportData[$i]; ?>
-                <?php $totalInvoicePerCustomer = round($dataItem['grand_total'] / $dataItem['customer_quantity'], 2); ?>
+                <?php $totalInvoicePerCustomer = round($dataItem['sub_total'] / $dataItem['customer_quantity'], 2); ?>
                 <?php $totalServicePerCustomer = round($dataItem['total_service'] / $dataItem['customer_quantity'], 2); ?> 
                 <?php $totalPartsPerCustomer = round($dataItem['total_product'] / $dataItem['customer_quantity'], 2); ?>
                 <?php $averageTire = $detailItem['tire_quantity'] > 0 ? $detailItem['tire_price'] / $detailItem['tire_quantity'] : '0.00'; ?>
