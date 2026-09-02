@@ -606,7 +606,7 @@ class TransactionSalesOrderController extends Controller {
                         $jurnalUmumPiutang->save();
                     }
 
-                    foreach ($salesOrderDetails as $key => $soDetail) {
+                    foreach ($salesOrder->transactionSalesOrderDetails as $key => $soDetail) {
                         $coaId = $soDetail->product->productSubMasterCategory->coa_penjualan_barang_dagang;
                         $journalReferences[$coaId]['debet_kredit'] = 'K';
                         $journalReferences[$coaId]['is_coa_category'] = 0;
