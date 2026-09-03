@@ -1,9 +1,11 @@
 <?php Yii::app()->clientScript->registerCss('_report', '
-    .width1-1 { width: 10% }
-    .width1-2 { width: 10% }
-    .width1-3 { width: 15% }
-    .width1-4 { width: 15% }
-    .width1-4 { width: 15% }
+    .width1-1 { width: 5% }
+    .width1-2 { width: 20% }
+    .width1-3 { width: 20% }
+    .width1-4 { width: 10% }
+    .width1-5 { width: 10% }
+    .width1-6 { width: 10% }
+    .width1-7 { width: 10% }
 '); ?>
 
 <div style="font-weight: bold; text-align: center">
@@ -22,6 +24,8 @@
             <th class="width1-3">Name</th>
             <th class="width1-4">Total Purchase</th>
             <th class="width1-5">Total Sub Pekerjaan Luar</th>
+            <th class="width1-6">Pembayaran</th>
+            <th class="width1-7">Sisa Hutang</th>
         </tr>
     </thead>
     
@@ -31,24 +35,36 @@
         <?php foreach ($purchasePerSupplierSummary->dataProvider->data as $header): ?>
             <?php $purchasePrice = $header->getPurchasePriceReport($startDate, $endDate, $branchId); ?>
             <?php $workOrderExpensePrice = $header->getWorkOrderExpensePriceReport($startDate, $endDate, $branchId); ?>
+            <?php $purchasePayment = $header->getPurchasePaymentReport($startDate, $endDate, $branchId); ?>
+            <?php $remainingPayable = $purchasePrice + $workOrderExpensePrice - $purchasePayment; ?>
             <?php //if ($purchasePrice > 0): ?>
                 <tr class="items1">
                     <td class="width1-1"><?php echo CHtml::encode(CHtml::value($header, 'code')); ?></td>
                     <td class="width1-2"><?php echo CHtml::encode(CHtml::value($header, 'company')); ?></td>
                     <td class="width1-3"><?php echo CHtml::encode(CHtml::value($header, 'name')); ?></td>
                     <td class="width1-4" style="text-align: right">
-                        <?php echo CHtml::link(Yii::app()->numberFormatter->format('#,##0', $purchasePrice), Yii::app()->createUrl("report/purchaseSummary/detailPurchaseTransaction", array(
+                        <?php echo CHtml::link(Yii::app()->numberFormatter->format('#,##0.00', $purchasePrice), Yii::app()->createUrl("report/purchaseSummary/detailPurchaseTransaction", array(
                             "supplierId" => $header->id,
                             "startDate" => $startDate,
                             "endDate" => $endDate,
                         )), array('target' => '_blank'));?>
                     </td>
                     <td class="width1-4" style="text-align: right">
-                        <?php echo CHtml::link(Yii::app()->numberFormatter->format('#,##0', $workOrderExpensePrice), Yii::app()->createUrl("report/purchaseSummary/detailWorkOrderExpenseTransaction", array(
+                        <?php echo CHtml::link(Yii::app()->numberFormatter->format('#,##0.00', $workOrderExpensePrice), Yii::app()->createUrl("report/purchaseSummary/detailWorkOrderExpenseTransaction", array(
                             "supplierId" => $header->id,
                             "startDate" => $startDate,
                             "endDate" => $endDate,
                         )), array('target' => '_blank'));?>
+                    </td>
+                    <td class="width1-4" style="text-align: right">
+                        <?php echo CHtml::link(Yii::app()->numberFormatter->format('#,##0.00', $purchasePayment), Yii::app()->createUrl("report/purchaseSummary/detailPaymentTransaction", array(
+                            "supplierId" => $header->id,
+                            "startDate" => $startDate,
+                            "endDate" => $endDate,
+                        )), array('target' => '_blank'));?>
+                    </td>
+                    <td class="width1-4" style="text-align: right">
+                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $remainingPayable)); ?>
                     </td>
                 </tr>
                 <?php $totalPurchase += $purchasePrice; ?>

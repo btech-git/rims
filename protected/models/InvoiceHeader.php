@@ -1173,7 +1173,8 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
     }
     
     public static function getYearlySaleSummary($year) {
-        $sql = "SELECT EXTRACT(YEAR_MONTH FROM invoice_date) AS year_month_value, branch_id, MIN(b.name) AS branch_name, SUM(total_price) AS total_price
+        $sql = "SELECT EXTRACT(YEAR_MONTH FROM invoice_date) AS year_month_value, branch_id, MIN(b.name) AS branch_name, 
+                    SUM(i.service_price + i.product_price + i.package_price) AS total_price
                 FROM " . InvoiceHeader::model()->tableName() . " i 
                 INNER JOIN " . Branch::model()->tableName() . " b ON b.id = i.branch_id
                 WHERE YEAR(invoice_date) = :year AND i.status NOT LIKE '%CANCELLED%'
@@ -1188,7 +1189,8 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
     }
     
     public static function getYearlyCompanySaleSummary($year) {
-        $sql = "SELECT EXTRACT(YEAR_MONTH FROM invoice_date) AS year_month_value, branch_id, MIN(b.name) AS branch_name, SUM(total_price) AS total_price
+        $sql = "SELECT EXTRACT(YEAR_MONTH FROM invoice_date) AS year_month_value, branch_id, MIN(b.name) AS branch_name, 
+                    SUM(i.service_price + i.product_price + i.package_price) AS total_price
                 FROM " . InvoiceHeader::model()->tableName() . " i 
                 INNER JOIN " . Branch::model()->tableName() . " b ON b.id = i.branch_id
                 INNER JOIN " . Customer::model()->tableName() . " c ON c.id = i.customer_id
@@ -1204,7 +1206,8 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
     }
     
     public static function getYearlyIndividualSaleSummary($year) {
-        $sql = "SELECT EXTRACT(YEAR_MONTH FROM invoice_date) AS year_month_value, branch_id, MIN(b.name) AS branch_name, SUM(total_price) AS total_price
+        $sql = "SELECT EXTRACT(YEAR_MONTH FROM invoice_date) AS year_month_value, branch_id, MIN(b.name) AS branch_name, 
+                    SUM(i.service_price + i.product_price + i.package_price) AS total_price
                 FROM " . InvoiceHeader::model()->tableName() . " i 
                 INNER JOIN " . Branch::model()->tableName() . " b ON b.id = i.branch_id
                 INNER JOIN " . Customer::model()->tableName() . " c ON c.id = i.customer_id
@@ -1247,7 +1250,9 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
             $params[':branch_id'] = $branchId;
         }
         
-        $sql = "SELECT EXTRACT(YEAR_MONTH FROM invoice_date) AS year_month_value, i.customer_id, MAX(c.name) AS customer_name, COUNT(*) AS quantity_invoice, SUM(i.service_price) AS service_price, SUM(i.product_price) AS product_price, SUM(i.product_price + i.service_price) AS sub_total, SUM(i.ppn_total) AS total_tax, SUM(i.pph_total) AS total_tax_income, SUM(i.total_price) AS total_price 
+        $sql = "SELECT EXTRACT(YEAR_MONTH FROM invoice_date) AS year_month_value, i.customer_id, MAX(c.name) AS customer_name, COUNT(*) AS quantity_invoice, 
+                    SUM(i.service_price) AS service_price, SUM(i.product_price) AS product_price, SUM(i.ppn_total) AS total_tax, 
+                    SUM(i.product_price + i.service_price + i.package_price) AS sub_total, SUM(i.pph_total) AS total_tax_income, SUM(i.total_price) AS total_price 
                 FROM " . InvoiceHeader::model()->tableName() . " i 
                 INNER JOIN " . Customer::model()->tableName() . " c ON c.id = i.customer_id
                 WHERE YEAR(i.invoice_date) = :year AND MONTH(i.invoice_date) = :month AND i.status NOT LIKE '%CANCELLED%' AND i.tax_percentage = 0 AND i.ppn_total = 0" . $branchConditionSql . "
@@ -1287,7 +1292,7 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
         }
         
         $sql = "SELECT EXTRACT(YEAR_MONTH FROM invoice_date) AS year_month_value, COUNT(*) AS quantity_invoice, SUM(i.service_price) AS service_price, 
-                SUM(i.product_price) AS product_price, SUM(i.product_price + i.service_price) AS sub_total, SUM(i.ppn_total) AS total_tax, 
+                SUM(i.product_price) AS product_price, SUM(i.product_price + i.service_price + i.package_price) AS sub_total, SUM(i.ppn_total) AS total_tax, 
                 SUM(i.pph_total) AS total_tax_income, SUM(i.total_price) AS total_price 
                 FROM " . InvoiceHeader::model()->tableName() . " i 
                 WHERE YEAR(i.invoice_date) = :year AND i.status NOT LIKE '%CANCELLED%' AND i.tax_percentage > 0 AND i.ppn_total > 0" . $branchConditionSql . "
@@ -1312,10 +1317,13 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
             $params[':branch_id'] = $branchId;
         }
         
-        $sql = "SELECT EXTRACT(YEAR_MONTH FROM invoice_date) AS year_month_value, i.customer_id, MAX(c.name) AS customer_name, COUNT(*) AS quantity_invoice, SUM(i.service_price) AS service_price, SUM(i.product_price) AS product_price, SUM(i.product_price + i.service_price) AS sub_total, SUM(i.ppn_total) AS total_tax, SUM(i.pph_total) AS total_tax_income, SUM(i.total_price) AS total_price 
+        $sql = "SELECT EXTRACT(YEAR_MONTH FROM invoice_date) AS year_month_value, i.customer_id, MAX(c.name) AS customer_name, COUNT(*) AS quantity_invoice, 
+                    SUM(i.service_price) AS service_price, SUM(i.product_price) AS product_price, SUM(i.ppn_total) AS total_tax, 
+                    SUM(i.product_price + i.service_price + i.package_price) AS sub_total, SUM(i.pph_total) AS total_tax_income, SUM(i.total_price) AS total_price 
                 FROM " . InvoiceHeader::model()->tableName() . " i 
                 INNER JOIN " . Customer::model()->tableName() . " c ON c.id = i.customer_id
-                WHERE YEAR(i.invoice_date) = :year AND MONTH(i.invoice_date) = :month AND i.status NOT LIKE '%CANCELLED%' AND i.tax_percentage > 0 AND i.ppn_total > 0" . $branchConditionSql . "
+                WHERE YEAR(i.invoice_date) = :year AND MONTH(i.invoice_date) = :month AND i.status NOT LIKE '%CANCELLED%' AND i.tax_percentage > 0 AND 
+                    i.ppn_total > 0" . $branchConditionSql . "
                 GROUP BY EXTRACT(YEAR_MONTH FROM invoice_date), i.customer_id
                 ORDER BY year_month_value ASC, c.name ASC";
                 
@@ -1329,7 +1337,8 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
                 FROM " . InvoiceHeader::model()->tableName() . " i 
                 INNER JOIN " . Branch::model()->tableName() . " b ON b.id = i.branch_id
                 INNER JOIN " . Customer::model()->tableName() . " c ON c.id = i.customer_id
-                WHERE YEAR(invoice_date) = :year AND i.status NOT LIKE '%CANCELLED%' AND c.customer_type = 'Company' AND i.tax_percentage > 0 AND i.ppn_total > 0
+                WHERE YEAR(invoice_date) = :year AND i.status NOT LIKE '%CANCELLED%' AND c.customer_type = 'Company' AND i.tax_percentage > 0 AND 
+                    i.ppn_total > 0
                 GROUP BY EXTRACT(YEAR_MONTH FROM invoice_date), branch_id
                 ORDER BY year_month_value ASC, branch_id ASC";
                 
@@ -1345,7 +1354,8 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
                 FROM " . InvoiceHeader::model()->tableName() . " i 
                 INNER JOIN " . Branch::model()->tableName() . " b ON b.id = i.branch_id
                 INNER JOIN " . Customer::model()->tableName() . " c ON c.id = i.customer_id
-                WHERE YEAR(invoice_date) = :year AND i.status NOT LIKE '%CANCELLED%' AND c.customer_type = 'Individual' AND i.tax_percentage > 0 AND i.ppn_total > 0
+                WHERE YEAR(invoice_date) = :year AND i.status NOT LIKE '%CANCELLED%' AND c.customer_type = 'Individual' AND i.tax_percentage > 0 AND 
+                    i.ppn_total > 0
                 GROUP BY EXTRACT(YEAR_MONTH FROM invoice_date), branch_id
                 ORDER BY year_month_value ASC, branch_id ASC";
                 
@@ -1594,7 +1604,8 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
                 INNER JOIN " . VehicleCarSubModel::model()->tableName() . " s ON s.id = v.car_sub_model_id
                 INNER JOIN " . VehicleCarModel::model()->tableName() . " c ON c.id = s.car_model_id
                 INNER JOIN " . VehicleCarMake::model()->tableName() . " m ON m.id = c.car_make_id
-                WHERE YEAR(t.invoice_date) = :year AND MONTH(t.invoice_date) = :month AND t.status NOT LIKE '%CANCELLED%'" . $branchConditionSql . $carMakeConditionSql . $carModelConditionSql . "
+                WHERE YEAR(t.invoice_date) = :year AND MONTH(t.invoice_date) = :month AND t.status NOT LIKE '%CANCELLED%'" . 
+                    $branchConditionSql . $carMakeConditionSql . $carModelConditionSql . "
                 GROUP BY s.id, SUBSTRING_INDEX(SUBSTRING_INDEX(t.invoice_date, ' ', 1), '-', 3)
                 ORDER BY m.name ASC, c.name ASC, s.name ASC, transaction_date ASC";
 
@@ -1741,10 +1752,11 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
             ':end_date' => $endDate,
         );
         
-        $sql = "SELECT h.branch_id, MAX(b.name) AS branch_name, COUNT(h.customer_id) AS customer_quantity, SUM(h.service_price + product_price + h.package_price) AS sub_total, 
-                    COUNT(CASE WHEN h.is_new_customer = 0 THEN 1 END) AS customer_repeat_quantity, COUNT(CASE WHEN h.is_new_customer = 1 THEN 1 END) AS customer_new_quantity, 
-                    COUNT(CASE WHEN c.customer_type = 'Individual' THEN 1 END) AS customer_retail_quantity, SUM(h.service_price) AS total_service,
-                    COUNT(CASE WHEN c.customer_type = 'Company' THEN 1 END) AS customer_company_quantity, SUM(h.product_price) AS total_product
+        $sql = "SELECT h.branch_id, MAX(b.name) AS branch_name, COUNT(h.customer_id) AS customer_quantity, SUM(h.service_price) AS total_service,
+                    SUM(h.service_price + product_price + h.package_price) AS sub_total, COUNT(CASE WHEN h.is_new_customer = 1 THEN 1 END) AS customer_new_quantity, 
+                    COUNT(CASE WHEN h.is_new_customer = 0 THEN 1 END) AS customer_repeat_quantity, 
+                    COUNT(CASE WHEN c.customer_type = 'Individual' THEN 1 END) AS customer_retail_quantity, SUM(h.product_price) AS total_product,
+                    COUNT(CASE WHEN c.customer_type = 'Company' THEN 1 END) AS customer_company_quantity
                 FROM " . InvoiceHeader::model()->tableName() . " h 
                 INNER JOIN " . Branch::model()->tableName() . " b ON b.id = h.branch_id
                 INNER JOIN " . Customer::model()->tableName() . " c ON c.id = h.customer_id

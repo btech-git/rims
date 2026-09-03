@@ -129,19 +129,15 @@ class Products extends CComponent {
             $valid = $this->validate() && $this->flush();
             if ($valid) {
                 $dbTransaction->commit();
-                //print_r('1');
             } else {
                 $dbTransaction->rollback();
-                //print_r('2');
             }
         } catch (Exception $e) {
             $dbTransaction->rollback();
             $valid = false;
-            //print_r($e);
         }
 
         return $valid;
-        //print_r('success');
     }
 
     public function validate() {
@@ -213,8 +209,7 @@ class Products extends CComponent {
         $this->header->minimum_selling_price = $this->minimumSellingPrice;
         $this->header->recommended_selling_price = $this->recommendedSellingPrice;
         $valid = $this->header->save();
-        //echo $valid;
-        //save battery specification
+
         if ($this->header->product_sub_category_id == 1) {
             if (isset($_POST['ProductSpecificationBattery'])) {
                 $productSpecificationBattery = ProductSpecificationBattery::model()->findByAttributes(array('product_id' => $this->header->id));
@@ -230,8 +225,6 @@ class Products extends CComponent {
             }
         }
 
-
-        //save oil specification
         if ($this->header->product_sub_category_id == 2) {
             if (isset($_POST['ProductSpecificationOil'])) {
                 $productSpecificationOil = ProductSpecificationOil::model()->findByAttributes(array('product_id' => $this->header->id));

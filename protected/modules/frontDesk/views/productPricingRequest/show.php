@@ -67,17 +67,20 @@ $this->breadcrumbs = array(
         <table>
             <thead>
                 <tr>
+                    <td>Code</td>
                     <td>Product</td>
                     <td>Brand</td>
                     <td>Category</td>
                     <td>Quantity</td>
                     <td>Recommended Price</td>
                     <td>Memo</td>
+                    <td></td>
                 </tr>
             </thead>
             <tbody>
                 <?php foreach($model->productPricingRequestDetails as $detail): ?>
                     <tr>
+                        <td><?php echo CHtml::encode(CHtml::value($detail, 'product_code')); ?></td>
                         <td><?php echo CHtml::encode(CHtml::value($detail, 'product_name')); ?></td>
                         <td>
                             <?php echo CHtml::encode(CHtml::value($detail, 'brand.name')); ?>
@@ -96,6 +99,13 @@ $this->breadcrumbs = array(
                             <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($detail, 'recommended_price'))); ?>
                         </td>
                         <td><?php echo CHtml::encode(CHtml::value($detail, 'memo')); ?></td>
+                        <td>
+                            <?php if (!empty($model->user_id_reply) && $model->status == 'Approved' && $detail->is_added_to_master == 0): ?>
+                                <?php echo CHtml::link('Add to Master', Yii::app()->createUrl("master/product/createRequest", array(
+                                    "pricingRequestId" => $detail->id,
+                                )), array('target' => '_blank')); ?>
+                            <?php endif; ?>
+                        </td>
                     </tr>
                 <?php endforeach; ?>
             </tbody>

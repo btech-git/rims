@@ -625,6 +625,32 @@ class Supplier extends CActiveRecord {
         return ($value === false) ? 0 : $value;
     }
     
+    public function getPurchasePaymentReport($startDate, $endDate, $branchId) {
+        $branchConditionSql = '';
+        
+        $params = array(
+            ':supplier_id' => $this->id,
+            ':start_date' => $startDate,
+            ':end_date' => $endDate,
+        );
+        
+        if (!empty($branchId)) {
+            $branchConditionSql = ' AND h.branch_id = :branch_id';
+            $params[':branch_id'] = $branchId;
+        }
+        
+        $sql = "
+            SELECT COALESCE(SUM(amount), 0) AS total_purchase 
+            FROM " . PaymentOut::model()->tableName() . " h 
+            INNER JOIN " . PayOutDetail::model()->tableName() . " d ON h.id = d.payment_out_id
+            WHERE h.supplier_id = :supplier_id AND substr(h.payment_date, 1, 10) BETWEEN :start_date AND :end_date AND h.user_id_cancelled IS NULL" . $branchConditionSql . "
+        ";
+
+        $value = Yii::app()->db->createCommand($sql)->queryScalar($params);
+
+        return ($value === false) ? 0 : $value;
+    }
+    
 //    public function getPayablePurchaseSupplierReport($endDate, $branchId) {
 //        $branchConditionSql = '';
 //        

@@ -89,22 +89,7 @@ class StockAnalysisController extends Controller {
         }
         
         if (isset($_GET['SaveExcel'])) {
-            $this->saveToExcel($inventoryDetail, array(
-                'startDate' => $startDate, 
-                'endDate' => $endDate,
-                'branchId' => $branchId,
-                'productId' => $productId,
-                'productCode' => $productCode,
-                'productName' => $productName,
-                'brandId' => $brandId,
-                'subBrandId' => $subBrandId,
-                'subBrandSeriesId' => $subBrandSeriesId,
-                'productMasterCategoryId' => $productMasterCategoryId,
-                'productSubMasterCategoryId' => $productSubMasterCategoryId,
-                'productSubCategoryId' => $productSubCategoryId,
-                'numberOfDays' => $numberOfDays,
-                'fastMovingItems' => $fastMovingItems,
-            ));
+            $this->saveToExcel($numberOfDays, $year, $monthList, $fastMovingItemsData);
         }
         
         $this->render('summary', array(
@@ -177,7 +162,7 @@ class StockAnalysisController extends Controller {
         }
     }
 
-    protected function saveToExcel($inventoryDetail, array $options = array()) {
+    protected function saveToExcel($numberOfDays, $year, $monthList, $fastMovingItemsData) {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
         
@@ -193,7 +178,6 @@ class StockAnalysisController extends Controller {
         $productMasterCategoryId = (!empty($options['productMasterCategoryId'])) ? $options['productMasterCategoryId'] : '';
         $productSubMasterCategoryId = (!empty($options['productSubMasterCategoryId'])) ? $options['productSubMasterCategoryId'] : '';
         $productSubCategoryId = (!empty($options['productSubCategoryId'])) ? $options['productSubCategoryId'] : '';
-        $numberOfDays = (empty($options['numberOfDays'])) ? '' : $options['numberOfDays'];
 
         spl_autoload_unregister(array('YiiBase', 'autoload'));
         include_once Yii::getPathOfAlias('ext.phpexcel.Classes') . DIRECTORY_SEPARATOR . 'PHPExcel.php';
@@ -202,101 +186,76 @@ class StockAnalysisController extends Controller {
         $objPHPExcel = new PHPExcel();
 
         $documentProperties = $objPHPExcel->getProperties();
-        $documentProperties->setCreator('PT. Raperind Motor');
-        $documentProperties->setTitle('Laporan Stok Analisis');
+        $documentProperties->setCreator('Raperind Motor');
+        $documentProperties->setTitle('Analisa Penjualan Barang');
 
         $worksheet = $objPHPExcel->setActiveSheetIndex(0);
-        $worksheet->setTitle('Laporan Stok Analisis');
+        $worksheet->setTitle('Analisa Penjualan Barang');
 
-        $worksheet->mergeCells('A1:I1');
-        $worksheet->mergeCells('A2:I2');
-        $worksheet->mergeCells('A3:I3');
-        $worksheet->mergeCells('A5:I5');
+        $worksheet->getStyle('A1:V5')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->getStyle('A1:V5')->getFont()->setBold(true);
 
-        $worksheet->getStyle('A1:I6')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-        $worksheet->getStyle('A1:I6')->getFont()->setBold(true);
+        $worksheet->setCellValue('A1', 'Raperind Motor');
+        $worksheet->setCellValue('A2', 'Analisa Penjualan Barang');
+        $worksheet->setCellValue('A3', $year);
 
-        $branch = Branch::model()->findByPk($branchId);
-        $worksheet->setCellValue('A1', 'PT. Raperind Motor');
-        $worksheet->setCellValue('A2', 'Laporan Stok Analisis' . $branchId);
-        $worksheet->setCellValue('A3', Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($startDate)) . ' - ' . Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($endDate)));
+        $columnHeaderCounter = 'G';
+        $worksheet->setCellValue('A5', 'No');
+        $worksheet->setCellValue('B5', 'ID');
+        $worksheet->setCellValue('C5', 'Code');
+        $worksheet->setCellValue('D5', 'Product Name');
+        $worksheet->setCellValue('E5', 'Category');
+        $worksheet->setCellValue('F5', 'Brand');
+        for ($month = 1; $month <= 12; $month++) {
+            $worksheet->setCellValue("{$columnHeaderCounter}5", $monthList[$month]);
+            $columnHeaderCounter++;
+        }
+        $worksheet->setCellValue("{$columnHeaderCounter}5", 'Total Sales');
+        $columnHeaderCounter++;
+        $worksheet->setCellValue("{$columnHeaderCounter}5", 'Average per Month');
+        $columnHeaderCounter++;
+        $worksheet->setCellValue("{$columnHeaderCounter}5", 'Average per Week');
+        $columnHeaderCounter++;
 
-        $worksheet->getStyle('A5:I5')->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->mergeCells("A1:{$columnHeaderCounter}1");
+        $worksheet->mergeCells("A2:{$columnHeaderCounter}2");
+        $worksheet->mergeCells("A3:{$columnHeaderCounter}3");
 
-        $worksheet->setCellValue('A5', 'Fast Moving Items ' . CHtml::value($branch, 'code'));
-        $worksheet->setCellValue('A6', 'No');
-        $worksheet->setCellValue('B6', 'ID');
-        $worksheet->setCellValue('C6', 'Code');
-        $worksheet->setCellValue('D6', 'Product Name');
-        $worksheet->setCellValue('E6', 'Category');
-        $worksheet->setCellValue('F6', 'Brand');
-        $worksheet->setCellValue('G6', 'Quantity Sales');
-        $worksheet->setCellValue('H6', 'Average per Month');
-        $worksheet->setCellValue('I6', 'Average per Week');
+        $worksheet->getStyle("A5:{$columnHeaderCounter}5")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A5:{$columnHeaderCounter}5")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
-        $worksheet->getStyle('A6:I6')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
-
-        $counter = 7; 
+        $counter = 6; 
         
         $numberOfMonths = floor($numberOfDays / 30);
         $numberOfWeeks = floor($numberOfDays / 7);
-        $fastMovingItems = $inventoryDetail->getFastMovingItems($startDate, $endDate, $brandId, $subBrandId, $subBrandSeriesId, $productMasterCategoryId, $productSubMasterCategoryId, $productSubCategoryId, $branchId, $productId, $productCode, $productName);
+        $i = 0;
         
-        foreach ($fastMovingItems as $i => $fastMovingItem) {
-            $worksheet->setCellValue("A{$counter}", $i + 1);
-            $worksheet->setCellValue("B{$counter}", $fastMovingItem['id']);
+        foreach ($fastMovingItemsData as $productId => $fastMovingItem) {
+            $worksheet->setCellValue("A{$counter}", ++$i);
+            $worksheet->setCellValue("B{$counter}", $productId);
             $worksheet->setCellValue("C{$counter}", $fastMovingItem['code']);
             $worksheet->setCellValue("D{$counter}", $fastMovingItem['product_name']);
             $worksheet->setCellValue("E{$counter}", $fastMovingItem['category']);
             $worksheet->setCellValue("F{$counter}", $fastMovingItem['brand'] . ' - ' . $fastMovingItem['sub_brand'] . ' - ' . $fastMovingItem['sub_brand_series']);
-            $worksheet->setCellValue("G{$counter}", $fastMovingItem['total_sale']);
-            $worksheet->setCellValue("H{$counter}", round($fastMovingItem['total_sale'] / $numberOfMonths, 2));
-            $worksheet->setCellValue("I{$counter}", round($fastMovingItem['total_sale'] / $numberOfWeeks, 2));
+            $totalSaleSum = '0.00';
+            $columnBodyCounter = 'G';
+            for ($month = 1; $month <= 12; $month++) {
+                $totalSale = isset($fastMovingItem['total_sale'][$month]) ? $fastMovingItem['total_sale'][$month] : ''; 
+                $worksheet->setCellValue("{$columnBodyCounter}{$counter}", $totalSale);
+                $totalSaleSum += $totalSale;
+                $columnBodyCounter++;
+            }
+            $worksheet->setCellValue("{$columnBodyCounter}{$counter}", $totalSaleSum);
+            $columnBodyCounter++;
+            $worksheet->setCellValue("{$columnBodyCounter}{$counter}", round($totalSaleSum / $numberOfMonths, 2));
+            $columnBodyCounter++;
+            $worksheet->setCellValue("{$columnBodyCounter}{$counter}", round($totalSaleSum / $numberOfWeeks, 2));
+            $columnBodyCounter++;
             
             $counter++;
         }
         $counter++;
         
-        $worksheet->getStyle("A{$counter}:I{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
-        $worksheet->getStyle("A{$counter}:I{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-        $worksheet->getStyle("A{$counter}:I{$counter}")->getFont()->setBold(true);
-        $worksheet->mergeCells("A{$counter}:I{$counter}");
-
-        $worksheet->setCellValue("A{$counter}", 'Slow Moving Items ' . CHtml::value($branch, 'code'));
-        $counter++;
-        
-        $worksheet->setCellValue("A{$counter}", 'No');
-        $worksheet->setCellValue("B{$counter}", 'ID');
-        $worksheet->setCellValue("C{$counter}", 'Code');
-        $worksheet->setCellValue("D{$counter}", 'Product Name');
-        $worksheet->setCellValue("E{$counter}", 'Category');
-        $worksheet->setCellValue("F{$counter}", 'Brand');
-        $worksheet->setCellValue("G{$counter}", 'Quantity Sales');
-        $worksheet->setCellValue("H{$counter}", 'Average per Month');
-        $worksheet->setCellValue("I{$counter}", 'Average per Week');
-
-        $worksheet->getStyle("A{$counter}:I{$counter}")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
-        $worksheet->getStyle("A{$counter}:I{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-        $worksheet->getStyle("A{$counter}:I{$counter}")->getFont()->setBold(true);
-        $counter++;
-        
-        $slowMovingItems = $inventoryDetail->getSlowMovingItems($startDate, $endDate, $brandId, $subBrandId, $subBrandSeriesId, $productMasterCategoryId, $productSubMasterCategoryId, $productSubCategoryId, $branchId, $productId, $productCode, $productName);
-        
-        foreach ($slowMovingItems as $i => $slowMovingItem) {
-            $worksheet->setCellValue("A{$counter}", $i + 1);
-            $worksheet->setCellValue("B{$counter}", $slowMovingItem['id']);
-            $worksheet->setCellValue("C{$counter}", $slowMovingItem['code']);
-            $worksheet->setCellValue("D{$counter}", $slowMovingItem['product_name']);
-            $worksheet->setCellValue("E{$counter}", $slowMovingItem['category']);
-            $worksheet->setCellValue("F{$counter}", $slowMovingItem['brand'] . ' - ' . $slowMovingItem['sub_brand'] . ' - ' . $slowMovingItem['sub_brand_series']);
-            $worksheet->setCellValue("G{$counter}", $slowMovingItem['total_sale']);
-            $worksheet->setCellValue("H{$counter}", round($slowMovingItem['total_sale'] / $numberOfMonths, 2));
-            $worksheet->setCellValue("I{$counter}", round($slowMovingItem['total_sale'] / $numberOfWeeks, 2));
-            
-            $counter++;
-        }
-        $counter++;
-
         for ($col = 'A'; $col !== 'Z'; $col++) {
             $objPHPExcel->getActiveSheet()
             ->getColumnDimension($col)

@@ -165,6 +165,96 @@ class ProductController extends Controller {
         ));
     }
 
+    public function actionCreateRequest($pricingRequestId) {
+        
+        $product = $this->instantiate(null);
+        $productPricingRequest = ProductPricingRequestDetail::model()->findByPk($pricingRequestId);
+        $product->header->date_posting = date('Y-m-d H:i:s');
+        $product->header->ppn = 2;
+        $product->header->user_id = Yii::app()->user->id;
+        $product->header->user_id_approval = null;
+        $product->header->date_approval = null;
+        $product->header->manufacturer_code = $productPricingRequest->product_code;
+        $product->header->name = $productPricingRequest->product_name;
+        $product->header->product_master_category_id = $productPricingRequest->product_master_category_id;
+        $product->header->product_sub_master_category_id = $productPricingRequest->product_sub_master_category_id;
+        $product->header->product_sub_category_id = $productPricingRequest->product_sub_category_id;
+        $product->header->brand_id = $productPricingRequest->brand_id;
+        $product->header->sub_brand_id = $productPricingRequest->sub_brand_id;
+        $product->header->sub_brand_series_id = $productPricingRequest->sub_brand_series_id;
+        $productSpecificationBattery = new ProductSpecificationBattery;
+        $productSpecificationOil = new ProductSpecificationOil;
+        $productSpecificationTire = new ProductSpecificationTire;
+
+        $supplier = new Supplier('search');
+        $supplier->unsetAttributes();  // clear any default values
+        if (isset($_GET['Supplier'])) {
+            $supplier->attributes = $_GET['Supplier'];
+        }
+
+        $supplierCriteria = new CDbCriteria;
+        $supplierCriteria->compare('name', $supplier->name, true);
+
+        $supplierDataProvider = new CActiveDataProvider('Supplier', array(
+            'criteria' => $supplierCriteria,
+        ));
+
+        $unit = new Unit('search');
+        $unit->unsetAttributes();  // clear any default values
+        if (isset($_GET['Unit'])) {
+            $unit->attributes = $_GET['Unit'];
+        }
+
+        $unitCriteria = new CDbCriteria;
+        $unitCriteria->compare('name', $unit->name, true);
+
+        $unitDataProvider = new CActiveDataProvider('Unit', array(
+            'criteria' => $unitCriteria,
+        ));
+
+        $productComplementSubstitute = new Product('search');
+        $productComplementSubstitute->unsetAttributes();  // clear any default values
+        if (isset($_GET['Product'])) {
+            $productComplementSubstitute->attributes = $_GET['Product'];
+        }
+
+        $productComplementSubstituteCriteria = new CDbCriteria;
+        $productComplementSubstituteCriteria->together = true;
+        $productComplementSubstituteCriteria->with = array('productMasterCategory', 'productSubMasterCategory', 'productSubCategory');
+        $productComplementSubstituteCriteria->compare('t.name', $productComplementSubstitute->name, true);
+        $productComplementSubstituteCriteria->compare('productMasterCategory.name', $productComplementSubstitute->product_master_category_name, true);
+        $productComplementSubstituteCriteria->compare('productSubMasterCategory.name', $productComplementSubstitute->product_sub_master_category_name, true);
+        $productComplementSubstituteCriteria->compare('productSubCategory.name', $productComplementSubstitute->product_sub_category_name, true);
+
+        $productComplementSubstituteDataProvider = new CActiveDataProvider('Product', array(
+            'criteria' => $productComplementSubstituteCriteria,
+        ));
+
+        if (isset($_POST['Product'])) {
+            $this->loadState($product);
+            
+            if ($product->save(Yii::app()->db)) {
+                $productPricingRequest->is_added_to_master = 1;
+                $productPricingRequest->update(array('is_added_to_master'));
+                
+                $this->redirect(array('view', 'id' => $product->header->id));
+            }
+        }
+
+        $this->render('createRequest', array(
+            'product' => $product,
+            'productSpecificationBattery' => $productSpecificationBattery,
+            'productSpecificationOil' => $productSpecificationOil,
+            'productSpecificationTire' => $productSpecificationTire,
+            'supplier' => $supplier,
+            'supplierDataProvider' => $supplierDataProvider,
+            'unit' => $unit,
+            'unitDataProvider' => $unitDataProvider,
+            'productComplementSubstitute' => $productComplementSubstitute,
+            'productComplementSubstituteDataProvider' => $productComplementSubstituteDataProvider
+        ));
+    }
+
     public function actionAdd($pricingId) {
         
         $product = $this->instantiate(null);

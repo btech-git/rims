@@ -20,6 +20,7 @@
  * @property string $product_code
  * @property integer $unit_id
  * @property integer $production_year
+ * @property integer $is_added_to_master
  *
  * The followings are the available model relations:
  * @property Brand $brand
@@ -48,7 +49,7 @@ class ProductPricingRequestDetail extends CActiveRecord {
         // will receive user inputs.
         return array(
             array('product_name, product_pricing_request_header_id, unit_id, product_code, production_year', 'required'),
-            array('brand_id, sub_brand_id, sub_brand_series_id, product_master_category_id, product_sub_master_category_id, product_sub_category_id, product_pricing_request_header_id, is_inactive, unit_id, production_year', 'numerical', 'integerOnly' => true),
+            array('brand_id, sub_brand_id, sub_brand_series_id, product_master_category_id, product_sub_master_category_id, product_sub_category_id, product_pricing_request_header_id, is_inactive, unit_id, production_year, is_added_to_master', 'numerical', 'integerOnly' => true),
             array('recommended_price', 'length', 'max' => 18),
             array('quantity', 'length', 'max' => 10),
             array('product_name', 'length', 'max' => 100),
@@ -56,7 +57,7 @@ class ProductPricingRequestDetail extends CActiveRecord {
             array('memo', 'length', 'max' => 200),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, recommended_price, quantity, product_name, memo, brand_id, sub_brand_id, sub_brand_series_id, product_master_category_id, product_sub_master_category_id, product_sub_category_id, product_pricing_request_header_id, is_inactive, unit_id, product_code, production_year', 'safe', 'on' => 'search'),
+            array('id, recommended_price, quantity, product_name, memo, brand_id, sub_brand_id, sub_brand_series_id, product_master_category_id, product_sub_master_category_id, product_sub_category_id, product_pricing_request_header_id, is_inactive, unit_id, product_code, production_year, is_added_to_master', 'safe', 'on' => 'search'),
         );
     }
 

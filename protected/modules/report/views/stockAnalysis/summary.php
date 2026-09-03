@@ -5,6 +5,14 @@ Yii::app()->clientScript->registerScript('report', '
 ');
 ?>
 
+<style> 
+ .table_wrapper{
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+}
+</style>
+
 <div class="tab reportTab">
     <div class="tabHead"></div>
     
@@ -182,23 +190,6 @@ Yii::app()->clientScript->registerScript('report', '
                             </div>
                         </div>
                     </div>
-                    
-                    <div class="medium-6 columns">
-                        <div class="field">
-                            <div class="row collapse">
-                                <div class="small-4 columns">
-                                    <span class="prefix">Branch</span>
-                                </div>
-
-                                <div class="small-8 columns" id="product_sub_category">
-                                    <?php echo CHtml::dropDownlist('BranchId', $branchId, CHtml::listData(Branch::model()->findAllbyAttributes(array('status'=>'Active')), 'id','name'), array(
-                                        'empty'=>'-- All Branch --',
-                                        'disabled' => Yii::app()->user->checkAccess('director') || Yii::app()->user->branch_id == 6 ? '' : 'disabled',
-                                    )); ?>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                 </div>
 
                 <div class="clear"></div>
@@ -220,7 +211,6 @@ Yii::app()->clientScript->registerScript('report', '
                 'inventoryDetail' => $inventoryDetail,
                 'startDate' => $startDate,
                 'endDate' => $endDate,
-                'branchId' => $branchId,
                 'brandId' => $brandId,
                 'subBrandId' => $subBrandId,
                 'subBrandSeriesId' => $subBrandSeriesId,

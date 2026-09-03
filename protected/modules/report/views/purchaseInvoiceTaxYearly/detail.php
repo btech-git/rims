@@ -34,7 +34,10 @@
                 <tr class="items1">
                     <td><?php echo $i + 1; ?></td>
                     <td class="width1-1">
-                        <?php echo CHtml::link($header->purchaseOrder->purchase_order_no, array("/transaction/transactionPurchaseOrder/view", "id"=>$header->purchase_order_id), array("target" => "_blank")); ?>
+                        <?php echo CHtml::link($header->purchaseOrder->purchase_order_no, array(
+                            "/transaction/transactionPurchaseOrder/show", 
+                            "id"=>$header->purchase_order_id
+                        ), array("target" => "_blank")); ?>
                     </td>
                     <td class="width1-2">
                         <?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy hh:mm:ss', strtotime($header->purchaseOrder->purchase_order_date))); ?>

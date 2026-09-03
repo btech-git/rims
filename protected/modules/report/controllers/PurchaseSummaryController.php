@@ -90,10 +90,33 @@ class PurchaseSummaryController extends Controller {
             ),
         ));
         
+        $supplier = Supplier::model()->findByPk($supplierId);
+        
         $this->render('detailWorkOrderExpenseTransaction', array(
             'workOrderExpenses' => $workOrderExpenses,
             'startDate' => $startDate,
             'endDate' => $endDate,
+            'supplier' => $supplier,
+        ));
+    }
+    
+    public function actionDetailPaymentTransaction($supplierId, $startDate, $endDate) {
+        $paymentOuts = PaymentOut::model()->findall(array(
+            'condition' => 'supplier_id = :supplier_id AND payment_date BETWEEN :start_date AND :end_date',
+            'params' => array(
+                ':supplier_id' => $supplierId,
+                ':start_date' => $startDate,
+                ':end_date' => $endDate,
+            ),
+        ));
+        
+        $supplier = Supplier::model()->findByPk($supplierId);
+        
+        $this->render('detailPaymentTransaction', array(
+            'paymentOuts' => $paymentOuts,
+            'startDate' => $startDate,
+            'endDate' => $endDate,
+            'supplier' => $supplier,
         ));
     }
     
