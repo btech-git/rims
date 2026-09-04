@@ -141,7 +141,7 @@
                     <div class="small-4 columns">
                         <span class="prefix">Customer Type</span>
                     </div>
-                    <div class="small-8 columns" id="car_model">
+                    <div class="small-8 columns">
                         <?php echo CHtml::dropDownList('CustomerType', $customerType, array('Individual' => 'Retail', 'Company' => 'Contract Service'), array('empty' => '-- All --')); ?>
                     </div>
                 </div>
@@ -152,9 +152,13 @@
             <div class="field">
                 <div class="row collapse">
                     <div class="small-4 columns">
-                        <span class="prefix"></span>
+                        <span class="prefix">Salesman</span>
                     </div>
-                    <div class="small-8 columns" id="car_sub_model">
+                    <div class="small-8 columns">
+                        <?php echo CHtml::dropDownList('EmployeeSaleId', $employeeSaleId, CHtml::listData(Employee::model()->findAllByAttributes(array(
+                            'position_id' => 2,
+                            'status' => 'Active',
+                        ), array('order' => 't.name ASC',)), 'id', 'name'), array('empty' => '-- All --',)); ?>
                     </div>
                 </div>
             </div>

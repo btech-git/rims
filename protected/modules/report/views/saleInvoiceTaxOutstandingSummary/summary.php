@@ -4,21 +4,12 @@ Yii::app()->clientScript->registerScript('report', '
 
 	$("#StartDate").val("' . $startDate . '");
 	$("#EndDate").val("' . $endDate . '");
-	$("#VehicleId").val("' . $vehicleId . '");
 	$("#PageSize").val("' . $saleInvoiceSummary->dataProvider->pagination->pageSize . '");
 	$("#CurrentPage").val("' . ($saleInvoiceSummary->dataProvider->pagination->getCurrentPage(false) + 1) . '");
 	$("#CurrentSort").val("' . $currentSort . '");
 ');
 //Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/transaction/report.css');
 ?>
-
-<style> 
- .table_wrapper{
-    display: block;
-    overflow-x: auto;
-    white-space: nowrap;
-}
-</style>
 
 <div class="tab reportTab">
     <div class="tabBody">
@@ -38,24 +29,7 @@ Yii::app()->clientScript->registerScript('report', '
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    
-                    <div class="medium-6 columns">
-                        <div class="field">
-                            <div class="row collapse">
-                                <div class="small-4 columns">
-                                    <label class="prefix">Halaman saat ini</label>
-                                </div>
-                                <div class="small-8 columns">
-                                    <?php echo CHtml::textField('page', '', array('size' => 3, 'id' => 'CurrentPage')); ?>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="row">
-                    <div class="medium-6 columns">
+                        
                         <div class="field">
                             <div class="row collapse">
                                 <div class="small-4 columns">
@@ -114,14 +88,7 @@ Yii::app()->clientScript->registerScript('report', '
                                         }',
                                         'columns' => array(
                                             'name',
-                                            array(
-                                                'name' => 'customer_type',
-                                                'filter' => CHtml::activeDropDownList($customer, 'customer_type', array(
-                                                    'Company' => 'Company', 
-                                                    'Individual' => 'Retail'
-                                                ), array('empty' => 'All')),
-                                                'value' => '$data->customer_type',
-                                            ),
+                                            'customer_type',
                                             'mobile_phone',
                                         ),
                                     )); ?>
@@ -133,68 +100,22 @@ Yii::app()->clientScript->registerScript('report', '
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    
-                    <div class="medium-6 columns">
+                        
                         <div class="field">
                             <div class="row collapse">
                                 <div class="small-4 columns">
-                                    <label class="prefix">Type</label>
+                                    <label class="prefix">Vehicle Plate #</label>
                                 </div>
                                 <div class="small-8 columns">
-                                    <?php echo CHtml::dropDownlist('CustomerType', $customerType, array(
-                                        'INDIVIDUAL' => 'INDIVIDUAL', 
-                                        'COMPANY' => 'COMPANY'
-                                    ), array('empty' => '-- All Type --')); ?>
+                                    <?php echo CHtml::textField('PlateNumber', $plateNumber); ?>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="medium-6 columns">
+                        
                         <div class="field">
                             <div class="row collapse">
                                 <div class="small-4 columns">
-                                    <label class="prefix">Plate #</label>
-                                </div>
-                                <div class="small-8 columns">
-                                    <span id="vehicle_list_span">
-                                        <?php $this->renderPartial('_vehicleList', array(
-                                            'vehicles' => $vehicles,
-                                            'vehicleId' => $vehicleId,
-                                        )); ?>
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="medium-6 columns">
-                        <div class="field">
-                            <div class="row collapse">
-                                <div class="small-4 columns">
-                                    <span class="prefix">Branch</span>
-                                </div>
-                                 <div class="small-8 columns">
-                                    <?php echo CHtml::dropDownlist('BranchId', $branchId, CHtml::listData(Branch::model()->findAllbyAttributes(array('status'=>'Active')), 'id','name'), array(
-                                        'empty'=>'-- All Branch --',
-                                        'disabled' => Yii::app()->user->checkAccess('director') || Yii::app()->user->branch_id == 6 ? '' : 'disabled',
-                                    )); ?>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="row">
-
-                    <div class="medium-6 columns">
-                        <div class="field">
-                            <div class="row collapse">
-                                <div class="small-4 columns">
-                                    <span class="prefix">Tanggal</span>
+                                    <span class="prefix">Tanggal </span>
                                 </div>
                                 
                                 <div class="small-4 columns">
@@ -234,20 +155,55 @@ Yii::app()->clientScript->registerScript('report', '
                         <div class="field">
                             <div class="row collapse">
                                 <div class="small-4 columns">
-                                    <span class="prefix">PPn/non</span>
+                                    <label class="prefix">Halaman saat ini</label>
+                                </div>
+                                <div class="small-8 columns">
+                                    <?php echo CHtml::textField('page', '', array('size' => 3, 'id' => 'CurrentPage')); ?>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="field">
+                            <div class="row collapse">
+                                <div class="small-4 columns">
+                                    <span class="prefix">Asuransi</span>
                                 </div>
                                  <div class="small-8 columns">
-                                      <?php echo CHtml::activeDropDownlist($invoiceHeader, 'ppn', array(
-                                          '0' => 'Non PPn',
-                                          '1' => 'Add PPn',
-                                          '3' => 'Include PPn',
-                                      ), array('empty'=>'-- All --')); ?>
+                                      <?php echo CHtml::activeDropDownlist($invoiceHeader, 'insurance_company_id', CHtml::listData(InsuranceCompany::model()->findAll(array('order' => 't.name ASC')), 'id','name'), array('empty'=>'-- All --')); ?>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="field">
+                            <div class="row collapse">
+                                <div class="small-4 columns">
+                                    <label class="prefix">Type</label>
+                                </div>
+                                <div class="small-8 columns">
+                                    <?php echo CHtml::dropDownlist('CustomerType', $customerType, array(
+                                        'INDIVIDUAL' => 'INDIVIDUAL', 
+                                        'COMPANY' => 'COMPANY'
+                                    ), array('empty' => '-- All --')); ?>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="field">
+                            <div class="row collapse">
+                                <div class="small-4 columns">
+                                    <span class="prefix">Branch</span>
+                                </div>
+                                 <div class="small-8 columns">
+                                    <?php echo CHtml::dropDownlist('BranchId', $branchId, CHtml::listData(Branch::model()->findAllbyAttributes(array('status'=>'Active')), 'id','name'), array(
+                                        'empty'=>'-- All Branch --',
+                                        'disabled' => Yii::app()->user->checkAccess('director') || Yii::app()->user->branch_id == 6 ? '' : 'disabled',
+                                    )); ?>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-
+                
                 <div class="clear"></div>
 
                 <div class="row buttons">

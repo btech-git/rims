@@ -52,6 +52,7 @@ class FollowUpController extends Controller {
         $customerName = (isset($_GET['CustomerName'])) ? $_GET['CustomerName'] : '';
         $startMileage = (isset($_GET['StartMileage'])) ? $_GET['StartMileage'] : '';
         $customerType = (isset($_GET['CustomerType'])) ? $_GET['CustomerType'] : '';
+        $employeeSaleId = (isset($_GET['EmployeeSaleId'])) ? $_GET['EmployeeSaleId'] : '';
         $currentPage = (isset($_GET['page'])) ? $_GET['page'] : '';
 
         $model = Search::bind(new InvoiceHeader('search'), isset($_GET['InvoiceHeader']) ? $_GET['InvoiceHeader'] : '');
@@ -107,6 +108,11 @@ class FollowUpController extends Controller {
             $dataProvider->criteria->params[':customer_type'] = $customerType;
         }
         
+        if (!empty($employeeSaleId)) {
+            $dataProvider->criteria->addCondition('registrationTransaction.employee_id_sales_person = :employee_id_sales_person');
+            $dataProvider->criteria->params[':employee_id_sales_person'] = $employeeSaleId;
+        }
+        
         $dataProvider->criteria->addBetweenCondition('t.invoice_date', $invoiceStartDate, $invoiceEndDate);
         $dataProvider->criteria->addCondition("t.user_id_cancelled IS NULL");
         $dataProvider->criteria->addCondition("t.invoice_date = (SELECT MAX(p.invoice_date) FROM rims_invoice_header p WHERE t.vehicle_id = p.vehicle_id GROUP BY p.vehicle_id)");
@@ -135,6 +141,7 @@ class FollowUpController extends Controller {
             'followUpEndDate' => $followUpEndDate,
             'startMileage' => $startMileage,
             'customerType' => $customerType,
+            'employeeSaleId' => $employeeSaleId,
             'currentPage' => $currentPage,
         ));
     }

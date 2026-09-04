@@ -816,6 +816,12 @@
                                         
                                     ),
                                     array(
+                                        'label' => 'Faktur Penjualan PPn (Outstanding F. Pajak)', 
+                                        'url' => array('/report/saleInvoiceTaxOnlySummary/summary'), 
+                                        'visible' => Yii::app()->user->checkAccess('saleTaxReport'),
+                                        
+                                    ),
+                                    array(
                                         'label' => 'Faktur Pembelian PPn (Rincian & Detail)', 
                                         'url' => array('/report/purchaseInvoiceTaxOnlySummary/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('purchaseTaxReport'),
@@ -982,12 +988,12 @@
                             <h2>Stock Analysis & Order</h2>
                             <?php $this->widget('zii.widgets.CMenu', array(
                                 'items' => array(
-                                    array(
-                                        'label' => 'Penjualan Parts Bulanan', 
-                                        'url' => array('/report/monthlyProductSale/summary'), 
-                                        'visible' => Yii::app()->user->checkAccess('monthlyProductSaleReport'),
-                                        
-                                    ),
+//                                    array(
+//                                        'label' => 'Penjualan Parts Bulanan', 
+//                                        'url' => array('/report/monthlyProductSale/summary'), 
+//                                        'visible' => Yii::app()->user->checkAccess('monthlyProductSaleReport'),
+//                                        
+//                                    ),
                                     array(
                                         'label' => 'Penjualan Jasa Bulanan', 
                                         'url' => array('/report/monthlyServiceSale/summary'), 

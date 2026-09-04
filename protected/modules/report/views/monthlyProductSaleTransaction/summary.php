@@ -9,7 +9,13 @@ Yii::app()->clientScript->registerScript('search', "
 ");
 ?>
 
-<div class="clear"></div>
+<style> 
+ .table_wrapper{
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+}
+</style>
 
 <div class="tab reportTab">
     <div class="tabHead"></div>

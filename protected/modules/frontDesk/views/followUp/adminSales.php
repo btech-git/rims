@@ -52,6 +52,7 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                             'followUpEndDate' => $followUpEndDate,
                             'startMileage' => $startMileage,
                             'customerType' => $customerType,
+                            'employeeSaleId' => $employeeSaleId,
                             'currentPage' => $currentPage,
                         )); ?>
                     </div><!-- search-form -->
