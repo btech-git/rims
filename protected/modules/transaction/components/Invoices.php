@@ -164,6 +164,8 @@ class Invoices extends CComponent {
         if ($this->header->isNewRecord) {
             $invoiceHeader = InvoiceHeader::model()->findByAttributes(array('customer_id' => $this->header->customer_id));
             $this->header->is_new_customer = $invoiceHeader === null ? 1 : 0;
+            $newVehicle = InvoiceHeader::model()->findByAttributes(array('vehicle_id' => $this->header->vehicle_id));
+            $this->header->is_new_vehicle = $newVehicle === null ? 1 : 0;
         }
         
         $this->header->status = $this->header->payment_left == 0 ? 'PAID' : "Approved";

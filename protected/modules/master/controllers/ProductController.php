@@ -168,6 +168,7 @@ class ProductController extends Controller {
     public function actionCreateRequest($pricingRequestId) {
         
         $product = $this->instantiate(null);
+        
         $productPricingRequest = ProductPricingRequestDetail::model()->findByPk($pricingRequestId);
         $product->header->date_posting = date('Y-m-d H:i:s');
         $product->header->ppn = 2;
@@ -182,6 +183,8 @@ class ProductController extends Controller {
         $product->header->brand_id = $productPricingRequest->brand_id;
         $product->header->sub_brand_id = $productPricingRequest->sub_brand_id;
         $product->header->sub_brand_series_id = $productPricingRequest->sub_brand_series_id;
+        $product->header->retail_price = $productPricingRequest->recommended_price;
+        
         $productSpecificationBattery = new ProductSpecificationBattery;
         $productSpecificationOil = new ProductSpecificationOil;
         $productSpecificationTire = new ProductSpecificationTire;
@@ -194,7 +197,6 @@ class ProductController extends Controller {
 
         $supplierCriteria = new CDbCriteria;
         $supplierCriteria->compare('name', $supplier->name, true);
-
         $supplierDataProvider = new CActiveDataProvider('Supplier', array(
             'criteria' => $supplierCriteria,
         ));
@@ -207,7 +209,6 @@ class ProductController extends Controller {
 
         $unitCriteria = new CDbCriteria;
         $unitCriteria->compare('name', $unit->name, true);
-
         $unitDataProvider = new CActiveDataProvider('Unit', array(
             'criteria' => $unitCriteria,
         ));
@@ -225,7 +226,6 @@ class ProductController extends Controller {
         $productComplementSubstituteCriteria->compare('productMasterCategory.name', $productComplementSubstitute->product_master_category_name, true);
         $productComplementSubstituteCriteria->compare('productSubMasterCategory.name', $productComplementSubstitute->product_sub_master_category_name, true);
         $productComplementSubstituteCriteria->compare('productSubCategory.name', $productComplementSubstitute->product_sub_category_name, true);
-
         $productComplementSubstituteDataProvider = new CActiveDataProvider('Product', array(
             'criteria' => $productComplementSubstituteCriteria,
         ));
