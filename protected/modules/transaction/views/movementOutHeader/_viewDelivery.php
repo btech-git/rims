@@ -51,7 +51,7 @@
             array(
                 'name' => 'destination_branch',
                 'header' => 'Cabang Tujuan',
-                'value' => '$data->destinationBranch->code',
+                'value' => 'empty($data->destination_branch) ? "" : $data->destinationBranch->code',
             ),
             array(
                 'header'=>'Movements',
