@@ -188,8 +188,8 @@ class DeliveryOrders extends CComponent {
                     }
 
                     $salesOrderDetail = TransactionSalesOrderDetail::model()->findByAttributes(array('id' => $detail->sales_order_detail_id, 'sales_order_id' => $this->header->sales_order_id));
-                    $salesOrderDetail->sales_order_quantity_left = $detail->quantity_request - ($detail->quantity_delivery + $quantity);
-                    $salesOrderDetail->delivery_quantity = $quantity + $detail->quantity_delivery;
+                    $salesOrderDetail->sales_order_quantity_left = $salesOrderDetail->getQuantityDeliveryLeft();
+                    $salesOrderDetail->delivery_quantity = $salesOrderDetail->getQuantityDelivery();
                     $left_quantity = $salesOrderDetail->sales_order_quantity_left;
                     $salesOrderDetail->save(false);
 
