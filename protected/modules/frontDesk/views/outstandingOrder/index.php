@@ -25,10 +25,21 @@ Yii::app()->clientScript->registerScript('report', '
                 <div class="medium-6 columns">
                     <div class="field">
                         <div class="row collapse">
-                            <div class="small-2 columns">
+                            <div class="small-4 columns">
+                                <span class="prefix">Main / Destination Branch</span>
+                            </div>
+                             <div class="small-8 columns">
+                                <?php echo CHtml::dropDownlist('MainBranch', $mainBranch, CHtml::listData(Branch::model()->findAllByAttributes(array('status' => 'Active')),'id','name'), array('empty'=>'-- All Main Branch --')); ?>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="field">
+                        <div class="row collapse">
+                            <div class="small-4 columns">
                                 <span class="prefix">Tanggal </span>
                             </div>
-                            <div class="small-5 columns">
+                            <div class="small-4 columns">
                                  <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(
                                     'name'=>'tanggal_mulai',
                                     'options'=>array(
@@ -41,7 +52,7 @@ Yii::app()->clientScript->registerScript('report', '
                                 )); ?>
                             </div>
 
-                            <div class="small-5 columns">
+                            <div class="small-4 columns">
                                 <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(
                                     'name'=>'tanggal_sampai',
                                     'options'=>array(
@@ -56,8 +67,7 @@ Yii::app()->clientScript->registerScript('report', '
                          </div>
                     </div>
                 </div>
-            </div>
-            <div class="row">
+                 
                 <div class="medium-6 columns">
                     <div class="field">
                         <div class="row collapse">
@@ -71,20 +81,6 @@ Yii::app()->clientScript->registerScript('report', '
 //                                    'Revised' => 'Revised',
 //                                    'Rejected'=>'Rejected'
                                 ), array('empty'=>'-- All Status Document --')); ?>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="medium-6 columns">
-                    <div class="field">
-                        <div class="row collapse">
-                            <div class="small-4 columns">
-                                <span class="prefix">Main / Destination Branch</span>
-                            </div>
-                             <div class="small-8 columns">
-                                <?php echo CHtml::dropDownlist('MainBranch', $mainBranch, CHtml::listData(Branch::model()->findAllByAttributes(array('status' => 'Active')),'id','name'), array('empty'=>'-- All Main Branch --')); ?>
                             </div>
                         </div>
                     </div>

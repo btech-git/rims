@@ -101,11 +101,9 @@ class CoaController extends Controller {
     public function actionAjaxHtmlUpdateMonthlyLedger($id) {
         if (Yii::app()->request->isAjaxRequest) {
             $yearNow = date('Y');
-            
             $year = (isset($_GET['Year'])) ? $_GET['Year'] : $yearNow;
         
             $coaLedgerSummaryReport = JurnalUmum::getCoaLedgerSummary($year, $id);
-        
             $coaLedgerAddBeginningBalanceSummaryReport = JurnalUmum::getCoaLedgerAddBeginningBalanceSummary($year, $id);
 
             $this->renderPartial('_monthlyLedger', array(

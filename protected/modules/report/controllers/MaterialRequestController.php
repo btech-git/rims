@@ -12,8 +12,9 @@ class MaterialRequestController extends Controller {
 
     public function filterAccess($filterChain) {
         if ($filterChain->action->id === 'summary') {
-            if (!(Yii::app()->user->checkAccess('materialRequestReport') ))
+            if (!(Yii::app()->user->checkAccess('materialRequestReport') )) {
                 $this->redirect(array('/site/login'));
+            }
         }
 
         $filterChain->run();
@@ -43,7 +44,7 @@ class MaterialRequestController extends Controller {
         }
         
         if (isset($_GET['SaveExcel'])) {
-            $this->saveToExcel($materialRequestSummary, $branchId, $materialRequestSummary->dataProvider, array('startDate' => $startDate, 'endDate' => $endDate));
+            $this->saveToExcel($materialRequestSummary->dataProvider, $branchId, array('startDate' => $startDate, 'endDate' => $endDate));
         }
 
         $this->render('summary', array(
@@ -56,7 +57,7 @@ class MaterialRequestController extends Controller {
         ));
     }
 
-    protected function saveToExcel($materialRequestSummary, $branchId, $dataProvider, array $options = array()) {
+    protected function saveToExcel($dataProvider, $branchId, array $options = array()) {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
 
@@ -73,62 +74,54 @@ class MaterialRequestController extends Controller {
         $worksheet = $objPHPExcel->setActiveSheetIndex(0);
         $worksheet->setTitle('Material Request');
 
-        $worksheet->getColumnDimension('A')->setAutoSize(true);
-        $worksheet->getColumnDimension('B')->setAutoSize(true);
-        $worksheet->getColumnDimension('C')->setAutoSize(true);
-        $worksheet->getColumnDimension('D')->setAutoSize(true);
-        $worksheet->getColumnDimension('E')->setAutoSize(true);
-        $worksheet->getColumnDimension('F')->setAutoSize(true);
-        $worksheet->getColumnDimension('G')->setAutoSize(true);
-        $worksheet->getColumnDimension('H')->setAutoSize(true);
-        $worksheet->getColumnDimension('I')->setAutoSize(true);
-        $worksheet->getColumnDimension('J')->setAutoSize(true);
-        $worksheet->getColumnDimension('K')->setAutoSize(true);
+        $worksheet->mergeCells('A1:M1');
+        $worksheet->mergeCells('A2:M2');
+        $worksheet->mergeCells('A3:M3');
 
-        $worksheet->mergeCells('A1:K1');
-        $worksheet->mergeCells('A2:K2');
-        $worksheet->mergeCells('A3:K3');
-
-        $worksheet->getStyle('A1:K5')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-        $worksheet->getStyle('A1:K5')->getFont()->setBold(true);
+        $worksheet->getStyle('A1:M5')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->getStyle('A1:M5')->getFont()->setBold(true);
 
         $branch = Branch::model()->findByPk($branchId);
-        $worksheet->setCellValue('A1', CHtml::encode(CHtml::value($branch, 'name')));
+        $worksheet->setCellValue('A1', 'Raperind Motor ' . CHtml::value($branch, 'name'));
         $worksheet->setCellValue('A2', 'Laporan Material Request');
         $worksheet->setCellValue('A3', Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($options['startDate'])) . ' - ' . Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($options['endDate'])));
 
-        $worksheet->getStyle('A5:K5')->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle('A5:M5')->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
         $worksheet->setCellValue('A5', 'Permintaan #');
         $worksheet->setCellValue('B5', 'Tanggal');
         $worksheet->setCellValue('C5', 'Status Doc');
         $worksheet->setCellValue('D5', 'Note');
-        $worksheet->setCellValue('E5', 'Branch');
-        $worksheet->setCellValue('F5', 'Admin');
-        $worksheet->setCellValue('G5', 'Status Movement');
-        $worksheet->setCellValue('H5', 'Product');
-        $worksheet->setCellValue('I5', 'Quantity');
-        $worksheet->setCellValue('J5', 'Quantity Movement');
-        $worksheet->setCellValue('K5', 'Quantity Remaining');
+        $worksheet->setCellValue('E5', 'Admin');
+        $worksheet->setCellValue('F5', 'Status Movement');
+        $worksheet->setCellValue('G5', 'Product');
+        $worksheet->setCellValue('H5', 'Quantity');
+        $worksheet->setCellValue('I5', 'Quantity Movement');
+        $worksheet->setCellValue('J5', 'Quantity Sisa');
+        $worksheet->setCellValue('K5', 'Satuan');
+        $worksheet->setCellValue('L5', 'Movement Out #');
+        $worksheet->setCellValue('M5', 'Tanggal');
 
-        $worksheet->getStyle('A5:K5')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle('A5:M5')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
-        $counter = 7;
+        $counter = 6;
         foreach ($dataProvider->data as $header) {
             foreach ($header->materialRequestDetails as $detail) {
                 $worksheet->getStyle("I{$counter}:K{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
 
-                $worksheet->setCellValue("A{$counter}", CHtml::encode($header->transaction_number));
-                $worksheet->setCellValue("B{$counter}", CHtml::encode($header->transaction_date));
-                $worksheet->setCellValue("C{$counter}", CHtml::encode(CHtml::value($header, 'status_document')));
-                $worksheet->setCellValue("D{$counter}", CHtml::encode(CHtml::value($header, 'note')));
-                $worksheet->setCellValue("E{$counter}", CHtml::encode(CHtml::value($header, 'branch.name')));
-                $worksheet->setCellValue("F{$counter}", CHtml::encode(CHtml::value($header, 'user.username')));
-                $worksheet->setCellValue("G{$counter}", CHtml::encode(CHtml::value($header, 'status')));
-                $worksheet->setCellValue("H{$counter}", CHtml::encode(CHtml::value($detail, 'product.name')));
-                $worksheet->setCellValue("I{$counter}", CHtml::encode(CHtml::value($detail, 'quantity')));
-                $worksheet->setCellValue("J{$counter}", CHtml::encode(CHtml::value($detail, 'quantity_movement_out')));
-                $worksheet->setCellValue("K{$counter}", CHtml::encode(CHtml::value($detail, 'quantity_remaining')));
+                $worksheet->setCellValue("A{$counter}", CHtml::value($header, 'transaction_number'));
+                $worksheet->setCellValue("B{$counter}", CHtml::value($header, 'transaction_date'));
+                $worksheet->setCellValue("C{$counter}", CHtml::value($header, 'status_document'));
+                $worksheet->setCellValue("D{$counter}", CHtml::value($header, 'note'));
+                $worksheet->setCellValue("E{$counter}", CHtml::value($header, 'user.username'));
+                $worksheet->setCellValue("F{$counter}", CHtml::value($header, 'status'));
+                $worksheet->setCellValue("G{$counter}", CHtml::value($detail, 'product.name'));
+                $worksheet->setCellValue("H{$counter}", CHtml::value($detail, 'quantity'));
+                $worksheet->setCellValue("I{$counter}", CHtml::value($detail, 'quantity_movement_out'));
+                $worksheet->setCellValue("J{$counter}", CHtml::value($detail, 'quantity_remaining'));
+                $worksheet->setCellValue("K{$counter}", CHtml::value($detail, 'unit.name'));
+                $worksheet->setCellValue("L{$counter}", CHtml::value($detail, 'movementOutNumber'));
+                $worksheet->setCellValue("M{$counter}", CHtml::value($detail, 'movementOutDate'));
 
                 $counter++;
             }
@@ -136,8 +129,14 @@ class MaterialRequestController extends Controller {
 
         ob_end_clean();
 
+        for ($col = 'A'; $col !== 'Z'; $col++) {
+            $objPHPExcel->getActiveSheet()
+            ->getColumnDimension($col)
+            ->setAutoSize(true);
+        }
+
         header('Content-type: application/vnd.ms-excel');
-        header('Content-Disposition: attachment;filename="Laporan Material Request.xls"');
+        header('Content-Disposition: attachment;filename="laporan_material_request.xls"');
         header('Cache-Control: max-age=0');
         
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');

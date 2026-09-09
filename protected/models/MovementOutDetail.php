@@ -14,23 +14,23 @@
  * @property integer $product_id
  * @property string $quantity_transaction
  * @property integer $warehouse_id
+ * @property integer $unit_id
  * @property string $quantity
  * @property string $quantity_receive
  * @property string $quantity_receive_left
  * @property string $quantity_stock
- * @property integer $unit_id
  * @property integer $production_year
  *
  * The followings are the available model relations:
  * @property MovementOutHeader $movementOutHeader
  * @property TransactionDeliveryOrderDetail $deliveryOrderDetail
  * @property Product $product
- * @property Unit $unit
  * @property Warehouse $warehouse
  * @property TransactionReturnOrderDetail $returnOrderDetail
- * @property MaterialRequestDetail $materialRequestDetail
  * @property RegistrationProduct $registrationProduct
  * @property RegistrationService $registrationService
+ * @property MaterialRequestDetail $materialRequestDetail
+ * @property Unit $unit
  * @property MovementOutShipping[] $movementOutShippings
  * @property TransactionReceiveItemDetail[] $transactionReceiveItemDetails
  */
@@ -43,8 +43,6 @@ class MovementOutDetail extends CActiveRecord {
         return '{{movement_out_detail}}';
     }
 
-    public $product_name;
-
     /**
      * @return array validation rules for model attributes.
      */
@@ -52,12 +50,12 @@ class MovementOutDetail extends CActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('movement_out_header_id, product_id, unit_id, quantity_transaction, warehouse_id, quantity', 'required'),
-            array('movement_out_header_id, delivery_order_detail_id, return_order_detail_id, material_request_detail_id, registration_product_id, registration_service_id, unit_id, product_id, warehouse_id, production_year', 'numerical', 'integerOnly' => true),
-            array('quantity_transaction, quantity, quantity_stock, quantity_receive, quantity_receive_left', 'length', 'max' => 10),
+            array('movement_out_header_id, product_id, warehouse_id, unit_id', 'required'),
+            array('movement_out_header_id, delivery_order_detail_id, return_order_detail_id, material_request_detail_id, registration_product_id, registration_service_id, product_id, warehouse_id, unit_id, production_year', 'numerical', 'integerOnly' => true),
+            array('quantity_transaction, quantity, quantity_receive, quantity_receive_left, quantity_stock', 'length', 'max' => 10),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, movement_out_header_id, delivery_order_detail_id, return_order_detail_id, material_request_detail_id, registration_product_id, registration_service_id, unit_id, product_id, quantity_transaction, warehouse_id, quantity, quantity_receive, quantity_receive_left, quantity_stock, production_year', 'safe', 'on' => 'search'),
+            array('id, movement_out_header_id, delivery_order_detail_id, return_order_detail_id, material_request_detail_id, registration_product_id, registration_service_id, product_id, quantity_transaction, warehouse_id, unit_id, quantity, quantity_receive, quantity_receive_left, quantity_stock, production_year', 'safe', 'on' => 'search'),
         );
     }
 
@@ -71,12 +69,12 @@ class MovementOutDetail extends CActiveRecord {
             'movementOutHeader' => array(self::BELONGS_TO, 'MovementOutHeader', 'movement_out_header_id'),
             'deliveryOrderDetail' => array(self::BELONGS_TO, 'TransactionDeliveryOrderDetail', 'delivery_order_detail_id'),
             'product' => array(self::BELONGS_TO, 'Product', 'product_id'),
-            'unit' => array(self::BELONGS_TO, 'Unit', 'unit_id'),
             'warehouse' => array(self::BELONGS_TO, 'Warehouse', 'warehouse_id'),
             'returnOrderDetail' => array(self::BELONGS_TO, 'TransactionReturnOrderDetail', 'return_order_detail_id'),
-            'materialRequestDetail' => array(self::BELONGS_TO, 'MaterialRequestDetail', 'material_request_detail_id'),
             'registrationProduct' => array(self::BELONGS_TO, 'RegistrationProduct', 'registration_product_id'),
             'registrationService' => array(self::BELONGS_TO, 'RegistrationService', 'registration_service_id'),
+            'materialRequestDetail' => array(self::BELONGS_TO, 'MaterialRequestDetail', 'material_request_detail_id'),
+            'unit' => array(self::BELONGS_TO, 'Unit', 'unit_id'),
             'movementOutShippings' => array(self::HAS_MANY, 'MovementOutShipping', 'movement_out_detail_id'),
             'transactionReceiveItemDetails' => array(self::HAS_MANY, 'TransactionReceiveItemDetail', 'movement_out_detail_id'),
         );
@@ -91,15 +89,17 @@ class MovementOutDetail extends CActiveRecord {
             'movement_out_header_id' => 'Movement Out Header',
             'delivery_order_detail_id' => 'Delivery Order Detail',
             'return_order_detail_id' => 'Return Order Detail',
+            'material_request_detail_id' => 'Material Request Detail',
             'registration_product_id' => 'Registration Product',
             'registration_service_id' => 'Registration Service',
             'product_id' => 'Product',
-            'unit_id' => 'Satuan',
             'quantity_transaction' => 'Quantity Transaction',
             'warehouse_id' => 'Warehouse',
+            'unit_id' => 'Unit',
             'quantity' => 'Quantity',
             'quantity_receive' => 'Quantity Receive',
             'quantity_receive_left' => 'Quantity Receive Left',
+            'quantity_stock' => 'Quantity Stock',
             'production_year' => 'Production Year',
         );
     }
@@ -129,12 +129,13 @@ class MovementOutDetail extends CActiveRecord {
         $criteria->compare('registration_product_id', $this->registration_product_id);
         $criteria->compare('registration_service_id', $this->registration_service_id);
         $criteria->compare('product_id', $this->product_id);
-        $criteria->compare('unit_id', $this->unit_id);
-        $criteria->compare('quantity_transaction', $this->quantity_transaction);
+        $criteria->compare('quantity_transaction', $this->quantity_transaction, true);
         $criteria->compare('warehouse_id', $this->warehouse_id);
-        $criteria->compare('quantity', $this->quantity);
-        $criteria->compare('quantity_receive', $this->quantity_receive);
-        $criteria->compare('quantity_receive_left', $this->quantity_receive_left);
+        $criteria->compare('unit_id', $this->unit_id);
+        $criteria->compare('quantity', $this->quantity, true);
+        $criteria->compare('quantity_receive', $this->quantity_receive, true);
+        $criteria->compare('quantity_receive_left', $this->quantity_receive_left, true);
+        $criteria->compare('quantity_stock', $this->quantity_stock, true);
         $criteria->compare('production_year', $this->production_year);
 
         return new CActiveDataProvider($this, array(

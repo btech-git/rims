@@ -614,11 +614,11 @@
                         'url' => array('/accounting/forecasting/admin'), 
                         'visible' => Yii::app()->user->checkAccess('financialAnalysisReport'),
                     ),
-                    array(
-                        'label' => 'Kertas Kerja', 
-                        'url' => array('/accounting/coa/kertasKerja'), 
-                        'visible' => Yii::app()->user->checkAccess('kertasKerjaReport'),
-                    ),
+//                    array(
+//                        'label' => 'Kertas Kerja', 
+//                        'url' => array('/report/workingSheet/summary'), 
+//                        'visible' => Yii::app()->user->checkAccess('kertasKerjaReport'),
+//                    ),
                     array(
                         'label' => 'Laporan Kas Harian', 
                         'url' => array('/report/kasharian/report'), 

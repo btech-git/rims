@@ -138,6 +138,36 @@ class SaleInvoiceInsuranceOwnRisk extends MonthlyTransactionActiveRecord {
         ));
     }
 
+    public function searchByReport() {
+        // @todo Please modify the following code to remove attributes that should not be searched.
+
+        $criteria = new CDbCriteria;
+
+        $criteria->compare('t.id', $this->id);
+        $criteria->compare('t.transaction_number', $this->transaction_number, true);
+        $criteria->compare('t.transaction_date', $this->transaction_date, true);
+        $criteria->compare('t.amount_invoice', $this->amount_invoice, true);
+        $criteria->compare('t.amount_payment', $this->amount_payment, true);
+        $criteria->compare('t.payment_remaining', $this->payment_remaining, true);
+        $criteria->compare('t.note', $this->note, true);
+        $criteria->compare('t.registration_transaction_id', $this->registration_transaction_id);
+        $criteria->compare('t.customer_id', $this->customer_id);
+        $criteria->compare('t.vehicle_id', $this->vehicle_id);
+        $criteria->compare('t.insurance_company_id', $this->insurance_company_id);
+        $criteria->compare('t.user_id_created', $this->user_id_created);
+        $criteria->compare('t.user_id_updated', $this->user_id_updated);
+        $criteria->compare('t.user_id_cancelled', $this->user_id_cancelled);
+        $criteria->compare('t.created_datetime', $this->created_datetime, true);
+        $criteria->compare('t.updated_datetime', $this->updated_datetime, true);
+        $criteria->compare('t.cancelled_datetime', $this->cancelled_datetime, true);
+        $criteria->compare('t.branch_id', $this->branch_id);
+        $criteria->compare('t.status', $this->status);
+
+        return new CActiveDataProvider($this, array(
+            'criteria' => $criteria,
+        ));
+    }
+
     public static function model($className = __CLASS__) {
         return parent::model($className);
     }

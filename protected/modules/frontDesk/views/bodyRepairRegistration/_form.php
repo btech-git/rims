@@ -93,7 +93,7 @@
                                                     'value' => $bodyRepairDate,
                                                     // additional javascript options for the date picker plugin
                                                     'options' => array(
-//                                                        'minDate' => '-7W',
+                                                        'minDate' => '-7W',
                                                         'maxDate' => '+6M',
                                                         'dateFormat' => 'yy-mm-dd',
                                                         'changeMonth' => true,

@@ -13,22 +13,16 @@
  * @property integer $material_request_header_id
  *
  * The followings are the available model relations:
+ * @property MaterialRequestHeader $materialRequestHeader
  * @property Product $product
  * @property Unit $unit
- * @property MaterialRequestHeader $materialRequestHeader
  * @property MovementOutDetail[] $movementOutDetails
  */
 class MaterialRequestDetail extends CActiveRecord {
 
-    /**
-     * Returns the static model of the specified AR class.
-     * @param string $className active record class name.
-     * @return MaterialRequestDetail the static model class
-     */
-    public static function model($className = __CLASS__) {
-        return parent::model($className);
-    }
-
+    public $movement_out_numbers;
+    public $movement_out_dates;
+    
     /**
      * @return string the associated database table name
      */
@@ -46,8 +40,9 @@ class MaterialRequestDetail extends CActiveRecord {
             array('product_id, unit_id, material_request_header_id', 'required'),
             array('product_id, unit_id, material_request_header_id', 'numerical', 'integerOnly' => true),
             array('quantity, quantity_movement_out, quantity_remaining', 'length', 'max' => 10),
+            array('movement_out_numbers, movement_out_dates', 'safe'),
             // The following rule is used by search().
-            // Please remove those attributes that should not be searched.
+            // @todo Please remove those attributes that should not be searched.
             array('id, quantity, quantity_movement_out, quantity_remaining, product_id, unit_id, material_request_header_id', 'safe', 'on' => 'search'),
         );
     }
@@ -59,9 +54,9 @@ class MaterialRequestDetail extends CActiveRecord {
         // NOTE: you may need to adjust the relation name and the related
         // class name for the relations automatically generated below.
         return array(
+            'materialRequestHeader' => array(self::BELONGS_TO, 'MaterialRequestHeader', 'material_request_header_id'),
             'product' => array(self::BELONGS_TO, 'Product', 'product_id'),
             'unit' => array(self::BELONGS_TO, 'Unit', 'unit_id'),
-            'materialRequestHeader' => array(self::BELONGS_TO, 'MaterialRequestHeader', 'material_request_header_id'),
             'movementOutDetails' => array(self::HAS_MANY, 'MovementOutDetail', 'material_request_detail_id'),
         );
     }
@@ -76,25 +71,20 @@ class MaterialRequestDetail extends CActiveRecord {
             'quantity_movement_out' => 'Quantity Movement Out',
             'quantity_remaining' => 'Quantity Remaining',
             'product_id' => 'Product',
-            'unit_id' => 'Satuan',
+            'unit_id' => 'Unit',
             'material_request_header_id' => 'Material Request Header',
         );
     }
 
-    /**
-     * Retrieves a list of models based on the current search/filter conditions.
-     * @return CActiveDataProvider the data provider that can return the models based on the search/filter conditions.
-     */
     public function search() {
-        // Warning: Please modify the following code to remove attributes that
-        // should not be searched.
+        // @todo Please modify the following code to remove attributes that should not be searched.
 
         $criteria = new CDbCriteria;
 
         $criteria->compare('id', $this->id);
-        $criteria->compare('quantity', $this->quantity);
-        $criteria->compare('quantity_movement_out', $this->quantity_movement_out);
-        $criteria->compare('quantity_remaining', $this->quantity_remaining);
+        $criteria->compare('quantity', $this->quantity, true);
+        $criteria->compare('quantity_movement_out', $this->quantity_movement_out, true);
+        $criteria->compare('quantity_remaining', $this->quantity_remaining, true);
         $criteria->compare('product_id', $this->product_id);
         $criteria->compare('unit_id', $this->unit_id);
         $criteria->compare('material_request_header_id', $this->material_request_header_id);
@@ -104,10 +94,10 @@ class MaterialRequestDetail extends CActiveRecord {
         ));
     }
 
-    /**
-     * Retrieves a list of models based on the current search/filter conditions.
-     * @return CActiveDataProvider the data provider that can return the models based on the search/filter conditions.
-     */
+    public static function model($className = __CLASS__) {
+        return parent::model($className);
+    }
+    
     public function searchByMovementOut() {
         // Warning: Please modify the following code to remove attributes that
         // should not be searched.
@@ -345,5 +335,25 @@ class MaterialRequestDetail extends CActiveRecord {
         $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
 
         return $resultSet;
+    }
+    
+    public function getMovementOutNumber() {
+        $transactionNumber = array();
+
+        foreach ($this->movementOutDetails as $detail) {
+            $transactionNumber[] = $detail->movementOutHeader->movement_out_no;
+        }
+
+        return $this->movement_out_numbers = implode(', ', $transactionNumber);
+    }
+    
+    public function getMovementOutDate() {
+        $transactionDate = array();
+
+        foreach ($this->movementOutDetails as $detail) {
+            $transactionDate[] = $detail->movementOutHeader->date_posting;
+        }
+
+        return $this->movement_out_dates = implode(', ', $transactionDate);
     }
 }

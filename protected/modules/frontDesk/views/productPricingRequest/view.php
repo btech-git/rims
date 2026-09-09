@@ -10,7 +10,6 @@ $this->breadcrumbs = array(
 
 <div id="maincontent">
     <div class="clearfix page-action">
-        
         <?php if ($model->status == "Draft"): ?>
             <?php echo CHtml::link('<span class="fa fa-edit"></span>Approval', Yii::app()->baseUrl . '/frontDesk/productPricingRequest/updateApproval?headerId=' . $model->id, array('class' => 'button cbutton right', 'style' => 'margin-right:10px')); ?>
         <?php endif; ?>
@@ -62,11 +61,13 @@ $this->breadcrumbs = array(
             <thead>
                 <tr>
                     <td>Code</td>
-                    <td>Product</td>
+                    <td>Parts</td>
                     <td>Brand</td>
                     <td>Category</td>
+                    <td>Tahun Produksi</td>
                     <td>Quantity</td>
-                    <td>Recommended Price</td>
+                    <td>Satuan</td>
+                    <td>Rec. Harga Jual</td>
                     <td>Memo</td>
                     <td></td>
                 </tr>
@@ -86,9 +87,11 @@ $this->breadcrumbs = array(
                             <?php echo CHtml::encode(CHtml::value($detail, 'productSubMasterCategory.name')); ?>
                             <?php echo CHtml::encode(CHtml::value($detail, 'productSubCategory.name')); ?>
                         </td>
+                        <td style="text-align: center"><?php echo CHtml::encode(CHtml::value($detail, 'production_year')); ?></td>
                         <td style="text-align: center">
                             <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($detail, 'quantity'))); ?>
                         </td>
+                        <td><?php echo CHtml::encode(CHtml::value($detail, 'unit.name')); ?></td>
                         <td style="text-align: right">
                             <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($detail, 'recommended_price'))); ?>
                         </td>

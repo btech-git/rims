@@ -549,8 +549,8 @@ class MovementInHeaderController extends Controller {
                     $journalReferences = array();
 
                     foreach ($details as $movementDetail) {
-                        $unitPrice = empty($movementDetail->receiveItemDetail->purchaseOrderDetail) ? $movementDetail->product->hpp : $movementDetail->receiveItemDetail->purchaseOrderDetail->unit_price;
-                        $jumlah = $movementDetail->quantity * $unitPrice;
+//                        $unitPrice = empty($movementDetail->receiveItemDetail->purchaseOrderDetail) ? $movementDetail->product->hpp : $movementDetail->receiveItemDetail->purchaseOrderDetail->unit_price;
+                        $jumlah = $movementDetail->quantity * $movementDetail->product->hpp;
 
                         $value = $jumlah;
 

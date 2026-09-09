@@ -235,6 +235,19 @@ class ProductPricingRequestController extends Controller {
         ));
     }
     
+    public function actionPdf($id) {
+        $productPricingRequestHeader = ProductPricingRequestHeader::model()->findByPk($id);
+        $mPDF1 = Yii::app()->ePdf->mpdf('', 'A4-L');
+
+        $stylesheet = file_get_contents(Yii::getPathOfAlias('webroot') . '/css/pdf.css');
+        $mPDF1->SetTitle('Estimasi');
+        $mPDF1->WriteHTML($stylesheet, 1);
+        $mPDF1->WriteHTML($this->renderPartial('pdf', array(
+            'productPricingRequestHeader' => $productPricingRequestHeader,
+        ), true));
+        $mPDF1->Output('Estimasi ' . $productPricingRequestHeader->transaction_number . '.pdf', 'I');
+    }
+
     public function actionAjaxHtmlUpdateCarModelSelect() {
         if (Yii::app()->request->isAjaxRequest) {
             $model = new ProductPricingRequestHeader('search');

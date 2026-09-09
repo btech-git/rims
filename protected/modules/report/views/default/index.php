@@ -286,73 +286,61 @@
                                     'label' => 'Buku Besar Pembantu Piutang', 
                                     'url' => array('/report/receivableLedger/summary'), 
                                     'visible' => Yii::app()->user->checkAccess('receivableJournalReport'),
-                                    
                                 ),
                                 array(
                                     'label' => 'Faktur Belum Lunas Customer', 
                                     'url' => array('/report/receivable/summary'), 
                                     'visible' => Yii::app()->user->checkAccess('customerUnpaidInvoiceReport'),
-                                    
                                 ),
                                 array(
                                     'label' => 'Piutang Customer Summary', 
                                     'url' => array('/report/receivableCustomer/summary'), 
                                     'visible' => Yii::app()->user->checkAccess('customerReceivableReport'),
-                                    
                                 ),
                                 array(
                                     'label' => 'Piutang Customer Detail', 
                                     'url' => array('/report/receivableDetail/summary'), 
                                     'visible' => Yii::app()->user->checkAccess('customerReceivableReport'),
-                                    
                                 ),
                                 array(
                                     'label' => 'Piutang Customer Bulanan', 
                                     'url' => array('/report/monthlyCustomerReceivable/summary'), 
                                     'visible' => Yii::app()->user->checkAccess('customerReceivableReport'),
-                                    
                                 ),
                                 array(
                                     'label' => 'Piutang Customer Tahunan', 
                                     'url' => array('/report/yearlyCustomerReceivable/summary'), 
                                     'visible' => Yii::app()->user->checkAccess('customerReceivableReport'),
-                                    
                                 ),
                                 array(
                                     'label' => 'Faktur Belum Lunas Asuransi', 
                                     'url' => array('/report/receivableInsuranceCompany/summary'), 
                                     'visible' => Yii::app()->user->checkAccess('insuranceUnpaidInvoiceReport'),
-                                    
                                 ),
                                 array(
                                     'label' => 'Piutang Asuransi', 
                                     'url' => array('/report/receivableInsuranceData/summary'), 
                                     'visible' => Yii::app()->user->checkAccess('insuranceReceivableReport'),
-                                    
                                 ),
                                 array(
                                     'label' => 'Piutang Asuransi Detail', 
                                     'url' => array('/report/receivableInsuranceDetail/summary'), 
                                     'visible' => Yii::app()->user->checkAccess('insuranceReceivableReport'),
-                                    
                                 ),
                                 array(
                                     'label' => 'Piutang Asuransi Bulanan', 
                                     'url' => array('/report/monthlyInsuranceReceivable/summary'), 
                                     'visible' => Yii::app()->user->checkAccess('insuranceReceivableReport'),
-                                    
                                 ),
                                 array(
                                     'label' => 'Piutang Asuransi Tahunan', 
                                     'url' => array('/report/yearlyInsuranceReceivable/summary'), 
                                     'visible' => Yii::app()->user->checkAccess('insuranceReceivableReport'),
-                                    
                                 ),
                                 array(
                                     'label' => 'Rincian Penerimaan Penjualan', 
                                     'url' => array('/report/paymentIn/summary'), 
                                     'visible' => Yii::app()->user->checkAccess('paymentInReport'),
-                                    
                                 ),
                             ),
                         )); ?>
@@ -377,79 +365,66 @@
                                         'label' => 'Faktur Penjualan Summary', 
                                         'url' => array('/report/saleInvoiceSummary/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('saleSummaryReport'),
-                                        
                                     ),
                                     array(
                                         'label' => 'Penjualan per Barang Summary', 
                                         'url' => array('/report/saleRetailProduct/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('saleProductSummaryReport'),
-                                        
                                     ),
                                     array(
                                         'label' => 'Rincian Penjualan per Barang', 
                                         'url' => array('/report/saleRetailProductDetail/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('saleProductSummaryReport'),
-                                        
                                     ),
                                     array(
                                         'label' => 'Penjualan per Jasa Summary', 
                                         'url' => array('/report/saleRetailService/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('saleServiceSummaryReport'),
-                                        
                                     ),
                                     array(
                                         'label' => 'Rincian Penjualan per Jasa', 
                                         'url' => array('/report/saleRetailServiceDetail/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('saleServiceSummaryReport'),
-                                        
                                     ),
                                     array(
                                         'label' => 'Penjualan Jasa + Kategori Produk', 
                                         'url' => array('/report/saleByProductCategoryServiceType/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('saleServiceProductCategoryReport'),
-                                        
                                     ),
                                     array(
                                         'label' => 'Penjualan Jasa + Kategori Produk Summary', 
                                         'url' => array('/report/companySaleByProductCategoryServiceType/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('saleServiceProductCategoryReport'),
-                                        
                                     ),
                                     array(
                                         'label' => 'Penjualan per Customer Summary', 
                                         'url' => array('/report/saleRetailCustomer/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('saleCustomerReport'),
-                                        
                                     ),
                                     array(
                                         'label' => 'Rincian Penjualan per Customer', 
                                         'url' => array('/report/saleRetail/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('saleCustomerReport'),
-                                        
                                     ),
                                     array(
                                         'label' => 'Penjualan Retail Summary', 
                                         'url' => array('/report/saleFlowSummary/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('saleCustomerReport'),
-                                        
                                     ),
                                     array(
                                         'label' => 'Penjualan Kendaraan Customer', 
                                         'url' => array('/report/customerVehicleSaleTransaction/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('saleCustomerReport'),
-                                        
                                     ),
                                     array(
                                         'label' => 'Penjualan per Asuransi Summary', 
                                         'url' => array('/report/saleRetailInsurance/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('saleInsuranceReport'),
-                                        
                                     ),
                                     array(
                                         'label' => 'Rincian Penjualan per Asuransi', 
                                         'url' => array('/report/saleRetailInsuranceDetail/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('saleInsuranceReport'),
-                                        
                                     ),
                                 ),
                             )); ?>
@@ -481,37 +456,31 @@
                                         'label' => 'Approval Kas Harian', 
                                         'url' => array('/accounting/cashDailySummary/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('cashDailyApprovalReport'),
-                                        
                                     ),
                                     array(
                                         'label' => 'Summary Kas Harian', 
                                         'url' => array('/accounting/cashDailySummary/index'), 
                                         'visible' => Yii::app()->user->checkAccess('cashDailySummaryReport'),
-                                        
                                     ),
                                     array(
                                         'label' => 'Financial Forecast', 
                                         'url' => array('/report/financialForecast/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('financialForecastReport'),
-                                        
                                     ),
                                     array(
                                         'label' => 'Transaksi Kas', 
                                         'url' => array('/report/cashTransaction/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('cashTransactionReport'),
-                                        
                                     ),
                                     array(
                                         'label' => 'Bank Bulanan', 
                                         'url' => array('/report/paymentByBankMonthly/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('monthlyBankingReport'),
-                                        
                                     ),
                                     array(
                                         'label' => 'Jurnal Penyesuaian', 
                                         'url' => array('/report/journalAdjustment/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('adjustmentJournalReport'),
-                                        
                                     ),
                                 ),
                             )); ?>
@@ -532,37 +501,31 @@
                                         'label' => 'Buku Besar Pembantu Hutang', 
                                         'url' => array('/report/payableLedger/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('payableJournalReport'),
-                                        
                                     ),
                                     array(
                                         'label' => 'Faktur Belum Lunas Supplier', 
                                         'url' => array('/report/payable/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('supplierPayableReport'),
-                                        
                                     ),
                                     array(
                                         'label' => 'Hutang Supplier Summary', 
                                         'url' => array('/report/payableSupplier/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('payableReport'),
-                                        
                                     ),
                                     array(
                                         'label' => 'Rincian Hutang Supplier', 
                                         'url' => array('/report/payableDetail/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('payableReport'),
-                                        
                                     ),
                                     array(
                                         'label' => 'Kartu Hutang Supplier', 
                                         'url' => array('/report/payableTransaction/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('payableReport'),
-                                        
                                     ),
                                     array(
                                         'label' => 'Rincian Pembayaran Hutang', 
                                         'url' => array('/report/paymentOut/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('paymentOutReport'),
-                                        
                                     ),
                                 ),
                             )); ?>
@@ -582,31 +545,26 @@
                                         'label' => 'Faktur Pembelian', 
                                         'url' => array('/report/purchaseInvoiceSummary/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('purchaseSummaryReport'),
-                                        
                                     ),
                                     array(
                                         'label' => 'Pembelian per Supplier Summary', 
                                         'url' => array('/report/purchaseSummary/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('purchaseSupplierSummaryReport'),
-                                        
                                     ),
                                     array(
                                         'label' => 'Rincian Pembelian per Supplier', 
                                         'url' => array('/report/purchaseOrder/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('purchaseSupplierSummaryReport'),
-                                        
                                     ),
                                     array(
                                         'label' => 'Pembelian per Parts Summary', 
                                         'url' => array('/report/purchasePerProduct/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('purchaseProductSummaryReport'),
-                                        
                                     ),
                                     array(
                                         'label' => 'Rincian Pembelian per Parts', 
                                         'url' => array('/report/purchasePerProductDetail/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('purchaseProductSummaryReport'),
-                                        
                                     ),
                                 ),
                             )); ?>
@@ -639,37 +597,31 @@
                                         'label' => 'Penjualan per Cabang Harian', 
                                         'url' => array('/report/saleInvoiceBranchDaily/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('dailySaleBranchReport'),
-                                        
                                     ),
                                     array(
                                         'label' => 'Penjualan Semua Cabang Harian', 
                                         'url' => array('/report/dailyMultipleBranchSaleTransaction/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('dailySaleAllBranchReport'),
-                                        
                                     ),
                                     array(
                                         'label' => 'Penjualan per Cabang Bulanan', 
                                         'url' => array('/report/monthlySingleBranchSaleTransaction/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('monthlySaleBranchReport'),
-                                        
                                     ),
                                     array(
                                         'label' => 'Penjualan Semua Cabang Bulanan', 
                                         'url' => array('/report/monthlyMultipleBranchSaleTransaction/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('monthlySaleAllBranchReport'),
-                                        
                                     ),
                                     array(
                                         'label' => 'Penjualan per Cabang Tahunan', 
                                         'url' => array('/report/yearlySingleBranchSaleTransaction/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('yearlySaleBranchReport'),
-                                        
                                     ),
                                     array(
                                         'label' => 'Penjualan Semua Cabang Tahunan', 
                                         'url' => array('/report/yearlyMultipleBranchSaleTransaction/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('yearlySaleAllBranchReport'),
-                                        
                                     ),
                                 ),
                             )); ?>
@@ -692,37 +644,31 @@
                                         'label' => 'Penjualan per Front Office Harian', 
                                         'url' => array('/report/saleInvoiceMarketingDaily/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('dailySaleFrontReport'),
-                                        
                                     ),
                                     array(
                                         'label' => 'Penjualan Semua Front Office Harian', 
                                         'url' => array('/report/dailyMultipleEmployeeSaleTransaction/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('dailySaleAllFrontReport'),
-                                        
                                     ),
                                     array(
                                         'label' => 'Penjualan per Front Office Bulanan', 
                                         'url' => array('/report/monthlySingleEmployeeSaleTransaction/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('monthlySaleFrontReport'),
-                                        
                                     ),
                                     array(
                                         'label' => 'Penjualan Semua Front Office Bulanan', 
                                         'url' => array('/report/monthlyMultipleEmployeeSaleTransaction/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('monthlySaleAllFrontReport'),
-                                        
                                     ),
                                     array(
                                         'label' => 'Penjualan per Front Office Tahunan', 
                                         'url' => array('/report/yearlySingleEmployeeSaleTransaction/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('yearlySaleFrontReport'),
-                                        
                                     ),
                                     array(
                                         'label' => 'Penjualan Semua Front Office Tahunan', 
                                         'url' => array('/report/yearlyMultipleEmployeeSaleTransaction/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('yearlySaleAllFrontReport'),
-                                        
                                     ),
                                 ),
                             )); ?>
@@ -745,37 +691,31 @@
                                         'label' => 'Penjualan per Mekanik Harian', 
                                         'url' => array('/report/registrationTransactionMechanicDaily/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('dailySaleMechanicReport'),
-                                        
                                     ),
                                     array(
                                         'label' => 'Penjualan Semua Mekanik Harian', 
                                         'url' => array('/report/dailyMultipleMechanicTransaction/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('dailySaleAllMechanicReport'),
-                                        
                                     ),
                                     array(
                                         'label' => 'Penjualan per Mekanik Bulanan', 
                                         'url' => array('/report/monthlySingleMechanicTransaction/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('monthlySaleMechanicReport'),
-                                        
                                     ),
                                     array(
                                         'label' => 'Penjualan Semua Mekanik Bulanan', 
                                         'url' => array('/report/monthlyMultipleMechanicTransaction/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('monthlySaleAllMechanicReport'),
-                                        
                                     ),
                                     array(
                                         'label' => 'Penjualan per Mekanik Tahunan', 
                                         'url' => array('/report/yearlySingleMechanicTransaction/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('yearlySaleMechanicReport'),
-                                        
                                     ),
                                     array(
                                         'label' => 'Penjualan Semua Mekanik Tahunan', 
                                         'url' => array('/report/yearlyMultipleMechanicTransaction/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('yearlySaleAllMechanicReport'),
-                                        
                                     ),
                                 ),
                             )); ?>
@@ -807,73 +747,61 @@
                                         'label' => 'Faktur Penjualan Harian (Rincian & Detail)', 
                                         'url' => array('/report/dailySaleInvoiceSummary/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('saleInvoiceDailyReport'),
-                                        
                                     ),
                                     array(
                                         'label' => 'Faktur Penjualan PPn (Rincian & Detail)', 
                                         'url' => array('/report/saleInvoiceTaxOnlySummary/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('saleTaxReport'),
-                                        
                                     ),
                                     array(
                                         'label' => 'Faktur Penjualan PPn (Outstanding F. Pajak)', 
                                         'url' => array('/report/saleInvoiceTaxOnlySummary/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('saleTaxReport'),
-                                        
                                     ),
                                     array(
                                         'label' => 'Faktur Pembelian PPn (Rincian & Detail)', 
                                         'url' => array('/report/purchaseInvoiceTaxOnlySummary/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('purchaseTaxReport'),
-                                        
                                     ),
                                     array(
                                         'label' => 'Faktur Penjualan Ppn Rekap Bulanan', 
                                         'url' => array('/report/saleInvoiceCustomerTaxMonthly/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('saleTaxReport'),
-                                        
                                     ),
                                     array(
                                         'label' => 'Faktur Pembelian Ppn Rekap Bulanan', 
                                         'url' => array('/report/purchaseInvoiceSupplierTaxMonthly/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('purchaseTaxReport'),
-                                        
                                     ),
                                     array(
                                         'label' => 'Faktur Penjualan Ppn Rekap Tahunan', 
                                         'url' => array('/report/saleInvoiceTaxYearly/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('saleTaxReport'),
-                                        
                                     ),
                                     array(
                                         'label' => 'Faktur Pembelian Ppn Rekap Tahunan', 
                                         'url' => array('/report/purchaseInvoiceTaxYearly/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('purchaseTaxReport'),
-                                        
                                     ),
                                     array(
                                         'label' => 'Faktur Penjualan Ppn Summary', 
                                         'url' => array('/report/yearlySaleTaxSummary/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('saleTaxReport'),
-                                        
                                     ),
                                     array(
                                         'label' => 'Faktur Pembelian Ppn Summary', 
                                         'url' => array('/report/yearlyPurchaseTaxSummary/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('purchaseTaxReport'),
-                                        
                                     ),
                                     array(
                                         'label' => 'Faktur Penjualan NON Ppn Rekap Bulanan', 
                                         'url' => array('/report/saleInvoiceNonTaxMonthly/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('saleNonTaxReport'),
-                                        
                                     ),
                                     array(
                                         'label' => 'Faktur Pembelian NON Ppn Rekap Bulanan', 
                                         'url' => array('/report/purchaseInvoiceNonTaxMonthly/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('purchaseNonTaxReport'),
-                                        
                                     ),
                                 ),
                             )); ?>
@@ -898,79 +826,71 @@
                                         'label' => 'Penjualan per Customer Tahunan', 
                                         'url' => array('/report/yearlyMultipleCustomerSaleTransaction/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('saleCustomerYearlyReport'),
-                                        
                                     ),
                                     array(
                                         'label' => 'Penjualan per Asuransi Tahunan', 
                                         'url' => array('/report/yearlyMultipleInsuranceSaleTransaction/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('saleInsuranceYearlyReport'),
-                                        
                                     ),
                                     array(
                                         'label' => 'Penjualan per Model Kendaraan Bulanan', 
                                         'url' => array('/report/saleInvoiceCarSubModelMonthly/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('saleVehicleMonthlyReport'),
-                                        
                                     ),
                                     array(
                                         'label' => 'Penjualan per Model Kendaraan Tahunan', 
                                         'url' => array('/report/saleInvoiceCarSubModelYearly/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('saleVehicleMonthlyReport'),
-                                        
                                     ),
                                     array(
                                         'label' => 'Rincian Penjualan per Brand Kendaraan', 
                                         'url' => array('/report/saleVehicleProduct/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('saleVehicleBrandReport'),
-                                        
                                     ),
                                     array(
                                         'label' => 'Penjualan per Kendaraan Customer Tahunan', 
                                         'url' => array('/report/yearlyMultipleVehicleSaleTransaction/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('saleVehicleCustomerReport'),
-                                        
                                     ),
                                     array(
                                         'label' => 'Customer Follow Up + Warranty', 
                                         'url' => array('/frontDesk/followUp/adminSales'), 
                                         'visible' => Yii::app()->user->checkAccess('customerFollowUpReport'),
-                                        
                                     ),
                                     array(
                                         'label' => 'Penjualan Ban Bulanan', 
                                         'url' => array('/report/monthlyTireSaleTransaction/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('saleTireDailyReport'),
-                                        
                                     ),
                                     array(
                                         'label' => 'Penjualan Ban Tahunan', 
                                         'url' => array('/report/yearlyTireSaleTransaction/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('saleTireDailyReport'),
-                                        
                                     ),
                                     array(
                                         'label' => 'Penjualan Ban Contract Service', 
                                         'url' => array('/report/monthlyTireCustomerSaleTransaction/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('saleTireDailyReport'),
-                                        
                                     ),
                                     array(
                                         'label' => 'Penjualan Oli Bulanan', 
                                         'url' => array('/report/monthlyOilSaleTransaction/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('saleOilDailyReport'),
-                                        
                                     ),
                                     array(
                                         'label' => 'Penjualan Oli Tahunan', 
                                         'url' => array('/report/yearlyOilSaleTransaction/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('saleOilDailyReport'),
-                                        
                                     ),
                                     array(
                                         'label' => 'Penjualan Customer Project', 
                                         'url' => array('/report/saleInvoiceProjectNonCogs/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('saleVehicleCustomerReport'),
-                                        
+                                    ),
+                                    array(
+                                        'label' => 'Invoice Asuransi OR', 
+                                        'url' => array('/report/saleInvoiceOwnRisk/summary'), 
+//                                        'visible' => Yii::app()->user->checkAccess('saleVehicleCustomerReport'),
                                     ),
                                 ),
                             )); ?>
@@ -992,43 +912,41 @@
 //                                        'label' => 'Penjualan Parts Bulanan', 
 //                                        'url' => array('/report/monthlyProductSale/summary'), 
 //                                        'visible' => Yii::app()->user->checkAccess('monthlyProductSaleReport'),
-//                                        
 //                                    ),
                                     array(
                                         'label' => 'Penjualan Jasa Bulanan', 
                                         'url' => array('/report/monthlyServiceSale/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('monthlyServiceSaleReport'),
-                                        
                                     ),
                                     array(
                                         'label' => 'Analisis Penjualan Parts', 
                                         'url' => array('/report/productSubMasterCategoryStatistics/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('productCategoryStatisticsReport'),
-                                        
                                     ),
                                     array(
                                         'label' => 'Penjualan Parts & Components Bulanan', 
                                         'url' => array('/report/monthlyProductSaleTransaction/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('partsComponentSaleTransactionReport'),
-                                        
                                     ),
                                     array(
                                         'label' => 'Penjualan Parts & Components Tahunan', 
                                         'url' => array('/report/yearlyProductSaleTransaction/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('partsComponentSaleTransactionReport'),
-                                        
                                     ),
                                     array(
                                         'label' => 'Pemakaian Bahan Material Bulanan', 
                                         'url' => array('/report/monthlyMaterialServiceUsage/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('monthlyMaterialServiceUsageReport'),
-                                        
                                     ),
                                     array(
                                         'label' => 'Pemakaian Bahan Material Tahunan', 
                                         'url' => array('/report/yearlyMaterialServiceUsage/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('monthlyMaterialServiceUsageReport'),
-                                        
+                                    ),
+                                    array(
+                                        'label' => 'Material Request Detail', 
+                                        'url' => array('/report/materialRequest/summary'), 
+                                        'visible' => Yii::app()->user->checkAccess('materialRequestReport'),
                                     ),
                                 ),
                             )); ?>

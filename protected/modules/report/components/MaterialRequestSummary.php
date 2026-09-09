@@ -16,7 +16,7 @@ class MaterialRequestSummary extends CComponent {
     }
 
     public function setupPaging($pageSize, $currentPage) {
-        $pageSize = (empty($pageSize)) ? 10 : $pageSize;
+        $pageSize = (empty($pageSize)) ? 100 : $pageSize;
         $pageSize = ($pageSize <= 0) ? 1 : $pageSize;
         $this->dataProvider->pagination->pageSize = $pageSize;
 
@@ -33,15 +33,5 @@ class MaterialRequestSummary extends CComponent {
 
         $this->dataProvider->criteria->addBetweenCondition('t.transaction_date', $startDate, $endDate);
         $this->dataProvider->criteria->compare('t.branch_id', $branch);
-    }
-    
-    public function reportTotalPrice() {
-        $grandTotal = 0.00;
-
-        foreach ($this->dataProvider->data as $data) {
-            $grandTotal += $data->total_price;
-        }
-
-        return $grandTotal;
     }
 }

@@ -67,6 +67,12 @@
                                         'linkOptions' => array('target' => '_blank'), 
                                     ),
                                     array(
+                                        'label' => 'Kertas Kerja', 
+                                        'url' => array('/report/workingSheet/summary'), 
+                                        'visible' => Yii::app()->user->checkAccess('director'),
+                                        'linkOptions' => array('target' => '_blank'), 
+                                    ),
+                                    array(
                                         'label' => 'Bank Multi Bulan', 
                                         'url' => array('/report/paymentByBankMonthToMonth/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('director'),

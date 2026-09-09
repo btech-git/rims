@@ -1,17 +1,19 @@
 <?php
 Yii::app()->clientScript->registerCss('_report', '
-    .width1-1 { width: 15% }
-    .width1-2 { width: 15% }
+    .width1-1 { width: 10% }
+    .width1-2 { width: 10% }
     .width1-3 { width: 10% }
-    .width1-4 { width: 25% }
+    .width1-4 { width: 40% }
     .width1-5 { width: 10% }
     .width1-6 { width: 10% }
-    .width1-7 { width: 15% }
 
     .width2-1 { width: 40% }
-    .width2-2 { width: 15% }
-    .width2-3 { width: 15% }
-    .width2-4 { width: 15% }
+    .width2-2 { width: 5% }
+    .width2-3 { width: 7% }
+    .width2-4 { width: 7% }
+    .width2-5 { width: 7% }
+    .width2-6 { width: 15% }
+    .width2-7 { width: 14% }
 ');
 ?>
 
@@ -33,46 +35,63 @@ Yii::app()->clientScript->registerCss('_report', '
         <th class="width1-3">Status Doc</th>
         <th class="width1-4">Note</th>
         <th class="width1-5">Admin</th>
-        <th class="width1-6">Branch</th>
-        <th class="width1-7">Status Movement</th>
+        <th class="width1-6">Status Movement</th>
     </tr>
     <tr id="header2">
-        <td colspan="7">
+        <td colspan="6">
             <table>
                 <tr>
                     <th class="width2-1">Product</th>
                     <th class="width2-2">Quantity</th>
-                    <th class="width2-3">Quantity Movement</th>
-                    <th class="width2-4">Quantity Sisa</th>
+                    <th class="width2-3">Qty Movement</th>
+                    <th class="width2-4">Qty Sisa</th>
+                    <th class="width2-5">Satuan</th>
+                    <th class="width2-6">Movement Out #</th>
+                    <th class="width2-7">Tanggal</th>
                 </tr>
             </table>
         </td>
     </tr>
-    <?php foreach ($materialRequestSummary->dataProvider->data as $header): ?>
+    <?php foreach($materialRequestSummary->dataProvider->data as $header): ?>
         <tr class="items1">
-            <td class="width1-1"><?php echo CHtml::link(CHtml::encode($header->transaction_number), array("/frontDesk/materialRequest/view", "id"=>$header->id), array("target" => "_blank")); ?></td>
+            <td class="width1-1">
+                <?php echo CHtml::link(CHtml::encode($header->transaction_number), array(
+                    "/frontDesk/materialRequest/view", 
+                    "id" => $header->id
+                ), array("target" => "_blank")); ?>
+            </td>
             <td class="width1-2"><?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($header->transaction_date))); ?></td>
             <td class="width1-3"><?php echo CHtml::encode($header->status_document); ?></td>
             <td class="width1-4"><?php echo CHtml::encode(CHtml::value($header, 'note')); ?></td>
             <td class="width1-5"><?php echo CHtml::encode(CHtml::value($header, 'user.username')); ?></td>
-            <td class="width1-6"><?php echo CHtml::encode(CHtml::value($header, 'branch.code')); ?></td>
-            <td class="width1-7"><?php echo CHtml::encode(CHtml::value($header, 'status_progress')); ?></td>
+            <td class="width1-6"><?php echo CHtml::encode(CHtml::value($header, 'status_progress')); ?></td>
         </tr>
         <tr class="items2">
-            <td colspan="7">
+            <td colspan="6">
                 <table>
                     <?php foreach ($header->materialRequestDetails as $detail): ?>
                         <tr>
                             <td class="width2-1"><?php echo CHtml::encode(CHtml::value($detail, 'product.name')); ?></td>
-                            <td class="width2-2" style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($detail, 'quantity'))); ?></td>
-                            <td class="width2-3" style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($detail, 'quantity_movement_out'))); ?></td>
-                            <td class="width2-4" style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($detail, 'quantity_remaining'))); ?></td>
+                            <td class="width2-2" style="text-align: right">
+                                <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($detail, 'quantity'))); ?>
+                            </td>
+                            <td class="width2-3" style="text-align: right">
+                                <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($detail, 'quantity_movement_out'))); ?>
+                            </td>
+                            <td class="width2-4" style="text-align: right">
+                                <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($detail, 'quantity_remaining'))); ?>
+                            </td>
+                            <td class="width2-5"><?php echo CHtml::encode(CHtml::value($detail, 'unit.name')); ?></td>
+                            <td class="width2-6"><?php echo CHtml::encode(CHtml::value($detail, 'movementOutNumber')); ?></td>
+                            <td class="width2-7"><?php echo CHtml::encode(CHtml::value($detail, 'movementOutDate')); ?></td>
                         </tr>
                     <?php endforeach; ?>
                     <tr>
-                        <td>TOTAL: </td>
-                        <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($header, 'total_quantity'))); ?></td>
-                        <td colspan="4">&nbsp;</td>
+                        <td style="text-align: right; font-weight: bold;">TOTAL: </td>
+                        <td style="text-align: right; font-weight: bold;">
+                            <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($header, 'total_quantity'))); ?>
+                        </td>
+                        <td colspan="5">&nbsp;</td>
                     </tr>
                 </table>
             </td>

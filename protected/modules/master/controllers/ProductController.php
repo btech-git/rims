@@ -184,6 +184,8 @@ class ProductController extends Controller {
         $product->header->sub_brand_id = $productPricingRequest->sub_brand_id;
         $product->header->sub_brand_series_id = $productPricingRequest->sub_brand_series_id;
         $product->header->retail_price = $productPricingRequest->recommended_price;
+        $product->header->purchase_price = $productPricingRequest->recommended_purchase_price;
+        $product->header->hpp = $productPricingRequest->recommended_purchase_price;
         
         $productSpecificationBattery = new ProductSpecificationBattery;
         $productSpecificationOil = new ProductSpecificationOil;

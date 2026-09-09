@@ -57,7 +57,8 @@
                         <?php echo CHtml::link(CHtml::encode($header->work_order_number), array("/frontDesk/registrationTransaction/view", "id"=>$header->id), array("target" => "_blank")); ?>
                     </td>
                     <td class="width1-3">
-                        <?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy hh:mm:ss', strtotime($header->work_order_date))); ?>
+                        <?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($header->work_order_date))); ?>
+                        <?php echo CHtml::encode($header->work_order_time); ?>
                     </td>
                     <td>
                         <?php $outstandingDays = date_diff(date_create($header->work_order_date), date_create(date('Y-m-d'))); ?>

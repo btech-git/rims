@@ -11,11 +11,11 @@
                 <th style="text-align: center">ID</th>
                 <th style="text-align: center">Code</th>
                 <th style="text-align: center">Name</th>
+                <th style="text-align: center">Uk. Ban</th>
+                <th style="text-align: center">SAE</th>
                 <th style="text-align: center">Brand</th>
                 <th style="text-align: center">Category</th>
                 <th style="text-align: center">Unit</th>
-                <th style="text-align: center">Uk. Ban</th>
-                <th style="text-align: center">SAE</th>
                 <?php foreach ($branches as $branch): ?>
                     <th style="text-align: center"><?php echo CHtml::encode(CHtml::value($branch, 'code')); ?></th>
                 <?php endforeach; ?>
@@ -33,6 +33,8 @@
                     <td><?php echo CHtml::link(CHtml::value($product, 'id'), array('showProduct', 'id' => $product->id), array('target' => 'blank')); ?></td>
                     <td><?php echo CHtml::encode(CHtml::value($product, 'manufacturer_code')); ?></td>
                     <td><?php echo CHtml::link(CHtml::value($product, 'name'), array('showProduct', 'id' => $product->id), array('target' => 'blank')); ?></td>
+                    <td><?php echo CHtml::encode(CHtml::value($product, 'tireSize.tireName')); ?></td>
+                    <td><?php echo CHtml::encode(CHtml::value($product, 'oilSae.oilName')); ?></td>
                     <td>
                         <?php echo CHtml::encode(CHtml::value($product, 'brand.name')); ?> - 
                         <?php echo CHtml::encode(CHtml::value($product, 'subBrand.name')); ?> - 
@@ -44,8 +46,6 @@
                         <?php echo CHtml::encode(CHtml::value($product, 'productSubCategory.name')); ?>
                     </td>
                     <td><?php echo CHtml::encode(CHtml::value($product, 'unit.name')); ?></td>
-                    <td><?php echo CHtml::encode(CHtml::value($product, 'tireSize.tireName')); ?></td>
-                    <td><?php echo CHtml::encode(CHtml::value($product, 'oilSae.oilName')); ?></td>
 
                     <?php foreach ($branches as $branch): ?>
                         <?php $stockValue = 0; ?>
@@ -78,6 +78,5 @@
             'pages' => $productDataProvider->pagination,
         )); ?>
     </div>
-    <br />
-    <br />
+    <br /><br />
 </div>

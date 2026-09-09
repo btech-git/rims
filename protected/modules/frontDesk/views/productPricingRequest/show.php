@@ -8,21 +8,34 @@ $this->breadcrumbs = array(
 );
 ?>
 
+<div class="row d-print-none">
+    <div class="col d-flex justify-content-end">
+        <div class="d-gap">
+            <?php $ccontroller = Yii::app()->controller->id; ?>
+            <?php $ccaction = Yii::app()->controller->action->id; ?>
+
+            <a class="button cbutton right" href="<?php echo Yii::app()->baseUrl . '/frontDesk/productPricingRequest/adminPending'; ?>">
+                <span class="fa fa-th-list"></span>Pending List
+            </a>
+            <?php if (empty($model->user_id_reply)): ?>
+                <a class="button warning right" style="margin-right:10px;" href="<?php echo Yii::app()->createUrl('/frontDesk/' . $ccontroller . '/reply', array('id' => $model->id)); ?>">
+                    <span class="fa fa-edit"></span> Reply
+                </a>
+            <?php endif; ?>
+
+            <?php echo CHtml::link('<span class="fa fa-print"></span> Print Permintaan', array("pdf", 'id' => $model->id), array(
+                'class'=>'button info right', 
+                'style' => 'margin-right:10px', 
+                'target' =>'_blank',
+            )); ?>
+        </div>
+    </div>
+</div>
+
+<hr />
+
 <div id="maincontent">
     <div class="clearfix page-action">
-        <?php $ccontroller = Yii::app()->controller->id; ?>
-        <?php $ccaction = Yii::app()->controller->action->id; ?>
-        <a class="button cbutton right" href="<?php echo Yii::app()->baseUrl . '/frontDesk/productPricingRequest/adminPending'; ?>">
-            <span class="fa fa-th-list"></span>Pending List
-        </a>
-        <?php if (empty($model->user_id_reply)): ?>
-            <a class="button warning right" style="margin-right:10px;" href="<?php echo Yii::app()->createUrl('/frontDesk/' . $ccontroller . '/reply', array('id' => $model->id)); ?>">
-                <span class="fa fa-edit"></span>Reply
-            </a>
-        <?php endif; ?>
-<!--        <a class="button cbutton success right" style="margin-right:10px;" href="<?php //echo Yii::app()->createUrl('/master/product/add', array('pricingId' => $model->id)); ?>">
-            <span class="fa fa-plus"></span>Add to Master Product
-        </a>-->
         <h1>View <?php echo $model->transaction_number ?></h1>
 
         <?php $this->widget('zii.widgets.CDetailView', array(
@@ -68,11 +81,14 @@ $this->breadcrumbs = array(
             <thead>
                 <tr>
                     <td>Code</td>
-                    <td>Product</td>
+                    <td>Parts</td>
                     <td>Brand</td>
                     <td>Category</td>
+                    <td>Tahun Produksi</td>
                     <td>Quantity</td>
-                    <td>Recommended Price</td>
+                    <td>Satuan</td>
+                    <td>Rec. Harga Jual</td>
+                    <td>Rec. Harga Beli</td>
                     <td>Memo</td>
                     <td></td>
                 </tr>
@@ -92,11 +108,16 @@ $this->breadcrumbs = array(
                             <?php echo CHtml::encode(CHtml::value($detail, 'productSubMasterCategory.name')); ?>
                             <?php echo CHtml::encode(CHtml::value($detail, 'productSubCategory.name')); ?>
                         </td>
+                        <td style="text-align: center"><?php echo CHtml::encode(CHtml::value($detail, 'production_year')); ?></td>
                         <td style="text-align: center">
                             <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($detail, 'quantity'))); ?>
                         </td>
+                        <td><?php echo CHtml::encode(CHtml::value($detail, 'unit.name')); ?></td>
                         <td style="text-align: right">
                             <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($detail, 'recommended_price'))); ?>
+                        </td>
+                        <td style="text-align: right">
+                            <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($detail, 'recommended_purchase_price'))); ?>
                         </td>
                         <td><?php echo CHtml::encode(CHtml::value($detail, 'memo')); ?></td>
                         <td>
