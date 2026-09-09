@@ -446,8 +446,8 @@ class Supplier extends CActiveRecord {
         }
         
         $sql = "
-            SELECT r.transaction_number AS registration_number, w.transaction_number, w.transaction_date, w.grand_total AS total_price, COALESCE(p.amount, 0) AS amount, 
-                w.grand_total - COALESCE(p.amount, 0) AS remaining
+            SELECT r.transaction_number AS registration_number, w.transaction_number, w.transaction_date, w.grand_total AS total_price, 
+                COALESCE(p.amount, 0) AS amount, w.grand_total - COALESCE(p.amount, 0) AS remaining
             FROM " . WorkOrderExpenseHeader::model()->tableName() . " w
             INNER JOIN " . RegistrationTransaction::model()->tableName() . " r ON r.id = w.registration_transaction_id
             LEFT OUTER JOIN (

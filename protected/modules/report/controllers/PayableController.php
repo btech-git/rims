@@ -112,31 +112,31 @@ class PayableController extends Controller {
         $worksheet = $objPHPExcel->setActiveSheetIndex(0);
         $worksheet->setTitle('Faktur Belum Lunas Supplier');
 
-        $worksheet->mergeCells('A1:I1');
-        $worksheet->mergeCells('A2:I2');
-        $worksheet->mergeCells('A3:I3');
+        $worksheet->mergeCells('A1:J1');
+        $worksheet->mergeCells('A2:J2');
+        $worksheet->mergeCells('A3:J3');
 
-        $worksheet->getStyle('A1:I5')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-        $worksheet->getStyle('A1:I5')->getFont()->setBold(true);
+        $worksheet->getStyle('A1:J5')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->getStyle('A1:J5')->getFont()->setBold(true);
         
         $branch = Branch::model()->findByPk($branchId);
         $worksheet->setCellValue('A1', 'Raperind Motor ' . CHtml::encode(CHtml::value($branch, 'name')));
         $worksheet->setCellValue('A2', 'Faktur Belum Lunas Supplier');
         $worksheet->setCellValue('A3', 'Per Tanggal ' . Yii::app()->dateFormatter->format('d MMMM yyyy', $endDate));
 
-        $worksheet->getStyle("A5:I5")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
-        $worksheet->getStyle("A5:I5")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
-        $worksheet->getStyle('A5:I5')->getFont()->setBold(true);
+        $worksheet->getStyle("A5:J5")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A5:J5")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
         
         $worksheet->setCellValue('A5', 'Code');
         $worksheet->setCellValue('B5', 'Company');
         $worksheet->setCellValue('C5', 'Name');
         $worksheet->setCellValue('D5', 'PO #');
-        $worksheet->setCellValue('E5', 'Tanggal');
-        $worksheet->setCellValue('F5', 'Invoice #');
-        $worksheet->setCellValue('G5', 'Grand Total');
-        $worksheet->setCellValue('H5', 'Payment');
-        $worksheet->setCellValue('I5', 'Remaining');
+        $worksheet->setCellValue('E5', 'Invoice #');
+        $worksheet->setCellValue('F5', 'Penerimaan #');
+        $worksheet->setCellValue('G5', 'Tanggal');
+        $worksheet->setCellValue('H5', 'Total');
+        $worksheet->setCellValue('I5', 'Payment');
+        $worksheet->setCellValue('J5', 'Remaining');
 
         $counter = 7;
         
@@ -156,11 +156,12 @@ class PayableController extends Controller {
                 $worksheet->setCellValue("B{$counter}", $header->company);
                 $worksheet->setCellValue("C{$counter}", $header->name);
                 $worksheet->setCellValue("D{$counter}", $payableRow['purchase_order_no']);
-                $worksheet->setCellValue("E{$counter}", $payableRow['purchase_order_date']);
-                $worksheet->setCellValue("F{$counter}", $payableRow['invoice_number']);
-                $worksheet->setCellValue("G{$counter}", $purchase);
-                $worksheet->setCellValue("H{$counter}", $paymentAmount);
-                $worksheet->setCellValue("I{$counter}", $paymentLeft);
+                $worksheet->setCellValue("E{$counter}", $payableRow['invoice_number']);
+                $worksheet->setCellValue("F{$counter}", $payableRow['receive_item_no']);
+                $worksheet->setCellValue("G{$counter}", $payableRow['invoice_date']);
+                $worksheet->setCellValue("H{$counter}", $purchase);
+                $worksheet->setCellValue("I{$counter}", $paymentAmount);
+                $worksheet->setCellValue("J{$counter}", $paymentLeft);
 
                 $totalPurchase += $purchase;
                 $totalPayment += $paymentAmount;
@@ -177,12 +178,12 @@ class PayableController extends Controller {
                 $worksheet->setCellValue("A{$counter}", $header->code);
                 $worksheet->setCellValue("B{$counter}", $header->company);
                 $worksheet->setCellValue("C{$counter}", $header->name);
-                $worksheet->setCellValue("D{$counter}", $payableRow['registration_number']);
-                $worksheet->setCellValue("E{$counter}", $payableRow['transaction_date']);
-                $worksheet->setCellValue("F{$counter}", $payableRow['transaction_number']);
-                $worksheet->setCellValue("G{$counter}", $purchase);
-                $worksheet->setCellValue("H{$counter}", $paymentAmount);
-                $worksheet->setCellValue("I{$counter}", $paymentLeft);
+                $worksheet->setCellValue("D{$counter}", $payableRow['transaction_number']);
+                $worksheet->setCellValue("F{$counter}", $payableRow['registration_number']);
+                $worksheet->setCellValue("G{$counter}", $payableRow['transaction_date']);
+                $worksheet->setCellValue("H{$counter}", $purchase);
+                $worksheet->setCellValue("I{$counter}", $paymentAmount);
+                $worksheet->setCellValue("J{$counter}", $paymentLeft);
 
                 $totalPurchase += $purchase;
                 $totalPayment += $paymentAmount;
@@ -191,13 +192,13 @@ class PayableController extends Controller {
                 $counter++;
             }
             
-            $worksheet->getStyle("A{$counter}:I{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
-            $worksheet->getStyle("A{$counter}:I{$counter}")->getFont()->setBold(true);
+            $worksheet->getStyle("A{$counter}:J{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+            $worksheet->getStyle("A{$counter}:J{$counter}")->getFont()->setBold(true);
             
             $worksheet->setCellValue("F{$counter}", 'Total');
-            $worksheet->setCellValue("G{$counter}", $totalPurchase);
-            $worksheet->setCellValue("H{$counter}", $totalPayment);
-            $worksheet->setCellValue("I{$counter}", $totalPayable);
+            $worksheet->setCellValue("H{$counter}", $totalPurchase);
+            $worksheet->setCellValue("I{$counter}", $totalPayment);
+            $worksheet->setCellValue("J{$counter}", $totalPayable);
 
             $counter++;$counter++;
             
