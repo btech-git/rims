@@ -60,16 +60,9 @@ class BankingLedgerMonthlyController extends Controller {
             $this->redirect(array('summary'));
         }
         
-//        if (isset($_GET['SaveExcel'])) {
-//            $this->saveToExcel(array(
-//                'paymentInList' => $paymentInList,
-//                'paymentOutList' => $paymentOutList,
-//                'selectedCoas' => $selectedCoas,
-//                'month' => $month,
-//                'year' => $year,
-//                'branchId' => $branchId,
-//            ));
-//        }
+        if (isset($_GET['SaveExcel'])) {
+            $this->saveToExcel($selectedCoas, $transactionInDataProviders, $transactionOutDataProviders, $month, $year, $branchId);
+        }
 
         $this->render('summary', array(
             'transactionInDataProviders' => $transactionInDataProviders,
@@ -104,7 +97,7 @@ class BankingLedgerMonthlyController extends Controller {
         }
     }
 
-    protected function saveToExcel(array $options = array()) {
+    protected function saveToExcel($selectedCoas, $transactionInDataProviders, $transactionOutDataProviders, $month, $year, $branchId) {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
 
@@ -114,157 +107,111 @@ class BankingLedgerMonthlyController extends Controller {
 
         $objPHPExcel = new PHPExcel();
 
-        $paymentInList = $options['paymentInList'];
-        $paymentOutList = $options['paymentOutList'];
-        $selectedCoas = $options['selectedCoas'];
-        $month = $options['month'];
-        $year = $options['year'];
-        $branchId = $options['branchId'];
-        
         $documentProperties = $objPHPExcel->getProperties();
         $documentProperties->setCreator('Raperind Motor');
-        $documentProperties->setTitle('Bank Bulanan');
+        $documentProperties->setTitle('Transaksi Bulanan Multi Bank');
 
         $worksheet = $objPHPExcel->setActiveSheetIndex(0);
-        $worksheet->setTitle('Bank Bulanan');
+        $worksheet->setTitle('Transaksi Bulanan Multi Bank');
 
         $branch = Branch::model()->findByPk($branchId);
         $worksheet->setCellValue('A1', 'RAPERIND MOTOR ' . CHtml::encode(CHtml::value($branch, 'name')));
-        $worksheet->setCellValue('A2', 'Bank Bulanan');
+        $worksheet->setCellValue('A2', 'Rincian Transaksi Bulanan Multi Bank');
         $worksheet->setCellValue('A3', CHtml::encode(strftime("%B",mktime(0,0,0,$month))) . ' ' . CHtml::encode($year));
+
+//        $columnCounterCoaIn = 'A';
+//        $columnCounterLabelIn = 'A';
+//        foreach ($selectedCoas as $coa) {
+//            $worksheet->mergeCells("{$columnCounterCoaIn}6:E6");
+//            $columnCounterCoaIn = $columnCounterLabelIn; $columnCounterCoaIn++;
+//            $columnCounterLabelIn++;
+//        }
+//        
+        $worksheet->mergeCells("A1:F1");
+        $worksheet->mergeCells("A2:F2");
+        $worksheet->mergeCells("A3:F3");
+        $worksheet->mergeCells("A5:F5");
+
+        $worksheet->getStyle("A1:F6")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->getStyle("A1:F6")->getFont()->setBold(true);
+        $worksheet->getStyle("A5:F5")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A6:F6")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+
         $worksheet->setCellValue('A5', 'Transaksi Bank Masuk');
-
-        $paymentInDailyTotals = array();
-        $columnCounterIn = 'B';
-        foreach ($selectedCoas as $coa) {
-            $worksheet->setCellValue("{$columnCounterIn}6", CHtml::encode(CHtml::value($coa, 'name')));
-            $paymentInDailyTotals[$coa->id] = '0.00'; 
-            $columnCounterIn++;
-        }
-        $dailyInTotal = '0.00';
-        $worksheet->setCellValue("{$columnCounterIn}6", 'Total');
+        $worksheet->setCellValue("A6", 'Bank');
+        $worksheet->setCellValue("B6", 'Transaction #');
+        $worksheet->setCellValue("C6", 'Tanggal');
+        $worksheet->setCellValue("D6", 'Keterangan');
+        $worksheet->setCellValue("E6", 'Catatan');
+        $worksheet->setCellValue("F6", 'Total');
         
-        $worksheet->mergeCells("A1:{$columnCounterIn}1");
-        $worksheet->mergeCells("A2:{$columnCounterIn}2");
-        $worksheet->mergeCells("A3:{$columnCounterIn}3");
-        $worksheet->mergeCells("A5:{$columnCounterIn}5");
-
-        $worksheet->getStyle("A1:{$columnCounterIn}6")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-        $worksheet->getStyle("A1:{$columnCounterIn}6")->getFont()->setBold(true);
-        $worksheet->getStyle("A6:{$columnCounterIn}6")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
-        $worksheet->getStyle("A6:{$columnCounterIn}6")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
-
         $counter = 7;
-        $daysInMonthTransactionIn = cal_days_in_month(CAL_GREGORIAN, $month, $year);
-        $yearMonth = str_pad($year, 2, '0', STR_PAD_LEFT) . '-' . str_pad($month, 2, '0', STR_PAD_LEFT);
-        for ($day = 1; $day <= $daysInMonthTransactionIn; $day++) {
-            $columnCounterIn = 'B';
-            $date = $yearMonth . '-' . str_pad($day, 2, '0', STR_PAD_LEFT);
-            if (isset($paymentInList[$date])) {
-                $paymentInItem = $paymentInList[$date];
-                $totalPerDate = '0.00';
-                $worksheet->setCellValue("A{$counter}", CHtml::encode($date));
-                
-                foreach ($selectedCoas as $coa) {
-                    $paymentInRetail = $paymentInItem[$coa->id];
-                    $worksheet->setCellValue("{$columnCounterIn}{$counter}", CHtml::encode($paymentInRetail));
-                    $paymentInDailyTotals[$coa->id] += $paymentInRetail;
-                    $totalPerDate += $paymentInRetail;
-                    $columnCounterIn++;
-                }
-                $worksheet->setCellValue("{$columnCounterIn}{$counter}", CHtml::encode($totalPerDate));
-                $dailyInTotal += $totalPerDate;
-            } else {
-                $worksheet->setCellValue("A{$counter}", CHtml::encode($date));
-                foreach ($selectedCoas as $coa) {
-                    $worksheet->setCellValue("{$columnCounterIn}{$counter}", 0);
-                }
-                $worksheet->setCellValue("{$columnCounterIn}{$counter}", 0);
-                
+        foreach ($selectedCoas as $coa) {
+            $paymentDailyTotal = '0.00';
+            $dataProvider = $transactionInDataProviders[$coa->id];
+            foreach ($dataProvider->data as $detail) {
+                $worksheet->setCellValue("A{$counter}", CHtml::value($coa, 'name'));
+                $worksheet->setCellValue("B{$counter}", CHtml::value($detail, 'kode_transaksi'));
+                $worksheet->setCellValue("C{$counter}", CHtml::value($detail, 'tanggal_transaksi'));
+                $worksheet->setCellValue("D{$counter}", CHtml::value($detail, 'transaction_subject'));
+                $worksheet->setCellValue("E{$counter}", CHtml::value($detail, 'remark'));
+                $worksheet->setCellValue("F{$counter}", CHtml::value($detail, 'total'));
+                $counter++;
+
+                $paymentDailyTotal += CHtml::value($detail, 'total');
             }
             
-            $counter++;
+            $worksheet->getStyle("A{$counter}:F{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+            $worksheet->getStyle("A{$counter}:F{$counter}")->getFont()->setBold(true);
+            
+            $worksheet->setCellValue("E{$counter}", 'Total Monthly');
+            $worksheet->setCellValue("F{$counter}", $paymentDailyTotal);
+            $counter++; $counter++;
         }
+        $counter++; $counter++;
         
-        $columnCounterInTotal = 'B';
-        $worksheet->setCellValue("A{$counter}", 'Total Monthly');
-        foreach ($selectedCoas as $coa) {
-            $worksheet->setCellValue("{$columnCounterInTotal}{$counter}", CHtml::encode($paymentInDailyTotals[$coa->id]));
-            $columnCounterInTotal++;
-        }
-        $worksheet->setCellValue("{$columnCounterInTotal}{$counter}", CHtml::encode($dailyInTotal));
-        
-        $worksheet->getStyle("A{$counter}:{$columnCounterInTotal}{$counter}")->getFont()->setBold(true);
-        $worksheet->getStyle("A{$counter}:{$columnCounterInTotal}{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
-        $worksheet->getStyle("A{$counter}:{$columnCounterInTotal}{$counter}")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
-        $counter++;$counter++;
+        $worksheet->mergeCells("A{$counter}:F{$counter}");
+        $worksheet->getStyle("A{$counter}:F{$counter}")->getFont()->setBold(true);
+        $worksheet->getStyle("A{$counter}:F{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->getStyle("A{$counter}:F{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
-        $worksheet->mergeCells("A{$counter}:{$columnCounterInTotal}{$counter}");
-        $worksheet->getStyle("A{$counter}:{$columnCounterInTotal}{$counter}")->getFont()->setBold(true);
-        $worksheet->getStyle("A{$counter}:{$columnCounterInTotal}{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
         $worksheet->setCellValue("A{$counter}", 'Transaksi Bank Keluar');
         $counter++;
-
-        $paymentOutDailyTotals = array();
-        $columnCounterOut = 'B';
-        foreach ($selectedCoas as $coa) {
-            $worksheet->setCellValue("{$columnCounterOut}{$counter}", CHtml::encode(CHtml::value($coa, 'name')));
-            $paymentOutDailyTotals[$coa->id] = '0.00'; 
-            $columnCounterOut++;
-        }
-        $dailyOutTotal = '0.00';
-        $worksheet->setCellValue("{$columnCounterOut}{$counter}", 'Total');
+        $worksheet->setCellValue("A{$counter}", 'Bank');
+        $worksheet->setCellValue("B{$counter}", 'Transaction #');
+        $worksheet->setCellValue("C{$counter}", 'Tanggal');
+        $worksheet->setCellValue("D{$counter}", 'Keterangan');
+        $worksheet->setCellValue("E{$counter}", 'Catatan');
+        $worksheet->setCellValue("F{$counter}", 'Total');
         
-        $worksheet->getStyle("A{$counter}:{$columnCounterOut}{$counter}")->getFont()->setBold(true);
-        $worksheet->getStyle("A{$counter}:{$columnCounterOut}{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
-        $worksheet->getStyle("A{$counter}:{$columnCounterOut}{$counter}")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
-        $counter++;$counter++;
+        $worksheet->getStyle("A{$counter}:F{$counter}")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A{$counter}:F{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->getStyle("A{$counter}:F{$counter}")->getFont()->setBold(true);
+        $counter++;
+        
+        foreach ($selectedCoas as $coa) {
+            $paymentDailyTotal = '0.00';
+            $dataProvider = $transactionOutDataProviders[$coa->id];
+            foreach ($dataProvider->data as $detail) {
+                $worksheet->setCellValue("A{$counter}", CHtml::value($coa, 'name'));
+                $worksheet->setCellValue("B{$counter}", CHtml::value($detail, 'kode_transaksi'));
+                $worksheet->setCellValue("C{$counter}", CHtml::value($detail, 'tanggal_transaksi'));
+                $worksheet->setCellValue("D{$counter}", CHtml::value($detail, 'transaction_subject'));
+                $worksheet->setCellValue("E{$counter}", CHtml::value($detail, 'remark'));
+                $worksheet->setCellValue("F{$counter}", CHtml::value($detail, 'total'));
+                $counter++;
 
-        $daysInMonthTransactionOut = cal_days_in_month(CAL_GREGORIAN, $month, $year);
-        $yearMonth = str_pad($year, 2, '0', STR_PAD_LEFT) . '-' . str_pad($month, 2, '0', STR_PAD_LEFT);
-        for ($day = 1; $day <= $daysInMonthTransactionOut; $day++) {
-            $columnCounterOut = 'B';
-            $date = $yearMonth . '-' . str_pad($day, 2, '0', STR_PAD_LEFT);
-            if (isset($paymentOutList[$date])) {
-                $paymentOutItem = $paymentOutList[$date];
-                $totalPerDate = '0.00';
-                $worksheet->setCellValue("A{$counter}", CHtml::encode($date));
-                
-                foreach ($selectedCoas as $coa) {
-                    $paymentOutRetail = $paymentOutItem[$coa->id];
-                    $worksheet->setCellValue("{$columnCounterOut}{$counter}", CHtml::encode($paymentOutRetail));
-                    $paymentOutDailyTotals[$coa->id] += $paymentOutRetail;
-                    $totalPerDate += $paymentOutRetail;
-                    $columnCounterOut++;
-                }
-                $worksheet->setCellValue("{$columnCounterOut}{$counter}", CHtml::encode($totalPerDate));
-                $dailyOutTotal += $totalPerDate;
-            } else {
-                $worksheet->setCellValue("A{$counter}", CHtml::encode($date));
-                foreach ($selectedCoas as $coa) {
-                    $worksheet->setCellValue("{$columnCounterOut}{$counter}", 0);
-                }
-                $worksheet->setCellValue("{$columnCounterOut}{$counter}", 0);
-                
+                $paymentDailyTotal += CHtml::value($detail, 'total');
             }
             
-            $counter++;
+            $worksheet->getStyle("A{$counter}:F{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+            $worksheet->getStyle("A{$counter}:F{$counter}")->getFont()->setBold(true);
+            
+            $worksheet->setCellValue("E{$counter}", 'Total Monthly');
+            $worksheet->setCellValue("F{$counter}", $paymentDailyTotal);
+            $counter++; $counter++;
         }
-
-        $columnCounterOutTotal = 'B';
-        $worksheet->setCellValue("A{$counter}", 'Total Monthly');
-        foreach ($selectedCoas as $coa) {
-            $worksheet->getStyle("{$columnCounterOutTotal}{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
-            $worksheet->setCellValue("{$columnCounterOutTotal}{$counter}", CHtml::encode($paymentOutDailyTotals[$coa->id]));
-            $columnCounterOutTotal++;
-        }
-        $worksheet->setCellValue("{$columnCounterOutTotal}{$counter}", CHtml::encode($dailyOutTotal));
-                
-        $worksheet->getStyle("A{$counter}:{$columnCounterOutTotal}{$counter}")->getFont()->setBold(true);
-        $worksheet->getStyle("A{$counter}:{$columnCounterOutTotal}{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
-        $worksheet->getStyle("A{$counter}:{$columnCounterOutTotal}{$counter}")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
-        $counter++;$counter++;
-
+        
         for ($col = 'A'; $col !== 'Z'; $col++) {
             $objPHPExcel->getActiveSheet()
             ->getColumnDimension($col)
