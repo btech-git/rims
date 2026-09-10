@@ -780,11 +780,6 @@ class InvoiceHeaderController extends Controller {
         ));
     }
 
-    /**
-     * Updates a particular model.
-     * If update is successful, the browser will be redirected to the 'view' page.
-     * @param integer $id the ID of the model to be updated
-     */
     public function actionUpdateTaxNumber($id) {
         $invoice = $this->loadModel($id);
         
@@ -807,11 +802,26 @@ class InvoiceHeaderController extends Controller {
         ));
     }
 
-    /**
-     * Deletes a particular model.
-     * If deletion is successful, the browser will be redirected to the 'admin' page.
-     * @param integer $id the ID of the model to be deleted
-     */
+    public function actionUpdateTechnicalNumber($id) {
+        $invoice = $this->loadModel($id);
+        
+        if (isset($_POST['Cancel'])) {
+            $this->redirect(array('admin'));
+        }
+
+        if (isset($_POST['InvoiceHeader']) && IdempotentManager::check()) {
+            $invoice->attributes = $_POST['InvoiceHeader'];
+            
+            if ($invoice->save()) {
+                $this->redirect(array('view', 'id' => $invoice->id));
+            }
+        }
+
+        $this->render('updateTechnicalNumber', array(
+            'invoice' => $invoice,
+        ));
+    }
+
     public function actionDelete($id) {
         $this->loadModel($id)->delete();
 

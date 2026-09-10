@@ -31,12 +31,12 @@ $this->menu = array(
 
         <?php if ($model->is_cancelled == 0): ?>
             <?php echo CHtml::link('<span class="fa fa-edit"></span>Edit', Yii::app()->baseUrl . '/transaction/transactionDeliveryOrder/update?id=' . $model->id, array(
-                'class' => 'button cbutton right', 
+                'class' => 'button warning right', 
                 'style' => 'margin-right:10px', 
                 'visible' => Yii::app()->user->checkAccess("deliveryEdit")
             )); ?>
-            <?php echo CHtml::link('<span class="fa fa-print"></span>Print Surat Jalan', array("pdf", "id" => $model->id), array(
-                'class' => 'button warning right', 
+            <?php echo CHtml::link('<span class="fa fa-print"></span>Print SJ', array("pdf", "id" => $model->id), array(
+                'class' => 'button info right', 
                 'style' => 'margin-right:10px', 
                 'target' => 'blank'
             )) ?>

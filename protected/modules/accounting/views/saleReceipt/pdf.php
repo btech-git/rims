@@ -81,6 +81,10 @@ function tanggal($date) {
                     <th style="font-size: 10px">Tanggal</th>
                     <th style="font-size: 10px">Plat #</th>
                     <th style="font-size: 10px">Memo</th>
+                    <th style="font-size: 10px">DMS Ref #</th>
+                    <th style="font-size: 10px">V-TAG</th>
+                    <th style="font-size: 10px">Resi Kirim</th>
+                    <th style="font-size: 10px">Warranty Report</th>
                     <th style="font-size: 10px">Amount</th>
                 </tr>
             </thead>
@@ -92,14 +96,18 @@ function tanggal($date) {
                         <td>&nbsp; <?php echo tanggal(CHtml::encode(CHtml::value($detail, 'invoiceHeader.invoice_date'))); ?></td>
                         <td>&nbsp; <?php echo CHtml::encode(CHtml::value($detail, 'invoiceHeader.vehicle.plate_number')); ?></td>
                         <td>&nbsp; <?php echo CHtml::encode(CHtml::value($detail, 'memo')); ?></td>
+                        <td>&nbsp; <?php echo CHtml::encode(CHtml::value($detail, 'invoiceHeader.registrationTransaction.customer_document_order_number')); ?></td>
+                        <td>&nbsp; <?php echo CHtml::encode(CHtml::value($detail, 'invoiceHeader.technical_code_number')); ?></td>
+                        <td>&nbsp; <?php echo CHtml::encode(CHtml::value($detail, 'invoiceHeader.delivery_receipt_number')); ?></td>
+                        <td>&nbsp; <?php echo CHtml::encode(CHtml::value($detail, 'invoiceHeader.warranty_report')); ?></td>
                         <td style="text-align: right;">&nbsp;  Rp. <?php echo number_format($detail->invoice_amount, 2, ',', '.'); ?></td>
                     </tr>
                 <?php endforeach; ?>
             </tbody>
             <tfoot>
                 <tr>
-                    <td colspan="5" style="text-align: right; font-weight: bold">Total</td>
-                    <td style="text-align: right; font-weight: bold">&nbsp;  Rp. <?php echo number_format($saleReceiptHeader->total_invoice_amount, 2, ',', '.'); ?></td>
+                    <td colspan="9" style="text-align: right; font-weight: bold">Total</td>
+                    <td style="text-align: right; font-weight: bold">Rp. <?php echo number_format($saleReceiptHeader->total_invoice_amount, 2, ',', '.'); ?></td>
                 </tr>
             </tfoot>
         </table>

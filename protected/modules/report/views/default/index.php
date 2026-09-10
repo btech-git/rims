@@ -117,6 +117,16 @@
                                         'url' => array('/report/stockOil/check'), 
                                         'visible' => Yii::app()->user->checkAccess('stockOilReport'),
                                     ),
+                                    array(
+                                        'label' => 'Sent Request', 
+                                        'url' => array('/report/sentRequest/summary'), 
+//                                        'visible' => Yii::app()->user->checkAccess('stockOilReport'),
+                                    ),
+                                    array(
+                                        'label' => 'Transfer Request', 
+                                        'url' => array('/report/transferRequest/summary'), 
+//                                        'visible' => Yii::app()->user->checkAccess('stockOilReport'),
+                                    ),
                                 ),
                             )); ?>
                         <?php endif; ?>

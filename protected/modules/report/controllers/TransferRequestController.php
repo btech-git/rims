@@ -73,56 +73,74 @@ class TransferRequestController extends Controller {
         $worksheet = $objPHPExcel->setActiveSheetIndex(0);
         $worksheet->setTitle('Transfer Request');
 
-        $worksheet->mergeCells('A1:K1');
-        $worksheet->mergeCells('A2:K2');
-        $worksheet->mergeCells('A3:K3');
+        $worksheet->mergeCells('A1:M1');
+        $worksheet->mergeCells('A2:M2');
+        $worksheet->mergeCells('A3:M3');
 
-        $worksheet->getStyle('A1:K5')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-        $worksheet->getStyle('A1:K5')->getFont()->setBold(true);
+        $worksheet->getStyle('A1:M5')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->getStyle('A1:M5')->getFont()->setBold(true);
 
         $branch = Branch::model()->findByPk($branchId);
-        $worksheet->setCellValue('A1', CHtml::encode(CHtml::value($branch, 'name')));
+        $worksheet->setCellValue('A1', 'Raperind Motor ' . CHtml::value($branch, 'name'));
         $worksheet->setCellValue('A2', 'Laporan Transfer Request');
         $worksheet->setCellValue('A3', Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($options['startDate'])) . ' - ' . Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($options['endDate'])));
 
-        $worksheet->getStyle('A5:K5')->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle('A5:M5')->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
         $worksheet->setCellValue('A5', 'Transfer Request #');
         $worksheet->setCellValue('B5', 'Tanggal');
         $worksheet->setCellValue('C5', 'Status');
         $worksheet->setCellValue('D5', 'Tanggal Tiba');
         $worksheet->setCellValue('E5', 'Tujuan');
-        $worksheet->setCellValue('F5', 'Admin ');
-        $worksheet->setCellValue('G5', 'Branch');
-        $worksheet->setCellValue('H5', 'Approval By');
-        $worksheet->setCellValue('I5', 'Product');
+        $worksheet->setCellValue('F5', 'User Request ');
+        $worksheet->setCellValue('G5', 'Approval By');
+        $worksheet->setCellValue('H5', 'Parts');
+        $worksheet->setCellValue('I5', 'Memo');
         $worksheet->setCellValue('J5', 'Quantity');
-        $worksheet->setCellValue('K5', 'Unit Price');
+        $worksheet->setCellValue('K5', 'Satuan');
+        $worksheet->setCellValue('L5', 'Unit Price');
+        $worksheet->setCellValue('M5', 'Total');
 
-        $worksheet->getStyle('A5:K5')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle('A5:M5')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
-        $counter = 7;
+        $counter = 6;
+        $totalQuantity = '0.00';
+        $totalAmount = '0.00';
+        
         foreach ($dataProvider->data as $header) {
             foreach ($header->transactionTransferRequestDetails as $detail) {
+                $quantity = CHtml::value($detail, 'quantity');
+                $amount = CHtml::value($detail, 'amount');
                 $worksheet->getStyle("C{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
 
-                $worksheet->setCellValue("A{$counter}", CHtml::encode($header->transfer_request_no));
-                $worksheet->setCellValue("B{$counter}", CHtml::encode($header->transfer_request_date));
-                $worksheet->setCellValue("C{$counter}", CHtml::encode(CHtml::value($header, 'status_document')));
-                $worksheet->setCellValue("D{$counter}", CHtml::encode(CHtml::value($header, 'estimate_date_arrival')));
-                $worksheet->setCellValue("E{$counter}", CHtml::encode(CHtml::value($header, 'destinationBranch.name')));
-                $worksheet->setCellValue("F{$counter}", CHtml::encode(CHtml::value($header, 'user.username')));
-                $worksheet->setCellValue("G{$counter}", CHtml::encode(CHtml::value($header, 'mainBranch.name')));
-                $worksheet->setCellValue("H{$counter}", CHtml::encode(CHtml::value($header, 'approval.username')));
-                $worksheet->setCellValue("I{$counter}", CHtml::encode(CHtml::value($detail, 'product.name')));
-                $worksheet->setCellValue("J{$counter}", CHtml::encode(CHtml::value($detail, 'quantity')));
-                $worksheet->setCellValue("K{$counter}", CHtml::encode(CHtml::value($detail, 'unit_price')));
+                $worksheet->setCellValue("A{$counter}", CHtml::value($header, 'transfer_request_no'));
+                $worksheet->setCellValue("B{$counter}", CHtml::value($header, 'transfer_request_date'));
+                $worksheet->setCellValue("C{$counter}", CHtml::value($header, 'status_document'));
+                $worksheet->setCellValue("D{$counter}", CHtml::value($header, 'estimate_arrival_date'));
+                $worksheet->setCellValue("E{$counter}", CHtml::value($header, 'destinationBranch.name'));
+                $worksheet->setCellValue("F{$counter}", CHtml::value($header, 'user.username'));
+                $worksheet->setCellValue("G{$counter}", CHtml::value($header, 'approval.username'));
+                $worksheet->setCellValue("H{$counter}", CHtml::value($detail, 'product.name'));
+                $worksheet->setCellValue("I{$counter}", CHtml::value($detail, 'memo'));
+                $worksheet->setCellValue("J{$counter}", $quantity);
+                $worksheet->setCellValue("K{$counter}", CHtml::value($detail, 'unit.name'));
+                $worksheet->setCellValue("L{$counter}", CHtml::value($detail, 'unit_price'));
+                $worksheet->setCellValue("M{$counter}", $amount);
 
+                $totalQuantity += $quantity;
+                $totalAmount += $amount;
                 $counter++;
             }
         }
 
-        for ($col = 'A'; $col !== 'K'; $col++) {
+        $worksheet->getStyle("A{$counter}:M{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A{$counter}:M{$counter}")->getFont()->setBold(true);
+        
+        $worksheet->setCellValue("I{$counter}", 'TOTAL');
+        $worksheet->setCellValue("J{$counter}", $totalQuantity);
+        $worksheet->setCellValue("M{$counter}", $totalAmount);
+
+        for ($col = 'A'; $col !== 'Z'; $col++) {
             $objPHPExcel->getActiveSheet()
             ->getColumnDimension($col)
             ->setAutoSize(true);

@@ -174,19 +174,21 @@ class SentRequests extends CComponent {
     }
     
     public function getGrandTotal() {
-        $total = 0.00;
+        $total = '0.00';
 
-        foreach ($this->details as $detail)
+        foreach ($this->details as $detail) {
             $total += $detail->total;
+        }
 
         return $total;
     }
     
     public function getTotalQuantity() {
-        $total = 0.00;
+        $total = '0.00';
         
-        foreach ($this->details as $detail)
+        foreach ($this->details as $detail) {
             $total += $detail->quantity;
+        }
 
         return $total;
     }
