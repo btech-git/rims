@@ -160,6 +160,9 @@ class ProfitLossDetailController extends Controller {
                 $worksheet->getStyle("A{$counter}:B{$counter}")->getFont()->setBold(true);
                 $worksheet->setCellValue("A{$counter}", 'Total ' . $profitLossReportData[$coaParentCodes[$previousLevel]]['name']);
                 $worksheet->setCellValue("B{$counter}", $amountSum === '' ? '' : $amountSum);
+                if ($amountSum < 0) {
+                    $worksheet->getStyle("B{$counter}")->getFont()->getColor()->setARGB(PHPExcel_Style_Color::COLOR_RED);
+                }
 
                 $counter++;
                 $previousLevel--;
@@ -171,6 +174,9 @@ class ProfitLossDetailController extends Controller {
                 $worksheet->getStyle("A{$counter}:B{$counter}")->getFont()->setBold(true);
                 $worksheet->setCellValue("A{$counter}", 'Laba Kotor');
                 $worksheet->setCellValue("B{$counter}", $grossProfit === '' ? '' : $grossProfit);
+                if ($grossProfit < 0) {
+                    $worksheet->getStyle("B{$counter}")->getFont()->getColor()->setARGB(PHPExcel_Style_Color::COLOR_RED);
+                }
                 $counter++;
             }
             $worksheet->setCellValue("A{$counter}", $coaCode . ' - ' . $profitLossReportItem['name']);
@@ -187,6 +193,9 @@ class ProfitLossDetailController extends Controller {
 
                 $worksheet->setCellValue("A{$counter}", 'Total ' . $profitLossReportData[$coaParentCodes[$previousLevel]]['name']);
                 $worksheet->setCellValue("B{$counter}", $amountSum === '' ? '' : $amountSum);
+                if ($amountSum < 0) {
+                    $worksheet->getStyle("B{$counter}")->getFont()->getColor()->setARGB(PHPExcel_Style_Color::COLOR_RED);
+                }
                 $counter++;
                 $previousLevel--;
             }
@@ -196,6 +205,9 @@ class ProfitLossDetailController extends Controller {
         $worksheet->getStyle("A{$counter}:B{$counter}")->getFont()->setBold(true);
         $worksheet->setCellValue("A{$counter}", 'Laba Bersih');
         $worksheet->setCellValue("B{$counter}", $netProfit === '' ? '' : $netProfit);
+        if ($netProfit < 0) {
+            $worksheet->getStyle("B{$counter}")->getFont()->getColor()->setARGB(PHPExcel_Style_Color::COLOR_RED);
+        }
 
         for ($col = 'A'; $col !== 'Z'; $col++) {
             $objPHPExcel->getActiveSheet()

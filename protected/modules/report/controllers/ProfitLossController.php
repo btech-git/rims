@@ -128,6 +128,9 @@ class ProfitLossController extends Controller {
                 
                 $worksheet->setCellValue("A{$counter}", $profitLossReportData[$coaParentCodes[$previousLevel]]['name']);
                 $worksheet->setCellValue("B{$counter}", $amountSum === '' ? '' : $amountSum);
+                if ($amountSum < 0) {
+                    $worksheet->getStyle("B{$counter}")->getFont()->getColor()->setARGB(PHPExcel_Style_Color::COLOR_RED);
+                }
 
                 $counter++;
                 $previousLevel--;
@@ -137,11 +140,13 @@ class ProfitLossController extends Controller {
                 $grossProfit = $accountGroupSums[4] - $accountGroupSums[5]; 
                 $worksheet->setCellValue("A{$counter}", 'Laba Kotor');
                 $worksheet->setCellValue("B{$counter}", $grossProfit === '' ? '' : $grossProfit);
+                if ($grossProfit < 0) {
+                    $worksheet->getStyle("B{$counter}")->getFont()->getColor()->setARGB(PHPExcel_Style_Color::COLOR_RED);
+                }
+                
                 $counter++;
             }
-//            $worksheet->setCellValue("A{$counter}", $coaCode . ' - ' . $profitLossReportItem['name']);
-//            $worksheet->setCellValue("B{$counter}", $balance);
-//            $counter++;
+            
             $previousLevel = $currentLevel;
         }
 
@@ -153,6 +158,9 @@ class ProfitLossController extends Controller {
 
                 $worksheet->setCellValue("A{$counter}", $profitLossReportData[$coaParentCodes[$previousLevel]]['name']);
                 $worksheet->setCellValue("B{$counter}", $amountSum === '' ? '' : $amountSum);
+                if ($amountSum < 0) {
+                    $worksheet->getStyle("B{$counter}")->getFont()->getColor()->setARGB(PHPExcel_Style_Color::COLOR_RED);
+                }
                 $counter++;
                 $previousLevel--;
             }
@@ -160,6 +168,9 @@ class ProfitLossController extends Controller {
         $netProfit = $accountGroupSums[4] - $accountGroupSums[5] - $accountGroupSums[6] + $accountGroupSums[7] - $accountGroupSums[8];
         $worksheet->setCellValue("A{$counter}", 'Laba Bersih');
         $worksheet->setCellValue("B{$counter}", $netProfit === '' ? '' : $netProfit);
+        if ($netProfit < 0) {
+            $worksheet->getStyle("B{$counter}")->getFont()->getColor()->setARGB(PHPExcel_Style_Color::COLOR_RED);
+        }
 
         for ($col = 'A'; $col !== 'Z'; $col++) {
             $objPHPExcel->getActiveSheet()

@@ -165,6 +165,9 @@ class BalanceSheetDetailController extends Controller {
                 $worksheet->getStyle("A{$counter}:B{$counter}")->getFont()->setBold(true);
                 $worksheet->setCellValue("A{$counter}", 'TOTAL ' . $balanceSheetReportData[$coaParentCodes[$previousLevel]]['name']);
                 $worksheet->setCellValue("B{$counter}", $amountSum === '' ? '' : $amountSum);
+                if ($amountSum < 0) {
+                    $worksheet->getStyle("B{$counter}")->getFont()->getColor()->setARGB(PHPExcel_Style_Color::COLOR_RED);
+                }
                 
                 $previousLevel--;
                 $counter++;
@@ -172,6 +175,9 @@ class BalanceSheetDetailController extends Controller {
             
             $worksheet->setCellValue("A{$counter}", $coaCode . ' - ' . $balanceSheetReportItem['name']);
             $worksheet->setCellValue("B{$counter}", $balance === '' ? '' : $balance);
+            if ($balance < 0) {
+                $worksheet->getStyle("B{$counter}")->getFont()->getColor()->setARGB(PHPExcel_Style_Color::COLOR_RED);
+            }
 
             $previousLevel = $currentLevel;
             $counter++;
@@ -187,6 +193,9 @@ class BalanceSheetDetailController extends Controller {
                 $worksheet->getStyle("A{$counter}:B{$counter}")->getFont()->setBold(true);
                 $worksheet->setCellValue("A{$counter}", 'TOTAL ' . $balanceSheetReportData[$coaParentCodes[$previousLevel]]['name']);
                 $worksheet->setCellValue("B{$counter}", $amountSum === '' ? '' : $amountSum);
+                if ($amountSum < 0) {
+                    $worksheet->getStyle("B{$counter}")->getFont()->getColor()->setARGB(PHPExcel_Style_Color::COLOR_RED);
+                }
                 
                 $previousLevel--;
                 $counter++;
