@@ -95,11 +95,11 @@ class TransactionSalesOrderController extends Controller {
             } else {
                 //D
 //                $getCoaPiutang = '121.00.001';
-                $coaPiutangWithCode = $model->customer->coa_id;
+//                $coaPiutangWithCode = $model->customer->coa_id;
                 $jurnalUmumPiutang = new JurnalUmum;
                 $jurnalUmumPiutang->kode_transaksi = $model->sale_order_no;
                 $jurnalUmumPiutang->tanggal_transaksi = $model->sale_order_date;
-                $jurnalUmumPiutang->coa_id = $coaPiutangWithCode->id;
+                $jurnalUmumPiutang->coa_id = $model->customer->coa_id;
                 $jurnalUmumPiutang->branch_id = $model->requester_branch_id;
                 $jurnalUmumPiutang->total = round($model->total_price, 0);
                 $jurnalUmumPiutang->debet_kredit = 'D';
@@ -595,7 +595,7 @@ class TransactionSalesOrderController extends Controller {
                         $jurnalUmumPiutang = new JurnalUmum;
                         $jurnalUmumPiutang->kode_transaksi = $transactionCode;
                         $jurnalUmumPiutang->tanggal_transaksi = $transactionDate;
-                        $jurnalUmumPiutang->coa_id = $coaPiutangWithCode->id;
+                        $jurnalUmumPiutang->coa_id = $salesOrder->customer->coa_id;
                         $jurnalUmumPiutang->branch_id = $branchId;
                         $jurnalUmumPiutang->total = round($salesOrder->total_price, 0);
                         $jurnalUmumPiutang->debet_kredit = 'D';
