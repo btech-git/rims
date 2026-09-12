@@ -77,22 +77,22 @@ class TransactionSalesOrderController extends Controller {
 
             $journalReferences = array();
 
-            if ($model->payment_type == "Cash") {
-                $getCoaKas = '121.00.002';
-                $coaKasWithCode = Coa::model()->findByAttributes(array('code' => $getCoaKas));
-                $jurnalUmumKas = new JurnalUmum;
-                $jurnalUmumKas->kode_transaksi = $model->sale_order_no;
-                $jurnalUmumKas->tanggal_transaksi = $model->sale_order_date;
-                $jurnalUmumKas->coa_id = $coaKasWithCode->id;
-                $jurnalUmumKas->branch_id = $model->requester_branch_id;
-                $jurnalUmumKas->total = round($model->total_price, 0);
-                $jurnalUmumKas->debet_kredit = 'D';
-                $jurnalUmumKas->tanggal_posting = date('Y-m-d');
-                $jurnalUmumKas->transaction_subject = $transactionSubject;
-                $jurnalUmumKas->is_coa_category = 0;
-                $jurnalUmumKas->transaction_type = 'SO';
-                $jurnalUmumKas->save();
-            } else {
+//            if ($model->payment_type == "Cash") {
+//                $getCoaKas = '121.00.002';
+//                $coaKasWithCode = Coa::model()->findByAttributes(array('code' => $getCoaKas));
+//                $jurnalUmumKas = new JurnalUmum;
+//                $jurnalUmumKas->kode_transaksi = $model->sale_order_no;
+//                $jurnalUmumKas->tanggal_transaksi = $model->sale_order_date;
+//                $jurnalUmumKas->coa_id = $coaKasWithCode->id;
+//                $jurnalUmumKas->branch_id = $model->requester_branch_id;
+//                $jurnalUmumKas->total = round($model->total_price, 0);
+//                $jurnalUmumKas->debet_kredit = 'D';
+//                $jurnalUmumKas->tanggal_posting = date('Y-m-d');
+//                $jurnalUmumKas->transaction_subject = $transactionSubject;
+//                $jurnalUmumKas->is_coa_category = 0;
+//                $jurnalUmumKas->transaction_type = 'SO';
+//                $jurnalUmumKas->save();
+//            } else {
                 //D
 //                $getCoaPiutang = '121.00.001';
 //                $coaPiutangWithCode = $model->customer->coa_id;
@@ -108,7 +108,7 @@ class TransactionSalesOrderController extends Controller {
                 $jurnalUmumPiutang->is_coa_category = 0;
                 $jurnalUmumPiutang->transaction_type = 'SO';
                 $jurnalUmumPiutang->save();
-            }
+//            }
 
             foreach ($salesOrderDetails as $key => $soDetail) {
                 $coaId = $soDetail->product->productSubMasterCategory->coa_penjualan_barang_dagang;
@@ -573,22 +573,22 @@ class TransactionSalesOrderController extends Controller {
 
                     $journalReferences = array();
 
-                    if ($salesOrder->payment_type == "Cash") {
-                        $getCoaKas = '121.00.002';
-                        $coaKasWithCode = Coa::model()->findByAttributes(array('code' => $getCoaKas));
-                        $jurnalUmumKas = new JurnalUmum;
-                        $jurnalUmumKas->kode_transaksi = $transactionCode;
-                        $jurnalUmumKas->tanggal_transaksi = $transactionDate;
-                        $jurnalUmumKas->coa_id = $coaKasWithCode->id;
-                        $jurnalUmumKas->branch_id = $branchId;
-                        $jurnalUmumKas->total = round($salesOrder->total_price, 0);
-                        $jurnalUmumKas->debet_kredit = 'D';
-                        $jurnalUmumKas->tanggal_posting = date('Y-m-d');
-                        $jurnalUmumKas->transaction_subject = $transactionSubject;
-                        $jurnalUmumKas->is_coa_category = 0;
-                        $jurnalUmumKas->transaction_type = 'SO';
-                        $jurnalUmumKas->save();
-                    } else {
+//                    if ($salesOrder->payment_type == "Cash") {
+//                        $getCoaKas = '121.00.002';
+//                        $coaKasWithCode = Coa::model()->findByAttributes(array('code' => $getCoaKas));
+//                        $jurnalUmumKas = new JurnalUmum;
+//                        $jurnalUmumKas->kode_transaksi = $transactionCode;
+//                        $jurnalUmumKas->tanggal_transaksi = $transactionDate;
+//                        $jurnalUmumKas->coa_id = $coaKasWithCode->id;
+//                        $jurnalUmumKas->branch_id = $branchId;
+//                        $jurnalUmumKas->total = round($salesOrder->total_price, 0);
+//                        $jurnalUmumKas->debet_kredit = 'D';
+//                        $jurnalUmumKas->tanggal_posting = date('Y-m-d');
+//                        $jurnalUmumKas->transaction_subject = $transactionSubject;
+//                        $jurnalUmumKas->is_coa_category = 0;
+//                        $jurnalUmumKas->transaction_type = 'SO';
+//                        $jurnalUmumKas->save();
+//                    } else {
                         //D
 //                        $getCoaPiutang = '121.00.001';
                         $coaPiutangWithCode = $salesOrder->customer->coa_id;
@@ -604,7 +604,7 @@ class TransactionSalesOrderController extends Controller {
                         $jurnalUmumPiutang->is_coa_category = 0;
                         $jurnalUmumPiutang->transaction_type = 'SO';
                         $jurnalUmumPiutang->save();
-                    }
+//                    }
 
                     foreach ($salesOrder->transactionSalesOrderDetails as $key => $soDetail) {
                         $coaId = $soDetail->product->productSubMasterCategory->coa_penjualan_barang_dagang;
