@@ -80,7 +80,7 @@ $('.search-form form').submit(function(){
                         'id',
                         'name',
                         'code',
-                        'coa_category_id',
+                        'coaCategory.name',
                         array(
                             'class' => 'CButtonColumn',
                         ),
