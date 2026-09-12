@@ -23,17 +23,7 @@ $this->breadcrumbs = array(
         <a class="button success right" style="margin-right:10px;" href="<?php echo Yii::app()->createUrl('/master/' . $ccontroller . '/addVehicle', array('id' => $model->id)); ?>">
             <span class="fa fa-plus"></span>Add Vehicle
         </a>
-        <!--        <a class="button cbutton right" style="margin-right:10px;"
-                   href="<?php /* echo Yii::app()->createUrl('/frontDesk/registrationTransaction/create',
-             array('type' => 1, 'id' => $model->id)); */ ?>"><span class="fa fa-plus"></span>Registration</a>-->
-<!--        <a class="button cbutton right" style="margin-right:10px;" href="<?php echo Yii::app()->createUrl('/transaction/consignmentOutHeader/create'); ?>">
-            <span class="fa fa-plus"></span>Consignment Out
-        </a>-->
-             
-<!--        <a class="button success right" style="margin-right:10px;" href="<?php echo Yii::app()->createUrl('/transaction/transactionSalesOrder/create'); ?>">
-            <span class="fa fa-plus"></span>Sales
-        </a>-->
-
+        
         <h1>View <?php echo $model->name ?></h1>
 
         <?php $this->widget('zii.widgets.CDetailView', array(

@@ -21,22 +21,35 @@ $this->menu = array(
     <div class="clearfix page-action">
         <?php $ccontroller = Yii::app()->controller->id; ?>
         <?php $ccaction = Yii::app()->controller->action->id; ?>
-        <a class="button cbutton right" style="margin-right:10px;" href="<?php echo Yii::app()->baseUrl . '/master/coaSubCategory/admin'; ?>"><span class="fa fa-th-list"></span>Manage CoaSubCategory</a>
+        
+        <a class="button cbutton right" style="margin-right:10px;" href="<?php echo Yii::app()->baseUrl . '/master/coaSubCategory/admin'; ?>">
+            <span class="fa fa-th-list"></span>Manage
+        </a>
         <?php if (Yii::app()->user->checkAccess("masterCoaSubCategoryEdit")) { ?>
-            <a class="button cbutton right" style="margin-right:10px;" href="<?php echo Yii::app()->createUrl('/master/' . $ccontroller . '/update', array('id' => $model->id)); ?>"><span class="fa fa-edit"></span>edit</a>
+            <a class="button warning right" style="margin-right:10px;" href="<?php echo Yii::app()->createUrl('/master/' . $ccontroller . '/update', array('id' => $model->id)); ?>">
+                <span class="fa fa-edit"></span>edit
+            </a>
         <?php } ?>
+            
         <h1>View Coa Sub Category #<?php echo $model->id; ?></h1>
 
-        <?php
-        $this->widget('zii.widgets.CDetailView', array(
+        <?php $this->widget('zii.widgets.CDetailView', array(
             'data' => $model,
             'attributes' => array(
                 'id',
-                'name',
                 'code',
-                'coa_category_id',
+                'name',
+                array(
+                    'label' => 'Category',
+                    'name' => 'coa_category_id', 
+                    'value' => $model->coaCategory->name
+                ),
+                array(
+                    'label' => 'Posisi Cashflow',
+                    'name' => 'cashflow_position', 
+                    'value' => $model->cashflow_position
+                ),
             ),
-        ));
-        ?>
+        )); ?>
     </div>
 </div>

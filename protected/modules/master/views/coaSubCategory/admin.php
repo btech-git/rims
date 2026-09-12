@@ -42,7 +42,7 @@ $('.search-form form').submit(function(){
             <div class="clearfix page-action">
                 <?php if (Yii::app()->user->checkAccess("masterCoaSubCategoryCreate")) { ?>
                     <a class="button success right" href="<?php echo Yii::app()->baseUrl . '/master/coaSubCategory/create'; ?>">
-                        <span class="fa fa-plus"></span>Create Coa Sub Categories
+                        <span class="fa fa-plus"></span>Create
                     </a>
                 <?php } ?>
                 <h2>Manage Coa Sub Categories</h2>
@@ -68,8 +68,7 @@ $('.search-form form').submit(function(){
             </div>
 
             <div class="grid-view">
-                <?php
-                $this->widget('zii.widgets.grid.CGridView', array(
+                <?php $this->widget('zii.widgets.grid.CGridView', array(
                     'id' => 'coa-sub-category-grid',
                     'dataProvider' => $model->search(),
                     'filter' => $model,
@@ -82,18 +81,17 @@ $('.search-form form').submit(function(){
                     'columns' => array(
                         'name',
                         'code',
-                        //'coa_category_id',
                         array(
                             'name' => 'coa_category_id',
                             'filter' => CHtml::activeDropDownList($model, 'coa_category_id', CHtml::listData(CoaCategory::model()->findAll(array('order' => 'name')), 'id', 'name'), array('empty' => '-- All --')),
                             'value' => '$data->coaCategory->name'
                         ),
+                        'cashflow_position',
                         array(
                             'class' => 'CButtonColumn',
                         ),
                     ),
-                ));
-                ?>
+                )); ?>
             </div>
         </div>
     </div> <!-- end row -->
