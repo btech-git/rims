@@ -94,8 +94,8 @@ class TransactionSalesOrderController extends Controller {
                 $jurnalUmumKas->save();
             } else {
                 //D
-                $getCoaPiutang = '121.00.001';
-                $coaPiutangWithCode = Coa::model()->findByAttributes(array('code' => $getCoaPiutang));
+//                $getCoaPiutang = '121.00.001';
+                $coaPiutangWithCode = $model->customer->coa_id;
                 $jurnalUmumPiutang = new JurnalUmum;
                 $jurnalUmumPiutang->kode_transaksi = $model->sale_order_no;
                 $jurnalUmumPiutang->tanggal_transaksi = $model->sale_order_date;
@@ -590,8 +590,8 @@ class TransactionSalesOrderController extends Controller {
                         $jurnalUmumKas->save();
                     } else {
                         //D
-                        $getCoaPiutang = '121.00.001';
-                        $coaPiutangWithCode = Coa::model()->findByAttributes(array('code' => $getCoaPiutang));
+//                        $getCoaPiutang = '121.00.001';
+                        $coaPiutangWithCode = $salesOrder->customer->coa_id;
                         $jurnalUmumPiutang = new JurnalUmum;
                         $jurnalUmumPiutang->kode_transaksi = $transactionCode;
                         $jurnalUmumPiutang->tanggal_transaksi = $transactionDate;
