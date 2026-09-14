@@ -49,7 +49,7 @@ class PaymentInComponent extends CComponent {
             $detail = new PaymentInDetail;
             $detail->invoice_header_id = $invoiceId;
             $detail->registration_transaction_id = $invoiceHeader->registration_transaction_id;
-            $detail->total_invoice = $invoiceHeader->total_price;
+            $detail->total_invoice = $invoiceHeader->invoice_amount;
             $this->details[] = $detail;
         }
     }
@@ -290,7 +290,13 @@ class PaymentInComponent extends CComponent {
         $total = '0.00';
         
         foreach ($this->details as $detail) {
-            $total += $detail->total_invoice - $detail->invoiceHeader->downpayment_amount - $detail->invoiceHeader->insurance_own_risk_amount;
+            $total += $detail->total_invoice;
+            
+//            if (empty($detail->invoice_header_id)) {
+//                $total += $detail->total_invoice;
+//            } else {
+//                $total += $detail->total_invoice - $detail->invoiceHeader->downpayment_amount - $detail->invoiceHeader->insurance_own_risk_amount;                
+//            }
         }
         
         return $total;
