@@ -924,7 +924,8 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
                 FROM " . InvoiceHeader::model()->tableName() . " h 
                 INNER JOIN " . InvoiceDetail::model()->tableName() . " d ON h.id = d.invoice_id
                 INNER JOIN " . Service::model()->tableName() . " s ON s.id = d.service_id
-                WHERE h.invoice_date BETWEEN :start_date AND :end_date AND h.status NOT LIKE '%CANCEL%'" . $branchConditionSql . $typeCategoryConditionSql . "
+                WHERE h.invoice_date BETWEEN :start_date AND :end_date AND h.status NOT LIKE '%CANCEL%' AND d.service_id IS NOT NULL" . 
+                    $branchConditionSql . $typeCategoryConditionSql . "
                 GROUP BY h.invoice_date, d.service_id
                 ORDER BY h.invoice_date ASC, d.service_id ASC";
         
