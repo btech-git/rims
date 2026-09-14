@@ -54,6 +54,8 @@ class InvoiceHeaderController extends Controller {
             'registration_transaction_id' => $registrationId,
             'user_id_cancelled' => null,
         ));
+        $ownRiskAmount = (!empty($saleInvoiceInsuranceOwnRisk) && $saleInvoiceInsuranceOwnRisk->payment_remaining == '0.00') ? $saleInvoiceInsuranceOwnRisk->amount_invoice : '0.00';
+        
         $invoice->header->reference_type = 2;
         $invoice->header->registration_transaction_id = $registrationId;
         $invoice->header->customer_id = $registrationTransaction->customer_id;
@@ -67,15 +69,15 @@ class InvoiceHeaderController extends Controller {
         $invoice->header->product_price = $registrationTransaction->total_product_price;
         $invoice->header->quick_service_price = $registrationTransaction->total_quickservice_price;
         $invoice->header->total_price = $registrationTransaction->grand_total;
-        $invoice->header->invoice_amount = $registrationTransaction->grand_total - $registrationTransaction->downpayment_amount;
-        $invoice->header->payment_left = $registrationTransaction->grand_total - $registrationTransaction->downpayment_amount;
+        $invoice->header->invoice_amount = $registrationTransaction->grand_total - $registrationTransaction->downpayment_amount - $ownRiskAmount;
+        $invoice->header->payment_left = $registrationTransaction->grand_total - $registrationTransaction->downpayment_amount - $ownRiskAmount;
         $invoice->header->payment_amount = '0.00';
         $invoice->header->ppn_total = $registrationTransaction->ppn_price;
         $invoice->header->ppn = ($registrationTransaction->ppn_price > 0) ? 1 : 0;
         $invoice->header->tax_percentage = $registrationTransaction->tax_percentage;
         $invoice->header->package_price = $registrationTransaction->total_price_package;
         $invoice->header->downpayment_amount = ($registrationTransaction->is_downpayment_paid == 0) ? '0.00' : $registrationTransaction->downpayment_amount;
-        $invoice->header->insurance_own_risk_amount = (!empty($saleInvoiceInsuranceOwnRisk) && $saleInvoiceInsuranceOwnRisk->payment_remaining == '0.00') ? $saleInvoiceInsuranceOwnRisk->amount_invoice : '0.00';
+        $invoice->header->insurance_own_risk_amount = $ownRiskAmount;
         $invoice->header->payment_date_estimate = date('Y-m-d');
         $invoice->header->coa_bank_id_estimate = null;
         $invoice->header->created_datetime = date('Y-m-d H:i:s');
