@@ -85,9 +85,9 @@ Yii::app()->clientScript->registerCss('_report', '
                             </td>
                             <td><?php echo CHtml::encode($stockRow['transaction_type']); ?></td>
                             <td><?php echo CHtml::encode($stockRow['warehouse']); ?></td>
-                            <td style="text-align: center"><?php echo Yii::app()->numberFormatter->format('#,##0', $stockIn); ?></td>
-                            <td style="text-align: center"><?php echo Yii::app()->numberFormatter->format('#,##0', $stockOut); ?></td>
-                            <td style="text-align: center"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $stock)); ?></td>
+                            <td style="text-align: center"><?php echo Yii::app()->numberFormatter->format('#,##0.00', $stockIn); ?></td>
+                            <td style="text-align: center"><?php echo Yii::app()->numberFormatter->format('#,##0.00', $stockOut); ?></td>
+                            <td style="text-align: center"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $stock)); ?></td>
                         </tr>
                         <?php $totalStockIn += $stockIn; ?>
                         <?php $totalStockOut += $stockOut; ?>
@@ -96,10 +96,10 @@ Yii::app()->clientScript->registerCss('_report', '
                     <tr>
                         <td colspan="4" style="text-align: right; font-weight: bold">Total</td>
                         <td style="text-align: center; font-weight: bold; border-top: 1px solid">
-                            <?php echo Yii::app()->numberFormatter->format('#,##0', $totalStockIn); ?>
+                            <?php echo Yii::app()->numberFormatter->format('#,##0.00', $totalStockIn); ?>
                         </td>
                         <td style="text-align: center; font-weight: bold; border-top: 1px solid">
-                            <?php echo Yii::app()->numberFormatter->format('#,##0', $totalStockOut); ?>
+                            <?php echo Yii::app()->numberFormatter->format('#,##0.00', $totalStockOut); ?>
                         </td>
                         <td>&nbsp;</td>
                     </tr>
