@@ -107,15 +107,14 @@ class StockCardController extends Controller {
             $pageNumber = isset($_GET['page']) ? $_GET['page'] : 1;
             $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
             $stockOperator = isset($_GET['StockOperator']) ? $_GET['StockOperator'] : '>';
+            $branchId = (isset($_GET['BranchId'])) ? $_GET['BranchId'] : (Yii::app()->user->checkAccess('director') || Yii::app()->user->branch_id == 6 ? '' : Yii::app()->user->branch_id);
             
             $product = Search::bind(new Product('search'), isset($_GET['Product']) ? $_GET['Product'] : '');
             $productDataProvider = $product->searchByStockCheck($pageNumber, $endDate, $stockOperator);
             
-            $branches = Branch::model()->findAll();
-
             $this->renderPartial('_summary', array(
                 'productDataProvider' => $productDataProvider,
-                'branches' => $branches,
+                'branchId' => $branchId,
             ));
         }
     }
