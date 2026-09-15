@@ -174,7 +174,7 @@ class BalanceSheetMonthlyController extends Controller {
                         $totalEquity = $elementsTotalSums['2'][$yearMonth] + $elementsTotalSums['3'][$yearMonth];
                         $worksheet->setCellValue("{$column}{$counter}", $totalEquity);
                         if ($totalEquity < 0) {
-                            $worksheet->getStyle("B{$counter}")->getFont()->getColor()->setARGB(PHPExcel_Style_Color::COLOR_RED);
+                            $worksheet->getStyle("{$column}{$counter}")->getFont()->getColor()->setARGB(PHPExcel_Style_Color::COLOR_RED);
                         }
                         $column++;$column++;$column++;
                     }
@@ -211,20 +211,20 @@ class BalanceSheetMonthlyController extends Controller {
                                     $debit = isset($accountInfo['debits'][$yearMonth]) ? $accountInfo['debits'][$yearMonth] : ''; 
                                     $worksheet->setCellValue("{$column}{$counter}", $debit);
                                     if ($debit < 0) {
-                                        $worksheet->getStyle("B{$counter}")->getFont()->getColor()->setARGB(PHPExcel_Style_Color::COLOR_RED);
+                                        $worksheet->getStyle("{$column}{$counter}")->getFont()->getColor()->setARGB(PHPExcel_Style_Color::COLOR_RED);
                                     }
                                     $column++;
                                     $credit = isset($accountInfo['credits'][$yearMonth]) ? $accountInfo['credits'][$yearMonth] : '';
                                     $worksheet->setCellValue("{$column}{$counter}", $credit);
                                     if ($credit < 0) {
-                                        $worksheet->getStyle("B{$counter}")->getFont()->getColor()->setARGB(PHPExcel_Style_Color::COLOR_RED);
+                                        $worksheet->getStyle("{$column}{$counter}")->getFont()->getColor()->setARGB(PHPExcel_Style_Color::COLOR_RED);
                                     }
                                     $column++;
                                     $balance = isset($accountInfo['totals'][$yearMonth]) ? $accountInfo['totals'][$yearMonth] : '';
                                     $currentBalance += $balance;
                                     $worksheet->setCellValue("{$column}{$counter}", $currentBalance);
                                     if ($currentBalance < 0) {
-                                        $worksheet->getStyle("B{$counter}")->getFont()->getColor()->setARGB(PHPExcel_Style_Color::COLOR_RED);
+                                        $worksheet->getStyle("{$column}{$counter}")->getFont()->getColor()->setARGB(PHPExcel_Style_Color::COLOR_RED);
                                     }
                                     $column++;
                                     $subCategoryTotalSums[$yearMonth] += $currentBalance;
@@ -240,7 +240,7 @@ class BalanceSheetMonthlyController extends Controller {
                                 $totalSubCategory = $subCategoryTotalSums[$yearMonth];
                                 $worksheet->setCellValue("{$column}{$counter}", $totalSubCategory);
                                 if ($totalSubCategory < 0) {
-                                    $worksheet->getStyle("B{$counter}")->getFont()->getColor()->setARGB(PHPExcel_Style_Color::COLOR_RED);
+                                    $worksheet->getStyle("{$column}{$counter}")->getFont()->getColor()->setARGB(PHPExcel_Style_Color::COLOR_RED);
                                 }
                                 $column++;
                             }
@@ -257,7 +257,7 @@ class BalanceSheetMonthlyController extends Controller {
                             $totalCategory = $categoryTotalSums[$yearMonth];
                             $worksheet->setCellValue("{$column}{$counter}", $totalCategory);
                             if ($totalCategory < 0) {
-                                $worksheet->getStyle("B{$counter}")->getFont()->getColor()->setARGB(PHPExcel_Style_Color::COLOR_RED);
+                                $worksheet->getStyle("{$column}{$counter}")->getFont()->getColor()->setARGB(PHPExcel_Style_Color::COLOR_RED);
                             }
                             $column++;
                         }
@@ -275,7 +275,7 @@ class BalanceSheetMonthlyController extends Controller {
                         $amountSum = $elementsTotalSums[$elementNumber][$yearMonth];
                         $worksheet->setCellValue("{$column}{$counter}", $amountSum);
                         if ($amountSum < 0) {
-                            $worksheet->getStyle("B{$counter}")->getFont()->getColor()->setARGB(PHPExcel_Style_Color::COLOR_RED);
+                            $worksheet->getStyle("{$column}{$counter}")->getFont()->getColor()->setARGB(PHPExcel_Style_Color::COLOR_RED);
                         }
                         $column++;
                     }

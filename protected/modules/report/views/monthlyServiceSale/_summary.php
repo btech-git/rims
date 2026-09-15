@@ -1,5 +1,13 @@
-<div class="grid-view">
-    <table class="report" style="width: 4000px">
+<style> 
+ .table_wrapper{
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+}
+</style>
+
+<div class="table_wrapper">
+    <table class="responsive">
         <thead>
             <tr id="header1">
                 <th></th>

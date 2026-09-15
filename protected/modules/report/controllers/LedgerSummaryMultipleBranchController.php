@@ -162,7 +162,13 @@ class LedgerSummaryMultipleBranchController extends Controller {
                 $debit = isset($ledgerSummaryMultipleBranchReportDataItem['amounts'][$branch->id]['debit']) ? $ledgerSummaryMultipleBranchReportDataItem['amounts'][$branch->id]['debit'] : '0.00';
                 $credit = isset($ledgerSummaryMultipleBranchReportDataItem['amounts'][$branch->id]['credit']) ? $ledgerSummaryMultipleBranchReportDataItem['amounts'][$branch->id]['credit'] : '0.00';
                 $worksheet->setCellValue("{$columnDebitBody}{$counter}", $debit);
+                if ($debit < 0) {
+                    $worksheet->getStyle("{$columnDebitBody}{$counter}")->getFont()->getColor()->setARGB(PHPExcel_Style_Color::COLOR_RED);
+                }
                 $worksheet->setCellValue("{$columnCreditBody}{$counter}", $credit);
+                if ($credit < 0) {
+                    $worksheet->getStyle("{$columnCreditBody}{$counter}")->getFont()->getColor()->setARGB(PHPExcel_Style_Color::COLOR_RED);
+                }
                 $columnDebitBody++;$columnDebitBody++;$columnCreditBody++;$columnCreditBody++;
                 $totalDebitSum += $debit;
                 $totalCreditSum += $credit;
@@ -177,7 +183,13 @@ class LedgerSummaryMultipleBranchController extends Controller {
                 $creditSums[$branch->id] += $credit;
             }
             $worksheet->setCellValue("{$columnDebitBody}{$counter}", $totalDebitSum);
+            if ($totalDebitSum < 0) {
+                $worksheet->getStyle("{$columnDebitBody}{$counter}")->getFont()->getColor()->setARGB(PHPExcel_Style_Color::COLOR_RED);
+            }
             $worksheet->setCellValue("{$columnCreditBody}{$counter}", $totalCreditSum);
+            if ($totalCreditSum < 0) {
+                $worksheet->getStyle("{$columnCreditBody}{$counter}")->getFont()->getColor()->setARGB(PHPExcel_Style_Color::COLOR_RED);
+            }
             
             $counter++;
         }

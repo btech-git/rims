@@ -66,8 +66,12 @@
                         <?php $debitSums[$branch->id] += $debit; ?>
                         <?php $creditSums[$branch->id] += $credit; ?>
                     <?php endforeach; ?>
-                    <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $totalDebitSum)); ?></td>
-                    <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $totalCreditSum)); ?></td>
+                    <td style="color: <?php echo $totalDebitSum < 0 ? 'red': 'black'; ?>; text-align: right">
+                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $totalDebitSum)); ?>
+                    </td>
+                    <td style="color: <?php echo $totalCreditSum < 0 ? 'red': 'black'; ?>; text-align: right">
+                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $totalCreditSum)); ?>
+                    </td>
                 </tr>
             <?php endforeach; ?>
         </tbody>

@@ -58,13 +58,15 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                         <?php echo ReportHelper::summaryText($stockCardSummary->dataProvider); ?>
                     </div>
 
-                    <?php $this->renderPartial('_summary', array(
-                        'stockCardSummary' => $stockCardSummary,
-                        'product' => $product,
-                        'startDate' => $startDate,
-                        'endDate' => $endDate,
-                        'branchId' => $branchId,
-                    )); ?>
+                    <div id="product_stock_table">
+                        <?php $this->renderPartial('_summary', array(
+                            'stockCardSummary' => $stockCardSummary,
+                            'product' => $product,
+                            'startDate' => $startDate,
+                            'endDate' => $endDate,
+                            'branchId' => $branchId,
+                        )); ?>
+                    </div>
                 </div>
                 
                 <div class="clear"></div>

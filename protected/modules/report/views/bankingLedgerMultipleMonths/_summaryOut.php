@@ -30,6 +30,7 @@
                                     <?php $paymentDailyTotal = '0.00'; ?>
                                     <?php $dataProvider = $transactionOutDataProviders[$yearMonth]; ?>
                                     <?php foreach ($dataProvider->data as $detail): ?>
+                                        <?php $totalAmount = CHtml::value($detail, 'total'); ?>
                                         <tr>
                                             <td>
                                                 <?php echo CHtml::link(CHtml::encode(CHtml::value($detail, 'kode_transaksi')), Yii::app()->createUrl("report/bankingLedgerMonthly/redirectTransaction", array("codeNumber" => $detail->kode_transaksi)), array('target' => '_blank')); ?>
@@ -39,17 +40,17 @@
                                             </td>
                                             <td><?php echo CHtml::encode(CHtml::value($detail, 'transaction_subject')); ?></td>
                                             <td><?php echo CHtml::encode(CHtml::value($detail, 'remark')); ?></td>
-                                            <td style="text-align: right">
-                                                <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($detail, 'total'))); ?>
+                                            <td style="color: <?php echo $totalAmount < 0 ? 'red': 'black'; ?>; text-align: right">
+                                                <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalAmount)); ?>
                                             </td>
                                         </tr>
-                                        <?php $paymentDailyTotal += CHtml::value($detail, 'total'); ?>
+                                        <?php $paymentDailyTotal += $totalAmount; ?>
                                     <?php endforeach; ?>
                                 </tbody>
                                 <tfoot>
                                     <tr>
                                         <td colspan="4" style="text-align: right; font-weight: bold">Total</td>
-                                        <td style="text-align: right; font-weight: bold">
+                                        <td style="color: <?php echo $paymentDailyTotal < 0 ? 'red': 'black'; ?>; text-align: right; font-weight: bold">
                                             <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $paymentDailyTotal)); ?>
                                         </td>
                                     </tr>

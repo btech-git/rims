@@ -1,3 +1,11 @@
+<style> 
+ .table_wrapper{
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+}
+</style>
+
 <div style="text-align: right">
     <?php echo ReportHelper::summaryText($productDataProvider); ?>
 </div>
@@ -10,7 +18,8 @@
 
 <br />
 
-<table>
+<div class="table_wrapper">
+    <table class="responsive">
     <thead style="position: sticky; top: 0">
         <tr>
             <th style="text-align: center">ID</th>
@@ -107,3 +116,4 @@
         </tr>
     </tfoot>
 </table>
+</div>

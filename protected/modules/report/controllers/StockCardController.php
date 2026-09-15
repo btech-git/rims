@@ -110,9 +110,10 @@ class StockCardController extends Controller {
             
             $product = Search::bind(new Product('search'), isset($_GET['Product']) ? $_GET['Product'] : '');
             $productDataProvider = $product->searchByStockCheck($pageNumber, $endDate, $stockOperator);
+            
             $branches = Branch::model()->findAll();
 
-            $this->renderPartial('_productStockTable', array(
+            $this->renderPartial('_summary', array(
                 'productDataProvider' => $productDataProvider,
                 'branches' => $branches,
             ));

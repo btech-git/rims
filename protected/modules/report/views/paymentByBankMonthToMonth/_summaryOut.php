@@ -36,7 +36,7 @@
                             </td>
                             <?php $amountTotal += $amount; ?>
                         <?php endforeach; ?>
-                        <td style="text-align: right; font-weight: bold;">
+                        <td style="color: <?php echo $amountTotal < 0 ? 'red': 'black'; ?>; text-align: right; font-weight: bold;">
                             <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $amountTotal)); ?>
                         </td>
                     </tr>
@@ -46,13 +46,13 @@
 
             <tfoot>
                 <tr>
-                    <td style="text-align: right">Total Monthly</td>
+                    <td style="text-align: right; font-weight: bold">Total Monthly</td>
                     <?php foreach ($yearMonthList as $yearMonth): ?>
-                        <td style="text-align: right">
+                        <td style="color: <?php echo $amountTotals[$yearMonth] < 0 ? 'red': 'black'; ?>; text-align: right; font-weight: bold">
                             <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $amountTotals[$yearMonth])); ?>
                         </td>
                     <?php endforeach; ?>
-                    <td style="text-align: right; font-weight: bold">
+                    <td style="color: <?php echo $grandTotal < 0 ? 'red': 'black'; ?>; text-align: right; font-weight: bold">
                         <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $grandTotal)); ?>
                     </td>
                 </tr>

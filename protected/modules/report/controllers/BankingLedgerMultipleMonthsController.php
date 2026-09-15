@@ -156,15 +156,15 @@ class BankingLedgerMultipleMonthsController extends Controller {
         $worksheet->setTitle('Bank Bulanan');
 
         $branch = Branch::model()->findByPk($branchId);
-        $worksheet->setCellValue('A1', 'RAPERIND MOTOR ' . CHtml::encode(CHtml::value($branch, 'name')));
+        $worksheet->setCellValue('A1', 'RAPERIND MOTOR ' . CHtml::value($branch, 'name'));
         $worksheet->setCellValue('A2', 'Bank Bulanan');
-        $worksheet->setCellValue('A3', CHtml::encode(strftime("%B",mktime(0,0,0,$month))) . ' ' . CHtml::encode($year));
+        $worksheet->setCellValue('A3', strftime("%B",mktime(0,0,0,$month) . ' ' . $year));
         $worksheet->setCellValue('A5', 'Transaksi Bank Masuk');
 
         $paymentInDailyTotals = array();
         $columnCounterIn = 'B';
         foreach ($selectedCoas as $coa) {
-            $worksheet->setCellValue("{$columnCounterIn}6", CHtml::encode(CHtml::value($coa, 'name')));
+            $worksheet->setCellValue("{$columnCounterIn}6", CHtml::value($coa, 'name'));
             $paymentInDailyTotals[$coa->id] = '0.00'; 
             $columnCounterIn++;
         }
@@ -190,19 +190,23 @@ class BankingLedgerMultipleMonthsController extends Controller {
             if (isset($paymentInList[$date])) {
                 $paymentInItem = $paymentInList[$date];
                 $totalPerDate = '0.00';
-                $worksheet->setCellValue("A{$counter}", CHtml::encode($date));
+                $worksheet->setCellValue("A{$counter}", $date);
                 
                 foreach ($selectedCoas as $coa) {
                     $paymentInRetail = $paymentInItem[$coa->id];
-                    $worksheet->setCellValue("{$columnCounterIn}{$counter}", CHtml::encode($paymentInRetail));
+                    $worksheet->setCellValue("{$columnCounterIn}{$counter}", $paymentInRetail);
+                    if ($paymentInRetail < 0) {
+                        $worksheet->getStyle("{$columnCounterIn}{$counter}")->getFont()->getColor()->setARGB(PHPExcel_Style_Color::COLOR_RED);
+                    }
+                    
                     $paymentInDailyTotals[$coa->id] += $paymentInRetail;
                     $totalPerDate += $paymentInRetail;
                     $columnCounterIn++;
                 }
-                $worksheet->setCellValue("{$columnCounterIn}{$counter}", CHtml::encode($totalPerDate));
+                $worksheet->setCellValue("{$columnCounterIn}{$counter}", $totalPerDate);
                 $dailyInTotal += $totalPerDate;
             } else {
-                $worksheet->setCellValue("A{$counter}", CHtml::encode($date));
+                $worksheet->setCellValue("A{$counter}", $date);
                 foreach ($selectedCoas as $coa) {
                     $worksheet->setCellValue("{$columnCounterIn}{$counter}", 0);
                 }
@@ -216,10 +220,16 @@ class BankingLedgerMultipleMonthsController extends Controller {
         $columnCounterInTotal = 'B';
         $worksheet->setCellValue("A{$counter}", 'Total Monthly');
         foreach ($selectedCoas as $coa) {
-            $worksheet->setCellValue("{$columnCounterInTotal}{$counter}", CHtml::encode($paymentInDailyTotals[$coa->id]));
+            $worksheet->setCellValue("{$columnCounterInTotal}{$counter}", $paymentInDailyTotals[$coa->id]);
+            if ($paymentInDailyTotals[$coa->id] < 0) {
+                $worksheet->getStyle("{$columnCounterInTotal}{$counter}")->getFont()->getColor()->setARGB(PHPExcel_Style_Color::COLOR_RED);
+            }
             $columnCounterInTotal++;
         }
-        $worksheet->setCellValue("{$columnCounterInTotal}{$counter}", CHtml::encode($dailyInTotal));
+        $worksheet->setCellValue("{$columnCounterInTotal}{$counter}", $dailyInTotal);
+        if ($dailyInTotal < 0) {
+            $worksheet->getStyle("{$columnCounterInTotal}{$counter}")->getFont()->getColor()->setARGB(PHPExcel_Style_Color::COLOR_RED);
+        }
         
         $worksheet->getStyle("A{$counter}:{$columnCounterInTotal}{$counter}")->getFont()->setBold(true);
         $worksheet->getStyle("A{$counter}:{$columnCounterInTotal}{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
@@ -235,7 +245,7 @@ class BankingLedgerMultipleMonthsController extends Controller {
         $paymentOutDailyTotals = array();
         $columnCounterOut = 'B';
         foreach ($selectedCoas as $coa) {
-            $worksheet->setCellValue("{$columnCounterOut}{$counter}", CHtml::encode(CHtml::value($coa, 'name')));
+            $worksheet->setCellValue("{$columnCounterOut}{$counter}", CHtml::value($coa, 'name'));
             $paymentOutDailyTotals[$coa->id] = '0.00'; 
             $columnCounterOut++;
         }
@@ -255,19 +265,26 @@ class BankingLedgerMultipleMonthsController extends Controller {
             if (isset($paymentOutList[$date])) {
                 $paymentOutItem = $paymentOutList[$date];
                 $totalPerDate = '0.00';
-                $worksheet->setCellValue("A{$counter}", CHtml::encode($date));
+                $worksheet->setCellValue("A{$counter}", $date);
                 
                 foreach ($selectedCoas as $coa) {
                     $paymentOutRetail = $paymentOutItem[$coa->id];
-                    $worksheet->setCellValue("{$columnCounterOut}{$counter}", CHtml::encode($paymentOutRetail));
+                    $worksheet->setCellValue("{$columnCounterOut}{$counter}", $paymentOutRetail);
+                    if ($paymentOutRetail < 0) {
+                        $worksheet->getStyle("{$columnCounterOut}{$counter}")->getFont()->getColor()->setARGB(PHPExcel_Style_Color::COLOR_RED);
+                    }
+                    
                     $paymentOutDailyTotals[$coa->id] += $paymentOutRetail;
                     $totalPerDate += $paymentOutRetail;
                     $columnCounterOut++;
                 }
-                $worksheet->setCellValue("{$columnCounterOut}{$counter}", CHtml::encode($totalPerDate));
+                $worksheet->setCellValue("{$columnCounterOut}{$counter}", $totalPerDate);
+                if ($totalPerDate < 0) {
+                    $worksheet->getStyle("{$columnCounterOut}{$counter}")->getFont()->getColor()->setARGB(PHPExcel_Style_Color::COLOR_RED);
+                }
                 $dailyOutTotal += $totalPerDate;
             } else {
-                $worksheet->setCellValue("A{$counter}", CHtml::encode($date));
+                $worksheet->setCellValue("A{$counter}", $date);
                 foreach ($selectedCoas as $coa) {
                     $worksheet->setCellValue("{$columnCounterOut}{$counter}", 0);
                 }
@@ -282,10 +299,16 @@ class BankingLedgerMultipleMonthsController extends Controller {
         $worksheet->setCellValue("A{$counter}", 'Total Monthly');
         foreach ($selectedCoas as $coa) {
             $worksheet->getStyle("{$columnCounterOutTotal}{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
-            $worksheet->setCellValue("{$columnCounterOutTotal}{$counter}", CHtml::encode($paymentOutDailyTotals[$coa->id]));
+            $worksheet->setCellValue("{$columnCounterOutTotal}{$counter}", $paymentOutDailyTotals[$coa->id]);
+            if ($paymentOutDailyTotals[$coa->id] < 0) {
+                $worksheet->getStyle("{$columnCounterOutTotal}{$counter}")->getFont()->getColor()->setARGB(PHPExcel_Style_Color::COLOR_RED);
+            }
             $columnCounterOutTotal++;
         }
-        $worksheet->setCellValue("{$columnCounterOutTotal}{$counter}", CHtml::encode($dailyOutTotal));
+        $worksheet->setCellValue("{$columnCounterOutTotal}{$counter}", $dailyOutTotal);
+        if ($dailyOutTotal < 0) {
+            $worksheet->getStyle("{$columnCounterOutTotal}{$counter}")->getFont()->getColor()->setARGB(PHPExcel_Style_Color::COLOR_RED);
+        }
                 
         $worksheet->getStyle("A{$counter}:{$columnCounterOutTotal}{$counter}")->getFont()->setBold(true);
         $worksheet->getStyle("A{$counter}:{$columnCounterOutTotal}{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
@@ -342,10 +365,10 @@ class BankingLedgerMultipleMonthsController extends Controller {
         $worksheet->getStyle('A1:E6')->getFont()->setBold(true);
 
         $transactionInOut = $inOut == 'In' ? 'Masuk' : 'Keluar';
-        $worksheet->setCellValue('A1', 'RAPERIND MOTOR ' . CHtml::encode(CHtml::value($branch, 'name')));
+        $worksheet->setCellValue('A1', 'RAPERIND MOTOR ' . CHtml::value($branch, 'name'));
         $worksheet->setCellValue('A2', 'Transaksi ' . $transactionInOut . ' Bank Harian');
         $worksheet->setCellValue('A3', CHtml::value($coa, 'code') . ' - ' . CHtml::value($coa, 'name') . ' - ' . CHtml::value($coa, 'coaCategory.name') . ' - ' . CHtml::value($coa, 'coaSubCategory.name'));
-        $worksheet->setCellValue('A4', CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($date))));
+        $worksheet->setCellValue('A4', Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($date)));
 
         $worksheet->getStyle('A6:E6')->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
         $worksheet->setCellValue("A6", 'Transaksi #');
@@ -425,10 +448,10 @@ class BankingLedgerMultipleMonthsController extends Controller {
 //        $worksheet->getStyle('A1:E6')->getFont()->setBold(true);
 //
 //        $transactionInOut = $inOut == 'In' ? 'Masuk' : 'Keluar';
-//        $worksheet->setCellValue('A1', 'RAPERIND MOTOR ' . CHtml::encode(CHtml::value($branch, 'name')));
+//        $worksheet->setCellValue('A1', 'RAPERIND MOTOR ' . CHtml::value($branch, 'name')));
 //        $worksheet->setCellValue('A2', 'Transaksi ' . $transactionInOut . ' Bank Bulanan');
 //        $worksheet->setCellValue('A3', CHtml::value($coa, 'code') . ' - ' . CHtml::value($coa, 'name') . ' - ' . CHtml::value($coa, 'coaCategory.name') . ' - ' . CHtml::value($coa, 'coaSubCategory.name'));
-//        $worksheet->setCellValue('A4', CHtml::encode(strftime("%B",mktime(0,0,0,$month))) . ' ' . CHtml::encode($year));
+//        $worksheet->setCellValue('A4', strftime("%B",mktime(0,0,0,$month))) . ' ' . $year));
 //
 //        $worksheet->getStyle('A6:E6')->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 //        $worksheet->setCellValue("A6", 'Transaksi #');

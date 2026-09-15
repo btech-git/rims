@@ -240,12 +240,18 @@ class PaymentByBankMonthToMonthController extends Controller {
             foreach ($yearMonthList as $yearMonth) {
                 $amount = isset($paymentInMonthlyRow['amounts'][$yearMonth]) ? $paymentInMonthlyRow['amounts'][$yearMonth] : '0.00';
                 $worksheet->setCellValue("{$columnCounterIn}{$counter}", $amount);
+                if ($amount < 0) {
+                    $worksheet->getStyle("{$columnCounterIn}{$counter}")->getFont()->getColor()->setARGB(PHPExcel_Style_Color::COLOR_RED);
+                }
                 $amountInTotals[$yearMonth] += $amount;
                 $amountTotal += $amount;
                 $columnCounterIn++;
             }
             
             $worksheet->setCellValue("{$columnCounterIn}{$counter}", $amountTotal);
+            if ($amountTotal < 0) {
+                $worksheet->getStyle("{$columnCounterIn}{$counter}")->getFont()->getColor()->setARGB(PHPExcel_Style_Color::COLOR_RED);
+            }
             $grandTotal += $amountTotal;
             $counter++;
         }
@@ -254,6 +260,9 @@ class PaymentByBankMonthToMonthController extends Controller {
         $worksheet->setCellValue("A{$counter}", 'Total Monthly');
         foreach ($yearMonthList as $yearMonth) {
             $worksheet->setCellValue("{$columnCounterInTotal}{$counter}", $amountInTotals[$yearMonth]);
+            if ($amountInTotals[$yearMonth] < 0) {
+                $worksheet->getStyle("{$columnCounterInTotal}{$counter}")->getFont()->getColor()->setARGB(PHPExcel_Style_Color::COLOR_RED);
+            }
             $columnCounterInTotal++;
         }
         $worksheet->setCellValue("{$columnCounterInTotal}{$counter}", CHtml::encode($grandTotal));
@@ -292,12 +301,18 @@ class PaymentByBankMonthToMonthController extends Controller {
             foreach ($yearMonthList as $yearMonth) {
                 $amount = isset($paymentOutMonthlyRow['amounts'][$yearMonth]) ? $paymentOutMonthlyRow['amounts'][$yearMonth] : '0.00';
                 $worksheet->setCellValue("{$columnCounterOut}{$counter}", $amount);
+                if ($amount < 0) {
+                    $worksheet->getStyle("{$columnCounterOut}{$counter}")->getFont()->getColor()->setARGB(PHPExcel_Style_Color::COLOR_RED);
+                }
                 $amountOutTotals[$yearMonth] += $amount;
                 $amountTotal += $amount;
                 $columnCounterOut++;
             }
             
             $worksheet->setCellValue("{$columnCounterOut}{$counter}", $amountTotal);
+            if ($amountTotal < 0) {
+                $worksheet->getStyle("{$columnCounterOut}{$counter}")->getFont()->getColor()->setARGB(PHPExcel_Style_Color::COLOR_RED);
+            }
             $grandTotalOut += $amountTotal;
             $counter++;
         }
@@ -306,9 +321,15 @@ class PaymentByBankMonthToMonthController extends Controller {
         $worksheet->setCellValue("A{$counter}", 'Total Monthly');
         foreach ($yearMonthList as $yearMonth) {
             $worksheet->setCellValue("{$columnCounterOutTotal}{$counter}", $amountOutTotals[$yearMonth]);
+            if ($amountOutTotals[$yearMonth] < 0) {
+                $worksheet->getStyle("{$columnCounterOutTotal}{$counter}")->getFont()->getColor()->setARGB(PHPExcel_Style_Color::COLOR_RED);
+            }
             $columnCounterOutTotal++;
         }
         $worksheet->setCellValue("{$columnCounterOutTotal}{$counter}", CHtml::encode($grandTotalOut));
+        if ($grandTotalOut < 0) {
+            $worksheet->getStyle("{$columnCounterOutTotal}{$counter}")->getFont()->getColor()->setARGB(PHPExcel_Style_Color::COLOR_RED);
+        }
         
         $worksheet->getStyle("A{$counter}:{$columnCounterOutTotal}{$counter}")->getFont()->setBold(true);
         $worksheet->getStyle("A{$counter}:{$columnCounterOutTotal}{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
