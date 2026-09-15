@@ -105,8 +105,11 @@ class StockCardController extends Controller {
     public function actionAjaxHtmlUpdateProductStockTable() {
         if (Yii::app()->request->isAjaxRequest) {
             $pageNumber = isset($_GET['page']) ? $_GET['page'] : 1;
+            $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
+            $stockOperator = isset($_GET['StockOperator']) ? $_GET['StockOperator'] : '>';
+            
             $product = Search::bind(new Product('search'), isset($_GET['Product']) ? $_GET['Product'] : '');
-            $productDataProvider = $product->searchByStockCheck($pageNumber);
+            $productDataProvider = $product->searchByStockCheck($pageNumber, $endDate, $stockOperator);
             $branches = Branch::model()->findAll();
 
             $this->renderPartial('_productStockTable', array(
