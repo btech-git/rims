@@ -62,7 +62,7 @@ Yii::app()->clientScript->registerCss('_report', '
                             <?php echo CHtml::encode(CHtml::value($header, 'productSubCategory.name')); ?>
                         </td>
                         <td style="text-align: center; font-weight: bold">
-                            <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $stock)); ?> 
+                            <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $stock)); ?> 
                             <?php echo CHtml::encode(CHtml::value($header, 'unit.name')); ?>
                         </td>
                     </tr>
