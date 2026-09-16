@@ -72,10 +72,10 @@ Yii::app()->clientScript->registerCss('_report', '
                         </td>
                         <td><?php echo CHtml::encode($stockRow['manufacturer_code']); ?></td>
                         <td><?php echo CHtml::encode($stockRow['unit_name']); ?></td>
-                        <td style="text-align: center"><?php echo Yii::app()->numberFormatter->format('#,##0', $stockBegin); ?></td>
-                        <td style="text-align: center"><?php echo Yii::app()->numberFormatter->format('#,##0', $stockIn); ?></td>
-                        <td style="text-align: center"><?php echo Yii::app()->numberFormatter->format('#,##0', $stockOut); ?></td>
-                        <td style="text-align: center"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $stokEnd)); ?></td>
+                        <td style="text-align: center"><?php echo Yii::app()->numberFormatter->format('#,##0.00', $stockBegin); ?></td>
+                        <td style="text-align: center"><?php echo Yii::app()->numberFormatter->format('#,##0.00', $stockIn); ?></td>
+                        <td style="text-align: center"><?php echo Yii::app()->numberFormatter->format('#,##0.00', $stockOut); ?></td>
+                        <td style="text-align: center"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $stokEnd)); ?></td>
                         <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $inventoryValue)); ?></td>
                     </tr>
                     
