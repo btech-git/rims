@@ -91,8 +91,13 @@ class PayableController extends Controller {
         } else if ($codeNumberConstant === 'WOE') {
             $model = WorkOrderExpenseHeader::model()->findByAttributes(array('transaction_number' => $codeNumber));
             $this->redirect(array('/accounting/workOrderExpense/show', 'id' => $model->id));
+        } else if ($codeNumberConstant === 'PO') {
+            $model = TransactionPurchaseOrder::model()->findByAttributes(array('purchase_order_no' => $codeNumber));
+            $this->redirect(array('/transaction/transactionPurchaseOrder/show', 'id' => $model->id));
+        } else if ($codeNumberConstant === 'RG') {
+            $model = RegistrationTransaction::model()->findByAttributes(array('transaction_number' => $codeNumber));
+            $this->redirect(array('/frontDesk/registrationTransaction/view', 'id' => $model->id));
         }
-
     }
     
     protected function saveToExcel($payableSummary, $endDate, $branchId) {

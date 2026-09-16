@@ -71,11 +71,11 @@
                                     )), array('target' => '_blank'));?>
                                 </td>
                                 <td class="width2-2">
-                                    <?php echo CHtml::encode($payableRow['receive_item_no']);?>
+                                    <?php echo CHtml::link($payableRow['receive_item_no'], Yii::app()->createUrl("report/payable/redirectTransaction", array(
+                                        "codeNumber" => $payableRow['receive_item_no']
+                                    )), array('target' => '_blank'));?>
                                 </td>
-                                <td class="width2-2">
-                                    <?php echo CHtml::encode($payableRow['invoice_number']);?>
-                                </td>
+                                <td class="width2-2"><?php echo CHtml::encode($payableRow['invoice_number']);?></td>
                                 <td class="width2-1">
                                     <?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($payableRow['invoice_date']))); ?>
                                 </td>
@@ -100,11 +100,15 @@
                             <?php $paymentLeft = $payableRow['remaining']; ?>
                             <tr>
                                 <td class="width2-2">
-                                    <?php echo CHtml::link($payableRow['transaction_number'], Yii::app()->createUrl("report/payable/redirectTransaction", array("codeNumber" => $payableRow['transaction_number'])), array('target' => '_blank'));?>
+                                    <?php echo CHtml::link($payableRow['transaction_number'], Yii::app()->createUrl("report/payable/redirectTransaction", array(
+                                        "codeNumber" => $payableRow['transaction_number']
+                                    )), array('target' => '_blank')); ?>
                                 </td>
                                 <td>&nbsp;</td>
                                 <td class="width2-2">
-                                    <?php echo CHtml::encode($payableRow['registration_number']);?>
+                                    <?php echo CHtml::link($payableRow['registration_number'], Yii::app()->createUrl("report/payable/redirectTransaction", array(
+                                        "codeNumber" => $payableRow['registration_number']
+                                    )), array('target' => '_blank')); ?>
                                 </td>
                                 <td class="width2-1">
                                     <?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($payableRow['transaction_date']))); ?>

@@ -71,8 +71,8 @@ $this->breadcrumbs = array(
                                     'class' => 'button warning left', 
                                     'style' => 'margin-right:10px'
                                 )); ?>
-                                <?php echo CHtml::link('<span class="fa fa-plus"></span> Revisi Parts & Service', Yii::app()->baseUrl . '/frontDesk/bodyRepairRegistration/addProductService?registrationId=' . $model->id, array(
-                                    'class' => 'button success left', 
+                                <?php echo CHtml::link('<span class="fa fa-edit"></span> Revisi Parts & Service', Yii::app()->baseUrl . '/frontDesk/bodyRepairRegistration/addProductService?registrationId=' . $model->id, array(
+                                    'class' => 'button warning left', 
                                     'style' => 'margin-right:10px'
                                 )); ?>
                             <?php endif; ?>
