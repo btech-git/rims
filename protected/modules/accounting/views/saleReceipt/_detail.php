@@ -4,7 +4,10 @@
             <th>Invoice #</th>
             <th>Plat #</th>
             <th>Memo</th>
-            <th>Total Invoice</th>
+            <th>Invoice Amount</th>
+            <th>DP</th>
+            <th>OR</th>
+            <th>Total</th>
             <th style="width: 3%"></th>
         </tr>
     </thead>
@@ -22,6 +25,18 @@
                     <?php echo CHtml::activeHiddenField($detail, "[$i]invoice_amount"); ?>
                     <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($detail, "invoice_amount"))); ?>
                 </td>
+                <td style="text-align: right">
+                    <?php echo CHtml::activeHiddenField($detail, "[$i]downpayment_amount"); ?>
+                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($detail, "downpayment_amount"))); ?>
+                </td>
+                <td style="text-align: right">
+                    <?php echo CHtml::activeHiddenField($detail, "[$i]insurance_own_risk_amount"); ?>
+                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($detail, "insurance_own_risk_amount"))); ?>
+                </td>
+                <td style="text-align: right">
+                    <?php echo CHtml::activeHiddenField($detail, "[$i]receivable_amount"); ?>
+                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($detail, "receivable_amount"))); ?>
+                </td>
                 <td>
                     <?php echo CHtml::button('X', array(
                         'onclick' => CHtml::ajax(array(
@@ -36,7 +51,7 @@
     </tbody>
     <tfoot>
         <tr>
-            <td colspan="3" style="text-align: right">Total</td>
+            <td colspan="6" style="text-align: right">Total</td>
             <td style="text-align: right">
                 <span id="total_invoice">
                     <?php echo CHtml::activeHiddenField($saleReceipt->header, "total_invoice_amount"); ?>

@@ -27,7 +27,7 @@ $this->breadcrumbs = array(
             <?php echo CHtml::link('<span class="fa fa-edit"></span>Print', Yii::app()->baseUrl.'/accounting/saleReceipt/pdf?id=' . $model->id, array(
                 'class'=>'button success right',
                 'style'=>'margin-right:10px',
-            )) ?>
+            ), array('target' => '_blank')); ?>
         <?php endif; ?>
         
         <?php if (Yii::app()->user->checkAccess("paymentHead") && $model->status === 'Approved'): ?>
@@ -82,29 +82,43 @@ $this->breadcrumbs = array(
                             </div>
                         </div>
 
-                        <div class="field">
-                            <div class="row collapse">
-                                <div class="small-4 columns">
-                                    <span class="prefix">Customer</span>
-                                </div>
-                                
-                                <div class="small-8 columns">
-                                    <input type="text" readonly="true" value="<?php echo $model->customer->name; ?>"> 
+                        <?php if (!empty($model->customer_id)): ?>
+                            <div class="field">
+                                <div class="row collapse">
+                                    <div class="small-4 columns">
+                                        <span class="prefix">Customer</span>
+                                    </div>
+
+                                    <div class="small-8 columns">
+                                        <input type="text" readonly="true" value="<?php echo CHtml::encode(CHtml::value($model, 'customer.name')); ?>"> 
+                                    </div>
                                 </div>
                             </div>
-                        </div>
 
-                        <div class="field">
-                            <div class="row collapse">
-                                <div class="small-4 columns">
-                                    <span class="prefix">Type</span>
-                                </div>
+                            <div class="field">
+                                <div class="row collapse">
+                                    <div class="small-4 columns">
+                                        <span class="prefix">Customer Type</span>
+                                    </div>
 
-                                <div class="small-8 columns">
-                                    <input type="text" readonly="true" id="Customer_customer_type" value="<?php echo $model->customer_id != "" ? $model->customer->customer_type : '' ?>"> 
+                                    <div class="small-8 columns">
+                                        <input type="text" readonly="true" id="Customer_customer_type" value="<?php echo CHtml::encode(CHtml::value($model, 'customer.customer_type')); ?>"> 
+                                    </div>
                                 </div>
                             </div>
-                        </div>
+                        <?php else: ?>
+                            <div class="field">
+                                <div class="row collapse">
+                                    <div class="small-4 columns">
+                                        <span class="prefix">Asuransi</span>
+                                    </div>
+
+                                    <div class="small-8 columns">
+                                        <input type="text" readonly="true" value="<?php echo CHtml::encode(CHtml::value($model, 'insuranceCompany.name')); ?>"> 
+                                    </div>
+                                </div>
+                            </div>
+                        <?php endif; ?>
 
                         <div class="field">
                             <div class="row collapse">
@@ -230,7 +244,10 @@ $this->breadcrumbs = array(
                                 <th>Invoice #</th>
                                 <th>Plate #</th>
                                 <th>Memo</th>
-                                <th>Total Invoice</th>
+                                <th>Invoice Amount</th>
+                                <th>DP</th>
+                                <th>OR</th>
+                                <th>Total</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -247,12 +264,21 @@ $this->breadcrumbs = array(
                                     <td style="text-align: right">
                                         <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($detail, 'invoice_amount'))); ?>
                                     </td>
+                                    <td style="text-align: right">
+                                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($detail, 'downpayment_amount'))); ?>
+                                    </td>
+                                    <td style="text-align: right">
+                                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($detail, 'insurance_own_risk_amount'))); ?>
+                                    </td>
+                                    <td style="text-align: right">
+                                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($detail, 'receivable_amount'))); ?>
+                                    </td>
                                 </tr>
                             <?php endforeach; ?>
                         </tbody>
                         <tfoot>
                             <tr>
-                                <td style="text-align: right; font-weight: bold" colspan="3">Total</td>
+                                <td style="text-align: right; font-weight: bold" colspan="6">Total</td>
                                 <td style="text-align: right; font-weight: bold">
                                     <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($model, 'total_invoice_amount'))); ?>
                                 </td>

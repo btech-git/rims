@@ -19,6 +19,7 @@
  * @property string $updated_datetime
  * @property integer $user_id_cancelled
  * @property string $cancelled_datetime
+ * @property integer $insurance_company_id
  *
  * The followings are the available model relations:
  * @property SaleReceiptDetail[] $saleReceiptDetails
@@ -27,6 +28,7 @@
  * @property Users $userIdCreated
  * @property Users $userIdUpdated
  * @property Users $userIdCancelled
+ * @property InsuranceCompany $insuranceCompany
  */
 class SaleReceiptHeader extends MonthlyTransactionActiveRecord {
 
@@ -45,15 +47,15 @@ class SaleReceiptHeader extends MonthlyTransactionActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('transaction_number, transaction_date, status, customer_id, branch_id, user_id_created, created_datetime', 'required'),
-            array('customer_id, branch_id, user_id_created, user_id_updated, user_id_cancelled', 'numerical', 'integerOnly' => true),
+            array('transaction_number, transaction_date, status, branch_id, user_id_created, created_datetime', 'required'),
+            array('customer_id, branch_id, user_id_created, user_id_updated, user_id_cancelled, insurance_company_id', 'numerical', 'integerOnly' => true),
             array('transaction_number', 'length', 'max' => 60),
             array('status', 'length', 'max' => 20),
             array('total_invoice_amount', 'length', 'max' => 18),
             array('note, updated_datetime, cancelled_datetime', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, transaction_number, transaction_date, due_date, status, note, total_invoice_amount, customer_id, branch_id, user_id_created, created_datetime, user_id_updated, updated_datetime, user_id_cancelled, cancelled_datetime', 'safe', 'on' => 'search'),
+            array('id, transaction_number, transaction_date, due_date, status, note, total_invoice_amount, customer_id, branch_id, user_id_created, created_datetime, user_id_updated, updated_datetime, user_id_cancelled, cancelled_datetime, insurance_company_id', 'safe', 'on' => 'search'),
         );
     }
 
@@ -70,6 +72,7 @@ class SaleReceiptHeader extends MonthlyTransactionActiveRecord {
             'userIdCreated' => array(self::BELONGS_TO, 'Users', 'user_id_created'),
             'userIdUpdated' => array(self::BELONGS_TO, 'Users', 'user_id_updated'),
             'userIdCancelled' => array(self::BELONGS_TO, 'Users', 'user_id_cancelled'),
+            'insuranceCompany' => array(self::BELONGS_TO, 'InsuranceCompany', 'insurance_company_id'),
         );
     }
 
@@ -93,6 +96,7 @@ class SaleReceiptHeader extends MonthlyTransactionActiveRecord {
             'updated_datetime' => 'Updated Datetime',
             'user_id_cancelled' => 'User Id Cancelled',
             'cancelled_datetime' => 'Cancelled Datetime',
+            'insurance_company_id' => 'Insurance Company',
         );
     }
 
@@ -128,6 +132,7 @@ class SaleReceiptHeader extends MonthlyTransactionActiveRecord {
         $criteria->compare('updated_datetime', $this->updated_datetime, true);
         $criteria->compare('user_id_cancelled', $this->user_id_cancelled);
         $criteria->compare('cancelled_datetime', $this->cancelled_datetime, true);
+        $criteria->compare('insurance_company_id', $this->insurance_company_id);
 
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,

@@ -34,7 +34,13 @@ $('.search-form form').submit(function(){
             <div class="clearfix page-action">
                 <h2>Manage Tanda Terima Penjualan</h2>
                 
-                <?php echo CHtml::link('<span class="fa fa-plus"></span>New', Yii::app()->baseUrl . '/accounting/saleReceipt/customerList', array(
+                <?php echo CHtml::link('<span class="fa fa-plus"></span>Rekap by Customer', Yii::app()->baseUrl . '/accounting/saleReceipt/customerList', array(
+                    'class' => 'button success right',
+                    'style' => 'margin-right:10px',
+//                    'visible' => Yii::app()->user->checkAccess("paymentInCreate")
+                )); ?>
+                
+                <?php echo CHtml::link('<span class="fa fa-plus"></span>Rekap by Asuransi', Yii::app()->baseUrl . '/accounting/saleReceipt/insuranceList', array(
                     'class' => 'button success right',
                     'style' => 'margin-right:10px',
 //                    'visible' => Yii::app()->user->checkAccess("paymentInCreate")

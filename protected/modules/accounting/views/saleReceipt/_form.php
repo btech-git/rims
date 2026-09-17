@@ -51,13 +51,23 @@
         <div class="small-12 medium-6 columns"> 
             <div class="field">
                 <div class="row collapse">
-                    <div class="small-4 columns">
-                        <?php echo CHtml::label('Customer', ''); ?>
-                    </div>
-                    <div class="small-8 columns">
-                        <?php $customer = Customer::model()->findByPk($saleReceipt->header->customer_id); ?>
-                        <?php echo CHtml::encode(CHtml::value($customer, 'name')); ?>
-                    </div>
+                    <?php if (empty($saleReceipt->header->customer_id)): ?>
+                        <div class="small-4 columns">
+                            <?php echo CHtml::label('Asuransi', ''); ?>
+                        </div>
+                        <div class="small-8 columns">
+                            <?php $insuranceCompany = InsuranceCompany::model()->findByPk($saleReceipt->header->insurance_company_id); ?>
+                            <?php echo CHtml::encode(CHtml::value($insuranceCompany, 'name')); ?>
+                        </div>
+                    <?php else: ?>
+                        <div class="small-4 columns">
+                            <?php echo CHtml::label('Customer', ''); ?>
+                        </div>
+                        <div class="small-8 columns">
+                            <?php $customer = Customer::model()->findByPk($saleReceipt->header->customer_id); ?>
+                            <?php echo CHtml::encode(CHtml::value($customer, 'name')); ?>
+                        </div>
+                    <?php endif; ?>
                 </div>
             </div>
             

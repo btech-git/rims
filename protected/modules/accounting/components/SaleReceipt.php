@@ -49,7 +49,12 @@ class SaleReceipt extends CComponent {
             $detail = new SaleReceiptDetail();
             $detail->invoice_header_id = $invoiceId;
             $detail->invoice_amount = $invoiceHeader->total_price;
+            $detail->insurance_own_risk_amount = $invoiceHeader->insurance_own_risk_amount;
+            $detail->downpayment_amount = $invoiceHeader->downpayment_amount;
+            $detail->receivable_amount = $invoiceHeader->invoice_amount;
             $this->details[] = $detail;
+            
+            $this->header->total_invoice_amount = $this->getTotalInvoiceAmount();
         }
     }
 
@@ -128,8 +133,8 @@ class SaleReceipt extends CComponent {
     }
 
     public function flush() {
-        $this->header->due_date = date('Y-m-d',strtotime('+' . $this->header->customer->tenor . ' days', strtotime($this->header->transaction_date)));
-        $this->header->total_invoice_amount = $this->totalInvoiceAmount;
+        $this->header->due_date = empty($this->header->customer_id) ? $this->header->transaction_date : date('Y-m-d',strtotime('+' . $this->header->customer->tenor . ' days', strtotime($this->header->transaction_date)));
+//        $this->header->total_invoice_amount = $this->totalInvoiceAmount;
         $valid = $this->header->save(false);
 
         foreach ($this->details as $i => $detail) {
@@ -174,7 +179,7 @@ class SaleReceipt extends CComponent {
         $total = '0.00';
         
         foreach ($this->details as $detail) {
-            $total += $detail->invoice_amount;
+            $total += $detail->receivable_amount;
         }
         
         return $total;

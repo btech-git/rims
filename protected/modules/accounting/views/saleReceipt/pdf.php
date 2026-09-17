@@ -57,9 +57,9 @@ function tanggal($date) {
                 <td><?php echo tanggal($saleReceiptHeader->transaction_date); ?></td>
             </tr>
             <tr>
-                <td>CUSTOMER</td>
+                <td><?php echo empty($saleReceiptHeader->customer_id) ? 'ASURANSI' : 'CUSTOMER'; ?></td>
                 <td>:</td>
-                <td><?php echo $customer->name; ?></td>
+                <td><?php echo empty($saleReceiptHeader->customer_id) ? $saleReceiptHeader->insuranceCompany->name : $customer->name; ?></td>
                 <td>JATUH TEMPO</td>
                 <td>:</td>
                 <td><?php echo tanggal($saleReceiptHeader->due_date); ?></td>
@@ -86,6 +86,9 @@ function tanggal($date) {
                     <th style="font-size: 10px">Resi Kirim</th>
                     <th style="font-size: 10px">Warranty Report</th>
                     <th style="font-size: 10px">Amount</th>
+                    <th style="font-size: 10px">DP</th>
+                    <th style="font-size: 10px">OR</th>
+                    <th style="font-size: 10px">Total</th>
                 </tr>
             </thead>
             <tbody>
@@ -101,12 +104,15 @@ function tanggal($date) {
                         <td>&nbsp; <?php echo CHtml::encode(CHtml::value($detail, 'invoiceHeader.delivery_receipt_number')); ?></td>
                         <td>&nbsp; <?php echo CHtml::encode(CHtml::value($detail, 'invoiceHeader.warranty_report')); ?></td>
                         <td style="text-align: right;">&nbsp;  Rp. <?php echo number_format($detail->invoice_amount, 2, ',', '.'); ?></td>
+                        <td style="text-align: right;">&nbsp;  Rp. <?php echo number_format($detail->downpayment_amount, 2, ',', '.'); ?></td>
+                        <td style="text-align: right;">&nbsp;  Rp. <?php echo number_format($detail->insurance_own_risk_amount, 2, ',', '.'); ?></td>
+                        <td style="text-align: right;">&nbsp;  Rp. <?php echo number_format($detail->receivable_amount, 2, ',', '.'); ?></td>
                     </tr>
                 <?php endforeach; ?>
             </tbody>
             <tfoot>
                 <tr>
-                    <td colspan="9" style="text-align: right; font-weight: bold">Total</td>
+                    <td colspan="12" style="text-align: right; font-weight: bold">Total</td>
                     <td style="text-align: right; font-weight: bold">Rp. <?php echo number_format($saleReceiptHeader->total_invoice_amount, 2, ',', '.'); ?></td>
                 </tr>
             </tfoot>

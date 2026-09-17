@@ -59,7 +59,19 @@ class SaleReceiptController extends Controller {
         ));
     }
 
-    public function actionCreate($customerId) {
+    public function actionInsuranceList() {
+
+        $insuranceCompany = Search::bind(new InsuranceCompany('search'), isset($_GET['InsuranceCompany']) ? $_GET['InsuranceCompany'] : array());
+        $insuranceCompanyDataProvider = $insuranceCompany->search();
+        $insuranceCompanyDataProvider->criteria->order = 't.name ASC';
+
+        $this->render('insuranceList', array(
+            'insuranceCompany' => $insuranceCompany,
+            'insuranceCompanyDataProvider' => $insuranceCompanyDataProvider,
+        ));
+    }
+
+    public function actionCreate($customerId, $insuranceId) {
         $saleReceipt = $this->instantiate(null, 'create');
         
         $saleReceipt->header->transaction_date = date('Y-m-d');
@@ -73,8 +85,16 @@ class SaleReceiptController extends Controller {
 
         if (!empty($customerId)) {
             $saleReceipt->header->customer_id = $customerId;
-            $invoiceHeaderDataProvider->criteria->addCondition("t.customer_id = :customer_id");
+            $saleReceipt->header->insurance_company_id = null;
+            $invoiceHeaderDataProvider->criteria->addCondition("t.customer_id = :customer_id AND t.insurance_company_id IS null");
             $invoiceHeaderDataProvider->criteria->params[':customer_id'] = $customerId;
+        }
+        
+        if (!empty($insuranceId)) {
+            $saleReceipt->header->insurance_company_id = $insuranceId;
+            $saleReceipt->header->customer_id = null;
+            $invoiceHeaderDataProvider->criteria->addCondition("t.insurance_company_id = :insurance_company_id");
+            $invoiceHeaderDataProvider->criteria->params[':insurance_company_id'] = $insuranceId;
         }
         
         if (isset($_POST['Cancel'])) {
