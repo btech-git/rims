@@ -62,14 +62,14 @@
                                 "CoaCode" => $coa->code, 
                                 "StartDate" => $startDate, 
                                 "EndDate" => $endDate, 
-                            )), array('target' => '_blank', 'style' => $positiveDebitTotal < '0.00' ? 'color:red' : 'color:black')); ?>
+                            )), array('target' => '_blank', 'style' => $positiveDebitTotal < '0.00' ? 'color:red' : 'color:blue')); ?>
                         </td>
                         <td style="text-align: right">
                             <?php echo CHtml::link(Yii::app()->numberFormatter->format('#,##0.00', $positiveCreditTotal), Yii::app()->createUrl("report/workingSheet/jurnalTransaction", array(
                                 "CoaCode" => $coa->code, 
                                 "StartDate" => $startDate, 
                                 "EndDate" => $endDate, 
-                            )), array('target' => '_blank', 'style' => $positiveCreditTotal < '0.00' ? 'color:red' : 'color:black')); ?>
+                            )), array('target' => '_blank', 'style' => $positiveCreditTotal < '0.00' ? 'color:red' : 'color:blue')); ?>
                         </td>
                         <td style="text-align: right; <?php echo $endingBalance < '0.00' ? 'color: red' : ''; ?>">
                             <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $endingBalance)); ?>
