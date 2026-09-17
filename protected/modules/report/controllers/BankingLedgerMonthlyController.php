@@ -111,131 +111,212 @@ class BankingLedgerMonthlyController extends Controller {
         $documentProperties->setCreator('Raperind Motor');
         $documentProperties->setTitle('Transaksi Bulanan Multi Bank');
 
-        $worksheet = $objPHPExcel->setActiveSheetIndex(0);
-        $worksheet->setTitle('Transaksi Bulanan Multi Bank');
-
         $branch = Branch::model()->findByPk($branchId);
+
+        $worksheet = $objPHPExcel->setActiveSheetIndex(0);
+        $worksheet->setTitle('Transaksi Bank Masuk');
+        
         $worksheet->setCellValue('A1', 'RAPERIND MOTOR ' . CHtml::value($branch, 'name'));
         $worksheet->setCellValue('A2', 'Rincian Transaksi Bulanan Multi Bank');
         $worksheet->setCellValue('A3', strftime("%B",mktime(0,0,0,$month)) . ' ' . $year);
 
-//        $columnCounterCoaIn = 'A';
-//        $columnCounterLabelIn = 'A';
-//        foreach ($selectedCoas as $coa) {
-//            $worksheet->mergeCells("{$columnCounterCoaIn}6:E6");
-//            $columnCounterCoaIn = $columnCounterLabelIn; $columnCounterCoaIn++;
-//            $columnCounterLabelIn++;
-//        }
-//        
-        $worksheet->mergeCells("A1:F1");
-        $worksheet->mergeCells("A2:F2");
-        $worksheet->mergeCells("A3:F3");
-        $worksheet->mergeCells("A5:F5");
-
-        $worksheet->getStyle("A1:F6")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-        $worksheet->getStyle("A1:F6")->getFont()->setBold(true);
-        $worksheet->getStyle("A5:F5")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
-        $worksheet->getStyle("A6:F6")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
-
-        $worksheet->setCellValue('A5', 'Transaksi Bank Masuk');
-        $worksheet->setCellValue("A6", 'Bank');
-        $worksheet->setCellValue("B6", 'Transaction #');
-        $worksheet->setCellValue("C6", 'Tanggal');
-        $worksheet->setCellValue("D6", 'Keterangan');
-        $worksheet->setCellValue("E6", 'Catatan');
-        $worksheet->setCellValue("F6", 'Total');
+        $worksheet->mergeCells("A1:E1");
+        $worksheet->mergeCells("A2:E2");
+        $worksheet->mergeCells("A3:E3");
         
-        $counter = 7;
+        $worksheet->getStyle("A1:E3")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->getStyle("A1:E3")->getFont()->setBold(true);
+        
+        $firstColumn = 'A';
+        $penultimateColumn = $firstColumn;
+        $lastColumn = $firstColumn;
+        for ($i = 0; $i < 4; $i++) {
+            if ($i === 3) {
+                $penultimateColumn = $lastColumn;
+            }
+            $lastColumn++;
+        }
+        $currentColumn = $firstColumn;
         foreach ($selectedCoas as $coa) {
+            $worksheet->getStyle("{$firstColumn}5:{$lastColumn}6")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+            $worksheet->getStyle("{$firstColumn}5:{$lastColumn}6")->getFont()->setBold(true);
+            $worksheet->getStyle("{$firstColumn}5:{$lastColumn}5")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+            $worksheet->getStyle("{$firstColumn}6:{$lastColumn}6")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+
+            $worksheet->mergeCells("{$firstColumn}5:{$lastColumn}5");
+            $worksheet->setCellValue("{$firstColumn}5", CHtml::value($coa, 'name'));
+            
+            $worksheet->setCellValue("{$currentColumn}6", 'Transaction #');
+            $currentColumn++;
+            $worksheet->setCellValue("{$currentColumn}6", 'Tanggal');
+            $currentColumn++;
+            $worksheet->setCellValue("{$currentColumn}6", 'Keterangan');
+            $currentColumn++;
+            $worksheet->setCellValue("{$currentColumn}6", 'Catatan');
+            $currentColumn++;
+            $worksheet->setCellValue("{$currentColumn}6", 'Total');
+            
+            $currentColumn = $firstColumn;
+            
+            $currentRow = 7;
+            
             $paymentDailyTotal = '0.00';
             $dataProvider = $transactionInDataProviders[$coa->id];
             foreach ($dataProvider->data as $detail) {
                 $totalAmount = CHtml::value($detail, 'total');
-                $worksheet->setCellValue("A{$counter}", CHtml::value($coa, 'name'));
-                $worksheet->setCellValue("B{$counter}", CHtml::value($detail, 'kode_transaksi'));
-                $worksheet->setCellValue("C{$counter}", CHtml::value($detail, 'tanggal_transaksi'));
-                $worksheet->setCellValue("D{$counter}", CHtml::value($detail, 'transaction_subject'));
-                $worksheet->setCellValue("E{$counter}", CHtml::value($detail, 'remark'));
-                $worksheet->setCellValue("F{$counter}", $totalAmount);
+                $worksheet->setCellValue("{$currentColumn}{$currentRow}", CHtml::value($detail, 'kode_transaksi'));
+                $currentColumn++;
+                $worksheet->setCellValue("{$currentColumn}{$currentRow}", CHtml::value($detail, 'tanggal_transaksi'));
+                $currentColumn++;
+                $worksheet->setCellValue("{$currentColumn}{$currentRow}", CHtml::value($detail, 'transaction_subject'));
+                $currentColumn++;
+                $worksheet->setCellValue("{$currentColumn}{$currentRow}", CHtml::value($detail, 'remark'));
+                $currentColumn++;
+                $worksheet->setCellValue("{$currentColumn}{$currentRow}", $totalAmount);
                 if ($totalAmount < 0) {
-                    $worksheet->getStyle("F{$counter}")->getFont()->getColor()->setARGB(PHPExcel_Style_Color::COLOR_RED);
+                    $worksheet->getStyle("{$currentColumn}{$currentRow}")->getFont()->getColor()->setARGB(PHPExcel_Style_Color::COLOR_RED);
                 }
-                $counter++;
-
-                $paymentDailyTotal += CHtml::value($detail, 'total');
-            }
-            
-            $worksheet->getStyle("A{$counter}:F{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
-            $worksheet->getStyle("A{$counter}:F{$counter}")->getFont()->setBold(true);
-            
-            $worksheet->setCellValue("E{$counter}", 'Total Monthly');
-            $worksheet->setCellValue("F{$counter}", $paymentDailyTotal);
-            if ($paymentDailyTotal < 0) {
-                $worksheet->getStyle("F{$counter}")->getFont()->getColor()->setARGB(PHPExcel_Style_Color::COLOR_RED);
-            }
-            $counter++; $counter++;
-        }
-        $counter++; $counter++;
-        
-        $worksheet->mergeCells("A{$counter}:F{$counter}");
-        $worksheet->getStyle("A{$counter}:F{$counter}")->getFont()->setBold(true);
-        $worksheet->getStyle("A{$counter}:F{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-        $worksheet->getStyle("A{$counter}:F{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
-
-        $worksheet->setCellValue("A{$counter}", 'Transaksi Bank Keluar');
-        $counter++;
-        $worksheet->setCellValue("A{$counter}", 'Bank');
-        $worksheet->setCellValue("B{$counter}", 'Transaction #');
-        $worksheet->setCellValue("C{$counter}", 'Tanggal');
-        $worksheet->setCellValue("D{$counter}", 'Keterangan');
-        $worksheet->setCellValue("E{$counter}", 'Catatan');
-        $worksheet->setCellValue("F{$counter}", 'Total');
-        
-        $worksheet->getStyle("A{$counter}:F{$counter}")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
-        $worksheet->getStyle("A{$counter}:F{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-        $worksheet->getStyle("A{$counter}:F{$counter}")->getFont()->setBold(true);
-        $counter++;
-        
-        foreach ($selectedCoas as $coa) {
-            $paymentDailyTotal = '0.00';
-            $dataProvider = $transactionOutDataProviders[$coa->id];
-            foreach ($dataProvider->data as $detail) {
-                $totalAmount = CHtml::value($detail, 'total');
-                $worksheet->setCellValue("A{$counter}", CHtml::value($coa, 'name'));
-                $worksheet->setCellValue("B{$counter}", CHtml::value($detail, 'kode_transaksi'));
-                $worksheet->setCellValue("C{$counter}", CHtml::value($detail, 'tanggal_transaksi'));
-                $worksheet->setCellValue("D{$counter}", CHtml::value($detail, 'transaction_subject'));
-                $worksheet->setCellValue("E{$counter}", CHtml::value($detail, 'remark'));
-                $worksheet->setCellValue("F{$counter}", $totalAmount);
-                if ($totalAmount < 0) {
-                    $worksheet->getStyle("F{$counter}")->getFont()->getColor()->setARGB(PHPExcel_Style_Color::COLOR_RED);
-                }
-                $counter++;
+                $currentColumn = $firstColumn;
+                $currentRow++;
 
                 $paymentDailyTotal += $totalAmount;
             }
             
-            $worksheet->getStyle("A{$counter}:F{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
-            $worksheet->getStyle("A{$counter}:F{$counter}")->getFont()->setBold(true);
+            $worksheet->getStyle("{$firstColumn}{$currentRow}:{$lastColumn}{$currentRow}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+            $worksheet->getStyle("{$firstColumn}{$currentRow}:{$lastColumn}{$currentRow}")->getFont()->setBold(true);
             
-            $worksheet->setCellValue("E{$counter}", 'Total Monthly');
-            $worksheet->setCellValue("F{$counter}", $paymentDailyTotal);
+            $worksheet->setCellValue("{$penultimateColumn}{$currentRow}", 'Total Monthly');
+            $worksheet->setCellValue("{$lastColumn}{$currentRow}", $paymentDailyTotal);
             if ($paymentDailyTotal < 0) {
-                $worksheet->getStyle("F{$counter}")->getFont()->getColor()->setARGB(PHPExcel_Style_Color::COLOR_RED);
+                $worksheet->getStyle("{$lastColumn}{$currentRow}")->getFont()->getColor()->setARGB(PHPExcel_Style_Color::COLOR_RED);
             }
-            $counter++; $counter++;
+            
+            $currentColumn = $lastColumn;
+            $currentColumn++;
+            $currentColumn++;
+            
+            $firstColumn = $currentColumn;
+            $penultimateColumn = $firstColumn;
+            $lastColumn = $firstColumn;
+            for ($i = 0; $i < 4; $i++) {
+                if ($i === 3) {
+                    $penultimateColumn = $lastColumn;
+                }
+                $lastColumn++;
+            }
         }
         
-        for ($col = 'A'; $col !== 'Z'; $col++) {
+        for ($col = 'A'; $col !== 'AZ'; $col++) {
+            $objPHPExcel->getActiveSheet()
+            ->getColumnDimension($col)
+            ->setAutoSize(true);
+        }        
+        
+        $worksheet = $objPHPExcel->createSheet(1);
+        $worksheet->setTitle('Transaksi Bank Keluar');
+
+        $worksheet->setCellValue('A1', 'RAPERIND MOTOR ' . CHtml::value($branch, 'name'));
+        $worksheet->setCellValue('A2', 'Rincian Transaksi Bulanan Multi Bank');
+        $worksheet->setCellValue('A3', strftime("%B",mktime(0,0,0,$month)) . ' ' . $year);
+
+        $worksheet->mergeCells("A1:E1");
+        $worksheet->mergeCells("A2:E2");
+        $worksheet->mergeCells("A3:E3");
+        
+        $worksheet->getStyle("A1:E3")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->getStyle("A1:E3")->getFont()->setBold(true);
+        
+        $firstColumn = 'A';
+        $penultimateColumn = $firstColumn;
+        $lastColumn = $firstColumn;
+        for ($i = 0; $i < 4; $i++) {
+            if ($i === 3) {
+                $penultimateColumn = $lastColumn;
+            }
+            $lastColumn++;
+        }
+        $currentColumn = $firstColumn;
+        foreach ($selectedCoas as $coa) {
+            $worksheet->getStyle("{$firstColumn}5:{$lastColumn}6")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+            $worksheet->getStyle("{$firstColumn}5:{$lastColumn}6")->getFont()->setBold(true);
+            $worksheet->getStyle("{$firstColumn}5:{$lastColumn}5")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+            $worksheet->getStyle("{$firstColumn}6:{$lastColumn}6")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+
+            $worksheet->mergeCells("{$firstColumn}5:{$lastColumn}5");
+            $worksheet->setCellValue("{$firstColumn}5", CHtml::value($coa, 'name'));
+            
+            $worksheet->setCellValue("{$currentColumn}6", 'Transaction #');
+            $currentColumn++;
+            $worksheet->setCellValue("{$currentColumn}6", 'Tanggal');
+            $currentColumn++;
+            $worksheet->setCellValue("{$currentColumn}6", 'Keterangan');
+            $currentColumn++;
+            $worksheet->setCellValue("{$currentColumn}6", 'Catatan');
+            $currentColumn++;
+            $worksheet->setCellValue("{$currentColumn}6", 'Total');
+            
+            $currentColumn = $firstColumn;
+            
+            $currentRow = 7;
+            
+            $paymentDailyTotal = '0.00';
+            $dataProvider = $transactionOutDataProviders[$coa->id];
+            foreach ($dataProvider->data as $detail) {
+                $totalAmount = CHtml::value($detail, 'total');
+                $worksheet->setCellValue("{$currentColumn}{$currentRow}", CHtml::value($detail, 'kode_transaksi'));
+                $currentColumn++;
+                $worksheet->setCellValue("{$currentColumn}{$currentRow}", CHtml::value($detail, 'tanggal_transaksi'));
+                $currentColumn++;
+                $worksheet->setCellValue("{$currentColumn}{$currentRow}", CHtml::value($detail, 'transaction_subject'));
+                $currentColumn++;
+                $worksheet->setCellValue("{$currentColumn}{$currentRow}", CHtml::value($detail, 'remark'));
+                $currentColumn++;
+                $worksheet->setCellValue("{$currentColumn}{$currentRow}", $totalAmount);
+                if ($totalAmount < 0) {
+                    $worksheet->getStyle("{$currentColumn}{$currentRow}")->getFont()->getColor()->setARGB(PHPExcel_Style_Color::COLOR_RED);
+                }
+                $currentColumn = $firstColumn;
+                $currentRow++;
+
+                $paymentDailyTotal += $totalAmount;
+            }
+            
+            $worksheet->getStyle("{$firstColumn}{$currentRow}:{$lastColumn}{$currentRow}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+            $worksheet->getStyle("{$firstColumn}{$currentRow}:{$lastColumn}{$currentRow}")->getFont()->setBold(true);
+            
+            $worksheet->setCellValue("{$penultimateColumn}{$currentRow}", 'Total Monthly');
+            $worksheet->setCellValue("{$lastColumn}{$currentRow}", $paymentDailyTotal);
+            if ($paymentDailyTotal < 0) {
+                $worksheet->getStyle("{$lastColumn}{$currentRow}")->getFont()->getColor()->setARGB(PHPExcel_Style_Color::COLOR_RED);
+            }
+            
+            $currentColumn = $lastColumn;
+            $currentColumn++;
+            $currentColumn++;
+            
+            $firstColumn = $currentColumn;
+            $penultimateColumn = $firstColumn;
+            $lastColumn = $firstColumn;
+            for ($i = 0; $i < 4; $i++) {
+                if ($i === 3) {
+                    $penultimateColumn = $lastColumn;
+                }
+                $lastColumn++;
+            }
+        }
+        
+        for ($col = 'A'; $col !== 'AZ'; $col++) {
             $objPHPExcel->getActiveSheet()
             ->getColumnDimension($col)
             ->setAutoSize(true);
         }
         
+        $objPHPExcel->setActiveSheetIndex(0);
+        
         ob_end_clean();
 
         header('Content-type: application/vnd.ms-excel');
-        header('Content-Disposition: attachment;filename="bank_bulanan.xls"');
+        header('Content-Disposition: attachment;filename="transaksi_bulanan_multi_bank.xls"');
         header('Cache-Control: max-age=0');
 
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');

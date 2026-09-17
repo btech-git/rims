@@ -44,7 +44,7 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                                         <span class="prefix">Service Category</span>
                                     </div>
                                     <div class="small-8 columns" id="service_category">
-                                        <?php echo CHtml::dropDownList('ServiceCategoryId', $serviceCategoryId, CHtml::listData(ServiceCategory::model()->findAll(array('order' => 'name')), 'id', 'name'), array('empty' => '-- All --',)); ?>
+                                        <?php echo CHtml::dropDownList('ServiceCategoryId', $serviceCategoryId, CHtml::listData(ServiceCategory::model()->findAllByAttributes(array('service_type_id' => $serviceTypeId), array('order' => 'name')), 'id', 'name'), array('empty' => '-- All --',)); ?>
                                     </div>
                                 </div>
                             </div>

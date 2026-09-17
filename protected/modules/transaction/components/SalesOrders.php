@@ -38,8 +38,9 @@ class SalesOrders extends CComponent {
 
     public function addDetail($productId) {
         $detail = new TransactionSalesOrderDetail();
-        $detail->product_id = $productId;
         $product = Product::model()->findByPK($productId);
+        
+        $detail->product_id = $productId;
         $detail->product_name = $product->name;
         $detail->unit_id = $product->unit_id;
         $detail->retail_price = $product->retail_price;
@@ -121,7 +122,7 @@ class SalesOrders extends CComponent {
         foreach ($this->details as $detail) {
             $detail->sales_order_id = $this->header->id;
             $detail->unit_price = $detail->unitPrice;
-            $detail->total_price = $detail->grandTotal;
+            $detail->total_price = $detail->getGrandTotal($this->header->ppn, $this->header->tax_percentage);
             $detail->total_quantity = $detail->totalQuantity;
             $detail->discount = $detail->totalDiscount;
 

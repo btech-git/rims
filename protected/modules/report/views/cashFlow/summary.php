@@ -58,7 +58,7 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                     </div>
                     
                     <?php $this->renderPartial('_summary', array(
-                        'workingSheetReportData' => $workingSheetReportData,
+                        'cashFlowReportData' => $cashFlowReportData,
                         'year' => $year,
                         'coas' => $coas,
                     )); ?>

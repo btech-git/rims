@@ -58,7 +58,7 @@ $this->menu = array(
         <?php endif; ?>
         
         <?php $checkInvoices = InvoiceHeader::model()->findAllByAttributes(array('sales_order_id' => $model->id)); ?>
-        <?php if (count($checkInvoices) == 0): ?>
+        <?php if (count($checkInvoices) == 0 && $model->status_document == 'Approved' && $model->payment_type == 'Credit'): ?>
             <?php echo CHtml::link('<span class="fa fa-plus"></span>Generate Invoice', array(
                 "/transaction/invoiceHeader/createSaleOrder", 
                 "saleOrderId" => $model->id

@@ -100,6 +100,34 @@ class WorkingSheetController extends Controller {
         ));
     }
     
+    public function actionJurnalTransaction() {
+        set_time_limit(0);
+        ini_set('memory_limit', '1024M');
+
+        $jurnalUmum = new JurnalUmum('search');
+        
+        $coaCode = (isset($_GET['CoaCode'])) ? $_GET['CoaCode'] : '';
+        $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : date('Y-m-d');
+        $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
+
+        $workingSheetSummary = new WorkingSheetSummary($jurnalUmum->search());
+        $workingSheetSummary->setupLoading();
+        $workingSheetSummary->setupPaging(5000, 1);
+        $workingSheetSummary->setupSorting();
+        $workingSheetSummary->setupFilter($startDate, $endDate, $coaCode);
+
+//        if (isset($_GET['SaveToExcel'])) {
+//            $this->saveToExcelTransactionJournal($profitLossSummary, $coaCode, $startDate, $endDate);
+//        }
+
+        $this->render('jurnalTransaction', array(
+            'workingSheetSummary' => $workingSheetSummary,
+            'startDate' => $startDate,
+            'endDate' => $endDate,
+            'coaCode' => $coaCode,
+        ));
+    }
+
     protected function saveToExcel($yearlyMaterialServiceUsageReportData, $inventoryCurrentStockData, $year, $yearNow, $monthNow) {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');

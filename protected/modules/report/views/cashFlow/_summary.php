@@ -2,7 +2,7 @@
 
 <div style="font-weight: bold; text-align: center">
     <div style="font-size: larger">Raperind Motor</div>
-    <div style="font-size: larger">Kertas Kerja</div>
+    <div style="font-size: larger">Cash Flow</div>
     <div><?php echo 'Periode tahun: ' . CHtml::encode($year); ?></div>
 </div>
 
@@ -10,56 +10,86 @@
     
 <div class="table_wrapper">
     <table class="responsive">
-        <thead>
-            <tr>
-                <th style="width: 10px">Kode</th>
-                <th style="width: 300px">Nama Akun</th>
-                <th style="width: 150px">Tipe</th>
-                <th>Normal Balance</th>
-                <th>Pos Arus Kas</th>
-                <th>Saldo Awal</th>
-                <th>Debit</th>
-                <th>Kredit</th>
-                <th>Saldo Akhir</th>
-                <th>Pengaruh Kas</th>
-                <th>Kontribusi Laba</th>
-            </tr>
-        </thead>
         <tbody>
-            <?php foreach ($coas as $coa): ?>
-                <?php $beginningBalance = '0.00'; ?>
-                <?php if ($coa->coaSubCategory->cashflow_position !== 'Laba Bersih'): ?>
-                    <?php $beginningBalance = isset($workingSheetReportData[$coa->id]['beginning_balance']) ? $workingSheetReportData[$coa->id]['beginning_balance'] : '0.00'; ?>
-                <?php endif; ?>
-                <?php $debitTotal = isset($workingSheetReportData[$coa->id]['debit_total']) ? $workingSheetReportData[$coa->id]['debit_total'] : '0.00'; ?>
-                <?php $positiveDebitTotal = abs($debitTotal); ?>
-                <?php $creditTotal = isset($workingSheetReportData[$coa->id]['credit_total']) ? $workingSheetReportData[$coa->id]['credit_total'] : '0.00'; ?>
-                <?php $positiveCreditTotal = abs($creditTotal); ?>
-                <?php $endingBalance = $beginningBalance + $debitTotal + $creditTotal; ?>
-                <?php $balanceDifference = '0.00'; ?>
-                <?php if ($coa->coaSubCategory->cashflow_position !== 'Laba Bersih'): ?>
-                    <?php $balanceDifference = $endingBalance - $beginningBalance; ?>
-                <?php endif; ?>
-                <?php $profitLossBalance = '0.00'; ?>
-                <?php if ($coa->coaSubCategory->cashflow_position === 'Laba Bersih'): ?>
-                    <?php $profitLossBalance = $positiveCreditTotal - $positiveDebitTotal; ?>
-                <?php endif; ?>
-                <?php if ($beginningBalance != '0.00' || $debitTotal != '0.00' || $creditTotal != '0.00'): ?>
-                    <tr>
-                        <td><?php echo CHtml::encode(CHtml::value($coa, 'code')); ?></td>
-                        <td><?php echo CHtml::encode(CHtml::value($coa, 'name')); ?></td>
-                        <td><?php echo CHtml::encode(CHtml::value($coa, 'coaCategory.name')); ?></td>
-                        <td><?php echo CHtml::encode(CHtml::value($coa, 'normal_balance')); ?></td>
-                        <td><?php echo CHtml::encode(CHtml::value($coa, 'coaSubCategory.cashflow_position')); ?></td>
-                        <td style="text-align: right; <?php echo $beginningBalance < '0.00' ? 'color: red' : ''; ?>"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $beginningBalance)); ?></td>
-                        <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $positiveDebitTotal)); ?></td>
-                        <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $positiveCreditTotal)); ?></td>
-                        <td style="text-align: right; <?php echo $endingBalance < '0.00' ? 'color: red' : ''; ?>"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $endingBalance)); ?></td>
-                        <td style="text-align: right; <?php echo $balanceDifference < '0.00' ? 'color: red' : ''; ?>"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $balanceDifference)); ?></td>
-                        <td style="text-align: right; <?php echo $profitLossBalance < '0.00' ? 'color: red' : ''; ?>"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $profitLossBalance)); ?></td>
-                    </tr>
-                <?php endif; ?>
-            <?php endforeach; ?>
+            <?php $operationalSum = $cashFlowReportData['Laba Bersih'] + $cashFlowReportData['Operasional']; ?>
+            <tr>
+                <td colspan="2" style="font-weight: bold">AKTIVITAS OPERASIONAL</td>
+            </tr>
+            <tr>
+                <td>Laba Bersih</td>
+                <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $cashFlowReportData['Laba Bersih'])); ?></td>
+            </tr>
+            <tr>
+                <td>Penyesuaian non-kas & perubahan modal kerja</td>
+                <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $cashFlowReportData['Operasional'])); ?></td>
+            </tr>
+            <tr>
+                <td style="font-weight: bold">Kas Bersih dari aktivitas Operasional</td>
+                <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $operationalSum)); ?></td>
+            </tr>
+            <tr>
+                <td colspan="2">&nbsp;</td>
+            </tr>
+            
+            <?php $investmentSum = $cashFlowReportData['Investasi']; ?>
+            <tr>
+                <td colspan="2" style="font-weight: bold">AKTIVITAS INVESTASI</td>
+            </tr>
+            <tr>
+                <td>Perolehan Aset Tetap (capex)</td>
+                <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $cashFlowReportData['Investasi'])); ?></td>
+            </tr>
+            <tr>
+                <td style="font-weight: bold">Kas Bersih dari aktivitas Investasi</td>
+                <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $investmentSum)); ?></td>
+            </tr>
+            <tr>
+                <td colspan="2">&nbsp;</td>
+            </tr>
+            
+            <?php $financingSum = $cashFlowReportData['Pendanaan'] + $cashFlowReportData['Saldo Laba']; ?>
+            <tr>
+                <td colspan="2" style="font-weight: bold">AKTIVITAS PENDANAAN</td>
+            </tr>
+            <tr>
+                <td>Perubahan Pinjaman KMK & pemegang saham</td>
+                <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $cashFlowReportData['Pendanaan'])); ?></td>
+            </tr>
+            <tr>
+                <td>Dividen dibayar</td>
+                <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $cashFlowReportData['Saldo Laba'])); ?></td>
+            </tr>
+            <tr>
+                <td style="font-weight: bold">Kas Bersih dari aktivitas Pendanaan</td>
+                <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $financingSum)); ?></td>
+            </tr>
+            <tr>
+                <td colspan="2">&nbsp;</td>
+            </tr>
+            
+            <?php $netCashSum = $operationalSum + $investmentSum + $financingSum; ?>
+            <?php $endCashAmount = $netCashSum - $cashFlowReportData['Kas']['beginning_balance']; ?>
+            <?php $cashAmountDifference = $endCashAmount - $cashFlowReportData['Kas']['ending_balance']; ?>
+            <tr>
+                <td style="font-weight: bold">KENAIKAN (PENURUNAN) KAS BERSIH</td>
+                <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $netCashSum)); ?></td>
+            </tr>
+            <tr>
+                <td>Kas & setara kas awal tahun</td>
+                <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $cashFlowReportData['Kas']['beginning_balance'])); ?></td>
+            </tr>
+            <tr>
+                <td>Kas & setara kas akhir (perhitungan)</td>
+                <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $endCashAmount)); ?></td>
+            </tr>
+            <tr>
+                <td>Kas & setara kas menurut Neraca</td>
+                <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $cashFlowReportData['Kas']['ending_balance'])); ?></td>
+            </tr>
+            <tr>
+                <td style="font-weight: bold">CEK SILANG</td>
+                <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $cashAmountDifference)); ?></td>
+            </tr>
         </tbody>
     </table>
 </div>

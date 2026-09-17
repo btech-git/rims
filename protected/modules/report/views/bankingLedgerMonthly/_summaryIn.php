@@ -1,11 +1,11 @@
 <div class="table_wrapper">
     <fieldset>
         <legend>Transaksi Bank Masuk</legend>
-        <table class="responsive">
+        <table class="responsive" style="width: 200%">
             <thead>
                 <tr>
                     <?php foreach ($selectedCoas as $coa): ?>
-                        <th style="text-align: center; width: 10%"><?php echo CHtml::encode(CHtml::value($coa, 'name')); ?></th>
+                        <th style="text-align: center;"><?php echo CHtml::encode(CHtml::value($coa, 'name')); ?></th>
                     <?php endforeach; ?>
                 </tr>
             </thead>

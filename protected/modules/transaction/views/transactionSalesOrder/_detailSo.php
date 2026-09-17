@@ -561,7 +561,7 @@
             <td colspan="3">Grand Total</td>
             <td style="text-align:right">
                 <span id="grand_total_detail_<?php echo $i; ?>">
-                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($detail, 'grandTotal'))); ?>
+                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $detail->getGrandTotal($salesOrder->header->ppn, $salesOrder->header->tax_percentage))); ?>
                 </span>
             </td>
             <td>&nbsp;</td>

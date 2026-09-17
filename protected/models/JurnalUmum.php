@@ -1047,7 +1047,7 @@ class JurnalUmum extends CActiveRecord {
                 ), 0) AS balance
                 FROM " . JurnalUmum::model()->tableName() . " j 
                 INNER JOIN " . Coa::model()->tableName() . " c ON c.id = j.coa_id
-                WHERE c.code >= '4' AND j.tanggal_transaksi BETWEEN :start_date AND :end_date" . $branchConditionSql . "
+                WHERE c.code >= '4' AND j.tanggal_transaksi BETWEEN :start_date AND :end_date AND is_coa_category = 0" . $branchConditionSql . "
                 GROUP BY j.coa_id
                 ORDER BY c.code ASC";
 

@@ -18,7 +18,7 @@
     <?php foreach ($salesOrderDetails as $key => $salesOrderDetail): ?>
         <tr>
             <?php $product = Product::model()->findByPK($salesOrderDetail->product_id); ?>
-            <td><?php echo $product->id; ?></td>
+            <td><?php echo ++$key; ?></td>
             <td><?php echo $product->name; ?></td>
             <td>
                 <?php echo $product->brand->name; ?> - 

@@ -45,6 +45,11 @@ class CashFlowController extends Controller {
             $workingSheetReportData[$coa->id]['beginning_balance'] = '0.00';
             $workingSheetReportData[$coa->id]['debit_total'] = '0.00';
             $workingSheetReportData[$coa->id]['credit_total'] = '0.00';
+            $workingSheetReportData[$coa->id]['positive_debit_total'] = '0.00';
+            $workingSheetReportData[$coa->id]['positive_credit_total'] = '0.00';
+            $workingSheetReportData[$coa->id]['ending_balance'] = '0.00';
+            $workingSheetReportData[$coa->id]['balance_difference'] = '0.00';
+            $workingSheetReportData[$coa->id]['profit_loss_balance'] = '0.00';
         }
         
         foreach ($workingSheetBeginningBalances as $workingSheetBeginningBalanceItem) {
@@ -70,9 +75,27 @@ class CashFlowController extends Controller {
             }
         }
         
-        var_dump($workingSheetReportData);
-        
         $cashFlowReportData = array();
+        
+        foreach ($workingSheetReportData as $coaId => $workingSheetReportDataItem) {
+            if (!isset($cashFlowReportData[$workingSheetReportDataItem['cashflow_position']])) {
+                if ($workingSheetReportDataItem['cashflow_position'] === 'Kas') {
+                    $cashFlowReportData[$workingSheetReportDataItem['cashflow_position']]['beginning_balance'] = '0.00';
+                    $cashFlowReportData[$workingSheetReportDataItem['cashflow_position']]['ending_balance'] = '0.00';
+                } else {
+                    $cashFlowReportData[$workingSheetReportDataItem['cashflow_position']] = '0.00';
+                }
+            }
+            
+            if ($workingSheetReportDataItem['cashflow_position'] === 'Kas') {
+                $cashFlowReportData[$workingSheetReportDataItem['cashflow_position']]['beginning_balance'] += $workingSheetReportDataItem['beginning_balance'];
+                $cashFlowReportData[$workingSheetReportDataItem['cashflow_position']]['ending_balance'] += $workingSheetReportDataItem['ending_balance'];
+            } else {
+                $field = $workingSheetReportDataItem['cashflow_position'] === 'Laba Bersih' ? 'profit_loss_balance' : 'balance_difference';
+
+                $cashFlowReportData[$workingSheetReportDataItem['cashflow_position']] += $workingSheetReportDataItem[$field];
+            }
+        }
 
         $yearList = array();
         for ($y = $yearNow - 4; $y <= $yearNow; $y++) {
@@ -88,7 +111,7 @@ class CashFlowController extends Controller {
 //        }
         
         $this->render('summary', array(
-            'workingSheetReportData' => $workingSheetReportData,
+            'cashFlowReportData' => $cashFlowReportData,
             'yearList' => $yearList,
             'year' => $year,
             'yearNow' => $yearNow,

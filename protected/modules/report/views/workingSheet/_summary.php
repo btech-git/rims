@@ -54,12 +54,32 @@
                         <td><?php echo CHtml::encode(CHtml::value($coa, 'coaSubCategory.name')); ?></td>
                         <td><?php echo CHtml::encode(CHtml::value($coa, 'normal_balance')); ?></td>
                         <td><?php echo CHtml::encode(CHtml::value($coa, 'coaSubCategory.cashflow_position')); ?></td>
-                        <td style="text-align: right; <?php echo $beginningBalance < '0.00' ? 'color: red' : ''; ?>"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $beginningBalance)); ?></td>
-                        <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $positiveDebitTotal)); ?></td>
-                        <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $positiveCreditTotal)); ?></td>
-                        <td style="text-align: right; <?php echo $endingBalance < '0.00' ? 'color: red' : ''; ?>"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $endingBalance)); ?></td>
-                        <td style="text-align: right; <?php echo $balanceDifference < '0.00' ? 'color: red' : ''; ?>"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $balanceDifference)); ?></td>
-                        <td style="text-align: right; <?php echo $profitLossBalance < '0.00' ? 'color: red' : ''; ?>"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $profitLossBalance)); ?></td>
+                        <td style="text-align: right; <?php echo $beginningBalance < '0.00' ? 'color: red' : ''; ?>">
+                            <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $beginningBalance)); ?>
+                        </td>
+                        <td style="text-align: right">
+                            <?php echo CHtml::link(Yii::app()->numberFormatter->format('#,##0.00', $positiveDebitTotal), Yii::app()->createUrl("report/workingSheet/jurnalTransaction", array(
+                                "CoaCode" => $coa->code, 
+                                "StartDate" => $startDate, 
+                                "EndDate" => $endDate, 
+                            )), array('target' => '_blank', 'style' => $positiveDebitTotal < '0.00' ? 'color:red' : 'color:black')); ?>
+                        </td>
+                        <td style="text-align: right">
+                            <?php echo CHtml::link(Yii::app()->numberFormatter->format('#,##0.00', $positiveCreditTotal), Yii::app()->createUrl("report/workingSheet/jurnalTransaction", array(
+                                "CoaCode" => $coa->code, 
+                                "StartDate" => $startDate, 
+                                "EndDate" => $endDate, 
+                            )), array('target' => '_blank', 'style' => $positiveCreditTotal < '0.00' ? 'color:red' : 'color:black')); ?>
+                        </td>
+                        <td style="text-align: right; <?php echo $endingBalance < '0.00' ? 'color: red' : ''; ?>">
+                            <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $endingBalance)); ?>
+                        </td>
+                        <td style="text-align: right; <?php echo $balanceDifference < '0.00' ? 'color: red' : ''; ?>">
+                            <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $balanceDifference)); ?>
+                        </td>
+                        <td style="text-align: right; <?php echo $profitLossBalance < '0.00' ? 'color: red' : ''; ?>">
+                            <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $profitLossBalance)); ?>
+                        </td>
                     </tr>
                 <?php endif; ?>
             <?php endforeach; ?>

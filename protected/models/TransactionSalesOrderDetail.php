@@ -345,10 +345,9 @@ class TransactionSalesOrderDetail extends CActiveRecord {
         return ($tax == 1) ? $this->subTotal * $taxPercentage / 100 : 0;
     }
 
-    public function getGrandTotal() {
-        $taxAmount = empty($this->salesOrder) ? 0 : $this->getTaxAmount($this->salesOrder->ppn, $this->salesOrder->tax_percentage);
+    public function getGrandTotal($tax, $taxPercentage) {
 
-        return $this->subTotal + $taxAmount;
+        return $this->subTotal + $this->getTaxAmount($tax, $taxPercentage);
     }
 
     public function getTotalQuantity() {
