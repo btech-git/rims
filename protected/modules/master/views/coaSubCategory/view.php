@@ -27,7 +27,7 @@ $this->menu = array(
         </a>
         <?php if (Yii::app()->user->checkAccess("masterCoaSubCategoryEdit")) { ?>
             <a class="button warning right" style="margin-right:10px;" href="<?php echo Yii::app()->createUrl('/master/' . $ccontroller . '/update', array('id' => $model->id)); ?>">
-                <span class="fa fa-edit"></span>edit
+                <span class="fa fa-edit"></span>Edit
             </a>
         <?php } ?>
             

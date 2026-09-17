@@ -97,6 +97,7 @@ class CoaSubCategory extends CActiveRecord {
         $criteria->compare('name', $this->name, true);
         $criteria->compare('code', $this->code, true);
         $criteria->compare('coa_category_id', $this->coa_category_id);
+        $criteria->compare('cashflow_position', $this->cashflow_position);
 
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,

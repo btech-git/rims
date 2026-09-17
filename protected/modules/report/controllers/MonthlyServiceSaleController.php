@@ -47,7 +47,6 @@ class MonthlyServiceSaleController extends Controller {
             $serviceSaleData[$monthlyServiceSaleItem['service_id']][$monthlyServiceSaleItem['invoice_date']]['total_price'] = $monthlyServiceSaleItem['total_price'];
         }
            
-        var_dump($serviceSaleData);
         $yearList = array();
         for ($y = $yearNow - 4; $y <= $yearNow; $y++) {
             $yearList[$y] = $y;

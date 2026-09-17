@@ -22,15 +22,39 @@ class WorkingSheetController extends Controller {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
         
-        $yearNow = date('Y');
-        $year = (isset($_GET['Year'])) ? $_GET['Year'] : $yearNow;
+//        $yearNow = date('Y');
+//        $year = (isset($_GET['Year'])) ? $_GET['Year'] : $yearNow;
+        $startDate = (isset($_GET['StartDate'])) ? $_GET['StartDate'] : date('Y-m-d');
+        $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
+        $cashflowPosition = (isset($_GET['CashflowPosition'])) ? $_GET['CashflowPosition'] : '';
+        $coaCategoryId = (isset($_GET['CoaCategoryId'])) ? $_GET['CoaCategoryId'] : '';
+        $coaSubCategoryId = (isset($_GET['CoaSubCategoryId'])) ? $_GET['CoaSubCategoryId'] : '';
         
-        $startDate = $year . '-01-01';
-        $endDate = $year . '-12-31';
+//        $startDate = $year . '-01-01';
+//        $endDate = $year . '-12-31';
+        
+        $cashflowPositionConditionSql = '';
+        $coaCategoryConditionSql = '';
+        $coaSubCategoryConditionSql = '';
+        
+        $params = array();
+        if (!empty($cashflowPosition)) {
+            $cashflowPositionConditionSql = ' AND coaSubCategory.cashflow_position = :cashflow_position';
+            $params[':cashflow_position'] = $cashflowPosition;
+        }
+        if (!empty($coaCategoryId)) {
+            $coaCategoryConditionSql = ' AND t.coa_category_id = :coa_category_id';
+            $params[':coa_category_id'] = $coaCategoryId;
+        }
+        if (!empty($coaSubCategoryId)) {
+            $coaSubCategoryConditionSql = ' AND t.coa_sub_category_id = :coa_sub_category_id';
+            $params[':coa_sub_category_id'] = $coaSubCategoryId;
+        }
         
         $coas = Coa::model()->findAll(array(
             'with' => 'coaSubCategory', 
-            'condition' => 'coaSubCategory.cashflow_position IS NOT NULL', 
+            'condition' => "coaSubCategory.cashflow_position IS NOT NULL" . $cashflowPositionConditionSql . $coaCategoryConditionSql . $coaSubCategoryConditionSql, 
+            'params' => $params,
             'order' => 'coaSubCategory.cashflow_position ASC, t.code ASC',
         )); 
         
@@ -49,10 +73,10 @@ class WorkingSheetController extends Controller {
             $workingSheetReportData[$workingSheetBalanceItem['coa_id']]['credit_total'] = $workingSheetBalanceItem['credit_total'];
         }
 
-        $yearList = array();
-        for ($y = $yearNow - 4; $y <= $yearNow; $y++) {
-            $yearList[$y] = $y;
-        }
+//        $yearList = array();
+//        for ($y = $yearNow - 4; $y <= $yearNow; $y++) {
+//            $yearList[$y] = $y;
+//        }
         
         if (isset($_GET['ResetFilter'])) {
             $this->redirect(array('summary'));
@@ -64,10 +88,15 @@ class WorkingSheetController extends Controller {
         
         $this->render('summary', array(
             'workingSheetReportData' => $workingSheetReportData,
-            'yearList' => $yearList,
-            'year' => $year,
-            'yearNow' => $yearNow,
+//            'yearList' => $yearList,
+//            'year' => $year,
+//            'yearNow' => $yearNow,
+            'startDate' => $startDate,
+            'endDate' => $endDate,
             'coas' => $coas,
+            'coaCategoryId' => $coaCategoryId,
+            'coaSubCategoryId' => $coaSubCategoryId,
+            'cashflowPosition' => $cashflowPosition,
         ));
     }
     

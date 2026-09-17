@@ -165,12 +165,6 @@ $this->breadcrumbs = array(
                                 'style' => 'margin-left:10px',
                                 'visible' => Yii::app()->user->checkAccess("generalRepairCreate") || Yii::app()->user->checkAccess("generalRepairEdit")
                             )); ?>
-
-                            <?php echo CHtml::link('Need Rework', array("/frontDesk/generalRepairRegistration/reworkTransaction", "id" => $model->id), array(
-                                'class' => 'button warning right', 
-                                'style' => 'margin-right:10px',
-                                'visible' => Yii::app()->user->checkAccess("generalRepairCreate") || Yii::app()->user->checkAccess("generalRepairEdit")
-                            )); ?>
                         <?php endif; ?>
 
                         <?php if (!empty($invoices) && $model->status !== 'Finished' && (!empty($model->sales_order_number) || !empty($model->work_order_number))): ?>
@@ -228,6 +222,15 @@ $this->breadcrumbs = array(
                             'style' => 'margin-right:10px',
                             'visible' => Yii::app()->user->checkAccess("generalRepairCreate") || Yii::app()->user->checkAccess("generalRepairEdit")
                         )); ?>
+                        
+                        <?php if ($model->status == 'Finished'): ?>
+                            <?php echo CHtml::link('WO Rework', array("/frontDesk/generalRepairRegistration/reworkTransaction", "id" => $model->id), array(
+                                'class' => 'button warning right', 
+                                'style' => 'margin-right:10px',
+                                'visible' => Yii::app()->user->checkAccess("generalRepairCreate") || Yii::app()->user->checkAccess("generalRepairEdit")
+                            )); ?>
+                        <?php endif; ?>
+
                     </div>
                 <?php endif; ?>
                 

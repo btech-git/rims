@@ -165,12 +165,6 @@ $this->breadcrumbs = array(
                                 'style' => 'margin-left:10px',
                                 'visible' => Yii::app()->user->checkAccess("bodyRepairCreate") || Yii::app()->user->checkAccess("bodyRepairEdit")
                             )); ?>
-
-                            <?php echo CHtml::link('Need Rework', array("/frontDesk/bodyRepairRegistration/reworkTransaction", "id" => $model->id), array(
-                                'class' => 'button warning right', 
-                                'style' => 'margin-right:10px',
-                                'visible' => Yii::app()->user->checkAccess("bodyRepairCreate") || Yii::app()->user->checkAccess("bodyRepairEdit")
-                            )); ?>
                         <?php endif; ?>
 
                         <?php if (!empty($invoices) && $model->status !== 'Finished' && (!empty($model->sales_order_number) || !empty($model->work_order_number))): ?>
@@ -209,7 +203,7 @@ $this->breadcrumbs = array(
 
             <fieldset>
                 <legend>Information</legend>
-                    <?php if ($model->user_id_cancelled == null): ?>
+                <?php if ($model->user_id_cancelled == null): ?>
                     <div class="row">
                         <?php echo CHtml::link('<span class="fa fa-plus"></span> KM Kendaraan', array("/frontDesk/bodyRepairRegistration/updateMileage", "id" => $model->id), array(
                             'class' => 'button success left', 
@@ -228,6 +222,14 @@ $this->breadcrumbs = array(
                             'style' => 'margin-right:10px',
                             'visible' => Yii::app()->user->checkAccess("bodyRepairCreate") || Yii::app()->user->checkAccess("bodyRepairEdit")
                         )); ?>
+                        
+                        <?php if ($model->status == 'Finished'): ?>
+                            <?php echo CHtml::link('WO Rework', array("/frontDesk/bodyRepairRegistration/reworkTransaction", "id" => $model->id), array(
+                                'class' => 'button warning right', 
+                                'style' => 'margin-right:10px',
+                                'visible' => Yii::app()->user->checkAccess("bodyRepairCreate") || Yii::app()->user->checkAccess("bodyRepairEdit")
+                            )); ?>
+                        <?php endif; ?>
                     </div>
                 <?php endif; ?>
 

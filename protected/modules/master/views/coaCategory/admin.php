@@ -41,7 +41,9 @@ $('.search-form form').submit(function(){
         <div class="small-12 columns">
             <div class="clearfix page-action">
                 <?php if (Yii::app()->user->checkAccess("masterCoaCategoryCreate")) { ?>
-                    <a class="button success right" href="<?php echo Yii::app()->baseUrl . '/master/coaCategory/create'; ?>"><span class="fa fa-plus"></span>Create Coa Categories</a>
+                    <a class="button success right" href="<?php echo Yii::app()->baseUrl . '/master/coaCategory/create'; ?>">
+                        <span class="fa fa-plus"></span>Create
+                    </a>
                 <?php } ?>
                 <h2>Manage Coa Categories</h2>
             </div>

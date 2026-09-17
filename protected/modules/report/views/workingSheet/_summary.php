@@ -3,7 +3,8 @@
 <div style="font-weight: bold; text-align: center">
     <div style="font-size: larger">Raperind Motor</div>
     <div style="font-size: larger">Kertas Kerja</div>
-    <div><?php echo 'Periode tahun: ' . CHtml::encode($year); ?></div>
+    <div><?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($startDate))) . ' &nbsp;&ndash;&nbsp; ' . CHtml::encode(Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($endDate))); ?></div>
+    <!--<div><?php //echo 'Periode tahun: ' . CHtml::encode($year); ?></div>-->
 </div>
 
 <br />
@@ -14,7 +15,8 @@
             <tr>
                 <th style="width: 10px">Kode</th>
                 <th style="width: 300px">Nama Akun</th>
-                <th style="width: 150px">Tipe</th>
+                <th style="width: 150px">Category</th>
+                <th style="width: 10px">Sub Category</th>
                 <th>Normal Balance</th>
                 <th>Pos Arus Kas</th>
                 <th>Saldo Awal</th>
@@ -49,6 +51,7 @@
                         <td><?php echo CHtml::encode(CHtml::value($coa, 'code')); ?></td>
                         <td><?php echo CHtml::encode(CHtml::value($coa, 'name')); ?></td>
                         <td><?php echo CHtml::encode(CHtml::value($coa, 'coaCategory.name')); ?></td>
+                        <td><?php echo CHtml::encode(CHtml::value($coa, 'coaSubCategory.name')); ?></td>
                         <td><?php echo CHtml::encode(CHtml::value($coa, 'normal_balance')); ?></td>
                         <td><?php echo CHtml::encode(CHtml::value($coa, 'coaSubCategory.cashflow_position')); ?></td>
                         <td style="text-align: right; <?php echo $beginningBalance < '0.00' ? 'color: red' : ''; ?>"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $beginningBalance)); ?></td>

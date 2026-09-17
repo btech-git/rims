@@ -218,47 +218,41 @@ class InventoryController extends Controller {
         $worksheet->mergeCells('A2:H2');
         $worksheet->mergeCells('A3:H3');
         
-        $worksheet->getStyle('A1:H5')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-
-        $worksheet->getStyle("A1:A2")->getFont()->setBold(true);
+        $worksheet->getStyle('A1:O5')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->getStyle("A1:O5")->getFont()->setBold(true);
+        
         $worksheet->setCellValue('A1', 'Raperind Motor');
         $worksheet->setCellValue('A2', 'Stok Gudang');
+        $worksheet->setCellValue('A3', 'Per Tanggal: ' . Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($endDate)));
 
-        $column = 'I'; 
+        $column = 'G'; 
         $worksheet->setCellValue('A5', 'ID');
         $worksheet->setCellValue('B5', 'Code');
         $worksheet->setCellValue('C5', 'Name');
         $worksheet->setCellValue('D5', 'Brand');
-        $worksheet->setCellValue('E5', 'Sub Brand');
-        $worksheet->setCellValue('F5', 'Sub Brand Series');
-        $worksheet->setCellValue('G5', 'Category');
-        $worksheet->setCellValue('H5', 'Unit');
+        $worksheet->setCellValue('E5', 'Category');
+        $worksheet->setCellValue('F5', 'Unit');
         foreach ($branches as $branch) {
             $worksheet->setCellValue("{$column}5", CHtml::value($branch, 'code'));
             $column++;
         }
         $worksheet->setCellValue("{$column}5", 'Total');
 
-        $worksheet->getStyle("A5:{$column}5")->getFont()->setBold(true);
         $worksheet->getStyle("A5:{$column}5")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
         $worksheet->getStyle("A5:{$column}5")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
-        $counter = 7;
+        $counter = 6;
         foreach ($dataProvider->data as $header) {
-            $worksheet->getStyle("C{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
-
             $inventoryTotalQuantities = $header->getInventoryTotalQuantitiesByPeriodic($endDate);
             $totalStock = 0;
 
-            $column = 'I'; 
-            $worksheet->setCellValue("A{$counter}", CHtml::encode(CHtml::value($header, 'id')));
-            $worksheet->setCellValue("B{$counter}", CHtml::encode(CHtml::value($header, 'manufacturer_code')));
-            $worksheet->setCellValue("C{$counter}", CHtml::encode(CHtml::value($header, 'name')));
-            $worksheet->setCellValue("D{$counter}", CHtml::encode(CHtml::value($header, 'brand.name')));
-            $worksheet->setCellValue("E{$counter}", CHtml::encode(CHtml::value($header, 'subBrand.name')));
-            $worksheet->setCellValue("F{$counter}", CHtml::encode(CHtml::value($header, 'subBrandSeries.name')));
-            $worksheet->setCellValue("G{$counter}", CHtml::encode(CHtml::value($header, 'masterSubCategoryCode')));
-            $worksheet->setCellValue("H{$counter}", CHtml::encode(CHtml::value($header, 'unit.name')));
+            $column = 'G'; 
+            $worksheet->setCellValue("A{$counter}", CHtml::value($header, 'id'));
+            $worksheet->setCellValue("B{$counter}", CHtml::value($header, 'manufacturer_code'));
+            $worksheet->setCellValue("C{$counter}", CHtml::value($header, 'name'));
+            $worksheet->setCellValue("D{$counter}", CHtml::value($header, 'brand.name') . ' - ' . CHtml::value($header, 'subBrand.name') . ' - ' . CHtml::value($header, 'subBrandSeries.name'));
+            $worksheet->setCellValue("E{$counter}", CHtml::value($header, 'productMasterCategory.name') . ' - ' . CHtml::value($header, 'productSubMasterCategory.name') . ' - ' . CHtml::value($header, 'productSubCategory.name'));
+            $worksheet->setCellValue("F{$counter}", CHtml::value($header, 'unit.name'));
             foreach ($branches as $branch) {
                 $stockValue = 0;
                 foreach ($inventoryTotalQuantities as $i => $inventoryTotalQuantity) {
@@ -266,11 +260,11 @@ class InventoryController extends Controller {
                         $stockValue = CHtml::value($inventoryTotalQuantities[$i], 'total_stock');
                     }
                 }
-                $worksheet->setCellValue("{$column}{$counter}", CHtml::encode($stockValue));
+                $worksheet->setCellValue("{$column}{$counter}", $stockValue);
                 $totalStock += $stockValue;
                 $column++;
             }
-            $worksheet->setCellValue("{$column}{$counter}", CHtml::encode($totalStock));
+            $worksheet->setCellValue("{$column}{$counter}", $totalStock);
 
             $counter++;
 

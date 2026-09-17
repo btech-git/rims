@@ -24,6 +24,7 @@
  * The followings are the available model relations:
  * @property CoaSubCategory[] $coaSubCategories
  * @property Coa[] $coas
+ * @property CoaCategory $coaCategory
  * @property UserIdCreated $userIdCreated
  * @property UserIdUpdated $userIdUpdated
  * @property UserIdApproved $userIdApproved
@@ -66,6 +67,7 @@ class CoaCategory extends CActiveRecord {
         return array(
             'coaSubCategories' => array(self::HAS_MANY, 'CoaSubCategory', 'coa_category_id'),
             'coas' => array(self::HAS_MANY, 'Coa', 'coa_category_id'),
+            'coaCategory' => array(self::BELONGS_TO, 'CoaCategory', 'coa_category_id'),
             'userIdCreated' => array(self::BELONGS_TO, 'Users', 'user_id_created'),
             'userIdUpdated' => array(self::BELONGS_TO, 'Users', 'user_id_updated'),
             'userIdApproved' => array(self::BELONGS_TO, 'Users', 'user_id_approved'),

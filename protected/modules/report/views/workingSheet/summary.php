@@ -21,14 +21,95 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                     
                     <div class="row">
                         <div class="medium-6 columns">
-                            <div class="field">
+<!--                            <div class="field">
                                 <div class="row collapse">
                                     <div class="small-4 columns">
-                                        <span class="prefix">Tahun </span>
+                                        <span class="prefix">Tahun</span>
                                     </div>
 
                                     <div class="small-8 columns">
-                                        <?php echo CHtml::dropDownList('Year', $year, $yearList); ?>
+                                        <?php //echo CHtml::dropDownList('Year', $year, $yearList); ?>
+                                    </div>
+                                </div>
+                            </div>-->
+                            <div class="field">
+                                <div class="row collapse">
+                                    <div class="small-4 columns">
+                                        <span class="prefix">Tanggal </span>
+                                    </div>
+
+                                    <div class="small-4 columns">
+                                        <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(
+                                            'name' => 'StartDate',
+                                            'value' => $startDate,
+                                            'options' => array(
+                                                'dateFormat' => 'yy-mm-dd',
+                                                'changeMonth'=>true,
+                                                'changeYear'=>true,
+                                            ),
+                                            'htmlOptions' => array(
+                                                'readonly' => true,
+                                                'placeholder' => 'Mulai',
+                                            ),
+                                        )); ?>
+                                    </div>
+
+                                    <div class="small-4 columns">
+                                        <?php $this->widget('zii.widgets.jui.CJuiDatePicker', array(
+                                            'name' => 'EndDate',
+                                            'value' => $endDate,
+                                            'options' => array(
+                                                'dateFormat' => 'yy-mm-dd',
+                                                'changeMonth'=>true,
+                                                'changeYear'=>true,
+                                            ),
+                                            'htmlOptions' => array(
+                                                'readonly' => true,
+                                                'placeholder' => 'Sampai',
+                                            ),
+                                        )); ?>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="field">
+                                <div class="row collapse">
+                                    <div class="small-4 columns">
+                                        <span class="prefix">Posisi Cashflow</span>
+                                    </div>
+
+                                    <div class="small-8 columns">
+                                        <?php echo CHtml::dropDownList('CashflowPosition', $cashflowPosition, array(
+                                            'Saldo Laba' => 'Saldo Laba',
+                                            'Pendanaan' => 'Pendanaan',
+                                            'Operasional' => 'Operasional',
+                                            'Laba Bersih' => 'Laba Bersih',
+                                            'Kas' => 'Kas',
+                                            'Investasi' => 'Investasi',
+                                        ), array('empty' => '-- All --')); ?>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="medium-6 columns">
+                            <div class="field">
+                                <div class="row collapse">
+                                    <div class="small-4 columns">
+                                        <span class="prefix">Category</span>
+                                    </div>
+
+                                    <div class="small-8 columns">
+                                        <?php echo CHtml::dropDownList('CoaCategoryId', $coaCategoryId, CHtml::listData(CoaCategory::model()->findAll(array('order' => 'name')), 'id', 'name'), array('empty' => '-- All --')); ?>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="field">
+                                <div class="row collapse">
+                                    <div class="small-4 columns">
+                                        <span class="prefix">Sub Category</span>
+                                    </div>
+
+                                    <div class="small-8 columns">
+                                        <?php echo CHtml::dropDownList('CoaSubCategoryId', $coaSubCategoryId, CHtml::listData(CoaSubCategory::model()->findAll(array('order' => 'name')), 'id', 'name'), array('empty' => '-- All --')); ?>
                                     </div>
                                 </div>
                             </div>
@@ -59,7 +140,9 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                     
                     <?php $this->renderPartial('_summary', array(
                         'workingSheetReportData' => $workingSheetReportData,
-                        'year' => $year,
+//                        'year' => $year,
+                        'startDate' => $startDate,
+                        'endDate' => $endDate,
                         'coas' => $coas,
                     )); ?>
                 </div>

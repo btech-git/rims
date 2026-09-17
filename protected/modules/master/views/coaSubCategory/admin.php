@@ -86,7 +86,18 @@ $('.search-form form').submit(function(){
                             'filter' => CHtml::activeDropDownList($model, 'coa_category_id', CHtml::listData(CoaCategory::model()->findAll(array('order' => 'name')), 'id', 'name'), array('empty' => '-- All --')),
                             'value' => '$data->coaCategory->name'
                         ),
-                        'cashflow_position',
+                        array(
+                            'name' => 'cashflow_position',
+                            'filter' => CHtml::activeDropDownList($model, 'cashflow_position', array(
+                                'Saldo Laba' => 'Saldo Laba',
+                                'Pendanaan' => 'Pendanaan',
+                                'Operasional' => 'Operasional',
+                                'Laba Bersih' => 'Laba Bersih',
+                                'Kas' => 'Kas',
+                                'Investasi' => 'Investasi',
+                            ), array('empty' => '-- All --')),
+                            'value' => '$data->cashflow_position'
+                        ),
                         array(
                             'class' => 'CButtonColumn',
                         ),
