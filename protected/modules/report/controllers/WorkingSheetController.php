@@ -82,9 +82,9 @@ class WorkingSheetController extends Controller {
             $this->redirect(array('summary'));
         }
         
-//        if (isset($_GET['SaveExcel'])) {
-//            $this->saveToExcel($workingSheetReportData, $inventoryCurrentStockData, $year, $yearNow, $monthNow);
-//        }
+        if (isset($_GET['SaveExcel'])) {
+            $this->saveToExcel($workingSheetReportData, $startDate, $endDate, $coas);
+        }
         
         $this->render('summary', array(
             'workingSheetReportData' => $workingSheetReportData,
@@ -128,7 +128,7 @@ class WorkingSheetController extends Controller {
         ));
     }
 
-    protected function saveToExcel($yearlyMaterialServiceUsageReportData, $inventoryCurrentStockData, $year, $yearNow, $monthNow) {
+    protected function saveToExcel($workingSheetReportData, $startDate, $endDate, $coas) {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
 
@@ -136,129 +136,94 @@ class WorkingSheetController extends Controller {
         include_once Yii::getPathOfAlias('ext.phpexcel.Classes') . DIRECTORY_SEPARATOR . 'PHPExcel.php';
         spl_autoload_register(array('YiiBase', 'autoload'));
         
-        $monthList = array(
-            1 => 'Jan',
-            2 => 'Feb',
-            3 => 'Mar',
-            4 => 'Apr',
-            5 => 'May',
-            6 => 'Jun',
-            7 => 'Jul',
-            8 => 'Aug',
-            9 => 'Sep',
-            10 => 'Oct',
-            11 => 'Nov',
-            12 => 'Dec',
-        );
+        $dateNumList = range(1, 31);
         
         $objPHPExcel = new PHPExcel();
 
         $documentProperties = $objPHPExcel->getProperties();
         $documentProperties->setCreator('Raperind Motor');
-        $documentProperties->setTitle('Pemakaian Material Tahunan');
+        $documentProperties->setTitle('Kertas Kerja');
 
         $worksheet = $objPHPExcel->setActiveSheetIndex(0);
-        $worksheet->setTitle('Pemakaian Material Tahunan');
+        $worksheet->setTitle('Kertas Kerja');
 
-        $worksheet->mergeCells('A1:Z1');
-        $worksheet->mergeCells('A2:Z2');
-        $worksheet->mergeCells('A3:Z3');
-        $worksheet->getStyle('A1:AZ6')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-        $worksheet->getStyle('A1:AZ6')->getFont()->setBold(true);
+        $worksheet->mergeCells('A1:L1');
+        $worksheet->mergeCells('A2:L2');
+        $worksheet->mergeCells('A3:L3');
+        
+        $worksheet->getStyle('A1:L5')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->getStyle('A1:L5')->getFont()->setBold(true);
 
         $worksheet->setCellValue('A1', 'Raperind Motor ');
-        $worksheet->setCellValue('A2', 'Pemakaian Material Tahunan');
-        $worksheet->setCellValue('A3', 'Periode Tahun: ' . $year);
+        $worksheet->setCellValue('A2', 'Kertas Kerja');
+        $worksheet->setCellValue('A3', Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($startDate)) . ' - ' . Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($endDate)));
         
-        $worksheet->setCellValue('A5', 'No');
-        $worksheet->setCellValue('B5', 'ID');
-        $worksheet->setCellValue('C5', 'Code');
-        $worksheet->setCellValue('D5', 'Name');
-        $worksheet->setCellValue('E5', 'Brand');
-        $worksheet->setCellValue('F5', 'Category');
-        $worksheet->setCellValue('G5', 'Satuan');
-        $columnCounter = 'H';
-        for ($month = 1; $month <= 12; $month++) {
-            $worksheet->setCellValue("{$columnCounter}5", $monthList[$month]);
-            $columnCounter++;
-        }
-        $worksheet->setCellValue("{$columnCounter}5", 'Total');
-        $columnCounter++;
-        $worksheet->setCellValue("{$columnCounter}5", 'Rata2 per Bulan');
-        $columnCounter++;
-        $worksheet->setCellValue("{$columnCounter}5", 'Pakai Min');
-        $columnCounter++;
-        $worksheet->setCellValue("{$columnCounter}5", 'Pakai Max');
-        $columnCounter++;
-        $worksheet->setCellValue("{$columnCounter}5", 'Pakai Median');
-        $columnCounter++;
-        $worksheet->setCellValue("{$columnCounter}5", 'Posisi Stok');
-        $columnCounter++;
-        $worksheet->setCellValue("{$columnCounter}5", 'Minimum Stok');
-        $columnCounter++;
-        $worksheet->setCellValue("{$columnCounter}5", 'Target Stok');
-        $columnCounter++;
-        $worksheet->setCellValue("{$columnCounter}5", 'Stock Order Plan');
-        $columnCounter++;
+        $worksheet->setCellValue('A5', 'Kode');
+        $worksheet->setCellValue('B5', 'Nama Akun');
+        $worksheet->setCellValue('C5', 'Category');
+        $worksheet->setCellValue('D5', 'Sub Category');
+        $worksheet->setCellValue('E5', 'Normal Balance');
+        $worksheet->setCellValue('F5', 'Pos Arus Kas');
+        $worksheet->setCellValue('G5', 'Saldo Awal');
+        $worksheet->setCellValue('H5', 'Debit');
+        $worksheet->setCellValue('I5', 'Kredit');
+        $worksheet->setCellValue('J5', 'Saldo Akhir');
+        $worksheet->setCellValue('K5', 'Pengaruh Kas');
+        $worksheet->setCellValue('L5', 'Kontribusi Laba');
         
-        $worksheet->getStyle("A5:{$columnCounter}5")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
-        $worksheet->getStyle("A5:{$columnCounter}5")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A5:L5")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A5:L5")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
         $counter = 6;
-        $ordinal = 0;
         
-        $maxMonthNum = (int) $year === (int) $yearNow ? $monthNow : 12;
-        foreach ($yearlyMaterialServiceUsageReportData as $productId => $yearlyMaterialServiceUsageReportDataItem) {
-            $worksheet->getStyle("G{$counter}:Z{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
-
-            $worksheet->setCellValue("A{$counter}", ++$ordinal);
-            $worksheet->setCellValue("B{$counter}", $yearlyMaterialServiceUsageReportDataItem['product_id']);
-            $worksheet->setCellValue("C{$counter}", $yearlyMaterialServiceUsageReportDataItem['product_code']);
-            $worksheet->setCellValue("D{$counter}", $yearlyMaterialServiceUsageReportDataItem['product_name']);
-            $worksheet->setCellValue("E{$counter}", $yearlyMaterialServiceUsageReportDataItem['brand_name'] . ' - ' . $yearlyMaterialServiceUsageReportDataItem['sub_brand_name'] . ' - ' . $yearlyMaterialServiceUsageReportDataItem['sub_brand_series_name']);
-            $worksheet->setCellValue("F{$counter}", $yearlyMaterialServiceUsageReportDataItem['master_category_name'] . ' - ' . $yearlyMaterialServiceUsageReportDataItem['sub_master_category_name'] . ' - ' . $yearlyMaterialServiceUsageReportDataItem['sub_category_name']);
-            $worksheet->setCellValue("G{$counter}", $yearlyMaterialServiceUsageReportDataItem['unit_name']);
-            
-            $materialTotals = array();
-            $columnCounter = 'H';
-            
-            for ($month = 1; $month <= 12; $month++) {
-                $materialTotal = isset($yearlyMaterialServiceUsageReportDataItem['totals'][$month]) ? $yearlyMaterialServiceUsageReportDataItem['totals'][$month] : '0.00';
-                $worksheet->setCellValue("{$columnCounter}{$counter}", $month <= $maxMonthNum ? $materialTotal : '');
-                $columnCounter++;
-                $materialTotals[] = $materialTotal;
+        foreach ($coas as $coa) {
+            $beginningBalance = '0.00';
+            if ($coa->coaSubCategory->cashflow_position !== 'Laba Bersih') {
+                $beginningBalance = isset($workingSheetReportData[$coa->id]['beginning_balance']) ? $workingSheetReportData[$coa->id]['beginning_balance'] : '0.00';
             }
-            $materialTotalSum = array_sum($materialTotals);
-            $worksheet->setCellValue("{$columnCounter}{$counter}", $materialTotalSum);
-            $columnCounter++;
-            $materialMean = $materialTotalSum / $maxMonthNum;
-            $worksheet->setCellValue("{$columnCounter}{$counter}", $materialMean);
-            $columnCounter++;
-            $materialMinAmount = min($materialTotals);
-            $worksheet->setCellValue("{$columnCounter}{$counter}", $materialMinAmount);
-            $columnCounter++;
-            $materialMaxAmount = max($materialTotals);
-            $worksheet->setCellValue("{$columnCounter}{$counter}", $materialMaxAmount);
-            $columnCounter++;
-            sort($materialTotals);
-            $materialMedian = ($materialTotals[5] + $materialTotals[6]) / 2; 
-            $worksheet->setCellValue("{$columnCounter}{$counter}", $materialMedian);
-            $columnCounter++;
-            $quantityStock = isset($inventoryCurrentStockData[$productId]) ? $inventoryCurrentStockData[$productId] : '0.00';
-            $worksheet->setCellValue("{$columnCounter}{$counter}", $quantityStock);
-            $columnCounter++;
-            $product = Product::model()->findByPk($productId);
-            $worksheet->setCellValue("{$columnCounter}{$counter}", $product->minimum_stock);
-            $columnCounter++;
-            $worksheet->setCellValue("{$columnCounter}{$counter}", round($materialMedian, 0));
-            $columnCounter++;
-            $worksheet->setCellValue("{$columnCounter}{$counter}", $product->minimum_stock - $quantityStock);
-            $columnCounter++;
-            
-            $counter++;
+            $debitTotal = isset($workingSheetReportData[$coa->id]['debit_total']) ? $workingSheetReportData[$coa->id]['debit_total'] : '0.00';
+            $positiveDebitTotal = abs($debitTotal);
+            $creditTotal = isset($workingSheetReportData[$coa->id]['credit_total']) ? $workingSheetReportData[$coa->id]['credit_total'] : '0.00'; 
+            $positiveCreditTotal = abs($creditTotal);
+            $endingBalance = $beginningBalance + $debitTotal + $creditTotal;
+            $balanceDifference = '0.00';
+            if ($coa->coaSubCategory->cashflow_position !== 'Laba Bersih') {
+                $balanceDifference = $endingBalance - $beginningBalance;
+            }
+            $profitLossBalance = '0.00';
+            if ($coa->coaSubCategory->cashflow_position === 'Laba Bersih') {
+                $profitLossBalance = $positiveCreditTotal - $positiveDebitTotal;
+            }
+            if ($beginningBalance != '0.00' || $debitTotal != '0.00' || $creditTotal != '0.00') {
+                $worksheet->setCellValue("A{$counter}", CHtml::value($coa, 'code'));
+                $worksheet->setCellValue("B{$counter}", CHtml::value($coa, 'name'));
+                $worksheet->setCellValue("C{$counter}", CHtml::value($coa, 'coaCategory.name'));
+                $worksheet->setCellValue("D{$counter}", CHtml::value($coa, 'coaSubCategory.name'));
+                $worksheet->setCellValue("E{$counter}", CHtml::value($coa, 'normal_balance'));
+                $worksheet->setCellValue("F{$counter}", CHtml::value($coa, 'coaSubCategory.cashflow_position'));
+                $worksheet->setCellValue("G{$counter}", $beginningBalance);
+                if ($beginningBalance < 0) {
+                    $worksheet->getStyle("G{$counter}")->getFont()->getColor()->setARGB(PHPExcel_Style_Color::COLOR_RED);
+                }
+                $worksheet->setCellValue("H{$counter}", $positiveDebitTotal);
+                $worksheet->setCellValue("I{$counter}", $positiveCreditTotal);
+                $worksheet->setCellValue("J{$counter}", $endingBalance);
+                if ($endingBalance < 0) {
+                    $worksheet->getStyle("J{$counter}")->getFont()->getColor()->setARGB(PHPExcel_Style_Color::COLOR_RED);
+                }
+                $worksheet->setCellValue("K{$counter}", $balanceDifference);
+                if ($balanceDifference < 0) {
+                    $worksheet->getStyle("K{$counter}")->getFont()->getColor()->setARGB(PHPExcel_Style_Color::COLOR_RED);
+                }
+                $worksheet->setCellValue("L{$counter}", $profitLossBalance);
+                if ($profitLossBalance < 0) {
+                    $worksheet->getStyle("L{$counter}")->getFont()->getColor()->setARGB(PHPExcel_Style_Color::COLOR_RED);
+                }
+                $counter++;
+            }
         }
 
-        for ($col = 'A'; $col !== 'AZ'; $col++) {
+        for ($col = 'A'; $col !== 'Z'; $col++) {
             $objPHPExcel->getActiveSheet()
             ->getColumnDimension($col)
             ->setAutoSize(true);
@@ -267,7 +232,7 @@ class WorkingSheetController extends Controller {
         ob_end_clean();
 
         header('Content-type: application/vnd.ms-excel');
-        header('Content-Disposition: attachment;filename="pemakaian_material_tahunan.xls"');
+        header('Content-Disposition: attachment;filename="kertas_kerja.xls"');
         header('Cache-Control: max-age=0');
 
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
