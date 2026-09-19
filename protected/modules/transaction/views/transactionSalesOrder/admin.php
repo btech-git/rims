@@ -42,11 +42,6 @@ $('.search-form form').submit(function(){
         <h1>Manage Transaction Sales Orders</h1>
         <div class="search-bar">
             <div class="clearfix button-bar">
-                <!--<div class="left clearfix bulk-action">
-                   <span class="checkbox"><span class="fa fa-reply fa-rotate-270"></span></span>
-                   <input type="submit" value="Archive" class="button secondary cbutton" name="archive">
-                   <input type="submit" value="Delete" class="button secondary cbutton" name="delete">
-               </div>-->
                 <a href="#" class="search-button right button cbutton secondary">Advanced Search</a>
                 <div class="clearfix"></div>
                 <div class="search-form" style="display:none">
@@ -82,15 +77,13 @@ $('.search-form form').submit(function(){
                         'value'=>'empty($data->customer_id) ? "" : $data->customer->name'
                     ),
                     'status_document',
-//                    'payment_type',
-//                    'estimate_arrival_date',
+                    'payment_type',
                     array(
                         'name' => 'total_price',
                         'filter' => false,
                         'value' => 'number_format($data->total_price, 2)',
                     ),
                     'user.username: Maker',
-                    'approval.username: Approval',
                     array(
                         'header' => 'Approval',
                         'filter' => false,
