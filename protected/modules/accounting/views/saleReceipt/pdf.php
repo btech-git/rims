@@ -95,25 +95,27 @@ function tanggal($date) {
                 <?php foreach ($saleReceiptHeader->saleReceiptDetails as $i => $detail): ?>
                     <tr class="isi">
                         <td class="noo"><?php echo $i+1; ?></td>
-                        <td>&nbsp; <?php echo CHtml::encode(CHtml::value($detail, 'invoiceHeader.invoice_number')); ?></td>
-                        <td>&nbsp; <?php echo tanggal(CHtml::encode(CHtml::value($detail, 'invoiceHeader.invoice_date'))); ?></td>
-                        <td>&nbsp; <?php echo CHtml::encode(CHtml::value($detail, 'invoiceHeader.vehicle.plate_number')); ?></td>
-                        <td>&nbsp; <?php echo CHtml::encode(CHtml::value($detail, 'memo')); ?></td>
-                        <td>&nbsp; <?php echo CHtml::encode(CHtml::value($detail, 'invoiceHeader.registrationTransaction.customer_document_order_number')); ?></td>
-                        <td>&nbsp; <?php echo CHtml::encode(CHtml::value($detail, 'invoiceHeader.technical_code_number')); ?></td>
-                        <td>&nbsp; <?php echo CHtml::encode(CHtml::value($detail, 'invoiceHeader.delivery_receipt_number')); ?></td>
-                        <td>&nbsp; <?php echo CHtml::encode(CHtml::value($detail, 'invoiceHeader.warranty_report')); ?></td>
-                        <td style="text-align: right;">&nbsp;  Rp. <?php echo number_format($detail->invoice_amount, 2, ',', '.'); ?></td>
-                        <td style="text-align: right;">&nbsp;  Rp. <?php echo number_format($detail->downpayment_amount, 2, ',', '.'); ?></td>
-                        <td style="text-align: right;">&nbsp;  Rp. <?php echo number_format($detail->insurance_own_risk_amount, 2, ',', '.'); ?></td>
-                        <td style="text-align: right;">&nbsp;  Rp. <?php echo number_format($detail->receivable_amount, 2, ',', '.'); ?></td>
+                        <td><?php echo CHtml::encode(CHtml::value($detail, 'invoiceHeader.invoice_number')); ?></td>
+                        <td><?php echo tanggal(CHtml::encode(CHtml::value($detail, 'invoiceHeader.invoice_date'))); ?></td>
+                        <td><?php echo CHtml::encode(CHtml::value($detail, 'invoiceHeader.vehicle.plate_number')); ?></td>
+                        <td><?php echo CHtml::encode(CHtml::value($detail, 'memo')); ?></td>
+                        <td><?php echo CHtml::encode(CHtml::value($detail, 'invoiceHeader.registrationTransaction.customer_document_order_number')); ?></td>
+                        <td><?php echo CHtml::encode(CHtml::value($detail, 'invoiceHeader.technical_code_number')); ?></td>
+                        <td><?php echo CHtml::encode(CHtml::value($detail, 'invoiceHeader.delivery_receipt_number')); ?></td>
+                        <td><?php echo CHtml::encode(CHtml::value($detail, 'invoiceHeader.warranty_report')); ?></td>
+                        <td style="text-align: right;">Rp. <?php echo number_format($detail->invoice_amount, 2, ',', '.'); ?></td>
+                        <td style="text-align: right;">Rp. <?php echo number_format($detail->downpayment_amount, 2, ',', '.'); ?></td>
+                        <td style="text-align: right;">Rp. <?php echo number_format($detail->insurance_own_risk_amount, 2, ',', '.'); ?></td>
+                        <td style="text-align: right;">Rp. <?php echo number_format($detail->receivable_amount, 2, ',', '.'); ?></td>
                     </tr>
                 <?php endforeach; ?>
             </tbody>
             <tfoot>
                 <tr>
                     <td colspan="12" style="text-align: right; font-weight: bold">Total</td>
-                    <td style="text-align: right; font-weight: bold">Rp. <?php echo number_format($saleReceiptHeader->total_invoice_amount, 2, ',', '.'); ?></td>
+                    <td style="text-align: right; font-weight: bold">
+                        Rp. <?php echo number_format($saleReceiptHeader->total_receivable_amount, 2, ',', '.'); ?>
+                    </td>
                 </tr>
             </tfoot>
         </table>

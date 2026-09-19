@@ -55,7 +55,10 @@
             <td style="text-align: right">
                 <span id="total_invoice">
                     <?php echo CHtml::activeHiddenField($saleReceipt->header, "total_invoice_amount"); ?>
-                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($saleReceipt->header, 'total_invoice_amount'))); ?>
+                    <?php echo CHtml::activeHiddenField($saleReceipt->header, "total_downpayment_amount"); ?>
+                    <?php echo CHtml::activeHiddenField($saleReceipt->header, "total_own_risk_amount"); ?>
+                    <?php echo CHtml::activeHiddenField($saleReceipt->header, "total_receivable_amount"); ?>
+                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($saleReceipt->header, 'total_receivable_amount'))); ?>
                 </span>
             </td>
             <td></td>

@@ -20,6 +20,9 @@
  * @property integer $user_id_cancelled
  * @property string $cancelled_datetime
  * @property integer $insurance_company_id
+ * @property string $total_downpayment_amount
+ * @property string $total_insurance_own_risk_amount
+ * @property string $total_receivable_amount
  *
  * The followings are the available model relations:
  * @property SaleReceiptDetail[] $saleReceiptDetails
@@ -51,11 +54,11 @@ class SaleReceiptHeader extends MonthlyTransactionActiveRecord {
             array('customer_id, branch_id, user_id_created, user_id_updated, user_id_cancelled, insurance_company_id', 'numerical', 'integerOnly' => true),
             array('transaction_number', 'length', 'max' => 60),
             array('status', 'length', 'max' => 20),
-            array('total_invoice_amount', 'length', 'max' => 18),
+            array('total_invoice_amount, total_downpayment_amount, total_insurance_own_risk_amount, total_receivable_amount', 'length', 'max' => 18),
             array('note, updated_datetime, cancelled_datetime', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, transaction_number, transaction_date, due_date, status, note, total_invoice_amount, customer_id, branch_id, user_id_created, created_datetime, user_id_updated, updated_datetime, user_id_cancelled, cancelled_datetime, insurance_company_id', 'safe', 'on' => 'search'),
+            array('id, transaction_number, transaction_date, due_date, status, note, total_invoice_amount, customer_id, branch_id, user_id_created, created_datetime, user_id_updated, updated_datetime, user_id_cancelled, cancelled_datetime, insurance_company_id, total_downpayment_amount, total_insurance_own_risk_amount, total_receivable', 'safe', 'on' => 'search'),
         );
     }
 

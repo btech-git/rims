@@ -76,9 +76,15 @@ $this->menu = array(
             'attributes' => array(
                 'sale_order_no',
                 'sale_order_date',
-                'status_document',
-                'payment_type',
                 'estimate_arrival_date',
+                'estimate_payment_date',
+                array('name' => 'customer_name', 'value' => $model->customer->name),
+                'payment_type',
+                array(
+                    'name' => 'company_bank_id', 
+                    'value' => CHtml::encode(CHtml::value($model, 'companyBank.account_name')),
+                    'visible' => $model->payment_type === 'Cash' ? true: false,
+                ),
                 array(
                     'name' => 'requester_id', 
                     'value' => $model->user != null ? $model->user->username : ''
@@ -89,17 +95,18 @@ $this->menu = array(
                 ),
                 array(
                     'name' => 'approved_id', 
+                    'label' => 'Approved By',
                     'value' => $model->approval != null ? $model->approval->username : ''
                 ),
                 array(
                     'name' => 'approved_branch_id',
                     'value' => $model->approvedBranch != null ? $model->approvedBranch->name : ''
                 ),
-                array('name' => 'customer_name', 'value' => $model->customer->name),
-                'estimate_payment_date',
+                'status_document',
                 array(
                     'label' => 'Invoice #',
-                    'value' => $model->invoiceHeaders != null ? $model->invoiceHeaders[0]->invoice_number : 'N/A'
+                    'value' => $model->invoiceHeaders != null ? $model->invoiceHeaders[0]->invoice_number : 'N/A',
+                    'visible' => $model->payment_type === 'Cash' ? false: true,
                 ),
             ),
         )); ?>

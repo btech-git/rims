@@ -55,6 +55,9 @@ class SaleReceipt extends CComponent {
             $this->details[] = $detail;
             
             $this->header->total_invoice_amount = $this->getTotalInvoiceAmount();
+            $this->header->total_downpayment_amount = $this->getTotalDownpaymentAmount();
+            $this->header->total_own_risk_amount = $this->getTotalOwnRiskAmount();
+            $this->header->total_receivable_amount = $this->getTotalReceivableAmount();
         }
     }
 
@@ -134,7 +137,6 @@ class SaleReceipt extends CComponent {
 
     public function flush() {
         $this->header->due_date = empty($this->header->customer_id) ? $this->header->transaction_date : date('Y-m-d',strtotime('+' . $this->header->customer->tenor . ' days', strtotime($this->header->transaction_date)));
-//        $this->header->total_invoice_amount = $this->totalInvoiceAmount;
         $valid = $this->header->save(false);
 
         foreach ($this->details as $i => $detail) {
@@ -176,6 +178,36 @@ class SaleReceipt extends CComponent {
     }
     
     public function getTotalInvoiceAmount() {
+        $total = '0.00';
+        
+        foreach ($this->details as $detail) {
+            $total += $detail->invoice_amount;
+        }
+        
+        return $total;
+    }
+    
+    public function getTotalDownpaymentAmount() {
+        $total = '0.00';
+        
+        foreach ($this->details as $detail) {
+            $total += $detail->downpayment_amount;
+        }
+        
+        return $total;
+    }
+    
+    public function getTotalOwnRiskAmount() {
+        $total = '0.00';
+        
+        foreach ($this->details as $detail) {
+            $total += $detail->insurance_own_risk_amount;
+        }
+        
+        return $total;
+    }
+    
+    public function getTotalReceivableAmount() {
         $total = '0.00';
         
         foreach ($this->details as $detail) {

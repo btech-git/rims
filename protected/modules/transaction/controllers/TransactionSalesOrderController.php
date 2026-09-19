@@ -2,10 +2,6 @@
 
 class TransactionSalesOrderController extends Controller {
 
-    /**
-     * @var string the default layout for the views. Defaults to '//layouts/column2', meaning
-     * using two-column layout. See 'protected/views/layouts/column2.php'.
-     */
     public $layout = '//layouts/column1';
 
     public function filters() {
@@ -15,19 +11,13 @@ class TransactionSalesOrderController extends Controller {
     }
 
     public function filterAccess($filterChain) {
-        if (
-                $filterChain->action->id === 'create' ||
-                $filterChain->action->id === 'generateInvoice'
-        ) {
+        if ($filterChain->action->id === 'create' || $filterChain->action->id === 'generateInvoice') {
             if (!(Yii::app()->user->checkAccess('saleOrderCreate'))) {
                 $this->redirect(array('/site/login'));
             }
         }
 
-        if (
-                $filterChain->action->id === 'delete' ||
-                $filterChain->action->id === 'update'
-        ) {
+        if ($filterChain->action->id === 'delete' || $filterChain->action->id === 'update') {
             if (!(Yii::app()->user->checkAccess('saleOrderEdit'))) {
                 $this->redirect(array('/site/login'));
             }
@@ -40,13 +30,16 @@ class TransactionSalesOrderController extends Controller {
         }
 
         if (
-                $filterChain->action->id === 'admin' ||
-                $filterChain->action->id === 'index' ||
-                $filterChain->action->id === 'view' ||
-                $filterChain->action->id === 'showProduct'
+            $filterChain->action->id === 'admin' ||
+            $filterChain->action->id === 'index' ||
+            $filterChain->action->id === 'view' ||
+            $filterChain->action->id === 'showProduct'
         ) {
-            if (
-                    !(Yii::app()->user->checkAccess('saleOrderCreate') || Yii::app()->user->checkAccess('saleOrderEdit') || Yii::app()->user->checkAccess('saleOrderView'))) {
+            if (!(
+                Yii::app()->user->checkAccess('saleOrderCreate') || 
+                Yii::app()->user->checkAccess('saleOrderEdit') || 
+                Yii::app()->user->checkAccess('saleOrderView')
+            )) {
                 $this->redirect(array('/site/login'));
             }
         }
@@ -77,25 +70,20 @@ class TransactionSalesOrderController extends Controller {
 
             $journalReferences = array();
 
-//            if ($model->payment_type == "Cash") {
-//                $getCoaKas = '121.00.002';
-//                $coaKasWithCode = Coa::model()->findByAttributes(array('code' => $getCoaKas));
-//                $jurnalUmumKas = new JurnalUmum;
-//                $jurnalUmumKas->kode_transaksi = $model->sale_order_no;
-//                $jurnalUmumKas->tanggal_transaksi = $model->sale_order_date;
-//                $jurnalUmumKas->coa_id = $coaKasWithCode->id;
-//                $jurnalUmumKas->branch_id = $model->requester_branch_id;
-//                $jurnalUmumKas->total = round($model->total_price, 0);
-//                $jurnalUmumKas->debet_kredit = 'D';
-//                $jurnalUmumKas->tanggal_posting = date('Y-m-d');
-//                $jurnalUmumKas->transaction_subject = $transactionSubject;
-//                $jurnalUmumKas->is_coa_category = 0;
-//                $jurnalUmumKas->transaction_type = 'SO';
-//                $jurnalUmumKas->save();
-//            } else {
-                //D
-//                $getCoaPiutang = '121.00.001';
-//                $coaPiutangWithCode = $model->customer->coa_id;
+            if ($model->payment_type == "Cash") {
+                $jurnalUmumKas = new JurnalUmum;
+                $jurnalUmumKas->kode_transaksi = $model->sale_order_no;
+                $jurnalUmumKas->tanggal_transaksi = $model->sale_order_date;
+                $jurnalUmumKas->coa_id = $model->companyBank->coa_id;
+                $jurnalUmumKas->branch_id = $model->requester_branch_id;
+                $jurnalUmumKas->total = round($model->total_price, 0);
+                $jurnalUmumKas->debet_kredit = 'D';
+                $jurnalUmumKas->tanggal_posting = date('Y-m-d');
+                $jurnalUmumKas->transaction_subject = $transactionSubject;
+                $jurnalUmumKas->is_coa_category = 0;
+                $jurnalUmumKas->transaction_type = 'SO';
+                $jurnalUmumKas->save();
+            } else {
                 $jurnalUmumPiutang = new JurnalUmum;
                 $jurnalUmumPiutang->kode_transaksi = $model->sale_order_no;
                 $jurnalUmumPiutang->tanggal_transaksi = $model->sale_order_date;
@@ -108,7 +96,7 @@ class TransactionSalesOrderController extends Controller {
                 $jurnalUmumPiutang->is_coa_category = 0;
                 $jurnalUmumPiutang->transaction_type = 'SO';
                 $jurnalUmumPiutang->save();
-//            }
+            }
 
             foreach ($salesOrderDetails as $key => $soDetail) {
                 $coaId = $soDetail->product->productSubMasterCategory->coa_penjualan_barang_dagang;
@@ -183,10 +171,6 @@ class TransactionSalesOrderController extends Controller {
         ));
     }
 
-    /**
-     * Creates a new model.
-     * If creation is successful, the browser will be redirected to the 'view' page.
-     */
     public function actionCreate() {
 
         $salesOrder = $this->instantiate(null);
@@ -534,7 +518,6 @@ class TransactionSalesOrderController extends Controller {
 
     public function actionAjaxCountTotal($totalquantity, $totalprice) {
         $unitprice = $totalprice / $totalquantity;
-//		$unitprice = 20/5;
         $object = array('unitprice' => $unitprice);
         echo CJSON::encode($object);
     }
@@ -551,7 +534,7 @@ class TransactionSalesOrderController extends Controller {
         $historis = TransactionSalesOrderApproval::model()->findAllByAttributes(array('sales_order_id' => $headerId));
         $model = new TransactionSalesOrderApproval;
         $model->date = date('Y-m-d H:i:s');
-//        $branch = Branch::model()->findByPk($salesOrder->requester_branch_id);
+
         if (isset($_POST['TransactionSalesOrderApproval'])) {
             $model->attributes = $_POST['TransactionSalesOrderApproval'];
             if ($model->save()) {
@@ -561,7 +544,7 @@ class TransactionSalesOrderController extends Controller {
                         'kode_transaksi' => $salesOrder->sale_order_no,
                         'branch_id' => $salesOrder->requester_branch_id,
                     ));
-                    
+
                     $salesOrder->approved_id = $model->supervisor_id;
 
                     $transactionType = 'SO';
@@ -573,25 +556,20 @@ class TransactionSalesOrderController extends Controller {
 
                     $journalReferences = array();
 
-//                    if ($salesOrder->payment_type == "Cash") {
-//                        $getCoaKas = '121.00.002';
-//                        $coaKasWithCode = Coa::model()->findByAttributes(array('code' => $getCoaKas));
-//                        $jurnalUmumKas = new JurnalUmum;
-//                        $jurnalUmumKas->kode_transaksi = $transactionCode;
-//                        $jurnalUmumKas->tanggal_transaksi = $transactionDate;
-//                        $jurnalUmumKas->coa_id = $coaKasWithCode->id;
-//                        $jurnalUmumKas->branch_id = $branchId;
-//                        $jurnalUmumKas->total = round($salesOrder->total_price, 0);
-//                        $jurnalUmumKas->debet_kredit = 'D';
-//                        $jurnalUmumKas->tanggal_posting = date('Y-m-d');
-//                        $jurnalUmumKas->transaction_subject = $transactionSubject;
-//                        $jurnalUmumKas->is_coa_category = 0;
-//                        $jurnalUmumKas->transaction_type = 'SO';
-//                        $jurnalUmumKas->save();
-//                    } else {
-                        //D
-//                        $getCoaPiutang = '121.00.001';
-                        $coaPiutangWithCode = $salesOrder->customer->coa_id;
+                    if ($salesOrder->payment_type == "Cash") {
+                        $jurnalUmumKas = new JurnalUmum;
+                        $jurnalUmumKas->kode_transaksi = $transactionCode;
+                        $jurnalUmumKas->tanggal_transaksi = $transactionDate;
+                        $jurnalUmumKas->coa_id = $salesOrder->companyBank->coa_id;
+                        $jurnalUmumKas->branch_id = $branchId;
+                        $jurnalUmumKas->total = round($salesOrder->total_price, 0);
+                        $jurnalUmumKas->debet_kredit = 'D';
+                        $jurnalUmumKas->tanggal_posting = date('Y-m-d');
+                        $jurnalUmumKas->transaction_subject = $transactionSubject;
+                        $jurnalUmumKas->is_coa_category = 0;
+                        $jurnalUmumKas->transaction_type = 'SO';
+                        $jurnalUmumKas->save();
+                    } else {
                         $jurnalUmumPiutang = new JurnalUmum;
                         $jurnalUmumPiutang->kode_transaksi = $transactionCode;
                         $jurnalUmumPiutang->tanggal_transaksi = $transactionDate;
@@ -604,7 +582,7 @@ class TransactionSalesOrderController extends Controller {
                         $jurnalUmumPiutang->is_coa_category = 0;
                         $jurnalUmumPiutang->transaction_type = 'SO';
                         $jurnalUmumPiutang->save();
-//                    }
+                    }
 
                     foreach ($salesOrder->transactionSalesOrderDetails as $key => $soDetail) {
                         $coaId = $soDetail->product->productSubMasterCategory->coa_penjualan_barang_dagang;
@@ -678,22 +656,15 @@ class TransactionSalesOrderController extends Controller {
         ));
     }
 
-    /**
-     * Deletes a particular model.
-     * If deletion is successful, the browser will be redirected to the 'admin' page.
-     * @param integer $id the ID of the model to be deleted
-     */
     public function actionDelete($id) {
         $this->loadModel($id)->delete();
 
         // if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
-        if (!isset($_GET['ajax']))
+        if (!isset($_GET['ajax'])) {
             $this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
+        }
     }
 
-    /**
-     * Lists all models.
-     */
     public function actionIndex() {
         $dataProvider = new CActiveDataProvider('TransactionSalesOrder');
         $this->render('index', array(
@@ -770,13 +741,6 @@ class TransactionSalesOrderController extends Controller {
         }
     }
 
-    /**
-     * Returns the data model based on the primary key given in the GET variable.
-     * If the data model is not found, an HTTP exception will be raised.
-     * @param integer $id the ID of the model to be loaded
-     * @return TransactionSalesOrder the loaded model
-     * @throws CHttpException
-     */
     public function instantiate($id) {
         if (empty($id)) {
             $salesOrder = new SalesOrders(new TransactionSalesOrder(), array());
@@ -784,6 +748,7 @@ class TransactionSalesOrderController extends Controller {
             $salesOrderModel = $this->loadModel($id);
             $salesOrder = new SalesOrders($salesOrderModel, $salesOrderModel->transactionSalesOrderDetails);
         }
+        
         return $salesOrder;
     }
 
@@ -802,8 +767,9 @@ class TransactionSalesOrderController extends Controller {
                     $salesOrder->details[] = $detail;
                 }
             }
-            if (count($_POST['TransactionSalesOrderDetail']) < count($salesOrder->details))
+            if (count($_POST['TransactionSalesOrderDetail']) < count($salesOrder->details)) {
                 array_splice($salesOrder->details, $i + 1);
+            }
         } else {
             $salesOrder->details = array();
         }
@@ -814,7 +780,6 @@ class TransactionSalesOrderController extends Controller {
         $detail = TransactionSalesOrderDetail::model()->findAllByAttributes(array('sales_order_id' => $id));
         $mPDF1 = Yii::app()->ePdf->mpdf();
         $mPDF1 = Yii::app()->ePdf->mpdf('', 'A4');
-        //$stylesheet = file_get_contents(Yii::getPathOfAlias('pdfcss') . '/pdf.css');
         $stylesheet = file_get_contents(Yii::getPathOfAlias('webroot') . '/css/pdf.css');
         $mPDF1->WriteHTML($stylesheet, 1);
         $mPDF1->WriteHTML($this->renderPartial('pdf', array('so' => $so, 'detail' => $detail), true));
@@ -823,15 +788,13 @@ class TransactionSalesOrderController extends Controller {
 
     public function loadModel($id) {
         $model = TransactionSalesOrder::model()->findByPk($id);
-        if ($model === null)
+        if ($model === null) {
             throw new CHttpException(404, 'The requested page does not exist.');
+        }
+        
         return $model;
     }
 
-    /**
-     * Performs the AJAX validation.
-     * @param TransactionSalesOrder $model the model to be validated
-     */
     protected function performAjaxValidation($model) {
         if (isset($_POST['ajax']) && $_POST['ajax'] === 'transaction-sales-order-form') {
             echo CActiveForm::validate($model);
@@ -895,546 +858,6 @@ class TransactionSalesOrderController extends Controller {
         echo CJSON::encode($object);
     }
 
-    public function actionlaporanPenjualan() {
-        $this->pageTitle = "RIMS - Laporan Penjualan";
-
-        $tanggal_mulai = (isset($_GET['tanggal_mulai'])) ? $_GET['tanggal_mulai'] : date('Y-m-d');
-        $tanggal_sampai = (isset($_GET['tanggal_sampai'])) ? $_GET['tanggal_sampai'] : date('Y-m-d');
-        $company = (isset($_GET['company'])) ? $_GET['company'] : '';
-        $branch = (isset($_GET['branch'])) ? $_GET['branch'] : '';
-        $customer_id = (isset($_GET['customer_id'])) ? $_GET['customer_id'] : '';
-        $customer_name = (isset($_GET['customer_name'])) ? $_GET['customer_name'] : '';
-        $paymentType = (isset($_GET['payment_type'])) ? $_GET['payment_type'] : '';
-        $customerType = (isset($_GET['customer_type'])) ? $_GET['customer_type'] : '';
-
-        $criteria = new CDbCriteria;
-        if ($company != "") {
-            $branches = Branch::model()->findAllByAttributes(array('company_id' => $company));
-            $arrBranch = array();
-            foreach ($branches as $key => $branchId) {
-                $arrBranch[] = $branchId->id;
-            }
-            if ($branch != "") {
-                $criteria->addCondition("requester_branch_id = " . $branch);
-            } else {
-                $criteria->addInCondition('requester_branch_id', $arrBranch);
-            }
-        } else {
-            if ($branch != "") {
-                $criteria->addCondition("requester_branch_id = " . $branch);
-            }
-        }
-        if ($paymentType != "") {
-            $criteria->addCondition("payment_type = '" . $paymentType . "'");
-        }
-        if ($customerType != "") {
-            $criteria->together = true;
-            $criteria->with = array('customer');
-            $criteria->addCondition("customer.customer_type ='" . $customerType . "'");
-        }
-        if ($customer_id != "") {
-            $criteria->addCondition("customer_id = '" . $customer_id . "'");
-        }
-        $criteria->addBetweenCondition('t.sale_order_date', $tanggal_mulai, $tanggal_sampai);
-        $transactions = TransactionSalesOrder::model()->findAll($criteria);
-
-        //$jurnals = JurnalUmum::model()->findAll($coaCriteria);
-        $customer = new Customer('search');
-        $customer->unsetAttributes();  // clear any default values
-        if (isset($_GET['Customer']))
-            $customer->attributes = $_GET['Customer'];
-
-        $customerCriteria = new CDbCriteria;
-
-        $customerCriteria->compare('name', $customer->name, true);
-        $customerCriteria->compare('customer_type', $customer->customer_type, true);
-
-        $customerDataProvider = new CActiveDataProvider('Customer', array(
-            'criteria' => $customerCriteria,
-        ));
-        //print_r($jurnals);
-
-        if (isset($_GET['SaveExcel']))
-            $this->getXlsReport($transactions, $tanggal_mulai, $tanggal_sampai, $branch);
-
-        $this->render('laporanPenjualan', array(
-            'company' => $company,
-            'tanggal_mulai' => $tanggal_mulai,
-            'tanggal_sampai' => $tanggal_sampai,
-            'transactions' => $transactions,
-            'branch' => $branch,
-            'customer_id' => $customer_id,
-            'customer_name' => $customer_name,
-            'customerType' => $customerType,
-            'paymentType' => $paymentType,
-            'customer' => $customer,
-            'customerDataProvider' => $customerDataProvider,
-        ));
-    }
-
-    public function getXlsReport($transactions, $tanggal_mulai, $tanggal_sampai, $branch) {
-
-        $objPHPExcel = new PHPExcel();
-
-        // Set document properties
-        $objPHPExcel->getProperties()->setCreator("Cakra Studio")
-                ->setLastModifiedBy("RIMS")
-                ->setTitle("Laporan Penjualan " . date('d-m-Y'))
-                ->setSubject("Laporan Penjualan")
-                ->setDescription("Export Data Laporan Penjualan.")
-                ->setKeywords("Laporan Penjualan Data")
-                ->setCategory("Export Laporan Penjualan");
-
-        // style for horizontal vertical center
-        $styleHorizontalVertivalCenter = array(
-            'alignment' => array(
-                'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
-                'vertical' => PHPExcel_Style_Alignment::VERTICAL_CENTER,
-            )
-        );
-        $styleHorizontalVertivalCenterBold = array(
-            'font' => array(
-                'bold' => true,
-            ),
-            'alignment' => array(
-                'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
-                'vertical' => PHPExcel_Style_Alignment::VERTICAL_CENTER,
-            )
-        );
-        $styleLeftVertivalCenterBold = array(
-            'font' => array(
-                'bold' => true,
-            ),
-            'alignment' => array(
-                'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_LEFT,
-                'vertical' => PHPExcel_Style_Alignment::VERTICAL_CENTER,
-            )
-        );
-        $styleHorizontalCenter = array(
-            'alignment' => array(
-                'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
-            )
-        );
-        $styleVerticalCenter = array(
-            'alignment' => array(
-                'vertical' => PHPExcel_Style_Alignment::VERTICAL_CENTER,
-            )
-        );
-
-        $styleBold = array(
-            'font' => array(
-                'bold' => true,
-            )
-        );
-
-        // style color red
-        $styleColorRED = array(
-            'font' => array(
-                'color' => array('rgb' => 'FF0000'),
-                'bold' => true,
-            ),
-        );
-
-        // Add some data
-        $objPHPExcel->setActiveSheetIndex(0)
-                ->setCellValue('A2', 'PT RATU PERDANA INDAH JAYA')
-                ->setCellValue('A3', 'Laporan Penjualan')
-                ->setCellValue('A4', 'PERIODE (' . $tanggal_mulai . '-' . $tanggal_sampai . ')')
-                ->setCellValue('A6', 'TANGGAL')
-                ->setCellValue('B6', 'NO DOKUMEN')
-                ->setCellValue('C6', 'T/K')
-                ->setCellValue('D6', 'CUSTOMER')
-                ->setCellValue('H6', 'SUBTOTAL')
-                ->setCellValue('I6', 'DISCOUNT')
-                ->setCellValue('P6', 'PPN')
-                ->setCellValue('Q6', 'TOTAL')
-                ->setCellValue('A7', 'PRODUCT CODE')
-                ->setCellValue('B7', 'PRODUCT NAME')
-                ->setCellValue('C7', 'PRODUCT MASTER CATEGORY')
-                ->setCellValue('D7', 'PRODUCT SUB MASTER CATEGORY')
-                ->setCellValue('E7', 'PRODUCT SUB CATEGORY')
-                ->setCellValue('F7', 'QUANTITY')
-                ->setCellValue('G7', 'UNIT PRICE')
-                ->setCellValue('H7', 'BRUTTO')
-                ->setCellValue('I7', 'DISCOUNTS')
-                ->setCellValue('N7', 'DISCOUNT PRICE')
-                ->setCellValue('O7', 'NETTO')
-                ->setCellValue('P7', 'BIAYA')
-                ->setCellValue('Q7', 'TOTAL');
-
-        $objPHPExcel->setActiveSheetIndex(0)->mergeCells('A2:S2');
-        $objPHPExcel->setActiveSheetIndex(0)->mergeCells('A3:S3');
-        $objPHPExcel->setActiveSheetIndex(0)->mergeCells('A4:S4');
-        $objPHPExcel->setActiveSheetIndex(0)->mergeCells('I7:M7');
-
-        $sheet = $objPHPExcel->getActiveSheet();
-        $sheet->getStyle('A2:S2')->applyFromArray($styleHorizontalVertivalCenterBold);
-        $sheet->getStyle('A3:S3')->applyFromArray($styleHorizontalVertivalCenterBold);
-        $sheet->getStyle('A4:S4')->applyFromArray($styleHorizontalVertivalCenterBold);
-
-        $objPHPExcel->getActiveSheet()->getColumnDimension('A')->setWidth(15);
-        $objPHPExcel->getActiveSheet()->getColumnDimension('B')->setWidth(15);
-        $objPHPExcel->getActiveSheet()->getColumnDimension('C')->setWidth(15);
-        $objPHPExcel->getActiveSheet()->getColumnDimension('D')->setWidth(15);
-        $objPHPExcel->getActiveSheet()->getColumnDimension('E')->setWidth(15);
-        $objPHPExcel->getActiveSheet()->getColumnDimension('F')->setWidth(15);
-        $objPHPExcel->getActiveSheet()->getColumnDimension('G')->setWidth(15);
-        $objPHPExcel->getActiveSheet()->getColumnDimension('H')->setWidth(15);
-        $objPHPExcel->getActiveSheet()->getColumnDimension('I')->setWidth(15);
-        $objPHPExcel->getActiveSheet()->getColumnDimension('J')->setWidth(15);
-        $objPHPExcel->getActiveSheet()->getColumnDimension('K')->setWidth(15);
-        $objPHPExcel->getActiveSheet()->getColumnDimension('L')->setWidth(15);
-        $objPHPExcel->getActiveSheet()->getColumnDimension('M')->setWidth(15);
-        $objPHPExcel->getActiveSheet()->getColumnDimension('N')->setWidth(15);
-        $objPHPExcel->getActiveSheet()->getColumnDimension('O')->setWidth(15);
-        $objPHPExcel->getActiveSheet()->getColumnDimension('P')->setWidth(15);
-        $objPHPExcel->getActiveSheet()->getColumnDimension('Q')->setWidth(15);
-
-        $startrow = 8;
-        $grandPbd = $grandDisc = $grandPpn = $grandSubtotal = $grandTotal = 0;
-        foreach ($transactions as $key => $transaction) {
-
-            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('A' . $startrow, $transaction->sale_order_date);
-            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('B' . $startrow, $transaction->sale_order_no);
-            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('C' . $startrow, $transaction->customer->name);
-            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('D' . $startrow, $transaction->payment_type);
-
-            $startrow = $startrow + 1;
-            foreach ($transaction->transactionSalesOrderDetails as $key => $transactionDetail) {
-                $objPHPExcel->setActiveSheetIndex(0)->setCellValue('A' . $startrow, $transactionDetail->product->code);
-                $objPHPExcel->setActiveSheetIndex(0)->setCellValue('B' . $startrow, $transactionDetail->product->name);
-                $objPHPExcel->setActiveSheetIndex(0)->setCellValue('C' . $startrow, $transactionDetail->product->productMasterCategory->name);
-                $objPHPExcel->setActiveSheetIndex(0)->setCellValue('D' . $startrow, $transactionDetail->product->productSubMasterCategory->name);
-                $objPHPExcel->setActiveSheetIndex(0)->setCellValue('E' . $startrow, $transactionDetail->product->productSubCategory->name);
-                $objPHPExcel->setActiveSheetIndex(0)->setCellValue('F' . $startrow, $transactionDetail->quantity);
-                $objPHPExcel->setActiveSheetIndex(0)->setCellValue('G' . $startrow, number_format($transactionDetail->unit_price, 2));
-                $objPHPExcel->setActiveSheetIndex(0)->setCellValue('H' . $startrow, number_format($transactionDetail->quantity * $transactionDetail->unit_price, 2));
-                $objPHPExcel->setActiveSheetIndex(0)->setCellValue('I' . $startrow, ($transactionDetail->discount1_type == 1 ? $transactionDetail->discount1_nominal . ' %' : (($transactionDetail->discount1_type == 2) ? $transactionDetail->discount1_nominal : (($transactionDetail->discount1_type == 3) ? 'Bonus' . ' ' . $transactionDetail->discount1_nominal : '-'))));
-                $objPHPExcel->setActiveSheetIndex(0)->setCellValue('J' . $startrow, ($transactionDetail->discount2_type == 1 ? $transactionDetail->discount2_nominal . ' %' : (($transactionDetail->discount2_type == 2) ? $transactionDetail->discount2_nominal : (($transactionDetail->discount2_type == 3) ? 'Bonus' . ' ' . $transactionDetail->discount2_nominal : '-'))));
-                $objPHPExcel->setActiveSheetIndex(0)->setCellValue('K' . $startrow, ($transactionDetail->discount3_type == 1 ? $transactionDetail->discount3_nominal . ' %' : (($transactionDetail->discount3_type == 2) ? $transactionDetail->discount3_nominal : (($transactionDetail->discount3_type == 3) ? 'Bonus' . ' ' . $transactionDetail->discount3_nominal : '-'))));
-                $objPHPExcel->setActiveSheetIndex(0)->setCellValue('L' . $startrow, ($transactionDetail->discount4_type == 1 ? $transactionDetail->discount4_nominal . ' %' : (($transactionDetail->discount4_type == 2) ? $transactionDetail->discount4_nominal : (($transactionDetail->discount4_type == 3) ? 'Bonus' . ' ' . $transactionDetail->discount4_nominal : '-'))));
-                $objPHPExcel->setActiveSheetIndex(0)->setCellValue('M' . $startrow, ($transactionDetail->discount5_type == 1 ? $transactionDetail->discount5_nominal . ' %' : (($transactionDetail->discount5_type == 2) ? $transactionDetail->discount5_nominal : (($transactionDetail->discount5_type == 3) ? 'Bonus' . ' ' . $transactionDetail->discount5_nominal : '-'))));
-                $objPHPExcel->setActiveSheetIndex(0)->setCellValue('N' . $startrow, number_format($transactionDetail->discount, 2));
-
-                $objPHPExcel->setActiveSheetIndex(0)->setCellValue('Q' . $startrow, number_format($transactionDetail->total_price, 2));
-                $startrow++;
-            }
-            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('G' . $startrow, "SUBTOTAL");
-            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('H' . $startrow, number_format($transaction->price_before_discount, 2));
-
-            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('N' . $startrow, number_format($transaction->discount, 2));
-            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('P' . $startrow, number_format($transaction->ppn_price, 2));
-            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('Q' . $startrow, number_format($transaction->total_price, 2));
-            $sheet = $objPHPExcel->getActiveSheet();
-            $sheet->getStyle("G" . ($startrow) . ":Q" . ($startrow))->applyFromArray($styleBold);
-
-            $grandPbd += $transaction->price_before_discount;
-            $grandDisc += $transaction->discount;
-            $grandPpn += $transaction->ppn_price;
-            $grandSubtotal += $transaction->subtotal;
-            $grandTotal += $transaction->total_price;
-            $startrow++;
-        }
-
-        $objPHPExcel->setActiveSheetIndex(0)->setCellValue('G' . $startrow, "GRAND TOTAL");
-        $objPHPExcel->setActiveSheetIndex(0)->setCellValue('H' . $startrow, number_format($grandPbd, 2));
-
-        $objPHPExcel->setActiveSheetIndex(0)->setCellValue('N' . $startrow, number_format($grandDisc, 2));
-        $objPHPExcel->setActiveSheetIndex(0)->setCellValue('P' . $startrow, number_format($grandPpn, 2));
-        $objPHPExcel->setActiveSheetIndex(0)->setCellValue('Q' . $startrow, number_format($grandTotal, 2));
-        $sheet = $objPHPExcel->getActiveSheet();
-        $sheet->getStyle("G" . ($startrow) . ":Q" . ($startrow))->applyFromArray($styleBold);
-
-        $objCommentRichText = $objPHPExcel->getActiveSheet(0)->getComment('E5')->getText()->createTextRun('My first comment :)');
-        // Miscellaneous glyphs, UTF-8
-        // Rename worksheet
-        $objPHPExcel->getActiveSheet()->setTitle('LAPORAN PENJUALAN');
-
-        // Set active sheet index to the first sheet, so Excel opens this as the first sheet
-        // $objPHPExcel->setActiveSheetIndex(0);
-        $objPHPExcel->setActiveSheetIndex(0);
-
-        // Save a xls file
-        $filename = 'laporan_penjualan_data_' . date("Y-m-d");
-        header('Content-Type: application/vnd.ms-excel');
-        header('Content-Disposition: attachment;filename="' . $filename . '.xls"');
-        header('Cache-Control: max-age=0');
-
-        $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
-
-        $objWriter->save('php://output');
-        unset($this->objWriter);
-        unset($this->objWorksheet);
-        unset($this->objReader);
-        unset($this->objPHPExcel);
-        exit();
-    }
-
-    public function actionlaporanOutstanding() {
-        $this->pageTitle = "RIMS - Laporan Outstanding";
-
-        $tanggal_mulai = (isset($_GET['tanggal_mulai'])) ? $_GET['tanggal_mulai'] : date('Y-m-d');
-        $tanggal_sampai = (isset($_GET['tanggal_sampai'])) ? $_GET['tanggal_sampai'] : date('Y-m-d');
-        $due_mulai = (isset($_GET['due_mulai'])) ? $_GET['due_mulai'] : '';
-        $due_sampai = (isset($_GET['due_sampai'])) ? $_GET['due_sampai'] : '';
-        $company = (isset($_GET['company'])) ? $_GET['company'] : '';
-        $branch = (isset($_GET['branch'])) ? $_GET['branch'] : '';
-        $customer_id = (isset($_GET['customer_id'])) ? $_GET['customer_id'] : '';
-        $customer_name = (isset($_GET['customer_name'])) ? $_GET['customer_name'] : '';
-
-        $criteria = new CDbCriteria;
-
-        if ($customer_id != "") {
-            $criteria->with = array('transaction_so' => array('together' => true, 'with' => array('customer')));
-            $criteria->addCondition("customer_id = '" . $customer_id . "'");
-        }
-        $criteria->with = array('transaction_so');
-        $criteria->addBetweenCondition('transaction_so.sale_order_date', $tanggal_mulai, $tanggal_sampai);
-        $criteria->addBetweenCondition('t.due_date', $due_mulai, $due_sampai);
-        $criteria->addCondition("type_forecasting = 'so'");
-        if ($company != "") {
-            $branches = Branch::model()->findAllByAttributes(array('company_id' => $company));
-            $arrBranch = array();
-            foreach ($branches as $key => $branchId) {
-                $arrBranch[] = $branchId->id;
-            }
-            if ($branch != "") {
-                $criteria->addCondition("transaction_so.requester_branch_id = " . $branch);
-            } else {
-                $criteria->addInCondition('transaction_so.requester_branch_id', $arrBranch);
-            }
-        } else {
-            if ($branch != "") {
-                $criteria->addCondition("transaction_so.requester_branch_id = " . $branch);
-            }
-        }
-        $transactions = Forecasting::model()->findAll($criteria);
-
-        $customer = new Customer('search');
-        $customer->unsetAttributes();  // clear any default values
-        if (isset($_GET['Customer']))
-            $customer->attributes = $_GET['Customer'];
-
-        $customerCriteria = new CDbCriteria;
-
-        $customerCriteria->compare('name', $customer->name, true);
-        $customerCriteria->compare('customer_type', $customer->customer_type, true);
-
-        $customerDataProvider = new CActiveDataProvider('Customer', array(
-            'criteria' => $customerCriteria,
-        ));
-
-        if (isset($_GET['SaveExcel']))
-            $this->getXlsOutstanding($transactions, $tanggal_mulai, $tanggal_sampai);
-
-        $this->render('laporanOutstanding', array(
-            'tanggal_mulai' => $tanggal_mulai,
-            'tanggal_sampai' => $tanggal_sampai,
-            'due_mulai' => $due_mulai,
-            'due_sampai' => $due_sampai,
-            'transactions' => $transactions,
-            'branch' => $branch,
-            'company' => $company,
-            'customer_id' => $customer_id,
-            'customer_name' => $customer_name,
-            'customer' => $customer,
-            'customerDataProvider' => $customerDataProvider,
-        ));
-    }
-
-    public function getXlsOutstanding($transactions, $tanggal_mulai, $tanggal_sampai) {
-        $objPHPExcel = new PHPExcel();
-
-        // Set document properties
-        $objPHPExcel->getProperties()->setCreator("Cakra Studio")
-                ->setLastModifiedBy("RIMS")
-                ->setTitle("Laporan Outstanding Penjualan Data " . date('d-m-Y'))
-                ->setSubject("Outstanding Penjualan")
-                ->setDescription("Export Data Outstanding Penjualan.")
-                ->setKeywords("Outstanding Penjualan Data")
-                ->setCategory("Export Outstanding Penjualan");
-
-        // style for horizontal vertical center
-        $styleHorizontalVertivalCenter = array(
-            'alignment' => array(
-                'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
-                'vertical' => PHPExcel_Style_Alignment::VERTICAL_CENTER,
-            )
-        );
-        $styleHorizontalVertivalCenterBold = array(
-            'font' => array(
-                'bold' => true,
-            ),
-            'alignment' => array(
-                'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
-                'vertical' => PHPExcel_Style_Alignment::VERTICAL_CENTER,
-            )
-        );
-        $styleLeftVertivalCenterBold = array(
-            'font' => array(
-                'bold' => true,
-            ),
-            'alignment' => array(
-                'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_LEFT,
-                'vertical' => PHPExcel_Style_Alignment::VERTICAL_CENTER,
-            )
-        );
-        $styleHorizontalCenter = array(
-            'alignment' => array(
-                'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
-            )
-        );
-        $styleVerticalCenter = array(
-            'alignment' => array(
-                'vertical' => PHPExcel_Style_Alignment::VERTICAL_CENTER,
-            )
-        );
-
-        $styleBold = array(
-            'font' => array(
-                'bold' => true,
-            )
-        );
-
-        // style color red
-        $styleColorRED = array(
-            'font' => array(
-                'color' => array('rgb' => 'FF0000'),
-                'bold' => true,
-            ),
-        );
-        $styleBorder = array(
-            'borders' => array(
-                'allborders' => array(
-                    'style' => PHPExcel_Style_Border::BORDER_THIN
-                )
-            )
-        );
-        $styleSize = array(
-            'font' => array(
-                'size' => 11,
-                'name' => 'calibri',
-            )
-        );
-        $BStyle = array(
-            'borders' => array(
-                'bottom' => array(
-                    'style' => PHPExcel_Style_Border::BORDER_THICK
-                )
-            )
-        );
-
-        // Add some data
-        $objPHPExcel->setActiveSheetIndex(0)
-                ->setCellValue('A2', 'PT RATU PERDANA INDAH JAYA')
-                ->setCellValue('A3', 'Outstanding Penjualan')
-                ->setCellValue('A4', 'PERIODE (' . $tanggal_mulai . '-' . $tanggal_sampai . ')')
-                ->setCellValue('B7', 'NAMA CUSTOMER')
-                ->setCellValue('C7', 'TGL NOTA')
-                ->setCellValue('D7', 'TGL JATUH TEMPO')
-                ->setCellValue('E7', 'NO NOTA')
-                ->setCellValue('F7', 'NO POLISI')
-                ->setCellValue('G7', 'TOTAL NOTA')
-                ->setCellValue('H7', 'PPH23')
-                ->setCellValue('I7', 'LAIN2')
-                ->setCellValue('J7', 'TOTAL BAYAR')
-                ->setCellValue('K7', 'TOTAL PIUTANG')
-                ->setCellValue('L7', 'TGL BAYAR')
-                ->setCellValue('M7', 'NO PELUNASAN')
-                ->setCellValue('N7', 'KODE BANK');
-
-        $objPHPExcel->setActiveSheetIndex(0)->mergeCells('A2:N2');
-        $objPHPExcel->setActiveSheetIndex(0)->mergeCells('A3:N3');
-        $objPHPExcel->setActiveSheetIndex(0)->mergeCells('A4:N4');
-
-        $sheet = $objPHPExcel->getActiveSheet();
-        $sheet->getStyle('A2:J2')->applyFromArray($styleHorizontalVertivalCenterBold);
-        $sheet->getStyle('A3:J3')->applyFromArray($styleHorizontalVertivalCenterBold);
-        $sheet->getStyle('A4:J4')->applyFromArray($styleHorizontalVertivalCenterBold);
-
-        $sheet->getStyle('A7:N7')->applyFromArray($styleBold);
-        $sheet->getStyle('B7:N7')->applyFromArray($styleBorder);
-        $sheet->getStyle('B7:N7')->applyFromArray($styleSize);
-        $objPHPExcel->getActiveSheet()->getColumnDimension('A')->setWidth(2);
-        $objPHPExcel->getActiveSheet()->getColumnDimension('B')->setWidth(15);
-        $objPHPExcel->getActiveSheet()->getColumnDimension('C')->setWidth(17);
-        $objPHPExcel->getActiveSheet()->getColumnDimension('D')->setWidth(17);
-        $objPHPExcel->getActiveSheet()->getColumnDimension('E')->setWidth(15);
-        $objPHPExcel->getActiveSheet()->getColumnDimension('F')->setWidth(15);
-        $objPHPExcel->getActiveSheet()->getColumnDimension('G')->setWidth(15);
-        $objPHPExcel->getActiveSheet()->getColumnDimension('H')->setWidth(8);
-        $objPHPExcel->getActiveSheet()->getColumnDimension('I')->setWidth(8);
-        $objPHPExcel->getActiveSheet()->getColumnDimension('J')->setWidth(11);
-        $objPHPExcel->getActiveSheet()->getColumnDimension('K')->setWidth(13);
-        $objPHPExcel->getActiveSheet()->getColumnDimension('L')->setWidth(11);
-        $objPHPExcel->getActiveSheet()->getColumnDimension('M')->setWidth(13);
-        $objPHPExcel->getActiveSheet()->getColumnDimension('N')->setWidth(10);
-
-        $startrow = 8;
-        $totalDebet = $totalKredit = 0;
-        $totalNota = $ppn = $lain = $bayar = $piutang = 0;
-        foreach ($transactions as $key => $transaction) {
-
-            $so = TransactionSalesOrder::model()->findByPk($transaction->transaction_id);
-            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('B' . $startrow, $so->customer->name);
-            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('C' . $startrow, $so->sale_order_date);
-            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('D' . $startrow, $transaction->due_date);
-            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('E' . $startrow, $so->sale_order_no);
-            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('F' . $startrow, "");
-            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('G' . $startrow, number_format($so->subtotal, 2));
-            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('H' . $startrow, number_format($so->ppn_price, 2));
-            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('I' . $startrow, number_format($so->discount, 2));
-            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('J' . $startrow, number_format($transaction->realization_balance, 2));
-            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('K' . $startrow, number_format($so->total_price, 2));
-            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('L' . $startrow, $transaction->realization_date);
-            $sheet = $objPHPExcel->getActiveSheet();
-            $sheet->getStyle("B" . ($startrow) . ":N" . ($startrow))->applyFromArray($styleBorder);
-            $sheet->getStyle("B" . ($startrow) . ":N" . ($startrow))->applyFromArray($styleSize);
-
-            $totalNota += $so->subtotal;
-            $ppn += $so->ppn_price;
-            $lain += $so->discount;
-            $bayar += $transaction->realization_balance;
-            $piutang += $so->total_price;
-
-            $startrow++;
-        }
-        $objPHPExcel->setActiveSheetIndex(0)->setCellValue('F' . $startrow, "TOTAL");
-        $objPHPExcel->setActiveSheetIndex(0)->setCellValue('G' . $startrow, number_format($totalNota, 2));
-        $objPHPExcel->setActiveSheetIndex(0)->setCellValue('H' . $startrow, number_format($ppn, 2));
-        $objPHPExcel->setActiveSheetIndex(0)->setCellValue('I' . $startrow, number_format($lain, 2));
-        $objPHPExcel->setActiveSheetIndex(0)->setCellValue('J' . $startrow, number_format($bayar, 2));
-        $objPHPExcel->setActiveSheetIndex(0)->setCellValue('K' . $startrow, number_format($piutang, 2));
-        $sheet = $objPHPExcel->getActiveSheet();
-        $sheet->getStyle("F" . ($startrow) . ":K" . ($startrow))->applyFromArray($styleBold);
-        $sheet->getStyle("F" . ($startrow) . ":K" . ($startrow))->applyFromArray($BStyle);
-        $sheet->getStyle("B" . ($startrow) . ":N" . ($startrow))->applyFromArray($styleSize);
-
-        $objCommentRichText = $objPHPExcel->getActiveSheet(0)->getComment('E5')->getText()->createTextRun('My first comment :)');
-        // Miscellaneous glyphs, UTF-8
-        // Rename worksheet
-        $objPHPExcel->getActiveSheet()->setTitle('OUTSTANDING PENJUALAN');
-
-        // Set active sheet index to the first sheet, so Excel opens this as the first sheet
-        // $objPHPExcel->setActiveSheetIndex(0);
-        $objPHPExcel->setActiveSheetIndex(0);
-
-        // Save a xls file
-        $filename = 'outstanding_penjualan_data_' . date("Y-m-d");
-        header('Content-Type: application/vnd.ms-excel');
-        header('Content-Disposition: attachment;filename="' . $filename . '.xls"');
-        header('Cache-Control: max-age=0');
-
-        $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
-
-        $objWriter->save('php://output');
-        unset($this->objWriter);
-        unset($this->objWorksheet);
-        unset($this->objReader);
-        unset($this->objPHPExcel);
-        exit();
-    }
-
     public function actionAjaxGetBranch() {
 
         $data = Branch::model()->findAllByAttributes(array('company_id' => $_POST['company']));
@@ -1453,5 +876,4 @@ class TransactionSalesOrderController extends Controller {
             echo CHtml::tag('option', array('value' => ''), '-- All Branch --', true);
         }
     }
-
 }

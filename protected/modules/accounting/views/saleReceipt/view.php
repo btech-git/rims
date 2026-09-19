@@ -280,7 +280,7 @@ $this->breadcrumbs = array(
                             <tr>
                                 <td style="text-align: right; font-weight: bold" colspan="6">Total</td>
                                 <td style="text-align: right; font-weight: bold">
-                                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($model, 'total_invoice_amount'))); ?>
+                                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($model, 'total_receivable_amount'))); ?>
                                 </td>
                             </tr>
                         </tfoot>

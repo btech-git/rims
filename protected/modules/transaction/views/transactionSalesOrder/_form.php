@@ -4,7 +4,10 @@
 /* @var $form CActiveForm */
 ?>
 <div class="clearfix page-action">
-    <?php echo CHtml::link('<span class="fa fa-list"></span>Manage', Yii::app()->baseUrl . '/transaction/transactionSalesOrder/admin', array('class' => 'button cbutton right', 'visible' => Yii::app()->user->checkAccess("transaction.transactionSalesOrder.admin"))) ?>
+    <?php echo CHtml::link('<span class="fa fa-list"></span>Manage', Yii::app()->baseUrl . '/transaction/transactionSalesOrder/admin', array(
+        'class' => 'button cbutton right', 
+        'visible' => Yii::app()->user->checkAccess("transaction.transactionSalesOrder.admin"),
+    )); ?>
     <h1>
         <?php
         if ($salesOrder->header->id == "") {
@@ -63,7 +66,10 @@
                             <label class="prefix"><?php echo $form->labelEx($salesOrder->header, 'status_document'); ?></label>
                         </div>
                         <div class="small-8 columns">
-                            <?php echo $form->textField($salesOrder->header, 'status_document', array('value' => $salesOrder->header->isNewRecord ? 'Draft' : $salesOrder->header->status_document, 'readonly' => true)); ?>
+                            <?php echo $form->textField($salesOrder->header, 'status_document', array(
+                                'value' => $salesOrder->header->isNewRecord ? 'Draft' : $salesOrder->header->status_document, 
+                                'readonly' => true,
+                            )); ?>
                             <?php echo $form->error($salesOrder->header, 'status_document'); ?>
                         </div>
                     </div>
@@ -169,11 +175,37 @@
                 <div class="field">
                     <div class="row collapse">
                         <div class="small-4 columns">
+                            <label class="prefix"><?php echo $form->labelEx($salesOrder->header, 'coa_customer'); ?></label>
+                        </div>
+                        <div class="small-8 columns">
+                            <?php echo $form->hiddenField($salesOrder->header, 'coa_customer'); ?>
+                            <?php echo $form->textField($salesOrder->header, 'coa_name', array(
+                                'readonly' => true, 
+                                'value' => $salesOrder->header->coa_customer != "" ? $salesOrder->customer->coa->name : ''
+                            )); ?>
+                            <?php echo $form->error($salesOrder->header, 'coa_customer'); ?>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="field">
+                    <div class="row collapse">
+                        <div class="small-4 columns">
                             <label class="prefix"><?php echo $form->labelEx($salesOrder->header, 'requester_id'); ?></label>
                         </div>
                         <div class="small-8 columns">
-                            <?php echo $form->hiddenField($salesOrder->header, 'requester_id', array('size' => 30, 'maxlength' => 30, 'value' => $salesOrder->header->isNewRecord ? Yii::app()->user->getId() : $salesOrder->header->requester_id, 'readonly' => true)); ?>
-                            <?php echo $form->textField($salesOrder->header, 'requester_name', array('size' => 30, 'maxlength' => 30, 'value' => $salesOrder->header->isNewRecord ? Yii::app()->user->getName() : $salesOrder->header->user->username, 'readonly' => true)); ?>
+                            <?php echo $form->hiddenField($salesOrder->header, 'requester_id', array(
+                                'size' => 30, 
+                                'maxlength' => 30, 
+                                'value' => $salesOrder->header->isNewRecord ? Yii::app()->user->getId() : $salesOrder->header->requester_id, 
+                                'readonly' => true
+                            )); ?>
+                            <?php echo $form->textField($salesOrder->header, 'requester_name', array(
+                                'size' => 30, 
+                                'maxlength' => 30, 
+                                'value' => $salesOrder->header->isNewRecord ? Yii::app()->user->getName() : $salesOrder->header->user->username, 
+                                'readonly' => true
+                            )); ?>
                             <?php echo $form->error($salesOrder->header, 'requester_id'); ?>
                         </div>
                     </div>
@@ -226,19 +258,6 @@
             </div>
 
             <div class="small-12 medium-6 columns">
-                <div class="field">
-                    <div class="row collapse">
-                        <div class="small-4 columns">
-                            <label class="prefix"><?php echo $form->labelEx($salesOrder->header, 'coa_customer'); ?></label>
-                        </div>
-                        <div class="small-8 columns">
-                            <?php echo $form->hiddenField($salesOrder->header, 'coa_customer'); ?>
-                            <?php echo $form->textField($salesOrder->header, 'coa_name', array('readonly' => true, 'value' => $salesOrder->header->coa_customer != "" ? $salesOrder->customer->coa->name : '')); ?>
-                            <?php echo $form->error($salesOrder->header, 'coa_customer'); ?>
-                        </div>
-                    </div>
-                </div> 
-
                 <div class="field">
                     <div class="row collapse">
                         <div class="small-4 columns">
@@ -297,9 +316,6 @@
                             <label class="prefix"><?php echo $form->labelEx($salesOrder->header, 'payment_type'); ?></label>
                         </div>
                         <div class="small-8 columns">
-                            <div id="payment-text">
-                                <?php echo $form->textField($salesOrder->header, 'payment_type', array('readonly' => true, 'value' => 'Cash')); ?>
-                            </div>
                             <div id="payment-ddl">
                                 <?php echo $form->dropDownList($salesOrder->header, 'payment_type', array('Cash' => 'Cash', 'Credit' => 'Credit'), array(
                                     'prompt' => '[--Select Payment type--]',
@@ -320,6 +336,24 @@
                         </div>
                     </div>
                 </div>
+                
+                <?php //if ($salesOrder->header->payment_type == 'Cash'): ?>
+                    <div class="field">
+                        <div class="row collapse">
+                            <div class="small-4 columns">
+                                <label class="prefix"><?php echo $form->labelEx($salesOrder->header, 'company_bank_id'); ?></label>
+                            </div>
+                            <div class="small-8 columns">
+                                <?php echo $form->dropDownList($salesOrder->header, 'company_bank_id', CHtml::listData(CompanyBank::model()->findAll(array(
+                                    'condition' => 't.status = "Active"',
+                                    'order' => 't.account_name ASC',
+                                )), 'id', 'accountNameAndNumber'), array('empty' => '-- Pilih --')); ?>
+                                <?php echo $form->error($salesOrder->header, 'company_bank_id'); ?>
+                            </div>
+                        </div>
+                    </div>
+                <?php //endif; ?>
+                
                 <div class="field">
                     <div class="row collapse">
                         <div class="small-4 columns">
@@ -331,6 +365,7 @@
                         </div>
                     </div>
                 </div>
+                
                 <div class="field">
                     <div class="row collapse">
                         <div class="small-4 columns">
@@ -340,7 +375,7 @@
                             <?php echo CHtml::activeDropDownList($salesOrder->header, 'tax_percentage', array(
                                 0 => 0,
                                 10 => 10,
-                                11 =>11,
+                                11 => 11,
                             )); ?>
                             <?php echo $form->error($salesOrder->header, 'tax_percentage'); ?>
                         </div>
@@ -413,7 +448,10 @@
 
             <div class="field buttons text-center">
                 <?php echo CHtml::submitButton('Cancel', array('name' => 'Cancel', 'confirm' => 'Are you sure you want to cancel?')); ?>
-                <?php echo CHtml::submitButton($salesOrder->header->isNewRecord ? 'Create' : 'Save', array('class' => 'button cbutton', 'confirm' => 'Are you sure you want to save?')); ?>
+                <?php echo CHtml::submitButton($salesOrder->header->isNewRecord ? 'Create' : 'Save', array(
+                    'class' => 'button cbutton', 
+                    'confirm' => 'Are you sure you want to save?'
+                )); ?>
             </div>
             <?php echo IdempotentManager::generate(); ?>
 
@@ -656,17 +694,3 @@ Yii::app()->clientScript->registerScript('myjavascript', '
     //$(".numbers").number( true,2, ".", ",");
 ', CClientScript::POS_END);
 ?>
-<script>
-    var type = $("#TransactionSalesOrder_cust_type").val();
-    var coa = $("#TransactionSalesOrder_coa_customer").val();
-
-    if (coa == "") {
-        $("#payment-text").hide();
-        $("#payment-ddl").show();
-        $("#payment-ddl select").attr("disabled", false);
-    } else {
-        $("#payment-text").hide();
-        $("#payment-ddl").show();
-        $("#payment-ddl select").prop("disabled", false);
-    }
-</script>
