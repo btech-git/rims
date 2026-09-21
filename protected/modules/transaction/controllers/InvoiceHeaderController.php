@@ -114,6 +114,7 @@ class InvoiceHeaderController extends Controller {
         $invoice->header->edited_datetime = date('Y-m-d H:i:s');
         $invoice->header->user_id_edited = Yii::app()->user->id;
         $invoice->header->invoice_amount = $invoice->header->total_price - $invoice->header->downpayment_amount - $invoice->header->insurance_own_risk_amount;
+        $invoice->header->payment_left = $invoice->header->total_price - $invoice->header->downpayment_amount - $invoice->header->insurance_own_risk_amount - $invoice->header->payment_amount;
         
         if (isset($_POST['Cancel'])) {
             $this->redirect(array('admin'));
