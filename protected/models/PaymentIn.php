@@ -193,6 +193,7 @@ class PaymentIn extends MonthlyTransactionActiveRecord {
         $criteria->compare('t.insurance_company_id', $this->insurance_company_id);
         $criteria->compare('invoice_number_list', $this->invoice_number_list, true);
         $criteria->compare('plate_number_list', $this->plate_number_list, true);
+        $criteria->compare('payment_category', $this->payment_category);
 
         $criteria->together = 'true';
         $criteria->with = array('invoice');

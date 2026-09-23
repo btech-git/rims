@@ -85,7 +85,7 @@ $('.search-form form').submit(function(){
                 <?php $this->widget('zii.widgets.grid.CGridView', array(
                     'id' => 'payment-in-grid',
                     'dataProvider' => $dataProvider,
-                    'filter' => NULL,
+                    'filter' => $model,
                     'template' => '{items}<div class="clearfix">{summary}{pager}</div>',
                     'pager' => array(
                         'cssFile' => false,
@@ -110,6 +110,16 @@ $('.search-form form').submit(function(){
                             'htmlOptions' => array('style' => 'text-align: right'),
                         ),
                         array(
+                            'header' => 'Category',
+                            'name' => 'payment_category',
+                            'filter' => CHtml::activeDropDownList($model, 'payment_category', array(
+                                'Invoice' => 'Invoice',
+                                'Downpayment' => 'DP',
+                                'Own Risk' => 'OR',
+                            ), array('empty' => '-- all --')),
+                            'value' => '$data->payment_category',
+                        ),
+                        array(
                             'header' => 'Insurance',
                             'value' => 'empty($data->insurance_company_id) ? "N/A" : $data->insuranceCompany->name',
                         ),
@@ -127,12 +137,12 @@ $('.search-form form').submit(function(){
                             'header' => 'Status',
                             'value' => '$data->status'
                         ),
-                        array(
-                            'header' => 'Tanggal Input',
-                            'name' => 'created_datetime',
-                            'filter' => false,
-                            'value' => 'Yii::app()->dateFormatter->format("d MMM yyyy", $data->created_datetime)'
-                        ),
+//                        array(
+//                            'header' => 'Tanggal Input',
+//                            'name' => 'created_datetime',
+//                            'filter' => false,
+//                            'value' => 'Yii::app()->dateFormatter->format("d MMM yyyy", $data->created_datetime)'
+//                        ),
                     ),
                 )); ?>
             </div>
