@@ -28,7 +28,7 @@ $this->breadcrumbs = array(
             <?php endif; ?>
         
             <?php if ($model->payment_remaining > '0.00'): ?>
-                <?php echo CHtml::link('<span class="fa fa-plus"></span>Payment', array("/transaction/paymentIn/create", "invoiceOwnRiskId" => $model->id), array(
+                <?php echo CHtml::link('<span class="fa fa-plus"></span>Payment', array("/transaction/paymentIn/createInvoiceOwnRisk", "invoiceOwnRiskId" => $model->id), array(
                     'class' => 'button success right', 
                     'style' => 'margin-right:10px', 
                 )); ?>

@@ -108,7 +108,7 @@ $('.search-form form').submit(function(){
 //                        'value' => 'empty($data->requesterBranch) ? "" : $data->requesterBranch->name',
 //                    ),
                     array(
-                        'header' => 'Status',
+                        'header' => 'Status Delivery',
                         'value' => '$data->totalRemainingQuantityDelivered',
                     ),
                     array(

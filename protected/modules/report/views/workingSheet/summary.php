@@ -132,10 +132,10 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
 
                 <div class="relative">
                     <div class="reportDisplay">
-                        <?php //$dataCount = count($coas); ?>
-                        <?php //if ($dataCount > 0): ?>
-                            <?php //echo "Displaying 1-{$dataCount} of {$dataCount} result(s)."; ?>
-                        <?php //endif; ?>
+                        <?php $dataCount = count($coas); ?>
+                        <?php if ($dataCount > 0): ?>
+                            <?php echo "Displaying 1-{$dataCount} of {$dataCount} result(s)."; ?>
+                        <?php endif; ?>
                     </div>
                     
                     <?php $this->renderPartial('_summary', array(

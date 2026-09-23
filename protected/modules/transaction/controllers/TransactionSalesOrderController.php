@@ -233,8 +233,6 @@ class TransactionSalesOrderController extends Controller {
      */
     public function actionUpdate($id) {
         $salesOrder = $this->instantiate($id);
-        $salesOrder->header->setCodeNumberByRevision('sale_order_no');
-
         $this->performAjaxValidation($salesOrder->header);
 
         $customer = new Customer('search');
@@ -277,6 +275,7 @@ class TransactionSalesOrderController extends Controller {
 
         if (isset($_POST['TransactionSalesOrder']) && IdempotentManager::check()) {
             $this->loadState($salesOrder);
+            $salesOrder->header->setCodeNumberByRevision('sale_order_no');
 
             if ($salesOrder->save(Yii::app()->db)) {
                 $this->redirect(array('view', 'id' => $salesOrder->header->id));
