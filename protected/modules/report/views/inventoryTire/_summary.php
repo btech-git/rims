@@ -45,7 +45,7 @@
                         <?php echo CHtml::encode(CHtml::value($product, 'subBrandSeries.name')); ?>
                     </td>
                     <td>
-                        <?php echo CHtml::encode(CHtml::value($product, 'tireSize.tireName')); ?>
+                        <?php echo CHtml::encode(CHtml::value($product, 'productSubMasterCategory.name')); ?>
                     </td>
                     <td><?php echo CHtml::encode(CHtml::value($product, 'unit.name')); ?></td>
 
