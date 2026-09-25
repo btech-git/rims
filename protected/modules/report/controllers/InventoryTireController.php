@@ -29,7 +29,7 @@ class InventoryTireController extends Controller {
         
         $endDate = isset($_GET['EndDate']) ? $_GET['EndDate'] : date('Y-m-d');
         $product = Search::bind(new Product(), isset($_GET['Product']) ? $_GET['Product'] : '');
-        $branches = Branch::model()->findAll();
+        $branches = Branch::model()->findAll(array('condition' => 't.id NOT IN (6, 9)'));
         
         $inventoryTireProductionYearStockReport = InventoryDetail::getInventoryTireProductionYearStockReport($endDate, $product);
         

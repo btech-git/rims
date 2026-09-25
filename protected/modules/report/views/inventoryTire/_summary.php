@@ -36,16 +36,16 @@
                 <?php $product = Product::model()->findByPk($productId); ?>
                 <?php $totalStockSums = array(); ?>
                 <tr>
-                    <td><?php echo CHtml::link(CHtml::value($product, 'id'), array('detail', 'id' => $product->id, 'endDate' => $endDate)); ?></td>
+                    <td><?php echo CHtml::encode(CHtml::value($product, 'id')); ?></td>
                     <td><?php echo CHtml::encode(CHtml::value($product, 'manufacturer_code')); ?></td>
-                    <td><?php echo CHtml::link(CHtml::value($product, 'nameAndSpecification'), array('detail', 'id' => $product->id, 'endDate' => $endDate)); ?></td>
+                    <td><?php echo CHtml::encode(CHtml::value($product, 'nameAndSpecification')); ?></td>
                     <td>
                         <?php echo CHtml::encode(CHtml::value($product, 'brand.name')); ?> - 
                         <?php echo CHtml::encode(CHtml::value($product, 'subBrand.name')); ?> - 
                         <?php echo CHtml::encode(CHtml::value($product, 'subBrandSeries.name')); ?>
                     </td>
                     <td>
-                        <?php echo CHtml::encode(CHtml::value($product, 'productSubMasterCategory.name')); ?>
+                        <?php echo CHtml::encode(CHtml::value($product, 'tireSize.tireName')); ?>
                     </td>
                     <td><?php echo CHtml::encode(CHtml::value($product, 'unit.name')); ?></td>
 
