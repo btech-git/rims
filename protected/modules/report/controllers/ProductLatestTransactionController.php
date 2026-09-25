@@ -1,0 +1,248 @@
+<?php
+
+class ProductLatestTransactionController extends Controller {
+
+    public function filters() {
+        return array(
+            'access',
+        );
+    }
+
+    public function filterAccess($filterChain) {
+        if ($filterChain->action->id === 'summary') {
+            if (!(Yii::app()->user->checkAccess('monthlyProductSaleTransactionReport'))) {
+                $this->redirect(array('/site/login'));
+            }
+        }
+
+        $filterChain->run();
+    }
+
+    public function actionSummary() {
+        set_time_limit(0);
+        ini_set('memory_limit', '1024M');
+        
+        $page = (isset($_GET['page'])) ? $_GET['page'] : '';
+        $product = Search::bind(new Product(), isset($_GET['Product']) ? $_GET['Product'] : '');
+        $productDataProvider = $product->search();
+        
+        $currentPage = (empty($page)) ? 0 : $page - 1;
+        $productDataProvider->pagination->currentPage = $currentPage;
+        
+        $productIds = array_map(function($product) { return $product->id; }, $productDataProvider->data);
+        
+        $productLatestTransactionReport = MovementOutDetail::getProductLatestTransactionReport($productIds);
+        
+        $productLatestTransactionReportData = array();
+        foreach ($productLatestTransactionReport as $productLatestTransactionReportItem) {
+            $productLatestTransactionReportData[$productLatestTransactionReportItem['product_id']]['date_posting'] = $productLatestTransactionReportItem['date_posting'];
+            $productLatestTransactionReportData[$productLatestTransactionReportItem['product_id']]['movement_out_no'] = $productLatestTransactionReportItem['movement_out_no'];
+        }
+        
+        if (isset($_GET['ResetFilter'])) {
+            $this->redirect(array('summary'));
+        }
+        
+//        if (isset($_GET['SaveExcel'])) {
+//            $this->saveToExcel($monthlyProductSaleTransactionReportData, $inventoryAllBranchCurrentStockData, $year, $monthList, $month, $branches);
+//        }
+        
+        $this->render('summary', array(
+            'product' => $product,
+            'productDataProvider' => $productDataProvider,
+            'productLatestTransactionReportData' => $productLatestTransactionReportData,
+        ));
+    }
+    
+    public function actionAjaxHtmlUpdateProductSubBrandSelect() {
+        if (Yii::app()->request->isAjaxRequest) {
+            $brandId = isset($_GET['BrandId']) ? $_GET['BrandId'] : '';
+            $subBrandId = (isset($_GET['SubBrandId'])) ? $_GET['SubBrandId'] : '';
+
+            $this->renderPartial('_productSubBrandSelect', array(
+                'brandId' => $brandId,
+                'subBrandId' => $subBrandId,
+            ));
+        }
+    }
+
+    public function actionAjaxHtmlUpdateProductSubBrandSeriesSelect() {
+        if (Yii::app()->request->isAjaxRequest) {
+            $subBrandId = isset($_GET['SubBrandId']) ? $_GET['SubBrandId'] : '';
+            $subBrandSeriesId = (isset($_GET['SubBrandSeriesId'])) ? $_GET['SubBrandSeriesId'] : '';
+
+            $this->renderPartial('_productSubBrandSeriesSelect', array(
+                'subBrandId' => $subBrandId,
+                'subBrandSeriesId' => $subBrandSeriesId,
+            ));
+        }
+    }
+
+    public function actionAjaxHtmlUpdateProductSubMasterCategorySelect() {
+        if (Yii::app()->request->isAjaxRequest) {
+            $masterCategoryId = isset($_GET['MasterCategoryId']) ? $_GET['MasterCategoryId'] : '';
+            $subMasterCategoryId = isset($_GET['SubMasterCategoryId']) ? $_GET['SubMasterCategoryId'] : '';
+
+            $this->renderPartial('_productSubMasterCategorySelect', array(
+                'masterCategoryId' => $masterCategoryId,
+                'subMasterCategoryId' => $subMasterCategoryId,
+            ));
+        }
+    }
+
+    public function actionAjaxHtmlUpdateProductSubCategorySelect() {
+        if (Yii::app()->request->isAjaxRequest) {
+            $subMasterCategoryId = isset($_GET['SubMasterCategoryId']) ? $_GET['SubMasterCategoryId'] : '';
+            $subCategoryId = isset($_GET['SubCategoryId']) ? $_GET['SubCategoryId'] : '';
+
+            $this->renderPartial('_productSubCategorySelect', array(
+                'subMasterCategoryId' => $subMasterCategoryId,
+                'subCategoryId' => $subCategoryId,
+            ));
+        }
+    }
+
+    protected function saveToExcel($monthlyProductSaleTransactionReportData, $inventoryAllBranchCurrentStockData, $year, $monthList, $month, $branches) {
+        set_time_limit(0);
+        ini_set('memory_limit', '1024M');
+
+        spl_autoload_unregister(array('YiiBase', 'autoload'));
+        include_once Yii::getPathOfAlias('ext.phpexcel.Classes') . DIRECTORY_SEPARATOR . 'PHPExcel.php';
+        spl_autoload_register(array('YiiBase', 'autoload'));
+        
+        $objPHPExcel = new PHPExcel();
+
+        $documentProperties = $objPHPExcel->getProperties();
+        $documentProperties->setCreator('Raperind Motor');
+        $documentProperties->setTitle('Penjualan Parts Bulanan');
+
+        $worksheet = $objPHPExcel->setActiveSheetIndex(0);
+        $worksheet->setTitle('Penjualan Parts Bulanan');
+
+        $worksheet->mergeCells('A1:Z1');
+        $worksheet->mergeCells('A2:Z2');
+        $worksheet->mergeCells('A3:Z3');
+
+        $worksheet->setCellValue('A1', 'Raperind Motor ');
+        $worksheet->setCellValue('A2', 'Penjualan Parts & Components Bulanan');
+        $worksheet->setCellValue('A3', 'Periode Tahun: ' . $monthList[$month] . ' ' . $year);
+        
+        $numberOfDays = cal_days_in_month(CAL_GREGORIAN, $month, $year);
+        
+        $columnStart = 'G';
+        $columnEnd = 'K';
+        
+        foreach ($branches as $branch) {
+            $worksheet->mergeCells("{$columnStart}5:{$columnEnd}5");
+            $worksheet->setCellValue("{$columnStart}5", CHtml::value($branch, 'code'));
+            ++$columnStart; ++$columnStart; ++$columnStart; ++$columnStart; ++$columnStart;
+            ++$columnEnd; ++$columnEnd; ++$columnEnd; ++$columnEnd; ++$columnEnd;
+            $worksheet->setCellValue("{$columnStart}5", '');
+            ++$columnStart; ++$columnEnd;
+        }
+        $worksheet->mergeCells("{$columnStart}5:{$columnEnd}5");
+        $worksheet->setCellValue("{$columnStart}5", 'All Cabang');
+
+        $worksheet->setCellValue('A6', 'No');
+        $worksheet->setCellValue('B6', 'ID');
+        $worksheet->setCellValue('C6', 'Code');
+        $worksheet->setCellValue('D6', 'Name');
+        $worksheet->setCellValue('E6', 'Brand');
+        $worksheet->setCellValue('F6', 'Category');
+        
+        $columnCounter = 'G';
+        foreach ($branches as $branch) {
+            $worksheet->setCellValue("{$columnCounter}6", 'Total Jual');
+            $columnCounter++;
+            $worksheet->setCellValue("{$columnCounter}6", 'Average Jual');
+            $columnCounter++;
+            $worksheet->setCellValue("{$columnCounter}6", 'Klasifikasi');
+            $columnCounter++;
+            $worksheet->setCellValue("{$columnCounter}6", 'Min Stok');
+            $columnCounter++;
+            $worksheet->setCellValue("{$columnCounter}6", 'Posisi Stok');
+            $columnCounter++;$columnCounter++;
+        }
+        $worksheet->setCellValue("{$columnCounter}6", 'Total Jual');
+        $columnCounter++;
+        $worksheet->setCellValue("{$columnCounter}6", 'Average Jual');
+        $columnCounter++;
+        $worksheet->setCellValue("{$columnCounter}6", 'Klasifikasi');
+        $columnCounter++;
+        $worksheet->setCellValue("{$columnCounter}6", 'Min Stok');
+        $columnCounter++;
+        $worksheet->setCellValue("{$columnCounter}6", 'Posisi Stok');
+        
+        $worksheet->getStyle("A5:{$columnCounter}5")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A6:{$columnCounter}6")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A1:{$columnCounter}6")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->getStyle("A1:{$columnCounter}6")->getFont()->setBold(true);
+
+        $counter = 7;
+        $ordinal = 0;
+        
+        foreach ($monthlyProductSaleTransactionReportData as $productId => $monthlyProductSaleTransactionReportDataItem) {
+            $worksheet->getStyle("G{$counter}:Z{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
+            $product = Product::model()->findByPk($productId); 
+
+            $worksheet->setCellValue("A{$counter}", ++$ordinal);
+            $worksheet->setCellValue("B{$counter}", $monthlyProductSaleTransactionReportDataItem['product_id']);
+            $worksheet->setCellValue("C{$counter}", $monthlyProductSaleTransactionReportDataItem['product_code']);
+            $worksheet->setCellValue("D{$counter}", $monthlyProductSaleTransactionReportDataItem['product_name']);
+            $worksheet->setCellValue("E{$counter}", $monthlyProductSaleTransactionReportDataItem['brand_name'] . ' - ' . $monthlyProductSaleTransactionReportDataItem['sub_brand_name'] . ' - ' . $monthlyProductSaleTransactionReportDataItem['sub_brand_series_name']);
+            $worksheet->setCellValue("F{$counter}", $monthlyProductSaleTransactionReportDataItem['master_category_name'] . ' - ' . $monthlyProductSaleTransactionReportDataItem['sub_master_category_name'] . ' - ' . $monthlyProductSaleTransactionReportDataItem['sub_category_name']);
+            
+            $invoiceTotals = array();
+            $quantityStocks = array();
+            $columnCounter = 'G';
+            
+            foreach ($branches as $branch) {
+                $invoiceTotal = isset($monthlyProductSaleTransactionReportDataItem['totals'][$branch->id]) ? $monthlyProductSaleTransactionReportDataItem['totals'][$branch->id] : '0.00';
+                $quantityStock = isset($inventoryAllBranchCurrentStockData[$productId][$branch->id]) ? $inventoryAllBranchCurrentStockData[$productId][$branch->id] : '0.00';
+                $worksheet->setCellValue("{$columnCounter}{$counter}", $invoiceTotal);
+                $columnCounter++;
+                $worksheet->setCellValue("{$columnCounter}{$counter}", round($invoiceTotal / $numberOfDays, 2));
+                $columnCounter++;
+                $worksheet->setCellValue("{$columnCounter}{$counter}", '');
+                $columnCounter++;
+                $worksheet->setCellValue("{$columnCounter}{$counter}", $product->minimum_stock);
+                $columnCounter++;
+                $worksheet->setCellValue("{$columnCounter}{$counter}", $quantityStock);
+                $columnCounter++;$columnCounter++;
+                $invoiceTotals[] = $invoiceTotal;
+                $quantityStocks[] = $quantityStock;
+            }
+            $invoiceTotalSum = array_sum($invoiceTotals);
+            $quantityStockSum = array_sum($quantityStocks); 
+            $worksheet->setCellValue("{$columnCounter}{$counter}", $invoiceTotalSum);
+            $columnCounter++;
+            $worksheet->setCellValue("{$columnCounter}{$counter}", round($invoiceTotalSum / $numberOfDays, 2));
+            $columnCounter++;
+            $worksheet->setCellValue("{$columnCounter}{$counter}", '');
+            $columnCounter++;
+            $worksheet->setCellValue("{$columnCounter}{$counter}", $product->minimum_stock);
+            $columnCounter++;
+            $worksheet->setCellValue("{$columnCounter}{$counter}", $quantityStockSum);
+            $columnCounter++;
+            
+            $counter++;
+        }
+
+        for ($col = 'A'; $col !== 'BG'; $col++) {
+            $objPHPExcel->getActiveSheet()
+            ->getColumnDimension($col)
+            ->setAutoSize(true);
+        }
+
+        ob_end_clean();
+
+        header('Content-type: application/vnd.ms-excel');
+        header('Content-Disposition: attachment;filename="penjualan_parts_components_bulanan.xls"');
+        header('Cache-Control: max-age=0');
+
+        $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
+        $objWriter->save('php://output');
+
+        Yii::app()->end();
+    }
+}

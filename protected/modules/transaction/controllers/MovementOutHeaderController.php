@@ -226,7 +226,7 @@ class MovementOutHeaderController extends Controller {
         
         $yearNow = date('Y');
         $yearList = array();
-        for ($y = $yearNow; $y >= $yearNow - 2; $y--) {
+        for ($y = $yearNow; $y >= $yearNow - 3; $y--) {
             $yearList[$y] = $y;
         }
         
@@ -273,7 +273,7 @@ class MovementOutHeaderController extends Controller {
 
         $yearNow = date('Y');
         $yearList = array();
-        for ($y = $yearNow; $y >= $yearNow - 2; $y--) {
+        for ($y = $yearNow; $y >= $yearNow - 3; $y--) {
             $yearList[$y] = $y;
         }
         

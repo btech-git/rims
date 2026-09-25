@@ -565,4 +565,60 @@ class InventoryDetail extends CActiveRecord {
 
         return $value;
     }
+    
+    public static function getInventoryTireProductionYearStockReport($endDate, $product) {
+        $brandIdConditionSql = '';
+        $subBrandIdConditionSql = '';
+        $subBrandSeriesIdConditionSql = '';
+        $productIdConditionSql = '';
+        $productCodeConditionSql = '';
+        $productNameConditionSql = '';
+
+        $params = array(
+            ':end_date' => $endDate,
+        );
+
+        if (!empty($product->brand_id)) {
+            $brandIdConditionSql = " AND p.brand_id = :brand_id";
+            $params[':brand_id'] = $product->brand_id;
+        }
+
+        if (!empty($product->sub_brand_id)) {
+            $subBrandIdConditionSql = " AND p.sub_brand_id = :sub_brand_id";
+            $params[':sub_brand_id'] = $product->sub_brand_id;
+        }
+
+        if (!empty($product->sub_brand_series_id)) {
+            $subBrandSeriesIdConditionSql = " AND p.sub_brand_series_id = :sub_brand_series_id";
+            $params[':sub_brand_series_id'] = $product->sub_brand_series_id;
+        }
+
+        if (!empty($product->id)) {
+            $productIdConditionSql = " AND p.id = :product_id";
+            $params[':product_id'] = $product->id;
+        }
+
+        if (!empty($product->code)) {
+            $productCodeConditionSql = " AND p.manufacturer_code LIKE :product_code";
+            $params[':product_code'] = "%$product->code%";
+        }
+
+        if (!empty($product->name)) {
+            $productNameConditionSql = " AND p.name LIKE :product_name";
+            $params[':product_name'] = "%$product->name%";
+        }
+
+        $sql = "SELECT i.product_id, w.branch_id, i.production_year, SUM(i.stock_in + i.stock_out) AS total_stock
+                FROM " . InventoryDetail::model()->tableName() . " i 
+                INNER JOIN " . Product::model()->tableName() . " p ON p.id = i.product_id
+                INNER JOIN " . Warehouse::model()->tableName() . " w ON w.id = i.warehouse_id
+                WHERE w.status = 'Active' AND p.product_sub_master_category_id IN (25, 26) AND i.transaction_date BETWEEN '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND :end_date" . $brandIdConditionSql . $subBrandIdConditionSql . 
+                    $subBrandSeriesIdConditionSql . $productIdConditionSql . $productCodeConditionSql . $productNameConditionSql . "
+                GROUP BY i.product_id, w.branch_id, i.production_year
+                HAVING total_stock <> 0";
+
+        $value = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
+
+        return $value;
+    }
 }

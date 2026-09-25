@@ -166,4 +166,17 @@ class MovementOutDetail extends CActiveRecord {
     public function getQuantityReceiveLeft() {
         return $this->quantity_delivery - $this->quantity_receive;
     }
+    
+    public static function getProductLatestTransactionReport($productIds) {
+        $productIdsSql = empty($productIds) ? 'NULL' : implode(',', $productIds);
+        
+        $sql = "SELECT d.product_id, h.date_posting, h.movement_out_no
+                FROM rims_movement_out_detail d 
+                INNER JOIN rims_movement_out_header h ON h.id = d.movement_out_header_id
+                WHERE d.product_id IN ({$productIdsSql}) AND h.date_posting = (SELECT MAX(oh.date_posting) FROM rims_movement_out_detail od INNER JOIN rims_movement_out_header oh ON oh.id = od.movement_out_header_id WHERE od.product_id = d.product_id)";
+
+        $value = Yii::app()->db->createCommand($sql)->queryAll(true);
+
+        return $value;
+    }
 }
