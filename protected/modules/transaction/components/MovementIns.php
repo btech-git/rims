@@ -132,7 +132,7 @@ class MovementIns extends CComponent {
 
                 $fields = array('quantity');
                 $valid = $detail->validate($fields) && $valid;
-                if (in_array($detail->product->product_sub_master_category_id, array(25, 26, 27)) && empty($detail->production_year)) {
+                if (in_array($detail->product->product_sub_master_category_id, array(26)) && empty($detail->production_year)) {
                     $valid = false;
                     $detail->addError('production_year', 'Production Year harus diisi.');
                 }
