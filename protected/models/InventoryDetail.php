@@ -612,7 +612,7 @@ class InventoryDetail extends CActiveRecord {
                 FROM " . InventoryDetail::model()->tableName() . " i 
                 INNER JOIN " . Product::model()->tableName() . " p ON p.id = i.product_id
                 INNER JOIN " . Warehouse::model()->tableName() . " w ON w.id = i.warehouse_id
-                WHERE w.status = 'Active' AND p.product_sub_master_category_id IN (25, 26) AND i.transaction_date BETWEEN '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND :end_date" . $brandIdConditionSql . $subBrandIdConditionSql . 
+                WHERE w.status = 'Active' AND p.product_sub_master_category_id IN (26) AND i.transaction_date BETWEEN '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND :end_date" . $brandIdConditionSql . $subBrandIdConditionSql . 
                     $subBrandSeriesIdConditionSql . $productIdConditionSql . $productCodeConditionSql . $productNameConditionSql . "
                 GROUP BY i.product_id, w.branch_id, i.production_year
                 HAVING total_stock <> 0";

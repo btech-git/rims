@@ -35,7 +35,7 @@
                     <td>
                         <?php echo CHtml::activeDropdownList($detail, "[$i]production_year", $yearList, array(
                             'empty' => '-- Pilih Tahun --', 
-                            'disabled' => !in_array($product->product_sub_master_category_id, array(25, 26)),
+                            'disabled' => !in_array($product->product_sub_master_category_id, array(26)),
                         )); ?>
                         <?php echo CHtml::error($detail, 'production_year'); ?>
                     </td>
