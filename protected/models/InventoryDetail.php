@@ -39,12 +39,12 @@ class InventoryDetail extends CActiveRecord {
         // will receive user inputs.
         return array(
             array(' product_id, warehouse_id, transaction_type, transaction_number, transaction_date', 'required'),
-            array('inventory_id, product_id, warehouse_id', 'numerical', 'integerOnly' => true),
+            array('inventory_id, product_id, warehouse_id, production_year', 'numerical', 'integerOnly' => true),
             array('transaction_type, stock_in, stock_out', 'length', 'max' => 10),
             array('transaction_number', 'length', 'max' => 50),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, inventory_id, product_id, warehouse_id, transaction_type, transaction_number, transaction_date, stock_in, stock_out, notes, purchase_price', 'safe', 'on' => 'search'),
+            array('id, inventory_id, product_id, warehouse_id, transaction_type, transaction_number, transaction_date, stock_in, stock_out, notes, purchase_price, production_year', 'safe', 'on' => 'search'),
         );
     }
 
@@ -152,6 +152,41 @@ class InventoryDetail extends CActiveRecord {
             'pagination' => array(
                 'pageSize' => 500,
                 'currentPage' => $currentPage,
+            ),
+        ));
+    }
+
+    public function searchByReport($productId, $branchId, $year, $page) {
+        // @todo Please modify the following code to remove attributes that should not be searched.
+
+        $criteria = new CDbCriteria;
+
+        $criteria->together = 'true';
+        $criteria->with = array('warehouse');
+
+        $criteria->compare('id', $this->id);
+        $criteria->compare('inventory_id', $this->inventory_id);
+        $criteria->compare('product_id', $productId);
+        $criteria->compare('warehouse_id', $this->warehouse_id);
+        $criteria->compare('transaction_type', $this->transaction_type, true);
+        $criteria->compare('transaction_number', $this->transaction_number, true);
+        $criteria->compare('transaction_date', $this->transaction_date, true);
+        $criteria->compare('stock_in', $this->stock_in);
+        $criteria->compare('stock_out', $this->stock_out);
+        $criteria->compare('notes', $this->notes, true);
+        $criteria->compare('purchase_price', $this->purchase_price, true);        
+        $criteria->compare('production_year', $year);
+
+        if ($branchId !== '') {
+            $criteria->compare('warehouse.branch_id', $branchId);
+        }
+        $criteria->order = 't.transaction_date ASC';
+
+        return new CActiveDataProvider($this, array(
+            'criteria' => $criteria,
+            'pagination' => array(
+                'pageSize' => 100,
+                'currentPage' => $page - 1,
             ),
         ));
     }

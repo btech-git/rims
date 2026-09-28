@@ -115,4 +115,22 @@ class MovementInDetail extends CActiveRecord {
             'criteria' => $criteria,
         ));
     }
+    
+    public static function getProductLatestTransactionReport($productIds) {
+        $productIdsSql = empty($productIds) ? 'NULL' : implode(',', $productIds);
+        
+        $sql = "SELECT d.product_id, h.date_posting, h.movement_in_number
+                FROM " . MovementInDetail::model()->tableName() . " d 
+                INNER JOIN " . MovementInHeader::model()->tableName() . " h ON h.id = d.movement_in_header_id
+                WHERE d.product_id IN ({$productIdsSql}) AND h.date_posting = (
+                    SELECT MAX(oh.date_posting)
+                    FROM " . MovementInDetail::model()->tableName() . " od
+                    INNER JOIN " . MovementInHeader::model()->tableName() . " oh ON oh.id = od.movement_in_header_id
+                    WHERE od.product_id = d.product_id
+                )";
+
+        $value = Yii::app()->db->createCommand($sql)->queryAll(true);
+
+        return $value;
+    }
 }

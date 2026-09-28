@@ -1256,4 +1256,22 @@ class InvoiceDetail extends CActiveRecord {
 
         return $resultSet;
     }
+    
+    public static function getProductLatestTransactionReport($productIds) {
+        $productIdsSql = empty($productIds) ? 'NULL' : implode(',', $productIds);
+        
+        $sql = "SELECT d.product_id, h.invoice_date, h.invoice_number
+                FROM " . InvoiceDetail::model()->tableName() . " d 
+                INNER JOIN " . InvoiceHeader::model()->tableName() . " h ON h.id = d.invoice_id
+                WHERE d.product_id IN ({$productIdsSql}) AND h.invoice_date = (
+                    SELECT MAX(oh.invoice_date)
+                    FROM " . InvoiceDetail::model()->tableName() . " od
+                    INNER JOIN " . InvoiceHeader::model()->tableName() . " oh ON oh.id = od.invoice_id
+                    WHERE od.product_id = d.product_id
+                )";
+
+        $value = Yii::app()->db->createCommand($sql)->queryAll(true);
+
+        return $value;
+    }
 }

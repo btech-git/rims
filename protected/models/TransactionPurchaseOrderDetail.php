@@ -491,4 +491,22 @@ class TransactionPurchaseOrderDetail extends CActiveRecord {
 
         return $total;
     }
+    
+    public static function getProductLatestTransactionReport($productIds) {
+        $productIdsSql = empty($productIds) ? 'NULL' : implode(',', $productIds);
+        
+        $sql = "SELECT d.product_id, h.purchase_order_date, h.purchase_order_no
+                FROM " . TransactionPurchaseOrderDetail::model()->tableName() . " d 
+                INNER JOIN " . TransactionPurchaseOrder::model()->tableName() . " h ON h.id = d.purchase_order_id
+                WHERE d.product_id IN ({$productIdsSql}) AND h.purchase_order_date = (
+                    SELECT MAX(oh.purchase_order_date)
+                    FROM " . TransactionPurchaseOrderDetail::model()->tableName() . " od
+                    INNER JOIN " . TransactionPurchaseOrder::model()->tableName() . " oh ON oh.id = od.purchase_order_id
+                    WHERE od.product_id = d.product_id
+                )";
+
+        $value = Yii::app()->db->createCommand($sql)->queryAll(true);
+
+        return $value;
+    }
 }
