@@ -16,7 +16,7 @@
         )) ?>
     <?php endif; ?>
 
-    <?php if ($paymentOut->status == "Draft" && Yii::app()->user->checkAccess("paymentOutApproval") && !($paymentOut->status == 'CANCELLED!!!')): ?>
+    <?php if ($paymentOut->status == "Draft" && Yii::app()->user->checkAccess("paymentOutApproval") && !($paymentOut->status == 'CANCELLED!!!') && $paymentOut->payment_date <= date('Y-m-d')): ?>
         <?php echo CHtml::link('<span class="fa fa-edit"></span>Approval', Yii::app()->baseUrl . '/accounting/paymentOut/updateApproval?headerId=' . $paymentOut->id, array(
             'class' => 'button success right', 
             'style' => 'margin-right:10px'
