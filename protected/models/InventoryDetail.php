@@ -527,7 +527,7 @@ class InventoryDetail extends CActiveRecord {
                 INNER JOIN " . Warehouse::model()->tableName() . " w ON w.id = i.warehouse_id
                 WHERE p.product_sub_category_id IN (442, 443, 444) AND i.transaction_date >= '2020-12-31' AND w.status = 'Active'
                 GROUP BY w.branch_id, i.production_year, i.product_id
-                HAVING total_stock <> 0 AND i.production_year BETWEEN :start_year AND :end_year" . $brandIdConditionSql . $subBrandIdConditionSql . 
+                HAVING i.production_year BETWEEN :start_year AND :end_year" . $brandIdConditionSql . $subBrandIdConditionSql . 
                     $subBrandSeriesIdConditionSql . $productIdConditionSql . $productCodeConditionSql . $productNameConditionSql . $tireSizeConditionSql;
 
         $value = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
