@@ -49,7 +49,7 @@ class StockTireController extends Controller {
             $tireSizeId = '';
         }
         
-        $startYear = max(2021, $endYear - 2);
+        $startYear = max(2021, $endYear - 5);
         
         $inventoryTireStockReport = InventoryDetail::getInventoryTireStockReport($startYear, $endYear, $brandId, $subBrandId, $subBrandSeriesId, $productId, $productCode, $productName, $tireSizeId);
         
