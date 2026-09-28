@@ -418,7 +418,9 @@ class TransactionPurchaseOrder extends MonthlyTransactionActiveRecord {
         
         foreach ($this->transactionReceiveItems as $transactionReceiveItem) {
             foreach ($transactionReceiveItem->payOutDetails as $payOutDetail) {
-                $total += $payOutDetail->amount;
+                if ($payOutDetail->paymentOut->status == 'Approved') {
+                    $total += $payOutDetail->amount;
+                }
             }
         }
         
