@@ -54,7 +54,10 @@ Yii::app()->clientScript->registerScript('search', "
 
                     <?php $this->renderPartial('_summary', array(
                         'productDataProvider' => $productDataProvider,
-                        'productLatestTransactionReportData' => $productLatestTransactionReportData,
+                        'movementOutProductLatestTransactionReportData' => $movementOutProductLatestTransactionReportData,
+                        'movementInProductLatestTransactionReportData' => $movementInProductLatestTransactionReportData,
+                        'saleProductLatestTransactionReportData' => $saleProductLatestTransactionReportData,
+                        'purchaseProductLatestTransactionReportData' => $purchaseProductLatestTransactionReportData,
                     )); ?>
                 </div>
                 

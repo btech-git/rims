@@ -9,7 +9,6 @@
                 <td>Code</td>
                 <td>Name</td>
                 <td>Ukuran</td>
-                <td>Tahun Produksi</td>
             </tr>
         </thead>
         <tbody>
@@ -56,7 +55,6 @@
                         'empty' => '-- All --',
                     )); ?>
                 </td>
-                <td><?php echo CHtml::dropDownList('EndYear', $endYear, $yearList); ?></td>
             </tr>
         </tbody>
     </table>

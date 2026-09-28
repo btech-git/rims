@@ -23,7 +23,7 @@ class StockTireController extends Controller {
         $filterChain->run();
     }
 
-    public function actionCheck() {
+    public function actionSummary() {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
         
@@ -49,7 +49,7 @@ class StockTireController extends Controller {
             $tireSizeId = '';
         }
         
-        $startYear = max(2024, $endYear - 2);
+        $startYear = max(2021, $endYear - 2);
         
         $inventoryTireStockReport = InventoryDetail::getInventoryTireStockReport($startYear, $endYear, $brandId, $subBrandId, $subBrandSeriesId, $productId, $productCode, $productName, $tireSizeId);
         
@@ -71,7 +71,7 @@ class StockTireController extends Controller {
             $this->saveToExcel($inventoryTireStockReportData, $startYear, $endYear, $branches);
         }
 
-        $this->render('check', array(
+        $this->render('summary', array(
             'inventoryTireStockReportData' => $inventoryTireStockReportData,
             'startYear' => $startYear,
             'endYear' => $endYear,
@@ -84,6 +84,24 @@ class StockTireController extends Controller {
             'productName' => $productName,
             'tireSizeId' => $tireSizeId,
             'branches' => $branches,
+        ));
+    }
+
+    public function actionTransactionInfo($productId, $branchId, $year) {
+        set_time_limit(0);
+        ini_set('memory_limit', '1024M');
+
+        $page = (isset($_GET['page'])) ? $_GET['page'] : 1;
+        
+        $dataProvider = InventoryDetail::model()->searchByReport($productId, $branchId, $year, $page);
+        $branch = Branch::model()->findByPk($branchId);
+        $product = Product::model()->findByPk($productId);
+        
+        $this->render('transactionInfo', array(
+            'dataProvider' => $dataProvider,
+            'year' => $year,
+            'product' => $product,
+            'branch' => $branch,
         ));
     }
 

@@ -1,4 +1,4 @@
-<?php echo CHtml::dropDownList('SubMasterCategoryId', $subMasterCategoryId, CHtml::listData(ProductSubMasterCategory::model()->findAllByAttributes(array('product_master_category_id' => $masterCategoryId)), 'id', 'name'), array(
+<?php echo CHtml::activeDropDownList($product, 'product_sub_master_category_id', CHtml::listData(ProductSubMasterCategory::model()->findAllByAttributes(array('product_master_category_id' => $product->product_master_category_id)), 'id', 'name'), array(
     'empty' => '-- Pilih Sub Master Category --',
     'order' => 'name',
     'onchange' => CHtml::ajax(array(

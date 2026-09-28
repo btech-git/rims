@@ -32,15 +32,33 @@
                     <td><?php echo CHtml::encode(CHtml::value($product, 'productMasterCategory.name')) . ' - ' . CHtml::encode(CHtml::value($product, 'productSubMasterCategory.name')) . ' - ' . CHtml::encode(CHtml::value($product, 'productSubCategory.name')); ?></td>
                     <td><?php echo CHtml::encode(CHtml::value($product, 'unit.name')); ?></td>
                     <td>
-                        <?php if (isset($productLatestTransactionReportData[$product->id])): ?>
-                            <?php echo CHtml::encode('Date Posting: ' . $productLatestTransactionReportData[$product->id]['date_posting']); ?>
+                        <?php if (isset($movementOutProductLatestTransactionReportData[$product->id])): ?>
+                            <?php echo CHtml::encode('Transaction #: ' . $movementOutProductLatestTransactionReportData[$product->id]['movement_out_no']); ?>
                             <br />
-                            <?php echo CHtml::encode('Movement Out No: ' . $productLatestTransactionReportData[$product->id]['movement_out_no']); ?>
+                            <?php echo CHtml::encode('Date: ' . $movementOutProductLatestTransactionReportData[$product->id]['date_posting']); ?>
                         <?php endif; ?>
                     </td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
+                    <td>
+                        <?php if (isset($movementInProductLatestTransactionReportData[$product->id])): ?>
+                            <?php echo CHtml::encode('Transaction #: ' . $movementInProductLatestTransactionReportData[$product->id]['movement_in_number']); ?>
+                            <br />
+                            <?php echo CHtml::encode('Date: ' . $movementInProductLatestTransactionReportData[$product->id]['date_posting']); ?>
+                        <?php endif; ?>
+                    </td>
+                    <td>
+                        <?php if (isset($saleProductLatestTransactionReportData[$product->id])): ?>
+                            <?php echo CHtml::encode('Transaction #: ' . $saleProductLatestTransactionReportData[$product->id]['invoice_number']); ?>
+                            <br />
+                            <?php echo CHtml::encode('Date: ' . $saleProductLatestTransactionReportData[$product->id]['invoice_date']); ?>
+                        <?php endif; ?>
+                    </td>
+                    <td>
+                        <?php if (isset($purchaseProductLatestTransactionReportData[$product->id])): ?>
+                            <?php echo CHtml::encode('Transaction #: ' . $purchaseProductLatestTransactionReportData[$product->id]['purchase_order_no']); ?>
+                            <br />
+                            <?php echo CHtml::encode('Date: ' . $purchaseProductLatestTransactionReportData[$product->id]['purchase_order_date']); ?>
+                        <?php endif; ?>
+                    </td>
                 </tr>
             <?php endforeach; ?>
         </tbody>

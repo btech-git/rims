@@ -31,12 +31,33 @@ class ProductLatestTransactionController extends Controller {
         
         $productIds = array_map(function($product) { return $product->id; }, $productDataProvider->data);
         
-        $productLatestTransactionReport = MovementOutDetail::getProductLatestTransactionReport($productIds);
+        $movementOutProductLatestTransactionReport = MovementOutDetail::getProductLatestTransactionReport($productIds);
+        $movementInProductLatestTransactionReport = MovementInDetail::getProductLatestTransactionReport($productIds);
+        $saleProductLatestTransactionReport = InvoiceDetail::getProductLatestTransactionReport($productIds);
+        $purchaseProductLatestTransactionReport = TransactionPurchaseOrderDetail::getProductLatestTransactionReport($productIds);
         
-        $productLatestTransactionReportData = array();
-        foreach ($productLatestTransactionReport as $productLatestTransactionReportItem) {
-            $productLatestTransactionReportData[$productLatestTransactionReportItem['product_id']]['date_posting'] = $productLatestTransactionReportItem['date_posting'];
-            $productLatestTransactionReportData[$productLatestTransactionReportItem['product_id']]['movement_out_no'] = $productLatestTransactionReportItem['movement_out_no'];
+        $movementOutProductLatestTransactionReportData = array();
+        foreach ($movementOutProductLatestTransactionReport as $movementOutProductLatestTransactionReportItem) {
+            $movementOutProductLatestTransactionReportData[$movementOutProductLatestTransactionReportItem['product_id']]['date_posting'] = $movementOutProductLatestTransactionReportItem['date_posting'];
+            $movementOutProductLatestTransactionReportData[$movementOutProductLatestTransactionReportItem['product_id']]['movement_out_no'] = $movementOutProductLatestTransactionReportItem['movement_out_no'];
+        }
+        
+        $movementInProductLatestTransactionReportData = array();
+        foreach ($movementInProductLatestTransactionReport as $movementInProductLatestTransactionReportItem) {
+            $movementInProductLatestTransactionReportData[$movementInProductLatestTransactionReportItem['product_id']]['date_posting'] = $movementInProductLatestTransactionReportItem['date_posting'];
+            $movementInProductLatestTransactionReportData[$movementInProductLatestTransactionReportItem['product_id']]['movement_in_number'] = $movementInProductLatestTransactionReportItem['movement_in_number'];
+        }
+        
+        $saleProductLatestTransactionReportData = array();
+        foreach ($saleProductLatestTransactionReport as $saleProductLatestTransactionReportItem) {
+            $saleProductLatestTransactionReportData[$saleProductLatestTransactionReportItem['product_id']]['invoice_date'] = $saleProductLatestTransactionReportItem['invoice_date'];
+            $saleProductLatestTransactionReportData[$saleProductLatestTransactionReportItem['product_id']]['invoice_number'] = $saleProductLatestTransactionReportItem['invoice_number'];
+        }
+        
+        $purchaseProductLatestTransactionReportData = array();
+        foreach ($purchaseProductLatestTransactionReport as $purchaseProductLatestTransactionReportItem) {
+            $purchaseProductLatestTransactionReportData[$purchaseProductLatestTransactionReportItem['product_id']]['purchase_order_date'] = $purchaseProductLatestTransactionReportItem['purchase_order_date'];
+            $purchaseProductLatestTransactionReportData[$purchaseProductLatestTransactionReportItem['product_id']]['purchase_order_no'] = $purchaseProductLatestTransactionReportItem['purchase_order_no'];
         }
         
         if (isset($_GET['ResetFilter'])) {
@@ -50,54 +71,49 @@ class ProductLatestTransactionController extends Controller {
         $this->render('summary', array(
             'product' => $product,
             'productDataProvider' => $productDataProvider,
-            'productLatestTransactionReportData' => $productLatestTransactionReportData,
+            'movementOutProductLatestTransactionReportData' => $movementOutProductLatestTransactionReportData,
+            'movementInProductLatestTransactionReportData' => $movementInProductLatestTransactionReportData,
+            'saleProductLatestTransactionReportData' => $saleProductLatestTransactionReportData,
+            'purchaseProductLatestTransactionReportData' => $purchaseProductLatestTransactionReportData,
         ));
     }
     
     public function actionAjaxHtmlUpdateProductSubBrandSelect() {
         if (Yii::app()->request->isAjaxRequest) {
-            $brandId = isset($_GET['BrandId']) ? $_GET['BrandId'] : '';
-            $subBrandId = (isset($_GET['SubBrandId'])) ? $_GET['SubBrandId'] : '';
+            $product = Search::bind(new Product(), isset($_GET['Product']) ? $_GET['Product'] : '');
 
             $this->renderPartial('_productSubBrandSelect', array(
-                'brandId' => $brandId,
-                'subBrandId' => $subBrandId,
+                'product' => $product,
             ));
         }
     }
 
     public function actionAjaxHtmlUpdateProductSubBrandSeriesSelect() {
         if (Yii::app()->request->isAjaxRequest) {
-            $subBrandId = isset($_GET['SubBrandId']) ? $_GET['SubBrandId'] : '';
-            $subBrandSeriesId = (isset($_GET['SubBrandSeriesId'])) ? $_GET['SubBrandSeriesId'] : '';
+            $product = Search::bind(new Product(), isset($_GET['Product']) ? $_GET['Product'] : '');
 
             $this->renderPartial('_productSubBrandSeriesSelect', array(
-                'subBrandId' => $subBrandId,
-                'subBrandSeriesId' => $subBrandSeriesId,
+                'product' => $product,
             ));
         }
     }
 
     public function actionAjaxHtmlUpdateProductSubMasterCategorySelect() {
         if (Yii::app()->request->isAjaxRequest) {
-            $masterCategoryId = isset($_GET['MasterCategoryId']) ? $_GET['MasterCategoryId'] : '';
-            $subMasterCategoryId = isset($_GET['SubMasterCategoryId']) ? $_GET['SubMasterCategoryId'] : '';
+            $product = Search::bind(new Product(), isset($_GET['Product']) ? $_GET['Product'] : '');
 
             $this->renderPartial('_productSubMasterCategorySelect', array(
-                'masterCategoryId' => $masterCategoryId,
-                'subMasterCategoryId' => $subMasterCategoryId,
+                'product' => $product,
             ));
         }
     }
 
     public function actionAjaxHtmlUpdateProductSubCategorySelect() {
         if (Yii::app()->request->isAjaxRequest) {
-            $subMasterCategoryId = isset($_GET['SubMasterCategoryId']) ? $_GET['SubMasterCategoryId'] : '';
-            $subCategoryId = isset($_GET['SubCategoryId']) ? $_GET['SubCategoryId'] : '';
+            $product = Search::bind(new Product(), isset($_GET['Product']) ? $_GET['Product'] : '');
 
             $this->renderPartial('_productSubCategorySelect', array(
-                'subMasterCategoryId' => $subMasterCategoryId,
-                'subCategoryId' => $subCategoryId,
+                'product' => $product,
             ));
         }
     }

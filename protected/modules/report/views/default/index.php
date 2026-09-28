@@ -109,7 +109,7 @@
                                     ),
                                     array(
                                         'label' => 'Stok Ban per Tahun Produksi', 
-                                        'url' => array('/report/stockTire/check'), 
+                                        'url' => array('/report/stockTire/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('stockTireReport'),
                                     ),
                                     array(
@@ -957,6 +957,11 @@
                                         'label' => 'Material Request Detail', 
                                         'url' => array('/report/materialRequest/summary'), 
                                         'visible' => Yii::app()->user->checkAccess('materialRequestReport'),
+                                    ),
+                                    array(
+                                        'label' => 'Transaksi Parts', 
+                                        'url' => array('/report/productLatestTransaction/summary'), 
+//                                        'visible' => Yii::app()->user->checkAccess('materialRequestReport'),
                                     ),
                                 ),
                             )); ?>

@@ -45,7 +45,7 @@ Yii::app()->clientScript->registerScript('search', "
     <?php echo CHtml::endForm(); ?>
 </div>
 
-<div class="reportDisplay">
+<div class="reportDisplay" style="text-align: right">
     <?php $dataCount = count($inventoryTireStockReportData); ?>
     <?php if ($dataCount > 0): ?>
         <?php echo "Displaying 1-{$dataCount} of {$dataCount} result(s)."; ?>
@@ -53,7 +53,7 @@ Yii::app()->clientScript->registerScript('search', "
 </div>
 
 <div>
-    <?php $this->renderPartial('_productStockTable', array(
+    <?php $this->renderPartial('_summary', array(
         'branches' => $branches,
         'inventoryTireStockReportData' => $inventoryTireStockReportData,
         'startYear' => $startYear,

@@ -1,7 +1,7 @@
 <div style="text-align: center">
     <span style="text-align: center"><h2>Raperind Motor</h2></span>
     <span style="text-align: center"><h2>Stok Ban per Tahun Produksi</h2></span>
-    <span style="text-align: center"><h3><?php echo $endYear; ?></h3></span>
+    <span style="text-align: center"><h3><?php //echo $endYear; ?></h3></span>
 </div>
 
 <div class="table_wrapper">
@@ -46,7 +46,14 @@
                     <?php foreach ($branches as $branch): ?>
                         <?php for ($year = $startYear; $year <= $endYear; $year++): ?>
                             <?php $totalStock = isset($inventoryTireStockReportItem[$branch->id][$year]) ? $inventoryTireStockReportItem[$branch->id][$year] : '0'; ?>
-                            <th style="text-align: center"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalStock)); ?></th>
+                            <th style="text-align: center">
+                                <?php echo CHtml::link(Yii::app()->numberFormatter->format('#,##0', $totalStock), array(
+                                    '/report/stockTire/transactionInfo', 
+                                    'productId' => $product->id, 
+                                    'branchId' => $branch->id, 
+                                    'year' => $year,
+                                ), array('target' => '_blank')); ?>
+                            </th>
                             <?php $totalStockSum += $totalStock; ?>
                         <?php endfor; ?>
                     <?php endforeach; ?>
