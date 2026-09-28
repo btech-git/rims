@@ -3,8 +3,11 @@
         <thead>
             <tr>
                 <th>Type</th>
-                <th>Transaction Number</th>
+                <th>Transaction #</th>
                 <th>Date</th>
+                <?php if ($product->product_sub_master_category_id == 26): ?>
+                    <th>DOT</th>
+                <?php endif; ?>
                 <th>Beginning</th>
                 <th>Qty In</th>
                 <th>Qty Out</th>
@@ -30,6 +33,9 @@
                     <td><?php echo CHtml::encode($latestInventoryItem['transaction_type']); ?></td>
                     <td><?php echo CHtml::link($latestInventoryItem['transaction_number'], Yii::app()->createUrl("frontDesk/inventory/redirectTransaction", array("codeNumber" => $latestInventoryItem['transaction_number'])), array('target' => '_blank')); ?></td>
                     <td><?php echo CHtml::encode($latestInventoryItem['transaction_date']); ?></td>
+                    <?php if ($product->product_sub_master_category_id == 26): ?>
+                        <td><?php echo CHtml::encode($latestInventoryItem['production_year']); ?></td>
+                    <?php endif; ?>
                     <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $lastCurrentStock)); ?></td>
                     <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $latestInventoryItem['stock_in'])); ?></td>
                     <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $latestInventoryItem['stock_out'])); ?></td>
@@ -45,7 +51,7 @@
         
         <tfoot>
             <tr>
-                <td colspan="4" class="text-right"><strong>Total</strong></td>
+                <td colspan=<?php $product->product_sub_master_category_id == 26 ? "5" : "4"; ?> class="text-right"><strong>Total</strong></td>
                 <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $totalStockIn)); ?></td>
                 <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $totalStockOut)); ?></td>
                 <td colspan="3"></td>

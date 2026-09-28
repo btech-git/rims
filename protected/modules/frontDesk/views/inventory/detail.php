@@ -15,7 +15,7 @@ $this->breadcrumbs=array(
         <?php } ?>
 
         <?php //$product = Product::model()->findByPk($_GET['id']); ?>
-        <h2>Stok Detail for <?php echo $product->name; ?></h2>
+        <h2>Stok Detail for <?php echo $product->name; ?> <?php $product->product_sub_master_category_id == 26 ? CHtml::encode(CHtml::value($product, 'tireSize.tireName')) : ""; ?></h2>
         <div>
             <table style="border: 1px solid">
                 <tr>
