@@ -589,11 +589,11 @@ class PaymentOutController extends Controller {
                                     $receiveItem->invoice_payment_remaining = $receiveItem->getTotalRemaining();
                                     $valid = $valid && $receiveItem->update(array('invoice_payment_amount', 'invoice_payment_remaining'));
 
-    //                                    $purchaseOrder = TransactionPurchaseOrder::model()->findByPk($receiveItem->purchase_order_id);
-    //                                    $purchaseOrder->payment_amount = $purchaseOrder->getTotalPayment();
-    //                                    $purchaseOrder->payment_left = $purchaseOrder->getTotalRemaining();
-    //                                    $purchaseOrder->payment_status = $purchaseOrder->payment_left > 0 ? 'Partial Payment' : 'PAID';
-    //                                    $valid = $valid && $purchaseOrder->update(array('payment_amount', 'payment_left', 'payment_status'));
+                                    $purchaseOrder = TransactionPurchaseOrder::model()->findByPk($receiveItem->purchase_order_id);
+                                    $purchaseOrder->payment_amount = $purchaseOrder->getTotalPayment();
+                                    $purchaseOrder->payment_left = $purchaseOrder->getTotalRemaining();
+                                    $purchaseOrder->payment_status = $purchaseOrder->payment_left > 0 ? 'Partial Payment' : 'PAID';
+                                    $valid = $valid && $purchaseOrder->update(array('payment_amount', 'payment_left', 'payment_status'));
                                 } elseif (!empty($detail->work_order_expense_header_id)) {
                                     $workOrderExpenseHeader = WorkOrderExpenseHeader::model()->findByPk($detail->work_order_expense_header_id);
                                     $workOrderExpenseHeader->total_payment = $workOrderExpenseHeader->getTotalPayment();
