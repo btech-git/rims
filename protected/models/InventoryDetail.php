@@ -393,7 +393,7 @@ class InventoryDetail extends CActiveRecord {
             $params[':branch_id'] = $branchId;
         }
 
-        $sql = "SELECT i.id,  i.transaction_type, i.transaction_number, i.transaction_date, i.stock_in, i.stock_out, i.notes, i.production_year
+        $sql = "SELECT i.id,  i.transaction_type, i.transaction_number, i.transaction_date, i.stock_in, i.stock_out, i.notes, i.production_year,
                     COALESCE(i.purchase_price, 0) AS stock_value, w.code AS warehouse_code
                 FROM " . InventoryDetail::model()->tableName() . " i
                 INNER JOIN " . Warehouse::model()->tableName() . " w on w.id = i.warehouse_id
