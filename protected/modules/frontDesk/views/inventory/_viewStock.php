@@ -51,7 +51,7 @@
         
         <tfoot>
             <tr>
-                <td colspan=<?php $product->product_sub_master_category_id == 26 ? "5" : "4"; ?> class="text-right"><strong>Total</strong></td>
+                <td colspan="<?php $product->product_sub_master_category_id == 26 ? 5 : 4; ?>" class="text-right"><strong>Total</strong></td>
                 <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $totalStockIn)); ?></td>
                 <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $totalStockOut)); ?></td>
                 <td colspan="3"></td>
