@@ -58,7 +58,7 @@ class StockTireController extends Controller {
             $inventoryTireStockReportData[$inventoryTireStockReportItem['product_id']][$inventoryTireStockReportItem['branch_id']][$inventoryTireStockReportItem['production_year']] = $inventoryTireStockReportItem['total_stock'];
         }
         
-        $branches = Branch::model()->findAll();
+        $branches = Branch::model()->findAll(array('condition' => 't.id BETWEEN 1 AND 5'));
 
         $yearList = array();
         for ($y = $yearNow - 4; $y <= $yearNow; $y++) {
