@@ -66,6 +66,7 @@ class InventoryController extends Controller {
             $tabContent = $this->renderPartial('_viewStock', array(
                 'latestInventoryData' => $latestInventoryData,
                 'inventoryBeginningStock' => $inventoryBeginningStock,
+                'product' => $product,
             ), true);
             $detailTabs[$branch->name] = array('content' => $tabContent);
         }
@@ -75,6 +76,7 @@ class InventoryController extends Controller {
         $tabContent = $this->renderPartial('_viewStock', array(
             'latestInventoryData' => $latestInventoryData,
             'inventoryBeginningStock' => $inventoryBeginningStock,
+            'product' => $product,
         ), true);
         $detailTabs['All'] = array('content' => $tabContent);
 
