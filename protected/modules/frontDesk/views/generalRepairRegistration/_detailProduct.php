@@ -117,11 +117,10 @@
                     </tr>
                     <tr <?php if ($productDetail->sale_package_detail_id != null): ?>style="display: none"<?php endif; ?>>
                         <td colspan="8">
+                            ID: <?php echo CHtml::encode(CHtml::value($productInfo, "id")); ?> ||
                             Code: <?php echo CHtml::encode(CHtml::value($productInfo, "manufacturer_code")); ?> ||
-                            Kategori: <?php echo CHtml::encode(CHtml::value($productInfo, "masterSubCategoryCode")); ?> ||
-                            Brand: <?php echo CHtml::encode(CHtml::value($productInfo, "brand.name")); ?> ||
-                            Sub Brand: <?php echo CHtml::encode(CHtml::value($productInfo, "subBrand.name")); ?> ||
-                            Sub Brand Series: <?php echo CHtml::encode(CHtml::value($productInfo, "subBrandSeries.name")); ?> 
+                            Kategori: <?php echo CHtml::encode(CHtml::value($productInfo, "productMasterCategory.name")); ?> - <?php echo CHtml::encode(CHtml::value($productInfo, "productSubMasterCategory.name")); ?> - <?php echo CHtml::encode(CHtml::value($productInfo, "productSubCategory.name")); ?> ||
+                            Brand: <?php echo CHtml::encode(CHtml::value($productInfo, "brand.name")); ?> - <?php echo CHtml::encode(CHtml::value($productInfo, "subBrand.name")); ?> - <?php echo CHtml::encode(CHtml::value($productInfo, "subBrandSeries.name")); ?> 
                         </td>			
                         <td colspan="2">
                             <?php echo CHtml::button('Stock', array(
