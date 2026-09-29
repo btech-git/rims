@@ -24,7 +24,11 @@ Yii::app()->clientScript->registerCss('_report', '
 <br />
 
 <div class="tab reportTab">
-    <div class="tabHead"></div>
+    <div class="tabHead">
+        <div class="reportDisplay" style="text-align: right">
+            <?php echo ReportHelper::summaryText($dataProvider->data); ?>
+        </div>
+    </div>
     
     <div class="tabBody">
         <table class="report">
