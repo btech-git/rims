@@ -27,7 +27,7 @@
             <?php $totalStockIn = 0; ?>
             <?php $totalStockOut = 0; ?> 
             <?php $lastCurrentStock = $currentStock; ?>
-            <?php foreach (array_reverse($latestInventoryData) as $latestInventoryItem): ?>
+            <?php foreach ($latestInventoryData as $latestInventoryItem): ?>
                 <?php $currentStock += $latestInventoryItem['stock_in'] + $latestInventoryItem['stock_out']; ?>
                 <tr>
                     <td><?php echo CHtml::encode($latestInventoryItem['transaction_type']); ?></td>
