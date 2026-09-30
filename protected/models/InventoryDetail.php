@@ -398,7 +398,7 @@ class InventoryDetail extends CActiveRecord {
                 FROM " . InventoryDetail::model()->tableName() . " i
                 INNER JOIN " . Warehouse::model()->tableName() . " w on w.id = i.warehouse_id
                 WHERE i.product_id = :product_id AND w.status = 'Active' AND i.transaction_date BETWEEN '" . AppParam::BEGINNING_TRANSACTION_DATE . "' And :end_date" . $branchConditionSql . "
-                ORDER BY i.transaction_date DESC, i.id DESC
+                ORDER BY i.transaction_date DESC, i.transaction_time ASC
                 LIMIT {$limit}";
 
         $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
