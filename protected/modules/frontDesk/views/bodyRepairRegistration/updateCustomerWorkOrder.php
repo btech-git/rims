@@ -200,6 +200,28 @@ $this->breadcrumbs=array(
                                                 </div>
                                             </div>
                                         </div>
+                                    
+                                        <div class="field">
+                                            <div class="row collapse">
+                                                <div class="small-4 columns">
+                                                    <label class="prefix">V-TAG #</label>
+                                                </div>
+                                                <div class="small-8 columns">
+                                                    <?php echo $form->textField($registrationTransaction, 'technical_code_number'); ?>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    
+                                        <div class="field">
+                                            <div class="row collapse">
+                                                <div class="small-4 columns">
+                                                    <label class="prefix">Warranty Report</label>
+                                                </div>
+                                                <div class="small-8 columns">
+                                                    <?php echo $form->textField($registrationTransaction, 'warranty_report'); ?>
+                                                </div>
+                                            </div>
+                                        </div>
                                     <?php //endif; ?>
 
                                     <div class="field">

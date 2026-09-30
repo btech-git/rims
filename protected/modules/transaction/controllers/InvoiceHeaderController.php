@@ -82,6 +82,9 @@ class InvoiceHeaderController extends Controller {
         $invoice->header->coa_bank_id_estimate = null;
         $invoice->header->created_datetime = date('Y-m-d H:i:s');
         $invoice->header->insurance_company_id = empty($registrationTransaction->insurance_company_id) ? null : $registrationTransaction->insurance_company_id;
+        $invoice->header->customer_document_order_number = $registrationTransaction->customer_document_order_number;
+        $invoice->header->technical_code_number = $registrationTransaction->technical_code_number;
+        $invoice->header->warranty_report = $registrationTransaction->warranty_report;
         
         $invoice->addDetails($invoice->header->reference_type, $registrationId);
         

@@ -217,6 +217,28 @@
             <div class="field">
                 <div class="row collapse">
                     <div class="small-4 columns">
+                        <span class="prefix">V-TAG #</span>
+                    </div>
+                    <div class="small-8 columns">
+                        <input type="text" readonly="true" value="<?php echo $model->technical_code_number; ?>"> 
+                    </div>
+                </div>
+            </div>
+
+            <div class="field">
+                <div class="row collapse">
+                    <div class="small-4 columns">
+                        <span class="prefix">Warranty Report</span>
+                    </div>
+                    <div class="small-8 columns">
+                        <input type="text" readonly="true" value="<?php echo $model->warranty_report; ?>"> 
+                    </div>
+                </div>
+            </div>
+
+            <div class="field">
+                <div class="row collapse">
+                    <div class="small-4 columns">
                         <span class="prefix">Sales Order #</span>
                     </div>
                     <div class="small-8 columns">

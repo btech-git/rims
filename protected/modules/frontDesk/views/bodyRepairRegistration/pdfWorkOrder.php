@@ -93,6 +93,9 @@ function tanggal($date) {
                 <td>SPK Customer #</td>
                 <td>:</td>
                 <td><?php echo CHtml::encode(CHtml::value($bodyRepairRegistration, 'customer_work_order_number')); ?></td>
+                <td>V-TAG #</td>
+                <td>:</td>
+                <td><?php echo CHtml::encode(CHtml::value($bodyRepairRegistration, 'technical_code_number')); ?></td>
             </tr>
         </table>
     </div>

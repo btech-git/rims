@@ -49,7 +49,7 @@ $this->breadcrumbs = array(
         <?php endif; ?>
 
         <?php if ($model->status != "CANCELLED!!!" && $model->technical_code_number == null && $model->warranty_report == null): ?>
-            <?php echo CHtml::link('<span class="fa fa-plus"></span>Add V-TAG', array("updateTechnicalNumber", "id" => $model->id), array(
+            <?php echo CHtml::link('<span class="fa fa-plus"></span>Add Resi Kirim', array("updateTechnicalNumber", "id" => $model->id), array(
                 'class' => 'button success right', 
                 'style' => 'margin-right:10px'
             )); ?>
@@ -156,7 +156,7 @@ $this->breadcrumbs = array(
                
             <tr>
                 <td>DMS Reference #</td>
-                <td width="30%"><?php echo CHtml::encode(CHtml::value($model, 'registrationTransaction.customer_document_order_number')); ?></td>
+                <td width="30%"><?php echo CHtml::encode(CHtml::value($model, 'customer_document_order_number')); ?></td>
                 <td width="10%">Tanggal F. Pajak</td>
                 <td width="30%"><?php echo CHtml::encode(Yii::app()->dateFormatter->format("d MMM yyyy", strtotime($model->transaction_tax_date))); ?></td>
             </tr>

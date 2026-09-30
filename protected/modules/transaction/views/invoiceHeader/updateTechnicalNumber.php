@@ -95,7 +95,7 @@ $this->breadcrumbs=array(
                                 <?php echo $form->labelEx($invoice, 'DMS Reference #', array('class' => 'prefix')); ?>
                             </div>
                             <div class="small-8 columns">
-                                <?php echo CHtml::encode(CHtml::value($invoice, 'registrationTransaction.customer_document_order_number')); ?>
+                                <?php echo CHtml::encode(CHtml::value($invoice, 'customer_document_order_number')); ?>
                             </div>
                         </div>
                     </div>
@@ -106,8 +106,7 @@ $this->breadcrumbs=array(
                                 <?php echo $form->labelEx($invoice, 'V-TAG', array('class' => 'prefix')); ?>
                             </div>
                             <div class="medium-8 columns">
-                                <?php echo $form->textField($invoice, 'technical_code_number'); ?>
-                                <?php echo $form->error($invoice, 'technical_code_number'); ?>
+                                <?php echo CHtml::encode(CHtml::value($invoice, 'technical_code_number')); ?>
                             </div>
                         </div>
                     </div>
@@ -130,8 +129,7 @@ $this->breadcrumbs=array(
                                 <?php echo $form->labelEx($invoice, 'warranty_report', array('class' => 'prefix')); ?>
                             </div>
                             <div class="medium-8 columns">
-                                <?php echo $form->textArea($invoice, 'warranty_report'); ?>
-                                <?php echo $form->error($invoice, 'warranty_report'); ?>
+                                <?php echo CHtml::encode(CHtml::value($invoice, 'warranty_report')); ?>
                             </div>
                         </div>
                     </div>
