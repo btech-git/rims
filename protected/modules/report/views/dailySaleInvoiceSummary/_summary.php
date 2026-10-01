@@ -38,9 +38,9 @@
                 <th>Total</th>
                 <th>WO #</th>
                 <th>SPK Customer #</th>
-                <th>DMS Reference #</th>
+                <th>DMS Ref #</th>
                 <th>V-TAG</th>
-                <th>Resi Pengiriman #</th>
+                <th>Resi Kirim #</th>
                 <th>Warranty Report</th>
                 <th>Faktur Pajak #</th>
                 <th>Tanggal F Pajak</th>
