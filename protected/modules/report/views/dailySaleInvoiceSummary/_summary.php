@@ -96,9 +96,9 @@
                     <td><?php echo CHtml::encode(CHtml::value($header, 'registrationTransaction.work_order_number')); ?></td>
                     <td><?php echo CHtml::encode(CHtml::value($header, 'registrationTransaction.customer_work_order_number')); ?></td>
                     <td><?php echo CHtml::encode(CHtml::value($header, 'registrationTransaction.customer_document_order_number')); ?></td>
-                    <td><?php echo CHtml::encode(CHtml::value($header, 'technical_code_number')); ?></td>
+                    <td><?php echo CHtml::encode(CHtml::value($header, 'registrationTransaction.technical_code_number')); ?></td>
                     <td><?php echo CHtml::encode(CHtml::value($header, 'delivery_receipt_number')); ?></td>
-                    <td><?php echo CHtml::encode(CHtml::value($header, 'warranty_report')); ?></td>
+                    <td><?php echo CHtml::encode(CHtml::value($header, 'registrationTransaction.warranty_report')); ?></td>
                     <td><?php echo CHtml::encode(CHtml::value($header, 'transaction_tax_number')); ?></td>
                     <td><?php echo $header->transaction_tax_date == null ? '' : CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($header->transaction_tax_date))); ?></td>
                     <td style="text-align: right">

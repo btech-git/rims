@@ -205,9 +205,9 @@ class DailySaleInvoiceSummaryController extends Controller {
             $worksheet->setCellValue("Q{$counter}", CHtml::value($header, 'registrationTransaction.work_order_number'));
             $worksheet->setCellValue("R{$counter}", CHtml::value($header, 'registrationTransaction.customer_work_order_number'));
             $worksheet->setCellValue("S{$counter}", CHtml::value($header, 'registrationTransaction.customer_document_order_number'));
-            $worksheet->setCellValue("T{$counter}", CHtml::value($header, 'technical_code_number'));
+            $worksheet->setCellValue("T{$counter}", CHtml::value($header, 'registrationTransaction.technical_code_number'));
             $worksheet->setCellValue("U{$counter}", CHtml::value($header, 'delivery_receipt_number'));
-            $worksheet->setCellValue("V{$counter}", CHtml::value($header, 'warranty_report'));
+            $worksheet->setCellValue("V{$counter}", CHtml::value($header, 'registrationTransaction.warranty_report'));
             $worksheet->setCellValue("W{$counter}", CHtml::value($header, 'transaction_tax_number'));
             $worksheet->setCellValue("X{$counter}", CHtml::value($header, 'transaction_tax_date'));
             $worksheet->setCellValue("Y{$counter}", CHtml::value($header, 'grand_total_coretax'));
