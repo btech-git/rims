@@ -52,7 +52,7 @@
         </thead>
         <tbody>
             <?php foreach ($saleInvoiceSummary->dataProvider->data as $i => $header): ?>
-            <?php $totalPrice = CHtml::value($header->total_price); ?>
+            <?php $totalPrice = CHtml::value($header, 'total_price'); ?>
                 <tr class="items1">
                     <td><?php echo $i + 1; ?></td>
                     <td>
