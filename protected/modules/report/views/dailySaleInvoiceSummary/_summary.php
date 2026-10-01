@@ -19,6 +19,7 @@
 
 <div class="table_wrapper">
     <table class="responsive">
+        <?php $totalPriceSum = '0.00'; ?>
         <thead style="position: sticky; top: 0">
             <tr id="header1">
                 <th></th>
@@ -51,6 +52,7 @@
         </thead>
         <tbody>
             <?php foreach ($saleInvoiceSummary->dataProvider->data as $i => $header): ?>
+            <?php $totalPrice = CHtml::value($header->total_price); ?>
                 <tr class="items1">
                     <td><?php echo $i + 1; ?></td>
                     <td>
@@ -91,7 +93,7 @@
                         <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', ($header->pph_total))); ?>
                     </td>
                     <td style="text-align: right">
-                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', ($header->total_price))); ?>
+                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $totalPrice)); ?>
                     </td>
                     <td><?php echo CHtml::encode(CHtml::value($header, 'registrationTransaction.work_order_number')); ?></td>
                     <td><?php echo CHtml::encode(CHtml::value($header, 'registrationTransaction.customer_work_order_number')); ?></td>
@@ -109,7 +111,14 @@
                     </td>
                     <td><?php echo CHtml::encode(CHtml::value($header, 'coretax_receipt_number')); ?></td>
                 </tr>
+                <?php $totalPriceSum += $totalPrice; ?>
             <?php endforeach; ?>
         </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="14">TOTAL</td>
+                <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $totalPriceSum)); ?></td>
+            </tr>
+        </tfoot>
     </table>
 </div>
