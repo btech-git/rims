@@ -24,7 +24,7 @@
  * @property string $service_price
  * @property string $product_price
  * @property string $quick_service_price
- * @property integer $total_product
+ * @property string $total_product
  * @property integer $total_service
  * @property integer $total_quick_service
  * @property string $pph_total
@@ -129,6 +129,7 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
             array('status', 'length', 'max' => 30),
             array('technical_code_number, customer_document_order_number', 'length', 'max' => 100),
             array('service_price, product_price, quick_service_price, pph_total, ppn_total, total_discount, total_price, payment_amount, payment_left, package_price, grand_total_coretax, tax_amount_coretax, downpayment_amount, invoice_amount, insurance_own_risk_amount', 'length', 'max' => 18),
+            array('total_product', 'length', 'max' => 10),
             array('invoice_number', 'unique'),
             array('in_words, note, payment_date_estimate, warranty_date, follow_up_date, warranty_feedback, follow_up_feedback, warranty_input_date_time, follow_up_input_date_time, customer_name, plate_number, insurance_company_name, created_datetime, cancelled_datetime, edited_datetime, verified_datetime, coretax_datetime, transaction_tax_date, warranty_report', 'safe'),
             // The following rule is used by search().
