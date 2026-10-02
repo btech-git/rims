@@ -397,7 +397,7 @@ class InventoryDetail extends CActiveRecord {
                     COALESCE(i.purchase_price, 0) AS stock_value, w.code AS warehouse_code
                 FROM " . InventoryDetail::model()->tableName() . " i
                 INNER JOIN " . Warehouse::model()->tableName() . " w on w.id = i.warehouse_id
-                WHERE i.product_id = :product_id AND w.status = 'Active' AND i.transaction_date BETWEEN '" . AppParam::BEGINNING_TRANSACTION_DATE . "' And :end_date" . $branchConditionSql . "
+                WHERE i.product_id = :product_id AND w.status = 'Active' AND i.transaction_date BETWEEN '2020-12-31' And :end_date" . $branchConditionSql . "
                 ORDER BY i.transaction_date ASC, i.transaction_time ASC
                 LIMIT {$limit}";
 
