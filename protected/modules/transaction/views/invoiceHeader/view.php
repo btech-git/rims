@@ -171,8 +171,8 @@ $this->breadcrumbs = array(
             <tr>
                 <td>Warranty Report</td>
                 <td width="30%"><?php echo CHtml::encode(CHtml::value($model, 'warranty_report')); ?></td>
-                <td width="10%"></td>
-                <td width="30%"><?php //echo CHtml::encode(CHtml::value($model, 'delivery_receipt_number')); ?></td>
+                <td width="10%">Note</td>
+                <td width="30%"><?php echo CHtml::encode(CHtml::value($model, 'note')); ?></td>
             </tr>
                 
             <?php if (Yii::app()->user->checkAccess("director")): ?>
