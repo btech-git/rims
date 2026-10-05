@@ -8,7 +8,6 @@
                 <td>ID</td>
                 <td>Code</td>
                 <td>Name</td>
-                <td>Ukuran</td>
             </tr>
         </thead>
         <tbody>
@@ -47,14 +46,32 @@
                         )); ?>
                     </div>
                 </td>
-                <td><?php echo CHtml::textField('ProductId', $productId, array('style' => 'width:100px')); ?></td>
-                <td><?php echo CHtml::textField('ProductCode', $productCode, array('style' => 'width:100px')); ?></td>
+                <td><?php echo CHtml::textField('ProductId', $productId); ?></td>
+                <td><?php echo CHtml::textField('ProductCode', $productCode); ?></td>
                 <td><?php echo CHtml::textField('ProductName', $productName); ?></td>
-                <td>
-                    <?php echo CHtml::dropDownList('TireSizeId', $tireSizeId, CHtml::listData(TireSize::model()->findAll(array('order' => 't.section_width ASC')), 'id', 'tireName'), array(
-                        'empty' => '-- All --',
-                    )); ?>
-                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <table>
+        <thead>
+            <tr>
+                <td>Section Width</td>
+                <td>Aspect Ratio</td>
+                <td>Construction Type</td>
+                <td>Rim Diameter</td>
+                <td>Load Rating</td>
+                <td>Speed Rating</td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><?php echo CHtml::textField('SectionWidth', $sectionWidth); ?></td>
+                <td><?php echo CHtml::textField('AspectRatio', $aspectRatio); ?></td>
+                <td><?php echo CHtml::textField('ConstructionType', $constructionType); ?></td>
+                <td><?php echo CHtml::textField('RimDiameter', $rimDiameter); ?></td>
+                <td><?php echo CHtml::textField('LoadRating', $loadRating); ?></td>
+                <td><?php echo CHtml::textField('SpeedRating', $speedRating); ?></td>
             </tr>
         </tbody>
     </table>

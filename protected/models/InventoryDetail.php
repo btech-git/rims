@@ -470,14 +470,19 @@ class InventoryDetail extends CActiveRecord {
         return $value;
     }
     
-    public static function getInventoryTireStockReport($startYear, $endYear, $brandId, $subBrandId, $subBrandSeriesId, $productId, $productCode, $productName, $tireSizeId) {
+    public static function getInventoryTireStockReport($startYear, $endYear, $brandId, $subBrandId, $subBrandSeriesId, $productId, $productCode, $productName, $sectionWidth, $aspectRatio, $constructionType, $rimDiameter, $loadRating, $speedRating) {
         $brandIdConditionSql = '';
         $subBrandIdConditionSql = '';
         $subBrandSeriesIdConditionSql = '';
         $productIdConditionSql = '';
         $productCodeConditionSql = '';
         $productNameConditionSql = '';
-        $tireSizeConditionSql = '';
+        $sectionWidthConditionSql = '';
+        $aspectRatioConditionSql = '';
+        $constructionTypeConditionSql = '';
+        $rimDiameterConditionSql = '';
+        $loadRatingConditionSql = '';
+        $speedRatingConditionSql = '';
 
         $params = array(
             ':start_year' => $startYear,
@@ -485,17 +490,17 @@ class InventoryDetail extends CActiveRecord {
         );
 
         if (!empty($brandId)) {
-            $brandIdConditionSql = " AND brand_id = :brand_id";
+            $brandIdConditionSql = " AND p.brand_id = :brand_id";
             $params[':brand_id'] = $brandId;
         }
 
         if (!empty($subBrandId)) {
-            $subBrandIdConditionSql = " AND sub_brand_id = :sub_brand_id";
+            $subBrandIdConditionSql = " AND p.sub_brand_id = :sub_brand_id";
             $params[':sub_brand_id'] = $subBrandId;
         }
 
         if (!empty($subBrandSeriesId)) {
-            $subBrandSeriesIdConditionSql = " AND sub_brand_series_id = :sub_brand_series_id";
+            $subBrandSeriesIdConditionSql = " AND p.sub_brand_series_id = :sub_brand_series_id";
             $params[':sub_brand_series_id'] = $subBrandSeriesId;
         }
 
@@ -514,9 +519,34 @@ class InventoryDetail extends CActiveRecord {
             $params[':product_name'] = "%$productName%";
         }
 
-        if (!empty($tireSizeId)) {
-            $tireSizeConditionSql = " AND tire_size_id = :tire_size_id";
-            $params[':tire_size_id'] = $tireSizeId;
+        if (!empty($sectionWidth)) {
+            $sectionWidthConditionSql = " AND t.section_width = :section_width";
+            $params[':section_width'] = $sectionWidth;
+        }
+
+        if (!empty($aspectRatio)) {
+            $aspectRatioConditionSql = " AND t.aspect_ratio = :aspect_ratio";
+            $params[':aspect_ratio'] = $aspectRatio;
+        }
+
+        if (!empty($constructionType)) {
+            $constructionTypeConditionSql = " AND t.construction_type = :construction_type";
+            $params[':construction_type'] = $constructionType;
+        }
+
+        if (!empty($rimDiameter)) {
+            $rimDiameterConditionSql = " AND t.rim_diameter = :rim_diameter";
+            $params[':rim_diameter'] = $rimDiameter;
+        }
+
+        if (!empty($loadRating)) {
+            $loadRatingConditionSql = " AND t.load_rating = :load_rating";
+            $params[':load_rating'] = $loadRating;
+        }
+
+        if (!empty($speedRating)) {
+            $speedRatingConditionSql = " AND t.speed_rating = :speed_rating";
+            $params[':speed_rating'] = $speedRating;
         }
 
         $sql = "SELECT w.branch_id, i.production_year, i.product_id, MAX(p.name) AS product_name, MAX(p.manufacturer_code) AS product_code, 
@@ -525,10 +555,12 @@ class InventoryDetail extends CActiveRecord {
                 FROM " . InventoryDetail::model()->tableName() . " i 
                 INNER JOIN " . Product::model()->tableName() . " p ON p.id = i.product_id
                 INNER JOIN " . Warehouse::model()->tableName() . " w ON w.id = i.warehouse_id
-                WHERE p.product_sub_master_category_id IN (26) AND i.transaction_date >= '2020-12-31' AND w.status = 'Active'
+                LEFT OUTER JOIN " . TireSize::model()->tableName() . " t ON t.id = p.tire_size_id
+                WHERE p.product_sub_master_category_id IN (26) AND i.transaction_date >= '2020-12-31' AND w.status = 'Active'" . $brandIdConditionSql . 
+                    $subBrandIdConditionSql . $subBrandSeriesIdConditionSql . $sectionWidthConditionSql . $aspectRatioConditionSql . 
+                    $constructionTypeConditionSql . $rimDiameterConditionSql . $loadRatingConditionSql . $speedRatingConditionSql . " 
                 GROUP BY w.branch_id, i.production_year, i.product_id
-                HAVING i.production_year BETWEEN :start_year AND :end_year" . $brandIdConditionSql . $subBrandIdConditionSql . 
-                    $subBrandSeriesIdConditionSql . $productIdConditionSql . $productCodeConditionSql . $productNameConditionSql . $tireSizeConditionSql;
+                HAVING i.production_year BETWEEN :start_year AND :end_year" . $productIdConditionSql . $productCodeConditionSql . $productNameConditionSql;
 
         $value = Yii::app()->db->createCommand($sql)->queryAll(true, $params);
 

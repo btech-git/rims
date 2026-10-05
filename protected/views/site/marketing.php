@@ -27,7 +27,7 @@
                             'customerDataProvider' => $customerDataProvider,
                         ), true),
                     ),
-                    'Product' => array(
+                    'Parts' => array(
                         'content' => $this->renderPartial('_viewProduct', array(
                             'productDataProvider' => $productDataProvider, 
                             'product' => $product, 
@@ -35,6 +35,30 @@
                             'endDate' => $endDate,
                         ), true),
                     ),
+                    'Ban' => array(
+                        'content' => $this->renderPartial('_viewTire', array(
+                            'tireDataProvider' => $tireDataProvider,
+                            'product' => $product, 
+                            'branches' => $branches,
+                            'sectionWidth' => $sectionWidth,
+                            'aspectRatio' => $aspectRatio,
+                            'constructionType' => $constructionType,
+                            'rimDiameter' => $rimDiameter,
+                            'loadRating' => $loadRating,
+                            'speedRating' => $speedRating,
+                            'endDate' => $endDate,
+                            'yearList' => $yearList,
+                            'productionYear' => $productionYear,
+                        ), true),
+                    ),
+//                    'Oli' => array(
+//                        'content' => $this->renderPartial('_viewOil', array(
+//                            'productDataProvider' => $productDataProvider, 
+//                            'product' => $product, 
+//                            'branches' => $branches,
+//                            'endDate' => $endDate,
+//                        ), true),
+//                    ),
                     'Jasa' => array(
                         'content' => $this->renderPartial('_viewService', array(
                             'service' => $service, 

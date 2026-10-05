@@ -39,7 +39,12 @@ Yii::app()->clientScript->registerScript('search', "
             'productId' => $productId,
             'productCode' => $productCode,
             'productName' => $productName,
-            'tireSizeId' => $tireSizeId,
+            'sectionWidth' => $sectionWidth,
+            'aspectRatio' => $aspectRatio,
+            'constructionType' => $constructionType,
+            'rimDiameter' => $rimDiameter,
+            'loadRating' => $loadRating,
+            'speedRating' => $speedRating,
         )); ?>
     </div><!-- search-form -->
     <?php echo CHtml::endForm(); ?>

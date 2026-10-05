@@ -36,7 +36,12 @@ class StockTireController extends Controller {
         $productId = isset($_GET['ProductId']) ? $_GET['ProductId'] : '';
         $productName = isset($_GET['ProductName']) ? $_GET['ProductName'] : '';
         $productCode = isset($_GET['ProductCode']) ? $_GET['ProductCode'] : '';
-        $tireSizeId = isset($_GET['TireSizeId']) ? $_GET['TireSizeId'] : '';
+        $sectionWidth = isset($_GET['SectionWidth']) ? $_GET['SectionWidth'] : '';
+        $aspectRatio = isset($_GET['AspectRatio']) ? $_GET['AspectRatio'] : '';
+        $constructionType = isset($_GET['ConstructionType']) ? $_GET['ConstructionType'] : '';
+        $rimDiameter = isset($_GET['RimDiameter']) ? $_GET['RimDiameter'] : '';
+        $loadRating = isset($_GET['LoadRating']) ? $_GET['LoadRating'] : '';
+        $speedRating = isset($_GET['SpeedRating']) ? $_GET['SpeedRating'] : '';
         
         if (isset($_GET['ResetFilter'])) {
             $endYear = date('Y');
@@ -46,12 +51,17 @@ class StockTireController extends Controller {
             $productId = '';
             $productName = '';
             $productCode = '';
-            $tireSizeId = '';
+            $sectionWidth = '';
+            $aspectRatio = '';
+            $constructionType = '';
+            $rimDiameter = '';
+            $loadRating = '';
+            $speedRating = '';
         }
         
         $startYear = max(2021, $endYear - 5);
         
-        $inventoryTireStockReport = InventoryDetail::getInventoryTireStockReport($startYear, $endYear, $brandId, $subBrandId, $subBrandSeriesId, $productId, $productCode, $productName, $tireSizeId);
+        $inventoryTireStockReport = InventoryDetail::getInventoryTireStockReport($startYear, $endYear, $brandId, $subBrandId, $subBrandSeriesId, $productId, $productCode, $productName, $sectionWidth, $aspectRatio, $constructionType, $rimDiameter, $loadRating, $speedRating);
         
         $inventoryTireStockReportData = array();
         foreach ($inventoryTireStockReport as $inventoryTireStockReportItem) {
@@ -82,8 +92,13 @@ class StockTireController extends Controller {
             'productId' => $productId,
             'productCode' => $productCode,
             'productName' => $productName,
-            'tireSizeId' => $tireSizeId,
             'branches' => $branches,
+            'sectionWidth' => $sectionWidth,
+            'aspectRatio' => $aspectRatio,
+            'constructionType' => $constructionType,
+            'rimDiameter' => $rimDiameter,
+            'loadRating' => $loadRating,
+            'speedRating' => $speedRating,
         ));
     }
 
@@ -212,7 +227,7 @@ class StockTireController extends Controller {
 
         }
         
-        for ($col = 'A'; $col !== 'Z'; $col++) {
+        for ($col = 'A'; $col !== 'AZ'; $col++) {
             $objPHPExcel->getActiveSheet()
             ->getColumnDimension($col)
             ->setAutoSize(true);

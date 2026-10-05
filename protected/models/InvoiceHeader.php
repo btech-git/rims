@@ -312,7 +312,7 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
 
         if ($this->invoice_date != NULL OR $this->invoice_date_to != NULL) {
             $criteria->addBetweenCondition('invoice_date', $this->invoice_date, $this->invoice_date_to);
-            $criteria->addBetweenCondition('due_date', $this->invoice_date, $this->invoice_date_to);
+//            $criteria->addBetweenCondition('due_date', $this->invoice_date, $this->invoice_date_to);
         }
 
         $criteria->together = 'true';

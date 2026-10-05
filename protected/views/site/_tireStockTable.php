@@ -1,5 +1,5 @@
 <div class="reportDisplay">
-    <?php echo ReportHelper::summaryText($productDataProvider); ?>
+    <?php echo ReportHelper::summaryText($tireDataProvider); ?>
 </div>
 
 <br />
@@ -12,10 +12,8 @@
                 <th style="text-align: center">Code</th>
                 <th style="text-align: center">Name</th>
                 <th style="text-align: center">Uk. Ban</th>
-                <th style="text-align: center">SAE</th>
                 <th style="text-align: center">Brand</th>
-                <th style="text-align: center">Category</th>
-                <th style="text-align: center">Unit</th>
+                <th style="text-align: center">DOT</th>
                 <?php foreach ($branches as $branch): ?>
                     <th style="text-align: center"><?php echo CHtml::encode(CHtml::value($branch, 'code')); ?></th>
                 <?php endforeach; ?>
@@ -26,26 +24,20 @@
         </thead>
 
         <tbody>
-            <?php foreach ($productDataProvider->data as $product): ?>
-                <?php $inventoryTotalQuantities = $product->getInventoryTotalQuantitiesByPeriodic($endDate); ?>
+            <?php foreach ($tireDataProvider->data as $product): ?>
+                <?php $inventoryTotalQuantities = $product->getTotalTireQuantitiesByProductionYear($endDate, $productionYear); ?>
                 <?php $totalStock = 0; ?>
                 <tr>
                     <td><?php echo CHtml::link(CHtml::value($product, 'id'), array('showProduct', 'id' => $product->id), array('target' => 'blank')); ?></td>
                     <td><?php echo CHtml::encode(CHtml::value($product, 'manufacturer_code')); ?></td>
                     <td><?php echo CHtml::link(CHtml::value($product, 'name'), array('showProduct', 'id' => $product->id), array('target' => 'blank')); ?></td>
                     <td><?php echo CHtml::encode(CHtml::value($product, 'tireSize.tireName')); ?></td>
-                    <td><?php echo CHtml::encode(CHtml::value($product, 'oilSae.oilName')); ?></td>
                     <td>
                         <?php echo CHtml::encode(CHtml::value($product, 'brand.name')); ?> - 
                         <?php echo CHtml::encode(CHtml::value($product, 'subBrand.name')); ?> - 
                         <?php echo CHtml::encode(CHtml::value($product, 'subBrandSeries.name')); ?>
                     </td>
-                    <td>
-                        <?php echo CHtml::encode(CHtml::value($product, 'productMasterCategory.name')); ?> -
-                        <?php echo CHtml::encode(CHtml::value($product, 'productMasterSubCategory.name')); ?> -
-                        <?php echo CHtml::encode(CHtml::value($product, 'productSubCategory.name')); ?>
-                    </td>
-                    <td><?php echo CHtml::encode(CHtml::value($product, 'unit.name')); ?></td>
+                    <td><?php echo CHtml::encode($productionYear); ?></td>
 
                     <?php foreach ($branches as $branch): ?>
                         <?php $stockValue = 0; ?>
@@ -61,7 +53,6 @@
 
                     <td><?php echo CHtml::encode($totalStock); ?></td>
                     <td style="text-align: right">
-                        <?php //$registrationProduct = RegistrationProduct::model()->findByAttributes(array('product_id' => $product->id), array('order' => 't.id DESC')); ?>
                         <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($product, 'recommended_selling_price'))); ?>
                     </td>
                     <td style="text-align: right">
@@ -75,7 +66,7 @@
 
     <div class="right">
         <?php $this->widget('system.web.widgets.pagers.CLinkPager', array(
-            'pages' => $productDataProvider->pagination,
+            'pages' => $tireDataProvider->pagination,
         )); ?>
     </div>
     <br /><br />

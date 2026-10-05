@@ -70,6 +70,33 @@ class SiteController extends Controller {
         ) > 3");
         $followUpDataProvider->pagination->pageVar = 'page_follow_up';
         
+        $yearNow = date('Y');
+        $sectionWidth = isset($_GET['SectionWidth']) ? $_GET['SectionWidth'] : '';
+        $aspectRatio = isset($_GET['AspectRatio']) ? $_GET['AspectRatio'] : '';
+        $constructionType = isset($_GET['ConstructionType']) ? $_GET['ConstructionType'] : '';
+        $rimDiameter = isset($_GET['RimDiameter']) ? $_GET['RimDiameter'] : '';
+        $loadRating = isset($_GET['LoadRating']) ? $_GET['LoadRating'] : '';
+        $speedRating = isset($_GET['SpeedRating']) ? $_GET['SpeedRating'] : '';
+        $productionYear = isset($_GET['ProductionYear']) ? $_GET['ProductionYear'] : $yearNow;
+        
+        $tireDataProvider = $product->searchByStockCard();
+        $tireDataProvider->criteria->addCondition("t.product_sub_master_category_id = 26");
+        $tireDataProvider->criteria->together = true;
+        $tireDataProvider->criteria->with = array('tireSize');
+        $tireDataProvider->criteria->compare('tireSize.section_width', $sectionWidth);
+        $tireDataProvider->criteria->compare('tireSize.aspect_ratio', $aspectRatio);
+        $tireDataProvider->criteria->compare('tireSize.construction_type', $constructionType);
+        $tireDataProvider->criteria->compare('tireSize.rim_diameter', $rimDiameter);
+        $tireDataProvider->criteria->compare('tireSize.load_rating', $loadRating);
+        $tireDataProvider->criteria->compare('tireSize.speed_rating', $speedRating);
+        
+        $yearList = array();
+        for ($y = $yearNow - 4; $y <= $yearNow; $y++) {
+            if ($y >= 2024) {
+                $yearList[$y] = $y;
+            }
+        }
+        
         $branches = Branch::model()->findAll();
 
         $vehicleDataProvider->criteria->with = array(
@@ -118,6 +145,15 @@ class SiteController extends Controller {
             'endDate' => $endDate,
             'plateNumber' => $plateNumber,
             'customerName' => $customerName,
+            'tireDataProvider' => $tireDataProvider,
+            'sectionWidth' => $sectionWidth,
+            'aspectRatio' => $aspectRatio,
+            'constructionType' => $constructionType,
+            'rimDiameter' => $rimDiameter,
+            'loadRating' => $loadRating,
+            'speedRating' => $speedRating,
+            'yearList' => $yearList,
+            'productionYear' => $productionYear,
         ));
     }
         
@@ -181,6 +217,41 @@ class SiteController extends Controller {
                 'productDataProvider' => $productDataProvider,
                 'branches' => $branches,
                 'endDate' => $endDate,
+            ));
+        }
+    }
+
+    public function actionAjaxHtmlUpdateTireStockTable() {
+        if (Yii::app()->request->isAjaxRequest) {
+//            $pageNumber = isset($_GET['page']) ? $_GET['page'] : 1;
+            $endDate = date('Y-m-d');
+            $product = Search::bind(new Product('search'), isset($_GET['Product']) ? $_GET['Product'] : '');
+            $branches = Branch::model()->findAll();
+
+            $sectionWidth = isset($_GET['SectionWidth']) ? $_GET['SectionWidth'] : '';
+            $aspectRatio = isset($_GET['AspectRatio']) ? $_GET['AspectRatio'] : '';
+            $constructionType = isset($_GET['ConstructionType']) ? $_GET['ConstructionType'] : '';
+            $rimDiameter = isset($_GET['RimDiameter']) ? $_GET['RimDiameter'] : '';
+            $loadRating = isset($_GET['LoadRating']) ? $_GET['LoadRating'] : '';
+            $speedRating = isset($_GET['SpeedRating']) ? $_GET['SpeedRating'] : '';
+            $productionYear = isset($_GET['ProductionYear']) ? $_GET['ProductionYear'] : '';
+
+            $tireDataProvider = $product->searchByStockCard();
+            $tireDataProvider->criteria->addCondition("t.product_sub_master_category_id = 26");
+            $tireDataProvider->criteria->together = true;
+            $tireDataProvider->criteria->with = array('tireSize');
+            $tireDataProvider->criteria->compare('tireSize.section_width', $sectionWidth);
+            $tireDataProvider->criteria->compare('tireSize.aspect_ratio', $aspectRatio);
+            $tireDataProvider->criteria->compare('tireSize.construction_type', $constructionType);
+            $tireDataProvider->criteria->compare('tireSize.rim_diameter', $rimDiameter);
+            $tireDataProvider->criteria->compare('tireSize.load_rating', $loadRating);
+            $tireDataProvider->criteria->compare('tireSize.speed_rating', $speedRating);
+        
+            $this->renderPartial('_tireStockTable', array(
+                'tireDataProvider' => $tireDataProvider,
+                'branches' => $branches,
+                'endDate' => $endDate,
+                'productionYear' => $productionYear,
             ));
         }
     }

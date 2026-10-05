@@ -685,6 +685,23 @@ class Product extends CActiveRecord {
         return $resultSet;
     }
 
+    public function getTotalTireQuantitiesByProductionYear($endDate, $productionYear) {
+        $sql = "SELECT w.branch_id, COALESCE(SUM(i.stock_in + i.stock_out), 0) AS total_stock, COALESCE(SUM((i.stock_in + i.stock_out) * i.purchase_price), 0) AS stock_amount
+                FROM " . InventoryDetail::model()->tableName() . " i
+                INNER JOIN " . Warehouse::model()->tableName() . " w ON w.id = i.warehouse_id
+                WHERE i.product_id = :product_id AND w.status = 'Active' AND i.production_year = :production_year AND 
+                    i.transaction_date BETWEEN '" . AppParam::BEGINNING_TRANSACTION_DATE . "' AND :end_date
+                GROUP BY w.branch_id";
+
+        $resultSet = Yii::app()->db->createCommand($sql)->queryAll(true, array(
+            ':product_id' => $this->id, 
+            ':end_date' => $endDate,
+            ':production_year' => $productionYear,
+        ));
+
+        return $resultSet;
+    }
+
     public function getTireSaleTotalQuantitiesReport($year, $month) {
         $sql = "SELECT h.branch_id, COALESCE(SUM(d.quantity), 0) AS total_quantity
                 FROM " . InvoiceDetail::model()->tableName() . " d
