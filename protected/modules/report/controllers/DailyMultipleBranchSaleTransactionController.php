@@ -50,6 +50,70 @@ class DailyMultipleBranchSaleTransactionController extends Controller {
         ));
     }
     
+    public function actionNewVehicleInfo($branchId, $startDate, $endDate) {
+        set_time_limit(0);
+        ini_set('memory_limit', '1024M');
+
+        $page = (isset($_GET['page'])) ? $_GET['page'] : 1;
+        
+        $dataProvider = InvoiceHeader::model()->searchByTransactionNewVehicleInfo($branchId, $startDate, $endDate, $page);
+        
+        $this->render('newVehicleInfo', array(
+            'dataProvider' => $dataProvider,
+            'startDate' => $startDate,
+            'endDate' => $endDate,
+            'branchId' => $branchId,
+        ));
+    }
+
+    public function actionRepeatVehicleInfo($branchId, $startDate, $endDate) {
+        set_time_limit(0);
+        ini_set('memory_limit', '1024M');
+
+        $page = (isset($_GET['page'])) ? $_GET['page'] : 1;
+        
+        $dataProvider = InvoiceHeader::model()->searchByTransactionRepeatVehicleInfo($branchId, $startDate, $endDate, $page);
+        
+        $this->render('repeatVehicleInfo', array(
+            'dataProvider' => $dataProvider,
+            'startDate' => $startDate,
+            'endDate' => $endDate,
+            'branchId' => $branchId,
+        ));
+    }
+
+    public function actionNewCustomerInfo($branchId, $startDate, $endDate) {
+        set_time_limit(0);
+        ini_set('memory_limit', '1024M');
+
+        $page = (isset($_GET['page'])) ? $_GET['page'] : 1;
+        
+        $dataProvider = InvoiceHeader::model()->searchByTransactionNewCustomerInfo($branchId, $startDate, $endDate, $page);
+        
+        $this->render('newCustomerInfo', array(
+            'dataProvider' => $dataProvider,
+            'startDate' => $startDate,
+            'endDate' => $endDate,
+            'branchId' => $branchId,
+        ));
+    }
+
+    public function actionRepeatCustomerInfo($branchId, $startDate, $endDate) {
+        set_time_limit(0);
+        ini_set('memory_limit', '1024M');
+
+        $page = (isset($_GET['page'])) ? $_GET['page'] : 1;
+        
+        $dataProvider = InvoiceHeader::model()->searchByTransactionRepeatCustomerInfo($branchId, $startDate, $endDate, $page);
+        
+        $this->render('repeatCustomerInfo', array(
+            'dataProvider' => $dataProvider,
+            'startDate' => $startDate,
+            'endDate' => $endDate,
+            'branchId' => $branchId,
+        ));
+    }
+
     protected function saveToExcel($dailyMultipleBranchSaleReport, $dailyMultipleBranchSaleProductReportData, $startDate, $endDate) {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');

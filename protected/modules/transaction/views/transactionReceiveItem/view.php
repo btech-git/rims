@@ -313,7 +313,7 @@ $this->menu = array(
                 <tr>
                     <td colspan="7" style="text-align: right;font-weight: bold">TOTAL</td>
                     <td style="text-align: center;font-weight: bold"><?php echo CHtml::encode($totalQuantity); ?></td>
-                    <td colspan=<?php !empty($model->delivery_order_id) ? "6": "4"?>>&nbsp;</td>
+                    <td colspan="<?php $model->delivery_order_id != "" ? 6 : 4; ?>">&nbsp;</td>
                 </tr>
             </tfoot>
         </table>	

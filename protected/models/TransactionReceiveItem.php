@@ -50,6 +50,7 @@
  * @property string $verified_datetime
  * @property string $invoice_payment_amount
  * @property string $invoice_payment_remaining
+ * @property string $purchase_return_amount
  *
  * The followings are the available model relations:
  * @property MovementInHeader[] $movementInHeaders
@@ -114,12 +115,12 @@ class TransactionReceiveItem extends MonthlyTransactionActiveRecord {
             array('recipient_id, recipient_branch_id, destination_branch, supplier_id, movement_type, purchase_order_id, transfer_request_id, consignment_in_id, delivery_order_id, movement_out_id, user_id_receive, user_id_invoice, user_id_cancelled, user_id_updated, is_approved_invoice, user_id_approval_invoice, is_verified, user_id_verified', 'numerical', 'integerOnly' => true),
             array('receive_item_no, request_type', 'length', 'max' => 30),
             array('invoice_number, invoice_tax_number, supplier_delivery_number', 'length', 'max' => 50),
-            array('invoice_sub_total, invoice_tax_nominal, invoice_grand_total, invoice_grand_total_rounded, invoice_rounding_nominal, invoice_payment_amount, invoice_payment_remaining', 'length', 'max' => 18),
+            array('invoice_sub_total, invoice_tax_nominal, invoice_grand_total, invoice_grand_total_rounded, invoice_rounding_nominal, invoice_payment_amount, invoice_payment_remaining, purchase_return_amount', 'length', 'max' => 18),
             array('receive_item_no', 'unique'),
             array('receive_item_date, arrival_date, request_date, estimate_arrival_date, invoice_date, invoice_due_date, purchase_order_no, transfer_request_no, delivery_order_no, consignment_in_no, movement_out_no, note, invoice_date_created, invoice_time_created, updated_datetime, cancelled_datetime, date_approval_invoice, time_approval_invoice, verified_datetime', 'safe'),
             // The following rule is used by search().
             // Please remove those attributes that should not be searched.
-            array('id, receive_item_no, receive_item_date, arrival_date, created_datetime, movement_type, recipient_id, recipient_branch_id, request_type, request_date, estimate_arrival_date, destination_branch, supplier_id, purchase_order_id, transfer_request_id, consignment_in_id,branch_name, delivery_order_id, supplier_name,invoice_number, invoice_date, movement_out_id, transfer_request_no, delivery_order_no, consignment_in_no, movement_out_no, invoice_tax_number, invoice_sub_total, invoice_tax_nominal, invoice_grand_total, note, supplier_delivery_number, invoice_grand_total_rounded, invoice_rounding_nominal, user_id_receive, user_id_invoice, invoice_date_created, invoice_time_created, cancelled_datetime, user_id_cancelled, updated_datetime, user_id_updated, is_approved_invoice, user_id_approval_invoice, date_approval_invoice, time_approval_invoice, is_verified, user_id_verified, verified_datetime, invoice_payment_amount, invoice_payment_remaining', 'safe', 'on' => 'search'),
+            array('id, receive_item_no, receive_item_date, arrival_date, created_datetime, movement_type, recipient_id, recipient_branch_id, request_type, request_date, estimate_arrival_date, destination_branch, supplier_id, purchase_order_id, transfer_request_id, consignment_in_id,branch_name, delivery_order_id, supplier_name,invoice_number, invoice_date, movement_out_id, transfer_request_no, delivery_order_no, consignment_in_no, movement_out_no, invoice_tax_number, invoice_sub_total, invoice_tax_nominal, invoice_grand_total, note, supplier_delivery_number, invoice_grand_total_rounded, invoice_rounding_nominal, user_id_receive, user_id_invoice, invoice_date_created, invoice_time_created, cancelled_datetime, user_id_cancelled, updated_datetime, user_id_updated, is_approved_invoice, user_id_approval_invoice, date_approval_invoice, time_approval_invoice, is_verified, user_id_verified, verified_datetime, invoice_payment_amount, invoice_payment_remaining, purchase_return_amount', 'safe', 'on' => 'search'),
         );
     }
 
@@ -229,7 +230,6 @@ class TransactionReceiveItem extends MonthlyTransactionActiveRecord {
         $criteria->compare('recipientBranch.name', $this->branch_name, true);
         $criteria->compare('supplier.name', $this->supplier_name, true);
         $criteria->compare('purchaseOrder.purchase_order_no', $this->purchase_order_no, true);
-//        $criteria->compare('transferRequest.transfer_request_no', $this->transfer_request_no, true);
         $criteria->compare('consignmentIn.consignment_in_no', $this->consignment_in_no, true);
         $criteria->compare('deliveryOrder.delivery_order_no', $this->delivery_order_no, true);
         $criteria->compare('movementOut.movement_out_no', $this->movement_out_no, true);
@@ -664,7 +664,7 @@ class TransactionReceiveItem extends MonthlyTransactionActiveRecord {
     
     public function getTotalRemaining() {
         
-        return $this->invoice_grand_total - $this->invoice_payment_amount;
+        return $this->invoice_grand_total - $this->invoice_payment_amount - $this->purchase_return_amount;
     }
     
     public function getOutstandingDays() {

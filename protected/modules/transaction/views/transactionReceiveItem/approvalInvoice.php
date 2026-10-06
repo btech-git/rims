@@ -167,8 +167,6 @@ $this->breadcrumbs=array(
                             <td>Code</td>
                             <td>Kategori</td>
                             <td>Brand</td>
-                            <td>Sub Brand</td>
-                            <td>Sub Brand Series</td>
                             <td>Qty Order</td>
                             <td>Qty Received</td>
                             <td>Unit</td>
@@ -182,10 +180,16 @@ $this->breadcrumbs=array(
                                 <?php $product = $detail->product; ?>
                                 <td><?php echo CHtml::encode(CHtml::value($product, 'name')); ?></td>
                                 <td><?php echo CHtml::encode(CHtml::value($product, 'manufacturer_code')); ?></td>
-                                <td><?php echo CHtml::encode(CHtml::value($product, 'masterSubCategoryCode')); ?></td>
-                                <td><?php echo CHtml::encode(CHtml::value($product, 'brand.name')); ?></td>
-                                <td><?php echo CHtml::encode(CHtml::value($product, 'subBrand.name')); ?></td>
-                                <td><?php echo CHtml::encode(CHtml::value($product, 'subBrandSeries.name')); ?></td>
+                                <td>
+                                    <?php echo CHtml::encode(CHtml::value($product, 'productMasterCategory.name')); ?> - 
+                                    <?php echo CHtml::encode(CHtml::value($product, 'productSubMasterCategory.name')); ?> -
+                                    <?php echo CHtml::encode(CHtml::value($product, 'productSubCategory.name')); ?>
+                                </td>
+                                <td>
+                                    <?php echo CHtml::encode(CHtml::value($product, 'brand.name')); ?> - 
+                                    <?php echo CHtml::encode(CHtml::value($product, 'subBrand.name')); ?> -
+                                    <?php echo CHtml::encode(CHtml::value($product, 'subBrandSeries.name')); ?>
+                                </td>
                                 <td style="text-align: center"><?php echo CHtml::encode(CHtml::value($detail, 'qty_request')); ?></td>
                                 <td style="text-align: center"><?php echo CHtml::encode(CHtml::value($detail, 'qty_received')); ?></td>
                                 <td><?php echo CHtml::encode(CHtml::value($product, 'unit.name')); ?></td>
@@ -200,31 +204,31 @@ $this->breadcrumbs=array(
                     </tbody>
                     <tfoot>
                         <tr>
-                            <td colspan="10" style="text-align: right">TOTAL</td>
+                            <td colspan="8" style="text-align: right">TOTAL</td>
                             <td style="text-align: right">
                                 <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($receiveItem, 'subTotal'))); ?>
                             </td>
                         </tr>
                         <tr>
-                            <td colspan="10" style="text-align: right">PPn <?php echo CHtml::encode(CHtml::value($receiveItem, 'purchaseOrder.tax_percentage')); ?>%</td>
+                            <td colspan="8" style="text-align: right">PPn <?php echo CHtml::encode(CHtml::value($receiveItem, 'purchaseOrder.tax_percentage')); ?>%</td>
                             <td style="text-align: right">
                                 <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($receiveItem, 'taxNominal'))); ?>
                             </td>
                         </tr>
                         <tr>
-                            <td colspan="10" style="text-align: right">SUB TOTAL</td>
+                            <td colspan="8" style="text-align: right">SUB TOTAL</td>
                             <td style="text-align: right">
                                 <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($receiveItem, 'grandTotal'))); ?>
                             </td>
                         </tr>
                         <tr>
-                            <td colspan="10" style="text-align: right">PEMBULATAN</td>
+                            <td colspan="8" style="text-align: right">PEMBULATAN</td>
                             <td style="text-align: right">
                                 <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($receiveItem, 'invoice_rounding_nominal'))); ?>
                             </td>
                         </tr>
                         <tr>
-                            <td colspan="10" style="text-align: right">GRAND TOTAL</td>
+                            <td colspan="8" style="text-align: right">GRAND TOTAL</td>
                             <td style="text-align: right">
                                 <span id="grand_total">
                                     <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', CHtml::value($receiveItem, 'invoice_grand_total_rounded'))); ?>

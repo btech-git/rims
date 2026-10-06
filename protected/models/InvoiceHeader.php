@@ -3147,4 +3147,84 @@ class InvoiceHeader extends MonthlyTransactionActiveRecord {
 
         return $resultSet;
     }
+    
+    public function searchByTransactionNewVehicleInfo($branchId, $startDate, $endDate, $page) {
+        $criteria = new CDbCriteria;
+
+        $criteria->compare('t.branch_id', $branchId);
+        $criteria->compare('t.is_new_vehicle', 1);
+        $criteria->addBetweenCondition('t.invoice_date', $startDate, $endDate);
+        $criteria->addCondition("t.status NOT LIKE '%CANCEL%'");
+        
+        return new CActiveDataProvider($this, array(
+            'criteria' => $criteria,
+            'sort' => array(
+                'defaultOrder' => 't.invoice_date DESC',
+            ),
+            'pagination' => array(
+                'pageSize' => 100,
+                'currentPage' => $page - 1,
+            ),
+        ));
+    }
+    
+    public function searchByTransactionRepeatVehicleInfo($branchId, $startDate, $endDate, $page) {
+        $criteria = new CDbCriteria;
+
+        $criteria->compare('t.branch_id', $branchId);
+        $criteria->compare('t.is_new_vehicle', 0);
+        $criteria->addBetweenCondition('t.invoice_date', $startDate, $endDate);
+        $criteria->addCondition("t.status NOT LIKE '%CANCEL%'");
+        
+        return new CActiveDataProvider($this, array(
+            'criteria' => $criteria,
+            'sort' => array(
+                'defaultOrder' => 't.invoice_date DESC',
+            ),
+            'pagination' => array(
+                'pageSize' => 100,
+                'currentPage' => $page - 1,
+            ),
+        ));
+    }
+
+    public function searchByTransactionNewCustomerInfo($branchId, $startDate, $endDate, $page) {
+        $criteria = new CDbCriteria;
+
+        $criteria->compare('t.branch_id', $branchId);
+        $criteria->compare('t.is_new_customer', 1);
+        $criteria->addBetweenCondition('t.invoice_date', $startDate, $endDate);
+        $criteria->addCondition("t.status NOT LIKE '%CANCEL%'");
+        
+        return new CActiveDataProvider($this, array(
+            'criteria' => $criteria,
+            'sort' => array(
+                'defaultOrder' => 't.invoice_date DESC',
+            ),
+            'pagination' => array(
+                'pageSize' => 100,
+                'currentPage' => $page - 1,
+            ),
+        ));
+    }
+    
+    public function searchByTransactionRepeatCustomerInfo($branchId, $startDate, $endDate, $page) {
+        $criteria = new CDbCriteria;
+
+        $criteria->compare('t.branch_id', $branchId);
+        $criteria->compare('t.is_new_customer', 0);
+        $criteria->addBetweenCondition('t.invoice_date', $startDate, $endDate);
+        $criteria->addCondition("t.status NOT LIKE '%CANCEL%'");
+        
+        return new CActiveDataProvider($this, array(
+            'criteria' => $criteria,
+            'sort' => array(
+                'defaultOrder' => 't.invoice_date DESC',
+            ),
+            'pagination' => array(
+                'pageSize' => 100,
+                'currentPage' => $page - 1,
+            ),
+        ));
+    }
 }

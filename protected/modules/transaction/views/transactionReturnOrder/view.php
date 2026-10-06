@@ -19,23 +19,32 @@ $this->menu = array(
     <div class="clearfix page-action">
         <?php $ccontroller = Yii::app()->controller->id; ?>
         <?php $ccaction = Yii::app()->controller->action->id; ?>
-        <?php echo CHtml::link('<span class="fa fa-list"></span>Manage Return Order', Yii::app()->baseUrl . '/transaction/transactionReturnOrder/admin', array('class' => 'button cbutton right', 'visible' => Yii::app()->user->checkAccess("transaction.transactionReturnOrder.admin"))) ?>
+        <?php echo CHtml::link('<span class="fa fa-list"></span>Manage', Yii::app()->baseUrl . '/transaction/transactionReturnOrder/admin', array(
+            'class' => 'button cbutton right', 
+            'visible' => Yii::app()->user->checkAccess("transaction.transactionReturnOrder.admin")
+        )); ?>
 
         <?php
         $movements = MovementOutHeader::model()->findAllByAttributes(array('return_order_id' => $model->id));
 //        if (empty($movements) && $model->status != 'Approved' && $model->status != 'Rejected'):
         ?>
             <?php echo CHtml::link('<span class="fa fa-edit"></span>Edit', Yii::app()->baseUrl . '/transaction/transactionReturnOrder/update?id=' . $model->id, array(
-                'class' => 'button cbutton right', 
+                'class' => 'button warning right', 
                 'style' => 'margin-right:10px', 
                 'visible' => Yii::app()->user->checkAccess("purchaseReturnEdit")
             )); ?>
         <?php //endif; ?>
         
         <?php if ($model->status == "Draft" && Yii::app()->user->checkAccess("purchaseReturnApproval")): ?>
-            <?php echo CHtml::link('<span class="fa fa-edit"></span>Approval', Yii::app()->baseUrl . '/transaction/transactionReturnOrder/updateApproval?headerId=' . $model->id, array('class' => 'button cbutton right', 'style' => 'margin-right:10px')) ?>
+            <?php echo CHtml::link('<span class="fa fa-edit"></span>Approval', Yii::app()->baseUrl . '/transaction/transactionReturnOrder/updateApproval?headerId=' . $model->id, array(
+                'class' => 'button success right', 
+                'style' => 'margin-right:10px'
+            )); ?>
         <?php elseif ($model->status != "Draft" && Yii::app()->user->checkAccess("operationHead")): ?>
-            <?php echo CHtml::link('<span class="fa fa-edit"></span>Update Approval', Yii::app()->baseUrl . '/transaction/transactionReturnOrder/updateApproval?headerId=' . $model->id, array('class' => 'button cbutton right', 'style' => 'margin-right:10px')) ?>
+            <?php echo CHtml::link('<span class="fa fa-edit"></span>Update Approval', Yii::app()->baseUrl . '/transaction/transactionReturnOrder/updateApproval?headerId=' . $model->id, array(
+                'class' => 'button success right', 
+                'style' => 'margin-right:10px'
+            )); ?>
         <?php endif; ?>
         
         <h1>View Transaction Return Beli #<?php echo $model->id; ?></h1>
@@ -155,8 +164,6 @@ $this->menu = array(
                     <td>Code</td>
                     <td>Kategori</td>
                     <td>Brand</td>
-                    <td>Sub Brand</td>
-                    <td>Sub Brand Series</td>
                     <td>QTY Receive</td>
                     <td>QTY Return</td>
                     <td>Note</td>
@@ -171,10 +178,16 @@ $this->menu = array(
                     <tr>
                         <td><?php echo $returnDetail->product->name == '' ? '-' : $returnDetail->product->name; ?></td>
                         <td><?php echo CHtml::encode(CHtml::value($returnDetail, 'product.manufacturer_code')); ?></td>
-                        <td><?php echo CHtml::encode(CHtml::value($returnDetail, 'product.masterSubCategoryCode')); ?></td>
-                        <td><?php echo CHtml::encode(CHtml::value($returnDetail, 'product.brand.name')); ?></td>
-                        <td><?php echo CHtml::encode(CHtml::value($returnDetail, 'product.subBrand.name')); ?></td>
-                        <td><?php echo CHtml::encode(CHtml::value($returnDetail, 'product.subBrandSeries.name')); ?></td>
+                        <td>
+                            <?php echo CHtml::encode(CHtml::value($returnDetail, 'product.productMasterCategory.name')); ?> - 
+                            <?php echo CHtml::encode(CHtml::value($returnDetail, 'product.productSubMasterCategory.name')); ?> -
+                            <?php echo CHtml::encode(CHtml::value($returnDetail, 'product.productSubCategory.name')); ?>
+                        </td>
+                        <td>
+                            <?php echo CHtml::encode(CHtml::value($returnDetail, 'product.brand.name')); ?> - 
+                            <?php echo CHtml::encode(CHtml::value($returnDetail, 'product.subBrand.name')); ?> -
+                            <?php echo CHtml::encode(CHtml::value($returnDetail, 'product.subBrandSeries.name')); ?>
+                        </td>
                         <td><?php echo $returnDetail->qty_request == '' ? '-' : $returnDetail->qty_request; ?></td>
                         <td><?php echo $returnDetail->qty_reject == '' ? '-' : $returnDetail->qty_reject; ?></td>
                         <td><?php echo $returnDetail->note == '' ? '-' : $returnDetail->note; ?></td>

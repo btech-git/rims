@@ -65,8 +65,22 @@
                                 'endDate' => $endDate
                             ), array('target' => '_blank')); ?>
                         </td>
-                        <td style="text-align: center"><?php echo CHtml::encode($dataItem['vehicle_new_quantity']); ?></td>
-                        <td style="text-align: center"><?php echo CHtml::encode($dataItem['vehicle_repeat_quantity']); ?></td>
+                        <td style="text-align: center">
+                            <?php echo CHtml::link(CHtml::encode($dataItem['vehicle_new_quantity']), array(
+                                '/report/dailyMultipleBranchSaleTransaction/newVehicleInfo', 
+                                'branchId' => $dataItem['branch_id'], 
+                                'startDate' => $startDate, 
+                                'endDate' => $endDate
+                            ), array('target' => '_blank')); ?>
+                        </td>
+                        <td style="text-align: center">
+                            <?php echo CHtml::link(CHtml::encode($dataItem['vehicle_repeat_quantity']), array(
+                                '/report/dailyMultipleBranchSaleTransaction/repeatVehicleInfo', 
+                                'branchId' => $dataItem['branch_id'], 
+                                'startDate' => $startDate, 
+                                'endDate' => $endDate
+                            ), array('target' => '_blank')); ?>
+                        </td>
                         <td style="text-align: center">
                             <?php echo CHtml::link(CHtml::encode($dataItem['customer_quantity']), array(
                                 '/report/branchSaleTransactionInfo/headerInfo', 
@@ -76,8 +90,22 @@
                                 'endDate' => $endDate
                             ), array('target' => '_blank')); ?>
                         </td>
-                        <td style="text-align: center"><?php echo CHtml::encode($dataItem['customer_new_quantity']); ?></td>
-                        <td style="text-align: center"><?php echo CHtml::encode($dataItem['customer_repeat_quantity']); ?></td>
+                        <td style="text-align: center">
+                            <?php echo CHtml::link(CHtml::encode($dataItem['customer_new_quantity']), array(
+                                '/report/dailyMultipleBranchSaleTransaction/newCustomerInfo', 
+                                'branchId' => $dataItem['branch_id'], 
+                                'startDate' => $startDate, 
+                                'endDate' => $endDate
+                            ), array('target' => '_blank')); ?>
+                        </td>
+                        <td style="text-align: center">
+                            <?php echo CHtml::link(CHtml::encode($dataItem['customer_repeat_quantity']), array(
+                                '/report/dailyMultipleBranchSaleTransaction/repeatCustomerInfo', 
+                                'branchId' => $dataItem['branch_id'], 
+                                'startDate' => $startDate, 
+                                'endDate' => $endDate
+                            ), array('target' => '_blank')); ?>
+                        </td>
                         <td style="text-align: center"><?php echo CHtml::encode($dataItem['customer_retail_quantity']); ?></td>
                         <td style="text-align: center"><?php echo CHtml::encode($dataItem['customer_company_quantity']); ?></td>
                         <td style="text-align: right">

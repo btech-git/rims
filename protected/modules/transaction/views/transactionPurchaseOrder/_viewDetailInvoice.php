@@ -122,6 +122,24 @@
                                         <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($receiveHeader, 'invoice_grand_total'))); ?>
                                     </td>
                                 </tr>
+                                <tr>
+                                    <td colspan="9" style="text-align: right">Total Retur</td>
+                                    <td style="text-align: right">
+                                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($receiveHeader, 'purchase_return_amount'))); ?>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="9" style="text-align: right">Total Payment</td>
+                                    <td style="text-align: right">
+                                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($receiveHeader, 'invoice_payment_amount'))); ?>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="9" style="text-align: right">Sisa Hutang</td>
+                                    <td style="text-align: right">
+                                        <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', CHtml::value($receiveHeader, 'invoice_payment_remaining'))); ?>
+                                    </td>
+                                </tr>
                             </tfoot>
                         </table>
                     </td>

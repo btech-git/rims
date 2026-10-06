@@ -440,7 +440,8 @@ class TransactionReturnOrderController extends Controller {
     }
 
     public function actionUpdateApproval($headerId) {
-        $returnOrder = TransactionReturnOrder::model()->findByPK($headerId);
+        $returnOrder = TransactionReturnOrder::model()->findByPk($headerId);
+        $receiveItem = TransactionReceiveItem::model()->findByPk($returnOrder->receive_item_id);
         $historis = TransactionReturnOrderApproval::model()->findAllByAttributes(array('return_order_id' => $headerId));
         $model = new TransactionReturnOrderApproval;
         $model->date = date('Y-m-d H:i:s');
@@ -454,9 +455,12 @@ class TransactionReturnOrderController extends Controller {
         if (isset($_POST['TransactionReturnOrderApproval'])) {
             $model->attributes = $_POST['TransactionReturnOrderApproval'];
             if ($model->save()) {
-                
                 $returnOrder->status = $model->approval_type;
                 $returnOrder->save(false);
+                
+                $receiveItem->purchase_return_amount = $returnOrder->totalDetail;
+                $receiveItem->invoice_payment_remaining = $receiveItem->totalRemaining;
+                $receiveItem->update(array('purchase_return_amount', 'invoice_payment_remaining'));
                 
                 if ($model->approval_type == 'Approved') {
                     $jumlah = 0;
