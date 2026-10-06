@@ -74,6 +74,21 @@
                     <div class="field">
                         <div class="row collapse">
                             <div class="small-4 columns">
+                                <label class="prefix"><?php echo $form->labelEx($productPricingRequest->header, 'Tahun Kendaraan'); ?></label>
+                            </div>
+
+                            <div class="small-8 columns">
+                                <?php echo CHtml::activeTextField($productPricingRequest->header, 'production_year'); ?>
+                                <?php echo CHtml::error($productPricingRequest->header, 'production_year'); ?>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="medium-6 columns">
+                    <div class="field">
+                        <div class="row collapse">
+                            <div class="small-4 columns">
                                 <label class="prefix">VIN #</label>
                             </div>
 
@@ -93,21 +108,6 @@
                             <div class="small-8 columns">
                                 <?php echo CHtml::activeTextField($productPricingRequest->header, 'vehicle_frame_number'); ?>
                                 <?php echo CHtml::error($productPricingRequest->header, 'vehicle_frame_number'); ?>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="medium-6 columns">
-                    <div class="field">
-                        <div class="row collapse">
-                            <div class="small-4 columns">
-                                <label class="prefix"><?php echo $form->labelEx($productPricingRequest->header, 'Tahun Kendaraan'); ?></label>
-                            </div>
-
-                            <div class="small-8 columns">
-                                <?php echo CHtml::activeTextField($productPricingRequest->header, 'production_year'); ?>
-                                <?php echo CHtml::error($productPricingRequest->header, 'production_year'); ?>
                             </div>
                         </div>
                     </div>

@@ -26,6 +26,30 @@
                             <div class="small-8 columns"><?php echo CHtml::encode(CHtml::value($productPricingRequest->header, 'transaction_number')); ?></div>
                         </div>
                     </div>
+                    
+                    <div class="field">
+                        <div class="row collapse">
+                            <div class="small-4 columns">
+                                <label class="prefix">Vehicle</label>
+                            </div>
+                            <div class="small-8 columns">
+                                <?php echo CHtml::encode(CHtml::value($productPricingRequest->header, 'vehicleCarMake.name')); ?> -
+                                <?php echo CHtml::encode(CHtml::value($productPricingRequest->header, 'vehicleCarModel.name')); ?> -
+                                <?php echo CHtml::encode(CHtml::value($productPricingRequest->header, 'vehicleCarSubModel.name')); ?>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="field">
+                        <div class="row collapse">
+                            <div class="small-4 columns">
+                                <label class="prefix"><?php echo $form->labelEx($productPricingRequest->header, 'Tahun Produksi'); ?></label>
+                            </div>
+
+                            <div class="small-8 columns"><?php echo CHtml::encode(CHtml::value($productPricingRequest->header, 'production_year')); ?></div>
+                        </div>
+                    </div>
+                    
                     <div class="field">
                         <div class="row collapse">
                             <div class="small-4 columns">
@@ -59,29 +83,6 @@
                 </div>
                 
                 <div class="medium-6 columns">
-                    <div class="field">
-                        <div class="row collapse">
-                            <div class="small-4 columns">
-                                <label class="prefix">Vehicle</label>
-                            </div>
-                            <div class="small-8 columns">
-                                <?php echo CHtml::encode(CHtml::value($productPricingRequest->header, 'vehicleCarMake.name')); ?> -
-                                <?php echo CHtml::encode(CHtml::value($productPricingRequest->header, 'vehicleCarModel.name')); ?> -
-                                <?php echo CHtml::encode(CHtml::value($productPricingRequest->header, 'vehicleCarSubModel.name')); ?>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="field">
-                        <div class="row collapse">
-                            <div class="small-4 columns">
-                                <label class="prefix"><?php echo $form->labelEx($productPricingRequest->header, 'Tahun Produksi'); ?></label>
-                            </div>
-
-                            <div class="small-8 columns"><?php echo CHtml::encode(CHtml::value($productPricingRequest->header, 'production_year')); ?></div>
-                        </div>
-                    </div>
-                    
                     <div class="field">
                         <div class="row collapse">
                             <div class="small-4 columns">
@@ -128,7 +129,7 @@
                                 <label class="prefix"><?php echo $form->labelEx($productPricingRequest->header, 'Catatan Reply'); ?></label>
                             </div>
 
-                            <div class="small-8 columns"><?php echo CHtml::activeTextArea($productPricingRequest->header, 'reply_note'); ?></div>
+                            <div class="small-8 columns"><?php echo CHtml::activeTextArea($productPricingRequest->header, 'reply_note', array('rows' => 5)); ?></div>
                         </div>
                     </div>
                 </div>
