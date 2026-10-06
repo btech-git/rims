@@ -105,8 +105,8 @@ class MonthlyCustomerReceivableController extends Controller {
         $worksheet->mergeCells('A2:W2');
         $worksheet->mergeCells('A3:W3');
 
-        $worksheet->getStyle('A1:AG6')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-        $worksheet->getStyle('A1:AG6')->getFont()->setBold(true);
+        $worksheet->getStyle('A1:AH6')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->getStyle('A1:AH6')->getFont()->setBold(true);
 
         $worksheet->setCellValue('A1', 'Raperind Motor ');
         $worksheet->setCellValue('A2', 'Piutang Customer Bulanan');
@@ -121,12 +121,12 @@ class MonthlyCustomerReceivableController extends Controller {
         $worksheet->setCellValue('J5', 'Nota - Sales Order(SO)');
         $worksheet->mergeCells('M5:U5');
         $worksheet->setCellValue('M5', 'Invoice');
-        $worksheet->mergeCells('V5:W5');
-        $worksheet->setCellValue('V5', 'Faktur Pajak');
-        $worksheet->mergeCells('X5:AA5');
-        $worksheet->setCellValue('X5', 'Doc Status');
-        $worksheet->mergeCells('AB5:AG5');
-        $worksheet->setCellValue('AB5', 'Payment Status');
+        $worksheet->mergeCells('W5:X5');
+        $worksheet->setCellValue('W5', 'Faktur Pajak');
+        $worksheet->mergeCells('Y5:AB5');
+        $worksheet->setCellValue('Y5', 'Doc Status');
+        $worksheet->mergeCells('AC5:AH5');
+        $worksheet->setCellValue('AC5', 'Payment Status');
         
         $worksheet->setCellValue('A6', 'No');
         $worksheet->setCellValue('B6', 'Customer');
@@ -147,26 +147,28 @@ class MonthlyCustomerReceivableController extends Controller {
         $worksheet->setCellValue('Q6', 'Materai');
         $worksheet->setCellValue('R6', 'PPh');
         $worksheet->setCellValue('S6', 'Amount');
-        $worksheet->setCellValue('T6', 'Date');
-        $worksheet->setCellValue('U6', 'Number');
-        $worksheet->setCellValue('V6', 'FP #');
-        $worksheet->setCellValue('W6', 'FP Date');
-        $worksheet->setCellValue('X6', 'pdf');
-        $worksheet->setCellValue('Y6', 'print');
-        $worksheet->setCellValue('Z6', 'Done Sent');
-        $worksheet->setCellValue('AA6', 'Tanggal Kirim');
-        $worksheet->setCellValue('AB6', 'No Resi');
-        $worksheet->setCellValue('AC6', 'Jatuh Tempo');
-        $worksheet->setCellValue('AD6', 'Outstanding');
-        $worksheet->setCellValue('AE6', 'Pelunasan');
-        $worksheet->setCellValue('AF6', 'Done');
-        $worksheet->setCellValue('AG6', 'Tanggal Bayar');
-        $worksheet->getStyle('A6:AG6')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->setCellValue('T6', 'Tanggal Invoice');
+        $worksheet->setCellValue('U6', 'Umur (hari)');
+        $worksheet->setCellValue('V6', 'Invoice #');
+        $worksheet->setCellValue('W6', 'FP #');
+        $worksheet->setCellValue('X6', 'FP Date');
+        $worksheet->setCellValue('Y6', 'pdf');
+        $worksheet->setCellValue('Z6', 'print');
+        $worksheet->setCellValue('AA6', 'Done Sent');
+        $worksheet->setCellValue('AB6', 'Tanggal Kirim');
+        $worksheet->setCellValue('AC6', 'No Resi');
+        $worksheet->setCellValue('AD6', 'Jatuh Tempo');
+        $worksheet->setCellValue('AE6', 'Outstanding');
+        $worksheet->setCellValue('AF6', 'Pelunasan');
+        $worksheet->setCellValue('AG6', 'Done');
+        $worksheet->setCellValue('AH6', 'Tanggal Bayar');
+        $worksheet->getStyle('A6:AH6')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
-        $counter = 8;
+        $counter = 7;
         foreach ($monthlyCustomerReceivableSummary->dataProvider->data as $customer) {
             foreach ($monthlyCustomerReceivableReportData[$customer->id] as $i => $dataItem) {
-//                $movementTransactionInfo = isset($monthlyCustomerMovementReportData[$dataItem['id']]) ? $monthlyCustomerMovementReportData[$dataItem['id']] : '';
+                $outstandingDays = date_diff(date_create($dataItem['invoice_date']), date_create(date('Y-m-d')));
+                
                 $worksheet->setCellValue("A{$counter}", $i + 1);
                 $worksheet->setCellValue("B{$counter}", CHtml::value($customer, 'name'));
                 $worksheet->setCellValue("C{$counter}", $dataItem['branch_name']);
@@ -182,14 +184,15 @@ class MonthlyCustomerReceivableController extends Controller {
                 $worksheet->setCellValue("P{$counter}", $dataItem['ppn_total']);
                 $worksheet->setCellValue("S{$counter}", $dataItem['total_price']);
                 $worksheet->setCellValue("T{$counter}", $dataItem['invoice_date']);
-                $worksheet->setCellValue("U{$counter}", $dataItem['invoice_number']);
-                $worksheet->setCellValue("V{$counter}", $dataItem['transaction_tax_number']);
-                $worksheet->setCellValue("AA{$counter}", $dataItem['invoice_date']);
-                $worksheet->setCellValue("AB{$counter}", $dataItem['payment_number']);
-                $worksheet->setCellValue("AC{$counter}", $dataItem['due_date']);
-                $worksheet->setCellValue("AD{$counter}", $dataItem['payment_left']);
-                $worksheet->setCellValue("AE{$counter}", $dataItem['payment_amount']);
-                $worksheet->setCellValue("AG{$counter}", $dataItem['payment_date']);
+                $worksheet->setCellValue("U{$counter}", $outstandingDays->format("%a days"));
+                $worksheet->setCellValue("V{$counter}", $dataItem['invoice_number']);
+                $worksheet->setCellValue("W{$counter}", $dataItem['transaction_tax_number']);
+                $worksheet->setCellValue("AB{$counter}", $dataItem['invoice_date']);
+                $worksheet->setCellValue("AC{$counter}", $dataItem['payment_number']);
+                $worksheet->setCellValue("AD{$counter}", $dataItem['due_date']);
+                $worksheet->setCellValue("AE{$counter}", $dataItem['payment_left']);
+                $worksheet->setCellValue("AF{$counter}", $dataItem['payment_amount']);
+                $worksheet->setCellValue("AH{$counter}", $dataItem['payment_date']);
                 
                 $counter++;
             }

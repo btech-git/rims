@@ -28,6 +28,7 @@
                         <tr>
                             <th class="width2-1">Tanggal</th>
                             <th class="width2-2">Jatuh Tempo</th>
+                            <th class="width2-1">Umur (hari)</th>
                             <th class="width2-3">Faktur #</th>
                             <th class="width2-4">Plat #</th>
                             <th class="width2-5">Kendaraan</th>
@@ -69,6 +70,10 @@
                                     </td>
                                     <td class="width2-2">
                                         <?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($receivableReportItem['due_date']))); ?>
+                                    </td>
+                                    <td>
+                                        <?php $agingDays = date_diff(date_create($receivableReportItem['invoice_date']), date_create(date('Y-m-d'))); ?>
+                                        <?php echo CHtml::encode($agingDays->format("%a days")); ?>
                                     </td>
                                     <td class="width2-3">
                                         <?php echo CHtml::link($receivableReportItem['invoice_number'], array(
@@ -119,7 +124,7 @@
                                 <?php $totalReceivable += $paymentLeft; ?>
                             <?php endforeach; ?>
                             <tr>
-                                <td colspan="12" style="text-align: right; font-weight: bold">TOTAL</td>
+                                <td colspan="13" style="text-align: right; font-weight: bold">TOTAL</td>
                                 <td class="width2-7" style="text-align: right; font-weight: bold"> 
                                     <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalRevenue)); ?>
                                 </td>

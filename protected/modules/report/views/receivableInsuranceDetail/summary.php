@@ -108,6 +108,7 @@ Yii::app()->clientScript->registerCssFile(Yii::app()->request->baseUrl . '/css/t
                         'receivableDetailSummary' => $receivableDetailSummary,
                         'account' => $account,
                         'branchId' => $branchId,
+                        'startDate' => $startDate, 
                         'endDate' => $endDate,
                     )); ?>
                 </div>

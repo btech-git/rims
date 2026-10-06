@@ -41,7 +41,7 @@ class MonthlyCustomerReceivableSummary extends CComponent {
             SELECT customer_id
             FROM " . InvoiceHeader::model()->tableName() . "
             WHERE YEAR(invoice_date) = :year AND MONTH(invoice_date) = :month AND customer_id = t.id AND user_id_cancelled IS NULL AND 
-                insurance_company_id IS NULL" . $branchConditionSql. "
+                payment_left > 1000 AND insurance_company_id IS NULL" . $branchConditionSql. "
         )");
 
         $this->dataProvider->criteria->params[':year'] = $year;

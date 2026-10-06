@@ -35,6 +35,8 @@ Yii::app()->clientScript->registerCss('_report', '
                 <th class="width1-7">PPn</th>
                 <th class="width1-8">Total</th>
                 <th class="width1-9">Invoice</th>
+                <th class="width1-9">Tanggal Invoice</th>
+                <th>Umur (hari)</th>
                 <th class="width1-10">Outstanding</th>
                 <th class="width1-11">Pelunasan</th>
                 <th class="width1-12">Payment #</th>
@@ -43,7 +45,9 @@ Yii::app()->clientScript->registerCss('_report', '
         <tbody>
             <?php foreach ($monthlyCustomerReceivableSummary->dataProvider->data as $i => $customer): ?>
                 <tr class="items1">
-                    <td colspan="16" style="font-weight: bold; text-align: center"><?php echo CHtml::encode($i + 1); ?> - <?php echo CHtml::encode(CHtml::value($customer, 'name')); ?></td>
+                    <td colspan="16" style="font-weight: bold; text-align: center">
+                        <?php echo CHtml::encode($i + 1); ?> - <?php echo CHtml::encode(CHtml::value($customer, 'name')); ?>
+                    </td>
                 </tr>
                 <?php foreach ($monthlyCustomerReceivableReportData[$customer->id] as $dataItem): ?>
                     <?php $movementTransactionInfo = isset($monthlyCustomerMovementReportData[$dataItem['id']]) ? $monthlyCustomerMovementReportData[$dataItem['id']] : ''; ?>
@@ -58,6 +62,13 @@ Yii::app()->clientScript->registerCss('_report', '
                         <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $dataItem['ppn_total'])); ?></td>
                         <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $dataItem['total_price'])); ?></td>
                         <td><?php echo CHtml::encode($dataItem['invoice_number']); ?></td>
+                        <td>
+                            <?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($dataItem['invoice_date']))); ?>
+                        </td>
+                        <td>
+                            <?php $outstandingDays = date_diff(date_create($dataItem['invoice_date']), date_create(date('Y-m-d'))); ?>
+                            <?php echo CHtml::encode($outstandingDays->format("%a days")); ?>
+                        </td>
                         <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $dataItem['payment_left'])); ?></td>
                         <td style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $dataItem['payment_amount'])); ?></td>
                         <td><?php echo CHtml::encode($dataItem['payment_number']); ?></td>

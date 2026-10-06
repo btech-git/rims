@@ -1,15 +1,17 @@
 <?php Yii::app()->clientScript->registerCss('_report', '
-    .width1-1 { width: 30% }
-    .width1-2 { width: 30% }
+    .width1-1 { width: 50% }
+    .width1-2 { width: 50% }
     
-    .width2-1 { width: 12% }
-    .width2-2 { width: 12% }
-    .width2-3 { width: 15% }
+    .width2-1 { width: 7% }
+    .width2-2 { width: 7% }
+    .width2-3 { width: 8% }
     .width2-4 { width: 10% }
-    .width2-5 { width: 12% }
-    .width2-6 { width: 12% }
-    .width2-7 { width: 12% }
-    .width2-8 { width: 15% }
+    .width2-5 { width: 15% }
+    .width2-6 { width: 15% }
+    .width2-7 { width: 8% }
+    .width2-8 { width: 10% }
+    .width2-9 { width: 10% }
+    .width2-10 { width: 10% }
 '); ?>
 
 <div style="font-weight: bold; text-align: center">
@@ -32,12 +34,14 @@
                     <tr>
                         <th class="width2-1">Tanggal</th>
                         <th class="width2-2">Jatuh Tempo</th>
-                        <th class="width2-3">Faktur #</th>
-                        <th class="width2-8">Customer</th>
-                        <th class="width2-4">Vehicle</th>
-                        <th class="width2-5">Grand Total</th>
-                        <th class="width2-6">Payment</th>
-                        <th class="width2-7">Remaining</th>
+                        <th class="width2-3">Umur (hari)</th>
+                        <th class="width2-4">Faktur #</th>
+                        <th class="width2-5">Customer</th>
+                        <th class="width2-6">Kendaraan</th>
+                        <th class="width2-7">Plat #</th>
+                        <th class="width2-8">Grand Total</th>
+                        <th class="width2-9">Payment</th>
+                        <th class="width2-10">Remaining</th>
                     </tr>
                 </table>
             </td>
@@ -53,32 +57,57 @@
                 <td colspan="2">
                     <table>
                         <?php $receivableData = $header->getReceivableReport($endDate, $branchId, $plateNumber); ?>
-                        <?php $totalRevenue = 0.00; ?>
-                        <?php $totalPayment = 0.00; ?>
-                        <?php $totalReceivable = 0.00; ?>
+                        <?php $totalRevenue = '0.00'; ?>
+                        <?php $totalPayment = '0.00'; ?>
+                        <?php $totalReceivable = '0.00'; ?>
                         <?php foreach ($receivableData as $receivableRow): ?>
                             <?php $revenue = $receivableRow['total_price']; ?>
                             <?php $paymentAmount = $receivableRow['amount']; ?>
                             <?php $paymentLeft = $receivableRow['remaining']; ?>
                             <tr>
-                                <td class="width2-1"><?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($receivableRow['invoice_date']))); ?></td>
-                                <td class="width2-2"><?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($receivableRow['due_date']))); ?></td>
-                                <td class="width2-3"><?php echo CHtml::link($receivableRow['invoice_number'], Yii::app()->createUrl("report/generalLedger/redirectTransaction", array("codeNumber" => $receivableRow['invoice_number'])), array('target' => '_blank'));?></td>
-                                <td class="width2-8"><?php echo CHtml::encode($receivableRow['customer_name']); ?></td>
-                                <td class="width2-4"><?php echo CHtml::encode($receivableRow['vehicle']); ?></td>
-                                <td class="width2-5" style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $revenue)); ?></td>
-                                <td class="width2-6" style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $paymentAmount)); ?></td>
-                                <td class="width2-7" style="text-align: right"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $paymentLeft)); ?></td>
+                                <td class="width2-1">
+                                    <?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($receivableRow['invoice_date']))); ?>
+                                </td>
+                                <td class="width2-2">
+                                    <?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($receivableRow['due_date']))); ?>
+                                </td>
+                                <td class="width2-3">
+                                    <?php $outstandingDays = date_diff(date_create($receivableRow['invoice_date']), date_create(date('Y-m-d'))); ?>
+                                    <?php echo CHtml::encode($outstandingDays->format("%a days")); ?>
+                                </td>
+                                <td class="width2-4">
+                                    <?php echo CHtml::link($receivableRow['invoice_number'], Yii::app()->createUrl("report/generalLedger/redirectTransaction", array(
+                                        "codeNumber" => $receivableRow['invoice_number']
+                                    )), array('target' => '_blank'));?>
+                                </td>
+                                <td class="width2-5"><?php echo CHtml::encode($receivableRow['customer_name']); ?></td>
+                                <td class="width2-6"><?php echo CHtml::encode($receivableRow['car_make'] . ' - ' . $receivableRow['car_model'] . ' - ' . $receivableRow['car_sub_model']); ?></td>
+                                <td class="width2-7"><?php echo CHtml::encode($receivableRow['plate_number']); ?></td>
+                                <td class="width2-8" style="text-align: right">
+                                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $revenue)); ?>
+                                </td>
+                                <td class="width2-9" style="text-align: right">
+                                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $paymentAmount)); ?>
+                                </td>
+                                <td class="width2-10" style="text-align: right">
+                                    <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $paymentLeft)); ?>
+                                </td>
                             </tr>
                             <?php $totalRevenue += $revenue; ?>
                             <?php $totalPayment += $paymentAmount; ?>
                             <?php $totalReceivable += $paymentLeft; ?>
                         <?php endforeach; ?>
                         <tr>
-                            <td colspan="5" style="text-align: right">TOTAL</td>
-                            <td class="width2-5" style="text-align: right"> <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalRevenue)); ?></td>
-                            <td class="width2-6" style="text-align: right"> <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalPayment)); ?></td>
-                            <td class="width2-7" style="text-align: right"> <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalReceivable)); ?></td>
+                            <td colspan="7" style="text-align: right">TOTAL</td>
+                            <td class="width2-8" style="text-align: right"> 
+                                <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalRevenue)); ?>
+                            </td>
+                            <td class="width2-9" style="text-align: right"> 
+                                <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalPayment)); ?>
+                            </td>
+                            <td class="width2-10" style="text-align: right"> 
+                                <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0', $totalReceivable)); ?>
+                            </td>
                         </tr>     
                     </table>
                 </td>

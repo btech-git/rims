@@ -37,9 +37,11 @@ class MonthlyInsuranceReceivableSummary extends CComponent {
         $this->dataProvider->criteria->compare('t.is_deleted', 0);
         
         $this->dataProvider->criteria->addCondition("EXISTS (
-            SELECT insurance_company_id
-            FROM " . RegistrationTransaction::model()->tableName() . "
-            WHERE insurance_company_id = t.id AND YEAR(transaction_date) = :year AND MONTH(transaction_date) = :month AND user_id_cancelled IS NULL" . $branchConditionSql. "
+            SELECT r.insurance_company_id
+            FROM " . RegistrationTransaction::model()->tableName() . " r
+            LEFT OUTER JOIN " . InvoiceHeader::model()->tableName() . " i ON r.id = i.registration_transaction_id
+            WHERE r.insurance_company_id = t.id AND YEAR(r.transaction_date) = :year AND MONTH(r.transaction_date) = :month AND r.user_id_cancelled IS NULL AND 
+                i.payment_left > 1000" . $branchConditionSql. "
         )");
 
         $this->dataProvider->criteria->params[':year'] = $year;

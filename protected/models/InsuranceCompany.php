@@ -247,14 +247,17 @@ class InsuranceCompany extends CActiveRecord {
         }
         
         $sql = "
-            SELECT i.invoice_number, i.invoice_date, due_date, v.plate_number AS vehicle, c.name as customer_name, COALESCE(i.total_price, 0) AS total_price, 
+            SELECT i.invoice_number, i.invoice_date, due_date, v.plate_number AS plate_number, c.name as customer_name, COALESCE(i.total_price, 0) AS total_price, 
                 COALESCE(p.amount, 0) + COALESCE(p.tax_service_amount, 0) + COALESCE(p.discount_amount, 0) + COALESCE(p.bank_administration_fee, 0) + 
                 COALESCE(p.merimen_fee, 0) + COALESCE(p.downpayment_amount, 0) AS amount, i.total_price - COALESCE(p.amount, 0) - 
                 COALESCE(p.tax_service_amount, 0) - COALESCE(p.discount_amount, 0) - COALESCE(p.bank_administration_fee, 0) - COALESCE(p.merimen_fee, 0) - 
-                COALESCE(p.downpayment_amount, 0) AS remaining
+                COALESCE(p.downpayment_amount, 0) AS remaining, m.name AS car_make, o.name AS car_model, s.name AS car_sub_model
             FROM " . InvoiceHeader::model()->tableName() . " i
             INNER JOIN " . Customer::model()->tableName() . " c ON c.id = i.customer_id
             INNER JOIN " . Vehicle::model()->tableName() . " v ON v.id = i.vehicle_id
+            INNER JOIN " . VehicleCarMake::model()->tableName() . " m ON m.id = v.car_make_id
+            INNER JOIN " . VehicleCarModel::model()->tableName() . " o ON o.id = v.car_model_id
+            INNER JOIN " . VehicleCarSubModel::model()->tableName() . " s ON s.id = v.car_sub_model_id
             LEFT OUTER JOIN (
                 SELECT d.invoice_header_id, SUM(d.amount) AS amount, SUM(d.tax_service_amount) AS tax_service_amount, SUM(d.discount_amount) AS discount_amount,
                     SUM(d.bank_administration_fee) AS bank_administration_fee, SUM(d.merimen_fee) AS merimen_fee, SUM(d.downpayment_amount) AS downpayment_amount

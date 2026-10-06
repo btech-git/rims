@@ -158,102 +158,85 @@ class ReceivableController extends Controller {
         $worksheet = $objPHPExcel->setActiveSheetIndex(0);
         $worksheet->setTitle('Faktur Belum Lunas Customer');
 
-        $worksheet->mergeCells('A1:R1');
-        $worksheet->mergeCells('A2:R2');
-        $worksheet->mergeCells('A3:R3');
+        $worksheet->mergeCells('A1:S1');
+        $worksheet->mergeCells('A2:S2');
+        $worksheet->mergeCells('A3:S3');
         
-        $worksheet->getStyle('A1:R5')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-        $worksheet->getStyle('A1:R5')->getFont()->setBold(true);
+        $worksheet->getStyle('A1:S5')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->getStyle('A1:S5')->getFont()->setBold(true);
         
         $worksheet->setCellValue('A1', 'Raperind Motor ');
         $worksheet->setCellValue('A2', 'Faktur Belum Lunas Customer');
         $worksheet->setCellValue('A3', 'Per Tanggal ' . Yii::app()->dateFormatter->format('d MMMM yyyy', $endDate));
 
-        $worksheet->getStyle("A5:R5")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
-        $worksheet->getStyle("A5:R5")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A5:S5")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A5:S5")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
         
         $worksheet->setCellValue('A5', 'Name');
         $worksheet->setCellValue('B5', 'Type');
         $worksheet->setCellValue('C5', 'Akun');
         $worksheet->setCellValue('D5', 'Tanggal');
         $worksheet->setCellValue('E5', 'Jatuh Tempo');
-        $worksheet->setCellValue('F5', 'Faktur #');
-        $worksheet->setCellValue('G5', 'Plat #');
-        $worksheet->setCellValue('H5', 'Kendaraan');
-        $worksheet->setCellValue('I5', 'Parts (Rp)');
-        $worksheet->setCellValue('J5', 'Jasa (Rp)');
-        $worksheet->setCellValue('K5', 'DPP Parts');
-        $worksheet->setCellValue('L5', 'DPP Jasa');
-        $worksheet->setCellValue('M5', 'Total DPP');
-        $worksheet->setCellValue('N5', 'Ppn');
-        $worksheet->setCellValue('O5', 'Pph');
-        $worksheet->setCellValue('P5', 'Grand Total');
-        $worksheet->setCellValue('Q5', 'Payment');
-        $worksheet->setCellValue('R5', 'Remaining');
+        $worksheet->setCellValue('F5', 'Umur (hari)');
+        $worksheet->setCellValue('G5', 'Faktur #');
+        $worksheet->setCellValue('H5', 'Plat #');
+        $worksheet->setCellValue('I5', 'Kendaraan');
+        $worksheet->setCellValue('J5', 'Parts (Rp)');
+        $worksheet->setCellValue('K5', 'Jasa (Rp)');
+        $worksheet->setCellValue('L5', 'DPP Parts');
+        $worksheet->setCellValue('M5', 'DPP Jasa');
+        $worksheet->setCellValue('N5', 'Total DPP');
+        $worksheet->setCellValue('O5', 'Ppn');
+        $worksheet->setCellValue('P5', 'Pph');
+        $worksheet->setCellValue('Q5', 'Grand Total');
+        $worksheet->setCellValue('R5', 'Payment');
+        $worksheet->setCellValue('S5', 'Remaining');
         $counter = 6;
 
         $totalRevenueSum = '0.00';
         $totalPaymentSum = '0.00';
         $totalReceivableSum = '0.00';
-        foreach ($receivableSummary->dataProvider->data as $customer) {
-//            $totalRevenue = '0.00';
-//            $totalPayment = '0.00';
-//            $totalReceivable = '0.00';
-            
+        foreach ($receivableSummary->dataProvider->data as $customer) {            
             foreach ($receivableReportData[$customer->id] as $receivableReportItem) {
                 $revenue = $receivableReportItem['total_price'];
                 $paymentAmount = isset($receivablePaymentReportData[$receivableReportItem['id']]) ? $receivablePaymentReportData[$receivableReportItem['id']] : '0.00';
                 $paymentLeft = $revenue - $paymentAmount;
+                $agingDays = date_diff(date_create($receivableReportItem['invoice_date']), date_create(date('Y-m-d')));
                 
                 $worksheet->setCellValue("A{$counter}", CHtml::value($customer, 'name'));
                 $worksheet->setCellValue("B{$counter}", CHtml::value($customer, 'customer_type'));
                 $worksheet->setCellValue("C{$counter}", CHtml::value($customer, 'coa.name'));
                 $worksheet->setCellValue("D{$counter}", $receivableReportItem['invoice_date']);
                 $worksheet->setCellValue("E{$counter}", $receivableReportItem['due_date']);
-                $worksheet->setCellValue("F{$counter}", $receivableReportItem['invoice_number']);
-                $worksheet->setCellValue("G{$counter}", $receivableReportItem['plate_number']);
-                $worksheet->setCellValue("H{$counter}", $receivableReportItem['car_make'] . ' - ' . $receivableReportItem['car_model'] . ' - ' . $receivableReportItem['car_sub_model']);
-                $worksheet->setCellValue("I{$counter}", $receivableReportItem['product_price_after_tax']);
-                $worksheet->setCellValue("J{$counter}", $receivableReportItem['service_price_after_tax']);
-                $worksheet->setCellValue("K{$counter}", $receivableReportItem['product_price']);
-                $worksheet->setCellValue("L{$counter}", $receivableReportItem['service_price']);
-                $worksheet->setCellValue("M{$counter}", $receivableReportItem['subtotal']);
-                $worksheet->setCellValue("N{$counter}", $receivableReportItem['ppn_total']);
-                $worksheet->setCellValue("O{$counter}", $receivableReportItem['pph_total']);
-                $worksheet->setCellValue("P{$counter}", $revenue);
-                $worksheet->setCellValue("Q{$counter}", $paymentAmount);
-                $worksheet->setCellValue("R{$counter}", $paymentLeft);
+                $worksheet->setCellValue("F{$counter}", $agingDays);
+                $worksheet->setCellValue("G{$counter}", $receivableReportItem['invoice_number']);
+                $worksheet->setCellValue("H{$counter}", $receivableReportItem['plate_number']);
+                $worksheet->setCellValue("I{$counter}", $receivableReportItem['car_make'] . ' - ' . $receivableReportItem['car_model'] . ' - ' . $receivableReportItem['car_sub_model']);
+                $worksheet->setCellValue("J{$counter}", $receivableReportItem['product_price_after_tax']);
+                $worksheet->setCellValue("K{$counter}", $receivableReportItem['service_price_after_tax']);
+                $worksheet->setCellValue("L{$counter}", $receivableReportItem['product_price']);
+                $worksheet->setCellValue("M{$counter}", $receivableReportItem['service_price']);
+                $worksheet->setCellValue("N{$counter}", $receivableReportItem['subtotal']);
+                $worksheet->setCellValue("O{$counter}", $receivableReportItem['ppn_total']);
+                $worksheet->setCellValue("P{$counter}", $receivableReportItem['pph_total']);
+                $worksheet->setCellValue("Q{$counter}", $revenue);
+                $worksheet->setCellValue("R{$counter}", $paymentAmount);
+                $worksheet->setCellValue("S{$counter}", $paymentLeft);
                 
                 $counter++;
-            
-//                $totalRevenue += $revenue;
-//                $totalPayment += $paymentAmount;
-//                $totalReceivable += $paymentLeft;
-                $totalRevenueSum += $revenue;
+                            $totalRevenueSum += $revenue;
                 $totalPaymentSum += $paymentAmount;
                 $totalReceivableSum += $paymentLeft;
             }
-            
-//            $worksheet->getStyle("A{$counter}:R{$counter}")->getFont()->setBold(true);
-//            $worksheet->getStyle("A{$counter}:R{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
-//            $worksheet->mergeCells("A{$counter}:O{$counter}");
-//            
-//            $worksheet->setCellValue("A{$counter}", 'Total');
-//            $worksheet->setCellValue("P{$counter}", $totalRevenue);
-//            $worksheet->setCellValue("Q{$counter}", $totalPayment);
-//            $worksheet->setCellValue("R{$counter}", $totalReceivable);
-//
-//            $counter++;$counter++;
-
         }
-        $worksheet->getStyle("A{$counter}:R{$counter}")->getFont()->setBold(true);
-        $worksheet->getStyle("A{$counter}:R{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
-        $worksheet->mergeCells("A{$counter}:O{$counter}");
+        $worksheet->getStyle("A{$counter}:S{$counter}")->getFont()->setBold(true);
+        $worksheet->getStyle("A{$counter}:S{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->mergeCells("A{$counter}:P{$counter}");
 
         $worksheet->setCellValue("A{$counter}", 'Grand Total');
-        $worksheet->setCellValue("P{$counter}", $totalRevenueSum);
-        $worksheet->setCellValue("Q{$counter}", $totalPaymentSum);
-        $worksheet->setCellValue("R{$counter}", $totalReceivableSum);
+        $worksheet->setCellValue("Q{$counter}", $totalRevenueSum);
+        $worksheet->setCellValue("R{$counter}", $totalPaymentSum);
+        $worksheet->setCellValue("S{$counter}", $totalReceivableSum);
 
         for ($col = 'A'; $col !== 'Z'; $col++) {
             $objPHPExcel->getActiveSheet()

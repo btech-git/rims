@@ -29,12 +29,13 @@ Yii::app()->clientScript->registerCss('_report', '
     <table style="width: 100%; margin: 0 auto; border-spacing: 0pt">
         <thead style="position: sticky; top: 0">
             <tr>
-                <th style="text-align: center; font-weight: bold; border-bottom: 1px solid; width: 15%">Tanggal</th>
-                <th style="text-align: center; font-weight: bold; border-bottom: 1px solid; width: 15%">Transaksi #</th>
+                <th style="text-align: center; font-weight: bold; border-bottom: 1px solid; width: 10%">Tanggal</th>
+                <th style="text-align: center; font-weight: bold; border-bottom: 1px solid; width: 10%">Umur (hari)</th>
+                <th style="text-align: center; font-weight: bold; border-bottom: 1px solid; width: 10%">Transaksi #</th>
                 <th style="text-align: center; font-weight: bold; border-bottom: 1px solid">Keterangan</th>
-                <th style="text-align: center; font-weight: bold; border-bottom: 1px solid; width: 15%">Debit</th>
-                <th style="text-align: center; font-weight: bold; border-bottom: 1px solid; width: 15%">Credit</th>
-                <th style="text-align: center; font-weight: bold; border-bottom: 1px solid; width: 15%">Saldo</th>
+                <th style="text-align: center; font-weight: bold; border-bottom: 1px solid; width: 10%">Debit</th>
+                <th style="text-align: center; font-weight: bold; border-bottom: 1px solid; width: 10%">Credit</th>
+                <th style="text-align: center; font-weight: bold; border-bottom: 1px solid; width: 10%">Saldo</th>
             </tr>
         </thead>
         
@@ -53,7 +54,7 @@ Yii::app()->clientScript->registerCss('_report', '
                         </td>
                     </tr>
 
-                    <?php $receivableData = $header->getReceivableDetailReport($endDate, $branchId); ?>
+                    <?php $receivableData = $header->getReceivableDetailReport($startDate, $endDate, $branchId); ?>
                     <?php foreach ($receivableData as $receivableRow): ?>
                         <?php $transactionNumber = $receivableRow['kode_transaksi']; ?>
                         <?php $amount = $receivableRow['amount']; ?>
@@ -65,7 +66,15 @@ Yii::app()->clientScript->registerCss('_report', '
                     
                         <tr class="items2">
                             <td><?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($receivableRow['tanggal_transaksi']))); ?></td>
-                            <td><?php echo CHtml::link($transactionNumber, Yii::app()->createUrl("report/receivableInsuranceDetail/redirectTransaction", array("codeNumber" => $transactionNumber)), array('target' => '_blank')); ?></td>
+                            <td>
+                                <?php $outstandingDays = date_diff(date_create($receivableRow['tanggal_transaksi']), date_create(date('Y-m-d'))); ?>
+                                <?php echo CHtml::encode($outstandingDays->format("%a days")); ?>
+                            </td>
+                            <td>
+                                <?php echo CHtml::link($transactionNumber, Yii::app()->createUrl("report/receivableInsuranceDetail/redirectTransaction", array(
+                                    "codeNumber" => $transactionNumber
+                                )), array('target' => '_blank')); ?>
+                            </td>
                             <td><?php echo CHtml::encode($receivableRow['remark']); ?></td>
                             <td style="text-align: right">
                                 <?php echo $receivableRow['transaction_type'] == 'D' ? Yii::app()->numberFormatter->format('#,##0', $amount) : 0; ?>

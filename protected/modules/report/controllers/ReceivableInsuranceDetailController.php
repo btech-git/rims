@@ -23,6 +23,7 @@ class ReceivableInsuranceDetailController extends Controller {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
 
+        $startDate = AppParam::BEGINNING_TRANSACTION_DATE;
         $branchId = isset($_GET['BranchId']) ? $_GET['BranchId'] : (Yii::app()->user->checkAccess('director') || Yii::app()->user->branch_id == 6 ? '' : Yii::app()->user->branch_id);
         $coaId = (isset($_GET['CoaId'])) ? $_GET['CoaId'] : '';
         $endDate = (isset($_GET['EndDate'])) ? $_GET['EndDate'] : date('Y-m-d');
@@ -49,6 +50,7 @@ class ReceivableInsuranceDetailController extends Controller {
         
         if (isset($_GET['SaveExcel'])) {
             $this->saveToExcel($receivableDetailSummary->dataProvider, array(
+                'startDate' => $startDate, 
                 'endDate' => $endDate, 
                 'branchId' => $branchId,
             ));
@@ -59,6 +61,7 @@ class ReceivableInsuranceDetailController extends Controller {
             'accountDataProvider' => $accountDataProvider,
             'branchId' => $branchId,
             'receivableDetailSummary' => $receivableDetailSummary,
+            'startDate' => $startDate, 
             'endDate' => $endDate,
             'currentSort' => $currentSort,
             'currentPage' => $currentPage,
@@ -101,30 +104,31 @@ class ReceivableInsuranceDetailController extends Controller {
         $worksheet = $objPHPExcel->setActiveSheetIndex(0);
         $worksheet->setTitle('Piutang Asuransi Detail');
 
-        $worksheet->mergeCells('A1:F1');
-        $worksheet->mergeCells('A2:F2');
-        $worksheet->mergeCells('A3:F3');
+        $worksheet->mergeCells('A1:G1');
+        $worksheet->mergeCells('A2:G2');
+        $worksheet->mergeCells('A3:G3');
 
-        $worksheet->getStyle('A1:F6')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-        $worksheet->getStyle('A1:F6')->getFont()->setBold(true);
+        $worksheet->getStyle('A1:G5')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->getStyle('A1:G5')->getFont()->setBold(true);
 
         $branch = Branch::model()->findByPk($branchId);
         $worksheet->setCellValue('A1', 'Raperind Motor ' . CHtml::value($branch, 'name'));
         $worksheet->setCellValue('A2', 'Piutang Asuransi Detail');
         $worksheet->setCellValue('A3', Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($startDate)) . ' - ' . Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($endDate)));
 
-        $worksheet->getStyle('A5:F5')->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle('A5:G5')->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
         $worksheet->setCellValue('A5', 'Tanggal');
-        $worksheet->setCellValue('B5', 'Transaksi #');
-        $worksheet->setCellValue('C5', 'Keterangan');
-        $worksheet->setCellValue('D5', 'Debit');
-        $worksheet->setCellValue('E5', 'Kredit');
-        $worksheet->setCellValue('F5', 'Saldo');
+        $worksheet->setCellValue('B5', 'Umur (hari)');
+        $worksheet->setCellValue('C5', 'Transaksi #');
+        $worksheet->setCellValue('D5', 'Keterangan');
+        $worksheet->setCellValue('E5', 'Debit');
+        $worksheet->setCellValue('F5', 'Kredit');
+        $worksheet->setCellValue('G5', 'Saldo');
 
-        $worksheet->getStyle('A5:F5')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle('A5:G5')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
-        $counter = 7;
+        $counter = 6;
 
         foreach ($receivableDetailSummary->data as $header) {
             $worksheet->mergeCells("A{$counter}:B{$counter}");
@@ -132,11 +136,11 @@ class ReceivableInsuranceDetailController extends Controller {
             $worksheet->setCellValue("A{$counter}", CHtml::value($header, 'code'));
             $worksheet->setCellValue("C{$counter}", CHtml::value($header, 'name'));
             $saldo = 0; //$header->getBeginningBalanceReceivable($startDate);
-            $worksheet->setCellValue("F{$counter}", $saldo);
+            $worksheet->setCellValue("G{$counter}", $saldo);
 
             $counter++;
 
-            $receivableData = $header->getReceivableDetailReport($endDate, $options['branchId']);
+            $receivableData = $header->getReceivableDetailReport($startDate, $endDate, $options['branchId']);
 
             foreach ($receivableData as $receivableRow) {
                 $transactionNumber = $receivableRow['kode_transaksi'];
@@ -146,13 +150,15 @@ class ReceivableInsuranceDetailController extends Controller {
                 } else {
                     $saldo -= $amount;
                 }
+                $outstandingDays = date_diff(date_create($receivableRow['tanggal_transaksi']), date_create(date('Y-m-d')));
 
                 $worksheet->setCellValue("A{$counter}", $receivableRow['tanggal_transaksi']);
-                $worksheet->setCellValue("B{$counter}", $transactionNumber);
-                $worksheet->setCellValue("C{$counter}", $receivableRow['remark']);
-                $worksheet->setCellValue("D{$counter}", $receivableRow['transaction_type'] == 'D' ? $amount : 0);
-                $worksheet->setCellValue("E{$counter}", $receivableRow['transaction_type'] == 'K' ? $amount : 0);
-                $worksheet->setCellValue("F{$counter}", $saldo);
+                $worksheet->setCellValue("B{$counter}", $outstandingDays->format("%a days"));
+                $worksheet->setCellValue("C{$counter}", $transactionNumber);
+                $worksheet->setCellValue("D{$counter}", $receivableRow['remark']);
+                $worksheet->setCellValue("E{$counter}", $receivableRow['transaction_type'] == 'D' ? $amount : 0);
+                $worksheet->setCellValue("F{$counter}", $receivableRow['transaction_type'] == 'K' ? $amount : 0);
+                $worksheet->setCellValue("G{$counter}", $saldo);
 
                 $counter++;
             }

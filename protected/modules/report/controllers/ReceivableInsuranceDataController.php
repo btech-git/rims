@@ -185,7 +185,7 @@ class ReceivableInsuranceDataController extends Controller {
         Yii::app()->end();
     }
 
-    protected function saveToExcelDetailTransaction($dataProvider, $endDate, $customer) {
+    protected function saveToExcelDetailTransaction($dataProvider, $endDate, $insuranceCompany) {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
 
@@ -197,35 +197,36 @@ class ReceivableInsuranceDataController extends Controller {
 
         $documentProperties = $objPHPExcel->getProperties();
         $documentProperties->setCreator('Raperind Motor');
-        $documentProperties->setTitle('Piutang Customer Detail');
+        $documentProperties->setTitle('Piutang Asuransi Detail');
 
         $worksheet = $objPHPExcel->setActiveSheetIndex(0);
-        $worksheet->setTitle('Piutang Customer Detail');
+        $worksheet->setTitle('Piutang Asuransi Detail');
 
-        $worksheet->mergeCells('A1:H1');
-        $worksheet->mergeCells('A2:H2');
-        $worksheet->mergeCells('A3:H3');
+        $worksheet->mergeCells('A1:I1');
+        $worksheet->mergeCells('A2:I2');
+        $worksheet->mergeCells('A3:I3');
         
-        $worksheet->getStyle('A1:H3')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-        $worksheet->getStyle('A1:H3')->getFont()->setBold(true);
-        $worksheet->setCellValue('A2', 'Raperind Motor');
-        $worksheet->setCellValue('A3', 'Piutang Customer ' . CHtml::value($customer, 'name'));
-        $worksheet->setCellValue('A4', 'Per Tanggal ' . Yii::app()->dateFormatter->format('d MMMM yyyy', $endDate));
-
-        $worksheet->getStyle("A6:H6")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
-        $worksheet->getStyle("A7:H7")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
-
-        $worksheet->getStyle('A6:H7')->getFont()->setBold(true);
-        $worksheet->setCellValue('A6', 'Invoice #');
-        $worksheet->setCellValue('B6', 'Tanggal');
-        $worksheet->setCellValue('C6', 'Jatuh Tempo');
-        $worksheet->setCellValue('D6', 'Plat #');
-        $worksheet->setCellValue('E6', 'Kendaraan');
-        $worksheet->setCellValue('F6', 'Total');
-        $worksheet->setCellValue('G6', 'Payment');
-        $worksheet->setCellValue('H6', 'Remaining');
+        $worksheet->getStyle('A1:I5')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->getStyle('A1:I5')->getFont()->setBold(true);
         
-        $counter = 9;
+        $worksheet->setCellValue('A1', 'Raperind Motor');
+        $worksheet->setCellValue('A2', 'Piutang Asuransi ' . CHtml::value($insuranceCompany, 'name'));
+        $worksheet->setCellValue('A3', 'Per Tanggal ' . Yii::app()->dateFormatter->format('d MMMM yyyy', $endDate));
+
+        $worksheet->getStyle("A5:I5")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A5:I5")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+
+        $worksheet->setCellValue('A5', 'Invoice #');
+        $worksheet->setCellValue('B5', 'Tanggal');
+        $worksheet->setCellValue('C5', 'Jatuh Tempo');
+        $worksheet->setCellValue('D5', 'Umur (hari)');
+        $worksheet->setCellValue('E5', 'Plat #');
+        $worksheet->setCellValue('F5', 'Kendaraan');
+        $worksheet->setCellValue('G5', 'Total');
+        $worksheet->setCellValue('H5', 'Payment');
+        $worksheet->setCellValue('I5', 'Remaining');
+        
+        $counter = 6;
 
         $totalPriceSum = '0.00';
         $paymentTotalSum = '0.00';
@@ -235,15 +236,17 @@ class ReceivableInsuranceDataController extends Controller {
             $totalPrice = CHtml::value($header, 'total_price'); 
             $paymentTotal = CHtml::value($header, 'payment_amount');
             $paymentLeft = CHtml::value($header, 'payment_left');
+            $outstandingDays = date_diff(date_create($header->invoice_date), date_create(date('Y-m-d')));
             
             $worksheet->setCellValue("A{$counter}", CHtml::value($header, 'invoice_number'));
             $worksheet->setCellValue("B{$counter}", CHtml::value($header, 'invoice_date'));
             $worksheet->setCellValue("C{$counter}", CHtml::value($header, 'due_date'));
-            $worksheet->setCellValue("D{$counter}", CHtml::value($header, 'vehicle.plate_number'));
-            $worksheet->setCellValue("E{$counter}", CHtml::value($header, 'vehicle.carMake.name') . ' ' . CHtml::value($header, 'vehicle.carModel.name') . ' ' . CHtml::value($header, 'vehicle.carSubModel.name'));
-            $worksheet->setCellValue("F{$counter}", $totalPrice);
-            $worksheet->setCellValue("G{$counter}", $paymentTotal);
-            $worksheet->setCellValue("H{$counter}", $paymentLeft);
+            $worksheet->setCellValue("D{$counter}", $outstandingDays->format("%a days"));
+            $worksheet->setCellValue("E{$counter}", CHtml::value($header, 'vehicle.plate_number'));
+            $worksheet->setCellValue("F{$counter}", CHtml::value($header, 'vehicle.carMake.name') . ' - ' . CHtml::value($header, 'vehicle.carModel.name') . ' - ' . CHtml::value($header, 'vehicle.carSubModel.name'));
+            $worksheet->setCellValue("G{$counter}", $totalPrice);
+            $worksheet->setCellValue("H{$counter}", $paymentTotal);
+            $worksheet->setCellValue("I{$counter}", $paymentLeft);
             
             $totalPriceSum += $totalPrice;
             $paymentTotalSum += $paymentTotal;
@@ -251,15 +254,15 @@ class ReceivableInsuranceDataController extends Controller {
 
             $counter++;
         }
-        $worksheet->getStyle("A{$counter}:H{$counter}")->getFont()->setBold(true);
-        $worksheet->getStyle("A{$counter}:H{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
-        $worksheet->getStyle("A{$counter}:H{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
-        $worksheet->mergeCells("A{$counter}:E{$counter}");
+        
+        $worksheet->getStyle("A{$counter}:I{$counter}")->getFont()->setBold(true);
+        $worksheet->getStyle("A{$counter}:I{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->mergeCells("A{$counter}:F{$counter}");
         
         $worksheet->setCellValue("A{$counter}", 'Total');
-        $worksheet->setCellValue("F{$counter}", $totalPriceSum);
-        $worksheet->setCellValue("G{$counter}", $paymentTotalSum);
-        $worksheet->setCellValue("H{$counter}", $paymentLeftSum);
+        $worksheet->setCellValue("G{$counter}", $totalPriceSum);
+        $worksheet->setCellValue("H{$counter}", $paymentTotalSum);
+        $worksheet->setCellValue("I{$counter}", $paymentLeftSum);
 
         $counter++;
 
@@ -272,7 +275,7 @@ class ReceivableInsuranceDataController extends Controller {
         ob_end_clean();
         // We'll be outputting an excel file
         header('Content-type: application/vnd.ms-excel');
-        header('Content-Disposition: attachment;filename="piutang_customer_detail.xls"');
+        header('Content-Disposition: attachment;filename="piutang_asuransi_detail.xls"');
         header('Cache-Control: max-age=0');
         
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');

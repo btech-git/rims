@@ -42,6 +42,7 @@ Yii::app()->clientScript->registerCss('_report', '
                             <th class="width1-1">Invoice #</th>
                             <th class="width1-2">Tanggal</th>
                             <th class="width1-3">Jatuh Tempo</th>
+                            <th class="width1-2">Umur (hari)</th>
                             <th class="width1-5">Plat #</th>
                             <th class="width1-6">Kendaraan</th>
                             <th class="width1-7">invoice</th>
@@ -79,6 +80,10 @@ Yii::app()->clientScript->registerCss('_report', '
                                 </td>
                                 <td><?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($invoiceHeader->invoice_date))); ?></td>
                                 <td><?php echo CHtml::encode(Yii::app()->dateFormatter->format('d MMM yyyy', strtotime($invoiceHeader->due_date))); ?></td>
+                                <td>
+                                    <?php $outstandingDays = date_diff(date_create($invoiceHeader->invoice_date), date_create(date('Y-m-d'))); ?>
+                                    <?php echo CHtml::encode($outstandingDays->format("%a days")); ?>
+                                </td>
                                 <td><?php echo CHtml::encode(CHtml::value($invoiceHeader, 'vehicle.plate_number')); ?></td>
                                 <td>
                                     <?php echo CHtml::encode(CHtml::value($invoiceHeader, 'vehicle.carMake.name')); ?> -
@@ -103,7 +108,7 @@ Yii::app()->clientScript->registerCss('_report', '
                     </tbody>
                     <tfoot>
                         <tr>
-                            <td colspan="5">TOTAL</td>
+                            <td colspan="6">TOTAL</td>
                             <td style="text-align: right">
                                 <?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00', $revenueSum)); ?>
                             </td>

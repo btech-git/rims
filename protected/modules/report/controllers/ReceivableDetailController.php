@@ -103,28 +103,29 @@ class ReceivableDetailController extends Controller {
         $worksheet = $objPHPExcel->setActiveSheetIndex(0);
         $worksheet->setTitle('Piutang Customer Detail');
 
-        $worksheet->mergeCells('A1:F1');
-        $worksheet->mergeCells('A2:F2');
-        $worksheet->mergeCells('A3:F3');
+        $worksheet->mergeCells('A1:G1');
+        $worksheet->mergeCells('A2:G2');
+        $worksheet->mergeCells('A3:G3');
 
-        $worksheet->getStyle('A1:F6')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-        $worksheet->getStyle('A1:F6')->getFont()->setBold(true);
+        $worksheet->getStyle('A1:G5')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->getStyle('A1:G5')->getFont()->setBold(true);
 
         $branch = Branch::model()->findByPk($branchId);
         $worksheet->setCellValue('A1', 'Raperind Motor ' . CHtml::value($branch, 'name'));
         $worksheet->setCellValue('A2', 'Piutang Customer Detail');
         $worksheet->setCellValue('A3', Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($startDate)) . ' - ' . Yii::app()->dateFormatter->format('d MMMM yyyy', strtotime($endDate)));
 
-        $worksheet->getStyle('A5:F5')->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle('A5:G5')->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
         $worksheet->setCellValue('A5', 'Tanggal');
         $worksheet->setCellValue('B5', 'Transaksi #');
-        $worksheet->setCellValue('C5', 'Keterangan');
-        $worksheet->setCellValue('D5', 'Debit');
-        $worksheet->setCellValue('E5', 'Kredit');
-        $worksheet->setCellValue('F5', 'Saldo');
+        $worksheet->setCellValue('C5', 'Umur (hari)');
+        $worksheet->setCellValue('D5', 'Keterangan');
+        $worksheet->setCellValue('E5', 'Debit');
+        $worksheet->setCellValue('F5', 'Kredit');
+        $worksheet->setCellValue('G5', 'Saldo');
 
-        $worksheet->getStyle('A5:F5')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle('A5:G5')->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
         $counter = 6;
 
@@ -155,13 +156,15 @@ class ReceivableDetailController extends Controller {
                     $amountCredit = $receivableRow['amount']; 
                     $saldo -= $amountCredit;
                 }
+                $outstandingDays = date_diff(date_create($receivableRow['tanggal_transaksi']), date_create(date('Y-m-d')));
 
                 $worksheet->setCellValue("A{$counter}", $receivableRow['tanggal_transaksi']);
                 $worksheet->setCellValue("B{$counter}", $transactionNumber);
-                $worksheet->setCellValue("C{$counter}", $receivableRow['remark']);
-                $worksheet->setCellValue("D{$counter}", $amountDebit);
-                $worksheet->setCellValue("E{$counter}", $amountCredit);
-                $worksheet->setCellValue("F{$counter}", $saldo);
+                $worksheet->setCellValue("C{$counter}", $outstandingDays->format("%a days"));
+                $worksheet->setCellValue("D{$counter}", $receivableRow['remark']);
+                $worksheet->setCellValue("E{$counter}", $amountDebit);
+                $worksheet->setCellValue("F{$counter}", $amountCredit);
+                $worksheet->setCellValue("G{$counter}", $saldo);
 
                 $totalDebit += $amountDebit;
                 $totalCredit += $amountCredit;
@@ -170,10 +173,14 @@ class ReceivableDetailController extends Controller {
 
             $counter++;
         }
-        $worksheet->setCellValue("C{$counter}", 'TOTAL');
-        $worksheet->setCellValue("D{$counter}", $totalDebit);
-        $worksheet->setCellValue("E{$counter}", $totalCredit);
-        $worksheet->setCellValue("E{$counter}", $totalDebit - $totalCredit);
+        
+        $worksheet->getStyle("A{$counter}:G{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A{$counter}:G{$counter}")->getFont()->setBold(true);
+
+        $worksheet->setCellValue("D{$counter}", 'TOTAL');
+        $worksheet->setCellValue("E{$counter}", $totalDebit);
+        $worksheet->setCellValue("F{$counter}", $totalCredit);
+        $worksheet->setCellValue("G{$counter}", $totalDebit - $totalCredit);
             
         for ($col = 'A'; $col !== 'Z'; $col++) {
             $objPHPExcel->getActiveSheet()

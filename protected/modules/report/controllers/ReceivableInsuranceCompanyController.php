@@ -113,20 +113,20 @@ class ReceivableInsuranceCompanyController extends Controller {
         $worksheet = $objPHPExcel->setActiveSheetIndex(0);
         $worksheet->setTitle('Faktur Belum Lunas Asuransi');
 
-        $worksheet->mergeCells('A1:H1');
-        $worksheet->mergeCells('A2:H2');
-        $worksheet->mergeCells('A3:H3');
+        $worksheet->mergeCells('A1:J1');
+        $worksheet->mergeCells('A2:J2');
+        $worksheet->mergeCells('A3:J3');
         
-        $worksheet->getStyle('A1:H6')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-        $worksheet->getStyle('A1:H6')->getFont()->setBold(true);
+        $worksheet->getStyle('A1:J6')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $worksheet->getStyle('A1:J6')->getFont()->setBold(true);
         
         $branch = Branch::model()->findByPk($branchId);
-        $worksheet->setCellValue('A1', 'Raperind Motor ' . CHtml::encode(CHtml::value($branch, 'name')));
+        $worksheet->setCellValue('A1', 'Raperind Motor ' . CHtml::value($branch, 'name'));
         $worksheet->setCellValue('A2', 'Faktur Belum Lunas Asuransi');
         $worksheet->setCellValue('A3', 'Per Tanggal ' . Yii::app()->dateFormatter->format('d MMMM yyyy', $endDate));
 
-        $worksheet->getStyle("A5:H5")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
-        $worksheet->getStyle("A6:H6")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A5:J5")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+        $worksheet->getStyle("A6:J6")->getBorders()->getBottom()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
 
         $worksheet->setCellValue('A5', 'Name');
         $worksheet->setCellValue('B5', 'COA');
@@ -134,11 +134,14 @@ class ReceivableInsuranceCompanyController extends Controller {
         $worksheet->setCellValue('A6', 'Tanggal');
         $worksheet->setCellValue('B6', 'Faktur #');
         $worksheet->setCellValue('C6', 'Jatuh Tempo');
-        $worksheet->setCellValue('D6', 'Customer');
-        $worksheet->setCellValue('E6', 'Vehicle');
-        $worksheet->setCellValue('F6', 'Grand Total');
-        $worksheet->setCellValue('G6', 'Payment');
-        $worksheet->setCellValue('H6', 'Remaining');
+        $worksheet->setCellValue('D6', 'Umur (hari)');
+        $worksheet->setCellValue('E6', 'Customer');
+        $worksheet->setCellValue('F6', 'Kendaraan');
+        $worksheet->setCellValue('G6', 'Plat #');
+        $worksheet->setCellValue('H6', 'Grand Total');
+        $worksheet->setCellValue('I6', 'Payment');
+        $worksheet->setCellValue('J6', 'Remaining');
+        
         $counter = 7;
 
         foreach ($receivableSummary->dataProvider->data as $header) {
@@ -148,39 +151,42 @@ class ReceivableInsuranceCompanyController extends Controller {
             $counter++;
             
             $receivableData = $header->getReceivableReport($endDate, $branchId, $plateNumber);
-            $totalRevenue = 0.00;
-            $totalPayment = 0.00;
-            $totalReceivable = 0.00;
+            $totalRevenue = '0.00';
+            $totalPayment = '0.00';
+            $totalReceivable = '0.00';
             foreach ($receivableData as $receivableRow) {
                 $revenue = $receivableRow['total_price'];
                 $paymentAmount = $receivableRow['amount'];
                 $paymentLeft = $receivableRow['remaining'];
+                $outstandingDays = date_diff(date_create($receivableRow['invoice_date']), date_create(date('Y-m-d')));
                 
                 $worksheet->setCellValue("A{$counter}", $receivableRow['invoice_date']);
-                $worksheet->setCellValue("B{$counter}", CHtml::encode($receivableRow['invoice_number']));
-                $worksheet->setCellValue("C{$counter}", CHtml::encode($receivableRow['due_date']));
-                $worksheet->setCellValue("D{$counter}", CHtml::encode($receivableRow['customer_name']));
-                $worksheet->setCellValue("E{$counter}", CHtml::encode($receivableRow['vehicle']));
-                $worksheet->setCellValue("F{$counter}", CHtml::encode($revenue));
-                $worksheet->setCellValue("G{$counter}", CHtml::encode($paymentAmount));
-                $worksheet->setCellValue("H{$counter}", CHtml::encode($paymentLeft));
+                $worksheet->setCellValue("B{$counter}", $receivableRow['invoice_number']);
+                $worksheet->setCellValue("C{$counter}", $receivableRow['due_date']);
+                $worksheet->setCellValue("D{$counter}", $outstandingDays->format("%a days"));
+                $worksheet->setCellValue("E{$counter}", $receivableRow['customer_name']);
+                $worksheet->setCellValue("F{$counter}", $receivableRow['plate_number']);
+                $worksheet->setCellValue("G{$counter}", $receivableRow['car_make'] . ' - ' . $receivableRow['car_model'] . ' - ' . $receivableRow['car_sub_model']);
+                $worksheet->setCellValue("H{$counter}", $revenue);
+                $worksheet->setCellValue("I{$counter}", $paymentAmount);
+                $worksheet->setCellValue("J{$counter}", $paymentLeft);
                 
-                $counter++;
-            
                 $totalRevenue += $revenue;
                 $totalPayment += $paymentAmount;
                 $totalReceivable += $paymentLeft;
+                
+                $counter++;
             }
             
-            $worksheet->getStyle("A{$counter}:H{$counter}")->getFont()->setBold(true);
-
-            $worksheet->getStyle("A{$counter}:H{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
-            $worksheet->getStyle("A{$counter}:H{$counter}")->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
-            $worksheet->mergeCells("A{$counter}:E{$counter}");
+            $worksheet->getStyle("A{$counter}:J{$counter}")->getFont()->setBold(true);
+            $worksheet->getStyle("A{$counter}:J{$counter}")->getBorders()->getTop()->setBorderStyle(PHPExcel_Style_Border::BORDER_THICK);
+            
+            $worksheet->mergeCells("A{$counter}:G{$counter}");
+            
             $worksheet->setCellValue("A{$counter}", 'Total');
-            $worksheet->setCellValue("F{$counter}", $totalRevenue);
-            $worksheet->setCellValue("G{$counter}", $totalPayment);
-            $worksheet->setCellValue("H{$counter}", $totalReceivable);
+            $worksheet->setCellValue("H{$counter}", $totalRevenue);
+            $worksheet->setCellValue("I{$counter}", $totalPayment);
+            $worksheet->setCellValue("J{$counter}", $totalReceivable);
 
             $counter++;$counter++;
         }
