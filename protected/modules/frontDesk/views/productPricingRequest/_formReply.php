@@ -71,6 +71,7 @@
                             </div>
                         </div>
                     </div>
+                    
                     <div class="field">
                         <div class="row collapse">
                             <div class="small-4 columns">
@@ -78,6 +79,26 @@
                             </div>
 
                             <div class="small-8 columns"><?php echo CHtml::encode(CHtml::value($productPricingRequest->header, 'production_year')); ?></div>
+                        </div>
+                    </div>
+                    
+                    <div class="field">
+                        <div class="row collapse">
+                            <div class="small-4 columns">
+                                <label class="prefix"><?php echo $form->labelEx($productPricingRequest->header, 'VIN #'); ?></label>
+                            </div>
+
+                            <div class="small-8 columns"><?php echo CHtml::encode(CHtml::value($productPricingRequest->header, 'vehicle_machine_number')); ?></div>
+                        </div>
+                    </div>
+                    
+                    <div class="field">
+                        <div class="row collapse">
+                            <div class="small-4 columns">
+                                <label class="prefix"><?php echo $form->labelEx($productPricingRequest->header, 'Rangka #'); ?></label>
+                            </div>
+
+                            <div class="small-8 columns"><?php echo CHtml::encode(CHtml::value($productPricingRequest->header, 'vehicle_frame_number')); ?></div>
                         </div>
                     </div>
                     

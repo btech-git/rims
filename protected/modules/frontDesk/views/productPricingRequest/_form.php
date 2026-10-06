@@ -21,20 +21,16 @@
                     <div class="field">
                         <div class="row collapse">
                             <div class="small-4 columns">
-                                <label class="prefix">Vehicle Car Make</label>
+                                <label class="prefix">Car Make</label>
                             </div>
                             <div class="small-8 columns">
                                 <?php echo CHtml::activeDropDownList($productPricingRequest->header, "vehicle_car_make_id", CHtml::listData(VehicleCarMake::model()->findAll(array('order' => 't.name ASC')), 'id', 'name'), array(
                                     'prompt' => '[--Select Car Make--]',
-                                    'onchange' => 'jQuery.ajax({
-	                  		type: "POST",
-	                  		//dataType: "JSON",
-	                  		url: "' . CController::createUrl('ajaxGetVehicleCarModel') . '",
-	                  		data: jQuery("form").serialize(),
-	                  		success: function(data) {
-                                            jQuery("#ProductPricingRequest_vehicle_car_model_id").html(data);
-                                        },
-                                    });'
+                                    'onchange' => CHtml::ajax(array(
+                                        'type' => 'GET',
+                                        'url' => CController::createUrl('ajaxHtmlUpdateCarModelSelect'),
+                                        'update' => '#car_model',
+                                    )),
                                 )); ?>
                                 <?php echo $form->error($productPricingRequest->header,'vehicle_car_make_id');  ?>
                             </div>
@@ -44,11 +40,16 @@
                     <div class="field">
                         <div class="row collapse">
                             <div class="small-4 columns">
-                                <label class="prefix">Vehicle Car Model</label>
+                                <label class="prefix">Car Model</label>
                             </div>
-                            <div class="small-8 columns">
+                            <div class="small-8 columns" id="car_model">
                                 <?php echo CHtml::activeDropDownList($productPricingRequest->header, "vehicle_car_model_id", CHtml::listData(VehicleCarModel::model()->findAll(array('order' => 't.name ASC')), 'id', 'name'), array(
                                     'prompt' => '[--Select Car Model--]',
+                                    'onchange' => CHtml::ajax(array(
+                                        'type' => 'GET',
+                                        'url' => CController::createUrl('ajaxHtmlUpdateCarSubModelSelect'),
+                                        'update' => '#car_sub_model',
+                                    )),
                                 )); ?>
                                 <?php echo $form->error($productPricingRequest->header,'vehicle_car_model_id');  ?>
                             </div>
@@ -58,14 +59,40 @@
                     <div class="field">
                         <div class="row collapse">
                             <div class="small-4 columns">
-                                <label class="prefix"><?php echo $form->labelEx($productPricingRequest->header, 'vehicle_car_sub_model_id'); ?></label>
+                                <label class="prefix">Car Sub Model</label>
                             </div>
 
-                            <div class="small-8 columns">
+                            <div class="small-8 columns" id="car_sub_model">
                                 <?php echo $form->dropDownList($productPricingRequest->header, 'vehicle_car_sub_model_id', CHtml::listData(VehicleCarSubModel::model()->findAll(array('order' => 't.name ASC')), 'id', 'name'), array(
                                     'prompt' => '[--Select Sub Model--]',
                                 )); ?>
                                 <?php echo $form->error($productPricingRequest->header, 'vehicle_car_sub_model_id'); ?>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="field">
+                        <div class="row collapse">
+                            <div class="small-4 columns">
+                                <label class="prefix">VIN #</label>
+                            </div>
+
+                            <div class="small-8 columns">
+                                <?php echo CHtml::activeTextField($productPricingRequest->header, 'vehicle_machine_number'); ?>
+                                <?php echo CHtml::error($productPricingRequest->header, 'vehicle_machine_number'); ?>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="field">
+                        <div class="row collapse">
+                            <div class="small-4 columns">
+                                <label class="prefix">Rangka #</label>
+                            </div>
+
+                            <div class="small-8 columns">
+                                <?php echo CHtml::activeTextField($productPricingRequest->header, 'vehicle_frame_number'); ?>
+                                <?php echo CHtml::error($productPricingRequest->header, 'vehicle_frame_number'); ?>
                             </div>
                         </div>
                     </div>

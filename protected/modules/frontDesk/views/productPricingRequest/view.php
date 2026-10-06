@@ -27,6 +27,8 @@ $this->breadcrumbs = array(
                     'value' => CHtml::encode(CHtml::value($model, 'vehicleCarMake.name')) . ' - ' . CHtml::encode(CHtml::value($model, 'vehicleCarModel.name')) . ' - ' . CHtml::encode(CHtml::value($model, 'vehicleCarSubModel.name')),
                 ),
                 'production_year',
+                'vehicle_machine_number',
+                'vehicle_frame_number',
                 array(
                     'label' => 'User Request', 
                     'value' => CHtml::encode(CHtml::value($model, 'userIdRequest.username'))

@@ -23,6 +23,8 @@
  * @property integer $is_inactive
  * @property string $transaction_number
  * @property string $status
+ * @property string $vehicle_machine_number
+ * @property string $vehicle_frame_number
  *
  * The followings are the available model relations:
  * @property ProductPricingRequestApproval[] $productPricingRequestApprovals
@@ -59,11 +61,11 @@ class ProductPricingRequestHeader extends MonthlyTransactionActiveRecord {
             array('user_id_request, user_id_reply, production_year, branch_id_request, branch_id_reply, vehicle_car_make_id, vehicle_car_model_id, vehicle_car_sub_model_id, is_inactive', 'numerical', 'integerOnly' => true),
             array('extension', 'length', 'max' => 5),
             array('transaction_number', 'length', 'max' => 60),
-            array('status', 'length', 'max' => 20),
+            array('status, vehicle_machine_number, vehicle_frame_number', 'length', 'max' => 20),
             array('reply_date, reply_time, reply_note', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, request_date, user_id_request, user_id_reply, extension, reply_date, request_time, reply_time, request_note, reply_note, production_year, branch_id_request, branch_id_reply, vehicle_car_make_id, vehicle_car_model_id, vehicle_car_sub_model_id, is_inactive, transaction_number, status', 'safe', 'on' => 'search'),
+            array('id, request_date, user_id_request, user_id_reply, extension, reply_date, request_time, reply_time, request_note, reply_note, production_year, branch_id_request, branch_id_reply, vehicle_car_make_id, vehicle_car_model_id, vehicle_car_sub_model_id, is_inactive, transaction_number, status, vehicle_machine_number, vehicle_frame_number', 'safe', 'on' => 'search'),
         );
     }
 

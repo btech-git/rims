@@ -27,6 +27,7 @@
                     </div>
                 </div>
             </div>
+            
             <div class="field">
                 <div class="row collapse">
                     <div class="small-4 columns">
@@ -37,6 +38,51 @@
                     </div>
                 </div>
             </div>
+            
+            <div class="field">
+                <div class="row collapse">
+                    <div class="small-4 columns">
+                        <label class="prefix">Kendaraan</label>
+                    </div>
+                    <div class="small-8 columns">
+                        <?php echo CHtml::encode(CHtml::value($model, 'vehicleCarMake.name')) . ' - ' . CHtml::encode(CHtml::value($model, 'vehicleCarModel.name')) . ' - ' . CHtml::encode(CHtml::value($model, 'vehicleCarSubModel.name')); ?>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="field">
+                <div class="row collapse">
+                    <div class="small-4 columns">
+                        <label class="prefix">Produksi Tahun</label>
+                    </div>
+                    <div class="small-8 columns">
+                        <?php echo CHtml::encode(CHtml::value($productPricingRequest->header, 'production_year')); ?>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="field">
+                <div class="row collapse">
+                    <div class="small-4 columns">
+                        <label class="prefix">VIN #</label>
+                    </div>
+                    <div class="small-8 columns">
+                        <?php echo CHtml::encode(CHtml::value($productPricingRequest->header, 'vehicle_machine_number')); ?>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="field">
+                <div class="row collapse">
+                    <div class="small-4 columns">
+                        <label class="prefix">Rangka #</label>
+                    </div>
+                    <div class="small-8 columns">
+                        <?php echo CHtml::encode(CHtml::value($productPricingRequest->header, 'vehicle_frame_number')); ?>
+                    </div>
+                </div>
+            </div>
+            
             <div class="field">
                 <div class="row collapse">
                     <div class="small-4 columns">
@@ -47,7 +93,9 @@
                     </div>
                 </div>
             </div>
+            
             <hr />
+            
             <div class="field">
                 <div class="row collapse">
                     <div class="small-12 columns">
