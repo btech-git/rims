@@ -26,9 +26,18 @@ $this->breadcrumbs = array(
                     'label' => 'Vehicle', 
                     'value' => CHtml::encode(CHtml::value($model, 'vehicleCarMake.name')) . ' - ' . CHtml::encode(CHtml::value($model, 'vehicleCarModel.name')) . ' - ' . CHtml::encode(CHtml::value($model, 'vehicleCarSubModel.name')),
                 ),
-                'production_year',
-                'vehicle_machine_number',
-                'vehicle_frame_number',
+                array(
+                    'label' => 'Tahun Produksi', 
+                    'value' => CHtml::encode(CHtml::value($model, 'production_year'))
+                ),
+                array(
+                    'label' => 'VIN #', 
+                    'value' => CHtml::encode(CHtml::value($model, 'vehicle_machine_number'))
+                ),
+                array(
+                    'label' => 'Rangka #', 
+                    'value' => CHtml::encode(CHtml::value($model, 'vehicle_frame_number'))
+                ),
                 array(
                     'label' => 'User Request', 
                     'value' => CHtml::encode(CHtml::value($model, 'userIdRequest.username'))

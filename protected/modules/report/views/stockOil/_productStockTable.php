@@ -47,11 +47,11 @@
                     <?php foreach ($branches as $branch): ?>
                         <?php $originalStock = isset($inventoryOilStockReportItem[$branch->id]) ? $inventoryOilStockReportItem[$branch->id] : 0; ?>
                         <?php $totalStock = $multiplier * $originalStock; ?>
-                        <td style="text-align: center"><?php echo CHtml::encode($totalStock); ?></td>
+                        <td style="text-align: center"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00',$totalStock)); ?></td>
                         <?php $totalStockSum += $totalStock; ?>
                     <?php endforeach; ?>
 
-                    <td style="text-align: center; font-weight: bold"><?php echo CHtml::encode($totalStockSum); ?></td>
+                    <td style="text-align: center; font-weight: bold"><?php echo CHtml::encode(Yii::app()->numberFormatter->format('#,##0.00',$totalStockSum)); ?></td>
                 </tr>
             <?php endforeach; ?>
         </tbody>

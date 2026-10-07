@@ -61,9 +61,21 @@ Yii::app()->clientScript->registerScript('search', "
                     'name' => 'vehicle_car_make_id', 
                     'value' => '$data->carMakeModelSubCombination',
                 ),
-                'production_year',
-                'vehicle_machine_number',
-                'vehicle_frame_number',
+                array(
+                    'header' => 'Tahun Produksi',
+                    'name' => 'production_year',
+                    'value' => '$data->production_year',
+                ),
+                array(
+                    'header' => 'VIN #',
+                    'name' => 'vehicle_machine_number',
+                    'value' => '$data->vehicle_machine_number',
+                ),
+                array(
+                    'header' => 'Rangka #',
+                    'name' => 'vehicle_frame_number',
+                    'value' => '$data->vehicle_frame_number',
+                ),
                 array(
                     'name' => 'request_date',
                     'value' => '$data->requestDateTime',

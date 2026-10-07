@@ -9,6 +9,7 @@
         <th style="text-align: center">Satuan</th>
         <th style="text-align: center">Rec. Harga Jual</th>
         <th style="text-align: center">Rec. Harga Beli</th>
+        <th style="text-align: center">Request Note</th>
         <th style="text-align: center">Memo</th>
     </tr>
     <?php foreach ($productPricingRequest->details as $i => $detail): ?>
@@ -31,6 +32,7 @@
             <td style="width: 10%"><?php echo CHtml::activeTextField($detail, "[$i]recommended_price"); ?></td>
             <td style="width: 10%"><?php echo CHtml::activeTextField($detail, "[$i]recommended_purchase_price"); ?></td>
             <td><?php echo CHtml::encode(CHtml::value($detail, 'memo')); ?></td>
+            <td><?php echo CHtml::activeTextField($detail, "[$i]memo_reply"); ?></td>
         </tr>
     <?php endforeach; ?>
 </table>

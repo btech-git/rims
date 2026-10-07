@@ -29,9 +29,10 @@
                         <?php if (
                             Yii::app()->user->checkAccess('warehouseStockReport') || 
                             Yii::app()->user->checkAccess('stockCardItemReport') || 
-                            Yii::app()->user->checkAccess('stockCardWarehouseReport') || 
                             Yii::app()->user->checkAccess('deliveryReport') || 
-                            Yii::app()->user->checkAccess('receiveItemReport')
+                            Yii::app()->user->checkAccess('receiveItemReport') ||
+                            Yii::app()->user->checkAccess('stockTireReport') ||
+                            Yii::app()->user->checkAccess('stockOilReport')
                         ): ?>
                             <h2>Gudang</h2>
                             <?php $this->widget('zii.widgets.CMenu', array(
@@ -47,24 +48,14 @@
                                         'visible' => Yii::app()->user->checkAccess('stockCardItemReport'),
                                     ),
                                     array(
-                                        'label' => 'Mutasi Stok per Barang', 
-                                        'url' => array('/report/stockCardWithAmount/summary'), 
-                                        'visible' => Yii::app()->user->checkAccess('stockCardItemReport'),
+                                        'label' => 'Stok Ban per Tahun Produksi', 
+                                        'url' => array('/report/stockTire/summary'), 
+                                        'visible' => Yii::app()->user->checkAccess('stockTireReport'),
                                     ),
                                     array(
-                                        'label' => 'Mutasi Stok Jual Beli Barang', 
-                                        'url' => array('/report/stockCardTransactionProduct/summary'), 
-                                        'visible' => Yii::app()->user->checkAccess('stockCardItemReport'),
-                                    ),
-                                    array(
-                                        'label' => 'Mutasi Stok Jual Beli Gudang', 
-                                        'url' => array('/report/stockCardTransactionWarehouse/summary'), 
-                                        'visible' => Yii::app()->user->checkAccess('stockCardWarehouseReport'),
-                                    ),
-                                    array(
-                                        'label' => 'Mutasi Stok per Gudang', 
-                                        'url' => array('/report/stockCardByWarehouse/summary'), 
-                                        'visible' => Yii::app()->user->checkAccess('stockCardWarehouseReport'),
+                                        'label' => 'Stok Oli', 
+                                        'url' => array('/report/stockOil/check'), 
+                                        'visible' => Yii::app()->user->checkAccess('stockOilReport'),
                                     ),
                                     array(
                                         'label' => 'Pengiriman Barang', 
@@ -85,9 +76,8 @@
                         <?php if (
                             Yii::app()->user->checkAccess('stockValueReport') ||
                             Yii::app()->user->checkAccess('stockQuantityValueReport') ||
-                            Yii::app()->user->checkAccess('stockPositionReport') ||
-                            Yii::app()->user->checkAccess('stockTireReport') ||
-                            Yii::app()->user->checkAccess('stockOilReport')
+                            Yii::app()->user->checkAccess('stockCardWarehouseReport') || 
+                            Yii::app()->user->checkAccess('stockPositionReport')
                         ): ?>
                             <h2>Persediaan</h2>
                             <?php $this->widget('zii.widgets.CMenu', array(
@@ -108,14 +98,24 @@
                                         'visible' => Yii::app()->user->checkAccess('stockPositionReport'),
                                     ),
                                     array(
-                                        'label' => 'Stok Ban per Tahun Produksi', 
-                                        'url' => array('/report/stockTire/summary'), 
-                                        'visible' => Yii::app()->user->checkAccess('stockTireReport'),
+                                        'label' => 'Mutasi Stok per Barang', 
+                                        'url' => array('/report/stockCardWithAmount/summary'), 
+                                        'visible' => Yii::app()->user->checkAccess('stockCardWarehouseReport'),
                                     ),
                                     array(
-                                        'label' => 'Stok Oli', 
-                                        'url' => array('/report/stockOil/check'), 
-                                        'visible' => Yii::app()->user->checkAccess('stockOilReport'),
+                                        'label' => 'Mutasi Stok Jual Beli Barang', 
+                                        'url' => array('/report/stockCardTransactionProduct/summary'), 
+                                        'visible' => Yii::app()->user->checkAccess('stockCardWarehouseReport'),
+                                    ),
+                                    array(
+                                        'label' => 'Mutasi Stok Jual Beli Gudang', 
+                                        'url' => array('/report/stockCardTransactionWarehouse/summary'), 
+                                        'visible' => Yii::app()->user->checkAccess('stockCardWarehouseReport'),
+                                    ),
+                                    array(
+                                        'label' => 'Mutasi Stok per Gudang', 
+                                        'url' => array('/report/stockCardByWarehouse/summary'), 
+                                        'visible' => Yii::app()->user->checkAccess('stockCardWarehouseReport'),
                                     ),
                                     array(
                                         'label' => 'Sent Request', 
