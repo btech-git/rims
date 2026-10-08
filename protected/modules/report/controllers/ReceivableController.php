@@ -77,7 +77,7 @@ class ReceivableController extends Controller {
         }
         
         if (isset($_GET['SaveExcel'])) {
-            $this->saveToExcel($receivableSummary, $receivableReportData, $receivablePaymentReportData, $endDate, $branchId);
+            $this->saveToExcel($receivableSummary, $receivableReportData, $receivablePaymentReportData, $endDate);
         }
 
         $this->render('summary', array(
@@ -141,7 +141,7 @@ class ReceivableController extends Controller {
         }
     }
 
-    protected function saveToExcel($receivableSummary, $receivableReportData, $receivablePaymentReportData, $endDate, $branchId) {
+    protected function saveToExcel($receivableSummary, $receivableReportData, $receivablePaymentReportData, $endDate) {
         set_time_limit(0);
         ini_set('memory_limit', '1024M');
 
@@ -208,7 +208,7 @@ class ReceivableController extends Controller {
                 $worksheet->setCellValue("C{$counter}", CHtml::value($customer, 'coa.name'));
                 $worksheet->setCellValue("D{$counter}", $receivableReportItem['invoice_date']);
                 $worksheet->setCellValue("E{$counter}", $receivableReportItem['due_date']);
-                $worksheet->setCellValue("F{$counter}", $agingDays);
+                $worksheet->setCellValue("F{$counter}", $agingDays->format("%a days"));
                 $worksheet->setCellValue("G{$counter}", $receivableReportItem['invoice_number']);
                 $worksheet->setCellValue("H{$counter}", $receivableReportItem['plate_number']);
                 $worksheet->setCellValue("I{$counter}", $receivableReportItem['car_make'] . ' - ' . $receivableReportItem['car_model'] . ' - ' . $receivableReportItem['car_sub_model']);
