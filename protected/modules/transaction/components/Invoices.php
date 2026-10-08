@@ -168,6 +168,8 @@ class Invoices extends CComponent {
             $this->header->is_new_vehicle = $newVehicle === null ? 1 : 0;
         }
         
+        $this->header->invoice_amount = $this->header->total_price - $this->header->downpayment_amount - $this->header->insurance_own_risk_amount;
+        $this->header->payment_left = $this->header->total_price - $this->header->downpayment_amount - $this->header->insurance_own_risk_amount - $this->header->payment_amount;
         $this->header->status = $this->header->payment_left == 0 ? 'PAID' : "Approved";
         $this->header->total_discount = $this->getTotalDiscount();
         $valid = $this->header->save();
