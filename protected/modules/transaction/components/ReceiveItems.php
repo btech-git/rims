@@ -278,8 +278,8 @@ class ReceiveItems extends CComponent {
 
             } else if ($this->header->request_type == 'Consignment In') {
                 $consignmentDetail = ConsignmentInDetail::model()->findByAttributes(array('id' => $detail->consignment_in_detail_id, 'consignment_in_id' => $this->header->consignment_in_id));
-                $consignmentDetail->qty_request_left = $detail->qty_request - $detail->qty_received - $consignmentDetail->getTotalQuantityReceived();
-                $consignmentDetail->qty_received = $detail->qty_received + $consignmentDetail->getTotalQuantityReceived();
+                $consignmentDetail->qty_request_left = $detail->qty_request - $consignmentDetail->getTotalQuantityReceived();
+                $consignmentDetail->qty_received = $consignmentDetail->getTotalQuantityReceived();
                 $consignmentDetail->save(false);
             }
         }
