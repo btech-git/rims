@@ -321,7 +321,8 @@
                             <?php echo $form->labelEx($invoice->header, 'downpayment_amount', array('class' => 'prefix')); ?>
                         </div>
                         <div class="small-8 columns">
-                            <?php echo number_format(CHtml::encode(CHtml::value($invoice->header, 'downpayment_amount')), 2); ?>
+                            <?php echo CHtml::activeTextField($invoice->header, 'downpayment_amount'); ?>
+                            <?php //echo number_format(CHtml::encode(CHtml::value($invoice->header, 'downpayment_amount')), 2); ?>
                         </div>
                     </div>
                 </div>
